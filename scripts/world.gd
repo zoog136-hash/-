@@ -5501,42 +5501,59 @@ func _patch523_craft_item_index() -> Dictionary:
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
-	for source_id: String in patch523_equipment.data.get("items", {}):
-		# Read-only identity for the branch checks (no deep copy of ~30,000
-		# records); the stored host binding below is still a full record().
-		var binding: Dictionary=patch523_equipment.record_view(source_id)
-		if binding.get("source","")=="twilight_host_binding":
-			binding=patch523_equipment.record(source_id)
-			var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
-			if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
-				binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
-				result[str(binding.name)]=binding
-			continue
-		if source_id=="26":
-			result["아데나"]=patch523_equipment.record("26")
-			continue
-		if binding.get("source_m_native_item",false):
-			for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
-				var variant: Dictionary=patch523_equipment.record(source_id,int(state))
-				var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
-				if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
-					var weighted_variant: Dictionary=current_variant.duplicate(true)
-					weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
-					result[str(variant.name)]=weighted_variant
-			var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
-			if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
-				var weighted: Dictionary=native_entry.duplicate(true)
-				weighted["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
-				result[str(binding.name)]=weighted
-			continue
-		var entry: Dictionary = _catalog_item_from_source_id(source_id)
-		var item_name: String = str(entry.get("name", ""))
-		if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: continue
-		var bound: Dictionary = entry.duplicate(true)
-		bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
-		result[item_name] = bound
+	# The same item order, read in blocks: worker threads decode the next
+	# block's item templates while this one is indexed (NATIVE_FIELDS prefetch).
+	var source_ids: Array=(patch523_equipment.data.get("items", {}) as Dictionary).keys()
+	var blocks: Array[PackedStringArray]=[]
+	for block_start: int in range(0,source_ids.size(),PATCH523_CRAFT_INDEX_BLOCK):
+		blocks.append(PackedStringArray(source_ids.slice(block_start,block_start+PATCH523_CRAFT_INDEX_BLOCK)))
+	var ahead: Dictionary=NATIVE_FIELDS.prefetch_begin(blocks[0]) if not blocks.is_empty() else {}
+	for index: int in blocks.size():
+		NATIVE_FIELDS.prefetch_install(ahead)
+		ahead=NATIVE_FIELDS.prefetch_begin(blocks[index+1]) if index+1<blocks.size() else {}
+		for source_id: String in blocks[index]:
+			_patch523_craft_index_item(result,source_id)
+	NATIVE_FIELDS.prefetch_install(ahead)
+	NATIVE_FIELDS.end_prefetch()
 	patch523_craft_item_cache=result
 	return result
+
+const PATCH523_CRAFT_INDEX_BLOCK := 1024
+
+func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
+	# Read-only identity for the branch checks (no deep copy of ~30,000
+	# records); the stored host binding below is still a full record().
+	var binding: Dictionary=patch523_equipment.record_view(source_id)
+	if binding.get("source","")=="twilight_host_binding":
+		binding=patch523_equipment.record(source_id)
+		var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
+		if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
+			binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=binding
+		return
+	if source_id=="26":
+		result["아데나"]=patch523_equipment.record("26")
+		return
+	if binding.get("source_m_native_item",false):
+		for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
+			var variant: Dictionary=patch523_equipment.record(source_id,int(state))
+			var current_variant: Dictionary=_catalog_item_from_source_id(str(variant.get("sourceId","")))
+			if int(catalog_item_variant_count.get(str(variant.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(current_variant,source_id,int(state)):
+				var weighted_variant: Dictionary=current_variant.duplicate(true)
+				weighted_variant["weight"]=maxi(0,int(item_weight_index.get(str(variant.name),3)))
+				result[str(variant.name)]=weighted_variant
+		var native_entry: Dictionary=_catalog_item_from_source_id(str(binding.sourceId))
+		if int(catalog_item_variant_count.get(str(binding.name),0))==1 and patch523_equipment.catalog_identity_matches(native_entry,source_id):
+			var weighted: Dictionary=native_entry.duplicate(true)
+			weighted["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=weighted
+		return
+	var entry: Dictionary = _catalog_item_from_source_id(source_id)
+	var item_name: String = str(entry.get("name", ""))
+	if entry.get("source", "") != "inven" or int(catalog_item_variant_count.get(item_name, 0)) != 1: return
+	var bound: Dictionary = entry.duplicate(true)
+	bound["weight"] = maxi(0, int(item_weight_index.get(item_name, 3)))
+	result[item_name] = bound
 
 func _load_patch523_equipment() -> void:
 	var path: String = OS.get_environment("TWILIGHT_PATCH523_EQUIPMENT_RULES")

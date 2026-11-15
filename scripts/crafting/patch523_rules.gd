@@ -1007,7 +1007,7 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
-		if NATIVE_FIELDS.field(item,key)!=NATIVE_FIELDS.field(canonical,key): return false
+		if NATIVE_FIELDS.field_view(item,key)!=NATIVE_FIELDS.field_view(canonical,key): return false
 	# The item entry (a lazy projection) only decides a material's class rule.
 	var entry: Dictionary={}
 	var entry_loaded: bool=false
@@ -1018,9 +1018,9 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 				entry=item_entry(source_id)
 				entry_loaded=true
 			var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
-			allow_zero=allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field(canonical,key) and entry.get("item_bonuses",[]).is_empty()
-		if not _source_ids_match(NATIVE_FIELDS.field(item,key),NATIVE_FIELDS.field(canonical,key),allow_zero): return false
-	if stack_bless!=1:return NATIVE_FIELDS.field(canonical,"source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
+			allow_zero=allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field_view(canonical,key) and entry.get("item_bonuses",[]).is_empty()
+		if not _source_ids_match(NATIVE_FIELDS.field_view(item,key),NATIVE_FIELDS.field_view(canonical,key),allow_zero): return false
+	if stack_bless!=1:return NATIVE_FIELDS.field_view(canonical,"source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id
 
 static func bless_code(physical: Dictionary) -> int:
