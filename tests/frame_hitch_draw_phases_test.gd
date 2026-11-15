@@ -213,7 +213,7 @@ func _disabled_reset_and_bounds() -> void:
 	check(summary.worst.size() == HITCH.KEEP and summary.hitches == 21, "callback diagnostics preserve bounded worst-frame retention and total hitch count")
 	for kept: Dictionary in summary.worst:
 		var diag: Dictionary = kept.get("diagnostics", {})
-		check(diag.size() == 5 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
+		check(diag.size() == 6 and diag.physics.size() == 4 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
 	check(JSON.stringify(summary).length() < 65536, "bounded callback fixture remains readable under the previous-record size limit")
 
 func _persistence() -> void:
@@ -361,6 +361,7 @@ func _probe_lifecycle() -> void:
 	check(_connections("frame_pre_draw", pre) == 1 and _connections("frame_post_draw", post) == 1, "probe connects each callback once on tree entry")
 	var tail: Node = probe._tail
 	check(tail != null and tail.process_priority == 2147483647 and tail.process_mode == Node.PROCESS_MODE_ALWAYS, "probe owns one late-priority always-processing tail child")
+	check(probe.process_physics_priority == -2147483647 and tail.process_physics_priority == 2147483647, "probe and tail bracket every physics step")
 	await process_frame
 	await process_frame
 	check(host.saw_probe_before and not host.saw_tail_before and HITCH._process_tail_count == 1 and HITCH._process_tail_usec >= HITCH._last_frame, "actual main-group order is probe then ordinary host then tail")
@@ -396,8 +397,42 @@ func _probe_lifecycle() -> void:
 	check(FileAccess.file_exists(DIR.path_join(HITCH.FILE_NAME)), "probe deletion still flushes the current record")
 	host.free()
 
+## Catch-up physics steps after a long frame: count, total, longest step and
+## the section time charged inside steps, persisted and shown on the next boot.
+func _physics_steps() -> void:
+	_clean()
+	_reset()
+	HITCH.frame_at_for_test(ORIGIN, "start")
+	# A head without a frame start or a tail without a head is not a step.
+	HITCH.physics_at_for_test(false, ORIGIN + 1000)
+	for step: int in 3:
+		var at: int = ORIGIN + 100000 + step * 30000
+		HITCH.physics_at_for_test(true, at)
+		HITCH.physics_at_for_test(false, at + 10000 + step * 5000)
+	HITCH.frame_at_for_test(ORIGIN + 300000, "catch_up")
+	var physics: Dictionary = _latest().get("diagnostics", {}).get("physics", {})
+	check(int(physics.get("steps", -1)) == 3, "three catch-up physics steps are counted")
+	check(int(physics.get("usec", -1)) == 45000 and int(physics.get("max_step_usec", -1)) == 20000, "physics total and longest step are exact")
+	HITCH.frame_at_for_test(ORIGIN + 500000, "no_physics")
+	check(int(_latest().diagnostics.physics.steps) == 0, "physics counters are per probe interval")
+	# Sections added inside a step are attributed to physics.
+	HITCH.physics_head()
+	var started: int = HITCH.now() - 7000
+	HITCH.add("player", started)
+	HITCH.physics_tail()
+	HITCH.backdate_frame_for_test(250000)
+	HITCH.frame("charged")
+	var charged: Dictionary = _latest().diagnostics.physics
+	check(int(charged.steps) == 1 and int(charged.sections_usec) >= 7000, "section time inside a physics step is charged to physics")
+	HITCH.flush()
+	_reset()
+	HITCH.start()
+	check(HITCH.previous_line().contains("물리 3회 45ms(최대 20ms)"), "loading line names the slowest frame's catch-up physics steps")
+	_clean()
+
 func _run() -> void:
 	_clean()
+	_physics_steps()
 	_ordered_boundaries()
 	_invalid_boundaries()
 	_accounting_and_logger()
