@@ -476,6 +476,7 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		add_child(sprite)
 		_layers.append(sprite)
+		invalidate_applied_frame()
 	visible = true
 	return true
 
@@ -533,6 +534,7 @@ func clear() -> void:
 	for sprite: Sprite2D in _layers:
 		sprite.free()
 	_layers.clear()
+	invalidate_applied_frame()
 	_role = "idle"
 	_clock = 0.0
 	_sequence = -1
@@ -559,6 +561,16 @@ func cancel_source_attack() -> void:
 	_attack_completed = false
 	_role = "idle"
 	_clock = 0.0
+
+var _applied_token: String = ""
+var _applied_selected: Dictionary = {}
+var _applied_layers: Array = []
+var _applied_layer_count: int = -1
+
+## Forget the applied frame so the next advance re-applies every layer.
+func invalidate_applied_frame() -> void:
+	_applied_token = ""
+	_applied_selected = {}
 
 func advance_source(delta: float, state: String, facing: int, sequence: int, gameplay_active: bool) -> void:
 	# Diagnostic bank requests still require explicit source dispatch. A typed card
@@ -630,8 +642,17 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			body_attributes = _reference_attachment_parent.get("parent_draw_attributes", [])
 			body_attributes_unresolved = bool(_reference_attachment_parent.get("parent_draw_attributes_unresolved", true))
 			body_projection_verified = bool(_reference_attachment_parent.get("parent_draw_projection_verified", false)) and not body_attributes_unresolved
-	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
-	for effect: Dictionary in selected.get("effect_layers", []):
+	# The same selected frame (same track objects, layers and token) was
+	# already applied: styles, textures and positions are unchanged, so only the
+	# clock, events and child sources advance. The host calls this every
+	# physics tick (30/s) while frames change far less often (2026-11-15 phone:
+	# player 136 ms of CPU per second).
+	# Reference banks keep their per-draw byte verification (a changed or
+	# deleted original is rejected on the very next advance).
+	var unchanged: bool = not is_reference and token == _applied_token and is_same(selected, _applied_selected) and is_same(_layers, _applied_layers) and _applied_layer_count == _layers.size()
+	if not unchanged:
+		for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
+	for effect: Dictionary in ([] if unchanged else selected.get("effect_layers", [])):
 		if effect.has("client_null"): continue
 		# First use must prime the verified member key before the shared texture
 		# lookup. Once this view owns the texture, _source_texture alone rechecks
@@ -690,7 +711,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	if not static_track and is_reference and not _reference_card_context.is_empty(): _dispatch_reference_overlays(frames,track,total,source_direction)
 	if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 		queue_free()
-	for index: int in range(_layers.size()):
+	for index: int in range(0 if unchanged else _layers.size()):
 		_layers[index].visible = index < selected.layers.size()
 		if not _layers[index].visible: continue
 		var layer: Dictionary = selected.layers[index]
@@ -723,6 +744,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_layers[index].texture = texture
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
 		if not recovered.is_empty(): SP2_COMPOSITOR.apply(_layers[index], recovered)
+	if not unchanged:
+		_applied_token = token
+		_applied_selected = selected
+		_applied_layers = _layers
+		_applied_layer_count = _layers.size()
 	if _reference_bank != null:
 		var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
 		if not source_children_ready and not _reference_texture_budget.is_empty():

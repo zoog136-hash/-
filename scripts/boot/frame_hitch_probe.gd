@@ -14,13 +14,23 @@ var _alive_at: int = 0
 class ProcessTail extends Node:
 	func _init() -> void:
 		process_priority = 2147483647
+		process_physics_priority = 2147483647
 		process_mode = Node.PROCESS_MODE_ALWAYS
 	func _process(_delta: float) -> void:
 		FRAME_HITCH.process_tail()
+	func _physics_process(_delta: float) -> void:
+		FRAME_HITCH.physics_tail()
 
 func _enter_tree() -> void:
 	process_priority = -2147483647
+	process_physics_priority = -2147483647
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# After one long frame the engine runs up to 8 catch-up physics steps
+	# (every monster AI and the player, per step) before the next frame: the
+	# phone's "after" span (262 ms behind a 4 s frame). Three steps still cover
+	# the 15 fps idle cap at 30 Hz; the world just runs slower during a stall.
+	if not _headless and Engine.max_physics_steps_per_frame > MAX_PHYSICS_STEPS:
+		Engine.max_physics_steps_per_frame = MAX_PHYSICS_STEPS
 	# Both callbacks are delivered on the main thread. A separate render
 	# thread defers post_draw, so its delivery cannot identify the same draw.
 	FRAME_HITCH.configure_draw_delivery(RenderingServer.is_on_render_thread())
@@ -42,6 +52,9 @@ func _exit_tree() -> void:
 		RenderingServer.frame_pre_draw.disconnect(_on_pre_draw)
 	if RenderingServer.frame_post_draw.is_connected(_on_post_draw):
 		RenderingServer.frame_post_draw.disconnect(_on_post_draw)
+
+func _physics_process(_delta: float) -> void:
+	FRAME_HITCH.physics_head()
 
 func _on_pre_draw() -> void:
 	FRAME_HITCH.draw_pre()
@@ -107,6 +120,7 @@ static func world_fields(world: Node) -> Dictionary:
 
 ## Frame cap while nobody touches the screen and auto hunting is off: the
 ## world keeps running, it is just drawn less often (heat).
+const MAX_PHYSICS_STEPS: int = 3
 const ACTIVE_FPS: int = 30
 const IDLE_FPS: int = 15
 const IDLE_AFTER_MSEC: int = 15000

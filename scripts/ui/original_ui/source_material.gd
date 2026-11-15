@@ -58,8 +58,18 @@ static func original_default(texture: Texture2D, grayscale: bool=false) -> Shade
 ## slots showed random colour blocks instead of their art on the phone.
 const DISPLAY_CACHE_LIMIT: int=4096
 static var _display_variants: Dictionary={}
+static var _display_shaders: Dictionary={}
+## Only shaders that declare the display parameters take them; a foreign
+## shader (SP2 kernels, panel layers) is left alone.
+static func takes_display(material: ShaderMaterial) -> bool:
+	var shader: Shader=material.shader
+	if shader==null:return false
+	var key: int=shader.get_instance_id()
+	if not _display_shaders.has(key):
+		_display_shaders[key]=shader.code.contains("uniform vec4 source_display_color") and shader.code.contains("uniform bool source_display_bound") and not shader.code.contains("instance uniform")
+	return _display_shaders[key]
 static func bind_display(item: CanvasItem, color: Color) -> void:
-	if not item.material is ShaderMaterial:return
+	if not item.material is ShaderMaterial or not takes_display(display_base(item.material)):return
 	var current: ShaderMaterial=item.material
 	var base: ShaderMaterial=display_base(current)
 	var key: Array=[base.get_instance_id(),color]
