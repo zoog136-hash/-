@@ -176,11 +176,11 @@ func _effect_rows(runtime: Object, group: Dictionary) -> Array:
 	for node: Dictionary in group.get("nodes",[]):
 		var id: String=str(node.id)
 		if not opened.has(id):continue
-		var text: String=str(node.get("name",id))
+		# A skill slot by its name, an ability slot by its current effect.
 		var effect: Dictionary=runtime.guardian_source.effects(id,runtime.guardian_level(id)) if runtime.guardian_source.has_node(id) else {}
-		if not effect.is_empty():text+=" · "+GrowthView.effect_text(runtime,effect)
+		var text: String=GrowthView.effect_text(runtime,effect) if str(node.get("kind",""))=="stat" and not effect.is_empty() else str(node.get("name",id))
 		rows.append({"member":EFFECT_ROW,"spec":{"Nd_Effect/On":{"visible":true},"Nd_Effect/Off":{"visible":false},
-			"On/Label_Dsc":{"role":"source_text","text":text},"On/Label_Level":{"role":"source_text","text":"Lv.%d" % runtime.guardian_level(id)}}})
+			"On/Label_Dsc":{"role":"source_text","text":text},"On/Label_Level":{"role":"source_text","text":"Lv.%d" % runtime.guardian_level(id),"visible":int(node.get("max_level",0))>0}}})
 	return rows
 
 ## The slot info popup: title, buttons and the representative ON / OFF.
@@ -191,8 +191,12 @@ func _popup_spec(runtime: Object, spec: Dictionary) -> void:
 	spec[POPUP]={"visible":true}
 	for name: String in ["Fx_Popup_RightBottom","Fx_Popup_LeftUp","Nd_Skill/Common_Slot","Nd_Skill/Label_Probability"]:spec[POPUP+"/"+name if not name.begins_with("Nd_Skill") else name]={"exclude":true}
 	spec[POPUP+"/Btn_Close"]={"activate":Callable(self,"_close_info")}
+	# The authored touch on the popup title only keeps taps inside the popup.
+	spec["Nd_SkillInfo/Label_Title"]={"input":Callable(self,"_ignore_input")}
 	spec["Nd_SkillInfo/Btn_No"]={"activate":Callable(self,"_close_info")}
-	spec["Nd_Skill/Label_SkillName"]={"role":"source_text","text":"%s  Lv.%d / %d" % [str(row.get("name",info)),runtime.guardian_level(info),int(row.get("max_level",0))]}
+	var name: String=str(row.get("name",info))
+	if int(row.get("max_level",0))>0:name+="  Lv.%d / %d" % [runtime.guardian_level(info),int(row.max_level)]
+	spec["Nd_Skill/Label_SkillName"]={"role":"source_text","text":name}
 	# 활성화 for a closed slot; an opened one keeps 강화 / 시전 in the existing view.
 	var activate: Dictionary=runtime.quote("activate",info) if not opened else {}
 	var ok: bool=opened or bool(activate.get("ok",false))
