@@ -82,6 +82,16 @@ static var _focus_at_start: int = -1
 static var _lifecycle_counts: PackedInt64Array = PackedInt64Array([0,0,0,0])
 static var _lifecycle_first_usec: int = 0
 static var _lifecycle_last_usec: int = 0
+## Physics steps inside the probe interval (head = first physics node, tail =
+## last). After a long frame the engine runs several catch-up steps; their time
+## sits in the "after" span of the callback/tail markers, so it is kept here
+## with the step count and the sections each step charged (monsters, player).
+static var _physics_steps: int = 0
+static var _physics_usec: int = 0
+static var _physics_max_usec: int = 0
+static var _physics_head_usec: int = 0
+static var _physics_nested_at_head: int = 0
+static var _physics_section_usec: int = 0
 
 static func now() -> int:
 	return Time.get_ticks_usec()
@@ -158,6 +168,35 @@ static func _clear_pending() -> void:
 	_lifecycle_counts.fill(0)
 	_lifecycle_first_usec = 0
 	_lifecycle_last_usec = 0
+	_physics_steps = 0
+	_physics_usec = 0
+	_physics_max_usec = 0
+	_physics_head_usec = 0
+	_physics_section_usec = 0
+
+static func physics_head() -> void:
+	_mark_physics(true, Time.get_ticks_usec())
+
+static func physics_tail() -> void:
+	_mark_physics(false, Time.get_ticks_usec())
+
+static func _mark_physics(is_head: bool, at: int) -> void:
+	if not enabled or _last_frame <= 0: return
+	if is_head:
+		_physics_head_usec = at
+		_physics_nested_at_head = _nested
+		return
+	if _physics_head_usec <= 0 or at < _physics_head_usec: return
+	var step: int = at - _physics_head_usec
+	_physics_steps += 1
+	_physics_usec += step
+	_physics_max_usec = maxi(_physics_max_usec, step)
+	_physics_section_usec += maxi(0, _nested - _physics_nested_at_head)
+	_physics_head_usec = 0
+
+static func _physics_sample() -> Dictionary:
+	return {"steps":_physics_steps, "usec":_physics_usec, "max_step_usec":_physics_max_usec,
+		"sections_usec":_physics_section_usec}
 
 static func process_tail() -> void:
 	_mark_process_tail(Time.get_ticks_usec())
@@ -272,6 +311,7 @@ static func _record(total: int, map_id: String, at: int) -> void:
 	var draw: Dictionary = _draw_sample(at)
 	entry["diagnostics"] = {"logger_usec":_logger_usec, "draw_callbacks":draw,
 		"process_tail":_process_tail_sample(at, draw), "lifecycle":_lifecycle_sample(),
+		"physics":_physics_sample(),
 		# Instantaneous record-time counters, not interval peaks or GC evidence.
 		"record_snapshot":{"sampled_usec":Time.get_ticks_usec(), "static_memory_bytes":OS.get_static_memory_usage(),
 			"objects":int(Performance.get_monitor(Performance.OBJECT_COUNT)), "nodes":int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))}}
@@ -414,6 +454,9 @@ static func previous_line() -> String:
 	elif tail is Dictionary and not tail.is_empty():
 		var status: String = str({"missing":"없음", "multiple":"중복", "out_of_order":"역순"}.get(tail.get("status", ""), "미확인"))
 		line += " · 후순위표식 %s(%d)" % [status, clampi(int(tail.get("count",0)),0,9999)]
+	var physics: Variant = diagnostics.get("physics", {})
+	if physics is Dictionary and int(physics.get("steps", 0)) > 0:
+		line += " · 물리 %d회 %dms(최대 %dms)" % [clampi(int(physics.steps),0,9999), int(physics.get("usec",0))/1000, int(physics.get("max_step_usec",0))/1000]
 	var lifecycle_sample: Variant = diagnostics.get("lifecycle", {})
 	if lifecycle_sample is Dictionary and not lifecycle_sample.is_empty():
 		var events: Variant = lifecycle_sample.get("counts_pause_resume_out_in", [])
@@ -470,6 +513,9 @@ static func draw_at_for_test(is_pre: bool, at: int) -> void:
 
 static func process_tail_at_for_test(at: int) -> void:
 	_mark_process_tail(at)
+
+static func physics_at_for_test(is_head: bool, at: int) -> void:
+	_mark_physics(is_head, at)
 
 static func lifecycle_at_for_test(event: int, at: int) -> void:
 	_mark_lifecycle(event, at)
