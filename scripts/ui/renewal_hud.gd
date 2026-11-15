@@ -1159,7 +1159,7 @@ func _navigate(section: String) -> void:
 		"option_awakening":
 			if not option_awakening_snapshot.is_empty():
 				option_awakening_open_requested.emit(str(option_awakening_snapshot.get("category", "")), str(option_awakening_snapshot.get("target_id", "")))
-		"weapon_mastery": weapon_mastery_requested.emit()
+		"weapon_mastery": open_weapon_mastery()
 		"protection523": open_protection523()
 		"equipment_collections": open_equipment_collections()
 		"growth96": open_growth96()
@@ -3164,6 +3164,18 @@ func open_equipment_collections() -> void:
 	var screen := EquipmentCollectionsUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+## The original 523 무기 숙련 window (source_main_mastery_window) over
+## world.weapon_mastery; the existing mastery panel when it is not handled.
+func open_weapon_mastery() -> void:
+	_open_window("weapon_mastery","무기 숙련","")
+	if _open_original_feature("weapon_mastery"):return
+	open_mastery_native()
+
+## The existing mastery panel (부분 옵션 복구 and the TWILIGHT fallback).
+func open_mastery_native() -> void:
+	_close_workspace()
+	weapon_mastery_requested.emit()
 
 func open_growth(section: String) -> void:
 	_open_window(section,"문양" if section == "emblems" else "수호성","")
