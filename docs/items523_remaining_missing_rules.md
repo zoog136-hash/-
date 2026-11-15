@@ -682,3 +682,32 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
   TeleportToTerritory 사각형 안 착지 칸(기존 콘텐츠의 `OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1`을 쓸지).
 - 같이 남은 것: Life 15종(획득 후 수명 시계), ClassUsageInterval 33종(직업별 재사용 시계), TeleportTypeID+혈맹 아지트 3종, 재사용 부적(TeleportAmulet 36종:
   소모되지 않는 활성 아이템, 소지 시 탑 부적 효과 — 장착·소지 버프 규칙 없음).
+
+### 16.3 사용자 결정 2026-11-15 적용 — 연결 (PR `feat/items523-location-teleport`)
+
+결정: 주문서로 들어갈 때 **NoTeleport는 면제**한다. 입장을 막는 조건이 아닌 속성(LandPlayerSocketTimeoutSecond·ObjectLazyLoad·IdleTime·
+UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다. **TurnOffAutoForTeleport**는 도착할 때 자동 사냥을 끄고 이동한다.
+**MinLevel은 그대로 판정**해 미달이면 거부한다. 혈맹·서버 기능은 새로 쓰지 않는다. 이 면제는 지정 위치 이동 주문서 경로
+(`world.ITEM523_TELEPORT_WAIVE`)에만 적용하고, 일반 지도 이동(포탈·귀환·콘텐츠 입장)의 정책은 바꾸지 않는다.
+
+- 사용 소유자(`source523_item_effects.location_teleport` / `prepare("teleport_location")`):
+  - 원본 523 지도에서만 쓸 수 있다.
+  - type 1 사용 지역 안에 있어야 하고, type 2 사용 불가 지역이면 거부한다.
+  - 사용 지역 행이 없는 주문서는 기존 순간이동 제한 지역 규칙을 따른다.
+  - 아이템의 LevelLimitMin은 기존 사용 조건이 판정한다.
+- 이동(`world.item523_teleport_land` → `enter_source_land(..., waive, save_changes)`):
+  - 도착 칸은 Locations 한 칸이다. Territories 사각형은 기존 콘텐츠 입장과 같은 첫 빈칸 규칙(`OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1`, TWILIGHT 해석)을 쓴다.
+  - 아이템 1개 차감(물리 수량 장부·재사용 대기 포함)은 **도착 지점 저장과 한 번에** 기록된다(`current523_map_travel_payment`가 consumable_state·
+    item_use_cooldowns·patch523_transaction_rng를 받음).
+  - 이동이 거부되면 아무것도 저장되지 않고 주문서는 남는다.
+- 남는 보류: 도착 Land가 NoTeleportCome·BlockLoginEnter·CloseTime·GivenSpellClassID·NoSpell·NoReusableSoloLand 등을 선언한 주문서(오프라인 집계 약 40종,
+  대부분 튜토리얼·이벤트 Land)는 이번 결정 범위 밖이라 계속 보존한다. Life 15·ClassUsageInterval 33·혈맹 아지트 3·부적 36(16.2)도 그대로다.
+- 실제 Main·원본 팩 확인(`tests/items523_location_teleport_test.gd`):
+  - 아덴에서 오만의 탑 2층 주문서를 쓰면 사용 지역이 아니라 거부되고 3장이 남는다.
+  - 탑 입구에서 레벨 60이면 "원본 사용 레벨 조건" 거부로 3장이 남는다.
+  - 레벨 70이면 입구 → 2층(Land 22802), 3장 → 2장이 되고 도착 저장에 차감이 기록된다.
+  - 2층에서 3층 주문서를 쓰면 3층(22812)으로 가고 마지막 장이 소모된다.
+  - 다시 불러온 뒤에도 2장 / 0장이 유지된다.
+  - 자동 사냥을 켠 채 퀘스트 이동 주문서(#292612)를 쓰면 말하는 섬 선착장(49492, TurnOffAutoForTeleport)으로 가고 자동 사냥이 꺼진다.
+  - 해적섬에서 해적의 무덤 주문서를 쓰면 해적의 무덤(47661)으로 간다. 해적섬 밖에서는 거부되고 주문서가 남는다.
+  - 원본 주문서 212종 모두 사용 소유자가 있다(ScrollTeleportDungeon 144 · ScrollTeleport 68).

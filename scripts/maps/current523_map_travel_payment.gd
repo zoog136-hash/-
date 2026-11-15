@@ -10,7 +10,10 @@ const MAX_AMOUNT: int = 100000000
 const OWN_MANUAL_PORTAL_ADENA_V1: int = 100000
 const WALLET_POLICY: String = "OWN_WALLET_ADENA_DEBIT_V1"
 const FREE_POLICY: String = "OWN_TRAVEL_FREE_V1"
-const _OVERRIDE_KEYS: Array[String] = ["gold", "inventory", "item_instances", "quest_state"]
+## consumable_state / item_use_cooldowns / patch523_transaction_rng: the
+## physical-stack debit of a fixed-destination teleport item
+## (current523_native_stack.try_use), saved with its arrival.
+const _OVERRIDE_KEYS: Array[String] = ["gold", "inventory", "item_instances", "quest_state", "consumable_state", "item_use_cooldowns", "patch523_transaction_rng"]
 const _SAVE_GUARDS: Dictionary = {
 	"quest_service": "save_blocked",
 	"equipment_collections": "save_blocked",

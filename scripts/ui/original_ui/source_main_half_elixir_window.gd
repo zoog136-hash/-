@@ -181,5 +181,7 @@ func _charge() -> Dictionary:
 	return _quote(runtime.request("charge",id),"%s 1개를 소모해 사용 포인트를 충전합니다." % str(runtime.source.charges[id].name))
 
 func _help() -> Dictionary:
+	var shown: Dictionary=_open_help(HelpBox.ELIXIR)
+	# TWILIGHT's own rules beside the original help text.
 	_message("하프 엘릭서: 복용으로 포인트를 충전하고 능력치에 투자합니다 · 확률 분모와 실패 차감은 TWILIGHT 자체 설정")
-	return {"ok":true}
+	return {"ok":true,"original_help":shown.get("handled",false)}
