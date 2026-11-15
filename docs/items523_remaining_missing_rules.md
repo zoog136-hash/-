@@ -225,7 +225,7 @@ CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3
 | SelectReward | 175 | 불가 | 172종이 제외된 선택 보상(source_excluded_select_reward), 3종 RewardGetTimeTypeID 규칙 없음 |
 | LuckyBag · ResetAutoSlotByEmpty | 174 | 보류 | 자동 사용 슬롯 표시 플래그. 단 155종은 내용물(장비 강화 주문서 등)의 공급자가 없어 열어도 거부됨. 주문서 묶음과 함께 처리 |
 | ScrollEnchant · EnchantScrollGroupID (+ByBlessCode) | 157 + 23 | 불가 | 기존 강화 규칙에 결과 단계·비용 화폐·0개 소비·부작용·축복 도약 규칙이 미확정(`enhancement_evidence.unresolved`) |
-| ScrollTeleportDungeon · TeleportToLocation | 141 + 21 | 불가 | 목적 Land 착지·충돌 실행 연결 없음(던전 지역 이동 보류와 같음) |
+| ScrollTeleportDungeon · TeleportToLocation | 141 + 21 | 불가 | 표 규칙(위치·사용 지역)은 있음. 도착 Land의 LandAttribute(NoTeleport 등) 입장 판정 정책이 없어 보류 → 16절 |
 | ScrollQuest · QuestID | 137 | 불가 | 퀘스트 두루마리가 여는 퀘스트의 시작 조건·중복 규칙 없음 |
 | ScrollBuffCardRetry / AwakenRetry (카드 재뽑기) | 107+52+46+17+34 | 불가 | 재뽑기 대상 카드 선택·결과 풀·PlayerValueReturn 의미 표 없음 |
 | IntangibleItemRecharger · BlessPoint 등 | 102 | 보류 | 축복 포인트(IntangibleItemClass 14)는 문양 소유자 자체 기록이 이미 있음. 원본 물리 수량 경로와 합치는 소유 규칙은 문양 쪽 결정 필요 |
@@ -645,3 +645,69 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 실제 Main 확인(`tests/items523_equipment_typed_effects_test.gd`): #286641 착용 시 PVP 리덕션 무시 추가 피해 0→12, 저장·불러오기 유지 /
   #315922 상태 성공 가상 레벨 10→11 / 같은 그룹 귀걸이 두 개를 착용한 예전식 저장 → 불러오기 후 earring1 유지·earring2 해제(가방 보존)·
   표시 1건 / 표시가 있는 저장은 다시 정리하지 않음.
+
+## 16. 지정 위치 이동 주문서 (오만의 탑 n층 이동 주문서 등) — 표 규칙은 있으나 도착 Land 입장 규칙이 막음 (2026-11-15)
+
+### 16.1 표가 정하는 것 (원본 523, 비테스트)
+
+- 대상: ItemBonus에 **TeleportToLocation**(Unit `LocationsID` → Locations `LandID·X·Y` 한 칸) 또는 **TeleportToTerritory**(Unit `TerritoriesID` →
+  Territories `LandID`+사각형) 행이 정확히 하나 있고, 나머지 행이 `ConsumeTerritoryClassID`·`ItemConsumeDelay`·`ItemConsumeEffectSpriteID`·
+  `DeleteTime`·`CannotExtendDeleteTime`뿐인 소모품 **212종**(ScrollTeleportDungeon 144 · ScrollTeleport 68). 도착 Land 분포: 오만의 탑 1~10층 124,
+  신념의 탑 1~4층 12, 해적의 무덤 3, 나머지는 튜토리얼·이벤트 Land.
+- 사용 지역: ConsumeTerritoryClass `ConsumeTerritoryTypeId` 1 = 이름이 모두 "… 사용 지역"(#42 "오만의 탑 부적 사용 지역", #10442 "오만의 탑 이동
+  주문서 사용 지역" 등 64행) → ConsumeTerritories → Territories 사각형 안에서만 사용. 2 = "사용 불가 지역"(기존 임의 순간이동 주문서가 이미 이렇게 읽음).
+  아이템 자신의 설명과 일치: #19352 "오만의 탑 2층으로 이동 / 68레벨 이상 / 오만과 신념의 탑 입구에서 / 탑 내부에서만 사용 가능",
+  #10442 = 탑 입구(Land 46952) + 1~10층 전역 11개 사각형.
+- 레벨: ItemClass LevelLimitMin(68 등) — 기존 사용 조건(`patch523_item_use.eligibility`)이 이미 읽음.
+
+### 16.2 막는 것 — 도착 Land의 입장 판정 (실제 Main·원본 팩 측정)
+
+사용 소유자(위치·사용 지역 판정, 아이템 차감을 도착 저장과 한 번에 기록)를 만들어 실제 Main에서 시험했으나, 지금 지도 이동 소유자
+(`current523_aden_play_controller._entry_context`)가 **도착 Land의 원본 LandAttribute 행을 전부 "정책 필요"로 보류**해 한 번도 이동하지 못했다
+(아이템은 보존). 측정한 보류 행:
+
+| 도착 Land | 보류 행 (LandAttributeType) |
+| --- | --- |
+| 46952 오만과 신념의 탑 입구 | TurnOffAutoForTeleport, MinLevel 68, LandPlayerSocketTimeoutSecond 300, ObjectLazyLoad, IdleTime 1800, … |
+| 22802 오만의 탑 2층 | MinLevel 68, **NoTeleport**, LandPlayerSocketTimeoutSecond, ObjectLazyLoad, UsableCallClan, LandCondition … |
+| 47661 해적의 무덤 | **NoTeleport**, MinLevel 88, LandPlayerSocketTimeoutSecond, UsableCallClan, CompetitionDungeonLand 253 |
+
+- 표에 없는 것: 이 속성들 중 무엇이 "아이템으로 들어오는 입장"을 막는지. 특히 **NoTeleport**가 Land 안에서의 순간이동 금지인지(주문서로 들어오는
+  것은 허용) 입장 자체 금지인지 표에 없다. 오만의 탑 층 이동 주문서가 탑 안에서 쓰는 아이템인데 모든 층이 NoTeleport=1이므로, 입장 금지로 읽으면
+  아이템 자체가 의미가 없어진다. IdleTime·LandPlayerSocketTimeoutSecond·ObjectLazyLoad·UsableCallClan은 서버·네트워크·혈맹 속성이다.
+- 콘텐츠 입장(에스카로스·요정 숲·오림)은 각 기능이 자기 Land에 대해 면제 목록(`CONTENT_ENTRY_WAIVE`)을 정했다. 주문서 입장에 같은 면제를 넓히는 것은
+  사용자 결정이 필요하다 → **연결하지 않음, 주문서 보존**.
+- 사용자 결정이 나면: 사용 소유자 코드는 작성·검증된 상태로 보관했다(위치·사각형 해석, 사용 지역 1/2, 차감을 도착 저장과 원자 기록,
+  거부 시 보존). 남은 것은 "주문서 입장 시 면제할 LandAttribute 목록"(예: MinLevel은 그대로 판정, NoTeleport·서버 속성은 면제)과
+  TeleportToTerritory 사각형 안 착지 칸(기존 콘텐츠의 `OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1`을 쓸지).
+- 같이 남은 것: Life 15종(획득 후 수명 시계), ClassUsageInterval 33종(직업별 재사용 시계), TeleportTypeID+혈맹 아지트 3종, 재사용 부적(TeleportAmulet 36종:
+  소모되지 않는 활성 아이템, 소지 시 탑 부적 효과 — 장착·소지 버프 규칙 없음).
+
+### 16.3 사용자 결정 2026-11-15 적용 — 연결 (PR `feat/items523-location-teleport`)
+
+결정: 주문서로 들어갈 때 **NoTeleport는 면제**한다. 입장을 막는 조건이 아닌 속성(LandPlayerSocketTimeoutSecond·ObjectLazyLoad·IdleTime·
+UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다. **TurnOffAutoForTeleport**는 도착할 때 자동 사냥을 끄고 이동한다.
+**MinLevel은 그대로 판정**해 미달이면 거부한다. 혈맹·서버 기능은 새로 쓰지 않는다. 이 면제는 지정 위치 이동 주문서 경로
+(`world.ITEM523_TELEPORT_WAIVE`)에만 적용하고, 일반 지도 이동(포탈·귀환·콘텐츠 입장)의 정책은 바꾸지 않는다.
+
+- 사용 소유자(`source523_item_effects.location_teleport` / `prepare("teleport_location")`):
+  - 원본 523 지도에서만 쓸 수 있다.
+  - type 1 사용 지역 안에 있어야 하고, type 2 사용 불가 지역이면 거부한다.
+  - 사용 지역 행이 없는 주문서는 기존 순간이동 제한 지역 규칙을 따른다.
+  - 아이템의 LevelLimitMin은 기존 사용 조건이 판정한다.
+- 이동(`world.item523_teleport_land` → `enter_source_land(..., waive, save_changes)`):
+  - 도착 칸은 Locations 한 칸이다. Territories 사각형은 기존 콘텐츠 입장과 같은 첫 빈칸 규칙(`OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1`, TWILIGHT 해석)을 쓴다.
+  - 아이템 1개 차감(물리 수량 장부·재사용 대기 포함)은 **도착 지점 저장과 한 번에** 기록된다(`current523_map_travel_payment`가 consumable_state·
+    item_use_cooldowns·patch523_transaction_rng를 받음).
+  - 이동이 거부되면 아무것도 저장되지 않고 주문서는 남는다.
+- 남는 보류: 도착 Land가 NoTeleportCome·BlockLoginEnter·CloseTime·GivenSpellClassID·NoSpell·NoReusableSoloLand 등을 선언한 주문서(오프라인 집계 약 40종,
+  대부분 튜토리얼·이벤트 Land)는 이번 결정 범위 밖이라 계속 보존한다. Life 15·ClassUsageInterval 33·혈맹 아지트 3·부적 36(16.2)도 그대로다.
+- 실제 Main·원본 팩 확인(`tests/items523_location_teleport_test.gd`):
+  - 아덴에서 오만의 탑 2층 주문서를 쓰면 사용 지역이 아니라 거부되고 3장이 남는다.
+  - 탑 입구에서 레벨 60이면 "원본 사용 레벨 조건" 거부로 3장이 남는다.
+  - 레벨 70이면 입구 → 2층(Land 22802), 3장 → 2장이 되고 도착 저장에 차감이 기록된다.
+  - 2층에서 3층 주문서를 쓰면 3층(22812)으로 가고 마지막 장이 소모된다.
+  - 다시 불러온 뒤에도 2장 / 0장이 유지된다.
+  - 자동 사냥을 켠 채 퀘스트 이동 주문서(#292612)를 쓰면 말하는 섬 선착장(49492, TurnOffAutoForTeleport)으로 가고 자동 사냥이 꺼진다.
+  - 해적섬에서 해적의 무덤 주문서를 쓰면 해적의 무덤(47661)으로 간다. 해적섬 밖에서는 거부되고 주문서가 남는다.
+  - 원본 주문서 212종 모두 사용 소유자가 있다(ScrollTeleportDungeon 144 · ScrollTeleport 68).

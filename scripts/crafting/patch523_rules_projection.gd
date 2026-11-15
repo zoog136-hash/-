@@ -9,6 +9,8 @@ const TABLES = ["SpecialResistanceType","InvokeOption","InvokeOptionType","Bonus
 ## Compile-time only helpers (cold bake): packed catalog identities and Bonus
 ## rows, and the boot progress sub-stages of the compile.
 const PACKED = preload("res://scripts/crafting/patch523_packed_records.gd")
+const SERVER_PROFILE = preload("res://scripts/loot/current523_server_profile.gd")
+const SERVER_CONTEXT = preload("res://scripts/maps/current523_map_runtime_context.gd")
 const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 ## Tables that are never read as whole row arrays: only the rows a join needs
 ## are read, by position (see _values/_positions/Keyed). Their row arrays were
@@ -450,6 +452,20 @@ func _calendar_time(row: Dictionary, offset: int) -> int:
 		if back.get(key) != parts[key]: return -1
 	return raw-offset*60
 
+## ServerLimitSetID of a craft (every view the same): 0, or a set whose
+## original ServerLimit rows name the offline game profile (KR world 1,
+## current523_map_runtime_context.OFFLINE_PROFILE) — the same rule items, NPC
+## spawns and the shop already use (current523_server_profile). Sets for other
+## servers only stay out, so the window never lists another server's copy.
+func _server_set_admitted(views: Array) -> bool:
+	var set_id: Variant = views[0].get("ServerLimitSetID")
+	for view: Dictionary in views:
+		if not _integer(view.get("ServerLimitSetID")) or view.get("ServerLimitSetID") != set_id: return false
+	if int(set_id) == 0: return true
+	if int(set_id) < 0: return false
+	var profile: Dictionary = SERVER_CONTEXT.OFFLINE_PROFILE
+	return SERVER_PROFILE.rows_allow(source.related("ServerLimit","ServerLimitSetID",int(set_id)),str(profile.ServiceRegionCode),int(profile.WorldNo))
+
 func _calendar_window(view: Dictionary) -> Variant:
 	if view.EffectiveFrom == 1 and view.EffectiveTo == 3: return {}
 	var clock: Dictionary = _policy.get("source_calendar_clock",{})
@@ -572,7 +588,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	if probabilistic and (not _view_contract(views,outs,complete) or primary.is_empty() or outs.is_empty() or not valid_outs or (total != 1000000 and not partial)): reason = "unverified_random_result_contract"
 	elif not probabilistic and (views.size() != 1 or view.AlwaysSuccess != 1 or outs.size() != 1): reason = "non_single_guaranteed_result"
 	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
-	elif (not restrictions.is_empty() and not known_restriction) or view.ServerLimitSetID != 0 or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
+	elif (not restrictions.is_empty() and not known_restriction) or not _server_set_admitted(views) or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
 	elif view.CraftTimeTypeID != 1 or calendar == null: reason = "limited_calendar_or_time_type"
 	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
@@ -605,8 +621,11 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		if slot.candidates.size() > 1: selection = true
 	var recipe: Dictionary = {"id":"patch523:"+craft_id,"name":"원본523 · "+str(result.name)+" +"+str(int(out.Enchant)),"category":category,
 		"source_snapshot":"patch523","source_craft_id":int(craft_id),"result":output,"adena":adena,"materials":materials,"material_slots":slots,"requires_material_selection":selection,"popup_text_id":view.PopupText}
-	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty():
+	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty() or int(view.ServerLimitSetID) != 0:
 		var condition: Dictionary = {"schema":"patch523-craft-conditions-v1","min_level":view.LevelLimitValue,"max_level":0,"source_level_fields":{"IsBelowLevelLimit":view.IsBelowLevelLimit,"LevelLimitValue":view.LevelLimitValue}}
+		# Checked again against the game's server profile on every craft
+		# (patch523_craft_conditions.stage, current523_server_profile).
+		if int(view.ServerLimitSetID) != 0: condition.server_limit_set_id = int(view.ServerLimitSetID)
 		if not calendar.is_empty(): condition.active_window = calendar
 		if known_restriction:
 			var weekly: bool = quota.get("period_seconds") == 604800 and expected.RefreshUnitID == 71 and expected.isMultiCount == true
