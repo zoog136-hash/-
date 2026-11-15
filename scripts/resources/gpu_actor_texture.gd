@@ -14,9 +14,17 @@ const MIN_PIXELS: int = 32 * 32
 static var enabled: bool = OS.get_environment("TWILIGHT_GPU_ACTOR_TEXTURES") != "0"
 static var _mode: int = -2
 
+static func compressor_available() -> bool:
+	return OS.has_feature("editor")
+
 static func compression_mode() -> int:
 	if _mode != -2: return _mode
 	_mode = -1
+	# The block compressors (etcpak) are built into editor binaries only. In an
+	# exported game (the phone's release template) Image.compress() fails with
+	# "image.cpp: _image_compress_etc2_func is null" after the frame was already
+	# copied and edge-fixed (2026-11-15 523.513), so it is never attempted there.
+	if not compressor_available(): return _mode
 	if RenderingServer.has_os_feature("etc2"): _mode = Image.COMPRESS_ETC2
 	elif RenderingServer.has_os_feature("s3tc"): _mode = Image.COMPRESS_S3TC
 	return _mode

@@ -668,7 +668,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	# _verify_unchanged_reference().
 	# Contents too, not only identities: frame and parent data can be edited in
 	# place. Dictionary.hash() is one native call over the whole frame.
+	var hash_started: int = FRAME_HITCH.now()
 	var applied_hash: int = hash([selected, _reference_attachment_parent, _source_body_style, _playback_mode])
+	FRAME_HITCH.detail("preview.hash", hash_started)
 	var unchanged: bool = token == _applied_token and is_same(selected, _applied_selected) and applied_hash == _applied_hash and is_same(_layers, _applied_layers) and _applied_layer_count == _layers.size() and is_same(_applied_body_material, _source_body_material)
 	# Reference effects always take the full path (their style depends on
 	# per-effect attributes); reference body layers re-run only the per-draw
@@ -735,6 +737,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	if not static_track and is_reference and not _reference_card_context.is_empty(): _dispatch_reference_overlays(frames,track,total,source_direction)
 	if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 		queue_free()
+	var layers_started: int = FRAME_HITCH.now()
 	if unchanged and is_reference and not _verify_unchanged_layers(selected): return
 	for index: int in range(0 if unchanged else _layers.size()):
 		_layers[index].visible = index < selected.layers.size()
@@ -769,6 +772,7 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_layers[index].texture = texture
 		_layers[index].position = Vector2(float(layer.offset[0]), float(layer.offset[1]))
 		if not recovered.is_empty(): SP2_COMPOSITOR.apply(_layers[index], recovered)
+	FRAME_HITCH.detail("preview.layers_same" if unchanged else "preview.layers", layers_started)
 	if not unchanged:
 		_applied_token = token
 		_applied_selected = selected
@@ -777,7 +781,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_applied_hash = applied_hash
 		_applied_body_material = _source_body_material
 	if _reference_bank != null:
+		var children_started: int = FRAME_HITCH.now()
 		var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
+		FRAME_HITCH.detail("preview.children", children_started)
 		if not source_children_ready and not _reference_texture_budget.is_empty():
 			var problem: Dictionary = _reference_child_problem.duplicate(true)
 			_abort_reference_source(problem)

@@ -238,6 +238,9 @@ func _update_facing(motion_vector: Vector2) -> void:
 	motion.face(motion_vector)
 	facing = motion.facing4
 
+var _source_visual_delta: float = 0.0
+var _source_visual_frame: int = -1
+
 func _update_visual(delta: float) -> void:
 	var started: int = FRAME_HITCH.now()
 	_update_visual_timed(delta)
@@ -254,7 +257,21 @@ func _update_visual_timed(delta: float) -> void:
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	if show_original:
-		original_source_preview.advance_source(delta, motion.state, motion.facing8, motion.sequence, motion.active)
+		# The original actor is drawn once per rendered frame, but this runs on
+		# every physics step (several per frame when the frame is slow; the
+		# phone measured ~28 ms per call, 16 calls/s at 10 fps). Advance it once
+		# per process frame with the accumulated time; the next frame catches
+		# up any later step (state/attack sequence are read again then).
+		_source_visual_delta += delta
+		var frame: int = Engine.get_process_frames()
+		# Direct calls outside the engine's physics step (tools, tests) advance
+		# every time, as before.
+		if frame != _source_visual_frame or not Engine.is_in_physics_frame():
+			_source_visual_frame = frame
+			var source_started: int = FRAME_HITCH.now()
+			original_source_preview.advance_source(_source_visual_delta, motion.state, motion.facing8, motion.sequence, motion.active)
+			FRAME_HITCH.detail("player.source", source_started)
+			_source_visual_delta = 0.0
 	elif not source_only_pending:
 		motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
 	if spx_effect_sprite != null and spx_effect_sprite.visible:
