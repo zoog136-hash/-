@@ -153,3 +153,18 @@ python3 tools/android/build_client523_addon.py --ui <private>/ui523/main_pack \
   profile; the 523 field now uses the client attr-bit0 rule
   (`CURRENT523_S32_CLIENT_ATTR_BIT0_V1`). The walk goes through the field's own
   `point_clear`/`find_world_path`, so both profiles are accepted.
+
+## 지배석 합성 탭의 지배석 가방 (2026-11-15)
+
+`DominationStone_Inventory` is now packed as a whole scope without the nodes
+the 523 client cannot supply or the window does not connect: `SlotSet` 26168
+(names `QuickSlotEdit_SlotSet`, absent), `Btn_Back` 12168, `ToolTip` 11868,
+`Menu_Button` 9712 and `Nd_Option` 428. `DominationStone_Tab_Fusion` keeps it
+(no exclusions). The domination window fills its ScrollView with
+`Inventory_Slot_Set` lines at the absent SlotSet's original position
+(Cocos 165, 380), four bag stones per line (A안 as storage/store), with the
+전체 / 오만 / 신념 / 지배 tabs (the stone's `DominationStoneGroup.TowerID` ->
+`DominationStoneTower` name). A tap registers or removes the stone in the
+FusionBox under the 일괄 등록 rules. `Nd_Number` ("120/120") stays hidden.
+Measured: 465 scenes, 0 blockers, manifest `255e61ce43fb…`; add-on
+`7d081a8a7a39…` (121.6 MB). An older UI add-on simply has no inventory panel.
