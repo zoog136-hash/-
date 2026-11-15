@@ -979,18 +979,46 @@ func compiled_record(source_id: String, stack_bless: int=1) -> Dictionary:
 	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty():return {}
 	return result
 
+## record()'s identity without its deep copy, for read-only branch checks
+## over every item (the craft item index): the catalog or live record that
+## record() copies, {} where record() is {}.
+## Never mutate the result; take record() for anything that is stored.
+func record_view(source_id: String) -> Dictionary:
+	var result: Dictionary = catalog_record_of(source_id)
+	if result.get("twilight_binding_slim") == true:
+		# The same live substitution record() makes, without its copy.
+		var live: Variant = live_record.call(str(result.get("sourceId",""))) if live_record.is_valid() else {}
+		if live is Dictionary and not (live as Dictionary).is_empty() and (live as Dictionary).get("name") == result.get("name"): result = live
+	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty(): return {}
+	return result
+
+## compiled_record() without its copy (read only).
+func _compiled_view(source_id: String, stack_bless: int=1) -> Dictionary:
+	var item: Dictionary = data.get("items",{}).get(source_id,{})
+	var result: Dictionary = item.get("stack_variants",{}).get(str(stack_bless),{}) if stack_bless!=1 else catalog_record_of(source_id)
+	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(result).is_empty():return {}
+	return result
+
 func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: int=1) -> bool:
 	# Compare against the compiled identity, never the live record itself.
-	var canonical: Dictionary=compiled_record(source_id,stack_bless)
+	# Read-only view: this comparison runs for every item of the craft index.
+	var canonical: Dictionary=_compiled_view(source_id,stack_bless)
 	if canonical.is_empty() or item.get("name")!=canonical.get("name") or item.get("source")!=canonical.get("source") or item.get("sourceId")!=canonical.get("sourceId"): return false
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
 		if NATIVE_FIELDS.field(item,key)!=NATIVE_FIELDS.field(canonical,key): return false
+	# The item entry (a lazy projection) only decides a material's class rule.
+	var entry: Dictionary={}
+	var entry_loaded: bool=false
 	for key: String in ["source_class_ids","source_equip_slot_ids"]:
-		var entry: Dictionary=item_entry(source_id)
-		var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
-		var allow_zero: bool=key=="source_class_ids" and canonical.get("slot")=="material" and allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field(canonical,key) and entry.get("item_bonuses",[]).is_empty()
+		var allow_zero: bool=false
+		if key=="source_class_ids" and canonical.get("slot")=="material":
+			if not entry_loaded:
+				entry=item_entry(source_id)
+				entry_loaded=true
+			var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
+			allow_zero=allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field(canonical,key) and entry.get("item_bonuses",[]).is_empty()
 		if not _source_ids_match(NATIVE_FIELDS.field(item,key),NATIVE_FIELDS.field(canonical,key),allow_zero): return false
 	if stack_bless!=1:return NATIVE_FIELDS.field(canonical,"source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id

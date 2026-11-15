@@ -572,6 +572,23 @@ func accessors(rules: Variant) -> Dictionary:
 	result["#any_runtime"] = rules.has_any_equipment_runtime()
 	return result
 
+## record_view() (the craft item index's copy-free read) decides exactly what
+## record() decides: emptiness, source, native flag, sourceId and name.
+func record_views(label: String, rules: Variant) -> bool:
+	var ok: bool = true
+	var ids: Array = rules.materialized_data().items.keys()
+	ids.append_array(["0", "26", "does-not-exist", "999999"])
+	for id: String in ids:
+		var full: Dictionary = rules.record(id)
+		var view: Dictionary = rules.record_view(id)
+		var left: Array = [full.is_empty(), full.get("source", ""), full.get("source_m_native_item", false), full.get("sourceId"), full.get("name")]
+		var right: Array = [view.is_empty(), view.get("source", ""), view.get("source_m_native_item", false), view.get("sourceId"), view.get("name")]
+		if var_to_bytes(left) != var_to_bytes(right):
+			ok = false
+			check(false, label + ": record_view identity of " + id)
+	check(true, label + ": record_view identity over every item")
+	return ok
+
 func compare_models(label: String, new_rules: Variant, old_rules: Variant) -> bool:
 	if not (new_rules is Object and old_rules is Object):
 		check(false, label+": compile failed new="+str(new_rules)+" old="+str(old_rules))
@@ -583,6 +600,7 @@ func compare_models(label: String, new_rules: Variant, old_rules: Variant) -> bo
 	ok = same(label+": recipes", new_rules.recipes, old_rules.recipes) and ok
 	var new_reads: Dictionary = accessors(new_rules)
 	var old_reads: Dictionary = accessors(old_rules)
+	ok = record_views(label, new_rules) and ok
 	ok = same(label+": accessor keys", new_reads.keys(), old_reads.keys()) and ok
 	for key: Variant in old_reads:
 		if not same(label+": accessors of "+str(key), new_reads.get(key), old_reads[key]):
