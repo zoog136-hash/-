@@ -5842,7 +5842,7 @@ func patch523_clear_owned_materials(recipe_id: String) -> void:
 	patch523_owned_material_choices.erase(recipe_id)
 
 func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
-	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id}
+	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id,"server_profile":preload("res://scripts/loot/current523_server_profile.gd").profile(self)}
 	if recipe_id.is_empty():return context
 	var selected: Dictionary=patch523_owned_material_choices.get(recipe_id,{})
 	if not selected.is_empty() and int(selected.batch)!=batches:

@@ -1,5 +1,7 @@
 extends RefCounted
 ## Exact crafting qualifications; the offline reset clock is a labelled host policy.
+const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const SERVER_PROFILE = preload("res://scripts/loot/current523_server_profile.gd")
 
 static func integer(value: Variant, minimum: int, maximum: int) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and float(value)==float(int(value)) and int(value)>=minimum and int(value)<=maximum
@@ -31,6 +33,7 @@ static func valid(value: Variant) -> bool:
 	if not integer(value.get("min_level"),0,1000) or not integer(value.get("max_level"),0,1000): return false
 	if int(value.max_level)>0 and int(value.max_level)<int(value.min_level): return false
 	if value.has("active_window") and not valid_window(value.active_window):return false
+	if value.has("server_limit_set_id") and not integer(value.server_limit_set_id,1,2147483647):return false
 	if not value.has("quota"): return true
 	var quota: Variant=value.quota
 	if not quota is Dictionary or not integer(quota.get("limit"),1,1000000) or not integer(quota.get("anchor_unix"),0,2147483647):return false
@@ -63,7 +66,8 @@ static func source_recipe(recipe: Dictionary, views: Array, restrictions: Array)
 		if not view is Dictionary: return {"ok":false,"reason":"원본 제작 자격 형식이 다릅니다"}
 		for key: String in fields:
 			if not view.has(key) or view[key] != first.get(key): return {"ok":false,"reason":"제작 결과별 원본 자격이 다릅니다 · 재료 보존"}
-	if first.get("ServerLimitSetID") != 0 or first.get("IsCoalitionItem") != false or first.get("NoRepeat") != false or first.get("IsBelowLevelLimit") != false or first.get("CraftTimeTypeID") != 1 or not integer(first.get("LevelLimitValue"),0,1000):
+	var server_set: int = int(condition.get("server_limit_set_id",0))
+	if not integer(first.get("ServerLimitSetID"),0,2147483647) or int(first.ServerLimitSetID) != server_set or first.get("IsCoalitionItem") != false or first.get("NoRepeat") != false or first.get("IsBelowLevelLimit") != false or first.get("CraftTimeTypeID") != 1 or not integer(first.get("LevelLimitValue"),0,1000):
 		return {"ok":false,"reason":"원본 제작의 별도 서버·자격 소유자 확인이 필요합니다 · 재료 보존"}
 	if int(condition.get("min_level",0)) != int(first.LevelLimitValue) or int(condition.get("max_level",0)) != 0 or int(recipe.get("popup_text_id",-1)) != int(first.PopupText):
 		return {"ok":false,"reason":"제작 레벨·재료 손실 안내의 원본 관계가 다릅니다 · 재료 보존"}
@@ -79,10 +83,24 @@ static func source_recipe(recipe: Dictionary, views: Array, restrictions: Array)
 		return {"ok":false,"reason":"제작 횟수 제한의 원본 행 관계가 다릅니다 · 재료 보존"}
 	return {"ok":true}
 
+## Original ServerLimitSetID of a craft against the game's server profile
+## (context.server_profile from current523_server_profile.profile):
+## {ok} or {ok:false, reason}.
+static func server_allows(condition: Dictionary, context: Dictionary) -> Dictionary:
+	if not condition.has("server_limit_set_id"): return {"ok":true}
+	var profile: Variant=context.get("server_profile")
+	if not profile is Dictionary or not profile.get("ServiceRegionCode") is String or not integer(profile.get("WorldNo"),0,1000000): return {"ok":false,"reason":"원본 제작 서버 조건 확인 필요 · 재료 보존"}
+	var rows: Array=SOURCE.related("ServerLimit","ServerLimitSetID",int(condition.server_limit_set_id))
+	if rows.is_empty(): return {"ok":false,"reason":"원본 서버 세트 %d 정의 없음 · 재료 보존" % int(condition.server_limit_set_id)}
+	if not SERVER_PROFILE.rows_allow(rows,str(profile.ServiceRegionCode),int(profile.WorldNo)): return {"ok":false,"reason":"원본 제작 서버 조건 · %s %d서버 대상 아님" % [str(profile.ServiceRegionCode),int(profile.WorldNo)]}
+	return {"ok":true}
+
 static func stage(recipe: Dictionary, count: int, context: Dictionary) -> Dictionary:
 	if not recipe.has("craft_conditions"): return {"ok":true}
 	var condition: Variant=recipe.craft_conditions
 	if not valid(condition): return {"ok":false,"reason":"원본 제작 자격 구조를 확인하세요"}
+	var server: Dictionary=server_allows(condition,context)
+	if not server.ok: return server
 	if condition.has("active_window"):
 		if not integer(context.get("now"),0,4102444800):return {"ok":false,"reason":"원본 제작 기간 시각 확인 필요 · 재료 보존"}
 		if int(context.now)<int(condition.active_window.start_unix) or int(context.now)>=int(condition.active_window.end_unix):return {"ok":false,"reason":"원본 제작 기간 밖 · "+window_text(condition.active_window)}
@@ -114,7 +132,11 @@ static func brief(recipe: Dictionary, context: Dictionary) -> String:
 		var used: String=str(int(quote.quota_used)) if quote.has("quota_used") else "?"
 		return "원본 주간 제한 %s/%d회 · 초기화 %s %02d:%02d KST (게임 설정)" % [used,int(condition.quota.limit),["일","월","화","수","목","금","토"][int(clock.weekday)],int(clock.hour),int(clock.minute)]
 	if condition.has("active_window"):return window_text(condition.active_window)
-	return "원본 제작 조건 · 레벨 %d 이상" % int(condition.min_level) if int(condition.min_level)>0 else ""
+	if int(condition.min_level)>0: return "원본 제작 조건 · 레벨 %d 이상" % int(condition.min_level)
+	if condition.has("server_limit_set_id"):
+		var server: Dictionary=server_allows(condition,context)
+		return "원본 서버 세트 %d · 현재 서버 대상" % int(condition.server_limit_set_id) if server.ok else str(server.reason)
+	return ""
 
 static func summary(recipe: Dictionary, context: Dictionary) -> String:
 	if not recipe.has("craft_conditions"): return ""
@@ -126,6 +148,9 @@ static func summary(recipe: Dictionary, context: Dictionary) -> String:
 		lines.append(str(condition.active_window.clock_origin))
 	if int(condition.min_level)>0: lines.append("원본 제작 조건 · 레벨 %d 이상" % int(condition.min_level))
 	if int(condition.max_level)>0: lines.append("원본 제작 조건 · 레벨 %d 이하" % int(condition.max_level))
+	if condition.has("server_limit_set_id"):
+		var server: Dictionary=server_allows(condition,context)
+		lines.append("원본 서버 세트 %d · 현재 서버 대상" % int(condition.server_limit_set_id) if server.ok else str(server.reason))
 	if condition.has("quota"):
 		lines.append(str(condition.get("origin","원본 제작 횟수 제한")))
 		var quote: Dictionary=stage(recipe,1,context)
