@@ -108,14 +108,16 @@ func run_headless(fixture: SceneTree,old: Script,next: Script) -> void:
 		var value: String=["AB가","BAA","가BA"][i%3]
 		check(a.set_source_text(value)==b.set_source_text(value),"update result matches independent old stage")
 		same(a,b,fixture,"steady %d"%i)
-	check(a._glyph_layer==retained_layer and a._glyph_layer.get_child(0)==retained_sprite and retained_sprite.material==retained_material,"same-sized text retains layer/node/private material")
+	check(a._glyph_layer==retained_layer and a._glyph_layer.get_child(0)==retained_sprite and retained_sprite.material==retained_material,"same-sized text retains layer/node/material")
 	allocation_proof={"old_sprites":b.test_sprites,"new_sprites":a.test_sprites,"old_layers":b.test_layers,"new_layers":a.test_layers,"old_materials":b.test_materials,"new_materials":a.test_materials}
-	check(b.test_sprites==39 and a.test_sprites==3 and b.test_layers==13 and a.test_layers==1 and b.test_materials==39 and a.test_materials==3,"actual constructor and private material counts include initial three glyphs")
-	# Growth, shrink and empty strings retain no unused slots or private materials.
+	# Display colour is a per-instance parameter on the shared glyph material:
+	# binding it never creates a material (it used to duplicate one per glyph).
+	check(b.test_sprites==39 and a.test_sprites==3 and b.test_layers==13 and a.test_layers==1 and b.test_materials==0 and a.test_materials==0,"actual constructor counts include initial three glyphs; display binding creates no material")
+	# Growth, shrink and empty strings retain no unused slots.
 	a.set_source_text("ABABAB");b.set_source_text("ABABAB");same(a,b,fixture,"growth")
-	var tail: WeakRef=weakref(a._glyph_layer.get_child(5));var tail_material: WeakRef=weakref(a._glyph_layer.get_child(5).material)
+	var tail: WeakRef=weakref(a._glyph_layer.get_child(5));var tail_material: Material=a._glyph_layer.get_child(5).material
 	a.set_source_text("A");b.set_source_text("A");same(a,b,fixture,"shrink")
-	check(tail.get_ref()==null and tail_material.get_ref()==null,"surplus node and private material released immediately")
+	check(tail.get_ref()==null and tail_material==a._glyph_layer.get_child(0).material,"surplus node released immediately; glyphs share one material")
 	a.set_source_text("");b.set_source_text("");same(a,b,fixture,"empty")
 	check(a._glyph_layer.get_child_count()==0,"no high-water glyph pool")
 	a.set_source_text("AB가");b.set_source_text("AB가")

@@ -34,7 +34,8 @@ func run() -> void:
 		if expected.has(pair): check(fixed.shader.code.contains(expected[pair]), "pair %s uses %s" % [pair, expected[pair]])
 		var names: Array = []
 		for uniform: Dictionary in fixed.shader.get_shader_uniform_list(): names.append(uniform.name)
-		check("source_pma" in names and "source_display_bound" in names and "source_display_color" in names, "pair %s keeps the display/premultiply uniforms" % pair)
+		# Display colour/opacity are per-instance parameters (not in the material uniform list).
+		check("source_pma" in names and fixed.shader.code.contains("instance uniform bool source_display_bound") and fixed.shader.code.contains("instance uniform vec4 source_display_color"), "pair %s keeps the display/premultiply uniforms" % pair)
 	PANEL._layer_material = null
 	var panel: ShaderMaterial = PANEL.layer_material()
 	check(panel != null and not panel.shader.code.contains("hint_screen_texture") and panel.shader.code.contains("blend_mix"), "panel colour layer uses the fixed mix blend")
