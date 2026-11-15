@@ -163,11 +163,16 @@ func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	navigator.loaded=true
 	navigator.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
 	var result:=PackedVector2Array()
-	for c: Vector2i in navigator.find_path(start,goal,navigation_search_limit()): result.append(cell_to_world(c))
+	var limit: int=navigation_search_limit()
+	if path_search_limit_override>0: limit=mini(limit,path_search_limit_override)
+	for c: Vector2i in navigator.find_path(start,goal,limit): result.append(cell_to_world(c))
 	if result.size()>1 and line_clear(from,result[1]): result.remove_at(0)
 	if not result.is_empty() and walkable(to) and line_clear(result[-1],to): result.append(to)
 	return result
 func navigation_search_limit() -> int: return 8192
+## A caller may lower (never raise) the A* node budget for one search, e.g.
+## a monster chase, which must not stall a physics step; -1 = field policy.
+var path_search_limit_override: int=-1
 func region_at(p: Vector2) -> Dictionary:
 	return {"id":"source_safe" if is_safe(p) else "source_field","name":data.map_name,"type":"safe" if is_safe(p) else "combat","color":"738e81"}
 func is_safe(p: Vector2) -> bool: return (value_at(world_to_cell(p))&48)==16

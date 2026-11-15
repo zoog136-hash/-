@@ -597,6 +597,7 @@ func _physics_process(delta: float) -> void:
 	FRAME_HITCH.add_self("monsters", hitch_started, hitch_nested)
 
 func _physics_step(delta: float) -> void:
+	var pre_started: int = FRAME_HITCH.now()
 	var source523 = _patch523_service()
 	if source523 != null and not dead: source523.extensions.remaining.sync_actor(self)
 	if not dead:
@@ -610,6 +611,7 @@ func _physics_step(delta: float) -> void:
 	source_boss_combat.tick(delta)
 	# Only bosses own warning/release lifetimes; normal actors have no such clock.
 	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
+	FRAME_HITCH.detail("monster.pre", pre_started)
 	if dead:
 		if visual_parked: restore_visual()
 		velocity = Vector2.ZERO
@@ -643,7 +645,9 @@ func _physics_step(delta: float) -> void:
 		# strike markers still advance every physics frame at the engine cadence.
 		_move_on_map()
 	if is_stunned() or is_feared() or custom_frozen(): motion.cancel_attack()
+	var motion_started: int = FRAME_HITCH.now()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
+	FRAME_HITCH.detail("monster.motion", motion_started)
 	if is_instance_valid(species_visual) and species_visual.warning_active:
 		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
 	# Boss warning geometry keeps ticking even at the camera fringe.
@@ -653,8 +657,10 @@ func _physics_step(delta: float) -> void:
 	var boss_telegraph: bool = is_boss and is_instance_valid(species_visual) and species_visual.warning_active
 	var drawn: bool = boss_telegraph or on_screen or get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin)
 	if drawn:
+		var anim_started: int = FRAME_HITCH.now()
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
+		FRAME_HITCH.detail("monster.anim", anim_started)
 	animation_state = motion.state
 	if not motion.active and velocity.length_squared() > 1.0:
 		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"
@@ -837,6 +843,10 @@ func _refresh_overhead_ui(distance: float = -1.0) -> void:
 ## 240-476 ms "몬스터" steps. Past the budget a monster keeps its path and
 ## searches on the next step (the first search of a step always runs).
 const PATH_SEARCH_BUDGET_USEC: int = 4000
+## A chase search expands at most this many cells (the 523 Aden field's own
+## limit is 8192: one unreachable target cost 100-170 ms in GDScript). A chase
+## target this far around obstacles is past the leash anyway.
+const PATH_SEARCH_NODES: int = 1024
 static var _path_budget_frame: int = -1
 static var _path_budget_spent: int = 0
 
@@ -863,7 +873,11 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 		elif _path_budget_open():
 			repath_cooldown = .65+float(get_instance_id()%7)*.015
 			var search_started: int = FRAME_HITCH.now()
+			var field: Object = world_controller.field_map
+			var bounded: bool = field != null and "path_search_limit_override" in field
+			if bounded: field.path_search_limit_override = PATH_SEARCH_NODES
 			path = world_controller.find_world_path(global_position,goal)
+			if bounded: field.path_search_limit_override = -1
 			_path_budget_spent += FRAME_HITCH.now() - search_started
 			FRAME_HITCH.detail("monster.path", search_started)
 			if path.is_empty(): FRAME_HITCH.count("monster.path_empty")
@@ -1396,6 +1410,11 @@ func _cancel_attack(id: int) -> void:
 		species_visual.queue_redraw()
 
 func _release_attack(id: int) -> void:
+	var started: int = FRAME_HITCH.now()
+	_release_attack_timed(id)
+	FRAME_HITCH.detail("monster.release", started)
+
+func _release_attack_timed(id: int) -> void:
 	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
 	released_sequence = id
 	var source523 = _patch523_service()
@@ -1453,11 +1472,13 @@ func _move_on_map() -> void:
 	if source_host_stationary:
 		velocity = Vector2.ZERO
 		return
+	var move_started: int = FRAME_HITCH.now()
 	var controller: Node = world_controller
 	if not _patrol_allows(global_position+velocity*get_physics_process_delta_time()): velocity = Vector2.ZERO
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
 		controller.constrain_original_motion(self)
 	move_and_slide()
+	FRAME_HITCH.detail("monster.move", move_started)
 
 func _patrol_allows(point: Vector2) -> bool:
 	if not is_instance_valid(world_controller): return true

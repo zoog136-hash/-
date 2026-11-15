@@ -3904,6 +3904,11 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 		_refresh_combat_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String, by_spell: bool = false, guard_kind: String = "") -> void:
+	var hitch_started: int = FRAME_HITCH.now()
+	_on_player_hit_timed(attacker, damage_value, attack_type, by_spell, guard_kind)
+	FRAME_HITCH.detail("world.player_hit", hitch_started)
+
+func _on_player_hit_timed(attacker: TwilightMonster, damage_value: int, attack_type: String, by_spell: bool = false, guard_kind: String = "") -> void:
 	if _source_combat_targets_hidden(): return
 	if attacker == null or not is_instance_valid(attacker) or attacker.dead or hp <= 0:
 		return
