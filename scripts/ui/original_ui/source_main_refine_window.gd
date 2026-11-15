@@ -11,14 +11,15 @@ extends RefCounted
 ## docs/bless_refine523_missing_rules.md): +100/+1000/직접입력 (amounts between
 ## the Min and Max endpoints have no probability formula) are shown disabled;
 ## the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
-## the help box, the Refine_Roulette result animation, the recipe caption and
-## the bag tabs stay inert.
+## the Refine_Roulette result animation, the recipe caption and the bag tabs
+## stay inert. Btn_Help opens the original HelpBox_Refine (source_main_help_box).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const SERVICE=preload("res://scripts/refine523/bless_refine523_service.gd")
 const RULES=preload("res://scripts/refine523/bless_refine523_rules.gd")
 const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 const ROOT="UI/RefineScene.csb"
 const ALL="UI/Refine/Refine_All.csb"
 const ITEM="UI/Refine/Refine_Item.csb"
@@ -48,6 +49,7 @@ var _tree: RefCounted
 var _hud: WeakRef
 var _world: WeakRef
 var _parent: WeakRef
+var _help_box: RefCounted
 var _scene: Node2D
 var _selected: String=""
 var _mode: String="min"
@@ -87,6 +89,7 @@ func refresh() -> Dictionary:
 	return _stage() if is_open() else {"ok":true,"handled":false}
 
 func close() -> void:
+	if _help_box!=null:_help_box.close()
 	var previous: Node2D=_scene
 	_scene=null
 	_scroll_content=null
@@ -195,6 +198,7 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	spec[P_ALL+"Btn_Alchemy/Normal/Fx_Active"]={"exclude":true}
 	# Frame.
 	spec[P_ALL+"Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
+	spec[P_ALL+"Btn_Help"]={"activate":Callable(self,"_help")}
 	# Min / Max are the two registered amounts the tables give; the other
 	# amount buttons have no probability rule and show their disabled state.
 	spec[P_ALL+"Nd_ButtonSet/Btn_Min"]={"activate":Callable(self,"_set_mode").bind("min"),"displaystate":not target.is_empty()}
@@ -418,3 +422,12 @@ static func _number(value: int) -> String:
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"handled":false,"code":code}
+
+## Btn_Help: the original HelpBox_Refine popup over the window.
+func _help() -> Dictionary:
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if _help_box==null:
+		_help_box=HelpBox.new()
+		_help_box.configure(_pack)
+	if not parent is Node or not _help_box.available(HelpBox.REFINE):return _fail("source_help_box_member_missing")
+	return _help_box.open(parent,HelpBox.REFINE)

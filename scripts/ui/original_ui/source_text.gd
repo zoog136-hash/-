@@ -20,7 +20,11 @@ func configure(font: FontFile, options: Dictionary, size_value: Vector2) -> Dict
 		# The actual caller has no established original continuation/page
 		# control for overflowing body text. Preserve its complete old owner.
 		if next_lines.size()*font.get_height(int(options.fontSize))>size_value.y:return {"ok":false,"error":"original_dialogue_text_continuation_required"}
-	elif next_lines.size()>1 and not bool(options.widgetOptions.get("ignoreSize",false)):
+	# Only a custom-size (constrained) Text can overflow its area: a Text with
+	# isCustomSize off adapts its content size to the text (Cocos TextReader
+	# ignoreContentAdaptWithSize(!IsCustomSize)), so its editor-measured size
+	# is no width limit (HelpBox_Change_Dispatch Label_Message).
+	elif next_lines.size()>1 and not bool(options.widgetOptions.get("ignoreSize",false)) and bool(options.get("isCustomSize",true)):
 		var font_size: int=int(options.fontSize)
 		for line: String in next_lines:
 			if font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>size_value.x:return {"ok":false,"error":"original_multiline_requires_word_wrap"}

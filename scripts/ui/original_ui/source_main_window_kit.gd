@@ -12,6 +12,7 @@ extends RefCounted
 ## node scope; any other keys merge into the sprite_scene binding (role,
 ## text, visible, activate, displaystate, percent, ...).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 signal closed
 var _pack: RefCounted
 var _hud: WeakRef
@@ -23,6 +24,7 @@ var _scrolls: Dictionary={}
 var _moved: float=0.0
 var _dragging: String=""
 var last_result: Dictionary={}
+var _help_box: RefCounted
 
 ## Members the window cannot open without (overridden).
 func required_members() -> Array[String]:
@@ -60,6 +62,7 @@ func refresh() -> Dictionary:
 	return _stage() if is_open() else {"ok":true,"handled":false}
 
 func close() -> void:
+	if _help_box!=null:_help_box.close()
 	var previous: Node2D=_scene
 	_scene=null
 	_scrolls.clear()
@@ -347,6 +350,16 @@ func _notify(result: Dictionary, success: String="") -> void:
 	if result.get("ok",false):
 		if not success.is_empty():_message(success)
 	else:_message(str(result.get("error",result.get("message","실패"))))
+
+## Opens the window's original help popup (source_main_help_box);
+## {handled:false} when the UI pack lacks the help member.
+func _open_help(member: String) -> Dictionary:
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if _help_box==null:
+		_help_box=HelpBox.new()
+		_help_box.configure(_pack)
+	if not parent is Node or not _help_box.available(member):return {"ok":false,"handled":false,"code":"source_help_box_member_missing"}
+	return _help_box.open(parent,member)
 
 func _ignore() -> Dictionary:
 	return {"ok":true}
