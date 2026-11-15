@@ -34,8 +34,8 @@ func run() -> void:
 		if expected.has(pair): check(fixed.shader.code.contains(expected[pair]), "pair %s uses %s" % [pair, expected[pair]])
 		var names: Array = []
 		for uniform: Dictionary in fixed.shader.get_shader_uniform_list(): names.append(uniform.name)
-		# Display colour/opacity are material uniforms (shared per-colour variants);
-		# per-instance uniforms overflow the phone's GLES3 global buffer.
+		# Display colour/opacity are ordinary uniforms: instance uniforms overflow
+		# the phone's clamped global shader buffer (random colour blocks).
 		check("source_pma" in names and "source_display_bound" in names and "source_display_color" in names and not fixed.shader.code.contains("instance uniform"), "pair %s keeps the display/premultiply uniforms" % pair)
 	PANEL._layer_material = null
 	var panel: ShaderMaterial = PANEL.layer_material()

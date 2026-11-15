@@ -18,6 +18,36 @@ static func ensure_loaded() -> void:
 static func _row(table_name: String, id: int) -> Dictionary:
 	return SOURCE.row(table_name,id)
 
+## Read-only rows shared by every record that names the same source row. Each
+## of the 1,355 Aden spawn records kept its own deep copy of its NpcClass row
+## (twice: context.npc and source_m_original), attacks, attributes, category,
+## Territory and Land: 35.6 MB, 26.9 KB per record. The values are the same
+## copies as before, frozen (make_read_only) so no record can change another;
+## readers that need to edit already duplicate the record. Reset when the
+## verified original archive changes.
+static var _shared_rows: Dictionary = {}
+static var _shared_archive: String = ""
+
+static func shared_copy(key: String, value: Variant) -> Variant:
+	var archive: String = str(SOURCE.identity().get("source_sha256", ""))
+	if archive != _shared_archive:
+		_shared_rows = {}
+		_shared_archive = archive
+	if archive.is_empty(): return value.duplicate(true)
+	if not _shared_rows.has(key):
+		var copy: Variant = value.duplicate(true)
+		_freeze(copy)
+		_shared_rows[key] = copy
+	return _shared_rows[key]
+
+static func _freeze(value: Variant) -> void:
+	if value is Dictionary:
+		for item: Variant in (value as Dictionary).values(): _freeze(item)
+		(value as Dictionary).make_read_only()
+	elif value is Array:
+		for item: Variant in value as Array: _freeze(item)
+		(value as Array).make_read_only()
+
 static func _failure(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
 static func activation_flag(value: Variant) -> String:
@@ -51,13 +81,13 @@ static func context(npc_id: int, spawn_view_id: int, territory_link_id: int, all
 	if territory.is_empty(): return _failure("territory_id_missing")
 	var land: Dictionary = _row("Land", int(territory.LandID))
 	if land.is_empty(): return _failure("land_id_missing")
-	return {"ok": true, "npc": npc.duplicate(true), "spawn_view": spawn.duplicate(true),
-		"territory_link": link.duplicate(true), "territory": territory.duplicate(true), "land": land.duplicate(true),
+	return {"ok": true, "npc": shared_copy("npc:%d" % npc_id, npc), "spawn_view": spawn.duplicate(true),
+		"territory_link": link.duplicate(true), "territory": shared_copy("Territories:%d" % int(link.TerritoriesID), territory), "land": shared_copy("Land:%d" % int(territory.LandID), land),
 		"sprite": _data.get("sprites", {}).get(str(int(npc.Sprite)), {}).duplicate(true),
-		"category": _row("NpcCategory", int(npc.Category)).duplicate(true),
-		"native_attacks": SOURCE.related("NpcAttack","NpcClassID",npc_id),
-		"native_attributes": SOURCE.related("NpcAttribute","NpcClassID",npc_id),
-		"native_schedules": SOURCE.related("NpcSpawnPackSchedulePeriod","NpcSpawnPackID",int(spawn.NpcSpawnPackID)),
+		"category": shared_copy("NpcCategory:%d" % int(npc.Category), _row("NpcCategory", int(npc.Category))),
+		"native_attacks": shared_copy("NpcAttack:%d" % npc_id, SOURCE.related("NpcAttack","NpcClassID",npc_id)),
+		"native_attributes": shared_copy("NpcAttribute:%d" % npc_id, SOURCE.related("NpcAttribute","NpcClassID",npc_id)),
+		"native_schedules": shared_copy("NpcSpawnPackSchedulePeriod:%d" % int(spawn.NpcSpawnPackID), SOURCE.related("NpcSpawnPackSchedulePeriod","NpcSpawnPackID",int(spawn.NpcSpawnPackID))),
 		"world_activation": "not_authorized_by_join; schedule/limit/coordinate and pixel readiness still required"}
 
 static func record(npc_id: int, spawn_view_id: int, territory_link_id: int, compatibility: Dictionary = {}, allowed_limit_sets: Array = [0]) -> Dictionary:
@@ -72,6 +102,8 @@ static func record(npc_id: int, spawn_view_id: int, territory_link_id: int, comp
 	local["source_m_spawn_npc_level"] = int(joined.spawn_view.NpcLevel)
 	var result: Dictionary = BASE.npc_record(npc_id, local)
 	result.erase("source_m_previous_application")
+	# Same NpcClass row as the context's (BASE.npc), shared read-only.
+	if result.get("source_m_original") is Dictionary and result.source_m_original == joined.npc: result["source_m_original"] = joined.npc
 	result["source"] = "lineagem_base508"
 	result["sourceId"] = "lineagem_base508:npc:%d:spawn:%d:territory:%d" % [npc_id, spawn_view_id, territory_link_id]
 	result["source_m_sprite_id"] = int(joined.npc.Sprite)

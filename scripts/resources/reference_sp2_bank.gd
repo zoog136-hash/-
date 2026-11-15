@@ -9,6 +9,7 @@ const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_i
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
+const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const ATTACHMENT_ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
 const PREPARED = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
@@ -310,6 +311,11 @@ func _member(member: String) -> Dictionary:
 			if not fresh.ok:
 				ASSETS.cancel(reservation)
 				return fresh
+			# Shared in packed form (~8x smaller than the decoder's Dictionaries;
+			# same pixels via PIXEL_RENDERER, see sp2_compact_parse.gd).
+			var compact_started: int = FRAME_HITCH.now()
+			fresh = COMPACT.from_parse(fresh)
+			FRAME_HITCH.detail("sp2.compact", compact_started)
 			parsed_cost = _parsed_payload_bytes(fresh)
 			parsed = ASSETS.complete(reservation, fresh, parsed_cost, _asset_owner)
 			# A completed reservation can reuse an already published payload.

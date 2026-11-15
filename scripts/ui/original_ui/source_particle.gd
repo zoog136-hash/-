@@ -74,7 +74,7 @@ func _sync_quads() -> void:
 		var color: Color=particle.color
 		var rgb_alpha: float=color.a if opacity_modify_rgb else 1.0
 		var vertex:=Color(float(int(color.r*rgb_alpha*255.0))/255.0,float(int(color.g*rgb_alpha*255.0))/255.0,float(int(color.b*rgb_alpha*255.0))/255.0,float(int(color.a*255.0))/255.0)
-		MATERIAL.bind_display(quad,vertex,true)
+		MATERIAL.bind_display(quad,vertex)
 
 func set_source_blend(pair: String) -> bool:
 	if pair not in BLEND.PAIRS or original_texture==null:return false

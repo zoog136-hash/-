@@ -5,6 +5,7 @@ extends RefCounted
 ## The decoder/cache retain every source field; accounting stays external.
 
 static func bytes_of(parsed: Dictionary) -> int:
+	if parsed.get("compact") == "sp2_compact_parse_v1": return load("res://scripts/resources/sp2_compact_parse.gd").bytes_of(parsed)
 	var raw: PackedByteArray=parsed.get("raw",PackedByteArray())
 	var body: PackedByteArray=parsed.get("body",PackedByteArray())
 	# The decoder assigns raw itself to body for an FE input (copy on write).

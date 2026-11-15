@@ -5479,8 +5479,11 @@ func _patch523_craft_item_index() -> Dictionary:
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
 	for source_id: String in patch523_equipment.data.get("items", {}):
-		var binding: Dictionary=patch523_equipment.record(source_id)
+		# Read-only identity for the branch checks (no deep copy of ~30,000
+		# records); the stored host binding below is still a full record().
+		var binding: Dictionary=patch523_equipment.record_view(source_id)
 		if binding.get("source","")=="twilight_host_binding":
+			binding=patch523_equipment.record(source_id)
 			var spec: Dictionary=CONSUMABLE_RULES.definition(str(binding.name))
 			if spec.get("kind")==binding.get("host_kind") and int(spec.get("amount",0))==int(binding.get("host_amount",-1)):
 				binding["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))

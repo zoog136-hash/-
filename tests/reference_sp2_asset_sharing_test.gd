@@ -138,7 +138,7 @@ func run() -> void:
 	var all_same: bool = true
 	for bank: RefCounted in banks: all_same = all_same and is_same(bank._parsed[member], shared_parse)
 	check(all_same, "every bank sees the same parse object")
-	check(shared_parse.is_read_only() and (shared_parse.groups as Array).is_read_only() and (shared_parse.groups[0] as Dictionary).is_read_only() and (shared_parse.groups[0].frames[0] as Dictionary).is_read_only() and (shared_parse.groups[0].frames[0].refs as Array).is_read_only(), "shared parse is deeply read-only")
+	check(shared_parse.is_read_only() and (shared_parse.groups as Array).is_read_only() and (shared_parse.groups[0] as Dictionary).is_read_only() and (shared_parse.groups[0].frames[0] as Dictionary).is_read_only() and shared_parse.groups[0].frames[0].refs is PackedInt32Array and shared_parse.groups[0].block_table is PackedInt32Array, "shared parse is deeply read-only (packed value arrays inside read-only containers)")
 	check(ASSETS.stats().parsed.pending_count == 0, "no parse reservation left pending")
 
 	# 2. N previews: one texture per shown frame, independent clocks, same pixels.

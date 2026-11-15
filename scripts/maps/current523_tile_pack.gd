@@ -8,6 +8,9 @@ const MAX_PNG_BYTES = 2 * 1024 * 1024
 const MAX_METADATA_BYTES = 64 * 1024 * 1024
 const MAX_TILES = 20000
 const TI2_DECODER = preload("res://scripts/maps/current523_ti2_decoder.gd")
+## Atlases are swapped to GPU block compression off the main thread.
+const TILE_GPU = preload("res://scripts/maps/current523_tile_gpu.gd")
+var gpu := TILE_GPU.new()
 const SEMANTICS = {"geometry":"CANDIDATE_24X24", "palette":"CANDIDATE_RGB565", "coverage_alpha":"STORED_255_UNSTORED_0", "runtime_alpha":"UNKNOWN", "coordinates":"UNKNOWN", "projection":"UNKNOWN", "layers":"UNKNOWN", "movement":"UNKNOWN", "collision":"UNKNOWN"}
 var problem: String = ""
 var loaded: bool = false
@@ -155,6 +158,7 @@ func has_subimage(tile_id: int, frame8bit: int) -> bool:
 
 func texture_for(tile_id: int) -> Texture2D:
 	problem = ""
+	gpu.pump()
 	if not has_tile(tile_id):
 		_fail("Unresolved original Tile/" + str(tile_id) + ".ti2")
 		return null
@@ -202,6 +206,8 @@ func texture_for(tile_id: int) -> Texture2D:
 			_fail("Generic coverage decoded RGBA digest mismatch")
 			return null
 	var texture := ImageTexture.create_from_image(image)
+	# The decoded image is not used after this; the worker may change it.
+	gpu.queue(texture, image)
 	atlas_loads += 1
 	_cache[tile_id] = texture
 	_recent.append(tile_id)
@@ -211,6 +217,10 @@ func texture_for(tile_id: int) -> Texture2D:
 
 func cache_size() -> int:
 	return _cache.size()
+
+## Called every frame by the map renderer: applies finished compressions.
+func pump_gpu() -> void:
+	gpu.pump()
 
 static func source_rect(frame8bit: int) -> Rect2:
 	if frame8bit < 0 or frame8bit > 255: return Rect2()

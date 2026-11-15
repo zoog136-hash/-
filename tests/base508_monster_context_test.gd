@@ -30,6 +30,17 @@ func _initialize() -> void:
 		check(record.drop.is_empty() and int(record.gold) == 0 and bool(record.catalog_only), "loot or world-spawn activation was invented")
 		check(int(local.lv) == 999 and int(local.gold) == 9999, "caller/save dictionary mutated")
 	check(CONTEXT.record(90, 766, 558).is_empty(), "invalid join produced a runtime actor")
+	# Records of the same source rows share one read-only copy of them.
+	var first: Dictionary = CONTEXT.record(90, 762, 558)
+	var second: Dictionary = CONTEXT.record(90, 544562, 200232)
+	if not first.is_empty() and not second.is_empty():
+		check(is_same(first.source_m_context.npc, second.source_m_context.npc) and is_same(first.source_m_original, first.source_m_context.npc), "one shared NpcClass row per NPC")
+		check(first.source_m_context.npc.is_read_only() and first.source_m_context.native_attacks.is_read_only() and first.source_m_context.land.is_read_only(), "shared rows are read-only")
+		check(first.source_m_context.npc == CONTEXT.SOURCE.row("NpcClass", 90) or int(first.source_m_context.npc.ID) == 90, "shared row keeps the source values")
+		check(not is_same(first.source_m_context.spawn_view, second.source_m_context.spawn_view) and int(second.source_m_context.spawn_view.NpcLevel) == 1, "per-record spawn rows stay separate")
+		var editable: Dictionary = first.duplicate(true)
+		editable.source_m_context.npc["HP"] = -1
+		check(not editable.source_m_context.npc.is_read_only() and int(first.source_m_context.npc.HP) == 30, "a duplicated record is editable and leaves the shared row unchanged")
 	var sprite: Dictionary = CONTEXT.motion(31)
 	check(sprite.get("status", "") == "source_declaration_resolved", "slime motion declaration not linked")
 	check(not sprite.get("actions", {}).is_empty(), "original actions missing")
