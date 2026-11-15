@@ -236,6 +236,12 @@ func _update_facing(motion_vector: Vector2) -> void:
 	facing = motion.facing4
 
 func _update_visual(delta: float) -> void:
+	var started: int = FRAME_HITCH.now()
+	var nested: int = FRAME_HITCH.nested()
+	_update_visual_step(delta)
+	FRAME_HITCH.add_self("player_visual", started, nested)
+
+func _update_visual_step(delta: float) -> void:
 	var show_spx: bool = not _source_only_class and not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	var show_original: bool = (transform_active or _source_only_class) and original_source_preview.installed()
@@ -755,10 +761,12 @@ func pulse_attack() -> void:
 	start_combat_attack(global_position + motion.direction, attack_visual_duration, motion.profile.motion_style)
 
 func _move_on_map() -> void:
+	var started: int = FRAME_HITCH.now()
 	var controller: Node = get_parent()
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
 		controller.constrain_original_motion(self)
 	move_and_slide()
+	FRAME_HITCH.add("player_move", started)
 
 func set_manual_click_path(points: PackedVector2Array, target: Vector2) -> void:
 	set_click_path(points, target)

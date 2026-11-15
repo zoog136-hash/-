@@ -51,8 +51,21 @@ static func original_default(texture: Texture2D, grayscale: bool=false) -> Shade
 ## ShaderMaterial, so an original window with thousands of nodes held
 ## thousands of materials that could not be batched (2026-11-14 phone:
 ## 11,133 nodes, 18.8 s frame while drawing the skill window).
+static var _display_shaders: Dictionary={}
+
+## Only shaders that declare the per-instance display parameters take them;
+## setting them on another shader's item logs an engine error on GLES3
+## (material_storage instance_buffer_pos) and has no effect.
+static func takes_display(material: ShaderMaterial) -> bool:
+	var shader: Shader=material.shader
+	if shader==null:return false
+	var key: int=shader.get_instance_id()
+	if not _display_shaders.has(key):
+		_display_shaders[key]=shader.code.contains("instance uniform vec4 source_display_color") and shader.code.contains("instance uniform bool source_display_bound")
+	return _display_shaders[key]
+
 static func bind_display(item: CanvasItem, color: Color) -> void:
-	if not item.material is ShaderMaterial:return
+	if not item.material is ShaderMaterial or not takes_display(item.material):return
 	# Read the item's actual values, not a memo: an external write must be
 	# corrected immediately, and equal writes are skipped.
 	var bound: Variant=item.get_instance_shader_parameter("source_display_bound")

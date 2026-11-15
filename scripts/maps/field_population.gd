@@ -501,6 +501,8 @@ func export_state() -> Dictionary:
 func import_state(value: Variant) -> void:
 	boss_director.import_state(value)
 
+var _slot_delta: float = 0.0
+
 func _process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
@@ -512,10 +514,17 @@ func _process_step(delta: float) -> void:
 	boss_director.tick(delta)
 	_drain_initial_spawns()
 	wake_clock -= delta
+	_slot_delta += delta
 	var refresh: bool = wake_clock<=0.
-	if refresh:
-		wake_clock = .4
-		_trim_pool(IDLE_POOL_TARGET,false)
+	# Respawn timers and activity are only acted on at the 0.4 s wake; walking
+	# all slots (810 on aden_world) every frame cost ~4 ms per frame on the
+	# phone (2026-11-15: field_population 124 ms per second). Timers receive
+	# the time since the previous wake, so cooldowns are unchanged.
+	if not refresh: return
+	wake_clock = .4
+	delta = _slot_delta
+	_slot_delta = 0.0
+	_trim_pool(IDLE_POOL_TARGET,false)
 	# Camera geometry is constant during this synchronous wake sweep. Build it
 	# lazily so empty populations and non-Escaros fields do no extra work.
 	var activity_view := Rect2()
