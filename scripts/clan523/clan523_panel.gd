@@ -75,7 +75,7 @@ func refresh() -> void:
 	if not snap.has_clan:
 		status.text = "혈맹 없음"
 		_label("창설 조건 (원본 표): %s · %d레벨 이상 · 아데나 %d" % ["/".join(data.create_class_names),int(data.policies.CreateLevelCondition.value),int(data.policies.CreateCommission.value)],body)
-		name_edit = LineEdit.new()
+		name_edit = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 		name_edit.name = "Clan523Name"
 		name_edit.placeholder_text = "혈맹 이름"
 		name_edit.max_length = Clan.NAME_MAX

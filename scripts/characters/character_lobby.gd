@@ -209,13 +209,12 @@ func _show_creation() -> void:
 	selected_class = 0
 	selected_gender = 0
 	content.add_child(STYLE.label("새 캐릭터 · 직업과 성별을 선택하세요",20,STYLE.GOLD))
-	name_input = LineEdit.new()
+	name_input = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	name_input.name = "CharacterName"
 	name_input.placeholder_text = "이름 2~12자 · 계정 내 중복 불가"
 	name_input.max_length = 12
 	name_input.custom_minimum_size.y = 52
 	name_input.text_changed.connect(func(_value: String) -> void: _refresh_create())
-	content.add_child(name_input)
 	var flow := HFlowContainer.new()
 	flow.name = "ClassChoices"
 	content.add_child(flow)
@@ -246,6 +245,9 @@ func _show_creation() -> void:
 	content.add_child(source_animation_controls)
 	details = STYLE.label("원본 Class 초기 능력치와 ClassAssets 성별 연결을 사용합니다.",16)
 	content.add_child(details)
+	# The name sits right above the button it unlocks: on a phone the class
+	# grid pushes a top field off screen and the button looks dead.
+	content.add_child(name_input)
 	create_button = _button("캐릭터 생성",_create,"CreateCharacter")
 	content.add_child(create_button)
 	content.add_child(_button("취소 · 목록으로",_show_roster,"CancelCreation"))
@@ -339,6 +341,7 @@ func _refresh_create() -> void:
 	if create_button == null: return
 	var length: int = name_input.text.strip_edges().length()
 	create_button.disabled = length < 2 or length > 12 or catalog.profile(selected_class,selected_gender).is_empty()
+	create_button.text = "캐릭터 생성" if length >= 2 else "캐릭터 생성 · 이름을 입력하세요 (2~12자)"
 
 func _create() -> void:
 	if busy or not _roster_ready() or create_button == null or create_button.disabled: return

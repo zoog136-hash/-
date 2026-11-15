@@ -200,14 +200,14 @@ func _ensure_built() -> void:
 	body.add_child(_install_box)
 	install_toggle.pressed.connect(func() -> void: _install_box.visible = not _install_box.visible)
 	_add_label(_install_box, "기기에 받은 규칙팩 파일과 검증값을 입력하세요. 기본 규칙팩을 먼저 설치한 뒤 효과 보완팩도 같은 방법으로 설치합니다.", "PackInstallHelp")
-	_path = LineEdit.new()
+	_path = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	_path.name = "PackFilePath"
 	_path.placeholder_text = "규칙팩 또는 효과 보완팩 파일 경로"
 	_path.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_install_box.add_child(_path)
 	var browse := _button(_install_box, "파일 선택", "BrowsePackFile")
 	browse.pressed.connect(_browse_pack)
-	_sha = LineEdit.new()
+	_sha = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	_sha.name = "PackSha256"
 	_sha.placeholder_text = "제공된 SHA-256 검증값 (64자리)"
 	_sha.size_flags_horizontal = Control.SIZE_EXPAND_FILL

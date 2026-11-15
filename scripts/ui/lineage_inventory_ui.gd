@@ -135,7 +135,7 @@ func _build_inventory() -> void:
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	header.add_child(title)
 
-	search_line = LineEdit.new()
+	search_line = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search_line.placeholder_text = "아이템 검색"
 	search_line.custom_minimum_size = Vector2(210, 38)
 	search_line.text_changed.connect(_on_search_changed)

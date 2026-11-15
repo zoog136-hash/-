@@ -149,7 +149,7 @@ func build_personal() -> void:
 	personal_slot=OptionButton.new(); personal_slot.name="PersonalSlot"; personal_slot.custom_minimum_size.y=44; personal_box.add_child(personal_slot)
 	for i: int in saved.names.size(): personal_slot.add_item("%d · %s"%[i+1,saved.names[i]],i)
 	if saved.names.size()<int(runtime.source.personal.max_names): personal_slot.add_item("새 호칭 보관",saved.names.size())
-	personal_text=LineEdit.new(); personal_text.name="PersonalName"; personal_text.placeholder_text="개인 호칭"; personal_text.custom_minimum_size.y=44; personal_box.add_child(personal_text)
+	personal_text=preload("res://scripts/ui/native_touch_line_edit.gd").new(); personal_text.name="PersonalName"; personal_text.placeholder_text="개인 호칭"; personal_text.custom_minimum_size.y=44; personal_box.add_child(personal_text)
 	personal_color=OptionButton.new(); personal_color.name="PersonalColor"; personal_color.custom_minimum_size.y=44; personal_box.add_child(personal_color)
 	for color: Dictionary in runtime.source.personal.colors:
 		var stage_name: String=""

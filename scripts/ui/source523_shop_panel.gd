@@ -56,7 +56,7 @@ func configure(source_catalog: RefCounted, controller: Node = null) -> void:
 	for title_text: String in ["상품", "NPC 판매", "재화", "누적 보상", "보관함"]: mode.add_item(title_text)
 	mode.item_selected.connect(func(_index: int) -> void: result_label.text=""; _build_entries())
 	filters.add_child(mode)
-	search = LineEdit.new()
+	search = preload("res://scripts/ui/native_touch_line_edit.gd").new()
 	search.name = "SourceShopSearch"
 	search.placeholder_text = "이름 또는 원본 번호 검색"
 	search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
