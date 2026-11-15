@@ -56,6 +56,9 @@ static var _nested: int = 0
 ## Sustained CPU (heat), not just hitches: every frame's section totals are
 ## added here until take_window() reads and clears them.
 static var _window_sections: Dictionary = {}
+## Detail operations (spawn, setup, visual...) summed over the window:
+## name -> [usec, calls].
+static var _window_details: Dictionary = {}
 static var _window_frames: int = 0
 static var _window_usec: int = 0
 ## Callback-delivery boundaries, not GPU timestamps. One fixed-size sample per
@@ -149,6 +152,10 @@ static func _close_frame(at: int, map_id: String) -> void:
 		_window_frames += 1
 		_window_usec += total
 		for key: String in _sections: _window_sections[key] = int(_window_sections.get(key, 0)) + int(_sections[key])
+		for key: String in _details:
+			var row: Array = _details[key]
+			var total_row: Array = _window_details.get(key, [0, 0])
+			_window_details[key] = [int(total_row[0]) + int(row[0]), int(total_row[1]) + int(row[1])]
 	_last_frame = at
 	_clear_pending()
 	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
@@ -343,6 +350,14 @@ static func take_window(top: int = 4) -> Dictionary:
 	var names: PackedStringArray = []
 	for part: Array in parts.slice(0, top): names.append("%s:%d" % [part[0], int(float(part[1]) / 1000.0 / seconds)])
 	var result: Dictionary = {"frames": _window_frames, "frame_ms": int(float(_window_usec) / 1000.0 / maxf(1.0, float(_window_frames))), "fps": int(round(float(_window_frames) / seconds)), "cpu_top": ",".join(names)}
+	# Busiest detail operations: ms per second and calls per second.
+	var detail_parts: Array = []
+	for key: String in _window_details: detail_parts.append([key, int(_window_details[key][0]), int(_window_details[key][1])])
+	detail_parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
+	var detail_names: PackedStringArray = []
+	for part: Array in detail_parts.slice(0, top): detail_names.append("%s:%d*%d" % [part[0], int(float(part[1]) / 1000.0 / seconds), int(round(float(part[2]) / seconds))])
+	result["detail_top"] = ",".join(detail_names)
+	_window_details.clear()
 	_window_sections.clear()
 	_window_frames = 0
 	_window_usec = 0
@@ -494,6 +509,7 @@ static func reset_for_test(directory: String) -> void:
 	_application_focused = -1
 	_clear_pending()
 	_window_sections.clear()
+	_window_details.clear()
 	_window_frames = 0
 	_window_usec = 0
 

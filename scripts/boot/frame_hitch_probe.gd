@@ -82,6 +82,7 @@ func _process(_delta: float) -> void:
 		fields["fps"] = window.fps
 		fields["frame_ms"] = window.frame_ms
 		if not str(window.cpu_top).is_empty(): fields["cpu_top"] = window.cpu_top
+		if not str(window.get("detail_top", "")).is_empty(): fields["detail_top"] = window.detail_top
 		fields["max_fps"] = Engine.max_fps
 		BOOT_LOG.mark("alive", fields)
 		DEFINITIONS.remember_used_tables()

@@ -1,5 +1,5 @@
 extends SceneTree
-## Per-instance display colour on shared materials, and an optional GL
+## Display colour on shared per-colour material variants, and an optional GL
 ## differential against the previous private-material binding.
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 var checks: int=0
@@ -22,15 +22,15 @@ func texture(pma: bool=false) -> Texture2D:
 	var result:=ImageTexture.create_from_image(image)
 	result.set_meta("cocos_premultiplied",pma)
 	return result
-## Oracle: the previous binding (a private duplicated material with ordinary
-## uniforms). The candidate (shared material + per-instance parameters) must
-## draw the same pixels.
+## Oracle: the previous binding (a private duplicated material per node).
+## The candidate (one shared variant per base material and colour) must draw
+## the same pixels.
 func original_bind(item: CanvasItem, color: Color) -> void:
 	if not item.material is ShaderMaterial:return
 	var current: ShaderMaterial=item.material
 	if not bool(current.get_meta("oracle_private_display",false)):
 		var shader:=Shader.new()
-		shader.code=current.shader.code.replace("instance uniform bool source_display_bound","uniform bool source_display_bound").replace("instance uniform vec4 source_display_color","uniform vec4 source_display_color")
+		shader.code=current.shader.code
 		var copy:=ShaderMaterial.new();copy.shader=shader
 		copy.set_shader_parameter("source_pma",current.get_shader_parameter("source_pma"))
 		copy.set_shader_parameter("source_gray",current.get_shader_parameter("source_gray"))
@@ -38,55 +38,81 @@ func original_bind(item: CanvasItem, color: Color) -> void:
 	current.set_shader_parameter("source_display_bound",true)
 	current.set_shader_parameter("source_display_color",color)
 func state(item: CanvasItem, color: Color, label: String) -> void:
-	check(item.get_instance_shader_parameter("source_display_bound")==true,label+" bound")
-	check(item.get_instance_shader_parameter("source_display_color")==color,label+" color")
+	var material: ShaderMaterial=item.material as ShaderMaterial
+	check(material!=null and material.get_shader_parameter("source_display_bound")==true,label+" bound")
+	check(material!=null and material.get_shader_parameter("source_display_color")==color,label+" color")
+func unbound(material: ShaderMaterial) -> bool:
+	var bound: Variant=material.get_shader_parameter("source_display_bound")
+	return bound==null or bound==false
+func crowd_color(i: int) -> Color:
+	return Color(float(i%256)/255.0,float(i/256)/255.0,0.5,1.0)
 func headless_checks() -> void:
 	var tex:=texture()
 	var prototype:=MATERIAL.original_default(tex)
 	var item:=Sprite2D.new()
 	var sibling:=Sprite2D.new()
-	item.material=prototype;sibling.material=prototype
+	var same_color:=Sprite2D.new()
+	item.material=prototype;sibling.material=prototype;same_color.material=prototype
 	MATERIAL.bind_display(item,FIRST)
-	check(item.material==prototype and sibling.material==prototype,"display colour keeps the shared prototype material")
-	check(prototype.shader.code.contains("instance uniform bool source_display_bound") and prototype.shader.code.contains("instance uniform vec4 source_display_color"),"display colour is a per-instance shader parameter")
-	var sibling_bound: Variant=sibling.get_instance_shader_parameter("source_display_bound")
-	check(sibling_bound==null or sibling_bound==false,"another node using the prototype stays unbound")
+	check(sibling.material==prototype and unbound(prototype),"the shared prototype itself is never bound; other nodes are untouched")
+	check(item.material!=prototype and MATERIAL.display_base(item.material)==prototype,"display colour uses a variant of the prototype")
+	check(not prototype.shader.code.contains("instance uniform"),"no per-instance shader parameters (phone GLES3 global buffer overflow)")
 	state(item,FIRST,"first binding")
+	var first_variant: Material=item.material
+	MATERIAL.bind_display(same_color,FIRST)
+	check(same_color.material==first_variant,"nodes with the same base and colour share one material")
 	for i: int in 100:MATERIAL.bind_display(item,FIRST)
-	check(item.material==prototype,"repeated binding keeps the shared material")
+	check(item.material==first_variant,"repeated binding keeps the shared variant")
 	state(item,FIRST,"unchanged binding")
 	MATERIAL.bind_display(item,NEXT);state(item,NEXT,"color update")
-	item.set_instance_shader_parameter("source_display_bound",false)
-	item.set_instance_shader_parameter("source_display_color",FIRST)
+	check(item.material!=first_variant and MATERIAL.display_base(item.material)==prototype,"a different colour is a different variant of the same base")
+	state(same_color,FIRST,"other colour's node unchanged")
+	var variant: ShaderMaterial=item.material
+	variant.set_shader_parameter("source_display_bound",false)
+	variant.set_shader_parameter("source_display_color",FIRST)
 	MATERIAL.bind_display(item,NEXT);state(item,NEXT,"external mutations corrected")
-	item.set_instance_shader_parameter("source_display_color",Vector4(NEXT.r,NEXT.g,NEXT.b,NEXT.a))
-	item.set_instance_shader_parameter("source_display_bound",1)
+	variant.set_shader_parameter("source_display_color",Vector4(NEXT.r,NEXT.g,NEXT.b,NEXT.a))
+	variant.set_shader_parameter("source_display_bound",1)
 	MATERIAL.bind_display(item,NEXT)
-	check(typeof(item.get_instance_shader_parameter("source_display_color"))==TYPE_COLOR,"actual color variant type restored")
-	check(typeof(item.get_instance_shader_parameter("source_display_bound"))==TYPE_BOOL,"actual bool variant type restored")
-	item.set_instance_shader_parameter("source_display_bound",null)
-	item.set_instance_shader_parameter("source_display_color",null)
+	check(typeof(variant.get_shader_parameter("source_display_color"))==TYPE_COLOR,"actual color variant type restored")
+	check(typeof(variant.get_shader_parameter("source_display_bound"))==TYPE_BOOL,"actual bool variant type restored")
+	variant.set_shader_parameter("source_display_bound",null)
+	variant.set_shader_parameter("source_display_color",null)
 	MATERIAL.bind_display(item,NEXT);state(item,NEXT,"cleared parameters restored")
 	var replacement:=MATERIAL.original_default(texture(true))
 	item.material=replacement
 	MATERIAL.bind_display(item,FIRST)
-	check(item.material==replacement,"a replacement material is shared too")
+	check(MATERIAL.display_base(item.material)==replacement and unbound(replacement),"a replacement material gets its own shared variant")
 	state(item,FIRST,"replacement material")
 	var shader:=Shader.new();shader.code=(item.material as ShaderMaterial).shader.code
 	var custom:=ShaderMaterial.new();custom.shader=shader
 	item.material=custom
-	MATERIAL.bind_display(item,NEXT);check(item.material==custom,"a custom shader material is not cloned")
+	MATERIAL.bind_display(item,NEXT);check(MATERIAL.display_base(item.material)==custom and unbound(custom),"a custom shader material is used as the base, never bound itself")
 	state(item,NEXT,"custom material")
+	var particle:=Sprite2D.new();particle.material=prototype
+	MATERIAL.bind_display(particle,FIRST,true)
+	var private_material: Material=particle.material
+	check(private_material!=first_variant and MATERIAL.display_base(private_material)==prototype,"private binding (particles) gets its own copy")
+	MATERIAL.bind_display(particle,NEXT,true)
+	check(particle.material==private_material,"private copy is reused for colour changes");state(particle,NEXT,"private copy")
+	state(same_color,FIRST,"shared variant unaffected by a private copy")
+	var crowd: Array[Sprite2D]=[]
+	for i: int in MATERIAL.VARIANTS_PER_BASE+4:
+		var node:=Sprite2D.new();node.material=custom;crowd.append(node)
+		MATERIAL.bind_display(node,crowd_color(i))
+	var last: Sprite2D=crowd[-1]
+	check(bool(last.material.get_meta("source_private_display",false)) and MATERIAL.display_base(last.material)==custom,"variant cache is bounded; extra colours fall back to a private copy")
+	state(last,crowd_color(MATERIAL.VARIANTS_PER_BASE+3),"fallback copy")
+	for node: Sprite2D in crowd:node.free()
 	var foreign:=ShaderMaterial.new();var foreign_shader:=Shader.new()
 	foreign_shader.code="shader_type canvas_item;\nvoid fragment(){ COLOR = texture(TEXTURE, UV); }\n"
 	foreign.shader=foreign_shader;item.material=foreign
-	item.set_instance_shader_parameter("source_display_bound",null)
 	MATERIAL.bind_display(item,NEXT)
-	check(not MATERIAL.takes_display(foreign) and item.get_instance_shader_parameter("source_display_bound")==null,"a shader without the display parameters is left alone (no engine error)")
+	check(not MATERIAL.takes_display(foreign) and item.material==foreign,"a shader without the display parameters is left alone")
 	var plain:=CanvasItemMaterial.new();item.material=plain
 	MATERIAL.bind_display(item,NEXT);check(item.material==plain,"nonshader material unchanged")
 	item.material=null;MATERIAL.bind_display(item,NEXT);check(item.material==null,"null material unchanged")
-	item.free();sibling.free()
+	item.free();sibling.free();same_color.free();particle.free()
 func make_view(tex: Texture2D, transparent: bool) -> Dictionary:
 	var viewport:=SubViewport.new();viewport.size=Vector2i(24,20);viewport.disable_3d=true
 	viewport.transparent_bg=transparent;viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
@@ -109,12 +135,8 @@ func render_comparisons() -> void:
 				var color: Color=FIRST if phase<2 else NEXT
 				for view: Dictionary in [candidate,oracle]:
 					if phase==3:
-						if view==candidate:
-							view.sprite.set_instance_shader_parameter("source_display_bound",false)
-							view.sprite.set_instance_shader_parameter("source_display_color",FIRST)
-						else:
-							view.sprite.material.set_shader_parameter("source_display_bound",false)
-							view.sprite.material.set_shader_parameter("source_display_color",FIRST)
+						view.sprite.material.set_shader_parameter("source_display_bound",false)
+						view.sprite.material.set_shader_parameter("source_display_color",FIRST)
 					if phase==4:view.sprite.material=MATERIAL.original_default(tex)
 					if phase==5:
 						var shader:=Shader.new();shader.code=(view.sprite.material as ShaderMaterial).shader.code

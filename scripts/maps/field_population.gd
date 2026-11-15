@@ -39,6 +39,22 @@ const SPAWN_RETRY_MAX: float = 60.0
 const SPAWN_SEARCH_BUDGET_USEC: int = 6000
 var retry_jitter := RandomNumberGenerator.new()
 const INITIAL_SPAWN_BUDGET_USEC: int = 4000
+## After a map's first fill, respawns are paced: each spawn builds an actor
+## (setup, art, collision), ~100 ms on the phone, and auto hunting kept
+## several respawning every second (2026-11-15 523.504: field_population
+## 498 ms of CPU per second at 4 fps). Bosses are never paced.
+const FILL_SECONDS: float = 12.0
+const STEADY_SPAWNS_PER_SECOND: float = 1.5
+const STEADY_SPAWN_BURST: float = 3.0
+var _fill_remaining: float = 0.0
+var _spawn_tokens: float = 0.0
+
+## True when a non-boss spawn may run now (and consumes one token).
+func _take_spawn_token() -> bool:
+	if _fill_remaining > 0.0: return true
+	if _spawn_tokens < 1.0: return false
+	_spawn_tokens -= 1.0
+	return true
 
 func _ready() -> void:
 	pool_root = Node2D.new()
@@ -67,6 +83,8 @@ func configure(controller: Node, value: PlayableField) -> void:
 	pending_initial_spawns.clear()
 	pending_spawn_ids.clear()
 	wake_clock = 0.
+	_fill_remaining = FILL_SECONDS
+	_spawn_tokens = STEADY_SPAWN_BURST
 	set_process(field != null)
 	if field == null: return
 	records.clear()
@@ -512,7 +530,11 @@ func _process(delta: float) -> void:
 func _process_step(delta: float) -> void:
 	if field==null: return
 	boss_director.tick(delta)
+	_fill_remaining = maxf(0.0, _fill_remaining - delta)
+	_spawn_tokens = minf(STEADY_SPAWN_BURST, _spawn_tokens + delta * STEADY_SPAWNS_PER_SECOND)
+	var drain_started: int = FRAME_HITCH.now()
 	_drain_initial_spawns()
+	FRAME_HITCH.detail("population.drain", drain_started)
 	wake_clock -= delta
 	_slot_delta += delta
 	var refresh: bool = wake_clock<=0.
@@ -524,6 +546,11 @@ func _process_step(delta: float) -> void:
 	wake_clock = .4
 	delta = _slot_delta
 	_slot_delta = 0.0
+	var wake_started: int = FRAME_HITCH.now()
+	_wake_slots(delta, refresh)
+	FRAME_HITCH.detail("population.wake", wake_started)
+
+func _wake_slots(delta: float, refresh: bool) -> void:
 	_trim_pool(IDLE_POOL_TARGET,false)
 	# Camera geometry is constant during this synchronous wake sweep. Build it
 	# lazily so empty populations and non-Escaros fields do no extra work.
@@ -543,6 +570,7 @@ func _process_step(delta: float) -> void:
 					continue
 				var boss_slot: bool = str(slot.region.get("mode","normal"))=="boss"
 				if not boss_slot and search_spent>=SPAWN_SEARCH_BUDGET_USEC:continue
+				if not boss_slot and not _take_spawn_token():continue
 				var search_started: int = Time.get_ticks_usec()
 				_spawn_slot(slot)
 				if not boss_slot:search_spent += Time.get_ticks_usec()-search_started
@@ -578,6 +606,7 @@ func _drain_initial_spawns() -> void:
 	var initial_count: int=0
 	while not pending_initial_spawns.is_empty() and initial_count<INITIAL_SPAWNS_PER_FRAME:
 		if initial_count>0 and Time.get_ticks_usec()-spawn_start>=INITIAL_SPAWN_BUDGET_USEC:break
+		if str(pending_initial_spawns[0].region.get("mode","normal"))!="boss" and not _take_spawn_token():break
 		var pending: Dictionary=pending_initial_spawns.pop_front()
 		pending_spawn_ids.erase(int(pending.slot_id))
 		if _zone_active(pending.region):
