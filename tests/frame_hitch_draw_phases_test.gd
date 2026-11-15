@@ -213,7 +213,7 @@ func _disabled_reset_and_bounds() -> void:
 	check(summary.worst.size() == HITCH.KEEP and summary.hitches == 21, "callback diagnostics preserve bounded worst-frame retention and total hitch count")
 	for kept: Dictionary in summary.worst:
 		var diag: Dictionary = kept.get("diagnostics", {})
-		check(diag.size() == 5 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
+		check(diag.size() == 6 and diag.physics.size() == 4 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
 	check(JSON.stringify(summary).length() < 65536, "bounded callback fixture remains readable under the previous-record size limit")
 
 func _persistence() -> void:
@@ -427,7 +427,7 @@ func _physics_steps() -> void:
 	HITCH.flush()
 	_reset()
 	HITCH.start()
-	check(HITCH.previous_line().contains("물리 1회"), "loading line names the catch-up physics steps")
+	check(HITCH.previous_line().contains("물리 3회 45ms(최대 20ms)"), "loading line names the slowest frame's catch-up physics steps")
 	_clean()
 
 func _run() -> void:
