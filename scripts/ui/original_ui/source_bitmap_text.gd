@@ -195,8 +195,8 @@ func _apply_glyphs(layer: Node2D, draws: Array) -> void:
 		sprite.region_rect=record.rect
 		var prototype: ShaderMaterial=record.material
 		var current: ShaderMaterial=sprite.material as ShaderMaterial
-		# Display colour is a per-instance parameter; glyphs share the prototype.
-		if current!=prototype:
+		# Glyphs share the prototype's per-colour display variant.
+		if SourceMaterial.display_base(current)!=prototype:
 			sprite.material=prototype
 		SourceMaterial.bind_display(sprite,_display_color)
 		if index>=existing.size():layer.add_child(sprite)
