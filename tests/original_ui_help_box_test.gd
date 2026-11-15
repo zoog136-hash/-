@@ -27,7 +27,7 @@ func _run() -> void:
 	root.add_child(parent)
 	check(not box.open(parent,HELP.REFINE).get("handled",true) and not box.is_open(),"opening a missing help fails closed")
 	# Each window opens its own original help.
-	for pair: Array in [["source_main_refine_window.gd","HelpBox.REFINE"],["source_main_totem_window.gd","HelpBox.TOTEM"],["source_main_half_elixir_window.gd","HelpBox.ELIXIR"],["source_main_card_dispatch_window.gd","HelpBox.DISPATCH"],["source_main_title_window.gd","HelpBox.TITLE"],["source_main_dungeon_window.gd","HelpBox.ORIM"]]:
+	for pair: Array in [["source_main_refine_window.gd","HelpBox.REFINE"],["source_main_totem_window.gd","HelpBox.TOTEM"],["source_main_half_elixir_window.gd","HelpBox.ELIXIR"],["source_main_card_dispatch_window.gd","HelpBox.DISPATCH"],["source_main_title_window.gd","HelpBox.TITLE"],["source_main_dungeon_window.gd","HelpBox.ORIM"],["source_main_symbol_window.gd","HelpBox.SYMBOL"]]:
 		var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/"+str(pair[0]))
 		check(source.contains(str(pair[1])),"window opens its original help: "+str(pair[0]))
 	var pack_dir: String=""
@@ -48,7 +48,7 @@ func _real_pack(pack_dir: String, parent: Node2D) -> void:
 	if not loaded.get("ok",false):return
 	var box=HELP.new()
 	box.configure(pack)
-	var pages: Dictionary={HELP.REFINE:4,HELP.TOTEM:4,HELP.ELIXIR:4,HELP.DISPATCH:6,HELP.ORIM:5,HELP.TITLE:1}
+	var pages: Dictionary={HELP.REFINE:4,HELP.TOTEM:4,HELP.ELIXIR:4,HELP.DISPATCH:6,HELP.ORIM:5,HELP.TITLE:1,HELP.SYMBOL:1}
 	for member: String in pages:
 		var opened: Dictionary=box.open(parent,member)
 		check(opened.get("handled",false) and box.is_open(),"help mounts: "+member+" "+str(opened))
