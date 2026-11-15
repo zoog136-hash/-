@@ -393,6 +393,11 @@ func _build(source: Dictionary) -> Node2D:
 	node.visible=bool(_bindings.get(int(source._offset),{}).get("visible",widget.visible))
 	node.z_index=int(widget.zOrder)
 	var color: Array=widget.color
+	# A caller may state the node's colour from an original table value
+	# (binding "color": [r, g, b] 0-255, e.g. Mastery ColorTable). It joins the
+	# same per-colour shared display materials; no instance uniform.
+	var color_binding: Variant=_bindings.get(int(source._offset),{}).get("color")
+	if color_binding is Array and (color_binding as Array).size()==3:color=[color[0],int(color_binding[0]),int(color_binding[1]),int(color_binding[2])]
 	node.modulate=Color.WHITE
 	node.set_meta("source_rgba",[int(color[1]),int(color[2]),int(color[3]),int(widget.alpha)])
 	node.set_meta("original_ui_source",{"scene":source_member,"node_offset":int(source._offset),"manifest_sha256":source_pack.manifest_sha256})

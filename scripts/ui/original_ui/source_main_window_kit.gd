@@ -246,7 +246,7 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 	for row: Dictionary in rows:
 		var member: String=str(row.member)
 		var row_out: Dictionary={}
-		var built: Dictionary=_scene_of(member,row.get("spec",{}),row_out,"" if horizontal else str(list.key))
+		var built: Dictionary=_scene_of(member,row.get("spec",{}),row_out,str(list.key))
 		if not built.get("ok",false):return built
 		var geometry: Dictionary=_row_geometry(member)
 		var extent: Vector2=geometry.size
@@ -269,6 +269,9 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 	if not horizontal:
 		var used: float=size.y-y-gap
 		_scrolls[str(list.key)]={"content":list.content,"min":minf(0.0,size.y-used),"value":0.0}
+	elif x-gap>size.x:
+		# A horizontal list wider than its ListView scrolls along x.
+		_scrolls[str(list.key)]={"content":list.content,"min":size.x-(x-gap),"value":0.0,"axis":"x"}
 	return {"ok":true,"rows":rows.size(),"scenes":scenes,"outs":outs}
 
 ## Repeats an authored ListView row (a template with no row member of its
@@ -308,7 +311,8 @@ func _scroll_to(key: String, value: float) -> void:
 	var state: Dictionary=_scrolls.get(key,{})
 	if state.is_empty() or not is_instance_valid(state.content):return
 	state.value=clampf(value,float(state.min),0.0)
-	(state.content as Node2D).position.y=float(state.value)
+	if state.get("axis","y")=="x":(state.content as Node2D).position.x=float(state.value)
+	else:(state.content as Node2D).position.y=float(state.value)
 
 ## True while the current press has moved like a list drag (row taps ignore it).
 func _dragged() -> bool:
@@ -322,14 +326,15 @@ func _list_input(event: InputEvent, key: String) -> void:
 		elif _dragging==key:_dragging=""
 		return
 	var delta: float=0.0
-	if event is InputEventScreenDrag:delta=event.relative.y
-	elif event is InputEventMouseMotion and _dragging==key:delta=event.relative.y
+	var along_x: bool=_scrolls.has(key) and _scrolls[key].get("axis","y")=="x"
+	if event is InputEventScreenDrag:delta=event.relative.x if along_x else event.relative.y
+	elif event is InputEventMouseMotion and _dragging==key:delta=event.relative.x if along_x else event.relative.y
 	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
 		delta=120.0*(1.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -1.0)
 	if delta==0.0 or not _scrolls.has(key):return
 	var content: Node2D=_scrolls[key].content
 	if not is_instance_valid(content):return
-	var scale_y: float=absf(content.get_global_transform_with_canvas().get_scale().y)
+	var scale_y: float=absf(content.get_global_transform_with_canvas().get_scale().x if along_x else content.get_global_transform_with_canvas().get_scale().y)
 	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
 	_moved+=delta
 	_scroll_to(key,float(_scrolls[key].value)+delta)
