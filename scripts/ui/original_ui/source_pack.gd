@@ -125,6 +125,8 @@ const CODE_EXTERNAL_TEXTURE_NODES := {
 	"UI/NpcDialogue/NpcDialogue_All.csb":[4912],
 	"UI/Map/Map_Tab_Area.csb":[44440],
 	"UI/Shop/Shop_List_Slot.csb":[10376],
+	# Original weapon icons (source_main_mastery_window): MasteryWeaponType.AssetID.
+	"UI/Mastery/Mastery_List_Weapon.csb":[3640],
 	# Original card pictures (source_main_change_window): CardSample sprites.
 	"UI/Change/Change_DetailView.csb":[38328],
 	"UI/Change/Change_Card_A_Common.csb":[2256],

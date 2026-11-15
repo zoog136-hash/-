@@ -60,7 +60,7 @@ NODE_SCOPES = [
 # Map_Tab_Teleport Payment/Icon 7356: the 지역 이동 fee is Adena, so the
 # teleport window (source_main_teleport_window) shows Atlas_Common's
 # Com_Icn_Adena there instead of the authored diamond.
-EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Map/Map_Tab_Teleport.csb": [7356], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788]}
+EXTERNAL_TEXTURE_NODES = {"UI/Map/Map_Tab_Area.csb": [44440], "UI/Map/Map_Tab_Teleport.csb": [7356], "UI/Clan/Clan_Slot_Join_Donate_Item.csb": [4788], "UI/Mastery/Mastery_List_Weapon.csb": [3640]}
 # Plain original pictures the code loads by path from the pack (not named by a
 # scene): the clan emblem PNGs of AssetType 111 "Emblem" (Path UI/Emblem/),
 # shown by source_main_emblem_window through Emblem.EmblemLargeID/AssetView.
@@ -90,6 +90,10 @@ WHOLE_SCOPES = [
     ("UI/Storage/Storage_Inventory.csb", [13764, 396]),
     ("UI/Storage/Storage_AccountInvGridMode.csb", [6672, 412]),
     ("UI/Storage/Storage_All.csb", [46564, 46252, 45968, 45420, 43992, 42648, 34968, 16280, 2384, 900, 640, 51812, 50252]),
+    # The weapon rows of the mastery window (source_main_mastery_window):
+    # Icn_Type 3640 (Mastery/Sample.png, absent) is external, the weapon's
+    # own MasteryWeaponType.AssetID picture; Btn_Disabled is not mounted.
+    ("UI/Mastery/Mastery_List_Weapon.csb", [1072]),
     # Clan_Slot_Join_Donate_Item whole; its Sp_IconSample is external (above).
     ("UI/Clan/Clan_Slot_Join_Donate_Item.csb", []),
     # The clan window (source_main_clan_window) mounts the 창설 / 혈맹 정보
