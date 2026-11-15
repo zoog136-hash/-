@@ -2,6 +2,8 @@ class_name Source523ImagePack
 extends RefCounted
 ## Explicit private pack. Exact original bytes only; no install/save/activation.
 
+## Same record file as BAKE.open_records(), with a packed ID index (~190k IDs).
+const RECORDS = preload("res://scripts/resources/current523_compact_records.gd")
 const ORIGINAL_ASSETS = preload("res://scripts/original_client/asset_resolver.gd")
 const IMAGE_TYPES: Array[int] = [1, 3, 5, 6, 7, 9, 10, 11, 82, 143, 161]
 const CONSUMER_FIELDS: Dictionary = {"ItemClass":["IconID"], "SpellClass":["IconID","ActivateIconID"], "BuffClass":["OnIconID","OffIconID"]}
@@ -150,7 +152,7 @@ static func baked(manifest_sha: String) -> bool:
 func _open_baked() -> bool:
 	var key: String = _bake_key()
 	if key.is_empty() or not _manifest_intact(): return false
-	var records: RefCounted = BAKE.open_records(BAKE_NAME, key)
+	var records: RefCounted = RECORDS.open(BAKE_NAME, key)
 	if records == null: return false
 	var meta: Variant = records.read("meta")
 	if not meta is Dictionary or meta.get("manifest_sha256") != _manifest_sha or not meta.get("manifest") is Dictionary or not meta.manifest.get("metrics") is Dictionary or not meta.manifest.get("source_tables") is Dictionary: return false
@@ -185,7 +187,7 @@ func _bake() -> void:
 			writer.add("c:%s:%d" % [table, id], item)
 	for path: String in _members: writer.add("m:" + path, _members[path])
 	if not BAKE.finish_records(writer): return
-	var records: RefCounted = BAKE.open_records(BAKE_NAME, key)
+	var records: RefCounted = RECORDS.open(BAKE_NAME, key)
 	if records == null: return
 	_records = records
 	_manifest = slim
