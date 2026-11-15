@@ -331,6 +331,11 @@ func _emblem() -> void:
 		_label("절대 옵션은 I부터 순서대로 개방합니다. 미연결 효과가 있는 등급은 보류합니다.")
 
 func _effect_text(effects: Dictionary) -> String:
+	return effect_text(runtime,effects)
+
+## Effect labels of a guardian / emblem effect record (shared with the
+## original 수호성 window).
+static func effect_text(runtime: Object, effects: Dictionary) -> String:
 	var mapping: Dictionary = {"max_hp:flat":"HP","max_mp:flat":"MP","ac:flat":"AC","mr:flat":"MR","sp:flat":"SP","weight_bonus:flat":"무게","experience_bonus:percent":"경험치 %","potion_flat:flat":"물약 회복량","potion_percent:percent":"물약 회복률 %","damage_reduction:flat":"리덕션","potion_cooldown:percent":"물약 쿨타임 감소 %","blessing_consumption:percent":"축복 소모 감소 %","incoming_reduction:percent":"피해 감소 %","mp_regeneration:flat":"MP 회복","blessing_charge:percent":"축복 충전 %"}
 	mapping.merge({"melee_hit:flat":"근거리 명중","ranged_hit:flat":"원거리 명중","magic_hit:flat":"마법 명중","melee_damage:flat":"근거리 대미지","ranged_damage:flat":"원거리 대미지","magic_damage:flat":"마법 대미지","str:flat":"STR","dex:flat":"DEX","con:flat":"CON","int:flat":"INT","wis:flat":"WIS","melee_critical_rate:percent":"근거리 치명타 %","ranged_critical_rate:percent":"원거리 치명타 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지","pve_damage_reduction:flat":"PvE 리덕션"})
 	mapping.merge({"magic_heal:percent":"회복 마법량 %","hp_drain:flat":"HP 흡수","life:flat":"생명","critical_reduction:flat":"치명타 리덕션","stunned_reduction:flat":"스턴 상태 리덕션","low_hp_reduction:percent":"HP 30% 이하 피해 감소 %","stun_hit:percent":"스턴 적중 %","stun_resistance:percent":"스턴 내성 %","fear_resistance:percent":"공포 내성 %","melee_critical_damage:flat":"근거리 치명타 대미지","ranged_critical_damage:flat":"원거리 치명타 대미지","magic_critical_damage:flat":"마법 치명타 대미지"})

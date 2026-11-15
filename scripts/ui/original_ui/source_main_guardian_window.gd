@@ -11,18 +11,29 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## slot centres (Nd_Normal when both are open). The cell pitch is not in the
 ## original data: data/growth/guardian_window_layout.json (TWILIGHT 추정,
 ## docs/GUARDIAN_WINDOW523_LAYOUT.md).
-## Every rule stays with world.growth: 수호성 초기화 is its guardian_reset
-## quote -> HUD confirmation -> execute; a slot tap (and a pending card choice)
-## opens the existing 수호성 view on that slot, which keeps 활성화 / 카드 선택 /
-## 강화 / 지정 / 시전. Left out: the slot info popup, the gauge, the message.
+## The info panel lists the star's opened slots (SkillTree_Text_Buff01: name
+## and effect, Lv) in ListView_1. A slot tap opens the original slot info
+## popup (SkillTree_Popup_SkillInfo_Layout): name, Lv, cost, prerequisites,
+## effect and detail lines (SkillTree_Text_02 in ListView_Info), the
+## 수호성 마법발동 스킬 설정 ON / OFF of an opened skill slot, 닫기 and 활성화.
+## Every rule stays with world.growth: 수호성 초기화, 활성화 and 대표 지정 are
+## its quote -> HUD confirmation -> execute; the card choice after 활성화, 강화
+## and 시전 (not in the original popup) open the existing 수호성 view on that
+## slot. Left out: the slot icon (Common_Slot), the gauge, the message.
 const ROOT="UI/SkillTree/SkillTree_All.csb"
 const ICON_SKILL="UI/SkillTree/SkillTree_Icon_Skill.csb"
 const ICON_BONUS="UI/SkillTree/SkillTree_Icon_Bonus.csb"
 const LINE="UI/SkillTree/SkillTree_Icon_Line.csb"
+const INFO_ROW="UI/SkillTree/SkillTree_Text_02.csb"
+const EFFECT_ROW="UI/SkillTree/SkillTree_Text_Buff01.csb"
+const POPUP="SkillTree_Popup_SkillInfo_Layout"
+const GrowthView=preload("res://scripts/growth/growth_view.gd")
 const LAYOUT_PATH="res://data/growth/guardian_window_layout.json"
 ## growth guardian id -> original tab button (SkillTreeCategory.Name).
 const STARS={"joe":"Zoewoo","atun":"Atune","gillian":"Zillian","christ":"Crister","isilote":"Ecilote","kerenis":"Kerenis"}
 var selected: String="joe"
+## The slot whose info popup is open ("" = closed).
+var info: String=""
 var _layout: Dictionary={}
 var _graph: Node2D
 var _graph_x: float=0.0
@@ -50,6 +61,7 @@ func open(parent: Node, id: String="") -> Dictionary:
 	if float(_layout.get("column_pitch",0))<=0.0 or float(_layout.get("row_pitch",0))<=0.0:return _fail("source_guardian_window_layout_unavailable")
 	if STARS.has(id):selected=id
 	_graph_x=0.0
+	info=""
 	return open_window(parent)
 
 func _group(runtime: Object) -> Dictionary:
@@ -61,7 +73,9 @@ func _spec() -> Dictionary:
 	var runtime: Object=_runtime()
 	var group: Dictionary=_group(runtime)
 	var spec: Dictionary={}
-	for name: String in ["Nd_Gauge","Nd_Message","SkillTree_Popup_SkillInfo_Layout","Label_Time","Fx_Img_BG_Particle"]:spec[name]={"exclude":true}
+	for name: String in ["Nd_Gauge","Nd_Message","Label_Time","Fx_Img_BG_Particle"]:spec[name]={"exclude":true}
+	if info.is_empty() or not _rows_available():spec[POPUP]={"exclude":true}
+	else:_popup_spec(runtime,spec)
 	for id: String in STARS:
 		var on: bool=id==selected
 		spec["ListView_Tab/Btn_"+STARS[id]]={"activate":Callable(self,"_select").bind(id)}
@@ -140,7 +154,83 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	_graph_min=minf(0.0,visible_width-width)
 	_graph_x=clampf(_graph_x,_graph_min,0.0)
 	graph.position.x=_graph_x
-	return {"ok":true,"selected":selected,"slots":slots,"clips":clips,"lines":lines,"width":width}
+	var effects: int=-1
+	if _rows_available():
+		var listed: Dictionary=_fill_list(root,out,"Nd_SkillTreeInfo/ListView_1",_effect_rows(runtime,group))
+		if not listed.get("ok",false):return listed
+		effects=int(listed.rows)
+		if not info.is_empty():
+			var lines_info: Dictionary=_fill_list(root,out,POPUP+"/Nd_SkillInfo/Nd_Skill/ListView_Info",_info_rows(runtime,info))
+			if not lines_info.get("ok",false):return lines_info
+	return {"ok":true,"selected":selected,"slots":slots,"clips":clips,"lines":lines,"width":width,"effects":effects,"info":info}
+
+## The row members of the effect list and the popup (absent in older packs).
+func _rows_available() -> bool:
+	var scenes: Dictionary=_pack.manifest.get("scenes",{}) if _pack!=null else {}
+	return scenes.has(INFO_ROW) and scenes.has(EFFECT_ROW)
+
+## ListView_1: the star's opened slots, one SkillTree_Text_Buff01 each.
+func _effect_rows(runtime: Object, group: Dictionary) -> Array:
+	var opened: Array=runtime.state.get("nodes",[])
+	var rows: Array=[]
+	for node: Dictionary in group.get("nodes",[]):
+		var id: String=str(node.id)
+		if not opened.has(id):continue
+		var text: String=str(node.get("name",id))
+		var effect: Dictionary=runtime.guardian_source.effects(id,runtime.guardian_level(id)) if runtime.guardian_source.has_node(id) else {}
+		if not effect.is_empty():text+=" · "+GrowthView.effect_text(runtime,effect)
+		rows.append({"member":EFFECT_ROW,"spec":{"Nd_Effect/On":{"visible":true},"Nd_Effect/Off":{"visible":false},
+			"On/Label_Dsc":{"role":"source_text","text":text},"On/Label_Level":{"role":"source_text","text":"Lv.%d" % runtime.guardian_level(id)}}})
+	return rows
+
+## The slot info popup: title, buttons and the representative ON / OFF.
+func _popup_spec(runtime: Object, spec: Dictionary) -> void:
+	var row: Dictionary=runtime.node(info)
+	var opened: bool=(runtime.state.get("nodes",[]) as Array).has(info)
+	var skill: bool=str(row.get("kind",""))!="stat"
+	spec[POPUP]={"visible":true}
+	for name: String in ["Fx_Popup_RightBottom","Fx_Popup_LeftUp","Nd_Skill/Common_Slot","Nd_Skill/Label_Probability"]:spec[POPUP+"/"+name if not name.begins_with("Nd_Skill") else name]={"exclude":true}
+	spec[POPUP+"/Btn_Close"]={"activate":Callable(self,"_close_info")}
+	spec["Nd_SkillInfo/Btn_No"]={"activate":Callable(self,"_close_info")}
+	spec["Nd_Skill/Label_SkillName"]={"role":"source_text","text":"%s  Lv.%d / %d" % [str(row.get("name",info)),runtime.guardian_level(info),int(row.get("max_level",0))]}
+	# 활성화 for a closed slot; an opened one keeps 강화 / 시전 in the existing view.
+	var activate: Dictionary=runtime.quote("activate",info) if not opened else {}
+	var ok: bool=opened or bool(activate.get("ok",false))
+	var label: String="활성화" if not opened else ("수호성 강화" if int(row.get("max_level",0))>runtime.guardian_level(info) else "사용 스킬 시전" if str(row.get("kind",""))=="active" else "수호성 정보")
+	spec["Nd_SkillInfo/Btn_Ok"]={"activate":Callable(self,"_info_ok"),"displaystate":ok}
+	spec["Btn_Ok/Normal"]={"visible":ok}
+	spec["Btn_Ok/Disabled"]={"visible":not ok}
+	spec["Btn_Ok/Normal/Label"]={"role":"source_text","text":label}
+	spec["Btn_Ok/Disabled/Label"]={"role":"source_text","text":label}
+	# 수호성 마법발동 스킬 설정 (분류 발동 스킬) for an opened skill slot.
+	var represent: bool=opened and skill
+	var current: bool=runtime.guardian_representative(int(row.get("category_id",0)))==info
+	spec["Nd_Skill/Nd_Represent"]={"visible":represent}
+	spec["Nd_On/Btn_Active_On"]={"visible":current,"activate":Callable(self,"_ignore")}
+	spec["Nd_On/Btn_Active_Off"]={"visible":not current,"activate":Callable(self,"_represent")}
+	spec["Nd_Off/Btn_Inactive_On"]={"visible":not current,"activate":Callable(self,"_ignore")}
+	spec["Nd_Off/Btn_Inactive_Off"]={"visible":current,"activate":Callable(self,"_ignore")}
+
+## ListView_Info: the slot's lines from the existing guardian source, one
+## SkillTree_Text_02 (title + description) each.
+func _info_rows(runtime: Object, id: String) -> Array:
+	var row: Dictionary=runtime.node(id)
+	var lines: Array=[]
+	var level: int=runtime.guardian_level(id)
+	if runtime.guardian_source.has_node(id):
+		lines.append(["비용","1회 수호석 %d개 · 카드 %d장" % [int(row.get("cost",0)),int(row.get("cards",0))]])
+		var previous: Array[String]=[]
+		for prerequisite: Variant in row.get("prerequisites",[]):previous.append(str(runtime.node(str(prerequisite)).get("name","")))
+		lines.append(["선행","없음" if previous.is_empty() else " → ".join(previous)])
+		lines.append(["능력치",GrowthView.effect_text(runtime,runtime.guardian_source.effects(id,level))])
+		var detail: String=runtime.guardian_source.detail(id,level)
+		if not detail.is_empty():lines.append(["효과",detail])
+		if int(row.get("max_level",0))>level:lines.append(["다음 강화",runtime.guardian_source.detail(id,level+1)])
+	var rows: Array=[]
+	for line: Array in lines:
+		rows.append({"member":INFO_ROW,"spec":{"Nd_Skill":{"visible":true},"Nd_Bonus":{"visible":false},
+			"Nd_Skill/Text_Title":{"role":"source_text","text":str(line[0])},"Nd_Skill/Text_Desc":{"role":"source_text","text":str(line[1])}}})
+	return rows
 
 ## Slot centre in the graph's Cocos space (x right, y up from the bottom of
 ## the 430-high inner area) for SkillTreeSlot UIPosX / UIPosY.
@@ -185,11 +275,57 @@ func _select(id: String) -> Dictionary:
 	_graph_x=0.0
 	return _stage()
 
-## A slot opens the existing 수호성 view on it (활성화, 카드 선택, 강화,
-## 지정, 시전 and their confirmations stay there).
+## A slot opens its original info popup; without the popup rows in the pack,
+## or with a pending card choice, the existing 수호성 view on that slot.
 func _slot_pressed(id: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
-	return _route("open_growth_native",["guardians",selected,id])
+	var runtime: Object=_runtime()
+	if not _rows_available() or not (runtime.state.get("pending",{}) as Dictionary).is_empty():return _route("open_growth_native",["guardians",selected,id])
+	info=id
+	return _stage()
+
+func _close_info() -> Dictionary:
+	info=""
+	return _stage()
+
+## 활성화: quote -> confirmation -> execute, then the existing view for the
+## card choice; an opened slot's 강화 / 시전 open the existing view on it.
+func _info_ok() -> Dictionary:
+	var runtime: Object=_runtime()
+	var id: String=info
+	if (runtime.state.get("nodes",[]) as Array).has(id):
+		info=""
+		return _route("open_growth_native",["guardians",selected,id])
+	var offer: Dictionary=runtime.quote("activate",id)
+	if not offer.get("ok",false):
+		_message(str(offer.get("message","활성화할 수 없습니다")))
+		return {"ok":false}
+	var owner: Object=hud()
+	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_window_confirmation_unavailable")
+	var group: String=selected
+	owner.call("confirm_action","수호성 활성화",str(offer.message),"확인",func(_count: int) -> void:
+		var response: Dictionary=runtime.execute("activate",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
+		_message(str(response.get("message","")))
+		info=""
+		if response.get("ok",false) and not (runtime.state.get("pending",{}) as Dictionary).is_empty():_route("open_growth_native",["guardians",group,id])
+		elif is_open():_stage())
+	return {"ok":true,"quoted":"activate"}
+
+## 수호성 마법발동 스킬 설정 ON: the existing representative action.
+func _represent() -> Dictionary:
+	var runtime: Object=_runtime()
+	var id: String=info
+	var offer: Dictionary=runtime.quote("representative",id)
+	if not offer.get("ok",false):
+		_message(str(offer.get("message","지정할 수 없습니다")))
+		return {"ok":false}
+	var owner: Object=hud()
+	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_window_confirmation_unavailable")
+	owner.call("confirm_action","분류 발동 스킬 지정",str(offer.message),"확인",func(_count: int) -> void:
+		var response: Dictionary=runtime.execute("representative",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
+		_message(str(response.get("message","")))
+		if is_open():_stage())
+	return {"ok":true,"quoted":"representative"}
 
 func _reset() -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
