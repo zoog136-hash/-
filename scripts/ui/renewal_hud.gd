@@ -3162,9 +3162,26 @@ func open_growth(section: String) -> void:
 	_open_window(section,"문양" if section == "emblems" else "수호성","")
 	# The original 523 문양 window (source_main_symbol_window) over world.growth.
 	if section=="emblems" and _open_original_feature("emblems"):return
+	# The original 523 수호성 window (source_main_guardian_window) over
+	# world.growth; a pending card choice stays in the existing view.
+	var growth: Variant=get_parent().get("growth") if get_parent()!=null else null
+	if section=="guardians" and growth!=null and growth.state.get("pending",{}).is_empty() and _open_original_feature("guardians"):return
+	_mount_growth_view(section)
+
+## The existing growth view (the original 수호성 window routes its slots here).
+func open_growth_native(section: String, group: String="", node: String="") -> void:
+	_open_window(section,"문양" if section == "emblems" else "수호성","")
+	var screen: Control=_mount_growth_view(section)
+	if not group.is_empty():
+		screen.selected=group
+		screen.selected_node=node
+		screen._refresh()
+
+func _mount_growth_view(section: String) -> Control:
 	var screen := preload("res://scripts/growth/growth_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,section)
+	return screen
 
 ## The original 523 아이템 컬렉션 window for the 96레벨 증표 컬렉션
 ## (source_main_item_book_window); false keeps the growth96 view.
