@@ -421,8 +421,10 @@ func _storage() -> Dictionary:
 	return _route("open_expedition")
 
 func _help() -> Dictionary:
+	var shown: Dictionary=_open_help(HelpBox.DISPATCH)
+	# TWILIGHT's own rules beside the original help text.
 	_message("변신 파견: 변신 카드 최대 4장을 스팟에 8시간 파견합니다 · 원본 비용·시간·HP·보상, 전투·이벤트는 TWILIGHT 추정 규칙")
-	return {"ok":true}
+	return {"ok":true,"original_help":shown.get("handled",false)}
 
 func _rules() -> Dictionary:
 	var rules: Dictionary=_runtime().rules_view()
