@@ -163,6 +163,15 @@ func _init() -> void:
 	BAKE.clear(PROBE)
 	if DirAccess.dir_exists_absolute(BAKE.ROOT) and DirAccess.get_files_at(BAKE.ROOT).is_empty() and DirAccess.get_directories_at(BAKE.ROOT).is_empty(): DirAccess.remove_absolute(BAKE.ROOT)
 
+	# Android release builds: /proc text read through `cat` (file access reads
+	# nothing from size-0 /proc files) still yields app and device memory.
+	var status_text: String = "Name:\tgodot\nVmHWM:\t 1800000 kB\nVmRSS:\t 1500000 kB\nRssAnon:\t 900000 kB\nMemTotal:\t5800000 kB\nMemAvailable:\t 700000 kB\n"
+	var parsed: PackedStringArray = LOG._status_fields(status_text)
+	check(parsed.has("vmrss_kb=1500000") and parsed.has("vmhwm_kb=1800000") and parsed.has("rssanon_kb=900000") and parsed.has("memavailable_kb=700000"), "status/meminfo text parses app and device memory: " + str(parsed))
+	FileAccess.open(LOG.previous_path(), FileAccess.WRITE).store_line("run=x seq=1 t=9000 ev=alive stage=- map=m cur=- static_kb=0 available_kb=-1 " + " ".join(parsed))
+	var release_line: String = LOG.previous_end_line()
+	check(release_line.contains("앱 메모리 1464MB(최대 1757MB)") and release_line.contains("기기 여유 683MB"), "release build line shows app memory and device available memory: " + release_line)
+
 	# --- a file that cannot be opened never stops callers ----------------------
 	LOG.reset_for_test(DIR.path_join("missing_dir/deeper"))
 	var started: int = LOG.begin("no_file_stage")

@@ -185,6 +185,7 @@ static func previous_end_line() -> String:
 		if fields.has("alive_r_raw_chunks"):
 			line += " · 지도 조각 %s/명령 %s/아틀라스 %s/정적 %s" % [fields.alive_r_raw_chunks, fields.get("alive_r_frame_commands", "-"), fields.get("alive_r_frame_atlases", "-"), fields.get("alive_r_static_tails", "-")]
 	var available: int = int(fields.get("available_kb", "-1"))
+	if available < 0: available = int(fields.get("memavailable_kb", "-1"))
 	if available >= 0: line += " · 기기 여유 %dMB" % (available / 1024)
 	return line
 
@@ -304,16 +305,49 @@ static func _memory() -> String:
 		parts.append("buf_kb=" + str(int(Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED)) / 1024))
 		parts.append("vid_kb=" + str(int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED)) / 1024))
 	if _proc_readable and OS.get_name() in ["Linux", "Android"]:
-		var status := FileAccess.open("/proc/self/status", FileAccess.READ)
-		if status == null:
-			_proc_readable = false
-		else:
-			var lines: int = 0
-			while not status.eof_reached() and lines < 80:
-				lines += 1
-				var row: String = status.get_line()
-				for field: String in ["VmRSS:", "VmHWM:", "RssAnon:"]:
-					if row.begins_with(field):
-						parts.append(field.trim_suffix(":").to_lower() + "_kb=" + row.trim_prefix(field).strip_edges().get_slice(" ", 0))
-			status.close()
+		var status_parts: PackedStringArray = _status_fields(_read_status_file())
+		if status_parts.is_empty() and OS.get_name() == "Android":
+			# Godot's Android file access sizes files before reading and /proc
+			# files report size 0, so nothing was read (release builds also count
+			# no engine memory: 2026-11-15 523.514 crashed with no memory shown).
+			# Ask the system's cat instead, at most every few seconds.
+			status_parts = _status_fields(_exec_status())
+		if status_parts.is_empty(): _proc_readable = false
+		parts.append_array(status_parts)
 	return " ".join(parts)
+
+static var _exec_text: String = ""
+static var _exec_msec: int = -100000
+const EXEC_STATUS_MSEC: int = 3000
+
+static func _read_status_file() -> String:
+	var status := FileAccess.open("/proc/self/status", FileAccess.READ)
+	if status == null: return ""
+	var rows: PackedStringArray = []
+	while not status.eof_reached() and rows.size() < 80:
+		rows.append(status.get_line())
+	status.close()
+	return "\n".join(rows)
+
+static func _exec_status() -> String:
+	var now_msec: int = Time.get_ticks_msec()
+	if now_msec - _exec_msec < EXEC_STATUS_MSEC: return _exec_text
+	_exec_msec = now_msec
+	var output: Array = []
+	# Own pid: /proc/self in a child would describe cat itself.
+	if OS.execute("/system/bin/cat", ["/proc/%d/status" % OS.get_process_id(), "/proc/meminfo"], output, true) != 0 or output.is_empty():
+		_exec_text = ""
+	else:
+		_exec_text = str(output[0])
+	return _exec_text
+
+## VmRSS/VmHWM/RssAnon of this process and, when present, MemAvailable.
+static func _status_fields(text: String) -> PackedStringArray:
+	var parts: PackedStringArray = []
+	for row: String in text.split("\n"):
+		for field: String in ["VmRSS:", "VmHWM:", "RssAnon:"]:
+			if row.begins_with(field):
+				parts.append(field.trim_suffix(":").to_lower() + "_kb=" + row.trim_prefix(field).strip_edges().get_slice(" ", 0))
+		if row.begins_with("MemAvailable:"):
+			parts.append("memavailable_kb=" + row.trim_prefix("MemAvailable:").strip_edges().get_slice(" ", 0))
+	return parts
