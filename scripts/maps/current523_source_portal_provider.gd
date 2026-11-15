@@ -132,6 +132,9 @@ func portal_context_for_actor_state_at_landing(land_id: int, exact_asset: String
 	return _portal_context(land_id,exact_asset,portal_id,actor_state.get("level"),{"source_cell":source_cell,"selection_policy":selection_policy},actor_state)
 
 func _date_row(definition: RefCounted, table: String, id: int) -> Dictionary:
+	# The Land definition answers one row by ID (same duplicate-ID rule) without
+	# a second full copy of the calendar table here.
+	if definition.has_method("context_row"): return definition.context_row(table, id)
 	if not _date_indexes.has(table):
 		var index: Dictionary={}
 		for row: Dictionary in definition.context_rows(table):
