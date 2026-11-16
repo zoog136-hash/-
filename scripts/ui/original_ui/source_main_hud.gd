@@ -1108,6 +1108,7 @@ const FEATURE_WINDOWS={
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
+	"fail_history":preload("res://scripts/ui/original_ui/source_main_fail_history_window.gd"),
 	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
 }
 var _feature_windows: Dictionary={}
