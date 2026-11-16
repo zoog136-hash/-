@@ -15,6 +15,7 @@ const APPROX_BAG_SUBSTITUTE: bool = true
 const SUBSTITUTE_TYPES := ["LuckyBagClassID","SelectRewardID","ComplexRewardID","BuffCardID"]
 static var _substitutes: Dictionary = {}
 static var _substitutes_identity: String = ""
+
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const SLOT_MAP={"Head":"helmet","Torso":"body","Shirt":"tshirt","Cloak":"cloak","Leg":"gaiters","Foot":"boots","Hand":"gloves","WeaponHold":"weapon","Finger":"ring","Neck":"necklace","Waist":"belt","Ear":"earring","ShieldHold":"offhand","Quiver":"offhand","Rune":"rune","SpellRune":"rune","Badge":"seal","Insignia":"badge","Spaulder":"shoulder","Bangle_normal":"bracelet","Bangle_BM":"bracelet","Crest":"crystal","Catalyst":"catalyst","DominationStone":"domination_stone","Relic":"relic_item","FishingRod":"fishing_rod"}
 const FLAT={"WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit","WeaponDamageBonus":"additionalDamage","ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction","PVPMeleeAdditionDamage":"pvp_melee_damage","PVPRangeAdditionDamage":"pvp_ranged_damage","PVPMagicAdditionDamage":"pvp_magic_damage","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","PierceMeleeDamageReduction":"melee_reduction_ignore","PierceRangeDamageReduction":"ranged_reduction_ignore","PierceMagicDamageReduction":"magic_reduction_ignore","HPPotionIncreaseStatic":"potionHealFlat"}
@@ -1060,6 +1061,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		var excluded_item: bool=item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()
 		var substitute: Dictionary=_substitute_for(item) if excluded_item and APPROX_BAG_SUBSTITUTE else {}
 		if not substitute.is_empty():excluded_item=false
+
 		if excluded_item and APPROX_BAG_DROP_TEST_REWARDS:
 			if retain_source_entities:
 				var kept: Dictionary=row.duplicate(true);kept["entity_type"]=type.duplicate(true);kept["class_limits"]=limits;kept["approx_dropped"]=true;linked.append(kept)
@@ -1103,6 +1105,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 				if whole_total>0:
 					if not spec.has("approx_class_pool"):spec["approx_class_pool"]=[]
 					spec.approx_class_pool.append(class_id);totals[str(class_id)]=whole_total;renormalized=true;continue
+
 			if total!=10000000 and not (APPROX_BAG_RENORMALIZE and total>0):distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
 			elif total!=10000000:renormalized=true
 	var unique: Array=[]
