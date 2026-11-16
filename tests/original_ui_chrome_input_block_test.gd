@@ -1,5 +1,6 @@
 extends SceneTree
-## A touch on an open TWILIGHT window (menu/workspace) must not reach the
+## A touch on an open TWILIGHT window (menu/workspace) or an open original
+## window's panel must not reach the
 ## original HUD chrome button drawn beneath it (menu open + tap → AUTO).
 ## Synthetic: a chrome button covered by a visible workspace stops taking the
 ## pointer, an uncovered one, an original window (z >= 140) and a
@@ -75,6 +76,19 @@ func _run() -> void:
 	hud.workspace.hide()
 	controller.call("_sync_chrome_input_block",hud)
 	check(auto_area.mouse_filter==Control.MOUSE_FILTER_STOP and not auto_area.has_meta("chrome_block_filter"),"closing the workspace restores the AUTO button")
+	# An open original window's panel covers the chrome button beneath it
+	# (the button router walks the chrome too); closing it restores the button.
+	var panel:=Control.new()
+	panel.position=Vector2(1000,440)
+	panel.size=Vector2(200,200)
+	panel.mouse_filter=Control.MOUSE_FILTER_STOP
+	window.add_child(panel)
+	controller.call("_sync_chrome_input_block",hud)
+	check(auto_area.mouse_filter==Control.MOUSE_FILTER_IGNORE and menu_area.mouse_filter==Control.MOUSE_FILTER_STOP,"an open original window's panel blocks the chrome AUTO button under it only")
+	check(window_area.mouse_filter==Control.MOUSE_FILTER_STOP,"the window's own button keeps its input")
+	window.hide()
+	controller.call("_sync_chrome_input_block",hud)
+	check(auto_area.mouse_filter==Control.MOUSE_FILTER_STOP,"closing the original window restores the AUTO button")
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	check(text.contains("class ChromeInputSync") and text.contains("_coordinates.add_child(input_sync)"),"every press syncs the block before the GUI delivers it")
 	controller.free()
