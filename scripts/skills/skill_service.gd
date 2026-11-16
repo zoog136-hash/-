@@ -344,7 +344,11 @@ func cast(record: Dictionary) -> bool:
 		"buff", "counter", "stealth":
 			apply_buff(skill)
 			# TWILIGHT 근사 (4): self heal / cleanse actives.
-			if skill.has("approx_self_child"): approx_cast_child(id, skill.approx_self_child, null)
+			if skill.has("approx_self_child"):
+				var self_child: Dictionary = skill.approx_self_child
+				while not self_child.is_empty():
+					approx_cast_child(id, self_child, null)
+					self_child = self_child.get("next", {})
 		"detect": estimated_nodes.detect(skill)
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
