@@ -53,6 +53,9 @@
     "OneHandSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [1]},
     "SpearDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [4]},
     "RuneSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [102]},
+    "PierceMeleeEvasion": {"stat": "meleeHit", "unit": "Value", "scale": 1, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 상대 근거리 회피 무시 → 근거리 명중 (혈맹 버프와 같은 해석)."},
+    "PierceRangeEvasion": {"stat": "rangedHit", "unit": "Value", "scale": 1, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 상대 원거리 회피 무시 → 원거리 명중."},
+    "MeleeDamageReductionPercent": {"stat": "receivedReductionPct", "unit": "Percentage", "scale": 0.0001, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 받는 근거리 피해 % 감소 → 받는 피해 % 감소 (몬스터 공격 대부분이 근거리). RangeDamageReductionPercent는 같은 받는 곳에 두 번 더해지지 않게 연결하지 않음."},
     "SpecialResistance": {"unit": "Percentage", "scale": 0.0001, "application_type": 2, "targets": {"6": "stunResistance", "7": "holdResistance", "8": "fearResistance", "41": "silenceResistance", "22": "poisonResistance"}, "note": "BonusApplicationType 2 + SpecialResistanceType(6 Stun …). 인벤 '스턴 내성 +5%' = 원본 50000/10000."}
   },
   "receiver_units_note": "Percentage = 원본 UIUnit Denominator 10000 (50000 → 5%). ValuePercent = 이미 % 값. receivedReductionPct·moveSpeedPct는 이번에 받는 곳을 새로 연결했다(받는 피해 % 감소 최대 80%, 이동 속도 배수).",

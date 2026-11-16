@@ -244,7 +244,10 @@ const EQUIPMENT_SPELLS = preload("res://scripts/crafting/patch523_equipment_spel
 ## TWILIGHT 근사 (4) switch: heal / cleanse / dash / control statuses (docs (4)).
 const APPROX_EXTRA_EFFECTS := true
 ## Target rows the equipment-spell fields lack: [modifier, UnitID, scale].
-const APPROX_TARGET_FIELDS := {"ArmorClass":["ac",1,-1.0]}
+## TWILIGHT 근사(근거 약함) 2026-11-17: AttackedMeleeDamageScale (Percentage, 350000 = 35 %)
+## = the target takes that much more damage → the existing "taken" multiplier (fraction).
+## The Range/Magic/Dark rows of the same buff are not added on top (one multiplier).
+const APPROX_TARGET_FIELDS := {"ArmorClass":["ac",1,-1.0],"AttackedMeleeDamageScale":["taken",3,0.000001]}
 func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 	var row: Dictionary = SOURCE_ROWS.row("SpellClass", spell_id)
 	if row.is_empty() or row.get("TestSpell") != false: return {"reason":"%d 없음/테스트" % spell_id}
