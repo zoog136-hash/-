@@ -458,13 +458,44 @@ func _calendar_time(row: Dictionary, offset: int) -> int:
 ## spawns and the shop already use (current523_server_profile). Sets for other
 ## servers only stay out, so the window never lists another server's copy.
 func _server_set_admitted(views: Array) -> bool:
+	return _server_set_state(views) == "admitted"
+
+## "admitted" (set 0 or a set naming KR 1), "other_server_only" (a set whose
+## original ServerLimit rows exist and name only other servers — 사용자 결정
+## 2026-11-16: deleted, never admitted or listed) or "unresolved" (views with
+## different sets, a malformed set, or a set without ServerLimit rows).
+func _server_set_state(views: Array) -> String:
 	var set_id: Variant = views[0].get("ServerLimitSetID")
 	for view: Dictionary in views:
-		if not _integer(view.get("ServerLimitSetID")) or view.get("ServerLimitSetID") != set_id: return false
-	if int(set_id) == 0: return true
-	if int(set_id) < 0: return false
+		if not _integer(view.get("ServerLimitSetID")) or view.get("ServerLimitSetID") != set_id: return "unresolved"
+	if int(set_id) == 0: return "admitted"
+	if int(set_id) < 0: return "unresolved"
 	var profile: Dictionary = SERVER_CONTEXT.OFFLINE_PROFILE
-	return SERVER_PROFILE.rows_allow(source.related("ServerLimit","ServerLimitSetID",int(set_id)),str(profile.ServiceRegionCode),int(profile.WorldNo))
+	var rows: Array = source.related("ServerLimit","ServerLimitSetID",int(set_id))
+	if rows.is_empty(): return "unresolved"
+	return "admitted" if SERVER_PROFILE.rows_allow(rows,str(profile.ServiceRegionCode),int(profile.WorldNo)) else "other_server_only"
+
+## 사용자 결정 2026-11-16 (docs/PATCH523_CRAFTING_EQUIPMENT.md): original
+## conditions the tables cannot name are lifted for KR 1 / no-set crafts.
+##   count_limit  ItemCraftRestriction rows without a verified policy
+##                (verified_craft_constraints) → no craft-count limit.
+##   time_window  CraftTimeTypeID ≠ 1 or an unreadable period → no period.
+##   no_repeat    NoRepeat → repeated crafting allowed.
+## Other-server-only sets are deleted (reason other_server_only_set) and win
+## over every waiver. Returns the waivers a craft needs ({} for none); the
+## craft is admitted only when every other check passes as well.
+const USER_DECISION_DATE = "2026-11-16"
+static func decision_waivers(view: Dictionary, restrictions: Array, constraint: Dictionary, known_restriction: bool, calendar: Variant) -> Dictionary:
+	var waived: Dictionary = {}
+	if not restrictions.is_empty() and not known_restriction and constraint.is_empty():
+		var ids: Array = []
+		for row: Dictionary in restrictions: ids.append(int(row.ID))
+		ids.sort()
+		waived.count_limit_restriction_ids = ids
+	if view.NoRepeat == true: waived.no_repeat = true
+	if view.CraftTimeTypeID != 1 or calendar == null:
+		waived.time_window = {"CraftTimeTypeID":int(view.CraftTimeTypeID),"EffectiveFrom":int(view.EffectiveFrom),"EffectiveTo":int(view.EffectiveTo)}
+	return waived
 
 func _calendar_window(view: Dictionary) -> Variant:
 	if view.EffectiveFrom == 1 and view.EffectiveTo == 3: return {}
@@ -584,12 +615,14 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	var primary: Dictionary = {}
 	for row: Dictionary in outs:
 		if row.ItemCraftOutputTypeID == 1 and _same_result(view,row): primary = row; break
+	var waived: Dictionary = decision_waivers(view,restrictions,constraint,known_restriction,calendar)
 	var reason: String = ""
 	if probabilistic and (not _view_contract(views,outs,complete) or primary.is_empty() or outs.is_empty() or not valid_outs or (total != 1000000 and not partial)): reason = "unverified_random_result_contract"
 	elif not probabilistic and (views.size() != 1 or view.AlwaysSuccess != 1 or outs.size() != 1): reason = "non_single_guaranteed_result"
 	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
-	elif (not restrictions.is_empty() and not known_restriction) or not _server_set_admitted(views) or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
-	elif view.CraftTimeTypeID != 1 or calendar == null: reason = "limited_calendar_or_time_type"
+	elif _server_set_state(views) == "other_server_only": reason = "other_server_only_set"
+	elif (not restrictions.is_empty() and not known_restriction and not waived.has("count_limit_restriction_ids")) or not _server_set_admitted(views) or view.IsCoalitionItem or (view.NoRepeat and not waived.has("no_repeat")) or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
+	elif (view.CraftTimeTypeID != 1 or calendar == null) and not waived.has("time_window"): reason = "limited_calendar_or_time_type"
 	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
 	elif not probabilistic and not _same_result(view,outs[0]): reason = "view_output_disagreement"
@@ -597,6 +630,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		for row: Dictionary in outs:
 			if row.ClanItemClassID != 0 or row.ClanAmount != 0: reason = "clan_output"; break
 	if not reason.is_empty(): return {"reason":reason}
+	if waived.has("time_window"): calendar = {}
 	var item_reason: Dictionary = _item_reason(ins,outs)
 	if not item_reason.is_empty(): return item_reason
 	var out: Dictionary = primary if probabilistic else outs[0]
@@ -621,8 +655,11 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		if slot.candidates.size() > 1: selection = true
 	var recipe: Dictionary = {"id":"patch523:"+craft_id,"name":"원본523 · "+str(result.name)+" +"+str(int(out.Enchant)),"category":category,
 		"source_snapshot":"patch523","source_craft_id":int(craft_id),"result":output,"adena":adena,"materials":materials,"material_slots":slots,"requires_material_selection":selection,"popup_text_id":view.PopupText}
-	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty() or int(view.ServerLimitSetID) != 0:
+	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty() or int(view.ServerLimitSetID) != 0 or not waived.is_empty():
 		var condition: Dictionary = {"schema":"patch523-craft-conditions-v1","min_level":view.LevelLimitValue,"max_level":0,"source_level_fields":{"IsBelowLevelLimit":view.IsBelowLevelLimit,"LevelLimitValue":view.LevelLimitValue}}
+		if not waived.is_empty():
+			waived.date = USER_DECISION_DATE
+			condition.user_decision = waived
 		# Checked again against the game's server profile on every craft
 		# (patch523_craft_conditions.stage, current523_server_profile).
 		if int(view.ServerLimitSetID) != 0: condition.server_limit_set_id = int(view.ServerLimitSetID)

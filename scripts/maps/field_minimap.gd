@@ -4,7 +4,12 @@ class_name FieldMinimap
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
 const RASTER_CACHE = preload("res://scripts/maps/minimap_raster_cache.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 var source_overview: Texture2D
+## World rectangle of an original map picture (current523 UIMapImageInfo);
+## empty when source_overview simply fills the minimap area.
+var overview_world_rect := Rect2()
+const MAP_IMAGES = preload("res://scripts/maps/current523_map_images.gd")
 var boss_region_mesh: MultiMesh
 var world: Node
 var field: PlayableField
@@ -42,7 +47,14 @@ func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
-	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
+	overview_world_rect = Rect2()
+	var original_picture: Dictionary = MAP_IMAGES.minimap_image(field) if field != null and bool(field.get_meta("current523_source_field", false)) else {}
+	if original_picture.get("ok", false):
+		# Original W_*.png of the Land replaces the own S32 walkability blocks.
+		source_overview = original_picture.texture
+		overview_world_rect = original_picture.world_rect
+	else:
+		source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	if field is NativePngField: source_overview = field.overview_texture()
 	_prepare_static_geometry()
 	_cache_boss_markers()
@@ -68,6 +80,7 @@ func adopt_static(owner: FieldMinimap) -> void:
 	cached_structure_pits = owner.cached_structure_pits
 	cached_hunting_polygons = owner.cached_hunting_polygons
 	cached_static_geometry_ready = owner.cached_static_geometry_ready
+	overview_world_rect = owner.overview_world_rect
 	boss_region_mesh = owner.boss_region_mesh
 
 func release_static() -> void:
@@ -94,10 +107,14 @@ func _ready() -> void:
 	resized.connect(_prepare_raster)
 	get_viewport().size_changed.connect(_prepare_raster)
 
+## Moving markers (player arrow, nearby monster dots, view box) redraw at
+## 4 Hz (was ~8 Hz): a dot moves at most a few minimap pixels between redraws.
+const OVERLAY_INTERVAL: float = .25
+
 func _process(delta: float) -> void:
 	clock -= delta
 	if clock <= 0.0:
-		clock = .12
+		clock = OVERLAY_INTERVAL
 		if is_instance_valid(overlay): overlay.queue_redraw()
 		else: queue_redraw()
 
@@ -128,7 +145,8 @@ func _draw() -> void:
 ## the field, its bounds or the control size. The heading stays direct text.
 func _draw_static_layer() -> void:
 	draw_rect(area,Color("202e27"))
-	if source_overview != null: draw_texture_rect(source_overview,area,false)
+	if source_overview != null and overview_world_rect.has_area(): _draw_original_picture()
+	elif source_overview != null: draw_texture_rect(source_overview,area,false)
 	if field != null:
 		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
@@ -173,10 +191,25 @@ func _draw_static_layer() -> void:
 		_draw_boss_regions()
 		_draw_hunting_obstacles()
 
+## The original picture placed by its own world rectangle, clipped to the area.
+func _draw_original_picture() -> void:
+	var top: Vector2 = _point(overview_world_rect.position)
+	var target := Rect2(top, _point(overview_world_rect.end) - top).abs()
+	var shown: Rect2 = target.intersection(area)
+	if not shown.has_area() or not target.has_area(): return
+	var texture_size: Vector2 = source_overview.get_size()
+	var source := Rect2((shown.position - target.position) / target.size * texture_size, shown.size / target.size * texture_size)
+	draw_texture_rect_region(source_overview, shown, source)
+
 ## Moving markers and the region title, drawn on `canvas` (the overlay).
 func _draw_dynamic(canvas: CanvasItem) -> void:
 	if world == null:
 		return
+	var hitch_started: int = FRAME_HITCH.now()
+	_draw_markers(canvas)
+	FRAME_HITCH.detail("hud.minimap_overlay", hitch_started)
+
+func _draw_markers(canvas: CanvasItem) -> void:
 	overlay_redraws += 1
 	var font: Font = get_theme_default_font()
 	for child: Node in world.monsters_root.get_children():

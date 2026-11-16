@@ -215,7 +215,85 @@ func _approx_invoke(option_id: int, chance: float, level: int) -> Dictionary:
 			result["percent"] = float(option.get(str(rule.percent_param),0))
 			result["base"] = float(option.get(str(rule.base_param),0))
 			result["cooldown"] = float(option.get(str(rule.cooldown_param),0))
+		"spell":
+			var child := approx_child_spell(int(option.get(str(rule.spell_param),0)))
+			if child.has("reason"): return {"reason":"발동 하위 주문 " + str(child.reason)}
+			result["spell"] = child
+			result["main_target_only"] = bool(option.get("Param4",false))
 	return result
+
+## TWILIGHT 근사: the child SpellClass an Attack_Spell invoke casts, reduced to
+## one of three effects the existing runtime has: direct damage (original
+## SpellDamageBase + DiceNumber d DiceSpotCount), a timed debuff on the target
+## (original BuffClass rows through the existing target modifiers), or a timed
+## self buff (original BuffClass rows through the passive receivers). Anything
+## else (composition nodes, chained/next spells, area shapes) keeps the hold.
+const EQUIPMENT_SPELLS = preload("res://scripts/crafting/patch523_equipment_spells.gd")
+func approx_child_spell(spell_id: int) -> Dictionary:
+	var row: Dictionary = SOURCE_ROWS.row("SpellClass", spell_id)
+	if row.is_empty() or row.get("TestSpell") != false: return {"reason":"%d 없음/테스트" % spell_id}
+	if int(row.get("SpellCompositionNode",0)) != 0 or int(row.get("SpellCategoryID",0)) == 371: return {"reason":"%d 조건 노드" % spell_id}
+	var rule: Dictionary = approx_rules().get("invokes",{}).get("child_spell",{})
+	var detail: Dictionary = SOURCE_SPELLS.describe(spell_id)
+	var values: Dictionary = {}
+	var buff_id := 0
+	var ignored: Array[String] = []
+	for entry: Dictionary in detail.get("bonuses",[]):
+		if int(entry.link.get("MinSpellLevel",0)) != 0: continue
+		var name: String = str(entry.type.get("Name",""))
+		if not _source_integer(entry.bonus.get("Value")): ignored.append(name); continue
+		if int(entry.bonus.get("BonusApplicationTypeID",0)) != 0 or int(entry.bonus.get("BonusApplicationTargetID",0)) != 0:
+			if name not in ignored: ignored.append(name)
+			continue
+		if name == "BuffClassID":
+			if buff_id != 0: return {"reason":"%d 버프 둘 이상" % spell_id}
+			buff_id = int(entry.bonus.Value)
+		elif name in rule.get("blocking",[]): return {"reason":"%d %s" % [spell_id, name]}
+		elif name in rule.get("read",[]): values[name] = int(entry.bonus.Value)
+		elif name not in ignored: ignored.append(name)
+	var base: Dictionary = {"spell_id":spell_id,"name":str(row.get("Name","")),"ignored":ignored}
+	if values.has("SpellDamageBase") or values.has("SpellDamageDiceNumber"):
+		var number := int(values.get("SpellDamageDiceNumber",0)); var sides := int(values.get("SpellDamageDiceSpotCount",0))
+		if number < 0 or number > 100 or (number > 0 and sides < 1): return {"reason":"%d 주사위" % spell_id}
+		base.merge({"effect":"damage","base":int(values.get("SpellDamageBase",0)),"number":number,"sides":sides,
+			"attack_type":"melee" if int(values.get("SpellAttackType",0)) == 1 else ("ranged" if int(values.get("SpellAttackType",0)) == 2 else "magic")})
+		return base
+	if buff_id <= 0: return {"reason":"%d 효과 없음" % spell_id}
+	var buff: Dictionary = SOURCE_BUFFS.describe(buff_id)
+	if buff.get("buff_class",{}).is_empty() or buff.get("excluded") == true: return {"reason":"버프 %d 없음" % buff_id}
+	if int(values.get("SpellBuffDuration",0)) > 0:
+		var stats: Dictionary = {}
+		var receivers: Dictionary = approx_rules().get("receivers",{})
+		for entry: Dictionary in buff.get("bonuses",[]):
+			var name: String = str(entry.get("type",{}).get("Name",""))
+			var receiver: Dictionary = receivers.get(name,{})
+			var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(entry.get("link",{}).get("MinSpellLevel",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTypeID",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTargetID",0)) == 0
+			if receiver.is_empty() or receiver.has("targets") or receiver.has("weapon_types") or not flat or str(entry.get("unit",{}).get("Name","")) != str(receiver.get("unit","")) or not _source_integer(entry.get("bonus",{}).get("Value")):
+				if name not in ignored: ignored.append(name)
+				continue
+			var key := "speedPct" if str(receiver.stat) == "moveSpeedPct" else str(receiver.stat)
+			stats[key] = float(stats.get(key,0.0)) + float(entry.bonus.Value) * float(receiver.get("scale",1))
+		if stats.is_empty(): return {"reason":"자기 버프 %d 받는 곳 없음" % buff_id}
+		if stats.has("speedPct"): stats["speed"] = 1.0 + float(stats.speedPct) / 100.0; stats.erase("speedPct")
+		base.merge({"effect":"self_buff","buff_id":buff_id,"duration":float(values.SpellBuffDuration),"stats":stats})
+		return base
+	var low := int(values.get("SpellDebuffMinDuration",0)); var high := int(values.get("SpellDebuffMaxDuration",low))
+	if low <= 0 or high < low: return {"reason":"%d 지속시간 없음" % spell_id}
+	var modifiers: Dictionary = {}
+	for entry: Dictionary in buff.get("bonuses",[]):
+		var t: Dictionary = entry.get("type",{}); var b: Dictionary = entry.get("bonus",{}); var name: String = str(t.get("Name",""))
+		var field: Array = EQUIPMENT_SPELLS.BUFF_FIELDS.get(name,[])
+		var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(b.get("BonusApplicationTypeID",0)) == 0 and int(b.get("BonusApplicationTargetID",0)) == 0
+		if field.is_empty() or not flat or int(t.get("UnitID",-1)) != int(field[1]) or not _source_integer(b.get("Value")) or name.begins_with("PVP"):
+			if name not in ignored: ignored.append(name)
+			continue
+		modifiers[str(field[0])] = float(modifiers.get(str(field[0]),0.0)) + float(b.Value) * float(field[2])
+	if modifiers.is_empty(): return {"reason":"대상 버프 %d 받는 곳 없음" % buff_id}
+	var chance := 1.0
+	if values.has("SpellHitProbabilityBase"):
+		chance = clampf(float(values.SpellHitProbabilityBase) / 1000000.0, float(values.get("SpellHitProbabilityMin",0)) / 1000000.0, float(values.get("SpellHitProbabilityMax",1000000)) / 1000000.0)
+	base.merge({"effect":"debuff","buff_id":buff_id,"duration":[float(low),float(high)],"modifiers":modifiers,"hit_chance":chance})
+	return base
 
 ## Approximated passive contract. Returns {"reason":...} when still held.
 func source_approx_passive(id: String, job: String) -> Dictionary:

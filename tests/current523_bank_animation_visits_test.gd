@@ -94,6 +94,10 @@ func run() -> void:
 	check(a.o._animated_nodes.is_empty() and a.o._placement_sprite_ids.is_empty(),"empty view retains no placement index")
 	# Large operation-count probe: real holders/scheduler, synthetic empty layers.
 	var ids: Array=[];ids.resize(1024);ids.fill(4)
+	# 1024 holders reach far outside the 96x64 viewport. This probe pins the
+	# shared-timeline scheduler itself, so the off-screen cull (covered by
+	# current523_bank_object_cull_test) is switched off for it explicitly.
+	a.o.offscreen_culling=false
 	refresh_pair(a,b,ids)
 	var old_static: Dictionary=count_ticks(b.o,60);var new_static: Dictionary=count_ticks(a.o,60)
 	check(old_static.get("map.object_placements_visited",0)==61440 and new_static.get("map.object_placements_visited",0)==0,"static placements: 61440 tick visits to zero")
@@ -128,6 +132,7 @@ func benchmark() -> void:
 	# per-call trace arrays, file I/O, GPU rendering or timing pass threshold.
 	for scenario: String in ["static","mixed","animated_512_ids"]:
 		var old: Current=benchmark_owner(true,scenario);var next: Current=benchmark_owner(false,scenario)
+		next.offscreen_culling=false # scheduler-only comparison, as above
 		for owner: Current in [old,next]:
 			for i: int in 3:owner._process_step(1.0/60.0)
 		var old_usec: Array[int]=[];var new_usec: Array[int]=[]

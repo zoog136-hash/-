@@ -25,11 +25,14 @@ const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 ## false = every caller uses its synchronous path (as before this loader).
 static var enabled: bool = true
 ## Completed results kept for their consumer, bounded (oldest first).
-const MAX_READY: int = 96
-const MAX_READY_BYTES: int = 96 * 1024 * 1024
+## Phone memory (2026-11-16 523.548: app memory peaked at 1,576 MB with this
+## loader): each running task holds the whole file plus its parse, and ready
+## results were kept up to 96 MB. Few tasks at once and a small ready pool.
+const MAX_READY: int = 32
+const MAX_READY_BYTES: int = 24 * 1024 * 1024
 ## Queued/running tasks; further requests wait for a free slot (the caller
 ## stays deferred and asks again).
-const MAX_INFLIGHT: int = 24
+const MAX_INFLIGHT: int = 3
 
 static var _inflight: Dictionary = {} # key -> Job
 static var _ready: Dictionary = {} # key -> Job (insertion order = age)
@@ -203,7 +206,7 @@ static func state(key: String) -> String:
 	if _inflight.has(key):
 		var job: Job = _inflight[key]
 		if job.task >= 0 and WorkerThreadPool.is_task_completed(job.task): poll()
-		else: return "pending"
+		elif job.task >= 0: return "pending"
 	if _ready.has(key):
 		if _current(_ready[key]): return "ready"
 		_drop_ready(key)
@@ -282,11 +285,16 @@ static func poll() -> void:
 		return
 	var finished: Array[Job] = []
 	for job: Job in _inflight.values():
-		if WorkerThreadPool.is_task_completed(job.task): finished.append(job)
-	for job: Job in finished: _finish(job)
+		if job.task >= 0 and WorkerThreadPool.is_task_completed(job.task): finished.append(job)
+	# A follow-up run by _finish may itself take() (and so finish) another job
+	# of this list; finishing it twice waited on a released task ID
+	# ("worker_thread_pool.cpp:408 Invalid Task ID", 523.548).
+	for job: Job in finished:
+		if _inflight.get(job.key) == job: _finish(job)
 	if _inflight.is_empty(): _release_pump()
 
 static func _finish(job: Job) -> void:
+	if job.task < 0: return
 	WorkerThreadPool.wait_for_task_completion(job.task)
 	job.work = Callable()
 	job.hold = null
@@ -345,7 +353,9 @@ static func take(key: String, wait: bool = true, keep: bool = false) -> Dictiona
 
 ## Waits for every task (tests, map change) and forgets all results.
 static func clear() -> void:
-	for job: Job in _inflight.values(): WorkerThreadPool.wait_for_task_completion(job.task)
+	for job: Job in _inflight.values():
+		if job.task >= 0: WorkerThreadPool.wait_for_task_completion(job.task)
+		job.task = -1
 	_inflight.clear()
 	_ready.clear()
 	_ready_bytes = 0
