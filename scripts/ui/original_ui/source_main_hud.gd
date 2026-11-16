@@ -1120,6 +1120,7 @@ const FEATURE_WINDOWS={
 	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
+	"fusion_result":preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
 	"fail_history":preload("res://scripts/ui/original_ui/source_main_fail_history_window.gd"),
 	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
@@ -1138,6 +1139,14 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
 	MENU_TRACE.end(trace,result.get("ok",false))
 	return result
+
+## Opens feature window `key` over the open ones (a result popup such as
+## 합성 결과 over the card fusion window); other windows stay open.
+func try_open_overlay_window(key: String, args: Array=[]) -> Dictionary:
+	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	var configured: Dictionary=_configure_feature_window(key)
+	if not configured.get("ok",false):return configured
+	return _feature_windows[key].callv("open",[_coordinates]+args)
 
 ## Configures feature window `key` once (its pack members); opens nothing.
 func _configure_feature_window(key: String) -> Dictionary:

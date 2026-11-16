@@ -53,7 +53,10 @@ static func active(world: Node,kind: String) -> Array[Dictionary]:
 		if source_id.is_empty() or record.get("patch523_effect_basis",{}).get("selection")!="source_exact_level":continue
 		if physical.has("sourceId") and str(physical.sourceId)!=str(record.get("sourceId","")):continue
 		if world.patch523_equipment.data.get("items",{}).has(source_id) and not world.patch523_equipment.catalog_identity_matches(record,source_id):continue
-		for effect: Dictionary in level_effects(record,int(physical.get("level",0))):
+		var effects: Array[Dictionary]=level_effects(record,int(physical.get("level",0)))
+		# TWILIGHT 근사: the item's drawn 신화 무기 발동 교체 slots (item_invoke_replacement523).
+		if world.get("item_invoke523")!=null:effects.append_array(world.item_invoke523.effects(id,int(physical.get("level",0))))
+		for effect: Dictionary in effects:
 			if effect.get("kind")!=kind or not valid(effect):continue
 			var selected: Dictionary=effect.duplicate(true)
 			selected["instance_id"]=id;selected["item_name"]=str(worn.name);selected["source_item_id"]=source_id

@@ -1035,3 +1035,26 @@ func _grant_synergy(synergy: Dictionary) -> Dictionary:
 	else:defer_candidate(next,{"inventory":overrides.inventory,"item_instances":overrides.item_instances,"gold":overrides.gold})
 	result["reward"]={"granted":granted,"withheld":withheld}
 	return result
+
+## 던전 창 세부 데이터 API (UI 요청 2026-11-16) — scripts/dungeons/dungeon_extras523.gd에 위임.
+func _extras() -> Variant:
+	return world.get("dungeon_extras523") if world != null else null
+func tower_buff_offers(floor_index: int = 0) -> Array:
+	return _extras().tower_buff_offers(floor_index) if _extras() != null else []
+func tower_buy_buff(buff_id: int) -> Dictionary:
+	return _extras().tower_buy_buff(buff_id) if _extras() != null else {"ok":false,"reason":"던전 데이터 소유자 없음","message":""}
+func tower_speed_mode() -> Dictionary:
+	return _extras().tower_speed_mode() if _extras() != null else {"available":false,"on":false,"multiplier":1.0,"cost":{},"reason":"던전 데이터 소유자 없음"}
+func tower_set_speed_mode(on: bool) -> Dictionary:
+	return _extras().tower_set_speed_mode(on) if _extras() != null else {"ok":false,"reason":"던전 데이터 소유자 없음"}
+func tower_ranking(floor_index: int, hard: bool = false) -> Dictionary:
+	return _extras().tower_ranking(floor_index, hard) if _extras() != null else {"rows":[],"mine":{}}
+func dungeon_shop(kind: String) -> Dictionary:
+	return _extras().dungeon_shop(kind) if _extras() != null else {}
+func orim_achievements(chapter: int) -> Array:
+	return _extras().orim_achievements(chapter) if _extras() != null else []
+func orim_claim_achievement(id: String) -> Dictionary:
+	return _extras().orim_claim_achievement(id) if _extras() != null else {"ok":false,"reason":"던전 데이터 소유자 없음","message":""}
+func orim_chapter_story(chapter: int) -> Dictionary:
+	return _extras().orim_chapter_story(chapter) if _extras() != null else {}
+
