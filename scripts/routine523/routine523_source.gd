@@ -29,6 +29,12 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 ## Goal.ID - RoutineView.ID for every linked mission (proven by the
 ## MissionComplete anchors at load, never trusted on its own).
 const GOAL_ID_OFFSET: int = 84870
+## TWILIGHT 근사 (근거 약함, 지시 2026-11-16 "근사치로 다 넣어"): the 8 routines with no
+## offset goal row are linked to the unused Goal row that names the same content and
+## action (악몽의 섬 몬스터/보스 처치, 성물 카드 구매·합성 by order, 혼돈의 개미굴 몬스터 처치).
+## The link is used only when the routine has no offset goal and the goal row exists.
+## docs/routine_todo523_missing_rules.md 2.
+const APPROX_GOAL_LINKS: Dictionary = {6822:93302, 6832:93312, 7448:94738, 7458:94748, 7468:94758, 7478:94768, 7488:94778, 10553:101053}
 const COMPLETE_TYPE: int = 6
 ## RoutineType -> reset period. MissionWorldWeekly resets with the week.
 const PERIODS: Dictionary = {4:"daily",5:"weekly",21:"monthly",31:"weekly"}
@@ -82,6 +88,7 @@ static func load_contract() -> Dictionary:
 			routine_ids[int(row.ID)] = true
 	var goal_ids: Dictionary = {}
 	for id: int in routine_ids: goal_ids[id + GOAL_ID_OFFSET] = true
+	for id: int in APPROX_GOAL_LINKS: goal_ids[int(APPROX_GOAL_LINKS[id])] = true
 	tables["Goal"] = SOURCE.rows_matching("Goal","ID",goal_ids)
 	tables["GoalType"] = SOURCE.rows("GoalType")
 	var reward_ids: Dictionary = {}
@@ -201,6 +208,9 @@ static func build(tables: Dictionary) -> Dictionary:
 		var type_id: int = int(row.Type)
 		var mission: Dictionary = {"id":id,"type":type_id,"type_name":types[type_id],"title":_desc(desc,row.get("TitleDescID")),"scenario":_desc(desc,row.get("ScenarioDescID")),"symbol":int(row.get("RoutineSymbolID",0)),"lucky":bool(row.get("IsLucky",false)),"reasons":[],"rewards":[]}
 		var goal: Dictionary = goals.get(id + GOAL_ID_OFFSET,{})
+		if goal.is_empty() and APPROX_GOAL_LINKS.has(id):
+			goal = goals.get(int(APPROX_GOAL_LINKS[id]),{})
+			if not goal.is_empty(): mission["approx_goal_link"] = int(APPROX_GOAL_LINKS[id])
 		if goal.is_empty():
 			mission.reasons.append("goal_missing")
 		else:
