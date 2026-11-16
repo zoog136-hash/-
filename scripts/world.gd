@@ -9315,6 +9315,17 @@ func card523_swap_execute(token: String, pick: String = "") -> Dictionary:
 	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
 	return card_swap523.execute(token, pick)
 
+## Takes the pending reroll result (quote.confirm_token): the original card
+## is replaced by it. Until then the pending result stays saved.
+func card523_swap_confirm(confirm_token: String) -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
+	return card_swap523.confirm(confirm_token)
+
+## Every saved pending reroll result (e.g. to reopen the window after a reload).
+func card523_swap_pending() -> Array:
+	return card_swap523.pending_results()
+
 func skill_card523_materials(grade_id: int = -1) -> Array:
 	return skill_cards523.materials(grade_id)
 
