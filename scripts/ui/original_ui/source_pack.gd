@@ -139,6 +139,8 @@ const CODE_EXTERNAL_TEXTURE_NODES := {
 	# Original 혈맹 문장 pictures (source_main_emblem_window): Icn_Mark_Dummy.
 	"UI/Clan/Clan_Mark_FlagSlot.csb":[6308],
 	"UI/Clan/Clan_Popup_Symbol.csb":[1208],
+	# Original 오림의 흔적 buff icons (source_main_dungeon_window): BuffClass OnIconID.
+	"UI/Mission/Mission_Dungeon_TracesOrim_SlotBtn.csb":[4196],
 }
 
 func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> void:

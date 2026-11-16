@@ -130,6 +130,8 @@ CHECKS = [
     ('original_ui_approx523_test', []),
     ('original_ui_forge_window_test', []),
     ('original_ui_tj_retry_window_test', []),
+    ('original_ui_mystery_card_window_test', []),
+    ('original_ui_guardian_find_window_test', []),
     ('original_ui_buff_info_window_test', []),
     ('original_ui_reward_select_window_test', []),
     ('original_ui_currency_window_test', []),
@@ -142,6 +144,7 @@ CHECKS = [
     ('original_ui_store_window_test', []),
     ('original_ui_box_probability_window_test', []),
     ('original_ui_dungeon_window_test', []),
+    ('original_ui_dungeon_extras_window_test', []),
     ('original_ui_stat_detail_window_test', []),
     ('original_ui_teleport_window_test', []),
     ('original_ui_production_window_test', []),
@@ -213,6 +216,7 @@ CHECKS = [
     ('craft_index_template_prefetch_test', []),
     ('craft523_server_sets_test', []),
     ('craft523_user_decisions_test', []),
+    ('craft523_gacha_test', []),
     ('tutorial523_removal_test', []),
     ('craft523_approx_rest_test', []),
     ('craft523_leftovers_test', []),
@@ -324,6 +328,7 @@ CHECKS = [
     ('sp2_background_load_test', []),
     ('sp2_background_reentry_test', []),
     ('content523_test', []),
+    ('content523_approx_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
     ('reference_sp2_native_build_test', []),
@@ -703,6 +708,8 @@ def main():
                       'original_ui_approx523_test':'ORIGINAL_UI_APPROX523_RESULT',
                       'original_ui_forge_window_test':'ORIGINAL_UI_FORGE_WINDOW_RESULT',
                       'original_ui_tj_retry_window_test':'ORIGINAL_UI_TJ_RETRY_WINDOW_RESULT',
+                      'original_ui_mystery_card_window_test':'ORIGINAL_UI_MYSTERY_CARD_WINDOW_RESULT',
+                      'original_ui_guardian_find_window_test':'ORIGINAL_UI_GUARDIAN_FIND_WINDOW_RESULT',
                       'original_ui_buff_info_window_test':'ORIGINAL_UI_BUFF_INFO_WINDOW_RESULT',
                       'original_ui_reward_select_window_test':'ORIGINAL_UI_REWARD_SELECT_WINDOW_RESULT',
                       'original_ui_currency_window_test':'ORIGINAL_UI_CURRENCY_WINDOW_RESULT',
@@ -715,6 +722,7 @@ def main():
                       'original_ui_store_window_test':'ORIGINAL_UI_STORE_WINDOW_RESULT',
                       'original_ui_box_probability_window_test':'ORIGINAL_UI_BOX_PROBABILITY_WINDOW_RESULT',
                       'original_ui_dungeon_window_test':'ORIGINAL_UI_DUNGEON_WINDOW_RESULT',
+                      'original_ui_dungeon_extras_window_test':'ORIGINAL_UI_DUNGEON_EXTRAS_WINDOW_RESULT',
                       'original_ui_stat_detail_window_test':'ORIGINAL_UI_STAT_DETAIL_WINDOW_RESULT',
                       'original_ui_teleport_window_test':'ORIGINAL_UI_TELEPORT_WINDOW_RESULT',
                       'original_ui_production_window_test':'ORIGINAL_UI_PRODUCTION_WINDOW_RESULT',
@@ -786,6 +794,7 @@ def main():
                       'craft_index_template_prefetch_test':'CRAFT_INDEX_PREFETCH_RESULT',
                       'craft523_server_sets_test':'CRAFT523_SERVER_SETS_RESULT',
                       'craft523_user_decisions_test':'CRAFT523_USER_DECISIONS_RESULT',
+                      'craft523_gacha_test':'CRAFT523_GACHA_RESULT',
                       'tutorial523_removal_test':'TUTORIAL523_REMOVAL_RESULT',
                       'craft523_approx_rest_test':'CRAFT523_APPROX_REST_RESULT',
                       'craft523_leftovers_test':'CRAFT523_LEFTOVERS_RESULT',
@@ -899,7 +908,8 @@ def main():
                       'sp2_background_load_test':'SP2_BACKGROUND_LOAD_RESULT',
                       'sp2_background_reentry_test':'SP2_BACKGROUND_REENTRY_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
-                      'content523_test':'CONTENT523_RESULT'}[name]
+                      'content523_test':'CONTENT523_RESULT',
+                      'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

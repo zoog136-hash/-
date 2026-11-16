@@ -1114,6 +1114,8 @@ const FEATURE_WINDOWS={
 	"weapon_mastery":preload("res://scripts/ui/original_ui/source_main_mastery_window.gd"),
 	"schedule":preload("res://scripts/ui/original_ui/source_main_schedule_window.gd"),
 	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
+	"mystery_card":preload("res://scripts/ui/original_ui/source_main_mystery_card_window.gd"),
+	"guardian_find":preload("res://scripts/ui/original_ui/source_main_guardian_find_window.gd"),
 	"buff_info":preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd"),
 	"currency_info":preload("res://scripts/ui/original_ui/source_main_currency_window.gd"),
 	"skill_cards":preload("res://scripts/ui/original_ui/source_main_skill_card_window.gd"),

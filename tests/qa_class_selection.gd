@@ -23,6 +23,13 @@ static func enter_game(world: Node, job: String = "기사") -> bool:
 	if selected == null or confirm == null:
 		return false
 	selected.pressed.emit()
+	# With the original pack the class window also needs a gender (source
+	# appearance): pick the first one that class allows.
+	if confirm.disabled:
+		for gender: Node in window.find_children("Gender_*","Button",true,false):
+			if gender is Button and not (gender as Button).disabled:
+				(gender as Button).pressed.emit()
+				break
 	if confirm.disabled:
 		return false
 	confirm.pressed.emit()
