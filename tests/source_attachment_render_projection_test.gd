@@ -4,7 +4,11 @@ extends SceneTree
 
 class Bank:
 	extends RefCounted
+	var _manifest_sha: String = ""
 	func render_layer(_layer: Dictionary, _pixels: bool) -> Dictionary: return {"ok":true}
+	# Cached frame plans (`-- --cached-frames`): the same no-I/O boundary.
+	func member_stamps(_layers: Array) -> Dictionary: return {"ok":true,"actors":PackedInt64Array(),"members":[]}
+	func recheck_layers(_stamps: Dictionary) -> Dictionary: return {"ok":true}
 
 class Preview:
 	extends "res://scripts/animation/original_source_preview.gd"
@@ -15,6 +19,14 @@ class Preview:
 		return fixture_texture
 	func _configure_reference_bank(_path: String, _pin: String, actor: int, roles: Dictionary, _loops: Dictionary, initial: String, _consumer: String, _actors: Dictionary = {}) -> bool:
 		if not playback_mode_override.is_empty(): _playback_mode = playback_mode_override
+		# `-- --cached-frames` runs the same checks on the production actors'
+		# cached frame plan path (original_source_preview.gd cached_frames).
+		# These node assertions run with plan caching but without compositing
+		# (the stub bank has no pixels; actor_frame_composite_cache_test.gd
+		# covers composited groups with decoded synthetic SP2 pixels).
+		if "--cached-frames" in OS.get_cmdline_user_args():
+			cached_frames = true
+			composite_groups_enabled = false
 		var layer: Dictionary = {"kind":"body","source_attributes":["128"],"source_attribute_projection":{"ok":true,"flags":128,"present":true},"layer_id":actor,"offset":[-7,9],"frame_provenance":{}}
 		var frame: Dictionary = {"source_group":0,"source_frame":0,"source_ticks":1,"duration":1.0,"layers":[layer],"effect_layers":[]}
 		var directions: Array = []
