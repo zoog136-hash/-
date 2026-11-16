@@ -1122,10 +1122,12 @@ const FEATURE_WINDOWS={
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 	"fusion_result":preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
+	"fail_history":preload("res://scripts/ui/original_ui/source_main_fail_history_window.gd"),
 	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
 	"craft_result":preload("res://scripts/ui/original_ui/source_main_craft_result_window.gd"),
 	"quick_change":preload("res://scripts/ui/original_ui/source_main_quick_change_window.gd"),
 	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
+	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
