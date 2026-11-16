@@ -70,6 +70,8 @@ func actual_main() -> void:
 		var named: bool = false
 		for row: Dictionary in rows:
 			if str(row.ServiceRegionCode)=="KR" and int(row.WorldNo)==1: named = true
+		# TWILIGHT 근사 2026-11-16: a set without any ServerLimit row is KR 1.
+		if rows.is_empty() and int(recipe.craft_conditions.get("twilight_approx",{}).get("server_set_without_rows",-1)) == int(recipe.craft_conditions.server_limit_set_id): named = true
 		if not named: failed.append(id+":set_not_kr1"); continue
 		var state: Dictionary = prepared(book,recipe)
 		var roll: int = 0 if recipe.has("outcomes") else -1

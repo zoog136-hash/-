@@ -353,6 +353,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_points
 		if bless_points.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var horn: Dictionary=source_clan_horn(definition)
+	if not horn.is_empty():
+		out["source_use_spec"]=horn
+		if horn.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	var mastery: Dictionary=source_mastery_points(definition)
 	if not mastery.is_empty():
 		out["source_use_spec"]=mastery
@@ -1454,6 +1459,53 @@ static func source_bless_points(definition: Dictionary,description: String,intan
 		if reason not in unique:unique.append(reason)
 	return {"kind":"source_bless_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":amount,"intangible_item_class":intangible.duplicate(true),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
 
+## 혈맹 뿔피리 (ItemCategory Horn, ClanRewardOnItemUseID) — TWILIGHT 근사 (2026-11-17,
+## docs/clan523_missing_rules.md 3-11). The original buff goes to "every clan member";
+## the local clan has one member, so the user gets it. ClanRewardOnItemUse → Reward
+## (RewardType Buff, Amount = seconds) → BuffClass. ExperienceAdditionPercent → xp %;
+## PVPDamageReductionPercent → reduction against monsters (user decision 2026-11-16, as
+## player_skills523 PVP_TARGET_TO_NPC: PvP numbers count against monsters). PVPPierceDamageReductionPercent (ignores the
+## target's reduction) has no monster counterpart and is listed, not applied.
+const HORN_PERCENT_FIELDS := {"ExperienceAdditionPercent":"xp","PVPDamageReductionPercent":"pve_damage_reduction_pct"}
+const HORN_LISTED := ["PVPPierceDamageReductionPercent"]
+static func source_clan_horn(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="Horn" or raw.is_empty():return {}
+	var reasons: Array=[];var ids: Array=[];var links: Array=[];var sprite: int=0
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="Life" and preload("res://scripts/loot/item_life523.gd").ENABLED:continue
+		if name_value=="ClanRewardOnItemUseID" and direct(row) and integer(bonus.get("Value")) and int(bonus.Value)>0:links.append(int(bonus.Value));continue
+		if name_value=="ItemConsumeEffectSpriteID" and direct(row) and integer(bonus.get("Value")):sprite=int(bonus.Value);continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	var buff: Dictionary={};var group: Dictionary={};var duration: int=0;var typed: Dictionary={};var listed: Array=[];var linked: Array=[]
+	if links.size()!=1:reasons.append("missing_or_ambiguous_clan_reward_on_item_use")
+	else:
+		var use: Dictionary=SOURCE.row("ClanRewardOnItemUse",int(links[0]))
+		var reward: Dictionary=SOURCE.row("Reward",int(use.get("RewardID",0)))
+		if str(SOURCE.row("RewardType",int(reward.get("RewardTypeID",0))).get("Name",""))!="Buff" or not integer(reward.get("Amount")) or int(reward.Amount)<=0:reasons.append("clan_horn_reward_not_a_timed_buff")
+		else:
+			duration=int(reward.Amount)
+			buff=SOURCE.row("BuffClass",int(reward.get("RewardClassID",0)))
+			group=SOURCE.row("BuffGroup",int(buff.get("BuffGroupID",0)))
+			if buff.is_empty() or group.is_empty():reasons.append("clan_horn_buff_missing")
+			for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",int(buff.get("ID",0))):
+				var effect: Dictionary=SOURCE.row("Bonus",int(link.get("BonusID",0)));var kind: Dictionary=SOURCE.row("BonusType",int(effect.get("BonusTypeID",0)))
+				var name_value: String=str(kind.get("Name",""));linked.append({"bonus":effect,"bonus_type":kind})
+				var conditional: bool=int(effect.get("BonusApplicationTypeID",0))!=0 or int(effect.get("BonusApplicationTargetID",0))!=0 or int(link.get("CharacterLevel",0))!=0 or int(link.get("CharacterClass",0))!=0
+				if name_value in HORN_LISTED:listed.append({"type":name_value,"value":effect.get("Value")});continue
+				if conditional or not HORN_PERCENT_FIELDS.has(name_value) or not integer(effect.get("Value")) or int(effect.Value)%10000!=0:reasons.append("unsupported_buff_effect:"+name_value);continue
+				typed[HORN_PERCENT_FIELDS[name_value]]=int(typed.get(HORN_PERCENT_FIELDS[name_value],0))+int(effect.Value)/10000
+	if typed.is_empty():reasons.append("no_supported_buff_effects")
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	return {"kind":"source_timed_buff","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"buff_class_id":int(buff.get("ID",0)),"duration_seconds":duration,"typed_effects":typed,"source_buff_class":buff.duplicate(true),"source_buff_group":group.duplicate(true),"source_buff_bonus":linked,"consume_delay_ms":0,"consume_effect_sprite_id":sprite,"approximation":"TWILIGHT 근사: 혈맹원 전원 → 1인 혈맹의 본인","approx_listed_effects":listed,"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
 ## Every "축복 포인트 N" amount an original description states ("1,000" -> 1000).
 static func described_bless_points(text: String) -> Array:
 	var found: Array=[]
@@ -1552,7 +1604,8 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 		if not integer(row.get("CharacterMinLevel")) or int(row.CharacterMinLevel)<0:reasons.append("unsupported_skill_min_level")
 		if not integer(row.get("ClassID")) or int(row.ClassID)<=0 or row.get("class",{}).get("CanCreateClient")!=true:reasons.append("unsupported_skill_learn_class")
 		if row.get("CharacterPolymorphGradeID")!=0:reasons.append("source_skill_polymorph_grade_requirement_unresolved")
-		if row.get("LimitBuffCardID")!=0:reasons.append("source_skill_limit_card_requirement_unresolved")
+		# TWILIGHT 근사: the card condition is checked at learning (card_requirement523, patch523_skill_book).
+		if row.get("LimitBuffCardID")!=0 and not preload("res://scripts/cards/card_requirement523.gd").ENABLED:reasons.append("source_skill_limit_card_requirement_unresolved")
 		if not SOURCE.declared_exclusion("SpellLearnLimit",edge.get("link",{})).is_empty():reasons.append("source_excluded_skill_learn_limit")
 	if limits.is_empty():reasons.append("missing_non_tutorial_source_skill_learn_limit")
 	# Reuse the exact existing source-profile serializer. Its SHA is confirmed

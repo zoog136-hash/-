@@ -284,6 +284,12 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 	if not CONDITIONS.integer(craft_id,1,2147483647) or recipe.get("id") != "patch523:"+str(int(craft_id)):
 		return denied("제작 원본 ID 관계가 필요합니다 · 재료 보존")
 	var source: Dictionary = recipe_evidence(int(craft_id))
+	# TWILIGHT 근사 2026-11-16: the same recorded row fixes as the current runtime.
+	var overrides: Dictionary = recipe.get("twilight_approx",{}).get("row_overrides",{})
+	if not overrides.is_empty():
+		var fixed: Dictionary = preload("res://scripts/crafting/patch523_craft_approx.gd").apply_overrides(source.get("views",[]),source.get("inputs",[]),source.get("outputs",[]),overrides,func(id: int) -> Dictionary: return SOURCE_DEFINITIONS.row("ItemClass",id))
+		if fixed.is_empty(): return denied("행 보정 근사의 원본 관계가 다릅니다 · 재료 보존")
+		source.views = fixed.views; source.inputs = fixed.ins; source.outputs = fixed.outs
 	for key: String in ["inputs","outputs","views","restrictions"]:
 		if not source.get(key) is Array: return denied("제작 원본 관계가 없습니다 · 재료 보존")
 		if key != "restrictions" and source[key].is_empty(): return denied("제작 원본 관계가 없습니다 · 재료 보존")
