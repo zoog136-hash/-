@@ -178,7 +178,8 @@ static func fix_rows(views: Array, ins: Array, outs: Array, item_reason: Callabl
 			for candidate: Dictionary in pair[1]:
 				if int(candidate.get("ItemClassID",0)) != id: continue
 				if fallback.is_empty(): fallback = [candidate,pair[0]]
-				if row.is_empty() and not overrides.has(str(pair[0])+str(int(candidate.get("ID",0)))): row = candidate; prefix = pair[0]
+				var irregular: bool = int(candidate.get("Enchant",0)) != 0 or int(candidate.get("ItemBlessCodeID",1)) != 1 or int(candidate.get("ItemHoningEpithetID",0)) != 0 or item_row.call(id).get("TestItem") == true
+				if row.is_empty() and irregular and not overrides.has(str(pair[0])+str(int(candidate.get("ID",0)))): row = candidate; prefix = pair[0]
 		if row.is_empty() and not fallback.is_empty(): row = fallback[0]; prefix = fallback[1]
 		if row.is_empty() or int(row.get("ID",0)) <= 0: break
 		var change: Dictionary = {}
