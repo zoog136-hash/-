@@ -85,6 +85,8 @@ func configure(controller: Node, value: PlayableField) -> void:
 	wake_clock = 0.
 	_fill_remaining = FILL_SECONDS
 	_spawn_tokens = STEADY_SPAWN_BURST
+	_build_tokens = BUILD_BURST
+	_build_clock_usec = -1
 	set_process(field != null)
 	if field == null: return
 	records.clear()
@@ -157,7 +159,32 @@ func _spawn_point(region: Dictionary) -> Vector2:
 		if clear: return p
 	return Vector2.INF
 
+## Hard cap on actor builds, enforced where every spawn path ends (all
+## callers, subclasses and retry queues reach this function). The per-path
+## respawn tokens above still apply; this catches any path that bypasses them:
+## 2026-11-16 523.541 still built ~5 actors per second at ~105 ms each
+## (spawn.total 527 ms x 5) after the first fill. Bosses are never capped.
+const BUILDS_PER_SECOND: float = 1.5
+const BUILD_BURST: float = 3.0
+var _build_tokens: float = BUILD_BURST
+var _build_clock_usec: int = -1
+
+func _take_build_token(slot: Dictionary) -> bool:
+	if str(slot.region.get("mode","normal")) == "boss" or _fill_remaining > 0.0: return true
+	var now: int = Time.get_ticks_usec()
+	if _build_clock_usec >= 0: _build_tokens = minf(BUILD_BURST, _build_tokens + float(now - _build_clock_usec) / 1000000.0 * BUILDS_PER_SECOND)
+	_build_clock_usec = now
+	if _build_tokens < 1.0: return false
+	_build_tokens -= 1.0
+	return true
+
 func _spawn_slot(slot: Dictionary) -> void:
+	var occupant: Variant = slot.get("monster")
+	if not (is_instance_valid(occupant) and not occupant.dead) and not _take_build_token(slot):
+		# Not a failed search: try again shortly, no failure backoff.
+		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.5)
+		FRAME_HITCH.count("spawn.rate_capped")
+		return
 	var started: int = FRAME_HITCH.now()
 	_spawn_slot_measured(slot)
 	FRAME_HITCH.detail("spawn.total", started)
