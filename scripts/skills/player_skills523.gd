@@ -152,7 +152,11 @@ func prepare_source_direct(record: Dictionary) -> void:
 		record["cooldown"] = float(row.CastDelay) / 1000.0 # shown on the hold screen
 	var spec := source_direct_passive(id, str(record.get("class", "")))
 	if spec.has("reason") or not spec.has("rows"):
-		record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패"))]
+		var approx := source_approx_passive(id, str(record.get("class", "")))
+		if approx.has("reason"):
+			record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패")), "근사 규칙: " + str(approx.reason)]
+			return
+		_open_approx_passive(record, approx)
 		return
 	var parts := PackedStringArray()
 	for entry: Dictionary in spec.rows: parts.append("%s %+d" % [str(entry.type), int(entry.value)])
@@ -161,6 +165,180 @@ func prepare_source_direct(record: Dictionary) -> void:
 	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":spec.stats,"mp":0,"hp":0,"items":{},
 		"minimum_level":int(spec.minimum_level),"local_kind":"source_direct523","desc":summary},true)
 	record["source_direct523"] = {"kind":"passive_stats","spell_id":int(row.ID),"buff_id":int(spec.buff_id),"rows":spec.rows,"ignored_pvp":spec.ignored_pvp,"basis":"원본 523 SpellBonus/BuffBonus 기본 단계 · BuffGroup 중첩 허용"}
+	record.erase("source_direct523_hold")
+
+## ---- TWILIGHT 근사 (user policy 2026-11-16): reference passives whose
+## original rows exist but whose interpretation rule is missing from the 523
+## tables. Every interpretation lives in data/skills/source_approx523.json
+## (sources and dates there); original row values are used unchanged.
+const APPROX_PATH := "res://data/skills/source_approx523.json"
+var approx_policy: Dictionary = {}
+var _spell_records: Dictionary = {}
+
+func approx_rules() -> Dictionary:
+	if approx_policy.is_empty():
+		var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(APPROX_PATH)) if FileAccess.file_exists(APPROX_PATH) else null
+		approx_policy = value if value is Dictionary and int(value.get("schema",0)) == 1 else {"schema":0}
+	return approx_policy
+
+## Bound record id for an original SpellClass ID ("" when not bound).
+func record_for_spell(spell_id: int) -> String:
+	if _spell_records.is_empty():
+		for key: String in bindings.get("skills",{}): _spell_records[int(bindings.skills[key].get("spell_id",-1))] = key
+	return str(_spell_records.get(spell_id, ""))
+
+static func weapon_group_types(group_id: int) -> Array[int]:
+	var result: Array[int] = []
+	for entry: Dictionary in SOURCE_ROWS.related("WeaponTypeForWeaponGroup","WeaponGroupID",group_id):
+		if _source_integer(entry.get("WeaponTypeID")) and int(entry.WeaponTypeID) not in result: result.append(int(entry.WeaponTypeID))
+	return result
+
+func _approx_invoke(option_id: int, chance: float, level: int) -> Dictionary:
+	var policy: Dictionary = approx_rules().get("invokes",{})
+	var option: Dictionary = SOURCE_ROWS.row("InvokeOption", option_id)
+	if option.is_empty(): return {"reason":"InvokeOption %d 없음" % option_id}
+	var type_name: String = str(SOURCE_ROWS.row("InvokeOptionType", int(option.get("InvokeOptionTypeID",-1))).get("Name",""))
+	var rule: Dictionary = policy.get("types",{}).get(type_name,{})
+	if rule.is_empty(): return {"reason":"발동 옵션 " + type_name}
+	var kinds: Array = policy.get("attack_types",{}).get(str(int(option.get("AttackTypeID",0))),[])
+	if kinds.is_empty(): return {"reason":"발동 옵션 공격 종류 %d" % int(option.get("AttackTypeID",0))}
+	var result: Dictionary = {"kind":str(rule.kind),"option_id":option_id,"option_type":type_name,"chance":chance * float(policy.get("chance_scale",0.000001)),
+		"level":level,"attack_kinds":kinds.duplicate(),"by_spell":bool(option.get("BySpellAttack",false)),"weapons":[]}
+	if int(option.get("WeaponGroupID",0)) > 0: result.weapons = weapon_group_types(int(option.WeaponGroupID))
+	match str(rule.kind):
+		"amplify":
+			var multiplier: float = float(option.get(str(rule.multiplier_param),0)) * float(rule.multiplier_scale)
+			if multiplier <= 0.0: return {"reason":"발동 옵션 증폭율 0"}
+			if multiplier < 1.0 and str(rule.get("below_one","")) == "add_one": multiplier += 1.0
+			result["multiplier"] = multiplier
+		"evade_heal":
+			result["percent"] = float(option.get(str(rule.percent_param),0))
+			result["base"] = float(option.get(str(rule.base_param),0))
+			result["cooldown"] = float(option.get(str(rule.cooldown_param),0))
+	return result
+
+## Approximated passive contract. Returns {"reason":...} when still held.
+func source_approx_passive(id: String, job: String) -> Dictionary:
+	var policy: Dictionary = approx_rules()
+	var profile: Dictionary = profiles.get(id, {})
+	if profile.is_empty() or int(policy.get("schema",0)) != 1: return {"reason":"근사 규칙 파일 없음"}
+	var row: Dictionary = profile.row
+	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문"}
+	if int(row.SpellCompositionNode) != 0: return {"reason":"조건 노드 %d" % int(row.SpellCompositionNode)}
+	if not profile.costs.is_empty() or int(row.SpellMaterialItemAmount) != 0 or int(row.MPCost) != 0 or int(row.HPCost) != 0: return {"reason":"패시브 비용 행"}
+	var native_class := int(bindings.class_ids.get(job, -1))
+	var weapons: Array[int] = []
+	var requires: Array[String] = []
+	var buff_ids: Array[int] = []
+	for entry: Dictionary in profile.bonuses:
+		if int(entry.link.MinSpellLevel) != 0: continue
+		var name: String = str(entry.type.Name)
+		if name not in policy.get("spell_bonus_allowed",[]): return {"reason":"주문 보너스 %s" % name}
+		if not _source_integer(entry.bonus.Value): return {"reason":"%s 값" % name}
+		match name:
+			"BuffClassID": buff_ids.append(int(entry.bonus.Value))
+			"RequiredSpellClassID":
+				var required := record_for_spell(int(entry.bonus.Value))
+				if required.is_empty(): return {"reason":"선행 주문 %d 미연결" % int(entry.bonus.Value)}
+				if required not in requires: requires.append(required)
+			"WeaponType": weapons.append(int(entry.bonus.Value))
+			"WeaponGroup": weapons.append_array(weapon_group_types(int(entry.bonus.Value)))
+	if buff_ids.is_empty(): return {"reason":"버프 연결 없음"}
+	var receivers: Dictionary = policy.get("receivers",{})
+	var rows: Array = []
+	var invokes: Array = []
+	var ignored: Dictionary = {}
+	var group: Dictionary = {}
+	for buff: Dictionary in profile.buffs:
+		if int(buff.row.ID) not in buff_ids: continue
+		for key: String in buff.row:
+			if not key.begins_with("IsEraseOn") or key == "IsEraseOnTimeEnd": continue
+			var flag: Variant = buff.row[key]
+			if (typeof(flag) == TYPE_BOOL and flag) or (typeof(flag) in [TYPE_INT,TYPE_FLOAT] and float(flag) != 0.0): return {"reason":"버프 해제 조건 %s" % key}
+		if bool(buff.row.get("IsBuffGroup", false)):
+			var group_row: Dictionary = SOURCE_ROWS.row("BuffGroup", int(buff.row.get("BuffGroupID",-1)))
+			var candidate := {"id":int(buff.row.get("BuffGroupID",-1)),"overlap":group_row.get("IsAllowOverlap") == true,"priority":int(buff.row.get("BuffGroupPriority",0)),"buff_id":int(buff.row.ID)}
+			if group.is_empty() or int(candidate.priority) > int(group.priority): group = candidate
+		for entry: Dictionary in buff.bonuses:
+			if int(entry.link.get("MinSpellLevel",0)) != 0: continue
+			var cls := int(entry.link.get("CharacterClass",0))
+			if cls != 0 and cls != native_class: continue
+			var name: String = str(entry.type.Name)
+			var unit: String = str(entry.unit.Name)
+			var at := int(entry.bonus.BonusApplicationTypeID)
+			var target := int(entry.bonus.BonusApplicationTargetID)
+			var level := int(entry.link.get("CharacterLevel",0))
+			if not _source_integer(entry.bonus.Value): ignored[name] = int(ignored.get(name,0)) + 1; continue
+			var value := float(entry.bonus.Value)
+			if name.begins_with("PVP"): ignored[name] = int(ignored.get(name,0)) + 1; continue
+			if name in ["WeaponType","WeaponGroup"] and at == 0 and target == 0:
+				if name == "WeaponType": weapons.append(int(value))
+				else: weapons.append_array(weapon_group_types(int(value)))
+				continue
+			if name == "InvokeOption" and at == 10:
+				var invoke := _approx_invoke(target, value, level)
+				if invoke.has("reason"): ignored[str(invoke.reason)] = int(ignored.get(str(invoke.reason),0)) + 1
+				else: invokes.append(invoke)
+				continue
+			var receiver: Dictionary = receivers.get(name, {})
+			var stat := str(receiver.get("stat",""))
+			if receiver.has("targets"):
+				stat = str(receiver.targets.get(str(target),"")) if at == int(receiver.get("application_type",-1)) else ""
+			elif at != 0 or target != 0: stat = ""
+			if receiver.is_empty() or stat.is_empty() or unit != str(receiver.get("unit","")):
+				ignored[name] = int(ignored.get(name,0)) + 1; continue
+			var row_weapons: Array[int] = []
+			# JSON numbers are floats; 7 in [7.0] is false in Godot 4.
+			for weapon: Variant in receiver.get("weapon_types",[]): row_weapons.append(int(weapon))
+			rows.append({"type":name,"stat":stat,"value":value * float(receiver.get("scale",1)),"level":level,"weapons":row_weapons})
+	if rows.is_empty() and invokes.is_empty(): return {"reason":"받는 곳이 있는 수치 없음(" + ", ".join(PackedStringArray(ignored.keys())) + ")"}
+	var minimum := -1
+	for limit: Dictionary in profile.learn_limits:
+		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
+		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건"}
+		minimum = int(limit.CharacterMinLevel)
+	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
+	var unique_weapons: Array[int] = []
+	for weapon: int in weapons:
+		if weapon not in unique_weapons: unique_weapons.append(weapon)
+	return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"weapons":unique_weapons,"requires":requires,"group":group,"minimum_level":minimum,"ignored":ignored}
+
+## Rows that apply at this level/weapon: per bonus type, only the highest
+## CharacterLevel threshold at or below the level (replacement, not a sum).
+static func approx_level_rows(entries: Array, level: int, weapon: int, spell_weapons: Array) -> Array:
+	if not spell_weapons.is_empty() and weapon not in spell_weapons: return []
+	var best: Dictionary = {}
+	for entry: Dictionary in entries:
+		var limit := int(entry.get("level",0))
+		if limit > level: continue
+		if not entry.get("weapons",[]).is_empty() and weapon not in entry.weapons: continue
+		var key := "%s|%s|%s|%s" % [str(entry.get("type",entry.get("option_type",""))),str(entry.get("stat","")),str(entry.get("attack_kinds","")),str(entry.get("by_spell",""))]
+		if not best.has(key) or limit > int(best[key].level): best[key] = {"level":limit,"rows":[entry]}
+		elif limit == int(best[key].level): best[key].rows.append(entry)
+	var result: Array = []
+	for key: String in best: result.append_array(best[key].rows)
+	return result
+
+static func approx_values(spec: Dictionary, level: int, weapon: int) -> Dictionary:
+	var stats: Dictionary = {}
+	for entry: Dictionary in approx_level_rows(spec.get("rows",[]), level, weapon, spec.get("weapons",[])):
+		stats[str(entry.stat)] = float(stats.get(str(entry.stat),0.0)) + float(entry.value)
+	return stats
+
+func _open_approx_passive(record: Dictionary, spec: Dictionary) -> void:
+	var parts := PackedStringArray()
+	for entry: Dictionary in approx_level_rows(spec.rows, 999, -2, []):
+		parts.append("%s %s" % [str(entry.type), str(snappedf(float(entry.value),0.01))])
+	for invoke: Dictionary in spec.invokes:
+		parts.append("%s 발동 %.1f%%%s" % [str(invoke.option_type), float(invoke.chance)*100.0, (" ×%.2f" % float(invoke.multiplier)) if invoke.has("multiplier") else ""])
+	var summary := "패시브 · 원본 523 수치 + TWILIGHT 근사 해석 · " + " · ".join(parts)
+	if not spec.weapons.is_empty(): summary += " · 무기 조건(원본 WeaponType %s)" % str(spec.weapons)
+	if not spec.requires.is_empty(): summary += " · 선행 스킬 필요"
+	if not spec.ignored.is_empty(): summary += " · 근사 미적용: " + ", ".join(PackedStringArray(spec.ignored.keys()))
+	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":{},"mp":0,"hp":0,"items":{},
+		"minimum_level":int(spec.minimum_level),"local_kind":"source_approx523","desc":summary},true)
+	record["source_approx523"] = spec
+	record["source_direct523"] = {"kind":"passive_approx","spell_id":int(spec.spell_id),"basis":"원본 523 BuffBonus 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
 	record.erase("source_direct523_hold")
 
 func configure_arguments() -> void:

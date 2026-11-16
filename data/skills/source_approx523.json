@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "label": "TWILIGHT 근사",
+  "policy": "원본523 표 값이 있으면 그 값을 그대로 쓰고, 표에 없는 '해석 규칙'만 아래 근사로 채운다 (사용자 정책 2026-11-16 09:30). 값을 바꾸려면 이 파일만 고치면 된다.",
+  "applied": "2026-11-16",
+  "sources": {
+    "inven_skill_db": {"url": "https://lineagem.inven.co.kr/db/skill/55674", "checked": "2026-11-16", "note": "인벤 스킬 DB(주소 숫자 = 원본 SpellClass ID). 리덕션 아머(베테랑): 선행 스킬 '리덕션 아머', '리덕션 아머 효과를 강화', 'AC -10, 스턴 내성 +5%', '레벨 85~88 : PVE 대미지 리덕션 +6 / 레벨 90 : +8'."},
+    "inven_bounce_attack": {"url": "https://lineagem.inven.co.kr/db/skill/84", "checked": "2026-11-16", "note": "바운스 어택: '근거리 명중 +7, 양손검 추가 대미지 +5' (원본 MeleeHit 7 + LargeSwordDamageBonus 5와 같음)."},
+    "inven_blow_attack": {"url": "https://lineagem.inven.co.kr/db/skill/35433", "checked": "2026-11-16", "note": "블로우 어택: '공격 시 정해진 확률에 따라 강화된 물리 피해', '양손검 착용 필요'."},
+    "gamechosun_blow_attack": {"url": "https://m.gamechosun.co.kr/news/view.php?no=183224", "checked": "2026-11-16", "note": "패치 기사: \"'블로우 어택'은 대미지 증폭을 2배로 변경했다.\" → 증폭율(백만분율) Param1을 '배수'로 읽는 근거."},
+    "inven_reference_skill_pages": {"url": "https://lineagem.inven.co.kr/db/skill/", "checked": "2026-11-16", "note": "열린 참고 스킬마다 같은 주소(+SpellClass ID)의 설명과 대조했다. 대조 결과는 docs/skill523_source_hold_report.md에 있다."}
+  },
+  "rules": {
+    "character_level": {"value": "highest_threshold_at_or_below_level", "why": "BuffBonus.CharacterLevel 행이 레벨 구간표(예: 이글 아이 RangeHit 5@70 … 10@85)로 되어 있고, 인벤 DB가 '레벨 85~88 : +6, 레벨 90 : +8'처럼 구간 값으로 설명한다. 같은 보너스 종류에서 '플레이어 레벨 이하인 가장 높은 CharacterLevel' 행만 적용(대체), CharacterLevel 0은 0레벨 구간.", "source": "inven_skill_db"},
+    "character_class": {"value": "match_native_class_only", "why": "CharacterClass가 0이 아니면 그 원본 직업일 때만 적용."},
+    "required_spell": {"value": "prerequisite_learned_and_additive", "why": "RequiredSpellClassID = 선행 스킬(인벤 '선행 스킬'). 선행 스킬을 배워야 습득·적용되고, 기본 스킬 효과에 더해진다('효과를 강화'). 같은 비중첩 버프 그룹이면 아래 그룹 규칙이 대체를 결정한다.", "source": "inven_skill_db"},
+    "buff_group": {"value": "non_overlap_highest_priority", "why": "원본 BuffGroup.IsAllowOverlap=false 그룹에서 배운 패시브 버프가 둘 이상이면 BuffGroupPriority가 가장 높은 것 하나만 적용(같으면 원본 BuffClass ID가 큰 쪽). 중첩 허용 그룹은 모두 더한다.", "source": "TWILIGHT 근사(확인된 공식 문서 없음, 가장 보수적인 해석)"},
+    "weapon": {"value": "equipped_weapon_type_in_set", "why": "주문/버프의 WeaponType·WeaponGroup 행(그룹은 원본 WeaponTypeForWeaponGroup로 펼침)이 있으면 장착 무기의 원본 WeaponType이 그 집합에 있을 때만 적용. 인벤 '양손검 착용 필요'와 같음.", "source": "inven_blow_attack"},
+    "unreceived_rows": {"value": "ignore_and_list", "why": "게임에 받는 곳이 없는 행(PvP 전용, 카운터 배리어 무시 확률, 다른 스킬 변환 등)은 적용하지 않고 스킬 설명의 '근사 미적용' 목록에 남긴다. 적용 가능한 행이 하나도 없으면 계속 보류."}
+  },
+  "spell_bonus_allowed": ["BuffClassID", "RequiredSpellClassID", "WeaponType", "WeaponGroup", "SpellAttackType", "UISpellSelectTypeID", "CannotUseSiegeZone", "SpellLevelFrom"],
+  "spell_bonus_note": "SpellAttackType·UISpellSelectTypeID·CannotUseSiegeZone·SpellLevelFrom은 패시브 상시 수치에 영향이 없어 무시한다. 그 밖의 주문 보너스(하위 주문, 토글, 스킬 변환 등)가 있으면 계속 보류.",
+  "receivers": {
+    "DamageReduction": {"stat": "damageReduction", "unit": "Value", "scale": 1},
+    "PVEDamageReduction": {"stat": "pveDamageReduction", "unit": "Value", "scale": 1},
+    "ArmorClassBonus": {"stat": "def", "unit": "Value", "scale": 1},
+    "ArmorClass": {"stat": "def", "unit": "Value", "scale": 1},
+    "MeleeHit": {"stat": "meleeHit", "unit": "Value", "scale": 1},
+    "RangeHit": {"stat": "rangedHit", "unit": "Value", "scale": 1},
+    "MeleeDamage": {"stat": "meleeDamage", "unit": "Value", "scale": 1},
+    "RangeDamage": {"stat": "rangedDamage", "unit": "Value", "scale": 1},
+    "MagicResist": {"stat": "mr", "unit": "Value", "scale": 1},
+    "HPPlus": {"stat": "hp", "unit": "Value", "scale": 1},
+    "MPPlus": {"stat": "mp", "unit": "Value", "scale": 1},
+    "Strength": {"stat": "str", "unit": "Value", "scale": 1},
+    "Dexterity": {"stat": "dex", "unit": "Value", "scale": 1},
+    "Intelligence": {"stat": "int", "unit": "Value", "scale": 1},
+    "Constitution": {"stat": "con", "unit": "Value", "scale": 1},
+    "MeleeEvasion": {"stat": "dg", "unit": "Value", "scale": 1},
+    "RangeEvasion": {"stat": "er", "unit": "Value", "scale": 1},
+    "HPPotionIncreaseStatic": {"stat": "potionFlat", "unit": "Value", "scale": 1},
+    "AttackSpeedBonus": {"stat": "attackSpeed", "unit": "Percentage", "scale": 0.0001},
+    "CastSpeedBonus": {"stat": "castSpeed", "unit": "Percentage", "scale": 0.0001},
+    "MoveSpeedBonus": {"stat": "moveSpeedPct", "unit": "Percentage", "scale": 0.0001},
+    "DamageReductionPercent": {"stat": "receivedReductionPct", "unit": "Percentage", "scale": 0.0001},
+    "PVEDamageReductionPercent": {"stat": "receivedReductionPct", "unit": "Percentage", "scale": 0.0001},
+    "MeleeCritical": {"stat": "meleeCrit", "unit": "ValuePercent", "scale": 1},
+    "RangeCritical": {"stat": "rangedCrit", "unit": "ValuePercent", "scale": 1},
+    "HPPlusPercent": {"stat": "hpPct", "unit": "ValuePercent", "scale": 1},
+    "LargeSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [7], "note": "양손검 추가 대미지 = 양손검 착용 시 근거리 대미지"},
+    "OneHandSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [1]},
+    "SpearDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [4]},
+    "RuneSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [102]},
+    "SpecialResistance": {"unit": "Percentage", "scale": 0.0001, "application_type": 2, "targets": {"6": "stunResistance", "7": "holdResistance", "8": "fearResistance", "41": "silenceResistance", "22": "poisonResistance"}, "note": "BonusApplicationType 2 + SpecialResistanceType(6 Stun …). 인벤 '스턴 내성 +5%' = 원본 50000/10000."}
+  },
+  "receiver_units_note": "Percentage = 원본 UIUnit Denominator 10000 (50000 → 5%). ValuePercent = 이미 % 값. receivedReductionPct·moveSpeedPct는 이번에 받는 곳을 새로 연결했다(받는 피해 % 감소 최대 80%, 이동 속도 배수).",
+  "invokes": {
+    "chance_scale": 0.000001,
+    "chance_note": "InvokeOption 보너스 값(Percentage, 1,000,000 = 100%)을 발동 확률로 쓴다. CharacterLevel 행은 위 레벨 구간 규칙.",
+    "types": {
+      "Attack_DamageScaleAfterReduction": {"kind": "amplify", "multiplier_param": "Param1", "multiplier_scale": 0.000001, "below_one": "add_one", "source": "gamechosun_blow_attack", "note": "증폭율(백만분율) Param1 → 피해 배수(3,000,000 = 3배). 1배 미만 값(예 600,000)은 '1 + 값'(1.6배)으로 읽는다."},
+      "Attack_DamageScale": {"kind": "amplify", "multiplier_param": "Param1", "multiplier_scale": 0.000001, "below_one": "add_one", "source": "gamechosun_blow_attack"},
+      "Evade_IncreaseHPByStrOrInt": {"kind": "evade_heal", "percent_param": "Param1", "base_param": "Param2", "cooldown_param": "Param3", "note": "회피 시 HP 회복 = Param2 + max(STR, INT) × Param1%. 재발동 대기 Param3초. 계산식이 표에 없어 가장 작은 해석을 골랐다."}
+    },
+    "attack_types": {"0": ["melee", "ranged", "magic"], "1": ["melee"], "2": ["ranged"], "3": ["magic"], "52": ["melee"], "62": ["ranged"], "72": ["melee", "magic"]},
+    "attack_types_note": "원본 AttackType(0 All, 1 Melee, 2 Range, 3 Magic, 52 SpellMelee, 62 SpellRange, 72 MeleeMagic). 42 Dark는 게임에 없는 공격 종류라 적용하지 않는다. BySpellAttack=false는 일반 공격, true는 스킬 공격에만."
+  }
+}
