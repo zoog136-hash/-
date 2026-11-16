@@ -736,7 +736,7 @@ https://www.inven.co.kr/board/lineagem/5056/10935)
 | 추첨 | 그룹을 `GroupSelectProbability`로, 그 안에서 아이템을 `Probability`로 한 번 뽑음 (정수 10^14 기준 가중치) | 원본 가중치 그대로. 후보 목록·`ChangeCost` 변경은 모델링하지 않음(한 번 뽑기의 최종 확률은 같음) |
 | 직업 | `ClassID` = 플레이어 직업(`BASE508.source_class_id`), 그룹에 `ClassID 0`만 있으면 공용, 그 직업 행이 없으면 기사(1) 행 | **(근거 약함)** 직업 행 없는 그룹 대체 |
 | 귀속 | `BoundItemProbability`(10,000,000 기준, 523은 2,000,000=20%) 확률로 `GachaCraftBoundItem`의 귀속 아이템 지급 | **(근거 약함)** |
-| 시험 행 | TestItem·더미 결과 행은 빼고 같은 그룹을 다시 정규화 | 오프라인에서 존재할 수 없는 아이템 |
+| 시험 행 | TestItem·더미 결과 행은 빼고 같은 그룹을 다시 정규화, 그룹의 모든 행이 시험이면 그룹째 빼고 그룹 확률을 다시 정규화(희귀 제작 비법서 기사: 5그룹 중 1그룹) | 오프라인에서 존재할 수 없는 아이템 |
 | 축복 0 | `ItemBlessCodeID 0`(1행)은 일반(1)으로 지급 | |
 
 지급은 공용 공급자(`patch523_item_inventory.stage`)로 `ItemAmount`·`ItemEnchant`·축복을 그대로 넣는다(장비는 물리 개체, 비장비는 영수증 스택,
