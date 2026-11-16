@@ -23,7 +23,14 @@ const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 ## false = every caller uses its synchronous path (as before this loader).
-static var enabled: bool = true
+## Off on Android: since this loader the phone dies without a Godot error
+## (523.548 after 374 s, 523.570 after 318 s, 523.574 five seconds after
+## loading). Worker role builds read the bank's shared dictionaries (actor
+## registry, _building_shared, exclusions, member metadata) that the main
+## thread can change meanwhile — an unsynchronised Dictionary race crashes
+## natively. The cooked actor pack (#592) now replaces most SP2 loads, so the
+## phone runs the synchronous path until those inputs are isolated.
+static var enabled: bool = not OS.has_feature("android")
 ## Completed results kept for their consumer, bounded (oldest first).
 ## Phone memory (2026-11-16 523.548: app memory peaked at 1,576 MB with this
 ## loader): each running task holds the whole file plus its parse, and ready
