@@ -49,7 +49,7 @@ func table() -> void:
 	evidence["oman2"] = oman
 	check(oman.get("land_id")==22802 and oman.get("bounds")==[32730,32803,32730,32803] and oman.get("usable_classes")==[10442] and (oman.get("forbidden_classes",[]) as Array).is_empty(), "#19352 -> Land 22802 (32730,32803), usable only in ConsumeTerritory 10442")
 	check(STACK.profile(record(OMAN2)).get("kind")=="teleport_location", "#19352 has the teleport_location use owner")
-	check(EFFECTS.location_teleport(record(LIFE_ITEM)).is_empty(), "Life rows keep the item")
+	check(int(EFFECTS.location_teleport(record(LIFE_ITEM)).get("land_id",0))>0, "Life rows are kept by the item life ledger (TWILIGHT 근사)")
 	var interval: Dictionary = EFFECTS.location_teleport(record(INTERVAL_ITEM))
 	evidence["class_usage_interval"] = interval
 	check(int(interval.get("consume_delay_ms",0))==1800000, "ClassUsageInterval 1800s becomes the reuse delay (TWILIGHT 근사) "+str(interval.get("consume_delay_ms")))
@@ -163,6 +163,16 @@ func runtime() -> void:
 		world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
 		var again: Dictionary = await use(world,amulet)
 		check(again.get("ok",false) and land(world)==22802 and int(world.inventory.get(amulet,0))==1, "the amulet is usable again and still kept "+str(again.get("reason",again.get("message",""))))
+		# TWILIGHT 근사: 지배 부적 소지 효과 — on its own floor: NoTeleport ignored + description bonuses.
+		var ruler: String = grant(world,OMAN2_RULER,1)
+		if not ruler.is_empty():
+			world.item_possession523._checked_ms = -100000; world.item_possession523._land_ms = -100000
+			var on_floor: Dictionary = {"land":land(world),"active":world.item_possession523.active(),"sp":world._active_item_buff_total("sp"),"xp":world._active_item_buff_total("xp")}
+			world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
+			world.item_possession523._land_ms = -100000
+			var off_floor: Dictionary = {"land":land(world),"active":world.item_possession523.active()}
+			evidence["ruler_possession"] = {"on":on_floor,"off":off_floor}
+			check(int(on_floor.land)==22802 and bool(on_floor.active) and int(on_floor.sp)>=3 and int(on_floor.xp)>=20 and not bool(off_floor.active), "2층 지배 부적: 2층에서만 순간이동 허용·SP+3·경험치+20% "+str(evidence.ruler_possession))
 		world.inventory.erase(amulet)
 		world._load_game(true)
 		check(int(world.inventory.get(amulet,0))==1, "reload keeps the amulet")
