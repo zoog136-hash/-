@@ -170,7 +170,13 @@ func run() -> void:
 		PREPARED.remember(str(index),value)
 	check(PREPARED.size()==PREPARED.MAX_KEYS and PREPARED.lookup("0")==null and is_instance_valid(holders[0]),"weak keys bounded without revoking live owner")
 	holders.clear()
-	check(PREPARED.size()==0,"last owner releases all weak snapshots")
+	# Changed 2026-11-16: the RECENT_KEEP most recently used snapshots stay
+	# alive after their last owner (respawns of a kind reuse them); everything
+	# older is still released, and release_recent() drops the rest.
+	var newest: String=str(PREPARED.MAX_KEYS+4)
+	check(PREPARED.size()==PREPARED.RECENT_KEEP and PREPARED.lookup(newest)!=null and PREPARED.lookup(str(PREPARED.MAX_KEYS+4-PREPARED.RECENT_KEEP))==null,"only the most recent snapshots outlive their owners: %d" % PREPARED.size())
+	PREPARED.release_recent()
+	check(PREPARED.size()==0,"releasing the recent references frees all idle snapshots")
 	# Root source declarations are still enforced before any snapshot is stored.
 	var bad: Dictionary=fixture(directory+"_bad","wrong_attributes")
 	check(not shared(BANK.new(),bad).ok,"invalid proof never cached")
