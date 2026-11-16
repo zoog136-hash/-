@@ -148,7 +148,9 @@ func actual_main() -> void:
 			if int(entry.row.ItemAmount) > 1 and big.is_empty(): big = {"book":id,"roll":threshold,"amount":int(entry.row.ItemAmount),"item":int(entry.row.ItemClassID)}
 			threshold += int(entry.weight)
 	if check(not big.is_empty(), "an original row with ItemAmount > 1"):
-		SUPPLY.commit(world,[{"item_class_id":int(big.book),"amount":1,"bless_raw":1,"enchant":0}] + ([] if int(GACHA.spec(int(big.book)).material_id) == 26 else [{"item_class_id":int(GACHA.spec(int(big.book)).material_id),"amount":int(GACHA.spec(int(big.book)).material_amount),"bless_raw":1,"enchant":0}]),{"kind":"test_craft523_gacha"})
+		var granted: bool = SUPPLY.commit(world,[{"item_class_id":int(big.book),"amount":1,"bless_raw":1,"enchant":0}] + ([] if int(GACHA.spec(int(big.book)).material_id) == 26 else [{"item_class_id":int(GACHA.spec(int(big.book)).material_id),"amount":int(GACHA.spec(int(big.book)).material_amount),"bless_raw":1,"enchant":0}]),{"kind":"test_craft523_gacha"})
+		check(granted, "forced-draw book and material granted")
+		world.gold = 100000000
 		var forced: Dictionary = GACHA.execute(world,int(big.book),int(big.roll),GACHA.SCALE-1)
 		check(forced.get("ok",false) and int(forced.output.amount) == int(big.amount) and int(forced.output.item_class_id) == int(big.item), "forced draw grants ItemAmount %d: %s" % [int(big.amount),str(forced.get("reason",forced.get("output","")))])
 		evidence["forced_amount"] = forced.get("output",{})

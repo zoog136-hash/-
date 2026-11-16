@@ -724,7 +724,7 @@ Final local validation: error-free actual Main2274 checks, covering all22 source
 | `GachaCraftOutput` | 그룹·`ClassID`별 `Probability`(직업별 합 10,000,000), `ItemAmount`, `ItemEnchant`, `ItemBlessCodeID`, `BoundItemProbability` |
 | `GachaCraftBoundItem` | `ItemClassID → BoundItemClassID` |
 
-TestItem=false·더미 아님·네 보너스가 모두 있는 비법서만 쓴다(523: 15종 — 희귀 제작 비법서 #754, 오림의 일기장 #98094,
+TestItem=false·더미 아님·네 보너스가 모두 있고 재료도 얻을 수 있는(비시험) 비법서만 쓴다(523: 14종 — 희귀 제작 비법서 #754, 오림의 일기장 #98094,
 타라스·신성 검사단·아인하사드·빛나는 제작 비법서, 도구리 제작 비법서 등).
 
 ### TWILIGHT 근사 (출처: https://dailyfun.kr/85 , https://dailyfun.kr/27 , https://dailyfun.kr/206 ,

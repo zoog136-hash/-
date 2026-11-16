@@ -75,7 +75,9 @@ static func spec(item_class_id: int) -> Dictionary:
 			var kind: Variant = BONUS_TYPES.get(int(bonus[-1].get("BonusTypeID",0)))
 			if kind != null and _int(bonus[-1].get("Value")): found[kind] = int(bonus[-1].Value)
 		var craft: Array = SOURCE.related("GachaCraft","ID",int(found.get("gacha",0)))
-		if found.size() == 4 and craft.size() == 1 and int(found.material_amount) > 0 and int(found.cost) >= 0:
+		# The material must be an item the game can own (not TestItem / dummy).
+		var material_ok: bool = int(found.get("material",0)) == 26 or _drawable(int(found.get("material",0)))
+		if found.size() == 4 and craft.size() == 1 and int(found.material_amount) > 0 and int(found.cost) >= 0 and material_ok:
 			result = {"item_class_id":item_class_id,"name":_name(item_class_id),"gacha_id":int(found.gacha),"material_id":int(found.material),
 				"material_name":_name(int(found.material)),"material_amount":int(found.material_amount),"cost":int(found.cost),"change_cost":int(craft[0].get("ChangeCost",0))}
 	_specs[item_class_id] = result
