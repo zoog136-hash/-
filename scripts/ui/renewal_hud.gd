@@ -2978,7 +2978,10 @@ func _select_current_world_map() -> void:
 	if is_instance_valid(world_node) and world_node.get("field_map")!=null and world_node.field_map.get("coordinates")!=null and is_instance_valid(world_node.get("player")):
 		var source: Vector2=world_node.field_map.coordinates.to_source(world_node.player.global_position)
 		if source.is_finite():cell=Vector2i(floori(source.x),floori(source.y))
-	original_main_ui_status["world_map_selection"]=view.call("select_offered_world",int(offered),cell)
+	var selected: Dictionary=view.call("select_offered_world",int(offered),cell)
+	# Keep only the outcome: the full result carries the map texture, which
+	# must be released when the window closes (phone memory).
+	original_main_ui_status["world_map_selection"]={"ok":selected.get("ok",false),"image_applied":selected.get("image_applied",false),"selected_world_id":selected.get("selected_world_id",0),"reason":str(selected.get("error",selected.get("unresolved_field","")))}
 	if original_main_ui_status.world_map_selection.get("image_applied",false) and is_instance_valid(world_node) and world_node.get("field_map")!=null:
 		original_main_ui_status["world_map_centered"]=_center_world_map(view,int(offered),world_node)
 

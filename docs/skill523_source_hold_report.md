@@ -303,3 +303,18 @@
 - 남은 190(액티브 85 · 패시브 105)의 사유: 스킬 대체 대상 패시브의 효과 행(`ChangeSpecialSpellClassID` 13 등), 받는 곳 없는 버프(자기 15 · 대상 10),
   "효과 없음"(이동·탐지·소환·흡수 등 세 효과 밖 주문 ~35), 조건 노드, 고유 체계 행(CounterRevenge·DeathBlow·SaintBlow·DualPotion·충전 등) — 다음 PR에서 순서대로 계속.
 
+
+## 근사 적용 2026-11-16 (4): 토글 패시브 · 조종 상태이상 · 회복/해제 · 이동기 (`feat/approx523-skill-active` 다음 PR)
+사용자 순서(스킬 대체 → 강화 관계 → 후속 주문 → 이동기 → 묶음 하위 주문 → 기타)를 이어서 진행했다. 모두 **TWILIGHT 근사(근거 약함)**이고 스위치는 `player_skills523.APPROX_EXTRA_EFFECTS`다.
+- **토글 패시브(#OFF/#ON)**: 원본 `ChangeSpecialSpellClassID`·`ToggleOnSpellClassID`는 같은 값의 ON 주문을 가리킨다. 게임에 토글 UI가 없어 **배우면 ON**으로 보고,
+  ON 주문의 버프 행을 하위 패시브처럼 합친다(OFF 버프의 `RemoveBuffGroup`는 ON 버프를 끄는 행이라 적용하지 않음). `PassiveCastSpell 1`은 '패시브로 상시 시전' 표시라 그대로 둔다.
+- **조종 계열 대상 버프 → 기존 몬스터 상태이상**(`status_service.apply`: 저항·보스 계수 그대로):
+  `CannotMove`+`CannotAttack` = 스턴(잠·기절), `CannotMove` = 홀드, `CannotCastSpell`/`CannotCastSkill` = 침묵, `PoisonDamageDice` = 독(틱 = 주사위 평균, 1초).
+  적중 = SpellHitProbabilityBase(Min~Max), 지속 = SpellDebuffMin~MaxDuration. 대상 `ArmorClass` 행은 장비 발동 디버프의 AC 수정치와 같게 연결.
+- **자기 회복·상태 해제**: `HPRestorationPercent`(여러 단계면 가장 낮은 값) = 최대 HP의 그 %만큼 회복, `SpellBuffGroup` 행 = 내 상태이상(스턴·홀드·공포·침묵·독·출혈) 해제.
+- **이동기**: `SpellMoveMultiple`이 있는 주문 = 대상 옆으로 이동(걸을 수 있는 칸일 때만) 뒤 후속 주문 실행. 원본 `SpellMove`(지점 이동)는 기존 `spell_move523` 소유자 그대로.
+- **아군 대상 버프(TargettingType 2)**: 파티가 없어 시전자 자신에게 건다.
+- **자기 버프의 SpecialResistance**(적용 유형 2 + 저항 종류): 패시브와 같은 수신처(스턴·홀드·공포·침묵·독 내성).
+- 측정(실제 Main, 원본 팩): 보류 참고 스킬 190 → **168**, 스킬이 열린 바인딩 스킬서 389 → **451**.
+- 남은 168: 대부분 한 스킬에만 있는 고유 체계(카운터 리벤지·데스 블로우·세인트 블로우·더블 포션·충전·반사·피해 연결·소환·탐지·오브젝트 찾기·변신 덱 버프 등)라
+  각각 새 실행부가 필요하다. 다음 PR에서 많은 것부터 계속.

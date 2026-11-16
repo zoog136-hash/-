@@ -88,9 +88,16 @@ func _offer(field: RefCounted) -> Dictionary:
 	var definition: Variant=field.get("definition")
 	if not definition is Dictionary or not _uint(definition.get("source_map_id")):return _fail("world_map_land_identity_required")
 	var offer: Variant=_offers.get(str(int(definition.source_map_id)))
-	if not offer is Dictionary or not _uint(offer.get("world_id")) or offer.world_id==0:return _fail("world_map_explicit_private_world_offer_required")
 	var candidates: Dictionary=_adapter.call("world_candidates",field)
 	if not candidates.get("ok",false):return candidates
+	if not offer is Dictionary:
+		# Contracts built before the Land 0 fix (tools/maps/build_client523_world_map.py
+		# skipped LandID 0, Talking Island) or Lands whose several World rows
+		# share one picture carry no offer. TWILIGHT approximation: the lowest
+		# World ID among this Land's image-bearing candidates, labelled with its
+		# Korean original name.
+		offer=_approximate_offer(candidates.get("candidates",[]),int(definition.source_map_id))
+	if not offer is Dictionary or not _uint(offer.get("world_id")) or offer.world_id==0:return _fail("world_map_explicit_private_world_offer_required")
 	if candidates.get("provenance",{}).get("map_contract_sha256")!=_contract_pin:return _fail("world_map_relation_selection_changed")
 	var matches: Array=[]
 	for candidate: Variant in candidates.get("candidates",[]):
@@ -101,6 +108,19 @@ func _offer(field: RefCounted) -> Dictionary:
 	var label: Variant=offer.get("label",source.get("Name"))
 	if not label is String or label.is_empty():return _fail("world_map_actual_source_label_required")
 	return {"ok":true,"world_id":int(offer.world_id),"label":label,"source_world":source.duplicate(true),"map_contract_sha256":_contract_pin}
+
+static func _approximate_offer(candidates: Array, land_id: int) -> Variant:
+	var best: Dictionary={}
+	var infos: Dictionary={}
+	for candidate: Variant in candidates:
+		if not candidate is Dictionary or candidate.get("world_namespace")!="UIMapWorld.ID" or not _uint(candidate.get("world_id")) or int(candidate.world_id)==0:continue
+		infos[candidate.get("image_info_id")]=true
+		if best.is_empty() or int(candidate.world_id)<int(best.world_id):best=candidate
+	# Several different pictures for one Land stay a choice for the player.
+	if best.is_empty() or infos.size()!=1:return null
+	var label: String=preload("res://scripts/maps/current523_map_images.gd").korean_name(land_id)
+	if label.is_empty():label=str(best.get("source_world",{}).get("raw",{}).get("Name",""))
+	return {"world_id":int(best.world_id),"label":label,"twilight_approximation":"offer_from_single_picture"}
 
 func input(event: InputEvent, supplied: Dictionary) -> Dictionary:
 	if event.device==InputEvent.DEVICE_ID_EMULATION:return {"ok":true,"ignored_emulated_event":true}

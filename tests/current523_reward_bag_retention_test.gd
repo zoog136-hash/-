@@ -37,7 +37,12 @@ func _run() -> void:
 	_compare(limited,"source_weighted_bag","unrestricted","","valid class limit")
 	var blocked: Dictionary=limited.duplicate(true)
 	blocked.class_rows=[]
-	_compare(blocked,"source_weighted_bag","blocked","incomplete_lucky_bag_probability_for_class:2","class-specific denominator remains incomplete")
+	# TWILIGHT 근사 (docs/items523_remaining_missing_rules.md 18): an incomplete class total is drawn over its own total.
+	if P.APPROX_BAG_RENORMALIZE:
+		_compare(blocked,"source_weighted_bag","unrestricted","","class-specific denominator is renormalized (TWILIGHT 근사)")
+		check(P.reward_bag(blocked).get("approx_renormalized")==true and P.reward_bag(blocked).class_probability_totals.get("2")==7500000,"renormalized bag keeps its own class total")
+	else:
+		_compare(blocked,"source_weighted_bag","blocked","incomplete_lucky_bag_probability_for_class:2","class-specific denominator remains incomplete")
 	blocked=limited.duplicate(true)
 	blocked.source_typed_references[0].bag.entities[0].class_limits[0].character_class.ID=2.0
 	_compare(blocked,"source_weighted_bag","blocked","unsupported_lucky_bag_entity_class","mismatched class join")
@@ -53,10 +58,12 @@ func _run() -> void:
 	_compare(blocked,"guaranteed_bag","blocked","source_declared_bag_entity_exclusion","excluded source entity observation")
 	blocked=_definition("guaranteed_bag")
 	blocked.source_typed_references[0].bag.entities[0].item_class.Name="[더미] retained item fixture"
-	_compare(blocked,"guaranteed_bag","blocked","source_test_or_excluded_reward_item","excluded source item observation")
+	if P.APPROX_BAG_DROP_TEST_REWARDS: _compare(blocked,"guaranteed_bag","unrestricted","","excluded source item observation: reward dropped (TWILIGHT 근사)")
+	else: _compare(blocked,"guaranteed_bag","blocked","source_test_or_excluded_reward_item","excluded source item observation")
 	blocked=_definition("guaranteed_bag")
 	blocked.source_typed_references[0].bag.entities[0].item_class.TestItem=true
-	_compare(blocked,"guaranteed_bag","blocked","source_test_or_excluded_reward_item","test item stays blocked")
+	if P.APPROX_BAG_DROP_TEST_REWARDS: _compare(blocked,"guaranteed_bag","unrestricted","","test item stays blocked: reward dropped (TWILIGHT 근사)")
+	else: _compare(blocked,"guaranteed_bag","blocked","source_test_or_excluded_reward_item","test item stays blocked")
 	blocked=_definition("mixed_rewards_bag")
 	blocked.original_item.TargettingTypeID=2.0
 	_compare(blocked,"mixed_rewards_bag","blocked","unsupported_targetting_type","source target constraint")
@@ -116,7 +123,7 @@ func _compare(definition: Dictionary, kind: String, status: String, reason: Stri
 		return
 	check(public.get("kind")==kind and discarded.get("kind")==kind and public.get("activation_status")==status,label+": actual expected kind and admission status retained")
 	check(public.source_entities.size()==definition.source_typed_references[0].bag.entities.size() and discarded.source_entities.is_empty(),label+": public evidence remains complete and false avoids only its retained copies")
-	check(public.rewards.size()==definition.source_typed_references[0].bag.entities.size(),label+": zero-weight and duplicate source rows still contribute their unchanged reward records")
+	check(public.rewards.size()+public.get("approx_dropped_test_rewards",[]).size()==definition.source_typed_references[0].bag.entities.size(),label+": zero-weight and duplicate source rows still contribute their unchanged reward records")
 	if not reason.is_empty():check(reason in public.blocked_reasons,label+": expected source blocker remains visible")
 	if kind!="guaranteed_bag" and status=="unrestricted":
 		check(public.source_probability_denominator==10000000 and public.class_probability_totals.get("1")==10000000,label+": native probability denominator remains unchanged")
