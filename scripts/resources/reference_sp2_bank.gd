@@ -13,6 +13,8 @@ const COMPACT = preload("res://scripts/resources/sp2_compact_parse.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const ATTACHMENT_ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
 const PREPARED = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
+const LOADER = preload("res://scripts/resources/sp2_background_loader.gd")
+const SELF_PATH := "res://scripts/resources/reference_sp2_bank.gd"
 const MAX_JSON = 16 * 1024 * 1024
 # Aggregate bank metadata is larger than an individual action JSON. Keep both
 # finite: the pinned cf2677 manifest is 31,361,924 bytes; the complete-client
@@ -84,6 +86,47 @@ static var member_verify_budget: int = -1
 static var _member_meta: Dictionary = {}
 static var _member_deferrals: Dictionary = {}
 var _member_budget_active: bool = false
+## Background preparation (sp2_background_loader.gd). A caller that can retry
+## (the current523 field population, budgeted map objects) sets
+## background_loading around its load: a role whose action JSON or members are
+## not prepared yet starts their worker tasks and returns ROLE_DEFERRED instead
+## of reading/hashing/parsing them on the main thread; background_wait then
+## names the tasks it waits for. A prepared role is built from the workers'
+## results with every check of the synchronous path (and no member budget:
+## its expensive part is already done). After BACKGROUND_WAIT_MAX_MSEC of
+## waiting a role is built synchronously (a running task is waited for, never
+## repeated). Every load, background or not, uses a finished or running task
+## for exactly its file, identity and file stamp instead of a second read.
+## false (default) = callers that cannot retry are unchanged.
+static var background_loading: bool = false
+## Set only on the private bank instance a worker builds a role with.
+var _worker_mode: bool = false
+var _worker_missing: bool = false
+
+## Read-only actor registry entries a worker role build may look up; any
+## other lookup marks the build as needing the main thread (never a guess).
+class IndexSnapshot:
+	extends RefCounted
+	var entries: Dictionary = {}
+	var missed: bool = false
+	func lookup(registry: String, key: String) -> Variant:
+		var known: Dictionary = entries.get(registry, {})
+		if not known.has(key):
+			missed = true
+			return null
+		return known[key]
+	func contains(registry: String, key: String) -> bool:
+		var known: Dictionary = entries.get(registry, {})
+		if not known.has(key):
+			missed = true
+			return false
+		return known[key] != null
+	func registry_is_dictionary(_registry: String) -> bool:
+		return true
+static var background_wait: Array[String] = []
+const BACKGROUND_WAIT_MAX_MSEC: int = 8000
+const BACKGROUND_SINCE_MAX: int = 64
+static var _background_since: Dictionary = {}
 var _member_budget_key: String = ""
 var _role_touched: Dictionary = {}
 var _role_keys_used: Array[String] = []
@@ -131,6 +174,10 @@ static func crc32(bytes: PackedByteArray) -> String:
 	return "%08x" % ((value ^ 0xffffffff) & 0xffffffff)
 
 func _json(path: String, expected: String, manifest_json: bool = false) -> Dictionary:
+	if not manifest_json and LOADER.enabled and not LOADER.idle():
+		# Read, SHA-256 checked and parsed by a worker for this exact file stamp.
+		var prepared: Dictionary = LOADER.take(LOADER.json_key(path, expected))
+		if not prepared.is_empty(): return prepared.value
 	var file := FileAccess.open(path, FileAccess.READ)
 	var maximum: int = MAX_MANIFEST_JSON if manifest_json else MAX_JSON
 	if file == null or file.get_length() <= 0 or file.get_length() > maximum: return fail("Missing or oversized bank JSON: " + path)
@@ -288,9 +335,18 @@ func _member(member: String) -> Dictionary:
 	var known: Variant = _verified_members.get(file_path)
 	var verified: bool = known is Array and known[0] == identity_key and known[1] == int(spec.bytes) and known[2] == modified
 	var bytes := PackedByteArray()
+	# Read, checked (and parsed/packed) by a worker for this exact file, identity
+	# and stamp (sp2_background_loader.gd); a running task is waited for.
+	var prepared: Dictionary = LOADER.take(LOADER.member_key(file_path, identity_key, int(spec.bytes))) if LOADER.enabled and not LOADER.idle() else {}
+	if not prepared.is_empty() and (int(prepared.stamp[0]) != int(spec.bytes) or int(prepared.stamp[1]) != modified): prepared = {}
 	if not verified:
-		bytes = _read_verified(file_path, spec, supplied_sha, received, member)
-		if bytes.is_empty(): return fail(str(_last_member_problem))
+		if not prepared.is_empty():
+			if not bool(prepared.verified):
+				_last_member_problem = str(prepared.error)
+				return fail(_last_member_problem)
+		else:
+			bytes = _read_verified(file_path, spec, supplied_sha, received, member)
+			if bytes.is_empty(): return fail(str(_last_member_problem))
 		_verified_members[file_path] = [identity_key, int(spec.bytes), modified]
 	# Shared parse identity: verified manifest SHA + this member's checked
 	# identity + decoder version (received members stay CRC/receipt scoped).
@@ -299,6 +355,18 @@ func _member(member: String) -> Dictionary:
 	if not _parsed.has(member):
 		var parsed: Variant = ASSETS.acquire("parsed", asset_key, _asset_owner) if not asset_key.is_empty() else null
 		var parsed_cost: int = ASSETS.entry_bytes("parsed", asset_key) if parsed != null else -1
+		if parsed == null and not prepared.is_empty() and bool(prepared.verified) and bool(prepared.get("has_parse", false)):
+			# The same parse and pack, done by the worker (sp2.parse/sp2.compact
+			# off the main thread); published exactly as below.
+			var prepared_reservation: int = ASSETS.reserve("parsed", asset_key, int(prepared.raw_size))
+			if prepared.has("parse_failure"):
+				ASSETS.cancel(prepared_reservation)
+				return prepared.parse_failure
+			FRAME_HITCH.count("sp2.parsed_payload_measured")
+			parsed_cost = int(prepared.cost)
+			parsed = ASSETS.complete(prepared_reservation, prepared.parsed, parsed_cost, _asset_owner)
+			var prepared_published: int = ASSETS.entry_bytes("parsed", asset_key)
+			if prepared_published >= 0: parsed_cost = prepared_published
 		if parsed == null:
 			if bytes.is_empty():
 				bytes = _read_verified(file_path, spec, supplied_sha, received, member)
@@ -358,6 +426,7 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 static func forget_verified_members() -> void:
 	_verified_members.clear()
 	_recheck_ok.clear()
+	_background_since.clear()
 	forget_member_meta()
 	PREPARED.clear()
 
@@ -394,6 +463,91 @@ func _notification(what: int) -> void:
 func parsed_asset_key(member: String) -> String:
 	return str(_parsed_keys.get(member, ""))
 
+## "" when `member` needs no background work (already verified and parsed,
+## prepared, or invalid so that the synchronous path rejects it); else the
+## loader key of the task it waits for (started here when not yet running).
+static func _background_member(index: RefCounted, root: String, manifest_sha: String, member: String) -> String:
+	var spec: Variant = index.lookup("members", member) if index != null else null
+	if not spec is Dictionary or spec.get("member") != member or spec.get("path") != "raw/" + member or not INSTALL.safe_relative(str(spec.get("path", ""))): return ""
+	var supplied_sha: bool = valid_sha(spec.get("sha256"))
+	if not integer(spec.get("bytes"), 1, DECODER.MAX_INPUT_BYTES) or (not supplied_sha and not valid_crc(spec.get("crc32"))): return ""
+	var file_path: String = root.path_join(str(spec.path))
+	if not FileAccess.file_exists(file_path) or int(FileAccess.get_size(file_path)) != int(spec.bytes): return ""
+	var identity_key: String = ("sha256:" + str(spec.sha256)) if supplied_sha else ("crc32:" + str(spec.crc32))
+	var modified: int = int(FileAccess.get_modified_time(file_path))
+	var known: Variant = _verified_members.get(file_path)
+	var verified: bool = known is Array and known[0] == identity_key and known[1] == int(spec.bytes) and known[2] == modified
+	var asset_key: String = ASSETS.parsed_key(manifest_sha, member, spec, file_path)
+	var parsed_present: bool = not asset_key.is_empty() and ASSETS.has_entry("parsed", asset_key)
+	if verified and parsed_present: return ""
+	if verified:
+		var meta: Variant = _member_meta.get(manifest_sha + "|" + member)
+		if meta is Dictionary and meta.get("stamp") == known: return ""
+	var key: String = LOADER.member_key(file_path, identity_key, int(spec.bytes))
+	var state: String = LOADER.state(key)
+	if state == "ready": return ""
+	if state == "none": LOADER.request_member(member, file_path, spec, identity_key, not parsed_present)
+	return key
+
+## Worker follow-up (main thread): a finished action JSON starts its members.
+static func _background_follow(result: Dictionary, index: RefCounted, root: String, manifest_sha: String) -> void:
+	var value: Variant = result.get("value")
+	if not value is Dictionary or not value.get("ok", false): return
+	for member: Variant in result.get("members", []): _background_member(index, root, manifest_sha, str(member))
+
+## true when this role's action JSON and every member it draws are prepared
+## (or will be rejected synchronously); else starts what is missing and adds
+## the awaited loader keys to `waiting`.
+func _background_role(role_actor_id: int, action_id: int, waiting: Array) -> bool:
+	var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
+	if not role_entries is Dictionary: return true
+	var entry: Variant = role_entries.get(str(action_id))
+	if not entry is Dictionary or not entry.get("path") is String or not INSTALL.safe_relative(str(entry.path)) or not valid_sha(entry.get("sha256")): return true
+	var actor_path: String = _root.path_join(str(entry.path))
+	var key: String = LOADER.json_key(actor_path, str(entry.sha256))
+	var state: String = LOADER.state(key)
+	if state != "ready":
+		if state == "none": LOADER.request_json(actor_path, str(entry.sha256), MAX_JSON, Callable(load(SELF_PATH), "_background_follow").bind(_index, _root, _manifest_sha))
+		waiting.append(key)
+		return false
+	var prepared: Dictionary = LOADER.take(key, false, true)
+	if prepared.is_empty():
+		waiting.append(key)
+		return false
+	if not prepared.value.get("ok", false): return true
+	var ready: bool = true
+	for member: Variant in prepared.get("members", []):
+		var member_key: String = _background_member(_index, _root, _manifest_sha, str(member))
+		if not member_key.is_empty():
+			ready = false
+			waiting.append(member_key)
+	return ready
+
+## Starts background preparation of a bank's action JSONs and members (an
+## effect about to be shown, a kind about to spawn). Loads nothing and admits
+## nothing: the later load_bank() still validates everything and simply uses
+## the prepared inputs (waiting for a task still running). Returns the number
+## of inputs still being prepared.
+func prefetch(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, role_actor_ids: Dictionary = {}) -> int:
+	if not LOADER.enabled or not valid_sha(expected_sha): return 0
+	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, true)
+	if not opened.ok: return 0
+	_root = manifest_path.get_base_dir()
+	_manifest_path = manifest_path
+	_manifest_sha = expected_sha
+	_index = opened.index
+	_manifest = _index.top
+	var waiting: Array = []
+	for role: Variant in bindings:
+		if not integer(bindings[role]): continue
+		var actor: Variant = role_actor_ids.get(role, source_actor_id)
+		if integer(actor): _background_role(int(actor), int(bindings[role]), waiting)
+	FRAME_HITCH.count("sp2.bg_prefetch")
+	# A deferring background caller also waits for these.
+	if background_loading:
+		for key: Variant in waiting: background_wait.append(str(key))
+	return waiting.size()
+
 ## Client static branch (no action descriptor): body Sprite/<remapped id>-0.sp2
 ## direction 0 picture 0, plus its 101 shadow drawn the same way; clothes are
 ## not collected. Returns layers for render_layer(); nothing is played here.
@@ -419,6 +573,15 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 	if not admitted.ok: return admitted
 	var entry: Variant = _manifest.static_pictures.get("sprite:" + str(source_sprite_id))
 	if not entry is Dictionary or entry.get("branch") != "client_static_no_action_descriptor" or not entry.get("layers") is Array: return fail("Exact source sprite has no static picture.")
+	if background_loading and LOADER.enabled:
+		background_wait.clear()
+		for layer: Variant in entry.layers:
+			if not layer is Dictionary: continue
+			var waiting_key: String = _background_member(_index, _root, _manifest_sha, "Sprite/%d-0.sp2" % int(layer.get("file_sprite_id",-1)))
+			if not waiting_key.is_empty(): background_wait.append(waiting_key)
+		if not background_wait.is_empty():
+			FRAME_HITCH.count("sp2.bg_deferred")
+			return fail(ROLE_DEFERRED)
 	var layers: Array = []
 	for layer: Variant in entry.layers:
 		if not layer is Dictionary or layer.get("kind") not in ["body","shadow"] or layer.get("source_sprite_id") != source_sprite_id or int(layer.get("group_bit",-1)) != 0 or int(layer.get("frame_index",-1)) != 0: return fail("Invalid static picture layer.")
@@ -536,6 +699,18 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 	if not admitted.ok: return admitted
 	var member: String = str(layer.get("member", ""))
 	_role_touched[member] = true
+	if _worker_mode:
+		# Worker role build: members were verified on the main thread and handed
+		# over in `memo` (a failure as the same rejection, at the same point).
+		var handed: Variant = memo.get(member)
+		if not handed is Dictionary:
+			_worker_missing = true
+			return fail("Worker role build lacks a prepared member: " + member)
+		if handed.has("failure"): return handed.failure
+		if handed.has("unbuilt"):
+			handed = _metadata_entry(handed.source, str(handed.path), handed.stamp)
+			memo[member] = handed
+		return _render_verified_layer(layer, handed.source, false)
 	if not memo.has(member) and member_verify_budget >= 0:
 		var known: Variant = _member_meta.get(_manifest_sha + "|" + member)
 		if known is Dictionary and _member_meta_current(known):
@@ -552,20 +727,8 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 		FRAME_HITCH.count("sp2.member_verify")
 		var source: Dictionary = _member(member)
 		if not source.ok: return source
-		var groups: Array = []
-		for group: Dictionary in source.parsed.groups:
-			var frames: Array = []
-			for frame: Dictionary in group.frames:
-				frames.append({"bounds":frame.bounds,"empty":frame.empty})
-			groups.append({"bit":group.bit,"frames":frames})
-		var compact: Dictionary = source.duplicate()
-		compact.parsed = {"groups":groups}
-		# A prepared result may freeze its provenance. Do not freeze the shared
-		# manifest index's mutable received-member identity as a side effect.
-		if _building_shared and (compact.source_identity is Dictionary or compact.source_identity is Array):
-			compact.source_identity = compact.source_identity.duplicate(true)
 		var file_path: String = _root.path_join("raw/" + member)
-		memo[member] = {"source":compact,"path":file_path,"stamp":_verified_members.get(file_path, []).duplicate()}
+		memo[member] = _metadata_entry(source, file_path, _verified_members.get(file_path, []).duplicate())
 		if member_verify_budget >= 0:
 			var meta_key: String = _manifest_sha + "|" + member
 			_member_meta.erase(meta_key)
@@ -573,6 +736,22 @@ func _load_layer_metadata(layer: Dictionary, memo: Dictionary) -> Dictionary:
 			# The non-shared API returns mutable data: keep a private copy there.
 			_member_meta[meta_key] = memo[member] if _building_shared else (memo[member] as Dictionary).duplicate(true)
 	return _render_verified_layer(layer, memo[member].source, false)
+
+## Geometry/provenance retained for one verified member (no raw/body/blocks).
+func _metadata_entry(source: Dictionary, file_path: String, stamp: Array) -> Dictionary:
+	var groups: Array = []
+	for group: Dictionary in source.parsed.groups:
+		var frames: Array = []
+		for frame: Dictionary in group.frames:
+			frames.append({"bounds":frame.bounds,"empty":frame.empty})
+		groups.append({"bit":group.bit,"frames":frames})
+	var compact: Dictionary = source.duplicate()
+	compact.parsed = {"groups":groups}
+	# A prepared result may freeze its provenance. Do not freeze the shared
+	# manifest index's mutable received-member identity as a side effect.
+	if _building_shared and (compact.source_identity is Dictionary or compact.source_identity is Array):
+		compact.source_identity = compact.source_identity.duplicate(true)
+	return {"source":compact,"path":file_path,"stamp":stamp}
 
 ## A retained member entry is the verified file only while its stamp is the
 ## current verification and the file still has that size and mtime.
@@ -946,6 +1125,257 @@ func _prepared_valid(snapshot: RefCounted, manifest_path: String, expected_sha: 
 		if _verified_members.get(path) != stamp or not FileAccess.file_exists(path) or int(FileAccess.get_size(path)) != int(stamp[1]) or int(FileAccess.get_modified_time(path)) != int(stamp[2]): return false
 	return true
 
+## One role of a bank load: every check and the expansion of its source
+## action. Pure data apart from the actor registry lookups (_index) and the
+## member metadata in `memo`, so a worker can run it (_worker_mode) with a
+## snapshot of both prepared on the main thread (see _dispatch_role_build).
+func _build_role(action_id: int, role_actor_id: int, source: Dictionary, contract: Dictionary, clothes_prefix_policy: bool, loop: Variant, member_metadata: Dictionary) -> Dictionary:
+	var admitted: Dictionary
+	var action_attributes: Dictionary = {}
+	if source.get("schema") != 1 or source.get("source_snapshot") != "patch523" or source.get("consumer_contract") != contract: return fail("Source action snapshot/contract mismatch.")
+	var reference_instances: Dictionary = _source_reference_instances(source)
+	if not reference_instances.ok: return reference_instances
+	var actor: Variant = source.get("actor")
+	var proof: Variant = source.get("source_proof")
+	var source_role: String = "source_action:" + str(action_id)
+	if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != role_actor_id or proof.get("root_sprite_id") != role_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
+	var native_policy: Dictionary = _native_markers(source,contract)
+	if not native_policy.ok: return native_policy
+	admitted = _source_graph_admission(proof)
+	if not admitted.ok: return admitted
+	var track: Variant = actor.roles.get(source_role)
+	if not source.get("compact_roles") is Dictionary or not proof.get("roles") is Dictionary: return fail("Missing exact compact action/source roles.")
+	var compact: Variant = source.compact_roles.get(source_role)
+	var action: Variant = proof.roles.get(source_role)
+	if not track is Dictionary or not compact is Dictionary or not action is Dictionary or not proof.get("declarations") is Array: return fail("Missing exact source action proof.")
+	var source_fps: Variant = track.get("fps")
+	var explicit_timing: bool = integer(source_fps, 1, 10000)
+	var pending_timing: bool = source_fps == null and contract.get("timing") == "source_explicit_or_existing_host_policy"
+	if track.get("source_action_id") != action_id or compact.get("source_action_id") != action_id or compact.get("source_sprite_id") != role_actor_id or action.get("code") != action_id or (not explicit_timing and not pending_timing) or source_fps != action.get("fps") or source_fps != compact.get("fps") or track.get("loop") != null or compact.get("loop") != null or not valid_sha(action.get("source_sha256")): return fail("Invalid preserved source timing/action identity.")
+	var key_pattern := RegEx.new()
+	var source_name_pattern := RegEx.new()
+	source_name_pattern.compile("^list_[0-9]+\\.spr$")
+	if not action.get("source_file") is String or source_name_pattern.search(action.source_file) == null: return fail("Invalid exact SPR source filename.")
+	if track.get("source_file") != action.get("source_file") or track.get("source_line") != action.get("source_line"): return fail("Exact source descriptor provenance mismatch.")
+	if native_policy.native:
+		var native_action: Dictionary = _native_action_identity(source,action,action_id,role_actor_id)
+		if not native_action.ok: return native_action
+	else:
+		key_pattern.compile("^" + str(action.get("source_file", "")).replace(".", "\\.") + ":B[0-9]+:A" + str(action_id) + "$")
+		if not source.get("action_key") is String or key_pattern.search(source.action_key) == null: return fail("Exact source action key/provenance mismatch.")
+	var tokens: Variant = compact.get("tokens")
+	var layer_specs: Variant = compact.get("layers")
+	var directions: Variant = track.get("directions")
+	if not tokens is Array or tokens.is_empty() or tokens.size() > 4096 or tokens != action.get("tokens") or not layer_specs is Array or layer_specs.is_empty() or layer_specs.size() > 64 or not directions is Array or directions.size() != 8 or not integer(compact.get("declared_flag"),0,1) or compact.declared_flag != action.get("declared_flag"): return fail("Invalid source tokens, layers or directions.")
+	var annotations: Variant = action.get("source_annotations",[])
+	if not annotations is Array: return fail("Invalid literal source annotations.")
+	for annotation: Variant in annotations:
+		if not annotation is Dictionary or not integer(annotation.get("token_index"),0,tokens.size()-1) or not annotation.get("raw") is String: return fail("Invalid literal source annotation token.")
+	if native_policy.native:
+		var native_bindings: Dictionary = _native_binding_set(source,layer_specs,action_attributes,action,source_role)
+		if not native_bindings.ok: return native_bindings
+	var body_layers: int = 0
+	for layer: Variant in layer_specs:
+		if not layer is Dictionary: return fail("Invalid compact layer specification.")
+		if layer.get("kind") == "body":
+			body_layers += 1
+			if layer.get("source_sprite_id") != proof.get("body_sprite_id"): return fail("Exact resolved body ID differs from source proof.")
+	if body_layers != 1: return fail("Exact source action requires one body layer.")
+	var expanded: Array = []
+	var total_ticks: int = 0
+	for token: Variant in tokens:
+		if not token is Array or token.size() != 3 or not integer(token[0]) or not integer(token[1],0,255) or not integer(token[2]): return fail("Invalid literal source frame token.")
+		total_ticks += int(token[2])
+	if total_ticks <= 0 or total_ticks > 2147483647: return fail("Source duration has no positive bounded total.")
+	for direction: int in range(8):
+		var frames: Variant = directions[direction]
+		if not frames is Array or frames.size() != tokens.size(): return fail("Source direction token count differs.")
+		var converted: Array = []
+		for index: int in range(frames.size()):
+			var frame: Variant = frames[index]
+			var token: Array = tokens[index]
+			if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
+			var shown: Dictionary = {"source_ticks":int(token[2]),"duration":_frame_seconds(int(token[2]),source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
+			var clothes_stop_index: int = -1
+			# C06 selection depends on this token/direction, never the layer actor.
+			var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
+			for layer_index: int in range(frame.layers.size()):
+				var layer: Variant = frame.layers[layer_index]
+				var spec: Variant = layer_specs[layer_index]
+				FRAME_HITCH.count("sp2.layer_validate")
+				if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
+				if native_policy.native and not _native_identity_matches(layer,spec): return fail("Native frame occurrence differs from its compact identity.")
+				var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
+				if not reference_binding.ok: return reference_binding
+				var native_attributes: Dictionary = {}
+				if native_policy.native:
+					native_attributes = _load_native_action_attributes(source,layer,action_attributes)
+					if not native_attributes.ok: return native_attributes
+					layer = layer.duplicate(true)
+					layer.merge({"source_layer_instance_key":native_attributes.instance_key,"source_attributes":native_attributes.attributes,"source_attribute_declarations":native_attributes.declarations,"source_attributes_unresolved":native_attributes.unresolved,"source_attribute_projection":native_attributes.projection,"source_attribute_owner_declarations":native_attributes.owner_declarations,"source_attribute_owner_attributes":native_attributes.owner_attributes})
+				var member: String = ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id), group.file_b)
+				var client_frames: bool = contract.get("frame_policy") == "client_clamp_frame_null_missing_direction_or_empty_body"
+				var frame_matches: bool = layer.get("frame_index") == token[1]
+				if client_frames and not frame_matches and layer.get("clamped_from_frame_index") == token[1] and integer(layer.get("frame_index"),0,255) and int(layer.frame_index) < int(token[1]): frame_matches = true
+				if layer.get("member") != member or layer.get("group_bit") != group.direction or not frame_matches: return fail("Literal source address differs from identity contract.")
+				if clothes_prefix_policy and layer.kind == "clothes" and clothes_stop_index >= 0:
+					if layer.get("client_null", "") == "clothes_prefix_stopped" and (not integer(layer.get("clothes_prefix_stop_layer_index")) or int(layer.clothes_prefix_stop_layer_index) != clothes_stop_index): return fail("Clothes prefix stop provenance differs from the first null.")
+					var stopped: Dictionary = layer if native_policy.native else layer.duplicate(true)
+					if layer.has("client_null"): stopped["source_client_null"] = layer.client_null
+					stopped.merge({"client_null":"clothes_prefix_stopped","clothes_prefix_stop_layer_index":clothes_stop_index,"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
+					shown.effect_layers.append(stopped)
+					continue
+				if layer.has("client_null"):
+					# A present empty Graphics/frame vector is not a null asset.
+					var allowed_null: bool = layer.client_null in ["direction_absent","empty_body_frame"] or (clothes_prefix_policy and layer.client_null == "empty_frame_set")
+					if not client_frames or not allowed_null or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
+					if clothes_prefix_policy and layer.kind == "clothes" and layer.client_null == "direction_absent": clothes_stop_index = layer_index
+					var null_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
+					null_layer.merge({"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
+					if layer.kind == "clothes": shown.effect_layers.append(null_layer)
+					else: shown.layers.append(null_layer)
+					continue
+				var attributes: Dictionary = native_attributes if native_policy.native else _load_action_attributes(source, layer.kind, int(layer.source_sprite_id), action_attributes)
+				if not attributes.ok: return attributes
+				var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
+				if not picture.ok: return picture
+				if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
+				# Native input was privately copied before its attribute merge. Reuse
+				# that copy so immutable shared proofs retain their ownership too.
+				var converted_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
+				converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"source_attribute_projection":attributes.projection,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
+				if not reference_binding.instances.is_empty():
+					converted_layer["source_reference_instances"] = reference_binding.instances
+					converted_layer.frame_provenance["source_reference_instances"] = reference_binding.instances.duplicate(true)
+				if layer.kind == "clothes": shown.effect_layers.append(converted_layer)
+				else: shown.layers.append(converted_layer)
+			converted.append(shown)
+		expanded.append(converted)
+	var built_track: Dictionary = {"source_action_id":action_id,"source_action_key":source.action_key,"source_sprite_id":role_actor_id,"source_body_id":proof.body_sprite_id,"source_annotations":annotations.duplicate(true),"fps":source_fps,"effective_fps":source_fps if explicit_timing else 0.0,"loop":loop,"directions":expanded,"static_pending_timing":not explicit_timing,"timing_origin":"SPR_explicit_section" if explicit_timing else "strict_unresolved"}
+	var independent: Variant = source.get("independent_source_layers",[])
+	if not independent is Array: return fail("Invalid independent source layer declarations.")
+	var independent_records: Array = []
+	for attachment: Variant in independent:
+		if not attachment is Dictionary or attachment.get("kind") not in ["clothes","shadow"] or not integer(attachment.get("from_sprite_id")) or not integer(attachment.get("target_sprite_id"),1) or attachment.get("parent_action_id") != action_id or attachment.get("child_action_id") != action_id or attachment.get("dispatch_policy") != "host_parent_role_starts_child_own_source_action_native_dispatch_unverified": return fail("Invalid independent source layer action dispatch.")
+		var target_id: int = int(attachment.target_sprite_id)
+		admitted = source_actor_admission(target_id)
+		if not admitted.ok: return admitted
+		admitted = source_actor_admission(int(attachment.from_sprite_id))
+		if not admitted.ok: return admitted
+		var child_key: String = "sprite:" + str(target_id)
+		var child_path: String = "actors/%d/action-%d.json" % [target_id,action_id]
+		var child_registry: Variant = _actor_registry(child_key) if _index.contains("actors", child_key) else {}
+		if attachment.get("child_actor_key") != child_key or attachment.get("child_action_path") != child_path or not child_registry is Dictionary: return fail("Independent layer has no exact child actor registry.")
+		var child_entry: Variant = child_registry.get(str(action_id))
+		if not child_entry is Dictionary or child_entry.get("path") != child_path or not valid_sha(child_entry.get("sha256")) or not attachment.get("child_source_action_key") is String: return fail("Independent layer child source action is unavailable.")
+		var declaration: Variant = attachment.get("source_declaration")
+		var source_code: int = 101 if attachment.kind == "shadow" else 105
+		if not declaration is Dictionary or declaration.get("code") != source_code or not integer(declaration.get("sprite_id")) or not declaration.get("body") is String or declaration.get("body") != attachment.get("source_reference") or not valid_sha(declaration.get("source_sha256")) or not integer(declaration.get("source_line"),1) or not declaration.get("source_file") is String or source_name_pattern.search(declaration.source_file) == null: return fail("Independent layer literal source declaration is unavailable.")
+		admitted = source_actor_admission(int(declaration.sprite_id))
+		if not admitted.ok: return admitted
+		var values: PackedStringArray = str(declaration.body).replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
+		if values.is_empty(): return fail("Independent literal layer target is missing.")
+		if source_code == 105 and (values.size() < 2 or not values[0].is_valid_int() or int(values[0]) != values.size()-1): return fail("Invalid independent literal 105 count.")
+		var target_values: PackedStringArray = values.slice(1) if source_code == 105 else values
+		var declared_target: bool = false
+		for value: String in target_values:
+			if not value.is_valid_int(): return fail("Invalid independent literal layer target.")
+			if int(value) == target_id: declared_target = true
+		if not declared_target: return fail("Independent layer target is absent from literal source declaration.")
+		var owner_proven: bool = false
+		for owner: Dictionary in proof.declarations:
+			var effective_owner: bool = false
+			var literal_owner: bool = false
+			for owner_path: Dictionary in owner.get("declaration_path",[]):
+				if owner_path.get("sprite_id") == attachment.from_sprite_id: effective_owner = true
+				if owner_path.get("sprite_id") == declaration.sprite_id and owner_path.get("source_file") == declaration.source_file and owner_path.get("source_sha256") == declaration.source_sha256: literal_owner = true
+			if effective_owner and literal_owner:
+				for active_owner_path: Dictionary in owner.get("declaration_path",[]):
+					admitted = source_actor_admission(int(active_owner_path.get("sprite_id",-1)))
+					if not admitted.ok: return admitted
+				owner_proven = true
+		if not owner_proven: return fail("Independent layer declaration owner is absent from source proof.")
+		var attachment_record: Dictionary = attachment.duplicate(true)
+		if attachment.has("source_binding_id") or attachment.has("reference_instance_ids"):
+			var binding_id: Variant = attachment.get("source_binding_id")
+			var instance_ids: Variant = attachment.get("reference_instance_ids")
+			if not binding_id is String or binding_id.is_empty() or not instance_ids is Array or instance_ids.is_empty(): return fail("Independent source reference binding is incomplete.")
+			var ordered_instances: Array = []
+			for instance_id: Variant in instance_ids:
+				if not instance_id is String or not reference_instances.by_id.has(instance_id): return fail("Independent source reference instance is absent.")
+				var instance: Dictionary = reference_instances.by_id[instance_id]
+				if instance.binding_id != binding_id or instance.kind != attachment.kind or instance.target_sprite_id != attachment.target_sprite_id or instance.from_sprite_id != attachment.from_sprite_id: return fail("Independent source reference instance has another binding.")
+				ordered_instances.append(instance.duplicate(true))
+			attachment_record["source_reference_instances"] = ordered_instances
+		independent_records.append(attachment_record)
+	return {"ok":true,"track":built_track,"body_id":int(proof.body_sprite_id),"independent":independent_records,"native":bool(native_policy.native)}
+
+## Main-thread part of a worker role build: the same admission, registry and
+## action-record checks as the synchronous path, the prepared action JSON, and
+## every member it draws verified here (prepared parses; a failure is handed
+## over as the same rejection). The worker gets private, read-only snapshots
+## only. state: "dispatched", "failed" (result = the rejection) or "sync"
+## (build it on the main thread now; source = the action JSON if taken).
+func _dispatch_role_build(key: String, action_id: int, role_actor_id: int, contract: Dictionary, clothes_prefix_policy: bool, loop: Variant, member_metadata: Dictionary) -> Dictionary:
+	var admitted: Dictionary = source_actor_admission(role_actor_id)
+	if not admitted.ok: return {"state":"failed","result":admitted}
+	var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
+	if not role_entries is Dictionary: return {"state":"failed","result":fail("Exact source role actor ID is absent.")}
+	var entry: Variant = role_entries.get(str(action_id))
+	if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [role_actor_id,action_id] or not valid_sha(entry.get("sha256")): return {"state":"failed","result":fail("Exact source action record is absent or unsafe.")}
+	var actor_path: String = _root.path_join(entry.path)
+	var json: Dictionary = LOADER.take(LOADER.json_key(actor_path, str(entry.sha256)))
+	if json.is_empty(): return {"state":"sync"}
+	if not json.value.ok: return {"state":"failed","result":json.value}
+	var source: Dictionary = json.value.value
+	var memo: Dictionary = {}
+	for member: Variant in json.get("members", []):
+		var name: String = str(member)
+		if member_metadata.has(name):
+			memo[name] = member_metadata[name]
+			continue
+		var checked: Dictionary = _member(name)
+		if not checked.ok:
+			memo[name] = {"failure":checked}
+			continue
+		var file_path: String = _root.path_join("raw/" + name)
+		memo[name] = {"unbuilt":true,"source":checked,"path":file_path,"stamp":_verified_members.get(file_path, []).duplicate()}
+	var actors: Dictionary = {"sprite:" + str(role_actor_id): role_entries}
+	var independent: Variant = source.get("independent_source_layers", [])
+	if independent is Array:
+		for attachment: Variant in independent:
+			if attachment is Dictionary and integer(attachment.get("target_sprite_id"), 1):
+				var child_key: String = "sprite:" + str(int(attachment.target_sprite_id))
+				actors[child_key] = _actor_registry(child_key) if _index.contains("actors", child_key) else null
+	var snapshot := IndexSnapshot.new()
+	snapshot.entries = {"actors": actors}
+	var worker: RefCounted = get_script().new()
+	worker._worker_mode = true
+	worker._root = _root
+	worker._manifest_path = _manifest_path
+	worker._manifest_sha = _manifest_sha
+	worker._index = snapshot
+	worker._excluded_source_actors = _excluded_source_actors
+	worker._building_shared = _building_shared
+	var work: Callable = worker._worker_build_role.bind(action_id, role_actor_id, source, contract, clothes_prefix_policy, loop, memo, snapshot, actor_path, str(entry.sha256))
+	if not LOADER.request_call(key, work, worker): return {"state":"sync","source":source}
+	return {"state":"dispatched"}
+
+## Runs on a worker thread (private instance, _worker_mode).
+func _worker_build_role(action_id: int, role_actor_id: int, source: Dictionary, contract: Dictionary, clothes_prefix_policy: bool, loop: Variant, memo: Dictionary, snapshot: IndexSnapshot, actor_path: String, actor_sha: String) -> Dictionary:
+	_role_touched = {}
+	var built: Dictionary = _build_role(action_id, role_actor_id, source, contract, clothes_prefix_policy, loop, memo)
+	return {"built":built,"missed":_worker_missing or snapshot.missed,"memo":memo,"touched":_role_touched.keys(),"actor_path":actor_path,"actor_sha":actor_sha}
+
+func _apply_role(role: String, role_actor_id: int, built: Dictionary, tracks: Dictionary, record: Dictionary, independent_by_role: Dictionary) -> void:
+	tracks[role] = built.track
+	record.role_actor_ids[role] = role_actor_id
+	record.role_body_ids[role] = int(built.body_id)
+	independent_by_role[role] = built.independent
+	if built.native:
+		record["native_selector_policy"] = NATIVE_SELECTOR_POLICY
+		record["native_activation_policy"] = NATIVE_ACTIVATION_POLICY
+
 func load_bank(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, loop_policy: Dictionary, consumer_scope: String = "", role_actor_ids: Dictionary = {}) -> Dictionary:
 	var started: int = FRAME_HITCH.now()
 	var result: Dictionary = _load_bank(manifest_path, expected_sha, source_actor_id, bindings, loop_policy, consumer_scope, role_actor_ids)
@@ -996,6 +1426,24 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	record["independent_source_layers"] = independent_by_role
 	record["role_actor_ids"] = {}
 	record["role_body_ids"] = {}
+	var background: bool = background_loading and LOADER.enabled
+	var role_ready: Dictionary = {}
+	var role_deferred: bool = false
+	if background:
+		# Start every missing input of every role now, so later attempts find
+		# them prepared in parallel instead of discovering them one by one.
+		background_wait.clear()
+		for role: Variant in bindings:
+			if not role is String or not integer(bindings[role]) or not loop_policy.has(role): continue
+			var prefetch_actor: Variant = role_actor_ids.get(role, source_actor_id)
+			if not integer(prefetch_actor): continue
+			var prefetch_key: String = var_to_str([manifest_path,expected_sha,source_actor_id,role,int(bindings[role]),int(prefetch_actor),loop_policy[role],consumer_scope])
+			if _building_shared and _role_memo.has(prefetch_key): continue
+			# Its worker role build already started: its inputs were consumed.
+			if _building_shared and LOADER.state("role|" + prefetch_key) != "none":
+				role_ready[role] = true
+				continue
+			role_ready[role] = _background_role(int(prefetch_actor), int(bindings[role]), background_wait)
 	for role: Variant in bindings:
 		if not role is String or role.is_empty() or not integer(bindings[role]) or not loop_policy.has(role) or not loop_policy[role] is bool: return fail("Each caller role needs an exact action ID and explicit boolean loop policy.")
 		var action_id: int = int(bindings[role])
@@ -1018,216 +1466,97 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 				_role_keys_used.append(role_key)
 				FRAME_HITCH.count("sp2.role_memo_hit")
 				continue
-		if role_build_budget == 0:
-			FRAME_HITCH.count("sp2.role_build_deferred")
-			return fail(ROLE_DEFERRED)
-		if role_build_budget > 0: role_build_budget -= 1
-		_member_budget_key = var_to_str([manifest_path,expected_sha,source_actor_id,role,action_id,role_actor_id,consumer_scope,_building_shared])
-		_member_budget_active = member_verify_budget >= 0 and int(_member_deferrals.get(_member_budget_key, 0)) < MEMBER_DEFERRALS_MAX
-		_role_touched = {}
-		admitted = source_actor_admission(role_actor_id)
-		if not admitted.ok: return admitted
-		var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
-		if not role_entries is Dictionary: return fail("Exact source role actor ID is absent.")
-		var entry: Variant = role_entries.get(str(action_id))
-		if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [role_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
-		var actor_path: String = _root.path_join(entry.path)
-		loaded = _json(actor_path, entry.sha256)
-		if not loaded.ok: return loaded
-		_actor_pins[actor_path] = entry.sha256
-		var source: Dictionary = loaded.value
-		var action_attributes: Dictionary = {}
-		if source.get("schema") != 1 or source.get("source_snapshot") != "patch523" or source.get("consumer_contract") != contract: return fail("Source action snapshot/contract mismatch.")
-		var reference_instances: Dictionary = _source_reference_instances(source)
-		if not reference_instances.ok: return reference_instances
-		var actor: Variant = source.get("actor")
-		var proof: Variant = source.get("source_proof")
-		var source_role: String = "source_action:" + str(action_id)
-		if not actor is Dictionary or not proof is Dictionary or actor.get("source_sprite_id") != role_actor_id or proof.get("root_sprite_id") != role_actor_id or not actor.get("roles") is Dictionary or actor.roles.size() != 1: return fail("Source action actor identity mismatch.")
-		var native_policy: Dictionary = _native_markers(source,contract)
-		if not native_policy.ok: return native_policy
-		admitted = _source_graph_admission(proof)
-		if not admitted.ok: return admitted
-		var track: Variant = actor.roles.get(source_role)
-		if not source.get("compact_roles") is Dictionary or not proof.get("roles") is Dictionary: return fail("Missing exact compact action/source roles.")
-		var compact: Variant = source.compact_roles.get(source_role)
-		var action: Variant = proof.roles.get(source_role)
-		if not track is Dictionary or not compact is Dictionary or not action is Dictionary or not proof.get("declarations") is Array: return fail("Missing exact source action proof.")
-		var source_fps: Variant = track.get("fps")
-		var explicit_timing: bool = integer(source_fps, 1, 10000)
-		var pending_timing: bool = source_fps == null and contract.get("timing") == "source_explicit_or_existing_host_policy"
-		if track.get("source_action_id") != action_id or compact.get("source_action_id") != action_id or compact.get("source_sprite_id") != role_actor_id or action.get("code") != action_id or (not explicit_timing and not pending_timing) or source_fps != action.get("fps") or source_fps != compact.get("fps") or track.get("loop") != null or compact.get("loop") != null or not valid_sha(action.get("source_sha256")): return fail("Invalid preserved source timing/action identity.")
-		var key_pattern := RegEx.new()
-		var source_name_pattern := RegEx.new()
-		source_name_pattern.compile("^list_[0-9]+\\.spr$")
-		if not action.get("source_file") is String or source_name_pattern.search(action.source_file) == null: return fail("Invalid exact SPR source filename.")
-		if track.get("source_file") != action.get("source_file") or track.get("source_line") != action.get("source_line"): return fail("Exact source descriptor provenance mismatch.")
-		if native_policy.native:
-			var native_action: Dictionary = _native_action_identity(source,action,action_id,role_actor_id)
-			if not native_action.ok: return native_action
+		var since_key: String = ""
+		if background:
+			since_key = var_to_str([manifest_path,expected_sha,source_actor_id,role,action_id,role_actor_id,consumer_scope])
+			if not bool(role_ready.get(role, true)):
+				var now: int = Time.get_ticks_msec()
+				if not _background_since.has(since_key):
+					while _background_since.size() >= BACKGROUND_SINCE_MAX: _background_since.erase(_background_since.keys()[0])
+					_background_since[since_key] = now
+				if now - int(_background_since[since_key]) < BACKGROUND_WAIT_MAX_MSEC:
+					# Later roles may already be prepared: start/apply them too.
+					FRAME_HITCH.count("sp2.bg_deferred")
+					role_deferred = true
+					continue
+				FRAME_HITCH.count("sp2.bg_wait_expired")
+		# Background shared build: the role's checks and expansion run on a
+		# worker (_dispatch_role_build); this attempt only applies its result.
+		var built: Dictionary = {}
+		var actor_path: String = ""
+		var actor_sha: String = ""
+		var handed_source: Variant = null
+		if background and _building_shared and LOADER.enabled and bool(role_ready.get(role, false)):
+			var role_job_key: String = "role|" + role_key
+			var job_state: String = LOADER.state(role_job_key)
+			if job_state == "pending":
+				background_wait.append(role_job_key)
+				FRAME_HITCH.count("sp2.bg_role_pending")
+				role_deferred = true
+				continue
+			if job_state == "ready":
+				var done: Dictionary = LOADER.take(role_job_key).get("value", {})
+				if not done.is_empty() and not bool(done.get("missed", true)):
+					built = done.built
+					if not built.ok: return built
+					actor_path = str(done.actor_path)
+					actor_sha = str(done.actor_sha)
+					_role_touched = {}
+					for member: String in done.touched:
+						_role_touched[member] = true
+						if not member_metadata.has(member) and done.memo.has(member): member_metadata[member] = done.memo[member]
+					FRAME_HITCH.count("sp2.bg_role_used")
+				else:
+					FRAME_HITCH.count("sp2.bg_role_missed")
+			else:
+				var dispatched: Dictionary = _dispatch_role_build(role_job_key, action_id, role_actor_id, contract, clothes_prefix_policy, loop_policy[role], member_metadata)
+				match str(dispatched.state):
+					"failed": return dispatched.result
+					"dispatched":
+						background_wait.append(role_job_key)
+						FRAME_HITCH.count("sp2.bg_role_dispatched")
+						role_deferred = true
+						continue
+					"sync": handed_source = dispatched.get("source")
+		if built.is_empty():
+			if role_build_budget == 0:
+				FRAME_HITCH.count("sp2.role_build_deferred")
+				return fail(ROLE_DEFERRED)
+			if role_build_budget > 0: role_build_budget -= 1
+			_member_budget_key = var_to_str([manifest_path,expected_sha,source_actor_id,role,action_id,role_actor_id,consumer_scope,_building_shared])
+			_member_budget_active = member_verify_budget >= 0 and int(_member_deferrals.get(_member_budget_key, 0)) < MEMBER_DEFERRALS_MAX
+			# Prepared by workers: verifying its members is cheap, no member budget.
+			if background and bool(role_ready.get(role, false)): _member_budget_active = false
+			_role_touched = {}
+			admitted = source_actor_admission(role_actor_id)
+			if not admitted.ok: return admitted
+			var role_entries: Variant = _actor_registry("sprite:" + str(role_actor_id))
+			if not role_entries is Dictionary: return fail("Exact source role actor ID is absent.")
+			var entry: Variant = role_entries.get(str(action_id))
+			if not entry is Dictionary or entry.get("path") != "actors/%d/action-%d.json" % [role_actor_id,action_id] or not valid_sha(entry.get("sha256")): return fail("Exact source action record is absent or unsafe.")
+			actor_path = _root.path_join(entry.path)
+			actor_sha = str(entry.sha256)
+			loaded = {"ok":true,"value":handed_source} if handed_source is Dictionary else _json(actor_path, entry.sha256)
+			if not loaded.ok: return loaded
+			_actor_pins[actor_path] = entry.sha256
+			built = _build_role(action_id, role_actor_id, loaded.value, contract, clothes_prefix_policy, loop_policy[role], member_metadata)
+			if not built.ok: return built
 		else:
-			key_pattern.compile("^" + str(action.get("source_file", "")).replace(".", "\\.") + ":B[0-9]+:A" + str(action_id) + "$")
-			if not source.get("action_key") is String or key_pattern.search(source.action_key) == null: return fail("Exact source action key/provenance mismatch.")
-		var tokens: Variant = compact.get("tokens")
-		var layer_specs: Variant = compact.get("layers")
-		var directions: Variant = track.get("directions")
-		if not tokens is Array or tokens.is_empty() or tokens.size() > 4096 or tokens != action.get("tokens") or not layer_specs is Array or layer_specs.is_empty() or layer_specs.size() > 64 or not directions is Array or directions.size() != 8 or not integer(compact.get("declared_flag"),0,1) or compact.declared_flag != action.get("declared_flag"): return fail("Invalid source tokens, layers or directions.")
-		var annotations: Variant = action.get("source_annotations",[])
-		if not annotations is Array: return fail("Invalid literal source annotations.")
-		for annotation: Variant in annotations:
-			if not annotation is Dictionary or not integer(annotation.get("token_index"),0,tokens.size()-1) or not annotation.get("raw") is String: return fail("Invalid literal source annotation token.")
-		if native_policy.native:
-			var native_bindings: Dictionary = _native_binding_set(source,layer_specs,action_attributes,action,source_role)
-			if not native_bindings.ok: return native_bindings
-			record["native_selector_policy"] = NATIVE_SELECTOR_POLICY
-			record["native_activation_policy"] = NATIVE_ACTIVATION_POLICY
-		var body_layers: int = 0
-		for layer: Variant in layer_specs:
-			if not layer is Dictionary: return fail("Invalid compact layer specification.")
-			if layer.get("kind") == "body":
-				body_layers += 1
-				if layer.get("source_sprite_id") != proof.get("body_sprite_id"): return fail("Exact resolved body ID differs from source proof.")
-		if body_layers != 1: return fail("Exact source action requires one body layer.")
-		var expanded: Array = []
-		var total_ticks: int = 0
-		for token: Variant in tokens:
-			if not token is Array or token.size() != 3 or not integer(token[0]) or not integer(token[1],0,255) or not integer(token[2]): return fail("Invalid literal source frame token.")
-			total_ticks += int(token[2])
-		if total_ticks <= 0 or total_ticks > 2147483647: return fail("Source duration has no positive bounded total.")
-		for direction: int in range(8):
-			var frames: Variant = directions[direction]
-			if not frames is Array or frames.size() != tokens.size(): return fail("Source direction token count differs.")
-			var converted: Array = []
-			for index: int in range(frames.size()):
-				var frame: Variant = frames[index]
-				var token: Array = tokens[index]
-				if not frame is Dictionary or frame.get("duration_ticks") != token[2] or not frame.get("layers") is Array or frame.layers.size() != layer_specs.size(): return fail("Source frame timing/layers differ from literal tokens.")
-				var shown: Dictionary = {"source_ticks":int(token[2]),"duration":_frame_seconds(int(token[2]),source_fps) if explicit_timing else 0.0,"source_group":int(token[0]),"source_frame":int(token[1]),"layers":[],"effect_layers":[]}
-				var clothes_stop_index: int = -1
-				# C06 selection depends on this token/direction, never the layer actor.
-				var group: Dictionary = ORIGINAL_SELECTION.sp2_group(int(token[0]), int(compact.declared_flag) == 1, direction)
-				for layer_index: int in range(frame.layers.size()):
-					var layer: Variant = frame.layers[layer_index]
-					var spec: Variant = layer_specs[layer_index]
-					FRAME_HITCH.count("sp2.layer_validate")
-					if not layer is Dictionary or not spec is Dictionary or layer.get("kind") not in ["body","shadow","clothes"] or layer.get("kind") != spec.get("kind") or not integer(layer.get("source_sprite_id")) or layer.source_sprite_id != spec.get("source_sprite_id"): return fail("Invalid literal layer identity.")
-					if native_policy.native and not _native_identity_matches(layer,spec): return fail("Native frame occurrence differs from its compact identity.")
-					var reference_binding: Dictionary = _reference_binding(source,reference_instances.by_id,layer,spec)
-					if not reference_binding.ok: return reference_binding
-					var native_attributes: Dictionary = {}
-					if native_policy.native:
-						native_attributes = _load_native_action_attributes(source,layer,action_attributes)
-						if not native_attributes.ok: return native_attributes
-						layer = layer.duplicate(true)
-						layer.merge({"source_layer_instance_key":native_attributes.instance_key,"source_attributes":native_attributes.attributes,"source_attribute_declarations":native_attributes.declarations,"source_attributes_unresolved":native_attributes.unresolved,"source_attribute_projection":native_attributes.projection,"source_attribute_owner_declarations":native_attributes.owner_declarations,"source_attribute_owner_attributes":native_attributes.owner_attributes})
-					var member: String = ORIGINAL_SELECTION.primary_name(int(layer.source_sprite_id), group.file_b)
-					var client_frames: bool = contract.get("frame_policy") == "client_clamp_frame_null_missing_direction_or_empty_body"
-					var frame_matches: bool = layer.get("frame_index") == token[1]
-					if client_frames and not frame_matches and layer.get("clamped_from_frame_index") == token[1] and integer(layer.get("frame_index"),0,255) and int(layer.frame_index) < int(token[1]): frame_matches = true
-					if layer.get("member") != member or layer.get("group_bit") != group.direction or not frame_matches: return fail("Literal source address differs from identity contract.")
-					if clothes_prefix_policy and layer.kind == "clothes" and clothes_stop_index >= 0:
-						if layer.get("client_null", "") == "clothes_prefix_stopped" and (not integer(layer.get("clothes_prefix_stop_layer_index")) or int(layer.clothes_prefix_stop_layer_index) != clothes_stop_index): return fail("Clothes prefix stop provenance differs from the first null.")
-						var stopped: Dictionary = layer if native_policy.native else layer.duplicate(true)
-						if layer.has("client_null"): stopped["source_client_null"] = layer.client_null
-						stopped.merge({"client_null":"clothes_prefix_stopped","clothes_prefix_stop_layer_index":clothes_stop_index,"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
-						shown.effect_layers.append(stopped)
-						continue
-					if layer.has("client_null"):
-						# A present empty Graphics/frame vector is not a null asset.
-						var allowed_null: bool = layer.client_null in ["direction_absent","empty_body_frame"] or (clothes_prefix_policy and layer.client_null == "empty_frame_set")
-						if not client_frames or not allowed_null or (layer.client_null == "empty_body_frame" and layer.kind != "body"): return fail("Unsupported client null layer.")
-						if clothes_prefix_policy and layer.kind == "clothes" and layer.client_null == "direction_absent": clothes_stop_index = layer_index
-						var null_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
-						null_layer.merge({"path":"raw/"+member,"texture_key":"","offset":[0,0],"layer_id":int(layer.source_sprite_id)})
-						if layer.kind == "clothes": shown.effect_layers.append(null_layer)
-						else: shown.layers.append(null_layer)
-						continue
-					var attributes: Dictionary = native_attributes if native_policy.native else _load_action_attributes(source, layer.kind, int(layer.source_sprite_id), action_attributes)
-					if not attributes.ok: return attributes
-					var picture: Dictionary = _load_layer_metadata(layer, member_metadata)
-					if not picture.ok: return picture
-					if layer.kind == "body" and bool(picture.empty) and not client_frames: return fail("Exact source action has an empty body frame.")
-					# Native input was privately copied before its attribute merge. Reuse
-					# that copy so immutable shared proofs retain their ownership too.
-					var converted_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
-					converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"source_attribute_projection":attributes.projection,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
-					if not reference_binding.instances.is_empty():
-						converted_layer["source_reference_instances"] = reference_binding.instances
-						converted_layer.frame_provenance["source_reference_instances"] = reference_binding.instances.duplicate(true)
-					if layer.kind == "clothes": shown.effect_layers.append(converted_layer)
-					else: shown.layers.append(converted_layer)
-				converted.append(shown)
-			expanded.append(converted)
-		tracks[role] = {"source_action_id":action_id,"source_action_key":source.action_key,"source_sprite_id":role_actor_id,"source_body_id":proof.body_sprite_id,"source_annotations":annotations.duplicate(true),"fps":source_fps,"effective_fps":source_fps if explicit_timing else 0.0,"loop":loop_policy[role],"directions":expanded,"static_pending_timing":not explicit_timing,"timing_origin":"SPR_explicit_section" if explicit_timing else "strict_unresolved"}
-		record.role_actor_ids[role] = role_actor_id
-		record.role_body_ids[role] = int(proof.body_sprite_id)
-		var independent: Variant = source.get("independent_source_layers",[])
-		if not independent is Array: return fail("Invalid independent source layer declarations.")
-		independent_by_role[role] = []
-		for attachment: Variant in independent:
-			if not attachment is Dictionary or attachment.get("kind") not in ["clothes","shadow"] or not integer(attachment.get("from_sprite_id")) or not integer(attachment.get("target_sprite_id"),1) or attachment.get("parent_action_id") != action_id or attachment.get("child_action_id") != action_id or attachment.get("dispatch_policy") != "host_parent_role_starts_child_own_source_action_native_dispatch_unverified": return fail("Invalid independent source layer action dispatch.")
-			var target_id: int = int(attachment.target_sprite_id)
-			admitted = source_actor_admission(target_id)
-			if not admitted.ok: return admitted
-			admitted = source_actor_admission(int(attachment.from_sprite_id))
-			if not admitted.ok: return admitted
-			var child_key: String = "sprite:" + str(target_id)
-			var child_path: String = "actors/%d/action-%d.json" % [target_id,action_id]
-			var child_registry: Variant = _actor_registry(child_key) if _index.contains("actors", child_key) else {}
-			if attachment.get("child_actor_key") != child_key or attachment.get("child_action_path") != child_path or not child_registry is Dictionary: return fail("Independent layer has no exact child actor registry.")
-			var child_entry: Variant = child_registry.get(str(action_id))
-			if not child_entry is Dictionary or child_entry.get("path") != child_path or not valid_sha(child_entry.get("sha256")) or not attachment.get("child_source_action_key") is String: return fail("Independent layer child source action is unavailable.")
-			var declaration: Variant = attachment.get("source_declaration")
-			var source_code: int = 101 if attachment.kind == "shadow" else 105
-			if not declaration is Dictionary or declaration.get("code") != source_code or not integer(declaration.get("sprite_id")) or not declaration.get("body") is String or declaration.get("body") != attachment.get("source_reference") or not valid_sha(declaration.get("source_sha256")) or not integer(declaration.get("source_line"),1) or not declaration.get("source_file") is String or source_name_pattern.search(declaration.source_file) == null: return fail("Independent layer literal source declaration is unavailable.")
-			admitted = source_actor_admission(int(declaration.sprite_id))
-			if not admitted.ok: return admitted
-			var values: PackedStringArray = str(declaration.body).replace("\t"," ").replace("\r"," ").replace("\n"," ").strip_edges().split(" ",false)
-			if values.is_empty(): return fail("Independent literal layer target is missing.")
-			if source_code == 105 and (values.size() < 2 or not values[0].is_valid_int() or int(values[0]) != values.size()-1): return fail("Invalid independent literal 105 count.")
-			var target_values: PackedStringArray = values.slice(1) if source_code == 105 else values
-			var declared_target: bool = false
-			for value: String in target_values:
-				if not value.is_valid_int(): return fail("Invalid independent literal layer target.")
-				if int(value) == target_id: declared_target = true
-			if not declared_target: return fail("Independent layer target is absent from literal source declaration.")
-			var owner_proven: bool = false
-			for owner: Dictionary in proof.declarations:
-				var effective_owner: bool = false
-				var literal_owner: bool = false
-				for owner_path: Dictionary in owner.get("declaration_path",[]):
-					if owner_path.get("sprite_id") == attachment.from_sprite_id: effective_owner = true
-					if owner_path.get("sprite_id") == declaration.sprite_id and owner_path.get("source_file") == declaration.source_file and owner_path.get("source_sha256") == declaration.source_sha256: literal_owner = true
-				if effective_owner and literal_owner:
-					for active_owner_path: Dictionary in owner.get("declaration_path",[]):
-						admitted = source_actor_admission(int(active_owner_path.get("sprite_id",-1)))
-						if not admitted.ok: return admitted
-					owner_proven = true
-			if not owner_proven: return fail("Independent layer declaration owner is absent from source proof.")
-			var attachment_record: Dictionary = attachment.duplicate(true)
-			if attachment.has("source_binding_id") or attachment.has("reference_instance_ids"):
-				var binding_id: Variant = attachment.get("source_binding_id")
-				var instance_ids: Variant = attachment.get("reference_instance_ids")
-				if not binding_id is String or binding_id.is_empty() or not instance_ids is Array or instance_ids.is_empty(): return fail("Independent source reference binding is incomplete.")
-				var ordered_instances: Array = []
-				for instance_id: Variant in instance_ids:
-					if not instance_id is String or not reference_instances.by_id.has(instance_id): return fail("Independent source reference instance is absent.")
-					var instance: Dictionary = reference_instances.by_id[instance_id]
-					if instance.binding_id != binding_id or instance.kind != attachment.kind or instance.target_sprite_id != attachment.target_sprite_id or instance.from_sprite_id != attachment.from_sprite_id: return fail("Independent source reference instance has another binding.")
-					ordered_instances.append(instance.duplicate(true))
-				attachment_record["source_reference_instances"] = ordered_instances
-			independent_by_role[role].append(attachment_record)
+			_actor_pins[actor_path] = actor_sha
+		_apply_role(role, role_actor_id, built, tracks, record, independent_by_role)
 		_member_deferrals.erase(_member_budget_key)
 		_member_budget_active = false
+		if not since_key.is_empty(): _background_since.erase(since_key)
 		if _building_shared:
 			var touched: Dictionary = {}
 			for member: String in _role_touched:
 				if member_metadata.has(member): touched[member] = member_metadata[member]
 			_role_memo.erase(role_key)
 			while _role_memo.size() >= ROLE_MEMO_MAX: _role_memo.erase(_role_memo.keys()[0])
-			_role_memo[role_key] = {"track":tracks[role],"body_id":int(proof.body_sprite_id),"independent":independent_by_role[role],
-				"actor_path":actor_path,"actor_sha":str(entry.sha256),"members":touched,"native":bool(native_policy.native)}
+			_role_memo[role_key] = {"track":tracks[role],"body_id":int(built.body_id),"independent":independent_by_role[role],
+				"actor_path":actor_path,"actor_sha":actor_sha,"members":touched,"native":bool(built.native)}
 			_role_keys_used.append(role_key)
+	if role_deferred: return fail(ROLE_DEFERRED)
 	var checked_members: Dictionary = _load_members_unchanged(member_metadata)
 	if not checked_members.ok: return checked_members
 	if not _pins_valid(): return fail("Source metadata changed while loading.")
