@@ -43,6 +43,9 @@ func synthetic() -> void:
 	check(swap.problem.is_empty() and swap.swap_count("변신", "id") == 2 and typeof(swap.export_state().counts["변신"]["id"]) == TYPE_INT, "JSON floats load as counts")
 	swap.import_state(null)
 	check(swap.export_state() == SWAP.empty_state(), "older saves start with no rerolls")
+	check(SWAP.validate({"schema":1,"counts":{},"picks":{},"pending":{"변신|a":{"result":"b","swap_count":2,"picked":false}}}).is_empty() and not SWAP.validate({"schema":1,"counts":{},"picks":{},"pending":{"변신|a":{"result":3}}}).is_empty(), "pending results validate")
+	swap.import_state({"schema":1, "counts":{}, "picks":{}})
+	check(swap.problem.is_empty() and swap.export_state().get("pending") == {}, "a save from before pending results loads with none")
 	check(SKILL.validate({}).is_empty() and SKILL.validate({"schema":1,"cards":{"14991":{"level":3,"exp":200000}}}).is_empty(), "skill card stage state validates")
 	check(not SKILL.validate({"schema":1,"cards":{"14991":{"level":4,"exp":0}}}).is_empty() and not SKILL.validate({"schema":1,"cards":{"x":{"level":1,"exp":0}}}).is_empty(), "stage above 3 / non-numeric card is refused")
 	var skill = SKILL.new()
@@ -108,76 +111,111 @@ func save_data(world: Node) -> Dictionary:
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 	return value if value is Dictionary else {}
 
+func reroll_once(world: Node, category: String, identity: String, pick: String = "") -> Dictionary:
+	var quote: Dictionary = world.card523_swap_quote(category, identity)
+	if not quote.get("ok", false): return quote
+	var done: Dictionary = world.card523_swap_execute(str(quote.token), pick)
+	done["quote"] = quote
+	return done
+
 func reroll(world: Node) -> void:
 	var swap = world.card_swap523
+	var cards = world.card_draw_fusion
 	var hero: Array = swap.candidates("변신", 4)
 	evidence["hero_candidates"] = hero.size()
 	check(hero.size() == 40, "변신 영웅 swap-out candidates = 40 (%d)" % hero.size())
-	if hero.is_empty(): return
+	if hero.size() < 3: return
+	# Below 영웅: refused (09:23).
+	var rare: Array = swap.candidates("변신", 3)
+	if not rare.is_empty():
+		cards.owned["변신"][str(rare[0].identity)] = true
+		var low: Dictionary = world.card523_swap_quote("변신", str(rare[0].identity))
+		check(not low.get("ok", true) and str(low.reason).contains("영웅"), "희귀 카드는 거부: %s" % str(low.get("reason","")))
+	# A single-copy card (no duplicate), rerolled and confirmed.
 	var target: String = str(hero[0].identity)
-	var cards = world.card_draw_fusion
 	cards.owned["변신"][target] = true
-	cards.spare["변신"][target] = 10
+	cards.spare["변신"].erase(target)
 	world.inventory["다이아"] = 100000
 	var first: Dictionary = world.card523_swap_quote("변신", target)
-	evidence["quote1"] = {"ok":first.get("ok"), "reason":first.get("reason"), "cost":first.get("cost"), "candidates":first.get("candidate_count"), "max":first.get("max")}
-	if not check(first.get("ok", false) and int(first.cost.amount) == 900 and int(first.swap_count) == 1 and int(first.candidate_count) == 39 and int(first.max) == 6, "1회째 견적: 900 다이아, 현재 카드 제외 39장"): return
-	# A failing save restores the card, diamonds and the count.
+	evidence["quote1"] = {"ok":first.get("ok"), "reason":first.get("reason"), "cost":first.get("cost"), "candidates":first.get("candidate_count"), "last":first.get("uses_last_copy")}
+	if not check(first.get("ok", false) and int(first.cost.amount) == 900 and int(first.candidate_count) == 39 and bool(first.uses_last_copy) and (first.pending as Dictionary).is_empty() and not first.has("confirm_token"), "1장뿐인 카드 1회째 견적: 900 다이아, 39장, 대기 결과 없음"): return
 	world.patch523_owner_state_problem = "test: save refused"
 	var refused: Dictionary = world.card523_swap_execute(str(first.token))
 	world.patch523_owner_state_problem = ""
-	check(not refused.get("ok", true) and int(cards.spare["변신"][target]) == 10 and int(world.inventory["다이아"]) == 100000 and swap.swap_count("변신", target) == 0, "save failure keeps card, diamonds and count")
+	check(not refused.get("ok", true) and int(world.inventory["다이아"]) == 100000 and swap.swap_count("변신", target) == 0 and swap.state.pending.is_empty(), "save failure keeps diamonds, count and no pending")
 	var diamonds: int = 100000
 	var spent: Array = []
+	var last_pending: String = ""
 	for count: int in range(1, 6):
-		var quote: Dictionary = world.card523_swap_quote("변신", target)
-		var done: Dictionary = world.card523_swap_execute(str(quote.get("token", "")))
+		var done: Dictionary = reroll_once(world, "변신", target)
 		if not check(done.get("ok", false), "%d회째 다시 뽑기: %s" % [count, str(done.get("reason", ""))]): return
-		diamonds -= int(quote.cost.amount)
-		spent.append(int(quote.cost.amount))
-		var result: String = str(done.result.id)
-		check(result != target and cards.known_ids["변신"].get(result) == cards.known_ids["변신"][target] and int(swap.swap_count("변신", target)) == count, "%d회째: 같은 등급 다른 카드, 횟수 %d" % [count, count])
-	check(spent == [900, 2900, 4900, 6900, 9900] and int(world.inventory["다이아"]) == diamonds and int(cards.spare["변신"][target]) == 5, "costs 900~9900 deducted from the diamond wallet, 5 copies used (%s)" % str(spent))
+		spent.append(int(done.cost.amount)); diamonds -= int(done.cost.amount)
+		last_pending = str(done.pending.result.identity)
+		check(last_pending != target and cards.known_ids["변신"].get(last_pending) == cards.known_ids["변신"][target] and cards.owned["변신"].get(target) == true and swap.swap_count("변신", target) == count, "%d회째: 같은 등급 대기 결과, 원래 카드 그대로" % count)
+	check(spent == [900, 2900, 4900, 6900, 9900] and int(world.inventory["다이아"]) == diamonds, "costs 900~9900 deducted from the diamond wallet (%s)" % str(spent))
+	var on_disk: Dictionary = save_data(world)
+	check(str(on_disk.get("card_swap523", {}).get("pending", {}).get("변신|" + target, {}).get("result", "")) == last_pending and on_disk.get("card_draw_fusion", {}).get("owned", {}).get("변신", {}).get(target) == true, "pending result saved, original still owned in the save")
+	# Reload before confirming: the pending result survives.
+	swap.state = SWAP.empty_state()
+	world._load_game(true)
+	swap = world.card_swap523; cards = world.card_draw_fusion
+	var after_load: Dictionary = world.card523_swap_quote("변신", target)
+	check(str(after_load.get("pending", {}).get("result", {}).get("identity", "")) == last_pending and after_load.get("can_confirm", false) and world.card523_swap_pending().size() >= 1, "reload keeps the pending result and it can be confirmed")
+	# 6회째: 5 shown, the picked card becomes the pending result.
 	var sixth: Dictionary = world.card523_swap_quote("변신", target)
 	var again: Dictionary = world.card523_swap_quote("변신", target)
-	evidence["sixth"] = {"pick_count":sixth.get("pick_count"), "picks":(sixth.get("pick_candidates", []) as Array).map(func(e: Dictionary) -> String: return str(e.name))}
-	check(sixth.get("ok", false) and int(sixth.pick_count) == 5 and (sixth.pick_candidates as Array).size() == 5 and int(sixth.cost.amount) == 9900, "6회째: 5장 보여 주고 고르기, 9900 다이아")
-	check(again.get("pick_candidates") == sixth.get("pick_candidates"), "quoting again shows the same 5 cards")
+	evidence["sixth"] = (sixth.get("pick_candidates", []) as Array).map(func(e: Dictionary) -> String: return str(e.name))
+	check(sixth.get("ok", false) and int(sixth.pick_count) == 5 and (sixth.pick_candidates as Array).size() == 5 and int(sixth.cost.amount) == 9900 and again.get("pick_candidates") == sixth.get("pick_candidates"), "6회째: 같은 5장, 9900 다이아")
+	check(save_data(world).get("card_swap523", {}).get("picks", {}).has("변신|" + target), "the 5 shown candidates are saved when first shown")
 	check(not world.card523_swap_execute(str(again.token)).get("ok", true), "6회째 needs a pick")
-	var held: Dictionary = save_data(world)
 	var third: Dictionary = world.card523_swap_quote("변신", target)
 	var chosen: String = str(third.pick_candidates[2].identity)
 	var picked: Dictionary = world.card523_swap_execute(str(third.token), chosen)
-	check(picked.get("ok", false) and str(picked.result.id) == chosen and bool(picked.picked), "the picked card is received")
+	check(picked.get("ok", false) and str(picked.pending.result.identity) == chosen and bool(picked.picked) and cards.owned["변신"].get(target) == true and not cards.owned["변신"].get(chosen, false), "picked card is pending, not yet received")
 	var seventh: Dictionary = world.card523_swap_quote("변신", target)
-	check(not seventh.get("ok", true) and int(seventh.get("remaining", -1)) == 0, "no 7th reroll (max 6)")
-	check(held.get("card_swap523", {}).get("picks", {}).has("변신|" + target), "the 5 shown candidates are saved when first shown")
-	var on_disk: Dictionary = save_data(world)
-	check(int(on_disk.get("card_swap523", {}).get("counts", {}).get("변신", {}).get(target, 0)) == 6 and int(on_disk.get("inventory", {}).get("다이아", 0)) == int(world.inventory["다이아"]) and not on_disk.card_swap523.picks.has("변신|" + target), "save holds count 6, diamonds, no stale picks")
+	check(not seventh.get("ok", true) and int(seventh.get("remaining", -1)) == 0 and seventh.get("can_confirm", false), "no 7th reroll, but the pending result can still be confirmed")
+	# Confirm: the single copy is replaced by the pending card.
+	var confirmed: Dictionary = world.card523_swap_confirm(str(seventh.confirm_token))
+	check(confirmed.get("ok", false) and bool(confirmed.used_last_copy) and not cards.owned["변신"].has(target) and cards.owned["변신"].get(chosen) == true and swap.state.pending.is_empty(), "확정: 1장뿐인 원래 카드가 고른 카드로 교체")
+	check(not world.card523_swap_confirm(str(seventh.confirm_token)).get("ok", true), "a confirm token works once")
+	on_disk = save_data(world)
+	check(not on_disk.card_draw_fusion.owned["변신"].has(target) and on_disk.card_draw_fusion.owned["변신"].get(chosen) == true and (on_disk.card_swap523.pending as Dictionary).is_empty() and int(on_disk.card_swap523.counts["변신"][target]) == 6, "save after confirm: replaced card, no pending, count 6")
+	# Existing owner state on the last copy: refused with a reason.
+	var guarded: String = str(hero[1].identity)
+	cards.owned["변신"][guarded] = true; cards.spare["변신"].erase(guarded)
+	world.equipped_catalog["변신"] = world.card_swap523.card_record("변신", guarded)
+	var equipped: Dictionary = world.card523_swap_quote("변신", guarded)
+	check(not equipped.get("ok", true) and str(equipped.reason).contains("장착"), "equipped last copy refused: %s" % str(equipped.get("reason","")))
+	world.equipped_catalog["변신"] = {}
+	var awaken: Dictionary = world.skill_awakening.progress.duplicate(true)
+	world.skill_awakening.progress.cards[guarded] = {"level":1}
+	var awakened: Dictionary = world.card523_swap_quote("변신", guarded)
+	check(not awakened.get("ok", true) and str(awakened.reason).contains("각성"), "skill-awakened last copy refused: %s" % str(awakened.get("reason","")))
+	world.skill_awakening.progress = awaken
+	cards.spare["변신"][guarded] = 1
+	var with_spare: Dictionary = reroll_once(world, "변신", guarded)
+	var spare_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", guarded).get("confirm_token", "")))
+	check(with_spare.get("ok", false) and spare_confirm.get("ok", false) and not bool(spare_confirm.used_last_copy) and cards.owned["변신"].get(guarded) == true and not cards.spare["변신"].has(guarded), "with a duplicate, the duplicate is used and the permanent copy stays")
 	# 신화 (ActivateCardAmount 1): one more copy of the same card.
 	var myth: Array = swap.candidates("변신", 32)
 	evidence["myth_candidates"] = myth.size()
 	if check(myth.size() >= 2, "변신 신화 swap-out candidates (%d)" % myth.size()):
 		var mythic: String = str(myth[0].identity)
 		cards.owned["변신"][mythic] = true
-		cards.spare["변신"][mythic] = 1
+		cards.spare["변신"].erase(mythic)
 		world.inventory["다이아"] = 200000
 		var short: Dictionary = world.card523_swap_quote("변신", mythic)
-		check(not short.get("ok", true) and int(short.get("copies_required", 0)) == 2 and int(short.get("extra_copies", 0)) == 1, "신화 needs 2 copies (1 + extra 1)")
-		cards.spare["변신"][mythic] = 2
-		var myth_quote: Dictionary = world.card523_swap_quote("변신", mythic)
-		var myth_done: Dictionary = world.card523_swap_execute(str(myth_quote.get("token", "")))
-		check(myth_done.get("ok", false) and int(myth_done.consumed) == 2 and not cards.spare["변신"].has(mythic) and cards.owned["변신"][mythic] == true and int(world.inventory["다이아"]) == 200000 - 99900, "신화: 99900 다이아, 같은 카드 2장 소모, 영구 보유는 유지")
-	# Only duplicates are rerolled; the permanent copy stays.
-	var lone: String = str(hero[1].identity)
-	cards.owned["변신"][lone] = true; cards.spare["변신"].erase(lone)
-	check(not world.card523_swap_quote("변신", lone).get("ok", true), "a card without a duplicate is not rerolled")
+		check(not short.get("ok", true) and int(short.get("copies_required", 0)) == 2, "신화 with 1 copy: needs 2 (1 + extra 1)")
+		cards.spare["변신"][mythic] = 1
+		var myth_done: Dictionary = reroll_once(world, "변신", mythic)
+		var myth_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", mythic).get("confirm_token", "")))
+		check(myth_done.get("ok", false) and int(world.inventory["다이아"]) == 200000 - 99900 and myth_confirm.get("ok", false) and int(myth_confirm.consumed) == 2 and not cards.owned["변신"].has(mythic), "신화: 99900 다이아, 확정 시 2장(중복 1 + 마지막 1) 소모")
 	check(world._save_game(true) == OK, "save before reload")
 	var count_before: int = swap.swap_count("변신", target)
 	var diamonds_before: int = int(world.inventory.get("다이아", 0))
 	swap.state = SWAP.empty_state(); world.inventory["다이아"] = 0
 	world._load_game(true)
-	check(world.card_swap523.swap_count("변신", target) == count_before and int(world.inventory.get("다이아", 0)) == diamonds_before, "reload keeps reroll counts and diamonds")
+	check(world.card_swap523.swap_count("변신", target) == count_before and int(world.inventory.get("다이아", 0)) == diamonds_before and not world.card_draw_fusion.owned["변신"].has(target), "reload keeps counts, diamonds and the replaced card")
 
 func skill_cards(world: Node) -> void:
 	var cards = world.skill_cards523

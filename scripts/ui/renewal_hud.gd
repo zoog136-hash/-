@@ -3294,6 +3294,20 @@ func open_skill_cards() -> void:
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
+## 기억 장소 (growth.travel.open): the original 523 Memory_All window
+## (source_main_memory_window); false keeps the TWILIGHT page.
+func open_memory_places(source: Dictionary = {}) -> bool:
+	_open_window("teleport","기억 장소","")
+	return _open_original_feature("memory_places",[source])
+
+## The 던전 window's 시련 tab → 시련 던전: the original 523 Dungeon_Trial_All
+## window (source_main_trial_dungeon_window) over the existing Challenge
+## feature; the dungeon screen when it cannot open.
+func open_trial_dungeon() -> void:
+	_open_window("source_dungeons","시련 던전","")
+	if _open_original_feature("trial_dungeon"):return
+	open_source_dungeons()
+
 func open_source_dungeons() -> void:
 	_open_window("source_dungeons","던전","입장 조건 · 목표 · 보상 · 등장 계획")
 	var view := SourceDungeonUI.new()
