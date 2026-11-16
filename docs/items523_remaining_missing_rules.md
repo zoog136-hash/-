@@ -290,8 +290,13 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 발록의 핏빛 투구 2종: Defence_DebuffTimeDecreasePercent "암흑" — 암흑 상태 없음.
 - ItemInvokeReplacementID 48종(신화 무기 18 등): ItemInvokeReplacementEntityView가 슬롯별 교체 후보와
   확률(Prob)만 준다. 교체를 언제·무엇을 소비해 굴리는지(획득 시/아이템 사용 시)가 표에 없음.
-- EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): 값이 SpellClass 1 "에너지 볼트" — 착용 시
-  주문 습득/실행 규칙은 스킬 실행 엔진 범위. 이번 PR에서 다루지 않음.
+- EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): ~~값이 SpellClass 1 "에너지 볼트"~~ (정정: 값 1은 '켜짐', 주문은
+  적용 대상 `BonusApplicationTargetID`, 적용 유형 1 = SpellClass) — **TWILIGHT 근사 (2026-11-16, PR `feat/approx523-equip-spell`)**:
+  착용 중에는 그 주문을 스킬 `eqspell523_<SpellClass ID>`로 쓸 수 있다(모든 직업, 벗으면 사용 불가, 저장 추가 없음).
+  주문은 참고 액티브 근사와 같은 규칙(원본 MPCost/HPCost·CastDelay·반경 ×48, 효과 = 피해/디버프/자기 버프/회복/해제)으로 연다.
+  7개 주문: 에오딘·질리언·나그바스·가이아·데포로쥬의 돌풍(반경 3 고정 마법 피해 500, 재사용 60초), 붉은 기사단의 의지(상태 해제, 30분),
+  라이온 하트(패왕의 위엄 망토: HP 30% 회복, 10분 — 묶음의 보호막 `ShieldID 388`은 보호막 수치 표가 없어 빠짐).
+  확인: `tests/items523_equip_spell_test.gd`(실제 Main: 착용 전 불가 → 착용 중 가능 → 라이온 하트 시전 HP 931→1489·재사용 600초 → 벗으면 불가).
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
   HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
 

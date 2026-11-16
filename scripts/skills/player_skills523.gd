@@ -268,6 +268,12 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 		elif name == "SpellClassID" and allow_next > 0 and _source_integer(entry.bonus.Value):
 			# TWILIGHT 근사 "묶음 하위 주문" (active): child spells run in table order.
 			var sub := approx_child_spell(int(entry.bonus.Value), allow_next - 1)
+			# TWILIGHT 근사 (5): a child whose rows have no receiver is left out (listed)
+			# when another child of the bundle runs; a bundle with none still holds.
+			if sub.has("reason") and APPROX_EXTRA_EFFECTS and (str(sub.reason).contains("받는 곳 없음") or str(sub.reason).ends_with("효과 없음")):
+				ignored.append("하위 주문 %d 미적용(%s)" % [int(entry.bonus.Value), str(sub.reason)])
+				values["_skipped_children"] = int(values.get("_skipped_children",0)) + 1
+				continue
 			if sub.has("reason"): return {"reason":"%d 하위 주문 %s" % [spell_id, str(sub.reason)]}
 			if not values.has("_children"): values["_children"] = []
 			values._children.append(sub)
@@ -285,6 +291,7 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 		elif APPROX_EXTRA_EFFECTS and name == "SpellBuffGroup": values["_cleanse"] = true
 		elif APPROX_EXTRA_EFFECTS and name == "SpellMoveMultiple": values["_dash"] = int(entry.bonus.Value)
 		elif name not in ignored: ignored.append(name)
+	values.erase("_skipped_children")
 	var base: Dictionary = {"spell_id":spell_id,"name":str(row.get("Name","")),"ignored":ignored}
 	if values.has("_dash"):
 		# TWILIGHT 근사 "이동기": SpellMoveMultiple = a dash to the target, then the follow-up spell.
@@ -643,6 +650,55 @@ func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
 	record["source_approx523_active"] = spec
 	record["source_direct523"] = {"kind":"active_approx","spell_id":int(spec.spell_id),"basis":"원본 523 SpellClass·Buff 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
 	record.erase("source_direct523_hold")
+
+## TWILIGHT 근사 (지시 2026-11-16, 장비 EquipSpellClassID): ItemBonus `EquipSpellClassID`
+## (적용 유형 1 = SpellClass, 값 1) gives the target SpellClass while the item is worn.
+## The spell is opened with the active approximation (원본 MP/HP·CastDelay·반경, 효과는
+## approx_child_spell) as a skill record "eqspell523_<SpellClass ID>" any class may use
+## while one of its items is equipped (skill_catalog.owned). docs/items523_remaining_missing_rules.md 10.2.
+const APPROX_EQUIP_SPELLS := true
+var equip_spell_items: Dictionary = {}
+
+func equipment_spell_records(jobs: Array) -> Array:
+	equip_spell_items = {}
+	var out: Array = []
+	if not APPROX_EQUIP_SPELLS or SOURCE_ROWS.identity().is_empty(): return out
+	var type_id := -1
+	for row: Dictionary in SOURCE_ROWS.rows("BonusType"):
+		if str(row.get("Name","")) == "EquipSpellClassID": type_id = int(row.ID)
+	if type_id < 0: return out
+	var bonuses: Dictionary = {}
+	for row: Dictionary in SOURCE_ROWS.rows("Bonus"):
+		if int(row.get("BonusTypeID",-1)) == type_id and int(row.get("BonusApplicationTypeID",0)) == 1 and _source_integer(row.get("Value")) and int(row.Value) == 1:
+			bonuses[int(row.ID)] = int(row.BonusApplicationTargetID)
+	for row: Dictionary in SOURCE_ROWS.rows("ItemBonus"):
+		if row.get("IsPossession") == true or not bonuses.has(int(row.get("BonusID",-1))): continue
+		var item: Dictionary = SOURCE_ROWS.row("ItemClass", int(row.ItemClassID))
+		if item.is_empty() or item.get("TestItem") != false: continue
+		var spell_id: int = int(bonuses[int(row.BonusID)])
+		if not equip_spell_items.has(spell_id): equip_spell_items[spell_id] = {}
+		equip_spell_items[spell_id][int(row.ItemClassID)] = true
+	var ids: Array = equip_spell_items.keys(); ids.sort()
+	for spell_id: int in ids:
+		var spell: Dictionary = SOURCE_ROWS.row("SpellClass", spell_id)
+		if spell.is_empty() or spell.get("TestSpell") != false: continue
+		var child := approx_child_spell(spell_id, 2)
+		if child.has("reason"): continue
+		var targeting := int(spell.get("TargettingTypeID",2))
+		var effect := str(child.get("effect",""))
+		if targeting == 2 and effect in ["heal_pct","cleanse","self_buff"] and not APPROX_EXTRA_EFFECTS: continue
+		var title := str(spell.get("Name",""))
+		while title.begins_with("["): title = title.substr(title.find("]") + 1).strip_edges()
+		var record: Dictionary = {"id":"eqspell523_%d" % spell_id, "name":title + " (장비)", "class":"장비", "classes":jobs.duplicate(), "stage":1, "trigger":"always",
+			"equipment_spell523":spell_id, "equipment_spell_items":(equip_spell_items[spell_id] as Dictionary).keys()}
+		var spec: Dictionary = {"spell_id":spell_id,"child":child,"weapons":[],"minimum_level":0,"mp":int(spell.get("MPCost",0)),"hp":int(spell.get("HPCost",0)),"items":{},
+			"radius":float(spell.get("TargetAreaRadius",0)) * 48.0,"targets":int(spell.TargetLimitCount) if int(spell.get("TargetLimitCount",0)) > 0 else 8,
+			"cooldown":maxf(0.0,float(spell.get("CastDelay",0)))/1000.0,"range":maxf(64.0,float(spell.get("CastRange",0))*32.0),"pvp_only_to_npc":false}
+		_open_approx_active(record, spec)
+		record["local_kind"] = "source_approx523_equip_spell"
+		record["desc"] = "장비 착용 중 사용 · " + str(record.get("desc",""))
+		out.append(record)
+	return out
 
 func configure_arguments() -> void:
 	var path := ""
