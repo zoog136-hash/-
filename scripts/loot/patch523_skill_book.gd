@@ -30,7 +30,8 @@ static func source_limit_problem(world: Node, spec: Dictionary) -> String:
 		if int(row.get("ClassID",-1)) == class_id and not row.get("IsTutorialSpell",true): ordinary.append(row)
 	if ordinary.is_empty(): return "원본 스킬서 학습 직업 조건 불일치"
 	for row: Dictionary in ordinary:
-		if int(row.get("CharacterPolymorphGradeID",0)) != 0 or int(row.get("LimitBuffCardID",0)) != 0: continue
+		# TWILIGHT 근사: a LimitBuffCardID row holds while that card is owned (card_requirement523).
+		if int(row.get("CharacterPolymorphGradeID",0)) != 0 or not preload("res://scripts/cards/card_requirement523.gd").satisfied(world,int(row.get("LimitBuffCardID",0))): continue
 		if world.level >= int(row.get("CharacterMinLevel",0)): return ""
 	return "원본 스킬서 레벨·변신·선행 카드 학습 조건 미충족 또는 미지원"
 

@@ -12,6 +12,7 @@ const PACKED = preload("res://scripts/crafting/patch523_packed_records.gd")
 const SERVER_PROFILE = preload("res://scripts/loot/current523_server_profile.gd")
 const SERVER_CONTEXT = preload("res://scripts/maps/current523_map_runtime_context.gd")
 const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
+const APPROX = preload("res://scripts/crafting/patch523_craft_approx.gd")
 ## Tables that are never read as whole row arrays: only the rows a join needs
 ## are read, by position (see _values/_positions/Keyed). Their row arrays were
 ## ~3.3 of the ~3.7 million row cells the compile used to hold at once.
@@ -420,7 +421,53 @@ func _bind_catalog(catalog: PackedInt32Array, wallet_records: PackedInt32Array) 
 		if _description(int(original.DescID)) != binding.item or not _categories[str(int(original.CategoryID))].IsStackable: problem = "기존 제작 host binding의 원본 재료가 다릅니다"; return false
 		var record: Dictionary = {"name":binding.item,"source":"twilight_host_binding","sourceId":key,"slot":"consumable","host_kind":binding.kind,"host_amount":binding.amount,"binding_origin":binding.origin}
 		_by_id[key] = [_records.add(record,false)]; _by_name[binding.item] = 1; _host_materials[key] = record
+	_bind_approx_owners(wallet_records,wallet_names)
 	return true
+
+## TWILIGHT 근사 2026-11-16 (patch523_craft_approx): original items whose
+## registered record belongs to another owner, not the native catalog —
+##   wallet   3252 마법인형 제작 코인: the coin wallet (inventory key = wallet
+##            name), exactly like 아데나 and the other coin wallets
+##            (patch523_item_inventory.COIN_WALLETS, source_currency_bindings);
+##   supply   각성서 (native_awakening_supply records, full current record);
+##   owner    other registered lineagem_patch523 records of the exact original
+##            ID (문양 축복의 성수, 문양 초기화 두루마리), stacks only.
+## Only IDs without a native binding are added; names must stay unique.
+var _owner_bindings: Dictionary = {}
+func _bind_approx_owners(registered_handles: PackedInt32Array, wallet_names: Dictionary) -> void:
+	_owner_bindings.clear()
+	for id: int in APPROX.WALLET_MATERIALS:
+		var key: String = str(id)
+		var wallet: String = str(APPROX.WALLET_MATERIALS[id])
+		var binding: Dictionary = _policy.get("source_currency_bindings",{}).get(key,{})
+		if not _by_id.get(key,[]).is_empty() or not _items.has(key) or binding.get("inventory_key") != wallet or not wallet_names.has(wallet): continue
+		var raw: Dictionary = _items.row(key)
+		if raw.get("TestItem") != false or _categories[str(int(raw.CategoryID))].get("Name") != "Currency" or _description(int(raw.IdentifiedDescID),"") not in binding.source_names and _description(int(raw.DescID),"") not in binding.source_names: continue
+		if int(_by_name.get(wallet,1)) != 1: continue
+		_by_id[key] = [_records.add({"name":wallet,"source":"twilight_wallet_binding","sourceId":key,"slot":"currency","weight":0,"wallet_inventory_key":wallet,"binding_origin":APPROX.WALLET_ORIGIN},false)]
+		_by_name[wallet] = 1; _currency_keys[key] = wallet; _owner_bindings[key] = "wallet"
+	var supply: Script = load("res://scripts/cards/native_awakening_supply.gd")
+	var registered: Dictionary = {}
+	for handle: int in registered_handles: registered[str(_records.field(handle,"sourceId"))+"|"+str(_records.field(handle,"name"))] = true
+	for id: int in supply.IDS:
+		var key: String = str(id)
+		if not _by_id.get(key,[]).is_empty() or APPROX.WALLET_MATERIALS.has(id): continue
+		var record: Dictionary = supply.call("record",id)
+		# Only a supply item the game registered under exactly this identity.
+		if record.is_empty() or _by_name.has(str(record.name)) or not registered.has(str(record.sourceId)+"|"+str(record.name)): continue
+		_by_id[key] = [_records.add(record,false)]; _by_name[str(record.name)] = 1; _owner_bindings[key] = "supply"
+	var names: Dictionary = {}
+	for handle: int in registered_handles: names[str(_records.field(handle,"name"))] = int(names.get(str(_records.field(handle,"name")),0))+1
+	for handle: int in registered_handles:
+		if _records.field(handle,"source") != "lineagem_patch523" or _records.field(handle,"source_m_native_item",false) == true: continue
+		var value: Variant = _records.field(handle,"source_item_class_id",0)
+		if not _integer(value) or int(value) <= 0: continue
+		var key: String = str(int(value))
+		if not _by_id.get(key,[]).is_empty() or _records.field(handle,"sourceId") != "m523:item:"+key or not _items.has(key): continue
+		var raw: Dictionary = _items.row(key)
+		var name: String = str(_records.field(handle,"name"))
+		if raw.get("TestItem") != false or not _categories[str(int(raw.CategoryID))].get("IsStackable",false) or _by_name.has(name) or int(names.get(name,0)) != 1: continue
+		_by_id[key] = [handle]; _by_name[name] = 1; _owner_bindings[key] = "owner"
 
 func _native_non_equipment(key: String) -> bool:
 	if not _policy.get("native_non_equipment_holding",{}).get("enabled",false) or _by_id.get(key,[]).size() != 1: return false
@@ -429,7 +476,7 @@ func _native_non_equipment(key: String) -> bool:
 
 func _physical(key: String) -> bool:
 	# Fixed once the catalog is bound (only recipes ask), so answered once per item.
-	if not _physical_cache.has(key): _physical_cache[key] = not _categories[_category_key(key)].IsStackable and not _native_non_equipment(key)
+	if not _physical_cache.has(key): _physical_cache[key] = not _categories[_category_key(key)].IsStackable and not _native_non_equipment(key) and not _owner_bindings.has(key)
 	return _physical_cache[key]
 
 func _record(original: Dictionary) -> Dictionary:
@@ -458,12 +505,14 @@ func _calendar_time(row: Dictionary, offset: int) -> int:
 ## spawns and the shop already use (current523_server_profile). Sets for other
 ## servers only stay out, so the window never lists another server's copy.
 func _server_set_admitted(views: Array) -> bool:
-	return _server_set_state(views) == "admitted"
+	return _server_set_state(views) in ["admitted","empty_set"]
 
 ## "admitted" (set 0 or a set naming KR 1), "other_server_only" (a set whose
 ## original ServerLimit rows exist and name only other servers — 사용자 결정
 ## 2026-11-16: deleted, never admitted or listed) or "unresolved" (views with
-## different sets, a malformed set, or a set without ServerLimit rows).
+## different sets or a malformed set). "empty_set": a set without any
+## ServerLimit row — TWILIGHT 근사 2026-11-16: treated as KR 1
+## (patch523_craft_approx.empty_server_set_allows).
 func _server_set_state(views: Array) -> String:
 	var set_id: Variant = views[0].get("ServerLimitSetID")
 	for view: Dictionary in views:
@@ -472,7 +521,7 @@ func _server_set_state(views: Array) -> String:
 	if int(set_id) < 0: return "unresolved"
 	var profile: Dictionary = SERVER_CONTEXT.OFFLINE_PROFILE
 	var rows: Array = source.related("ServerLimit","ServerLimitSetID",int(set_id))
-	if rows.is_empty(): return "unresolved"
+	if rows.is_empty(): return "empty_set"
 	return "admitted" if SERVER_PROFILE.rows_allow(rows,str(profile.ServiceRegionCode),int(profile.WorldNo)) else "other_server_only"
 
 ## 사용자 결정 2026-11-16 (docs/PATCH523_CRAFTING_EQUIPMENT.md): original
@@ -529,7 +578,8 @@ func _item_reason(ins: Array, outs: Array) -> Dictionary:
 		var category: Dictionary = _categories[str(int(item.CategoryID))]
 		var invalid_classes: bool = false
 		for link: Dictionary in _limits.get(key,[]):
-			if int(link.ClassID) <= 0 or not _classes.has(str(int(link.ClassID))): invalid_classes = true
+			# TWILIGHT 근사 2026-11-16: ClassID 0 = every class.
+			if int(link.ClassID) < 0 or (int(link.ClassID) > 0 and not _classes.has(str(int(link.ClassID)))): invalid_classes = true
 		var allowance: Dictionary = _policy.get("nonactivating_material_class_references",{}).get(key,{})
 		var source_input: bool = ins.has(row) and category.get("IsStackable") == true and category.get("IsActivatable") == false and _links(key).is_empty() and allowance.get("scope") == "source_input_only" and _ids(_limits.get(key,[]),"ClassID",true) == allowance.get("class_ids")
 		if item.TestItem or _truthy(item.ServiceRegionCode) or item.LevelLimitMin < 0 or item.LevelLimitMin > 1000 or item.LevelLimitMax < 0 or item.LevelLimitMax > 1000 or (item.LevelLimitMax != 0 and item.LevelLimitMax < item.LevelLimitMin) or (invalid_classes and not source_input): return {"reason":"unresolved_item_condition","item_id":row.ItemClassID}
@@ -593,6 +643,14 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		for row: Dictionary in pair[1]:
 			var exclusion: Dictionary = _declared_exclusion(pair[0],row)
 			if not exclusion.is_empty(): return {"reason":"source_declared_exclusion","source_exclusion":exclusion}
+	# TWILIGHT 근사 2026-11-16: TestItem rows use their same-name substitute.
+	var substitutes: Dictionary = APPROX.substitutes_for(views+ins+outs,func(id: int) -> Dictionary: return _items.row(str(id)))
+	if not substitutes.is_empty():
+		views = APPROX.substitute_rows(views,substitutes); ins = APPROX.substitute_rows(ins,substitutes); outs = APPROX.substitute_rows(outs,substitutes)
+	# TWILIGHT 근사 2026-11-16: test inputs / honing epithet / stack states.
+	var fixed: Dictionary = APPROX.fix_rows(views,ins,outs,_item_reason,func(id: int) -> Dictionary: return _items.row(str(id)))
+	var overrides: Dictionary = fixed.overrides
+	if not overrides.is_empty(): views = fixed.views; ins = fixed.ins; outs = fixed.outs
 	var view: Dictionary = views[0]
 	var calendar: Variant = _calendar_window(view)
 	var total: int = 0; var valid_outs: bool = true
@@ -616,24 +674,39 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	for row: Dictionary in outs:
 		if row.ItemCraftOutputTypeID == 1 and _same_result(view,row): primary = row; break
 	var waived: Dictionary = decision_waivers(view,restrictions,constraint,known_restriction,calendar)
+	# TWILIGHT 근사 2026-11-16 (patch523_craft_approx): 성공 페이백 rows of a
+	# guaranteed craft and the clan share are given with the result.
+	var split: Dictionary = APPROX.payback_split(outs) if not probabilistic else {"core":outs,"payback":[]}
+	var core: Array = split.core
+	var clan: Array = APPROX.clan_rows(core)
 	var reason: String = ""
 	if probabilistic and (not _view_contract(views,outs,complete) or primary.is_empty() or outs.is_empty() or not valid_outs or (total != 1000000 and not partial)): reason = "unverified_random_result_contract"
-	elif not probabilistic and (views.size() != 1 or view.AlwaysSuccess != 1 or outs.size() != 1): reason = "non_single_guaranteed_result"
-	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
+	elif not probabilistic and (views.size() != 1 or view.AlwaysSuccess != 1 or core.size() != 1): reason = "non_single_guaranteed_result"
+	elif not probabilistic and (core[0].Probability != 1000000 or core[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
 	elif _server_set_state(views) == "other_server_only": reason = "other_server_only_set"
 	elif (not restrictions.is_empty() and not known_restriction and not waived.has("count_limit_restriction_ids")) or not _server_set_admitted(views) or view.IsCoalitionItem or (view.NoRepeat and not waived.has("no_repeat")) or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
 	elif (view.CraftTimeTypeID != 1 or calendar == null) and not waived.has("time_window"): reason = "limited_calendar_or_time_type"
 	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
-	elif not probabilistic and not _same_result(view,outs[0]): reason = "view_output_disagreement"
+	elif not probabilistic and not _same_result(view,core[0]): reason = "view_output_disagreement"
 	else:
 		for row: Dictionary in outs:
-			if row.ClanItemClassID != 0 or row.ClanAmount != 0: reason = "clan_output"; break
+			if (row.ClanItemClassID != 0 or row.ClanAmount != 0) and (row.ClanItemClassID <= 0 or row.ClanAmount <= 0): reason = "clan_output"; break
 	if not reason.is_empty(): return {"reason":reason}
 	if waived.has("time_window"): calendar = {}
-	var item_reason: Dictionary = _item_reason(ins,outs)
+	var item_reason: Dictionary = _item_reason(ins,outs+clan)
 	if not item_reason.is_empty(): return item_reason
-	var out: Dictionary = primary if probabilistic else outs[0]
+	var bonuses: Array = []
+	for pair: Array in [["payback",split.payback],["clan",clan]]:
+		for row: Dictionary in pair[1]:
+			var key: String = str(int(row.ItemClassID))
+			# Stack (non-physical) bonuses only; a physical bonus keeps the craft out.
+			if key == "26" or _physical(key): return {"reason":"non_single_guaranteed_result" if pair[0] == "payback" else "clan_output"}
+			var bonus: Dictionary = APPROX.bonus(row,_record(row),pair[0],false)
+			if probabilistic: bonus.outcome_conditional = true
+			if _currency_keys.has(key): bonus.inventory_key = _currency_keys[key]
+			bonuses.append(bonus)
+	var out: Dictionary = primary if probabilistic else core[0]
 	var key: String = str(int(out.ItemClassID))
 	var result: Dictionary = _currency_record() if key == "26" else _record(out)
 	var materials: Array = []; var slots: Array = []; var adena: int = 0
@@ -645,7 +718,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 			if row.ItemClassID == 26 and slot_rows.size() == 1: adena += int(row.Amount); continue
 			candidates.append(_project_material(row,int(slot)))
 		if not candidates.is_empty(): slots.append({"slot_index":int(slot),"candidates":candidates}); materials.append(candidates[0])
-	if materials.is_empty(): return {"reason":"currency_only_input"}
+	# TWILIGHT 근사 2026-11-16: an 아데나-only craft is a fee-only craft.
 	var slot_type: String = str(result.get("slot",""))
 	var category: String = "장신구" if slot_type in ["ring","earring","seal","necklace","belt","rune","insignia"] else "무기" if slot_type == "weapon" else "재료" if slot_type in ["material","consumable","currency",""] else "방어구"
 	var output: Dictionary = {"item":result.name,"quantity":out.Amount,"level":out.Enchant,"bless_code":out.ItemBlessCodeID,"source_id":key,"physical":false if key == "26" else _physical(key),"wallet_currency":key == "26"}
@@ -677,12 +750,28 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	recipe.host_material_bindings = host
 	if probabilistic:
 		var outcomes: Array = []
-		for row: Dictionary in execution_outs: outcomes.append(_project_outcome(row))
+		for row: Dictionary in execution_outs:
+			var outcome: Dictionary = _project_outcome(row)
+			if int(row.get("ClanItemClassID",0)) > 0 and int(row.get("ClanAmount",0)) > 0: outcome.clan_bonus_row_id = int(row.ID)
+			outcomes.append(outcome)
 		recipe.outcomes = outcomes
 		if views.size() > 1: recipe.source_success_view_count = views.size(); recipe.name = "원본523 · "+str(result.name)+" 확률 제작"
 		recipe.probability_origin = "원본 확률 · NC 공식 재료/결과 대조" if verified_random else "원본523 완전 결과표 · 개별 공개 표 미대조"
 		if partial: recipe.missing_failure_policy = missing; recipe.probability_origin = missing.origin
 		recipe.preserve_refund_instance = bool(_policy.preserve_matching_refund_instance)
+	if not bonuses.is_empty() or _server_set_state(views) == "empty_set" or not substitutes.is_empty() or not overrides.is_empty() or materials.is_empty():
+		var approx: Dictionary = {"date":APPROX.DATE}
+		if not overrides.is_empty(): approx.row_overrides = overrides; approx.row_kinds = fixed.kinds
+		if materials.is_empty(): approx.fee_only = true
+		if not substitutes.is_empty():
+			var mapped: Dictionary = {}
+			for id: int in substitutes: mapped[str(id)] = str(substitutes[id])
+			approx.test_item_substitutes = mapped
+		if not bonuses.is_empty(): recipe.bonus_outputs = bonuses; approx.bonus_outputs = true
+		if _server_set_state(views) == "empty_set":
+			approx.server_set_without_rows = int(view.ServerLimitSetID)
+			recipe.craft_conditions.twilight_approx = {"date":APPROX.DATE,"server_set_without_rows":int(view.ServerLimitSetID)}
+		recipe.twilight_approx = approx
 	return {"recipe":recipe}
 
 ## The Bonus rows the item joins read: the last row per ID among the IDs that
@@ -789,6 +878,7 @@ func _item_entry(key: String) -> Variant:
 		for state: String in _variants[key]: variants[state] = _rec(_variants[key][state])
 		entry.stack_variants = variants
 	if _currency_keys.has(key): entry.currency_inventory_key = _currency_keys[key]
+	if _owner_bindings.has(key): entry.twilight_owner_binding = _owner_bindings[key]
 	var references: Dictionary = _policy.get("nonactivating_material_class_references",{})
 	if references.has(key) and _categories[str(int(item.CategoryID))].get("IsActivatable") == false and _links(key).is_empty(): entry.craft_material_only_class_references = references[key]
 	# item_class/item_bonuses/enchant_effects are verbatim original rows; the
@@ -1005,6 +1095,7 @@ func release() -> void:
 		_runtime_reuse_stats.entries = _runtime_reuse.entries.size()
 		_runtime_reuse_stats.bytes = _runtime_reuse.bytes
 		BOOT_LOG.mark("rules_runtime_reuse",_runtime_reuse_stats)
+	_owner_bindings.clear()
 	_tables.clear(); _evidence.clear(); _descriptions.clear(); _by_id.clear(); _by_name.clear(); _variants.clear(); _currency_keys.clear(); _host_materials.clear(); _use_conditions.clear(); _exclusions.clear()
 	_items = Keyed.new(); _categories = {}; _classes = {}; _dates = Keyed.new(); _limits = {}; _equip_links = {}; _item_bonuses = {}; _link_bonus = []
 	_records = PACKED.new(); _record_cache.clear(); _supplement = 0

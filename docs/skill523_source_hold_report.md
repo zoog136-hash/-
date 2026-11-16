@@ -324,3 +324,10 @@
   (빠진 것은 `ignored`에 "하위 주문 N 미적용"으로 남는다). 모두 빠지면 계속 보류. 예: 라이온 하트 = 회복(적용) + 보호막 ShieldID(수치 표 없음, 생략).
 - 측정(실제 Main): 보류 참고 스킬 168 → **150**, 스킬이 열린 바인딩 스킬서 451 → **496**, 열린 액티브 30 → 46.
 
+## 근사 적용 2026-11-16 (6): 카드 보유 조건 `LimitBuffCardID` (PR `feat/approx523-card-requirement`)
+- 원본 SpellLearnLimit 94행·MerchantGoods 23행이 카드 하나를 조건으로 건다(플래티넘 데스나이트·플래티넘 바포메트·기르타스 3종(변신·인형·성물)·"신화변신").
+  표에는 판정 방식이 없다. **TWILIGHT 근사(근거 약함)**: 그 원본 카드를 **보유**하면 조건 충족(소모 없음).
+  "신화변신"(#11152)은 아무도 가질 수 없는 자리표시 카드라(등록된 수집 카드 없음) "같은 덱·같은 등급(신화) 카드 하나 보유"로 읽는다.
+- 적용: 스킬서 학습(`source523_skill_books.learn_reason`, `patch523_skill_book.source_limit_problem`, 스킬 창 학습 레벨), 원본 스킬서 아이템 사용 정의(더 이상 막지 않음 — 학습 때 확인),
+  NPC 상점 구매(`source523_shop_runtime.quote_merchant`), 근사로 연 참고 스킬(`approx_required_card` — 카드를 보유하는 동안만 사용).
+
