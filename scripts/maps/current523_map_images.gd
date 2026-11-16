@@ -119,6 +119,8 @@ static func _decode_original(asset_id: int, asset_type: int, path: String) -> Di
 	var row: Dictionary = pack.call("_asset", asset_id)
 	if int(row.get("asset_type_id", -1)) != asset_type or str(row.get("path", "")) != path or str(row.get("status", "")) != "verified_original":
 		return {"ok": false, "reason": "asset_not_verified_original"}
+	var dummies: Variant = pack.get("_dummy_assets")
+	if dummies is Dictionary and dummies.has(asset_id): return {"ok": false, "reason": "source_dummy_excluded"}
 	if not pack.call("_has_member", path): return {"ok": false, "reason": "missing_current_member"}
 	var member: Dictionary = pack.call("_member", path)
 	var checked: Dictionary = pack.call("_bytes", {"path": member.get("file", ""), "bytes": member.get("plain_bytes", -1), "sha256": member.get("sha256", "")})
@@ -131,7 +133,39 @@ static func _decode_original(asset_id: int, asset_type: int, path: String) -> Di
 		"BMP": error = image.load_bmp_from_buffer(checked.bytes)
 	if error != OK or image.is_empty() or image.get_width() != int(member.get("width", -1)) or image.get_height() != int(member.get("height", -1)):
 		return {"ok": false, "reason": "original_image_decode_failed"}
-	return {"ok": true, "image": image}
+	return {"ok": true, "image": image, "member": member}
+
+## The original map window's picture (UIMapWorld image) for phones: the
+## verified original bytes are decoded once, shrunk so the longest side is at
+## most WINDOW_MAX_EDGE, premultiplied the same way as the Cocos upload
+## (cocos_premultiply_pixels) and returned as one ImageTexture whose size
+## override keeps the original pixel size. The window therefore lays out,
+## scrolls and registers clicks in original pixels exactly as before, but holds
+## about 10 MB instead of a 25 MB original plus a 25 MB premultiplied copy, and
+## nothing stays in the shared icon/PMA caches after the window closes.
+const WINDOW_MAX_EDGE: int = 2048
+const PMA_PIXELS = preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
+
+static func window_texture(asset_id: int, asset_type: int, path: String) -> Dictionary:
+	var decoded: Dictionary = _decode_original(asset_id, asset_type, path)
+	if not decoded.get("ok", false): return decoded
+	var image: Image = decoded.image
+	var original_size := Vector2i(image.get_width(), image.get_height())
+	var longest: int = maxi(original_size.x, original_size.y)
+	if image.get_format() != Image.FORMAT_RGBA8: image.convert(Image.FORMAT_RGBA8)
+	if longest > WINDOW_MAX_EDGE:
+		var scale: float = float(WINDOW_MAX_EDGE) / float(longest)
+		image.resize(maxi(1, roundi(original_size.x * scale)), maxi(1, roundi(original_size.y * scale)), Image.INTERPOLATE_BILINEAR)
+	var texture := ImageTexture.create_from_image(PMA_PIXELS.convert(image))
+	if Vector2i(texture.get_width(), texture.get_height()) != original_size: texture.set_size_override(original_size)
+	texture.set_meta("cocos_premultiplied", true)
+	texture.set_meta("source523_display_copy", {"original_size": original_size, "stored_size": image.get_size(), "policy": "TWILIGHT_MAP_WINDOW_SHRUNK_COPY_V1"})
+	var pack: Variant = IMAGES.active()
+	var provenance: Dictionary = (pack.call("_asset", asset_id) as Dictionary).duplicate(true)
+	provenance.merge({"asset_id": asset_id, "source_version": 523, "manifest_sha256": str(pack.get("_manifest_sha")), "member": decoded.member.duplicate(true)}, true)
+	return {"ok": true, "status": "verified_original_texture", "status_type": "verified_original_texture", "texture": texture,
+		"provenance": provenance, "original_bytes_unchanged": true, "actual_game_consumption_observed": false,
+		"display_copy": {"original_size": original_size, "stored_size": image.get_size()}}
 
 ## Original UIMapArea zones of the Land (village/dungeon/field/spot names from
 ## DescData_Korean over their Territories rectangle), smallest first.

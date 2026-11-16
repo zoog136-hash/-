@@ -13,17 +13,29 @@
 | TJ의 쿠폰 합성 재도전 (Recovery_All_Compose) | 등급 카드의 확률 보기 | 원본 | 덱·등급별 원본 합성 규칙의 SuccessProbability ÷ 10,000 %. 같은 행으로 `scripts/tj/runtime.gd`가 굴리며, 서버 조건이 맞는 행 하나일 때만 표시함 | 원본 BuffCardMergeRule |
 | 검색 키패드 (ItemBook/Inventory/Production/Trade_Popup_Keypad) | 입력 글자색 | 원본 | 흰색 (255,255,255,255) | 각 키패드 CSB TextField의 widget color가 흰색. 빈칸 글자는 Cocos TextFieldTTF 기본값인 127 회색(이미 적용됨). 근사 필요 없음 |
 | 스킬 카드 강화 (SkillCard_Popup_Enchant) | 강화 전후 Lv·Exp·게이지 | 원본 형식 | `Lv.%d`, `Exp` 소수 4자리 % (원본 자리 표시 `00.0000%`), 게이지는 먹인 뒤 경험치 ÷ 필요 경험치 | 원본 CSB 자리 표시 + 기존 levelup quote 값 (#573) |
+| 스킬 카드 강화 (SkillCard_Popup_Enchant) | 성공 확률 버튼 | 원본 | 기존 levelup quote의 원본 강화 확률(예: 66.7%) | 원본 표 · 실제 후기 "첫 시도 66.7%, 두 번째 33.3%" https://www.inven.co.kr/board/lineagem/5063/10729 |
+| 카드 다시 뽑기 (CardChange_Popup_Retry) | 뽑기 확률 | 기능 규칙 | 같은 등급 후보 N종 중 1장, 각 1/N(지금 카드 제외). card523_swap execute가 균등하게 뽑음 | `scripts/cards/card_swap523.gd` |
+| 카드 다시 뽑기 (CardChange_Popup_Retry) | 목록 보기 | 기능 데이터 | quote의 후보 이름(앞 20개 + 나머지 종 수) | quote.candidates |
+| 카드 다시 뽑기 (CardChange_Popup_Retry) | 주의 사항 | 기능 규칙 | "다시 뽑은 결과는 카드 확정을 눌러야 획득, 확정 전에는 원래 카드 유지, 영웅 이상만" | 사용자 결정 2026-11-16. 원본 문구는 현금·마일리지 안내라 쓰지 않음 |
 
-## 검색했지만 근사 근거를 찾지 못해 보류한 것
+## TWILIGHT 근사(근거 약함): 정렬·필터 선택지
 
-아래 항목은 원본 문자열 테이블(UIStaticTextData/UITextData)에 선택지 문구가 없다. 원본에는 "정렬", "레벨 별 정렬", "등급 별 정렬"만 있다. 웹 검색으로도 실제 화면의 선택지를 확인하지 못했다. 근거 없이 값을 지어내지 않고 비워 둔다.
+원본 문자열 테이블(UIStaticTextData/UITextData)에는 선택지 문구가 "정렬", "레벨 별 정렬", "등급 별 정렬"밖에 없다. 웹 검색으로도 실제 화면의 선택지를 확인하지 못했다. 검색어는 "리니지M 변신 목록 정렬 등급순", "리니지M 인벤토리 정렬 버튼 옵션", "리니지M 스킬 카드 강화 재료 정렬 자동 등록"이었다. 사용자 지시(2026-11-16 "근사치로 다 넣어")에 따라, 리니지M 화면에서 흔히 쓰는 등급순·이름순·수량순·진행 상태로 근사한다. 각 창의 첫 선택지는 원본 버튼에 적힌 문구 그대로다.
 
-| 창 | 항목 | 검색 |
+| 창 | 버튼 | TWILIGHT 근사(근거 약함) |
 |---|---|---|
-| 변신·인형 목록 (전체 정렬), 몬스터 도감, 아이템 도감, 제작 목록, 스킬 카드 강화 재료, 스케줄 | 정렬 선택지 | "리니지M 변신 목록 정렬 등급순", "리니지M 인벤토리 정렬 버튼 옵션", "리니지M 스킬 카드 강화 재료 정렬 자동 등록": 선택지가 적힌 결과 없음 |
-| 카드 다시 뽑기 (CardChange_All) | 상품 안내·주의 사항 | 현금 상품·마일리지 안내라서 TWILIGHT에 해당 기능이 없음 |
+| 아이템 컬렉션 (ItemBook_Tab_Collection Btn_Sort) | 전체 | 전체 / 진행 중 / 미완성 / 완성. 같은 원본 버튼에 카드 컬렉션 창이 이미 쓰는 선택지 |
+| 몬스터 도감 (MonsterBook_CollectionView Btn_Sort) | 모두 보기 | 모두 보기 / 진행 중 / 완료. 완료는 모든 단계 보상을 받은 도감 |
+| 제작 목록 (Production_Tab_List Btn_Sort) | 아이콘 토글 | 제작 가능 우선. 기존 quote가 허용하는 제작이 먼저 오고, 각 묶음은 원래 순서를 유지 |
+| 변신·인형·성물 목록 (Change_DetailView Btn_Sort2) | 전체 | 전체(원래 순서) / 등급순(높은 등급 먼저) / 이름순 |
+| 스킬 카드 강화 재료 (SkillCard_Popup_Enchant Btn_Sort) | 전체 | 전체(기능 순서) / 수량순(많은 것 먼저) / 이름순 |
 
-참고: 스킬 카드 강화 확률은 원본 테이블 값을 그대로 쓴다. 실제 후기("첫 시도 66.7%, 두 번째 33.3%")와 같다. 출처: https://www.inven.co.kr/board/lineagem/5063/10729
+## 보류한 것
+
+| 창 | 항목 | 이유 |
+|---|---|---|
+| 카드 다시 뽑기 (CardChange_All) | 상품 안내 | 현금 상품 안내라 TWILIGHT에 해당 기능이 없음 |
+| 스케줄 | 정렬 | 스케줄 목록 기능 자체가 없음 |
 
 ## 그림이 없어 비운 것 (변경 없음)
 

@@ -24,6 +24,14 @@ const SELF_PATH := "res://scripts/resources/current523_source_effect_selection.g
 static func fail(reason: String, detail: Dictionary = {}) -> Dictionary:
 	return {"ok":false,"enabled":true,"status":"selection_pending","reason":reason,"source_snapshot":"patch523","source_reference":detail}
 
+static var _rejected_key: String = ""
+static var _rejected: Dictionary = {}
+
+static func _reject(key: String, result: Dictionary) -> Dictionary:
+	_rejected_key = key
+	_rejected = result.duplicate()
+	return result
+
 static func _bank(options: Dictionary) -> Dictionary:
 	var path: String = str(options.get("manifest_path",""))
 	var expected: String = str(options.get("manifest_sha256",""))
@@ -32,6 +40,13 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var stamp: String = "%d:%d" % [file.get_length(), FileAccess.get_modified_time(path)]
 	file.close()
 	if path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
+	# A pinned manifest that was read and rejected stays rejected while the
+	# file is unchanged. Without this every effect request re-read, hashed and
+	# parsed the whole ~45 MB manifest again on the main thread (2026-11-16:
+	# the installed pack's bank has no source_action_domains, so every hit or
+	# cast paid this; phone player.impact 1,274 ms).
+	var rejected_key: String = path + "|" + expected + "|" + stamp
+	if rejected_key == _rejected_key: return _rejected.duplicate()
 	var prepared: Dictionary = {}
 	if LOADER.enabled and not LOADER.idle():
 		var key: String = LOADER.json_key(path, expected)
@@ -55,8 +70,8 @@ static func _bank(options: Dictionary) -> Dictionary:
 			_manifest_stamp = stamp
 			return {"ok":true,"manifest":_manifest}
 		value = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return fail("current523_effect_original_action_domain_required")
-	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return fail("current523_effect_source_dummy_policy_required")
+	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return _reject(rejected_key, fail("current523_effect_original_action_domain_required"))
+	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return _reject(rejected_key, fail("current523_effect_source_dummy_policy_required"))
 	_manifest_path = path
 	_manifest_sha = expected
 	_manifest = value
@@ -87,7 +102,31 @@ static func _source_integer(value: Variant) -> int:
 	if value is String and value.is_valid_int() and int(value) >= 0: return int(value)
 	return -1
 
+const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
+## The cook tool sets the index it derived (same shape as the cooked pack's).
+static var cooked_domain_index: Dictionary = {}
+
+## Action selection from the cooked pack's cook-time action domains (same
+## rules as below: dummy exclusion, sole or declared action in the domain,
+## compiled inputs present), without reading the bank manifest.
+static func _cooked_action(index: Dictionary, sprite: int, explicit_action: int) -> Dictionary:
+	var key: String = "sprite:" + str(sprite)
+	if index.excluded.has(key): return fail("current523_effect_source_declared_dummy",index.excluded[key])
+	var domain: Variant = index.domains.get(key)
+	if not domain is PackedInt32Array: return fail("current523_effect_complete_original_action_domain_missing")
+	var action: int = explicit_action
+	if action < 0:
+		if domain.size() != 1: return fail("current523_effect_original_action_selection_not_unique")
+		action = int(domain[0])
+	if not domain.has(action): return fail("current523_effect_requested_action_not_declared")
+	var compiled: Variant = index.compiled.get(key)
+	if not compiled is PackedInt32Array or not compiled.has(action): return fail("current523_effect_original_action_inputs_unavailable")
+	return {"ok":true,"action_id":action,"source_action_domain":{"source_snapshot":"patch523","source_actor_id":sprite,"action_ids":Array(domain),"action_domain_basis":str(index.get("domain_basis",""))}}
+
 static func _action(options: Dictionary, sprite: int, explicit_action: int = -1) -> Dictionary:
+	var sha: String = str(options.get("manifest_sha256","")).to_lower()
+	var cooked: Dictionary = cooked_domain_index if not cooked_domain_index.is_empty() and str(cooked_domain_index.get("manifest_sha256","")) == sha else COOKED_STORE.effect_index(sha)
+	if not cooked.is_empty(): return _cooked_action(cooked,sprite,explicit_action)
 	var loaded: Dictionary = _bank(options)
 	if not loaded.ok: return loaded
 	var index: Dictionary = loaded.manifest

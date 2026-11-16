@@ -523,3 +523,20 @@ remains separate from skipped remote CI.
     줄 버튼과 같은 `select_offered_world` 호출).
 - 다른 Land: `UIMapWorld`에 그림이 있는 Land는 같은 방식으로 처리된다. 그림이 없는 Land는 원본 그림 없이 기존
   자체 S32 미니맵을 쓰고(그림을 만들지 않음), 이름은 `Land.Name`을 쓴다(TWILIGHT 근사).
+
+### 원본 지도 창 메모리 (폰)
+
+- 이전: 창을 열면 이미지 팩 경로가 3200x1974 원본 텍스처(25 MB)를 공유 아이콘 캐시(32 MB 예산)에 넣고,
+  Cocos 프리멀티플라이 사본(25 MB)을 PMA 캐시에 따로 만들었다. 데스크톱 측정값: 텍스처 +70 MB,
+  아이콘 캐시 25 MB가 창을 닫은 뒤에도 남았다.
+- 지금(`current523_map_images.window_texture`, `source523_map_image_adapter.resolve_world`): 이미지 팩과 같은 검증
+  (AssetView 타입·상태·경로, 멤버 크기·SHA)을 거친 원본 바이트를 한 번 디코드한다. 긴 변 2048px 사본으로 줄이고
+  Cocos 규칙(`cocos_premultiply_pixels`)으로 프리멀티플라이한 텍스처 하나만 만든다. `set_size_override`로 원본
+  픽셀 크기를 보고하므로 창 배치·스크롤·클릭 정합은 원본 픽셀 그대로다. 공유 아이콘/PMA 캐시에 넣지 않고,
+  HUD 상태에도 텍스처를 두지 않아 창을 닫으면 해제된다.
+  측정: 아덴 창 열기 텍스처 +19.6 MB(이전 +70), 아이콘 캐시 0.1 MB(이전 25), 닫은 뒤 원래 값으로 돌아감.
+- 표시 사본 축소는 그림을 새로 만드는 것이 아니라 원본 픽셀을 줄인 표시용 사본이다(TWILIGHT 근사, 기록용).
+- 제안 World: 팩 빌더(`tools/maps/build_client523_world_map.py`)가 LandID 0(말하는 섬)을 "Land 없음"으로 보고
+  빠뜨렸다. 빌더를 고쳤고, 이미 설치된 계약서에서는 런타임이 그 Land의 그림 하나짜리 후보 중 가장 작은 World ID를
+  고른다(`current523_world_map_input._approximate_offer`, TWILIGHT 근사). 그림이 서로 다른 World가 여러 개인
+  Land는 그대로 선택하지 않는다.

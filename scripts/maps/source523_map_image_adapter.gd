@@ -1,6 +1,7 @@
 extends RefCounted
 ## Exact source-map image bridge. It never selects a World or places a node.
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+const MAP_IMAGES = preload("res://scripts/maps/current523_map_images.gd")
 const MAX_CONTRACT_BYTES: int = 4 * 1024 * 1024
 var _worlds: Dictionary = {}
 var _worlds_by_land: Dictionary = {}
@@ -123,7 +124,14 @@ func resolve_world(world_id: int) -> Dictionary:
 	var relation: Dictionary = _worlds[world_id]
 	var image: Dictionary = relation.image_info.raw
 	var asset: Dictionary = relation.asset_view.raw
-	var result: Dictionary = IMAGES.resolve_asset_value(image.ImageID,int(asset.AssetTypeId),relation.exact_typed_path)
+	# Phone memory: a shrunk, premultiplied display copy with the original
+	# pixel size (current523_map_images.window_texture). The full-size owner
+	# path stays as the fallback when that reader is unavailable.
+	var result: Dictionary = MAP_IMAGES.window_texture(int(image.ImageID),int(asset.AssetTypeId),relation.exact_typed_path)
+	if not result.get("ok",false) and str(result.get("reason","")) in ["image_pack_reader_api_missing"]:
+		result = IMAGES.resolve_asset_value(image.ImageID,int(asset.AssetTypeId),relation.exact_typed_path)
+	elif not result.get("ok",false):
+		result = {"ok":false,"status":str(result.get("reason","original_map_picture_unavailable")),"reason":str(result.get("reason","")),"texture":null,"provenance":{}}
 	var provenance: Dictionary = result.get("provenance",{}).duplicate(true)
 	provenance["map_contract_sha256"] = _contract_pin
 	provenance["source_map_relation"] = relation.duplicate(true)
