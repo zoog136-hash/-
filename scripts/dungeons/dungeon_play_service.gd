@@ -314,7 +314,9 @@ func consume_source(item_id: int, amount: int) -> Dictionary:
 	if int(inventory[name])==0:inventory.erase(name)
 	return {"ok":true,"inventory":inventory,"item_instances":instances}
 
-func recharge(item_id: int, now: int = -1) -> Dictionary:
+## consume=false: the caller already debited the stone (bag use of an original physical
+## stack, current523_native_stack.use_time_recharge); only the pool is charged.
+func recharge(item_id: int, now: int = -1, consume: bool = true) -> Dictionary:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	var error:=check_idle()
 	if not error.is_empty():return {"ok":false,"reason":error}
@@ -324,9 +326,11 @@ func recharge(item_id: int, now: int = -1) -> Dictionary:
 	var id:=int(item.group_id);var p:=pool(id,now);var cap:=int(rules.time_by_id[id].row.MaxRechargeTime)*int(state.settings.group_time_scale)
 	if cap==0:cap=int(state.settings.zero_cap)
 	if int(p.bonus)+3600>cap:return {"ok":false,"reason":"별도 충전시간 상한 초과 · 아이템 보존"}
-	var changes:=consume_source(item_id,1)
-	if not changes.get("ok",false):changes=consume_own_recharger(item_id)
-	if not changes.get("ok",false):return changes
+	var changes: Dictionary={"ok":true}
+	if consume:
+		changes=consume_source(item_id,1)
+		if not changes.get("ok",false):changes=consume_own_recharger(item_id)
+		if not changes.get("ok",false):return changes
 	changes.erase("ok");p.bonus=int(p.bonus)+3600
 	var next:=state.duplicate(true);next.pools[str(id)]=p;next.day=day(now)
 	return commit(next,changes)

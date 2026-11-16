@@ -106,6 +106,20 @@ func configure(world: Node) -> void:
 	_map_time=MAP_TIME.new()
 	_map_time.configure(world)
 
+## TWILIGHT 근사 (시간 충전석): charge one original LandTimeLimitGroup row only while the
+## own map time is in effect (map_open_policy not always-open and map_time_policy
+## OWN_MAP_TIME). Otherwise nothing is charged and in_effect is false.
+func map_time_in_effect() -> bool:
+	return _map_time!=null and settings.get("map_open_policy",OPTIONS.OWN_ALWAYS_OPEN_V1)!=OPTIONS.OWN_ALWAYS_OPEN_V1 and str(settings.get("map_time_policy",OPTIONS.OWN_MAP_TIME))==OPTIONS.OWN_MAP_TIME
+
+func recharge_map_time(group_row: Dictionary, seconds: int) -> Dictionary:
+	var world: Node=_world()
+	if world==null or _map_time==null:return {"ok":false,"reason":"map_time_world_unavailable","in_effect":false}
+	if not map_time_in_effect():return {"ok":false,"reason":"own_map_time_not_in_effect","in_effect":false}
+	var result: Dictionary=_map_time.recharge(group_row,ACTOR_CONTEXT.capture(world).get("server_profile",{}),seconds*1000)
+	result["in_effect"]=true
+	return result
+
 func _world() -> Node:
 	return _world_ref.get_ref() as Node if _world_ref != null else null
 
