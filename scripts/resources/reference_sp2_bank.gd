@@ -357,6 +357,7 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 ## within the same second at the same size).
 static func forget_verified_members() -> void:
 	_verified_members.clear()
+	_recheck_ok.clear()
 	forget_member_meta()
 	PREPARED.clear()
 
@@ -447,15 +448,44 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 ## holds goes through the full render_layer() of one of its layers, which
 ## re-hashes it (and records the new stamp) or returns the same rejection.
 ## `stamps` comes from member_stamps(). Returns {ok:true} or that failure.
+##
+## Successful file checks are shared for the rest of the current rendered
+## (process) frame: every actor that draws the same member in that frame reuses
+## the result instead of repeating the stats (on this server one stat call is
+## ~5 us and FileAccess.get_size() opens the file; 13 monsters of one kind
+## repeated them per layer). A file changed after its check is therefore seen
+## on the next rendered frame at the latest. Failures are never shared.
+static var _recheck_frame: int = -1
+static var _recheck_ok: Dictionary = {}
+
+static func _recheck_memo_frame() -> void:
+	var frame: int = Engine.get_process_frames()
+	if frame != _recheck_frame:
+		_recheck_frame = frame
+		_recheck_ok.clear()
+
+func _pins_valid_this_frame() -> bool:
+	_recheck_memo_frame()
+	var key: String = "pins|%s|%s|%s" % [_manifest_path, _manifest_sha, str(_actor_pins)]
+	if _recheck_ok.has(key): return true
+	if not _pins_valid(): return false
+	_recheck_ok[key] = true
+	return true
+
 func recheck_layers(stamps: Dictionary) -> Dictionary:
-	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
+	if not _pins_valid_this_frame(): return fail("Pinned source bank metadata changed.")
 	for actor: int in stamps.actors:
 		var admitted: Dictionary = source_actor_admission(actor)
 		if not admitted.ok: return admitted
 	for entry: Array in stamps.members:
 		var path: String = entry[0]
 		var known: Variant = _verified_members.get(path)
-		if known is Array and known[0] == entry[1] and known[1] == entry[2] and FileAccess.file_exists(path) and int(FileAccess.get_size(path)) == int(entry[2]) and int(FileAccess.get_modified_time(path)) == int(known[2]): continue
+		if known is Array and known[0] == entry[1] and known[1] == entry[2]:
+			var memo_key: String = "%s|%s|%d" % [path, entry[1], int(known[2])]
+			if _recheck_ok.has(memo_key): continue
+			if FileAccess.file_exists(path) and int(FileAccess.get_size(path)) == int(entry[2]) and int(FileAccess.get_modified_time(path)) == int(known[2]):
+				_recheck_ok[memo_key] = true
+				continue
 		FRAME_HITCH.count("sp2.recheck_full")
 		var full: Dictionary = render_layer(entry[3], false)
 		if not full.ok: return full

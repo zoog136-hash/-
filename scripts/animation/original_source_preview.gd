@@ -604,6 +604,8 @@ func _verify_unchanged_layers(selected: Dictionary) -> bool:
 const COMPOSITES = preload("res://scripts/resources/actor_frame_composite_cache.gd")
 const FRAME_PLAN_MAX: int = 512
 static var cached_frames_enabled: bool = not "--twilight-actor-frame-cache-off" in OS.get_cmdline_user_args()
+## Plans without compositing (every group keeps its nodes): diagnostics.
+static var composite_groups_enabled: bool = not "--twilight-actor-composite-off" in OS.get_cmdline_user_args()
 var cached_frames: bool = false
 var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
 var _cached_applied_plan: Dictionary = {}
@@ -753,7 +755,7 @@ func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
 		if spec.position != Vector2(Vector2i(spec.position)): composable = false
 		if not spec.empty: items.append({"layer":spec.layer,"offset":Vector2i(spec.position)})
 	# A single layer gains nothing from a copy: it keeps its node and texture.
-	if not composable or drawn.size() < 2: return {"mode":"nodes"}
+	if not composable or drawn.size() < 2 or not composite_groups_enabled: return {"mode":"nodes"}
 	return {"mode":"composite","items":items,"key":COMPOSITES.key(_root, _reference_bank._manifest_sha, group, items) if not items.is_empty() else ""}
 
 func _plan_body_textures(plan: Dictionary) -> bool:
