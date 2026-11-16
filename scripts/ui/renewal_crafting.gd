@@ -51,9 +51,6 @@ func configure(controller: Node) -> void:
 	var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
 	source_info.name = "Patch523EquipmentInfoButton"
 	filters.add_child(source_info)
-	var gacha_toggle: Button = UI.button("비법서 제작", func() -> void: _toggle_gacha())
-	gacha_toggle.name = "Patch523GachaCraftButton"
-	filters.add_child(gacha_toggle)
 	category_filter = OptionButton.new()
 	category_filter.name = "CraftCategoryFilter"
 	category_filter.custom_minimum_size.y=40
@@ -75,7 +72,6 @@ func configure(controller: Node) -> void:
 	name_filter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_filter.text_changed.connect(func(_value: String) -> void: _rebuild_listing())
 	filters.add_child(name_filter)
-	_build_gacha()
 	layout = Browser.new()
 	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(layout)
@@ -198,81 +194,6 @@ func configure(controller: Node) -> void:
 		last_focus={"recipe_id":target,"focused":focus_recipe(target)}
 
 ## Shows every recipe and selects `recipe_id` when the game has it.
-## 비법서 제작 (original GachaCraft, TWILIGHT 근사): world.patch523_gacha_craft_owned /
-## _quote / _execute. Hidden until the 비법서 제작 button is pressed.
-var gacha_box: VBoxContainer
-var gacha_books: OptionButton
-var gacha_detail: RichTextLabel
-var gacha_action: Button
-var gacha_ids: Array[int] = []
-
-func _build_gacha() -> void:
-	gacha_box = VBoxContainer.new()
-	gacha_box.name = "Patch523GachaCraft"
-	gacha_box.visible = false
-	add_child(gacha_box)
-	var row := HBoxContainer.new()
-	gacha_box.add_child(row)
-	gacha_books = OptionButton.new()
-	gacha_books.name = "Patch523GachaBooks"
-	gacha_books.custom_minimum_size.y = 40
-	gacha_books.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	gacha_books.item_selected.connect(func(_index: int) -> void: _refresh_gacha())
-	row.add_child(gacha_books)
-	gacha_action = UI.button("비법서 제작 실행", func() -> void: _gacha_execute(), Vector2(0,40))
-	gacha_action.name = "Patch523GachaExecute"
-	Surfaces.action(gacha_action)
-	row.add_child(gacha_action)
-	gacha_detail = UI.rich("")
-	gacha_detail.name = "Patch523GachaDetail"
-	gacha_detail.custom_minimum_size.y = 120
-	gacha_detail.add_theme_font_size_override("normal_font_size",12)
-	gacha_box.add_child(gacha_detail)
-
-func _toggle_gacha() -> void:
-	gacha_box.visible = not gacha_box.visible
-	if gacha_box.visible: _reload_gacha()
-
-func _reload_gacha() -> void:
-	gacha_books.clear(); gacha_ids.clear()
-	if not world.has_method("patch523_gacha_craft_owned"): return
-	for entry: Dictionary in world.patch523_gacha_craft_owned():
-		gacha_ids.append(int(entry.item_class_id))
-		gacha_books.add_item("%s ×%d" % [str(entry.name),int(entry.owned)])
-	if gacha_ids.is_empty():
-		gacha_detail.text = "가방에 원본 비법서(제작 비법서)가 없습니다."
-		gacha_action.disabled = true
-		return
-	gacha_books.select(0)
-	_refresh_gacha()
-
-func _refresh_gacha() -> void:
-	if gacha_books.selected < 0 or gacha_books.selected >= gacha_ids.size(): return
-	var quote: Dictionary = world.patch523_gacha_craft_quote(gacha_ids[gacha_books.selected])
-	var item: Dictionary = quote.get("item",{})
-	var lines: PackedStringArray = []
-	if not item.is_empty():
-		lines.append("재료: %s ×1 · %s ×%s · 제작 비용 %s 아데나" % [UI.safe(str(item.name)),UI.safe(str(item.material_name)),UI.number_text(int(item.material_amount)),UI.number_text(int(item.cost))])
-	lines.append("[color=#79bf83]제작 가능[/color]" if quote.get("ok",false) else "[color=#ec8075]"+UI.safe(str(quote.get("reason","제작 불가")))+"[/color]")
-	var outcomes: Array = quote.get("outcomes",[]).duplicate()
-	outcomes.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.percent) > float(b.percent))
-	for outcome: Dictionary in outcomes.slice(0,30):
-		lines.append("%.4f%% · %s ×%d%s" % [float(outcome.percent),UI.safe(str(outcome.name)),int(outcome.amount)," · 귀속 %.0f%%" % float(outcome.bound_percent) if float(outcome.bound_percent) > 0.0 else ""])
-	if outcomes.size() > 30: lines.append("… 외 %d종" % (outcomes.size()-30))
-	lines.append(UI.safe(str(quote.get("origin",""))))
-	gacha_detail.text = "\n".join(lines)
-	gacha_action.disabled = not quote.get("ok",false)
-
-func _gacha_execute() -> void:
-	if gacha_books.selected < 0 or gacha_books.selected >= gacha_ids.size(): return
-	var id: int = gacha_ids[gacha_books.selected]
-	var quote: Dictionary = world.patch523_gacha_craft_quote(id)
-	if not quote.get("ok",false): hud.show_message(str(quote.get("reason","제작 불가"))); return
-	hud.confirm_action("비법서 제작 확인","%s 1개, %s ×%d, 아데나 %s를 소모하고 원본 확률로 1개를 얻습니다." % [str(quote.item.name),str(quote.item.material_name),int(quote.item.material_amount),UI.number_text(int(quote.gold_cost))],"제작",func(_amount: int) -> void:
-		var result: Dictionary = world.patch523_gacha_craft_execute(id)
-		hud.show_message(str(result.get("detail","")) if result.get("ok",false) else str(result.get("reason","비법서 제작 실패")))
-		_reload_gacha())
-
 func focus_recipe(recipe_id: String) -> bool:
 	if not all_recipe_ids.has(recipe_id):return false
 	category_filter.select(0)
