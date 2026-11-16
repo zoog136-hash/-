@@ -87,6 +87,11 @@ func run() -> void:
 	one.free()
 	check(owned.get_ref() != null,"second live view retains snapshot")
 	two.free()
+	# Changed 2026-11-16: the prepared index keeps the most recent snapshots
+	# for respawns (PREPARED.RECENT_KEEP). The layout memo itself still adds
+	# no owner: once the recent references are released the snapshot is gone.
+	check(owned.get_ref() != null and PREPARED.size() == 1,"the most recent snapshot outlives its last view for respawns")
+	PREPARED.release_recent()
 	check(owned.get_ref() == null and PREPARED.size() == 0,"layout adds no idle strong cache owner")
 	var changed := PREVIEW.new()
 	HITCH._counters.clear()

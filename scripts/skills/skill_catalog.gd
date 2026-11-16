@@ -27,6 +27,8 @@ var stat_signature: String = ""
 var static_stat_totals: Dictionary = {}
 var weighted_stat_entries: Dictionary = {}
 var static_speed: float = 1.0
+## TWILIGHT 근사 invoke options of learned approximated passives (rebuilt with the stat index).
+var approx_invokes: Array = []
 var stat_rebuild_count: int = 0
 const RELIC_LEVELS = preload("res://scripts/cards/relic_spell_levels.gd")
 
@@ -80,6 +82,11 @@ func configure(owner: Node) -> void:
 	for record: Dictionary in records:
 		source523.prepare_estimate(record)
 		source523.prepare_source_direct(record)
+		# TWILIGHT 근사: RequiredSpellClassID = prerequisite skill (learn guard).
+		var required: Array = record.get("source_approx523",{}).get("requires",[])
+		if not required.is_empty():
+			if not relations.has(str(record.id)):relations[str(record.id)]={}
+			relations[str(record.id)]["requires_skill"]=required.duplicate()
 		record["effect"] = effect_for(record)
 	seed_starters()
 
@@ -315,13 +322,28 @@ func _ensure_stat_index() -> void:
 	stat_signature=signature
 	static_stat_totals.clear();weighted_stat_entries.clear()
 	static_speed=1.0
+	approx_invokes.clear()
 	stat_rebuild_count+=1
+	# TWILIGHT 근사 passives (data/skills/source_approx523.json): a non-overlap
+	# original BuffGroup keeps only its highest-priority learned passive.
+	var approx_groups: Dictionary = {}
+	var approx_weapon: int = source_weapon_type_id()
 	for record: Dictionary in records:
 		if not enabled(record):continue
 		if bool(record.get("local_design",false)):
 			static_speed=maxf(static_speed,float(record.get("passive_speed",1)))
 		var resolved: Dictionary=_resolved_reference(record)
 		if not str(resolved.get("source523_block_reason","")).is_empty():continue
+		if resolved.has("source_approx523"):
+			var spec: Dictionary=resolved.source_approx523
+			if not spec.get("requires",[]).all(func(required: String) -> bool: return int(learned.get(required,0))>0):continue
+			var entry: Dictionary={"id":str(record.id),"stats":SOURCE523.approx_values(spec,int(world.level),approx_weapon),
+				"invokes":SOURCE523.approx_level_rows(spec.get("invokes",[]),int(world.level),approx_weapon,spec.get("weapons",[]))}
+			var group: Dictionary=spec.get("group",{})
+			var key: String=str(record.id) if group.is_empty() or bool(group.get("overlap",true)) else "group:%d" % int(group.id)
+			var rank: Array=[int(group.get("priority",0)),int(group.get("buff_id",0))]
+			if not approx_groups.has(key) or rank>approx_groups[key].rank:approx_groups[key]={"rank":rank,"entry":entry}
+			continue
 		if str(resolved.mode)!="stats":continue
 		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
 		var stats: Dictionary=resolved.get("stats",{})
@@ -333,6 +355,29 @@ func _ensure_stat_index() -> void:
 				if not weighted_stat_entries.has(key):weighted_stat_entries[key]=[]
 				weighted_stat_entries[key].append({"minimum":float(condition.weight_min_percent),"value":value})
 			else:static_stat_totals[key]=float(static_stat_totals.get(key,0.0))+value
+	for group_key: String in approx_groups:
+		var chosen: Dictionary=approx_groups[group_key].entry
+		for key: String in chosen.stats:
+			if key=="moveSpeedPct":static_speed=maxf(static_speed,1.0+float(chosen.stats[key])/100.0)
+			else:static_stat_totals[key]=float(static_stat_totals.get(key,0.0))+float(chosen.stats[key])
+		for invoke: Dictionary in chosen.invokes:
+			var copy: Dictionary=invoke.duplicate(true)
+			copy["skill_id"]=str(chosen.id)
+			approx_invokes.append(copy)
+
+## Original WeaponType ID of the equipped weapon (native row first, then the
+## existing local weapon-type mapping; -1 when unknown, 0 unarmed).
+func source_weapon_type_id() -> int:
+	var weapon: Variant=world.equipped_items.get("weapon",{})
+	if not weapon is Dictionary or weapon.is_empty():return 0
+	var native: Dictionary=preload("res://scripts/loot/patch523_ammo.gd").weapon_type(world._equipped_weapon_record())
+	if not native.is_empty():return int(native.get("ID",-1))
+	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())
+
+## Active TWILIGHT 근사 invoke options of learned passives at this level/weapon.
+func approx_invoke_list() -> Array:
+	_ensure_stat_index()
+	return approx_invokes
 
 func stat(key: String) -> float:
 	_ensure_stat_index()

@@ -85,6 +85,8 @@ func configure(controller: Node, value: PlayableField) -> void:
 	wake_clock = 0.
 	_fill_remaining = FILL_SECONDS
 	_spawn_tokens = STEADY_SPAWN_BURST
+	_build_tokens = BUILD_BURST
+	_build_clock_usec = -1
 	set_process(field != null)
 	if field == null: return
 	records.clear()
@@ -157,7 +159,32 @@ func _spawn_point(region: Dictionary) -> Vector2:
 		if clear: return p
 	return Vector2.INF
 
+## Hard cap on actor builds, enforced where every spawn path ends (all
+## callers, subclasses and retry queues reach this function). The per-path
+## respawn tokens above still apply; this catches any path that bypasses them:
+## 2026-11-16 523.541 still built ~5 actors per second at ~105 ms each
+## (spawn.total 527 ms x 5) after the first fill. Bosses are never capped.
+const BUILDS_PER_SECOND: float = 1.5
+const BUILD_BURST: float = 3.0
+var _build_tokens: float = BUILD_BURST
+var _build_clock_usec: int = -1
+
+func _take_build_token(slot: Dictionary) -> bool:
+	if str(slot.region.get("mode","normal")) == "boss" or _fill_remaining > 0.0: return true
+	var now: int = Time.get_ticks_usec()
+	if _build_clock_usec >= 0: _build_tokens = minf(BUILD_BURST, _build_tokens + float(now - _build_clock_usec) / 1000000.0 * BUILDS_PER_SECOND)
+	_build_clock_usec = now
+	if _build_tokens < 1.0: return false
+	_build_tokens -= 1.0
+	return true
+
 func _spawn_slot(slot: Dictionary) -> void:
+	var occupant: Variant = slot.get("monster")
+	if not (is_instance_valid(occupant) and not occupant.dead) and not _take_build_token(slot):
+		# Not a failed search: try again shortly, no failure backoff.
+		slot.remaining = maxf(float(slot.get("remaining", 0.0)), 0.5)
+		FRAME_HITCH.count("spawn.rate_capped")
+		return
 	var started: int = FRAME_HITCH.now()
 	_spawn_slot_measured(slot)
 	FRAME_HITCH.detail("spawn.total", started)
@@ -558,6 +585,7 @@ func _wake_slots(delta: float, refresh: bool) -> void:
 	var activity_radius: float = -1.0
 	var escaros_refresh: bool = refresh and field is NativePngField and str(field.data.map_id)=="escaros_world"
 	var search_spent: int = 0
+	var woken: Array[TwilightMonster] = []
 	for slot: Dictionary in slots:
 		if pending_spawn_ids.has(int(slot.slot_id)):continue
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
@@ -595,6 +623,48 @@ func _wake_slots(delta: float, refresh: bool) -> void:
 				activity_view = Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
 				activity_radius = extent.length()*.5+320.0
 			_update_activity(monster, activity_view, activity_radius)
+			if refresh and monster.is_physics_processing(): woken.append(monster)
+	if refresh: _cap_awake(woken)
+
+## At most MAX_AWAKE actors run AI and physics at once. Actors on or near the
+## screen and busy ones (dead, engaged, returning, status-affected, bosses)
+## always stay awake; the remaining places go to the nearest off-screen
+## actors and the rest sleep until a later 0.4 s sweep picks them again. A
+## sleeping actor does no per-frame work (no physics callback at all).
+const MAX_AWAKE: int = 12
+const AWAKE_VIEW_MARGIN: float = 240.0
+
+static func awake_busy(monster: TwilightMonster) -> bool:
+	return monster.dead or monster.is_boss or monster.motion.active or monster.aggro_remaining>0 or monster.returning_home or monster.poison_remaining>0 or monster.bleed_remaining>0 or monster.slow_remaining>0 or monster.is_stunned() or monster.is_held() or monster.is_feared() or monster.is_silenced()
+
+## The world rect the camera shows, grown by AWAKE_VIEW_MARGIN; empty without a camera.
+func awake_view() -> Rect2:
+	var actor: Variant = world.get("player") if world != null else null
+	var camera: Camera2D = (actor as Object).get("camera") as Camera2D if actor is Object and is_instance_valid(actor) else null
+	if camera == null or not camera.is_inside_tree(): return Rect2()
+	var extent: Vector2 = get_viewport().get_visible_rect().size/camera.zoom
+	return Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(AWAKE_VIEW_MARGIN)
+
+func _cap_awake(woken: Array[TwilightMonster]) -> void:
+	FRAME_HITCH.count("population.awake_candidates", woken.size())
+	if woken.size() <= MAX_AWAKE: return
+	var view: Rect2 = awake_view()
+	var kept: int = 0
+	var optional: Array = []
+	var center: Vector2 = world.player.global_position
+	for monster: TwilightMonster in woken:
+		if awake_busy(monster) or (view.has_area() and view.has_point(monster.global_position)): kept += 1
+		else: optional.append([monster.global_position.distance_squared_to(center), monster.get_instance_id(), monster])
+	optional.sort()
+	var slept: int = 0
+	for index: int in optional.size():
+		if kept + index < MAX_AWAKE: continue
+		var monster: TwilightMonster = optional[index][2]
+		monster.note_asleep()
+		monster.set_physics_process(false)
+		monster.velocity = Vector2.ZERO
+		slept += 1
+	FRAME_HITCH.count("population.awake_capped", slept)
 
 func _spawn_retry_delay(slot: Dictionary) -> float:
 	var failures: int = int(slot.get("spawn_failures",0))+1

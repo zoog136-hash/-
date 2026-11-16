@@ -8,12 +8,14 @@ const TRAVEL_PAYMENT=preload("res://scripts/maps/current523_map_travel_payment.g
 const SOURCE_SPAWNS=preload("res://scripts/maps/current523_source_spawns.gd")
 const SOURCE_POPULATION=preload("res://scripts/maps/current523_source_population.gd")
 const TOWN_NPCS=preload("res://scripts/npc/source523_town_npcs.gd")
+const TOWN_NPC_BODIES=preload("res://scripts/npc/source523_town_npc_bodies.gd")
 const HOST=preload("res://scripts/maps/current523_host.gd")
 var active: bool = false
 ## Source-field actors live in their own root/population. The host Aden root
 ## and population stay paused for return and keep their saved boss state.
 var _source_population: FieldPopulation
 var _source_monsters: Node2D
+var _town_npc_bodies: Node2D
 var _host_population: FieldPopulation
 var _host_monsters: Node2D
 var spawn_summary: Dictionary = {}
@@ -601,6 +603,7 @@ func _reopen_after_failed_rebuild(map_id: String) -> void:
 func _clear_source_actors(world: Node) -> void:
 	world.selected_monster = null; world.auto_target = null
 	if is_instance_valid(_source_population): _source_population.configure(world,null)
+	if is_instance_valid(_town_npc_bodies): _town_npc_bodies.configure(world,null)
 	if is_instance_valid(_source_monsters):
 		for child: Node in _source_monsters.get_children():
 			_source_monsters.remove_child(child); child.queue_free()
@@ -615,6 +618,12 @@ func _attach_source_population(world: Node, field: OriginalPlayableField) -> voi
 		_source_monsters.z_index = _host_monsters.z_index
 		world.add_child(_source_monsters)
 		world.move_child(_source_monsters, _host_monsters.get_index()+1)
+		# Original town NPC bodies: Y-sorted with the player and monsters but
+		# never part of monsters_root (not targetable, not attackable).
+		_town_npc_bodies = TOWN_NPC_BODIES.new()
+		_town_npc_bodies.z_index = _host_monsters.z_index
+		world.add_child(_town_npc_bodies)
+		world.move_child(_town_npc_bodies, _source_monsters.get_index()+1)
 		_source_population = SOURCE_POPULATION.new()
 		_source_population.name = "Current523SourcePopulation"
 		# Existing boss rule: wall-clock deadlines kept in the save. Share the
@@ -630,6 +639,7 @@ func _attach_source_population(world: Node, field: OriginalPlayableField) -> voi
 	spawn_summary = SOURCE_SPAWNS.apply(field)
 	# Original 523 town NPCs of this Land (talk: original NpcDialogue_All).
 	spawn_summary["town_npcs"] = TOWN_NPCS.apply(field)
+	if is_instance_valid(_town_npc_bodies): _town_npc_bodies.configure(world,field)
 	_source_population.configure(world,field)
 	spawn_summary.merge(_source_population.source_metrics(),true)
 	# Drops on a source field stay on that field's own map identity.
@@ -645,11 +655,14 @@ func _detach_source_population(world: Node) -> void:
 		world.loot_pickup.map_changed()
 	if is_instance_valid(_source_population): _source_population.queue_free()
 	if is_instance_valid(_source_monsters): _source_monsters.queue_free()
+	if is_instance_valid(_town_npc_bodies): _town_npc_bodies.clear(); _town_npc_bodies.queue_free()
+	_town_npc_bodies = null
 	_source_population = null; _source_monsters = null; _host_population = null; _host_monsters = null
 
 func source_spawn_metrics() -> Dictionary:
 	var result: Dictionary = spawn_summary.duplicate(true)
 	if is_instance_valid(_source_population): result.merge(_source_population.source_metrics(),true)
+	if is_instance_valid(_town_npc_bodies): result["town_npc_bodies"] = _town_npc_bodies.metrics()
 	return result
 
 func _close_source(remember_disabled: bool) -> bool:

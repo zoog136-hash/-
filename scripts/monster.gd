@@ -570,6 +570,8 @@ func _clear_source_m_view() -> void:
 func permits_auto_selection() -> bool:
 	return source_targeting.is_empty() or (source_targeting.get("IsAutoSelectable") is bool and source_targeting.IsAutoSelectable)
 
+var _source_view_frame: int = -1
+
 func _advance_source_m_view(delta: float) -> void:
 	if is_instance_valid(source_m_view):
 		var view_started: int = FRAME_HITCH.now()
@@ -589,6 +591,8 @@ func _hide_source_only_native_media() -> void:
 
 func custom_frozen() -> bool:
 	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
+
+const OFFSCREEN_DECISION_INTERVAL: float = .4
 
 func _physics_process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
@@ -629,12 +633,14 @@ func _physics_step(delta: float) -> void:
 	var previous: Vector2 = global_position
 	decision_elapsed += delta
 	var on_screen: bool = get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin)
-	# Off-screen actors that are only roaming re-decide at 5 Hz; anything
-	# engaged, returning, casting, status-affected or a boss keeps 30 Hz.
+	# Off-screen actors that are only roaming re-decide at 2.5 Hz (was 5 Hz;
+	# they are not drawn, movement along the chosen path still advances every
+	# step); anything engaged, returning, casting, status-affected or a boss
+	# keeps 30 Hz.
 	var decision_interval: float = .032
 	if not on_screen and not is_boss and not motion.active and aggro_remaining <= 0.0 and not returning_home \
 			and not is_stunned() and not is_held() and not is_feared() and poison_remaining <= 0.0 and bleed_remaining <= 0.0:
-		decision_interval = .2
+		decision_interval = OFFSCREEN_DECISION_INTERVAL
 	if ai.is_empty() or decision_elapsed>=decision_interval:
 		var ai_started: int = FRAME_HITCH.now()
 		_tick_ai(decision_elapsed)
@@ -669,8 +675,19 @@ func _physics_step(delta: float) -> void:
 	# events only spawn visual overlays. Skipped time is handed over when the
 	# actor comes back into view, so its clock is where it would have been.
 	if drawn or not is_instance_valid(source_m_view):
-		_advance_source_m_view(delta + source_view_skipped)
-		source_view_skipped = 0.0
+		# Drawn once per rendered frame: a slow frame runs several physics
+		# steps, and each re-advanced every layer (2026-11-16 523.530:
+		# monster.view 378 ms x 70 calls per second at 4 fps). The time of the
+		# later steps is handed to the next frame's advance, like off-screen
+		# time above. Direct calls outside the engine's physics step (tools,
+		# tests) advance every time.
+		var frame: int = Engine.get_process_frames()
+		if frame != _source_view_frame or not Engine.is_in_physics_frame() or not is_instance_valid(source_m_view):
+			_source_view_frame = frame
+			_advance_source_m_view(delta + source_view_skipped)
+			source_view_skipped = 0.0
+		else:
+			source_view_skipped = minf(source_view_skipped + delta, SOURCE_VIEW_SKIP_CAP)
 	else:
 		source_view_skipped = minf(source_view_skipped + delta, SOURCE_VIEW_SKIP_CAP)
 		_hide_source_only_native_media()

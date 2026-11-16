@@ -5,6 +5,7 @@ extends VBoxContainer
 ## Common_MessageBox_Dissolution popup when the UI pack has them. This panel
 ## only calls the service.
 const SERVICE = preload("res://scripts/refine523/bless_refine523_service.gd")
+const RULES = preload("res://scripts/refine523/bless_refine523_rules.gd")
 var hud: Node
 var status: Label
 var body: VBoxContainer
@@ -77,6 +78,11 @@ func refresh() -> void:
 		box.add_child(line)
 		_button("최소 %d개 (%s)" % [int(row.min),str(row.min_percent)],"RefineMin_" + str(row.uid),line,_refine.bind(str(row.uid),"min"),int(snapshot.powder)>=int(row.min))
 		_button("최대 %d개 (%s)" % [int(row.max),str(row.max_percent)],"RefineMax_" + str(row.uid),line,_refine.bind(str(row.uid),"max"),int(snapshot.powder)>=int(row.max))
+		# TWILIGHT 근사: register what the bag holds when it is between the endpoints.
+		var held: int = int(snapshot.powder)
+		if held>int(row.min) and held<int(row.max):
+			var middle: Dictionary = RULES.registration({"input":row.get("input",{})},"amount:%d" % held)
+			if middle.get("ok",false): _button("보유 %d개 (%s · 근사)" % [held,RULES.percent_text(int(middle.probability))],"RefineHeld_" + str(row.uid),line,_refine.bind(str(row.uid),"amount:%d" % held))
 	if snapshot.refine.is_empty(): _label("가방에 질서의 연금 대상 장비가 없습니다.",body)
 
 func _show(result: Dictionary) -> void:
