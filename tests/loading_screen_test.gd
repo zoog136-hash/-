@@ -170,6 +170,18 @@ func _run() -> void:
 	for _frame: int in 6: await process_frame
 	check(is_instance_valid(titled) and titled.is_awaiting_title(), "the title stays after loading until a touch")
 	check(paused, "the ready scene stays paused behind the title")
+	# The title offers the add-on installer so packs can be installed before
+	# entering the game; a press on that button does not start the game.
+	var addon_button: Button = titled.get_node_or_null("TitleAddonInstall") as Button
+	if root.get_node_or_null("Source523Pack") != null:
+		check(addon_button != null and addon_button.visible, "the title offers the add-on installer")
+		if addon_button != null:
+			var on_button := InputEventMouseButton.new()
+			on_button.button_index = MOUSE_BUTTON_LEFT
+			on_button.pressed = true
+			on_button.position = addon_button.get_global_rect().get_center()
+			titled._input(on_button)
+			check(is_instance_valid(titled) and titled.is_awaiting_title() and paused, "a press on the installer button keeps the title")
 	var touch := InputEventMouseButton.new()
 	touch.button_index = MOUSE_BUTTON_LEFT
 	touch.pressed = true
