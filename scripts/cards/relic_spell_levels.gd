@@ -202,7 +202,18 @@ static func level_for(world: Node, source_grade_id: int, base_level: int) -> Dic
 
 static func state_key(world: Node) -> int:
 	ensure_loaded()
-	return hash([revision, world.equipped_catalog.get("성물", {}), world.card_draw_fusion.owned.get("성물", {}), world.card_collections.source_server_context()])
+	return hash([revision, world.equipped_catalog.get("성물", {}), world.card_draw_fusion.owned.get("성물", {}), world.card_collections.source_server_context(), skill_card_key(world)])
+
+## Skill card enhancement stage of a deck-41 card (skill_card523), 0 without one.
+static func skill_card_level(world: Node, card_id: int) -> int:
+	var cards: Variant = world.get("skill_cards523")
+	if cards == null or not cards.has_method("level"): return 0
+	return clampi(int(cards.call("level", card_id)), 0, 3)
+
+static func skill_card_key(world: Node) -> int:
+	var cards: Variant = world.get("skill_cards523")
+	if cards == null or not cards.has_method("export_state"): return 0
+	return hash([cards.get("revision"), cards.call("export_state")])
 
 static func project(world: Node, record: Dictionary, identity: Dictionary, enabled: bool) -> Dictionary:
 	if not ensure_loaded(): return record
@@ -210,4 +221,6 @@ static func project(world: Node, record: Dictionary, identity: Dictionary, enabl
 	if profile.is_empty() or not EFFECTS.identity_matches(identity, profile): return record
 	if bool(record.get("runtime_blocked", false)) or not str(record.get("source523_block_reason", "")).is_empty(): enabled = false
 	# learned=1 is ownership in this host, not native spell level progression.
-	return EFFECTS.project(record, profile, level_for(world, int(profile.binding.grade_id), 0), int(world.level), enabled)
+	# The skill card's enhancement stage is the base spell level (사용자 결정
+	# 2026-11-16); an equipped relic still adds its grade bonus on top.
+	return EFFECTS.project(record, profile, level_for(world, int(profile.binding.grade_id), skill_card_level(world, int(profile.binding.spell_card_id))), int(world.level), enabled)
