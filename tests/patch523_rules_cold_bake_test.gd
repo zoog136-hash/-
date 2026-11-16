@@ -666,7 +666,8 @@ func _run() -> void:
 	# 4. The model and every accessor.
 	print("PATCH523_RULES_COLD_BAKE_MODEL items=", new_big.data.items.size(), " runtime=", new_big._runtime_ids.size(), " records_bytes=", (new_bytes["equipment_rules_catalog_records"] as PackedByteArray).size(), " runtime_bytes=", (new_bytes["equipment_rules_runtime"] as PackedByteArray).size())
 	check(new_big.data.items.size() > 900 and new_big._runtime_ids.size() > 300, "big: items and runtime compiled")
-	check((new_big.data.recipe_summary.rejected as Dictionary).size() >= 6, "big: rejection reasons covered "+str(new_big.data.recipe_summary.rejected))
+	# TWILIGHT 근사 2026-11-16 admits the stack-state and 아데나-only fixture crafts (1019, 1012).
+	check((new_big.data.recipe_summary.rejected as Dictionary).size() >= 5, "big: rejection reasons covered "+str(new_big.data.recipe_summary.rejected))
 	var marked: int = 0
 	for id: String in new_big.data.items:
 		if new_big.data.items[id].get(RULES.RECORDS_MARK) == true and not new_big.data.items[id].has("catalog_record"): marked += 1
@@ -703,7 +704,8 @@ func _run() -> void:
 		for name: String in BAKES: check(typed_bytes[name] == bake_bytes()[name] and not (typed_bytes[name] as PackedByteArray).is_empty(), "integer rows: "+name+" is byte-identical")
 		print("PATCH523_RULES_COLD_BAKE_COVERAGE recipes=", typed_new.recipes.size(), " rejected=", typed_new.data.recipe_summary.rejected)
 		check(typed_new.recipes.size() >= 12, "integer rows: recipes compiled ("+str(typed_new.recipes.size())+")")
-		check((typed_new.data.recipe_summary.rejected as Dictionary).size() >= 8, "integer rows: rejection reasons covered")
+		# TWILIGHT 근사 2026-11-16 admits the stack-state and 아데나-only fixture crafts.
+		check((typed_new.data.recipe_summary.rejected as Dictionary).size() >= 6, "integer rows: rejection reasons covered")
 		var currencies: int = 0
 		var exclusions: int = 0
 		var data: Dictionary = typed_new.materialized_data()

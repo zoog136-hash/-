@@ -397,3 +397,19 @@ current-map/save32, identical-save/deferred-save guards, actual current-region
 Tower34 and inspection UI30. The runtime's existing97-check test prints a plain
 summary rather than JSON; its exit0, zero errors and exact97/0 summary were checked
 without changing the test. Historical full suites and device runs remain unrun.
+
+## 던전 창 세부 데이터 API — 원본 표 + TWILIGHT 근사 (2026-11-16, PR `feat/approx523-dungeon-data`)
+
+UI 담당 요청(던전 창 버프·스피드 모드·랭킹·상점·업적·스토리)의 데이터 쪽. `world.dungeon_play.*`가 `scripts/dungeons/dungeon_extras523.gd`에 위임하고, 저장 키 `dungeon_extras523`을 새로 쓴다(예전 저장은 빈 상태로 시작).
+
+| API | 근거 | 근사 |
+| --- | --- | --- |
+| `tower_buff_offers(floor)` → `[{buff_id, name, buff_class_id, cost:{currency, currency_id, amount}, active, remaining_sec, effects}]` | 원본 `TrialTowerBuff` 6행(일반 3 · 하드 3), 화폐 152 "시련의 증표"(하드 2734), 비용 3/5/10, BuffClass 행(근거리/원거리 대미지·명중·SP) | 지속 = `TrialTowerConstant.BuffMaxTime` 360초로 읽음, 한 번에 하나(바꾸면 교체) |
+| `tower_buy_buff(buff_id)` → `{ok, reason, message}` | 화폐 152/2734는 `CurrencyUnitClass`의 원본 아이템 물리 수량에서 뺀다 | 효과는 `_active_item_buff_total`(근거리/원거리 대미지·명중·SP) |
+| `tower_speed_mode()` → `{available, on, multiplier, cost, reason}` · `tower_set_speed_mode(on)` → `{ok, reason}` | 원본 표 없음 | 기존 로컬 탑 시간 배율(`source_dungeon_runs.configure_local`) 2배, 도전 중에는 바꿀 수 없음 |
+| `tower_ranking(floor, hard=false)` → `{rows:[{rank, name, class, clear_sec, at}], mine:{rank, clear_sec}}` | 서버 랭킹 없음 (`TrialTowerConstant.UIRank` 100) | 이 기기의 클리어 기록(층·모드마다 가장 빠른 10개, 입장~클리어 실시간 초) |
+| `dungeon_shop(kind)` → `{open_method, args, market_display_category, currency}` | `MarketDisplayCategoryGroupEntity` DisplayCurrencyId 152 → 카테고리 122 | 탑: 기존 `hud.open_shop()`; 오림: 전용 상점 표 없음 → `{}` |
+| `orim_achievements(chapter)` → `[{id, name, progress, goal, reward, claimed, can_claim}]` · `orim_claim_achievement(id)` | 523 표에 오림 업적 없음 | 챕터마다 일반·하드 클리어 2개(진행 = 그 챕터 성공 클리어 기록), 보상 없음 |
+| `orim_chapter_story(chapter)` → `{title, text, unlocked}` | 원본 `UIOrimsTrailStage.StageName`·`StoryDescID` | 열림 = 1장 또는 앞 챕터 일반 클리어 |
+
+확인: `tests/dungeon_extras523_test.gd`(실제 Main, 원본 팩 14/14 — 증표 10→7·근거리 대미지 +3·360초, 스피드 ×2 켜기/끄기, 랭킹 90초 1위, 상점 경로, 업적 수령, 스토리 1·2장 열림·3장 잠김, 저장·불러오기).

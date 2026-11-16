@@ -35,6 +35,9 @@ static func valid(value: Variant) -> bool:
 	if value.has("active_window") and not valid_window(value.active_window):return false
 	if value.has("server_limit_set_id") and not integer(value.server_limit_set_id,1,2147483647):return false
 	if value.has("user_decision") and not valid_decision(value.user_decision,value): return false
+	if value.has("twilight_approx"):
+		var approx: Variant = value.twilight_approx
+		if not approx is Dictionary or approx.get("date") != "2026-11-16" or approx.size() != 2 or not value.has("server_limit_set_id") or not integer(approx.get("server_set_without_rows"),1,2147483647) or int(approx.server_set_without_rows) != int(value.server_limit_set_id): return false
 	if not value.has("quota"): return true
 	var quota: Variant=value.quota
 	if not quota is Dictionary or not integer(quota.get("limit"),1,1000000) or not integer(quota.get("anchor_unix"),0,2147483647):return false
@@ -142,7 +145,13 @@ static func server_allows(condition: Dictionary, context: Dictionary) -> Diction
 	var profile: Variant=context.get("server_profile")
 	if not profile is Dictionary or not profile.get("ServiceRegionCode") is String or not integer(profile.get("WorldNo"),0,1000000): return {"ok":false,"reason":"원본 제작 서버 조건 확인 필요 · 재료 보존"}
 	var rows: Array=SOURCE.related("ServerLimit","ServerLimitSetID",int(condition.server_limit_set_id))
-	if rows.is_empty(): return {"ok":false,"reason":"원본 서버 세트 %d 정의 없음 · 재료 보존" % int(condition.server_limit_set_id)}
+	if rows.is_empty():
+		# TWILIGHT 근사 2026-11-16 (patch523_craft_approx): a set without any
+		# ServerLimit row is the KR 1 offline profile.
+		if int(condition.get("twilight_approx",{}).get("server_set_without_rows",-1)) == int(condition.server_limit_set_id):
+			if preload("res://scripts/crafting/patch523_craft_approx.gd").empty_server_set_allows(profile): return {"ok":true}
+			return {"ok":false,"reason":"TWILIGHT 근사 · 원본 서버 세트 %d(행 없음)는 KR 1서버로 봅니다 · %s %d서버 대상 아님" % [int(condition.server_limit_set_id),str(profile.ServiceRegionCode),int(profile.WorldNo)]}
+		return {"ok":false,"reason":"원본 서버 세트 %d 정의 없음 · 재료 보존" % int(condition.server_limit_set_id)}
 	if not SERVER_PROFILE.rows_allow(rows,str(profile.ServiceRegionCode),int(profile.WorldNo)): return {"ok":false,"reason":"원본 제작 서버 조건 · %s %d서버 대상 아님" % [str(profile.ServiceRegionCode),int(profile.WorldNo)]}
 	return {"ok":true}
 
