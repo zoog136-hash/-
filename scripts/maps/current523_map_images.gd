@@ -58,6 +58,16 @@ static func world_rect(coordinates: Object, info: Dictionary, size: Vector2) -> 
 	if not anchor.is_finite(): return Rect2()
 	return Rect2(anchor - Vector2(float(info.BasePixelX), float(info.BasePixelY)) * ratio, size * ratio)
 
+## Original image pixel of a world point for a UIMapWorld row (same OWN
+## registration as world_rect), or Vector2.INF.
+static func image_pixel(coordinates: Object, world_id: int, point: Vector2) -> Vector2:
+	var world: Dictionary = DEF.row("UIMapWorld", world_id) if DEF.row_count("UIMapWorld") > 0 else {}
+	if world.is_empty() or not _integer(world.get("MapImageInfoID")): return Vector2.INF
+	var info: Dictionary = DEF.row("UIMapImageInfo", int(world.MapImageInfoID))
+	var rect: Rect2 = world_rect(coordinates, info, Vector2.ONE)
+	if not rect.has_area() or not point.is_finite(): return Vector2.INF
+	return (point - rect.position) / float(info.Ratio)
+
 ## {ok, texture, world_rect, world_id, image_info_id, path} for the field's
 ## Land, or {ok:false, reason}. The texture is a shrunk display copy.
 static func minimap_image(field: Object) -> Dictionary:
@@ -79,26 +89,49 @@ static func minimap_image(field: Object) -> Dictionary:
 		texture = _cache[key].texture
 		source_size = _cache[key].source_size
 	else:
-		var resolved: Dictionary = IMAGES.resolve_asset_value(int(info.ImageID), int(asset.AssetTypeId), path)
-		var original: Texture2D = resolved.get("texture") as Texture2D
-		if not resolved.get("ok", false) or original == null:
-			return {"ok": false, "reason": "original_map_picture_unavailable:" + str(resolved.get("status", resolved.get("reason", ""))), "path": path}
-		source_size = Vector2(original.get_size())
-		texture = original
+		var decoded: Dictionary = _decode_original(int(info.ImageID), int(asset.AssetTypeId), path)
+		if not decoded.get("ok", false):
+			return {"ok": false, "reason": "original_map_picture_unavailable:" + str(decoded.get("reason", "")), "path": path}
+		var image: Image = decoded.image
+		source_size = Vector2(image.get_size())
 		var longest: float = maxf(source_size.x, source_size.y)
 		if longest > MINIMAP_MAX_EDGE:
-			var image: Image = original.get_image()
-			if image != null and not image.is_empty():
-				if image.is_compressed(): image.decompress()
-				var scale: float = float(MINIMAP_MAX_EDGE) / longest
-				image.resize(maxi(1, roundi(source_size.x * scale)), maxi(1, roundi(source_size.y * scale)), Image.INTERPOLATE_BILINEAR)
-				texture = ImageTexture.create_from_image(image)
+			var scale: float = float(MINIMAP_MAX_EDGE) / longest
+			image.resize(maxi(1, roundi(source_size.x * scale)), maxi(1, roundi(source_size.y * scale)), Image.INTERPOLATE_BILINEAR)
+		texture = ImageTexture.create_from_image(image)
 		_cache.clear()
 		_cache[key] = {"texture": texture, "source_size": source_size, "pack": IMAGES.active()}
 	var rect: Rect2 = world_rect(field.get("coordinates"), info, source_size)
 	if not rect.has_area(): return {"ok": false, "reason": "original_map_registration_invalid"}
 	return {"ok": true, "texture": texture, "world_rect": rect, "world_id": int(world.ID), "image_info_id": int(info.ID),
 		"path": path, "source_size": source_size, "coordinate_policy": POLICY, "native_image_info_formula_confirmed": false}
+
+## Verified original bytes of one map asset decoded for the minimap copy only.
+## The pack's own checks (typed AssetView row, verified status, declared path,
+## member size/SHA) run first; the full-size picture is not admitted to the
+## shared icon texture cache (it would take most of its 32 MB budget).
+static func _decode_original(asset_id: int, asset_type: int, path: String) -> Dictionary:
+	var pack: Variant = IMAGES.active()
+	if not pack is RefCounted: return {"ok": false, "reason": "source523_image_pack_not_selected"}
+	for method: String in ["_has_asset", "_asset", "_has_member", "_member", "_bytes"]:
+		if not pack.has_method(method): return {"ok": false, "reason": "image_pack_reader_api_missing"}
+	if not pack.call("_has_asset", asset_id): return {"ok": false, "reason": "missing_asset_key"}
+	var row: Dictionary = pack.call("_asset", asset_id)
+	if int(row.get("asset_type_id", -1)) != asset_type or str(row.get("path", "")) != path or str(row.get("status", "")) != "verified_original":
+		return {"ok": false, "reason": "asset_not_verified_original"}
+	if not pack.call("_has_member", path): return {"ok": false, "reason": "missing_current_member"}
+	var member: Dictionary = pack.call("_member", path)
+	var checked: Dictionary = pack.call("_bytes", {"path": member.get("file", ""), "bytes": member.get("plain_bytes", -1), "sha256": member.get("sha256", "")})
+	if not checked.get("ok", false): return {"ok": false, "reason": str(checked.get("status", "original_bytes_unverified"))}
+	var image := Image.new()
+	var error: Error = ERR_FILE_UNRECOGNIZED
+	match str(member.get("format", "")):
+		"PNG": error = image.load_png_from_buffer(checked.bytes)
+		"JPEG": error = image.load_jpg_from_buffer(checked.bytes)
+		"BMP": error = image.load_bmp_from_buffer(checked.bytes)
+	if error != OK or image.is_empty() or image.get_width() != int(member.get("width", -1)) or image.get_height() != int(member.get("height", -1)):
+		return {"ok": false, "reason": "original_image_decode_failed"}
+	return {"ok": true, "image": image}
 
 ## Original UIMapArea zones of the Land (village/dungeon/field/spot names from
 ## DescData_Korean over their Territories rectangle), smallest first.
