@@ -290,8 +290,13 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 발록의 핏빛 투구 2종: Defence_DebuffTimeDecreasePercent "암흑" — 암흑 상태 없음.
 - ItemInvokeReplacementID 48종(신화 무기 18 등): ItemInvokeReplacementEntityView가 슬롯별 교체 후보와
   확률(Prob)만 준다. 교체를 언제·무엇을 소비해 굴리는지(획득 시/아이템 사용 시)가 표에 없음.
-- EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): 값이 SpellClass 1 "에너지 볼트" — 착용 시
-  주문 습득/실행 규칙은 스킬 실행 엔진 범위. 이번 PR에서 다루지 않음.
+- EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): ~~값이 SpellClass 1 "에너지 볼트"~~ (정정: 값 1은 '켜짐', 주문은
+  적용 대상 `BonusApplicationTargetID`, 적용 유형 1 = SpellClass) — **TWILIGHT 근사 (2026-11-16, PR `feat/approx523-equip-spell`)**:
+  착용 중에는 그 주문을 스킬 `eqspell523_<SpellClass ID>`로 쓸 수 있다(모든 직업, 벗으면 사용 불가, 저장 추가 없음).
+  주문은 참고 액티브 근사와 같은 규칙(원본 MPCost/HPCost·CastDelay·반경 ×48, 효과 = 피해/디버프/자기 버프/회복/해제)으로 연다.
+  7개 주문: 에오딘·질리언·나그바스·가이아·데포로쥬의 돌풍(반경 3 고정 마법 피해 500, 재사용 60초), 붉은 기사단의 의지(상태 해제, 30분),
+  라이온 하트(패왕의 위엄 망토: HP 30% 회복, 10분 — 묶음의 보호막 `ShieldID 388`은 보호막 수치 표가 없어 빠짐).
+  확인: `tests/items523_equip_spell_test.gd`(실제 Main: 착용 전 불가 → 착용 중 가능 → 라이온 하트 시전 HP 931→1489·재사용 600초 → 벗으면 불가).
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
   HP 상한 의미는 표에 없고 기존 TWILIGHT 규칙/설정을 그대로 쓴다.
 
@@ -761,6 +766,30 @@ UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다.
 - 뺀 보상의 원본 행은 사양의 `source_entities`(원본 증거)에 `approx_dropped: true`로 그대로 남는다(보상 목록에서만 빠짐).
   합성 고정 테스트 `tests/current523_reward_bag_retention_test.gd`는 스위치가 켜져 있으면 "테스트 보상 상자 보존·직업별 합 미완 보존" 대신
   이 근사 결과(사용 가능 · 재정규화 · 보상 수 + 뺀 수 = 원본 행 수)를 확인하도록 바꿨다(스위치를 끄면 예전 기대값 그대로).
+
+### 18.2 남은 막힌 상자 — TWILIGHT 근사 (2) (2026-11-16, PR `feat/approx523-luckybag2`, 지시 "막힌 상자 666종도 사유별로 근사")
+
+사유 분류(원본 팩, LuckyBag 비테스트 상자 사양 10,375종 중 사용 정의가 막힌 666종, 겹침 있음)와 적용:
+
+| 사유 | 수 | 근사 |
+| --- | ---: | --- |
+| `UIShowFilter`·`NoAnnounce` | 223·134 | 화면 필터·서버 공지라 오프라인에서는 무시 |
+| `SpellMaterialTypeID` | 6 | 주문 재료 표시 — 상자 열기와 무관, 무시 |
+| `Life` | 3 | 획득 후 수명은 수명 장부(§19, `item_life523`)가 맡으므로 열기에는 무시 |
+| `UsageInterval`·`ClassUsageInterval`(직접 또는 적용 유형 314 Account) | 24·49+32 | 재사용 대기(초)로 적용(`consume_delay_ms`, 저장됨, 게임 시간 기준). 오프라인 계정은 하나라 계정당 = 직업당(§17.1과 같은 방식) |
+| `InfiniteAmount` 1 | 12 | **열어도 소모되지 않음**(+재사용 대기). 퀘스트·빠른 슬롯 소유자(`quest_reusable523`)가 같은 열을 이미 '소지 유지 사용'으로 읽는다. 성장 항아리 12종은 원본 설명 "사용 시 '아덴 영웅의 성장 물약' N개를 획득합니다. (재사용 시간 24시간)" + `UsageInterval 86400`으로 확인(인벤 아이템 DB에는 항목 없음, 2026-11-16 검색) |
+| `LuckyBagLimitedItemPossession`(적용 유형 5 = ItemClass) | 33 | 대상 아이템을 값만큼 이미 가지고 있으면 열기 거부·상자 보존(예: 봉인된 지룡의 마안 → 지룡의 마안 #75304 1개) |
+| `ItemPossessionAppellationID` | 1 (전체 아이템 296: 엠블럼 205 등) | 열기에는 무시. **보유 칭호**로 연결(`scripts/titles/item_appellation523.gd`): 원본 Appellation → AppellationTitle 이름, RewardID(BuffClass) 행 중 받는 곳이 있는 것(경험치·PVE 리덕션·명중·AC·MR·공속·이속 등)을 `_active_item_buff_total`에 더한다. 칭호 여럿의 합산 규칙이 표에 없어 **하나만**(Appellation.Priority가 가장 높은 것) 적용(근거 약함). 작위·개인 호칭이 표시되지 않을 때 그 이름을 칭호 자리에 보여 준다. PvP 행은 사용자 결정(PvP 수치 = 몬스터 상대)대로 |
+| 보상이 전부 테스트 아이템 | 218 | 테스트 보상을 **같은 기능 행**(LuckyBagClassID·SelectRewardID·ComplexRewardID·BuffCardID 값이 같은 비테스트 아이템)으로 바꾸고, 대체가 없는 테스트 카드 아이템(BuffCardDrawer, 변신·마법인형·성물 덱)은 **그 카드 자체**를 카드 소유자에게 지급 |
+| 직업 확률 합 0 | 8 | 그 직업에 행이 하나도 없으면 직업 제한 없이 전체 행에서 그 합으로 추첨(`approx_class_pool`) |
+
+- 스위치: `current523_native_item_projection.gd` `APPROX_BAG_ROWS`·`APPROX_BAG_SUBSTITUTE`, `item_appellation523.ENABLED`.
+- 결과(실제 Main·원본 팩, `tests/items523_luckybag_approx2_test.gd`, 실제 가방 사용 프로필 기준): 사용 가능 **10,366 / 10,375**, 막힘 **9**
+  (예전 사양 기준 666). 남은 9는 보상이 전부 테스트 '상자 안의 상자'(대체 없음)나 테스트 재료라 줄 것이 없는 상자(#96114, #122271, #126682, #134832 등).
+- 근사가 닿은 상자: 대체 보상 227 · 카드 보상 421 · 소모 안 함 12 · 재사용 대기 95 · 보유 제한 33 · 직업 전체 풀 5 · 무시 행 321.
+- 실제 Main 확인: 성장 항아리 #200743 → 물약 지급, 항아리 보존, 24시간 대기, 대기 중 재사용 거부, 저장·불러오기 유지 /
+  희귀 변신 카드 상자 #121713 → 변신 카드(실버 레인저) 지급·저장 유지 / 봉인된 지룡의 마안 #96154 → 지룡의 마안 보유 중 거부, 없으면 열림 /
+  메티스의 훈장(이벤트) #217263 보유 → 칭호 '메티스의훈장', 경험치 +5%, 아이템을 빼면 효과 없음.
 
 ## 19. 획득 후 수명(Life)·지배 부적 소지 효과 — TWILIGHT 근사 (2026-11-16, PR `feat/approx523-teleport-life`)
 
