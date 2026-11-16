@@ -103,13 +103,14 @@ LimitBuffCardID 23, 기존 스킬 연결 없음 4, 스킬 실행 보류 3, 직�
 8. ~~혈맹 버프 효과 중 소비처 없는 것 9행~~ → **TWILIGHT 근사, 2026-11-17**: RangeEvasion 5행(16~20레벨) → 기존 원거리 회피 ER
    (`world._effective_er`), PierceMeleeEvasion·PierceRangeEvasion 각 2행(19·20레벨) → 기존 근거리·원거리 명중의 "회피 무시" 항목
    (장비 `melee/ranged_evasion_ignore`와 같은 자리). 20레벨: ER +5, 근거리·원거리 명중 +2.
-9. **MerchantGoods 91 남은 막힘**: LimitBuffCardID 23행(신화 변신 카드 보유 조건 — 카드 보유 판정 규칙 없음),
+9. **MerchantGoods 91 남은 막힘**: LimitBuffCardID 23행(신화 변신 카드 보유 조건 — 카드 보유 판정 규칙 없음 →
+   **TWILIGHT 근사 2026-11-16**: 그 원본 카드를 보유하면 구매 가능, `scripts/cards/card_requirement523.gd`),
    혈맹 레벨 15·16·17·19 행은 레벨 도달 필요.
    **TWILIGHT 근사(근거 약함), 2026-11-17**: LimitClanMemberRank(bool) = 직위 보유 → 로컬 창설자(군주)는 항상 충족.
    DaysAfterClanJoin·LimitDaysAfterClanJoin(상인 123 9행, 모두 7) = 혈맹 창설 후 지난 일수(1인 혈맹이라 가입일 = 창설일) ≥ 7.
    (상인 91·123·1371 행은 공성 시간 조건 `AvailableSiegeTime`으로 여전히 막힌다 — 공성은 범위 밖.)
 10. **혈맹 전용 아이템 (현재 집계 33종 사용 거부·지급 불가, 이름 "[혈맹]" 105종 중)**: 특수-신화 스킬서 22종
-    (학습 조건에 신화 변신 카드 필요 — `source_skill_limit_card_requirement_unresolved`), 속성 강화·변환 주문서 5종,
+    (학습 조건에 신화 변신 카드 필요 — `source_skill_limit_card_requirement_unresolved` → **TWILIGHT 근사 2026-11-16**: 카드를 보유하면 학습), 속성 강화·변환 주문서 5종,
     마법서·정령 수정 등 효과 소유자 없음 6종. 혈맹 규칙이 아니라 스킬·강화 쪽 미연결이라 이번에 연결하지 않음.
     이전 감사(사용 101 · 지급 178)는 그 뒤 PR들(#423 선택 상자 등)로 대부분 연결됨.
 11. ~~성장의 뿔피리·전투의 뿔피리(350562·350572, ClanRewardOnItemUse)~~ → **TWILIGHT 근사, 2026-11-17**

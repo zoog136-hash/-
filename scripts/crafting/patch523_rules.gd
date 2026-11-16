@@ -11,6 +11,7 @@ const ENHANCEMENT = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SOURCE_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
 const SOURCE_ITEMS = preload("res://scripts/resources/current523_item_data.gd")
 const ORIGINAL_PROJECTION = preload("res://scripts/crafting/patch523_rules_projection.gd")
+const APPROX = preload("res://scripts/crafting/patch523_craft_approx.gd")
 const SCHEMA: String = "twilight-patch523-equipment-v1"
 const MAX_BYTES: int = 128 * 1024 * 1024
 const MAX_BATCH: int = 20
@@ -64,7 +65,7 @@ const BAKE_NAME := "equipment_rules"
 ## Everything the compiled model depends on besides the inputs in the key.
 const BAKE_CODE: Array[String] = ["res://scripts/crafting/patch523_rules.gd","res://scripts/crafting/patch523_rules_projection.gd",
 	"res://scripts/crafting/patch523_enchantment_projection.gd","res://scripts/crafting/current523_equipment_spell_profiles.gd","res://scripts/crafting/patch523_packed_records.gd",
-	"res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
+	"res://scripts/crafting/patch523_craft_approx.gd","res://scripts/resources/current523_bake_cache.gd","res://data/crafting/patch523_crafting_policy.json",
 	"res://data/crafting/patch523_enhancement_policy.json"]
 ## True when the model was read from this device's bake instead of compiled.
 var loaded_from_bake: bool = false
@@ -453,6 +454,14 @@ func _valid_model(parsed: Variant) -> bool:
 				problem="원본 제작 확률 합계 오류"; return false
 		if value.has("craft_conditions") and not CONDITIONS.valid(value.craft_conditions):
 			problem="원본 제작 자격 구조 오류"; return false
+		if value.has("bonus_outputs"):
+			# TWILIGHT 근사 2026-11-16 (patch523_craft_approx): stack bonuses only.
+			if not value.bonus_outputs is Array or value.bonus_outputs.is_empty():
+				problem="원본 제작 추가 지급 구조 오류"; return false
+			for bonus: Variant in value.bonus_outputs:
+				# A random craft only carries the clan share of one outcome row.
+				if not valid_material(bonus) or bonus.physical or bonus.get("kind") not in ["payback","clan"] or not CONDITIONS.integer(bonus.get("source_row_id"),1,2147483647) or value.has("outcomes") != (bonus.get("outcome_conditional",false) == true and bonus.kind == "clan"):
+					problem="원본 제작 추가 지급 구조 오류"; return false
 		if value.has("material_slots"):
 			if not value.material_slots is Array:
 				problem = "원본523 후보 슬롯 구조 오류"
@@ -537,6 +546,20 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 	if not CONDITIONS.integer(craft_id,1,2147483647) or recipe.get("id") != "patch523:"+str(int(craft_id)):
 		return denied("제작 원본 ID 관계가 필요합니다 · 재료 보존")
 	var source: Dictionary = recipe_evidence(int(craft_id))
+	# TWILIGHT 근사 2026-11-16 (patch523_craft_approx.TEST_ITEM_SUBSTITUTES):
+	# the recorded TestItem substitutes are joined again from the const table.
+	var recorded: Dictionary = recipe.get("twilight_approx",{}).get("test_item_substitutes",{})
+	if not recorded.is_empty():
+		var substitutes: Dictionary = APPROX.substitutes_for(source.get("views",[])+source.get("inputs",[])+source.get("outputs",[]),func(id: int) -> Dictionary: return SOURCE_DEFINITIONS.row("ItemClass",id))
+		var expected: Dictionary = {}
+		for id: int in substitutes: expected[str(id)] = str(substitutes[id])
+		if expected != recorded: return denied("TestItem 대체 근사의 원본 관계가 다릅니다 · 재료 보존")
+		for key: String in ["inputs","outputs","views"]: source[key] = APPROX.substitute_rows(source.get(key,[]),substitutes)
+	var overrides: Dictionary = recipe.get("twilight_approx",{}).get("row_overrides",{})
+	if not overrides.is_empty():
+		var fixed: Dictionary = APPROX.apply_overrides(source.get("views",[]),source.get("inputs",[]),source.get("outputs",[]),overrides,func(id: int) -> Dictionary: return SOURCE_DEFINITIONS.row("ItemClass",id))
+		if fixed.is_empty(): return denied("행 보정 근사의 원본 관계가 다릅니다 · 재료 보존")
+		source.views = fixed.views; source.inputs = fixed.ins; source.outputs = fixed.outs
 	for key: String in ["inputs","outputs","views","restrictions"]:
 		if not source.get(key) is Array: return denied("제작 원본 관계가 없습니다 · 재료 보존")
 		if key != "restrictions" and source[key].is_empty(): return denied("제작 원본 관계가 없습니다 · 재료 보존")
@@ -546,7 +569,8 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 		if not CONDITIONS.integer(original.get("ItemClassID"),0,2147483647): return denied("제작 원본 품목 참조가 필요합니다")
 		if int(original.ItemClassID) != 0 and not _source_item_allowed(int(original.ItemClassID)):
 			return denied("제작 원본 품목이 미확정 또는 명시적 시험용입니다 · 재료 보존")
-		if int(original.get("ItemHoningEpithetID",0)) != 0 or int(original.get("ClanItemClassID",0)) != 0 or int(original.get("ClanAmount",0)) != 0:
+		if int(original.get("ItemHoningEpithetID",0)) != 0: return denied("별도 소유자 제작 조건입니다 · 재료 보존")
+		if (int(original.get("ClanItemClassID",0)) != 0 or int(original.get("ClanAmount",0)) != 0) and not _bonus_matches(recipe,"clan",original):
 			return denied("별도 소유자 제작 조건입니다 · 재료 보존")
 	var conditions: Dictionary = CONDITIONS.source_recipe(recipe,source.views,source.restrictions)
 	if not conditions.get("ok",false): return conditions
@@ -558,6 +582,15 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 		if _source_item_tuple(recipe.result,original): view_found = true
 	if not primary_found or not view_found: return denied("제작 결과와 원본 표시·결과 관계가 다릅니다 · 재료 보존")
 	if not recipe.has("outcomes"):
+		var main_outputs: Array = []
+		for original: Dictionary in source.outputs:
+			if not _bonus_matches(recipe,"payback",original): main_outputs.append(original)
+		var paid: int = 0
+		for bonus: Dictionary in recipe.get("bonus_outputs",[]):
+			for original: Dictionary in source.outputs:
+				if int(original.get("ID",0)) == int(bonus.source_row_id) and _bonus_matches(recipe,str(bonus.kind),original): paid += 1; break
+		if paid != recipe.get("bonus_outputs",[]).size(): return denied("제작 추가 지급의 원본 행이 다릅니다 · 재료 보존")
+		source = source.duplicate(); source.outputs = main_outputs
 		if source.outputs.size() != 1 or source.outputs[0].get("Probability") != 1000000:
 			return denied("원본 제작 결과 분기를 확인해야 합니다 · 재료 보존")
 		for view: Dictionary in source.views:
@@ -581,6 +614,19 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 			remaining.remove_at(found)
 		if not remaining.is_empty(): return denied("원본 제작 결과가 빠져 있습니다 · 재료 보존")
 	return {"ok":true,"source":source}
+
+## TWILIGHT 근사 2026-11-16: the recipe's recorded payback / clan-share bonus
+## is exactly this original output row (type 12 Probability 0, or its
+## ClanItemClassID/ClanAmount/ClanEnchant/ClanItemBlessCodeID).
+static func _bonus_matches(recipe: Dictionary, kind: String, original: Dictionary) -> bool:
+	for bonus: Variant in recipe.get("bonus_outputs",[]):
+		if not bonus is Dictionary or bonus.get("kind") != kind or int(bonus.get("source_row_id",0)) != int(original.get("ID",-1)): continue
+		if kind == "payback":
+			if int(original.get("ItemCraftOutputTypeID",-1)) == APPROX.PAYBACK_TYPE and int(original.get("Probability",-1)) == 0 and _source_item_tuple(bonus,original): return true
+		else:
+			var clan: Array = APPROX.clan_rows([original])
+			if clan.size() == 1 and int(original.ClanItemClassID) > 0 and int(original.ClanAmount) > 0 and _source_item_tuple(bonus,clan[0]): return true
+	return false
 
 static func _source_material_contract(recipe: Dictionary, source: Dictionary) -> Dictionary:
 	var slots: Dictionary = {}
@@ -1003,7 +1049,12 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 	# Compare against the compiled identity, never the live record itself.
 	# Read-only view: this comparison runs for every item of the craft index.
 	var canonical: Dictionary=_compiled_view(source_id,stack_bless)
+	# TWILIGHT 근사 2026-11-16: records of another owner (patch523_craft_approx).
+	var owner: String=str(data.get("items",{}).get(source_id,{}).get("twilight_owner_binding","")) if stack_bless==1 else ""
+	if owner=="wallet": return not canonical.is_empty() and str(item.get("name",""))==str(canonical.get("wallet_inventory_key"))
 	if canonical.is_empty() or item.get("name")!=canonical.get("name") or item.get("source")!=canonical.get("source") or item.get("sourceId")!=canonical.get("sourceId"): return false
+	if owner=="supply": return load("res://scripts/cards/native_awakening_supply.gd").call("exact",item,int(source_id))
+	if owner=="owner": return int(item.get("source_item_class_id",0))==int(source_id) and item.get("source_m_native_item",false)!=true
 	if canonical.get("source")=="inven": return str(item.sourceId)==source_id
 	if canonical.get("source")!="lineagem_patch523" or not canonical.get("source_m_native_item",false): return false
 	for key: String in ["source_snapshot","source_item_class_id","source_display_name","source_is_stackable","source_test_item","source_level_limit_min","source_level_limit_max","slot"]:
@@ -1019,6 +1070,8 @@ func catalog_identity_matches(item: Dictionary, source_id: String, stack_bless: 
 				entry_loaded=true
 			var allowed: Dictionary=entry.get("craft_material_only_class_references",{})
 			allow_zero=allowed.get("scope")=="source_input_only" and allowed.get("class_ids")==NATIVE_FIELDS.field_view(canonical,key) and entry.get("item_bonuses",[]).is_empty()
+		# TWILIGHT 근사 2026-11-16: an item limited only to ClassID 0 is for every class.
+		if key=="source_class_ids" and _source_ids_match(NATIVE_FIELDS.field_view(canonical,key),[0],true) and _source_ids_match(NATIVE_FIELDS.field_view(item,key),[0],true): allow_zero=true
 		if not _source_ids_match(NATIVE_FIELDS.field_view(item,key),NATIVE_FIELDS.field_view(canonical,key),allow_zero): return false
 	if stack_bless!=1:return NATIVE_FIELDS.field_view(canonical,"source_is_stackable",false) and int(item.get("source_bless_raw",0))==stack_bless and str(item.sourceId)=="m523:item:"+source_id+":bless:"+str(stack_bless)
 	return identity({"record":item})==source_id
@@ -1139,6 +1192,7 @@ func ownership_key(material: Dictionary) -> String:
 	return key if not key.is_empty() and key==str(entry.get("currency_inventory_key","")) and not bool(material.physical) and int(material.level)==0 and int(material.bless_code)==1 else ""
 
 func _stack_identity_matches(item: Dictionary, material: Dictionary) -> bool:
+	if str(data.get("items",{}).get(str(material.source_id),{}).get("twilight_owner_binding",""))=="wallet": return int(material.bless_code)==1 and int(material.level)==0 and ownership_key(material)==str(record(str(material.source_id)).get("wallet_inventory_key","-"))
 	if item.get("source","") in ["inven","lineagem_patch523"]: return catalog_identity_matches(item,str(material.source_id),1 if material.physical else int(material.bless_code))
 	if str(item.get("sourceId",""))!=str(material.source_id): return false
 	var canonical: Dictionary=record(str(material.source_id))
@@ -1198,10 +1252,11 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	if result_record.is_empty() or str(result_record.get("name", "")) != str(output.item):
 		return denied("원본 결과 아이템의 정확한 ID 연결이 필요합니다")
 	var wallet_output: bool = bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" and str(result_record.get("source",""))=="lineagem_patch523" and str(output.item)=="아데나" and not bool(output.physical)
-	var current_output: Dictionary = result_record if wallet_output else items.get(str(output.item), {})
+	var owner_kind: String=str(data.get("items",{}).get(str(output.source_id),{}).get("twilight_owner_binding",""))
+	var current_output: Dictionary = result_record if wallet_output or owner_kind=="wallet" else items.get(str(output.item), {})
 	if not wallet_output and not catalog_identity_matches(current_output,str(output.source_id),1 if output.physical else int(output.bless_code)):
 		return denied("현재 게임에서 원본 결과 아이템을 사용할 수 없습니다")
-	if not output.physical and not wallet_output and _stack_has_owned_entities(output,physical,ownership_key(output)):
+	if not output.physical and not wallet_output and owner_kind not in ["wallet","supply"] and _stack_has_owned_entities(output,physical,ownership_key(output)):
 		var native_stacks: Script=load("res://scripts/loot/current523_native_stack.gd")
 		if not native_stacks.call("can_supply",current_output,inventory,physical):return denied("결과 아이템의 기존 개체/영수증 소유자 확인 필요 · 재료 보존")
 	var costs: Dictionary = {}
@@ -1283,6 +1338,14 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		if not catalog_identity_matches(candidate,str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)) or record(str(outcome.source_id),1 if outcome.physical else int(outcome.bless_code)).get("name","")!=outcome.item:
 			return denied("모든 확률 결과의 정확한 아이템 ID 연결이 필요합니다")
 		output_weight=maxi(output_weight,maxi(0,int(candidate.get("weight",3)))*int(outcome.quantity))
+	for bonus: Dictionary in recipe.get("bonus_outputs",[]):
+		if ownership_key(bonus).is_empty(): return denied("추가 지급 재화의 정확한 보유 키가 필요합니다")
+		var bonus_item: Dictionary=items.get(str(bonus.item),{})
+		if not catalog_identity_matches(bonus_item,str(bonus.source_id),int(bonus.bless_code)) or record(str(bonus.source_id),int(bonus.bless_code)).get("name","")!=bonus.item: return denied("추가 지급(%s)의 정확한 아이템 ID 연결이 필요합니다" % str(bonus.label))
+		if _stack_has_owned_entities(bonus,physical,ownership_key(bonus)):
+			var native_stacks: Script=load("res://scripts/loot/current523_native_stack.gd")
+			if not native_stacks.call("can_supply",bonus_item,inventory,physical):return denied("추가 지급 아이템의 기존 개체 소유자 확인 필요 · 재료 보존")
+		output_weight+=maxi(0,int(bonus_item.get("weight",3)))*int(bonus.quantity)*count
 	net_weight += output_weight
 	if net_weight < 0 or net_weight > capacity:
 		return denied("제작 결과를 보관할 무게가 부족합니다")
@@ -1346,6 +1409,13 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 			produced-=returned
 			if produced==0:break
 	if wallet_reward==0 and not output.get("empty_result",false) and produced>0: staged_inventory[output_key] = int(staged_inventory.get(output_key, 0)) + produced
+	var bonus_outputs: Array=[]
+	for bonus: Dictionary in recipes[recipe_id].get("bonus_outputs",[]):
+		if bonus.get("outcome_conditional",false) and int(output.get("clan_bonus_row_id",-1))!=int(bonus.source_row_id): continue
+		var granted: Dictionary=bonus.duplicate(true); granted.quantity=int(bonus.quantity)*count
+		staged_inventory[ownership_key(bonus)]=int(staged_inventory.get(ownership_key(bonus),0))+int(granted.quantity)
+		bonus_outputs.append(granted)
+	if not bonus_outputs.is_empty(): approval["bonus_outputs"]=bonus_outputs
 	var counter: int = maxi(1, next_id)
 	if bool(output.physical):
 		for _i: int in range(int(approval.result_quantity)):
