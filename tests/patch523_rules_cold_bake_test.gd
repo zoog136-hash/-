@@ -704,7 +704,8 @@ func _run() -> void:
 		for name: String in BAKES: check(typed_bytes[name] == bake_bytes()[name] and not (typed_bytes[name] as PackedByteArray).is_empty(), "integer rows: "+name+" is byte-identical")
 		print("PATCH523_RULES_COLD_BAKE_COVERAGE recipes=", typed_new.recipes.size(), " rejected=", typed_new.data.recipe_summary.rejected)
 		check(typed_new.recipes.size() >= 12, "integer rows: recipes compiled ("+str(typed_new.recipes.size())+")")
-		check((typed_new.data.recipe_summary.rejected as Dictionary).size() >= 8, "integer rows: rejection reasons covered")
+		# TWILIGHT 근사 2026-11-16 admits the stack-state and 아데나-only fixture crafts.
+		check((typed_new.data.recipe_summary.rejected as Dictionary).size() >= 6, "integer rows: rejection reasons covered")
 		var currencies: int = 0
 		var exclusions: int = 0
 		var data: Dictionary = typed_new.materialized_data()
