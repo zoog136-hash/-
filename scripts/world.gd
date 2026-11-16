@@ -9343,6 +9343,13 @@ func skill_card523_merge_quote(grade_id: int, selection: Dictionary = {}) -> Dic
 func skill_card523_merge_execute(token: String) -> Dictionary:
 	return skill_cards523.merge_execute(token)
 
+## TWILIGHT 근사: deck-41 skill card reroll (docs/cards523_reroll_skillcard.md 5).
+func skill_card523_swap_quote(physical_id: String) -> Dictionary:
+	return skill_cards523.swap_quote(physical_id)
+
+func skill_card523_swap_execute(token: String) -> Dictionary:
+	return skill_cards523.swap_execute(token)
+
 func skill_card523_levelup_quote(card_id: int, feed: Dictionary = {}, attempt: bool = true) -> Dictionary:
 	return skill_cards523.levelup_quote(card_id, feed, attempt)
 
