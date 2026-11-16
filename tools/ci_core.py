@@ -288,6 +288,7 @@ CHECKS = [
     ('reference_sp2_role_split_test', []),
     ('reference_sp2_member_split_test', []),
     ('sp2_background_load_test', []),
+    ('sp2_background_reentry_test', []),
     ('content523_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
@@ -828,6 +829,7 @@ def main():
                       'reference_sp2_role_split_test':'REFERENCE_SP2_ROLE_SPLIT_RESULT',
                       'reference_sp2_member_split_test':'REFERENCE_SP2_MEMBER_SPLIT_RESULT',
                       'sp2_background_load_test':'SP2_BACKGROUND_LOAD_RESULT',
+                      'sp2_background_reentry_test':'SP2_BACKGROUND_REENTRY_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
                       'content523_test':'CONTENT523_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
