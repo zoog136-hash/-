@@ -43,19 +43,23 @@ func runtime() -> void:
 			var active: Dictionary = record.source_approx523_active
 			var text: String = JSON.stringify(active)
 			if text.contains("\"taken\""): opened[name] = ["taken"]
-		elif stats.has("receivedReductionPct") or stats.has("meleeHit") or stats.has("rangedHit"):
+			elif text.contains("\"magicCrit\"") or text.contains("\"magicHit\""): opened[name] = ["magic"]
+			elif text.contains("\"speed\""): opened[name] = ["speed"]
+		elif stats.has("receivedReductionPct") or stats.has("meleeHit") or stats.has("rangedHit") or stats.has("magicCrit") or stats.has("magicHit") or stats.has("moveSpeedPct"):
 			opened[name] = stats
 	evidence["blocked"] = blocked
 	evidence["opened"] = opened
-	var reduction: Array = []; var pierce: Array = []; var taken: Array = []
+	var reduction: Array = []; var pierce: Array = []; var taken: Array = []; var magic: Array = []
 	for name: String in opened:
 		if (opened[name] as Array).has("receivedReductionPct"): reduction.append(name)
 		if (opened[name] as Array).has("taken"): taken.append(name)
+		if (opened[name] as Array).has("magic") or (opened[name] as Array).has("magicCrit") or (opened[name] as Array).has("magicHit"): magic.append(name)
 	for name: String in ["피어스 애로우","라이트닝 어택(미스틱)","세인트 블로우(디바인)"]:
 		for key: String in opened:
 			if key.ends_with("/"+name): pierce.append(key)
-	evidence["groups"] = {"reduction":reduction,"pierce":pierce,"taken":taken}
-	check(blocked < 150, "held reference skills below 150: %d" % blocked)
+	evidence["groups"] = {"reduction":reduction,"pierce":pierce,"taken":taken,"magic":magic}
+	check(blocked < 145, "held reference skills below 145 (근사 (8)): %d" % blocked)
+	check(magic.size() >= 1, "MagicCritical / MagicHit open magic skills "+str(magic))
 	check(reduction.size() >= 2, "MeleeDamageReductionPercent opens 받는 피해 % 감소 skills "+str(reduction))
 	check(pierce.size() >= 1, "Pierce*Evasion opens accuracy skills "+str(pierce))
 	check(taken.size() >= 1, "AttackedMeleeDamageScale gives a 'taken' target debuff "+str(taken))
@@ -66,6 +70,6 @@ func run() -> void:
 	if not SOURCE.not_installed(): await runtime()
 	else:
 		var policy: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/source_approx523.json"))
-		check(policy.receivers.has("PierceMeleeEvasion") and policy.receivers.has("MeleeDamageReductionPercent"), "receivers declared")
+		check(policy.receivers.has("PierceMeleeEvasion") and policy.receivers.has("MeleeDamageReductionPercent") and policy.receivers.has("MagicCritical") and policy.receivers.has("FixedMoveSpeedBonus"), "receivers declared")
 	print("SKILL523_RECEIVERS_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)

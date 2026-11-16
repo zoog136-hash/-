@@ -5974,6 +5974,22 @@ func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
 
+## 비법서 제작 (original GachaCraft, TWILIGHT 근사 — scripts/crafting/patch523_gacha_craft.gd).
+## UI API: owned books → quote (costs, ownership, per-item %) → execute (one
+## atomic save; returns {ok, output:{item_class_id,name,amount,enchant,bless_raw,bound}, detail}).
+func patch523_gacha_craft_owned() -> Array:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
+
+func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+
+func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
+
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return
 	if recipe_id.begins_with("patch523:"):
@@ -10185,7 +10201,7 @@ func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
-	return totems.bonus("MagicHit") + level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+	return totems.bonus("MagicHit") + int(original_skills.stat("magicHit") if original_skills != null else 0) + level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _spell_power_stat() -> int:
 	var defaults: Dictionary = original_skills.runtime_defaults if original_skills != null else {}

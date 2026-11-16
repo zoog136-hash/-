@@ -55,6 +55,9 @@
     "RuneSwordDamageBonus": {"stat": "meleeDamage", "unit": "Value", "scale": 1, "weapon_types": [102]},
     "PierceMeleeEvasion": {"stat": "meleeHit", "unit": "Value", "scale": 1, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 상대 근거리 회피 무시 → 근거리 명중 (혈맹 버프와 같은 해석)."},
     "PierceRangeEvasion": {"stat": "rangedHit", "unit": "Value", "scale": 1, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 상대 원거리 회피 무시 → 원거리 명중."},
+    "MagicCritical": {"stat": "magicCrit", "unit": "ValuePercent", "scale": 1, "note": "TWILIGHT 근사 2026-11-17: 마법 치명타(이미 % 값) → 기존 마법 치명 수신부 (MeleeCritical·RangeCritical과 같은 방식)."},
+    "MagicHit": {"stat": "magicHit", "unit": "Value", "scale": 1, "note": "TWILIGHT 근사 2026-11-17: 마법 명중 → world._magic_accuracy_stat에 새로 더함."},
+    "FixedMoveSpeedBonus": {"stat": "moveSpeedPct", "unit": "Percentage", "scale": 0.0001, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 고정 이동 속도 보너스(1000000 = 100%) → 이동 속도 %. 같은 버프의 CannotLoot(줍기 불가)는 패시브에도 같은 받는 곳을 쓰게 되므로 연결하지 않음."},
     "MeleeDamageReductionPercent": {"stat": "receivedReductionPct", "unit": "Percentage", "scale": 0.0001, "note": "TWILIGHT 근사(근거 약함) 2026-11-17: 받는 근거리 피해 % 감소 → 받는 피해 % 감소 (몬스터 공격 대부분이 근거리). RangeDamageReductionPercent는 같은 받는 곳에 두 번 더해지지 않게 연결하지 않음."},
     "SpecialResistance": {"unit": "Percentage", "scale": 0.0001, "application_type": 2, "targets": {"6": "stunResistance", "7": "holdResistance", "8": "fearResistance", "41": "silenceResistance", "22": "poisonResistance"}, "note": "BonusApplicationType 2 + SpecialResistanceType(6 Stun …). 인벤 '스턴 내성 +5%' = 원본 50000/10000."}
   },
