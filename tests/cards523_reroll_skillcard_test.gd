@@ -201,6 +201,13 @@ func reroll(world: Node) -> void:
 	cards.spare["변신"][guarded] = 1
 	# 할파스 별 강화 (TWILIGHT 근사(근거 약함)): the last 할파스 copy may be swapped; the star stays on 할파스.
 	var halphas: String = str(swap.HALPHAS_IDENTITY)
+	if world.get("halphas_star") != null:
+		# The guard itself (no card record needed).
+		var star_saved: Dictionary = world.halphas_star.progress.duplicate(true)
+		world.halphas_star.progress["level"] = maxi(1, int(world.halphas_star.progress.get("level", 0)))
+		evidence["halphas_guard"] = {"guard":str(swap._last_copy_guard("변신", halphas)), "report":swap.progress_report("변신", halphas)}
+		check(str(evidence.halphas_guard.guard).is_empty() and int(evidence.halphas_guard.report.get("halphas_star_kept",0)) >= 1, "할파스 별 강화: 마지막 1장 가드가 거부하지 않고 보존 단계를 표시 %s" % str(evidence.halphas_guard))
+		world.halphas_star.progress = star_saved
 	if not swap.card_record("변신", halphas).is_empty() and world.get("halphas_star") != null:
 		var star_before: Dictionary = world.halphas_star.progress.duplicate(true)
 		cards.owned["변신"][halphas] = true; cards.spare["변신"].erase(halphas)
