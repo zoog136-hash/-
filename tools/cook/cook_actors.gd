@@ -28,6 +28,7 @@ const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const COMPOSITES = preload("res://scripts/resources/actor_frame_composite_cache.gd")
 const PREPARED = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
+const COOKED_PREVIEW = preload("res://scripts/animation/cooked_actor_preview.gd")
 
 func _initialize() -> void: call_deferred("run")
 
@@ -55,6 +56,7 @@ func run() -> void:
 	var shards: int = maxi(1, int(argument("--shards=", "1")))
 	var limit: int = int(argument("--limit=", "0"))
 	var lossless: bool = "--lossless" in OS.get_cmdline_user_args()
+	var verify_count: int = int(argument("--verify=", "40"))
 	var report: Dictionary = {"format":FORMAT.FORMAT,"shard":shard,"shards":shards,"lossless":lossless,"engine":Engine.get_version_info().string,"actors":{},"failures":[]}
 	var report_path: String = out.path_join("report-%d.json" % shard)
 	if base.is_empty() or out.is_empty():
@@ -104,6 +106,7 @@ func run() -> void:
 	report["npc_sprites_total"] = ids.size()
 	report["npc_sprites_in_shard"] = mine.size()
 	var compress: int = -1 if lossless else Image.COMPRESS_ETC2
+	var verification: Dictionary = {"actors":0,"failed":0,"steps":0,"items":0,"exact_items":0,"etc2_items":0,"etc2_max_error":0,"etc2_psnr_db_min":99.0}
 	var totals: Dictionary = {"cooked":0,"failed":0,"bytes":0,"gpu_bytes":0,"states":0,"images":0,"samples":0,"resampled_child_tracks":0}
 	var host := Node2D.new()
 	root.add_child(host)
@@ -117,6 +120,7 @@ func run() -> void:
 			entry = {"ok":false,"error":str(selected.get("reason", ""))}
 		else:
 			var inputs: Dictionary = STORE.inputs(selected)
+			var selected_copy: Dictionary = selected.duplicate(true)
 			var preview: Node2D = PREVIEW.new()
 			preview.cached_frames = true
 			host.add_child(preview)
@@ -137,6 +141,17 @@ func run() -> void:
 					else:
 						entry = {"ok":true,"bytes":written.bytes,"gpu_bytes":written.gpu_bytes,"roles":cooked.index.tracks.keys()}
 						entry.merge(cooked.index.stats)
+						if verification.actors < verify_count:
+							entry["verify"] = verify_written(host, selected_copy, path, cooked.index.tracks.keys(), sprite)
+							verification.actors += 1
+							for field: String in ["steps","items","exact_items","etc2_items"]: verification[field] += int(entry.verify.get(field, 0))
+							verification.etc2_max_error = maxi(verification.etc2_max_error, int(entry.verify.get("etc2_max_error", 0)))
+							verification.etc2_psnr_db_min = minf(verification.etc2_psnr_db_min, float(entry.verify.get("etc2_psnr_db", 99.0)))
+							if not entry.verify.ok:
+								verification.failed += 1
+								entry.ok = false
+								entry["error"] = "verify:" + str(entry.verify.problems)
+								DirAccess.remove_absolute(path)
 			preview.free()
 		entry["msec"] = Time.get_ticks_msec() - actor_started
 		report.actors[str(sprite)] = entry
@@ -154,5 +169,25 @@ func run() -> void:
 			print("COOK_PROGRESS %d/%d cooked=%d failed=%d bytes=%d msec=%d" % [count, mine.size(), totals.cooked, totals.failed, totals.bytes, Time.get_ticks_msec() - started])
 		await process_frame
 	report["totals"] = totals
+	report["verification"] = verification
+	if verification.failed > 0: report.failures.append("verification failed for %d actors" % verification.failed)
 	report["msec"] = Time.get_ticks_msec() - started
 	finish(report, report_path, 0)
+
+func verify_written(host: Node, selected: Dictionary, path: String, roles: Array, sprite: int) -> Dictionary:
+	var loaded: Dictionary = STORE.load_actor(path)
+	if not loaded.ok: return {"ok":false,"problems":["load:" + str(loaded.error)]}
+	var runtime: Node2D = PREVIEW.new()
+	runtime.cached_frames = true
+	host.add_child(runtime)
+	var result: Dictionary = {}
+	if not runtime._configure_selected_roles(selected, "idle"):
+		result = {"ok":false,"problems":["runtime configure"]}
+	else:
+		var cooked: Node2D = COOKED_PREVIEW.new()
+		host.add_child(cooked)
+		cooked.configure_cooked(loaded.actor, "idle")
+		result = COOKER.verify(runtime, cooked, COOKER.verify_steps(roles, sprite))
+		cooked.free()
+	runtime.free()
+	return result

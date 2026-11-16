@@ -326,3 +326,70 @@ static func write_cooked(path: String, cooked: Dictionary, compress: int) -> Dic
 	var written: Dictionary = FORMAT.write(path, index, pages)
 	if written.ok: written["gpu_bytes"] = page_bytes
 	return written
+
+## Real-data check used by the cook run: steps a fresh runtime preview and the
+## cooked preview of the written file together and compares what they draw.
+## Structure (count, offsets, sizes, blend, z, filter, modulate) and source
+## frame must be identical, RGBA8 items byte-identical; ETC2 items report their
+## largest channel error and PSNR (lossy by design, user-approved).
+static func verify(runtime: Node2D, cooked: Node2D, steps: Array) -> Dictionary:
+	var result: Dictionary = {"ok":true,"steps":0,"items":0,"exact_items":0,"etc2_items":0,"etc2_max_error":0,"etc2_squared":0.0,"etc2_samples":0,"problems":[]}
+	for step: Array in steps:
+		var a: bool = runtime.advance_reference_source(step[0], step[1], step[2])
+		var b: bool = cooked.advance_reference_source(step[0], step[1], step[2])
+		result.steps += 1
+		if not (a and b) or runtime.last_source_frame != cooked.last_source_frame:
+			result.problems.append("frame %s: %s/%s %d/%d" % [str(step), str(a), str(b), runtime.last_source_frame, cooked.last_source_frame])
+			continue
+		var left: Dictionary = capture(runtime)
+		var right: Dictionary = capture(cooked)
+		if not left.ok or not right.ok:
+			result.problems.append("capture %s" % str(step))
+			continue
+		var expected: Array = merge(left.items)
+		var shown: Array = right.items
+		if expected.size() != shown.size():
+			result.problems.append("items %s: %d/%d" % [str(step), expected.size(), shown.size()])
+			continue
+		for index: int in range(expected.size()):
+			var e: Dictionary = expected[index]
+			var s: Dictionary = shown[index]
+			result.items += 1
+			if e.position != s.position or e.image.get_size() != s.image.get_size() or e.blend != s.blend or e.z != s.z or e.filter != s.filter or e.color != s.color:
+				result.problems.append("item %s #%d differs" % [str(step), index])
+				continue
+			if e.image.get_data() == s.image.get_data():
+				result.exact_items += 1
+				continue
+			var opaque: bool = e.blend == CanvasItemMaterial.BLEND_MODE_MIX and e.color == Color.WHITE and _binary_alpha(e.image)
+			if not opaque:
+				result.problems.append("exact item %s #%d pixels differ" % [str(step), index])
+				continue
+			result.etc2_items += 1
+			var left_bytes: PackedByteArray = e.image.get_data()
+			var right_bytes: PackedByteArray = s.image.get_data()
+			for at: int in range(0, left_bytes.size(), 4):
+				if left_bytes[at + 3] == 0 and right_bytes[at + 3] < 8: continue
+				for channel: int in range(4):
+					var error: int = absi(int(left_bytes[at + channel]) - int(right_bytes[at + channel]))
+					result.etc2_max_error = maxi(result.etc2_max_error, error)
+					result.etc2_squared += error * error
+					result.etc2_samples += 1
+	result.ok = result.problems.is_empty()
+	if result.etc2_samples > 0:
+		var mse: float = result.etc2_squared / float(result.etc2_samples)
+		result["etc2_psnr_db"] = 99.0 if mse <= 0.0 else 10.0 * log(255.0 * 255.0 / mse) / log(10.0)
+	result.erase("etc2_squared")
+	if result.problems.size() > 8: result.problems = result.problems.slice(0, 8)
+	return result
+
+## Deterministic verification steps over every role and direction.
+static func verify_steps(roles: Array, seed_value: int) -> Array:
+	var random := RandomNumberGenerator.new()
+	random.seed = seed_value
+	var steps: Array = []
+	for role: String in roles:
+		for direction: int in range(8):
+			steps.append([0.0, role, direction])
+			for _index: int in range(3): steps.append([random.randf_range(0.0, 0.4), role, direction])
+	return steps

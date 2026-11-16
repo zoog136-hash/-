@@ -191,6 +191,8 @@ func run() -> void:
 			check(runtime.last_source_frame == cooked_view.last_source_frame, "one-shot frame after %f" % delta)
 			compare_draw(runtime, cooked_view, "one-shot %f" % delta)
 		check(cooked_view.source_playback_mode() == runtime.source_playback_mode(), "same playback mode")
+		var verified: Dictionary = COOKER.verify(runtime, cooked_view, COOKER.verify_steps(["idle", "walk"], 7))
+		check(verified.ok and verified.exact_items == verified.items and verified.items > 0, "cook-run verifier agrees (lossless): " + str(verified))
 		measure(runtime, cooked_view)
 		if render: await gpu_compare(data, actor)
 		runtime.free()
