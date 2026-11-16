@@ -54,6 +54,26 @@ var _animation_ids: Array = []
 var _animated_nodes: Array[Node2D] = []
 var _clock: float = 0.0
 var _stats: Dictionary = {}
+## Per-second CPU on the phone (523.545, 8 fps): map_objects 174 ms, i.e.
+## every frame re-sampled and re-laid out every animated placement of the 25
+## visible chunks, most of them off screen. Two bounds (approved ~90% quality):
+## - the engine tick advances the shared clock at most ANIMATION_HZ times per
+##   second (the elapsed time is carried, so the clock and frame choice stay
+##   exact at each update, only drawn less often at 30 fps);
+## - only placements whose drawn bounds meet the camera view grown by
+##   CULL_MARGIN advance. The list is rebuilt when the view has moved more
+##   than CULL_MARGIN - CULL_KEEP px, the animated set changed or a refresh
+##   ran. A culled placement keeps its last frame until it comes back into
+##   view, where its next update shows the clock's frame at once.
+## Without a viewport (tools, tests out of the tree) every placement advances.
+const ANIMATION_HZ: float = 15.0
+const CULL_MARGIN: float = 160.0
+const CULL_KEEP: float = 96.0
+var offscreen_culling: bool = true
+var animation_step: float = 1.0 / ANIMATION_HZ
+var _tick_carry: float = 0.0
+var _cull_view := Rect2()
+var _shown_animated: Array[Node2D] = []
 
 ## The bank selection the resource pack installer wrote, or {}.
 static func bank_selection() -> Dictionary:
@@ -88,6 +108,8 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	_placement_sprite_ids.clear()
 	_animation_ids.clear()
 	_animated_nodes.clear()
+	_shown_animated.clear()
+	_cull_view = Rect2()
 	var created: int = 0
 	var reused: int = 0
 	var trimmed: int = 0
@@ -274,12 +296,52 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 		node.remove_child(unused)
 		unused.queue_free()
 	FRAME_HITCH.count("map.object_layer_nodes_created", created)
+	# Holder-local drawn bounds of this frame, for the off-screen cull.
+	var bounds := Rect2()
+	for index_child: int in order:
+		var shown: Sprite2D = node.get_child(index_child) as Sprite2D
+		var rect := Rect2(shown.position, shown.texture.get_size())
+		bounds = rect if index_child == 0 else bounds.merge(rect)
+	node.set_meta("bounds", bounds)
 
 func _process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
-	_process_step(delta)
+	_tick_carry += maxf(delta, 0.0)
+	if _tick_carry + 0.0005 >= animation_step:
+		var step: float = _tick_carry
+		_tick_carry = 0.0
+		_process_step(step)
+	else:
+		FRAME_HITCH.count("map.object_ticks_skipped")
 	FRAME_HITCH.add_self("map_objects", hitch_started, hitch_nested)
+
+## The camera view in this node's coordinates, or an empty rect without one.
+func _local_view() -> Rect2:
+	if not offscreen_culling or not is_inside_tree(): return Rect2()
+	var screen: Rect2 = get_viewport_rect()
+	if not screen.has_area(): return Rect2()
+	var inverse: Transform2D = get_global_transform_with_canvas().affine_inverse()
+	var view := Rect2(inverse * screen.position, Vector2.ZERO)
+	for point: Vector2 in [Vector2(screen.end.x, screen.position.y), screen.end, Vector2(screen.position.x, screen.end.y)]:
+		view = view.expand(inverse * point)
+	return view
+
+## The animated placements this update advances (all of them without a view).
+func _advanced_nodes() -> Array[Node2D]:
+	var view: Rect2 = _local_view()
+	if not view.has_area(): return _animated_nodes
+	if _cull_view.has_area() and _cull_view.encloses(view.grow(CULL_MARGIN - CULL_KEEP)): return _shown_animated
+	var started: int = FRAME_HITCH.now()
+	_cull_view = view.grow(CULL_MARGIN)
+	_shown_animated.clear()
+	for node: Node2D in _animated_nodes:
+		var bounds: Variant = node.get_meta("bounds") if node.has_meta("bounds") else null
+		if not bounds is Rect2 or _cull_view.intersects(Rect2(node.position + (bounds as Rect2).position, (bounds as Rect2).size).grow(1.0)):
+			_shown_animated.append(node)
+	FRAME_HITCH.count("map.object_cull_rebuilds")
+	FRAME_HITCH.detail("map.object_cull", started)
+	return _shown_animated
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
@@ -296,14 +358,17 @@ func _process_step(delta: float) -> void:
 	if active_ids != _animation_ids:
 		_animation_ids = active_ids
 		_animated_nodes.clear()
+		_cull_view = Rect2()
 		# Preserve dense source order, even for interleaved duplicate IDs.
 		if not frames.is_empty():
 			FRAME_HITCH.count("map.object_index_holders_scanned", _nodes.size())
 			for node: Node2D in _nodes:
 				if frames.has(int(node.get_meta("sprite_id"))): _animated_nodes.append(node)
-	for node: Node2D in _animated_nodes:
+	var advanced: Array[Node2D] = _advanced_nodes()
+	for node: Node2D in advanced:
 		var id: int = int(node.get_meta("sprite_id"))
 		_show(node, _sprites[id], int(frames[id]))
 	FRAME_HITCH.count("map.object_timeline_samples", frames.size())
-	FRAME_HITCH.count("map.object_placements_visited", _animated_nodes.size())
+	FRAME_HITCH.count("map.object_placements_visited", advanced.size())
+	FRAME_HITCH.count("map.object_placements_culled", _animated_nodes.size() - advanced.size())
 	FRAME_HITCH.count("map.object_sprite_states_checked", _placement_sprite_ids.size())

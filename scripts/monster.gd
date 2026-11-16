@@ -592,6 +592,8 @@ func _hide_source_only_native_media() -> void:
 func custom_frozen() -> bool:
 	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
 
+const OFFSCREEN_DECISION_INTERVAL: float = .4
+
 func _physics_process(delta: float) -> void:
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
@@ -631,12 +633,14 @@ func _physics_step(delta: float) -> void:
 	var previous: Vector2 = global_position
 	decision_elapsed += delta
 	var on_screen: bool = get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin)
-	# Off-screen actors that are only roaming re-decide at 5 Hz; anything
-	# engaged, returning, casting, status-affected or a boss keeps 30 Hz.
+	# Off-screen actors that are only roaming re-decide at 2.5 Hz (was 5 Hz;
+	# they are not drawn, movement along the chosen path still advances every
+	# step); anything engaged, returning, casting, status-affected or a boss
+	# keeps 30 Hz.
 	var decision_interval: float = .032
 	if not on_screen and not is_boss and not motion.active and aggro_remaining <= 0.0 and not returning_home \
 			and not is_stunned() and not is_held() and not is_feared() and poison_remaining <= 0.0 and bleed_remaining <= 0.0:
-		decision_interval = .2
+		decision_interval = OFFSCREEN_DECISION_INTERVAL
 	if ai.is_empty() or decision_elapsed>=decision_interval:
 		var ai_started: int = FRAME_HITCH.now()
 		_tick_ai(decision_elapsed)
