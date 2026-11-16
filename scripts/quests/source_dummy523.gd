@@ -1,5 +1,6 @@
 extends RefCounted
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 ## Explicit original declarations only. This excludes gameplay connections,
 ## never deletes source rows/assets, existing ownership or original denominators.
 const SOURCE_SHA="d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -14,6 +15,10 @@ static func evidence(table: String,row: Dictionary,scope: String="record") -> Di
 	var line: int=0
 	if table=="ItemClass" and ITEM_DECLARATIONS.has(id) and name_value==ITEM_DECLARATIONS[id].name:
 		marker=str(ITEM_DECLARATIONS[id].name);line=int(ITEM_DECLARATIONS[id].line)
+	elif table=="ItemClass" and TUTORIAL.item(id):
+		# 사용자 결정 2026-11-16: tutorial items are cut like dummies (no new
+		# grant, use, drop, shop or craft); saves drop them (tutorial523.gd).
+		marker=TUTORIAL.MARKER
 	elif name_value.contains("[더미]"):
 		marker="[더미]"
 	elif scope=="motion" and name_value.contains("(더미모션)"):
@@ -25,6 +30,7 @@ static func evidence(table: String,row: Dictionary,scope: String="record") -> Di
 	return result
 
 static func item_id_evidence(id: int) -> Dictionary:
+	if TUTORIAL.item(id): return evidence("ItemClass",{"ID":id,"Name":TUTORIAL.MARKER})
 	return evidence("ItemClass",{"ID":id,"Name":ITEM_DECLARATIONS[id].name}) if ITEM_DECLARATIONS.has(id) else {}
 
 static func item_evidence(row: Dictionary) -> Dictionary:
@@ -45,4 +51,5 @@ static func record_evidence(record: Dictionary) -> Dictionary:
 
 static func reason(record: Dictionary) -> String:
 	var excluded: Dictionary=record_evidence(record)
+	if not excluded.is_empty() and excluded.get("declaration")==TUTORIAL.MARKER: return TUTORIAL.DECISION+"으로 사용·지급 연결에서 제외"
 	return "원본 더미 선언으로 사용·지급 연결에서 제외 · 기존 소유와 원본 보존" if not excluded.is_empty() else ""
