@@ -5,11 +5,14 @@ extends RefCounted
 ## 텔레포트 비용 and 이동하기. Destinations, levels, prices, the refusal reason
 ## and the move stay with the existing owners (world.maps, npc/teleport_policy,
 ## hud.npc_teleport_requested → world._npc_teleport_requested).
+## The 던전 tab is the 오만의 탑 button (TWILIGHT 근사): it opens the original
+## 오만의 탑 리스트 (source_main_oman_tower_window) over this window.
 ## Left inert or empty (no rule here): the other map tabs, the destination
 ## preview picture, 전체 / 즐겨찾기 목록 and bookmarks, 세율, every effect.
 ## The authored Hadin portrait, name and line stay as the tab authors them.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const POLICY=preload("res://scripts/npc/teleport_policy.gd")
+const OmanTower=preload("res://scripts/ui/original_ui/source_main_oman_tower_window.gd")
 const ALL="UI/Map/Map_All.csb"
 const TAB="UI/Map/Map_Tab_Teleport.csb"
 const ROW="UI/Map/Map_List_Button.csb"
@@ -153,6 +156,11 @@ func _spec(world: Node, chosen: Dictionary, quote: Dictionary) -> Dictionary:
 	for name: String in OTHER_TABS:
 		spec["Nd_TabMenu/"+name+"_On"]={"visible":false}
 		spec["Nd_TabMenu/"+name+"_Off"]={"visible":false}
+	# 오만의 탑 (TWILIGHT 근사): the 던전 tab opens the original 오만의 탑 리스트,
+	# whose floor picks select that destination here.
+	if _oman_available():
+		spec["Nd_TabMenu/Btn_Dungeon_Off"]={"visible":true,"activate":Callable(self,"_open_oman")}
+		spec["Nd_TabMenu/Btn_Dungeon_Off/Label"]={"role":"source_text","text":"오만의 탑"}
 	spec["Map_Tab_Teleport"]={"visible":true}
 	spec[P_TAB+"Nd_Gradation/Fx_Img_BG_Particle"]={"exclude":true}
 	for name: String in ["Nd_Preview","Fx_Teleport_Open","Nd_Npc/Nd_Spine","Btn_CheckBox","Nd_Tax","Label_Message"]:spec[P_TAB+name]={"exclude":true}
@@ -217,6 +225,27 @@ func _list_input(event: InputEvent) -> void:
 	_moved+=absf(delta)
 	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
 	_content.position.y=_scroll
+
+func _controller() -> Object:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var controller: Variant=hud.get("original_main_ui_controller") if hud!=null else null
+	return controller if is_instance_valid(controller) and controller.has_method("try_open_overlay_window") else null
+
+func _oman_available() -> bool:
+	var world: Node=_world.get_ref() if _world!=null else null
+	var controller: Object=_controller()
+	return controller!=null and controller.feature_window_available("oman_tower") and not OmanTower.floors(world).is_empty()
+
+func _open_oman() -> Dictionary:
+	var controller: Object=_controller()
+	if controller==null:return _fail("source_teleport_window_oman_unavailable")
+	return controller.try_open_overlay_window("oman_tower",[Callable(self,"_select_oman")])
+
+## A floor picked in the 오만의 탑 리스트: selected here (price, level, 이동하기).
+func _select_oman(map_id: String) -> Dictionary:
+	_moved=0.0
+	_selected=map_id
+	return _stage() if is_open() else {"ok":true,"handled":false}
 
 func _select(map_id: String) -> Dictionary:
 	if _moved>12.0:return {"ok":true,"ignored_after_drag":true}
