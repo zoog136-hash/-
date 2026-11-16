@@ -219,6 +219,24 @@ func value_at(cell: Vector2i, mask: bool = false) -> int:
 func walkable(point: Vector2) -> bool:
 	return loaded and point.is_finite() and _cell_allowed(world_to_cell(point))
 
+## Nearest own-clear source cell centre around `point`, searched ring by ring
+## (Chebyshev radius in source cells). Used to put an actor that ended on a
+## blocked or unsupported cell (old save, knockback, landing error) back on
+## the map instead of closing the 523 session. `accept` may veto a candidate
+## (the renderer's painted-coverage check).
+func nearest_clear_point(point: Vector2, radius_cells: int = 24, accept: Callable = Callable()) -> Dictionary:
+	if not loaded or not point.is_finite(): return {"ok":false,"reason":"source_field_unavailable"}
+	var center: Vector2i = world_to_cell(point)+coordinates.origin
+	for ring: int in range(maxi(0,radius_cells)+1):
+		for y: int in range(center.y-ring,center.y+ring+1):
+			for x: int in range(center.x-ring,center.x+ring+1):
+				if maxi(absi(x-center.x),absi(y-center.y))!=ring: continue
+				var position: Vector2 = coordinates.to_world(Vector2(x,y))
+				if not point_clear(position,4.0): continue
+				if accept.is_valid() and not bool(accept.call(position)): continue
+				return {"ok":true,"position":position,"source_cell":Vector2i(x,y),"ring":ring}
+	return {"ok":false,"reason":"no_clear_cell_within_%d" % radius_cells}
+
 func can_step(cell: Vector2i, heading: int) -> bool:
 	if heading<0 or heading>=8 or not _cell_allowed(cell): return false
 	var offset: Vector2i = DIRECTIONS[heading]
