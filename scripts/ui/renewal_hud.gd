@@ -796,7 +796,7 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	for key: Variant in visible_keys:
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
-		var b := UI.button("",open_character,Vector2(36,42))
+		var b := UI.button("",open_buff_info,Vector2(36,42))
 		var icon := TextureRect.new()
 		var source_image: Dictionary = _source523_buff_image(effect if effect is Dictionary else {})
 		if source_image.handled:
@@ -825,6 +825,12 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		if source_images_selected: _source523_buff_views[key]={"button":b,"remaining":remaining,"missing_hint":missing_hint}
 	if source_images_selected:
 		_source523_buff_signature["ui_revision"]=preload("res://scripts/ui/source523_image_assets.gd").original_ui_revision()
+
+## A tap on the active effect row: the original 523 버프 정보 window
+## (source_main_buff_info_window); the character window without it.
+func open_buff_info() -> void:
+	if _open_original_feature("buff_info"):return
+	open_character()
 
 func _source523_buff_image(effect: Dictionary) -> Dictionary:
 	var service: RefCounted = get_parent().get("original_skills")
