@@ -177,6 +177,42 @@ static func _selected(rows: Array, level: int, character_level: int) -> Dictiona
 ## bonus the equipped relic's raise; rows up to effective_level replace the
 ## base rows (SpellBonus/BuffBonus MinSpellLevel). With base_level 0 this is
 ## the former relic-only level-1 projection.
+## TWILIGHT 근사 (사용자 지시 2026-11-16 11:40 "근사치로 다 넣어", docs/cards523_reroll_skillcard.md 5):
+## stage rows with no consumer get the nearest existing one.
+##  SpellHitProbabilityBase / IgnoreSpecialResistance (Percentage) -> the record's
+##    status_chance (+delta, 0~1), SpellHitProbabilityMin -> a floor on it;
+##  SpellDebuffMinDuration / SpellDebuffMaxDuration (Seconds) -> duration_bounds.
+## Child spell replacement (SpellClassID) and unbound cards stay listed.
+const APPROX_STAGE_FIELDS := true
+static func _approx_stage(record: Dictionary, meta: Dictionary, name_value: String, raised: Dictionary, base: Dictionary) -> bool:
+	var target: Dictionary = raised.get(name_value, {})
+	if target.is_empty() or bool(target.get("ambiguous", false)): return false
+	var previous: Dictionary = base.get(name_value, {})
+	var value: float = float(target.effect.value) / float(target.effect.denominator)
+	var old: float = float(previous.effect.value) / float(previous.effect.denominator) if not previous.is_empty() and not bool(previous.get("ambiguous", false)) else 0.0
+	var applied: Dictionary = {"source_type":name_value, "source_link_id":target.effect.link_id, "source_bonus_id":target.effect.bonus_id, "projection":"TWILIGHT_APPROX_STAGE"}
+	match name_value:
+		"SpellHitProbabilityBase", "IgnoreSpecialResistance":
+			if not record.has("status_chance") or str(target.effect.unit) != "Percentage": return false
+			var delta: float = (value - old) / 100.0
+			if meta.active: record["status_chance"] = clampf(float(record.status_chance) + delta, 0.0, 1.0)
+			applied.merge({"field":"status_chance", "delta":delta})
+		"SpellHitProbabilityMin":
+			if not record.has("status_chance") or str(target.effect.unit) != "Percentage": return false
+			if meta.active: record["status_chance"] = clampf(maxf(float(record.status_chance), value / 100.0), 0.0, 1.0)
+			applied.merge({"field":"status_chance_floor", "delta":value / 100.0})
+		"SpellDebuffMinDuration", "SpellDebuffMaxDuration":
+			if str(target.effect.unit) != "Seconds" or not (record.has("duration_bounds") or record.has("status")): return false
+			var bounds: Array = (record.get("duration_bounds", [float(record.get("duration", value)), float(record.get("duration", value))]) as Array).duplicate()
+			if meta.active:
+				if name_value == "SpellDebuffMinDuration": bounds[0] = value
+				else: bounds[1] = maxf(value, float(bounds[0]))
+				record["duration_bounds"] = bounds
+			applied.merge({"field":"duration_bounds", "delta":value - old})
+		_: return false
+	if meta.active: meta.applied.append(applied)
+	return true
+
 static func project(record: Dictionary, profile: Dictionary, level: Dictionary, character_level: int, enabled: bool) -> Dictionary:
 	var top: int = maxi(1, int(level.effective_level))
 	var meta: Dictionary = {"spell_id":profile.binding.spell_id, "grade_id":profile.binding.grade_id, "base_level":int(level.get("base_level", 0)), "effective_level":level.effective_level, "active":enabled and int(level.effective_level) > 0, "code":level.code, "applied":[], "pending":profile.child_pending.duplicate(), "blockers":profile.get("blockers", []).duplicate(true), "buff_level_changes":profile.buff.any(func(row: Dictionary) -> bool: return row.spell_level == 1)}
@@ -215,6 +251,7 @@ static func project(record: Dictionary, profile: Dictionary, level: Dictionary, 
 				if kind == "spell": supported = supported and (custom_probability or str(record.get("mode", "")) in ACTION_MODES.get(name_value, []))
 				else: supported = supported and str(record.get("mode", "")) in ["stats", "buff", "counter", "stealth", "heal"]
 			if not supported:
+				if kind == "spell" and APPROX_STAGE_FIELDS and _approx_stage(record, meta, name_value, raised, base): continue
 				if not meta.pending.has(name_value): meta.pending.append(name_value)
 				continue
 			var baseline: float = float(previous.effect.value) if not previous.is_empty() else 0.0
