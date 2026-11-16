@@ -103,6 +103,14 @@ func _ready() -> void:
 	choices.item_selected.connect(func(index: int) -> void:
 		confirm.disabled = committing
 		_sync_confirm_icon(index))
+	# The original 523 선택 보상 window (RewardSelectBoxScene) shows the same
+	# rows and claims through claim_entity; this dialog stays (hidden) as the
+	# owner its callers know.
+	var hud_node: Variant = world.get("hud") if is_instance_valid(world) else null
+	var controller: Variant = hud_node.get("original_main_ui_controller") if is_instance_valid(hud_node) else null
+	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):
+		var native: Dictionary = controller.try_open_feature_window("reward_select",[self])
+		if native.get("handled",false): visible = false
 
 func _sync_confirm_icon(index: int) -> void:
 	confirm.icon = null
@@ -117,22 +125,47 @@ func _sync_confirm_icon(index: int) -> void:
 
 func _claim() -> void:
 	if committing or choices.get_selected_items().size() != 1: return
+	claim_entity(int(choices.get_item_metadata(choices.get_selected_items()[0])))
+
+## The choices for the original 523 선택 보상 window
+## (source_main_reward_select_window): {entity_id, item_class_id, name,
+## amount, blessing, enchant} per row, in the list's order.
+func original_rows() -> Array:
+	var rows: Array = []
+	for reward: Dictionary in _choice_rows():
+		var item: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
+		if item.is_empty(): item = DROPS.definition_id(str(int(reward.item_class_id))).get("native_record",{})
+		rows.append({"entity_id":int(reward.source_entity_id),"item_class_id":int(reward.item_class_id),"name":str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name","?"))),
+			"amount":int(reward.amount),"blessing":int(reward.get("bless_raw",0)),"enchant":int(reward.enchant) if reward.get("enchant") != null else 0})
+	return rows
+
+## The box's own name and ItemClassID (the original window's box slot).
+func box_info() -> Dictionary:
+	var original: Dictionary = pending.get("original_item",{}) if pending.get("original_item") is Dictionary else {}
+	var id: Variant = original.get("source_item_class_id", record.get("source_item_class_id", 0))
+	return {"name":str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
+
+## Claims the reward `entity_id` (the list's own claim); true when the box
+## was used and this dialog closes.
+func claim_entity(entity_id: int) -> bool:
+	if committing: return false
 	committing = true
-	confirm.disabled = true
-	var entity_id: int = int(choices.get_item_metadata(choices.get_selected_items()[0]))
+	if confirm != null: confirm.disabled = true
 	if not pending.is_empty():
 		last_claim = world.consumable_service.claim_owned_original_selection(pending.get("original_item",{}),pending.get("ownership_request",{}),entity_id)
 		world.hud.show_message(str(last_claim.get("message",last_claim.get("reason","원본 선택 보상 연결 대기"))))
 		if last_claim.get("ok",false) and last_claim.get("saved",false) and last_claim.get("consumed")==1:
 			queue_free()
-			return
+			return true
 		committing = false
-		confirm.disabled = false
-		return
-	if use_service.claim_selection(world,record,entity_id): queue_free()
-	else:
-		committing = false
-		confirm.disabled = false
+		if confirm != null: confirm.disabled = false
+		return false
+	if use_service.claim_selection(world,record,entity_id):
+		queue_free()
+		return true
+	committing = false
+	if confirm != null: confirm.disabled = false
+	return false
 
 func _exit_tree() -> void:
 	if is_instance_valid(world) and is_instance_valid(world.hud) and world.hud.has_meta("patch523_reward_choice") and world.hud.get_meta("patch523_reward_choice") == self:

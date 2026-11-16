@@ -7,9 +7,12 @@ extends RefCounted
 ## transaction stay with the existing owners (world.crafting / patch523
 ## rules, renewal_crafting.confirm_target → craft_requested).
 ## Left inert or empty (no rule here): 메인 (recommend) / 이벤트 / 한정 /
-## 서버 한정 / 즐겨찾기 / 검색 tabs (Off; tapping says so), the class filter
-## and sort button, 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
+## 서버 한정 / 즐겨찾기 / 검색 tabs (Off; tapping says so), the class filter,
+## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
+## The list's Btn_Sort (Normal / Enable) toggles 제작 가능 우선: recipes the
+## existing quote allows first, the rest after in their own order (TWILIGHT
+## 근사(근거 약함), docs/original_ui523_approx.md).
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
@@ -43,6 +46,7 @@ var _tab: String="equip"
 var _category: String=""
 var _selected: String=""
 var _count: int=1
+var _ready_first: bool=false
 var _scrolls: Dictionary={}
 var _last_out: Dictionary={}
 var last_result: Dictionary={}
@@ -151,7 +155,24 @@ func _recipes(world: Node) -> Array[String]:
 		if not allowed.has(category_name):continue
 		if not _category.is_empty() and category_name!=_category:continue
 		ids.append(str(raw))
+	if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return world._craft_quote(id,1).get("ok",false))
 	return ids
+
+## 제작 가능 우선: craftable recipes first, each group in its own order.
+static func ready_first(ids: Array[String], craftable: Callable) -> Array[String]:
+	var ready: Array[String]=[]
+	var rest: Array[String]=[]
+	for id: String in ids:
+		if craftable.call(id):ready.append(id)
+		else:rest.append(id)
+	ready.append_array(rest)
+	return ready
+
+func _toggle_ready_first() -> Dictionary:
+	if _moved():return {"ok":true,"ignored_after_drag":true}
+	_ready_first=not _ready_first
+	(_scrolls.items as ListScroll).y=0.0
+	return _stage()
 
 func _max_count(world: Node) -> int:
 	return 1 if world.crafting.recipes.get(_selected,{}).has("outcomes") else 20
@@ -256,7 +277,10 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 	spec[P_ALL+"Production_Popup_Keypad_Layout"]={"exclude":true}
 	spec[P_ALL+"Nd_Notice"]={"visible":ids.is_empty()}
 	# Tab_List: lists.
-	for name: String in ["Nd_Block","Btn_Back","Nd_List/Nd_Button_List","Nd_ItemList/Common_ButtonSet_Class","Nd_ItemList/Btn_Sort"]:spec[P_LIST+name]={"exclude":true}
+	for name: String in ["Nd_Block","Btn_Back","Nd_List/Nd_Button_List","Nd_ItemList/Common_ButtonSet_Class"]:spec[P_LIST+name]={"exclude":true}
+	spec[P_LIST+"Nd_ItemList/Btn_Sort"]={"activate":Callable(self,"_toggle_ready_first")}
+	spec[P_LIST+"Nd_ItemList/Btn_Sort/Normal"]={"visible":not _ready_first}
+	spec[P_LIST+"Nd_ItemList/Btn_Sort/Enable"]={"visible":_ready_first}
 	spec[P_LIST+"Nd_ItemList/Label_Notice"]={"visible":ids.is_empty()}
 	spec[P_LIST+"Nd_List/ListView_Sort"]={"input":Callable(_scrolls.sort,"input")}
 	spec[P_LIST+"Nd_ItemList/ListView"]={"input":Callable(_scrolls.items,"input")}

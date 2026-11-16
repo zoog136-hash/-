@@ -355,6 +355,7 @@ func choose_template() -> bool:
 
 func tick(delta: float, now: int = -1) -> void:
 	if not orim_state().is_empty() and state.active.status=="active" and pending.is_empty():_orim_cast(delta)
+	_orim_hero_visual(delta)
 	tick_clock+=delta
 	if tick_clock<0.5:return
 	tick_clock=0
@@ -847,6 +848,39 @@ func stop(now: int = -1, return_home: bool = true) -> Dictionary:
 	var result:=commit(next)
 	if result.get("ok",false):cleanup()
 	return result
+
+## TWILIGHT 근사 (오림 영웅 외형, docs/orim523_missing_rules.md): during an active Orim
+## run the chosen hero's original sprite (OrimsTrailCharacter.SpriteID) is drawn over
+## the player with the Orim NPC core actions; the player's own sprites are hidden.
+## Ends (player look restored) when the run is not active. Switch: ORIM_HERO_VISUAL.
+const ORIM_HERO_VISUAL := true
+var orim_hero_view: Node = null
+var orim_hero_character := 0
+var orim_hero_status: Dictionary = {}
+func _orim_hero_visual(delta: float) -> void:
+	var orim: Dictionary = orim_state()
+	var wanted: int = int(orim.get("character",0)) if ORIM_HERO_VISUAL and not orim.is_empty() and str(state.active.get("status",""))=="active" else 0
+	var player: Node = world.player if world != null else null
+	if wanted != orim_hero_character:
+		if is_instance_valid(orim_hero_view): orim_hero_view.queue_free()
+		orim_hero_view = null
+		orim_hero_character = wanted
+		orim_hero_status = {}
+		if wanted > 0 and is_instance_valid(player):
+			var hero: Dictionary = ORIM_RUN.character(orim_model(),wanted)
+			var view: Node = ORIM_VIEW.new()
+			if view.configure_hero(wanted,int(hero.get("sprite",0))):
+				view.name = "OrimHeroVisual"
+				player.add_child(view)
+				orim_hero_view = view
+				orim_hero_status = {"ok":true,"character":wanted,"sprite":int(hero.get("sprite",0))}
+			else:
+				orim_hero_status = {"ok":false,"character":wanted,"sprite":int(hero.get("sprite",0)),"reason":str(view.selection_status.get("reason",""))}
+				view.free()
+	if is_instance_valid(player): player.appearance_override_active = is_instance_valid(orim_hero_view)
+	if is_instance_valid(orim_hero_view) and is_instance_valid(player):
+		var motion: Variant = player.get("motion")
+		if motion != null: orim_hero_view.advance(delta, str(motion.state), int(motion.facing8), int(motion.sequence), bool(motion.active), int(world.hp) <= 0)
 
 func cleanup() -> void:
 	for actor: Variant in actors.values():
