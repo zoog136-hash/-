@@ -106,6 +106,85 @@ static func dissolve(world: Node, uids: Array) -> Dictionary:
 	_apply(world,staged.overrides)
 	return {"ok":true,"kind":"dissolve","dissolved":ledger,"output_item_class_id":RULES.BLESS_POWDER_ITEM,"amount":int(quote.total),"detail":"용해 %d개 → 축복의 가루 %d" % [ledger.size(),int(quote.total)]}
 
+## Proven physical stacks of one original ItemClass (normal bless), in ID order.
+static func stacks_of(world: Node, item_class_id: int) -> Dictionary:
+	var ids: Array = world.item_instances.keys(); ids.sort()
+	var stacks: Array = []; var total: int = 0
+	for uid: Variant in ids:
+		var owned: Dictionary = STACK.proof(world,str(uid))
+		if owned.is_empty() or int(owned.record.get("source_item_class_id",0))!=item_class_id: continue
+		var name_value: String = str(owned.record.name)
+		if world._item_locked(name_value,str(uid)) or world._item_locked(name_value): continue
+		stacks.append({"uid":str(uid),"owned":owned}); total += int(owned.remaining)
+	return {"stacks":stacks,"total":total}
+
+static func _debit_requests(stacks: Array, need: int) -> Array:
+	var requests: Array = []; var remaining: int = need
+	for stack: Dictionary in stacks:
+		if remaining==0: break
+		var owned: Dictionary = stack.owned
+		var amount: int = mini(remaining,int(owned.remaining))
+		requests.append({"physical_id":stack.uid,"quantity":amount,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-amount,STACK.RECEIPT:owned.receipt.duplicate(true)})
+		remaining -= amount
+	return requests
+
+## Solvent item classes the bag holds, with their method/output (상급·최상급 용해제).
+static func solvents_owned(world: Node) -> Array:
+	var found: Dictionary = {}
+	for uid: Variant in world.item_instances:
+		var owned: Dictionary = STACK.proof(world,str(uid))
+		if owned.is_empty(): continue
+		var id: int = int(owned.record.get("source_item_class_id",0))
+		if found.has(id): continue
+		var spec: Dictionary = RULES.solvent(id)
+		if not spec.is_empty() and int(spec.method) in [24,34]: found[id] = spec
+	var result: Array = found.values()
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.item_class_id)<int(b.item_class_id))
+	return result
+
+## 상급·최상급 용해 (TWILIGHT 근사): one solvent per item, output = the solvent's
+## SolutionItemClassID, amount = RULES.advanced_dissolve_yield.
+static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class_id: int) -> Dictionary:
+	if uids.is_empty(): return _fail("용해할 장비를 선택하세요","empty")
+	var spec: Dictionary = RULES.solvent(solvent_item_class_id)
+	if spec.is_empty() or int(spec.method) not in [24,34]: return _fail("상급·최상급 용해제가 아닙니다","solvent")
+	var seen: Dictionary = {}; var items: Array = []; var total: int = 0
+	for value: Variant in uids:
+		var uid: String = str(value)
+		if seen.has(uid): return _fail("같은 장비를 두 번 선택했습니다","duplicate")
+		seen[uid] = true
+		var info: Dictionary = equipment(world,uid)
+		if not info.ok: return info
+		var element_level: int = info.element_level if info.element.is_empty() or info.element_level!=0 else 1
+		var yielded: Dictionary = RULES.advanced_dissolve_yield(info.item_class_id,element_level,int(spec.method))
+		if not yielded.ok: return yielded
+		info["amount"] = int(yielded.amount); info["grade_id"] = int(yielded.grade_id)
+		items.append(info); total += int(yielded.amount)
+	var need: int = items.size()*RULES.ADVANCED_SOLVENT_PER_ITEM
+	var owned: Dictionary = stacks_of(world,solvent_item_class_id)
+	if int(owned.total)<need: return _fail("용해제가 부족합니다 (%d/%d)" % [int(owned.total),need],"solvent_short")
+	return {"ok":true,"items":items,"output_item_class_id":int(spec.output_item_class_id),"total":total,"solvent":spec,"requests":_debit_requests(owned.stacks,need),"solvent_used":need}
+
+static func dissolve_advanced(world: Node, uids: Array, solvent_item_class_id: int) -> Dictionary:
+	var quote: Dictionary = dissolve_advanced_quote(world,uids,solvent_item_class_id)
+	if not quote.ok: return quote
+	var debit: Dictionary = STACK.stage_debit(world,quote.requests)
+	if not debit.get("ok",false): return _fail(str(debit.get("reason",debit.get("error","용해제 차감 준비 실패"))),"debit")
+	var inventory: Dictionary = debit.overrides.inventory
+	var instances: Dictionary = debit.overrides.item_instances
+	var ledger: Array = []
+	for info: Dictionary in quote.items:
+		_remove(inventory,instances,info)
+		ledger.append({"physical_id":info.uid,"item_class_id":info.item_class_id,"enchant":info.enchant,"grade_id":info.grade_id,"amount":info.amount})
+	var origin: Dictionary = {"kind":"source523_advanced_dissolution","table":"AdvancedBlessPowderAmount","approximation":"TWILIGHT","solvent_item_class_id":solvent_item_class_id,"dissolved":ledger}
+	var staged: Dictionary = _grant(world,inventory,instances,int(world.gold),[{"item_class_id":int(quote.output_item_class_id),"amount":int(quote.total),"bless_raw":1,"enchant":0}],origin)
+	if not staged.get("ok",false): return _fail(str(staged.get("error","가루 지급 준비 실패")) + " · 장비·용해제 보존","grant")
+	staged.overrides["consumable_state"] = debit.overrides.consumable_state
+	if world._save_game(true,staged.overrides)!=OK: return _fail("용해 저장 실패 · 장비·용해제 보존","save")
+	_apply(world,staged.overrides)
+	var output_name: String = str(D.definition_id(str(int(quote.output_item_class_id))).get("native_record",{}).get("name",""))
+	return {"ok":true,"kind":"dissolve_advanced","dissolved":ledger,"output_item_class_id":int(quote.output_item_class_id),"amount":int(quote.total),"solvent_used":int(quote.solvent_used),"detail":"용해 %d개 (용해제 %d) → %s %d · TWILIGHT 근사" % [ledger.size(),int(quote.solvent_used),output_name,int(quote.total)]}
+
 ## Proven physical 상급 축복의 가루 stacks, in physical ID order.
 static func powder_owned(world: Node) -> Dictionary:
 	var ids: Array = world.item_instances.keys(); ids.sort()
@@ -121,12 +200,29 @@ static func powder_owned(world: Node) -> Dictionary:
 static func refine_quote(world: Node, uid: String, mode: String) -> Dictionary:
 	var info: Dictionary = equipment(world,uid)
 	if not info.ok: return info
-	if info.bless!=1: return _fail("축복·저주 장비의 연금 결과 상태가 원본 표에 없어 보존합니다","bless_state")
+	# TWILIGHT 근사(근거 약함, docs #14): a blessed/cursed target keeps its
+	# bless state on the output. Elemental enchant stays refused: the item
+	# supplier has no elemental field to carry it.
+	if info.bless not in [1,2,3]: return _fail("축복 상태 확인 실패","bless_state")
 	if info.element_level!=0 or not info.element.is_empty(): return _fail("속성 강화 장비의 연금 결과 계승 규칙이 원본 표에 없어 보존합니다","element")
 	var entry: Dictionary = RULES.refine_entry(info.item_class_id,info.enchant)
 	if not entry.ok: return entry
+	# "amount:N|special:M" adds M special inputs (TWILIGHT 근사, docs #12).
+	var special_amount: int = 0
+	if mode.contains("|special:"):
+		special_amount = int(mode.get_slice("|special:",1)) if mode.get_slice("|special:",1).is_valid_int() else -1
+		mode = mode.get_slice("|special:",0)
+		if special_amount<0: return _fail("특수 재료 수량 형식 확인 실패","special_format")
 	var registered: Dictionary = RULES.registration(entry,mode)
 	if not registered.ok: return registered
+	var special: Dictionary = RULES.special_registration(entry,special_amount)
+	if not special.ok: return special
+	if special_amount>0:
+		registered = registered.duplicate(true)
+		registered["main_probability"] = int(registered.probability)
+		registered["special_amount"] = special_amount
+		registered["special_probability"] = int(special.probability)
+		registered.probability = mini(RULES.SCALE,int(registered.probability)+int(special.probability))
 	var powder: Dictionary = powder_owned(world)
 	var need: int = int(registered.amount)
 	if int(powder.total)<need: return _fail("상급 축복의 가루가 부족합니다 (%d/%d)" % [int(powder.total),need],"powder")
@@ -138,6 +234,10 @@ static func refine_quote(world: Node, uid: String, mode: String) -> Dictionary:
 		requests.append({"physical_id":stack.uid,"quantity":amount,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-amount,STACK.RECEIPT:owned.receipt.duplicate(true)})
 		remaining -= amount
 		if remaining==0: break
+	if special_amount>0:
+		var specials: Dictionary = stacks_of(world,int(special.item_class_id))
+		if int(specials.total)<special_amount: return _fail("특수 재료가 부족합니다 (%d/%d)" % [int(specials.total),special_amount],"special_short")
+		requests.append_array(_debit_requests(specials.stacks,special_amount))
 	return {"ok":true,"target":info,"entry":entry,"registration":registered,"requests":requests,"cost":int(entry.cost),"percent":RULES.percent_text(int(registered.probability))}
 
 static func refine(world: Node, uid: String, mode: String) -> Dictionary:
@@ -159,7 +259,7 @@ static func refine(world: Node, uid: String, mode: String) -> Dictionary:
 		output = RULES.pick_output(quote.entry,rng)
 		_remove(inventory,instances,quote.target)
 		var origin: Dictionary = {"kind":"source523_refine","table":"RefineOutput","refine_item_group_id":int(quote.entry.group_id),"target_physical_id":uid,"target_item_class_id":int(quote.target.item_class_id),"target_enchant":int(quote.target.enchant),"registered_amount":int(quote.registration.amount),"probability":int(quote.registration.probability),"roll":roll,"output_row_id":int(output.ID)}
-		var granted: Dictionary = _grant(world,inventory,instances,gold,[{"item_class_id":int(output.ItemClassID),"amount":1,"bless_raw":1,"enchant":int(output.Enchant)}],origin)
+		var granted: Dictionary = _grant(world,inventory,instances,gold,[{"item_class_id":int(output.ItemClassID),"amount":1,"bless_raw":int(quote.target.bless),"enchant":int(output.Enchant)}],origin)
 		if not granted.get("ok",false): return _fail(str(granted.get("error","연금 결과 지급 준비 실패")) + " · 재료·장비 보존","grant")
 		staged = granted.overrides
 		staged["consumable_state"] = overrides.consumable_state
@@ -197,4 +297,4 @@ static func snapshot(world: Node) -> Dictionary:
 		if entry_rule.ok:
 			var output: Dictionary = entry_rule.outputs[0]
 			refine_rows.append({"uid":uid,"label":label,"min":int(entry_rule.input.MinAmount),"max":int(entry_rule.input.MaxAmount),"min_percent":RULES.percent_text(int(entry_rule.input.MinProbability)),"max_percent":RULES.percent_text(int(entry_rule.input.MaxProbability)),"cost":int(entry_rule.cost),"output_enchant":int(output.Enchant),"output_name":str(D.definition_id(str(int(output.ItemClassID))).get("native_record",{}).get("name","")),"special_inputs":entry_rule.special_inputs.size(),"input":entry_rule.input.duplicate(true)})
-	return {"installed":RULES.installed(),"dissolve":dissolve_rows,"refine":refine_rows,"powder":int(powder_owned(world).total),"gold":int(world.gold),"refine_contents_enabled":RULES.refine_contents_enabled() if RULES.installed() else null}
+	return {"installed":RULES.installed(),"solvents":solvents_owned(world) if RULES.installed() else [],"dissolve":dissolve_rows,"refine":refine_rows,"powder":int(powder_owned(world).total),"gold":int(world.gold),"refine_contents_enabled":RULES.refine_contents_enabled() if RULES.installed() else null}

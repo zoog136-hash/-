@@ -153,3 +153,32 @@ var lr: Dictionary = world.skill_card523_levelup_execute(l.token)
 - 스킬 카드 덱 41 다시 뽑기(영웅·전설 활성 행): 스킬서 아이템을 다른 스킬서로 바꾸는 규칙(직업 제한 여부)이 정해지지 않아 넣지 않았다.
 - 각성·장착·파견·완성 컬렉션이 걸린 마지막 1장의 다시 뽑기: 거부한다. 진행을 옮기는 규칙이 정해지면 바꿀 수 있다.
 - 소비자 없는 단계 효과(위 목록).
+
+## 5. TWILIGHT 근사 적용 — 사용자 지시 2026-11-16 11:40 "근사치로 다 넣어" (PR `feat/approx523-cards`)
+
+4절의 남은 것 세 가지를 근사로 넣었다. 근거가 약한 것은 "TWILIGHT 근사(근거 약함)"으로 표시한다. 원본 창 연결은 여전히 UI 작업이다.
+
+### 5.1 스킬 카드 덱 41 다시 뽑기 (`skill_card523.swap_quote/swap_execute`, world `skill_card523_swap_quote/execute`)
+- 표에서 오는 것: BuffCardRuleSwap 덱 41(영웅 5회·전설 5회, 신화 `Activate=false`라 제외), BuffCardRuleSwapCost(영웅 900·2900·4900·6900·9900, 전설 9900~49900 다이아, PickCount 0), SourceView `IsSwapOut`·`IsNoSwapOut`.
+- 없던 것: 결과 후보의 직업 제한. **근사(근거 약함)**: 사용자가 합성에서 정한 규칙과 같게 "같은 등급 중 **현재 직업이 배울 수 있는** 카드(SpellLearnLimit, 튜토리얼 제외), 받을 스킬서가 있는 것" 중 균등, 현재 카드 제외.
+- 대상·결과: 배우지 않은 스킬서 1장(원본 영수증, 잠금 제외)을 차감하고 결과 스킬서 1장을 지급한다. 스킬서에는 영구 보유 1장이 없어 다른 덱처럼 "대기 결과"를 둘 곳이 없으므로 **바로 바뀐다**.
+  다이아 차감·스킬서 차감·결과 지급·횟수(`skill_card523.swaps{카드ID:횟수}`, 초기화 없음)를 저장 한 번에 기록. 예전 저장(`swaps` 없음)도 그대로 읽는다.
+
+### 5.2 마지막 1장의 진행 이전 (`card_swap523._move_progress`, 상수 `APPROX_MOVE_PROGRESS`)
+- 예전: 장착·옵션 각성/추가 슬롯·스킬 각성·탐험 파견·완성 컬렉션이 걸린 마지막 1장은 거부.
+- **근사(근거 약함)**: 확정할 때 진행을 결과 카드로 옮긴다 — 장착 칸은 결과 카드로, 옵션 각성·스킬 각성·탐험 파견 기록은 카드 정체(키·값)를 결과 카드 정체로 바꿔 다시 넣는다.
+  완성 카드 컬렉션은 보유 카드에서 매번 계산되므로 풀릴 수 있다(견적 `progress_moves.collections_undone`에 수를 보여 준다).
+  저장이 실패하면 카드·대기 결과와 함께 옮긴 진행도 되돌린다.
+- 계속 거부: 할파스 별 강화(할파스 카드 자체의 체계라 다른 카드로 옮길 대상이 없음).
+
+### 5.3 소비자 없던 스킬 카드 단계 효과 (`relic_spell_effects._approx_stage`, 상수 `APPROX_STAGE_FIELDS`)
+| 행 | 근사 소비자 |
+|---|---|
+| `SpellHitProbabilityBase`, `IgnoreSpecialResistance` (Percentage) | 스킬의 상태이상 성공 확률 `status_chance`에 단계 차이만큼 더함(0~100%) |
+| `SpellHitProbabilityMin` (Percentage) | `status_chance`의 하한 |
+| `SpellDebuffMinDuration` / `SpellDebuffMaxDuration` (Seconds) | 상태이상 지속 `duration_bounds`의 최소/최대 |
+- 계속 남는 것: 자식 주문 교체(`SpellClassID`)와 바인딩에 없는 카드(힐 올, 셰이프 체인지, 블레이드 스턴 등 10종) — 바꿀 기존 스킬 기록 자체가 없다.
+
+### 확인 (`tests/cards523_reroll_skillcard_test.gd`, 실제 Main·원본 팩)
+- 장착 + 스킬 각성 기록이 있는 마지막 1장: 견적 가능(옮길 진행 표시) → 다시 뽑기 → 확정하면 장착 칸·스킬 각성이 결과 카드로 옮겨짐.
+- 마법사 영웅 스킬 카드 다시 뽑기: 900 다이아, 원래 스킬서 1장 → 같은 등급 마법사 카드 스킬서 1장, 횟수 1, 저장에 횟수 기록.
