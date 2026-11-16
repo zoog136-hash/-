@@ -241,6 +241,10 @@ func _approx_invoke(option_id: int, chance: float, level: int) -> Dictionary:
 ## self buff (original BuffClass rows through the passive receivers). Anything
 ## else (composition nodes, chained/next spells, area shapes) keeps the hold.
 const EQUIPMENT_SPELLS = preload("res://scripts/crafting/patch523_equipment_spells.gd")
+## TWILIGHT 근사 (4) switch: heal / cleanse / dash / control statuses (docs (4)).
+const APPROX_EXTRA_EFFECTS := true
+## Target rows the equipment-spell fields lack: [modifier, UnitID, scale].
+const APPROX_TARGET_FIELDS := {"ArmorClass":["ac",1,-1.0]}
 func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 	var row: Dictionary = SOURCE_ROWS.row("SpellClass", spell_id)
 	if row.is_empty() or row.get("TestSpell") != false: return {"reason":"%d 없음/테스트" % spell_id}
@@ -275,8 +279,17 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 			values["_next"] = next
 		elif name in rule.get("blocking",[]): return {"reason":"%d %s" % [spell_id, name]}
 		elif name in rule.get("read",[]): values[name] = int(entry.bonus.Value)
+		elif APPROX_EXTRA_EFFECTS and name == "HPRestorationPercent":
+			# Several level rows: the lowest (가장 보수적인 값).
+			values["HPRestorationPercent"] = mini(int(values.get("HPRestorationPercent", int(entry.bonus.Value))), int(entry.bonus.Value))
+		elif APPROX_EXTRA_EFFECTS and name == "SpellBuffGroup": values["_cleanse"] = true
+		elif APPROX_EXTRA_EFFECTS and name == "SpellMoveMultiple": values["_dash"] = int(entry.bonus.Value)
 		elif name not in ignored: ignored.append(name)
 	var base: Dictionary = {"spell_id":spell_id,"name":str(row.get("Name","")),"ignored":ignored}
+	if values.has("_dash"):
+		# TWILIGHT 근사 "이동기": SpellMoveMultiple = a dash to the target, then the follow-up spell.
+		base["dash"] = true
+		values.erase("_dash")
 	if values.has("_children"):
 		# Chain: children in order, then the own follow-up spell (if any).
 		var chain: Array = values._children.duplicate()
@@ -295,6 +308,7 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 		if not values.has("SpellDamageBase") and not values.has("SpellDamageDiceNumber") and buff_id <= 0:
 			var only: Dictionary = base.next.duplicate(true)
 			only["spell_id"] = spell_id; only["name"] = str(row.get("Name",""))
+			if base.get("dash",false): only["dash"] = true
 			return only
 	if values.has("SpellDamageBase") or values.has("SpellDamageDiceNumber"):
 		var number := int(values.get("SpellDamageDiceNumber",0)); var sides := int(values.get("SpellDamageDiceSpotCount",0))
@@ -302,6 +316,18 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 		base.merge({"effect":"damage","base":int(values.get("SpellDamageBase",0)),"number":number,"sides":sides,
 			"attack_type":"melee" if int(values.get("SpellAttackType",0)) == 1 else ("ranged" if int(values.get("SpellAttackType",0)) == 2 else "magic")})
 		return base
+	if buff_id <= 0 and APPROX_EXTRA_EFFECTS:
+		# TWILIGHT 근사 (4): self heal (HPRestorationPercent, 1/10000 %) and status
+		# cleanse (SpellBuffGroup rows = the groups it removes) through the existing player.
+		if values.has("HPRestorationPercent") and int(values.HPRestorationPercent) > 0:
+			base.merge({"effect":"heal_pct","percent":float(values.HPRestorationPercent) / 10000.0,"cleanse":values.has("_cleanse")})
+			return base
+		if values.has("_cleanse"):
+			base.merge({"effect":"cleanse"})
+			return base
+		if base.get("dash",false):
+			base.merge({"effect":"dash"})
+			return base
 	if buff_id <= 0: return {"reason":"%d 효과 없음" % spell_id}
 	var buff: Dictionary = SOURCE_BUFFS.describe(buff_id)
 	if buff.get("buff_class",{}).is_empty() or buff.get("excluded") == true: return {"reason":"버프 %d 없음" % buff_id}
@@ -312,6 +338,14 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 			var name: String = str(entry.get("type",{}).get("Name",""))
 			var receiver: Dictionary = receivers.get(name,{})
 			var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(entry.get("link",{}).get("MinSpellLevel",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTypeID",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTargetID",0)) == 0
+			var at_value := int(entry.get("bonus",{}).get("BonusApplicationTypeID",0))
+			var target_stat := ""
+			# TWILIGHT 근사 (4): SpecialResistance (적용 유형 2 + 저항 종류) on a self buff, as on passives.
+			if APPROX_EXTRA_EFFECTS and receiver.has("targets") and at_value == int(receiver.get("application_type",-1)) and int(entry.get("link",{}).get("CharacterLevel",0)) == 0:
+				target_stat = str(receiver.targets.get(str(int(entry.get("bonus",{}).get("BonusApplicationTargetID",0))),""))
+			if not target_stat.is_empty() and str(entry.get("unit",{}).get("Name","")) == str(receiver.get("unit","")) and _source_integer(entry.get("bonus",{}).get("Value")):
+				stats[target_stat] = float(stats.get(target_stat,0.0)) + float(entry.bonus.Value) * float(receiver.get("scale",1))
+				continue
 			if receiver.is_empty() or receiver.has("targets") or receiver.has("weapon_types") or not flat or str(entry.get("unit",{}).get("Name","")) != str(receiver.get("unit","")) or not _source_integer(entry.get("bonus",{}).get("Value")):
 				if name not in ignored: ignored.append(name)
 				continue
@@ -324,15 +358,29 @@ func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 	var low := int(values.get("SpellDebuffMinDuration",0)); var high := int(values.get("SpellDebuffMaxDuration",low))
 	if low <= 0 or high < low: return {"reason":"%d 지속시간 없음" % spell_id}
 	var modifiers: Dictionary = {}
+	var control: Dictionary = {}
 	for entry: Dictionary in buff.get("bonuses",[]):
 		var t: Dictionary = entry.get("type",{}); var b: Dictionary = entry.get("bonus",{}); var name: String = str(t.get("Name",""))
-		var field: Array = EQUIPMENT_SPELLS.BUFF_FIELDS.get(name,[])
+		var field: Array = EQUIPMENT_SPELLS.BUFF_FIELDS.get(name, APPROX_TARGET_FIELDS.get(name, []) if APPROX_EXTRA_EFFECTS else [])
+		if APPROX_EXTRA_EFFECTS and name in ["CannotMove","CannotAttack","CannotCastSpell","CannotCastSkill","PoisonDamageDiceNumber","PoisonDamageDiceSpotCount"] and _source_integer(b.get("Value")):
+			control[name] = int(b.Value); continue
 		var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(b.get("BonusApplicationTypeID",0)) == 0 and int(b.get("BonusApplicationTargetID",0)) == 0
 		if field.is_empty() or not flat or int(t.get("UnitID",-1)) != int(field[1]) or not _source_integer(b.get("Value")) or name.begins_with("PVP"):
 			if name not in ignored: ignored.append(name)
 			continue
 		modifiers[str(field[0])] = float(modifiers.get(str(field[0]),0.0)) + float(b.Value) * float(field[2])
-	if modifiers.is_empty(): return {"reason":"대상 버프 %d 받는 곳 없음" % buff_id}
+	# TWILIGHT 근사 (4): control rows → the existing monster statuses (근거 약함):
+	# CannotMove + CannotAttack = stun (잠·기절), CannotMove = hold, CannotCastSpell/Skill = silence,
+	# PoisonDamageDice = poison (tick = average die, 1 s).
+	var status_kind := ""
+	var tick := 0
+	if control.has("CannotMove") and control.has("CannotAttack"): status_kind = "stun"
+	elif control.has("CannotMove"): status_kind = "hold"
+	elif control.has("CannotCastSpell") or control.has("CannotCastSkill"): status_kind = "silence"
+	elif control.has("PoisonDamageDiceNumber"):
+		status_kind = "poison"; tick = maxi(1, int(round(float(control.PoisonDamageDiceNumber) * (float(control.get("PoisonDamageDiceSpotCount",1)) + 1.0) / 2.0)))
+	if modifiers.is_empty() and status_kind.is_empty(): return {"reason":"대상 버프 %d 받는 곳 없음" % buff_id}
+	if not status_kind.is_empty(): base.merge({"status":status_kind,"tick_damage":tick})
 	var chance := 1.0
 	if values.has("SpellHitProbabilityBase"):
 		chance = clampf(float(values.SpellHitProbabilityBase) / 1000000.0, float(values.get("SpellHitProbabilityMin",0)) / 1000000.0, float(values.get("SpellHitProbabilityMax",1000000)) / 1000000.0)
@@ -353,9 +401,17 @@ func source_approx_passive(id: String, job: String, given_profile: Dictionary = 
 	var requires: Array[String] = []
 	var buff_ids: Array[int] = []
 	var children: Array = []
+	var toggled: Dictionary = {}
 	for entry: Dictionary in profile.bonuses:
 		if int(entry.link.MinSpellLevel) != 0: continue
 		var name: String = str(entry.type.Name)
+		# TWILIGHT 근사 (4, 근거 약함): a #OFF/#ON toggle passive has no toggle UI here, so
+		# learning it is treated as ON — the ON spell (ChangeSpecialSpellClassID /
+		# ToggleOnSpellClassID, same value) is merged like a child passive.
+		if name in ["ChangeSpecialSpellClassID","ToggleOnSpellClassID"] and APPROX_EXTRA_EFFECTS and _source_integer(entry.bonus.Value):
+			if toggled.has(int(entry.bonus.Value)): continue
+			toggled[int(entry.bonus.Value)] = true
+			name = "SpellClassID"
 		if name == "SpellClassID" and APPROX_CHILD_PASSIVES and child_depth < 2 and int(entry.bonus.BonusApplicationTypeID) == 0 and _source_integer(entry.bonus.Value):
 			# TWILIGHT 근사 "묶음 하위 주문": a passive made of child passives takes
 			# each child's own rows (with the child's own weapon/prerequisite rows).
@@ -527,8 +583,11 @@ func source_approx_active(id: String, job: String) -> Dictionary:
 	var child := approx_child_spell(int(row.ID), 2)
 	if child.has("reason"): return {"reason":str(child.reason)}
 	var effect := str(child.get("effect",""))
-	if targeting == 1 and effect != "self_buff" and float(row.TargetAreaRadius) <= 0.0: return {"reason":"자기 대상 %s" % effect}
-	if targeting == 2 and effect == "self_buff": return {"reason":"대상 지정 자기 버프"}
+	# TWILIGHT 근사 (4): self heal / cleanse on oneself; an ally-targeted buff
+	# (TargettingType 2) has no party here, so it is cast on oneself (근거 약함).
+	if targeting == 1 and effect not in ["self_buff","heal_pct","cleanse"] and float(row.TargetAreaRadius) <= 0.0: return {"reason":"자기 대상 %s" % effect}
+	if targeting == 2 and effect == "self_buff" and not APPROX_EXTRA_EFFECTS: return {"reason":"대상 지정 자기 버프"}
+	if targeting == 2 and effect in ["heal_pct","cleanse"] and not APPROX_EXTRA_EFFECTS: return {"reason":"대상 지정 %s" % effect}
 	var weapons: Array[int] = []
 	for entry: Dictionary in profile.bonuses:
 		if int(entry.link.MinSpellLevel) != 0 or int(entry.bonus.BonusApplicationTypeID) != 0: continue
@@ -557,6 +616,9 @@ func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
 			"damage": parts.append("피해 %d+%dd%d" % [int(cursor.base),int(cursor.number),int(cursor.sides)])
 			"debuff": parts.append("대상 약화 %s (%.0f~%.0f초)" % [str(cursor.modifiers.keys()),float(cursor.duration[0]),float(cursor.duration[1])])
 			"self_buff": parts.append("자기 강화 %s (%.0f초)" % [str(cursor.stats.keys()),float(cursor.duration)])
+			"heal_pct": parts.append("HP %.0f%% 회복" % float(cursor.percent))
+			"cleanse": parts.append("상태 이상 해제")
+			"dash": parts.append("대상에게 이동")
 		cursor = cursor.get("next",{})
 	var summary := "액티브 · 원본 523 수치 + TWILIGHT 근사 · " + " → ".join(parts)
 	if bool(spec.pvp_only_to_npc): summary += " · 원본 PC 전용 대상 → 몬스터에 적용(사용자 결정 2026-11-16)"
@@ -564,6 +626,8 @@ func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
 		"minimum_level":int(spec.minimum_level),"local_kind":"source_approx523_active","desc":summary,"range":float(spec.range)}
 	if effect == "self_buff":
 		runtime.merge({"mode":"buff","stats":child.stats.duplicate(true),"duration":float(child.duration),"shape":"self"})
+	elif effect in ["heal_pct","cleanse"] and float(spec.get("radius",0.0)) <= 0.0:
+		runtime.merge({"mode":"buff","stats":{},"duration":0.1,"shape":"self","approx_self_child":child.duplicate(true)})
 	else:
 		var shape := "single"
 		if float(spec.get("radius",0.0)) > 0.0: shape = "self_circle" if int(SOURCE_ROWS.row("SpellClass", int(spec.spell_id)).get("TargettingTypeID",2)) == 1 else "target_circle"

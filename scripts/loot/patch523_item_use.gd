@@ -323,8 +323,10 @@ static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGen
 	var given: Array[Dictionary] = []
 	var weighted: Array[Dictionary] = []
 	var total: int = 0
+	# TWILIGHT 근사 (2): a class with no row of its own draws from every row.
+	var whole_pool: bool = class_id in spec.get("approx_class_pool",[])
 	for reward: Dictionary in spec.get("rewards",[]):
-		if not class_matches(reward.get("class_ids",[]),class_id): continue
+		if not whole_pool and not class_matches(reward.get("class_ids",[]),class_id): continue
 		if int(reward.get("entity_type_id",1)) == 1: given.append(reward)
 		elif int(reward.get("entity_type_id",-1)) == 0:
 			var weight: int = int(reward.get("probability_raw",0))
@@ -333,7 +335,9 @@ static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGen
 			if weight > 0: weighted.append(reward)
 		else: return {"ok":false}
 	if spec.get("kind") != "guaranteed_bag":
-		if total != 10000000 or int(spec.get("source_probability_denominator",0)) != total or weighted.is_empty(): return {"ok":false}
+		# TWILIGHT 근사: a renormalized box draws over the class's own total.
+		var renormalized: bool = bool(spec.get("approx_renormalized", false)) and total > 0
+		if (total != 10000000 or int(spec.get("source_probability_denominator",0)) != total) and not renormalized or weighted.is_empty(): return {"ok":false}
 		for index: int in range(clampi(draws,1,10)):
 			var roll: int = rng.randi_range(0,total-1)
 			var upper: int = 0

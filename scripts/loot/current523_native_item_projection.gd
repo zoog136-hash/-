@@ -1,6 +1,21 @@
 extends RefCounted
 ## Current ItemData -> existing game DTO. This supplies no ownership or save.
 ## Slot/stat/formula mappings retain the public patch523_item_definitions.py ABI.
+## TWILIGHT 근사 switches (LuckyBag, docs/items523_remaining_missing_rules.md 18).
+const APPROX_BAG_DROP_TEST_REWARDS: bool = true
+const APPROX_BAG_RENORMALIZE: bool = true
+## TWILIGHT 근사 (2) — 남은 막힌 상자 (docs/items523_remaining_missing_rules.md 18.2).
+const APPROX_BAG_ROWS: bool = true
+## Rows that only steer the live client/server (화면 필터·서버 공지·주문 재료 표시) or
+## that another owner handles (Life → item_life523): ignored for opening.
+const APPROX_BAG_IGNORED := ["UIShowFilter","NoAnnounce","SpellMaterialTypeID","Life","ItemPossessionAppellationID"]
+## Test reward rows are replaced by a non-test item with the same functional
+## row, or (a card item) by the card itself.
+const APPROX_BAG_SUBSTITUTE: bool = true
+const SUBSTITUTE_TYPES := ["LuckyBagClassID","SelectRewardID","ComplexRewardID","BuffCardID"]
+static var _substitutes: Dictionary = {}
+static var _substitutes_identity: String = ""
+
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const SLOT_MAP={"Head":"helmet","Torso":"body","Shirt":"tshirt","Cloak":"cloak","Leg":"gaiters","Foot":"boots","Hand":"gloves","WeaponHold":"weapon","Finger":"ring","Neck":"necklace","Waist":"belt","Ear":"earring","ShieldHold":"offhand","Quiver":"offhand","Rune":"rune","SpellRune":"rune","Badge":"seal","Insignia":"badge","Spaulder":"shoulder","Bangle_normal":"bracelet","Bangle_BM":"bracelet","Crest":"crystal","Catalyst":"catalyst","DominationStone":"domination_stone","Relic":"relic_item","FishingRod":"fishing_rod"}
 const FLAT={"WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit","WeaponDamageBonus":"additionalDamage","ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction","PVPMeleeAdditionDamage":"pvp_melee_damage","PVPRangeAdditionDamage":"pvp_ranged_damage","PVPMagicAdditionDamage":"pvp_magic_damage","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","PierceMeleeDamageReduction":"melee_reduction_ignore","PierceRangeDamageReduction":"ranged_reduction_ignore","PierceMagicDamageReduction":"magic_reduction_ignore","HPPotionIncreaseStatic":"potionHealFlat"}
@@ -1007,6 +1022,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		return selectable_bag(definition,graph,label(definition.original_item.get("StoryDescID")),_active_classes(),func(item_id: int) -> Array:return SOURCE.related("ItemEquipSlot","ItemClassID",item_id),func(table: String,row: Dictionary) -> Dictionary:return SOURCE.declared_exclusion(table,row))
 	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,BAG_UNITS,false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	if APPROX_BAG_ROWS:_approx_bag_rows(rows,spec)
 	var reasons: Array=spec.blocked_reasons;var distribution: Array=[];var active: Dictionary={};var domain: Array=[]
 	if not bag_flags_valid(rows):reasons.append("unsupported_item_bonus_unit_or_value:ResetAutoSlotByEmpty")
 	active = _active_classes()
@@ -1017,7 +1033,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 	domain.sort()
 	for class_id: int in domain:
 		if not active.has(class_id):distribution.append("unsupported_lucky_bag_root_class")
-	var rewards: Array=[];var linked: Array=[];var types: Dictionary={};var weighted: Array=[]
+	var rewards: Array=[];var linked: Array=[];var types: Dictionary={};var weighted: Array=[];var dropped: Array=[]
 	for entity: Dictionary in graph.entities:
 		var row: Dictionary=entity.get("row",{});var type: Dictionary=entity.get("entity_type",{});var item: Dictionary=entity.get("item_class",{})
 		if not integer(row.get("LuckyBagEntityTypeID")) or int(row.LuckyBagEntityTypeID) not in [0,1]:return {}
@@ -1038,8 +1054,22 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		for class_id: int in classes:
 			if class_id in domain:eligible=true
 		var positive: bool=kind==1 or (integer(row.get("Probability")) and int(row.Probability)>0)
-		if eligible and positive and (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+		# TWILIGHT 근사 (사용자 지시 2026-11-16 "근사치로 다 넣어", docs/items523_remaining_missing_rules.md 18):
+		# a test/dummy reward item is dropped from the box instead of keeping the box;
+		# the remaining probability rows are drawn over their own total.
+		# The original entity stays in source_entities (complete evidence); only the reward is left out.
+		var excluded_item: bool=item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()
+		var substitute: Dictionary=_substitute_for(item) if excluded_item and APPROX_BAG_SUBSTITUTE else {}
+		if not substitute.is_empty():excluded_item=false
+
+		if excluded_item and APPROX_BAG_DROP_TEST_REWARDS:
+			if retain_source_entities:
+				var kept: Dictionary=row.duplicate(true);kept["entity_type"]=type.duplicate(true);kept["class_limits"]=limits;kept["approx_dropped"]=true;linked.append(kept)
+			dropped.append(row.get("ItemClassID"))
+			continue
+		if eligible and positive and excluded_item:reasons.append("source_test_or_excluded_reward_item")
 		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
+		if substitute.has("item_class_id"):item=SOURCE.row("ItemClass",int(substitute.item_class_id))
 		if level_ok and int(enchant)>0:
 			var slots: Dictionary={};var equip_rows: Array=SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0)))
 			if equip_rows.is_empty():level_ok=false
@@ -1051,9 +1081,11 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		if retain_source_entities:
 			var original: Dictionary=row.duplicate(true);original["entity_type"]=type.duplicate(true);original["class_limits"]=limits;linked.append(original)
 		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
+		if substitute.has("item_class_id"):reward["approx_substituted_from"]=row.get("ItemClassID");reward["item_class_id"]=float(substitute.item_class_id)
+		elif substitute.has("card_id"):reward["approx_card"]=substitute.duplicate(true)
 		rewards.append(reward)
 		if kind==0:weighted.append(reward)
-	var totals: Dictionary={}
+	var totals: Dictionary={};var renormalized: bool=false
 	if not weighted.is_empty():
 		if domain.is_empty():distribution.append("unresolved_lucky_bag_source_class_scope")
 		for reward: Dictionary in weighted:
@@ -1063,7 +1095,19 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 			for reward: Dictionary in weighted:
 				if (reward.class_ids.is_empty() or class_id in reward.class_ids) and integer(reward.probability_raw) and int(reward.probability_raw)>=0:total+=int(reward.probability_raw)
 			totals[str(class_id)]=total
-			if total!=10000000:distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
+			# TWILIGHT 근사: a class total other than 10,000,000 (or one reduced by a
+			# dropped test reward) is drawn over its own total (renormalized).
+			# TWILIGHT 근사 (2): a class with no row of its own draws from every row.
+			if total==0 and APPROX_BAG_RENORMALIZE and APPROX_BAG_ROWS:
+				var whole_total: int=0
+				for reward: Dictionary in weighted:
+					if integer(reward.probability_raw) and int(reward.probability_raw)>0:whole_total+=int(reward.probability_raw)
+				if whole_total>0:
+					if not spec.has("approx_class_pool"):spec["approx_class_pool"]=[]
+					spec.approx_class_pool.append(class_id);totals[str(class_id)]=whole_total;renormalized=true;continue
+
+			if total!=10000000 and not (APPROX_BAG_RENORMALIZE and total>0):distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
+			elif total!=10000000:renormalized=true
 	var unique: Array=[]
 	for reason: String in reasons+distribution:
 		if reason not in unique:unique.append(reason)
@@ -1075,7 +1119,72 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 	if not weighted.is_empty():
 		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
 		if distribution.is_empty():spec["source_probability_denominator"]=10000000
+		if distribution.is_empty() and renormalized:spec["approx_renormalized"]=true
+	if not dropped.is_empty():spec["approx_dropped_test_rewards"]=dropped
+	if rewards.is_empty() and spec.activation_status=="unrestricted":spec.activation_status="blocked";spec.blocked_reasons=["approx_all_rewards_dropped"]
 	return spec
+
+## TWILIGHT 근사 (2): the bag's own rows that the opening path did not accept.
+##  - APPROX_BAG_IGNORED rows: ignored (listed in approx_ignored_rows);
+##  - UsageInterval / ClassUsageInterval (Seconds; direct or BonusApplicationType
+##    314 Account — one offline account) → reuse wait (consume_delay_ms);
+##  - InfiniteAmount 1 → the bag is not consumed (approx_reusable), as the
+##    quest/quick-slot owners already read the same column (quest_reusable523);
+##  - LuckyBagLimitedItemPossession (BonusApplicationType 5 = ItemClass) → the bag
+##    is refused while that many of the target item are owned (approx_possession_limits).
+static func _approx_bag_rows(rows: Array, spec: Dictionary) -> void:
+	var handled: Dictionary={};var ignored: Array=[];var limits: Array=[];var wait: int=0
+	for row: Dictionary in rows:
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		var unit: String=str(row.get("unit",{}).get("Name",""));var at: int=whole(bonus.get("BonusApplicationTypeID",0)) if integer(bonus.get("BonusApplicationTypeID",0)) else -1
+		if name_value in APPROX_BAG_IGNORED:ignored.append(name_value);handled[name_value]=true
+		elif name_value in ["UsageInterval","ClassUsageInterval"] and unit=="Seconds" and integer(bonus.get("Value")) and int(bonus.Value)>0 and at in [0,314] and row.get("IsPossession")!=true:
+			wait=maxi(wait,int(bonus.Value));handled[name_value]=true
+		elif name_value=="InfiniteAmount" and integer(bonus.get("Value")) and int(bonus.Value)==1:spec["approx_reusable"]=true;handled[name_value]=true
+		elif name_value=="LuckyBagLimitedItemPossession" and at==5 and integer(bonus.get("Value")) and int(bonus.Value)>0 and integer(bonus.get("BonusApplicationTargetID")):
+			limits.append({"item_class_id":int(bonus.BonusApplicationTargetID),"max":int(bonus.Value)});handled[name_value]=true
+	if handled.is_empty():return
+	var kept: Array=[]
+	for reason: String in spec.get("blocked_reasons",[]):
+		var name_value: String=reason.get_slice(":",1) if reason.contains(":") else ""
+		if reason=="source_infinite_amount_not_supported" and handled.has("InfiniteAmount"):continue
+		if (reason.begins_with("unsupported_item_bonus:") or reason.begins_with("conditional_or_possession_item_bonus:")) and handled.has(name_value):continue
+		kept.append(reason)
+	spec.blocked_reasons=kept
+	if wait>0:spec["consume_delay_ms"]=maxi(int(spec.get("consume_delay_ms",0)),wait*1000);spec["approx_reuse_seconds"]=wait
+	if not ignored.is_empty():spec["approx_ignored_rows"]=ignored
+	if not limits.is_empty():spec["approx_possession_limits"]=limits
+
+## A non-test ItemClass whose functional row (SUBSTITUTE_TYPES) equals the test
+## item's, or the card itself for a test card item (BuffCardDrawer, deck 1/2/98).
+static func _substitute_for(item: Dictionary) -> Dictionary:
+	var identity: String=str(SOURCE.identity().get("source_sha256",""))
+	if identity.is_empty() or not integer(item.get("ID")):return {}
+	if _substitutes_identity!=identity:
+		_substitutes={};_substitutes_identity=identity
+		var types: Dictionary={}
+		for row: Dictionary in SOURCE.rows("BonusType"):
+			if str(row.get("Name","")) in SUBSTITUTE_TYPES:types[int(row.ID)]=str(row.Name)
+		var bonuses: Dictionary={}
+		for row: Dictionary in SOURCE.rows("Bonus"):
+			if types.has(int(row.get("BonusTypeID",-1))) and int(row.get("BonusApplicationTypeID",0))==0:bonuses[int(row.ID)]=types[int(row.BonusTypeID)]+":"+str(int(row.Value))
+		for row: Dictionary in SOURCE.rows("ItemBonus"):
+			if row.get("IsPossession")==true or not bonuses.has(int(row.get("BonusID",-1))):continue
+			var key: String=bonuses[int(row.BonusID)];var owner: Dictionary=SOURCE.row("ItemClass",int(row.ItemClassID))
+			var test: bool=owner.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",owner).is_empty() or not str(owner.get("ServiceRegionCode","")).is_empty()
+			if not _substitutes.has(key):_substitutes[key]={"items":[],"test":{}}
+			if test:_substitutes[key].test[int(row.ItemClassID)]=true
+			else:_substitutes[key].items.append(int(row.ItemClassID))
+		for key: String in _substitutes:_substitutes[key].items.sort()
+	for key: String in _substitutes:
+		var entry: Dictionary=_substitutes[key]
+		if not entry.test.has(int(item.ID)):continue
+		if not entry.items.is_empty():return {"item_class_id":int(entry.items[0]),"by":key}
+		if key.begins_with("BuffCardID:"):
+			var card: Dictionary=SOURCE.row("BuffCard",int(key.get_slice(":",1)))
+			var deck: Variant=whole(card.get("BuffCardDeckID"))
+			if CARD_DECKS.has(deck) and SOURCE.declared_exclusion("BuffCard",card).is_empty():return {"card_id":int(card.ID),"card_kind":CARD_DECKS[deck][1],"deck_id":deck,"by":key}
+	return {}
 
 ## How many entries the item's own original description says are chosen
 ## ("다음 아이템 중 1종 선택 획득"): the one count it states, or 0 when it states

@@ -56,6 +56,13 @@ const REQUIRED := ["bank","images","maps","tiles"]
 const FRAME_BUDGET_MSEC: int = 30
 const COPY_CHUNK: int = 16 * 1024 * 1024
 const STYLE = preload("res://scripts/boot/boot_style.gd")
+## Cooked actor pack parts (build-time composited actors, private Twm release
+## cooked-*). Each part is accepted only when its SHA-256 is pinned in
+## cooked_actor_pins.gd; then its members are extracted like a pack part.
+const COOKED_PINS = preload("res://scripts/boot/cooked_actor_pins.gd")
+const COOKED_FORMAT = preload("res://scripts/resources/cooked_actor_format.gd")
+const COOKED_STATE := "cooked_actors.json"
+const HASH_CHUNK: int = 8 * 1024 * 1024
 
 ## Install target; tests use a scratch directory instead of ROOT.
 var root: String = ROOT
@@ -88,6 +95,11 @@ var _missing: Array[String] = []
 var _index: Dictionary = {}
 var _cursor: int = 0
 var _verify: Array = []
+var _hash_file: FileAccess
+var _hash_context: HashingContext
+var _hash_index: Dictionary = {}
+var _hash_path: String = ""
+var _cooked: bool = false
 
 static func _safe_relative(value: Variant) -> bool:
 	if not value is String or value.is_empty() or value.length() > 1024: return false
@@ -308,7 +320,85 @@ func status_lines() -> PackedStringArray:
 		var entry: Variant = read.descriptor.get(section, addons.get(section)) if read.ok else addons.get(section)
 		if entry is Dictionary: lines.append("%s: 설치됨 (%s)" % [ADDON_NAMES[section], str(entry.manifest_sha256).left(8)])
 		else: lines.append("%s: 없음 → %s 설치 필요" % [ADDON_NAMES[section], ADDON_FILES[section]])
+	lines.append(cooked_status_line(cooked_state(root)))
 	return lines
+
+## --- Cooked actor pack -----------------------------------------------------
+
+## {ok, reason} for a cooked part whose whole-file SHA-256 is `sha`.
+static func cooked_part_accepted(sha: String, index: Dictionary, pins: Dictionary = COOKED_PINS.parts, cooked_id: String = COOKED_PINS.cooked_id) -> Dictionary:
+	if cooked_id.is_empty() or pins.is_empty(): return {"ok":false,"reason":"cooked_pack_not_pinned_in_this_build"}
+	var pin: Variant = pins.get(sha.to_lower())
+	if not pin is Array or pin.size() < 2: return {"ok":false,"reason":"cooked_part_sha256_not_pinned"}
+	if index.get("pack_id") != cooked_id or index.get("format") != COOKED_FORMAT.FORMAT: return {"ok":false,"reason":"cooked_part_identity"}
+	if int(index.get("part", -1)) != int(pin[0]) or int(index.get("parts", -1)) != int(pin[1]): return {"ok":false,"reason":"cooked_part_number"}
+	return {"ok":true}
+
+## Installed cooked parts under `base` (a user:// or absolute pack folder).
+static func cooked_state(base: String) -> Dictionary:
+	var path: String = base.path_join(COOKED_STATE)
+	if not FileAccess.file_exists(path) or FileAccess.get_size(path) > 64 * 1024: return {}
+	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return value if value is Dictionary else {}
+
+## Records one more installed part; complete when every pinned part is in.
+static func record_cooked_part(base: String, index: Dictionary, cooked_id: String = COOKED_PINS.cooked_id) -> Dictionary:
+	var state: Dictionary = cooked_state(base)
+	if state.get("cooked_id") != cooked_id or state.get("format") != COOKED_FORMAT.FORMAT:
+		state = {"cooked_id":cooked_id,"format":COOKED_FORMAT.FORMAT,"parts":int(index.parts),"done":[]}
+	var done: Array = []
+	for part: Variant in state.get("done", []):
+		if (part is int or part is float) and not done.has(int(part)): done.append(int(part))
+	if not done.has(int(index.part)): done.append(int(index.part))
+	done.sort()
+	state["done"] = done
+	state["parts"] = int(index.parts)
+	state["complete"] = done.size() == int(index.parts)
+	state["root"] = COOKED_PINS.COOKED_DIR.path_join(COOKED_FORMAT.FORMAT_TAG)
+	var file := FileAccess.open(base.path_join(COOKED_STATE), FileAccess.WRITE)
+	if file == null: return {}
+	file.store_string(JSON.stringify(state, "\t", true))
+	file.close()
+	return state
+
+static func cooked_status_line(state: Dictionary) -> String:
+	if state.get("cooked_id") == COOKED_PINS.cooked_id and not str(COOKED_PINS.cooked_id).is_empty() and state.get("format") == COOKED_FORMAT.FORMAT:
+		if state.get("complete") == true: return "변환 액터 팩: 설치됨 (%s, %d조각)" % [str(state.cooked_id).left(8), int(state.parts)]
+		return "변환 액터 팩: 설치 중 %d / %d 조각" % [state.get("done", []).size(), int(state.get("parts", 0))]
+	if str(COOKED_PINS.cooked_id).is_empty(): return "변환 액터 팩: 이 빌드에 고정된 팩 없음 (원본 실시간 처리)"
+	return "변환 액터 팩: 없음 (원본 실시간 처리) → twilight523-cooked-*.zip 설치 가능"
+
+func _start_cooked_hash(path: String, index: Dictionary) -> void:
+	_hash_file = FileAccess.open(path, FileAccess.READ)
+	if _hash_file == null:
+		_fail_part("변환 액터 팩 조각을 열 수 없습니다: " + _copy_name)
+		return
+	_hash_context = HashingContext.new()
+	_hash_context.start(HashingContext.HASH_SHA256)
+	_hash_index = index
+	_hash_path = path
+	set_process(true)
+
+func _hash_step() -> void:
+	var length: int = _hash_file.get_length()
+	var chunk: PackedByteArray = _hash_file.get_buffer(mini(HASH_CHUNK, length - _hash_file.get_position()))
+	_hash_context.update(chunk)
+	_status.text = "변환 액터 팩 조각 확인 중 (%s): %d / %d MB" % [_copy_name, _hash_file.get_position() >> 20, length >> 20]
+	if not chunk.is_empty() and _hash_file.get_position() < length: return
+	var sha: String = _hash_context.finish().hex_encode()
+	_hash_file = null
+	_hash_context = null
+	var accepted: Dictionary = cooked_part_accepted(sha, _hash_index)
+	if not accepted.ok:
+		_fail_part("변환 액터 팩 조각이 이 빌드에 고정된 SHA-256과 다릅니다 (%s): %s" % [accepted.reason, _copy_name])
+		return
+	if not ProjectSettings.load_resource_pack(_hash_path, true):
+		_fail_part("변환 액터 팩 조각을 읽을 수 없습니다: " + _copy_name)
+		return
+	_cooked = true
+	_mounted = true
+	_index = _hash_index
+	_cursor = 0
 
 func _actor_pack_needed() -> bool:
 	var actor: Node = get_node_or_null("/root/ActorPack")
@@ -361,6 +451,10 @@ func open_addon_installer() -> bool:
 	_later.visible = true
 	_status.text = "새 추가 리소스(twilight523-addon-ui.zip 등)를 선택하세요.\n설치한 뒤 앱을 다시 실행하면 적용됩니다."
 	return true
+
+## True while the install screen is open (the title screen ignores touches).
+func installer_open() -> bool:
+	return _layer != null
 
 func _close_installer() -> void:
 	if _layer != null: _layer.queue_free()
@@ -415,6 +509,9 @@ func _fail_part(message: String) -> void:
 ## Its local copy is no longer read and is removed.
 func _release_part() -> void:
 	_mounted = false
+	_cooked = false
+	_hash_file = null
+	_hash_context = null
 	_copy_source = null
 	if _copy_target != null: _copy_target.close()
 	_copy_target = null
@@ -479,6 +576,10 @@ func _open_part(path: String) -> void:
 			or int(index.part) < 1 or int(index.part) > int(index.parts):
 		_fail_part("리소스 팩 조각 정보가 다릅니다: " + _copy_name)
 		return
+	if index.get("cooked") == true:
+		# Never part of the original pack's state; pinned SHA-256 first.
+		_start_cooked_hash(path, index)
+		return
 	if index.get("addon") == true:
 		# An add-on never touches the installed pack's parts or descriptor.
 		var addon: Dictionary = read_addon(addon_bytes, index)
@@ -517,6 +618,9 @@ func _process(_delta: float) -> void:
 	if _copy_source != null:
 		_copy_step()
 		return
+	if _hash_file != null:
+		_hash_step()
+		return
 	if not _verify.is_empty():
 		_verify_step()
 		return
@@ -543,6 +647,9 @@ func _process(_delta: float) -> void:
 		_cursor += 1
 	_status.text = "%d / %d 조각 설치 중: %d / %d 파일" % [int(_index.part), int(_index.parts), _cursor, members.size()]
 	if _cursor < members.size(): return
+	if _cooked:
+		_finish_cooked()
+		return
 	if _index.get("addon") == true:
 		_finish_addon()
 		return
@@ -615,6 +722,24 @@ func _finish_addon() -> void:
 		_later.pressed.connect(func() -> void: get_tree().quit())
 		return
 	_status.text = "추가 리소스 설치 완료.\n앱을 완전히 닫고 다시 실행하세요.\n(설치에 쓴 zip은 지워도 됩니다)"
+	_offer_quit()
+
+func _finish_cooked() -> void:
+	var index: Dictionary = _index
+	_release_part()
+	var state: Dictionary = record_cooked_part(root, index)
+	if state.is_empty():
+		_fail_part("변환 액터 팩 기록을 저장하지 못했습니다.")
+		return
+	if not _queue.is_empty():
+		_next_part()
+		return
+	if state.get("complete") != true:
+		_status.text = "변환 액터 팩 %d / %d 조각 설치됨.\n남은 twilight523-cooked-*.zip 조각을 선택하세요." % [state.done.size(), int(state.parts)]
+		_choose.disabled = false
+		_later.disabled = false
+		return
+	_status.text = "변환 액터 팩 설치 완료.\n앱을 완전히 닫고 다시 실행하세요.\n(설치에 쓴 zip은 지워도 됩니다)"
 	_offer_quit()
 
 func _offer_quit() -> void:

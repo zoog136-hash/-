@@ -191,14 +191,20 @@ const NATIVE_COLLECTIONS = preload("res://scripts/cards/native_collection_rules.
 ## equipped slot, option awakening / extra slots, skill awakening and
 ## expedition records are re-keyed from the old identity to the result
 ## identity. A completed collection that needed the card is recomputed (it
-## may come undone; the quote lists it). Only the 할파스 star (a system of that
-## one card) still refuses. Switch: APPROX_MOVE_PROGRESS.
+## may come undone; the quote lists it). Switch: APPROX_MOVE_PROGRESS.
+## 할파스 별 강화 (TWILIGHT 근사(근거 약함), 지시 2026-11-16): the star system
+## exists only for 해방된 할파스, so there is no card to move it to. The last
+## 할파스 copy may be swapped; its star progress is KEPT unchanged under the
+## 할파스 identity (inactive while the card is not owned and equipped,
+## halphas_star_enchant_runtime line "owned and equipped") and resumes if 할파스
+## is owned again. Nothing is erased. Switch: APPROX_KEEP_HALPHAS_STAR.
 const APPROX_MOVE_PROGRESS := true
+const APPROX_KEEP_HALPHAS_STAR := true
 const PROGRESS_OWNERS := ["option_awakening", "skill_awakening", "expedition_local"]
 
 func _last_copy_guard(category: String, identity: String) -> String:
 	if APPROX_MOVE_PROGRESS:
-		if identity == HALPHAS_IDENTITY and world.get("halphas_star") != null and int(world.halphas_star.progress.get("level", 0)) > 0: return "별 강화 진행이 있는 카드입니다"
+		if not APPROX_KEEP_HALPHAS_STAR and identity == HALPHAS_IDENTITY and world.get("halphas_star") != null and int(world.halphas_star.progress.get("level", 0)) > 0: return "별 강화 진행이 있는 카드입니다"
 		return ""
 	if CARDS.card_id(world.equipped_catalog.get(category, {})) == identity: return "장착 중인 카드입니다 · 해제 후 다시 뽑으세요"
 	var token: String = JSON.stringify(identity)
@@ -224,6 +230,8 @@ func _last_copy_guard(category: String, identity: String) -> String:
 ## What moving the last copy would carry over (shown in the quote).
 func progress_report(category: String, identity: String) -> Dictionary:
 	var report: Dictionary = {"equipped":CARDS.card_id(world.equipped_catalog.get(category, {})) == identity, "owners":[], "collections_undone":0}
+	if APPROX_KEEP_HALPHAS_STAR and identity == HALPHAS_IDENTITY and world.get("halphas_star") != null and int(world.halphas_star.progress.get("level", 0)) > 0:
+		report["halphas_star_kept"] = int(world.halphas_star.progress.get("level", 0))
 	var token: String = JSON.stringify(identity)
 	for owner: String in PROGRESS_OWNERS:
 		var service: Variant = world.get(owner)
