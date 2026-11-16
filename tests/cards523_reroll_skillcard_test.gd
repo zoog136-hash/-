@@ -199,6 +199,29 @@ func reroll(world: Node) -> void:
 	world.skill_awakening.progress = awaken
 	cards.owned["변신"][guarded] = true
 	cards.spare["변신"][guarded] = 1
+	# 할파스 별 강화 (TWILIGHT 근사(근거 약함)): the last 할파스 copy may be swapped; the star stays on 할파스.
+	var halphas: String = str(swap.HALPHAS_IDENTITY)
+	if not swap.card_record("변신", halphas).is_empty() and world.get("halphas_star") != null:
+		var star_before: Dictionary = world.halphas_star.progress.duplicate(true)
+		cards.owned["변신"][halphas] = true; cards.spare["변신"].erase(halphas)
+		world.halphas_star.progress["level"] = maxi(1, int(world.halphas_star.progress.get("level", 0)))
+		world.inventory["다이아"] = int(world.inventory.get("다이아", 0)) + 200000
+		var h_quote: Dictionary = world.card523_swap_quote("변신", halphas)
+		var reason: String = str(h_quote.get("reason","")) + " " + str(h_quote.get("confirm_reason",""))
+		evidence["halphas"] = {"ok":h_quote.get("ok"), "reason":reason, "moves":h_quote.get("progress_moves",{}), "copies":h_quote.get("copies_required")}
+		check(not reason.contains("별 강화"), "할파스 별 강화가 있어도 마지막 1장 다시 뽑기를 거부하지 않음: %s" % str(evidence.halphas))
+		# The guard itself no longer refuses, and the quote lists the kept star.
+		check(str(swap._last_copy_guard("변신", halphas)).is_empty() and int(swap.progress_report("변신", halphas).get("halphas_star_kept",0)) >= 1, "가드는 통과하고 별 강화 단계는 보존 목록에 표시")
+		if h_quote.get("ok", false):
+			if int(h_quote.get("copies_required", 1)) > 1: cards.spare["변신"][halphas] = int(h_quote.copies_required) - 1
+			var h_swap: Dictionary = reroll_once(world, "변신", halphas)
+			var h_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", halphas).get("confirm_token", "")))
+			evidence["halphas"]["confirm"] = {"swap":h_swap.get("ok"), "ok":h_confirm.get("ok"), "reason":h_confirm.get("reason",""), "last":h_confirm.get("used_last_copy"), "star_level":int(world.halphas_star.progress.get("level",0))}
+			check(h_confirm.get("ok", false) and not cards.owned["변신"].has(halphas) and int(world.halphas_star.progress.get("level",0)) >= 1 and not world.halphas_star.active(), "확정: 할파스는 빠지고 별 강화 단계는 그대로 보존(효과는 꺼짐) %s" % str(evidence.halphas))
+		else:
+			# 원본 표: 할파스와 같은 덱·등급의 다른 카드가 없으면 다시 뽑기 자체가 성립하지 않는다.
+			check(str(h_quote.get("reason","")).contains("같은 등급"), "할파스: 원본 표의 같은 등급 후보 없음으로만 거부 %s" % str(evidence.halphas))
+		world.halphas_star.progress = star_before
 	var with_spare: Dictionary = reroll_once(world, "변신", guarded)
 	var spare_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", guarded).get("confirm_token", "")))
 	check(with_spare.get("ok", false) and spare_confirm.get("ok", false) and not bool(spare_confirm.used_last_copy) and cards.owned["변신"].get(guarded) == true and not cards.spare["변신"].has(guarded), "with a duplicate, the duplicate is used and the permanent copy stays")
