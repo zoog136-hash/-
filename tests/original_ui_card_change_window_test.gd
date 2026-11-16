@@ -77,6 +77,9 @@ func _run() -> void:
 	check(window.popup=="confirm","카드 확정 opens the confirm popup")
 	window._confirm_result()
 	check(world.calls[-1][0]=="confirm" and str(world.calls[-1][1]).begins_with("c") and window.popup=="","카드 확정 runs the confirm token")
+	var offer: Dictionary={"candidate_count":3,"candidates":[{"name":"가"},{"name":"나"},{"name":"다"}]}
+	check(WINDOW.probability_text(offer)=="같은 등급 카드 3종 중 1장이 나옵니다 (각 33.3333%, 지금 카드 제외)","뽑기 확률: each candidate 1 / count: "+WINDOW.probability_text(offer))
+	check(WINDOW.list_text(offer)=="다시 뽑기 후보 3종: 가 · 나 · 다" and WINDOW.probability_text({}).contains("없습니다"),"목록 보기 lists the quote's candidates")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(renewal.contains("[\"card_swap523\",\"카드 다시 뽑기\"]") and renewal.contains("_open_original_feature(\"card_change\")"),"the menu opens the original window")
 	var pack_dir: String=""

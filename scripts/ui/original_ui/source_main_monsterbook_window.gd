@@ -10,6 +10,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## in the page's own ListView_Effect rows. Not connected (no TWILIGHT
 ## feature): 미션 도감, 도감 컬렉션, the grade sidebar, the story page and
 ## the representative-monster list; the reward item slots stay empty.
+## Btn_Sort cycles 모두 보기 / 진행 중 / 완료 (TWILIGHT 근사(근거 약함): the
+## original names only its first option; docs/original_ui523_approx.md).
 const ROOT="UI/MonsterBook/MonsterBook_All.csb"
 const PAGE="UI/MonsterBook/MonsterBook_CollectionView.csb"
 const ROW="UI/MonsterBook/MonsterBook_CollectionList.csb"
@@ -17,6 +19,8 @@ const P="MonsterBook_CollectionView/"
 const EFFECT_STEP: float=20.0
 var selected: int=0
 var showing_effects: bool=false
+const STATES: Array[String]=["모두 보기","진행 중","완료"]
+var state: int=0
 var _books: Array=[]
 
 func required_members() -> Array[String]:
@@ -43,6 +47,24 @@ func _current_stage(id: int) -> Dictionary:
 		if not progress.get("claimed",[]).has(int(stage.ID)):return stage
 	return levels[-1] if not levels.is_empty() else {}
 
+## Every stage of the book claimed.
+func _done(id: int) -> bool:
+	var service: Object=_service()
+	var claimed: Array=service.progress(id).get("claimed",[])
+	for stage: Dictionary in service.levels(id):
+		if not claimed.has(int(stage.ID)):return false
+	return true
+
+## The books the sort state shows (진행 중: not every stage claimed).
+static func filtered(books: Array, done: Callable, state_index: int) -> Array:
+	if state_index==0:return books
+	return books.filter(func(book: Dictionary) -> bool:return bool(done.call(int(book.ID)))==(state_index==2))
+
+func _cycle_state() -> Dictionary:
+	if _dragged():return {"ok":true,"ignored_after_drag":true}
+	state=(state+1)%STATES.size()
+	return _stage()
+
 func _count(id: int, stage: Dictionary) -> int:
 	return int(_service().progress(id).get("counts",{}).get(str(int(stage.get("ID",0))),0))
 
@@ -58,7 +80,7 @@ static func _date(value: Dictionary) -> String:
 
 func _spec() -> Dictionary:
 	var service: Object=_service()
-	_books=service.books(true)
+	_books=filtered(service.books(true),Callable(self,"_done"),state)
 	var known: bool=false
 	for book: Dictionary in _books:
 		if int(book.ID)==selected:known=true
@@ -75,7 +97,8 @@ func _spec() -> Dictionary:
 	spec[P+"Nd_Story"]={"exclude":true}
 	spec[P+"Nd_Effect"]={"visible":false}
 	spec[P+"Nd_Grade"]={"visible":false}
-	spec[P+"Btn_Sort"]={"visible":false}
+	spec[P+"Btn_Sort"]={"visible":true,"activate":Callable(self,"_cycle_state")}
+	spec[P+"Btn_Sort/Text_Sort"]={"role":"source_text","text":STATES[state]}
 	spec[P+"Nd_Monster_List/Text_Notice"]={"visible":_books.is_empty()}
 	var info: String=P+"Nd_Monster_Info/"
 	spec[info+"Text_Notice"]={"visible":selected==0}
