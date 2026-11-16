@@ -1108,6 +1108,7 @@ const FEATURE_WINDOWS={
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
+	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
 	"quick_change":preload("res://scripts/ui/original_ui/source_main_quick_change_window.gd"),
 	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
 }
