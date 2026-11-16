@@ -323,8 +323,10 @@ static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGen
 	var given: Array[Dictionary] = []
 	var weighted: Array[Dictionary] = []
 	var total: int = 0
+	# TWILIGHT 근사 (2): a class with no row of its own draws from every row.
+	var whole_pool: bool = class_id in spec.get("approx_class_pool",[])
 	for reward: Dictionary in spec.get("rewards",[]):
-		if not class_matches(reward.get("class_ids",[]),class_id): continue
+		if not whole_pool and not class_matches(reward.get("class_ids",[]),class_id): continue
 		if int(reward.get("entity_type_id",1)) == 1: given.append(reward)
 		elif int(reward.get("entity_type_id",-1)) == 0:
 			var weight: int = int(reward.get("probability_raw",0))

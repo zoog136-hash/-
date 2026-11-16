@@ -122,3 +122,23 @@ static func select(record: Dictionary, admission: Dictionary) -> Dictionary:
 		"overlay_whitelist_sha256":supplied.options.get("overlay_whitelist_sha256",""),
 		"stats_contract":("current523_final_definition_selection_only; actor_registry_still_required" if definition_selection_only else "current523_admitted_original_registry; saved_encounter_identity_ABI_only") if source_only else "existing_base508_fields_unchanged_by_patch523_spawn_policy",
 		"host_policy":"existing_npc_core_actions_and_facing_plus3; native_dispatch_unverified"}
+
+## The visual part of select() for one NpcClass sprite, without an encounter
+## admission: tools/cook/cook_actors.gd cooks exactly what select() would ask
+## the preview for (same core actions, loops, typed SpriteRun binding and bank
+## pins). The runtime only uses a cooked actor whose recorded inputs equal its
+## own select() result (cooked_actor_store.gd inputs()).
+static func cook_selection(sprite_id: int, context: Dictionary) -> Dictionary:
+	var supplied: Dictionary = SOURCE.source_tables(context)
+	if not supplied.ok: return fail(str(supplied.get("reason","current523_original_visual_input_unavailable")),true)
+	for role: String in CORE_ACTIONS:
+		var action: Dictionary = SOURCE.table_row("ListSprAction",int(CORE_ACTIONS[role]))
+		if action.is_empty() or action.get("MotionType") != CORE_MOTIONS[role] or action.get("WeaponType") != 0 or action.get("WeaponAlterType") != 0:
+			return fail("current523_existing_npc_core_action_family_differs:" + role,true)
+	var run_binding: Dictionary = SOURCE.source_run_binding(sprite_id,int(CORE_ACTIONS.walk),0)
+	return {"ok":true,"consumer":"npc","sprite_id":sprite_id,"source_snapshot":"patch523",
+		"manifest_path":supplied.options.manifest_path,"manifest_sha256":supplied.options.manifest_sha256,
+		"source_tables_sha256":supplied.source_tables_sha256,
+		"role_actions":CORE_ACTIONS.duplicate(),"loop_policy":LOOPS.duplicate(),
+		"optional_role_actions":run_binding.optional_role_actions,"optional_role_actor_ids":run_binding.optional_role_actor_ids,"run_status":run_binding.run_status,
+		"host_policy":"existing_npc_core_actions_and_facing_plus3; native_dispatch_unverified"}

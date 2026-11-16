@@ -19,6 +19,10 @@ var title_after_loading: bool = true
 var title_in_headless: bool = false
 var _awaiting_title: bool = false
 var _title_prompt: Label
+## Title-screen shortcut to the add-on/cooked pack installer, so packs can be
+## installed before entering the game (2026-11-16: the game closed within
+## minutes of entering the world, before the settings screen could be used).
+var _title_addon: Button
 var _column: VBoxContainer
 var destination: String = ""
 ## Main.tscn loaded during the first loading so entering the world from the
@@ -337,8 +341,28 @@ func _show_title() -> void:
 	_title_prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_title_prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	add_child(_title_prompt)
+	var pack: Node = _source_pack()
+	if pack != null and pack.has_method("open_addon_installer"):
+		_title_addon = STYLE.button("추가 리소스(.zip) 설치·업데이트", false, 44)
+		_title_addon.name = "TitleAddonInstall"
+		_title_addon.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		_title_addon.offset_left = -420
+		_title_addon.offset_right = -24
+		_title_addon.offset_top = 24
+		_title_addon.offset_bottom = 76
+		_title_addon.pressed.connect(func() -> void:
+			if is_instance_valid(pack): pack.call("open_addon_installer"))
+		add_child(_title_addon)
 	_awaiting_title = true
 	BOOT_LOG.mark("title_shown", {"scene": destination})
+
+func _source_pack() -> Node:
+	return get_tree().root.get_node_or_null("Source523Pack") if is_inside_tree() else null
+
+## The install screen is open over the title.
+func _title_installer_open() -> bool:
+	var pack: Node = _source_pack()
+	return pack != null and pack.has_method("installer_open") and bool(pack.call("installer_open"))
 
 func is_awaiting_title() -> bool:
 	return _awaiting_title
@@ -346,13 +370,20 @@ func is_awaiting_title() -> bool:
 func _process(_delta: float) -> void:
 	if _awaiting_title and is_instance_valid(_title_prompt):
 		_title_prompt.modulate.a = 0.55 + 0.45 * absf(sin(Time.get_ticks_msec() / 600.0))
+		# Closing the install screen unpauses the tree; the ready scene stays
+		# paused behind the title until it is touched.
+		if _owns_pause and not get_tree().paused and not _title_installer_open(): get_tree().paused = true
 
 func _input(event: InputEvent) -> void:
 	if not _awaiting_title: return
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed) or (event is InputEventKey and event.pressed and not event.echo)
 	if not pressed: return
+	if _title_installer_open(): return
+	# A press on the installer button is the button's, not "touch to start".
+	if is_instance_valid(_title_addon) and _title_addon.visible and (event is InputEventScreenTouch or event is InputEventMouseButton) and _title_addon.get_global_rect().has_point(event.position): return
 	get_viewport().set_input_as_handled()
 	_awaiting_title = false
+	if is_instance_valid(_title_addon): _title_addon.queue_free()
 	BOOT_LOG.mark("title_closed", {"scene": destination})
 	_close()
 
