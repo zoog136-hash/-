@@ -1057,6 +1057,7 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	parent.add_child(overlay)
 	# The source event copies position/direction; the scene parent owns lifetime.
 	overlay.set_as_top_level(true)
+	TwilightWorldRenderScale.follow_world(overlay)
 	if not overlay._configure_reference_bank(_manifest_path,str(_reference_card_context.manifest_sha256),int(binding.target_sprite_id),{"idle":int(binding.child_action_id)},{"idle":false},"idle","overlay"):
 		overlay.free()
 		return false
@@ -1306,7 +1307,9 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	# Existing spell/item/invoke callers supply a world-space event snapshot.
 	# Only apply events without a point remain attached to their moving owner.
 	var world_anchored: bool = fixed_world_point or world_point.is_finite()
-	if world_anchored: overlay.set_as_top_level(true)
+	if world_anchored:
+		overlay.set_as_top_level(true)
+		TwilightWorldRenderScale.follow_world(overlay)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
 	var placement: String = "existing_caller_world_point" if world_anchored else "existing_owner_relative_apply_event"
 	overlay._reference_overlay_parent["placement_policy"] = placement

@@ -141,6 +141,11 @@ const CLAN523 = preload("res://scripts/clan523/clan523.gd")
 var clan523 = CLAN523.new()
 const CONTENT523 = preload("res://scripts/content523/content523.gd")
 var content523 = CONTENT523.new()
+## 523 카드 다시 뽑기 / 스킬 카드 합성·강화 (사용자 결정 2026-11-16).
+const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
+var card_swap523 = CARD_SWAP523.new()
+const SKILL_CARD523 = preload("res://scripts/cards/skill_card523.gd")
+var skill_cards523 = SKILL_CARD523.new()
 const TITLE523 = preload("res://scripts/titles/title_runtime523.gd")
 var titles = TITLE523.new()
 var title_badge: Label
@@ -531,6 +536,8 @@ func _finish_boot_loading() -> void:
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
+	# Android: world canvas at 90% resolution, CanvasLayer UI stays native.
+	add_child(preload("res://scripts/boot/world_render_scale.gd").new())
 	BOOT_LOG.step("world_npc_spells")
 	if patch523_npc_spells.configure(self):
 		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
@@ -1031,6 +1038,8 @@ func _load_data() -> void:
 	domination_stones.configure(self)
 	routines.configure(self)
 	content523.configure(self)
+	card_swap523.configure(self)
+	skill_cards523.configure(self)
 	unconfirmed523.configure(self)
 
 func _refresh_patch523_drop_catalog() -> void:
@@ -6517,6 +6526,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		EMBLEM523.SAVE_KEY: emblem523.export_state(),
 		CLAN523.SAVE_KEY: clan523.export_state(),
 		CONTENT523.SAVE_KEY: content523.export_state(),
+		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
+		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"inventory_automation": inventory_automation.state.duplicate(true),
@@ -7169,6 +7180,8 @@ func _load_game(quiet: bool) -> void:
 	emblem523.import_state(data.get(EMBLEM523.SAVE_KEY, {}))
 	clan523.import_state(data.get(CLAN523.SAVE_KEY, {}))
 	content523.import_state(data.get(CONTENT523.SAVE_KEY, {}))
+	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
+	skill_cards523.import_state(data.get(SKILL_CARD523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
@@ -9291,6 +9304,47 @@ func _restore_equipped_visuals() -> void:
 	if relic_value is Dictionary:
 		_apply_relic_visual(relic_value as Dictionary)
 	_refresh_speed_modifiers()
+
+## --- 523 카드 다시 뽑기 · 스킬 카드 합성/강화 (견적 → 확인 → 실행) -------------
+## UI 창은 이 함수들만 부른다. 규칙·저장은 scripts/cards/card_swap523.gd,
+## scripts/cards/skill_card523.gd (docs/cards523_reroll_skillcard.md).
+func card523_swap_quote(category: String, identity: String) -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	return card_swap523.quote(category, identity)
+
+func card523_swap_execute(token: String, pick: String = "") -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
+	return card_swap523.execute(token, pick)
+
+## Takes the pending reroll result (quote.confirm_token): the original card
+## is replaced by it. Until then the pending result stays saved.
+func card523_swap_confirm(confirm_token: String) -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
+	return card_swap523.confirm(confirm_token)
+
+## Every saved pending reroll result (e.g. to reopen the window after a reload).
+func card523_swap_pending() -> Array:
+	return card_swap523.pending_results()
+
+func skill_card523_materials(grade_id: int = -1) -> Array:
+	return skill_cards523.materials(grade_id)
+
+func skill_card523_deck() -> Array:
+	return skill_cards523.deck_cards()
+
+func skill_card523_merge_quote(grade_id: int, selection: Dictionary = {}) -> Dictionary:
+	return skill_cards523.merge_quote(grade_id, selection)
+
+func skill_card523_merge_execute(token: String) -> Dictionary:
+	return skill_cards523.merge_execute(token)
+
+func skill_card523_levelup_quote(card_id: int, feed: Dictionary = {}, attempt: bool = true) -> Dictionary:
+	return skill_cards523.levelup_quote(card_id, feed, attempt)
+
+func skill_card523_levelup_execute(token: String) -> Dictionary:
+	return skill_cards523.levelup_execute(token)
 
 func source_relic_spell_level(source_grade_id: int, base_level: int) -> Dictionary:
 	# Source grades are explicit IDs. Do not reinterpret the current custom

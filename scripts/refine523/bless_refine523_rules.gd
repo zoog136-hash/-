@@ -17,7 +17,7 @@ extends RefCounted
 ##    RefineInput slot 1 (상급 축복의 가루) registered at exactly MinAmount
 ##    (MinProbability) or MaxAmount (MaxProbability), RefineOutput weighted by
 ##    Probability, RefineConstants RefineCost in RefineCurrencyID 1 (Adena).
-##    Amounts between Min and Max are refused (no interpolation rule), the
+##    Amounts between Min and Max use a straight line (TWILIGHT 근사), the
 ##    special input (IsSpecialInput, slot 2) is refused (no rule combining it
 ##    with the main slot), RefineDivinationProb is not used (presentation of
 ##    the crystal colour only; its MaxGrade meaning is not stated).
@@ -118,13 +118,32 @@ static func refine_entry(item_class_id: int, enchant: int) -> Dictionary:
 		return _fail("원본 연금 비용·대상 수량 상수 확인 실패","constants")
 	return {"ok":true,"group_id":group,"target_row":targets[0].duplicate(true),"input":input.duplicate(true),"special_inputs":special.duplicate(true),"outputs":outputs.duplicate(true),"cost":int(cost),"currency_id":int(currency),"contents_enabled":refine_contents_enabled()}
 
-## Registered amount and success probability (per SCALE) of a table endpoint.
+## TWILIGHT 근사 (user policy 2026-11-16 "원본 데이터에 없는 건 검색 후 근사치로
+## 적용해"): the tables give only the two endpoints. A registered amount between
+## them takes the straight-line probability between the endpoints, rounded
+## down to the SCALE unit. Basis: the 523 rows themselves are proportional
+## (10,000→10% · 20,000→20%, 1% per 1,000 powder) and a player report
+## "확률 10% 부터 도전이 가능 … 9천개니깐 확률 9%?" (인벤, 2021-02-08,
+## https://www.inven.co.kr/board/lineagem/5056/17012, checked 2026-11-16).
+## Recorded in docs/bless_refine523_missing_rules.md #11. Set to false to
+## return to endpoint-only registration.
+const APPROX_LINEAR_BETWEEN: bool = true
+
+## Registered amount and success probability (per SCALE). mode is "min",
+## "max" or "amount:N" (N inside [MinAmount, MaxAmount], TWILIGHT 근사).
 static func registration(entry: Dictionary, mode: String) -> Dictionary:
 	var input: Dictionary = entry.get("input",{})
 	match mode:
 		"min": return {"ok":true,"mode":mode,"amount":int(input.MinAmount),"probability":int(input.MinProbability)}
 		"max": return {"ok":true,"mode":mode,"amount":int(input.MaxAmount),"probability":int(input.MaxProbability)}
-	return _fail("최소·최대 사이 수량의 확률 계산식이 원본 표에 없습니다","amount_between")
+	if not mode.begins_with("amount:") or not APPROX_LINEAR_BETWEEN or not mode.get_slice(":",1).is_valid_int():
+		return _fail("최소·최대 사이 수량의 확률 계산식이 원본 표에 없습니다","amount_between")
+	var amount: int = int(mode.get_slice(":",1))
+	var low: int = int(input.MinAmount); var high: int = int(input.MaxAmount)
+	if amount<low or amount>high: return _fail("등록 수량은 원본 최소 %d ~ 최대 %d개입니다" % [low,high],"amount_range")
+	var probability: int = int(input.MinProbability)
+	if high>low: probability += int(floor(float(int(input.MaxProbability)-int(input.MinProbability))*float(amount-low)/float(high-low)))
+	return {"ok":true,"mode":"amount","amount":amount,"probability":clampi(probability,int(input.MinProbability),int(input.MaxProbability)),"approximation":"TWILIGHT_LINEAR_BETWEEN_ENDPOINTS"}
 
 ## Shown as the original help text says: percent with decimals cut off.
 static func percent_text(probability: int) -> String:
