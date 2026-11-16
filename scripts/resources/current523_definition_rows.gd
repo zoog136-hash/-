@@ -790,6 +790,24 @@ static func _row_at(store: Dictionary, index: int) -> Dictionary:
 	return result
 ## [store-format-end]
 
+## TWILIGHT 근사 2026-11-17 (2026-11-17 지시, docs/PATCH523_CRAFTING_EQUIPMENT.md): the
+## TestItem=true ItemClass rows that are the only result of an original craft and have
+## no same-effect non-test item are read as ordinary items — an explicit allow list,
+## never a global TestItem pass. Their own rows (BuffCardID, LuckyBagClassID …) give
+## the effect. Every other test item stays refused.
+const APPROX_TEST_ITEMS := {
+	1067:"[변신 카드] 아크 나이트",1068:"[변신 카드] 아크 쉐도우",1069:"[변신 카드] 아크 스카우터",1070:"[변신 카드] 아크 위자드",
+	111114:"[변신 카드] 아크 머스킷티어",115802:"[변신 카드] 아크 드래곤 나이트",189614:"[변신 카드] 아크 리퍼",221871:"[변신 카드] 아크 랜서",
+	125502:"봉인된 정상의 가호(1단) 상자",125512:"봉인된 정상의 가호(2단) 상자",125522:"봉인된 정상의 가호(3단) 상자",
+	124562:"[+8] 빛나는 완력의 티셔츠 상자",124572:"[+8] 빛나는 민첩의 티셔츠 상자",124582:"[+8] 빛나는 지식의 티셔츠 상자",
+	124592:"[+9] 빛나는 완력의 티셔츠 상자",124602:"[+9] 빛나는 민첩의 티셔츠 상자",124612:"[+9] 빛나는 지식의 티셔츠 상자",
+	130631:"[+7] 회복의 인장 상자",130641:"[+8] 회복의 인장 상자",
+	97434:"빛나는 붉은빛 귀걸이 패키지",97444:"빛나는 보랏빛 귀걸이 패키지",97454:"빛나는 검은빛 귀걸이 패키지",
+	111654:"빛나는 용사 반지 패키지",111664:"빛나는 지혜 반지 패키지",111674:"빛나는 방어 반지 패키지"}
+static func _view(table: String, value: Dictionary) -> Dictionary:
+	if table == "ItemClass" and value.get("TestItem") == true and _integer(value.get("ID")) and APPROX_TEST_ITEMS.has(int(value.ID)): value["TestItem"] = false
+	return value
+
 ## Rows whose integer `field` is a key of `ids`, in original table order.
 ## Same rows as filtering rows(table), without building the whole table.
 static func rows_matching(table: String, field: String, ids: Dictionary) -> Array[Dictionary]:
@@ -799,14 +817,14 @@ static func rows_matching(table: String, field: String, ids: Dictionary) -> Arra
 	if store.has("rows"):
 		for index: int in int(store.count):
 			var value: Variant = (store.rows[index] as Dictionary).get(field)
-			if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
+			if _integer(value) and ids.has(int(value)): result.append(_view(table, _row_at(store, index)))
 		return result
 	var position: int = (store.columns as PackedStringArray).find(field)
 	if position < 0: return result
 	var column: Variant = _column_data(store, position)
 	for index: int in int(store.count):
 		var value: Variant = column[index]
-		if _integer(value) and ids.has(int(value)): result.append(_row_at(store, index))
+		if _integer(value) and ids.has(int(value)): result.append(_view(table, _row_at(store, index)))
 	return result
 
 ## Row count and one fresh row by position, for streaming a table in order
@@ -817,7 +835,7 @@ static func row_count(table: String) -> int:
 static func row_at(table: String, index: int) -> Dictionary:
 	var store: Dictionary = _store(table)
 	if index < 0 or index >= int(store.get("count", 0)): return {}
-	return _row_at(store, index)
+	return _view(table, _row_at(store, index))
 
 ## One column's values in table order (a copy-on-write packed array when the
 ## column is uniform); empty when the field is not a column of every row.
@@ -836,7 +854,7 @@ static func column(table: String, field: String) -> Variant:
 static func rows(table: String) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var store: Dictionary = _store(table)
-	for index: int in int(store.get("count", 0)): result.append(_row_at(store, index))
+	for index: int in int(store.get("count", 0)): result.append(_view(table, _row_at(store, index)))
 	return result
 
 static func _integer(value: Variant) -> bool:
@@ -919,7 +937,7 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 					(groups[identifier] as Array).append(index)
 			for identifier: int in groups: groups[identifier] = PackedInt32Array(groups[identifier])
 			_relations[key] = {"groups": groups}
-	for index: int in _relation_rows(_relations[key], id): result.append(_row_at(store, index))
+	for index: int in _relation_rows(_relations[key], id): result.append(_view(table, _row_at(store, index)))
 	return result
 
 ## Table positions (0-based, table order) of the rows related() returns for
@@ -1002,7 +1020,7 @@ static func row(table: String, id: int) -> Dictionary:
 	var key: String = table + ":ID"
 	if _tables.has(table) and _relations.has(key):
 		var index: int = _unique_relation_row(_relations[key], id)
-		if index >= 0: return _row_at(store, index)
+		if index >= 0: return _view(table, _row_at(store, index))
 		if index == -1:
 			_problem = "원본 ID가 없습니다: " + table + "#" + str(id)
 			return {}
