@@ -18,6 +18,8 @@ const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd"
 const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
 var motion: TwilightActorMotion = MOTION.new()
+## True while another drawn actor (오림 영웅 외형) stands in for the player's sprites.
+var appearance_override_active: bool = false
 var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var _class_fallback_combat_profile: TwilightAnimationProfile = null
 var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
@@ -292,6 +294,8 @@ func _refresh_visual_visibility() -> void:
 	var sample: Node = get_node_or_null("Current523EstimatedWorldPreview")
 	var estimated: bool = sample != null and sample.is_player_override_active()
 	estimated = estimated or (is_instance_valid(current523_identity_actor) and current523_identity_actor.is_player_override_active())
+	# TWILIGHT 근사: an Orim hero appearance (orim523_hero_visual) is drawn instead of the player's own look.
+	estimated = estimated or appearance_override_active
 	if is_instance_valid(class_sprite): class_sprite.visible = not source_only_pending and not show_original and not transform_active and not show_spx and not estimated
 	if is_instance_valid(transform_sprite): transform_sprite.visible = not source_only_pending and transform_active and not show_original and not estimated
 	if is_instance_valid(spx_sprite): spx_sprite.visible = not source_only_pending and show_spx and not estimated
