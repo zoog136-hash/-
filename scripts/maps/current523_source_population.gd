@@ -106,6 +106,15 @@ func _drain_retry() -> void:
 		slot.erase("retry_queued")
 		var occupant: Variant = slot.get("monster")
 		if (is_instance_valid(occupant) and not occupant.dead) or slot.has("patch523_spawn_hold") or not _zone_active(slot.region): continue
+		# Retries (budget deferrals and the one-role-per-attempt original bank
+		# build) are spawn attempts too, so they share the steady respawn pace
+		# after the first fill: on the phone they bypassed it and ran ~5 setups
+		# a second at ~85 ms each (2026-11-16 523.530: field_population
+		# 437 ms of CPU per second). Bosses are never paced.
+		if str(slot.region.get("mode","normal"))!="boss" and not _take_spawn_token():
+			slot.retry_queued = true
+			_retry.push_front(slot)
+			break
 		tried += 1
 		_spawn_slot(slot)
 		if is_instance_valid(slot.get("monster")):
