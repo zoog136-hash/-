@@ -65,14 +65,21 @@ func _run() -> void:
 				if want.a > 0.5: colour_close = colour_close and absf(got.r - want.r) < 0.09 and absf(got.g - want.g) < 0.09 and absf(got.b - want.b) < 0.09
 		check(alpha_kept, "transparent and opaque 24 px cells keep their alpha up to the cell edges")
 		check(colour_close, "cell colours survive block compression without bleeding into neighbours")
-	# Bounded queue: decoded copies waiting for a worker are capped.
+	# Bounded queue: decoded copies waiting for a worker are capped. Queue
+	# without pumping so no worker can finish (and free a slot) mid-loop: the
+	# bound and the drop count are then exact instead of timing dependent.
+	await _drain(gpu)
+	var dropped_before: int = gpu.dropped
 	var many: Array = []
-	for index: int in TILE_GPU.MAX_WAITING + TILE_GPU.MAX_RUNNING + 5:
+	var extra: int = TILE_GPU.MAX_RUNNING + 5
+	for index: int in TILE_GPU.MAX_WAITING + extra:
 		var image: Image = atlas(index)
 		var item := ImageTexture.create_from_image(image)
 		many.append(item)
-		gpu.queue(item, image)
-	check(gpu.pending() <= TILE_GPU.MAX_WAITING + TILE_GPU.MAX_RUNNING and gpu.dropped > 0, "waiting copies are bounded")
+		gpu.queue(item, image, false)
+	check(gpu.pending() == TILE_GPU.MAX_WAITING and gpu.dropped - dropped_before == extra, "waiting copies are bounded")
+	gpu.pump()
+	check(gpu.pending() <= TILE_GPU.MAX_WAITING + TILE_GPU.MAX_RUNNING, "pumping keeps the running + waiting bound")
 	await _drain(gpu)
 	var all_sized: bool = true
 	for item: ImageTexture in many: all_sized = all_sized and item.get_size() == Vector2(384, 384)

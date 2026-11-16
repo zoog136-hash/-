@@ -29,6 +29,8 @@ var weighted_stat_entries: Dictionary = {}
 var static_speed: float = 1.0
 ## TWILIGHT 근사 invoke options of learned approximated passives (rebuilt with the stat index).
 var approx_invokes: Array = []
+## TWILIGHT 근사 "스킬 대체": replaced record id -> transform of a learned approximated passive.
+var approx_transforms: Dictionary = {}
 var stat_rebuild_count: int = 0
 const RELIC_LEVELS = preload("res://scripts/cards/relic_spell_levels.gd")
 
@@ -170,6 +172,8 @@ func enabled(record: Dictionary) -> bool:
 	if level_locked(record):return false
 	if str(record.get("class", "")) == "요정" and str(record.get("school", "")) in ["water","earth","wind","fire"]:
 		if str(record.school) != str(schools.get("요정", "water")): return false
+	var approx_weapons: Array = record.get("approx_weapon_types", [])
+	if not approx_weapons.is_empty() and not approx_weapons.has(source_weapon_type_id()): return false
 	var required: Array = record.get("weapons", [])
 	return required.is_empty() or required.has(world._current_weapon_type())
 
@@ -323,6 +327,7 @@ func _ensure_stat_index() -> void:
 	static_stat_totals.clear();weighted_stat_entries.clear()
 	static_speed=1.0
 	approx_invokes.clear()
+	approx_transforms.clear()
 	stat_rebuild_count+=1
 	# TWILIGHT 근사 passives (data/skills/source_approx523.json): a non-overlap
 	# original BuffGroup keeps only its highest-priority learned passive.
@@ -337,6 +342,10 @@ func _ensure_stat_index() -> void:
 		if resolved.has("source_approx523"):
 			var spec: Dictionary=resolved.source_approx523
 			if not spec.get("requires",[]).all(func(required: String) -> bool: return int(learned.get(required,0))>0):continue
+			for transform: Dictionary in spec.get("transforms",[]):
+				if int(transform.get("level",0))>int(world.level):continue
+				var current: Dictionary=approx_transforms.get(str(transform.record),{})
+				if current.is_empty() or int(transform.level)>int(current.level):approx_transforms[str(transform.record)]=transform
 			var entry: Dictionary={"id":str(record.id),"stats":SOURCE523.approx_values(spec,int(world.level),approx_weapon),
 				"invokes":SOURCE523.approx_level_rows(spec.get("invokes",[]),int(world.level),approx_weapon,spec.get("weapons",[]))}
 			var group: Dictionary=spec.get("group",{})
@@ -373,6 +382,10 @@ func source_weapon_type_id() -> int:
 	var native: Dictionary=preload("res://scripts/loot/patch523_ammo.gd").weapon_type(world._equipped_weapon_record())
 	if not native.is_empty():return int(native.get("ID",-1))
 	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())
+
+func approx_transform_for(id: String) -> Dictionary:
+	_ensure_stat_index()
+	return approx_transforms.get(id, {})
 
 ## Active TWILIGHT 근사 invoke options of learned passives at this level/weapon.
 func approx_invoke_list() -> Array:
