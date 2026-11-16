@@ -590,7 +590,7 @@ Final local validation: error-free actual Main2274 checks, covering all22 source
 - `tests/craft523_server_sets_test.gd`(ci_core 등록): 215개 모두 KR 1서버 프로필로 실제 규칙 모델에서 실행 성공, 세트가 가리키지 않는 지역 프로필에서는
   215개 모두 "서버 대상 아님"으로 거부. 실제 Main 제작 경로로 #110102(축복 부여 주문서 (각인)) 제작 → 저장 → 다시 불러오기 유지.
 
-### 표에 없어 남긴 제작식 (429)
+### 표에 없어 남긴 제작식 (429, 2026-11-15 기준 — 아래 "사용자 결정 2026-11-16"으로 갱신)
 
 | 사유 | 수 | 표에 없는 것 |
 | --- | ---: | --- |
@@ -601,3 +601,83 @@ Final local validation: error-free actual Main2274 checks, covering all22 source
 | 품목 조건(테스트 아이템·레벨·직업 미해석) | 56 | #123563·#113892(TestItem=true 재료) 등 |
 | 카탈로그 정체 불일치 | 33 | 대부분 #3252 마법인형 제작 코인(지갑 소유자, 물리 아이템 아님) 24 |
 | 스택 상태 표현 불가 / 결과 여러 개 | 13 / 4 | 강화된 스택 재료, 확정 결과가 여러 행 |
+
+## 사용자 결정 2026-11-16 — 남은 제작식 정리 (PR `feat/craft523-unblock-decisions`)
+
+### 결정
+
+| 사유 | 결정 | 코드 |
+| --- | --- | --- |
+| ItemCraftRestriction 행(횟수 제한, `ServiceTypeID`/`RefreshUnitID` 이름 없음) | **제한 제거** — 횟수 제한 없이 연결 | `decision_waivers().count_limit_restriction_ids` |
+| 기간 제작(CraftTimeTypeID ≠ 1 / 기간 해석 불가) | **기간 제거** — 시작·끝 기간 없이 연결 | `decision_waivers().time_window` |
+| NoRepeat | **허용** — 반복 제작 가능 | `decision_waivers().no_repeat` |
+| 다른 서버 전용 세트(제한 행 유무와 무관) | **삭제** — 영구 제외, 목록에 안 나옴 | 사유 `other_server_only_set` |
+
+- 투영(`patch523_rules_projection._recipe`): 위 세 조건 **외의 막힘이 없을 때만** 연결한다. 결정으로 풀린 뒤 다른 사유(품목 조건·카탈로그 정체·
+  스택 상태·혈맹 결과 등)에 걸리면 그 사유로 계속 제외된다. 다른 서버 전용 세트는 다른 모든 결정보다 먼저 판정해 항상 빠진다
+  (`_server_set_state` = `other_server_only`: 세트의 원본 ServerLimit 행이 있고 KR 1서버를 가리키지 않음).
+- 연결된 제작식은 `craft_conditions.user_decision = {date:"2026-11-16", count_limit_restriction_ids?, time_window?, no_repeat?}`를 남긴다.
+  횟수 제한을 푼 제작식에는 quota가 없고, 기간을 푼 제작식에는 active_window가 없다(`patch523_craft_conditions.valid_decision`).
+  견적·제작 때 `source_recipe`가 원본 View·Restriction 행과 다시 대조한다(제한 행 ID 목록·시간 종류/기간 ID·NoRepeat 값이 같아야 함).
+  서버 세트가 있는 제작식은 기존대로 매 제작 현재 서버 프로필로 다시 판정한다. 제작 창 조건 줄: "사용자 결정 2026-11-16 · 원본 횟수 제한 없음 · …".
+- 이미 검증된 quota 정책(`verified_craft_constraints`, 2종)은 그대로 둔다(이번 결정 대상은 이름 없는 제한 행).
+- 새 아이템 색인·첫 열림 경로는 바꾸지 않았다(#529/#539, 색인 30,818항목 동일, 열 때마다 깊은 복사 없음).
+
+### 수치 (실제 Main, 원본 팩)
+
+| | 이전 (origin/main) | 이후 |
+| --- | ---: | ---: |
+| 원본 제작식(모델) | 1,221 | **1,328** (+107) |
+| 제외(admission) | 429 | 322 |
+
+결정 대상 사유(이전 `unresolved_player_or_server_condition` 274 + `limited_calendar_or_time_type` 49 = 323)의 행방:
+
+| 이전 분류(원본 행 기준) | 이전 | 연결 | 다른 서버 삭제 | 그 밖의 사유로 계속 제외 |
+| --- | ---: | ---: | ---: | ---: |
+| 제한 행 + 기간 + 서버 세트 | 102 | 23 | 35 | 44 (혈맹 결과 31 · 품목 조건 10 · 카탈로그 3) |
+| 제한 행 + 서버 세트 | 92 | 13 | 61 | 18 (세트의 ServerLimit 행 없음) |
+| 기간 + 서버 세트 (KR 1 세트 49 = 이전 `limited_calendar_or_time_type`) | 69 | 41 | 20 | 8 (스택 4 · 품목 조건 4) |
+| NoRepeat + 서버 세트 | 30 | 24 | 0 | 6 (품목 상태) |
+| 서버 세트만 | 17 | 0 | 15 | 2 (세트의 ServerLimit 행 없음) |
+| 제한 행 + 기간 (세트 없음) | 7 | 0 | 0 | 7 (비장비 상태) |
+| 제한 행 (세트 없음) | 6 | 6 | 0 | 0 |
+| **합계** | **323** | **107** | **131** | **85** |
+
+이유별 제외 수(이전 → 이후):
+
+| 사유 | 이전 | 이후 |
+| --- | ---: | ---: |
+| `unresolved_player_or_server_condition` | 274 | 20 (서버 세트의 ServerLimit 행이 없음 — 닫힌 세트, 미결정) |
+| `limited_calendar_or_time_type` | 49 | 0 |
+| `other_server_only_set` (사용자 결정: 삭제) | — | 131 (그중 제한 행 있음 96) |
+| `unresolved_item_condition` (품목 조건, 미결정) | 56 | 70 |
+| `missing_or_ambiguous_catalog_identity` (카탈로그 정체, 미결정) | 33 | 36 |
+| `stack_state_cannot_be_represented` (스택 상태, 미결정) | 13 | 17 |
+| `non_single_guaranteed_result` (확정 결과 여러 행, 미결정) | 4 | 4 |
+| `clan_output` (혈맹 결과) | 0 | 31 |
+| `non_equipment_state_unrepresented` | 0 | 7 |
+| `unresolved_item_state` | 0 | 6 |
+
+- 결정으로 앞 단계가 풀리면서 뒤 단계 사유가 드러난 것: 혈맹 결과 31, 품목 조건 +14, 비장비 상태 7, 품목 상태 6, 스택 +4, 카탈로그 +3 (합 65),
+  그리고 ServerLimit 행이 없는 서버 세트 20(이전부터 같은 사유). 모두 사용자 결정 범위 밖이라 그대로 제외(위 표의 85).
+- 결정 대상이 아니던 1,327개 제작식(연결 1,221 + 다른 사유 제외 106)은 이전·이후 사유가 하나도 바뀌지 않았다(제작식별 대조).
+- `tests/craft523_user_decisions_test.gd`(ci_core 등록): 합성 — 결정 판정·구조·원본 대조·같은 제작 반복 통과. 원본 팩 — 결정 제작식 전부를
+  실제 규칙 모델에서 같은 상태로 **두 번 연속** 실행, 다른 서버 전용 131개는 목록에 없음, 목록의 모든 서버 세트 제작식은 KR 1서버를 가리킴,
+  결정 종류마다 한 개를 실제 Main에서 견적 → 두 번 제작 → 저장 → 다시 불러오기 유지.
+
+실제 Main 표본(견적 → 같은 제작 두 번 → 저장 → 다시 불러오기, 2026-11-16):
+
+| 결정 종류 | 연결 수 | 표본 | 결과 |
+| --- | ---: | --- | --- |
+| 횟수 제한 제거 | 19 | #138672 | 예배당 부적 선택 상자 ×2 |
+| 횟수 + 기간 제거 | 23 | #250053 | 아라크네의 신비한 성장 물약 ×2 |
+| 기간 제거 | 41 | #251312 | 세계수의 최상급 픽업팩 선택 상자 ×2 |
+| NoRepeat 허용 | 24 | #252288 | 기르타스의 양손검 (각인) 물리 장비 2개 |
+
+`craft523_server_sets_test`(원본 팩): 서버 세트 제작식 215 → 316개, 전부 KR 1서버로 실행·다른 지역 프로필에서 거부.
+
+### 아직 남긴 것 (미결정)
+
+품목 조건(70), 카탈로그 정체 불일치(36, #3252 마법인형 제작 코인 포함), 스택 상태(17), 확정 결과 여러 행(4), 혈맹 결과(31),
+비장비 상태(7), 품목 상태(6), ServerLimit 행이 없는 서버 세트(20).
+

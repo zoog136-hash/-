@@ -34,6 +34,7 @@ static func valid(value: Variant) -> bool:
 	if int(value.max_level)>0 and int(value.max_level)<int(value.min_level): return false
 	if value.has("active_window") and not valid_window(value.active_window):return false
 	if value.has("server_limit_set_id") and not integer(value.server_limit_set_id,1,2147483647):return false
+	if value.has("user_decision") and not valid_decision(value.user_decision,value): return false
 	if not value.has("quota"): return true
 	var quota: Variant=value.quota
 	if not quota is Dictionary or not integer(quota.get("limit"),1,1000000) or not integer(quota.get("anchor_unix"),0,2147483647):return false
@@ -41,6 +42,38 @@ static func valid(value: Variant) -> bool:
 	if not source is Dictionary or not integer(source.get("ID"),1,2147483647) or int(source.get("Value",-1))!=int(quota.limit) or source.get("ServiceTypeID")!=13 or not quota.get("clock_origin") is String or str(quota.clock_origin).is_empty():return false
 	if quota.get("mode")=="bounded_lifetime":return quota.get("period_seconds")==0 and source.get("RefreshUnitID")==111 and source.get("isMultiCount")==false
 	return integer(quota.get("period_seconds"),604800,604800) and source.get("isMultiCount")==true and source.get("RefreshUnitID")==71
+
+## 사용자 결정 2026-11-16 (patch523_rules_projection.decision_waivers): the
+## original count limit / period / NoRepeat of a craft is lifted. A waived
+## count limit never carries a quota and a waived period never a window.
+static func valid_decision(value: Variant, condition: Dictionary) -> bool:
+	if not value is Dictionary or value.get("date") != "2026-11-16": return false
+	var known: int = 1
+	if value.has("count_limit_restriction_ids"):
+		var ids: Variant = value.count_limit_restriction_ids
+		if not ids is Array or ids.is_empty() or condition.has("quota"): return false
+		for id: Variant in ids:
+			if not integer(id,1,2147483647): return false
+		known += 1
+	if value.has("no_repeat"):
+		if value.no_repeat != true: return false
+		known += 1
+	if value.has("time_window"):
+		var time: Variant = value.time_window
+		if not time is Dictionary or condition.has("active_window") or time.size() != 3: return false
+		for key: String in ["CraftTimeTypeID","EffectiveFrom","EffectiveTo"]:
+			if not integer(time.get(key),0,2147483647): return false
+		known += 1
+	return known > 1 and value.size() == known
+
+static func decision_text(condition: Dictionary) -> String:
+	var decision: Dictionary = condition.get("user_decision",{})
+	if decision.is_empty(): return ""
+	var parts: PackedStringArray = []
+	if decision.has("count_limit_restriction_ids"): parts.append("원본 횟수 제한 없음")
+	if decision.has("time_window"): parts.append("원본 기간 제한 없음")
+	if decision.has("no_repeat"): parts.append("반복 제작 허용")
+	return "사용자 결정 2026-11-16 · " + " · ".join(parts)
 
 static func restore(value: Variant) -> Dictionary:
 	# Preserve damaged state rather than turn a failed import into free quota.
@@ -67,16 +100,34 @@ static func source_recipe(recipe: Dictionary, views: Array, restrictions: Array)
 		for key: String in fields:
 			if not view.has(key) or view[key] != first.get(key): return {"ok":false,"reason":"제작 결과별 원본 자격이 다릅니다 · 재료 보존"}
 	var server_set: int = int(condition.get("server_limit_set_id",0))
-	if not integer(first.get("ServerLimitSetID"),0,2147483647) or int(first.ServerLimitSetID) != server_set or first.get("IsCoalitionItem") != false or first.get("NoRepeat") != false or first.get("IsBelowLevelLimit") != false or first.get("CraftTimeTypeID") != 1 or not integer(first.get("LevelLimitValue"),0,1000):
+	var decision: Dictionary = condition.get("user_decision",{})
+	var no_repeat_ok: bool = first.get("NoRepeat") == false or (first.get("NoRepeat") == true and decision.get("no_repeat") == true)
+	if decision.has("no_repeat") and first.get("NoRepeat") != true: return {"ok":false,"reason":"반복 제작 결정의 원본 관계가 다릅니다 · 재료 보존"}
+	var time_waived: bool = decision.has("time_window")
+	if time_waived:
+		var time: Dictionary = decision.time_window
+		for key: String in ["CraftTimeTypeID","EffectiveFrom","EffectiveTo"]:
+			if not integer(first.get(key),0,2147483647) or int(time.get(key,-1)) != int(first[key]): return {"ok":false,"reason":"기간 제한 결정의 원본 관계가 다릅니다 · 재료 보존"}
+	if not integer(first.get("ServerLimitSetID"),0,2147483647) or int(first.ServerLimitSetID) != server_set or first.get("IsCoalitionItem") != false or not no_repeat_ok or first.get("IsBelowLevelLimit") != false or (first.get("CraftTimeTypeID") != 1 and not time_waived) or not integer(first.get("LevelLimitValue"),0,1000):
 		return {"ok":false,"reason":"원본 제작의 별도 서버·자격 소유자 확인이 필요합니다 · 재료 보존"}
 	if int(condition.get("min_level",0)) != int(first.LevelLimitValue) or int(condition.get("max_level",0)) != 0 or int(recipe.get("popup_text_id",-1)) != int(first.PopupText):
 		return {"ok":false,"reason":"제작 레벨·재료 손실 안내의 원본 관계가 다릅니다 · 재료 보존"}
 	var permanent: bool = first.get("EffectiveFrom") == 1 and first.get("EffectiveTo") == 3
-	if permanent and condition.has("active_window"): return {"ok":false,"reason":"제작 원본 기간 관계가 다릅니다 · 재료 보존"}
-	if not permanent:
+	if (permanent or time_waived) and condition.has("active_window"): return {"ok":false,"reason":"제작 원본 기간 관계가 다릅니다 · 재료 보존"}
+	if not permanent and not time_waived:
 		var window: Dictionary = condition.get("active_window",{})
 		if window.is_empty() or window.get("source_start",{}).get("ID") != first.get("EffectiveFrom") or window.get("source_end",{}).get("ID") != first.get("EffectiveTo"):
 			return {"ok":false,"reason":"제작 기간의 원본 DateTimes 참조가 필요합니다 · 재료 보존"}
+	if decision.has("count_limit_restriction_ids"):
+		var ids: Array = []
+		for row: Variant in restrictions:
+			if not row is Dictionary or not integer(row.get("ID"),1,2147483647): return {"ok":false,"reason":"제작 횟수 제한의 원본 행 관계가 다릅니다 · 재료 보존"}
+			ids.append(int(row.ID))
+		ids.sort()
+		var recorded: Array = []
+		for id: Variant in decision.count_limit_restriction_ids: recorded.append(int(id))
+		if ids != recorded: return {"ok":false,"reason":"횟수 제한 결정의 원본 행 관계가 다릅니다 · 재료 보존"}
+		return {"ok":true}
 	if restrictions.is_empty():
 		return {"ok":not condition.has("quota"),"reason":"제작 횟수 제한의 원본 관계가 다릅니다 · 재료 보존" if condition.has("quota") else ""}
 	if restrictions.size() != 1 or not condition.has("quota") or condition.quota.get("source_restriction") != restrictions[0]:
@@ -135,8 +186,9 @@ static func brief(recipe: Dictionary, context: Dictionary) -> String:
 	if int(condition.min_level)>0: return "원본 제작 조건 · 레벨 %d 이상" % int(condition.min_level)
 	if condition.has("server_limit_set_id"):
 		var server: Dictionary=server_allows(condition,context)
-		return "원본 서버 세트 %d · 현재 서버 대상" % int(condition.server_limit_set_id) if server.ok else str(server.reason)
-	return ""
+		if not server.ok: return str(server.reason)
+		if not condition.has("user_decision"): return "원본 서버 세트 %d · 현재 서버 대상" % int(condition.server_limit_set_id)
+	return decision_text(condition)
 
 static func summary(recipe: Dictionary, context: Dictionary) -> String:
 	if not recipe.has("craft_conditions"): return ""
@@ -151,6 +203,7 @@ static func summary(recipe: Dictionary, context: Dictionary) -> String:
 	if condition.has("server_limit_set_id"):
 		var server: Dictionary=server_allows(condition,context)
 		lines.append("원본 서버 세트 %d · 현재 서버 대상" % int(condition.server_limit_set_id) if server.ok else str(server.reason))
+	if condition.has("user_decision"): lines.append(decision_text(condition))
 	if condition.has("quota"):
 		lines.append(str(condition.get("origin","원본 제작 횟수 제한")))
 		var quote: Dictionary=stage(recipe,1,context)

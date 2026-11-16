@@ -18,9 +18,11 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   with their unlearned books, tap to register (SkillCard_Slot_A), 카드 자동
 ##   등록, the registered cards, the target and the original merge chance;
 ##   합 성 runs the existing merge (failure loses the books: OnFailReward false).
+## - The popup's 성공 확률 shows the levelup quote's chance; its 전체 button
+##   orders the books 전체 / 수량순 / 이름순 (TWILIGHT 근사(근거 약함)).
 ## Left empty (no TWILIGHT feature or data): 상점 바로가기, 확정 합성, 실패 이력
-## 조회 and 실패 횟수 / 합성 시도 보상 gauges, the lock buttons, the sort and
-## grade filter of the popup, the result roulette / reveal and stage 4.
+## 조회 and 실패 횟수 / 합성 시도 보상 gauges, the lock buttons, the grade filter
+## of the popup (its books are one grade), the result roulette / reveal and stage 4.
 const ROOT="UI/SkillCard/SkillCard_All.csb"
 const POPUP="UI/SkillCard/SkillCard_Popup_Enchant.csb"
 const CLASS_ROW="UI/SkillCard/SkillCard_List_Class.csb"
@@ -47,6 +49,10 @@ var compose_grade: int=1
 var registered: Dictionary={}
 var feed: Dictionary={}
 var page: int=0
+## The enchant popup's book order (Btn_Sort "전체"): TWILIGHT 근사(근거 약함),
+## docs/original_ui523_approx.md.
+const BOOK_ORDERS: Array[String]=["전체","수량순","이름순"]
+var book_order: int=0
 
 func required_members() -> Array[String]:
 	return [ROOT,POPUP,CLASS_ROW,SLOT,SLOT_B,COMMON_SLOT]
@@ -171,8 +177,12 @@ func _enchant_spec() -> Dictionary:
 	spec["Nd_Skill/Nd_Bg/Img_bg1"]={"role":"consume"}
 	var inv: String="Nd_Inventory/"
 	spec[inv+"Btn_Close"]={"exclude":true}
-	for name: String in ["Btn_Sort","Common_ButtonSet_Grade","Img_Disabled"]:spec[inv+name]={"exclude":true}
-	var books: Array=materials(int(card.get("grade_id",0)))
+	for name: String in ["Common_ButtonSet_Grade","Img_Disabled"]:spec[inv+name]={"exclude":true}
+	spec[inv+"Btn_Sort"]={"activate":Callable(self,"_cycle_book_order")}
+	spec[inv+"Btn_Sort/Normal"]={"visible":true}
+	spec[inv+"Btn_Sort/Disabled"]={"visible":false}
+	spec[inv+"Btn_Sort/Normal/Label_Class"]={"role":"source_text","text":BOOK_ORDERS[book_order]}
+	var books: Array=_books(card)
 	var pages: int=maxi(1,ceili(float(books.size())/float(PAGE_SIZE)))
 	page=clampi(page,0,pages-1)
 	spec[inv+"Btn_Prev"]={"activate":Callable(self,"_page").bind(-1)}
@@ -183,7 +193,7 @@ func _enchant_spec() -> Dictionary:
 	spec[inv+"Nd_Notice"]={"visible":books.is_empty()}
 	var s: String="Nd_Skill/Nd_Skill/"
 	spec[s+"Label_Title"]={"role":"source_text","text":str(card.get("name",""))}
-	spec[s+"Btn_Probability"]={"exclude":true}
+	spec[s+"Btn_Probability"]={"activate":Callable(self,"_enchant_probability")}
 	spec[s+"Fx_CardSelect_Material"]={"exclude":true}
 	spec[s+"Nd_Enchant/Label_Skill_Percent"]={"role":"source_text","text":"성공 확률 "+percent_text(float(quote.get("probability_percent",0.0)))}
 	spec[s+"Nd_Enchant/Nd_Arrow"]={"visible":true}
@@ -281,9 +291,38 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		filled["registered"]=chosen.size()
 	return filled
 
+## The card's material books in the popup's order.
+func _books(card: Dictionary) -> Array:
+	return ordered_books(materials(int(card.get("grade_id",0))),book_order)
+
+## 전체: the feature's order; 수량순: most first; 이름순 (stable).
+static func ordered_books(books: Array, order: int) -> Array:
+	if order==0:return books
+	var keyed: Array=[]
+	for index: int in range(books.size()):
+		var entry: Dictionary=books[index]
+		keyed.append([-int(entry.get("remaining",0)) if order==1 else 0,str(entry.get("name","")) if order==2 else "",index])
+	keyed.sort()
+	return keyed.map(func(key: Array) -> Dictionary:return books[int(key[2])])
+
+func _cycle_book_order() -> Dictionary:
+	book_order=(book_order+1)%BOOK_ORDERS.size()
+	page=0
+	return _stage()
+
+## 성공 확률 (the popup's Btn_Probability): the levelup quote's own chance.
+func _enchant_probability() -> Dictionary:
+	var quote: Dictionary=_levelup_quote()
+	var card: Dictionary=_card()
+	if int(card.get("level",0))>=int(card.get("max_level",0)):
+		_message("최고 강화 단계입니다")
+		return {"ok":false}
+	_message("%s Lv.%d → Lv.%d 강화 성공 확률 %s (경험치 게이지가 가득 차야 시도합니다)" % [str(card.get("name","")),int(card.get("level",0)),int(card.get("level",0))+1,percent_text(float(quote.get("probability_percent",0.0)))])
+	return {"ok":true}
+
 func _fill_enchant(root: Node2D, out: Dictionary) -> Dictionary:
 	var card: Dictionary=_card()
-	var books: Array=materials(int(card.get("grade_id",0)))
+	var books: Array=_books(card)
 	var start: int=page*PAGE_SIZE
 	var rows: int=0
 	for r: int in range(PAGE_ROWS.size()):
