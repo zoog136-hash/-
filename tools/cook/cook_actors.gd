@@ -74,6 +74,9 @@ func run() -> void:
 		return
 	var selected_pack: Dictionary = PACK.selections(base, read.descriptor)
 	var bank_options: Dictionary = selected_pack.bank
+	# The phone's reader configuration (source523_pack.gd apply()): the shared
+	# column-packed definition rows read the same pinned tables ZIP.
+	for key: String in selected_pack.environment: OS.set_environment(key, str(selected_pack.environment[key]))
 	# Cook-time verification of the originals' pins (members are verified by
 	# the bank on every render below).
 	var manifest_sha: String = FileAccess.get_sha256(str(bank_options.manifest_path))
@@ -94,6 +97,7 @@ func run() -> void:
 	var kinds: PackedStringArray = argument("--kinds=", "npc,class,transform,effect").split(",")
 	var jobs: Array = build_jobs(kinds, context, bank_options)
 	report["job_counts"] = _job_counts(jobs)
+	report["effect_selection_rejections"] = _effect_reasons
 	var only: String = argument("--actors=", "")
 	if not only.is_empty():
 		var wanted: PackedStringArray = only.split(",")
@@ -171,6 +175,7 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 		if seen.has(key): return
 		seen[key] = true
 		jobs.append(job)
+	print("COOK_JOBS before npc %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "npc" in kinds:
 		var sprites: Dictionary = {}
 		for row: Dictionary in SOURCE.table_rows("NpcClass"):
@@ -180,6 +185,7 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 		for sprite: int in ids:
 			var selected: Dictionary = SELECTION.cook_selection(sprite, context)
 			if selected.ok: add.call({"kind":"npc","sprite":sprite,"label":"npc:%d" % sprite,"selected":selected,"inputs":STORE.selection_inputs(selected)})
+	print("COOK_JOBS before class %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "class" in kinds:
 		SOURCE.source_tables(context, ["Class","Gender"])
 		for row: Dictionary in SOURCE.table_rows("Class"):
@@ -190,6 +196,7 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 					class_context.merge({"class_id":int(row.ID),"gender_id":gender,"source_weapon_type":weapon})
 					var selected: Dictionary = SOURCE.select_class(class_context)
 					if selected.get("ok", false): add.call({"kind":"class","sprite":int(selected.sprite_id),"label":"class:%d:%d:%d" % [int(row.ID), gender, weapon],"selected":selected,"inputs":STORE.selection_inputs(selected)})
+	print("COOK_JOBS before transform %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "transform" in kinds:
 		var sprites: Dictionary = {}
 		for row: Dictionary in SOURCE.table_rows("PolymorphEntity"):
@@ -201,24 +208,37 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 				if not _actor_has(options, sprite, SOURCE.PRIMARY_ACTIONS[weapon].values()): continue
 				var selected: Dictionary = SOURCE.card_visual_selection("transform", sprite, weapon, options)
 				if selected.ok: add.call({"kind":"transform","sprite":sprite,"label":"transform:%d:%d" % [sprite, weapon],"selected":selected,"inputs":STORE.selection_inputs(selected)})
+	print("COOK_JOBS before effect %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "effect" in kinds:
+		var effect_reasons: Dictionary = {}
 		for pair: Array in effect_sprites(context):
+			# The runtime effect selection itself (sole/declared action in the
+			# bank's complete original action domain); what it rejects is
+			# never shown at runtime either, so it is not cooked.
 			var action: Dictionary = EFFECT._action(options, int(pair[1]), int(pair[2]))
-			if not action.get("ok", false): continue
+			if not action.get("ok", false):
+				effect_reasons[str(action.get("reason", ""))] = int(effect_reasons.get(str(action.get("reason", "")), 0)) + 1
+				continue
 			var bindings: Dictionary = {"idle":int(action.action_id)}
 			var loops: Dictionary = {"idle":bool(OVERLAY_LOOPS.get(pair[0], false))}
 			var mode_override: String = POLICY.mode(str(options.manifest_path).get_base_dir()) if str(pair[0]).begins_with("ammo") else ""
 			add.call({"kind":"effect","sprite":int(pair[1]),"label":"effect:%s:%d:%d" % [pair[0], int(pair[1]), int(action.action_id)],
 				"request":{"manifest_path":options.manifest_path,"sha":options.manifest_sha256,"sprite":int(pair[1]),"bindings":bindings,"loops":loops,"consumer":"overlay","override":mode_override},
 				"inputs":STORE.request_inputs(str(options.manifest_path), str(options.manifest_sha256), int(pair[1]), bindings, loops, "overlay", {}, mode_override)})
+		_effect_reasons = effect_reasons
+	print("COOK_JOBS done %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	return jobs
 
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 
+var _bank_actors: Dictionary = {}
+var _effect_reasons: Dictionary = {}
+
 func _actor_has(options: Dictionary, sprite: int, actions: Array) -> bool:
-	var loaded: Dictionary = EFFECT._bank(options)
-	if not loaded.get("ok", false): return false
-	var entries: Variant = loaded.manifest.actors.get("sprite:%d" % sprite)
+	if _bank_actors.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(options.manifest_path)))
+		_bank_actors = parsed.get("actors", {}) if parsed is Dictionary else {}
+	var entries: Variant = _bank_actors.get("sprite:%d" % sprite)
 	if not entries is Dictionary: return false
 	for action: Variant in actions:
 		if not entries.has(str(int(action))): return false
