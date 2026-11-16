@@ -264,6 +264,23 @@ func run() -> void:
 	check(var_to_bytes(population.result) == var_to_bytes(whole), "the spawned bank equals the synchronous build")
 	check(int(slot.get("spawn_failures", 0)) == 0 and not slot.has("patch523_spawn_hold"), "no failure or hold recorded")
 	check(not BANK.background_loading and BANK.role_build_budget == -1 and BANK.member_verify_budget == -1, "population restores the bank's defaults")
+	# After the first fill: a deferral that only started worker tasks does not
+	# use up a build token (field_population._take_build_token caps builds).
+	_reset()
+	population.data = fixture(scratch.path_join("token_cold"))
+	population.spawned = false
+	population._fill_remaining = 0.0
+	population._spawn_tokens = 5.0
+	population._build_tokens = 1.0
+	population._build_clock_usec = -1
+	var token_slot: Dictionary = {"region": {"monster_types": [key]}, "slot_id": 1, "monster": null, "remaining": 0.0}
+	await process_frame
+	population._spawn_slot(token_slot)
+	check(token_slot.has("background_wait") and not population.spawned and population._build_tokens >= 0.99, "a background deferral gives its build token back (%.2f)" % population._build_tokens)
+	frames = 0
+	while LOADER.busy() and frames < 600:
+		frames += 1
+		await process_frame
 	population.field = null
 	population._retry.clear()
 	population.free()

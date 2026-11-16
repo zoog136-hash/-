@@ -88,6 +88,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 		if not SP2_BANK.background_wait.is_empty():
 			slot.background_wait = SP2_BANK.background_wait.duplicate()
 			FRAME_HITCH.count("spawn.background_wait")
+			# Only started/awaited worker tasks, no actor was built: give back the
+			# build token (_take_build_token caps real ~100 ms builds, not this).
+			if str(slot.region.get("mode","normal")) != "boss" and _fill_remaining <= 0.0:
+				_build_tokens = minf(BUILD_BURST, _build_tokens + 1.0)
 		_queue_retry(slot)
 	var spent: int = Time.get_ticks_usec() - started
 	_budget_usec += spent
