@@ -39,7 +39,11 @@ func _initialize() -> void:
 	var workflow_path: String = _repo_file(".github/workflows/twilight-android-playtest-apk.yml")
 	check(not workflow_path.is_empty(), "the APK workflow is found")
 	var workflow: String = FileAccess.get_file_as_string(workflow_path) if not workflow_path.is_empty() else ""
-	check(workflow.contains('--export-release "Android"') and not workflow.contains('--export-debug "Android"'), "the playtest APK is a release export")
+	check(workflow.contains('--export-release "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk'), "the playtest APK is a release export")
+	## The only debug-template export is the separate diagnostic twin TWILIGHT_DEBUG.apk.
+	var debug_exports: int = workflow.count('--export-debug "Android"')
+	check(debug_exports == 0 or (debug_exports == 1 and workflow.contains('--export-debug "Android" build/TWILIGHT_DEBUG.apk')), "only the diagnostic TWILIGHT_DEBUG.apk uses the debug template")
+	check(workflow.contains("cp build/TWILIGHT_ANDROID_PLAYTEST.apk build/TWILIGHT.apk"), "the published TWILIGHT.apk is the release export")
 	check(workflow.contains("GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$GITHUB_WORKSPACE/tools/android/twilight-playtest.keystore"), "the release export keeps the fixed playtest signature")
 	var files: Array = []
 	_scripts("res://scripts", files)
