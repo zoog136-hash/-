@@ -271,6 +271,18 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 func cast(record: Dictionary) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
+	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
+	var transform: Dictionary = catalog.approx_transform_for(str(skill.get("id","")))
+	if not transform.is_empty():
+		var child: Dictionary = transform.child
+		if str(child.get("effect","")) == "self_buff" and str(skill.get("mode","")) in ["buff","counter","stealth"]:
+			skill["stats"] = child.stats.duplicate(true); skill["duration"] = float(child.duration)
+		elif str(child.get("effect","")) in ["damage","debuff"] and str(skill.get("mode","")) == "attack":
+			skill["approx_child"] = child.duplicate(true)
+		elif str(child.get("effect","")) in ["damage","debuff"] and str(skill.get("mode","")) == "status":
+			# The host status (stun, hold, ...) stays; the replacement's damage/debuff is added.
+			skill["approx_extra_child"] = child.duplicate(true)
+		skill["approx_transform"] = {"from_spell":int(transform.from_spell),"to_spell":int(transform.to_spell)}
 	if progression.is_toggle(skill):return progression.toggle(skill)
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
 	# Cast-speed options reduce cooldown through the world's shared policy;
@@ -426,6 +438,8 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			resolve_turn_undead(skill, target)
 			continue
 		if str(skill.mode) == "status":
+			if skill.has("approx_extra_child") and is_instance_valid(target) and not target.dead: approx_cast_child(str(skill.id), skill.approx_extra_child, target)
+			if not is_instance_valid(target) or target.dead: continue
 			if status.apply(skill, target, world):
 				vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 				_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
@@ -434,6 +448,14 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			else:
 				vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 				_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
+			continue
+		if skill.has("approx_child"):
+			# TWILIGHT 근사 active: the original spell (and its follow-ups) as damage/debuff.
+			var child: Dictionary = skill.approx_child
+			while not child.is_empty() and is_instance_valid(target) and not target.dead:
+				approx_cast_child(str(skill.id), child, target)
+				child = child.get("next", {})
+			if is_instance_valid(target) and not target.dead: trigger("on_hit", target, skill)
 			continue
 		var hit := hit_chance(skill, target)
 		if world.rng.randf() >= hit:

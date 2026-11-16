@@ -20,6 +20,7 @@ const PRODUCERS := {
 		"ignore": [],
 		"files": [
 			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/expedition/source_catalog.gd",
 			"res://scripts/loot/current523_native_fields.gd",
 			"res://scripts/quests/source_dummy523.gd",
@@ -36,6 +37,7 @@ const PRODUCERS := {
 		"ignore": ["res://data/quests/private_current523.json"],
 		"files": [
 			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/loot/current523_native_fields.gd",
 			"res://scripts/quests/quest_item_bindings.gd",
 			"res://scripts/quests/source_dummy523.gd",
@@ -54,6 +56,7 @@ const PRODUCERS := {
 		"ignore": [],
 		"files": [
 			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/loot/current523_native_fields.gd",
 			"res://scripts/protection/protection523_source.gd",
 			"res://scripts/quests/source_dummy523.gd",
@@ -69,6 +72,7 @@ const PRODUCERS := {
 		"ignore": [],
 		"files": [
 			"res://scripts/boot/boot_progress_log.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/dungeons/source_dungeon_projection.gd",
 			"res://scripts/dungeons/source_dungeon_runtime.gd",
 			"res://scripts/loot/current523_native_fields.gd",
@@ -92,6 +96,7 @@ const PRODUCERS := {
 			"res://scripts/cards/current523_relic_input.gd",
 			"res://scripts/cards/option_slot_definitions.gd",
 			"res://scripts/cards/patch523_slot_data.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/loot/current523_native_fields.gd",
 			"res://scripts/quests/source_dummy523.gd",
 			"res://scripts/resources/current523_bake_cache.gd",
@@ -110,6 +115,7 @@ const PRODUCERS := {
 			"res://scripts/cards/current523_card_identity.gd",
 			"res://scripts/cards/current523_option_combat_input.gd",
 			"res://scripts/cards/option_slot_definitions.gd",
+			"res://scripts/content523/tutorial523.gd",
 			"res://scripts/loot/current523_native_fields.gd",
 			"res://scripts/quests/source_dummy523.gd",
 			"res://scripts/resources/current523_bake_cache.gd",
