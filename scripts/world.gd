@@ -5598,6 +5598,14 @@ func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
 	if source_id=="26":
 		result["아데나"]=patch523_equipment.record("26")
 		return
+	# TWILIGHT 근사 2026-11-16: 각성서 supply / other-owner records of the exact ID.
+	if str(patch523_equipment.data.items[source_id].get("twilight_owner_binding","")) in ["supply","owner"]:
+		var owned_record: Dictionary=_catalog_item_from_source_id(str(binding.get("sourceId","")))
+		if int(catalog_item_variant_count.get(str(binding.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(owned_record,source_id):
+			var weighted_owner: Dictionary=owned_record.duplicate(true)
+			weighted_owner["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=weighted_owner
+		return
 	if binding.get("source_m_native_item",false):
 		for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
 			var variant: Dictionary=patch523_equipment.record(source_id,int(state))
@@ -5764,6 +5772,12 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
+	# TWILIGHT 근사 2026-11-16: 성공 페이백 / 혈맹 몫 stacks get the same owned-stack receipts.
+	for bonus: Dictionary in (transaction.get("bonus_outputs",[]) if transaction.get("ok",false) else []):
+		var part: Dictionary=transaction.duplicate(); part.selected_output=bonus; part.result_quantity=int(bonus.quantity); part.erase("source_native_retained_output_quantity")
+		var joined: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,part,context)
+		if not joined.get("ok",false):transaction=joined;break
+		transaction.item_instances=joined.item_instances
 	if not bool(transaction.get("ok", false)):
 		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))

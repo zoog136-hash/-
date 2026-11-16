@@ -641,8 +641,11 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["LimitServerCount","LimitBuffCardID","Enchant","ElementalEnchant"]:
+	for key: String in ["LimitServerCount","Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 서버·카드·장비 조건 미해석")
+	# TWILIGHT 근사: LimitBuffCardID = that card owned (card_requirement523).
+	var card_rule = preload("res://scripts/cards/card_requirement523.gd")
+	if int(row.get("LimitBuffCardID",0))!=0 and not card_rule.satisfied(world,int(row.LimitBuffCardID)):return fail("원본 조건: %s 카드 보유 필요" % card_rule.label(int(row.LimitBuffCardID)))
 	# Clan columns read against the local clan (scripts/clan523/clan523.gd).
 	if int(row.get("ClanLevelMin",0))!=0 or int(row.get("LimitMinClanLevel",0))!=0 or int(row.get("DaysAfterClanJoin",0))!=0 or int(row.get("LimitDaysAfterClanJoin",0))!=0 or row.get("LimitClanMemberRank",false):
 		var clan: Variant=world.get("clan523")
