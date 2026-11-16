@@ -130,6 +130,8 @@ CHECKS = [
     ('original_ui_approx523_test', []),
     ('original_ui_forge_window_test', []),
     ('original_ui_tj_retry_window_test', []),
+    ('original_ui_mystery_card_window_test', []),
+    ('original_ui_guardian_find_window_test', []),
     ('original_ui_buff_info_window_test', []),
     ('original_ui_reward_select_window_test', []),
     ('original_ui_currency_window_test', []),
@@ -142,6 +144,7 @@ CHECKS = [
     ('original_ui_store_window_test', []),
     ('original_ui_box_probability_window_test', []),
     ('original_ui_dungeon_window_test', []),
+    ('original_ui_dungeon_extras_window_test', []),
     ('original_ui_stat_detail_window_test', []),
     ('original_ui_teleport_window_test', []),
     ('original_ui_production_window_test', []),
@@ -258,6 +261,7 @@ CHECKS = [
     ('items523_selection_boxes_test', []),
     ('items523_bless_points_test', []),
     ('items523_storage_items_test', []),
+    ('map_time_recharge523_test', []),
     ('items523_location_teleport_test', []),
     ('items523_item_life_test', []),
     ('items523_invoke_replacement_test', []),
@@ -323,6 +327,7 @@ CHECKS = [
     ('sp2_background_load_test', []),
     ('sp2_background_reentry_test', []),
     ('content523_test', []),
+    ('content523_approx_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
     ('reference_sp2_native_build_test', []),
@@ -702,6 +707,8 @@ def main():
                       'original_ui_approx523_test':'ORIGINAL_UI_APPROX523_RESULT',
                       'original_ui_forge_window_test':'ORIGINAL_UI_FORGE_WINDOW_RESULT',
                       'original_ui_tj_retry_window_test':'ORIGINAL_UI_TJ_RETRY_WINDOW_RESULT',
+                      'original_ui_mystery_card_window_test':'ORIGINAL_UI_MYSTERY_CARD_WINDOW_RESULT',
+                      'original_ui_guardian_find_window_test':'ORIGINAL_UI_GUARDIAN_FIND_WINDOW_RESULT',
                       'original_ui_buff_info_window_test':'ORIGINAL_UI_BUFF_INFO_WINDOW_RESULT',
                       'original_ui_reward_select_window_test':'ORIGINAL_UI_REWARD_SELECT_WINDOW_RESULT',
                       'original_ui_currency_window_test':'ORIGINAL_UI_CURRENCY_WINDOW_RESULT',
@@ -714,6 +721,7 @@ def main():
                       'original_ui_store_window_test':'ORIGINAL_UI_STORE_WINDOW_RESULT',
                       'original_ui_box_probability_window_test':'ORIGINAL_UI_BOX_PROBABILITY_WINDOW_RESULT',
                       'original_ui_dungeon_window_test':'ORIGINAL_UI_DUNGEON_WINDOW_RESULT',
+                      'original_ui_dungeon_extras_window_test':'ORIGINAL_UI_DUNGEON_EXTRAS_WINDOW_RESULT',
                       'original_ui_stat_detail_window_test':'ORIGINAL_UI_STAT_DETAIL_WINDOW_RESULT',
                       'original_ui_teleport_window_test':'ORIGINAL_UI_TELEPORT_WINDOW_RESULT',
                       'original_ui_production_window_test':'ORIGINAL_UI_PRODUCTION_WINDOW_RESULT',
@@ -830,6 +838,7 @@ def main():
                       'items523_selection_boxes_test':'ITEMS523_SELECTION_BOXES_RESULT',
                       'items523_bless_points_test':'ITEMS523_BLESS_POINTS_RESULT',
                       'items523_storage_items_test':'ITEMS523_STORAGE_ITEMS_RESULT',
+                      'map_time_recharge523_test':'MAP_TIME_RECHARGE523_RESULT',
                       'items523_location_teleport_test':'ITEMS523_LOCATION_TELEPORT_RESULT',
                       'items523_item_life_test':'ITEM_LIFE523_RESULT',
                       'items523_invoke_replacement_test':'INVOKE_REPLACE523_RESULT',
@@ -897,7 +906,8 @@ def main():
                       'sp2_background_load_test':'SP2_BACKGROUND_LOAD_RESULT',
                       'sp2_background_reentry_test':'SP2_BACKGROUND_REENTRY_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
-                      'content523_test':'CONTENT523_RESULT'}[name]
+                      'content523_test':'CONTENT523_RESULT',
+                      'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 

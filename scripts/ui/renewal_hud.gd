@@ -3486,6 +3486,15 @@ func refresh_totems() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_feature_window"):original_main_ui_controller.refresh_feature_window("totems")
 	if active_section == "totems" and is_instance_valid(totem_view) and not totem_view.is_queued_for_deletion() and totem_view.content != null:
 		totem_view._refresh()
+## The original 523 미스터리 카드 합성 window (source_main_mystery_card_window)
+## for owned mystery card `item_name`; false (nothing opens) for any other
+## item or without the UI pack, and the 몬스터 도감 opens as before.
+func open_mystery_card523(item_name: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("feature_window_available"):return false
+	if not original_main_ui_controller.feature_window_available("mystery_card") or load("res://scripts/ui/original_ui/source_main_mystery_card_window.gd").mystery_action(get_parent(),item_name).is_empty():return false
+	_open_window("mystery_card","미스터리 카드 합성","")
+	return _open_original_feature("mystery_card",[item_name])
+
 func open_monsterbook523() -> void:
 	_open_window("monsterbook523", "몬스터 도감", "처치 누적 · 단계 등록 · 옵션 · 보상 기록")
 	if _open_original_feature("monsterbook"):return
