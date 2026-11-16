@@ -152,6 +152,11 @@ const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
 ## TWILIGHT 근사: 획득 후 수명(Life) 장부, 지배 부적 소지 효과.
 const ITEM_LIFE523 = preload("res://scripts/loot/item_life523.gd")
 var item_life523 = ITEM_LIFE523.new()
+## TWILIGHT 근사: 신화 무기 발동 교체 (ItemInvokeReplacementID) 한 번 추첨 장부.
+const ITEM_INVOKE523 = preload("res://scripts/loot/item_invoke_replacement523.gd")
+var item_invoke523 = ITEM_INVOKE523.new()
+## TWILIGHT 근사: 장비 상시 버프 (착용 장비의 BuffClassID 행).
+var equipment_buff523 = preload("res://scripts/loot/equipment_buff523.gd").new()
 var item_possession523 = preload("res://scripts/loot/item_possession523.gd").new()
 var card_swap523 = CARD_SWAP523.new()
 const SKILL_CARD523 = preload("res://scripts/cards/skill_card523.gd")
@@ -834,6 +839,7 @@ func _process_frame(delta: float) -> void:
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
 	item_life523.tick(delta)
+	item_invoke523.tick(delta)
 	var hitch_7: int = FRAME_HITCH.now()
 	if original_skills != null: original_skills.tick(delta)
 	FRAME_HITCH.add("skills", hitch_7)
@@ -1077,6 +1083,8 @@ func _load_data() -> void:
 	item_appellation523.configure(self)
 	card_swap523.configure(self)
 	item_life523.configure(self)
+	item_invoke523.configure(self)
+	equipment_buff523.configure(self)
 	item_possession523.configure(self)
 	skill_cards523.configure(self)
 	unconfirmed523.configure(self)
@@ -4667,7 +4675,7 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
-	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key)
+	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key) + equipment_buff523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6572,6 +6580,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		CONTENT523.SAVE_KEY: content523.export_state(),
 		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
 		ITEM_LIFE523.SAVE_KEY: item_life523.export_state(),
+		ITEM_INVOKE523.SAVE_KEY: item_invoke523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
@@ -7246,6 +7255,8 @@ func _load_game(quiet: bool) -> void:
 	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
 	# An older save has no ledger: its Life items start at this load time.
 	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
+	# An older save has no draws: its 신화 weapons draw once after this load.
+	item_invoke523.import_state(data.get(ITEM_INVOKE523.SAVE_KEY, {}))
 	skill_cards523.import_state(data.get(SKILL_CARD523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
