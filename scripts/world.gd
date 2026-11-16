@@ -5974,6 +5974,22 @@ func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
 
+## 비법서 제작 (original GachaCraft, TWILIGHT 근사 — scripts/crafting/patch523_gacha_craft.gd).
+## UI API: owned books → quote (costs, ownership, per-item %) → execute (one
+## atomic save; returns {ok, output:{item_class_id,name,amount,enchant,bless_raw,bound}, detail}).
+func patch523_gacha_craft_owned() -> Array:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
+
+func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+
+func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
+
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return
 	if recipe_id.begins_with("patch523:"):
