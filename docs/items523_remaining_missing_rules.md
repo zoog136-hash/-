@@ -712,6 +712,37 @@ UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다.
   - 해적섬에서 해적의 무덤 주문서를 쓰면 해적의 무덤(47661)으로 간다. 해적섬 밖에서는 거부되고 주문서가 남는다.
   - 원본 주문서 212종 모두 사용 소유자가 있다(ScrollTeleportDungeon 144 · ScrollTeleport 68).
 
+## 17. 재사용 이동 부적 (TeleportAmulet) — TWILIGHT 근사 적용 (2026-11-16, PR `feat/approx523-teleport-amulet`)
+
+사용자 정책 2026-11-16 "원본 데이터에 없는 건 검색 후 근사치로 적용해"에 따라 16.2 끝의 "재사용 부적(TeleportAmulet 36종: 소모되지 않는 활성 아이템 …
+규칙 없음)"을 근사로 연결했다.
+
+- 없던 것: 부적이 쓸 때 사라지는지, 몇 번 쓸 수 있는지(ItemClass·ItemBonus에 소모 여부 열이 없음). 지배 부적의 소지 행
+  (`IgnoreNoTeleport`·`PossessItemSpellClassID`, IsPossession=true, 대상 = 해당 층 Land)과 `StorableOnEnchant`(@4)의 의미.
+- 찾은 것: 인벤 추천 사냥터 가이드 "오만의 탑 1~3층" — 이동 부적은 "1회성이 아니라 무제한으로 탑으로 향할 수 있기 때문에",
+  층 보스가 봉인된 부적을 떨어뜨리고 그 층 이동 주문서로 봉인을 푼다. <https://lineagem.inven.co.kr/dataninfo/guide/?idx=185439> (2026-11-16 확인).
+  공식 공지에서 소모 여부를 따로 적은 글은 찾지 못했다.
+- 적용 (`source523_item_effects.location_teleport`, 상수 `AMULET_REUSABLE`):
+  - ItemCategory가 TeleportAmulet이면 이동 주문서와 **같은 판정**(원본 지도, 사용 지역 type 1/2, 레벨, 도착 Land 입장 — 16.3 면제 그대로)으로 이동하고,
+    **아이템을 차감하지 않는다**(`current523_native_stack`: 물리 수량·사용 장부를 그대로 두고 도착 저장만 기록, 결과 `consumed 0`).
+  - `UsageInterval`(초) 행이 있으면 그 값을 재사용 대기시간으로 쓴다(이벤트 부적 300초).
+  - `StorableOnEnchant` 행과 소지(IsPossession) 행은 적용하지 않는다(`ignored_rows`에 남김). 지배 부적의 "층 안 순간이동 허용"(IgnoreNoTeleport)과
+    소지 주문(PossessItemSpellClassID 107943)은 실행하지 않는다 → 지배 부적도 일반 이동 부적처럼 움직인다.
+- 수치(원본 팩·실제 Main): TeleportAmulet 사용 소유자 0 → **34종**(이동 부적·지배 부적), 지정 위치 이동 주문서 212 → 245종(아래 17.1 포함: ScrollTeleport 68→92, ScrollTeleportDungeon 144→153).
+- 계속 보존: `RequiredBuffClassID`(이벤트 버프 필요) 2종, `IndexedTeleportToTerritory`(환상의 오만의 탑 층 선택) 1종,
+  예배당 부적(ActivateNagvasArtifact + Life) 5종, 행 없는 "이동 부적/지배 부적" 2종.
+- 원본 사용 지역: 오만의 탑 부적은 ConsumeTerritoryClass 42 "오만의 탑 부적 사용 지역" = 탑 입구(Land 46952) 전역 한 칸뿐이라, 탑 안(3층 등)에서는 거부된다(원본 값 그대로).
+- 확인: `tests/items523_location_teleport_test.gd` — #19372 오만의 탑 2층 이동 부적 → Land 22802·재사용, #122424 지배 부적 소지 행 목록,
+  실제 Main 원본 팩에서 탑 안(3층)에서는 거부·보존, 탑 입구 → 2층 이동 후 부적 1개 유지, 입구에서 다시 사용 가능, 다시 불러온 뒤에도 1개.
+
+### 17.1 ClassUsageInterval 이동 주문서 — TWILIGHT 근사 (같은 PR)
+- 없던 것: `ClassUsageInterval`(초) 행의 시계(직업별인지·아이템 종류별인지). 이 행이 있는 지정 위치 이동 주문서 33종(ScrollTeleport 24 · ScrollTeleportDungeon 9)이 보존되던 것.
+- 판단: 같은 표에 개체별 `UsageInterval`이 따로 있으므로 `ClassUsageInterval`은 **아이템 종류(ItemClass) 전체가 공유하는 재사용 대기**로 읽었다(가장 보수적: 사용은 허용하되 대기를 둠).
+  공식·인벤 문서에서 이 열의 설명은 찾지 못했다.
+- 적용: 그 값(초)을 재사용 대기로 쓴다(기존 아이템 재사용 대기는 아이템 이름 기준이라 같은 종류가 공유). 상수 `CLASS_USAGE_INTERVAL_AS_DELAY`.
+- 확인: #123364 흑마법 연구실 이동 주문서(이벤트) → 재사용 1,800초.
+- 계속 보존: `Life`(획득 후 수명) 15종 — 획득 시각을 기록하는 소유 장부가 물리 개체에 없어, 근사하려면 수명 시계 소유자가 필요하다.
+
 ## 18. 상자(LuckyBag) — 테스트 보상·확률 합 TWILIGHT 근사 (2026-11-16, PR `feat/approx523-luckybag`)
 
 사용자 지시(2026-11-16 11:40) "근사치로 다 넣어"에 따라 11.2의 두 큰 묶음을 근사로 열었다.

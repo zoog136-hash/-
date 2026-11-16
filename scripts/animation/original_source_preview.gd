@@ -181,6 +181,8 @@ func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bo
 		var loaded: Dictionary = _optional_role_probe(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),role,action,loop,str(selected.consumer),int(actor))
 		if loaded.get("error") == REFERENCE_BANK.ROLE_DEFERRED:
 			# The caller retries later; never record the optional role as missing.
+			# Background mode: prepare the combined bank's inputs meanwhile too.
+			if REFERENCE_BANK.background_loading: REFERENCE_BANK.new().prefetch(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),actions,role_actors)
 			reference_bank_status = {"ok":false,"error":REFERENCE_BANK.ROLE_DEFERRED}
 			return false
 		if not loaded.ok:
@@ -1616,6 +1618,21 @@ func notify_current_source_spell_event(spell: Dictionary, stage: String, world_p
 	supplied_context.merge(context,true)
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
+
+## Starts this spell row's effect banks for `stages` loading on worker threads
+## (reference_sp2_bank.prefetch): reads/hashes/parses only, admits and shows
+## nothing. The later notify_current_source_spell_event() validates as always
+## and uses the prepared inputs. Returns how many inputs are being prepared.
+func prefetch_current_source_spell_effects(spell: Dictionary, stages: Array, context: Dictionary = {}) -> int:
+	if not REFERENCE_BANK.LOADER.enabled: return 0
+	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
+	supplied_context.merge(context,true)
+	var started: int = 0
+	for stage: Variant in stages:
+		var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,str(stage),"patch523",supplied_context)
+		if not bool(selected.get("ok",false)) or not selected.get("role_actions") is Dictionary: continue
+		started += REFERENCE_BANK.new().prefetch(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions)
+	return started
 
 func notify_current_source_item_consume(original_item: Dictionary, requested_sprite: int, world_point: Vector2, facing: int, context: Dictionary = {}) -> bool:
 	# Called only by the existing item's successful use presentation. Resolve the

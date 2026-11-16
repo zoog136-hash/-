@@ -49,7 +49,10 @@ func table() -> void:
 	evidence["oman2"] = oman
 	check(oman.get("land_id")==22802 and oman.get("bounds")==[32730,32803,32730,32803] and oman.get("usable_classes")==[10442] and (oman.get("forbidden_classes",[]) as Array).is_empty(), "#19352 -> Land 22802 (32730,32803), usable only in ConsumeTerritory 10442")
 	check(STACK.profile(record(OMAN2)).get("kind")=="teleport_location", "#19352 has the teleport_location use owner")
-	check(EFFECTS.location_teleport(record(LIFE_ITEM)).is_empty() and EFFECTS.location_teleport(record(INTERVAL_ITEM)).is_empty(), "Life / ClassUsageInterval rows keep the item")
+	check(EFFECTS.location_teleport(record(LIFE_ITEM)).is_empty(), "Life rows keep the item")
+	var interval: Dictionary = EFFECTS.location_teleport(record(INTERVAL_ITEM))
+	evidence["class_usage_interval"] = interval
+	check(int(interval.get("consume_delay_ms",0))==1800000, "ClassUsageInterval 1800s becomes the reuse delay (TWILIGHT 근사) "+str(interval.get("consume_delay_ms")))
 	var areas: Variant = EFFECTS.consume_areas([10442])
 	check(areas is Array and (areas as Array).size()==11, "ConsumeTerritory 10442 = entrance + 10 floors")
 	var categories: Dictionary = {}
@@ -67,7 +70,12 @@ func table() -> void:
 	evidence["claimed"] = claimed; evidence["lands"] = lands.size()
 	var total: int = 0
 	for value: int in claimed.values(): total += value
-	check(total>=180 and not claimed.has("TeleportAmulet"), "fixed-destination scrolls are usable, reusable amulets are not (%s)" % str(claimed))
+	check(total>=180 and int(claimed.get("TeleportAmulet",0))>=30, "fixed-destination scrolls and (TWILIGHT 근사) reusable amulets are usable (%s)" % str(claimed))
+	var amulet: Dictionary = EFFECTS.location_teleport(record(OMAN2_AMULET))
+	evidence["amulet"] = amulet
+	check(amulet.get("land_id")==22802 and amulet.get("reusable")==true and amulet.get("usable_classes")==[42], "#19372 오만의 탑 2층 이동 부적 -> Land 22802, reusable, 사용 지역 42")
+	var ruler: Dictionary = EFFECTS.location_teleport(record(OMAN2_RULER))
+	check(ruler.get("reusable")==true and (ruler.get("ignored_rows",[]) as Array).has("IgnoreNoTeleport"), "#122424 지배 부적: reusable, possession rows listed as not applied "+str(ruler.get("ignored_rows",[])))
 	evidence["total"] = total
 
 ## Test setup only (reaching a start spot, not the feature): every in-Land
@@ -79,6 +87,9 @@ const PIRATE_TOMB := 259611
 const PIRATE_ISLAND_LAND := 47323
 ## 퀘스트 이동 주문서 -> [초보존][마검사] 말하는 섬 선착장 (Land 49492 declares TurnOffAutoForTeleport).
 const AUTO_OFF_SCROLL := 292612
+## 오만의 탑 2층 이동 부적 / 지배 부적 (TeleportAmulet, TWILIGHT 근사: not consumed).
+const OMAN2_AMULET := 19372
+const OMAN2_RULER := 122424
 
 func grant(world: Node, id: int, amount: int) -> String:
 	var staged: Dictionary = INVENTORY.stage(world,[{"item_class_id":id,"amount":amount,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
@@ -140,6 +151,21 @@ func runtime() -> void:
 	var floor3: Dictionary = await use(world,oman3)
 	evidence["to_3f"] = {"ok":floor3.get("ok"),"reason":floor3.get("reason",floor3.get("message","")),"land":land(world)}
 	check(floor3.get("ok",false) and land(world)==22812 and not world.inventory.has(oman3), "inside the tower: 2층 -> 3층, last scroll used")
+	# TWILIGHT 근사: the 2층 이동 부적 (사용 지역 42 = 탑 입구) moves to 2층 and stays in the bag.
+	var amulet: String = grant(world,OMAN2_AMULET,1)
+	if not amulet.is_empty():
+		var inside: Dictionary = await use(world,amulet)
+		check(not inside.get("ok",false) and int(world.inventory.get(amulet,0))==1, "the amulet outside its 사용 지역(탑 입구) is refused and kept")
+		world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
+		var back: Dictionary = await use(world,amulet)
+		evidence["amulet_use"] = {"ok":back.get("ok"),"reason":back.get("reason",back.get("message","")),"land":land(world),"left":int(world.inventory.get(amulet,0)),"consumed":back.get("consumed")}
+		check(back.get("ok",false) and land(world)==22802 and int(world.inventory.get(amulet,0))==1 and int(back.get("consumed",-1))==0, "entrance -> 2층 with the amulet, amulet kept")
+		world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
+		var again: Dictionary = await use(world,amulet)
+		check(again.get("ok",false) and land(world)==22802 and int(world.inventory.get(amulet,0))==1, "the amulet is usable again and still kept "+str(again.get("reason",again.get("message",""))))
+		world.inventory.erase(amulet)
+		world._load_game(true)
+		check(int(world.inventory.get(amulet,0))==1, "reload keeps the amulet")
 	check(world.patch523_owner_state_problem.is_empty(), "no owner problem")
 	world.inventory.erase(oman2)
 	world._load_game(true)
