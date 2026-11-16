@@ -536,6 +536,8 @@ func _finish_boot_loading() -> void:
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
+	# Android: world canvas at 90% resolution, CanvasLayer UI stays native.
+	add_child(preload("res://scripts/boot/world_render_scale.gd").new())
 	BOOT_LOG.step("world_npc_spells")
 	if patch523_npc_spells.configure(self):
 		var source_panel = preload("res://scripts/ui/patch523_npc_panel.gd").new()
