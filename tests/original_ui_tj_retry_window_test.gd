@@ -75,6 +75,7 @@ func _host() -> Dictionary:
 	root.add_child(world)
 	var core: FakeCore=world.tj_coupons.core
 	core.definitions={"coupons":{"9001":{"item":{"Name":"TJ의 쿠폰(변신 합성)"}},"9002":{"item":{"Name":"빈 쿠폰"}},"9003":{"item":{"Name":"TJ의 쿠폰(변신 각성)"}}},
+		"merge_rules":[{"BuffCardDeckID":1,"GradeID":4,"ServerLimitSetID":0,"SuccessProbability":155000},{"BuffCardDeckID":2,"GradeID":4,"ServerLimitSetID":0,"SuccessProbability":1}],
 		"cards":{"101":{"Name":"전설 A"},"102":{"Name":"전설 B"},"201":{"Name":"영웅 A"},"202":{"Name":"영웅 B"},"203":{"Name":"영웅 C"},"301":{"Name":"각성 대상"}}}
 	core.events={"9001":[{"id":"failure-1","adapter":"fusion","deck":1,"grade":4,"success_candidates":["101","102"],"fail_candidates":["201","202","203"]},
 		{"id":"failure-2","adapter":"fusion","deck":2,"grade":5,"success_candidates":["101"],"fail_candidates":["201"]}],
@@ -92,6 +93,8 @@ func _run() -> void:
 	check(usable[1].category=="마법인형" and usable[2].kind=="awakening" and int(usable[0].fail_count)==2 and int(usable[2].fail_count)==1,"records keep their deck category, adapter and the coupon's fail count")
 	window.kind="fusion"
 	window.category="변신"
+	check(window._probability(4).get("percent",0.0)==15.5 and host.hud.messages[-1].contains("영웅 변신 합성 재도전 성공 확률 15.5%"),"확률 보기 shows the original merge rule's chance: "+str(host.hud.messages.slice(-1)))
+	check(not window._probability(5).get("ok",true),"no merge rule: no chance")
 	check(not window._grade(32).get("ok",true) and host.hud.messages[-1].contains("이력이 없습니다"),"a grade without a usable record stays closed (the 9002 coupon is not owned)")
 	window._grade(4)
 	check(window.stage=="popup" and window.coupon=="9001" and str(window.retry_event.id)=="failure-1" and window.fail_count==2 and window.revision==7,"a grade opens its record with the coupon, fail count and revision")

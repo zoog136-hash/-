@@ -117,6 +117,8 @@ static func location_teleport(record: Dictionary) -> Dictionary:
 	for row: Dictionary in definition.get("item_bonus",[]):
 		var name: String = str(row.get("bonus_type",{}).get("Name",""))
 		if name in LIFETIME: continue
+		# TWILIGHT 근사: the Life clock is kept by scripts/loot/item_life523.gd.
+		if name=="Life" and preload("res://scripts/loot/item_life523.gd").ENABLED: continue
 		if amulet and (name in ["StorableOnEnchant","IgnoreNoTeleport","PossessItemSpellClassID"] or row.get("IsPossession")==true):
 			if name not in ignored: ignored.append(name)
 			continue
@@ -423,7 +425,7 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var contract: Dictionary = teleport(record)
 		if contract.is_empty(): return {"ok":false,"reason":"원본 순간이동 정의 확인 실패 · 주문서 보존"}
 		if world.patch523_npc_spells.blocks("CannotTeleport") or world.player.is_stunned() or world.player.is_feared() or world.player.is_held(): return {"ok":false,"reason":"현재 상태에서는 순간이동할 수 없습니다 · 주문서 보존"}
-		if world.field_map is OriginalPlayableField and world.field_map.uses_original_gameplay_rules() and not bool(world.field_map.definition.rules.get("teleportable",0)): return {"ok":false,"reason":"원본 규칙상 순간이동 제한 지역입니다 · 주문서 보존"}
+		if world.field_map is OriginalPlayableField and world.field_map.uses_original_gameplay_rules() and not bool(world.field_map.definition.rules.get("teleportable",0)) and not (world.get("item_possession523") != null and world.item_possession523.ignores_no_teleport()): return {"ok":false,"reason":"원본 규칙상 순간이동 제한 지역입니다 · 주문서 보존"}
 		var areas: Variant = forbidden_areas(contract)
 		if areas==null: return {"ok":false,"reason":"원본 순간이동 불가 지역 자료 확인 실패 · 주문서 보존"}
 		if _forbidden(world, areas, world.player.global_position): return {"ok":false,"reason":"원본 순간 이동 불가 지역입니다 · 주문서 보존"}

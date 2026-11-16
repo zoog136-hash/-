@@ -10,7 +10,7 @@ extends RefCounted
 ##    only value seen; another value has no stated meaning). Items with an
 ##    elemental enchant are refused: BlessPowderAmplifyRate gives a rate per
 ##    elemental level but not how it is applied to the amount or rounded.
-##    상급/최상급 용해 (AdvancedBlessPowder*) is refused: the catalyst amount,
+##    상급/최상급 용해 (AdvancedBlessPowder*): TWILIGHT 근사 below (was refused: the catalyst amount,
 ##    how Increment/MinSafeEnchantLevel/Multiplier/ItemEnchantScrollID combine
 ##    and the 최상급 output item are not in the tables.
 ##  - 질서의 연금: RefineItem (target ItemClassID + exact Enchant) -> group,
@@ -63,10 +63,14 @@ static func dissolve_yield(item_class_id: int, enchant: int, element_level: int)
 	var raw: Dictionary = item_row(item_class_id)
 	if raw.is_empty() or raw.get("TestItem")!=false: return _fail("원본 아이템 정의 확인 실패","item_row_missing")
 	if raw.get("IsSoluble")!=true: return _fail("원본에서 용해할 수 없는 아이템입니다 (IsSoluble)","not_soluble")
+	var amplify: int = 0
 	if element_level!=0:
-		# BlessPowderAmplifyRate has a rate per elemental level, but the tables
-		# do not say how it scales or rounds the amount.
-		return _fail("속성 강화 장비의 가루 증폭 계산식이 원본 표에 없어 보존합니다","amplify_rule_missing")
+		# TWILIGHT 근사(근거 약함, docs #4): BlessPowderAmplifyRate is a percent
+		# added to the table amount (rounded down). 인벤 "계산은 강화 가루 +
+		# 속성단계 가루" (2021-07-26) says the elemental part is added.
+		var rates: Array = SOURCE.rows_matching("BlessPowderAmplifyRate","ElementalEnchantLevel",{element_level:true})
+		if not APPROX_ELEMENT_AMPLIFY or rates.size()!=1 or not _integer(rates[0].get("AmplifyRate")): return _fail("속성 강화 장비의 가루 증폭 계산식이 원본 표에 없어 보존합니다","amplify_rule_missing")
+		amplify = int(rates[0].AmplifyRate)
 	var rate: Variant = constant("BlessConstant","BlessPowderRate")
 	if not _integer(rate) or int(rate)!=100: return _fail("BlessPowderRate 의미 미확정 · 용해 보류","powder_rate_unresolved")
 	if not _integer(raw.get("GradeID")) or enchant<0: return _fail("원본 등급·강화 수치 확인 실패","grade_or_enchant")
@@ -78,7 +82,84 @@ static func dissolve_yield(item_class_id: int, enchant: int, element_level: int)
 		return _fail("이 등급·강화 수치의 원본 가루 수량 행이 없습니다","amount_row_missing")
 	var powder: Dictionary = item_row(BLESS_POWDER_ITEM)
 	if powder.is_empty() or powder.get("TestItem")!=false: return _fail("원본 축복의 가루 아이템 정의 확인 실패","powder_item_missing")
-	return {"ok":true,"item_class_id":BLESS_POWDER_ITEM,"amount":int(rows[0].Amount),"grade_id":grade,"enchant":enchant,"source_row":rows[0].duplicate(true)}
+	var amount: int = int(rows[0].Amount)*(100+amplify)/100
+	var result: Dictionary = {"ok":true,"item_class_id":BLESS_POWDER_ITEM,"amount":amount,"grade_id":grade,"enchant":enchant,"source_row":rows[0].duplicate(true)}
+	if amplify>0: result.merge({"amplify_percent":amplify,"approximation":"TWILIGHT_ELEMENT_AMPLIFY_PERCENT"})
+	return result
+
+## ---- TWILIGHT 근사(근거 약함) switches, docs/bless_refine523_missing_rules.md
+## "근사 적용 (2) 2026-11-16". false restores the earlier refusal.
+const APPROX_ELEMENT_AMPLIFY: bool = true
+const APPROX_ADVANCED_DISSOLVE: bool = true
+const APPROX_SPECIAL_INPUT: bool = true
+## Solvents used per dissolved item (no table column; the most conservative).
+const ADVANCED_SOLVENT_PER_ITEM: int = 1
+
+## Solvent ItemClass -> {method, output}: ItemBonus DissolutionMethodID and
+## SolutionItemClassID of an active Solvent item (상급 용해제 24 → 상급 축복의
+## 가루 117544, 최상급 용해제 34 → 최상급 축복의 가루 192654).
+static func solvent(item_class_id: int) -> Dictionary:
+	var raw: Dictionary = item_row(item_class_id)
+	if raw.is_empty() or raw.get("TestItem")!=false: return {}
+	var method: int = 0; var output: int = 0
+	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_class_id):
+		var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
+		var type: String = str(SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1))).get("Name",""))
+		if type=="DissolutionMethodID" and _integer(bonus.get("Value")): method = int(bonus.Value)
+		elif type=="SolutionItemClassID" and _integer(bonus.get("Value")): output = int(bonus.Value)
+	if method<=0 or output<=0 or item_row(output).is_empty(): return {}
+	return {"item_class_id":item_class_id,"method":method,"output_item_class_id":output}
+
+## 상급/최상급 용해 (TWILIGHT 근사, docs #5·#6): amount = AdvancedBlessPowderAmount
+## (ItemCategory, GradeID, DissolutionMethodType).Amount + AdvancedBlessPowderIncrement
+## (same method, EnchantLevel = the item's elemental level).Amount. The 인벤
+## summary "마족 3강 + 속성 3단 = 1050개" = 180 + 870 and "영웅 무기 6강 + 속성
+## 1단 = 4090개" = 4000 + 90 match exactly this reading (Increment is indexed by
+## the elemental level; the item enchant, Multiplier and MinSafeEnchantLevel do
+## not change the result in those examples, so they are not applied).
+## Grade range: BlessConstant HighMelt* (24) / Highest*Melt* (34) per category.
+static func advanced_dissolve_yield(item_class_id: int, element_level: int, method: int) -> Dictionary:
+	if not installed(): return _fail("원본 523 정의 ZIP 미설치 · 용해 보류","source_not_installed")
+	if not APPROX_ADVANCED_DISSOLVE: return _fail("상급·최상급 용해 규칙 미구현","advanced_off")
+	var raw: Dictionary = item_row(item_class_id)
+	if raw.is_empty() or raw.get("TestItem")!=false: return _fail("원본 아이템 정의 확인 실패","item_row_missing")
+	if raw.get("IsSoluble")!=true: return _fail("원본에서 용해할 수 없는 아이템입니다 (IsSoluble)","not_soluble")
+	var category: int = int(raw.get("CategoryID",-1)); var grade: int = int(raw.get("GradeID",-1))
+	var bounds: Array = grade_bounds(method,category)
+	if bounds.is_empty() or grade<int(bounds[0]) or grade>int(bounds[1]): return _fail("이 용해제로 용해할 수 없는 등급입니다","grade_range")
+	var rows: Array = []
+	for row: Dictionary in SOURCE.rows("AdvancedBlessPowderAmount"):
+		if int(row.get("ItemCategory",-1))==category and int(row.get("GradeID",-1))==grade and int(row.get("DissolutionMethodType",-1))==method: rows.append(row)
+	if rows.size()!=1 or not _integer(rows[0].get("Amount")): return _fail("이 종류·등급의 원본 상급 가루 수량 행이 없습니다","advanced_row_missing")
+	var increment: int = 0
+	if element_level>0:
+		var found: bool = false
+		for row: Dictionary in SOURCE.rows("AdvancedBlessPowderIncrement"):
+			if int(row.get("DissolutionMethodType",-1))==method and int(row.get("EnchantLevel",-1))==element_level and _integer(row.get("Amount")): increment = int(row.Amount); found = true
+		if not found and method==24: return _fail("이 속성 단계의 원본 증가량 행이 없습니다","increment_missing")
+	return {"ok":true,"method":method,"grade_id":grade,"category":category,"amount":int(rows[0].Amount)+increment,"base":int(rows[0].Amount),"increment":increment,"approximation":"TWILIGHT_ADVANCED_DISSOLVE_BASE_PLUS_ELEMENT_INCREMENT"}
+
+static func grade_bounds(method: int, category: int) -> Array:
+	var names: Array = []
+	if method==24: names = ["HighMeltGradeMinValue","HighMeltGradeMaxValue"]
+	elif method==34:
+		match category:
+			1: names = ["HighestWeaponMeltGradeMinValue","HighestWeaponMeltGradeMaxValue"]
+			2: names = ["HighestArmorMeltGradeMinValue","HighestArmorMeltGradeMaxValue"]
+			43: names = ["HighestAccessoryMeltGradeMinValue","HighestAccessoryMeltGradeMaxValue"]
+	if names.is_empty(): return []
+	var low: Variant = constant("BlessConstant",names[0]); var high: Variant = constant("BlessConstant",names[1])
+	return [int(low),int(high)] if _integer(low) and _integer(high) else []
+
+## 특수 재료(2번 슬롯, TWILIGHT 근사 docs #12): its own Min~Max probability on the
+## same straight line, added to the main probability and capped at 100%.
+static func special_registration(entry: Dictionary, amount: int) -> Dictionary:
+	if amount<=0: return {"ok":true,"amount":0,"probability":0}
+	if not APPROX_SPECIAL_INPUT or entry.get("special_inputs",[]).size()!=1: return _fail("특수 재료 규칙 미확정","special_input")
+	var registered: Dictionary = registration({"input":entry.special_inputs[0]},"amount:%d" % amount)
+	if not registered.ok: return registered
+	registered["item_class_id"] = int(entry.special_inputs[0].ItemClassID)
+	return registered
 
 ## Original refine recipe for one target ItemClassID at its exact enchant.
 static func refine_entry(item_class_id: int, enchant: int) -> Dictionary:
