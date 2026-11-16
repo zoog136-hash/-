@@ -160,8 +160,13 @@ func actual_main() -> void:
 		var before: int = world.crafting_log.size()
 		var rng_state: int = world.rng.state
 		world._patch523_craft_requested(id,1)
+		var again: Dictionary = world._craft_quote(id,1)
 		world._patch523_craft_requested(id,1)
-		if world.crafting_log.size() != before + 2: skipped[wanted] = id+":crafted %d" % (world.crafting_log.size()-before); continue
+		# A random craft whose drawn result is an owned receipted stack is quoted
+		# once per stack owner (existing rule, "확률 결과의 기존 개체 소유자 확인");
+		# one craft through Main is the sample then.
+		var needed: int = 1 if recipe.has("outcomes") and not again.get("ok",false) else 2
+		if world.crafting_log.size() < before + needed: skipped[wanted] = id+":crafted %d · %s" % [world.crafting_log.size()-before,str(again.get("reason",""))]; continue
 		var result_key: String = str(recipe.result.get("inventory_key",recipe.result.item))
 		var bonus_ok: bool = true
 		if not recipe.has("outcomes"):
