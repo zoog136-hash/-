@@ -503,3 +503,23 @@ This follow-up commit uses `[skip ci]` at the user's request. No manual remote
 CI is launched or retried. Earlier CI success belongs to bb9a6fa4; it is not a
 remote result for the later display/UI commit. Local direct validation above
 remains separate from skipped remote CI.
+
+## 원본 지도 그림과 한국어 지명 (2026-11-16 사용자 보고 "아덴 대륙이 왜 계속 옛날 맵이지?")
+
+- 원인: current523 필드의 미니맵은 S32 통행 칸을 128x64 초록 블록으로 직접 칠한 TWILIGHT 자체 그림이었고,
+  원본 지도 창(UI/MapScene.csb)은 Land의 World 줄 버튼을 누르기 전에는 그림을 넣지 않았다. 지명은 영문 원본
+  `Land.Name`("Aden")이었다.
+- 수정(`scripts/maps/current523_map_images.gd`):
+  - 그림: `UIMapWorld`(LandID, 가장 작은 ID, `[테스트]` 제외) → `UIMapImageInfo` → `AssetView`/`AssetType`의 원본
+    `Image/Map/W_*.png`(아덴: World 5 → ImageInfo 19 → AssetID 1498 `W_aden.png`)를 설치된 이미지 팩에서 읽는다.
+  - 위치: 월드맵 클릭과 같은 자체 정합(`OWN_SOURCE_CELL_CENTER_FIELD_RATIO_V1`). Ratio는 이미지 1픽셀당 필드
+    캔버스 단위이고 BaseLoc는 셀 중심이므로, 그림 전체는 `Rect2(W(BaseLoc) − BasePixel×Ratio, 크기×Ratio)`를 덮는다.
+    미니맵(`field_minimap.gd`)은 이 사각형을 영역에 맞춰 잘라 그리고, 그림이 있으면 자체 초록 실루엣은 쓰지 않는다.
+    미니맵용으로 기기에서 긴 변 1024px로 줄인 사본만 보관한다(새 픽셀을 만들지 않고 축소만 함).
+  - 지명: `UIMapWorld.DescID` → `DescData_Korean`(아덴 "아덴대륙", Land 0 "말하는 섬"). 구역명은 `UIMapArea`
+    (WorldID, IsHide 아님) → `Territories` 사각형 → `DescData_Korean`(예: "기란 마을", "글루딘 마을")이다.
+    `region_at`의 type은 계속 neutral이라 안전지대·PvP 규칙은 바뀌지 않는다.
+  - 원본 지도 창: 열 때 현재 Land에 제안된 World 하나를 바로 선택한다(`renewal_hud._select_current_world_map`,
+    줄 버튼과 같은 `select_offered_world` 호출).
+- 다른 Land: `UIMapWorld`에 그림이 있는 Land는 같은 방식으로 처리된다. 그림이 없는 Land는 원본 그림 없이 기존
+  자체 S32 미니맵을 쓰고(그림을 만들지 않음), 이름은 `Land.Name`을 쓴다(TWILIGHT 근사).

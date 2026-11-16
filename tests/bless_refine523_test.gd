@@ -35,6 +35,8 @@ func rules() -> void:
 	check(odd.get("ok",false) and odd.probability==105310, "the line rounds down to the table unit "+str(odd))
 	check(RULES.registration(table_input,"amount:9999").get("code")=="amount_range" and RULES.registration(table_input,"amount:20001").get("code")=="amount_range", "amounts outside the endpoints are refused")
 	check(RULES.registration(table_input,"amount:x").get("code")=="amount_between", "a malformed amount is refused")
+	var special: Dictionary = RULES.special_registration({"special_inputs":[{"ItemClassID":9,"MinAmount":1,"MaxAmount":2,"MinProbability":10000,"MaxProbability":20000}]},2)
+	check(special.get("ok",false) and special.probability==20000 and special.item_class_id==9, "special input 2 -> +2%% (TWILIGHT 근사) "+str(special))
 	if SOURCE.not_installed():
 		check(not RULES.installed() and RULES.dissolve_yield(1,0,0).get("code")=="source_not_installed" and RULES.refine_entry(1,0).get("code")=="source_not_installed", "without the original archive both features are held")
 
@@ -60,8 +62,25 @@ func table() -> void:
 			check(yielded.get("ok",false) and int(yielded.amount)==expected_amount(grade,enchant) and int(yielded.item_class_id)==RULES.BLESS_POWDER_ITEM, "dissolve amount grade %d +%d" % [grade,enchant])
 			checked += 1
 		check(RULES.dissolve_yield(item,21,0).get("code")=="amount_row_missing", "no row past +20 for grade %d" % grade)
-		check(RULES.dissolve_yield(item,0,1).get("code")=="amplify_rule_missing", "an elemental enchant is held for grade %d" % grade)
+		var element: Dictionary = RULES.dissolve_yield(item,0,4)
+		check(element.get("ok",false) and int(element.amount)==expected_amount(grade,0)*115/100 and int(element.amplify_percent)==15, "elemental +4 adds BlessPowderAmplifyRate 15%% (TWILIGHT 근사) grade %d: %s" % [grade,str(element.get("amount",element.get("reason","")))])
 	evidence["dissolve_rows_checked"] = checked
+	# 상급·최상급 용해 (TWILIGHT 근사): Amount + Increment[elemental level].
+	var advanced: Dictionary = {}
+	for row: Dictionary in SOURCE.rows("AdvancedBlessPowderAmount"):
+		var method: int = int(row.DissolutionMethodType); var category: int = int(row.ItemCategory); var grade: int = int(row.GradeID)
+		var item: int = 0
+		for candidate: Dictionary in SOURCE.rows_matching("ItemClass","GradeID",{grade:true}):
+			if candidate.get("IsSoluble")==true and candidate.get("TestItem")==false and int(candidate.get("CategoryID",0))==category and str(candidate.get("ServiceRegionCode",""))=="": item = int(candidate.ID); break
+		if item==0: continue
+		var plain: Dictionary = RULES.advanced_dissolve_yield(item,0,method)
+		var elemental: Dictionary = RULES.advanced_dissolve_yield(item,3,method)
+		advanced["%d/%d/%d" % [method,category,grade]] = [plain.get("amount",plain.get("code")),elemental.get("amount",elemental.get("code"))]
+		check(plain.get("ok",false) and int(plain.amount)==int(row.Amount), "advanced dissolve base = table Amount %s" % str(advanced))
+		if method==24: check(elemental.get("ok",false) and int(elemental.amount)==int(row.Amount)+870, "상급 용해 + 속성 3단 = Amount + 870 (인벤 예: 180+870=1050)")
+	evidence["advanced_dissolve"] = advanced
+	check(advanced.size()>=10, "advanced rows resolve to real soluble items: %d" % advanced.size())
+	check(int(RULES.solvent(118682).get("method",0))==24 and int(RULES.solvent(118682).get("output_item_class_id",0))==117544 and int(RULES.solvent(192664).get("method",0))==34 and int(RULES.solvent(192664).get("output_item_class_id",0))==192654, "상급/최상급 용해제 -> method and output from ItemBonus")
 	var target: Dictionary = SOURCE.row_at("RefineItem",0)
 	var entry: Dictionary = RULES.refine_entry(int(target.ItemClassID),int(target.Enchant))
 	check(entry.get("ok",false) and int(entry.group_id)==int(target.RefineItemGroupID), "a RefineItem row resolves its group")
@@ -182,6 +201,18 @@ func runtime() -> void:
 	check(bag_diff.is_empty() and lost.is_empty() and int(world.gold)==gold, "inventory, physical items and Adena reload unchanged")
 	check(int(world.inventory.get(powder_name,0))==before_powder+expected and physical_of(world,output_id).size()==1 and int(SERVICE.powder_owned(world).total)==0, "축복의 가루 and the refined item survive the reload")
 	check(world.patch523_owner_state_problem.is_empty(), "no owner problem after reload")
+	# 상급 용해 (TWILIGHT 근사): one 상급 용해제 per item -> 상급 축복의 가루.
+	var advanced_weapon: int = soluble_weapon(3)
+	check(grant(world,[{"item_class_id":advanced_weapon,"amount":1,"bless_raw":1,"enchant":0},{"item_class_id":118682,"amount":2,"bless_raw":1,"enchant":0}]), "a grade-3 weapon and 2 상급 용해제 granted")
+	var expected_advanced: int = int(RULES.advanced_dissolve_yield(advanced_weapon,0,24).get("amount",-1))
+	var advanced_before: int = int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)
+	var advanced_targets: Array = physical_of(world,advanced_weapon)
+	var advanced: Dictionary = SERVICE.dissolve_advanced(world,advanced_targets,118682)
+	evidence["advanced_runtime"] = {"result":advanced.get("detail",advanced.get("reason","")),"expected":expected_advanced,"powder":[advanced_before,int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)],"solvent_left":int(SERVICE.stacks_of(world,118682).total)}
+	check(advanced.get("ok",false) and expected_advanced>0 and int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)==advanced_before+expected_advanced and int(SERVICE.stacks_of(world,118682).total)==1 and physical_of(world,advanced_weapon).is_empty(), "상급 용해: weapon gone, 상급 축복의 가루 +table amount, 용해제 2 -> 1 "+str(evidence.advanced_runtime))
+	world.inventory.erase(str(world.source_item_definition(118682).get("native_record",{}).get("name","")))
+	world._load_game(true)
+	check(int(SERVICE.stacks_of(world,118682).total)==1 and int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)==advanced_before+expected_advanced, "상급 용해 result survives reload")
 	world.queue_free()
 	await process_frame
 
