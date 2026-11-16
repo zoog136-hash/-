@@ -124,6 +124,13 @@ func run() -> void:
 				owner.free()
 			samples.sort()
 			bench["legacy" if legacy else "current"]={"median_usec_300_frames":samples[2],"samples":samples,"frame_changes":shows[2]}
+		# One holder refresh of the 1024 records: what the map renderer now skips
+		# when a periodic rebuild sees the same visible chunks.
+		var refresher: Fixture=make(t,false)
+		var refresh_started: int=Time.get_ticks_usec()
+		for repeat: int in 10: refresher.refresh(rows())
+		bench["refresh_1024_usec"]=(Time.get_ticks_usec()-refresh_started)/10
+		refresher.free()
 		print("MAP_OBJECT_CULL_BENCH "+JSON.stringify({"synthetic_only":true,"placements":1024,"frames":300,"fps":30,"result":bench}))
 	old.free();current.free();camera.free()
 	print("CURRENT523_BANK_OBJECT_CULL_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"synthetic_only":true,"on_screen_compared":on_screen}))

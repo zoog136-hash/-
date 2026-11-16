@@ -9,6 +9,7 @@ class PopulationFixture extends FieldPopulation:
 
 var failures: Array[String] = []
 var checks: int = 0
+var cap_sample: Dictionary = {}
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label)
@@ -80,6 +81,7 @@ func _run() -> void:
 		if monster.is_physics_processing(): awake_now += 1; farthest_awake = maxf(farthest_awake, distance)
 		elif distance < 1000.0: nearest_asleep = minf(nearest_asleep, distance)
 	check(by_distance > FieldPopulation.MAX_AWAKE and awake_now < by_distance and awake_now >= FieldPopulation.MAX_AWAKE, "awake cap applied (%d by distance -> %d awake)" % [by_distance, awake_now])
+	cap_sample = {"awake_by_distance":by_distance,"awake_after_cap":awake_now}
 	check(nearest_asleep >= farthest_awake or awake_now > FieldPopulation.MAX_AWAKE, "the nearest actors are the ones kept awake")
 	# A direct spawn update and later sweeps must observe fresh camera geometry.
 	population.field.data.map_id = "escaros_world"
@@ -141,7 +143,7 @@ func _run() -> void:
 		var started: int = Time.get_ticks_usec()
 		for iteration: int in range(500): population._process(0.4)
 		samples.append(Time.get_ticks_usec()-started)
-	print("POPULATION_ACTIVITY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"actors":165,"refreshes_per_sample":500,"cpu_usec":samples,"scope":"synthetic_headless_cpu_not_device_fps"}))
+	print("POPULATION_ACTIVITY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"actors":165,"cap_sample":cap_sample,"refreshes_per_sample":500,"cpu_usec":samples,"scope":"synthetic_headless_cpu_not_device_fps"}))
 	world.free()
 	quit(0 if failures.is_empty() else 1)
 
