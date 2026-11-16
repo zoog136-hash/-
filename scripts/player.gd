@@ -106,6 +106,8 @@ func _ready() -> void:
 	if FileAccess.file_exists(installed_manifest):
 		original_source_manifest = installed_manifest
 	original_source_preview.name = "OriginalSourceInspection"
+	# Cached frame plans / composited layer groups (original_source_preview.gd).
+	original_source_preview.cached_frames = true
 	add_child(original_source_preview)
 	add_child(preload("res://scripts/resources/current523_world_preview.gd").new())
 	add_child(current523_identity_actor)
