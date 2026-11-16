@@ -40,6 +40,11 @@ const HOLY_WATER_SOURCE_EXP := 31920000
 ## Item lifetime rows: the projection resolves them and use eligibility
 ## refuses an expired item (patch523_item_use.eligibility).
 const LIFETIME: Array[String] = ["DeleteTime","CannotExtendDeleteTime"]
+## TWILIGHT 근사 switch: false keeps TeleportAmulet items unclaimed as before.
+const AMULET_REUSABLE: bool = true
+## TWILIGHT 근사 switch: ClassUsageInterval (seconds) on a fixed-destination
+## scroll becomes its reuse delay instead of keeping the scroll.
+const CLASS_USAGE_INTERVAL_AS_DELAY: bool = true
 
 static var _areas: Dictionary = {}
 
@@ -52,13 +57,20 @@ static func _direct(row: Dictionary) -> bool:
 
 ## The original definition when `record` is an ordinary, usable 523 consumable.
 static func _definition(record: Dictionary) -> Dictionary:
-	if record.get("source_m_native_item")!=true or record.get("slot")!="consumable" or record.get("source_test_item",true)!=false: return {}
+	# TeleportAmulet (IsConsumable=false, IsActivatable=true) is projected as a
+	# material; with the TWILIGHT 근사 switch it is a usable non-consumed item.
+	var slot_ok: bool = record.get("slot")=="consumable" or (AMULET_REUSABLE and record.get("slot")=="material" and _amulet_category(record))
+	if record.get("source_m_native_item")!=true or not slot_ok or record.get("source_test_item",true)!=false: return {}
 	if not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false): return {}
 	var definition: Dictionary = D.item_definition(record)
 	var raw: Dictionary = definition.get("original_item",{})
 	if raw.is_empty() or raw.get("TestItem")!=false or definition.get("excluded",false): return {}
 	if not _integer(raw.get("TargettingTypeID")) or int(raw.TargettingTypeID)!=1 or not str(raw.get("ServiceRegionCode","")).is_empty(): return {}
 	return definition
+
+static func _amulet_category(record: Dictionary) -> bool:
+	var raw: Dictionary = D.item_definition(record).get("original_item",{})
+	return str(SOURCE.row("ItemCategory",int(raw.get("CategoryID",-1))).get("Name",""))=="TeleportAmulet"
 
 ## {"kind":"teleport", "territory_class_ids", "consume_delay_ms"} or {}.
 static func teleport(record: Dictionary) -> Dictionary:
@@ -94,12 +106,28 @@ static func location_teleport(record: Dictionary) -> Dictionary:
 	var definition: Dictionary = _definition(record)
 	if definition.is_empty(): return {}
 	var targets: Array = []; var classes: Array[int] = []; var delay: int = 0; var delays: int = 0; var sprite: int = 0; var sprites: int = 0
+	# TWILIGHT 근사 (user policy 2026-11-16): a TeleportAmulet (이동/지배 부적) is
+	# the same fixed-destination move but is not consumed ("1회성이 아니라
+	# 무제한으로", 인벤 오만의 탑 가이드 https://lineagem.inven.co.kr/dataninfo/guide/?idx=185439,
+	# checked 2026-11-16). Its StorableOnEnchant row and possession-only rows
+	# (지배 부적 IgnoreNoTeleport / PossessItemSpellClassID inside the floor) are
+	# not applied; UsageInterval (seconds) becomes its reuse delay.
+	var amulet: bool = AMULET_REUSABLE and str(SOURCE.row("ItemCategory",int(definition.get("original_item",{}).get("CategoryID",-1))).get("Name",""))=="TeleportAmulet"
+	var ignored: Array[String] = []
 	for row: Dictionary in definition.get("item_bonus",[]):
 		var name: String = str(row.get("bonus_type",{}).get("Name",""))
 		if name in LIFETIME: continue
+		if amulet and (name in ["StorableOnEnchant","IgnoreNoTeleport","PossessItemSpellClassID"] or row.get("IsPossession")==true):
+			if name not in ignored: ignored.append(name)
+			continue
 		if not _direct(row): return {}
 		var value: int = int(row.bonus.Value)
 		var unit: String = str(row.get("unit",{}).get("Name",""))
+		if (amulet and name=="UsageInterval" or name=="ClassUsageInterval" and CLASS_USAGE_INTERVAL_AS_DELAY) and unit=="Seconds" and value>0:
+			# TWILIGHT 근사: ClassUsageInterval = reuse delay of this item class
+			# (the existing cooldown is keyed by the item name, shared by copies).
+			delay = value*1000; delays += 1
+			continue
 		match name:
 			"TeleportToLocation":
 				if unit!="LocationsID": return {}
@@ -136,7 +164,9 @@ static func location_teleport(record: Dictionary) -> Dictionary:
 			1: usable.append(class_id)
 			2: forbidden.append(class_id)
 			_: return {}
-	return {"kind":"teleport_location","land_id":int(target.LandID),"bounds":bounds,"usable_classes":usable,"forbidden_classes":forbidden,"consume_delay_ms":delay,"consume_sprite_id":sprite,"source":{"table":table,"id":id}}
+	var result: Dictionary = {"kind":"teleport_location","land_id":int(target.LandID),"bounds":bounds,"usable_classes":usable,"forbidden_classes":forbidden,"consume_delay_ms":delay,"consume_sprite_id":sprite,"source":{"table":table,"id":id}}
+	if amulet: result.merge({"reusable":true,"approximation":"TWILIGHT_REUSABLE_TELEPORT_AMULET","ignored_rows":ignored})
+	return result
 
 ## Rectangles [{land, rect}] of ConsumeTerritoryClass ids, or null when a
 ## referenced row is missing.
@@ -417,7 +447,11 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		elif world.field_map is OriginalPlayableField and world.field_map.uses_original_gameplay_rules() and not bool(world.field_map.definition.rules.get("teleportable",0)): return {"ok":false,"reason":"원본 규칙상 순간이동 제한 지역입니다 · 주문서 보존"}
 		if _forbidden(world, forbidden, position): return {"ok":false,"reason":"원본 사용 불가 지역입니다 · 주문서 보존"}
 		var land_rows: Array[Dictionary] = SOURCE.rows_matching("Land","ID",{int(contract.land_id):true})
-		return {"ok":true,"travel":{"land_id":int(contract.land_id),"bounds":contract.bounds},"consume_delay_ms":int(contract.consume_delay_ms),"consume_sprite_id":int(contract.consume_sprite_id),"message":"%s · %s(으)로 이동" % [display, str(land_rows[0].get("Name","")) if land_rows.size()==1 else str(contract.land_id)]}
+		var moving: Dictionary = {"ok":true,"travel":{"land_id":int(contract.land_id),"bounds":contract.bounds},"consume_delay_ms":int(contract.consume_delay_ms),"consume_sprite_id":int(contract.consume_sprite_id),"message":"%s · %s(으)로 이동" % [display, str(land_rows[0].get("Name","")) if land_rows.size()==1 else str(contract.land_id)]}
+		if bool(contract.get("reusable",false)):
+			moving["reusable"] = true
+			moving.message += " (부적은 소모되지 않음 · TWILIGHT 근사)"
+		return moving
 	if kind=="ain":
 		var contract: Dictionary = ain(record)
 		if contract.is_empty(): return {"ok":false,"reason":"원본 아인하사드 충전 정의 확인 실패 · 아이템 보존"}
