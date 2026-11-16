@@ -42,7 +42,7 @@ func _run() -> void:
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
 	if not pack_dir.is_empty():await _real_pack(pack_dir)
-	print("ORIGINAL_UI_FAIL_HISTORY_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
+	print("ORIGINAL_UI_HISTORY_LOG_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
 
 func _real_pack(pack_dir: String) -> void:
