@@ -1103,6 +1103,7 @@ const FEATURE_WINDOWS={
 	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
 	"buff_info":preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd"),
 	"currency_info":preload("res://scripts/ui/original_ui/source_main_currency_window.gd"),
+	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 }

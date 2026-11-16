@@ -34,6 +34,21 @@ func _initialize() -> void:
 	for i: int in 50:
 		if population._take_spawn_token(): next_second += 1
 	check(next_second == int(POPULATION.STEADY_SPAWNS_PER_SECOND), "steady respawns are paced per second")
+	# Hard cap where every spawn path ends (bypasses of the tokens above).
+	population._fill_remaining = 0.0
+	population._build_tokens = POPULATION.BUILD_BURST
+	population._build_clock_usec = Time.get_ticks_usec()
+	var normal_slot: Dictionary = {"region":{"mode":"normal"}}
+	var builds: int = 0
+	for i: int in 20:
+		if population._take_build_token(normal_slot): builds += 1
+	check(builds == int(POPULATION.BUILD_BURST), "actor builds after the fill are capped at the burst at once: %d" % builds)
+	var boss_builds: int = 0
+	for i: int in 5:
+		if population._take_build_token({"region":{"mode":"boss"}}): boss_builds += 1
+	check(boss_builds == 5, "bosses are never capped")
+	population._fill_remaining = 1.0
+	check(population._take_build_token(normal_slot), "the first fill is not capped")
 	population.free()
 
 	HITCH.reset_for_test("user://spawn_pacing_detail_test")

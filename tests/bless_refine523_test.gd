@@ -27,6 +27,14 @@ func rules() -> void:
 	var low: Dictionary = RULES.registration({"input":{"MinAmount":10000,"MaxAmount":20000,"MinProbability":100000,"MaxProbability":200000}},"min")
 	var high: Dictionary = RULES.registration({"input":{"MinAmount":10000,"MaxAmount":20000,"MinProbability":100000,"MaxProbability":200000}},"max")
 	check(low.amount==10000 and low.probability==100000 and high.amount==20000 and high.probability==200000, "the endpoints register the table amount and probability")
+	# TWILIGHT 근사: a straight line between the endpoints (docs #11).
+	var table_input: Dictionary = {"input":{"MinAmount":10000,"MaxAmount":20000,"MinProbability":100000,"MaxProbability":200000}}
+	var mid: Dictionary = RULES.registration(table_input,"amount:15000")
+	check(mid.get("ok",false) and mid.amount==15000 and mid.probability==150000 and mid.approximation=="TWILIGHT_LINEAR_BETWEEN_ENDPOINTS", "15,000 powder registers 15% (straight line) "+str(mid))
+	var odd: Dictionary = RULES.registration({"input":{"MinAmount":10000,"MaxAmount":19000,"MinProbability":105300,"MaxProbability":200000}},"amount:10001")
+	check(odd.get("ok",false) and odd.probability==105310, "the line rounds down to the table unit "+str(odd))
+	check(RULES.registration(table_input,"amount:9999").get("code")=="amount_range" and RULES.registration(table_input,"amount:20001").get("code")=="amount_range", "amounts outside the endpoints are refused")
+	check(RULES.registration(table_input,"amount:x").get("code")=="amount_between", "a malformed amount is refused")
 	if SOURCE.not_installed():
 		check(not RULES.installed() and RULES.dissolve_yield(1,0,0).get("code")=="source_not_installed" and RULES.refine_entry(1,0).get("code")=="source_not_installed", "without the original archive both features are held")
 
@@ -142,6 +150,11 @@ func runtime() -> void:
 	var gold0: int = int(world.gold)
 	var powder0: int = int(SERVICE.powder_owned(world).total)
 	check(SERVICE.refine_quote(world,str(targets[0]),"between").get("code")=="amount_between", "an amount between min and max is refused in the world")
+	var middle_amount: int = (int(entry.input.MinAmount)+int(entry.input.MaxAmount))/2
+	var middle: Dictionary = SERVICE.refine_quote(world,str(targets[0]),"amount:%d" % middle_amount)
+	var expected_middle: int = int(entry.input.MinProbability)+int(floor(float(int(entry.input.MaxProbability)-int(entry.input.MinProbability))*float(middle_amount-int(entry.input.MinAmount))/float(int(entry.input.MaxAmount)-int(entry.input.MinAmount))))
+	check(middle.get("ok",false) and int(middle.registration.amount)==middle_amount and int(middle.registration.probability)==expected_middle, "a middle amount quotes the straight-line probability (TWILIGHT 근사) "+str(middle.get("registration",middle)))
+	evidence["middle_quote"] = {"amount":middle_amount,"probability":int(middle.get("registration",{}).get("probability",-1)),"percent":str(middle.get("percent",""))}
 	world.rng.seed = seed_for(int(entry.input.MinProbability),false)
 	var failed: Dictionary = SERVICE.refine(world,str(targets[0]),"min")
 	check(failed.get("ok",false) and failed.success==false, "a roll above the probability fails " + str(failed))
