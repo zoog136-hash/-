@@ -14,6 +14,8 @@ var search_row: HBoxContainer
 var expand_button: Button
 var lock_button: Button
 var acquisition_button: Button
+## 확률: the original 523 획득 가능 아이템 window for a lucky bag (its rows).
+var probability_button: Button
 ## The last 획득처 request: {item_class_id, native (original popup result) or summary lines}.
 var last_acquisition: Dictionary = {}
 var sort_mode: int = 0
@@ -134,6 +136,10 @@ func _ready() -> void:
 	acquisition_button.name = "InventoryAcquisition523"
 	acquisition_button.hide()
 	detail_stack.add_child(acquisition_button)
+	probability_button = UI.button("확률",_open_box_probability,Vector2(0,44))
+	probability_button.name = "InventoryBoxProbability523"
+	probability_button.hide()
+	detail_stack.add_child(probability_button)
 	weight_readout = UI.label("",11,UI.MUTED)
 	layout.add_child(weight_readout)
 	weight_readout.hide()
@@ -718,6 +724,8 @@ func _refresh_detail(item_reference: String) -> void:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
 	if acquisition_button != null:
 		acquisition_button.visible = _item_class_id(item) > 0 and ACQUISITION523.available()
+	if probability_button != null:
+		probability_button.visible = BOX_PROBABILITY.is_bag(item)
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
 	if controller!=null and not _is_item_equipped(item_reference):
@@ -763,6 +771,23 @@ func _open_acquisition() -> void:
 	if lines.is_empty(): lines.append(str(data.get("problem","원본 표에 획득처 행이 없습니다")))
 	last_acquisition["lines"] = lines
 	detail_text.text += "\n\n[color=#d8b878]획득처 (원본 523)[/color]\n" + UI.safe("\n".join(lines))
+
+const BOX_PROBABILITY = preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd")
+
+## 확률: the original Probability_All window over the bag's own rows; without
+## the original UI pack the same rows are listed in the detail text.
+func _open_box_probability() -> void:
+	if selected_item.is_empty() or controller == null: return
+	var item: Dictionary = _find_item_record(selected_item)
+	if not BOX_PROBABILITY.is_bag(item): return
+	var host: Node = controller.get_parent()
+	var class_id: int = int(host.BASE508.source_class_id(str(host.job_class)))
+	var native: Variant = controller.original_main_ui_controller.try_open_feature_window("box_probability",[item,class_id]) if is_instance_valid(controller.get("original_main_ui_controller")) else {}
+	if native is Dictionary and (native as Dictionary).get("handled",false): return
+	var lines: PackedStringArray = []
+	for row: Dictionary in BOX_PROBABILITY.bag_rows(item,class_id):
+		lines.append("%s ×%d · %s" % [str(row.name),int(row.amount),BOX_PROBABILITY.percent_text(float(row.percent))])
+	detail_text.text += "\n\n[color=#d8b878]획득 가능 아이템 (원본 523)[/color]\n" + UI.safe("\n".join(lines))
 
 func _activate_selected() -> void:
 	if selected_item.is_empty(): return
