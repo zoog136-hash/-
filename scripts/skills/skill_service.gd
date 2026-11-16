@@ -699,6 +699,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					_emit_verified_source_effect(skill, "impact", world.player.global_position)
 				if skill.has("power") and event in ["on_hit", "on_miss"] and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
+	if event == "on_hit": approx_attack_spells(target, attack)
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
 		progression.on_normal_hit(target,source_skill)
 		local_runtime.on_hit(target,source_skill)
@@ -784,6 +785,37 @@ func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 		if str(invoke.get("kind","")) != "amplify" or not approx_invoke_matches(invoke, attack): continue
 		if world.rng.randf() < clampf(float(invoke.get("chance",0)), 0, 1): multiplier = maxf(multiplier, float(invoke.get("multiplier",1)))
 	return maxi(0, int(amount * multiplier))
+
+## TWILIGHT 근사: Attack_Spell invokes of learned approximated passives cast
+## their child spell once per hit (each passive at most once per hit).
+func approx_attack_spells(target: TwilightMonster, attack: Dictionary) -> void:
+	var fired: Dictionary = {}
+	for invoke: Dictionary in catalog.approx_invoke_list():
+		if str(invoke.get("kind","")) != "spell" or not approx_invoke_matches(invoke, attack): continue
+		if not is_instance_valid(target) or target.dead: return
+		var owner: String = str(invoke.get("skill_id",""))
+		if fired.has(owner) or (bool(invoke.get("main_target_only",false)) and not bool(attack.get("main_target",true))): continue
+		if world.rng.randf() >= clampf(float(invoke.get("chance",0)), 0, 1): continue
+		fired[owner] = true
+		approx_cast_child(owner, invoke.spell, target)
+
+func approx_cast_child(owner: String, child: Dictionary, target: TwilightMonster) -> void:
+	var record: Dictionary = catalog.record_for(owner)
+	var name: String = str(record.get("name", owner))
+	match str(child.get("effect","")):
+		"damage":
+			var power: int = int(child.get("base",0))
+			for _die: int in int(child.get("number",0)): power += world.rng.randi_range(1, maxi(1,int(child.get("sides",1))))
+			deal_damage({"id":owner,"name":name,"power":power,"attack_type":str(child.get("attack_type","magic")),"shape":"single"}, target)
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"debuff":
+			if world.rng.randf() >= clampf(float(child.get("hit_chance",1)), 0, 1): return
+			var span: Array = child.get("duration",[0,0])
+			status.set_modifiers(target, "approx523:" + owner, world.rng.randf_range(float(span[0]), float(span[1])), child.get("modifiers",{}))
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"self_buff":
+			apply_buff({"id":owner,"name":name + " (발동)","duration":float(child.get("duration",0)),"stats":child.get("stats",{}).duplicate(true),"mode":"approx_proc"})
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
 
 static func approx_invoke_matches(invoke: Dictionary, attack: Dictionary) -> bool:
 	if attack.is_empty(): return false
@@ -969,12 +1001,21 @@ func _source_only_skill_presentation() -> bool:
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
 	if _is_verified_source_skill(skill):
 		if world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest): return
+	var row: Dictionary = _current_source_effect_row(skill)
+	if row.is_empty(): return
+	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
+	# The cast starts this skill's later effects (impact/success/fail) loading
+	# on worker threads, so the hit does not read/parse them on the main thread.
+	if stage == "cast": world.player.original_source_preview.prefetch_current_source_spell_effects(row,["impact","success","fail"])
+
+## The already admitted skill's pinned current-source row, or {}.
+func _current_source_effect_row(skill: Dictionary) -> Dictionary:
 	# Reuse the already admitted skill's pinned current-source profile. This
 	# changes only its existing cast/impact presentation call, not skill identity,
 	# admission, costs, proc timing, damage, progression or saved state.
 	var profile: Dictionary = catalog.source523.profiles.get(str(skill.get("id","")),{})
 	var row: Variant = profile.get("row")
-	if not row is Dictionary or row.is_empty(): return
+	if not row is Dictionary or row.is_empty(): return {}
 	if catalog.source523.active_sha256.is_empty():
 		# The raw-definition owner admits profiles without assigning the compiled
 		# pack fingerprint. Read its optional contract dynamically for older owners.
@@ -989,19 +1030,19 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 					if value is String: source_mode = value
 				"source_identity": source_identity = owner.get("source_identity")
 				"source_fallback_status": fallback_status = owner.get("source_fallback_status")
-		if source_mode != "original_bound_profiles" or not source_identity is Dictionary or not fallback_status is Dictionary: return
+		if source_mode != "original_bound_profiles" or not source_identity is Dictionary or not fallback_status is Dictionary: return {}
 		var source_archive_sha: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
-		if source_identity.get("kind") != "twilight.current523.original-definitions.v1" or source_identity.get("source_snapshot") != "patch523" or source_identity.get("source_sha256") != source_archive_sha or source_identity.get("source_bytes") != 25031173: return
+		if source_identity.get("kind") != "twilight.current523.original-definitions.v1" or source_identity.get("source_snapshot") != "patch523" or source_identity.get("source_sha256") != source_archive_sha or source_identity.get("source_bytes") != 25031173: return {}
 		var id: String = str(skill.get("id",""))
 		var applied: Variant = fallback_status.get("applied")
 		var deferred: Variant = fallback_status.get("deferred")
-		if fallback_status.get("state") != "loaded" or not applied is Array or not applied.has(id) or not deferred is Dictionary or deferred.has(id): return
+		if fallback_status.get("state") != "loaded" or not applied is Array or not applied.has(id) or not deferred is Dictionary or deferred.has(id): return {}
 		var bindings: Dictionary = catalog.source523.bindings
 		var skills: Variant = bindings.get("skills")
-		if not skills is Dictionary: return
+		if not skills is Dictionary: return {}
 		var binding: Variant = skills.get(id)
-		if bindings.get("source_zip_sha256") != source_archive_sha or not binding is Dictionary or binding.get("spell_id") != row.get("ID"): return
-	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
+		if bindings.get("source_zip_sha256") != source_archive_sha or not binding is Dictionary or binding.get("spell_id") != row.get("ID"): return {}
+	return row
 
 ## Original SpellMove skill: validation first, then the same cost/cooldown
 ## bookkeeping as other casts. Follow-up spells of the move are not run here.

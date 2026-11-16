@@ -8,7 +8,7 @@ extends RefCounted
 ##   - 대상: 보유한 아무 카드(중복분 포함, 1장뿐인 카드도), 영웅 등급 이상만 (09:19, 09:23).
 ##     확정 때 중복분부터 쓰고, 모자라면 영구 보유(해금) 1장을 바꾼다. 그 1장에 기존 소유자
 ##     상태(장착, 옵션 각성·추가 슬롯, 스킬 각성, 할파스 별, 탐험 파견, 완성 컬렉션)가 걸려
-##     있으면 거부하고 이유를 보여 준다(_last_copy_guard). 상태를 옮기거나 지우지 않는다.
+##     있으면 거부했으나, TWILIGHT 근사(2026-11-16)로 결과 카드에 진행을 옮긴다(_move_progress).
 ##   - 다시 뽑은 결과는 바로 받지 않고 "대기 결과"로 저장한다(09:23). 원래 카드는 확정 전까지
 ##     그대로다. 대기 중 다시 뽑기(다음 횟수·비용)는 대기 결과를 바꾸고, 확정(confirm)해야
 ##     원래 카드가 대기 결과로 바뀐다. 6회째 고른 카드도 대기 결과가 된다. 원본 창에 별도
@@ -186,7 +186,20 @@ const NATIVE_COLLECTIONS = preload("res://scripts/cards/native_collection_rules.
 ## Why the permanent (last) copy of a card cannot be swapped away now, or "".
 ## Existing owners keep their state attached to the permanent unlock; none of
 ## it is moved or erased here, so a card that carries it is refused.
+## TWILIGHT 근사 (사용자 지시 2026-11-16 11:40 "근사치로 다 넣어"): progress on
+## the last copy MOVES to the result card at confirmation instead of refusing:
+## equipped slot, option awakening / extra slots, skill awakening and
+## expedition records are re-keyed from the old identity to the result
+## identity. A completed collection that needed the card is recomputed (it
+## may come undone; the quote lists it). Only the 할파스 star (a system of that
+## one card) still refuses. Switch: APPROX_MOVE_PROGRESS.
+const APPROX_MOVE_PROGRESS := true
+const PROGRESS_OWNERS := ["option_awakening", "skill_awakening", "expedition_local"]
+
 func _last_copy_guard(category: String, identity: String) -> String:
+	if APPROX_MOVE_PROGRESS:
+		if identity == HALPHAS_IDENTITY and world.get("halphas_star") != null and int(world.halphas_star.progress.get("level", 0)) > 0: return "별 강화 진행이 있는 카드입니다"
+		return ""
 	if CARDS.card_id(world.equipped_catalog.get(category, {})) == identity: return "장착 중인 카드입니다 · 해제 후 다시 뽑으세요"
 	var token: String = JSON.stringify(identity)
 	var owners: Array = [["option_awakening", "옵션 각성·추가 슬롯 진행이 있는 카드입니다"], ["skill_awakening", "스킬 각성 진행이 있는 카드입니다"], ["expedition_local", "탐험 파견 기록이 있는 카드입니다"]]
@@ -207,6 +220,65 @@ func _last_copy_guard(category: String, identity: String) -> String:
 			for key: Variant in before:
 				if not after.has(key): return "완성한 카드 컬렉션에 쓰인 마지막 1장입니다"
 	return ""
+
+## What moving the last copy would carry over (shown in the quote).
+func progress_report(category: String, identity: String) -> Dictionary:
+	var report: Dictionary = {"equipped":CARDS.card_id(world.equipped_catalog.get(category, {})) == identity, "owners":[], "collections_undone":0}
+	var token: String = JSON.stringify(identity)
+	for owner: String in PROGRESS_OWNERS:
+		var service: Variant = world.get(owner)
+		if service != null and service.has_method("export_state") and JSON.stringify(service.call("export_state")).contains(token): report.owners.append(owner)
+	var collections: Variant = world.get("card_collections")
+	if collections != null and collections.problem.is_empty() and collections.core != null and collections.core.has_method("derive"):
+		collections.current_revision()
+		var before: Dictionary = collections._completed
+		if not before.is_empty():
+			var owned: Dictionary = world.card_draw_fusion.owned.duplicate(true)
+			(owned[category] as Dictionary).erase(identity)
+			var input: Dictionary = {"owned":owned, "source_server_context":collections.source_server_context()}
+			if collections.core is NATIVE_COLLECTIONS: input["source_option_awakening"] = world.option_awakening.native_collection_state()
+			var after: Dictionary = collections.core.derive(input).get("completed", {})
+			for key: Variant in before:
+				if not after.has(key): report.collections_undone = int(report.collections_undone) + 1
+	return report
+
+static func _rekey(value: Variant, from: String, to: String) -> Variant:
+	if value is Dictionary:
+		var result: Dictionary = {}
+		for key: Variant in value:
+			var moved: Variant = to if key is String and key == from else key
+			result[moved] = _rekey(value[key], from, to)
+		return result
+	if value is Array:
+		var result: Array = []
+		for entry: Variant in value: result.append(_rekey(entry, from, to))
+		return result
+	if value is String and value == from: return to
+	return value
+
+## Moves the owners' state; returns the states before (for a rollback).
+func _move_progress(category: String, identity: String, result_identity: String, result_record: Dictionary) -> Dictionary:
+	var before: Dictionary = {"equipped":world.equipped_catalog.get(category, {}).duplicate(true) if world.equipped_catalog.get(category, {}) is Dictionary else world.equipped_catalog.get(category, {})}
+	for owner: String in PROGRESS_OWNERS:
+		var service: Variant = world.get(owner)
+		if service == null or not service.has_method("export_state"): continue
+		var exported: Variant = service.call("export_state")
+		if not JSON.stringify(exported).contains(JSON.stringify(identity)): continue
+		before[owner] = exported
+		_put_state(service, _rekey(exported, identity, result_identity))
+	if CARDS.card_id(world.equipped_catalog.get(category, {})) == identity: world.equipped_catalog[category] = result_record.duplicate(true)
+	return before
+
+## Owners load their state through import_state, or (skill awakening) keep it
+## in `progress`, which export_state copies.
+static func _put_state(service: Object, value: Variant) -> void:
+	if service.has_method("import_state"): service.call("import_state", value)
+	elif "progress" in service: service.set("progress", value)
+
+func _restore_progress(category: String, before: Dictionary) -> void:
+	for owner: String in before:
+		if owner == "equipped": world.equipped_catalog[category] = before[owner]
+		else: _put_state(world.get(owner), before[owner])
 
 func _plan(category: String, identity: String) -> Dictionary:
 	if world == null: return _fail("게임 연결 전")
@@ -240,7 +312,9 @@ func _plan(category: String, identity: String) -> Dictionary:
 	if free + 1 < copies: copy_reason = "같은 카드 %d장(대상 1장 + 추가 %d장)이 필요합니다 · 보유 %d장" % [copies, extra, free + 1]
 	elif free < copies:
 		if spares > free: copy_reason = "퀘스트로 받아 보류 중인 중복분이 있어 마지막 1장은 바꿀 수 없습니다"
-		else: copy_reason = _last_copy_guard(category, identity)
+		else:
+			copy_reason = _last_copy_guard(category, identity)
+			if APPROX_MOVE_PROGRESS and copy_reason.is_empty(): info["progress_moves"] = progress_report(category, identity)
 	var held: Dictionary = state.pending.get(category + "|" + identity, {})
 	if not held.is_empty():
 		var result_record: Dictionary = card_record(category, str(held.result))
@@ -419,13 +493,16 @@ func confirm(token: String) -> Dictionary:
 		(cards.owned[category] as Dictionary).erase(identity)
 	var received: Dictionary = cards._receive(category, {"id":result_identity, "record":result_record})
 	received["identity"] = str(received.get("id", ""))
+	var moved: Dictionary = {}
+	if last_copy and APPROX_MOVE_PROGRESS: moved = _move_progress(category, identity, result_identity, result_record)
 	state.pending.erase(key)
 	revision += 1
 	var bag: Dictionary = world.inventory.duplicate(true)
 	if _saved_world(bag) != OK:
 		state = state_before
 		cards.import_state(cards_before)
+		_restore_progress(category, moved)
 		revision += 1
 		return _fail("확정 저장 실패 · 원래 카드와 대기 결과를 그대로 두었습니다")
 	_after_save(bag, "카드 다시 뽑기 확정 · %s → %s (%s)" % [str(plan.card.name), str(received.get("name","")), category])
-	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "result":received, "consumed":int(plan.copies_required), "used_last_copy":last_copy}
+	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "result":received, "consumed":int(plan.copies_required), "used_last_copy":last_copy, "moved_progress":moved.keys()}

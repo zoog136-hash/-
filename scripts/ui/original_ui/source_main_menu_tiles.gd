@@ -19,6 +19,7 @@ const MEMBERS: Dictionary={
 	"titles":"UI/CsbFile/MainMenu/MainMenu_Title.csb",
 	"totems":"UI/CsbFile/MainMenu/MainMenu_Totem.csb",
 	"weapon_mastery":"UI/CsbFile/MainMenu/MainMenu_Mastery.csb",
+	"skill_card523":"UI/CsbFile/MainMenu/MainMenu_SkillCard.csb",
 	"monsterbook523":"UI/CsbFile/MainMenu/MainMenu_MonsterBook.csb",
 	"source_dungeons":"UI/CsbFile/MainMenu/MainMenu_Dungeon.csb",
 	"exchange":"UI/CsbFile/MainMenu/MainMenu_Trade.csb",

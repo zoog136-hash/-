@@ -180,18 +180,24 @@ func reroll(world: Node) -> void:
 	check(not world.card523_swap_confirm(str(seventh.confirm_token)).get("ok", true), "a confirm token works once")
 	on_disk = save_data(world)
 	check(not on_disk.card_draw_fusion.owned["변신"].has(target) and on_disk.card_draw_fusion.owned["변신"].get(chosen) == true and (on_disk.card_swap523.pending as Dictionary).is_empty() and int(on_disk.card_swap523.counts["변신"][target]) == 6, "save after confirm: replaced card, no pending, count 6")
-	# Existing owner state on the last copy: refused with a reason.
+	# Existing owner state on the last copy: TWILIGHT 근사 — moved to the result card.
 	var guarded: String = str(hero[1].identity)
 	cards.owned["변신"][guarded] = true; cards.spare["변신"].erase(guarded)
 	world.equipped_catalog["변신"] = world.card_swap523.card_record("변신", guarded)
-	var equipped: Dictionary = world.card523_swap_quote("변신", guarded)
-	check(not equipped.get("ok", true) and str(equipped.reason).contains("장착"), "equipped last copy refused: %s" % str(equipped.get("reason","")))
-	world.equipped_catalog["변신"] = {}
 	var awaken: Dictionary = world.skill_awakening.progress.duplicate(true)
 	world.skill_awakening.progress.cards[guarded] = {"level":1}
-	var awakened: Dictionary = world.card523_swap_quote("변신", guarded)
-	check(not awakened.get("ok", true) and str(awakened.reason).contains("각성"), "skill-awakened last copy refused: %s" % str(awakened.get("reason","")))
+	world.inventory["다이아"] = int(world.inventory.get("다이아", 0)) + 20000
+	var carried: Dictionary = world.card523_swap_quote("변신", guarded)
+	evidence["progress_quote"] = {"ok":carried.get("ok"), "reason":carried.get("reason",""), "moves":carried.get("progress_moves",{})}
+	check(carried.get("ok", false) and bool(carried.get("progress_moves",{}).get("equipped",false)) and (carried.get("progress_moves",{}).get("owners",[]) as Array).has("skill_awakening"), "equipped + skill-awakened last copy: quote ok, lists the moves %s" % str(evidence.progress_quote))
+	var moved_swap: Dictionary = reroll_once(world, "변신", guarded)
+	var moved_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", guarded).get("confirm_token", "")))
+	var moved_to: String = str(moved_confirm.get("result",{}).get("identity",""))
+	evidence["progress_moved"] = {"swap":moved_swap.get("ok"), "confirm":moved_confirm.get("ok"), "reason":moved_confirm.get("reason",""), "to":moved_to, "moved":moved_confirm.get("moved_progress",[])}
+	check(moved_confirm.get("ok", false) and bool(moved_confirm.used_last_copy) and not moved_to.is_empty() and TwilightCardDrawFusion.card_id(world.equipped_catalog["변신"]) == moved_to and world.skill_awakening.progress.cards.has(moved_to) and not world.skill_awakening.progress.cards.has(guarded), "confirm moves the equipped slot and skill awakening to the result card %s" % str(evidence.progress_moved))
+	world.equipped_catalog["변신"] = {}
 	world.skill_awakening.progress = awaken
+	cards.owned["변신"][guarded] = true
 	cards.spare["변신"][guarded] = 1
 	var with_spare: Dictionary = reroll_once(world, "변신", guarded)
 	var spare_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", guarded).get("confirm_token", "")))
@@ -279,7 +285,22 @@ func skill_cards(world: Node) -> void:
 	var won: Dictionary = world.skill_card523_merge_execute(str(merge2.get("token", "")))
 	evidence["merge_won"] = won.get("result", {})
 	check(won.get("ok", false) and won.success and int(world.inventory.get(str(won.result.get("item", "")), 0)) >= 1 and int(world.inventory.get(name, 0)) == before_books - 16, "합성 성공: 영웅 스킬 카드 1장 받음")
+	# TWILIGHT 근사: 영웅 스킬 카드 다시 뽑기 (deck 41 RuleSwap 900 다이아, 같은 등급·현재 직업).
+	var hero_book: String = str(won.get("result", {}).get("item", ""))
+	var hero_uid: String = ""
+	for entry: Dictionary in world.skill_cards523.materials(4):
+		if str(entry.name) == hero_book: hero_uid = str(entry.physical_id)
+	world.inventory["다이아"] = 5000
+	var swap_q: Dictionary = world.skill_card523_swap_quote(hero_uid)
+	evidence["skill_swap_quote"] = {"ok":swap_q.get("ok"), "reason":swap_q.get("reason",""), "cost":swap_q.get("cost",{}), "candidates":swap_q.get("candidate_count",0)}
+	if check(swap_q.get("ok", false) and int(swap_q.cost.amount) == 900 and int(swap_q.candidate_count) > 0, "스킬 카드 다시 뽑기 견적: 영웅 1회째 900 다이아 "+str(evidence.skill_swap_quote)):
+		var swapped: Dictionary = world.skill_card523_swap_execute(str(swap_q.token))
+		evidence["skill_swap"] = {"ok":swapped.get("ok"), "reason":swapped.get("reason",""), "result":swapped.get("result",{})}
+		var result_card: int = int(swapped.get("result",{}).get("card_id",0))
+		var mage_ok: bool = SOURCE.related("SpellLearnLimit", "SpellClassID", int(SOURCE.row("BuffCard", result_card).get("SpellClassID", 0))).any(func(limit: Dictionary) -> bool: return int(limit.ClassID) == 3 and limit.IsTutorialSpell == false)
+		check(swapped.get("ok", false) and int(world.inventory.get("다이아", 0)) == 4100 and int(world.inventory.get(hero_book, 0)) == 0 and int(world.inventory.get(str(swapped.result.get("item","")), 0)) >= 1 and mage_ok and int(SOURCE.row("BuffCard", result_card).get("GradeID", 0)) == 4 and world.skill_cards523.swap_count(int(swap_q.card_id)) == 1, "다시 뽑기: 다이아 900 차감, 원래 카드 1장 → 같은 등급 마법사 카드 1장, 횟수 1 "+str(evidence.skill_swap))
 	var on_disk: Dictionary = save_data(world)
+	check(int(on_disk.get("skill_card523", {}).get("swaps", {}).values().size()) >= 1, "save holds the skill card reroll count")
 	check(int(on_disk.get("skill_card523", {}).get("cards", {}).get(str(ICE_CARD), {}).get("level", -1)) == 2 and int(on_disk.get("gold", -1)) == int(world.gold), "save holds stage 2 and adena")
 	cards.state = SKILL.empty_state(); cards.revision += 1
 	check(int(catalog.resolve(ice).power) == base_power, "without the stage the effect is gone")

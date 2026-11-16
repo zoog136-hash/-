@@ -6,6 +6,7 @@ extends VBoxContainer
 ## only calls the service.
 const SERVICE = preload("res://scripts/refine523/bless_refine523_service.gd")
 const RULES = preload("res://scripts/refine523/bless_refine523_rules.gd")
+const HONING = preload("res://scripts/honing/honing523_service.gd")
 var hud: Node
 var status: Label
 var body: VBoxContainer
@@ -69,6 +70,10 @@ func refresh() -> void:
 			else: selected.erase(row.uid))
 		body.add_child(check)
 	_button("선택한 장비 용해","DissolveSelected",body,_dissolve)
+	# TWILIGHT 근사: 상급·최상급 용해 with an owned 상급/최상급 용해제 (1 per item).
+	for solvent: Dictionary in snapshot.get("solvents",[]):
+		var label: String = "상급 용해" if int(solvent.method)==24 else "최상급 용해"
+		_button("선택한 장비 %s (용해제 #%d · 근사)" % [label,int(solvent.item_class_id)],"DissolveAdvanced_%d" % int(solvent.item_class_id),body,_dissolve_advanced.bind(int(solvent.item_class_id)))
 	_label("[질서의 연금] 대상 장비 + 상급 축복의 가루(원본 최소·최대 등록 수량) + 아데나. 실패해도 대상 장비는 돌아오고 재료·아데나는 소모됩니다.%s" % ("" if snapshot.refine_contents_enabled==true else " ※ 원본 523에서는 이 콘텐츠가 꺼져 있습니다(ContentsControl Refine)."),body)
 	for row: Dictionary in snapshot.refine:
 		var box := VBoxContainer.new()
@@ -84,6 +89,12 @@ func refresh() -> void:
 			var middle: Dictionary = RULES.registration({"input":row.get("input",{})},"amount:%d" % held)
 			if middle.get("ok",false): _button("보유 %d개 (%s · 근사)" % [held,RULES.percent_text(int(middle.probability))],"RefineHeld_" + str(row.uid),line,_refine.bind(str(row.uid),"amount:%d" % held))
 	if snapshot.refine.is_empty(): _label("가방에 질서의 연금 대상 장비가 없습니다.",body)
+	# 대장간 연마 (원본 ItemHoning 표 + TWILIGHT 근사, scripts/honing/honing523_service.gd).
+	_label("[대장간 연마] +7 이상 신화 무기 · 신화 연금석 2 + 태고의 구 1 · 성공 시 수식어 '태고의'(대미지 +5%), 실패 시 재료만 소모됩니다.",body)
+	var honing: Array = HONING.candidates(world())
+	for row: Dictionary in honing:
+		_button(("%s (연마 완료)" % str(row.label)) if bool(row.honed) else ("%s 연마 (%s)" % [str(row.label),str(row.percent)] if bool(row.ok) else "%s · %s" % [str(row.label),str(row.reason)]),"Honing_"+str(row.uid),body,_hone.bind(str(row.uid)),bool(row.ok))
+	if honing.is_empty(): _label("가방에 연마할 수 있는 무기가 없습니다.",body)
 
 func _show(result: Dictionary) -> void:
 	status.text = str(result.get("detail","")) if result.get("ok",false) else str(result.get("reason","실패"))
@@ -105,6 +116,14 @@ func _dissolve() -> void:
 			return
 	selected.clear()
 	_show(SERVICE.dissolve(world(),ids))
+
+func _dissolve_advanced(solvent_item_class_id: int) -> void:
+	var ids: Array = selected.keys()
+	selected.clear()
+	_show(SERVICE.dissolve_advanced(world(),ids,solvent_item_class_id))
+
+func _hone(uid: String) -> void:
+	_show(HONING.attempt(world(),uid))
 
 func _refine(uid: String, mode: String) -> void:
 	_show(SERVICE.refine(world(),uid,mode))

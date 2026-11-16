@@ -263,7 +263,8 @@ func _source(sprite_id: int, selector: int=0, declared_child: bool=false) -> Dic
 	var raw: PackedByteArray = file.get_buffer(length)
 	file.close()
 	if PACK.digest(raw)!=row.sha256: return _unresolved(sprite_id,"source_sha256",attempt)
-	var decoded: Dictionary = DECODER.parse(raw)
+	# Same decoder; the lock keeps its error-print toggle apart from background parses.
+	var decoded: Dictionary = preload("res://scripts/resources/sp2_parse_cache.gd").decode_locked(raw)
 	if not decoded.ok: return _unresolved(sprite_id,"source_parse",attempt)
 	var group: int = -1
 	for i: int in decoded.groups.size():
