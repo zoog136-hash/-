@@ -1196,7 +1196,7 @@ func _navigate(section: String) -> void:
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
-		"auto": open_macro_info()
+		"auto": open_schedule()
 		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
 		"warehouse": open_warehouse()
@@ -1233,7 +1233,14 @@ func _on_lineage_side_action(action_id: String) -> void:
 	super._on_lineage_side_action(action_id)
 
 
+## The original 523 TJ의 쿠폰 retry window (source_main_tj_retry_window)
+## first; the TWILIGHT TJ page (source install, server context) otherwise.
 func open_tj_coupons() -> void:
+	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	if _open_original_feature("tj_coupons"):return
+	open_tj_coupons_native()
+
+func open_tj_coupons_native() -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
@@ -1494,6 +1501,13 @@ func open_settings_info(expand_all: bool = false) -> void:
 	workspace.mount(options)
 	options.configure(self)
 	if expand_all: options.expand_all()
+
+## The original 523 스케줄 window (source_main_schedule_window) over the
+## existing 자동사냥 지역 feature; the TWILIGHT 자동사냥 panel when not handled.
+func open_schedule() -> void:
+	_open_window("auto","자동사냥","")
+	if _open_original_feature("schedule"):return
+	open_macro_info()
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")

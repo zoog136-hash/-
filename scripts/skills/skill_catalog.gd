@@ -153,9 +153,13 @@ func owned(record: Dictionary) -> bool:
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
 func enabled(record: Dictionary) -> bool:
-	if world.get("spell_group_conversion")!=null and not world.spell_group_conversion.allows(record):return false
+	# Every condition is a side-effect-free AND. The cheap ownership checks run
+	# first: combat loops call this for all ~480 records on every hit, and the
+	# spell-group source-ID adapter costs ~12 us per record (2026-11-15:
+	# outgoing_damage + trigger ~15 ms per hit on desktop, ~1.9 s on the phone).
 	if bool(record.get("runtime_blocked", false)): return false
 	if not owned(record): return false
+	if world.get("spell_group_conversion")!=null and not world.spell_group_conversion.allows(record):return false
 	if level_locked(record):return false
 	if str(record.get("class", "")) == "요정" and str(record.get("school", "")) in ["water","earth","wind","fire"]:
 		if str(record.school) != str(schools.get("요정", "water")): return false

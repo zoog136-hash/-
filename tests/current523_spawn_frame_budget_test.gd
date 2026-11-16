@@ -42,6 +42,9 @@ func _run() -> void:
 	var population := FakePopulation.new()
 	var world := FakeWorld.new()
 	population.world = world
+	# State right after configure(): the map's first fill is not paced.
+	population._fill_remaining = POPULATION.FILL_SECONDS
+	population._spawn_tokens = POPULATION.STEADY_SPAWN_BURST
 	var slots: Array[Dictionary] = _slots(population, 6)
 	await process_frame
 	# Cheap spawns: the count cap (2) still applies.
@@ -85,6 +88,23 @@ func _run() -> void:
 	var ids: Array = population.ever.keys()
 	ids.sort()
 	check(ids == [0, 1, 2, 3, 4, 5], "all six slots spawned: %s" % [ids])
+	# After the first fill, queued retries share the steady respawn pace.
+	await process_frame
+	population.spawned.clear()
+	population._fill_remaining = 0.0
+	population._spawn_tokens = 1.0
+	for slot: Dictionary in population._retry: slot.erase("retry_queued")
+	population._retry.clear()
+	slots[0].monster = null
+	slots[1].monster = null
+	population._queue_retry(slots[0])
+	population._queue_retry(slots[1])
+	population._drain_retry()
+	check(population.spawned == [0] and population._retry.size() == 1 and population._retry[0] == slots[1] and slots[1].get("retry_queued") == true, "a retry without a respawn token waits at the front of the queue: %s" % [population.spawned])
+	await process_frame
+	population._spawn_tokens = 1.0
+	population._drain_retry()
+	check(population.spawned == [0, 1] and population._retry.is_empty(), "it spawns once a token is available: %s" % [population.spawned])
 	population.field = null
 	population._retry.clear()
 	population.free()
