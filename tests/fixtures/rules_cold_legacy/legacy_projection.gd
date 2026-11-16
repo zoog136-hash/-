@@ -8,6 +8,7 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const POLICY_PATH = "res://data/crafting/patch523_crafting_policy.json"
 const EQUIPMENT_PATH = "res://tests/fixtures/rules_cold_legacy/legacy_enchantment.gd"
 const DECISIONS = preload("res://scripts/crafting/patch523_rules_projection.gd") # 사용자 결정 2026-11-16 waivers only
+const APPROX = preload("res://scripts/crafting/patch523_craft_approx.gd") # TWILIGHT 근사 2026-11-16 row fixes only
 const TABLES = ["SpecialResistanceType","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","ItemBlessBonus","Material","Unit","UIUnit","Class","LuckyBagClass","LuckyBagEntityView","LuckyBagEntityType","LuckyBagEntityClassLimit","DescData_Korean","ItemCraftInput","ItemCraftOutputView","ItemCraftView","ItemCraftRestriction","ItemClass","ItemCategory","ItemClassLimit","ItemBonus","Bonus","BonusType","ItemEnchantBonus","ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroup","ItemEnchantScrollGroupMapping","BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView","ItemBlessEnchantProbability","DateTimes_Korean","ItemBlessCode","EquipSlotConfig","ItemEquipSlot"]
 var problem: String = ""
 var source: Variant = SOURCE
@@ -251,7 +252,7 @@ func _item_reason(ins: Array, outs: Array) -> Dictionary:
 		var category: Dictionary = _categories[str(int(item.CategoryID))]
 		var invalid_classes: bool = false
 		for link: Dictionary in _limits.get(key,[]):
-			if int(link.ClassID) <= 0 or not _classes.has(str(int(link.ClassID))): invalid_classes = true
+			if int(link.ClassID) < 0 or (int(link.ClassID) > 0 and not _classes.has(str(int(link.ClassID)))): invalid_classes = true
 		var allowance: Dictionary = _policy.get("nonactivating_material_class_references",{}).get(key,{})
 		var source_input: bool = ins.has(row) and category.get("IsStackable") == true and category.get("IsActivatable") == false and _item_bonuses.get(key,[]).is_empty() and allowance.get("scope") == "source_input_only" and _ids(_limits.get(key,[]),"ClassID",true) == allowance.get("class_ids")
 		if item.TestItem or _truthy(item.ServiceRegionCode) or item.LevelLimitMin < 0 or item.LevelLimitMin > 1000 or item.LevelLimitMax < 0 or item.LevelLimitMax > 1000 or (item.LevelLimitMax != 0 and item.LevelLimitMax < item.LevelLimitMin) or (invalid_classes and not source_input): return {"reason":"unresolved_item_condition","item_id":row.ItemClassID}
@@ -315,6 +316,10 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		for row: Dictionary in pair[1]:
 			var exclusion: Dictionary = _declared_exclusion(pair[0],row)
 			if not exclusion.is_empty(): return {"reason":"source_declared_exclusion","source_exclusion":exclusion}
+	# TWILIGHT 근사 2026-11-16: the same row fixes as the current projection.
+	var fixed: Dictionary = APPROX.fix_rows(views,ins,outs,_item_reason,func(id: int) -> Dictionary: return _items.get(str(id),{}))
+	var overrides: Dictionary = fixed.overrides
+	if not overrides.is_empty(): views = fixed.views; ins = fixed.ins; outs = fixed.outs
 	var view: Dictionary = views[0]
 	var calendar: Variant = _calendar_window(view)
 	var total: int = 0; var valid_outs: bool = true
@@ -368,7 +373,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 			if row.ItemClassID == 26 and slot_rows.size() == 1: adena += int(row.Amount); continue
 			candidates.append(_project_material(row,int(slot)))
 		if not candidates.is_empty(): slots.append({"slot_index":int(slot),"candidates":candidates}); materials.append(candidates[0])
-	if materials.is_empty(): return {"reason":"currency_only_input"}
+	# TWILIGHT 근사 2026-11-16: an 아데나-only craft is a fee-only craft.
 	var slot_type: String = str(result.get("slot",""))
 	var category: String = "장신구" if slot_type in ["ring","earring","seal","necklace","belt","rune","insignia"] else "무기" if slot_type == "weapon" else "재료" if slot_type in ["material","consumable","currency",""] else "방어구"
 	var output: Dictionary = {"item":result.name,"quantity":out.Amount,"level":out.Enchant,"bless_code":out.ItemBlessCodeID,"source_id":key,"physical":false if key == "26" else _physical(key),"wallet_currency":key == "26"}
@@ -403,6 +408,11 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		recipe.probability_origin = "원본 확률 · NC 공식 재료/결과 대조" if verified_random else "원본523 완전 결과표 · 개별 공개 표 미대조"
 		if partial: recipe.missing_failure_policy = missing; recipe.probability_origin = missing.origin
 		recipe.preserve_refund_instance = bool(_policy.preserve_matching_refund_instance)
+	if not overrides.is_empty() or materials.is_empty():
+		var approx: Dictionary = {"date":APPROX.DATE}
+		if not overrides.is_empty(): approx.row_overrides = overrides; approx.row_kinds = fixed.kinds
+		if materials.is_empty(): approx.fee_only = true
+		recipe.twilight_approx = approx
 	return {"recipe":recipe}
 
 func _bound_items(bonuses: Dictionary, used_bonuses: Dictionary) -> Dictionary:

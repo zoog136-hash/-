@@ -515,15 +515,18 @@ func source_approx_passive(id: String, job: String, given_profile: Dictionary = 
 	if child_depth > 0:
 		return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"transforms":transforms,"weapons":weapons,"requires":requires,"group":group,"minimum_level":0,"ignored":ignored}
 	var minimum := -1
+	var required_card := 0
 	for limit: Dictionary in profile.learn_limits:
 		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
-		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건"}
+		if int(limit.CharacterPolymorphGradeID) != 0: return {"reason":"학습 변신 등급 조건"}
+		# TWILIGHT 근사: LimitBuffCardID = that card owned (card_requirement523, checked by skill_catalog.owned).
+		if int(limit.LimitBuffCardID) != 0: required_card = int(limit.LimitBuffCardID)
 		minimum = int(limit.CharacterMinLevel)
 	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
 	var unique_weapons: Array[int] = []
 	for weapon: int in weapons:
 		if weapon not in unique_weapons: unique_weapons.append(weapon)
-	return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"transforms":transforms,"weapons":unique_weapons,"requires":requires,"group":group,"minimum_level":minimum,"ignored":ignored}
+	return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"transforms":transforms,"weapons":unique_weapons,"requires":requires,"group":group,"minimum_level":minimum,"ignored":ignored,"required_card":required_card}
 
 ## Rows that apply at this level/weapon: per bonus type, only the highest
 ## CharacterLevel threshold at or below the level (replacement, not a sum).
@@ -562,6 +565,7 @@ func _open_approx_passive(record: Dictionary, spec: Dictionary) -> void:
 	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":{},"mp":0,"hp":0,"items":{},
 		"minimum_level":int(spec.minimum_level),"local_kind":"source_approx523","desc":summary},true)
 	record["source_approx523"] = spec
+	if int(spec.get("required_card",0)) != 0: record["approx_required_card"] = int(spec.required_card)
 	record["source_direct523"] = {"kind":"passive_approx","spell_id":int(spec.spell_id),"basis":"원본 523 BuffBonus 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
 	record.erase("source_direct523_hold")
 
@@ -605,16 +609,18 @@ func source_approx_active(id: String, job: String) -> Dictionary:
 		elif str(entry.type.Name) == "WeaponGroup": weapons.append_array(weapon_group_types(int(entry.bonus.Value)))
 	var native_class := int(bindings.class_ids.get(job, -1))
 	var minimum := -1
+	var required_card := 0
 	for limit: Dictionary in profile.learn_limits:
 		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
-		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건"}
+		if int(limit.CharacterPolymorphGradeID) != 0: return {"reason":"학습 변신 등급 조건"}
+		if int(limit.LimitBuffCardID) != 0: required_card = int(limit.LimitBuffCardID)
 		minimum = int(limit.CharacterMinLevel)
 	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
 	if targeting == 1 and radius > 0.0 and effect == "self_buff": return {"reason":"범위 자기 버프(파티 대상)"}
 	return {"spell_id":int(row.ID),"child":child,"weapons":weapons,"minimum_level":minimum,"mp":int(row.MPCost),"hp":int(row.HPCost),"items":items,
 		"radius":radius * 48.0,"targets":int(row.TargetLimitCount) if int(row.TargetLimitCount) > 0 else 8,
 		"cooldown":maxf(0.0,float(row.CastDelay))/1000.0,"range":maxf(64.0,float(row.CastRange)*32.0) if not bool(row.get("IsAttackRange",false)) else 240.0,
-		"pvp_only_to_npc":int(row.TargetKindID) == 52}
+		"pvp_only_to_npc":int(row.TargetKindID) == 52,"required_card":required_card}
 
 func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
 	var child: Dictionary = spec.child
@@ -651,6 +657,7 @@ func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
 		runtime["approx_weapon_types"] = spec.weapons.duplicate()
 	record.merge(runtime, true)
 	record["source_approx523_active"] = spec
+	if int(spec.get("required_card",0)) != 0: record["approx_required_card"] = int(spec.required_card)
 	record["source_direct523"] = {"kind":"active_approx","spell_id":int(spec.spell_id),"basis":"원본 523 SpellClass·Buff 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
 	record.erase("source_direct523_hold")
 
