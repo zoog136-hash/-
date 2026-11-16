@@ -5585,6 +5585,14 @@ func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
 	if source_id=="26":
 		result["아데나"]=patch523_equipment.record("26")
 		return
+	# TWILIGHT 근사 2026-11-16: 각성서 supply / other-owner records of the exact ID.
+	if str(patch523_equipment.data.items[source_id].get("twilight_owner_binding","")) in ["supply","owner"]:
+		var owned_record: Dictionary=_catalog_item_from_source_id(str(binding.get("sourceId","")))
+		if int(catalog_item_variant_count.get(str(binding.get("name","")),0))==1 and patch523_equipment.catalog_identity_matches(owned_record,source_id):
+			var weighted_owner: Dictionary=owned_record.duplicate(true)
+			weighted_owner["weight"]=maxi(0,int(item_weight_index.get(str(binding.name),3)))
+			result[str(binding.name)]=weighted_owner
+		return
 	if binding.get("source_m_native_item",false):
 		for state: String in patch523_equipment.data.items[source_id].get("stack_variants",{}):
 			var variant: Dictionary=patch523_equipment.record(source_id,int(state))
@@ -5751,6 +5759,12 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
+	# TWILIGHT 근사 2026-11-16: 성공 페이백 / 혈맹 몫 stacks get the same owned-stack receipts.
+	for bonus: Dictionary in (transaction.get("bonus_outputs",[]) if transaction.get("ok",false) else []):
+		var part: Dictionary=transaction.duplicate(); part.selected_output=bonus; part.result_quantity=int(bonus.quantity); part.erase("source_native_retained_output_quantity")
+		var joined: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,part,context)
+		if not joined.get("ok",false):transaction=joined;break
+		transaction.item_instances=joined.item_instances
 	if not bool(transaction.get("ok", false)):
 		rng.state=previous_rng
 		hud.show_message(str(transaction.get("reason", "원본 제작에 실패했습니다")))
@@ -5943,6 +5957,22 @@ func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
 
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
+
+## 비법서 제작 (original GachaCraft, TWILIGHT 근사 — scripts/crafting/patch523_gacha_craft.gd).
+## UI API: owned books → quote (costs, ownership, per-item %) → execute (one
+## atomic save; returns {ok, output:{item_class_id,name,amount,enchant,bless_raw,bound}, detail}).
+func patch523_gacha_craft_owned() -> Array:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
+
+func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+
+func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return

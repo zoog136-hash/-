@@ -159,7 +159,8 @@ func actual_main() -> void:
 	check(listed == 0 and not_other == 0, "no other-server craft is listed and every one names only other servers (%d listed, %d not other)" % [listed,not_other])
 	for id: String in book.recipes:
 		var set_id: int = int(book.recipes[id].get("craft_conditions",{}).get("server_limit_set_id",0))
-		if set_id > 0 and not SERVER_PROFILE.rows_allow(SOURCE.related("ServerLimit","ServerLimitSetID",set_id),"KR",1): listed += 1
+		var empty_approx: bool = int(book.recipes[id].get("craft_conditions",{}).get("twilight_approx",{}).get("server_set_without_rows",-1)) == set_id and SOURCE.related("ServerLimit","ServerLimitSetID",set_id).is_empty() # TWILIGHT 근사 2026-11-16
+		if set_id > 0 and not empty_approx and not SERVER_PROFILE.rows_allow(SOURCE.related("ServerLimit","ServerLimitSetID",set_id),"KR",1): listed += 1
 	check(listed == 0, "every listed server-set craft names KR 1")
 	# One sample per class: quote → craft twice through Main's path, save, reload.
 	var samples: Dictionary = {}; var skipped: Dictionary = {}

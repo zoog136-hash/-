@@ -666,7 +666,8 @@ func _run() -> void:
 	# 4. The model and every accessor.
 	print("PATCH523_RULES_COLD_BAKE_MODEL items=", new_big.data.items.size(), " runtime=", new_big._runtime_ids.size(), " records_bytes=", (new_bytes["equipment_rules_catalog_records"] as PackedByteArray).size(), " runtime_bytes=", (new_bytes["equipment_rules_runtime"] as PackedByteArray).size())
 	check(new_big.data.items.size() > 900 and new_big._runtime_ids.size() > 300, "big: items and runtime compiled")
-	check((new_big.data.recipe_summary.rejected as Dictionary).size() >= 6, "big: rejection reasons covered "+str(new_big.data.recipe_summary.rejected))
+	# TWILIGHT 근사 2026-11-16 admits the stack-state and 아데나-only fixture crafts (1019, 1012).
+	check((new_big.data.recipe_summary.rejected as Dictionary).size() >= 5, "big: rejection reasons covered "+str(new_big.data.recipe_summary.rejected))
 	var marked: int = 0
 	for id: String in new_big.data.items:
 		if new_big.data.items[id].get(RULES.RECORDS_MARK) == true and not new_big.data.items[id].has("catalog_record"): marked += 1

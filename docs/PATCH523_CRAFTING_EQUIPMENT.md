@@ -681,3 +681,70 @@ Final local validation: error-free actual Main2274 checks, covering all22 source
 품목 조건(70), 카탈로그 정체 불일치(36, #3252 마법인형 제작 코인 포함), 스택 상태(17), 확정 결과 여러 행(4), 혈맹 결과(31),
 비장비 상태(7), 품목 상태(6), ServerLimit 행이 없는 서버 세트(20).
 
+
+## TWILIGHT 근사 2026-11-16 — 남은 제작식 (PR `feat/craft523-approx-rest`)
+
+사용자 정책 "원본 데이터에 없는 건 검색 후 근사치로 적용"·"근사치로 다 넣어"에 따라 `사용자 결정 2026-11-16` 뒤에 남은 제외
+191개(다른 서버 전용 131개는 계속 삭제)를 근사로 연다. 원본 값이 있으면 원본이 이긴다. 모든 근사 규칙은
+`scripts/crafting/patch523_craft_approx.gd`("TWILIGHT 근사" 블록)에 있고, 제작식에는 `twilight_approx`(날짜·종류·보정 행)가
+남아 견적·제작 때 `patch523_rules._source_recipe_contract`가 원본 행에 같은 보정을 다시 적용해 대조한다.
+
+| 이전 사유(수) | 근사 | 근거 |
+| --- | --- | --- |
+| ServerLimit 행 없는 세트(20, 모두 세트 274) | 행이 하나도 없는 세트는 KR 1서버로 봄(`craft_conditions.twilight_approx.server_set_without_rows`), 다른 프로필에서는 거부. 행이 있고 다른 서버만 가리키는 세트는 계속 삭제 | ServerLimit 표에 세트 274 행 없음 |
+| 확정 결과 여러 행(4, 각성서 제작 261638~261668) | OutputType 12 · Probability 0 행 = 원본 출력 DescID 973942 "성공 페이백": 확정 제작이면 결과와 함께 페이백(상급 축복의 가루 N)을 매번 지급(`bonus_outputs` kind payback) **(근거 약함)** | DescData_Korean 973912 실패 / 973922 성공 / 973932 대성공 / 973942 성공 페이백 / 973952 실패 페이백 / 973962 페이백 / 983152 대성공 페이백. 공개 설명 없음(https://www.inven.co.kr/board/lineagem/5019/736148 확인) |
+| 혈맹 결과(31) | `ClanItemClassID`·`ClanAmount`(혈맹 몫, 주로 명예 주화 #216053)를 플레이어에게 결과와 함께 지급. 확률 제작이면 그 결과 행이 뽑힐 때만(`outcome_conditional`) | 오프라인 1인, `clan523`에 혈맹 창고 없음(창설·기부·버프만) |
+| 품목 조건 — TestItem(약 60) | ① 같은 표시 이름·같은 분류의 비시험 아이템으로 대체(`TEST_ITEM_SUBSTITUTES` 12종: 드래곤의 다이아몬드(각인)→#549, 판금 제작 재료 상자→#134742, [변신 카드] 천상의 기사→#268222 등; 접미사(각인·이벤트·시련의 탑) 변형은 **(근거 약함)**) ② 대체 없는 시험 **재료**는 다른 재료가 남으면 빼고 제작("TestItem 무시") | 시험 아이템은 오프라인에서 얻을 곳이 없음 |
+| 품목 조건 — ItemClassLimit ClassID 0(망자의 혼) | ClassID 0 = 모든 직업 | |
+| 카탈로그 정체 — #3252 마법인형 제작 코인(24) | 아데나처럼 기존 코인 지갑 "마법인형 제작 코인"에서 차감/적립(`twilight_wallet_binding`) | `COIN_WALLETS`·`source_currency_bindings` "3252" |
+| 카탈로그 정체 — 각성서(10) | `native_awakening_supply` 원본 기록으로 결합(결과는 각성서 공급 개체로 지급) | |
+| 카탈로그 정체 — 문양 재료(7: 축복의 성수 4종, 문양 초기화 두루마리) | 같은 원본 ID의 다른 소유자 기록(스택)으로 결합 **(근거 약함: 문양 창 소비 증명은 그 소유자 몫)** | |
+| 스택 상태(17)·비장비 상태(7) | 강화 수치가 있는 스택/비장비 행, 카탈로그에 축복·저주 변형이 없는 스택 행은 일반 +0 스택으로 사용·지급 **(근거 약함: 축복 주문서 결과도 일반으로 지급)** | |
+| 품목 상태(6, 진명황의 집행검 연마 칭호) | 재료의 `ItemHoningEpithetID`(연마 칭호) 조건은 요구하지 않음 **(근거 약함)** | |
+| 아데나만 쓰는 제작(1) | 수수료만 내는 제작으로 연결 | |
+
+### 아직 남긴 것
+
+- 결과가 시험 아이템인데 대체가 없는 제작(아크 변신 카드·봉인된 정상의 가호 상자·드래곤의 다이아몬드 조각(제작) 등): 지급할 수 있는
+  아이템이 게임에 없다(등록하려면 전역 아이템 등록·사용 소유자를 바꿔야 함).
+- 재료가 시험 아이템뿐인 제작(+4 룸티스 제작서만 쓰는 제작, 지하 침공로 충전석): 빼면 공짜 제작이 되어 열지 않음.
+- 다른 서버 전용 세트(131): 사용자 결정대로 삭제 유지.
+
+## 비법서 제작 (GachaCraft) 실행 — TWILIGHT 근사 2026-11-16 (PR `feat/craft523-approx-rest`)
+
+`current523_gacha_craft_data.gd`는 참조 전용(`can_execute:false`) 그래프였다. 이제 `scripts/crafting/patch523_gacha_craft.gd`가
+원본 표로 비법서 제작을 견적 → 확인 → 실행한다(제작 창 `비법서 제작` 버튼).
+
+### 원본 표 (523)
+
+| 표 | 쓰는 값 |
+| --- | --- |
+| 비법서 ItemClass(ItemCategory `ScrollGachaCraft`) → ItemBonus → Bonus | `GachaCraftID`(2302)·`MaterialClassID`(2312)·`MaterialAmount`(2322)·`GachaCraftCost`(2332) |
+| `GachaCraft` | `ChangeCost`(목록 변경 비용, 실행에는 안 씀) |
+| `GachaCraftGroupProbability` | 그룹 `GroupSelectProbability` (모든 비법서 합 10,000,000) |
+| `GachaCraftOutput` | 그룹·`ClassID`별 `Probability`(직업별 합 10,000,000), `ItemAmount`, `ItemEnchant`, `ItemBlessCodeID`, `BoundItemProbability` |
+| `GachaCraftBoundItem` | `ItemClassID → BoundItemClassID` |
+
+TestItem=false·더미 아님·네 보너스가 모두 있는 비법서만 쓴다(523: 15종 — 희귀 제작 비법서 #754, 오림의 일기장 #98094,
+타라스·신성 검사단·아인하사드·빛나는 제작 비법서, 도구리 제작 비법서 등).
+
+### TWILIGHT 근사 (출처: https://dailyfun.kr/85 , https://dailyfun.kr/27 , https://dailyfun.kr/206 ,
+https://www.inven.co.kr/board/lineagem/5056/10935)
+
+| 항목 | 근사 | 근거 |
+| --- | --- | --- |
+| 소비 | 1회 = 비법서 1 + `MaterialClassID` × `MaterialAmount` + `GachaCraftCost` 아데나 (재료가 #26이면 아데나로 합산, 코인이면 코인 지갑) | 공략: 구슬 장착 → 목록 → 제작 10만 아데나. 비법서 소모 시점은 공략에 없음 **(근거 약함)** |
+| 추첨 | 그룹을 `GroupSelectProbability`로, 그 안에서 아이템을 `Probability`로 한 번 뽑음 (정수 10^14 기준 가중치) | 원본 가중치 그대로. 후보 목록·`ChangeCost` 변경은 모델링하지 않음(한 번 뽑기의 최종 확률은 같음) |
+| 직업 | `ClassID` = 플레이어 직업(`BASE508.source_class_id`), 그룹에 `ClassID 0`만 있으면 공용, 그 직업 행이 없으면 기사(1) 행 | **(근거 약함)** 직업 행 없는 그룹 대체 |
+| 귀속 | `BoundItemProbability`(10,000,000 기준, 523은 2,000,000=20%) 확률로 `GachaCraftBoundItem`의 귀속 아이템 지급 | **(근거 약함)** |
+| 시험 행 | TestItem·더미 결과 행은 빼고 같은 그룹을 다시 정규화 | 오프라인에서 존재할 수 없는 아이템 |
+| 축복 0 | `ItemBlessCodeID 0`(1행)은 일반(1)으로 지급 | |
+
+지급은 공용 공급자(`patch523_item_inventory.stage`)로 `ItemAmount`·`ItemEnchant`·축복을 그대로 넣는다(장비는 물리 개체, 비장비는 영수증 스택,
+코인은 지갑). 비법서·재료(영수증 스택 차감 `current523_native_stack.stage_debit`)·아데나·결과·RNG를 한 번에 저장한다(실패 시 모두 보존).
+
+### API (UI 담당용)
+
+- `world.patch523_gacha_craft_owned() -> Array` — 가방의 비법서 `[{item_class_id, name, owned, spec}]`
+- `world.patch523_gacha_craft_quote(item_class_id) -> Dictionary` — `{ok, reason, item:{name, material_name, material_amount, cost, change_cost, gacha_id}, gold_cost, books_owned, material, outcomes:[{item_class_id, name, amount, enchant, bless_raw, percent, bound_percent}], origin}`
+- `world.patch523_gacha_craft_execute(item_class_id) -> Dictionary` — `{ok, output:{item_class_id, name, amount, enchant, bless_raw, bound, row_id, group_id}, roll, gold_cost, detail}` 또는 `{ok:false, reason}`
