@@ -11,7 +11,7 @@ extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## saves stay there. Change_Fusion_All is the client's result reveal page
 ## (PageView of Change_Fusion_CardSet): the existing card reveal keeps
 ## showing results. Not connected (no TWILIGHT rule): 확정 합성, the
-## 보상 받기 mileage reward, the 실패 이력 history and the third/fourth
+## 보상 받기 mileage reward and the third/fourth
 ## mileage gauges.
 ## The page's own content sits under its Nd_Card_Change node.
 const P="Change_DetailView_Mix/Nd_Card_Change/"
@@ -87,7 +87,9 @@ func _spec() -> Dictionary:
 	var available: int=_available(grade)
 	var pity: Dictionary=hud().get("card_collection_state").get("pity",{}).get(category,{})
 	spec[P+"Nd_SelectEffect"]={"exclude":true}
-	spec[P+"Nd_Fail_History"]={"visible":false}
+	# 실패 이력 조회: the original FailHistory_All over the TJ failure records.
+	spec[P+"Nd_Fail_History"]={"visible":true}
+	spec[P+"Nd_Fail_History/Btn_History"]={"activate":Callable(self,"_fail_history")}
 	# 합성 시도 보상: TWILIGHT keeps pity for 희귀 and 영웅 (PITY_LIMIT tries).
 	var mileage: String=P+"Nd_Mileage/"
 	spec[mileage+"Btn_HelpBox"]={"activate":Callable(self,"_help")}
@@ -191,6 +193,15 @@ func _merge() -> Dictionary:
 func _probability() -> Dictionary:
 	_message("현재 게임 합성 성공률 %.2f%% · 처음 획득한 카드 1장은 영구 보관되며 중복만 소비됩니다" % (float(Cards.FUSION_WEIGHTS.get(grade,0))/100.0))
 	return {"ok":true}
+
+## 실패 이력 조회: FailHistory_All over this window (this category's 합성).
+func _fail_history() -> Dictionary:
+	var owner: Object=hud()
+	var controller: Variant=owner.get("original_main_ui_controller") if owner!=null else null
+	if not is_instance_valid(controller):return _fail("source_fail_history_controller_unavailable")
+	var start: String={"변신":"Btn_Change_Mix","마법인형":"Btn_Magic_Mix","성물":"Btn_HolyRelics_Mix"}.get(category,"Btn_Change_Mix")
+	if controller.has_method("try_open_overlay_window"):return controller.try_open_overlay_window("fail_history",[start])
+	return controller.try_open_feature_window("fail_history",[start])
 
 func _help() -> Dictionary:
 	_message("합성 시도 보상: 희귀·영웅 합성 %d회 연속 실패 시 상위 등급 카드 1장 추가 (TWILIGHT 규칙)" % Cards.PITY_LIMIT)
