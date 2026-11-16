@@ -17,8 +17,7 @@ extends RefCounted
 ## and 각 성 asks the existing option awakening (option_awakening_open_requested,
 ## the same request as the catalog's 각성 tab).
 ## Not connected (no TWILIGHT feature): 성급 강화 (BuffCardTranscendence has no
-## game rule here), 변신 등록 (quick registration), the 전체 sort button (its
-## options are not in the tables), the keypad's result list, 도펠겡어/이름 옵션,
+## game rule here), 변신 등록 (quick registration), the keypad's result list, 도펠겡어/이름 옵션,
 ## 사용 가능 기간 and the 합성 시도 보상 gauges.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
@@ -73,6 +72,13 @@ const SEARCH_STATES: Array[int]=[6600,5972]
 const SORT=1868
 const SORT_STATES: Array[int]=[2828,1920]
 const SORT_LABELS: Array[int]=[3216,2308]
+## Btn_Sort2 (the 전체 sort button) and its Text_Sort: 전체 (the list's own
+## order) / 등급순 (highest grade first) / 이름순. TWILIGHT 근사(근거 약함):
+## the tables name no options (docs/original_ui523_approx.md).
+const ORDER_BUTTON=4456
+const ORDER_TEXT=4844
+const ORDERS: Array[String]=["전체","등급순","이름순"]
+const GRADE_RANK={"신화":0,"전설":1,"영웅":2,"희귀":3,"고급":4,"일반":5}
 const POPUP_CLOSE=760
 const TYPE_PROJECT=488
 const KEYPAD_PROJECT=1460
@@ -147,6 +153,7 @@ var _drag: bool=false
 var _moved: float=0.0
 var _grade: String="전체"
 var _type: int=0
+var _order: int=0
 var _query: String=""
 var _class_content: Node2D
 var _class_scroll: float=0.0
@@ -240,8 +247,27 @@ func _filtered(owned: Array[Dictionary]) -> Array[Dictionary]:
 		if _grade!="전체" and str(record.get("grade",""))!=_grade:continue
 		if not _matches(record):continue
 		result.append(record)
-		if result.size()>=MAX_CARDS:break
+	result=ordered(result,_order)
+	if result.size()>MAX_CARDS:result.resize(MAX_CARDS)
 	return result
+
+## The list in sort order `order` (stable: ties keep the list's order).
+static func ordered(records: Array[Dictionary], order: int) -> Array[Dictionary]:
+	if order==0:return records
+	var keyed: Array=[]
+	for index: int in range(records.size()):
+		var record: Dictionary=records[index]
+		keyed.append([int(GRADE_RANK.get(str(record.get("grade","")),9)) if order==1 else 0,str(record.get("name","")) if order==2 else "",index])
+	keyed.sort()
+	var result: Array[Dictionary]=[]
+	for entry: Array in keyed:result.append(records[int(entry[2])])
+	return result
+
+func _cycle_order() -> Dictionary:
+	_close_popups()
+	_order=(_order+1)%ORDERS.size()
+	_scroll=0.0
+	return _stage()
 
 ## Sidebar counts per grade: [owned shown, catalog total] under type/query.
 func _grade_counts(owned: Array[Dictionary]) -> Dictionary:
@@ -407,6 +433,9 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 	bindings[RESET]={"role":"button","displaystate":filtering,"activate":Callable(self,"_reset_filters")}
 	bindings[RESET_STATES[0]]={"visible":filtering}
 	bindings[RESET_STATES[1]]={"visible":not filtering}
+	scope.append_array(_subtree(DETAIL,[ORDER_BUTTON]))
+	bindings[ORDER_BUTTON]={"role":"button","activate":Callable(self,"_cycle_order")}
+	bindings[ORDER_TEXT]={"role":"source_text","text":ORDERS[_order]}
 	# 모든 유형: Common_ButtonSet_Type over the full-page Btn_Close.
 	var type_set: Dictionary=TYPE_SETS[_category]
 	if _available(TYPE_SET):

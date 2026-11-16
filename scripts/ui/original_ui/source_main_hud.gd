@@ -1109,6 +1109,7 @@ const FEATURE_WINDOWS={
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 	"fusion_result":preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
+	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

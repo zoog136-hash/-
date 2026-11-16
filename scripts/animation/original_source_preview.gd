@@ -31,6 +31,14 @@ const PREPARED_LAYOUT = preload("res://scripts/resources/reference_sp2_prepared_
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const CURRENT523_BANK = preload("res://scripts/resources/current523_source_bank.gd")
 const CURRENT523_EFFECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
+## Installed cooked actor pack (build-time composited frames, part SHA-256
+## pinned at install). A preview whose exact selection/request was cooked
+## plays its recorded frames instead of loading and verifying the SP2 bank.
+const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
+var _cooked: COOKED_STORE.CookedActor = null
+var _cooked_entry: Dictionary = {}
+var _cooked_sprites: Array[Sprite2D] = []
+var _cooked_state: int = -1
 var source_effect_status: Dictionary = {}
 var _reference_bank: RefCounted
 var _reference_card_context: Dictionary = {}
@@ -165,6 +173,15 @@ func source_bank_request_context() -> Dictionary:
 func _configure_selected_roles(selected: Dictionary, initial_role: String) -> bool:
 	# Selection/admission belongs to the existing card/NPC caller. Each optional
 	# action is admitted independently, so missing HIT cannot remove valid RUN.
+	var cooked: Dictionary = COOKED_STORE.lookup_inputs(COOKED_STORE.selection_inputs(selected,playback_mode_override)) if COOKED_STORE.available() else {}
+	if not cooked.is_empty() and _configure_cooked(cooked,str(selected.manifest_path),initial_role,str(selected.consumer),int(selected.sprite_id)):
+		# The optional roles were resolved (and verified) by the cook run.
+		var resolved: Dictionary = cooked.entry.get("resolved_selection",{})
+		for field: String in ["role_actions","loop_policy","role_actor_ids","run_status","optional_role_status"]:
+			if resolved.has(field): selected[field] = resolved[field].duplicate(true)
+		reference_bank_status["run_status"] = selected.get("run_status",{}).duplicate(true)
+		reference_bank_status["optional_role_status"] = selected.get("optional_role_status",{}).duplicate(true)
+		return true
 	var actions: Dictionary = selected.role_actions.duplicate()
 	var loops: Dictionary = selected.loop_policy.duplicate()
 	var role_actors: Dictionary = selected.get("role_actor_ids",{}).duplicate()
@@ -323,6 +340,9 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	if not explicit_role_action_bindings.has(initial_role):
 		reference_bank_status = {"ok":false,"error":"Explicit initial caller role is required."}
 		return false
+	if COOKED_STORE.available() and COOKED_STORE.cookable_consumer(card_consumer):
+		var cooked: Dictionary = COOKED_STORE.lookup_inputs(COOKED_STORE.request_inputs(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,card_consumer,role_actor_ids,playback_mode_override))
+		if not cooked.is_empty() and _configure_cooked(cooked,manifest_path,initial_role,card_consumer,source_actor_id): return true
 	var bank := REFERENCE_BANK.new()
 	var shared_npc: bool = card_consumer == "npc"
 	var loaded: Dictionary = bank.load_shared_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids) if shared_npc else bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids)
@@ -357,6 +377,38 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	_role = initial_role
 	return true
 
+## Cooked mode: the recorded tracks replace the bank; _reference_bank holds a
+## marker so every existing "configured" check and clock path stays the same.
+class CookedBank:
+	extends RefCounted
+	var _manifest_sha: String = ""
+	var _prepared_snapshot: RefCounted = null
+
+## `cooked`: {actor, entry} from cooked_actor_store.gd lookup_inputs().
+func _configure_cooked(cooked: Dictionary, manifest_path: String, initial_role: String, consumer: String, sprite_id: int) -> bool:
+	var entry: Dictionary = cooked.entry
+	if not entry.runtime_tracks.has(initial_role): return false
+	clear()
+	var marker := CookedBank.new()
+	marker._manifest_sha = str(entry.inputs.get("manifest_sha256",""))
+	_reference_bank = marker
+	_cooked = cooked.actor
+	_cooked_entry = entry
+	_cooked_state = -1
+	_current523_source_only = not consumer.is_empty()
+	_root = manifest_path.get_base_dir()
+	_manifest_path = manifest_path
+	_playback_mode = str(entry.get("mode","strict"))
+	_playback_tracks = entry.runtime_tracks.duplicate()
+	_record = {"source_sprite_id":sprite_id,"cooked_actor":_cooked.key}
+	_role = initial_role
+	reference_bank_status = {"ok":true,"error":"","purpose":"cooked_actor","source_actor_id":sprite_id,"manifest_sha256":marker._manifest_sha,"cooked_actor":_cooked.key,"cooked_format":COOKED_STORE.FORMAT.FORMAT}
+	visible = true
+	return true
+
+func cooked_actor() -> bool:
+	return _cooked != null
+
 func advance_reference_source(delta: float, explicit_role: String, stored_direction: int) -> bool:
 	if _reference_bank == null or not _playback_tracks.has(explicit_role) or stored_direction < 0 or stored_direction > 7 or not is_finite(delta) or delta < 0.0: return false
 	if explicit_role != _role:
@@ -385,6 +437,9 @@ func restart_reference_source(explicit_role: String, sequence: int) -> bool:
 	return true
 
 func reference_source_frame_status() -> Dictionary:
+	if _cooked != null:
+		var track: Dictionary = _playback_tracks.get(_role,{})
+		return {"purpose":"cooked_actor","request_key":str(_reference_card_context.get("request_key","")),"role":_role,"source_action_id":track.get("source_action_id"),"source_actor_id":track.get("source_sprite_id"),"stored_direction":source_facing,"source_frame":last_source_frame,"cooked_actor":_cooked.key,"cooked_state":_cooked_state,"actual_observed_original_bytes":null,"M_visual_equivalence_verified":false}
 	if not _reference_frame_inputs.is_empty():
 		_reference_frame_status = _build_reference_frame_status(_reference_frame_inputs)
 		_reference_frame_inputs = {}
@@ -541,6 +596,12 @@ func clear() -> void:
 	_composite_nodes.clear()
 	_frame_plans.clear()
 	_cached_applied_plan = {}
+	for sprite: Sprite2D in _cooked_sprites:
+		if is_instance_valid(sprite): sprite.free()
+	_cooked_sprites.clear()
+	_cooked = null
+	_cooked_entry = {}
+	_cooked_state = -1
 	invalidate_applied_frame()
 	_role = "idle"
 	_clock = 0.0
@@ -966,6 +1027,18 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
+	if _cooked != null:
+		# Cooked actor: the same clock and frame choice as above, then the
+		# frame's recorded draw state; no layer, style or byte work.
+		var ended: bool = not static_track and not bool(track.loop) and _clock >= total
+		var state: int = COOKED_STORE.state_for(_cooked_entry, _role, source_direction, int(selected.get("cooked_index", 0)), time, ended)
+		if state != _cooked_state:
+			_cooked_state = state
+			COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state)
+		_last_token = token
+		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
+			queue_free()
+		return
 	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
 	var body_attributes: Array = []
 	var body_attributes_unresolved: bool = true
@@ -1306,6 +1379,10 @@ func _source_texture(layer: Dictionary) -> Texture2D:
 	return _textures.get(key) as Texture2D
 
 func attachment_status() -> Dictionary:
+	if _cooked != null:
+		var recorded: Dictionary = _cooked_entry.get("attachment_status",{}).duplicate(true)
+		recorded["cooked_actor"] = true
+		return recorded
 	var active: int = 0
 	for node: Sprite2D in _effect_nodes.values():
 		if bool(node.get_meta("compatibility_style", {}).get("enabled", false)): active += 1
@@ -1631,6 +1708,8 @@ func prefetch_current_source_spell_effects(spell: Dictionary, stages: Array, con
 	for stage: Variant in stages:
 		var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,str(stage),"patch523",supplied_context)
 		if not bool(selected.get("ok",false)) or not selected.get("role_actions") is Dictionary: continue
+		# A cooked effect needs no bank inputs.
+		if COOKED_STORE.available() and COOKED_STORE.lookup_inputs(COOKED_STORE.request_inputs(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"overlay",{},playback_mode_override)).is_empty() == false: continue
 		started += REFERENCE_BANK.new().prefetch(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions)
 	return started
 

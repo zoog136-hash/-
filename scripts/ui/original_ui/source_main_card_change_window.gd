@@ -14,7 +14,10 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   2026-11-16); the 6th swap (PickCount) first opens
 ##   CardChange_Popup_RetrySpecial_Select with the fixed candidates.
 ##   카드 확정 runs card523_swap_confirm. There is no cancel of a waiting result.
-## Left empty (no TWILIGHT data): 상품 안내 / 뽑기 확률 / 목록 보기 / 주의 사항,
+## - 뽑기 확률 / 목록 보기 / 주의 사항 of the retry popup: the quote's
+##   candidates (each 1 / count, the feature draws evenly) and the feature's
+##   own rules.
+## Left empty (no TWILIGHT data): 상품 안내 (cash goods),
 ## the collection view, 전체 선택 / 선택 확정 (bulk), the confirm time limit,
 ## the cash notice and the gacha reveal.
 const ROOT="UI/CardChange/CardChange_All.csb"
@@ -169,7 +172,10 @@ func _popup(root: Node2D) -> Dictionary:
 	match popup:
 		"retry":
 			spec["Btn_Close"]={"activate":Callable(self,"_close_popup")}
-			for name: String in ["Btn_ListView","Btn_Caution","Btn_Probability","Nd_Confirm/Text","Label_Caution"]:spec[name]={"exclude":true}
+			for name: String in ["Nd_Confirm/Text","Label_Caution"]:spec[name]={"exclude":true}
+			spec["Btn_Probability"]={"activate":Callable(self,"_probability")}
+			spec["Btn_ListView"]={"activate":Callable(self,"_candidate_list")}
+			spec["Btn_Caution"]={"activate":Callable(self,"_caution")}
 			spec["Nd_Confirm/Label_01"]={"role":"source_text","text":"남은 다시 뽑기 횟수 : %d회" % int(quote.get("remaining",0))}
 			spec["Nd_Confirm/Label_02_Num"]={"role":"source_text","text":_number(int(quote.get("cost",{}).get("amount",0)))}
 			spec["Nd_Confirm/Label_03_Num"]={"role":"source_text","text":_number(int(quote.get("diamonds",0)))}
@@ -249,6 +255,37 @@ func _confirm(index: int) -> Dictionary:
 func _choose(identity: String) -> Dictionary:
 	pick=identity
 	return _stage()
+
+## 뽑기 확률: the feature draws one of the quote's same-grade candidates
+## evenly (card_swap523 execute), so each has 1 / candidate_count.
+static func probability_text(offer: Dictionary) -> String:
+	var count: int=int(offer.get("candidate_count",(offer.get("candidates",[]) as Array).size()))
+	if count<=0:return "다시 뽑을 수 있는 카드가 없습니다"
+	var each: String=("%.4f" % (100.0/float(count))).rstrip("0").rstrip(".")
+	return "같은 등급 카드 %d종 중 1장이 나옵니다 (각 %s%%, 지금 카드 제외)" % [count,each]
+
+## 목록 보기: the candidate names (the first 20, then the rest's count).
+static func list_text(offer: Dictionary) -> String:
+	var names: PackedStringArray=[]
+	var candidates: Array=offer.get("candidates",[])
+	for index: int in range(mini(20,candidates.size())):names.append(str(candidates[index].get("name","")))
+	if names.is_empty():return "다시 뽑을 수 있는 카드가 없습니다"
+	var more: int=candidates.size()-names.size()
+	return "다시 뽑기 후보 %d종: %s%s" % [candidates.size()," · ".join(names)," 외 %d종" % more if more>0 else ""]
+
+func _probability() -> Dictionary:
+	_message(probability_text(quote))
+	return {"ok":true}
+
+func _candidate_list() -> Dictionary:
+	_message(list_text(quote))
+	return {"ok":true}
+
+## 주의 사항: the feature's own rules (the original text is the cash / mileage
+## notice TWILIGHT has no part of).
+func _caution() -> Dictionary:
+	_message("다시 뽑은 결과는 카드 확정을 눌러야 획득됩니다. 확정 전에는 원래 카드가 유지되며, 다시 뽑기는 영웅 이상 카드만 할 수 있습니다.")
+	return {"ok":true}
 
 func _close_popup() -> Dictionary:
 	popup=""
