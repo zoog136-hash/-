@@ -988,7 +988,9 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	# player 136 ms of CPU per second).
 	# Reference banks keep their per-draw byte verification (a changed or
 	# deleted original is rejected on the very next advance): see
-	# _verify_unchanged_reference().
+	# _verify_unchanged_layers(). Actors with cached_frames use the frame plan
+	# below instead: one recheck_layers() per advance (file checks shared within
+	# one rendered frame, so a change is rejected on the next rendered frame).
 	# Contents too, not only identities: frame and parent data can be edited in
 	# place. Dictionary.hash() is one native call over the whole frame.
 	var hash_started: int = FRAME_HITCH.now()
