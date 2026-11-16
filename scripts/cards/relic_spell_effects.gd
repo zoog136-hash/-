@@ -172,8 +172,14 @@ static func _selected(rows: Array, level: int, character_level: int) -> Dictiona
 			result[key].ambiguous = true
 	return result
 
+## `level` = {base_level, bonus, effective_level, code}. base_level is the
+## skill card enhancement stage (skill_card523, 사용자 결정 2026-11-16) and
+## bonus the equipped relic's raise; rows up to effective_level replace the
+## base rows (SpellBonus/BuffBonus MinSpellLevel). With base_level 0 this is
+## the former relic-only level-1 projection.
 static func project(record: Dictionary, profile: Dictionary, level: Dictionary, character_level: int, enabled: bool) -> Dictionary:
-	var meta: Dictionary = {"spell_id":profile.binding.spell_id, "grade_id":profile.binding.grade_id, "base_level":0, "effective_level":level.effective_level, "active":enabled and int(level.bonus) > 0, "code":level.code, "applied":[], "pending":profile.child_pending.duplicate(), "blockers":profile.get("blockers", []).duplicate(true), "buff_level_changes":profile.buff.any(func(row: Dictionary) -> bool: return row.spell_level == 1)}
+	var top: int = maxi(1, int(level.effective_level))
+	var meta: Dictionary = {"spell_id":profile.binding.spell_id, "grade_id":profile.binding.grade_id, "base_level":int(level.get("base_level", 0)), "effective_level":level.effective_level, "active":enabled and int(level.effective_level) > 0, "code":level.code, "applied":[], "pending":profile.child_pending.duplicate(), "blockers":profile.get("blockers", []).duplicate(true), "buff_level_changes":profile.buff.any(func(row: Dictionary) -> bool: return row.spell_level == 1)}
 	if not enabled: meta.code = "skill_not_enabled"
 	record["relic_spell_effect"] = meta
 	policy() # Read both projection policies once, including source-less UI use.
@@ -184,10 +190,10 @@ static func project(record: Dictionary, profile: Dictionary, level: Dictionary, 
 	for kind: String in ["spell", "buff"]:
 		var rows: Array = profile[kind]
 		var base: Dictionary = _selected(rows, 0, character_level)
-		var raised: Dictionary = _selected(rows, 1, character_level)
+		var raised: Dictionary = _selected(rows, top, character_level)
 		var changed: Dictionary = {}
 		for effect: Dictionary in rows:
-			if effect.spell_level != 1: continue
+			if effect.spell_level < 1 or effect.spell_level > top: continue
 			if invoke_connected and effect.name_value == "InvokeOption": continue
 			changed[str(effect.name_value)] = true
 			if effect.application != 0 or effect.target != 0 or effect.character_class != 0:
@@ -231,7 +237,7 @@ static func project(record: Dictionary, profile: Dictionary, level: Dictionary, 
 	var heal: Dictionary = profile.get("child_heal", {})
 	if not heal.is_empty() and str(record.get("mode", "")) == "heal":
 		var before: Dictionary = _selected(heal.rows, 0, character_level).get("HPRestorationPercent", {})
-		var after: Dictionary = _selected(heal.rows, 1, character_level).get("HPRestorationPercent", {})
+		var after: Dictionary = _selected(heal.rows, top, character_level).get("HPRestorationPercent", {})
 		if not before.is_empty() and not after.is_empty() and not before.ambiguous and not after.ambiguous and before.effect.unit == "Percentage" and after.effect.unit == "Percentage":
 			meta.pending.erase("HPRestorationPercent")
 			if meta.active:
@@ -246,6 +252,7 @@ static func detail_text(skill: Dictionary, source_detail: bool = false) -> Strin
 	var meta: Dictionary = skill.get("relic_spell_effect", {})
 	if meta.is_empty(): return ""
 	var lines: Array[String] = ["성물 · 원본 스킬 레벨 %d → %d" % [int(meta.base_level), int(meta.effective_level)]]
+	if int(meta.base_level) > 0: lines[0] = "스킬 카드 강화 %d단계 · 원본 스킬 레벨 %d" % [int(meta.base_level), int(meta.effective_level)]
 	for effect: Dictionary in meta.applied:
 		if effect.field == "status_chance": lines.append("상태 성공률 %+.2f%%p · 게임 적용 설정(원본 증가분)" % (float(effect.delta) * 100.0))
 		elif effect.field == "invoke_probability": lines.append("발동률 %+.2f%%p · 게임 적용 설정(원본 증가분)\n%s\n기존 피해·발동 동작 유지" % [float(effect.delta) * 100.0, str(meta.get("invoke_scope", ""))])

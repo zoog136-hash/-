@@ -31,6 +31,7 @@ func _initialize() -> void:
 	var capped: Dictionary = PROMO.apply("111", PROMO.MAX_BALANCE, {"다이아": PROMO.MAX_BALANCE})
 	_check(int(capped.gold) == PROMO.MAX_BALANCE and int(capped.diamond) == PROMO.MAX_BALANCE, "balances cap instead of overflowing")
 	_check(SIDE_UI.MENU_ITEMS.any(func(row: Array) -> bool: return str(row[0]) == "promo_code"), "side menu has the promo code entry")
+	_check(FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd").contains('["promo_code","쿠폰 코드"]'), "the visible full menu (메뉴 > 전체 메뉴) has the promo code tile")
 
 	var fake := FakeWorld.new()
 	var view = VIEW.new()
