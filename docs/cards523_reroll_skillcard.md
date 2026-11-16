@@ -23,14 +23,28 @@
 - 6회째(PickCount 5)는 후보 5장을 보여 주고 플레이어가 하나를 고른다.
 - 신화·유일(`ActivateCardAmount 1`)은 같은 카드 1장을 더 소모한다.
 - 비용은 게임 다이아 지갑(인벤토리 `다이아`)에서 뺀다.
+- (09:19) 1장뿐인 카드도 다시 뽑을 수 있다. 처음의 "중복분만" 해석은 없앴다.
+- (09:23) 영웅 등급 이상만 대상이다(Grade `GradeValue` 4~7: 영웅·전설·신화·유일). 그 아래는 거부한다.
+- (09:23) 다시 뽑은 결과는 바로 받지 않는다. 카드마다 **대기 결과**로 저장되고, 원래 카드는 확정 전까지 그대로 보유한다.
+  대기 중에도 다시 뽑을 수 있고(다음 횟수·비용), 새 결과가 대기 결과를 바꾼다. 확정하면 원래 카드가 대기 결과로 바뀐다.
+  6회째에 고른 카드도 대기 결과가 된다. 대기 결과는 저장되므로 불러오기·앱 종료 뒤에도 남는다.
+- (09:23) 포기(취소) 버튼: 원본 창(CardChange_All, CardChange_Popup_Retry/RetrySpecial/Confirm/Result)에 별도 포기 버튼이 없다
+  (노드: Btn_Ok · Btn_No · Btn_Close · Btn_Back · Btn_Caution · Btn_ListView · Btn_Probability · Btn_Confirm, 선택 팝업 Btn_Yes · Btn_Cancel).
+  그래서 취소 API는 만들지 않았고, 대기 결과는 확정할 때까지 그대로 남는다.
 
 ### TWILIGHT 해석 (표에 없음)
 
-- TWILIGHT 카드 보유는 "영구 보유(해금) 1장 + 중복분"이다. 다시 뽑기는 **중복분**을 바꾼다. 영구 보유 1장은 각성·컬렉션·장착·원정이
-  걸려 있어 기존 합성과 같이 소모하지 않는다(저장 보존). 그래서 중복분이 없는 카드는 다시 뽑을 수 없고, 신화·유일은 중복분 2장이 필요하다.
-  퀘스트로 받아 보류 중인 중복분(`outgoing_material_spare`)은 쓰지 않는다.
-- "카드마다"는 카드 정체(`card_id`)마다다. 같은 카드의 중복분을 여러 번 바꾸면 그 카드의 횟수가 쌓이고, 결과로 받은 카드는 자기 횟수를 따로 갖는다.
-- 6회째에 보여 준 5장은 처음 보여 줄 때 저장(`picks`)하고 실행할 때까지 고정한다. 다시 견적을 내도 같은 5장이다(창을 닫았다 열어 후보를 바꾸는 것 방지).
+- TWILIGHT 카드 보유는 "영구 보유(해금) 1장 + 중복분"이다. 확정할 때 바꾸는 장수(1장, 신화·유일은 2장)는 중복분부터 쓰고, 모자라면 영구 보유 1장을 쓴다.
+  퀘스트로 받아 보류 중인 중복분(`outgoing_material_spare`)은 쓰지 않는다. 보류 중복분이 남아 있으면 영구 보유 1장은 바꿀 수 없다(보류 사본이 주인 없이 남기 때문).
+- 영구 보유 1장을 바꿀 때의 기존 소유자 규칙(확인 결과):
+  - 카드 컬렉션(`collection_runtime`)은 저장된 등록 없이 `card_draw_fusion.owned`에서 매번 계산된다. 카드를 잃으면 그 카드가 든 완성 컬렉션이 풀린다.
+  - 옵션 각성(`option_awakening_service.validate_state`)은 미보유 카드에 각성 진행이 있으면 저장을 막는다. 추가 인형·성물 슬롯도 이 상태에 있다.
+  - 스킬 각성·탐험 파견·할파스 별 강화는 카드 정체에 진행을 붙여 둔다.
+  - 장착(`equipped_catalog`)은 보유 카드를 가리킨다.
+  그래서 상태를 옮기거나 지우지 않고, 다음 중 하나면 **거부하고 이유를 보여 준다**(`_last_copy_guard`): 장착 중 · 옵션 각성/추가 슬롯 기록 · 스킬 각성 기록 ·
+  탐험 파견 기록 · 할파스 별 강화 진행 · 그 카드를 빼면 지금 완성된 카드 컬렉션이 풀림. 이 검사는 견적(다시 뽑기 가능 여부)과 확정 때 모두 한다.
+- "카드마다"는 카드 정체(`card_id`)마다다. 결과로 받은 카드는 자기 횟수를 따로 갖는다.
+- 6회째에 보여 준 5장은 처음 보여 줄 때 저장(`picks`)하고 그 회차를 실행할 때까지 고정한다. 다시 견적을 내도 같은 5장이다(창을 닫았다 열어 후보를 바꾸는 것 방지).
 - 대상 덱: 표에 활성 행이 있는 변신(1)·마법인형(2)·성물(98). 스킬 카드 덱 41의 다시 뽑기는 2절의 "남은 것" 참고.
 
 ### API (world)
@@ -39,14 +53,21 @@
 var q: Dictionary = world.card523_swap_quote(category, identity)   # category: "변신"|"마법인형"|"성물", identity: TwilightCardDrawFusion.card_id(record)
 # q = {ok, reason, token, category, card{identity,card_id,name,grade,grade_id}, used, max, remaining,
 #      swap_count, cost{currency:"다이아",currency_id:4,amount}, diamonds, copies_required, extra_copies,
-#      copies_available, candidates[{identity,card_id,name,grade}], candidate_count,
-#      pick_count, pick_candidates[...]}          # ok=false여도 아는 칸은 채워서 돌려준다(창 표시용)
-var r: Dictionary = world.card523_swap_execute(q.token, pick_identity)  # pick은 pick_count>0일 때만, pick_candidates 중 하나
-# r = {ok, reason, saved, category, from{...}, result{id,name,grade,new}, picked, consumed, cost, swap_count, remaining}
+#      copies_available, uses_last_copy, candidates[{identity,card_id,name,grade}], candidate_count,
+#      pick_count, pick_candidates[...],
+#      pending{result{identity,card_id,name,grade}, swap_count, picked} | {},
+#      can_confirm, confirm_reason, confirm_token}   # ok=다시 뽑기 가능(token), can_confirm=확정 가능(confirm_token)
+var r: Dictionary = world.card523_swap_execute(q.token, pick_identity)  # 다시 뽑기. pick은 pick_count>0일 때만, pick_candidates 중 하나
+# r = {ok, reason, saved, category, from{...}, pending{result{...},swap_count,picked}, picked, cost, swap_count, remaining}
+var c: Dictionary = world.card523_swap_confirm(q.confirm_token)         # 확정: 원래 카드 → 대기 결과
+# c = {ok, reason, saved, category, from{...}, result{id,identity,name,grade,new}, consumed, used_last_copy}
+var all: Array = world.card523_swap_pending()   # 저장된 대기 결과 전부 [{category,identity,name,result{identity,name,grade},swap_count,picked}]
 ```
 
-견적 → 확인 → 실행. 실행은 저장 한 번으로 확정되고, 저장이 실패하면 카드·다이아·횟수·후보를 모두 되돌린다.
-견적 뒤 카드·다이아·횟수가 바뀌면 실행을 거부한다(다시 견적).
+창 흐름: 견적 → 다시 뽑기(다이아 차감, 대기 결과 저장) → 다시 견적해 결과 표시 → 다시 뽑기 또는 확정.
+최대 횟수를 다 써도 대기 결과가 있으면 `ok=false`, `can_confirm=true`이고 `confirm_token`이 있다.
+각 단계는 저장 한 번으로 끝나고, 저장이 실패하면 카드·다이아·횟수·대기 결과를 되돌린다.
+견적 뒤 카드·다이아·횟수·대기 결과가 바뀌면 실행·확정을 거부한다(다시 견적). 토큰은 한 번만 쓸 수 있다.
 
 ## 2. 스킬 카드 덱 41 (`scripts/cards/skill_card523.gd`, 저장 키 `skill_card523`)
 
@@ -122,7 +143,7 @@ var lr: Dictionary = world.skill_card523_levelup_execute(l.token)
 
 ## 3. 저장
 
-- 새 키 `card_swap523` = `{schema:1, counts:{덱:{카드:횟수}}, picks:{"덱|카드":{swap_count, candidates[]}}}`,
+- 새 키 `card_swap523` = `{schema:1, counts:{덱:{카드:횟수}}, picks:{"덱|카드":{swap_count, candidates[]}}, pending:{"덱|카드":{result, swap_count, picked}}}`(pending이 없는 저장도 읽음),
   `skill_card523` = `{schema:1, cards:{"카드ID":{level 0~3, exp}}}`. 예전 저장에는 키가 없고 빈 상태로 시작한다.
 - 읽을 수 없는 값은 그대로 보존해 다시 저장하고(덮어쓰지 않음), 그 기능만 막는다.
 
@@ -130,5 +151,5 @@ var lr: Dictionary = world.skill_card523_levelup_execute(l.token)
 
 - 원본 창 연결(CardChange, SkillCard_All): UI 담당 작업.
 - 스킬 카드 덱 41 다시 뽑기(영웅·전설 활성 행): 스킬서 아이템을 다른 스킬서로 바꾸는 규칙(직업 제한 여부)이 정해지지 않아 넣지 않았다.
-- 영구 보유 1장만 있는 카드의 다시 뽑기: 위 해석대로 막혀 있다. 해금 카드를 바꾸려면 각성·컬렉션·장착 처리 규칙이 필요하다.
+- 각성·장착·파견·완성 컬렉션이 걸린 마지막 1장의 다시 뽑기: 거부한다. 진행을 옮기는 규칙이 정해지면 바꿀 수 있다.
 - 소비자 없는 단계 효과(위 목록).

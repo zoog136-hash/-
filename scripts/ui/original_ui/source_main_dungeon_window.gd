@@ -40,10 +40,20 @@ const REQUIRED: Array[String]=[ROOT,TAB,TOWER,ORIM,SPECIAL,SPECIAL_ROW,TIME,TIME
 ## Mission_Dungeon_All_Layout in MissionScene (600, 337.5).
 const LAYOUT_POSITION=Vector2(600.0,-337.5)
 ## Tab order: UIDungeonCategory ViewOrder (특수 0, 시련 1), then 오림.
-const TABS: Array=[["special","특수 던전"],["tower","시련의 탑"],["orim","오림의 흔적"]]
+const TABS: Array=[["special","특수 던전"],["tower","시련"],["orim","오림의 흔적"]]
+## 시련 tab (user decision 2026-11-16): the original 시련 page
+## Mission_Dungeon_Trial lists 시련의 탑 (this window's TrialTower page, whose
+## Btn_Back returns here) and 시련 던전 (the Dungeon_Trial_All window over the
+## existing Challenge feature) as Mission_DungeonTrial_Btn rows. Without those
+## members the tab opens the TrialTower page as before.
+const TRIAL="UI/Mission/Mission_Dungeon_Trial.csb"
+const TRIAL_ROW="UI/Mission/Mission_DungeonTrial_Btn.csb"
+const P_TRIAL="Mission_Dungeon_Trial/"
+const TRIAL_ROWS: Array=[["tower","시련의 탑"],["dungeon","시련 던전"]]
+const TRIAL_GAP: float=4.0
 const PAGES={"special":"Mission_Dungeon_Special","tower":"Mission_Dungeon_TrialTower","orim":"Mission_Dungeon_TracesOrim"}
 ## Pages of Mission_Dungeon_All this window never mounts (party excluded).
-const OTHER: Array[String]=["Mission_Dungeon_MasterDungeon","Mission_Dungeon_GlobalMaster","Mission_Dungeon_Competition_Theberas","Mission_Dungeon_Competition_Lastavard","Mission_Dungeon_Siege","Mission_Dungeon_Defense","Mission_Dungeon_Arena","Mission_Dungeon_ElfDefense","Mission_Dungeon_Trial","Mission_Dungeon_Season","Mission_Dungeon_PartyDungeon","Fx_Loading"]
+const OTHER: Array[String]=["Mission_Dungeon_MasterDungeon","Mission_Dungeon_GlobalMaster","Mission_Dungeon_Competition_Theberas","Mission_Dungeon_Competition_Lastavard","Mission_Dungeon_Siege","Mission_Dungeon_Defense","Mission_Dungeon_Arena","Mission_Dungeon_ElfDefense","Mission_Dungeon_Season","Mission_Dungeon_PartyDungeon","Fx_Loading"]
 ## The existing view's families (source_dungeon_view.FAMILIES).
 const FAMILY={"tower":0,"tower_hard":1,"orim":2,"orim_hard":3,"special":4,"rechargers":5}
 const P_TOWER="Mission_Dungeon_TrialTower/"
@@ -62,6 +72,8 @@ var _view: WeakRef
 var _scene: Node2D
 var _last_out: Dictionary={}
 var tab: String="special"
+## 시련 tab: the Mission_Dungeon_Trial list (true) or the TrialTower page.
+var trial_list: bool=true
 var hard: bool=false
 ## Selected tower floor / orim stage (row index of the current family).
 var index: int=0
@@ -266,11 +278,13 @@ func _stage() -> Dictionary:
 	spec["Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["ListView_Button"]={"input":Callable(self,"_ignore_input")}
 	for page: String in PAGES:
-		if page==tab:spec[PAGES[page]]={"visible":true}
+		if page==tab and not _trial_mode():spec[PAGES[page]]={"visible":true}
 		else:spec[PAGES[page]]={"exclude":true}
+	if _trial_mode():spec.merge(_trial_spec(world),true)
+	else:spec["Mission_Dungeon_Trial"]={"exclude":true}
 	if not time_open:spec["Mission_Popup_Time"]={"exclude":true}
 	match tab:
-		"tower":spec.merge(_tower_spec(world,view),true)
+		"tower":if not _trial_mode():spec.merge(_tower_spec(world,view),true)
 		"orim":spec.merge(_orim_spec(world,view),true)
 		_:spec.merge(_special_spec(),true)
 	var time_rows: Array=[]
@@ -287,6 +301,7 @@ func _stage() -> Dictionary:
 	var pictures: int=0
 	if filled.get("ok",false):
 		match tab:
+			"tower" when _trial_mode():filled=_fill_trial(next,out,world)
 			"tower":filled=_fill_slots(next,out,P_TOWER+"Nd_TowerInfo_All/Nd_Reward/ListView",TOWER,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
 			"orim":filled=_fill_slots(next,out,P_ORIM+"Nd_OrimInfo_All/Nd_Info/Nd_Reward/ListView",ORIM,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
 			_:filled=_fill_special(next,out,world)
@@ -307,7 +322,7 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"tab":tab,"hard":hard,"rows":rows.size(),"index":index,"time_open":time_open,"time_rows":time_rows.size(),"pictures":pictures}
+	last_result={"ok":true,"handled":true,"member":ROOT,"tab":tab,"trial_list":_trial_mode(),"hard":hard,"rows":rows.size(),"index":index,"time_open":time_open,"time_rows":time_rows.size(),"pictures":pictures}
 	return last_result
 
 func _rewards(entry: Dictionary) -> Array:
@@ -363,7 +378,9 @@ func _tower_spec(world: Node, view: Object) -> Dictionary:
 	var spec: Dictionary={}
 	var p: String=P_TOWER
 	var i: String=p+"Nd_TowerInfo_All/"
-	for name: String in ["Label_Notice","Btn_HelpBox","Btn_Shop","Btn_Ranking","Nd_Popup_Ranking","Btn_Back","Nd_TowerInfo_All/Nd_BuffInfo","Nd_MoveFloor/Nd_Navi","Nd_TowerInfo_All/Nd_SpeedMode","Nd_TowerInfo_All/Nd_StageInfo/Btn_InfoView","Nd_TowerInfo_All/Nd_ReChallenge/Common_Slot_Layout"]:spec[p+name]={"exclude":true}
+	if _trial_available():spec[p+"Btn_Back"]={"activate":Callable(self,"_trial_back")}
+	else:spec[p+"Btn_Back"]={"exclude":true}
+	for name: String in ["Label_Notice","Btn_HelpBox","Btn_Shop","Btn_Ranking","Nd_Popup_Ranking","Nd_TowerInfo_All/Nd_BuffInfo","Nd_MoveFloor/Nd_Navi","Nd_TowerInfo_All/Nd_SpeedMode","Nd_TowerInfo_All/Nd_StageInfo/Btn_InfoView","Nd_TowerInfo_All/Nd_ReChallenge/Common_Slot_Layout"]:spec[p+name]={"exclude":true}
 	spec[p+"BG"]={"visible":not hard}
 	spec[p+"BG_Hard"]={"visible":hard}
 	spec[p+"Nd_Title_Tower/Nd_Title_Normal"]={"visible":not hard}
@@ -531,6 +548,63 @@ func _fill_special(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
 	_special.bind(content,built_rows,width+SPECIAL_GAP,size.x,true)
 	return {"ok":true,"pictures":0}
 
+## --- 시련 (Mission_Dungeon_Trial) -------------------------------------------------
+
+func _trial_available() -> bool:
+	var scenes: Dictionary=_pack.manifest.get("scenes",{}) if _pack!=null else {}
+	return scenes.has(TRIAL) and scenes.has(TRIAL_ROW)
+
+func _trial_mode() -> bool:
+	return tab=="tower" and trial_list and _trial_available()
+
+func _trial_spec(_world: Node) -> Dictionary:
+	var spec: Dictionary={"Mission_Dungeon_Trial":{"visible":true}}
+	for name: String in ["Btn_HelpBox","Btn_Rank","Nd_Rank","Img_Block","Btn_Use","Btn_Complete_All","Common_Slot_Layout_1","Common_Slot_Layout_2","Btn_Buy_All","Label_Event"]:spec[P_TRIAL+name]={"exclude":true}
+	# The authored notice also names the 70-level extra dungeons and the
+	# original reset; only the TWILIGHT 05:00 reset applies here.
+	spec[P_TRIAL+"Label_Notice"]={"role":"source_text","text":"※ 매일 오전 5시 초기화 됩니다."}
+	spec[P_TRIAL+"ListView_Daily"]={"input":Callable(self,"_ignore_input")}
+	return spec
+
+## 시련의 탑 and 시련 던전 as Mission_DungeonTrial_Btn rows (name; 시련 던전
+## locked below the ordinary Challenge level 40).
+func _fill_trial(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
+	var content: Variant=_list_content(root,out,P_TRIAL+"ListView_Daily")
+	if not content is Node2D:return _fail("source_dungeon_window_trial_list_missing")
+	var size: Vector2=NamedTree.list_size(out,_pack,TRIAL,"ListView_Daily")
+	for i: int in range(TRIAL_ROWS.size()):
+		var id: String=str(TRIAL_ROWS[i][0])
+		var locked: bool=id=="dungeon" and int(world.level)<40
+		var spec: Dictionary={
+			"Panel":{"input":Callable(self,"_ignore_input")},
+			"Panel/Img_Daily":{"visible":false},
+			"Panel/Button":{"activate":Callable(self,"_trial_pressed").bind(id)},
+			"Panel/Label_Dungeon":{"role":"source_text","text":str(TRIAL_ROWS[i][1])},
+			"Panel/Nd_Lock":{"visible":locked},
+			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"Lv 40","visible":locked},
+		}
+		for name: String in ["Panel/Nd_Event_Reward","Panel/Sp_Power","Panel/Label_Power","Panel/Sp_Infinity","Panel/Sp_Event","Panel/Nd_Buy","Panel/Btn_Recovery_Free","Panel/Common_Slot_Layout","Panel/Label_Retry"]:spec[name]={"exclude":true}
+		var built: Dictionary=_tree.scene_of(TRIAL_ROW,spec,{})
+		if not built.get("ok",false):return built
+		_add_column(content,TRIAL_ROW,built.scene,i,size,TRIAL_GAP)
+	return {"ok":true,"pictures":0,"trial_rows":TRIAL_ROWS.size()}
+
+func _trial_pressed(id: String) -> Dictionary:
+	if id=="tower":
+		trial_list=false
+		index=0
+		hard=false
+		return _stage()
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not hud.has_method("open_trial_dungeon"):return _fail("source_dungeon_window_trial_route_unavailable")
+	close()
+	hud.call("open_trial_dungeon")
+	return {"ok":true,"routed":"open_trial_dungeon"}
+
+func _trial_back() -> Dictionary:
+	trial_list=true
+	return _stage()
+
 ## --- 시간 충전석 ----------------------------------------------------------------
 
 func _recharger_rows(world: Node) -> Array:
@@ -685,6 +759,7 @@ func _apply_picture(root: Node2D, out: Dictionary, suffix: String, info: Diction
 
 func _set_tab(value: String) -> Dictionary:
 	tab=value
+	trial_list=true
 	hard=false
 	index=0
 	time_open=false
