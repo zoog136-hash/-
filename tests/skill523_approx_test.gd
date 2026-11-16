@@ -83,6 +83,62 @@ func book_owners(catalog, bound: Dictionary) -> Dictionary:
 			if record.has("source_approx523"): approx += 1
 	return {"bound_books":spells.size(),"blocked":blocked,"open":open,"open_by_approx":approx}
 
+func attack_spells(world, catalog, adapter) -> Dictionary:
+	var out: Dictionary = {"kinds":{}}
+	var picks: Dictionary = {}
+	var saved: Array = [catalog.learned.duplicate(true), world.job_class, world.level]
+	for key: String in adapter.profiles:
+		var record: Dictionary = catalog.record_for(key)
+		var spec: Dictionary = record.get("source_approx523",{})
+		if spec.is_empty(): continue
+		for invoke: Dictionary in spec.get("invokes",[]):
+			if str(invoke.get("kind","")) != "spell": continue
+			var effect: String = str(invoke.spell.effect)
+			out.kinds[effect] = int(out.kinds.get(effect,0)) + 1
+			if not picks.has(effect) and spec.get("weapons",[]).is_empty() and spec.get("requires",[]).is_empty() and invoke.get("weapons",[]).is_empty() and "melee" in invoke.attack_kinds and not bool(invoke.by_spell) and float(invoke.chance) >= 0.03:
+				picks[effect] = {"id":key,"name":str(record.name),"class":str(record["class"]),"invoke":invoke}
+	check(out.kinds.has("damage") and out.kinds.has("debuff"), "Attack_Spell children open as damage and debuff: "+str(out.kinds))
+	# Explicit runtime test fixture (never an original spawn record), next to the player.
+	var target: TwilightMonster = preload("res://scenes/Monster.tscn").instantiate()
+	target.position = world.monsters_root.to_local(world.player.global_position + Vector2(24, 0))
+	world.monsters_root.add_child(target)
+	out["fixture_setup"] = target.setup({"name":"approx523_proc_fixture","hp":1000000000,"lv":1,"atk":0}, world.player, world, null)
+	target.set_physics_process(false)
+	out["target"] = str(target.get("monster_name")) if target != null else ""
+	check(target != null, "a real field monster for the proc check")
+	if target == null:
+		catalog.learned = saved[0]; world.job_class = saved[1]; world.level = saved[2]; catalog.revision += 1
+		return out
+	for effect: String in ["damage","debuff"]:
+		if not picks.has(effect): continue
+		var pick: Dictionary = picks[effect]
+		world.job_class = str(pick["class"]); world.level = 90
+		catalog.learned.clear(); catalog.learned[str(pick.id)] = 1; catalog.revision += 1
+		var context: Dictionary = world.original_skills.attack_context("melee", false, true)
+		var key: String = "approx_spell:" + str(pick.id)
+		world.original_skills.event_counts.erase(key)
+		var hp_lost: int = 0
+		for _i: int in 1000:
+			target.hp = 1000000000
+			var before: int = target.hp
+			world.original_skills.trigger("on_hit", target, {}, context)
+			hp_lost += maxi(0, before - target.hp)
+		var fired: int = int(world.original_skills.event_counts.get(key,0))
+		var expected: float = float(pick.invoke.chance) * 1000.0 * (float(pick.invoke.spell.get("hit_chance",1.0)) if effect == "debuff" else 1.0)
+		var row: Dictionary = {"name":pick.name,"chance":pick.invoke.chance,"spell":pick.invoke.spell.get("name",""),"fired_of_1000":fired,"expected":expected,"hp_lost":hp_lost}
+		if effect == "debuff":
+			var mods: Dictionary = pick.invoke.spell.modifiers
+			var first: String = str(mods.keys()[0])
+			row["modifier"] = [first, world.original_skills.status.modifier(target, first), mods[first]]
+			check(fired > 0 and is_equal_approx(float(row.modifier[1]), float(mods[first])), "debuff child applied to the target: "+str(row))
+		else:
+			check(fired > 0 and hp_lost > 0, "damage child hits the target: "+str(row))
+		check(float(fired) > expected * 0.4 and float(fired) < expected * 1.8 + 5.0, "proc rate near the original chance: "+str(row))
+		out[effect] = row
+	catalog.learned = saved[0]; world.job_class = saved[1]; world.level = saved[2]; catalog.revision += 1
+	if is_instance_valid(target): target.queue_free()
+	return out
+
 func run() -> void:
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--source523-pack="):
@@ -177,6 +233,9 @@ func run() -> void:
 		check(list.size() == 1 and is_equal_approx(float(list[0].chance),0.15) and is_equal_approx(float(list[0].multiplier),3.0), "블로우 어택 Lv84 발동 15% x3: "+str(list))
 		check(amplified > 200 and amplified < 420, "블로우 어택 실제 일반 근접 2000회 중 약 15%% 증폭: %d" % amplified)
 		world.equipped_items["weapon"] = saved_weapon
+		# 4b) Attack_Spell child spells (TWILIGHT 근사): one damage and one debuff
+		# passive without weapon/prerequisite conditions, on a real monster.
+		real["attack_spell"] = await attack_spells(world, catalog, adapter)
 		# 5) Save/load keeps learned approximated passives and their stats.
 		var before: float = world.original_skills.stat("pveDamageReduction")
 		check(world._save_game(true) == OK, "save with approximated passives learned")
