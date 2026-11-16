@@ -534,6 +534,11 @@ func clear() -> void:
 	for sprite: Sprite2D in _layers:
 		sprite.free()
 	_layers.clear()
+	for sprite: Variant in _composite_nodes.values():
+		if is_instance_valid(sprite): sprite.free()
+	_composite_nodes.clear()
+	_frame_plans.clear()
+	_cached_applied_plan = {}
 	invalidate_applied_frame()
 	_role = "idle"
 	_clock = 0.0
@@ -582,6 +587,324 @@ func _verify_unchanged_layers(selected: Dictionary) -> bool:
 		if texture == null: return false
 		if _layers[index].texture != texture: _layers[index].texture = texture
 	return true
+
+## --- Cached frame plans and composited draw groups (2026-11-16) -----------
+## Production actors (the player, current523 monsters and their independent
+## source children) set cached_frames. A reference frame is then planned ONCE
+## per preview: every layer is verified by render_layer() and its style,
+## visibility and texture are computed exactly as the per-layer path below
+## computes them. Each draw group (body layers z0, effect layers z1) whose
+## drawn layers are all MIX at alpha 1.0 with 0/255 texel alpha is shown as one
+## composited texture from COMPOSITES (shared by every actor showing the same
+## frame); any other group keeps its per-layer nodes with the planned values.
+## Each later advance of a planned frame makes one recheck_layers() call (the
+## same pins, admission and member size/mtime stamps that render_layer() checks
+## on its warm path; a changed stamp re-hashes or rejects through
+## render_layer()), instead of render_layer() plus style work per layer.
+const COMPOSITES = preload("res://scripts/resources/actor_frame_composite_cache.gd")
+const FRAME_PLAN_MAX: int = 512
+static var cached_frames_enabled: bool = not "--twilight-actor-frame-cache-off" in OS.get_cmdline_user_args()
+## Plans without compositing (every group keeps its nodes): diagnostics.
+static var composite_groups_enabled: bool = not "--twilight-actor-composite-off" in OS.get_cmdline_user_args()
+var cached_frames: bool = false
+var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
+var _cached_applied_plan: Dictionary = {}
+var _cached_applied_translucent: bool = false
+var _composite_nodes: Dictionary = {} # group -> Sprite2D
+
+func _cached_frames_allowed() -> bool:
+	# Shared effect texture budgets charge per-layer textures: keep that path.
+	return cached_frames and cached_frames_enabled and _reference_texture_budget.is_empty()
+
+func cached_frame_status() -> Dictionary:
+	var groups: Dictionary = {}
+	for group: String in _cached_applied_plan.get("groups", {}):
+		groups[group] = _cached_applied_plan.groups[group].mode
+	return {"active":not _cached_applied_plan.is_empty(),"plans":_frame_plans.size(),"groups":groups,"translucent":_cached_applied_translucent}
+
+func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
+	var plan: Variant = _frame_plans.get(applied_hash)
+	var fresh: bool = false
+	if not (plan is Dictionary and is_same(plan.selected, selected) and is_same(plan.nodes, _layers) and plan.node_count == _layers.size() and plan.screen_copy == SP2_COMPOSITOR.screen_copy_available and plan.mode == _playback_mode):
+		plan = _build_frame_plan(selected, track, body_attributes, body_unresolved, body_projection_verified)
+		if plan.is_empty(): return {}
+		_frame_plans.erase(applied_hash)
+		while _frame_plans.size() >= FRAME_PLAN_MAX: _frame_plans.erase(_frame_plans.keys()[0])
+		_frame_plans[applied_hash] = plan
+		fresh = true
+		FRAME_HITCH.count("preview.plan_built")
+	if not fresh:
+		var checked: Dictionary = _reference_bank.recheck_layers(plan.stamps)
+		if not checked.ok:
+			_abort_reference_source(checked)
+			return {}
+	# A translucent actor (concealment: monster 0.15, player 0.5) draws its
+	# layers one by one so overlapping layers keep their per-layer blending;
+	# compositing is exact only for an opaque draw.
+	var translucent: bool = _inherited_alpha() < 1.0
+	if not is_same(plan, _cached_applied_plan) or translucent != _cached_applied_translucent:
+		if not _apply_frame_plan(plan, translucent): return {}
+	return plan
+
+func _inherited_alpha() -> float:
+	var alpha: float = modulate.a
+	var node: Node = get_parent()
+	while node is CanvasItem:
+		alpha *= (node as CanvasItem).modulate.a
+		node = node.get_parent()
+	return alpha
+
+func _body_draw_spec(index: int, layer: Dictionary, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
+	# Mirrors the reference branch of the per-layer body loop.
+	var is_body: bool = layer.get("kind") == "body"
+	var spec: Dictionary = {"index":index,"layer":layer,"skip":false,"hidden":false,"material":null,"alpha":1.0,"kind_meta":layer.get("kind","body" if is_body else ""),"role_actor":track.get("source_sprite_id",_record.get("source_sprite_id",-1)),"layer_id":int(layer.get("layer_id",-1)),"position":Vector2(float(layer.offset[0]), float(layer.offset[1]))}
+	var draw_layer: Dictionary = layer
+	if is_body and _reference_attachment_parent.get("kind", "") == "shadow":
+		draw_layer = layer.duplicate()
+		draw_layer["kind"] = "shadow"
+	var recovered: Dictionary = SP2_COMPOSITOR.style(draw_layer, body_attributes, body_unresolved, _playback_mode, body_projection_verified)
+	var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(layer)
+	var fallback: Dictionary = SP2_COMPOSITOR.fallback_style(draw_layer,body_attributes,body_unresolved,_playback_mode,body_projection_verified)
+	if recovered.is_empty() and (not fallback.is_empty() or not own_input.attributes.is_empty() or own_input.unresolved):
+		var style: Dictionary = fallback if not fallback.is_empty() else POLICY.effect(own_input.attributes, _playback_mode)
+		if (fallback.is_empty() and own_input.unresolved) or not bool(style.get("enabled", false)):
+			spec.hidden = true
+		else:
+			spec.material = _blend_material(int(style.blend_mode))
+			spec.alpha = float(style.alpha)
+	spec["recovered"] = recovered
+	return spec
+
+func _effect_draw_spec(node: Sprite2D, effect: Dictionary, selected: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
+	# Mirrors the reference branch of the per-layer effect loop.
+	var own_input: Dictionary = SP2_COMPOSITOR.attribute_input(effect)
+	var fallback: Dictionary = SP2_COMPOSITOR.fallback_style(effect,body_attributes,body_unresolved,_playback_mode,body_projection_verified)
+	var style: Dictionary = fallback if not fallback.is_empty() else POLICY.effect(own_input.attributes,_playback_mode)
+	if fallback.is_empty() and own_input.unresolved: style = {"enabled":false,"reason":"source_attribute_inheritance_unverified"}
+	var recovered: Dictionary = SP2_COMPOSITOR.style(effect, body_attributes, body_unresolved, _playback_mode, body_projection_verified)
+	return {"node":node,"layer":effect,"position":Vector2(float(effect.offset[0]), float(effect.offset[1])),"pixel_path":INSTALL.resolve_file(_root, str(effect.path)),"source_frame":selected.source_frame,
+		"drawn":bool(style.get("enabled", false)) or not recovered.is_empty(),"recovered":recovered,
+		"material":_blend_material(int(style.get("blend_mode",CanvasItemMaterial.BLEND_MODE_MIX))) if recovered.is_empty() else null,
+		"alpha":float(style.get("alpha",1.0)) if recovered.is_empty() else 1.0}
+
+func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
+	var verify: Array = []
+	var body: Array = []
+	for index: int in range(mini(_layers.size(), selected.layers.size())):
+		var layer: Dictionary = selected.layers[index]
+		if layer.has("client_null"):
+			body.append({"index":index,"skip":true})
+			continue
+		verify.append(layer)
+		body.append(_body_draw_spec(index, layer, track, body_attributes, body_unresolved, body_projection_verified))
+	var effects: Array = []
+	var effect_nodes: Dictionary = {}
+	var effects_composable: bool = true
+	for effect: Dictionary in selected.get("effect_layers", []):
+		if effect.has("client_null"): continue
+		verify.append(effect)
+		var node: Sprite2D = _effect_nodes.get(_effect_node_key(effect)) as Sprite2D
+		if node == null: continue
+		# One node drawn by two source entries keeps the sequential node path.
+		if effect_nodes.has(node) or node.has_meta("observed_backbuffer") or node.z_index != 1: effects_composable = false
+		effect_nodes[node] = true
+		effects.append(_effect_draw_spec(node, effect, selected, body_attributes, body_unresolved, body_projection_verified))
+	# Every planned layer is verified exactly as its first per-layer use is.
+	var empty: Array[bool] = []
+	for layer: Dictionary in verify:
+		var verified: Dictionary = _reference_bank.render_layer(layer, false)
+		if not verified.ok:
+			_abort_reference_source(verified)
+			return {}
+		empty.append(bool(verified.get("empty", false)))
+	var verified_index: int = 0
+	for spec: Dictionary in body:
+		if spec.skip: continue
+		spec["empty"] = empty[verified_index]
+		verified_index += 1
+	for effect: Dictionary in selected.get("effect_layers", []):
+		if effect.has("client_null"): continue
+		var node: Sprite2D = _effect_nodes.get(_effect_node_key(effect)) as Sprite2D
+		if node != null:
+			for spec: Dictionary in effects:
+				if is_same(spec.layer, effect): spec["empty"] = empty[verified_index]
+		verified_index += 1
+	var stamps: Dictionary = _reference_bank.member_stamps(verify)
+	if not stamps.ok:
+		_abort_reference_source(stamps)
+		return {}
+	var body_drawn: Array = []
+	var body_composable: bool = true
+	for spec: Dictionary in body:
+		if spec.skip or spec.hidden: continue
+		body_drawn.append(spec)
+		if _layers[spec.index].z_index != 0: body_composable = false
+	var effects_drawn: Array = []
+	for spec: Dictionary in effects:
+		if spec.drawn: effects_drawn.append(spec)
+	# Tree order is the draw order of same-z siblings.
+	effects_drawn.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.node.get_index() < b.node.get_index())
+	var shown: Array = []
+	for spec: Dictionary in body_drawn: shown.append(spec.layer)
+	for spec: Dictionary in effects:
+		if effect_nodes.has(spec.node) and spec.drawn: effect_nodes[spec.node] = false
+	for effect: Dictionary in selected.get("effect_layers", []):
+		var node: Sprite2D = _effect_nodes.get(_effect_node_key(effect)) as Sprite2D
+		if node != null and effect_nodes.get(node, true) == false: shown.append(effect)
+	var plan: Dictionary = {"selected":selected,"nodes":_layers,"node_count":_layers.size(),"screen_copy":SP2_COMPOSITOR.screen_copy_available,"mode":_playback_mode,"stamps":stamps,"body":body,"effects":effects,"shown":shown,"groups":{}}
+	plan.groups["body"] = _group_plan("body", body_drawn, body_composable)
+	plan.groups["effects"] = _group_plan("effects", effects_drawn, effects_composable)
+	# Per-layer textures are needed only by groups that keep their nodes. The
+	# per-layer path also assigns textures to style-hidden body layers.
+	if plan.groups.body.mode == "nodes" and not _plan_body_textures(plan): return {}
+	if plan.groups.effects.mode == "nodes" and not _plan_effect_textures(plan): return {}
+	return plan
+
+func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
+	var items: Array = []
+	for spec: Dictionary in drawn:
+		var material: CanvasItemMaterial = spec.material as CanvasItemMaterial
+		if not spec.recovered.is_empty() or spec.alpha != 1.0 or (material != null and material.blend_mode != CanvasItemMaterial.BLEND_MODE_MIX): composable = false
+		if spec.position != Vector2(Vector2i(spec.position)): composable = false
+		if not spec.empty: items.append({"layer":spec.layer,"offset":Vector2i(spec.position)})
+	# A single layer gains nothing from a copy: it keeps its node and texture.
+	if not composable or drawn.size() < 2 or not composite_groups_enabled: return {"mode":"nodes"}
+	return {"mode":"composite","items":items,"key":COMPOSITES.key(_root, _reference_bank._manifest_sha, group, items) if not items.is_empty() else ""}
+
+func _plan_body_textures(plan: Dictionary) -> bool:
+	for spec: Dictionary in plan.body:
+		if spec.skip: continue
+		var texture: Texture2D = _source_texture(spec.layer)
+		if texture == null: return false
+		spec["texture"] = texture
+	return true
+
+func _plan_effect_textures(plan: Dictionary) -> bool:
+	for spec: Dictionary in plan.effects:
+		if not spec.drawn: continue
+		var texture: Texture2D = _source_texture(spec.layer)
+		if texture == null: return false
+		spec["texture"] = texture
+	return true
+
+func _composite_node(group: String) -> Sprite2D:
+	var sprite: Sprite2D = _composite_nodes.get(group) as Sprite2D
+	if is_instance_valid(sprite): return sprite
+	sprite = Sprite2D.new()
+	sprite.name = "SourceComposite_" + group
+	sprite.centered = false
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.z_index = 0 if group == "body" else 1
+	sprite.hide()
+	add_child(sprite)
+	# Same tree slot as the nodes it replaces: after the effect nodes, before
+	# the body layers and before any independent source child.
+	if not _layers.is_empty(): move_child(sprite, _layers[0].get_index())
+	_composite_nodes[group] = sprite
+	return sprite
+
+func _show_composite(plan: Dictionary, group: String) -> bool:
+	var info: Dictionary = plan.groups[group]
+	var sprite: Sprite2D = _composite_node(group)
+	if str(info.key).is_empty():
+		sprite.hide()
+		return true
+	var entry: Dictionary = COMPOSITES.lookup(info.key)
+	if entry.is_empty():
+		var started: int = FRAME_HITCH.now()
+		var images: Array = []
+		for item: Dictionary in info.items:
+			# The composite is built only from pixels verified by this call.
+			var rendered: Dictionary = _reference_bank.render_layer(item.layer, true)
+			if not rendered.ok:
+				_abort_reference_source(rendered)
+				return false
+			images.append({"image":rendered.image,"offset":item.offset})
+		var composed: Dictionary = COMPOSITES.compose(images)
+		if composed.is_empty():
+			# Not exactly composable (texel alpha other than 0/255): keep nodes.
+			info.mode = "nodes"
+			sprite.hide()
+			return _plan_body_textures(plan) if group == "body" else _plan_effect_textures(plan)
+		var texture: ImageTexture = ImageTexture.create_from_image(composed.image)
+		if texture == null:
+			_abort_reference_source({"ok":false,"error":"Source composite texture allocation failed."})
+			return false
+		entry = COMPOSITES.store(info.key, texture, composed.origin, composed.image.get_width() * composed.image.get_height() * 4)
+		FRAME_HITCH.detail("preview.composite_build", started)
+	sprite.texture = entry.texture
+	sprite.position = Vector2(entry.origin)
+	sprite.show()
+	return true
+
+func _apply_frame_plan(plan: Dictionary, translucent: bool = false) -> bool:
+	invalidate_applied_frame()
+	var body_composite: bool = plan.groups.body.mode == "composite" and not translucent
+	var effects_composite: bool = plan.groups.effects.mode == "composite" and not translucent
+	if body_composite:
+		if not _show_composite(plan, "body"): return false
+		body_composite = plan.groups.body.mode == "composite"
+	elif plan.groups.body.mode == "composite" and not plan.has("body_textures"):
+		if not _plan_body_textures(plan): return false
+		plan["body_textures"] = true
+	if body_composite:
+		for sprite: Sprite2D in _layers: sprite.visible = false
+	else:
+		if _composite_nodes.has("body"): _composite_nodes.body.hide()
+		for index: int in range(_layers.size()):
+			var node: Sprite2D = _layers[index]
+			node.visible = index < plan.body.size()
+			if not node.visible: continue
+			var spec: Dictionary = plan.body[index]
+			if spec.skip:
+				node.hide()
+				continue
+			SP2_COMPOSITOR.reset(node)
+			node.material = null
+			node.modulate.a = 1.0
+			node.set_meta("source_layer_kind",spec.kind_meta)
+			node.set_meta("source_role_actor_id",spec.role_actor)
+			if spec.hidden: node.hide()
+			elif spec.material != null:
+				node.material = spec.material
+				node.modulate.a = spec.alpha
+			node.set_meta("source_layer_id", spec.layer_id)
+			node.texture = spec.texture
+			node.position = spec.position
+			if not spec.recovered.is_empty(): SP2_COMPOSITOR.apply(node, spec.recovered)
+	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
+	if effects_composite:
+		if not _show_composite(plan, "effects"): return false
+		effects_composite = plan.groups.effects.mode == "composite"
+	elif plan.groups.effects.mode == "composite" and not plan.has("effect_textures"):
+		if not _plan_effect_textures(plan): return false
+		plan["effect_textures"] = true
+	if not effects_composite:
+		if _composite_nodes.has("effects"): _composite_nodes.effects.hide()
+		for spec: Dictionary in plan.effects:
+			var node: Sprite2D = spec.node
+			node.set_meta("source_layer_id",int(spec.layer.layer_id))
+			node.position = spec.position
+			node.set_meta("source_pixel_path", spec.pixel_path)
+			node.set_meta("source_frame", spec.source_frame)
+			if not spec.drawn: continue
+			SP2_COMPOSITOR.reset(node)
+			if spec.recovered.is_empty():
+				node.material = spec.material
+				node.modulate.a = spec.alpha
+			node.texture = spec.texture
+			if not spec.recovered.is_empty(): SP2_COMPOSITOR.apply(node, spec.recovered)
+			node.show()
+	_cached_applied_plan = plan
+	_cached_applied_translucent = translucent
+	return true
+
+## Back to the per-layer path (flag off or a texture budget was attached).
+func _leave_cached_frames() -> void:
+	for sprite: Variant in _composite_nodes.values():
+		if is_instance_valid(sprite): sprite.hide()
+	_cached_applied_plan = {}
+	invalidate_applied_frame()
 
 func invalidate_applied_frame() -> void:
 	_applied_token = ""
@@ -665,13 +988,32 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	# player 136 ms of CPU per second).
 	# Reference banks keep their per-draw byte verification (a changed or
 	# deleted original is rejected on the very next advance): see
-	# _verify_unchanged_reference().
+	# _verify_unchanged_layers(). Actors with cached_frames use the frame plan
+	# below instead: one recheck_layers() per advance (file checks shared within
+	# one rendered frame, so a change is rejected on the next rendered frame).
 	# Contents too, not only identities: frame and parent data can be edited in
 	# place. Dictionary.hash() is one native call over the whole frame.
 	var hash_started: int = FRAME_HITCH.now()
 	var applied_hash: int = hash([selected, _reference_attachment_parent, _source_body_style, _playback_mode])
 	FRAME_HITCH.detail("preview.hash", hash_started)
 	var unchanged: bool = token == _applied_token and is_same(selected, _applied_selected) and applied_hash == _applied_hash and is_same(_layers, _applied_layers) and _applied_layer_count == _layers.size() and is_same(_applied_body_material, _source_body_material)
+	if is_reference and _cached_frames_allowed():
+		# Cached frame plan: styles, textures and draw groups of this exact
+		# frame were computed (and every layer verified by render_layer) once;
+		# each advance rechecks pins/admission/member stamps once per frame.
+		var cached_started: int = FRAME_HITCH.now()
+		var plan: Dictionary = _advance_cached_frame(selected, applied_hash, track, body_attributes, body_attributes_unresolved, body_projection_verified)
+		FRAME_HITCH.detail("preview.cached", cached_started)
+		if plan.is_empty(): return
+		_last_token = token
+		if not static_track and not _reference_card_context.is_empty(): _dispatch_reference_overlays(frames,track,total,source_direction)
+		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
+			queue_free()
+		_finish_reference_advance(delta,source_direction,track,body_attributes,body_attributes_unresolved,body_projection_verified,plan.shown)
+		return
+	if not _cached_applied_plan.is_empty():
+		_leave_cached_frames()
+		unchanged = false
 	# Reference effects always take the full path (their style depends on
 	# per-effect attributes); reference body layers re-run only the per-draw
 	# byte checks when the frame is unchanged (_verify_unchanged_layers).
@@ -781,30 +1123,35 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_applied_hash = applied_hash
 		_applied_body_material = _source_body_material
 	if _reference_bank != null:
-		var children_started: int = FRAME_HITCH.now()
-		var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
-		FRAME_HITCH.detail("preview.children", children_started)
-		if not source_children_ready and not _reference_texture_budget.is_empty():
-			var problem: Dictionary = _reference_child_problem.duplicate(true)
-			_abort_reference_source(problem)
-			return
 		var shown_layers: Array = []
 		for index: int in range(selected.layers.size()):
 			if _layers[index].visible: shown_layers.append(selected.layers[index])
 		for layer: Dictionary in selected.get("effect_layers", []):
 			var node: Sprite2D = _effect_nodes.get(_effect_node_key(layer)) as Sprite2D
 			if node != null and node.visible: shown_layers.append(layer)
-		var card_consumer: bool = not _reference_card_context.is_empty() or not _reference_overlay_parent.is_empty() or not _reference_attachment_parent.is_empty()
-		var consumer: String = str(_reference_card_context.get("consumer",_reference_overlay_parent.get("consumer",_reference_attachment_parent.get("consumer",""))))
-		var purpose: String = "existing_npc_consumer" if consumer == "npc" else "existing_card_consumer"
-		if not _reference_attachment_parent.is_empty(): purpose = "existing_npc_independent_source_layer" if consumer == "npc" else "existing_card_independent_source_layer"
-		elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
-		elif not card_consumer: purpose = "diagnostic_reference_preview"
-		if consumer in ["spell_effect","global_effect","item_effect","invoke_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
-		if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
-		var scene: Node = get_tree().current_scene if is_inside_tree() else null
-		var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
-		_reference_frame_inputs = {"purpose":purpose,"consumer":consumer,"card":_reference_card_context,"overlay":_reference_overlay_parent,"attachment":_reference_attachment_parent,"role":_role,"track":track,"record_sprite_id":_record.source_sprite_id,"direction":source_direction,"layers":shown_layers,"in_main":in_main}
+		_finish_reference_advance(delta,source_direction,track,body_attributes,body_attributes_unresolved,body_projection_verified,shown_layers)
+
+## Independent source children and the diagnostic frame inputs of one reference
+## advance (shared by the per-layer and the cached-frame paths).
+func _finish_reference_advance(delta: float, source_direction: int, track: Dictionary, body_attributes: Array, body_attributes_unresolved: bool, body_projection_verified: bool, shown_layers: Array) -> void:
+	var children_started: int = FRAME_HITCH.now()
+	var source_children_ready: bool = _advance_reference_children(delta,source_direction,body_attributes,body_attributes_unresolved,body_projection_verified)
+	FRAME_HITCH.detail("preview.children", children_started)
+	if not source_children_ready and not _reference_texture_budget.is_empty():
+		var problem: Dictionary = _reference_child_problem.duplicate(true)
+		_abort_reference_source(problem)
+		return
+	var card_consumer: bool = not _reference_card_context.is_empty() or not _reference_overlay_parent.is_empty() or not _reference_attachment_parent.is_empty()
+	var consumer: String = str(_reference_card_context.get("consumer",_reference_overlay_parent.get("consumer",_reference_attachment_parent.get("consumer",""))))
+	var purpose: String = "existing_npc_consumer" if consumer == "npc" else "existing_card_consumer"
+	if not _reference_attachment_parent.is_empty(): purpose = "existing_npc_independent_source_layer" if consumer == "npc" else "existing_card_independent_source_layer"
+	elif not _reference_overlay_parent.is_empty(): purpose = "existing_npc_source_overlay" if consumer == "npc" else "existing_card_source_overlay"
+	elif not card_consumer: purpose = "diagnostic_reference_preview"
+	if consumer in ["spell_effect","global_effect","item_effect","invoke_effect"]: purpose = "existing_typed_effect_source_layer" if not _reference_attachment_parent.is_empty() else "existing_typed_source_effect"
+	if consumer == "awakening": purpose = "existing_awakening_source_layer" if not _reference_attachment_parent.is_empty() else "existing_enabled_source_awakening"
+	var scene: Node = get_tree().current_scene if is_inside_tree() else null
+	var in_main: bool = card_consumer and scene != null and scene.scene_file_path == "res://Main.tscn" and scene.is_ancestor_of(self)
+	_reference_frame_inputs = {"purpose":purpose,"consumer":consumer,"card":_reference_card_context,"overlay":_reference_overlay_parent,"attachment":_reference_attachment_parent,"role":_role,"track":track,"record_sprite_id":_record.source_sprite_id,"direction":source_direction,"layers":shown_layers,"in_main":in_main}
 
 func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dictionary:
 	var provenance: Dictionary = layer.frame_provenance.duplicate(true)
@@ -845,6 +1192,7 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 		if child == null:
 			child = get_script().new()
 			child.playback_mode_override = _playback_mode
+			child.cached_frames = cached_frames
 			add_child(child)
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
 				_reference_child_problem = child.reference_bank_status.duplicate(true)
@@ -1057,6 +1405,7 @@ func _spawn_reference_overlay(binding: Dictionary, parent_track: Dictionary, tok
 	parent.add_child(overlay)
 	# The source event copies position/direction; the scene parent owns lifetime.
 	overlay.set_as_top_level(true)
+	TwilightWorldRenderScale.follow_world(overlay)
 	if not overlay._configure_reference_bank(_manifest_path,str(_reference_card_context.manifest_sha256),int(binding.target_sprite_id),{"idle":int(binding.child_action_id)},{"idle":false},"idle","overlay"):
 		overlay.free()
 		return false
@@ -1306,7 +1655,9 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	# Existing spell/item/invoke callers supply a world-space event snapshot.
 	# Only apply events without a point remain attached to their moving owner.
 	var world_anchored: bool = fixed_world_point or world_point.is_finite()
-	if world_anchored: overlay.set_as_top_level(true)
+	if world_anchored:
+		overlay.set_as_top_level(true)
+		TwilightWorldRenderScale.follow_world(overlay)
 	overlay.global_position = global_position if not world_point.is_finite() else world_point
 	var placement: String = "existing_caller_world_point" if world_anchored else "existing_owner_relative_apply_event"
 	overlay._reference_overlay_parent["placement_policy"] = placement

@@ -74,6 +74,7 @@ static func options(world: Node, origin: Vector2, target: Node2D) -> Dictionary:
 		flight_node.global_position = origin
 		flight_node.visible = false
 		world.combat_flights.add_child(flight_node)
+		TwilightWorldRenderScale.follow_world(flight_node)
 	var token: Dictionary = {"node":flight_node,"inputs":inputs,"world":weakref(world),"target":weakref(target),"point":origin}
 	return {"visual_step":_step.bind(token),"visual_end":_end.bind(token),"current523_ammo_flight":last_status.duplicate(true)}
 
@@ -103,4 +104,5 @@ static func _end(token: Dictionary) -> void:
 	blast.set_as_top_level(true)
 	blast.global_position = end
 	world.combat_flights.add_child(blast)
+	TwilightWorldRenderScale.follow_world(blast)
 	token["explosion_started"] = true

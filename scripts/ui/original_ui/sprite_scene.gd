@@ -204,7 +204,9 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 		# "transfer" ("true"/"false") is a client flag on Text nodes (e.g.
 		# MessBoxHUD Text_Line); CSLoader keeps it as user data only, so it
 		# selects no pixels, font or layout. Retain it as metadata.
-		if not custom is Dictionary or custom.is_empty():problems.append("custom_property")
+		# An empty JSON object ("{}", e.g. Inventory_Buff_Info_All ListView_Buff)
+		# carries no user data at all; there is nothing to interpret.
+		if not custom is Dictionary or (custom.is_empty() and str(widget.customProperty).strip_edges()!="{}"):problems.append("custom_property")
 		else:
 			for key: Variant in custom:
 				# "HangulWordFind" (bool) / "LineBreakSymbols" are the client's

@@ -725,6 +725,11 @@ func update_currency_balances(items: Dictionary) -> void:
 	_refresh_currency_readout()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_currency_balances(currency_balances)
 
+## The original HUD wallet's Btn_Info: the original 523 재화 정보 window
+## (source_main_currency_window) over the existing balances.
+func open_currency_info() -> void:
+	_open_original_feature("currency_info")
+
 func _refresh_currency_readout() -> void:
 	if currency_readout == null or not is_instance_valid(lineage_inventory_ui):
 		return
@@ -791,7 +796,7 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	for key: Variant in visible_keys:
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
-		var b := UI.button("",open_character,Vector2(36,42))
+		var b := UI.button("",open_buff_info,Vector2(36,42))
 		var icon := TextureRect.new()
 		var source_image: Dictionary = _source523_buff_image(effect if effect is Dictionary else {})
 		if source_image.handled:
@@ -820,6 +825,12 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		if source_images_selected: _source523_buff_views[key]={"button":b,"remaining":remaining,"missing_hint":missing_hint}
 	if source_images_selected:
 		_source523_buff_signature["ui_revision"]=preload("res://scripts/ui/source523_image_assets.gd").original_ui_revision()
+
+## A tap on the active effect row: the original 523 버프 정보 window
+## (source_main_buff_info_window); the character window without it.
+func open_buff_info() -> void:
+	if _open_original_feature("buff_info"):return
+	open_character()
 
 func _source523_buff_image(effect: Dictionary) -> Dictionary:
 	var service: RefCounted = get_parent().get("original_skills")
@@ -3272,6 +3283,20 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	view.configure(runtime,identity)
 	workspace.register_scroll_drag(scroll,view)
 
+
+## 기억 장소 (growth.travel.open): the original 523 Memory_All window
+## (source_main_memory_window); false keeps the TWILIGHT page.
+func open_memory_places(source: Dictionary = {}) -> bool:
+	_open_window("teleport","기억 장소","")
+	return _open_original_feature("memory_places",[source])
+
+## The 던전 window's 시련 tab → 시련 던전: the original 523 Dungeon_Trial_All
+## window (source_main_trial_dungeon_window) over the existing Challenge
+## feature; the dungeon screen when it cannot open.
+func open_trial_dungeon() -> void:
+	_open_window("source_dungeons","시련 던전","")
+	if _open_original_feature("trial_dungeon"):return
+	open_source_dungeons()
 
 func open_source_dungeons() -> void:
 	_open_window("source_dungeons","던전","입장 조건 · 목표 · 보상 · 등장 계획")
