@@ -28,8 +28,11 @@ const MISSING_MAX: int = 4096
 class CookedActor:
 	extends RefCounted
 	var key: String = ""
+	var path: String = ""
+	var data_start: int = 0
 	var index: Dictionary = {}
-	var textures: Array[Texture2D] = []
+	## Page textures, null until a state that draws from the page is shown.
+	var textures: Array = []
 	## entry key (var_to_str of its inputs) -> entry; each entry also holds
 	## "runtime_tracks" shaped for the existing view API (duration/timing).
 	var entries: Dictionary = {}
@@ -59,10 +62,12 @@ static func reset_for_tests() -> void:
 	_root_known = false
 	_effect_index = {}
 	_effect_index_root = "-"
+	_pages.clear()
+	_page_bytes = 0
 	budget_bytes = DEFAULT_BUDGET_BYTES
 
 static func stats() -> Dictionary:
-	return {"format":FORMAT.FORMAT,"root":root(),"entries":_cache.size(),"bytes":_bytes,"budget_bytes":budget_bytes,"missing":_missing.size(),"counters":_counters.duplicate()}
+	return {"format":FORMAT.FORMAT,"root":root(),"entries":_cache.size(),"bytes":_page_bytes,"pages":_pages.size(),"index_bytes":_bytes,"budget_bytes":budget_bytes,"missing":_missing.size(),"counters":_counters.duplicate()}
 
 ## The user setting (default on). Off: every actor uses the original path.
 static func setting_enabled() -> bool:
@@ -189,36 +194,73 @@ static func lookup_inputs(inputs: Dictionary) -> Dictionary:
 		return {}
 	return {"actor":actor,"entry":entry}
 
+const INDEX_CACHE_MAX: int = 192
+## Loaded page textures, oldest first: "file#page" -> [actor, page, bytes].
+static var _pages: Dictionary = {}
+static var _page_bytes: int = 0
+
 static func _trim() -> void:
-	while _bytes > budget_bytes and _cache.size() > 1:
+	while _cache.size() > INDEX_CACHE_MAX:
 		var oldest: String = _cache.keys()[0]
 		_bytes -= int(_cache[oldest].bytes)
 		_cache.erase(oldest)
-		_count("evicted")
+		_count("index_evicted")
+
+## The texture of one page, loaded on first use. Pages past the byte budget
+## are dropped oldest first (a sprite showing one keeps it alive).
+static func page_texture(actor: CookedActor, page: int) -> Texture2D:
+	var key: String = actor.path + "#" + str(page)
+	var texture: Variant = actor.textures[page]
+	if texture is Texture2D:
+		if _pages.has(key):
+			var known: Array = _pages[key]
+			_pages.erase(key)
+			_pages[key] = known
+		return texture
+	var file := FileAccess.open(actor.path, FileAccess.READ)
+	var image: Image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start) if file != null else null
+	if image == null:
+		_count("page_unreadable")
+		return null
+	var made: ImageTexture = ImageTexture.create_from_image(image)
+	actor.textures[page] = made
+	var bytes: int = image.get_data_size()
+	_pages[key] = [actor, page, bytes]
+	_page_bytes += bytes
+	_count("page_loaded")
+	while _page_bytes > budget_bytes and _pages.size() > 1:
+		var oldest: String = _pages.keys()[0]
+		var entry: Array = _pages[oldest]
+		_pages.erase(oldest)
+		_page_bytes -= int(entry[2])
+		entry[0].textures[int(entry[1])] = null
+		_count("page_evicted")
+	return made
 
 ## Reads one cooked actor file into textures and runtime tracks.
+## Reads a cooked file's index (no pixels; pages load on first use).
 static func load_actor(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path): return {"ok":false,"error":"absent"}
 	var file := FileAccess.open(path, FileAccess.READ)
 	var head: Dictionary = FORMAT.read_index(file)
 	if not head.ok: return head
 	var index: Dictionary = head.index
-	var pages: Dictionary = FORMAT.read_pages(file, index, int(head.data_start))
+	for page: Variant in index.pages:
+		if not page is Dictionary or int(page.get("offset", -1)) < 0 or int(head.data_start) + int(page.get("offset", -1)) + int(page.get("bytes", 0)) > file.get_length() or FORMAT.data_size(int(page.get("w", 0)), int(page.get("h", 0)), int(page.get("format", -1))) != int(page.get("raw", -1)):
+			return {"ok":false,"error":"cooked_actor_page_entry"}
 	file.close()
-	if not pages.ok: return pages
 	var actor := CookedActor.new()
 	actor.key = path.get_file().get_basename()
+	actor.path = path
+	actor.data_start = int(head.data_start)
 	actor.index = index
-	for image: Image in pages.images:
-		var texture: ImageTexture = ImageTexture.create_from_image(image)
-		if texture == null: return {"ok":false,"error":"cooked_actor_texture"}
-		actor.textures.append(texture)
-		actor.bytes += image.get_data_size()
+	actor.textures.resize(index.pages.size())
+	actor.bytes = int(head.data_start)
 	var images: PackedInt32Array = index.images
 	if images.size() % 5 != 0: return {"ok":false,"error":"cooked_actor_images"}
 	for at: int in range(0, images.size(), 5):
 		if images[at] < 0 or images[at] >= actor.textures.size(): return {"ok":false,"error":"cooked_actor_image_page"}
-		var size: Vector2 = actor.textures[images[at]].get_size()
+		var size := Vector2(int(index.pages[images[at]].w), int(index.pages[images[at]].h))
 		if images[at + 1] < 0 or images[at + 2] < 0 or images[at + 1] + images[at + 3] > size.x or images[at + 2] + images[at + 4] > size.y: return {"ok":false,"error":"cooked_actor_image_rect"}
 	var image_count: int = images.size() / 5
 	for state: Variant in index.states:
@@ -295,7 +337,10 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 			continue
 		var at: int = slot * FORMAT.ITEM_STRIDE
 		var image: int = items[at] * 5
-		var texture: Texture2D = actor.textures[images[image]]
+		var texture: Texture2D = page_texture(actor, images[image])
+		if texture == null:
+			sprite.hide()
+			continue
 		if sprite.texture != texture: sprite.texture = texture
 		sprite.region_rect = Rect2(images[image + 1], images[image + 2], images[image + 3], images[image + 4])
 		sprite.position = Vector2(items[at + 1], items[at + 2])

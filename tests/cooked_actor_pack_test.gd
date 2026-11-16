@@ -18,6 +18,7 @@ const GPU_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
 const COMPOSITES = preload("res://scripts/resources/actor_frame_composite_cache.gd")
 const PACK = preload("res://scripts/boot/source523_pack.gd")
 const PREPARED = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
+const PINS = preload("res://scripts/boot/cooked_actor_pins.gd")
 const CANVAS: int = 32
 
 var pixel_comparisons: int = 0
@@ -228,8 +229,7 @@ func run() -> void:
 		var loaded: Dictionary = STORE.load_actor(etc.path)
 		check(loaded.get("ok", false), "ASTC cooked actor loads: " + str(loaded.get("error", "")))
 		if loaded.get("ok", false):
-			var formats: Array = []
-			for texture: Texture2D in loaded.actor.textures: formats.append(texture.get_image().get_format() if texture.get_image() != null else -1)
+			check(STORE.page_texture(loaded.actor, 0) != null, "a block-compressed bundle's page loads")
 			var classes: Array = loaded.actor.index.page_classes
 			for page: int in range(classes.size()):
 				if classes[page] == FORMAT.PAGE_RGBA8: check(loaded.actor.index.pages[page].format == Image.FORMAT_RGBA8, "soft/ADD page stays RGBA8")
@@ -256,16 +256,25 @@ func run() -> void:
 	var one: Dictionary = STORE.lookup(selection(data, ACTOR + 100))
 	check(not one.is_empty(), "bound fixture actor loads")
 	if not one.is_empty():
-		STORE.budget_bytes = one.actor.bytes * 2
+		# Page textures load lazily and stay within the byte budget.
+		var page_bytes: int = 0
+		for page: Dictionary in one.actor.index.pages: page_bytes = maxi(page_bytes, int(page.raw))
+		STORE.budget_bytes = page_bytes * 2
+		check(int(STORE.stats().pages) == 0, "looking an actor up loads no page pixels")
 		var over: bool = false
 		for offset: int in range(6):
-			check(not STORE.lookup(selection(data, ACTOR + 100 + offset)).is_empty(), "bound actor %d loads" % offset)
-			if int(STORE.stats().bytes) > STORE.budget_bytes: over = true
+			var found: Dictionary = STORE.lookup(selection(data, ACTOR + 100 + offset))
+			check(not found.is_empty(), "bound actor %d loads" % offset)
+			if found.is_empty(): continue
+			for page: int in range(found.actor.index.pages.size()):
+				check(STORE.page_texture(found.actor, page) != null, "page %d of actor %d loads" % [page, offset])
+				if int(STORE.stats().bytes) > STORE.budget_bytes: over = true
 		var bound: Dictionary = STORE.stats()
-		check(not over and int(bound.entries) <= 2 and int(bound.counters.get("evicted", 0)) >= 4, "cache stays within its byte budget: " + JSON.stringify(bound))
+		check(not over and int(bound.counters.get("page_evicted", 0)) >= 4, "page textures stay within their byte budget: " + JSON.stringify(bound))
 	# 8. Install: only pinned part SHA-256s are accepted.
 	install_checks()
 	effect_domain_checks(data)
+	content_key_checks(data)
 	finish(previous_copy, previous_gpu)
 
 ## The block-compression (ASTC 4x4) acceptance rule on synthetic cells: a smooth opaque cell passes,
@@ -309,6 +318,32 @@ func effect_domain_checks(data: Dictionary) -> void:
 	var first: Dictionary = EFFECT._bank(options)
 	check(not first.ok and first.reason == "current523_effect_original_action_domain_required", "manifest without domains rejected")
 	check(EFFECT._rejected_key.begins_with(data.path) and EFFECT._bank(options) == first, "rejection memoized while the file is unchanged")
+
+## A cooked entry is found by the original content and FORMAT only: the
+## bank manifest SHA-256 (the same bank in pack-b2162b06 and its repack
+## pack-63fb1355), the selection's source roles/actions, playback mode and
+## copy-free path. No game-code revision, script hash or original pack ID is a
+## key, so a code update (OTA) keeps using the installed cooked pack; only a
+## FORMAT change or another bank invalidates it.
+func content_key_checks(data: Dictionary) -> void:
+	var inputs: Dictionary = STORE.selection_inputs(selection(data))
+	var keys: Array = inputs.keys()
+	keys.sort()
+	check(keys == ["consumer","kind","loop_policy","manifest_sha256","mode","optional_role_actions","optional_role_actor_ids","optional_role_loop_policy","role_actions","role_actor_ids","screen_copy","sprite_id"], "selection key fields are content only: " + str(keys))
+	var request: Dictionary = STORE.request_inputs(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "overlay", {})
+	var request_keys: Array = request.keys()
+	request_keys.sort()
+	check(request_keys == ["consumer","kind","loop_policy","manifest_sha256","mode","role_actions","role_actor_ids","screen_copy","sprite_id"], "request key fields are content only: " + str(request_keys))
+	check(STORE.file_for(inputs) == "actors/npc_%d.twca" % ACTOR, "bundle file named by consumer and body sprite only")
+	# The same bank at another install path (another pack's folder) gives the
+	# same key; the pinned source pack ID is not part of it.
+	var moved: Dictionary = selection(data)
+	moved.manifest_path = "/elsewhere/pack-b2162b06/source523/bank/manifest.json"
+	check(STORE.entry_key(STORE.selection_inputs(moved)) == STORE.entry_key(inputs), "install location / pack ID does not change the key")
+	var saved_pack: String = PINS.SOURCE_PACK_ID
+	check(not STORE.entry_key(inputs).contains(saved_pack) and not STORE.entry_key(inputs).contains(FORMAT.FORMAT), "neither pack ID nor code identity inside the key")
+	# FORMAT is checked by the reader, not by the key: a file of another
+	# FORMAT is rejected outright (tested above), the key stays content.
 
 func install_checks() -> void:
 	var zip_path: String = scratch.path_join("cooked-part-1of1.zip")

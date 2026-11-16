@@ -343,18 +343,43 @@ static func write_cooked(path: String, session: Session, entries: Array, compres
 			else: quality.etc2_rejected_psnr += 1
 	for id: int in range(classes.size()):
 		if classes[id] == FORMAT.PAGE_RGBA8: quality.rgba8_cells += 1
+	# Pages per draw group: an image belongs to the first (entry, role,
+	# stored direction) that draws it, so showing one direction loads only
+	# that group's pages (and pages of images it shares with earlier groups).
+	var group_of: PackedInt32Array = PackedInt32Array()
+	group_of.resize(session.images.size())
+	group_of.fill(-1)
+	var group_count: int = 0
+	for entry: Dictionary in entries:
+		var roles: Array = entry.tracks.keys()
+		roles.sort()
+		for role: String in roles:
+			for direction: Dictionary in entry.tracks[role].directions:
+				var states: Array = Array(direction.seg_state)
+				if int(direction.end_state) >= 0: states.append(int(direction.end_state))
+				for state: int in states:
+					var items: PackedInt32Array = session.states[state]
+					for at: int in range(0, items.size(), FORMAT.ITEM_STRIDE):
+						if group_of[items[at]] < 0: group_of[items[at]] = group_count
+				group_count += 1
+	for id: int in range(group_of.size()):
+		if group_of[id] < 0: group_of[id] = group_count
 	var image_table := PackedInt32Array()
 	image_table.resize(session.images.size() * 5)
 	var pages: Array = []
 	var page_classes: Array = []
-	for page_class: String in [FORMAT.PAGE_ETC2, FORMAT.PAGE_RGBA8]:
-		var members: Array = []
+	var by_group: Dictionary = {}
+	for id: int in range(session.images.size()):
+		var key: String = "%d:%s" % [group_of[id], classes[id]]
+		if not by_group.has(key): by_group[key] = []
+		by_group[key].append(id)
+	var group_keys: Array = by_group.keys()
+	group_keys.sort_custom(func(a: String, b: String) -> bool: return int(a.get_slice(":", 0)) < int(b.get_slice(":", 0)) or (int(a.get_slice(":", 0)) == int(b.get_slice(":", 0)) and a < b))
+	for key: String in group_keys:
+		var page_class: String = key.get_slice(":", 1)
+		var members: Array = by_group[key]
 		var sizes: Array = []
-		for id: int in range(session.images.size()):
-			if classes[id] != page_class: continue
-			members.append(id)
-			sizes.append(session.images[id].get_size())
-		if members.is_empty(): continue
+		for id: int in members: sizes.append(session.images[id].get_size())
 		var packed: Dictionary = FORMAT.pack(sizes)
 		var first: int = pages.size()
 		for size: Vector2i in packed.pages:

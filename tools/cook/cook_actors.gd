@@ -54,7 +54,11 @@ func run() -> void:
 	var shard: int = int(argument("--shard=", "0"))
 	var shards: int = maxi(1, int(argument("--shards=", "1")))
 	var limit: int = int(argument("--limit=", "0"))
-	var lossless: bool = "--lossless" in OS.get_cmdline_user_args()
+	# Default: exact RGBA8 pages (zstd). Measured on the v2 trial: RGBA8+zstd
+	# files are smaller than ASTC+zstd (sprite pages are mostly transparent;
+	# block data barely compresses) and pixels stay identical to the runtime.
+	# --block enables the ASTC 4x4 hybrid for GPU memory instead.
+	var lossless: bool = not "--block" in OS.get_cmdline_user_args()
 	var verify_count: int = int(argument("--verify=", "25"))
 	var report: Dictionary = {"format":FORMAT.FORMAT,"shard":shard,"shards":shards,"lossless":lossless,"engine":Engine.get_version_info().string,"actors":{},"failures":[]}
 	var report_path: String = out.path_join("report-%d.json" % shard)

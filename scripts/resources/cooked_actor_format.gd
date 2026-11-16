@@ -21,12 +21,14 @@ extends RefCounted
 ## The index names FORMAT explicitly; a reader rejects any other FORMAT. A rule
 ## change of the capture, composition or index layout must bump FORMAT; script
 ## edits that keep the same output do not.
-const FORMAT := "twilight-cooked-actor-v2:android_copy_free;cached_frame_composites;binary_alpha_MIX_runs;cells4;bundled_entries;astc4x4_psnr32_binary_alpha_else_rgba8"
+const FORMAT := "twilight-cooked-actor-v2:android_copy_free;cached_frame_composites;binary_alpha_MIX_runs;cells4;bundled_entries;draw_group_pages_lazy;rgba8_or_astc4x4_psnr32"
 ## Folder name under the cooked pack root; changes together with FORMAT.
 const FORMAT_TAG := "v2"
 const MAGIC := "TWCA"
 const FILE_VERSION: int = 1
-const PAGE_MAX: int = 2048
+## Pages hold one draw group (entry, role, stored direction) and are loaded
+## only when that group is shown; 1024 bounds one load to 4 MB of RGBA8.
+const PAGE_MAX: int = 1024
 ## Ints per drawn item in a state: image, x, y, blend, z, filter, color id
 ## (into the float RGBA table "colors"), flags.
 const ITEM_STRIDE: int = 8
@@ -136,22 +138,27 @@ static func data_size(width: int, height: int, format: int) -> int:
 		Image.FORMAT_ETC2_RGB8, Image.FORMAT_ETC2_RGB8A1, Image.FORMAT_ETC: return blocks * 8
 	return -1
 
+## One page's pixels (pages are read lazily, one draw group at a time).
+static func read_page(file: FileAccess, entry: Variant, data_start: int) -> Image:
+	if not entry is Dictionary: return null
+	var size: int = int(entry.get("bytes", 0))
+	var raw_size: int = int(entry.get("raw", 0))
+	var start: int = data_start + int(entry.get("offset", -1))
+	if size <= 0 or raw_size <= 0 or raw_size > MAX_PAGE_BYTES or start < data_start or start + size > file.get_length(): return null
+	var width: int = int(entry.get("w", 0))
+	var height: int = int(entry.get("h", 0))
+	var format: int = int(entry.get("format", -1))
+	if width <= 0 or height <= 0 or data_size(width, height, format) != raw_size: return null
+	file.seek(start)
+	var raw: PackedByteArray = file.get_buffer(size).decompress(raw_size, FileAccess.COMPRESSION_ZSTD)
+	if raw.size() != raw_size: return null
+	var image: Image = Image.create_from_data(width, height, false, format, raw)
+	return image if image != null and not image.is_empty() else null
+
 static func read_pages(file: FileAccess, index: Dictionary, data_start: int) -> Dictionary:
 	var images: Array[Image] = []
 	for entry: Variant in index.pages:
-		if not entry is Dictionary: return {"ok":false,"error":"cooked_actor_page_entry"}
-		var size: int = int(entry.get("bytes", 0))
-		var raw_size: int = int(entry.get("raw", 0))
-		var start: int = data_start + int(entry.get("offset", -1))
-		if size <= 0 or raw_size <= 0 or raw_size > MAX_PAGE_BYTES or start < data_start or start + size > file.get_length(): return {"ok":false,"error":"cooked_actor_page_range"}
-		file.seek(start)
-		var raw: PackedByteArray = file.get_buffer(size).decompress(raw_size, FileAccess.COMPRESSION_ZSTD)
-		var width: int = int(entry.get("w", 0))
-		var height: int = int(entry.get("h", 0))
-		var format: int = int(entry.get("format", -1))
-		if raw.size() != raw_size or width <= 0 or height <= 0 or format < 0 or format >= Image.FORMAT_MAX: return {"ok":false,"error":"cooked_actor_page_corrupt"}
-		if data_size(width, height, format) != raw_size: return {"ok":false,"error":"cooked_actor_page_size"}
-		var image: Image = Image.create_from_data(width, height, false, format, raw)
-		if image == null or image.is_empty(): return {"ok":false,"error":"cooked_actor_page_image"}
+		var image: Image = read_page(file, entry, data_start)
+		if image == null: return {"ok":false,"error":"cooked_actor_page"}
 		images.append(image)
 	return {"ok":true,"images":images}
