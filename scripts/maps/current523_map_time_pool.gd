@@ -28,6 +28,12 @@ var _mutex_token: String=""
 var _observed_clock_ms: int=0
 var _seen: Dictionary={}
 var _seen_signature: String=""
+## TWILIGHT 근사(근거 약함) (2026-11-17, 시간 충전석 LandTimeRecharger): the original rows say only
+## RechargeLandTimeLimitGroupID + RechargeTime (3600 s) and the group's MaxRechargeTime.
+## Read as the dungeon window already does (dungeon_play_service.recharge): charged time
+## sits above TimeLimit, up to TimeLimit + MaxRechargeTime. Each group keeps the total it
+## was ever recharged (recharged_ms) so another process can tell a recharge from a rollback.
+var _recharge_ms: int=0
 
 func configure(world: Node) -> bool:
 	if not is_instance_valid(world):problem="map_time_world_unavailable";return false
@@ -76,6 +82,18 @@ func pulse() -> bool:
 func end_session() -> Dictionary:
 	return _change("end",0,[],{})
 
+## TWILIGHT 근사: add amount_ms to one source group (same mutex, clock, head and
+## rollback protection as every other change). Refuses when the group is full.
+func recharge(group: Dictionary, profile: Dictionary, amount_ms: int) -> Dictionary:
+	if not _integer(amount_ms,1,MAX_CLOCK_MS):return _remember(_result(false,"map_time_recharge_amount_invalid"))
+	_recharge_ms=amount_ms
+	var result: Dictionary=_change("recharge",0,[group],profile)
+	_recharge_ms=0
+	return result
+
+static func cap_ms(source_group: Dictionary) -> int:
+	return (int(source_group.get("TimeLimit",0))+maxi(0,int(source_group.get("MaxRechargeTime",0))))*1000
+
 static func _integer(value: Variant, minimum: int, maximum: int) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and CONDITIONS.integer(value,minimum,maximum)
 
@@ -112,7 +130,7 @@ static func _source_group(value: Variant) -> Dictionary:
 	if row.ID<1 or row.ServiceTypeID!=13 or row.TimeLimit<1:return {}
 	var text: String=JSON.stringify(row,"",true,true)
 	if text.to_utf8_buffer().size()>4096:return {}
-	return {"id":int(row.ID),"source_group":row,"source_group_sha256":text.sha256_text(),"initial_ms":int(row.TimeLimit)*1000}
+	return {"id":int(row.ID),"source_group":row,"source_group_sha256":text.sha256_text(),"initial_ms":int(row.TimeLimit)*1000,"cap_ms":cap_ms(row)}
 
 func _request(groups: Array, profile: Dictionary) -> Dictionary:
 	if groups.size()>MAX_REQUEST_GROUPS:return _result(false,"map_time_too_many_groups")
@@ -151,7 +169,8 @@ func _document_problem(state: Variant) -> String:
 			var stored: Variant=scope.groups[group_key]
 			if not group_key is String or not stored is Dictionary:return "map_time_group_invalid"
 			var source: Dictionary=_source_group(stored.get("source_group"))
-			if source.is_empty() or group_key!=str(source.id) or stored.get("source_group_sha256")!=source.source_group_sha256 or stored.get("initial_ms")!=source.initial_ms or not _integer(stored.get("remaining_ms"),0,int(source.initial_ms)):return "map_time_group_definition_or_budget_invalid"
+			if source.is_empty() or group_key!=str(source.id) or stored.get("source_group_sha256")!=source.source_group_sha256 or stored.get("initial_ms")!=source.initial_ms or not _integer(stored.get("remaining_ms"),0,int(source.cap_ms)) or (stored.has("recharged_ms") and not _integer(stored.recharged_ms,1,MAX_SAFE_INTEGER)):return "map_time_group_definition_or_budget_invalid"
+			if int(stored.remaining_ms)>int(source.initial_ms) and not stored.has("recharged_ms"):return "map_time_group_definition_or_budget_invalid"
 	var lease: Dictionary=state.lease
 	if lease.is_empty():return ""
 	if not _integer(lease.get("owner_pid"),1,2147483647) or not _integer(lease.get("world_instance_id"),1,MAX_SAFE_INTEGER) or not lease.get("owner_token") is String or lease.owner_token.length()!=64 or not lease.owner_token.is_valid_hex_number(false):return "map_time_lease_invalid"
@@ -173,7 +192,7 @@ func _rollback_problem(state: Dictionary, signature: String) -> String:
 		for id: String in _seen.scopes[scope_key].groups:
 			var old: Dictionary=_seen.scopes[scope_key].groups[id]
 			var current: Dictionary=state.scopes[scope_key].groups.get(id,{})
-			if current.is_empty() or current.source_group_sha256!=old.source_group_sha256 or current.initial_ms!=old.initial_ms or current.remaining_ms>old.remaining_ms:return "map_time_registered_budget_rollback"
+			if current.is_empty() or current.source_group_sha256!=old.source_group_sha256 or current.initial_ms!=old.initial_ms or int(current.get("recharged_ms",0))<int(old.get("recharged_ms",0)) or int(current.remaining_ms)-int(old.remaining_ms)>int(current.get("recharged_ms",0))-int(old.get("recharged_ms",0)):return "map_time_registered_budget_rollback"
 	return ""
 
 func _observe(state: Dictionary, signature: String) -> void:
@@ -251,7 +270,8 @@ func _ensure_groups(state: Dictionary, request: Dictionary, allow_new: bool) -> 
 	for group: Dictionary in request.groups:
 		var key: String=str(group.id)
 		if stored.has(key):
-			if stored[key].source_group_sha256!=group.source_group_sha256 or stored[key].source_group!=group.source_group or stored[key].initial_ms!=group.initial_ms:return _result(false,"map_time_source_group_definition_mismatch")
+			# A stored row read back from JSON holds floats; compare its integer form.
+			if stored[key].source_group_sha256!=group.source_group_sha256 or _source_group(stored[key].source_group).get("source_group",{})!=group.source_group or int(stored[key].initial_ms)!=int(group.initial_ms):return _result(false,"map_time_source_group_definition_mismatch")
 			continue
 		if not allow_new:return _result(false,"map_time_groups_not_prepared")
 		if stored.size()>=MAX_SCOPE_GROUPS or total>=MAX_TOTAL_GROUPS:return _result(false,"map_time_group_limit")
@@ -276,6 +296,7 @@ func _change(kind: String, land_id: int, groups: Array, profile: Dictionary) -> 
 	var request: Dictionary=_request(groups,profile)
 	if not request.ok:return _remember(request)
 	if kind=="switch" and not _integer(land_id,0,2147483647):return _remember(_result(false,"map_time_land_invalid"))
+	if kind=="recharge" and (request.groups.size()!=1 or _recharge_ms<=0):return _remember(_result(false,"map_time_recharge_request_invalid"))
 	_busy=true
 	var locked: Dictionary=_acquire_mutex()
 	if not locked.ok:_busy=false;return _remember(locked)
@@ -294,6 +315,20 @@ func _change(kind: String, land_id: int, groups: Array, profile: Dictionary) -> 
 		var target: Dictionary=_view(next,request)
 		if not request.groups.is_empty() and int(target.remaining_ms)<=0:
 			target["expired"]=true;return _finish(_result(false,"map_time_budget_exhausted",target))
+	var recharged: int=0
+	if kind=="recharge":
+		var added: Dictionary=_ensure_groups(next,request,true)
+		if not added.ok:return _finish(added)
+		var group: Dictionary=request.groups[0]
+		var stored: Dictionary=next.scopes[request.scope_key].groups[str(group.id)]
+		var before: int=int(stored.remaining_ms)
+		if before>=int(group.cap_ms):
+			var full: Dictionary=_view(next,request);full["cap_ms"]=int(group.cap_ms)
+			return _finish(_result(false,"map_time_recharge_full",full))
+		recharged=mini(int(group.cap_ms)-before,_recharge_ms)
+		if int(stored.get("recharged_ms",0))>MAX_SAFE_INTEGER-recharged:return _finish(_result(false,"map_time_recharge_counter_exhausted"))
+		stored.remaining_ms=before+recharged
+		stored["recharged_ms"]=int(stored.get("recharged_ms",0))+recharged
 	if kind=="switch":
 		var ids: Array=[]
 		for group: Dictionary in request.groups:ids.append(int(group.id))
@@ -319,6 +354,7 @@ func _change(kind: String, land_id: int, groups: Array, profile: Dictionary) -> 
 	_observe(next,signature)
 	_owned_active=_owns(next.lease)
 	var view: Dictionary=_view(next,request)
+	if kind=="recharge":view.merge({"recharged_ms":recharged,"cap_ms":int(request.groups[0].cap_ms)},true)
 	view.merge({"active":_owned_active,"prepared":kind=="prepare","committed":true,"recovered_orphan":projected.orphan,"previous_lease_expired":projected.charge.expired,"charged_ms":projected.charge.charged_ms},true)
 	if kind=="pulse" and projected.charge.expired:
 		view["expired"]=true;view["remaining_ms"]=0;return _finish(_result(false,"map_time_active_lease_expired",view))

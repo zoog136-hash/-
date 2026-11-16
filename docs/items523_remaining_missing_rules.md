@@ -219,7 +219,7 @@ CSB 아이콘은 선택 문서에 모두 묶여 있다(누락 0, 신화 장비 3
 | 묶음(ItemCategory · 효과) | 사용 거부 | 판정 | 표에 없는 것 / 처리 |
 | --- | ---: | --- | --- |
 | LuckyBag · LuckyBagClassID | 857 | 불가 | 보상에 테스트·제외 아이템 포함(388+156+52) — 후보를 빼면 확률이 바뀌어 거부. 직업별 확률 합 불완전(126+11) |
-| LandTimeRecharger · RechargeLandTimeLimitGroupID + RechargeTime | 327 | 불가 | MaxRechargeTime이 기간당 충전 한도인지 잔량 상한인지 표에 없음. 기존 시간 풀(`current523_map_time_pool`)은 초기화 없음 정책이고 기본 개방 정책에서는 시간 제한 자체가 꺼짐 → 보존 |
+| LandTimeRecharger · RechargeLandTimeLimitGroupID + RechargeTime | 327 | 근사 연결 (12.2) | MaxRechargeTime 의미가 표에 없음 → TWILIGHT 근사: 남은 시간 상한 TimeLimit + MaxRechargeTime |
 | LuckyBag · (행 없음) | 197 | 불가 | 내용물 표 연결(LuckyBagClassID) 없음 |
 | EinasadRecharager · +Experience | 184 | **연결(4.2)** | 그룹 2 행(1·99레벨) 밖 레벨, 축복 최대치일 때 EXP만 받는 규칙 없음 → 보존 |
 | SelectReward | 175 | 불가 | 172종이 제외된 선택 보상(source_excluded_select_reward), 3종 RewardGetTimeTypeID 규칙 없음 |
@@ -370,13 +370,25 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 실제 Main·원본 팩(`tests/items523_bless_points_test.gd`): #168024 [이벤트] 축복의 성수(대) 3개 → 1개 사용 시 포인트 +1000,
   2개째 +2000 → 저장→다시 불러오기 후 포인트·남은 1개 유지 → 다시 사용 가능. #117304는 문양 재료 기록 그대로.
 
-### 12.2 시간 충전석 (LandTimeRecharger 327종) — 미연결
+### 12.2 시간 충전석 (LandTimeRecharger 327종) — **TWILIGHT 근사로 연결** (2026-11-17)
 
-- 행: RechargeLandTimeLimitGroupID → LandTimeLimitGroup(TimeLimit·MaxRechargeTime·ContentsResetScheduleTypeID), RechargeTime(초, 대부분 3600).
+- 행: RechargeLandTimeLimitGroupID → LandTimeLimitGroup(TimeLimit·MaxRechargeTime·ContentsResetScheduleTypeID), RechargeTime(초, 450종 모두 3600).
 - 표에 없는 것: MaxRechargeTime이 "초기화 주기당 충전 가능한 총량"인지 "남은 시간의 상한"인지(설명 문구·다른 표 모두 없음).
   충전 시점이 초기화(Daily/WeeklyWed 등) 전후로 걸칠 때의 처리도 없다.
-- 게임 쪽: 기존 시간 풀(`current523_map_time_pool`, 정책 `OWN_BOUNDED_SOURCE_LIMIT_NO_AUTO_RESET_V1`)은 초기화가 없고,
-  기본 개방 정책에서는 시간 제한 자체가 꺼져 있다. 충전 대상 시간이 소비되지 않으므로 사용해도 결과가 없다 → 아이템 보존.
+- **TWILIGHT 근사(근거 약함)** (근거: 기존 던전 창 충전 `dungeon_play_service.recharge`가 같은 해석 — 별도 충전분 상한 = MaxRechargeTime;
+  원본 일일 그룹의 TimeLimit + MaxRechargeTime이 대부분 23시간으로 하루를 넘지 않음. 2026-11-17 웹 검색(인벤 리니지M 게시판 등)에서는
+  상한 규칙 문구를 확인하지 못함):
+  충전 시간은 TimeLimit 위로 쌓이고 **남은 시간 상한 = TimeLimit + MaxRechargeTime**. 가득 차면 사용 거부·아이템 보존.
+- 연결 (`current523_native_item_projection.source_time_recharge` → `current523_native_stack.use_time_recharge`):
+  - 자체 맵 시간이 켜져 있을 때(map_open_policy ≠ 무제한 개방, map_time_policy = OWN_MAP_TIME): 물리 1개 차감·저장 후
+    맵 시간 풀(`current523_map_time_pool.recharge`, 새 변경 종류 `recharge`)에 충전. 충전이 거부되면 아이템을 되돌려 저장.
+    시간 풀은 그룹별 누적 충전량 `recharged_ms`를 기록해, 다른 프로세스가 충전을 되감기(rollback)로 오인하지 않게 한다.
+    잠금·리스·헤드·되감기 검사와 prepare/switch/pulse/end 결과는 그대로(회귀 테스트).
+  - 기본 무제한 개방일 때: 맵 시간이 소비되지 않으므로, 기존 던전 창 시간 풀(던전 창 "충전석 사용"과 같은 `dungeon_play.recharge`)에 충전.
+    그것도 안 되면(던전 실행 꺼짐 등) 안내 후 아이템 보존.
+- 실제 Main·원본 팩(`tests/map_time_recharge523_test.gd`): #202238 주말 월드 던전 시간 충전석(그룹 30582, 4h + 최대 8h) —
+  무제한 개방에서 던전 창 풀 +1h, 자체 맵 시간에서 TimeLimit + 1h·개수 차감·다시 불러오기 유지, 상한 거부.
+- 보관 예시 테스트(`items523_storage_items_test`)는 시간 충전석 대신 강화 주문서 #2431을 쓴다(12.3, 여전히 보관).
 
 ### 12.3 강화 주문서 (ScrollEnchant 181종: EnchantScrollGroupID 157 + ByBlessCode 23 + 행 없음 1) — 미연결
 
@@ -400,7 +412,7 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 | 묶음 | 이전 사용 가능 | 이후 사용 가능 | 남은 거부 |
 | --- | ---: | ---: | ---: |
 | 상자(LuckyBag·SelectReward·ComplexReward) | 12,465 | 12,736 | 1,285 |
-| 시간 충전석 | 0 | 0 | 327 |
+| 시간 충전석 | 0 | 327 (2026-11-17 근사, 12.2) | 0 |
 | 강화 주문서 | 0 | 0 | 181 |
 | 카드 재뽑기 | 0 | 0 | 256 |
 | 축복 포인트 | 10 (문양 화면) | 101 (가방 91 + 문양 화면 10) | 1 (Gem) |

@@ -143,6 +143,21 @@ static func build(src: Variant) -> Dictionary:
 			"max_rankers":_i(row.get("MaxRankerCount")),"teleport_box":box(teleport_territory)})
 	data.artifacts.sort_custom(func(a: Dictionary,b: Dictionary)->bool: return int(a.round)<int(b.round))
 	data.rank_rewards = src.rows("EscarosArtifactRankReward").size()
+	# Rank reward of each artifact (every Rank 1..MaxRankerCount row names the same
+	# Reward). TWILIGHT 근사: the local record is rank 1 of its own ranking.
+	data["rank_reward_by_artifact"] = {}
+	for row: Dictionary in src.rows("EscarosArtifactRankReward"):
+		if _i(row.get("Rank"))!=1 or _i(row.get("ServerLimitSetID"))!=0: continue
+		var reward: Dictionary = _one(src,"Reward",_i(row.get("RewardID")))
+		data.rank_reward_by_artifact[str(_i(row.get("EscarosArtifactID")))] = {"id":_i(reward.get("ID")),"type":str(reward_types.get(_i(reward.get("RewardTypeID")),"")),
+			"class_id":_i(reward.get("RewardClassID")),"amount":_i(reward.get("Amount")),"bless":_i(reward.get("ItemBlessCodeID"))}
+	# The hot open time of the dungeon (HotWeeklyOpenTimeGroupId -> WeeklyOpenTimeGroupSet
+	# -> WeeklyOpenTimeEntity): its DurationMinutes is the round cycle (TWILIGHT 근사).
+	var hot_minutes: int = 0
+	for link: Dictionary in src.related("WeeklyOpenTimeGroupSet","WeeklyOpenTimeGroupId",int(data.dungeon.hot_open_group)):
+		for entity: Dictionary in src.related("WeeklyOpenTimeEntity","WeeklyOpenTimeID",_i(link.get("WeeklyOpenTimeId"))):
+			if str(entity.get("ServiceRegionCode",""))=="KR": hot_minutes = maxi(hot_minutes,_i(entity.get("DurationMinutes")))
+	data.dungeon["hot_duration_minutes"] = hot_minutes
 	data.counts = {"lands":data.lands.size(),"teleporters":data.teleporters.size(),"zones":data.zones.size(),"landmarks":data.landmarks.size(),
 		"groups":data.groups.size(),"artifacts":data.artifacts.size(),"rank_rewards":data.rank_rewards,"constants":data.constants.size()}
 	if entry.is_empty() or int(entry.land_id)==0 or data.lands.is_empty():

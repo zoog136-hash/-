@@ -4466,6 +4466,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if death_recovery.blocked(): return
 	var source_reward: Dictionary = _find_catalog_item_record(_parse_enhancement_target(item_name).name)
 	if source_reward.get("monsterbook_source_item",false):
+		if hud.has_method("open_mystery_card523") and hud.open_mystery_card523(str(source_reward.name)): return
 		hud.open_monsterbook523()
 		var panel: Control = hud.find_child("MonsterBook523Panel",true,false)
 		if panel != null: panel.focus_owned_item(str(source_reward.name))
