@@ -186,3 +186,81 @@
 - `scripts/crafting/patch523_rules_projection.gd` `_item_reason()`의 `row.ItemBlessCodeID not in [1,2]` 검사가 원인이다. 원본 표 행의 숫자는 실수(JSON/PackedFloat64Array의 `1.0`)이고, Godot 4.7에서 `1.0 in [1,2]`는 `false`다(직접 확인함). 그래서 품목 검사까지 온 제작식 773개가 모두 떨어진다. 원본 표에서 실제로 이 검사에 걸릴 행은 `ItemHoningEpithetID≠0`인 6개뿐이다.
 - 같은 방식의 비교가 `_recipe()`에도 있다: `ItemCraftOutputTypeID not in [0,1,2]`, `int(craft_id) in delegated_protection_recipe_ids`(정책 JSON 값도 실수). 이 비교들은 확률 제작식 판정에 영향을 줄 수 있다.
 - 고치는 방법: `int(...)`로 바꾼 뒤 비교한다. 다만 제작은 공용 영역이고 획득처 작업과 겹치므로 따로 작업한다.
+
+## 근사 적용 2026-11-16: 참고 패시브 57개 (`feat/approx523-skill-passive`)
+
+사용자 정책(2026-11-16 09:30): "원본 데이터에 없는 건 검색 후 근사치로 적용해". 원본 523 표의 **값**은 그대로 쓰고, 표에 없는 **해석 규칙**만
+근사로 채웠다. 모든 근사 규칙은 `data/skills/source_approx523.json`("TWILIGHT 근사", 출처 주소·확인 날짜 포함)에 있고 그 파일만 고치면 바뀐다.
+
+### 없던 것 → 찾은 것 → 적용한 것
+| 막힘(위 "남은 294개" 표) | 찾은 근거 | 적용 |
+|---|---|---|
+| `CharacterLevel` 행(13+) | 원본 행이 레벨 구간표(예: 이글 아이 RangeHit 5@0 … 10@85). 인벤 스킬 DB(주소 숫자 = SpellClass ID) 리덕션 아머(베테랑): "레벨 85~88 : PVE 대미지 리덕션 +6 / 레벨 90 : +8" <https://lineagem.inven.co.kr/db/skill/55674> | 같은 보너스 종류에서 **플레이어 레벨 이하인 가장 높은 CharacterLevel 행만**(대체, 합산 아님). `CharacterClass`≠0이면 그 원본 직업만 |
+| `RequiredSpellClassID`(14+, 61개 기록에 있음) | 같은 인벤 DB `desc_preskill: 리덕션 아머`, 설명 "리덕션 아머 효과를 강화시킨다" | **선행 스킬**: 습득 화면 "선행 스킬 필요"(`relations.requires_skill`), 선행 스킬을 배우지 않았으면 효과 0. 효과는 기본 스킬에 더함 |
+| 비중첩 BuffGroup(77개 버프) | 공식 문서 없음 | 같은 비중첩 그룹의 배운 근사 패시브 중 **BuffGroupPriority가 가장 높은 것 하나**(같으면 BuffClass ID 큰 쪽). 가장 보수적인 해석 |
+| 무기 조건(`WeaponType`·`WeaponGroup`, 무기별 추가 대미지) | 인벤 블로우 어택 "양손검 착용 필요", 바운스 어택 "양손검 추가 대미지 +5" <https://lineagem.inven.co.kr/db/skill/84> | 주문·버프의 무기 행(그룹은 원본 `WeaponTypeForWeaponGroup`로 펼침)이 있으면 장착 무기의 원본 WeaponType일 때만. `LargeSword/OneHandSword/Spear/RuneSwordDamageBonus` = 그 무기일 때 근거리 대미지 |
+| 받는 곳 없는 수치(26+) | 단위 = 원본 UIUnit(Percentage Denominator 10000). 인벤 "스턴 내성 +5%" = 원본 50000 | 받는 곳 연결: 근거리/원거리 회피(dg/er), 치명타(meleeCrit/rangedCrit), 공격·시전 속도, 이동 속도(배수), 최대 HP %, 물약 회복량, CON, PVE 대미지 리덕션, **받는 피해 % 감소(새 수신부, 최대 80%)**, 스턴·홀드·공포·침묵·독 내성(SpecialResistance@2/6·7·8·41·22) |
+| 발동 옵션(`InvokeOption`) 중 피해 배율 | 패치 기사 "'블로우 어택'은 대미지 증폭을 2배로 변경했다" <https://m.gamechosun.co.kr/news/view.php?no=183224> | `Attack_DamageScale(AfterReduction)` Param1(백만분율)=**피해 배수**(3,000,000=3배, 1배 미만 값은 1+값), 발동 확률 = 보너스 값/1,000,000(레벨 구간 규칙 동일), 원본 AttackType·BySpellAttack(일반/스킬 공격) 구분. `Evade_IncreaseHPByStrOrInt`: 회피 시 HP = Param2 + max(STR,INT)×Param1%, 재발동 Param3초(가장 작은 해석) |
+| 적용할 수 없는 행 | — | PvP 전용, 카운터 배리어 무시 확률, 다른 스킬 변환(`SpellTransformID`), `Attack_Spell`·`Evade_Spell` 하위 주문, `RunSpritePoint` 등은 **적용하지 않고** 스킬 설명 "근사 미적용"에 이름을 남긴다. 받는 곳이 있는 행이 하나도 없으면 계속 보류 |
+
+- 열린 패시브의 설명 문구: "패시브 · 원본 523 수치 + TWILIGHT 근사 해석 · …(행) · 무기 조건 · 선행 스킬 필요 · 근사 미적용: …".
+- 원본 표와 인벤 DB가 다른 점: 블로우 어택은 인벤에 "양손검 착용 필요"가 있으나 원본 523 행에 무기 조건이 없어 **원본대로 무기 무관**.
+  리덕션 아머(베테랑) "레벨 85~88 : +6"은 원본 행(86 → +6, 83 → +4)과 85레벨 한 칸이 다르다 → 원본 행 우선.
+- 저장: 근사 사양·원본 행은 저장 파일에 들어가지 않는다(배운 스킬 ID만). 회피 회복 재발동 대기는 기존 `skill_cooldowns`(`approx_evade:<스킬>`)에 저장된다.
+
+### 수치 (원본 ZIP·실제 팩, 실제 Main, `tests/skill523_approx_test.gd`)
+| | 전 | 후 |
+|---|---:|---:|
+| 참고 스킬(원본 바인딩 322개) 실행 보류 | 294 | **237** |
+| └ 패시브 보류 | 191 | **134** (받는 곳 있는 행 없음 94 · 지원하지 않는 주문 보너스 39 · 선행 주문 미연결 1) |
+| └ 액티브 보류 | 103 | 103 (이번 PR 범위 밖) |
+| 근사로 열린 참고 패시브 | 0 | **57** |
+| 원본 스킬서(바인딩 스킬을 가르치는 BuffCard 아이템, 비테스트 1,256종) 중 스킬이 열려 있는 것 | 78 | **257** (근사 179) |
+| └ "주문 실행 소유자 미지원"으로 보존 | 1,178 | **999** |
+
+(스킬서 수는 이번 시험의 집계 방식 — ItemBonus `BuffCardID` → BuffCard.SpellClassID가 바인딩 스킬 — 이라 위 1,402종 표와 모집단이 다르다.)
+
+열린 57개: 군주 브레이브 멘탈(마스터) · 기사 바운스 어택, 마이티 어택, 블로우 어택, 리덕션 아머(베테랑), 리커버리 아머 · 요정 이글 아이, 이글 아이(스피릿),
+엘리멘탈 파이어, 소울 오브 프레임, 스톰 샷, 스톰 샷(스피릿), 아이언 스킨(스피릿) · 마법사 오라클, 홀리 스위프트(에이션트) · 다크엘프 버닝 스피릿츠,
+쉐도우 악셀레이션, 쉐도우 아머(데스티니), 버닝 스피릿츠(데스티니), 언케니 닷지(데스티니), 루나틱, 루시퍼 · 총사 패스트 무빙, 토탈 업, 마나 업,
+컴뱃 업(트루퍼), 마크스맨, 래피드 샷(트루퍼) · 투사 보일링 블러드 · 암흑기사 다크 임팩트, 다크 벤전스, 다크 프로텍션, 카운터 리벤지(어벤져),
+다크 나이트(어벤져), 보이드 필드(어벤져), 카운터 리벤지(다크로드) · 신성검사 세인트 카운터, 세인트 소드 마스터리, 세인트 카운터(디바인),
+세인트 이뮨(디바인) · 광전사 기간틱(라이징), 타이탄: 락, 타이탄: 블릿, 타이탄: 매직, 오버 파워 · 사신 고스트 웨폰, 고스트 아머, 사이드 마스터리,
+고스트 아머(레퀴엠), 데스 크리티컬(레퀴엠), 그림리퍼 · 뇌신 웨폰 마스터리, 라이트닝 블로우, 플래시(미스틱) · 마검사 룬 마스터리(에이스),
+플라잉 소드, 룬 마스터리(레전드).
+
+### 실제 게임 확인 (원본 ZIP, Main)
+- 요정 이글 아이: 습득 후 원거리 명중 Lv69 **+5**, Lv85 **+10**(레벨 구간 대체).
+- 기사 리덕션 아머(베테랑): 리덕션 아머 미습득이면 "선행 스킬 필요: 리덕션 아머"·효과 0 → 리덕션 아머 습득 후 Lv90 **PVE 대미지 리덕션 +8, 스턴 내성 +5%**(인벤 DB와 같음).
+- 기사 바운스 어택: 무기 없이 근거리 명중 +7만, 양손검(원본 WeaponType 7) 착용 시 근거리 대미지 +5 추가.
+- 기사 블로우 어택 Lv84: 발동 15%·×3. 일반 근거리 공격 2,000회 중 실제 증폭 309회(15.5%), 스킬 공격 500회 중 0회.
+- 저장 → 습득 기록 지움 → 불러오기: 습득 유지, 저장 파일에 근사 사양·원본 행 없음.
+
+### 계속 보류 (근사할 근거·수신부가 없음)
+- 패시브 134: `SpellTransformID`(다른 스킬로 바꾸기, 바뀐 주문의 실행 필요) · `Attack_Spell`/`Evade_Spell`/`Defence_Spell` 하위 주문 실행 ·
+  토글(`PassiveCastSpell`+`ToggleOnSpellClassID`+`ChangeSpecialSpellClassID`) · 하위 주문(`SpellClassID`) · 카운터 배리어(`Defence_CounterBarrier`) 등.
+  하위 주문 실행기(대상 디버프·추가 피해·자기 버프)를 만들면 다음 묶음으로 열 수 있다.
+- 액티브 103: 위 표 그대로(PC 전용 대상 18은 원본 값(TargetKind 52)이므로 근사 대상이 아님).
+
+## 근사 적용 2026-11-16 (2): 발동 하위 주문(`Attack_Spell`) — 참고 패시브 13개 추가 (`feat/approx523-skill-invoke-spell`)
+
+- 없던 것: 패시브 버프의 `InvokeOption` `Attack_Spell`(일반 공격 시 확률로 Param1 SpellClass 시전)의 **하위 주문 실행 방법**.
+- 찾은 것: 인벤 스킬 DB 설명이 하위 주문의 효과 방향을 말한다 — 투사 가드 브레이크 "공격 시 정해진 확률에 따라 대상의 갑옷을 파괴하여 물리 방어력을 감소", "AC +10"
+  (<https://lineagem.inven.co.kr/db/skill/31442>), 사신 데스 사이드 "공격 시 정해진 확률에 따라 대상을 약화 … AC 증가 / DG 감소"(<https://lineagem.inven.co.kr/db/skill/62834>),
+  신성검사 인챈트 웨폰: 크래쉬 "공격 시 정해진 확률에 따라 적에게 피해를 입히는 마법이 발동"(<https://lineagem.inven.co.kr/db/skill/41461>). 계수·순서 공식은 없다.
+- 적용(`source_approx523.json` `invokes.child_spell`, `player_skills523.approx_child_spell`, `skill_service.approx_attack_spells`):
+  - 발동 확률 = 원본 InvokeOption 보너스 값(레벨 구간 규칙), 원본 AttackType·BySpellAttack(일반 공격만)·Param4(메인 타겟만)·무기 그룹 조건. 한 번 적중에 패시브마다 최대 1회.
+  - 하위 주문이 **피해**(SpellDamageBase + DiceNumber d DiceSpotCount)면 기존 `deal_damage`(치명·속성·대상 감소)로. 무기 피해 결합·흡수 등은 적용하지 않음.
+  - **대상 디버프**(BuffClassID + SpellDebuffMin/MaxDuration)면 원본 버프 행을 기존 장비 발동 디버프와 같은 대상 수정치(`patch523_equipment_spells.BUFF_FIELDS`)로, 지속은 Min~Max 무작위,
+    적중은 `SpellHitProbabilityBase`(Min~Max로 자름, MR·레벨 보정 없음 — 가장 단순한 해석).
+  - **자기 버프**(BuffClassID + SpellBuffDuration)면 원본 버프 행을 패시브 수신부로 받아 그 시간 동안.
+  - 조건 노드·후속 주문(`NextSpellClassID`, `SpellCastAll` 등)이 있는 하위 주문은 계속 보류.
+
+### 수치 (원본 ZIP·실제 팩, 실제 Main)
+| | 근사(1) 뒤 | 근사(2) 뒤 |
+|---|---:|---:|
+| 참고 스킬 실행 보류 (322개 중) | 237 | **224** |
+| └ 패시브 보류 | 134 | **121** (받는 곳 있는 행 없음 81 · 지원하지 않는 주문 보너스 39 · 선행 주문 미연결 1) |
+| 근사로 열린 참고 패시브 | 57 | **70** |
+| 열린 패시브의 하위 주문 발동 | 0 | 16 (피해 5 · 대상 디버프 7 · 자기 버프 4) |
+| 바인딩 스킬서 1,256종 중 스킬이 열린 것 | 257 | **295** ("주문 실행 소유자 미지원" 999 → **961**) |

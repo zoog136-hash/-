@@ -53,6 +53,10 @@ static var enabled: bool = true:
 		_application_focused = -1
 		_clear_pending()
 static var _nested: int = 0
+## Background loads (sp2_background_loader.gd) run shared code on worker
+## threads; their count()/detail() calls are not recorded (the log's
+## Dictionaries are main-thread only).
+static var _main_thread: int = OS.get_main_thread_id()
 ## Sustained CPU (heat), not just hitches: every frame's section totals are
 ## added here until take_window() reads and clears them.
 static var _window_sections: Dictionary = {}
@@ -106,7 +110,7 @@ static func detail_next(name: String, started: int) -> int:
 	return now()
 
 static func detail(operation: String, started_usec: int) -> void:
-	if not enabled: return
+	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
 	if not _details.has(operation): _details[operation] = [0, 0, 0]
 	var row: Array = _details[operation]
@@ -115,7 +119,7 @@ static func detail(operation: String, started_usec: int) -> void:
 	row[2] = maxi(int(row[2]), elapsed)
 
 static func count(operation: String, amount: int = 1) -> void:
-	if not enabled: return
+	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	_counters[operation] = int(_counters.get(operation, 0)) + amount
 
 ## One bounded, scalar-only setup sample, not a copy of an actor/source record.

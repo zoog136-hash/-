@@ -25,6 +25,8 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 			selection_status["selection_phase"] = "awaiting_active_actor_registry"
 			return false
 	var candidate := PREVIEW.new()
+	# Cached frame plans / composited layer groups (original_source_preview.gd).
+	candidate.cached_frames = true
 	started = HITCH.now()
 	var configured: bool = candidate._configure_selected_roles(selected,"idle")
 	HITCH.detail("view.roles",started)
