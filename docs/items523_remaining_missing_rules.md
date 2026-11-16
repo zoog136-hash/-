@@ -282,6 +282,12 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 | 67231~67261 "[쟁탈전껍데기용] 영예의 전투" | 4 | 행 없음 | 효과 없음(쟁탈전 = 온라인) |
 | 79021 "안티 블라인드" (발록의 핏빛 투구) | 2 | SpecialResistance 대상 5 Dark | 불가 — TWILIGHT에 암흑 상태 없음 |
 
+**TWILIGHT 근사 (2026-11-16, PR `feat/approx523-invoke-replace`, `scripts/loot/equipment_buff523.gd`)**: 착용 중 그 BuffClass의 행 가운데
+받는 곳이 있는 수치(근거리/원거리 대미지·대미지 리덕션·PVE/PvP 리덕션(사용자 결정: PvP = 몬스터 상대)·MR·명중·SP·공격 속도·이동 속도)를
+`_active_item_buff_total`로 더한다. 변신형(PolymorphSetID가 있는) 장비 버프는 '변신'이라 변신 카드를 끼고 있으면 속도 행을 더하지 않는다
+(한 번에 한 변신, 근거 약함). 변신 외형 자체, 낚싯대 폴(낚시 = 사용자 제외), 수치 없는 플래그 행(대상 고정·발동 억제 무시·투명·공격 불가·HP·능력치 등)은
+적용하지 않고 남긴다(플래그 행은 고유 스킬 체계 실행부를 만들 때 같이 근사). 확인: `tests/items523_equipment_buff_test.gd`.
+
 ### 10.2 장비 발동 중 남은 것
 
 - 발록의 핏빛 망토 2종: Attack_Spell "핏빛 계약: 수혈"(근접·원거리·암흑기사·근접마법, AttackTypeID 1/2/42/72) —
@@ -290,6 +296,12 @@ LuckyBag 8 · ScrollQuest 6 등), 지급 불가 178종. 혈맹은 온라인 전�
 - 발록의 핏빛 투구 2종: Defence_DebuffTimeDecreasePercent "암흑" — 암흑 상태 없음.
 - ItemInvokeReplacementID 48종(신화 무기 18 등): ItemInvokeReplacementEntityView가 슬롯별 교체 후보와
   확률(Prob)만 준다. 교체를 언제·무엇을 소비해 굴리는지(획득 시/아이템 사용 시)가 표에 없음.
+  **TWILIGHT 근사(근거 약함, 2026-11-16, PR `feat/approx523-invoke-replace`)**: 공식·인벤에서 추첨 시점 설명을 찾지 못해(검색 2026-11-16)
+  가장 단순한 해석을 쓴다 — 물리 개체마다 **처음 볼 때(획득) 슬롯마다 한 번** Prob(슬롯 합으로 나눔)으로 추첨해 새 저장 키 `item_invoke523`에 두고,
+  다시 굴리지 않는다(다시 굴리는 소비 아이템이 표에 없음). 예전 저장의 신화 무기는 불러온 뒤 한 번 추첨.
+  추첨된 묶음의 `ItemInvokeReplacementBonus` 행(InvokeOption, 값 = 확률, EnchantLevel = 그 강화 이하 가장 높은 행)을 착용 무기의 기존 발동과 함께
+  `patch523_equipment_combat.active`에 넣는다(같은 옵션은 기존 규칙대로 가장 높은 확률 하나). 기존 소비자가 받는 InvokeOption 종류(1·3·5·6·61)만 — 종류 38(64행)은 소비자 없음.
+  예: 진명황의 집행검(교체 94) = 슬롯 1 카오스 크래시(+7 10%) · 슬롯 2 이레이즈 이뮨 투 함 · 슬롯 3 일렉트로닉 쇼크 45%/다크 라이트닝 41%/… · 슬롯 4 없음 70%/위크니스 13%/….
 - EquipSpellClassID 16종(발센의 문장·에오딘/질리언의 스톤 등): 값이 SpellClass 1 "에너지 볼트" — 착용 시
   주문 습득/실행 규칙은 스킬 실행 엔진 범위. 이번 PR에서 다루지 않음.
 - 크로우·이도류·출혈의 확률은 표 값이지만, 크로우 = "무기 최대 대미지", 이도류 배율 적용 범위, 출혈 틱 간격·
