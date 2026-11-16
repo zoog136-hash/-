@@ -2507,8 +2507,31 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 			views.append((by_id.get(str(result.get("id","")),{}) as Dictionary).merged(result,true).duplicate(true))
 	if views.is_empty():
 		return
+	if is_fusion and _present_original_fusion(views,category,bool(awarded.get("success",false))): return
 	var stage: Control = _new_card_reveal_stage()
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
+
+## 합성 결과 in the original 523 Change_Fusion_All window (UI pack only). A
+## hidden guard holds card_reveal_stage while it is open, so the busy rule is
+## the stage's own; false keeps the existing CardRevealStage.
+func _present_original_fusion(views: Array[Dictionary], category: String, success: bool) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
+	var guard := Control.new()
+	guard.name = "OriginalFusionRevealGuard"
+	guard.visible = false
+	guard.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(guard)
+	card_reveal_stage = guard
+	var release := func() -> void:
+		if card_reveal_stage == guard: card_reveal_stage = null
+		if is_instance_valid(guard): guard.queue_free()
+		_refresh_card_controls()
+	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release])
+	original_main_ui_status["fusion_result_window"] = native
+	if native.get("handled",false): return true
+	card_reveal_stage = null
+	guard.queue_free()
+	return false
 
 func _refresh_card_controls() -> void:
 	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return

@@ -81,7 +81,7 @@ func _registry() -> void:
 		var result: Dictionary=window.configure(FakePack.new(),hud)
 		check(not result.get("ok",true) and result.get("code")=="source_window_member_missing" and not result.get("handled",true),key+" fails closed without its members")
 		check(not window.is_open(),key+" is closed before opening")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","buff_info","currency_info","skill_cards","memory_places","trial_dungeon","card_change","forge","reward_select","quick_change","quick_summon"],"the registered feature windows")
+	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","buff_info","currency_info","skill_cards","memory_places","trial_dungeon","card_change","fusion_result","forge","reward_select","craft_result","quick_change","quick_summon"],"the registered feature windows")
 	hud.free()
 
 func _binding() -> void:
