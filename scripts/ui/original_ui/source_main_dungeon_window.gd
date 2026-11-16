@@ -15,11 +15,22 @@ extends RefCounted
 ## the mounted source_dungeon_view); every entry check, confirmation and
 ## action is the existing view's (_check_entry / _perform / _play_action)
 ## behind the HUD's confirmation. Nothing here decides a dungeon rule.
+## The extra parts read the dungeon data API (world.dungeon_play, #614;
+## TWILIGHT 근사 where its basis says so):
+##   시련의 탑 버프 구매 (Nd_BuffInfo: one Mission_Dungeon_TracesOrim_SlotBtn per
+##   TrialTowerBuff offer, tower_buy_buff), 스피드 모드 (tower_speed_mode /
+##   tower_set_speed_mode), 클리어 타임 랭킹 (Btn_Ranking -> Nd_Popup_Ranking,
+##   Mission_List_TrialTower_Rank rows of tower_ranking; a tap outside the list
+##   closes it), 상점 (dungeon_shop: the HUD's own shop route; 오림 has none),
+##   오림 업적 (Nd_Achievement: Nd_New while one is claimable; a tap claims it
+##   or names the progress) and the chapter story (Btn_Story_On / Off,
+##   orim_chapter_story; a locked chapter says so).
 ## Left empty (no picture or rule in the original data here): dungeon
 ## thumbnails (SpecialDungeon.EntranceAssetID / Orim chapter and hero
-## art are not in the packs), buffs, 스피드 모드, ranking, shop, the 시련의 탑
+## art are not in the packs), the 시련의 탑
 ## help (Mission_Tooltip_TrialTower is the 2019 event text), the floor tower
-## art, story, achievements, bookmarks, share and notices. The 오림의 흔적
+## art (no original floor picture), the rank class / medal icons, the 오림
+## shop, bookmarks, share and notices. The 오림의 흔적
 ## Btn_HelpBox opens the original HelpBox_Mission_TracesOrim.
 ## Party dungeons are excluded (user decision 2026-11-12).
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
@@ -35,6 +46,14 @@ const SPECIAL_ROW="UI/Mission/Mission_DungeonSpecial_Btn.csb"
 const TIME="UI/Mission/Mission_Popup_Time.csb"
 const TIME_ROW="UI/Mission/Mission_List_Time.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
+## 오림의 흔적 버프 구매 rows (optional: an older UI pack keeps the list out).
+const BUFF_ROW="UI/Mission/Mission_Dungeon_TracesOrim_SlotBtn.csb"
+## The 클리어 타임 랭킹 row (optional like BUFF_ROW: an older pack keeps the popup out).
+const RANK_ROW="UI/Mission/Mission_List_TrialTower_Rank.csb"
+const RANK_GAP: float=2.0
+## The largest buff picture (px) the 64px buff slot shows.
+const ICON_MAX: float=128.0
+const CURRENCY_NAMES={1:"아데나",4:"다이아"}
 const MEMBER_SCOPES={SLOT:[15728,15316,15012,6880]}
 const REQUIRED: Array[String]=[ROOT,TAB,TOWER,ORIM,SPECIAL,SPECIAL_ROW,TIME,TIME_ROW,SLOT]
 ## Mission_Dungeon_All_Layout in MissionScene (600, 337.5).
@@ -81,6 +100,9 @@ var index: int=0
 var hero: int=-1
 ## 시간 충전석 popup open, and the special row's time group it shows (0: all).
 var time_open: bool=false
+var ranking_open: bool=false
+var story_open: bool=false
+var _rank: Scroller=Scroller.new()
 var time_group: int=0
 var rows: Array=[]
 var last_result: Dictionary={}
@@ -163,6 +185,8 @@ func open(parent: Node, view: Object) -> Dictionary:
 	hero=-1
 	time_open=false
 	time_group=0
+	ranking_open=false
+	story_open=false
 	_special.at=0.0
 	_time.at=0.0
 	return _stage()
@@ -302,8 +326,19 @@ func _stage() -> Dictionary:
 	if filled.get("ok",false):
 		match tab:
 			"tower" when _trial_mode():filled=_fill_trial(next,out,world)
-			"tower":filled=_fill_slots(next,out,P_TOWER+"Nd_TowerInfo_All/Nd_Reward/ListView",TOWER,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
-			"orim":filled=_fill_slots(next,out,P_ORIM+"Nd_OrimInfo_All/Nd_Info/Nd_Reward/ListView",ORIM,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
+			"tower":
+				filled=_fill_slots(next,out,P_TOWER+"Nd_TowerInfo_All/Nd_Reward/ListView",TOWER,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
+				if filled.get("ok",false) and _has(BUFF_ROW) and world.dungeon_play.has_method("tower_buff_offers") and not ranking_open:
+					var offers: Dictionary=_fill_buff_rows(next,out,P_TOWER+"Nd_TowerInfo_All/Nd_BuffInfo/ListView",TOWER,_tower_buff_rows(world))
+					filled=offers if not offers.get("ok",false) else filled.merged({"buffs":int(offers.buffs),"pictures":int(filled.get("pictures",0))+int(offers.pictures)},true)
+				if filled.get("ok",false) and ranking_open:
+					var ranked: Dictionary=_fill_ranking(next,out,world)
+					filled=ranked if not ranked.get("ok",false) else filled.merged({"ranks":int(ranked.ranks)},true)
+			"orim":
+				filled=_fill_slots(next,out,P_ORIM+"Nd_OrimInfo_All/Nd_Info/Nd_Reward/ListView",ORIM,reward_slots(_rewards(rows[index] if index<rows.size() else {})))
+				if filled.get("ok",false) and _pack.manifest.get("scenes",{}).has(BUFF_ROW):
+					var buffs: Dictionary=_fill_buff_rows(next,out,P_ORIM+"Nd_OrimInfo_All/Nd_Info/Nd_Buff/ListView",ORIM,_orim_buff_rows(world))
+					filled=buffs if not buffs.get("ok",false) else filled.merged({"buffs":int(buffs.buffs),"pictures":int(filled.get("pictures",0))+int(buffs.pictures)},true)
 			_:filled=_fill_special(next,out,world)
 		pictures+=int(filled.get("pictures",0))
 	if filled.get("ok",false) and time_open:
@@ -313,6 +348,18 @@ func _stage() -> Dictionary:
 		next.free()
 		last_result=filled
 		return filled
+	# The 오림 page starts transparent at its Popup_On keyframe: its own loop clip.
+	if tab=="orim":
+		var page: Dictionary=NamedTree.locate(next,out,"Mission_Dungeon_TracesOrim")
+		var holder: Variant=page.player.source_nodes.get(page.offset) if page.get("ok",false) else null
+		var nested: Variant=(holder as Node).get_meta("source_project_player") if holder is Node and (holder as Node).has_meta("source_project_player") else null
+		if nested is Node2D:nested.play("Fx_Loop_Hard" if hard else "Fx_Loop",true)
+		# The chapter story fades in on its own Fx_Story_On clip.
+		if story_open:
+			var chapter: Dictionary=NamedTree.locate(next,out,"Nd_Chapter")
+			var chapter_node: Variant=chapter.player.source_nodes.get(chapter.offset) if chapter.get("ok",false) else null
+			var chapter_player: Variant=(chapter_node as Node).get_meta("source_project_player") if chapter_node is Node and (chapter_node as Node).has_meta("source_project_player") else null
+			if chapter_player is Node2D:chapter_player.play("Fx_Story_On",false)
 	var previous: Node2D=_scene
 	next.position=LAYOUT_POSITION
 	parent.add_child(next)
@@ -322,8 +369,203 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"tab":tab,"trial_list":_trial_mode(),"hard":hard,"rows":rows.size(),"index":index,"time_open":time_open,"time_rows":time_rows.size(),"pictures":pictures}
+	last_result={"ok":true,"handled":true,"member":ROOT,"tab":tab,"trial_list":_trial_mode(),"hard":hard,"rows":rows.size(),"index":index,"time_open":time_open,"time_rows":time_rows.size(),"pictures":pictures,"buffs":int(filled.get("buffs",0)),"ranking_open":ranking_open,"ranks":int(filled.get("ranks",0)),"story_open":story_open}
 	return last_result
+
+## The original OrimsTrailBuff rows: [{buff_id, currency, cost}].
+static func orim_buffs(world: Node) -> Array:
+	var service: Variant=world.get("dungeon_play") if world!=null else null
+	var rules: Variant=service.get("rules") if service is Object else null
+	var data: Variant=rules.get("data") if rules is Object else null
+	var rows_value: Variant=data.get("declarations",{}).get("OrimsTrailBuff",[]) if data is Dictionary else []
+	var found: Array=[]
+	for row: Variant in rows_value:
+		if row is Dictionary and int(row.get("BuffClassID",0))>0:found.append({"buff_id":int(row.BuffClassID),"currency":int(row.get("CurrencyID",0)),"cost":int(row.get("CurrencyCost",0))})
+	return found
+
+func _has(member: String) -> bool:
+	return _pack.manifest.get("scenes",{}).has(member)
+
+## 오림 버프 구매 rows: the original OrimsTrailBuff (bought ones checked).
+func _orim_buff_rows(world: Node) -> Array:
+	var run: Dictionary=world.dungeon_play.state.active
+	var bought: Dictionary=run.get("buffs",{}) if run.get("kind","")=="orim" else {}
+	var found: Array=[]
+	for buff: Dictionary in orim_buffs(world):
+		found.append({"buff_class_id":int(buff.buff_id),"cost":int(buff.cost),"owned":bought.has(str(buff.buff_id)),"activate":Callable(self,"_buy_orim_buff").bind(int(buff.buff_id))})
+	return found
+
+## 시련의 탑 버프 구매 rows: tower_buff_offers of this mode (the active one checked).
+func _tower_buff_rows(world: Node) -> Array:
+	var found: Array=[]
+	var floor: int=int((rows[index] if index<rows.size() else {}).get("stage",{}).get("StageIndex",0))
+	for offer: Dictionary in world.dungeon_play.tower_buff_offers(floor):
+		found.append({"buff_class_id":int(offer.get("buff_class_id",0)),"cost":int(offer.get("cost",{}).get("amount",0)),"owned":bool(offer.get("active",false)),"activate":Callable(self,"_buy_tower_buff").bind(int(offer.get("buff_id",0)))})
+	return found
+
+## 버프 구매: one Mission_Dungeon_TracesOrim_SlotBtn per buff row (its
+## BuffClass OnIconID picture, the price; bought / active ones checked).
+func _fill_buff_rows(root: Node2D, out: Dictionary, suffix: String, member: String, buff_rows: Array) -> Dictionary:
+	var content: Variant=_list_content(root,out,suffix)
+	if not content is Node2D:return _fail("source_dungeon_window_buff_list_missing")
+	var size: Vector2=NamedTree.list_size(out,_pack,member,suffix)
+	var pictures: int=0
+	for i: int in range(buff_rows.size()):
+		var buff: Dictionary=buff_rows[i]
+		var owned: bool=bool(buff.owned)
+		var cell_out: Dictionary={}
+		var built: Dictionary=_tree.scene_of(BUFF_ROW,{
+			"Panel/Sp_IconSample":{"role":"source_asset_slot","visible":false},
+			"Panel/Sp_Icon_TokenOfOrim":{"visible":false},
+			"Panel/Text_Price":{"role":"source_text","text":number_text(int(buff.cost))},
+			"Panel/Btn_Normal":{"visible":not owned,"activate":buff.activate},
+			"Panel/Btn_Pressed":{"visible":owned,"activate":buff.activate},
+		},cell_out)
+		if not built.get("ok",false):return built
+		_add_column(content,BUFF_ROW,built.scene,i,size,0.0)
+		var icon: Dictionary=SourceImages.resolve_consumer("BuffClass",int(buff.buff_class_id),"OnIconID")
+		# Only an icon-sized picture fits the slot (some OnIconIDs name a large effect frame).
+		var texture: Variant=icon.get("texture")
+		if texture is Texture2D and maxf((texture as Texture2D).get_width(),(texture as Texture2D).get_height())<=ICON_MAX and _apply_picture(built.scene,cell_out,"Panel/Sp_IconSample",icon):pictures+=1
+	return {"ok":true,"buffs":buff_rows.size(),"pictures":pictures}
+
+func _buy_orim_buff(buff_id: int) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_dungeon_window_host_unavailable")
+	var cost: String=""
+	for buff: Dictionary in orim_buffs(world):
+		if int(buff.buff_id)==buff_id:cost="%s %s" % [str(CURRENCY_NAMES.get(int(buff.currency),"재화")),number_text(int(buff.cost))]
+	var result: Dictionary=world.dungeon_play.buy_buff(buff_id)
+	hud.show_message(("버프를 구매했습니다 · "+cost) if result.get("ok",false) else "%s (%s)" % [str(result.get("reason","구매할 수 없습니다")),cost])
+	var staged: Dictionary=refresh()
+	staged["buy"]=result
+	return staged
+
+func _buy_tower_buff(buff_id: int) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_dungeon_window_host_unavailable")
+	var cost: String=""
+	for offer: Dictionary in world.dungeon_play.tower_buff_offers():
+		if int(offer.get("buff_id",0))==buff_id:cost="%s %s" % [str(offer.get("cost",{}).get("currency","재화")),number_text(int(offer.get("cost",{}).get("amount",0)))]
+	var result: Dictionary=world.dungeon_play.tower_buy_buff(buff_id)
+	hud.show_message(str(result.get("message","버프를 구매했습니다"))+" · "+cost if result.get("ok",false) else "%s (%s)" % [str(result.get("reason","구매할 수 없습니다")),cost])
+	var staged: Dictionary=refresh()
+	staged["buy"]=result
+	return staged
+
+## 클리어 타임 랭킹: Mission_List_TrialTower_Rank rows of this floor's
+## tower_ranking (rank, name, clear time; the player's own rows marked), and
+## a transparent catcher under the list that closes the popup (its authored
+## full-screen Btn_Close carries a title in a font the pack does not ship).
+func _fill_ranking(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
+	var suffix: String=P_TOWER+"Nd_Popup_Ranking/ListView_Rank"
+	var content: Variant=_list_content(root,out,suffix)
+	if not content is Node2D:return _fail("source_dungeon_window_rank_list_missing")
+	var located: Dictionary=NamedTree.locate(root,out,P_TOWER+"Nd_Popup_Ranking")
+	var popup: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
+	if popup is Node2D:
+		var catcher:=Control.new()
+		catcher.name="DungeonRankingOutsideClose"
+		catcher.position=Vector2(-4000.0,-4000.0)
+		catcher.size=Vector2(8000.0,8000.0)
+		catcher.mouse_filter=Control.MOUSE_FILTER_STOP
+		catcher.gui_input.connect(_ranking_outside)
+		(popup as Node2D).add_child(catcher)
+		(popup as Node2D).move_child(catcher,0)
+	var size: Vector2=NamedTree.list_size(out,_pack,TOWER,suffix)
+	var panel: Dictionary=_tree.row_panel(RANK_ROW)
+	var w: float=float(panel.size[0])
+	var h: float=float(panel.size[1])
+	var entry: Dictionary=rows[index] if index<rows.size() else {}
+	var ranking: Dictionary=world.dungeon_play.tower_ranking(int(entry.get("stage",{}).get("StageIndex",0)),hard)
+	var me: String=str(world.get("character_display_name")) if world.get("character_display_name")!=null else ""
+	var built_rows: Array[Node2D]=[]
+	for i: int in range(ranking.get("rows",[]).size()):
+		var row: Dictionary=ranking.rows[i]
+		var seconds: int=int(row.get("clear_sec",0))
+		var built: Dictionary=_tree.scene_of(RANK_ROW,{
+			"Panel":{"input":Callable(_rank,"input")},
+			"Panel/Nd_Me":{"visible":not me.is_empty() and str(row.get("name",""))==me},
+			"Panel/Label_Rank":{"role":"source_text","text":str(int(row.get("rank",i+1)))},
+			"Panel/Label_Name":{"role":"source_text","text":str(row.get("name",""))},
+			"Panel/Label_Clan":{"role":"source_text","text":str(row.get("class",""))},
+			"Panel/Nd_Time/Label_Min":{"role":"source_text","text":"%02d분 %02d초" % [seconds/60,seconds%60]},
+			"Panel/Sp_Rank":{"visible":false},"Panel/Icon_Keep":{"visible":false},"Panel/Sp_Class":{"visible":false},
+		},{})
+		if not built.get("ok",false):return built
+		var top: float=size.y-(h+RANK_GAP)*float(i)
+		built.scene.position=Vector2((size.x-w)*0.5-(float(panel.position[0])-float(panel.anchor[0])*w),-(top-h-(float(panel.position[1])-float(panel.anchor[1])*h)))
+		(content as Node2D).add_child(built.scene)
+		built_rows.append(built.scene)
+	_rank.bind(content,built_rows,h+RANK_GAP,size.y,false)
+	if built_rows.is_empty():
+		var hud: Node=_hud.get_ref() if _hud!=null else null
+		if hud!=null:hud.show_message("%d층 클리어 기록이 없습니다 (이 기기의 기록)" % int(entry.get("stage",{}).get("StageIndex",0)))
+	return {"ok":true,"ranks":built_rows.size()}
+
+func _ranking_outside(event: InputEvent) -> void:
+	if (event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT)) and not event.pressed:
+		_toggle_ranking.call_deferred()
+
+func _toggle_ranking() -> Dictionary:
+	ranking_open=not ranking_open
+	_rank.at=0.0
+	return _stage()
+
+func _speed_mode() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_dungeon_window_host_unavailable")
+	var mode: Dictionary=world.dungeon_play.tower_speed_mode()
+	if not bool(mode.get("available",false)):
+		hud.show_message(str(mode.get("reason","스피드 모드를 바꿀 수 없습니다")))
+		return {"ok":false,"handled":true}
+	var result: Dictionary=world.dungeon_play.tower_set_speed_mode(not bool(mode.get("on",false)))
+	var now: Dictionary=world.dungeon_play.tower_speed_mode()
+	hud.show_message(("스피드 모드 %s · %s" % ["켜짐" if bool(now.get("on",false)) else "꺼짐",str(now.get("basis",""))]) if result.get("ok",false) else str(result.get("reason","바꿀 수 없습니다")))
+	var staged: Dictionary=refresh()
+	staged["speed"]=result
+	return staged
+
+## 상점: the dungeon's own shop route (dungeon_shop), else a message.
+func _shop(kind: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_dungeon_window_host_unavailable")
+	var route: Dictionary=world.dungeon_play.dungeon_shop(kind)
+	var method: String=str(route.get("open_method",""))
+	if method.is_empty() or not hud.has_method(method):
+		hud.show_message("이 던전의 상점이 없습니다")
+		return {"ok":false,"handled":true}
+	close()
+	hud.callv(method,route.get("args",[]))
+	return {"ok":true,"handled":true,"routed":method}
+
+func _chapter() -> int:
+	return int((rows[index] if index<rows.size() else {}).get("stage",{}).get("StageIndex",0))
+
+## 오림 업적: claims a claimable chapter achievement, else names the progress.
+func _achievement() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_dungeon_window_host_unavailable")
+	var lines: PackedStringArray=[]
+	for row: Dictionary in world.dungeon_play.orim_achievements(_chapter()):
+		if bool(row.get("can_claim",false)):
+			var result: Dictionary=world.dungeon_play.orim_claim_achievement(str(row.id))
+			hud.show_message("%s · %s" % [str(row.get("name","")),str(result.get("message","")) if result.get("ok",false) else str(result.get("reason",""))])
+			var staged: Dictionary=refresh()
+			staged["claim"]=result
+			return staged
+		lines.append("%s %s" % [str(row.get("name","")),"완료" if bool(row.get("claimed",false)) else "%d/%d" % [int(row.get("progress",0)),int(row.get("goal",1))]])
+	hud.show_message(" · ".join(lines) if not lines.is_empty() else "이 장의 업적이 없습니다")
+	return {"ok":true,"handled":true,"claim":{}}
+
+func _toggle_story() -> Dictionary:
+	story_open=not story_open
+	return _stage()
 
 func _rewards(entry: Dictionary) -> Array:
 	return entry.get("normal_rewards",[])
@@ -380,7 +622,33 @@ func _tower_spec(world: Node, view: Object) -> Dictionary:
 	var i: String=p+"Nd_TowerInfo_All/"
 	if _trial_available():spec[p+"Btn_Back"]={"activate":Callable(self,"_trial_back")}
 	else:spec[p+"Btn_Back"]={"exclude":true}
-	for name: String in ["Label_Notice","Btn_HelpBox","Btn_Shop","Btn_Ranking","Nd_Popup_Ranking","Nd_TowerInfo_All/Nd_BuffInfo","Nd_MoveFloor/Nd_Navi","Nd_TowerInfo_All/Nd_SpeedMode","Nd_TowerInfo_All/Nd_StageInfo/Btn_InfoView","Nd_TowerInfo_All/Nd_ReChallenge/Common_Slot_Layout"]:spec[p+name]={"exclude":true}
+	for name: String in ["Label_Notice","Btn_HelpBox","Nd_MoveFloor/Nd_Navi","Nd_TowerInfo_All/Nd_StageInfo/Btn_InfoView","Nd_TowerInfo_All/Nd_ReChallenge/Common_Slot_Layout"]:spec[p+name]={"exclude":true}
+	var extras: bool=world.dungeon_play.has_method("tower_buff_offers")
+	# 버프 구매 (TrialTowerBuff offers in the SlotBtn rows).
+	# The ranking popup covers the buff list (its rows would draw over the popup).
+	if extras and _has(BUFF_ROW) and not ranking_open:spec[i+"Nd_BuffInfo/ListView"]={"input":Callable(self,"_ignore_input")}
+	else:spec[i+"Nd_BuffInfo"]={"exclude":true}
+	# 스피드 모드 (the existing local tower time scale).
+	if extras:
+		var speed: Dictionary=world.dungeon_play.tower_speed_mode()
+		var on: bool=bool(speed.get("on",false))
+		var usable: bool=bool(speed.get("available",false))
+		spec[i+"Nd_SpeedMode/Btn_Off"]={"visible":usable and not on,"activate":Callable(self,"_speed_mode")}
+		spec[i+"Nd_SpeedMode/Btn_On"]={"visible":usable and on,"activate":Callable(self,"_speed_mode")}
+		spec[i+"Nd_SpeedMode/Btn_Disabled"]={"visible":not usable,"activate":Callable(self,"_speed_mode")}
+		spec[p+"Btn_Shop"]={"activate":Callable(self,"_shop").bind("tower")}
+	else:
+		for name: String in ["Nd_TowerInfo_All/Nd_SpeedMode","Btn_Shop"]:spec[p+name]={"exclude":true}
+	# 클리어 타임 랭킹 (this device's records).
+	if extras and _has(RANK_ROW):
+		spec[p+"Btn_Ranking"]={"activate":Callable(self,"_toggle_ranking")}
+		if ranking_open:
+			spec[p+"Nd_Popup_Ranking"]={"visible":true}
+			spec[p+"Nd_Popup_Ranking/Btn_Close"]={"exclude":true}
+			spec[p+"Nd_Popup_Ranking/ListView_Rank"]={"input":Callable(_rank,"input")}
+		else:spec[p+"Nd_Popup_Ranking"]={"exclude":true}
+	else:
+		for name: String in ["Btn_Ranking","Nd_Popup_Ranking"]:spec[p+name]={"exclude":true}
 	spec[p+"BG"]={"visible":not hard}
 	spec[p+"BG_Hard"]={"visible":hard}
 	spec[p+"Nd_Title_Tower/Nd_Title_Normal"]={"visible":not hard}
@@ -452,13 +720,32 @@ func _orim_spec(world: Node, view: Object) -> Dictionary:
 	var p: String=P_ORIM
 	var i: String=p+"Nd_OrimInfo_All/"
 	spec[p+"Btn_HelpBox"]={"activate":Callable(self,"_orim_help")}
-	for name: String in ["Label_Notice","Nd_Achievement","Btn_Shop","Btn_Back","Nd_Chapter/Nd_ChapterStory","Nd_PanelOrim/Panel_OrimPage/Nd_Page_Move","Nd_OrimInfo_All/Nd_Info/Nd_Buff","Nd_OrimInfo_All/Nd_CardInfo/Nd_CardOn/Panel_Card/Nd_Character"]:spec[p+name]={"exclude":true}
+	for name: String in ["Label_Notice","Btn_Shop","Btn_Back","Fx_Img_BG_Particle","Sp_Light","Nd_PanelOrim/Panel_OrimPage/Nd_Page_Move","Nd_OrimInfo_All/Nd_CardInfo/Nd_CardOn/Panel_Card/Nd_Character"]:spec[p+name]={"exclude":true}
+	# 업적 and the chapter story (orim_achievements / orim_chapter_story).
+	if world.dungeon_play.has_method("orim_achievements"):
+		var chapter: int=int((rows[index] if index<rows.size() else {}).get("stage",{}).get("StageIndex",0))
+		var claimable: bool=world.dungeon_play.orim_achievements(chapter).any(func(row: Dictionary) -> bool: return bool(row.get("can_claim",false)))
+		spec[p+"Nd_Achievement/Button"]={"activate":Callable(self,"_achievement")}
+		spec[p+"Nd_Achievement/Button/Nd_Orim/Nd_New"]={"visible":claimable}
+		# The badge's glow sprites start on clip keyframes (left out; the NEW mark stays).
+		for glow: String in ["Nd_Orim/Fx_Glow","Nd_Orim/Fx_Lighting_Rotation","Nd_Orim/Panel_Shining","Nd_Orim/Nd_New/Img_Light_Back","Nd_Orim/Nd_New/Sp_New_Blend","Nd_Orim/Nd_New/Fx_Glow"]:spec[p+"Nd_Achievement/Button/"+glow]={"exclude":true}
+		var story: Dictionary=world.dungeon_play.orim_chapter_story(chapter)
+		var told: String=str(story.get("text","")) if bool(story.get("unlocked",false)) else "이전 장을 클리어하면 열립니다."
+		spec[p+"Nd_Chapter/Nd_ChapterStory/Nd_Story"]={"visible":story_open}
+		spec[p+"Nd_Chapter/Nd_ChapterStory/Nd_Story/Label_Story"]={"role":"source_text","text":told if not story.is_empty() else "-"}
+		spec[p+"Nd_Chapter/Nd_ChapterStory/Btn_Story_Off"]={"visible":not story_open,"activate":Callable(self,"_toggle_story")}
+		spec[p+"Nd_Chapter/Nd_ChapterStory/Btn_Story_On"]={"visible":story_open,"activate":Callable(self,"_toggle_story")}
+	else:
+		for name: String in ["Nd_Achievement","Nd_Chapter/Nd_ChapterStory"]:spec[p+name]={"exclude":true}
 	spec[p+"Fx_HardLoop"]={"visible":hard}
 	spec[p+"Nd_Title_Orim/Sp_Normal"]={"visible":not hard}
 	spec[p+"Nd_Title_Orim/Sp_Hard"]={"visible":hard}
 	spec[i+"Nd_CheckBox/Btn_Off"]={"visible":not hard,"activate":Callable(self,"_toggle_hard")}
 	spec[i+"Nd_CheckBox/Btn_On"]={"visible":hard,"activate":Callable(self,"_toggle_hard")}
 	spec[i+"Nd_Info/Nd_Reward/ListView"]={"input":Callable(self,"_ignore_input")}
+	# 버프 구매: the original OrimsTrailBuff rows over the existing buy_buff.
+	if _pack.manifest.get("scenes",{}).has(BUFF_ROW):spec[i+"Nd_Info/Nd_Buff/ListView"]={"input":Callable(self,"_ignore_input")}
+	else:spec[i+"Nd_Info/Nd_Buff"]={"exclude":true}
 	var entry: Dictionary=rows[index] if index<rows.size() else {}
 	var before: bool=index>0
 	var after: bool=index+1<rows.size()
@@ -763,6 +1050,8 @@ func _set_tab(value: String) -> Dictionary:
 	hard=false
 	index=0
 	time_open=false
+	ranking_open=false
+	story_open=false
 	_special.at=0.0
 	return _stage()
 
