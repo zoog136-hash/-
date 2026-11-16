@@ -143,6 +143,10 @@ const CONTENT523 = preload("res://scripts/content523/content523.gd")
 var content523 = CONTENT523.new()
 ## 523 카드 다시 뽑기 / 스킬 카드 합성·강화 (사용자 결정 2026-11-16).
 const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
+## TWILIGHT 근사: 획득 후 수명(Life) 장부, 지배 부적 소지 효과.
+const ITEM_LIFE523 = preload("res://scripts/loot/item_life523.gd")
+var item_life523 = ITEM_LIFE523.new()
+var item_possession523 = preload("res://scripts/loot/item_possession523.gd").new()
 var card_swap523 = CARD_SWAP523.new()
 const SKILL_CARD523 = preload("res://scripts/cards/skill_card523.gd")
 var skill_cards523 = SKILL_CARD523.new()
@@ -823,6 +827,7 @@ func _process_frame(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
+	item_life523.tick(delta)
 	var hitch_7: int = FRAME_HITCH.now()
 	if original_skills != null: original_skills.tick(delta)
 	FRAME_HITCH.add("skills", hitch_7)
@@ -1039,6 +1044,8 @@ func _load_data() -> void:
 	routines.configure(self)
 	content523.configure(self)
 	card_swap523.configure(self)
+	item_life523.configure(self)
+	item_possession523.configure(self)
 	skill_cards523.configure(self)
 	unconfirmed523.configure(self)
 
@@ -4628,7 +4635,7 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
-	return total + clan523.buff_value(key) + content523.buff_value(key)
+	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6530,6 +6537,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		CLAN523.SAVE_KEY: clan523.export_state(),
 		CONTENT523.SAVE_KEY: content523.export_state(),
 		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
+		ITEM_LIFE523.SAVE_KEY: item_life523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
@@ -7184,6 +7192,8 @@ func _load_game(quiet: bool) -> void:
 	clan523.import_state(data.get(CLAN523.SAVE_KEY, {}))
 	content523.import_state(data.get(CONTENT523.SAVE_KEY, {}))
 	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
+	# An older save has no ledger: its Life items start at this load time.
+	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
 	skill_cards523.import_state(data.get(SKILL_CARD523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
@@ -8751,7 +8761,7 @@ func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 	if growth.travel.enabled():
 		growth.travel.open({"kind":"job","name":str(skill.name)})
 		return false
-	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)) and not item_possession523.ignores_no_teleport():
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
 	for _attempt: int in range(100):
@@ -11663,6 +11673,7 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
+	if not opened: print("CURRENT523_SESSION_OPEN_FAILED ", JSON.stringify({"reason":current523_aden_play_problem}))
 	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile") in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC] else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
 	if opened and not current523_aden_play_problem.is_empty(): description += " · 포탈 보류: "+current523_aden_play_problem
 	current523_aden_play_changed.emit(current523_aden_play_active, description if opened else current523_aden_play_problem)
@@ -11674,6 +11685,7 @@ func close_current523_aden_play(remember_disabled: bool = true, reason: String =
 	current523_aden_play_active = false
 	current523_aden_play_problem = reason
 	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
+	if not reason.is_empty(): print("CURRENT523_SESSION_CLOSED ", JSON.stringify({"reason":reason,"saved":saved}))
 	if not saved:
 		var close_problem: String = str(controller.get("problem"))
 		if close_problem.is_empty(): close_problem = "종료 상태를 저장하지 못했습니다."

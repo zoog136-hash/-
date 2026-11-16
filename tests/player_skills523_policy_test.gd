@@ -103,7 +103,12 @@ func run() -> void:
 	adapter.profiles.synthetic=profile()
 	adapter.profiles.synthetic.row.TargetKindID=52
 	adapter.profiles.synthetic.target_kind.Name="PCButMe"
-	check(not adapter.apply_to(base.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"PC source cannot target host NPC")
+	# 사용자 결정 2026-11-16 13:46 + TWILIGHT 근사: PC 전용(TargetKind 52) 효과는 몬스터에게 적용한다.
+	if adapter.PVP_TARGET_TO_NPC:
+		var pvp: Dictionary=adapter.apply_to(base.duplicate(true),"기사",false)
+		check(str(pvp.get("source523_block_reason","")).is_empty() and pvp.get("source523",{}).get("pvp_only_to_npc",false)==true and str(pvp.source523.get("target_kind",""))=="AllButMe","PC source is applied to host NPCs (user decision)")
+	else:
+		check(not adapter.apply_to(base.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"PC source cannot target host NPC")
 	adapter.profiles.synthetic=profile()
 	adapter.profiles.synthetic.costs=[{"synthetic_alternative":true}]
 	check(not adapter.apply_to(base.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"alternative cost dispatch cannot default to base")

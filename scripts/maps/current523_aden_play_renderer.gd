@@ -3,6 +3,9 @@ extends "res://scripts/maps/source_map_runtime_renderer.gd"
 ## The selected field owns movement; rendering never infers native collision.
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 signal safe_return_requested(reason: String)
+## The actor stood on a blocked or unsupported cell and was moved back onto
+## the map (nearest own-clear cell, else the owner's village fallback).
+signal actor_position_recovered(detail: Dictionary)
 
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
 const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
@@ -23,6 +26,11 @@ const DELTA_LIMIT: float = 48.0
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
+## Position problems (scope / entry) the owner can repair by moving the actor.
+const POSITION_SCOPE_PROBLEM: String = "원문 자체 통행의 지원 영역 밖이므로 복귀합니다."
+const POSITION_ENTRY_PROBLEM: String = "기존 통행 API에서 현재 위치를 확인하지 못했습니다."
+## Own search radius (source cells) for putting the actor back on the map.
+const RECOVERY_RADIUS_CELLS: int = 24
 
 class TileGround extends Node2D:
 	var renderer: Node
@@ -65,6 +73,15 @@ var _visible_members: Array[String]=[]
 ## object layer still refresh.
 var _objects_built_for: Array=[]
 var _force_objects_refresh: bool=true
+## Owner-supplied fallback point (village return) when no clear cell is near.
+var recovery_fallback: Callable = Callable()
+var position_recoveries: int = 0
+var last_position_recovery: Dictionary = {}
+## Tile references the installed pack does not resolve: drawn as holes and
+## counted instead of closing the 523 session (logged once per tile).
+var unresolved_tile_refs: int = 0
+var _unresolved_logged: Dictionary = {}
+var _unreadable_chunks: Dictionary = {}
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -178,7 +195,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): return _fail(scope)
 	if not field.point_clear(player.global_position, 4.0):
-		return _fail("기존 통행 API에서 현재 위치를 확인하지 못했습니다.")
+		return _fail(POSITION_ENTRY_PROBLEM)
 	_ensure_ground()
 	var spr_options: Dictionary = STATIC_SPR.read_options()
 	if spr_options.enabled:
@@ -304,7 +321,11 @@ func _scope_problem() -> String:
 	if field == null or not is_instance_valid(player): return "기존 아덴 필드가 없습니다."
 	if bool(field.get_meta("current523_source_field",false)):
 		if not bool(field.get("loaded")) or not str(field.get("problem")).is_empty(): return "M 원문 이동 필드에 오류가 있어 복귀합니다."
-		if not player.global_position.is_finite() or not support_world_point(player.global_position) or not field.point_clear(player.global_position,4): return "원문 자체 통행의 지원 영역 밖이므로 복귀합니다."
+		if not actor_point_ok(player.global_position):
+			# Runtime only (never during try_configure): move the actor back onto
+			# the map rather than closing the session and dropping to the old map.
+			if _recover_actor_position(): return ""
+			return POSITION_SCOPE_PROBLEM
 		return ""
 	if field.definition.get("source_map_id") != 4 or field.definition.get("map_id") != "aden_world" or field.definition.get("source_sha256") != GRID_SHA256:
 		return "기존 아덴 필드가 변경되어 표시 실험을 종료합니다."
@@ -315,6 +336,35 @@ func _scope_problem() -> String:
 	if not support_world_point(player.global_position):
 		return "M 표시와 기존 아덴 통행의 공통 영역 밖이므로 기존 화면으로 돌아갑니다."
 	return ""
+
+
+## A point the 523 source session can keep the actor on.
+func actor_point_ok(point: Vector2) -> bool:
+	return field != null and point.is_finite() and support_world_point(point) and field.point_clear(point,4)
+
+
+func _recover_actor_position() -> bool:
+	if not _configured or not is_instance_valid(player) or field == null or not field.has_method("nearest_clear_point"): return false
+	var from: Vector2 = player.global_position
+	var found: Dictionary = field.call("nearest_clear_point",from,RECOVERY_RADIUS_CELLS,support_world_point) if from.is_finite() else {"ok":false,"reason":"non_finite_position"}
+	var kind: String = "nearest_clear_cell"
+	if not found.get("ok",false) and recovery_fallback.is_valid():
+		var fallback: Variant = recovery_fallback.call()
+		if fallback is Vector2 and actor_point_ok(fallback): found = {"ok":true,"position":fallback}; kind = "village_return"
+	if not found.get("ok",false): return false
+	player.global_position = found.position
+	if player.has_method("clear_click_path"): player.call("clear_click_path")
+	if player.has_method("set_touch_vector"): player.call("set_touch_vector",Vector2.ZERO)
+	if player is CharacterBody2D: (player as CharacterBody2D).velocity = Vector2.ZERO
+	var camera: Variant = player.get("camera")
+	if camera is Camera2D: (camera as Camera2D).reset_smoothing(); (camera as Camera2D).force_update_scroll()
+	_built_view = Rect2()
+	position_recoveries += 1
+	var from_cell: Vector2i = field.world_to_cell(from)+field.coordinates.origin if from.is_finite() else Vector2i(-1,-1)
+	last_position_recovery = {"kind":kind,"from":[from.x,from.y],"from_source_cell":[from_cell.x,from_cell.y],"to":[found.position.x,found.position.y],"ring":int(found.get("ring",-1)),"count":position_recoveries}
+	print("CURRENT523_POSITION_RECOVERED ", JSON.stringify(last_position_recovery))
+	actor_position_recovered.emit(last_position_recovery.duplicate(true))
+	return true
 
 
 func support_world_point(point: Vector2) -> bool:
@@ -347,8 +397,14 @@ func _read_chunk(member: String) -> Dictionary:
 	if _raw_chunks.has(member):
 		_raw_recent.erase(member); _raw_recent.append(member)
 		return _raw_chunks[member]
+	if _unreadable_chunks.has(member): return {}
 	var decoded: Dictionary = _raw_sources.read_member(member)
-	if decoded.is_empty(): _fail(_raw_sources.problem); return {}
+	if decoded.is_empty():
+		# One unreadable S32 member is a hole in the picture (its cells are
+		# already non-walkable for the source field), not a session close.
+		_unreadable_chunks[member] = str(_raw_sources.problem)
+		print("CURRENT523_CHUNK_UNREADABLE ", JSON.stringify({"member":member,"problem":_unreadable_chunks[member]}))
+		return {}
 	var origin: Vector2i = _member_origins[member]
 	# Retain the same currently loaded S32 tail even while SPR display is off.
 	# Enabling the existing consumer does not need another map entry or a source scan.
@@ -413,6 +469,7 @@ func _build_frame() -> bool:
 	var atlases: Dictionary = {}
 	var count: int = 0
 	var raw_ff: int = 0
+	var unresolved: int = 0
 	for member: String in visible:
 		var layers: Dictionary = _read_chunk(member)
 		if not problem.is_empty(): return false
@@ -425,20 +482,22 @@ func _build_frame() -> bool:
 				var ref: int = records[index + 2]
 				if ref == 4294967295: raw_ff += 1; continue
 				var tile_id: int = ref >> 8
-				if not _tile_pack.has_tile(tile_id): return _fail("해결되지 않은 M 타일 원문: " + str(tile_id))
-				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): return _fail("원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255])
+				# A tile the installed pack lacks is a hole, not a reason to close the map.
+				if not _tile_pack.has_tile(tile_id): _unresolved_tile(tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id)); unresolved += 1; continue
+				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): _unresolved_tile(tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255]); unresolved += 1; continue
 				if count >= DRAW_COMMAND_LIMIT or (not atlases.has(tile_id) and atlases.size() >= VISIBLE_ATLAS_LIMIT):
 					return _fail("M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다.")
 				if not atlases.has(tile_id):
 					var texture: Texture2D = _frame_atlases.get(tile_id)
 					if texture == null: texture = _tile_pack.texture_for(tile_id)
-					if texture == null: return _fail(_tile_pack.problem)
+					if texture == null: _unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)]); unresolved += 1; continue
 					atlases[tile_id] = texture
 				if not commands.has(layer): commands[layer] = []
 				var lane: Array = commands[layer]
 				lane.append(records[index]); lane.append(records[index + 1]); lane.append(ref)
 				count += 1
-	if count == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	if count == 0 and unresolved == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	unresolved_tile_refs = unresolved
 	_frame_commands.clear()
 	_draw_generation+=1
 	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
@@ -449,7 +508,7 @@ func _build_frame() -> bool:
 		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
 		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count,
-		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": 0, "budget_skips": 0, "skipped_chunks": 0,
+		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": unresolved, "unreadable_chunks": _unreadable_chunks.size(), "budget_skips": 0, "skipped_chunks": 0,
 		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": source_owned,
 		"scope_clipped_records": _scope_clipped_records,
 		"off_floor_decoration_records":_off_floor_decoration_records,
@@ -553,6 +612,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func set_visual_mode(_mode: String) -> void:
 	pass  # Preserve original candidate RGBA values rather than tinting the pack.
+
+
+func _unresolved_tile(tile_id: int, detail: String) -> void:
+	if _unresolved_logged.has(tile_id) or _unresolved_logged.size() >= 64: return
+	_unresolved_logged[tile_id] = detail
+	print("CURRENT523_TILE_UNRESOLVED ", detail)
 
 
 func _fail(reason: String) -> bool:
