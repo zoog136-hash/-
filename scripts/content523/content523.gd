@@ -35,6 +35,17 @@ const REOPEN_WAIVE := ENTRY_WAIVE
 
 ## User decision 2026-11-13: EscarosArtifact.BuffDuration is minutes (15 = 15 min).
 const ARTIFACT_BUFF_MINUTES_PER_UNIT := 1
+## TWILIGHT 근사(근거 약함) 2026-11-17 (docs/escaros_elfforest_territory523_missing_rules.md 2-2/3/8):
+## - Rounds: the hot open time's DurationMinutes (30) holds StartRoundNo..EndRoundNo (1..5),
+##   so each round lasts 6 minutes; the cycle repeats all day (single player), and only
+##   the artifact of the current round takes a touchdown.
+## - Rank reward: the local record is rank 1 — after a touchdown in a week, that
+##   artifact's EscarosArtifactRankReward (same Reward for every rank) is claimable once.
+## - 요정 숲 승리 보상 (QuestResetType 21): weekly, Wednesday 05:00 KST (the existing
+##   weekly reset, domination_stone_runtime.week_key); grades still open by total wins.
+const APPROX_ROUNDS := true
+const APPROX_ROUND_CYCLE_FALLBACK := 30
+const DOMINATION_WEEK = preload("res://scripts/domination/domination_stone_runtime.gd")
 const BUFF_SECONDS_MAX := 86400
 ## Buff keys the existing consumers read (world._active_item_buff_total), the
 ## same BonusType mapping as clan523 PERCENT_FIELDS.
@@ -53,7 +64,7 @@ var _tick_clock: float = 0.0
 var last_note: String = ""
 
 static func empty_state() -> Dictionary:
-	return {"schema":SCHEMA,"escaros":{"period":-1,"found":[],"touchdowns":{},"buffs":{}},"elf":{"blessing":0,"entries":0,"wins":0,"run":{},"claimed":[]},"tq":{"active":{},"done":{},"failed":{}}}
+	return {"schema":SCHEMA,"escaros":{"period":-1,"found":[],"touchdowns":{},"buffs":{},"week":-1,"week_touch":{},"rank_claimed":[]},"elf":{"blessing":0,"entries":0,"wins":0,"run":{},"claimed":[],"week":-1,"week_wins":0},"tq":{"active":{},"done":{},"failed":{}}}
 
 ## --- Models -------------------------------------------------------------------
 
@@ -128,8 +139,14 @@ static func validate(value: Variant) -> String:
 	if not buffs is Dictionary or buffs.size()>16: return "에스카로스 버프 기록 오류"
 	for key: Variant in buffs:
 		if not key is String or not key.is_valid_int() or not typeof(buffs[key]) in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(buffs[key])) or float(buffs[key])<0.0 or float(buffs[key])>float(BUFF_SECONDS_MAX): return "에스카로스 버프 기록 오류"
+	if not typeof(e.get("week",-1)) in [TYPE_INT,TYPE_FLOAT] or not e.get("week_touch",{}) is Dictionary or e.get("week_touch",{}).size()>64 or not e.get("rank_claimed",[]) is Array or e.get("rank_claimed",[]).size()>64: return "에스카로스 순위 기록 오류"
+	for key: Variant in e.get("week_touch",{}):
+		if not key is String or not key.is_valid_int() or not _whole(e.week_touch[key]): return "에스카로스 순위 기록 오류"
+	for id: Variant in e.get("rank_claimed",[]):
+		if not _whole(id,1): return "에스카로스 순위 기록 오류"
 	var f: Dictionary = value.elf
 	if not _whole(f.get("blessing")) or not _whole(f.get("entries")): return "요정 숲 저장 값 오류"
+	if not typeof(f.get("week",-1)) in [TYPE_INT,TYPE_FLOAT] or not _whole(f.get("week_wins",0)): return "요정 숲 주간 기록 오류"
 	if not _whole(f.get("wins",0)) or int(f.get("wins",0))>100000 or not f.get("run",{}) is Dictionary or not f.get("claimed",[]) is Array or f.get("claimed",[]).size()>64: return "요정 숲 승리 기록 오류"
 	for no: Variant in f.get("claimed",[]):
 		if not _whole(no,1): return "요정 숲 보상 기록 오류"
@@ -170,6 +187,15 @@ func import_state(value: Variant) -> void:
 	for key: String in state.escaros.buffs: state.escaros.buffs[key] = float(state.escaros.buffs[key])
 	state.elf.wins = int(state.elf.get("wins",0))
 	state.elf.claimed = (state.elf.get("claimed",[]) as Array).map(func(no: Variant)->int: return int(no))
+	# Saves from before the 2026-11-17 approximation have no weekly fields: their
+	# claims stay for the current week.
+	state.escaros.week = int(state.escaros.get("week",-1))
+	var touch: Dictionary = state.escaros.get("week_touch",{})
+	for key: String in touch: touch[key] = int(touch[key])
+	state.escaros.week_touch = touch
+	state.escaros.rank_claimed = (state.escaros.get("rank_claimed",[]) as Array).map(func(id: Variant)->int: return int(id))
+	state.elf.week = int(state.elf.get("week",week()))
+	state.elf.week_wins = int(state.elf.get("week_wins",state.elf.wins))
 	var run: Dictionary = state.elf.get("run",{})
 	for key: String in run: run[key] = int(run[key])
 	state.elf.run = run
@@ -189,6 +215,31 @@ func now() -> int:
 
 func period(at: int = -1) -> int:
 	return CLOCK.korean_daily_key(now() if at<0 else at)
+
+## Week key of the weekly reset (Wednesday 05:00 KST).
+func week(at: int = -1) -> int:
+	return DOMINATION_WEEK.week_key(now() if at<0 else at)
+
+## Current Escaros round (TWILIGHT 근사): DurationMinutes / rounds minutes each.
+func current_round(at: int = -1) -> int:
+	var model: Dictionary = models().escaros
+	var first: int = int(model.get("constants",{}).get("StartRoundNo",1))
+	var last: int = maxi(first,int(model.get("constants",{}).get("EndRoundNo",first)))
+	var cycle: int = int(model.get("dungeon",{}).get("hot_duration_minutes",0))
+	if cycle<=0: cycle = APPROX_ROUND_CYCLE_FALLBACK
+	var count: int = last-first+1
+	var slot: int = maxi(1,cycle/count)
+	var minute: int = int(floor(float(now() if at<0 else at)/60.0))
+	return first+mini(count-1,int(posmod(minute,slot*count)/slot))
+
+## Rolls the weekly records of a candidate state to the current week.
+func _weekly(next: Dictionary) -> Dictionary:
+	var current: int = week()
+	if int(next.escaros.get("week",-1))!=current:
+		next.escaros.week = current; next.escaros.week_touch = {}; next.escaros.rank_claimed = []
+	if int(next.elf.get("week",-1))!=current:
+		next.elf.week = current; next.elf.week_wins = 0; next.elf.claimed = []
+	return next
 
 ## Saves `next` with the given world overrides, or keeps the old state.
 func _commit(next: Dictionary, overrides: Dictionary = {}) -> Dictionary:
@@ -346,12 +397,38 @@ func examine_landmark(id: int) -> Dictionary:
 func touchdowns() -> Dictionary:
 	return state.escaros.touchdowns.duplicate()
 
+## Weekly rank rewards (TWILIGHT 근사): one row per artifact.
+func rank_rewards() -> Array:
+	var view: Dictionary = _weekly(state.duplicate(true))
+	var model: Dictionary = models().escaros
+	var out: Array = []
+	for artifact: Dictionary in model.get("artifacts",[]):
+		var key: String = str(int(artifact.id))
+		var touches: int = int(view.escaros.week_touch.get(key,0))
+		out.append({"artifact":int(artifact.id),"name":str(artifact.name),"round":int(artifact.round),"touches":touches,"rank":1 if touches>0 else 0,
+			"reward":model.get("rank_reward_by_artifact",{}).get(key,{}),"claimed":int(artifact.id) in view.escaros.rank_claimed,"active":int(artifact.round)==current_round()})
+	return out
+
+func claim_rank_reward(artifact_id: int) -> Dictionary:
+	for row: Dictionary in rank_rewards():
+		if int(row.artifact)!=artifact_id: continue
+		if bool(row.claimed): return {"ok":false,"reason":"이번 주 순위 보상을 이미 받았습니다"}
+		if int(row.touches)<=0: return {"ok":false,"reason":"이번 주 %s 터치다운 기록이 없습니다" % str(row.name)}
+		if (row.reward as Dictionary).is_empty(): return {"ok":false,"reason":"원본 순위 보상 없음"}
+		var staged: Dictionary = _stage_items([row.reward],true)
+		if (staged.granted as Array).is_empty(): return {"ok":false,"reason":"지급할 수 있는 보상이 없습니다: "+", ".join(staged.withheld)+" · 보상 보존"}
+		var next: Dictionary = _weekly(state.duplicate(true)); next.escaros.rank_claimed.append(artifact_id)
+		var result: Dictionary = _commit(next,staged.overrides)
+		if result.get("ok",false): result["granted"] = staged.granted
+		return result
+	return {"ok":false,"reason":"원본 아티팩트 없음"}
+
 ## Touchdown (GoalType EscarosTouchDown): standing within ActivationRange
 ## cells of an artifact for TouchdownDelaySec, at most once per
 ## ArtifactUseCoolTime (ms). The artifact's BuffClass is applied for
 ## BuffDuration minutes (user decision 2026-11-13); a new touchdown of the same
 ## artifact restarts it. The round schedule and the ranking are not in the
-## tables (all artifacts always usable, no rank reward).
+## tables: TWILIGHT 근사 rounds (current_round) and a local weekly record (rank_rewards).
 func _artifact_tick(at: Dictionary) -> void:
 	var model: Dictionary = models().escaros
 	var cooldown: int = int(model.constants.get("ArtifactUseCoolTime",0))
@@ -360,11 +437,14 @@ func _artifact_tick(at: Dictionary) -> void:
 		var key: String = str(int(artifact.id))
 		var inside: bool = int(at.land_id)==int(artifact.land_id) and ESCAROS.cell_distance(at.cell,artifact.cell)<=int(artifact.range)
 		if not inside: _artifact_since.erase(key); continue
+		if APPROX_ROUNDS and int(artifact.round)!=current_round(): _artifact_since.erase(key); continue
 		if not _artifact_since.has(key): _artifact_since[key] = clock
 		if clock-int(_artifact_since[key])<int(artifact.touchdown_delay_sec)*1000 or clock<int(_artifact_ready_ms.get(key,0)): continue
 		_artifact_ready_ms[key] = clock+maxi(1000,cooldown)
 		_artifact_since[key] = clock+maxi(1000,cooldown)
 		state.escaros.touchdowns[key] = int(state.escaros.touchdowns.get(key,0))+1
+		state = _weekly(state)
+		state.escaros.week_touch[key] = int(state.escaros.week_touch.get(key,0))+1
 		var seconds: int = int(artifact.buff_duration_raw)*60*ARTIFACT_BUFF_MINUTES_PER_UNIT
 		if int(artifact.buff_id)>0 and seconds>0: state.escaros.buffs[str(int(artifact.buff_id))] = float(seconds)
 		last_note = "터치다운 · %s (%d회) · %s %d분" % [str(artifact.name),int(state.escaros.touchdowns[key]),str(artifact.buff_name),seconds/60]
@@ -460,8 +540,8 @@ func record_kill() -> void:
 	last_note = "요정 숲 방어전 처치 %d" % int(run.kills)
 
 func _elf_win() -> void:
-	var next: Dictionary = state.duplicate(true)
-	next.elf.wins = int(next.elf.wins)+1; next.elf.run = {}
+	var next: Dictionary = _weekly(state.duplicate(true))
+	next.elf.wins = int(next.elf.wins)+1; next.elf.week_wins = int(next.elf.week_wins)+1; next.elf.run = {}
 	if _commit(next).get("ok",false):
 		last_note = "요정 숲 방어전 승리 · 누적 %d승" % int(state.elf.wins)
 		_show(last_note)
@@ -487,21 +567,22 @@ func _elf_tick(at: Dictionary) -> void:
 
 func elf_rewards() -> Array:
 	var out: Array = []
+	var view: Dictionary = _weekly(state.duplicate(true))
 	for win: Dictionary in models().elf.get("wins",[]):
 		out.append({"win_no":int(win.win_no),"rewards":win.rewards,"goal":str(win.goals[0].text) if not win.goals.is_empty() else "",
-			"reached":int(state.elf.get("wins",0))>=int(win.win_no),"claimed":int(win.win_no) in state.elf.get("claimed",[])})
+			"reached":int(view.elf.get("week_wins",0))>=int(win.win_no),"claimed":int(win.win_no) in view.elf.get("claimed",[])})
 	return out
 
 func claim_elf_reward(win_no: int) -> Dictionary:
 	for row: Dictionary in elf_rewards():
 		if int(row.win_no)!=win_no: continue
 		if bool(row.claimed): return {"ok":false,"reason":"이미 받은 승리 보상입니다"}
-		if not bool(row.reached): return {"ok":false,"reason":"승리 %d회가 필요합니다 (현재 %d회)" % [win_no,int(state.elf.get("wins",0))]}
+		if not bool(row.reached): return {"ok":false,"reason":"이번 주 승리 %d회가 필요합니다 (이번 주 %d회)" % [win_no,int(_weekly(state.duplicate(true)).elf.get("week_wins",0))]}
 		# As the Orim rewards: every row the 523 item supplier owns is paid,
 		# rows it refuses are named (withheld); nothing payable keeps it open.
 		var staged: Dictionary = _stage_items(row.rewards,true)
 		if (staged.granted as Array).is_empty(): return {"ok":false,"reason":"지급할 수 있는 보상이 없습니다: "+", ".join(staged.withheld)+" · 보상 보존"}
-		var next: Dictionary = state.duplicate(true); next.elf.claimed.append(win_no)
+		var next: Dictionary = _weekly(state.duplicate(true)); next.elf.claimed.append(win_no)
 		var result: Dictionary = _commit(next,staged.overrides)
 		if result.get("ok",false):
 			result["granted"] = staged.granted

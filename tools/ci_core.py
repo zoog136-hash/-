@@ -259,6 +259,7 @@ CHECKS = [
     ('items523_selection_boxes_test', []),
     ('items523_bless_points_test', []),
     ('items523_storage_items_test', []),
+    ('map_time_recharge523_test', []),
     ('items523_location_teleport_test', []),
     ('items523_item_life_test', []),
     ('items523_invoke_replacement_test', []),
@@ -324,6 +325,7 @@ CHECKS = [
     ('sp2_background_load_test', []),
     ('sp2_background_reentry_test', []),
     ('content523_test', []),
+    ('content523_approx_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
     ('reference_sp2_native_build_test', []),
@@ -832,6 +834,7 @@ def main():
                       'items523_selection_boxes_test':'ITEMS523_SELECTION_BOXES_RESULT',
                       'items523_bless_points_test':'ITEMS523_BLESS_POINTS_RESULT',
                       'items523_storage_items_test':'ITEMS523_STORAGE_ITEMS_RESULT',
+                      'map_time_recharge523_test':'MAP_TIME_RECHARGE523_RESULT',
                       'items523_location_teleport_test':'ITEMS523_LOCATION_TELEPORT_RESULT',
                       'items523_item_life_test':'ITEM_LIFE523_RESULT',
                       'items523_invoke_replacement_test':'INVOKE_REPLACE523_RESULT',
@@ -899,7 +902,8 @@ def main():
                       'sp2_background_load_test':'SP2_BACKGROUND_LOAD_RESULT',
                       'sp2_background_reentry_test':'SP2_BACKGROUND_REENTRY_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
-                      'content523_test':'CONTENT523_RESULT'}[name]
+                      'content523_test':'CONTENT523_RESULT',
+                      'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
