@@ -109,7 +109,8 @@ def build(tables: Path, images_manifest: Path) -> dict:
 
     by_land = collections.defaultdict(list)
     for row in worlds:
-        if row.get("MapImageInfoID") and row.get("LandID"):
+        # LandID 0 is Talking Island, a real Land (not "no Land").
+        if row.get("MapImageInfoID") and isinstance(row.get("LandID"), int) and row["LandID"] >= 0:
             by_land[row["LandID"]].append(row)
     offered, several, missing_image = {}, {}, []
     for land in sorted(by_land):
