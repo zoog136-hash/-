@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 # Presentation options and character-specific consumable safety controls.
+const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 const MONSTER_DIAGNOSTICS = preload("res://scripts/monsters/monster_diagnostics523.gd")
@@ -85,6 +86,14 @@ func configure(controller: Node) -> void:
 		addon_button.custom_minimum_size = Vector2(0,48)
 		addon_button.pressed.connect(func() -> void: source_pack.call("open_addon_installer"))
 		stack.add_child(addon_button)
+		# Cooked actor pack (pre-composited monsters): on by default once
+		# installed; off returns every actor to the original runtime path.
+		var cooked_toggle := CheckButton.new()
+		cooked_toggle.name = "CookedActorsEnabled"
+		cooked_toggle.text = "변환 액터 팩 사용 (새로 나타나는 몬스터부터 적용)"
+		cooked_toggle.button_pressed = COOKED_STORE.setting_enabled()
+		cooked_toggle.toggled.connect(func(on: bool) -> void: COOKED_STORE.set_setting_enabled(on))
+		stack.add_child(cooked_toggle)
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("오디오",18,UI.GOLD))
 	var audio := HBoxContainer.new()
