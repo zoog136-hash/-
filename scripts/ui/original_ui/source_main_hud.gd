@@ -1126,6 +1126,7 @@ const FEATURE_WINDOWS={
 	"craft_result":preload("res://scripts/ui/original_ui/source_main_craft_result_window.gd"),
 	"quick_change":preload("res://scripts/ui/original_ui/source_main_quick_change_window.gd"),
 	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
+	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
