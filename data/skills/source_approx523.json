@@ -60,7 +60,15 @@
     "types": {
       "Attack_DamageScaleAfterReduction": {"kind": "amplify", "multiplier_param": "Param1", "multiplier_scale": 0.000001, "below_one": "add_one", "source": "gamechosun_blow_attack", "note": "증폭율(백만분율) Param1 → 피해 배수(3,000,000 = 3배). 1배 미만 값(예 600,000)은 '1 + 값'(1.6배)으로 읽는다."},
       "Attack_DamageScale": {"kind": "amplify", "multiplier_param": "Param1", "multiplier_scale": 0.000001, "below_one": "add_one", "source": "gamechosun_blow_attack"},
+      "Attack_Spell": {"kind": "spell", "spell_param": "Param1", "note": "일반 공격 적중 시 발동 확률로 Param1 SpellClass를 근사 실행(아래 child_spell). Param4=메인 타겟에만."},
       "Evade_IncreaseHPByStrOrInt": {"kind": "evade_heal", "percent_param": "Param1", "base_param": "Param2", "cooldown_param": "Param3", "note": "회피 시 HP 회복 = Param2 + max(STR, INT) × Param1%. 재발동 대기 Param3초. 계산식이 표에 없어 가장 작은 해석을 골랐다."}
+    },
+    "child_spell": {
+      "read": ["SpellDamageBase", "SpellDamageDiceNumber", "SpellDamageDiceSpotCount", "SpellAttackType", "SpellBuffDuration", "SpellDebuffMinDuration", "SpellDebuffMaxDuration", "SpellHitProbabilityBase", "SpellHitProbabilityMin", "SpellHitProbabilityMax"],
+      "blocking": ["NextSpellClassID", "SpellCastAll", "AdditionalSpellClassID", "SpellMove", "UncontrollableCompanionID", "NpcSummonSetID"],
+      "rules": "피해 = SpellDamageBase + DiceNumber d DiceSpotCount (기존 deal_damage 단계: 치명·속성·대상 감소), 무기 피해 결합(SpellWeaponBasedDamage)·흡수 등은 적용하지 않음. 대상 디버프 = 원본 BuffClass 행을 기존 장비 발동 디버프와 같은 대상 수정치(patch523_equipment_spells.BUFF_FIELDS)로, 지속 = Min~Max 사이 무작위, 적중 = SpellHitProbabilityBase(Min~Max로 자름, MR·레벨 보정 없음 — 가장 단순한 해석). 자기 버프 = 위 receivers, 지속 SpellBuffDuration초.",
+      "source": "TWILIGHT 근사(발동 하위 주문의 실행 순서·계수는 공식 문서·인벤 DB에 없음). 인벤 스킬 DB 설명과 같은 방향의 효과만 연결 — 예: 투사 가드 브레이크 '공격 시 정해진 확률에 따라 대상의 갑옷을 파괴하여 물리 방어력을 감소시킨다', 'AC +10' (https://lineagem.inven.co.kr/db/skill/31442), 사신 데스 사이드 '공격 시 정해진 확률에 따라 대상을 약화 … AC 증가 / DG 감소' (https://lineagem.inven.co.kr/db/skill/62834).",
+      "checked": "2026-11-16"
     },
     "attack_types": {"0": ["melee", "ranged", "magic"], "1": ["melee"], "2": ["ranged"], "3": ["magic"], "52": ["melee"], "62": ["ranged"], "72": ["melee", "magic"]},
     "attack_types_note": "원본 AttackType(0 All, 1 Melee, 2 Range, 3 Magic, 52 SpellMelee, 62 SpellRange, 72 MeleeMagic). 42 Dark는 게임에 없는 공격 종류라 적용하지 않는다. BySpellAttack=false는 일반 공격, true는 스킬 공격에만."

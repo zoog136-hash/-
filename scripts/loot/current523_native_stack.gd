@@ -58,6 +58,8 @@ static func profile(record: Dictionary) -> Dictionary:
 	if definition.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or not NATIVE_FIELDS.field(record,"source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
 	var ammo: Dictionary=load("res://scripts/loot/patch523_ammo.gd").call("current_profile",record)
 	if not ammo.is_empty():return {"kind":"ammo","spec":ammo}
+	# TWILIGHT 근사: a reusable TeleportAmulet is projected as a material.
+	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
 	if record.get("source_item_class_id")==310:
 		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").call("profile",record)
@@ -282,12 +284,16 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		amount=int(spec.base)
 		for die: int in range(int(spec.dice_number)):amount+=candidate_rng.randi_range(1,int(spec.dice_spot_count))
 	var after: int=mini(maximum,before+amount)
-	var bag: Dictionary=world.inventory.duplicate(true);bag[item_name]=int(bag[item_name])-1
-	if int(bag[item_name])==0:bag.erase(item_name)
+	var bag: Dictionary=world.inventory.duplicate(true)
 	var instances: Dictionary=world.item_instances.duplicate(true)
-	if owned.remaining==1:instances.erase(uid)
-	else:instances[uid][QUANTITY]=int(owned.remaining)-1;instances[uid].source_native_stack_used_quantity=int(owned.used)+1
-	ledger=ledger.duplicate(true);ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1);state[USES]=ledger
+	# TWILIGHT 근사: a reusable teleport amulet moves without a physical debit.
+	var reusable: bool=bool(prepared.get("reusable",false))
+	if not reusable:
+		bag[item_name]=int(bag[item_name])-1
+		if int(bag[item_name])==0:bag.erase(item_name)
+		if owned.remaining==1:instances.erase(uid)
+		else:instances[uid][QUANTITY]=int(owned.remaining)-1;instances[uid].source_native_stack_used_quantity=int(owned.used)+1
+		ledger=ledger.duplicate(true);ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1);state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
 	var delay: float=float(details.get("source_consume_delay_ms",spec.get("consume_delay_ms",0)))/1000.0
 	if delay>0:cooldowns[cooldown_key]=delay;cooldowns[item_name]=delay
@@ -342,7 +348,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
-	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":message}
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 
 # Existing save/load owner uses these pure candidate guards. No game load or
