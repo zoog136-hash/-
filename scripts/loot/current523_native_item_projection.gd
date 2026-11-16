@@ -1,6 +1,9 @@
 extends RefCounted
 ## Current ItemData -> existing game DTO. This supplies no ownership or save.
 ## Slot/stat/formula mappings retain the public patch523_item_definitions.py ABI.
+## TWILIGHT 근사 switches (LuckyBag, docs/items523_remaining_missing_rules.md 18).
+const APPROX_BAG_DROP_TEST_REWARDS: bool = true
+const APPROX_BAG_RENORMALIZE: bool = true
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const SLOT_MAP={"Head":"helmet","Torso":"body","Shirt":"tshirt","Cloak":"cloak","Leg":"gaiters","Foot":"boots","Hand":"gloves","WeaponHold":"weapon","Finger":"ring","Neck":"necklace","Waist":"belt","Ear":"earring","ShieldHold":"offhand","Quiver":"offhand","Rune":"rune","SpellRune":"rune","Badge":"seal","Insignia":"badge","Spaulder":"shoulder","Bangle_normal":"bracelet","Bangle_BM":"bracelet","Crest":"crystal","Catalyst":"catalyst","DominationStone":"domination_stone","Relic":"relic_item","FishingRod":"fishing_rod"}
 const FLAT={"WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit","WeaponDamageBonus":"additionalDamage","ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction","PVPMeleeAdditionDamage":"pvp_melee_damage","PVPRangeAdditionDamage":"pvp_ranged_damage","PVPMagicAdditionDamage":"pvp_magic_damage","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","PierceMeleeDamageReduction":"melee_reduction_ignore","PierceRangeDamageReduction":"ranged_reduction_ignore","PierceMagicDamageReduction":"magic_reduction_ignore","HPPotionIncreaseStatic":"potionHealFlat"}
@@ -1017,7 +1020,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 	domain.sort()
 	for class_id: int in domain:
 		if not active.has(class_id):distribution.append("unsupported_lucky_bag_root_class")
-	var rewards: Array=[];var linked: Array=[];var types: Dictionary={};var weighted: Array=[]
+	var rewards: Array=[];var linked: Array=[];var types: Dictionary={};var weighted: Array=[];var dropped: Array=[]
 	for entity: Dictionary in graph.entities:
 		var row: Dictionary=entity.get("row",{});var type: Dictionary=entity.get("entity_type",{});var item: Dictionary=entity.get("item_class",{})
 		if not integer(row.get("LuckyBagEntityTypeID")) or int(row.LuckyBagEntityTypeID) not in [0,1]:return {}
@@ -1038,7 +1041,15 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		for class_id: int in classes:
 			if class_id in domain:eligible=true
 		var positive: bool=kind==1 or (integer(row.get("Probability")) and int(row.Probability)>0)
-		if eligible and positive and (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+		# TWILIGHT 근사 (사용자 지시 2026-11-16 "근사치로 다 넣어", docs/items523_remaining_missing_rules.md 18):
+		# a test/dummy reward item is dropped from the box instead of keeping the box;
+		# the remaining probability rows are drawn over their own total.
+		if eligible and positive and (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):
+			if APPROX_BAG_DROP_TEST_REWARDS:
+				dropped.append(row.get("ItemClassID"));continue
+			reasons.append("source_test_or_excluded_reward_item")
+		if not eligible or not positive:
+			if (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()) and APPROX_BAG_DROP_TEST_REWARDS:continue
 		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
 		if level_ok and int(enchant)>0:
 			var slots: Dictionary={};var equip_rows: Array=SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0)))
@@ -1053,7 +1064,7 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		var reward: Dictionary={"source_entity_id":row.get("ID"),"item_class_id":row.get("ItemClassID"),"amount":row.get("ItemAmount"),"bless_raw":row.get("ItemBlessCodeID"),"enchant":enchant,"class_ids":classes,"entity_type_id":kind,"entity_type":type.get("Name"),"probability_raw":row.get("Probability")}
 		rewards.append(reward)
 		if kind==0:weighted.append(reward)
-	var totals: Dictionary={}
+	var totals: Dictionary={};var renormalized: bool=false
 	if not weighted.is_empty():
 		if domain.is_empty():distribution.append("unresolved_lucky_bag_source_class_scope")
 		for reward: Dictionary in weighted:
@@ -1063,7 +1074,10 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 			for reward: Dictionary in weighted:
 				if (reward.class_ids.is_empty() or class_id in reward.class_ids) and integer(reward.probability_raw) and int(reward.probability_raw)>=0:total+=int(reward.probability_raw)
 			totals[str(class_id)]=total
-			if total!=10000000:distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
+			# TWILIGHT 근사: a class total other than 10,000,000 (or one reduced by a
+			# dropped test reward) is drawn over its own total (renormalized).
+			if total!=10000000 and not (APPROX_BAG_RENORMALIZE and total>0):distribution.append("incomplete_lucky_bag_probability_for_class:"+str(class_id))
+			elif total!=10000000:renormalized=true
 	var unique: Array=[]
 	for reason: String in reasons+distribution:
 		if reason not in unique:unique.append(reason)
@@ -1075,6 +1089,9 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 	if not weighted.is_empty():
 		spec["class_probability_totals"]=totals;spec["source_class_domain"]=domain;spec["source_class_domain_origin"]="ItemClassLimit" if not definition.get("class_rows",[]).is_empty() else "Class.CanCreateClient";spec["reward_selection_model"]="local_single_weighted_draw";spec["random_draw_count"]=1;spec["draw_count_origin"]="local_policy_not_source_count";spec["selection_configuration_key"]="patch523_reward_bag_draw_count"
 		if distribution.is_empty():spec["source_probability_denominator"]=10000000
+		if distribution.is_empty() and renormalized:spec["approx_renormalized"]=true
+	if not dropped.is_empty():spec["approx_dropped_test_rewards"]=dropped
+	if rewards.is_empty() and spec.activation_status=="unrestricted":spec.activation_status="blocked";spec.blocked_reasons=["approx_all_rewards_dropped"]
 	return spec
 
 ## How many entries the item's own original description says are chosen
