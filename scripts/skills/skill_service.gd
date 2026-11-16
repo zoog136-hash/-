@@ -779,9 +779,28 @@ func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 		if skill.mode != "amplify": continue
 		var chance: float = float(skill.get("proc_chance", 0)) + Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
 		if world.rng.randf() < clampf(chance, 0, 1): multiplier = maxf(multiplier, float(skill.get("multiplier", 1)))
+	# TWILIGHT 근사 invoke options (Attack_DamageScale*) of learned passives.
+	for invoke: Dictionary in catalog.approx_invoke_list():
+		if str(invoke.get("kind","")) != "amplify" or not approx_invoke_matches(invoke, attack): continue
+		if world.rng.randf() < clampf(float(invoke.get("chance",0)), 0, 1): multiplier = maxf(multiplier, float(invoke.get("multiplier",1)))
 	return maxi(0, int(amount * multiplier))
 
+static func approx_invoke_matches(invoke: Dictionary, attack: Dictionary) -> bool:
+	if attack.is_empty(): return false
+	if bool(invoke.get("by_spell",false)) != bool(attack.get("by_spell",false)): return false
+	return invoke.get("attack_kinds",[]).has(str(attack.get("attack_type","")))
+
 func on_evaded(attacker: TwilightMonster) -> void:
+	# TWILIGHT 근사: Evade_IncreaseHPByStrOrInt of learned passives (one heal per
+	# evade, own reuse delay from the original Param3 seconds).
+	for invoke: Dictionary in catalog.approx_invoke_list():
+		if str(invoke.get("kind","")) != "evade_heal": continue
+		var key: String = "approx_evade:" + str(invoke.get("skill_id",""))
+		if float(world.skill_cooldowns.get(key, 0)) > 0 or world.rng.randf() >= clampf(float(invoke.get("chance",0)), 0, 1): continue
+		var amount: int = int(float(invoke.get("base",0)) + maxf(float(world._effective_attribute("STR")), float(world._effective_attribute("INT"))) * float(invoke.get("percent",0)) / 100.0)
+		if amount > 0: world.hp = mini(world._effective_max_hp(), world.hp + amount)
+		world.skill_cooldowns[key] = float(invoke.get("cooldown",0))
+		break
 	for name: String in world.active_skill_buffs:
 		var base := catalog.record_for(name)
 		if base.is_empty() or not catalog.enabled(base): continue
@@ -855,6 +874,8 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 		return 0
 	var multiplier := 1.0
 	for buff: Dictionary in world.active_skill_buffs.values(): multiplier *= float(buff.get("skill_stats", {}).get("receivedMultiplier", 1))
+	# TWILIGHT 근사: original (PVE)DamageReductionPercent of approximated passives, capped at 80%.
+	multiplier *= 1.0 - clampf(catalog.stat("receivedReductionPct") / 100.0, 0.0, 0.8)
 	var reduction := stat("damageReduction") + stat("receivedReduction")
 	# This entry point receives TwilightMonster attacks, so keep native PvE
 	# reduction separate from general/PvP stats.
