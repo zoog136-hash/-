@@ -336,7 +336,7 @@ func _advanced_nodes() -> Array[Node2D]:
 	_cull_view = view.grow(CULL_MARGIN)
 	_shown_animated.clear()
 	for node: Node2D in _animated_nodes:
-		var bounds: Variant = node.get_meta("bounds", null)
+		var bounds: Variant = node.get_meta("bounds") if node.has_meta("bounds") else null
 		if not bounds is Rect2 or _cull_view.intersects(Rect2(node.position + (bounds as Rect2).position, (bounds as Rect2).size).grow(1.0)):
 			_shown_animated.append(node)
 	FRAME_HITCH.count("map.object_cull_rebuilds")
