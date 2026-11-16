@@ -241,3 +241,26 @@
   토글(`PassiveCastSpell`+`ToggleOnSpellClassID`+`ChangeSpecialSpellClassID`) · 하위 주문(`SpellClassID`) · 카운터 배리어(`Defence_CounterBarrier`) 등.
   하위 주문 실행기(대상 디버프·추가 피해·자기 버프)를 만들면 다음 묶음으로 열 수 있다.
 - 액티브 103: 위 표 그대로(PC 전용 대상 18은 원본 값(TargetKind 52)이므로 근사 대상이 아님).
+
+## 근사 적용 2026-11-16 (2): 발동 하위 주문(`Attack_Spell`) — 참고 패시브 13개 추가 (`feat/approx523-skill-invoke-spell`)
+
+- 없던 것: 패시브 버프의 `InvokeOption` `Attack_Spell`(일반 공격 시 확률로 Param1 SpellClass 시전)의 **하위 주문 실행 방법**.
+- 찾은 것: 인벤 스킬 DB 설명이 하위 주문의 효과 방향을 말한다 — 투사 가드 브레이크 "공격 시 정해진 확률에 따라 대상의 갑옷을 파괴하여 물리 방어력을 감소", "AC +10"
+  (<https://lineagem.inven.co.kr/db/skill/31442>), 사신 데스 사이드 "공격 시 정해진 확률에 따라 대상을 약화 … AC 증가 / DG 감소"(<https://lineagem.inven.co.kr/db/skill/62834>),
+  신성검사 인챈트 웨폰: 크래쉬 "공격 시 정해진 확률에 따라 적에게 피해를 입히는 마법이 발동"(<https://lineagem.inven.co.kr/db/skill/41461>). 계수·순서 공식은 없다.
+- 적용(`source_approx523.json` `invokes.child_spell`, `player_skills523.approx_child_spell`, `skill_service.approx_attack_spells`):
+  - 발동 확률 = 원본 InvokeOption 보너스 값(레벨 구간 규칙), 원본 AttackType·BySpellAttack(일반 공격만)·Param4(메인 타겟만)·무기 그룹 조건. 한 번 적중에 패시브마다 최대 1회.
+  - 하위 주문이 **피해**(SpellDamageBase + DiceNumber d DiceSpotCount)면 기존 `deal_damage`(치명·속성·대상 감소)로. 무기 피해 결합·흡수 등은 적용하지 않음.
+  - **대상 디버프**(BuffClassID + SpellDebuffMin/MaxDuration)면 원본 버프 행을 기존 장비 발동 디버프와 같은 대상 수정치(`patch523_equipment_spells.BUFF_FIELDS`)로, 지속은 Min~Max 무작위,
+    적중은 `SpellHitProbabilityBase`(Min~Max로 자름, MR·레벨 보정 없음 — 가장 단순한 해석).
+  - **자기 버프**(BuffClassID + SpellBuffDuration)면 원본 버프 행을 패시브 수신부로 받아 그 시간 동안.
+  - 조건 노드·후속 주문(`NextSpellClassID`, `SpellCastAll` 등)이 있는 하위 주문은 계속 보류.
+
+### 수치 (원본 ZIP·실제 팩, 실제 Main)
+| | 근사(1) 뒤 | 근사(2) 뒤 |
+|---|---:|---:|
+| 참고 스킬 실행 보류 (322개 중) | 237 | **224** |
+| └ 패시브 보류 | 134 | **121** (받는 곳 있는 행 없음 81 · 지원하지 않는 주문 보너스 39 · 선행 주문 미연결 1) |
+| 근사로 열린 참고 패시브 | 57 | **70** |
+| 열린 패시브의 하위 주문 발동 | 0 | 16 (피해 5 · 대상 디버프 7 · 자기 버프 4) |
+| 바인딩 스킬서 1,256종 중 스킬이 열린 것 | 257 | **295** ("주문 실행 소유자 미지원" 999 → **961**) |

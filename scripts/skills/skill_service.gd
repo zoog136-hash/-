@@ -699,6 +699,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					_emit_verified_source_effect(skill, "impact", world.player.global_position)
 				if skill.has("power") and event in ["on_hit", "on_miss"] and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
+	if event == "on_hit": approx_attack_spells(target, attack)
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
 		progression.on_normal_hit(target,source_skill)
 		local_runtime.on_hit(target,source_skill)
@@ -784,6 +785,37 @@ func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 		if str(invoke.get("kind","")) != "amplify" or not approx_invoke_matches(invoke, attack): continue
 		if world.rng.randf() < clampf(float(invoke.get("chance",0)), 0, 1): multiplier = maxf(multiplier, float(invoke.get("multiplier",1)))
 	return maxi(0, int(amount * multiplier))
+
+## TWILIGHT 근사: Attack_Spell invokes of learned approximated passives cast
+## their child spell once per hit (each passive at most once per hit).
+func approx_attack_spells(target: TwilightMonster, attack: Dictionary) -> void:
+	var fired: Dictionary = {}
+	for invoke: Dictionary in catalog.approx_invoke_list():
+		if str(invoke.get("kind","")) != "spell" or not approx_invoke_matches(invoke, attack): continue
+		if not is_instance_valid(target) or target.dead: return
+		var owner: String = str(invoke.get("skill_id",""))
+		if fired.has(owner) or (bool(invoke.get("main_target_only",false)) and not bool(attack.get("main_target",true))): continue
+		if world.rng.randf() >= clampf(float(invoke.get("chance",0)), 0, 1): continue
+		fired[owner] = true
+		approx_cast_child(owner, invoke.spell, target)
+
+func approx_cast_child(owner: String, child: Dictionary, target: TwilightMonster) -> void:
+	var record: Dictionary = catalog.record_for(owner)
+	var name: String = str(record.get("name", owner))
+	match str(child.get("effect","")):
+		"damage":
+			var power: int = int(child.get("base",0))
+			for _die: int in int(child.get("number",0)): power += world.rng.randi_range(1, maxi(1,int(child.get("sides",1))))
+			deal_damage({"id":owner,"name":name,"power":power,"attack_type":str(child.get("attack_type","magic")),"shape":"single"}, target)
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"debuff":
+			if world.rng.randf() >= clampf(float(child.get("hit_chance",1)), 0, 1): return
+			var span: Array = child.get("duration",[0,0])
+			status.set_modifiers(target, "approx523:" + owner, world.rng.randf_range(float(span[0]), float(span[1])), child.get("modifiers",{}))
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"self_buff":
+			apply_buff({"id":owner,"name":name + " (발동)","duration":float(child.get("duration",0)),"stats":child.get("stats",{}).duplicate(true),"mode":"approx_proc"})
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
 
 static func approx_invoke_matches(invoke: Dictionary, attack: Dictionary) -> bool:
 	if attack.is_empty(): return false
