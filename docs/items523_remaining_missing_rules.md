@@ -727,3 +727,6 @@ UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다.
   (11.2의 1,285종은 SelectReward 등을 포함한 가방 사용 거부 기준이라 모집단이 다르다.)
 - 확인: `tests/items523_luckybag_approx_test.gd` — 재정규화 추첨(2,000,000 + 2,000,000 → 각 약 50%), 실제 Main에서
   #2461 스냅퍼의 체력 반지 상자(테스트 보상 제외 확정 상자) → 스냅퍼의 반지 강화 주문서 지급, #896 소모품 상자(재정규화) → 용기의 물약·드래곤의 진주 지급, 테스트 아이템은 받지 않음.
+- 뺀 보상의 원본 행은 사양의 `source_entities`(원본 증거)에 `approx_dropped: true`로 그대로 남는다(보상 목록에서만 빠짐).
+  합성 고정 테스트 `tests/current523_reward_bag_retention_test.gd`는 스위치가 켜져 있으면 "테스트 보상 상자 보존·직업별 합 미완 보존" 대신
+  이 근사 결과(사용 가능 · 재정규화 · 보상 수 + 뺀 수 = 원본 행 수)를 확인하도록 바꿨다(스위치를 끄면 예전 기대값 그대로).

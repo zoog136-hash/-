@@ -1044,12 +1044,14 @@ static func reward_bag(definition: Dictionary, retain_source_entities: bool = tr
 		# TWILIGHT 근사 (사용자 지시 2026-11-16 "근사치로 다 넣어", docs/items523_remaining_missing_rules.md 18):
 		# a test/dummy reward item is dropped from the box instead of keeping the box;
 		# the remaining probability rows are drawn over their own total.
-		if eligible and positive and (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):
-			if APPROX_BAG_DROP_TEST_REWARDS:
-				dropped.append(row.get("ItemClassID"));continue
-			reasons.append("source_test_or_excluded_reward_item")
-		if not eligible or not positive:
-			if (item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()) and APPROX_BAG_DROP_TEST_REWARDS:continue
+		# The original entity stays in source_entities (complete evidence); only the reward is left out.
+		var excluded_item: bool=item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",item).is_empty()
+		if excluded_item and APPROX_BAG_DROP_TEST_REWARDS:
+			if retain_source_entities:
+				var kept: Dictionary=row.duplicate(true);kept["entity_type"]=type.duplicate(true);kept["class_limits"]=limits;kept["approx_dropped"]=true;linked.append(kept)
+			dropped.append(row.get("ItemClassID"))
+			continue
+		if eligible and positive and excluded_item:reasons.append("source_test_or_excluded_reward_item")
 		var enchant: Variant=row.get("ItemEnchant");var level_ok: bool=integer(enchant) and int(enchant)>=0
 		if level_ok and int(enchant)>0:
 			var slots: Dictionary={};var equip_rows: Array=SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0)))
