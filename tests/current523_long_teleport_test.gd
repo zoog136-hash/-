@@ -137,7 +137,16 @@ func _mb() -> float: return OS.get_static_memory_usage() / 1048576.0
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	check(QA.enter_game(world), "actual Main map entry")
+	for frame: int in 120: await process_frame
+	# Actual Main shows the renewal class picker on a fresh save; the older
+	# HUD workspace picker is the fallback.
+	var picker: Node = _find_script(root, "renewal_class_select.gd")
+	if picker != null:
+		picker.call("_choose", "기사")
+		if picker.has_method("_choose_gender"): picker.call("_choose_gender", 1)
+		picker.call("_confirm")
+	else: QA.enter_game(world)
+	picker = null
 	for frame: int in 900:
 		await process_frame
 		if world.current523_aden_source_active(): break
@@ -183,8 +192,44 @@ func runtime() -> void:
 	if baseline_mb >= 0.0:
 		check(final_mb - baseline_mb < 160.0, "static memory stays bounded over repeated teleports (+%.1f MB)" % (final_mb - baseline_mb))
 		check(final_nodes < int(baseline_nodes * 1.35) + 200, "node count stays bounded (%d -> %d)" % [baseline_nodes, final_nodes])
+	await blocked_entry(world)
 	world.queue_free()
 	for frame: int in 3: await process_frame
+
+## A saved/relocated spot on a blocked cell (old save, #485 relocation) used to
+## leave the player on the old aden_world: reopening now starts on a clear cell.
+func blocked_entry(world: Node) -> void:
+	if not world.current523_aden_source_active(): return
+	var field_now: Object = world.field_map
+	var renderer: Object = world.field_renderer
+	var center: Vector2i = Vector2i(int(TOWNS.aden[0]), int(TOWNS.aden[1]))
+	var blocked := Vector2i(-1, -1)
+	for ring: int in range(1, 16):
+		for y: int in range(center.y - ring, center.y + ring + 1):
+			for x: int in range(center.x - ring, center.x + ring + 1):
+				if blocked.x >= 0: break
+				var p: Vector2 = field_now.coordinates.to_world(Vector2(x, y))
+				if not field_now.walkable(p) and renderer.support_world_point(p): blocked = Vector2i(x, y)
+	if not check(blocked.x >= 0, "a blocked covered cell exists near Aden village"): return
+	var controller: RefCounted = world.call("_aden_play_controller")
+	var options: Dictionary = (controller.get("settings") as Dictionary).duplicate(true)
+	options["source_position"] = [blocked.x + 0.5, blocked.y + 0.5]
+	world.close_current523_aden_play(false)
+	for frame: int in 10: await process_frame
+	var opened: bool = world.open_current523_aden_play(str(options.raw_root), str(options.tile_root), options)
+	for frame: int in 30: await process_frame
+	var recovery: Dictionary = controller.get("entry_recovery")
+	evidence["blocked_entry"] = {"blocked_cell":[blocked.x, blocked.y], "opened":opened, "active":world.current523_aden_source_active(), "recovery":recovery.duplicate(true), "problem":str(world.get("current523_aden_play_problem"))}
+	check(opened and world.current523_aden_source_active() and not recovery.is_empty(), "a blocked saved spot opens the 523 map on a nearby clear cell (no old-map fallback)")
+	check(world.current523_aden_source_active() and world.field_renderer.actor_point_ok(world.player.global_position), "the reopened actor stands on a clear covered cell")
+
+func _find_script(node: Node, file: String) -> Node:
+	var script: Variant = node.get_script()
+	if script != null and str(script.resource_path).ends_with(file): return node
+	for child: Node in node.get_children():
+		var found: Node = _find_script(child, file)
+		if found != null: return found
+	return null
 
 func run() -> void:
 	landing_contract()
