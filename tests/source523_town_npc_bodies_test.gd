@@ -5,6 +5,7 @@ extends SceneTree
 ## creates/clears the layer with the source field.
 const BODIES = preload("res://scripts/npc/source523_town_npc_bodies.gd")
 const TOWN = preload("res://scripts/npc/source523_town_npcs.gd")
+const DEF = preload("res://scripts/resources/current523_definition_rows.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -66,6 +67,12 @@ func _run() -> void:
 	var controller: String = FileAccess.get_file_as_string("res://scripts/maps/current523_aden_play_controller.gd")
 	check(controller.contains("TOWN_NPC_BODIES.new()") and controller.contains("_town_npc_bodies.configure(world,field)") and controller.contains("_town_npc_bodies.queue_free()"), "controller owns the body layer")
 	check(TOWN.is_town_npc_id("m523npc:7") and not TOWN.is_town_npc_id("old_npc"), "town id prefix")
+	# TWILIGHT approximations (user 2026-11-16): event/clan/hideout/fishing NPCs
+	# and KR world 1 server-set NPCs are placed and marked; test rows stay out.
+	check(TOWN.APPROX_NAME_TAGS.has("[이벤트]") and TOWN.APPROX_CATEGORIES.has("AgitMerchant") and not TOWN.EXCLUDED_NAME_TAGS.has("[이벤트]") and TOWN.EXCLUDED_NAME_TAGS.has("[테스트]"), "approximation tag split")
+	check(source.contains("\"twilight_approximation\": approximations") and BODIES.IDLE_ACTIONS[0] == 3 and BODIES.IDLE_ACTIONS.size() > 2, "approximations are recorded; idle falls back to other original actions")
+	if DEF.row_count("ServerLimit") > 0:
+		check(TOWN.local_server_set(762) and not TOWN.local_server_set(782) and not TOWN.local_server_set(274), "KR world 1 server sets only")
 	world.queue_free()
 	var result: Dictionary = {"checks": checks, "failures": failures}
 	print("SOURCE523_TOWN_NPC_BODIES_RESULT " + JSON.stringify(result))

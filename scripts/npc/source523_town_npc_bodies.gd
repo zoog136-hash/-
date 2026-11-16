@@ -18,7 +18,9 @@ const SP2_BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const TOWN = preload("res://scripts/npc/source523_town_npcs.gd")
 ## Original ListSprAction rows: 3 = idle (MotionType 4), 0 = walk (MotionType 1).
-const IDLE_ACTIONS: Array[int] = [3, 0]
+## A sprite without idle stands in its first other original action
+## (walk, hit, ...): TWILIGHT 근사 (user 2026-11-16 "근사치로 다 넣어").
+const IDLE_ACTIONS: Array[int] = [3, 0, 2, 9, 8, 1]
 const ACTIVE_RADIUS: float = 1500.0
 const RELEASE_RADIUS: float = 2100.0
 const FRAME_BUDGET_USEC: int = 6000

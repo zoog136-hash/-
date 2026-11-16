@@ -106,3 +106,18 @@ python3 tools/map_restore/current523_spawn_preview.py --pack /private/patch523-w
   빌드), 2100px 밖은 해제. 은행에 스프라이트가 없으면 몸 없이 두고 `metrics().missing_reasons`에 기록한다.
   이미지를 만들거나 대체하지 않는다.
 - 현재 리소스 팩(bank manifest `587b419b…`)에는 아덴 NPC 240행의 SpriteID가 모두 있다(없는 것 0).
+
+### TWILIGHT 근사 (사용자 지시 2026-11-16 "근사치로 다 넣어")
+
+원본 표만으로는 비거나 빠지던 항목을 아래 규칙으로 채운다. 원작 수치가 아니며 배치 행의
+`twilight_approximation`과 요약 `approximated`에 남는다. 그림은 원본만 쓴다.
+
+| 항목 | 원본 상태 | TWILIGHT 근사 |
+| --- | --- | --- |
+| 이벤트·낚시·혈맹·아지트·할로윈 NPC (아덴 6곳) | 온라인/기간 콘텐츠라 제외 | 항상 배치 (`event_clan_hideout_or_fishing_included`) |
+| `ServerLimitSetID≠0` NPC (아덴 17곳) | 서버 세트 전용 | `ServerLimit`에 KR 1서버(WorldNo 1) 행이 있는 세트만 배치 (`server_set_kr_world1`, 아덴: 혈맹상인 린 1곳). 행이 없거나 다른 서버만인 세트는 계속 제외 |
+| `SpawnManually` NPC | 퀘스트 등에서 수동 출현 | 항상 배치 (`spawn_manually_always_placed`, 아덴 0곳) |
+| idle 동작이 없는 스프라이트 | 대기 동작 없음 | 원본 동작 중 walk 0 → hit 2 → 9 → death 8 → attack 1 순서의 첫 동작으로 서 있음 |
+| 방향 | 모든 행에 `DirectionID` 있음 | 범위 밖이면 4 |
+
+`[테스트]`, `[미사용]` 행은 계속 넣지 않는다. 아덴 배치: 217 → 224.

@@ -12,9 +12,16 @@ const SPAWNS = preload("res://scripts/maps/current523_source_spawns.gd")
 const LINKS_PATH: String = "res://data/npc/source523_npc_dialog_links.json"
 const ID_PREFIX: String = "m523npc:"
 const PLACEMENT: String = "EARTH_OBJECT_SPAWN_TERRITORY_CELL_V1"
-## Online-only, event, rotating and cut content (clan, hideout, fishing, events).
-const EXCLUDED_NAME_TAGS: Array[String] = ["[이벤트]", "[랜덤]", "[낚시]", "혈맹", "아지트", "[테스트]", "[미사용]", "할로윈"]
-const EXCLUDED_CATEGORIES: Array[String] = ["AgitMerchant", "AgitTeleporter"]
+## Test and unused rows stay out.
+const EXCLUDED_NAME_TAGS: Array[String] = ["[테스트]", "[미사용]"]
+## Event, rotating, fishing, clan and hideout NPCs: the user asked for them to
+## be placed too (2026-11-16 "근사치로 다 넣어"); recorded as TWILIGHT 근사.
+const APPROX_NAME_TAGS: Array[String] = ["[이벤트]", "[랜덤]", "[낚시]", "혈맹", "아지트", "할로윈"]
+const APPROX_CATEGORIES: Array[String] = ["AgitMerchant", "AgitTeleporter"]
+## Server-set NPCs are placed when their set names the KR world 1 server
+## (ServerLimit rows) — the local game stands in for that server (TWILIGHT 근사).
+const LOCAL_SERVER_REGION: String = "KR"
+const LOCAL_SERVER_WORLD: int = 1
 ## DialogActionType -> existing TWILIGHT service. Other action types (quest,
 ## buff, restore, agit, landmark) have no local owner and stay unconnected.
 const ACTIONS: Dictionary = {"SellList": "shop", "BuyList": "buyback", "CraftList": "craft",
@@ -33,9 +40,14 @@ static func _first(table: String, id: int) -> Dictionary:
 	var found: Array[Dictionary] = DEF.related(table, "ID", id)
 	return found[0] if found.size() == 1 else {}
 
-static func _tagged(text: String) -> bool:
-	for tag: String in EXCLUDED_NAME_TAGS:
+static func _tagged(text: String, tags: Array[String] = EXCLUDED_NAME_TAGS) -> bool:
+	for tag: String in tags:
 		if text.contains(tag): return true
+	return false
+
+static func local_server_set(set_id: int) -> bool:
+	for row: Dictionary in DEF.related("ServerLimit", "ServerLimitSetID", set_id):
+		if str(row.get("ServiceRegionCode", "")) == LOCAL_SERVER_REGION and int(row.get("WorldNo", -1)) == LOCAL_SERVER_WORLD: return true
 	return false
 
 ## "title^name" -> {name, title, display}; DialogData NPC name rows use "[title] name".
@@ -79,11 +91,17 @@ static func apply(field: Object) -> Dictionary:
 		var object_class: Dictionary = _first("EarthObjectClass", int(spawn.get("EarthObjectClassID", -1)))
 		var description: Dictionary = _first("DescData_Korean", int(object_class.get("DescID", -1))) if not object_class.is_empty() else {}
 		var full_name: String = str(description.get("Description", ""))
+		var approximations: Array[String] = []
 		if object_class.is_empty() or full_name.is_empty(): reason = "class_or_name_missing"
-		elif int(spawn.get("ServerLimitSetID", 0)) != 0: reason = "server_limited"
-		elif spawn.get("SpawnManually") == true: reason = "spawn_manually"
 		elif _tagged(str(spawn.get("Name", ""))) or _tagged(str(object_class.get("Name", ""))) or _tagged(full_name): reason = "excluded_content"
-		elif EXCLUDED_CATEGORIES.has(str(categories.get(int(object_class.get("EarthObjectCategoryID", -1)), ""))): reason = "excluded_content"
+		elif int(spawn.get("ServerLimitSetID", 0)) != 0:
+			if local_server_set(int(spawn.ServerLimitSetID)): approximations.append("server_set_kr_world1")
+			else: reason = "server_limited"
+		if reason.is_empty() and not object_class.is_empty():
+			if spawn.get("SpawnManually") == true: approximations.append("spawn_manually_always_placed")
+			if _tagged(str(spawn.get("Name", "")), APPROX_NAME_TAGS) or _tagged(str(object_class.get("Name", "")), APPROX_NAME_TAGS) or _tagged(full_name, APPROX_NAME_TAGS) \
+					or APPROX_CATEGORIES.has(str(categories.get(int(object_class.get("EarthObjectCategoryID", -1)), ""))):
+				approximations.append("event_clan_hideout_or_fishing_included")
 		var cell := Vector2i((int(territory.StartX) + int(territory.EndX)) / 2, (int(territory.StartY) + int(territory.EndY)) / 2)
 		if reason.is_empty() and bounds.has_area() and not bounds.has_point(cell): reason = "outside_field"
 		if reason.is_empty() and cells.has(cell): reason = "same_cell"
@@ -100,7 +118,8 @@ static func apply(field: Object) -> Dictionary:
 			"source523_category": str(categories.get(int(object_class.get("EarthObjectCategoryID", -1)), "")),
 			"source523_sprite_id": int(object_class.get("SpriteID", 0)), "source523_direction_id": int(spawn.get("DirectionID", -1)), "source523_actions": actions,
 			"source_land_id": land_id, "source_position": [cell.x, cell.y], "position": [point.x, point.y],
-			"placement_policy": PLACEMENT})
+			"placement_policy": PLACEMENT, "twilight_approximation": approximations})
+		if not approximations.is_empty(): summary.approximated = int(summary.get("approximated", 0)) + 1
 	field.data.npc_spawn = placed
 	summary.placed = placed.size()
 	summary.skipped = skipped
