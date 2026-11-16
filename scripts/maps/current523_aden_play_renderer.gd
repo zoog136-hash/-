@@ -58,6 +58,13 @@ var _off_floor_decoration_records: int = 0
 var _draw_generation: int=0
 var _usage_generation: int=-1
 var _visible_members: Array[String]=[]
+## The object layer and visible chunk list its records were last built from.
+## A periodic rebuild (the screen left the built margin) with the same chunks
+## hands the objects the same records: re-laying out every holder there was
+## pure cost (map.object_refresh while walking). refresh_visible() and a new
+## object layer still refresh.
+var _objects_built_for: Array=[]
+var _force_objects_refresh: bool=true
 
 
 static func valid_delta(value: Vector2) -> bool:
@@ -197,6 +204,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 		else:
 			map_objects_problem=objects.problem
 			objects.free()
+	_force_objects_refresh = true
 	if not _build_frame(): return false
 	_configured = true
 	y_sort_enabled = true
@@ -449,9 +457,15 @@ func _build_frame() -> bool:
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	_visible_members=visible.duplicate()
 	if is_instance_valid(_static_spr):
-		var static_records: Dictionary=_visible_static_records()
-		_static_spr.refresh(static_records.records,int(static_records.malformed))
+		var built_for: Array=[_static_spr.get_instance_id(),visible.duplicate()]
+		if _force_objects_refresh or built_for!=_objects_built_for:
+			var static_records: Dictionary=_visible_static_records()
+			_static_spr.refresh(static_records.records,int(static_records.malformed))
+			_objects_built_for=built_for
+		else:
+			FRAME_HITCH.count("map.object_refresh_skipped")
 		_metrics["static_spr"]=_static_spr.metrics()
+	_force_objects_refresh=false
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
@@ -461,6 +475,7 @@ func _build_frame() -> bool:
 ## Callers outside the periodic refresh change what is shown: always rebuild.
 func refresh_visible() -> void:
 	_built_view = Rect2()
+	_force_objects_refresh = true
 	_refresh_view()
 
 

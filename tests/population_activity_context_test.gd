@@ -9,6 +9,7 @@ class PopulationFixture extends FieldPopulation:
 
 var failures: Array[String] = []
 var checks: int = 0
+var cap_sample: Dictionary = {}
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label)
@@ -53,13 +54,35 @@ func _run() -> void:
 					monster.is_boss = state == "motion"
 					monster.visible = true
 					monster.velocity = Vector2(3,4)
-				var expected: Array = []
-				for monster: TwilightMonster in actors: expected.append(_expected(population,monster))
+				var expected: Array = _expected_sweep(population,actors)
 				population.wake_clock = 0.0
 				population._process(0.01)
 				for i: int in range(actors.size()):
 					var monster: TwilightMonster = actors[i]
 					check([monster.is_physics_processing(),monster.visible,monster.velocity] == expected[i],"%s/%s/%s/%d" % [map_id,zoom,state,i])
+	# The awake cap is really exercised: an idle crowd awake by distance alone
+	# is cut to MAX_AWAKE plus on-screen actors, nearest first.
+	population.field.data.map_id = "aden_world"
+	world.player.camera.zoom = Vector2.ONE * 2.0
+	for monster: TwilightMonster in actors:
+		monster.dead = false; monster.motion.active = false; monster.returning_home = false; monster.is_boss = false
+		for clock: String in states.slice(3):
+			if clock != "returning_home": monster.set(clock,0.0)
+	var by_distance: int = 0
+	for monster: TwilightMonster in actors:
+		if monster.global_position.distance_to(world.player.global_position) < 1000.0: by_distance += 1
+	population.wake_clock = 0.0
+	population._process(0.01)
+	var awake_now: int = 0
+	var farthest_awake: float = 0.0
+	var nearest_asleep: float = INF
+	for monster: TwilightMonster in actors:
+		var distance: float = monster.global_position.distance_to(world.player.global_position)
+		if monster.is_physics_processing(): awake_now += 1; farthest_awake = maxf(farthest_awake, distance)
+		elif distance < 1000.0: nearest_asleep = minf(nearest_asleep, distance)
+	check(by_distance > FieldPopulation.MAX_AWAKE and awake_now < by_distance and awake_now >= FieldPopulation.MAX_AWAKE, "awake cap applied (%d by distance -> %d awake)" % [by_distance, awake_now])
+	cap_sample = {"awake_by_distance":by_distance,"awake_after_cap":awake_now}
+	check(nearest_asleep >= farthest_awake or awake_now > FieldPopulation.MAX_AWAKE, "the nearest actors are the ones kept awake")
 	# A direct spawn update and later sweeps must observe fresh camera geometry.
 	population.field.data.map_id = "escaros_world"
 	var probe: TwilightMonster = actors[0]
@@ -120,9 +143,37 @@ func _run() -> void:
 		var started: int = Time.get_ticks_usec()
 		for iteration: int in range(500): population._process(0.4)
 		samples.append(Time.get_ticks_usec()-started)
-	print("POPULATION_ACTIVITY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"actors":165,"refreshes_per_sample":500,"cpu_usec":samples,"scope":"synthetic_headless_cpu_not_device_fps"}))
+	print("POPULATION_ACTIVITY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"actors":165,"cap_sample":cap_sample,"refreshes_per_sample":500,"cpu_usec":samples,"scope":"synthetic_headless_cpu_not_device_fps"}))
 	world.free()
 	quit(0 if failures.is_empty() else 1)
+
+## A 0.4 s sweep additionally keeps at most FieldPopulation.MAX_AWAKE actors
+## awake: busy and on-screen (camera view grown by AWAKE_VIEW_MARGIN) actors
+## always, then the nearest others; the rest sleep with zero velocity.
+## (Updated with the awake cap; the per-actor rule above it is unchanged.)
+func _expected_sweep(population: FieldPopulation, actors: Array[TwilightMonster]) -> Array:
+	var result: Array = []
+	for monster: TwilightMonster in actors: result.append(_expected(population,monster))
+	var camera: Camera2D = population.world.player.camera
+	var extent: Vector2 = population.get_viewport().get_visible_rect().size/camera.zoom
+	var view := Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(FieldPopulation.AWAKE_VIEW_MARGIN)
+	var kept: int = 0
+	var optional: Array = []
+	for i: int in range(actors.size()):
+		if not result[i][0]: continue
+		var monster: TwilightMonster = actors[i]
+		var busy: bool = monster.dead or monster.is_boss or monster.motion.active or monster.aggro_remaining>0 or monster.returning_home or monster.poison_remaining>0 or monster.bleed_remaining>0 or monster.slow_remaining>0 or monster.is_stunned() or monster.is_held() or monster.is_feared() or monster.is_silenced()
+		if busy or view.has_point(monster.global_position): kept += 1
+		else: optional.append([monster.global_position.distance_squared_to(population.world.player.global_position), monster.get_instance_id(), i])
+	var awake_total: int = 0
+	for row: Array in result: if row[0]: awake_total += 1
+	if awake_total <= FieldPopulation.MAX_AWAKE: return result
+	optional.sort()
+	for index: int in range(optional.size()):
+		if kept + index < FieldPopulation.MAX_AWAKE: continue
+		var i: int = optional[index][2]
+		result[i] = [false, result[i][1], Vector2.ZERO]
+	return result
 
 func _expected(population: FieldPopulation, monster: TwilightMonster) -> Array:
 	var distance: float = monster.global_position.distance_to(population.world.player.global_position)
