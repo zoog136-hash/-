@@ -4466,6 +4466,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if death_recovery.blocked(): return
 	var source_reward: Dictionary = _find_catalog_item_record(_parse_enhancement_target(item_name).name)
 	if source_reward.get("monsterbook_source_item",false):
+		if hud.has_method("open_mystery_card523") and hud.open_mystery_card523(str(source_reward.name)): return
 		hud.open_monsterbook523()
 		var panel: Control = hud.find_child("MonsterBook523Panel",true,false)
 		if panel != null: panel.focus_owned_item(str(source_reward.name))
@@ -5972,6 +5973,22 @@ func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
 
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:
 	return patch523_equipment.CONDITIONS.summary(recipe,_patch523_craft_context())
+
+## 비법서 제작 (original GachaCraft, TWILIGHT 근사 — scripts/crafting/patch523_gacha_craft.gd).
+## UI API: owned books → quote (costs, ownership, per-item %) → execute (one
+## atomic save; returns {ok, output:{item_class_id,name,amount,enchant,bless_raw,bound}, detail}).
+func patch523_gacha_craft_owned() -> Array:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
+
+func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+
+func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
+	_sync_item_instances()
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return

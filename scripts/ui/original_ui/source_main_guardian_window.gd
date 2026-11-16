@@ -17,7 +17,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## effect and detail lines (SkillTree_Text_02 in ListView_Info), the
 ## 수호성 마법발동 스킬 설정 ON / OFF of an opened skill slot, 닫기 and 활성화.
 ## Every rule stays with world.growth: 수호성 초기화, 활성화 and 대표 지정 are
-## its quote -> HUD confirmation -> execute; the card choice after 활성화, 강화
+## its quote -> HUD confirmation -> execute; the card choice after 활성화 opens
+## the original 수호성 찾기 window (source_main_guardian_find_window); 강화
 ## and 시전 (not in the original popup) open the existing 수호성 view on that
 ## slot. Left out: the slot icon (Common_Slot), the gauge, the message.
 const ROOT="UI/SkillTree/SkillTree_All.csb"
@@ -300,6 +301,9 @@ func _info_ok() -> Dictionary:
 	if (runtime.state.get("nodes",[]) as Array).has(id):
 		info=""
 		return _route("open_growth_native",["guardians",selected,id])
+	if str((runtime.state.get("pending",{}) as Dictionary).get("node",""))==id:
+		info=""
+		return _find(selected,id)
 	var offer: Dictionary=runtime.quote("activate",id)
 	if not offer.get("ok",false):
 		_message(str(offer.get("message","활성화할 수 없습니다")))
@@ -311,9 +315,19 @@ func _info_ok() -> Dictionary:
 		var response: Dictionary=runtime.execute("activate",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
 		_message(str(response.get("message","")))
 		info=""
-		if response.get("ok",false) and not (runtime.state.get("pending",{}) as Dictionary).is_empty():_route("open_growth_native",["guardians",group,id])
+		if response.get("ok",false) and not (runtime.state.get("pending",{}) as Dictionary).is_empty():_find(group,id)
 		elif is_open():_stage())
 	return {"ok":true,"quoted":"activate"}
+
+## The pending card choice: the original 수호성 찾기 window
+## (source_main_guardian_find_window), else the existing view on the slot.
+func _find(group: String, id: String) -> Dictionary:
+	var owner: Object=hud()
+	var controller: Variant=owner.get("original_main_ui_controller") if owner!=null else null
+	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):
+		var opened: Dictionary=controller.try_open_feature_window("guardian_find",[group])
+		if opened.get("handled",false):return opened
+	return _route("open_growth_native",["guardians",group,id])
 
 ## 수호성 마법발동 스킬 설정 ON: the existing representative action.
 func _represent() -> Dictionary:

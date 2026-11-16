@@ -53,15 +53,22 @@ Land는 `IdealNumberOfPlayer 30`, `LandChannelTypeID 1`: 30인 팀 콘텐츠다.
 
 ### 에스카로스
 1. **아티팩트 버프 지속 단위**: `EscarosArtifact.BuffDuration = 15`에 단위가 없다 → 사용자 결정 2026-11-13으로 **분**(아래 4절).
-2. **라운드 일정**: `StartRoundNo 1`~`EndRoundNo 5`, `HotWeeklyOpenTimeGroupId 1074`가 있으나 어느 시각에 몇 라운드 아티팩트가 활성인지 표에 없다 → 5개 모두 상시 표시·기록.
-3. **터치다운 순위·보상**: `EscarosArtifactRankReward`(순위 1~500)는 서버 전체 순위다. 1인 순위 판정이 없어 미지급. "터치다운 사열 몬스터"(설명 1233478)의 등장 규칙도 없다.
+2. **라운드 일정**: `StartRoundNo 1`~`EndRoundNo 5`, `HotWeeklyOpenTimeGroupId 1074`가 있으나 어느 시각에 몇 라운드 아티팩트가 활성인지 표에 없다
+   → **TWILIGHT 근사(근거 약함), 2026-11-17**: 핫타임(1074 → WeeklyOpenTimeEntity, KR `DurationMinutes` 30) 30분에 5라운드가 든다고 보고 라운드당 6분,
+   혼자 하는 게임이라 이 30분 주기를 하루 종일 반복한다. 지금 라운드의 아티팩트만 터치다운된다(`content523.current_round`, 끄기 `APPROX_ROUNDS`).
+3. **터치다운 순위·보상**: `EscarosArtifactRankReward`(순위 1~500)는 서버 전체 순위다. 1인 순위 판정이 없다. "터치다운 사열 몬스터"(설명 1233478)의 등장 규칙도 없다.
+   → **TWILIGHT 근사(근거 약함), 2026-11-17**: 로컬 기록 기준 순위 — 이 기기의 기록이 그 순위의 1위. 아티팩트마다 1~500위가 모두 같은 Reward라
+   (명예 코인 10,000 · 드래곤의 성수 · 숙련 옵션 변경 티켓 · 축복 부여 주문서 · 수호석), 그 주(수요일 05시 시작)에 한 번 이상 터치다운했으면 주 1회 받는다.
+   사열 몬스터는 계속 없음.
 4. **랜드마크 재추첨 주기·조사 거리**: Prob 추첨 시점과 조사 범위가 없다. 자체: 한국시간 05시 일일 키로 추첨(같은 날 같은 결과), 기존 마을 NPC 대화 거리(190px) 안에서 조사, 하루 1회 보상.
 5. **아인하사드 100의 단위**: Reward Amount를 그대로 축복 포인트에 더한다(루틴 523 미션 보상과 같은 기존 규칙).
 6. **경쟁 던전 서버 조건**: 경쟁(타 서버 PvP)·`DungeonState`·ServerLimitSet은 오프라인에서 판정하지 않는다. `CompetitionDungeonLand` 입장 보류는 콘텐츠 입장에서만 면제.
 
 ### 요정 숲 방어전
 7. **승리 판정**: 방어전 승리(ArenaWin) 조건이 표에 없다 → 사용자 결정 2026-11-13의 자체 규칙(아래 4절).
-8. **등급 상승**: 승리 수 → GradeNo 규칙이 없다 → 사용자 결정: 누적 승리 N회면 GradeNo ≤ N 입장(5승 이상 전 단계). 승리 보상 주간 초기화(QuestResetType 21)는 해석하지 않고 누적 1회씩.
+8. **등급 상승**: 승리 수 → GradeNo 규칙이 없다 → 사용자 결정: 누적 승리 N회면 GradeNo ≤ N 입장(5승 이상 전 단계). 승리 보상 주간 초기화(QuestResetType 21)는 해석하지 않고 누적 1회씩
+   → **TWILIGHT 근사, 2026-11-17**: QuestResetType 표가 ZIP에 없어 요일 근거가 없으므로 기존 주간 초기화(지배석 `week_key`, **수요일 05시 KST**;
+   LandTimeLimitGroup ContentsResetScheduleType WeeklyWed와 같은 요일)로 승리 보상 수령과 "이번 주 승리"를 매주 초기화. 단계 개방은 계속 누적 승리 기준.
 9. **가호 효과**: `StatusEffectID`(4262~4292)의 효과 표(StatusEffect)가 ZIP에 없고 `StatusEffectAttr` 한 행(유형 178)만 있어 해석 불가 → 선택만 저장. 우위 속성의 상대(적 팀/몬스터)도 없다.
 10. **팀 구성·30인 채널**: 팀 배정 규칙이 없다.
 11. **이벤트 기간**: 시간 그룹 32562 / 퀘스트 StartTime·EndTime 274238~274248 — 기존 "종료 시즌 로컬 반복" 결정을 따른다(맵 시간 정책).
@@ -90,7 +97,7 @@ Land는 `IdealNumberOfPlayer 30`, `LandChannelTypeID 1`: 30인 팀 콘텐츠다.
 1. **아티팩트 버프 = 15분**: 터치다운하면 그 아티팩트의 BuffClass(ExperienceAdditionPercent 50000/10000 = 경험치 +5%)를
    `BuffDuration` 분(15분) 동안 적용한다. 같은 아티팩트를 다시 터치다운하면 15분으로 다시 시작, 다른 아티팩트 버프는 각각 따로.
    남은 시간은 게임 안 시간으로 줄고 저장(`content523.escaros.buffs`, 남은 초)·불러오기 후 그대로 이어진다. 기존 버프 소비처
-   (`world._active_item_buff_total("xp")`)로 반영. 라운드 일정·1인 순위 보상은 표에 없어 **보류**(전 아티팩트 상시, 순위 보상 미지급).
+   (`world._active_item_buff_total("xp")`)로 반영. 라운드 일정·1인 순위 보상은 2-2·2-3 근사(2026-11-17).
 2. **요정 숲 방어전 승리(자체 규칙)**: 단계에 입장하면 도전 시작. 그 Land에 나타난 몬스터(기존 개체군 `source_spawn_metrics().alive`)를
    전부 처치해 1마리 이상 처치 후 살아 있는 몬스터가 0이 되면 승리 1회(마지막 처치 전 새로 나타난 몬스터도 처치해야 함).
    Land를 떠나면 도전 종료(승리 없음). 누적 승리로 GradeNo ≤ 승리 수 단계 입장, WinNo 1~12 원본 승리 보상
@@ -112,5 +119,6 @@ Land는 `IdealNumberOfPlayer 30`, `LandChannelTypeID 1`: 30인 팀 콘텐츠다.
 
 ## 5. 남은 사용자 결정 항목
 
-- 아티팩트 라운드 일정과 1인 터치다운 순위 보상(보류 중).
-- 요정 숲 승리 보상의 주간 초기화(QuestResetType 21) 적용 여부.
+- ~~아티팩트 라운드 일정과 1인 터치다운 순위 보상~~ → 2-2·2-3 근사(2026-11-17, 사용자 방침 "근사치로 다 넣어").
+- ~~요정 숲 승리 보상의 주간 초기화~~ → 2-8 근사(수요일 05시).
+- 시험: `tests/content523_approx_test.gd`.

@@ -86,7 +86,11 @@ func _escaros(service: RefCounted, model: Dictionary) -> void:
 	var parts: Array = []
 	for artifact: Dictionary in model.artifacts:
 		parts.append("%d라운드 %s(%d,%d) %d회" % [int(artifact.round),str(artifact.name),int(artifact.cell[0]),int(artifact.cell[1]),int(touch.get(str(int(artifact.id)),0))])
-	_label("터치다운(아티팩트 %d칸 안 대기): %s · 라운드 일정·순위 보상은 원본 표에 없어 미적용" % [int(model.artifacts[0].range) if not model.artifacts.is_empty() else 0,", ".join(parts)])
+	_label("터치다운(아티팩트 %d칸 안 대기): %s · 지금 %d라운드 (TWILIGHT 근사: 30분에 5라운드 반복)" % [int(model.artifacts[0].range) if not model.artifacts.is_empty() else 0,", ".join(parts),service.current_round()])
+	for row: Dictionary in service.rank_rewards():
+		var rw: Dictionary = row.reward
+		_button("%d라운드 %s 순위 보상 · 이번 주 %d회%s · %s ×%d%s" % [int(row.round),str(row.name),int(row.touches),(" · 1위(로컬)" if int(row.rank)==1 else ""),Content._item_name(int(rw.get("class_id",0))),int(rw.get("amount",0))," · 받음" if row.claimed else ""],
+			"Escaros523Rank_%d" % int(row.artifact),func() -> void: _act(service.claim_rank_reward(int(row.artifact))),int(row.touches)>0 and not bool(row.claimed))
 	for buff: Dictionary in service.artifact_buffs():
 		_label("버프 %s · 경험치 +%d%% · 남은 %d분 %d초" % [str(buff.name),service.buff_value("xp"),int(buff.left)/60,int(buff.left)%60])
 
@@ -95,7 +99,7 @@ func _elf(service: RefCounted, model: Dictionary) -> void:
 	if not model.get("ok",false): _label(str(model.get("problem",""))); return
 	var wins: int = int(service.state.elf.get("wins",0))
 	var run: Dictionary = service.elf_run()
-	_label("누적 승리 %d회%s · 승리: 그 단계 지역의 몬스터를 모두 처치(사용자 결정 2026-11-13)" % [wins,(" · 진행 %d/%d" % [int(run.kills),int(run.target)]) if not run.is_empty() else ""])
+	_label("누적 승리 %d회 · 이번 주 %d회(보상은 매주 수요일 05시 초기화)%s · 승리: 그 단계 지역의 몬스터를 모두 처치(사용자 결정 2026-11-13)" % [wins,int(service._weekly(service.state.duplicate(true)).elf.week_wins),(" · 진행 %d/%d" % [int(run.kills),int(run.target)]) if not run.is_empty() else ""])
 	for grade: Dictionary in model.grades:
 		var r: Dictionary = grade.route
 		var open: bool = int(grade.grade_no) <= wins

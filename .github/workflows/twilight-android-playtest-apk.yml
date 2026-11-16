@@ -166,6 +166,16 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/alignment-android.txt
           echo "TWILIGHT_ANDROID_APK_BUILD_OK"
           ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
+          # Diagnostic twin built from the debug template, same playtest key,
+          # same scripts and compatibility key (installs over the release APK
+          # and takes the same update packs). Release templates compile out
+          # GDScript runtime checks, so a script error there ends as a native
+          # SIGSEGV with no message (2026-11-16 tombstones: Array::size() on a
+          # null array, 3-5 s after loading). The debug template reports the
+          # same error as "SCRIPT ERROR file:line" in the loading-screen record.
+          timeout 3600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_DEBUG.apk > /tmp/export-android-debug.txt 2>&1 || { echo "DEBUG_EXPORT_FAILED"; tail -n 80 /tmp/export-android-debug.txt; exit 1; }
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify build/TWILIGHT_DEBUG.apk
+          ls -lh build/TWILIGHT_DEBUG.apk
       - name: Check retired legacy art is not in the APK
         # Pre-523 actor, monster, transform and map art no longer ships: the
         # 523 resource pack supplies them (and the old actor pack is retired).
@@ -188,6 +198,7 @@ jobs:
             # Fits a release asset: players get a direct .apk link.
             cp build/TWILIGHT_ANDROID_PLAYTEST.apk build/TWILIGHT.apk
             apk_url="$base/TWILIGHT.apk"
+            if [ "$(stat -c %s build/TWILIGHT_DEBUG.apk)" -lt 2000000000 ]; then cp build/TWILIGHT_DEBUG.apk build/TWILIGHT_DEBUG_PUBLISH.apk; fi
           else
             echo "::notice::APK is over the 2 GB release asset limit; it stays a workflow artifact"
           fi
@@ -201,6 +212,7 @@ jobs:
             build/twilight-update.pck
             build/update.json
             build/TWILIGHT.apk
+            build/TWILIGHT_DEBUG_PUBLISH.apk
           if-no-files-found: error
           compression-level: 0
       - name: Upload signed Android debug APK
@@ -221,6 +233,7 @@ jobs:
           path: |
             /tmp/import-android.txt
             /tmp/export-android.txt
+            /tmp/export-android-debug.txt
             /tmp/export-update-pack.txt
             build/update.json
             /tmp/android-settings.txt
@@ -258,6 +271,7 @@ jobs:
           gh release view playtest-latest >/dev/null 2>&1 || gh release create playtest-latest --prerelease --title "TWILIGHT playtest (latest main)" --notes "Automatic main build. The game downloads update packs from here; the 523 resource pack is not included." --target "$GITHUB_SHA"
           assets=("build/$file")
           if [ -f build/TWILIGHT.apk ]; then assets+=("build/TWILIGHT.apk"); fi
+          if [ -f build/TWILIGHT_DEBUG_PUBLISH.apk ]; then mv build/TWILIGHT_DEBUG_PUBLISH.apk build/TWILIGHT_DEBUG.apk; assets+=("build/TWILIGHT_DEBUG.apk"); fi
           # Pack first, feed last: a player never sees a feed whose pack is missing.
           gh release upload playtest-latest "${assets[@]}" --clobber
           gh release upload playtest-latest build/update.json --clobber
