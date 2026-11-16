@@ -2942,11 +2942,50 @@ func _equip_selected_catalog() -> void:
 					catalog_equip_button.text="현재 적용 중"
 					catalog_equip_button.disabled=true)
 
+## The current Land's original World (the single authored offer) is shown
+## right away instead of waiting for its row button; same select call.
+func _select_current_world_map() -> void:
+	var opened: Dictionary=original_main_ui_status.get("world_map",{})
+	var offered: Variant=opened.get("offered_world_id")
+	var view: Variant=original_main_ui_controller.get("_world_map")
+	if typeof(offered)!=TYPE_INT or int(offered)<=0 or not is_instance_valid(view) or not view.has_method("select_offered_world"):return
+	var cell: Variant=null
+	var world_node: Node=get_parent()
+	if is_instance_valid(world_node) and world_node.get("field_map")!=null and world_node.field_map.get("coordinates")!=null and is_instance_valid(world_node.get("player")):
+		var source: Vector2=world_node.field_map.coordinates.to_source(world_node.player.global_position)
+		if source.is_finite():cell=Vector2i(floori(source.x),floori(source.y))
+	original_main_ui_status["world_map_selection"]=view.call("select_offered_world",int(offered),cell)
+	if original_main_ui_status.world_map_selection.get("image_applied",false) and is_instance_valid(world_node) and world_node.get("field_map")!=null:
+		original_main_ui_status["world_map_centered"]=_center_world_map(view,int(offered),world_node)
+
+## Scrolls the original map so the player's spot is in the middle, through the
+## same image_pixel_at / scroll_geometry / set_scroll_position calls the drag
+## input uses. The pixel target uses the OWN UIMapImageInfo registration.
+func _center_world_map(view: Object, world_id: int, world_node: Node) -> Dictionary:
+	var target: Vector2=preload("res://scripts/maps/current523_map_images.gd").image_pixel(world_node.field_map.get("coordinates"),world_id,world_node.player.global_position)
+	var geometry: Dictionary=view.call("scroll_geometry")
+	if not target.is_finite() or not geometry.get("ok",false):return {"ok":false,"reason":"world_map_center_unavailable"}
+	var transform: Transform2D=geometry.input_to_viewport
+	if not is_finite(transform.determinant()) or is_zero_approx(transform.determinant()):return {"ok":false,"reason":"world_map_scroll_transform_invalid"}
+	var middle: Vector2=transform*(Vector2(geometry.viewport_extent)*0.5)
+	var here: Dictionary=view.call("image_pixel_at",middle)
+	var right: Dictionary=view.call("image_pixel_at",middle+Vector2(8,0))
+	var down: Dictionary=view.call("image_pixel_at",middle+Vector2(0,8))
+	if not here.get("ok",false) or not right.get("ok",false) or not down.get("ok",false):return {"ok":false,"reason":"world_map_center_pixel_unavailable"}
+	# Pixels per viewport unit around the middle, then the viewport move that
+	# brings the target pixel to the middle.
+	var jacobian:=Transform2D((Vector2(right.raw_pixel)-Vector2(here.raw_pixel))/8.0,(Vector2(down.raw_pixel)-Vector2(here.raw_pixel))/8.0,Vector2.ZERO)
+	if is_zero_approx(jacobian.determinant()):return {"ok":false,"reason":"world_map_image_scale_invalid"}
+	var move: Vector2=jacobian.affine_inverse().basis_xform(target-Vector2(here.raw_pixel))
+	var local: Vector2=transform.affine_inverse().basis_xform(-move)
+	return view.call("set_scroll_position",Vector2(geometry.content_position)+Vector2(local.x,-local.y))
+
 func toggle_map() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_world_map_binding():
 		if not original_main_ui_controller.world_map_is_open():_close_workspace()
 		original_main_ui_status["world_map"]=original_main_ui_controller.toggle_world_map()
 		if not original_main_ui_status.world_map.get("ok",false):show_message("원본 지도 데이터를 사용할 수 없습니다.")
+		elif original_main_ui_controller.world_map_is_open():_select_current_world_map()
 		return
 	if active_section=="map" and workspace.visible:
 		_close_workspace()
