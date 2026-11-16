@@ -1591,7 +1591,8 @@ static func source_skill_book(definition: Dictionary) -> Dictionary:
 		if not integer(row.get("CharacterMinLevel")) or int(row.CharacterMinLevel)<0:reasons.append("unsupported_skill_min_level")
 		if not integer(row.get("ClassID")) or int(row.ClassID)<=0 or row.get("class",{}).get("CanCreateClient")!=true:reasons.append("unsupported_skill_learn_class")
 		if row.get("CharacterPolymorphGradeID")!=0:reasons.append("source_skill_polymorph_grade_requirement_unresolved")
-		if row.get("LimitBuffCardID")!=0:reasons.append("source_skill_limit_card_requirement_unresolved")
+		# TWILIGHT 근사: the card condition is checked at learning (card_requirement523, patch523_skill_book).
+		if row.get("LimitBuffCardID")!=0 and not preload("res://scripts/cards/card_requirement523.gd").ENABLED:reasons.append("source_skill_limit_card_requirement_unresolved")
 		if not SOURCE.declared_exclusion("SpellLearnLimit",edge.get("link",{})).is_empty():reasons.append("source_excluded_skill_learn_limit")
 	if limits.is_empty():reasons.append("missing_non_tutorial_source_skill_learn_limit")
 	# Reuse the exact existing source-profile serializer. Its SHA is confirmed

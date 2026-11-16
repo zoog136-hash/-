@@ -166,6 +166,8 @@ func owned(record: Dictionary) -> bool:
 	if record.has("equipment_spell523"): return permitted(record) and equipment_spells().has(int(record.equipment_spell523))
 	if not source_learning_status(record).is_empty():return false
 	if bool(record.get("runtime_blocked", false)): return false
+	# TWILIGHT 근사: a card-bound skill (LimitBuffCardID) works while that card is owned.
+	if int(record.get("approx_required_card",0)) != 0 and not preload("res://scripts/cards/card_requirement523.gd").satisfied(world,int(record.approx_required_card)): return false
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
 
 var _equip_spells: Dictionary = {}
@@ -477,7 +479,8 @@ func _source_learning_input(record: Dictionary)->Dictionary:
 		if int(limit.SpellClassID)!=spell_id:return {"message":"원본 학습 조건의 스킬 ID 불일치"}
 		# Same ordinary alternatives as source523_skill_books.learn_reason:
 		# a nonzero card/polymorph requirement is never satisfied by inference.
-		if int(limit.LimitBuffCardID)==0 and int(limit.CharacterPolymorphGradeID)==0:
+		# TWILIGHT 근사: a card row counts while its card is owned (card_requirement523).
+		if int(limit.CharacterPolymorphGradeID)==0 and preload("res://scripts/cards/card_requirement523.gd").satisfied(world,int(limit.LimitBuffCardID)):
 			ordinary_levels.append(int(limit.CharacterMinLevel))
 	if not matched:return {"message":"523 원본 직업의 일반 학습 대상이 아닙니다."}
 	if ordinary_levels.is_empty():return {"message":"원본 학습의 선행 카드·변신 등급·제외 조건 확인 필요"}
