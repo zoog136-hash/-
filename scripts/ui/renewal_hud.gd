@@ -725,6 +725,11 @@ func update_currency_balances(items: Dictionary) -> void:
 	_refresh_currency_readout()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_currency_balances(currency_balances)
 
+## The original HUD wallet's Btn_Info: the original 523 재화 정보 window
+## (source_main_currency_window) over the existing balances.
+func open_currency_info() -> void:
+	_open_original_feature("currency_info")
+
 func _refresh_currency_readout() -> void:
 	if currency_readout == null or not is_instance_valid(lineage_inventory_ui):
 		return
