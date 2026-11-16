@@ -105,7 +105,11 @@ func run() -> void:
 	var mine: Array = []
 	for index: int in range(jobs.size()):
 		if index % shards == shard: mine.append(jobs[index])
-	if limit > 0: mine = mine.slice(0, limit)
+	if limit > 0 and mine.size() > limit:
+		# A trial samples every kind: evenly spaced jobs of this shard.
+		var sampled: Array = []
+		for index: int in range(limit): sampled.append(mine[int(float(index) * mine.size() / limit)])
+		mine = sampled
 	report["jobs_total"] = jobs.size()
 	report["jobs_in_shard"] = mine.size()
 	var compress: int = -1 if lossless else Image.COMPRESS_ETC2
