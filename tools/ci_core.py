@@ -323,6 +323,7 @@ CHECKS = [
     ('sp2_background_load_test', []),
     ('sp2_background_reentry_test', []),
     ('content523_test', []),
+    ('content523_approx_test', []),
     ('reference_sp2_node_layout_test', []),
     ('source_effect_validation_once_test', []),
     ('reference_sp2_native_build_test', []),
@@ -897,7 +898,8 @@ def main():
                       'sp2_background_load_test':'SP2_BACKGROUND_LOAD_RESULT',
                       'sp2_background_reentry_test':'SP2_BACKGROUND_REENTRY_RESULT',
                       'minigame523_scope_test':'MINIGAME523_RESULT',
-                      'content523_test':'CONTENT523_RESULT'}[name]
+                      'content523_test':'CONTENT523_RESULT',
+                      'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
             run(command, target, logs/(name+'.txt'), env, 180, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
