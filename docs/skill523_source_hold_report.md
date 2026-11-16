@@ -331,3 +331,15 @@
 - 적용: 스킬서 학습(`source523_skill_books.learn_reason`, `patch523_skill_book.source_limit_problem`, 스킬 창 학습 레벨), 원본 스킬서 아이템 사용 정의(더 이상 막지 않음 — 학습 때 확인),
   NPC 상점 구매(`source523_shop_runtime.quote_merchant`), 근사로 연 참고 스킬(`approx_required_card` — 카드를 보유하는 동안만 사용).
 
+### 근사 (7) — 받는 곳 추가 (2026-11-17, PR `feat/approx523-skill-receivers`)
+- 남은 150개 중 패시브 86개는 "받는 곳이 있는 수치 없음"이다(괄호 안이 받는 곳이 없던 BonusType). 그중 기존 수신부로 바로 이어지는 것만 연결했다.
+  모두 **TWILIGHT 근사(근거 약함)**이고, 값은 `data/skills/source_approx523.json` `receivers`에서 바꾼다.
+  - `PierceMeleeEvasion` → 근거리 명중, `PierceRangeEvasion` → 원거리 명중. 상대 회피 무시를 명중으로 읽었다(혈맹 버프와 같은 해석).
+  - `MeleeDamageReductionPercent` → 받는 피해 % 감소(`receivedReductionPct`, 최대 80%). 몬스터 공격은 대부분 근거리다.
+    같은 버프의 `RangeDamageReductionPercent`는 같은 수신부에 두 번 더해지지 않도록 연결하지 않았다.
+  - 대상 디버프 `AttackedMeleeDamageScale`(350000 = 35%) → 기존 대상 "받는 피해" 배수 `taken`(0.35). 같은 버프의 원거리·마법·암흑 행은 더하지 않는다(`player_skills523.APPROX_TARGET_FIELDS`).
+- 받는 곳이 없어 계속 보류(효과 0인 스킬은 열지 않음): 카운터 배리어 관련(IgnoreCounterBarrierProbability·CounterBarrierEvadePercent),
+  몬스터 쪽 수치가 없는 무시류(IgnoreDamageReductionPercent·HitSpecialResistance), 고유 체계(DeathBlow·SaintBlow·DualPotion·BreakMirror·충전 등).
+- 시험: `tests/skill523_receivers_test.gd`.
+- 측정(실제 Main·원본 팩): 보류 참고 스킬 150 → **145**. 새로 열린 스킬: 피어스 애로우(요정), 라이트닝 어택(미스틱)(뇌신), 타이탄(라이징)(광전사),
+  고스트 이베이젼 (레퀴엠)(사신), 플레임 소드(요정, 대상 받는 피해 +35%).
