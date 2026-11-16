@@ -101,11 +101,12 @@ LimitBuffCardID 23, 기존 스킬 연결 없음 4, 스킬 실행 보류 3, 직�
    UIClanBenefit 문구만 보인다.
 8. **혈맹 버프 효과 중 소비처 없는 것 9행**: RangeEvasion 5행(16~20레벨), PierceMeleeEvasion·PierceRangeEvasion 각 2행(19·20레벨).
    게임에 원거리 회피·회피 무시 버프를 읽는 곳이 없어 미반영(창에 "미반영"으로 표시).
-9. **MerchantGoods 91 남은 막힘**: LimitBuffCardID 23행(신화 변신 카드 보유 조건 — 카드 보유 판정 규칙 없음),
+9. **MerchantGoods 91 남은 막힘**: LimitBuffCardID 23행(신화 변신 카드 보유 조건 — 카드 보유 판정 규칙 없음 →
+   **TWILIGHT 근사 2026-11-16**: 그 원본 카드를 보유하면 구매 가능, `scripts/cards/card_requirement523.gd`),
    LimitClanMemberRank 1행(어느 직위인지 값이 bool뿐), 혈맹 레벨 15·16·17·19 행은 레벨 도달 필요.
    DaysAfterClanJoin·LimitDaysAfterClanJoin(상인 123 9행) — 로컬 창설자의 "가입일" 정의 없음, 거부.
 10. **혈맹 전용 아이템 (현재 집계 33종 사용 거부·지급 불가, 이름 "[혈맹]" 105종 중)**: 특수-신화 스킬서 22종
-    (학습 조건에 신화 변신 카드 필요 — `source_skill_limit_card_requirement_unresolved`), 속성 강화·변환 주문서 5종,
+    (학습 조건에 신화 변신 카드 필요 — `source_skill_limit_card_requirement_unresolved` → **TWILIGHT 근사 2026-11-16**: 카드를 보유하면 학습), 속성 강화·변환 주문서 5종,
     마법서·정령 수정 등 효과 소유자 없음 6종. 혈맹 규칙이 아니라 스킬·강화 쪽 미연결이라 이번에 연결하지 않음.
     이전 감사(사용 101 · 지급 178)는 그 뒤 PR들(#423 선택 상자 등)로 대부분 연결됨.
 11. **성장의 뿔피리·전투의 뿔피리(350562·350572, ClanRewardOnItemUse)**: 사용 시 혈맹원 전원에게 버프(성장 = 경험치 +20% 1,800초,

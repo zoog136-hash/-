@@ -158,7 +158,7 @@ static func learn_reason(world, spec: Dictionary) -> String:
 	var limits: Array = spec.classes.get(str(world.job_class),[])
 	if limits.is_empty():return "원본 스킬북 직업 조건 미충족"
 	for limit: Dictionary in limits:
-		if int(world.level)>=int(limit.minimum_level) and int(limit.required_card)==0 and int(limit.polymorph_grade)==0:return ""
+		if int(world.level)>=int(limit.minimum_level) and preload("res://scripts/cards/card_requirement523.gd").satisfied(world,int(limit.required_card)) and int(limit.polymorph_grade)==0:return ""
 	return "원본 스킬북 레벨·선행 카드·변신 등급 조건 미충족 또는 미연결"
 
 static func qualification(world, sale: Dictionary) -> Dictionary:
