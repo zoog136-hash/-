@@ -90,3 +90,19 @@ python3 tools/map_restore/current523_spawn_preview.py --pack /private/patch523-w
 - 구현: `scripts/monsters/current523_kill_experience.gd`(`monster.gd`의 `exp_reward`). 지도별
   경험치 배수·축복 소모 등 기존 처치 경험치 처리는 그대로 적용된다.
 
+
+## 마을 NPC 몸 (2026-11-16 사용자 보고 "맵에 NPC들도 없던데")
+
+- 원인: `scripts/npc/source523_town_npcs.gd`가 원본 `EarthObjectSpawn` → `Territories`(Land) 행으로
+  `field.data.npc_spawn`을 만들고(아덴 Land4: 원본 240행 중 217곳, `ServerLimitSetID≠0` 17·이벤트/아지트 6 제외)
+  대화·미니맵 점은 동작했지만, current523 렌더러(`current523_aden_play_renderer.gd`)는 `npc_spawn`을 그리지
+  않아 화면에 NPC 노드가 0개였다(옛 `field_renderer.gd`만 그렸다).
+- 수정: `scripts/npc/source523_town_npc_bodies.gd`(`Current523TownNpcs`)가 몬스터와 같은 current523 원본 SP2
+  은행(공유 prepared 스냅샷, 읽기 전용)으로 `EarthObjectClass.SpriteID`의 원본 idle(ListSprAction 3, 없으면
+  원본 walk 0)을 `EarthObjectSpawn.DirectionID` 방향으로 표시한다. 이름 표시는 원본 DescData 이름.
+- 몬스터가 아니다: `monsters_root` 밖의 Y정렬 형제 노드라 선택·공격 대상이 아니며, 대화/상점/창고/텔레포트는
+  기존 `npc_spawn` 상호작용(`world_interactions`, `World._npc_dialogue_action`)을 그대로 쓴다.
+- 예산: 플레이어 1500px 안의 NPC만, 프레임당 1개 로드(6 ms 예산, 몬스터와 같은 역할 1개·멤버 2개 단위 은행
+  빌드), 2100px 밖은 해제. 은행에 스프라이트가 없으면 몸 없이 두고 `metrics().missing_reasons`에 기록한다.
+  이미지를 만들거나 대체하지 않는다.
+- 현재 리소스 팩(bank manifest `587b419b…`)에는 아덴 NPC 240행의 SpriteID가 모두 있다(없는 것 0).

@@ -98,7 +98,7 @@ static func apply(field: Object) -> Dictionary:
 		placed.append({"id": ID_PREFIX + str(int(spawn.ID)), "name": named.display, "role": actions[0] if not actions.is_empty() else "dialogue",
 			"source523_earth_object_spawn_id": int(spawn.ID), "source523_earth_object_class_id": int(object_class.ID),
 			"source523_category": str(categories.get(int(object_class.get("EarthObjectCategoryID", -1)), "")),
-			"source523_sprite_id": int(object_class.get("SpriteID", 0)), "source523_actions": actions,
+			"source523_sprite_id": int(object_class.get("SpriteID", 0)), "source523_direction_id": int(spawn.get("DirectionID", -1)), "source523_actions": actions,
 			"source_land_id": land_id, "source_position": [cell.x, cell.y], "position": [point.x, point.y],
 			"placement_policy": PLACEMENT})
 	field.data.npc_spawn = placed
