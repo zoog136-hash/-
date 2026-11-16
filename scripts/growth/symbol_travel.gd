@@ -63,7 +63,13 @@ func allowed() -> bool:
 func marks() -> Array:
 	return runtime.state.get("teleport_bookmarks",[]).duplicate(true)
 
+## The original 523 나의 기억장소 window first (renewal_hud.open_memory_places);
+## the TWILIGHT 기억 장소 page otherwise. Presentation only.
 func open(source: Dictionary = {}) -> void:
+	if world.hud.has_method("open_memory_places") and bool(world.hud.call("open_memory_places",source)):return
+	open_native(source)
+
+func open_native(source: Dictionary = {}) -> void:
 	world.hud._open_window("teleport","기억 장소","에바 III · 기억한 지역·위치 선택 · 기존 입장 조건 적용")
 	var view=View.new();world.hud.workspace.mount(view);view.configure(self,source)
 
