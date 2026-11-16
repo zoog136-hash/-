@@ -120,7 +120,7 @@ func _process(delta: float) -> void:
 		create_usec_max = maxi(create_usec_max, spent)
 	for holder: Node2D in bodies.values():
 		if is_instance_valid(holder) and holder.is_visible_in_tree():
-			var preview: Node = holder.get_meta("preview", null)
+			var preview: Node = holder.get_meta("preview") if holder.has_meta("preview") else null
 			if is_instance_valid(preview): preview.advance_reference_source(delta, str(holder.get_meta("role")), int(holder.get_meta("direction")))
 	HITCH.detail("town_npc_bodies", started)
 
