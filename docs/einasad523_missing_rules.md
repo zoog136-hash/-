@@ -40,7 +40,9 @@ BuffClass, DescData_Korean)로 **확정되는 것만** 구현했다
    85~89: 600,000, 90: 1,200,000 … 110: 13,200,000 = 50~2200포인트):
    언제(접속·매일·시간·레벨업) 누구에게 주는지 표·설명문에 없다. 연결되는
    BonusType(10971)의 값은 이 표가 아니라 ItemConsumeRate 그룹 번호다.
-   → 충전하지 않음.
+   → **TWILIGHT 근사(근거 약함), 2026-11-17**: 게임 하루(05:00 기준)에 한 번, 그날 처음 캐릭터를 볼 때
+   ExtraRecharge ÷ 6,000(EinasadVariable 단위)을 충전(80레벨 50 … 110레벨 2,200포인트, 기존 충전 상한까지).
+   `TwilightAinhasadService.daily_extra` (끄기: `APPROX_DAILY_EXTRA`), 저장 키 `ainhasad_state.last_extra_day`.
 4. **자연(시간) 충전**: EinasadVariable의 #1 600000, #4 120, #22 1200000,
    #54 4272000, #72 59142, #82 1, #92 5, #102 3, #112 4, #123 200,
    #133 10000, #143 50 은 종류 이름(EinasadVariableType) 표가 없어 의미를
@@ -51,7 +53,10 @@ BuffClass, DescData_Korean)로 **확정되는 것만** 구현했다
    ConstantData `EinasadConsumLimit`=201 의 사용처(2단계 하한과 같은 값)도 불명.
 6. **Experience 표의 Einasad 열**: `EinasadReduction`(60레벨 20 … 160레벨 40),
    `EinasadSpecialBlessValue`(80레벨 10000, 91레벨 200000 …),
-   `EinasadAdditionValue/Percent`(전부 0)의 단위·적용 대상이 없다. → 미적용.
+   `EinasadAdditionValue/Percent`(전부 0)의 단위·적용 대상이 없다.
+   → **TWILIGHT 근사(근거 약함), 2026-11-17**: `EinasadReduction`(60레벨 20 … 160레벨 40)을 축복 소모 감소 %로 읽어
+   기존 장비·카드 감소에 더한다(`TwilightAinhasadService.level_reduction_percent`, 끄기: `APPROX_LEVEL_REDUCTION`).
+   `EinasadSpecialBlessValue`는 꺼진 콘텐츠(7. 특별한 축복)라 미적용, `EinasadAdditionValue/Percent`는 전부 0.
 7. **특별한 축복(Level_SpecialBless, 3단계)**: ContentsControl
    `EinasadSpecialBless` Enable=false (523에서 꺼진 콘텐츠). 버프 59142의
    "축복 소모 없음"도 꺼진 콘텐츠라 연결하지 않음.
@@ -64,3 +69,5 @@ BuffClass, DescData_Korean)로 **확정되는 것만** 구현했다
     NoEinasadAddtionalDamage** BonusType: 일부 버프에 값이 있으나 단위·계산식
     설명이 없어 연결하지 않음 (충전 보너스 %는 기존 `blessing_charge:percent`
     소비자만 유지).
+
+시험: `tests/clan523_approx_test.gd` (일일 추가 충전 1회·저장 유지, 60레벨 감소 +20%).

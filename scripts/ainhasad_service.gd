@@ -20,6 +20,17 @@ var last_orb_purchase_month: String = ""
 # Derived from the installed source523 subscription adapter; the existing
 # expiry is the only timer. -1 retains the established monthly-shop behavior.
 var source_jade_level_override: int = -1
+## TWILIGHT 근사(근거 약함) (2026-11-17, docs/einasad523_missing_rules.md 3·6):
+## - LevelEinasadBlessRecharge.ExtraRecharge (80~84 300,000 … 110 13,200,000, in the
+##   original EinasadVariable unit 6,000 = 1 point) is given once per game day (05:00),
+##   the first time the character is seen that day: 80레벨 50포인트 … 110레벨 2,200포인트.
+## - Experience.EinasadReduction (60레벨 20 … 160레벨 40) is read as a blessing
+##   consumption reduction in percent, added to the equipment reduction.
+const APPROX_DAILY_EXTRA := true
+const APPROX_LEVEL_REDUCTION := true
+const EINASAD_UNIT := 6000
+var last_extra_day: int = 0
+static var _approx_cache: Dictionary = {}
 
 ## Item charge-bonus group of the original charge items (ItemConsumeRate #12).
 const CHARGE_BONUS_GROUP := 12
@@ -100,6 +111,37 @@ func adena_rate() -> float:
 func protected_drops() -> bool:
 	return stage() > 0
 
+static func daily_extra_points(player_level: int) -> int:
+	if not APPROX_DAILY_EXTRA:
+		return 0
+	var key: String = "extra:%d" % player_level
+	if not _approx_cache.has(key):
+		var rows: Array = preload("res://scripts/resources/current523_definition_rows.gd").related("LevelEinasadBlessRecharge", "Level", player_level)
+		_approx_cache[key] = maxi(0, int(rows[0].get("ExtraRecharge", 0))) / EINASAD_UNIT if rows.size() == 1 else 0
+	return int(_approx_cache[key])
+
+static func level_reduction_percent(player_level: int) -> float:
+	if not APPROX_LEVEL_REDUCTION:
+		return 0.0
+	var key: String = "reduction:%d" % player_level
+	if not _approx_cache.has(key):
+		var rows: Array = preload("res://scripts/resources/current523_definition_rows.gd").related("Experience", "Level", player_level)
+		_approx_cache[key] = clampf(float(rows[0].get("EinasadReduction", 0)), 0.0, 100.0) if rows.size() == 1 else 0.0
+	return float(_approx_cache[key])
+
+## Gives the day's ExtraRecharge once; returns the points added (0 when already given).
+func daily_extra(player_level: int, now: int = 0) -> int:
+	if now <= 0:
+		now = int(Time.get_unix_time_from_system())
+	var day: int = preload("res://scripts/routine523/routine523_runtime.gd").period_key("daily", now)
+	if day <= last_extra_day:
+		return 0
+	var points: int = daily_extra_points(player_level)
+	if points <= 0:
+		return 0
+	last_extra_day = day
+	return charge(points)
+
 func consume_for_kill(base_exp: int, reduction_percent: float = 0.0) -> int:
 	if blessing <= 0:
 		return 0
@@ -171,7 +213,8 @@ func export_state() -> Dictionary:
 		"last_regen_at": last_regen_at,
 		"dragon_orb_expires_at": dragon_orb_expires_at,
 		"auto_recharge": auto_recharge,
-		"last_orb_purchase_month": last_orb_purchase_month
+		"last_orb_purchase_month": last_orb_purchase_month,
+		"last_extra_day": last_extra_day
 	}
 
 func import_state(value: Variant) -> void:
@@ -185,6 +228,7 @@ func import_state(value: Variant) -> void:
 	dragon_orb_expires_at = maxi(0, int(state.get("dragon_orb_expires_at", 0)))
 	auto_recharge = bool(state.get("auto_recharge", false))
 	last_orb_purchase_month = str(state.get("last_orb_purchase_month", ""))
+	last_extra_day = maxi(0, int(state.get("last_extra_day", 0)))
 	advance_time()
 
 func snapshot() -> Dictionary:

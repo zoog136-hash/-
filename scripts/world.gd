@@ -934,6 +934,8 @@ func _process_slow(delta: float) -> void:
 	if ain_refresh_clock <= 0.0:
 		ain_refresh_clock = 1.0
 		ain_service.advance_time()
+		var ain_extra: int = ain_service.daily_extra(level)
+		if ain_extra > 0: hud.append_log("아인하사드 일일 추가 충전 +%d (TWILIGHT 근사: LevelEinasadBlessRecharge)" % ain_extra)
 		unconfirmed523.advance_time()
 		LOCAL_TOWER.tick(self)
 		if not source_dungeon_runs.state.active.is_empty(): _refresh_source_dungeon_panel()
@@ -10138,13 +10140,13 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return int(patch523_npc_spells.modifier("MeleeHit")) + int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(patch523_npc_spells.modifier("MeleeHit")) + int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + int(growth.bonus("melee_evasion_ignore:flat")) + _active_item_buff_total("melee_evasion_ignore") + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
-	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + int(growth.bonus("ranged_evasion_ignore:flat")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + int(growth.bonus("ranged_evasion_ignore:flat")) + _active_item_buff_total("ranged_evasion_ignore") + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
@@ -10476,7 +10478,8 @@ func _effective_er() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
-	return maxi(0, total + int(original_skills.stat("er") if original_skills != null else 0))
+	# TWILIGHT 근사: clan RangeEvasion (and any other held "ranged_evasion" buff) adds to ER.
+	return maxi(0, total + int(original_skills.stat("er") if original_skills != null else 0) + _active_item_buff_total("ranged_evasion"))
 
 func _record_mr(record: Dictionary) -> int:
 	if record.has("mr"):
@@ -10661,6 +10664,7 @@ func _blessing_consumption_reduction_percent() -> float:
 	for record: Dictionary in _all_equipped_records():
 		reduction += AIN_OPTION_RULES.reduction_percent(record)
 	reduction += _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "ain_saving_pct")
+	reduction += TwilightAinhasadService.level_reduction_percent(level)
 	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:
