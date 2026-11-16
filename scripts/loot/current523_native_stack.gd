@@ -76,6 +76,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if spec.get("kind")=="equipment_bless" and spec.get("activation_status")=="unrestricted":return {"kind":"bless","spec":spec}
 	if spec.get("kind")=="weapon_mastery_points" and spec.get("activation_status")=="unrestricted":return {"kind":"mastery","spec":spec}
 	if spec.get("kind")=="source_bless_points" and spec.get("activation_status")=="unrestricted":return {"kind":"bless_points","spec":spec}
+	if spec.get("kind")=="source_time_recharge" and spec.get("activation_status")=="unrestricted":return {"kind":"time_recharge","spec":spec}
 	if spec.get("kind")=="source_timed_buff" and spec.get("activation_status")=="unrestricted" and not spec.get("typed_effects",{}).is_empty():return {"kind":"buff","spec":spec}
 	if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"bag","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind") in ["source_selectable_reward","source_selectable_bag"] and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"selection","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
@@ -254,6 +255,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
 	if effect.kind=="bless_points":return use_bless_points(world,uid,owned,record,spec)
+	if effect.kind=="time_recharge":return use_time_recharge(world,uid,owned,record,spec)
 	# A bless scroll needs a target: the existing blessing chooser opens and its
 	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
 	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
@@ -1186,6 +1188,62 @@ static func use_bless_points(world: Node,uid: String,owned: Dictionary,record: D
 	world.hud.append_log(message)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"points":int(spec.points),"message":message}
 	return committed_use_context(result,record,0,false,"current523_native_stack.use_bless_points")
+
+## 시간 충전석 — TWILIGHT 근사(근거 약함) (2026-11-17, docs/items523_remaining_missing_rules.md 12.2). While the own map time is in effect
+## (current523_aden_play_controller.recharge_map_time) one physical unit is debited and
+## saved first, then the group is charged in the map time pool; a refused charge puts
+## the unit back. Otherwise the existing dungeon window recharge (dungeon_play.recharge,
+## the same pools the 던전 창 시간 충전 button fills) is used when it knows the item; with
+## neither, the stone is kept and a notice explains why.
+static func use_time_recharge(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	if spec.get("kind")!="source_time_recharge" or spec.get("activation_status")!="unrestricted" or not integer(spec.get("seconds")) or int(spec.seconds)<=0 or not spec.get("group") is Dictionary or spec.group.is_empty():return _failure("원본 시간 충전석 정의 연결 필요")
+	var label: String=str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name","")))
+	var hours: String=("%d시간" % int(int(spec.seconds)/3600)) if int(spec.seconds)%3600==0 else ("%d분" % int(int(spec.seconds)/60))
+	var controller: Object=world.call("_aden_play_controller") if world.has_method("_aden_play_controller") else null
+	var in_effect: bool=controller!=null and controller.has_method("map_time_in_effect") and bool(controller.call("map_time_in_effect"))
+	var play: Variant=world.get("dungeon_play")
+	var item_id: int=int(whole(record.get("source_item_class_id",0)))
+	var dungeon: bool=not in_effect and play is Object and play.has_method("recharge") and play.get("rules")!=null and play.rules.recharge_by_item.has(item_id)
+	if not in_effect and not dungeon:return _failure("%s: 현재 맵 시간 제한이 꺼져 있어(무제한 개방) 충전할 시간이 없습니다 · 아이템 보존" % label)
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 시간 충전석 차감 소유자 연결 필요"))))
+	var restore: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"item_use_cooldowns":world.item_use_cooldowns.duplicate(true),"consumable_state":world.consumable_service.export_state()}
+	var payload: Dictionary=paid.overrides.duplicate(true)
+	payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	busy=true
+	var saved: Error=world._save_game(true,payload)
+	busy=false
+	if saved!=OK:return _failure("%s 저장 실패 · 아이템과 시간 보존 (%d)" % [label,saved])
+	# The debit is in memory before the charge: the dungeon window commit saves the world.
+	_apply_bag(world,payload)
+	var charged: Dictionary={}
+	if dungeon:
+		var before_bonus: int=int(play.pool(int(spec.group_id),int(Time.get_unix_time_from_system())).bonus)
+		charged=play.recharge(item_id,-1,false)
+		if charged.get("ok",false):charged.merge({"recharged_ms":int(spec.seconds)*1000,"dungeon_bonus_seconds":[before_bonus,int(play.pool(int(spec.group_id),int(Time.get_unix_time_from_system())).bonus)]},true)
+	else:charged=controller.call("recharge_map_time",spec.group,int(spec.seconds))
+	if not charged.get("ok",false):
+		_apply_bag(world,restore)
+		busy=true
+		var back: Error=world._save_game(true,restore)
+		busy=false
+		var why: String="충전 상한(TimeLimit + MaxRechargeTime) 도달" if str(charged.get("reason",""))=="map_time_recharge_full" else str(charged.get("reason",""))
+		if back!=OK:return _failure("%s: 시간 충전 실패(%s) · 아이템 복구 저장 실패 (%d)" % [label,why,back])
+		return _failure("%s: 시간 충전 보류 · %s · 아이템 보존" % [label,why])
+	world.deferred_save.cancel()
+	var message: String=""
+	if dungeon:message="%s 사용 · 던전 이용 시간 +%s (던전 창 시간 풀)" % [label,hours]
+	else:
+		var minutes: int=int(int(charged.get("group_remaining_ms",{}).get(str(int(spec.group_id)),0))/60000)
+		message="%s 사용 · 맵 이용 시간 +%d분 (남은 %d시간 %d분)" % [label,int(int(charged.get("recharged_ms",0))/60000),int(minutes/60),minutes%60]
+	world.hud.append_log(message)
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"recharged_ms":int(charged.get("recharged_ms",0)),"route":"dungeon_play" if dungeon else "own_map_time","map_time":charged.duplicate(true),"message":message}
+	return committed_use_context(result,record,0,false,"current523_native_stack.use_time_recharge")
+
+static func _apply_bag(world: Node,payload: Dictionary) -> void:
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns
+	if payload.has("consumable_state"):world.consumable_service.import_state(payload.consumable_state)
 
 ## A card item: one physical unit is debited through its grant receipt and the
 ## exact original card is credited to the existing card owner in one save.

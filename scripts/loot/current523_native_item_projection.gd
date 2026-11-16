@@ -353,6 +353,11 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_points
 		if bless_points.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
+	var time_recharge: Dictionary=source_time_recharge(definition)
+	if not time_recharge.is_empty():
+		out["source_use_spec"]=time_recharge
+		if time_recharge.get("activation_status")=="unrestricted":
+			for index: int in range(rows.size()):handled[index]=true
 	var mastery: Dictionary=source_mastery_points(definition)
 	if not mastery.is_empty():
 		out["source_use_spec"]=mastery
@@ -1453,6 +1458,40 @@ static func source_bless_points(definition: Dictionary,description: String,intan
 	for reason: String in reasons:
 		if reason not in unique:unique.append(reason)
 	return {"kind":"source_bless_points","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"points":amount,"intangible_item_class":intangible.duplicate(true),"source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
+
+## 시간 충전석 (ItemCategory LandTimeRecharger) — TWILIGHT 근사(근거 약함) (2026-11-17, docs/items523_remaining_missing_rules.md 12.2): one
+## RechargeLandTimeLimitGroupID (an original ServiceType 13 LandTimeLimitGroup row) and one
+## RechargeTime in Seconds. Use adds that time to the group (current523_native_stack
+## .use_time_recharge), capped at TimeLimit + MaxRechargeTime. DeleteTime and
+## CannotExtendDeleteTime keep their existing meaning; any other row stays unsupported.
+static func source_time_recharge(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{});var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="LandTimeRecharger" or raw.is_empty():return {}
+	var reasons: Array=[];var ids: Array=[];var groups: Array=[];var seconds: Array=[]
+	if category.get("IsConsumable")!=true:reasons.append("source_category_not_consumable")
+	if whole(raw.get("TargettingTypeID"))!=1:reasons.append("unsupported_targetting_type")
+	if not str(raw.get("ServiceRegionCode","")).is_empty():reasons.append("source_service_region_context_required")
+	for row: Dictionary in definition.get("item_bonus",[]):
+		ids.append(row.get("ID"))
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var bonus: Dictionary=row.get("bonus",{})
+		if name_value=="DeleteTime":
+			if delete_time_stamp(row)<=0:reasons.append("source_item_lifetime_unresolved")
+			continue
+		if name_value=="CannotExtendDeleteTime" and direct(row) and row.get("unit",{}).get("Name")=="TrueFalse" and whole(bonus.get("Value")) in [0,1]:continue
+		if name_value=="RechargeLandTimeLimitGroupID" and direct(row) and row.get("unit",{}).get("Name")=="LandTimeLimitGroupID" and integer(bonus.get("Value")) and int(bonus.Value)>0:groups.append(int(bonus.Value));continue
+		if name_value=="RechargeTime" and direct(row) and row.get("unit",{}).get("Name")=="Seconds" and integer(bonus.get("Value")) and int(bonus.Value)>0:seconds.append(int(bonus.Value));continue
+		reasons.append("unsupported_item_bonus:"+name_value)
+	var group: Dictionary={}
+	if groups.size()!=1 or seconds.size()!=1:reasons.append("missing_or_ambiguous_time_recharge_rows")
+	else:
+		group=SOURCE.row("LandTimeLimitGroup",int(groups[0]))
+		if group.is_empty() or whole(group.get("ServiceTypeID"))!=13 or not integer(group.get("TimeLimit")) or int(group.TimeLimit)<=0:reasons.append("time_recharge_group_unsupported:"+str(groups[0]))
+	var unique: Array=[]
+	for reason: String in reasons:
+		if reason not in unique:unique.append(reason)
+	var typed_group: Dictionary={}
+	for key: Variant in group:typed_group[key]=int(group[key]) if integer(group[key]) else group[key]
+	return {"kind":"source_time_recharge","source_snapshot":"patch523","source_item_class_id":raw.get("ID"),"group_id":int(groups[0]) if groups.size()==1 else 0,"group":typed_group,"seconds":int(seconds[0]) if seconds.size()==1 else 0,"approximation":"TWILIGHT 근사: 충전 시간은 TimeLimit 위로 쌓이고 상한은 TimeLimit + MaxRechargeTime","source_item_bonus_ids":ids,"item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if unique.is_empty() else "blocked","blocked_reasons":unique}
 
 ## Every "축복 포인트 N" amount an original description states ("1,000" -> 1000).
 static func described_bless_points(text: String) -> Array:

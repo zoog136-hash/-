@@ -12,9 +12,10 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const VIS = preload("res://scripts/ui/item_visual_resolver.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
-## [시간 충전석][미션] 주말 월드 던전 시간 충전석: LandTimeRecharger, use rule
-## (MaxRechargeTime meaning) not in the table -> storage.
-const TIME_STONE := 202238
+## [BM][주문서-강화] 스냅퍼의 반지 강화 주문서: ScrollEnchant, the per-step success
+## rate is not in the table -> storage. (The 시간 충전석 used here before now has a use
+## owner: tests/map_time_recharge523_test.gd.)
+const TIME_STONE := 2431
 ## [재료] 빛나는 비늘: a StackableItem material that no ItemCraftInput row uses -> storage.
 const MATERIAL := 722
 ## [테스트] 버프 아이템 지급 (TestItem false, but a test name marker).
@@ -75,7 +76,7 @@ func runtime() -> void:
 	check(world._save_game(true,staged.overrides)==OK, "grant save")
 	world.inventory = staged.overrides.inventory; world.item_instances = staged.overrides.item_instances
 	var stone: String = str(record(TIME_STONE).name); var material: String = str(record(MATERIAL).name)
-	check(int(world.inventory.get(stone,0))==3 and int(world.inventory.get(material,0))==2, "3 time stones and 2 materials in the bag")
+	check(int(world.inventory.get(stone,0))==3 and int(world.inventory.get(material,0))==2, "3 enchant scrolls and 2 materials in the bag")
 	var shown: Dictionary = VIS.describe(world._find_catalog_item_record(stone))
 	evidence["icon"] = {"route":shown.get("route",""),"status":shown.get("status",""),"texture":shown.get("texture") is Texture2D,"icon_id":int(record(TIME_STONE).get("source_original_item",{}).get("IconID",0)) if record(TIME_STONE).get("source_original_item") is Dictionary else -1}
 	check(str(shown.get("status","")) in ["original_linked","original_icon_not_installed"], "the bag shows the item's own original IconID route (%s)" % str(shown.get("status","")))
