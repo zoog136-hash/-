@@ -129,7 +129,10 @@ func flow(data: Dictionary) -> void:
 	var first: Dictionary = clan.donate(world,2)
 	evidence["donate"] = first
 	check(first.ok and int(clan.state.experience)==90 and int(clan.state.week_points)==90 and world.gold==700000,"adena donation: 90 exp and points, 200,000 paid")
-	check(first.withheld.size()==1 and str(first.withheld[0]).contains("600"),"an item without a game owner is withheld and named")
+	# The synthetic reward item 3631 is the real 명예 코인 row: with the original ZIP
+	# installed the shared supplier pays it, without it the item has no owner.
+	if SOURCE.not_installed(): check(first.withheld.size()==1 and str(first.withheld[0]).contains("600"),"an item without a game owner is withheld and named")
+	else: check(first.withheld.is_empty() and str(first.granted).contains("600"),"with the original ZIP the same item is paid by the shared supplier")
 	var second: Dictionary = clan.donate(world,2)
 	check(second.ok and clan.level()==2 and clan.buff_value("hp_flat")==4 and clan.buff_value("def")==1,"180 exp -> level 2 buff")
 	check(not clan.donate_quote(world,2).ok,"DailyMaxDonatePoint 200 refuses a third 90-point adena donation")
