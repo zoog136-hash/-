@@ -12,7 +12,6 @@ const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const COOKER = preload("res://scripts/resources/cooked_actor_cooker.gd")
 const FORMAT = preload("res://scripts/resources/cooked_actor_format.gd")
 const STORE = preload("res://scripts/resources/cooked_actor_store.gd")
-const COOKED_PREVIEW = preload("res://scripts/animation/cooked_actor_preview.gd")
 const VIEW = preload("res://scripts/monsters/current523_source_bank_view.gd")
 const COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const GPU_TEXTURE = preload("res://scripts/resources/gpu_actor_texture.gd")
@@ -30,15 +29,26 @@ func selection(data: Dictionary, sprite: int = ACTOR) -> Dictionary:
 		"role_actions":{"idle":3,"walk":0},"loop_policy":{"idle":true,"walk":false},"host_policy":"cooked_actor_pack_test"}
 
 func runtime_preview(parent: Node, selected: Dictionary) -> Node2D:
+	STORE.disabled = true
 	var preview: Node2D = PREVIEW.new()
 	preview.cached_frames = true
 	parent.add_child(preview)
 	check(preview._configure_selected_roles(selected, "idle"), "runtime preview configures: " + str(preview.reference_bank_status.get("error", "")))
+	check(not preview.cooked_actor(), "runtime preview uses the original bank")
+	STORE.disabled = false
+	return preview
+
+## The same production preview with the cooked pack installed.
+func cooked_preview(parent: Node, selected: Dictionary) -> Node2D:
+	var preview: Node2D = PREVIEW.new()
+	preview.cached_frames = true
+	parent.add_child(preview)
+	check(preview._configure_selected_roles(selected, "idle") and preview.cooked_actor(), "preview plays the cooked actor: " + str(preview.reference_bank_status))
 	return preview
 
 func cook(data: Dictionary, directory: String, compress: int) -> Dictionary:
 	var selected: Dictionary = selection(data)
-	var inputs: Dictionary = STORE.inputs(selected)
+	var inputs: Dictionary = STORE.selection_inputs(selected)
 	var preview: Node2D = runtime_preview(root, selected)
 	var resolved: Dictionary = {"role_actions":selected.role_actions,"loop_policy":selected.loop_policy}
 	var started: int = Time.get_ticks_usec()
@@ -47,7 +57,7 @@ func cook(data: Dictionary, directory: String, compress: int) -> Dictionary:
 	preview.free()
 	check(cooked.get("ok", false), "cook succeeds: " + str(cooked.get("error", "")))
 	if not cooked.get("ok", false): return {}
-	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(FORMAT.actor_file(inputs.key))
+	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(inputs))
 	var written: Dictionary = COOKER.write_cooked(path, cooked, compress)
 	check(written.get("ok", false), "cooked file written: " + str(written.get("error", "")))
 	return {"path":path,"cooked":cooked,"written":written}
@@ -129,7 +139,7 @@ func run() -> void:
 		check(index.format == FORMAT.FORMAT, "explicit FORMAT constant stored")
 		check(var_to_bytes(index.states) == var_to_bytes(made.cooked.index.states), "states round-trip byte-exact")
 		check(var_to_bytes(index.tracks) == var_to_bytes(made.cooked.index.tracks), "tracks round-trip byte-exact")
-		check(index.inputs == made.cooked.index.inputs and index.key == "npc:%d" % ACTOR, "selection inputs round-trip")
+		check(index.inputs == made.cooked.index.inputs and index.inputs.sprite_id == ACTOR and index.inputs.kind == "selection", "selection inputs round-trip")
 		var pages: Dictionary = FORMAT.read_pages(file, index, int(head.data_start))
 		check(pages.get("ok", false) and pages.images.size() == index.pages.size(), "pages read back")
 		if pages.get("ok", false):
@@ -173,9 +183,8 @@ func run() -> void:
 	# 4. Pixel equality: runtime preview vs cooked preview, same steps.
 	if actor != null:
 		var runtime: Node2D = runtime_preview(root, selection(data))
-		var cooked_view: Node2D = COOKED_PREVIEW.new()
-		root.add_child(cooked_view)
-		check(cooked_view.configure_cooked(actor, "idle"), "cooked preview configures")
+		var cooked_view: Node2D = cooked_preview(root, selection(data))
+		check(cooked_view._layers.is_empty() and cooked_view._effect_nodes.is_empty(), "cooked preview builds no SP2 layer nodes")
 		for step: Array in steps():
 			var a: bool = runtime.advance_reference_source(step[0], step[1], step[2])
 			var b: bool = cooked_view.advance_reference_source(step[0], step[1], step[2])
@@ -198,7 +207,9 @@ func run() -> void:
 		runtime.free()
 		cooked_view.free()
 		# 5. The monster view: same advance logic on both previews.
-		await compare_views(data, actor)
+		await compare_views(data)
+		# 5b. A direct effect-style request (one-shot overlay) is cooked too.
+		await compare_request(data)
 	# 6. ETC2 variant: opaque pages block compressed, soft/ADD pages exact.
 	var etc_dir: String = scratch.path_join("cooked_etc2")
 	var etc: Dictionary = cook(data, etc_dir, Image.COMPRESS_ETC2)
@@ -223,13 +234,10 @@ func run() -> void:
 	var page_images: Array = FORMAT.read_pages(page_file, head_again.index, int(head_again.data_start)).images
 	for offset: int in range(6):
 		var copy: Dictionary = head_again.index.duplicate(true)
-		var key: String = "npc:%d" % (ACTOR + 100 + offset)
-		copy.key = key
-		copy.inputs.key = key
-		copy.inputs.sprite_id = ACTOR + 100 + offset
+		copy.inputs = STORE.selection_inputs(selection(data, ACTOR + 100 + offset))
 		copy.erase("pages")
 		copy.erase("format")
-		FORMAT.write(bound_dir.path_join(FORMAT.FORMAT_TAG).path_join(FORMAT.actor_file(key)), copy, page_images)
+		FORMAT.write(bound_dir.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(copy.inputs)), copy, page_images)
 	STORE.root_override = bound_dir
 	var one: STORE.CookedActor = STORE.lookup(selection(data, ACTOR + 100))
 	check(one != null, "bound fixture actor loads")
@@ -285,19 +293,30 @@ func install_checks() -> void:
 	state = PACK.record_cooked_part(base, two, "c".repeat(64))
 	check(state.get("complete") == true and state.done == [1, 2], "all parts: complete")
 
-func compare_views(data: Dictionary, actor: STORE.CookedActor) -> void:
+func attach(view: Node2D, preview: Node2D) -> void:
+	# What configure_admitted does after SELECTION.select (which needs the
+	# real pinned tables): the same preview API calls.
+	view._preview = preview
+	view.add_child(preview)
+	view._tracks = preview._playback_tracks
+	view._mode = preview.source_playback_mode()
+	for role: String in preview._playback_tracks:
+		var track: Dictionary = view._tracks.get(role,{})
+		view.timing_status[role] = {"effective_fps":track.get("effective_fps"),"origin":track.get("timing_origin"),"source_fps":track.get("fps")}
+	view.attachment_status = preview.attachment_status()
+	preview.advance_reference_source(0.0, "idle", 5)
+
+func compare_views(data: Dictionary) -> void:
 	var runtime_view: Node2D = VIEW.new()
 	var cooked_view: Node2D = VIEW.new()
 	root.add_child(runtime_view)
 	root.add_child(cooked_view)
-	var selected: Dictionary = selection(data)
-	var preview: Node2D = PREVIEW.new()
-	preview.cached_frames = true
-	check(preview._configure_selected_roles(selected, "idle"), "view runtime preview configures")
-	check(runtime_view._attach(preview, selected), "runtime view attaches")
-	var cooked_preview: Node2D = COOKED_PREVIEW.new()
-	cooked_preview.configure_cooked(actor, "idle")
-	check(cooked_view._attach(cooked_preview, selection(data)), "cooked view attaches")
+	var runtime: Node2D = runtime_preview(root, selection(data))
+	root.remove_child(runtime)
+	attach(runtime_view, runtime)
+	var cooked: Node2D = cooked_preview(root, selection(data))
+	root.remove_child(cooked)
+	attach(cooked_view, cooked)
 	check(is_equal_approx(runtime_view.duration("walk"), cooked_view.duration("walk")) and runtime_view.duration("walk") > 0.0, "same role duration")
 	check(runtime_view.timing_status == cooked_view.timing_status, "same timing status")
 	# delta, state, facing, sequence, attacking, dead
@@ -308,6 +327,51 @@ func compare_views(data: Dictionary, actor: STORE.CookedActor) -> void:
 		compare_draw(runtime_view._preview, cooked_view._preview, "view " + str(step))
 	runtime_view.free()
 	cooked_view.free()
+
+func compare_request(data: Dictionary) -> void:
+	var directory: String = scratch.path_join("cooked_request")
+	STORE.disabled = true
+	var source: Node2D = PREVIEW.new()
+	root.add_child(source)
+	check(source._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "idle", "overlay"), "effect request configures")
+	var inputs: Dictionary = STORE.request_inputs(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "overlay", {})
+	var cooked: Dictionary = COOKER.cook_preview(source, inputs, true)
+	source.free()
+	check(cooked.ok, "effect request cooks")
+	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(inputs))
+	check(COOKER.write_cooked(path, cooked, -1).ok, "effect request written")
+	var runtime: Node2D = PREVIEW.new()
+	root.add_child(runtime)
+	runtime._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "idle", "overlay")
+	runtime._is_overlay = true
+	STORE.disabled = false
+	STORE.reset_for_tests()
+	STORE.root_override = directory
+	var played: Node2D = PREVIEW.new()
+	root.add_child(played)
+	check(played._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "idle", "overlay") and played.cooked_actor(), "effect request plays cooked")
+	played._is_overlay = true
+	var looped: Node2D = PREVIEW.new()
+	root.add_child(looped)
+	check(looped._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":true}, "idle", "overlay") and not looped.cooked_actor(), "another loop policy is not this cooked request")
+	looped.free()
+	var layer: Node2D = PREVIEW.new()
+	root.add_child(layer)
+	layer._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "idle", "source_layer")
+	check(not layer.cooked_actor(), "independent source layers are never cooked")
+	layer.free()
+	for delta: float in [0.0, 0.05, 0.1, 0.2]:
+		runtime.advance_reference_source(delta, "idle", 4)
+		played.advance_reference_source(delta, "idle", 4)
+		check(runtime.last_source_frame == played.last_source_frame, "effect frame after %f" % delta)
+		compare_draw(runtime, played, "effect %f" % delta)
+	runtime.advance_reference_source(5.0, "idle", 4)
+	played.advance_reference_source(5.0, "idle", 4)
+	check(runtime.is_queued_for_deletion() and played.is_queued_for_deletion(), "both one-shot overlays free themselves at the end")
+	STORE.root_override = scratch.path_join("cooked_lossless")
+	STORE.reset_for_tests()
+	STORE.root_override = scratch.path_join("cooked_lossless")
+	await process_frame
 
 func measure(runtime: Node2D, cooked_view: Node2D) -> void:
 	for pair: Array in [["runtime", runtime], ["cooked", cooked_view]]:
@@ -329,16 +393,14 @@ func gpu_compare(data: Dictionary, actor: STORE.CookedActor) -> void:
 			background.color = Color(0.2, 0.4, 0.6)
 			background.size = Vector2(CANVAS, CANVAS)
 			viewport.add_child(background)
-			var view: Node2D
-			if cooked:
-				view = COOKED_PREVIEW.new()
-				view.configure_cooked(actor, "idle")
-			else:
-				view = PREVIEW.new()
-				view.cached_frames = true
+			STORE.disabled = not cooked
+			var view: Node2D = PREVIEW.new()
+			view.cached_frames = true
 			view.position = Vector2(CANVAS / 2, CANVAS / 2)
 			viewport.add_child(view)
-			if not cooked: view._configure_selected_roles(selection(data), "idle")
+			view._configure_selected_roles(selection(data), "idle")
+			check(view.cooked_actor() == cooked, "GPU view source " + str(cooked))
+			STORE.disabled = false
 			view.advance_reference_source(0.0, step[1], step[2])
 			view.advance_reference_source(step[0], step[1], step[2])
 			await process_frame

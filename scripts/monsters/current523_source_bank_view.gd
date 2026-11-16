@@ -4,13 +4,8 @@ const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const SELECTION = preload("res://scripts/monsters/current523_source_bank_selection.gd")
 const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
 const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
-const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
-const COOKED_PREVIEW = preload("res://scripts/animation/cooked_actor_preview.gd")
 var selection_status: Dictionary = {}
-## original_source_preview.gd, or cooked_actor_preview.gd when the installed
-## cooked actor pack has this exact selection (same view API).
-var _preview = null
-var cooked: bool = false
+var _preview: PREVIEW = null
 
 static func source_only_request(record: Dictionary) -> bool:
 	return SELECTION.source_only_request(record)
@@ -29,20 +24,6 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 			selection_status["reason"] = "current523_active_actor_registry_required_for_view"
 			selection_status["selection_phase"] = "awaiting_active_actor_registry"
 			return false
-	# Cooked pack first (build-time composited frames, verified at install);
-	# any actor it does not have exactly keeps the original runtime path.
-	started = HITCH.now()
-	var cooked_actor: COOKED_STORE.CookedActor = COOKED_STORE.lookup(selected)
-	HITCH.detail("view.cooked_lookup",started)
-	if cooked_actor != null:
-		var cooked_candidate := COOKED_PREVIEW.new()
-		if cooked_candidate.configure_cooked(cooked_actor,"idle"):
-			var resolved: Dictionary = cooked_actor.index.get("resolved_selection",{})
-			for field: String in ["role_actions","loop_policy","role_actor_ids","run_status","optional_role_status"]:
-				if resolved.has(field): selected[field] = resolved[field].duplicate(true)
-			cooked = true
-			return _attach(cooked_candidate,selected)
-		cooked_candidate.free()
 	var candidate := PREVIEW.new()
 	# Cached frame plans / composited layer groups (original_source_preview.gd).
 	candidate.cached_frames = true
@@ -56,10 +37,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 		selection_status["reason"] = candidate.reference_bank_status.get("error","current523_npc_core_source_action_unavailable")
 		candidate.free()
 		return false
-	return _attach(candidate,selected)
-
-func _attach(candidate: Node2D, selected: Dictionary) -> bool:
-	var started: int = HITCH.now()
+	started = HITCH.now()
 	_preview = candidate
 	_preview._reference_request_context = selected.get("source_bank_context",{}).duplicate(true)
 	_preview._reference_card_context = selected.duplicate(true)

@@ -35,6 +35,8 @@ class CookedActor:
 static var budget_bytes: int = DEFAULT_BUDGET_BYTES
 ## Tests and desktop: a cooked directory (the folder holding FORMAT_TAG).
 static var root_override: String = ""
+## Tests and the cook tool: never use a cooked actor (original path only).
+static var disabled: bool = false
 static var _root: String = ""
 static var _root_known: bool = false
 static var _cache: Dictionary = {} # key -> CookedActor, oldest first
@@ -81,6 +83,7 @@ static func installed_state() -> Dictionary:
 ## Absolute folder of FORMAT_TAG's actor files, or "" when the cooked pack is
 ## not installed, is another build's pack, or is turned off.
 static func root() -> String:
+	if disabled: return ""
 	if _root_known: return _root
 	_root_known = true
 	_root = ""
@@ -105,50 +108,75 @@ static func _ints(value: Variant) -> Dictionary:
 		for key: Variant in value: out[str(key)] = int(value[key]) if value[key] is int or value[key] is float else value[key]
 	return out
 
-## The selection fields a cooked actor must have been made from.
-static func inputs(selected: Dictionary) -> Dictionary:
-	var consumer: String = str(selected.get("consumer", ""))
-	var sprite: int = int(selected.get("sprite_id", -1))
-	return {"key":"%s:%d" % [consumer, sprite],"consumer":consumer,"sprite_id":sprite,
-		"role_actions":_ints(selected.get("role_actions", {})),"loop_policy":selected.get("loop_policy", {}).duplicate(),
-		"optional_role_actions":_ints(selected.get("optional_role_actions", {})),"optional_role_actor_ids":_ints(selected.get("optional_role_actor_ids", {})),
-		"optional_role_loop_policy":selected.get("optional_role_loop_policy", {}).duplicate(),"role_actor_ids":_ints(selected.get("role_actor_ids", {})),
-		"manifest_sha256":str(selected.get("manifest_sha256", "")).to_lower()}
+static func _bools(value: Variant) -> Dictionary:
+	var out: Dictionary = {}
+	if value is Dictionary:
+		for key: Variant in value: out[str(key)] = bool(value[key]) if value[key] is bool else value[key]
+	return out
 
-## The cooked actor for this exact selection, or null (original path).
-static func lookup(selected: Dictionary) -> CookedActor:
+## Playback mode original_source_preview.gd resolves for this request.
+static func request_mode(manifest_path: String, consumer: String, override: String = "") -> String:
+	if consumer.is_empty(): return override if override in ["strict", "compatible"] else "strict"
+	return POLICY.mode(manifest_path.get_base_dir(), override)
+
+## A card/NPC/class selection as given to _configure_selected_roles (before
+## its optional roles are resolved): the fields that decide what is drawn.
+static func selection_inputs(selected: Dictionary, override: String = "") -> Dictionary:
+	var consumer: String = str(selected.get("consumer", ""))
+	return {"kind":"selection","consumer":consumer,"sprite_id":int(selected.get("sprite_id", -1)),
+		"role_actions":_ints(selected.get("role_actions", {})),"loop_policy":_bools(selected.get("loop_policy", {})),
+		"optional_role_actions":_ints(selected.get("optional_role_actions", {})),"optional_role_actor_ids":_ints(selected.get("optional_role_actor_ids", {})),
+		"optional_role_loop_policy":_bools(selected.get("optional_role_loop_policy", {})),"role_actor_ids":_ints(selected.get("role_actor_ids", {})),
+		"manifest_sha256":str(selected.get("manifest_sha256", "")).to_lower(),
+		"mode":request_mode(str(selected.get("manifest_path", "")), consumer, override),"screen_copy":COMPOSITOR.screen_copy_available}
+
+## A direct _configure_reference_bank request (effects, ammo, overlays).
+static func request_inputs(manifest_path: String, manifest_sha: String, sprite: int, bindings: Dictionary, loops: Dictionary, consumer: String, role_actor_ids: Dictionary, override: String = "") -> Dictionary:
+	return {"kind":"request","consumer":consumer,"sprite_id":sprite,"role_actions":_ints(bindings),"loop_policy":_bools(loops),
+		"role_actor_ids":_ints(role_actor_ids),"manifest_sha256":manifest_sha.to_lower(),
+		"mode":request_mode(manifest_path, consumer, override),"screen_copy":COMPOSITOR.screen_copy_available}
+
+## Requests that are never cooked: an independent source layer is drawn with
+## its parent's draw flags, so it is part of its parent's cooked frames.
+static func cookable_consumer(consumer: String) -> bool:
+	return consumer != "source_layer"
+
+static func file_for(inputs: Dictionary) -> String:
+	var name: String = "%s_%d_%s" % [str(inputs.get("consumer", "")).replace(":", "_"), int(inputs.get("sprite_id", -1)), var_to_str(inputs).sha256_text().left(20)]
+	return "actors/" + name + ".twca"
+
+## Back-compatible NPC selection lookup.
+static func lookup(selected: Dictionary, override: String = "") -> CookedActor:
+	return lookup_inputs(selection_inputs(selected, override))
+
+## The cooked actor made from exactly these inputs, or null (original path).
+static func lookup_inputs(inputs: Dictionary) -> CookedActor:
+	if not cookable_consumer(str(inputs.get("consumer", ""))): return null
 	var folder: String = root()
 	if folder.is_empty(): return null
-	var wanted: Dictionary = inputs(selected)
-	var key: String = wanted.key
-	var actor: Variant = _cache.get(key)
+	var file: String = file_for(inputs)
+	var actor: Variant = _cache.get(file)
 	if actor is CookedActor:
-		_cache.erase(key)
-		_cache[key] = actor
+		_cache.erase(file)
+		_cache[file] = actor
 		_count("hit")
-		return actor if _matches(actor, wanted, selected) else null
-	if _missing.has(key):
+		return actor
+	if _missing.has(file):
 		_count("missing_memo")
 		return null
-	var loaded: Dictionary = load_actor(folder.path_join(FORMAT.actor_file(key)))
+	var loaded: Dictionary = load_actor(folder.path_join(file))
+	if loaded.ok and loaded.actor.index.get("inputs") != inputs: loaded = {"ok":false,"error":"selection_differs"}
 	if not loaded.ok:
 		while _missing.size() >= MISSING_MAX: _missing.erase(_missing.keys()[0])
-		_missing[key] = loaded.error
+		_missing[file] = loaded.error
 		_count("miss:" + str(loaded.error))
 		return null
 	actor = loaded.actor
-	_cache[key] = actor
+	_cache[file] = actor
 	_bytes += actor.bytes
 	_count("loaded")
 	_trim()
-	return actor if _matches(actor, wanted, selected) else null
-
-static func _matches(actor: CookedActor, wanted: Dictionary, selected: Dictionary) -> bool:
-	var mode: String = POLICY.mode(str(selected.get("manifest_path", "")).get_base_dir())
-	if actor.index.get("inputs") != wanted or actor.index.get("mode") != mode or bool(actor.index.get("screen_copy", true)) != COMPOSITOR.screen_copy_available:
-		_count("selection_differs")
-		return false
-	return true
+	return actor
 
 static func _trim() -> void:
 	while _bytes > budget_bytes and _cache.size() > 1:
@@ -198,8 +226,65 @@ static func load_actor(path: String) -> Dictionary:
 			if int(direction.get("end_state", -1)) >= index.states.size(): return {"ok":false,"error":"cooked_actor_end_state"}
 			var frames: Array = []
 			for frame: int in range(direction.durations.size()):
-				frames.append({"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame]})
+				var cooked_frame: Dictionary = {"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
+				# The original preview's boundary epsilon depends on this key.
+				if bool(direction.get("eps", false)): cooked_frame["presentation_duration"] = direction.durations[frame]
+				frames.append(cooked_frame)
 			directions.append(frames)
 		actor.tracks[str(role)] = {"loop":bool(track.loop),"static_pending_timing":bool(track.static_pending_timing),"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
 			"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"cooked":true}
 	return {"ok":true,"actor":actor}
+
+## The recorded draw state of `direction` for the frame the original clock
+## selected (`frame` with `offset` seconds into it), or the held end state.
+static func state_for(actor: CookedActor, role: String, direction: int, frame: int, offset: float, ended: bool) -> int:
+	var cooked: Dictionary = actor.index.tracks[role].directions[direction]
+	if ended: return int(cooked.end_state)
+	var state: int = -1
+	for segment: int in range(cooked.seg_start[frame], cooked.seg_start[frame + 1]):
+		state = cooked.seg_state[segment]
+		if offset < cooked.seg_end[segment]: break
+	return state if state >= 0 else int(cooked.end_state)
+
+static var _materials: Dictionary = {}
+
+static func _material(blend: int) -> CanvasItemMaterial:
+	if blend == CanvasItemMaterial.BLEND_MODE_MIX: return null
+	if not _materials.has(blend):
+		var material := CanvasItemMaterial.new()
+		material.blend_mode = blend
+		_materials[blend] = material
+	return _materials[blend]
+
+## Shows `state` with `sprites` (children of `owner`, grown on demand): one
+## Sprite2D per recorded item, page texture + region, in recorded draw order.
+static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedActor, state: int) -> void:
+	var items: PackedInt32Array = actor.index.states[state]
+	var images: PackedInt32Array = actor.index.images
+	var colors: PackedFloat32Array = actor.index.colors
+	var count: int = items.size() / FORMAT.ITEM_STRIDE
+	while sprites.size() < count:
+		var sprite := Sprite2D.new()
+		sprite.name = "CookedLayer%d" % sprites.size()
+		sprite.centered = false
+		sprite.region_enabled = true
+		sprite.region_filter_clip_enabled = true
+		owner.add_child(sprite)
+		sprites.append(sprite)
+	for slot: int in range(sprites.size()):
+		var sprite: Sprite2D = sprites[slot]
+		if slot >= count:
+			sprite.hide()
+			continue
+		var at: int = slot * FORMAT.ITEM_STRIDE
+		var image: int = items[at] * 5
+		var texture: Texture2D = actor.textures[images[image]]
+		if sprite.texture != texture: sprite.texture = texture
+		sprite.region_rect = Rect2(images[image + 1], images[image + 2], images[image + 3], images[image + 4])
+		sprite.position = Vector2(items[at + 1], items[at + 2])
+		sprite.material = _material(items[at + 3])
+		sprite.z_index = items[at + 4]
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_PARENT_NODE if items[at + 5] == FORMAT.FILTER_INHERIT else items[at + 5] as CanvasItem.TextureFilter
+		var color: int = items[at + 6] * 4
+		sprite.modulate = Color(colors[color], colors[color + 1], colors[color + 2], colors[color + 3])
+		sprite.show()
