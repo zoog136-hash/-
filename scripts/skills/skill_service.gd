@@ -341,7 +341,10 @@ func cast(record: Dictionary) -> bool:
 				if not world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range)): return false
 				world.pending_attack["original_skill"] = skill
 				world.pending_attack["original_target_life_id"] = target.life_id
-		"buff", "counter", "stealth": apply_buff(skill)
+		"buff", "counter", "stealth":
+			apply_buff(skill)
+			# TWILIGHT 근사 (4): self heal / cleanse actives.
+			if skill.has("approx_self_child"): approx_cast_child(id, skill.approx_self_child, null)
 		"detect": estimated_nodes.detect(skill)
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
@@ -821,9 +824,16 @@ func approx_attack_spells(target: TwilightMonster, attack: Dictionary) -> void:
 		fired[owner] = true
 		approx_cast_child(owner, invoke.spell, target)
 
+## TWILIGHT 근사 (4) "이동기": move next to the target (walkable cell only).
+func _approx_dash(target: TwilightMonster) -> void:
+	if not is_instance_valid(target) or target.dead: return
+	var end: Vector2 = target.global_position + target.global_position.direction_to(world.player.global_position) * 32.0
+	if world._is_walkable_world(end): world.player.global_position = end
+
 func approx_cast_child(owner: String, child: Dictionary, target: TwilightMonster) -> void:
 	var record: Dictionary = catalog.record_for(owner)
 	var name: String = str(record.get("name", owner))
+	if bool(child.get("dash", false)) and str(child.get("effect","")) != "dash": _approx_dash(target)
 	match str(child.get("effect","")):
 		"damage":
 			var power: int = int(child.get("base",0))
@@ -831,9 +841,26 @@ func approx_cast_child(owner: String, child: Dictionary, target: TwilightMonster
 			deal_damage({"id":owner,"name":name,"power":power,"attack_type":str(child.get("attack_type","magic")),"shape":"single"}, target)
 			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
 		"debuff":
-			if world.rng.randf() >= clampf(float(child.get("hit_chance",1)), 0, 1): return
 			var span: Array = child.get("duration",[0,0])
+			if not str(child.get("status","")).is_empty():
+				# TWILIGHT 근사 (4): control rows through the existing status service (resistance, boss factor).
+				var applied: bool = is_instance_valid(target) and status.apply({"id":"approx523:"+owner,"status":str(child.status),"status_chance":clampf(float(child.get("hit_chance",1)),0,1),
+					"duration_bounds":[float(span[0]),float(span[1])],"tick_damage":int(child.get("tick_damage",8)),"tick_interval":1.0,"debuff":child.get("modifiers",{})}, target, world)
+				if applied: event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+				return
+			if world.rng.randf() >= clampf(float(child.get("hit_chance",1)), 0, 1): return
 			status.set_modifiers(target, "approx523:" + owner, world.rng.randf_range(float(span[0]), float(span[1])), child.get("modifiers",{}))
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"heal_pct":
+			var amount: int = int(float(world._effective_max_hp()) * float(child.get("percent",0)) / 100.0)
+			if amount > 0: world.hp = mini(world._effective_max_hp(), world.hp + amount)
+			if bool(child.get("cleanse",false)): status.cleanse(world.player, ["stun","hold","fear","silence","poison","bleed","dark","ice"])
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"cleanse":
+			status.cleanse(world.player, ["stun","hold","fear","silence","poison","bleed","dark","ice"])
+			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+		"dash":
+			_approx_dash(target)
 			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
 		"self_buff":
 			apply_buff({"id":owner,"name":name + " (발동)","duration":float(child.get("duration",0)),"stats":child.get("stats",{}).duplicate(true),"mode":"approx_proc"})
