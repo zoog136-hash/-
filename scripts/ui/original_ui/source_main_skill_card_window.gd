@@ -187,6 +187,24 @@ func _enchant_spec() -> Dictionary:
 	spec[s+"Fx_CardSelect_Material"]={"exclude":true}
 	spec[s+"Nd_Enchant/Label_Skill_Percent"]={"role":"source_text","text":"성공 확률 "+percent_text(float(quote.get("probability_percent",0.0)))}
 	spec[s+"Nd_Enchant/Nd_Arrow"]={"visible":true}
+	# Before: the card's level and gauge; after: the gauge with the fed books
+	# (the next level once the gauge is full).
+	var need: float=maxf(1.0,float(quote.get("required_exp",card.get("required_exp",0))))
+	var exp_now: float=float(quote.get("exp",card.get("exp",0)))
+	var exp_after: float=float(quote.get("exp_after_feed",exp_now))
+	var level: int=int(card.get("level",0))
+	var maxed: bool=level>=int(card.get("max_level",level))
+	var full: bool=exp_after>=need and not maxed
+	var n: String=s+"Nd_Enchant/"
+	spec[n+"Panel_Exp_Before/Label_Level"]={"role":"source_text","text":"Lv.%d" % level}
+	spec[n+"Panel_Exp_Before/Label_Exp_0"]={"role":"source_text","text":"%.4f%%" % (100.0*exp_now/need)}
+	spec[n+"Panel_Exp_After/Label_Level"]={"role":"source_text","text":"Lv.%d" % (level+1 if full else level)}
+	spec[n+"Panel_Exp_After/Label_Exp_0"]={"role":"source_text","text":"%.4f%%" % (100.0*minf(exp_after,need)/need)}
+	spec[n+"Panel_Exp_After/Label_Max_On"]={"visible":maxed}
+	spec[n+"Panel_Exp_After/Label_Max_Off"]={"visible":false}
+	spec[n+"Panel_Exp_After/Fx_Levelup"]={"exclude":true}
+	spec[n+"Nd_ProgressBar/ProgressBar_Exp"]={"role":"source_percent","percent":100.0*minf(exp_after,need)/need}
+	spec[n+"ListView"]={"exclude":true}
 	var cost: int=int(quote.get("cost",{}).get("amount",0))
 	var can: bool=bool(quote.get("ok",false))
 	spec[s+"Btn_Production"]={"activate":Callable(self,"_levelup")}
