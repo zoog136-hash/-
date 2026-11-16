@@ -13,13 +13,27 @@ static func selection(npc_id: int) -> Dictionary:
 	if native.is_empty() or native.get("TestNPC")!=false: return {"ok":false,"reason":"orim_npc_class_missing_or_test"}
 	var sprite_id: int = int(native.get("Sprite",0))
 	if sprite_id<=0: return {"ok":false,"reason":"orim_npc_sprite_missing"}
+	return _sprite_selection(supplied,sprite_id,native,"npc:%d" % npc_id)
+
+## TWILIGHT 근사 (지시 2026-11-16, 오림 영웅 외형): the hero's OrimsTrailCharacter.SpriteID
+## with the same core action family the Orim NPCs use (ListSprAction idle 3 · walk 0 ·
+## attack 1 · hit 2 · death 8). The table names no hero action set; a hero sprite
+## missing one of them keeps the player's own look (no substitute image).
+static func hero_selection(character_id: int, sprite_id: int) -> Dictionary:
+	var supplied: Dictionary = BANK_SOURCE.source_tables({})
+	if not supplied.get("ok",false): return {"ok":false,"reason":str(supplied.get("reason","current523_source_bank_unavailable"))}
+	if sprite_id<=0: return {"ok":false,"reason":"orim_hero_sprite_missing"}
+	return _sprite_selection(supplied,sprite_id,{"OrimsTrailCharacterID":character_id,"SpriteID":sprite_id},"hero:%d" % character_id)
+
+static func _sprite_selection(supplied: Dictionary, sprite_id: int, native: Dictionary, key: String) -> Dictionary:
+	var npc_id: int = int(native.get("ID",0))
 	var action_rows: Dictionary = {}
 	for role: String in SELECTION.CORE_ACTIONS:
 		var action: Dictionary = BANK_SOURCE.table_row("ListSprAction",int(SELECTION.CORE_ACTIONS[role]))
 		if action.is_empty() or action.get("MotionType")!=SELECTION.CORE_MOTIONS[role]: return {"ok":false,"reason":"orim_npc_core_action_family_differs:"+role}
 		action_rows[role] = action.duplicate(true)
 	var run_binding: Dictionary = BANK_SOURCE.source_run_binding(sprite_id,int(SELECTION.CORE_ACTIONS.walk),0)
-	return {"ok":true,"enabled":true,"status":"selected","consumer":"npc","request_key":"orim523:npc:%d" % npc_id,
+	return {"ok":true,"enabled":true,"status":"selected","consumer":"npc","request_key":"orim523:" + key,
 		"source_snapshot":"patch523","content_snapshot":"patch523","npc_id":npc_id,"sprite_id":sprite_id,
 		"source_only":true,"legacy_media_fallback_allowed":false,"definition_selection_only":false,"runtime_actor_registry_required":false,
 		"selection_phase":"orim523_npc_class_visual","npc_source_row":native.duplicate(true),
@@ -33,6 +47,13 @@ static func selection(npc_id: int) -> Dictionary:
 
 func configure_orim(npc_id: int) -> bool:
 	selection_status = selection(npc_id)
+	return _configure_selection()
+
+func configure_hero(character_id: int, sprite_id: int) -> bool:
+	selection_status = hero_selection(character_id, sprite_id)
+	return _configure_selection()
+
+func _configure_selection() -> bool:
 	if not selection_status.get("ok",false): return false
 	var selected: Dictionary = selection_status
 	var candidate := PREVIEW.new()
