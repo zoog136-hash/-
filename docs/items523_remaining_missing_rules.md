@@ -761,3 +761,27 @@ UsableCallClan·LandCondition)과 **CompetitionDungeonLand**는 통과시킨다.
 - 뺀 보상의 원본 행은 사양의 `source_entities`(원본 증거)에 `approx_dropped: true`로 그대로 남는다(보상 목록에서만 빠짐).
   합성 고정 테스트 `tests/current523_reward_bag_retention_test.gd`는 스위치가 켜져 있으면 "테스트 보상 상자 보존·직업별 합 미완 보존" 대신
   이 근사 결과(사용 가능 · 재정규화 · 보상 수 + 뺀 수 = 원본 행 수)를 확인하도록 바꿨다(스위치를 끄면 예전 기대값 그대로).
+
+### 18.2 남은 막힌 상자 — TWILIGHT 근사 (2) (2026-11-16, PR `feat/approx523-luckybag2`, 지시 "막힌 상자 666종도 사유별로 근사")
+
+사유 분류(원본 팩, LuckyBag 비테스트 상자 사양 10,375종 중 사용 정의가 막힌 666종, 겹침 있음)와 적용:
+
+| 사유 | 수 | 근사 |
+| --- | ---: | --- |
+| `UIShowFilter`·`NoAnnounce` | 223·134 | 화면 필터·서버 공지라 오프라인에서는 무시 |
+| `SpellMaterialTypeID` | 6 | 주문 재료 표시 — 상자 열기와 무관, 무시 |
+| `Life` | 3 | 획득 후 수명은 수명 장부(§19, `item_life523`)가 맡으므로 열기에는 무시 |
+| `UsageInterval`·`ClassUsageInterval`(직접 또는 적용 유형 314 Account) | 24·49+32 | 재사용 대기(초)로 적용(`consume_delay_ms`, 저장됨, 게임 시간 기준). 오프라인 계정은 하나라 계정당 = 직업당(§17.1과 같은 방식) |
+| `InfiniteAmount` 1 | 12 | **열어도 소모되지 않음**(+재사용 대기). 퀘스트·빠른 슬롯 소유자(`quest_reusable523`)가 같은 열을 이미 '소지 유지 사용'으로 읽는다. 성장 항아리 12종은 원본 설명 "사용 시 '아덴 영웅의 성장 물약' N개를 획득합니다. (재사용 시간 24시간)" + `UsageInterval 86400`으로 확인(인벤 아이템 DB에는 항목 없음, 2026-11-16 검색) |
+| `LuckyBagLimitedItemPossession`(적용 유형 5 = ItemClass) | 33 | 대상 아이템을 값만큼 이미 가지고 있으면 열기 거부·상자 보존(예: 봉인된 지룡의 마안 → 지룡의 마안 #75304 1개) |
+| `ItemPossessionAppellationID` | 1 (전체 아이템 296: 엠블럼 205 등) | 열기에는 무시. **보유 칭호**로 연결(`scripts/titles/item_appellation523.gd`): 원본 Appellation → AppellationTitle 이름, RewardID(BuffClass) 행 중 받는 곳이 있는 것(경험치·PVE 리덕션·명중·AC·MR·공속·이속 등)을 `_active_item_buff_total`에 더한다. 칭호 여럿의 합산 규칙이 표에 없어 **하나만**(Appellation.Priority가 가장 높은 것) 적용(근거 약함). 작위·개인 호칭이 표시되지 않을 때 그 이름을 칭호 자리에 보여 준다. PvP 행은 사용자 결정(PvP 수치 = 몬스터 상대)대로 |
+| 보상이 전부 테스트 아이템 | 218 | 테스트 보상을 **같은 기능 행**(LuckyBagClassID·SelectRewardID·ComplexRewardID·BuffCardID 값이 같은 비테스트 아이템)으로 바꾸고, 대체가 없는 테스트 카드 아이템(BuffCardDrawer, 변신·마법인형·성물 덱)은 **그 카드 자체**를 카드 소유자에게 지급 |
+| 직업 확률 합 0 | 8 | 그 직업에 행이 하나도 없으면 직업 제한 없이 전체 행에서 그 합으로 추첨(`approx_class_pool`) |
+
+- 스위치: `current523_native_item_projection.gd` `APPROX_BAG_ROWS`·`APPROX_BAG_SUBSTITUTE`, `item_appellation523.ENABLED`.
+- 결과(실제 Main·원본 팩, `tests/items523_luckybag_approx2_test.gd`, 실제 가방 사용 프로필 기준): 사용 가능 **10,366 / 10,375**, 막힘 **9**
+  (예전 사양 기준 666). 남은 9는 보상이 전부 테스트 '상자 안의 상자'(대체 없음)나 테스트 재료라 줄 것이 없는 상자(#96114, #122271, #126682, #134832 등).
+- 근사가 닿은 상자: 대체 보상 227 · 카드 보상 421 · 소모 안 함 12 · 재사용 대기 95 · 보유 제한 33 · 직업 전체 풀 5 · 무시 행 321.
+- 실제 Main 확인: 성장 항아리 #200743 → 물약 지급, 항아리 보존, 24시간 대기, 대기 중 재사용 거부, 저장·불러오기 유지 /
+  희귀 변신 카드 상자 #121713 → 변신 카드(실버 레인저) 지급·저장 유지 / 봉인된 지룡의 마안 #96154 → 지룡의 마안 보유 중 거부, 없으면 열림 /
+  메티스의 훈장(이벤트) #217263 보유 → 칭호 '메티스의훈장', 경험치 +5%, 아이템을 빼면 효과 없음.

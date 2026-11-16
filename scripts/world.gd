@@ -141,6 +141,9 @@ const CLAN523 = preload("res://scripts/clan523/clan523.gd")
 var clan523 = CLAN523.new()
 const CONTENT523 = preload("res://scripts/content523/content523.gd")
 var content523 = CONTENT523.new()
+## 보유 칭호 ItemPossessionAppellationID (TWILIGHT 근사, scripts/titles/item_appellation523.gd).
+const ITEM_APPELLATION523 = preload("res://scripts/titles/item_appellation523.gd")
+var item_appellation523 = ITEM_APPELLATION523.new()
 ## 523 카드 다시 뽑기 / 스킬 카드 합성·강화 (사용자 결정 2026-11-16).
 const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
 var card_swap523 = CARD_SWAP523.new()
@@ -1038,6 +1041,7 @@ func _load_data() -> void:
 	domination_stones.configure(self)
 	routines.configure(self)
 	content523.configure(self)
+	item_appellation523.configure(self)
 	card_swap523.configure(self)
 	skill_cards523.configure(self)
 	unconfirmed523.configure(self)
@@ -4625,7 +4629,7 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
-	return total + clan523.buff_value(key) + content523.buff_value(key)
+	return total + clan523.buff_value(key) + content523.buff_value(key) + item_appellation523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6210,6 +6214,8 @@ func _update_hud() -> void:
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
 		title_badge.add_theme_color_override("font_color",titles.personal.display_color())
+		# TWILIGHT 근사: with no 작위/개인 호칭 shown, the held possession title (보유 칭호).
+		if title_badge.text.is_empty() and item_appellation523 != null: title_badge.text=item_appellation523.display_name()
 		title_badge.visible=not title_badge.text.is_empty()
 	if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	stat_hud_refresh_pending = false

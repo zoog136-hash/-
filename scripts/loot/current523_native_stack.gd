@@ -906,9 +906,21 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 	var view:=SupplierView.new();view.host=world;view.inventory=world.inventory;view.item_instances=world.item_instances;view.gold=world.gold
 	# Every eligible positive candidate must have a real registered supplier.
 	# Missing candidates never disappear or renormalize a random pool.
+	# TWILIGHT 근사 (2): LuckyBagLimitedItemPossession — refused while that many are owned.
+	for limit: Dictionary in spec.get("approx_possession_limits",[]):
+		var held: int=0
+		for key: Variant in world.item_instances:
+			var value: Variant=world.item_instances[key]
+			if value is Dictionary and value.get("record") is Dictionary and int(value.record.get("source_item_class_id",0))==int(limit.item_class_id):
+				var stack: Dictionary=proof(world,str(key))
+				held+=int(stack.get("remaining",1)) if not stack.is_empty() else 1
+		if held>=int(limit.max):view.free();return _failure("원본 조건: 이미 보유한 아이템이라 열 수 없습니다 · 상자 보존 (TWILIGHT 근사)")
 	for reward: Dictionary in spec.get("rewards",[]):
-		if not executor.call("class_matches",reward.get("class_ids",[]),class_id):continue
+		if not executor.call("class_matches",reward.get("class_ids",[]),class_id) and not class_id in spec.get("approx_class_pool",[]):continue
 		if reward.get("entity_type_id")==0 and int(reward.get("probability_raw",0))<=0:continue
+		if reward.has("approx_card"):
+			if card_binding(world,str(reward.approx_card.card_kind),int(reward.approx_card.card_id)).is_empty():view.free();return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 상자 보존")
+			continue
 		var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
 		var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
 		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
@@ -1005,18 +1017,38 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	if is_quest:
 		request.erase("source_native_stack_receipt");request["quest_reward_receipt"]=owned.receipt.duplicate(true)
 		paid=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256))
+	elif spec.get("approx_reusable",false):
+		# TWILIGHT 근사 (2): InfiniteAmount — the bag stays (no debit); the reuse wait applies.
+		paid={"ok":true,"overrides":{"inventory":world.inventory.duplicate(true),"item_instances":world.item_instances.duplicate(true),"consumable_state":world.consumable_service.export_state()},"selections":[{"physical_id":uid,"quantity":0,"approx_reusable":true}]}
 	else:paid=stage_debit(world,[request])
 	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 상자 입력 차감 소유자 연결 필요"))))
 	var view:=SupplierView.new();view.host=world;view.inventory=paid.overrides.inventory;view.item_instances=paid.overrides.item_instances;view.gold=world.gold
-	var grants: Array=[]
-	for reward: Dictionary in rewards:grants.append({"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)})
+	var grants: Array=[];var cards: Array=[]
+	for reward: Dictionary in rewards:
+		if reward.has("approx_card"):cards.append(reward);continue
+		grants.append({"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)})
 	origin=origin.duplicate(true)
 	origin.merge({"source_definition_archive":SOURCE.identity(),"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true),"input_ownership_kind":"quest" if is_quest else "native","source_rewards":rewards.duplicate(true)})
 	var supplier: Script=load("res://scripts/loot/patch523_item_inventory.gd")
-	var awarded: Dictionary=supplier.call("stage",view,grants,origin)
+	var awarded: Dictionary=supplier.call("stage",view,grants,origin) if not grants.is_empty() else {"ok":true,"overrides":paid.overrides.duplicate(true)}
 	view.free()
 	if not awarded.get("ok",false):return _failure(str(awarded.get("error","원본 상자 결과 지급 후보 연결 실패")))
 	var payload: Dictionary=awarded.overrides
+	if not payload.has("gold"):payload["gold"]=world.gold
+	# TWILIGHT 근사 (2): a test card item reward is the card itself, given to the card owner.
+	var card_outcomes: Array=[]
+	if not cards.is_empty():
+		var scratch: Object=preload("res://scripts/card_draw_fusion.gd").new()
+		scratch.configure(world.catalog_db);scratch.import_state(world.card_draw_fusion.export_state())
+		for reward: Dictionary in cards:
+			var category: String=str(reward.approx_card.card_kind)
+			var card: Dictionary=card_binding(world,category,int(reward.approx_card.card_id))
+			if card.is_empty():return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 상자 보존")
+			for copy: int in range(maxi(1,int(reward.get("amount",1)))):
+				var outcome: Dictionary=scratch.receive_source_card(category,card,{"source_snapshot":"patch523","item_class_id":int(reward.item_class_id),"card_id":int(reward.approx_card.card_id),"buff_card_cannot_swap":false,"bless":int(reward.get("bless_raw",1)),"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true),"approximation":"TWILIGHT_BAG_TEST_CARD_REWARD"})
+				if not outcome.get("ok",false):return _failure(str(outcome.get("error","원본 카드 지급 실패"))+" · 상자 보존")
+				card_outcomes.append({"category":category,"name":str(card.get("name",""))})
+		payload["card_draw_fusion"]=scratch.export_state()
 	var weight: int=world._inventory_total_weight();var keys: Dictionary={}
 	for key: String in world.inventory:keys[key]=true
 	for key: String in payload.inventory:keys[key]=true
@@ -1045,10 +1077,15 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	if is_quest and not world.quest_service.import_state(payload.quest_state):
 		world.patch523_owner_state_problem="원본 상자 저장 후 퀘스트 영수증 채택 미확정 · 정상 저장 불러오기 필요";busy=false;return _failure(world.patch523_owner_state_problem)
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.gold=int(payload.gold);world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(state)
+	if payload.has("card_draw_fusion"):
+		world.card_draw_fusion.import_state(payload.card_draw_fusion);world._invalidate_equipment_static()
+		if world.get("card_collections")!=null:world.card_collections.invalidate()
+		for card: Dictionary in card_outcomes:world.hud.append_log("원본 상자 카드 지급 · %s (%s) · TWILIGHT 근사" % [card.name,card.category])
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state;world.deferred_save.cancel();busy=false
 	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
-	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":rewards,"message":"원본 선택 보상을 지급했습니다" if spec.kind in ["source_selectable_reward","source_selectable_bag"] else "원본 상자 보상을 지급했습니다"}
+	var kept: bool=bool(spec.get("approx_reusable",false)) and not is_quest
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if kept else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if kept else int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":rewards,"cards":card_outcomes,"message":"원본 선택 보상을 지급했습니다" if spec.kind in ["source_selectable_reward","source_selectable_bag"] else "원본 상자 보상을 지급했습니다"}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.commit_owned_rewards")
 
 
