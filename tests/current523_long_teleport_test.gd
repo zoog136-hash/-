@@ -137,7 +137,16 @@ func _mb() -> float: return OS.get_static_memory_usage() / 1048576.0
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	check(QA.enter_game(world), "actual Main map entry")
+	for frame: int in 120: await process_frame
+	# Actual Main shows the renewal class picker on a fresh save; the older
+	# HUD workspace picker is the fallback.
+	var picker: Node = _find_script(root, "renewal_class_select.gd")
+	if picker != null:
+		picker.call("_choose", "기사")
+		if picker.has_method("_choose_gender"): picker.call("_choose_gender", 1)
+		picker.call("_confirm")
+	else: QA.enter_game(world)
+	picker = null
 	for frame: int in 900:
 		await process_frame
 		if world.current523_aden_source_active(): break
@@ -185,6 +194,14 @@ func runtime() -> void:
 		check(final_nodes < int(baseline_nodes * 1.35) + 200, "node count stays bounded (%d -> %d)" % [baseline_nodes, final_nodes])
 	world.queue_free()
 	for frame: int in 3: await process_frame
+
+func _find_script(node: Node, file: String) -> Node:
+	var script: Variant = node.get_script()
+	if script != null and str(script.resource_path).ends_with(file): return node
+	for child: Node in node.get_children():
+		var found: Node = _find_script(child, file)
+		if found != null: return found
+	return null
 
 func run() -> void:
 	landing_contract()
