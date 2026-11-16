@@ -61,8 +61,13 @@ func original_tables() -> void:
 	# Distribution of many draws of the first book (knight) vs original group weights.
 	var first: Dictionary = GACHA.spec(int(callers[0]))
 	var drawn: Dictionary = GACHA.table(int(first.gacha_id),1)
-	var expected: Dictionary = {}
-	for group: Dictionary in SOURCE.related("GachaCraftGroupProbability","GachaCraftID",int(first.gacha_id)): expected[int(group.GachaCraftGroupID)] = float(group.GroupSelectProbability)/float(GACHA.SCALE)
+	# Expected: the original group weights over the groups that keep a
+	# drawable row for this class (a group of only test rows is left out, 근사).
+	var expected: Dictionary = {}; var kept_total: float = 0.0
+	for entry: Dictionary in drawn.entries:
+		if not expected.has(int(entry.group_id)): expected[int(entry.group_id)] = float(entry.group_weight); kept_total += float(entry.group_weight)
+	for group: int in expected: expected[group] = expected[group]/kept_total
+	evidence["groups_without_drawable_rows"] = SOURCE.related("GachaCraftGroupProbability","GachaCraftID",int(first.gacha_id)).size()-expected.size()
 	var seen: Dictionary = {}
 	var rng := RandomNumberGenerator.new(); rng.seed = 20261116
 	var draws: int = 200000
@@ -136,7 +141,7 @@ func actual_main() -> void:
 		runs.append({"book":id,"name":item.name,"crafted":results.map(func(o: Dictionary) -> String: return "%s ×%d%s" % [o.name,int(o.amount)," 귀속" if o.bound else ""])})
 	# Forced draw: an entry with ItemAmount > 1 gives that amount.
 	var big: Dictionary = {}
-	for id: int in samples:
+	for id: int in GACHA.callers():
 		var drawn: Dictionary = GACHA.table(int(GACHA.spec(id).gacha_id),GACHA.class_of(world))
 		var threshold: int = 0
 		for entry: Dictionary in drawn.entries:
