@@ -361,6 +361,13 @@ func _sync_chrome_input_block(hud: Node) -> void:
 	for property: String in ["detail_window","companion_window","workspace"]:
 		var overlay: Variant=hud.get(property)
 		if overlay is Control and overlay.is_visible_in_tree():covers.append((overlay as Control).get_global_rect())
+	# An open original window (z >= CHROME_Z_LIMIT) covers the chrome under
+	# every input area it owns (its buttons, consumed panels and backdrops):
+	# the button router walks the chrome too, so a touch on the window's
+	# panel must not press the HUD button drawn beneath it.
+	for scene: Node in _coordinates.get_children():
+		if scene is CanvasItem and (scene as CanvasItem).z_as_relative and (scene as CanvasItem).z_index>=CHROME_Z_LIMIT and (scene as CanvasItem).is_visible_in_tree():
+			_collect_input_rects(scene,covers)
 	var blocked: int=0
 	for scene: Node in _coordinates.get_children():
 		if not scene is CanvasItem:continue
@@ -382,6 +389,12 @@ func _sync_chrome_input_block(hud: Node) -> void:
 				area.mouse_filter=int(area.get_meta("chrome_block_filter"))
 				area.remove_meta("chrome_block_filter")
 	chrome_blocked_buttons=blocked
+
+## Global rects of the input-taking Controls of an original window.
+static func _collect_input_rects(node: Node, found: Array[Rect2]) -> void:
+	if node is CanvasItem and not (node as CanvasItem).visible:return
+	if node is Control and (node as Control).mouse_filter==Control.MOUSE_FILTER_STOP and (node as Control).size.x>0.0 and (node as Control).size.y>0.0:found.append((node as Control).get_global_rect())
+	for child: Node in node.get_children():_collect_input_rects(child,found)
 
 static func _collect_button_areas(node: Node, found: Array) -> void:
 	var button: Variant=node.get_meta("source_button") if node.has_meta("source_button") else null
@@ -1109,6 +1122,7 @@ const FEATURE_WINDOWS={
 	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
 	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
+	"craft_result":preload("res://scripts/ui/original_ui/source_main_craft_result_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
