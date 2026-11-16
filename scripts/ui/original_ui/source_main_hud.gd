@@ -1104,6 +1104,7 @@ const FEATURE_WINDOWS={
 	"buff_info":preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd"),
 	"currency_info":preload("res://scripts/ui/original_ui/source_main_currency_window.gd"),
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
+	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
