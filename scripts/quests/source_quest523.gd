@@ -12,6 +12,7 @@ const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const BAKE_NAME := "quest523_payload"
 const SHARED = preload("res://scripts/resources/shared_values.gd")
 const DUMMY = preload("res://scripts/quests/source_dummy523.gd")
+const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 ## Lineage M style: only what the hot paths read (identity, title, category,
 ## period, blockers/exclusions, objective and the compact gate inputs) stays
 ## resident. Each quest's complete row (QuestView definition, joined goals,
@@ -319,6 +320,8 @@ static func install_zip(path: String) -> Dictionary:
 
 func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -> String:
 	var lazy: Variant = row.get(LAZY_KEY)
+	# 사용자 결정 2026-11-16: tutorial quests are deleted (tutorial523.gd).
+	if TUTORIAL.quest(TUTORIAL.quest_row_id(row)): return TUTORIAL.DECISION
 	if lazy is Dictionary: return _gate_compact(row, lazy, context, claimed, now)
 	if not preload("res://scripts/quests/source_dummy523.gd").evidence("QuestView",row.get("definition",{})).is_empty():return "원본 더미 선언 퀘스트 연결 제외"
 	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
@@ -346,7 +349,11 @@ func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -
 			"ClassNot":
 				if int(context.get("class_id",-1)) < 0 or int(context.get("class_id",-1)) == amount: return "직업 조건 미충족"
 			"Quest":
-				if not claimed.has("m523:quest:"+str(amount)): return "선행 퀘스트 %d 필요" % amount
+				# A deleted tutorial quest counts as done (its chain's class still applies).
+				if TUTORIAL.quest(amount):
+					var chain: String = TUTORIAL.prerequisite_gate(amount, context)
+					if not chain.is_empty(): return chain
+				elif not claimed.has("m523:quest:"+str(amount)): return "선행 퀘스트 %d 필요" % amount
 			"CreateCharacter":
 				# A live local character satisfies source CreateCharacter=1.
 				if amount != 1: return "캐릭터 생성 조건 확인 필요"
@@ -387,7 +394,11 @@ func _gate_compact(row: Dictionary, lazy: Dictionary, context: Dictionary, claim
 			"ClassNot":
 				if int(context.get("class_id",-1)) < 0 or int(context.get("class_id",-1)) == amount: return "직업 조건 미충족"
 			"Quest":
-				if not claimed.has("m523:quest:"+str(amount)): return "선행 퀘스트 %d 필요" % amount
+				# A deleted tutorial quest counts as done (its chain's class still applies).
+				if TUTORIAL.quest(amount):
+					var chain: String = TUTORIAL.prerequisite_gate(amount, context)
+					if not chain.is_empty(): return chain
+				elif not claimed.has("m523:quest:"+str(amount)): return "선행 퀘스트 %d 필요" % amount
 			"CreateCharacter":
 				if amount != 1: return "캐릭터 생성 조건 확인 필요"
 			_: return "선행 조건 미연결: "+str(condition[0])

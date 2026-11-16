@@ -62,7 +62,7 @@ func unit() -> void:
 	check(opened.get("requires",[]) == ["lm_base"] and int(opened.get("minimum_level",-1)) == 70, "prerequisite mapped to its bound record, learn level kept: "+str(opened))
 	check(ADAPTER.approx_values(opened, 90, 0) == {"def":10.0,"pveDamageReduction":11.0,"stunResistance":5.0}, "receivers + level row + stun resistance + PvP row as PvE (사용자 결정): "+str(ADAPTER.approx_values(opened,90,0)))
 	check(not opened.get("ignored",{}).has("PVPDamageReduction") and opened.get("ignored",{}).has("IgnoreCounterBarrierProbability"), "unreceived rows listed, not applied")
-	profile.bonuses.append(entry.call("PassiveCastSpell",1.0,"Value"))
+	profile.bonuses.append(entry.call("CounterRevenge",1.0,"Value"))
 	check(adapter.source_approx_passive("lmref_v","기사").has("reason"), "unsupported spell bonus still holds")
 
 func book_owners(catalog, bound: Dictionary) -> Dictionary:
@@ -150,7 +150,19 @@ func approx_actives(world, catalog, adapter) -> Dictionary:
 		if pick.is_empty() and str(spec.child.effect) == "damage" and spec.weapons.is_empty() and int(spec.mp) > 0 and spec.get("items",{}).is_empty() and float(spec.get("radius",0.0)) <= 0.0: pick = record
 		if not spec.get("items",{}).is_empty(): out["material_actives"] = int(out.get("material_actives",0)) + 1
 		if float(spec.get("radius",0.0)) > 0.0: out["area_actives"] = int(out.get("area_actives",0)) + 1
+		# (4) effects along the chain: heal / cleanse / dash / control status.
+		var cursor: Dictionary = spec.child
+		while not cursor.is_empty():
+			var tag: String = str(cursor.get("effect","")) + ("/" + str(cursor.status) if cursor.has("status") else "") + ("+dash" if cursor.get("dash",false) else "")
+			if not out.has("effects"): out["effects"] = {}
+			out.effects[tag] = int(out.effects.get(tag,0)) + 1
+			cursor = cursor.get("next",{})
 	check(out.opened.size() > 0, "approximated actives open: %d" % out.opened.size())
+	var tags: Dictionary = out.get("effects",{})
+	var status_tags: int = 0
+	for tag: String in tags:
+		if tag.contains("/"): status_tags += int(tags[tag])
+	check(status_tags > 0 and (int(tags.get("heal_pct",0)) + int(tags.get("cleanse",0)) + int(tags.get("dash",0)) + int(tags.get("damage+dash",0))) > 0, "(4) control statuses and heal/cleanse/dash reach actives: "+str(tags))
 	# 스킬 대체 (SpellTransformID): a learned passive replaces its bound skill's cast.
 	var transformer: Dictionary = {}
 	out["transform_passives"] = []
