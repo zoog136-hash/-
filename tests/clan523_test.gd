@@ -95,10 +95,10 @@ func rules() -> Dictionary:
 	var one: Dictionary = data.buffs[1]
 	check(one.effects=={"xp":1} and one.name=="혈맹 버프 1단계","ExperienceAdditionPercent 10000 / 10000 = 1 percent point")
 	var two: Dictionary = data.buffs[2]
-	check(two.effects=={"hp_flat":4,"def":1},"HPPlus -> hp_flat, ArmorClassBonus -> def (Value)")
+	check(two.effects=={"hp_flat":4,"def":1,"ranged_evasion":3},"HPPlus -> hp_flat, ArmorClassBonus -> def (Value), RangeEvasion -> ER (TWILIGHT 근사)")
 	var held: Array = []
 	for row: Dictionary in two.held: held.append(str(row.type))
-	check(held==["RangeEvasion","HPPlus"],"no consumer (RangeEvasion) and conditional rows are held, not applied")
+	check(held==["HPPlus"],"conditional rows are held, not applied")
 	check(str(data.benefits[1].text)=="혈맹 채팅" and int(data.benefits[1].icon_asset_id)==45641,"UIClanBenefit text and icon asset")
 	var bad: Rows = synthetic()
 	bad.tables.ClanCreateGameClass = []
@@ -144,8 +144,14 @@ func flow(data: Dictionary) -> void:
 	# MerchantGoods clan columns
 	check(clan.merchant_gate({"ClanLevelMin":2.0,"LimitMinClanLevel":2.0}).ok,"clan level 2 opens a level-2 row")
 	check(not clan.merchant_gate({"ClanLevelMin":0.0,"LimitMinClanLevel":4.0}).ok,"the higher of ClanLevelMin/LimitMinClanLevel applies")
-	check(not clan.merchant_gate({"ClanLevelMin":1.0,"LimitMinClanLevel":1.0,"DaysAfterClanJoin":7.0}).ok,"DaysAfterClanJoin is refused")
-	check(not clan.merchant_gate({"ClanLevelMin":1.0,"LimitClanMemberRank":true}).ok,"LimitClanMemberRank is refused")
+	# TWILIGHT 근사: join days = days since the local clan was created; the founder holds a rank.
+	check(not clan.merchant_gate({"ClanLevelMin":1.0,"LimitMinClanLevel":1.0,"DaysAfterClanJoin":7.0,"LimitDaysAfterClanJoin":7.0}).ok,"DaysAfterClanJoin 7: refused on the founding day")
+	var founded: int = clan.now_override
+	clan.now_override = int(clan.state.created_at)+7*86400
+	check(clan.joined_days()==7 and clan.merchant_gate({"ClanLevelMin":1.0,"LimitMinClanLevel":1.0,"DaysAfterClanJoin":7.0,"LimitDaysAfterClanJoin":7.0}).ok,"DaysAfterClanJoin 7: open 7 days after founding")
+	clan.now_override = founded
+	check(clan.merchant_gate({"ClanLevelMin":1.0,"LimitClanMemberRank":true}).ok,"LimitClanMemberRank: the local founder holds a rank")
+	check(not CLAN.new().merchant_gate({"LimitClanMemberRank":true}).ok and not CLAN.new().merchant_gate({"DaysAfterClanJoin":7.0}).ok,"no clan: rank / join-day rows refused")
 	check(not CLAN.new().merchant_gate({"ClanLevelMin":2.0}).ok and CLAN.new().merchant_gate({"ClanLevelMin":0.0}).ok,"no clan: only rows without a clan level")
 	check(clan.level()==3 and clan.emblem_grade()==3,"emblem OpenGrade follows the clan level")
 	# Hunting share (user decision 2026-11-12): 9 % x HuntingExpRatio, carry kept.

@@ -92,26 +92,32 @@ LimitBuffCardID 23, 기존 스킬 연결 없음 4, 스킬 실행 보류 3, 직�
 2. **MaxDonateCount 5의 기간.** UnitId 1(Value)만 있고 기간이 없다. DailyMaxDonatePoint와 같은 하루(05:00)로 적용.
 3. ~~Currency.ExchangeRate~~ → 사용자 결정 2026-11-12 (2)로 해결(가격 ÷ 환율, 올림). Gem 825 등 다른 재화의 환율은
    다이아로 파는 NPC가 열려 있지 않아 적용 대상이 없다.
-4. **아인하사드 기부 보상**(Unit Einasad 2,500 / 7,500). 원본 축복 단위(EinasadVariable 6,000 = 1포인트)인지 표시 포인트인지
-   표에 없어 지급하지 않는다(기부 결과에 "미지급"으로 표시).
+4. ~~아인하사드 기부 보상~~ → **TWILIGHT 근사(근거 약함), 2026-11-17**: Unit Einasad(242) 2,500 / 7,500 = 표시 축복 포인트.
+   근거: 같은 단위를 쓰는 MarketProduct 상품(83593~83623)의 수량이 100·200·300·1000으로 표시 포인트 크기이고,
+   원본 축복 단위(EinasadVariable 6,000 = 1포인트)라면 2,500은 1포인트도 안 된다. 기존 충전 상한(`charge_cap`)까지 충전·저장.
 5. **지급 소유자가 없는 보상**: 기사단의 증표(215394, 화폐지만 게임 지갑 없음) 60/200/600 → 미지급.
    주간 보상 결속의 주화(353752, 화폐·지갑 없음) 5종, 특별한 뿔피리 선택 상자(353592, Life 미지원) → 수령 거부(수령 기록도 안 남김).
 6. **혈맹 이름 규칙.** 길이·금지어 표가 없다(금지어는 사용자 범위 밖). TWILIGHT 기술 제한 1~16자.
 7. **ClanContentLevelRestriction (12행).** ClanContentTypeID(1~111)의 이름 표가 없어 어떤 기능인지 알 수 없다. 화면에는
    UIClanBenefit 문구만 보인다.
-8. **혈맹 버프 효과 중 소비처 없는 것 9행**: RangeEvasion 5행(16~20레벨), PierceMeleeEvasion·PierceRangeEvasion 각 2행(19·20레벨).
-   게임에 원거리 회피·회피 무시 버프를 읽는 곳이 없어 미반영(창에 "미반영"으로 표시).
+8. ~~혈맹 버프 효과 중 소비처 없는 것 9행~~ → **TWILIGHT 근사, 2026-11-17**: RangeEvasion 5행(16~20레벨) → 기존 원거리 회피 ER
+   (`world._effective_er`), PierceMeleeEvasion·PierceRangeEvasion 각 2행(19·20레벨) → 기존 근거리·원거리 명중의 "회피 무시" 항목
+   (장비 `melee/ranged_evasion_ignore`와 같은 자리). 20레벨: ER +5, 근거리·원거리 명중 +2.
 9. **MerchantGoods 91 남은 막힘**: LimitBuffCardID 23행(신화 변신 카드 보유 조건 — 카드 보유 판정 규칙 없음 →
    **TWILIGHT 근사 2026-11-16**: 그 원본 카드를 보유하면 구매 가능, `scripts/cards/card_requirement523.gd`),
-   LimitClanMemberRank 1행(어느 직위인지 값이 bool뿐), 혈맹 레벨 15·16·17·19 행은 레벨 도달 필요.
-   DaysAfterClanJoin·LimitDaysAfterClanJoin(상인 123 9행) — 로컬 창설자의 "가입일" 정의 없음, 거부.
+   혈맹 레벨 15·16·17·19 행은 레벨 도달 필요.
+   **TWILIGHT 근사(근거 약함), 2026-11-17**: LimitClanMemberRank(bool) = 직위 보유 → 로컬 창설자(군주)는 항상 충족.
+   DaysAfterClanJoin·LimitDaysAfterClanJoin(상인 123 9행, 모두 7) = 혈맹 창설 후 지난 일수(1인 혈맹이라 가입일 = 창설일) ≥ 7.
+   (상인 91·123·1371 행은 공성 시간 조건 `AvailableSiegeTime`으로 여전히 막힌다 — 공성은 범위 밖.)
 10. **혈맹 전용 아이템 (현재 집계 33종 사용 거부·지급 불가, 이름 "[혈맹]" 105종 중)**: 특수-신화 스킬서 22종
     (학습 조건에 신화 변신 카드 필요 — `source_skill_limit_card_requirement_unresolved` → **TWILIGHT 근사 2026-11-16**: 카드를 보유하면 학습), 속성 강화·변환 주문서 5종,
     마법서·정령 수정 등 효과 소유자 없음 6종. 혈맹 규칙이 아니라 스킬·강화 쪽 미연결이라 이번에 연결하지 않음.
     이전 감사(사용 101 · 지급 178)는 그 뒤 PR들(#423 선택 상자 등)로 대부분 연결됨.
-11. **성장의 뿔피리·전투의 뿔피리(350562·350572, ClanRewardOnItemUse)**: 사용 시 혈맹원 전원에게 버프(성장 = 경험치 +20% 1,800초,
-    전투 = PVP 리덕션). 성장 뿔피리는 표로 정의되지만 얻는 경로가 주간 52,500포인트 보너스 상자(Life 미지원)뿐이고,
-    1인 혈맹의 "혈맹원 전원" 적용 범위가 표에 없어 연결하지 않음. 전투 뿔피리는 PVP 전용(게임에 PVP 없음).
+11. ~~성장의 뿔피리·전투의 뿔피리(350562·350572, ClanRewardOnItemUse)~~ → **TWILIGHT 근사, 2026-11-17**
+    (`current523_native_item_projection.source_clan_horn`): "혈맹원 전원" = 1인 혈맹의 본인. ClanRewardOnItemUse → Reward(Buff, Amount 초)
+    → BuffClass. 성장 = 경험치 +20% 1,800초, 전투 = PVPDamageReductionPercent 3% → 몬스터 대상 대미지 감소 3% 600초
+    (사용자 결정 2026-11-16 13:46: PvP 수치는 몬스터 대상 수치 — player_skills523 PVP_TARGET_TO_NPC). PVPPierceDamageReductionPercent 3%(상대 리덕션 무시)는 몬스터 쪽 대응 항목이
+    없어 목록에만 남김. Life(259200초)는 기존 아이템 수명 규칙(#587). 시험: `tests/clan523_approx_test.gd`.
 12. **Reward.RewardGetTimeTypeID / ClanOnly / UseImmediately**: 혈맹 보상 행에서 의미 표가 없어 읽지 않음.
 
 ## 4. 온라인 전용 (범위 밖)

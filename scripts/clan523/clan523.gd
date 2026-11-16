@@ -31,12 +31,16 @@ const NAME_MAX := 16
 ## Same mapping as current523_native_item_projection timed buffs.
 const FIELDS := {"ArmorClassBonus":"def","HPPlus":"hp_flat","MPPlus":"mp_flat","DamageReduction":"damage_reduction",
 	"MeleeDamage":"melee_damage","RangeDamage":"ranged_damage","MagicDamage":"magic_damage",
-	"MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy"}
+	"MeleeHit":"melee_accuracy","RangeHit":"ranged_accuracy","MagicHit":"magic_accuracy",
+	# TWILIGHT 근사 (2026-11-17, docs/clan523_missing_rules.md 3-8): 원거리 회피 → 기존 ER,
+	# 근거리·원거리 회피 무시 → 기존 근거리·원거리 명중의 회피 무시 항목.
+	"RangeEvasion":"ranged_evasion","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore"}
 ## Percentage effects read as whole percent points (Value / UIUnit Denominator).
 const PERCENT_FIELDS := {"ExperienceAdditionPercent":"xp"}
 const LABELS := {"def":"AC","hp_flat":"최대 HP","mp_flat":"최대 MP","damage_reduction":"대미지 리덕션","melee_damage":"근거리 대미지",
 	"ranged_damage":"원거리 대미지","magic_damage":"마법 대미지","melee_accuracy":"근거리 명중","ranged_accuracy":"원거리 명중",
-	"magic_accuracy":"마법 명중","xp":"획득 경험치 %"}
+	"magic_accuracy":"마법 명중","xp":"획득 경험치 %","ranged_evasion":"원거리 회피(ER)","melee_evasion_ignore":"근거리 회피 무시",
+	"ranged_evasion_ignore":"원거리 회피 무시"}
 const POLICIES := ["CreateLevelCondition","CreateCommission","MaxDonateCount","WeeklyMaxDonatePoint","DonateExpRatio","AdenaDonateID","HuntingExpRatio"]
 ## User decision 2026-11-12: hunting gives clan experience in proportion to
 ## the character experience of each monster kill. TWILIGHT share 9 % times the
@@ -397,9 +401,20 @@ func donate(world: Object, donate_id: int) -> Dictionary:
 	var overrides: Dictionary = {"gold":gold,"inventory":inventory,"item_instances":(world.get("item_instances") as Dictionary).duplicate(true)}
 	var granted: Array[String] = []
 	var withheld: Array[String] = []
+	var ain: Variant = world.get("ain_service") if world!=null else null
+	var ain_added: int = 0
 	for reward: Dictionary in quote.entry.rewards:
 		if reward.unit!="ItemClassID":
-			if reward.unit=="Einasad": withheld.append("아인하사드 %d (단위 해석 없음)" % int(reward.amount))
+			# TWILIGHT 근사(근거 약함) (2026-11-17): Unit Einasad = 표시 축복 포인트 (같은 단위의
+			# MarketProduct 상품 100·200·300·1000과 같은 크기). 기존 충전 상한(charge_cap)까지.
+			if reward.unit=="Einasad":
+				if ain is Object and ain.has_method("charge_cap") and ain.has_method("export_state"):
+					var room: int = maxi(0,int(ain.charge_cap())-int(ain.get("blessing"))-ain_added)
+					var add: int = mini(room,int(reward.amount))
+					ain_added += add
+					if add>0: granted.append("아인하사드 축복 %d" % add)
+					else: withheld.append("아인하사드 %d (축복 상한)" % int(reward.amount))
+				else: withheld.append("아인하사드 %d (축복 소유자 없음)" % int(reward.amount))
 			continue
 		var staged: Dictionary = _stage_item(world,overrides,int(reward.class_id),int(reward.amount),1,{"kind":"clan523_donate","donate_id":donate_id,"reward_id":int(reward.id)})
 		if staged.get("ok",false):
@@ -415,7 +430,12 @@ func donate(world: Object, donate_id: int) -> Dictionary:
 	var message: String = "%s 기부 · 혈맹 경험치 +%d · 기부 포인트 +%d" % [str(quote.entry.name),int(quote.experience),int(quote.points)]
 	if not granted.is_empty(): message += " · 획득 "+", ".join(granted)
 	if not withheld.is_empty(): message += " · 미지급 "+", ".join(withheld)
+	if ain_added>0:
+		var ain_state: Dictionary = ain.export_state()
+		ain_state.blessing = int(ain_state.blessing)+ain_added
+		overrides["ainhasad_state"] = ain_state
 	var result: Dictionary = _commit(world,next,overrides,message)
+	if result.ok and ain_added>0: ain.set("blessing",int(overrides.ainhasad_state.blessing))
 	if result.ok and int(result.level)>before: result.reason = str(result.reason)+" · 혈맹 레벨 %d" % int(result.level)
 	result["granted"] = granted; result["withheld"] = withheld
 	return result
@@ -493,16 +513,27 @@ func claim_weekly(world: Object, reward_row_id: int) -> Dictionary:
 
 ## MerchantGoods clan columns: ClanLevelMin and LimitMinClanLevel are both
 ## minimum clan levels; a row needs the local clan at the higher of the two.
-## DaysAfterClanJoin / LimitDaysAfterClanJoin / LimitClanMemberRank have no
-## local meaning defined and refuse.
+## TWILIGHT 근사(근거 약함) (2026-11-17): DaysAfterClanJoin / LimitDaysAfterClanJoin
+## (both 7 on every row) = whole days since the local clan was created (the only
+## member joined then); LimitClanMemberRank (a bool) = a ranked member, which the
+## local founder (군주 rank) always is.
 func merchant_gate(row: Dictionary) -> Dictionary:
 	var need: int = maxi(int(row.get("ClanLevelMin",0)),int(row.get("LimitMinClanLevel",0)))
-	if int(row.get("DaysAfterClanJoin",0))!=0 or int(row.get("LimitDaysAfterClanJoin",0))!=0: return {"ok":false,"reason":"혈맹 가입 경과일 조건 미해석"}
-	if row.get("LimitClanMemberRank",false): return {"ok":false,"reason":"혈맹 직위 조건 미해석"}
+	var days_need: int = maxi(int(row.get("DaysAfterClanJoin",0)),int(row.get("LimitDaysAfterClanJoin",0)))
+	if (days_need>0 or row.get("LimitClanMemberRank",false)) and not has_clan(): return {"ok":false,"reason":"혈맹 가입 필요 · 혈맹 없음 (혈맹 창으로 창설)","need":need}
+	if days_need>0:
+		var days: int = joined_days()
+		if days<days_need: return {"ok":false,"reason":"혈맹 가입 %d일 후 구매 가능 · 현재 %d일" % [days_need,days],"need":need,"days_need":days_need}
 	if need<=0: return {"ok":true,"need":0}
 	if not has_clan(): return {"ok":false,"reason":"혈맹 레벨 %d 필요 · 혈맹 없음 (혈맹 창으로 창설)" % need,"need":need}
 	if level()<need: return {"ok":false,"reason":"혈맹 레벨 %d 필요 · 현재 %d" % [need,level()],"need":need}
 	return {"ok":true,"need":need}
+
+## Whole days since the local clan was created (TWILIGHT 근사: 가입일 = 창설일).
+func joined_days(at: int = -1) -> int:
+	if not has_clan(): return 0
+	if at<0: at = now()
+	return maxi(0,int((at-int(state.get("created_at",at)))/86400))
 
 ## Emblem.OpenGrade the clan unlocks (the clan level), 0 without a clan.
 func emblem_grade() -> int:
