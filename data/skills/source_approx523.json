@@ -18,11 +18,13 @@
     "weapon": {"value": "equipped_weapon_type_in_set", "why": "주문/버프의 WeaponType·WeaponGroup 행(그룹은 원본 WeaponTypeForWeaponGroup로 펼침)이 있으면 장착 무기의 원본 WeaponType이 그 집합에 있을 때만 적용. 인벤 '양손검 착용 필요'와 같음.", "source": "inven_blow_attack"},
     "unreceived_rows": {"value": "ignore_and_list", "why": "게임에 받는 곳이 없는 행(PvP 전용, 카운터 배리어 무시 확률, 다른 스킬 변환 등)은 적용하지 않고 스킬 설명의 '근사 미적용' 목록에 남긴다. 적용 가능한 행이 하나도 없으면 계속 보류."}
   },
-  "spell_bonus_allowed": ["BuffClassID", "RequiredSpellClassID", "WeaponType", "WeaponGroup", "SpellAttackType", "UISpellSelectTypeID", "CannotUseSiegeZone", "SpellLevelFrom"],
+  "spell_bonus_allowed": ["BuffClassID", "RequiredSpellClassID", "WeaponType", "WeaponGroup", "SpellAttackType", "UISpellSelectTypeID", "CannotUseSiegeZone", "SpellLevelFrom", "ChangeSpecialSpellClassID", "ToggleOnSpellClassID", "PassiveCastSpell"],
+  "spell_bonus_note_toggle": "TWILIGHT 근사 (4, 근거 약함): #OFF/#ON 토글 패시브(ChangeSpecialSpellClassID·ToggleOnSpellClassID)는 토글 UI가 없어 기본(OFF) 주문의 버프 행만 적용한다. PassiveCastSpell=1은 '패시브로 시전'(버프 상시 적용) 표시라 그대로 둔다.",
   "spell_bonus_note": "SpellAttackType·UISpellSelectTypeID·CannotUseSiegeZone·SpellLevelFrom은 패시브 상시 수치에 영향이 없어 무시한다. 그 밖의 주문 보너스(하위 주문, 토글, 스킬 변환 등)가 있으면 계속 보류.",
   "receivers": {
     "DamageReduction": {"stat": "damageReduction", "unit": "Value", "scale": 1},
     "PVEDamageReduction": {"stat": "pveDamageReduction", "unit": "Value", "scale": 1},
+    "PVPDamageReduction": {"stat": "pveDamageReduction", "unit": "Value", "scale": 1, "note": "사용자 결정 2026-11-16 13:46: PvP 수치도 몬스터 상대 수치로 취급(TWILIGHT 근사). PVE 행과 함께 있으면 둘 다 더해진다."},
     "ArmorClassBonus": {"stat": "def", "unit": "Value", "scale": 1},
     "ArmorClass": {"stat": "def", "unit": "Value", "scale": 1},
     "MeleeHit": {"stat": "meleeHit", "unit": "Value", "scale": 1},

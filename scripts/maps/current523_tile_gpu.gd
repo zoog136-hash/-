@@ -23,14 +23,15 @@ static func mode() -> int:
 	return GPU.compression_mode() if GPU.enabled else -1
 
 ## Queues `image` (exclusively owned by the caller, not used afterwards) to
-## replace the pixels of `texture`.
-func queue(texture: ImageTexture, image: Image) -> void:
+## replace the pixels of `texture`. `pump_now` false only queues (tests use it
+## to check the waiting bound without racing the worker threads).
+func queue(texture: ImageTexture, image: Image, pump_now: bool = true) -> void:
 	if mode() < 0 or texture == null or image == null or image.is_compressed() or image.get_width() % 4 != 0 or image.get_height() % 4 != 0: return
 	if _waiting.size() >= MAX_WAITING:
 		_waiting.pop_front()
 		dropped += 1
 	_waiting.append([texture, image])
-	pump()
+	if pump_now: pump()
 
 ## Applies finished compressions and starts waiting ones. Cheap when idle.
 func pump() -> void:

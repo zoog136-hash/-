@@ -60,9 +60,9 @@ func unit() -> void:
 	adapter.profiles = {"lmref_v":profile}
 	var opened: Dictionary = adapter.source_approx_passive("lmref_v","기사")
 	check(opened.get("requires",[]) == ["lm_base"] and int(opened.get("minimum_level",-1)) == 70, "prerequisite mapped to its bound record, learn level kept: "+str(opened))
-	check(ADAPTER.approx_values(opened, 90, 0) == {"def":10.0,"pveDamageReduction":8.0,"stunResistance":5.0}, "receivers + level row + stun resistance: "+str(ADAPTER.approx_values(opened,90,0)))
-	check(opened.get("ignored",{}).has("PVPDamageReduction") and opened.get("ignored",{}).has("IgnoreCounterBarrierProbability"), "unreceived rows listed, not applied")
-	profile.bonuses.append(entry.call("PassiveCastSpell",1.0,"Value"))
+	check(ADAPTER.approx_values(opened, 90, 0) == {"def":10.0,"pveDamageReduction":11.0,"stunResistance":5.0}, "receivers + level row + stun resistance + PvP row as PvE (사용자 결정): "+str(ADAPTER.approx_values(opened,90,0)))
+	check(not opened.get("ignored",{}).has("PVPDamageReduction") and opened.get("ignored",{}).has("IgnoreCounterBarrierProbability"), "unreceived rows listed, not applied")
+	profile.bonuses.append(entry.call("CounterRevenge",1.0,"Value"))
 	check(adapter.source_approx_passive("lmref_v","기사").has("reason"), "unsupported spell bonus still holds")
 
 func book_owners(catalog, bound: Dictionary) -> Dictionary:
@@ -139,6 +139,79 @@ func attack_spells(world, catalog, adapter) -> Dictionary:
 	if is_instance_valid(target): target.queue_free()
 	return out
 
+func approx_actives(world, catalog, adapter) -> Dictionary:
+	var out: Dictionary = {"opened":[],"pvp_lm":{}}
+	var pick: Dictionary = {}
+	for key: String in adapter.profiles:
+		var record: Dictionary = catalog.record_for(key)
+		if not record.has("source_approx523_active"): continue
+		out.opened.append("%s/%s" % [str(record["class"]),str(record.name)])
+		var spec: Dictionary = record.source_approx523_active
+		if pick.is_empty() and str(spec.child.effect) == "damage" and spec.weapons.is_empty() and int(spec.mp) > 0 and spec.get("items",{}).is_empty() and float(spec.get("radius",0.0)) <= 0.0: pick = record
+		if not spec.get("items",{}).is_empty(): out["material_actives"] = int(out.get("material_actives",0)) + 1
+		if float(spec.get("radius",0.0)) > 0.0: out["area_actives"] = int(out.get("area_actives",0)) + 1
+		# (4) effects along the chain: heal / cleanse / dash / control status.
+		var cursor: Dictionary = spec.child
+		while not cursor.is_empty():
+			var tag: String = str(cursor.get("effect","")) + ("/" + str(cursor.status) if cursor.has("status") else "") + ("+dash" if cursor.get("dash",false) else "")
+			if not out.has("effects"): out["effects"] = {}
+			out.effects[tag] = int(out.effects.get(tag,0)) + 1
+			cursor = cursor.get("next",{})
+	check(out.opened.size() > 0, "approximated actives open: %d" % out.opened.size())
+	var tags: Dictionary = out.get("effects",{})
+	var status_tags: int = 0
+	for tag: String in tags:
+		if tag.contains("/"): status_tags += int(tags[tag])
+	check(status_tags > 0 and (int(tags.get("heal_pct",0)) + int(tags.get("cleanse",0)) + int(tags.get("dash",0)) + int(tags.get("damage+dash",0))) > 0, "(4) control statuses and heal/cleanse/dash reach actives: "+str(tags))
+	# 스킬 대체 (SpellTransformID): a learned passive replaces its bound skill's cast.
+	var transformer: Dictionary = {}
+	out["transform_passives"] = []
+	for key: String in adapter.profiles:
+		var record: Dictionary = catalog.record_for(key)
+		if record.get("source_approx523",{}).get("transforms",[]).is_empty(): continue
+		out.transform_passives.append(str(record.name))
+		if transformer.is_empty() and int(record.source_approx523.transforms[0].level) <= 90 and record.source_approx523.requires.is_empty(): transformer = record
+	check(out.transform_passives.size() > 0, "스킬 대체 패시브가 열림: "+str(out.transform_passives))
+	if not transformer.is_empty():
+		var held: Dictionary = catalog.learned.duplicate(true)
+		world.job_class = str(transformer["class"]); world.level = 90
+		catalog.learned[str(transformer.id)] = 1; catalog.revision += 1
+		var transform: Dictionary = catalog.approx_transform_for(str(transformer.source_approx523.transforms[0].record))
+		out["transform"] = {"passive":str(transformer.name),"replaces":str(transformer.source_approx523.transforms[0].record),"active":not transform.is_empty()}
+		check(not transform.is_empty(), "learned 스킬 대체 passive registers its replacement: "+str(out.transform))
+		catalog.learned = held; catalog.revision += 1
+	for id: String in ["lm_f5125fc718ebf071","lm_4577052891abbbc4"]:
+		var lm: Dictionary = catalog.record_for(id)
+		world.job_class = str(lm.get("class",""))
+		var resolved: Dictionary = catalog.resolve(lm)
+		out.pvp_lm[str(lm.get("name",id))] = {"block":str(resolved.get("source523_block_reason","")),"target":str(resolved.get("source523",{}).get("target_kind","")),"pvp":resolved.get("source523",{}).get("pvp_only_to_npc",false)}
+		check(str(resolved.get("source523_block_reason","")).is_empty() and bool(resolved.get("source523",{}).get("pvp_only_to_npc",false)), "PC 전용 %s → 몬스터 대상 (사용자 결정): %s" % [str(lm.get("name","")),str(out.pvp_lm)])
+	if pick.is_empty(): return out
+	var saved: Array = [catalog.learned.duplicate(true), world.job_class, world.level]
+	world.job_class = str(pick["class"]); world.level = 90
+	catalog.learned[str(pick.id)] = 1; catalog.revision += 1
+	var target: TwilightMonster = preload("res://scenes/Monster.tscn").instantiate()
+	target.position = world.monsters_root.to_local(world.player.global_position + Vector2(40, 0))
+	world.monsters_root.add_child(target)
+	target.setup({"name":"approx523_active_fixture","hp":1000000000,"lv":1,"atk":0}, world.player, world, null)
+	target.set_physics_process(false)
+	target.hp = 1000000000
+	world.selected_monster = target
+	world.mp = world._effective_max_mp(); world.skill_cooldowns.clear(); world.skill_global_cooldown = 0.0
+	var mp0: int = world.mp
+	var cast: bool = world.original_skills.cast(pick)
+	# The attack animation timeline is not driven in this headless check: resolve the impact directly.
+	world.pending_attack.clear()
+	world.original_skills.impact(catalog.resolve(pick), target)
+	var row: Dictionary = {"name":str(pick.name),"cast":cast,"targets":world.original_skills.targets(catalog.resolve(pick), target).size(),"items":pick.get("items",{}),"shape":str(pick.get("shape","")),"mp":[mp0,world.mp],"mp_cost":int(pick.source_approx523_active.mp),"hp_lost":1000000000 - int(target.hp),"cooldown":float(world.skill_cooldowns.get(str(pick.name),0.0)),"cast_delay_s":float(pick.source_approx523_active.cooldown)}
+	out["cast"] = row
+	check(cast and mp0 - world.mp == int(pick.source_approx523_active.mp), "active cast spends original MP: "+str(row))
+	check(float(row.cooldown) > 0.0 or float(row.cast_delay_s) == 0.0, "active cooldown from CastDelay: "+str(row))
+	check(int(row.hp_lost) > 0, "active damage reaches the monster: "+str(row))
+	target.queue_free()
+	catalog.learned = saved[0]; world.job_class = saved[1]; world.level = saved[2]; catalog.revision += 1
+	return out
+
 func run() -> void:
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--source523-pack="):
@@ -159,19 +232,21 @@ func run() -> void:
 		var public: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ADAPTER.BINDINGS_PATH))
 		var bound: Dictionary = {}
 		for id: String in public.skills: bound[int(public.skills[id].spell_id)] = id
-		var blocked: int = 0; var refs: int = 0; var approx: Array = []; var passive_blocked: int = 0; var holds: Dictionary = {}
+		var blocked: int = 0; var refs: int = 0; var approx: Array = []; var passive_blocked: int = 0; var holds: Dictionary = {}; var all_holds: Dictionary = {}
 		for key: String in adapter.profiles:
 			if not key.begins_with("lmref_"): continue
 			refs += 1
 			var record: Dictionary = catalog.record_for(key)
-			if record.has("source_approx523"): approx.append("%s/%s" % [str(record["class"]),str(record.name)])
+			if record.has("source_approx523") or record.has("source_approx523_active"): approx.append("%s/%s" % [str(record["class"]),str(record.name)])
 			if record.get("runtime_blocked",false):
 				blocked += 1
+				var full: String = ("P " if int(adapter.profiles[key].row.SpellTypeID) == 3 else "A ") + str(record.get("source_direct523_hold",["",str(record.get("source523_block_reason","?"))])[-1]).replace("근사 규칙: ","")
+				all_holds[full] = all_holds.get(full, []) + [str(record.name)]
 				if int(adapter.profiles[key].row.SpellTypeID) == 3:
 					passive_blocked += 1
 					var why: String = str(record.get("source_direct523_hold",["",""])[-1]).replace("근사 규칙: ","").split("(")[0].split(" ")[0]
 					holds[why] = int(holds.get(why,0)) + 1
-		real.merge({"bound_references":refs,"blocked_after":blocked,"blocked_before":blocked + approx.size(),"opened_by_approx":approx.size(),"passive_blocked_after":passive_blocked,"approx_names":approx,"passive_hold_heads":holds}, true)
+		real.merge({"bound_references":refs,"blocked_after":blocked,"blocked_before":blocked + approx.size(),"opened_by_approx":approx.size(),"passive_blocked_after":passive_blocked,"approx_names":approx,"passive_hold_heads":holds,"hold_reasons":all_holds}, true)
 		check(approx.size() > 0 and blocked + approx.size() == 294, "held references 294 -> %d (approx %d)" % [blocked, approx.size()])
 		real["books"] = book_owners(catalog, bound)
 		# 1) Level threshold: 이글 아이 (요정) RangeHit 5 @ level 0 ... 10 @ 85.
@@ -236,6 +311,8 @@ func run() -> void:
 		# 4b) Attack_Spell child spells (TWILIGHT 근사): one damage and one debuff
 		# passive without weapon/prerequisite conditions, on a real monster.
 		real["attack_spell"] = await attack_spells(world, catalog, adapter)
+		# 4c) Approximated actives (TWILIGHT 근사) and PvP-only targets on monsters.
+		real["actives"] = await approx_actives(world, catalog, adapter)
 		# 5) Save/load keeps learned approximated passives and their stats.
 		var before: float = world.original_skills.stat("pveDamageReduction")
 		check(world._save_game(true) == OK, "save with approximated passives learned")

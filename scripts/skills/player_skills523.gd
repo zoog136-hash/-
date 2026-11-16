@@ -153,6 +153,12 @@ func prepare_source_direct(record: Dictionary) -> void:
 	var spec := source_direct_passive(id, str(record.get("class", "")))
 	if spec.has("reason") or not spec.has("rows"):
 		var approx := source_approx_passive(id, str(record.get("class", "")))
+		if approx.has("reason") and int(profiles[id].row.SpellTypeID) != 3:
+			var active := source_approx_active(id, str(record.get("class", "")))
+			if not active.has("reason"):
+				_open_approx_active(record, active)
+				return
+			approx = active
 		if approx.has("reason"):
 			record["source_direct523_hold"] = [str(spec.get("reason","원본 표 직접 실행 계약 확인 실패")), "근사 규칙: " + str(approx.reason)]
 			return
@@ -172,6 +178,12 @@ func prepare_source_direct(record: Dictionary) -> void:
 ## tables. Every interpretation lives in data/skills/source_approx523.json
 ## (sources and dates there); original row values are used unchanged.
 const APPROX_PATH := "res://data/skills/source_approx523.json"
+## 사용자 결정 2026-11-16 13:46: PvP 전용 스킬의 효과를 몬스터에게 적용 (TWILIGHT 근사).
+const PVP_TARGET_TO_NPC := true
+## TWILIGHT 근사 switch: SpellTransformID (스킬 대체) of approximated passives.
+const APPROX_TRANSFORMS := true
+## TWILIGHT 근사 switch: passives made of child passive SpellClassID rows.
+const APPROX_CHILD_PASSIVES := true
 var approx_policy: Dictionary = {}
 var _spell_records: Dictionary = {}
 
@@ -229,7 +241,11 @@ func _approx_invoke(option_id: int, chance: float, level: int) -> Dictionary:
 ## self buff (original BuffClass rows through the passive receivers). Anything
 ## else (composition nodes, chained/next spells, area shapes) keeps the hold.
 const EQUIPMENT_SPELLS = preload("res://scripts/crafting/patch523_equipment_spells.gd")
-func approx_child_spell(spell_id: int) -> Dictionary:
+## TWILIGHT 근사 (4) switch: heal / cleanse / dash / control statuses (docs (4)).
+const APPROX_EXTRA_EFFECTS := true
+## Target rows the equipment-spell fields lack: [modifier, UnitID, scale].
+const APPROX_TARGET_FIELDS := {"ArmorClass":["ac",1,-1.0]}
+func approx_child_spell(spell_id: int, allow_next: int = 0) -> Dictionary:
 	var row: Dictionary = SOURCE_ROWS.row("SpellClass", spell_id)
 	if row.is_empty() or row.get("TestSpell") != false: return {"reason":"%d 없음/테스트" % spell_id}
 	if int(row.get("SpellCompositionNode",0)) != 0 or int(row.get("SpellCategoryID",0)) == 371: return {"reason":"%d 조건 노드" % spell_id}
@@ -248,16 +264,70 @@ func approx_child_spell(spell_id: int) -> Dictionary:
 		if name == "BuffClassID":
 			if buff_id != 0: return {"reason":"%d 버프 둘 이상" % spell_id}
 			buff_id = int(entry.bonus.Value)
+		elif name == "SpellCastAll" and allow_next > 0: continue
+		elif name == "SpellClassID" and allow_next > 0 and _source_integer(entry.bonus.Value):
+			# TWILIGHT 근사 "묶음 하위 주문" (active): child spells run in table order.
+			var sub := approx_child_spell(int(entry.bonus.Value), allow_next - 1)
+			if sub.has("reason"): return {"reason":"%d 하위 주문 %s" % [spell_id, str(sub.reason)]}
+			if not values.has("_children"): values["_children"] = []
+			values._children.append(sub)
+		elif name == "NextSpellClassID" and allow_next > 0 and _source_integer(entry.bonus.Value):
+			# TWILIGHT 근사 (active spells): the follow-up spell runs right after,
+			# on the same target, when it reduces to the same three effects.
+			var next := approx_child_spell(int(entry.bonus.Value), allow_next - 1)
+			if next.has("reason"): return {"reason":"%d 후속 주문 %s" % [spell_id, str(next.reason)]}
+			values["_next"] = next
 		elif name in rule.get("blocking",[]): return {"reason":"%d %s" % [spell_id, name]}
 		elif name in rule.get("read",[]): values[name] = int(entry.bonus.Value)
+		elif APPROX_EXTRA_EFFECTS and name == "HPRestorationPercent":
+			# Several level rows: the lowest (가장 보수적인 값).
+			values["HPRestorationPercent"] = mini(int(values.get("HPRestorationPercent", int(entry.bonus.Value))), int(entry.bonus.Value))
+		elif APPROX_EXTRA_EFFECTS and name == "SpellBuffGroup": values["_cleanse"] = true
+		elif APPROX_EXTRA_EFFECTS and name == "SpellMoveMultiple": values["_dash"] = int(entry.bonus.Value)
 		elif name not in ignored: ignored.append(name)
 	var base: Dictionary = {"spell_id":spell_id,"name":str(row.get("Name","")),"ignored":ignored}
+	if values.has("_dash"):
+		# TWILIGHT 근사 "이동기": SpellMoveMultiple = a dash to the target, then the follow-up spell.
+		base["dash"] = true
+		values.erase("_dash")
+	if values.has("_children"):
+		# Chain: children in order, then the own follow-up spell (if any).
+		var chain: Array = values._children.duplicate()
+		values.erase("_children")
+		if values.has("_next"): chain.append(values._next)
+		for index: int in range(chain.size() - 2, -1, -1):
+			var link: Dictionary = (chain[index] as Dictionary).duplicate(true)
+			var tail: Dictionary = link
+			while tail.has("next"): tail = tail.next
+			tail["next"] = chain[index + 1]
+			chain[index] = link
+		values["_next"] = chain[0]
+	if values.has("_next"):
+		base["next"] = values._next
+		values.erase("_next")
+		if not values.has("SpellDamageBase") and not values.has("SpellDamageDiceNumber") and buff_id <= 0:
+			var only: Dictionary = base.next.duplicate(true)
+			only["spell_id"] = spell_id; only["name"] = str(row.get("Name",""))
+			if base.get("dash",false): only["dash"] = true
+			return only
 	if values.has("SpellDamageBase") or values.has("SpellDamageDiceNumber"):
 		var number := int(values.get("SpellDamageDiceNumber",0)); var sides := int(values.get("SpellDamageDiceSpotCount",0))
 		if number < 0 or number > 100 or (number > 0 and sides < 1): return {"reason":"%d 주사위" % spell_id}
 		base.merge({"effect":"damage","base":int(values.get("SpellDamageBase",0)),"number":number,"sides":sides,
 			"attack_type":"melee" if int(values.get("SpellAttackType",0)) == 1 else ("ranged" if int(values.get("SpellAttackType",0)) == 2 else "magic")})
 		return base
+	if buff_id <= 0 and APPROX_EXTRA_EFFECTS:
+		# TWILIGHT 근사 (4): self heal (HPRestorationPercent, 1/10000 %) and status
+		# cleanse (SpellBuffGroup rows = the groups it removes) through the existing player.
+		if values.has("HPRestorationPercent") and int(values.HPRestorationPercent) > 0:
+			base.merge({"effect":"heal_pct","percent":float(values.HPRestorationPercent) / 10000.0,"cleanse":values.has("_cleanse")})
+			return base
+		if values.has("_cleanse"):
+			base.merge({"effect":"cleanse"})
+			return base
+		if base.get("dash",false):
+			base.merge({"effect":"dash"})
+			return base
 	if buff_id <= 0: return {"reason":"%d 효과 없음" % spell_id}
 	var buff: Dictionary = SOURCE_BUFFS.describe(buff_id)
 	if buff.get("buff_class",{}).is_empty() or buff.get("excluded") == true: return {"reason":"버프 %d 없음" % buff_id}
@@ -268,6 +338,14 @@ func approx_child_spell(spell_id: int) -> Dictionary:
 			var name: String = str(entry.get("type",{}).get("Name",""))
 			var receiver: Dictionary = receivers.get(name,{})
 			var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(entry.get("link",{}).get("MinSpellLevel",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTypeID",0)) == 0 and int(entry.get("bonus",{}).get("BonusApplicationTargetID",0)) == 0
+			var at_value := int(entry.get("bonus",{}).get("BonusApplicationTypeID",0))
+			var target_stat := ""
+			# TWILIGHT 근사 (4): SpecialResistance (적용 유형 2 + 저항 종류) on a self buff, as on passives.
+			if APPROX_EXTRA_EFFECTS and receiver.has("targets") and at_value == int(receiver.get("application_type",-1)) and int(entry.get("link",{}).get("CharacterLevel",0)) == 0:
+				target_stat = str(receiver.targets.get(str(int(entry.get("bonus",{}).get("BonusApplicationTargetID",0))),""))
+			if not target_stat.is_empty() and str(entry.get("unit",{}).get("Name","")) == str(receiver.get("unit","")) and _source_integer(entry.get("bonus",{}).get("Value")):
+				stats[target_stat] = float(stats.get(target_stat,0.0)) + float(entry.bonus.Value) * float(receiver.get("scale",1))
+				continue
 			if receiver.is_empty() or receiver.has("targets") or receiver.has("weapon_types") or not flat or str(entry.get("unit",{}).get("Name","")) != str(receiver.get("unit","")) or not _source_integer(entry.get("bonus",{}).get("Value")):
 				if name not in ignored: ignored.append(name)
 				continue
@@ -280,15 +358,29 @@ func approx_child_spell(spell_id: int) -> Dictionary:
 	var low := int(values.get("SpellDebuffMinDuration",0)); var high := int(values.get("SpellDebuffMaxDuration",low))
 	if low <= 0 or high < low: return {"reason":"%d 지속시간 없음" % spell_id}
 	var modifiers: Dictionary = {}
+	var control: Dictionary = {}
 	for entry: Dictionary in buff.get("bonuses",[]):
 		var t: Dictionary = entry.get("type",{}); var b: Dictionary = entry.get("bonus",{}); var name: String = str(t.get("Name",""))
-		var field: Array = EQUIPMENT_SPELLS.BUFF_FIELDS.get(name,[])
+		var field: Array = EQUIPMENT_SPELLS.BUFF_FIELDS.get(name, APPROX_TARGET_FIELDS.get(name, []) if APPROX_EXTRA_EFFECTS else [])
+		if APPROX_EXTRA_EFFECTS and name in ["CannotMove","CannotAttack","CannotCastSpell","CannotCastSkill","PoisonDamageDiceNumber","PoisonDamageDiceSpotCount"] and _source_integer(b.get("Value")):
+			control[name] = int(b.Value); continue
 		var flat: bool = int(entry.get("link",{}).get("CharacterLevel",0)) == 0 and int(b.get("BonusApplicationTypeID",0)) == 0 and int(b.get("BonusApplicationTargetID",0)) == 0
 		if field.is_empty() or not flat or int(t.get("UnitID",-1)) != int(field[1]) or not _source_integer(b.get("Value")) or name.begins_with("PVP"):
 			if name not in ignored: ignored.append(name)
 			continue
 		modifiers[str(field[0])] = float(modifiers.get(str(field[0]),0.0)) + float(b.Value) * float(field[2])
-	if modifiers.is_empty(): return {"reason":"대상 버프 %d 받는 곳 없음" % buff_id}
+	# TWILIGHT 근사 (4): control rows → the existing monster statuses (근거 약함):
+	# CannotMove + CannotAttack = stun (잠·기절), CannotMove = hold, CannotCastSpell/Skill = silence,
+	# PoisonDamageDice = poison (tick = average die, 1 s).
+	var status_kind := ""
+	var tick := 0
+	if control.has("CannotMove") and control.has("CannotAttack"): status_kind = "stun"
+	elif control.has("CannotMove"): status_kind = "hold"
+	elif control.has("CannotCastSpell") or control.has("CannotCastSkill"): status_kind = "silence"
+	elif control.has("PoisonDamageDiceNumber"):
+		status_kind = "poison"; tick = maxi(1, int(round(float(control.PoisonDamageDiceNumber) * (float(control.get("PoisonDamageDiceSpotCount",1)) + 1.0) / 2.0)))
+	if modifiers.is_empty() and status_kind.is_empty(): return {"reason":"대상 버프 %d 받는 곳 없음" % buff_id}
+	if not status_kind.is_empty(): base.merge({"status":status_kind,"tick_damage":tick})
 	var chance := 1.0
 	if values.has("SpellHitProbabilityBase"):
 		chance = clampf(float(values.SpellHitProbabilityBase) / 1000000.0, float(values.get("SpellHitProbabilityMin",0)) / 1000000.0, float(values.get("SpellHitProbabilityMax",1000000)) / 1000000.0)
@@ -296,9 +388,9 @@ func approx_child_spell(spell_id: int) -> Dictionary:
 	return base
 
 ## Approximated passive contract. Returns {"reason":...} when still held.
-func source_approx_passive(id: String, job: String) -> Dictionary:
+func source_approx_passive(id: String, job: String, given_profile: Dictionary = {}, child_depth: int = 0) -> Dictionary:
 	var policy: Dictionary = approx_rules()
-	var profile: Dictionary = profiles.get(id, {})
+	var profile: Dictionary = given_profile if not given_profile.is_empty() else profiles.get(id, {})
 	if profile.is_empty() or int(policy.get("schema",0)) != 1: return {"reason":"근사 규칙 파일 없음"}
 	var row: Dictionary = profile.row
 	if int(row.SpellTypeID) != 3: return {"reason":"액티브 주문"}
@@ -308,9 +400,26 @@ func source_approx_passive(id: String, job: String) -> Dictionary:
 	var weapons: Array[int] = []
 	var requires: Array[String] = []
 	var buff_ids: Array[int] = []
+	var children: Array = []
+	var toggled: Dictionary = {}
 	for entry: Dictionary in profile.bonuses:
 		if int(entry.link.MinSpellLevel) != 0: continue
 		var name: String = str(entry.type.Name)
+		# TWILIGHT 근사 (4, 근거 약함): a #OFF/#ON toggle passive has no toggle UI here, so
+		# learning it is treated as ON — the ON spell (ChangeSpecialSpellClassID /
+		# ToggleOnSpellClassID, same value) is merged like a child passive.
+		if name in ["ChangeSpecialSpellClassID","ToggleOnSpellClassID"] and APPROX_EXTRA_EFFECTS and _source_integer(entry.bonus.Value):
+			if toggled.has(int(entry.bonus.Value)): continue
+			toggled[int(entry.bonus.Value)] = true
+			name = "SpellClassID"
+		if name == "SpellClassID" and APPROX_CHILD_PASSIVES and child_depth < 2 and int(entry.bonus.BonusApplicationTypeID) == 0 and _source_integer(entry.bonus.Value):
+			# TWILIGHT 근사 "묶음 하위 주문": a passive made of child passives takes
+			# each child's own rows (with the child's own weapon/prerequisite rows).
+			var built: Dictionary = _source_profile(int(entry.bonus.Value)).get("profile",{})
+			var sub: Dictionary = source_approx_passive("", job, built, child_depth + 1) if not built.is_empty() else {"reason":"하위 주문 %d 없음" % int(entry.bonus.Value)}
+			if sub.has("reason"): return {"reason":"하위 주문 %d: %s" % [int(entry.bonus.Value), str(sub.reason)]}
+			children.append(sub)
+			continue
 		if name not in policy.get("spell_bonus_allowed",[]): return {"reason":"주문 보너스 %s" % name}
 		if not _source_integer(entry.bonus.Value): return {"reason":"%s 값" % name}
 		match name:
@@ -321,10 +430,11 @@ func source_approx_passive(id: String, job: String) -> Dictionary:
 				if required not in requires: requires.append(required)
 			"WeaponType": weapons.append(int(entry.bonus.Value))
 			"WeaponGroup": weapons.append_array(weapon_group_types(int(entry.bonus.Value)))
-	if buff_ids.is_empty(): return {"reason":"버프 연결 없음"}
+	if buff_ids.is_empty() and children.is_empty(): return {"reason":"버프 연결 없음"}
 	var receivers: Dictionary = policy.get("receivers",{})
 	var rows: Array = []
 	var invokes: Array = []
+	var transforms: Array = []
 	var ignored: Dictionary = {}
 	var group: Dictionary = {}
 	for buff: Dictionary in profile.buffs:
@@ -348,10 +458,19 @@ func source_approx_passive(id: String, job: String) -> Dictionary:
 			var level := int(entry.link.get("CharacterLevel",0))
 			if not _source_integer(entry.bonus.Value): ignored[name] = int(ignored.get(name,0)) + 1; continue
 			var value := float(entry.bonus.Value)
-			if name.begins_with("PVP"): ignored[name] = int(ignored.get(name,0)) + 1; continue
+			if name.begins_with("PVP") and not receivers.has(name): ignored[name] = int(ignored.get(name,0)) + 1; continue
 			if name in ["WeaponType","WeaponGroup"] and at == 0 and target == 0:
 				if name == "WeaponType": weapons.append(int(value))
 				else: weapons.append_array(weapon_group_types(int(value)))
+				continue
+			if name == "SpellTransformID" and at == 1 and APPROX_TRANSFORMS:
+				# TWILIGHT 근사: "스킬 대체" — casting the bound skill of SpellClass
+				# `target` runs this SpellClass instead (when it reduces to the
+				# damage / debuff / self buff effects).
+				var replaced := record_for_spell(target)
+				var child := approx_child_spell(int(value), 2) if not replaced.is_empty() else {"reason":"대상 주문 %d 미연결" % target}
+				if child.has("reason"): ignored["스킬 대체 " + str(child.reason).split(" ")[0]] = int(ignored.get("스킬 대체 " + str(child.reason).split(" ")[0],0)) + 1
+				else: transforms.append({"from_spell":target,"record":replaced,"to_spell":int(value),"level":level,"child":child})
 				continue
 			if name == "InvokeOption" and at == 10:
 				var invoke := _approx_invoke(target, value, level)
@@ -369,7 +488,22 @@ func source_approx_passive(id: String, job: String) -> Dictionary:
 			# JSON numbers are floats; 7 in [7.0] is false in Godot 4.
 			for weapon: Variant in receiver.get("weapon_types",[]): row_weapons.append(int(weapon))
 			rows.append({"type":name,"stat":stat,"value":value * float(receiver.get("scale",1)),"level":level,"weapons":row_weapons})
-	if rows.is_empty() and invokes.is_empty(): return {"reason":"받는 곳이 있는 수치 없음(" + ", ".join(PackedStringArray(ignored.keys())) + ")"}
+	for sub: Dictionary in children:
+		for entry: Dictionary in sub.rows:
+			var merged: Dictionary = entry.duplicate(true)
+			if not sub.weapons.is_empty() and merged.weapons.is_empty(): merged.weapons = sub.weapons.duplicate()
+			rows.append(merged)
+		for invoke: Dictionary in sub.invokes:
+			var merged_invoke: Dictionary = invoke.duplicate(true)
+			if not sub.weapons.is_empty() and merged_invoke.weapons.is_empty(): merged_invoke.weapons = sub.weapons.duplicate()
+			invokes.append(merged_invoke)
+		transforms.append_array(sub.transforms)
+		for required: String in sub.requires:
+			if required not in requires: requires.append(required)
+		for key: String in sub.ignored: ignored[key] = int(ignored.get(key,0)) + int(sub.ignored[key])
+	if rows.is_empty() and invokes.is_empty() and transforms.is_empty(): return {"reason":"받는 곳이 있는 수치 없음(" + ", ".join(PackedStringArray(ignored.keys())) + ")"}
+	if child_depth > 0:
+		return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"transforms":transforms,"weapons":weapons,"requires":requires,"group":group,"minimum_level":0,"ignored":ignored}
 	var minimum := -1
 	for limit: Dictionary in profile.learn_limits:
 		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
@@ -379,7 +513,7 @@ func source_approx_passive(id: String, job: String) -> Dictionary:
 	var unique_weapons: Array[int] = []
 	for weapon: int in weapons:
 		if weapon not in unique_weapons: unique_weapons.append(weapon)
-	return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"weapons":unique_weapons,"requires":requires,"group":group,"minimum_level":minimum,"ignored":ignored}
+	return {"spell_id":int(row.ID),"rows":rows,"invokes":invokes,"transforms":transforms,"weapons":unique_weapons,"requires":requires,"group":group,"minimum_level":minimum,"ignored":ignored}
 
 ## Rows that apply at this level/weapon: per bonus type, only the highest
 ## CharacterLevel threshold at or below the level (replacement, not a sum).
@@ -411,12 +545,103 @@ func _open_approx_passive(record: Dictionary, spec: Dictionary) -> void:
 		parts.append("%s 발동 %.1f%%%s" % [str(invoke.option_type), float(invoke.chance)*100.0, (" ×%.2f" % float(invoke.multiplier)) if invoke.has("multiplier") else ""])
 	var summary := "패시브 · 원본 523 수치 + TWILIGHT 근사 해석 · " + " · ".join(parts)
 	if not spec.weapons.is_empty(): summary += " · 무기 조건(원본 WeaponType %s)" % str(spec.weapons)
+	for transform: Dictionary in spec.get("transforms",[]):
+		summary += " · 스킬 대체: 원본 주문 %d → %d" % [int(transform.from_spell), int(transform.to_spell)]
 	if not spec.requires.is_empty(): summary += " · 선행 스킬 필요"
 	if not spec.ignored.is_empty(): summary += " · 근사 미적용: " + ", ".join(PackedStringArray(spec.ignored.keys()))
 	record.merge({"runtime_blocked":false,"activation":"passive","mode":"stats","stats":{},"mp":0,"hp":0,"items":{},
 		"minimum_level":int(spec.minimum_level),"local_kind":"source_approx523","desc":summary},true)
 	record["source_approx523"] = spec
 	record["source_direct523"] = {"kind":"passive_approx","spell_id":int(spec.spell_id),"basis":"원본 523 BuffBonus 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
+	record.erase("source_direct523_hold")
+
+## TWILIGHT 근사 active contract (사용자 지시 2026-11-16 "근사치로 다 넣어", 13:46
+## PvP 전용 대상 결정): a reference active whose own SpellClass reduces to a
+## damage / target debuff / self buff (approx_child_spell, follow-up spells
+## allowed) opens with the original MPCost/HPCost, CastDelay cooldown, learn
+## level and weapon rows. TargetKind 52 (PC 전용) is applied to monsters
+## (user decision 13:46). Area spells, material costs and SpellCost rows stay held.
+func source_approx_active(id: String, job: String) -> Dictionary:
+	var profile: Dictionary = profiles.get(id, {})
+	if profile.is_empty() or int(approx_rules().get("schema",0)) != 1: return {"reason":"근사 규칙 파일 없음"}
+	var row: Dictionary = profile.row
+	if int(row.SpellTypeID) == 3: return {"reason":"패시브"}
+	if int(row.SpellCompositionNode) != 0: return {"reason":"조건 노드 %d" % int(row.SpellCompositionNode)}
+	if not profile.costs.is_empty(): return {"reason":"대상별 비용 행"}
+	if int(row.get("VPCost",0)) != 0 or int(row.get("MPCostUnit",1)) != 1: return {"reason":"VP·비용 단위"}
+	# Original material cost through the existing reviewed material bridges.
+	var items: Dictionary = {}
+	if int(row.SpellMaterialItemAmount) > 0:
+		var material := str(int(row.SpellMaterialTypeID))
+		var bridge: Dictionary = bindings.get("material_inventory_keys",{}).get(material, {})
+		if bridge.is_empty(): return {"reason":"재료 %s 인벤토리 연결 없음" % material}
+		if material_holds.has(material): return {"reason":"원본 재료 보류 %s" % material}
+		items[str(bridge.inventory_key)] = int(row.SpellMaterialItemAmount)
+	var targeting := int(row.TargettingTypeID)
+	if targeting not in [1,2]: return {"reason":"대상 지정 방식 %d" % targeting}
+	var radius := float(row.TargetAreaRadius)
+	var child := approx_child_spell(int(row.ID), 2)
+	if child.has("reason"): return {"reason":str(child.reason)}
+	var effect := str(child.get("effect",""))
+	# TWILIGHT 근사 (4): self heal / cleanse on oneself; an ally-targeted buff
+	# (TargettingType 2) has no party here, so it is cast on oneself (근거 약함).
+	if targeting == 1 and effect not in ["self_buff","heal_pct","cleanse"] and float(row.TargetAreaRadius) <= 0.0: return {"reason":"자기 대상 %s" % effect}
+	if targeting == 2 and effect == "self_buff" and not APPROX_EXTRA_EFFECTS: return {"reason":"대상 지정 자기 버프"}
+	if targeting == 2 and effect in ["heal_pct","cleanse"] and not APPROX_EXTRA_EFFECTS: return {"reason":"대상 지정 %s" % effect}
+	var weapons: Array[int] = []
+	for entry: Dictionary in profile.bonuses:
+		if int(entry.link.MinSpellLevel) != 0 or int(entry.bonus.BonusApplicationTypeID) != 0: continue
+		if str(entry.type.Name) == "WeaponType": weapons.append(int(entry.bonus.Value))
+		elif str(entry.type.Name) == "WeaponGroup": weapons.append_array(weapon_group_types(int(entry.bonus.Value)))
+	var native_class := int(bindings.class_ids.get(job, -1))
+	var minimum := -1
+	for limit: Dictionary in profile.learn_limits:
+		if int(limit.ClassID) != native_class or bool(limit.IsTutorialSpell): continue
+		if int(limit.CharacterPolymorphGradeID) != 0 or int(limit.LimitBuffCardID) != 0: return {"reason":"학습 변신 등급/카드 조건"}
+		minimum = int(limit.CharacterMinLevel)
+	if minimum < 0: return {"reason":"이 직업의 SpellLearnLimit 행 없음"}
+	if targeting == 1 and radius > 0.0 and effect == "self_buff": return {"reason":"범위 자기 버프(파티 대상)"}
+	return {"spell_id":int(row.ID),"child":child,"weapons":weapons,"minimum_level":minimum,"mp":int(row.MPCost),"hp":int(row.HPCost),"items":items,
+		"radius":radius * 48.0,"targets":int(row.TargetLimitCount) if int(row.TargetLimitCount) > 0 else 8,
+		"cooldown":maxf(0.0,float(row.CastDelay))/1000.0,"range":maxf(64.0,float(row.CastRange)*32.0) if not bool(row.get("IsAttackRange",false)) else 240.0,
+		"pvp_only_to_npc":int(row.TargetKindID) == 52}
+
+func _open_approx_active(record: Dictionary, spec: Dictionary) -> void:
+	var child: Dictionary = spec.child
+	var effect := str(child.effect)
+	var parts := PackedStringArray()
+	var cursor: Dictionary = child
+	while not cursor.is_empty():
+		match str(cursor.get("effect","")):
+			"damage": parts.append("피해 %d+%dd%d" % [int(cursor.base),int(cursor.number),int(cursor.sides)])
+			"debuff": parts.append("대상 약화 %s (%.0f~%.0f초)" % [str(cursor.modifiers.keys()),float(cursor.duration[0]),float(cursor.duration[1])])
+			"self_buff": parts.append("자기 강화 %s (%.0f초)" % [str(cursor.stats.keys()),float(cursor.duration)])
+			"heal_pct": parts.append("HP %.0f%% 회복" % float(cursor.percent))
+			"cleanse": parts.append("상태 이상 해제")
+			"dash": parts.append("대상에게 이동")
+		cursor = cursor.get("next",{})
+	var summary := "액티브 · 원본 523 수치 + TWILIGHT 근사 · " + " → ".join(parts)
+	if bool(spec.pvp_only_to_npc): summary += " · 원본 PC 전용 대상 → 몬스터에 적용(사용자 결정 2026-11-16)"
+	var runtime: Dictionary = {"runtime_blocked":false,"activation":"active","mp":int(spec.mp),"hp":int(spec.hp),"items":spec.get("items",{}).duplicate(),"cooldown":float(spec.cooldown),
+		"minimum_level":int(spec.minimum_level),"local_kind":"source_approx523_active","desc":summary,"range":float(spec.range)}
+	if effect == "self_buff":
+		runtime.merge({"mode":"buff","stats":child.stats.duplicate(true),"duration":float(child.duration),"shape":"self"})
+	elif effect in ["heal_pct","cleanse"] and float(spec.get("radius",0.0)) <= 0.0:
+		runtime.merge({"mode":"buff","stats":{},"duration":0.1,"shape":"self","approx_self_child":child.duplicate(true)})
+	else:
+		var shape := "single"
+		if float(spec.get("radius",0.0)) > 0.0: shape = "self_circle" if int(SOURCE_ROWS.row("SpellClass", int(spec.spell_id)).get("TargettingTypeID",2)) == 1 else "target_circle"
+		runtime.merge({"mode":"attack","shape":shape,"targets":1 if shape == "single" else int(spec.get("targets",8)),"radius":float(spec.get("radius",0.0)),
+			"attack_type":str(child.get("attack_type","magic")),"power":int(child.get("base",0)),"approx_child":child.duplicate(true)})
+	if not spec.weapons.is_empty():
+		var names: Array = []
+		for weapon: int in spec.weapons:
+			var local := str(SOURCE_ROWS.row("WeaponType", weapon).get("Name",""))
+			if not local.is_empty(): names.append(local)
+		runtime["approx_weapon_types"] = spec.weapons.duplicate()
+	record.merge(runtime, true)
+	record["source_approx523_active"] = spec
+	record["source_direct523"] = {"kind":"active_approx","spell_id":int(spec.spell_id),"basis":"원본 523 SpellClass·Buff 값 + data/skills/source_approx523.json 해석(TWILIGHT 근사)"}
 	record.erase("source_direct523_hold")
 
 func configure_arguments() -> void:
@@ -902,8 +1127,14 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var mode := str(record.get("mode", ""))
 	if not estimate.is_empty() and str(estimate.kind) == "asura": record.source523["estimated_self_only"] = true
 	var self_branch_allowed := (not estimate.is_empty() and (str(estimate.kind) == "asura" or str(estimate.kind) == "detection")) or bool(recovery.get("meta",{}).get("self_branch",false))
-	if target_kind==52:reason="523 원본은 다른 플레이어 대상 · 상대 PC가 없는 현재 PvE에 확대하지 않음"
-	elif targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not self_branch_allowed): reason = "523 대상 유형은 현재 PvE 연결 미지원"
+	# 사용자 결정 2026-11-16 13:46 + TWILIGHT 근사: PC 전용 대상(TargetKind 52)은 몬스터에게 적용.
+	var pvp_to_npc: bool = target_kind == 52 and PVP_TARGET_TO_NPC
+	if pvp_to_npc:
+		record.source523["target_kind"] = "AllButMe"
+		record.source523["original_target_kind"] = str(profile.target_kind.Name)
+		record.source523["pvp_only_to_npc"] = true
+	if target_kind==52 and not pvp_to_npc:reason="523 원본은 다른 플레이어 대상 · 상대 PC가 없는 현재 PvE에 확대하지 않음"
+	elif targeting not in [1,2] or (target_kind not in [1,2,3,7,10,11,422] and not self_branch_allowed and not pvp_to_npc): reason = "523 대상 유형은 현재 PvE 연결 미지원"
 	elif mode in ["attack","status","turn_undead"]:
 		if int(row.SpellCategoryID) not in [1,8,11] and estimate.is_empty() and progression.is_empty(): reason = "523 공격·상태 실행 방식 연결 확인 필요"
 		if target_kind == 1: reason = "523 자기 대상 효과는 적에게 적용할 수 없음"

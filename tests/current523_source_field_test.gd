@@ -47,9 +47,14 @@ func _actual_sources(root: String, pin: String) -> void:
 	check(catalog.catalog_lands().size() == 1065,"all native logical Land rows remain available before field selection")
 	var excluded: int = 0
 	var included: int = 0
+	var tutorial: int = 0
 	for row: Dictionary in catalog.catalog_lands():
-		if row.excluded_content.is_empty(): included += 1
+		# The pack's own scope, without the game's tutorial cut (사용자 결정 2026-11-16).
+		var tags: Array = (row.excluded_content as Array).filter(func(tag: Variant) -> bool: return tag != "tutorial")
+		if (row.excluded_content as Array).has("tutorial"): tutorial += 1
+		if tags.is_empty(): included += 1
 		else: excluded += 1
+	check(tutorial == 46, "the 46 tutorial Lands are cut from play (%d)" % tutorial)
 	# Two explicit scopes exist: the pinned full-map handoff (997 ordinary, 68
 	# excluded) and the user's all-maps decision (client523_map_inventory.py,
 	# every Land included). Both must still classify every native Land row.
