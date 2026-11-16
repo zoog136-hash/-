@@ -90,6 +90,12 @@ func configure(owner: Node) -> void:
 			if not relations.has(str(record.id)):relations[str(record.id)]={}
 			relations[str(record.id)]["requires_skill"]=required.duplicate()
 		record["effect"] = effect_for(record)
+	# TWILIGHT 근사: skills given by worn equipment (EquipSpellClassID).
+	for record: Dictionary in source523.equipment_spell_records(source523.bindings.get("class_ids",{}).keys()):
+		record["effect"] = effect_for(record)
+		records.append(record)
+		by_id[str(record.id)] = record
+		by_name[str(record.name)] = str(record.id)
 	seed_starters()
 
 
@@ -157,9 +163,26 @@ func permitted(record: Dictionary) -> bool:
 	return record.get("classes", [record.get("class")]).has(world.job_class)
 
 func owned(record: Dictionary) -> bool:
+	if record.has("equipment_spell523"): return permitted(record) and equipment_spells().has(int(record.equipment_spell523))
 	if not source_learning_status(record).is_empty():return false
 	if bool(record.get("runtime_blocked", false)): return false
 	return permitted(record) and int(learned.get(str(record.get("id", "")), 0)) > 0
+
+var _equip_spells: Dictionary = {}
+## SpellClass IDs given by the currently worn items (TWILIGHT 근사, EquipSpellClassID).
+func equipment_spells() -> Dictionary:
+	_equip_spells = {}
+	if world == null or source523.equip_spell_items.is_empty(): return _equip_spells
+	for slot: Variant in world.equipped_items:
+		var worn: Variant = world.equipped_items[slot]
+		if not worn is Dictionary: continue
+		var physical: Variant = world.item_instances.get(str((worn as Dictionary).get("instance_id","")), {})
+		var record: Dictionary = (physical as Dictionary).get("record", {}) if physical is Dictionary else {}
+		var item_id: int = int(record.get("source_item_class_id", (worn as Dictionary).get("source_item_class_id",0)))
+		if item_id <= 0: continue
+		for spell_id: Variant in source523.equip_spell_items:
+			if (source523.equip_spell_items[spell_id] as Dictionary).has(item_id): _equip_spells[int(spell_id)] = true
+	return _equip_spells
 
 func enabled(record: Dictionary) -> bool:
 	# Every condition is a side-effect-free AND. The cheap ownership checks run
