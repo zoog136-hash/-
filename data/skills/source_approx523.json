@@ -23,6 +23,7 @@
   "receivers": {
     "DamageReduction": {"stat": "damageReduction", "unit": "Value", "scale": 1},
     "PVEDamageReduction": {"stat": "pveDamageReduction", "unit": "Value", "scale": 1},
+    "PVPDamageReduction": {"stat": "pveDamageReduction", "unit": "Value", "scale": 1, "note": "사용자 결정 2026-11-16 13:46: PvP 수치도 몬스터 상대 수치로 취급(TWILIGHT 근사). PVE 행과 함께 있으면 둘 다 더해진다."},
     "ArmorClassBonus": {"stat": "def", "unit": "Value", "scale": 1},
     "ArmorClass": {"stat": "def", "unit": "Value", "scale": 1},
     "MeleeHit": {"stat": "meleeHit", "unit": "Value", "scale": 1},
