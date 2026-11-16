@@ -609,6 +609,7 @@ static var composite_groups_enabled: bool = not "--twilight-actor-composite-off"
 var cached_frames: bool = false
 var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
 var _cached_applied_plan: Dictionary = {}
+var _cached_applied_translucent: bool = false
 var _composite_nodes: Dictionary = {} # group -> Sprite2D
 
 func _cached_frames_allowed() -> bool:
@@ -619,7 +620,7 @@ func cached_frame_status() -> Dictionary:
 	var groups: Dictionary = {}
 	for group: String in _cached_applied_plan.get("groups", {}):
 		groups[group] = _cached_applied_plan.groups[group].mode
-	return {"active":not _cached_applied_plan.is_empty(),"plans":_frame_plans.size(),"groups":groups}
+	return {"active":not _cached_applied_plan.is_empty(),"plans":_frame_plans.size(),"groups":groups,"translucent":_cached_applied_translucent}
 
 func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
 	var plan: Variant = _frame_plans.get(applied_hash)
@@ -637,9 +638,21 @@ func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dicti
 		if not checked.ok:
 			_abort_reference_source(checked)
 			return {}
-	if not is_same(plan, _cached_applied_plan):
-		if not _apply_frame_plan(plan): return {}
+	# A translucent actor (concealment: monster 0.15, player 0.5) draws its
+	# layers one by one so overlapping layers keep their per-layer blending;
+	# compositing is exact only for an opaque draw.
+	var translucent: bool = _inherited_alpha() < 1.0
+	if not is_same(plan, _cached_applied_plan) or translucent != _cached_applied_translucent:
+		if not _apply_frame_plan(plan, translucent): return {}
 	return plan
+
+func _inherited_alpha() -> float:
+	var alpha: float = modulate.a
+	var node: Node = get_parent()
+	while node is CanvasItem:
+		alpha *= (node as CanvasItem).modulate.a
+		node = node.get_parent()
+	return alpha
 
 func _body_draw_spec(index: int, layer: Dictionary, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
 	# Mirrors the reference branch of the per-layer body loop.
@@ -824,11 +837,17 @@ func _show_composite(plan: Dictionary, group: String) -> bool:
 	sprite.show()
 	return true
 
-func _apply_frame_plan(plan: Dictionary) -> bool:
+func _apply_frame_plan(plan: Dictionary, translucent: bool = false) -> bool:
 	invalidate_applied_frame()
-	if plan.groups.body.mode == "composite":
+	var body_composite: bool = plan.groups.body.mode == "composite" and not translucent
+	var effects_composite: bool = plan.groups.effects.mode == "composite" and not translucent
+	if body_composite:
 		if not _show_composite(plan, "body"): return false
-	if plan.groups.body.mode == "composite":
+		body_composite = plan.groups.body.mode == "composite"
+	elif plan.groups.body.mode == "composite" and not plan.has("body_textures"):
+		if not _plan_body_textures(plan): return false
+		plan["body_textures"] = true
+	if body_composite:
 		for sprite: Sprite2D in _layers: sprite.visible = false
 	else:
 		if _composite_nodes.has("body"): _composite_nodes.body.hide()
@@ -854,9 +873,13 @@ func _apply_frame_plan(plan: Dictionary) -> bool:
 			node.position = spec.position
 			if not spec.recovered.is_empty(): SP2_COMPOSITOR.apply(node, spec.recovered)
 	for effect_node: Sprite2D in _effect_nodes.values(): effect_node.hide()
-	if plan.groups.effects.mode == "composite":
+	if effects_composite:
 		if not _show_composite(plan, "effects"): return false
-	if plan.groups.effects.mode != "composite":
+		effects_composite = plan.groups.effects.mode == "composite"
+	elif plan.groups.effects.mode == "composite" and not plan.has("effect_textures"):
+		if not _plan_effect_textures(plan): return false
+		plan["effect_textures"] = true
+	if not effects_composite:
 		if _composite_nodes.has("effects"): _composite_nodes.effects.hide()
 		for spec: Dictionary in plan.effects:
 			var node: Sprite2D = spec.node
@@ -873,6 +896,7 @@ func _apply_frame_plan(plan: Dictionary) -> bool:
 			if not spec.recovered.is_empty(): SP2_COMPOSITOR.apply(node, spec.recovered)
 			node.show()
 	_cached_applied_plan = plan
+	_cached_applied_translucent = translucent
 	return true
 
 ## Back to the per-layer path (flag off or a texture budget was attached).

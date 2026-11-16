@@ -220,6 +220,7 @@ func run() -> void:
 		{"name":"body_add","body_attrs":["8"],"effect_attrs":[]},
 		{"name":"body_multiply","body_attrs":["128"],"effect_attrs":[]},
 		{"name":"strict_hidden_effect","effect_attrs":[],"strict":true},
+		{"name":"translucent_actor","effect_attrs":[],"alpha":0.5},
 	]
 	var expected_modes: Dictionary = {"plain":{"body":"composite","effects":"nodes"},"effect_add":{"body":"composite","effects":"nodes"},"body_add":{"body":"nodes","effects":"nodes"}}
 	for copy: bool in [false, true]:
@@ -233,11 +234,14 @@ func run() -> void:
 			if config.get("strict", false):
 				cached._playback_mode = "strict"
 				plain._playback_mode = "strict"
+			cached.modulate.a = float(config.get("alpha", 1.0))
+			plain.modulate.a = cached.modulate.a
 			for step: Array in steps():
 				var a: bool = cached.advance_reference_source(step[0], "idle", step[1])
 				var b: bool = plain.advance_reference_source(step[0], "idle", step[1])
 				check(a and b, label + ": both advance " + str(step))
 				same_output(cached, plain, label + " step " + str(step))
+				if config.has("alpha"): check(list_signature(draw_list(cached)) == list_signature(draw_list(plain)), label + ": translucent nodes identical " + str(step))
 			check(cached.cached_frame_status().active, label + ": cached path active")
 			if not copy and expected_modes.has(config.name):
 				check(cached.cached_frame_status().groups == expected_modes[config.name], label + ": draw group modes " + str(cached.cached_frame_status().groups))
@@ -255,6 +259,22 @@ func run() -> void:
 	var composite: Sprite2D = view._composite_nodes.get("body")
 	check(visible_layers == 0 and composite != null and composite.visible and composite.texture != null, "three body layers draw as one composited sprite")
 	check(composite.get_index() < view._layers[0].get_index() and composite.z_index == 0 and composite.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "composite keeps the body draw slot, z and filter")
+	# A translucent actor (concealment) draws its layers one by one again.
+	var translucent_plain: Node2D = make_view(root, bank, track, info.path, false)
+	for alpha: float in [0.15, 1.0]:
+		view.modulate.a = alpha
+		translucent_plain.modulate.a = alpha
+		translucent_plain._clock = view._clock
+		check(view.advance_reference_source(0.0, "idle", 0) and translucent_plain.advance_reference_source(0.0, "idle", 0), "translucency %f advances" % alpha)
+		var layers_shown: int = 0
+		for sprite: Sprite2D in view._layers: layers_shown += int(sprite.visible)
+		if alpha < 1.0:
+			check(not view._composite_nodes.body.visible and layers_shown == 3 and view.cached_frame_status().translucent, "translucent actor keeps per-layer nodes")
+			check(list_signature(draw_list(view)) == list_signature(draw_list(translucent_plain)), "translucent actor draws the per-layer path's nodes")
+		else:
+			check(view._composite_nodes.body.visible and layers_shown == 0, "opaque again: composite restored")
+			same_output(view, translucent_plain, "opaque after translucency")
+	translucent_plain.free()
 	# 2. A planned frame skips the per-layer work; its recheck runs once per advance.
 	bank.reset_counts()
 	for index: int in range(10): check(view.advance_reference_source(0.0, "idle", 0), "warm advance %d" % index)
@@ -413,6 +433,7 @@ func gpu_compare(info: Dictionary, config: Dictionary, copy: bool) -> void:
 		viewport.add_child(background)
 		var view: Node2D = make_view(viewport, bank, track, info.path, cached)
 		view.position = Vector2(8, 8)
+		view.modulate.a = float(config.get("alpha", 1.0))
 		if config.get("strict", false): view._playback_mode = "strict"
 		viewports.append(viewport)
 		views.append(view)
