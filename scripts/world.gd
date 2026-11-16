@@ -1341,6 +1341,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
 	normal_damage+=PATCH523_EQUIPMENT_COMBAT.fear_flat_ignore(self,target,by_spell)
 	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage, original_skills.attack_context(attack_kind, by_spell, true, main_target) if ordinary_attack else relic_attack_context)
+	# TWILIGHT 근사: 대장간 연마 수식어(태고의 PierceDamageReductionPercent 5% = NC "대미지 증가 +5%").
+	var honing_percent: float = preload("res://scripts/honing/honing523_service.gd").damage_percent(self)
+	if honing_percent > 0.0: normal_damage = int(normal_damage * (1.0 + honing_percent / 100.0))
 	if target.get_meta("dungeon_play_role","")=="Boss":normal_damage=int(round(normal_damage*(1.0+dungeon_play.modifier("boss_damage")/100.0)))
 	var stolen: int = 0
 	var drain: int = (1 if _has_hp_absorption() else 0)+int(growth.bonus("hp_drain:flat"))
@@ -9339,6 +9342,13 @@ func skill_card523_merge_quote(grade_id: int, selection: Dictionary = {}) -> Dic
 
 func skill_card523_merge_execute(token: String) -> Dictionary:
 	return skill_cards523.merge_execute(token)
+
+## TWILIGHT 근사: deck-41 skill card reroll (docs/cards523_reroll_skillcard.md 5).
+func skill_card523_swap_quote(physical_id: String) -> Dictionary:
+	return skill_cards523.swap_quote(physical_id)
+
+func skill_card523_swap_execute(token: String) -> Dictionary:
+	return skill_cards523.swap_execute(token)
 
 func skill_card523_levelup_quote(card_id: int, feed: Dictionary = {}, attempt: bool = true) -> Dictionary:
 	return skill_cards523.levelup_quote(card_id, feed, attempt)

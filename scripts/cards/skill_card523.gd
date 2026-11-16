@@ -68,6 +68,10 @@ static func validate(value: Variant) -> String:
 		var entry: Variant = value.cards[key]
 		if not key is String or not (key as String).is_valid_int() or not entry is Dictionary: return "스킬 카드 기록 오류"
 		if not _whole(entry.get("level")) or int(entry.level) > 3 or not _whole(entry.get("exp")): return "스킬 카드 단계·경험치 오류"
+	if value.has("swaps"):
+		if not value.swaps is Dictionary: return "스킬 카드 다시 뽑기 기록 오류"
+		for key: Variant in value.swaps:
+			if not key is String or not (key as String).is_valid_int() or not _whole(value.swaps[key]): return "스킬 카드 다시 뽑기 기록 오류"
 	return ""
 
 func export_state() -> Variant:
@@ -89,6 +93,9 @@ func import_state(value: Variant) -> void:
 	if (value as Dictionary).is_empty(): return
 	for key: String in value.cards:
 		state.cards[key] = {"level":int(value.cards[key].level), "exp":int(value.cards[key].exp)}
+	if value.has("swaps"):
+		state["swaps"] = {}
+		for key: String in value.swaps: state.swaps[key] = int(value.swaps[key])
 
 ## Enhancement stage (0..3) of a deck-41 card. Unknown cards are 0.
 func level(card_id: int) -> int:
@@ -368,6 +375,114 @@ func merge_execute(token: String) -> Dictionary:
 	var message: String = ("스킬 카드 합성 성공 · %s" % str(result.name)) if success else ("스킬 카드 합성 실패 · %s %d장 소멸" % [str(plan.grade), int(plan.source_amount)])
 	_log(message)
 	return {"ok":true, "reason":"", "saved":true, "success":success, "result":result, "consumed":int(plan.source_amount), "grade_id":int(plan.grade_id), "target_grade_id":int(plan.target_grade_id), "message":message}
+
+## --- reroll (다시 뽑기) — TWILIGHT 근사 -----------------------------------------
+## 사용자 지시 2026-11-16 11:40 "근사치로 다 넣어": the deck-41 BuffCardRuleSwap /
+## Cost rows (영웅 5회 900~9900, 전설 5회 9900~49900 다이아; 신화 Activate=false)
+## are applied to an unused skill book (the card). The table has no class rule:
+## the result is drawn uniformly from same-grade deck-41 IsSwapOut cards the
+## CURRENT CLASS can learn and that have a book item — the same class rule the
+## user chose for synthesis (merge_candidates). The swap is immediate: one book
+## is debited and the result book is issued in the same save (skill books have
+## no permanent copy to hold a pending result on). Count = per card, no reset.
+const DIAMOND := "다이아"
+const GEM_CURRENCY_ID := 4
+const APPROX_REROLL := true
+
+func swap_rule(grade_id: int) -> Dictionary:
+	var found: Array = []
+	for row: Dictionary in SOURCE.rows("BuffCardRuleSwap"):
+		if int(row.get("BuffCardDeckID",-1)) == DECK and int(row.get("GradeID",-1)) == grade_id and row.get("Activate") == true and _admitted(row.get("ServerLimitSetID",0)): found.append(row)
+	return found[0] if found.size() == 1 else {}
+
+func swap_cost(grade_id: int, count: int) -> Dictionary:
+	for row: Dictionary in SOURCE.rows("BuffCardRuleSwapCost"):
+		if int(row.get("BuffCardDeckID",-1)) == DECK and int(row.get("GradeID",-1)) == grade_id and int(row.get("SwapCount",-1)) == count: return row
+	return {}
+
+func swap_count(card_id: int) -> int:
+	return int(state.get("swaps", {}).get(str(card_id), 0))
+
+func swap_candidates(grade_id: int, exclude: int) -> Array:
+	var result: Array = []
+	for entry: Dictionary in merge_candidates(grade_id):
+		if int(entry.card_id) == exclude: continue
+		var raw: Dictionary = card(int(entry.card_id))
+		if raw.get("IsNoSwapOut") != false or SOURCE.row("BuffCardSourceView", int(raw.ID)).get("IsSwapOut") != true: continue
+		result.append(entry)
+	return result
+
+func _swap_plan(physical_id: String) -> Dictionary:
+	var issue: String = _base_problem()
+	if not issue.is_empty(): return _fail(issue)
+	if not APPROX_REROLL: return _fail("스킬 카드 다시 뽑기 규칙 미구현")
+	var material: Dictionary = {}
+	for entry: Dictionary in materials():
+		if str(entry.physical_id) == physical_id: material = entry
+	if material.is_empty(): return _fail("다시 뽑을 스킬 카드(스킬서)가 없습니다")
+	if bool(material.locked): return _fail("잠긴 스킬 카드는 다시 뽑을 수 없습니다")
+	var card_id: int = int(material.card_id); var grade_id: int = int(material.grade_id)
+	var rule: Dictionary = swap_rule(grade_id)
+	if rule.is_empty(): return _fail("이 등급은 다시 뽑기 대상이 아닙니다 (원본 표)")
+	var used: int = swap_count(card_id)
+	var info: Dictionary = {"physical_id":physical_id, "card_id":card_id, "name":str(material.card_name), "grade":str(material.grade), "grade_id":grade_id,
+		"used":used, "max":int(rule.MaxSwapCount), "remaining":maxi(0, int(rule.MaxSwapCount) - used), "diamonds":maxi(0, int(world.inventory.get(DIAMOND, 0))), "approximation":"TWILIGHT_SKILL_CARD_REROLL_CURRENT_CLASS"}
+	if used >= int(rule.MaxSwapCount): return _fail("다시 뽑기 최대 횟수(%d회)를 모두 썼습니다" % int(rule.MaxSwapCount), info)
+	var cost: Dictionary = swap_cost(grade_id, used + 1)
+	if cost.is_empty() or int(cost.get("CurrencyID",-1)) != GEM_CURRENCY_ID: return _fail("원본 비용 표에 %d회째 다이아 비용이 없습니다" % (used + 1), info)
+	var pool: Array = swap_candidates(grade_id, card_id)
+	info.merge({"cost":{"currency":DIAMOND, "amount":int(cost.Cost)}, "candidates":pool, "candidate_count":pool.size(), "swap_count":used + 1}, true)
+	if pool.is_empty(): return _fail("내 직업이 받을 수 있는 같은 등급 스킬 카드가 없습니다", info)
+	if int(info.diamonds) < int(cost.Cost): return _fail("다이아가 부족합니다 (필요 %d · 보유 %d)" % [int(cost.Cost), int(info.diamonds)], info)
+	info.merge({"ok":true, "reason":"", "requests":[{"physical_id":physical_id, "quantity":1, "expected_quantity":int(material.remaining), "expected_remaining":int(material.remaining) - 1, STACK.RECEIPT:material.receipt.duplicate(true)}]}, true)
+	return info
+
+## {ok, reason, token, card_id, name, grade, used, max, remaining, cost{currency,amount}, diamonds, candidates, candidate_count}
+func swap_quote(physical_id: String) -> Dictionary:
+	var plan: Dictionary = _swap_plan(physical_id)
+	if not bool(plan.get("ok", false)): return plan
+	var shown: Dictionary = plan.duplicate(true)
+	shown.erase("requests")
+	shown["token"] = _new_token({"kind":"swap", "physical_id":physical_id, "requests":plan.requests, "revision":revision, "count":int(plan.used), "cost":int(plan.cost.amount)})
+	return shown
+
+## {ok, reason, saved, from{card_id,name}, result{card_id,name,item_class_id,item}, cost, swap_count}
+func swap_execute(token: String) -> Dictionary:
+	var held: Dictionary = _quotes.get(token, {})
+	if held.is_empty() or held.get("kind") != "swap": return _fail("견적이 없거나 만료되었습니다 · 다시 확인하세요")
+	_quotes.erase(token)
+	var plan: Dictionary = _swap_plan(str(held.physical_id))
+	if not bool(plan.get("ok", false)): return plan
+	if plan.requests != held.requests or int(held.revision) != revision or int(held.count) != int(plan.used) or int(held.cost) != int(plan.cost.amount): return _fail("스킬 카드·횟수가 바뀌었습니다 · 다시 확인하세요")
+	var paid: Dictionary = STACK.stage_debit(world, plan.requests)
+	if not bool(paid.get("ok", false)): return _fail(str(paid.get("reason", paid.get("error", "스킬 카드 차감 실패"))))
+	var roll_before: int = rng.state
+	var pool: Array = plan.candidates
+	var chosen: Dictionary = pool[rng.randi_range(0, pool.size() - 1)]
+	var payload: Dictionary = paid.overrides.duplicate(true)
+	var issued: Dictionary = STAGE.stage_one(world, payload.inventory, payload.item_instances, int(world.gold), int(chosen.item_class_id), 1, 1, {"kind":"skill_card523_swap", "deck_id":DECK, "card_id":int(chosen.card_id), "from_card_id":int(plan.card_id), "approximation":"TWILIGHT"})
+	if not bool(issued.get("ok", false)):
+		rng.state = roll_before
+		return _fail(str(issued.get("error", "다시 뽑기 결과 지급 실패")) + " · 스킬 카드 보존")
+	payload.inventory = issued.overrides.inventory
+	payload.item_instances = issued.overrides.item_instances
+	payload.inventory[DIAMOND] = int(payload.inventory.get(DIAMOND, 0)) - int(plan.cost.amount)
+	if int(payload.inventory[DIAMOND]) <= 0: payload.inventory.erase(DIAMOND)
+	var state_before: Dictionary = state.duplicate(true)
+	if not state.has("swaps"): state["swaps"] = {}
+	state.swaps[str(plan.card_id)] = int(plan.used) + 1
+	revision += 1
+	if world.call("_save_game", true, payload) != OK:
+		state = state_before; revision += 1
+		rng.state = roll_before
+		return _fail("다시 뽑기 저장 실패 · 스킬 카드와 다이아를 그대로 두었습니다")
+	_commit_world(payload)
+	var item: String = ""
+	for uid: Variant in payload.item_instances:
+		if not paid.overrides.item_instances.has(uid) and int(NATIVE_FIELDS.full(payload.item_instances[uid].get("record", {})).get("source_item_class_id", -1)) == int(chosen.item_class_id): item = str(payload.item_instances[uid].name)
+	var message: String = "스킬 카드 다시 뽑기 · %s → %s (다이아 %d · TWILIGHT 근사)" % [str(plan.name), str(chosen.name), int(plan.cost.amount)]
+	_log(message)
+	return {"ok":true, "reason":"", "saved":true, "from":{"card_id":int(plan.card_id), "name":str(plan.name)}, "result":{"card_id":int(chosen.card_id), "name":str(chosen.name), "item_class_id":int(chosen.item_class_id), "item":item}, "cost":plan.cost, "swap_count":int(plan.used) + 1, "message":message}
 
 ## --- enhancement -------------------------------------------------------------
 

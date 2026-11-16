@@ -14,7 +14,9 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   popup Recovery_Popup_Awaken_CardList lists the failed awakening targets;
 ##   각 성 shows Nd_Retry with the card and 확 인 redeems the record
 ##   (the existing awakening engine keeps its own costs).
-## Left empty (no TWILIGHT data or feature): 확률 보기, 후보 카드 컬렉션 보기 /
+## - 확률 보기 (합성): the original merge rule's SuccessProbability for the
+##   deck and grade (the same row tj runtime rolls with, server-matched).
+## Left empty (no TWILIGHT data or feature): 각성 확률 보기, 후보 카드 컬렉션 보기 /
 ## 컬렉션 보기, the awakening detail panel (Nd_Detail), the moving select
 ## frame (Nd_SelectEffect) and the reveal effects. Skill card retry (Recovery_All_Compose_Skill) has no TWILIGHT
 ## engine and equipment recovery (Recovery_All) no TWILIGHT record. Without
@@ -157,7 +159,7 @@ func _spec() -> Dictionary:
 		var id: int=int(GRADE_NODES[shown])
 		var p: String="Nd_CardSelect/"+button+"/"
 		spec[p+"Btn_Card"]={"activate":Callable(self,"_grade").bind(id)}
-		spec[p+"Btn_Probability"]={"exclude":true}
+		spec[p+"Btn_Probability"]={"exclude":true} if kind=="awakening" else {"activate":Callable(self,"_probability").bind(id)}
 		for node: String in GRADE_NODES:
 			if node!=shown:spec[p+"Btn_Card/"+node]={"exclude":true}
 		spec[p+"Btn_Card/"+shown]={"visible":true}
@@ -184,6 +186,27 @@ func _retry_spec(spec: Dictionary, p: String) -> void:
 	spec[p+"Nd_Button/Btn_Cancle"]={"activate":Callable(self,"_cancel")}
 	spec[p+"Nd_Button/Btn_ReSelect"]={"activate":Callable(self,"_reselect")}
 	spec[p+"Nd_Button/Btn_Ok"]={"activate":Callable(self,"_redeem")}
+
+## The original merge chance of this deck and grade (BuffCardMergeRule
+## SuccessProbability out of 1,000,000, the row tj runtime rolls with).
+func success_chance(grade_id: int) -> float:
+	var tj: Object=_tj()
+	if tj==null:return -1.0
+	var found: Array=[]
+	for row: Variant in tj.core.definitions.get("merge_rules",[]):
+		if not row is Dictionary or int(row.get("BuffCardDeckID",0))!=int(DECKS.get(category,0)) or int(row.get("GradeID",0))!=grade_id:continue
+		if tj.core.has_method("server_matches") and not tj.core.server_matches(int(row.get("ServerLimitSetID",0)),tj.context()):continue
+		found.append(row)
+	return float(found[0].SuccessProbability)/10000.0 if found.size()==1 else -1.0
+
+func _probability(grade_id: int) -> Dictionary:
+	var chance: float=success_chance(grade_id)
+	if chance<0.0:
+		_message("현재 서버의 원본 합성 확률을 확인할 수 없습니다")
+		return {"ok":false}
+	var text: String=("%.4f" % chance).rstrip("0").rstrip(".")
+	_message("%s %s 합성 재도전 성공 확률 %s%% (성공 시 고른 성공 후보, 실패 시 고른 실패 후보 중 1장)" % [GRADE_NAMES.get(grade_id,""),category,text])
+	return {"ok":true,"percent":chance}
 
 func _phase() -> String:
 	return "success" if picked_success.is_empty() else "fail"
