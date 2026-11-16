@@ -11673,6 +11673,7 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
+	if not opened: print("CURRENT523_SESSION_OPEN_FAILED ", JSON.stringify({"reason":current523_aden_play_problem}))
 	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile") in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC] else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
 	if opened and not current523_aden_play_problem.is_empty(): description += " · 포탈 보류: "+current523_aden_play_problem
 	current523_aden_play_changed.emit(current523_aden_play_active, description if opened else current523_aden_play_problem)
@@ -11684,6 +11685,7 @@ func close_current523_aden_play(remember_disabled: bool = true, reason: String =
 	current523_aden_play_active = false
 	current523_aden_play_problem = reason
 	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
+	if not reason.is_empty(): print("CURRENT523_SESSION_CLOSED ", JSON.stringify({"reason":reason,"saved":saved}))
 	if not saved:
 		var close_problem: String = str(controller.get("problem"))
 		if close_problem.is_empty(): close_problem = "종료 상태를 저장하지 못했습니다."
