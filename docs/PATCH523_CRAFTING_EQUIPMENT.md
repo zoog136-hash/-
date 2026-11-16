@@ -747,3 +747,15 @@ https://www.inven.co.kr/board/lineagem/5056/10935)
 - `world.patch523_gacha_craft_owned() -> Array` — 가방의 비법서 `[{item_class_id, name, owned, spec}]`
 - `world.patch523_gacha_craft_quote(item_class_id) -> Dictionary` — `{ok, reason, item:{name, material_name, material_amount, cost, change_cost, gacha_id}, gold_cost, books_owned, material, outcomes:[{item_class_id, name, amount, enchant, bless_raw, percent, bound_percent}], origin}`
 - `world.patch523_gacha_craft_execute(item_class_id) -> Dictionary` — `{ok, output:{item_class_id, name, amount, enchant, bless_raw, bound, row_id, group_id}, roll, gold_cost, detail}` 또는 `{ok:false, reason}`
+
+
+## TWILIGHT 근사 2026-11-17 — 제작 잔여 (PR `feat/approx523-craft-leftovers`)
+
+| 문제 | 근사 |
+| --- | --- |
+| 일반 세공 주문서 2개(+재료) → 축복 세공 주문서 1개 제작이 `stack_state_normal`로 **일반** 주문서를 지급(손해 제작) | 원본 제작이 축복(ItemBlessCodeID 2)으로 지급하는 ScrollElementalEnchant 36종(`patch523_craft_approx.BLESSED_STACK_OUTPUTS`, ItemCraftOutputView에서 계산)의 축복 스택을 카탈로그에 함께 등록(`patch523_item_catalog.register`). 결과는 원본대로 축복 주문서 |
+| 각성서를 재료로 쓰는 제작: 각성서를 공급 개체(`native_awakening_supply`, 자기 수량·영수증)로 가지고 있으면 "원본 보상 개체" 보호로 견적 거부 | 공급 개체의 source/legacy 영수증 수량을 재료로 세고(`patch523_rules.awakening_pool`), 제작 때 그 개체 수량을 차감(`_debit_awakening`). 퀘스트 영수증 개체는 그 소비 소유자 몫이라 쓰지 않음 |
+
+- 결과가 대체 없는 시험 아이템인 제작(아크 변신 카드 8종, 봉인된 정상의 가호 상자 1~3단, 티셔츠·인장 상자, 패키지류)은 별도 PR에서
+  명시적 허용 목록으로 카탈로그·사용 소유자에 등록한다(2026-11-17 지시: 전역 TestItem 허용은 하지 않음).
+- 시험: `tests/craft523_leftovers_test.gd`.

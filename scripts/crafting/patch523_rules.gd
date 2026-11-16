@@ -1166,6 +1166,40 @@ static func _stack_has_owned_entities(material: Dictionary, physical: Dictionary
 		if instance is Dictionary and str(instance.get("name","")) in [owned_key,str(material.item)]:return true
 	return false
 
+## TWILIGHT 근사 2026-11-17 (docs/PATCH523_CRAFTING_EQUIPMENT.md): a 각성서 held as an
+## awakening supply entity (native_awakening_supply: own quantity + receipt) is a craft
+## input — its source/legacy receipts are counted and debited entity by entity
+## (quest-receipt entities keep their own consumption owner and are not used here).
+const AWAKENING_SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
+static func awakening_pool(material: Dictionary, physical: Dictionary, locks: Dictionary, context: Dictionary) -> Dictionary:
+	var world: Variant=context.get("awakening_world")
+	var id: int=int(material.get("source_id",0))
+	if bool(material.get("physical",false)) or id not in AWAKENING_SUPPLY.IDS or not world is Node or not is_instance_valid(world) or int(material.get("bless_code",1))!=1 or int(material.get("level",0))!=0:return {}
+	var result: Dictionary={}
+	for uid: String in physical:
+		var owned: Dictionary=AWAKENING_SUPPLY.proof(world,uid,id)
+		if not owned.get("ok",false) or str(owned.receipt_kind) not in ["source","legacy"]:continue
+		var key: String=str(owned.inventory_key)
+		if bool(locks.get(key,false)) or bool(locks.get(key+"@@@"+uid,false)):continue
+		if not result.has(key):result[key]={"amount":0,"record":owned.record,"awakening_supply":true,"entities":[]}
+		result[key].amount=int(result[key].amount)+int(owned.quantity)
+		result[key].entities.append(uid)
+	return result
+
+## Debits `quantity` of `key` from the awakening supply entities of `physical`.
+static func _debit_awakening(world: Node, physical: Dictionary, key: String, item_id: int, quantity: int) -> bool:
+	var remaining: int=quantity
+	var ids: Array=physical.keys();ids.sort()
+	for uid: Variant in ids:
+		if remaining==0:break
+		var owned: Dictionary=AWAKENING_SUPPLY.proof(world,str(uid),item_id)
+		if not owned.get("ok",false) or str(owned.inventory_key)!=key or str(owned.receipt_kind) not in ["source","legacy"]:continue
+		var take: int=mini(remaining,int(owned.quantity));var rest: int=int(owned.quantity)-take
+		if rest==0:physical.erase(uid)
+		else:physical[uid]["source_card_currency_quantity" if owned.receipt_kind=="legacy" else AWAKENING_SUPPLY.QUANTITY]=rest
+		remaining-=take
+	return remaining==0
+
 func available_material(material: Dictionary, inventory: Dictionary, items: Dictionary, physical: Dictionary, equipped: Dictionary, locks: Dictionary, allow_smelt_loss: bool, gold: int = -1, context: Dictionary = {}) -> int:
 	var item_name: String = str(material.item)
 	if bool(material.get("wallet",false)) and str(material.source_id)=="26": return maxi(0,gold)
@@ -1177,6 +1211,8 @@ func available_material(material: Dictionary, inventory: Dictionary, items: Dict
 		var total: int=owned if not _stack_has_owned_entities(material,physical,ownership_key(material)) and _stack_identity_matches(item,material) else 0
 		for value: Dictionary in EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context).values():total+=int(value.amount)
 		for value: Dictionary in QUEST_MATERIALS.owned(material,context).values():total+=int(value.row_limit)
+		if _stack_has_owned_entities(material,physical,ownership_key(material)):
+			for value: Dictionary in awakening_pool(material,physical,locks,context).values():total+=int(value.amount)
 		return total
 	var eligible: int = 0
 	for id: Variant in physical:
@@ -1280,6 +1316,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 			if not _stack_has_owned_entities(material,physical,owned_key) and _stack_identity_matches(item,material):pools[owned_key]={"amount":maxi(0,int(inventory.get(owned_key,0))),"record":item}
 			pools.merge(EXPEDITION_MATERIALS.owned(self,material,inventory,physical,locks,context))
 			pools.merge(QUEST_MATERIALS.owned(material,context))
+			if _stack_has_owned_entities(material,physical,owned_key):pools.merge(awakening_pool(material,physical,locks,context))
 			var need: int=required
 			var keys: Array=pools.keys();keys.sort()
 			# Keep exact native ownership first; the remaining typed key is
@@ -1297,7 +1334,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 				if pools[key].get("quest_material",false):take=mini(take,int(pools[key].row_limit))
 				if take<=0:continue
 				costs[key]=int(costs.get(key,0))+take
-				provenance[key]={"source_id":str(material.source_id),"bless_code":int(material.bless_code),"level":int(material.level),"record":pools[key].record,"expedition":pools[key].has("tuple"),"quest_material":pools[key].get("quest_material",false)}
+				provenance[key]={"source_id":str(material.source_id),"bless_code":int(material.bless_code),"level":int(material.level),"record":pools[key].record,"expedition":pools[key].has("tuple"),"quest_material":pools[key].get("quest_material",false),"awakening_supply":pools[key].get("awakening_supply",false)}
 				material_rows.append({"key":key,"quantity":take,"source_id":str(material.source_id),"material_row_id":int(material.get("row_id",0)),"quest_material":pools[key].get("quest_material",false)})
 				net_weight-=maxi(0,int(pools[key].get("carried_weight",pools[key].record.get("weight",3))))*take
 				need-=take
@@ -1393,6 +1430,10 @@ func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, it
 			staged_inventory.erase(item_name)
 	for id: String in (approval.consumed_ids if consume_materials else []):
 		staged_physical.erase(id)
+	for key: String in (approval.materials if consume_materials else {}):
+		var proof: Dictionary=approval.material_provenance.get(key,{})
+		if not proof.get("awakening_supply",false):continue
+		if not _debit_awakening(context.get("awakening_world"),staged_physical,key,int(proof.source_id),int(approval.materials[key])):return denied("각성서 공급 개체 차감 확인 필요 · 재료 보존")
 	var output_record: Dictionary = record(str(output.source_id),1 if output.physical else int(output.bless_code))
 	var output_name: String = str(output.item)
 	var wallet_reward: int = int(approval.result_quantity) if bool(output.get("wallet_currency",false)) and str(output.source_id)=="26" else 0
