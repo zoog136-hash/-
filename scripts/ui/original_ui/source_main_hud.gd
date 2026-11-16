@@ -1106,6 +1106,7 @@ const FEATURE_WINDOWS={
 	"skill_cards":preload("res://scripts/ui/original_ui/source_main_skill_card_window.gd"),
 	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
 	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
+	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

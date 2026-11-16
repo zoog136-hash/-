@@ -7,6 +7,7 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const POLICY_PATH = "res://data/crafting/patch523_crafting_policy.json"
 const EQUIPMENT_PATH = "res://tests/fixtures/rules_cold_legacy/legacy_enchantment.gd"
+const DECISIONS = preload("res://scripts/crafting/patch523_rules_projection.gd") # 사용자 결정 2026-11-16 waivers only
 const TABLES = ["SpecialResistanceType","InvokeOption","InvokeOptionType","BonusApplicationType","AttackType","ItemBlessBonus","Material","Unit","UIUnit","Class","LuckyBagClass","LuckyBagEntityView","LuckyBagEntityType","LuckyBagEntityClassLimit","DescData_Korean","ItemCraftInput","ItemCraftOutputView","ItemCraftView","ItemCraftRestriction","ItemClass","ItemCategory","ItemClassLimit","ItemBonus","Bonus","BonusType","ItemEnchantBonus","ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroup","ItemEnchantScrollGroupMapping","BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView","ItemBlessEnchantProbability","DateTimes_Korean","ItemBlessCode","EquipSlotConfig","ItemEquipSlot"]
 var problem: String = ""
 var source: Variant = SOURCE
@@ -336,12 +337,15 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 	var primary: Dictionary = {}
 	for row: Dictionary in outs:
 		if row.ItemCraftOutputTypeID == 1 and _same_result(view,row): primary = row; break
+	# 사용자 결정 2026-11-16: the same waivers as the current projection
+	# (count limit / period / NoRepeat lifted), applied to the frozen algorithm.
+	var waived: Dictionary = DECISIONS.decision_waivers(view,restrictions,constraint,known_restriction,calendar)
 	var reason: String = ""
 	if probabilistic and (not _view_contract(views,outs,complete) or primary.is_empty() or outs.is_empty() or not valid_outs or (total != 1000000 and not partial)): reason = "unverified_random_result_contract"
 	elif not probabilistic and (views.size() != 1 or view.AlwaysSuccess != 1 or outs.size() != 1): reason = "non_single_guaranteed_result"
 	elif not probabilistic and (outs[0].Probability != 1000000 or outs[0].ItemCraftOutputTypeID != 1): reason = "unresolved_probability_or_output_type"
-	elif (not restrictions.is_empty() and not known_restriction) or view.ServerLimitSetID != 0 or view.IsCoalitionItem or view.NoRepeat or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
-	elif view.CraftTimeTypeID != 1 or calendar == null: reason = "limited_calendar_or_time_type"
+	elif (not restrictions.is_empty() and not known_restriction and not waived.has("count_limit_restriction_ids")) or view.ServerLimitSetID != 0 or view.IsCoalitionItem or (view.NoRepeat and not waived.has("no_repeat")) or view.IsBelowLevelLimit or view.LevelLimitValue < 0 or view.LevelLimitValue > 1000: reason = "unresolved_player_or_server_condition"
+	elif (view.CraftTimeTypeID != 1 or calendar == null) and not waived.has("time_window"): reason = "limited_calendar_or_time_type"
 	elif _in_ints(craft_id,_policy.get("delegated_protection_recipe_ids",[])): reason = "delegated_protection_owner"
 	elif ins.is_empty(): reason = "candidate_selection_required"
 	elif not probabilistic and not _same_result(view,outs[0]): reason = "view_output_disagreement"
@@ -349,6 +353,7 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		for row: Dictionary in outs:
 			if row.ClanItemClassID != 0 or row.ClanAmount != 0: reason = "clan_output"; break
 	if not reason.is_empty(): return {"reason":reason}
+	if waived.has("time_window"): calendar = {}
 	var item_reason: Dictionary = _item_reason(ins,outs)
 	if not item_reason.is_empty(): return item_reason
 	var out: Dictionary = primary if probabilistic else outs[0]
@@ -373,8 +378,11 @@ func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictio
 		if slot.candidates.size() > 1: selection = true
 	var recipe: Dictionary = {"id":"patch523:"+craft_id,"name":"원본523 · "+str(result.name)+" +"+str(int(out.Enchant)),"category":category,
 		"source_snapshot":"patch523","source_craft_id":int(craft_id),"result":output,"adena":adena,"materials":materials,"material_slots":slots,"requires_material_selection":selection,"popup_text_id":view.PopupText}
-	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty():
+	if view.LevelLimitValue != 0 or known_restriction or not calendar.is_empty() or not waived.is_empty():
 		var condition: Dictionary = {"schema":"patch523-craft-conditions-v1","min_level":view.LevelLimitValue,"max_level":0,"source_level_fields":{"IsBelowLevelLimit":view.IsBelowLevelLimit,"LevelLimitValue":view.LevelLimitValue}}
+		if not waived.is_empty():
+			waived.date = DECISIONS.USER_DECISION_DATE
+			condition.user_decision = waived
 		if not calendar.is_empty(): condition.active_window = calendar
 		if known_restriction:
 			var weekly: bool = quota.get("period_seconds") == 604800 and expected.RefreshUnitID == 71 and expected.isMultiCount == true
