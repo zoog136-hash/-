@@ -15,8 +15,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   각 성 shows Nd_Retry with the card and 확 인 redeems the record
 ##   (the existing awakening engine keeps its own costs).
 ## Left empty (no TWILIGHT data or feature): 확률 보기, 후보 카드 컬렉션 보기 /
-## 컬렉션 보기, the awakening detail panel (Nd_Detail) and the reveal
-## effects. Skill card retry (Recovery_All_Compose_Skill) has no TWILIGHT
+## 컬렉션 보기, the awakening detail panel (Nd_Detail), the moving select
+## frame (Nd_SelectEffect) and the reveal effects. Skill card retry (Recovery_All_Compose_Skill) has no TWILIGHT
 ## engine and equipment recovery (Recovery_All) no TWILIGHT record. Without
 ## the 523 TJ source or a server context the existing TJ page opens instead
 ## (it installs the source and stores the context).
@@ -217,6 +217,9 @@ func _awaken_popup_spec(spec: Dictionary) -> void:
 	spec["Nd_Popup/Btn_Close"]={"activate":Callable(self,"_popup_close")}
 	spec["Nd_Popup/Btn_Collection"]={"exclude":true}
 	spec["Nd_Popup/Nd_Detail"]={"exclude":true}
+	# The select frame follows the chosen card in the client; the chosen card
+	# shows its own Nd_Select mark here instead of a frame left in place.
+	spec["Nd_Popup/Nd_SelectEffect"]={"exclude":true}
 	spec["Nd_Popup/Nd_Non"]={"visible":retry_event.is_empty()}
 	spec["Nd_Popup/Btn_Awaken"]={"activate":Callable(self,"_popup_ok")}
 	spec["Nd_Popup/Btn_Awaken/Normal"]={"visible":not retry_event.is_empty()}

@@ -1101,6 +1101,8 @@ const FEATURE_WINDOWS={
 	"weapon_mastery":preload("res://scripts/ui/original_ui/source_main_mastery_window.gd"),
 	"schedule":preload("res://scripts/ui/original_ui/source_main_schedule_window.gd"),
 	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
+	"buff_info":preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd"),
+	"currency_info":preload("res://scripts/ui/original_ui/source_main_currency_window.gd"),
 	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
 }
 var _feature_windows: Dictionary={}
@@ -1632,7 +1634,7 @@ func _refresh_wallet(changed: bool) -> void:
 	if header.get("_source_sha256")!=HEADER_SHA:
 		_wallet_result=_fail("source_main_header_parent_identity_mismatch")
 		return
-	var contract: Dictionary=Wallet.build(_pack,_gold,_balances)
+	var contract: Dictionary=Wallet.build(_pack,_gold,_balances,Callable(self,"_wallet_info") if FEATURE_WINDOWS.has("currency_info") and _pack.manifest.get("scenes",{}).has(FEATURE_WINDOWS["currency_info"].ROOT) else Callable())
 	if not contract.get("ok",false):
 		_wallet_result=contract
 		return
@@ -1645,6 +1647,12 @@ func _refresh_wallet(changed: bool) -> void:
 	_coordinates.add_child(scene)
 	_wallet_scene=scene
 	_wallet_result={"ok":true,"source":Wallet.MEMBER,"source_parent":HEADER,"source_project":1540,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+
+## The wallet's Btn_Info: the original 재화 정보 window (Gem_All).
+func _wallet_info() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud!=null and hud.has_method("open_currency_info"):hud.call("open_currency_info")
+	return {"ok":true}
 
 func _refresh_blessing(hud: Node) -> void:
 	var state: Dictionary=Blessing.source_state(hud)
