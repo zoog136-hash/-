@@ -60,6 +60,11 @@ const ADEN_RETURN_LOCATION={"ID":166,"LandID":4,"X":33923,"Y":33350}
 const ADEN_RETURN_POLICY="OWN_ADEN_LOCATION166_CLEAR_RING_V1"
 var _source_portal_provider: RefCounted
 var _source_travel_busy: bool=false
+## Last start-position repair of _open_source (empty when none was needed).
+var entry_recovery: Dictionary = {}
+## Last runtime actor position repair reported by the renderer.
+var last_position_recovery: Dictionary = {}
+var _last_recovery_notice_msec: int = -100000
 var _portal_definition_generation: int=0
 const GENERIC_CATALOG=preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES=preload("res://scripts/maps/current523_tile_pack.gd")
@@ -294,7 +299,7 @@ func open(value: Dictionary) -> bool:
 	world.set("field_renderer", candidate)
 	settings = options
 	active = true
-	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
+	_wire_renderer(candidate)
 	candidate.process_mode = Node.PROCESS_MODE_INHERIT
 	candidate.show()
 	_build_notice(world)
@@ -383,6 +388,9 @@ func metrics() -> Dictionary:
 	result["own_map_time"]=_last_map_time.duplicate(true)
 	result["own_map_time_active"]=_map_time!=null and _map_time.active()
 	result["map_open_policy"]=settings.get("map_open_policy",OPTIONS.OWN_ALWAYS_OPEN_V1)
+	result["entry_recovery"]=entry_recovery.duplicate(true)
+	result["position_recoveries"]=int(_renderer.get("position_recoveries")) if active and is_instance_valid(_renderer) and _renderer.get("position_recoveries")!=null else 0
+	result["last_position_recovery"]=last_position_recovery.duplicate(true)
 	if active and source_owned and settings.get("navigation_profile")==OPTIONS.GENERIC and _map_time!=null:
 		if _always_open(settings):result.own_map_time=_always_open_quote()
 		else:
@@ -460,8 +468,15 @@ func _open_source(value: Dictionary) -> bool:
 		problem="선택한 논리 Land의 원문 입장 좌표를 지정해 주세요. 다른 지도의 좌표를 재사용하지 않습니다."; proposed.close(); return false
 	if source_position.is_empty(): source_position = prior_field.coordinates.source_components(world.player.global_position)
 	var position: Vector2 = proposed.coordinates.components_to_world(source_position)
+	entry_recovery = {}
 	if not proposed.point_clear(position,4):
-		problem = "선택한 원문 위치는 자체 통행에서 거부됩니다. 원본 좌표를 임의로 바꾸지 않았습니다."; proposed.close(); return false
+		# A saved/relocated spot on a blocked cell: start on the nearest clear
+		# cell (else the village return point) instead of staying on the old map.
+		var recovered: Dictionary = _entry_recovery_point(proposed,position,int(options.native_land_id),Callable())
+		if not recovered.get("ok",false):
+			problem = "선택한 원문 위치와 주변 %d칸에 통행 가능한 셀이 없습니다." % RENDERER.RECOVERY_RADIUS_CELLS; proposed.close(); return false
+		position = recovered.position; source_position = proposed.coordinates.source_components(position)
+		entry_recovery = recovered
 	var entry_context: Dictionary={}
 	var actor_state: Dictionary={}
 	if generic:
@@ -486,11 +501,30 @@ func _open_source(value: Dictionary) -> bool:
 	candidate.process_mode = Node.PROCESS_MODE_DISABLED; candidate.hide()
 	world.add_child(candidate)
 	var valid: bool = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.get("tile_manifest_sha256","")),catalog,tiles)
+	if not valid and generic and str(candidate.problem) in [RENDERER.POSITION_SCOPE_PROBLEM,RENDERER.POSITION_ENTRY_PROBLEM]:
+		# Clear but outside the painted coverage: retry once on the nearest point
+		# the candidate's own coverage accepts.
+		var covered: Dictionary = _entry_recovery_point(proposed,position,int(options.native_land_id),candidate.support_world_point)
+		candidate.queue_free()
+		candidate = RENDERER.new()
+		candidate.name = "Current523AdenSourceRenderer"
+		candidate.process_mode = Node.PROCESS_MODE_DISABLED; candidate.hide()
+		world.add_child(candidate)
+		if covered.get("ok",false):
+			position = covered.position; source_position = proposed.coordinates.source_components(position)
+			proposed.data.spawn_position = [position.x,position.y]
+			entry_recovery = covered
+			world.player.global_position = position
+			camera.reset_smoothing(); camera.force_update_scroll()
+			valid = candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.get("tile_manifest_sha256","")),catalog,tiles)
+		else:
+			candidate.problem = "원문 표시 영역 안에서 통행 가능한 시작 위치를 찾지 못했습니다."
 	world.player.global_position = actor_position
 	camera.limit_left = old_camera.left; camera.limit_top = old_camera.top; camera.limit_right = old_camera.right; camera.limit_bottom = old_camera.bottom
 	camera.reset_smoothing(); camera.force_update_scroll()
 	if not valid:
 		problem = candidate.problem; candidate.queue_free(); proposed.close(); return false
+	if not entry_recovery.is_empty(): print("CURRENT523_ENTRY_POSITION_RECOVERED ", JSON.stringify({"land":int(options.native_land_id),"kind":entry_recovery.get("kind",""),"to":[position.x,position.y],"source_position":source_position,"ring":entry_recovery.get("ring",-1)}))
 	if generic:
 		actor_state=_actor_state(world,options)
 		entry_context=_entry_context(int(options.native_land_id),str(proposed.get("source_asset")),proposed.world_to_cell(position)+proposed.coordinates.origin,actor_state,str(options.map_time_policy))
@@ -530,7 +564,7 @@ func _open_source(value: Dictionary) -> bool:
 	_source_physics = proposed.build_physics(world); world.field_physics = _source_physics
 	_renderer = candidate; world.field_renderer = candidate
 	settings = options; source_owned = true; active = true
-	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
+	_wire_renderer(candidate)
 	candidate.process_mode = Node.PROCESS_MODE_INHERIT; candidate.show()
 	world.field_minimap.configure(world,proposed)
 	_attach_source_population(world,proposed)
@@ -593,6 +627,44 @@ func _rebuild_prior_renderer(world: Node) -> FieldRenderer:
 		if now[key] != record[key]: report.mismatch.append(key)
 	report.rebuilt = true
 	return renderer
+
+## Wires a 523 renderer to this owner: safe return on real failures, and
+## position recovery (nearest clear cell, else village) on position problems.
+func _wire_renderer(candidate: Node) -> void:
+	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
+	if candidate.has_signal("actor_position_recovered"):
+		candidate.set("recovery_fallback",_recovery_fallback_point)
+		candidate.actor_position_recovered.connect(_position_recovered)
+
+## Village fallback when no clear cell is near the actor: the Aden return
+## point on Aden, else this Land's arrival point.
+func _recovery_fallback_point() -> Variant:
+	if _source_field == null: return null
+	if int(settings.get("native_land_id",-1)) == HOST.ADEN_LAND and _source_field.has_method("source_cell_info"):
+		var landing: Dictionary = _aden_return_point(_source_field,int(settings.get("aden_return_radius",8)))
+		if landing.get("ok",false): return landing.position
+	var spawn: Variant = _source_field.data.get("spawn_position",[])
+	if spawn is Array and (spawn as Array).size() == 2: return Vector2(float(spawn[0]),float(spawn[1]))
+	return null
+
+func _entry_recovery_point(proposed: OriginalPlayableField, position: Vector2, land_id: int, accept: Callable) -> Dictionary:
+	if proposed.has_method("nearest_clear_point"):
+		var near: Dictionary = proposed.call("nearest_clear_point",position,RENDERER.RECOVERY_RADIUS_CELLS,accept)
+		if near.get("ok",false): near["kind"] = "nearest_clear_cell"; return near
+	if land_id == HOST.ADEN_LAND and proposed.has_method("source_cell_info"):
+		var landing: Dictionary = _aden_return_point(proposed,int(settings.get("aden_return_radius",8)))
+		if landing.get("ok",false) and (not accept.is_valid() or bool(accept.call(landing.position))): landing["kind"] = "village_return"; return landing
+	return {"ok":false}
+
+func _position_recovered(detail: Dictionary) -> void:
+	last_position_recovery = detail.duplicate(true)
+	var world: Node = _world()
+	var now: int = Time.get_ticks_msec()
+	if not is_instance_valid(world) or now - _last_recovery_notice_msec < 5000: return
+	_last_recovery_notice_msec = now
+	var hud: Variant = world.get("hud")
+	if is_instance_valid(hud) and hud.has_method("show_message"):
+		hud.call("show_message","통행할 수 없는 위치라 " + ("마을로 이동했습니다." if detail.get("kind") == "village_return" else "가장 가까운 통행 가능 위치로 옮겼습니다."))
 
 func _reopen_after_failed_rebuild(map_id: String) -> void:
 	var world: Node = _world()
@@ -1228,7 +1300,7 @@ func _commit_source_destination(world: Node,proposed: OriginalPlayableField,opti
 		return false
 	if payment.get("ok",false) and save_changes.has("gold"):world.set("gold",int(save_changes.gold))
 	physics.collision_layer=4; physics.process_mode=Node.PROCESS_MODE_INHERIT
-	candidate.safe_return_requested.connect(_renderer_problem.bind(candidate))
+	_wire_renderer(candidate)
 	candidate.process_mode=Node.PROCESS_MODE_INHERIT; candidate.show()
 	world.field_minimap.configure(world,proposed); world.region_id=""; world.hud.set_map_name(str(proposed.data.map_name))
 	_attach_source_population(world,proposed)

@@ -264,3 +264,42 @@
 | 근사로 열린 참고 패시브 | 57 | **70** |
 | 열린 패시브의 하위 주문 발동 | 0 | 16 (피해 5 · 대상 디버프 7 · 자기 버프 4) |
 | 바인딩 스킬서 1,256종 중 스킬이 열린 것 | 257 | **295** ("주문 실행 소유자 미지원" 999 → **961**) |
+
+## 근사 적용 2026-11-16 (3): 참고 액티브 + PC 전용 대상 — 사용자 결정 + TWILIGHT 근사 (`feat/approx523-skill-active`)
+
+### 사용자 결정 2026-11-16 13:46
+- 대 플레이어 전용(PvP, `TargetKind 52`) 스킬은 효과를 **몬스터에게 적용**한다(`player_skills523.PVP_TARGET_TO_NPC`). 기존 스킬 기록(lm_: 슬로우·블랙 핸드·다크 핸드·파워 그립·사이드 그랩·데스 핸드)은
+  `source523.target_kind = AllButMe`, `pvp_only_to_npc = true`로 시전 대상 검사를 통과한다. 참고 액티브(lmref_)는 아래 근사 계약으로 연다.
+- PvP 수치(`PVPDamageReduction` 등)도 같은 원칙으로 **몬스터 상대 수치로 취급**한다(`source_approx523.json` receivers `PVPDamageReduction → pveDamageReduction`). PVE 행과 함께 있으면 둘 다 더해진다.
+
+### TWILIGHT 근사 — 참고 액티브 계약 (`source_approx_active`)
+- 대상: SpellType ≠ 3, 조건 노드·대상별 비용(SpellCost)·VP 비용 없음, 대상 지정 방식 1(자기) 또는 2(대상).
+  - 재료(SpellMaterialTypeID/Amount): 기존 검토된 재료 연결(`bindings.material_inventory_keys`)이 있고 원본 재료 보류가 아닐 때 그 수량을 시전 비용으로 그대로 쓴다.
+  - 범위(TargetAreaRadius > 0): 반경 × 48(거리 정책의 기존 환산값), 대상 수 = TargetLimitCount(0이면 8, 근거 약함). 자기 대상 범위는 내 주위, 대상 지정 범위는 대상 주위.
+    파티 대상 범위 자기 버프는 계속 보류(파티 없음).
+- 주문 자체를 발동 하위 주문과 같은 규칙(`approx_child_spell`)으로 줄인다: 피해 / 대상 디버프 / 자기 버프. **후속 주문(`NextSpellClassID`)**은 최대 2단계까지 같은 대상에 이어서 실행(같은 세 효과로 줄어들 때만).
+- 원본 값 그대로: MPCost·HPCost, CastDelay(재사용), 학습 레벨(SpellLearnLimit), 무기 조건(WeaponType/WeaponGroup → 착용 무기의 원본 WeaponType 검사), 사거리 = CastRange × 32(거리 정책의 기존 환산값).
+- 피해는 기존 `deal_damage`, 디버프는 기존 대상 수정치, 자기 버프는 기존 스킬 버프로 적용. 이동기·소환·그 밖의 효과(탐지·마나 흡수 등)는 다음 단계.
+
+### TWILIGHT 근사 — 스킬 대체·묶음 하위 주문 (같은 PR, 사용자 순서 "스킬 대체 → 강화 관계 → 후속 주문 → 이동기 → 묶음 하위 주문")
+- **스킬 대체(`SpellTransformID` @1/X, 패시브 버프 행)**: 그 패시브를 배우면 원본 주문 X가 바인딩된 스킬을 시전할 때 값 V의 SpellClass를 대신 실행한다(`approx_transforms`, `skill_service.cast`).
+  V는 같은 세 효과(피해·대상 디버프·자기 버프, 후속 주문 2단계까지)로 줄어들 때만. 공격 스킬은 V로 바꾸고, **상태이상 스킬(스턴 등)은 원래 상태이상을 그대로 두고 V의 피해/디버프를 더한다**(대체로 스턴이 사라지지 않게 — 근거 약함).
+  레벨 구간(CharacterLevel) 행은 같은 규칙. 스위치 `APPROX_TRANSFORMS`.
+- **강화 관계(`RequiredSpellClassID`)**: 근사(1)의 선행 스킬 규칙 그대로.
+- **후속 주문(`NextSpellClassID`)**: 액티브는 같은 대상에 최대 2단계까지 이어서 실행(위).
+- **묶음 하위 주문**: 패시브의 주문 행 `SpellClassID`(하위 패시브)는 각 하위 주문의 버프 행을 그 하위 주문의 무기·선행 조건과 함께 합친다(`APPROX_CHILD_PASSIVES`).
+  액티브의 `SpellClassID`(+`SpellCastAll`)는 하위 주문을 표 순서대로 같은 대상에 실행한다.
+- **이동기(`SpellMove`)**: 기존 `spell_move523` 실행부가 있는 기록만 그대로(새 근사 없음).
+
+### 측정 (실제 Main, 원본 팩, `tests/skill523_approx_test.gd`)
+| | 근사 (2) 후 | 근사 (3) 후 |
+| --- | ---: | ---: |
+| 보류 참고 스킬 (294 중) | 224 | **190** |
+| 근사로 열린 참고 스킬 | 70 (패시브) | **104** (패시브 86 · 액티브 18, 재료 비용 15 · 범위 3 포함) |
+| 스킬 대체 패시브 | 0 | 11 (블로우 어택·쇼크 스턴(베테랑) 등) |
+| PC 전용 lm_ 스킬(슬로우·블랙 핸드 등) | 대상 검사에서 막힘 | 몬스터 대상으로 열림 |
+| 바인딩 스킬서 1,256종 중 스킬이 열린 것 | 295 | **389** (막힘 961 → 867) |
+- 실제 Main 시전: 요정 뱀파이어릭 터치 — MP 375 → 363(원본 MPCost 12), 재사용 0.05초(CastDelay), 대상 몬스터 피해 27.
+- 남은 190(액티브 85 · 패시브 105)의 사유: 스킬 대체 대상 패시브의 효과 행(`ChangeSpecialSpellClassID` 13 등), 받는 곳 없는 버프(자기 15 · 대상 10),
+  "효과 없음"(이동·탐지·소환·흡수 등 세 효과 밖 주문 ~35), 조건 노드, 고유 체계 행(CounterRevenge·DeathBlow·SaintBlow·DualPotion·충전 등) — 다음 PR에서 순서대로 계속.
+

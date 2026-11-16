@@ -2,6 +2,7 @@ extends RefCounted
 ## Generic M523 raw storage. Logical Lands retain exact native AssetPath values.
 ## Format helpers only are reused from the pinned Aden reader; its identity and
 ## manifest validation are unchanged and are never called with another member.
+const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 const S32_FORMAT = preload("res://scripts/maps/current523_aden_pack.gd")
 const LAND_SHA256 = "8778d18d8c23a0ccb0a555f495e056987796232c616dec805dfb4c4d633b0ef9"
 const MANIFEST_NAME = "source523.json"
@@ -165,6 +166,11 @@ func load_catalog(directory: String, expected_manifest_sha256: String) -> bool:
 		for tag: Variant in exclusions:
 			if not tag in ["arena","ziggurat","guild","siege"]: return _fail("Unknown excluded content tag")
 		lands[int(land.ID)] = entry.duplicate(true)
+		# 사용자 결정 2026-11-16: tutorial Lands are deleted from play (never
+		# opened, entered or travelled to); the pack entry itself is untouched.
+		if TUTORIAL.land_declaration(land) and not (lands[int(land.ID)].excluded_content as Array).has("tutorial"):
+			lands[int(land.ID)].excluded_content.append("tutorial")
+			lands[int(land.ID)].tutorial_exclusion = TUTORIAL.DECISION
 		if not ids_by_asset.has(land.AssetPath): ids_by_asset[land.AssetPath] = []
 		ids_by_asset[land.AssetPath].append(int(land.ID))
 	for asset_path: String in assets:

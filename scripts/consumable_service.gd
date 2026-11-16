@@ -510,7 +510,7 @@ func _random_destination() -> Vector2:
 	var start: Vector2 = world.player.global_position
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
 	if field is OriginalPlayableField:
-		if field.uses_original_gameplay_rules() and not bool(field.definition.rules.get("teleportable",0)): return Vector2.INF
+		if field.uses_original_gameplay_rules() and not bool(field.definition.rules.get("teleportable",0)) and not (world.get("item_possession523") != null and world.item_possession523.ignores_no_teleport()): return Vector2.INF
 		return field.random_landing(rng,start)
 	if field is NativePngField:
 		# A PNG canvas can be almost entirely closed terrain. Sample the cached,

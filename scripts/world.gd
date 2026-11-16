@@ -5,6 +5,8 @@ const CHARACTER_PROFILE = preload("res://scripts/characters/save_profile.gd")
 var character_source_cursor: Dictionary = {}
 ## Where an old-map save was moved from when it was brought to 523 Aden (kept in the save).
 var old_map_relocation523: Dictionary = {}
+## 사용자 결정 2026-11-16 tutorial removal record (scripts/content523/tutorial523.gd).
+var tutorial523: Dictionary = {}
 var character_display_name: String = "황혼의 기사"
 var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
@@ -82,6 +84,7 @@ const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
+const TUTORIAL523 = preload("res://scripts/content523/tutorial523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const CURRENT523_ADEN_PLAY = preload("res://scripts/maps/current523_aden_play_controller.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
@@ -143,6 +146,10 @@ const CONTENT523 = preload("res://scripts/content523/content523.gd")
 var content523 = CONTENT523.new()
 ## 523 카드 다시 뽑기 / 스킬 카드 합성·강화 (사용자 결정 2026-11-16).
 const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
+## TWILIGHT 근사: 획득 후 수명(Life) 장부, 지배 부적 소지 효과.
+const ITEM_LIFE523 = preload("res://scripts/loot/item_life523.gd")
+var item_life523 = ITEM_LIFE523.new()
+var item_possession523 = preload("res://scripts/loot/item_possession523.gd").new()
 var card_swap523 = CARD_SWAP523.new()
 const SKILL_CARD523 = preload("res://scripts/cards/skill_card523.gd")
 var skill_cards523 = SKILL_CARD523.new()
@@ -823,6 +830,7 @@ func _process_frame(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
+	item_life523.tick(delta)
 	var hitch_7: int = FRAME_HITCH.now()
 	if original_skills != null: original_skills.tick(delta)
 	FRAME_HITCH.add("skills", hitch_7)
@@ -879,6 +887,30 @@ func _process_frame(delta: float) -> void:
 		_update_target_hud()
 
 ## Once per SLOW_TICK_SECONDS; `delta` is the time since the previous call.
+var _tutorial523_grant_retry_at: float = 0.0
+## TWILIGHT 근사 (사용자 결정 2026-11-16, tutorial523.gd): class skill books only
+## the deleted tutorial quests gave are granted once per character.
+func _tutorial523_start_grant() -> void:
+	if tutorial523.get("start_grant") is Dictionary or source_save_blocked or equipment_collections.save_blocked or not pending_map_save_record.is_empty(): return
+	var now: float = Time.get_unix_time_from_system()
+	if now < _tutorial523_grant_retry_at: return
+	_tutorial523_grant_retry_at = now + 5.0
+	var class_id: int = 0
+	for id: int in preload("res://scripts/characters/account_store.gd").JOBS:
+		if str(preload("res://scripts/characters/account_store.gd").JOBS[id]) == str(job_class): class_id = id
+	var grants: Array = TUTORIAL523.start_grants(class_id, tutorial523)
+	var before: Dictionary = tutorial523.duplicate(true)
+	tutorial523["decision"] = TUTORIAL523.DECISION
+	tutorial523["start_grant"] = {"class_id":class_id,"items":grants.map(func(grant: Dictionary) -> int: return int(grant.item_class_id)),"origin":"TWILIGHT 근사 · 튜토리얼 보상 대체"}
+	if grants.is_empty(): return
+	if not preload("res://scripts/loot/patch523_item_inventory.gd").stage(self,grants,{"kind":"tutorial523_start_grant"}).get("ok",false):
+		tutorial523 = before # catalog not ready yet: retry later
+		return
+	if not preload("res://scripts/loot/patch523_item_inventory.gd").commit(self,grants,{"kind":"tutorial523_start_grant"}):
+		tutorial523 = before
+		return
+	hud.append_log("튜토리얼 삭제 대체 지급(TWILIGHT 근사): 직업 1단계 기술서 %d권" % grants.size())
+
 func _process_slow(delta: float) -> void:
 	option_awakening.refresh_timed_relic()
 	inventory_automation.maintenance.tick()
@@ -887,6 +919,7 @@ func _process_slow(delta: float) -> void:
 	FRAME_HITCH.add("monsterbook", hitch_0)
 	var hitch_1: int = FRAME_HITCH.now()
 	quest_auto.tick(self)
+	_tutorial523_start_grant()
 	FRAME_HITCH.add("quests", hitch_1)
 	var hitch_5: int = FRAME_HITCH.now()
 	dungeon_play.tick(delta)
@@ -1039,6 +1072,8 @@ func _load_data() -> void:
 	routines.configure(self)
 	content523.configure(self)
 	card_swap523.configure(self)
+	item_life523.configure(self)
+	item_possession523.configure(self)
 	skill_cards523.configure(self)
 	unconfirmed523.configure(self)
 
@@ -4628,7 +4663,7 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
-	return total + clan523.buff_value(key) + content523.buff_value(key)
+	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key)
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6530,6 +6565,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		CLAN523.SAVE_KEY: clan523.export_state(),
 		CONTENT523.SAVE_KEY: content523.export_state(),
 		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
+		ITEM_LIFE523.SAVE_KEY: item_life523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
@@ -6541,6 +6577,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"character_source_cursor":character_source_cursor.duplicate(true),
 		OLD_MAP_RELOCATION523.KEY:old_map_relocation523.duplicate(true),
+		TUTORIAL523.KEY:tutorial523.duplicate(true),
 		"class_index": class_index,
 		"job_class": job_class,
 		"source_visual_context": {"snapshot":"base508","gender_id":source_gender_id,"active_card_options":source_card_visual_options.duplicate(true)},
@@ -6918,6 +6955,18 @@ func _load_game(quiet: bool) -> void:
 		data=OLD_MAP_RELOCATION523.relocated(data)
 		saved_map_id=OLD_MAP_RELOCATION523.TARGET_MAP
 		hud.append_log("옛 지도 저장을 523 아덴 마을로 옮겼습니다 (원본 백업 보존)")
+	if TUTORIAL523.needed(data):
+		# 사용자 결정 2026-11-16: a character in a deleted tutorial Land moves to
+		# Aden town and tutorial items leave the save (amounts recorded); the
+		# original file is backed up byte for byte first.
+		var tutorial_sha: String=FileAccess.get_sha256(save_path())
+		var tutorial_backup: String=save_path()+".pre-tutorial-523-"+tutorial_sha
+		if (not FileAccess.file_exists(tutorial_backup) and DirAccess.copy_absolute(save_path(),tutorial_backup)!=OK) or FileAccess.get_sha256(tutorial_backup)!=tutorial_sha:
+			source_save_blocked=true
+			hud.show_message("튜토리얼 삭제 이전 백업 실패: 기존 저장을 보존합니다")
+			return
+		data=TUTORIAL523.migrate_save(data)
+		hud.append_log("튜토리얼 삭제(사용자 결정 2026-11-16): 튜토리얼 위치·아이템을 정리했습니다 (원본 백업 보존)")
 	var has_native_position: bool=data.has("native_png_plan_sha256")
 	var requested_native: bool=NATIVE_PNG.supports(saved_map_id) and not SOURCE_MAP84.supports(saved_map_id)
 	var explicit_legacy: bool=LEGACY_LAYOUT.active("--legacy-map-layouts") or (NATIVE_PNG.extra_map(saved_map_id) and LEGACY_LAYOUT.active("--legacy-aden-faith-layouts"))
@@ -7113,7 +7162,12 @@ func _load_game(quiet: bool) -> void:
 	_ensure_inventory_ammo_defaults()
 	consumable_service.call("prune_removed")
 	character_source_cursor = data.get("character_source_cursor",{}).duplicate(true) if data.get("character_source_cursor",{}) is Dictionary else {}
+	if TUTORIAL523.land(character_source_cursor.get("native_land_id",-1)):
+		# Any other copy of a deleted tutorial Land spot (사용자 결정 2026-11-16).
+		tutorial523["relocated"] = {"from_native_land_id":int(character_source_cursor.native_land_id),"from_source_position":character_source_cursor.get("source_position",[]),"to_native_land_id":TUTORIAL523.ADEN_LAND_ID}
+		character_source_cursor = {"native_land_id":TUTORIAL523.ADEN_LAND_ID,"source_position":[]}
 	old_map_relocation523 = data.get(OLD_MAP_RELOCATION523.KEY,{}).duplicate(true) if data.get(OLD_MAP_RELOCATION523.KEY,{}) is Dictionary else {}
+	tutorial523 = data.get(TUTORIAL523.KEY,{}).duplicate(true) if data.get(TUTORIAL523.KEY,{}) is Dictionary else {}
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
@@ -7184,6 +7238,8 @@ func _load_game(quiet: bool) -> void:
 	clan523.import_state(data.get(CLAN523.SAVE_KEY, {}))
 	content523.import_state(data.get(CONTENT523.SAVE_KEY, {}))
 	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
+	# An older save has no ledger: its Life items start at this load time.
+	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
 	skill_cards523.import_state(data.get(SKILL_CARD523.SAVE_KEY, {}))
 	CATALOG_GRADES.synchronize_saved_grades(catalog_db.get("아이템", []), item_db,
 		item_instances, equipped_items, warehouse.instances)
@@ -8751,7 +8807,7 @@ func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 	if growth.travel.enabled():
 		growth.travel.open({"kind":"job","name":str(skill.name)})
 		return false
-	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)) and not item_possession523.ignores_no_teleport():
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
 	for _attempt: int in range(100):
@@ -11663,6 +11719,7 @@ func open_current523_aden_play(raw_root: String, tile_root: String, options: Dic
 	var opened: bool = bool(controller.call("open", requested))
 	current523_aden_play_active = bool(controller.get("active"))
 	current523_aden_play_problem = str(controller.get("problem"))
+	if not opened: print("CURRENT523_SESSION_OPEN_FAILED ", JSON.stringify({"reason":current523_aden_play_problem}))
 	var description: String = "S32 원문 지형·속성의 자체 해석으로 이동합니다. M 원작 판정은 미확정입니다." if options.get("navigation_profile") in [CURRENT523_ADEN_PLAY_OPTIONS.SOURCE,CURRENT523_ADEN_PLAY_OPTIONS.GENERIC] else "기존 TWILIGHT 통행을 사용하는 아덴 실험 플레이입니다."
 	if opened and not current523_aden_play_problem.is_empty(): description += " · 포탈 보류: "+current523_aden_play_problem
 	current523_aden_play_changed.emit(current523_aden_play_active, description if opened else current523_aden_play_problem)
@@ -11674,6 +11731,7 @@ func close_current523_aden_play(remember_disabled: bool = true, reason: String =
 	current523_aden_play_active = false
 	current523_aden_play_problem = reason
 	var detail: String = "기존 지도로 복귀했습니다." if reason.is_empty() else "실험 플레이 종료: " + reason
+	if not reason.is_empty(): print("CURRENT523_SESSION_CLOSED ", JSON.stringify({"reason":reason,"saved":saved}))
 	if not saved:
 		var close_problem: String = str(controller.get("problem"))
 		if close_problem.is_empty(): close_problem = "종료 상태를 저장하지 못했습니다."
@@ -11821,6 +11879,8 @@ func _restore_current523_aden_play() -> void:
 		# restored from the selected character, not the previous player.
 		var cursor: Dictionary=character_source_cursor if not character_source_cursor.is_empty() else {"native_land_id":4,"source_position":[]}
 		options.merge(cursor,true)
+	# A deleted tutorial Land (사용자 결정 2026-11-16) is never resumed.
+	if TUTORIAL523.land(options.get("native_land_id",-1)): options.merge({"native_land_id":TUTORIAL523.ADEN_LAND_ID,"source_position":[]},true)
 	# Over the 523 host Aden, play mode is how the world is played: it always
 	# resumes (the old picture-pack world no longer exists to fall back to).
 	var host: bool = CURRENT523_HOST.is_host(field_map)
