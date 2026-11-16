@@ -27,6 +27,12 @@ const TEXTURE_BUDGET_BYTES := 96 * 1024 * 1024
 ## dropped, and an already loaded sprite is never delayed). -1 = load all.
 const FRAME_SPRITE_LOAD_BUDGET_USEC := 12000
 var sprite_load_budget_usec: int = -1
+## With a load budget (the field renderer), cold sprite banks are prepared on
+## worker threads (reference_sp2_bank.background_loading): a sprite whose
+## inputs are not ready yet waits like a budget-deferred one, and the waiting
+## refresh repeats only once a worker result arrived.
+const LOADER = preload("res://scripts/resources/sp2_background_loader.gd")
+var _waiting_serial: int = -1
 var _malformed: int = 0
 var _pending_refresh: bool = false
 
@@ -94,8 +100,11 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 				deferred += 1
 				continue
 			var load_started: int = Time.get_ticks_usec()
-			_sprite(int(row.sprite_id))
+			var loading: Dictionary = _sprite(int(row.sprite_id))
 			load_spent += Time.get_ticks_usec() - load_started
+			if loading.get("background_pending", false):
+				deferred += 1
+				continue
 		var sprite: Dictionary = _sprite(int(row.sprite_id))
 		if not sprite.ok:
 			unresolved[str(row.sprite_id)] = sprite.get("error", "unresolved")
@@ -127,6 +136,7 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	FRAME_HITCH.count("map.object_holders_created", created)
 	FRAME_HITCH.count("map.object_holders_reused", reused)
 	FRAME_HITCH.count("map.object_holders_trimmed", trimmed)
+	_waiting_serial = LOADER.serial if deferred > 0 and LOADER.busy() else -1
 	if deferred > 0:
 		_pending_refresh = true
 		FRAME_HITCH.count("map.object_sprites_deferred", deferred)
@@ -141,8 +151,14 @@ func _sprite(id: int) -> Dictionary:
 	if _sprites.has(id): return _sprites[id]
 	if _sprites.size() >= MAX_SPRITES: return {"ok":false,"error":"map_object_sprite_cache_full"}
 	var started: int = FRAME_HITCH.now()
+	BANK.background_loading = sprite_load_budget_usec >= 0 and LOADER.enabled
 	var result: Dictionary = _load_sprite(id)
+	BANK.background_loading = false
 	FRAME_HITCH.detail("map.object_sprite_load", started)
+	if result.get("background_pending", false):
+		# Not a result: asked again after its worker tasks finished.
+		FRAME_HITCH.count("map.object_sprite_background_wait")
+		return result
 	FRAME_HITCH.count("map.object_sprite_loads")
 	_sprites[id] = result
 	return result
@@ -157,6 +173,7 @@ func _load_sprite(id: int) -> Dictionary:
 		var loaded: Dictionary = _bank.load_bank(manifest_path, manifest_sha256, id, {"idle":action}, {"idle":true}, SCOPE)
 		if not loaded.get("ok", false):
 			last_error = str(loaded.get("error", ""))
+			if last_error == BANK.ROLE_DEFERRED: return {"ok":false,"error":last_error,"background_pending":true}
 			if not last_error.begins_with("Exact source action record"): break
 			if index == ACTION_PREFERENCE.size():
 				# Neither display action: the sprite's other declared actions, lowest first.
@@ -177,6 +194,7 @@ func _load_sprite(id: int) -> Dictionary:
 		return {"ok":true,"action":action,"frames":frames,"total":total,"static":bool(track.get("static_pending_timing", false)) or total <= 0.0}
 	# A sprite without actions: its client static picture.
 	var picture: Dictionary = _bank.load_static(manifest_path, manifest_sha256, id)
+	if picture.get("error", "") == BANK.ROLE_DEFERRED: return {"ok":false,"error":BANK.ROLE_DEFERRED,"background_pending":true}
 	if picture.get("ok", false):
 		return {"ok":true,"action":-1,"frames":[{"layers":picture.layers,"duration":0.0}],"total":0.0,"static":true}
 	return {"ok":false,"error":last_error if not last_error.is_empty() else str(picture.get("error", "map_object_source_absent"))}
@@ -265,7 +283,8 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	_clock += maxf(delta, 0.0)
-	if _pending_refresh: refresh(_records, _malformed)
+	# A refresh waiting only for worker results repeats once one arrived.
+	if _pending_refresh and (_waiting_serial < 0 or LOADER.serial != _waiting_serial or not LOADER.busy()): refresh(_records, _malformed)
 	# Check the live cached record per visible source ID, including static IDs:
 	# a replacement or static/animated transition must take effect this tick.
 	var frames: Dictionary = {}
