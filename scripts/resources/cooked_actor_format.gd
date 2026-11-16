@@ -21,9 +21,9 @@ extends RefCounted
 ## The index names FORMAT explicitly; a reader rejects any other FORMAT. A rule
 ## change of the capture, composition or index layout must bump FORMAT; script
 ## edits that keep the same output do not.
-const FORMAT := "twilight-cooked-actor-v1:android_copy_free;cached_frame_composites;binary_alpha_MIX_runs;cells4;etc2_opaque_rgba8_soft"
+const FORMAT := "twilight-cooked-actor-v2:android_copy_free;cached_frame_composites;binary_alpha_MIX_runs;cells4;bundled_entries;astc4x4_psnr32_binary_alpha_else_rgba8"
 ## Folder name under the cooked pack root; changes together with FORMAT.
-const FORMAT_TAG := "v1"
+const FORMAT_TAG := "v2"
 const MAGIC := "TWCA"
 const FILE_VERSION: int = 1
 const PAGE_MAX: int = 2048
@@ -124,7 +124,7 @@ static func read_index(file: FileAccess) -> Dictionary:
 	if raw.size() != raw_size: return {"ok":false,"error":"cooked_actor_index_corrupt"}
 	var index: Variant = bytes_to_var(raw)
 	if not index is Dictionary or index.get("format") != FORMAT: return {"ok":false,"error":"cooked_actor_format"}
-	if not index.get("pages") is Array or not index.get("images") is PackedInt32Array or not index.get("states") is Array or not index.get("tracks") is Dictionary or not index.get("colors") is PackedFloat32Array: return {"ok":false,"error":"cooked_actor_index_shape"}
+	if not index.get("pages") is Array or not index.get("images") is PackedInt32Array or not index.get("states") is Array or not index.get("entries") is Array or not index.get("colors") is PackedFloat32Array: return {"ok":false,"error":"cooked_actor_index_shape"}
 	return {"ok":true,"index":index,"data_start":16 + packed_size}
 
 ## Bytes of one mip level in the page formats a cooked file may hold; -1 else.
@@ -132,7 +132,7 @@ static func data_size(width: int, height: int, format: int) -> int:
 	var blocks: int = ((width + 3) / 4) * ((height + 3) / 4)
 	match format:
 		Image.FORMAT_RGBA8: return width * height * 4
-		Image.FORMAT_ETC2_RGBA8: return blocks * 16
+		Image.FORMAT_ETC2_RGBA8, Image.FORMAT_ASTC_4x4: return blocks * 16
 		Image.FORMAT_ETC2_RGB8, Image.FORMAT_ETC2_RGB8A1, Image.FORMAT_ETC: return blocks * 8
 	return -1
 

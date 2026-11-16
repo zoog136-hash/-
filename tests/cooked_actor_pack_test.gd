@@ -46,21 +46,30 @@ func cooked_preview(parent: Node, selected: Dictionary) -> Node2D:
 	check(preview._configure_selected_roles(selected, "idle") and preview.cooked_actor(), "preview plays the cooked actor: " + str(preview.reference_bank_status))
 	return preview
 
-func cook(data: Dictionary, directory: String, compress: int) -> Dictionary:
+## Two entries in one bundle: the selection and a "weapon variant" whose
+## roles reuse the same source actions (as most transform weapon families do).
+func variant(data: Dictionary) -> Dictionary:
 	var selected: Dictionary = selection(data)
-	var inputs: Dictionary = STORE.selection_inputs(selected)
-	var preview: Node2D = runtime_preview(root, selected)
-	var resolved: Dictionary = {"role_actions":selected.role_actions,"loop_policy":selected.loop_policy}
+	selected.role_actions = {"idle":0,"walk":3}
+	return selected
+
+func cook(data: Dictionary, directory: String, compress: int) -> Dictionary:
+	var session := COOKER.Session.new()
+	var entries: Array = []
 	var started: int = Time.get_ticks_usec()
-	var cooked: Dictionary = COOKER.cook_preview(preview, inputs, compress < 0, resolved)
+	for selected: Dictionary in [selection(data), variant(data)]:
+		var inputs: Dictionary = STORE.selection_inputs(selected)
+		var preview: Node2D = runtime_preview(root, selected)
+		var cooked: Dictionary = COOKER.cook_preview(preview, inputs, compress < 0, {"role_actions":selected.role_actions,"loop_policy":selected.loop_policy}, session)
+		preview.free()
+		check(cooked.get("ok", false), "cook succeeds: " + str(cooked.get("error", "")))
+		if not cooked.get("ok", false): return {}
+		entries.append(cooked.entry)
 	measured["cook_usec"] = Time.get_ticks_usec() - started
-	preview.free()
-	check(cooked.get("ok", false), "cook succeeds: " + str(cooked.get("error", "")))
-	if not cooked.get("ok", false): return {}
-	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(inputs))
-	var written: Dictionary = COOKER.write_cooked(path, cooked, compress)
+	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(entries[0].inputs))
+	var written: Dictionary = COOKER.write_cooked(path, session, entries, compress)
 	check(written.get("ok", false), "cooked file written: " + str(written.get("error", "")))
-	return {"path":path,"cooked":cooked,"written":written}
+	return {"path":path,"session":session,"entries":entries,"written":written}
 
 ## CPU oracle of the canvas draw (MIX and ADD with texel alpha * modulate).
 func flatten(items: Array, background: Color) -> Image:
@@ -128,8 +137,9 @@ func run() -> void:
 	if made.is_empty():
 		finish(previous_copy, previous_gpu)
 		return
-	var stats: Dictionary = made.cooked.index.stats
-	check(int(stats.states) > 0 and int(stats.images) > 0 and int(stats.merged_layers) > int(stats.images), "cook records states, images and merged layers: " + str(stats))
+	var stats: Dictionary = made.written.stats
+	check(int(stats.states) > 0 and int(stats.images) > 0 and int(stats.merged_layers) > int(stats.images) and int(stats.entries) == 2, "cook records states, images, merged layers and two entries: " + str(stats))
+	check(int(made.entries[1].stats.new_images) == 0 and int(made.entries[1].stats.new_states) == 0, "the variant entry reuses every image and state of the bundle: " + str(made.entries[1].stats))
 	# 1. Index round trip: the file holds exactly what was cooked.
 	var file := FileAccess.open(made.path, FileAccess.READ)
 	var head: Dictionary = FORMAT.read_index(file)
@@ -137,16 +147,16 @@ func run() -> void:
 	if head.get("ok", false):
 		var index: Dictionary = head.index
 		check(index.format == FORMAT.FORMAT, "explicit FORMAT constant stored")
-		check(var_to_bytes(index.states) == var_to_bytes(made.cooked.index.states), "states round-trip byte-exact")
-		check(var_to_bytes(index.tracks) == var_to_bytes(made.cooked.index.tracks), "tracks round-trip byte-exact")
-		check(index.inputs == made.cooked.index.inputs and index.inputs.sprite_id == ACTOR and index.inputs.kind == "selection", "selection inputs round-trip")
+		check(var_to_bytes(index.states) == var_to_bytes(made.session.states), "states round-trip byte-exact")
+		check(index.entries.size() == 2 and var_to_bytes(index.entries[0].tracks) == var_to_bytes(made.entries[0].tracks) and var_to_bytes(index.entries[1].tracks) == var_to_bytes(made.entries[1].tracks), "entry tracks round-trip byte-exact")
+		check(index.entries[0].inputs == made.entries[0].inputs and index.entries[0].inputs.sprite_id == ACTOR and index.entries[0].inputs.kind == "selection", "selection inputs round-trip")
 		var pages: Dictionary = FORMAT.read_pages(file, index, int(head.data_start))
 		check(pages.get("ok", false) and pages.images.size() == index.pages.size(), "pages read back")
 		if pages.get("ok", false):
 			for at: int in range(0, index.images.size(), 5):
 				var page: Image = pages.images[index.images[at]]
 				var cell: Image = page.get_region(Rect2i(index.images[at + 1], index.images[at + 2], index.images[at + 3], index.images[at + 4]))
-				check(cell.get_data() == made.cooked.images[at / 5].get_data(), "lossless page cell %d keeps exact pixels" % (at / 5))
+				check(cell.get_data() == made.session.images[at / 5].get_data(), "lossless page cell %d keeps exact pixels" % (at / 5))
 				check(index.images[at + 1] % 4 == 0 and index.images[at + 2] % 4 == 0, "cells are 4-aligned")
 	file.close()
 	# 2. Corrupt / other-format files are rejected.
@@ -161,27 +171,28 @@ func run() -> void:
 	# 3. Lookup and fallback.
 	STORE.root_override = lossless_dir
 	var selected: Dictionary = selection(data)
-	var actor: STORE.CookedActor = STORE.lookup(selected)
-	check(actor != null, "installed cooked actor found: " + str(STORE.stats()))
-	check(STORE.lookup(selection(data, ACTOR + 77)) == null, "actor missing from the cooked pack -> original path")
+	var actor: Dictionary = STORE.lookup(selected)
+	check(not actor.is_empty(), "installed cooked actor found: " + str(STORE.stats()))
+	check(not STORE.lookup(variant(data)).is_empty() and STORE.lookup(variant(data)).actor == actor.actor, "the variant entry comes from the same bundle")
+	check(STORE.lookup(selection(data, ACTOR + 77)).is_empty(), "actor missing from the cooked pack -> original path")
 	var other_roles: Dictionary = selection(data)
 	other_roles.role_actions = {"idle":3,"walk":3}
-	check(STORE.lookup(other_roles) == null, "different role actions -> original path")
+	check(STORE.lookup(other_roles).is_empty(), "different role actions -> original path")
 	var other_bank: Dictionary = selection(data)
 	other_bank.manifest_sha256 = "0".repeat(64)
-	check(STORE.lookup(other_bank) == null, "different bank manifest -> original path")
+	check(STORE.lookup(other_bank).is_empty(), "different bank manifest -> original path")
 	COMPOSITOR.screen_copy_available = true
-	check(STORE.lookup(selection(data)) == null, "screen-copy (desktop) path -> original path")
+	check(STORE.lookup(selection(data)).is_empty(), "screen-copy (desktop) path -> original path")
 	COMPOSITOR.screen_copy_available = false
 	STORE.root_override = scratch.path_join("nowhere")
 	STORE.reset_for_tests()
 	STORE.root_override = scratch.path_join("nowhere")
-	check(STORE.lookup(selection(data)) == null and not STORE.available(), "no cooked pack installed -> original path")
+	check(STORE.lookup(selection(data)).is_empty() and not STORE.available(), "no cooked pack installed -> original path")
 	STORE.reset_for_tests()
 	STORE.root_override = lossless_dir
 	actor = STORE.lookup(selection(data))
 	# 4. Pixel equality: runtime preview vs cooked preview, same steps.
-	if actor != null:
+	if not actor.is_empty():
 		var runtime: Node2D = runtime_preview(root, selection(data))
 		var cooked_view: Node2D = cooked_preview(root, selection(data))
 		check(cooked_view._layers.is_empty() and cooked_view._effect_nodes.is_empty(), "cooked preview builds no SP2 layer nodes")
@@ -210,22 +221,24 @@ func run() -> void:
 		await compare_views(data)
 		# 5b. A direct effect-style request (one-shot overlay) is cooked too.
 		await compare_request(data)
-	# 6. ETC2 variant: opaque pages block compressed, soft/ADD pages exact.
+	# 6. ASTC variant: opaque pages block compressed, soft/ADD pages exact.
 	var etc_dir: String = scratch.path_join("cooked_etc2")
-	var etc: Dictionary = cook(data, etc_dir, Image.COMPRESS_ETC2)
+	var etc: Dictionary = cook(data, etc_dir, Image.COMPRESS_ASTC)
 	if not etc.is_empty():
 		var loaded: Dictionary = STORE.load_actor(etc.path)
-		check(loaded.get("ok", false), "ETC2 cooked actor loads: " + str(loaded.get("error", "")))
+		check(loaded.get("ok", false), "ASTC cooked actor loads: " + str(loaded.get("error", "")))
 		if loaded.get("ok", false):
 			var formats: Array = []
 			for texture: Texture2D in loaded.actor.textures: formats.append(texture.get_image().get_format() if texture.get_image() != null else -1)
 			var classes: Array = loaded.actor.index.page_classes
 			for page: int in range(classes.size()):
 				if classes[page] == FORMAT.PAGE_RGBA8: check(loaded.actor.index.pages[page].format == Image.FORMAT_RGBA8, "soft/ADD page stays RGBA8")
-				else: check(Image.FORMAT_ETC2_R11 <= int(loaded.actor.index.pages[page].format) and int(loaded.actor.index.pages[page].format) <= Image.FORMAT_ETC2_RA_AS_RG, "opaque page ETC2 compressed: " + str(loaded.actor.index.pages[page].format))
+				else: check(int(loaded.actor.index.pages[page].format) == Image.FORMAT_ASTC_4x4, "opaque page ASTC 4x4 compressed: " + str(loaded.actor.index.pages[page].format))
 			measured["etc2_file_bytes"] = etc.written.bytes
 			measured["etc2_gpu_bytes"] = etc.written.gpu_bytes
 			measured["lossless_gpu_bytes"] = made.written.gpu_bytes
+			check(etc.written.stats.has("etc2_cells") and etc.written.stats.has("rgba8_cells"), "hybrid rule counts cells: " + str(etc.written.stats))
+	hybrid_checks()
 	# 7. Bounded cache: distinct actors past the byte budget evict the oldest.
 	STORE.reset_for_tests()
 	var bound_dir: String = scratch.path_join("cooked_bound")
@@ -234,24 +247,68 @@ func run() -> void:
 	var page_images: Array = FORMAT.read_pages(page_file, head_again.index, int(head_again.data_start)).images
 	for offset: int in range(6):
 		var copy: Dictionary = head_again.index.duplicate(true)
-		copy.inputs = STORE.selection_inputs(selection(data, ACTOR + 100 + offset))
+		copy.entries = [copy.entries[0]]
+		copy.entries[0].inputs = STORE.selection_inputs(selection(data, ACTOR + 100 + offset))
 		copy.erase("pages")
 		copy.erase("format")
-		FORMAT.write(bound_dir.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(copy.inputs)), copy, page_images)
+		FORMAT.write(bound_dir.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(copy.entries[0].inputs)), copy, page_images)
 	STORE.root_override = bound_dir
-	var one: STORE.CookedActor = STORE.lookup(selection(data, ACTOR + 100))
-	check(one != null, "bound fixture actor loads")
-	if one != null:
-		STORE.budget_bytes = one.bytes * 2
+	var one: Dictionary = STORE.lookup(selection(data, ACTOR + 100))
+	check(not one.is_empty(), "bound fixture actor loads")
+	if not one.is_empty():
+		STORE.budget_bytes = one.actor.bytes * 2
 		var over: bool = false
 		for offset: int in range(6):
-			check(STORE.lookup(selection(data, ACTOR + 100 + offset)) != null, "bound actor %d loads" % offset)
+			check(not STORE.lookup(selection(data, ACTOR + 100 + offset)).is_empty(), "bound actor %d loads" % offset)
 			if int(STORE.stats().bytes) > STORE.budget_bytes: over = true
 		var bound: Dictionary = STORE.stats()
 		check(not over and int(bound.entries) <= 2 and int(bound.counters.get("evicted", 0)) >= 4, "cache stays within its byte budget: " + JSON.stringify(bound))
 	# 8. Install: only pinned part SHA-256s are accepted.
 	install_checks()
+	effect_domain_checks(data)
 	finish(previous_copy, previous_gpu)
+
+## The block-compression (ASTC 4x4) acceptance rule on synthetic cells: a smooth opaque cell passes,
+## a high-contrast noise cell and a cell whose binary alpha would not survive
+## keep RGBA8.
+func hybrid_checks() -> void:
+	var smooth := Image.create_empty(16, 16, false, Image.FORMAT_RGBA8)
+	for y: int in 16:
+		for x: int in 16: smooth.set_pixel(x, y, Color(x / 16.0, y / 16.0, 0.5, 1.0))
+	var passed: Dictionary = COOKER.etc2_check(smooth, Image.COMPRESS_ASTC, COOKER.ETC2_MIN_PSNR)
+	check(passed.ok and passed.psnr >= COOKER.ETC2_MIN_PSNR, "smooth opaque cell is block compressed: " + str(passed.psnr))
+	var noise := Image.create_empty(16, 16, false, Image.FORMAT_RGBA8)
+	var random := RandomNumberGenerator.new()
+	random.seed = 5
+	for y: int in 16:
+		for x: int in 16: noise.set_pixel(x, y, Color(random.randf(), random.randf(), random.randf(), 1.0 if random.randf() < 0.7 else 0.0))
+	var rejected: Dictionary = COOKER.etc2_check(noise, Image.COMPRESS_ASTC, COOKER.ETC2_MIN_PSNR)
+	check(not rejected.ok, "noisy/binary-alpha cell keeps RGBA8: " + str([rejected.psnr, rejected.get("alpha", false)]))
+	measured["etc2_check_psnr"] = [passed.psnr, rejected.psnr]
+
+## Cook-time effect action domains (cooked pack) follow the effect
+## selection's rules; a manifest without domains is rejected once, not
+## re-hashed and re-parsed on every request.
+func effect_domain_checks(data: Dictionary) -> void:
+	var EFFECT = load("res://scripts/resources/current523_source_effect_selection.gd")
+	var index: Dictionary = {"format":STORE.EFFECT_INDEX_FORMAT,"manifest_sha256":data.sha,"domain_basis":STORE.EFFECT_DOMAIN_BASIS,
+		"domains":{"sprite:10":PackedInt32Array([0]),"sprite:11":PackedInt32Array([0, 1]),"sprite:12":PackedInt32Array([2])},
+		"compiled":{"sprite:10":PackedInt32Array([0]),"sprite:11":PackedInt32Array([0, 1])},"excluded":{"sprite:13":{"dummy":true}}}
+	EFFECT.cooked_domain_index = index
+	var options: Dictionary = {"manifest_path":data.path,"manifest_sha256":data.sha}
+	var sole: Dictionary = EFFECT._action(options, 10)
+	check(sole.ok and sole.action_id == 0 and sole.source_action_domain.action_domain_basis == STORE.EFFECT_DOMAIN_BASIS, "sole domain action selected from the cooked index")
+	check(EFFECT._action(options, 11).reason == "current523_effect_original_action_selection_not_unique", "two actions: not unique")
+	check(EFFECT._action(options, 11, 1).ok, "declared action in the domain")
+	check(EFFECT._action(options, 11, 5).reason == "current523_effect_requested_action_not_declared", "undeclared action rejected")
+	check(EFFECT._action(options, 12).reason == "current523_effect_original_action_inputs_unavailable", "domain action without compiled frames rejected")
+	check(EFFECT._action(options, 13).reason == "current523_effect_source_declared_dummy", "dummy rejected")
+	check(EFFECT._action(options, 99).reason == "current523_effect_complete_original_action_domain_missing", "unknown actor rejected")
+	EFFECT.cooked_domain_index = {}
+	# The fixture manifest has no source_action_domains: rejected, then memoized.
+	var first: Dictionary = EFFECT._bank(options)
+	check(not first.ok and first.reason == "current523_effect_original_action_domain_required", "manifest without domains rejected")
+	check(EFFECT._rejected_key.begins_with(data.path) and EFFECT._bank(options) == first, "rejection memoized while the file is unchanged")
 
 func install_checks() -> void:
 	var zip_path: String = scratch.path_join("cooked-part-1of1.zip")
@@ -339,7 +396,7 @@ func compare_request(data: Dictionary) -> void:
 	source.free()
 	check(cooked.ok, "effect request cooks")
 	var path: String = directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(inputs))
-	check(COOKER.write_cooked(path, cooked, -1).ok, "effect request written")
+	check(COOKER.write_cooked(path, cooked.session, [cooked.entry], -1).ok, "effect request written")
 	var runtime: Node2D = PREVIEW.new()
 	root.add_child(runtime)
 	runtime._configure_reference_bank(data.path, data.sha, ACTOR, {"idle":3}, {"idle":false}, "idle", "overlay")
@@ -380,7 +437,7 @@ func measure(runtime: Node2D, cooked_view: Node2D) -> void:
 		for index: int in range(200): view.advance_reference_source(0.033, "idle", index % 8)
 		measured[pair[0] + "_usec_per_advance"] = float(Time.get_ticks_usec() - started) / 200.0
 
-func gpu_compare(data: Dictionary, actor: STORE.CookedActor) -> void:
+func gpu_compare(data: Dictionary, _actor: Dictionary) -> void:
 	for step: Array in [[0.0, "idle", 0], [0.1, "idle", 3], [0.0, "walk", 5], [0.15, "walk", 6]]:
 		var images: Array = []
 		for cooked: bool in [false, true]:

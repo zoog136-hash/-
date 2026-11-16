@@ -175,8 +175,13 @@ static func _boundaries(frames: Array, loop: bool, total_limit: float) -> Packed
 ## Steps one configured preview through all its tracks. `inputs` is the
 ## selection the runtime must match (stored as-is). Returns {ok, index, images,
 ## image_class, stats} or {ok:false,error}.
-static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = false, resolved: Dictionary = {}) -> Dictionary:
-	var session := Session.new()
+## Records one selection/request (an "entry") into `session`; entries of one
+## bundle file share images and draw states (weapon variants of one body
+## reuse most frames). Returns {ok, entry, session}.
+static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = false, resolved: Dictionary = {}, session: Session = null) -> Dictionary:
+	if session == null: session = Session.new()
+	var images_before: int = session.images.size()
+	var states_before: int = session.states.size()
 	var tracks_out: Dictionary = {}
 	var sequence: int = 1000000
 	var roles: Array = preview._playback_tracks.keys()
@@ -272,59 +277,116 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 				"seg_start":seg_start,"seg_end":seg_end,"seg_state":seg_state,"eps":frames[0].has("presentation_duration")})
 		tracks_out[role] = {"loop":loop,"static_pending_timing":static_track,"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
 			"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions_out}
-	var index: Dictionary = {"key":str(inputs.get("key","")),"inputs":inputs.duplicate(true),"resolved_selection":resolved.duplicate(true),"mode":preview.source_playback_mode(),
+	var entry: Dictionary = {"inputs":inputs.duplicate(true),"resolved_selection":resolved.duplicate(true),"mode":preview.source_playback_mode(),
 		"screen_copy":COMPOSITOR.screen_copy_available,"tracks":tracks_out,"attachment_status":preview.attachment_status(),
-		"states":session.states,"colors":session.colors,"stats":{"samples":session.samples,"states":session.states.size(),"images":session.images.size(),"merged_layers":session.merged_items,"resampled_child_tracks":resampled}}
-	return {"ok":true,"index":index,"images":session.images,"image_class":session.image_class}
+		"stats":{"new_states":session.states.size() - states_before,"new_images":session.images.size() - images_before,"resampled_child_tracks":resampled}}
+	return {"ok":true,"entry":entry,"session":session}
 
-## Packs captured images into pages and writes the cooked actor file.
-## `compress`: Image.COMPRESS_* for opaque pages, or -1 for RGBA8 everywhere.
-static func write_cooked(path: String, cooked: Dictionary, compress: int) -> Dictionary:
-	var index: Dictionary = cooked.index.duplicate()
-	var classes: Array = [FORMAT.PAGE_ETC2, FORMAT.PAGE_RGBA8]
+## Block-compression acceptance for one opaque cell (hybrid rule; the cook
+## uses ASTC 4x4, 8 bits per texel like ETC2 RGBA but far closer to the
+## source: gradient probe 49.9 dB vs ETC2 27.4 dB): binary alpha must survive
+## exactly and the opaque colour PSNR must reach `min_psnr`; otherwise the cell
+## keeps exact RGBA8 pixels. Returns {ok, psnr, max_error, cell} where `cell`
+## is the 4-aligned, edge-fixed RGBA8 cell to place in an ETC2 page.
+static func etc2_check(image: Image, compress: int, min_psnr: float) -> Dictionary:
+	var cell := Image.create_empty(FORMAT.pad4(image.get_width()), FORMAT.pad4(image.get_height()), false, Image.FORMAT_RGBA8)
+	cell.blit_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), Vector2i.ZERO)
+	cell.fix_alpha_edges()
+	var trial: Image = cell.duplicate() as Image
+	if trial.compress(compress, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_4x4) != OK or not trial.is_compressed(): return {"ok":false,"psnr":0.0,"max_error":255,"cell":cell}
+	trial.decompress()
+	if trial.get_format() != Image.FORMAT_RGBA8: trial.convert(Image.FORMAT_RGBA8)
+	var original: PackedByteArray = cell.get_data()
+	var decoded: PackedByteArray = trial.get_data()
+	var width: int = cell.get_width()
+	var squared: float = 0.0
+	var samples: int = 0
+	var worst: int = 0
+	for y: int in range(image.get_height()):
+		for x: int in range(image.get_width()):
+			var at: int = (y * width + x) * 4
+			var opaque: bool = original[at + 3] == 255
+			if opaque != (decoded[at + 3] >= 128): return {"ok":false,"psnr":0.0,"max_error":255,"cell":cell,"alpha":true}
+			if not opaque: continue
+			for channel: int in range(3):
+				var error: int = absi(int(original[at + channel]) - int(decoded[at + channel]))
+				worst = maxi(worst, error)
+				squared += error * error
+				samples += 1
+	var psnr: float = 99.0 if samples == 0 or squared <= 0.0 else 10.0 * log(255.0 * 255.0 * samples / squared) / log(10.0)
+	return {"ok":psnr >= min_psnr,"psnr":psnr,"max_error":worst,"cell":cell}
+
+## Packs a bundle's images into pages and writes its cooked file.
+## `compress`: Image.COMPRESS_* for opaque cells that pass etc2_check, or -1
+## for RGBA8 everywhere.
+const ETC2_MIN_PSNR: float = 32.0
+
+static func write_cooked(path: String, session: Session, entries: Array, compress: int, min_psnr: float = ETC2_MIN_PSNR) -> Dictionary:
+	var classes: Array = session.image_class.duplicate()
+	var cells: Dictionary = {}
+	var quality: Dictionary = {"etc2_cells":0,"etc2_rejected_psnr":0,"etc2_rejected_alpha":0,"rgba8_cells":0,"etc2_psnr_min":99.0,"etc2_max_error":0,"etc2_psnr_sum":0.0}
+	for id: int in range(session.images.size()):
+		if classes[id] != FORMAT.PAGE_ETC2: continue
+		if compress < 0:
+			classes[id] = FORMAT.PAGE_RGBA8
+			continue
+		var checked: Dictionary = etc2_check(session.images[id], compress, min_psnr)
+		if checked.ok:
+			cells[id] = checked.cell
+			quality.etc2_cells += 1
+			quality.etc2_psnr_min = minf(quality.etc2_psnr_min, checked.psnr)
+			quality.etc2_psnr_sum += checked.psnr
+			quality.etc2_max_error = maxi(quality.etc2_max_error, checked.max_error)
+		else:
+			classes[id] = FORMAT.PAGE_RGBA8
+			if checked.get("alpha", false): quality.etc2_rejected_alpha += 1
+			else: quality.etc2_rejected_psnr += 1
+	for id: int in range(classes.size()):
+		if classes[id] == FORMAT.PAGE_RGBA8: quality.rgba8_cells += 1
 	var image_table := PackedInt32Array()
-	image_table.resize(cooked.images.size() * 5)
+	image_table.resize(session.images.size() * 5)
 	var pages: Array = []
 	var page_classes: Array = []
-	for page_class: String in classes:
+	for page_class: String in [FORMAT.PAGE_ETC2, FORMAT.PAGE_RGBA8]:
 		var members: Array = []
 		var sizes: Array = []
-		for id: int in range(cooked.images.size()):
-			if cooked.image_class[id] != page_class: continue
+		for id: int in range(session.images.size()):
+			if classes[id] != page_class: continue
 			members.append(id)
-			sizes.append(cooked.images[id].get_size())
+			sizes.append(session.images[id].get_size())
 		if members.is_empty(): continue
 		var packed: Dictionary = FORMAT.pack(sizes)
 		var first: int = pages.size()
 		for size: Vector2i in packed.pages:
-			var page := Image.create_empty(FORMAT.pad4(size.x), FORMAT.pad4(size.y), false, Image.FORMAT_RGBA8)
-			pages.append(page)
+			pages.append(Image.create_empty(FORMAT.pad4(size.x), FORMAT.pad4(size.y), false, Image.FORMAT_RGBA8))
 			page_classes.append(page_class)
 		for slot: int in range(members.size()):
 			var id: int = members[slot]
 			var place: Array = packed.placements[slot]
-			var image: Image = cooked.images[id]
+			var image: Image = cells.get(id, session.images[id])
 			pages[first + int(place[0])].blit_rect(image, Rect2i(Vector2i.ZERO, image.get_size()), Vector2i(int(place[1]), int(place[2])))
 			var at: int = id * 5
 			image_table[at] = first + int(place[0])
 			image_table[at + 1] = int(place[1])
 			image_table[at + 2] = int(place[2])
-			image_table[at + 3] = image.get_width()
-			image_table[at + 4] = image.get_height()
+			image_table[at + 3] = session.images[id].get_width()
+			image_table[at + 4] = session.images[id].get_height()
 	var page_bytes: int = 0
 	for page_index: int in range(pages.size()):
 		var page: Image = pages[page_index]
-		if page_classes[page_index] == FORMAT.PAGE_ETC2 and compress >= 0:
-			page.fix_alpha_edges()
-			if page.compress(compress, Image.COMPRESS_SOURCE_GENERIC) != OK or not page.is_compressed(): return fail("cooked_page_compress")
+		# Cells were edge-fixed one by one: a block never mixes two cells.
+		if page_classes[page_index] == FORMAT.PAGE_ETC2:
+			if page.compress(compress, Image.COMPRESS_SOURCE_GENERIC, Image.ASTC_FORMAT_4x4) != OK or not page.is_compressed(): return fail("cooked_page_compress")
 		page_bytes += page.get_data_size()
-	index["images"] = image_table
-	index["page_classes"] = page_classes
-	index["stats"] = cooked.index.stats.duplicate()
-	index.stats["pages"] = pages.size()
-	index.stats["gpu_bytes"] = page_bytes
+	if quality.etc2_cells > 0: quality["etc2_psnr_mean"] = quality.etc2_psnr_sum / quality.etc2_cells
+	quality.erase("etc2_psnr_sum")
+	var stats: Dictionary = {"entries":entries.size(),"samples":session.samples,"states":session.states.size(),"images":session.images.size(),"merged_layers":session.merged_items,"pages":pages.size(),"gpu_bytes":page_bytes}
+	stats.merge(quality)
+	var index: Dictionary = {"entries":entries,"states":session.states,"colors":session.colors,"images":image_table,"page_classes":page_classes,"stats":stats}
 	var written: Dictionary = FORMAT.write(path, index, pages)
-	if written.ok: written["gpu_bytes"] = page_bytes
+	if written.ok:
+		written["gpu_bytes"] = page_bytes
+		written["stats"] = stats
 	return written
 
 ## Real-data check used by the cook run: steps a fresh runtime preview and the

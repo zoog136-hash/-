@@ -95,67 +95,93 @@ func run() -> void:
 		finish(report, report_path, 3)
 		return
 	var kinds: PackedStringArray = argument("--kinds=", "npc,class,transform,effect").split(",")
-	var jobs: Array = build_jobs(kinds, context, bank_options)
+	var jobs: Array = build_jobs(kinds, context, bank_options, base)
 	report["job_counts"] = _job_counts(jobs)
+	report["job_filters"] = _filters
 	report["effect_selection_rejections"] = _effect_reasons
+	report["effect_domain_index"] = _effect_index_stats
+	if shard == 0 and not _effect_index.is_empty():
+		STORE.write_effect_index(out.path_join(FORMAT.FORMAT_TAG).path_join(STORE.EFFECT_INDEX), _effect_index)
 	var only: String = argument("--actors=", "")
 	if not only.is_empty():
 		var wanted: PackedStringArray = only.split(",")
 		jobs = jobs.filter(func(job: Dictionary) -> bool: return str(job.sprite) in wanted)
+	# One bundle file per consumer body sprite: its entries share frames.
+	var bundles: Dictionary = {}
+	for job: Dictionary in jobs:
+		var file: String = STORE.file_for(job.inputs)
+		if not bundles.has(file): bundles[file] = []
+		bundles[file].append(job)
+	var files: Array = bundles.keys()
 	var mine: Array = []
-	for index: int in range(jobs.size()):
-		if index % shards == shard: mine.append(jobs[index])
+	for index: int in range(files.size()):
+		if index % shards == shard: mine.append(files[index])
 	if limit > 0 and mine.size() > limit:
-		# A trial samples every kind: evenly spaced jobs of this shard.
+		# A trial samples every kind: evenly spaced bundles of this shard.
 		var sampled: Array = []
 		for index: int in range(limit): sampled.append(mine[int(float(index) * mine.size() / limit)])
 		mine = sampled
 	report["jobs_total"] = jobs.size()
-	report["jobs_in_shard"] = mine.size()
-	var compress: int = -1 if lossless else Image.COMPRESS_ETC2
-	var verification: Dictionary = {"actors":0,"failed":0,"steps":0,"items":0,"exact_items":0,"etc2_items":0,"etc2_max_error":0,"etc2_psnr_db_min":99.0}
-	var totals: Dictionary = {"cooked":0,"failed":0,"bytes":0,"gpu_bytes":0,"states":0,"images":0,"samples":0,"resampled_child_tracks":0}
+	report["bundles_total"] = files.size()
+	report["bundles_in_shard"] = mine.size()
+	var compress: int = -1 if lossless else Image.COMPRESS_ASTC
+	var verification: Dictionary = {"entries":0,"failed":0,"steps":0,"items":0,"exact_items":0,"etc2_items":0,"etc2_max_error":0,"etc2_psnr_db_min":99.0}
+	var totals: Dictionary = {"bundles":0,"entries":0,"failed_entries":0,"failed_bundles":0,"bytes":0,"gpu_bytes":0,"states":0,"images":0,"etc2_cells":0,"rgba8_cells":0,"etc2_rejected_psnr":0,"etc2_rejected_alpha":0,"etc2_psnr_min":99.0,"etc2_max_error":0}
 	var by_kind: Dictionary = {}
 	var verified_kinds: Dictionary = {}
+	var failures: Dictionary = {}
 	var host := Node2D.new()
 	root.add_child(host)
 	var count: int = 0
-	for job: Dictionary in mine:
+	for file: String in mine:
 		count += 1
-		var actor_started: int = Time.get_ticks_msec()
-		var entry: Dictionary = cook_job(host, job, lossless, compress, out, int(verified_kinds.get(job.kind, 0)) < verify_count)
-		if entry.has("verify"): verified_kinds[job.kind] = int(verified_kinds.get(job.kind, 0)) + 1
-		entry["msec"] = Time.get_ticks_msec() - actor_started
-		entry["kind"] = job.kind
-		report.actors[job.label] = entry
-		var kind_totals: Dictionary = by_kind.get(job.kind, {"cooked":0,"failed":0,"bytes":0,"gpu_bytes":0,"msec":0})
-		kind_totals.msec += entry.msec
-		if entry.has("verify"):
-			verification.actors += 1
-			for field: String in ["steps","items","exact_items","etc2_items"]: verification[field] += int(entry.verify.get(field, 0))
-			verification.etc2_max_error = maxi(verification.etc2_max_error, int(entry.verify.get("etc2_max_error", 0)))
-			verification.etc2_psnr_db_min = minf(verification.etc2_psnr_db_min, float(entry.verify.get("etc2_psnr_db", 99.0)))
-			if not entry.verify.ok: verification.failed += 1
-		if entry.ok:
-			totals.cooked += 1
-			kind_totals.cooked += 1
-			kind_totals.bytes += int(entry.bytes)
-			kind_totals.gpu_bytes += int(entry.gpu_bytes)
-			for field: String in ["bytes","gpu_bytes","states","images","samples","resampled_child_tracks"]: totals[field] += int(entry.get(field, 0))
+		var group: Array = bundles[file]
+		var kind: String = group[0].kind
+		var bundle_started: int = Time.get_ticks_msec()
+		var verify_it: bool = int(verified_kinds.get(kind, 0)) < verify_count
+		var result: Dictionary = cook_bundle(host, group, lossless, compress, out.path_join(FORMAT.FORMAT_TAG).path_join(file), verify_it)
+		if verify_it: verified_kinds[kind] = int(verified_kinds.get(kind, 0)) + 1
+		result["msec"] = Time.get_ticks_msec() - bundle_started
+		result["kind"] = kind
+		report.actors[file] = result
+		var kind_totals: Dictionary = by_kind.get(kind, {"bundles":0,"entries":0,"failed_entries":0,"bytes":0,"gpu_bytes":0,"msec":0})
+		kind_totals.msec += result.msec
+		for problem: String in result.get("failures", {}):
+			failures[problem] = int(failures.get(problem, 0)) + int(result.failures[problem])
+		totals.failed_entries += int(result.get("failed_entries", 0))
+		kind_totals.failed_entries += int(result.get("failed_entries", 0))
+		for check: Dictionary in result.get("verify", []):
+			verification.entries += 1
+			for field: String in ["steps","items","exact_items","etc2_items"]: verification[field] += int(check.get(field, 0))
+			verification.etc2_max_error = maxi(verification.etc2_max_error, int(check.get("etc2_max_error", 0)))
+			verification.etc2_psnr_db_min = minf(verification.etc2_psnr_db_min, float(check.get("etc2_psnr_db", 99.0)))
+			if not check.ok: verification.failed += 1
+		if result.ok:
+			totals.bundles += 1
+			totals.entries += int(result.entries)
+			kind_totals.bundles += 1
+			kind_totals.entries += int(result.entries)
+			kind_totals.bytes += int(result.bytes)
+			kind_totals.gpu_bytes += int(result.gpu_bytes)
+			for field: String in ["bytes","gpu_bytes"]: totals[field] += int(result[field])
+			for field: String in ["states","images","etc2_cells","rgba8_cells","etc2_rejected_psnr","etc2_rejected_alpha"]: totals[field] += int(result.stats.get(field, 0))
+			totals.etc2_psnr_min = minf(totals.etc2_psnr_min, float(result.stats.get("etc2_psnr_min", 99.0)))
+			totals.etc2_max_error = maxi(totals.etc2_max_error, int(result.stats.get("etc2_max_error", 0)))
 		else:
-			totals.failed += 1
-			kind_totals.failed += 1
-		by_kind[job.kind] = kind_totals
+			totals.failed_bundles += 1
+		by_kind[kind] = kind_totals
 		# Bounded process memory across thousands of actors.
 		ASSETS.reset_for_tests()
 		COMPOSITES.reset_for_tests()
 		PREPARED.clear()
-		if count % 50 == 0:
+		if count % 25 == 0:
 			BANK.forget_member_meta()
-			print("COOK_PROGRESS %d/%d cooked=%d failed=%d bytes=%d msec=%d" % [count, mine.size(), totals.cooked, totals.failed, totals.bytes, Time.get_ticks_msec() - started])
+			print("COOK_PROGRESS %d/%d bundles=%d failed=%d bytes=%d msec=%d" % [count, mine.size(), totals.bundles, totals.failed_entries, totals.bytes, Time.get_ticks_msec() - started])
 		await process_frame
 	report["by_kind"] = by_kind
 	report["totals"] = totals
+	report["failure_reasons"] = failures
+	report["failure_examples"] = _failed_examples
 	report["verification"] = verification
 	report["msec"] = Time.get_ticks_msec() - started
 	finish(report, report_path, 0)
@@ -168,10 +194,24 @@ func _job_counts(jobs: Array) -> Dictionary:
 	for job: Dictionary in jobs: out[job.kind] = int(out.get(job.kind, 0)) + 1
 	return out
 
-## Every runtime request the cooked pack answers, in a fixed order.
+var _filters: Dictionary = {}
+var _effect_index: Dictionary = {}
+var _effect_index_stats: Dictionary = {}
+var _failed_examples: Dictionary = {}
+
+func _filtered(reason: String) -> void:
+	_filters[reason] = int(_filters.get(reason, 0)) + 1
+
+## Every runtime request the cooked pack answers, in a fixed order. Only
+## identities the game can reach are cooked: NPCs of spawn rows the existing
+## spawn admission accepts (IsSpawn 1, ServerLimitSetID 0), class bodies of
+## the Class table, transform bodies reachable from non-test transform cards,
+## and the effect sprites of the effect callers. A combination whose actions
+## the bank does not contain (the runtime would reject it the same way) is
+## left out and counted in job_filters.
 ## selection jobs: exactly what _configure_selected_roles receives;
 ## request jobs: exactly what _configure_reference_bank receives.
-func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictionary) -> Array:
+func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictionary, base: String) -> Array:
 	var jobs: Array = []
 	var seen: Dictionary = {}
 	var add := func(job: Dictionary) -> void:
@@ -179,46 +219,65 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 		if seen.has(key): return
 		seen[key] = true
 		jobs.append(job)
-	print("COOK_JOBS before npc %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
+	_bank_manifest(options)
 	if "npc" in kinds:
+		var npc_ids: Dictionary = {}
+		for row: Dictionary in SOURCE.table_rows("NpcSpawnPackNpcClassView") if not DEF.table_metadata("NpcSpawnPackNpcClassView").is_empty() else []:
+			if int(row.get("IsSpawn", 0)) == 1 and int(row.get("ServerLimitSetID", 0)) == 0: npc_ids[int(row.get("NpcClassID", -1))] = true
+		_effect_index_stats["admitted_spawn_npc_classes"] = npc_ids.size()
 		var sprites: Dictionary = {}
 		for row: Dictionary in SOURCE.table_rows("NpcClass"):
-			if row.get("TestNPC") == false and BANK.integer(row.get("Sprite"), 1): sprites[int(row.Sprite)] = true
+			if row.get("TestNPC") != false or not BANK.integer(row.get("Sprite"), 1): continue
+			if not npc_ids.is_empty() and not npc_ids.has(int(row.ID)):
+				_filtered("npc_class_not_in_admitted_spawn_rows")
+				continue
+			sprites[int(row.Sprite)] = true
 		var ids: Array = sprites.keys()
 		ids.sort()
 		for sprite: int in ids:
+			if not _actor_usable(sprite, SELECTION.CORE_ACTIONS.values()):
+				_filtered("npc_core_action_absent_in_bank")
+				continue
 			var selected: Dictionary = SELECTION.cook_selection(sprite, context)
 			if selected.ok: add.call({"kind":"npc","sprite":sprite,"label":"npc:%d" % sprite,"selected":selected,"inputs":STORE.selection_inputs(selected)})
-	print("COOK_JOBS before class %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "class" in kinds:
 		SOURCE.source_tables(context, ["Class","Gender"])
 		for row: Dictionary in SOURCE.table_rows("Class"):
 			if not BANK.integer(row.get("ID"), 1): continue
 			for gender: int in [1, 2]:
+				var field: String = "MaleSpriteID" if gender == 1 else "FemaleSpriteID"
+				if not BANK.integer(row.get(field), 1):
+					_filtered("class_gender_without_sprite")
+					continue
 				for weapon: int in SOURCE.PRIMARY_ACTIONS.keys():
+					if not _actor_usable(int(row[field]), SOURCE.PRIMARY_ACTIONS[weapon].values()):
+						_filtered("class_weapon_actions_absent_in_bank")
+						continue
 					var class_context: Dictionary = context.duplicate(true)
 					class_context.merge({"class_id":int(row.ID),"gender_id":gender,"source_weapon_type":weapon})
 					var selected: Dictionary = SOURCE.select_class(class_context)
 					if selected.get("ok", false): add.call({"kind":"class","sprite":int(selected.sprite_id),"label":"class:%d:%d:%d" % [int(row.ID), gender, weapon],"selected":selected,"inputs":STORE.selection_inputs(selected)})
-	print("COOK_JOBS before transform %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
+					else: _filtered("class_selection:" + str(selected.get("reason", "")))
 	if "transform" in kinds:
-		var sprites: Dictionary = {}
-		for row: Dictionary in SOURCE.table_rows("PolymorphEntity"):
-			if BANK.integer(row.get("SpriteID"), 1): sprites[int(row.SpriteID)] = true
+		var sprites: Dictionary = transform_sprites()
 		var ids: Array = sprites.keys()
 		ids.sort()
+		_effect_index_stats["transform_bodies_reachable"] = ids.size()
 		for sprite: int in ids:
 			for weapon: int in SOURCE.PRIMARY_ACTIONS.keys():
-				if not _actor_has(options, sprite, SOURCE.PRIMARY_ACTIONS[weapon].values()): continue
+				if not _actor_usable(sprite, SOURCE.PRIMARY_ACTIONS[weapon].values()):
+					_filtered("transform_weapon_actions_absent_in_bank")
+					continue
 				var selected: Dictionary = SOURCE.card_visual_selection("transform", sprite, weapon, options)
 				if selected.ok: add.call({"kind":"transform","sprite":sprite,"label":"transform:%d:%d" % [sprite, weapon],"selected":selected,"inputs":STORE.selection_inputs(selected)})
-	print("COOK_JOBS before effect %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	if "effect" in kinds:
+		_effect_index = effect_domain_index(base.path_join("bank"), options)
+		EFFECT.cooked_domain_index = _effect_index
 		var effect_reasons: Dictionary = {}
 		for pair: Array in effect_sprites(context):
 			# The runtime effect selection itself (sole/declared action in the
-			# bank's complete original action domain); what it rejects is
-			# never shown at runtime either, so it is not cooked.
+			# action domain, compiled inputs present); what it rejects is never
+			# shown at runtime either, so it is not cooked.
 			var action: Dictionary = EFFECT._action(options, int(pair[1]), int(pair[2]))
 			if not action.get("ok", false):
 				effect_reasons[str(action.get("reason", ""))] = int(effect_reasons.get(str(action.get("reason", "")), 0)) + 1
@@ -233,16 +292,94 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 	print("COOK_JOBS done %d msec=%d" % [jobs.size(), Time.get_ticks_msec()])
 	return jobs
 
+const DEF = preload("res://scripts/resources/current523_definition_rows.gd")
+
+## Transform bodies of every non-test transform card's typed entity chain
+## (BuffClass -> PolymorphSet -> PolymorphEntity, sub-slot buffs and the
+## card's sprite customizing options), the same walk select_card makes.
+func transform_sprites() -> Dictionary:
+	var out: Dictionary = {}
+	var cards: int = 0
+	for card: Dictionary in SOURCE.table_rows("BuffCard"):
+		if int(card.get("BuffCardDeckID", -1)) != SOURCE.DECKS.transform or bool(card.get("IsTest", false)): continue
+		cards += 1
+		var chains: Array = []
+		SOURCE._walk_buff(int(card.get("BuffClassID", -1)), [], [], chains)
+		for option: Dictionary in SOURCE.table_where("BuffCardSpriteCustomizingOption", "BuffCardID", int(card.ID)):
+			var unit: Dictionary = SOURCE.table_row("Unit", int(option.get("UnitID", -1)))
+			if unit.get("Name", "") == "PolymorphSetID": SOURCE._add_set(int(option.get("Value", -1)), [], chains)
+		for chain: Dictionary in chains: out[int(chain.sprite_id)] = true
+	_effect_index_stats["transform_cards"] = cards
+	return out
+
+## Cook-time action domains for the effect selection (see
+## cooked_actor_store.gd EFFECT_DOMAIN_BASIS): every effective SPR action the
+## pack's own evidence lists per actor, compiled or blocked.
+func effect_domain_index(bank: String, options: Dictionary) -> Dictionary:
+	var domains: Dictionary = {}
+	var lines: int = 0
+	for file: String in ["action-outcomes.jsonl.gz", "source-family-scan-failures.jsonl.gz"]:
+		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(bank.path_join(file))
+		if bytes.is_empty(): return {}
+		var text: String = bytes.decompress_dynamic(512 * 1024 * 1024, FileAccess.COMPRESSION_GZIP).get_string_from_utf8()
+		for line: String in text.split("\n", false):
+			var row: Variant = JSON.parse_string(line)
+			if not row is Dictionary: continue
+			var actor: int = -1
+			var action: int = -1
+			if (row.get("actor_id") is float or row.get("actor_id") is int) and (row.get("action_id") is float or row.get("action_id") is int):
+				actor = int(row.actor_id)
+				action = int(row.action_id)
+			else:
+				var match: RegExMatch = _failure_key().search(str(row.get("failure_key", "")))
+				if match == null: continue
+				actor = int(match.get_string(1))
+				action = int(match.get_string(2))
+			lines += 1
+			var key: String = "sprite:%d" % actor
+			if not domains.has(key): domains[key] = {}
+			domains[key][action] = true
+	var packed_domains: Dictionary = {}
+	for key: String in domains:
+		var ids: Array = domains[key].keys()
+		ids.sort()
+		packed_domains[key] = PackedInt32Array(ids)
+	var compiled: Dictionary = {}
+	for key: String in _bank_actors:
+		var ids: Array = []
+		for action: String in _bank_actors[key]: ids.append(int(action))
+		ids.sort()
+		compiled[key] = PackedInt32Array(ids)
+	_effect_index_stats["domain_actors"] = packed_domains.size()
+	_effect_index_stats["domain_actions"] = lines
+	return {"format":STORE.EFFECT_INDEX_FORMAT,"manifest_sha256":str(options.manifest_sha256).to_lower(),"domain_basis":STORE.EFFECT_DOMAIN_BASIS,
+		"domains":packed_domains,"compiled":compiled,"excluded":_bank_excluded.duplicate(true)}
+
+var _failure_regex: RegEx = null
+func _failure_key() -> RegEx:
+	if _failure_regex == null:
+		_failure_regex = RegEx.new()
+		_failure_regex.compile("^sprite:(\\d+)/action:(\\d+)$")
+	return _failure_regex
+
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
 
 var _bank_actors: Dictionary = {}
+var _bank_excluded: Dictionary = {}
 var _effect_reasons: Dictionary = {}
 
-func _actor_has(options: Dictionary, sprite: int, actions: Array) -> bool:
-	if _bank_actors.is_empty():
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(options.manifest_path)))
-		_bank_actors = parsed.get("actors", {}) if parsed is Dictionary else {}
-	var entries: Variant = _bank_actors.get("sprite:%d" % sprite)
+func _bank_manifest(options: Dictionary) -> void:
+	if not _bank_actors.is_empty(): return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(options.manifest_path)))
+	if not parsed is Dictionary: return
+	_bank_actors = parsed.get("actors", {})
+	_bank_excluded = parsed.get("excluded_source_actors", {})
+
+## The bank holds every action and the actor is not a declared dummy.
+func _actor_usable(sprite: int, actions: Array) -> bool:
+	var key: String = "sprite:%d" % sprite
+	if _bank_excluded.has(key): return false
+	var entries: Variant = _bank_actors.get(key)
 	if not entries is Dictionary: return false
 	for action: Variant in actions:
 		if not entries.has(str(int(action))): return false
@@ -288,63 +425,80 @@ func effect_sprites(context: Dictionary) -> Array:
 			for field: String in ["MaleSpriteID","FemaleSpriteID"]: push.call("death", EFFECT._source_integer(row.get(field)), int(death[0]))
 	return out
 
-func cook_job(host: Node, job: Dictionary, lossless: bool, compress: int, out: String, verify_it: bool) -> Dictionary:
-	var preview: Node2D = PREVIEW.new()
-	preview.cached_frames = true
-	host.add_child(preview)
-	var entry: Dictionary = {}
-	var configured: bool = false
-	var resolved: Dictionary = {}
+func _configure(preview: Node2D, job: Dictionary, resolved: Dictionary) -> bool:
 	if job.has("selected"):
 		var selected: Dictionary = job.selected.duplicate(true)
-		configured = preview._configure_selected_roles(selected, "idle")
+		var configured: bool = preview._configure_selected_roles(selected, "idle")
 		for field: String in ["role_actions","loop_policy","role_actor_ids","run_status","optional_role_status"]:
 			if selected.has(field): resolved[field] = selected[field]
-	else:
-		var request: Dictionary = job.request
-		preview.playback_mode_override = str(request.override)
-		configured = preview._configure_reference_bank(str(request.manifest_path), str(request.sha), int(request.sprite), request.bindings, request.loops, "idle", str(request.consumer))
-	if not configured:
-		entry = {"ok":false,"error":"configure:" + str(preview.reference_bank_status.get("error", ""))}
-		preview.free()
-		return entry
-	var cooked: Dictionary = COOKER.cook_preview(preview, job.inputs, lossless, resolved)
-	preview.free()
-	if not cooked.ok: return {"ok":false,"error":str(cooked.error)}
-	var path: String = out.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(job.inputs))
-	var written: Dictionary = COOKER.write_cooked(path, cooked, compress)
-	if not written.ok: return {"ok":false,"error":str(written.error)}
-	entry = {"ok":true,"bytes":written.bytes,"gpu_bytes":written.gpu_bytes,"roles":cooked.index.tracks.keys(),"file":STORE.file_for(job.inputs)}
-	entry.merge(cooked.index.stats)
-	if verify_it:
-		entry["verify"] = verify_written(host, job, path, cooked.index.tracks.keys())
-		if not entry.verify.ok:
-			entry.ok = false
-			entry["error"] = "verify:" + str(entry.verify.problems)
-			DirAccess.remove_absolute(path)
-	return entry
+		return configured
+	var request: Dictionary = job.request
+	preview.playback_mode_override = str(request.override)
+	return preview._configure_reference_bank(str(request.manifest_path), str(request.sha), int(request.sprite), request.bindings, request.loops, "idle", str(request.consumer))
 
-func verify_written(host: Node, job: Dictionary, path: String, roles: Array) -> Dictionary:
+## Failure classes for the report (the runtime fails the same way).
+static func classify(error: String) -> String:
+	if error.contains("Invalid raw member identity"): return "original_member_identity_differs (pack member bytes/size vs bank manifest)"
+	if error.contains("palette marker") or error.contains("SP2 sample extent"): return "original_sp2_layout_unsupported_by_decoder"
+	if error.contains("dummy actor"): return "source_declared_dummy"
+	if error.contains("absent or unsafe") or error.contains("actor ID is absent"): return "bank_action_absent"
+	return error.left(120)
+
+func cook_bundle(host: Node, group: Array, lossless: bool, compress: int, path: String, verify_it: bool) -> Dictionary:
+	var session := COOKER.Session.new()
+	var entries: Array = []
+	var cooked_jobs: Array = []
+	var failures: Dictionary = {}
+	for job: Dictionary in group:
+		var preview: Node2D = PREVIEW.new()
+		preview.cached_frames = true
+		host.add_child(preview)
+		var resolved: Dictionary = {}
+		if not _configure(preview, job, resolved):
+			var reason: String = classify(str(preview.reference_bank_status.get("error", "")))
+			failures[reason] = int(failures.get(reason, 0)) + 1
+			_failed_examples[reason] = job.label
+			preview.free()
+			continue
+		var cooked: Dictionary = COOKER.cook_preview(preview, job.inputs, lossless, resolved, session)
+		preview.free()
+		if not cooked.ok:
+			var reason: String = classify(str(cooked.error))
+			failures[reason] = int(failures.get(reason, 0)) + 1
+			continue
+		entries.append(cooked.entry)
+		cooked_jobs.append(job)
+	var failed: int = group.size() - entries.size()
+	if entries.is_empty(): return {"ok":false,"entries":0,"failed_entries":failed,"failures":failures}
+	var written: Dictionary = COOKER.write_cooked(path, session, entries, compress)
+	if not written.ok: return {"ok":false,"entries":0,"failed_entries":group.size(),"failures":{"write:" + str(written.error):1}}
+	var result: Dictionary = {"ok":true,"entries":entries.size(),"failed_entries":failed,"failures":failures,"bytes":written.bytes,"gpu_bytes":written.gpu_bytes,"stats":written.stats}
+	if verify_it:
+		var checks: Array = []
+		# The first entry and the last one (weapon variants share frames).
+		for job: Dictionary in ([cooked_jobs[0]] if cooked_jobs.size() == 1 else [cooked_jobs[0], cooked_jobs[-1]]):
+			checks.append(verify_written(host, job, path))
+		result["verify"] = checks
+	return result
+
+func verify_written(host: Node, job: Dictionary, path: String) -> Dictionary:
 	var loaded: Dictionary = STORE.load_actor(path)
 	if not loaded.ok: return {"ok":false,"problems":["load:" + str(loaded.error)]}
+	var entry: Variant = loaded.actor.entries.get(STORE.entry_key(job.inputs))
+	if not entry is Dictionary: return {"ok":false,"problems":["entry missing"]}
 	var runtime: Node2D = PREVIEW.new()
 	runtime.cached_frames = true
 	host.add_child(runtime)
-	var configured: bool = false
-	if job.has("selected"):
-		configured = runtime._configure_selected_roles(job.selected.duplicate(true), "idle")
-	else:
-		var request: Dictionary = job.request
-		runtime.playback_mode_override = str(request.override)
-		configured = runtime._configure_reference_bank(str(request.manifest_path), str(request.sha), int(request.sprite), request.bindings, request.loops, "idle", str(request.consumer))
 	var result: Dictionary = {}
-	if not configured:
+	if not _configure(runtime, job, {}):
 		result = {"ok":false,"problems":["runtime configure"]}
 	else:
 		var cooked: Node2D = PREVIEW.new()
 		host.add_child(cooked)
-		var ok: bool = cooked._configure_cooked(loaded.actor, str(job.get("selected", job.get("request", {})).get("manifest_path", "")), "idle", "overlay", int(job.sprite))
-		result = COOKER.verify(runtime, cooked, COOKER.verify_steps(roles, int(job.sprite))) if ok else {"ok":false,"problems":["cooked configure"]}
+		var manifest_path: String = str(job.get("selected", job.get("request", {})).get("manifest_path", ""))
+		var ok: bool = cooked._configure_cooked({"actor":loaded.actor,"entry":entry}, manifest_path, "idle", "overlay", int(job.sprite))
+		if ok and job.has("request"): cooked._is_overlay = false
+		result = COOKER.verify(runtime, cooked, COOKER.verify_steps(entry.runtime_tracks.keys(), int(job.sprite))) if ok else {"ok":false,"problems":["cooked configure"]}
 		cooked.free()
 	runtime.free()
 	return result

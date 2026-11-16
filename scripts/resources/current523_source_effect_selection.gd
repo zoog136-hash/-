@@ -102,7 +102,31 @@ static func _source_integer(value: Variant) -> int:
 	if value is String and value.is_valid_int() and int(value) >= 0: return int(value)
 	return -1
 
+const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
+## The cook tool sets the index it derived (same shape as the cooked pack's).
+static var cooked_domain_index: Dictionary = {}
+
+## Action selection from the cooked pack's cook-time action domains (same
+## rules as below: dummy exclusion, sole or declared action in the domain,
+## compiled inputs present), without reading the bank manifest.
+static func _cooked_action(index: Dictionary, sprite: int, explicit_action: int) -> Dictionary:
+	var key: String = "sprite:" + str(sprite)
+	if index.excluded.has(key): return fail("current523_effect_source_declared_dummy",index.excluded[key])
+	var domain: Variant = index.domains.get(key)
+	if not domain is PackedInt32Array: return fail("current523_effect_complete_original_action_domain_missing")
+	var action: int = explicit_action
+	if action < 0:
+		if domain.size() != 1: return fail("current523_effect_original_action_selection_not_unique")
+		action = int(domain[0])
+	if not domain.has(action): return fail("current523_effect_requested_action_not_declared")
+	var compiled: Variant = index.compiled.get(key)
+	if not compiled is PackedInt32Array or not compiled.has(action): return fail("current523_effect_original_action_inputs_unavailable")
+	return {"ok":true,"action_id":action,"source_action_domain":{"source_snapshot":"patch523","source_actor_id":sprite,"action_ids":Array(domain),"action_domain_basis":str(index.get("domain_basis",""))}}
+
 static func _action(options: Dictionary, sprite: int, explicit_action: int = -1) -> Dictionary:
+	var sha: String = str(options.get("manifest_sha256","")).to_lower()
+	var cooked: Dictionary = cooked_domain_index if not cooked_domain_index.is_empty() and str(cooked_domain_index.get("manifest_sha256","")) == sha else COOKED_STORE.effect_index(sha)
+	if not cooked.is_empty(): return _cooked_action(cooked,sprite,explicit_action)
 	var loaded: Dictionary = _bank(options)
 	if not loaded.ok: return loaded
 	var index: Dictionary = loaded.manifest

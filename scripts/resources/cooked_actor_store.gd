@@ -23,13 +23,16 @@ const SETTINGS := "user://twilight_cooked_actors.cfg"
 const DEFAULT_BUDGET_BYTES: int = 96 * 1024 * 1024
 const MISSING_MAX: int = 4096
 
+## One bundle file: shared pages/images/states and its entries (one per
+## cooked selection/request of this body, e.g. every weapon family).
 class CookedActor:
 	extends RefCounted
 	var key: String = ""
 	var index: Dictionary = {}
 	var textures: Array[Texture2D] = []
-	## Runtime-shaped tracks for the existing view API (duration/timing_status).
-	var tracks: Dictionary = {}
+	## entry key (var_to_str of its inputs) -> entry; each entry also holds
+	## "runtime_tracks" shaped for the existing view API (duration/timing).
+	var entries: Dictionary = {}
 	var bytes: int = 0
 
 static var budget_bytes: int = DEFAULT_BUDGET_BYTES
@@ -54,6 +57,8 @@ static func reset_for_tests() -> void:
 	_bytes = 0
 	_root = ""
 	_root_known = false
+	_effect_index = {}
+	_effect_index_root = "-"
 	budget_bytes = DEFAULT_BUDGET_BYTES
 
 static func stats() -> Dictionary:
@@ -141,42 +146,48 @@ static func request_inputs(manifest_path: String, manifest_sha: String, sprite: 
 static func cookable_consumer(consumer: String) -> bool:
 	return consumer != "source_layer"
 
+## The bundle file of a consumer's body sprite (all its cooked entries).
 static func file_for(inputs: Dictionary) -> String:
-	var name: String = "%s_%d_%s" % [str(inputs.get("consumer", "")).replace(":", "_"), int(inputs.get("sprite_id", -1)), var_to_str(inputs).sha256_text().left(20)]
-	return "actors/" + name + ".twca"
+	return "actors/%s_%d.twca" % [str(inputs.get("consumer", "")).replace(":", "_"), int(inputs.get("sprite_id", -1))]
+
+static func entry_key(inputs: Dictionary) -> String:
+	return var_to_str(inputs)
 
 ## Back-compatible NPC selection lookup.
-static func lookup(selected: Dictionary, override: String = "") -> CookedActor:
+static func lookup(selected: Dictionary, override: String = "") -> Dictionary:
 	return lookup_inputs(selection_inputs(selected, override))
 
-## The cooked actor made from exactly these inputs, or null (original path).
-static func lookup_inputs(inputs: Dictionary) -> CookedActor:
-	if not cookable_consumer(str(inputs.get("consumer", ""))): return null
+## {actor, entry} cooked from exactly these inputs, or {} (original path).
+static func lookup_inputs(inputs: Dictionary) -> Dictionary:
+	if not cookable_consumer(str(inputs.get("consumer", ""))): return {}
 	var folder: String = root()
-	if folder.is_empty(): return null
+	if folder.is_empty(): return {}
 	var file: String = file_for(inputs)
 	var actor: Variant = _cache.get(file)
 	if actor is CookedActor:
 		_cache.erase(file)
 		_cache[file] = actor
 		_count("hit")
-		return actor
-	if _missing.has(file):
+	elif _missing.has(file):
 		_count("missing_memo")
-		return null
-	var loaded: Dictionary = load_actor(folder.path_join(file))
-	if loaded.ok and loaded.actor.index.get("inputs") != inputs: loaded = {"ok":false,"error":"selection_differs"}
-	if not loaded.ok:
-		while _missing.size() >= MISSING_MAX: _missing.erase(_missing.keys()[0])
-		_missing[file] = loaded.error
-		_count("miss:" + str(loaded.error))
-		return null
-	actor = loaded.actor
-	_cache[file] = actor
-	_bytes += actor.bytes
-	_count("loaded")
-	_trim()
-	return actor
+		return {}
+	else:
+		var loaded: Dictionary = load_actor(folder.path_join(file))
+		if not loaded.ok:
+			while _missing.size() >= MISSING_MAX: _missing.erase(_missing.keys()[0])
+			_missing[file] = loaded.error
+			_count("miss:" + str(loaded.error))
+			return {}
+		actor = loaded.actor
+		_cache[file] = actor
+		_bytes += actor.bytes
+		_count("loaded")
+		_trim()
+	var entry: Variant = actor.entries.get(entry_key(inputs))
+	if not entry is Dictionary or entry.get("inputs") != inputs:
+		_count("entry_absent")
+		return {}
+	return {"actor":actor,"entry":entry}
 
 static func _trim() -> void:
 	while _bytes > budget_bytes and _cache.size() > 1:
@@ -196,7 +207,7 @@ static func load_actor(path: String) -> Dictionary:
 	file.close()
 	if not pages.ok: return pages
 	var actor := CookedActor.new()
-	actor.key = str(index.get("key", ""))
+	actor.key = path.get_file().get_basename()
 	actor.index = index
 	for image: Image in pages.images:
 		var texture: ImageTexture = ImageTexture.create_from_image(image)
@@ -214,31 +225,37 @@ static func load_actor(path: String) -> Dictionary:
 		if not state is PackedInt32Array or state.size() % FORMAT.ITEM_STRIDE != 0: return {"ok":false,"error":"cooked_actor_state"}
 		for at: int in range(0, state.size(), FORMAT.ITEM_STRIDE):
 			if state[at] < 0 or state[at] >= image_count or state[at + 6] < 0 or state[at + 6] * 4 + 3 >= index.colors.size(): return {"ok":false,"error":"cooked_actor_state_image"}
-	for role: Variant in index.tracks:
-		var track: Variant = index.tracks[role]
-		if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return {"ok":false,"error":"cooked_actor_track"}
-		var directions: Array = []
-		for direction: Variant in track.directions:
-			if not direction is Dictionary or not direction.get("durations") is PackedFloat64Array or direction.durations.is_empty(): return {"ok":false,"error":"cooked_actor_direction"}
-			if direction.seg_start.size() != direction.durations.size() + 1 or direction.seg_end.size() != direction.seg_state.size(): return {"ok":false,"error":"cooked_actor_segments"}
-			for state: int in direction.seg_state:
-				if state < 0 or state >= index.states.size(): return {"ok":false,"error":"cooked_actor_segment_state"}
-			if int(direction.get("end_state", -1)) >= index.states.size(): return {"ok":false,"error":"cooked_actor_end_state"}
-			var frames: Array = []
-			for frame: int in range(direction.durations.size()):
-				var cooked_frame: Dictionary = {"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
-				# The original preview's boundary epsilon depends on this key.
-				if bool(direction.get("eps", false)): cooked_frame["presentation_duration"] = direction.durations[frame]
-				frames.append(cooked_frame)
-			directions.append(frames)
-		actor.tracks[str(role)] = {"loop":bool(track.loop),"static_pending_timing":bool(track.static_pending_timing),"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
-			"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"cooked":true}
+	for value: Variant in index.entries:
+		if not value is Dictionary or not value.get("inputs") is Dictionary or not value.get("tracks") is Dictionary: return {"ok":false,"error":"cooked_actor_entry"}
+		var entry: Dictionary = value
+		var runtime_tracks: Dictionary = {}
+		for role: Variant in entry.tracks:
+			var track: Variant = entry.tracks[role]
+			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return {"ok":false,"error":"cooked_actor_track"}
+			var directions: Array = []
+			for direction: Variant in track.directions:
+				if not direction is Dictionary or not direction.get("durations") is PackedFloat64Array or direction.durations.is_empty(): return {"ok":false,"error":"cooked_actor_direction"}
+				if direction.seg_start.size() != direction.durations.size() + 1 or direction.seg_end.size() != direction.seg_state.size(): return {"ok":false,"error":"cooked_actor_segments"}
+				for state: int in direction.seg_state:
+					if state < 0 or state >= index.states.size(): return {"ok":false,"error":"cooked_actor_segment_state"}
+				if int(direction.get("end_state", -1)) >= index.states.size(): return {"ok":false,"error":"cooked_actor_end_state"}
+				var frames: Array = []
+				for frame: int in range(direction.durations.size()):
+					var cooked_frame: Dictionary = {"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
+					# The original preview's boundary epsilon depends on this key.
+					if bool(direction.get("eps", false)): cooked_frame["presentation_duration"] = direction.durations[frame]
+					frames.append(cooked_frame)
+				directions.append(frames)
+			runtime_tracks[str(role)] = {"loop":bool(track.loop),"static_pending_timing":bool(track.static_pending_timing),"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
+				"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"cooked":true}
+		entry["runtime_tracks"] = runtime_tracks
+		actor.entries[entry_key(entry.inputs)] = entry
 	return {"ok":true,"actor":actor}
 
 ## The recorded draw state of `direction` for the frame the original clock
 ## selected (`frame` with `offset` seconds into it), or the held end state.
-static func state_for(actor: CookedActor, role: String, direction: int, frame: int, offset: float, ended: bool) -> int:
-	var cooked: Dictionary = actor.index.tracks[role].directions[direction]
+static func state_for(entry: Dictionary, role: String, direction: int, frame: int, offset: float, ended: bool) -> int:
+	var cooked: Dictionary = entry.tracks[role].directions[direction]
 	if ended: return int(cooked.end_state)
 	var state: int = -1
 	for segment: int in range(cooked.seg_start[frame], cooked.seg_start[frame + 1]):
@@ -288,3 +305,38 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 		var color: int = items[at + 6] * 4
 		sprite.modulate = Color(colors[color], colors[color + 1], colors[color + 2], colors[color + 3])
 		sprite.show()
+
+## --- Effect action domains -------------------------------------------------
+## The installed 523 bank manifest has no source_action_domains, which the
+## effect selection requires (every effect was rejected: 2,165 requests).
+## The cook run derives them once from the same pinned pack's own evidence
+## (bank/action-outcomes.jsonl.gz + source-family-scan-failures.jsonl.gz: every
+## effective SPR action with or without compiled frames, except the 602
+## actions the pack records without any target address) and ships them in the
+## pinned cooked pack. current523_source_effect_selection.gd reads them from
+## here instead of parsing the ~45 MB bank manifest.
+const EFFECT_INDEX := "effects/effect_index.bin"
+const EFFECT_INDEX_FORMAT := "twilight-cooked-effect-index-v1"
+const EFFECT_DOMAIN_BASIS := "cook_time_effective_SPR_actions_from_pack_evidence;602_unaddressed_actions_absent"
+static var _effect_index: Dictionary = {}
+static var _effect_index_root: String = "-"
+
+static func effect_index(manifest_sha: String) -> Dictionary:
+	var folder: String = root()
+	if folder != _effect_index_root:
+		_effect_index_root = folder
+		_effect_index = {}
+		var path: String = folder.path_join(EFFECT_INDEX)
+		if not folder.is_empty() and FileAccess.file_exists(path) and FileAccess.get_size(path) < 64 * 1024 * 1024:
+			var value: Variant = bytes_to_var(FileAccess.get_file_as_bytes(path).decompress_dynamic(256 * 1024 * 1024, FileAccess.COMPRESSION_ZSTD))
+			if value is Dictionary and value.get("format") == EFFECT_INDEX_FORMAT and value.get("domains") is Dictionary and value.get("compiled") is Dictionary and value.get("excluded") is Dictionary: _effect_index = value
+	if _effect_index.is_empty() or str(_effect_index.get("manifest_sha256", "")) != manifest_sha.to_lower(): return {}
+	return _effect_index
+
+static func write_effect_index(path: String, index: Dictionary) -> Error:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null: return FileAccess.get_open_error()
+	file.store_buffer(var_to_bytes(index).compress(FileAccess.COMPRESSION_ZSTD))
+	file.close()
+	return OK
