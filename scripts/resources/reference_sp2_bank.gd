@@ -438,6 +438,44 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not source.ok: return source
 	return _render_verified_layer(layer, source, pixels)
 
+## Per-advance recheck for a frame plan whose every layer already passed
+## render_layer() (original_source_preview.gd cached frames). It makes the same
+## checks render_layer() makes on its warm path, once per frame instead of once
+## per layer: the manifest/actor pins, each actor's admission, and each
+## member's verified stamp (file exists, declared size, the modification time
+## recorded when its bytes were last hashed). A member whose stamp no longer
+## holds goes through the full render_layer() of one of its layers, which
+## re-hashes it (and records the new stamp) or returns the same rejection.
+## `stamps` comes from member_stamps(). Returns {ok:true} or that failure.
+func recheck_layers(stamps: Dictionary) -> Dictionary:
+	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
+	for actor: int in stamps.actors:
+		var admitted: Dictionary = source_actor_admission(actor)
+		if not admitted.ok: return admitted
+	for entry: Array in stamps.members:
+		var path: String = entry[0]
+		var known: Variant = _verified_members.get(path)
+		if known is Array and known[0] == entry[1] and known[1] == entry[2] and FileAccess.file_exists(path) and int(FileAccess.get_size(path)) == int(entry[2]) and int(FileAccess.get_modified_time(path)) == int(known[2]): continue
+		FRAME_HITCH.count("sp2.recheck_full")
+		var full: Dictionary = render_layer(entry[3], false)
+		if not full.ok: return full
+	return {"ok":true}
+
+## The recheck input for `layers` (each already verified by render_layer()):
+## distinct actors and, per distinct member, [file, identity, bytes, layer].
+func member_stamps(layers: Array) -> Dictionary:
+	var actors: Dictionary = {}
+	var members: Dictionary = {}
+	for layer: Dictionary in layers:
+		actors[int(layer.get("source_sprite_id", -1))] = true
+		var member: String = str(layer.get("member", ""))
+		if members.has(member): continue
+		var spec: Variant = _index.lookup("members", member) if _index != null else null
+		if not spec is Dictionary: return fail("Invalid exact raw member path: " + member)
+		var identity: String = ("sha256:" + str(spec.sha256)) if valid_sha(spec.get("sha256")) else ("crc32:" + str(spec.get("crc32")))
+		members[member] = [_root.path_join(str(spec.path)), identity, int(spec.bytes), layer]
+	return {"ok":true,"actors":PackedInt64Array(actors.keys()),"members":members.values()}
+
 func _render_verified_layer(layer: Dictionary, source: Dictionary, pixels: bool) -> Dictionary:
 	var parsed: Dictionary = source.parsed
 	var group_index: int = -1
