@@ -1101,6 +1101,7 @@ const FEATURE_WINDOWS={
 	"weapon_mastery":preload("res://scripts/ui/original_ui/source_main_mastery_window.gd"),
 	"schedule":preload("res://scripts/ui/original_ui/source_main_schedule_window.gd"),
 	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
+	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

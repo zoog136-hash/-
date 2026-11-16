@@ -3273,6 +3273,12 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 	workspace.register_scroll_drag(scroll,view)
 
 
+## 기억 장소 (growth.travel.open): the original 523 Memory_All window
+## (source_main_memory_window); false keeps the TWILIGHT page.
+func open_memory_places(source: Dictionary = {}) -> bool:
+	_open_window("teleport","기억 장소","")
+	return _open_original_feature("memory_places",[source])
+
 func open_source_dungeons() -> void:
 	_open_window("source_dungeons","던전","입장 조건 · 목표 · 보상 · 등장 계획")
 	var view := SourceDungeonUI.new()

@@ -60,6 +60,8 @@ func _transfer_metadata() -> void:
 	# Validation passes; the synthetic pack has no font, so building stops later.
 	var accepted: Dictionary=_configure_text("Text",'{"transfer":"false"}')
 	check(accepted.get("error")!="unsupported_source_scene","Text transfer metadata is accepted: "+str(accepted))
+	var empty_object: Dictionary=_configure_text("Text","{}")
+	check(empty_object.get("error")!="unsupported_source_scene","an empty user data object is accepted: "+str(empty_object))
 	for case: Array in [["Text",'{"transfer":"maybe"}'],["Text",'{"transfer":"false","shader":"x"}'],["Sprite",'{"transfer":"true"}']]:
 		var rejected: Dictionary=_configure_text(case[0],case[1])
 		check(rejected.get("error")=="unsupported_source_scene" and "custom_property" in rejected.get("details",[]),"other custom properties stay rejected: "+str(case))
