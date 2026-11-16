@@ -5,17 +5,22 @@ extends RefCounted
 ##   BuffCardRuleSwapCost  덱·등급·SwapCount별 CurrencyID(4 = Gem = 다이아), Cost, PickCount
 ##   BuffCardSourceView    결과 후보(IsSwapOut), BuffCard.IsNoSwapOut
 ## 사용자 결정 2026-11-16 (표에 없는 규칙):
-##   - 대상: 보유한 아무 카드(중복분 포함). TWILIGHT 카드 보유는 "영구 보유(해금) 1장 +
-##     중복분"이며 다시 뽑기는 중복분 1장을 바꾼다. 영구 보유 1장은 각성·컬렉션·장착이
-##     걸려 있어 기존 합성과 같이 소모하지 않는다(저장 보존).
+##   - 대상: 보유한 아무 카드(중복분 포함, 1장뿐인 카드도), 영웅 등급 이상만 (09:19, 09:23).
+##     확정 때 중복분부터 쓰고, 모자라면 영구 보유(해금) 1장을 바꾼다. 그 1장에 기존 소유자
+##     상태(장착, 옵션 각성·추가 슬롯, 스킬 각성, 할파스 별, 탐험 파견, 완성 컬렉션)가 걸려
+##     있으면 거부하고 이유를 보여 준다(_last_copy_guard). 상태를 옮기거나 지우지 않는다.
+##   - 다시 뽑은 결과는 바로 받지 않고 "대기 결과"로 저장한다(09:23). 원래 카드는 확정 전까지
+##     그대로다. 대기 중 다시 뽑기(다음 횟수·비용)는 대기 결과를 바꾸고, 확정(confirm)해야
+##     원래 카드가 대기 결과로 바뀐다. 6회째 고른 카드도 대기 결과가 된다. 원본 창에 별도
+##     포기 버튼이 없어 취소 API는 없다(대기 결과는 계속 남는다).
 ##   - 횟수: 카드(정체)마다 누적, 초기화 없음.
 ##   - 결과: 표의 같은 덱·같은 등급 후보(IsSwapOut, 현재 서버 조건) 중 균등, 현재 카드 제외.
 ##   - PickCount>0 회차(6회째): 후보 5장을 보여 주고 플레이어가 하나를 고른다. 보여 준
 ##     5장은 처음 보여 줄 때 저장되고 그 회차를 실행할 때까지 고정된다(다시 견적해도 같은 5장).
 ##   - ActivateCardAmount 1(신화·유일): 같은 카드 1장을 더 소모한다.
 ##   - 비용: 게임 다이아 지갑(인벤토리 "다이아")에서 뺀다.
-## 견적(quote) → 확인 → 실행(execute) 형태이며, 실행은 한 번의 저장으로 확정된다.
-## 저장 실패 시 카드·다이아·횟수를 모두 되돌린다.
+## 견적(quote) → 다시 뽑기(execute) → 확정(confirm). 각 단계는 저장 한 번으로 끝나고,
+## 저장 실패 시 카드·다이아·횟수·대기 결과를 모두 되돌린다.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const SERVER = preload("res://scripts/loot/current523_server_profile.gd")
 const CARDS = preload("res://scripts/card_draw_fusion.gd")
@@ -43,7 +48,7 @@ func _init() -> void:
 	rng.randomize()
 
 static func empty_state() -> Dictionary:
-	return {"schema":SCHEMA, "counts":{}, "picks":{}}
+	return {"schema":SCHEMA, "counts":{}, "picks":{}, "pending":{}}
 
 func configure(owner: Object) -> void:
 	world = owner
@@ -65,6 +70,12 @@ static func validate(value: Variant) -> String:
 		if not key is String or not pick is Dictionary or not _whole(pick.get("swap_count")) or not pick.get("candidates") is Array or (pick.candidates as Array).size() > 64: return "카드 다시 뽑기 선택 후보 기록 오류"
 		for identity: Variant in pick.candidates:
 			if not identity is String: return "카드 다시 뽑기 선택 후보 기록 오류"
+	# Saves from before the 09:23 decision have no pending results.
+	var pending: Variant = value.get("pending", {})
+	if not pending is Dictionary: return "카드 다시 뽑기 대기 결과 기록 오류"
+	for key: Variant in pending:
+		var entry: Variant = pending[key]
+		if not key is String or not entry is Dictionary or not entry.get("result") is String or not _whole(entry.get("swap_count")) or not entry.get("picked") is bool: return "카드 다시 뽑기 대기 결과 기록 오류"
 	return ""
 
 func export_state() -> Variant:
@@ -91,6 +102,9 @@ func import_state(value: Variant) -> void:
 			state.counts[category][identity] = int(state.counts[category][identity])
 	for key: String in state.picks:
 		state.picks[key].swap_count = int(state.picks[key].swap_count)
+	if not state.has("pending"): state["pending"] = {}
+	for key: String in state.pending:
+		state.pending[key].swap_count = int(state.pending[key].swap_count)
 
 func swap_count(category: String, identity: String) -> int:
 	return int(state.counts.get(category, {}).get(identity, 0))
@@ -166,6 +180,34 @@ func _fail(reason: String, extra: Dictionary = {}) -> Dictionary:
 	result.merge(extra, true)
 	return result
 
+const HALPHAS_IDENTITY := "source:m508:1:24504"
+const NATIVE_COLLECTIONS = preload("res://scripts/cards/native_collection_rules.gd")
+
+## Why the permanent (last) copy of a card cannot be swapped away now, or "".
+## Existing owners keep their state attached to the permanent unlock; none of
+## it is moved or erased here, so a card that carries it is refused.
+func _last_copy_guard(category: String, identity: String) -> String:
+	if CARDS.card_id(world.equipped_catalog.get(category, {})) == identity: return "장착 중인 카드입니다 · 해제 후 다시 뽑으세요"
+	var token: String = JSON.stringify(identity)
+	var owners: Array = [["option_awakening", "옵션 각성·추가 슬롯 진행이 있는 카드입니다"], ["skill_awakening", "스킬 각성 진행이 있는 카드입니다"], ["expedition_local", "탐험 파견 기록이 있는 카드입니다"]]
+	for owner: Array in owners:
+		var service: Variant = world.get(owner[0])
+		if service != null and service.has_method("export_state") and JSON.stringify(service.call("export_state")).contains(token): return str(owner[1])
+	if identity == HALPHAS_IDENTITY and world.get("halphas_star") != null and int(world.halphas_star.progress.get("level", 0)) > 0: return "별 강화 진행이 있는 카드입니다"
+	var collections: Variant = world.get("card_collections")
+	if collections != null and collections.problem.is_empty() and collections.core != null and collections.core.has_method("derive"):
+		collections.current_revision()
+		var before: Dictionary = collections._completed
+		if not before.is_empty():
+			var owned: Dictionary = world.card_draw_fusion.owned.duplicate(true)
+			(owned[category] as Dictionary).erase(identity)
+			var input: Dictionary = {"owned":owned, "source_server_context":collections.source_server_context()}
+			if collections.core is NATIVE_COLLECTIONS: input["source_option_awakening"] = world.option_awakening.native_collection_state()
+			var after: Dictionary = collections.core.derive(input).get("completed", {})
+			for key: Variant in before:
+				if not after.has(key): return "완성한 카드 컬렉션에 쓰인 마지막 1장입니다"
+	return ""
+
 func _plan(category: String, identity: String) -> Dictionary:
 	if world == null: return _fail("게임 연결 전")
 	if not problem.is_empty(): return _fail("카드 다시 뽑기 저장을 읽지 못해 막았습니다: " + problem)
@@ -179,32 +221,45 @@ func _plan(category: String, identity: String) -> Dictionary:
 	var grade_id: int = int(raw.GradeID)
 	var cards: Dictionary = world.card_draw_fusion.export_state()
 	if cards.get("owned",{}).get(category,{}).get(identity,false) != true: return _fail("보유하지 않은 카드입니다")
+	var grade_value: int = int(SOURCE.row("Grade", grade_id).get("GradeValue", 0))
+	if grade_value < int(SOURCE.row("Grade", 4).get("GradeValue", 4)) or grade_value > int(SOURCE.row("Grade", 52).get("GradeValue", 7)): return _fail("영웅 등급 이상 카드만 다시 뽑을 수 있습니다")
 	var swap: Dictionary = rule(deck, grade_id)
 	if swap.is_empty(): return _fail("이 등급은 다시 뽑기 대상이 아닙니다 (원본 표)")
 	var used: int = swap_count(category, identity)
 	var limit: int = int(swap.MaxSwapCount)
+	var extra: int = maxi(0, int(swap.get("ActivateCardAmount",0)))
+	var copies: int = 1 + extra
+	var spares: int = maxi(0, int(cards.get("spare",{}).get(category,{}).get(identity,0)))
+	var free: int = CARDS.outgoing_material_spare(cards, category, identity)
 	var info: Dictionary = {"category":category, "card":{"identity":identity, "card_id":int(raw.ID), "name":str(record.get("name","")), "grade":str(record.get("grade","")), "grade_id":grade_id},
-		"used":used, "max":limit, "remaining":maxi(0, limit-used)}
+		"used":used, "max":limit, "remaining":maxi(0, limit-used), "copies_required":copies, "extra_copies":extra, "copies_available":free + 1, "uses_last_copy":free < copies,
+		"pending":{}, "can_confirm":false, "confirm_reason":"", "swap_count":used + 1, "cost":{}, "diamonds":maxi(0, int(world.inventory.get(DIAMOND, 0))),
+		"candidates":[], "candidate_count":0, "pick_count":0, "pick_candidates":[]}
+	# Copies at confirmation: free duplicates first, then the permanent copy.
+	var copy_reason: String = ""
+	if free + 1 < copies: copy_reason = "같은 카드 %d장(대상 1장 + 추가 %d장)이 필요합니다 · 보유 %d장" % [copies, extra, free + 1]
+	elif free < copies:
+		if spares > free: copy_reason = "퀘스트로 받아 보류 중인 중복분이 있어 마지막 1장은 바꿀 수 없습니다"
+		else: copy_reason = _last_copy_guard(category, identity)
+	var held: Dictionary = state.pending.get(category + "|" + identity, {})
+	if not held.is_empty():
+		var result_record: Dictionary = card_record(category, str(held.result))
+		info.pending = {"result":{"identity":str(held.result), "card_id":int(result_record.get("source_card_id", 0)), "name":str(result_record.get("name","")), "grade":str(result_record.get("grade",""))},
+			"swap_count":int(held.swap_count), "picked":bool(held.picked)}
+		info.can_confirm = copy_reason.is_empty() and not result_record.is_empty()
+		info.confirm_reason = copy_reason if not copy_reason.is_empty() else ("" if not result_record.is_empty() else "대기 결과 카드 정의를 찾을 수 없습니다")
 	if used >= limit: return _fail("다시 뽑기 최대 횟수(%d회)를 모두 썼습니다" % limit, info)
 	var next: int = used + 1
 	var cost: Dictionary = cost_row(deck, grade_id, next)
 	if cost.is_empty(): return _fail("원본 비용 표에 %d회째 비용이 없습니다" % next, info)
 	if int(cost.get("CurrencyID",-1)) != GEM_CURRENCY_ID or SOURCE.row("Currency", GEM_CURRENCY_ID).get("Name") != "Gem": return _fail("원본 비용 화폐가 다이아가 아닙니다", info)
-	var extra: int = maxi(0, int(swap.get("ActivateCardAmount",0)))
-	var copies: int = 1 + extra
-	var available: int = CARDS.outgoing_material_spare(cards, category, identity)
 	var pool: Array = candidates(category, grade_id, identity)
 	var pick_count: int = maxi(0, int(cost.get("PickCount",0)))
-	var diamonds: int = maxi(0, int(world.inventory.get(DIAMOND, 0)))
-	info.merge({"swap_count":next, "cost":{"currency":DIAMOND, "currency_id":GEM_CURRENCY_ID, "amount":int(cost.Cost)}, "diamonds":diamonds,
-		"copies_required":copies, "extra_copies":extra, "copies_available":available, "candidates":pool, "candidate_count":pool.size(),
-		"pick_count":pick_count, "pick_candidates":[]}, true)
+	info.merge({"cost":{"currency":DIAMOND, "currency_id":GEM_CURRENCY_ID, "amount":int(cost.Cost)}, "candidates":pool, "candidate_count":pool.size(), "pick_count":pick_count}, true)
 	if pool.is_empty(): return _fail("바꿀 수 있는 같은 등급 카드가 없습니다", info)
-	if pick_count > 0:
-		info.pick_candidates = _pick_candidates(category, identity, next, pool, pick_count)
-	if available < copies:
-		return _fail(("같은 카드 %d장(대상 1장 + 추가 %d장)이 필요합니다 · 중복분 %d장" % [copies, extra, available]) if extra > 0 else "바꿀 중복 카드가 없습니다 (영구 보유 1장은 유지)", info)
-	if diamonds < int(cost.Cost): return _fail("다이아가 부족합니다 (필요 %d · 보유 %d)" % [int(cost.Cost), diamonds], info)
+	if pick_count > 0: info.pick_candidates = _pick_candidates(category, identity, next, pool, pick_count)
+	if not copy_reason.is_empty(): return _fail(copy_reason, info)
+	if int(info.diamonds) < int(cost.Cost): return _fail("다이아가 부족합니다 (필요 %d · 보유 %d)" % [int(cost.Cost), int(info.diamonds)], info)
 	info["ok"] = true
 	info["reason"] = ""
 	return info
@@ -231,11 +286,14 @@ func _pick_candidates(category: String, identity: String, count: int, pool: Arra
 	_picks_dirty = true
 	return chosen_cards
 
-## Quote one swap of `identity` (a CARDS.card_id) in `category`.
-## {ok, reason, token, category, card{identity,card_id,name,grade,grade_id}, used, max, remaining,
-##  swap_count, cost{currency,currency_id,amount}, diamonds, copies_required, extra_copies,
-##  copies_available, candidates[...], candidate_count, pick_count, pick_candidates[...]}
-## ok:false still carries the known fields for display. Pass `token` to execute().
+## Quote one reroll of `identity` (a CARDS.card_id) in `category`, and its
+## pending result if one is waiting. `ok` = a reroll can run now (`token`);
+## `can_confirm` = the pending result can be taken now (`confirm_token`).
+## Fields: category, card{identity,card_id,name,grade,grade_id}, used, max, remaining,
+## swap_count, cost{currency,currency_id,amount}, diamonds, copies_required, extra_copies,
+## copies_available, uses_last_copy, candidates[...], candidate_count, pick_count,
+## pick_candidates[...], pending{result{identity,card_id,name,grade},swap_count,picked}|{},
+## can_confirm, confirm_reason. ok:false still carries the known fields for display.
 func quote(category: String, identity: String) -> Dictionary:
 	_picks_dirty = false
 	var plan: Dictionary = _plan(category, identity)
@@ -243,23 +301,57 @@ func quote(category: String, identity: String) -> Dictionary:
 	# does not show a different 5 (a refused save keeps them for this session).
 	if _picks_dirty and world != null: world.call("_save_game", true)
 	_picks_dirty = false
-	if not bool(plan.get("ok", false)): return plan
-	var token: String = Crypto.new().generate_random_bytes(16).hex_encode()
 	_quotes.clear() # one confirmation at a time
-	_quotes[token] = _fingerprint(plan)
-	plan["token"] = token
+	if bool(plan.get("ok", false)):
+		plan["token"] = Crypto.new().generate_random_bytes(16).hex_encode()
+		_quotes[plan.token] = _fingerprint(plan)
+	if bool(plan.get("can_confirm", false)):
+		plan["confirm_token"] = Crypto.new().generate_random_bytes(16).hex_encode()
+		_quotes[plan.confirm_token] = _confirm_fingerprint(plan)
 	return plan
 
-func _fingerprint(plan: Dictionary) -> Dictionary:
-	return {"category":plan.category, "identity":plan.card.identity, "swap_count":plan.swap_count, "cost":plan.cost.amount, "copies":plan.copies_required,
-		"pick":plan.pick_candidates.map(func(entry: Dictionary) -> String: return str(entry.identity)), "revision":revision}
+## Every pending result, for showing them again after a reload:
+## [{category, identity, name, result{identity,name,grade}, swap_count, picked}].
+func pending_results() -> Array:
+	var result: Array = []
+	for key: String in state.pending:
+		var parts: PackedStringArray = key.split("|", true, 1)
+		if parts.size() != 2: continue
+		var entry: Dictionary = state.pending[key]
+		var original: Dictionary = card_record(parts[0], parts[1])
+		var target: Dictionary = card_record(parts[0], str(entry.result))
+		result.append({"category":parts[0], "identity":parts[1], "name":str(original.get("name","")), "result":{"identity":str(entry.result), "name":str(target.get("name","")), "grade":str(target.get("grade",""))},
+			"swap_count":int(entry.swap_count), "picked":bool(entry.picked)})
+	return result
 
-## Execute a quoted swap. `pick` is the chosen identity on a PickCount swap
-## (must be one of quote.pick_candidates); otherwise it is ignored.
-## {ok, reason, saved, result{identity,name,grade,new}, consumed, cost, swap_count, remaining}
+func _fingerprint(plan: Dictionary) -> Dictionary:
+	return {"kind":"reroll", "category":plan.category, "identity":plan.card.identity, "swap_count":plan.swap_count, "cost":plan.cost.amount, "copies":plan.copies_required,
+		"pick":plan.pick_candidates.map(func(entry: Dictionary) -> String: return str(entry.identity)), "pending":plan.pending, "revision":revision}
+
+func _confirm_fingerprint(plan: Dictionary) -> Dictionary:
+	return {"kind":"confirm", "category":plan.category, "identity":plan.card.identity, "pending":plan.pending, "copies":plan.copies_required, "revision":revision}
+
+func _saved_world(bag: Dictionary) -> Error:
+	return world.call("_save_game", true, {"inventory":bag})
+
+func _after_save(bag: Dictionary, message: String) -> void:
+	world.inventory = bag
+	if world.has_method("_invalidate_equipment_static"): world.call("_invalidate_equipment_static")
+	var collections: Variant = world.get("card_collections")
+	if collections != null and collections.has_method("invalidate"): collections.invalidate()
+	var hud: Variant = world.get("hud")
+	if hud != null and is_instance_valid(hud):
+		if hud.has_method("refresh_inventory"): hud.refresh_inventory(world.inventory)
+		if hud.has_method("append_log"): hud.append_log(message)
+	if world.has_method("_update_hud"): world.call("_update_hud")
+
+## Reroll (pay the next count's diamonds): the result becomes the card's pending
+## result; the original card is unchanged until confirm(). `pick` is the chosen
+## identity on a PickCount swap (one of quote.pick_candidates), else ignored.
+## {ok, reason, saved, category, from{...}, pending{...}, picked, cost, swap_count, remaining}
 func execute(token: String, pick: String = "") -> Dictionary:
 	var held: Dictionary = _quotes.get(token, {})
-	if held.is_empty(): return _fail("견적이 없거나 만료되었습니다 · 다시 확인하세요")
+	if held.is_empty() or held.get("kind") != "reroll": return _fail("견적이 없거나 만료되었습니다 · 다시 확인하세요")
 	var plan: Dictionary = _plan(str(held.category), str(held.identity))
 	if not bool(plan.get("ok", false)): _quotes.erase(token); return plan
 	if _fingerprint(plan) != held: _quotes.erase(token); return _fail("카드·다이아·횟수가 바뀌었습니다 · 다시 확인하세요")
@@ -270,47 +362,70 @@ func execute(token: String, pick: String = "") -> Dictionary:
 		if result_entry.is_empty(): return _fail("보여 준 후보 %d장 중 하나를 고르세요" % (plan.pick_candidates as Array).size())
 	var category: String = str(plan.category)
 	var identity: String = str(plan.card.identity)
-	var cards = world.card_draw_fusion
-	var cards_before: Dictionary = cards.export_state()
+	var key: String = category + "|" + identity
 	var roll_before: int = rng.state
 	var state_before: Dictionary = state.duplicate(true)
 	if result_entry.is_empty():
 		var pool: Array = plan.candidates
 		result_entry = pool[rng.randi_range(0, pool.size() - 1)]
-	var result_record: Dictionary = card_record(category, str(result_entry.identity))
-	if result_record.is_empty() or int(cards.spare.get(category,{}).get(str(result_entry.identity),0)) >= MAX_SPARE: return _fail("결과 카드 저장 한도")
-	var extras: Dictionary = cards.spare[category]
-	var left: int = int(extras.get(identity, 0)) - int(plan.copies_required)
-	if left < 0: return _fail("중복 카드가 부족합니다")
-	if left == 0: extras.erase(identity)
-	else: extras[identity] = left
-	var received: Dictionary = cards._receive(category, {"id":str(result_entry.identity), "record":result_record})
-	received["identity"] = str(received.get("id", ""))
 	var counts: Dictionary = state.counts.get(category, {})
 	counts[identity] = int(plan.swap_count)
 	state.counts[category] = counts
-	state.picks.erase(category + "|" + identity)
+	state.picks.erase(key)
+	state.pending[key] = {"result":str(result_entry.identity), "swap_count":int(plan.swap_count), "picked":int(plan.pick_count) > 0}
 	var bag: Dictionary = world.inventory.duplicate(true)
 	var balance: int = int(bag.get(DIAMOND, 0)) - int(plan.cost.amount)
 	if balance > 0: bag[DIAMOND] = balance
 	else: bag.erase(DIAMOND)
 	revision += 1
-	var saved: Error = world.call("_save_game", true, {"inventory":bag})
-	if saved != OK:
+	_quotes.erase(token)
+	if _saved_world(bag) != OK:
+		state = state_before
+		rng.state = roll_before
+		revision += 1
+		return _fail("다시 뽑기 저장 실패 · 다이아와 횟수를 그대로 두었습니다")
+	_after_save(bag, "카드 다시 뽑기 · %s → 대기 결과 %s (%s) · 다이아 %d" % [str(plan.card.name), str(result_entry.name), category, int(plan.cost.amount)])
+	var pending: Dictionary = {"result":{"identity":str(result_entry.identity), "card_id":int(result_entry.card_id), "name":str(result_entry.name), "grade":str(result_entry.grade)}, "swap_count":int(plan.swap_count), "picked":int(plan.pick_count) > 0}
+	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "pending":pending, "picked":int(plan.pick_count) > 0,
+		"cost":plan.cost, "swap_count":int(plan.swap_count), "remaining":maxi(0, int(plan.max) - int(plan.swap_count))}
+
+## Take the pending result: the original card (duplicates first, then the
+## permanent copy; 신화·유일 one more copy) is replaced by the pending card.
+## {ok, reason, saved, category, from{...}, result{id,identity,name,grade,new}, consumed, used_last_copy}
+func confirm(token: String) -> Dictionary:
+	var held: Dictionary = _quotes.get(token, {})
+	if held.is_empty() or held.get("kind") != "confirm": return _fail("확정할 대기 결과가 없거나 견적이 만료되었습니다 · 다시 확인하세요")
+	_quotes.erase(token)
+	var plan: Dictionary = _plan(str(held.category), str(held.identity))
+	if not bool(plan.get("can_confirm", false)): return _fail(str(plan.get("confirm_reason", plan.get("reason", "확정할 수 없습니다"))), plan)
+	if _confirm_fingerprint(plan) != held: return _fail("카드·대기 결과가 바뀌었습니다 · 다시 확인하세요")
+	var category: String = str(plan.category)
+	var identity: String = str(plan.card.identity)
+	var key: String = category + "|" + identity
+	var result_identity: String = str(plan.pending.result.identity)
+	var result_record: Dictionary = card_record(category, result_identity)
+	var cards = world.card_draw_fusion
+	if int(cards.spare.get(category,{}).get(result_identity,0)) >= MAX_SPARE: return _fail("결과 카드 저장 한도")
+	var cards_before: Dictionary = cards.export_state()
+	var state_before: Dictionary = state.duplicate(true)
+	var extras: Dictionary = cards.spare[category]
+	var from_spare: int = mini(int(plan.copies_required), CARDS.outgoing_material_spare(cards_before, category, identity))
+	var last_copy: bool = from_spare < int(plan.copies_required)
+	var left: int = int(extras.get(identity, 0)) - from_spare
+	if left > 0: extras[identity] = left
+	else: extras.erase(identity)
+	if last_copy:
+		if int(extras.get(identity, 0)) > 0: cards.import_state(cards_before); return _fail("퀘스트 보류 중복분이 있어 마지막 1장은 바꿀 수 없습니다")
+		(cards.owned[category] as Dictionary).erase(identity)
+	var received: Dictionary = cards._receive(category, {"id":result_identity, "record":result_record})
+	received["identity"] = str(received.get("id", ""))
+	state.pending.erase(key)
+	revision += 1
+	var bag: Dictionary = world.inventory.duplicate(true)
+	if _saved_world(bag) != OK:
 		state = state_before
 		cards.import_state(cards_before)
-		rng.state = roll_before
-		_quotes.erase(token)
-		return _fail("다시 뽑기 저장 실패 · 카드와 다이아를 그대로 두었습니다")
-	_quotes.erase(token)
-	world.inventory = bag
-	if world.has_method("_invalidate_equipment_static"): world.call("_invalidate_equipment_static")
-	var collections: Variant = world.get("card_collections")
-	if collections != null and collections.has_method("invalidate"): collections.invalidate()
-	var hud: Variant = world.get("hud")
-	if hud != null and is_instance_valid(hud):
-		if hud.has_method("refresh_inventory"): hud.refresh_inventory(world.inventory)
-		if hud.has_method("append_log"): hud.append_log("카드 다시 뽑기 · %s → %s (%s) · 다이아 %d" % [str(plan.card.name), str(received.get("name","")), category, int(plan.cost.amount)])
-	if world.has_method("_update_hud"): world.call("_update_hud")
-	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "result":received, "picked":int(plan.pick_count) > 0,
-		"consumed":int(plan.copies_required), "cost":plan.cost, "swap_count":int(plan.swap_count), "remaining":maxi(0, int(plan.max) - int(plan.swap_count))}
+		revision += 1
+		return _fail("확정 저장 실패 · 원래 카드와 대기 결과를 그대로 두었습니다")
+	_after_save(bag, "카드 다시 뽑기 확정 · %s → %s (%s)" % [str(plan.card.name), str(received.get("name","")), category])
+	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "result":received, "consumed":int(plan.copies_required), "used_last_copy":last_copy}
