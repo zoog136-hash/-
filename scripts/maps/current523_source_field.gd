@@ -3,6 +3,7 @@ extends "res://scripts/maps/current523_aden_source_field.gd"
 ## Logical identity is never inferred from a numeric physical folder name.
 const GEOGRAPHIC_CONTRACT="CURRENT523_S32_OWN_SOURCE_FIELD_V1"
 const SOURCE_PACK = preload("res://scripts/maps/current523_source_pack.gd")
+const MAP_IMAGES = preload("res://scripts/maps/current523_map_images.gd")
 var native_land: Dictionary = {}
 var source_asset: String = ""
 var catalog_root: String = ""
@@ -64,8 +65,10 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	astar=AStarGrid2D.new(); astar.region=Rect2i(0,0,1,1); astar.update()
 	definition={"map_id":"m523_land_"+str(land_id),"source_map_id":land_id,"source_land_id":land_id,"source_asset_path":source_asset,"geographic_contract":GEOGRAPHIC_CONTRACT,"source_sha256":str(availability.source_inventory_sha256),"source_manifest_sha256":catalog_sha256,"origin":[minimum.x,minimum.y],"dimensions":[width,height],"layout_revision":5230001,"navigation":{"profile":OWN_PROFILE},"native_m_rules_verified":false}
 	# The original Land name only; development tags are not shown in the game.
-	var title: String = str(native_land.Name)
-	data={"map_id":definition.map_id,"source_land_id":land_id,"map_name":title,"short_name":str(native_land.Name),"layout_revision":5230001,"navigation_profile":str(policy.get("profile",OWN_PROFILE)),"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],"collision":[],"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],"navigation":{"profile":OWN_PROFILE},"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600},"native_m_rules_verified":false}
+	# Korean original name (UIMapWorld.DescID -> DescData_Korean) when declared.
+	var title: String = MAP_IMAGES.korean_name(land_id)
+	if title.is_empty(): title = str(native_land.Name)
+	data={"map_id":definition.map_id,"source_land_id":land_id,"map_name":title,"short_name":title,"source_land_name":str(native_land.Name),"layout_revision":5230001,"navigation_profile":str(policy.get("profile",OWN_PROFILE)),"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],"collision":[],"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],"navigation":{"profile":OWN_PROFILE},"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600},"native_m_rules_verified":false}
 	loaded=true
 	if interpretation.has("spawn_source"):
 		var entry: Variant=interpretation.spawn_source
@@ -77,8 +80,19 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	set_meta("current523_generic_field",true)
 	return true
 
-func region_at(_point: Vector2) -> Dictionary:
-	return {"id":"m523_land_"+str(native_land.get("ID",-1)),"name":str(data.get("map_name","원문 필드")),"type":"neutral","color":"738e81","native_m_rules_verified":false}
+func region_at(point: Vector2) -> Dictionary:
+	# Original UIMapArea zone name (e.g. 기란 마을) when the player stands in
+	# one; the type stays neutral (no safety/PvP rule is derived from it).
+	var id: String = "m523_land_"+str(native_land.get("ID",-1))
+	var name: String = str(data.get("map_name","원문 필드"))
+	if loaded and coordinates.valid and point.is_finite():
+		var source: Vector2 = coordinates.to_source(point)
+		if source.is_finite():
+			var zone: Dictionary = MAP_IMAGES.area_at(int(native_land.get("ID",-1)),Vector2i(floori(source.x),floori(source.y)))
+			if not zone.is_empty():
+				name = str(zone.name)
+				id += ":area:"+str(zone.area_id)
+	return {"id":id,"name":name,"type":"neutral","color":"738e81","native_m_rules_verified":false}
 
 func scope_metrics() -> Dictionary:
 	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":_raw.source_members().size() if loaded else 0,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"inferred_placements":inferred_placements.duplicate(true),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
