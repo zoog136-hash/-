@@ -47,6 +47,14 @@ func _initialize() -> void:
 	check(minimap.contains("MAP_IMAGES.minimap_image(field)") and minimap.contains("draw_texture_rect_region(source_overview, shown, source)") and minimap.contains("overview_world_rect = owner.overview_world_rect"), "minimap draws the original picture by its rectangle (also in the raster copy)")
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud.contains("_select_current_world_map()") and hud.contains("\"select_offered_world\""), "world map selects the current Land's offered World on open")
+	# Map window copy: shrunk storage, original pixel size reported to the window.
+	var adapter: String = FileAccess.get_file_as_string("res://scripts/maps/source523_map_image_adapter.gd")
+	check(adapter.contains("MAP_IMAGES.window_texture(") and IMAGES.WINDOW_MAX_EDGE <= 2048, "map window uses the shrunk premultiplied copy")
+	var small := Image.create_empty(1600, 987, false, Image.FORMAT_RGBA8)
+	var copy := ImageTexture.create_from_image(small)
+	copy.set_size_override(Vector2i(3200, 1974))
+	check(copy.get_width() == 3200 and copy.get_height() == 1974 and copy.get_size() == Vector2(3200, 1974), "size override keeps original pixel geometry")
+	check(not hud.contains("original_main_ui_status[\"world_map_selection\"]=view.call("), "HUD status keeps no texture reference")
 	var evidence: String = "not_installed"
 	if DEF.row_count("UIMapWorld") > 0:
 		evidence = "installed"

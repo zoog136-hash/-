@@ -34,7 +34,7 @@ class FakeWorld extends Node:
 		var fed: int=0
 		for key: String in feed:fed+=int(feed[key])*20
 		var after: int=mini(100,20+fed)
-		if attempt and after<100:return {"ok":false,"reason":"경험치가 부족합니다"}
+		if attempt and after<100:return {"ok":false,"reason":"경험치가 부족합니다","probability_percent":66.7}
 		return {"ok":true,"token":"l%d" % calls.size(),"name":"아이스 스파이크","level":1,"exp":20,"exp_after_feed":after,"required_exp":100,"probability_percent":66.7,"attempt":attempt and after>=100,"cost":{"amount":100000*(1+fed/20)},"wasted_exp":0}
 	func skill_card523_levelup_execute(token: String) -> Dictionary:
 		calls.append(["levelup_execute",token])
@@ -96,6 +96,10 @@ func _run() -> void:
 	check(host.hud.confirmations[-1][1].contains("강화 시도 (성공 확률 66.7%)"),"a full gauge tries the enhancement")
 	window._clear_feed()
 	check(window.feed.is_empty(),"취소 clears the books")
+	window._enchant_probability()
+	check(host.hud.messages[-1].contains("Lv.1 → Lv.2 강화 성공 확률 66.7%"),"성공 확률 shows the quote's chance: "+host.hud.messages[-1])
+	var books: Array=[{"name":"B","remaining":2},{"name":"A","remaining":5},{"name":"C","remaining":2}]
+	check(WINDOW.ordered_books(books,0)==books and WINDOW.ordered_books(books,1).map(func(e: Dictionary) -> String:return e.name)==["A","B","C"] and WINDOW.ordered_books(books,2).map(func(e: Dictionary) -> String:return e.name)==["A","B","C"],"the popup's book orders")
 	window.selected=0
 	window.grade=4
 	window.tab="skill"
