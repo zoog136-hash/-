@@ -55,3 +55,7 @@
 - 재화 획득처
 
 각 창 스크립트 머리의 "Left empty" 또는 "Not connected" 주석을 참고한다.
+
+## 선택 보상 (Common_Reward_SelectBox)
+
+- 수량 선택 줄: TWILIGHT 근사(근거 약함). 버튼(+1/+10/Max/직접입력/초기화)은 빼고, 제목 "선택한 보상"과 고른 보상 이름을 표시한다. TWILIGHT는 상자를 하나씩 연다.
