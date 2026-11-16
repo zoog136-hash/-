@@ -452,6 +452,10 @@ func open_addon_installer() -> bool:
 	_status.text = "새 추가 리소스(twilight523-addon-ui.zip 등)를 선택하세요.\n설치한 뒤 앱을 다시 실행하면 적용됩니다."
 	return true
 
+## True while the install screen is open (the title screen ignores touches).
+func installer_open() -> bool:
+	return _layer != null
+
 func _close_installer() -> void:
 	if _layer != null: _layer.queue_free()
 	_layer = null
