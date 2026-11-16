@@ -4,6 +4,7 @@ class_name FieldMinimap
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
 const RASTER_CACHE = preload("res://scripts/maps/minimap_raster_cache.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 var source_overview: Texture2D
 var boss_region_mesh: MultiMesh
 var world: Node
@@ -94,10 +95,14 @@ func _ready() -> void:
 	resized.connect(_prepare_raster)
 	get_viewport().size_changed.connect(_prepare_raster)
 
+## Moving markers (player arrow, nearby monster dots, view box) redraw at
+## 4 Hz (was ~8 Hz): a dot moves at most a few minimap pixels between redraws.
+const OVERLAY_INTERVAL: float = .25
+
 func _process(delta: float) -> void:
 	clock -= delta
 	if clock <= 0.0:
-		clock = .12
+		clock = OVERLAY_INTERVAL
 		if is_instance_valid(overlay): overlay.queue_redraw()
 		else: queue_redraw()
 
@@ -177,6 +182,11 @@ func _draw_static_layer() -> void:
 func _draw_dynamic(canvas: CanvasItem) -> void:
 	if world == null:
 		return
+	var hitch_started: int = FRAME_HITCH.now()
+	_draw_markers(canvas)
+	FRAME_HITCH.detail("hud.minimap_overlay", hitch_started)
+
+func _draw_markers(canvas: CanvasItem) -> void:
 	overlay_redraws += 1
 	var font: Font = get_theme_default_font()
 	for child: Node in world.monsters_root.get_children():

@@ -11,6 +11,15 @@ static var _manifest: Dictionary = {}
 ## Size and modified time of the verified manifest: an unchanged file is not
 ## hashed again on every effect request (a full SHA256 of the bank manifest).
 static var _manifest_stamp: String = ""
+## The first effect of a session read, SHA-256 hashed and JSON-parsed the
+## whole bank manifest (~40 MB for the complete 523 bank) on the main thread,
+## inside the hit/cast that showed it (phone: player.impact 1,274 ms for one
+## hit). prewarm() does that read/hash/parse on a worker thread
+## (sp2_background_loader.gd) when a 523 field starts; the result is adopted
+## with exactly the checks below, and an effect requested before the worker
+## finished waits for its remaining time instead of starting over.
+const LOADER = preload("res://scripts/resources/sp2_background_loader.gd")
+const SELF_PATH := "res://scripts/resources/current523_source_effect_selection.gd"
 
 static func fail(reason: String, detail: Dictionary = {}) -> Dictionary:
 	return {"ok":false,"enabled":true,"status":"selection_pending","reason":reason,"source_snapshot":"patch523","source_reference":detail}
@@ -23,12 +32,29 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var stamp: String = "%d:%d" % [file.get_length(), FileAccess.get_modified_time(path)]
 	file.close()
 	if path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
-	# Ordinary production pin admission; no separate resource audit is launched.
-	if FileAccess.get_sha256(path) != expected: return fail("current523_effect_bank_pin_changed")
-	if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty():
-		_manifest_stamp = stamp
-		return {"ok":true,"manifest":_manifest}
-	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var prepared: Dictionary = {}
+	if LOADER.enabled and not LOADER.idle():
+		var key: String = LOADER.json_key(path, expected)
+		var adopting: bool = LOADER.in_flight(key)
+		prepared = LOADER.take(key)
+		# Finishing the task may have adopted it already (_prewarmed).
+		if adopting and path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
+	var value: Variant
+	if not prepared.is_empty() and "%d:%d" % prepared.stamp == stamp:
+		# Read and SHA-256 checked by the worker for this exact file stamp.
+		if not prepared.value.ok:
+			if str(prepared.value.error).begins_with("Bank JSON SHA256 mismatch"): return fail("current523_effect_bank_pin_changed")
+			if str(prepared.value.error).begins_with("Missing or oversized"): return fail("current523_effect_bank_missing_or_oversized")
+			value = null
+		else:
+			value = prepared.value.value
+	else:
+		# Ordinary production pin admission; no separate resource audit is launched.
+		if FileAccess.get_sha256(path) != expected: return fail("current523_effect_bank_pin_changed")
+		if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty():
+			_manifest_stamp = stamp
+			return {"ok":true,"manifest":_manifest}
+		value = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return fail("current523_effect_original_action_domain_required")
 	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return fail("current523_effect_source_dummy_policy_required")
 	_manifest_path = path
@@ -36,6 +62,25 @@ static func _bank(options: Dictionary) -> Dictionary:
 	_manifest = value
 	_manifest_stamp = stamp
 	return {"ok":true,"manifest":value}
+
+## Starts reading/hashing/parsing the configured bank manifest on a worker,
+## unless it is already loaded for the file as it is now. true = started or
+## already warm.
+static func prewarm(context: Dictionary = {}) -> bool:
+	if not LOADER.enabled: return false
+	var configured: Dictionary = SOURCE.options(context)
+	if not configured.get("ok", false): return false
+	var path: String = str(configured.options.get("manifest_path", ""))
+	var expected: String = str(configured.options.get("manifest_sha256", ""))
+	if path.is_empty() or not BANK.valid_sha(expected) or not FileAccess.file_exists(path): return false
+	var stamp: String = "%d:%d" % [FileAccess.get_size(path), FileAccess.get_modified_time(path)]
+	if path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return true
+	return LOADER.request_json(path, expected, BANK.MAX_MANIFEST_JSON, Callable(load(SELF_PATH), "_prewarmed").bind(path, expected))
+
+## Main thread, when the prewarm task finished: adopts it through _bank()
+## (the same stamp, pin and structure checks as an effect request).
+static func _prewarmed(_result: Dictionary, path: String, expected: String) -> void:
+	_bank({"manifest_path":path,"manifest_sha256":expected})
 
 static func _source_integer(value: Variant) -> int:
 	if BANK.integer(value,0): return int(value)
