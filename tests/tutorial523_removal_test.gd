@@ -4,7 +4,8 @@ extends SceneTree
 ## original definition ZIP the sets are re-derived from the tables, and Main
 ## proves: tutorial Lands never open, tutorial quests never start and each
 ## class's first post-tutorial quest becomes its start, tutorial items are
-## refused, a save in a tutorial Land moves to Aden with tutorial items
+## refused, a save in a tutorial Land moves to the start village (Giran town,
+## 사용자 결정 2026-11-17) with tutorial items
 ## removed (amounts recorded), and the class skill book grant happens once.
 const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 const DUMMY = preload("res://scripts/quests/source_dummy523.gd")
@@ -14,6 +15,7 @@ const PACK = preload("res://scripts/maps/current523_source_pack.gd")
 const FIELD = preload("res://scripts/maps/current523_source_field.gd")
 const OPTIONS = preload("res://scripts/maps/current523_aden_play_options.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const START_VILLAGE = preload("res://scripts/maps/current523_start_village.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -49,7 +51,8 @@ func synthetic() -> void:
 		"item_instances":{"7":{"name":"x","record":{"source_item_class_id":155701}},"8":{"name":"검 · 원본#4681","record":{"source_item_class_id":4681}}}}
 	check(TUTORIAL.needed(save), "a save in a tutorial Land needs the migration")
 	var moved: Dictionary = TUTORIAL.migrate_save(save)
-	check(moved.character_source_cursor == {"native_land_id":4,"source_position":[]}, "moved to Aden town")
+	check(moved.character_source_cursor == {"native_land_id":4,"source_position":[33441.5,32813.5]} and moved.character_source_cursor == START_VILLAGE.cursor(), "moved to Giran town (Locations473 리스타트 좌표 기란 마을)")
+	check(moved.tutorial523.relocated.to_source_position == [33441.5,32813.5] and moved.tutorial523.relocated.to_village == "기란 마을", "the Giran destination is recorded")
 	check(moved.inventory == {"빨간 물약":5} and moved.item_instances.keys() == ["8"], "tutorial items removed, others kept")
 	check(moved.tutorial523.removed_items == {"138531":3,"6171":2} and moved.tutorial523.relocated.from_native_land_id == 44502, "amounts and origin recorded")
 	check(not TUTORIAL.needed(moved) and save.inventory.size() == 3, "migration is one-shot and does not touch the input")
@@ -123,7 +126,7 @@ func actual_main() -> void:
 	var writer := FileAccess.open(world.save_path(), FileAccess.WRITE); writer.store_string(JSON.stringify(file)); writer.close()
 	world._load_game(true)
 	evidence["cursor_after_load"] = world.character_source_cursor.duplicate(true)
-	check(int(world.character_source_cursor.get("native_land_id",-1)) == 4 and (world.character_source_cursor.get("source_position",[]) as Array).is_empty(), "load moves the character to Aden town")
+	check(world.character_source_cursor == START_VILLAGE.cursor(), "load moves the character to Giran town")
 	check(not world.inventory.has("[퀘스트] 퀘스트 이동 주문서 (004) · 원본#138531") and world.inventory == baseline, "tutorial items removed, others kept")
 	check(int(world.tutorial523.get("removed_items",{}).get("138531",0)) == 3 and int(world.tutorial523.get("relocated",{}).get("from_native_land_id",0)) == 44502, "removed amount and origin recorded")
 	var backups: int = 0
