@@ -94,8 +94,8 @@ func _ready() -> void:
 	teleport_button.tooltip_text = "기존 텔레포트 안내 · 비용과 이동 제한 유지"
 	teleport_button.hide()
 	title_row.add_child(teleport_button)
-	var close := UI.button("",func() -> void: closed.emit(),Vector2(32,32))
-	close.icon = UI.icon("close")
+	# Text instead of the removed self-drawn close icon (still tappable).
+	var close := UI.button("X",func() -> void: closed.emit(),Vector2(32,32))
 	close.tooltip_text = "닫기 · Esc"
 	close.name = "CloseWindow"
 	close.add_theme_stylebox_override("normal",UI.box(Color("542d24"),Color("957963"),3))

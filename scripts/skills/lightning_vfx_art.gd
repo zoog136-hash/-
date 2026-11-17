@@ -1,7 +1,6 @@
 extends RefCounted
 ## Original ImageGen texture. Frame anchors are measured from its actual pixels.
 ## This module has no RNG, combat, save, or clock access.
-const PATH := "res://assets/effects/skills/lightning_discharge_frames.png"
 const RGBA_BYTES: int = 1254 * 1254 * 4
 const STRIKE_ANCHORS: Array[Vector2] = [Vector2(166,294), Vector2(166.5,292), Vector2(164,290), Vector2(162.5,290), Vector2(166,283.5), Vector2(164.5,288.5), Vector2(166,288.5), Vector2(162.5,292.5)]
 const LINK_STARTS: Array[Vector2] = [Vector2(41,154), Vector2(39.5,156), Vector2(45,154), Vector2(50.5,154), Vector2(37,153.5), Vector2(43.5,156.5), Vector2(42,156.5), Vector2(37.5,157.5)]
@@ -12,9 +11,9 @@ static func supports(profile: Dictionary) -> bool:
 	return str(profile.get("program", "")) in ["lightning", "chain_lightning", "thunder_stun"]
 
 static func make_frames(profile: Dictionary) -> SpriteFrames:
-	# The frame sheet is no longer in the repo; without it no frames (no load error).
-	if not ResourceLoader.exists(PATH): return null
-	var atlas := ResourceLoader.load(PATH, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+	# The self-made ImageGen frame sheet is retired (no self-made images), and an
+	# older install may still carry it: never read it, so there are no frames.
+	var atlas: Texture2D = null
 	if atlas == null: return null
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
