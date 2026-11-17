@@ -29,5 +29,6 @@ func _initialize() -> void:
 	HITCH.add("monsters", HITCH.now())
 	check(HITCH._trail_seq == closed, "nothing is traced after the window")
 	check(FileAccess.get_file_as_string("res://scripts/boot/loading_screen.gd").contains("FRAME_HITCH.arm_trail()"), "loading completion arms the trail")
+	check(FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd").contains("FRAME_HITCH.arm_trail(WINDOW_TRAIL_SECONDS)"), "opening a window arms the trail")
 	print("CRASH_TRAIL_RESULT " + JSON.stringify({"checks": checks, "failures": failures}))
 	quit(0 if failures.is_empty() else 1)
