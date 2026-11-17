@@ -103,6 +103,28 @@ static var _physics_section_usec: int = 0
 static func now() -> int:
 	return Time.get_ticks_usec()
 
+## Crash trail. The phone's release APK dies natively (no script message)
+## 3-5 s after loading, at a GDScript array index four calls below a
+## per-frame callback; the same build, pack and NPCs do not crash on Linux.
+## For TRAIL_SECONDS after loading, every finished measured section, counter
+## and frame boundary is printed to the engine log (logcat) with a sequence
+## number, so the last TRAIL line before a crash names the step that ran
+## last. Off otherwise (one integer compare per call).
+const TRAIL_SECONDS: int = 40
+static var _trail_until_msec: int = 0
+static var _trail_seq: int = 0
+static func arm_trail(seconds: int = TRAIL_SECONDS) -> void:
+	_trail_until_msec = Time.get_ticks_msec() + seconds * 1000
+	trail("armed")
+static func trail(name: String) -> void:
+	if _trail_until_msec == 0: return
+	if Time.get_ticks_msec() > _trail_until_msec:
+		_trail_until_msec = 0
+		print("TRAIL end")
+		return
+	_trail_seq += 1
+	print("TRAIL %d f%d %s" % [_trail_seq, Engine.get_process_frames(), name])
+
 ## Diagnose a single long spawn/cache miss without double-counting its parent.
 ## Records `name` from `started` and returns now, for consecutive phases.
 static func detail_next(name: String, started: int) -> int:
@@ -110,6 +132,7 @@ static func detail_next(name: String, started: int) -> int:
 	return now()
 
 static func detail(operation: String, started_usec: int) -> void:
+	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail(operation)
 	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
 	if not _details.has(operation): _details[operation] = [0, 0, 0]
@@ -119,6 +142,7 @@ static func detail(operation: String, started_usec: int) -> void:
 	row[2] = maxi(int(row[2]), elapsed)
 
 static func count(operation: String, amount: int = 1) -> void:
+	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail("#" + operation)
 	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	_counters[operation] = int(_counters.get(operation, 0)) + amount
 
@@ -129,6 +153,7 @@ static func slow_spawn(sample: Dictionary) -> void:
 		_slow_spawn = sample.duplicate(true)
 
 static func add(section: String, started_usec: int) -> void:
+	if _trail_until_msec != 0: trail(section)
 	if not enabled: return
 	var elapsed: int = Time.get_ticks_usec() - started_usec
 	_nested += elapsed
@@ -140,6 +165,7 @@ static func nested() -> int:
 
 ## Adds the elapsed time minus whatever add() recorded since `nested_before`.
 static func add_self(section: String, started_usec: int, nested_before: int) -> void:
+	if _trail_until_msec != 0: trail(section)
 	if not enabled: return
 	var elapsed: int = Time.get_ticks_usec() - started_usec - (_nested - nested_before)
 	_nested += maxi(0, elapsed)
@@ -147,6 +173,7 @@ static func add_self(section: String, started_usec: int, nested_before: int) -> 
 
 ## Called once per frame, before any other node processes.
 static func frame(map_id: String = "") -> void:
+	if _trail_until_msec != 0: trail("frame")
 	if not enabled: return
 	var at: int = Time.get_ticks_usec()
 	_close_frame(at, map_id)

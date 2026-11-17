@@ -779,6 +779,7 @@ func _show_store_failures() -> void:
 	hud.show_message("기기 저장 공간이 부족해 원본 데이터를 정리하지 못했습니다. 공간을 확보한 뒤 다시 시작하면 다시 시도합니다.")
 
 func _process(delta: float) -> void:
+	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("world.begin")
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
 	_process_frame(delta)
