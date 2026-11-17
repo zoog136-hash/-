@@ -16,7 +16,7 @@ static func resolve_owned(hud: Node, entry: Dictionary, native_context: Dictiona
 	# when appropriate; the UI never reconstructs it or substitutes an alias.
 	var record: Variant=bag.call("_item_visual_record",reference,fallback)
 	if not record is Dictionary:return _fail("source_inventory_existing_visual_record_invalid")
-	if not ResourceLoader.exists(OWNER_API):return _fail("source_inventory_existing_image_owner_unavailable")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(OWNER_API):return _fail("source_inventory_existing_image_owner_unavailable")
 	var api: Script=load(OWNER_API)
 	if api==null:return _fail("source_inventory_existing_image_owner_unavailable")
 	var info: Dictionary=api.describe_item(record,str(entry.get("name","")))

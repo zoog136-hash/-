@@ -160,7 +160,7 @@ static func stage_snapshot(pack: Dictionary, before: Dictionary, authorities: Di
 static func stage(world: Node, pack: Dictionary, consumer_sha: String) -> Dictionary:
 	var before: Dictionary = snapshot(world)
 	var authorities: Dictionary = {}
-	if ResourceLoader.exists(OWNER_PATH):
+	if preload("res://scripts/resources/retired_assets.gd").usable(OWNER_PATH):
 		var owner: Variant = load(OWNER_PATH)
 		var ready: bool = owner != null
 		for method: String in ["pack_identity","definition_id","expected_variant","equipment"]:
@@ -193,7 +193,7 @@ static func stage(world: Node, pack: Dictionary, consumer_sha: String) -> Dictio
 
 static func current(world: Node, candidate: Dictionary) -> bool:
 	if candidate.get("ok",false) != true or not Native.same(snapshot(world),candidate.get("before")): return false
-	if not ResourceLoader.exists(OWNER_PATH): return not candidate.get("changed",false)
+	if not preload("res://scripts/resources/retired_assets.gd").usable(OWNER_PATH): return not candidate.get("changed",false)
 	var owner: Variant = load(OWNER_PATH)
 	if owner == null or not owner.has_method("pack_identity"): return false
 	var identity: Dictionary = owner.pack_identity()

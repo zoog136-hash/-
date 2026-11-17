@@ -62,8 +62,8 @@ static func frames_for(sprite_id: String, track_name: String = "") -> SpriteFram
 	if not track_name.is_empty():
 		if not track_name.is_valid_filename(): return null
 		var lazy := PREFIX + sprite_id + "/tracks/" + track_name + ".tres"
-		if ResourceLoader.exists(lazy): path = lazy
-	if not ResourceLoader.exists(path): return null
+		if preload("res://scripts/resources/retired_assets.gd").usable(lazy): path = lazy
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return null
 	var value := load(path) as SpriteFrames
 	if value != null:
 		var pages: Dictionary = {}
@@ -219,7 +219,7 @@ func _play_sound(id: String) -> void:
 	if not id.is_valid_int(): return
 	var path := "res://assets/external_spx/source_sounds/" + id + ".ogg"
 	# Missing10831/10832 or actor footsteps never stop visual playback.
-	if not ResourceLoader.exists(path): return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return
 	var key := "sound:" + id
 	if not _resources.has(key): _resources[key] = load(path) as AudioStream
 	if _resources[key] == null: return

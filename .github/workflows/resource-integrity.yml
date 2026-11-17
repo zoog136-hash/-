@@ -29,7 +29,11 @@ jobs:
           sparse-checkout: |
             /tools/check_no_legacy_resources.py
             /tests/test_no_legacy_resources.py
-      - name: No pre-November resources are committed
+            /scripts/
+            /addons/
+            /scenes/
+            /Main.tscn
+      - name: No old or self-made pictures are committed or loaded by code
         run: python3 tools/check_no_legacy_resources.py --root .
       - name: The check rejects old art
         run: python3 -m unittest discover -s tests -p 'test_no_legacy_resources.py' -v

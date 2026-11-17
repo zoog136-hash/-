@@ -50,6 +50,8 @@ static func _ensure() -> void:
 
 static func _texture(path: String, digest: String) -> Texture2D:
 	if not _enabled or not path.begins_with("res://assets/l1j/verified/"): return null
+	# Old L1J art is retired: never read it (or its exported byte copy) from an older install.
+	if preload("res://scripts/resources/retired_assets.gd").retired(path): return null
 	if path.contains("..") or path.contains("\\") or digest.length() != 64 or not digest.is_valid_hex_number(false): return null
 	var key: String = path + "|" + digest
 	if _textures.has(key): return _textures[key] as Texture2D
@@ -67,7 +69,7 @@ static func _texture(path: String, digest: String) -> Texture2D:
 		_clear_border_background(portrait)
 		result = ImageTexture.create_from_image(portrait)
 		result.resource_path = path
-	elif ResourceLoader.exists(path): result = load(path) as Texture2D
+	elif preload("res://scripts/resources/retired_assets.gd").usable(path): result = load(path) as Texture2D
 	else:
 		var pixels := Image.new()
 		if pixels.load_png_from_buffer(FileAccess.get_file_as_bytes(raw_path)) != OK: return null

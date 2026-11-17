@@ -61,7 +61,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if not settings.has("attack_hit_ratio"): result.attack_hit_ratio = PROFILE.hit_ratio(result.motion_style)
 	if not settings.has("movement_fps"): result.movement_fps = 7.0 if result.motion_style == "heavy" else 9.0
 	var authored: Dictionary = VISUALS.record(key)
-	if result.frames_path.is_empty() and not authored.is_empty() and ResourceLoader.exists(str(authored.get("atlas", ""))):
+	if result.frames_path.is_empty() and not authored.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(str(authored.get("atlas", ""))):
 		# Keep gameplay hit ratios and attack clocks. Only pose/anchor metadata
 		# belongs to the generated local atlas.
 		result.frames_path = str(authored.atlas)
@@ -103,7 +103,7 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 			return retained
 	var result: SpriteFrames = SpriteFrames.new()
 	result.remove_animation("default")
-	if path.is_empty() or not ResourceLoader.exists(path): return result
+	if path.is_empty() or not preload("res://scripts/resources/retired_assets.gd").usable(path): return result
 	if path.get_extension() in ["tres", "res"]:
 		# A frame set with a missing texture still loads every other texture
 		# before failing (~2.2 s for a boss sheet), and the old fallthrough then
@@ -158,7 +158,7 @@ static func _missing_dependency(path: String) -> String:
 		var dependency: String = raw
 		for part: String in raw.split("::"):
 			if part.begins_with("res://"):dependency = part
-		if dependency.begins_with("res://") and not ResourceLoader.exists(dependency):return dependency
+		if dependency.begins_with("res://") and not preload("res://scripts/resources/retired_assets.gd").usable(dependency):return dependency
 	return ""
 
 static func _cache_frames(key: String, result: SpriteFrames) -> void:
@@ -243,12 +243,12 @@ static func first_texture(source: SpriteFrames) -> Texture2D:
 
 static func frames_for_profile(profile: TwilightAnimationProfile, fallback: String) -> SpriteFrames:
 	# Optional authored art must never remove an otherwise valid existing appearance.
-	if profile.frames_path.get_extension() in ["tres", "res"] and ResourceLoader.exists(profile.frames_path):
+	if profile.frames_path.get_extension() in ["tres", "res"] and preload("res://scripts/resources/retired_assets.gd").usable(profile.frames_path):
 		var authored: SpriteFrames = frames(profile.frames_path, profile.layout)
 		if first_texture(authored) != null: return authored
 	var from_manifest: SpriteFrames = VISUALS.catalog_frames(profile.profile_id)
 	if from_manifest != null: return from_manifest
-	if not profile.frames_path.is_empty() and ResourceLoader.exists(profile.frames_path):
+	if not profile.frames_path.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(profile.frames_path):
 		var authored: SpriteFrames = frames(profile.frames_path, profile.layout)
 		if first_texture(authored) != null: return authored
 	return frames(fallback, profile.layout)

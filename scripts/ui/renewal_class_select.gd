@@ -73,7 +73,7 @@ func configure(controller: Node, initial: bool = false) -> void:
 		button.add_theme_font_size_override("font_size",13)
 		button.tooltip_text = "주스탯: %s · 주무기: %s" % [profile.get("primary_stat",""),profile.get("weapon","")]
 		var path: String = str(profile.get("image_path",""))
-		if path != "" and ResourceLoader.exists(path):
+		if path != "" and preload("res://scripts/resources/retired_assets.gd").usable(path):
 			button.icon = load(path) as Texture2D
 			button.expand_icon = true
 			button.add_theme_constant_override("icon_max_width",40)
@@ -145,7 +145,7 @@ func _choose(job_name: String) -> void:
 	for key: String in class_buttons:
 		(class_buttons[key] as Button).button_pressed = key == job_name
 	var image_path: String = str(profile.get("image_path",""))
-	portrait.texture = load(image_path) as Texture2D if image_path != "" and ResourceLoader.exists(image_path) else null
+	portrait.texture = load(image_path) as Texture2D if image_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(image_path) else null
 	details.text = "[font_size=20][color=#d8b878]%s[/color][/font_size]\n역할: %s\n주무기: %s\n주스탯: %s\n대표 변신: %s" % [
 		UI.safe(job_name), UI.safe(profile.get("role","직업 전투")),
 		UI.safe(profile.get("weapon","직업 무기")), UI.safe(profile.get("primary_stat","직업별")),

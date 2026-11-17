@@ -126,10 +126,10 @@ const EQUIPMENT_SLOT_DISPLAY: Array = [
 ]
 
 const CLASS_SHEETS: Array[String] = [
-	"res://assets/sprites/classes/warrior.png",
-	"res://assets/sprites/classes/mage.png",
-	"res://assets/sprites/classes/archer.png",
-	"res://assets/sprites/classes/assassin.png"
+	"",
+	"",
+	"",
+	""
 ]
 
 func _ready() -> void:
@@ -481,7 +481,7 @@ func _add_inventory_item_row(item_name: String, target_reference: String, displa
 	use_button.add_theme_font_size_override("font_size", 16)
 	use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var image_path: String = str(images.get(item_name, ""))
-	if image_path != "" and ResourceLoader.exists(image_path):
+	if image_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(image_path):
 		use_button.icon = load(image_path) as Texture2D
 		use_button.expand_icon = false
 		use_button.add_theme_constant_override("icon_max_width", 36)
@@ -1194,12 +1194,12 @@ func _refresh_character_panel() -> void:
 	_refresh_job_class_selection()
 	var profile: Dictionary = _job_profile(current_job)
 	var portrait_path: String = str(profile.get("image_path", ""))
-	if portrait_path != "" and ResourceLoader.exists(portrait_path):
+	if portrait_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(portrait_path):
 		character_preview.texture = load(portrait_path) as Texture2D
 	else:
 		var class_index: int = clampi(int(character_state.get("class_index", 0)), 0, 3)
 		var fallback_path: String = CLASS_SHEETS[class_index]
-		if ResourceLoader.exists(fallback_path):
+		if preload("res://scripts/resources/retired_assets.gd").usable(fallback_path):
 			var atlas: AtlasTexture = AtlasTexture.new()
 			atlas.atlas = load(fallback_path) as Texture2D
 			atlas.region = Rect2(0, 0, 148, 116)

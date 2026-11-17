@@ -55,6 +55,9 @@ func _sync_electricity() -> void:
 	if is_instance_valid(electricity): electricity.sync(grade, clock, reduced_motion, intensity)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if not awakened or minf(size.x, size.y) < 20.0:
 		return
 	var tint: Color = UI.grade(grade)

@@ -240,6 +240,9 @@ func _remake_natural() -> void:
 		_edge([Vector2(8,-78),Vector2(28,-103),Vector2(32,-128)],tint.darkened(.18),8)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if kind != "rune":
 		_ellipse(Vector2(6,5),Vector2(44,16),Color(0,0,0,.08))
 		_ellipse(Vector2(4,3),Vector2(35,12),Color(0,0,0,.2))

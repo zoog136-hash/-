@@ -138,7 +138,7 @@ func present(card: Dictionary, committed_result: Dictionary, settings: Dictionar
 		set_meta("original_card_asset",evidence)
 	else:
 		var path: String = str(record.get("image_path", ""))
-		if not path.is_empty() and ResourceLoader.exists(path):
+		if not path.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(path):
 			texture = load(path) as Texture2D
 	card_label.text = str(record.get("name", "카드"))
 	grade_label.text = str(record.get("grade", ""))
@@ -291,6 +291,9 @@ func _stroke(start: Vector2, end: Vector2, tint: Color, alpha: float, width: flo
 	draw_line(start, end, Color(tint, alpha), width, true)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if board == null:
 		return
 	draw_rect(Rect2(Vector2.ZERO, size), Color("080b12"))

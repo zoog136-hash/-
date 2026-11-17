@@ -3,12 +3,9 @@ extends RefCounted
 # TWILIGHT's own midnight-metal visual language, inspired by the functional
 # hierarchy of Lineage M: compact gold-framed panels, inset item slots and
 # legible parchment copy. No source-game textures are bundled.
-const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
-const ICONS = preload("res://scripts/ui/renewal_icons.gd")
 const MATERIAL = preload("res://scripts/ui/renewal_material_style.gd")
 const NATIVE_TEXT=preload("res://scripts/ui/native_touch_text.gd")
-static var source_icon_cache: Dictionary = {}
-static var recess_style: StyleBoxTexture
+static var recess_style: StyleBoxFlat
 
 const GOLD = Color("dcc391")
 const BRONZE = Color("766452")
@@ -50,7 +47,7 @@ static func chrome_panel(bg: Color = Color("0c0d11"), rim: Color = GOLD, margin:
 	s.shadow_color = Color(0,0,0,.55)
 	return s
 
-static func screen_frame() -> StyleBoxTexture:
+static func screen_frame() -> StyleBoxFlat:
 	return MATERIAL.window_frame()
 
 static func primary_button(button: Button) -> void:
@@ -74,7 +71,7 @@ static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat
 	s.shadow_color = Color(tint,.18)
 	return s
 
-static func slot_recess() -> StyleBoxTexture:
+static func slot_recess() -> StyleBoxFlat:
 	# The grid draws consecutive recesses with this one shared texture before
 	# any item art. No extra per-slot CanvasItem or per-frame allocation.
 	if recess_style == null:
@@ -88,30 +85,17 @@ static func menu_tile(active: bool = false) -> StyleBoxFlat:
 	style.border_width_left = 1 if active else 0
 	style.border_width_right = 1 if active else 0
 	return style
-static func icon(kind: String) -> Texture2D:
-	if kind == "attack":
-		# The old painted icon was removed with the pre-November resources.
-		if not source_icon_cache.has(kind):source_icon_cache[kind]=load("res://assets/ui/attack_sword_painted.png") if ResourceLoader.exists("res://assets/ui/attack_sword_painted.png") else null
-		return source_icon_cache[kind]
-	# Service navigation shares one embossed symbol family. Item/skill art
-	# continues through its existing record-based resolvers below.
-	if ICONS.PATHS.has(str(ICONS.ALIASES.get(kind,kind))): return ICONS.texture(kind)
-	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
-	if files.has(kind):
-		if source_icon_cache.has(kind): return source_icon_cache[kind]
-		var path: String = "res://assets/ui/"+str(files[kind])+".png"
-		if ResourceLoader.exists(path):
-			var source: Texture2D = load(path) as Texture2D
-			if source != null:
-				source_icon_cache[kind] = source
-				return source
-	return ICONS.texture(kind)
+## Service icons: none. The self-drawn symbols and the old assets/ui PNGs were
+## removed (user rule: no self-made images; an unconnected slot stays empty).
+## Original 523 UI add-on icons are bound by the original windows themselves.
+static func icon(_kind: String) -> Texture2D:
+	return null
 static func section(value: String, font_size: int = 16) -> Label:
 	var l := label(value,font_size,GOLD)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
-static func tab_frame(active: bool = false) -> StyleBoxTexture:
+static func tab_frame(active: bool = false) -> StyleBoxFlat:
 	var s := box(Color("342b20") if active else Color("211c17"), Color("b69b6e") if active else Color("514637"), 7)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
@@ -164,8 +148,6 @@ static func make_theme() -> Theme:
 	t.set_color("caret_color","LineEdit",GOLD)
 	t.set_color("selection_color","LineEdit",Color("574222"))
 	var list_panel := MATERIAL.from_flat(box(Color("12100d"),Color("514233"),6),true)
-	# Tall lists need one shallow surface, rather than repeating button seams.
-	list_panel.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
 	t.set_stylebox("panel","ItemList",list_panel)
 	t.set_stylebox("selected","ItemList",slot_frame(GOLD,true))
 	t.set_stylebox("selected_focus","ItemList",slot_frame(GOLD,true))

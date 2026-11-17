@@ -8,7 +8,6 @@ var local_design: Dictionary = {}
 func _init() -> void:
 	local_design = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/local_design_missing12.json"))
 	var document: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/current_official_specs.json"))
-	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/current_official_visuals.json"))
 	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/official_roster.json"))
 	var observed: Array = document.get("records", []).duplicate()
 	observed.append_array(roster.get("references", []))
@@ -30,7 +29,7 @@ func _init() -> void:
 			"duration":spec.get("duration_seconds",spec.get("duration")),"book_cost":null,"book_name":null,
 			"historical_aliases":row.get("historical_aliases",[]),"official":spec.duplicate(true),"historical":row.historical.duplicate(true),
 			"visual_reference_name":row.get("visual_reference_name",""),"visual_matching_basis":row.get("visual_matching_basis",""),
-			"class_observations":row.get("class_observations",[]),"missing_runtime_fields":row.get("missing_runtime_fields",[]),"icon":str(visual.get("icons",{}).get(current_name,"")),"desc":str(spec.get("effect_summary",row.historical.get("effect_summary","")))}
+			"class_observations":row.get("class_observations",[]),"missing_runtime_fields":row.get("missing_runtime_fields",[]),"desc":str(spec.get("effect_summary",row.historical.get("effect_summary","")))}
 		var design: Dictionary = local_design.get("records",{}).get(id,{})
 		if not design.is_empty():
 			record.merge(design.runtime.duplicate(true),true)

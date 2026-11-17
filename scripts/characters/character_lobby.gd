@@ -375,7 +375,7 @@ func _enter() -> void:
 func _enter_main() -> void:
 	# The world loads behind the progress overlay (no title a second time); the
 	# Main scene itself was already loaded by the first loading.
-	var loader: Script = load(LOADING_SCREEN) as Script if ResourceLoader.exists(LOADING_SCREEN) else null
+	var loader: Script = load(LOADING_SCREEN) as Script if preload("res://scripts/resources/retired_assets.gd").usable(LOADING_SCREEN) else null
 	if loader != null and loader.call("open", get_tree(), MAIN, false) != null: return
 	var result: Error = get_tree().change_scene_to_file(MAIN)
 	if result != OK:

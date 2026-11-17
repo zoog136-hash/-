@@ -11,7 +11,7 @@ static func configure(profile: Resource, kind: String, record: Dictionary) -> vo
 	var entry: Dictionary = entries.get(profile.profile_id, {})
 	if entry.is_empty() or str(record.get("name", "")) != str(entry.get("name", "")) or str(record.get("grade", "")) != str(entry.get("grade", "")): return
 	var path: String = str(entry.get("frames_path", ""))
-	if not ResourceLoader.exists(path): return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return
 	# Retain layout, projectile/hit/collision offsets, timing and hit markers.
 	# Baphomet already uses directional8; changing layout would change projectiles.
 	# The generated visual manifest can promote directional4 to authored4.

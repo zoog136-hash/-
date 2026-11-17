@@ -20,7 +20,7 @@ static func configure(document: Dictionary) -> void:
 	bindings = scenes.icons.duplicate(true)
 
 static func open_pack(root: String, expected_sha256: String) -> Dictionary:
-	if not ResourceLoader.exists(PACK_PATH) or not ResourceLoader.exists(PLAYER_PATH):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(PACK_PATH) or not preload("res://scripts/resources/retired_assets.gd").usable(PLAYER_PATH):
 		return {"ok":false,"error":"source_scene_player_not_installed"}
 	var candidate: RefCounted = load(PACK_PATH).new()
 	var result: Dictionary = candidate.open(root, expected_sha256)
@@ -56,7 +56,7 @@ static func attach(view: TextureRect, identity: Dictionary) -> Dictionary:
 	var source: Dictionary = pack.scene(member)
 	if source.is_empty() or spec.get("current523_scene_sha256", "") != source.get("_source_sha256"):
 		return {"ok":false,"error":"source_scene_version_unverified"}
-	if not ResourceLoader.exists(PLAYER_PATH): return {"ok":false,"error":"source_scene_player_not_installed"}
+	if not preload("res://scripts/resources/retired_assets.gd").usable(PLAYER_PATH): return {"ok":false,"error":"source_scene_player_not_installed"}
 	var scene: Node2D = load(PLAYER_PATH).new()
 	var result: Dictionary = scene.configure(pack, member, false)
 	if not result.get("ok", false):

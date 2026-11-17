@@ -58,7 +58,6 @@ func configure(controller: Node) -> void:
 	stack.add_theme_constant_override("separation",12)
 	scroller.add_child(stack)
 	stack.add_child(UI.section("환경 설정",17))
-	stack.add_child(UI.section("스킬 아이콘: Lorc · Delapouite / Game-icons.net (CC BY 3.0)", 10))
 	stack.add_child(UI.section("게임 화면 · 오디오 · 저장",12))
 	var source_pack: Node = (Engine.get_main_loop() as SceneTree).root.get_node_or_null("Source523Pack")
 	if source_pack != null:

@@ -706,7 +706,7 @@ static func _start_registration_reader() -> void:
 	_scope_mutex.unlock()
 	if scope == null or scope.describe_reader != null: return
 	var path: String = "res://scripts/resources/current523_item_data.gd"
-	if not ResourceLoader.exists(path): return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return
 	var reader: Script = load(path) as Script
 	if reader == null: return
 	# This is positive API validation only. No definition, graph or mutable

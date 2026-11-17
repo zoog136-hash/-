@@ -61,7 +61,8 @@ func frames_for_resource(key: String) -> SpriteFrames:
 		return cache[key].frames as SpriteFrames
 	var entry: Dictionary = effects[key]
 	var path := ROOT + str(entry.atlas)
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != str(entry.sha256): return null
+	# Old reviewed atlases under res://assets/ are retired (older installs may still carry them).
+	if preload("res://scripts/resources/retired_assets.gd").retired(path) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != str(entry.sha256): return null
 	var image := Image.new()
 	if image.load_png_from_buffer(FileAccess.get_file_as_bytes(path)) != OK: return null
 	if image.get_width() * image.get_height() > 16777216: return null

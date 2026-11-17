@@ -6,6 +6,9 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	var center := Vector2(size.x*.5,size.y*.60)
 	var radius: float = minf(size.x*.42,size.y*.52)
 	draw_rect(Rect2(Vector2.ZERO,size),Color("0a0d12"))

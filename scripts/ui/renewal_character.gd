@@ -205,7 +205,7 @@ func bind_item_art(hud: Node) -> void:
 		var slot: String=world._equipment_slot_base(record)
 		if not wanted.has(slot) or empty_slot_art.has(slot):continue
 		var source: String=str(record.get("image_path",images.get(str(record.get("name","")),"")))
-		if not source.begins_with("res://assets/") or not ResourceLoader.exists(source):continue
+		if not source.begins_with("res://assets/") or not preload("res://scripts/resources/retired_assets.gd").usable(source):continue
 		var texture: Texture2D=UI.item_icon(record,str(record.get("name","")),images)
 		if texture==null:continue
 		empty_slot_art[slot]=texture

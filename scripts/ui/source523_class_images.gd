@@ -23,7 +23,7 @@ static func resolve(context: Dictionary, role: String = "MainHUDPortraitID") -> 
 	var gender_id: Variant = context.get("gender_id")
 	if not class_id is int or class_id <= 0: return _missing(context,role,"source_native_class_identity_required")
 	if not gender_id is int or gender_id <= 0: return _missing(context,role,"source_explicit_gender_required")
-	if not ResourceLoader.exists(DEFINITIONS_PATH): return _missing(context,role,"source_class_definition_reader_not_installed")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(DEFINITIONS_PATH): return _missing(context,role,"source_class_definition_reader_not_installed")
 	var api: Script = load(DEFINITIONS_PATH) as Script
 	if api == null: return _missing(context,role,"source_class_definition_reader_not_installed")
 	var methods: Dictionary = {}

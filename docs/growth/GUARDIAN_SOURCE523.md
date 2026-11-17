@@ -75,7 +75,7 @@ python3 tools/build_guardian_source523.py --source-dir /workspace/guardian-sourc
 
 후속 특수 탭 첫 실행은 검증 stage에 동적으로 읽는 스킬 SVG가 빠져 리소스 오류가 있었다. 기존 Git125개 SVG의 실제 바이트를 검증 stage에 복사하고 SHA 영수증을 보존했다. 최종 화면33항목은 리소스/스크립트 오류 없이 통과했다. 화면의 폭과 탭 선택 표시도 직접 확인했다.
 
-화면: [특수 탭](guardian-followup-evidence/guardian-special-ready.png), [공용 대기시간](guardian-followup-evidence/guardian-special-shared-cooldown.png), [퀵슬롯 시전](guardian-followup-evidence/guardian-quickslot-cast.png), [초기화 확인](guardian-followup-evidence/guardian-reset-confirmation.png), [초기화 결과](guardian-followup-evidence/guardian-reset-result.png), [854×480](guardian-followup-evidence/guardian-special-854x480.png).
+화면: 특수 탭 _(스크린샷 삭제됨)_, 공용 대기시간 _(스크린샷 삭제됨)_, 퀵슬롯 시전 _(스크린샷 삭제됨)_, 초기화 확인 _(스크린샷 삭제됨)_, 초기화 결과 _(스크린샷 삭제됨)_, 854×480 _(스크린샷 삭제됨)_.
 
 ## 원본 광원·기존 다이아 소비 후속
 
@@ -87,7 +87,7 @@ python3 tools/build_guardian_source523.py --source-dir /workspace/guardian-sourc
 
 후속 최종 검증은 [원본 광원/다이아 manifest](guardian-media-evidence/manifest.json)에 보존한다. 기존 원본 ZIP·원본 DAT·로컬 subset의3입력 경로에서 각각91개 설치/픽셀 검증, 전투/경제60, 기존 거래39, 기존 재화 드랍, 실제 Main 저장32와 추가 게이트2개, 원본 설치/실제 강화/바닥 습득/일반 다이아 초기화/재접속 UI29가 통과했다. 원본 설치 전후 게임 세이브 SHA가 동일함도 확인했다. 723시트/41,442프레임SHA 통과. 파일 선택 fixture의 첫 실패와 수정 후 성공을 구분해 보존하며, 원본 광원 실기동 캡처는 공개하지 않고 해시/로컬 경로만 기록한다.
 
-[일반 다이아 초기화 확인](guardian-media-evidence/guardian-earned-diamonds-reset-confirm.png), [초기화 결과](guardian-media-evidence/guardian-earned-diamonds-reset-result.png).
+일반 다이아 초기화 확인 _(스크린샷 삭제됨)_, 초기화 결과 _(스크린샷 삭제됨)_.
 
 
 ## 자체 표현 마무리

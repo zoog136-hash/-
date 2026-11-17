@@ -13,7 +13,8 @@ var selected: bool = false
 var source_missing: bool=false
 ## Off for a current 523 item: its floor beam is the original drop effect
 ## sprite (current523_ground_drop_effect.gd) or nothing, never this drawing.
-var procedural_beam: bool = true
+## Always off: self-drawn beams/shapes are not shown (user rule 2026-11-17).
+var procedural_beam: bool = false
 var clock: float = 0.0
 var redraw_time: float = 0.0
 var source_icon: Sprite2D
@@ -74,8 +75,6 @@ func _draw() -> void:
 		var pulse: float = 0.8 + 0.2 * sin(clock * 3.0)
 		for radius: int in range(32, 5, -4):
 			draw_circle(Vector2.ZERO, radius, Color(color, 0.030 * pulse))
-	if selected:
-		draw_arc(Vector2.ZERO, 27, 0, TAU, 48, Color("ffe6a1"), 2.5, true)
 	draw_set_transform(Vector2.ZERO)
 	if rank >= 2 and procedural_beam:
 		var height: float = 104.0 + float(rank) * 13.0
@@ -104,30 +103,4 @@ func _draw() -> void:
 		pass
 	elif texture != null:
 		draw_texture_rect(texture, Rect2(-16, -28, 32, 32), false)
-	elif slot == "scroll":
-		# A folded parchment with a colored seal; beam still follows item grade.
-		draw_colored_polygon(PackedVector2Array([Vector2(-13,-27),Vector2(11,-27),Vector2(14,-4),Vector2(-13,-4)]),Color("e3cca0"))
-		draw_rect(Rect2(-10,-24,17,3),Color("897156"))
-		draw_line(Vector2(-9,-18),Vector2(9,-18),Color("968466"),1.5,true)
-		draw_line(Vector2(-9,-13),Vector2(5,-13),Color("968466"),1.5,true)
-		draw_circle(Vector2(5,-6),5,Color(color))
-		draw_circle(Vector2(5,-6),2,Color("fff5d7"))
-	elif slot == "material":
-		# Raw ore/wood/fabric icon rather than the potion bottle fallback.
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(-14,-4),Vector2(-12,-18),Vector2(0,-29),
-			Vector2(12,-19),Vector2(15,-5),Vector2(2,1)
-		]),Color("8ba4a7"))
-		draw_colored_polygon(PackedVector2Array([
-			Vector2(-12,-18),Vector2(0,-29),Vector2(0,-10),Vector2(-14,-4)
-		]),Color("d2deda"))
-		draw_line(Vector2(0,-28),Vector2(0,-10),Color("344e58"),1.5,true)
-	elif slot == "consumable":
-		draw_rect(Rect2(-7, -21, 14, 20), Color("bb334e"))
-		draw_rect(Rect2(-4, -26, 8, 6), Color("d2bd91"))
-	elif slot in ["weapon", "mainhand"]:
-		draw_line(Vector2(-11, 2), Vector2(10, -27), Color("d8e4eb"), 5, true)
-		draw_line(Vector2(-12, -8), Vector2(2, 2), Color("c9a35f"), 4, true)
-	else:
-		draw_colored_polygon(PackedVector2Array([Vector2(0,-26), Vector2(13,-16), Vector2(10,-2), Vector2(0,4), Vector2(-10,-2), Vector2(-13,-16)]), Color("abb8c9"))
-		draw_arc(Vector2(0,-10), 10, 0, TAU, 6, color, 2, true)
+	# No self-drawn substitute shapes: without an original picture the spot stays empty.

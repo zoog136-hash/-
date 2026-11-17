@@ -33,7 +33,7 @@ static func card_tab(button: Button) -> void:
 # Surfaces for the inspected Korean LineageM guide screens. These are original
 # controls/materials, not extracted game textures or purported original colors.
 # https://lineagem.plaync.com/guidebook/view?title=메뉴%20및%20UI%20소개
-static func inset(margin: int = 8) -> StyleBoxTexture:
+static func inset(margin: int = 8) -> StyleBoxFlat:
 	return UI.MATERIAL.from_flat(UI.box(Color("101c28"),Color("354454"),margin),true)
 
 static func action(button: Button) -> void:

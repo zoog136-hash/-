@@ -8,7 +8,7 @@ const PMA_CACHE=preload("res://scripts/ui/original_ui/source_asset_pma_cache.gd"
 static var _pma_cache=PMA_CACHE.new()
 
 static func resolve(reference: Dictionary) -> Dictionary:
-	if not ResourceLoader.exists(OWNER_API):return {"ok":false,"error":"source_image_owner_api_unavailable"}
+	if not preload("res://scripts/resources/retired_assets.gd").usable(OWNER_API):return {"ok":false,"error":"source_image_owner_api_unavailable"}
 	var api: Script=load(OWNER_API)
 	if api==null:return {"ok":false,"error":"source_image_owner_api_unavailable"}
 	var result: Dictionary=api.resolve(reference.duplicate(true))

@@ -288,7 +288,7 @@ static func declared_exclusion(table: String, row: Dictionary, scope: String = "
 	# PR269 owns the original declarations. Its optional SPI never substitutes
 	# local names, ID lists or heuristics when that owner module is unavailable.
 	var path: String = "res://scripts/quests/source_dummy523.gd"
-	if not ResourceLoader.exists(path): return {}
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return {}
 	var owner: Resource = load(path)
 	if owner == null or not owner.has_method("evidence"): return {}
 	var evidence: Variant = owner.call("evidence",table,row.duplicate(true),scope)

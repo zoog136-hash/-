@@ -15,7 +15,7 @@ static func native(record: Dictionary) -> bool:
 static func detail(record: Dictionary, acquired: bool, detail_view: bool = true) -> Dictionary:
 	if not native(record):
 		return {"status":"legacy", "texture":null}
-	if not ResourceLoader.exists(SOURCE_API):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(SOURCE_API):
 		return {"status":"runtime_missing", "texture":null}
 	var api: Script = load(SOURCE_API)
 	if api == null: return {"status":"runtime_missing", "texture":null}

@@ -43,7 +43,7 @@ static func texture(original: Texture2D) -> Texture2D:
 	if _sha(pixels) != str(entry.get("source_rgba_sha256","")): return original
 	var path: String = str(entry.path)
 	if FileAccess.file_exists(path) and FileAccess.get_sha256(path) != str(entry.get("sha256","")): return original
-	if not ResourceLoader.exists(path): return original
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return original
 	var cleaned: Texture2D = load(path) as Texture2D
 	if cleaned == null or cleaned.get_size() != original.get_size(): return original
 	_cache[key] = cleaned

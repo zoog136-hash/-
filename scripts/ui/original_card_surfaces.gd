@@ -49,7 +49,7 @@ static func resolve(role: String, record: Dictionary={}) -> Dictionary:
 	if role not in Roles:return _missing(role,"source_card_surface_role_unsupported")
 	var grade_id: int=0
 	if role=="grade_frame":
-		if record.get("source")!="lineagem_patch523" or not ResourceLoader.exists(SOURCE_API):return _missing(role,"source_card_surface_original_card_identity_required")
+		if record.get("source")!="lineagem_patch523" or not preload("res://scripts/resources/retired_assets.gd").usable(SOURCE_API):return _missing(role,"source_card_surface_original_card_identity_required")
 		var api: Script=load(SOURCE_API)
 		var canonical: Dictionary=api.canonical(record) if api!=null else {}
 		if canonical.is_empty() or canonical.get("sourceId")!=record.get("sourceId"):return _missing(role,"source_card_surface_current_card_definition_required")

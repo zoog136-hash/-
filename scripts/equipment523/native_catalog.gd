@@ -29,7 +29,7 @@ static func resolve(pack: Dictionary, record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item") != true or not record.get("source_m_native_item") is bool: return {}
 	var id: int = whole(record.get("source_item_class_id"))
 	if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(id).is_empty():return {}
-	if id <= 0 or C.item(pack,id).is_empty() or not ResourceLoader.exists(OWNER_PATH): return {}
+	if id <= 0 or C.item(pack,id).is_empty() or not preload("res://scripts/resources/retired_assets.gd").usable(OWNER_PATH): return {}
 	var owner: Variant = load(OWNER_PATH)
 	if owner == null: return {}
 	for method: String in ["pack_identity","item_definition","expected_variant","equipment"]:

@@ -42,14 +42,14 @@ func _item(record: Dictionary, images: Dictionary) -> Dictionary:
 		var description: Dictionary = resolver.describe(record, name_value, images)
 		var resolved_texture: Texture2D = resolver.texture(record, name_value, images)
 		result["icon"] = _texture_info(resolved_texture)
-		result.icon["path"] = description.path if not str(description.path).is_empty() else "res://scripts/ui/item_fallback_art.gd"
+		result.icon["path"] = description.path if not str(description.path).is_empty() else ""
 		result.icon["selection"] = description.route
 		result.icon["rgba_sha256"] = _pixel_digest(resolved_texture)
 		result["resolver_description"] = description
 		var ground_description: Dictionary = resolver.describe(record, name_value, images, true)
 		var ground_texture: Texture2D = resolver.texture(record, name_value, images, true)
 		result["ground_icon"] = _texture_info(ground_texture)
-		result.ground_icon["path"] = ground_description.path if not str(ground_description.path).is_empty() else "res://scripts/ui/item_fallback_art.gd"
+		result.ground_icon["path"] = ground_description.path if not str(ground_description.path).is_empty() else ""
 		result.ground_icon["rgba_sha256"] = _pixel_digest(ground_texture)
 		result["ground_resolver_description"] = ground_description
 		result["manifest_binding"] = VISUALS.item_binding(record, name_value)

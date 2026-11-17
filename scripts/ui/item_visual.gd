@@ -2,13 +2,10 @@ extends Node
 ## Reusable presentation attached once to an existing TextureRect. Texture pixels
 ## alone receive the shader; slot chrome, badges, labels and input stay untouched.
 const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
-const FOREGROUND = preload("res://scripts/ui/item_icon_foreground.gd")
 const SCHEDULER = preload("res://scripts/ui/item_visual_scheduler.gd")
-const SHADER = preload("res://scripts/ui/item_rarity.gdshader")
 const SOURCE523 = preload("res://scripts/ui/source523_image_assets.gd")
 const GRADES: Array[String] = ["일반","고급","희귀","영웅","전설","신화","유일"]
 const COLORS: Array[Color] = [Color("ddd6c5"),Color("79bf83"),Color("73b4ee"),Color("e97772"),Color("bc89e3"),Color("e5be60"),Color("66dfc2")]
-static var materials: Dictionary = {}
 static var scheduler_ref: WeakRef
 static var reduced_motion: bool = false
 ## Original animated (CSB) icon scenes that could not be attached, by reason:
@@ -86,17 +83,6 @@ static func _detach_source_scene(view: TextureRect, immediate: bool = true) -> v
 		view.remove_meta("item_visual")
 		SOURCE523.bind_metadata(view,{})
 
-static func shared_material(grade_rank: int, group: int) -> ShaderMaterial:
-	var key: String = "%d:%d" % [grade_rank,group]
-	if materials.has(key): return materials[key]
-	var result := ShaderMaterial.new()
-	result.shader = SHADER
-	result.set_shader_parameter("rank",float(grade_rank))
-	result.set_shader_parameter("phase",float(group)*0.67)
-	result.set_shader_parameter("accent",COLORS[grade_rank])
-	materials[key] = result
-	return result
-
 func configure(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary, usage: String, original_ui_bindings: Dictionary = {}) -> void:
 	_configure_presentation(view,record,item_name,images,usage,original_ui_bindings,RESOLVER.describe(record,item_name,images,usage == "ground"))
 
@@ -135,15 +121,6 @@ func _configure_presentation(view: TextureRect, record: Dictionary, item_name: S
 	phase_group = 0 if reference_presentation else posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
 	foreground_ready = true
-	# Only turning surfaces need a cutout. Static list/quickslot/drag/ground
-	# art and every hero/legend source image remain exactly as they were.
-	if not source_presentation and rank >= 5 and context not in ["quickslot","list","drag","ground"]:
-		var foreground: Dictionary = FOREGROUND.prepare(target.texture)
-		target.texture = foreground.texture
-		foreground_ready = bool(foreground.ready)
-		info["foreground_ready"] = foreground_ready
-		info["foreground_reason"] = foreground.reason
-		info["foreground_removed_pixels"] = foreground.removed_pixels
 	target.set_meta("item_visual",info)
 	SOURCE523.bind_metadata(target,info)
 	if substitute_mark == null:
@@ -206,12 +183,10 @@ func refresh_visibility() -> bool:
 	if source_presentation:
 		target.material = null
 		return false
-	var animate: bool = not reduced_motion and rank >= 3 and context not in ["quickslot","list","drag","ground"] and target.is_inside_tree() and SCHEDULER.visible_area(target)
-	# An unsupported opaque frame may retain a non-rotating sheen, but must
-	# never be fed to rank 5/6's UV turn. Shared material count remains <= 32.
-	var shader_rank: int = 4 if rank >= 5 and not foreground_ready else rank
-	target.material = shared_material(shader_rank,phase_group) if animate else null
-	return animate
+	# The self-made grade sheen/turn shader and the matte cutout were removed
+	# (user rule 2026-11-17): original pixels are shown unchanged.
+	target.material = null
+	return false
 
 func deactivate() -> void:
 	if is_instance_valid(target): _detach_source_scene(target)

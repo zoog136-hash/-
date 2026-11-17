@@ -44,7 +44,7 @@ static func resolve_definition(npc_id: int) -> Dictionary:
 	if npc_id <= 0: return _missing(npc_id,"source_npc_identity_required")
 	# Reuse Data271's exact original-archive reader for town NPCs as well.
 	# It is an integration dependency, not another table importer or pack.
-	if not ResourceLoader.exists(DEFINITIONS_PATH): return _missing(npc_id,"source_npc_definition_reader_not_installed")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(DEFINITIONS_PATH): return _missing(npc_id,"source_npc_definition_reader_not_installed")
 	var api: Script = load(DEFINITIONS_PATH) as Script
 	if api == null: return _missing(npc_id,"source_npc_definition_reader_not_installed")
 	var methods: Dictionary = {}

@@ -45,10 +45,10 @@ signal bleed_tick(damage: int)
 @onready var camera: Camera2D = $Camera2D
 
 const CLASS_SHEETS: Array[String] = [
-	"res://assets/sprites/classes/warrior.png",
-	"res://assets/sprites/classes/mage.png",
-	"res://assets/sprites/classes/archer.png",
-	"res://assets/sprites/classes/assassin.png"
+	"",
+	"",
+	"",
+	""
 ]
 const CELL_SIZE: Vector2 = Vector2(148, 116)
 # Visual-only width correction for transformed player sprites; no physics or base class changes.

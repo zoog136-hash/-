@@ -1063,18 +1063,6 @@ func _load_data() -> void:
 	var directional_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIRECTIONAL_PATH))
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
-	# Use owned Twilight art as fallbacks instead of blank inventory icons.
-	var image_records: Dictionary = catalog_image_index.get("아이템", {}) as Dictionary
-	for name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
-		if name == "드래곤의 루비":
-			# Previous placeholder made a ruby look like the local red HP potion.
-			# Let the identity-aware resolver choose reviewed art or its gem symbol.
-			if str(image_records.get(name, "")) == "res://assets/ui/potionRed.png":
-				image_records.erase(name)
-			continue
-		if not image_records.has(name):
-			image_records[name] = "res://assets/ui/rune.png"
-	catalog_image_index["아이템"] = image_records
 	# Source card UI assets are separate from legacy artwork, including equal names.
 	for source_category: String in ["변신", "마법인형", "성물"]:
 		catalog_image_index[source_category] = {}
@@ -2398,10 +2386,8 @@ func _saved_visual_mode() -> String:
 func _apply_map_background() -> void:
 	var path: String = str(active_map.get("image_path", ""))
 	var texture: Texture2D = null
-	if path != "" and ResourceLoader.exists(path):
+	if path != "" and preload("res://scripts/resources/retired_assets.gd").usable(path):
 		texture = load(path) as Texture2D
-	elif ResourceLoader.exists("res://assets/world.png"):
-		texture = load("res://assets/world.png") as Texture2D
 	else:
 		texture = null
 	map_background.texture = texture
@@ -2682,23 +2668,7 @@ func _spawn_monsters(count: int) -> void:
 func _monster_texture(record: Dictionary) -> Texture2D:
 	var original_art: Texture2D = MONSTER_ART.texture_for(record)
 	if original_art != null: return original_art
-	var monster_name: String = str(record.get("name", ""))
-	var visual_index: int = 5
-	if monster_name.contains("뱀") or monster_name.contains("드레이크") or monster_name.contains("용") or monster_name.contains("리자드"):
-		visual_index = 0
-	elif monster_name.contains("골렘") or monster_name.contains("오우거") or monster_name.contains("버그베어"):
-		visual_index = 1
-	elif monster_name.contains("거미") or monster_name.contains("스콜피온") or monster_name.contains("개미"):
-		visual_index = 2
-	elif monster_name.contains("악마") or monster_name.contains("서큐") or monster_name.contains("고스트") or monster_name.contains("데몬"):
-		visual_index = 3
-	elif monster_name.contains("늑대") or monster_name.contains("라이칸") or monster_name.contains("멧돼지"):
-		visual_index = 4
-	var path: String = "res://assets/sprites/monsters/monster_%d.png" % visual_index
-	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	if ResourceLoader.exists("res://assets/ghost.png"):
-		return load("res://assets/ghost.png") as Texture2D
+	# The old TWILIGHT monster sheets were removed: no substitute picture.
 	return null
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
@@ -5728,7 +5698,7 @@ func open_patch523_protection_owner() -> void:
 	var binding: Dictionary=preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	if not binding.get("ok",false):hud.show_message(str(binding.get("error","가호 제작 소유자 확인 필요")));return
 	var path: String="res://scripts/protection/protection523_panel.gd"
-	if not ResourceLoader.exists(path):hud.show_message("가호 전용 화면이 설치되지 않았습니다");return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):hud.show_message("가호 전용 화면이 설치되지 않았습니다");return
 	hud.call("_open_window","protection523","불멸·파멸의 가호","보유 · 원본 재료 제작 · 영구 호칭")
 	var scroll:=ScrollContainer.new()
 	scroll.name="ProtectionFullScroll"
@@ -9294,19 +9264,19 @@ func _directional_image_path(kind: String, record: Dictionary) -> String:
 			var donor_id: String = str(visual_donors[source_id])
 			var donor_metadata: Dictionary = directional_art.get("transform:" + donor_id, {})
 			var donor_directional: String = str(donor_metadata.get("path", ""))
-			if not donor_directional.is_empty() and ResourceLoader.exists(donor_directional):
+			if not donor_directional.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(donor_directional):
 				return donor_directional
 			for donor_record: Dictionary in catalog_db.get("변신", []):
 				if str(donor_record.get("sourceId", "")) == donor_id:
 					var donor_path: String = str(donor_record.get("image_path", ""))
-					if ResourceLoader.exists(donor_path): return donor_path
+					if preload("res://scripts/resources/retired_assets.gd").usable(donor_path): return donor_path
 					break
 	var key: String = "%s:%s" % [kind, source_id]
 	var value: Variant = directional_art.get(key, {})
 	if value is Dictionary:
 		var meta: Dictionary = value as Dictionary
 		var directional_path: String = str(meta.get("path", ""))
-		if directional_path != "" and ResourceLoader.exists(directional_path):
+		if directional_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(directional_path):
 			return directional_path
 	var fallback: String = str(record.get("image_path", ""))
 	return fallback

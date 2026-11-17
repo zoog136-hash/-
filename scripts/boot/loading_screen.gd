@@ -67,14 +67,14 @@ static func open(tree: SceneTree, target: String = MAIN, show_title: bool = true
 ## debug gates remain authoritative; no save namespace is selected here.
 static func initial_destination() -> String:
 	var headless: bool = DisplayServer.get_name() == "headless"
-	var available: bool = ResourceLoader.exists(CHARACTERS)
+	var available: bool = preload("res://scripts/resources/retired_assets.gd").usable(CHARACTERS)
 	return destination_for(headless, available, not headless and available and _roster_allowed())
 
 static func destination_for(headless: bool, roster_available: bool, roster_allowed: bool) -> String:
 	return CHARACTERS if not headless and roster_available and roster_allowed else MAIN
 
 static func _roster_allowed() -> bool:
-	if not ResourceLoader.exists(CHARACTER_PROFILE_PATH): return true
+	if not preload("res://scripts/resources/retired_assets.gd").usable(CHARACTER_PROFILE_PATH): return true
 	return _profile_allows(load(CHARACTER_PROFILE_PATH) as Script)
 
 static func _profile_allows(profile: Script) -> bool:
@@ -95,7 +95,7 @@ static func plan_steps(steps: Array[Dictionary], _target: String) -> Array[Dicti
 	return steps.duplicate()
 
 func _prepares_main() -> bool:
-	return destination == CHARACTERS and _prepared_main == null and ResourceLoader.exists(MAIN)
+	return destination == CHARACTERS and _prepared_main == null and preload("res://scripts/resources/retired_assets.gd").usable(MAIN)
 
 ## The Main scene prepared by the first loading, if any.
 static func prepared_main() -> PackedScene:
@@ -276,7 +276,7 @@ func _boot() -> void:
 	# Main stays on the main thread: Android GL shader preloads failed with
 	# worker-thread ResourceLoader in the prior implementation.
 	var started: int = BOOT_LOG.begin("main_scene_load", {"scene": destination})
-	var scene: PackedScene = _prepared_main if destination == MAIN and _prepared_main != null else (load(destination) as PackedScene if ResourceLoader.exists(destination) else null)
+	var scene: PackedScene = _prepared_main if destination == MAIN and _prepared_main != null else (load(destination) as PackedScene if preload("res://scripts/resources/retired_assets.gd").usable(destination) else null)
 	if destination == MAIN: _prepared_main = null
 	BOOT_LOG.end("main_scene_load", started, {"ok": scene != null})
 	if scene == null:

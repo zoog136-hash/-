@@ -48,7 +48,9 @@ func configure(owner: Node) -> void:
 		for key: String in balances.get(id, {}):
 			record[key] = balances[id][key].get("value")
 		record["effect"] = effect_for(record)
-		record["icon"] = preferred_icon_path(record)
+		# Skill pictures come only from the original 523 pack (Source523 skill
+		# images). Old icon files are never read; an unconnected slot stays empty.
+		record.erase("icon")
 		record["trigger"] = record.get("trigger", "always")
 		records.append(record)
 		by_id[id] = record
@@ -98,21 +100,6 @@ func configure(owner: Node) -> void:
 		by_name[str(record.name)] = str(record.id)
 	seed_starters()
 
-
-## Only ID-exact, locally installed private skill icons override generated art.
-static func preferred_icon_path(record: Dictionary) -> String:
-	var fallback: String = str(record.get("icon", ""))
-	var skill_id: String = str(record.get("id", ""))
-	if not skill_id.begins_with("lm_") or skill_id.length() != 19:
-		return fallback
-	for glyph: String in skill_id.substr(3):
-		if not "0123456789abcdef".contains(glyph):
-			return fallback
-	var private_path: String = "res://assets/skills/private_icons/" + skill_id + ".png"
-	if ResourceLoader.exists(private_path):
-		return private_path
-	var styled_path: String = "res://assets/skills/styled_icons/" + skill_id + ".svg"
-	return styled_path if ResourceLoader.exists(styled_path) else fallback
 
 static func read_json(filename: String) -> Dictionary:
 	var result: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROOT_PATH + filename))

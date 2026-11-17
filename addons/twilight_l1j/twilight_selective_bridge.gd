@@ -42,7 +42,7 @@ func _record(candidate_id: String) -> Dictionary:
 func _safe_texture(path: String) -> Texture2D:
     if not path.begins_with("res://assets/l1j/"):
         return null
-    if not ResourceLoader.exists(path):
+    if not preload("res://scripts/resources/retired_assets.gd").usable(path):
         return null
     return load(path) as Texture2D
 
@@ -73,20 +73,10 @@ func _safe_sprite_id(sprite_id: String) -> bool:
                 return false
     return true
 
-func sprite_frames(sprite_id: String, source: String = "spx") -> SpriteFrames:
-    if not is_feature_enabled("sprite_frames") or not _safe_sprite_id(sprite_id):
-        return null
-    var path: String = ""
-    match source:
-        "spx":
-            path = "res://assets/l1j/candidates/spx_converted/%s/SpriteFrames.tres" % sprite_id
-        "spr":
-            path = "res://assets/l1j/spr/%s/SpriteFrames.tres" % sprite_id
-        _:
-            return null
-    if not ResourceLoader.exists(path):
-        return null
-    return load(path) as SpriteFrames
+func sprite_frames(_sprite_id: String, _source: String = "spx") -> SpriteFrames:
+    # Old L1J sprite frames under res://assets/ are retired (pre-523 pack);
+    # an older install may still carry them, so they are never read.
+    return null
 
 func map_attribute(map_id: int, source: String = "a3") -> Texture2D:
     if not is_feature_enabled("map_attributes") or map_id < 0 or map_id > 99999:
@@ -99,7 +89,7 @@ func map_attribute(map_id: int, source: String = "a3") -> Texture2D:
             path = "res://data/l1j/candidates/jp_maps/attributes/%d.png" % map_id
         _:
             return null
-    if not ResourceLoader.exists(path):
+    if not preload("res://scripts/resources/retired_assets.gd").usable(path):
         return null
     return load(path) as Texture2D
 

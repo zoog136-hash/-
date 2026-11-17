@@ -8,6 +8,9 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if size.x<24 or size.y<24:return
 	# The same fixed title plate spans every connected screen. No animated
 	# decoration or secondary viewport is needed for the chrome.

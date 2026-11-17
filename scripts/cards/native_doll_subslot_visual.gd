@@ -27,7 +27,7 @@ func clear() -> void:
 func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	if record.is_empty() or int(world.hp)<=0:clear();return
 	var path: String="res://scripts/animation/original_source_preview.gd"
-	if not ResourceLoader.exists(path):status="source_engine_unavailable";hide();return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):status="source_engine_unavailable";hide();return
 	if not is_instance_valid(actor):actor=load(path).new();add_child(actor)
 	var source_key: String=("relic:" if category=="성물" else "doll:")+str(record.get("sourceId",""))
 	var source_only: bool=actor.current523_source_required(source_key)
@@ -75,7 +75,7 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 
 func sync_existing_source_aura(world: Node,record: Dictionary,manifest: String) -> void:
 	var path: String="res://scripts/animation/source_awakening_aura.gd"
-	if not ResourceLoader.exists(path):return
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):return
 	var awake: bool=world.option_awakening.source_relic_subslot_visual_awakened(record) if category=="성물" else world.option_awakening.source_subslot_visual_awakened(record)
 	var key: String=binding+":"+str(awake)+":"+str(hash(world.presentation_settings))
 	if key!=_requested_aura_signature:

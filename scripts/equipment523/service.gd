@@ -77,7 +77,7 @@ func _quest_consumer(world: Node) -> Variant:
 	# feature never supplies its own quest ledger or treats a receipt as use.
 	var owner: Variant = _host_property(world,"quest_service")
 	if owner == null or not owner.has_method("validate_saved_state") or not owner.has_method("import_state"): return null
-	if not ResourceLoader.exists(QUEST_CONSUMPTION_PATH): return null
+	if not preload("res://scripts/resources/retired_assets.gd").usable(QUEST_CONSUMPTION_PATH): return null
 	var consumer: Variant = load(QUEST_CONSUMPTION_PATH)
 	if consumer == null: return null
 	for method: String in ["available","stage","current","matches_payload"]:

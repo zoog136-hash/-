@@ -168,7 +168,7 @@ static var _icons: Dictionary = {}
 static func icon(record: Dictionary) -> Texture2D:
 	if not native(record):
 		var legacy: String = str(record.get("image_path", ""))
-		return load(legacy) as Texture2D if not legacy.is_empty() and ResourceLoader.exists(legacy) else null
+		return load(legacy) as Texture2D if not legacy.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(legacy) else null
 	if record.get("source_snapshot", "") == "patch523": return null
 	var asset: Variant = record.get("source_ui_assets", {}).get("DisplayBaseAssetID")
 	if not asset is Dictionary: return null

@@ -32,13 +32,13 @@ static func host_property(host:Node,name:String)->Variant:
 	return null
 
 static func provider()->Variant:
-	return load(DROP_SCRIPT) if ResourceLoader.exists(DROP_SCRIPT) else null
+	return load(DROP_SCRIPT) if preload("res://scripts/resources/retired_assets.gd").usable(DROP_SCRIPT) else null
 
 static func consumer()->Variant:
-	return load(USE_SCRIPT) if ResourceLoader.exists(USE_SCRIPT) else null
+	return load(USE_SCRIPT) if preload("res://scripts/resources/retired_assets.gd").usable(USE_SCRIPT) else null
 
 static func supplier()->Variant:
-	return load(SUPPLIER_SCRIPT) if ResourceLoader.exists(SUPPLIER_SCRIPT) else null
+	return load(SUPPLIER_SCRIPT) if preload("res://scripts/resources/retired_assets.gd").usable(SUPPLIER_SCRIPT) else null
 
 static func exposes(service:Variant,method:String)->bool:
 	if service==null:return false
@@ -68,7 +68,7 @@ static func open_issued_owner_ui(world:Node,key:String,item_name:String)->Dictio
 		var opened:Variant=world.call("patch523_open_expedition_enhancement",item_name)
 		if opened is Dictionary and opened.get("handled",false):return opened
 		return {"handled":true,"ok":false,"committed":false,"error":"원본 강화 소유자의 선택 결과를 확인하세요 · 자동 재시도 안함"}
-	if not world.has_method("_patch523_craft_context") or not world.has_method("_patch523_craft_requested") or not world.has_method("_patch523_craft_item_index") or not ResourceLoader.exists(MATERIAL_SCRIPT):return {"handled":false}
+	if not world.has_method("_patch523_craft_context") or not world.has_method("_patch523_craft_requested") or not world.has_method("_patch523_craft_item_index") or not preload("res://scripts/resources/retired_assets.gd").usable(MATERIAL_SCRIPT):return {"handled":false}
 	var owner:Variant=host_property(world,"expedition_local")
 	var book:Variant=host_property(world,"patch523_equipment")
 	var helper:Script=load(MATERIAL_SCRIPT)

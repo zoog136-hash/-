@@ -23,7 +23,7 @@ func frame(group_id:String,record_key:String,index:int)->Dictionary:
  if selected.is_empty() or index<0 or index>=int(selected.get("frames",selected.get("count",0))):return {}
  if selected.get("storage","")=="reviewed_atlas":
   var path:String="res://assets/external_spx/similar_skills/"+str(selected.atlas)
-  if FileAccess.get_sha256(path)!=str(selected.sha256):return {}
+  if preload("res://scripts/resources/retired_assets.gd").retired(path) or FileAccess.get_sha256(path)!=str(selected.sha256):return {}
   var atlas:=Image.new()
   if atlas.load_png_from_buffer(FileAccess.get_file_as_bytes(path))!=OK:return {}
   var width:int=int(selected.width);var height:int=int(selected.height);var columns:int=int(selected.columns)

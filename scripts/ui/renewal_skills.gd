@@ -39,7 +39,6 @@ var touch_active: bool = false
 # Grayscale variants are created once per source texture while this view lives.
 # Do not re-read/decompress icons during the cooldown polling loop.
 var unlearned_icons: Dictionary = {}
-var decoded_skill_icons: Dictionary = {}
 var class_only: bool = false
 var scope_buttons: Array[Button] = []
 var guardian_scope_button: Button
@@ -302,23 +301,11 @@ func refresh() -> void:
 		select(chosen)
 		cards.get_v_scroll_bar().set_deferred("value",scroll_position)
 
-func _icon_for_skill(record: Dictionary, learned: bool) -> Texture2D:
+func _icon_for_skill(record: Dictionary, _learned: bool) -> Texture2D:
+	# Only the original 523 skill picture is shown. Old icon files (game-icons
+	# SVGs, assets/ui PNGs) are never read: an unconnected slot stays empty.
 	var original: Dictionary = Source523Images.describe_skill(record)
-	if original.handled: return original.get("texture") as Texture2D
-	var path: String = str(record.get("icon",""))
-	if not learned and not path.is_empty() and unlearned_icons.has(path):
-		return unlearned_icons[path] as Texture2D
-	var source: Texture2D
-	if path.get_extension()=="svg" and FileAccess.file_exists(path) and not FileAccess.file_exists(path+".import"):
-		# Decode the unchanged committed SVG in runtime-only consumers where
-		# editor import metadata is absent; never synthesize replacement art.
-		if not decoded_skill_icons.has(path):
-			var image:=Image.new()
-			if image.load_svg_from_string(FileAccess.get_file_as_string(path))==OK:decoded_skill_icons[path]=ImageTexture.create_from_image(image)
-			else:push_error("Committed skill SVG cannot be decoded: "+path)
-		source=decoded_skill_icons.get(path)
-	else:source=load(path) as Texture2D if not path.is_empty() else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
-	return source if learned else _unlearned_icon(source)
+	return original.get("texture") as Texture2D if original.handled else null
 
 func _unlearned_icon(source: Texture2D) -> Texture2D:
 	if source == null: return null

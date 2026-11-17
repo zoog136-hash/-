@@ -58,7 +58,7 @@ static func _texture(path: String) -> Texture2D:
 		_texture_order.erase(path)
 		_texture_order.append(path)
 		return _textures[path] as Texture2D
-	if not ResourceLoader.exists(path):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):
 		_missing[path] = "missing texture"
 		return null
 	var result: Texture2D = load(path) as Texture2D

@@ -40,7 +40,7 @@ func _ready() -> void:
 	theme = UI.make_theme()
 	z_index = 150
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	var frame: StyleBoxTexture=UI.screen_frame()
+	var frame: StyleBoxFlat=UI.screen_frame()
 	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
 	add_theme_stylebox_override("panel",frame)
 	var surface := Surface.new()
@@ -290,7 +290,7 @@ func open(section: String, title: String, description: String) -> void:
 	if full_browser:
 		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
 	else:
-		var frame: StyleBoxTexture=UI.screen_frame()
+		var frame: StyleBoxFlat=UI.screen_frame()
 		for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
 		add_theme_stylebox_override("panel",frame)
 	title_dragged = false
