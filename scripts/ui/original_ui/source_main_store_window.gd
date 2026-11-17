@@ -175,6 +175,8 @@ func _merchant_goods(world: Object) -> Array:
 func _record(world: Object, row: Dictionary) -> Dictionary:
 	var name: String=str(row.get("name",""))
 	var record: Dictionary=world.call("_find_catalog_item_record",name)
+	# A blessed/cursed stack is not a catalog row; its picture is its base row's.
+	if record.is_empty():record=preload("res://scripts/loot/patch523_monster_drops.gd").bless_stack_record(name,func(base: String) -> Dictionary: return world.call("_find_catalog_item_record",base))
 	var id: String=str(row.get("instance_id",""))
 	var instances: Variant=world.get("item_instances")
 	if not id.is_empty() and instances is Dictionary and instances.has(id) and instances[id] is Dictionary:record=instances[id].get("record",record)

@@ -715,6 +715,19 @@ static func variant_item(record: Dictionary, bless: int) -> Dictionary:
 		result["sourceId"] = str(result.sourceId) + ":bless:" + str(bless)
 	return result
 
+## Blessed/cursed stacks ("<name> · 축복"/" · 저주") are not catalog rows. The
+## record of such a stack is variant_item() of its base row, found by
+## `find_base(base_name) -> Dictionary`; {} when the name is not such a stack.
+const BLESS_STACK_SUFFIXES: Dictionary = {" · 축복":2, " · 저주":3}
+static func bless_stack_record(name: String, find_base: Callable) -> Dictionary:
+	for suffix: String in BLESS_STACK_SUFFIXES:
+		if not name.ends_with(suffix): continue
+		var base: Variant = find_base.call(name.trim_suffix(suffix))
+		if not base is Dictionary or base.get("source_m_native_item") != true: return {}
+		var variant: Dictionary = variant_item(base, int(BLESS_STACK_SUFFIXES[suffix]))
+		return variant if str(variant.get("name","")) == name else {}
+	return {}
+
 static func legacy_stone_variant(record: Dictionary, bless: int) -> Dictionary:
 	# Previous verified packs stored slot293 as non-wearable material, whose
 	# blessed/cursed stack names must remain addressable without merging keys.

@@ -34,6 +34,13 @@ func _initialize() -> void:
 	check(bag._find_item_record("옛 물약 · 축복").get("slot") == "other", "non-523 rows get no variant")
 	check(bag._find_item_record("없는 아이템 · 축복").get("slot") == "other", "unknown base keeps the bare fallback")
 	check(bag._find_item_record(str(base.name) + " · 상태4").get("slot") == "other", "unknown suffix keeps the bare fallback")
+	var drops: Script = preload("res://scripts/loot/patch523_monster_drops.gd")
+	var store_lookup := func(name: String) -> Dictionary: return base if name == str(base.name) else {}
+	var store_variant: Dictionary = drops.bless_stack_record(str(base.name) + " · 저주", store_lookup)
+	check(store_variant == bag._find_item_record(str(base.name) + " · 저주"), "store/storage windows get the same variant record as the bag")
+	check(drops.bless_stack_record(str(base.name), store_lookup).is_empty(), "a plain name is not a stack variant")
+	for path: String in ["res://scripts/ui/original_ui/source_main_store_window.gd", "res://scripts/ui/original_ui/source_main_storage_window.gd"]:
+		check(FileAccess.get_file_as_string(path).contains("bless_stack_record("), "picture record of a blessed/cursed stack in " + path.get_file())
 	bag.free()
 	_check_dead_images()
 	_finish()
