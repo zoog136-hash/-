@@ -15,7 +15,7 @@ const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows
 const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
 const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
-const SOURCE_SCENE := preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
@@ -226,6 +226,7 @@ func _boot() -> void:
 	_cache_misses.clear()
 	_cache_warning.hide()
 	# Installers may configure the pack after this screen was constructed.
+	_attach_original_loading_fx()
 	while get_tree().paused and not _owns_pause:
 		_status.text = "리소스 팩 설치를 기다리는 중…"
 		await get_tree().process_frame
@@ -427,12 +428,14 @@ func _attach_original_loading_fx() -> void:
 	if not pack.manifest.get("scenes", {}).has(FX_LOADING):
 		fx_loading_status = {"ok": false, "reason": "fx_loading_missing_in_pack"}
 		return
-	var scene: Node2D = SOURCE_SCENE.new()
-	var configured: Dictionary = scene.configure(pack, FX_LOADING)
-	if not configured.get("ok", false):
-		scene.free()
-		fx_loading_status = {"ok": false, "reason": str(configured.get("error", "fx_loading_configure_failed"))}
+	# The scene's two Text nodes hold the client's placeholder copy (문구 테스트
+	# / another-device notice); the loading text is this screen's own labels,
+	# so they stay hidden. The dim Bg keeps its original touch-consuming role.
+	var built: Dictionary = NAMED_TREE.new(pack).scene_of(FX_LOADING, {"Text": {"visible": false}, "Text_Sub": {"visible": false}}, {})
+	if not built.get("ok", false):
+		fx_loading_status = {"ok": false, "reason": str(built.get("error", "fx_loading_configure_failed")), "details": built.get("details", [])}
 		return
+	var scene: Node2D = built.scene
 	var played: Dictionary = scene.play(FX_LOADING_CLIP, true)
 	var holder := Node2D.new()
 	holder.name = "OriginalFxLoading"
@@ -454,10 +457,13 @@ func _layout_original_loading_fx() -> void:
 	_fx_loading.position = area * 0.5
 
 func _release_original_loading_fx() -> void:
-	if is_instance_valid(_fx_loading): _fx_loading.queue_free()
+	if is_instance_valid(_fx_loading):
+		_fx_loading.queue_free()
+		fx_loading_status["released"] = true
 	_fx_loading = null
 
 func _fail(message: String) -> void:
+	_release_original_loading_fx() # keep 다시 시도 / 오류 화면 보기 reachable
 	_progress.fail_task(message)
 	_render("진행률은 유지됩니다. 실패한 작업은 완료로 계산하지 않습니다.")
 	_running = false
