@@ -54,6 +54,7 @@ func build(member: String) -> Dictionary:
 	var scope: Array[int]=[]
 	var rows: Array=[]
 	var owners: Dictionary={}
+	var missing: Dictionary={}
 	for offset: int in spec.slots:
 		var slot: Dictionary=spec.slots[offset]
 		var raw: Dictionary=_node_at(panel,offset)
@@ -69,15 +70,21 @@ func build(member: String) -> Dictionary:
 			if input_button.disabled:return {"ok":false,"code":"source_equipment_owner_input_unavailable","physical_slot":physical_slot}
 			if not _image_provider.is_valid():return _fail("source_equipment_existing_image_provider_required")
 			var owner: Variant=_image_provider.call(record.duplicate(true),{"physical_slot":physical_slot,"page_member":member,"slot_project_offset":offset,"member":COMMON,"node_offset":ICON})
-			if not owner is Dictionary or not owner.get("ok",false) or (not owner.get("texture") is Texture2D and not owner.get("source_scene_descriptor") is Dictionary):return {"ok":false,"code":"source_equipment_actual_owner_icon_required","physical_slot":physical_slot,"owner_result":owner}
-			owners[offset]=owner
-			common_scope.append(ICON)
-			common_bindings[ICON]={"role":"source_asset_slot","visible":false}
+			# One equipped item without a resolvable original picture used to
+			# reject the whole original page (the phone then showed the TWILIGHT
+			# equipment panel). That slot keeps its original frame and input and
+			# only its picture stays empty, like the original bag.
+			if owner is Dictionary and owner.get("ok",false) and (owner.get("texture") is Texture2D or owner.get("source_scene_descriptor") is Dictionary):
+				owners[offset]=owner
+				common_scope.append(ICON)
+				common_bindings[ICON]={"role":"source_asset_slot","visible":false}
+			else:
+				missing[physical_slot]=owner.duplicate(true) if owner is Dictionary else {"ok":false}
 			common_bindings[BUTTON]={"role":"button","activate":Callable(self,"activate").bind(physical_slot)}
 		scope.append(offset)
 		bindings[offset]={"role":"project","source_node_offsets":common_scope,"bindings":common_bindings}
 		rows.append({"source_project_offset":offset,"source_name":slot.source_name,"physical_slot":physical_slot,"record":record.duplicate(true),"owner_button":input_button,"input_basis":"existing equipment_buttons[physical_slot].pressed callback owns equipment_requested/reference construction","original_widget":_widget(raw).duplicate(true)})
-	return {"ok":true,"member":member,"sha256":spec.sha256,"source_node_offsets":scope,"bindings":bindings,"rows":rows,"owner_results":owners,"panel_offset":spec.panel,"original_panel_widget":panel_widget.duplicate(true),"viewport_extent":Vector2(326,428),"page_registration_ready":true,"page_registration_basis":"Cocos2d-x3.6 PageView preserves original Layout anchor; changes position/size only","page_selection_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original class/mode to caller-selected page member and page order","remaining physical slot aliases/numbering and source modes","original per-slot Border/Broken/Clear visibility and unsupported detail/unequip modes"]}
+	return {"ok":true,"member":member,"sha256":spec.sha256,"source_node_offsets":scope,"bindings":bindings,"rows":rows,"owner_results":owners,"missing_pictures":missing,"panel_offset":spec.panel,"original_panel_widget":panel_widget.duplicate(true),"viewport_extent":Vector2(326,428),"page_registration_ready":true,"page_registration_basis":"Cocos2d-x3.6 PageView preserves original Layout anchor; changes position/size only","page_selection_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original class/mode to caller-selected page member and page order","remaining physical slot aliases/numbering and source modes","original per-slot Border/Broken/Clear visibility and unsupported detail/unequip modes"]}
 
 func activate(physical_slot: String) -> Dictionary:
 	if physical_slot not in PHYSICAL_SLOTS:return _fail("source_equipment_unmapped_physical_slot")

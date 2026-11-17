@@ -95,9 +95,9 @@ func open_equipment(parent: Node) -> Dictionary:
 			var slot: Dictionary=page.project_player([int(offset)])
 			if not slot.get("ok",false):next.free();return slot
 			var uploaded: Dictionary=slot.player.set_bound_source_visual_result(Equipment.ICON,contract.owner_results[offset])
-			if not uploaded.get("ok",false):next.free();return uploaded
-			result=slot.player.set_bound_visible(Equipment.ICON,true)
-			if not result.get("ok",false):next.free();return result
+			# A picture that cannot be shown leaves only that slot empty.
+			if not uploaded.get("ok",false):continue
+			slot.player.set_bound_visible(Equipment.ICON,true)
 	_page_index=clampi(_page_index,0,contracts.size()-1)
 	pages.set_page_index(_page_index)
 	var all: Dictionary=next.project_player([PROJECT])

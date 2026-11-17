@@ -12,6 +12,8 @@ static func supports(profile: Dictionary) -> bool:
 	return str(profile.get("program", "")) in ["lightning", "chain_lightning", "thunder_stun"]
 
 static func make_frames(profile: Dictionary) -> SpriteFrames:
+	# The frame sheet is no longer in the repo; without it no frames (no load error).
+	if not ResourceLoader.exists(PATH): return null
 	var atlas := ResourceLoader.load(PATH, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
 	if atlas == null: return null
 	var frames := SpriteFrames.new()

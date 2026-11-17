@@ -626,7 +626,24 @@ func _find_item_record(item_name: String) -> Dictionary:
 	var record: Dictionary = CATALOG_LOOKUP.first_by_name(records, item_name)
 	if not record.is_empty():
 		return record
+	var variant: Dictionary = _bless_variant_record(records, item_name)
+	if not variant.is_empty(): return variant
 	return {"name":item_name, "grade":"일반", "type":"기타", "slot":"other"}
+
+## Blessed/cursed stacks of an original 523 item ("<name> · 축복"/" · 저주",
+## from monster drops) are not rows of the bag's item catalog, so they fell to
+## the bare fallback record and every bag/quickslot/store/storage slot showed
+## no picture. They are the same ItemClass row (same IconID): rebuild the exact
+## record the drop owner made from the base row.
+const BLESS_SUFFIXES: Dictionary = {" · 축복":2, " · 저주":3}
+func _bless_variant_record(records: Array, item_name: String) -> Dictionary:
+	for suffix: String in BLESS_SUFFIXES:
+		if not item_name.ends_with(suffix): continue
+		var base: Dictionary = CATALOG_LOOKUP.first_by_name(records, item_name.trim_suffix(suffix))
+		if base.is_empty() or base.get("source_m_native_item") != true: return {}
+		var variant: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").variant_item(base, int(BLESS_SUFFIXES[suffix]))
+		return variant if str(variant.get("name","")) == item_name else {}
+	return {}
 
 func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 	# Presentation keeps the selected physical instance's existing native source
