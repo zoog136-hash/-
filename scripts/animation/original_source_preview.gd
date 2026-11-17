@@ -611,6 +611,18 @@ func clear() -> void:
 	last_source_frame = -1
 	hide()
 
+## Seconds one loop of `role` takes at its own source clock (first stored
+## direction), 0 when the role is missing or untimed.
+func role_cycle_seconds(role: String) -> float:
+	var track: Variant=_playback_tracks.get(role)
+	if not track is Dictionary or bool(track.get("static_pending_timing",false)): return 0.0
+	var directions: Array=track.get("directions",[])
+	if directions.is_empty() or not directions[0] is Array: return 0.0
+	var total: float=0.0
+	for item: Variant in directions[0]:
+		if item is Dictionary: total+=preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+	return total
+
 func source_role() -> String:
 	return _role
 
@@ -1728,6 +1740,16 @@ func notify_current_source_invoke_effect(original_option: Dictionary, field: Str
 	var selected: Dictionary = CURRENT523_EFFECT.select_invoke_effect(original_option,field,supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+## Original SkipDamageMotionSprite hit effect of `body_sprite` (this actor's
+## own original body) at `target_point`, or at `attacker_point` when the row
+## says DamageEffectNearAttacker. False when the original declares none.
+func notify_current_source_damage_effect(body_sprite: int, target_point: Vector2, attacker_point: Vector2, facing: int) -> bool:
+	var selected: Dictionary = CURRENT523_EFFECT.select_damage_effect(body_sprite,_reference_request_context)
+	if not bool(selected.get("ok",false)):
+		source_effect_status = selected.duplicate(true)
+		return false
+	return _spawn_current523_source_effect(selected,attacker_point if bool(selected.get("near_attacker",false)) else target_point,facing)
+
 func notify_current_source_death_pose(world_point: Vector2, facing: int) -> bool:
 	# Keep this detached from the live player's motion/physics lifecycle. The
 	# existing death event owns when the copied original pose is requested.
@@ -1772,7 +1794,7 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose","damage_effect"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"

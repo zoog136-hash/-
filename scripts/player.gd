@@ -9,6 +9,7 @@ signal attack_cancelled(sequence: int)
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
+const SOURCE_WALK = preload("res://scripts/maps/source_walk_speed.gd")
 var original_source_preview = ORIGINAL_SOURCE.new()
 var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
@@ -148,6 +149,7 @@ func _ready() -> void:
 		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
 
 func _physics_process(delta: float) -> void:
+	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("player.begin")
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
 	_physics_step(delta)
@@ -214,7 +216,7 @@ func _physics_step(delta: float) -> void:
 	if manual.length_squared() > 0.01:
 		cancel_attack()
 		clear_click_path()
-		velocity = manual.normalized() * move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
+		velocity = _walk_velocity(manual, move_speed)
 	else:
 		velocity = _click_path_velocity()
 
@@ -234,8 +236,41 @@ func _click_path_velocity() -> Vector2:
 		next_point = click_path[path_index]
 		distance = global_position.distance_to(next_point)
 	var direction: Vector2 = global_position.direction_to(next_point)
-	var speed: float = click_move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
+	var speed: float = _walk_velocity(direction, click_move_speed).length()
 	return direction * minf(speed, distance / maxf(physics_delta, 0.001))
+
+## Walk animation clock on an original 523 Land: one walk loop of the
+## original actor is one cell step, so its own clock is scaled to finish the
+## loop in exactly the step time at the current speed (source_walk_speed.gd).
+var _walk_clock_scale: float = 1.0
+
+static func walk_clock_scale(cycle_seconds: float, multiplier: float) -> float:
+	if cycle_seconds <= 0.0: return 1.0
+	return cycle_seconds / SOURCE_WALK.step_seconds(multiplier)
+
+func _source_walk_clock() -> float:
+	_walk_clock_scale = 1.0
+	if motion.active or not motion.state in ["walk", "run"] or not original_source_preview.source_role() in ["walk", "run"]: return 1.0
+	if SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null) == null: return 1.0
+	# A slowed or partly blocked move keeps the same stride per cell.
+	var speed_ratio: float = 1.0
+	var full: float = _walk_velocity(velocity, 0.0).length()
+	if full > 0.001: speed_ratio = clampf(get_real_velocity().length() / full, 0.0, 1.0)
+	_walk_clock_scale = walk_clock_scale(original_source_preview.role_cycle_seconds(original_source_preview.source_role()), walk_speed_multiplier()) * speed_ratio
+	return _walk_clock_scale
+
+## Total speed multiplier (equipment/buffs and skills) over the base walk.
+func walk_speed_multiplier() -> float:
+	return equipment_move_speed_multiplier * skill_speed_multiplier
+
+## On an original 523 Land the original walk (source_walk_speed.gd:
+## ListSprAction Walk, one cell per 16/36 s, Chebyshev cells); elsewhere the
+## existing flat `legacy_speed` px/s.
+func _walk_velocity(direction: Vector2, legacy_speed: float) -> Vector2:
+	if direction.length_squared() < 0.000001: return Vector2.ZERO
+	var coordinates: Variant = SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null)
+	if coordinates == null: return direction.normalized() * legacy_speed * walk_speed_multiplier()
+	return SOURCE_WALK.velocity(coordinates, direction, SOURCE_WALK.cells_per_second() * walk_speed_multiplier())
 
 func _update_facing(motion_vector: Vector2) -> void:
 	if motion.active: return
@@ -273,7 +308,7 @@ func _update_visual_timed(delta: float) -> void:
 		if frame != _source_visual_frame or not Engine.is_in_physics_frame():
 			_source_visual_frame = frame
 			var source_started: int = FRAME_HITCH.now()
-			original_source_preview.advance_source(_source_visual_delta, motion.state, motion.facing8, motion.sequence, motion.active)
+			original_source_preview.advance_source(_source_visual_delta * _source_walk_clock(), motion.state, motion.facing8, motion.sequence, motion.active)
 			FRAME_HITCH.detail("player.source", source_started)
 			_source_visual_delta = 0.0
 	elif not source_only_pending:
@@ -721,7 +756,7 @@ func _fear_velocity() -> Vector2:
 	var away: Vector2 = global_position - fear_source_position
 	if away.length_squared() < 0.01:
 		away = Vector2.RIGHT
-	return away.normalized() * move_speed * fear_move_multiplier * equipment_move_speed_multiplier * skill_speed_multiplier
+	return _walk_velocity(away, move_speed) * fear_move_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)

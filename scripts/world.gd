@@ -83,6 +83,7 @@ var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
+const CURRENT523_MAP_TELEPORT = preload("res://scripts/maps/current523_map_teleport.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
 const TUTORIAL523 = preload("res://scripts/content523/tutorial523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
@@ -779,6 +780,7 @@ func _show_store_failures() -> void:
 	hud.show_message("기기 저장 공간이 부족해 원본 데이터를 정리하지 못했습니다. 공간을 확보한 뒤 다시 시작하면 다시 시도합니다.")
 
 func _process(delta: float) -> void:
+	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("world.begin")
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
 	_process_frame(delta)
@@ -3788,6 +3790,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 ## a deep copy for the side panel) on every pickup stalled the frame; publish just
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
+	_merge_native_stacks()
 	_sync_item_instances()
 	combinations.invalidate();combinations.reconcile()
 	# Carried weight feeds the encumbrance movement multiplier.
@@ -3816,6 +3819,41 @@ func _refresh_inventory_hud() -> void:
 	if str(hud.get("active_section")) == "character":
 		stat_hud_refresh_pending = true
 	regional_return_settings_updated.emit()
+
+## Bag stacking (scripts/loot/native_stack_merge.gd): receipted original
+## stacks of the same item/bless merge into one slot up to the original
+## MaxStackAmount. Runs between transactions, never inside one; the result is
+## fully validated (state_error) before it is adopted and is persisted by the
+## next save. Returns how many bag slots were folded away.
+func _merge_native_stacks() -> int:
+	var stock: Script=preload("res://scripts/loot/current523_native_stack.gd")
+	if stock.busy or source_ground_acquisitions.get("_busy")==true or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
+	if quest_service==null or quest_service.save_blocked or consumable_service==null or warehouse==null or ground_loot==null: return 0
+	var counts: Dictionary={};var candidate: bool=false
+	for entry: Variant in item_instances.values():
+		if entry is Dictionary and entry.has(stock.RECEIPT):
+			var key: String=str(entry.get("name",""))
+			counts[key]=int(counts.get(key,0))+1
+			if int(counts[key])>1: candidate=true;break
+	if not candidate: return 0
+	var dormant: Dictionary=dormant_character_items()
+	var floor: Array=_ground_drops_snapshot()
+	var reserved: Dictionary={}
+	for uid: Variant in warehouse.instances: reserved[str(uid)]=true
+	for uid: Variant in dormant: reserved[str(uid)]=true
+	for record: Variant in floor:
+		if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
+	var planned: Dictionary=preload("res://scripts/loot/native_stack_merge.gd").plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved)
+	if not planned.get("changed",false): return 0
+	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
+	# A plan the full ownership check rejects is not adopted; the bag stays as
+	# it is (still valid) and nothing is saved.
+	if not issue.is_empty(): return 0
+	item_instances=planned.item_instances
+	consumable_service.import_state(planned.consumable_state)
+	ui_preferences["item_locks"]=planned.item_locks
+	_request_deferred_save()
+	return int(planned.merged_slots)
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)
@@ -6286,6 +6324,7 @@ func _update_hud() -> void:
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
 	_invalidate_equipment_static()
+	_merge_native_stacks()
 	_sync_item_instances()
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
@@ -7001,7 +7040,8 @@ func _load_game(quiet: bool) -> void:
 		saved_map_id="albino_02"
 	if OLD_MAP_RELOCATION523.needed(data,CURRENT523_HOST.requested(),LEGACY_LAYOUT.active("--legacy-map-layouts")):
 		# A save from before the 523 pack on an old map (only old base508
-		# monsters there) is moved once to 523 Aden town; progression is kept
+		# monsters there) is moved once to 523 Land 4 at the start village
+		# (Giran town, 사용자 결정 2026-11-17); progression is kept
 		# and the original file is kept byte for byte.
 		var relocation_sha: String=FileAccess.get_sha256(save_path())
 		var relocation_backup: String=save_path()+".pre-old-map-523-"+relocation_sha
@@ -7011,10 +7051,10 @@ func _load_game(quiet: bool) -> void:
 			return
 		data=OLD_MAP_RELOCATION523.relocated(data)
 		saved_map_id=OLD_MAP_RELOCATION523.TARGET_MAP
-		hud.append_log("옛 지도 저장을 523 아덴 마을로 옮겼습니다 (원본 백업 보존)")
+		hud.append_log("옛 지도 저장을 523 기란 마을로 옮겼습니다 (원본 백업 보존)")
 	if TUTORIAL523.needed(data):
 		# 사용자 결정 2026-11-16: a character in a deleted tutorial Land moves to
-		# Aden town and tutorial items leave the save (amounts recorded); the
+		# the start village (Giran town) and tutorial items leave the save (amounts recorded); the
 		# original file is backed up byte for byte first.
 		var tutorial_sha: String=FileAccess.get_sha256(save_path())
 		var tutorial_backup: String=save_path()+".pre-tutorial-523-"+tutorial_sha
@@ -7221,8 +7261,8 @@ func _load_game(quiet: bool) -> void:
 	character_source_cursor = data.get("character_source_cursor",{}).duplicate(true) if data.get("character_source_cursor",{}) is Dictionary else {}
 	if TUTORIAL523.land(character_source_cursor.get("native_land_id",-1)):
 		# Any other copy of a deleted tutorial Land spot (사용자 결정 2026-11-16).
-		tutorial523["relocated"] = {"from_native_land_id":int(character_source_cursor.native_land_id),"from_source_position":character_source_cursor.get("source_position",[]),"to_native_land_id":TUTORIAL523.ADEN_LAND_ID}
-		character_source_cursor = {"native_land_id":TUTORIAL523.ADEN_LAND_ID,"source_position":[]}
+		tutorial523["relocated"] = {"from_native_land_id":int(character_source_cursor.native_land_id),"from_source_position":character_source_cursor.get("source_position",[]),"to_native_land_id":TUTORIAL523.ADEN_LAND_ID,"to_source_position":TUTORIAL523.START_VILLAGE.source_position(),"to_village":TUTORIAL523.START_VILLAGE.NAME}
+		character_source_cursor = TUTORIAL523.START_VILLAGE.cursor()
 	old_map_relocation523 = data.get(OLD_MAP_RELOCATION523.KEY,{}).duplicate(true) if data.get(OLD_MAP_RELOCATION523.KEY,{}) is Dictionary else {}
 	tutorial523 = data.get(TUTORIAL523.KEY,{}).duplicate(true) if data.get(TUTORIAL523.KEY,{}) is Dictionary else {}
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
@@ -7382,6 +7422,8 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
+	# _update_hud also folds an old save's separate receipted stacks of one
+	# item into one slot (_merge_native_stacks).
 	_update_hud()
 	_refresh_source_dungeon_panel()
 	_emit_consumable_auto_settings()
@@ -10796,6 +10838,13 @@ func _update_field_triggers() -> void:
 	if str(region["id"]) != region_id:
 		region_id = str(region["id"])
 		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · " + str(field_map.data.get("short_name", "아덴"))))
+	# Original 523 walk-in portals (Portal table) on a 523 Land field.
+	if current523_aden_source_active():
+		var walked: Dictionary = _aden_play_controller().call("step_source_portal")
+		if not walked.is_empty():
+			current523_aden_play_active = bool(_aden_play_controller().get("active"))
+			if not bool(walked.get("ok",false)): hud.show_message("포탈 이동 보류: "+str(walked.get("reason","")))
+			return
 	if portal_cooldown > 0.0 or player.auto_enabled:
 		return
 	for portal: Dictionary in field_map.data["portal"]:
@@ -11046,10 +11095,26 @@ func _clear_combat_actions() -> void:
 func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
 	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
 
+var _source_damage_effect_absent: Dictionary = {}
+## Original hit effect of a 523 source monster (SkipDamageMotionSprite), on
+## the existing successful-hit feedback. Monsters whose original body has no
+## such row show none.
+func _source_damage_effect(target: TwilightMonster) -> void:
+	if not is_instance_valid(target) or not is_instance_valid(target.source_m_view) or target.source_m_view.get("_preview") == null: return
+	var selection: Variant = target.get_meta("current523_source_bank_selection", {})
+	var body_sprite: int = int(selection.get("sprite_id", -1)) if selection is Dictionary and selection.get("ok", false) else -1
+	if body_sprite <= 0 or _source_damage_effect_absent.has(body_sprite): return
+	var facing: int = int(target.motion.facing8) if target.motion != null else 0
+	var preview: Node = target.source_m_view._preview
+	if not preview.notify_current_source_damage_effect(body_sprite, target.global_position, player.global_position, facing):
+		# Most bodies declare none: do not look the table up again on every hit.
+		if str(preview.source_effect_status.get("reason", "")) == "current523_damage_effect_not_declared": _source_damage_effect_absent[body_sprite] = true
+
 func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
 	# Named skill hits retain their existing skill audio path.
 	if damage_kind.is_empty() and is_instance_valid(presentation_audio):
 		presentation_audio.play_world("impact", target.combat_hit_position(), critical)
+	_source_damage_effect(target)
 	if not is_instance_valid(combat_vfx): return
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
@@ -11764,6 +11829,27 @@ func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary
 		if auto_off and player.auto_enabled: player.set_auto_enabled(false)
 	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
 
+## Original 523 map teleport (텔레포터 NPC / 지역 이동 창): UIMapArea row `id`
+## (current523_map_teleport.gd). Same entry rules as a teleport item
+## (ITEM523_TELEPORT_WAIVE; MinLevel judged), the LandTeleport Adena price is
+## saved with the arrival, auto hunting is turned off on arrival.
+func current523_map_teleport(id: String) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 이동할 수 없습니다"}
+	if patch523_npc_spells.blocks("CannotTeleport") or player.is_stunned() or player.is_feared() or player.is_held() or int(hp)<=0 or not charge_skill.is_empty():
+		return {"ok":false,"reason":"이동 불가 상태에서는 텔레포트할 수 없습니다"}
+	if not current523_aden_source_active(): return {"ok":false,"reason":"원본 523 지도에서만 사용할 수 있습니다"}
+	var quote: Dictionary = CURRENT523_MAP_TELEPORT.quote(self, id)
+	if not quote.get("ok",false): return {"ok":false,"reason":str(quote.get("reason","텔레포트할 수 없습니다"))}
+	var row: Dictionary = quote.row
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", int(row.land_id), row.bounds, ITEM523_TELEPORT_WAIVE.duplicate(), quote.changes)
+	var transition: Dictionary = controller.call("last_source_transition")
+	current523_aden_play_active = bool(controller.get("active"))
+	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
+	if player.auto_enabled: player.set_auto_enabled(false)
+	_update_hud()
+	return {"ok":true,"reason":"텔레포트 완료 · %s · %d 아데나" % [str(row.name), int(row.price)],"land_id":int(row.land_id),"price":int(row.price),"saved":bool(transition.get("saved",false))}
+
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:
 		_current523_aden_play_controller = CURRENT523_ADEN_PLAY.new()
@@ -11943,7 +12029,7 @@ func _restore_current523_aden_play() -> void:
 		var cursor: Dictionary=character_source_cursor if not character_source_cursor.is_empty() else {"native_land_id":4,"source_position":[]}
 		options.merge(cursor,true)
 	# A deleted tutorial Land (사용자 결정 2026-11-16) is never resumed.
-	if TUTORIAL523.land(options.get("native_land_id",-1)): options.merge({"native_land_id":TUTORIAL523.ADEN_LAND_ID,"source_position":[]},true)
+	if TUTORIAL523.land(options.get("native_land_id",-1)): options.merge(TUTORIAL523.START_VILLAGE.cursor(),true)
 	# Over the 523 host Aden, play mode is how the world is played: it always
 	# resumes (the old picture-pack world no longer exists to fall back to).
 	var host: bool = CURRENT523_HOST.is_host(field_map)
@@ -11957,11 +12043,12 @@ func _restore_current523_aden_play() -> void:
 	controller.call("resume_saved_spot", -1)
 	if not opened and host and saved_spot and str(controller.get("problem")).contains("조건 보류"):
 		# The saved spot cannot reopen under its Land's rules: rather than a
-		# world with no 523 play mode (and no monsters), start at Aden town.
+		# world with no 523 play mode (and no monsters), start at the start
+		# village (Giran town, 사용자 결정 2026-11-17).
 		var held: String = str(controller.get("problem"))
-		options.merge({"native_land_id":4,"source_position":CURRENT523_ADEN_PLAY.aden_town_source_position()},true)
+		options.merge({"native_land_id":4,"source_position":CURRENT523_ADEN_PLAY.village_source_position()},true)
 		opened = open_current523_aden_play(options.raw_root, options.tile_root, options)
-		if opened: hud.append_log("저장 위치를 다시 열 수 없어 아덴 마을에서 시작합니다 (" + held + ")")
+		if opened: hud.append_log("저장 위치를 다시 열 수 없어 기란 마을에서 시작합니다 (" + held + ")")
 	if not opened and field_population.get("field")==null and not host:
 		field_population.configure(self,field_map)
 

@@ -337,6 +337,7 @@ func _boot() -> void:
 	_progress.complete_task("scene_ready")
 	_render("준비 완료")
 	BOOT_LOG.mark("loading_ready", {"scene": destination, "completed": snapshot().completed, "total": snapshot().total})
+	FRAME_HITCH.arm_trail()
 	_running = false
 	finished.emit(true)
 	# One render opportunity for the measured 100%, then reveal the ready scene.

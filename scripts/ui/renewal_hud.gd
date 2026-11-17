@@ -1,5 +1,6 @@
 extends "res://scripts/hud_v20.gd"
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const WINDOW_TRAIL_SECONDS: int = 10
 const MENU_MEMORY_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 
 signal equipment523_open_requested
@@ -1060,6 +1061,10 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	# Crash trail for the window's first seconds (523.607: the release APK
+	# closed the moment the exchange was entered, 30 minutes into a run).
+	FRAME_HITCH.arm_trail(WINDOW_TRAIL_SECONDS)
+	FRAME_HITCH.trail("ui.open " + section)
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
@@ -1334,8 +1339,11 @@ func open_shop() -> void:
 				workspace.hide()
 				_sync_screen_focus()
 
+## The original 523 거래소 window (source_main_trade_window) first; the
+## TWILIGHT frozen-snapshot panel without the original UI pack.
 func open_frozen_exchange() -> void:
 	_open_window("exchange","거래소 · 초기 실측 고정","")
+	if _open_original_feature("trade"):return
 	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
 	workspace.mount(panel)
 	panel.configure(self)

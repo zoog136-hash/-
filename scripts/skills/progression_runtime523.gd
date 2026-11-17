@@ -94,6 +94,11 @@ func tick(delta: float) -> void:
 
 func update_light() -> void:
 	var radius: float=service.catalog.stat("lightRadius")
+	# Original rule: 라이트 (SpellClass 2, "밝은 광원을 만들어 주위를 밝힌다")
+	# gives LightRadius (BonusType 56, shown as 시야거리). The original client
+	# lights it in the engine, with no sprite (its effect 2507 is a 34-byte
+	# blank), so this gradient is the TWILIGHT approximation and stays under
+	# the 523 original-only presentation too.
 	if radius<=0 or service.world.hp<=0:
 		if is_instance_valid(light):light.hide()
 		return

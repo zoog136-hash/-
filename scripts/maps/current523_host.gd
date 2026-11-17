@@ -55,7 +55,8 @@ static func is_host(field: Variant) -> bool:
 static func _interpretation(value: Dictionary) -> Dictionary:
 	return {"attribute_rule":str(value.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":value.get("allowed_raw_words",OPTIONS.SOURCE_WORDS.duplicate()),"path_search_limit":value.get("path_search_limit",8192),"aden_inferred_placement_enabled":value.get("aden_inferred_placement_enabled",true)}
 
-## The 523 Aden field with its spawn at the existing own Aden return point.
+## The 523 Aden field (Land 4) with its spawn at the start village: Giran
+## (current523_start_village, 사용자 결정 2026-11-17). New characters start here.
 ## `controller` supplies its verified catalog cache (shared with play mode).
 static func load_field(controller: RefCounted) -> OriginalPlayableField:
 	problem = ""
@@ -66,9 +67,9 @@ static func load_field(controller: RefCounted) -> OriginalPlayableField:
 	var field: OriginalPlayableField = FIELD.new()
 	if not field.configure_verified_catalog(catalog, str(value.source_manifest_sha256), ADEN_LAND, _interpretation(value)):
 		problem = str(field.problem); field.close(); return null
-	var landing: Dictionary = controller.call("_aden_return_point", field, int(value.get("aden_return_radius", 8)))
+	var landing: Dictionary = controller.call("_village_return_point", field, int(value.get("aden_return_radius", 8)))
 	if not landing.get("ok", false):
-		problem = str(landing.get("reason", "아덴 시작 위치가 없습니다.")); field.close(); return null
+		problem = str(landing.get("reason", "기란 마을 시작 위치가 없습니다.")); field.close(); return null
 	field.data.spawn_position = [landing.position.x, landing.position.y]
 	field.set_meta(META, true)
 	return field

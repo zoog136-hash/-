@@ -12,6 +12,8 @@ extends RefCounted
 ## The authored Hadin portrait, name and line stay as the tab authors them.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const POLICY=preload("res://scripts/npc/teleport_policy.gd")
+## On an original 523 Land: the original UIMapArea / LandTeleport destinations.
+const MAP_TELEPORT=preload("res://scripts/maps/current523_map_teleport.gd")
 const OmanTower=preload("res://scripts/ui/original_ui/source_main_oman_tower_window.gd")
 const ALL="UI/Map/Map_All.csb"
 const TAB="UI/Map/Map_Tab_Teleport.csb"
@@ -81,9 +83,18 @@ func selected() -> String:
 func node_keys() -> Dictionary:
 	return _last_out
 
-## The existing 지역 이동 destinations (renewal_teleport's list).
+## The existing 지역 이동 destinations (renewal_teleport's list). On an
+## original 523 Land the old map list does not apply (those maps are not the
+## 523 world): the original UIMapArea teleport rows are listed instead.
+static func source523(world: Node) -> bool:
+	return world!=null and world.has_method("current523_aden_source_active") and bool(world.call("current523_aden_source_active"))
+
 static func destinations(world: Node) -> Array[Dictionary]:
 	var rows: Array[Dictionary]=[]
+	if source523(world):
+		for row: Dictionary in MAP_TELEPORT.destinations():
+			rows.append({"id":str(row.id),"name":str(row.name),"min_level":int(row.min_level),"price":int(row.price),"type_id":int(row.type_id)})
+		return rows
 	for raw: Variant in world.get("maps"):
 		if not raw is Dictionary:continue
 		var map_id: String=str(raw.get("id",""))
@@ -93,6 +104,7 @@ static func destinations(world: Node) -> Array[Dictionary]:
 	return rows
 
 func _quote(world: Node, map_id: String) -> Dictionary:
+	if MAP_TELEPORT.is_destination_id(map_id):return MAP_TELEPORT.quote(world,map_id)
 	return POLICY.quote(map_id,world.get("maps_by_id"),str(world.get("active_map_id")),int(world.get("level")),int(world.get("gold")))
 
 ## --- Stage ------------------------------------------------------------------
@@ -183,10 +195,11 @@ func _row(world: Node, row: Dictionary) -> Dictionary:
 	for state: String in ["Btn_Normal","Btn_Pressed"]:
 		spec[state]={"visible":(state=="Btn_Pressed")==chosen,"activate":Callable(self,"_select").bind(str(row.id))}
 		spec[state+"/Label"]={"role":"source_text","text":str(row.name)}
-		# The client picks Base / Dungeon / Field / Village per map type, which
-		# this game's maps do not record: the neutral Base frame is shown.
-		for frame: String in ["Img_Dungeon","Img_Field","Img_Village"]:spec[state+"/Nd_Bg/"+frame]={"visible":false}
-		spec[state+"/Nd_Bg/Img_Base"]={"visible":true}
+		# The client picks Base / Dungeon / Field / Village per map type: the
+		# original UIMapAreaType (3 Village, 4 Dungeon, 5 Field) when the row
+		# has one, else the neutral Base frame.
+		var frame_name: String={3:"Img_Village",4:"Img_Dungeon",5:"Img_Field"}.get(int(row.get("type_id",0)),"Img_Base")
+		for frame: String in ["Img_Base","Img_Dungeon","Img_Field","Img_Village"]:spec[state+"/Nd_Bg/"+frame]={"visible":frame==frame_name}
 	# The bookmark star is not packed (no bookmark rule here).
 	spec["Btn_CheckBox"]={"exclude":true}
 	spec["Label_Lv"]={"role":"source_text","text":"Lv.%d ~" % int(row.min_level)}
@@ -234,6 +247,8 @@ func _controller() -> Object:
 func _oman_available() -> bool:
 	var world: Node=_world.get_ref() if _world!=null else null
 	var controller: Object=_controller()
+	# The 오만의 탑 floors are old-map ids, which are not the original 523 world.
+	if source523(world):return false
 	return controller!=null and controller.feature_window_available("oman_tower") and not OmanTower.floors(world).is_empty()
 
 func _open_oman() -> Dictionary:
@@ -260,6 +275,13 @@ func _teleport_requested() -> Dictionary:
 	if not quote.get("ok",false):
 		if hud.has_method("show_message"):hud.call("show_message",str(quote.get("reason","")))
 		return {"ok":false,"reason":str(quote.get("reason",""))}
+	if MAP_TELEPORT.is_destination_id(_selected):
+		# Original 523 map teleport: the world rechecks, moves and saves the debit.
+		var result: Dictionary=world.call("current523_map_teleport",_selected)
+		if hud.has_method("show_message"):hud.call("show_message",str(result.get("reason","")))
+		if result.get("ok",false):_close_requested()
+		elif is_open():_stage()
+		return {"ok":true,"requested":_selected,"moved":bool(result.get("ok",false)),"result":result}
 	# The existing move: the world rechecks, moves and debits.
 	var target: String=_selected
 	hud.emit_signal("npc_teleport_requested",target)

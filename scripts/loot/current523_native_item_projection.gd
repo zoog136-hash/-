@@ -423,6 +423,21 @@ static var template_fault: String=""
 static func _template_key() -> String:
 	return BAKE.key([_inputs().verified_key(),TEMPLATE_SCHEMA,BAKE.global_code_key()])
 
+## Identity of the template *contents* for consumers that bake from them
+## (equipment rules): the SHA-256 of the committed template file, recorded in
+## its bake meta and re-verified on every open. _template_key() holds the
+## global code key, so after any game update the templates are rebuilt; when
+## the rebuilt file has the same bytes, its consumers keep their bakes
+## (2026-11-17 Twm diag: an unrelated one-line update rebuilt the equipment
+## rules, ~30 s on PC, ~60 s on the phone). Without a committed file this is
+## the code key, as before.
+static func template_content_key() -> String:
+	var key: String=_template_key()
+	if key.is_empty():return ""
+	var meta: Variant=BAKE._meta_checked(TEMPLATE_BAKE,key)
+	var digest: String=str(meta.get("sha256","")) if meta is Dictionary else ""
+	return "content:"+TEMPLATE_SCHEMA+":"+digest if digest.length()==64 and digest.is_valid_hex_number(false) else key
+
 ## Baked native records by ItemClass ID (one var per record, offsets indexed).
 class TemplateStore extends RefCounted:
 	var file: FileAccess

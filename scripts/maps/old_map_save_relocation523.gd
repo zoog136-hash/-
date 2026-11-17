@@ -5,10 +5,12 @@ extends RefCounted
 ## monsters from the old base508 monster pack, which current installs do not
 ## have: the character loaded there met no monsters at all, or the load was
 ## refused when the old map pictures were gone. Such a save is moved once to
-## 523 Aden town (Land 4), keeping all progression. The original file is
+## 523 Land 4 at the start village (Giran town, current523_start_village;
+## 사용자 결정 2026-11-17), keeping all progression. The original file is
 ## backed up byte for byte by the caller, and the move is recorded in the
 ## save so it happens only once.
 
+const START_VILLAGE := preload("res://scripts/maps/current523_start_village.gd")
 const KEY := "old_map_relocation523"
 const TARGET_MAP := "aden_world"
 
@@ -26,7 +28,8 @@ static func needed(data: Dictionary, host_requested: bool, legacy_layouts: bool)
 		if active is Dictionary and str(active.get("status", "")) == "active" and str(active.get("map_id", "")) == map_id: return false
 	return true
 
-## A copy of `data` placed at 523 Aden town, with where it was recorded.
+## A copy of `data` placed at the 523 start village (Giran town), with where
+## it was recorded.
 static func relocated(data: Dictionary) -> Dictionary:
 	var result: Dictionary = data.duplicate(true)
 	result[KEY] = {
@@ -38,8 +41,9 @@ static func relocated(data: Dictionary) -> Dictionary:
 	result["position"] = []
 	result["map_layout_revision"] = -1
 	result["original_position"] = {}
-	# No saved 523 spot: 523 play mode starts the character at Aden town.
-	result.erase("character_source_cursor")
+	# The 523 spot is the start village (Giran town); the old map's cursor (a
+	# spot on another Land) is dropped.
+	result["character_source_cursor"] = START_VILLAGE.cursor()
 	for key: String in ["native_png_plan_sha256", "native_png_review_sha256", "oman_png_index_sha256"]:
 		result.erase(key)
 	return result
