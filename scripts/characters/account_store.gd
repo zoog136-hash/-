@@ -18,7 +18,7 @@ const LEGACY_PRIVATE_OPTION := ["native_subslot_identity","native_relic_subslot_
 const PRIVATE_OPTION := ["native_subslot_identity","native_relic_subslot_identity","native_doll_unlock","native_relic_unlock","native_relic_summon_time"]
 ## Proofs follow warehouse items. Sharing these journals does not share the
 ## resulting learned skill, permanent stat, quest, cooldown or active buff.
-const SHARED_PROOFS := ["source_native_stack_uses","source_native_stack_partitions"]
+const SHARED_PROOFS := ["source_native_stack_uses","source_native_stack_partitions","source_native_stack_merges"]
 static var session: Dictionary = {}
 var path: String = DEFAULT_PATH
 var _hash: String = ""

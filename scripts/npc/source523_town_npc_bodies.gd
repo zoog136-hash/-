@@ -121,11 +121,38 @@ func _process(delta: float) -> void:
 		var spent: int = Time.get_ticks_usec() - create_started
 		create_usec_total += spent
 		create_usec_max = maxi(create_usec_max, spent)
-	for holder: Node2D in bodies.values():
-		if is_instance_valid(holder) and holder.is_visible_in_tree():
-			var preview: Node = holder.get_meta("preview") if holder.has_meta("preview") else null
-			if is_instance_valid(preview): preview.advance_reference_source(delta, str(holder.get_meta("role")), int(holder.get_meta("direction")))
+	_advance_bodies(delta)
 	HITCH.detail("town_npc_bodies", started)
+
+## Idle animation of the bodies near the screen, ADVANCES_PER_FRAME of them
+## per frame in turn. Each body keeps the time it was not advanced and gets it
+## on its turn, so every body plays at the original speed (a few frames of
+## latency on a standing idle loop); bodies far from the player only bank
+## their time until they come near.
+const ADVANCES_PER_FRAME: int = 6
+const ANIMATE_RADIUS: float = 1000.0
+var _advance_cursor: int = 0
+func _advance_bodies(delta: float) -> void:
+	if bodies.is_empty(): return
+	var at: Vector2 = _player_position()
+	var holders: Array = bodies.values()
+	for holder: Variant in holders:
+		if is_instance_valid(holder): holder.set_meta("pending_delta", float(holder.get_meta("pending_delta", 0.0)) + delta)
+	var count: int = holders.size()
+	var advanced: int = 0
+	var visited: int = 0
+	while advanced < ADVANCES_PER_FRAME and visited < count:
+		_advance_cursor = (_advance_cursor + 1) % count
+		visited += 1
+		var holder: Variant = holders[_advance_cursor]
+		if not is_instance_valid(holder) or not (holder as Node2D).is_visible_in_tree(): continue
+		if at.is_finite() and (holder as Node2D).position.distance_to(at) > ANIMATE_RADIUS: continue
+		var preview: Node = holder.get_meta("preview") if holder.has_meta("preview") else null
+		if not is_instance_valid(preview): continue
+		var pending: float = float(holder.get_meta("pending_delta", 0.0))
+		holder.set_meta("pending_delta", 0.0)
+		preview.advance_reference_source(pending, str(holder.get_meta("role")), int(holder.get_meta("direction")))
+		advanced += 1
 
 func _selected(sprite_id: int, action: int, options: Dictionary) -> Dictionary:
 	return {"manifest_path": str(options.manifest_path), "manifest_sha256": str(options.manifest_sha256),
@@ -149,6 +176,11 @@ func _create(record: Dictionary) -> void:
 			return
 		actions = [int(_action_memo[sprite_id])]
 	var preview := PREVIEW.new()
+	# Cached frame plans / composited layer groups, as for field monsters and
+	# the player (original_source_preview.gd). Without them every visible NPC
+	# re-verified each layer every frame: 523.607 town_npc_bodies 541 ms/s,
+	# preview.layers_same 273 ms over 107 calls per second.
+	preview.cached_frames = true
 	var configured: bool = false
 	var problem: String = ""
 	loads += 1

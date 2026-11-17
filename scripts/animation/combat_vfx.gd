@@ -7,6 +7,7 @@ const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_regis
 const CAPACITY: int = 160
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
 const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
+const SOURCE_ONLY = preload("res://scripts/animation/source_only_host_fx.gd")
 const SOURCE_SPX = preload("res://scripts/animation/source_spx_player.gd")
 var source_effects: Array[TwilightSourceSPXPlayer] = []
 var source_csb_effects: Array[Node2D] = []
@@ -42,7 +43,14 @@ func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
 	queue_redraw()
 	return entry
 
+## True while the 523 original-only presentation is active: the TWILIGHT-made
+## impact halos/crescents, rings and the critical-heading glow are not drawn
+## (no original sprite). Numbers, MISS and the "Critical" text stay.
+func host_art_suppressed() -> bool:
+	return SOURCE_ONLY.active_for_world(get_parent())
+
 func impact(point: Vector2, direction: Vector2, style: String, critical: bool = false) -> void:
+	if host_art_suppressed(): return
 	var entry: Dictionary = _record("impact", point, 0.22 if not critical else 0.30)
 	entry.merge({"direction":direction.normalized(), "style":style, "family":VISUALS.family(style), "critical":critical})
 
@@ -57,7 +65,7 @@ func number(point: Vector2, value: String, color: Color, critical: bool = false)
 	var size: int = 25 if critical else 18
 	var display: String = value.trim_prefix("CRIT ") if critical else value
 	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
-	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "caption":caption, "width":width, "critical_width":font.get_string_size("Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if critical and font != null else 0.0})
+	entry.merge({"host_art_suppressed":host_art_suppressed(), "text":value, "display":display, "color":color, "critical":critical, "caption":caption, "width":width, "critical_width":font.get_string_size("Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if critical and font != null else 0.0})
 
 func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "", registration_base_scale: Vector2 = Vector2.ZERO) -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
@@ -90,6 +98,7 @@ static func _death_draw_scale(entry: Dictionary, texture: Texture2D) -> Vector2:
 	return _death_draw_geometry(entry, texture).scale
 
 func ring(point: Vector2, radius: float, color: Color) -> void:
+	if host_art_suppressed(): return
 	var entry: Dictionary = _record("ring", point, 0.3)
 	entry.merge({"radius":clampf(radius, 16, 150), "color":color})
 
@@ -243,7 +252,8 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	if not bool(entry.get("caption", false)): return
 	var title_point: Vector2 = point + Vector2(0.0, -27.0) * keep
 	var title_width: float = float(entry.critical_width)
-	visuals.halo(self, title_point + Vector2(0.0, -8.0) * keep, Vector2(title_width * 1.8, 42.0) * keep, Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
+	if not bool(entry.get("host_art_suppressed", false)):
+		visuals.halo(self, title_point + Vector2(0.0, -8.0) * keep, Vector2(title_width * 1.8, 42.0) * keep, Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
 	# Shear just the heading; normal numbers, MISS and healing keep their color.
 	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value, scale_value), title_point))
 	var title_base: Vector2 = Vector2(-title_width * 0.5, 0.0)
