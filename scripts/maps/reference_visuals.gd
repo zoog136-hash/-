@@ -11,6 +11,7 @@ static func profile(id: String) -> Dictionary:
 	return catalog.get("maps",{}).get(id,{})
 
 static func cell(atlas: Texture2D, index: int) -> AtlasTexture:
+	if atlas == null: return null # removed sheet: the cell stays empty
 	var result := AtlasTexture.new()
 	result.atlas = atlas
 	result.region = Rect2(Vector2(index%4,index/4)*atlas.get_size()/4.0,atlas.get_size()/4.0)
