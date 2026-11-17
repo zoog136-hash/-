@@ -7,8 +7,8 @@ var ABI: Variant
 var OWN: Variant
 var SOURCE: Variant
 const PROOF: String = "user://equipment523-quest-abi-proof.json"
-const QUEST_SHA: String = "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a"
-const QUEST_BYTES: int = 9884157
+const QUEST_SHA: String = preload("res://scripts/quests/source_quest523.gd").PAYLOAD_SHA
+const QUEST_BYTES: int = 9884169
 const CHAIN: Array[int] = [236,237,238,239,240,241,244,245,246,247,248,249,250,251,252,254]
 var checks: int = 0
 var failures: Array[String] = []

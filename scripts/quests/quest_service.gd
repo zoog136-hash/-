@@ -63,6 +63,10 @@ func configure(items: Array, monsters: Array) -> bool:
 		for native: Dictionary in source.quests:
 			quests.append(native)
 			index[str(native.id)] = native
+	elif problem.is_empty():
+		# Name why the original quests are missing (world warning, quest window)
+		# instead of an empty list with an empty reason.
+		problem = "원본 퀘스트 불러오기 실패: " + str(source.problem)
 	_advance_day(int(Time.get_unix_time_from_system()))
 	return not quests.is_empty()
 

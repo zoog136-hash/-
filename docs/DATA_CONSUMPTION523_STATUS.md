@@ -1092,7 +1092,10 @@ this does not start a general description-table implementation.
 The canonical memory bytes use sorted keys, original integral numbers and no
 trailing newline. `_load_original()→_load_payload(bytes,"")` still requires the
 existing `PAYLOAD_SHA`
-`2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a`,
+`5ef91702b62e4fc5e1a4209eb040439fac6f4320723652ca8836542bbb94eded`
+(2026-11-17; was `2d11ecff…` until #625 read the 8 아크 변신 카드 rows that quest
+60341 rewards as TestItem=false — the old pin then refused every quest, see
+`tests/quest_payload523_pin_test.gd`),
 `MAX_BYTES` and `valid_document()` before the unchanged adoption loop can expose
 the quest registry. The archive SHA never substitutes for the payload SHA, and
 the memory mode leaves `loaded_path` empty rather than claiming a generated

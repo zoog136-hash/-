@@ -3,7 +3,13 @@ extends RefCounted
 const USER_PATH = "user://quests_current523.json"
 const DEV_PATH = "res://data/quests/private_current523.json"
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
-const PAYLOAD_SHA = "2d11ecff4e695244220dc8e3a9b5707809f8bcfe34d7789a517880a6590bcb9a"
+## Fingerprint of the projection of the verified original with this code.
+## 2026-11-17: 5ef91702… replaces 2d11ecff…. #625 (APPROX_TEST_ITEMS) reads 8
+## 아크 변신 카드 ItemClass rows as TestItem=false, and quest 60341 embeds those
+## rows as its rewards, so the projected bytes changed and every quest was
+## refused ("퀘스트 팩 SHA-256 불일치"). tests/quest_payload523_pin_test.gd
+## re-derives this value from the original tables.
+const PAYLOAD_SHA = "5ef91702b62e4fc5e1a4209eb040439fac6f4320723652ca8836542bbb94eded"
 const MAX_BYTES = 16 * 1024 * 1024
 const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 const ORIGINAL_PROJECTION = preload("res://scripts/quests/source_quest523_projection.gd")
@@ -39,11 +45,18 @@ func load_pack() -> bool:
 	var path: String = USER_PATH if FileAccess.file_exists(USER_PATH) else DEV_PATH
 	if not FileAccess.file_exists(path): return _load_original()
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > MAX_BYTES:
-		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
-		return false
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	return _load_payload(bytes,path)
+	var refused: String = "퀘스트 팩 파일을 읽을 수 없습니다"
+	if file != null and file.get_length() <= MAX_BYTES:
+		var bytes: PackedByteArray = file.get_buffer(file.get_length())
+		file = null
+		if _load_payload(bytes,path): return true
+		refused = problem
+	# A received/private payload of an earlier projection (other fingerprint)
+	# or an unreadable file must not hide every quest: project the installed
+	# original tables instead. The file itself is left untouched.
+	if _load_original(): return true
+	problem = refused + " · " + problem
+	return false
 
 func _load_original() -> bool:
 	if not document.is_empty(): return not quests.is_empty() # No replacement of live input.
