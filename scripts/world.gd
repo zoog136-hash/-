@@ -3865,9 +3865,9 @@ func _merge_native_stacks() -> int:
 	var planned: Dictionary=preload("res://scripts/loot/native_stack_merge.gd").plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved)
 	if not planned.get("changed",false): return 0
 	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
-	if not issue.is_empty():
-		if OS.is_debug_build(): print("[가방 겹치기] 병합 보류 · ", issue)
-		return 0
+	# A plan the full ownership check rejects is not adopted; the bag stays as
+	# it is (still valid) and nothing is saved.
+	if not issue.is_empty(): return 0
 	item_instances=planned.item_instances
 	consumable_service.import_state(planned.consumable_state)
 	ui_preferences["item_locks"]=planned.item_locks
