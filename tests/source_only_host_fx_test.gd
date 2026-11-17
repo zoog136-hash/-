@@ -2,9 +2,10 @@ extends SceneTree
 ## TWILIGHT-made combat/light presentation under the 523 original-only rule
 ## (user report 2026-11-17: hazy glow around the character, a floating white
 ## "sword" beside a 유카). PlayerActionFX swing crescents/dust, CombatVFX
-## impact halos/crescents/rings and the critical-heading glow, and the
-## generated Source523PassiveLight have no original sprite: none of them is
-## drawn while current523_source_only_presentation() is true. Damage numbers
+## impact halos/crescents/rings and the critical-heading glow have no
+## original basis: none of them is drawn while
+## current523_source_only_presentation() is true. Damage numbers and the
+## Light spell's LightRadius light (an original rule, drawn approximately)
 ## stay. The original SkipDamageMotionSprite hit effect is the only hit effect
 ## selected, and only for a body the original declares.
 ##   godot --headless --path <repo> --script res://tests/source_only_host_fx_test.gd
@@ -88,7 +89,10 @@ func _run() -> void:
 		fx._process(1.0 / 60.0)
 		check(fx.visible != source_only, "%s: player swing crescent %s" % [label, "is hidden" if source_only else "stays for the host presentation"])
 		player.motion.active = false
-		# Source523PassiveLight: a generated gradient PointLight2D.
+		# Source523PassiveLight is the TWILIGHT approximation of an original
+		# light (라이트 LightRadius, BonusType 56 "시야거리"; the original
+		# draws it with the engine, there is no sprite: effect 2507 is a 34-byte
+		# blank). It stays in both presentations.
 		var service := FakeService.new()
 		service.world = world
 		var runtime = PROGRESSION.new()
@@ -97,7 +101,7 @@ func _run() -> void:
 		var light: Node = player.get_node_or_null("Source523PassiveLight")
 		var shown: bool = light != null and (light as CanvasItem).visible
 		evidence[label + "_light"] = shown
-		check(shown != source_only, "%s: generated passive light %s" % [label, "is not drawn" if source_only else "stays for the host presentation"])
+		check(shown, "%s: original LightRadius light stays (TWILIGHT approximation)" % label)
 		world.queue_free()
 		await process_frame
 		player.free()

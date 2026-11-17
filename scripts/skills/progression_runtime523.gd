@@ -2,7 +2,6 @@ extends RefCounted
 ## Existing skills only: persisted ON/OFF, explicit native execution and host timing.
 const RULES = preload("res://scripts/skills/progression_rules523.gd")
 const RECOVERY = preload("res://scripts/skills/recovery_rules523.gd")
-const SOURCE_ONLY_FX = preload("res://scripts/animation/source_only_host_fx.gd")
 var owner_ref: WeakRef
 var service: RefCounted:
 	get:return owner_ref.get_ref() if owner_ref!=null else null
@@ -95,9 +94,12 @@ func tick(delta: float) -> void:
 
 func update_light() -> void:
 	var radius: float=service.catalog.stat("lightRadius")
-	# The light is a generated gradient (no original sprite): not drawn under
-	# the 523 original-only presentation. The lightRadius stat is unchanged.
-	if radius<=0 or service.world.hp<=0 or SOURCE_ONLY_FX.active(service.world.player):
+	# Original rule: 라이트 (SpellClass 2, "밝은 광원을 만들어 주위를 밝힌다")
+	# gives LightRadius (BonusType 56, shown as 시야거리). The original client
+	# lights it in the engine, with no sprite (its effect 2507 is a 34-byte
+	# blank), so this gradient is the TWILIGHT approximation and stays under
+	# the 523 original-only presentation too.
+	if radius<=0 or service.world.hp<=0:
 		if is_instance_valid(light):light.hide()
 		return
 	if not is_instance_valid(light):
