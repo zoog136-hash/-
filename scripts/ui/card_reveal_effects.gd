@@ -79,6 +79,9 @@ func _path(a: Vector2, b: Vector2, salt: float, amount: float) -> PackedVector2A
 	return points
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if light_texture == null or elapsed < -0.3 or size.x < 1:
 		return
 	var p: Dictionary = PROFILES.profile(grade)

@@ -5,12 +5,12 @@ class_name TwilightCardPackItems
 # the visual hierarchy of the Inven draw-ticket/11-card pack references; no
 # third-party pixels or original-game artwork are redistributed.
 const PACKS: Dictionary = {
-	"최상급 변신 뽑기권": {"category": "변신", "count": 1, "image_path": "res://assets/card_packs/transformation_ticket.svg"},
-	"최상급 변신 뽑기권 11회 팩": {"category": "변신", "count": 11, "image_path": "res://assets/card_packs/transformation_pack.svg"},
-	"최상급 마법인형 뽑기권": {"category": "마법인형", "count": 1, "image_path": "res://assets/card_packs/doll_ticket.svg"},
-	"최상급 마법인형 뽑기권 11회 팩": {"category": "마법인형", "count": 11, "image_path": "res://assets/card_packs/doll_pack.svg"},
-	"최상급 성물 뽑기권": {"category": "성물", "count": 1, "image_path": "res://assets/card_packs/relic_ticket.svg"},
-	"최상급 성물 뽑기권 11회 팩": {"category": "성물", "count": 11, "image_path": "res://assets/card_packs/relic_pack.svg"}
+	"최상급 변신 뽑기권": {"category": "변신", "count": 1, "image_path": ""},
+	"최상급 변신 뽑기권 11회 팩": {"category": "변신", "count": 11, "image_path": ""},
+	"최상급 마법인형 뽑기권": {"category": "마법인형", "count": 1, "image_path": ""},
+	"최상급 마법인형 뽑기권 11회 팩": {"category": "마법인형", "count": 11, "image_path": ""},
+	"최상급 성물 뽑기권": {"category": "성물", "count": 1, "image_path": ""},
+	"최상급 성물 뽑기권 11회 팩": {"category": "성물", "count": 11, "image_path": ""}
 }
 
 static func definition(item_name: String) -> Dictionary:

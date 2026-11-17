@@ -31,8 +31,8 @@
 - Godot 4.7.2 Compatibility, Linux 소프트웨어 OpenGL(llvmpipe)로 실제 게임 씬을 실행했다.
 - [배치 검증](evidence/validation.json): 9,251개 조건, 실패 0개. 물리 공간 조회, 이동 격자와 실제 건물 입구 경로를 검사한다.
 - 전·후 각각 45장, 합계 90장. 모든 대응 화면의 카메라 위치·줌·실제 중심 좌표가 같다는 것을 [매니페스트](evidence/manifest.json)로 확인했다.
-- [기란 전후](evidence/aden_world-giran-before-after.jpg), [글루디오 전후](evidence/aden_world-gludio-before-after.jpg), [동부 숲 전후](evidence/aden_world-eastern_forest-before-after.jpg), [오만 외곽 전후](evidence/oman_01-western_rail-before-after.jpg).
-- [11개 마을 변경 후](evidence/after-towns.jpg), [전체 25개 지도 변경 후](evidence/after-all-25-maps.jpg). 전체 지도 캡처 성공을 원작 지도 완성으로 집계하지 않는다.
+- 기란 전후 _(스크린샷 삭제됨)_, 글루디오 전후 _(스크린샷 삭제됨)_, 동부 숲 전후 _(스크린샷 삭제됨)_, 오만 외곽 전후 _(스크린샷 삭제됨)_.
+- 11개 마을 변경 후 _(스크린샷 삭제됨)_, 전체 25개 지도 변경 후 _(스크린샷 삭제됨)_. 전체 지도 캡처 성공을 원작 지도 완성으로 집계하지 않는다.
 - 원본 로그: [변경 전 캡처](evidence/validation-logs/before-capture.txt), [변경 후 캡처](evidence/validation-logs/after-capture.txt), [배치 검사](evidence/validation-logs/placement-test.txt). 전체 프로젝트 검증 결과는 별도 요약과 로그에 기록한다.
 - [전체 프로젝트 최종 검증](evidence/project-validation-summary.json): 110개 중 107개 통과, 실패 0개, 원본 팩 미제공 3개 건너뜀. 단일 전체 실행은 1,800초 제한에 도달해 나머지를 별도로 완료했다. 시간 초과·초기 실패와 최종 성공 로그를 함께 보존했다.
 - [24개 필드 이동·전투·저장 검사](evidence/validation-logs/world_regions_test.txt): 5개 지역 계열, 5,673개 조건 통과. 기존 검사의 고정 몬스터 위치 `[1700,2416]`가 새 오만 바위 `[1728,2404]`의 이동 격자와 겹쳤으므로, 실제로 이동 가능한 직선 구간에 참가자를 놓도록 시험 장면만 수정했다. 접근 이동·처치·경험치 조건은 유지하고 참가자 위치의 유효성 검사도 추가했다.

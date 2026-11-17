@@ -24,7 +24,7 @@ func play_current_source(preview: Node,sprite_id: int,facing: int,point: Vector2
 	return preview.spawn_source_overlay(sprite_id,facing,point)
 
 func _play_legacy_source_for_reference(manifest: String,sprite_id: int,facing: int,point: Vector2) -> bool:
-	if active.size()>=MAX_ACTIVE or not ResourceLoader.exists(POLICY_PATH) or not FileAccess.file_exists(manifest):return false
+	if active.size()>=MAX_ACTIVE or not preload("res://scripts/resources/retired_assets.gd").usable(POLICY_PATH) or not FileAccess.file_exists(manifest):return false
 	var policy: Script=load(POLICY_PATH)
 	if policy.mode(manifest.get_base_dir())!="compatible":return false
 	var index: Variant=JSON.parse_string(FileAccess.get_file_as_string(manifest))

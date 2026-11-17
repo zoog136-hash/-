@@ -31,7 +31,7 @@ static func apply(record: Dictionary,host_map_id: String) -> Dictionary:
 		if held.get(field)!=original[field]:problem="current523_npc_original_changed";return {}
 	var admission: Dictionary=POLICY.admit(record,host_map_id)
 	if not admission.get("ok",false) or not admission.get("applied",false):problem=str(admission.get("reason","current523_map_admission_required"));return {}
-	if not ResourceLoader.exists(SELECTOR):problem="Sprite272 current523_source_bank_selection not integrated";return {}
+	if not preload("res://scripts/resources/retired_assets.gd").usable(SELECTOR):problem="Sprite272 current523_source_bank_selection not integrated";return {}
 	var selector: Resource=load(SELECTOR)
 	if selector==null or not selector.has_method("select"):problem="Sprite272 source selection contract missing";return {}
 	var selected: Variant=selector.call("select",admission.record,admission)

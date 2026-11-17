@@ -1,21 +1,13 @@
 extends RefCounted
 const GROUND_ICONS = preload("res://scripts/ui/ground_item_icons.gd")
-const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
 ## New pinned art wins; legacy links are recovery paths, never identity overrides.
-const FALLBACK = preload("res://scripts/ui/item_fallback_art.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
-const OPTIONAL = preload("res://scripts/ui/optional_item_icon_pack.gd")
 const SOURCE523 = preload("res://scripts/ui/source523_image_assets.gd")
 const MAX_CACHE: int = 256
-const LOCAL_ITEM_ICONS: Dictionary = {
-	"HP 물약":"res://assets/ui/potionRed.png",
-	"강력 HP 물약":"res://assets/ui/potionRed.png",
-	"축복받은 HP 물약":"res://assets/ui/potionRed.png",
-	"초록 잎":"res://assets/ui/items/green_leaf_painted.png"
-}
+const RETIRED = preload("res://scripts/resources/retired_assets.gd")
 static var _loaded: bool = false
 static var _ids: Dictionary = {}
 static var _names: Dictionary = {}
@@ -39,7 +31,7 @@ static func _ensure() -> void:
 		if proof is Dictionary: _evidence = verified_paths(proof.get("records", {}))
 
 ## A canonical record only feeds identity checks and image/category routing
-## here (this file, ground_item_icons, optional_item_icon_pack, the L1J/A2
+## here (this file, ground_item_icons, the L1J/A2
 ## bridges and the visual manifest read exactly these fields). Stats, options
 ## and descriptions are owned by the game catalog, not by this resolver.
 const SOURCE_FIELDS: Array[String] = ["sourceId", "name", "image_path", "type", "slot", "crafting_scroll", "crafting_material"]
@@ -62,16 +54,18 @@ static func verified_paths(records: Variant) -> Dictionary:
 	return result
 
 static func _valid(path: String) -> bool:
-	if not path.begins_with("res://assets/") or path.contains("..") or path.contains("\\"):
+	# Every res://assets/ picture is retired (no self-made or old-pack art);
+	# an older install may still carry the files, so never read them.
+	if not path.begins_with("res://assets/") or path.contains("..") or path.contains("\\") or RETIRED.retired(path):
 		return false
-	if ResourceLoader.exists(path): return true
+	if preload("res://scripts/resources/retired_assets.gd").usable(path): return true
 	# Optional/local PNGs may exist before editor import. Do not mistake missing
 	# .godot import metadata for a deleted image; exported .ctex still uses load().
 	return path.get_extension().to_lower() in ["png", "webp", "jpg", "jpeg", "svg"] and FileAccess.file_exists(path)
 
 static func _load_path(path: String) -> Texture2D:
 	if not _valid(path): return null
-	if ResourceLoader.exists(path): return load(path) as Texture2D
+	if preload("res://scripts/resources/retired_assets.gd").usable(path): return load(path) as Texture2D
 	var pixels := Image.new()
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 	var error: int = ERR_FILE_UNRECOGNIZED
@@ -116,18 +110,6 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 			original["category"] = choice.category
 			original["art_source"] = choice
 		return original
-	# Ground art and all real/unknown source IDs retain the original resolver.
-	if not ground and str(record.get("sourceId", "")).is_empty():
-		_ensure()
-		var inventory_name: String = str(record.get("name", fallback_name))
-		# Catalog names (including ambiguous variants) must never borrow an alias.
-		if not _names.has(inventory_name):
-			var binding: Dictionary = INVEN_INVENTORY.lookup(record, inventory_name)
-			if not binding.is_empty():
-				return {"source_id":"", "name":inventory_name, "path":binding.path,
-					"status":"inven_exact_name" if binding.match_kind == "exact_name" else "inven_visual_alias",
-					"route":"inven_inventory", "family":"", "match_kind":binding.match_kind,
-					"art_source":binding.art_source}
 	return _describe_original(record, fallback_name, images, ground)
 
 static func _describe_original(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
@@ -165,13 +147,6 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 	if not source.is_empty() and not ambiguous and _valid(record_path):
 		result.path = record_path
 		result.route = "legacy_record_path"
-		if record_path.begins_with("res://assets/ui/"): result.status = "bundled_ui_art"
-		return result
-	var local_path: String = str(LOCAL_ITEM_ICONS.get(name_value,""))
-	if not has_id and id.is_empty() and not ambiguous and _valid(local_path):
-		result.path = local_path
-		result.route = "twilight_local_item"
-		result.status = "bundled_ui_art"
 		return result
 	# A known ID paired with the wrong name is rejected all the way to fallback.
 	if not source.is_empty() and not ambiguous:
@@ -192,16 +167,6 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 			result.path = bridge.resource_path
 			result.route = "a2_candidate"
 			return result
-	# Private exact-name icon candidates are allowed only for records with no
-	# sourceId. They never override verified catalog, physical, reviewed L1J,
-	# visual manifest, or A2 art, and invalid/missing files retain fallback.
-	if id.is_empty() and not ambiguous:
-		var optional: Dictionary = OPTIONAL.lookup(source, name_value)
-		if not optional.is_empty():
-			result.path = str(optional.get("path", ""))
-			result.route = "optional_exact_name_icon"
-			result.status = "original_review_pending"
-			return result
 	# The pre-rework exact-name index also contains deliberate stock UI links.
 	# Restore those links instead of replacing them with an unrelated family
 	# symbol. They are bundled art, not newly verified publisher originals.
@@ -210,14 +175,13 @@ static func _describe_original(record: Dictionary, fallback_name: String = "", i
 	if not has_id and not ambiguous and _valid(indexed):
 		result.path = indexed
 		result.route = "legacy_exact_name_index"
-		if indexed.begins_with("res://assets/ui/"): result.status = "bundled_ui_art"
 		return result
 	if preload("res://scripts/cards/source_awakening_items.gd").recognized(record):
 		result.route="source_original_unavailable";result.status="original_icon_not_installed"
 		return result
-	result.family = FALLBACK.family(record, name_value)
-	result.route = "twilight_family_symbol"
-	result.status = "self_authored_substitute"
+	# No self-made family symbol: the slot stays empty.
+	result.route = "no_original_image"
+	result.status = "original_icon_not_installed"
 	result["reason"] = "ambiguous_name" if ambiguous else "no_verified_source_path"
 	return result
 
@@ -242,14 +206,14 @@ static func texture(record: Dictionary, name_value: String = "", images: Diction
 			"reviewed_l1j": external = REVIEWED.item_icon(source, str(info.name))
 			"a2_candidate": external = A2.item_icon(source, str(info.name))
 		if external != null: return external
-		return FALLBACK.texture(FALLBACK.family(record, name_value))
-	if path.is_empty(): return FALLBACK.texture(str(info.family))
+		return null
+	if path.is_empty(): return null
 	if _textures.has(path):
 		_order.erase(path)
 		_order.append(path)
 		return _textures[path]
 	var result: Texture2D = _load_path(path)
-	if result == null: return FALLBACK.texture(FALLBACK.family(record, name_value))
+	if result == null: return null
 	_textures[path] = result
 	_order.append(path)
 	while _order.size() > MAX_CACHE: _textures.erase(_order.pop_front())

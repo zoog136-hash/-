@@ -44,10 +44,10 @@ var lineage_side_ui: TwilightSideUI
 var lineage_inventory_ui: TwilightInventoryUI
 
 const V20_CLASS_SHEETS: Array[String] = [
-	"res://assets/sprites/classes/warrior.png",
-	"res://assets/sprites/classes/mage.png",
-	"res://assets/sprites/classes/archer.png",
-	"res://assets/sprites/classes/assassin.png"
+	"",
+	"",
+	"",
+	""
 ]
 
 func _ready() -> void:
@@ -262,7 +262,8 @@ func _place(control: Control, left: float, top: float, right: float, bottom: flo
 	control.offset_bottom = bottom
 
 func _load_texture(path: String) -> Texture2D:
-	if path != "" and ResourceLoader.exists(path):
+	# Retired res://assets/ pictures are never read, even if an older install has them.
+	if path != "" and preload("res://scripts/resources/retired_assets.gd").usable(path):
 		return load(path) as Texture2D
 	return null
 
@@ -388,7 +389,7 @@ func _build_v20_status() -> void:
 	content.add_child(gold_label)
 
 	# Two immediate-use item slots next to the status block.
-	var red: Button = _make_icon_button(v20_layer, "res://assets/ui/potionRed.png", "", Rect2(380.0, 15.0, 58.0, 66.0), 12)
+	var red: Button = _make_icon_button(v20_layer, "", "", Rect2(380.0, 15.0, 58.0, 66.0), 12)
 	red.pressed.connect(func() -> void: potion_pressed.emit())
 	v20_potion_button = red
 	v20_potion_count = Label.new()
@@ -401,7 +402,7 @@ func _build_v20_status() -> void:
 	_place(v20_potion_count, 380.0, 61.0, 436.0, 82.0)
 	v20_layer.add_child(v20_potion_count)
 
-	var leaf: Button = _make_icon_button(v20_layer, "res://assets/ui/leaf.png", "", Rect2(442.0, 15.0, 58.0, 66.0), 12)
+	var leaf: Button = _make_icon_button(v20_layer, "", "", Rect2(442.0, 15.0, 58.0, 66.0), 12)
 	v20_leaf_button = leaf
 	leaf.name = "AinhasadLeaf"
 	leaf.tooltip_text = "아인하사드의 축복 · 눌러서 상세 정보와 충전 아이템 보기"
@@ -530,7 +531,7 @@ func _build_v20_buffs() -> void:
 	title.add_theme_font_size_override("font_size", 15)
 	title.add_theme_color_override("font_color", Color(0.84, 0.80, 0.70, 1.0))
 	row.add_child(title)
-	for path: String in ["res://assets/ui/wind.png", "res://assets/ui/energy.png", "res://assets/ui/fire.png", "res://assets/ui/shield.png"]:
+	for path: String in ["", "", "", ""]:
 		var slot: TextureRect = TextureRect.new()
 		slot.custom_minimum_size = Vector2(48.0, 38.0)
 		slot.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -548,16 +549,16 @@ func _build_v20_top_menu() -> void:
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
-	var shop: Button = _top_menu_button("res://assets/ui/shop.png", "상점")
+	var shop: Button = _top_menu_button("", "상점")
 	shop.pressed.connect(open_shop)
 	row.add_child(shop)
-	var bag: Button = _top_menu_button("res://assets/ui/bag.png", "가방")
+	var bag: Button = _top_menu_button("", "가방")
 	bag.pressed.connect(func() -> void: inventory_pressed.emit())
 	row.add_child(bag)
-	var skill: Button = _top_menu_button("res://assets/ui/skill.png", "스킬")
+	var skill: Button = _top_menu_button("", "스킬")
 	skill.pressed.connect(open_skills)
 	row.add_child(skill)
-	var menu: Button = _top_menu_button("res://assets/ui/menu.png", "메뉴")
+	var menu: Button = _top_menu_button("", "메뉴")
 	menu.pressed.connect(func() -> void: menu_pressed.emit())
 	row.add_child(menu)
 
@@ -630,7 +631,7 @@ func _build_v20_right_controls() -> void:
 
 	var target_button: Button = Button.new()
 	target_button.text = "대상"
-	target_button.icon = _load_texture("res://assets/ui/eye.png")
+	target_button.icon = _load_texture("")
 	target_button.expand_icon = true
 	target_button.add_theme_font_size_override("font_size", 13)
 	target_button.add_theme_color_override("font_color", Color(0.94, 0.90, 0.82, 1.0))
@@ -655,7 +656,7 @@ func _build_v20_right_controls() -> void:
 
 	var attack: Button = Button.new()
 	attack.text = "공격"
-	attack.icon = _load_texture("res://assets/ui/attack.png")
+	attack.icon = _load_texture("")
 	attack.expand_icon = true
 	attack.add_theme_font_size_override("font_size", 15)
 	attack.add_theme_color_override("font_color", Color(1.0, 0.91, 0.76, 1.0))
@@ -710,8 +711,8 @@ func _build_v20_bottom_bar() -> void:
 	sys.add_theme_constant_override("separation", 4)
 	sys_panel.add_child(sys)
 	for data: Array in [
-		["res://assets/ui/macro.png", "매크로"],
-		["res://assets/ui/settings.png", "설정"]
+		["", "매크로"],
+		["", "설정"]
 	]:
 		var button: Button = Button.new()
 		button.custom_minimum_size = Vector2(52.0, 58.0)
@@ -830,7 +831,7 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 			var is_buff: bool = str(skill.get("effect", "")).find("Buff") >= 0
 			var active_text: String = " · ACTIVE" if active_buffs.has(entry_id) else ""
 			button.text = entry_id.left(5) + ("\nAUTO" if bool(entry.get("auto", false)) else "")
-			button.icon = load(str(skill.icon)) as Texture2D if skill.has("icon") else _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
+			button.icon = null
 			button.expand_icon = true
 			button.tooltip_text = "%s · %s · MP %d%s" % [
 				entry_id, str(skill.get("type", "")), int(skill.get("mp", 0)),
@@ -841,7 +842,7 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 			button.text = "%s\nx%d" % [entry_id.left(4), count]
 			var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 			var path: String = str(images.get(entry_id, ""))
-			if path != "" and ResourceLoader.exists(path):
+			if path != "" and preload("res://scripts/resources/retired_assets.gd").usable(path):
 				button.icon = load(path) as Texture2D
 				button.expand_icon = true
 			var item_active_text: String = ""
@@ -860,16 +861,9 @@ func _job_skill_by_name(skill_name: String) -> Dictionary:
 				return skill
 	return {}
 
-func _skill_icon(effect: String, type_text: String) -> Texture2D:
-	if effect == "heal":
-		return _load_texture("res://assets/ui/heal.png")
-	if effect in ["damage", "charge", "turnUndead"]:
-		return _load_texture("res://assets/ui/attack.png")
-	if effect.find("Buff") >= 0 or type_text == "버프":
-		return _load_texture("res://assets/ui/rune.png")
-	if effect == "teleport" or type_text == "이동":
-		return _load_texture("res://assets/ui/wind.png")
-	return _load_texture("res://assets/ui/skill.png")
+## No self-made or old assets/ui skill pictures: an unconnected skill stays empty.
+func _skill_icon(_effect: String, _type_text: String) -> Texture2D:
+	return null
 
 func _emit_combat_skill(skill_id: String) -> void:
 	combat_skill_pressed.emit(skill_id)
@@ -924,7 +918,7 @@ func set_character_state(value: Dictionary) -> void:
 			v20_portrait.remove_meta("source523_class_image")
 	if source_portrait:
 		_update_source_class_portrait()
-	elif job_image_path != "" and ResourceLoader.exists(job_image_path):
+	elif job_image_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(job_image_path):
 		var job_texture: Texture2D = load(job_image_path) as Texture2D
 		if job_texture != null and v20_portrait != null:
 			v20_portrait.texture = job_texture
@@ -953,7 +947,7 @@ func _update_v20_portrait(class_index_value: int) -> void:
 		if v20_portrait.has_meta("source523_class_image"): v20_portrait.remove_meta("source523_class_image")
 		return
 	var path: String = V20_CLASS_SHEETS[clampi(class_index_value, 0, V20_CLASS_SHEETS.size() - 1)]
-	if not ResourceLoader.exists(path):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):
 		return
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null:

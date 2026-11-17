@@ -48,12 +48,12 @@ func get_record(source_qualified_id: String) -> Dictionary:
 
 func get_inventory_icon_path(source_qualified_id: String) -> String:
     var texture_path: String = str(get_record(source_qualified_id).get("inventory_texture", ""))
-    if texture_path.begins_with("res://assets/l1j/") and ResourceLoader.exists(texture_path):
+    if texture_path.begins_with("res://assets/l1j/") and preload("res://scripts/resources/retired_assets.gd").usable(texture_path):
         return texture_path
     return ""
 
 func get_ground_icon_path(source_qualified_id: String) -> String:
     var texture_path: String = str(get_record(source_qualified_id).get("ground_texture", ""))
-    if texture_path.begins_with("res://assets/l1j/") and ResourceLoader.exists(texture_path):
+    if texture_path.begins_with("res://assets/l1j/") and preload("res://scripts/resources/retired_assets.gd").usable(texture_path):
         return texture_path
     return ""

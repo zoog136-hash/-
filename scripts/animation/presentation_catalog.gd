@@ -17,7 +17,7 @@ static func configure(profile: TwilightAnimationProfile, kind: String, record: D
 		# The installed source can differ from the fallback atlas family (a
 		# biped werewolf vs a quadruped wolf, for example). Prefer reviewed art.
 		var source: String = str(MANIFEST.monster_binding(record).get("path", ""))
-		if not source.is_empty() and ResourceLoader.exists(source):
+		if not source.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(source):
 			body = str(data.get("monster_sources", {}).get(source, {}).get("body", body))
 	var override: Dictionary = record.get("animation_profile", {})
 	body = str(override.get("body_kind", body))

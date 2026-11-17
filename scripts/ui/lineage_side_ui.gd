@@ -518,7 +518,7 @@ func _refresh_character() -> void:
 	defense_label.text = "방어 %d" % int(character_state.get("defense", character_state.get("ac", 0)))
 
 	var image_path := str(character_state.get("job_image_path", ""))
-	if image_path != "" and ResourceLoader.exists(image_path):
+	if image_path != "" and preload("res://scripts/resources/retired_assets.gd").usable(image_path):
 		character_preview.texture = load(image_path) as Texture2D
 
 	var equipped_items: Dictionary = character_state.get("equipped_items", {}) as Dictionary

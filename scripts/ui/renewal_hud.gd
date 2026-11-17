@@ -804,7 +804,7 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 			source_image=Source523SkillImages.apply(icon,source_image,"active_buff_row")
 			b.set_meta("source523_buff_image",Source523SkillImages.evidence(source_image))
 		else:
-			icon.texture=_load_texture("res://assets/ui/rune.png")
+			icon.texture=null
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.position = Vector2(5,2)
@@ -872,7 +872,6 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
 		else:
 			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
-			var path: String = str(skill.get("icon",""))
 			var source_image: Dictionary = Source523SkillImages.describe_guardian_skill(skill,get_parent().get("growth")) if skill.get("origin") == "TWILIGHT_GUARDIAN523" else Source523SkillImages.describe_skill(skill)
 			if source_image.handled:
 				source_image=Source523SkillImages.apply(quickslot_icons[index],source_image,"skill_quickslot")
@@ -880,7 +879,8 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 					quickslot_captions[index].text = Source523SkillImages.missing_label(source_image)
 			else:
 				Source523SkillImages.clear(quickslot_icons[index])
-				quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
+				# Only the original 523 skill picture; old icon files are never read.
+				quickslot_icons[index].texture = null
 			quickslot_icons[index].modulate = Color.WHITE
 		if bool(entry.get("auto",false)):
 			quickslot_auto_badges[index].text = "AUTO"
@@ -2497,7 +2497,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	for path: String in candidate_paths:
 		if candidates.size() >= 16:
 			break
-		if ResourceLoader.exists(path):
+		if preload("res://scripts/resources/retired_assets.gd").usable(path):
 			var texture: Texture2D = load(path) as Texture2D
 			if texture != null:
 				candidates.append(texture)
@@ -2652,7 +2652,7 @@ func _continue_catalog_drag(point: Vector2) -> void:
 		catalog_drag_ready = true
 		var record: Dictionary = catalog_results[catalog_drag_index] as Dictionary
 		var path: String = str(record.get("image_path", ""))
-		var art: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+		var art: Texture2D = load(path) as Texture2D if not path.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(path) else null
 		if catalog_category == "아이템":
 			art = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
 		if SourceCardPresentation.native(record):
@@ -2821,7 +2821,7 @@ func _apply_catalog_page() -> void:
 				source_card_images[index] = evidence
 			else:
 				var path := str(record.get("image_path", ""))
-				if path != "" and ResourceLoader.exists(path):
+				if path != "" and preload("res://scripts/resources/retired_assets.gd").usable(path):
 					catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
 	catalog_list.set_meta("source523_card_images",source_card_images)
@@ -2905,8 +2905,6 @@ func _on_catalog_item_selected(index: int) -> void:
 	catalog_detail.text = "[font_size=18][b]%s[/b][/font_size]\n%s\n\n%s" % [UI.safe(item_name),UI.safe(selected_catalog_record.get("type","")),"\n".join(option_lines) if not option_lines.is_empty() else UI.safe(selected_catalog_record.get("desc",""))]
 	if catalog_category == "아이템":
 		UI.apply_item_visual(catalog_preview,selected_catalog_record,item_name,item_image_index.get("아이템",{}),"detail")
-		if catalog_preview.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
-			catalog_detail.text += "\n대체 아이콘 ◇"
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0

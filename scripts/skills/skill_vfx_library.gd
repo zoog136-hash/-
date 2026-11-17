@@ -64,7 +64,7 @@ func acquire(id: String) -> Dictionary:
 				denied += 1
 				return {}
 			entries.erase(victim)
-		if not ResourceLoader.exists(path): return {}
+		if not preload("res://scripts/resources/retired_assets.gd").usable(path): return {}
 		var atlas := ResourceLoader.load(path, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
 		if atlas == null: return {}
 		var frames := SpriteFrames.new()

@@ -110,7 +110,7 @@ static func committed(world: Node,path: String,candidate: Dictionary) -> bool:
 
 static func quest_ownership_provider() -> Script:
 	var path: String="res://scripts/quests/quest_reward_ownership.gd"
-	if not ResourceLoader.exists(path):return null
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path):return null
 	var provider: Script=load(path)
 	# Re-reviewed 2026-11-14 at 7b3a1ed: since 708c581 (11-04) only the native
 	# field accessor (NATIVE_FIELDS.full) and service.full() row loading were

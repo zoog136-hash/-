@@ -13,7 +13,7 @@ static func frame(plist: String, key: String) -> Image:
 	if not LEGACY_CARD_PACK_FINAL_USE: return null
 	var identity: String = plist + ":" + key
 	if frames.has(identity): return frames[identity]
-	if missing.has(identity) or not ResourceLoader.exists(SOURCE_API): return null
+	if missing.has(identity) or not preload("res://scripts/resources/retired_assets.gd").usable(SOURCE_API): return null
 	var entry: Dictionary = INDEX.data.atlases.get(plist,{})
 	var spec: Dictionary = entry.get("frames",{}).get(key,{})
 	if spec.is_empty(): return null

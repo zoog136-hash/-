@@ -7,6 +7,9 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if size.x < 72.0 or size.y < 62.0:
 		return
 	var outer := Color("654a2c")

@@ -108,7 +108,7 @@ func _ready() -> void:
 	detail_panel.reparent(self)
 	detail_panel.z_index = 10
 	detail_panel.custom_minimum_size = Vector2(300,0)
-	var detail_frame: StyleBoxTexture=UI.screen_frame()
+	var detail_frame: StyleBoxFlat=UI.screen_frame()
 	for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:detail_frame.set_content_margin(side,12)
 	detail_panel.add_theme_stylebox_override("panel",detail_frame)
 	detail_panel.minimum_size_changed.connect(_queue_detail_layout)
@@ -752,8 +752,6 @@ func _refresh_detail(item_reference: String) -> void:
 		detail_action.disabled = false
 		detail_action.tooltip_text = "선택한 장비의 장착을 해제합니다"
 	detail_type.text = str(item.get("type","")) + (" · 각인" if _is_engraved(item,item_name) else "")
-	if detail_icon.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
-		detail_type.text += " · 대체 아이콘 ◇"
 
 	if not detail_type.text.contains("선택됨"):detail_type.text+=" · 선택됨"
 	var selection_locked: bool=bool(character_state.get("item_locks",{}).get(item_reference,false))
@@ -833,7 +831,7 @@ func _settle_detail_layout() -> void:
 
 func _draw_slot_recesses() -> void:
 	if preload("res://scripts/ui/source_inventory_skin.gd").style()!=null:return
-	var style: StyleBoxTexture = UI.slot_recess()
+	var style: StyleBoxFlat = UI.slot_recess()
 	for child: Node in item_grid.get_children():
 		if child is Control and child.visible:
 			item_grid.draw_style_box(style,Rect2(child.position+Vector2(3,3),child.size-Vector2(6,6)))

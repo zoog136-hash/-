@@ -7,6 +7,9 @@ func contains_world(point: Vector2) -> bool:
 	var local: Vector2 = to_local(point)
 	return Rect2(Vector2(-radius,-radius),Vector2.ONE*radius*2).has_point(local) if box else local.length_squared() <= radius*radius
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	var color := Color(.95,.64,.12,.2) if warning else Color(.95,.18,.12,.25)
 	if box:
 		draw_rect(Rect2(Vector2.ONE*-radius,Vector2.ONE*radius*2),color)

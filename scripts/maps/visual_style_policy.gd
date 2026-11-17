@@ -19,16 +19,10 @@ static func prop_tint(mode: String) -> Color:
 static func saturation_multiplier(mode: String) -> float:
 	return 0.85 if normalize(mode) == CLASSIC else 1.0
 
-static func npc_class_art(role: String) -> String:
-	match role:
-		"shop","teleport":
-			return "res://assets/sprites/classes/mage.png"
-		"warehouse":
-			return "res://assets/sprites/classes/archer.png"
-		"buyback":
-			return "res://assets/sprites/classes/assassin.png"
-		_:
-			return "res://assets/sprites/classes/warrior.png"
+## No NPC substitute picture: the old class sheets were retired (no self-made
+## or pre-523 art). Callers leave the NPC body empty.
+static func npc_class_art(_role: String) -> String:
+	return ""
 
 static func npc_role_tint(role: String) -> Color:
 	match role:

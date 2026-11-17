@@ -28,11 +28,7 @@
 
 장거리 검사는 실제 CharacterBody2D와 경로를 이용해 글루디오 진입부에서 기란까지, 오만 진입부에서 반대편 전장까지 이동한다. 게임 시간만 10배로 가속하며 순간이동으로 도착시키지 않는다. 이동 중 통행 가능 영역과 충돌 여유를 반복 검사한다. 실제 이동 거리와 물리 프레임 수는 같은 JSON에 기록한다.
 
-`evidence/before`와 `evidence/after`에는 25개 전체 지도 및 두 지역의 플레이 카메라가 있다. 전체 지도 촬영은 각 지도 경계에 맞춰 줌을 조정하므로 동일한 절대 좌표 카메라 비교가 아니다. `manifest.json`은 실제 파일 크기와 SHA-256을 기록한다. 전 지역 출력 성공을 지도 재현 완료로 계산하지 않는다.
-
-- `aden_world-before-after.jpg`, `oman_01-before-after.jpg`: 실제 전체 지도 전후.
-- `before-contact-sheet.jpg`, `after-contact-sheet.jpg`: 전체 25개 지도.
-- `oman-floor-sheet.jpg`, `faith-floor-sheet.jpg`, `domination-floor-sheet.jpg`: 현재 구현된 각 탑 지도. 오만 2~10층·신념 1~4층·지배 정상은 기존 임시 구조임을 유지한다.
+`evidence/before`·`evidence/after`의 촬영 이미지는 2026-11-17 저장소에서 삭제되었다(스크린샷은 커밋하지 않는다). `captures.json`·`manifest.json`에는 당시 파일 이름·크기·SHA-256 기록만 남아 있다. 전 지역 출력 성공을 지도 재현 완료로 계산하지 않는다.
 
 검사 명령: `tools/test_project.py --godot <Godot 4.7.2> --render-visual-tests`, `tests/world_structure_test.gd`, `tests/world_structure_capture_test.gd`. 실제 전체 검사 결과는 동봉 로그와 요약 JSON으로 판정한다. 검사에 사용한 4×3 L1J 데이터와 작은 이미지 fixture는 자체 제작 테스트 데이터이며 원본 팩 복원이 아니다.
 

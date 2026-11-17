@@ -52,7 +52,7 @@ static func effects_frames(id: String) -> SpriteFrames:
 	var key: String = id + ":effects"
 	if _cache.has(key): return _cache[key]
 	var path: String = PREFIX + id + "/EffectsFrames.tres"
-	if not ResourceLoader.exists(path): return null
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return null
 	var loaded: SpriteFrames = load(path) as SpriteFrames
 	var body: SpriteFrames = frames(id)
 	if loaded == null or body == null: return null
@@ -69,7 +69,7 @@ static func frames(id: String) -> SpriteFrames:
 	if not ACTOR_IDS.has(id): return null
 	if _cache.has(id): return _cache[id]
 	var path: String = PREFIX + id + "/SpriteFrames.tres"
-	if not ResourceLoader.exists(path): return null
+	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return null
 	var loaded: SpriteFrames = load(path) as SpriteFrames
 	if loaded == null: return null
 	for role: String in ROLES:

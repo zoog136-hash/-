@@ -49,7 +49,7 @@ func frames_for(id: String, phase: String) -> SpriteFrames:
 		frames = cache[family] as SpriteFrames
 	else:
 		var path := PREFIX + family + "/SpriteFrames.tres"
-		if not ResourceLoader.exists(path):
+		if not preload("res://scripts/resources/retired_assets.gd").usable(path):
 			return null
 		frames = load(path) as SpriteFrames
 		if frames == null:

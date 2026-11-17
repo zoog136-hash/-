@@ -2,7 +2,6 @@ extends SceneTree
 
 const QA = preload("res://tests/qa_class_selection.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
-const Icons = preload("res://scripts/ui/renewal_icons.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 var assertions: int = 0
 var failures: Array[String] = []
@@ -24,9 +23,8 @@ func _drag(index: int, point: Vector2, motion: Vector2) -> void:
 
 func _run() -> void:
 	root.size=Vector2i(1280,720)
-	for key: String in Icons.PATHS:
-		var texture: Texture2D = UI.icon(key)
-		_check(texture != null and texture.get_width() > 0,"own SVG icon loads "+key)
+	for key: String in ["inventory","skills","settings","attack","close","lock"]:
+		_check(UI.icon(key) == null,"no self-drawn or old service icon: "+key)
 	var world: TwilightWorld = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	for frame: int in range(8): await process_frame

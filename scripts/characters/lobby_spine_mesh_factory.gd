@@ -108,7 +108,7 @@ static func create(bundle: Dictionary, root_path: String, entry: Dictionary) -> 
 		var image := Image.new()
 		if image.load_png_from_buffer(bytes) != OK or image.get_size() != size: return _fail("mesh_bake_page_decode_failed")
 		textures[path] = ImageTexture.create_from_image(image)
-	if not ResourceLoader.exists(PLAYER_PATH): return _fail("mesh_player_not_installed")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(PLAYER_PATH): return _fail("mesh_player_not_installed")
 	var player_script: Script = load(PLAYER_PATH) as Script
 	if player_script == null: return _fail("mesh_player_not_installed")
 	var node: Node2D = player_script.new()

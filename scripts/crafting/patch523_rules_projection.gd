@@ -1205,7 +1205,7 @@ func _build_bound(catalog_bytes: PackedByteArray, binding: Dictionary, binding_s
 		"items":items_part,"bonuses":{"twilight_source_lazy":true,"ids":_used.keys()},"bonus_types":_index(_tables.BonusType),"enchantment":enchantment,"source_exclusions":{},
 		"equipment_runtime":runtime_part}
 	if not binding_sha256.is_empty(): result.binding_catalog_sha256 = binding_sha256
-	if not ResourceLoader.exists(EQUIPMENT_PATH): problem = "제작 장비 projection 모듈이 아직 없습니다 · 미완료"; return {}
+	if not preload("res://scripts/resources/retired_assets.gd").usable(EQUIPMENT_PATH): problem = "제작 장비 projection 모듈이 아직 없습니다 · 미완료"; return {}
 	var equipment_script: Script = load(EQUIPMENT_PATH)
 	if equipment_script == null: problem = "제작 장비 projection 모듈을 읽을 수 없습니다 · 미완료"; return {}
 	_equipment = equipment_script.new()

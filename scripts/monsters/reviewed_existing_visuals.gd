@@ -11,7 +11,7 @@ static func binding(record:Dictionary) -> Dictionary:
 static func configure(profile:Resource,kind:String,record:Dictionary) -> void:
  if kind!="monster":return
  var entry:Dictionary=binding(record)
- if entry.is_empty() or not ResourceLoader.exists(str(entry.frames_path)):return
+ if entry.is_empty() or not preload("res://scripts/resources/retired_assets.gd").usable(str(entry.frames_path)):return
  profile.frames_path=str(entry.frames_path)
  profile.animation_names={}
  profile.native_width_ratio=0.90

@@ -22,7 +22,7 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 		result["source_unavailable"]=true
 		result.source_problems.append("current523_source_unavailable:"+Source.problem())
 		return result
-	var source_aura_component: bool=ResourceLoader.exists("res://scripts/animation/source_awakening_aura.gd")
+	var source_aura_component: bool=preload("res://scripts/resources/retired_assets.gd").usable("res://scripts/animation/source_awakening_aura.gd")
 	var identities: Dictionary={}
 	for category: String in Cards.CATEGORIES:
 		for record: Dictionary in catalog.get(category,[]):

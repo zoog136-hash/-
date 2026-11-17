@@ -28,6 +28,9 @@ func finish_strike(duration: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	var fade := minf(1,age*3)
 	var bob := sin(age*(11 if walking else 2))*(3 if walking else 1)
 	var center := Vector2(0,-28+bob)

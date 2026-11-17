@@ -214,7 +214,7 @@ func _prepare_csb(layer: Dictionary, role: String, ticket: int) -> Dictionary:
 		clips.append(clip.name)
 	# Missing/unselected lobby art must not initialize the shared renderer's
 	# image/card dependency graph during an ordinary roster launch.
-	if not ResourceLoader.exists(SCENE_PATH): return _layer_error(layer,"renderer_error","source_csb_renderer_missing")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(SCENE_PATH): return _layer_error(layer,"renderer_error","source_csb_renderer_missing")
 	var renderer_script: Script = load(SCENE_PATH) as Script
 	if ticket != _generation: return _superseded()
 	if renderer_script == null: return _layer_error(layer,"renderer_error","source_csb_renderer_missing")
@@ -285,7 +285,7 @@ func _prepare_spine(layer: Dictionary, ticket: int) -> Dictionary:
 	if use_baked_mesh:
 		var pack_root: String = _pack.root
 		var entry: Dictionary = explicit.mesh_bake.duplicate(true)
-		var factory_script: Script = load(MESH_FACTORY_PATH) as Script if ResourceLoader.exists(MESH_FACTORY_PATH) else null
+		var factory_script: Script = load(MESH_FACTORY_PATH) as Script if preload("res://scripts/resources/retired_assets.gd").usable(MESH_FACTORY_PATH) else null
 		if factory_script == null: return _layer_error(result,"missing_runtime","source_mesh_player_not_installed")
 		created = factory_script.create(bundle,pack_root,entry)
 	else:

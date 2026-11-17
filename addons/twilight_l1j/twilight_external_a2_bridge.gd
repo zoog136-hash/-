@@ -44,7 +44,7 @@ static func _texture(group: String, name_value: String) -> Texture2D:
 	var graphic_id: String = str(entry.get("graphic_id", ""))
 	if graphic_id.is_empty() or not graphic_id.is_valid_int() or graphic_id.begins_with("-"): return null
 	var expected: String = ROOT + group + "/" + graphic_id + ".png"
-	if str(entry.get("path", "")) != expected or not ResourceLoader.exists(expected): return null
+	if str(entry.get("path", "")) != expected or not preload("res://scripts/resources/retired_assets.gd").usable(expected): return null
 	if _textures.has(expected):
 		_order.erase(expected)
 		_order.append(expected)

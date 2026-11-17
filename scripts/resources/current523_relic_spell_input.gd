@@ -10,7 +10,7 @@ static func adopt(accepted_archive_identity: Dictionary) -> Dictionary:
 	# player profiles. It is not their in-memory/compiled profile fingerprint.
 	if accepted_archive_identity.get("source_snapshot")!="patch523" or accepted_archive_identity.get("source_sha256")!=CommonSource.SOURCE_SHA or accepted_archive_identity.get("source_bytes")!=CommonSource.SOURCE_BYTES:
 		return _status("held","accepted_original_profile_identity_required")
-	if not ResourceLoader.exists(OWNER_PATH):return _status("unavailable","owner_module_unavailable")
+	if not preload("res://scripts/resources/retired_assets.gd").usable(OWNER_PATH):return _status("unavailable","owner_module_unavailable")
 	var owner: Resource=load(OWNER_PATH)
 	var owner_script: Script=owner as Script
 	if owner_script==null:return _status("held","owner_script_unavailable")

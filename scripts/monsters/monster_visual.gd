@@ -157,6 +157,9 @@ func _draw_release() -> void:
 	impacts.halo(self, center, Vector2.ONE * 64.0 * effect_scale, Color(color, alpha * .45))
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if not is_instance_valid(actor): return
 	# Ordinary source/native actors draw their body directly. Only bosses
 	# need this node's extra warnings/criticals/death, so skip all draw setup.

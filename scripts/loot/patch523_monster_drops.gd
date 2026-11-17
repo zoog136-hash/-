@@ -280,7 +280,7 @@ static func _describe_item(item_id: int, native_only: bool = false) -> Dictionar
 	var reader: Script = CURRENT_DTO.registration_item_reader()
 	if reader == null:
 		var path: String = "res://scripts/resources/current523_item_data.gd"
-		if not ResourceLoader.exists(path): return {}
+		if not preload("res://scripts/resources/retired_assets.gd").usable(path): return {}
 		reader = load(path) as Script
 		if reader == null: return {}
 		# ItemData.describe is the published static reader API. Match the script's

@@ -65,7 +65,7 @@ func _check_dead_images() -> void:
 	check(unguarded.is_empty(), "no unguarded load of a removed repo image: " + ", ".join(unguarded))
 	var relic: String = FileAccess.get_file_as_string("res://scripts/ui/relic_reference_view.gd")
 	check(not relic.contains("res://assets/ui/return.png"), "relic summon scroll icon no longer loads the removed return.png")
-	check(preload("res://scripts/skills/lightning_vfx_art.gd").make_frames({"program":"lightning"}) == null or ResourceLoader.exists(preload("res://scripts/skills/lightning_vfx_art.gd").PATH), "missing lightning sheet gives no frames instead of a load error")
+	check(preload("res://scripts/skills/lightning_vfx_art.gd").make_frames({"program":"lightning"}) == null, "retired lightning sheet is never read: no frames, no load error")
 
 func _collect(directory: String, files: PackedStringArray) -> void:
 	var dir := DirAccess.open(directory)

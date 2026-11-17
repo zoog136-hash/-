@@ -29,7 +29,7 @@ func _ready() -> void:
 func configure(world: Node, adapter: RefCounted, offered_worlds: Dictionary, options: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(world) or not is_instance_valid(world.hud) or not world.hud.has_method("bind_original_world_map") or not world.hud.has_signal("original_world_map_image_clicked"):return _remember(_fail("world_map_ui267_caller_dependency_required"))
 	if adapter==null or not adapter.has_method("world_candidates") or not adapter.has_method("apply_field_world"):return _remember(_fail("world_map_image270_adapter_required"))
-	if not ResourceLoader.exists(IMAGE_OWNER_PATH):return _remember(_fail("world_map_image270_selection_owner_required"))
+	if not preload("res://scripts/resources/retired_assets.gd").usable(IMAGE_OWNER_PATH):return _remember(_fail("world_map_image270_selection_owner_required"))
 	var image_owner: Script=load(IMAGE_OWNER_PATH)
 	if image_owner==null:return _remember(_fail("world_map_image270_selection_owner_required"))
 	var bound: Dictionary=world.hud.call("bind_original_world_map",adapter,Callable(self,"context"),Callable(self,"input"))
@@ -53,7 +53,7 @@ func configure_from_settings(world: Node, path: String=CONFIG_PATH) -> Dictionar
 	if error==ERR_FILE_NOT_FOUND:return _remember({"ok":true,"selected":false,"reason":"world_map_private_settings_not_selected"})
 	if error!=OK:return _remember(_fail("world_map_private_settings_unreadable"))
 	if config.get_value("world_map","enabled",false)!=true:return _remember({"ok":true,"selected":false})
-	if not ResourceLoader.exists(ADAPTER_PATH):return _remember(_fail("world_map_image270_adapter_dependency_required"))
+	if not preload("res://scripts/resources/retired_assets.gd").usable(ADAPTER_PATH):return _remember(_fail("world_map_image270_adapter_dependency_required"))
 	if not is_instance_valid(world.hud) or not world.hud.has_method("bind_original_world_map"):return _remember(_fail("world_map_ui267_caller_dependency_required"))
 	var contract_path: Variant=config.get_value("world_map","contract_path","")
 	var pin: Variant=config.get_value("world_map","contract_sha256","")

@@ -21,7 +21,7 @@ func play_skill(id: String, point: Vector2, phase: String = "impact") -> bool:
 	if players.is_empty() or not PHASE_PITCH.has(phase): return false
 	if not cache.has(id):
 		var path := "res://assets/skills/audio/" + id + ".wav"
-		if not ResourceLoader.exists(path): return false
+		if not preload("res://scripts/resources/retired_assets.gd").usable(path): return false
 		cache[id] = load(path)
 	if not cache[id] is AudioStream: return false
 	var player := players[next_voice]

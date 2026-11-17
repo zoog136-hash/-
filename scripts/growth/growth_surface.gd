@@ -8,6 +8,9 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if size.x < 16 or size.y < 16: return
 	draw_line(Vector2(2,2),Vector2(size.x-2,2),Color("9b7e59"),1)
 	draw_line(Vector2(3,size.y-3),Vector2(size.x-3,size.y-3),Color(0,0,0,.8),2)

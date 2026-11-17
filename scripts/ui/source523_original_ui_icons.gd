@@ -78,7 +78,7 @@ static func _metadata_value(value: Variant) -> Variant:
 	return null
 
 static func prepare_pack(root: String, expected_sha256: String) -> Dictionary:
-	if not ResourceLoader.exists(PACK_PATH) or not ResourceLoader.exists(PLAYER_PATH):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(PACK_PATH) or not preload("res://scripts/resources/retired_assets.gd").usable(PLAYER_PATH):
 		return _unavailable("source_scene_player_not_installed")
 	var script: Variant = load(PACK_PATH)
 	if not script is Script or not script.can_instantiate():
@@ -403,7 +403,7 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 	var policy: Dictionary = _playback_policy(spec,context)
 	if not policy.get("ok",false):
 		return _attach_failure(view,str(policy.error))
-	if not ResourceLoader.exists(PLAYER_PATH):
+	if not preload("res://scripts/resources/retired_assets.gd").usable(PLAYER_PATH):
 		return _attach_failure(view,"source_scene_player_not_installed")
 	var host_context: Dictionary = _host_context(context)
 	var key: Dictionary = {"consumer":consumer.identity,"icon_id":int(canonical.icon_id),

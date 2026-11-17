@@ -52,7 +52,9 @@ static func _ensure() -> void:
 		if not (entry is Dictionary): continue
 		var path: String = str(entry.get("path", ""))
 		if not path.begins_with("res://assets/ground_categories/") or ".." in path or "\\" in path or not path.ends_with(".png"): continue
-		if not ResourceLoader.exists(path) and not FileAccess.file_exists(path): continue
+		# Old category pictures under res://assets/ are retired: never read them
+		# from an older install (OTA packs cannot delete files).
+		if preload("res://scripts/resources/retired_assets.gd").retired(path) or (not preload("res://scripts/resources/retired_assets.gd").usable(path) and not FileAccess.file_exists(path)): continue
 		_entries[str(key)] = entry
 
 static func lookup(record: Dictionary, item_name: String) -> Dictionary:

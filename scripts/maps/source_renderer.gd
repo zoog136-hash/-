@@ -28,10 +28,11 @@ func configure(value: PlayableField,actor: Node2D) -> void:
 	if authored_art_enabled:
 		authored_material=ShaderMaterial.new()
 		authored_material.shader=load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
-		authored_material.set_shader_parameter("atlas",(load("res://assets/maps/reference_expansion_v2/terrain.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/terrain.png") else null))
+		# The reference expansion sheets are retired TWILIGHT art: never read them.
+		authored_material.set_shader_parameter("atlas",null)
 		authored_material.set_shader_parameter("atlas_grid",4.0)
 		authored_material.set_shader_parameter("material_slots",Vector4(0,2,1,7))
-		var prop_atlas: Texture2D=(load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null)
+		var prop_atlas: Texture2D=null
 		for i: int in range(16):
 			authored_props.append(REFERENCE_VISUALS.cell(prop_atlas,i))
 	for record: Dictionary in source.definition.terrain_chunks:
@@ -48,7 +49,7 @@ func tile_texture(tile: int,index: int) -> Texture2D:
 		return source_textures[key] as Texture2D
 	var entry: Dictionary=tile_mapping.get(str(tile),{}).get("images",{}).get(str(index),{})
 	var path: String=str(entry.get("path",""))
-	if path.is_empty() or not ResourceLoader.exists(path): return null
+	if path.is_empty() or not preload("res://scripts/resources/retired_assets.gd").usable(path): return null
 	var found: Texture2D=load(path) as Texture2D
 	if found==null: return null
 	if source_textures.size()>=SOURCE_TEXTURE_LIMIT:
@@ -113,21 +114,16 @@ func _refresh_markers() -> void:
 			var node:=Node2D.new()
 			node.position=p
 			add_child(node)
-			var ring:=Line2D.new()
-			ring.width=2
-			ring.default_color=Color("87d1c8") if bool(entry[1]) else Color("dec68e")
-			for i: int in range(17): ring.add_point(Vector2(cos(TAU*i/16)*15,sin(TAU*i/16)*7))
-			node.add_child(ring)
+			# No self-drawn placement ring (user rule: no self-made images); the
+			# original name label remains.
 			if not bool(entry[1]) and record.has("source523_earth_object_class_id"):
 				# Original 523 town NPC: its original sprite is not connected yet,
-				# so only the placement ring and original name are shown (no own art).
+				# so only the original name is shown (no own art).
 				pass
 			elif not bool(entry[1]):
 				var npc:=Sprite2D.new()
-				var part:=AtlasTexture.new()
-				part.atlas=load(VISUAL_STYLE.npc_class_art(str(record.get("role","guide"))))
-				part.region=Rect2(0,0,148,116)
-				npc.texture=part
+				# No substitute NPC body (old class sheets retired): empty sprite.
+				npc.texture=null
 				npc.scale=Vector2.ONE*.55
 				npc.offset=Vector2(0,-52)
 				node.add_child(npc)

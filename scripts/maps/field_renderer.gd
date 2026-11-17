@@ -61,10 +61,8 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	atlas = load(str(field.data["foreground"]["prop_atlas"])) as Texture2D
 	terrain = load(str(field.data["background"]["material_atlas"])) as Texture2D
 	reference_profile = REFERENCE_VISUALS.profile(str(field.data.map_id))
-	# The reference expansion sheets were removed from the repo; keep the
-	# field's own atlas instead of loading a missing file.
-	if not reference_profile.is_empty() and ResourceLoader.exists("res://assets/maps/reference_expansion_v2/terrain.png"):
-		terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
+	# The reference expansion sheets are retired TWILIGHT art: never read them,
+	# even from an older install that still carries the files.
 	for kind: String in REGIONS:
 		var tex := AtlasTexture.new()
 		tex.atlas = atlas
@@ -72,10 +70,6 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		tex.filter_clip = true
 		textures[kind] = tex
 		detail_textures[kind] = tex
-	if not reference_profile.is_empty():
-		var expanded: Texture2D = (load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null)
-		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
-			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
 	terrain_root = Node2D.new()
 	terrain_root.name = "Terrain"
 	terrain_root.z_index = -20
@@ -469,11 +463,8 @@ func _build_markers() -> void:
 		var p: Vector2 = COORD.array_vector(npc["position"])
 		var sprite := Sprite2D.new()
 		var npc_role: String = str(npc.get("role","guide"))
-		var tex: Texture2D = load(VISUAL_STYLE.npc_class_art(npc_role)) as Texture2D
-		var part := AtlasTexture.new()
-		part.atlas = tex
-		part.region = Rect2(0,0,148,116)
-		sprite.texture = part
+		# No substitute NPC body (old class sheets retired); name and role stay.
+		sprite.texture = null
 		sprite.position = p
 		sprite.offset = Vector2(0,-52)
 		sprite.scale = Vector2.ONE*.78
@@ -591,12 +582,6 @@ func _load_chunk(key: Vector2i) -> void:
 			accent.offset = (LANDMARK_CELL*.5-LANDMARK_ORIGIN)*LANDMARK_BAKE_SCALE
 			var prop_scale: float = float(record.get("scale",1.0))
 			accent.scale = Vector2.ONE*prop_scale/LANDMARK_BAKE_SCALE
-			var replacement: Dictionary = {"crystal":11,"altar":13,"arch":15,"obelisk":8}
-			if not reference_profile.is_empty() and replacement.has(kind):
-				accent.texture = REFERENCE_VISUALS.cell((load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null),int(replacement[kind]))
-				accent.material = null
-				accent.offset = Vector2(0,-accent.texture.get_height()*.40)
-				accent.scale = Vector2.ONE * 180.0 * prop_scale / accent.texture.get_height()
 			accent.set_meta("prop_kind",kind)
 			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*prop_scale)
 			if kind in ["crystal","obelisk","arch","banner"] or float(accent.get_meta("visual_size").y) >= 120.0:

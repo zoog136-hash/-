@@ -657,7 +657,7 @@ func _texture(record: Dictionary) -> Texture2D:
 		var acquired: bool=bool(snapshot.get("owned",false)) if identity==str(snapshot.get("target_id","")) else true
 		return preload("res://scripts/ui/catalog_card_ownership.gd").icon_for(record,acquired)
 	var path: String = str(record.get("image_path", ""))
-	return load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	return load(path) as Texture2D if not path.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(path) else null
 
 func _percent(value: float) -> String:
 	return ("%.2f" % value).trim_suffix("0").trim_suffix("0").trim_suffix(".")

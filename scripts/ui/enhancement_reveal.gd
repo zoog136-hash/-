@@ -196,6 +196,9 @@ func _stroke(a: Vector2, b: Vector2, tint: Color, alpha: float, width: float = 1
 	draw_line(a,b,Color(tint,alpha),width,true)
 
 func _draw() -> void:
+	# Self-drawn TWILIGHT artwork is not shown (user rule 2026-11-17: no
+	# self-made images; without an original 523 resource this stays empty).
+	return
 	if not is_instance_valid(board): return
 	draw_rect(Rect2(Vector2.ZERO,size),Color(0.012,0.018,0.029,0.96))
 	draw_set_transform(design_offset,0,Vector2.ONE*design_scale)

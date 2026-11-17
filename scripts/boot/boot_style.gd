@@ -2,28 +2,20 @@ extends RefCounted
 ## Opaque look shared by the loading screen and the pack installers.
 ## The installers draw over the game; translucent default panels made their
 ## buttons hard to see, so everything here is fully opaque and high contrast.
-const BACKDROP := "res://assets/boot/twilight_loading.png"
 const GOLD := Color("f0d38c")
 const TEXT := Color("fff6e0")
 const MUTED := Color("cdbf9f")
 const PANEL := Color(0.06, 0.05, 0.10, 0.94)
 
+## Plain dark fill. The self-made backdrop picture was removed (user rule
+## 2026-11-17: no self-made images; no original 523 loading backdrop exists
+## before the resource pack is installed).
 static func backdrop() -> Control:
-	# A TextureRect when the image is in the build, else a plain dark fill.
-	var texture: Texture2D = load(BACKDROP) as Texture2D if ResourceLoader.exists(BACKDROP) else null
-	if texture == null:
-		var fill := ColorRect.new()
-		fill.color = Color("0b0a16")
-		fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		fill.mouse_filter = Control.MOUSE_FILTER_STOP
-		return fill
-	var picture := TextureRect.new()
-	picture.texture = texture
-	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	picture.mouse_filter = Control.MOUSE_FILTER_STOP
-	return picture
+	var fill := ColorRect.new()
+	fill.color = Color("0b0a16")
+	fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fill.mouse_filter = Control.MOUSE_FILTER_STOP
+	return fill
 
 static func box(radius: int, fill: Color, border: Color, width: int = 2) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
