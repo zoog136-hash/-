@@ -1339,8 +1339,11 @@ func open_shop() -> void:
 				workspace.hide()
 				_sync_screen_focus()
 
+## The original 523 거래소 window (source_main_trade_window) first; the
+## TWILIGHT frozen-snapshot panel without the original UI pack.
 func open_frozen_exchange() -> void:
 	_open_window("exchange","거래소 · 초기 실측 고정","")
+	if _open_original_feature("trade"):return
 	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
 	workspace.mount(panel)
 	panel.configure(self)
