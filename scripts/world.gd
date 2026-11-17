@@ -3819,6 +3819,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 ## a deep copy for the side panel) on every pickup stalled the frame; publish just
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
+	_merge_native_stacks()
 	_sync_item_instances()
 	combinations.invalidate();combinations.reconcile()
 	# Carried weight feeds the encumbrance movement multiplier.
@@ -3847,6 +3848,41 @@ func _refresh_inventory_hud() -> void:
 	if str(hud.get("active_section")) == "character":
 		stat_hud_refresh_pending = true
 	regional_return_settings_updated.emit()
+
+## Bag stacking (scripts/loot/native_stack_merge.gd): receipted original
+## stacks of the same item/bless merge into one slot up to the original
+## MaxStackAmount. Runs between transactions, never inside one; the result is
+## fully validated (state_error) before it is adopted and is persisted by the
+## next save. Returns how many bag slots were folded away.
+func _merge_native_stacks() -> int:
+	var stock: Script=preload("res://scripts/loot/current523_native_stack.gd")
+	if stock.busy or source_ground_acquisitions.get("_busy")==true or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
+	if quest_service==null or quest_service.save_blocked or consumable_service==null or warehouse==null or ground_loot==null: return 0
+	var counts: Dictionary={};var candidate: bool=false
+	for entry: Variant in item_instances.values():
+		if entry is Dictionary and entry.has(stock.RECEIPT):
+			var key: String=str(entry.get("name",""))
+			counts[key]=int(counts.get(key,0))+1
+			if int(counts[key])>1: candidate=true;break
+	if not candidate: return 0
+	var dormant: Dictionary=dormant_character_items()
+	var floor: Array=_ground_drops_snapshot()
+	var reserved: Dictionary={}
+	for uid: Variant in warehouse.instances: reserved[str(uid)]=true
+	for uid: Variant in dormant: reserved[str(uid)]=true
+	for record: Variant in floor:
+		if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
+	var planned: Dictionary=preload("res://scripts/loot/native_stack_merge.gd").plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved)
+	if not planned.get("changed",false): return 0
+	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
+	# A plan the full ownership check rejects is not adopted; the bag stays as
+	# it is (still valid) and nothing is saved.
+	if not issue.is_empty(): return 0
+	item_instances=planned.item_instances
+	consumable_service.import_state(planned.consumable_state)
+	ui_preferences["item_locks"]=planned.item_locks
+	_request_deferred_save()
+	return int(planned.merged_slots)
 
 func _on_ground_drop_clicked(drop: Button) -> void:
 	loot_pickup.select(drop)
@@ -6317,6 +6353,7 @@ func _update_hud() -> void:
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
 	_invalidate_equipment_static()
+	_merge_native_stacks()
 	_sync_item_instances()
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
@@ -7413,6 +7450,8 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
+	# _update_hud also folds an old save's separate receipted stacks of one
+	# item into one slot (_merge_native_stacks).
 	_update_hud()
 	_refresh_source_dungeon_panel()
 	_emit_consumable_auto_settings()
