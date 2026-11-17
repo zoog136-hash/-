@@ -28,6 +28,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_cut_tables.gd",
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 		],
 	},
 	"quest523": {
@@ -47,6 +48,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_cut_tables.gd",
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 			"res://scripts/resources/shared_values.gd",
 			"res://scripts/skills/save_writer.gd",
 		],
@@ -64,6 +66,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_cut_tables.gd",
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 			"res://scripts/resources/zip_table_rows.gd",
 		],
 	},
@@ -82,6 +85,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_cut_tables.gd",
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 		],
 	},
 	"card_slots523": {
@@ -104,6 +108,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/current523_keyed_records.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 		],
 	},
 	"option_combat523": {
@@ -123,6 +128,7 @@ const PRODUCERS := {
 			"res://scripts/resources/current523_definition_rows.gd",
 			"res://scripts/resources/current523_keyed_records.gd",
 			"res://scripts/resources/reference_sp2_manifest_index.gd",
+			"res://scripts/resources/retired_assets.gd",
 		],
 	},
 }
