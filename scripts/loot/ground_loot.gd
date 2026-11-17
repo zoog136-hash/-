@@ -5,6 +5,7 @@ const VISUAL = preload("res://scripts/loot/drop_visual.gd")
 const GROUND_SOURCE_VIEW = preload("res://scripts/loot/current523_ground_source_view.gd")
 const DROP_EFFECT = preload("res://scripts/loot/current523_ground_drop_effect.gd")
 const GRADE = preload("res://scripts/loot/current523_item_grade.gd")
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 var source_drop_effect: Node2D
 var source_name_label: Label
 var loot_id: String = ""
@@ -116,6 +117,7 @@ func _configure_source_presentation(request: Dictionary) -> void:
 	source_name_label.add_theme_color_override("font_color",color.color)
 	source_name_label.size = Vector2(160,16)
 	source_name_label.position = Vector2(28-80,-14)
+	FIELD_CAMERA.keep_screen_size(source_name_label, Vector2(80,8))
 	source_name_label.show()
 
 func _on_source_ground_status(status: Dictionary) -> void:

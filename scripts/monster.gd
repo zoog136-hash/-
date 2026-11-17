@@ -25,6 +25,7 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
 var source_option_debuffs: Dictionary={}
 var source_option_sequence := 0
@@ -1394,6 +1395,10 @@ func _setup_animation(record: Dictionary) -> void:
 	$CollisionShape2D.position = motion.profile.collision_offset
 	name_label.position.y = -visual_height - 20.0
 	hp_bar.position.y = -visual_height - 4.0
+	# Name and HP bar keep their screen size under the field camera zoom,
+	# scaled around the head point so their layout above it is unchanged.
+	FIELD_CAMERA.keep_screen_size(name_label, Vector2(0.0, -visual_height) - name_label.position)
+	FIELD_CAMERA.keep_screen_size(hp_bar, Vector2(0.0, -visual_height) - hp_bar.position)
 	if not motion_connected:
 		motion.strike.connect(_release_attack)
 		motion.cancelled.connect(_cancel_attack)

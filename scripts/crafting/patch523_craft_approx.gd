@@ -209,6 +209,15 @@ static func _merged(overrides: Dictionary, key: String, change: Dictionary) -> D
 	result[key] = change
 	return result
 
+## ── 축복 세공 주문서 결과 (2026-11-17) ─────────────────────────────────────────
+## TWILIGHT 근사: "일반 세공 주문서 2개 + 재료 → 축복 세공 주문서 1개" crafts name a
+## blessed (ItemBlessCodeID 2) stack result, but the item pack declares no blessed
+## stack for these items, so stack_state_normal used to pay a normal scroll (a loss:
+## two normal scrolls in, one normal out). The catalog now also registers the
+## blessed stack of every ScrollElementalEnchant item that an original craft gives
+## blessed (ItemCraftOutputView, 36 items), and the craft pays it as written.
+const BLESSED_STACK_OUTPUTS := [223762,223772,223782,223792,233628,233638,233648,233658,251392,251402,251412,251422,271968,271978,271988,271998,298462,298472,298482,298492,326253,326263,326273,326283,338123,338133,338143,338153,349633,349643,349653,349663,365311,365321,365331,365341]
+
 ## ── 카탈로그 정체 (다른 소유자 기록) ─────────────────────────────────────────
 ## TWILIGHT 근사: 3252 마법인형 제작 코인 is paid from / credited to its coin
 ## wallet like 아데나 (the wallet already exists: patch523_item_inventory

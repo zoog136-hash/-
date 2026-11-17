@@ -627,11 +627,24 @@ func _acquisition_order(entries: Array[Dictionary]) -> Array[String]:
 		var rank_a: int = int(name_rank.get(_base_item_name(a), 0))
 		var rank_b: int = int(name_rank.get(_base_item_name(b), 0))
 		if rank_a != rank_b: return rank_a < rank_b
-		return int(_ref_instance_id(a)) < int(_ref_instance_id(b)))
+		return _instance_before(_ref_instance_id(a), _ref_instance_id(b)))
 	ordered.append_array(fresh)
 	if Array(ordered) != stored:
 		store["inventory_order"] = Array(ordered)
 	return ordered
+
+## Instance ids are numeric in old saves and 32-hex digests in current ones;
+## int() on a digest reports an engine error for every comparison of a sort
+## (2026-11-17 523.602: ustring.cpp:2281 on each bag/shop refresh). Numeric
+## ids keep their numeric order, others compare as text (same length first).
+static func _instance_before(a: String, b: String) -> bool:
+	# An empty id (stackable item) counts as 0, as int("") did before.
+	var a_int: bool = a.is_empty() or (a.is_valid_int() and a.length() < 19)
+	var b_int: bool = b.is_empty() or (b.is_valid_int() and b.length() < 19)
+	if a_int and b_int: return a.to_int() < b.to_int()
+	if a_int != b_int: return a_int
+	if a.length() != b.length(): return a.length() < b.length()
+	return a < b
 
 func _store_sorted_order(entries: Array[Dictionary], mode: int) -> void:
 	var references: Array[String] = []
@@ -648,7 +661,7 @@ func _store_sorted_order(entries: Array[Dictionary], mode: int) -> void:
 		var name_a: String = _base_item_name(a)
 		var name_b: String = _base_item_name(b)
 		if name_a != name_b: return name_a < name_b
-		return int(_ref_instance_id(a)) < int(_ref_instance_id(b)))
+		return _instance_before(_ref_instance_id(a), _ref_instance_id(b)))
 	_order_store()["inventory_order"] = Array(references)
 
 func _refresh_weight() -> void:
