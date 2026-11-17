@@ -10,12 +10,14 @@ extends RefCounted
 ##              "이동 주문서" items that only tutorial quests reward (48).
 ## A tutorial quest named as a prerequisite counts as done (the class chain's
 ## class still applies), so each class's first quest after the tutorial is
-## its start quest. Characters saved in a tutorial Land move to Aden town;
+## its start quest. Characters saved in a tutorial Land move to Giran town
+## (start village, 사용자 결정 2026-11-17);
 ## tutorial items in a save are removed with their amounts recorded.
 const MARKER := "[튜토리얼]"
 const DECISION := "사용자 결정 2026-11-16 · 튜토리얼 삭제"
 const KEY := "tutorial523"
 const ADEN_LAND_ID := 4
+const START_VILLAGE := preload("res://scripts/maps/current523_start_village.gd")
 const LAND_IDS: Array[int] = [
 	12177,43192,43212,43222,43622,43632,43642,43652,44492,44502,44512,44522,44532,44542,46511,46521,46531,46541,46551,
 	46561,46571,46581,47041,47051,47061,47071,47081,47091,47101,47141,47974,47984,47994,48004,48014,48024,48034,48044,
@@ -105,8 +107,8 @@ static func needed(data: Dictionary) -> bool:
 			if item(_instance_item_id(entry)): return true
 	return false
 
-## A copy of `data` with the character moved out of a tutorial Land to Aden
-## town and tutorial items (stacks and instances; all are scrolls/currency,
+## A copy of `data` with the character moved out of a tutorial Land to the
+## start village (Giran town, current523_start_village) and tutorial items (stacks and instances; all are scrolls/currency,
 ## never equipment) removed. What was
 ## done is recorded under KEY, added to any earlier record.
 static func migrate_save(data: Dictionary) -> Dictionary:
@@ -115,8 +117,8 @@ static func migrate_save(data: Dictionary) -> Dictionary:
 	record.decision = DECISION
 	var cursor: Variant = result.get("character_source_cursor",{})
 	if cursor is Dictionary and land(cursor.get("native_land_id",-1)):
-		record.relocated = {"from_native_land_id":int(cursor.native_land_id),"from_source_position":cursor.get("source_position",[]),"to_native_land_id":ADEN_LAND_ID}
-		result.character_source_cursor = {"native_land_id":ADEN_LAND_ID,"source_position":[]}
+		record.relocated = {"from_native_land_id":int(cursor.native_land_id),"from_source_position":cursor.get("source_position",[]),"to_native_land_id":ADEN_LAND_ID,"to_source_position":START_VILLAGE.source_position(),"to_village":START_VILLAGE.NAME}
+		result.character_source_cursor = START_VILLAGE.cursor()
 	var removed: Dictionary = record.get("removed_items",{}).duplicate(true) if record.get("removed_items",{}) is Dictionary else {}
 	var inventory: Variant = result.get("inventory",{})
 	if inventory is Dictionary:

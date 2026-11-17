@@ -3,6 +3,7 @@ class_name TwilightPlayerActionFX
 
 # Read-only presentation. Never calls attack, modifies physics or awards damage.
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
+const SOURCE_ONLY = preload("res://scripts/animation/source_only_host_fx.gd")
 var actor: TwilightPlayer
 var clock: float = 0.0
 var visuals = VISUALS.new()
@@ -13,7 +14,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not is_instance_valid(actor): return
 	clock += delta
-	visible = actor.motion.active or actor.motion.move_ratio > .10
+	# Swing crescents, magic halos, glints and movement dust are TWILIGHT-made.
+	visible = (actor.motion.active or actor.motion.move_ratio > .10) and not SOURCE_ONLY.active(actor)
 	if visible: queue_redraw()
 
 func _draw() -> void:

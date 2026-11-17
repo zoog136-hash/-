@@ -596,6 +596,7 @@ func custom_frozen() -> bool:
 const OFFSCREEN_DECISION_INTERVAL: float = .4
 
 func _physics_process(delta: float) -> void:
+	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("monster.begin %s %d" % [monster_name, source_m_npc_id])
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
 	_physics_step(delta)

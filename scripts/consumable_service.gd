@@ -65,7 +65,7 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 		if source_overrides.has("quest_state"):world.quest_service.import_state(source_overrides.quest_state)
 		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
 		result.merge(returned,true)
-		result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"source_item_id":239,"message":"아덴으로 귀환했습니다 · 자체 지정 목적지"},true)
+		result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"source_item_id":239,"message":"기란 마을로 귀환했습니다 · 자체 지정 목적지"},true)
 		if is_quest:result["physical_id"]=physical_id;result["ownership_origin"]="quest523_receipt"
 		return result
 	if str(world.active_map_id)!="aden_world" or world.field_map==null:
@@ -120,6 +120,9 @@ var source_native_bag_uses: Variant={}
 
 var source_native_stack_partitions_present: bool=false
 var source_native_stack_partitions: Variant={}
+## Bag stacking journal (scripts/loot/native_stack_merge.gd).
+var source_native_stack_merges_present: bool=false
+var source_native_stack_merges: Variant={}
 
 var source_native_stack_uses_present: bool=false
 var source_native_stack_uses: Variant={}
@@ -152,6 +155,7 @@ func export_state() -> Dictionary:
 	}
 
 	if source_native_bag_uses_present:state["source_native_bag_uses"]=source_native_bag_uses.duplicate(true) if source_native_bag_uses is Dictionary or source_native_bag_uses is Array else source_native_bag_uses
+	if source_native_stack_merges_present:state["source_native_stack_merges"]=source_native_stack_merges.duplicate(true) if source_native_stack_merges is Dictionary or source_native_stack_merges is Array else source_native_stack_merges
 	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=source_native_stack_partitions.duplicate(true) if source_native_stack_partitions is Dictionary or source_native_stack_partitions is Array else source_native_stack_partitions
 	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
 	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
@@ -168,6 +172,9 @@ func import_state(input: Variant) -> void:
 	source_native_bag_uses_present=input is Dictionary and input.has("source_native_bag_uses")
 	var bag_uses: Variant=input.get("source_native_bag_uses",{}) if input is Dictionary else {}
 	source_native_bag_uses=bag_uses.duplicate(true) if bag_uses is Dictionary or bag_uses is Array else bag_uses
+	source_native_stack_merges_present=input is Dictionary and input.has("source_native_stack_merges")
+	var merges: Variant=input.get("source_native_stack_merges",{}) if input is Dictionary else {}
+	source_native_stack_merges=merges.duplicate(true) if merges is Dictionary or merges is Array else merges
 	source_native_stack_partitions_present=input is Dictionary and input.has("source_native_stack_partitions")
 	var partitions: Variant=input.get("source_native_stack_partitions",{}) if input is Dictionary else {}
 	source_native_stack_partitions=partitions.duplicate(true) if partitions is Dictionary or partitions is Array else partitions

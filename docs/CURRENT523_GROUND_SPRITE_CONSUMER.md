@@ -52,3 +52,21 @@ The Sprite manager consumes this API when that public owner implementation is pr
 The main integration through44eb4f581 includes the public269 context producer and ownership code. This Sprite consumer does not duplicate that implementation. The compatibility path without the method remains distinct from an actual current-floor proof; source rendering is still pending until the original ground role is supplied.
 
 `source_use_context` is post-save data from an existing use event, not a second event. `visual_dispatch_attempted=true` means the existing emitter was called; no result observer is allowed to re-emit it, and this consumer adds no result replay. The public cure310 follow-up is applied at its one existing perform emission: pass `result.source_use_context.original_item` to `emit_sprite` while preserving the following attempted flag and all newer prepare/commit logic. Original16007 remains unavailable.
+
+## 2026-11-17 바닥 그림 전체 연결 (원본 우선 · 없으면 원본 근사)
+
+`current523_source_ground_selection.select`는 아이템 자신의 ItemClass.SpriteID를 고정 bank에서 다음 순서로 찾는다.
+
+| 순서 | 조건 | 표시 | 성격 |
+| --- | --- | --- | --- |
+| 1 | `static_pictures`에 있음 | 클라이언트 정적 분기 그림(방향0·그림0 + 101 그림자) | 원본 |
+| 2 | 동작 3(breath)을 선언 | `current523_ground_drop_effect.configure_body`가 동작 3 재생 | 원본 |
+| 3 | 동작만 선언(상자 122 열기/닫기, 화살 66 비행 등) | 가장 낮은 선언 동작의 몸체 파일에 정적 분기 규칙(방향0·그림0)을 적용해 정지 표시 (`load_ground_still`) | 근사 |
+| 4 | SpriteID 0 · 523 클라이언트에 없음 · 원본 더미 | 같은 원본 CategoryID와 같은 이름 분류 머리말(`[악세-귀걸이]` 등)의 비테스트 아이템이 가장 많이 쓰는 원본 정적 바닥 스프라이트, 없으면 같은 CategoryID의 최다 스프라이트 (`current523_ground_category_sprite.gd`) | 근사 (정책 "원본에 없으면 검색 후 근사") |
+| 5 | 그 분류에도 원본 바닥 그림이 없음 | 빈칸 | — |
+
+자체 제작 그림은 쓰지 않는다. 근사 결과는 `source_ground_status.basis`(`approx_static_branch_of_declared_action_body`, `approx_same_category_and_name_kind`, `approx_same_category`)와 `own_sprite_id`로 남는다.
+
+523 ItemClass 비테스트 30,398종 기준(실제 팩 bank, `tests/ground523_original_sprites_test.gd`): 이전 원본 표시 20,453종(정적 20,428 + 동작3 25) → 이후 30,253종(정지 근사 4,953, 분류 근사 4,847 추가), 빈칸 145종(속성 변환 주문서·퀘스트 프리패스·인피니티 기어 등 분류 전체에 원본 바닥 그림이 없는 경우). 분류 표 계산은 처음 필요할 때 한 번(서버 측 약 0.2초)이며 bank 고정값이 바뀌면 다시 계산한다.
+
+바닥 빛기둥(#428)은 원본 Grade.DropItemEffectSpriteID / UIItemDropEffect 스프라이트(23195·23197·23200·23203·23206)의 동작 3이며 변경하지 않았다. 등장 이펙트 Fx_Item_Summon_000~026과 PickUp_coin_A/B는 523 클라이언트에 파일이 없어 빈칸이다.
