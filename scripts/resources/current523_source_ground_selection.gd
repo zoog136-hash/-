@@ -3,6 +3,7 @@ extends RefCounted
 ## Ground dispatch remains an explicit caller contract, separate from UI icons.
 const SOURCE = preload("res://scripts/resources/current523_source_bank.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const CATEGORY = preload("res://scripts/loot/current523_ground_category_sprite.gd")
 
 static func fail(reason: String, reference: Dictionary = {}) -> Dictionary:
 	return {"ok":false,"enabled":true,"status":"source_only_pending","reason":reason,
@@ -20,8 +21,7 @@ static func select(original_item: Dictionary, context: Dictionary = {}, binding:
 	var native: Dictionary = SOURCE.table_row("ItemClass",int(original_item.ID))
 	if native.is_empty() or native != original_item: return fail("current523_ground_complete_item_definition_differs",reference)
 	if not native.get("TestItem") is bool or native.TestItem != false: return fail("current523_test_ground_item_not_admitted",reference)
-	if not BANK.integer(native.get("SpriteID"),1): return fail("current523_ground_source_sprite_missing",reference)
-	var sprite: int = int(native.SpriteID)
+	var sprite: int = int(native.SpriteID) if BANK.integer(native.get("SpriteID"),1) else 0
 	reference["original_sprite_animation_id"] = native.get("SpriteAnimationID")
 	reference["caller_binding"] = binding.duplicate(true)
 	# ItemClass.SpriteID is not permission to bind a same-numbered actor action.
@@ -30,14 +30,35 @@ static func select(original_item: Dictionary, context: Dictionary = {}, binding:
 	# Sprite/<remapped id>-0.sp2 direction 0 picture 0 plus its 101 shadow. The
 	# bank's static_pictures registry carries exactly that relationship.
 	var bank_options: Dictionary = supplied.options
+	var path: String = str(bank_options.manifest_path)
+	var sha: String = str(bank_options.manifest_sha256)
 	var statics = BANK.new()
-	var picture: Dictionary = statics.load_static(str(bank_options.manifest_path),str(bank_options.manifest_sha256),sprite)
+	var kind: String = statics.ground_kind(path,sha,sprite)
+	var picture: Dictionary = {}
+	var basis: String = "ItemClass.SpriteID"
+	var selected_sprite: int = sprite
+	if kind == "static": picture = statics.load_static(path,sha,sprite)
+	elif kind == "still": picture = statics.load_ground_still(path,sha,sprite)
+	elif kind != "action3":
+		# 원본에 없으면 근사: the same original category's floor sprite.
+		var approx: Dictionary = CATEGORY.select(native,path+"|"+sha,func(id: int) -> bool: return statics.ground_kind(path,sha,id) == "static")
+		reference["category_approximation"] = approx.duplicate(true)
+		if approx.get("ok",false):
+			selected_sprite = int(approx.sprite_id)
+			basis = str(approx.basis)
+			picture = statics.load_static(path,sha,selected_sprite)
+		else: picture = {"ok":false,"error":str(approx.get("reason","")),"own_sprite_kind":kind}
+	if kind == "still": basis = "approx_static_branch_of_declared_action_body"
 	if picture.get("ok",false):
 		return {"ok":true,"enabled":true,"status":"selected_static_picture","consumer":"ground_item","source_snapshot":"patch523",
-			"source_reference":reference,"request_key":"current523:item:%d:ground" % int(native.ID),"sprite_id":sprite,
+			"source_reference":reference,"request_key":"current523:item:%d:ground" % int(native.ID),"sprite_id":selected_sprite,"own_sprite_id":sprite,"basis":basis,
 			"layers":picture.layers,"branch":picture.branch,"source_declaration":picture.source_declaration,
-			"manifest_path":str(bank_options.manifest_path),"manifest_sha256":str(bank_options.manifest_sha256),
+			"manifest_path":path,"manifest_sha256":sha,
 			"source_tables_sha256":supplied.source_tables_sha256}
+	if sprite <= 0 and kind != "action3":
+		var empty: Dictionary = fail("current523_ground_source_sprite_missing",reference)
+		empty["static_picture_status"] = picture.duplicate(true)
+		return empty
 	var pending: Dictionary = fail("current523_ground_original_member_and_renderer_role_unresolved",reference)
 	pending["static_picture_status"] = picture.duplicate(true)
 	pending["request_key"] = "current523:item:%d:ground" % int(native.ID)
