@@ -105,6 +105,7 @@ const NATIVE_PNG_SAVE_MIGRATIONS: Dictionary = {
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
@@ -296,6 +297,9 @@ var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
 var field_map: PlayableField = null
+## Zoom from the field data and whether it is an original-art (1:1) field.
+var field_camera_base_zoom: float = 1.0
+var field_camera_original_art: bool = false
 var field_renderer: FieldRenderer = null
 var field_physics: StaticBody2D = null
 var field_population: FieldPopulation = null
@@ -2264,7 +2268,10 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			_build_collision_debug_tiles()
 		player.collision_mask = 4
 		var settings: Dictionary = field_map.data["camera"]
-		player.camera.zoom = Vector2.ONE * float(settings["zoom"])
+		field_camera_base_zoom = float(settings["zoom"])
+		# Original-art fields only (1:1 source pixels); authored remake fields keep their own zoom.
+		field_camera_original_art = requested_native != null or requested_original != null
+		_apply_field_camera_zoom()
 		player.camera.position = COORD.array_vector(settings["offset"])
 		player.camera.position_smoothing_speed = float(settings["follow_speed"])
 	else:
@@ -2276,6 +2283,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		player.collision_mask = 3
 		# Small legacy maps still fill the viewport at their existing dimensions.
 		var fit_zoom: float = maxf(1.0,maxf(get_viewport_rect().size.x/world_size.x,get_viewport_rect().size.y/world_size.y))
+		field_camera_original_art = false
+		FIELD_CAMERA.set_applied(1.0, get_tree())
 		player.camera.zoom = Vector2.ONE * fit_zoom
 		player.camera.position = Vector2(0,-32)
 	if not keep_position or not _is_walkable_world(player.global_position):
@@ -5963,7 +5972,7 @@ func patch523_clear_owned_materials(recipe_id: String) -> void:
 	patch523_owned_material_choices.erase(recipe_id)
 
 func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
-	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"source_recipe_id":recipe_id,"server_profile":preload("res://scripts/loot/current523_server_profile.gd").profile(self)}
+	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"awakening_world":self,"source_recipe_id":recipe_id,"server_profile":preload("res://scripts/loot/current523_server_profile.gd").profile(self)}
 	if recipe_id.is_empty():return context
 	var selected: Dictionary=patch523_owned_material_choices.get(recipe_id,{})
 	if not selected.is_empty() and int(selected.batch)!=batches:
@@ -6452,6 +6461,30 @@ func _prepare_patch523_item_save_backup() -> Error:
 
 func _save_card_selection(quiet: bool, staged: Dictionary) -> Error:
 	return card_selection_saves.commit(self, quiet, staged)
+
+## Field camera = field data zoom x the player's camera distance
+## (FIELD_CAMERA, TWILIGHT 근사) on original-art fields. Touch, picking,
+## minimap and culling read the camera transform, so they follow it.
+func _apply_field_camera_zoom() -> void:
+	var factor: float = FIELD_CAMERA.preference(ui_preferences) if field_camera_original_art else 1.0
+	FIELD_CAMERA.set_applied(factor, get_tree())
+	player.camera.zoom = Vector2.ONE * field_camera_base_zoom * factor
+
+func field_camera_zoom() -> float:
+	return FIELD_CAMERA.preference(ui_preferences)
+
+## Live change from settings; `persist` writes the existing save once.
+func set_field_camera_zoom(value: float, persist: bool = true) -> Error:
+	var before: Variant = ui_preferences.get(FIELD_CAMERA.PREFERENCE_KEY)
+	ui_preferences[FIELD_CAMERA.PREFERENCE_KEY] = FIELD_CAMERA.clamp_zoom(value)
+	if field_map != null: _apply_field_camera_zoom()
+	if not persist: return OK
+	var result: Error = _save_game(true)
+	if result != OK:
+		if before == null: ui_preferences.erase(FIELD_CAMERA.PREFERENCE_KEY)
+		else: ui_preferences[FIELD_CAMERA.PREFERENCE_KEY] = before
+		if field_map != null: _apply_field_camera_zoom()
+	return result
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
@@ -7240,6 +7273,7 @@ func _load_game(quiet: bool) -> void:
 	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
 	for key: String in ["quickslot_pages","edited_quickslots","item_locks"]:
 		if not ui_preferences.get(key) is Dictionary: ui_preferences[key] = {}
+	if field_map != null and is_instance_valid(player): _apply_field_camera_zoom()
 	var quickslots_value: Variant = data.get("quickslots", quickslots)
 	if quickslots_value is Array:
 		quickslots = quickslots_value as Array

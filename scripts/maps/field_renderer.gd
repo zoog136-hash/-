@@ -61,7 +61,9 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	atlas = load(str(field.data["foreground"]["prop_atlas"])) as Texture2D
 	terrain = load(str(field.data["background"]["material_atlas"])) as Texture2D
 	reference_profile = REFERENCE_VISUALS.profile(str(field.data.map_id))
-	if not reference_profile.is_empty():
+	# The reference expansion sheets were removed from the repo; keep the
+	# field's own atlas instead of loading a missing file.
+	if not reference_profile.is_empty() and ResourceLoader.exists("res://assets/maps/reference_expansion_v2/terrain.png"):
 		terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
 	for kind: String in REGIONS:
 		var tex := AtlasTexture.new()
@@ -71,7 +73,7 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		textures[kind] = tex
 		detail_textures[kind] = tex
 	if not reference_profile.is_empty():
-		var expanded: Texture2D = load("res://assets/maps/reference_expansion_v2/props.png")
+		var expanded: Texture2D = (load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null)
 		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
 			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
 	terrain_root = Node2D.new()
@@ -591,7 +593,7 @@ func _load_chunk(key: Vector2i) -> void:
 			accent.scale = Vector2.ONE*prop_scale/LANDMARK_BAKE_SCALE
 			var replacement: Dictionary = {"crystal":11,"altar":13,"arch":15,"obelisk":8}
 			if not reference_profile.is_empty() and replacement.has(kind):
-				accent.texture = REFERENCE_VISUALS.cell(load("res://assets/maps/reference_expansion_v2/props.png"),int(replacement[kind]))
+				accent.texture = REFERENCE_VISUALS.cell((load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null),int(replacement[kind]))
 				accent.material = null
 				accent.offset = Vector2(0,-accent.texture.get_height()*.40)
 				accent.scale = Vector2.ONE * 180.0 * prop_scale / accent.texture.get_height()

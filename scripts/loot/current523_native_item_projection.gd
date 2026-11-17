@@ -896,6 +896,14 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		FIELDS.bind(store,TemplateStore)
 		for index: int in placed:
 			if not FIELDS.lazy(records[index]):records[index]=FIELDS.slim(records[index])
+	# TWILIGHT 근사 2026-11-17 (patch523_craft_approx.BLESSED_STACK_OUTPUTS): the blessed
+	# stack of each 세공 주문서 that an original craft gives blessed is registered too.
+	for blessed_id: int in preload("res://scripts/crafting/patch523_craft_approx.gd").BLESSED_STACK_OUTPUTS:
+		if not admitted.has(str(blessed_id)):continue
+		var base: Dictionary=owner.call("definition_id",str(blessed_id)).get("native_record",{})
+		var variant: Dictionary=owner.call("variant_item",base,2) if not base.is_empty() else {}
+		if variant.is_empty() or str(variant.get("sourceId",""))==str(base.get("sourceId","")) or positions.has(str(variant.sourceId)):continue
+		records.append(variant);positions[str(variant.sourceId)]=[records.size()-1]
 	catalog["아이템"]=records
 	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":src.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
