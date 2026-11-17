@@ -63,6 +63,8 @@ func configure(items: Array, monsters: Array) -> bool:
 		for native: Dictionary in source.quests:
 			quests.append(native)
 			index[str(native.id)] = native
+	elif problem.is_empty():
+		problem = str(source.problem)
 	_advance_day(int(Time.get_unix_time_from_system()))
 	return not quests.is_empty()
 
