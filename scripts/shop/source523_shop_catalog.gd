@@ -231,6 +231,23 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 		if staged and shared.get(table) is bool:
 			indices[table] = {}
 			continue
+		if staged and shared.get(table) is PackedInt32Array:
+			# Selected label rows of a bake that already passed this staging:
+			# only their sorted IDs are kept, read from the packed ID column.
+			# Reading each of these rows back (row_at) cost 2.0 s of a 2.4 s
+			# shop open on desktop and ~10 s on the phone (2026-11-17 523.602).
+			var column: Variant = Definitions.column(table, "ID")
+			if not column is Array and not column is PackedInt64Array and not column is PackedInt32Array and not column is PackedFloat64Array:
+				return _fail("상점 팩 ID 열 오류: " + table)
+			var ids := PackedInt64Array()
+			for position: int in (shared[table] as PackedInt32Array):
+				if position < 0 or position >= column.size() or not _integer(column[position]): return _fail("상점 팩 ID 오류: " + table)
+				ids.append(int(column[position]))
+			ids.sort()
+			for at: int in range(1, ids.size()):
+				if ids[at] == ids[at - 1]: return _fail("상점 팩 중복 ID: " + table)
+			indices[table] = ids
+			continue
 		for index: int in count:
 			var row: Variant = _row_of(table,index,tables,shared)
 			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
