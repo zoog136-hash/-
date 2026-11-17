@@ -18,6 +18,9 @@ const AMMO_USES="source_native_ammo_uses"
 const AMMO_RNG="source_native_ammo_rng"
 const SKILL_MATERIAL_USES="source_native_skill_material_uses"
 const TRANSFERRED="source_native_stack_transferred_quantity"
+## Bag stacking journal (native_stack_merge.gd): absorbed stacks' receipts.
+const MERGES="source_native_stack_merges"
+const MERGE=preload("res://scripts/loot/native_stack_merge.gd")
 const EFFECTS=preload("res://scripts/loot/source523_item_effects.gd")
 static var busy: bool=false
 static var _candidate: Dictionary={}
@@ -178,8 +181,9 @@ static func proof_entry(entry: Variant,uid: String) -> Dictionary:
 	return {"record":record,"remaining":int(remaining),"used":int(used),"transferred":int(transferred),"receipt":receipt,"first_grant_receipt":first_grant_receipt(receipt),"allocated_quantity":int(granted)}
 
 static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0) -> bool:
-	if depth>128 or whole(receipt.get("schema")) not in [1,2] or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or NATIVE_FIELDS.full(receipt).get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
+	if depth>128 or whole(receipt.get("schema")) not in [1,2,3] or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or NATIVE_FIELDS.full(receipt).get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
 	if receipt.schema==1:return true
+	if receipt.schema==3:return MERGE.receipt_shape_valid(receipt)
 	var origin: Dictionary=receipt.origin
 	if origin.get("kind")!="owned_quantity_partition" or not origin.get("partition_id") is String or str(origin.partition_id).length()!=32 or not str(origin.partition_id).is_valid_hex_number(false) or not origin.get("parent_physical_id") is String or origin.parent_physical_id==uid or not origin.get("parent_receipt") is Dictionary:return false
 	var parent: Dictionary=origin.parent_receipt
@@ -188,7 +192,7 @@ static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0) -> bool:
 static func first_grant_receipt(receipt: Dictionary) -> Dictionary:
 	var root: Dictionary=receipt
 	for depth: int in range(129):
-		if root.get("schema")==1:return root.duplicate(true)
+		if whole(root.get("schema")) in [1,3]:return root.duplicate(true)
 		if root.get("schema")!=2 or not root.get("origin",{}).get("parent_receipt") is Dictionary:return {}
 		root=root.origin.parent_receipt
 	return {}
@@ -430,7 +434,9 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if int(disposed)>0 and (entry.get("discard_reason")!="TWILIGHT_existing_ground_lifetime" or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
 		if int(entry.remaining_quantity)>0 and not all.has(uid):return "남은 원본 물리 개체가 없습니다 · 소비 장부 보존"
 		if int(entry.remaining_quantity)==0 and all.has(uid):return "소비 완료 원본 개체의 중복 소유 보존 중지"
-	return partition_error(all,ledger,state.get(PARTITIONS,{}))
+	var merged: String=MERGE.merges_error(all,ledger,state.get(MERGES,{}),state.get(PARTITIONS,{}))
+	if not merged.is_empty():return merged
+	return partition_error(all,ledger,state.get(PARTITIONS,{}),state.get(MERGES,{}))
 
 static func override_error(world: Node,overrides: Dictionary) -> String:
 	var inventory: Variant=overrides.get("inventory",world.inventory)
@@ -511,6 +517,9 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if next_partitions.get(id)!=previous_partitions[id]:return "원본 물리 분할 이력 변경 금지"
 	for id: String in next_partitions:
 		if not previous_partitions.has(id) and not (authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"]):return "새 물리 분할은 정확한 이전 소유자 거래가 필요합니다"
+	# Bag stacking runs only through world._merge_native_stacks (in memory, then
+	# the next save); a transaction may neither rewrite nor add merge history.
+	if world.consumable_service.export_state().get(MERGES,{})!=state.get(MERGES,{}):return "원본 묶음 병합 이력 변경 금지"
 	var old_ledger: Variant=world.consumable_service.export_state().get(USES,{})
 	if not old_ledger is Dictionary:return "기존 원본 사용 장부 보존 필요"
 	for uid: String in old_ledger:
@@ -757,13 +766,14 @@ static func expire_floor(world: Node,record: Dictionary) -> bool:
 	world.consumable_service.import_state(state);world.deferred_save.cancel();_clear_floor_candidate()
 	return true
 
-static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Variant) -> String:
+static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Variant,merges: Variant={}) -> String:
 	if not partitions is Dictionary:return "원본 물리 분할 장부 형식 확인 필요"
 	var receipts: Dictionary={};var transferred: Dictionary={};var by_parent: Dictionary={}
 	for uid: String in all:
 		if all[uid] is Dictionary and all[uid].has(RECEIPT):receipts[uid]=all[uid][RECEIPT];transferred[uid]=int(all[uid].get(TRANSFERRED,0))
 	for uid: String in ledger:
 		receipts[uid]=ledger[uid].receipt;transferred[uid]=int(ledger[uid].get("transferred_quantity",0))
+	MERGE.add_absorbed(receipts,transferred,merges)
 	for id: String in partitions:
 		var event: Variant=partitions[id]
 		if not event is Dictionary or event.get("schema")!=1 or not event.get("parent_id") is String or not event.get("child_id") is String or event.parent_id==event.child_id or not event.get("parent_receipt") is Dictionary or not event.get("child_receipt") is Dictionary:return "원본 분할 거래 정체 확인 필요"

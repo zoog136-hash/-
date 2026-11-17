@@ -29,10 +29,10 @@ ID 목록은 `tutorial523.gd`에 고정했고, 원본 정의 ZIP이 있으면 �
 - **아이템**: 50개는 원본 더미와 같은 경로(`source_dummy523`)로 신규 지급·사용·드랍·상점·제작 연결에서 빠진다.
   원본 표에서 이 아이템을 쓰는 곳은 퀘스트 보상과 ItemBonus뿐이다(상점·드랍·제작 0).
 - **세이브**: 불러올 때(원본 저장 파일은 바이트 그대로 `.pre-tutorial-523-<sha>`로 백업)
-  - 튜토리얼 Land에 저장된 캐릭터 → 523 아덴 마을(Land 4, 마을 시작 위치).
+  - 튜토리얼 Land에 저장된 캐릭터 → 523 기란 마을(Land 4, 시작 마을 `Locations`473 — 사용자 결정 2026-11-17, `docs/START_VILLAGE523.md`).
   - 튜토리얼 아이템(스택·개체) 삭제, 아이템 ID별 수량을 `tutorial523.removed_items`에 기록.
 - **새 캐릭터 시작 위치**: 원본 `Class.CreateTerritoryID`는 6개 직업이 튜토리얼을 가리키지만, 게임은 이 값을 쓰지 않고 모든 새 캐릭터를
-  `start_land_id` 4(아덴)에서 시작한다. 바꿀 것 없음.
+  `start_land_id` 4(아덴 대륙)의 기란 마을에서 시작한다(사용자 결정 2026-11-17, `docs/START_VILLAGE523.md`).
 - **UI**: 원본 Tutorial 창은 연결하지 않은 상태를 유지한다. 코치마크(`QuestTutorialSequence` 516행 · `TutorialSprite` 121행)와
   `TutorialCutSceneQuest`는 게임 코드에 연결된 적이 없으므로 그대로 미연결.
 

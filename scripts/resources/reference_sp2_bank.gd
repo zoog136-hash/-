@@ -551,7 +551,7 @@ func prefetch(manifest_path: String, expected_sha: String, source_actor_id: int,
 ## Client static branch (no action descriptor): body Sprite/<remapped id>-0.sp2
 ## direction 0 picture 0, plus its 101 shadow drawn the same way; clothes are
 ## not collected. Returns layers for render_layer(); nothing is played here.
-func load_static(manifest_path: String, expected_sha: String, source_sprite_id: int) -> Dictionary:
+func _open_static(manifest_path: String, expected_sha: String) -> Dictionary:
 	_prepared_snapshot = null
 	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
@@ -567,8 +567,11 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 	var contract: Variant = _manifest.get("static_picture_contract")
 	if not contract is Dictionary or contract.get("branch") != "client_static_no_action_descriptor" or contract.get("frame") != "direction0_picture0" or not contract.get("evidence") is String: return fail("Bank has no client static picture contract.")
 	if not _manifest.get("static_pictures") is Dictionary or not _index.registry_is_dictionary("members"): return fail("Missing static picture registry.")
-	var exclusions: Dictionary = _install_source_exclusions()
-	if not exclusions.ok: return exclusions
+	return _install_source_exclusions()
+
+func load_static(manifest_path: String, expected_sha: String, source_sprite_id: int) -> Dictionary:
+	var opened: Dictionary = _open_static(manifest_path, expected_sha)
+	if not opened.ok: return opened
 	var admitted: Dictionary = source_actor_admission(source_sprite_id)
 	if not admitted.ok: return admitted
 	var entry: Variant = _manifest.static_pictures.get("sprite:" + str(source_sprite_id))
@@ -592,6 +595,58 @@ func load_static(manifest_path: String, expected_sha: String, source_sprite_id: 
 		layers.append(layer.duplicate(true))
 	if layers.is_empty() or layers[0].kind != "body": return fail("Static picture requires its body first.")
 	return {"ok":true,"layers":layers,"source_declaration":entry.get("source_declaration",{}).duplicate(true),"branch":entry.branch,"manifest_sha256":expected_sha}
+
+## What the opened bank holds for one sprite on the floor, without reading any
+## member: "static" (client no-action static picture), "action3" (a declared
+## breath/effect action, played by current523_ground_drop_effect.gd), "still"
+## (declared actions only), "excluded" (source dummy) or "" (absent).
+func ground_kind(manifest_path: String, expected_sha: String, source_sprite_id: int) -> String:
+	if source_sprite_id <= 0: return ""
+	if _manifest_path != manifest_path or _manifest_sha != expected_sha or _index == null:
+		if not _open_static(manifest_path, expected_sha).ok: return ""
+	if not source_actor_admission(source_sprite_id).ok: return "excluded"
+	if _manifest.static_pictures.has("sprite:" + str(source_sprite_id)): return "static"
+	var entries: Variant = _actor_registry("sprite:" + str(source_sprite_id))
+	if not entries is Dictionary or entries.is_empty(): return ""
+	return "action3" if entries.has("3") else "still"
+
+## Approximation for a sprite that declares actions but no static picture
+## (boxes 122 open/close, arrows 66 flight, ...). The client static branch
+## draws <file>-0 direction 0 picture 0; the same picture of the body file the
+## lowest declared action draws is used, held still. No frame is invented: the
+## body member and file come from that action's own declaration.
+func load_ground_still(manifest_path: String, expected_sha: String, source_sprite_id: int) -> Dictionary:
+	var opened: Dictionary = _open_static(manifest_path, expected_sha)
+	if not opened.ok: return opened
+	var admitted: Dictionary = source_actor_admission(source_sprite_id)
+	if not admitted.ok: return admitted
+	var entries: Variant = _actor_registry("sprite:" + str(source_sprite_id))
+	if not entries is Dictionary or entries.is_empty(): return fail("Exact source sprite declares no action.")
+	var keys: Array = []
+	for key: Variant in entries:
+		if str(key).is_valid_int(): keys.append(int(key))
+	keys.sort()
+	for action: int in keys:
+		var spec: Variant = entries.get(str(action))
+		if not spec is Dictionary or not INSTALL.safe_relative(str(spec.get("path",""))): continue
+		var parsed: Dictionary = _json(_root.path_join(str(spec.path)), str(spec.get("sha256","")))
+		if not parsed.ok: continue
+		var role: Variant = parsed.value.get("actor",{}).get("roles",{}).get("source_action:%d" % action)
+		if not role is Dictionary or not role.get("directions") is Array: continue
+		for direction: Variant in role.directions:
+			if not direction is Array or direction.is_empty() or not direction[0] is Dictionary: continue
+			for layer: Variant in direction[0].get("layers",[]):
+				if not layer is Dictionary or layer.get("kind") != "body" or layer.has("client_null") or not integer(layer.get("source_sprite_id"),1): continue
+				var body: int = int(layer.source_sprite_id)
+				var member: String = "Sprite/%d-0.sp2" % body
+				if layer.get("member") != member or not source_actor_admission(body).ok: continue
+				var source: Dictionary = _member(member)
+				if not source.ok: return source
+				var still: Dictionary = {"kind":"body","member":member,"file_sprite_id":body,"source_sprite_id":body,"group_bit":0,"frame_index":0}
+				return {"ok":true,"layers":[still],"branch":"approx_static_branch_of_declared_action_body","source_action":action,"manifest_sha256":expected_sha,
+					"source_declaration":{"actor":"sprite:%d" % source_sprite_id,"action_key":str(parsed.value.get("action_key",""))}}
+			break
+	return fail("Exact source sprite has no drawable body action.")
 
 func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 	if not _pins_valid(): return fail("Pinned source bank metadata changed.")
