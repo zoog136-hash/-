@@ -28,6 +28,7 @@ var failures: Array[String] = []
 var evidence: Dictionary = {}
 
 const RENDERER = preload("res://scripts/maps/current523_aden_play_renderer.gd")
+const START_VILLAGE = preload("res://scripts/maps/current523_start_village.gd")
 
 class GridField extends "res://scripts/maps/current523_source_field.gd":
 	var blocked: Dictionary = {}
@@ -154,6 +155,7 @@ func runtime() -> void:
 		evidence["runtime"] = "original 523 map not active (run with --source523-pack=<root>): teleport part skipped"
 		world.queue_free(); await process_frame; return
 	world.save_timer = -100000
+	start_village(world)
 	var steps: int = int(OS.get_environment("LONG_TELEPORT_STEPS")) if OS.get_environment("LONG_TELEPORT_STEPS") != "" else 21
 	var settle: int = int(OS.get_environment("LONG_TELEPORT_FRAMES")) if OS.get_environment("LONG_TELEPORT_FRAMES") != "" else 45
 	var previous_fields: Array = []
@@ -193,6 +195,7 @@ func runtime() -> void:
 		check(final_mb - baseline_mb < 160.0, "static memory stays bounded over repeated teleports (+%.1f MB)" % (final_mb - baseline_mb))
 		check(final_nodes < int(baseline_nodes * 1.35) + 200, "node count stays bounded (%d -> %d)" % [baseline_nodes, final_nodes])
 	await blocked_entry(world)
+	await village_fallback(world)
 	world.queue_free()
 	for frame: int in 3: await process_frame
 
@@ -222,6 +225,76 @@ func blocked_entry(world: Node) -> void:
 	evidence["blocked_entry"] = {"blocked_cell":[blocked.x, blocked.y], "opened":opened, "active":world.current523_aden_source_active(), "recovery":recovery.duplicate(true), "problem":str(world.get("current523_aden_play_problem"))}
 	check(opened and world.current523_aden_source_active() and not recovery.is_empty(), "a blocked saved spot opens the 523 map on a nearby clear cell (no old-map fallback)")
 	check(world.current523_aden_source_active() and world.field_renderer.actor_point_ok(world.player.global_position), "the reopened actor stands on a clear covered cell")
+
+## 사용자 결정 2026-11-17: a new character starts in Giran town (original
+## Locations473 "[리스타트 좌표] 기란 마을", inside TerritoriesVillage1367) on a
+## walkable cell, with original Giran town NPCs (EarthObjectSpawn) around.
+func start_village(world: Node) -> void:
+	var here: Dictionary = world.orim_current_land()
+	var cell := Vector2i(int(here.get("cell",[0,0])[0]), int(here.get("cell",[0,0])[1])) if here.get("cell",[]) is Array and (here.get("cell",[]) as Array).size() == 2 else Vector2i(-1,-1)
+	var offset: int = maxi(absi(cell.x - START_VILLAGE.cell().x), absi(cell.y - START_VILLAGE.cell().y))
+	var npcs: Array = []
+	for npc: Variant in (world.field_map.data.get("npc_spawn",[]) if world.field_map != null else []):
+		if not npc is Dictionary or not npc.get("source_position") is Array: continue
+		var at: Array = npc.source_position
+		if maxi(absi(int(at[0]) - cell.x), absi(int(at[1]) - cell.y)) <= 20: npcs.append({"name":str(npc.get("name","")),"cell":at,"spawn":int(npc.get("source523_earth_object_spawn_id",0))})
+	evidence["start_village"] = {"land":here,"location":START_VILLAGE.LOCATION,"ring":offset,"npcs_within_20":npcs.size(),"npcs":npcs.slice(0,12),"walkable":world.field_map.walkable(world.player.global_position)}
+	print("GIRAN_START ", JSON.stringify(evidence.start_village))
+	check(int(here.get("land_id",-1)) == 4 and START_VILLAGE.in_village(cell) and offset <= 8, "a new character starts in Giran village next to Locations473 (cell %s, ring %d)" % [str(cell), offset])
+	check(world.field_map.walkable(world.player.global_position) and world.field_renderer.actor_point_ok(world.player.global_position), "the Giran start cell is walkable and covered")
+	check(npcs.size() >= 3, "original Giran town NPCs are near the start (%d within 20 cells)" % npcs.size())
+	var controller: RefCounted = world.call("_aden_play_controller")
+	var fallback: Variant = controller.call("_recovery_fallback_point")
+	var fallback_cell: Vector2i = world.field_map.world_to_cell(fallback) + world.field_map.coordinates.origin if fallback is Vector2 else Vector2i(-1,-1)
+	evidence["recovery_fallback_cell"] = [fallback_cell.x, fallback_cell.y]
+	check(fallback is Vector2 and START_VILLAGE.in_village(fallback_cell), "the runtime village fallback is Giran (%s)" % str(fallback_cell))
+
+## A spot with no clear cell within the recovery radius (open sea) falls back to
+## the start village: Giran town.
+func village_fallback(world: Node) -> void:
+	if not world.current523_aden_source_active(): return
+	var field_now: Object = world.field_map
+	var bounds: Rect2i = field_now.get("source_bounds") if field_now.get("source_bounds") is Rect2i else Rect2i()
+	var stranded := Vector2i(-1, -1)
+	if bounds.has_area():
+		for gy: int in range(1, 16):
+			for gx: int in range(1, 16):
+				if stranded.x >= 0: break
+				var probe := Vector2i(bounds.position.x + bounds.size.x * gx / 16, bounds.position.y + bounds.size.y * gy / 16)
+				var p: Vector2 = field_now.coordinates.to_world(Vector2(probe.x, probe.y))
+				if not field_now.call("nearest_clear_point", p, RENDERER.RECOVERY_RADIUS_CELLS, Callable()).get("ok", false): stranded = probe
+	if not check(stranded.x >= 0, "a cell with no clear cell within %d exists on Land 4" % RENDERER.RECOVERY_RADIUS_CELLS): return
+	var controller: RefCounted = world.call("_aden_play_controller")
+	var options: Dictionary = (controller.get("settings") as Dictionary).duplicate(true)
+	options["source_position"] = [stranded.x + 0.5, stranded.y + 0.5]
+	world.close_current523_aden_play(false)
+	for frame: int in 10: await process_frame
+	var opened: bool = world.open_current523_aden_play(str(options.raw_root), str(options.tile_root), options)
+	for frame: int in 30: await process_frame
+	var recovery: Dictionary = controller.get("entry_recovery")
+	var here: Dictionary = world.orim_current_land() if world.current523_aden_source_active() else {}
+	var cell := Vector2i(int(here.cell[0]), int(here.cell[1])) if here.get("cell") is Array else Vector2i(-1, -1)
+	evidence["village_fallback"] = {"stranded_cell":[stranded.x, stranded.y], "opened":opened, "recovery_kind":str(recovery.get("kind","")), "landed":here}
+	print("GIRAN_FALLBACK ", JSON.stringify(evidence.village_fallback))
+	check(opened and str(recovery.get("kind","")) == "village_return", "a stranded spot opens through the village fallback")
+	check(START_VILLAGE.in_village(cell) and world.field_renderer.actor_point_ok(world.player.global_position), "the village fallback lands in Giran town on a clear cell (%s)" % str(cell))
+	# The return scroll destination (own policy, no original Territory->village table) is Giran too.
+	var returned: Dictionary = world.return_current523_source_to_aden()
+	for frame: int in 30: await process_frame
+	here = world.orim_current_land() if world.current523_aden_source_active() else {}
+	cell = Vector2i(int(here.cell[0]), int(here.cell[1])) if here.get("cell") is Array else Vector2i(-1, -1)
+	evidence["return_scroll"] = {"ok":returned.get("ok",false),"policy":str(returned.get("policy","")),"reason":str(returned.get("reason","")),"landed":here}
+	check(returned.get("ok",false) and str(returned.get("policy","")) == START_VILLAGE.POLICY and int(returned.get("source_location",{}).get("ID",0)) == 473 and START_VILLAGE.in_village(cell), "the 523 return lands in Giran town: " + str(evidence.return_scroll))
+	# An existing character at a normal saved spot (here Aden town) is not moved.
+	check(world._save_game(true) == OK, "save after the Giran return")
+	var file: Variant = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+	if not check(file is Dictionary, "the save reads back"): return
+	var aden_spot: Dictionary = {"native_land_id":4, "source_position":[33923.5, 33350.5]}
+	file["character_source_cursor"] = aden_spot
+	var writer := FileAccess.open(world.save_path(), FileAccess.WRITE); writer.store_string(JSON.stringify(file)); writer.close()
+	world._load_game(true)
+	evidence["normal_save_cursor_after_load"] = world.character_source_cursor.duplicate(true)
+	check(world.character_source_cursor == aden_spot and not world.source_save_blocked, "a normal saved spot loads unchanged (not moved to Giran)")
 
 func _find_script(node: Node, file: String) -> Node:
 	var script: Variant = node.get_script()

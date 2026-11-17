@@ -65,7 +65,7 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 		if source_overrides.has("quest_state"):world.quest_service.import_state(source_overrides.quest_state)
 		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
 		result.merge(returned,true)
-		result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"source_item_id":239,"message":"아덴으로 귀환했습니다 · 자체 지정 목적지"},true)
+		result.merge({"ok":true,"saved":true,"handled":true,"consumed":1,"source_item_id":239,"message":"기란 마을로 귀환했습니다 · 자체 지정 목적지"},true)
 		if is_quest:result["physical_id"]=physical_id;result["ownership_origin"]="quest523_receipt"
 		return result
 	if str(world.active_map_id)!="aden_world" or world.field_map==null:
