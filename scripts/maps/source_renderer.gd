@@ -28,10 +28,10 @@ func configure(value: PlayableField,actor: Node2D) -> void:
 	if authored_art_enabled:
 		authored_material=ShaderMaterial.new()
 		authored_material.shader=load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
-		authored_material.set_shader_parameter("atlas",load("res://assets/maps/reference_expansion_v2/terrain.png"))
+		authored_material.set_shader_parameter("atlas",(load("res://assets/maps/reference_expansion_v2/terrain.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/terrain.png") else null))
 		authored_material.set_shader_parameter("atlas_grid",4.0)
 		authored_material.set_shader_parameter("material_slots",Vector4(0,2,1,7))
-		var prop_atlas: Texture2D=load("res://assets/maps/reference_expansion_v2/props.png")
+		var prop_atlas: Texture2D=(load("res://assets/maps/reference_expansion_v2/props.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/props.png") else null)
 		for i: int in range(16):
 			authored_props.append(REFERENCE_VISUALS.cell(prop_atlas,i))
 	for record: Dictionary in source.definition.terrain_chunks:

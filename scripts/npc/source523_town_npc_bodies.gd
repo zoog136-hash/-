@@ -32,6 +32,7 @@ const ROLE_BUILDS_PER_LOAD: int = 1
 const MEMBER_VERIFIES_PER_LOAD: int = 2
 ## Labels use the original DescData name already on the npc_spawn record.
 const NAME_OFFSET := Vector2(-90, -118)
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 
 var world: Node = null
 var records: Array = []
@@ -194,6 +195,8 @@ func _create(record: Dictionary) -> void:
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.z_index = 15
 	holder.add_child(label)
+	# Same screen size under the field camera zoom, around the head point.
+	FIELD_CAMERA.keep_screen_size(label, Vector2(0.0, NAME_OFFSET.y + label.size.y) - NAME_OFFSET)
 	add_child(holder)
 	if not preview.advance_reference_source(0.0, "idle", int(holder.get_meta("direction"))):
 		_release(id)

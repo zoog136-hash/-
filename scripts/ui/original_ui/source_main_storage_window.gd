@@ -174,6 +174,8 @@ func _record(row: Dictionary, side: String) -> Dictionary:
 	var world: Object=screen.get("world")
 	var name: String=str(row.get("name",""))
 	var record: Dictionary=world.call("_find_catalog_item_record",name)
+	# A blessed/cursed stack is not a catalog row; its picture is its base row's.
+	if record.is_empty():record=preload("res://scripts/loot/patch523_monster_drops.gd").bless_stack_record(name,func(base: String) -> Dictionary: return world.call("_find_catalog_item_record",base))
 	var id: String=str(row.get("instance_id",""))
 	var physical: Variant=world.get("item_instances") if side=="bag" else world.get("warehouse").get("instances")
 	if not id.is_empty() and physical is Dictionary and physical.has(id) and physical[id] is Dictionary:record=physical[id].get("record",record)

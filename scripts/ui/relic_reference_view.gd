@@ -185,7 +185,9 @@ func configure(controller: Node) -> void:
 	right.add_child(summon_row)
 	var scroll:=TextureRect.new()
 	scroll.name="RelicSummonScrollIcon"
-	scroll.texture=load("res://assets/ui/return.png")
+	# The self-made return icon was removed; the original summon-scroll
+	# picture is not connected here, so the slot stays empty (no new image).
+	scroll.texture=null
 	scroll.custom_minimum_size=Vector2(38,38)
 	scroll.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	scroll.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
