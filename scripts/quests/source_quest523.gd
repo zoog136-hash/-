@@ -57,7 +57,11 @@ func _load_original() -> bool:
 	if not baked.is_empty() and _load_payload(baked.bytes,""): return true
 	BOOT_LOG.mark("quest_cold_build")
 	var projection = ORIGINAL_PROJECTION.new()
+	# The pinned payload is the unmodified original: no game-rule row views.
+	var approximate: bool = ORIGINAL_PROJECTION.SOURCE.approximate_test_items
+	ORIGINAL_PROJECTION.SOURCE.approximate_test_items = false
 	var value: Dictionary = projection.build()
+	ORIGINAL_PROJECTION.SOURCE.approximate_test_items = approximate
 	if value.is_empty():
 		problem = projection.problem
 		return false
