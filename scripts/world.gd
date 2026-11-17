@@ -11117,10 +11117,26 @@ func _clear_combat_actions() -> void:
 func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
 	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
 
+var _source_damage_effect_absent: Dictionary = {}
+## Original hit effect of a 523 source monster (SkipDamageMotionSprite), on
+## the existing successful-hit feedback. Monsters whose original body has no
+## such row show none.
+func _source_damage_effect(target: TwilightMonster) -> void:
+	if not is_instance_valid(target) or not is_instance_valid(target.source_m_view) or target.source_m_view.get("_preview") == null: return
+	var selection: Variant = target.get_meta("current523_source_bank_selection", {})
+	var body_sprite: int = int(selection.get("sprite_id", -1)) if selection is Dictionary and selection.get("ok", false) else -1
+	if body_sprite <= 0 or _source_damage_effect_absent.has(body_sprite): return
+	var facing: int = int(target.motion.facing8) if target.motion != null else 0
+	var preview: Node = target.source_m_view._preview
+	if not preview.notify_current_source_damage_effect(body_sprite, target.global_position, player.global_position, facing):
+		# Most bodies declare none: do not look the table up again on every hit.
+		if str(preview.source_effect_status.get("reason", "")) == "current523_damage_effect_not_declared": _source_damage_effect_absent[body_sprite] = true
+
 func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
 	# Named skill hits retain their existing skill audio path.
 	if damage_kind.is_empty() and is_instance_valid(presentation_audio):
 		presentation_audio.play_world("impact", target.combat_hit_position(), critical)
+	_source_damage_effect(target)
 	if not is_instance_valid(combat_vfx): return
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
