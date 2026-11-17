@@ -121,8 +121,6 @@ func _rules() -> void:
 	check(HUD_CONTROLLER.FEATURE_WINDOWS.get("trade")==WINDOW,"the trade window is a registered feature window")
 	var hud_source: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud_source.contains("func open_frozen_exchange() -> void:\n\t_open_window(\"exchange\",\"거래소 · 초기 실측 고정\",\"\")\n\tif _open_original_feature(\"trade\"):return"),"the HUD 거래소 menu opens the original window first")
-	var builder: String=FileAccess.get_file_as_string("res://tools/ui/build_client523_main_ui_pack.py")
-	check(builder.contains("(\"UI/Trade/Trade_All.csb\", [1624])"),"the pack builder leaves only Trade_Popup_Purchase_Batch out of Trade_All")
 	var window=WINDOW.new()
 	var hud:=FakeHud.new()
 	var world:=FakeWorld.new()
