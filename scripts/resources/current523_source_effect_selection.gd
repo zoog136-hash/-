@@ -204,6 +204,30 @@ static func select_invoke_effect(original_option: Dictionary, field: String, con
 	if not action.ok: return action
 	return _selected(supplied,sprite,action,"invoke_effect","current523:invoke:%d:%s" % [int(native.ID),field],reference,"patch523")
 
+## Original SkipDamageMotionSprite: a body sprite the original declares as
+## skipping its damage motion shows DamageEffectSpriteID when it takes damage
+## (at the attacker when DamageEffectNearAttacker). Only that declared sprite
+## is selected; a body without a row has no hit effect (none is invented).
+## ExceptOverDamage (when the damage motion still plays) is not used here.
+static func select_damage_effect(body_sprite: int, context: Dictionary = {}) -> Dictionary:
+	if not BANK.integer(body_sprite,1): return fail("current523_damage_effect_body_sprite_required")
+	var supplied: Dictionary = SOURCE.source_tables(context,["SkipDamageMotionSprite"])
+	if not supplied.ok: return supplied
+	var matches: Array[Dictionary] = SOURCE.table_where("SkipDamageMotionSprite","SpriteID",body_sprite)
+	if matches.is_empty(): return fail("current523_damage_effect_not_declared")
+	if matches.size() != 1: return fail("current523_damage_effect_declaration_not_unique")
+	var row: Dictionary = matches[0]
+	var sprite: int = _source_integer(row.get("DamageEffectSpriteID"))
+	if sprite <= 0: return fail("current523_damage_effect_sprite_absent")
+	var action: Dictionary = _action(supplied.options,sprite)
+	if not action.ok: return action
+	var selected: Dictionary = _selected(supplied,sprite,action,"damage_effect","current523:damage_effect:%d" % body_sprite,
+		{"table":"SkipDamageMotionSprite","row":row.duplicate(true),"field":"DamageEffectSpriteID",
+		"action_field":"sole_original_SPR_action_host_policy",
+		"gameplay_admission":"existing_successful_hit_feedback_only; no_damage_motion_or_combat_change_by_visual_loader"},"patch523")
+	selected["near_attacker"] = row.get("DamageEffectNearAttacker") == true
+	return selected
+
 static func select_player_death(request_key: String, context: Dictionary = {}) -> Dictionary:
 	# The existing death owner has already requested the visual. A separate
 	# source one-shot must not set ActorMotion.dead or change revival/save state.
