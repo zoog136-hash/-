@@ -154,7 +154,8 @@ func _authored(id: String, phase: String, point: Vector2, end: Vector2, context:
 		body.position = container.to_local(ground_point) - Vector2(0, float(contact))
 	# These atlas tails are ground dust, not a continuation of the directional
 	# blade/bolt. Use their painted origin (128px cells), never rotate or stretch
-	# the dust with the impact. Coordinates come from vfx_raster_painter.py.
+	# the dust with the impact. The y values below are the dust baselines of
+	# those atlas cells.
 	if phase == "aftermath" and ground_point.is_finite():
 		var program: String = str(entry.profile.program)
 		var dust_y: float = 26.0 if program in ["firestorm", "meteor", "eruption"] else 27.0 if program in ["lightning", "chain_lightning", "storm_field", "storm_ward", "thunder_stun", "plasma"] else 21.0

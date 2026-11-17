@@ -804,8 +804,13 @@ const APPROX_TEST_ITEMS := {
 	130631:"[+7] 회복의 인장 상자",130641:"[+8] 회복의 인장 상자",
 	97434:"빛나는 붉은빛 귀걸이 패키지",97444:"빛나는 보랏빛 귀걸이 패키지",97454:"빛나는 검은빛 귀걸이 패키지",
 	111654:"빛나는 용사 반지 패키지",111664:"빛나는 지혜 반지 패키지",111674:"빛나는 방어 반지 패키지"}
+## Off while a payload pinned to the unmodified original is projected (the
+## quest pack: source_quest523.gd PAYLOAD_SHA); the approximation is a game
+## rule, not original data (2026-11-17: it changed the quest payload bytes and
+## every start failed "퀘스트 팩 SHA-256 불일치" with no quests).
+static var approximate_test_items: bool = true
 static func _view(table: String, value: Dictionary) -> Dictionary:
-	if table == "ItemClass" and value.get("TestItem") == true and _integer(value.get("ID")) and APPROX_TEST_ITEMS.has(int(value.ID)): value["TestItem"] = false
+	if approximate_test_items and table == "ItemClass" and value.get("TestItem") == true and _integer(value.get("ID")) and APPROX_TEST_ITEMS.has(int(value.ID)): value["TestItem"] = false
 	return value
 
 ## Rows whose integer `field` is a key of `ids`, in original table order.
