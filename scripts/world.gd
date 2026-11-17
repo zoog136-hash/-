@@ -83,6 +83,7 @@ var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
+const CURRENT523_MAP_TELEPORT = preload("res://scripts/maps/current523_map_teleport.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
 const TUTORIAL523 = preload("res://scripts/content523/tutorial523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
@@ -10837,6 +10838,13 @@ func _update_field_triggers() -> void:
 	if str(region["id"]) != region_id:
 		region_id = str(region["id"])
 		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · " + str(field_map.data.get("short_name", "아덴"))))
+	# Original 523 walk-in portals (Portal table) on a 523 Land field.
+	if current523_aden_source_active():
+		var walked: Dictionary = _aden_play_controller().call("step_source_portal")
+		if not walked.is_empty():
+			current523_aden_play_active = bool(_aden_play_controller().get("active"))
+			if not bool(walked.get("ok",false)): hud.show_message("포탈 이동 보류: "+str(walked.get("reason","")))
+			return
 	if portal_cooldown > 0.0 or player.auto_enabled:
 		return
 	for portal: Dictionary in field_map.data["portal"]:
@@ -11820,6 +11828,27 @@ func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary
 			if hold is Dictionary and str(hold.get("type",{}).get("Name",""))=="TurnOffAutoForTeleport": auto_off = true
 		if auto_off and player.auto_enabled: player.set_auto_enabled(false)
 	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
+
+## Original 523 map teleport (텔레포터 NPC / 지역 이동 창): UIMapArea row `id`
+## (current523_map_teleport.gd). Same entry rules as a teleport item
+## (ITEM523_TELEPORT_WAIVE; MinLevel judged), the LandTeleport Adena price is
+## saved with the arrival, auto hunting is turned off on arrival.
+func current523_map_teleport(id: String) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 이동할 수 없습니다"}
+	if patch523_npc_spells.blocks("CannotTeleport") or player.is_stunned() or player.is_feared() or player.is_held() or int(hp)<=0 or not charge_skill.is_empty():
+		return {"ok":false,"reason":"이동 불가 상태에서는 텔레포트할 수 없습니다"}
+	if not current523_aden_source_active(): return {"ok":false,"reason":"원본 523 지도에서만 사용할 수 있습니다"}
+	var quote: Dictionary = CURRENT523_MAP_TELEPORT.quote(self, id)
+	if not quote.get("ok",false): return {"ok":false,"reason":str(quote.get("reason","텔레포트할 수 없습니다"))}
+	var row: Dictionary = quote.row
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", int(row.land_id), row.bounds, ITEM523_TELEPORT_WAIVE.duplicate(), quote.changes)
+	var transition: Dictionary = controller.call("last_source_transition")
+	current523_aden_play_active = bool(controller.get("active"))
+	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
+	if player.auto_enabled: player.set_auto_enabled(false)
+	_update_hud()
+	return {"ok":true,"reason":"텔레포트 완료 · %s · %d 아데나" % [str(row.name), int(row.price)],"land_id":int(row.land_id),"price":int(row.price),"saved":bool(transition.get("saved",false))}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

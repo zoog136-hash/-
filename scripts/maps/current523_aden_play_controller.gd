@@ -1112,6 +1112,73 @@ func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY
 	_content_entry_land=-1;_content_entry_waive=[]
 	return moved
 
+## --- Walk-in portals (original 523 `Portal`) ------------------------------
+## Stepping onto a Portal row's source cell (SourceLandID, SourceX, SourceY)
+## moves to its TargetTerritoryID box (Territories LandID/StartX..EndY), like
+## the original client's dungeon entrances and stairs. The Portal table has
+## no fee column: the walk-in is free. Entry rules of the target Land apply
+## with CONTENT_ENTRY_WAIVE (a portal is the way in, so NoTeleport /
+## NoTeleportCome do not hold; MinLevel is still judged). Only a cell change
+## into the portal cell fires it: arriving on one (or standing on it while
+## the travel cooldown runs) does not, and auto hunting never walks through.
+const PORTAL_DEF=preload("res://scripts/resources/current523_definition_rows.gd")
+var _portal_cells_land: int=-2147483647
+var _portal_cells: Dictionary={}
+var _portal_last_cell: Vector2i=Vector2i(-2147483647,-2147483647)
+var last_walk_in_portal: Dictionary={}
+## Cells per trigger tick still counted as walking (2.5x speed cap x 0.2 s ~ 1.2).
+const WALK_IN_MAX_STEP: int=4
+
+func source_portal_cells() -> Dictionary:
+	var land: int=int(settings.get("native_land_id",-1))
+	if land==_portal_cells_land: return _portal_cells
+	_portal_cells_land=land
+	_portal_cells={}
+	if PORTAL_DEF.not_installed() or PORTAL_DEF.row_count("Portal")<=0: return _portal_cells
+	for row: Dictionary in PORTAL_DEF.related("Portal","SourceLandID",land):
+		if int(row.get("TargetTerritoryID",0))>0: _portal_cells[Vector2i(int(row.SourceX),int(row.SourceY))]=int(row.ID)
+	return _portal_cells
+
+## Called by the world's field trigger tick. Returns the walk-in result when
+## a portal fired, else {}.
+func step_source_portal() -> Dictionary:
+	var world: Node=_world()
+	if not active or not source_owned or _source_field==null or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC: return {}
+	var land_changed: bool=int(settings.get("native_land_id",-1))!=_portal_cells_land
+	var cells: Dictionary=source_portal_cells()
+	var cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+	if cell==_portal_last_cell: return {}
+	var was: Vector2i=_portal_last_cell
+	_portal_last_cell=cell
+	# A new Land or a jump of more than a few cells (teleport, respawn) is an
+	# arrival, not a walk: nothing fires.
+	if land_changed or was==Vector2i(-2147483647,-2147483647) or maxi(absi(cell.x-was.x),absi(cell.y-was.y))>WALK_IN_MAX_STEP: return {}
+	if _source_travel_busy or float(world.portal_cooldown)>0.0 or world.player.auto_enabled or int(world.hp)<=0 or world.player.movement_locked: return {}
+	# The trigger tick runs every 0.2 s: check every cell walked since the last one.
+	var steps: int=maxi(absi(cell.x-was.x),absi(cell.y-was.y))
+	for step: int in range(1,steps+1):
+		var passed: Vector2i=Vector2i(roundi(lerpf(was.x,cell.x,float(step)/steps)),roundi(lerpf(was.y,cell.y,float(step)/steps)))
+		if cells.has(passed): return use_walk_in_portal(int(cells[passed]))
+	return {}
+
+func use_walk_in_portal(id: int) -> Dictionary:
+	var world: Node=_world()
+	var portal: Dictionary=PORTAL_DEF.row("Portal",id)
+	var territory: Dictionary=PORTAL_DEF.row("Territories",int(portal.get("TargetTerritoryID",0))) if not portal.is_empty() else {}
+	if territory.is_empty():
+		last_walk_in_portal={"ok":false,"id":id,"reason":"포탈 도착 지역(Territories) 원본 행이 없습니다"}
+		return last_walk_in_portal
+	var bounds: Array=[int(territory.StartX),int(territory.StartY),int(territory.EndX),int(territory.EndY)]
+	var moved: bool=enter_source_land(int(territory.LandID),bounds)
+	world.portal_cooldown=2.0
+	if moved:
+		world.player.clear_click_path(); world.player.velocity=Vector2.ZERO; world.player.set_touch_vector(Vector2.ZERO)
+		# The arrival cell never fires a portal by itself.
+		_portal_cells_land=-2147483647
+		_portal_last_cell=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
+	last_walk_in_portal={"ok":moved,"id":id,"land_id":int(territory.LandID),"bounds":bounds,"reason":"" if moved else problem}
+	return last_walk_in_portal
+
 ## Result of the last save-carrying transition: {"ok","saved","uncertain"}.
 func last_source_transition() -> Dictionary:
 	return _last_source_transition.duplicate(true)
