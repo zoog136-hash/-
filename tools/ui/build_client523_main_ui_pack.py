@@ -133,6 +133,10 @@ WHOLE_SCOPES = [
     # an Atlas_Hud frame absent from the 523 client; the item book window
     # (source_main_item_book_window) leaves that ProjectNode out.
     ("UI/ItemBook/ItemBook_All.csb", [1784]),
+    # Trade_All (source_main_trade_window): the same Trade_Popup_Purchase_Batch
+    # (Atlas_Hud frame absent from the 523 client) left out; 일괄 구매 is not
+    # connected. Every other node of the 서버 / 월드 거래소 is kept.
+    ("UI/Trade/Trade_All.csb", [1624]),
 ]
 
 
