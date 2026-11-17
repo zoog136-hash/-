@@ -1,7 +1,7 @@
 extends RefCounted
-## TWILIGHT-made combat/light presentation (swing crescents, runtime glow
-## halos, invented hit polygons, the generated passive light) has no original
-## sprite behind it. While the 523 original-only presentation is active
+## TWILIGHT-made combat presentation (swing crescents, runtime glow halos,
+## invented hit polygons) has no original sprite or rule behind it. The
+## 라이트 LightRadius light is an original rule and is not gated here. While the 523 original-only presentation is active
 ## (the same rule skill_vfx.gd source_only_policy already applies to authored
 ## skill art) it is not drawn; original effects come only from the SP2 paths.
 ## Damage numbers and other text are not part of this rule.

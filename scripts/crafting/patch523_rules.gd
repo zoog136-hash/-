@@ -81,7 +81,8 @@ const RECORDS_MARK := "twilight_catalog_record_offloaded"
 ## record: light records are hashed as stored and their template fields are
 ## identified by the item template bake key (full() = light + template).
 static func _registered_catalog_key(items: Array, contract: Dictionary) -> String:
-	var template_key: String = NATIVE_PROJECTION._template_key()
+	# Template contents, not the code key: see template_content_key().
+	var template_key: String = NATIVE_PROJECTION.template_content_key()
 	if template_key.is_empty(): return ""
 	var hash := HashingContext.new(); hash.start(HashingContext.HASH_SHA256)
 	hash.update(("templates:" + template_key + "\n").to_utf8_buffer())

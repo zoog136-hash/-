@@ -611,6 +611,18 @@ func clear() -> void:
 	last_source_frame = -1
 	hide()
 
+## Seconds one loop of `role` takes at its own source clock (first stored
+## direction), 0 when the role is missing or untimed.
+func role_cycle_seconds(role: String) -> float:
+	var track: Variant=_playback_tracks.get(role)
+	if not track is Dictionary or bool(track.get("static_pending_timing",false)): return 0.0
+	var directions: Array=track.get("directions",[])
+	if directions.is_empty() or not directions[0] is Array: return 0.0
+	var total: float=0.0
+	for item: Variant in directions[0]:
+		if item is Dictionary: total+=preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+	return total
+
 func source_role() -> String:
 	return _role
 
