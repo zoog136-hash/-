@@ -1,6 +1,7 @@
 extends SceneTree
 ## Old saves on old maps (pre-523 pack: faith, albino, escaros, oman ...)
-## are moved once to 523 Aden town when the 523 pack is installed. Synthetic
+## are moved once to 523 Land 4 at the start village (Giran town, 사용자 결정
+## 2026-11-17) when the 523 pack is installed. Synthetic
 ## save dictionaries only; no packs or real saves are read.
 const RELOCATION = preload("res://scripts/maps/old_map_save_relocation523.gd")
 var failures: Array[String] = []
@@ -22,8 +23,8 @@ func _initialize() -> void:
 	in_run["source_dungeon523"] = {"active":{"status":"active", "map_id":"faith_01"}}
 	check(not RELOCATION.needed(in_run, true, false), "an active dungeon run keeps its map")
 	var moved: Dictionary = RELOCATION.relocated(old_save)
-	check(moved.map_id == "aden_world" and moved.position == [] and moved.map_layout_revision == -1, "placed at Aden with no old position")
-	check(moved.original_position == {} and not moved.has("character_source_cursor"), "523 play mode starts at Aden town")
+	check(moved.map_id == "aden_world" and moved.position == [] and moved.map_layout_revision == -1, "placed on the 523 host map with no old position")
+	check(moved.original_position == {} and moved.character_source_cursor == {"native_land_id":4, "source_position":[33441.5, 32813.5]}, "523 play mode starts at Giran town (Locations473): " + str(moved.get("character_source_cursor")))
 	check(not moved.has("native_png_plan_sha256") and not moved.has("native_png_review_sha256"), "old map picture keys dropped")
 	check(moved.level == 35 and moved.gold == 1234 and moved.inventory == {"HP 물약":10}, "progression unchanged")
 	check(moved[RELOCATION.KEY] == {"from_map_id":"faith_01", "from_position":[1200.0, 640.0], "from_original_position":{}}, "move recorded: " + str(moved.get(RELOCATION.KEY)))

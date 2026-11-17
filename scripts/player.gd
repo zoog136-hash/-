@@ -148,6 +148,7 @@ func _ready() -> void:
 		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
 
 func _physics_process(delta: float) -> void:
+	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("player.begin")
 	var hitch_started: int = FRAME_HITCH.now()
 	var hitch_nested: int = FRAME_HITCH.nested()
 	_physics_step(delta)
