@@ -31,7 +31,8 @@ func _draw_static_picture() -> bool:
 	# placed by its own SP2 frame offset; nothing is substituted when a layer fails.
 	for child: Node in get_children(): child.queue_free()
 	var bank = BANK.new()
-	var opened: Dictionary = bank.load_static(str(selection_status.manifest_path),str(selection_status.manifest_sha256),int(selection_status.sprite_id))
+	var still: bool = selection_status.get("branch") == "approx_static_branch_of_declared_action_body"
+	var opened: Dictionary = bank.call("load_ground_still" if still else "load_static",str(selection_status.manifest_path),str(selection_status.manifest_sha256),int(selection_status.sprite_id))
 	if not opened.get("ok",false): return false
 	var drawn: Array = []
 	for index: int in range(opened.layers.size()):
