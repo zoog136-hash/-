@@ -214,6 +214,10 @@ func prepare(move: Dictionary, target: Node2D, weapon_type_id: int = -1) -> Dict
 			var base_speed: float = float(world.player.get("move_speed"))
 			for factor: String in ["equipment_move_speed_multiplier", "skill_speed_multiplier"]:
 				if world.player.get(factor) != null: base_speed *= float(world.player.get(factor))
+			# On an original 523 Land the walk is the original cell speed
+			# (source_walk_speed.gd); the dash percent applies to that walk.
+			if world.player.has_method("_walk_velocity"):
+				base_speed = (world.player.call("_walk_velocity", caster.direction_to(route[0]) if not caster.is_equal_approx(route[0]) else Vector2.RIGHT, float(world.player.get("move_speed"))) as Vector2).length()
 			var speed: float = base_speed * float(move.speed_percent) / 100.0
 			event["planned_cells"] = length / cell; event["speed"] = speed
 			return {"ok":true, "apply":"dash", "route":route, "speed":speed, "event":event}
