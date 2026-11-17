@@ -52,7 +52,8 @@ func _check_dead_images() -> void:
 			for found: RegExMatch in regex.search_all(lines[index]):
 				var target: String = found.get_string(1)
 				if FileAccess.file_exists(target) or ResourceLoader.exists(target): continue
-				if lines[index].contains("ResourceLoader.exists(\"%s\")" % target): continue
+				var guard: String = "ResourceLoader.exists(\"%s\")" % target
+				if lines[index].contains(guard) or (index > 0 and lines[index - 1].contains(guard)): continue
 				unguarded.append("%s:%d %s" % [path, index + 1, target])
 	check(unguarded.is_empty(), "no unguarded load of a removed repo image: " + ", ".join(unguarded))
 	var relic: String = FileAccess.get_file_as_string("res://scripts/ui/relic_reference_view.gd")

@@ -58,7 +58,7 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	add_child(backdrop)
 	render_profile = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/remake_render_profiles.json")).maps.get(str(source.data.map_id),{})
 	reference_profile = render_profile
-	terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
+	terrain = (load("res://assets/maps/reference_expansion_v2/terrain.png") if ResourceLoader.exists("res://assets/maps/reference_expansion_v2/terrain.png") else null)
 	floor_material = ShaderMaterial.new()
 	floor_material.shader = load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
 	floor_material.set_shader_parameter("atlas",terrain)
