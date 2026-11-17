@@ -294,7 +294,8 @@ func village_fallback(world: Node) -> void:
 	var writer := FileAccess.open(world.save_path(), FileAccess.WRITE); writer.store_string(JSON.stringify(file)); writer.close()
 	world._load_game(true)
 	evidence["normal_save_cursor_after_load"] = world.character_source_cursor.duplicate(true)
-	check(world.character_source_cursor == aden_spot and not world.source_save_blocked, "a normal saved spot loads unchanged (not moved to Giran)")
+	# JSON reads numbers back as floats: compare values, not variant types.
+	check(int(world.character_source_cursor.get("native_land_id",-1)) == 4 and world.character_source_cursor.get("source_position",[]) == aden_spot.source_position and not world.source_save_blocked,"a normal saved spot loads unchanged (not moved to Giran)")
 
 func _find_script(node: Node, file: String) -> Node:
 	var script: Variant = node.get_script()
