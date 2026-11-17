@@ -1,5 +1,6 @@
 extends "res://scripts/hud_v20.gd"
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const WINDOW_TRAIL_SECONDS: int = 10
 const MENU_MEMORY_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 
 signal equipment523_open_requested
@@ -1060,6 +1061,10 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	# Crash trail for the window's first seconds (523.607: the release APK
+	# closed the moment the exchange was entered, 30 minutes into a run).
+	FRAME_HITCH.arm_trail(WINDOW_TRAIL_SECONDS)
+	FRAME_HITCH.trail("ui.open " + section)
 	if original_inventory_is_open():original_main_ui_controller.close_inventory()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()

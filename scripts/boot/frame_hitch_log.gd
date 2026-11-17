@@ -114,7 +114,8 @@ const TRAIL_SECONDS: int = 40
 static var _trail_until_msec: int = 0
 static var _trail_seq: int = 0
 static func arm_trail(seconds: int = TRAIL_SECONDS) -> void:
-	_trail_until_msec = Time.get_ticks_msec() + seconds * 1000
+	# A shorter request never cuts an open window short.
+	_trail_until_msec = maxi(_trail_until_msec, Time.get_ticks_msec() + seconds * 1000)
 	trail("armed")
 static func trail(name: String) -> void:
 	if _trail_until_msec == 0: return
