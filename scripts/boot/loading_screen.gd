@@ -13,6 +13,16 @@ const JOB := preload("res://scripts/boot/source523_prebake_job.gd")
 const PROGRESS := preload("res://scripts/boot/loading_progress.gd")
 const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
 const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
+const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selection.gd")
+const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
+const SOURCE_SCENE := preload("res://scripts/ui/original_ui/sprite_scene.gd")
+## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
+## Fx_Loop). The loading background stays a plain colour: no original 523
+## loading backdrop exists (user decision 2026-11-17).
+const FX_LOADING := "UI/CommonUi/Fx_Loading.csb"
+const FX_LOADING_CLIP := "Fx_Loop"
+## Fx_Loading's authored design area (its Bg ImageView is 1600x675).
+const FX_LOADING_DESIGN := Vector2(1600, 675)
 ## Show the title picture after loading until a touch (off in headless runs).
 var title_after_loading: bool = true
 ## Test hook: also show the title stage under the headless display server.
@@ -44,6 +54,11 @@ var _job: RefCounted
 var _running: bool = false
 var _owns_pause: bool = false
 var _previous: String = ""
+## Holder of the original Fx_Loading scene; null until the original UI pack is
+## installed and its scene trees are on the device.
+var _fx_loading: Node2D
+## Result of the last attach attempt (diagnostics and tests).
+var fx_loading_status: Dictionary = {}
 signal progress_changed(snapshot: Dictionary)
 signal finished(ok: bool)
 
@@ -215,6 +230,7 @@ func _boot() -> void:
 		_status.text = "리소스 팩 설치를 기다리는 중…"
 		await get_tree().process_frame
 	HANDOFF.clear()
+	_attach_original_loading_fx()
 	var steps: Array[Dictionary] = plan_steps(PREBAKE.pending(), destination)
 	var counted: Array[Dictionary] = steps.duplicate()
 	# Original tables used on earlier runs whose stored form an update made
@@ -249,6 +265,7 @@ func _boot() -> void:
 			_cache_warning.text = "기기 캐시 저장 실패: %s · 다음 실행에 다시 정리합니다." % ", ".join(_cache_misses)
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
+		_attach_original_loading_fx()
 		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
 	if not tables.is_empty():
 		_progress.begin_task("definitions", "원본 표를 준비하는 중…")
@@ -332,6 +349,7 @@ func _boot() -> void:
 ## touches the screen; the ready scene stays paused behind it. The engine boot
 ## splash shows only the background color, so the title appears once, here.
 func _show_title() -> void:
+	_release_original_loading_fx()
 	if is_instance_valid(_column): _column.hide()
 	_title_prompt = STYLE.label("화면을 터치하세요", 24, STYLE.TEXT)
 	_title_prompt.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -386,6 +404,58 @@ func _input(event: InputEvent) -> void:
 	if is_instance_valid(_title_addon): _title_addon.queue_free()
 	BOOT_LOG.mark("title_closed", {"scene": destination})
 	_close()
+
+## Shows the original Fx_Loading indicator when the selected original UI pack
+## already holds its scene trees on the device (a fresh pack is baked by the
+## "원작 UI" step first, so the 34 MB manifest is never parsed twice here).
+## Without the pack nothing is drawn: no substitute spinner.
+func _attach_original_loading_fx() -> void:
+	if is_instance_valid(_fx_loading): return
+	var root: String = OS.get_environment("TWILIGHT_SOURCE_UI")
+	var sha: String = OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")
+	if root.is_empty() or sha.length() != 64:
+		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_selected"}
+		return
+	if not UI_PACK.baked(sha):
+		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_baked"}
+		return
+	var selected: Dictionary = UI_SELECTION.selected_pack()
+	if not selected.get("ok", false) or not selected.get("selected", false):
+		fx_loading_status = {"ok": false, "reason": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
+		return
+	var pack: RefCounted = selected.pack
+	if not pack.manifest.get("scenes", {}).has(FX_LOADING):
+		fx_loading_status = {"ok": false, "reason": "fx_loading_missing_in_pack"}
+		return
+	var scene: Node2D = SOURCE_SCENE.new()
+	var configured: Dictionary = scene.configure(pack, FX_LOADING)
+	if not configured.get("ok", false):
+		scene.free()
+		fx_loading_status = {"ok": false, "reason": str(configured.get("error", "fx_loading_configure_failed"))}
+		return
+	var played: Dictionary = scene.play(FX_LOADING_CLIP, true)
+	var holder := Node2D.new()
+	holder.name = "OriginalFxLoading"
+	holder.add_child(scene)
+	add_child(holder)
+	move_child(holder, 1) # above the plain backdrop, below the progress text
+	_fx_loading = holder
+	_layout_original_loading_fx()
+	if not resized.is_connected(_layout_original_loading_fx): resized.connect(_layout_original_loading_fx)
+	fx_loading_status = {"ok": true, "member": FX_LOADING, "clip": FX_LOADING_CLIP, "playing": played.get("ok", false)}
+	BOOT_LOG.mark("original_fx_loading", fx_loading_status)
+
+## Centre of the screen, scaled so the authored 1600x675 area fits.
+func _layout_original_loading_fx() -> void:
+	if not is_instance_valid(_fx_loading): return
+	var area: Vector2 = size if size.x > 0 and size.y > 0 else get_viewport_rect().size
+	var fit: float = minf(area.x / FX_LOADING_DESIGN.x, area.y / FX_LOADING_DESIGN.y)
+	_fx_loading.scale = Vector2.ONE * fit
+	_fx_loading.position = area * 0.5
+
+func _release_original_loading_fx() -> void:
+	if is_instance_valid(_fx_loading): _fx_loading.queue_free()
+	_fx_loading = null
 
 func _fail(message: String) -> void:
 	_progress.fail_task(message)
