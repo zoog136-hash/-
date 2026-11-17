@@ -8,6 +8,7 @@ const MONSTER_DIAGNOSTICS = preload("res://scripts/monsters/monster_diagnostics5
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
 const PREFS = preload("res://scripts/animation/presentation_preferences.gd")
 const SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 var hud: Node
 var config: ConfigFile = ConfigFile.new()
 var volume: HSlider
@@ -216,6 +217,7 @@ func configure(controller: Node) -> void:
 	map_visual_mode.select(1 if str(config.get_value("visual","map_mode","twilight")) == "classic" else 0)
 	map_visual_mode.item_selected.connect(_map_visual_mode_changed)
 	stack.add_child(map_visual_mode)
+	_add_camera_distance(stack)
 	stack.add_child(HSeparator.new())
 	# Everything below is built only when its foldout is opened. Opening
 	# settings must not decode original images, list installed SP2 files,
@@ -361,6 +363,40 @@ func _spx_transform_preview_changed(enabled: bool, transform_id: String) -> void
 	var record: Variant = (equipped as Dictionary).get("변신", {})
 	if record is Dictionary and str((record as Dictionary).get("sourceId", "")) == transform_id:
 		world.call("_apply_transform_visual", record)
+
+## Camera distance (TWILIGHT 근사, default from Lineage M captures). Moving
+## the slider applies live; releasing it saves once with the game save.
+func _add_camera_distance(stack: VBoxContainer) -> void:
+	var world: Node = hud.get_parent() if is_instance_valid(hud) else null
+	if world == null or not world.has_method("set_field_camera_zoom"): return
+	var row := HBoxContainer.new()
+	row.name = "FieldCameraDistanceRow"
+	var caption := UI.label("", 14)
+	caption.custom_minimum_size = Vector2(150, 0)
+	var slider := HSlider.new()
+	slider.name = "FieldCameraDistance"
+	slider.min_value = FIELD_CAMERA.MIN_ZOOM
+	slider.max_value = FIELD_CAMERA.MAX_ZOOM
+	slider.step = FIELD_CAMERA.STEP
+	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	slider.custom_minimum_size = Vector2(0, 36)
+	slider.value = float(world.field_camera_zoom())
+	var show_caption := func(value: float) -> void: caption.text = "카메라 거리 %.2f배" % value
+	show_caption.call(slider.value)
+	slider.value_changed.connect(func(value: float) -> void:
+		show_caption.call(value)
+		world.set_field_camera_zoom(value, false))
+	slider.drag_ended.connect(func(changed: bool) -> void:
+		if changed: world.set_field_camera_zoom(slider.value, true))
+	var reset := UI.button("기본", func() -> void:
+		slider.set_value_no_signal(FIELD_CAMERA.DEFAULT_ZOOM)
+		show_caption.call(FIELD_CAMERA.DEFAULT_ZOOM)
+		world.set_field_camera_zoom(FIELD_CAMERA.DEFAULT_ZOOM, true), Vector2(72, 36))
+	row.add_child(caption)
+	row.add_child(slider)
+	row.add_child(reset)
+	stack.add_child(row)
+	stack.add_child(UI.section("숫자가 클수록 가깝게(캐릭터가 크게) 보입니다. 기본 %.2f배는 리니지M 화면 비교로 정한 TWILIGHT 근사값입니다." % FIELD_CAMERA.DEFAULT_ZOOM, 12))
 
 func _map_visual_mode_changed(index: int) -> void:
 	var mode: String = "classic" if index == 1 else "twilight"

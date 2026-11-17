@@ -6,6 +6,7 @@ signal source_frame_marker(sprite_id: String, source_frame: int)
 const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_registration.gd")
 const CAPACITY: int = 160
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
+const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 const SOURCE_SPX = preload("res://scripts/animation/source_spx_player.gd")
 var source_effects: Array[TwilightSourceSPXPlayer] = []
 var source_csb_effects: Array[Node2D] = []
@@ -229,8 +230,10 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	var alpha: float = minf(1.0, (1.0 - p) * 2.0)
 	var color: Color = entry.color
 	color.a *= alpha
-	point += Vector2((int(entry.serial) % 3 - 1) * 8.0, 0.0 if reduced_motion else -p * 35.0)
-	var scale_value: float = 1.0 if reduced_motion else VISUALS.number_scale(age, critical)
+	# Screen size and drift stay as at camera zoom 1.0 (field camera distance).
+	var keep: float = FIELD_CAMERA.text_scale()
+	point += Vector2((int(entry.serial) % 3 - 1) * 8.0, 0.0 if reduced_motion else -p * 35.0) * keep
+	var scale_value: float = (1.0 if reduced_motion else VISUALS.number_scale(age, critical)) * keep
 	draw_set_transform(point, 0.0, Vector2.ONE * scale_value)
 	var baseline: Vector2 = Vector2(-width * 0.5, 0.0)
 	draw_string_outline(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4, Color(0.025, 0.025, 0.03, color.a))
@@ -238,9 +241,9 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	draw_set_transform(Vector2.ZERO)
 
 	if not bool(entry.get("caption", false)): return
-	var title_point: Vector2 = point + Vector2(0.0, -27.0)
+	var title_point: Vector2 = point + Vector2(0.0, -27.0) * keep
 	var title_width: float = float(entry.critical_width)
-	visuals.halo(self, title_point + Vector2(0.0, -8.0), Vector2(title_width * 1.8, 42.0), Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
+	visuals.halo(self, title_point + Vector2(0.0, -8.0) * keep, Vector2(title_width * 1.8, 42.0) * keep, Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
 	# Shear just the heading; normal numbers, MISS and healing keep their color.
 	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value, scale_value), title_point))
 	var title_base: Vector2 = Vector2(-title_width * 0.5, 0.0)
