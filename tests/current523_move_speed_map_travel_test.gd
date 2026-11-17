@@ -20,6 +20,7 @@ const PACK = preload("res://scripts/boot/source523_pack.gd")
 const DEF = preload("res://scripts/resources/current523_definition_rows.gd")
 const TELEPORT_WINDOW = preload("res://scripts/ui/original_ui/source_main_teleport_window.gd")
 const WORLD_MAP_WALK = preload("res://scripts/maps/current523_world_map_walk.gd")
+const QA = preload("res://tests/qa_class_selection.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -118,6 +119,9 @@ func real_main(base: String) -> void:
 	root.add_child(world)
 	var opened: bool = await _wait_for(func() -> bool: return bool(world.get("current523_aden_play_active")), 1500)
 	if not check(opened, "523 play mode active: " + str(world.get("current523_aden_play_problem"))): return
+	# A fresh profile starts at the class window; play as a player would.
+	check(QA.enter_game(world), "class chosen (game entered)")
+	await _wait_for(func() -> bool: return world.player.original_source_preview.installed(), 600)
 	for i: int in 60: await process_frame
 	world.level = maxi(int(world.level), 60)
 	world.gold = 2000000
@@ -213,6 +217,7 @@ func real_main(base: String) -> void:
 		world.player.global_position = world.field_map.coordinates.to_world(Vector2(picked.cell + Vector2i(1, 0)))
 		for i: int in 20: await physics_frame
 		world.player.global_position = world.field_map.coordinates.to_world(Vector2(picked.cell))
+		evidence["portal_gate"] = {"class_picker_initial": world.hud.get("class_picker_initial"), "cooldown": world.portal_cooldown, "auto": world.player.auto_enabled}
 		var arrived: bool = await _wait_for(func() -> bool: return int(world.field_map.native_land.get("ID", -1)) == int(picked.target.LandID), 120)
 		evidence["portal"] = {"id": picked.portal.ID, "target_land": picked.target.LandID, "result": world.call("_aden_play_controller").get("last_walk_in_portal")}
 		check(arrived, "stepping onto Portal %d moves to Land %d" % [int(picked.portal.ID), int(picked.target.LandID)])
@@ -235,6 +240,11 @@ func real_main(base: String) -> void:
 		if goal.x >= 0: break
 	if goal.x >= 0:
 		var ticket: Dictionary = WORLD_MAP_WALK.ticket(world, field)
+		var again: Dictionary = WORLD_MAP_WALK.ticket(world, field)
+		var changed: Array = []
+		for key: Variant in ticket:
+			if not again.has(key) or str(again[key]) != str(ticket[key]) or again[key] != ticket[key]: changed.append(str(key))
+		evidence["world_map_ticket_unstable_keys"] = changed
 		var walk: Dictionary = WORLD_MAP_WALK.request(world, field, [float(goal.x) + 0.5, float(goal.y) + 0.5], ticket)
 		evidence["world_map_walk"] = {"ok": walk.get("ok"), "reason": walk.get("reason")}
 		check(bool(walk.get("ok", false)), "world map point walk accepted: " + str(walk.get("reason", "")))

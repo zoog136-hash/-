@@ -1117,8 +1117,8 @@ func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY
 ## moves to its TargetTerritoryID box (Territories LandID/StartX..EndY), like
 ## the original client's dungeon entrances and stairs. The Portal table has
 ## no fee column: the walk-in is free. Entry rules of the target Land apply
-## with CONTENT_ENTRY_WAIVE (a portal is the way in, so NoTeleport /
-## NoTeleportCome do not hold; MinLevel is still judged). Only a cell change
+## with WALK_IN_WAIVE (a portal is the way in, so NoTeleport / NoTeleportCome
+## and the non-entry declarations do not hold; MinLevel is still judged). Only a cell change
 ## into the portal cell fires it: arriving on one (or standing on it while
 ## the travel cooldown runs) does not, and auto hunting never walks through.
 const PORTAL_DEF=preload("res://scripts/resources/current523_definition_rows.gd")
@@ -1126,6 +1126,12 @@ var _portal_cells_land: int=-2147483647
 var _portal_cells: Dictionary={}
 var _portal_last_cell: Vector2i=Vector2i(-2147483647,-2147483647)
 var last_walk_in_portal: Dictionary={}
+## Walk-in entry: CONTENT_ENTRY_WAIVE plus the declarations that do not gate
+## an entry (the same non-entry list a teleport item waives, user decision
+## 2026-11-15): server/socket/loading/clan-call attributes, LandCondition,
+## CompetitionDungeonLand. MinLevel (actor_level_requirement_not_met) and every
+## other declaration still hold.
+const WALK_IN_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePushOnDie","NpcBuff","NoTeleportCome","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand"]
 ## Cells per trigger tick still counted as walking (2.5x speed cap x 0.2 s ~ 1.2).
 const WALK_IN_MAX_STEP: int=4
 
@@ -1169,7 +1175,7 @@ func use_walk_in_portal(id: int) -> Dictionary:
 		last_walk_in_portal={"ok":false,"id":id,"reason":"포탈 도착 지역(Territories) 원본 행이 없습니다"}
 		return last_walk_in_portal
 	var bounds: Array=[int(territory.StartX),int(territory.StartY),int(territory.EndX),int(territory.EndY)]
-	var moved: bool=enter_source_land(int(territory.LandID),bounds)
+	var moved: bool=enter_source_land(int(territory.LandID),bounds,WALK_IN_WAIVE)
 	world.portal_cooldown=2.0
 	if moved:
 		world.player.clear_click_path(); world.player.velocity=Vector2.ZERO; world.player.set_touch_vector(Vector2.ZERO)
