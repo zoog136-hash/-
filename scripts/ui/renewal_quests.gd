@@ -134,6 +134,8 @@ func _render() -> void:
 			accept.pressed.connect(_accept.bind(str(quest.id)))
 			row.add_child(accept)
 	summary.text = "%s · %d개" % [CATEGORIES[selected],model.matches]
+	# No quest rows at all: say why (e.g. the original quest data was refused).
+	if service.quests.is_empty() and not str(service.problem).is_empty(): summary.text += " · " + str(service.problem)
 	page_label.text = "%d / %d 페이지" % [page+1,model.pages]
 	previous.disabled = page==0
 	next.disabled = page==model.pages-1
