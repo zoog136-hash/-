@@ -130,6 +130,7 @@ func _process(delta: float) -> void:
 ## latency on a standing idle loop); bodies far from the player only bank
 ## their time until they come near.
 const ADVANCES_PER_FRAME: int = 6
+const ADVANCE_EVERY_FRAMES: int = 2
 const ANIMATE_RADIUS: float = 1000.0
 var _advance_cursor: int = 0
 func _advance_bodies(delta: float) -> void:
@@ -138,6 +139,11 @@ func _advance_bodies(delta: float) -> void:
 	var holders: Array = bodies.values()
 	for holder: Variant in holders:
 		if is_instance_valid(holder): holder.set_meta("pending_delta", float(holder.get_meta("pending_delta", 0.0)) + delta)
+	# Idle loops are advanced on every other frame (15 per second at the 30
+	# fps cap); the skipped frame's time is banked above, so the original
+	# speed is kept (Twm diag 2026-11-19: town_npc_bodies was still the top
+	# per-frame detail in town).
+	if Engine.get_process_frames() % ADVANCE_EVERY_FRAMES != 0: return
 	var count: int = holders.size()
 	var advanced: int = 0
 	var visited: int = 0
