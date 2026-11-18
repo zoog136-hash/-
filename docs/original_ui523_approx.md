@@ -88,3 +88,10 @@
 ## 비법서 제작 진입 (Production_All)
 
 - TWILIGHT 근사(근거 약함). 원본 제작 창에는 GachaCraft 진입점이 없다. 그래서 비어 있던 "이벤트" 탭에 "비법서 제작"이라는 이름을 붙이고, 누르면 기존 제작 화면을 비법서 제작 패널이 열린 채로 띄운다(renewal_hud.open_gacha_craft523).
+
+## 버프 정보 창 디버프·발동 마법 탭 (Inventory_Buff_Info_All)
+
+- 디버프 탭: 플레이어에게 지금 걸린 효과만 보여 준다. player.gd의 상태 타이머(스턴·사일런스·홀드·공포·중독·출혈)와 몬스터가 건 원본 BuffClass 효과(patch523_npc_spells.player_buffs, IsGood=false; 이름은 BuffClass DescID, 설명은 EffectDescID, 아이콘은 OnIconID)이다. 몬스터가 건 이로운 BuffClass(IsGood=true)는 버프 탭에 붙는다.
+- 발동 마법 탭: 착용 장비에서 전투 런타임이 실제로 굴리는 발동(patch523_equipment_combat.active의 다섯 종류)만 보여 준다. 마법 발동은 발동 SpellClass 이름·아이콘, 나머지는 장비 이름과 원본 확률·수치이다. 지속 시간 칸은 비운다(발동에는 남은 시간이 없음).
+- 상태 타이머 다섯 가지에는 원본 BuffClass가 없어 아이콘 칸을 비운다(그림을 만들지 않음).
+- TWILIGHT 근사(근거 약함) · 빈 목록 안내 문구: 원본 세 탭의 안내 문구가 모두 "사용 중인 버프가 없습니다."로 같고 523 문자열 표에 다른 문구가 없어, 디버프 탭은 "적용 중인 디버프가 없습니다.", 발동 마법 탭은 "발동하는 마법이 없습니다."로 바꿔 쓴다.
