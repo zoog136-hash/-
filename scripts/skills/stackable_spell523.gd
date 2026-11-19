@@ -22,14 +22,18 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const STATE = preload("res://scripts/original_client/oc_m95_m99_spell_state.gd")
 const PLAYER523 = preload("res://scripts/skills/player_skills523.gd")
 const CELL: float = 48.0
-var service: RefCounted
+## Weak: the skill service owns this module (a strong back reference would be a
+## RefCounted cycle that is never freed).
+var owner_ref: WeakRef
+var service: RefCounted:
+	get: return owner_ref.get_ref() if owner_ref!=null else null
 var charges: Dictionary = {}   # record id -> {"current": int, "active": int}
 var gaps: Dictionary = {}      # record id + ":" + kind -> remaining seconds
 var plates: Array = []         # live casts: {"id","skill","hits_left","next","remaining"}
 var _specs: Dictionary = {}
 
 func configure(owner: RefCounted) -> void:
-	service = owner
+	owner_ref = weakref(owner)
 
 func clear() -> void:
 	plates.clear()
