@@ -61,6 +61,21 @@ func _run() -> void:
 	button.set_meta(ROUTER.DRAG_META,own)
 	window._forward_row_drags(row,"Rows")
 	check(button.get_meta(ROUTER.DRAG_META)==own,"a row's own drag forward is kept")
+	# A row's own horizontal card list inside the vertical list: a vertical
+	# drag scrolls the outer list, a horizontal one the inner list.
+	var outer:=Node2D.new();holder.add_child(outer)
+	var inner:=Node2D.new();holder.add_child(inner)
+	window._scrolls["Outer"]={"content":outer,"min":-500.0,"value":0.0}
+	window._scrolls["Inner"]={"content":inner,"min":-500.0,"value":0.0,"axis":"x"}
+	var card:=Node2D.new();holder.add_child(card)
+	card.set_meta(KIT.ROW_LIST_META,"Outer")
+	var card_row:=Node2D.new();card.add_child(card_row)
+	check(KIT._outer_list_key(card_row)=="Outer","a node inside an outer row finds the outer list")
+	window._nested_list_input(_event("press",Vector2.ZERO),"Inner","Outer")
+	window._nested_list_input(_event("drag",Vector2.ZERO,Vector2(0,-40)),"Inner","Outer")
+	check(float(window._scrolls["Outer"].value)<-30.0 and float(window._scrolls["Inner"].value)==0.0,"a vertical drag on an inner card scrolls the outer list")
+	window._nested_list_input(_event("drag",Vector2.ZERO,Vector2(-40,0)),"Inner","Outer")
+	check(float(window._scrolls["Inner"].value)<-30.0,"a horizontal drag scrolls the inner card list")
 	holder.free()
 	print("ORIGINAL_UI_LIST_ROW_DRAG_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
