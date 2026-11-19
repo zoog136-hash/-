@@ -471,7 +471,9 @@ func _process_step(_delta: float) -> void:
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
 			if signature!=_inventory_signature:
-				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh()
+				# Header only -> chrome; counts/markers/selection over the same rows
+				# -> rows-only patch (it rebuilds itself when the rows changed).
+				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh_rows()
 				if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
