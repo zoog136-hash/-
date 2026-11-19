@@ -1137,6 +1137,7 @@ const FEATURE_WINDOWS={
 	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
 	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
+	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

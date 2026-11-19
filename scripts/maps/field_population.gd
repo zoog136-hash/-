@@ -345,9 +345,14 @@ func _spawn_slot_measured(slot: Dictionary) -> void:
 		var home: Array = state.get("home",[])
 		if home.size()==2:
 			var saved_home := Vector2(float(home[0]),float(home[1]))
-			var rect: Array = region.rect
-			var box := Rect2(float(rect[0]),float(rect[1]),float(rect[2]),float(rect[3]))
-			if box.has_point(saved_home) and field.spawn_contains(region,saved_home) and field.walkable(saved_home) and field.point_clear(saved_home) and not field.is_safe(saved_home): monster.home_position = saved_home
+			# A 523 source boss region may carry no world `rect` (2026-11-19
+			# 523.637: "Invalid access to 'rect'" on every boss spawn, which
+			# aborted the spawn half way). Without one the saved home is not
+			# checked or restored; the boss keeps the home it was just given.
+			var rect: Variant = region.get("rect")
+			var boxed: bool = rect is Array and (rect as Array).size() == 4
+			var box := Rect2(float(rect[0]),float(rect[1]),float(rect[2]),float(rect[3])) if boxed else Rect2()
+			if boxed and box.has_point(saved_home) and field.spawn_contains(region,saved_home) and field.walkable(saved_home) and field.point_clear(saved_home) and not field.is_safe(saved_home): monster.home_position = saved_home
 		if position.size()==2:
 			var saved := Vector2(float(position[0]),float(position[1]))
 			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
