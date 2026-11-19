@@ -61,7 +61,34 @@ func _window_state() -> void:
 	check(not source.contains("다중 강화는 원본 규칙이 없어") and source.contains("\"Nd_Enchant_Bless\",\"Nd_Enchant_Smelt\",\"Nd_Enchant_Grace\""),"the 다중 강화 page is mounted (no longer kept out)")
 	hud.queue_free()
 
+## user:// as it was: later suites in the same run read the saved character.
+static func _snapshot(dir: String, into: Dictionary) -> void:
+	for file: String in DirAccess.get_files_at(dir):into[dir.path_join(file)]=FileAccess.get_file_as_bytes(dir.path_join(file))
+	for sub: String in DirAccess.get_directories_at(dir):_snapshot(dir.path_join(sub),into)
+
+static func _restore(dir: String, saved: Dictionary) -> void:
+	var now: Dictionary={}
+	_snapshot(dir,now)
+	for path: String in now:
+		if not saved.has(path):DirAccess.remove_absolute(path)
+	for path: String in saved:
+		if not now.has(path) or now[path]!=saved[path]:
+			DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+			var file:=FileAccess.open(path,FileAccess.WRITE)
+			if file!=null:
+				file.store_buffer(saved[path])
+				file.close()
+
 func _series() -> void:
+	var saved: Dictionary={}
+	_snapshot("user://",saved)
+	await _series_run()
+	_restore("user://",saved)
+	var after: Dictionary={}
+	_snapshot("user://",after)
+	check(after.keys()==saved.keys() and after.values()==saved.values(),"user:// is restored for the next suites")
+
+func _series_run() -> void:
 	var QA=load("res://tests/qa_class_selection.gd")
 	var world=load("res://Main.tscn").instantiate()
 	root.add_child(world)
