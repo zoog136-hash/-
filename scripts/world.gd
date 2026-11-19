@@ -6809,7 +6809,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"gold": gold,
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
-		"source_item_catalog_history":source_item_catalog_history.duplicate(true),
 		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
 		"quest_state": quest_service.export_state(),
 		"monsterbook523": monsterbook523.export_state(),
@@ -6914,6 +6913,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not owner_boundary.protection_error(self,protection_state).is_empty():return ERR_INVALID_DATA
 		data["protection523"]=protection_state
 	data.merge(equipment_collections.extra_save_fields, false)
+	data.erase("source_item_catalog_history") # retired history, also not carried as an unknown field
 	var staged_overrides := collection_override.duplicate(true)
 	if staged_overrides.has("totem_combat_settings"):
 		data.ui_preferences = ui_preferences.duplicate(true)
@@ -6924,6 +6924,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not bool(observed_content.get("ok",false)): return ERR_INVALID_DATA
 	if observed_content.has("state"):
 		data["unconfirmed523"] = observed_content.state
+	# Live-event replay keys are session-only (unconfirmed523/runtime.gd).
+	data["unconfirmed523"] = UNCONFIRMED523.saved_form(data.get("unconfirmed523"))
 	var save_started_usec: int = Time.get_ticks_usec()
 	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
@@ -7104,8 +7106,9 @@ func _load_game(quiet: bool) -> void:
 	var old_history: Variant=data.get("source_item_catalog_history",[])
 	if not old_history is Array:
 		source_item_save_blocked=true;hud.show_message("기존 원본 정의 출처 이력 형식 확인 필요 · 저장 보존");return
-	source_item_catalog_history=old_history.duplicate(true)
-	if not saved_items.is_empty() and saved_items!=current_items and not saved_items in source_item_catalog_history:source_item_catalog_history.append(saved_items.duplicate(true))
+	# Earlier definition-pack identities were only kept as history; no rule
+	# reads them, so they are no longer carried (save_journal_trim_test).
+	source_item_catalog_history=[]
 	if int(saved_items.get("schema",0)) in [3,4] and current_items.is_empty():
 		source_item_save_blocked=true
 		hud.show_message("새 원본523 아이템 입력이 없어 기존 저장을 보존합니다")
