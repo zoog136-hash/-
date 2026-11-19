@@ -1182,6 +1182,22 @@ func boss_overhead(npc_class_id: int) -> Node2D:
 	var built: Dictionary=BossOverhead.build(_pack,node)
 	return built.scene if built.get("ok",false) else null
 
+## --- Original 523 level-up presentation (source_main_level_up, Hud_LevelUp)
+const LevelUp=preload("res://scripts/ui/original_ui/source_main_level_up.gd")
+var _level_up: RefCounted
+
+## Plays the original level-up scene for `reached` with its LevelUpEffectDesc
+## guidance rows; {handled:false} when the UI pack lacks Hud_LevelUp.
+func play_level_up(reached: int, guidance: Array[Dictionary]) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if _pack==null or hud==null or not is_instance_valid(_coordinates):return _fail("source_level_up_host_unavailable")
+	if _level_up==null:
+		var candidate=LevelUp.new()
+		var configured: Dictionary=candidate.configure(_pack,hud)
+		if not configured.get("ok",false):return configured
+		_level_up=candidate
+	return _level_up.play_level_up(_coordinates,reached,guidance)
+
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.
 func try_open_overlay_window(key: String, args: Array=[]) -> Dictionary:
