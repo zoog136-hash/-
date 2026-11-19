@@ -8288,7 +8288,7 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 			continue
 		if not _skill_ready(skill):
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			break
 
 
@@ -8397,12 +8397,12 @@ func _run_auto_heal_quickslots() -> void:
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
+			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name), false)
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
 			continue
 		if _skill_ready(skill):
-			_cast_job_skill(str(skill.get("name", "")))
+			_cast_job_skill(str(skill.get("name", "")), false)
 			return
 
 func _run_auto_combat_quickslots() -> bool:
@@ -8429,7 +8429,7 @@ func _run_auto_combat_quickslots() -> bool:
 			continue
 		if SKILL_RULES.effect_kind(skill) == "turnUndead" and not selected_monster.is_undead():
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			return true
 	return false
 
@@ -8567,13 +8567,13 @@ func _skill_record(skill_name: String) -> Dictionary:
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
-func _cast_job_skill(skill_name: String) -> bool:
+func _cast_job_skill(skill_name: String, manual: bool = true) -> bool:
 	if death_recovery.blocked(): return false
 	if skill_name.begins_with("guardian:"):
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill, manual)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false

@@ -23,6 +23,10 @@ var last_tap_at: int = -1000
 var last_tap_position: Vector2
 var last_tap_touch: bool = false
 const DOUBLE_TAP_MS: int = 360
+## Original skill window slot under a press: the press stays the window's (tap
+## selects, drag scrolls); holding still for TOUCH_HOLD_SECONDS hands the
+## gesture to this transfer so the skill can be dropped on a quick slot.
+var held_watch: Dictionary = {}
 
 func reset_tap_history() -> void:
 	last_tap_id = ""
@@ -134,6 +138,12 @@ func _input(event: InputEvent) -> void:
 		var candidate: Dictionary = _source_at(event.position)
 		if candidate.is_empty():
 			reset_tap_history()
+			held_watch = _held_source_at(event.position)
+			if not held_watch.is_empty():
+				held_watch["pointer"] = event.index if event is InputEventScreenTouch else -1
+				held_watch["origin"] = event.position
+				held_watch["at"] = Time.get_ticks_msec()
+				set_process(true)
 			return
 		pointer = event.index if event is InputEventScreenTouch else -1
 		source = candidate
@@ -149,7 +159,9 @@ func _input(event: InputEvent) -> void:
 			handled_touch_position = event.position
 		get_viewport().set_input_as_handled()
 		return
-	if pointer == -2: return
+	if pointer == -2:
+		_watch_input(event)
+		return
 	if (event is InputEventScreenTouch or event is InputEventScreenDrag) and event.index == pointer:
 		handled_touch_at = Time.get_ticks_msec()
 		handled_touch_position = event.position
@@ -203,11 +215,51 @@ func _input(event: InputEvent) -> void:
 		_finish_gesture()
 		get_viewport().set_input_as_handled()
 
+func _held_source_at(point: Vector2) -> Dictionary:
+	if hud.class_picker_initial or not hud.has_method("original_skill_window_hit_at"): return {}
+	var hit: Dictionary = hud.original_skill_window_hit_at(point)
+	return {"source":hit} if not hit.is_empty() else {}
+
+func _watch_input(event: InputEvent) -> void:
+	if held_watch.is_empty(): return
+	var index: int = int(held_watch.pointer)
+	var mine: bool = (event is InputEventScreenTouch or event is InputEventScreenDrag) and event.index == index or index == -1 and (event is InputEventMouseMotion or event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT)
+	if not mine: return
+	if event is InputEventScreenTouch or event is InputEventMouseButton:
+		if not event.pressed: held_watch.clear()
+	elif event.position.distance_to(held_watch.origin) > (L.TOUCH_SCROLL_DISTANCE if index >= 0 else L.MOUSE_DRAG_DISTANCE):
+		held_watch.clear()
+
+func _adopt_held_watch() -> void:
+	var watch: Dictionary = held_watch
+	held_watch = {}
+	var live: Dictionary = hud.original_skill_window_hit_at(watch.origin)
+	if live.is_empty() or str(live.get("id","")) != str(watch.source.get("id","")): return
+	pointer = int(watch.pointer)
+	source = live
+	origin = watch.origin
+	position = origin
+	pressed_at = int(watch.at)
+	elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
+	mode = "drag"
+	if pointer >= 0:
+		handled_touch_at = Time.get_ticks_msec()
+		handled_touch_position = origin
+	_show_drag()
+
 func _process(_delta: float) -> void:
-	if pointer == -2: return
+	if pointer == -2:
+		if held_watch.is_empty():
+			set_process(false)
+		elif not hud.original_skill_window_is_open():
+			held_watch.clear()
+		elif float(Time.get_ticks_msec()-int(held_watch.at))/1000.0 >= L.TOUCH_HOLD_SECONDS:
+			_adopt_held_watch()
+		return
 	elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
 	var inventory_visible: bool=hud.original_inventory_is_open() if bool(source.get("source_native",false)) else hud.lineage_inventory_ui.is_visible_in_tree()
-	if source.from == "inventory" and not inventory_visible or source.from == "skill" and (not hud.workspace.visible or hud.active_section != "skills"):
+	var skill_visible: bool = hud.original_skill_window_is_open() if bool(source.get("source_skill_window",false)) else hud.workspace.visible and hud.active_section == "skills"
+	if source.from == "inventory" and not inventory_visible or source.from == "skill" and not skill_visible:
 		cancel()
 		return
 	if source.from == "warehouse" and (not hud.workspace.visible or hud.active_section != "warehouse" or not is_instance_valid(hud.transaction_view) or hud.transaction_view.mode.selected != 1):
@@ -343,6 +395,7 @@ func _drop() -> void:
 
 func cancel() -> void:
 	reset_tap_history()
+	held_watch.clear()
 	_finish_gesture()
 
 func _finish_gesture() -> void:
