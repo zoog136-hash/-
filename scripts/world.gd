@@ -439,6 +439,10 @@ const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
 # verification cache; pause/quit and transactions still save immediately.
 const AUTOSAVE_SECONDS: float = 60.0
 const DEFERRED_SAVE_SECONDS: float = 10.0
+## SHA-256 of the save file this session last wrote with the shop state in it.
+var _shop_key_saved_sha: String = ""
+## Full re-reads of the previous save file for the shop migration (diagnostics/tests).
+var previous_save_parses: int = 0
 const PERF_LOG_THRESHOLD_USEC: int = 30000
 var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
 # Automated suites run headless and assert durable state right after each action.
@@ -6855,8 +6859,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		var peer_state:Dictionary=collection_override.get("source_shop",peer_shop.export_state())
 		if not peer_shop.validate(peer_state).is_empty():return ERR_UNAVAILABLE
 		if FileAccess.file_exists(save_path()):
-			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
-			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
+			# prepare_load only acts on a save that has no shop state yet. A file
+			# whose SHA-256 is the one this session last wrote with that state
+			# already has it: skip re-reading and parsing the whole previous
+			# save on every write (the largest single part of a phone save).
+			if preload("res://scripts/save/previous_save_check.gd").needs_reading(save_path(),_shop_key_saved_sha):
+				previous_save_parses+=1
+				var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+				if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
 		data["source_shop"]=peer_state.duplicate(true)
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -6901,6 +6911,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		elif FileAccess.file_exists(save_path()) and FileAccess.get_sha256(save_path())!=prior_owner_hash:
 			patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
 	_perf_log("저장", save_started_usec)
+	if result == OK and data.has(SOURCE_SHOP.SAVE_KEY) and str(equipment_collections.get("_disk_path"))==save_path():
+		_shop_key_saved_sha=str(equipment_collections.get("_disk_hash"))
+	elif result != OK:
+		_shop_key_saved_sha=""
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
