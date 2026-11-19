@@ -204,7 +204,13 @@ func regions() -> void:
 		var before_scroll: Vector2=world.player.global_position
 		world.consumable_service.try_use("귀환 주문서")
 		check(world.current523_aden_source_active() and world.player.global_position==before_scroll and int(world.inventory.get("귀환 주문서",0))==2,"actual return-scroll use is held without relocation or consumption")
-		check(not world._drop_inventory_reference("귀환 주문서",before_scroll) and int(world.inventory.get("귀환 주문서",0))==2,"existing real item cannot be transferred into an unsupported source drop store")
+		# Source fields keep their own floor now (inventory_drag_drop523_test);
+		# a drag-out only asks first and moves nothing before 확인.
+		world.request_inventory_ground_drop("귀환 주문서",before_scroll)
+		check(int(world.inventory.get("귀환 주문서",0))==2,"a source-field drag-out asks first and moves nothing")
+		if world.hud.original_drop_confirm_is_open(): world.hud.original_main_ui_controller.close_drop_confirm()
+		for dialog: Node in world.hud.get_node("Root").get_children():
+			if dialog.name=="TwilightConfirmation" and not dialog.is_queued_for_deletion(): dialog.dismiss()
 		if source_cell.x%64==63:
 			check(field.source_cell_info(source_cell).member!=field.source_cell_info(next).member,"actual motion crossed two distinct original S32 chunks")
 		if source_cell==Vector2i(34002,32326):

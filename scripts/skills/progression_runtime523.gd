@@ -200,8 +200,11 @@ func try_repeat(target: TwilightMonster) -> bool:
 		if service.world.player.global_position.distance_to(target.global_position)>float(skill.range) or not service.world._has_line_of_sight_world(service.world.player.global_position,target.global_position):return false
 		if not service.catalog.SOURCE523.target_allowed(skill,target):return false
 		# Queue first; a refused motion never spends. Validation and payment are synchronous.
+		# A refused payment withdraws only this motion (not every combat action).
+		var kept: Dictionary=service.world._break_on_attack_buffs()
 		if not service.world._queue_player_attack(target,str(skill.attack_type),service.impact.bind(skill,target),float(skill.cast_time),false,float(skill.range)):return false
-		if not service.spend(skill):service.world._clear_combat_actions();return false
+		var registered: int=int(service.world.pending_attack.get("id",-1))
+		if not service.spend(skill):service.world._withdraw_player_attack(registered,kept);return false
 		service.world.pending_attack["original_skill"]=skill
 		service.world.pending_attack["original_target_life_id"]=target.life_id
 		service.world.skill_cooldowns[str(record.name)]=float(skill.cooldown)*service.world._skill_cooldown_factor()
