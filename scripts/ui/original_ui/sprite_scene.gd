@@ -468,7 +468,6 @@ func _build(source: Dictionary) -> Node2D:
 		if binding.has("displaystate"):checkbox.set_source_state("normal" if binding.displaystate else "disabled")
 		if binding.has("selected"):checkbox.set_selected(binding.selected)
 		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
-		if binding.get("tap_when_disabled",false):checkbox.disabled_tap=true
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		# A caller may supply the live title of an authored button title.
@@ -486,7 +485,6 @@ func _build(source: Dictionary) -> Node2D:
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
 		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
-		if binding.get("tap_when_disabled",false):button.disabled_tap=true
 	if source.classname=="Particle":
 		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
 		var configured: Dictionary=emitter.configure(source_pack,options)

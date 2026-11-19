@@ -201,17 +201,16 @@ func _source_input(event: InputEvent) -> void:
 		if activate:_dispatch_activation()
 	_input_area.accept_event()
 
-## A binding with tap_when_disabled keeps its disabled look and still takes a
-## tap (its callback says why it cannot act). Cocos setBright(false), which the
-## original displaystate reads, is a look, not a touch lock.
-var disabled_tap: bool=false
-
+## The disabled state is a look (Cocos setBright(false), the original
+## displaystate): it keeps that look while pressed, and a tap still reaches the
+## callback, which says why it cannot act. Only touchEnabled (the input
+## rectangle's mouse_filter), visibility and a bound callback gate the input.
 func _show_state(state: String) -> void:
 	if current_state=="disabled":return
 	set_source_state(state)
 
 func _input_available() -> bool:
-	return (current_state!="disabled" or disabled_tap) and _activation.is_valid() and is_visible_in_tree() and is_instance_valid(_input_area) and _input_area.is_visible_in_tree() and _input_area.mouse_filter!=Control.MOUSE_FILTER_IGNORE
+	return _activation.is_valid() and is_visible_in_tree() and is_instance_valid(_input_area) and _input_area.is_visible_in_tree() and _input_area.mouse_filter!=Control.MOUSE_FILTER_IGNORE
 
 func _hit_viewport(point: Vector2) -> bool:
 	if not _control_contains(_input_area,point):return false

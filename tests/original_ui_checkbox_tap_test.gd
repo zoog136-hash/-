@@ -1,9 +1,9 @@
 extends SceneTree
 ## Original CheckBoxes take a finger like original Buttons: the HUD's native
-## button router collects source_checkbox too, and a binding with
-## tap_when_disabled keeps the authored disabled look (Cocos displaystate =
-## setBright, a look only) while its tap still runs the callback
-## (카드 컬렉션 member cards: CB_Check never reacted to a touch).
+## button router collects source_checkbox too, and the disabled state is a
+## look only (Cocos displaystate = setBright): a disabled-look button keeps
+## its look while its tap still runs the callback (카드 컬렉션 member cards:
+## CB_Check never reacted to a touch). touchEnabled still gates input.
 const BUTTON=preload("res://scripts/ui/original_ui/source_button.gd")
 const CHECKBOX=preload("res://scripts/ui/original_ui/source_checkbox.gd")
 const HUD=preload("res://scripts/ui/original_ui/source_main_hud.gd")
@@ -36,18 +36,15 @@ func _run() -> void:
 		fired+=1
 		return {"ok":true},Vector2(50,50),true)
 	button.current_state="disabled"
-	check(not button._input_available(),"a disabled button takes no tap by default")
-	_touch(button,true);_touch(button,false)
-	check(fired==0,"nothing runs for a plain disabled button")
-	button.disabled_tap=true
-	check(button._input_available(),"tap_when_disabled takes the tap")
+	check(button._input_available(),"a disabled-look button takes the tap")
 	_touch(button,true)
 	check(button.current_state=="disabled","the press keeps the disabled look")
 	var released: Dictionary=_touch(button,false)
 	check(fired==1 and released.get("activated",false) and button.current_state=="disabled","the release runs the callback and keeps the look")
-	button.disabled_tap=false
 	button.current_state="normal"
 	check(button._input_available(),"a normal button is unchanged")
+	button.get("_input_area").mouse_filter=Control.MOUSE_FILTER_IGNORE
+	check(not button._input_available(),"touchEnabled false (input ignored) still takes no tap")
 	# The router's candidates include an original CheckBox.
 	var node:=Node2D.new()
 	holder.add_child(node)
@@ -57,10 +54,6 @@ func _run() -> void:
 	var found: Array=[]
 	HUD._collect_native_buttons(holder,found)
 	check(found.has(box) and found.has(button)==false,"the router collects a source_checkbox node: "+str(found.size()))
-	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
-	check(text.contains("checkbox.disabled_tap=true") and text.contains("button.disabled_tap=true"),"sprite_scene applies tap_when_disabled to buttons and boxes")
-	var collection: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_card_collection_window.gd")
-	check(collection.contains("card.spec[\"Panel_Root/CB_Check\"][\"tap_when_disabled\"]=true"),"collection member cards take their tap")
 	holder.free()
 	print("ORIGINAL_UI_CHECKBOX_TAP_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
