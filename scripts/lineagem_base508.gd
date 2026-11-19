@@ -98,8 +98,20 @@ static func canonical(record: Dictionary) -> Dictionary:
 		return record
 	cards()
 	var current: Dictionary = _by_id.get(str(record.get("sourceId", "")),{})
-	if current.is_empty(): current_card_problem = "현재523 원문에서 해당 저장 카드 정체를 읽을 수 없습니다. 기존 저장은 보존합니다."
-	return current
+	if current.is_empty():
+		current_card_problem = "현재523 원문에서 해당 저장 카드 정체를 읽을 수 없습니다. 기존 저장은 보존합니다."
+		return current
+	# 보고서2 R2: ClassifiedByClass cards read the BuffCardByClass row of the
+	# playing character (same saved identity; bonuses, polymorph and screens).
+	return CURRENT_CARD_CATALOG.class_variant(current,character_class_id,character_gender_id)
+## The playing character's original Class ID and Gender (0 unknown), set by the
+## world when a character is loaded, its class chosen or its gender set.
+static var character_class_id: int = 0
+static var character_gender_id: int = 0
+static func set_character_context(class_id: int, gender_id: int) -> bool:
+	var changed: bool = class_id!=character_class_id or gender_id!=character_gender_id
+	character_class_id = maxi(0,class_id); character_gender_id = gender_id if gender_id in [1,2] else 0
+	return changed
 static func apply_catalog(existing: Dictionary) -> Dictionary:
 	var data: Dictionary = cards()
 	# Shallow copy: only the three replaced categories get new arrays below. A
