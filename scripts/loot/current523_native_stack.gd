@@ -159,7 +159,9 @@ static func draw_ticket_profile(record: Dictionary) -> Dictionary:
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
 
-static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
+## shallow: the caller only adds this entry and never edits existing ones in
+## place (floor pickup); existing entries stay shared with the live bag.
+static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool=false) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
@@ -168,7 +170,7 @@ static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,o
 	# reads the row from the installed definition by ItemClass ID.
 	if not integer(record.get("source_item_class_id")) or int(record.source_item_class_id)<1:return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var receipt: Dictionary=TRIM.receipt({"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,NATIVE_FIELDS.MARK:true,"source_item_class_id":int(record.source_item_class_id),"origin":origin.duplicate(true)})
-	var result: Dictionary=instances.duplicate(true)
+	var result: Dictionary=instances.duplicate(not shallow)
 	result[uid]={"name":str(record.name),"record":TRIM.record(NATIVE_FIELDS.full(record).duplicate(true)),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
 	return {"ok":true,"item_instances":result,"id":uid}
 

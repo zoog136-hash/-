@@ -103,7 +103,7 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"})
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"},true)
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
