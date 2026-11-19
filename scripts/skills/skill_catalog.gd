@@ -151,6 +151,10 @@ func permitted(record: Dictionary) -> bool:
 
 func owned(record: Dictionary) -> bool:
 	if record.has("equipment_spell523"): return permitted(record) and equipment_spells().has(int(record.equipment_spell523))
+	# Every condition below is a side-effect-free AND that ends on "learned";
+	# check that one first. Combat loops ask this for all ~480 records per hit
+	# and most are not learned (523 auto-hunt: ~950 calls per attack).
+	if int(learned.get(str(record.get("id", "")), 0)) <= 0: return false
 	if not source_learning_status(record).is_empty():return false
 	if bool(record.get("runtime_blocked", false)): return false
 	# TWILIGHT 근사: a card-bound skill (LimitBuffCardID) works while that card is owned.
