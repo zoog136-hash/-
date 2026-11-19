@@ -79,6 +79,15 @@ func restore_user_files() -> void:
 		var file := FileAccess.open(directory.path_join(name), FileAccess.WRITE)
 		if file != null: file.store_buffer(_prior_files[name]); file.close()
 
+## Equipment enhancement options are re-derived on every load
+## (world._refresh_patch523_equipment_options), with or without this change.
+const DERIVED := ["enhancement_options","enhancement_extra_options","patch523_blessing_bonus","patch523_effect_basis","patch523_invoke_options"]
+func without_derived(entry: Dictionary) -> Dictionary:
+	var copy: Dictionary = entry.duplicate(true)
+	if copy.get("record") is Dictionary:
+		for key: String in DERIVED: copy.record.erase(key)
+	return copy
+
 func norm(value: Variant) -> String:
 	return JSON.stringify(JSON.parse_string(JSON.stringify(value)), "", true)
 
@@ -117,7 +126,7 @@ func runtime() -> void:
 	check(world.patch523_owner_state_problem.is_empty() and not world.source_item_save_blocked, "reload without an ownership problem")
 	var same: bool = world.item_instances.size() == records.size()
 	for uid: String in records:
-		if norm(world.item_instances.get(uid)) != norm(records[uid]):
+		if norm(without_derived(world.item_instances.get(uid,{}))) != norm(without_derived(records[uid])):
 			same = false; evidence["differs"] = uid
 			var now: Dictionary = JSON.parse_string(JSON.stringify(world.item_instances.get(uid,{})))
 			var was: Dictionary = JSON.parse_string(JSON.stringify(records[uid]))
@@ -133,10 +142,16 @@ func runtime() -> void:
 	check(norm(world.inventory) == norm(bag) and world._inventory_total_weight() == weight, "bag counts and weight unchanged")
 	for uid: String in world.item_instances:
 		if world.item_instances[uid].has(STACK.RECEIPT): check(not STACK.proof(world, uid).is_empty(), "ownership proof %s" % uid.left(6))
+	var first_load: Dictionary = {}
+	for uid: String in world.item_instances: first_load[uid] = norm(world.item_instances[uid])
 	for round: int in range(2):
 		check(world._save_game(true) == OK, "save round %d" % round)
 		world.item_instances = {}; world.inventory = {}
 		world._load_game(true)
+		var stable: bool = world.item_instances.size() == first_load.size()
+		for uid: String in first_load:
+			if norm(world.item_instances.get(uid,{})) != first_load[uid]: stable = false
+		check(stable, "reload %d gives exactly the same full records (derived options included)" % round)
 	check(norm(world.inventory) == norm(bag) and world.item_instances.size() == records.size(), "save -> load repeated keeps the bag")
 	world.queue_free()
 	await process_frame
