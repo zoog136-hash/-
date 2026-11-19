@@ -8,7 +8,9 @@ extends RefCounted
 ## illustration, name, grade and options. Tapping the selected card again or
 ## the original 즉시 변신 button runs the existing catalog equip
 ## (World._equip_catalog), so every rule and save stays with the game.
-## The same window serves 마법인형 (the client reuses Change_WinTotal).
+## The same window serves 마법인형 and 성물 (the client reuses Change_WinTotal;
+## Change_WinTotal names its 성 물 tab). 성물 cards have no BuffCard attack
+## type, so their page has no 모든 유형 popup.
 ## The page's left grade list is Change_WinTotal_Class (전체 + each grade,
 ## owned / catalog count), 모든 유형 opens Common_ButtonSet_Type (the card's
 ## original BuffCard.AttackTypeID; the labels are the popup's own), the
@@ -182,7 +184,7 @@ func category() -> String:
 
 func open(parent: Node, category_name: String) -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_change_window_host_unavailable")
-	if category_name not in ["변신","마법인형"]:return _fail("source_change_window_category_unsupported")
+	if category_name not in ["변신","마법인형","성물"]:return _fail("source_change_window_category_unsupported")
 	_parent=weakref(parent)
 	if category_name!=_category:
 		_selected=""
@@ -329,6 +331,10 @@ func _stage() -> Dictionary:
 		bindings[TITLE]={"role":"source_text","text":"마법인형"}
 		for offset: int in CHANGE_LABELS:bindings[offset]={"role":"source_text","text":"마법인형"}
 		for offset: int in COLLECTION_LABELS:bindings[offset]={"role":"source_text","text":"마법인형 컬렉션"}
+	elif _category=="성물":
+		bindings[TITLE]={"role":"source_text","text":"성 물"}
+		for offset: int in CHANGE_LABELS:bindings[offset]={"role":"source_text","text":"성 물"}
+		for offset: int in COLLECTION_LABELS:bindings[offset]={"role":"source_text","text":"성물 컬렉션"}
 	var page: Dictionary=_detail_bindings(equipped,parent)
 	bindings[DETAIL_PROJECT]={"role":"project","visible":true,"source_node_offsets":page.scope,"bindings":page.bindings}
 	var root_scope: Array[int]=_subtree(ROOT,roots)
@@ -437,8 +443,8 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 	bindings[ORDER_BUTTON]={"role":"button","activate":Callable(self,"_cycle_order")}
 	bindings[ORDER_TEXT]={"role":"source_text","text":ORDERS[_order]}
 	# 모든 유형: Common_ButtonSet_Type over the full-page Btn_Close.
-	var type_set: Dictionary=TYPE_SETS[_category]
-	if _available(TYPE_SET):
+	var type_set: Dictionary=TYPE_SETS.get(_category,{})
+	if _available(TYPE_SET) and not type_set.is_empty():
 		scope.append_array(_subtree(DETAIL,[SORT]))
 		scope.append_array([POPUP_CLOSE,TYPE_PROJECT])
 		var label: String=_type_label(_type)
@@ -702,7 +708,7 @@ func _class_input(event: InputEvent) -> void:
 func _type_label(id: int) -> String:
 	if not _available(TYPE_SET):return ""
 	var tree: Dictionary=_pack.scene(TYPE_SET).get("nodeTree",{})
-	for button: Array in TYPE_SETS[_category].buttons:
+	for button: Array in TYPE_SETS.get(_category,{}).get("buttons",[]):
 		if int(button[3])==id:return str(Scene._node_at_offset(tree,int(button[2])).get("options",{}).get("text",""))
 	return ""
 

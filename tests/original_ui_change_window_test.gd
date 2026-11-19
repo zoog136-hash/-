@@ -215,8 +215,11 @@ func _catalog_routing() -> void:
 	check(hud.browser_categories==["변신","마법인형"],"an unselected original pack retains the current browser")
 	hud.original_main_ui_controller=native
 	var native_attempts: int=native.categories.size()
-	for category: String in ["아이템","성물"]:hud.open_catalog(category)
-	check(native.categories.size()==native_attempts and hud.browser_categories==["변신","마법인형","아이템","성물"],"item and relic browsers do not attempt a polymorph window")
+	hud.open_catalog("아이템")
+	check(native.categories.size()==native_attempts and hud.browser_categories==["변신","마법인형","아이템"],"the item browser does not attempt a card window")
+	native.handles=true
+	hud.open_catalog("성물")
+	check(native.categories.size()==native_attempts+1 and native.categories[-1]=="성물" and hud.browser_categories==["변신","마법인형","아이템"],"성물 opens the original Change_WinTotal (성 물) first")
 	hud.free()
 
 func _hidden_browser_state() -> void:
@@ -313,6 +316,12 @@ func _real_pack(pack_dir: String) -> void:
 	opened=window.open(parent,"마법인형")
 	check(opened.get("handled",false) and opened.get("cards")==1 and opened.get("query")=="","the doll list has its own filters: "+str(opened))
 	check(window._toggle_type_popup().get("type_popup",false),"the doll type popup opens")
+	var relic: Dictionary=_card_record("성물 시험","희귀",98001,0)
+	hud.catalog_data["성물"]=[relic]
+	hud.card_collection_state.owned["성물"]={CARDS.card_id(relic):true}
+	opened=window.open(parent,"성물")
+	check(opened.get("handled",false) and opened.get("category")=="성물" and opened.get("cards")==1,"성물 lists its owned card in Change_WinTotal: "+str(opened).left(300))
+	check(window._type_label(0)=="" and not window._toggle_type_popup().get("type_popup",false),"성물 has no 모든 유형 popup")
 	window.close()
 	await process_frame
 	parent.queue_free()
