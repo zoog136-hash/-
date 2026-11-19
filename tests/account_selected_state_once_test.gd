@@ -57,6 +57,7 @@ func run() -> void:
 	var reread: Dictionary = JSON.parse_string(compact_text)
 	STORE.expand(reread)
 	check(STORE.validate(reread).is_empty(), "expanded file validates")
+	evidence["back_probe"] = true
 	check(JSON.stringify(reread,"",true,true) == JSON.stringify(JSON.parse_string(full_text),"",true,true), "expand(compact) is exactly the sealed payload")
 	check(STORE.dormant_items(reread).is_empty() and reread.gold == 777, "dormant items exclude the selected bag; body unchanged")
 	var old_full: Dictionary = JSON.parse_string(full_text); STORE.expand(old_full)
@@ -83,7 +84,7 @@ func run() -> void:
 	check(STORE.validate(switched).is_empty() and switched.get("item_instances",{}).size() == 0, "switched file validates; body is the second character")
 	check(store.select_character(first.id).get("ok",false), "switch back")
 	var back: Dictionary = parse(store.path); STORE.expand(back)
-	check(STORE.validate(back).is_empty() and back.item_instances.size() == 200 and back.gold == 777 and back.inventory == {"가죽":200}, "switching back restores the same bag, gold and counts")
+	check(STORE.validate(back).is_empty() and back.item_instances.size() == 200 and int(back.gold) == 777 and back.inventory.size() == 1 and int(back.inventory.get("가죽",0)) == 200, "switching back restores the same bag, gold and counts")
 	finish(base)
 
 func finish(base: String) -> void:
