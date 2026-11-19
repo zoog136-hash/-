@@ -2580,7 +2580,25 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
+## Original 523 town NPC tap: its function window opens directly, without the
+## NpcDialogue_All talk (user request 2026-11-19). Shop NPC -> original store
+## window, 창고지기 -> storage, 텔레포터 -> 지역 이동, quest -> quest window,
+## 사망 복구 -> recovery; an NPC with no function only shows its name.
+func _open_town_npc_function(npc: Dictionary) -> void:
+	var npc_id: String = str(npc.get("id",""))
+	match TOWN_NPCS.primary_action(self,npc_id):
+		"shop": hud.open_npc_shop(npc_id)
+		"warehouse": hud.call("open_warehouse")
+		"teleport": hud.call("open_npc_teleport")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
+		_: hud.show_message(str(npc.get("name","")))
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
@@ -2590,8 +2608,7 @@ func _set_click_destination(target: Vector2) -> void:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if TOWN_NPCS.is_town_npc_id(str(npc.get("id",""))):
-					# Original 523 town NPC: the original NpcDialogue_All talk window.
-					hud.call("open_npc_dialogue",str(npc.id))
+					_open_town_npc_function(npc)
 					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
