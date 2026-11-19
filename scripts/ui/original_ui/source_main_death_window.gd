@@ -288,7 +288,8 @@ func _recover(mode: String) -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	var request: Dictionary=_service.quote(_selected,_tab,mode)
 	if not request.get("ok",false):
-		_message(str(request.get("message","")))
+		var why: String=str(request.get("message",""))
+		_message(why if not why.is_empty() else "지금은 복구할 수 없습니다")
 		return request
 	var currency_text: String={"free":"무료 횟수 1회","certificate":"%s %d개" % [str(request.get("certificate",{}).get("name","구호의 증서")),int(request.cost)],"adena":"%s 아데나" % _number(int(request.cost)),"gem":"%d 다이아" % int(request.cost)}[mode]
 	var apply: Callable=func(_amount: int) -> void:
@@ -311,7 +312,9 @@ func _recover_all() -> Dictionary:
 		if request.get("ok",false):
 			requests.append(request)
 			total+=int(request.cost)
-	if requests.is_empty():return _fail("source_death_window_nothing_to_recover")
+	if requests.is_empty():
+		_message("복구할 수 있는 아이템이 없습니다")
+		return _fail("source_death_window_nothing_to_recover")
 	var apply: Callable=func(_amount: int) -> void:
 		var done: int=0
 		for request: Dictionary in requests:

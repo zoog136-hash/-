@@ -11,8 +11,11 @@ extends RefCounted
 ## docs/bless_refine523_missing_rules.md): +100/+1000/직접입력 (amounts between
 ## the Min and Max endpoints have no probability formula) are shown disabled;
 ## the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
-## the Refine_Roulette result animation, the recipe caption and the bag tabs
-## stay inert. Btn_Help opens the original HelpBox_Refine (source_main_help_box).
+## the Refine_Roulette result animation and the recipe caption stay inert.
+## The 전체 / 장비 / 소모 / 기타 bag tabs filter the 연금 재료 slots with the
+## bag's own split (targets are equipment, 상급 축복의 가루 by its catalog row),
+## and the 기본재료 slot / 재료 button show the powder owned (TWILIGHT 근사 of
+## the client's item tooltip). Btn_Help opens the original HelpBox_Refine.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
@@ -39,6 +42,8 @@ const P_ALL="Refine_All_Layout/"
 const P_ITEM="Refine_All_Layout/Refine_Item/Nd_Slot/"
 const P_INV="Refine_All_Layout/Refine_Inventory/Nd_Inventory/"
 const SET_SLOTS: Array[String]=["Slot_1","Slot_2","Slot_3","Slot_4"]
+const TABS: Array[String]=["all","equip","consume","etc"]
+const TAB_NODES={"all":"Btn_All","equip":"Btn_Equipment","consume":"Btn_Consume","etc":"Btn_Etc"}
 ## Vertical pitch between slot rows: the authored horizontal slot pitch of
 ## Inventory_Slot_Set (-117, -41, 35, 111), as the main inventory uses.
 const ROW_PITCH: float=76.0
@@ -53,6 +58,7 @@ var _help_box: RefCounted
 var _scene: Node2D
 var _selected: String=""
 var _mode: String="min"
+var _tab: String="all"
 var _notice: String=""
 var _scroll_content: Node2D
 var _scroll_top: float=0.0
@@ -81,6 +87,7 @@ func open(parent: Node, world: Node) -> Dictionary:
 	_world=weakref(world)
 	_selected=""
 	_mode="min"
+	_tab="all"
 	_notice=""
 	_scroll_y=null
 	return _stage()
@@ -102,6 +109,9 @@ func selected() -> String:
 
 func mode() -> String:
 	return _mode
+
+func tab() -> String:
+	return _tab
 
 func node_keys() -> Dictionary:
 	return _last_out
@@ -125,6 +135,20 @@ func _materials(world: Node, snapshot: Dictionary) -> Array[Dictionary]:
 		rows.append({"kind":"powder","uid":"","item_class_id":RULES.ADVANCED_BLESS_POWDER_ITEM,"name":_item_name(RULES.ADVANCED_BLESS_POWDER_ITEM),"amount":int(snapshot.powder)})
 	return rows
 
+## The 연금 재료 entries of the current bag tab (the bag's own 장비 / 소모 /
+## 기타 split: targets are equipment, the powder by its catalog record).
+func _shown(world: Node, materials: Array[Dictionary]) -> Array[Dictionary]:
+	if _tab=="all":return materials
+	var out: Array[Dictionary]=[]
+	for entry: Dictionary in materials:
+		if _kind(world,entry)==_tab:out.append(entry)
+	return out
+
+static func _kind(world: Node, entry: Dictionary) -> String:
+	if entry.kind=="target":return "equip"
+	var record: Variant=world.call("_find_catalog_item_record",str(entry.name)) if world!=null and world.has_method("_find_catalog_item_record") else {}
+	return preload("res://scripts/ui/original_ui/source_main_storage_window.gd").kind_of(record if record is Dictionary else {},false)
+
 static func _item_name(item_class_id: int) -> String:
 	var row: Dictionary=RULES.item_row(item_class_id)
 	var info: Dictionary=SERVICE.D.definition_id(str(item_class_id)).get("native_record",{})
@@ -146,7 +170,8 @@ func _stage() -> Dictionary:
 	var target: Dictionary=_target(materials)
 	if target.is_empty():_selected=""
 	var quote: Dictionary=SERVICE.refine_quote(world,_selected,_mode) if not target.is_empty() else {}
-	var spec: Dictionary=_spec(snapshot,materials,target,quote)
+	var shown: Array[Dictionary]=_shown(world,materials)
+	var spec: Dictionary=_spec(snapshot,materials,target,quote,shown)
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(ROOT,spec,out)
 	if not built.get("ok",false):
@@ -157,7 +182,7 @@ func _stage() -> Dictionary:
 	if not target.is_empty():
 		if _slot_picture(next,out,P_ITEM+"Nd_Slot_Target/Refine_Slot/Nd_Slot/Common_Slot/Sp_IconSample",int(target.item_class_id),str(target.name)):pictures+=1
 		if _slot_picture(next,out,P_ITEM+"Nd_Slot/Refine_Slot/Nd_Slot/Common_Slot/Sp_IconSample",RULES.ADVANCED_BLESS_POWDER_ITEM,""):pictures+=1
-	var filled: Dictionary=_fill_inventory(next,out,materials)
+	var filled: Dictionary=_fill_inventory(next,out,shown)
 	if not filled.get("ok",false):
 		next.free()
 		last_result=filled
@@ -177,10 +202,10 @@ func _stage() -> Dictionary:
 		previous.hide()
 		previous.queue_free()
 	last_result={"ok":true,"handled":true,"member":ROOT,"materials":materials.size(),"targets":materials.filter(func(e: Dictionary) -> bool: return e.kind=="target").size(),
-		"selected":_selected,"mode":_mode,"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"notice":_notice,"powder":int(snapshot.get("powder",0)),"gold":int(snapshot.get("gold",0))}
+		"selected":_selected,"mode":_mode,"tab":_tab,"shown":shown.size(),"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"notice":_notice,"powder":int(snapshot.get("powder",0)),"gold":int(snapshot.get("gold",0))}
 	return last_result
 
-func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionary, quote: Dictionary) -> Dictionary:
+func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionary, quote: Dictionary, shown: Array[Dictionary]) -> Dictionary:
 	var spec: Dictionary={}
 	# Particle/animation layers with no data role here stay out of the scene.
 	spec[P_ALL+"Refine_Roulette"]={"exclude":true}
@@ -232,6 +257,8 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 		spec[key+"Common_Slot/Sp_Select"]={"visible":false}
 		spec[key+"Common_Slot/Text_Amount"]={"role":"source_text","text":str(amount) if slot=="Nd_Slot" else "","visible":slot=="Nd_Slot" and has}
 	spec[P_ITEM+"Nd_Slot_Target/Refine_Slot/Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_clear_target")}
+	spec[P_ITEM+"Nd_Slot/Refine_Slot/Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_powder_info")}
+	spec[P_ITEM+"Btn_Material"]={"activate":Callable(self,"_powder_info")}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet"]={"visible":has}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet/Label_Min"]={"role":"source_text","text":"최소:%d" % min_amount}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet/Label_Max"]={"role":"source_text","text":"최대:%d" % max_amount}
@@ -241,11 +268,10 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	# Refine_Inventory: the authored first row; further rows are added in _fill_inventory.
 	spec[P_INV+"ScrollView"]={"role":"source_scroll","input":Callable(self,"_scroll_input")}
 	spec[P_INV+"Nd_Number"]={"visible":false}
-	var tabs: Dictionary={"Btn_All":true,"Btn_Equipment":false,"Btn_Consume":false,"Btn_Etc":false}
-	for tab: String in tabs:
-		spec[P_INV+"Tab/"+tab+"_On"]={"visible":tabs[tab]}
-		spec[P_INV+"Tab/"+tab+"_Off"]={"visible":not tabs[tab]}
-	var first: Dictionary=_row_spec(materials,0,P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/")
+	for tab_name: String in TABS:
+		spec[P_INV+"Tab/"+TAB_NODES[tab_name]+"_On"]={"visible":tab_name==_tab}
+		spec[P_INV+"Tab/"+TAB_NODES[tab_name]+"_Off"]={"visible":tab_name!=_tab,"activate":Callable(self,"_set_tab").bind(tab_name)}
+	var first: Dictionary=_row_spec(shown,0,P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/")
 	spec.merge(first,true)
 	return spec
 
@@ -356,7 +382,7 @@ func _slot_pressed(index: int) -> Dictionary:
 	if _moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_refine_window_host_unavailable")
-	var materials: Array[Dictionary]=_materials(world,SERVICE.snapshot(world))
+	var materials: Array[Dictionary]=_shown(world,_materials(world,SERVICE.snapshot(world)))
 	if index<0 or index>=materials.size():return {"ok":true,"empty_slot":true}
 	var entry: Dictionary=materials[index]
 	if entry.kind!="target":
@@ -379,6 +405,20 @@ func _clear_target() -> Dictionary:
 func _set_mode(value: String) -> Dictionary:
 	_mode=value
 	_notice=""
+	return _restage()
+
+func _set_tab(tab_name: String) -> Dictionary:
+	if tab_name not in TABS:return _fail("source_refine_window_tab_unknown")
+	_tab=tab_name
+	_scroll_y=null
+	return _stage()
+
+## 기본재료 slot / 재료 button: the 상급 축복의 가루 the bag holds.
+func _powder_info() -> Dictionary:
+	var world: Node=_world.get_ref() if _world!=null else null
+	if world==null:return _fail("source_refine_window_host_unavailable")
+	var owned: int=int(SERVICE.snapshot(world).get("powder",0))
+	_notice="%s 보유 %s개" % [_item_name(RULES.ADVANCED_BLESS_POWDER_ITEM),_number(owned)]
 	return _restage()
 
 func _amount_unavailable() -> Dictionary:

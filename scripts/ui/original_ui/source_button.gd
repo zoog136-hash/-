@@ -122,7 +122,7 @@ func _source_exit() -> void:
 	if _native_touch_index>=0:return
 	if _armed:
 		_armed=false
-		set_source_state("normal")
+		_show_state("normal")
 
 func handle_native_touch(event: InputEvent, viewport_position: Vector2) -> Dictionary:
 	if not (event is InputEventScreenTouch or event is InputEventScreenDrag):return {"handled":false,"activated":false}
@@ -146,11 +146,11 @@ func handle_native_touch(event: InputEvent, viewport_position: Vector2) -> Dicti
 				_mouse_captured=false
 				_mouse_emulated=false
 				_armed=false
-				set_source_state("normal")
+				_show_state("normal")
 			if _native_touch_index>=0 or _mouse_captured or not _hit_viewport(viewport_position):return {"handled":false,"activated":false}
 			_native_touch_index=event.index
 			_armed=true
-			set_source_state("pressed")
+			_show_state("pressed")
 			return {"handled":true,"activated":false}
 		if not captured:return {"handled":false,"activated":false}
 		var activate: bool=_armed and _hit_viewport(viewport_position)
@@ -160,7 +160,7 @@ func handle_native_touch(event: InputEvent, viewport_position: Vector2) -> Dicti
 	if not captured:return {"handled":false,"activated":false}
 	if _armed and not _hit_viewport(viewport_position):
 		_armed=false
-		set_source_state("normal")
+		_show_state("normal")
 	return {"handled":true,"activated":false}
 
 func cancel_native_touch() -> void:
@@ -191,18 +191,26 @@ func _source_input(event: InputEvent) -> void:
 		_mouse_captured=true
 		_mouse_emulated=event.device==InputEvent.DEVICE_ID_EMULATION
 		_armed=true
-		set_source_state("pressed")
+		_show_state("pressed")
 	else:
 		var activate: bool=_mouse_captured and _armed and _hit_viewport(viewport_point)
 		_mouse_captured=false
 		_mouse_emulated=false
 		_armed=false
-		set_source_state("normal")
+		_show_state("normal")
 		if activate:_dispatch_activation()
 	_input_area.accept_event()
 
+## The disabled state is a look (Cocos setBright(false), the original
+## displaystate): it keeps that look while pressed, and a tap still reaches the
+## callback, which says why it cannot act. Only touchEnabled (the input
+## rectangle's mouse_filter), visibility and a bound callback gate the input.
+func _show_state(state: String) -> void:
+	if current_state=="disabled":return
+	set_source_state(state)
+
 func _input_available() -> bool:
-	return current_state!="disabled" and _activation.is_valid() and is_visible_in_tree() and is_instance_valid(_input_area) and _input_area.is_visible_in_tree() and _input_area.mouse_filter!=Control.MOUSE_FILTER_IGNORE
+	return _activation.is_valid() and is_visible_in_tree() and is_instance_valid(_input_area) and _input_area.is_visible_in_tree() and _input_area.mouse_filter!=Control.MOUSE_FILTER_IGNORE
 
 func _hit_viewport(point: Vector2) -> bool:
 	if not _control_contains(_input_area,point):return false

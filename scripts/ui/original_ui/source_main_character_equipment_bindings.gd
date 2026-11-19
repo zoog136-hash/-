@@ -17,12 +17,17 @@ const PAGES={
 }
 ## TWILIGHT physical slots shown by the pages above.
 const PHYSICAL_SLOTS: Array[String]=["helmet","weapon","body","boots","tshirt","cloak","offhand","gloves","belt","ring1","ring2","necklace"]
+## Korean slot names for the empty-slot notice (TWILIGHT 근사: an empty slot
+## opens the bag to choose the item; a slot TWILIGHT has no equipment for
+## says so instead of staying silent).
+const SLOT_TITLES={"Slot_Helmet":"투구","Slot_Insignia":"휘장","Slot_Weapon":"무기","Slot_Armor":"갑옷","Slot_Boot":"부츠","Slot_Legging":"각반","Slot_Shirt":"티셔츠","Slot_Spaulder":"견갑","Slot_Cape":"망토","Slot_Shield":"방패·보조","Slot_Glove":"장갑","Slot_Etc":"기타","Slot_Earring":"귀걸이","Slot_Earring_1":"귀걸이","Slot_Belt":"벨트","Slot_Ring":"반지","Slot_Ring_1":"반지","Slot_Ring_2":"반지","Slot_Ring_3":"반지","Slot_Loon":"룬","Slot_Loon_1":"룬","Slot_Necklace":"목걸이"}
 const BUTTON=15728
 const BACKGROUND=15316
 const ICON=15012
 var _pack: RefCounted
 var _side: WeakRef
 var _image_provider: Callable
+var _hud: WeakRef
 
 func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Dictionary:
 	if not is_instance_valid(hud):return _fail("source_equipment_existing_hud_required")
@@ -30,6 +35,7 @@ func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Diction
 	if not is_instance_valid(side) or not side.has_signal("equipment_requested"):return _fail("source_equipment_existing_side_input_required")
 	_pack=pack
 	_side=weakref(side)
+	_hud=weakref(hud)
 	_image_provider=image_provider
 	return {"ok":true,"page_selection_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -65,7 +71,7 @@ func build(member: String) -> Dictionary:
 		var record: Variant=state.equipped_items.get(physical_slot,{}) if not physical_slot.is_empty() else {}
 		if not record is Dictionary:return _fail("source_equipment_existing_record_invalid")
 		var common_scope: Array[int]=[BUTTON,BACKGROUND]
-		var common_bindings: Dictionary={BUTTON:{"role":"button","displaystate":false,"activate":Callable()}}
+		var common_bindings: Dictionary={BUTTON:{"role":"button","activate":Callable(self,"empty_slot").bind(physical_slot,str(slot.source_name))}}
 		if not record.is_empty():
 			if input_button.disabled:return {"ok":false,"code":"source_equipment_owner_input_unavailable","physical_slot":physical_slot}
 			if not _image_provider.is_valid():return _fail("source_equipment_existing_image_provider_required")
@@ -100,6 +106,29 @@ func activate(physical_slot: String) -> Dictionary:
 	# physical reference construction, selection, unequip or save is duplicated.
 	button.emit_signal("pressed")
 	return {"ok":true,"dispatched":true,"physical_slot":physical_slot,"signal":"existing equipment_buttons.pressed -> equipment_requested","action_result_known":false}
+
+## An empty slot: a TWILIGHT equipment slot opens the bag (choose the item
+## there); a slot without TWILIGHT equipment shows why nothing can go in it.
+func empty_slot(physical_slot: String, source_name: String) -> Dictionary:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	var title: String=str(SLOT_TITLES.get(source_name,source_name))
+	if physical_slot.is_empty():
+		_message(hud,"%s 칸에 장착할 장비는 TWILIGHT에 없습니다" % title)
+		return {"ok":true,"notice":"no_twilight_slot","source_name":source_name}
+	_message(hud,"가방에서 장착할 %s%s 고르세요" % [title,_object_particle(title)])
+	if hud!=null and hud.has_signal("inventory_pressed"):
+		hud.emit_signal("inventory_pressed")
+		return {"ok":true,"opened":"inventory","physical_slot":physical_slot}
+	return {"ok":true,"notice":"bag_unavailable","physical_slot":physical_slot}
+
+static func _object_particle(word: String) -> String:
+	if word.is_empty():return "를"
+	var code: int=word.unicode_at(word.length()-1)
+	if code<0xAC00 or code>0xD7A3:return "를"
+	return "을" if (code-0xAC00)%28!=0 else "를"
+
+static func _message(hud: Object, text: String) -> void:
+	if hud!=null and hud.has_method("show_message"):hud.call("show_message",text)
 
 static func _node_at(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset")==offset:return node
