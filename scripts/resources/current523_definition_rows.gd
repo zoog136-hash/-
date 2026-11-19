@@ -826,11 +826,40 @@ static func rows_matching(table: String, field: String, ids: Dictionary) -> Arra
 		return result
 	var position: int = (store.columns as PackedStringArray).find(field)
 	if position < 0: return result
+	# An all-integer column has (or gets, once) the validated relation index
+	# related() uses, cached on storage: the rows of the requested IDs are
+	# read from it and put back in table order, instead of scanning the whole
+	# table on every call (Twm diag 2026-11-19: opening 지배석 scanned
+	# ItemClass/Bonus/Quest*/DescData_Korean, 613,248 integer checks).
+	var indices: Variant = _indexed_positions(table, field, ids)
+	if indices is PackedInt32Array:
+		for index: int in (indices as PackedInt32Array): result.append(_view(table, _row_at(store, index)))
+		return result
 	var column: Variant = _column_data(store, position)
 	for index: int in int(store.count):
 		var value: Variant = column[index]
 		if _integer(value) and ids.has(int(value)): result.append(_view(table, _row_at(store, index)))
 	return result
+
+## Table positions (ascending) of the rows whose `field` is one of the integer
+## keys of `ids`, from the relation index; null when the field is not an
+## all-integer column (the scan above then decides, as before).
+static func _indexed_positions(table: String, field: String, ids: Dictionary) -> Variant:
+	if not integer_field(table, field): return null
+	var key: String = table + ":" + field
+	if not _relations.has(key):
+		for id: Variant in ids:
+			if typeof(id) == TYPE_INT:
+				related(table, field, int(id))
+				break
+	if not _relations.has(key): return null
+	var relation: Dictionary = _relations[key]
+	var positions := PackedInt32Array()
+	# rows_matching() matches ids.has(int(value)): only integer keys can.
+	for id: Variant in ids:
+		if typeof(id) == TYPE_INT: positions.append_array(_relation_rows(relation, int(id)))
+	positions.sort()
+	return positions
 
 ## Row count and one fresh row by position, for streaming a table in order
 ## without materializing every row at once.

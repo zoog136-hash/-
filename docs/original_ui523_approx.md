@@ -95,3 +95,12 @@
 - 발동 마법 탭: 착용 장비에서 전투 런타임이 실제로 굴리는 발동(patch523_equipment_combat.active의 다섯 종류)만 보여 준다. 마법 발동은 발동 SpellClass 이름·아이콘, 나머지는 장비 이름과 원본 확률·수치이다. 지속 시간 칸은 비운다(발동에는 남은 시간이 없음).
 - 상태 타이머 다섯 가지에는 원본 BuffClass가 없어 아이콘 칸을 비운다(그림을 만들지 않음).
 - TWILIGHT 근사(근거 약함) · 빈 목록 안내 문구: 원본 세 탭의 안내 문구가 모두 "사용 중인 버프가 없습니다."로 같고 523 문자열 표에 다른 문구가 없어, 디버프 탭은 "적용 중인 디버프가 없습니다.", 발동 마법 탭은 "발동하는 마법이 없습니다."로 바꿔 쓴다.
+
+## 스킬 창 탭·버튼·슬롯 표시 (Skill_All)
+
+- 탭: 전체(목록 전부), 정령(요정만: 원소 계열 스킬, 기록 school fire·earth·water·wind, ScrollView_Special), 특수(카드에 묶인 스킬: 원본 SpellLearnLimit.LimitBuffCardID → 기록 approx_required_card, ScrollView_MythSkill), 착용(착용 장비가 주는 스킬: 기록 equipment_spell523, Nd_ItempEquip과 "사용 가능한 착용 스킬이 없습니다." 안내).
+- TWILIGHT 근사(근거 약함) · 탭 분류: 원본 클라이언트의 탭 분류 규칙은 표에 없다. ScrollView 이름(Special·MythSkill·EquipSkill), SpellLearnLimit의 [신화] 카드 스킬, ItemBonus EquipSpellClassID를 근거로 나눴다. 정령 탭은 요정에게만 보인다.
+- Panel_EquipSkill의 원본 글자는 "특수"(MythSkill 글자 복사)로 되어 있어 "착용"으로 바꿔 쓴다.
+- 버튼: 스킬 카드는 스킬 카드 창을 연다. 속성 변경(요정, Elemental 계열)과 디버프(마법사, MagicMaster 계열)는 원본 GameClassSpellGroup을 다루는 기존 스킬 계열 전환 화면을 연다. 다른 직업에는 계열 버튼이 없다(원본 Skill_All에 그 직업 버튼이 없음).
+- 슬롯: Label_CoolTime은 world.skill_cooldowns의 남은 재사용 시간이다. Text_Amount는 남은 사용 횟수로, 퀵슬롯과 같은 탄약 수를 쓰고 탄약이 없으면 가방 재료로 시전할 수 있는 횟수를 쓴다. 착용 스킬에는 원본 장비 스킬 표시(Sp_Item_Equip_Spell_Icon)를 켠다. 0.25초마다 갱신한다.
+- 160개 고정 절단을 없앴다. 보이는 줄 근처만 노드로 만들기 때문에 200개가 넘어도 마지막 스킬까지 스크롤하고 선택할 수 있다.

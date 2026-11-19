@@ -251,7 +251,11 @@ func _stage(tables: Dictionary, provenance: Dictionary, actual: String, input_id
 		for index: int in count:
 			var row: Variant = _row_of(table,index,tables,shared)
 			if not row is Dictionary: return _fail("상점 팩 행 오류: " + table)
-			for field: String in FIELDS.get(table, ["ID"]):
+			# A staged bake holds exactly the rows that passed these field
+			# checks when it was written (its bytes are SHA-verified on read):
+			# re-checking every field of every row cost ~300,000 integer checks
+			# per shop open (Twm diag 2026-11-19). IDs are still indexed below.
+			for field: String in ([] if staged else FIELDS.get(table, ["ID"])):
 				if field in STRING_FIELDS:
 					if not row.get(field) is String: return _fail("상점 팩 문자열 오류: " + table + "." + field)
 				elif field in BOOLEAN_FIELDS:

@@ -1492,6 +1492,29 @@ func dissolve_confirm_is_open() -> bool:
 func close_dissolve_confirm() -> void:
 	if dissolve_confirm_is_open():_dissolve_popup.close()
 
+## --- Bag item -> floor (source_main_drop_popup: Common_Calculator quantity,
+## then Common_MessageBox_Dissolution confirmation). `on_confirm(count)`.
+const DropPopup=preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
+var _drop_popup: RefCounted
+
+func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+	if _drop_popup==null and _pack!=null:
+		var popup=DropPopup.new()
+		_window_problems["drop_popup"]=popup.configure(_pack)
+		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
+	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
+	_cancel_native_buttons()
+	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm)
+
+func drop_confirm_is_open() -> bool:
+	return _drop_popup!=null and _drop_popup.is_open()
+
+func drop_confirm_popup() -> RefCounted:
+	return _drop_popup
+
+func close_drop_confirm() -> void:
+	if drop_confirm_is_open():_drop_popup.close()
+
 ## --- Original 523 오림의 흔적 skill choice (source_main_orim_skill_window)
 const OrimSkillWindow=preload("res://scripts/ui/original_ui/source_main_orim_skill_window.gd")
 var _orim_skill_window: RefCounted
