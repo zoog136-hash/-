@@ -140,10 +140,15 @@ func claim_all(world: Node) -> Dictionary:
 		var batch: Array[String] = []
 		for id: String in order.slice(at,at+32): batch.append(id)
 		at += 32
+		var was_claimed: Dictionary = {}
+		for id: String in batch: was_claimed[id] = world.quest_service.claimed.has(id)
+		last_completed = [] as Array[String]
 		if complete(world,batch):
-			claimed_count += last_completed.size()
 			for id: String in batch:
-				if last_completed.has(id): ready.erase(id)
+				# Newly claimed, or a repeat this transaction granted again.
+				if last_completed.has(id) or (not was_claimed[id] and world.quest_service.claimed.has(id)):
+					claimed_count += 1
+					ready.erase(id)
 				else: failed += 1
 		else:
 			if busy or world.quest_service.save_blocked or retry_at > Time.get_unix_time_from_system():
