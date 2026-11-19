@@ -160,6 +160,9 @@ func _fill_cards(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 		if record.is_empty():continue
 		var card: Dictionary=_card_row(record,false,Callable(self,"_card_pressed").bind(str(requirement.get("name",""))))
 		if card.is_empty():continue
+		# The member card's CB_Check is authored displaystate=false (Cocos
+		# setBright: a look only); its tap still names the card.
+		card.spec["Panel_Root/CB_Check"]["tap_when_disabled"]=true
 		cards.append(card)
 		records.append(record)
 		owned.append(bool(requirement.get("met",false)))
