@@ -179,12 +179,19 @@ func pick(world: Node, entry: Dictionary) -> Dictionary:
 	if not is_instance_valid(view):
 		evidence["pick_problem_"+id] = {"records":world.ground_loot.records.has(id)}
 		return {"ok":false,"id":id}
+	# The drop is made durable first (as the batched save would), so the file
+	# before the pickup has it on the floor.
+	world._save_game(true)
+	world.deferred_save.cancel()
+	var sha_before: String = FileAccess.get_sha256(world.save_path())
+	var text_before: String = FileAccess.get_file_as_string(world.save_path())
+	view = world.ground_loot.views.get(id) if is_instance_valid(world.ground_loot.views.get(id)) else view
 	view.set("visible_since", Time.get_ticks_msec()-world.ground_loot.MIN_VISIBLE_MS-50)
 	var floor: Dictionary = world.ground_loot.records.get(id,{})
 	world.player.global_position = Vector2(float(floor.position[0]), float(floor.position[1]))
 	var started: int = Time.get_ticks_usec()
 	var ok: bool = world._collect_ground_drop(view)
-	return {"ok":ok,"usec":Time.get_ticks_usec()-started,"id":id}
+	return {"ok":ok,"usec":Time.get_ticks_usec()-started,"id":id,"sha_before":sha_before,"text_before":text_before}
 
 ## A source floor pickup is validated at once and written by the batched save.
 func deferred_pickup(world: Node) -> void:
@@ -200,11 +207,10 @@ func deferred_pickup(world: Node) -> void:
 	world.deferred_save.cancel()
 	var name_value: String = str(entry.item_name)
 	var before: int = int(world.inventory.get(name_value,0))
-	var sha: String = FileAccess.get_sha256(world.save_path())
 	var first: Dictionary = await pick(world, entry)
 	evidence["pickup_usec"] = [first.get("usec",0)]
 	check(first.ok and int(world.inventory.get(name_value,0)) == before+1, "pickup adopted in memory")
-	check(FileAccess.get_sha256(world.save_path()) == sha and world.deferred_save.pending(), "no file write in the pickup frame; batched save pending")
+	check(FileAccess.get_sha256(world.save_path()) == str(first.get("sha_before","")) and world.deferred_save.pending(), "no file write in the pickup frame; batched save pending")
 	# Crash before the batched save: the item is back on the floor, not in the bag.
 	world.deferred_save.cancel()
 	world.item_instances = {}; world.inventory = {}
