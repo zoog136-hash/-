@@ -12,6 +12,7 @@ extends RefCounted
 ## node scope; any other keys merge into the sprite_scene binding (role,
 ## text, visible, activate, displaystate, percent, ...).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const Router=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 signal closed
 var _pack: RefCounted
@@ -263,6 +264,7 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 				column=0
 				y-=line_height+gap
 				line_height=0.0
+		_forward_row_drags(built.scene,str(list.key))
 		scenes.append(built.scene)
 		outs.append(row_out)
 	if column>0:y-=line_height+gap
@@ -315,6 +317,18 @@ func _scroll_to(key: String, value: float) -> void:
 	else:(state.content as Node2D).position.y=float(state.value)
 
 ## True while the current press has moved like a list drag (row taps ignore it).
+## A finger that lands on a row's button still scrolls its list: the native
+## button router owns that press, so each row button hands its finger's drag
+## to the list (source_button_router DRAG_META, as a Cocos ListView child
+## button passes its move to the list). Without it a list whose rows are all
+## buttons could not be dragged on a phone.
+func _forward_row_drags(node: Node, key: String) -> void:
+	for meta: String in ["source_button","source_checkbox"]:
+		if node.has_meta(meta):
+			var button: Variant=node.get_meta(meta)
+			if is_instance_valid(button) and not (button as Object).has_meta(Router.DRAG_META):(button as Object).set_meta(Router.DRAG_META,Callable(self,"_list_input").bind(key))
+	for child: Node in node.get_children():_forward_row_drags(child,key)
+
 func _dragged() -> bool:
 	return absf(_moved)>12.0
 
