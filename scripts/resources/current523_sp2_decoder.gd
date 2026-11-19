@@ -18,6 +18,7 @@ const MAX_SAMPLES = 16 * 1024 * 1024
 const MAX_REFERENCES = 131072
 const MAX_BLOCKS = 65536
 const MAX_COMMANDS = 1024 * 1024
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 class Reader:
 	extends RefCounted
@@ -62,10 +63,19 @@ static func _fail(message: String) -> Dictionary:
 	return {"ok":false,"error":message,"estimated":true}
 
 static func parse(raw: PackedByteArray) -> Dictionary:
+	var started: int = FRAME_HITCH.now()
+	FRAME_HITCH.count("sp2.decoder_input_bytes", raw.size())
+	var result: Dictionary = _parse(raw)
+	FRAME_HITCH.detail("sp2.decoder_total", started)
+	FRAME_HITCH.count("sp2.decoder_ok" if result.ok else "sp2.decoder_reject")
+	return result
+
+static func _parse(raw: PackedByteArray) -> Dictionary:
 	if raw.is_empty() or raw.size() > MAX_INPUT_BYTES:
 		return _fail("SP2 input must contain 1 to %d bytes." % MAX_INPUT_BYTES)
 	var body: PackedByteArray = raw
 	if raw[0] != 254:
+		var decompress_started: int = FRAME_HITCH.now()
 		# Godot4.7's dynamic Brotli loop does not stop on NEEDS_MORE_INPUT.
 		# Use its bounded one-shot codec to reject incomplete streams safely.
 		# https://github.com/godotengine/godot/blob/4.7/core/io/compression.cpp#L230-L257
@@ -74,8 +84,10 @@ static func parse(raw: PackedByteArray) -> Dictionary:
 		Engine.print_error_messages = false
 		body = raw.decompress(MAX_BODY_BYTES,FileAccess.COMPRESSION_BROTLI)
 		Engine.print_error_messages = previous_errors
+		FRAME_HITCH.detail("sp2.decoder_brotli", decompress_started)
 	if body.size() < 2 or body.size() > MAX_BODY_BYTES or body[0] != 254:
 		return _fail("Invalid, incomplete or oversized Brotli/FE SP2 body.")
+	FRAME_HITCH.count("sp2.decoder_body_bytes", body.size())
 	var marker: int = body[1]
 	var layouts: Array = [1,3] if marker == 1 else [256 if marker == 0 else marker]
 	var passed: Array[Dictionary] = []
@@ -94,6 +106,13 @@ static func parse(raw: PackedByteArray) -> Dictionary:
 	return parsed
 
 static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
+	var started: int = FRAME_HITCH.now()
+	var result: Dictionary = _parse_candidate_measured(body, entries)
+	FRAME_HITCH.detail("sp2.decoder_candidate", started)
+	return result
+
+static func _parse_candidate_measured(body: PackedByteArray,entries: int) -> Dictionary:
+	var metadata_started: int = FRAME_HITCH.now()
 	var reader := Reader.new(body)
 	if reader.u8() != 254: return _fail("Missing FE header.")
 	reader.u8()
@@ -150,13 +169,20 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 			for _command: int in range(command_count): commands.append(reader.u16())
 			blocks.append({"x":bx,"y":by,"commands":commands})
 		groups.append({"bit":bit,"frames":frames,"blocks":blocks})
+	FRAME_HITCH.detail("sp2.decoder_metadata", metadata_started)
+	FRAME_HITCH.count("sp2.decoder_blocks", total_blocks)
+	FRAME_HITCH.count("sp2.decoder_commands", total_commands)
+	FRAME_HITCH.count("sp2.decoder_references", total_refs)
 	# All groups' metadata precede all groups' palette-index streams.
 	for group: Dictionary in groups:
+		var samples_started: int = FRAME_HITCH.now()
 		for block: Dictionary in group.blocks:
 			var decoded: Dictionary = _read_block(reader,block,palette.size())
 			if not decoded.ok: return decoded
 			total_samples += int(block.sample_count)
 			if total_samples > MAX_SAMPLES: return _fail("SP2 sample limit exceeded.")
+		FRAME_HITCH.detail("sp2.decoder_samples", samples_started)
+		var geometry_started: int = FRAME_HITCH.now()
 		for frame: Dictionary in group.frames:
 			var geometry: Dictionary = _frame_geometry(frame,group.blocks)
 			if not geometry.ok: return geometry
@@ -165,9 +191,11 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 			frame["sample_extent"] = geometry.extent
 			frame_count += 1
 			if not geometry.empty: nonempty_count += 1
+		FRAME_HITCH.detail("sp2.decoder_geometry", geometry_started)
 	if not reader.error.is_empty(): return _fail(reader.error)
 	if reader.position != body.size(): return _fail("Trailing SP2 bytes: %d." % (body.size() - reader.position))
 	var all_exact: bool = true
+	var bounds_started: int = FRAME_HITCH.now()
 	for group: Dictionary in groups:
 		for frame: Dictionary in group.frames:
 			if frame.empty: continue
@@ -187,6 +215,8 @@ static func _parse_candidate(body: PackedByteArray,entries: int) -> Dictionary:
 			var bounds: Rect2i = frame.bounds
 			if bounds.size.x <= 0 or bounds.size.y <= 0 or bounds.size.x > MAX_DIMENSION or bounds.size.y > MAX_DIMENSION or bounds.size.x * bounds.size.y > MAX_CANVAS_PIXELS:
 				return _fail("SP2 native frame bounds exceed the canvas limit.")
+	FRAME_HITCH.detail("sp2.decoder_bounds", bounds_started)
+	FRAME_HITCH.count("sp2.decoder_samples", total_samples)
 	return {"ok":true,"error":"","palette":palette,"mask":mask,"groups":groups,"frame_count":frame_count,"nonempty_count":nonempty_count,"sample_count":total_samples,"bounds_rule":"half_open" if all_exact else "per_frame"}
 
 ## "half_open": the samples fill the stored bounds exactly (the long-standing
@@ -208,8 +238,13 @@ static func frame_bounds_rule(stored: Rect2i,extent: Rect2i) -> String:
 
 static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> Dictionary:
 	var commands: PackedInt32Array = block.commands
-	var indices := PackedByteArray()
+	# A block's sample bytes are contiguous. Keep the exact per-command bounds
+	# check (including truncation position/count), but copy the range only once.
+	var sample_start: int = reader.position
+	var sample_count: int = 0
 	var runs := PackedInt32Array() # Repeated x, y, sample-offset, sample-count.
+	runs.resize(commands.size() * 4)
+	var run_size: int = 0
 	var xx: int = 0
 	var yy: int = 0
 	var has_samples: bool = false
@@ -218,11 +253,15 @@ static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> D
 		xx += word & 31
 		var count: int = (word >> 5) & 31
 		var step: int = word >> 10
-		var samples: PackedByteArray = reader.take(count)
-		if not reader.error.is_empty(): return _fail(reader.error)
+		if not reader.need(count): return _fail(reader.error)
+		reader.position += count
 		if count > 0:
-			runs.append_array(PackedInt32Array([xx,yy,indices.size(),count]))
-			indices.append_array(samples)
+			runs[run_size] = xx
+			runs[run_size + 1] = yy
+			runs[run_size + 2] = sample_count
+			runs[run_size + 3] = count
+			run_size += 4
+			sample_count += count
 			var run_bounds := Rect2i(xx,yy,count,1)
 			extent = extent.merge(run_bounds) if has_samples else run_bounds
 			has_samples = true
@@ -231,6 +270,8 @@ static func _read_block(reader: Reader,block: Dictionary,palette_size: int) -> D
 			xx = 0
 		else:
 			xx += count
+	runs.resize(run_size)
+	var indices: PackedByteArray = reader.data.slice(sample_start, reader.position)
 	# Palette range for the whole block at once (native scans) instead of a
 	# GDScript loop over every sample; the first offending sample in stream
 	# order is reported exactly as before.
