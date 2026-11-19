@@ -86,6 +86,17 @@ func state_of(world: Node, text: String, name_value: String, floor_id: String) -
 		if record is Dictionary and str(record.get("id","")) == floor_id: on_floor = true
 	return [int(data.get("inventory",{}).get(name_value,0)), on_floor]
 
+func differing_paths(left: Variant, right: Variant, prefix: String) -> Dictionary:
+	var out: Dictionary = {}
+	if left is Dictionary and right is Dictionary:
+		for key: Variant in left.keys() + right.keys():
+			if out.has(prefix+"/"+str(key)): continue
+			if not left.has(key) or not right.has(key): out[prefix+"/"+str(key)] = true; continue
+			out.merge(differing_paths(left[key], right[key], prefix+"/"+str(key)))
+		return out
+	if JSON.stringify(left) != JSON.stringify(right): out[prefix] = true
+	return out
+
 func runtime() -> void:
 	remember_user_files()
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -110,7 +121,20 @@ func runtime() -> void:
 	check(world._save_game(true) == OK, "direct save of the same state")
 	var direct_usec: int = Time.get_ticks_usec() - started
 	evidence["save_usec"] = {"background_main_thread":main_usec,"direct":direct_usec}
-	check(FileAccess.get_file_as_string(world.save_path()) == background_text, "background file == direct file (byte for byte)")
+	var direct_text: String = FileAccess.get_file_as_string(world.save_path())
+	# Clock-driven fields (latest_at, regen timers ...) may tick between two
+	# saves: allow exactly the keys two direct saves of this state also differ in.
+	check(world._save_game(true) == OK, "second direct save")
+	var noise: Dictionary = differing_paths(JSON.parse_string(direct_text), JSON.parse_string(FileAccess.get_file_as_string(world.save_path())), "")
+	var against: Dictionary = differing_paths(JSON.parse_string(background_text), JSON.parse_string(direct_text), "")
+	var unexplained: Array = []
+	for path: String in against:
+		var covered: bool = false
+		for clock: String in noise:
+			if path.begins_with(clock) or clock.begins_with(path): covered = true
+		if not covered: unexplained.append(path)
+	evidence["clock_paths"] = noise.keys()
+	check(unexplained.is_empty() and (against.is_empty() or not noise.is_empty() or background_text == direct_text), "background file == direct file apart from clock ticks (%s)" % str(unexplained))
 	check(int(JSON.parse_string(background_text).get("gold",-1)) == world.gold, "background file holds the change")
 	# 2. A change made while the worker runs is kept for the next save.
 	check(world._save_game(true,{},{},false,true) == OK, "second background save")
