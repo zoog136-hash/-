@@ -6,9 +6,12 @@ extends RefCounted
 ## Recipes, quotes, owned counts, material choices, the confirmation and the
 ## transaction stay with the existing owners (world.crafting / patch523
 ## rules, renewal_crafting.confirm_target → craft_requested).
-## Left inert or empty (no rule here): 메인 (recommend) / 이벤트 / 한정 /
-## 서버 한정 / 즐겨찾기 / 검색 tabs (Off; tapping says so; the 이벤트 tab is
-## 비법서 제작 when the world has it: TWILIGHT 근사, the existing panel), the class filter,
+## 메인 / 한정 / 서버한정 list the registry recipes of the original
+## recommendation list and MainCategoryID 41 / 51 (scripts/crafting/
+## craft_tabs523.gd); their category list is every TWILIGHT category.
+## Left inert or empty (no rule here): 이벤트 / 즐겨찾기 / 검색 tabs (Off;
+## tapping says so; the 이벤트 tab is 비법서 제작 when the world has it:
+## TWILIGHT 근사, the existing panel), the class filter,
 ## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
 ## The list's Btn_Sort (Normal / Enable) toggles 제작 가능 우선: recipes the
@@ -35,7 +38,12 @@ const P_LIST="Production_Tab_List/"
 const P_PROD="Production_Tab_List/Nd_Production/"
 ## 장비 / 기타 tabs over the TWILIGHT recipe categories.
 const TABS: Dictionary={"equip":["무기","방어구","장신구"],"other":["물약","재료"]}
-const OFF_TABS: Array[String]=["Btn_Main","Btn_Event","Btn_LimitedAccount","Btn_LimitedServer","Btn_Bookmark","Btn_Search"]
+const OFF_TABS: Array[String]=["Btn_Event","Btn_Bookmark","Btn_Search"]
+## Original-table tabs (craft_tabs523): tab -> its Nd_TabMenu button.
+const SOURCE_TABS: Dictionary={"main":"Btn_Main","limited":"Btn_LimitedAccount","server":"Btn_LimitedServer"}
+const CraftTabs=preload("res://scripts/crafting/craft_tabs523.gd")
+## The recipe ids of the shown original-table tab (made when the tab opens).
+var _source_ids: Array[String]=[]
 signal closed
 var _pack: RefCounted
 var _tree: RefCounted
@@ -122,6 +130,7 @@ func open(parent: Node, world: Node) -> Dictionary:
 	_parent=weakref(parent)
 	_world=weakref(world)
 	_count=1
+	if SOURCE_TABS.has(_tab):_source_ids=source_tab_ids(world,_tab)
 	for scroll: ListScroll in _scrolls.values():scroll.y=0.0
 	return _stage()
 
@@ -162,6 +171,11 @@ func node_keys() -> Dictionary:
 func _recipes(world: Node) -> Array[String]:
 	var ids: Array[String]=[]
 	var registry: Dictionary=world.crafting.recipes
+	if SOURCE_TABS.has(_tab):
+		for id: String in _source_ids:
+			if registry.has(id) and (_category.is_empty() or str((registry[id] as Dictionary).get("category",""))==_category):ids.append(id)
+		if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return world._craft_quote(id,1).get("ok",false))
+		return ids
 	var allowed: Array=TABS.get(_tab,[])
 	for raw: Variant in registry.keys():
 		var category_name: String=str((registry[raw] as Dictionary).get("category",""))
@@ -283,6 +297,9 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 		var tab_name: String="Btn_Equip" if name=="equip" else "Btn_Other"
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_On"]={"visible":_tab==name}
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_Off"]={"visible":_tab!=name,"activate":Callable(self,"_set_tab").bind(name)}
+	for name: String in SOURCE_TABS:
+		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_On"]={"visible":_tab==name}
+		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_Off"]={"visible":_tab!=name,"activate":Callable(self,"_set_tab").bind(name)}
 	for tab_name: String in OFF_TABS:
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_On"]={"visible":false}
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 장비·기타 제작만 연결했습니다")}
@@ -348,7 +365,9 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 func _sort_rows(world: Node) -> Array:
 	var rows: Array=[]
 	var titles: Array=["전체"]
-	titles.append_array(TABS.get(_tab,[]))
+	if SOURCE_TABS.has(_tab):
+		for name: String in TABS:titles.append_array(TABS[name])
+	else:titles.append_array(TABS.get(_tab,[]))
 	for title: String in titles:
 		var value: String="" if title=="전체" else title
 		var chosen: bool=value==_category
@@ -546,8 +565,17 @@ func _set_tab(value: String) -> Dictionary:
 	_category=""
 	_selected=""
 	_count=1
+	_source_ids=source_tab_ids(_world.get_ref() if _world!=null else null,value)
 	for scroll: ListScroll in _scrolls.values():scroll.y=0.0
 	return _stage()
+
+## The recipe ids of an original-table tab for this character now.
+static func source_tab_ids(world: Node, tab_name: String, reader: RefCounted=null) -> Array[String]:
+	if world==null or not SOURCE_TABS.has(tab_name):return []
+	var registry: Dictionary=world.crafting.recipes
+	if tab_name=="limited":return CraftTabs.by_main_category(registry,CraftTabs.LIMITED_ACCOUNT,reader)
+	if tab_name=="server":return CraftTabs.by_main_category(registry,CraftTabs.LIMITED_SERVER,reader)
+	return CraftTabs.recommended(registry,CraftTabs.context(world,reader),reader)
 
 func _set_category(value: String) -> Dictionary:
 	if _moved():return {"ok":true,"ignored_after_drag":true}
