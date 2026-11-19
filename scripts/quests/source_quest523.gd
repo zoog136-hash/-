@@ -39,11 +39,18 @@ func load_pack() -> bool:
 	var path: String = USER_PATH if FileAccess.file_exists(USER_PATH) else DEV_PATH
 	if not FileAccess.file_exists(path): return _load_original()
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > MAX_BYTES:
-		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
-		return false
-	var bytes: PackedByteArray = file.get_buffer(file.get_length())
-	return _load_payload(bytes,path)
+	var refused: String = "퀘스트 팩 파일을 읽을 수 없습니다"
+	if file != null and file.get_length() <= MAX_BYTES:
+		var bytes: PackedByteArray = file.get_buffer(file.get_length())
+		file = null
+		if _load_payload(bytes,path): return true
+		refused = problem
+	# A received/private payload of an earlier projection (other fingerprint)
+	# or an unreadable file must not hide every quest: project the installed
+	# original tables instead. The file itself is left untouched.
+	if _load_original(): return true
+	problem = refused + " · " + problem
+	return false
 
 func _load_original() -> bool:
 	if not document.is_empty(): return not quests.is_empty() # No replacement of live input.
