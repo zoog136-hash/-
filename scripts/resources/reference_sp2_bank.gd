@@ -212,6 +212,14 @@ func source_actor_admission(source_actor_id: int) -> Dictionary:
 func _install_source_exclusions() -> Dictionary:
 	var registry: Variant = _manifest.get("excluded_source_actors",{})
 	if not registry is Dictionary: return fail("Invalid source actor exclusion registry.")
+	# This exact registry object of this manifest already passed every check
+	# below (the memo is only written after they pass): every bank load used
+	# to re-check all declarations again (~41,000 SHA checks in 40 s of
+	# auto-hunting).
+	var validated: Variant = _shared_exclusions.get(_manifest_sha)
+	if validated is Array and is_same(validated[0], registry):
+		_excluded_source_actors = validated[1]
+		return {"ok":true}
 	var source_file_pattern := RegEx.new()
 	source_file_pattern.compile("^list_[0-9]+\\.spr$")
 	for key: Variant in registry:
