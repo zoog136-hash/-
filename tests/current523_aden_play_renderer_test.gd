@@ -23,6 +23,18 @@ class FakeTiles extends RefCounted:
 		return image
 	func cache_size() -> int: return 1
 
+## Decodes on a "worker": an atlas is ready only after a request and a pump.
+class FakeAsyncTiles extends FakeTiles:
+	var requested: Dictionary = {}
+	var ready: Dictionary = {}
+	func prefetch(id: int) -> bool:
+		if ready.has(id): return true
+		requested[id] = true
+		return false
+	func pump() -> void:
+		for id: int in requested: ready[id] = true
+		requested.clear()
+
 func check(value: bool, message: String) -> void:
 	checks += 1
 	if not value: failures.append(message)
@@ -108,6 +120,25 @@ func run() -> void:
 	check(decorations[0][2]==123 and decorations[-1][2]==456 and not decorations.has(-2),"source packet decorations span absent floor chunks without inventing floor")
 	check(field.raw_grid.bytes.count(0)==field.raw_grid.bytes.size(),"off-floor artwork never changes navigation bytes")
 	field.remove_meta("current523_generic_field")
+	# The one-pass chunk projection equals the per-record path (lanes and counters).
+	var rng := RandomNumberGenerator.new(); rng.seed = 523
+	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var raw_refs := PackedInt64Array()
+	for index: int in 3000:
+		halves.append(rng.randi_range(0, 255)); rows.append(rng.randi_range(0, 255)); kinds.append([-2, -1, 0, 1, 3][rng.randi() % 5]); raw_refs.append(rng.randi())
+	for generic: bool in [false, true]:
+		if generic: field.set_meta("current523_generic_field", true)
+		for origin: Vector2i in [PLAY.GRID_ORIGIN, PLAY.GRID_ORIGIN + Vector2i(64, 0), PLAY.GRID_ORIGIN + Vector2i(-64, 64)]:
+			renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+			var slow: Dictionary = {}
+			for index: int in halves.size(): renderer._append(slow, origin, halves[index], rows[index], raw_refs[index], kinds[index])
+			var slow_counts: Array = [renderer._scope_clipped_records, renderer._off_floor_decoration_records]
+			renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+			var fast: Dictionary = renderer._project_records(origin, halves, rows, kinds, raw_refs)
+			var same: bool = fast.size() == slow.size() and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == slow_counts
+			for layer: int in slow: same = same and fast.has(layer) and fast[layer] == PackedInt64Array(slow[layer])
+			check(same, "one-pass chunk projection equals the per-record path (generic=%s origin=%s)" % [generic, origin])
+	field.remove_meta("current523_generic_field")
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
 	var tiles := FakeTiles.new()
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
@@ -116,17 +147,50 @@ func run() -> void:
 	check(tiles.loads == [8388608], "upper24 bits are preserved; all-ones word is not an asset lookup")
 	check(renderer._build_frame() and tiles.loads.size() == 1, "visible frame textures reused across refreshes")
 	check(renderer.frame_metrics().uninterpreted_ffffffff_words == 1 and renderer.frame_metrics().draw_commands == 1, "sentinel and visible drawing metrics separate")
+	var first_block: Variant = (renderer._blocks.get(Vector2i.ZERO, {}) as Dictionary).get("viewport")
+	check(renderer.frame_metrics().visible_blocks >= 1 and first_block is SubViewport and renderer._visible_blocks.has(Vector2i.ZERO), "ground tiles are baked into a 512 px block image")
+	check(renderer._build_frame() and (renderer._blocks[Vector2i.ZERO] as Dictionary).viewport == first_block, "an unchanged block image is reused, not baked again")
+	renderer._chunk_rects = {"synthetic":Rect2(480,-32,64,64)}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([500,0,2147483903])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	check(renderer._build_frame() and renderer.frame_metrics().draw_commands == 1 and renderer.frame_metrics().block_draw_commands == 2, "a tile across a block edge is drawn in both blocks but counted once")
+	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
+	# Margin blocks wait for their atlases' worker decode; on-screen ones never wait.
+	# Shift the screen so its right edge (1500) is just before a block edge (1536).
+	var async_tiles := FakeAsyncTiles.new()
+	renderer._tile_pack = async_tiles
+	var saved_canvas: Transform2D = root.canvas_transform
+	root.canvas_transform = Transform2D(0.0, Vector2(renderer._view_rect().end.x - 1500.0, 0.0)) * saved_canvas
+	var view_now: Rect2 = renderer._view_rect()
+	var here := Vector2i(view_now.get_center())
+	var margin_point := Vector2i(1540, here.y)
+	renderer._chunk_rects = {"synthetic":Rect2(Vector2(here) - Vector2(32, 32), Vector2(64, 64)), "margin":Rect2(Vector2(margin_point) - Vector2(32, 32), Vector2(64, 64))}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([here.x,here.y,2147483903])}, "margin":{-2:PackedInt64Array([margin_point.x,margin_point.y,(7 << 8) | 1])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	var near_cell := Vector2i(here.x >> PLAY.BLOCK_SHIFT, here.y >> PLAY.BLOCK_SHIFT)
+	var far_cell := Vector2i(margin_point.x >> PLAY.BLOCK_SHIFT, margin_point.y >> PLAY.BLOCK_SHIFT)
+	check(not PLAY._block_rect(far_cell).intersects(view_now) and view_now.grow(PLAY.BUILD_MARGIN).has_point(Vector2(margin_point)), "fixture: the far block is in the margin only")
+	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
+	async_tiles.pump()
+	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	root.canvas_transform = saved_canvas
+	renderer._tile_pack = tiles
+	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([0,0,2147483903,0,0,4294967295])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	var requested: Array[String] = []
 	renderer.safe_return_requested.connect(func(reason: String) -> void: requested.append(reason))
 	var too_many := PackedInt64Array()
 	too_many.resize((PLAY.DRAW_COMMAND_LIMIT + 1) * 3)
 	for index: int in range(0, too_many.size(), 3): too_many[index + 2] = 2147483903
 	renderer._raw_chunks = {"synthetic":{-2:too_many}}
+	# Swapping raw chunks directly bypasses configure, so drop the cached bins and blocks.
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	renderer._configured = true
 	check(not renderer._build_frame() and renderer.problem.contains("예산"), "draw budget failure does not keep a partial successful frame")
 	await process_frame
 	check(requested.size() == 1, "runtime rendering failure requests safe return once")
-	check(not renderer._configured and renderer._frame_commands.is_empty(), "failed experimental display stops drawing")
+	check(not renderer._configured and renderer._frame_commands.is_empty() and renderer._blocks.is_empty(), "failed experimental display stops drawing")
 	field.local_doors = {"synthetic":[Vector2i(0,0)]}
 	field.local_door_states = {"synthetic":false}
 	actor.global_position = point
