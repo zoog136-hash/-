@@ -457,6 +457,8 @@ func _build(source: Dictionary) -> Node2D:
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
 		input_area.gui_input.connect(direct_binding.input)
 		origin.add_child(input_area)
+	# A binding may state "touch_enabled" for a button the client enables at
+	# run time (Cocos setTouchEnabled(true) after loading an authored false).
 	if source.classname=="CheckBox":
 		var checkbox=preload("res://scripts/ui/original_ui/source_checkbox.gd").new()
 		var configured: Dictionary=checkbox.configure(source_pack,options)
@@ -467,7 +469,7 @@ func _build(source: Dictionary) -> Node2D:
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):checkbox.set_source_state("normal" if binding.displaystate else "disabled")
 		if binding.has("selected"):checkbox.set_selected(binding.selected)
-		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(binding.get("touch_enabled",widget.touchEnabled)))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		# A caller may supply the live title of an authored button title.
@@ -484,7 +486,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
-		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(binding.get("touch_enabled",widget.touchEnabled)))
 	if source.classname=="Particle":
 		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
 		var configured: Dictionary=emitter.configure(source_pack,options)
