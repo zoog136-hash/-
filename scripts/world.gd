@@ -84,6 +84,7 @@ const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
 const CURRENT523_MAP_TELEPORT = preload("res://scripts/maps/current523_map_teleport.gd")
+const WALK_PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
 const TUTORIAL523 = preload("res://scripts/content523/tutorial523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
@@ -288,6 +289,13 @@ const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_cata
 const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 var patch523_craft_catalog_status: Dictionary={}
 var patch523_craft_item_cache: Dictionary={}
+## The craft item index built in small slices on idle frames after entering
+## the game (same items, same order, same records as the one-shot build), so
+## the first 제작 quote does not stall ~8 s building it (2026-11-19 measure:
+## 8,016 ms for ~30,000 original items on desktop). A cache reset drops it.
+var _craft_index_warm: Dictionary={}
+var craft_index_warm_seconds: float=12.0
+const CRAFT_INDEX_WARM_BUDGET_USEC := 3000
 # Installed/configured only by the protection feature owner (PR256).
 var patch523_owner_state_problem: String=""
 var patch523_final_blow_fired: bool=false
@@ -810,6 +818,7 @@ func _process_frame(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	_tick_craft_index_warm(delta)
 	_slow_tick_delta += delta
 	_slow_tick_clock -= delta
 	if _slow_tick_clock <= 0.0:
@@ -826,7 +835,10 @@ func _process_frame(delta: float) -> void:
 	_advance_native_route_preparation()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
-	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
+	# Stuck = a route walk that is not progressing, per expected step (the
+	# original vertical walk is under 1 px per frame when slowed); standing on
+	# purpose (attacking, healing, waiting) is not stuck (walk_path_progress.gd).
+	if player.auto_enabled and WALK_PATH_PROGRESS.stalled(player.global_position - auto_last_position, player.intended_walk_speed(), delta):
 		auto_stuck_time += delta
 	else:
 		auto_stuck_time = 0.0
@@ -1215,6 +1227,7 @@ func _equipped_numeric_sum(key: String) -> float:
 
 func _index_catalog_item_sources() -> void:
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	catalog_item_by_source_id.clear()
 	catalog_item_variant_count.clear()
 	for value: Variant in catalog_db.get("아이템", []) as Array:
@@ -1587,6 +1600,7 @@ func _index_item_weights() -> void:
 		return
 	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
@@ -3465,6 +3479,17 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	if directly_visible:
 		# A visible target needs no old A* corners; physics still collides.
 		return PackedVector2Array([target.global_position])
+	# Re-search while walking: continue from the point the player is already
+	# walking to. A route searched from the player starts at the centre of its
+	# own cell, usually already passed at the original walk (2.25 cells/s,
+	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	if player.path_index < player.click_path.size() and not player.manual_navigation:
+		var via: Vector2 = player.click_path[player.path_index]
+		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
+			var rest: PackedVector2Array = find_world_path(via, target.global_position)
+			if not rest.is_empty():
+				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
+				return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -3483,6 +3508,17 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> bool:
+	if field_map is OriginalPlayableField:
+		# Same or neighbouring source cell joined by a legal step: in sight, as
+		# on the A* grid below. The straight foot line between two off-centre
+		# points can graze a third (blocked) cell at a diagonal corner; the player
+		# then never attacked and walked back and forth next to its target.
+		var field: OriginalPlayableField = field_map as OriginalPlayableField
+		var a: Vector2i = field.world_to_cell(from_position)
+		var b: Vector2i = field.world_to_cell(to_position)
+		if a == b and field.walkable(from_position): return true
+		var heading: int = OriginalPlayableField.DIRECTIONS.find(b - a)
+		if heading >= 0 and field.can_step(a, heading): return true
 	if field_map != null:
 		return field_map.line_clear(from_position, to_position)
 	if astar == null:
@@ -5594,6 +5630,14 @@ func _craft_item_index() -> Dictionary:
 
 func _patch523_craft_item_index() -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	if not _craft_index_warm.is_empty():
+		# Finish a started warm build here: the remaining items in their order.
+		var ids: Array=_craft_index_warm.ids
+		var partial: Dictionary=_craft_index_warm.result
+		for index: int in range(int(_craft_index_warm.cursor),ids.size()):_patch523_craft_index_item(partial,str(ids[index]))
+		_craft_index_warm={}
+		patch523_craft_item_cache=partial
+		return partial
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
@@ -5615,6 +5659,31 @@ func _patch523_craft_item_index() -> Dictionary:
 	return result
 
 const PATCH523_CRAFT_INDEX_BLOCK := 1024
+
+## One idle-frame slice of the craft item index (CRAFT_INDEX_WARM_BUDGET_USEC);
+## true while work remains. Starts craft_index_warm_seconds after it is first
+## called with nothing built.
+func _tick_craft_index_warm(delta: float) -> bool:
+	if not patch523_craft_item_cache.is_empty():return false
+	var items: Variant=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
+	if not items is Dictionary or (items as Dictionary).is_empty():return false
+	if _craft_index_warm.is_empty():
+		craft_index_warm_seconds-=delta
+		if craft_index_warm_seconds>0.0:return true
+		_craft_index_warm={"ids":(items as Dictionary).keys(),"cursor":0,"result":_craft_item_index().duplicate()}
+		return true
+	var started: int=Time.get_ticks_usec()
+	var ids: Array=_craft_index_warm.ids
+	var cursor: int=int(_craft_index_warm.cursor)
+	while cursor<ids.size() and Time.get_ticks_usec()-started<CRAFT_INDEX_WARM_BUDGET_USEC:
+		_patch523_craft_index_item(_craft_index_warm.result,str(ids[cursor]))
+		cursor+=1
+	_craft_index_warm.cursor=cursor
+	if cursor>=ids.size():
+		patch523_craft_item_cache=_craft_index_warm.result
+		_craft_index_warm={}
+		return false
+	return true
 
 func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
 	# Read-only identity for the branch checks (no deep copy of ~30,000
@@ -5716,6 +5785,7 @@ func _apply_loaded_patch523_equipment() -> void:
 	patch523_material_choices.clear()
 	patch523_owned_material_choices.clear()
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	# Keep existing recipes, IDs and economy unchanged.
 	for key: Variant in crafting.recipes.keys():
 		if str(key).begins_with("patch523:"):

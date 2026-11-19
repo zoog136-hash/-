@@ -623,8 +623,9 @@ static func clear_template_failure() -> void:
 ## quantity and enhancement are not touched. The partial file is removed.
 static func _template_stop(stage: String,writer: TemplateWriter,identity: Dictionary,value_key: String) -> Dictionary:
 	if writer!=null:writer.abort()
-	# A commit that failed half way may have left an unpublished data file.
-	if stage=="commit":BAKE.clear(TEMPLATE_BAKE)
+	# A failed commit publishes nothing and removes its own new generation
+	# (current523_bake_cache._publish()); a previously accepted template bake
+	# stays as it was (under its own key, so it is not read as this one).
 	var message: String="원본 아이템 템플릿을 기기 저장소에 만들지 못했습니다(단계: "+stage+"). 저장 공간과 쓰기 권한을 확인한 뒤 게임을 다시 시작하면 다시 시도합니다. 보유 아이템·수량·강화 상태는 변경하지 않았습니다."
 	_template_failure={"key":value_key,"stage":stage,"message":message}
 	print("CURRENT523_NATIVE_TEMPLATE_STORE_STOPPED "+JSON.stringify({"stage":stage}))
