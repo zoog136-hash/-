@@ -1945,7 +1945,7 @@ func _open_catalog_impl(category: String) -> void:
 	catalog_category = category
 	# The native window owns its selected card and scroll position. Preparing
 	# the other browser first loads the same card pictures before hiding it.
-	if category in ["변신","마법인형"] and _open_original_change_window(category):
+	if category in ["변신","마법인형","성물"] and _open_original_change_window(category):
 		return
 	_open_catalog_browser(category)
 
