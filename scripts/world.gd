@@ -6788,8 +6788,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if protection523.save_blocked:
 		if not quiet: hud.show_message("가호 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
-	if not PROTECTION523.validate(collection_override.get("protection523",protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
-	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:collection_override.get(SOURCE_SHOP.SAVE_KEY, source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
+	if not PROTECTION523.validate((collection_override["protection523"] if collection_override.has("protection523") else protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
+	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:(collection_override[SOURCE_SHOP.SAVE_KEY] if collection_override.has(SOURCE_SHOP.SAVE_KEY) else source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
 	if not patch523_owner_state_problem.is_empty():return ERR_UNAVAILABLE
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	if protection523!=null and protection523.get("save_blocked")==true:return ERR_UNAVAILABLE
@@ -6831,7 +6831,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		source_item_save_blocked = true
 		hud.show_message("전체 원본 아이템 이전 백업 실패 · 기존 저장 보존")
 		return source_backup_error
-	if expedition_local.save_blocked or not expedition_local.validate(collection_override.get(EXPEDITION_LOCAL.KEY, expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
+	if expedition_local.save_blocked or not expedition_local.validate((collection_override[EXPEDITION_LOCAL.KEY] if collection_override.has(EXPEDITION_LOCAL.KEY) else expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
 	if not expedition_local.before_save(): return ERR_CANT_CREATE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("quest_state"):

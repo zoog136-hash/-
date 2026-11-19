@@ -477,8 +477,8 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 static func override_error(world: Node,overrides: Dictionary) -> String:
 	var inventory: Variant=overrides.get("inventory",world.inventory)
 	var instances: Variant=overrides.get("item_instances",world.item_instances)
-	var state: Variant=overrides.get("consumable_state",world.consumable_service.export_state())
-	var warehouse: Variant=overrides.get("warehouse",world.warehouse.snapshot())
+	var state: Variant=(overrides["consumable_state"] if overrides.has("consumable_state") else world.consumable_service.export_state())
+	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else world.warehouse.snapshot())
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
 	var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
