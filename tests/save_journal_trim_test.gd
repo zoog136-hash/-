@@ -93,12 +93,16 @@ func runtime() -> void:
 		saved.consumable_state["source_native_bag_uses"] = {"r1":{"schema":1,"input":[],"selected_rewards":[]}}
 		saved["source_item_catalog_history"] = [{"schema":3,"sha256":"old"}]
 		var file := FileAccess.open(world.save_path(), FileAccess.WRITE); file.store_string(JSON.stringify(saved)); file.close()
-		var gold: int = world.gold; var bag: Dictionary = world.inventory.duplicate(true)
+		var gold: int = world.gold; var bag: String = JSON.stringify(JSON.parse_string(JSON.stringify(world.inventory)),"",true)
 		world._load_game(true)
 		check(not content.state.event_receipts.has("oldnonce:aden:1:1") and int(content.state.event_counters.get("kill",0)) == int(counters_before.get("kill",0)) + 40, "old live keys dropped on load, counters kept")
 		check(not world.consumable_service.export_state().has("source_native_bag_uses") and world.patch523_owner_state_problem.is_empty() and not content.save_blocked, "old box journal dropped, no ownership problem")
-		check(world.gold == gold and world.inventory == bag, "gold and bag unchanged")
-		check(world._save_game(true) == OK and not FileAccess.get_file_as_string(world.save_path()).contains("source_native_bag_uses") and not FileAccess.get_file_as_string(world.save_path()).contains("source_item_catalog_history"), "re-save without the box journal or definition-pack history")
+		check(int(world.gold) == gold and JSON.stringify(JSON.parse_string(JSON.stringify(world.inventory)),"",true) == bag, "gold and bag unchanged")
+		check(world._save_game(true) == OK, "re-save after load")
+		var written: String = FileAccess.get_file_as_string(world.save_path())
+		check(not written.contains("source_native_bag_uses"), "re-save without the box journal")
+		check(not written.contains("source_item_catalog_history"), "re-save without the definition-pack history")
+		check(not written.contains("oldnonce:"), "re-save without old live event keys")
 	world.queue_free()
 	await process_frame
 	restore_user_files()

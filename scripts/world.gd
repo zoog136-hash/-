@@ -6875,6 +6875,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not owner_boundary.protection_error(self,protection_state).is_empty():return ERR_INVALID_DATA
 		data["protection523"]=protection_state
 	data.merge(equipment_collections.extra_save_fields, false)
+	data.erase("source_item_catalog_history") # retired history, also not carried as an unknown field
 	var staged_overrides := collection_override.duplicate(true)
 	if staged_overrides.has("totem_combat_settings"):
 		data.ui_preferences = ui_preferences.duplicate(true)
