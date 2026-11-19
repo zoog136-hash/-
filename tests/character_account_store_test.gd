@@ -28,6 +28,8 @@ func same(left: Variant, right: Variant) -> bool:
 func read(path: String) -> Dictionary:
 	var parser := JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not parser.data is Dictionary: return {}
+	# The selected state is stored once (the body); readers expand it.
+	STORE.expand(parser.data)
 	return parser.data
 
 func fresh(suffix: String) -> RefCounted:

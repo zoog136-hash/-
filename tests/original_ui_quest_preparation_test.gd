@@ -30,6 +30,24 @@ class NativeController extends Node:
 		refreshes+=1
 		return target_window.refresh() if target_window!=null else {"ok":true,"handled":true}
 
+class RoutingController extends Node:
+	var handled: bool=true
+	var succeeded: bool=true
+	var attempts: int=0
+	var refreshes: int=0
+	var open: bool=false
+	var claim: Callable
+	func try_open_quest_window(_world: Node,callback: Callable) -> Dictionary:
+		attempts+=1
+		claim=callback
+		open=handled and succeeded
+		return {"ok":succeeded,"handled":handled}
+	func quest_window_is_open() -> bool:return open
+	func refresh_quest_window() -> Dictionary:
+		refreshes+=1
+		return {"ok":true,"handled":true}
+	func close_quest_window() -> void:open=false
+
 class HudProbe extends "res://scripts/ui/renewal_hud.gd":
 	var browser_opens: int=0
 	func _ready() -> void:pass
@@ -94,23 +112,30 @@ func _run() -> void:
 
 func _routing() -> void:
 	var hud: HudProbe=_hud()
-	var controller:=NativeController.new()
+	var controller:=RoutingController.new()
 	hud.add_child(controller)
 	hud.original_main_ui_controller=controller
 	var claimed: Array=[]
 	hud.quest_complete_requested.connect(func(id: String) -> void:claimed.append(id))
 	hud.open_quests()
-	check(controller.attempts==0 and hud.browser_opens==1 and hud.workspace.visible,"quest entry uses text browser without attempting native scenes")
-	check(hud.active_section=="quests","text quest section remains active")
+	check(controller.attempts==1 and hud.browser_opens==0 and not hud.workspace.visible,"quest entry opens the original Quest_All window first (original windows first)")
+	check(hud.active_section=="quests","the quest section is active")
+	controller.claim.call("m523:quest:7")
+	check(claimed==["m523:quest:7"],"the window's receive button uses the existing World claim")
+	for i: int in 5:hud.open_quests()
+	check(controller.attempts==1 and controller.refreshes==5,"repeated opens refresh the open window instead of rebuilding it")
+	controller.open=false
 	controller.succeeded=false
 	hud.open_quests()
-	check(hud.browser_opens==2,"text browser does not depend on source pack availability")
+	check(controller.attempts==2 and hud.browser_opens==1 and hud.workspace.visible,"a failed original window falls back to the text list")
 	controller.handled=false
+	hud.workspace.hide()
 	hud.open_quests()
-	check(hud.browser_opens==3,"unsupported native input still uses text browser")
+	check(hud.browser_opens==2,"without the pack's quest members the text list opens")
 	hud.original_main_ui_controller=null
+	hud.workspace.hide()
 	hud.open_quests()
-	check(hud.browser_opens==4,"missing native controller still uses text browser")
+	check(hud.browser_opens==3,"missing native controller still uses text browser")
 	hud.free()
 
 func _row_models() -> void:
