@@ -16,6 +16,34 @@ class FakeScreen extends RefCounted:
 	func request_drop(reference: String) -> void:calls.append(["drop",reference])
 	func request_withdraw(reference: String) -> void:calls.append(["withdraw",reference])
 
+class FakeWarehouse extends RefCounted:
+	var stacks: Dictionary={}
+	var instances: Dictionary={}
+
+class FakeWorld extends Node:
+	var inventory: Dictionary={"물약":150,"주문서":2}
+	var item_instances: Dictionary={"e1":{"name":"장검"}}
+	var warehouse:=FakeWarehouse.new()
+	var refused: String="주문서"
+
+class FakeHud extends Node:
+	signal warehouse_transfer_requested(item: String, amount: int, direction: String, id: String)
+	var asked: Array=[]
+	func confirm_action(title: String, _body: String, _action: String, callback: Callable, _maximum: int=0) -> void:
+		asked.append(title)
+		callback.call(0)
+	func show_message(_text: String) -> void:
+		pass
+
+func _move(item: String, amount: int, direction: String, id: String, world: FakeWorld) -> void:
+	if item==world.refused:return
+	if direction=="deposit":
+		if not id.is_empty():
+			world.warehouse.instances[id]=world.item_instances[id];world.item_instances.erase(id)
+		else:
+			world.inventory[item]=int(world.inventory[item])-amount
+			world.warehouse.stacks[item]=int(world.warehouse.stacks.get(item,0))+amount
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:
@@ -51,9 +79,31 @@ func _run() -> void:
 	check(window._slot_pressed("bag",0).get("requested")=="deposit" and screen.calls[0]==["drop","물약"],"a 소지품 item asks 보관 through the warehouse screen")
 	check(window._slot_pressed("store",0).get("requested")=="withdraw" and screen.calls[1]==["withdraw","장검@@@s9"],"a 창고 item asks 찾기 through the warehouse screen")
 	check(window._slot_pressed("store",3).get("empty_slot",false) and screen.calls.size()==2,"an empty slot asks nothing")
+	_batch()
 	_sources()
 	print("ORIGINAL_UI_STORAGE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+## 모두 맡기기: every row of the tab, 99 per move, stopping at a refused row.
+func _batch() -> void:
+	var world:=FakeWorld.new()
+	var hud:=FakeHud.new()
+	world.add_child(hud)
+	root.add_child(world)
+	hud.warehouse_transfer_requested.connect(_move.bind(world))
+	var window=WINDOW.new()
+	window._hud=weakref(hud)
+	window._rows={"bag":[{"name":"물약","count":150,"instance_id":""},{"name":"장검","count":1,"instance_id":"e1"},{"name":"주문서","count":2,"instance_id":""},{"name":"물약2","count":1,"instance_id":""}],"store":[]}
+	var asked: Dictionary=window._batch_requested("bag")
+	check(asked.get("asked","")=="모두 맡기기" and hud.asked==["모두 맡기기"],"모두 맡기기 asks once")
+	check(int(world.inventory["물약"])==0 and int(world.warehouse.stacks["물약"])==150 and world.warehouse.instances.has("e1"),"every row moves, a stack of 150 in moves of up to 99")
+	check(int(world.inventory["주문서"])==2,"the batch stops at the first move the world refuses")
+	check(window._batch_requested("store").get("empty",false),"모두 찾기 with an empty tab moves nothing")
+	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_storage_window.gd")
+	check(text.contains("spec[\"Btn_Sell_On\"]") and text.contains("spec[\"Btn_Confirm_On\"]"),"the original 모두 맡기기 / 모두 찾기 buttons are bound")
+	var builder: String=FileAccess.get_file_as_string("res://tools/ui/build_client523_main_ui_pack.py") if FileAccess.file_exists("res://tools/ui/build_client523_main_ui_pack.py") else ""
+	if not builder.is_empty():check(builder.contains("[46564, 46252, 45968, 45420, 44044, 42700, 34968,"),"the pack keeps both buttons (their activation effects stay out)")
+	world.queue_free()
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")

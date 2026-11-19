@@ -83,13 +83,13 @@ WHOLE_SCOPES = [
     ("UI/Store/Store_PurchaseAutoList.csb", [1608, 248]),
     ("UI/Store/Store_All.csb", [66852, 66540, 66288, 66028, 65512, 55996, 48736, 43088, 37272, 30584, 21984, 7652, 6288, 5364, 3988, 2656, 1216, 1020, 760, 70792, 70108]),
     # The storage window (source_main_storage_window): Storage_All without the
-    # cart, 자동 보관, list mode, 모두 찾기/맡기기, batch count buttons, help,
+    # cart, 자동 보관, list mode, the 모두 찾기/맡기기 activation effects, batch count buttons, help,
     # dungeon message, particle and spine it leaves out. Storage_Inventory's
     # SlotSet names QuickSlotEdit_SlotSet, absent from the 523 client: the
     # window shows Inventory_Slot_Set lines there instead (user decision A안).
     ("UI/Storage/Storage_Inventory.csb", [13764, 396]),
     ("UI/Storage/Storage_AccountInvGridMode.csb", [6672, 412]),
-    ("UI/Storage/Storage_All.csb", [46564, 46252, 45968, 45420, 43992, 42648, 34968, 16280, 2384, 900, 640, 51812, 50252]),
+    ("UI/Storage/Storage_All.csb", [46564, 46252, 45968, 45420, 44044, 42700, 34968, 16280, 2384, 900, 640, 51812, 50252]),
     # The weapon rows of the mastery window (source_main_mastery_window):
     # Icn_Type 3640 (Mastery/Sample.png, absent) is external, the weapon's
     # own MasteryWeaponType.AssetID picture; Btn_Disabled is not mounted.
