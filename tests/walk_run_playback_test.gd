@@ -125,7 +125,7 @@ func _run() -> void:
 		check(is_equal_approx(cycle / scale, SOURCE_WALK.step_seconds(multiplier)), "x%.2f: one loop takes one cell step (%.3f s)" % [multiplier, cycle / scale])
 
 	if not _pack_root().is_empty(): await _main_checks()
-	var result := {"checks": checks, "failures": failures.size(), "evidence": evidence}
+	var result := {"checks": checks, "failures": failures, "evidence": evidence}
 	print("WALK_RUN_PLAYBACK_RESULT ", JSON.stringify(result))
 	quit(0 if failures.is_empty() else 1)
 
