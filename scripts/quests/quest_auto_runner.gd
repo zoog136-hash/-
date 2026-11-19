@@ -94,7 +94,7 @@ func _scan_ready(world: Node) -> void:
 		var quest: Dictionary = quests[_scan_cursor]
 		_scan_cursor += 1
 		var id: String = str(quest.id)
-		if not service.done(id,now) and service.source.gate(quest,context,service.claimed,now).is_empty():
+		if not _done(service,id,now) and service.source.gate(quest,context,service.claimed,now).is_empty():
 			var plan: Dictionary = service.source.reward_plan(quest,context)
 			if plan.ok: _scan_found[id] = true
 			else: failures[id] = str(plan.error)
@@ -109,6 +109,11 @@ func _scan_ready(world: Node) -> void:
 	if added > 0 and is_instance_valid(world.get("hud")):
 		world.hud.append_log("퀘스트 완료 %d개 · 퀘스트 창에서 [보상 받기]로 보상을 받으세요" % added)
 		if world.hud.has_method("refresh_quests"): world.hud.refresh_quests()
+
+## Done for the player (claimed, and no open repeat period). Services
+## without a repeat ledger keep the plain claimed check.
+static func _done(service: Variant, id: String, now: int) -> bool:
+	return service.done(id,now) if service.has_method("done") else service.claimed.has(id)
 
 ## The player's [보상 받기]: the same atomic transaction as before.
 func claim(world: Node, id: String) -> bool:
@@ -127,7 +132,7 @@ func claim_all(world: Node) -> Dictionary:
 	var order: Array[String] = []
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
-		if ready.has(id) and not world.quest_service.done(id): order.append(id)
+		if ready.has(id) and not _done(world.quest_service,id,int(Time.get_unix_time_from_system())): order.append(id)
 	var claimed_count: int = 0
 	var failed: int = 0
 	var at: int = 0
@@ -194,7 +199,7 @@ func tick(world: Node) -> void:
 	var state: String = state_key(world)
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
-		if world.quest_service.done(id,int(now)): continue
+		if _done(world.quest_service,id,int(now)): continue
 		if blocked.get(id,"") == state: continue
 		var gate: String = world.quest_service.source.gate(quest,context,offered,int(now))
 		if not gate.is_empty(): continue
@@ -242,7 +247,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		# (source_quest523.REPEAT_PERIODS, TWILIGHT 근사), on the staged ledger.
 		var repeat: bool = staged_state.claimed.has(id)
 		if not staged_state.has("repeats"): staged_state["repeats"]={}
-		if quest.is_empty() or (repeat and not service.repeat_open(id,at_time,staged_state.claimed,staged_state.repeats)) or not service.source.gate(quest,context,staged_state.claimed,at_time).is_empty(): continue
+		if quest.is_empty() or (repeat and not (service.has_method("repeat_open") and service.repeat_open(id,at_time,staged_state.claimed,staged_state.repeats))) or not service.source.gate(quest,context,staged_state.claimed,at_time).is_empty(): continue
 		var plan: Dictionary = service.source.reward_plan(quest,context)
 		if not plan.ok:
 			failures[id] = str(plan.error)
@@ -284,7 +289,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		adena += int(plan.adena)
 		experience += int(plan.exp)
 		staged_state.claimed[id] = true
-		var ledger: Dictionary = service.repeat_after(id,at_time,staged_state.repeats,plan)
+		var ledger: Dictionary = service.repeat_after(id,at_time,staged_state.repeats,plan) if service.has_method("repeat_after") else {}
 		if not ledger.is_empty(): staged_state.repeats[id] = ledger
 		if not plan.get("source_dummy_rewards",[]).is_empty():
 			if not staged_state.has("source_dummy_rewards"):staged_state["source_dummy_rewards"]={}
