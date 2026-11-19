@@ -51,8 +51,12 @@ func run() -> void:
 	check(view.use_button.disabled and view.selection_sheet.category.text.contains("패시브"),"light UI shows passive and prevents active use")
 	check(not world._quickslot_registration_error("skill",IDS.light).is_empty(),"converted passive cannot register as active quickslot")
 	var mp_before: int=world.mp
+	# The light only reveals a darkened canvas (progression_runtime523.gd).
+	var shade:=CanvasModulate.new();shade.color=Color(.35,.35,.4);world.add_child(shade)
+	service.progression.reset_darkness_cache()
 	service.tick(.01)
 	check(is_instance_valid(service.progression.light) and service.progression.light.visible and service.catalog.stat("lightRadiusRaw")==13,"native radius drives actual player light consumer")
+	shade.free();service.progression.reset_darkness_cache()
 	check(not world._cast_job_skill(IDS.light) and world.mp==mp_before,"passive never spends old active cost")
 	view=await learn_ui(IDS.brave)
 	var brave: Dictionary=catalog.resolve(catalog.record_for(IDS.brave))

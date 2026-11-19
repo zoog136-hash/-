@@ -92,16 +92,29 @@ func _run() -> void:
 		# Source523PassiveLight is the TWILIGHT approximation of an original
 		# light (라이트 LightRadius, BonusType 56 "시야거리"; the original
 		# draws it with the engine, there is no sprite: effect 2507 is a 34-byte
-		# blank). It stays in both presentations.
+		# blank). It stays in both presentations, but only lights a darkened
+		# canvas: without darkness an additive light is just a halo over the
+		# character (user report 2026-11-19, "케릭 부착물 뿌연").
 		var service := FakeService.new()
 		service.world = world
 		var runtime = PROGRESSION.new()
 		runtime.configure(service)
+		PROGRESSION.reset_darkness_cache()
 		runtime.update_light()
 		var light: Node = player.get_node_or_null("Source523PassiveLight")
+		var bright_shown: bool = light != null and (light as CanvasItem).visible
+		check(not bright_shown, "%s: no light halo on an undarkened field" % label)
+		var shade := CanvasModulate.new()
+		shade.color = Color(0.35, 0.35, 0.4)
+		world.add_child(shade)
+		PROGRESSION.reset_darkness_cache()
+		runtime.update_light()
+		light = player.get_node_or_null("Source523PassiveLight")
 		var shown: bool = light != null and (light as CanvasItem).visible
 		evidence[label + "_light"] = shown
-		check(shown, "%s: original LightRadius light stays (TWILIGHT approximation)" % label)
+		check(shown, "%s: original LightRadius light reveals a darkened field (TWILIGHT approximation)" % label)
+		shade.free()
+		PROGRESSION.reset_darkness_cache()
 		world.queue_free()
 		await process_frame
 		player.free()
