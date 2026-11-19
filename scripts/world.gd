@@ -84,6 +84,7 @@ const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
 const CURRENT523_MAP_TELEPORT = preload("res://scripts/maps/current523_map_teleport.gd")
+const WALK_PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
 const TUTORIAL523 = preload("res://scripts/content523/tutorial523.gd")
 const CURRENT523_ADEN_REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
@@ -826,7 +827,10 @@ func _process_frame(delta: float) -> void:
 	_advance_native_route_preparation()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
-	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
+	# Stuck = a route walk that is not progressing, per expected step (the
+	# original vertical walk is under 1 px per frame when slowed); standing on
+	# purpose (attacking, healing, waiting) is not stuck (walk_path_progress.gd).
+	if player.auto_enabled and WALK_PATH_PROGRESS.stalled(player.global_position - auto_last_position, player.intended_walk_speed(), delta):
 		auto_stuck_time += delta
 	else:
 		auto_stuck_time = 0.0
@@ -3465,6 +3469,17 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	if directly_visible:
 		# A visible target needs no old A* corners; physics still collides.
 		return PackedVector2Array([target.global_position])
+	# Re-search while walking: continue from the point the player is already
+	# walking to. A route searched from the player starts at the centre of its
+	# own cell, usually already passed at the original walk (2.25 cells/s,
+	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	if player.path_index < player.click_path.size() and not player.manual_navigation:
+		var via: Vector2 = player.click_path[player.path_index]
+		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
+			var rest: PackedVector2Array = find_world_path(via, target.global_position)
+			if not rest.is_empty():
+				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
+				return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -3483,6 +3498,17 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> bool:
+	if field_map is OriginalPlayableField:
+		# Same or neighbouring source cell joined by a legal step: in sight, as
+		# on the A* grid below. The straight foot line between two off-centre
+		# points can graze a third (blocked) cell at a diagonal corner; the player
+		# then never attacked and walked back and forth next to its target.
+		var field: OriginalPlayableField = field_map as OriginalPlayableField
+		var a: Vector2i = field.world_to_cell(from_position)
+		var b: Vector2i = field.world_to_cell(to_position)
+		if a == b and field.walkable(from_position): return true
+		var heading: int = OriginalPlayableField.DIRECTIONS.find(b - a)
+		if heading >= 0 and field.can_step(a, heading): return true
 	if field_map != null:
 		return field_map.line_clear(from_position, to_position)
 	if astar == null:
