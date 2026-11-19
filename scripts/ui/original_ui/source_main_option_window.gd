@@ -126,11 +126,11 @@ func _volume_pressed() -> Dictionary:
 func _coupon_requested() -> Dictionary:
 	var owner: Object=world()
 	if owner==null or not owner.has_method("redeem_promo_code"):return _say("지금은 쿠폰을 사용할 수 없습니다")
-	var code: String=_editor().text.strip_edges()
+	var code: String=_coupon_editor.text.strip_edges() if is_instance_valid(_coupon_editor) else ""
 	if code.is_empty():return _say("쿠폰 번호를 입력해 주세요")
 	var result: Dictionary=owner.call("redeem_promo_code",code)
 	if bool(result.get("ok",false)):
-		_editor().clear()
+		_coupon_editor.clear()
 		_say("지급 완료 · 다이아 %d · 아데나 %d" % [int(result.get("diamond_gain",0)),int(result.get("gold_gain",0))])
 	else:_say(str(result.get("reason","쿠폰을 사용할 수 없습니다")))
 	var staged: Dictionary=_stage()
