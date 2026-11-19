@@ -4,7 +4,9 @@ extends SceneTree
 ## actual Main: separate receipted stacks from an old save fold into one slot
 ## on load (counts, weight, receipts, use ledger kept); repeated floor pickups
 ## of one original material end in one slot; potions/scrolls stack; equipment
-## stays per instance; the original MaxStackAmount caps a stack; a floor
+## stays per instance; the original MaxStackAmount caps a stack; the same item
+## picked up from different monsters and granted by the shop/quest path still
+## ends in one slot (2026-11-19 regression: 공성 포인트 2·1·8·2, 가죽 4·2); a floor
 ## drop/re-pickup (partition) and a later use still save and reload.
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const MERGE = preload("res://scripts/loot/native_stack_merge.gd")
@@ -14,7 +16,8 @@ const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const ACQUIRE = preload("res://scripts/loot/source523_ground_acquisition.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const LEATHER := 366 ## [재료] 가죽, MaxStackAmount 10000
-const HALPAS := 767 ## [재료] 할파스의 집념 (the screenshot's coin-like material), MaxStackAmount 10000
+const HALPAS := 767 ## [재료] 할파스의 집념 (red flame icon), MaxStackAmount 10000
+const SIEGE_POINT := 195371 ## [화폐] 공성 포인트: the silver coin of the 2026-11-19 recording (Item/siege_point.png)
 const POTION := 237 ## [물약-회복] 고급 체력 회복제 (각인)
 const SCROLL := 313 ## [주문서-이동] 순간이동 주문서 (각인)
 const ARMOR := 377 ## [방어구-갑옷] 징박힌 가죽 갑옷, MaxStackAmount 1
@@ -41,6 +44,15 @@ func rules() -> void:
 	check(MERGE.max_stack({"source_original_item":{}}) == MERGE.APPROX_MAX_STACK, "TWILIGHT 근사 cap when the row has no MaxStackAmount")
 	check(not MERGE.plan({}, {}, {}).get("changed", true), "an empty bag plans nothing")
 	check(MERGE.merges_error({}, {}, {}, {}).is_empty(), "no journal is valid")
+	var a: Dictionary = {"name":"x","level":0,"record":{"slot":"material","source_item_class_id":1,"source_m_drop_proof":{"source_npc_id":1}}}
+	var b: Dictionary = {"name":"x","level":0,"record":{"slot":"material","source_item_class_id":1,"source_m_drop_proof":{"source_npc_id":2}}}
+	var c: Dictionary = {"name":"x","level":0,"record":{"slot":"material","source_item_class_id":1,"source_m_reward_proof":{"quest":3}}}
+	check(MERGE.stack_identity(a) == MERGE.stack_identity(b) and MERGE.stack_identity(a) == MERGE.stack_identity(c), "drop/reward provenance (which monster or reward) does not split a stack")
+	var loaded: Dictionary = a.duplicate(true); loaded.level = 0.0; loaded.record.source_item_class_id = 1.0
+	check(MERGE.stack_identity(a) == MERGE.stack_identity(loaded), "a stack read back from the save (JSON 1.0) matches a fresh grant (1)")
+	var d: Dictionary = a.duplicate(true); d.record["source_delete_time"] = 60
+	var e: Dictionary = a.duplicate(true); e["element"] = "fire"
+	check(MERGE.stack_identity(a) != MERGE.stack_identity(d) and MERGE.stack_identity(a) != MERGE.stack_identity(e), "any other record or instance field still keeps stacks apart")
 
 func counts(world: Node) -> Dictionary:
 	var result: Dictionary = {}
@@ -122,6 +134,74 @@ func _floor_entry(id: int) -> Dictionary:
 				return {"item_name":str(item.name),"quantity":1,"item_record":candidate,"source_m_drop_proof":proof}
 	return {}
 
+## Floor drop rows of `id` from up to `limit` different original monsters.
+func floor_entries(id: int, limit: int) -> Array:
+	admit_droppers(id)
+	var document: Dictionary = D.data()
+	var item: Dictionary = record(id)
+	var found: Array = []
+	if item.is_empty(): return found
+	item["source_m_item_id"] = id; item["bless_state"] = "normal"
+	for npc_key: Variant in document.get("drops",{}):
+		for row: Variant in document.drops[npc_key]:
+			if not row is Dictionary or int(row.get("ItemClassID",0)) != id or int(row.get("Bless",0)) != 1 or int(row.get("RequiredQuestID",-1)) != 0: continue
+			var proof: Dictionary = {"source_snapshot":"patch523","source_npc_id":int(npc_key),"source_item_class_id":id,"bless_raw":1,"bless_state":"normal","required_quest_id":0,"source_rows":[row.duplicate(true)],"selection_policy":"host_uniform_distinct_items_then_distinct_variants","quantity_policy":"host_one"}
+			var candidate: Dictionary = item.duplicate(true); candidate["source_m_drop_proof"] = proof
+			if ACQUIRE._proof_problem(candidate,proof,1).is_empty(): found.append({"item_name":str(item.name),"quantity":1,"item_record":candidate,"source_m_drop_proof":proof})
+			break
+		if found.size() >= limit: break
+	return found
+
+## The bag state a real floor pickup leaves (source523_ground_acquisition
+## stages exactly this grant: the drop record with its monster proof), saved.
+func floor_grant(world: Node, entry: Dictionary) -> bool:
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var staged: Dictionary = STACK.stage_grant(entry.item_record, 1, instances, {"kind":"source523_floor","floor_id":Crypto.new().generate_random_bytes(8).hex_encode(),"drop":entry.source_m_drop_proof.duplicate(true)})
+	if not check(staged.get("ok",false), "floor grant staged"): return false
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	inventory[str(entry.item_name)] = int(inventory.get(str(entry.item_name),0)) + 1
+	if not check(world._save_game(true,{"inventory":inventory,"item_instances":staged.item_instances}) == OK, "floor grant save"): return false
+	world.inventory = inventory; world.item_instances = staged.item_instances
+	return true
+
+## 2026-11-19 recording: the same original item from different monsters (and
+## from the shop/quest grant path) sat in separate slots, because each stored
+## record carries its own drop proof. Interleaved as in a real hunt.
+func mixed_sources(world: Node) -> void:
+	var coins: Array = floor_entries(SIEGE_POINT, 3)
+	var hides: Array = floor_entries(LEATHER, 2)
+	var fine: Array = floor_entries(FINE_LEATHER, 1)
+	evidence["mixed_npcs"] = {"siege_point":coins.map(func(e: Dictionary) -> int: return int(e.source_m_drop_proof.source_npc_id)),"leather":hides.map(func(e: Dictionary) -> int: return int(e.source_m_drop_proof.source_npc_id))}
+	if not check(coins.size() >= 2 and hides.size() >= 2, "original drop rows of 공성 포인트/가죽 from at least two monsters"): return
+	var before_leather: int = int(world.inventory.get(str(record(LEATHER).name),0))
+	for entry: Dictionary in [coins[0], coins[0], hides[0], coins[1], hides[1], coins[coins.size()-1], coins[0]]:
+		if not floor_grant(world, entry): return
+		world._refresh_inventory_hud() # what a pickup publishes
+	evidence["mixed_after_pickups"] = {"siege_point":slots(world,SIEGE_POINT),"leather":slots(world,LEATHER)}
+	var leather_entries: Array = world.item_instances.values().filter(func(e: Variant) -> bool: return e is Dictionary and e.get("name") == record(LEATHER).name)
+	if leather_entries.size() > 1:
+		var left: Dictionary = MERGE.stack_identity(leather_entries[0]); var right: Dictionary = MERGE.stack_identity(leather_entries[1])
+		var keys: Array = []
+		for key: Variant in left.keys() + right.keys():
+			if left.get(key) != right.get(key): keys.append(str(key))
+		if left.get("record") is Dictionary and right.get("record") is Dictionary:
+			for key: Variant in left.record.keys() + right.record.keys():
+				if left.record.get(key) != right.record.get(key): keys.append("record." + str(key))
+		evidence["leather_identity_diff"] = keys
+	check(slots(world,SIEGE_POINT) == [5], "공성 포인트 from %d monsters -> one slot of 5 (%s)" % [coins.size(), str(slots(world,SIEGE_POINT))])
+	check(slots(world,LEATHER).size() == 1 and slots(world,LEATHER)[0] == before_leather+2, "가죽 from 2 monsters joins the existing slot (%s)" % str(slots(world,LEATHER)))
+	# Shop/quest/debug grants (patch523_item_inventory.stage, no drop proof).
+	if grant(world, SIEGE_POINT, 3):
+		world._update_hud()
+		check(slots(world,SIEGE_POINT) == [8], "a granted (shop/quest path) stack joins the picked-up one (%s)" % str(slots(world,SIEGE_POINT)))
+	if not fine.is_empty() and floor_grant(world, fine[0]):
+		world._refresh_inventory_hud()
+		check(slots(world,FINE_LEATHER).size() == 1 and slots(world,LEATHER).size() == 1, "고급 가죽 (another ID) never joins 가죽 (%s / %s)" % [str(slots(world,FINE_LEATHER)), str(slots(world,LEATHER))])
+	check(world.patch523_owner_state_problem.is_empty() and STACK.state_error(world.inventory,world.item_instances,world.consumable_service.export_state(),world.warehouse.snapshot(),world._ground_drops_snapshot(),world.dormant_character_items()).is_empty(), "mixed-source merge validates")
+	check(world._save_game(true) == OK, "mixed-source save")
+	reload(world)
+	check(slots(world,SIEGE_POINT) == [8] and slots(world,LEATHER).size() == 1, "mixed-source stacks survive a reload (%s / %s)" % [str(slots(world,SIEGE_POINT)), str(slots(world,LEATHER))])
+
 func pick_up(world: Node, entry: Dictionary) -> bool:
 	var spawned: Button = world._spawn_ground_drop(str(entry.item_name), world.player.global_position, 1, "", D.ground_metadata(entry))
 	if not check(is_instance_valid(spawned), "floor drop spawned"): return false
@@ -150,6 +230,10 @@ func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
 	check(QA.enter_game(world), "actual Main map entry")
+	# CI Core tests share user://: put back whatever save this test found.
+	var save_file: String = world.save_path()
+	var had_save: bool = FileAccess.file_exists(save_file)
+	var saved_bytes: PackedByteArray = FileAccess.get_file_as_bytes(save_file) if had_save else PackedByteArray()
 	world.field_population.set_process(false); world.player.set_physics_process(false); world.player.auto_enabled = false
 	world._clear_monsters(); world._clear_drops()
 	world.inventory = {}; world.item_instances = {}
@@ -270,6 +354,7 @@ func runtime() -> void:
 			if world.ground_loot.records[id].get("item_name") == record(LEATHER).name: floor_id = id
 		check(await collect_id(world, floor_id), "re-pickup of the dropped leather (%s)" % str(evidence.get("pickup_problem_"+floor_id,"")))
 		check(slots(world,LEATHER) == [5], "re-picked leather merges back into one slot of 5 (%s)" % str(slots(world,LEATHER)))
+	mixed_sources(world)
 	# Original MaxStackAmount caps one stack.
 	if grant(world, HALPAS, 9999) and grant(world, HALPAS, 3) and grant(world, HALPAS, 1):
 		world._update_hud()
@@ -286,6 +371,10 @@ func runtime() -> void:
 	check(diff(final_counts, counts(world)).is_empty() and world.patch523_owner_state_problem.is_empty(), "final reload keeps counts and ownership")
 	world.queue_free()
 	await process_frame
+	if had_save:
+		var restore := FileAccess.open(save_file, FileAccess.WRITE)
+		if restore != null: restore.store_buffer(saved_bytes); restore.close()
+	elif FileAccess.file_exists(save_file): DirAccess.remove_absolute(ProjectSettings.globalize_path(save_file))
 
 func run() -> void:
 	rules()

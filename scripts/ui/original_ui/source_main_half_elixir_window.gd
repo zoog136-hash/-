@@ -30,10 +30,34 @@ func open(parent: Node, _item_name: String="") -> Dictionary:
 	var runtime: Object=_runtime()
 	if runtime==null:return _fail("source_half_elixir_runtime_unavailable")
 	runtime.source=runtime.source_for(runtime.state)
-	# Without an installed source and a chosen context the TWILIGHT view opens
-	# instead (install + context picker); choosing a context there reopens this.
+	# No source recorded yet: link the bundled 523 definitions (no copy).
+	if runtime.source==null and str(runtime.state.get("source_sha256","")).is_empty() and runtime.has_method("link_bundled"):
+		runtime.link_bundled()
+		runtime.source=runtime.source_for(runtime.state)
+	# Without a source the TWILIGHT view opens instead (install).
+	# A source without a chosen context takes the default one (TWILIGHT 근사):
+	# a local game has no server, so the menu opened the TWILIGHT view every time.
+	if runtime.source!=null and not _context_ready():apply_default_context()
 	if not _context_ready():return _fail("source_half_elixir_context_required")
 	return open_window(parent)
+
+## TWILIGHT 근사: the original ServerLimit context ("region:world") of a local
+## game is the Korean service's world 1 (KR:1), else the first KR world, else
+## the first pair. Only while nothing is invested (the runtime refuses a
+## context change over allocations).
+static func default_context(pairs: Array) -> String:
+	if pairs.has("KR:1"):return "KR:1"
+	for pair: Variant in pairs:
+		if str(pair).begins_with("KR:"):return str(pair)
+	return str(pairs[0]) if not pairs.is_empty() else ""
+
+func apply_default_context() -> Dictionary:
+	var runtime: Object=_runtime()
+	if runtime==null or runtime.source==null:return _fail("source_half_elixir_runtime_unavailable")
+	if not (runtime.state.get("allocations",{}) as Dictionary).is_empty():return _fail("source_half_elixir_context_locked")
+	var pair: String=default_context(runtime.source.pairs)
+	if pair.is_empty():return _fail("source_half_elixir_context_missing")
+	return runtime.execute(runtime.request("context",pair))
 
 ## True while the runtime has a source and the saved context is one of its
 ## pairs. Every action is refused (no crash) otherwise.

@@ -80,7 +80,10 @@ class World extends Node:
 class NativeSpy extends Node:
 	var opens: int=0
 	var closes: int=0
+	var refreshes: int=0
 	func try_open_quest_window(_world: Node,_claim: Callable) -> Dictionary:opens+=1;return {"ok":true,"handled":true}
+	func quest_window_is_open() -> bool:return opens>0
+	func refresh_quest_window() -> Dictionary:refreshes+=1;return {"ok":true}
 	func close_quest_window() -> void:closes+=1
 
 class HudRoute extends "res://scripts/ui/renewal_hud.gd":
@@ -199,11 +202,29 @@ func _run() -> void:
 	view=VIEW.new();root.add_child(view);view.configure(world)
 	check(view.listing.get_child_count()==30,"text list reopens with saved completion")
 	view.free()
+	_original_window_rows(world,service)
 	await _routing(world)
 	check(FileAccess.get_sha256(BAKE.data_path(bake_name))==record_sha,"original record bake bytes are unchanged")
 	DirAccess.remove_absolute(world.path)
 	world.free()
 	_finish()
+
+## The original Quest_All window lists the resident text model: no record
+## decode or reward plan for the list; only the selected quest's record.
+func _original_window_rows(world: Node, service: RefCounted) -> void:
+	var window=preload("res://scripts/ui/original_ui/source_main_quest_window.gd").new()
+	window._world=weakref(world)
+	window._category="main"
+	var reads: int=source.reads
+	var plans: int=source.plans
+	var rows: Array[Dictionary]=window._rows()
+	check(rows.size()==60 and source.reads==reads and source.plans==plans,"the original window lists 60 text rows without decoding records or planning rewards: "+str([rows.size(),source.reads-reads,source.plans-plans]))
+	check(rows[0].text_row and not rows[0].completed and rows.filter(func(row: Dictionary) -> bool: return row.completed).size()<=60,"uncompleted quests come first")
+	var ready: Array=rows.filter(func(row: Dictionary) -> bool: return window._receivable(row))
+	check(not ready.is_empty() and str(ready[0].status_reason)=="수락 가능","an acceptable quest shows the receive button with text_page's status")
+	var detail: Dictionary=window._detail(rows[0])
+	check(detail.has("source_rewards") and source.reads==reads+1,"only the selected quest's record is read for its rewards")
+	check(window._problem()=="","a loaded quest list shows no load problem")
 
 func _routing(world: Node) -> void:
 	var hud: Node=preload("res://scenes/ui/HUD.tscn").instantiate()
@@ -213,9 +234,14 @@ func _routing(world: Node) -> void:
 	world.add_child(hud)
 	var native:=NativeSpy.new();hud.add_child(native);hud.original_main_ui_controller=native
 	hud.open_quests()
+	for i: int in 50:hud.open_quests()
+	check(hud.quest_view==null and native.opens==1 and native.refreshes==50,"actual HUD opens the original quest window once and refreshes it on repeated opens")
+	hud.original_main_ui_controller=null
+	hud._close_workspace()
+	hud.open_quests()
 	var view: Node=hud.quest_view
 	for i: int in 50:hud.open_quests()
-	check(hud.quest_view==view and native.opens==0 and native.closes==1,"actual HUD repeated opens reuse one text view and never open native quest art")
+	check(is_instance_valid(view) and hud.quest_view==view,"without the original UI repeated opens reuse one text view")
 	hud.free();await frames()
 
 func _finish() -> void:

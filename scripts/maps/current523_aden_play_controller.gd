@@ -1189,8 +1189,19 @@ func use_walk_in_portal(id: int) -> Dictionary:
 func last_source_transition() -> Dictionary:
 	return _last_source_transition.duplicate(true)
 
+## A landing box is [StartX, StartY, EndX, EndY] in whole source cells. An
+## empty/short/non-integer box used to be indexed before validation: the script
+## error left _source_travel_busy set, so every later map move was refused.
+static func valid_landing_bounds(bounds: Array) -> bool:
+	if bounds.size()!=4: return false
+	for value: Variant in bounds:
+		if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or float(value)!=floorf(float(value)) or float(value)<0.0: return false
+	return int(bounds[0])<=int(bounds[2]) and int(bounds[1])<=int(bounds[3])
+
 func _enter_source_land(land_id: int, bounds: Array, save_changes: Dictionary={}) -> bool:
 	problem=""
+	if not valid_landing_bounds(bounds):
+		problem="도착 범위 오류: "+str(bounds); return false
 	var world: Node=_world()
 	if _source_travel_busy or not active or not source_owned or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC:
 		problem="원문 지도 이동을 사용할 수 없습니다(523 원문 필드 아님)."; return false

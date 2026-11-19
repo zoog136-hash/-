@@ -439,6 +439,10 @@ const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
 # verification cache; pause/quit and transactions still save immediately.
 const AUTOSAVE_SECONDS: float = 60.0
 const DEFERRED_SAVE_SECONDS: float = 10.0
+## SHA-256 of the save file this session last wrote with the shop state in it.
+var _shop_key_saved_sha: String = ""
+## Full re-reads of the previous save file for the shop migration (diagnostics/tests).
+var previous_save_parses: int = 0
 const PERF_LOG_THRESHOLD_USEC: int = 30000
 var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
 # Automated suites run headless and assert durable state right after each action.
@@ -1553,7 +1557,7 @@ func _skill_cooldown_factor() -> float:
 func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -2580,7 +2584,25 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
+## Original 523 town NPC tap: its function window opens directly, without the
+## NpcDialogue_All talk (user request 2026-11-19). Shop NPC -> original store
+## window, 창고지기 -> storage, 텔레포터 -> 지역 이동, quest -> quest window,
+## 사망 복구 -> recovery; an NPC with no function only shows its name.
+func _open_town_npc_function(npc: Dictionary) -> void:
+	var npc_id: String = str(npc.get("id",""))
+	match TOWN_NPCS.primary_action(self,npc_id):
+		"shop": hud.open_npc_shop(npc_id)
+		"warehouse": hud.call("open_warehouse")
+		"teleport": hud.call("open_npc_teleport")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
+		_: hud.show_message(str(npc.get("name","")))
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
@@ -2590,8 +2612,7 @@ func _set_click_destination(target: Vector2) -> void:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if TOWN_NPCS.is_town_npc_id(str(npc.get("id",""))):
-					# Original 523 town NPC: the original NpcDialogue_All talk window.
-					hud.call("open_npc_dialogue",str(npc.id))
+					_open_town_npc_function(npc)
 					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
@@ -4750,6 +4771,17 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
 	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key) + equipment_buff523.buff_value(key) + dungeon_extras523.buff_value(key)
 
+## _active_item_buff_total for a percent that may hold a fraction of a point
+## (original 엘븐 와퍼 MoveSpeedBonus 125000 = 12.5 %); the other sources
+## stay the integer totals they always were.
+func _active_item_buff_percent(key: String) -> float:
+	var total: float = 0.0
+	for value: Variant in active_item_buffs.values():
+		if value is Dictionary:
+			var amount: Variant = (value as Dictionary).get(key, 0)
+			if amount is int or amount is float: total += float(amount)
+	return total + float(_active_item_buff_total(key, {}))
+
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
 	if whole >= 3600:
@@ -6854,8 +6886,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		var peer_state:Dictionary=collection_override.get("source_shop",peer_shop.export_state())
 		if not peer_shop.validate(peer_state).is_empty():return ERR_UNAVAILABLE
 		if FileAccess.file_exists(save_path()):
-			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
-			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
+			# prepare_load only acts on a save that has no shop state yet. A file
+			# whose SHA-256 is the one this session last wrote with that state
+			# already has it: skip re-reading and parsing the whole previous
+			# save on every write (the largest single part of a phone save).
+			if preload("res://scripts/save/previous_save_check.gd").needs_reading(save_path(),_shop_key_saved_sha):
+				previous_save_parses+=1
+				var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+				if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
 		data["source_shop"]=peer_state.duplicate(true)
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -6903,6 +6941,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		elif FileAccess.file_exists(save_path()) and FileAccess.get_sha256(save_path())!=prior_owner_hash:
 			patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
 	_perf_log("저장", save_started_usec)
+	if result == OK and data.has(SOURCE_SHOP.SAVE_KEY) and str(equipment_collections.get("_disk_path"))==save_path():
+		_shop_key_saved_sha=str(equipment_collections.get("_disk_hash"))
+	elif result != OK:
+		_shop_key_saved_sha=""
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
@@ -7985,6 +8027,10 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	var return_record: Dictionary = _find_catalog_item_record(item_name)
 	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
+	# Original 523 acceleration potions (초록 물약·용기의 물약·엘븐 와퍼 ...) are
+	# drunk from the quick slot like in the original.
+	var native_use: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(return_record)
+	if native_use.get("kind") == "buff" and not native_use.get("runtime_presentation", false) and int(native_use.get("spec", {}).get("acceleration_stage", 0)) > 0: return true
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -8262,7 +8308,7 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 			continue
 		if not _skill_ready(skill):
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			break
 
 
@@ -8371,12 +8417,12 @@ func _run_auto_heal_quickslots() -> void:
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
+			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name), false)
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
 			continue
 		if _skill_ready(skill):
-			_cast_job_skill(str(skill.get("name", "")))
+			_cast_job_skill(str(skill.get("name", "")), false)
 			return
 
 func _run_auto_combat_quickslots() -> bool:
@@ -8403,7 +8449,7 @@ func _run_auto_combat_quickslots() -> bool:
 			continue
 		if SKILL_RULES.effect_kind(skill) == "turnUndead" and not selected_monster.is_undead():
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			return true
 	return false
 
@@ -8541,13 +8587,13 @@ func _skill_record(skill_name: String) -> Dictionary:
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
-func _cast_job_skill(skill_name: String) -> bool:
+func _cast_job_skill(skill_name: String, manual: bool = true) -> bool:
 	if death_recovery.blocked(): return false
 	if skill_name.begins_with("guardian:"):
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill, manual)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -10327,7 +10373,7 @@ func _effective_move_speed_multiplier_uncached() -> float:
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
-	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= 1.0 + _active_item_buff_percent("move_speed") / 100.0
 	multiplier *= 1.0+dungeon_play.modifier("move_speed")/100.0
 	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
@@ -10337,7 +10383,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
-	total += float(_active_item_buff_total("attack_speed"))
+	total += _active_item_buff_percent("attack_speed")
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
 

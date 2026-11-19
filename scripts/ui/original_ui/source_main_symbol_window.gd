@@ -76,6 +76,9 @@ func _spec() -> Dictionary:
 		var ok: bool=bool(offer.get("ok",false))
 		var key: String="Nd_Button/"+str(pair[0])
 		spec[key]={"activate":Callable(self,"_ask").bind(str(pair[1]),selected,int(pair[2])),"displaystate":ok}
+		# Symbol_All authors 저장 / 복구 with touchEnabled off (the client turns
+		# it on in code); the features exist here, so they take a tap.
+		if str(pair[0]) in ["Btn_Save","Btn_Repair"]:spec[key]["touch_enabled"]=true
 		spec[key+"/Normal"]={"visible":ok}
 		spec[key+"/Disabled"]={"visible":not ok}
 		if str(pair[0]) in ["Btn_Upgrade","Btn_Upgrade_Five","Btn_Change"]:
