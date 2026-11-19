@@ -184,8 +184,10 @@ const PROOF_CACHE_LIMIT := 4096
 static var _proof_cache: Dictionary = {}
 static var _proof_identity: Variant = null
 
+static var _last_valid_inputs: Array = []
+
 static func clear_proof_cache() -> void:
-	_proof_cache.clear();_proof_identity=null
+	_proof_cache.clear();_proof_identity=null;_last_valid_inputs=[]
 
 static func proof_entry(entry: Variant,uid: String) -> Dictionary:
 	if not entry is Dictionary:return {}
@@ -481,8 +483,14 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else world.warehouse.snapshot())
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
-	var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
-	if not issue.is_empty():return issue
+	# A plain save of state already proven unchanged (same definition) skips
+	# the whole-bag proof; any difference re-runs it.
+	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
+	var unchanged: bool=overrides.is_empty() and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
+	if not unchanged:
+		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
+		if not issue.is_empty():_last_valid_inputs=[];return issue
+		_last_valid_inputs=inputs.duplicate(true) if overrides.is_empty() else []
 	var ledger: Dictionary=state.get(USES,{})
 	for uid: String in world.item_instances:
 		var previous: Variant=world.item_instances[uid]
