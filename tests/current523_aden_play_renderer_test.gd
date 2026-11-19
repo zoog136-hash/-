@@ -116,17 +116,27 @@ func run() -> void:
 	check(tiles.loads == [8388608], "upper24 bits are preserved; all-ones word is not an asset lookup")
 	check(renderer._build_frame() and tiles.loads.size() == 1, "visible frame textures reused across refreshes")
 	check(renderer.frame_metrics().uninterpreted_ffffffff_words == 1 and renderer.frame_metrics().draw_commands == 1, "sentinel and visible drawing metrics separate")
+	var first_block: Variant = (renderer._blocks.get(Vector2i.ZERO, {}) as Dictionary).get("viewport")
+	check(renderer.frame_metrics().visible_blocks >= 1 and first_block is SubViewport and renderer._visible_blocks.has(Vector2i.ZERO), "ground tiles are baked into a 512 px block image")
+	check(renderer._build_frame() and (renderer._blocks[Vector2i.ZERO] as Dictionary).viewport == first_block, "an unchanged block image is reused, not baked again")
+	renderer._chunk_rects = {"synthetic":Rect2(480,-32,64,64)}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([500,0,2147483903])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	check(renderer._build_frame() and renderer.frame_metrics().draw_commands == 1 and renderer.frame_metrics().block_draw_commands == 2, "a tile across a block edge is drawn in both blocks but counted once")
+	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
 	var requested: Array[String] = []
 	renderer.safe_return_requested.connect(func(reason: String) -> void: requested.append(reason))
 	var too_many := PackedInt64Array()
 	too_many.resize((PLAY.DRAW_COMMAND_LIMIT + 1) * 3)
 	for index: int in range(0, too_many.size(), 3): too_many[index + 2] = 2147483903
 	renderer._raw_chunks = {"synthetic":{-2:too_many}}
+	# Swapping raw chunks directly bypasses configure, so drop the cached bins and blocks.
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	renderer._configured = true
 	check(not renderer._build_frame() and renderer.problem.contains("예산"), "draw budget failure does not keep a partial successful frame")
 	await process_frame
 	check(requested.size() == 1, "runtime rendering failure requests safe return once")
-	check(not renderer._configured and renderer._frame_commands.is_empty(), "failed experimental display stops drawing")
+	check(not renderer._configured and renderer._frame_commands.is_empty() and renderer._blocks.is_empty(), "failed experimental display stops drawing")
 	field.local_doors = {"synthetic":[Vector2i(0,0)]}
 	field.local_door_states = {"synthetic":false}
 	actor.global_position = point
