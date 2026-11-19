@@ -151,17 +151,20 @@ static func digest(bytes: PackedByteArray) -> String:
 	context.update(bytes)
 	return context.finish().hex_encode()
 
+## Lower-case hex of an exact length. One engine call per string: the old
+## per-character GDScript loop ran ~100,000 times per 25 s of auto-hunting
+## (manifest pins re-checked each frame), a visible share of a phone frame.
+static func _lower_hex(value: Variant, length: int) -> bool:
+	if not value is String: return false
+	var text: String = value
+	if text.length() != length or text[0] == "+" or text[0] == "-": return false
+	return text.is_valid_hex_number(false) and text.to_lower() == text
+
 static func valid_sha(value: Variant) -> bool:
-	if not value is String or value.length() != 64: return false
-	for character: String in value:
-		if not character in "0123456789abcdef": return false
-	return true
+	return _lower_hex(value, 64)
 
 static func valid_crc(value: Variant) -> bool:
-	if not value is String or value.length() != 8: return false
-	for character: String in value:
-		if not character in "0123456789abcdef": return false
-	return true
+	return _lower_hex(value, 8)
 
 static func crc32(bytes: PackedByteArray) -> String:
 	if _crc_table.is_empty():
