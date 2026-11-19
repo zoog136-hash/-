@@ -12,6 +12,7 @@ extends RefCounted
 ## node scope; any other keys merge into the sprite_scene binding (role,
 ## text, visible, activate, displaystate, percent, ...).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const Router=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 signal closed
 var _pack: RefCounted
@@ -263,6 +264,10 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 				column=0
 				y-=line_height+gap
 				line_height=0.0
+		# A row of an outer list is marked so a list inside it (a row's own
+		# horizontal card list) can hand vertical drags to the outer list.
+		built.scene.set_meta(ROW_LIST_META,str(list.key))
+		_forward_row_drags(built.scene,str(list.key),_outer_list_key(root))
 		scenes.append(built.scene)
 		outs.append(row_out)
 	if column>0:y-=line_height+gap
@@ -315,6 +320,41 @@ func _scroll_to(key: String, value: float) -> void:
 	else:(state.content as Node2D).position.y=float(state.value)
 
 ## True while the current press has moved like a list drag (row taps ignore it).
+## A finger that lands on a row's button still scrolls its list: the native
+## button router owns that press, so each row button hands its finger's drag
+## to the list (source_button_router DRAG_META, as a Cocos ListView child
+## button passes its move to the list). Without it a list whose rows are all
+## buttons could not be dragged on a phone.
+const ROW_LIST_META="source_window_list_row"
+
+func _forward_row_drags(node: Node, key: String, outer: String="") -> void:
+	for meta: String in ["source_button","source_checkbox"]:
+		if node.has_meta(meta):
+			var button: Variant=node.get_meta(meta)
+			if is_instance_valid(button) and not (button as Object).has_meta(Router.DRAG_META):
+				var forward: Callable=Callable(self,"_list_input").bind(key) if outer.is_empty() else Callable(self,"_nested_list_input").bind(key,outer)
+				(button as Object).set_meta(Router.DRAG_META,forward)
+	for child: Node in node.get_children():_forward_row_drags(child,key,outer)
+
+## The list whose row `node` sits in ("" when it is no list row).
+static func _outer_list_key(node: Node) -> String:
+	var at: Node=node
+	while at!=null:
+		if at.has_meta(ROW_LIST_META):return str(at.get_meta(ROW_LIST_META))
+		at=at.get_parent()
+	return ""
+
+## A list inside another list's row: a drag along the inner list's axis
+## scrolls it, any other drag scrolls the outer list (as Cocos nested lists).
+func _nested_list_input(event: InputEvent, key: String, outer: String) -> void:
+	if not event is InputEventScreenDrag:
+		_list_input(event,key)
+		_list_input(event,outer)
+		return
+	var along_x: bool=_scrolls.has(key) and _scrolls[key].get("axis","y")=="x"
+	var inner_axis: bool=absf(event.relative.x)>=absf(event.relative.y) if along_x else absf(event.relative.y)>absf(event.relative.x)
+	_list_input(event,key if inner_axis and _scrolls.has(key) else outer)
+
 func _dragged() -> bool:
 	return absf(_moved)>12.0
 
