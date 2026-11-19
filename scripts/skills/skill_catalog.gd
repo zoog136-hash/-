@@ -528,7 +528,7 @@ func migrate_slots() -> void:
 		var entry: Dictionary = world.quickslots[index]
 		if str(entry.get("kind", "")) != "skill": continue
 		var record := record_for(str(entry.get("skill_id", entry.get("id", ""))))
-		if record.is_empty() or not owned(record) or str(record.activation) == "passive":
+		if record.is_empty() or not owned(record) or (str(record.activation) == "passive" and not (world.original_skills != null and world.original_skills.stackable.handles(record))):
 			archived["slot_%d" % index] = entry.duplicate(true)
 			world.quickslots[index] = {}
 		else:
