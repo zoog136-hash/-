@@ -3657,6 +3657,12 @@ func original_quickslot_control(visible_index: int) -> Control:
 		if is_instance_valid(native):return native
 	return v20_quickslot_buttons[visible_index] if visible_index>=0 and visible_index<v20_quickslot_buttons.size() else null
 
+func original_skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
+	return original_main_ui_controller.skill_window_hit_at(viewport_point) if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("skill_window_hit_at") else {}
+
+func original_skill_window_is_open() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open()
+
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
