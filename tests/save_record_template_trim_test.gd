@@ -117,7 +117,17 @@ func runtime() -> void:
 	check(world.patch523_owner_state_problem.is_empty() and not world.source_item_save_blocked, "reload without an ownership problem")
 	var same: bool = world.item_instances.size() == records.size()
 	for uid: String in records:
-		if norm(world.item_instances.get(uid)) != norm(records[uid]): same = false; evidence["differs"] = uid
+		if norm(world.item_instances.get(uid)) != norm(records[uid]):
+			same = false; evidence["differs"] = uid
+			var now: Dictionary = JSON.parse_string(JSON.stringify(world.item_instances.get(uid,{})))
+			var was: Dictionary = JSON.parse_string(JSON.stringify(records[uid]))
+			var keys: Array = []
+			for key: Variant in now.keys() + was.keys():
+				if JSON.stringify(now.get(key)) != JSON.stringify(was.get(key)): keys.append(str(key))
+			var record_keys: Array = []
+			for key: Variant in now.get("record",{}).keys() + was.get("record",{}).keys():
+				if JSON.stringify(now.get("record",{}).get(key)) != JSON.stringify(was.get("record",{}).get(key)) and not str(key) in record_keys: record_keys.append(str(key))
+			evidence["differs_keys"] = {"entry":keys,"record":record_keys,"name":str(was.get("name",""))}
 		if world.item_instances.get(uid,{}).get("record",{}).has(TRIM.SAVED_TEMPLATE): same = false; evidence["still_marked"] = uid
 	check(same, "memory holds the identical full records after reload")
 	check(norm(world.inventory) == norm(bag) and world._inventory_total_weight() == weight, "bag counts and weight unchanged")
