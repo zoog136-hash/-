@@ -6948,11 +6948,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message(str(account_stage.problem))
 		return ERR_INVALID_DATA
 	data = account_stage.payload
+	var written_envelope: Variant = data.get(CHARACTER_ACCOUNT.KEY)
 	# The selected character's state is this body: written once (account_store.compact).
 	data = CHARACTER_ACCOUNT.compact(data)
 	FRAME_HITCH.detail("save.account", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
+	CHARACTER_ACCOUNT.forget_durable()
 	var result: Error = equipment_collections.write_save(save_path(), data)
+	if result == OK and written_envelope is Dictionary: CHARACTER_ACCOUNT.remember_durable(save_path(), written_envelope)
 	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
@@ -7041,6 +7044,9 @@ func _load_game(quiet: bool) -> void:
 	# Older saves: drop acquisition history no rule reads (drop proofs, receipt
 	# row copies, per-floor pickup receipts). Owned state is unchanged.
 	SAVE_TRIM.loaded_save(value)
+	preload("res://scripts/loot/current523_native_stack.gd").clear_proof_cache()
+	# The validated file just read: the next save needs no second parse of it.
+	if value.has(CHARACTER_ACCOUNT.KEY) and loaded_save_sha==FileAccess.get_sha256(save_path()): CHARACTER_ACCOUNT.remember_durable(save_path(), value[CHARACTER_ACCOUNT.KEY])
 	character_dormant_physical = CHARACTER_ACCOUNT.dormant_items(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)

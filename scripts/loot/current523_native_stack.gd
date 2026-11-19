@@ -175,7 +175,30 @@ static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,o
 static func proof(world: Node,uid: String) -> Dictionary:
 	return proof_entry(world.item_instances.get(uid),uid)
 
+## proof_entry is pure for (uid, entry, installed definition): the ownership
+## checks call it for every physical stack on every save, pickup and bag merge
+## (~1 ms each: the definition record is rebuilt). Results are reused while
+## the entry is equal to the one proven and the definition identity is the
+## same; callers get their own top-level copy.
+const PROOF_CACHE_LIMIT := 4096
+static var _proof_cache: Dictionary = {}
+static var _proof_identity: Variant = null
+
+static func clear_proof_cache() -> void:
+	_proof_cache.clear();_proof_identity=null
+
 static func proof_entry(entry: Variant,uid: String) -> Dictionary:
+	if not entry is Dictionary:return {}
+	var identity: Variant=SOURCE.identity()
+	if identity!=_proof_identity:_proof_cache.clear();_proof_identity=identity
+	var cached: Variant=_proof_cache.get(uid)
+	if cached is Array and cached[0]==entry:return (cached[1] as Dictionary).duplicate(false)
+	var result: Dictionary=_proof_entry(entry,uid)
+	if _proof_cache.size()>=PROOF_CACHE_LIMIT:_proof_cache.clear()
+	_proof_cache[uid]=[(entry as Dictionary).duplicate(true),result.duplicate(true)]
+	return result
+
+static func _proof_entry(entry: Variant,uid: String) -> Dictionary:
 	if not entry is Dictionary or not entry.get("record") is Dictionary or not entry.get(RECEIPT) is Dictionary:return {}
 	var record: Dictionary=D.current_owned_record(entry.record)
 	if supply_profile(record).is_empty() or entry.get("name")!=record.get("name") or entry.get("level")!=0:return {}
