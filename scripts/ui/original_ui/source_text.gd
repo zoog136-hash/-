@@ -40,6 +40,13 @@ func set_source_text(value: String) -> Dictionary:
 	# Only the top-level text changes. configure reads nested options and
 	# commits its own deep snapshot after every font/layout guard succeeds.
 	var started: int=FRAME_HITCH.now()
+	# Unchanged text: configure() already accepted exactly this text with
+	# this font, options and size, so the state (and the drawing) is the same.
+	# The HUD sets its labels every frame (Twm diag 2026-11-19: ~120 calls/s,
+	# each re-checking every glyph, deep-copying options and redrawing).
+	if original_font!=null and original_options.get("text")==value:
+		FRAME_HITCH.detail("ui.text_same",started)
+		return {"ok":true}
 	var next: Dictionary=original_options.duplicate()
 	next.text=value
 	var result: Dictionary=configure(original_font,next,original_size)
