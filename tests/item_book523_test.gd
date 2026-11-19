@@ -9,6 +9,7 @@ extends SceneTree
 const Source = preload("res://scripts/collections/item_book523_source.gd")
 const Runtime = preload("res://scripts/collections/item_book523_runtime.gd")
 const WINDOW = preload("res://scripts/ui/original_ui/source_main_item_book_window.gd")
+const LEGACY = preload("res://scripts/collections/equipment_collection_runtime.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -54,6 +55,8 @@ class Host extends Node:
 		saves.append(overrides.duplicate(true))
 		return OK
 	func _update_hud() -> void: pass
+	var invalidated: int = 0
+	func _invalidate_equipment_static() -> void: invalidated += 1
 
 ## Registration with a fixture proof (the real proof needs original records).
 class TestRuntime extends "res://scripts/collections/item_book523_runtime.gd":
@@ -118,6 +121,7 @@ func _run() -> void:
 	_runtime()
 	_legacy()
 	_window()
+	_effects()
 	_wiring()
 	print("ITEM_BOOK523_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(1 if not failures.is_empty() else 0)
@@ -239,8 +243,43 @@ func _window() -> void:
 	check(window.tab == "Btn_Event", "a tab button selects its tab")
 	host.queue_free()
 
+## 2단계: complete original collections add their effects; a legacy
+## collection stops counting once a linked original collection is complete.
+func _effects() -> void:
+	var host := _host()
+	var legacy = LEGACY.new()
+	legacy.world = host
+	var defs: Dictionary = {"collections":[{"id":"eqc_a","name":"MP를 위한 투자 I","source_names":[],"data_ready":true,"review_reasons":[],
+		"effects":[{"key":"max_mp","unit":"flat","value":10,"raw":"최대 MP +10"}],"requirements":[{"slot_id":"eqc_a:slot:1","name":"마법 망토","enchant":7,"quantity":1}]}]}
+	check(legacy.core.configure(defs, [{"source_id":"s1","name":"마법 망토","kind":"equipment"}], ["max_mp:flat"]), "legacy fixture configures: " + legacy.core.last_error)
+	legacy._rows = legacy.core.definitions()
+	legacy.progress = {"schema_version":2,"revision":1,"gear":{},"progress":{"eqc_a":{"eqc_a:slot:1":["41"]}},"requests":{},"favorites":[],"preserved_legacy":{},
+		"receipts":{"41":{"instance_id":"41","source_id":"s1","original_name":"마법 망토","canonical_name":"마법 망토","enchant":7,"collection_id":"eqc_a","slot_id":"eqc_a:slot:1"}}}
+	host.equipment_collections = legacy
+	legacy._rebuild()
+	check(legacy.totals == {"max_mp:flat":10.0}, "a complete legacy collection counts before any original record: " + str(legacy.totals))
+	var book = host.item_book523
+	check(book.effect_totals().totals.is_empty() and book.state.legacy_links.is_empty(), "no original records: nothing loaded, nothing added")
+	check(book.prepare() and book.state.legacy_links.get("100", {}).has("1001"), "the legacy item links to the original card")
+	legacy._rebuild()
+	check(legacy.totals == {"max_mp:flat":10.0} and legacy.suppressed_by_item_book.is_empty(), "the legacy effect stays while the linked original collection is incomplete")
+	host.item_instances = {"11":equipment(502, 5)}
+	host.inventory = {"장비#502":1}
+	var offer: Dictionary = book.quote("100", "1002")
+	var done: Dictionary = book.execute("100", "1002", int(offer.revision))
+	check(done.completed and host.invalidated > 0, "completing the original collection refreshes the stats")
+	check(legacy.suppressed_by_item_book == {"eqc_a":true} and is_equal_approx(float(legacy.totals.get("max_mp:flat", -1)), 0.0), "the linked legacy collection stops counting")
+	check(is_equal_approx(float(legacy.totals.get("max_hp:flat", 0)), 30.0) and is_equal_approx(float(legacy.totals.get("experience_bonus:percent", 0)), 1.5), "the original effects count once: " + str(legacy.totals))
+	check(Runtime.stat_key({"type":"ElementalResistance","application_type":3,"application_target":1}) == "fire_resistance:percent" and Runtime.stat_key({"type":"PVPDamageReduction","application_type":0,"application_target":0}).is_empty(), "targeted and unsupported bonus types")
+	var shown: Dictionary = book.detail(book.rows("Btn_Identified")[1])
+	check(not str(shown.effects[0].display).contains("미적용"), "a supported effect is shown plainly")
+	var armor: Dictionary = {"type":"ArmorClass","application_type":0,"application_target":0}
+	check(Runtime.stat_key(armor) == "ac:flat" and Runtime.NEGATED_KEYS.has("ac:flat"), "물리 방어력 +1 is AC -1 in the World stat")
+	host.queue_free()
+
 func _wiring() -> void:
 	var world: String = FileAccess.get_file_as_string("res://scripts/world.gd")
 	check(world.contains("ITEM_BOOK523.SAVE_KEY: item_book523.export_state(),") and world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))") and world.contains("DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]"), "world saves, loads and admits the new save key")
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud.contains("if _open_original_feature(\"item_book\"):return\n\topen_legacy_equipment_collections()"), "장비 컬렉션 opens the original window, else the TWILIGHT view")
+	check(world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))\n\t# Original 아이템 컬렉션 effects join the collection stats (no double count).\n\tequipment_collections.refresh_item_book_totals()"), "a load recounts the collection stats")

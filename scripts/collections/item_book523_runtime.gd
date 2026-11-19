@@ -11,14 +11,37 @@ extends RefCounted
 ## guide data's 447 collections) are never changed: a registered legacy slot
 ## whose item matches a card of the same-named original collection is linked
 ## to that card (legacy_links) so it counts as registered here; a record that
-## matches nothing stays only in its own save key. Collection effects are
-## listed but not applied by this owner yet (the legacy owner still applies
-## the guide effects), so no effect counts twice.
+## matches nothing stays only in its own save key.
+##
+## Effects: a complete original collection adds its slot bonuses (STAT_KEYS,
+## the stat keys World already reads through equipment_collection_runtime).
+## A complete legacy collection keeps its guide effect until one original
+## collection linked to it is complete; from then the original one counts and
+## the legacy one does not (effect_totals().suppressed_legacy), so one
+## collection is never applied twice. Bonus types without a TWILIGHT stat
+## (PvP, 내성 증폭, 물약 ...) are listed as 미적용.
 const Source = preload("res://scripts/collections/item_book523_source.gd")
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const REFINE = preload("res://scripts/refine523/bless_refine523_service.gd")
 const SAVE_KEY := "item_book523"
 const SCHEMA := 1
+## Original BonusType -> World stat key (equipment_collection_stats.SUPPORTED).
+const STAT_KEYS: Dictionary = {"HPPlus":"max_hp:flat","MPPlus":"max_mp:flat","MeleeHit":"melee_hit:flat","RangeHit":"ranged_hit:flat","MagicHit":"magic_hit:flat",
+	"MeleeDamage":"melee_damage:flat","RangeDamage":"ranged_damage:flat","MagicDamage":"magic_damage:flat","DamageReduction":"damage_reduction:flat",
+	"ArmorClass":"ac:flat","MagicResist":"mr:flat","RangeEvasion":"er:flat","CarryPlus":"weight_bonus:flat","SpellPower":"sp:flat",
+	"Strength":"str:flat","Dexterity":"dex:flat","Constitution":"con:flat","Intelligence":"int:flat","Wisdom":"wis:flat","Charisma":"cha:flat",
+	"ExperienceAdditionPercent":"experience_bonus:percent","AttackSpeedBonus":"attack_speed:percent","MoveSpeedBonus":"movement_speed:percent",
+	"MeleeCritical":"melee_critical_rate:percent","RangeCritical":"ranged_critical_rate:percent",
+	"CriticalMeleeDamage":"melee_critical_damage:flat","CriticalRangeDamage":"ranged_critical_damage:flat","CriticalMagicDamage":"magic_critical_damage:flat",
+	"PVEMeleeHit":"pve_melee_hit:flat","PVERangeHit":"pve_ranged_hit:flat","PVEMagicHit":"pve_magic_hit:flat",
+	"PVEMeleeAdditionDamage":"pve_melee_damage:flat","PVERangeAdditionDamage":"pve_ranged_damage:flat","PVEMagicAdditionDamage":"pve_magic_damage:flat",
+	"PVEDamageReduction":"pve_damage_reduction:flat"}
+## Bonuses aimed at one SpecialResistanceType (2) / ElementalType (3) target.
+const TARGETED_KEYS: Dictionary = {"HitSpecialResistance:2:6":"stun_hit:percent","SpecialResistance:2:6":"stun_resistance:percent","SpecialResistance:2:7":"hold_resistance:percent",
+	"ElementalResistance:3:1":"fire_resistance:percent","ElementalResistance:3:2":"water_resistance:percent","ElementalResistance:3:3":"wind_resistance:percent","ElementalResistance:3:4":"earth_resistance:percent"}
+## The guide data writes 물리 방어력 as AC -1 (World adds ac:flat to the shown
+## AC); the original Bonus row stores it as +1.
+const NEGATED_KEYS: Array[String] = ["ac:flat"]
 const ROMAN: Dictionary = {"Ⅰ":"I","Ⅱ":"II","Ⅲ":"III","Ⅳ":"IV","Ⅴ":"V","Ⅵ":"VI","Ⅶ":"VII","Ⅷ":"VIII","Ⅸ":"IX","Ⅹ":"X"}
 
 var world: Node
@@ -58,7 +81,7 @@ func prepare() -> bool:
 	if not source.ready: return false
 	if not _linked:
 		_linked = true
-		link_legacy()
+		if link_legacy() > 0: _refresh_stats()
 	return true
 
 func ready() -> bool:
@@ -138,9 +161,47 @@ func rows(tab_button: String) -> Array:
 ## page; the item and bonus lookups stay off the other rows).
 func detail(row: Dictionary) -> Dictionary:
 	var out: Dictionary = row.duplicate(true)
-	out.effects = source.effects_of(str(row.id))
+	var lines: Array = []
+	for effect: Dictionary in source.effects_of(str(row.id)):
+		var line: Dictionary = effect.duplicate()
+		if stat_key(effect).is_empty(): line.display = str(line.display) + " (미적용)"
+		lines.append(line)
+	out.effects = lines
 	for card: Dictionary in out.cards: card["label"] = source.option_label(card)
 	return out
+
+## The World stat key one original effect line adds to ("" = none).
+static func stat_key(effect: Dictionary) -> String:
+	var type: String = str(effect.get("type", ""))
+	if int(effect.get("application_type", 0)) == 0 and int(effect.get("application_target", 0)) == 0: return str(STAT_KEYS.get(type, ""))
+	return str(TARGETED_KEYS.get("%s:%d:%d" % [type, int(effect.get("application_type", 0)), int(effect.get("application_target", 0))], ""))
+
+## {totals: stat key -> value of every complete original collection,
+## suppressed_legacy: legacy collection id -> true (a linked original
+## collection is complete)}. Nothing is loaded for a state with no records.
+func effect_totals() -> Dictionary:
+	var totals: Dictionary = {}
+	var suppressed: Dictionary = {}
+	if preserved_raw != null or (state.registered.is_empty() and state.legacy_links.is_empty()) or not prepare(): return {"totals":totals,"suppressed_legacy":suppressed}
+	var touched: Dictionary = {}
+	for cid: Variant in state.registered: touched[str(cid)] = true
+	for cid: Variant in state.legacy_links: touched[str(cid)] = true
+	for cid: String in touched:
+		if not complete(cid): continue
+		for effect: Dictionary in source.effects_of(cid):
+			var key: String = stat_key(effect)
+			if key.is_empty(): continue
+			var value: float = -float(effect.value) if key in NEGATED_KEYS else float(effect.value)
+			totals[key] = float(totals.get(key, 0.0)) + value
+		for link: Dictionary in state.legacy_links.get(cid, {}).values(): suppressed[str(link.get("legacy_collection_id", ""))] = true
+	return {"totals":totals,"suppressed_legacy":suppressed}
+
+## Lets World's collection stats (equipment_collection_runtime) recount.
+func _refresh_stats() -> void:
+	if world == null: return
+	var legacy: Variant = world.get("equipment_collections")
+	if legacy != null and legacy.has_method("refresh_item_book_totals"): legacy.refresh_item_book_totals()
+	if world.has_method("_invalidate_equipment_static"): world._invalidate_equipment_static()
 
 ## The alternative shown on a slot: the registered one, else the first.
 func _shown_option(card: Dictionary, cid: String) -> Dictionary:
@@ -288,6 +349,7 @@ func execute(cid: String, card_id: String, expected_revision: int) -> Dictionary
 	state = next
 	_bag_valid = false
 	busy = false
+	_refresh_stats()
 	if world.get("hud") != null:
 		if world.hud.has_method("refresh_inventory"): world.hud.refresh_inventory(world.inventory)
 		if world.hud.has_method("append_log"): world.hud.append_log("아이템 컬렉션 등록 · %s · %s" % [str(source.collection(cid).name), str(offer.label)])

@@ -205,15 +205,19 @@ func effects_of(cid: String) -> Array:
 		var type: Dictionary = reader.row("BonusType", int(bonus.get("BonusTypeID", 0)))
 		var unit: String = str(reader.row("Unit", int(type.get("UnitID", 0))).get("Name", ""))
 		var value: float = float(bonus.get("Value", 0))
-		if unit == "Percentage":
-			var denominator: float = 0.0
-			for ui: Dictionary in reader.related("UIUnit", "UnitID", int(type.get("UnitID", 0))): denominator = float(ui.get("Denominator", 0))
-			value = value / (denominator if denominator > 0.0 else 10000.0)
+		# UIUnit.Denominator scales the stored value for display (Percentage
+		# 10000 = 1%, Weight 100 = 1); 0 means the value is shown as stored.
+		var denominator: float = 0.0
+		for ui: Dictionary in reader.related("UIUnit", "UnitID", int(type.get("UnitID", 0))): denominator = float(ui.get("Denominator", 0))
+		if denominator <= 0.0 and unit == "Percentage": denominator = 10000.0
+		if denominator > 0.0: value = value / denominator
 		var label: String = _description(int(type.get("DescID", 0)), str(type.get("Name", "")))
 		var number: String = str(int(value)) if value == floorf(value) else String.num(value, 2)
+		var percent: bool = unit in ["Percentage","ValuePercent"]
+		var display: String = label if unit == "TrueFalse" else "%s %s%s%s" % [label, "+" if value >= 0.0 else "", number, "%" if percent else ""]
 		lines.append({"slot_no":int(link.slot_no),"bonus":bonus,"type":str(type.get("Name", "")),"unit":unit,"value":value,
 			"application_type":int(bonus.get("BonusApplicationTypeID", 0)),"application_target":int(bonus.get("BonusApplicationTargetID", 0)),
-			"display":"%s %s%s%s" % [label, "+" if value >= 0.0 else "", number, "%" if unit == "Percentage" else ""]})
+			"display":display})
 	row.effects = lines
 	return lines
 

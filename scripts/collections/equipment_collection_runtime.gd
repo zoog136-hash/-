@@ -160,7 +160,36 @@ func stat_record() -> Dictionary:
 
 func _rebuild() -> void:
 	totals = core.bonuses(progress)
+	_merge_item_book()
 	bonus_record = Stats.record(totals)
+
+## Legacy collections whose linked original collection is complete (world.item_book523).
+var suppressed_by_item_book: Dictionary = {}
+
+## The original 523 아이템 컬렉션 effects (world.item_book523.effect_totals):
+## a complete legacy collection whose linked original collection is complete
+## stops counting here, and the original collections' effects are added, so
+## one collection never counts twice.
+func _merge_item_book() -> void:
+	suppressed_by_item_book = {}
+	var book: Variant = world.get("item_book523") if world != null else null
+	if book == null or not book.has_method("effect_totals"): return
+	var result: Dictionary = book.effect_totals()
+	# core.bonuses() counts nothing for an invalid state: nothing to take out.
+	var counted: bool = core.validate_state(progress).is_empty()
+	for raw: Variant in result.get("suppressed_legacy", {}) if counted else {}:
+		var cid: String = str(raw)
+		if not core.complete(progress, cid): continue
+		suppressed_by_item_book[cid] = true
+		for effect: Dictionary in core.resolve(cid).get("effects", []):
+			var key: String = Core.effect_code(effect)
+			totals[key] = float(totals.get(key, 0.0)) - float(effect.value)
+	for key: Variant in result.get("totals", {}):
+		totals[str(key)] = float(totals.get(str(key), 0.0)) + float(result.totals[key])
+
+## Recounts after the original 아이템 컬렉션 changed (registration, load, links).
+func refresh_item_book_totals() -> void:
+	if problem.is_empty(): _rebuild()
 
 func export_state() -> Dictionary:
 	var out: Dictionary = progress.duplicate(true)

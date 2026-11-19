@@ -7779,6 +7779,8 @@ func _load_game(quiet: bool) -> void:
 	# An older save has no ledger: its Life items start at this load time.
 	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
 	item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))
+	# Original 아이템 컬렉션 effects join the collection stats (no double count).
+	equipment_collections.refresh_item_book_totals()
 	# An older save has no draws: its 신화 weapons draw once after this load.
 	item_invoke523.import_state(data.get(ITEM_INVOKE523.SAVE_KEY, {}))
 	dungeon_extras523.import_state(data.get(DUNGEON_EXTRAS523.SAVE_KEY, {}))
