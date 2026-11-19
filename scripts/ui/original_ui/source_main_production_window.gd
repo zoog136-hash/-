@@ -7,7 +7,8 @@ extends RefCounted
 ## transaction stay with the existing owners (world.crafting / patch523
 ## rules, renewal_crafting.confirm_target → craft_requested).
 ## Left inert or empty (no rule here): 메인 (recommend) / 이벤트 / 한정 /
-## 서버 한정 / 즐겨찾기 / 검색 tabs (Off; tapping says so), the class filter,
+## 서버 한정 / 즐겨찾기 / 검색 tabs (Off; tapping says so; the 이벤트 tab is
+## 비법서 제작 when the world has it: TWILIGHT 근사, the existing panel), the class filter,
 ## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
 ## The list's Btn_Sort (Normal / Enable) toggles 제작 가능 우선: recipes the
@@ -276,6 +277,11 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 	for tab_name: String in OFF_TABS:
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_On"]={"visible":false}
 		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 장비·기타 제작만 연결했습니다")}
+	# 비법서 제작 (TWILIGHT 근사): the original has no GachaCraft entry here, so
+	# the 이벤트 tab opens the existing 비법서 제작 panel (renewal_crafting).
+	if world.has_method("patch523_gacha_craft_owned"):
+		spec[P_ALL+"Nd_TabMenu/Btn_Event_Off"]={"activate":Callable(self,"_open_gacha")}
+		spec[P_ALL+"Nd_TabMenu/Btn_Event_Off/Label"]={"role":"source_text","text":"비법서 제작"}
 	spec[P_ALL+"Production_Tab_Main"]={"exclude":true}
 	spec[P_ALL+"Nd_SearchBar"]={"exclude":true}
 	spec[P_ALL+"Production_Popup_Keypad_Layout"]={"exclude":true}
@@ -630,6 +636,14 @@ func _report_result(world: Node) -> void:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	var controller: Variant=hud.get("original_main_ui_controller") if hud!=null else null
 	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):controller.try_open_feature_window("craft_result",[craft_result(world,entry)])
+
+## 비법서 제작: the existing crafting screen with its 비법서 제작 panel open.
+func _open_gacha() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null or not hud.has_method("open_gacha_craft523"):return _notice("비법서 제작 화면을 열 수 없습니다")
+	close()
+	hud.call("open_gacha_craft523")
+	return {"ok":true,"handled":true,"routed":"open_gacha_craft523"}
 
 func _close_requested() -> Dictionary:
 	close()
