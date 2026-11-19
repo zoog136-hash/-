@@ -559,7 +559,9 @@ func _enchant_requested() -> Dictionary:
 	if multi:return _multi_requested()
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var entry: Dictionary=_entry()
-	if hud==null or entry.is_empty() or _scroll.is_empty():return _fail("source_enchant_window_target_unselected")
+	if hud==null or entry.is_empty() or _scroll.is_empty():
+		if hud!=null and hud.has_method("show_message"):hud.call("show_message","강화할 장비를 고르세요" if entry.is_empty() else "강화 주문서가 없습니다")
+		return _fail("source_enchant_window_target_unselected")
 	return {"ok":Forge.confirm_target(hud,_scroll,entry),"confirmation_owner":"renewal_forge.confirm_target"}
 
 func _close_requested() -> Dictionary:

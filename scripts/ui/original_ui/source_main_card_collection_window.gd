@@ -8,10 +8,14 @@ extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## Change_List_Collection_Text (현재 | 최대), and 컬렉션 현황 shows the
 ## acquisition and completion counts. Completion stays automatic in the
 ## runtime (first acquisition, no card consumed); nothing is registered here.
-## Not connected (no TWILIGHT rule or input): the search keypad
-## (ItemBook_Popup_Keypad), the effect filter popup (ItemBook_Tab_Filter),
-## bookmarks, and the radial progress of the 현황 circles (their
-## foreground sprites stay hidden).
+## 검색 (Nd_SearchBar/Btn_Search): the phone keyboard on a native touch
+## LineEdit (TWILIGHT 근사 of the client's ItemBook_Popup_Keypad, which is not
+## mounted); the query filters by collection or member card name and shows
+## in the bar's original Text. 효과 (Btn_Sort2): each tap selects the next
+## effect the listed collections give (TWILIGHT 근사 of the ItemBook_Tab_Filter
+## popup, not mounted), back to 모든 효과. 초기화 clears both.
+## Not connected: bookmarks and the radial progress of the 현황 circles
+## (their foreground sprites stay hidden).
 const Rules=preload("res://scripts/cards/native_collection_rules.gd")
 const SourceUI=preload("res://scripts/ui/source_collection_presentation.gd")
 const ROW="UI/Change/Change_List_Collection.csb"
@@ -23,6 +27,9 @@ var focus: String=""
 var grade: String="전체"
 var state: int=0
 var showing_status: bool=false
+var query: String=""
+var effect_key: String=""
+var _search_editor: LineEdit
 var _rows: Array=[]
 var _records: Dictionary={}
 
@@ -40,6 +47,8 @@ func open(parent: Node, category_name: String, identity: String="") -> Dictionar
 	if category_name!=category:
 		grade="전체"
 		state=0
+		query=""
+		effect_key=""
 	category=category_name
 	focus=identity
 	_records.clear()
@@ -57,6 +66,8 @@ func _filtered() -> Array:
 		if state==1 and (done or int(row.get("met_count",0))==0):continue
 		if state==2 and done:continue
 		if state==3 and not done:continue
+		if not effect_key.is_empty() and not _has_effect(row,effect_key):continue
+		if not query.is_empty() and not _matches(row,query):continue
 		result.append(row)
 	return result
 
@@ -69,10 +80,14 @@ func _spec() -> Dictionary:
 	spec[P+"Nd_Collection/Text_Message"]={"visible":_filtered().is_empty()}
 	spec[P+"Btn_Sort"]={"activate":Callable(self,"_cycle_state")}
 	spec[P+"Btn_Sort/Text_Sort"]={"role":"source_text","text":STATES[state]}
+	var effect_title: String=_effect_title(effect_key)
 	spec[P+"Btn_Sort2"]={"activate":Callable(self,"_effect_filter")}
-	spec[P+"Btn_Sort2/Enable"]={"visible":false}
+	spec[P+"Btn_Sort2/Normal"]={"visible":effect_key.is_empty()}
+	spec[P+"Btn_Sort2/Enable"]={"visible":not effect_key.is_empty()}
+	spec[P+"Btn_Sort2/Enable/Text_Sort"]={"role":"source_text","text":effect_title}
 	spec[P+"Nd_SearchBar/Btn_Search"]={"activate":Callable(self,"_search")}
-	var filtering: bool=grade!="전체" or state!=0 or not focus.is_empty()
+	if not query.is_empty():spec[P+"Nd_SearchBar/Btn_Search/Text"]={"role":"source_text","text":query}
+	var filtering: bool=grade!="전체" or state!=0 or not focus.is_empty() or not query.is_empty() or not effect_key.is_empty()
 	spec[P+"Nd_SearchBar/Btn_Reset_All"]={"activate":Callable(self,"_reset"),"displaystate":filtering}
 	spec[P+"Nd_SearchBar/Btn_Reset_All/Normal"]={"visible":filtering}
 	spec[P+"Nd_SearchBar/Btn_Reset_All/Disabled"]={"visible":not filtering}
@@ -233,17 +248,94 @@ func _reset() -> Dictionary:
 	grade="전체"
 	state=0
 	focus=""
+	query=""
+	effect_key=""
+	if is_instance_valid(_search_editor):_search_editor.text=""
 	var owner: Object=hud()
 	if owner!=null and owner.get("normal_card_collection_focus")!=null:owner.set("normal_card_collection_focus","")
 	return _stage()
 
+## 검색: the phone keyboard edits `query` (the list follows each change).
 func _search() -> Dictionary:
-	_message("컬렉션 검색: 원본 검색 키패드(ItemBook_Popup_Keypad)는 연결하지 않았습니다")
-	return {"ok":false,"code":"source_collection_search_not_connected"}
+	var editor: LineEdit=_editor()
+	if editor==null:return _fail("source_collection_search_host_unavailable")
+	editor.text=query
+	editor.grab_focus()
+	editor.edit()
+	return {"ok":true,"editing":true}
 
+func _editor() -> LineEdit:
+	if is_instance_valid(_search_editor):return _search_editor
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if not parent is Node:return null
+	var editor: LineEdit=preload("res://scripts/ui/native_touch_line_edit.gd").new()
+	editor.name="CollectionSearchInput"
+	editor.max_length=24
+	# The original bar draws the text; the editor only takes the keyboard.
+	editor.self_modulate=Color(1,1,1,0)
+	editor.size=Vector2(1,1)
+	editor.position=Vector2(-8,-8)
+	editor.text_changed.connect(set_query)
+	editor.text_submitted.connect(func(_text: String) -> void: editor.release_focus())
+	(parent as Node).add_child(editor)
+	_search_editor=editor
+	return editor
+
+func set_query(value: String) -> Dictionary:
+	query=value.strip_edges()
+	return _stage() if is_open() else {"ok":true,"query":query}
+
+func close() -> void:
+	if is_instance_valid(_search_editor):
+		_search_editor.release_focus()
+		_search_editor.queue_free()
+	_search_editor=null
+	super.close()
+
+## 효과: the next effect the listed collections give, then 모든 효과.
 func _effect_filter() -> Dictionary:
-	_message("효과 필터: 원본 필터 창(ItemBook_Tab_Filter)은 연결하지 않았습니다")
-	return {"ok":false,"code":"source_collection_effect_filter_not_connected"}
+	var choices: Array[String]=effect_choices()
+	if choices.is_empty():
+		effect_key=""
+		_message("효과로 고를 컬렉션이 없습니다")
+		return _stage() if is_open() else {"ok":true}
+	var at: int=choices.find(effect_key)
+	effect_key=choices[at+1] if at+1<choices.size() else ""
+	_message("효과: "+_effect_title(effect_key))
+	return _stage() if is_open() else {"ok":true,"effect":effect_key}
+
+## Effect identities of the listed collections, in first-seen order.
+func effect_choices() -> Array[String]:
+	var found: Array[String]=[]
+	var runtime: Object=_runtime()
+	for row: Dictionary in _rows:
+		for effect: Variant in (runtime.displayed_effects(row,true) if runtime!=null else row.get("effects",[])):
+			if not effect is Dictionary:continue
+			var key: String=SourceUI.effect_identity(effect)
+			if not found.has(key):found.append(key)
+	return found
+
+func _has_effect(row: Dictionary, key: String) -> bool:
+	var runtime: Object=_runtime()
+	for effect: Variant in (runtime.displayed_effects(row,true) if runtime!=null else row.get("effects",[])):
+		if effect is Dictionary and SourceUI.effect_identity(effect)==key:return true
+	return false
+
+func _effect_title(key: String) -> String:
+	if key.is_empty():return "모든 효과"
+	var runtime: Object=_runtime()
+	for row: Dictionary in _rows:
+		for effect: Variant in (runtime.displayed_effects(row,true) if runtime!=null else row.get("effects",[])):
+			if effect is Dictionary and SourceUI.effect_identity(effect)==key:return SourceUI.effect_title(effect)
+	return "모든 효과"
+
+## A collection matches by its name or a member card's name.
+static func _matches(row: Dictionary, text: String) -> bool:
+	var needle: String=text.to_lower()
+	if str(row.get("name","")).to_lower().contains(needle):return true
+	for requirement: Variant in row.get("requirements",[]):
+		if requirement is Dictionary and str(requirement.get("name","")).to_lower().contains(needle):return true
+	return false
 
 func _card_pressed(_checked: bool, name: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
