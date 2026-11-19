@@ -19,12 +19,30 @@ const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 ## rewards with ItemClass rows, prerequisites, enhancements, description)
 ## lives in a device record bake and is read back on demand by full().
 const RECORDS_NAME := "quest523_records"
-const RECORDS_SCHEMA := 1
+## 2: compact rows also carry [QuestResetType, MaxDailyRepeat] (repeat rule).
+const RECORDS_SCHEMA := 2
 const HOT_RECORD := "__hot__"
 ## Key of the compact gate inputs on a row whose complete form is on storage.
 const LAZY_KEY := "source_lazy_gate"
 const CACHE_SIZE := 128
 const LINKED_TYPES := [92,102,131,143,172,182,162,71,81]
+## 사용자 결정(기간제는 기한 없앰, 제작 2026-11-16 "기간 제거"와 같음): the
+## original StartTime/EndTime window stays on every row (starts_at/ends_at)
+## but no longer closes a quest ("시작 전"/"기간 종료").
+const PERIOD_DECISION := "사용자 결정: 원본 퀘스트 기간 제거(기한 없음)"
+## TWILIGHT 근사 — QuestResetType has no enum table in the 523 client data.
+## 11 = daily, 21 = weekly, on TWILIGHT's one game calendar (사용자 결정
+## 2026-11-09): day from 05:00 KST (quest_service.korean_daily_key), week from
+## Wednesday 05:00 KST (domination_stone_runtime.week_key; the original 523
+## shop notice "일일 05시 / 주간 수요일 05시"). Evidence: 11 rows are the
+## daily requests (판도라의 부탁·라라의 부탁, MaxDailyRepeat 1), 21 rows are
+## named "주간 퀘스트"; the season pass already reads 11 as a daily reset
+## (unconfirmed523/events_domain) and 요정 숲 reads 21 as weekly (content523).
+## MaxDailyRepeat = completions per reset period (0 = once). Other reset
+## types keep "원본 반복/초기화 규칙 확인 필요".
+const REPEAT_PERIODS := {11:"daily",21:"weekly"}
+const REPEAT_APPROX := "TWILIGHT 근사: 원본 QuestResetType 11=일간(05시)·21=주간(수요일 05시), MaxDailyRepeat=주기당 완료 횟수"
+const REPEAT_UNKNOWN := "원본 반복/초기화 규칙 확인 필요"
 var document: Dictionary = {}
 var problem: String = "최신523 퀘스트 팩 미설치"
 var quests: Array[Dictionary] = []
@@ -206,8 +224,9 @@ static func _compact(row: Dictionary) -> Dictionary:
 	var after: String = ""
 	if int(definition.TypeID) in LINKED_TYPES: after = "연계 콘텐츠의 획득 조건 확인 필요"
 	elif int(definition.get("LimitWeeklyOpenTimeGroup",0)) != 0 or int(definition.get("LimitHours",0)) != 0: after = "원본 운영 시간 조건 확인 필요"
-	elif int(definition.get("QuestResetType",0)) != 0 or int(definition.get("MaxDailyRepeat",0)) != 0: after = "원본 반복/초기화 규칙 확인 필요"
+	elif repeat_problem(int(definition.get("QuestResetType",0)), int(definition.get("MaxDailyRepeat",0))) != "": after = REPEAT_UNKNOWN
 	lazy["after"] = after
+	lazy["repeat"] = [int(definition.get("QuestResetType",0)), int(definition.get("MaxDailyRepeat",0))]
 	var conditions: Array = []
 	for condition: Variant in row.prerequisites:
 		if not condition is Dictionary or not condition.has("type_name") or not _number(condition.get("Value")): return {}
@@ -329,6 +348,29 @@ static func install_zip(path: String) -> Dictionary:
 	var result: Error = preload("res://scripts/skills/save_writer.gd").write_text(USER_PATH,payload.get_string_from_utf8())
 	return {"ok":result==OK,"error":"퀘스트 팩 저장 실패 · 기존 파일 보존" if result!=OK else ""}
 
+## "" when (QuestResetType, MaxDailyRepeat) is one-time or a supported
+## REPEAT_PERIODS reset, otherwise why it stays closed.
+static func repeat_problem(reset_type: int, max_daily: int) -> String:
+	if reset_type == 0 and max_daily == 0: return ""
+	if REPEAT_PERIODS.has(reset_type) and max_daily >= 0 and max_daily <= 1000: return ""
+	return REPEAT_UNKNOWN
+
+## The repeat rule of a resident (compact or complete) row:
+## {} for a one-time quest, else {"period":"daily"|"weekly","limit":N,"reset_type":T}.
+static func repeat_rule(row: Dictionary) -> Dictionary:
+	var reset_type: int = 0
+	var max_daily: int = 0
+	var lazy: Variant = row.get(LAZY_KEY)
+	if lazy is Dictionary:
+		var pair: Variant = lazy.get("repeat",[0,0])
+		if pair is Array and pair.size() == 2:
+			reset_type = int(pair[0]); max_daily = int(pair[1])
+	elif row.get("definition") is Dictionary:
+		reset_type = int(row.definition.get("QuestResetType",0))
+		max_daily = int(row.definition.get("MaxDailyRepeat",0))
+	if not REPEAT_PERIODS.has(reset_type) or not repeat_problem(reset_type, max_daily).is_empty(): return {}
+	return {"period":REPEAT_PERIODS[reset_type],"limit":maxi(1,max_daily),"reset_type":reset_type}
+
 func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -> String:
 	var lazy: Variant = row.get(LAZY_KEY)
 	# 사용자 결정 2026-11-16: tutorial quests are deleted (tutorial523.gd).
@@ -338,14 +380,13 @@ func gate(row: Dictionary, context: Dictionary, claimed: Dictionary, now: int) -
 	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
 	if not row.blockers.is_empty(): return str(row.blockers[0])
 	if row.starts_at == null or row.ends_at == null: return "원본 운영 기간 해석 보류"
-	if now < int(row.starts_at): return "시작 전"
-	if now > int(row.ends_at): return "기간 종료"
+	# PERIOD_DECISION: the original window no longer closes the quest.
 	var definition: Dictionary = row.definition
 	if int(definition.TypeID) in [92,102,131,143,172,182,162,71,81]: return "연계 콘텐츠의 획득 조건 확인 필요"
 	if int(definition.get("LimitWeeklyOpenTimeGroup",0)) != 0 or int(definition.get("LimitHours",0)) != 0: return "원본 운영 시간 조건 확인 필요"
-	# The client dump does not contain the QuestResetType enum contract. Never
-	# guess IDs from an unrelated reset table and accidentally farm rewards.
-	if int(definition.get("QuestResetType",0)) != 0 or int(definition.get("MaxDailyRepeat",0)) != 0: return "원본 반복/초기화 규칙 확인 필요"
+	# The client dump has no QuestResetType enum: only the REPEAT_PERIODS
+	# approximation opens a reset quest; any other value stays closed.
+	if not repeat_problem(int(definition.get("QuestResetType",0)), int(definition.get("MaxDailyRepeat",0))).is_empty(): return REPEAT_UNKNOWN
 	for condition: Dictionary in row.prerequisites:
 		var amount: int = int(condition.Value)
 		match str(condition.type_name):
@@ -388,8 +429,7 @@ func _gate_compact(row: Dictionary, lazy: Dictionary, context: Dictionary, claim
 	if not row.excluded_reasons.is_empty(): return str(row.excluded_reasons[0])
 	if not row.blockers.is_empty(): return str(row.blockers[0])
 	if row.starts_at == null or row.ends_at == null: return "원본 운영 기간 해석 보류"
-	if now < int(row.starts_at): return "시작 전"
-	if now > int(row.ends_at): return "기간 종료"
+	# PERIOD_DECISION: the original window no longer closes the quest.
 	if not str(lazy.after).is_empty(): return str(lazy.after)
 	for condition: Array in lazy.prerequisites:
 		var amount: int = int(condition[1])
