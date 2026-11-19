@@ -177,6 +177,9 @@ func load_configured() -> Dictionary:
 		return load_pack(DEFAULT_MANIFEST)
 	return _load_original_projection()
 
+## Bake value: the projection candidate plus the payload SHA it matched.
+const VERIFIED_MARK := "verified_payload_sha256"
+
 func _load_original_projection() -> Dictionary:
 	# UNVERIFIED: never substitute the source archive hash for a model hash.
 	# Only the actual canonical projection bytes matching the established pack
@@ -186,7 +189,17 @@ func _load_original_projection() -> Dictionary:
 	# identity check below still runs on it).
 	var bake_key: String = BAKE.producer_key(BAKE_NAME, "dungeon523", "payload:" + PAYLOAD_SHA256, str(ORIGINAL_PROJECTION.SOURCE.identity().get("source_sha256","")))
 	var baked: Variant = BAKE.read(BAKE_NAME, bake_key) if not str(ORIGINAL_PROJECTION.SOURCE.identity().get("source_sha256","")).is_empty() else null
-	var candidate: Dictionary = baked if baked is Dictionary and not (baked as Dictionary).is_empty() else {}
+	var candidate: Dictionary = {}
+	# A bake written after the byte identity check below passed carries that
+	# result; BAKE.read() re-verifies the stored bytes, so the candidate is the
+	# one that matched. Re-encoding it (~350,000 canonical values) on every
+	# load cost 1.4 s of a 2.6 s first 던전 page (Twm diag 2026-11-19).
+	var verified: bool = false
+	if baked is Dictionary and (baked as Dictionary).get(VERIFIED_MARK) == PAYLOAD_SHA256 and (baked as Dictionary).get("candidate") is Dictionary:
+		candidate = baked.candidate
+		verified = not candidate.is_empty()
+	elif baked is Dictionary and not (baked as Dictionary).has(VERIFIED_MARK):
+		candidate = baked
 	if candidate.is_empty():
 		BOOT_LOG.mark("dungeon_cold_build")
 		var projection = ORIGINAL_PROJECTION.new()
@@ -194,14 +207,15 @@ func _load_original_projection() -> Dictionary:
 		if candidate.is_empty():
 			last_error = projection.problem
 			return {"ok":false,"reason":last_error}
-		BAKE.write(BAKE_NAME, bake_key, candidate)
-	var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(candidate)
-	var hash := HashingContext.new()
-	hash.start(HashingContext.HASH_SHA256)
-	hash.update(bytes)
-	if bytes.size() != PAYLOAD_BYTES or hash.finish().hex_encode() != PAYLOAD_SHA256:
-		last_error = "보유 원본의 던전 projection 바이트가 기존 팩 정체와 다릅니다 · 기존 자료 보존"
-		return {"ok":false,"reason":last_error}
+	if not verified:
+		var bytes: PackedByteArray = ORIGINAL_PROJECTION.encoded(candidate)
+		var hash := HashingContext.new()
+		hash.start(HashingContext.HASH_SHA256)
+		hash.update(bytes)
+		if bytes.size() != PAYLOAD_BYTES or hash.finish().hex_encode() != PAYLOAD_SHA256:
+			last_error = "보유 원본의 던전 projection 바이트가 기존 팩 정체와 다릅니다 · 기존 자료 보존"
+			return {"ok":false,"reason":last_error}
+		BAKE.write(BAKE_NAME, bake_key, {VERIFIED_MARK: PAYLOAD_SHA256, "candidate": candidate})
 	_activate(candidate)
 	# No execution sidecar is manufactured. This existing optional reader only
 	# clears unavailable sidecar definitions for the absent default installation.
