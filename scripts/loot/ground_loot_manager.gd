@@ -204,6 +204,11 @@ func activate(map_id: String) -> void:
 			_create_view(record)
 	revision += 1
 
+## Original 523 field (current523_source_field.gd "m523_land_<LandID>"): its
+## floor is kept and shown when that field is entered again.
+static func source_field_map(map_id: String) -> bool:
+	return map_id.begins_with("m523_land_") and map_id.trim_prefix("m523_land_").is_valid_int()
+
 func valid_view(view: Button) -> bool:
 	if not is_instance_valid(view) or view.is_queued_for_deletion(): return false
 	var id: String = str(view.get_meta("id", ""))
@@ -292,7 +297,7 @@ func restore(saved: Variant) -> void:
 			if not Vector2(float(point[0]), float(point[1])).is_finite(): continue
 			var map_id: String = str(record.get("map_id", current_map))
 			var native_stack: bool=_native_stack_record(record)
-			if not (world.get("maps_by_id") as Dictionary).has(map_id) and not native_stack: continue
+			if not (world.get("maps_by_id") as Dictionary).has(map_id) and not native_stack and not source_field_map(map_id): continue
 			var expires: float = float(record.get("expires_at", now + LIFETIME))
 			if (expires <= now and not native_stack) or not is_finite(expires) or str(record.get("state", "ground")) != "ground": continue
 			var id: String = str(record.get("id", new_id()))

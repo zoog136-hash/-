@@ -11309,11 +11309,14 @@ func return_from_original_map() -> bool:
 		return true
 	return SOURCE_TRAVEL.return_home(self)
 
-func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
-	if current523_aden_source_active():
-		hud.show_message("원문 필드의 바닥 아이템 저장 연결은 아직 지원하지 않아 아이템을 보존합니다.")
-		return false
-	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
+## Bag item dragged onto the field: confirmation (quantity for stacks) first.
+func request_inventory_ground_drop(reference: String, target: Vector2) -> Dictionary:
+	return INVENTORY_GROUND_TRANSFER.request(self,reference,target)
+
+func _drop_inventory_reference(reference: String, target: Vector2, count: int = 1) -> bool:
+	# Source (original 523) fields keep their floor under their own map ID
+	# (ground_loot_manager restores m523_land_* records like other maps).
+	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target,count)
 
 func _on_secondary_doll_requested(identity: String) -> void:
 	if _option_awakening_busy():return

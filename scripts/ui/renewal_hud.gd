@@ -1017,6 +1017,7 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_production_window"):original_main_ui_controller.close_production_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_enchant_window"):original_main_ui_controller.close_enchant_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_dissolve_confirm"):original_main_ui_controller.close_dissolve_confirm()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_drop_confirm"):original_main_ui_controller.close_drop_confirm()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_acquisition"):original_main_ui_controller.close_acquisition()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_feature_windows"):original_main_ui_controller.close_feature_windows()
 	_retire_original_menu_status()
@@ -3628,6 +3629,7 @@ func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 
 func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if not is_instance_valid(original_main_ui_controller):return false
+	if original_drop_confirm_is_open():return true
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
 	if original_main_ui_controller.inventory_search_is_open():return true
@@ -3637,6 +3639,20 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if original_main_ui_controller.dungeon_blocks_point(viewport_point):return true
 	if original_main_ui_controller.workspace_controls_block_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
+
+func original_drop_confirm_is_open() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("drop_confirm_is_open") and original_main_ui_controller.drop_confirm_is_open()
+
+## Bag -> floor confirmation: the original keypad/message box when the UI pack
+## has them, else the TWILIGHT confirmation (with a quantity box for stacks).
+## `on_confirm(count)` performs the transfer.
+func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+	if pointer_transfer != null: pointer_transfer.cancel()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_drop_confirm"):
+		var opened: Dictionary=original_main_ui_controller.try_open_drop_confirm(item_name,item_class_id,maximum,on_confirm)
+		if opened.get("handled",false):return opened
+	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
+	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
 
 func original_inventory_gesture_bounds() -> Control:
 	return original_main_ui_controller.inventory_gesture_bounds() if original_inventory_is_open() else null
