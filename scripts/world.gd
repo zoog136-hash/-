@@ -5332,6 +5332,9 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	_update_hud()
 	_perf_log("강화 HUD 갱신", phase_usec)
 	# Persist first. Presentation/skip/close must never commit or reroll a result.
+	if enhancement_series_quiet:
+		enhancement_series_last={"result":result_type,"from":current_level,"to":result_level,"name":target_name}
+		return
 	if hud.has_method("show_enhancement_result"):
 		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	else:
@@ -5344,6 +5347,56 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	else:
 		hud.call("open_enhancement", scroll_name, [])
 	_perf_log("강화 목록 갱신", phase_usec)
+
+## 다중 강화 (TWILIGHT 근사): the existing single roll (_attempt_enhancement,
+## its rules, costs, save and rollback) run for each target in turn up to
+## `goal`; stops at the first roll that is not a success (유지 / 하락 / 소실),
+## a refused roll (rules, too few scrolls or Adena) or the scroll running out.
+var enhancement_series_quiet: bool=false
+var enhancement_series_last: Dictionary={}
+func attempt_enhancement_series(scroll_name: String, targets: Array, goal: int) -> Dictionary:
+	if enhancement_series_quiet:return {"ok":false,"reason":"다중 강화가 진행 중입니다"}
+	var rolls: int=0
+	var reached: int=0
+	var stop: String=""
+	var stop_name: String=""
+	enhancement_series_quiet=true
+	for raw: Variant in targets:
+		var target: Dictionary=_parse_enhancement_target(str(raw))
+		var id: String=str(target.get("id",""))
+		var name: String=str(target.get("name",""))
+		while stop.is_empty():
+			if not item_instances.has(id):
+				stop="missing"
+				break
+			var level: int=_item_instance_level(id,name)
+			if level>=goal:
+				reached+=1
+				break
+			if int(inventory.get(scroll_name,0))<=0:
+				stop="scroll"
+				break
+			enhancement_series_last={}
+			var scrolls_before: int=int(inventory.get(scroll_name,0))
+			_attempt_enhancement(scroll_name,str(raw))
+			if enhancement_series_last.is_empty() or int(inventory.get(scroll_name,0))>=scrolls_before:
+				stop="refused"
+				break
+			rolls+=1
+			match str(enhancement_series_last.get("result","")):
+				"success":pass
+				"destroy":stop="destroy"
+				_:stop="fail"
+			if not stop.is_empty():stop_name=name
+		if not stop.is_empty():break
+	enhancement_series_quiet=false
+	var texts: Dictionary={"":"다중 강화 완료","fail":"강화 실패로 멈췄습니다","destroy":"장비가 소실되어 멈췄습니다","scroll":"주문서가 부족해 멈췄습니다","refused":"강화할 수 없는 단계라 멈췄습니다","missing":"장비를 찾을 수 없어 멈췄습니다"}
+	var message: String="%s · %d회 · 목표 달성 %d/%d%s" % [str(texts.get(stop,"")),rolls,reached,targets.size()," · "+stop_name if not stop_name.is_empty() else ""]
+	hud.show_message(message)
+	hud.append_log(message)
+	var kind: String=_scroll_kind(scroll_name)
+	hud.call("open_enhancement",scroll_name,_enhancement_candidates(kind,_scroll_mode(scroll_name),scroll_name) if int(inventory.get(scroll_name,0))>0 else [])
+	return {"ok":stop.is_empty(),"rolls":rolls,"reached":reached,"stop":stop,"message":message}
 
 func _destroy_enhancement_target(item_name: String, item_id: String = "") -> void:
 	if not item_id.is_empty():
