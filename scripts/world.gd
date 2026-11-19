@@ -2751,8 +2751,9 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 		hud.show_message("출혈 베기 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "melee", _cast_bleed_skill.bind(target, 0, power, bleed_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 90.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "melee", _cast_bleed_skill.bind(target, 0, power, bleed_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 90.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -2814,8 +2815,9 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 		hud.show_message("포이즌 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "magic", _cast_poison_skill.bind(target, 0, poison_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 300.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "magic", _cast_poison_skill.bind(target, 0, poison_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 300.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -2867,8 +2869,9 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 		hud.show_message("피어 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "magic", _cast_fear_skill.bind(target, 0, fear_duration, skill_name), _skill_motion_duration({}), false, 300.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "magic", _cast_fear_skill.bind(target, 0, fear_duration, skill_name), _skill_motion_duration({}), false, 300.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -2920,8 +2923,9 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 		hud.show_message("홀드 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "magic", _cast_hold_skill.bind(target, 0, hold_duration, skill_name), _skill_motion_duration({}), false, 280.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "magic", _cast_hold_skill.bind(target, 0, hold_duration, skill_name), _skill_motion_duration({}), false, 280.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -2973,8 +2977,9 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 		hud.show_message("사일런스 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "magic", _cast_silence_skill.bind(target, 0, silence_duration, skill_name), _skill_motion_duration({}), false, 320.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "magic", _cast_silence_skill.bind(target, 0, silence_duration, skill_name), _skill_motion_duration({}), false, 320.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -3026,8 +3031,9 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 		hud.show_message("쇼크 스턴 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "melee", _cast_stun_skill.bind(target, power, 0, stun_duration, skill_name), _skill_motion_duration({}), false, 90.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "melee", _cast_stun_skill.bind(target, power, 0, stun_duration, skill_name), _skill_motion_duration({}), false, 90.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -3092,8 +3098,9 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 		hud.show_message("마법 사거리 밖입니다")
 		return false
 	if not resolving_combat_action:
+		# MP is paid only for a registered motion; a refused registration keeps it.
+		if not _queue_player_attack(target, "magic", _cast_magic_attack.bind(target, power, 0, skill_name), _skill_motion_duration({}), false, 360.0): return false
 		mp = maxi(0, mp - mp_cost)
-		_queue_player_attack(target, "magic", _cast_magic_attack.bind(target, power, 0, skill_name), _skill_motion_duration({}), false, 360.0)
 		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
@@ -3214,6 +3221,11 @@ func _attack(automatic_acquisition: bool = false) -> void:
 		selected_monster=target
 		return
 	var source_ammo: Dictionary=SOURCE_AMMO.selected(self,_weapon_ammo_family())
+	# Ammo is paid only for an attack that registers: the refusals are
+	# checked first and the paid shot is registered in this same frame.
+	if _player_attack_refused(target, attack_kind, true):
+		auto_attack_timer = _normal_attack_interval()
+		return
 	var native_ammo_bonus: int=-1
 	var native_ammo: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("consume_ammo",self,_current_ammo_name(),1,0,target,true)
 	if native_ammo.get("handled",false):
@@ -8274,9 +8286,8 @@ func _cast_job_status_skill(skill: Dictionary) -> bool:
 	if target == null:
 		hud.show_message("상태이상 대상이 없습니다")
 		return false
-	if not _spend_skill_mp(skill): return false
+	if not _register_then_spend_skill(skill, _queue_player_attack.bind(target, _skill_attack_kind(skill), _resolve_status_skill.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))): return false
 	_break_invisibility()
-	_queue_player_attack(target, _skill_attack_kind(skill), _resolve_status_skill.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))
 	return true
 
 func _resolve_status_skill(skill: Dictionary, target: TwilightMonster) -> void:
@@ -8603,10 +8614,9 @@ func _cast_job_turn_undead(skill: Dictionary) -> bool:
 	if not target.is_undead():
 		hud.show_message("턴 언데드는 언데드에게만 사용할 수 있습니다")
 		return false
-	if not _spend_skill_mp(skill):
+	if not _register_then_spend_skill(skill, _queue_player_attack.bind(target, "magic", _resolve_turn_undead.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))):
 		return false
 	_break_invisibility()
-	_queue_player_attack(target, "magic", _resolve_turn_undead.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))
 	return true
 
 func _resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
@@ -8638,10 +8648,9 @@ func _cast_job_charge_skill(skill: Dictionary) -> bool:
 	var source: Vector2 = player.global_position
 	var distance: float = source.distance_to(target.global_position)
 	if distance <= stop_distance + 32.0:
-		if not _spend_skill_mp(skill):
+		if not _register_then_spend_skill(skill, _queue_damage_skill.bind(skill, target, 100.0)):
 			return false
 		_break_invisibility()
-		_queue_damage_skill(skill, target, 100.0)
 		return true
 	var path: PackedVector2Array = find_world_path(source, target.global_position)
 	if path.is_empty():
@@ -8731,10 +8740,9 @@ func _cast_job_damage_skill(skill: Dictionary) -> bool:
 	if target == null:
 		hud.show_message("공격 대상이 없습니다")
 		return false
-	if not _spend_skill_mp(skill):
+	if not _register_then_spend_skill(skill, _queue_damage_skill.bind(skill, target, SKILL_RULES.range_pixels(skill))):
 		return false
 	_break_invisibility()
-	_queue_damage_skill(skill, target, SKILL_RULES.range_pixels(skill))
 	return true
 
 func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void:
@@ -10961,15 +10969,57 @@ func _skill_motion_duration(skill: Dictionary) -> float:
 		return combinations.charge_step_duration(float(skill.combination_charge_step_seconds))
 	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
 
-func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:
-	if not _queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range): return
+func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> bool:
+	if not _queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range): return false
 	pending_attack["skill"] = skill.duplicate(true)
 	pending_attack["duration"] = _skill_motion_duration(skill)
+	return true
+
+## _queue_player_attack()'s refusals, without its side effects. A caller
+## whose cost cannot be handed back (a saved ammo shot) asks this first and
+## registers in the same frame, so a refused motion never consumes anything.
+func _player_attack_refused(target: TwilightMonster, kind: String, normal: bool = false) -> bool:
+	if _player_attack_gate_refused(target, kind, normal): return true
+	return player.motion.dead or player.is_stunned() or player.is_feared() # start_combat_attack() refusals
+
+func _player_attack_gate_refused(target: TwilightMonster, kind: String, normal: bool) -> bool:
+	if patch523_npc_spells.blocks("CannotAttack" if normal else "CannotCastSkill") or (kind == "magic" and patch523_npc_spells.blocks("CannotCastSpell")): return true
+	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return true
+	return not is_instance_valid(target) or target.dead or hp <= 0
+
+## Cost after registration: the motion is registered first (cancellable),
+## then the cost is paid (MP/ammo, saved by its owner). A refused
+## registration pays nothing; a refused payment withdraws only that
+## registration. After a paid release, MISS and target death keep the
+## normal rules (the cost stays spent).
+func _register_then_spend_skill(skill: Dictionary, register: Callable) -> bool:
+	var kept: Dictionary = _break_on_attack_buffs()
+	if not bool(register.call()): return false
+	var id: int = int(pending_attack.get("id", -1))
+	if _spend_skill_mp(skill): return true
+	_withdraw_player_attack(id, kept)
+	return false
+
+## The active buffs a registered attack removes (break_attack_buffs()).
+func _break_on_attack_buffs() -> Dictionary:
+	var kept: Dictionary = {}
+	for name: String in active_skill_buffs:
+		var buff: Variant = active_skill_buffs[name]
+		if buff is Dictionary and bool((buff as Dictionary).get("break_on_attack", false)): kept[name] = buff
+	return kept
+
+## Undoes one just-registered player attack whose cost was then refused:
+## only that motion, its pending entry and the buffs its registration broke.
+## Never _clear_combat_actions() (flights, VFX, corpses, NPC effects stay).
+func _withdraw_player_attack(id: int, kept_buffs: Dictionary = {}) -> void:
+	if id < 0 or int(pending_attack.get("id", -1)) != id: return
+	player.cancel_attack() # emits attack_cancelled -> _cancel_player_attack(id)
+	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
+	for name: String in kept_buffs:
+		if not active_skill_buffs.has(name): active_skill_buffs[name] = kept_buffs[name]
 
 func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> bool:
-	if patch523_npc_spells.blocks("CannotAttack" if normal else "CannotCastSkill") or (kind == "magic" and patch523_npc_spells.blocks("CannotCastSpell")): return false
-	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
-	if not is_instance_valid(target) or target.dead or hp <= 0: return false
+	if _player_attack_gate_refused(target, kind, normal): return false
 	player.cancel_attack()
 	player.clear_click_path()
 	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
