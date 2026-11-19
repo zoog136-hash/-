@@ -12,9 +12,10 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   무기), four per Inventory_Slot_Set line (A안), +N on each; a tap chooses.
 ## - Btn_Help opens the original HelpBox_Forge.
 ## Left empty (no TWILIGHT feature): the 제작 tab (Forge_Panel_Item_Craft,
-## Btn_Craft) and 상세 (Btn_Detail), 연출 스킵, 창고 수수료, the bag type tabs
-## and the result animation (Forge_Result; the HUD message and log carry the
-## result).
+## Btn_Craft) and 상세 (Btn_Detail), 연출 스킵, 창고 수수료 and the result
+## animation (Forge_Result; the HUD message and log carry the result).
+## The 전체 / 장비 / 소모 / 기타 bag tabs filter the 연마 재료 list: every
+## candidate is a weapon, so 장비 lists them and 소모 / 기타 are empty.
 const HONING=preload("res://scripts/honing/honing523_service.gd")
 const REFINE=preload("res://scripts/refine523/bless_refine523_service.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
@@ -37,7 +38,10 @@ const P_SHARPEN="Forge_Panel_Item_Sharpen/"
 ## Common_Slot nodes left out (badges and states no rule here sets).
 const SLOT_EXCLUDED: Array[String]=["Nd_Grace","Nd_Properties","Nd_Properties_Smelt","Nd_Lock","Nd_Wrong","Sp_Center","Sp_Left_Top","Sp_Left_Middle","Sp_Right_Top","Sp_Left_Bottom","Label_Center","Sp_Random","Sp_Choice","Sp_Infinity","Sp_Check","Img_Enchant","Sp_Pause","Btn_Probability","Btn_Detail","Nd_Collected"]
 var selected: String=""
+var bag_tab: String="all"
+const BAG_TABS={"all":"Btn_All","equip":"Btn_Equipment","consume":"Btn_Consume","etc":"Btn_Etc"}
 var _weapons: Array=[]
+var _all_weapons: Array=[]
 var _scroller=Storage.Scroller.new()
 
 func required_members() -> Array[String]:
@@ -48,6 +52,7 @@ func _root_member() -> String:
 
 func open(parent: Node) -> Dictionary:
 	selected=""
+	bag_tab="all"
 	_scroller=Storage.Scroller.new()
 	return open_window(parent)
 
@@ -86,9 +91,11 @@ static func enchant_text(label: String) -> String:
 ## --- Spec -----------------------------------------------------------------------
 
 func _spec() -> Dictionary:
-	_weapons=candidates()
+	_all_weapons=candidates()
+	# Every 연마 candidate is a weapon (장비); 소모 / 기타 list nothing.
+	_weapons=_all_weapons if bag_tab in ["all","equip"] else []
 	var known: bool=false
-	for row: Dictionary in _weapons:
+	for row: Dictionary in _all_weapons:
 		if str(row.uid)==selected:known=true
 	if not known:selected=""
 	var current: Dictionary=_current()
@@ -126,9 +133,9 @@ func _spec() -> Dictionary:
 	spec[P_INV+"ScrollView/Inventory_Slot_Set"]={"exclude":true}
 	spec[P_INV+"ScrollView"]={"role":"source_scroll","input":Callable(_scroller,"input")}
 	spec[P_INV+"Nd_Number"]={"visible":false}
-	for tab: String in ["Btn_All","Btn_Equipment","Btn_Consume","Btn_Etc"]:
-		spec[P_INV+"Tab/"+tab+"_On"]={"visible":tab=="Btn_All"}
-		spec[P_INV+"Tab/"+tab+"_Off"]={"visible":tab!="Btn_All"}
+	for tab: String in BAG_TABS:
+		spec[P_INV+"Tab/"+BAG_TABS[tab]+"_On"]={"visible":tab==bag_tab}
+		spec[P_INV+"Tab/"+BAG_TABS[tab]+"_Off"]={"visible":tab!=bag_tab,"activate":Callable(self,"_set_bag_tab").bind(tab)}
 	return spec
 
 func _slot_spec(spec: Dictionary, p: String) -> void:
@@ -136,7 +143,7 @@ func _slot_spec(spec: Dictionary, p: String) -> void:
 	for name: String in SLOT_EXCLUDED:spec[p+name]={"exclude":true}
 
 func _current() -> Dictionary:
-	for row: Dictionary in _weapons:
+	for row: Dictionary in _all_weapons:
 		if str(row.uid)==selected:return row
 	return {}
 
@@ -240,6 +247,12 @@ func _pressed(index: int) -> Dictionary:
 	selected="" if str(row.uid)==selected else str(row.uid)
 	if not selected.is_empty() and not bool(row.get("ok",false)):_message(str(row.get("reason","")) if not bool(row.get("honed",false)) else "이미 연마된 무기입니다")
 	_scroller.keep()
+	return _stage()
+
+func _set_bag_tab(tab: String) -> Dictionary:
+	if not BAG_TABS.has(tab):return _fail("source_forge_window_tab_unknown")
+	bag_tab=tab
+	_scroller=Storage.Scroller.new()
 	return _stage()
 
 func select(uid: String) -> Dictionary:
