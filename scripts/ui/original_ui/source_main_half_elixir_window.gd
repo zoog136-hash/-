@@ -30,7 +30,11 @@ func open(parent: Node, _item_name: String="") -> Dictionary:
 	var runtime: Object=_runtime()
 	if runtime==null:return _fail("source_half_elixir_runtime_unavailable")
 	runtime.source=runtime.source_for(runtime.state)
-	# Without an installed source the TWILIGHT view opens instead (install).
+	# No source recorded yet: link the bundled 523 definitions (no copy).
+	if runtime.source==null and str(runtime.state.get("source_sha256","")).is_empty() and runtime.has_method("link_bundled"):
+		runtime.link_bundled()
+		runtime.source=runtime.source_for(runtime.state)
+	# Without a source the TWILIGHT view opens instead (install).
 	# A source without a chosen context takes the default one (TWILIGHT 근사):
 	# a local game has no server, so the menu opened the TWILIGHT view every time.
 	if runtime.source!=null and not _context_ready():apply_default_context()
