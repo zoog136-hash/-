@@ -92,7 +92,10 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		var unit_weight: int=maxi(0,int(world.item_weight_index.get(key,3)))
 		if world._inventory_total_weight()+quantity*unit_weight>world._carrying_capacity():return _fail("기존 소지 무게 한도 초과 · 바닥 아이템 보존")
 	var physical:=PhysicalView.new()
-	physical.item_instances=world.item_instances.duplicate(true);physical.next_item_instance_id=world.next_item_instance_id
+	# Shallow: the suppliers below only add new physical IDs (each returns its
+	# own copy); existing entries are never edited here, and shared entries keep
+	# the ownership comparison against the live bag cheap.
+	physical.item_instances=world.item_instances.duplicate(false);physical.next_item_instance_id=world.next_item_instance_id
 	Transfer.restore_physical(physical,pending)
 	var acquired: Dictionary=Supply.prepare_pickup(pending,physical.item_instances,physical.next_item_instance_id)
 	var symbols: Dictionary=world.growth.source523.prepare_pickup(pending,acquired.item_instances,int(acquired.next_item_instance_id))

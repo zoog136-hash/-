@@ -3849,11 +3849,30 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
-	_refresh_inventory_hud()
-	if not wallet_item.is_empty(): _update_hud()
+	# Stacks fold at once (bag state); the bag/quickslot/weight/speed redraw
+	# runs in the next frame, coalesced for a burst of pickups, so the pickup
+	# frame does not also pay for the HUD.
+	_merge_native_stacks()
+	_queue_inventory_hud_refresh()
+	# A wallet pickup changes only the Adena readout (coins reach the HUD with the
+	# queued quickslot redraw above); no full character-sheet rebuild.
+	if not wallet_item.is_empty(): _refresh_combat_hud()
 	_perf_log("습득 HUD 갱신", pickup_hud_started_usec)
 	if bool(record.get("player_dropped",false)): _request_deferred_save()
 	return true
+
+var _inventory_hud_queued: bool = false
+
+func _queue_inventory_hud_refresh() -> void:
+	if _inventory_hud_queued or not is_inside_tree(): 
+		if not is_inside_tree(): _refresh_inventory_hud()
+		return
+	_inventory_hud_queued = true
+	get_tree().process_frame.connect(_flush_inventory_hud, CONNECT_ONE_SHOT)
+
+func _flush_inventory_hud() -> void:
+	_inventory_hud_queued = false
+	if is_inside_tree(): _refresh_inventory_hud()
 
 ## A pickup only changes item counts, physical IDs and carried weight. Rebuilding
 ## the whole character sheet (all derived stats, card/awakening state, portrait,
@@ -6675,7 +6694,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
 		# Native source cursors cannot authorize the host auto-movement save override.
 		if not movement_override.is_empty(): return ERR_UNAVAILABLE
-		return _current523_aden_play_controller.call("save_source_progress",quiet,collection_override)
+		# A check-only call writes nothing, so it needs no source-map snapshot swap.
+		if not validate_only: return _current523_aden_play_controller.call("save_source_progress",quiet,collection_override)
 	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
 	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
 	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA

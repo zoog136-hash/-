@@ -169,9 +169,11 @@ func floor_entry(id: int) -> Dictionary:
 func pick(world: Node, entry: Dictionary) -> Dictionary:
 	var view: Button = world._spawn_ground_drop(str(entry.item_name), world.player.global_position, 1, "", D.ground_metadata(entry))
 	var id: String = str(view.get_meta("id"))
+	var spawned: Button = view
 	for step: int in range(80):
 		await process_frame
 		view = world.ground_loot.views.get(id)
+		if not is_instance_valid(view) and is_instance_valid(spawned) and world.ground_loot.valid_view(spawned): view = spawned
 		if is_instance_valid(view): break
 		await create_timer(0.05).timeout
 	if not is_instance_valid(view):
