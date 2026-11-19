@@ -548,6 +548,9 @@ func _prune_source_overlays() -> void:
 
 func clear() -> void:
 	_reference_bank = null
+	_root_motion_fits.clear()
+	walk_root_motion_offset = Vector2.ZERO
+	if cancel_walk_root_motion: position = Vector2.ZERO
 	source_effect_status.clear()
 	_reference_card_context.clear()
 	_reference_request_context.clear()
@@ -623,6 +626,122 @@ func role_cycle_seconds(role: String) -> float:
 		if item is Dictionary: total+=preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	return total
 
+## --- Walk root motion ------------------------------------------------------
+## The original walk/run frames carry the step itself: across one cycle the
+## body's frame offsets advance about one cell (523 elf 15282 walking up: body
+## y +2, +1, 0, -4, -9, -11, -12, -17, then frame 0 again). The original client
+## holds the actor on its step cell while those frames play. TWILIGHT moves the
+## player node smoothly at the original 2.25 cells/s, so drawing the frames
+## unchanged applied the step twice: the picture ran ahead by up to one cell and
+## jumped back at every cycle (user report 2026-11-19, "앞뒤로 왔다갔다";
+## phone recording: background smooth, character sawtooth with the cycle).
+## A host that moves its actor smoothly turns this on; the preview then removes
+## the frames' linear drift (least-squares slope of the body anchor over the
+## frame index, measured from the same source frames or cooked states) so the
+## pose changes stay and only the built-in travel is cancelled.
+var cancel_walk_root_motion: bool = false
+var walk_root_motion_offset: Vector2 = Vector2.ZERO
+var _root_motion_fits: Dictionary = {}
+## Below this travel per cycle (source px) or fit quality the frames are an
+## in-place walk and are drawn unchanged.
+const ROOT_MOTION_MIN_TRAVEL: float = 6.0
+## One-cell screen steps (this node's source px) of the field the host walks
+## on, or empty. One original walk/run loop travels exactly one cell, so a fitted
+## travel near one of them is replaced by that exact step: a single odd frame
+## (523 elf 15282 walk, directions 0/2/6: frame 0's box sits ~20 px off the
+## line) skewed the least-squares slope to 37 px per loop instead of 24 and
+## left a sawtooth of that difference.
+var root_motion_cell_steps: Array[Vector2] = []:
+	set(value):
+		if value == root_motion_cell_steps: return
+		root_motion_cell_steps = value
+		_root_motion_fits.clear()
+## A fitted travel snaps to a step within this fraction of the step length.
+const ROOT_MOTION_SNAP_FRACTION: float = 0.6
+const ROOT_MOTION_MIN_R2: float = 0.6
+
+func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: int, static_track: bool) -> void:
+	var correction: Vector2 = Vector2.ZERO
+	if cancel_walk_root_motion and not static_track and _role in ["walk", "run"] and bool(track.get("loop", false)) and frames.size() >= 3:
+		var key: String = "%s:%d:%d:%s:%s:%s" % [_role, source_direction, frames.size(), str(track.get("source_sprite_id", "")), str(track.get("source_action_id", "")), _cooked.key if _cooked != null else "sp2"]
+		if not _root_motion_fits.has(key): _root_motion_fits[key] = _fit_walk_root_motion(frames, source_direction)
+		correction = -(_root_motion_fits[key] as Vector2) * float(index)
+	if correction != walk_root_motion_offset or (cancel_walk_root_motion and position != correction * scale):
+		walk_root_motion_offset = correction
+		# Offsets are in this node's (source pixel) space; position is the parent's.
+		if cancel_walk_root_motion: position = correction * scale
+
+## Per-frame body anchor of `frames` in source pixels, or [] when unknown.
+func _walk_anchor_points(frames: Array, source_direction: int) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	for k: int in frames.size():
+		var frame: Dictionary = frames[k]
+		if _cooked != null:
+			var state: int = COOKED_STORE.state_for(_cooked_entry, _role, source_direction, int(frame.get("cooked_index", k)), 0.0, false)
+			if state < 0 or state >= _cooked.index.states.size(): return []
+			var items: PackedInt32Array = _cooked.index.states[state]
+			var images: PackedInt32Array = _cooked.index.images
+			var box: Rect2 = Rect2()
+			var first: bool = true
+			for at: int in range(0, items.size(), COOKED_STORE.FORMAT.ITEM_STRIDE):
+				var image: int = items[at] * 5
+				var rect := Rect2(items[at + 1], items[at + 2], images[image + 3], images[image + 4])
+				box = rect if first else box.merge(rect)
+				first = false
+			if first: return []
+			points.append(box.get_center())
+			continue
+		var found: bool = false
+		for layer: Variant in frame.get("layers", []):
+			if layer is Dictionary and layer.get("kind", "") == "body" and layer.get("offset") is Array and layer.offset.size() >= 2:
+				points.append(Vector2(float(layer.offset[0]), float(layer.offset[1])))
+				found = true
+				break
+		if not found: return []
+	return points
+
+## Linear drift per frame of the body anchor, or ZERO for an in-place cycle.
+func _fit_walk_root_motion(frames: Array, source_direction: int) -> Vector2:
+	var points: Array[Vector2] = _walk_anchor_points(frames, source_direction)
+	return snap_root_motion(fit_root_motion(points), points.size(), root_motion_cell_steps)
+
+## `slope` (per frame) replaced by the nearest one-cell step over `count`
+## frames when the loop's fitted travel is close to it; unchanged otherwise.
+static func snap_root_motion(slope: Vector2, count: int, steps: Array[Vector2]) -> Vector2:
+	if slope == Vector2.ZERO or count <= 0 or steps.is_empty(): return slope
+	var travel: Vector2 = slope * float(count)
+	var best: Vector2 = Vector2.ZERO
+	var best_distance: float = INF
+	for step: Vector2 in steps:
+		var distance: float = travel.distance_to(step)
+		if distance < best_distance:
+			best_distance = distance
+			best = step
+	if best_distance > best.length() * ROOT_MOTION_SNAP_FRACTION: return slope
+	return best / float(count)
+
+static func fit_root_motion(points: Array[Vector2]) -> Vector2:
+	var n: int = points.size()
+	if n < 3: return Vector2.ZERO
+	var mean_k: float = float(n - 1) * 0.5
+	var mean_p: Vector2 = Vector2.ZERO
+	for p: Vector2 in points: mean_p += p
+	mean_p /= float(n)
+	var sxx: float = 0.0
+	var sxy: Vector2 = Vector2.ZERO
+	for k: int in n:
+		sxx += (float(k) - mean_k) * (float(k) - mean_k)
+		sxy += (points[k] - mean_p) * (float(k) - mean_k)
+	var slope: Vector2 = sxy / sxx
+	if slope.length() * float(n) < ROOT_MOTION_MIN_TRAVEL: return Vector2.ZERO
+	var total: float = 0.0
+	var residual: float = 0.0
+	for k: int in n:
+		total += (points[k] - mean_p).length_squared()
+		residual += (points[k] - (mean_p + slope * (float(k) - mean_k))).length_squared()
+	if total <= 0.0 or 1.0 - residual / total < ROOT_MOTION_MIN_R2: return Vector2.ZERO
+	return slope
+
 func source_role() -> String:
 	return _role
 
@@ -682,6 +801,11 @@ static var cached_frames_enabled: bool = not "--twilight-actor-frame-cache-off" 
 ## Plans without compositing (every group keeps its nodes): diagnostics.
 static var composite_groups_enabled: bool = not "--twilight-actor-composite-off" in OS.get_cmdline_user_args()
 var cached_frames: bool = false
+## Plans this preview keeps. A plan holds every layer texture of its frame, so
+## many actors each holding FRAME_PLAN_MAX plans keep that many frames of
+## textures alive (523.652 in town: app memory 2,158 MB and still growing).
+## Actors shown in large numbers lower it.
+var frame_plan_max: int = FRAME_PLAN_MAX
 var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
 var _cached_applied_plan: Dictionary = {}
 var _cached_applied_translucent: bool = false
@@ -704,7 +828,7 @@ func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dicti
 		plan = _build_frame_plan(selected, track, body_attributes, body_unresolved, body_projection_verified)
 		if plan.is_empty(): return {}
 		_frame_plans.erase(applied_hash)
-		while _frame_plans.size() >= FRAME_PLAN_MAX: _frame_plans.erase(_frame_plans.keys()[0])
+		while _frame_plans.size() >= maxi(1, frame_plan_max): _frame_plans.erase(_frame_plans.keys()[0])
 		_frame_plans[applied_hash] = plan
 		fresh = true
 		FRAME_HITCH.count("preview.plan_built")
@@ -1007,8 +1131,11 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		requested = "walk" # The displayed native action remains WALK, never a fabricated RUN track.
 	if not _playback_tracks.has(requested): requested = "idle"
 	if requested != _role:
+		# Walk and run loops are both one cell long (same frame count and
+		# timing): keep the step phase so the feet do not restart mid-step.
+		var keep_phase: bool = _role in ["walk", "run"] and requested in ["walk", "run"]
 		_role = requested
-		_clock = 0.0
+		if not keep_phase: _clock = 0.0
 		_annotation_clock = -0.000000001
 	# Visual inspection maps front bit5 to game S2. Keep this explicit and unapproved.
 	var source_direction: int = posmod(facing + 3, 8)
@@ -1029,11 +1156,16 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var boundary_epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
 	if bool(track.loop) and total - time <= boundary_epsilon: time = 0.0
 	var selected: Dictionary = frames[0] if static_track else frames[-1]
+	var selected_index: int = 0 if static_track else frames.size() - 1
+	var scan_index: int = 0
 	for item: Dictionary in ([] if static_track else frames):
 		if time + boundary_epsilon < preload("res://scripts/animation/source_presentation_policy.gd").duration(item):
 			selected = item
+			selected_index = scan_index
 			break
 		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		scan_index += 1
+	_apply_walk_root_motion(track, frames, source_direction, selected_index, static_track)
 	if (_reference_bank == null or not _reference_card_context.is_empty()) and _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true
@@ -1280,6 +1412,7 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 			child = get_script().new()
 			child.playback_mode_override = _playback_mode
 			child.cached_frames = cached_frames
+			child.frame_plan_max = frame_plan_max
 			add_child(child)
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
 				_reference_child_problem = child.reference_bank_status.duplicate(true)

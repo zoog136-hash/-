@@ -6,6 +6,13 @@ extends RefCounted
 ## ListView, the way the client fills it. The detail side shows the selected
 ## quest's goals, story and original reward slots (Quest_Slot_Set).
 ## quest_service and the World claim handler keep every rule, reward and save.
+## With quest_service.text_page (the resident text model) the list is the
+## first MAX_ROWS uncompleted quests of the tab (acceptable first), then the
+## completed ones; only the selected quest's full record is read for its
+## goals and reward pictures (no category-wide decode or reward planning).
+## A row that can be accepted shows the receive button (수락 = 즉시 완료, the
+## existing World claim); the detail shows text_page's status, repeat cycle
+## included (#658), and an empty tab shows quest_service.problem (#653).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 const RoutinePage=preload("res://scripts/ui/original_ui/source_main_routine_page.gd")
@@ -117,6 +124,7 @@ func _rows() -> Array[Dictionary]:
 	var world: Object=_world.get_ref() if _world!=null else null
 	if world==null:return shown
 	var service: Variant=world.get("quest_service")
+	if service!=null and service.has_method("text_page"):return _text_rows(world,service)
 	if service==null or not service.has_method("entries"):return shown
 	var auto: Variant=world.get("quest_auto")
 	if auto!=null and auto.has_method("refresh_context"):auto.refresh_context(world)
@@ -135,6 +143,42 @@ func _rows() -> Array[Dictionary]:
 			if shown.size()>=MAX_ROWS:return shown
 			shown.append(quest)
 	return shown
+
+## Resident text rows (quest_service.text_page): acceptable, then still
+## waiting, then completed, at most MAX_ROWS.
+func _text_rows(world: Object, service: Object) -> Array[Dictionary]:
+	var level: int=int(world.get("level"))
+	var source: Variant=service.get("source")
+	var classes: Variant=source.get("class_ids") if source is Object else null
+	var class_id: int=int(classes.get(str(world.get("job_class")),-1)) if classes is Dictionary else -1
+	var ready: Array[Dictionary]=[]
+	var waiting: Array[Dictionary]=[]
+	var done: Array[Dictionary]=[]
+	for row: Dictionary in service.text_page(level,_category,0,MAX_ROWS,"","waiting",-1,class_id).get("rows",[]):
+		(ready if bool(row.get("can_accept",false)) else waiting).append(_text_row(row))
+	var shown: Array[Dictionary]=[]
+	shown.append_array(ready)
+	shown.append_array(waiting)
+	if shown.size()<MAX_ROWS:
+		for row: Dictionary in service.text_page(level,_category,0,MAX_ROWS-shown.size(),"","done",-1,class_id).get("rows",[]):done.append(_text_row(row))
+	shown.append_array(done)
+	return shown
+
+static func _text_row(row: Dictionary) -> Dictionary:
+	var accept: bool=bool(row.get("can_accept",false))
+	return {"id":str(row.id),"source_id":int(row.get("source_id",0)),"title":str(row.get("title","")),"completed":bool(row.get("completed",false)),
+		"available":accept,"progress":1 if accept else 0,"objective":{"count":1},"status_reason":str(row.get("status","")),"text_row":true}
+
+## The selected text row with its full record's goals and rewards.
+func _detail(row: Dictionary) -> Dictionary:
+	if not bool(row.get("text_row",false)):return row
+	var world: Object=_world.get_ref() if _world!=null else null
+	var service: Variant=world.get("quest_service") if world!=null else null
+	var full: Dictionary=service.full_quest(str(row.id)) if service!=null and service.has_method("full_quest") else {}
+	var merged: Dictionary=row.duplicate()
+	for key: String in ["goals","source_rewards"]:
+		if full.has(key):merged[key]=full[key]
+	return merged
 
 func _tab_bindings(scope: Array[int], bindings: Dictionary) -> void:
 	for category: String in TABS:
@@ -192,6 +236,7 @@ func _stage() -> Dictionary:
 	if selected.is_empty() and not rows.is_empty():
 		selected=rows[0]
 		_selected_id=str(selected.id)
+	selected=_detail(selected)
 	var bindings: Dictionary={CLOSE:{"role":"button","activate":Callable(self,"_close_requested")},TITLE:{"role":"static_source_text"}}
 	var scope: Array[int]=ROOT_SCOPE.duplicate()
 	_tab_bindings(scope,bindings)
@@ -249,6 +294,9 @@ func _stage() -> Dictionary:
 func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 	var scope: Array[int]=PAGE_SCOPE.duplicate()
 	var bindings: Dictionary={DETAIL_TITLE:{"role":"static_source_text"},REWARD_TITLE:{"role":"static_source_text"},LIST:{"role":"source_list","row_offsets":[],"input":Callable(self,"_list_input")},NOTICE:{"visible":empty},NOTICE_TEXT:{"role":"static_source_text"}}
+	# No quest at all: the reason the quest data was refused (#653).
+	var problem: String=_problem()
+	if empty and not problem.is_empty():bindings[NOTICE_TEXT]={"role":"source_text","text":problem}
 	# The two detail ListViews hold their one authored text row each.
 	bindings[5564]={"role":"source_list","row_offsets":[GOAL_TEXT],"input":Callable(self,"_ignore_input")}
 	bindings[4312]={"role":"source_list","row_offsets":[STORY_TEXT],"input":Callable(self,"_ignore_input")}
@@ -259,9 +307,11 @@ func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 	for goal: Dictionary in selected.get("goals",[]):goals.append(str(goal.get("description",goal.get("type_name",""))))
 	var count: int=int((selected.get("objective",{}) as Dictionary).get("count",1)) if selected.get("objective") is Dictionary else 1
 	var goal_text: String="\n".join(goals) if not goals.is_empty() else str(selected.get("title",""))
-	if not selected.is_empty():goal_text+=" (%d/%d)"%[int(selected.get("progress",0)),count]
+	var text_row: bool=bool(selected.get("text_row",false))
+	if not selected.is_empty() and not text_row:goal_text+=" (%d/%d)"%[int(selected.get("progress",0)),count]
 	bindings[GOAL_TEXT]={"role":"source_text","text":goal_text}
-	var status: String="완료" if bool(selected.get("completed",false)) else str(selected.get("status_reason",""))
+	# A text row's status carries the repeat cycle (완료 · 다음 초기화 ...).
+	var status: String=str(selected.get("status_reason","")) if text_row else ("완료" if bool(selected.get("completed",false)) else str(selected.get("status_reason","")))
 	bindings[STORY_TEXT]={"role":"source_text","text":(str(selected.get("title",""))+"\n"+status).strip_edges()}
 	# Reward slots (Quest_Slot_Set): original item pictures of the rewards.
 	var slot_scope: Array[int]=[]
@@ -286,6 +336,12 @@ func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 		slot_bindings[offset]={"role":"project","source_node_offsets":common_scope,"bindings":common}
 	bindings[3380]={"role":"project","source_node_offsets":slot_scope,"bindings":slot_bindings}
 	return {"ok":true,"scope":scope,"bindings":bindings,"reward_owners":owners}
+
+func _problem() -> String:
+	var world: Object=_world.get_ref() if _world!=null else null
+	var service: Variant=world.get("quest_service") if world!=null else null
+	if service==null or not (service.get("quests") is Array) or not (service.quests as Array).is_empty():return ""
+	return str(service.get("problem")) if service.get("problem")!=null else ""
 
 func _reward_picture(reward: Dictionary, offset: int) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null

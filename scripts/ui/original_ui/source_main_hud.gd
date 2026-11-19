@@ -2,6 +2,7 @@ extends Node
 ## Existing game's update_player -> original main HUD components. This node
 ## adds no gameplay logic or artwork. Component positions are read from the
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
+const PackVersion=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MENU_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
@@ -260,6 +261,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER) or _joystick_view!=null)
+	# An old UI add-on still plays (windows it lacks keep their fallback);
+	# the player is told once to reinstall it.
+	var pack_info: Dictionary=PackVersion.describe(str(pack.get("manifest_sha256")),pack.get("manifest").get("scenes",{}) if pack.get("manifest") is Dictionary else null)
+	if pack_info.outdated and hud.is_inside_tree():
+		hud.get_tree().create_timer(3.0).timeout.connect(func() -> void:
+			if is_instance_valid(hud):PackVersion.warn_once(hud,pack_info))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -418,7 +425,10 @@ static func _collect_native_buttons(node: Node, found: Array) -> void:
 	var children: Array[Node]=node.get_children()
 	children.reverse()
 	for child: Node in children:_collect_native_buttons(child,found)
-	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null)
+	# An original CheckBox (source_checkbox extends source_button) takes the
+	# same native touch; it used to be left out, so no CheckBox reacted to a
+	# finger (카드 컬렉션 CB_Check: activation never ran).
+	var button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else (node.get_meta("source_checkbox") if node.has_meta("source_checkbox") else null))
 	if is_instance_valid(button):found.append(button)
 
 func _cancel_native_buttons() -> void:
@@ -471,7 +481,9 @@ func _process_step(_delta: float) -> void:
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
 			if signature!=_inventory_signature:
-				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh()
+				# Header only -> chrome; counts/markers/selection over the same rows
+				# -> rows-only patch (it rebuilds itself when the rows changed).
+				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh_rows()
 				if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
@@ -1024,6 +1036,11 @@ func skill_window() -> RefCounted:
 func skill_window_is_open() -> bool:
 	return _skill_window!=null and _skill_window.is_open()
 
+## A skill slot under the point of the open original skill window (long-press
+## registration source for PointerTransfer), else {}.
+func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
+	return _skill_window.hit_at(viewport_point) if skill_window_is_open() else {}
+
 func close_skill_window() -> void:
 	if skill_window_is_open():
 		_cancel_native_buttons()
@@ -1137,6 +1154,7 @@ const FEATURE_WINDOWS={
 	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
 	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
+	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

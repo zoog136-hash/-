@@ -27,7 +27,7 @@ static func lines(font: FontFile, value: String, font_size: int, width: float) -
 		var code: int=value.unicode_at(index)
 		if code>0xffff:return {"ok":false,"error":"original_utf16_wrap_not_connected_for_supplementary_character"}
 		if character=="\n":
-			output.append(committed+_trim_tail(pending))
+			_flush(output,committed,pending,font,font_size,width)
 			committed="";pending=""
 			continue
 		if _space(code):
@@ -55,10 +55,25 @@ static func lines(font: FontFile, value: String, font_size: int, width: float) -
 			pending+=character
 			if not _trim_tail(committed).is_empty():output.append(_trim_tail(committed))
 			committed=""
-	output.append(committed+pending)
+	# A line's trailing spaces are not drawn and take no width (a line that
+	# ends with a space before a newline/the end used to fail as unbreakable:
+	# 시련 던전 "...사용하여 \n").
+	_flush(output,committed,pending,font,font_size,width)
 	for line: String in output:
 		if font.get_string_size(line,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>width:return {"ok":false,"error":"original_unbreakable_word_exceeds_source_width"}
 	return {"ok":true,"lines":output}
+
+## The last word of a line (before a newline or the end) had no width check
+## of its own: a word that starts after CJK text is taken unmeasured and only
+## the next character measures it. When it does not fit it opens the next
+## line, as the non-CJK overflow branch does mid-text (시련 던전 "...등장합니다.").
+static func _flush(output: PackedStringArray, committed: String, pending: String, font: FontFile, font_size: int, width: float) -> void:
+	var whole: String=_trim_tail(committed+pending)
+	if font.get_string_size(whole,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x<=width or _trim_tail(committed).is_empty() or pending.is_empty():
+		output.append(whole)
+		return
+	output.append(_trim_tail(committed))
+	output.append(_trim_tail(pending))
 
 static func _trim_tail(value: String) -> String:
 	var end: int=value.length()

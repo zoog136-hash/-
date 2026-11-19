@@ -37,6 +37,14 @@ func rules() -> void:
 	check(RULES.registration(table_input,"amount:x").get("code")=="amount_between", "a malformed amount is refused")
 	var special: Dictionary = RULES.special_registration({"special_inputs":[{"ItemClassID":9,"MinAmount":1,"MaxAmount":2,"MinProbability":10000,"MaxProbability":20000}]},2)
 	check(special.get("ok",false) and special.probability==20000 and special.item_class_id==9, "special input 2 -> +2%% (TWILIGHT 근사) "+str(special))
+	# 보고서2 NEW01/NEW02: original consumption formulas (virtual vectors, not item data).
+	check(RULES.normal_amount(101,10,3)==336 and (101*110/100)*3==333, "일반 용해 = (base + ceilf(f32 rate×base)) × 수량: 101,10%,×3 -> 336 (old integer cut 333)")
+	check(RULES.normal_amount(101,5)==107 and RULES.normal_amount(100,10)==110 and RULES.normal_amount(100,0)==100 and RULES.normal_amount(1,10)==2, "101×5% rounds the share up -> 107; 100×10% stays 110; 1×10% -> 2")
+	check(RULES.normal_amount(100,15)==116 and RULES.normal_amount(6000,15)==6901, "float32 0.15f×100 = 15.000001f -> ceil 16 (원본 float32 규칙 그대로, 정수 계산이면 115)")
+	check(RULES.normal_amount(5,20)==6, "float32 share 0.2f×5 = 1.0f -> ceil 1 (a double would give 2)")
+	check(RULES.advanced_amount(100,2.0,7,5,9)==409 and RULES.advanced_amount(100,2.0,3,5,9)==109 and RULES.advanced_amount(100,2.0,7,5,9,3)==1227, "상급: 100×2^(7−5)+9 = 409, at/below safe 109, ×3 수량 1227")
+	check(RULES.advanced_amount(180,1.3,3,0,870)==1265 and RULES.advanced_amount(4000,2.0,6,6,90)==4090, "상급: 180×1.3^3 cut 395 + 870; 영웅 무기 6강(safe 6)+속성1단 = 4090 (인벤 예)")
+	check(RULES.advanced_amount(1,2.0,80,0,0)==-1, "an int64 overflow is refused, not wrapped")
 	if SOURCE.not_installed():
 		check(not RULES.installed() and RULES.dissolve_yield(1,0,0).get("code")=="source_not_installed" and RULES.refine_entry(1,0).get("code")=="source_not_installed", "without the original archive both features are held")
 
@@ -63,7 +71,7 @@ func table() -> void:
 			checked += 1
 		check(RULES.dissolve_yield(item,21,0).get("code")=="amount_row_missing", "no row past +20 for grade %d" % grade)
 		var element: Dictionary = RULES.dissolve_yield(item,0,4)
-		check(element.get("ok",false) and int(element.amount)==expected_amount(grade,0)*115/100 and int(element.amplify_percent)==15, "elemental +4 adds BlessPowderAmplifyRate 15%% (TWILIGHT 근사) grade %d: %s" % [grade,str(element.get("amount",element.get("reason","")))])
+		check(element.get("ok",false) and int(element.amount)==RULES.normal_amount(expected_amount(grade,0),15) and int(element.amplify_percent)==15, "elemental +4 adds ceilf(BlessPowderAmplifyRate 15%%) grade %d: %s" % [grade,str(element.get("amount",element.get("reason","")))])
 	evidence["dissolve_rows_checked"] = checked
 	# 상급·최상급 용해 (TWILIGHT 근사): Amount + Increment[elemental level].
 	var advanced: Dictionary = {}
@@ -77,7 +85,17 @@ func table() -> void:
 		var elemental: Dictionary = RULES.advanced_dissolve_yield(item,3,method)
 		advanced["%d/%d/%d" % [method,category,grade]] = [plain.get("amount",plain.get("code")),elemental.get("amount",elemental.get("code"))]
 		check(plain.get("ok",false) and int(plain.amount)==int(row.Amount), "advanced dissolve base = table Amount %s" % str(advanced))
-		if method==24: check(elemental.get("ok",false) and int(elemental.amount)==int(row.Amount)+870, "상급 용해 + 속성 3단 = Amount + 870 (인벤 예: 180+870=1050)")
+		if method==24: check(elemental.get("ok",false) and int(elemental.amount)==int(row.Amount)+870, "상급 용해 +0 + 속성 3단 = Amount + 870")
+		# Enchant above safe multiplies by Multiplier per step (원본 safe/pow).
+		var helper: int = RULES.item_safe_enchant(item,int(row.ItemEnchantScrollID))
+		var safe: int = maxi(int(row.MinSafeEnchantLevel),helper)
+		var above: Dictionary = RULES.advanced_dissolve_yield(item,0,method,safe+2)
+		var at_safe: Dictionary = RULES.advanced_dissolve_yield(item,0,method,safe)
+		check(at_safe.get("ok",false) and int(at_safe.amount)==int(row.Amount) and above.get("ok",false) and int(above.amount)==int(float(row.Amount)*pow(RULES._f32(float(row.Multiplier)),2.0)) and int(above.safe)==safe, "상급 %d/%d/%d: safe %d (helper %d) -> +2 = Amount×Multiplier² %s" % [method,category,grade,safe,helper,str(above.get("amount",above.get("code")))])
+		advanced["%d/%d/%d" % [method,category,grade]].append_array([safe,above.get("amount",above.get("code"))])
+		if method==24 and category==1 and grade==4 and helper==6:
+			check(int(RULES.advanced_dissolve_yield(item,1,method,6).get("amount",-1))==4090, "영웅 무기 6강 + 속성 1단 = 4090 (인벤 예와 일치)")
+			evidence["hero_weapon_4090"] = item
 	evidence["advanced_dissolve"] = advanced
 	check(advanced.size()>=10, "advanced rows resolve to real soluble items: %d" % advanced.size())
 	check(int(RULES.solvent(118682).get("method",0))==24 and int(RULES.solvent(118682).get("output_item_class_id",0))==117544 and int(RULES.solvent(192664).get("method",0))==34 and int(RULES.solvent(192664).get("output_item_class_id",0))==192654, "상급/최상급 용해제 -> method and output from ItemBonus")
@@ -203,8 +221,11 @@ func runtime() -> void:
 	check(world.patch523_owner_state_problem.is_empty(), "no owner problem after reload")
 	# 상급 용해 (TWILIGHT 근사): one 상급 용해제 per item -> 상급 축복의 가루.
 	var advanced_weapon: int = soluble_weapon(3)
-	check(grant(world,[{"item_class_id":advanced_weapon,"amount":1,"bless_raw":1,"enchant":0},{"item_class_id":118682,"amount":2,"bless_raw":1,"enchant":0}]), "a grade-3 weapon and 2 상급 용해제 granted")
-	var expected_advanced: int = int(RULES.advanced_dissolve_yield(advanced_weapon,0,24).get("amount",-1))
+	var advanced_enchant: int = maxi(2,RULES.item_safe_enchant(advanced_weapon,1))+1
+	check(grant(world,[{"item_class_id":advanced_weapon,"amount":1,"bless_raw":1,"enchant":advanced_enchant},{"item_class_id":118682,"amount":2,"bless_raw":1,"enchant":0}]), "a grade-3 weapon above its safe enchant and 2 상급 용해제 granted")
+	var expected_advanced: int = int(RULES.advanced_dissolve_yield(advanced_weapon,0,24,advanced_enchant).get("amount",-1))
+	var advanced_quote: Dictionary = SERVICE.dissolve_advanced_quote(world,physical_of(world,advanced_weapon),118682)
+	check(advanced_quote.get("ok",false) and int(advanced_quote.total)==expected_advanced and expected_advanced>int(RULES.advanced_dissolve_yield(advanced_weapon,0,24).get("amount",0)), "the advanced quote passes the item's +%d enchant (× Multiplier) %s" % [advanced_enchant,str(advanced_quote.get("total",advanced_quote.get("reason","")))])
 	var advanced_before: int = int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)
 	var advanced_targets: Array = physical_of(world,advanced_weapon)
 	var advanced: Dictionary = SERVICE.dissolve_advanced(world,advanced_targets,118682)

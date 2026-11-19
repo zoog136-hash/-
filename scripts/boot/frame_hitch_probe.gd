@@ -100,6 +100,10 @@ static func alive_fields(map_id: String) -> Dictionary:
 	fields["resources"] = int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT))
 	fields["tables"] = DEFINITIONS._tables.size()
 	fields["objects"] = int(Performance.get_monitor(Performance.OBJECT_COUNT))
+	# CPU-side image caches with their own budgets (MB), next to GPU texture MB.
+	# Loaded here, not preloaded: this autoload starts before those scripts' packs.
+	fields["cook_mb"] = int(load("res://scripts/resources/cooked_actor_store.gd").stats().get("bytes", 0)) / 1048576
+	fields["uipage_mb"] = int(load("res://scripts/ui/original_ui/source_pack_page_cache.gd").stats().get("cache_owned_bytes", 0)) / 1048576
 	return fields
 
 ## 523 field/renderer/actor sizes from the world, for the same heartbeat.
@@ -108,7 +112,7 @@ static func world_fields(world: Node) -> Dictionary:
 	if world == null: return fields
 	var renderer: Variant = world.get("field_renderer")
 	if renderer is Object and is_instance_valid(renderer):
-		for key: String in ["_raw_chunks", "_frame_atlases", "_frame_commands", "_static_tails", "_chunk_rects"]:
+		for key: String in ["_raw_chunks", "_frame_atlases", "_frame_commands", "_static_tails", "_chunk_rects", "_blocks"]:
 			var value: Variant = (renderer as Object).get(key)
 			if value is Dictionary: fields["r" + key] = (value as Dictionary).size()
 	var monsters: Variant = world.get("monsters_root")

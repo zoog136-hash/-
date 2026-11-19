@@ -6,7 +6,8 @@ const Transfer=preload("res://scripts/loot/inventory_ground_transfer.gd")
 const Supply=preload("res://scripts/cards/source_awakening_items.gd")
 const Identity=preload("res://scripts/equipment523/native_catalog.gd")
 const Dummy=preload("res://scripts/quests/source_dummy523.gd")
-const FIELD="source_ground_acquisitions"
+const FIELD="source_ground_acquisitions" ## retired save field (removed on load)
+const TRIM=preload("res://scripts/loot/save_provenance_trim.gd")
 var _busy: bool=false
 var _candidate: Dictionary={}
 
@@ -72,10 +73,11 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var deadline: String=D.deadline_problem(source.item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty():return _fail(deadline)
 	var id: String=str(pending.get("id",""))
+	if id.is_empty():return _fail("바닥 개체 ID 확인 필요 · 원본 보존")
+	# No per-floor pickup receipt is kept (save_provenance_trim.gd): the floor
+	# entry leaves in this same save, so it cannot be picked up twice.
 	var state: Dictionary=world.consumable_service.export_state()
-	var receipts: Variant=state.get(FIELD,{})
-	if id.is_empty() or not receipts is Dictionary:return _fail("기존 원본 습득 영수증 형식 보존")
-	if receipts.has(id):return _fail("이미 기록된 바닥 개체의 습득 영수증 · 중복 지급 중지")
+	state.erase(FIELD)
 	var wallet: String=D.wallet_name(source.item)
 	var key: String=wallet if not wallet.is_empty() else str(pending.item_name)
 	var inventory: Dictionary=world.inventory.duplicate(true)
@@ -98,19 +100,14 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor","floor_id":id,"drop":source.proof.duplicate(true)})
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"})
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
-	var added: Array=[]
+	# Newly created entries only: existing ones must stay byte-identical here.
 	for uid: String in instances:
-		if not world.item_instances.has(uid):added.append(uid)
-	var source_rows: Array=[]
-	for row: Dictionary in source.proof.source_rows:source_rows.append(row.get("ID"))
-	var receipt: Dictionary={"schema":1,"source_snapshot":"patch523","source_pack_sha256":str(pack.sha256),"source_npc_id":int(source.proof.source_npc_id),"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key,"physical_ids":added,"source_row_ids":source_rows,"drop_proof_sha256":JSON.stringify(source.proof,"",true,true).sha256_text()}
-	if pack.get("schema")==4:
-		receipt.schema=2;receipt["source_input_marker"]=pack.duplicate(true);receipt["source_pack_sha256_scope"]="current_original_archive_not_legacy_bin"
-	receipts=receipts.duplicate(true);receipts[id]=receipt;state[FIELD]=receipts
+		if not world.item_instances.has(uid) and instances[uid] is Dictionary:instances[uid]=TRIM.entry(instances[uid])
+	var receipt: Dictionary={"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key}
 	var floor: Array=world._ground_drops_snapshot()
 	var after: Array=[];var found: bool=false
 	for entry: Dictionary in floor:

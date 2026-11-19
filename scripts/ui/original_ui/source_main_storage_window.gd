@@ -9,7 +9,11 @@ extends RefCounted
 ## warehouse screen (renewal_warehouse): tapping a 소지품 item asks 보관 and a
 ## 창고 item asks 찾기 through its confirmation, the world moves the items and
 ## refreshes this window.
-## Left out (no rule here): 모두 찾기 / 모두 맡기기, the 1 / 10 / 100 / 직접 입력
+## 모두 찾기 / 모두 맡기기 move every row of the side's current tab through the
+## same world transfer (warehouse_transfer_requested, up to 99 per move) after
+## one confirmation, and stop at the first move the world refuses (weight,
+## lock, storage rule): TWILIGHT 근사 (one confirmation for the batch).
+## Left out (no rule here): the 1 / 10 / 100 / 직접 입력
 ## batch buttons, 자동 보관 and its settings, the cart (weight / cost), list
 ## mode, 이동 / 정렬, help, tooltips and every effect layer.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
@@ -32,7 +36,7 @@ const ROW_PITCH: float=76.0
 const ROW_TAIL: float=40.0
 ## Storage_Inventory's SlotSet sits one unit right of the 창고 grid's.
 const BAG_ROW_SHIFT=Vector2(1.0,0.0)
-const OTHER: Array[String]=["Cart","Storage_KeepAuto","Storage_KeepAuto_Equipment","AccountInv_ListMode","Btn_Confirm_On","Btn_Sell_On","Nd_SaleButton","Nd_AutoKeep","Nd_Auto_Set_Group","Btn_Help","Hud_AutoMessage_Dungeon","FullFrameType_A/Fx_Img_BG_Particle","Nd_Spine"]
+const OTHER: Array[String]=["Cart","Storage_KeepAuto","Storage_KeepAuto_Equipment","AccountInv_ListMode","Btn_Confirm_On/Fx_Btn_Activation","Btn_Sell_On/Fx_Btn_Activation","Nd_SaleButton","Nd_AutoKeep","Nd_Auto_Set_Group","Btn_Help","Hud_AutoMessage_Dungeon","FullFrameType_A/Fx_Img_BG_Particle","Nd_Spine"]
 const BAG_TABS: Array[String]=["all","equip","consume","etc"]
 const STORE_TABS: Array[String]=["all","equip","etc"]
 const TAB_NODES={"all":"Btn_All","equip":"Btn_Equipment","consume":"Btn_Consume","etc":"Btn_Etc"}
@@ -47,6 +51,8 @@ var _tabs: Dictionary={"bag":"all","store":"all"}
 var _scrollers: Dictionary={"bag":Scroller.new(),"store":Scroller.new()}
 var _rows: Dictionary={"bag":[],"store":[]}
 var _last_out: Dictionary={}
+## Which batch button shows (both sit at one place): the side last used.
+var batch_side: String="bag"
 var last_result: Dictionary={}
 
 ## Drag scrolling of one original ScrollView whose first line is extended by
@@ -191,6 +197,8 @@ func _stage() -> Dictionary:
 	var spec: Dictionary={}
 	for name: String in OTHER:spec[name]={"exclude":true}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
+	spec["Btn_Sell_On"]={"visible":batch_side=="bag","activate":Callable(self,"_batch_requested").bind("bag")}
+	spec["Btn_Confirm_On"]={"visible":batch_side=="store","activate":Callable(self,"_batch_requested").bind("store")}
 	for side: String in ["bag","store"]:
 		var p: String=P_BAG if side=="bag" else P_STORE
 		var tabs: Array[String]=BAG_TABS if side=="bag" else STORE_TABS
@@ -343,14 +351,65 @@ func _slot_pressed(side: String, index: int) -> Dictionary:
 	var screen: Object=_screen.get_ref() if _screen!=null else null
 	if screen==null:return _fail("source_storage_window_host_unavailable")
 	var reference: String=reference_of(listing[index])
+	batch_side=side
 	screen.call("request_drop" if side=="bag" else "request_withdraw",reference)
 	return {"ok":true,"requested":"deposit" if side=="bag" else "withdraw","reference":reference}
 
 func _set_tab(side: String, tab_name: String) -> Dictionary:
 	_tabs[side]=tab_name
+	batch_side=side
 	(_scrollers[side] as Scroller).y=null
 	(_scrollers[("store" if side=="bag" else "bag")] as Scroller).keep()
 	return _stage()
+
+## 모두 맡기기 (bag) / 모두 찾기 (store): every row of the side's current tab,
+## after one confirmation (TWILIGHT 근사).
+func _batch_requested(side: String) -> Dictionary:
+	var listing: Array=(_rows.get(side,[]) as Array).duplicate(true)
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_storage_window_host_unavailable")
+	if listing.is_empty():
+		if hud.has_method("show_message"):hud.call("show_message","옮길 아이템이 없습니다")
+		return {"ok":true,"empty":true}
+	var title: String="모두 맡기기" if side=="bag" else "모두 찾기"
+	hud.call("confirm_action",title,"%d개 항목을 %s" % [listing.size(),"창고에 맡깁니다" if side=="bag" else "창고에서 찾습니다"],title,func(_amount: int) -> void: move_all(side,listing))
+	return {"ok":true,"asked":title,"rows":listing.size()}
+
+## Moves `listing` one row at a time (99 per move) through the world's
+## warehouse transfer; stops at the first move that changes nothing.
+func move_all(side: String, listing: Array) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if hud!=null else null
+	if world==null:return _fail("source_storage_window_host_unavailable")
+	var direction: String="deposit" if side=="bag" else "withdraw"
+	var moved: int=0
+	var stopped: String=""
+	for row: Dictionary in listing:
+		var item: String=str(row.get("name",""))
+		var id: String=str(row.get("instance_id",""))
+		var left: int=int(row.get("count",1))
+		while left>0 and stopped.is_empty():
+			var amount: int=1 if not id.is_empty() else mini(99,left)
+			var before: int=_held(world,side,item,id)
+			hud.emit_signal("warehouse_transfer_requested",item,amount,direction,id)
+			var after: int=_held(world,side,item,id)
+			if after>=before:
+				stopped=item
+				break
+			left-=before-after
+			moved+=1
+		if not stopped.is_empty():break
+	var result: Dictionary=refresh()
+	result["batch"]={"moved":moved,"stopped_at":stopped}
+	return result
+
+## The side's remaining amount of `item` (its physical id: 1 or 0).
+static func _held(world: Node, side: String, item: String, id: String) -> int:
+	if side=="bag":
+		if not id.is_empty():return 1 if world.item_instances.has(id) else 0
+		return int(world.inventory.get(item,0))
+	if not id.is_empty():return 1 if world.warehouse.instances.has(id) else 0
+	return int(world.warehouse.stacks.get(item,0))
 
 func _close_requested() -> Dictionary:
 	close()

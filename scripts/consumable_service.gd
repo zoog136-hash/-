@@ -169,9 +169,10 @@ func export_state() -> Dictionary:
 	return state
 
 func import_state(input: Variant) -> void:
-	source_native_bag_uses_present=input is Dictionary and input.has("source_native_bag_uses")
-	var bag_uses: Variant=input.get("source_native_bag_uses",{}) if input is Dictionary else {}
-	source_native_bag_uses=bag_uses.duplicate(true) if bag_uses is Dictionary or bag_uses is Array else bag_uses
+	# Retired box-result journal (history no rule reads): dropped on load and
+	# never exported again. Kept vars stay empty for older callers.
+	source_native_bag_uses_present=false
+	source_native_bag_uses={}
 	source_native_stack_merges_present=input is Dictionary and input.has("source_native_stack_merges")
 	var merges: Variant=input.get("source_native_stack_merges",{}) if input is Dictionary else {}
 	source_native_stack_merges=merges.duplicate(true) if merges is Dictionary or merges is Array else merges

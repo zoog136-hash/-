@@ -241,7 +241,8 @@ func _set_spec() -> Dictionary:
 		var on: bool=buffs.has(id)
 		var supported: bool=bool(option.get("supported",false))
 		spec[panel+"/Text_Price"]={"role":"source_text","text":_number(int(option.buff.Cost))}
-		spec[panel+"/Btn_Normal"]={"visible":not on,"activate":Callable(self,"_buff_pressed").bind(id),"displaystate":supported}
+		# A disabled-look button still takes a tap: an unsupported buff says so.
+		spec[panel+"/Btn_Normal"]={"visible":not on,"activate":Callable(self,"_buff_pressed").bind(id) if supported else Callable(self,"_buff_unsupported"),"displaystate":supported}
 		spec[panel+"/Btn_Pressed"]={"visible":on,"activate":Callable(self,"_buff_pressed").bind(id)}
 	var synergies: Array=prepared.get("inspection",{}).get("party",{}).get("synergy_ids",[]) if prepared.get("ok",false) else []
 	spec["Nd_SynergyInfo/Nd_On"]={"visible":not synergies.is_empty()}
@@ -363,6 +364,10 @@ func _spot_pressed(spot_id: int) -> Dictionary:
 func _close_popup() -> Dictionary:
 	popup=""
 	return _stage()
+
+func _buff_unsupported() -> Dictionary:
+	_message("이 파견 버프는 TWILIGHT에서 지원하지 않습니다")
+	return {"ok":false,"code":"card_dispatch_buff_unsupported"}
 
 func _buff_pressed(id: int) -> Dictionary:
 	if buffs.has(id):buffs.erase(id)

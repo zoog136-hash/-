@@ -275,7 +275,9 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
 	return reason.is_empty()
 
-func cast(record: Dictionary) -> bool:
+## `manual`: a player's press (quick slot, 스킬 사용). Automatic passes keep
+## their silent refusal so a polling loop never floods the message line.
+func cast(record: Dictionary, manual: bool = true) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
 	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
@@ -309,8 +311,13 @@ func cast(record: Dictionary) -> bool:
 		if not is_instance_valid(target) or target.dead:
 			# An explicit unreachable selection never redirects into a dash.
 			if estimated_nodes.kind(skill) == "grab" and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
-			else: return false
-		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target): return false
+			else:
+				# A refused manual cast must say why (the quick slot otherwise looks dead).
+				if manual: world.hud.show_message(_target_refusal(skill))
+				return false
+		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target):
+			if manual: world.hud.show_message("사용할 수 없는 대상입니다")
+			return false
 	var dash_end := Vector2.INF
 	if estimated_nodes.kind(skill) == "grab":
 		dash_end = estimated_nodes.dash_plan(skill, target)
@@ -422,6 +429,15 @@ func cast(record: Dictionary) -> bool:
 	trigger("on_skill", target, skill)
 	world._update_hud()
 	return true
+
+## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables
+## (DescData_Korean / ErrorMessage) hold no client text for this refusal, so
+## the plain "대상이 없습니다" / "거리가 멉니다" are used. With nothing selected
+## the cast already takes the nearest visible monster in range (_skill_target).
+func _target_refusal(_skill: Dictionary) -> String:
+	var selected: Variant = world.selected_monster
+	if is_instance_valid(selected) and not selected.dead: return "거리가 멉니다"
+	return "대상이 없습니다"
 
 ## Every mode cast() executes after payment; anything else is refused before it.
 const CAST_MODES: Array[String] = ["attack", "status", "turn_undead", "buff", "counter", "stealth", "detect", "heal", "cleanse", "convert", "teleport", "taunt", "toggle_proc", "summon"]
