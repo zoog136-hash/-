@@ -129,7 +129,8 @@ func runtime() -> void:
 	var against: Dictionary = differing_paths(JSON.parse_string(background_text), JSON.parse_string(direct_text), "")
 	var unexplained: Array = []
 	for path: String in against:
-		var covered: bool = false
+		# Wall-clock stamps (unconfirmed523 latest_at = now()) also tick per second.
+		var covered: bool = path.ends_with("/latest_at") or path.ends_with("_elapsed")
 		for clock: String in noise:
 			if path.begins_with(clock) or clock.begins_with(path): covered = true
 		if not covered: unexplained.append(path)
