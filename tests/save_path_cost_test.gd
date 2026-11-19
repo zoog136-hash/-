@@ -193,6 +193,11 @@ func deferred_pickup(world: Node) -> void:
 	world.deferred_save_enabled = true
 	world.deferred_save.cancel()
 	check(world._save_game(true) == OK, "settled save before the pickup")
+	# Pickups run on a loaded field (floor views follow the restored map).
+	world.item_instances = {}; world.inventory = {}
+	world._load_game(true)
+	for frame: int in range(20): await process_frame
+	world.deferred_save.cancel()
 	var name_value: String = str(entry.item_name)
 	var before: int = int(world.inventory.get(name_value,0))
 	var sha: String = FileAccess.get_sha256(world.save_path())
