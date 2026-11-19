@@ -481,7 +481,9 @@ func _process_step(_delta: float) -> void:
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
 			if signature!=_inventory_signature:
-				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh()
+				# Header only -> chrome; counts/markers/selection over the same rows
+				# -> rows-only patch (it rebuilds itself when the rows changed).
+				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh_rows()
 				if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
@@ -1033,6 +1035,11 @@ func skill_window() -> RefCounted:
 
 func skill_window_is_open() -> bool:
 	return _skill_window!=null and _skill_window.is_open()
+
+## A skill slot under the point of the open original skill window (long-press
+## registration source for PointerTransfer), else {}.
+func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
+	return _skill_window.hit_at(viewport_point) if skill_window_is_open() else {}
 
 func close_skill_window() -> void:
 	if skill_window_is_open():

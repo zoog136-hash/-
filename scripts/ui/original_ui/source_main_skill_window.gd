@@ -414,14 +414,45 @@ func _slot(hud: Node, record: Dictionary) -> Dictionary:
 		var node: Variant=button.player.source_nodes.get(button.offset)
 		var source_button: Variant=(node.get_meta("source_button") if node.has_meta("source_button") else null) if is_instance_valid(node) else null
 		var area: Variant=source_button.get("_input_area") if is_instance_valid(source_button) else null
-		if area is Control:area.gui_input.connect(_list_input)
+		if area is Control:
+			area.gui_input.connect(_list_input)
+			button["area"]=area
 	var labels: Dictionary={}
 	for pair: Array in [["cooldown","Nd_Skill_1/Label_CoolTime",cool],["amount","Nd_Skill_1/Text_Amount",amount]]:
 		var located_label: Dictionary=NamedTree.locate(built.scene,out,str(pair[1]))
 		if located_label.get("ok",false):labels[pair[0]]={"player":located_label.player,"offset":int(located_label.offset),"text":str(pair[2])}
-	var slot: Dictionary={"ok":true,"scene":built.scene,"picture":picture,"out":out,"id":id}
+	var slot: Dictionary={"ok":true,"scene":built.scene,"picture":picture,"out":out,"id":id,"name":str(record.get("name","")),"area":button.get("area"),"texture":image.get("texture") if picture else null}
 	slot.merge(labels)
 	return slot
+
+## Long-press source for PointerTransfer (원본 리니지M: 스킬 창의 스킬을 길게 눌러
+## 하단 단축 슬롯으로 끌어 놓아 등록). Only a visible slot inside the list view
+## answers; the tap/scroll of the slot itself stays this window's.
+func hit_at(viewport_point: Vector2) -> Dictionary:
+	if not is_open() or not viewport_point.is_finite():return {}
+	var scroll_area: Control=_scroll_area()
+	if scroll_area!=null and not _contains(scroll_area,viewport_point):return {}
+	for index: int in _slots:
+		var slot: Dictionary=_slots[index]
+		var area: Variant=slot.get("area")
+		if not area is Control or not _contains(area,viewport_point):continue
+		if str(slot.get("name","")).is_empty():return {}
+		return {"from":"skill","id":str(slot.name),"entry":{"kind":"skill","id":str(slot.name)},"texture":slot.get("texture"),"source_native":false,"source_skill_window":true}
+	return {}
+
+func _scroll_area() -> Control:
+	if not is_instance_valid(_content):return null
+	var node: Node=_content.get_parent()
+	while node!=null and node!=_scene:
+		if node.has_meta("source_scroll"):
+			var scroll: Variant=node.get_meta("source_scroll")
+			var control: Variant=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+			return control if control is Control else null
+		node=node.get_parent()
+	return null
+
+static func _contains(control: Control, point: Vector2) -> bool:
+	return is_instance_valid(control) and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*point)
 
 func _slot_pressed(id: String) -> Dictionary:
 	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
