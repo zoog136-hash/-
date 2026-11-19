@@ -532,7 +532,13 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 	_busy = false
 	return {"ok":true}
 
-func buy(id: int, quantity: int = 1) -> Dictionary:
+## Where a purchase is delivered: the order box (보관함, claimed later), the
+## bag in the same atomic save (refused when the bag cannot take it, as an
+## original NPC 상점 purchase), or the bag with the order box kept when the bag
+## cannot take it yet.
+enum Delivery {BOX, BAG, BAG_OR_BOX}
+
+func buy(id: int, quantity: int = 1, delivery: int = Delivery.BOX) -> Dictionary:
 	var prepared: Dictionary = quote(id, quantity)
 	if not prepared.ok: return prepared
 	var started: Dictionary = _start()
@@ -540,9 +546,9 @@ func buy(id: int, quantity: int = 1) -> Dictionary:
 	# _start can commit a migration. Re-read all authoritative values afterward.
 	prepared = _quote(id, quantity, true)
 	if not prepared.ok: _busy = false; return prepared
-	return _purchase(prepared, "market", str(id))
+	return _purchase(prepared, "market", str(id), delivery)
 
-func _purchase(prepared: Dictionary, kind: String, counter_key: String) -> Dictionary:
+func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery: int = Delivery.BOX) -> Dictionary:
 	var id: int = int(prepared.offer_id)
 	var quantity: int = int(prepared.quantity)
 	var inventory: Dictionary = world.inventory.duplicate(true)
@@ -579,8 +585,32 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String) -> Dicti
 		next.orders[order_id]["npc_reset_identity"]=str(prepared.npc_reset_identity)
 	if not next.purchases.has(counter_key): next.purchases[counter_key] = []
 	next.purchases[counter_key].append({"at":_now(),"quantity":quantity})
-	var result: Dictionary = _commit(next, inventory, gold, world.item_instances.duplicate(true), int(world.next_item_instance_id))
-	if result.ok: result.merge({"order_id":order_id,"name":prepared.name,"quantity":quantity,"reason":"구매 완료 · 보관함에서 수령하세요"})
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var next_instance: int = int(world.next_item_instance_id)
+	var delivered: bool = false
+	if delivery != Delivery.BOX:
+		# The payment and the goods land in one save: the order is recorded
+		# already received (the same record a 보관함 claim writes).
+		var granted: Dictionary = _grant(next.orders[order_id].goods, inventory, gold, instances, next_instance)
+		if granted.ok:
+			var received: Array = []
+			for physical_id: String in granted.instances:
+				if not instances.has(physical_id): received.append(physical_id)
+			inventory = granted.inventory
+			gold = int(granted.gold)
+			instances = granted.instances
+			next_instance = int(granted.next_id)
+			next.orders[order_id].status = "claimed"
+			next.orders[order_id].claimed_at = _now()
+			next.orders[order_id]["received_physical_ids"] = received
+			if kind == "market": _activate_cumulative(next, id)
+			delivered = true
+		elif delivery == Delivery.BAG:
+			_busy = false
+			return fail(str(granted.get("reason", "가방에 넣을 수 없습니다")).replace(" · 보관함 주문은 유지됩니다", "").replace(" · 보관함 주문 유지", "") + " · 구매하지 않았습니다")
+	var result: Dictionary = _commit(next, inventory, gold, instances, next_instance)
+	if result.ok: result.merge({"order_id":order_id,"name":prepared.name,"quantity":quantity,"delivered":delivered,
+		"reason":"구매 완료 · 가방에 넣었습니다" if delivered else "구매 완료 · 보관함에서 수령하세요"})
 	return result
 
 func merchant_signature(id: int) -> String:
@@ -726,14 +756,14 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		quoted["source_npc_input_identity"]=npc_definitions.input_identity.duplicate(true)
 	return quoted
 
-func buy_merchant(id: int, quantity: int = 1) -> Dictionary:
+func buy_merchant(id: int, quantity: int = 1, delivery: int = Delivery.BOX) -> Dictionary:
 	var prepared: Dictionary=quote_merchant(id,quantity)
 	if not prepared.ok:return prepared
 	var started: Dictionary=_start()
 	if not started.ok:return started
 	prepared=quote_merchant(id,quantity,true)
 	if not prepared.ok:_busy=false;return prepared
-	return _purchase(prepared,"merchant","merchant:"+str(catalog.merchant_offer(id).goods.get("MerchantGoodGUID",id)))
+	return _purchase(prepared,"merchant","merchant:"+str(catalog.merchant_offer(id).goods.get("MerchantGoodGUID",id)),delivery)
 
 func orders() -> Array:
 	var result: Array = []

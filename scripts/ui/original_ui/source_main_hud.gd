@@ -403,11 +403,16 @@ static func _collect_button_areas(node: Node, found: Array) -> void:
 		if area is Control and is_instance_valid(area):found.append(area)
 	for child: Node in node.get_children():_collect_button_areas(child,found)
 
+## Meta on an original Common_Slot root whose button the router may activate.
+const SLOT_ROUTED_META="source_slot_routed"
+
 static func _collect_native_buttons(node: Node, found: Array) -> void:
 	if node is CanvasItem and not node.is_visible_in_tree():return
 	if node.is_queued_for_deletion() or node.has_meta("source_asset_scene"):return
 	var identity: Variant=node.get_meta("original_ui_source",{})
-	if identity is Dictionary and identity.get("scene") in ["UI/CommonUi/Common_Slot.csb","UI/MainFloating/Slot_Skill.csb"]:return
+	# A window may hand a slot's own button to the router (SLOT_ROUTED_META on
+	# the slot root, e.g. a NPC 상점 product slot that is no bag item).
+	if identity is Dictionary and identity.get("scene") in ["UI/CommonUi/Common_Slot.csb","UI/MainFloating/Slot_Skill.csb"] and not node.has_meta(SLOT_ROUTED_META):return
 	# Reverse source child order follows the current native presentation. The
 	# original item/quickslot controls remain exclusively PointerTransfer's.
 	var children: Array[Node]=node.get_children()

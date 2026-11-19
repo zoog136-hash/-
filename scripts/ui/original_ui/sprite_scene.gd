@@ -200,6 +200,13 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 	if not widget.get("rotationSkew") is Array or widget.rotationSkew.size()!=2: problems.append("invalid_rotation_skew")
 	if not str(widget.get("customProperty","")).is_empty() and not _known_poison_metadata(node,binding,widget) and not _loading_bar_colour_note(node,widget):
 		var custom: Variant=_optional_dictionary(str(widget.customProperty))
+		# Common_Calculator's keypad buttons carry the client's own malformed
+		# JSON {"touchsoundid":"UI_COMMON_01,"textid":"99752"} (one quote
+		# missing): a touch sound (out of scope) and a text row, no pixels.
+		# Read exactly that shape as its two metadata strings.
+		if not custom is Dictionary:
+			var unquoted: RegExMatch=RegEx.create_from_string("^\\{\"touchsoundid\":\"([A-Z0-9_]+),\"textid\":\"([0-9]+)\"\\}$").search(str(widget.customProperty).strip_edges())
+			if unquoted!=null:custom={"touchsoundid":unquoted.get_string(1),"textid":unquoted.get_string(2)}
 		# Sound is excluded by the current user scope; retain exact metadata.
 		# "transfer" ("true"/"false") is a client flag on Text nodes (e.g.
 		# MessBoxHUD Text_Line); CSLoader keeps it as user data only, so it
