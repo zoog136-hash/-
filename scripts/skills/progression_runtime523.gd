@@ -99,7 +99,12 @@ func update_light() -> void:
 	# lights it in the engine, with no sprite (its effect 2507 is a 34-byte
 	# blank), so this gradient is the TWILIGHT approximation and stays under
 	# the 523 original-only presentation too.
-	if radius<=0 or service.world.hp<=0:
+	# The original light reveals a radius of a dark screen; it is not a glow.
+	# TWILIGHT fields have no darkness (no CanvasModulate), where an additive
+	# PointLight2D only washed a warm halo over the character and the ground
+	# (user report 2026-11-19 "케릭 부착물 뿌연건 여전히 존재"). Light only a
+	# darkened canvas.
+	if radius<=0 or service.world.hp<=0 or not scene_darkened(service.world):
 		if is_instance_valid(light):light.hide()
 		return
 	if not is_instance_valid(light):
@@ -109,6 +114,25 @@ func update_light() -> void:
 		texture.fill=GradientTexture2D.FILL_RADIAL;texture.fill_from=Vector2(.5,.5);texture.fill_to=Vector2(1,.5)
 		light.texture=texture;service.world.player.add_child(light)
 	light.texture_scale=radius/128.0;light.show()
+
+## True when the world's canvas is darkened (a CanvasModulate below full
+## brightness), the only case where the original light radius is visible.
+static var _dark_checked_msec: int = -1000000
+static var _dark_cached: bool = false
+static func scene_darkened(world: Node) -> bool:
+	if world == null or not world.is_inside_tree(): return false
+	# The tick calls this every frame; the canvas shade changes rarely.
+	var now: int = Time.get_ticks_msec()
+	if now - _dark_checked_msec < 1000: return _dark_cached
+	_dark_checked_msec = now
+	_dark_cached = false
+	for node: Node in world.get_tree().root.find_children("*", "CanvasModulate", true, false):
+		var shade := node as CanvasModulate
+		if shade.visible and shade.color.get_luminance() < 0.95: _dark_cached = true; break
+	return _dark_cached
+
+static func reset_darkness_cache() -> void:
+	_dark_checked_msec = -1000000
 
 func ammo_problem(skill: Dictionary) -> String:
 	if not skill.has("progression523"):return ""
