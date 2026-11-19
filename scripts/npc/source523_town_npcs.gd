@@ -22,12 +22,20 @@ const APPROX_CATEGORIES: Array[String] = ["AgitMerchant", "AgitTeleporter"]
 ## (ServerLimit rows) — the local game stands in for that server (TWILIGHT 근사).
 const LOCAL_SERVER_REGION: String = "KR"
 const LOCAL_SERVER_WORLD: int = 1
-## DialogActionType -> existing TWILIGHT service. Other action types (quest,
-## buff, restore, agit, landmark) have no local owner and stay unconnected.
+## DialogActionType -> existing TWILIGHT service. Quest rows open the quest
+## window (accept/complete stay there) and RestoreItemsAndExps the death
+## recovery window. Other action types (buff, agit, landmark) have no local
+## owner and stay unconnected.
 const ACTIONS: Dictionary = {"SellList": "shop", "BuyList": "buyback", "CraftList": "craft",
 	"TeleportList": "teleport", "RequestTeleport": "teleport",
 	"ShowCanStorageItems": "warehouse", "ShowCanPickupItems": "warehouse", "StorageItems": "warehouse",
-	"PickupItems": "warehouse", "UseAccountStorage": "warehouse"}
+	"PickupItems": "warehouse", "UseAccountStorage": "warehouse",
+	"QuestAccept": "quest", "QuestRewardGet": "quest", "QuestLvAchievement": "quest",
+	"RestoreItemsAndExps": "restore"}
+## A tapped NPC opens one function directly, without the talk window (user
+## request 2026-11-19 "NPC는 누르면 대화 안나오고 바로 상점 메뉴로"); with
+## several, the shop first.
+const PRIMARY_ORDER: Array[String] = ["shop", "warehouse", "teleport", "craft", "buyback", "restore", "quest"]
 const INTERACT_DISTANCE: float = 190.0
 static var _links: Dictionary = {}
 static var _links_loaded: bool = false
@@ -189,6 +197,17 @@ static func resolve(world: Node, npc_id: String, node_id: String) -> Dictionary:
 	return {"ok": true, "npc_id": npc_id, "npc_name": str(npc.get("name", "")), "node_id": "p%d" % (index + 1),
 		"text": text, "choices": choices, "source_dialog_rows": pages.map(func(page: Dictionary) -> int: return int(page.id)),
 		"source_earth_object_class_id": int(npc.source523_earth_object_class_id), "text_basis": "DialogData_Korean" if not pages.is_empty() else "none"}
+
+## The function a tap opens ("" when the NPC only talks), from the NPC's own
+## original DialogActionType rows; the player must stand next to it. Reads no
+## DialogData (talk text).
+static func primary_action(world: Node, npc_id: String) -> String:
+	var npc: Dictionary = record(world, npc_id)
+	if npc.is_empty() or not nearby(world, npc): return ""
+	var actions: Array = npc.get("source523_actions", [])
+	for action: String in PRIMARY_ORDER:
+		if actions.has(action): return action
+	return ""
 
 static func allowed_action(world: Node, npc_id: String, node_id: String, action: String) -> bool:
 	var resolved: Dictionary = resolve(world, npc_id, node_id)

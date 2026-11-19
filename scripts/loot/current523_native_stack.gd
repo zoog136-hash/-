@@ -12,11 +12,11 @@ const QUANTITY="source_native_stack_quantity"
 const RECEIPT="source_native_stack_receipt"
 const USES="source_native_stack_uses"
 const PARTITIONS="source_native_stack_partitions"
-const BAG_USES="source_native_bag_uses"
+const BAG_USES="source_native_bag_uses" ## retired journal (dropped on load)
 const AMMO_EQUIPPED="source_native_ammo_equipped"
-const AMMO_USES="source_native_ammo_uses"
+const AMMO_USES="source_native_ammo_uses" ## retired journal
 const AMMO_RNG="source_native_ammo_rng"
-const SKILL_MATERIAL_USES="source_native_skill_material_uses"
+const SKILL_MATERIAL_USES="source_native_skill_material_uses" ## retired journal
 const TRANSFERRED="source_native_stack_transferred_quantity"
 ## Bag stacking journal (native_stack_merge.gd): absorbed stacks' receipts.
 const MERGES="source_native_stack_merges"
@@ -254,6 +254,10 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
+	if effect.kind=="buff" and not spec.get("forbidden_territory_class_ids",[]).is_empty():
+		var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
+		if areas==null:return _failure("원본 사용 불가 지역 입력 확인 실패 · 아이템 보존")
+		if EFFECTS._forbidden(world,areas,world.player.global_position):return _failure("원본 조건: 이 지역에서는 사용할 수 없습니다")
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
@@ -400,10 +404,6 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 	var ammo_rng: Variant=state.get(AMMO_RNG,{})
 	if not ammo_rng is Dictionary:return "원본 탄약 독립 난수 저장 형식 보존 필요"
 	if not ammo_rng.is_empty() and (ammo_rng.size()!=3 or ammo_rng.get("schema")!=1 or not ammo_rng.get("seed") is String or not ammo_rng.get("state") is String or not str(ammo_rng.seed).is_valid_int() or not str(ammo_rng.state).is_valid_int()):return "원본 탄약 독립 난수 저장 증명 불일치"
-	var ammo_uses: Variant=state.get(AMMO_USES,{})
-	if not ammo_uses is Dictionary:return "원본 탄약 발사 장부 형식 확인 필요"
-	for event: Variant in ammo_uses.values():
-		if not event is Dictionary or event.get("schema")!=1 or not event.get("input") is Array or event.input.is_empty() or not event.get("source_definition_archive") is Dictionary:return "원본 탄약 발사 기록 보존 필요"
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return "원본 물리 사용 장부 형식 확인 필요"
 	var totals: Dictionary={};var stored_totals: Dictionary={}
@@ -489,28 +489,10 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var old_consumables: Dictionary=world.consumable_service.export_state()
 	if old_consumables.get(AMMO_EQUIPPED,{})!=state.get(AMMO_EQUIPPED,{}) and not (authorizes(overrides) and _candidate_kind in ["ammo_equip","ammo_consume"]):return "원본 탄약 개체 착용은 정확한 소유자 저장이 필요합니다"
 	if old_consumables.get(AMMO_RNG,{})!=state.get(AMMO_RNG,{}) and not (authorizes(overrides) and _candidate_kind=="ammo_consume"):return "원본 탄약 독립 난수 변경은 실제 소비 소유자 저장이 필요합니다"
-	var old_ammo_uses: Variant=old_consumables.get(AMMO_USES,{})
-	var next_ammo_uses: Variant=state.get(AMMO_USES,{})
-	if not old_ammo_uses is Dictionary or not next_ammo_uses is Dictionary:return "원본 탄약 발사 장부 보존 필요"
-	for event_id: String in old_ammo_uses:
-		if next_ammo_uses.get(event_id)!=old_ammo_uses[event_id]:return "기존 원본 탄약 발사 기록 변경 금지"
-	for event_id: String in next_ammo_uses:
-		if not old_ammo_uses.has(event_id) and not (authorizes(overrides) and _candidate_kind=="ammo_consume"):return "새 원본 탄약 발사 기록은 실제 물리 차감 소유자가 필요합니다"
-	var old_material_uses: Variant=old_consumables.get(SKILL_MATERIAL_USES,{})
-	var next_material_uses: Variant=state.get(SKILL_MATERIAL_USES,{})
-	if not old_material_uses is Dictionary or not next_material_uses is Dictionary:return "기존 원문 스킬 재료 소비 기록 보존 필요"
-	for event_id: String in old_material_uses:
-		if next_material_uses.get(event_id)!=old_material_uses[event_id]:return "기존 원문 스킬 재료 소비 기록 변경 금지"
-	for event_id: String in next_material_uses:
-		if not old_material_uses.has(event_id) and not (authorizes(overrides) and _candidate_kind=="skill_material_use"):return "새 원문 스킬 재료 기록은 실제 공동 차감 소유자 저장 필요"
-	var previous_bags: Variant=world.consumable_service.export_state().get(BAG_USES,{})
-	var next_bags: Variant=state.get(BAG_USES,{})
-	if not previous_bags is Dictionary or not next_bags is Dictionary:return "기존 원본 상자 사용 장부 형식 보존"
-	for id: String in previous_bags:
-		if next_bags.get(id)!=previous_bags[id]:return "이전 원본 상자 결과·난수 영수증 변경 금지"
-	for id: String in next_bags:
-		if not previous_bags.has(id) and not (authorizes(overrides) and _candidate_kind=="bag_use"):return "새 상자 결과 영수증은 정확한 지급·소비 소유자가 필요합니다"
-	var previous_partitions: Variant=world.consumable_service.export_state().get(PARTITIONS,{})
+	# Shot, skill-material and box-result journals are no longer kept
+	# (save_journal_trim: history no rule reads). The debit itself stays in
+	# the bag quantity and use ledger checked above.
+	var previous_partitions: Variant=old_consumables.get(PARTITIONS,{})
 	var next_partitions: Variant=state.get(PARTITIONS,{})
 	if not previous_partitions is Dictionary or not next_partitions is Dictionary:return "기존 물리 분할 장부 형식 보존"
 	for id: String in previous_partitions:
@@ -519,8 +501,8 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if not previous_partitions.has(id) and not (authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"]):return "새 물리 분할은 정확한 이전 소유자 거래가 필요합니다"
 	# Bag stacking runs only through world._merge_native_stacks (in memory, then
 	# the next save); a transaction may neither rewrite nor add merge history.
-	if world.consumable_service.export_state().get(MERGES,{})!=state.get(MERGES,{}):return "원본 묶음 병합 이력 변경 금지"
-	var old_ledger: Variant=world.consumable_service.export_state().get(USES,{})
+	if old_consumables.get(MERGES,{})!=state.get(MERGES,{}):return "원본 묶음 병합 이력 변경 금지"
+	var old_ledger: Variant=old_consumables.get(USES,{})
 	if not old_ledger is Dictionary:return "기존 원본 사용 장부 보존 필요"
 	for uid: String in old_ledger:
 		if ledger.get(uid)==old_ledger[uid]:continue
@@ -1026,7 +1008,7 @@ static func claim_bag_selection(world: Node,uid: String,owned: Dictionary,record
 	var evidence: Dictionary={"original_lucky_bag_class":spec.original_lucky_bag_class.duplicate(true),"class_id":current_class(world),"selection_entity_id":entity_id,"select_count_origin":spec.get("select_count_origin","")}
 	return commit_owned_rewards(world,uid,owned,record,spec,[selected],candidate_rng,origin,evidence)
 
-static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,rewards: Array,candidate_rng: RandomNumberGenerator,origin: Dictionary,evidence: Dictionary) -> Dictionary:
+static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,rewards: Array,candidate_rng: RandomNumberGenerator,origin: Dictionary,_evidence: Dictionary) -> Dictionary:
 	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
 	var is_quest: bool=owned.get("ownership_kind")=="quest"
 	var paid: Dictionary={}
@@ -1071,14 +1053,10 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
 	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
 	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
-	var journal: Variant=state.get(BAG_USES,{})
-	if not journal is Dictionary:return _failure("기존 원본 상자 사용 장부 형식 보존")
-	journal=journal.duplicate(true);var receipt_id: String=Crypto.new().generate_random_bytes(16).hex_encode()
-	while journal.has(receipt_id):receipt_id=Crypto.new().generate_random_bytes(16).hex_encode()
-	var outcome: Dictionary=evidence.duplicate(true)
-	outcome.merge({"schema":1,"input":paid.selections.duplicate(true),"kind":origin.kind,"source_definition_archive":SOURCE.identity(),"selected_rewards":rewards.duplicate(true),"rng_before":{"seed":str(world.rng.seed),"state":str(world.rng.state)},"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}})
-	journal[receipt_id]=outcome
-	state[BAG_USES]=journal;payload["consumable_state"]=state
+	# One opening id for this result (visual commit key); the result itself is
+	# the granted items, not a kept journal row.
+	var receipt_id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+	state.erase(BAG_USES);payload["consumable_state"]=state
 	var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
 	payload["item_use_cooldowns"]=executor.call("next_cooldowns",world,record,spec)
 	payload["patch523_transaction_rng"]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
@@ -1444,15 +1422,10 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	payload["hp"]=int(world.hp)-hp_cost
 	if int(owned.remaining)==quantity:
 		state[AMMO_EQUIPPED]={};payload["equipped_ammo"]="";payload["ammo_unequipped"]=true
-	var journal: Variant=state.get(AMMO_USES,{})
-	if not journal is Dictionary:return _failure("기존 원본 탄약 발사 장부 보존")
-	journal=journal.duplicate(true);var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
-	while journal.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
-	var recorded_cost: Dictionary=additional_cost.duplicate(true)
-	if recorded_cost.has("resolved_skill"):
-		recorded_cost["resolved_skill_quote_sha256"]=JSON.stringify(recorded_cost.resolved_skill,"",true,true).sha256_text();recorded_cost.erase("resolved_skill")
-	journal[id]={"schema":1,"input":paid.selections.duplicate(true),"source_definition_archive":SOURCE.identity(),"quantity":quantity,"mp_cost":mp_cost,"additional_existing_skill_cost":recorded_cost,"damage_bonus":damage,"damage_origin":"existing_TWILIGHT_ammo_damage_policy" if roll_damage else "skill_does_not_add_new_ammo_damage","damage_policy":policy,"target_size":size_class,"rng_domain":"TWILIGHT_source_native_ammo_independent_v1","rng_before":private_before.duplicate(true),"rng_after":{"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
-	state[AMMO_USES]=journal;payload["mp"]=int(world.mp)-mp_cost
+	# No per-shot journal row: the shot's result is the debited quantity,
+	# MP and the ammo RNG state saved below.
+	var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+	state.erase(AMMO_USES);payload["mp"]=int(world.mp)-mp_cost
 	if roll_damage:state[AMMO_RNG]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
 	if not paid.quest_step.is_empty() and not QUEST_CONSUME.matches_payload(world,paid.quest_step,payload):return _failure("퀘스트 탄약 잔량·최초 사용 증명·MP 결과 공동 후보 불일치")
 	busy=true;_candidate_kind="ammo_consume";_candidate=payload.duplicate(true)
@@ -1657,12 +1630,9 @@ static func spend_original_skill_materials(world: Node,skill: Dictionary,plan: D
 			if physical is Dictionary and physical.get("name")==key and (physical.has(RECEIPT) or physical.has("quest_reward_receipt")):return _failure("다른 물리 재료의 이름 기반 차감 금지")
 		payload.inventory[key]=int(payload.inventory[key])-int(amount)
 		if payload.inventory[key]==0:payload.inventory.erase(key)
-	var state: Dictionary=payload.consumable_state;var journal: Variant=state.get(SKILL_MATERIAL_USES,{})
-	if not journal is Dictionary:return _failure("기존 원문 스킬 재료 사용 기록 보존 필요")
-	journal=journal.duplicate(true);var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
-	while journal.has(id):id=Crypto.new().generate_random_bytes(16).hex_encode()
-	journal[id]={"schema":1,"source_definition_archive":SOURCE.identity(),"skill_id":str(skill.get("id","")),"source_skill_input":skill.get("source523",{}).duplicate(true),"selected_inputs":paid.selections.duplicate(true),"legacy_spent":plan.spent.duplicate(true),"mp_cost":int(mp_cost),"hp_cost":int(hp_cost),"selection_policy":"TWILIGHT_exact_proven_physical_id_order"}
-	state[SKILL_MATERIAL_USES]=journal;payload["mp"]=int(world.mp)-int(mp_cost);payload["hp"]=int(world.hp)-int(hp_cost)
+	# No per-cast journal row: the debited physical quantities are the result.
+	var state: Dictionary=payload.consumable_state;var id: String=Crypto.new().generate_random_bytes(16).hex_encode()
+	state.erase(SKILL_MATERIAL_USES);payload["mp"]=int(world.mp)-int(mp_cost);payload["hp"]=int(world.hp)-int(hp_cost)
 	if not paid.quest_step.is_empty() and not QUEST_CONSUME.matches_payload(world,paid.quest_step,payload):return _failure("스킬 원문 재료의 실제 잔량·퀘스트 사용 장부 공동 후보 불일치")
 	busy=true;_candidate_kind="skill_material_use";_candidate=payload.duplicate(true)
 	var saved: Error=world._save_game(true,payload)

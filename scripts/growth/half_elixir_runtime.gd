@@ -146,6 +146,24 @@ func install(path: String) -> Dictionary:
 	accept(next)
 	return {"ok":true, "message":"523 원본을 설치하고 저장했습니다."}
 
+## Links the bundled verified 523 definitions archive (the same SHA
+## source_for already accepts) when no source is recorded yet, without
+## copying the 25 MB archive: the menu's 하프 엘릭서 then opens the original
+## window on a phone whose original pack is installed.
+func link_bundled() -> Dictionary:
+	if busy or save_blocked: return failure("다른 처리가 진행 중이거나 저장 보호 중입니다.")
+	if not str(state.get("source_sha256","")).is_empty(): return {"ok":true, "already":true}
+	if DEFINITIONS.archive_path().is_empty(): return failure(str(DEFINITIONS.problem()))
+	var next: Dictionary = state.duplicate(true)
+	next.source_sha256 = DEFINITIONS.SOURCE_SHA
+	next.revision += 1
+	busy = true
+	var error: Error = world._save_game(true, {KEY:next})
+	busy = false
+	if error != OK: return failure("저장 실패로 원본 연결을 활성화하지 않았습니다.")
+	accept(next)
+	return {"ok":true, "message":"523 원본 정의 묶음에 연결했습니다."}
+
 func owned_stack(name: String, inventory: Dictionary) -> int:
 	if name.is_empty() or not integer(inventory.get(name, 0)): return -1
 	# Stack-name compatibility is explicit. Never consume a named physical or locked item.
