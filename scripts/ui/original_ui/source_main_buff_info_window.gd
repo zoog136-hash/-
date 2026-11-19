@@ -6,13 +6,29 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## BuffClass ON icon in the Common_Slot picture (the HUD buff row's own
 ## Source523SkillImages.describe_buff), the effect name, the item / skill
 ## description and the remaining time, updated every second while open.
-## Left empty (no TWILIGHT data): the 디버프 and 발동 마법 lists (TWILIGHT keeps
-## no named player debuffs or invoke list; their own 없습니다 notices show),
-## 상세보기 (ToolTip_HudType_Buff), a buff whose original icon is not known.
+## 디버프 lists the effects on the player now: the player's own status timers
+## (스턴 / 사일런스 / 홀드 / 공포 / 중독 / 출혈, player.gd) and the original
+## BuffClass effects monsters put on the player (patch523_npc_spells
+## .player_buffs, IsGood false: BuffClass DescID name, EffectDescID text, ON
+## icon); a good BuffClass effect from there joins the 버프 list. 발동 마법
+## lists the worn equipment's invokes the combat runtime rolls
+## (patch523_equipment_combat.active, every kind it handles): the invoked
+## SpellClass name and icon for a spell invoke, the item name otherwise, the
+## original chance. Times follow the runtime every second.
+## Left empty: 상세보기 (ToolTip_HudType_Buff), a row whose original icon is
+## not known (the player status timers have no BuffClass).
 const SkillImages=preload("res://scripts/ui/source523_skill_buff_images.gd")
 const ROOT="UI/FloatingUi/Inventory_Buff_Info_All.csb"
 const ROW="UI/FloatingUi/Inventory_Buff_List_Item.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
+const EquipmentCombat=preload("res://scripts/crafting/patch523_equipment_combat.gd")
+const Rows=preload("res://scripts/resources/current523_definition_rows.gd")
+## player.gd status timers -> the name the debuff list shows.
+const PLAYER_STATUS: Array=[["stun_remaining","스턴"],["silence_remaining","사일런스"],["hold_remaining","홀드"],["fear_remaining","공포"],["poison_remaining","중독"],["bleed_remaining","출혈"]]
+## patch523_equipment_combat kinds, in list order -> the content text.
+const INVOKE_KINDS: Array=["attack_source_spell","attack_fixed_damage","attack_weapon_scale","defence_flat_reduction","defence_fixed_counter"]
+## The empty notices (the authored text is the 버프 one for all three tabs).
+const NOTICES={"buff":"","debuff":"적용 중인 디버프가 없습니다.","spell":"발동하는 마법이 없습니다."}
 ## tab -> [pressed button, released button, list node]
 const TABS={"buff":["Btn_BuffInfo_On","Btn_BuffInfo_Off","Nd_Tab_Buff"],"debuff":["Btn_DebuffInfo_On","Btn_DebuffInfo_Off","Nd_Tab_Debuff"],"spell":["Btn_SpellInfo_On","Btn_SpellInfo_Off","Nd_Tab_Spell"]}
 ## Common_Slot keeps its button, frame and picture.
@@ -40,7 +56,82 @@ func open(parent: Node) -> Dictionary:
 func _buffs() -> Dictionary:
 	var owner: Object=world()
 	var buffs: Variant=owner.call("_combined_active_buffs") if owner!=null and owner.has_method("_combined_active_buffs") else {}
-	return buffs if buffs is Dictionary else {}
+	var result: Dictionary=(buffs as Dictionary).duplicate() if buffs is Dictionary else {}
+	for row: Dictionary in _source_effects(true):result[row.key]=row.effect
+	return result
+
+## The rows of `kind` (buff / debuff / spell): key -> effect dictionary with
+## remaining (seconds, -1 none), desc, and source_buff_class / source_spell_class
+## when the original row is known.
+func rows_of(kind: String) -> Dictionary:
+	if kind=="buff":return _buffs()
+	var result: Dictionary={}
+	if kind=="debuff":
+		var player: Object=world().get("player") if world()!=null else null
+		if is_instance_valid(player):
+			for status: Array in PLAYER_STATUS:
+				var left: float=float(player.get(str(status[0])) if player.get(str(status[0]))!=null else 0.0)
+				if left>0.0:result[str(status[1])]={"remaining":left,"desc":"","player_status":str(status[0])}
+		for row: Dictionary in _source_effects(false):result[row.key]=row.effect
+	elif kind=="spell":
+		for row: Dictionary in _invokes():result[row.key]=row.effect
+	return result
+
+## Original BuffClass effects monsters put on the player (good or not).
+func _source_effects(good: bool) -> Array:
+	var owner: Object=world()
+	var service: Variant=owner.get("patch523_npc_spells") if owner!=null else null
+	if not service is Object or not (service as Object).get("player_buffs") is Dictionary:return []
+	var found: Array=[]
+	var buffs: Dictionary=(service as Object).get("player_buffs")
+	for id: Variant in buffs:
+		var buff: Variant=buffs[id]
+		if not buff is Dictionary:continue
+		var source: Dictionary=(service as Object).catalog.row("BuffClass",int(id))
+		if source.is_empty() or bool(source.get("IsGood",false))!=good or source.get("IsShownBuffIcon",true)==false or source.get("IsHide",false)==true:continue
+		var title: String=desc(int(source.get("DescID",0)))
+		if title.is_empty():title=str(source.get("Name",id))
+		var key: String=title
+		if found.any(func(r: Dictionary) -> bool: return r.key==key):key="%s #%d" % [title,int(id)]
+		found.append({"key":key,"effect":{"remaining":float((buff as Dictionary).get("remaining",0.0)),"desc":desc(int(source.get("EffectDescID",0))),"source_buff_class":source,"source_snapshot":"patch523","buff_id":int(id)}})
+	return found
+
+## The worn equipment's invokes the combat runtime rolls.
+func _invokes() -> Array:
+	var owner: Object=world()
+	if owner==null or not owner.get("equipped_items") is Dictionary or owner.get("patch523_equipment")==null or not owner.has_method("_physical_enhancement_record"):return []
+	var found: Array=[]
+	for kind: String in INVOKE_KINDS:
+		for effect: Dictionary in EquipmentCombat.active(owner,kind):
+			var option: Dictionary=effect.get("option",{})
+			var chance: String="%s%%" % String.num(float(effect.get("probability",0))/10000.0,2).trim_suffix(".00")
+			var title: String=str(effect.get("item_name",""))
+			var text: String=""
+			var spell: Dictionary={}
+			match kind:
+				"attack_source_spell":
+					spell=Rows.row("SpellClass",int(option.get("Param1",0)))
+					var spell_name: String=desc(int(spell.get("DescID",0)))
+					if not spell_name.is_empty():title=spell_name
+					text="%s · 공격 시 %s" % [str(effect.get("item_name","")),chance]
+				"attack_fixed_damage":text="공격 시 %s · 추가 대미지 %d" % [chance,int(option.get("Param1",0))]
+				"attack_weapon_scale":text="공격 시 %s · 무기 대미지 %s%%" % [chance,String.num(float(option.get("Param1",0))/10000.0,1).trim_suffix(".0")]
+				"defence_flat_reduction":text="피격 시 %s · 대미지 감소 %d" % [chance,int(option.get("Param1",0))]
+				"defence_fixed_counter":text="피격 시 %s · 반격" % chance
+			var key: String=title
+			var n: int=2
+			while found.any(func(r: Dictionary) -> bool: return r.key==key):
+				key="%s (%d)" % [title,n]
+				n+=1
+			var row: Dictionary={"remaining":-1.0,"desc":text,"invoke_kind":kind,"option_id":int(option.get("ID",0)),"instance_id":str(effect.get("instance_id",""))}
+			if not spell.is_empty():row["source_spell_class"]=spell
+			found.append({"key":key,"effect":row})
+	return found
+
+static func desc(id: int) -> String:
+	if id<=0:return ""
+	var rows: Array[Dictionary]=Rows.related("DescData_Korean","ID",id)
+	return str(rows[-1].get("Description","")).replace("\r\n","\n") if not rows.is_empty() else ""
 
 static func remaining_text(seconds: float) -> String:
 	var total: int=maxi(0,int(ceil(seconds)))
@@ -58,28 +149,31 @@ func _spec() -> Dictionary:
 		spec["Tab/"+str(TABS[name][1])]={"visible":not on,"activate":Callable(self,"_tab").bind(name)}
 		spec[str(TABS[name][2])]={"visible":true} if on else {"exclude":true}
 		spec[str(TABS[name][2])+"/ToolTip_HudType_Buff"]={"exclude":true}
-	spec["Nd_Tab_Buff/Text_Notice"]={"visible":_buffs().is_empty()}
+	var empty: bool=rows_of(tab).is_empty()
+	var notice: Dictionary={"visible":empty}
+	if empty and not str(NOTICES[tab]).is_empty():notice.merge({"role":"source_text","text":str(NOTICES[tab])})
+	spec[str(TABS[tab][2])+"/Text_Notice"]=notice
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	_times.clear()
 	_shown_keys.clear()
-	if tab!="buff":return {"ok":true,"tab":tab,"rows":0}
-	var buffs: Dictionary=_buffs()
+	var buffs: Dictionary=rows_of(tab)
 	var rows: Array=[]
 	for key: Variant in buffs:
 		var effect: Dictionary=buffs[key] if buffs[key] is Dictionary else {}
 		var spec: Dictionary={"Panel/Btn_Normal":{"activate":Callable(self,"_ignore")},"Panel/Btn_Pressed":{"exclude":true},"Panel/Btn_Disabled":{"exclude":true},
 			"Btn_Normal/Label_Exp":{"role":"source_text","text":str(key)},
 			"Btn_Normal/Label_Content":{"role":"source_text","text":str(effect.get("desc","")).split("\n")[0]},
-			"Btn_Normal/Lable_Info":{"role":"source_text","text":remaining_text(float(effect.get("remaining",0.0)))},
+			"Btn_Normal/Lable_Info":{"role":"source_text","text":remaining_text(float(effect.get("remaining",0.0)))} if float(effect.get("remaining",0.0))>=0.0 else {"visible":false},
 			"Btn_Normal/Lable_Id":{"visible":false},
 			"Slot/Btn":{"activate":Callable(self,"_ignore")},
 			"Slot/Sp_IconSample":{"role":"source_asset_slot","visible":false}}
 		for name: String in SLOT_EXCLUDED:spec["Slot/"+name]={"exclude":true}
 		rows.append({"member":ROW,"spec":spec,"key":str(key),"effect":effect})
 		_shown_keys.append(str(key))
-	var placed: Dictionary=_fill_list(root,out,"Nd_Tab_Buff/ListView_Buff",rows)
+	var list_names: Dictionary={"buff":"Nd_Tab_Buff/ListView_Buff","debuff":"Nd_Tab_Debuff/ListView_Debuff","spell":"Nd_Tab_Spell/ListView_Spell"}
+	var placed: Dictionary=_fill_list(root,out,str(list_names[tab]),rows)
 	if not placed.get("ok",false):return placed
 	var icons: int=0
 	for index: int in range(rows.size()):
@@ -87,7 +181,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var row_out: Dictionary=placed.outs[index]
 		if _icon(scene,row_out,rows[index].effect):icons+=1
 		var time: Dictionary=_locate(scene,row_out,"Btn_Normal/Lable_Info")
-		if time.get("ok",false):_times.append({"key":rows[index].key,"player":time.player,"offset":time.offset})
+		if time.get("ok",false) and float(rows[index].effect.get("remaining",0.0))>=0.0:_times.append({"key":rows[index].key,"player":time.player,"offset":time.offset})
 	_watch(root)
 	return {"ok":true,"tab":tab,"rows":rows.size(),"icons":icons}
 
@@ -100,7 +194,7 @@ func _icon(scene: Node2D, out: Dictionary, effect: Dictionary) -> bool:
 	if service is Object and (service as Object).get("catalog")!=null:
 		source=(service as Object).get("catalog").get("source523")
 		if owner.has_method("_skill_record"):record=owner.call("_skill_record",str(effect.get("skill_id","")))
-	var info: Dictionary=SkillImages.describe_buff(effect,"OnIconID",source,record)
+	var info: Dictionary=SkillImages.describe_spell_class_row(effect.source_spell_class) if effect.get("source_spell_class") is Dictionary else SkillImages.describe_buff(effect,"OnIconID",source,record)
 	if not info.get("texture") is Texture2D:return false
 	var located: Dictionary=_locate(scene,out,"Slot/Sp_IconSample")
 	if not located.get("ok",false):return false
@@ -116,8 +210,8 @@ func _watch(root: Node2D) -> void:
 	root.add_child(_timer)
 
 func _tick() -> void:
-	if not is_open() or tab!="buff":return
-	var buffs: Dictionary=_buffs()
+	if not is_open():return
+	var buffs: Dictionary=rows_of(tab)
 	var keys: Array=[]
 	for key: Variant in buffs:keys.append(str(key))
 	if keys!=_shown_keys:
