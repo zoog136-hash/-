@@ -23,6 +23,23 @@ const VISIBLE_CHUNK_LIMIT: int = 48
 const VISIBLE_ATLAS_LIMIT: int = 256
 const DRAW_COMMAND_LIMIT: int = 65536
 const DELTA_LIMIT: float = 48.0
+## Ground baking: the tile layers are drawn once per BLOCK x BLOCK world-pixel
+## block into its own render target, and the screen draws the visible block
+## images. Before, every refresh outside the built margin re-walked every
+## record of every visible chunk (8,192 floor words each, plus covers and
+## objects) and re-issued every 24 px tile draw (tens of thousands per frame
+## build): the phone's map_renderer 130-150 ms/s and a stall per walk step.
+## Each block holds every record whose 24 px rect meets it, in the original
+## order (layer, then sorted member, then record), clipped to the block, so the
+## block images side by side are the same picture as the direct layer pass.
+const BLOCK: int = 512
+const BLOCK_SHIFT: int = 9 # BLOCK == 1 << BLOCK_SHIFT
+const TILE_PX: int = 24
+## Baked blocks kept (1 MiB RGBA8 each, 48 MiB at most); a phone screen with
+## the build margin uses ~20. Older blocks are freed and rebaked when seen again.
+const BLOCK_CACHE_LIMIT: int = 48
+## New margin block images per refresh (blocks on screen always bake at once).
+const MARGIN_BAKES_PER_REFRESH: int = 6
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -58,6 +75,14 @@ var _raw_recent: Array[String] = []
 var _frame_commands: Dictionary = {}
 var _built_view := Rect2() # World rect the current frame commands cover.
 var _frame_atlases: Dictionary = {}
+## Block cell -> {viewport, canvas, commands {layer: PackedInt64Array},
+## atlases {tile_id: Texture2D}, count (records owned), draws, raw_ff, unresolved}.
+var _blocks: Dictionary = {}
+var _block_recent: Array[Vector2i] = []
+var _blocks_include_objects: bool = true
+var _visible_blocks: Array[Vector2i] = []
+## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
+var _chunk_bins: Dictionary = {}
 var _metrics: Dictionary = {}
 var _last_actor_cell := Vector2i(-2147483648, -2147483648)
 var _refresh_clock: float = 0.0
@@ -167,6 +192,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
+	_chunk_bins.clear(); _clear_blocks()
 	_scope_clipped_records = 0
 	_off_floor_decoration_records = 0
 	for row: Variant in record.chunks:
@@ -248,6 +274,11 @@ func _ensure_ground() -> void:
 		node.name = "Current523ExperimentalTiles"
 		node.z_index = -4096
 		node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		# Block images hold colour already multiplied by alpha (mix blending
+		# onto a transparent target), so they are laid down premultiplied.
+		var blend := CanvasItemMaterial.new()
+		blend.blend_mode = CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
+		node.material = blend
 		add_child(node)
 		_tile_ground = node
 	_tile_ground.position = _visual_delta
@@ -415,28 +446,85 @@ func _read_chunk(member: String) -> Dictionary:
 			row["source_sha256"]=decoded.source_sha256
 			row["source_bytes"]=decoded.source_bytes
 	_static_tails[member]=tail
-	var layers: Dictionary = {}
+	# Records in file order (floor, covers, objects), then projected in one pass.
+	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var refs := PackedInt64Array()
 	var floor_bytes: PackedByteArray = decoded.sections.floor
-	for index: int in range(8192): _append(layers, origin, index & 127, index >> 7, floor_bytes.decode_u32(index * 4), -2)
+	halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
+	for index: int in range(8192):
+		halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
 	var covers: PackedByteArray = decoded.sections.covers
 	for index: int in range(covers.decode_u16(0)):
 		var offset: int = 2 + index * 6
-		_append(layers, origin, covers[offset], covers[offset + 1], covers.decode_u32(offset + 2), -1)
+		halves.append(covers[offset]); rows.append(covers[offset + 1]); kinds.append(-1); refs.append(covers.decode_u32(offset + 2))
 	var objects: PackedByteArray = decoded.sections.objects
 	var cursor: int = 4
 	for _group: int in range(objects.decode_u32(0)):
 		var count: int = objects.decode_u16(cursor + 2)
 		cursor += 4
 		for _part: int in range(count):
-			_append(layers, origin, objects[cursor], objects[cursor + 1], objects.decode_u32(cursor + 3), objects[cursor + 2])
+			halves.append(objects[cursor]); rows.append(objects[cursor + 1]); kinds.append(objects[cursor + 2]); refs.append(objects.decode_u32(cursor + 3))
 			cursor += 7
-	var packed: Dictionary = {}
-	for layer: int in layers: packed[layer] = PackedInt64Array(layers[layer])
+	var packed: Dictionary = _project_records(origin, halves, rows, kinds, refs)
+	_chunk_bins[member] = _bin_chunk(packed)
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
 		var oldest: String=_raw_recent.pop_front()
-		_raw_chunks.erase(oldest);_static_tails.erase(oldest)
+		_raw_chunks.erase(oldest);_static_tails.erase(oldest);_chunk_bins.erase(oldest)
+	return packed
+
+
+## The same result as _append for every record in order (scope check,
+## off-floor decorations, projection, per-layer lanes), in one loop: the
+## per-record path made five script calls per record (~20,000 per chunk) and
+## was the largest map cost while moving (837,955 projections in 40 s).
+func _project_records(origin: Vector2i, halves: PackedInt32Array, rows: PackedInt32Array, kinds: PackedInt32Array, refs: PackedInt64Array) -> Dictionary:
+	var coordinates: RefCounted = field.coordinates
+	var lanes: Dictionary = {}
+	if not bool(coordinates.valid):
+		var slow: Dictionary = {}
+		for index: int in halves.size(): _append(slow, origin, halves[index], rows[index], refs[index], kinds[index])
+		for layer: int in slow: lanes[layer] = PackedInt64Array(slow[layer])
+		return lanes
+	var generic: bool = bool(field.get_meta("current523_generic_field",false))
+	var bx: Vector2 = coordinates.basis_x
+	var by: Vector2 = coordinates.basis_y
+	var shift: Vector2 = coordinates.translation
+	var grid_origin: Vector2i = coordinates.origin
+	var odd: Vector2 = (bx + by) * 0.5
+	var last_cover := Vector2i(-2147483647, -2147483647)
+	var last_inside: bool = false
+	for index: int in halves.size():
+		var half_x: int = halves[index]
+		var row_y: int = rows[index]
+		var layer: int = kinds[index]
+		var sx: int = origin.x + floori(float(half_x) / 2.0)
+		var sy: int = origin.y + row_y
+		var cover := Vector2i(floori(float(sx) / 64.0) * 64, floori(float(sy) / 64.0) * 64)
+		if cover != last_cover:
+			last_cover = cover
+			last_inside = _overlap.has(cover)
+		if not last_inside:
+			if layer == -2 or not generic:
+				_scope_clipped_records += 1
+				continue
+			_off_floor_decoration_records += 1
+		# source_coordinates.half_tile_position -> to_world -> grid_to_world,
+		# same operations in the same order (Vector2 float32 results).
+		var gx: float = float(float(sx) - grid_origin.x + 0.5)
+		var gy: float = float(float(sy) - grid_origin.y + 0.5)
+		var world := Vector2(bx.x * gx + by.x * gy + shift.x, bx.y * gx + by.y * gy + shift.y)
+		var point: Vector2 = world - by + float(half_x & 1) * odd
+		# Arrays are shared references; a packed array taken from the
+		# dictionary would be copied on every append.
+		var lane: Variant = lanes.get(layer)
+		if lane == null:
+			lane = []
+			lanes[layer] = lane
+		var items: Array = lane
+		items.append(int(point.x)); items.append(int(point.y)); items.append(refs[index])
+	var packed: Dictionary = {}
+	for layer: int in lanes: packed[layer] = PackedInt64Array(lanes[layer])
 	return packed
 
 
@@ -457,6 +545,191 @@ func _append(layers: Dictionary, origin: Vector2i, half_x: int, row_y: int, raw_
 	lane.append(int(point.x)); lane.append(int(point.y)); lane.append(raw_ref)
 
 
+## Record positions of one chunk by the blocks their 24 px rect meets:
+## block cell -> {layer: PackedInt32Array(record index)}.
+static func _bin_chunk(packed: Dictionary) -> Dictionary:
+	var bins: Dictionary = {}
+	for layer: int in packed:
+		var records: PackedInt64Array = packed[layer]
+		# Integer cell keys and shifts (floor division for negatives too);
+		# almost every 24 px record lies inside one block.
+		var lanes: Dictionary = {}
+		for index: int in range(0, records.size(), 3):
+			var x: int = records[index]
+			var y: int = records[index + 1]
+			var x0: int = x >> BLOCK_SHIFT
+			var y0: int = y >> BLOCK_SHIFT
+			var x1: int = (x + TILE_PX - 1) >> BLOCK_SHIFT
+			var y1: int = (y + TILE_PX - 1) >> BLOCK_SHIFT
+			var key: int = (x0 << 32) | (y0 & 0xffffffff)
+			var lane: PackedInt32Array = lanes.get(key, PackedInt32Array())
+			lane.append(index)
+			lanes[key] = lane
+			if x1 != x0 or y1 != y0:
+				for bx: int in range(x0, x1 + 1):
+					for by: int in range(y0, y1 + 1):
+						if bx == x0 and by == y0: continue
+						var other: int = (bx << 32) | (by & 0xffffffff)
+						var extra: PackedInt32Array = lanes.get(other, PackedInt32Array())
+						extra.append(index)
+						lanes[other] = extra
+		for key: int in lanes:
+			var cell := Vector2i(key >> 32, (key << 32) >> 32)
+			if not bins.has(cell): bins[cell] = {}
+			(bins[cell] as Dictionary)[layer] = lanes[key]
+	return bins
+
+
+static func _block_rect(cell: Vector2i) -> Rect2:
+	return Rect2(Vector2(cell * BLOCK), Vector2(BLOCK, BLOCK))
+
+
+## Draw records of one block (all layers, original order) or a problem text.
+## A block always takes the chunks near it (not the screen's chunk set at bake
+## time), so the cached image does not depend on where the player came from.
+func _block_commands(cell: Vector2i) -> Dictionary:
+	var rect: Rect2 = _block_rect(cell)
+	var near: Rect2 = rect.grow(BUILD_MARGIN)
+	var members: Array[String] = []
+	for member: String in _chunk_rects:
+		if (_chunk_rects[member] as Rect2).intersects(near): members.append(member)
+	members.sort()
+	var by_layer: Dictionary = {}
+	var atlases: Dictionary = {}
+	var draws: int = 0
+	# Metrics count a record once, in the block holding its top-left corner.
+	var count: int = 0
+	var raw_ff: int = 0
+	var unresolved: int = 0
+	for member: String in members:
+		var layers: Dictionary = _read_chunk(member)
+		if not problem.is_empty(): return {"problem": problem}
+		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell, {})
+		for layer: int in bins:
+			if not include_objects and layer >= 0: continue
+			var records: PackedInt64Array = layers[layer]
+			for index: int in (bins[layer] as PackedInt32Array):
+				var ref: int = records[index + 2]
+				var owned: bool = floori(float(records[index]) / BLOCK) == cell.x and floori(float(records[index + 1]) / BLOCK) == cell.y
+				if ref == 4294967295:
+					if owned: raw_ff += 1
+					continue
+				var tile_id: int = ref >> 8
+				# A tile the installed pack lacks is a hole, not a reason to close the map.
+				if not _tile_pack.has_tile(tile_id): _unresolved_tile(tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id)); unresolved += int(owned); continue
+				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): _unresolved_tile(tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255]); unresolved += int(owned); continue
+				if draws >= DRAW_COMMAND_LIMIT or (not atlases.has(tile_id) and atlases.size() >= VISIBLE_ATLAS_LIMIT):
+					return {"problem": "M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다."}
+				if not atlases.has(tile_id):
+					var texture: Texture2D = _frame_atlases.get(tile_id)
+					if texture == null: texture = _tile_pack.texture_for(tile_id)
+					if texture == null: _unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)]); unresolved += int(owned); continue
+					atlases[tile_id] = texture
+				var lane: Variant = by_layer.get(layer)
+				if lane == null:
+					lane = []
+					by_layer[layer] = lane
+				(lane as Array).append_array([records[index], records[index + 1], ref])
+				draws += 1
+				count += int(owned)
+	var commands: Dictionary = {}
+	for layer: int in by_layer: commands[layer] = PackedInt64Array(by_layer[layer])
+	return {"commands": commands, "atlases": atlases, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
+
+
+## Asks the tile pack to decode, on workers, every atlas the block draws;
+## true when all of them are ready (or the pack decodes only on demand).
+func _request_block_tiles(cell: Vector2i) -> bool:
+	if not _tile_pack.has_method("prefetch"): return true
+	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
+	var ready: bool = true
+	var asked: Dictionary = {}
+	for member: String in _chunk_rects:
+		if not (_chunk_rects[member] as Rect2).intersects(near): continue
+		var layers: Dictionary = _read_chunk(member)
+		if layers.is_empty(): continue
+		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell, {})
+		for layer: int in bins:
+			if not include_objects and layer >= 0: continue
+			var records: PackedInt64Array = layers[layer]
+			for index: int in (bins[layer] as PackedInt32Array):
+				var ref: int = records[index + 2]
+				if ref == 4294967295: continue
+				var tile_id: int = ref >> 8
+				if asked.has(tile_id): continue
+				asked[tile_id] = true
+				if not _tile_pack.has_tile(tile_id): continue
+				if not _tile_pack.call("prefetch", tile_id): ready = false
+	return ready
+
+
+## One block's render target, drawn once (UPDATE_ONCE) from its commands.
+func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
+	var viewport := SubViewport.new()
+	viewport.name = "Current523GroundBlock_%d_%d" % [cell.x, cell.y]
+	viewport.size = Vector2i(BLOCK, BLOCK)
+	viewport.transparent_bg = true
+	viewport.disable_3d = true
+	viewport.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	var canvas := Node2D.new()
+	canvas.name = "Tiles"
+	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases, "atlas_ids": (built.atlases as Dictionary).keys(),
+		"count": int(built.count), "draws": int(built.draws), "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
+	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
+	viewport.add_child(canvas)
+	add_child(viewport)
+	FRAME_HITCH.count("map.block_baked")
+	# After the frame that drew it the block is only its image: let go of the
+	# atlases (the tile cache may free them) and the drawing node.
+	# One connection for all blocks baked this frame (bound callables of the
+	# same method count as one connection).
+	_unreleased.append([block, canvas])
+	if not RenderingServer.frame_post_draw.is_connected(_release_baked):
+		RenderingServer.frame_post_draw.connect(_release_baked, CONNECT_ONE_SHOT)
+	return block
+
+
+var _unreleased: Array = [] # [block, canvas] drawn in the coming frame
+
+func _release_baked() -> void:
+	for pair: Array in _unreleased:
+		(pair[0] as Dictionary).erase("atlases")
+		if is_instance_valid(pair[1]): (pair[1] as Node).queue_free()
+	_unreleased.clear()
+
+
+func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
+	var origin := Vector2(cell * BLOCK)
+	var commands: Dictionary = block.commands
+	var layers: Array = commands.keys()
+	layers.sort()
+	var atlases: Dictionary = block.get("atlases", {})
+	if atlases.is_empty(): return
+	for layer: int in layers:
+		var lane: PackedInt64Array = commands[layer]
+		for index: int in range(0, lane.size(), 3):
+			var ref: int = lane[index + 2]
+			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
+
+
+func _free_block(cell: Vector2i) -> void:
+	var block: Dictionary = _blocks.get(cell, {})
+	_blocks.erase(cell)
+	_block_recent.erase(cell)
+	var viewport: Variant = block.get("viewport")
+	if is_instance_valid(viewport): (viewport as Node).queue_free()
+
+
+func _clear_blocks() -> void:
+	for cell: Vector2i in _blocks.keys(): _free_block(cell)
+	_block_recent.clear()
+	_visible_blocks.clear()
+
+
 func _build_frame() -> bool:
 	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
 	var visible: Array[String] = []
@@ -465,49 +738,71 @@ func _build_frame() -> bool:
 	if visible.is_empty(): return _fail("현재 화면에 표시할 공통 원문 영역이 없습니다.")
 	if visible.size() > VISIBLE_CHUNK_LIMIT: return _fail("M 표시 실험의 동시 청크 예산을 초과했습니다.")
 	visible.sort()
-	var commands: Dictionary = {}
-	var atlases: Dictionary = {}
+	if _blocks_include_objects != include_objects:
+		_clear_blocks()
+		_blocks_include_objects = include_objects
+	var screen: Rect2 = _view_rect()
+	var first := Vector2i(floori(view.position.x / BLOCK), floori(view.position.y / BLOCK))
+	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
+	var cells: Array[Vector2i] = []
+	var margin_bakes: int = 0
+	for bx: int in range(first.x, last.x + 1):
+		for by: int in range(first.y, last.y + 1):
+			var wanted := Vector2i(bx, by)
+			if not _blocks.has(wanted) and _block_rect(wanted).intersects(screen): _request_block_tiles(wanted)
+	var draws: int = 0
+	var fresh_atlases: Dictionary = {}
+	var partial: bool = false
 	var count: int = 0
 	var raw_ff: int = 0
 	var unresolved: int = 0
-	for member: String in visible:
-		var layers: Dictionary = _read_chunk(member)
-		if not problem.is_empty(): return false
-		for layer: int in layers:
-			if not include_objects and layer >= 0: continue
-			var records: PackedInt64Array = layers[layer]
-			for index: int in range(0, records.size(), 3):
-				var point := Vector2(records[index], records[index + 1])
-				if not view.has_point(point): continue
-				var ref: int = records[index + 2]
-				if ref == 4294967295: raw_ff += 1; continue
-				var tile_id: int = ref >> 8
-				# A tile the installed pack lacks is a hole, not a reason to close the map.
-				if not _tile_pack.has_tile(tile_id): _unresolved_tile(tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id)); unresolved += 1; continue
-				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): _unresolved_tile(tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255]); unresolved += 1; continue
-				if count >= DRAW_COMMAND_LIMIT or (not atlases.has(tile_id) and atlases.size() >= VISIBLE_ATLAS_LIMIT):
-					return _fail("M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다.")
-				if not atlases.has(tile_id):
-					var texture: Texture2D = _frame_atlases.get(tile_id)
-					if texture == null: texture = _tile_pack.texture_for(tile_id)
-					if texture == null: _unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)]); unresolved += 1; continue
-					atlases[tile_id] = texture
-				if not commands.has(layer): commands[layer] = []
-				var lane: Array = commands[layer]
-				lane.append(records[index]); lane.append(records[index + 1]); lane.append(ref)
-				count += 1
-	if count == 0 and unresolved == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	var atlases: Dictionary = {}
+	for bx: int in range(first.x, last.x + 1):
+		for by: int in range(first.y, last.y + 1):
+			var cell := Vector2i(bx, by)
+			if not _blocks.has(cell):
+				# Blocks on screen bake now (their atlases were requested above
+				# and decode in parallel); margin blocks bake a few per refresh,
+				# once every atlas they use has decoded on a worker.
+				var on_screen: bool = _block_rect(cell).intersects(screen)
+				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or not _request_block_tiles(cell)):
+					partial = true
+					continue
+				var built: Dictionary = _block_commands(cell)
+				if built.has("problem"):
+					if problem.is_empty(): return _fail(str(built.problem))
+					return false
+				if not on_screen: margin_bakes += 1
+				_blocks[cell] = _bake_block(cell, built)
+			_block_recent.erase(cell); _block_recent.append(cell)
+			var block: Dictionary = _blocks[cell]
+			cells.append(cell)
+			count += int(block.count)
+			draws += int(block.draws)
+			raw_ff += int(block.raw_ff)
+			unresolved += int(block.unresolved)
+			for tile_id: int in block.atlas_ids: atlases[tile_id] = true
+			for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
+	if draws == 0 and unresolved == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	while _block_recent.size() > BLOCK_CACHE_LIMIT:
+		var oldest: Vector2i = _block_recent[0]
+		if cells.has(oldest): break
+		_free_block(oldest)
 	unresolved_tile_refs = unresolved
 	_frame_commands.clear()
 	_draw_generation+=1
-	for layer: int in commands: _frame_commands[layer] = PackedInt64Array(commands[layer])
-	_frame_atlases = atlases
-	_built_view = view
+	for cell: Vector2i in cells: _frame_commands[cell] = (_blocks[cell] as Dictionary).commands
+	_visible_blocks = cells
+	# Only atlases of blocks still waiting their first draw are held here.
+	_frame_atlases = fresh_atlases
+	# Margin blocks still waiting bake on the next periodic refresh.
+	_built_view = Rect2() if partial else view
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
 		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
-		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count,
+		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count, "block_draw_commands": draws,
+		"visible_blocks": cells.size(), "cached_blocks": _blocks.size(), "block_size": BLOCK,
 		"uninterpreted_ffffffff_words": raw_ff, "unresolved_refs": unresolved, "unreadable_chunks": _unreadable_chunks.size(), "budget_skips": 0, "skipped_chunks": 0,
 		"visual_delta": [_visual_delta.x, _visual_delta.y], "M_attributes_used": source_owned,
 		"scope_clipped_records": _scope_clipped_records,
@@ -582,15 +877,18 @@ func _draw_tiles(canvas: Node2D) -> void:
 	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
 	var observed_refs: Dictionary={}
-	var layers: Array = _frame_commands.keys()
-	layers.sort()
-	for layer: int in layers:
-		var lane: PackedInt64Array = _frame_commands[layer]
-		for index: int in range(0, lane.size(), 3):
-			var ref: int = lane[index + 2]
-			var rect:=Rect2(Vector2(lane[index],lane[index+1]),Vector2(24,24))
-			canvas.draw_texture_rect_region(_frame_atlases[ref >> 8],rect,TILES.source_rect(ref & 255))
-			if observe and not observed_refs.has(ref) and rect.intersects(view):observed_refs[ref]=true
+	for cell: Vector2i in _visible_blocks:
+		var block: Dictionary = _blocks.get(cell, {})
+		var viewport: Variant = block.get("viewport")
+		if not is_instance_valid(viewport): continue
+		canvas.draw_texture((viewport as SubViewport).get_texture(), Vector2(cell * BLOCK))
+		if observe and _block_rect(cell).intersects(view):
+			var commands: Dictionary = block.commands
+			for layer: int in commands:
+				var lane: PackedInt64Array = commands[layer]
+				for index: int in range(0, lane.size(), 3):
+					var ref: int = lane[index + 2]
+					if not observed_refs.has(ref) and Rect2(Vector2(lane[index],lane[index+1]),Vector2(TILE_PX,TILE_PX)).intersects(view): observed_refs[ref]=true
 	if observe:
 		for ref: int in observed_refs:
 			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
@@ -625,7 +923,7 @@ func _fail(reason: String) -> bool:
 	failure = reason
 	var active: bool = _configured and is_inside_tree() and is_visible_in_tree()
 	_configured = false
-	_frame_commands.clear(); _frame_atlases.clear()
+	_frame_commands.clear(); _frame_atlases.clear(); _clear_blocks()
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	set_process(false)
 	if active and not _return_pending:
@@ -638,8 +936,15 @@ func _emit_safe_return(reason: String) -> void:
 	if is_inside_tree() and not is_queued_for_deletion(): safe_return_requested.emit(reason)
 
 
+func _notification(what: int) -> void:
+	# A render target may come back empty after the app returns; rebake.
+	if what == NOTIFICATION_APPLICATION_RESUMED and _configured:
+		_clear_blocks()
+		_built_view = Rect2()
+
+
 func _exit_tree() -> void:
 	_configured = false
-	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear()
+	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(); _chunk_bins.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()
