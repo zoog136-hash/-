@@ -21,6 +21,8 @@ const CARD_SET="UI/Change/Change_Card_Set.csb"
 const CARD_SET_PANEL=120
 const CARD_SET_SLOTS: Array[int]=[724,444,176]
 const CARD_SET_MARGIN: float=-4.0
+## Rows built beyond each edge of a virtual card grid's view.
+const CARD_GRID_MARGIN: int=1
 const SIDEBAR: Array[String]=["전체","유일","신화","전설","영웅","희귀","고급","일반"]
 var category: String="변신"
 
@@ -127,8 +129,14 @@ func _spare(id: String, member_category: String="") -> int:
 
 ## Cards three per row the way Change_Card_Set places them (its ProjectNode
 ## slots inside the centred 360x150 row panel, ListView itemMargin -4), in
-## the card ListView at `suffix`. Returns {ok, scenes, outs}.
-func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array) -> Dictionary:
+## the card ListView at `suffix`. The list is virtual: every card keeps its
+## place in the scroll range, but only the rows in view (plus
+## CARD_GRID_MARGIN rows each side) are built; scrolling builds the rows
+## that come into view and frees those that left. `decorate`
+## (scene, out, card) -> bool runs once per built card (its picture).
+## Returns {ok, cards, built, pictures, scenes, outs} (scenes/outs: the
+## cards built now, in card order; `first` is the first built index).
+func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array, decorate: Callable=Callable()) -> Dictionary:
 	var list: Dictionary=_list(root,out,suffix)
 	if not list.get("ok",false):return list
 	var tree: Dictionary=_pack.scene(CARD_SET).get("nodeTree",{})
@@ -141,19 +149,66 @@ func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array
 		slots.append(Vector2(float(position[0]),float(position[1])))
 	var size: Vector2=list.size
 	var row_height: float=float(panel_size[1])
-	var row_x: float=(size.x-float(panel_size[0]))*0.5
+	var rows: int=ceili(float(cards.size())/3.0)
+	var grid: Dictionary={"cards":cards,"decorate":decorate,"slots":slots,"size":size,"row_height":row_height,
+		"row_x":(size.x-float(panel_size[0]))*0.5,"key":str(list.key),"built":{},"pictures":0,"builds":0}
+	var key: String=str(list.key)
+	_scrolls[key]={"content":list.content,"min":minf(0.0,size.y-(float(rows)*(row_height+CARD_SET_MARGIN)-CARD_SET_MARGIN)),"value":0.0,"grid":grid}
+	var synced: Dictionary=_sync_card_grid(key)
+	if not synced.get("ok",false):return synced
 	var scenes: Array[Node2D]=[]
 	var outs: Array[Dictionary]=[]
-	for index: int in range(cards.size()):
-		var card_out: Dictionary={}
-		var built: Dictionary=_scene_of(str(cards[index].member),cards[index].spec,card_out,str(list.key))
-		if not built.get("ok",false):return built
-		var top: float=size.y-float(index/3)*(row_height+CARD_SET_MARGIN)
-		var slot: Vector2=slots[index%3]
-		built.scene.position=Vector2(row_x+slot.x,-(top-row_height+slot.y))
-		list.content.add_child(built.scene)
-		scenes.append(built.scene)
-		outs.append(card_out)
-	var rows: int=ceili(float(cards.size())/3.0)
-	_scrolls[str(list.key)]={"content":list.content,"min":minf(0.0,size.y-(float(rows)*(row_height+CARD_SET_MARGIN)-CARD_SET_MARGIN)),"value":0.0}
-	return {"ok":true,"scenes":scenes,"outs":outs}
+	var indices: Array=(grid.built as Dictionary).keys()
+	indices.sort()
+	for index: Variant in indices:
+		scenes.append(grid.built[index].scene)
+		outs.append(grid.built[index].out)
+	return {"ok":true,"cards":cards.size(),"built":indices.size(),"pictures":int(grid.pictures),"first":int(indices[0]) if not indices.is_empty() else 0,"scenes":scenes,"outs":outs}
+
+## The card rows of grid `key` to keep built at its scroll value.
+func card_grid_rows(key: String) -> Vector2i:
+	var state: Dictionary=_scrolls.get(key,{})
+	var grid: Dictionary=state.get("grid",{})
+	if grid.is_empty():return Vector2i(0,-1)
+	var pitch: float=float(grid.row_height)+CARD_SET_MARGIN
+	var rows: int=ceili(float((grid.cards as Array).size())/3.0)
+	var top: float=-float(state.get("value",0.0))
+	var first: int=maxi(0,floori(top/pitch)-CARD_GRID_MARGIN)
+	var last: int=mini(rows-1,ceili((top+(grid.size as Vector2).y)/pitch)+CARD_GRID_MARGIN)
+	return Vector2i(first,last)
+
+func _scrolled(key: String) -> void:
+	if _scrolls.get(key,{}).has("grid"):_sync_card_grid(key)
+
+## Builds the cards of grid `key` that came into view; frees those that left.
+func _sync_card_grid(key: String) -> Dictionary:
+	var state: Dictionary=_scrolls.get(key,{})
+	var grid: Dictionary=state.get("grid",{})
+	if grid.is_empty() or not is_instance_valid(state.get("content")):return {"ok":true}
+	var content: Node2D=state.content
+	var rows: Vector2i=card_grid_rows(key)
+	var built: Dictionary=grid.built
+	for index: Variant in built.keys():
+		var row: int=int(index)/3
+		if row>=rows.x and row<=rows.y:continue
+		var old: Variant=built[index].scene
+		if is_instance_valid(old):
+			old.hide()
+			old.queue_free()
+		built.erase(index)
+	var cards: Array=grid.cards
+	for row: int in range(rows.x,rows.y+1):
+		for column: int in 3:
+			var index: int=row*3+column
+			if index>=cards.size() or built.has(index):continue
+			var card_out: Dictionary={}
+			var made: Dictionary=_scene_of(str(cards[index].member),cards[index].spec,card_out,key)
+			if not made.get("ok",false):return made
+			var top: float=(grid.size as Vector2).y-float(row)*(float(grid.row_height)+CARD_SET_MARGIN)
+			var slot: Vector2=grid.slots[column]
+			made.scene.position=Vector2(float(grid.row_x)+slot.x,-(top-float(grid.row_height)+slot.y))
+			content.add_child(made.scene)
+			built[index]={"scene":made.scene,"out":card_out}
+			grid.builds=int(grid.builds)+1
+			if (grid.decorate as Callable).is_valid() and bool((grid.decorate as Callable).call(made.scene,card_out,cards[index])):grid.pictures=int(grid.pictures)+1
+	return {"ok":true}
