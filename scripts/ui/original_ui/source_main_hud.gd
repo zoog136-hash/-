@@ -2,6 +2,7 @@ extends Node
 ## Existing game's update_player -> original main HUD components. This node
 ## adds no gameplay logic or artwork. Component positions are read from the
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
+const PackVersion=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MENU_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
@@ -260,6 +261,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER) or _joystick_view!=null)
+	# An old UI add-on still plays (windows it lacks keep their fallback);
+	# the player is told once to reinstall it.
+	var pack_info: Dictionary=PackVersion.describe(str(pack.get("manifest_sha256")),pack.get("manifest").get("scenes",{}) if pack.get("manifest") is Dictionary else null)
+	if pack_info.outdated and hud.is_inside_tree():
+		hud.get_tree().create_timer(3.0).timeout.connect(func() -> void:
+			if is_instance_valid(hud):PackVersion.warn_once(hud,pack_info))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:

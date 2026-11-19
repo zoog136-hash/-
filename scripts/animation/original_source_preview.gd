@@ -773,6 +773,11 @@ static var cached_frames_enabled: bool = not "--twilight-actor-frame-cache-off" 
 ## Plans without compositing (every group keeps its nodes): diagnostics.
 static var composite_groups_enabled: bool = not "--twilight-actor-composite-off" in OS.get_cmdline_user_args()
 var cached_frames: bool = false
+## Plans this preview keeps. A plan holds every layer texture of its frame, so
+## many actors each holding FRAME_PLAN_MAX plans keep that many frames of
+## textures alive (523.652 in town: app memory 2,158 MB and still growing).
+## Actors shown in large numbers lower it.
+var frame_plan_max: int = FRAME_PLAN_MAX
 var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
 var _cached_applied_plan: Dictionary = {}
 var _cached_applied_translucent: bool = false
@@ -795,7 +800,7 @@ func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dicti
 		plan = _build_frame_plan(selected, track, body_attributes, body_unresolved, body_projection_verified)
 		if plan.is_empty(): return {}
 		_frame_plans.erase(applied_hash)
-		while _frame_plans.size() >= FRAME_PLAN_MAX: _frame_plans.erase(_frame_plans.keys()[0])
+		while _frame_plans.size() >= maxi(1, frame_plan_max): _frame_plans.erase(_frame_plans.keys()[0])
 		_frame_plans[applied_hash] = plan
 		fresh = true
 		FRAME_HITCH.count("preview.plan_built")
@@ -1376,6 +1381,7 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 			child = get_script().new()
 			child.playback_mode_override = _playback_mode
 			child.cached_frames = cached_frames
+			child.frame_plan_max = frame_plan_max
 			add_child(child)
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
 				_reference_child_problem = child.reference_bank_status.duplicate(true)
