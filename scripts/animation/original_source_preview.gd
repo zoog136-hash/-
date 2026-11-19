@@ -645,6 +645,19 @@ var _root_motion_fits: Dictionary = {}
 ## Below this travel per cycle (source px) or fit quality the frames are an
 ## in-place walk and are drawn unchanged.
 const ROOT_MOTION_MIN_TRAVEL: float = 6.0
+## One-cell screen steps (this node's source px) of the field the host walks
+## on, or empty. One original walk/run loop travels exactly one cell, so a fitted
+## travel near one of them is replaced by that exact step: a single odd frame
+## (523 elf 15282 walk, directions 0/2/6: frame 0's box sits ~20 px off the
+## line) skewed the least-squares slope to 37 px per loop instead of 24 and
+## left a sawtooth of that difference.
+var root_motion_cell_steps: Array[Vector2] = []:
+	set(value):
+		if value == root_motion_cell_steps: return
+		root_motion_cell_steps = value
+		_root_motion_fits.clear()
+## A fitted travel snaps to a step within this fraction of the step length.
+const ROOT_MOTION_SNAP_FRACTION: float = 0.6
 const ROOT_MOTION_MIN_R2: float = 0.6
 
 func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: int, static_track: bool) -> void:
@@ -690,7 +703,22 @@ func _walk_anchor_points(frames: Array, source_direction: int) -> Array[Vector2]
 ## Linear drift per frame of the body anchor, or ZERO for an in-place cycle.
 func _fit_walk_root_motion(frames: Array, source_direction: int) -> Vector2:
 	var points: Array[Vector2] = _walk_anchor_points(frames, source_direction)
-	return fit_root_motion(points)
+	return snap_root_motion(fit_root_motion(points), points.size(), root_motion_cell_steps)
+
+## `slope` (per frame) replaced by the nearest one-cell step over `count`
+## frames when the loop's fitted travel is close to it; unchanged otherwise.
+static func snap_root_motion(slope: Vector2, count: int, steps: Array[Vector2]) -> Vector2:
+	if slope == Vector2.ZERO or count <= 0 or steps.is_empty(): return slope
+	var travel: Vector2 = slope * float(count)
+	var best: Vector2 = Vector2.ZERO
+	var best_distance: float = INF
+	for step: Vector2 in steps:
+		var distance: float = travel.distance_to(step)
+		if distance < best_distance:
+			best_distance = distance
+			best = step
+	if best_distance > best.length() * ROOT_MOTION_SNAP_FRACTION: return slope
+	return best / float(count)
 
 static func fit_root_motion(points: Array[Vector2]) -> Vector2:
 	var n: int = points.size()
@@ -1103,8 +1131,11 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		requested = "walk" # The displayed native action remains WALK, never a fabricated RUN track.
 	if not _playback_tracks.has(requested): requested = "idle"
 	if requested != _role:
+		# Walk and run loops are both one cell long (same frame count and
+		# timing): keep the step phase so the feet do not restart mid-step.
+		var keep_phase: bool = _role in ["walk", "run"] and requested in ["walk", "run"]
 		_role = requested
-		_clock = 0.0
+		if not keep_phase: _clock = 0.0
 		_annotation_clock = -0.000000001
 	# Visual inspection maps front bit5 to game S2. Keep this explicit and unapproved.
 	var source_direction: int = posmod(facing + 3, 8)
