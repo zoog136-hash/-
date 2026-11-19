@@ -101,5 +101,7 @@ func bind_activation(callback: Callable, extent: Vector2, source_touch: bool) ->
 	super.bind_activation(_toggle_and_dispatch,extent,source_touch)
 
 func _toggle_and_dispatch() -> Variant:
+	# A disabled-look box (displaystate is a look) keeps its state on a tap.
+	if current_state=="disabled":return _selection_callback.call(selected)
 	set_selected(not selected)
 	return _selection_callback.call(selected)
