@@ -13,6 +13,8 @@ var indexed_size: int = -1
 ## retried as soon as level, class, inventory, instances or quest claims change,
 ## so a reward that can never be supplied cannot rescan every frame.
 var blocked: Dictionary = {}
+## Quest ids the last successful complete() granted (first or repeat).
+var last_completed: Array[String] = []
 ## false (the game): no automatic completion. The text list's individual
 ## [수락] runs the existing atomic complete() transaction immediately.
 ## true: the previous automatic acquisition (tests of that transaction).
@@ -92,7 +94,7 @@ func _scan_ready(world: Node) -> void:
 		var quest: Dictionary = quests[_scan_cursor]
 		_scan_cursor += 1
 		var id: String = str(quest.id)
-		if not service.claimed.has(id) and service.source.gate(quest,context,service.claimed,now).is_empty():
+		if not service.done(id,now) and service.source.gate(quest,context,service.claimed,now).is_empty():
 			var plan: Dictionary = service.source.reward_plan(quest,context)
 			if plan.ok: _scan_found[id] = true
 			else: failures[id] = str(plan.error)
@@ -125,7 +127,7 @@ func claim_all(world: Node) -> Dictionary:
 	var order: Array[String] = []
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
-		if ready.has(id) and not world.quest_service.claimed.has(id): order.append(id)
+		if ready.has(id) and not world.quest_service.done(id): order.append(id)
 	var claimed_count: int = 0
 	var failed: int = 0
 	var at: int = 0
@@ -133,11 +135,10 @@ func claim_all(world: Node) -> Dictionary:
 		var batch: Array[String] = []
 		for id: String in order.slice(at,at+32): batch.append(id)
 		at += 32
-		var before: int = world.quest_service.claimed.size()
 		if complete(world,batch):
-			claimed_count += world.quest_service.claimed.size()-before
+			claimed_count += last_completed.size()
 			for id: String in batch:
-				if world.quest_service.claimed.has(id): ready.erase(id)
+				if last_completed.has(id): ready.erase(id)
 				else: failed += 1
 		else:
 			if busy or world.quest_service.save_blocked or retry_at > Time.get_unix_time_from_system():
@@ -172,7 +173,8 @@ func _source_lookup(catalogs: Array) -> RefCounted:
 	return _lookup
 
 func state_key(world: Node) -> String:
-	return "%s:%s:%d:%d:%d:%d:%d" % [str(world.level),str(world.job_class),world.inventory.size(),world.item_instances.size(),int(world.next_item_instance_id),world.quest_service.claimed.size(),hash(world.inventory)]
+	var ledger: Variant = world.quest_service.get("repeats")
+	return "%s:%s:%d:%d:%d:%d:%d:%d" % [str(world.level),str(world.job_class),world.inventory.size(),world.item_instances.size(),int(world.next_item_instance_id),world.quest_service.claimed.size(),hash(world.inventory),hash(ledger) if ledger is Dictionary else 0]
 
 func tick(world: Node) -> void:
 	if busy or world.quest_service.source.quests.is_empty(): return
@@ -192,7 +194,7 @@ func tick(world: Node) -> void:
 	var state: String = state_key(world)
 	for quest: Dictionary in world.quest_service.source.quests:
 		var id: String = str(quest.id)
-		if world.quest_service.claimed.has(id): continue
+		if world.quest_service.done(id,int(now)): continue
 		if blocked.get(id,"") == state: continue
 		var gate: String = world.quest_service.source.gate(quest,context,offered,int(now))
 		if not gate.is_empty(): continue
@@ -233,12 +235,21 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	var completed: Array[String] = []
 	var native_grants: Array = []
 	var native_receipts: Array = []
+	var at_time: int = int(Time.get_unix_time_from_system())
 	for id: String in ids:
 		var quest: Dictionary = service.index.get(id,{})
-		if quest.is_empty() or staged_state.claimed.has(id) or not service.source.gate(quest,context,staged_state.claimed,int(Time.get_unix_time_from_system())).is_empty(): continue
+		# A claimed quest completes again only while its repeat period is open
+		# (source_quest523.REPEAT_PERIODS, TWILIGHT 근사), on the staged ledger.
+		var repeat: bool = staged_state.claimed.has(id)
+		if not staged_state.has("repeats"): staged_state["repeats"]={}
+		if quest.is_empty() or (repeat and not service.repeat_open(id,at_time,staged_state.claimed,staged_state.repeats)) or not service.source.gate(quest,context,staged_state.claimed,at_time).is_empty(): continue
 		var plan: Dictionary = service.source.reward_plan(quest,context)
 		if not plan.ok:
 			failures[id] = str(plan.error)
+			continue
+		# A repeat never adds a second per-grant receipt for the same reward.
+		if repeat and not service.repeat_reward_problem(plan).is_empty():
+			failures[id] = service.repeat_reward_problem(plan)
 			continue
 		for item: Dictionary in plan.items:
 			var record: Dictionary = item.record
@@ -273,12 +284,15 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		adena += int(plan.adena)
 		experience += int(plan.exp)
 		staged_state.claimed[id] = true
+		var ledger: Dictionary = service.repeat_after(id,at_time,staged_state.repeats,plan)
+		if not ledger.is_empty(): staged_state.repeats[id] = ledger
 		if not plan.get("source_dummy_rewards",[]).is_empty():
 			if not staged_state.has("source_dummy_rewards"):staged_state["source_dummy_rewards"]={}
 			staged_state.source_dummy_rewards[id]=plan.source_dummy_rewards.duplicate(true)
 		for unlocked: int in plan.quests: staged_state.unlocked["m523:quest:"+str(unlocked)] = true
 		if not plan.ui_requests.is_empty(): staged_state.ui_requests[id]=plan.ui_requests.duplicate(true)
 		completed.append(id)
+	if staged_state.repeats.is_empty(): staged_state.erase("repeats")
 	if completed.is_empty(): return false
 	var staged: Dictionary = {"quest_state":staged_state,"inventory":staged_inventory,"item_instances":staged_instances,"next_item_instance_id":next_id,"gold":world.gold+adena,"experience":world.experience+experience}
 	if not native_grants.is_empty():
@@ -339,6 +353,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	for key: String in growth_keys: world.set(key,staged["attack" if key=="attack_power" else key])
 	service.import_state(staged_state)
 	for id: String in completed: failures.erase(id)
+	last_completed = completed.duplicate()
 	world.deferred_save.cancel()
 	if world.level != int(before_growth.level): world._update_hud()
 	else:
