@@ -143,7 +143,8 @@ static func solvents_owned(world: Node) -> Array:
 	return result
 
 ## 상급·최상급 용해 (TWILIGHT 근사): one solvent per item, output = the solvent's
-## SolutionItemClassID, amount = RULES.advanced_dissolve_yield.
+## SolutionItemClassID, amount = RULES.advanced_dissolve_yield with the item's
+## own enchant (원본 safe/pow rule). dissolve_advanced re-runs this same quote.
 static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class_id: int) -> Dictionary:
 	if uids.is_empty(): return _fail("용해할 장비를 선택하세요","empty")
 	var spec: Dictionary = RULES.solvent(solvent_item_class_id)
@@ -156,7 +157,7 @@ static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class
 		var info: Dictionary = equipment(world,uid)
 		if not info.ok: return info
 		var element_level: int = info.element_level if info.element.is_empty() or info.element_level!=0 else 1
-		var yielded: Dictionary = RULES.advanced_dissolve_yield(info.item_class_id,element_level,int(spec.method))
+		var yielded: Dictionary = RULES.advanced_dissolve_yield(info.item_class_id,element_level,int(spec.method),info.enchant)
 		if not yielded.ok: return yielded
 		info["amount"] = int(yielded.amount); info["grade_id"] = int(yielded.grade_id)
 		items.append(info); total += int(yielded.amount)

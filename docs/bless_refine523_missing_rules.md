@@ -25,7 +25,7 @@
 | 2 | 용해 결과 아이템 | `BlessPowderAmount`에 결과 아이템 열이 없음 | 523에서 활성(TestItem 거짓)인 유일한 `축복의 가루` ItemClass를 사용 (원본 용해 UI 문구 "축복의 가루 100"과 일치) |
 | 3 | `BlessConstant` `BlessPowderRate` | 단위·적용식 없음 (값 하나만 있음) | 현재 값(100)일 때만 표 수량 그대로 지급, 다른 값이면 용해 보류 |
 | 4 | 속성 강화 장비의 가루 증폭 | `BlessPowderAmplifyRate`는 속성 단계별 비율만 있고, 수량에 곱하는지·더하는지·반올림이 없음 | **TWILIGHT 근사(근거 약함, 2026-11-16)**: 표 수량 × (100 + AmplifyRate)% 버림. 아래 "근사 적용 (2)" |
-| 5 | 상급·최상급 용해 | `AdvancedBlessPowderAmount`/`Increment`: 촉매(상급/최상급 용해제) 소모 수량, `Increment`와 `MinSafeEnchantLevel`의 관계, `Multiplier`·`ItemEnchantScrollID`의 의미, 최상급 결과 아이템 연결 열, +6 이상 증가량 | **TWILIGHT 근사(2026-11-16)**: Amount + Increment[속성 단계], 용해제 1개/장비, 결과 = 용해제의 `SolutionItemClassID`. 아래 "근사 적용 (2)" |
+| 5 | 상급·최상급 용해 (2026-11-19 원본 소비 규칙 + TWILIGHT 근사 safe): 결과 = (trunc(Amount × pow(`Multiplier`, max(0, 장비 강화 − safe))) + `AdvancedBlessPowderIncrement`[속성 단계].Amount(행 없으면 0)) × 수량. safe = max(`MinSafeEnchantLevel`, helper safe). 원본 helper는 복원되지 않아 **TWILIGHT 근사**: 행의 `ItemEnchantScrollID`(주문서 그룹 1 무기·11 갑옷·302 장신구)와 장비 `EnchantEquipGroupID`가 함께 가리키는 확률 그룹의 `BmItemEnchantProView` 100% 성공 단계 수(= 안전 강화). 못 정하면 `MinSafeEnchantLevel`만 쓴다. safe 이하 분기는 원본 미복원 → 배수 없음(지수 0). 결과 아이템 = 용해제 ItemBonus `SolutionItemClassID`(상급 → 117544, 최상급 → 192654), 용해제 장비 1개당 1개 | 보고서2 NEW02. 인벤 예 "영웅 무기 6강 + 속성 1단 = 4090개" = 4000 × 2^(6−6) + 90 (영웅 무기 안전 강화 6)과 일치. "마족 3강 + 속성 3단 = 1050개"(장신구 안전 0)는 원본 식으로는 395 + 870 = 1265라 맞지 않는다 — 2021년 글이라 `Multiplier` 도입 전 값일 수 있어 원본 식을 따른다 |
 | 6 | `BlessConstant` HighMelt*/HighestMelt* 등급 범위 | 어떤 용해에서 어떤 대상 등급을 거르는지 설명 없음 | **TWILIGHT 근사**: HighMelt* = 상급(24) 대상 등급, Highest{Weapon,Armor,Accessory}Melt* = 최상급(34) 종류별 대상 등급 |
 | 7 | 축복·저주 장비 용해 | 표에 축복 상태 열이 없음 | 축복 상태와 무관하게 등급·강화 수치로만 계산 |
 | 8 | 다른 가공·보상 기록이 있는 장비 | 세공·제련·연금 기록, 퀘스트 보상 영수증 등이 붙은 장비를 용해·연금할 때의 처리 없음 | 거부 (해당 장비와 기록 보존) |
@@ -87,7 +87,7 @@
 
 | # | 적용 | 근거 |
 |---|---|---|
-| 4 (근거 약함) | 일반 용해에서 속성 강화 장비의 가루 = 표 수량 × (100 + `BlessPowderAmplifyRate`)% (버림). 속성 1~3단 +10%, 4~5단 +15%, 6단 이상 +20% | 인벤 정리 글 "계산은 강화 가루 + 속성단계 가루"(2021-07-26, <https://www.inven.co.kr/board/lineagem/5056/19201>) — 속성 몫을 **더한다**. 비율 값은 원본 표 |
+| 4 (원본 소비 규칙, 2026-11-19) | 일반 용해 가루 = (표 수량 + ceilf(float32(`BlessPowderAmplifyRate`/100) × float32(표 수량))) × 수량. 속성 1~3단 10%, 4~5단 15%, 6단 이상 20%. float32 그대로라 예: 100 × 15% → 15.000001f → 116, 101 × 5% → 107 (예전 정수 버림은 115·106) | 보고서2 NEW01(원본 클라이언트 소비 함수). 인벤 정리 글 "계산은 강화 가루 + 속성단계 가루"(2021-07-26, <https://www.inven.co.kr/board/lineagem/5056/19201>)와도 같은 방향 |
 | 5 | 상급·최상급 용해: 결과 = `AdvancedBlessPowderAmount`(장비 종류 `ItemCategory`·등급·용해 방식).Amount + `AdvancedBlessPowderIncrement`(같은 방식, `EnchantLevel` = 장비의 **속성 단계**).Amount. 결과 아이템 = 용해제 ItemBonus `SolutionItemClassID`(상급 용해제 → 상급 축복의 가루 117544, 최상급 용해제 → 최상급 축복의 가루 192654). 용해제는 장비 1개당 1개 소모(표에 열 없음, 가장 보수적) | 같은 인벤 글의 예 "마족 3강 + 속성 3단 = 1050개" = 장신구 3등급 180 + 증가량 3단 870, "영웅 무기 6강 + 속성 1단 = 4090개" = 무기 4등급 4000 + 증가량 1단 90과 정확히 같다. 이 예에서 강화 수치·`Multiplier`·`MinSafeEnchantLevel`은 결과를 바꾸지 않으므로 적용하지 않는다 |
 | 6 | 대상 등급: 상급(24) = `HighMeltGradeMin~Max`(3~4), 최상급(34) = 무기/방어구/장신구별 `Highest*MeltGradeMin~Max`(4~5) | 상수 이름 그대로 |
 | 12 (근거 약함) | 특수 재료(2번 슬롯) M개 = 자기 Min~Max 직선 확률(#11과 같은 규칙)을 기본 확률에 **더함**, 최대 100%. 특수 재료도 차감 | 원본 행(1~2개 → 1~2%)이 "추가 확률" 크기라 더하는 해석이 가장 자연스럽다. 공식 설명은 찾지 못함 |
@@ -96,7 +96,7 @@
 - 화면: 용해 작업창에 가방에 있는 상급/최상급 용해제마다 "선택한 장비 상급 용해 / 최상급 용해 (용해제 #ID · 근사)" 버튼. 연금 서비스는 `amount:N|special:M`을 받는다
   (원본 `RefineScene` 창은 `scripts/ui/original_ui` 작업 영역이라 바꾸지 않음).
 - 저장: 장비 제거·용해제/특수 재료 차감·결과 지급이 한 번의 저장으로 기록된다(기존 용해·연금과 같은 원자 저장).
-- 확인: `tests/bless_refine523_test.gd` — 속성 +4 = ×115%, 상급/최상급 표 행마다 실제 원본 장비로 Amount 일치, 상급 + 속성 3단 = Amount + 870,
+- 확인: `tests/bless_refine523_test.gd` — 일반 101×10%×3 = 336, float32 경계(5×20% → 6, 100×15% → 116), 상급 100×2^(7−5)+9 = 409·안전 이하 109·int64 넘침 거부, 표 행마다 safe+2 = Amount×Multiplier², 영웅 무기 6강+속성1단 = 4090, 실제 Main에서 안전 강화 초과 장비의 상급 견적 = 지급, 속성 +4 = ceilf 15%, 상급/최상급 표 행마다 실제 원본 장비로 Amount 일치, 상급 + 속성 3단 = Amount + 870,
   용해제 → 방식·결과 아이템, 특수 재료 2개 → +2%, 실제 Main에서 3등급 무기 + 상급 용해제 2개 → 상급 용해 → 상급 축복의 가루 +표 수량·용해제 1개 남음·다시 불러와도 유지.
 
 ## 대장간 연마 (ItemHoning) — 연결 + TWILIGHT 근사 (2026-11-16, 같은 PR)
