@@ -74,6 +74,49 @@ static func _other_fields(entry: Dictionary) -> Dictionary:
 	for key: String in [QUANTITY,RECEIPT,USED,TRANSFERRED]:result.erase(key)
 	return result
 
+## Per-acquisition provenance carried on the stored item record: which
+## monster/drop row or reward granted this stack. It is not item state (each
+## absorbed stack's receipt keeps its own origin and proof in the merge
+## journal), so two stacks of one item from different monsters, the shop, a
+## quest or the warehouse still stack (user 2026-11-19: 공성 포인트·가죽 from
+## different monsters sat in separate slots).
+const PROVENANCE: Array[String]=["source_m_drop_proof","source_m_reward_proof"]
+
+## What must be equal for two stacks of one item/bless to share a slot: every
+## stored field except quantity/receipt bookkeeping and record provenance. The
+## record is compared in its full form (a saved compact record and a freshly
+## granted full one are the same item).
+static func stack_identity(entry: Dictionary) -> Dictionary:
+	var result: Dictionary=_other_fields(entry)
+	var value: Variant=result.get("record")
+	if value is Dictionary:
+		var record: Dictionary=(preload("res://scripts/loot/current523_native_fields.gd").full(value) as Dictionary).duplicate()
+		for key: String in PROVENANCE:record.erase(key)
+		# Identity labels a drop record repeats (the plan's group key already
+		# has the ItemClass ID and bless): the drop's own item ID and its bless
+		# label, dropped only while they agree with the record's identity.
+		if record.has("source_m_item_id") and _int(record.source_m_item_id) and int(record.source_m_item_id)==int(record.get("source_item_class_id",-1)):record.erase("source_m_item_id")
+		if record.get("bless_state")==BLESS_LABELS.get(int(record.get("source_bless_raw",0)),null):record.erase("bless_state")
+		result["record"]=record
+	return _canonical(result)
+
+## A stack restored from the save holds JSON numbers (1.0) where a fresh grant
+## holds integers (1); Dictionary equality is type-strict, so a loaded stack
+## and a new pickup of one item never matched until the next reload.
+static func _canonical(value: Variant) -> Variant:
+	if value is Dictionary:
+		var out: Dictionary={}
+		for key: Variant in value:out[key]=_canonical(value[key])
+		return out
+	if value is Array:
+		var items: Array=[]
+		for item: Variant in value:items.append(_canonical(item))
+		return items
+	if value is float and is_finite(value) and value==floorf(value) and absf(value)<=9007199254740991.0:return int(value)
+	return value
+
+const BLESS_LABELS: Dictionary={1:"normal",2:"blessed",3:"cursed"}
+
 ## Plans the bag merge. Pure: returns new copies, never edits its inputs.
 ## {changed, item_instances, consumable_state, item_locks, merged_slots}
 static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reserved: Dictionary={}) -> Dictionary:
@@ -97,7 +140,7 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 		if equipment(owned.record) or str(owned.record.get("slot","")) not in STACK_SLOTS:continue
 		var key: String="%s|%d|%d" % [str(entry.get("name","")),int(owned.receipt.item_class_id),int(owned.receipt.bless_raw)]
 		if not groups.has(key):groups[key]=[];order.append(key)
-		groups[key].append({"uid":uid,"owned":owned,"entry":entry,"other":_other_fields(entry)})
+		groups[key].append({"uid":uid,"owned":owned,"entry":entry,"other":stack_identity(entry)})
 	var bins: Array=[]
 	for key: String in order:
 		var members: Array=groups[key]
