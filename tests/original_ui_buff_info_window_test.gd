@@ -4,15 +4,34 @@ extends SceneTree
 ## time text, the world's _combined_active_buffs as the source, the HUD
 ## active effect row opening the window first. Real input: -- --pack=<private
 ## original main UI pack directory>: Inventory_Buff_Info_All mounts one row
-## per effect, the 디버프 / 발동 마법 tabs mount empty with their notices, and
+## per effect, the 디버프 tab one row per player status timer / monster
+## BuffClass debuff, the 발동 마법 tab (no worn invoke here) its notice, and
 ## the per-second refresh follows the live times and a changed effect set.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
+class FakeCatalog extends RefCounted:
+	func row(_table: String, id: int) -> Dictionary:
+		return {3:{"ID":3,"Name":"커스 포이즌","DescID":0,"IsGood":false},7:{"ID":7,"Name":"보호막","DescID":0,"IsGood":true}}.get(id,{})
+
+class FakeNpcSpells extends RefCounted:
+	var catalog:=FakeCatalog.new()
+	var player_buffs: Dictionary={3:{"id":3,"remaining":12.0,"values":{}},7:{"id":7,"remaining":30.0,"values":{}}}
+
+class FakePlayer extends Node:
+	var stun_remaining: float=0.0
+	var silence_remaining: float=0.0
+	var hold_remaining: float=0.0
+	var fear_remaining: float=0.0
+	var poison_remaining: float=0.0
+	var bleed_remaining: float=0.0
+
 class FakeWorld extends Node:
 	var buffs: Dictionary={"헤이스트":{"remaining":299.2,"speed":1.3},"민첩 강화 물약":{"remaining":4000.0,"desc":"민첩 +5 · 지속 시간 1시간\n두 번째 줄"}}
+	var player:=FakePlayer.new()
+	var patch523_npc_spells=null
 	func _combined_active_buffs() -> Dictionary:
 		return buffs.duplicate(true)
 
@@ -40,6 +59,18 @@ func _run() -> void:
 	var window=WINDOW.new()
 	window._hud=weakref(host.hud)
 	check(window._buffs().keys()==["헤이스트","민첩 강화 물약"],"the existing combined active effects")
+	check(window.rows_of("debuff").is_empty() and window.rows_of("spell").is_empty(),"no debuff / invoke: empty lists")
+	host.world.player.stun_remaining=2.5
+	host.world.player.poison_remaining=8.0
+	host.world.patch523_npc_spells=FakeNpcSpells.new()
+	var debuffs: Dictionary=window.rows_of("debuff")
+	check(debuffs.keys()==["스턴","중독","커스 포이즌"] and is_equal_approx(float(debuffs["커스 포이즌"].remaining),12.0) and int(debuffs["커스 포이즌"].buff_id)==3,"the player status timers and the monster BuffClass debuffs: "+str(debuffs.keys()))
+	check(window._buffs().has("보호막") and not debuffs.has("보호막"),"a good monster BuffClass effect joins the buff list")
+	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_buff_info_window.gd")
+	check(source.contains("EquipmentCombat.active(owner,kind)") and source.contains("\"attack_source_spell\",\"attack_fixed_damage\",\"attack_weapon_scale\",\"defence_flat_reduction\",\"defence_fixed_counter\""),"발동 마법 lists every invoke kind the combat runtime rolls")
+	host.world.player.stun_remaining=0.0
+	host.world.player.poison_remaining=0.0
+	host.world.patch523_npc_spells=null
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(renewal.contains("UI.button(\"\",open_buff_info,") and renewal.contains("_open_original_feature(\"buff_info\")"),"the active effect row opens the original window first")
 	var pack_dir: String=""
@@ -74,9 +105,15 @@ func _real_pack(pack_dir: String) -> void:
 	host.world.buffs.erase("민첩 강화 물약")
 	window._tick()
 	check(window._scene!=before and int(window.last_result.filled.rows)==1,"a changed effect set rebuilds the list")
-	for tab: String in ["debuff","spell"]:
-		var shown: Dictionary=window._tab(tab)
-		check(shown.get("handled",false) and int(shown.filled.rows)==0,tab+" tab mounts empty with its notice")
+	var shown: Dictionary=window._tab("spell")
+	check(shown.get("handled",false) and int(shown.filled.rows)==0,"발동 마법 without a worn invoke mounts empty with its notice")
+	check(window._tab("debuff").get("handled",false) and int(window.last_result.filled.rows)==0,"디버프 with none mounts empty with its notice")
+	host.world.player.bleed_remaining=5.0
+	host.world.patch523_npc_spells=FakeNpcSpells.new()
+	window._tick()
+	check(int(window.last_result.filled.rows)==2 and window._times.size()==2,"a new debuff rebuilds the 디버프 list with live times: "+str(window.last_result).left(200))
+	host.world.player.bleed_remaining=0.0
+	host.world.patch523_npc_spells=null
 	host.world.buffs.clear()
 	var empty: Dictionary=window._tab("buff")
 	check(empty.get("handled",false) and int(empty.filled.rows)==0,"no effect: the 버프 notice")

@@ -53,7 +53,10 @@ static var store_failures: Dictionary = {}
 ## with stage "create" (record_writer), "append:<n>" (the n-th record write),
 ## "write" (write()), "commit" (publishing the finished file), "reopen"
 ## (open_records returns nothing) or "index" (the reopened index lacks its
-## last record). It fails the same step the storage would fail.
+## last record); while publishing a new generation also "verify" (the moved
+## file does not read back), "meta" (the new metadata cannot be written) and
+## "swap" (the metadata cannot replace the current one). It fails the same
+## step the storage would fail.
 static var fault: String = ""
 static func _fault(name: String, stage: String) -> bool:
 	return not fault.is_empty() and fault == name + "|" + stage
@@ -182,10 +185,11 @@ static func key(parts: Array) -> String:
 static func read(name: String, expected_key: String) -> Variant:
 	var meta: Variant = _meta_checked(name, expected_key)
 	if meta == null: return null
-	if FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")):
+	var path: String = _data_for(name, meta)
+	if FileAccess.get_sha256(path) != str(meta.get("sha256", "")):
 		LOG.cache(name, "verify_fail")
 		return null
-	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(_data(name))
+	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 	if bytes.size() != int(meta.get("bytes", -1)):
 		LOG.cache(name, "verify_fail")
 		return null
@@ -211,6 +215,9 @@ static func _meta_checked(name: String, expected_key: String) -> Variant:
 	if meta.get("key") != expected_key:
 		LOG.cache(name, "key_changed")
 		return null
+	if _data_for(name, meta).is_empty():
+		LOG.cache(name, "corrupt")
+		return null
 	return meta
 
 static func write(name: String, value_key: String, value: Variant) -> bool:
@@ -229,44 +236,103 @@ static func write(name: String, value_key: String, value: Variant) -> bool:
 		DirAccess.remove_absolute(_data(name) + ".part")
 		_failed(name, "write", "write_fail", {"bytes": bytes.size()})
 		return false
-	DirAccess.remove_absolute(_meta(name))
-	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
-	if DirAccess.rename_absolute(_data(name) + ".part", _data(name)) != OK:
-		_failed(name, "write", "rename_fail", {"bytes": bytes.size()})
-		return false
-	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
-	if meta == null:
-		_failed(name, "write", "meta_fail", {"bytes": bytes.size()})
-		return false
-	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": _sha(bytes), "bytes": bytes.size()}))
-	meta.close()
-	store_failures.erase(name)
-	LOG.io(name, "write", "ok", {"bytes": bytes.size()})
-	return true
+	return _publish(name, value_key, _data(name) + ".part", "write", bytes.size(), _sha(bytes))
 
-## Where a file-format bake (written by its owner) lives.
-static func data_path(name: String) -> String: return _data(name)
+## Where a file-format bake (written by its owner) lives: the current
+## generation's data file (the legacy fixed name when none is recorded).
+## Owners write their unfinished file next to it as data_path(name)+".part".
+static func data_path(name: String) -> String:
+	var path: String = _data_for(name, _meta_value(name))
+	return path if not path.is_empty() else _data(name)
 
-## Moves a finished `part` file into place and records its key and SHA256.
+## Publishes a finished `part` file as the bake's new generation with its key
+## and SHA256 (see _publish()).
 static func commit_file(name: String, value_key: String, part: String) -> bool:
 	if value_key.is_empty():
 		LOG.io(name, "commit", "no_key")
 		return false
-	DirAccess.remove_absolute(_meta(name))
-	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
-	if _fault(name, "commit") or DirAccess.rename_absolute(part, _data(name)) != OK:
+	var size: int = _size(part)
+	var digest: String = FileAccess.get_sha256(part) if size >= 0 else ""
+	if _fault(name, "commit") or digest.is_empty():
+		DirAccess.remove_absolute(part)
 		_failed(name, "commit", "rename_fail")
 		return false
-	var meta := FileAccess.open(_meta(name), FileAccess.WRITE)
-	if meta == null:
-		_failed(name, "commit", "meta_fail")
+	return _publish(name, value_key, part, "commit", size, digest)
+
+## Replaces the bake with a new generation without ever losing the accepted
+## one first. The finished part is moved to its own generation file and read
+## back (size and SHA256); the new metadata - the only pointer readers follow
+## - is written beside the current one, read back, and then replaces it in a
+## single rename. Until that rename the previously accepted metadata and data
+## are untouched, and any failure removes only the new generation's own
+## files. A kept older cache stays under its own key, so a reader asking for a
+## different key still misses: it is never used as the current data. Only
+## after the swap are the superseded generation and stale leftovers removed.
+static func _publish(name: String, value_key: String, part: String, op: String, size: int, digest: String) -> bool:
+	var file_name: String = _generation_name(name)
+	var target: String = ROOT + "/" + file_name
+	if DirAccess.rename_absolute(part, target) != OK:
+		DirAccess.remove_absolute(part)
+		_failed(name, op, "rename_fail", {"bytes": size})
 		return false
-	var size: int = _size(_data(name))
-	meta.store_string(JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": FileAccess.get_sha256(_data(name)), "bytes": size}))
-	meta.close()
+	if _fault(name, "verify") or _size(target) != size or FileAccess.get_sha256(target) != digest:
+		DirAccess.remove_absolute(target)
+		_failed(name, op, "verify_fail", {"bytes": size})
+		return false
+	var text: String = JSON.stringify({"schema": SCHEMA, "key": value_key, "sha256": digest, "bytes": size, "file": file_name})
+	var meta_part: String = _meta(name) + ".part"
+	var meta: FileAccess = null
+	if not _fault(name, "meta"): meta = FileAccess.open(meta_part, FileAccess.WRITE)
+	var meta_stored: bool = meta != null and meta.store_string(text) and meta.get_error() == OK
+	if meta != null: meta.close()
+	if not meta_stored or FileAccess.get_file_as_string(meta_part) != text:
+		DirAccess.remove_absolute(meta_part)
+		DirAccess.remove_absolute(target)
+		_failed(name, op, "meta_fail", {"bytes": size})
+		return false
+	var previous: String = _data_for(name, _meta_value(name))
+	if _fault(name, "swap") or DirAccess.rename_absolute(meta_part, _meta(name)) != OK:
+		DirAccess.remove_absolute(meta_part)
+		DirAccess.remove_absolute(target)
+		_failed(name, op, "swap_fail", {"bytes": size})
+		return false
+	# The new generation is current: remove what it superseded.
+	if not previous.is_empty() and previous != target: DirAccess.remove_absolute(previous)
+	if FileAccess.file_exists(_data(name)): DirAccess.remove_absolute(_data(name))
+	_remove_generations(name, file_name)
 	store_failures.erase(name)
-	LOG.io(name, "commit", "ok", {"bytes": size})
+	LOG.io(name, op, "ok", {"bytes": size})
 	return true
+
+## "<name>.g<16 hex>.bin": a fresh generation file name for this bake.
+static func _generation_name(name: String) -> String:
+	return name + ".g" + Crypto.new().generate_random_bytes(8).hex_encode() + ".bin"
+
+static func _is_generation(name: String, file_name: String) -> bool:
+	if not file_name.begins_with(name + ".g") or not file_name.ends_with(".bin"): return false
+	var token: String = file_name.trim_prefix(name + ".g").trim_suffix(".bin")
+	return token.length() == 16 and token.is_valid_hex_number()
+
+## The data file the metadata points to: its generation file, or the legacy
+## fixed name for metadata written before generations existed; "" when the
+## recorded file is not one of this bake's generation names.
+static func _data_for(name: String, meta: Variant) -> String:
+	if not meta is Dictionary or not (meta as Dictionary).has("file"): return _data(name)
+	var file_name: Variant = meta.file
+	if not file_name is String or not _is_generation(name, file_name): return ""
+	return ROOT + "/" + file_name
+
+static func _meta_value(name: String) -> Variant:
+	if not FileAccess.file_exists(_meta(name)): return null
+	return JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
+
+## Removes this bake's generation files (and their unfinished parts) except `keep`.
+static func _remove_generations(name: String, keep: String) -> void:
+	var dir := DirAccess.open(ROOT)
+	if dir == null: return
+	for file_name: String in dir.get_files():
+		var base: String = file_name.trim_suffix(".part")
+		if base != keep and _is_generation(name, base): DirAccess.remove_absolute(ROOT + "/" + file_name)
 
 ## The file of a file-format bake when its key matches and its bytes verify; "" otherwise.
 ## True when a bake with this key and its declared size is present (no hash:
@@ -274,19 +340,21 @@ static func commit_file(name: String, value_key: String, part: String) -> bool:
 static func present(name: String, expected_key: String) -> bool:
 	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return false
 	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
-	return meta is Dictionary and meta.get("schema") == SCHEMA and meta.get("key") == expected_key and _size(_data(name)) == int(meta.get("bytes", -2))
+	return meta is Dictionary and meta.get("schema") == SCHEMA and meta.get("key") == expected_key and _size(_data_for(name, meta)) == int(meta.get("bytes", -2))
 
 static func verified_file(name: String, expected_key: String) -> String:
 	var meta: Variant = _meta_checked(name, expected_key)
 	if meta == null: return ""
-	var size: int = _size(_data(name))
-	if size != int(meta.get("bytes", -1)) or FileAccess.get_sha256(_data(name)) != str(meta.get("sha256", "")):
+	var path: String = _data_for(name, meta)
+	var size: int = _size(path)
+	if size != int(meta.get("bytes", -1)) or FileAccess.get_sha256(path) != str(meta.get("sha256", "")):
 		LOG.cache(name, "missing" if size < 0 else "verify_fail")
 		return ""
 	LOG.cache(name, "hit", {"bytes": size})
-	return _data(name)
+	return path
 
 static func _size(path: String) -> int:
+	if path.is_empty(): return -1
 	var file := FileAccess.open(path, FileAccess.READ)
 	return int(file.get_length()) if file != null else -1
 
@@ -388,8 +456,11 @@ static func open_records(name: String, value_key: String) -> RecordFile:
 	return records
 
 static func clear(name: String) -> void:
+	var current: String = _data_for(name, _meta_value(name))
 	DirAccess.remove_absolute(_meta(name))
+	if not current.is_empty(): DirAccess.remove_absolute(current)
 	DirAccess.remove_absolute(_data(name))
+	_remove_generations(name, "")
 
 static func _sha(bytes: PackedByteArray) -> String:
 	var hash := HashingContext.new()

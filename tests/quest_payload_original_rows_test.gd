@@ -25,6 +25,6 @@ func _initialize() -> void:
 	var build_at: int = quest.find("projection.build()")
 	var restore_at: int = quest.find("SOURCE.approximate_test_items = approximate")
 	check(off_at >= 0 and build_at > off_at and restore_at > build_at, "the quest projection is built with the rule off and restores it")
-	check(FileAccess.get_file_as_string("res://scripts/quests/quest_service.gd").contains("problem = str(source.problem)"), "a quest pack failure names its cause")
+	check(FileAccess.get_file_as_string("res://scripts/quests/quest_service.gd").contains("problem = \"원본 퀘스트 불러오기 실패: \" + str(source.problem)"), "a quest pack failure names its cause")
 	print("QUEST_PAYLOAD_ROWS_RESULT " + JSON.stringify({"checks": checks, "failures": failures}))
 	quit(0 if failures.is_empty() else 1)
