@@ -22,6 +22,7 @@ const TRANSFERRED="source_native_stack_transferred_quantity"
 const MERGES="source_native_stack_merges"
 const MERGE=preload("res://scripts/loot/native_stack_merge.gd")
 const EFFECTS=preload("res://scripts/loot/source523_item_effects.gd")
+const TRIM=preload("res://scripts/loot/save_provenance_trim.gd")
 static var busy: bool=false
 static var _candidate: Dictionary={}
 static var _candidate_kind: String=""
@@ -162,9 +163,13 @@ static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,o
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
-	var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,"source_definition_archive":SOURCE.identity(),"source_original_item":NATIVE_FIELDS.full(record).source_original_item.duplicate(true),"origin":origin.duplicate(true)}
+	# The original ItemClass row, definition identity and acquisition detail
+	# are not copied into the receipt (save_provenance_trim.gd): full(receipt)
+	# reads the row from the installed definition by ItemClass ID.
+	if not integer(record.get("source_item_class_id")) or int(record.source_item_class_id)<1:return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
+	var receipt: Dictionary=TRIM.receipt({"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,NATIVE_FIELDS.MARK:true,"source_item_class_id":int(record.source_item_class_id),"origin":origin.duplicate(true)})
 	var result: Dictionary=instances.duplicate(true)
-	result[uid]={"name":str(record.name),"record":NATIVE_FIELDS.full(record).duplicate(true),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
+	result[uid]={"name":str(record.name),"record":TRIM.record(NATIVE_FIELDS.full(record).duplicate(true)),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
 	return {"ok":true,"item_instances":result,"id":uid}
 
 static func proof(world: Node,uid: String) -> Dictionary:
@@ -175,19 +180,27 @@ static func proof_entry(entry: Variant,uid: String) -> Dictionary:
 	var record: Dictionary=D.current_owned_record(entry.record)
 	if supply_profile(record).is_empty() or entry.get("name")!=record.get("name") or entry.get("level")!=0:return {}
 	var receipt: Dictionary=entry[RECEIPT]
-	if not receipt_valid(receipt,uid) or NATIVE_FIELDS.full(receipt).get("source_original_item")!=NATIVE_FIELDS.full(record).get("source_original_item") or receipt.get("item_class_id")!=record.get("source_item_class_id") or receipt.get("bless_raw")!=record.get("source_bless_raw"):return {}
+	if not receipt_valid(receipt,uid) or (not NATIVE_FIELDS.lazy(receipt) and receipt.get("source_original_item")!=NATIVE_FIELDS.full(record).get("source_original_item")) or receipt.get("item_class_id")!=record.get("source_item_class_id") or receipt.get("bless_raw")!=record.get("source_bless_raw"):return {}
 	var remaining: Variant=entry.get(QUANTITY);var used: Variant=entry.get("source_native_stack_used_quantity");var granted: Variant=receipt.get("granted_quantity");var transferred: Variant=entry.get(TRANSFERRED,0)
 	if not integer(remaining) or not integer(used) or not integer(granted) or not integer(transferred) or int(remaining)<1 or int(used)>int(granted)-int(transferred) or int(remaining)!=int(granted)-int(used)-int(transferred):return {}
 	return {"record":record,"remaining":int(remaining),"used":int(used),"transferred":int(transferred),"receipt":receipt,"first_grant_receipt":first_grant_receipt(receipt),"allocated_quantity":int(granted)}
 
 static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0) -> bool:
-	if depth>128 or whole(receipt.get("schema")) not in [1,2,3] or receipt.get("issued_physical_id")!=uid or receipt.get("source_definition_archive")!=SOURCE.identity() or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or NATIVE_FIELDS.full(receipt).get("source_original_item")!=SOURCE.row("ItemClass",int(receipt.item_class_id)) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
+	if depth>128 or whole(receipt.get("schema")) not in [1,2,3] or receipt.get("issued_physical_id")!=uid or (receipt.has("source_definition_archive") and receipt.source_definition_archive!=SOURCE.identity()) or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or not _original_row_ok(receipt) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
 	if receipt.schema==1:return true
 	if receipt.schema==3:return MERGE.receipt_shape_valid(receipt)
 	var origin: Dictionary=receipt.origin
 	if origin.get("kind")!="owned_quantity_partition" or not origin.get("partition_id") is String or str(origin.partition_id).length()!=32 or not str(origin.partition_id).is_valid_hex_number(false) or not origin.get("parent_physical_id") is String or origin.parent_physical_id==uid or not origin.get("parent_receipt") is Dictionary:return false
 	var parent: Dictionary=origin.parent_receipt
-	return receipt_valid(parent,str(origin.parent_physical_id),depth+1) and parent.get("item_class_id")==receipt.item_class_id and parent.get("bless_raw")==receipt.bless_raw and NATIVE_FIELDS.full(parent).get("source_original_item")==NATIVE_FIELDS.full(receipt).source_original_item and int(receipt.granted_quantity)<=int(parent.granted_quantity)
+	return receipt_valid(parent,str(origin.parent_physical_id),depth+1) and parent.get("item_class_id")==receipt.item_class_id and parent.get("bless_raw")==receipt.bless_raw and int(receipt.granted_quantity)<=int(parent.granted_quantity)
+
+## A trimmed receipt (no row copy, catalog MARK + the same ItemClass ID) reads
+## its row from the installed definition; a full one keeps the exact copy
+## check. Either way the row must be the current original ItemClass row.
+static func _original_row_ok(receipt: Dictionary) -> bool:
+	if NATIVE_FIELDS.lazy(receipt):
+		return not receipt.has("source_original_item") and whole(receipt.get("source_item_class_id"))==whole(receipt.get("item_class_id")) and not SOURCE.row("ItemClass",int(receipt.item_class_id)).is_empty()
+	return receipt.get("source_original_item")==SOURCE.row("ItemClass",int(receipt.item_class_id))
 
 static func first_grant_receipt(receipt: Dictionary) -> Dictionary:
 	var root: Dictionary=receipt
