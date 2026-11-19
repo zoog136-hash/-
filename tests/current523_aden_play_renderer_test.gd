@@ -108,6 +108,25 @@ func run() -> void:
 	check(decorations[0][2]==123 and decorations[-1][2]==456 and not decorations.has(-2),"source packet decorations span absent floor chunks without inventing floor")
 	check(field.raw_grid.bytes.count(0)==field.raw_grid.bytes.size(),"off-floor artwork never changes navigation bytes")
 	field.remove_meta("current523_generic_field")
+	# The one-pass chunk projection equals the per-record path (lanes and counters).
+	var rng := RandomNumberGenerator.new(); rng.seed = 523
+	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var raw_refs := PackedInt64Array()
+	for index: int in 3000:
+		halves.append(rng.randi_range(0, 255)); rows.append(rng.randi_range(0, 255)); kinds.append([-2, -1, 0, 1, 3][rng.randi() % 5]); raw_refs.append(rng.randi())
+	for generic: bool in [false, true]:
+		if generic: field.set_meta("current523_generic_field", true)
+		for origin: Vector2i in [PLAY.GRID_ORIGIN, PLAY.GRID_ORIGIN + Vector2i(64, 0), PLAY.GRID_ORIGIN + Vector2i(-64, 64)]:
+			renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+			var slow: Dictionary = {}
+			for index: int in halves.size(): renderer._append(slow, origin, halves[index], rows[index], raw_refs[index], kinds[index])
+			var slow_counts: Array = [renderer._scope_clipped_records, renderer._off_floor_decoration_records]
+			renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+			var fast: Dictionary = renderer._project_records(origin, halves, rows, kinds, raw_refs)
+			var same: bool = fast.size() == slow.size() and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == slow_counts
+			for layer: int in slow: same = same and fast.has(layer) and fast[layer] == PackedInt64Array(slow[layer])
+			check(same, "one-pass chunk projection equals the per-record path (generic=%s origin=%s)" % [generic, origin])
+	field.remove_meta("current523_generic_field")
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
 	var tiles := FakeTiles.new()
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}

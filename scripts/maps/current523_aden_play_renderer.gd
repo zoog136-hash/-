@@ -446,29 +446,85 @@ func _read_chunk(member: String) -> Dictionary:
 			row["source_sha256"]=decoded.source_sha256
 			row["source_bytes"]=decoded.source_bytes
 	_static_tails[member]=tail
-	var layers: Dictionary = {}
+	# Records in file order (floor, covers, objects), then projected in one pass.
+	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var refs := PackedInt64Array()
 	var floor_bytes: PackedByteArray = decoded.sections.floor
-	for index: int in range(8192): _append(layers, origin, index & 127, index >> 7, floor_bytes.decode_u32(index * 4), -2)
+	halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
+	for index: int in range(8192):
+		halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
 	var covers: PackedByteArray = decoded.sections.covers
 	for index: int in range(covers.decode_u16(0)):
 		var offset: int = 2 + index * 6
-		_append(layers, origin, covers[offset], covers[offset + 1], covers.decode_u32(offset + 2), -1)
+		halves.append(covers[offset]); rows.append(covers[offset + 1]); kinds.append(-1); refs.append(covers.decode_u32(offset + 2))
 	var objects: PackedByteArray = decoded.sections.objects
 	var cursor: int = 4
 	for _group: int in range(objects.decode_u32(0)):
 		var count: int = objects.decode_u16(cursor + 2)
 		cursor += 4
 		for _part: int in range(count):
-			_append(layers, origin, objects[cursor], objects[cursor + 1], objects.decode_u32(cursor + 3), objects[cursor + 2])
+			halves.append(objects[cursor]); rows.append(objects[cursor + 1]); kinds.append(objects[cursor + 2]); refs.append(objects.decode_u32(cursor + 3))
 			cursor += 7
-	var packed: Dictionary = {}
-	for layer: int in layers: packed[layer] = PackedInt64Array(layers[layer])
+	var packed: Dictionary = _project_records(origin, halves, rows, kinds, refs)
 	_chunk_bins[member] = _bin_chunk(packed)
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
 		var oldest: String=_raw_recent.pop_front()
 		_raw_chunks.erase(oldest);_static_tails.erase(oldest);_chunk_bins.erase(oldest)
+	return packed
+
+
+## The same result as _append for every record in order (scope check,
+## off-floor decorations, projection, per-layer lanes), in one loop: the
+## per-record path made five script calls per record (~20,000 per chunk) and
+## was the largest map cost while moving (837,955 projections in 40 s).
+func _project_records(origin: Vector2i, halves: PackedInt32Array, rows: PackedInt32Array, kinds: PackedInt32Array, refs: PackedInt64Array) -> Dictionary:
+	var coordinates: RefCounted = field.coordinates
+	var lanes: Dictionary = {}
+	if not bool(coordinates.valid):
+		var slow: Dictionary = {}
+		for index: int in halves.size(): _append(slow, origin, halves[index], rows[index], refs[index], kinds[index])
+		for layer: int in slow: lanes[layer] = PackedInt64Array(slow[layer])
+		return lanes
+	var generic: bool = bool(field.get_meta("current523_generic_field",false))
+	var bx: Vector2 = coordinates.basis_x
+	var by: Vector2 = coordinates.basis_y
+	var shift: Vector2 = coordinates.translation
+	var grid_origin: Vector2i = coordinates.origin
+	var odd: Vector2 = (bx + by) * 0.5
+	var last_cover := Vector2i(-2147483647, -2147483647)
+	var last_inside: bool = false
+	for index: int in halves.size():
+		var half_x: int = halves[index]
+		var row_y: int = rows[index]
+		var layer: int = kinds[index]
+		var sx: int = origin.x + floori(float(half_x) / 2.0)
+		var sy: int = origin.y + row_y
+		var cover := Vector2i(floori(float(sx) / 64.0) * 64, floori(float(sy) / 64.0) * 64)
+		if cover != last_cover:
+			last_cover = cover
+			last_inside = _overlap.has(cover)
+		if not last_inside:
+			if layer == -2 or not generic:
+				_scope_clipped_records += 1
+				continue
+			_off_floor_decoration_records += 1
+		# source_coordinates.half_tile_position -> to_world -> grid_to_world,
+		# same operations in the same order (Vector2 float32 results).
+		var gx: float = float(float(sx) - grid_origin.x + 0.5)
+		var gy: float = float(float(sy) - grid_origin.y + 0.5)
+		var world := Vector2(bx.x * gx + by.x * gy + shift.x, bx.y * gx + by.y * gy + shift.y)
+		var point: Vector2 = world - by + float(half_x & 1) * odd
+		# Arrays are shared references; a packed array taken from the
+		# dictionary would be copied on every append.
+		var lane: Variant = lanes.get(layer)
+		if lane == null:
+			lane = []
+			lanes[layer] = lane
+		var items: Array = lane
+		items.append(int(point.x)); items.append(int(point.y)); items.append(refs[index])
+	var packed: Dictionary = {}
+	for layer: int in lanes: packed[layer] = PackedInt64Array(lanes[layer])
 	return packed
 
 
@@ -570,13 +626,16 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 					if texture == null: texture = _tile_pack.texture_for(tile_id)
 					if texture == null: _unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)]); unresolved += int(owned); continue
 					atlases[tile_id] = texture
-				if not by_layer.has(layer): by_layer[layer] = PackedInt64Array()
-				var lane: PackedInt64Array = by_layer[layer]
-				lane.append(records[index]); lane.append(records[index + 1]); lane.append(ref)
-				by_layer[layer] = lane
+				var lane: Variant = by_layer.get(layer)
+				if lane == null:
+					lane = []
+					by_layer[layer] = lane
+				(lane as Array).append_array([records[index], records[index + 1], ref])
 				draws += 1
 				count += int(owned)
-	return {"commands": by_layer, "atlases": atlases, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
+	var commands: Dictionary = {}
+	for layer: int in by_layer: commands[layer] = PackedInt64Array(by_layer[layer])
+	return {"commands": commands, "atlases": atlases, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
 
 
 ## One block's render target, drawn once (UPDATE_ONCE) from its commands.
