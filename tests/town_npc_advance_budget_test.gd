@@ -40,14 +40,20 @@ func _run() -> void:
 	var frames: int = 30
 	var step: float = 1.0 / 30.0
 	var max_per_frame: int = 0
+	var advance_frames: int = 0
 	for frame: int in frames:
 		var before: int = 0
 		for p: StubPreview in previews: before += p.calls
+		if Engine.get_process_frames() % BODIES.ADVANCE_EVERY_FRAMES == 0: advance_frames += 1
 		bodies._advance_bodies(step)
+		await process_frame
 		var after: int = 0
 		for p: StubPreview in previews: after += p.calls
 		max_per_frame = maxi(max_per_frame, after - before)
 	check(max_per_frame <= BODIES.ADVANCES_PER_FRAME, "at most %d advances per frame (%d)" % [BODIES.ADVANCES_PER_FRAME, max_per_frame])
+	var total_calls: int = 0
+	for p: StubPreview in previews: total_calls += p.calls
+	check(total_calls <= advance_frames * BODIES.ADVANCES_PER_FRAME and advance_frames < frames, "advances happen only on every %d-th frame (%d calls over %d of %d frames)" % [BODIES.ADVANCE_EVERY_FRAMES, total_calls, advance_frames, frames])
 	var every_body_moved: bool = true
 	for p: StubPreview in previews: every_body_moved = every_body_moved and p.calls > 0
 	check(every_body_moved, "every near body is advanced in turn")
