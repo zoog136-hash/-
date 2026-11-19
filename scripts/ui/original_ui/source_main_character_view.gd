@@ -1,6 +1,8 @@
 extends RefCounted
 ## The existing character tab caller opens the original six-value stats scope.
 ## Original parents, their opening clip and input nodes supply all geometry.
+## source_main_hud.SLOT_ROUTED_META: a Common_Slot the router may press.
+const SLOT_ROUTED_META="source_slot_routed"
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Stats=preload("res://scripts/ui/original_ui/source_main_character_stats_bindings.gd")
 const PARENT="UI/FloatingUiScene.csb"
@@ -91,6 +93,12 @@ func open_equipment(parent: Node) -> Dictionary:
 		if not result.get("ok",false):page.free();next.free();return result
 		result=pages.register_original_page(page,int(contract.panel_offset),index)
 		if not result.get("ok",false):page.free();next.free();return result
+		# An empty slot has no item for PointerTransfer: its own button goes
+		# to the original button router (empty_slot: open the bag / notice).
+		for row: Dictionary in contract.rows:
+			if not (row.record as Dictionary).is_empty():continue
+			var empty: Dictionary=page.project_player([int(row.source_project_offset)])
+			if empty.get("ok",false):_route_slot(empty.player)
 		for offset: Variant in contract.owner_results:
 			var slot: Dictionary=page.project_player([int(offset)])
 			if not slot.get("ok",false):next.free();return slot
@@ -114,6 +122,13 @@ func open_equipment(parent: Node) -> Dictionary:
 	_mode="equipment"
 	_parent=weakref(parent)
 	return {"ok":true,"handled":true,"member":ALL,"tab":"equipment","pages":PAGE_MEMBERS.duplicate(),"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+
+## Marks every node of an original Common_Slot as router-owned (as the NPC
+## store's product slots): the router walks the slot down to its Btn.
+static func _route_slot(node: Node) -> void:
+	var identity: Variant=node.get_meta("original_ui_source",{})
+	if identity is Dictionary and identity.get("scene")==Equipment.COMMON:node.set_meta(SLOT_ROUTED_META,true)
+	for child: Node in node.get_children():_route_slot(child)
 
 static func _background_input(all_player: Node) -> Control:
 	var background: Variant=all_player.get("source_nodes").get(22036)
