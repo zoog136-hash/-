@@ -57,6 +57,7 @@ func _run() -> void:
 	host.free()
 	check(REFINE._number(100000)=="100,000" and REFINE._number(0)=="0" and REFINE._number(1234567)=="1,234,567","the Adena cost is grouped like the client's amount text")
 	_hud_routing()
+	_bag_tabs()
 	_sources()
 	print("ORIGINAL_UI_REFINE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
@@ -82,6 +83,38 @@ func _hud_routing() -> void:
 	hud.open_refine523()
 	check(hud.fallback_opened==2,"without the original UI controller the panel opens")
 	hud.free()
+
+class FakeWorld extends Node:
+	func _find_catalog_item_record(name: String) -> Dictionary:
+		return {"slot":"consumable"} if name=="가루" else {}
+
+## 전체 / 장비 / 소모 / 기타 filter the 연금 재료 slots (the bag's own split) and
+## every tab, the 기본재료 slot and the 재료 button act (none stays _ignore).
+func _bag_tabs() -> void:
+	var window=REFINE.new()
+	var world:=FakeWorld.new()
+	var materials: Array[Dictionary]=[{"kind":"target","uid":"a","name":"검","enchant":7,"item_class_id":1},{"kind":"powder","uid":"","name":"가루","amount":3,"item_class_id":2}]
+	check(window._shown(world,materials).size()==2,"전체 shows every material")
+	window._tab="equip"
+	var equip: Array[Dictionary]=window._shown(world,materials)
+	check(equip.size()==1 and equip[0].uid=="a","장비 shows the refine targets")
+	window._tab="consume"
+	check(window._shown(world,materials).size()==1 and window._shown(world,materials)[0].kind=="powder","소모 shows the powder by its catalog record")
+	window._tab="etc"
+	check(window._shown(world,materials).is_empty(),"기타 is empty here")
+	window._tab="equip"
+	var spec: Dictionary=window._spec({},materials,{},{},equip)
+	var tab: String=REFINE.P_INV+"Tab/"
+	check(spec[tab+"Btn_Equipment_On"].visible and not spec[tab+"Btn_All_On"].visible and spec[tab+"Btn_All_Off"].visible,"the current tab shows its On state")
+	var bound: bool=true
+	for name: String in ["Btn_All","Btn_Equipment","Btn_Consume","Btn_Etc"]:
+		var callable: Variant=spec[tab+name+"_Off"].get("activate")
+		bound=bound and callable is Callable and (callable as Callable).get_method()=="_set_tab"
+	check(bound,"every bag tab's Off button switches the tab")
+	check(spec[REFINE.P_ITEM+"Btn_Material"].activate.get_method()=="_powder_info" and spec[REFINE.P_ITEM+"Nd_Slot/Refine_Slot/Nd_Slot/Common_Slot/Btn"].activate.get_method()=="_powder_info","the 기본재료 slot and 재료 button show the powder owned")
+	check(spec.has(REFINE.P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/Slot_1/Btn") and spec[REFINE.P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/Slot_2/Text_Amount"].visible==false,"the slot rows follow the shown tab")
+	check(window._set_tab("nope").get("code")=="source_refine_window_tab_unknown","an unknown tab is refused")
+	world.free()
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
