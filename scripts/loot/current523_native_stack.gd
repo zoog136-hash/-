@@ -375,7 +375,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):continue
 		var uid: String=str(physical.get("id",""))
 		var owned: Dictionary=proof_entry(physical.data,uid)
-		if uid.is_empty() or all.has(uid) or owned.is_empty() or entry.get("player_dropped")!=true or entry.get("quantity")!=1 or int(owned.remaining)!=1 or entry.get("item_name")!=physical.data.get("name") or entry.get("item_record")!=physical.data.get("record"):return "바닥 원본 개체·잔량·출처 중복 또는 불일치"
+		if uid.is_empty() or all.has(uid) or owned.is_empty() or entry.get("player_dropped")!=true or not integer(entry.get("quantity")) or int(entry.quantity)<1 or int(owned.remaining)!=int(entry.quantity) or entry.get("item_name")!=physical.data.get("name") or entry.get("item_record")!=physical.data.get("record"):return "바닥 원본 개체·잔량·출처 중복 또는 불일치"
 		all[uid]=physical.data;floor_ids[uid]=true
 	# Offline character ownership proves shared quantity journals without
 	# granting their items or counting their bag weight in this session.
@@ -660,13 +660,15 @@ static func _floor_payload(record: Dictionary) -> Dictionary:
 	var physical: Variant=record.get("physical_item")
 	if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):return {}
 	var uid: String=str(physical.get("id",""));var owned: Dictionary=proof_entry(physical.data,uid)
-	if owned.is_empty() or owned.remaining!=1 or record.get("quantity")!=1 or record.get("player_dropped")!=true or record.get("item_name")!=physical.data.get("name") or record.get("item_record")!=physical.data.get("record"):return {}
+	if owned.is_empty() or not integer(record.get("quantity")) or int(record.quantity)<1 or int(owned.remaining)!=int(record.quantity) or record.get("player_dropped")!=true or record.get("item_name")!=physical.data.get("name") or record.get("item_record")!=physical.data.get("record"):return {}
 	return {"uid":uid,"owned":owned,"physical":physical.data}
 
 static func _clear_floor_candidate() -> void:
 	_candidate.clear();_candidate_kind="";_floor_record.clear();_floor_commit_confirmed=false;_partition_parent="";busy=false
 
-static func drop(world: Node,reference: String,requested_position: Vector2) -> Dictionary:
+## Moves `quantity` units of one physical original stack to the floor as one
+## floor record (a partition child with exactly that remaining quantity).
+static func drop(world: Node,reference: String,requested_position: Vector2,quantity: int=1) -> Dictionary:
 	var selected: Dictionary=world._parse_enhancement_target(reference)
 	var name_value: String=str(selected.get("name",""));var uid: String=str(selected.get("id",""))
 	var claims: bool=false
@@ -678,19 +680,20 @@ static func drop(world: Node,reference: String,requested_position: Vector2) -> D
 	if owned.is_empty() or owned.record.get("name")!=name_value:return _failure("바닥으로 이동할 실제 원본 개체를 선택하세요")
 	if world.hp<=0 or world.death_recovery.blocked() or world._item_locked(name_value,uid) or world._item_locked(name_value) or world._is_instance_equipped(uid) or NATIVE_FIELDS.full(owned.receipt).source_original_item.get("IsDroppable")!=true:return _failure("원본 내려놓기·잠금·장착·생존 조건 미충족")
 	if not requested_position.is_finite():return _failure("유효한 바닥 좌표 필요")
+	if quantity<1 or quantity>int(owned.remaining):return _failure("내려놓을 원본 수량 범위 초과")
 	var point: Vector2=world.player.global_position+(requested_position-world.player.global_position).limit_length(96.0)
 	if not world._is_walkable_world(point) or not world._has_line_of_sight_world(world.player.global_position,point):point=world.player.global_position
 	var physical: Dictionary=world.item_instances[uid].duplicate(true)
 	var moved_uid: String=uid;var partition: Dictionary={}
-	if int(owned.remaining)>1:
-		partition=prepare_partition(world,physical,uid,1,world.consumable_service.export_state())
+	if int(owned.remaining)>quantity:
+		partition=prepare_partition(world,physical,uid,quantity,world.consumable_service.export_state())
 		if not partition.get("ok",false):return partition
 		physical=partition.child;moved_uid=str(partition.child_id)
-	var record: Dictionary=world.ground_loot.stage_spawn(name_value,point,1,"",{"player_dropped":true,"item_record":physical.record.duplicate(true),"physical_item":{"id":moved_uid,"data":physical}})
+	var record: Dictionary=world.ground_loot.stage_spawn(name_value,point,quantity,"",{"player_dropped":true,"item_record":physical.record.duplicate(true),"physical_item":{"id":moved_uid,"data":physical}})
 	if record.is_empty():return _failure("기존 바닥 배치 공간 없음 · 소유 보존")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
-	if not integer(inventory.get(name_value,0)) or int(inventory[name_value])<1:return _failure("원본 소지 수량 불일치")
-	inventory[name_value]=int(inventory[name_value])-1
+	if not integer(inventory.get(name_value,0)) or int(inventory[name_value])<quantity:return _failure("원본 소지 수량 불일치")
+	inventory[name_value]=int(inventory[name_value])-quantity
 	if int(inventory[name_value])==0:inventory.erase(name_value)
 	if partition.is_empty():instances.erase(uid)
 	else:instances[uid]=partition.parent
@@ -707,7 +710,7 @@ static func drop(world: Node,reference: String,requested_position: Vector2) -> D
 	world.inventory=inventory;world.item_instances=instances
 	if payload.has("consumable_state"):world.consumable_service.import_state(payload.consumable_state)
 	world.deferred_save.cancel();_clear_floor_candidate()
-	return {"handled":true,"ok":true,"saved":true,"physical_id":moved_uid,"parent_physical_id":uid,"quantity":1,"message":"원본 물리 개체1개를 바닥으로 이동했습니다"}
+	return {"handled":true,"ok":true,"saved":true,"physical_id":moved_uid,"parent_physical_id":uid,"quantity":quantity,"message":"원본 물리 개체 %d개를 바닥으로 이동했습니다" % quantity}
 
 static func collect_floor(world: Node,view: Button,record: Dictionary) -> Dictionary:
 	var envelope: Variant=record.get("physical_item",{})
@@ -722,10 +725,11 @@ static func collect_floor(world: Node,view: Button,record: Dictionary) -> Dictio
 	var destination:=Vector2(float(point[0]),float(point[1]))
 	if not destination.is_finite() or world.player.global_position.distance_to(destination)>world.GROUND_PICKUP_RADIUS or Time.get_ticks_msec()-int(view.get("visible_since"))<world.ground_loot.MIN_VISIBLE_MS or not world._has_line_of_sight_world(world.player.global_position,destination):return _failure("기존 바닥 습득 거리·시간·시야 조건 미충족")
 	var name_value: String=str(source.physical.name)
-	if world._inventory_total_weight()+maxi(0,int(world.item_weight_index.get(name_value,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
+	var units: int=int(source.owned.remaining)
+	if world._inventory_total_weight()+maxi(0,int(world.item_weight_index.get(name_value,3)))*units>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
-	if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))>=9007199254740991:return _failure("원본 습득 수량 범위 초과")
-	inventory[name_value]=int(inventory.get(name_value,0))+1;instances[source.uid]=source.physical.duplicate(true)
+	if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))>=9007199254740991-units:return _failure("원본 습득 수량 범위 초과")
+	inventory[name_value]=int(inventory.get(name_value,0))+units;instances[source.uid]=source.physical.duplicate(true)
 	var floor: Array=[];var found: bool=false
 	for previous: Dictionary in world._ground_drops_snapshot():
 		if previous.get("id")==record.get("id"):
@@ -751,7 +755,7 @@ static func expire_floor(world: Node,record: Dictionary) -> bool:
 	if source.is_empty() or world.ground_loot.records.get(str(record.get("id","")))!=record or not is_finite(float(record.get("expires_at",INF))) or float(record.get("expires_at",INF))>Time.get_unix_time_from_system():return false
 	var state: Dictionary=world.consumable_service.export_state();var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return false
-	ledger=ledger.duplicate(true);ledger[source.uid]=ledger_row(source.owned,int(source.owned.used),0,1);state[USES]=ledger
+	ledger=ledger.duplicate(true);ledger[source.uid]=ledger_row(source.owned,int(source.owned.used),0,int(source.owned.remaining));state[USES]=ledger
 	var floor: Array=[]
 	for previous: Dictionary in world.ground_loot.records.values():
 		if previous.get("id")!=record.get("id"):floor.append(previous.duplicate(true))

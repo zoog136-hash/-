@@ -318,9 +318,35 @@ func cast(record: Dictionary) -> bool:
 		if not teleport_landing.is_finite():
 			world.hud.show_message("이동 가능한 위치가 없습니다")
 			return false
-	# Validation ends here. Costs and cooldowns happen once, before the marker.
-	if not spend(skill): return false
+	# Validation ends here. Order: register the attack motion (cancellable)
+	# -> pay the cost (MP/HP/materials/ammo; atomic and saved by its owner)
+	# -> cooldown and presentation. A refused registration pays nothing; a
+	# refused payment withdraws only this registration (and a dash), never
+	# world._clear_combat_actions(). After a paid release, MISS and target
+	# death keep the normal rules.
+	if mode not in CAST_MODES: return false
+	var registers: bool = mode in ["attack", "status", "turn_undead"] and not dash_only
+	var area: bool = str(skill.get("shape", "single")) == "self_circle"
+	var origin: Vector2 = world.player.global_position
 	if dash_end.is_finite(): estimated_nodes.move_to(dash_end)
+	var registered: int = -1
+	var kept_buffs: Dictionary = {}
+	if registers:
+		kept_buffs = world._break_on_attack_buffs()
+		var queued: bool
+		if area: queued = world._queue_player_area_attack(skill)
+		else:
+			var kind := str(skill.get("attack_type", "magic"))
+			if kind not in ["magic", "ranged", "melee"]: kind = "melee"
+			queued = world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range))
+		if not queued:
+			_undo_dash(origin, dash_end)
+			return false
+		registered = int(world.pending_attack.get("id", -1))
+	if not spend(skill):
+		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
+		_undo_dash(origin, dash_end)
+		return false
 	var id := str(skill.id)
 	var cooldown: float = float(skill.get("cooldown", 0)) * world._skill_cooldown_factor()
 	cooldown *= clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1)
@@ -333,12 +359,7 @@ func cast(record: Dictionary) -> bool:
 		"attack", "status", "turn_undead":
 			if dash_only:
 				world.player.pulse_attack()
-			elif str(skill.get("shape", "single")) == "self_circle":
-				if not world._queue_player_area_attack(skill): return false
-			else:
-				var kind := str(skill.get("attack_type", "magic"))
-				if kind not in ["magic", "ranged", "melee"]: kind = "melee"
-				if not world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range)): return false
+			elif not area:
 				world.pending_attack["original_skill"] = skill
 				world.pending_attack["original_target_life_id"] = target.life_id
 		"buff", "counter", "stealth":
@@ -388,11 +409,19 @@ func cast(record: Dictionary) -> bool:
 			toggles[id] = not bool(toggles.get(id, false))
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
 		"summon": summons.spawn(skill)
-		_: return false
 	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
 	trigger("on_skill", target, skill)
 	world._update_hud()
 	return true
+
+## Every mode cast() executes after payment; anything else is refused before it.
+const CAST_MODES: Array[String] = ["attack", "status", "turn_undead", "buff", "counter", "stealth", "detect", "heal", "cleanse", "convert", "teleport", "taunt", "toggle_proc", "summon"]
+
+## A dash that moved the caster for an attack that then did not start.
+func _undo_dash(origin: Vector2, dash_end: Vector2) -> void:
+	if not dash_end.is_finite(): return
+	world.player.global_position = origin
+	world.player.camera.reset_smoothing()
 
 func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
 	var target_life := int(action.get("original_target_life_id", target.life_id))
