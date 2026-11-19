@@ -130,6 +130,8 @@ func _process(delta: float) -> void:
 ## latency on a standing idle loop); bodies far from the player only bank
 ## their time until they come near.
 const ADVANCES_PER_FRAME: int = 6
+## Frame plans kept per town NPC preview (field actors keep 512).
+const TOWN_FRAME_PLANS: int = 24
 const ADVANCE_EVERY_FRAMES: int = 2
 const ANIMATE_RADIUS: float = 1000.0
 var _advance_cursor: int = 0
@@ -187,6 +189,9 @@ func _create(record: Dictionary) -> void:
 	# re-verified each layer every frame: 523.607 town_npc_bodies 541 ms/s,
 	# preview.layers_same 273 ms over 107 calls per second.
 	preview.cached_frames = true
+	# Dozens of town NPCs: each keeps only its idle loop's plans (each plan
+	# holds that frame's layer textures).
+	preview.frame_plan_max = TOWN_FRAME_PLANS
 	var configured: bool = false
 	var problem: String = ""
 	loads += 1
