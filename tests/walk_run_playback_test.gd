@@ -160,12 +160,23 @@ func _main_checks() -> void:
 		{"name": "x1.25", "mult": 1.25, "buffs": {}, "role": "run", "actor": 15284},
 		{"name": "초록 물약", "mult": 1.0, "buffs": {"zz_test_green": {"source_buff_class": {"ID": 40}, "remaining": 600.0, "duration": 600.0}}, "role": "run", "actor": 15284},
 		{"name": "강제 걷기", "mult": 1.25, "buffs": {"zz_test_walk": {"source_buff_class": {"ID": 84031}, "remaining": 600.0, "duration": 600.0}}, "role": "walk", "actor": 15282}]
+	# The original rows: 초록 물약 (BuffClass 40) stage 1, 강제 걷기 (84031) -1.
+	var green: Dictionary = RUN_POINTS.buff_points(40)
+	var forced: Dictionary = RUN_POINTS.buff_points(84031)
+	evidence["source_points"] = {"40": str(green), "84031": str(forced), "41": str(RUN_POINTS.buff_points(41)), "237": str(RUN_POINTS.buff_points(237))}
+	check(int(green.get("levels", {}).get(1, 0)) == 1, "original BuffClass 40 (초록 물약): RunSpritePoint 1 at RunSpriteLevel 1 (%s)" % str(green))
+	check(int(forced.get("flat", 0)) == -1, "original BuffClass 84031 (강제 걷기): RunSpritePoint -1 (%s)" % str(forced))
 	var rows: Dictionary = {}
+	var turn: int = 0
 	for c: Dictionary in cases:
 		p.set_skill_speed_multiplier(float(c.mult))
 		world.active_item_buffs = saved_items.duplicate(true)
 		world.active_item_buffs.merge(c.buffs, true)
-		p.set_touch_vector(Vector2.RIGHT)
+		# Back and forth, so the walk never ends at a wall.
+		p.set_touch_vector(Vector2.RIGHT if turn % 2 == 0 else Vector2.LEFT)
+		turn += 1
+		var clock: float = 0.0
+		var status: Dictionary = {}
 		var roles: Dictionary = {}
 		var actors: Dictionary = {}
 		var advanced: int = 0
@@ -180,6 +191,8 @@ func _main_checks() -> void:
 				continue
 			roles[pv.source_role()] = true
 			actors[int(pv._playback_tracks.get(pv.source_role(), {}).get("source_sprite_id", -1))] = true
+			clock = p._walk_clock_scale
+			status = p.source_run_status.duplicate()
 			advanced += posmod(pv.last_source_frame - last_frame, 8)
 			distance += p.global_position.distance_to(last_pos)
 			last_frame = pv.last_source_frame
@@ -187,7 +200,7 @@ func _main_checks() -> void:
 		p.set_touch_vector(Vector2.ZERO)
 		for i: int in 8: await physics_frame
 		var per_loop: float = distance / (float(advanced) / 8.0) if advanced > 0 else -1.0
-		rows[c.name] = {"roles": roles.keys(), "actors": actors.keys(), "status": p.source_run_status.duplicate(), "px_per_loop": snappedf(per_loop, 0.1), "clock": snappedf(p._walk_clock_scale, 0.001)}
+		rows[c.name] = {"roles": roles.keys(), "actors": actors.keys(), "status": status, "px_per_loop": snappedf(per_loop, 0.1), "clock": snappedf(clock, 0.001)}
 		check(roles.keys() == [c.role], "%s: %s shown (%s)" % [c.name, c.role, str(roles.keys())])
 		check(actors.keys() == [c.actor], "%s: original actor %d (%s)" % [c.name, c.actor, str(actors.keys())])
 		check(per_loop >= 40.0 and per_loop <= 56.0, "%s: one loop per 48 px sideways cell (%.1f px)" % [c.name, per_loop])
