@@ -582,13 +582,21 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	var canvas := Node2D.new()
 	canvas.name = "Tiles"
 	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases,
+	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases, "atlas_ids": (built.atlases as Dictionary).keys(),
 		"count": int(built.count), "draws": int(built.draws), "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
 	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
 	viewport.add_child(canvas)
 	add_child(viewport)
 	FRAME_HITCH.count("map.block_baked")
+	# After the frame that drew it the block is only its image: let go of the
+	# atlases (the tile cache may free them) and the drawing node.
+	RenderingServer.frame_post_draw.connect(_release_baked.bind(block, canvas), CONNECT_ONE_SHOT)
 	return block
+
+
+func _release_baked(block: Dictionary, canvas: Node2D) -> void:
+	block.erase("atlases")
+	if is_instance_valid(canvas): canvas.queue_free()
 
 
 func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
@@ -596,7 +604,8 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 	var commands: Dictionary = block.commands
 	var layers: Array = commands.keys()
 	layers.sort()
-	var atlases: Dictionary = block.atlases
+	var atlases: Dictionary = block.get("atlases", {})
+	if atlases.is_empty(): return
 	for layer: int in layers:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
@@ -635,6 +644,7 @@ func _build_frame() -> bool:
 	var cells: Array[Vector2i] = []
 	var margin_bakes: int = 0
 	var draws: int = 0
+	var fresh_atlases: Dictionary = {}
 	var partial: bool = false
 	var count: int = 0
 	var raw_ff: int = 0
@@ -662,7 +672,8 @@ func _build_frame() -> bool:
 			draws += int(block.draws)
 			raw_ff += int(block.raw_ff)
 			unresolved += int(block.unresolved)
-			for tile_id: int in block.atlases: atlases[tile_id] = block.atlases[tile_id]
+			for tile_id: int in block.atlas_ids: atlases[tile_id] = true
+			for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
 	if draws == 0 and unresolved == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
 	while _block_recent.size() > BLOCK_CACHE_LIMIT:
 		var oldest: Vector2i = _block_recent[0]
@@ -673,7 +684,8 @@ func _build_frame() -> bool:
 	_draw_generation+=1
 	for cell: Vector2i in cells: _frame_commands[cell] = (_blocks[cell] as Dictionary).commands
 	_visible_blocks = cells
-	_frame_atlases = atlases
+	# Only atlases of blocks still waiting their first draw are held here.
+	_frame_atlases = fresh_atlases
 	# Margin blocks still waiting bake on the next periodic refresh.
 	_built_view = Rect2() if partial else view
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
@@ -813,6 +825,13 @@ func _fail(reason: String) -> bool:
 
 func _emit_safe_return(reason: String) -> void:
 	if is_inside_tree() and not is_queued_for_deletion(): safe_return_requested.emit(reason)
+
+
+func _notification(what: int) -> void:
+	# A render target may come back empty after the app returns; rebake.
+	if what == NOTIFICATION_APPLICATION_RESUMED and _configured:
+		_clear_blocks()
+		_built_view = Rect2()
 
 
 func _exit_tree() -> void:
