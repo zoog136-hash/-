@@ -4348,6 +4348,12 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	_update_hud()
 	_request_deferred_save()
 
+## The original boss overhead mark for NPC class `npc_class_id` (null: none).
+func original_boss_overhead(npc_class_id: int) -> Node2D:
+	var controller: Variant = hud.get("original_main_ui_controller") if hud != null else null
+	if not is_instance_valid(controller) or not controller.has_method("boss_overhead"): return null
+	return controller.boss_overhead(npc_class_id)
+
 func _check_level_up(quiet: bool=false) -> void:
 	var gained_stat_points: bool = false
 	while experience >= exp_need:
