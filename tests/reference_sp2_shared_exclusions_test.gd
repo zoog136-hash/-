@@ -80,6 +80,15 @@ func run() -> void:
 	check(first.load_bank(data.path, data.sha, ACTOR, BINDINGS, LOOPS).get("ok", false), "reloading a bank replaces its shared registry without mutating it")
 	first.load_static(data.path, data.sha, ACTOR)
 	check(first._excluded_source_actors.is_empty() or is_same(first._excluded_source_actors, shared), "static load path replaces the registry reference without mutating it")
+	# The same registry object of one manifest is checked once; a different
+	# (here: invalid) registry object is still checked in full.
+	first._manifest = {"excluded_source_actors": first._manifest.get("excluded_source_actors")}
+	var memo: Array = BANK._shared_exclusions.get(first._manifest_sha, [])
+	check(not memo.is_empty() and is_same(memo[0], first._manifest.excluded_source_actors) and first._install_source_exclusions().get("ok", false), "an already checked registry object is reused without checking it again")
+	var broken: Dictionary = (first._manifest.excluded_source_actors as Dictionary).duplicate(true)
+	broken["sprite:x"] = {}
+	first._manifest = {"excluded_source_actors": broken}
+	check(not first._install_source_exclusions().get("ok", true), "a different registry object is checked in full")
 	helper.free()
 	print("REFERENCE_SP2_SHARED_EXCLUSIONS_RESULT " + JSON.stringify({"checks": checks, "failures": failures}))
 	quit(0 if failures.is_empty() else 1)
