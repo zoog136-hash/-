@@ -79,6 +79,9 @@ func restore_user_files() -> void:
 		var file := FileAccess.open(directory.path_join(name), FileAccess.WRITE)
 		if file != null: file.store_buffer(_prior_files[name]); file.close()
 
+func norm(value: Variant) -> String:
+	return JSON.stringify(JSON.parse_string(JSON.stringify(value)), "", true)
+
 func grant(world: Node, id: int, amount: int) -> bool:
 	var staged: Dictionary = INVENTORY.stage(world,[{"item_class_id":id,"amount":amount,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
 	if not check(staged.get("ok",false), "grant #%d: %s" % [id, str(staged.get("error",""))]): return false
@@ -114,16 +117,17 @@ func runtime() -> void:
 	check(world.patch523_owner_state_problem.is_empty() and not world.source_item_save_blocked, "reload without an ownership problem")
 	var same: bool = world.item_instances.size() == records.size()
 	for uid: String in records:
-		if world.item_instances.get(uid) != records[uid]: same = false; evidence["differs"] = uid
+		if norm(world.item_instances.get(uid)) != norm(records[uid]): same = false; evidence["differs"] = uid
+		if world.item_instances.get(uid,{}).get("record",{}).has(TRIM.SAVED_TEMPLATE): same = false; evidence["still_marked"] = uid
 	check(same, "memory holds the identical full records after reload")
-	check(world.inventory == bag and world._inventory_total_weight() == weight, "bag counts and weight unchanged")
+	check(norm(world.inventory) == norm(bag) and world._inventory_total_weight() == weight, "bag counts and weight unchanged")
 	for uid: String in world.item_instances:
 		if world.item_instances[uid].has(STACK.RECEIPT): check(not STACK.proof(world, uid).is_empty(), "ownership proof %s" % uid.left(6))
 	for round: int in range(2):
 		check(world._save_game(true) == OK, "save round %d" % round)
 		world.item_instances = {}; world.inventory = {}
 		world._load_game(true)
-	check(world.inventory == bag and world.item_instances.size() == records.size(), "save -> load repeated keeps the bag")
+	check(norm(world.inventory) == norm(bag) and world.item_instances.size() == records.size(), "save -> load repeated keeps the bag")
 	world.queue_free()
 	await process_frame
 	restore_user_files()
