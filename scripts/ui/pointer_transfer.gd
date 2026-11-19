@@ -66,6 +66,7 @@ func _source_at(point: Vector2) -> Dictionary:
 	if hud.class_picker_initial: return {}
 	for child: Node in hud.get_node("Root").get_children():
 		if child.name == "TwilightConfirmation" and not child.is_queued_for_deletion(): return {}
+	if hud.has_method("original_drop_confirm_is_open") and hud.original_drop_confirm_is_open(): return {}
 	if hud.has_method("original_inventory_hit_at"):
 		var native: Dictionary=hud.original_inventory_hit_at(point)
 		if not native.is_empty():return native
@@ -283,7 +284,7 @@ func _show_drag() -> void:
 			hud.lineage_side_ui.equipment_buttons[key].modulate = Color("b3f3c0") if compatible else Color("817d75")
 	hint.text = "퀵슬롯에 놓아 등록" if source.from != "quick" else "슬롯 이동 · 아래 AUTO · 위 AUTO 해제"
 	if not valid: hint.text = "등록할 수 없는 항목"
-	if source.from == "inventory": hint.text = "장비칸: 장착 · 퀵슬롯: 등록 · 바닥: 1개 내려놓기"
+	if source.from == "inventory": hint.text = "장비칸: 장착 · 퀵슬롯: 등록 · 바닥: 내려놓기"
 	if source.from == "warehouse":
 		hint.text = "가방에 놓아 찾기"
 		for index: int in range(hud.v20_quickslot_buttons.size()):
@@ -337,7 +338,7 @@ func _drop() -> void:
 				bag.reorder(str(source.id),id)
 				return
 		if not hud.blocks_world_input(position):
-			world._drop_inventory_reference(str(source.id), preload("res://scripts/maps/world_coordinates.gd").screen_to_world(get_viewport(),position))
+			world.request_inventory_ground_drop(str(source.id), preload("res://scripts/maps/world_coordinates.gd").screen_to_world(get_viewport(),position))
 	# Other UI releases cancel; they never destroy or discard inventory items.
 
 func cancel() -> void:

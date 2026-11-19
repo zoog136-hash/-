@@ -1,5 +1,6 @@
 extends RefCounted
 ## Explicit private source pack. Failed replacement preserves the prior pack.
+const PMA_PIXELS=preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 ## Decoded CPU pages and reconstructed frames are shared across instances that
@@ -264,12 +265,14 @@ func _page(member: String) -> Image:
 	_pages[member]=original
 	return original
 
+## Cocos (channel*(alpha+1))>>8 for every frame/page this pack decodes. The
+## two-lane form (cocos_premultiply_pixels.gd) gives the same bytes
+## (tests/original_ui_premultiply_exact_test.gd keeps the scalar equation as
+## reference) with fewer GDScript operations per pixel: 136 ms -> 84 ms for a
+## 1024x1024 page on desktop; 지배석/문양 spent 2.4 s / 0.9 s here (Twm diag
+## 2026-11-19).
 static func cocos_premultiply(original: Image) -> Image:
-	var pixels: PackedByteArray=original.get_data()
-	for at: int in range(0,pixels.size(),4):
-		var alpha_plus_one: int=int(pixels[at+3])+1
-		for channel: int in range(3):pixels[at+channel]=(int(pixels[at+channel])*alpha_plus_one)>>8
-	return Image.create_from_data(original.get_width(),original.get_height(),false,Image.FORMAT_RGBA8,pixels)
+	return PMA_PIXELS.convert(original)
 
 static func _png_premultiplies(path: String) -> bool:
 	var file:=FileAccess.open(path,FileAccess.READ)

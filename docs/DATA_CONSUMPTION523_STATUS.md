@@ -1096,7 +1096,12 @@ existing `PAYLOAD_SHA`
 `MAX_BYTES` and `valid_document()` before the unchanged adoption loop can expose
 the quest registry. The archive SHA never substitutes for the payload SHA, and
 the memory mode leaves `loaded_path` empty rather than claiming a generated
-file. Existing files enter the same `_load_payload()` guards. No installed file,
+file. Existing files enter the same `_load_payload()` guards; since 2026-11-19 a
+received/private `user://quests_current523.json` that those guards refuse (other
+fingerprint, unreadable) is left untouched and the installed original tables are
+projected instead, and a load that still fails names its reason in
+`quest_service.problem` ("원본 퀘스트 불러오기 실패: …", start warning and quest
+window; `tests/quest_payload523_pin_test.gd`). No installed file,
 pack, new quest admission rule, reward operation, gate, ownership or save is
 created or changed. Exact byte/hash reproduction and runtime adoption have not
 been executed; this is not an additional3,621 gameplay-completed quests or any

@@ -517,7 +517,7 @@ func bake_bytes() -> Dictionary:
 func clear_bakes() -> void:
 	for name: String in BAKES:
 		BAKE.clear(name)
-		for suffix: String in [".bin", ".bin.part"]:
+		for suffix: String in [".bin", ".bin.part", ".json"]:
 			var path: String = BAKE.ROOT + "/" + name + suffix
 			if DirAccess.dir_exists_absolute(path):
 				DirAccess.remove_absolute(path.path_join("blocker"))
@@ -747,7 +747,9 @@ func _run() -> void:
 	blocked = null
 	clear_bakes()
 	# 8. Record file that cannot be committed: compiled again, resident.
-	var blocker: String = BAKE.ROOT + "/equipment_rules_catalog_records.bin"
+	# The commit point is the metadata rename (a new generation is published
+	# by replacing <name>.json), so a directory there blocks the commit.
+	var blocker: String = BAKE.ROOT + "/equipment_rules_catalog_records.json"
 	DirAccess.make_dir_recursive_absolute(blocker)
 	var keep := FileAccess.open(blocker.path_join("blocker"), FileAccess.WRITE)
 	keep.store_string("x")
