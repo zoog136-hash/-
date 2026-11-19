@@ -176,17 +176,20 @@ static func amount_presentation(filled: bool,existing_text: String,ammo: Diction
 	var loaded:=PackedByteArray()
 	loaded.resize(0x30)
 	loaded[ORIGINAL_COUNT.LOADED_ROW_WITHOUT_AMMO]=1 if bool(ammo.get("can_use_without_ammo",false)) else 0
-	# Game skills carry no stack counter (the original SpellManager+188 store is absent).
-	var never_stackable:=func(_id: int) -> bool: return false
-	var no_stack:=func(_id: int) -> int: return 0
+	# 보고서2 R1: a stackable (충전형) spell's charges come from the game's charge store
+	# (stackable_spell523) through the same original refresh; it has no BulletID row.
+	var stacked: bool=ammo.has("stack_count")
+	var charges: int=int(ammo.get("stack_count",0))
+	var is_stackable:=func(_id: int) -> bool: return stacked
+	var stack_count:=func(_id: int) -> int: return charges
 	var model: Dictionary={"slots":{0:{"metadata_id":1,"dword10":1,"is_spell":true}},
-		"stackable":never_stackable,"stack_count":no_stack,
-		"mapping_rows":{1:mapping},"loaded_rows":{1:loaded},"service_c0":{1:int(ammo.get("ammo_count",0))},"reload_90":{},"reads":[]}
+		"stackable":is_stackable,"stack_count":stack_count,
+		"mapping_rows":{} if stacked else {1:mapping},"loaded_rows":{} if stacked else {1:loaded},"service_c0":{} if stacked else {1:int(ammo.get("ammo_count",0))},"reload_90":{},"reads":[]}
 	var result: Dictionary=ORIGINAL_COUNT.refresh(model,{"bucket":0,"index":0})
 	var visible: bool=filled
 	for op: Array in result.get("ops",[]):
 		if op[0]=="Nd_Count.visible":visible=bool(op[1])
-	return {"text":str(int(result.count)),"visible":visible,"basis":"original_ammo_count","flag34":int(result.flag34),"flag35":int(result.flag35)}
+	return {"text":str(int(result.count)),"visible":visible,"basis":"original_stack_count" if stacked else "original_ammo_count","flag34":int(result.flag34),"flag35":int(result.flag35)}
 
 static func _entry_identity(entry: Dictionary) -> Dictionary:
 	var identity: Dictionary=entry.duplicate(true)

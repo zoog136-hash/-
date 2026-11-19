@@ -6664,6 +6664,8 @@ func set_field_camera_zoom(value: float, persist: bool = true) -> Error:
 	return result
 
 func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
+	# Stage times for the phone record (523.655: save 286 ms/s without a split).
+	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
 	if unconfirmed523.save_blocked or not unconfirmed523.validate(collection_override.get("unconfirmed523",unconfirmed523.state)).is_empty():return ERR_INVALID_DATA
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
@@ -6726,6 +6728,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if source_item_save_blocked:
 		if not quiet: hud.show_message("전체 원본 아이템 팩 확인 필요 · 기존 저장 보존")
 		return ERR_UNAVAILABLE
+	FRAME_HITCH.detail("save.check", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
 	var source_backup_error: Error = _prepare_patch523_item_save_backup()
 	if source_backup_error != OK:
 		source_item_save_blocked = true
@@ -6927,9 +6931,18 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		data["unconfirmed523"] = observed_content.state
 	# Live-event replay keys are session-only (unconfirmed523/runtime.gd).
 	data["unconfirmed523"] = UNCONFIRMED523.saved_form(data.get("unconfirmed523"))
+	FRAME_HITCH.detail("save.snapshot", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
 	var save_started_usec: int = Time.get_ticks_usec()
 	data = SAVE_TRIM.payload(data)
-	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
+	# write_save() refuses any file whose SHA-256 is not the one it last wrote
+	# (external change -> save_blocked), so when this path is that file its
+	# recorded hash is the file's hash: no extra full read and hash per save.
+	var prior_owner_hash: String=""
+	if str(equipment_collections.get("_disk_path"))==save_path() and not str(equipment_collections.get("_disk_hash")).is_empty():
+		prior_owner_hash=str(equipment_collections.get("_disk_hash"))
+	elif FileAccess.file_exists(save_path()):
+		prior_owner_hash=FileAccess.get_sha256(save_path())
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
@@ -6937,7 +6950,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	data = account_stage.payload
 	# The selected character's state is this body: written once (account_store.compact).
 	data = CHARACTER_ACCOUNT.compact(data)
+	FRAME_HITCH.detail("save.account", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
 	var result: Error = equipment_collections.write_save(save_path(), data)
+	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
 			result=OK
@@ -8054,7 +8070,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if original_skills!=null and skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:skill=original_skills.catalog.resolve(skill)
 	var source_status: Dictionary=original_skills.catalog.source_learning_status(skill)
 	if not source_status.is_empty():return str(source_status.message)
-	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
+	if _is_passive_skill(skill) and not (original_skills!=null and original_skills.stackable.handles(skill)): return "패시브는 직접 사용할 수 없습니다"
 	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
@@ -8678,6 +8694,9 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 func _quickslot_ammo_source(entry: Dictionary) -> Dictionary:
 	if str(entry.get("kind", "")) != "skill": return {}
 	var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
+	# 보고서2 R1: a stackable (충전형) spell shows its stored charges, not ammo.
+	var charges: int = original_skills.stackable.count_for(skill) if original_skills != null and not skill.is_empty() else -1
+	if charges >= 0: return {"ammo_count": charges, "stack_count": charges, "can_use_without_ammo": true}
 	if skill.is_empty() or int(skill.get("ammo_per_hit", 0)) <= 0: return {}
 	return {"ammo_count": int(inventory.get(_skill_ammo_name(), 0)), "can_use_without_ammo": false}
 
