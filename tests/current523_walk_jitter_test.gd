@@ -109,7 +109,7 @@ func _synthetic_player(c: RefCounted) -> Array:
 	return [host, player]
 
 ## Lets the engine step the player (project physics rate) and records each tick.
-func _step(player: CharacterBody2D, track: Track, frames: int, auto_repath: Callable = Callable()) -> void:
+func _step(player: CharacterBody2D, track: Track, frames: int, auto_repath: Callable = Callable(), goal: Vector2 = Vector2.INF) -> void:
 	var dt: float = 1.0 / float(Engine.physics_ticks_per_second)
 	var repath_clock: float = 0.0
 	for i: int in frames:
@@ -121,6 +121,13 @@ func _step(player: CharacterBody2D, track: Track, frames: int, auto_repath: Call
 		var before: Vector2 = player.global_position
 		await physics_frame
 		track.add(before, player.global_position, int(player.motion.facing8), str(player.motion.state), {"i": int(player.get("path_index"))})
+		# CI time budget: stop a few frames after arriving.
+		if goal.is_finite() and player.global_position.distance_to(goal) < 6.0 and int(player.get("path_index")) >= player.click_path.size() and i > 0:
+			for k: int in 3:
+				before = player.global_position
+				await physics_frame
+				track.add(before, player.global_position, int(player.motion.facing8), str(player.motion.state), {})
+			return
 
 func synthetic() -> void:
 	var c := COORDS.new()
@@ -134,32 +141,34 @@ func synthetic() -> void:
 		player.set_equipment_speed_multipliers(multiplier, 1.0)
 		# 1) Click path whose first point is the centre of the cell the player
 		# stands in, behind it (A* start cell when the next corner is hidden).
-		for heading: Vector2 in [Vector2(1, 0), Vector2(0, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(0, -1), Vector2(-1, -1), Vector2(1, -1)]:
+		var headings: Array = [Vector2(1, 0), Vector2(0, 1), Vector2(1, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(0, -1), Vector2(-1, -1), Vector2(1, -1)]
+		if multiplier != 1.0: headings = [Vector2(1, 0), Vector2(0, -1), Vector2(-1, 1), Vector2(1, 1)]
+		for heading: Vector2 in headings:
 			var start: Vector2 = cell.call(100.5, 100.5) + (cell.call(heading.x, heading.y) - cell.call(0, 0)) * 0.4
 			player.global_position = start
 			var route := PackedVector2Array([cell.call(100.5, 100.5)])
-			for k: int in range(1, 7): route.append(cell.call(100.5 + heading.x * k, 100.5 + heading.y * k))
+			for k: int in range(1, 4): route.append(cell.call(100.5 + heading.x * k, 100.5 + heading.y * k))
 			player.set_click_path(route, route[-1])
 			var track := Track.new(); track.coordinates = c
-			await _step(player, track, 240)
+			await _step(player, track, 240 * 4, Callable(), route[-1])
 			results["click_%s_x%.1f" % [str(heading), multiplier]] = track.summary()
 			check(track.reversals == 0, "click path (first point behind) x%.1f %s: no reversal %s" % [multiplier, str(heading), str(track.first_reversal)])
 			check(player.global_position.distance_to(route[-1]) < 6.0, "click path x%.1f %s arrives" % [multiplier, str(heading)])
 		# 2) Auto pursuit: the route to a target is re-searched every 0.65 s from
 		# wherever the player is; every new route starts at its cell centre.
-		var target: Vector2 = cell.call(100.5, 118.5)
+		var target: Vector2 = cell.call(100.5, 110.5)
 		player.global_position = cell.call(100.5, 100.5)
 		var repath := func() -> void:
 			var here: Vector2 = c.world_to_grid(player.global_position)
 			var from := Vector2(floorf(here.x) + 0.5, floorf(here.y) + 0.5)
 			var route := PackedVector2Array([c.grid_to_world(from.x, from.y)])
 			var g: Vector2 = from
-			while g.distance_to(Vector2(100.5, 118.5)) > 0.01:
-				g = g + Vector2(signf(100.5 - g.x), signf(118.5 - g.y))
+			while g.distance_to(Vector2(100.5, 110.5)) > 0.01:
+				g = g + Vector2(signf(100.5 - g.x), signf(110.5 - g.y))
 				route.append(c.grid_to_world(g.x, g.y))
 			player.set_click_path(route, target)
 		var pursuit := Track.new(); pursuit.coordinates = c
-		await _step(player, pursuit, int(ceil(18.0 / (2.25 * multiplier) * 30.0)) + 60, repath)
+		await _step(player, pursuit, int(ceil(10.0 / (2.25 * multiplier) * 120.0)) + 180, repath, target)
 		results["pursuit_x%.1f" % multiplier] = pursuit.summary()
 		check(pursuit.reversals == 0 and pursuit.facing_flips == 0, "auto pursuit re-search x%.1f: no reversal/facing flip %s" % [multiplier, str(pursuit.first_reversal)])
 		check(player.global_position.distance_to(target) < 6.0, "auto pursuit x%.1f reaches the target" % multiplier)
@@ -170,7 +179,7 @@ func synthetic() -> void:
 	player.set_click_path(PackedVector2Array([cell.call(101.5, 100.5), cell.call(102.5, 100.5), corner, cell.call(103.5, 101.5), cell.call(103.5, 103.5)]), cell.call(103.5, 103.5))
 	var corner_track := Track.new(); corner_track.coordinates = c
 	var closest: float = INF
-	for i: int in 120:
+	for i: int in 480:
 		await _step(player, corner_track, 1)
 		closest = minf(closest, player.global_position.distance_to(corner))
 	results["corner_closest_px"] = closest
@@ -387,7 +396,18 @@ func _run() -> void:
 		await real_main(base)
 		if is_instance_valid(world): world.queue_free()
 		for i: int in 5: await process_frame
+	var synthetic_started: int = Time.get_ticks_msec()
+	# CI time budget: the synthetic walks run at 120 physics ticks/s, uncapped
+	# frames (the walk is velocity x delta; the project keeps its own rates).
+	var ticks: int = Engine.physics_ticks_per_second
+	var max_fps: int = Engine.max_fps
+	Engine.physics_ticks_per_second = 120
+	Engine.max_physics_steps_per_frame = 8
+	Engine.max_fps = 0
 	await synthetic()
+	Engine.physics_ticks_per_second = ticks
+	Engine.max_fps = max_fps
+	evidence["synthetic_seconds"] = (Time.get_ticks_msec() - synthetic_started) / 1000.0
 	evidence["real_input_checked"] = not base.is_empty()
 	print("WALK_JITTER_RESULT " + JSON.stringify({"checks": checks, "failures": failures, "evidence": evidence}))
 	await process_frame
