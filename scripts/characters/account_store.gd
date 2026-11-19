@@ -198,6 +198,46 @@ static func _project(shared: Dictionary, state: Dictionary) -> Dictionary:
 		else: result[key] = _copy(shared[key])
 	return result
 
+## The selected character's state is the flat save body itself
+## (_project(shared, state) == body, checked by validate()). The file keeps it
+## once: the selected record holds only this marker on disk and expand() puts
+## private_fields(body) back right after parsing, before validate() or any
+## other reader (user 2026-11-19: "쓸데없이 비용만 차지하는 데이터 다 삭제").
+const SELECTED_IN_BODY := "twilight_selected_state_in_body"
+
+static func _selected_index(account: Dictionary) -> int:
+	var characters: Variant = account.get("characters")
+	if not characters is Array: return -1
+	for index: int in (characters as Array).size():
+		var record: Variant = characters[index]
+		if record is Dictionary and record.get("id") == account.get("selected"): return index
+	return -1
+
+static func _marked(state: Variant) -> bool:
+	return state is Dictionary and (state as Dictionary).size() == 1 and (state as Dictionary).get(SELECTED_IN_BODY) == true
+
+## File form of a sealed (already validated) v2 payload. Shares untouched parts.
+static func compact(payload: Dictionary) -> Dictionary:
+	var account: Variant = payload.get(KEY)
+	if not account is Dictionary or account.get("schema") != SCHEMA: return payload
+	var index: int = _selected_index(account)
+	if index < 0 or not account.characters[index].get("state") is Dictionary or _marked(account.characters[index].state): return payload
+	var result: Dictionary = payload.duplicate(false)
+	var envelope: Dictionary = account.duplicate(false)
+	var characters: Array = (account.characters as Array).duplicate(false)
+	var record: Dictionary = (characters[index] as Dictionary).duplicate(false)
+	record.state = {SELECTED_IN_BODY: true}
+	characters[index] = record; envelope.characters = characters; result[KEY] = envelope
+	return result
+
+## Memory form of a parsed save, in place (no-op for older full files).
+static func expand(payload: Dictionary) -> void:
+	var account: Variant = payload.get(KEY)
+	if not account is Dictionary or account.get("schema") != SCHEMA: return
+	var index: int = _selected_index(account)
+	if index < 0 or not _marked(account.characters[index].get("state")): return
+	account.characters[index].state = private_fields(payload)
+
 static func selected_record(payload: Dictionary) -> Dictionary:
 	var envelope: Dictionary = payload.get(KEY,{})
 	for record: Dictionary in envelope.get("characters",[]):
@@ -306,6 +346,7 @@ func open() -> Dictionary:
 		var parser:=JSON.new()
 		if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary: return fail("저장 파일이 손상되었습니다. 기존 파일을 보존합니다.")
 		_loaded=parser.data
+		expand(_loaded)
 		var error: String=validate(_loaded)
 		if not error.is_empty(): return fail(error)
 	elif FileAccess.file_exists(path): return fail("저장 파일 무결성을 확인하지 못했습니다.")
@@ -323,11 +364,12 @@ func _commit(payload: Dictionary) -> Dictionary:
 	if (FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "")!=_hash: return fail("다른 실행에서 저장이 변경되었습니다. 목록을 다시 불러오세요.")
 	var error: String=validate(payload)
 	if not error.is_empty(): return fail(error)
-	var result: Error=test_writer.call(path,payload.duplicate(true)) if test_writer.is_valid() else WRITER.write(path,payload)
+	var on_disk: Dictionary=compact(payload)
+	var result: Error=test_writer.call(path,on_disk.duplicate(true)) if test_writer.is_valid() else WRITER.write(path,on_disk)
 	if result!=OK:
 		# A lost response after an actual replace must not create a second
 		# character on retry. Only the exact intended durable bytes count.
-		var expected: String=JSON.stringify(payload,"",true,true).sha256_text()
+		var expected: String=JSON.stringify(on_disk,"",true,true).sha256_text()
 		var actual: String=FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
 		if actual!=expected:
 			if actual!=_hash: _opened=false
@@ -503,6 +545,7 @@ static func stage_save(path: String, payload: Dictionary) -> Dictionary:
 	var parser:=JSON.new()
 	if parser.parse(FileAccess.get_file_as_string(path))!=OK or not parser.data is Dictionary: return fail("캐릭터 계정 저장을 읽지 못했습니다.")
 	var prior: Dictionary=parser.data
+	expand(prior)
 	var error: String=validate(prior)
 	if not error.is_empty(): return fail(error)
 	var account: Dictionary=prior.get(KEY,{}).duplicate(true)

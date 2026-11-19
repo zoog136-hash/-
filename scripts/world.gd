@@ -6933,6 +6933,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message(str(account_stage.problem))
 		return ERR_INVALID_DATA
 	data = account_stage.payload
+	# The selected character's state is this body: written once (account_store.compact).
+	data = CHARACTER_ACCOUNT.compact(data)
 	var result: Error = equipment_collections.write_save(save_path(), data)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
@@ -7003,6 +7005,7 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
+	CHARACTER_ACCOUNT.expand(value)
 	var account_error: String = CHARACTER_ACCOUNT.validate(value)
 	if not account_error.is_empty():
 		source_save_blocked=true
