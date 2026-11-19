@@ -7,6 +7,7 @@ var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
 var progression = preload("res://scripts/skills/progression_runtime523.gd").new()
 var spell_move = preload("res://scripts/skills/spell_move523.gd").new()
+var stackable = preload("res://scripts/skills/stackable_spell523.gd").new()
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
@@ -50,10 +51,12 @@ func configure(owner: Node) -> void:
 	estimated_nodes.configure(self)
 	spell_move.configure(owner)
 	progression.configure(self)
+	stackable.configure(self)
 
 func clear() -> void:
 	estimated_nodes.clear()
 	spell_move.clear()
+	stackable.clear()
 	if progression.owner_ref!=null:progression.suspend()
 	if local_runtime.world != null: local_runtime.suspend()
 	summons.clear()
@@ -71,6 +74,7 @@ func tick(delta: float) -> void:
 	local_runtime.tick(delta)
 	estimated_nodes.tick(delta)
 	spell_move.tick(delta)
+	stackable.tick(delta)
 	status.tick(delta)
 	summons.tick(delta)
 	progression.tick(delta)
@@ -256,7 +260,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
 	elif spell_move.busy(): reason = "원본 이동 효과 진행 중"
 	elif not catalog.owned(skill): reason = "미습득 또는 직업 제한"
-	elif str(skill.activation) == "passive": reason = "패시브 기술"
+	elif str(skill.activation) == "passive" and not stackable.handles(skill): reason = "패시브 기술"
 	elif catalog.level_locked(skill): reason = "Lv.%d 필요" % catalog.minimum_level_for(skill)
 	elif not catalog.enabled(skill): reason = "속성 계열 또는 사용 무기 제한"
 	elif str(skill.mode) == "summon" and (summons.active() or world.active_skill_buffs.has(str(skill.name))): reason = "가디언 또는 보호막 유지 중"
@@ -264,11 +268,16 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif world.hp <= 0 or world.player.motion.dead: reason = "사망 상태"
 	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.silence_remaining > 0 or (world.player.source_523_spell_blocked and str(skill.get("attack_type","magic")) == "magic")): reason = "상태이상으로 사용 불가"
 	elif world.skill_global_cooldown > 0 or float(world.skill_cooldowns.get(str(skill.name), 0)) > 0: reason = "재사용 대기 중"
+	elif stackable.handles(skill):
+		var gate: Dictionary = stackable.admission(skill)
+		reason = str(gate.get("reason","")) if gate.result!="continue_next_validation" else cost_reason(stackable.cast_skill(skill))
 	else: reason = cost_reason(skill)
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
 	return reason.is_empty()
 
-func cast(record: Dictionary) -> bool:
+## `manual`: a player's press (quick slot, 스킬 사용). Automatic passes keep
+## their silent refusal so a polling loop never floods the message line.
+func cast(record: Dictionary, manual: bool = true) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
 	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
@@ -283,6 +292,8 @@ func cast(record: Dictionary) -> bool:
 			# The host status (stun, hold, ...) stays; the replacement's damage/debuff is added.
 			skill["approx_extra_child"] = child.duplicate(true)
 		skill["approx_transform"] = {"from_spell":int(transform.from_spell),"to_spell":int(transform.to_spell)}
+	# 보고서2 R1: original stackable (충전형) spells cast from their own charge store.
+	if stackable.handles(skill): return stackable.cast(record)
 	if progression.is_toggle(skill):return progression.toggle(skill)
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.cast(skill)
 	# Cast-speed options reduce cooldown through the world's shared policy;
@@ -300,8 +311,13 @@ func cast(record: Dictionary) -> bool:
 		if not is_instance_valid(target) or target.dead:
 			# An explicit unreachable selection never redirects into a dash.
 			if estimated_nodes.kind(skill) == "grab" and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
-			else: return false
-		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target): return false
+			else:
+				# A refused manual cast must say why (the quick slot otherwise looks dead).
+				if manual: world.hud.show_message(_target_refusal(skill))
+				return false
+		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target):
+			if manual: world.hud.show_message("사용할 수 없는 대상입니다")
+			return false
 	var dash_end := Vector2.INF
 	if estimated_nodes.kind(skill) == "grab":
 		dash_end = estimated_nodes.dash_plan(skill, target)
@@ -413,6 +429,15 @@ func cast(record: Dictionary) -> bool:
 	trigger("on_skill", target, skill)
 	world._update_hud()
 	return true
+
+## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables
+## (DescData_Korean / ErrorMessage) hold no client text for this refusal, so
+## the plain "대상이 없습니다" / "거리가 멉니다" are used. With nothing selected
+## the cast already takes the nearest visible monster in range (_skill_target).
+func _target_refusal(_skill: Dictionary) -> String:
+	var selected: Variant = world.selected_monster
+	if is_instance_valid(selected) and not selected.dead: return "거리가 멉니다"
+	return "대상이 없습니다"
 
 ## Every mode cast() executes after payment; anything else is refused before it.
 const CAST_MODES: Array[String] = ["attack", "status", "turn_undead", "buff", "counter", "stealth", "detect", "heal", "cleanse", "convert", "teleport", "taunt", "toggle_proc", "summon"]
@@ -702,6 +727,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 	if proc_depth > 0: return
 	proc_depth += 1
 	combat_elapsed = 0 if event != "on_skill" else combat_elapsed
+	stackable.on_event(event, attack)
 	for base: Dictionary in catalog.records:
 		if not catalog.enabled(base) or str(base.mode) not in ["proc","mark","toggle_proc","stack_defense","stack_attack"]: continue
 		var skill := catalog.resolve(base)
@@ -1033,7 +1059,7 @@ func remove_guardian_shield_buff(id: String) -> void:
 	vfx.remove_persistent(id)
 
 func export_state() -> Dictionary:
-	return {"local_design":local_runtime.export_state(),"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state(),"source523_toggles":progression.export_state()}
+	return {"local_design":local_runtime.export_state(),"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state(),"source523_toggles":progression.export_state(),"stackable523":stackable.export_state()}
 
 func import_state(data: Dictionary) -> void:
 	clear()
@@ -1076,6 +1102,7 @@ func import_state(data: Dictionary) -> void:
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))
+	stackable.import_state(data.get("stackable523",{}))
 
 func _source_only_skill_presentation() -> bool:
 	return is_instance_valid(world) and is_instance_valid(world.player) and world.player.original_source_preview.current523_source_only_presentation()

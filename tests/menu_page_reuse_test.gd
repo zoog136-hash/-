@@ -40,13 +40,12 @@ func _run() -> void:
 	var first_tiles: Array[Node] = _tiles(hud)
 	check(first_tiles.size() == 20,"menu shows 20 tiles once (got %d)" % first_tiles.size())
 	check(hud.menu_tiles.size() == 20,"category filter tracks each tile once")
-	var filter: OptionButton = hud.workspace.find_child("MenuCategoryFilter",true,false) as OptionButton
+	var filter: Control = hud.workspace.find_child("MenuCategoryFilter",true,false) as Control
 	check(filter != null,"category filter is mounted")
 	if filter == null:
 		_finish(world)
 		return
-	filter.select(3)
-	filter.item_selected.emit(3)
+	(hud.menu_category_buttons[3] as Button).pressed.emit()
 	var shown: int = first_tiles.filter(func(tile: Node) -> bool: return (tile as Control).visible).size()
 	check(shown > 0 and shown < 20,"category filter narrows tiles (shown %d)" % shown)
 	hud.menu_scroll_view.scroll_vertical = 40
@@ -60,7 +59,7 @@ func _run() -> void:
 	await _frames()
 	var reopened: Array[Node] = _tiles(hud)
 	check(reopened.size() == 20 and reopened[0] == first_tiles[0],"reopen reuses the same tile nodes")
-	check(filter.selected == 0,"reopen resets the filter to the full list")
+	check(hud.menu_category_index == 0 and hud.menu_category_buttons[0].button_pressed,"reopen resets the filter to the full list")
 	check(reopened.all(func(tile: Node) -> bool: return (tile as Control).visible),"reopen shows every tile")
 	check(hud.menu_scroll_view.scroll_vertical == 0,"reopen starts at the top")
 	var tile: Button = hud.workspace.find_child("MenuTile_settings",true,false) as Button

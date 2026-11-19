@@ -31,6 +31,13 @@ var _entered_frames: Dictionary={}
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
 var _requested_source_nodes: Array[int]=[]
+## Node-scoped projections of pack scenes by "pack id|member|offsets" ->
+## [WeakRef(pack), pristine projected tree]. Every bag slot, quickslot and
+## status row is its own scene: each one read the whole member back from the
+## pack and pruned it again (523.637: ui.scene_scope 1,976 ms over 613 calls).
+## A pack's scenes do not change; a copy is handed out per configure.
+static var _scoped_trees: Dictionary={}
+const SCOPED_TREE_LIMIT: int=64
 var _external_texture_nodes: Array[int]=[]
 var _external_texture_tags: Dictionary={}
 
@@ -86,17 +93,33 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	_external_texture_tags.clear()
 	for offset: Variant in pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[]):_external_texture_nodes.append(int(offset))
 	if _bindings.has("frame_events") and not _bindings.frame_events is Dictionary:return {"ok":false,"error":"source_frame_event_binding_shape"}
-	var tree: Dictionary=pack.scene(member)
-	if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
-	if bool(tree.get("_partial_source_scene",false)):
-		if _requested_source_nodes.is_empty():return {"ok":false,"error":"partial_source_requires_explicit_node_scope"}
-		var allowed: Array=tree.get("_selected_source_offsets",[])
-		for offset: int in _requested_source_nodes:
-			if offset not in allowed:return {"ok":false,"error":"source_node_outside_pack_scope","offset":offset}
-	if not _requested_source_nodes.is_empty():
-		var scoped: Dictionary=NODE_SCOPE.select(tree,_requested_source_nodes)
-		if not scoped.get("ok",false):return scoped
-		tree=scoped.tree
+	var tree: Dictionary={}
+	var scope_key: String=""
+	var pack_sha: Variant=pack.get("manifest_sha256")
+	# Only a pinned pack (its manifest SHA in the key) is cached.
+	if not _requested_source_nodes.is_empty() and pack_sha is String and (pack_sha as String).length()==64:
+		scope_key=str(pack.get_instance_id())+"|"+str(pack_sha)+"|"+member+"|"+str(_requested_source_nodes)
+		var hit: Variant=_scoped_trees.get(scope_key)
+		if hit is Array and (hit[0] as WeakRef).get_ref()==pack:
+			# The same pack's same member and node scope: the projection that
+			# already passed the checks below, as a fresh copy for this scene.
+			tree=(hit[1] as Dictionary).duplicate(true)
+	if tree.is_empty():
+		tree=pack.scene(member)
+		if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
+		if bool(tree.get("_partial_source_scene",false)):
+			if _requested_source_nodes.is_empty():return {"ok":false,"error":"partial_source_requires_explicit_node_scope"}
+			var allowed: Array=tree.get("_selected_source_offsets",[])
+			for offset: int in _requested_source_nodes:
+				if offset not in allowed:return {"ok":false,"error":"source_node_outside_pack_scope","offset":offset}
+		if not _requested_source_nodes.is_empty():
+			var scoped: Dictionary=NODE_SCOPE.select(tree,_requested_source_nodes)
+			if not scoped.get("ok",false):return scoped
+			tree=scoped.tree
+			if not scope_key.is_empty():
+				_scoped_trees.erase(scope_key)
+				_scoped_trees[scope_key]=[weakref(pack),tree.duplicate(true)]
+				while _scoped_trees.size()>SCOPED_TREE_LIMIT:_scoped_trees.erase(_scoped_trees.keys()[0])
 	if member in _project_ancestry or _project_ancestry.size()>=32:return {"ok":false,"error":"project_recursion"}
 	if not _project_root_options.is_empty():
 		# CSLoader creates the referenced node, then ProjectNodeReader applies
@@ -434,6 +457,8 @@ func _build(source: Dictionary) -> Node2D:
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
 		input_area.gui_input.connect(direct_binding.input)
 		origin.add_child(input_area)
+	# A binding may state "touch_enabled" for a button the client enables at
+	# run time (Cocos setTouchEnabled(true) after loading an authored false).
 	if source.classname=="CheckBox":
 		var checkbox=preload("res://scripts/ui/original_ui/source_checkbox.gd").new()
 		var configured: Dictionary=checkbox.configure(source_pack,options)
@@ -444,7 +469,7 @@ func _build(source: Dictionary) -> Node2D:
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):checkbox.set_source_state("normal" if binding.displaystate else "disabled")
 		if binding.has("selected"):checkbox.set_selected(binding.selected)
-		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="checkbox" and binding.get("activate") is Callable and binding.activate.is_valid():checkbox.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(binding.get("touch_enabled",widget.touchEnabled)))
 	if source.classname=="Button":
 		var button=preload("res://scripts/ui/original_ui/source_button.gd").new()
 		# A caller may supply the live title of an authored button title.
@@ -461,7 +486,7 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_button",button)
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
-		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(widget.touchEnabled))
+		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(binding.get("touch_enabled",widget.touchEnabled)))
 	if source.classname=="Particle":
 		var emitter=preload("res://scripts/ui/original_ui/source_particle.gd").new()
 		var configured: Dictionary=emitter.configure(source_pack,options)

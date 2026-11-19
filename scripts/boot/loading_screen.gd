@@ -16,6 +16,7 @@ const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
 const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
 const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const PACK_VERSION := preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
@@ -42,6 +43,8 @@ static var _prepared_main: PackedScene
 var readiness_timeout_msec: int = 60000
 var _overlay: CanvasLayer
 var _status: Label
+var _ui_pack: Label
+var _ui_pack_sha: String = ""
 var _bar: ProgressBar
 var _count: Label
 var _stage: Label
@@ -188,7 +191,29 @@ func _ready() -> void:
 	version.offset_top = 10
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(version)
+	# The installed UI add-on (and a reinstall notice when it is old) under
+	# the version; refreshed as the boot selects the pack.
+	_ui_pack = STYLE.label("", 14, Color(STYLE.MUTED, 0.75))
+	_ui_pack.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_ui_pack.offset_left = -520
+	_ui_pack.offset_right = -16
+	_ui_pack.offset_top = 32
+	_ui_pack.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_ui_pack.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(_ui_pack)
+	_refresh_ui_pack()
 	_start.call_deferred()
+
+## UI 팩 ui42 (335af82d); an old pack adds the reinstall notice. The game
+## is never held for it.
+func _refresh_ui_pack() -> void:
+	if not is_instance_valid(_ui_pack): return
+	var sha: String = OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")
+	if sha == _ui_pack_sha and not _ui_pack.text.is_empty(): return
+	_ui_pack_sha = sha
+	var info: Dictionary = PACK_VERSION.installed()
+	_ui_pack.text = PACK_VERSION.label(info) + ("\n" + PACK_VERSION.WARNING if bool(info.outdated) else "")
+	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) else Color(STYLE.MUTED, 0.75))
 
 func _version_text() -> String:
 	var updater: Node = get_node_or_null("/root/Updater")
@@ -211,6 +236,7 @@ func snapshot() -> Dictionary:
 	return _progress.snapshot()
 
 func _render(detail: String = "") -> void:
+	_refresh_ui_pack()
 	var value: Dictionary = snapshot()
 	_bar.value = value.percent
 	_status.text = value.status

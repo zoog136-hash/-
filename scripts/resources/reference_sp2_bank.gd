@@ -151,17 +151,20 @@ static func digest(bytes: PackedByteArray) -> String:
 	context.update(bytes)
 	return context.finish().hex_encode()
 
+## Lower-case hex of an exact length. One engine call per string: the old
+## per-character GDScript loop ran ~100,000 times per 25 s of auto-hunting
+## (manifest pins re-checked each frame), a visible share of a phone frame.
+static func _lower_hex(value: Variant, length: int) -> bool:
+	if not value is String: return false
+	var text: String = value
+	if text.length() != length or text[0] == "+" or text[0] == "-": return false
+	return text.is_valid_hex_number(false) and text.to_lower() == text
+
 static func valid_sha(value: Variant) -> bool:
-	if not value is String or value.length() != 64: return false
-	for character: String in value:
-		if not character in "0123456789abcdef": return false
-	return true
+	return _lower_hex(value, 64)
 
 static func valid_crc(value: Variant) -> bool:
-	if not value is String or value.length() != 8: return false
-	for character: String in value:
-		if not character in "0123456789abcdef": return false
-	return true
+	return _lower_hex(value, 8)
 
 static func crc32(bytes: PackedByteArray) -> String:
 	if _crc_table.is_empty():
@@ -209,6 +212,14 @@ func source_actor_admission(source_actor_id: int) -> Dictionary:
 func _install_source_exclusions() -> Dictionary:
 	var registry: Variant = _manifest.get("excluded_source_actors",{})
 	if not registry is Dictionary: return fail("Invalid source actor exclusion registry.")
+	# This exact registry object of this manifest already passed every check
+	# below (the memo is only written after they pass): every bank load used
+	# to re-check all declarations again (~41,000 SHA checks in 40 s of
+	# auto-hunting).
+	var validated: Variant = _shared_exclusions.get(_manifest_sha)
+	if validated is Array and is_same(validated[0], registry):
+		_excluded_source_actors = validated[1]
+		return {"ok":true}
 	var source_file_pattern := RegEx.new()
 	source_file_pattern.compile("^list_[0-9]+\\.spr$")
 	for key: Variant in registry:

@@ -8,6 +8,13 @@ extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 var pack: RefCounted
 var member_scopes: Dictionary={}
+## Name paths that more than one node of a bound tree shares (sibling nodes
+## of the same name): path -> [{member, chain, offset}] in tree order. `out`
+## keeps the last one under the path (as before); locate_exact and
+## node_key name each node uniquely.
+var duplicate_paths: Dictionary={}
+## Buttons left inert (no spec activate): path -> callback name (may be "").
+var inert_buttons: Dictionary={}
 
 func _init(source_pack: RefCounted, scopes: Dictionary={}) -> void:
 	pack=source_pack
@@ -20,6 +27,9 @@ func _ignore_input(_event: InputEvent) -> void:
 	pass
 
 func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary) -> Dictionary:
+	if key.is_empty() and chain.is_empty():
+		duplicate_paths.clear()
+		inert_buttons.clear()
 	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
@@ -28,10 +38,10 @@ func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dict
 	if member_scopes.has(member):
 		for offset: int in member_scopes[member]:roots.append(Scene._node_at_offset(tree,offset))
 	else:roots=tree.get("children",[])
-	for node: Dictionary in roots:_walk(node,key,chain,spec,scope,bindings,external,out)
+	for node: Dictionary in roots:_walk(node,member,key,chain,spec,scope,bindings,external,out)
 	return {"scope":scope,"bindings":bindings}
 
-func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary) -> void:
+func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary) -> void:
 	if node.is_empty():return
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
@@ -44,11 +54,11 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 	var binding: Dictionary={}
 	match kind:
 		"ProjectNode":
-			var member: String=str(options.get("fileName",""))
-			if not member.begins_with("UI/"):member="UI/"+member
+			var child_member: String=str(options.get("fileName",""))
+			if not child_member.begins_with("UI/"):child_member="UI/"+child_member
 			var next_chain: Array=chain.duplicate()
 			next_chain.append(offset)
-			var child: Dictionary=bind(member,key,next_chain,spec,out)
+			var child: Dictionary=bind(child_member,key,next_chain,spec,out)
 			binding={"role":"project","source_node_offsets":child.scope,"bindings":child.bindings}
 		"Button":binding={"role":"button","activate":Callable(self,"_ignore")}
 		"CheckBox":binding={"role":"checkbox","displaystate":false}
@@ -67,10 +77,15 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 	elif bool(widget.get("touchEnabled",false)) and not binding.has("role") and kind!="ProjectNode":binding["role"]="consume"
 	for pattern: String in spec:
 		if key.ends_with("/"+pattern):binding.merge(spec[pattern],true)
+	if kind=="Button" and binding.get("activate")==Callable(self,"_ignore"):inert_buttons[key]=str(widget.get("callBackName",""))
 	if not binding.is_empty():bindings[offset]=binding
-	out[key]={"chain":chain,"offset":offset,"kind":kind}
+	var entry: Dictionary={"chain":chain,"offset":offset,"kind":kind,"member":member}
+	if out.has(key):
+		if not duplicate_paths.has(key):duplicate_paths[key]=[out[key]]
+		(duplicate_paths[key] as Array).append(entry)
+	out[key]=entry
 	if kind=="ProjectNode":return
-	for child: Dictionary in node.get("children",[]):_walk(child,key,chain,spec,scope,bindings,external,out)
+	for child: Dictionary in node.get("children",[]):_walk(child,member,key,chain,spec,scope,bindings,external,out)
 
 ## The player owning `suffix` and the node offset in it.
 static func locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
@@ -81,6 +96,46 @@ static func locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
 		if not player.get("ok",false):return player
 		return {"ok":true,"player":player.player,"offset":int(entry.offset),"key":key}
 	return {"ok":false,"error":"source_named_node_missing","suffix":suffix}
+
+## The unique key of a bound node: its member, the ProjectNode offset chain
+## and its own offset (name paths can repeat; this does not).
+static func node_key(entry: Dictionary) -> String:
+	var parts: PackedStringArray=[]
+	for offset: Variant in entry.get("chain",[]):parts.append(str(offset))
+	return "%s|%s|%d" % [str(entry.get("member","")),",".join(parts),int(entry.get("offset",-1))]
+
+## Every node path of `out` ending in `suffix` (one entry per path).
+static func matches(out: Dictionary, suffix: String) -> Array[String]:
+	var found: Array[String]=[]
+	for key: String in out:
+		if key.ends_with("/"+suffix):found.append(key)
+	return found
+
+## locate, but only when `suffix` names exactly one node: several paths
+## ending in it, or a path shared by sibling nodes (duplicates, from the
+## binding NamedTree), give source_named_node_ambiguous with the candidates
+## instead of the first match.
+static func locate_exact(root: Node2D, out: Dictionary, suffix: String, duplicates: Dictionary={}) -> Dictionary:
+	var found: Array[String]=matches(out,suffix)
+	if found.is_empty():return {"ok":false,"error":"source_named_node_missing","suffix":suffix}
+	if found.size()>1 or duplicates.has(found[0]):
+		var candidates: Array=[]
+		for key: String in found:
+			for entry: Variant in duplicates.get(key,[out[key]]):candidates.append(key+"#"+node_key(entry))
+		return {"ok":false,"error":"source_named_node_ambiguous","suffix":suffix,"candidates":candidates}
+	return locate(root,out,suffix)
+
+## Spec suffixes of `spec` that select more than one node of the bound tree
+## (a binding that lands on several nodes, or a locate that would take the
+## first of several): suffix -> candidate count. Empty means every suffix
+## is unique.
+func ambiguous_suffixes(out: Dictionary, spec: Dictionary) -> Dictionary:
+	var result: Dictionary={}
+	for suffix: String in spec:
+		var count: int=0
+		for key: String in matches(out,suffix):count+=(duplicate_paths[key] as Array).size() if duplicate_paths.has(key) else 1
+		if count>1:result[suffix]=count
+	return result
 
 func scene_of(member: String, spec: Dictionary, out: Dictionary) -> Dictionary:
 	var bound: Dictionary=bind(member,"",[],spec,out)
