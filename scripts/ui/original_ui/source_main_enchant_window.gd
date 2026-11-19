@@ -7,8 +7,13 @@ extends RefCounted
 ## roll stay with the existing owners: world._enhancement_candidates supplies
 ## the rows, renewal_forge.confirm_target asks and emits
 ## hud.enhancement_requested, the world rolls and reopens this window.
-## Left inert or empty (no rule for them in this project): 다중 강화 tab (its
-## Off state is shown; tapping says so), the other Enchant_All pages
+## 다중 강화 (Nd_Enchant_Multi, TWILIGHT 근사: the existing single roll run in
+## turn): bag taps pick up to MULTI_MAX targets, Nd_Btn_01..10 choose the goal
+## +N, 강화 시작 asks once and World.attempt_enhancement_series rolls each
+## target up to the goal; the series stops at the first failure (유지 / 하락),
+## a destroyed target or too few scrolls. Label_Num shows the fewest scrolls
+## the goal needs; the picked list (ListView_Item) stays empty.
+## Left inert or empty (no rule for them in this project): the other Enchant_All pages
 ## (축복 부여 / 제련 / 속성 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
 ## the grade filters, 상세보기 / 일괄 선택, the result popup, tooltips and
 ## every effect layer.
@@ -39,7 +44,9 @@ const ROW_TAIL: float=40.0
 const TEXT_PITCH: float=30.0
 const TEXT_TAIL: float=20.0
 ## Enchant_All pages with no rule here, kept out of the scene.
-const OTHER_PAGES: Array[String]=["Nd_Enchant_Bless","Nd_Enchant_Smelt","Nd_Enchant_Multi","Nd_Enchant_Grace","Nd_ChangeProperty","Nd_Enchant_Properties_Smelt","Nd_Enchant_Skill","Nd_Dissolve","Nd_Delete",
+const MULTI_MAX: int=10
+const P_MULTI="Enchant_All_Layout/Nd_Enchant_Multi/"
+const OTHER_PAGES: Array[String]=["Nd_Enchant_Bless","Nd_Enchant_Smelt","Nd_Enchant_Grace","Nd_ChangeProperty","Nd_Enchant_Properties_Smelt","Nd_Enchant_Skill","Nd_Dissolve","Nd_Delete",
 	"Nd_Btn_Auto","Nd_Enchant_Btn/Nd_Auto_Enchant","Fx_Enchant_Start","Enchant_Popup_Message","Enchant_ToolTip_Bless","Enchant_ToolTip_Skill","Enchant_ToolTip_Smelt","Enchant_ToolTip_Grace","Enchant_ToolTip_Properties_Smelt","Btn_FailHistory"]
 const OTHER_TABS: Array[String]=["Nd_Properties","Nd_Bless","Nd_Magic","Nd_Smelt","Nd_Grace","Nd_Properties_Smelt","Nd_Label"]
 signal closed
@@ -52,6 +59,9 @@ var _scroll: String=""
 var _candidates: Array=[]
 var _selected: String=""
 var _tab: String="equip"
+var multi: bool=false
+var _picked: Array[String]=[]
+var _goal: int=0
 var _bag: Scroller=Scroller.new()
 var _text: Scroller=Scroller.new()
 var _last_out: Dictionary={}
@@ -127,9 +137,13 @@ func open(parent: Node, scroll: String, candidates: Array) -> Dictionary:
 ## New candidates after an attempt (or another scroll): keeps the selected
 ## physical item when it is still listed.
 func update(scroll: String, candidates: Array) -> Dictionary:
-	if scroll!=_scroll:_bag.y=null
+	if scroll!=_scroll:
+		_bag.y=null
+		_picked.clear()
 	_scroll=scroll
 	_candidates=candidates.duplicate(true)
+	_prune_picked()
+	if scroll.is_empty():multi=false
 	_tab="equip" if not scroll.is_empty() else "scroll"
 	if _entry().is_empty():_selected=str(_candidates[0].get("target_id","")) if not _candidates.is_empty() else ""
 	return _restage()
@@ -264,13 +278,17 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	spec[P_COMMON+"Enchant_Base_Curse"]={"visible":cursed}
 	spec[P_COMMON+"Enchant_Base_Unsafety"]={"visible":not cursed and has and not safe}
 	spec[P_COMMON+"Enchant_Base_Bless"]={"visible":not cursed and not (has and not safe)}
-	# 단일 강화 is the page shown; 다중 강화 keeps its Off state.
+	# 단일 강화 / 다중 강화 tabs.
 	spec[P_COMMON+"Tab/Nd_Single"]={"visible":true}
 	spec[P_COMMON+"Tab/Nd_Multi"]={"visible":true}
-	spec[P_COMMON+"Tab/Nd_Single/Btn_Single_On"]={"visible":true}
-	spec[P_COMMON+"Tab/Nd_Single/Btn_Single_Off"]={"visible":false}
-	spec[P_COMMON+"Tab/Nd_Multi/Btn_Multi_On"]={"visible":false}
-	spec[P_COMMON+"Tab/Nd_Multi/Btn_Multi_Off"]={"activate":Callable(self,"_notice").bind("다중 강화는 원본 규칙이 없어 단일 강화만 진행합니다")}
+	spec[P_COMMON+"Tab/Nd_Single/Btn_Single_On"]={"visible":not multi}
+	spec[P_COMMON+"Tab/Nd_Single/Btn_Single_Off"]={"visible":multi,"activate":Callable(self,"_set_multi").bind(false)}
+	spec[P_COMMON+"Tab/Nd_Multi/Btn_Multi_On"]={"visible":multi}
+	spec[P_COMMON+"Tab/Nd_Multi/Btn_Multi_Off"]={"visible":not multi,"activate":Callable(self,"_set_multi").bind(true)}
+	if multi:
+		has=not _picked.is_empty() and _goal>0
+		_multi_spec(hud,spec)
+	else:spec[P_ALL+"Nd_Enchant_Multi"]={"exclude":true}
 	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":_title(entry) if has else ("강화할 장비를 선택하세요" if not _scroll.is_empty() else "강화 주문서를 선택하세요")}
 	# Slot0: the scroll; Slot1: the target (TWILIGHT forge order 주문서 + 대상).
 	var owned: int=int(hud.lineage_inventory_ui.inventory.get(_scroll,0)) if not _scroll.is_empty() else 0
@@ -282,6 +300,7 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 		spec[key+"Text_Amount"]={"role":"source_text","text":amount,"visible":not amount.is_empty()}
 	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Btn"]={"activate":Callable(self,"_set_tab").bind("scroll")}
 	spec[P_COMMON+"Nd_Slot/Inventory_Slot1/Btn"]={"activate":Callable(self,"_set_tab").bind("equip")}
+	spec[P_ALL+"Nd_Enchant"]={"visible":not multi}
 	# Nd_Enchant: zone, stats, cost, probability.
 	spec[P_ENCHANT+"Label_Safe"]={"visible":has and safe}
 	spec[P_ENCHANT+"Label_Unsafe"]={"visible":has and not safe}
@@ -332,7 +351,7 @@ func _row_spec(listing: Array, line: int, prefix: String) -> Dictionary:
 		var at: int=line*SET_SLOTS.size()+index
 		var entry: Dictionary=listing[at] if at<listing.size() else {}
 		spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
-		var chosen: bool=not entry.is_empty() and (str(entry.get("target_id",""))==_selected if _tab=="equip" else str(entry.get("name",""))==_scroll)
+		var chosen: bool=not entry.is_empty() and ((str(entry.get("target_id","")) in _picked if multi else str(entry.get("target_id",""))==_selected) if _tab=="equip" else str(entry.get("name",""))==_scroll)
 		spec[key+"Sp_Select"]={"visible":chosen}
 		var text: String=""
 		if not entry.is_empty():
@@ -431,6 +450,7 @@ func _slot_pressed(index: int) -> Dictionary:
 	if index<0 or index>=listing.size():return {"ok":true,"empty_slot":true}
 	var entry: Dictionary=listing[index]
 	if _tab=="equip":
+		if multi:return _toggle_pick(str(entry.get("target_id","")))
 		_selected=str(entry.get("target_id",""))
 		return _restage()
 	var name: String=str(entry.get("name",""))
@@ -462,7 +482,81 @@ func _probability() -> Dictionary:
 	if entry.is_empty():return _fail("source_enchant_window_target_unselected")
 	return _notice("성공 %.1f%% · 유지 %.1f%% · 하락 %.1f%% · 소실 %.1f%% · 성공 강화폭 %s" % [float(entry.get("success_chance",0.0)),float(entry.get("no_change_chance",0.0)),float(entry.get("decrease_chance",0.0)),float(entry.get("destroy_chance",0.0)),str(entry.get("gain_text","+1"))])
 
+## --- 다중 강화 ----------------------------------------------------------------
+
+func _multi_spec(hud: Node, spec: Dictionary) -> void:
+	spec[P_MULTI+"Nd_Fx_Enchant_Sound"]={"exclude":true}
+	spec[P_MULTI+"Nd_Money"]={"visible":false}
+	spec[P_MULTI+"Label_Num"]={"role":"source_text","text":"주문서 필요 수량 %s" % _number(scrolls_needed())}
+	spec[P_MULTI+"Btn_Reset"]={"activate":Callable(self,"_reset_multi"),"displaystate":not _picked.is_empty()}
+	spec[P_MULTI+"Btn_Reset/Normal"]={"visible":not _picked.is_empty()}
+	spec[P_MULTI+"Btn_Reset/Disabled"]={"visible":_picked.is_empty()}
+	var slot: String=P_MULTI+"Nd_Slot_Multi/Inventory_Slot/"
+	spec[slot+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
+	spec[slot+"Sp_Select"]={"visible":false}
+	var count: String="%d개" % _picked.size() if not _picked.is_empty() else ""
+	spec[slot+"Text_Amount"]={"role":"source_text","text":count if not count.is_empty() else "0","visible":not count.is_empty()}
+	for n: int in range(1,11):
+		var key: String=P_MULTI+"Nd_Progress/Nd_Btn_%02d/" % n
+		spec[key+"Btn_On"]={"visible":n==_goal,"activate":Callable(self,"_set_goal").bind(n)}
+		spec[key+"Btn_Off"]={"visible":n!=_goal,"activate":Callable(self,"_set_goal").bind(n)}
+		spec[key+"Nd_Gauge"]={"visible":false}
+
+## The fewest scrolls the picked targets need for the goal (one roll per level
+## at the entry's scroll count, every roll a success).
+func scrolls_needed() -> int:
+	var total: int=0
+	for entry: Variant in _candidates:
+		if entry is Dictionary and str(entry.get("target_id","")) in _picked:
+			total+=maxi(0,_goal-int(entry.get("level",0)))*maxi(1,int(entry.get("count",1)))
+	return total
+
+func picked() -> Array[String]:
+	return _picked
+
+func goal() -> int:
+	return _goal
+
+func _set_multi(value: bool) -> Dictionary:
+	if value and _scroll.is_empty():return _notice("강화 주문서를 먼저 선택하세요")
+	multi=value
+	_tab="equip"
+	return _restage()
+
+func _toggle_pick(target_id: String) -> Dictionary:
+	if target_id in _picked:_picked.erase(target_id)
+	elif _picked.size()>=MULTI_MAX:return _notice("다중 강화는 %d개까지 고를 수 있습니다" % MULTI_MAX)
+	else:_picked.append(target_id)
+	return _restage()
+
+func _set_goal(n: int) -> Dictionary:
+	_goal=n
+	return _restage()
+
+func _reset_multi() -> Dictionary:
+	_picked.clear()
+	_goal=0
+	return _restage()
+
+func _multi_requested() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_enchant_window_host_unavailable")
+	if _picked.is_empty() or _goal<=0:return _notice("강화할 장비와 목표 단계를 고르세요")
+	var targets: Array[String]=_picked.duplicate()
+	var goal_level: int=_goal
+	var scroll: String=_scroll
+	hud.call("confirm_action","다중 강화 확인","%d개 장비를 +%d까지 차례로 강화합니다\n%s 최소 %d장\n실패·하락·소실이나 주문서 부족 시 그 자리에서 멈춥니다" % [targets.size(),goal_level,scroll,scrolls_needed()],"강화",func(_count: int) -> void:
+		var world: Node=hud.get_parent()
+		if world!=null and world.has_method("attempt_enhancement_series"):world.call("attempt_enhancement_series",scroll,targets,goal_level))
+	return {"ok":true,"asked":"multi","targets":targets.size(),"goal":goal_level}
+
+## Drops picked targets that left the candidate list (sold, destroyed).
+func _prune_picked() -> void:
+	var ids: Array=_candidates.map(func(e: Variant) -> String: return str((e as Dictionary).get("target_id","")) if e is Dictionary else "")
+	_picked=_picked.filter(func(id: String) -> bool: return id in ids)
+
 func _enchant_requested() -> Dictionary:
+	if multi:return _multi_requested()
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var entry: Dictionary=_entry()
 	if hud==null or entry.is_empty() or _scroll.is_empty():return _fail("source_enchant_window_target_unselected")
