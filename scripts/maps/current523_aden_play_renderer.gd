@@ -599,13 +599,21 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	FRAME_HITCH.count("map.block_baked")
 	# After the frame that drew it the block is only its image: let go of the
 	# atlases (the tile cache may free them) and the drawing node.
-	RenderingServer.frame_post_draw.connect(_release_baked.bind(block, canvas), CONNECT_ONE_SHOT)
+	# One connection for all blocks baked this frame (bound callables of the
+	# same method count as one connection).
+	_unreleased.append([block, canvas])
+	if not RenderingServer.frame_post_draw.is_connected(_release_baked):
+		RenderingServer.frame_post_draw.connect(_release_baked, CONNECT_ONE_SHOT)
 	return block
 
 
-func _release_baked(block: Dictionary, canvas: Node2D) -> void:
-	block.erase("atlases")
-	if is_instance_valid(canvas): canvas.queue_free()
+var _unreleased: Array = [] # [block, canvas] drawn in the coming frame
+
+func _release_baked() -> void:
+	for pair: Array in _unreleased:
+		(pair[0] as Dictionary).erase("atlases")
+		if is_instance_valid(pair[1]): (pair[1] as Node).queue_free()
+	_unreleased.clear()
 
 
 func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
