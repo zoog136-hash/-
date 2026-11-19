@@ -421,7 +421,7 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
 
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0)
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -429,7 +429,28 @@ static func _item_presentation_info(id: int, title: String, source_id: String = 
 		"route":"source523_images","status":"original_icon_not_installed","reason":"source523_item_identity_required",
 		"texture":null,"provenance":{},"original_bytes_unchanged":false,"actual_game_consumption_observed":false}
 
+## Original coin wallets (patch523_item_inventory.COIN_WALLETS: 명예 코인,
+## 변신/마법인형/성물 제작 코인) are name-keyed bag stacks without a physical
+## record, so their bag/quickslot row carried no ItemClass identity and drew no
+## picture. The wallet's own original ItemClass row (validated by coin_wallet:
+## category 122, grade 1, exact untagged name) supplies its original icon.
+static func _wallet_item_class_id(record: Dictionary, fallback_name: String) -> int:
+	var name: String = str(record.get("name", fallback_name))
+	var inventory: Script = load("res://scripts/loot/patch523_item_inventory.gd")
+	var wallets: Dictionary = inventory.get("COIN_WALLETS")
+	for id: Variant in wallets:
+		if str(wallets[id]) == name and str(inventory.call("coin_wallet", int(id))) == name: return int(id)
+	return -1
+
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
+	if not recognized_item(record):
+		var wallet_id: int = _wallet_item_class_id(record, fallback_name)
+		if wallet_id > 0:
+			var wallet_image: Dictionary = describe_item_class(wallet_id, str(record.get("name", fallback_name)))
+			wallet_image["source_id"] = str(record.get("sourceId", ""))
+			wallet_image["source_record_kind"] = "original_coin_wallet"
+			wallet_image.provenance["caller_item_identity_field"] = "patch523_item_inventory.COIN_WALLETS"
+			return wallet_image
 	var shop_item_id: int = _shop_item_class_id(record)
 	if not recognized_item(record) and shop_item_id > 0:
 		var shop_image: Dictionary = describe_item_class(shop_item_id,str(record.get("name",fallback_name)))
