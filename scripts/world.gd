@@ -289,6 +289,13 @@ const PATCH523_CRAFT_CATALOG=preload("res://scripts/crafting/patch523_craft_cata
 const BOOT_LOG=preload("res://scripts/boot/boot_progress_log.gd")
 var patch523_craft_catalog_status: Dictionary={}
 var patch523_craft_item_cache: Dictionary={}
+## The craft item index built in small slices on idle frames after entering
+## the game (same items, same order, same records as the one-shot build), so
+## the first 제작 quote does not stall ~8 s building it (2026-11-19 measure:
+## 8,016 ms for ~30,000 original items on desktop). A cache reset drops it.
+var _craft_index_warm: Dictionary={}
+var craft_index_warm_seconds: float=12.0
+const CRAFT_INDEX_WARM_BUDGET_USEC := 3000
 # Installed/configured only by the protection feature owner (PR256).
 var patch523_owner_state_problem: String=""
 var patch523_final_blow_fired: bool=false
@@ -811,6 +818,7 @@ func _process_frame(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	_tick_craft_index_warm(delta)
 	_slow_tick_delta += delta
 	_slow_tick_clock -= delta
 	if _slow_tick_clock <= 0.0:
@@ -1219,6 +1227,7 @@ func _equipped_numeric_sum(key: String) -> float:
 
 func _index_catalog_item_sources() -> void:
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	catalog_item_by_source_id.clear()
 	catalog_item_variant_count.clear()
 	for value: Variant in catalog_db.get("아이템", []) as Array:
@@ -1591,6 +1600,7 @@ func _index_item_weights() -> void:
 		return
 	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	var next_weight_index: Dictionary = {}
 	var type_defaults: Dictionary = {}
 	var overrides: Dictionary = {}
@@ -5358,6 +5368,9 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	_update_hud()
 	_perf_log("강화 HUD 갱신", phase_usec)
 	# Persist first. Presentation/skip/close must never commit or reroll a result.
+	if enhancement_series_quiet:
+		enhancement_series_last={"result":result_type,"from":current_level,"to":result_level,"name":target_name}
+		return
 	if hud.has_method("show_enhancement_result"):
 		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	else:
@@ -5370,6 +5383,56 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	else:
 		hud.call("open_enhancement", scroll_name, [])
 	_perf_log("강화 목록 갱신", phase_usec)
+
+## 다중 강화 (TWILIGHT 근사): the existing single roll (_attempt_enhancement,
+## its rules, costs, save and rollback) run for each target in turn up to
+## `goal`; stops at the first roll that is not a success (유지 / 하락 / 소실),
+## a refused roll (rules, too few scrolls or Adena) or the scroll running out.
+var enhancement_series_quiet: bool=false
+var enhancement_series_last: Dictionary={}
+func attempt_enhancement_series(scroll_name: String, targets: Array, goal: int) -> Dictionary:
+	if enhancement_series_quiet:return {"ok":false,"reason":"다중 강화가 진행 중입니다"}
+	var rolls: int=0
+	var reached: int=0
+	var stop: String=""
+	var stop_name: String=""
+	enhancement_series_quiet=true
+	for raw: Variant in targets:
+		var target: Dictionary=_parse_enhancement_target(str(raw))
+		var id: String=str(target.get("id",""))
+		var name: String=str(target.get("name",""))
+		while stop.is_empty():
+			if not item_instances.has(id):
+				stop="missing"
+				break
+			var level: int=_item_instance_level(id,name)
+			if level>=goal:
+				reached+=1
+				break
+			if int(inventory.get(scroll_name,0))<=0:
+				stop="scroll"
+				break
+			enhancement_series_last={}
+			var scrolls_before: int=int(inventory.get(scroll_name,0))
+			_attempt_enhancement(scroll_name,str(raw))
+			if enhancement_series_last.is_empty() or int(inventory.get(scroll_name,0))>=scrolls_before:
+				stop="refused"
+				break
+			rolls+=1
+			match str(enhancement_series_last.get("result","")):
+				"success":pass
+				"destroy":stop="destroy"
+				_:stop="fail"
+			if not stop.is_empty():stop_name=name
+		if not stop.is_empty():break
+	enhancement_series_quiet=false
+	var texts: Dictionary={"":"다중 강화 완료","fail":"강화 실패로 멈췄습니다","destroy":"장비가 소실되어 멈췄습니다","scroll":"주문서가 부족해 멈췄습니다","refused":"강화할 수 없는 단계라 멈췄습니다","missing":"장비를 찾을 수 없어 멈췄습니다"}
+	var message: String="%s · %d회 · 목표 달성 %d/%d%s" % [str(texts.get(stop,"")),rolls,reached,targets.size()," · "+stop_name if not stop_name.is_empty() else ""]
+	hud.show_message(message)
+	hud.append_log(message)
+	var kind: String=_scroll_kind(scroll_name)
+	hud.call("open_enhancement",scroll_name,_enhancement_candidates(kind,_scroll_mode(scroll_name),scroll_name) if int(inventory.get(scroll_name,0))>0 else [])
+	return {"ok":stop.is_empty(),"rolls":rolls,"reached":reached,"stop":stop,"message":message}
 
 func _destroy_enhancement_target(item_name: String, item_id: String = "") -> void:
 	if not item_id.is_empty():
@@ -5620,6 +5683,14 @@ func _craft_item_index() -> Dictionary:
 
 func _patch523_craft_item_index() -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	if not _craft_index_warm.is_empty():
+		# Finish a started warm build here: the remaining items in their order.
+		var ids: Array=_craft_index_warm.ids
+		var partial: Dictionary=_craft_index_warm.result
+		for index: int in range(int(_craft_index_warm.cursor),ids.size()):_patch523_craft_index_item(partial,str(ids[index]))
+		_craft_index_warm={}
+		patch523_craft_item_cache=partial
+		return partial
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
@@ -5641,6 +5712,31 @@ func _patch523_craft_item_index() -> Dictionary:
 	return result
 
 const PATCH523_CRAFT_INDEX_BLOCK := 1024
+
+## One idle-frame slice of the craft item index (CRAFT_INDEX_WARM_BUDGET_USEC);
+## true while work remains. Starts craft_index_warm_seconds after it is first
+## called with nothing built.
+func _tick_craft_index_warm(delta: float) -> bool:
+	if not patch523_craft_item_cache.is_empty():return false
+	var items: Variant=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
+	if not items is Dictionary or (items as Dictionary).is_empty():return false
+	if _craft_index_warm.is_empty():
+		craft_index_warm_seconds-=delta
+		if craft_index_warm_seconds>0.0:return true
+		_craft_index_warm={"ids":(items as Dictionary).keys(),"cursor":0,"result":_craft_item_index().duplicate()}
+		return true
+	var started: int=Time.get_ticks_usec()
+	var ids: Array=_craft_index_warm.ids
+	var cursor: int=int(_craft_index_warm.cursor)
+	while cursor<ids.size() and Time.get_ticks_usec()-started<CRAFT_INDEX_WARM_BUDGET_USEC:
+		_patch523_craft_index_item(_craft_index_warm.result,str(ids[cursor]))
+		cursor+=1
+	_craft_index_warm.cursor=cursor
+	if cursor>=ids.size():
+		patch523_craft_item_cache=_craft_index_warm.result
+		_craft_index_warm={}
+		return false
+	return true
 
 func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
 	# Read-only identity for the branch checks (no deep copy of ~30,000
@@ -5742,6 +5838,7 @@ func _apply_loaded_patch523_equipment() -> void:
 	patch523_material_choices.clear()
 	patch523_owned_material_choices.clear()
 	patch523_craft_item_cache={}
+	_craft_index_warm={}
 	# Keep existing recipes, IDs and economy unchanged.
 	for key: Variant in crafting.recipes.keys():
 		if str(key).begins_with("patch523:"):

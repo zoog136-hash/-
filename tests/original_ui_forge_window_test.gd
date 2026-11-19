@@ -76,6 +76,21 @@ func _run() -> void:
 	check(window.calls[-1]==["attempt","w1"] and host.hud.confirmations[-1][1].contains("성공 확률 33%") and host.hud.logs[-1]=="대장간 연마 성공","연마 confirms and runs the attempt: "+str(window.calls.slice(-2)))
 	window._craft_missing()
 	check(host.hud.messages[-1].contains("제작"),"제작 has no TWILIGHT feature")
+	# Bag tabs: every candidate is a weapon; 소모 / 기타 list nothing and keep the choice.
+	window.selected="w1"
+	window.bag_tab="consume"
+	var spec: Dictionary=window._spec()
+	check(window._weapons.is_empty() and window.selected=="w1" and str(window._current().get("uid",""))=="w1","소모 lists no weapon and keeps the chosen one")
+	check(spec[WINDOW.P_INV+"Tab/Btn_Consume_On"].visible and spec[WINDOW.P_INV+"Tab/Btn_All_Off"].visible and not spec[WINDOW.P_INV+"Tab/Btn_All_On"].visible,"the current bag tab shows its On state")
+	var tabs_bound: bool=true
+	for name: String in ["Btn_All","Btn_Equipment","Btn_Consume","Btn_Etc"]:
+		var callable: Variant=spec[WINDOW.P_INV+"Tab/"+name+"_Off"].get("activate")
+		tabs_bound=tabs_bound and callable is Callable and (callable as Callable).get_method()=="_set_bag_tab"
+	check(tabs_bound,"every bag tab's Off button switches the tab")
+	window.bag_tab="equip"
+	window._spec()
+	check(window._weapons.size()==3,"장비 lists every weapon")
+	check(window._set_bag_tab("nope").get("code")=="source_forge_window_tab_unknown","an unknown tab is refused")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(renewal.contains("[\"forge523\",\"대장간\"]") and renewal.contains("_open_original_feature(\"forge\")"),"the menu opens the original window")
 	var pack_dir: String=""

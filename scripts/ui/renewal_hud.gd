@@ -1530,8 +1530,11 @@ func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> v
 
 ## Heavy settings sections are foldouts built on first open; tests and tools
 ## that inspect them pass expand_all = true.
-func open_settings_info(expand_all: bool = false) -> void:
+## The original 523 설정 window (source_main_option_window, Option_All) first;
+## original=false (its 세부 설정) or no UI pack opens the TWILIGHT settings.
+func open_settings_info(expand_all: bool = false, original: bool = true) -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
+	if original and not expand_all and _open_original_feature("options"):return
 	var options := SettingsUI.new()
 	workspace.mount(options)
 	options.configure(self)

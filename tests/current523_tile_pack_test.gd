@@ -58,6 +58,15 @@ func _initialize() -> void:
 			check(pack.texture_for(32) != null and pack.cache_size() == 32 and pack.atlas_loads == 33, "33rd atlas evicts oldest")
 			check(pack.texture_for(0) != null and pack.atlas_loads == 33, "recently touched atlas stays cached")
 			check(pack.texture_for(1) != null and pack.atlas_loads == 34 and pack.cache_size() == 32, "oldest untouched atlas reloads")
+			# Worker decode: the same verified result, published on the main thread.
+			check(not pack.prefetch(2) and pack.pending_jobs() == 1, "an uncached atlas decodes on a worker")
+			check(not pack.prefetch(2) and pack.pending_jobs() == 1, "a second request joins the same decode")
+			var waited: int = 0
+			while pack.pending_jobs() > 0 and waited < 2000:
+				pack.pump_jobs(); OS.delay_msec(1); waited += 1
+			check(pack.prefetch(2) and pack.atlas_loads == 35 and pack.texture_for(2) != null and pack.atlas_loads == 35, "a finished worker decode is cached once")
+			check(not pack.prefetch(3) and pack.texture_for(3) != null and pack.pending_jobs() == 0 and pack.atlas_loads == 36, "an atlas drawn before its worker finishes waits for that decode")
+			check(pack.prefetch(999) == false and pack.pending_jobs() == 0, "an unknown tile is never queued")
 		var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(fixture_root.path_join(PACK.MANIFEST_NAME)))
 		var mutation_root: String = ProjectSettings.globalize_path("user://generic-ti2-metadata-rejections")
 		for kind: String in ["edition", "version", "count", "duplicate", "path", "provenance_edition", "provenance_version", "wrong_current_container", "wrong_member", "layout", "png_bytes", "raw_sections", "raw_header", "raw_roundtrip", "alpha", "source_inventory", "rgba_inventory", "whole_input_inventory", "atlas_storage", "runtime_with_png", "missing_png_metadata"]:
@@ -108,6 +117,11 @@ func _initialize() -> void:
 			var changed_sha: String = _write_manifest(root, changed)
 			check(pack.load_pack(root, changed_sha), "byte rejection fixture has valid metadata: " + kind)
 			check(pack.texture_for(0) == null and pack.cache_size() == 0, "bad/missing bytes reject without caching: " + kind)
+			pack.prefetch(0)
+			var waits: int = 0
+			while pack.pending_jobs() > 0 and waits < 2000:
+				pack.pump_jobs(); OS.delay_msec(1); waits += 1
+			check(pack.pending_jobs() == 0 and pack.cache_size() == 0, "bad/missing bytes on a worker are not cached either: " + kind)
 	var real_count: int = 0
 	var real_bytes: int = 0
 	if not real_root.is_empty():

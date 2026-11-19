@@ -112,6 +112,9 @@ func _ready() -> void:
 	original_source_preview.name = "OriginalSourceInspection"
 	# Cached frame plans / composited layer groups (original_source_preview.gd).
 	original_source_preview.cached_frames = true
+	# The player node moves smoothly; the walk frames' own step is removed
+	# (original_source_preview.gd, "Walk root motion").
+	original_source_preview.cancel_walk_root_motion = true
 	add_child(original_source_preview)
 	add_child(preload("res://scripts/resources/current523_world_preview.gd").new())
 	add_child(current523_identity_actor)

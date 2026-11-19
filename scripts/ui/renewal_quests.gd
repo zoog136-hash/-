@@ -99,7 +99,7 @@ func _exit_tree() -> void:
 func _accept(id: String) -> void:
 	if _accept_pending or not is_instance_valid(world): return
 	var service: Variant = world.get("quest_service")
-	if service==null or bool(service.claimed.get(id,false)) or service.save_blocked: return
+	if service==null or service.save_blocked or (service.has_method("done") and service.done(id)) or (not service.has_method("done") and bool(service.claimed.get(id,false))): return
 	_accept_pending = true
 	# Existing world._claim_quest -> quest_auto.claim -> atomic save. No bulk
 	# completion or reward preview; a refused write stays uncompleted.

@@ -29,6 +29,10 @@ var _records: RefCounted
 var _blocks: Dictionary = {}
 var _cache: Dictionary = {}
 var _recent: Array[int] = []
+## tile_id -> {task, row, root, storage, image, problem} decoding on a worker.
+var _jobs: Dictionary = {}
+## Worker decodes in flight at once (each holds ~1.2 MiB while decoding).
+const MAX_DECODE_JOBS: int = 6
 
 func _fail(message: String) -> bool:
 	problem = message
@@ -44,6 +48,7 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_records = null
 	_cache.clear()
 	_recent.clear()
+	_drop_jobs()
 	problem = ""
 	atlas_loads = 0
 	if not _sha(expected_manifest_sha256): return _fail("A caller-pinned generic TI2 manifest SHA256 is required")
@@ -166,45 +171,100 @@ func texture_for(tile_id: int) -> Texture2D:
 		_recent.erase(tile_id)
 		_recent.append(tile_id)
 		return _cache[tile_id]
-	var row: Dictionary = _row(tile_id)
-	var source := FileAccess.open(_root.path_join(str(row.original_path)), FileAccess.READ)
+	var job: Dictionary = _jobs.get(tile_id, {})
+	if job.is_empty():
+		job = _new_job(tile_id)
+		_decode_job(job)
+	else:
+		# Already decoding on a worker: wait for that one result.
+		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		_jobs.erase(tile_id)
+	return _publish(tile_id, job)
+
+## Starts reading and decoding `tile_id` on a worker thread when it is not
+## cached yet; true when its texture is ready now. Reading, the SHA-256 pins
+## and the TI2/PNG decode are the same as texture_for; only the texture is
+## made on the main thread (pump_jobs). A miss used to stall the frame for
+## the whole decode (about 15 ms per atlas on a PC, ~60 ms on the phone).
+func prefetch(tile_id: int) -> bool:
+	if _cache.has(tile_id): return true
+	if not has_tile(tile_id) or _jobs.has(tile_id): return false
+	if _jobs.size() >= MAX_DECODE_JOBS: return false
+	var job: Dictionary = _new_job(tile_id)
+	job["task"] = WorkerThreadPool.add_task(_decode_job.bind(job), false, "TI2 atlas decode")
+	_jobs[tile_id] = job
+	return false
+
+## Publishes finished worker decodes (main thread). Returns how many.
+func pump_jobs() -> int:
+	var done: int = 0
+	for tile_id: int in _jobs.keys():
+		var job: Dictionary = _jobs[tile_id]
+		if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		_jobs.erase(tile_id)
+		var saved: String = problem
+		_publish(tile_id, job)
+		problem = saved
+		done += 1
+	return done
+
+## Waits for and discards every worker decode (a new pack or teardown).
+func _drop_jobs() -> void:
+	for job: Dictionary in _jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+	_jobs.clear()
+
+func _notification(what: int) -> void:
+	# No method calls while this object is being deleted.
+	if what == NOTIFICATION_PREDELETE:
+		for job: Dictionary in _jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+		_jobs.clear()
+
+func pending_jobs() -> int:
+	return _jobs.size()
+
+func _new_job(tile_id: int) -> Dictionary:
+	return {"row": _row(tile_id), "root": _root, "storage": _atlas_storage, "image": null, "problem": ""}
+
+## Worker-safe: only the job's own row copy, files and pure decoders.
+static func _decode_job(job: Dictionary) -> void:
+	var row: Dictionary = job.row
+	var source := FileAccess.open(str(job.root).path_join(str(row.original_path)), FileAccess.READ)
 	if source == null or source.get_length() != int(row.source_bytes):
-		_fail("Missing or wrong-sized original TI2")
-		return null
+		job.problem = "Missing or wrong-sized original TI2"; return
 	var compressed: PackedByteArray = source.get_buffer(int(row.source_bytes))
 	if _hash(compressed) != row.source_sha256:
-		_fail("Original TI2 digest mismatch")
-		return null
-	var image: Image
-	if _atlas_storage == "runtime_ti2":
+		job.problem = "Original TI2 digest mismatch"; return
+	if job.storage == "runtime_ti2":
 		var decoder = TI2_DECODER.new()
 		# Coverage is checked against its pin first; the drawn atlas then
 		# carries the TI2 block flags' display alpha.
 		var rgba: PackedByteArray = decoder.decode_rgba(compressed, row, true)
 		if rgba.size() != 384 * 384 * 4:
-			_fail(decoder.problem)
-			return null
-		image = Image.create_from_data(384, 384, false, Image.FORMAT_RGBA8, rgba)
-	else:
-		var png := FileAccess.open(_root.path_join(str(row.atlas_path)), FileAccess.READ)
-		if png == null or png.get_length() != int(row.atlas_bytes):
-			_fail("Missing or wrong-sized generic coverage atlas")
-			return null
-		var encoded: PackedByteArray = png.get_buffer(int(row.atlas_bytes))
-		if _hash(encoded) != row.atlas_sha256:
-			_fail("Generic coverage PNG digest mismatch")
-			return null
-		if not bounded_png_header(encoded):
-			_fail("Generic coverage PNG header exceeds supported layout")
-			return null
-		image = Image.new()
-		if image.load_png_from_buffer(encoded) != OK or image.get_size() != Vector2i(384, 384):
-			_fail("Invalid generic coverage atlas image")
-			return null
-		image.convert(Image.FORMAT_RGBA8)
-		if _hash(image.get_data()) != row.atlas_rgba_sha256:
-			_fail("Generic coverage decoded RGBA digest mismatch")
-			return null
+			job.problem = decoder.problem; return
+		job.image = Image.create_from_data(384, 384, false, Image.FORMAT_RGBA8, rgba)
+		return
+	var png := FileAccess.open(str(job.root).path_join(str(row.atlas_path)), FileAccess.READ)
+	if png == null or png.get_length() != int(row.atlas_bytes):
+		job.problem = "Missing or wrong-sized generic coverage atlas"; return
+	var encoded: PackedByteArray = png.get_buffer(int(row.atlas_bytes))
+	if _hash(encoded) != row.atlas_sha256:
+		job.problem = "Generic coverage PNG digest mismatch"; return
+	if not bounded_png_header(encoded):
+		job.problem = "Generic coverage PNG header exceeds supported layout"; return
+	var image := Image.new()
+	if image.load_png_from_buffer(encoded) != OK or image.get_size() != Vector2i(384, 384):
+		job.problem = "Invalid generic coverage atlas image"; return
+	image.convert(Image.FORMAT_RGBA8)
+	if _hash(image.get_data()) != row.atlas_rgba_sha256:
+		job.problem = "Generic coverage decoded RGBA digest mismatch"; return
+	job.image = image
+
+func _publish(tile_id: int, job: Dictionary) -> Texture2D:
+	if job.image == null:
+		_fail(str(job.problem))
+		return null
+	var image: Image = job.image
 	var texture := ImageTexture.create_from_image(image)
 	# The decoded image is not used after this; the worker may change it.
 	gpu.queue(texture, image)
@@ -221,6 +281,7 @@ func cache_size() -> int:
 ## Called every frame by the map renderer: applies finished compressions.
 func pump_gpu() -> void:
 	gpu.pump()
+	pump_jobs()
 
 static func source_rect(frame8bit: int) -> Rect2:
 	if frame8bit < 0 or frame8bit > 255: return Rect2()
