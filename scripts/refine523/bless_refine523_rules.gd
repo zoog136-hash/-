@@ -10,9 +10,9 @@ extends RefCounted
 ##    only value seen; another value has no stated meaning). Items with an
 ##    elemental enchant are refused: BlessPowderAmplifyRate gives a rate per
 ##    elemental level but not how it is applied to the amount or rounded.
-##    상급/최상급 용해 (AdvancedBlessPowder*): TWILIGHT 근사 below (was refused: the catalyst amount,
-##    how Increment/MinSafeEnchantLevel/Multiplier/ItemEnchantScrollID combine
-##    and the 최상급 output item are not in the tables.
+##    상급/최상급 용해 (AdvancedBlessPowder*): original consumption rule with a
+##    TWILIGHT 근사 helper safe below (the catalyst amount, the below-safe branch
+##    and the 최상급 output item are not in the tables).
 ##  - 질서의 연금: RefineItem (target ItemClassID + exact Enchant) -> group,
 ##    RefineInput slot 1 (상급 축복의 가루) registered at exactly MinAmount
 ##    (MinProbability) or MaxAmount (MaxProbability), RefineOutput weighted by
@@ -38,6 +38,29 @@ static func _integer(value: Variant) -> bool:
 static func _fail(reason: String, code: String) -> Dictionary:
 	return {"ok":false,"reason":reason,"code":code}
 
+## Value rounded to IEEE float32 (the original client computes these in float).
+static func _f32(value: float) -> float:
+	var packed := PackedFloat32Array([value])
+	return packed[0]
+
+## 일반 용해 (원본 소비 규칙, 보고서2 NEW01): base + ceilf(float32(rate/100) ×
+## float32(base)), then × quantity. The preview (dissolve_quote/snapshot) and the
+## grant (dissolve) both read this one function.
+static func normal_amount(base: int, rate: int, count: int = 1) -> int:
+	var share: float = _f32(_f32(_f32(float(rate))/100.0)*_f32(float(base)))
+	return (base+int(ceilf(share)))*count
+
+## 상급/최상급 용해 (원본 소비 규칙, 보고서2 NEW02): base × pow(Multiplier,
+## enchant − safe) cut to an integer, plus the elemental increment, × quantity.
+## At or below safe the exponent is 0 (TWILIGHT 근사: the original below-safe
+## branch is not recovered). -1 when the value leaves the int64 range.
+static func advanced_amount(base: int, multiplier: float, enchant: int, safe: int, increment: int, count: int = 1) -> int:
+	var scaled: float = float(base)*pow(_f32(multiplier),float(maxi(0,enchant-safe)))
+	if not is_finite(scaled) or scaled<0.0 or scaled>=9.0e18: return -1
+	var each: int = int(scaled)+increment
+	if each<0 or (count>0 and each>9000000000000000000/count): return -1
+	return each*count
+
 static func installed() -> bool:
 	return not SOURCE.not_installed() and SOURCE.row_count("BlessPowderAmount")>0
 
@@ -58,16 +81,16 @@ static func item_row(item_class_id: int) -> Dictionary:
 	return SOURCE.row("ItemClass",item_class_id) if item_class_id>0 else {}
 
 ## {ok, item_class_id, amount, grade_id, enchant} for one normal dissolution.
-static func dissolve_yield(item_class_id: int, enchant: int, element_level: int) -> Dictionary:
+static func dissolve_yield(item_class_id: int, enchant: int, element_level: int, count: int = 1) -> Dictionary:
 	if not installed(): return _fail("원본 523 정의 ZIP 미설치 · 용해 보류","source_not_installed")
 	var raw: Dictionary = item_row(item_class_id)
 	if raw.is_empty() or raw.get("TestItem")!=false: return _fail("원본 아이템 정의 확인 실패","item_row_missing")
 	if raw.get("IsSoluble")!=true: return _fail("원본에서 용해할 수 없는 아이템입니다 (IsSoluble)","not_soluble")
 	var amplify: int = 0
 	if element_level!=0:
-		# TWILIGHT 근사(근거 약함, docs #4): BlessPowderAmplifyRate is a percent
-		# added to the table amount (rounded down). 인벤 "계산은 강화 가루 +
-		# 속성단계 가루" (2021-07-26) says the elemental part is added.
+		# 원본 소비 규칙(보고서2 NEW01, docs #4): BlessPowderAmplifyRate is a
+		# percent whose float32 share of the table amount is rounded UP and
+		# added (normal_amount). 인벤 "계산은 강화 가루 + 속성단계 가루" agrees.
 		var rates: Array = SOURCE.rows_matching("BlessPowderAmplifyRate","ElementalEnchantLevel",{element_level:true})
 		if not APPROX_ELEMENT_AMPLIFY or rates.size()!=1 or not _integer(rates[0].get("AmplifyRate")): return _fail("속성 강화 장비의 가루 증폭 계산식이 원본 표에 없어 보존합니다","amplify_rule_missing")
 		amplify = int(rates[0].AmplifyRate)
@@ -82,9 +105,10 @@ static func dissolve_yield(item_class_id: int, enchant: int, element_level: int)
 		return _fail("이 등급·강화 수치의 원본 가루 수량 행이 없습니다","amount_row_missing")
 	var powder: Dictionary = item_row(BLESS_POWDER_ITEM)
 	if powder.is_empty() or powder.get("TestItem")!=false: return _fail("원본 축복의 가루 아이템 정의 확인 실패","powder_item_missing")
-	var amount: int = int(rows[0].Amount)*(100+amplify)/100
-	var result: Dictionary = {"ok":true,"item_class_id":BLESS_POWDER_ITEM,"amount":amount,"grade_id":grade,"enchant":enchant,"source_row":rows[0].duplicate(true)}
-	if amplify>0: result.merge({"amplify_percent":amplify,"approximation":"TWILIGHT_ELEMENT_AMPLIFY_PERCENT"})
+	if count<1: return _fail("용해 수량 확인 실패","count")
+	var amount: int = normal_amount(int(rows[0].Amount),amplify,count)
+	var result: Dictionary = {"ok":true,"item_class_id":BLESS_POWDER_ITEM,"amount":amount,"grade_id":grade,"enchant":enchant,"count":count,"source_row":rows[0].duplicate(true)}
+	if amplify>0: result.merge({"amplify_percent":amplify,"formula":"NATIVE_BASE_PLUS_CEILF32_RATE"})
 	return result
 
 ## ---- TWILIGHT 근사(근거 약함) switches, docs/bless_refine523_missing_rules.md
@@ -110,20 +134,25 @@ static func solvent(item_class_id: int) -> Dictionary:
 	if method<=0 or output<=0 or item_row(output).is_empty(): return {}
 	return {"item_class_id":item_class_id,"method":method,"output_item_class_id":output}
 
-## 상급/최상급 용해 (TWILIGHT 근사, docs #5·#6): amount = AdvancedBlessPowderAmount
-## (ItemCategory, GradeID, DissolutionMethodType).Amount + AdvancedBlessPowderIncrement
-## (same method, EnchantLevel = the item's elemental level).Amount. The 인벤
-## summary "마족 3강 + 속성 3단 = 1050개" = 180 + 870 and "영웅 무기 6강 + 속성
-## 1단 = 4090개" = 4000 + 90 match exactly this reading (Increment is indexed by
-## the elemental level; the item enchant, Multiplier and MinSafeEnchantLevel do
-## not change the result in those examples, so they are not applied).
+## 상급/최상급 용해 (docs #5·#6). Rows: AdvancedBlessPowderAmount (ItemCategory,
+## GradeID, DissolutionMethodType) -> Amount, Multiplier, MinSafeEnchantLevel,
+## ItemEnchantScrollID; AdvancedBlessPowderIncrement (same method, EnchantLevel =
+## the item's elemental level) -> Amount, a missing row adds 0 (원본 소비 규칙).
+## amount = advanced_amount(Amount, Multiplier, item enchant, safe, increment).
+## safe = max(MinSafeEnchantLevel, helper safe). The original helper is not
+## recovered; TWILIGHT 근사 uses the item's safe enchant for the row's own
+## ItemEnchantScrollID (scroll group): the number of leading 100% stages in
+## BmItemEnchantProView (item_safe_enchant). If that cannot be resolved only
+## MinSafeEnchantLevel is used. External check: 인벤 "영웅 무기 6강 + 속성 1단 =
+## 4090개" = 4000 × 2^(6−6) + 90 (영웅 무기 safe 6).
 ## Grade range: BlessConstant HighMelt* (24) / Highest*Melt* (34) per category.
-static func advanced_dissolve_yield(item_class_id: int, element_level: int, method: int) -> Dictionary:
+static func advanced_dissolve_yield(item_class_id: int, element_level: int, method: int, enchant: int = 0, count: int = 1) -> Dictionary:
 	if not installed(): return _fail("원본 523 정의 ZIP 미설치 · 용해 보류","source_not_installed")
 	if not APPROX_ADVANCED_DISSOLVE: return _fail("상급·최상급 용해 규칙 미구현","advanced_off")
 	var raw: Dictionary = item_row(item_class_id)
 	if raw.is_empty() or raw.get("TestItem")!=false: return _fail("원본 아이템 정의 확인 실패","item_row_missing")
 	if raw.get("IsSoluble")!=true: return _fail("원본에서 용해할 수 없는 아이템입니다 (IsSoluble)","not_soluble")
+	if enchant<0 or count<1: return _fail("강화 수치·수량 확인 실패","grade_or_enchant")
 	var category: int = int(raw.get("CategoryID",-1)); var grade: int = int(raw.get("GradeID",-1))
 	var bounds: Array = grade_bounds(method,category)
 	if bounds.is_empty() or grade<int(bounds[0]) or grade>int(bounds[1]): return _fail("이 용해제로 용해할 수 없는 등급입니다","grade_range")
@@ -131,13 +160,50 @@ static func advanced_dissolve_yield(item_class_id: int, element_level: int, meth
 	for row: Dictionary in SOURCE.rows("AdvancedBlessPowderAmount"):
 		if int(row.get("ItemCategory",-1))==category and int(row.get("GradeID",-1))==grade and int(row.get("DissolutionMethodType",-1))==method: rows.append(row)
 	if rows.size()!=1 or not _integer(rows[0].get("Amount")): return _fail("이 종류·등급의 원본 상급 가루 수량 행이 없습니다","advanced_row_missing")
+	var row: Dictionary = rows[0]
+	var multiplier: Variant = row.get("Multiplier")
+	var min_safe: Variant = row.get("MinSafeEnchantLevel")
+	if typeof(multiplier) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(multiplier)) or float(multiplier)<1.0 or not _integer(min_safe) or int(min_safe)<0:
+		return _fail("원본 상급 가루 배수·안전 강화 열 확인 실패","advanced_row_format")
 	var increment: int = 0
 	if element_level>0:
-		var found: bool = false
-		for row: Dictionary in SOURCE.rows("AdvancedBlessPowderIncrement"):
-			if int(row.get("DissolutionMethodType",-1))==method and int(row.get("EnchantLevel",-1))==element_level and _integer(row.get("Amount")): increment = int(row.Amount); found = true
-		if not found and method==24: return _fail("이 속성 단계의 원본 증가량 행이 없습니다","increment_missing")
-	return {"ok":true,"method":method,"grade_id":grade,"category":category,"amount":int(rows[0].Amount)+increment,"base":int(rows[0].Amount),"increment":increment,"approximation":"TWILIGHT_ADVANCED_DISSOLVE_BASE_PLUS_ELEMENT_INCREMENT"}
+		for inc: Dictionary in SOURCE.rows("AdvancedBlessPowderIncrement"):
+			if int(inc.get("DissolutionMethodType",-1))==method and int(inc.get("EnchantLevel",-1))==element_level and _integer(inc.get("Amount")): increment = int(inc.Amount)
+	var helper: int = item_safe_enchant(item_class_id,int(row.get("ItemEnchantScrollID",-1)))
+	var safe: int = maxi(int(min_safe),helper)
+	var amount: int = advanced_amount(int(row.Amount),float(multiplier),enchant,safe,increment,count)
+	if amount<0: return _fail("상급 가루 수량이 표현 범위를 넘습니다","overflow")
+	return {"ok":true,"method":method,"grade_id":grade,"category":category,"amount":amount,"base":int(row.Amount),"increment":increment,
+		"enchant":enchant,"count":count,"multiplier":float(multiplier),"min_safe":int(min_safe),"helper_safe":helper,"safe":safe,
+		"approximation":"TWILIGHT_ADVANCED_DISSOLVE_HELPER_SAFE" if helper>=0 else "TWILIGHT_ADVANCED_DISSOLVE_MIN_SAFE_ONLY"}
+
+## TWILIGHT 근사 of the original "helper safe": leading 100% (1000000) Success
+## stages in BmItemEnchantProView for the probability group shared by the item's
+## EnchantEquipGroupID and the scroll group. Bless code 1 rows win over 0 rows.
+## -1 when the group is missing or not unique.
+static func item_safe_enchant(item_class_id: int, scroll_group: int) -> int:
+	if scroll_group<0: return -1
+	var equip: Dictionary = {}
+	for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_class_id):
+		var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
+		if str(SOURCE.row("BonusType",int(bonus.get("BonusTypeID",-1))).get("Name",""))=="EnchantEquipGroupID" and _integer(bonus.get("Value")): equip[int(bonus.Value)] = true
+	if equip.is_empty(): return -1
+	var probability: Dictionary = {}
+	for map: Dictionary in SOURCE.rows("ItemEnchantEquipGroupMapping"):
+		if equip.has(int(map.get("ItemEnchantEquipGroupID",-1))): probability[int(map.get("ItemEnchantProbabilityGroupID",-1))] = true
+	var groups: Array = []
+	for map: Dictionary in SOURCE.rows("ItemEnchantScrollGroupMapping"):
+		var group: int = int(map.get("ItemEnchantProbabilityGroupID",-1))
+		if int(map.get("ItemEnchantScrollGroupID",-1))==scroll_group and probability.has(group) and group not in groups: groups.append(group)
+	if groups.size()!=1: return -1
+	var success: Dictionary = {}
+	for view: Dictionary in SOURCE.rows("BmItemEnchantProView"):
+		if int(view.get("ItemEnchantProbabilityGroupID",-1))!=groups[0]: continue
+		var code: int = int(view.get("TargetItemBlessCode",-1)); var level: int = int(view.get("EnchantLevel",-1))
+		if code==1 or (code==0 and not success.has(level)): success[level] = int(view.get("Success",0))
+	var safe: int = 0
+	while int(success.get(safe,0))==1000000: safe += 1
+	return safe
 
 static func grade_bounds(method: int, category: int) -> Array:
 	var names: Array = []
