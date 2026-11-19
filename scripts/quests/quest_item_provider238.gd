@@ -238,8 +238,12 @@ func try_use(world: Node, record: Dictionary) -> bool:
 		var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		var aligned: bool=durable is Dictionary
 		if aligned:
-			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp","mp"]:
-				if durable.get(key)!=JSON.parse_string(JSON.stringify(world.get(key))):aligned=false;break
+			# Compared in the form the save writer stores (save_provenance_trim.gd).
+			var live: Dictionary={}
+			for key: String in ["inventory","item_instances","gold","active_item_buffs","item_use_cooldowns","hp","mp"]:live[key]=world.get(key)
+			var written: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(live)
+			for key: String in live:
+				if durable.get(key)!=written.get(key):aligned=false;break
 		if not aligned:
 			# The unchanged shared consumer may report an error after the atomic
 			# writer has committed. Preserve that save and require reload before

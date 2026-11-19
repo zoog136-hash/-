@@ -53,6 +53,7 @@ var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
+const SAVE_TRIM = preload("res://scripts/loot/save_provenance_trim.gd")
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
@@ -6887,6 +6888,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if observed_content.has("state"):
 		data["unconfirmed523"] = observed_content.state
 	var save_started_usec: int = Time.get_ticks_usec()
+	data = SAVE_TRIM.payload(data)
 	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
@@ -6973,6 +6975,9 @@ func _load_game(quiet: bool) -> void:
 		if CHARACTER_ACCOUNT.session.get("path")!=save_path() or CHARACTER_ACCOUNT.session.get("id")!=selected.id:
 			source_save_blocked=true; hud.show_message("선택 캐릭터가 변경되었습니다. 로비에서 다시 접속하세요."); return
 	preload("res://scripts/resources/current523_definition_rows.gd").normalize_loaded_save(value)
+	# Older saves: drop acquisition history no rule reads (drop proofs, receipt
+	# row copies, per-floor pickup receipts). Owned state is unchanged.
+	SAVE_TRIM.loaded_save(value)
 	character_dormant_physical = CHARACTER_ACCOUNT.dormant_items(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)

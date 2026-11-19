@@ -75,7 +75,7 @@ static func use(world: Node,record: Dictionary,physical_id: String="")->Dictiona
  var error: Error=world._save_game(true,payload)
  if error!=OK:
   var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
-  var expected: Dictionary=JSON.parse_string(JSON.stringify(payload));var confirmed: bool=durable is Dictionary
+  var expected: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(payload);var confirmed: bool=durable is Dictionary
   if confirmed:
    for key: String in expected:
     if durable.get(key)!=expected[key]:confirmed=false;break

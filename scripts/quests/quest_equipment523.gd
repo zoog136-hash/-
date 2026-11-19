@@ -296,7 +296,7 @@ func commit(world: Node,quoted: Dictionary)->Dictionary:
   if world.get("patch523_owner_state_problem") is String and not world.patch523_owner_state_problem.is_empty():
    world.quest_service.save_blocked=true;return fail("공동 장비 저장 결과 미확정 · 재사용 중지")
   var parser:=JSON.new();var parsed: Error=parser.parse(FileAccess.get_file_as_string(world.save_path()))
-  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true));var confirmed: bool=disk is Dictionary
+  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(payload);var confirmed: bool=disk is Dictionary
   if confirmed:
    for key: String in expected:
     if disk.get(key)!=expected[key]:confirmed=false;break
