@@ -482,7 +482,7 @@ func cash_shop(world: Node, ctl: Object) -> void:
 		await tap(tab_point)
 		for frame: int in 3: await process_frame
 		evidence["tab_tap"] = {"point": str(tab_point), "tab": window.tab, "target": target_tab, "result": window.get("last_result")}
-		check(window.tab == target_tab and int(window.get("last_result").get("cards", -1)) == mini(tabs[target_tab].products.size(), SHOP_WINDOW.MAX_CARDS), "tapping a tab lists that category (%s)" % str(tabs[target_tab].name))
+		check(window.tab == target_tab and int(window.get("last_result").get("cards", -1)) == tabs[target_tab].products.size(), "tapping a tab lists that category (%s)" % str(tabs[target_tab].name))
 	# Buy one offer paid in a game currency.
 	var offer: int = -1
 	var quote: Dictionary = {}
@@ -529,8 +529,9 @@ func cash_shop(world: Node, ctl: Object) -> void:
 	window.set("_scroll", -SHOP_WINDOW.COLUMN_WIDTH * float(floori(at_card / 2.0)))
 	window.refresh()
 	for frame: int in 3: await process_frame
-	var cards: Node2D = window.get("_content")
-	var card_button: Variant = routable_button(cards.get_child(at_card)) if at_card >= 0 and at_card < cards.get_child_count() else null
+	# The list is virtual: the built card of that product (scrolled into view).
+	var built: Dictionary = window.get("_cards")
+	var card_button: Variant = routable_button(built[at_card]) if built.has(at_card) else null
 	var card_point: Vector2 = button_point(card_button)
 	evidence["card_hit"] = hit_report(ctl, card_point, card_button)
 	await tap(card_point)
