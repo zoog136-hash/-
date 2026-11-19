@@ -556,6 +556,44 @@ static func _current_host_condition_admission(detail: Dictionary) -> Dictionary:
 ## they are shared with the cached document instead of deep-copied on every
 ## death; only the containers a resolution writes get their own copy.
 const WORKING_WRITES: Array[String] = ["bindings","unresolved_item_ids","host_binding_problems","binding_provenance","unavailable_source_definitions"]
+## The two sourceId indexes of the item catalog the bindings read. Each kill
+## used to rebuild them from every catalog item (tens of thousands): ~40 ms
+## of the ~70 ms an auto-hunt kill took on a PC. Rebuilt when the catalog
+## dictionary is replaced or resized, or when an indexed item no longer is
+## that catalog's entry under its name (in-place replacement).
+static var _index_catalog: Dictionary = {}
+static var _index_catalog_size: int = -1
+static var _indexes: Dictionary = {}
+
+static func _catalog_index(unique: Dictionary, kind: String) -> Dictionary:
+	if not is_same(unique, _index_catalog) or unique.size() != _index_catalog_size:
+		_index_catalog = unique
+		_index_catalog_size = unique.size()
+		_indexes.clear()
+	if not _indexes.has(kind):
+		var built: Dictionary = {}
+		for item: Variant in unique.values():
+			if not item is Dictionary: continue
+			var source_id: String = str(item.get("sourceId",""))
+			if kind == "host":
+				if item.get("source") != "inven" or item.get("source_m_native_item",false) or item.get("source_legacy_catalog_alias",false): continue
+				if not source_id.is_valid_int() or int(source_id) <= 0 or source_id != str(int(source_id)): continue
+			if not built.has(source_id): built[source_id] = []
+			built[source_id].append(item)
+		_indexes[kind] = built
+	return _indexes[kind]
+
+## False when a listed item's name now maps to another catalog entry;
+## otherwise the indexes are dropped so the caller's next read rebuilds them.
+static func _index_current(unique: Dictionary, items: Array) -> bool:
+	for item: Variant in items:
+		if not item is Dictionary: continue
+		var entry: Variant = unique.get(str((item as Dictionary).get("name","")), null)
+		if entry != null and not is_same(entry, item):
+			_indexes.clear()
+			return false
+	return true
+
 static func _working_document(original: Dictionary) -> Dictionary:
 	var document: Dictionary = original.duplicate(false)
 	for key: String in WORKING_WRITES:
@@ -576,13 +614,7 @@ static func _current_host_bindings(original: Dictionary, catalog: Dictionary) ->
 			document.unresolved_item_ids[id] = "missing_current_native_record_projection"
 			document.host_binding_problems[id] = "current_unique_catalog_index_missing"
 		return document
-	var by_id: Dictionary = {}
-	for item: Variant in unique.values():
-		if not item is Dictionary or item.get("source") != "inven" or item.get("source_m_native_item",false) or item.get("source_legacy_catalog_alias",false): continue
-		var source_id: String = str(item.get("sourceId",""))
-		if not source_id.is_valid_int() or int(source_id) <= 0 or source_id != str(int(source_id)): continue
-		if not by_id.has(source_id): by_id[source_id] = []
-		by_id[source_id].append(item)
+	var by_id: Dictionary = _catalog_index(unique, "host")
 	for id: String in document.source_item_references:
 		var detail: Dictionary = document.source_item_references[id]
 		var source: Dictionary = detail.get("item_class",{})
@@ -599,6 +631,8 @@ static func _current_host_bindings(original: Dictionary, catalog: Dictionary) ->
 			continue
 		if document.unresolved_item_ids.has(id): continue
 		var candidates: Array = by_id.get(id,[])
+		if not _index_current(unique, candidates):
+			by_id = _catalog_index(unique, "host"); candidates = by_id.get(id,[])
 		var reason: String = "no_unique_exact_native_ID_in_existing_catalog"
 		if candidates.size() == 1:
 			var item: Dictionary = candidates[0]
@@ -629,12 +663,7 @@ static func _current_native_bindings(document: Dictionary,catalog: Dictionary,co
 	if document.is_empty():return {}
 	var index: Variant=catalog.get("patch523_by_name",{})
 	if not index is Dictionary:return document
-	var by_source: Dictionary={}
-	for value: Variant in index.values():
-		if not value is Dictionary:continue
-		var key: String=str(value.get("sourceId",""))
-		if not by_source.has(key):by_source[key]=[]
-		by_source[key].append(value)
+	var by_source: Dictionary=_catalog_index(index, "source")
 	var supply: Script=load("res://scripts/cards/native_awakening_supply.gd")
 	for id: String in document.source_item_references:
 		if document.bindings.has(id):continue
@@ -648,6 +677,8 @@ static func _current_native_bindings(document: Dictionary,catalog: Dictionary,co
 				if evidence.get("reason")!="source_item_lifetime_not_represented_by_exact_host_DTO":unresolved=true
 			if unresolved:document.unresolved_item_ids[id]=condition.reason;continue
 		var choices: Array=by_source.get("m523:item:"+id,[])
+		if not _index_current(index, choices):
+			by_source=_catalog_index(index, "source"); choices=by_source.get("m523:item:"+id,[])
 		if choices.size()!=1:continue
 		var item: Dictionary=choices[0]
 		var typed: bool=supply!=null and supply.call("exact",item,int(id))

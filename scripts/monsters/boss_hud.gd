@@ -4,6 +4,24 @@ var panel: PanelContainer
 var title: Label
 var bar: ProgressBar
 var controller: Node
+## Boss slots of the controller's list. Scanning every slot (1,579 on
+## aden_world) each frame only to find the few boss ones cost ~0.3 ms per PC
+## frame. Rebuilt when the slot list is replaced or resized.
+var _boss_cache: Array[Dictionary] = []
+var _boss_source: Array = []
+var _boss_source_size: int = -1
+
+func _boss_slots() -> Array[Dictionary]:
+	var source: Array = controller.slots
+	if not is_same(source, _boss_source) or source.size() != _boss_source_size or (not source.is_empty() and not is_same(source[0], _boss_first)):
+		_boss_source = source
+		_boss_source_size = source.size()
+		_boss_first = source[0] if not source.is_empty() else null
+		_boss_cache.clear()
+		for slot: Dictionary in source:
+			if str(slot.region.get("mode","")) == "boss": _boss_cache.append(slot)
+	return _boss_cache
+var _boss_first: Variant = null
 
 func _ready() -> void:
 	layer = 13
@@ -42,8 +60,7 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(controller): return
 	var nearest: TwilightMonster = null
 	var distance: float = 1000.0
-	for slot: Dictionary in controller.slots:
-		if str(slot.region.get("mode","")) != "boss": continue
+	for slot: Dictionary in _boss_slots():
 		var monster: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
 		if not is_instance_valid(monster) or monster.dead: continue
 		var d: float = monster.global_position.distance_to(controller.world.player.global_position)

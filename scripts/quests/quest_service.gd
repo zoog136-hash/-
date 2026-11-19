@@ -23,17 +23,74 @@ var claimed: Dictionary = {}
 var progress: Dictionary = {}
 var day_key: int = -1
 var problem: String = ""
+## Repeatable original quests (source_quest523.REPEAT_PERIODS, TWILIGHT 근사):
+## quest id -> {"period": reset period key of the last completion, "count":
+## completions in that period, "again": whether that completion's reward plan
+## can be granted again (repeat_reward_problem() was "")}. claimed[id] stays the permanent "completed at
+## least once" fact (prerequisites, reward receipts); this ledger only decides
+## whether the same quest can be completed again in the current period.
+var repeats: Dictionary = {}
+## A repeat grants again only rewards that need no per-grant receipt (EXP,
+## adena, currency stacks). Original held/native items keep exactly one
+## receipt per (quest, reward), so those quests stay one-time.
+const REPEAT_REWARD_PROBLEM := "반복 보상에 1회 지급 영수증 아이템 포함 · 1회만 지급(TWILIGHT 근사)"
+const MAX_REPEAT_COUNT := 1000
 
 static func korean_daily_key(unix_time: int) -> int:
 	# 05:00 Korea time = 20:00 UTC of the preceding day.
 	# A fixed UTC offset is intentional for TWILIGHT's Korean playtest rules.
 	return floori(float(unix_time + 4 * 3600) / 86400.0)
 
+## Week key from Wednesday 05:00 KST: the same value as
+## domination_stone_runtime.week_key (one game calendar, 사용자 결정 2026-11-09).
+static func korean_week_key(unix_time: int) -> int:
+	var day: int = korean_daily_key(unix_time)
+	# KST day 0 (1970-01-01 05:00 KST) is a Thursday (weekday 4); Wednesday = 3.
+	return day - posmod(posmod(4 + day, 7) - 3, 7)
+
+static func period_key(period: String, unix_time: int) -> int:
+	return korean_week_key(unix_time) if period == "weekly" else korean_daily_key(unix_time)
+
+## Whether claimed repeatable `id` can be completed again at `now` (from the
+## given claim map and ledger, so staged transactions use their own copies).
+## A clock moved backwards never opens a new period.
+func repeat_open(id: String, now: int, claim_map: Dictionary = claimed, ledger: Dictionary = repeats) -> bool:
+	if not claim_map.has(id): return false
+	var rule: Dictionary = SOURCE.repeat_rule(index.get(id, {}))
+	if rule.is_empty(): return false
+	var entry: Variant = ledger.get(id)
+	if not entry is Dictionary or not bool(entry.get("again", true)): return false
+	if period_key(str(rule.period), now) > int(entry.period): return true
+	return int(entry.count) < int(rule.limit)
+
+## The ledger entry after one more completion of `id` at `now` with `plan`,
+## or {} for a one-time quest.
+func repeat_after(id: String, now: int, ledger: Dictionary, plan: Dictionary) -> Dictionary:
+	var rule: Dictionary = SOURCE.repeat_rule(index.get(id, {}))
+	if rule.is_empty(): return {}
+	var key: int = period_key(str(rule.period), now)
+	var entry: Variant = ledger.get(id)
+	var again: bool = repeat_reward_problem(plan).is_empty()
+	if entry is Dictionary and int(entry.period) >= key: return {"period":int(entry.period),"count":mini(MAX_REPEAT_COUNT,int(entry.count)+1),"again":again}
+	return {"period":key,"count":1,"again":again}
+
+## "" when a repeat of this reward plan grants only receipt-free rewards.
+static func repeat_reward_problem(plan: Dictionary) -> String:
+	if not plan.get("ok", false): return str(plan.get("error", REPEAT_REWARD_PROBLEM))
+	for item: Variant in plan.get("items", []):
+		if not item is Dictionary or not bool(item.get("stack_only", false)): return REPEAT_REWARD_PROBLEM
+	return ""
+
+## Done for the player: claimed, and not open again in this period.
+func done(id: String, now: int = -1) -> bool:
+	return claimed.has(id) and not repeat_open(id, now if now >= 0 else int(Time.get_unix_time_from_system()))
+
 func configure(items: Array, monsters: Array) -> bool:
 	quests.clear()
 	index.clear()
 	claimed.clear()
 	progress.clear()
+	repeats.clear()
 	day_key = -1
 	problem = ""
 	save_blocked = false
@@ -187,7 +244,7 @@ func _entries(level: int, inventory: Dictionary, now: int, category: Variant=nul
 		var row: Dictionary = source.detached(resident) if source != null and source.has_method("detached") else resident.duplicate(true)
 		var quest: Dictionary = row.duplicate(false) if row.has("source_id") else resident
 		var quest_id: String = str(quest["id"])
-		row["completed"] = bool(claimed.get(quest_id, false))
+		row["completed"] = done(quest_id, now if now >= 0 else -1) if quest.has("source_id") else bool(claimed.get(quest_id, false))
 		row["available"] = level >= int(quest.get("min_level", 1))
 		if quest.has("source_id"):
 			var context: Dictionary = source_context.duplicate()
@@ -220,6 +277,7 @@ func text_page(level: int, category: String, requested_page: int, page_size: int
 		var quest: Dictionary = quests[at]
 		var native: bool = quest.has("source_id")
 		var completed: bool = bool(claimed.get(str(quest.id),false))
+		if native and completed: completed = done(str(quest.id), now)
 		if not native and (not completed or state!="history"): continue
 		if native and state=="history": continue
 		var group: String = "common" if not native and quest.get("category")=="daily" else str(quest.get("category",""))
@@ -242,12 +300,21 @@ func text_page(level: int, category: String, requested_page: int, page_size: int
 	var at_time: int = now if now>=0 else int(Time.get_unix_time_from_system())
 	for index_in_page: int in range(page*size,mini(matches.size(),(page+1)*size)):
 		var quest: Dictionary = quests[matches[index_in_page]]
-		var completed: bool = bool(claimed.get(str(quest.id),false))
+		var completed: bool = done(str(quest.id),at_time) if quest.has("source_id") else bool(claimed.get(str(quest.id),false))
 		var reason: String = ""
 		if not completed:
 			if save_blocked: reason="저장 보호 중"
 			elif quest.has("source_id"): reason=source.gate(quest,context,claimed,at_time)
-		rows.append({"id":str(quest.id),"source_id":int(quest.get("source_id",0)),"title":str(quest.get("title","")),"completed":completed,"can_accept":not completed and quest.has("source_id") and reason.is_empty(),"status":"완료" if completed else ("수락 가능" if reason.is_empty() else reason)})
+		var status: String = "완료" if completed else ("수락 가능" if reason.is_empty() else reason)
+		var rule: Dictionary = SOURCE.repeat_rule(quest) if quest.has("source_id") else {}
+		if not rule.is_empty():
+			var cycle: String = "일간 05시" if rule.period == "daily" else "주간 수요일 05시"
+			var entry: Variant = repeats.get(str(quest.id))
+			var used: int = int(entry.count) if entry is Dictionary and period_key(str(rule.period),at_time) <= int(entry.period) else 0
+			if completed and entry is Dictionary and not bool(entry.get("again",true)): status = "완료 · " + REPEAT_REWARD_PROBLEM
+			elif completed: status = "완료 · 다음 초기화 %s (%d/%d)" % [cycle,used,int(rule.limit)]
+			elif claimed.has(str(quest.id)) and reason.is_empty(): status = "반복 수락 가능 · %s 초기화 (%d/%d)" % [cycle,used,int(rule.limit)]
+		rows.append({"id":str(quest.id),"source_id":int(quest.get("source_id",0)),"title":str(quest.get("title","")),"completed":completed,"can_accept":not completed and quest.has("source_id") and reason.is_empty(),"status":status})
 	return {"rows":rows,"matches":matches.size(),"page":page,"pages":pages}
 
 ## The complete row of an index/quests row (original rows are compact in
@@ -345,6 +412,15 @@ static func validate_saved_state(saved: Variant) -> String:
 			excluded_ids[int(entry.reward_id)]=true
 			var expected: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(entry.get("item_class_id",0)))
 			if expected.is_empty() or JSON.parse_string(JSON.stringify(expected))!=JSON.parse_string(JSON.stringify(entry.get("evidence"))):return "원본 더미 선언 근거 불일치 · 제외 기록 보존"
+	var ledger: Variant = saved.get("repeats",{})
+	if not ledger is Dictionary or ledger.size()>20000: return "반복 퀘스트 기록 형식 오류"
+	for id: Variant in ledger:
+		var entry: Variant = ledger[id]
+		if not id is String or not id.begins_with("m523:quest:") or saved.get("claimed",{}).get(id)!=true or not entry is Dictionary: return "반복 퀘스트 기록 관계 오류"
+		for key: String in ["period","count"]:
+			var number: Variant = entry.get(key)
+			if not (number is int or number is float) or not is_finite(float(number)) or float(number)!=floorf(float(number)): return "반복 퀘스트 기록 값 오류"
+		if int(entry.period)<0 or int(entry.period)>10000000 or int(entry.count)<1 or int(entry.count)>MAX_REPEAT_COUNT or (entry.has("again") and not entry.again is bool): return "반복 퀘스트 기록 값 오류"
 	var requests: Variant = saved.get("ui_requests",{})
 	if not requests is Dictionary or requests.size()>20000: return "퀘스트 UI 기록 오류"
 	for id: Variant in requests:
@@ -361,6 +437,7 @@ func export_state() -> Dictionary:
 	var result: Dictionary = {"schema_version":2, "claimed":claimed.duplicate(true), "progress":progress.duplicate(true), "day_key":day_key,"unlocked":unlocked.duplicate(true),"ui_requests":ui_requests.duplicate(true)}
 	if not item_grants.is_empty(): result["item_grants"]=item_grants.duplicate(true)
 	if not source_dummy_rewards.is_empty():result["source_dummy_rewards"]=source_dummy_rewards.duplicate(true)
+	if not repeats.is_empty(): result["repeats"]=repeats.duplicate(true)
 	return result
 
 func import_state(saved: Variant, now: int = -1) -> bool:
@@ -384,6 +461,15 @@ func import_state(saved: Variant, now: int = -1) -> bool:
 		if index.has(id) or id.begins_with("m523:quest:") or id.begins_with("twilight:"): progress[id] = int(saved.progress[id])
 	for id: String in saved.get("unlocked",{}):
 		if bool(saved.unlocked[id]): unlocked[id] = true
+	repeats.clear()
+	for id: String in saved.get("repeats",{}):
+		repeats[id] = {"period":int(saved.repeats[id].period),"count":int(saved.repeats[id].count),"again":bool(saved.repeats[id].get("again",true))}
+	# A repeatable quest claimed before this ledger existed counts as done in
+	# the current period (never a second grant before the next reset).
+	for id: String in claimed:
+		if repeats.has(id): continue
+		var rule: Dictionary = SOURCE.repeat_rule(index.get(id, {}))
+		if not rule.is_empty(): repeats[id] = {"period":period_key(str(rule.period),at),"count":int(rule.limit),"again":true}
 	# Retain the saved high-water date even if the device clock moved backwards.
 	day_key = maxi(0,int(saved.get("day_key",day_key)))
 	_advance_day(at)
