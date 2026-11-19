@@ -23,6 +23,18 @@ class FakeTiles extends RefCounted:
 		return image
 	func cache_size() -> int: return 1
 
+## Decodes on a "worker": an atlas is ready only after a request and a pump.
+class FakeAsyncTiles extends FakeTiles:
+	var requested: Dictionary = {}
+	var ready: Dictionary = {}
+	func prefetch(id: int) -> bool:
+		if ready.has(id): return true
+		requested[id] = true
+		return false
+	func pump() -> void:
+		for id: int in requested: ready[id] = true
+		requested.clear()
+
 func check(value: bool, message: String) -> void:
 	checks += 1
 	if not value: failures.append(message)
@@ -143,6 +155,29 @@ func run() -> void:
 	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	check(renderer._build_frame() and renderer.frame_metrics().draw_commands == 1 and renderer.frame_metrics().block_draw_commands == 2, "a tile across a block edge is drawn in both blocks but counted once")
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
+	# Margin blocks wait for their atlases' worker decode; on-screen ones never wait.
+	# Shift the screen so its right edge (1500) is just before a block edge (1536).
+	var async_tiles := FakeAsyncTiles.new()
+	renderer._tile_pack = async_tiles
+	var saved_canvas: Transform2D = root.canvas_transform
+	root.canvas_transform = Transform2D(0.0, Vector2(renderer._view_rect().end.x - 1500.0, 0.0)) * saved_canvas
+	var view_now: Rect2 = renderer._view_rect()
+	var here := Vector2i(view_now.get_center())
+	var margin_point := Vector2i(1540, here.y)
+	renderer._chunk_rects = {"synthetic":Rect2(Vector2(here) - Vector2(32, 32), Vector2(64, 64)), "margin":Rect2(Vector2(margin_point) - Vector2(32, 32), Vector2(64, 64))}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([here.x,here.y,2147483903])}, "margin":{-2:PackedInt64Array([margin_point.x,margin_point.y,(7 << 8) | 1])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	var near_cell := Vector2i(here.x >> PLAY.BLOCK_SHIFT, here.y >> PLAY.BLOCK_SHIFT)
+	var far_cell := Vector2i(margin_point.x >> PLAY.BLOCK_SHIFT, margin_point.y >> PLAY.BLOCK_SHIFT)
+	check(not PLAY._block_rect(far_cell).intersects(view_now) and view_now.grow(PLAY.BUILD_MARGIN).has_point(Vector2(margin_point)), "fixture: the far block is in the margin only")
+	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
+	async_tiles.pump()
+	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	root.canvas_transform = saved_canvas
+	renderer._tile_pack = tiles
+	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
+	renderer._raw_chunks = {"synthetic":{-2:PackedInt64Array([0,0,2147483903,0,0,4294967295])}}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	var requested: Array[String] = []
 	renderer.safe_return_requested.connect(func(reason: String) -> void: requested.append(reason))
 	var too_many := PackedInt64Array()

@@ -638,6 +638,33 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 	return {"commands": commands, "atlases": atlases, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
 
 
+## Asks the tile pack to decode, on workers, every atlas the block draws;
+## true when all of them are ready (or the pack decodes only on demand).
+func _request_block_tiles(cell: Vector2i) -> bool:
+	if not _tile_pack.has_method("prefetch"): return true
+	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
+	var ready: bool = true
+	var asked: Dictionary = {}
+	for member: String in _chunk_rects:
+		if not (_chunk_rects[member] as Rect2).intersects(near): continue
+		var layers: Dictionary = _read_chunk(member)
+		if layers.is_empty(): continue
+		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell, {})
+		for layer: int in bins:
+			if not include_objects and layer >= 0: continue
+			var records: PackedInt64Array = layers[layer]
+			for index: int in (bins[layer] as PackedInt32Array):
+				var ref: int = records[index + 2]
+				if ref == 4294967295: continue
+				var tile_id: int = ref >> 8
+				if asked.has(tile_id): continue
+				asked[tile_id] = true
+				if not _tile_pack.has_tile(tile_id): continue
+				if not _tile_pack.call("prefetch", tile_id): ready = false
+	return ready
+
+
 ## One block's render target, drawn once (UPDATE_ONCE) from its commands.
 func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	var viewport := SubViewport.new()
@@ -719,6 +746,10 @@ func _build_frame() -> bool:
 	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
 	var cells: Array[Vector2i] = []
 	var margin_bakes: int = 0
+	for bx: int in range(first.x, last.x + 1):
+		for by: int in range(first.y, last.y + 1):
+			var wanted := Vector2i(bx, by)
+			if not _blocks.has(wanted) and _block_rect(wanted).intersects(screen): _request_block_tiles(wanted)
 	var draws: int = 0
 	var fresh_atlases: Dictionary = {}
 	var partial: bool = false
@@ -730,9 +761,11 @@ func _build_frame() -> bool:
 		for by: int in range(first.y, last.y + 1):
 			var cell := Vector2i(bx, by)
 			if not _blocks.has(cell):
-				# Blocks on screen bake now; margin blocks a few per refresh.
+				# Blocks on screen bake now (their atlases were requested above
+				# and decode in parallel); margin blocks bake a few per refresh,
+				# once every atlas they use has decoded on a worker.
 				var on_screen: bool = _block_rect(cell).intersects(screen)
-				if not on_screen and margin_bakes >= MARGIN_BAKES_PER_REFRESH:
+				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or not _request_block_tiles(cell)):
 					partial = true
 					continue
 				var built: Dictionary = _block_commands(cell)
