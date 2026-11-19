@@ -19,6 +19,9 @@ const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
 const TownNpcs=preload("res://scripts/npc/source523_town_npcs.gd")
 const ShopCatalog=preload("res://scripts/shop/source523_shop_catalog.gd")
+const Calculator=preload("res://scripts/ui/original_ui/source_main_calculator.gd")
+const Runtime=preload("res://scripts/shop/source523_shop_runtime.gd")
+const Router=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const ROOT="UI/Store/Store_All.csb"
 const BAG="UI/Store/Store_Inventory.csb"
 const GOODS="UI/Store/Store_PurchaseAuto.csb"
@@ -55,6 +58,9 @@ var _goods: Array=[]
 var _bag_rows: Array=[]
 var _last_out: Dictionary={}
 var last_result: Dictionary={}
+## The original quantity keypad (Common_Calculator) of a purchase.
+var calculator: RefCounted=Calculator.new()
+var last_purchase: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
@@ -62,6 +68,7 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	_pack=pack
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
+	calculator.configure(pack)
 	return {"ok":true,"configured":true}
 
 func is_open() -> bool:
@@ -87,6 +94,7 @@ func refresh() -> Dictionary:
 	return _stage()
 
 func close() -> void:
+	calculator.close()
 	var previous: Node2D=_scene
 	_scene=null
 	_bag.content=null
@@ -265,6 +273,9 @@ func _fill_goods(hud: Node, world: Object, root: Node2D, out: Dictionary) -> Dic
 			"Panel/Slot/Text_Amount":{"visible":false},
 		},row_out)
 		if not row_built.get("ok",false):return row_built
+		for suffix: String in ["Panel/Btn_Calculator","Panel/Slot/Btn"]:forward_drag(row_built.scene,row_out,suffix,Callable(_list,"input"))
+		# The product picture is no bag item: its tap buys like Btn_Calculator.
+		_route_slots(row_built.scene)
 		_tree.add_row(content,ROW,row_built.scene,index,size,ROW_GAP)
 		if _class_picture(row_built.scene,row_out,"Panel/Slot/Sp_IconSample",int(entry.class_id)):pictures+=1
 	_list.content=content
@@ -292,6 +303,7 @@ func _add_bag_lines(world: Object, content: Node2D) -> Dictionary:
 		var built: Dictionary=_tree.scene_of(SET,spec,row_out)
 		if not built.get("ok",false):return built
 		var scene: Node2D=built.scene
+		for index: int in range(SET_SLOTS.size()):forward_drag(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Btn",Callable(_bag,"input"))
 		scene.position=BAG_ROW_POSITION+Vector2(0.0,Storage.ROW_PITCH*float(line))
 		content.add_child(scene)
 		for index: int in range(SET_SLOTS.size()):
@@ -324,9 +336,12 @@ func _class_picture(root: Node2D, out: Dictionary, suffix: String, class_id: int
 func _bag_tapped() -> Dictionary:
 	return {"ok":true,"shown_only":true}
 
-## A product row -> the original merchant quote, the quantity confirmation
-## and world.source_shop.buy_merchant (the 원본 상점 panel's purchase).
+## A product row -> the original merchant quote, the original quantity keypad
+## (Common_Calculator) and world.source_shop.buy_merchant: the price is paid
+## and the goods go into the bag in one save (an original NPC 상점 purchase
+## goes straight into the bag; it is refused when the bag cannot take it).
 func _buy_requested(index: int) -> Dictionary:
+	if calculator.is_open():return {"ok":true,"ignored_under_keypad":true}
 	if _list.moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	if index<0 or index>=_goods.size():return {"ok":true,"empty":true}
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -338,24 +353,71 @@ func _buy_requested(index: int) -> Dictionary:
 	if not quote.get("ok",false):
 		hud.show_message(str(quote.get("reason","구매할 수 없는 상품입니다")))
 		return {"ok":true,"refused":str(quote.get("reason",""))}
+	var limit: int=affordable(quote,world)
+	if limit<1:
+		hud.show_message("NPC 구매 재화 부족")
+		return {"ok":true,"refused":"NPC 구매 재화 부족"}
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"purchase").bind(id)) if parent!=null else _fail("source_store_window_host_unavailable")
+	if opened.get("handled",false):return {"ok":true,"requested":id,"calculator":true,"maximum":limit}
+	# No keypad member: the existing quantity confirmation.
 	var name: String=str(_goods[index].name)
-	var body: String="%s\n단가 %s · 구매할 수량을 선택하세요\n구매분은 보관함 주문으로 저장되며 보관함 수령 시 지급됩니다" % [name,price_text(int(_goods[index].price))]
-	hud.confirm_action("원본 상점 · 구매",body,"구매",func(amount: int) -> void:
-		var result: Dictionary=runtime.call("buy_merchant",id,amount)
-		hud.show_message(str(result.get("reason","거래를 완료했습니다")))
-		if result.get("ok",false):
-			world.call("_update_hud")
-			hud.refresh_inventory(world.get("inventory"))
-		refresh(),1000)
-	return {"ok":true,"requested":id}
+	var body: String="%s\n단가 %s · 구매할 수량을 선택하세요\n구매품은 가방에 바로 들어갑니다" % [name,price_text(int(_goods[index].price))]
+	hud.confirm_action("원본 상점 · 구매",body,"구매",func(amount: int) -> void: purchase(amount,id),limit)
+	return {"ok":true,"requested":id,"calculator":false,"maximum":limit}
+
+## The largest count the balance pays for (1..1000).
+static func affordable(quote: Dictionary, world: Object) -> int:
+	var payment: Dictionary=quote.get("payment",{}) if quote.get("payment") is Dictionary else {}
+	var unit: int=int(payment.get("amount",0))
+	if unit<=0:return 0
+	var binding: Dictionary=quote.get("payment_binding",{}) if quote.get("payment_binding") is Dictionary else {}
+	var balance: int=int(world.get("gold")) if binding.get("gold",false) else int(world.get("inventory").get(str(binding.get("name","")),0))
+	@warning_ignore("integer_division")
+	return clampi(balance/unit,0,1000)
+
+## Pays `amount` of merchant row `id` and puts the goods into the bag.
+func purchase(amount: int, id: int) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_store_window_host_unavailable")
+	var world: Object=hud.get_parent()
+	var result: Dictionary=world.get("source_shop").call("buy_merchant",id,amount,Runtime.Delivery.BAG)
+	last_purchase=result
+	hud.show_message(str(result.get("reason","거래를 완료했습니다")))
+	if result.get("ok",false):
+		world.call("_update_hud")
+		hud.refresh_inventory(world.get("inventory"))
+	refresh()
+	return result
+
+## Marks the original Common_Slot roots under `node` as router-owned (a
+## store row's product picture; PointerTransfer owns only bag/quick slots).
+static func _route_slots(node: Node) -> void:
+	var identity: Variant=node.get_meta("original_ui_source",{})
+	if identity is Dictionary and identity.get("scene")==SLOT:node.set_meta("source_slot_routed",true)
+	for child: Node in node.get_children():_route_slots(child)
+
+## A button inside a list passes its finger's drag to that list (the router's
+## `source_drag_forward`; the GUI path for a mouse).
+static func forward_drag(root: Node2D, out: Dictionary, suffix: String, input: Callable) -> void:
+	var located: Dictionary=NamedTree.locate(root,out,suffix)
+	if not located.get("ok",false):return
+	var node: Variant=located.player.source_nodes.get(located.offset)
+	var button: Variant=node.get_meta("source_button") if is_instance_valid(node) and node.has_meta("source_button") else null
+	if not is_instance_valid(button):return
+	button.set_meta(Router.DRAG_META,input)
+	var area: Variant=button.get("_input_area")
+	if area is Control and not area.gui_input.is_connected(input):area.gui_input.connect(input)
 
 func _set_tab(tab_name: String) -> Dictionary:
+	if calculator.is_open():return {"ok":true,"ignored_under_keypad":true}
 	_tab=tab_name
 	_bag.y=null
 	_list.keep()
 	return _stage()
 
 func _close_requested() -> Dictionary:
+	if calculator.is_open():return {"ok":true,"ignored_under_keypad":true}
 	close()
 	closed.emit()
 	return {"ok":true,"closed":true}

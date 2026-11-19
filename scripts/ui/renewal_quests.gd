@@ -99,7 +99,7 @@ func _exit_tree() -> void:
 func _accept(id: String) -> void:
 	if _accept_pending or not is_instance_valid(world): return
 	var service: Variant = world.get("quest_service")
-	if service==null or bool(service.claimed.get(id,false)) or service.save_blocked: return
+	if service==null or service.save_blocked or (service.has_method("done") and service.done(id)) or (not service.has_method("done") and bool(service.claimed.get(id,false))): return
 	_accept_pending = true
 	# Existing world._claim_quest -> quest_auto.claim -> atomic save. No bulk
 	# completion or reward preview; a refused write stays uncompleted.
@@ -134,6 +134,8 @@ func _render() -> void:
 			accept.pressed.connect(_accept.bind(str(quest.id)))
 			row.add_child(accept)
 	summary.text = "%s · %d개" % [CATEGORIES[selected],model.matches]
+	# No quest rows at all: say why (e.g. the original quest data was refused).
+	if service.quests.is_empty() and not str(service.problem).is_empty(): summary.text += " · " + str(service.problem)
 	page_label.text = "%d / %d 페이지" % [page+1,model.pages]
 	previous.disabled = page==0
 	next.disabled = page==model.pages-1

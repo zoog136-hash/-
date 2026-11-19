@@ -10,6 +10,7 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE_WALK = preload("res://scripts/maps/source_walk_speed.gd")
+const PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 var original_source_preview = ORIGINAL_SOURCE.new()
 var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
@@ -227,9 +228,14 @@ func _physics_step(delta: float) -> void:
 func _click_path_velocity() -> Vector2:
 	if path_index >= click_path.size():
 		return Vector2.ZERO
+	# Never turn back to a route point already walked past (walk_path_progress.gd).
+	path_index = PATH_PROGRESS.first_ahead(global_position, click_path, path_index, _route_coordinates(), _route_line_clear)
 	var next_point: Vector2 = click_path[path_index]
 	var distance: float = global_position.distance_to(next_point)
-	while distance <= 5.0:
+	# Within 5 px of a route point the walk turns to the next one, unless the
+	# field blocks that straight walk from here (a diagonal corner step the
+	# route takes from the exact cell centre): then finish on the point first.
+	while distance <= 5.0 and (distance < 0.05 or path_index + 1 >= click_path.size() or _route_line_clear(global_position, click_path[path_index + 1]) or not _route_has_field()):
 		path_index += 1
 		if path_index >= click_path.size():
 			return Vector2.ZERO
@@ -623,8 +629,30 @@ func set_click_path(points: PackedVector2Array, target: Vector2) -> void:
 	manual_navigation = false
 	if not points.is_empty(): cancel_attack()
 	click_path = points
-	path_index = 0
+	# A route searched from here starts at this cell's centre; the player may
+	# already be past it (auto pursuit searches again every 0.65 s).
+	path_index = PATH_PROGRESS.first_ahead(global_position, points, 0, _route_coordinates(), _route_line_clear)
 	navigation_agent.target_position = target
+
+## Cell coordinates of the original 523 Land the player walks on, else null.
+func _route_coordinates() -> Object:
+	var coordinates: Variant = SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null)
+	return coordinates as Object if coordinates is Object else null
+
+## The field's straight-walk test for skipping a passed route point; no field
+## (legacy A* maps) never skips.
+func _route_line_clear(from: Vector2, to: Vector2) -> bool:
+	var field: Variant = get_parent().get("field_map") if get_parent() != null else null
+	return field is Object and is_instance_valid(field) and (field as Object).has_method("line_clear") and bool((field as Object).call("line_clear", from, to))
+
+func _route_has_field() -> bool:
+	var field: Variant = get_parent().get("field_map") if get_parent() != null else null
+	return field is Object and is_instance_valid(field) and (field as Object).has_method("line_clear")
+
+## Speed (px/s) the current route walk wants this frame, 0 without a route.
+func intended_walk_speed() -> float:
+	if path_index >= click_path.size(): return 0.0
+	return _walk_velocity(global_position.direction_to(click_path[path_index]), click_move_speed).length()
 
 func clear_click_path() -> void:
 	manual_navigation = false
