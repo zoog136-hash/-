@@ -6,8 +6,12 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## - ThumbNail tab (Dungeon_Trial_Tab_ThumbNail): one
 ##   Dungeon_Trial_List_ThumbNail per group of working Challenge rows that
 ##   share their MiniAssetID (턴 언데드 1~3, 미믹 처치 1~3): the group title
-##   (TitleDescID text without its step number), ScenarioDescID text, the
-##   lock with 오픈 레벨 when no member is eligible.
+##   (TitleDescID text without its step number) and the lock with 오픈 레벨
+##   when no member is eligible. Its 200x46 Label_Info (two lines) has no
+##   short group text in the tables and every ScenarioDescID runs 3-6 lines,
+##   so it stays hidden (the scenario shows wrapped in the Detail tab); the
+##   old full-text binding failed the whole window open
+##   (original_multiline_requires_word_wrap).
 ## - Detail tab (Dungeon_Trial_Tab_Detail): the group's challenges as
 ##   Dungeon_Trial_List_Detail rows (TitleDescID, 입장레벨), the selected
 ##   one's title, scenario, completion rewards (A/B/C: name and amount of the
@@ -81,6 +85,13 @@ func groups() -> Array:
 static func desc(id: int) -> String:
 	var rows: Array[Dictionary]=Rows.related("DescData_Korean","ID",id)
 	return str(rows[-1].get("Description","")).replace("\r\n","\n") if not rows.is_empty() else ""
+
+## The scenario's first paragraph, wrapped in the detail's 350x80 Label_Info
+## (Cocos word wrap). The [맵스킬] paragraph after the blank line of the
+## renewal challenges does not fit the authored box and is left out (the
+## whole text failed the page with original_dialogue_text_continuation_required).
+static func scenario_text(text: String) -> String:
+	return text.split("\n\n",false)[0].strip_edges() if not text.strip_edges().is_empty() else ""
 
 ## The challenge's own title (TitleDescID text, else its Name).
 func title(id: int) -> String:
@@ -159,7 +170,7 @@ func _spec() -> Dictionary:
 	var row: Dictionary=_row(id)
 	spec[D+"Label_Title"]={"role":"source_text","text":title(id)}
 	spec[D+"Nd_Info/Img_Location"]={"visible":false}
-	spec[D+"Nd_Info/Label_Info"]={"role":"source_text","text":desc(int(row.get("ScenarioDescID",0)))}
+	spec[D+"Nd_Info/Label_Info"]={"role":"source_text","text":scenario_text(desc(int(row.get("ScenarioDescID",0)))),"cocos_wrap":true}
 	var shown: Array=rewards(id)
 	for i: int in range(3):
 		var letter: String=["A","B","C"][i]
@@ -212,11 +223,11 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			var first: Dictionary=_row(int(ids[0]))
 			rows.append({"member":THUMB_ROW,"spec":{"Panel/Img_Sample":{"visible":false},
 				"Panel/Label_Title":{"role":"source_text","text":group_title(ids)},
-				"Panel/Label_Info":{"role":"source_text","text":desc(int(first.get("ScenarioDescID",0)))},
+				"Panel/Label_Info":{"visible":false},
 				"Panel/Btn_Normal":{"visible":open,"activate":Callable(self,"_group").bind(i)},
 				"Btn_Normal/Sp_IconNew":{"visible":false},"Btn_Normal/Nd_Time":{"visible":false},
 				"Panel/Btn_Disabled":{"visible":not open,"activate":Callable(self,"_group").bind(i)},
-				"Btn_Disabled/Label_Info":{"role":"source_text","text":desc(int(first.get("ScenarioDescID",0)))},
+				"Btn_Disabled/Label_Info":{"visible":false},
 				"Btn_Disabled/Nd_Notice/Label_Time":{"role":"source_text","text":"오픈 레벨 : %dLv" % minimum}}})
 		var placed: Dictionary=_fill_list(root,out,T+"Nd_MenuButton/ListView",rows,NAN,true)
 		if not placed.get("ok",false):return placed

@@ -7,12 +7,16 @@ extends RefCounted
 ## line). Every rule, roll, cost and save stays in
 ## scripts/refine523/bless_refine523_service.gd; this file mounts original
 ## nodes and routes their buttons.
+## +100/+1000/직접입력 register an amount between the table's Min and Max:
+## the tables give no formula for it, so its chance is the straight line
+## between MinProbability and MaxProbability (TWILIGHT 근사, shown as such).
 ## Left as authored or empty (no rule in the tables, see
-## docs/bless_refine523_missing_rules.md): +100/+1000/직접입력 (amounts between
-## the Min and Max endpoints have no probability formula) are shown disabled;
-## the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
-## the Refine_Roulette result animation, the recipe caption and the bag tabs
-## stay inert. Btn_Help opens the original HelpBox_Refine (source_main_help_box).
+## docs/bless_refine523_missing_rules.md): the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
+## the Refine_Roulette result animation and the recipe caption stay inert.
+## The 전체 / 장비 / 소모 / 기타 bag tabs filter the 연금 재료 slots with the
+## bag's own split (targets are equipment, 상급 축복의 가루 by its catalog row),
+## and the 기본재료 slot / 재료 button show the powder owned (TWILIGHT 근사 of
+## the client's item tooltip). Btn_Help opens the original HelpBox_Refine.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
@@ -39,6 +43,8 @@ const P_ALL="Refine_All_Layout/"
 const P_ITEM="Refine_All_Layout/Refine_Item/Nd_Slot/"
 const P_INV="Refine_All_Layout/Refine_Inventory/Nd_Inventory/"
 const SET_SLOTS: Array[String]=["Slot_1","Slot_2","Slot_3","Slot_4"]
+const TABS: Array[String]=["all","equip","consume","etc"]
+const TAB_NODES={"all":"Btn_All","equip":"Btn_Equipment","consume":"Btn_Consume","etc":"Btn_Etc"}
 ## Vertical pitch between slot rows: the authored horizontal slot pitch of
 ## Inventory_Slot_Set (-117, -41, 35, 111), as the main inventory uses.
 const ROW_PITCH: float=76.0
@@ -53,6 +59,8 @@ var _help_box: RefCounted
 var _scene: Node2D
 var _selected: String=""
 var _mode: String="min"
+var _amount_editor: LineEdit
+var _tab: String="all"
 var _notice: String=""
 var _scroll_content: Node2D
 var _scroll_top: float=0.0
@@ -81,6 +89,7 @@ func open(parent: Node, world: Node) -> Dictionary:
 	_world=weakref(world)
 	_selected=""
 	_mode="min"
+	_tab="all"
 	_notice=""
 	_scroll_y=null
 	return _stage()
@@ -102,6 +111,9 @@ func selected() -> String:
 
 func mode() -> String:
 	return _mode
+
+func tab() -> String:
+	return _tab
 
 func node_keys() -> Dictionary:
 	return _last_out
@@ -125,6 +137,20 @@ func _materials(world: Node, snapshot: Dictionary) -> Array[Dictionary]:
 		rows.append({"kind":"powder","uid":"","item_class_id":RULES.ADVANCED_BLESS_POWDER_ITEM,"name":_item_name(RULES.ADVANCED_BLESS_POWDER_ITEM),"amount":int(snapshot.powder)})
 	return rows
 
+## The 연금 재료 entries of the current bag tab (the bag's own 장비 / 소모 /
+## 기타 split: targets are equipment, the powder by its catalog record).
+func _shown(world: Node, materials: Array[Dictionary]) -> Array[Dictionary]:
+	if _tab=="all":return materials
+	var out: Array[Dictionary]=[]
+	for entry: Dictionary in materials:
+		if _kind(world,entry)==_tab:out.append(entry)
+	return out
+
+static func _kind(world: Node, entry: Dictionary) -> String:
+	if entry.kind=="target":return "equip"
+	var record: Variant=world.call("_find_catalog_item_record",str(entry.name)) if world!=null and world.has_method("_find_catalog_item_record") else {}
+	return preload("res://scripts/ui/original_ui/source_main_storage_window.gd").kind_of(record if record is Dictionary else {},false)
+
 static func _item_name(item_class_id: int) -> String:
 	var row: Dictionary=RULES.item_row(item_class_id)
 	var info: Dictionary=SERVICE.D.definition_id(str(item_class_id)).get("native_record",{})
@@ -146,7 +172,8 @@ func _stage() -> Dictionary:
 	var target: Dictionary=_target(materials)
 	if target.is_empty():_selected=""
 	var quote: Dictionary=SERVICE.refine_quote(world,_selected,_mode) if not target.is_empty() else {}
-	var spec: Dictionary=_spec(snapshot,materials,target,quote)
+	var shown: Array[Dictionary]=_shown(world,materials)
+	var spec: Dictionary=_spec(snapshot,materials,target,quote,shown)
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(ROOT,spec,out)
 	if not built.get("ok",false):
@@ -157,7 +184,7 @@ func _stage() -> Dictionary:
 	if not target.is_empty():
 		if _slot_picture(next,out,P_ITEM+"Nd_Slot_Target/Refine_Slot/Nd_Slot/Common_Slot/Sp_IconSample",int(target.item_class_id),str(target.name)):pictures+=1
 		if _slot_picture(next,out,P_ITEM+"Nd_Slot/Refine_Slot/Nd_Slot/Common_Slot/Sp_IconSample",RULES.ADVANCED_BLESS_POWDER_ITEM,""):pictures+=1
-	var filled: Dictionary=_fill_inventory(next,out,materials)
+	var filled: Dictionary=_fill_inventory(next,out,shown)
 	if not filled.get("ok",false):
 		next.free()
 		last_result=filled
@@ -177,10 +204,10 @@ func _stage() -> Dictionary:
 		previous.hide()
 		previous.queue_free()
 	last_result={"ok":true,"handled":true,"member":ROOT,"materials":materials.size(),"targets":materials.filter(func(e: Dictionary) -> bool: return e.kind=="target").size(),
-		"selected":_selected,"mode":_mode,"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"notice":_notice,"powder":int(snapshot.get("powder",0)),"gold":int(snapshot.get("gold",0))}
+		"selected":_selected,"mode":_mode,"tab":_tab,"shown":shown.size(),"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"notice":_notice,"powder":int(snapshot.get("powder",0)),"gold":int(snapshot.get("gold",0))}
 	return last_result
 
-func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionary, quote: Dictionary) -> Dictionary:
+func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionary, quote: Dictionary, shown: Array[Dictionary]) -> Dictionary:
 	var spec: Dictionary={}
 	# Particle/animation layers with no data role here stay out of the scene.
 	spec[P_ALL+"Refine_Roulette"]={"exclude":true}
@@ -199,12 +226,15 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	# Frame.
 	spec[P_ALL+"Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec[P_ALL+"Btn_Help"]={"activate":Callable(self,"_help")}
-	# Min / Max are the two registered amounts the tables give; the other
-	# amount buttons have no probability rule and show their disabled state.
+	# Min / Max are the two registered amounts the tables give. +100 / +1000 /
+	# 직접 입력 register an amount between them: its chance is the straight
+	# line between the table's MinProbability and MaxProbability (TWILIGHT 근사,
+	# bless_refine523_rules.registration "amount:N").
 	spec[P_ALL+"Nd_ButtonSet/Btn_Min"]={"activate":Callable(self,"_set_mode").bind("min"),"displaystate":not target.is_empty()}
 	spec[P_ALL+"Nd_ButtonSet/Btn_Max"]={"activate":Callable(self,"_set_mode").bind("max"),"displaystate":not target.is_empty()}
-	for name: String in ["Btn_100","Btn_1000","Btn_Input"]:
-		spec[P_ALL+"Nd_ButtonSet/"+name]={"activate":Callable(self,"_amount_unavailable"),"displaystate":false}
+	spec[P_ALL+"Nd_ButtonSet/Btn_100"]={"activate":Callable(self,"_amount_step").bind(100),"displaystate":not target.is_empty()}
+	spec[P_ALL+"Nd_ButtonSet/Btn_1000"]={"activate":Callable(self,"_amount_step").bind(1000),"displaystate":not target.is_empty()}
+	spec[P_ALL+"Nd_ButtonSet/Btn_Input"]={"activate":Callable(self,"_amount_input"),"displaystate":not target.is_empty()}
 	var can: bool=quote.get("ok",false)
 	spec[P_ALL+"Btn_Alchemy"]={"activate":Callable(self,"_refine_requested"),"displaystate":can}
 	spec[P_ALL+"Btn_Alchemy/Normal"]={"visible":can}
@@ -221,8 +251,9 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	var has: bool=not target.is_empty()
 	var min_amount: int=int(target.get("min",0))
 	var max_amount: int=int(target.get("max",0))
-	var amount: int=min_amount if _mode=="min" else max_amount
-	var percent: String=str(target.get("min_percent" if _mode=="min" else "max_percent",""))
+	var amount: int=amount_of(target)
+	var percent: String=percent_of(target)
+	if _mode.begins_with("amount:"):percent+=" (TWILIGHT 근사)"
 	spec[P_ITEM+"Nd_Probability"]={"visible":has}
 	spec[P_ITEM+"Nd_Probability/Label"]={"role":"source_text","text":"성공 확률 %s" % percent}
 	for slot: String in ["Nd_Slot","Nd_Slot_Target","Nd_Slot_Special"]:
@@ -232,6 +263,8 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 		spec[key+"Common_Slot/Sp_Select"]={"visible":false}
 		spec[key+"Common_Slot/Text_Amount"]={"role":"source_text","text":str(amount) if slot=="Nd_Slot" else "","visible":slot=="Nd_Slot" and has}
 	spec[P_ITEM+"Nd_Slot_Target/Refine_Slot/Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_clear_target")}
+	spec[P_ITEM+"Nd_Slot/Refine_Slot/Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_powder_info")}
+	spec[P_ITEM+"Btn_Material"]={"activate":Callable(self,"_powder_info")}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet"]={"visible":has}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet/Label_Min"]={"role":"source_text","text":"최소:%d" % min_amount}
 	spec[P_ITEM+"Nd_Slot/Nd_TextSet/Label_Max"]={"role":"source_text","text":"최대:%d" % max_amount}
@@ -241,11 +274,10 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	# Refine_Inventory: the authored first row; further rows are added in _fill_inventory.
 	spec[P_INV+"ScrollView"]={"role":"source_scroll","input":Callable(self,"_scroll_input")}
 	spec[P_INV+"Nd_Number"]={"visible":false}
-	var tabs: Dictionary={"Btn_All":true,"Btn_Equipment":false,"Btn_Consume":false,"Btn_Etc":false}
-	for tab: String in tabs:
-		spec[P_INV+"Tab/"+tab+"_On"]={"visible":tabs[tab]}
-		spec[P_INV+"Tab/"+tab+"_Off"]={"visible":not tabs[tab]}
-	var first: Dictionary=_row_spec(materials,0,P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/")
+	for tab_name: String in TABS:
+		spec[P_INV+"Tab/"+TAB_NODES[tab_name]+"_On"]={"visible":tab_name==_tab}
+		spec[P_INV+"Tab/"+TAB_NODES[tab_name]+"_Off"]={"visible":tab_name!=_tab,"activate":Callable(self,"_set_tab").bind(tab_name)}
+	var first: Dictionary=_row_spec(shown,0,P_INV+"ScrollView/Inventory_Slot_Set/Nd_Slot/")
 	spec.merge(first,true)
 	return spec
 
@@ -356,13 +388,14 @@ func _slot_pressed(index: int) -> Dictionary:
 	if _moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_refine_window_host_unavailable")
-	var materials: Array[Dictionary]=_materials(world,SERVICE.snapshot(world))
+	var materials: Array[Dictionary]=_shown(world,_materials(world,SERVICE.snapshot(world)))
 	if index<0 or index>=materials.size():return {"ok":true,"empty_slot":true}
 	var entry: Dictionary=materials[index]
 	if entry.kind!="target":
 		_notice="대상 아이템을 먼저 선택하세요"
 		return _restage()
 	_selected="" if str(entry.uid)==_selected else str(entry.uid)
+	_mode="min"
 	_notice=""
 	return _restage()
 
@@ -381,9 +414,80 @@ func _set_mode(value: String) -> Dictionary:
 	_notice=""
 	return _restage()
 
-func _amount_unavailable() -> Dictionary:
-	_notice="최소·최대 사이 수량의 확률은 원본 표에 없어 최소·최대만 등록합니다"
+## The registered amount of `target` in the current mode.
+func amount_of(target: Dictionary) -> int:
+	if _mode.begins_with("amount:"):return clampi(int(_mode.get_slice(":",1)),int(target.get("min",0)),int(target.get("max",0)))
+	return int(target.get("max" if _mode=="max" else "min",0))
+
+## The success chance text: the table's for 최소 / 최대, the straight line
+## between them for any other amount (TWILIGHT 근사).
+func percent_of(target: Dictionary) -> String:
+	if not _mode.begins_with("amount:"):return str(target.get("max_percent" if _mode=="max" else "min_percent",""))
+	var registered: Dictionary=RULES.registration({"input":target.get("input",{})},"amount:%d" % amount_of(target))
+	return RULES.percent_text(int(registered.probability)) if registered.get("ok",false) else str(target.get("min_percent",""))
+
+## +100 / +1000: the amount grows from the current one up to the table's 최대.
+func _amount_step(delta: int) -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():
+		_notice="대상 아이템을 먼저 선택하세요"
+		return _restage()
+	return set_amount(amount_of(target)+delta)
+
+## Registers `amount` (clamped to the table's 최소 ~ 최대).
+func set_amount(amount: int) -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():return _fail("source_refine_window_target_unselected")
+	var value: int=clampi(amount,int(target.get("min",0)),int(target.get("max",0)))
+	_mode="min" if value==int(target.get("min",0)) else ("max" if value==int(target.get("max",0)) else "amount:%d" % value)
+	_notice="등록 수량 %s개 · 최소·최대 사이 확률은 TWILIGHT 근사(원본 표의 두 값 사이 직선)" % _number(value) if _mode.begins_with("amount:") else ""
 	return _restage()
+
+## 직접 입력: the phone's number keyboard on a native touch LineEdit (the
+## original keypad stops at 1000; amounts here run to tens of thousands).
+func _amount_input() -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():
+		_notice="대상 아이템을 먼저 선택하세요"
+		return _restage()
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if not parent is Node:return _fail("source_refine_window_host_unavailable")
+	if not is_instance_valid(_amount_editor):
+		_amount_editor=preload("res://scripts/ui/native_touch_line_edit.gd").new()
+		_amount_editor.name="RefineAmountInput"
+		_amount_editor.max_length=6
+		_amount_editor.virtual_keyboard_type=LineEdit.KEYBOARD_TYPE_NUMBER
+		_amount_editor.self_modulate=Color(1,1,1,0)
+		_amount_editor.size=Vector2(1,1)
+		_amount_editor.position=Vector2(-8,-8)
+		_amount_editor.text_submitted.connect(func(text: String) -> void:
+			_amount_editor.release_focus()
+			if text.strip_edges().is_valid_int():set_amount(int(text.strip_edges())))
+		(parent as Node).add_child(_amount_editor)
+	_amount_editor.text=str(amount_of(target))
+	_amount_editor.grab_focus()
+	_amount_editor.edit()
+	return {"ok":true,"editing":true}
+
+func _current_target() -> Dictionary:
+	var world: Node=_world.get_ref() if _world!=null else null
+	if world==null or _selected.is_empty():return {}
+	return _target(_materials(world,SERVICE.snapshot(world)))
+
+func _set_tab(tab_name: String) -> Dictionary:
+	if tab_name not in TABS:return _fail("source_refine_window_tab_unknown")
+	_tab=tab_name
+	_scroll_y=null
+	return _stage()
+
+## 기본재료 slot / 재료 button: the 상급 축복의 가루 the bag holds.
+func _powder_info() -> Dictionary:
+	var world: Node=_world.get_ref() if _world!=null else null
+	if world==null:return _fail("source_refine_window_host_unavailable")
+	var owned: int=int(SERVICE.snapshot(world).get("powder",0))
+	_notice="%s 보유 %s개" % [_item_name(RULES.ADVANCED_BLESS_POWDER_ITEM),_number(owned)]
+	return _restage()
+
 
 func _refine_requested() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null

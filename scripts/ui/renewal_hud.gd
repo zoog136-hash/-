@@ -1275,12 +1275,27 @@ func open_promo_code() -> void:
 	view.configure(get_parent())
 
 func open_quests() -> void:
-	# The requested quest UI is a text list. Repeated opens reuse it instead
-	# of building original CSB trees, reward pictures or hidden fallback views.
+	# The original Quest_All window first (user policy: original windows
+	# first). It reads the resident text model (quest_service.text_page) and
+	# accepts through the same World claim. Without the pack the text list.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("quest_window_is_open") and original_main_ui_controller.quest_window_is_open():
+		original_main_ui_controller.refresh_quest_window()
+		return
 	if active_section=="quests" and is_instance_valid(quest_view) and not quest_view.is_queued_for_deletion() and workspace.visible:
 		quest_view.refresh()
 		return
 	var trace_token: int=MENU_MEMORY_TRACE.begin("quests")
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quest_window"):
+		_open_window("quests", "퀘스트", "목록 · 수락 · 완료")
+		quest_view = null
+		var native: Dictionary=original_main_ui_controller.try_open_quest_window(get_parent(),func(quest_id: String) -> void: quest_complete_requested.emit(quest_id))
+		original_main_ui_status["quest_window"]=native
+		if native.get("handled",false) and native.get("ok",false):
+			if pointer_transfer!=null:pointer_transfer.cancel()
+			workspace.hide()
+			_sync_screen_focus()
+			MENU_MEMORY_TRACE.end(trace_token)
+			return
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):
 		original_main_ui_controller.close_quest_window()
 	_open_window("quests", "퀘스트", "목록 · 수락 · 완료")
@@ -1530,8 +1545,11 @@ func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> v
 
 ## Heavy settings sections are foldouts built on first open; tests and tools
 ## that inspect them pass expand_all = true.
-func open_settings_info(expand_all: bool = false) -> void:
+## The original 523 설정 window (source_main_option_window, Option_All) first;
+## original=false (its 세부 설정) or no UI pack opens the TWILIGHT settings.
+func open_settings_info(expand_all: bool = false, original: bool = true) -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
+	if original and not expand_all and _open_original_feature("options"):return
 	var options := SettingsUI.new()
 	workspace.mount(options)
 	options.configure(self)

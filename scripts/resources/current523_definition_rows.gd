@@ -113,11 +113,19 @@ static func stored_current(table: String) -> bool:
 	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(meta_path))
 	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and meta.get("key") == _bake_key(table)
 
+## Tables kept in the archive and opened on demand only, never converted on
+## the loading screen even when an earlier run used them: DialogData_Korean
+## (NPC talk text, 5,427 rows) is no longer read by an NPC tap since NPCs open
+## their function directly (2026-11-19); converting it cost ~170 ms (PC) and
+## 1.7 MB of stored form after every update.
+const PREPARE_ON_DEMAND_ONLY: Dictionary = {"DialogData_Korean": true}
+
 ## Used tables whose stored form is missing or outdated.
 static func tables_to_prepare() -> PackedStringArray:
 	var missing := PackedStringArray()
 	if _not_installed or not _open(): return missing
 	for table: String in used_tables():
+		if PREPARE_ON_DEMAND_ONLY.has(table): continue
 		if not stored_current(table): missing.append(table)
 	return missing
 

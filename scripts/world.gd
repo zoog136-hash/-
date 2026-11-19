@@ -439,6 +439,10 @@ const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
 # verification cache; pause/quit and transactions still save immediately.
 const AUTOSAVE_SECONDS: float = 60.0
 const DEFERRED_SAVE_SECONDS: float = 10.0
+## SHA-256 of the save file this session last wrote with the shop state in it.
+var _shop_key_saved_sha: String = ""
+## Full re-reads of the previous save file for the shop migration (diagnostics/tests).
+var previous_save_parses: int = 0
 const PERF_LOG_THRESHOLD_USEC: int = 30000
 var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
 # Automated suites run headless and assert durable state right after each action.
@@ -1553,7 +1557,7 @@ func _skill_cooldown_factor() -> float:
 func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -2580,7 +2584,25 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
+## Original 523 town NPC tap: its function window opens directly, without the
+## NpcDialogue_All talk (user request 2026-11-19). Shop NPC -> original store
+## window, 창고지기 -> storage, 텔레포터 -> 지역 이동, quest -> quest window,
+## 사망 복구 -> recovery; an NPC with no function only shows its name.
+func _open_town_npc_function(npc: Dictionary) -> void:
+	var npc_id: String = str(npc.get("id",""))
+	match TOWN_NPCS.primary_action(self,npc_id):
+		"shop": hud.open_npc_shop(npc_id)
+		"warehouse": hud.call("open_warehouse")
+		"teleport": hud.call("open_npc_teleport")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
+		_: hud.show_message(str(npc.get("name","")))
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
@@ -2590,8 +2612,7 @@ func _set_click_destination(target: Vector2) -> void:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if TOWN_NPCS.is_town_npc_id(str(npc.get("id",""))):
-					# Original 523 town NPC: the original NpcDialogue_All talk window.
-					hud.call("open_npc_dialogue",str(npc.id))
+					_open_town_npc_function(npc)
 					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
@@ -4750,6 +4771,17 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
 	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key) + equipment_buff523.buff_value(key) + dungeon_extras523.buff_value(key)
 
+## _active_item_buff_total for a percent that may hold a fraction of a point
+## (original 엘븐 와퍼 MoveSpeedBonus 125000 = 12.5 %); the other sources
+## stay the integer totals they always were.
+func _active_item_buff_percent(key: String) -> float:
+	var total: float = 0.0
+	for value: Variant in active_item_buffs.values():
+		if value is Dictionary:
+			var amount: Variant = (value as Dictionary).get(key, 0)
+			if amount is int or amount is float: total += float(amount)
+	return total + float(_active_item_buff_total(key, {}))
+
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
 	if whole >= 3600:
@@ -5368,6 +5400,9 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	_update_hud()
 	_perf_log("강화 HUD 갱신", phase_usec)
 	# Persist first. Presentation/skip/close must never commit or reroll a result.
+	if enhancement_series_quiet:
+		enhancement_series_last={"result":result_type,"from":current_level,"to":result_level,"name":target_name}
+		return
 	if hud.has_method("show_enhancement_result"):
 		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	else:
@@ -5380,6 +5415,56 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	else:
 		hud.call("open_enhancement", scroll_name, [])
 	_perf_log("강화 목록 갱신", phase_usec)
+
+## 다중 강화 (TWILIGHT 근사): the existing single roll (_attempt_enhancement,
+## its rules, costs, save and rollback) run for each target in turn up to
+## `goal`; stops at the first roll that is not a success (유지 / 하락 / 소실),
+## a refused roll (rules, too few scrolls or Adena) or the scroll running out.
+var enhancement_series_quiet: bool=false
+var enhancement_series_last: Dictionary={}
+func attempt_enhancement_series(scroll_name: String, targets: Array, goal: int) -> Dictionary:
+	if enhancement_series_quiet:return {"ok":false,"reason":"다중 강화가 진행 중입니다"}
+	var rolls: int=0
+	var reached: int=0
+	var stop: String=""
+	var stop_name: String=""
+	enhancement_series_quiet=true
+	for raw: Variant in targets:
+		var target: Dictionary=_parse_enhancement_target(str(raw))
+		var id: String=str(target.get("id",""))
+		var name: String=str(target.get("name",""))
+		while stop.is_empty():
+			if not item_instances.has(id):
+				stop="missing"
+				break
+			var level: int=_item_instance_level(id,name)
+			if level>=goal:
+				reached+=1
+				break
+			if int(inventory.get(scroll_name,0))<=0:
+				stop="scroll"
+				break
+			enhancement_series_last={}
+			var scrolls_before: int=int(inventory.get(scroll_name,0))
+			_attempt_enhancement(scroll_name,str(raw))
+			if enhancement_series_last.is_empty() or int(inventory.get(scroll_name,0))>=scrolls_before:
+				stop="refused"
+				break
+			rolls+=1
+			match str(enhancement_series_last.get("result","")):
+				"success":pass
+				"destroy":stop="destroy"
+				_:stop="fail"
+			if not stop.is_empty():stop_name=name
+		if not stop.is_empty():break
+	enhancement_series_quiet=false
+	var texts: Dictionary={"":"다중 강화 완료","fail":"강화 실패로 멈췄습니다","destroy":"장비가 소실되어 멈췄습니다","scroll":"주문서가 부족해 멈췄습니다","refused":"강화할 수 없는 단계라 멈췄습니다","missing":"장비를 찾을 수 없어 멈췄습니다"}
+	var message: String="%s · %d회 · 목표 달성 %d/%d%s" % [str(texts.get(stop,"")),rolls,reached,targets.size()," · "+stop_name if not stop_name.is_empty() else ""]
+	hud.show_message(message)
+	hud.append_log(message)
+	var kind: String=_scroll_kind(scroll_name)
+	hud.call("open_enhancement",scroll_name,_enhancement_candidates(kind,_scroll_mode(scroll_name),scroll_name) if int(inventory.get(scroll_name,0))>0 else [])
+	return {"ok":stop.is_empty(),"rolls":rolls,"reached":reached,"stop":stop,"message":message}
 
 func _destroy_enhancement_target(item_name: String, item_id: String = "") -> void:
 	if not item_id.is_empty():
@@ -6802,8 +6887,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		var peer_state:Dictionary=collection_override.get("source_shop",peer_shop.export_state())
 		if not peer_shop.validate(peer_state).is_empty():return ERR_UNAVAILABLE
 		if FileAccess.file_exists(save_path()):
-			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
-			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
+			# prepare_load only acts on a save that has no shop state yet. A file
+			# whose SHA-256 is the one this session last wrote with that state
+			# already has it: skip re-reading and parsing the whole previous
+			# save on every write (the largest single part of a phone save).
+			if preload("res://scripts/save/previous_save_check.gd").needs_reading(save_path(),_shop_key_saved_sha):
+				previous_save_parses+=1
+				var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+				if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
 		data["source_shop"]=peer_state.duplicate(true)
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -6848,6 +6939,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		elif FileAccess.file_exists(save_path()) and FileAccess.get_sha256(save_path())!=prior_owner_hash:
 			patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
 	_perf_log("저장", save_started_usec)
+	if result == OK and data.has(SOURCE_SHOP.SAVE_KEY) and str(equipment_collections.get("_disk_path"))==save_path():
+		_shop_key_saved_sha=str(equipment_collections.get("_disk_hash"))
+	elif result != OK:
+		_shop_key_saved_sha=""
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
@@ -7929,6 +8024,10 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	var return_record: Dictionary = _find_catalog_item_record(item_name)
 	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
+	# Original 523 acceleration potions (초록 물약·용기의 물약·엘븐 와퍼 ...) are
+	# drunk from the quick slot like in the original.
+	var native_use: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(return_record)
+	if native_use.get("kind") == "buff" and not native_use.get("runtime_presentation", false) and int(native_use.get("spec", {}).get("acceleration_stage", 0)) > 0: return true
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -10271,7 +10370,7 @@ func _effective_move_speed_multiplier_uncached() -> float:
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
-	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= 1.0 + _active_item_buff_percent("move_speed") / 100.0
 	multiplier *= 1.0+dungeon_play.modifier("move_speed")/100.0
 	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
@@ -10281,7 +10380,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
-	total += float(_active_item_buff_total("attack_speed"))
+	total += _active_item_buff_percent("attack_speed")
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
 

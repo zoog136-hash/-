@@ -373,10 +373,35 @@ static func effect_index(manifest_sha: String) -> Dictionary:
 		_effect_index = {}
 		var path: String = folder.path_join(EFFECT_INDEX)
 		if not folder.is_empty() and FileAccess.file_exists(path) and FileAccess.get_size(path) < 64 * 1024 * 1024:
-			var value: Variant = bytes_to_var(FileAccess.get_file_as_bytes(path).decompress_dynamic(256 * 1024 * 1024, FileAccess.COMPRESSION_ZSTD))
+			# decompress_dynamic supports only gzip/DEFLATE/Brotli: with ZSTD it
+			# failed every time (523.652: marshalls.cpp "len < 4" here), the index
+			# stayed empty and every source effect was rejected.
+			var bytes: PackedByteArray = zstd_frame_bytes(FileAccess.get_file_as_bytes(path), 256 * 1024 * 1024)
+			var value: Variant = bytes_to_var(bytes) if bytes.size() >= 4 else null
 			if value is Dictionary and value.get("format") == EFFECT_INDEX_FORMAT and value.get("domains") is Dictionary and value.get("compiled") is Dictionary and value.get("excluded") is Dictionary: _effect_index = value
 	if _effect_index.is_empty() or str(_effect_index.get("manifest_sha256", "")) != manifest_sha.to_lower(): return {}
 	return _effect_index
+
+## Decompresses one ZSTD frame written by PackedByteArray.compress(ZSTD),
+## sized from the frame header's content size (no guessing, no failed tries).
+## Empty when it is not such a frame, has no content size or exceeds `limit`.
+static func zstd_frame_bytes(data: PackedByteArray, limit: int) -> PackedByteArray:
+	if data.size() < 6 or data.decode_u32(0) != 0xFD2FB528: return PackedByteArray()
+	var descriptor: int = data[4]
+	var size_flag: int = descriptor >> 6
+	var single_segment: bool = (descriptor >> 5) & 1 == 1
+	var at: int = 5 + (0 if single_segment else 1) + [0, 1, 2, 4][descriptor & 3]
+	var field: int = [1 if single_segment else 0, 2, 4, 8][size_flag]
+	if field == 0 or data.size() < at + field: return PackedByteArray()
+	var content: int = 0
+	match field:
+		1: content = data[at]
+		2: content = data.decode_u16(at) + 256
+		4: content = data.decode_u32(at)
+		8: content = data.decode_s64(at)
+	if content <= 0 or content > limit: return PackedByteArray()
+	var out: PackedByteArray = data.decompress(content, FileAccess.COMPRESSION_ZSTD)
+	return out if out.size() == content else PackedByteArray()
 
 static func write_effect_index(path: String, index: Dictionary) -> Error:
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
