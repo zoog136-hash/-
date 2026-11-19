@@ -1553,7 +1553,7 @@ func _skill_cooldown_factor() -> float:
 func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -4749,6 +4749,17 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
 	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key) + equipment_buff523.buff_value(key) + dungeon_extras523.buff_value(key)
+
+## _active_item_buff_total for a percent that may hold a fraction of a point
+## (original 엘븐 와퍼 MoveSpeedBonus 125000 = 12.5 %); the other sources
+## stay the integer totals they always were.
+func _active_item_buff_percent(key: String) -> float:
+	var total: float = 0.0
+	for value: Variant in active_item_buffs.values():
+		if value is Dictionary:
+			var amount: Variant = (value as Dictionary).get(key, 0)
+			if amount is int or amount is float: total += float(amount)
+	return total + float(_active_item_buff_total(key, {}))
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -7982,6 +7993,10 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	var return_record: Dictionary = _find_catalog_item_record(item_name)
 	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
+	# Original 523 acceleration potions (초록 물약·용기의 물약·엘븐 와퍼 ...) are
+	# drunk from the quick slot like in the original.
+	var native_use: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(return_record)
+	if native_use.get("kind") == "buff" and not native_use.get("runtime_presentation", false) and int(native_use.get("spec", {}).get("acceleration_stage", 0)) > 0: return true
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -10324,7 +10339,7 @@ func _effective_move_speed_multiplier_uncached() -> float:
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
-	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= 1.0 + _active_item_buff_percent("move_speed") / 100.0
 	multiplier *= 1.0+dungeon_play.modifier("move_speed")/100.0
 	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
@@ -10334,7 +10349,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
-	total += float(_active_item_buff_total("attack_speed"))
+	total += _active_item_buff_percent("attack_speed")
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
 
