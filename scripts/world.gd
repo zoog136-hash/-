@@ -6663,7 +6663,10 @@ func set_field_camera_zoom(value: float, persist: bool = true) -> Error:
 		if field_map != null: _apply_field_camera_zoom()
 	return result
 
-func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
+## validate_only: every ownership/namespace check of this payload, then OK
+## without building or writing the file (a staged owner may adopt it and
+## request the batched save; the next save writes it with everything else).
+func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}, validate_only: bool = false) -> Error:
 	# Stage times for the phone record (523.655: save 286 ms/s without a split).
 	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
@@ -6781,6 +6784,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return ERR_UNAVAILABLE
+	if validate_only: return OK
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {

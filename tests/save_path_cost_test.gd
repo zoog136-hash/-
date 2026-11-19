@@ -16,6 +16,8 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const D = preload("res://scripts/loot/patch523_monster_drops.gd")
+const ACQUIRE = preload("res://scripts/loot/source523_ground_acquisition.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -133,6 +135,7 @@ func runtime() -> void:
 			var filtered: Dictionary = domain.event(event, context, state)
 			evidence["event_usec_"+kind] = {"full":full_usec,"filtered":Time.get_ticks_usec()-started}
 			check(sorted(filtered) == sorted(reference), "%s event: filtered scan == full scan" % kind)
+	await deferred_pickup(world)
 	var saves: Array = []
 	for round: int in range(3):
 		var started: int = Time.get_ticks_usec()
@@ -148,6 +151,73 @@ func runtime() -> void:
 	await process_frame
 	STORE.forget_durable(); STORE.session.clear()
 	restore_user_files()
+
+func floor_entry(id: int) -> Dictionary:
+	for row: Dictionary in SOURCE.related("NpcItemDropView","ItemClassID",id):
+		var npc: Dictionary = SOURCE.row("NpcClass",int(row.get("NpcClassID",0)))
+		if npc.is_empty(): continue
+		D._current_source_document({"source_input_identity":SOURCE.identity(),"current_source_admitted":true,"source_npc_id":int(npc.ID),"source_sprite_id":npc.get("Sprite"),"source_desc_id":npc.get("DescId"),"source_name":npc.get("Name")})
+		for drop: Variant in D.data().get("drops",{}).get(str(int(npc.ID)),[]):
+			if not drop is Dictionary or int(drop.get("ItemClassID",0)) != id or int(drop.get("Bless",0)) != 1 or int(drop.get("RequiredQuestID",-1)) != 0: continue
+			var item: Dictionary = D.variant_item(D.definition_id(str(id)).get("native_record",{}),1)
+			item["source_m_item_id"] = id; item["bless_state"] = "normal"
+			var proof: Dictionary = {"source_snapshot":"patch523","source_npc_id":int(npc.ID),"source_item_class_id":id,"bless_raw":1,"bless_state":"normal","required_quest_id":0,"source_rows":[drop.duplicate(true)],"selection_policy":"host_uniform_distinct_items_then_distinct_variants","quantity_policy":"host_one"}
+			item["source_m_drop_proof"] = proof
+			if ACQUIRE._proof_problem(item,proof,1).is_empty(): return {"item_name":str(item.name),"quantity":1,"item_record":item,"source_m_drop_proof":proof}
+	return {}
+
+func pick(world: Node, entry: Dictionary) -> Dictionary:
+	var view: Button = world._spawn_ground_drop(str(entry.item_name), world.player.global_position, 1, "", D.ground_metadata(entry))
+	var id: String = str(view.get_meta("id"))
+	for step: int in range(80):
+		await process_frame
+		view = world.ground_loot.views.get(id)
+		if is_instance_valid(view): break
+		await create_timer(0.05).timeout
+	if not is_instance_valid(view):
+		evidence["pick_problem_"+id] = {"records":world.ground_loot.records.has(id)}
+		return {"ok":false,"id":id}
+	view.set("visible_since", Time.get_ticks_msec()-world.ground_loot.MIN_VISIBLE_MS-50)
+	var floor: Dictionary = world.ground_loot.records.get(id,{})
+	world.player.global_position = Vector2(float(floor.position[0]), float(floor.position[1]))
+	var started: int = Time.get_ticks_usec()
+	var ok: bool = world._collect_ground_drop(view)
+	return {"ok":ok,"usec":Time.get_ticks_usec()-started,"id":id}
+
+## A source floor pickup is validated at once and written by the batched save.
+func deferred_pickup(world: Node) -> void:
+	var entry: Dictionary = floor_entry(366)
+	if not check(not entry.is_empty(), "an original 가죽 drop row"): return
+	world.deferred_save_enabled = true
+	world.deferred_save.cancel()
+	check(world._save_game(true) == OK, "settled save before the pickup")
+	var name_value: String = str(entry.item_name)
+	var before: int = int(world.inventory.get(name_value,0))
+	var sha: String = FileAccess.get_sha256(world.save_path())
+	var first: Dictionary = await pick(world, entry)
+	evidence["pickup_usec"] = [first.get("usec",0)]
+	check(first.ok and int(world.inventory.get(name_value,0)) == before+1, "pickup adopted in memory")
+	check(FileAccess.get_sha256(world.save_path()) == sha and world.deferred_save.pending(), "no file write in the pickup frame; batched save pending")
+	# Crash before the batched save: the item is back on the floor, not in the bag.
+	world.deferred_save.cancel()
+	world.item_instances = {}; world.inventory = {}
+	world._load_game(true)
+	for frame: int in range(20): await process_frame
+	var on_floor: int = 0
+	for record: Dictionary in world.ground_loot.records.values():
+		if str(record.get("id","")) == str(first.id): on_floor += 1
+	check(int(world.inventory.get(name_value,0)) == before and on_floor == 1, "without the batched save: bag unchanged, item still on the floor (no duplicate, no loss)")
+	var second: Dictionary = await pick(world, entry)
+	evidence["pickup_usec"].append(second.get("usec",0))
+	check(second.ok and world.deferred_save.pending(), "second pickup pending")
+	check(world._save_game(true) == OK, "batched save writes it")
+	world.item_instances = {}; world.inventory = {}
+	world._load_game(true)
+	for frame: int in range(20): await process_frame
+	var left: int = 0
+	for record: Dictionary in world.ground_loot.records.values():
+		if str(record.get("id","")) == str(second.id): left += 1
+	check(int(world.inventory.get(name_value,0)) == before+1 and left == 0 and world.patch523_owner_state_problem.is_empty(), "after the batched save: one item in the bag, gone from the floor")
 
 func run() -> void:
 	account_rules()
