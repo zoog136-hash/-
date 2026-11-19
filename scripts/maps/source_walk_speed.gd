@@ -74,3 +74,18 @@ static func velocity(coordinates: Object, direction: Vector2, cells: float) -> V
 	var per_pixel: float = maxf(absf(gx), absf(gy))
 	if per_pixel <= 0.0: return Vector2.ZERO
 	return unit * (cells / per_pixel)
+
+## The eight one-cell screen steps of the field's cell basis (a Chebyshev cell
+## step: along either grid axis or both). One original walk/run loop travels
+## exactly one of these (523 elf 15282/15284: 48.8/46.8 px sideways, 24.9/23.9
+## px up), so the walk root-motion cancel can use the exact step.
+static func cell_steps(coordinates: Object) -> Array[Vector2]:
+	var steps: Array[Vector2] = []
+	if coordinates == null: return steps
+	var bx: Vector2 = coordinates.get("basis_x")
+	var by: Vector2 = coordinates.get("basis_y")
+	for step: Vector2 in [bx, by, bx + by, bx - by]:
+		if step.length_squared() < 0.000001: continue
+		steps.append(step)
+		steps.append(-step)
+	return steps
