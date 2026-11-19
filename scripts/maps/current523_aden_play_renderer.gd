@@ -35,9 +35,11 @@ const DELTA_LIMIT: float = 48.0
 const BLOCK: int = 512
 const BLOCK_SHIFT: int = 9 # BLOCK == 1 << BLOCK_SHIFT
 const TILE_PX: int = 24
-## Baked blocks kept (1 MiB RGBA8 each, 48 MiB at most); a phone screen with
-## the build margin uses ~20. Older blocks are freed and rebaked when seen again.
-const BLOCK_CACHE_LIMIT: int = 48
+## Baked blocks kept (1 MiB RGBA8 each, 32 MiB at most); a phone screen with
+## the build margin uses ~12-20. Older blocks are freed and rebaked when seen
+## again (523.637 ran with only 178 MB of device memory free, so this stays
+## close to one screen and its margin).
+const BLOCK_CACHE_LIMIT: int = 32
 ## New margin block images per refresh (blocks on screen always bake at once).
 const MARGIN_BAKES_PER_REFRESH: int = 6
 ## The built frame covers this much beyond the screen, so standing still or
