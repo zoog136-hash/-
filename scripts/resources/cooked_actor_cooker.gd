@@ -79,6 +79,22 @@ static func _effective_material(item: CanvasItem, owner: Node2D) -> Material:
 	if node == null or node == owner: return null
 	return node.material
 
+## A live preview can keep its body while a declared independent layer is
+## unavailable. A cooked actor cannot retry that layer once its pixels are
+## baked, so reject the entry instead of saving a permanently partial frame.
+static func _attachment_problem(preview: Node2D) -> String:
+	var problem: Dictionary = preview._reference_child_problem
+	if not problem.is_empty():
+		return "cooked_source_layer_incomplete:" + str(problem.get("error", "independent layer unavailable"))
+	for child: Node2D in preview._reference_source_children.values():
+		var nested: String = _attachment_problem(child)
+		if not nested.is_empty(): return nested
+	return ""
+
+static func _capture_cook_frame(preview: Node2D) -> Dictionary:
+	var problem: String = _attachment_problem(preview)
+	return capture(preview) if problem.is_empty() else fail(problem)
+
 static func _binary_alpha(image: Image) -> bool:
 	return image.detect_alpha() != Image.ALPHA_BLEND
 
@@ -181,6 +197,13 @@ static func _boundaries(frames: Array, loop: bool, total_limit: float) -> Packed
 ## bundle file share images and draw states (weapon variants of one body
 ## reuse most frames). Returns {ok, entry, session}.
 static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = false, resolved: Dictionary = {}, session: Session = null) -> Dictionary:
+	var previous: Dictionary = preview._reference_capture_lineage
+	preview._reference_capture_lineage = {"manifest_sha256":str(inputs.get("manifest_sha256","")), "consumer":str(inputs.get("consumer",""))}
+	var cooked: Dictionary = _cook_preview(preview, inputs, lossless, resolved, session)
+	preview._reference_capture_lineage = previous
+	return cooked
+
+static func _cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool, resolved: Dictionary, session: Session) -> Dictionary:
 	if session == null: session = Session.new()
 	var images_before: int = session.images.size()
 	var states_before: int = session.states.size()
@@ -212,12 +235,14 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 			sequence += 1
 			preview.restart_reference_source(role, sequence)
 			if not preview.advance_reference_source(0.0, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
+			var initial_problem: String = _attachment_problem(preview)
+			if not initial_problem.is_empty(): return fail(initial_problem)
 			var cuts: Dictionary = {}
 			var seg_start := PackedInt32Array()
 			var seg_end := PackedFloat64Array()
 			var seg_state := PackedInt32Array()
 			if static_track or total <= 0.0:
-				var captured: Dictionary = capture(preview)
+				var captured: Dictionary = _capture_cook_frame(preview)
 				if not captured.ok: return captured
 				session.samples += 1
 				for _index: int in range(frames.size()):
@@ -253,7 +278,7 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 						seg_start.append(seg_state.size())
 					if not preview.advance_reference_source(middle - clock, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
 					clock = middle
-					var captured: Dictionary = capture(preview)
+					var captured: Dictionary = _capture_cook_frame(preview)
 					if not captured.ok: return captured
 					session.samples += 1
 					var state: int = _state_id(session, merge(captured.items), lossless)
@@ -269,7 +294,7 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 			if not static_track and total > 0.0 and not loop:
 				var current: float = float(preview._clock)
 				if not preview.advance_reference_source(maxf(0.0, total - current) + 0.001, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
-				var held: Dictionary = capture(preview)
+				var held: Dictionary = _capture_cook_frame(preview)
 				if not held.ok: return held
 				session.samples += 1
 				end_state = _state_id(session, merge(held.items), lossless)

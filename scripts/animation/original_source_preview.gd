@@ -58,6 +58,9 @@ var _reference_frame_inputs: Dictionary = {}
 var _reference_texture_budget: Dictionary = {}
 var _reference_texture_charges: Dictionary = {}
 var _reference_child_problem: Dictionary = {}
+## Offline cooking has no live card/NPC owner, but must capture its
+## independently selected layers with the same pinned ancestry checks.
+var _reference_capture_lineage: Dictionary = {}
 var reference_bank_status: Dictionary = {}
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
@@ -1405,6 +1408,7 @@ func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dict
 
 func _advance_reference_children(delta: float, stored_direction: int, parent_attributes: Array = [], parent_unresolved: bool = true, parent_projection_verified: bool = false) -> bool:
 	var lineage: Dictionary = _reference_card_context if not _reference_card_context.is_empty() else (_reference_attachment_parent if not _reference_attachment_parent.is_empty() else _reference_overlay_parent)
+	if lineage.is_empty(): lineage = _reference_capture_lineage
 	if lineage.is_empty(): return true
 	_reference_child_problem.clear()
 	var ready: bool = true
@@ -1458,6 +1462,10 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 			_reference_child_problem = child.reference_bank_status.duplicate(true)
 			_reference_child_problem["ok"] = false
 			if str(_reference_child_problem.get("error","")).is_empty(): _reference_child_problem["error"] = "Independent source layer frame is unavailable."
+			# A rejected child can no longer advance. Drop it so the next
+			# frame can admit it again from the currently verified source.
+			_reference_source_children.erase(key)
+			child.free()
 			ready = false
 	return ready
 
