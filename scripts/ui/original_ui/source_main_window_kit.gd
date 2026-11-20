@@ -350,9 +350,12 @@ func _forward_row_drags(node: Node, key: String, outer: String="") -> void:
 	for meta: String in ["source_button","source_checkbox"]:
 		if node.has_meta(meta):
 			var button: Variant=node.get_meta(meta)
-			if is_instance_valid(button) and not (button as Object).has_meta(Router.DRAG_META):
+			# A list's default forward (sprite_scene, any ListView row) yields
+			# to the window's own (a nested list's row hands vertical drags out).
+			if is_instance_valid(button) and (not (button as Object).has_meta(Router.DRAG_META) or (button as Object).has_meta(Scene.LIST_DRAG_AUTO_META)):
 				var forward: Callable=Callable(self,"_list_input").bind(key) if outer.is_empty() else Callable(self,"_nested_list_input").bind(key,outer)
 				(button as Object).set_meta(Router.DRAG_META,forward)
+				(button as Object).remove_meta(Scene.LIST_DRAG_AUTO_META)
 	for child: Node in node.get_children():_forward_row_drags(child,key,outer)
 
 ## The list whose row `node` sits in ("" when it is no list row).

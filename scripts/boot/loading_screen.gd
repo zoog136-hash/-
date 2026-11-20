@@ -169,7 +169,7 @@ func _ready() -> void:
 	column.add_child(_bar)
 	_count = STYLE.label("완료 작업 0/0 · 작업 수 기준", 16, STYLE.GOLD)
 	column.add_child(_count)
-	column.add_child(STYLE.label("검증 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
+	column.add_child(STYLE.label("준비 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
 	_stage = STYLE.label("지난 실행 중단 단계: " + _previous if not _previous.is_empty() else "", 14, STYLE.MUTED)
 	column.add_child(_stage)
 	_cache_warning = STYLE.label("", 14, STYLE.GOLD)
@@ -274,7 +274,7 @@ func _boot() -> void:
 	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
 	for step: Dictionary in steps:
-		_progress.begin_task(str(step.id), "원본 %s 검증·정리 중…" % str(step.label))
+		_progress.begin_task(str(step.id), "%s 준비 중…" % str(step.label))
 		_render("현재 단계의 남은 시간은 계산할 수 없습니다.")
 		await get_tree().process_frame
 		_job = JOB.new()
@@ -282,16 +282,16 @@ func _boot() -> void:
 		var error: Error = _job.start(step)
 		if error == OK:
 			while not _job.completed():
-				_render("검증 단계: " + BOOT_LOG.current_stage())
+				_render("준비 단계: " + BOOT_LOG.current_stage() if preload("res://scripts/boot/build_flags.gd").developer_ui() else "준비 중…")
 				await get_tree().process_frame
 			result = _job.finish()
 		else:
-			_render("백그라운드 검증을 시작하지 못해 현재 단계에서 직접 검증합니다.")
+			_render("준비를 계속하는 중…")
 			await get_tree().process_frame
 			result = PREBAKE.run_result(step)
 		_job = null
 		if not result.get("ok", false):
-			_fail("원본 %s 검증 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
+			_fail("%s 준비 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
 			return
 		if not result.get("baked", false):
 			_cache_misses.append(str(step.label))
@@ -299,7 +299,7 @@ func _boot() -> void:
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
 		_attach_original_loading_fx()
-		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
+		_render("준비 완료" if result.get("baked", false) else "준비 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
 	if not tables.is_empty():
 		_progress.begin_task("definitions", "원본 표를 준비하는 중…")
 		var definitions_started: int = BOOT_LOG.begin("definitions_prepare", {"tables": tables.size()})
