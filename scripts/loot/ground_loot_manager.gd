@@ -11,6 +11,14 @@ const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
 const OCCUPANCY_CELL: float = 64.0
 const SEPARATION: float = 36.0
+## Bag items put on the floor before this time (2026-12-01 00:00 KST) may have
+## lain invisible (legacy-name items had no floor picture until the
+## inventory-icon fallback). If such a floor record outlived its lifetime
+## while the game was closed, loading returns it to the bag once instead of
+## dropping it (user 2026-11-20: "바닥에 안떨어지고 삭제되고").
+const INVISIBLE_DROP_RECOVERY_BEFORE: float = 1796050800.0
+## Records returned to the bag by the last restore() (for the log/tests).
+var recovered_to_bag: Array = []
 var world: Node
 var records: Dictionary = {}
 var views: Dictionary = {}
@@ -125,10 +133,14 @@ func _create_view(record: Dictionary) -> Button:
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
 	var ground_request: Dictionary = _source_ground_request(item_data,str(record["id"]))
 	var icon: Texture2D = null
+	var images: Dictionary = world.catalog_image_index.get("아이템",{})
 	if ground_request.is_empty():
-		var images: Dictionary = world.catalog_image_index.get("아이템",{})
 		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
-	view.configure(record, icon, visual_slot, ground_request)
+	# The original inventory icon is the floor picture when no original floor
+	# body can be drawn (legacy-name items had none and lay invisible).
+	var item_name: String = str(record["item_name"])
+	var inventory_icon: Callable = func() -> Variant: return preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,item_name,images,false)
+	view.configure(record, icon, visual_slot, ground_request, inventory_icon)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view
@@ -293,6 +305,7 @@ func snapshot() -> Array:
 
 func restore(saved: Variant) -> void:
 	_restoring=true
+	recovered_to_bag.clear()
 	hide_map()
 	records.clear()
 	occupancy.clear()
@@ -320,6 +333,7 @@ func restore(saved: Variant) -> void:
 			var native_stack: bool=_native_stack_record(record)
 			if not (world.get("maps_by_id") as Dictionary).has(map_id) and not native_stack and not source_field_map(map_id): continue
 			var expires: float = float(record.get("expires_at", now + LIFETIME))
+			if expires <= now and not native_stack and is_finite(expires) and _recover_expired_player_drop(record, item_name): continue
 			if (expires <= now and not native_stack) or not is_finite(expires) or str(record.get("state", "ground")) != "ground": continue
 			var id: String = str(record.get("id", new_id()))
 			if id.is_empty() or records.has(id): continue
@@ -335,6 +349,24 @@ func restore(saved: Variant) -> void:
 	activate(current_map)
 	_restoring=false
 
+
+## A player-dropped plain (non-receipt) floor record from before the fix that
+## expired: back into the bag with its physical equipment entry. Original
+## receipted stacks keep their own expiry journal and are not touched here.
+func _recover_expired_player_drop(record: Dictionary, item_name: String) -> bool:
+	if record.get("player_dropped") != true or str(record.get("state","ground")) != "ground" or item_name.is_empty(): return false
+	var created: float = float(record.get("created_at", 0.0))
+	if not is_finite(created) or created >= INVISIBLE_DROP_RECOVERY_BEFORE: return false
+	var quantity: int = int(record.get("quantity", 0))
+	if quantity < 1: return false
+	if record.has("physical_item"):
+		var physical: Variant = record.physical_item
+		if not physical is Dictionary or not physical.get("data") is Dictionary or physical.data.has("source_native_stack_receipt"): return false
+		preload("res://scripts/loot/inventory_ground_transfer.gd").restore_physical(world, record)
+	var inventory: Dictionary = world.get("inventory")
+	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	recovered_to_bag.append({"item_name":item_name,"quantity":quantity})
+	return true
 
 # Source actor-render handoff only. This reads the actually published current
 # floor selection; it does not create/collect/move/save or authenticate a grant.

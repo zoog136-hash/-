@@ -279,7 +279,9 @@ func _show(node: Node2D, sprite: Dictionary, index: int) -> void:
 			var rendered: Dictionary = _bank.render_layer(layer, false)
 			if rendered.get("ok", false): picture.position = Vector2(rendered.offset)
 		picture.z_index = -1 if layer.get("kind") == "shadow" else order
-		if int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
+		if int(style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			picture.material = preload("res://scripts/animation/source_sp2_compositor.gd").multiply_material()
+		elif int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
 			var material: CanvasItemMaterial = picture.material as CanvasItemMaterial
 			if material == null:
 				material = CanvasItemMaterial.new()
