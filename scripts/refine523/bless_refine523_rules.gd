@@ -23,6 +23,7 @@ extends RefCounted
 ##    the crystal colour only; its MaxGrade meaning is not stated).
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const SCALE: int = 1000000
+const MAX_DISSOLVE_AMOUNT: int = 9000000000000000000
 ## The only active (TestItem false) ItemClass rows named 축복의 가루 / 상급
 ## 축복의 가루. BlessPowderAmount has no item column; 3732 is the 523 item the
 ## dissolution UI text ("축복의 가루 100") names. 117544 is RefineInput's own
@@ -47,8 +48,14 @@ static func _f32(value: float) -> float:
 ## float32(base)), then × quantity. The preview (dissolve_quote/snapshot) and the
 ## grant (dissolve) both read this one function.
 static func normal_amount(base: int, rate: int, count: int = 1) -> int:
+	if base<0 or rate<0 or count<1:return -1
 	var share: float = _f32(_f32(_f32(float(rate))/100.0)*_f32(float(base)))
-	return (base+int(ceilf(share)))*count
+	if not is_finite(share) or share<0.0 or share>=float(MAX_DISSOLVE_AMOUNT):return -1
+	var extra: int=int(ceilf(share))
+	if base>MAX_DISSOLVE_AMOUNT-extra:return -1
+	var each: int=base+extra
+	if each>MAX_DISSOLVE_AMOUNT/count:return -1
+	return each*count
 
 ## 상급/최상급 용해 (원본 소비 규칙, 보고서2 NEW02): base × pow(Multiplier,
 ## enchant − safe) cut to an integer, plus the elemental increment, × quantity.
@@ -107,6 +114,7 @@ static func dissolve_yield(item_class_id: int, enchant: int, element_level: int,
 	if powder.is_empty() or powder.get("TestItem")!=false: return _fail("원본 축복의 가루 아이템 정의 확인 실패","powder_item_missing")
 	if count<1: return _fail("용해 수량 확인 실패","count")
 	var amount: int = normal_amount(int(rows[0].Amount),amplify,count)
+	if amount<0:return _fail("용해 수량이 안전한 정수 범위를 초과합니다","amount_overflow")
 	var result: Dictionary = {"ok":true,"item_class_id":BLESS_POWDER_ITEM,"amount":amount,"grade_id":grade,"enchant":enchant,"count":count,"source_row":rows[0].duplicate(true)}
 	if amplify>0: result.merge({"amplify_percent":amplify,"formula":"NATIVE_BASE_PLUS_CEILF32_RATE"})
 	return result
