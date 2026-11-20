@@ -77,6 +77,10 @@ func tick(delta: float) -> void:
 	if world.hp<=0 or world.player.motion.dead or world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced():return
 	for id: String in on:
 		if not bool(on[id]) or float(clocks.get(id,0))>0:continue
+		# Only auras act here, and a skill's kind never changes. Non-aura skills
+		# switched on (no clock) resolved their record every frame
+		# (523.699: skills.progression still 80 ms/s on the phone).
+		if not _is_aura(id):continue
 		var record: Dictionary=service.catalog.record_for(id)
 		if record.is_empty() or not service.catalog.enabled(record):continue
 		var skill: Dictionary=service.catalog.resolve(record)
@@ -95,6 +99,23 @@ func tick(delta: float) -> void:
 			if count>=int(aura.row.TargetLimitCount):break
 		clocks[id]=maxf(.1,config.value(id,"interval"))
 		if count>0:fired[id]=int(fired.get(id,0))+1;service.vfx.emit_skill(id,"impact",world.player.global_position)
+
+## Skill id -> whether its resolved progression kind is "aura" (static per catalog).
+var _aura_kind: Dictionary = {}
+var _aura_catalog: Object = null
+
+func _is_aura(id: String) -> bool:
+	if _aura_catalog != service.catalog:
+		_aura_catalog = service.catalog
+		_aura_kind.clear()
+	if _aura_kind.has(id): return bool(_aura_kind[id])
+	var record: Dictionary=service.catalog.record_for(id)
+	var aura: bool=false
+	if not record.is_empty():
+		aura=str(service.catalog.resolve(record).get("progression523",{}).get("kind",""))=="aura"
+	# An unknown id may become known once the source loads: only cache knowns.
+	if not record.is_empty(): _aura_kind[id]=aura
+	return aura
 
 ## Names and skill ids of the active buffs last checked by _drop_converted_passives.
 var _checked_buffs_signature: int = 0
