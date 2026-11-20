@@ -401,7 +401,7 @@ func show_message(text: String) -> void:
 	message_time = 2.6
 
 func append_log(text: String) -> void:
-	text = preload("res://scripts/ui/source523_item_identity.gd").clean_message(text)
+	text = preload("res://scripts/ui/source523_item_identity.gd").screen_text(text)
 	log_label.append_text(text + "\n")
 	if log_label.get_line_count() > 8:
 		log_label.clear()
