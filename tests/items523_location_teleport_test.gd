@@ -34,6 +34,10 @@ func check(condition: bool, label: String) -> bool:
 func _initialize() -> void: call_deferred("run")
 
 func rules() -> void:
+	# 보고서2 NEW04: start <= p < end (end exclusive), a degenerate row holds no cell.
+	var rect: Rect2i = EFFECTS.area_rect({"StartX":10,"StartY":20,"EndX":13,"EndY":22})
+	check(rect.has_point(Vector2i(10,20)) and rect.has_point(Vector2i(12,21)) and not rect.has_point(Vector2i(13,21)) and not rect.has_point(Vector2i(12,22)) and not rect.has_point(Vector2i(9,20)), "ConsumeTerritories rectangle: StartX <= x < EndX, StartY <= y < EndY")
+	check(not EFFECTS.area_rect({"StartX":5,"StartY":5,"EndX":5,"EndY":5}).has_point(Vector2i(5,5)) and not EFFECTS.area_rect({"StartX":5,"StartY":5,"EndX":3,"EndY":9}).has_point(Vector2i(4,6)), "End <= Start contains no cell")
 	check(EFFECTS.location_teleport({}).is_empty() and EFFECTS.claims({}).is_empty(), "a non-original record is not claimed")
 	check(EFFECTS.location_teleport({"source_m_native_item":true,"slot":"material","source_test_item":false}).is_empty(), "only consumables are claimed")
 	var payment_script: Script = PAYMENT
