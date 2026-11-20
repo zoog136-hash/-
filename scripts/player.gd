@@ -220,7 +220,7 @@ func _physics_step(delta: float) -> void:
 	if manual.length_squared() > 0.01:
 		cancel_attack()
 		clear_click_path()
-		velocity = _walk_velocity(manual, move_speed)
+		velocity = _walk_velocity(SOURCE_WALK.cell_direction(_route_coordinates(), manual), move_speed)
 	else:
 		velocity = _click_path_velocity()
 
@@ -245,8 +245,15 @@ func _click_path_velocity() -> Vector2:
 		next_point = click_path[path_index]
 		distance = global_position.distance_to(next_point)
 	var direction: Vector2 = global_position.direction_to(next_point)
+	var room: float = distance
+	# On an original Land the leg is walked in the original's eight cell
+	# directions (diagonal steps, then straight), never an off-grid line.
+	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, next_point, Callable(self, "_route_line_clear") if _route_has_field() else Callable())
+	if not leg.is_empty():
+		direction = leg.direction
+		room = maxf(float(leg.length), 0.0)
 	var speed: float = _walk_velocity(direction, click_move_speed).length()
-	return direction * minf(speed, distance / maxf(physics_delta, 0.001))
+	return direction * minf(speed, room / maxf(physics_delta, 0.001))
 
 ## Walk animation clock on an original 523 Land: one walk loop of the
 ## original actor is one cell step, so its own clock is scaled to finish the
@@ -260,13 +267,62 @@ static func walk_clock_scale(cycle_seconds: float, multiplier: float) -> float:
 func _source_walk_clock() -> float:
 	_walk_clock_scale = 1.0
 	if motion.active or not motion.state in ["walk", "run"] or not original_source_preview.source_role() in ["walk", "run"]: return 1.0
-	if SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null) == null: return 1.0
+	var coordinates: Variant = SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null)
+	if coordinates == null: return 1.0
+	_sync_root_motion_cell_steps(coordinates)
 	# A slowed or partly blocked move keeps the same stride per cell.
 	var speed_ratio: float = 1.0
 	var full: float = _walk_velocity(velocity, 0.0).length()
 	if full > 0.001: speed_ratio = clampf(get_real_velocity().length() / full, 0.0, 1.0)
 	_walk_clock_scale = walk_clock_scale(original_source_preview.role_cycle_seconds(original_source_preview.source_role()), walk_speed_multiplier()) * speed_ratio
 	return _walk_clock_scale
+
+## Movement action shown on an original 523 Land (user report 2026-11-19,
+## "이젠 왜 뛰지 않고 걷는거지"; user decision: as the original, walk normally
+## and run from acceleration stage 1). The original declares a separate run
+## actor per character (SpriteRun: elf 15282 -> 15284, 15270 -> 15272) with the
+## walk's timing (8 frames x 2 ticks = PlayerDelay 16 at PlayerFrameRate 36,
+## one cell per loop) and turns it on with RunSpritePoint, which only the
+## 1단/2단/3단 acceleration buffs grant (source_run_points.gd). The points come
+## from the buffs the world applies (any record naming its original BuffClass);
+## when none of them carries RunSpritePoint, TWILIGHT 근사: a total speed
+## multiplier above the base walk counts as stage 1. The old px/s threshold
+## (actor_motion.gd, reference 210 px/s) is not used here: since the original
+## walk speed (#642) it could never be reached.
+const RUN_POINTS = preload("res://scripts/animation/source_run_points.gd")
+const SOURCE_RUN_MIN_MULTIPLIER: float = 1.0 + 0.001
+## Last evaluation, for tools and tests: {"known", "points", "run", "origin"}.
+var source_run_status: Dictionary = {}
+
+func source_run_accelerated() -> bool:
+	source_run_status = source_run_decision(RUN_POINTS.from_world(get_parent()), walk_speed_multiplier())
+	return bool(source_run_status.run)
+
+## Run or walk from the applied RunSpritePoint (`found`, source_run_points.gd)
+## or, when no applied effect carries one, from the speed multiplier.
+static func source_run_decision(found: Dictionary, multiplier: float) -> Dictionary:
+	var known: bool = bool(found.get("known", false))
+	var points: int = int(found.get("points", 0))
+	if known: return {"known": true, "points": points, "run": points >= 1, "origin": "RunSpritePoint"}
+	return {"known": false, "points": 0, "run": multiplier > SOURCE_RUN_MIN_MULTIPLIER, "origin": "TWILIGHT_approx_move_speed_multiplier"}
+
+func source_move_state(state: String) -> String:
+	if not state in ["walk", "run"]: return state
+	if SOURCE_WALK.coordinates_of(get_parent().get("field_map") if get_parent() != null else null) == null: return state
+	return "run" if source_run_accelerated() else "walk"
+
+## The walk root-motion cancel uses the field's exact one-cell steps, in the
+## preview's own (source pixel) space.
+var _root_motion_steps_key: String = ""
+func _sync_root_motion_cell_steps(coordinates: Object) -> void:
+	var preview_scale: Vector2 = original_source_preview.scale
+	var key: String = "%s|%s|%s" % [str(coordinates.get("basis_x")), str(coordinates.get("basis_y")), str(preview_scale)]
+	if key == _root_motion_steps_key: return
+	_root_motion_steps_key = key
+	var steps: Array[Vector2] = []
+	if absf(preview_scale.x) > 0.0001 and absf(preview_scale.y) > 0.0001:
+		for step: Vector2 in SOURCE_WALK.cell_steps(coordinates): steps.append(step / preview_scale)
+	original_source_preview.root_motion_cell_steps = steps
 
 ## Total speed multiplier (equipment/buffs and skills) over the base walk.
 func walk_speed_multiplier() -> float:
@@ -317,7 +373,7 @@ func _update_visual_timed(delta: float) -> void:
 		if frame != _source_visual_frame or not Engine.is_in_physics_frame():
 			_source_visual_frame = frame
 			var source_started: int = FRAME_HITCH.now()
-			original_source_preview.advance_source(_source_visual_delta * _source_walk_clock(), motion.state, motion.facing8, motion.sequence, motion.active)
+			original_source_preview.advance_source(_source_visual_delta * _source_walk_clock(), source_move_state(motion.state), motion.facing8, motion.sequence, motion.active)
 			FRAME_HITCH.detail("player.source", source_started)
 			_source_visual_delta = 0.0
 	elif not source_only_pending:
@@ -655,7 +711,8 @@ func _route_has_field() -> bool:
 ## Speed (px/s) the current route walk wants this frame, 0 without a route.
 func intended_walk_speed() -> float:
 	if path_index >= click_path.size(): return 0.0
-	return _walk_velocity(global_position.direction_to(click_path[path_index]), click_move_speed).length()
+	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, click_path[path_index])
+	return _walk_velocity(leg.direction if not leg.is_empty() else global_position.direction_to(click_path[path_index]), click_move_speed).length()
 
 func clear_click_path() -> void:
 	manual_navigation = false

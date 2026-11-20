@@ -16,6 +16,8 @@ const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
 const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
 const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const PACK_VERSION := preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
+const ICON_STATUS := preload("res://scripts/ui/item_icon_resource_status.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
@@ -42,6 +44,8 @@ static var _prepared_main: PackedScene
 var readiness_timeout_msec: int = 60000
 var _overlay: CanvasLayer
 var _status: Label
+var _ui_pack: Label
+var _ui_pack_sha: String = ""
 var _bar: ProgressBar
 var _count: Label
 var _stage: Label
@@ -165,7 +169,7 @@ func _ready() -> void:
 	column.add_child(_bar)
 	_count = STYLE.label("완료 작업 0/0 · 작업 수 기준", 16, STYLE.GOLD)
 	column.add_child(_count)
-	column.add_child(STYLE.label("검증 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
+	column.add_child(STYLE.label("준비 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
 	_stage = STYLE.label("지난 실행 중단 단계: " + _previous if not _previous.is_empty() else "", 14, STYLE.MUTED)
 	column.add_child(_stage)
 	_cache_warning = STYLE.label("", 14, STYLE.GOLD)
@@ -188,7 +192,34 @@ func _ready() -> void:
 	version.offset_top = 10
 	version.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(version)
+	# The installed UI add-on (and a reinstall notice when it is old) under
+	# the version; refreshed as the boot selects the pack.
+	_ui_pack = STYLE.label("", 14, Color(STYLE.MUTED, 0.75))
+	_ui_pack.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_ui_pack.offset_left = -520
+	_ui_pack.offset_right = -16
+	_ui_pack.offset_top = 32
+	_ui_pack.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_ui_pack.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(_ui_pack)
+	_refresh_ui_pack()
 	_start.call_deferred()
+
+## UI 팩 ui42 (335af82d); an old pack adds the reinstall notice. The game
+## is never held for it.
+func _refresh_ui_pack() -> void:
+	if not is_instance_valid(_ui_pack): return
+	var sha: String = OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")
+	if sha == _ui_pack_sha and not _ui_pack.text.is_empty(): return
+	_ui_pack_sha = sha
+	var info: Dictionary = PACK_VERSION.installed()
+	_ui_pack.text = PACK_VERSION.label(info) + ("\n" + PACK_VERSION.WARNING if bool(info.outdated) else "")
+	# Item icons (images section of the resource pack), checked without
+	# opening the image list: only a missing one is announced here.
+	var icons: Dictionary = ICON_STATUS.check(false)
+	var icons_missing: bool = not bool(icons.ok) and not OS.get_environment("TWILIGHT_PATCH523_CONTENT").is_empty()
+	if icons_missing: _ui_pack.text += "\n" + ICON_STATUS.label(icons)
+	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) or icons_missing else Color(STYLE.MUTED, 0.75))
 
 func _version_text() -> String:
 	var updater: Node = get_node_or_null("/root/Updater")
@@ -211,6 +242,7 @@ func snapshot() -> Dictionary:
 	return _progress.snapshot()
 
 func _render(detail: String = "") -> void:
+	_refresh_ui_pack()
 	var value: Dictionary = snapshot()
 	_bar.value = value.percent
 	_status.text = value.status
@@ -242,7 +274,7 @@ func _boot() -> void:
 	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
 	for step: Dictionary in steps:
-		_progress.begin_task(str(step.id), "원본 %s 검증·정리 중…" % str(step.label))
+		_progress.begin_task(str(step.id), "%s 준비 중…" % str(step.label))
 		_render("현재 단계의 남은 시간은 계산할 수 없습니다.")
 		await get_tree().process_frame
 		_job = JOB.new()
@@ -250,16 +282,16 @@ func _boot() -> void:
 		var error: Error = _job.start(step)
 		if error == OK:
 			while not _job.completed():
-				_render("검증 단계: " + BOOT_LOG.current_stage())
+				_render("준비 단계: " + BOOT_LOG.current_stage() if preload("res://scripts/boot/build_flags.gd").developer_ui() else "준비 중…")
 				await get_tree().process_frame
 			result = _job.finish()
 		else:
-			_render("백그라운드 검증을 시작하지 못해 현재 단계에서 직접 검증합니다.")
+			_render("준비를 계속하는 중…")
 			await get_tree().process_frame
 			result = PREBAKE.run_result(step)
 		_job = null
 		if not result.get("ok", false):
-			_fail("원본 %s 검증 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
+			_fail("%s 준비 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
 			return
 		if not result.get("baked", false):
 			_cache_misses.append(str(step.label))
@@ -267,7 +299,7 @@ func _boot() -> void:
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
 		_attach_original_loading_fx()
-		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
+		_render("준비 완료" if result.get("baked", false) else "준비 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
 	if not tables.is_empty():
 		_progress.begin_task("definitions", "원본 표를 준비하는 중…")
 		var definitions_started: int = BOOT_LOG.begin("definitions_prepare", {"tables": tables.size()})

@@ -62,17 +62,25 @@ func tick(delta: float) -> void:
 	for id: String in clocks:clocks[id]=maxf(0,float(clocks[id])-delta)
 	var world: Node=service.world
 	# Old active-save versions must not stack a converted passive's old package.
-	for name: String in world.active_skill_buffs.keys():
-		var old: Dictionary=world.active_skill_buffs[name]
-		var record: Dictionary=service.catalog.record_for(str(old.get("skill_id",name)))
-		if record.is_empty():continue
-		var resolved: Dictionary=service.catalog.resolve(record)
-		if resolved.has("progression523") and str(resolved.activation)=="passive":
-			world.active_skill_buffs.erase(name);service.vfx.remove_persistent(str(record.id))
+	# Only a changed buff list can hold such a package: resolving every active
+	# buff's record each frame was the "skills.progression" cost (523.691:
+	# 96 ms/s on the phone).
+	var buff_ids: Array = []
+	for name: String in world.active_skill_buffs:
+		var buff: Variant = world.active_skill_buffs[name]
+		buff_ids.append(name); buff_ids.append(str((buff as Dictionary).get("skill_id", name)) if buff is Dictionary else "")
+	var buff_signature: int = hash(buff_ids)
+	if buff_signature != _checked_buffs_signature:
+		_checked_buffs_signature = buff_signature
+		_drop_converted_passives(world)
 	update_light()
 	if world.hp<=0 or world.player.motion.dead or world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced():return
 	for id: String in on:
 		if not bool(on[id]) or float(clocks.get(id,0))>0:continue
+		# Only auras act here, and a skill's kind never changes. Non-aura skills
+		# switched on (no clock) resolved their record every frame
+		# (523.699: skills.progression still 80 ms/s on the phone).
+		if not _is_aura(id):continue
 		var record: Dictionary=service.catalog.record_for(id)
 		if record.is_empty() or not service.catalog.enabled(record):continue
 		var skill: Dictionary=service.catalog.resolve(record)
@@ -92,7 +100,47 @@ func tick(delta: float) -> void:
 		clocks[id]=maxf(.1,config.value(id,"interval"))
 		if count>0:fired[id]=int(fired.get(id,0))+1;service.vfx.emit_skill(id,"impact",world.player.global_position)
 
+## Skill id -> whether its resolved progression kind is "aura" (static per catalog).
+var _aura_kind: Dictionary = {}
+var _aura_catalog: Object = null
+
+func _is_aura(id: String) -> bool:
+	if _aura_catalog != service.catalog:
+		_aura_catalog = service.catalog
+		_aura_kind.clear()
+	if _aura_kind.has(id): return bool(_aura_kind[id])
+	var record: Dictionary=service.catalog.record_for(id)
+	var aura: bool=false
+	if not record.is_empty():
+		aura=str(service.catalog.resolve(record).get("progression523",{}).get("kind",""))=="aura"
+	# An unknown id may become known once the source loads: only cache knowns.
+	if not record.is_empty(): _aura_kind[id]=aura
+	return aura
+
+## Names and skill ids of the active buffs last checked by _drop_converted_passives.
+var _checked_buffs_signature: int = 0
+
+func _drop_converted_passives(world: Node) -> void:
+	for name: String in world.active_skill_buffs.keys():
+		var old: Dictionary=world.active_skill_buffs[name]
+		var record: Dictionary=service.catalog.record_for(str(old.get("skill_id",name)))
+		if record.is_empty():continue
+		var resolved: Dictionary=service.catalog.resolve(record)
+		if resolved.has("progression523") and str(resolved.activation)=="passive":
+			world.active_skill_buffs.erase(name);service.vfx.remove_persistent(str(record.id))
+	# Erasing changed the list; remember the list as it now is.
+	var buff_ids: Array = []
+	for name: String in world.active_skill_buffs:
+		var buff: Variant = world.active_skill_buffs[name]
+		buff_ids.append(name); buff_ids.append(str((buff as Dictionary).get("skill_id", name)) if buff is Dictionary else "")
+	_checked_buffs_signature = hash(buff_ids)
+
 func update_light() -> void:
+	# The cheap checks first: stat() sums the stat index and the carried
+	# weight every call, and without a darkened canvas the light stays hidden.
+	if service.world.hp<=0 or not scene_darkened(service.world):
+		if is_instance_valid(light):light.hide()
+		return
 	var radius: float=service.catalog.stat("lightRadius")
 	# Original rule: 라이트 (SpellClass 2, "밝은 광원을 만들어 주위를 밝힌다")
 	# gives LightRadius (BonusType 56, shown as 시야거리). The original client

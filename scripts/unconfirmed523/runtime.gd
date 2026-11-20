@@ -86,7 +86,7 @@ func restore(data: Dictionary) -> void:
 	var next: Variant = data.get(SAVE_KEY,fresh())
 	problem = validate(next)
 	if not problem.is_empty(): save_blocked = true; return
-	state = next.duplicate(true)
+	state = saved_form(next).duplicate(true)
 	if not state.has("event_receipts"): state.event_receipts = {}
 	for key: String in domains:
 		if not state.domains.has(key): state.domains[key] = domains[key].initial_state()
@@ -98,7 +98,7 @@ func restore(data: Dictionary) -> void:
 func snapshot() -> Dictionary:
 	# Staged writes ask for the ordinary snapshot before merging their payload.
 	# Keep that read isolated so a failed write cannot modify live transaction state.
-	var result: Dictionary = state.duplicate(true)
+	var result: Dictionary = saved_form(state).duplicate(true)
 	if not save_blocked and source.ready() and _source_configured and result.domains.has("jade_grail"):
 		result.domains.jade_grail.latest_at = maxi(int(result.domains.jade_grail.get("latest_at",0)),now())
 		if not busy: state.domains.jade_grail.latest_at = result.domains.jade_grail.latest_at
@@ -306,8 +306,11 @@ func _observe_source_ground_acquisition(overrides: Dictionary) -> Dictionary:
 	# The item owner has sealed exact original drop membership, physical IDs,
 	# quantities and the removed floor record. Reuse the existing event owner.
 	if busy or save_blocked or not problem.is_empty() or not source.ready() or not _source_configured:return {"ok":true}
-	var before: Variant=world.consumable_service.export_state().get("source_ground_acquisitions",{})
 	var after: Variant=overrides.get("consumable_state",{}).get("source_ground_acquisitions",{})
+	# Pickup receipts are no longer written (save_provenance_trim.gd): nothing
+	# to observe, and no copy of the whole state per pickup.
+	if after is Dictionary and after.is_empty():return {"ok":true}
+	var before: Variant=world.consumable_service.export_state().get("source_ground_acquisitions",{})
 	if not before is Dictionary or not after is Dictionary:return _fail("원본 습득 이벤트 영수증 형식 오류")
 	var next: Dictionary=state.duplicate(true)
 	var changed: bool=false
@@ -706,6 +709,38 @@ func _item_life(id: int) -> Dictionary:
 		seconds = int(bonus_row.Value)
 	return {"seconds":seconds}
 
+## Live-event replay keys (this session's nonce + host event id) only stop
+## one kill/pickup/use from counting twice in this session; a reload makes a
+## new nonce, so a saved one can never match again. They stay in memory
+## (bounded) and are not saved. "source_grant:" receipts are one-time grant
+## keys and are always kept.
+const LIVE_RECEIPT_LIMIT := 2048
+const LIVE_RECEIPT_TRIM := 512
+const GRANT_PREFIX := "source_grant:"
+
+static func _live(event_id: Variant) -> bool:
+	return not str(event_id).begins_with(GRANT_PREFIX)
+
+static func _bound_live_receipts(value: Dictionary) -> void:
+	var receipts: Variant = value.get("event_receipts")
+	if not receipts is Dictionary or receipts.size() <= LIVE_RECEIPT_LIMIT + LIVE_RECEIPT_TRIM: return
+	var live: Array = []
+	for id: Variant in receipts:
+		if _live(id): live.append(id)
+	for index: int in range(maxi(0, live.size()-LIVE_RECEIPT_LIMIT)): receipts.erase(live[index])
+
+## The saved form: live replay keys left out (copy only when there are any).
+static func saved_form(value: Variant) -> Variant:
+	if not value is Dictionary or not value.get("event_receipts") is Dictionary: return value
+	var receipts: Dictionary = value.event_receipts
+	var kept: Dictionary = {}
+	for id: Variant in receipts:
+		if not _live(id): kept[id] = receipts[id]
+	if kept.size() == receipts.size(): return value
+	var result: Dictionary = value.duplicate(false)
+	result.event_receipts = kept
+	return result
+
 func record_event(kind: String, payload: Dictionary = {}) -> void:
 	if save_blocked or not source.ready() or not _source_configured: return
 	var raw_event_id: String = str(payload.get("event_id",""))
@@ -716,30 +751,29 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 	if not _integer(payload.get("amount",1),1): return
 	if not state.has("event_receipts"): state.event_receipts = {}
 	state.event_receipts[event_id] = true
-	if state.event_receipts.size() > 8192:
-		# Transaction receipts must survive the bounded live-event replay window.
-		var live_receipts: Array = []
-		for old_id: String in state.event_receipts:
-			if not old_id.begins_with("source_grant:"): live_receipts.append(old_id)
-		for index: int in range(maxi(0,live_receipts.size()-8192)): state.event_receipts.erase(live_receipts[index])
+	_bound_live_receipts(state)
 	var amount: int = int(payload.get("amount",1))
 	state.event_counters[kind] = int(state.event_counters.get(kind,0))+amount
 	var source_id: int = int(payload.get("source_id",0))
 	if source_id > 0:
 		var counter_key: String = "%s:%d" % [kind,source_id]
 		state.event_counters[counter_key] = int(state.event_counters.get(counter_key,0))+amount
+	# Event progress reads only clock, level, class, region, map, counters and
+	# policies (challenge/events domains' event()); never the full bag/quest
+	# export context() builds for claims (was ~100 ms per kill/pickup).
+	var event_context: Dictionary = _fresh_context(state)
 	if kind in ["kill","item_use","territory_enter","npc_transform","npc_hp","player_death","map_change"] and domains.has("challenge") and domains.challenge.has_method("event"):
 		var event: Dictionary = payload.duplicate(true)
 		event.kind = kind
 		event.event_id = event_id
 		if not event.has("npc_id"): event.npc_id = source_id
-		var response: Dictionary = domains.challenge.event(event,context(),state.domains.challenge)
+		var response: Dictionary = domains.challenge.event(event,event_context,state.domains.challenge)
 		if bool(response.get("ok",false)): state.domains.challenge = response.state
 	if domains.has("events") and domains.events.has_method("event"):
 		var event: Dictionary = payload.duplicate(true)
 		event.kind = kind
 		event.event_id = event_id
-		var response: Dictionary = domains.events.event(event,context(),state.domains.events)
+		var response: Dictionary = domains.events.event(event,event_context,state.domains.events)
 		if bool(response.get("ok",false)): state.domains.events = response.state
 	state.revision = int(state.revision)+1
 

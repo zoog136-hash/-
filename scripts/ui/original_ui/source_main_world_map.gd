@@ -4,6 +4,11 @@ extends Node
 ## default, cell projection, movement, image resolver or replacement artwork.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Bindings=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
+const Router=preload("res://scripts/ui/original_ui/source_button_router.gd")
+const AreaTab=preload("res://scripts/ui/original_ui/source_main_map_area_tab.gd")
+## The area tab's (and 지역 정보 popup's) buttons: list rows hand their drag
+## to the list through this router (DRAG_META), as the other original windows.
+var _tab_router=Router.new()
 signal world_image_clicked(payload: Dictionary)
 var _pack: RefCounted
 var _bindings: RefCounted
@@ -97,12 +102,32 @@ func open() -> Dictionary:
 		_register_native_button(map_row.player,4508)
 	scene.z_index=150
 	mount.add_child(scene)
+	var tab: RefCounted=area_tab()
+	var tab_result: Dictionary=tab.presented(child.player,mount) if tab!=null else {}
 	if not get_window().focus_exited.is_connected(_cancel_native_input):get_window().focus_exited.connect(_cancel_native_input)
 	if not get_viewport().size_changed.is_connected(_cancel_native_input):get_viewport().size_changed.connect(_cancel_native_input)
 	set_process(true)
 	# The original offered row is visible; it has not been selected here.
 	# No image or Ratio/Base fields are inferred from current Land/map IDs.
-	return _remember({"ok":true,"source_scene_presented":true,"offered_world_id":offered,"selected_world_id":0,"world_auto_selected":false,"image_applied":false,"original_ui_member":contract.member,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":contract.area_contract.unresolved_fields})
+	return _remember({"ok":true,"source_scene_presented":true,"offered_world_id":offered,"selected_world_id":0,"world_auto_selected":false,"image_applied":false,"original_ui_member":contract.member,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":contract.area_contract.unresolved_fields,"area_tab":tab_result})
+
+## The original area list / 텔레포트 / 지역 정보 (null with an older UI pack).
+func area_tab() -> RefCounted:
+	return _bindings.get("area_tab") if _bindings!=null else null
+
+## A map tap at source `cell` (the walk target): its area is selected.
+func select_area_at_cell(cell: Vector2) -> Dictionary:
+	var tab: RefCounted=area_tab()
+	return tab.select_cell(cell) if tab!=null and is_open() else {"ok":false,"code":"source_world_map_area_tab_unavailable"}
+
+func _tab_buttons() -> Array:
+	var tab: RefCounted=area_tab()
+	if tab==null:return []
+	var found: Array=tab.popup_buttons()
+	# With 지역 정보 open only its buttons take a touch (its Black_BG covers the map).
+	if not found.is_empty():return found
+	AreaTab.collect_buttons(_scene,found)
+	return found
 
 func _register_native_button(renderer: Node2D, offset: int) -> void:
 	var node: Variant=renderer.get("source_nodes").get(offset)
@@ -114,6 +139,12 @@ func _input(event: InputEvent) -> void:
 	if _native_touch_blocked():
 		_cancel_native_input()
 		return
+	var tab: RefCounted=area_tab()
+	if tab!=null and _touch_button==null and _scroll_touch<0:
+		var routed: Dictionary=_tab_router.route(event,event.position,_tab_buttons() if not _tab_router.is_capturing() else [])
+		if routed.get("handled",false) or tab.area_info_open():
+			get_viewport().set_input_as_handled()
+			return
 	var captured: Object=_touch_button.get_ref() if _touch_button!=null else null
 	if captured!=null:
 		if event.index==_button_touch:
@@ -175,6 +206,7 @@ func _native_touch_blocked() -> bool:
 	return false
 
 func _cancel_native_input() -> void:
+	_tab_router.cancel()
 	_touch_button=null
 	_button_touch=-1
 	for reference: WeakRef in _native_buttons:

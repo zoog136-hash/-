@@ -51,6 +51,11 @@ static func equipment(world: Node, uid: String) -> Dictionary:
 	elif state in ["cursed","저주"]: bless = 3
 	return {"ok":true,"uid":uid,"name":name_value,"record":record,"raw":raw,"item_class_id":item_class_id,"enchant":int(level),"element":str(entry.get("element","")),"element_level":int(element_level),"bless":bless}
 
+## Reject before addition; callers use this while quoting, before removal/save.
+static func dissolve_total(total: int, amount: int) -> int:
+	if total<0 or amount<0 or amount>RULES.MAX_DISSOLVE_AMOUNT or total>RULES.MAX_DISSOLVE_AMOUNT-amount:return -1
+	return total+amount
+
 static func dissolve_quote(world: Node, uids: Array) -> Dictionary:
 	if uids.is_empty(): return _fail("용해할 장비를 선택하세요","empty")
 	var seen: Dictionary = {}; var items: Array = []; var total: int = 0
@@ -64,7 +69,9 @@ static func dissolve_quote(world: Node, uids: Array) -> Dictionary:
 		var yielded: Dictionary = RULES.dissolve_yield(info.item_class_id,info.enchant,element_level)
 		if not yielded.ok: return yielded
 		info["amount"] = int(yielded.amount); info["grade_id"] = int(yielded.grade_id)
-		items.append(info); total += int(yielded.amount)
+		total=dissolve_total(total,int(yielded.amount))
+		if total<0:return _fail("용해 합계가 안전한 정수 범위를 초과합니다","amount_overflow")
+		items.append(info)
 	return {"ok":true,"items":items,"output_item_class_id":RULES.BLESS_POWDER_ITEM,"total":total}
 
 ## Supplier stage over an already staged bag (the targets already removed).
@@ -160,7 +167,9 @@ static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class
 		var yielded: Dictionary = RULES.advanced_dissolve_yield(info.item_class_id,element_level,int(spec.method),info.enchant)
 		if not yielded.ok: return yielded
 		info["amount"] = int(yielded.amount); info["grade_id"] = int(yielded.grade_id)
-		items.append(info); total += int(yielded.amount)
+		total=dissolve_total(total,int(yielded.amount))
+		if total<0:return _fail("용해 합계가 안전한 정수 범위를 초과합니다","amount_overflow")
+		items.append(info)
 	var need: int = items.size()*RULES.ADVANCED_SOLVENT_PER_ITEM
 	var owned: Dictionary = stacks_of(world,solvent_item_class_id)
 	if int(owned.total)<need: return _fail("용해제가 부족합니다 (%d/%d)" % [int(owned.total),need],"solvent_short")

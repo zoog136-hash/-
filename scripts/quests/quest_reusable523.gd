@@ -127,7 +127,7 @@ class View extends Node:
 			if host.get("patch523_owner_state_problem") is String and not host.patch523_owner_state_problem.is_empty():host.quest_service.save_blocked=true;uncertain=true;return error
 			var parser:=JSON.new();var parse_error: Error=parser.parse(FileAccess.get_file_as_string(path))
 			var durable: Variant=parser.data if parse_error==OK else null
-			var normalized: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true));var confirmed: bool=durable is Dictionary
+			var normalized: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(payload);var confirmed: bool=durable is Dictionary
 			if confirmed:
 				for key: String in normalized:
 					if durable.get(key)!=normalized[key]:confirmed=false;break

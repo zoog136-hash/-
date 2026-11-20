@@ -159,7 +159,12 @@ static func _allocator(payload: Dictionary, account: Dictionary) -> Dictionary:
 ## Trusted owner candidates are sealed once into canonical account state and
 ## its exact legacy-compatible selected-character projection. Pure: no I/O.
 static func seal_payload(payload: Dictionary) -> Dictionary:
-	var data: Dictionary=payload.duplicate(true)
+	return _seal(payload.duplicate(true))
+
+## data is owned by the caller (already a private copy). The sealed body is
+## built as _project(shared, state) from this very data, so validate() need
+## not re-prove that identity with three sorted JSON copies of the save.
+static func _seal(data: Dictionary) -> Dictionary:
 	if not data.get(KEY) is Dictionary or data[KEY].get("schema")!=SCHEMA: return fail("계정 v2 저장으로 먼저 안전하게 이전해 주세요.")
 	var account: Dictionary=data[KEY]
 	if not account.get("characters") is Array or not account.get("selected") is String or not account.get("shared") is Dictionary: return fail("계정 공유·캐릭터 목록 저장 형식 오류")
@@ -182,7 +187,7 @@ static func seal_payload(payload: Dictionary) -> Dictionary:
 	selected.state=state
 	var sealed: Dictionary=_project(shared,state)
 	sealed[KEY]=account
-	var error: String=validate(sealed)
+	var error: String=validate(sealed,true)
 	return {"ok":true,"payload":sealed} if error.is_empty() else fail(error)
 
 static func reseal_migration(payload: Dictionary) -> Dictionary:
@@ -197,6 +202,46 @@ static func _project(shared: Dictionary, state: Dictionary) -> Dictionary:
 			result[key] = merged
 		else: result[key] = _copy(shared[key])
 	return result
+
+## The selected character's state is the flat save body itself
+## (_project(shared, state) == body, checked by validate()). The file keeps it
+## once: the selected record holds only this marker on disk and expand() puts
+## private_fields(body) back right after parsing, before validate() or any
+## other reader (user 2026-11-19: "쓸데없이 비용만 차지하는 데이터 다 삭제").
+const SELECTED_IN_BODY := "twilight_selected_state_in_body"
+
+static func _selected_index(account: Dictionary) -> int:
+	var characters: Variant = account.get("characters")
+	if not characters is Array: return -1
+	for index: int in (characters as Array).size():
+		var record: Variant = characters[index]
+		if record is Dictionary and record.get("id") == account.get("selected"): return index
+	return -1
+
+static func _marked(state: Variant) -> bool:
+	return state is Dictionary and (state as Dictionary).size() == 1 and (state as Dictionary).get(SELECTED_IN_BODY) == true
+
+## File form of a sealed (already validated) v2 payload. Shares untouched parts.
+static func compact(payload: Dictionary) -> Dictionary:
+	var account: Variant = payload.get(KEY)
+	if not account is Dictionary or account.get("schema") != SCHEMA: return payload
+	var index: int = _selected_index(account)
+	if index < 0 or not account.characters[index].get("state") is Dictionary or _marked(account.characters[index].state): return payload
+	var result: Dictionary = payload.duplicate(false)
+	var envelope: Dictionary = account.duplicate(false)
+	var characters: Array = (account.characters as Array).duplicate(false)
+	var record: Dictionary = (characters[index] as Dictionary).duplicate(false)
+	record.state = {SELECTED_IN_BODY: true}
+	characters[index] = record; envelope.characters = characters; result[KEY] = envelope
+	return result
+
+## Memory form of a parsed save, in place (no-op for older full files).
+static func expand(payload: Dictionary) -> void:
+	var account: Variant = payload.get(KEY)
+	if not account is Dictionary or account.get("schema") != SCHEMA: return
+	var index: int = _selected_index(account)
+	if index < 0 or not _marked(account.characters[index].get("state")): return
+	account.characters[index].state = private_fields(payload)
 
 static func selected_record(payload: Dictionary) -> Dictionary:
 	var envelope: Dictionary = payload.get(KEY,{})
@@ -218,7 +263,7 @@ static func dormant_items(payload: Dictionary) -> Dictionary:
 			if physical is Dictionary and physical.get("data") is Dictionary and physical.get("id") is String: result[physical.id]=physical.data
 	return result
 
-static func validate(payload: Dictionary) -> String:
+static func validate(payload: Dictionary, projection_built: bool=false) -> String:
 	if not payload.has(KEY): return ""
 	var account: Variant = payload[KEY]
 	if not account is Dictionary or account.get("schema") not in [SCHEMA,LEGACY_SCHEMA] or not _whole(account.get("revision")) or not account.get("characters") is Array or not account.get("selected") is String: return "캐릭터 계정 저장 형식이 올바르지 않습니다. 원본을 보존합니다."
@@ -286,9 +331,10 @@ static func validate(payload: Dictionary) -> String:
 		if shared.get("consumable_state") is Dictionary:
 			for key: String in shared.consumable_state:
 				if key not in SHARED_PROOFS: return "개별 소비 상태가 계정 공유 상태에 중복되어 있습니다."
-		if not _same(shared_fields(payload),shared) or not _same(private_fields(payload),selected.state): return "계정 공유·캐릭터 상태와 저장 본문이 일치하지 않습니다."
-		var flat: Dictionary=payload.duplicate(true);flat.erase(KEY)
-		if not _same(flat,_project(shared,selected.state)): return "계정 정본과 선택 캐릭터 호환 저장이 일치하지 않습니다."
+		if not projection_built:
+			if not _same(shared_fields(payload),shared) or not _same(private_fields(payload),selected.state): return "계정 공유·캐릭터 상태와 저장 본문이 일치하지 않습니다."
+			var flat: Dictionary=payload.duplicate(true);flat.erase(KEY)
+			if not _same(flat,_project(shared,selected.state)): return "계정 정본과 선택 캐릭터 호환 저장이 일치하지 않습니다."
 		if not _whole(shared.get("next_item_instance_id"),1): return "계정 물리 아이템 할당자 형식 오류"
 	var warehouse: Variant=payload.get("warehouse",{})
 	if not warehouse is Dictionary or not warehouse.get("instances",{}) is Dictionary or not warehouse.get("stacks",{}) is Dictionary: return "공유 창고 저장 형식 오류"
@@ -306,6 +352,7 @@ func open() -> Dictionary:
 		var parser:=JSON.new()
 		if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary: return fail("저장 파일이 손상되었습니다. 기존 파일을 보존합니다.")
 		_loaded=parser.data
+		expand(_loaded)
 		var error: String=validate(_loaded)
 		if not error.is_empty(): return fail(error)
 	elif FileAccess.file_exists(path): return fail("저장 파일 무결성을 확인하지 못했습니다.")
@@ -323,16 +370,18 @@ func _commit(payload: Dictionary) -> Dictionary:
 	if (FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "")!=_hash: return fail("다른 실행에서 저장이 변경되었습니다. 목록을 다시 불러오세요.")
 	var error: String=validate(payload)
 	if not error.is_empty(): return fail(error)
-	var result: Error=test_writer.call(path,payload.duplicate(true)) if test_writer.is_valid() else WRITER.write(path,payload)
+	var on_disk: Dictionary=compact(payload)
+	var result: Error=test_writer.call(path,on_disk.duplicate(true)) if test_writer.is_valid() else WRITER.write(path,on_disk)
 	if result!=OK:
 		# A lost response after an actual replace must not create a second
 		# character on retry. Only the exact intended durable bytes count.
-		var expected: String=JSON.stringify(payload,"",true,true).sha256_text()
+		var expected: String=JSON.stringify(on_disk,"",true,true).sha256_text()
 		var actual: String=FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
 		if actual!=expected:
 			if actual!=_hash: _opened=false
 			return fail("저장 결과를 확인하지 못했습니다. 목록을 다시 불러오세요. 오류 %d"%result)
 	_loaded=payload.duplicate(true); _hash=FileAccess.get_sha256(path)
+	remember_durable(path,payload.get(KEY))
 	return {"ok":true}
 
 func _backup(suffix: String) -> Dictionary:
@@ -500,19 +549,41 @@ static func stage_save(path: String, payload: Dictionary) -> Dictionary:
 			if saved.parse(FileAccess.get_file_as_string(path))!=OK or not saved.data is Dictionary: return fail("기존 저장 형식 확인 실패 · 덮어쓰지 않습니다.")
 			if saved.data.has(KEY): return fail("계정 저장은 로비에서 선택한 캐릭터만 변경할 수 있습니다.")
 		return {"ok":true,"payload":payload}
-	var parser:=JSON.new()
-	if parser.parse(FileAccess.get_file_as_string(path))!=OK or not parser.data is Dictionary: return fail("캐릭터 계정 저장을 읽지 못했습니다.")
-	var prior: Dictionary=parser.data
-	var error: String=validate(prior)
-	if not error.is_empty(): return fail(error)
-	var account: Dictionary=prior.get(KEY,{}).duplicate(true)
+	# The file this process last wrote and validated, unchanged on disk (same
+	# SHA-256), needs no second parse + full validate per save.
+	var prior_envelope: Variant=null
+	var trusted: bool=_durable.get("path")==path and not str(_durable.get("sha","")).is_empty() and FileAccess.get_sha256(path)==_durable.sha
+	if trusted:
+		prior_envelope=_durable.envelope
+	else:
+		var parser:=JSON.new()
+		if parser.parse(FileAccess.get_file_as_string(path))!=OK or not parser.data is Dictionary: return fail("캐릭터 계정 저장을 읽지 못했습니다.")
+		var prior: Dictionary=parser.data
+		expand(prior)
+		var error: String=validate(prior)
+		if not error.is_empty(): return fail(error)
+		prior_envelope=prior.get(KEY,{})
+	var account: Dictionary=(prior_envelope as Dictionary).duplicate(true)
 	if account.get("schema")!=SCHEMA: return fail("v1 캐릭터 계정을 로비에서 먼저 백업 후 v2로 이전해 주세요.")
 	if account.get("selected")!=session.get("id"): return fail("다른 캐릭터로 선택이 변경되었습니다. 다시 접속하세요.")
 	var data: Dictionary=payload.duplicate(true)
 	data[KEY]=account
 	for record: Dictionary in account.characters:
 		if record.id==session.id: record.initialized=true
-	var staged: Dictionary=seal_payload(data)
+	var staged: Dictionary=_seal(data)
 	if not staged.ok: return staged
-	if not _same(staged.payload[KEY],prior[KEY]): staged.payload[KEY].revision=int(account.revision)+1
+	var changed: bool=staged.payload[KEY]!=prior_envelope if trusted else not _same(staged.payload[KEY],prior_envelope)
+	if changed: staged.payload[KEY].revision=int(account.revision)+1
 	return staged
+
+## The last account file this process wrote: {path, sha, envelope (memory
+## form)}. Any outside change of the file (other SHA) falls back to the full
+## parse + validate above.
+static var _durable: Dictionary = {}
+
+static func remember_durable(path: String, envelope: Variant) -> void:
+	if not envelope is Dictionary or not FileAccess.file_exists(path): _durable = {}; return
+	_durable = {"path":path,"sha":FileAccess.get_sha256(path),"envelope":(envelope as Dictionary).duplicate(true)}
+
+static func forget_durable() -> void:
+	_durable = {}

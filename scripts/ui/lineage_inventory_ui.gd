@@ -334,6 +334,13 @@ func _ref_instance_id(reference: String) -> String:
 	var pieces: PackedStringArray = reference.split("@@@", false, 1)
 	return pieces[1] if pieces.size() > 1 else ""
 
+## Wallet values without an original ItemClass row or picture: the
+## intangible currencies (source523_shop_runtime.INTANGIBLE_BINDINGS 다이아/
+## 마일리지, shown in the HUD/currency window) and 수호석 points (shown in the
+## guardian window, opened from original 수호석 상자). Like the original they
+## are not bag slots (phone 2026-11-20: empty "10000", "400", "2400" slots).
+const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
+
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
@@ -350,7 +357,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
-		if int(inventory.get(item_name, 0)) <= 0:
+		if int(inventory.get(item_name, 0)) <= 0 or WALLET_ONLY.has(item_name):
 			continue
 		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
 		instance_ids.sort_custom(instance_id_less)
@@ -512,8 +519,10 @@ func _is_engraved(record: Dictionary, item_name: String) -> bool:
 	return bool(record.get("engraved", false)) or item_name.find("(각인)") >= 0 or item_name.find("각인") >= 0
 
 func _status_badges(record: Dictionary, item_name: String) -> String:
-	# Blessing is indicated by its name prefix only; engraving is independent.
-	return "◆" if _is_engraved(record, item_name) else ""
+	# Blessing is indicated by its name prefix only; engraving is part of the
+	# original item name ("(각인)"). The old TWILIGHT "◆" mark read as a card
+	# suit on the phone (2026-11-20) and is not an original marker.
+	return ""
 
 func _display_item_name(record: Dictionary, item_reference: String) -> String:
 	if record.has("growth96_item_id"): return str(record.get("display_name",record.get("name",item_reference)))
@@ -523,7 +532,15 @@ func _display_item_name(record: Dictionary, item_reference: String) -> String:
 	if record.get("source_m_native_item") == true:
 		var original: String = str(preload("res://scripts/loot/current523_native_fields.gd").field(record,"source_display_name",""))
 		if not original.is_empty(): base = original
-	if _bless_state(record, item_reference) == "blessed" and not base.begins_with("축복받은 "):
+	# Any other entry with an original identity (held "[원본 보상]" keys,
+	# legacy rows) shows the original DescData name, never an internal key.
+	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
+	if record.get("source_m_native_item") != true or base.contains(" · 원본#"): base = identity.display_name(record, base)
+	if base.ends_with(" · 저주") or _base_item_name(item_reference).ends_with(" · 저주"):
+		base = base.trim_suffix(" · 저주")
+		return base if base.begins_with("저주받은 ") else "저주받은 " + base
+	base = base.trim_suffix(" · 축복")
+	if (_bless_state(record, item_reference) == "blessed" or _base_item_name(item_reference).ends_with(" · 축복")) and not base.begins_with("축복받은 "):
 		return "축복받은 " + base
 	return base
 
@@ -706,7 +723,7 @@ func _refresh_detail(item_name: String) -> void:
 	elif bless_state == "cursed":
 		lines.append("[color=#d76cff]☠ 저주 아이템[/color]")
 	if engraved:
-		lines.append("[color=#86d7ff]◆ 각인 아이템[/color]")
+		lines.append("[color=#86d7ff]각인 아이템[/color]")
 	if enhance_level > 0 or bless_state != "normal" or engraved:
 		lines.append("")
 	var desc := str(record.get("desc", "")).strip_edges()

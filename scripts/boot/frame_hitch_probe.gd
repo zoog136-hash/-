@@ -100,6 +100,10 @@ static func alive_fields(map_id: String) -> Dictionary:
 	fields["resources"] = int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT))
 	fields["tables"] = DEFINITIONS._tables.size()
 	fields["objects"] = int(Performance.get_monitor(Performance.OBJECT_COUNT))
+	# CPU-side image caches with their own budgets (MB), next to GPU texture MB.
+	# Loaded here, not preloaded: this autoload starts before those scripts' packs.
+	fields["cook_mb"] = int(load("res://scripts/resources/cooked_actor_store.gd").stats().get("bytes", 0)) / 1048576
+	fields["uipage_mb"] = int(load("res://scripts/ui/original_ui/source_pack_page_cache.gd").stats().get("cache_owned_bytes", 0)) / 1048576
 	return fields
 
 ## 523 field/renderer/actor sizes from the world, for the same heartbeat.
@@ -108,7 +112,7 @@ static func world_fields(world: Node) -> Dictionary:
 	if world == null: return fields
 	var renderer: Variant = world.get("field_renderer")
 	if renderer is Object and is_instance_valid(renderer):
-		for key: String in ["_raw_chunks", "_frame_atlases", "_frame_commands", "_static_tails", "_chunk_rects"]:
+		for key: String in ["_raw_chunks", "_frame_atlases", "_frame_commands", "_static_tails", "_chunk_rects", "_blocks"]:
 			var value: Variant = (renderer as Object).get(key)
 			if value is Dictionary: fields["r" + key] = (value as Dictionary).size()
 	var monsters: Variant = world.get("monsters_root")
@@ -121,8 +125,11 @@ static func world_fields(world: Node) -> Dictionary:
 
 ## Frame cap while nobody touches the screen and auto hunting is off: the
 ## world keeps running, it is just drawn less often (heat).
-const MAX_PHYSICS_STEPS: int = 3
-const ACTIVE_FPS: int = 30
+## Physics steps one frame may catch up (6 at 60 Hz: the same 100 ms of game
+## time that 3 steps covered at 30 Hz).
+const MAX_PHYSICS_STEPS: int = 6
+## Frame cap while playing (60 by the user's request, 2026-11-20; was 30).
+const ACTIVE_FPS: int = 60
 const IDLE_FPS: int = 15
 const IDLE_AFTER_MSEC: int = 15000
 static var last_input_msec: int = 0

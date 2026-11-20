@@ -230,7 +230,15 @@ static func _walk_buff(buff_id: int, path: Array, seen: Array, output: Array, pr
 		if kind.get("Name","") in ["PolymorphSetID","SpecialPolymorphSetID"]:
 			if not _add_set(int(bonus.get("Value",-1)),extended,output): return false
 		elif kind.get("Name","") == "SubSlotBuffClassID":
-			if not _walk_buff(int(bonus.get("Value",-1)),extended,seen + [buff_id],output,preserved_rule): return false
+			# The 추가 슬롯 buff applies only while the card sits in the extra
+			# slot: the 523 tables give nearly every doll / relic one whose
+			# summon carries BonusApplicationType 461 (BuffCardSummonSlotType).
+			# That conditional branch is not admitted (unchanged), but it no
+			# longer voids the card's own unconditional summon: every 523
+			# doll and relic failed here and never appeared on the field
+			# (user report 2026-11-20 "인형 성물 안나오고").
+			var sub_slot: Array = []
+			if _walk_buff(int(bonus.get("Value",-1)),extended,seen + [buff_id],sub_slot,preserved_rule): output.append_array(sub_slot)
 		elif kind.get("Name","") == "BuffCardSummonNPCClassID":
 			if not _add_npc_summon(bonus,kind,extended,output,preserved_rule): return false
 	return true

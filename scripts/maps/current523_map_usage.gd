@@ -10,6 +10,12 @@ static var _dirty: bool=false
 static var _last_flush: int=0
 static var _disabled: bool=false
 static var problem: String=""
+## Observations already in the ledger this session ("member|sha|unit|offset|length").
+## Static map objects report every draw of every animation tick and the ground
+## every rebuild; a repeat changes nothing, so it returns before any check.
+static var _recorded: Dictionary={}
+## Ledger writes at most this often while new units appear (and on exit).
+const FLUSH_INTERVAL_MSEC: int=10000
 
 static func actual_main(renderer: Node) -> bool:
 	if DisplayServer.get_name()=="headless" or not is_instance_valid(renderer) or not renderer is CanvasItem or not renderer.is_visible_in_tree():return false
@@ -51,6 +57,8 @@ static func _load() -> void:
 	if _disabled:problem="기존 소비 장부 형식이 달라 기록을 중단했습니다. 게임 상태는 바꾸지 않습니다."
 
 static func observe(renderer: Node, member: String, original_bytes: int, sha256: String, unit: String, source_offset: int=-1, source_length: int=0) -> void:
+	var seen_key: String=member+"|"+sha256+"|"+str(original_bytes)+"|"+unit+"|"+str(source_offset)+"|"+str(source_length)
+	if _recorded.has(seen_key):return
 	if not actual_main(renderer) or original_bytes<=0 or sha256.length()!=64 or not sha256.is_valid_hex_number(false):return
 	if not member.begins_with("Map/") and not member.begins_with("Tile/") and not member.begins_with("Sprite/") and not member.begins_with("Client/Text/"):return
 	if unit.is_empty() or unit.length()>256:return
@@ -68,9 +76,10 @@ static func observe(renderer: Node, member: String, original_bytes: int, sha256:
 	if source_offset>=0 and source_length>0 and source_offset<=original_bytes-source_length:
 		var range_key: String=str(source_offset)+":"+str(source_length)
 		if not event.source_ranges.has(range_key):event.source_ranges[range_key]=true;_dirty=true
+	_recorded[seen_key]=true
 
 static func flush(force: bool=false) -> void:
-	if _disabled or not _dirty or (not force and Time.get_ticks_msec()-_last_flush<1000):return
+	if _disabled or not _dirty or (not force and Time.get_ticks_msec()-_last_flush<FLUSH_INTERVAL_MSEC):return
 	var snapshot: Dictionary={"schema":1,"scope_owner":"MAPS","dataset":"current523","inventory_JSONL_SHA256":INVENTORY_SHA,"fixed_Map_Tile_denominator":DENOMINATOR,"members":_members,"claim":"Partial observations only. Compressed Sprite/TI2 frame units do not prove original byte coverage. QA Main is separate from USER_MAIN; no fixture/inspection observations.","global_non_sound_denominator_known":false,"usage95_verified":false}
 	var result: Error=WRITER.write(PATH,snapshot)
 	if result!=OK:problem="소비 장부 저장 실패: "+error_string(result);_disabled=true;return

@@ -44,7 +44,7 @@ static func _collect(owner: Node2D, node: Node, inverse: Transform2D, z: int, co
 		var item_color: Color = color * item.modulate
 		var item_filter: int = filter if item.texture_filter == CanvasItem.TEXTURE_FILTER_PARENT_NODE else int(item.texture_filter)
 		order[0] += 1
-		if item.material != null and not item.material is CanvasItemMaterial: return "cooked_capture_shader_material"
+		if item.material != null and COMPOSITOR.material_blend(item.material) < 0: return "cooked_capture_shader_material"
 		if item is Sprite2D:
 			var sprite: Sprite2D = item
 			if sprite.texture != null:
@@ -62,20 +62,38 @@ static func _collect(owner: Node2D, node: Node, inverse: Transform2D, z: int, co
 					image.convert(Image.FORMAT_RGBA8)
 				if sprite.region_enabled: image = image.get_region(Rect2i(sprite.region_rect))
 				if Vector2(image.get_size()) != rect.size: return "cooked_capture_size"
-				var material: CanvasItemMaterial = _effective_material(sprite, owner)
-				if material != null and material.light_mode != CanvasItemMaterial.LIGHT_MODE_NORMAL: return "cooked_capture_light_mode"
-				out.append({"image":image,"position":Vector2i(at),"blend":int(material.blend_mode) if material != null else CanvasItemMaterial.BLEND_MODE_MIX,
+				var material: Material = _effective_material(sprite, owner)
+				if material is CanvasItemMaterial and (material as CanvasItemMaterial).light_mode != CanvasItemMaterial.LIGHT_MODE_NORMAL: return "cooked_capture_light_mode"
+				# The multiply material (original attr128) is recorded as BLEND_MODE_MUL;
+				# cooked_actor_store.gd draws it with the same material.
+				out.append({"image":image,"position":Vector2i(at),"blend":COMPOSITOR.material_blend(material),
 					"z":item_z,"filter":item_filter,"color":item_color * sprite.self_modulate,"order":order[0]})
 		var problem: String = _collect(owner, child, inverse, item_z, item_color, item_filter, out, order)
 		if not problem.is_empty(): return problem
 	return ""
 
-static func _effective_material(item: CanvasItem, owner: Node2D) -> CanvasItemMaterial:
+static func _effective_material(item: CanvasItem, owner: Node2D) -> Material:
 	var node: CanvasItem = item
 	while node != null and node.use_parent_material and node != owner:
 		node = node.get_parent() as CanvasItem
 	if node == null or node == owner: return null
-	return node.material as CanvasItemMaterial
+	return node.material
+
+## A live preview can keep its body while a declared independent layer is
+## unavailable. A cooked actor cannot retry that layer once its pixels are
+## baked, so reject the entry instead of saving a permanently partial frame.
+static func _attachment_problem(preview: Node2D) -> String:
+	var problem: Dictionary = preview._reference_child_problem
+	if not problem.is_empty():
+		return "cooked_source_layer_incomplete:" + str(problem.get("error", "independent layer unavailable"))
+	for child: Node2D in preview._reference_source_children.values():
+		var nested: String = _attachment_problem(child)
+		if not nested.is_empty(): return nested
+	return ""
+
+static func _capture_cook_frame(preview: Node2D) -> Dictionary:
+	var problem: String = _attachment_problem(preview)
+	return capture(preview) if problem.is_empty() else fail(problem)
 
 static func _binary_alpha(image: Image) -> bool:
 	return image.detect_alpha() != Image.ALPHA_BLEND
@@ -179,6 +197,13 @@ static func _boundaries(frames: Array, loop: bool, total_limit: float) -> Packed
 ## bundle file share images and draw states (weapon variants of one body
 ## reuse most frames). Returns {ok, entry, session}.
 static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = false, resolved: Dictionary = {}, session: Session = null) -> Dictionary:
+	var previous: Dictionary = preview._reference_capture_lineage
+	preview._reference_capture_lineage = {"manifest_sha256":str(inputs.get("manifest_sha256","")), "consumer":str(inputs.get("consumer",""))}
+	var cooked: Dictionary = _cook_preview(preview, inputs, lossless, resolved, session)
+	preview._reference_capture_lineage = previous
+	return cooked
+
+static func _cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool, resolved: Dictionary, session: Session) -> Dictionary:
 	if session == null: session = Session.new()
 	var images_before: int = session.images.size()
 	var states_before: int = session.states.size()
@@ -210,12 +235,14 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 			sequence += 1
 			preview.restart_reference_source(role, sequence)
 			if not preview.advance_reference_source(0.0, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
+			var initial_problem: String = _attachment_problem(preview)
+			if not initial_problem.is_empty(): return fail(initial_problem)
 			var cuts: Dictionary = {}
 			var seg_start := PackedInt32Array()
 			var seg_end := PackedFloat64Array()
 			var seg_state := PackedInt32Array()
 			if static_track or total <= 0.0:
-				var captured: Dictionary = capture(preview)
+				var captured: Dictionary = _capture_cook_frame(preview)
 				if not captured.ok: return captured
 				session.samples += 1
 				for _index: int in range(frames.size()):
@@ -251,7 +278,7 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 						seg_start.append(seg_state.size())
 					if not preview.advance_reference_source(middle - clock, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
 					clock = middle
-					var captured: Dictionary = capture(preview)
+					var captured: Dictionary = _capture_cook_frame(preview)
 					if not captured.ok: return captured
 					session.samples += 1
 					var state: int = _state_id(session, merge(captured.items), lossless)
@@ -267,7 +294,7 @@ static func cook_preview(preview: Node2D, inputs: Dictionary, lossless: bool = f
 			if not static_track and total > 0.0 and not loop:
 				var current: float = float(preview._clock)
 				if not preview.advance_reference_source(maxf(0.0, total - current) + 0.001, role, direction): return fail("cooked_advance:" + str(preview.reference_bank_status.get("error", role)))
-				var held: Dictionary = capture(preview)
+				var held: Dictionary = _capture_cook_frame(preview)
 				if not held.ok: return held
 				session.samples += 1
 				end_state = _state_id(session, merge(held.items), lossless)

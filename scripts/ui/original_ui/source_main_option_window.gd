@@ -7,13 +7,15 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   one audio bus; TWILIGHT 근사: its title reads 전체 음량). Tapping the row
 ##   steps the volume 0..10 (the original Option_Slider_A is a Cocos Slider
 ##   this renderer does not mount: TWILIGHT 근사); the other sound rows stay out.
-## - 정보 (Option_Tab_Info): 캐릭터 이름, 버전 정보 (the project version), the
+## - 정보 (Option_Tab_Info): 캐릭터 이름, 버전 정보 (the project version and the
+##   installed UI add-on: source_ui_pack_version), the
 ##   쿠폰 field and 확 인 (World.redeem_promo_code), 캐릭터 선택
 ##   (World.return_to_character_lobby); 계정 탈퇴's place opens the TWILIGHT
 ##   세부 설정 screen (TWILIGHT 근사: save / load, effects, HUD toggles).
 ## Left inert (no TWILIGHT rule for their rows): 기본 / 조작 / 출력 / 알림 tabs
 ## (tapping says so), 계정 연동, 결제, 로그아웃, 만든 사람들, the help popups.
 const ROOT="UI/Option/Option_All.csb"
+const PackVersion=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 const SETTINGS_PATH=preload("res://scripts/ui/renewal_settings.gd").SETTINGS_PATH
 ## tab -> [pressed button, released button, page project]
 const TABS={"game":["Btn_Hunt_On","Btn_Hunt_Off","Option_Tab_Game"],"control":["Btn_Looting_On","Btn_Looting_Off","Option_Tab_Hunt"],
@@ -74,7 +76,10 @@ func _info_spec(spec: Dictionary) -> void:
 	spec[p+"LeftContents/Btn_Withdrawal"]={"activate":Callable(self,"_details_requested")}
 	spec[p+"LeftContents/Btn_Withdrawal/Label"]={"role":"source_text","text":"세부 설정"}
 	var version: String=str(ProjectSettings.get_setting("application/config/version",""))
-	spec[p+"RightContents/Version/Text_Desc"]={"role":"source_text","text":version if not version.is_empty() else "TWILIGHT"}
+	# 버전 정보: the project version, then the installed UI add-on (two lines
+	# of the authored 500x45 text).
+	var pack_info: Dictionary=PackVersion.describe(str(_pack.get("manifest_sha256")) if _pack!=null else "",_pack.get("manifest").get("scenes",{}) if _pack!=null and _pack.get("manifest") is Dictionary else null)
+	spec[p+"RightContents/Version/Text_Desc"]={"role":"source_text","text":(version if not version.is_empty() else "TWILIGHT")+"\n"+PackVersion.label(pack_info)+"\n"+preload("res://scripts/ui/item_icon_resource_status.gd").label(preload("res://scripts/ui/item_icon_resource_status.gd").check(true))}
 	spec[p+"RightContents/Coupon/TextField"]={"role":"source_text_field","editor":_editor()}
 	spec[p+"RightContents/Coupon/Btn_Confirm"]={"activate":Callable(self,"_coupon_requested")}
 	for absent: String in ["RightContents/Achievement","RightContents/Google","RightContents/Contact/Btn_Logout","RightContents/Btn_Credit"]:spec[p+absent]={"exclude":true}

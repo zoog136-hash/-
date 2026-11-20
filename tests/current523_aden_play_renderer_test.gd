@@ -23,6 +23,41 @@ class FakeTiles extends RefCounted:
 		return image
 	func cache_size() -> int: return 1
 
+class CountedTiles extends FakeTiles:
+	var tile_checks: int = 0
+	var frame_checks: int = 0
+	var blocked_frame: int = 2
+	var fail_next_load: bool = false
+
+	func has_tile(id: int) -> bool:
+		tile_checks += 1
+		return id != 8
+
+	func has_subimage(_id: int, frame: int) -> bool:
+		frame_checks += 1
+		return frame != blocked_frame
+
+	func texture_for(id: int) -> Texture2D:
+		var texture: Texture2D = super.texture_for(id)
+		if fail_next_load:
+			fail_next_load = false
+			return null
+		return texture
+
+## S32 sections for the worker chunk read (a floor with a few tiles, covers and objects).
+class FakeChunkSources extends RefCounted:
+	var problem: String = ""
+	var broken: bool = false
+	func source_metadata(_member: String) -> Dictionary: return {"core_end": 0}
+	func read_member(member: String) -> Dictionary: return read_member_job(member)
+	func read_member_job(_member: String) -> Dictionary:
+		if broken: return {"_problem": "synthetic failure"}
+		var floor_bytes := PackedByteArray(); floor_bytes.resize(8192 * 4)
+		for index: int in 8192: floor_bytes.encode_u32(index * 4, 4294967295 if index % 7 else (3 << 8) | (index & 255))
+		var covers := PackedByteArray([2, 0, 5, 9, 1, 2, 0, 0, 40, 3, 7, 1, 0, 0])
+		var objects := PackedByteArray([1, 0, 0, 0, 0, 0, 2, 0, 10, 12, 0, 9, 2, 0, 0, 11, 30, 1, 5, 4, 0, 0])
+		return {"source_sha256": "a".repeat(64), "source_bytes": 1, "sections": {"floor": floor_bytes, "covers": covers, "objects": objects, "tail": PackedByteArray()}}
+
 ## Decodes on a "worker": an atlas is ready only after a request and a pump.
 class FakeAsyncTiles extends FakeTiles:
 	var requested: Dictionary = {}
@@ -137,8 +172,37 @@ func run() -> void:
 			var same: bool = fast.size() == slow.size() and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == slow_counts
 			for layer: int in slow: same = same and fast.has(layer) and fast[layer] == PackedInt64Array(slow[layer])
 			check(same, "one-pass chunk projection equals the per-record path (generic=%s origin=%s)" % [generic, origin])
+	_check_chunk_bins()
+	# A chunk read on a worker installs the same lanes, bins, tail and counters
+	# as the main-thread read of the same S32 sections.
+	var worker_sources := FakeChunkSources.new()
+	var saved_sources: Variant = renderer._raw_sources
+	renderer._raw_sources = worker_sources
+	renderer._member_origins["worker_a"] = PLAY.GRID_ORIGIN
+	renderer._member_origins["worker_b"] = PLAY.GRID_ORIGIN
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+	var direct: Dictionary = renderer._install_chunk("worker_a", PLAY._decode_chunk(renderer._chunk_params("worker_a"), worker_sources.read_member_job("worker_a")))
+	var direct_counts: Array = [renderer._scope_clipped_records, renderer._off_floor_decoration_records]
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+	check(not renderer._prefetch_chunk("worker_b") and renderer._chunk_jobs.has("worker_b"), "an unread chunk is read on a worker")
+	var waited_chunk: int = 0
+	while not renderer._chunk_jobs.is_empty() and waited_chunk < 5000:
+		renderer._pump_chunk_jobs(); OS.delay_msec(1); waited_chunk += 1
+	check(renderer._raw_chunks.get("worker_b") == direct and renderer._chunk_bins.get("worker_b") == renderer._chunk_bins.get("worker_a") and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == direct_counts and renderer._static_tails.has("worker_b"), "the worker read equals the main-thread read")
+	check(renderer._prefetch_chunk("worker_b"), "a loaded chunk is ready")
+	worker_sources.broken = true
+	renderer._member_origins["worker_c"] = PLAY.GRID_ORIGIN
+	renderer._prefetch_chunk("worker_c")
+	waited_chunk = 0
+	while not renderer._chunk_jobs.is_empty() and waited_chunk < 5000:
+		renderer._pump_chunk_jobs(); OS.delay_msec(1); waited_chunk += 1
+	check(renderer._unreadable_chunks.has("worker_c") and not renderer._raw_chunks.has("worker_c"), "a failed worker read becomes an unreadable hole")
+	for member: String in ["worker_a", "worker_b", "worker_c"]:
+		renderer._raw_chunks.erase(member); renderer._chunk_bins.erase(member); renderer._static_tails.erase(member); renderer._unreadable_chunks.erase(member); renderer._member_origins.erase(member); renderer._raw_recent.erase(member)
+	renderer._raw_sources = saved_sources
 	field.remove_meta("current523_generic_field")
 	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+	_check_block_reference_work(renderer)
 	var tiles := FakeTiles.new()
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
@@ -158,6 +222,7 @@ func run() -> void:
 	# Margin blocks wait for their atlases' worker decode; on-screen ones never wait.
 	# Shift the screen so its right edge (1500) is just before a block edge (1536).
 	var async_tiles := FakeAsyncTiles.new()
+	async_tiles.ready[2147483903 >> 8] = true  # the on-screen block's atlas is already decoded
 	renderer._tile_pack = async_tiles
 	var saved_canvas: Transform2D = root.canvas_transform
 	root.canvas_transform = Transform2D(0.0, Vector2(renderer._view_rect().end.x - 1500.0, 0.0)) * saved_canvas
@@ -170,9 +235,21 @@ func run() -> void:
 	var near_cell := Vector2i(here.x >> PLAY.BLOCK_SHIFT, here.y >> PLAY.BLOCK_SHIFT)
 	var far_cell := Vector2i(margin_point.x >> PLAY.BLOCK_SHIFT, margin_point.y >> PLAY.BLOCK_SHIFT)
 	check(not PLAY._block_rect(far_cell).intersects(view_now) and view_now.grow(PLAY.BUILD_MARGIN).has_point(Vector2(margin_point)), "fixture: the far block is in the margin only")
-	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
+	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and renderer._built_view.has_area() and renderer._pending_blocks.has(far_cell), "an on-screen block bakes now; a margin block waits for its decode as a pending block and the built view stays")
+	check(renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC) == 0 and renderer._pending_blocks.has(far_cell), "a pending block whose atlas is still decoding is not baked")
 	async_tiles.pump()
-	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	renderer._pending_retry.clear()
+	check(renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC) == 1 and renderer._blocks.has(far_cell) and renderer._visible_blocks.has(far_cell) and renderer._pending_blocks.is_empty(), "the margin block bakes once its atlas is ready, without a new frame build")
+	renderer._clear_blocks()
+	check(renderer._build_frame() and renderer._blocks.has(far_cell), "a frame build bakes a ready margin block itself")
+	# A new on-screen block waits briefly for its decode, then bakes regardless.
+	renderer._raw_chunks["synthetic"] = {-2:PackedInt64Array([here.x,here.y,(8 << 8) | 1])}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	renderer._refresh_clock = 0.25
+	var waited_ok: bool = renderer._build_frame()
+	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._pending_blocks.has(near_cell) and renderer._pending_blocks[0] == near_cell and renderer.problem.is_empty(), "an on-screen block waits for its worker decode (first in the pending blocks) without failing the map")
+	renderer._screen_wait[near_cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
+	check(renderer._build_frame() and renderer._blocks.has(near_cell), "after the wait limit it bakes with what the pack gives")
 	root.canvas_transform = saved_canvas
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
@@ -201,3 +278,49 @@ func run() -> void:
 	await process_frame
 	print("CURRENT523_ADEN_PLAY_RENDERER_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"scope":"SYNTHETIC_DISPLAY_AND_GUARDS; NO_NATIVE_M_BEHAVIOR_CLAIM"}))
 	quit(0 if failures.is_empty() else 1)
+
+func _check_chunk_bins() -> void:
+	var floor_lane := PackedInt64Array([-24,-24,1, -23,-23,2, 0,0,3, 489,489,4, 488,488,5, 512,512,6])
+	var bins: Dictionary = PLAY._bin_chunk({-2:floor_lane, 7:PackedInt64Array([489,489,7])})
+	var expected: Dictionary = {
+		Vector2i(-1,-1): {-2:PackedInt32Array([0,3])},
+		Vector2i(-1,0): {-2:PackedInt32Array([3])},
+		Vector2i(0,-1): {-2:PackedInt32Array([3])},
+		Vector2i.ZERO: {-2:PackedInt32Array([3,6,9,12]), 7:PackedInt32Array([0])},
+		Vector2i(0,1): {-2:PackedInt32Array([9]), 7:PackedInt32Array([0])},
+		Vector2i(1,0): {-2:PackedInt32Array([9]), 7:PackedInt32Array([0])},
+		Vector2i(1,1): {-2:PackedInt32Array([9,15]), 7:PackedInt32Array([0])},
+	}
+	check(bins == expected, "negative and positive seams preserve packed indices, order, and layer separation")
+	check(PLAY._bin_chunk({-2:PackedInt64Array()}).is_empty(), "an empty layer creates no block")
+
+
+func _check_block_reference_work(renderer: Node2D) -> void:
+	var tiles := CountedTiles.new()
+	renderer._tile_pack = tiles
+	var good: int = (7 << 8) | 1
+	var bad_frame: int = (7 << 8) | 2
+	var absent: int = (8 << 8) | 1
+	var first: PackedInt64Array = PackedInt64Array()
+	var expected: PackedInt64Array = PackedInt64Array()
+	for index: int in 512:
+		first.append_array(PackedInt64Array([index, 0, good, index, 1, bad_frame, index, 2, absent]))
+		expected.append_array(PackedInt64Array([index, 0, good]))
+	# Reverse member insertion order. Command ordering still follows member name.
+	renderer._chunk_rects = {"z": Rect2(0, 0, 512, 32), "a": Rect2(0, 0, 512, 32)}
+	renderer._raw_chunks = {"z": {-2: PackedInt64Array([0, 3, good, 0, 4, 4294967295])}, "a": {-2: first}}
+	renderer._chunk_bins.clear()
+	expected.append_array(PackedInt64Array([0, 3, good]))
+	var block: Dictionary = renderer._block_commands(Vector2i.ZERO)
+	check(block.get("commands", {}).get(-2) == expected, "exact packed commands and member order survive repeated reference validation")
+	check(block.get("count") == 513 and block.get("unresolved") == 1024 and block.get("raw_ff") == 1, "memoized invalid references retain per-placement counts")
+	check(tiles.tile_checks == 3 and tiles.frame_checks == 2 and tiles.loads == [7], "1537 non-sentinel placements validate only 3 distinct references and request one atlas")
+	print("MAP_BLOCK_REF_COUNTS ", JSON.stringify({"placements": 1537, "tile_checks": tiles.tile_checks, "subimage_checks": tiles.frame_checks}))
+	tiles.blocked_frame = -1
+	tiles.fail_next_load = true
+	tiles.loads.clear()
+	block = renderer._block_commands(Vector2i.ZERO)
+	check(block.get("count") == 1024 and block.get("unresolved") == 513 and tiles.loads == [7, 7], "next build revalidates references and a failed atlas load is retried within the block")
+	renderer._chunk_bins.clear()
+	renderer._raw_recent.clear()
+	renderer._unresolved_logged.clear()

@@ -12,7 +12,9 @@ extends RefCounted
 ## node scope; any other keys merge into the sprite_scene binding (role,
 ## text, visible, activate, displaystate, percent, ...).
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const Router=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
+const MAX_STAGE_TREES: int=8
 signal closed
 var _pack: RefCounted
 var _hud: WeakRef
@@ -25,6 +27,7 @@ var _moved: float=0.0
 var _dragging: String=""
 var last_result: Dictionary={}
 var _help_box: RefCounted
+var _stage_trees: Variant=null
 
 ## Members the window cannot open without (overridden).
 func required_members() -> Array[String]:
@@ -79,6 +82,15 @@ func world() -> Object:
 	return owner.get_parent() if owner is Node else null
 
 func _stage() -> Dictionary:
+	# Bindings and geometry repeatedly inspect the same authored row and its
+	# projects. Reuse those trees only during this synchronous build.
+	var previous: Variant=_stage_trees
+	_stage_trees={}
+	var result: Dictionary=_build_stage()
+	_stage_trees=previous
+	return result
+
+func _build_stage() -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	if parent==null or hud()==null:return _fail("source_window_host_unavailable")
 	var keep: Dictionary={}
@@ -111,11 +123,19 @@ func _stage() -> Dictionary:
 
 ## --- Original-tree binding ---------------------------------------------------
 
+func _read_stage_tree(member: String) -> Dictionary:
+	if _stage_trees == null: return _pack.scene(member).get("nodeTree",{})
+	var trees: Dictionary=_stage_trees
+	if trees.has(member): return trees[member]
+	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	if trees.size()<MAX_STAGE_TREES: trees[member]=tree
+	return tree
+
 ## {scope, bindings} for `member` mounted under `key`. `out` maps each node
 ## key to {chain, offset, kind, member}. `list_key` makes touch panels of a
 ## row scene forward drags to that list's scroll instead of consuming them.
 func _bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary, list_key: String="") -> Dictionary:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	var tree: Dictionary=_read_stage_tree(member)
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
 	var external: Array=_pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[])
@@ -190,7 +210,7 @@ func _scene_of(member: String, spec: Dictionary, out: Dictionary, list_key: Stri
 func _node_size(out: Dictionary, suffix: String) -> Vector2:
 	for key: String in out:
 		if not key.ends_with("/"+suffix):continue
-		var node: Dictionary=Scene._node_at_offset(_pack.scene(str(out[key].member)).get("nodeTree",{}),int(out[key].offset))
+		var node: Dictionary=Scene._node_at_offset(_read_stage_tree(str(out[key].member)),int(out[key].offset))
 		var options: Dictionary=node.get("options",{})
 		var size: Array=options.get("widgetOptions",options.get("nodeOptions",{})).get("size",[0,0])
 		return Vector2(float(size[0]),float(size[1]))
@@ -198,7 +218,7 @@ func _node_size(out: Dictionary, suffix: String) -> Vector2:
 
 func _node_options(out: Dictionary, suffix: String) -> Dictionary:
 	for key: String in out:
-		if key.ends_with("/"+suffix):return Scene._node_at_offset(_pack.scene(str(out[key].member)).get("nodeTree",{}),int(out[key].offset)).get("options",{})
+		if key.ends_with("/"+suffix):return Scene._node_at_offset(_read_stage_tree(str(out[key].member)),int(out[key].offset)).get("options",{})
 	return {}
 
 ## {ok, content, size} of the ListView at `suffix`.
@@ -212,7 +232,7 @@ func _list(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
 
 ## The first (root) panel of an original row member: size and origin offset.
 func _row_geometry(member: String) -> Dictionary:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	var tree: Dictionary=_read_stage_tree(member)
 	var children: Array=tree.get("children",[])
 	var panel: Dictionary=children[0] if not children.is_empty() else {}
 	var options: Dictionary=panel.get("options",{})
@@ -263,6 +283,10 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 				column=0
 				y-=line_height+gap
 				line_height=0.0
+		# A row of an outer list is marked so a list inside it (a row's own
+		# horizontal card list) can hand vertical drags to the outer list.
+		built.scene.set_meta(ROW_LIST_META,str(list.key))
+		_forward_row_drags(built.scene,str(list.key),_outer_list_key(root))
 		scenes.append(built.scene)
 		outs.append(row_out)
 	if column>0:y-=line_height+gap
@@ -287,7 +311,7 @@ func _repeat_template(host: Node2D, member: String, template_suffix: String, spe
 		if key.ends_with("/"+template_suffix):template=int(probe[key].offset)
 	if template<0:return _fail("source_window_template_missing")
 	var scope: Array[int]=[]
-	_collect_subtree(Scene._node_at_offset(_pack.scene(member).get("nodeTree",{}),template),scope)
+	_collect_subtree(Scene._node_at_offset(_read_stage_tree(member),template),scope)
 	var built: int=0
 	for index: int in range(mini(specs.size(),limit)):
 		var bound: Dictionary=_bind(member,"",[],specs[index],{})
@@ -315,6 +339,44 @@ func _scroll_to(key: String, value: float) -> void:
 	else:(state.content as Node2D).position.y=float(state.value)
 
 ## True while the current press has moved like a list drag (row taps ignore it).
+## A finger that lands on a row's button still scrolls its list: the native
+## button router owns that press, so each row button hands its finger's drag
+## to the list (source_button_router DRAG_META, as a Cocos ListView child
+## button passes its move to the list). Without it a list whose rows are all
+## buttons could not be dragged on a phone.
+const ROW_LIST_META="source_window_list_row"
+
+func _forward_row_drags(node: Node, key: String, outer: String="") -> void:
+	for meta: String in ["source_button","source_checkbox"]:
+		if node.has_meta(meta):
+			var button: Variant=node.get_meta(meta)
+			# A list's default forward (sprite_scene, any ListView row) yields
+			# to the window's own (a nested list's row hands vertical drags out).
+			if is_instance_valid(button) and (not (button as Object).has_meta(Router.DRAG_META) or (button as Object).has_meta(Scene.LIST_DRAG_AUTO_META)):
+				var forward: Callable=Callable(self,"_list_input").bind(key) if outer.is_empty() else Callable(self,"_nested_list_input").bind(key,outer)
+				(button as Object).set_meta(Router.DRAG_META,forward)
+				(button as Object).remove_meta(Scene.LIST_DRAG_AUTO_META)
+	for child: Node in node.get_children():_forward_row_drags(child,key,outer)
+
+## The list whose row `node` sits in ("" when it is no list row).
+static func _outer_list_key(node: Node) -> String:
+	var at: Node=node
+	while at!=null:
+		if at.has_meta(ROW_LIST_META):return str(at.get_meta(ROW_LIST_META))
+		at=at.get_parent()
+	return ""
+
+## A list inside another list's row: a drag along the inner list's axis
+## scrolls it, any other drag scrolls the outer list (as Cocos nested lists).
+func _nested_list_input(event: InputEvent, key: String, outer: String) -> void:
+	if not event is InputEventScreenDrag:
+		_list_input(event,key)
+		_list_input(event,outer)
+		return
+	var along_x: bool=_scrolls.has(key) and _scrolls[key].get("axis","y")=="x"
+	var inner_axis: bool=absf(event.relative.x)>=absf(event.relative.y) if along_x else absf(event.relative.y)>absf(event.relative.x)
+	_list_input(event,key if inner_axis and _scrolls.has(key) else outer)
+
 func _dragged() -> bool:
 	return absf(_moved)>12.0
 

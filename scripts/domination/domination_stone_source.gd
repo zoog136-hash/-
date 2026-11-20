@@ -279,3 +279,15 @@ static func pair_total(pairs: Array) -> int:
 	var total: int = 0
 	for pair: Array in pairs: total += int(pair[1])
 	return total
+
+## TWILIGHT's existing two-draw merge policy, for presentation only.
+## Keep the exact numerator over SCALE^2: the base draw can select the same
+## group again after the special draw fails. No RNG is sampled here.
+static func same_group_outcome_numerator(quote: Dictionary) -> int:
+	var group: int=int(quote.get("same_group",-1))
+	if group<=0:return 0
+	var special: int=clampi(int(quote.get("same_group_probability_raw",0)),0,PROBABILITY_SCALE)
+	var base: int=0
+	for pair: Array in quote.get("base_groups",[]):
+		if int(pair[0])==group:base+=int(pair[1])
+	return special*PROBABILITY_SCALE+(PROBABILITY_SCALE-special)*base

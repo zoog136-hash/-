@@ -7,10 +7,11 @@ extends RefCounted
 ## line). Every rule, roll, cost and save stays in
 ## scripts/refine523/bless_refine523_service.gd; this file mounts original
 ## nodes and routes their buttons.
+## +100/+1000/직접입력 register an amount between the table's Min and Max:
+## the tables give no formula for it, so its chance is the straight line
+## between MinProbability and MaxProbability (TWILIGHT 근사, shown as such).
 ## Left as authored or empty (no rule in the tables, see
-## docs/bless_refine523_missing_rules.md): +100/+1000/직접입력 (amounts between
-## the Min and Max endpoints have no probability formula) are shown disabled;
-## the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
+## docs/bless_refine523_missing_rules.md): the 특수재료 slot stays locked; the magic ball effect (frame events) is not mounted; 연금 결과물 목록 (Refine_Popup_Result),
 ## the Refine_Roulette result animation and the recipe caption stay inert.
 ## The 전체 / 장비 / 소모 / 기타 bag tabs filter the 연금 재료 slots with the
 ## bag's own split (targets are equipment, 상급 축복의 가루 by its catalog row),
@@ -58,6 +59,7 @@ var _help_box: RefCounted
 var _scene: Node2D
 var _selected: String=""
 var _mode: String="min"
+var _amount_editor: LineEdit
 var _tab: String="all"
 var _notice: String=""
 var _scroll_content: Node2D
@@ -224,12 +226,15 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	# Frame.
 	spec[P_ALL+"Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec[P_ALL+"Btn_Help"]={"activate":Callable(self,"_help")}
-	# Min / Max are the two registered amounts the tables give; the other
-	# amount buttons have no probability rule and show their disabled state.
+	# Min / Max are the two registered amounts the tables give. +100 / +1000 /
+	# 직접 입력 register an amount between them: its chance is the straight
+	# line between the table's MinProbability and MaxProbability (TWILIGHT 근사,
+	# bless_refine523_rules.registration "amount:N").
 	spec[P_ALL+"Nd_ButtonSet/Btn_Min"]={"activate":Callable(self,"_set_mode").bind("min"),"displaystate":not target.is_empty()}
 	spec[P_ALL+"Nd_ButtonSet/Btn_Max"]={"activate":Callable(self,"_set_mode").bind("max"),"displaystate":not target.is_empty()}
-	for name: String in ["Btn_100","Btn_1000","Btn_Input"]:
-		spec[P_ALL+"Nd_ButtonSet/"+name]={"activate":Callable(self,"_amount_unavailable"),"displaystate":false}
+	spec[P_ALL+"Nd_ButtonSet/Btn_100"]={"activate":Callable(self,"_amount_step").bind(100),"displaystate":not target.is_empty()}
+	spec[P_ALL+"Nd_ButtonSet/Btn_1000"]={"activate":Callable(self,"_amount_step").bind(1000),"displaystate":not target.is_empty()}
+	spec[P_ALL+"Nd_ButtonSet/Btn_Input"]={"activate":Callable(self,"_amount_input"),"displaystate":not target.is_empty()}
 	var can: bool=quote.get("ok",false)
 	spec[P_ALL+"Btn_Alchemy"]={"activate":Callable(self,"_refine_requested"),"displaystate":can}
 	spec[P_ALL+"Btn_Alchemy/Normal"]={"visible":can}
@@ -246,8 +251,9 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	var has: bool=not target.is_empty()
 	var min_amount: int=int(target.get("min",0))
 	var max_amount: int=int(target.get("max",0))
-	var amount: int=min_amount if _mode=="min" else max_amount
-	var percent: String=str(target.get("min_percent" if _mode=="min" else "max_percent",""))
+	var amount: int=amount_of(target)
+	var percent: String=percent_of(target)
+	if _mode.begins_with("amount:"):percent+=" (TWILIGHT 근사)"
 	spec[P_ITEM+"Nd_Probability"]={"visible":has}
 	spec[P_ITEM+"Nd_Probability/Label"]={"role":"source_text","text":"성공 확률 %s" % percent}
 	for slot: String in ["Nd_Slot","Nd_Slot_Target","Nd_Slot_Special"]:
@@ -389,6 +395,7 @@ func _slot_pressed(index: int) -> Dictionary:
 		_notice="대상 아이템을 먼저 선택하세요"
 		return _restage()
 	_selected="" if str(entry.uid)==_selected else str(entry.uid)
+	_mode="min"
 	_notice=""
 	return _restage()
 
@@ -407,6 +414,66 @@ func _set_mode(value: String) -> Dictionary:
 	_notice=""
 	return _restage()
 
+## The registered amount of `target` in the current mode.
+func amount_of(target: Dictionary) -> int:
+	if _mode.begins_with("amount:"):return clampi(int(_mode.get_slice(":",1)),int(target.get("min",0)),int(target.get("max",0)))
+	return int(target.get("max" if _mode=="max" else "min",0))
+
+## The success chance text: the table's for 최소 / 최대, the straight line
+## between them for any other amount (TWILIGHT 근사).
+func percent_of(target: Dictionary) -> String:
+	if not _mode.begins_with("amount:"):return str(target.get("max_percent" if _mode=="max" else "min_percent",""))
+	var registered: Dictionary=RULES.registration({"input":target.get("input",{})},"amount:%d" % amount_of(target))
+	return RULES.percent_text(int(registered.probability)) if registered.get("ok",false) else str(target.get("min_percent",""))
+
+## +100 / +1000: the amount grows from the current one up to the table's 최대.
+func _amount_step(delta: int) -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():
+		_notice="대상 아이템을 먼저 선택하세요"
+		return _restage()
+	return set_amount(amount_of(target)+delta)
+
+## Registers `amount` (clamped to the table's 최소 ~ 최대).
+func set_amount(amount: int) -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():return _fail("source_refine_window_target_unselected")
+	var value: int=clampi(amount,int(target.get("min",0)),int(target.get("max",0)))
+	_mode="min" if value==int(target.get("min",0)) else ("max" if value==int(target.get("max",0)) else "amount:%d" % value)
+	_notice="등록 수량 %s개 · 최소·최대 사이 확률은 TWILIGHT 근사(원본 표의 두 값 사이 직선)" % _number(value) if _mode.begins_with("amount:") else ""
+	return _restage()
+
+## 직접 입력: the phone's number keyboard on a native touch LineEdit (the
+## original keypad stops at 1000; amounts here run to tens of thousands).
+func _amount_input() -> Dictionary:
+	var target: Dictionary=_current_target()
+	if target.is_empty():
+		_notice="대상 아이템을 먼저 선택하세요"
+		return _restage()
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if not parent is Node:return _fail("source_refine_window_host_unavailable")
+	if not is_instance_valid(_amount_editor):
+		_amount_editor=preload("res://scripts/ui/native_touch_line_edit.gd").new()
+		_amount_editor.name="RefineAmountInput"
+		_amount_editor.max_length=6
+		_amount_editor.virtual_keyboard_type=LineEdit.KEYBOARD_TYPE_NUMBER
+		_amount_editor.self_modulate=Color(1,1,1,0)
+		_amount_editor.size=Vector2(1,1)
+		_amount_editor.position=Vector2(-8,-8)
+		_amount_editor.text_submitted.connect(func(text: String) -> void:
+			_amount_editor.release_focus()
+			if text.strip_edges().is_valid_int():set_amount(int(text.strip_edges())))
+		(parent as Node).add_child(_amount_editor)
+	_amount_editor.text=str(amount_of(target))
+	_amount_editor.grab_focus()
+	_amount_editor.edit()
+	return {"ok":true,"editing":true}
+
+func _current_target() -> Dictionary:
+	var world: Node=_world.get_ref() if _world!=null else null
+	if world==null or _selected.is_empty():return {}
+	return _target(_materials(world,SERVICE.snapshot(world)))
+
 func _set_tab(tab_name: String) -> Dictionary:
 	if tab_name not in TABS:return _fail("source_refine_window_tab_unknown")
 	_tab=tab_name
@@ -421,9 +488,6 @@ func _powder_info() -> Dictionary:
 	_notice="%s 보유 %s개" % [_item_name(RULES.ADVANCED_BLESS_POWDER_ITEM),_number(owned)]
 	return _restage()
 
-func _amount_unavailable() -> Dictionary:
-	_notice="최소·최대 사이 수량의 확률은 원본 표에 없어 최소·최대만 등록합니다"
-	return _restage()
 
 func _refine_requested() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null

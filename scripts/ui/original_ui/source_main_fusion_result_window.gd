@@ -10,10 +10,12 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   comes last as in the existing reveal.
 ## - The full-screen Btn_Close turns to the next page, then closes; the top
 ##   Btn_Close closes.
-## Left out (no TWILIGHT feature): the roulette and reveal effects, 모두 열기
+## - 영웅 이상 results light up in their grade (source_main_card_grade_fx).
+## Left out (no TWILIGHT feature): the roulette, 모두 열기
 ## (the results are shown open), the collection notice and 카드교체 바로가기.
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
+const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const ROOT="UI/Change/Change_Fusion_All.csb"
 const CARD_SET="UI/Change/Change_Fusion_CardSet.csb"
 const CARD="UI/Change/Change_Fusion_Card.csb"
@@ -66,7 +68,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			spec["Panel/Card_%02d" % index]={"exclude":true}
 			continue
 		var card: Dictionary=results[start+index]
-		for name: String in ["Fx_Result_Loop_1","Panel/Fx_Result_Loop_2","Card_Roultte","Nd_info","Fx_Glow","Fx_Outline_Front","Fx_Result_Start"]:spec[key+name]={"exclude":true}
+		GradeFx.cell_spec(self,spec,key,str(card.get("grade","")))
 		spec[key+"Text_Card_Name"]={"role":"source_text","text":str(card.get("name",""))}
 		spec[key+"Btn_Card"]={"activate":Callable(self,"_card").bind(start+index)}
 	var set_out: Dictionary={}
@@ -77,11 +79,16 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	root.add_child(scene)
 	var pictures: int=0
 	var shown: int=0
+	var lights: int=0
 	for index: int in range(mini(PER_PAGE,results.size()-start)):
 		var card: Dictionary=results[start+index]
-		# Text_Card_Name stays transparent until the client's Fx_Cardname clip.
-		var nested: Node2D=_project(scene,set_out,"Panel/Card_%02d" % index)
-		if nested!=null:nested.play("Fx_Cardname",false)
+		# Text_Card_Name stays transparent until the client's Fx_Cardname clip;
+		# 영웅 이상 first light up in their grade (source_main_card_grade_fx).
+		var lit: Dictionary=GradeFx.light(self,scene,set_out,"Panel/Card_%02d" % index,str(card.get("grade","")))
+		if lit.get("lit",false):lights+=1
+		else:
+			var nested: Node2D=_project(scene,set_out,"Panel/Card_%02d" % index)
+			if nested!=null:nested.play("Fx_Cardname",false)
 		var located: Dictionary=_locate(scene,set_out,"Panel/Card_%02d/Panel" % index)
 		var cell: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
 		shown+=1
@@ -92,7 +99,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		if not prefab.get("ok",false):return prefab
 		(cell as Node2D).add_child(prefab.scene)
 		if _prefab_picture(prefab.scene,prefab_out,card):pictures+=1
-	return {"ok":true,"page":page,"pages":pages(),"shown":shown,"pictures":pictures,"success":success}
+	return {"ok":true,"page":page,"pages":pages(),"shown":shown,"pictures":pictures,"lights":lights,"success":success}
 
 ## The nested player of the ProjectNode at `suffix`.
 func _project(root: Node2D, out: Dictionary, suffix: String) -> Node2D:

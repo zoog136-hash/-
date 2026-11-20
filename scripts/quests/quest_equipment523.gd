@@ -296,7 +296,7 @@ func commit(world: Node,quoted: Dictionary)->Dictionary:
   if world.get("patch523_owner_state_problem") is String and not world.patch523_owner_state_problem.is_empty():
    world.quest_service.save_blocked=true;return fail("공동 장비 저장 결과 미확정 · 재사용 중지")
   var parser:=JSON.new();var parsed: Error=parser.parse(FileAccess.get_file_as_string(world.save_path()))
-  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true));var confirmed: bool=disk is Dictionary
+  var disk: Variant=parser.data if parsed==OK else null;var expected: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(payload);var confirmed: bool=disk is Dictionary
   if confirmed:
    for key: String in expected:
     if disk.get(key)!=expected[key]:confirmed=false;break
@@ -319,6 +319,18 @@ static func mp_contribution(world: Node,record: Dictionary)->int:
 func authorizes_save(payload: Dictionary)->bool:return not saving_payload.is_empty() and saving_payload==payload
 func activate(world: Node,id: String,target: String="",remove: bool=false)->bool:
  if not recognizes(world,id):return false
+ # The phone has no --quest-equipment-view input, so every held quest gear
+ # answered "검증된 장비 수치 입력 미설치" and could never be worn (2026-11-20).
+ # Without that view a held "[원본 보상]" gear becomes the ordinary original
+ # +0 item (same ItemClass/bless as the reward, the native drop record with
+ # its original stats) in one save, then is worn through the normal path.
+ if not problem.is_empty() and not remove:
+  var converted: Dictionary=convert_held(world,id)
+  if converted.get("handled",false):
+   if not converted.get("ok",false):world.hud.show_message(str(converted.get("reason","장비를 착용할 수 없습니다")));return true
+   world.hud.refresh_inventory(world.inventory);world._update_hud()
+   world._on_inventory_item_activated(str(converted.name)+"@@@"+str(converted.id))
+   return true
  var result: Dictionary=commit(world,quote(world,id,target,remove))
  world.hud.show_message("원본 +0 장비 "+("해제" if remove else "장착")+" 저장 완료" if result.get("ok",false) else str(result.get("reason",problem)))
  return true
@@ -352,3 +364,31 @@ func reduce_hit(world: Node,damage: int,kind: String)->int:
  var result: int=maxi(1,int(round(float(damage)*970000.0/1000000.0)))
  last_magic_hit={"physical_id":id,"item_class_id":30213,"raw_percent":30000,"damage_before":damage,"damage_after":result,"native_order_and_rounding_verified":false}
  return result
+
+## A held "[원본 보상]" gear -> the ordinary original item of the same
+## ItemClass and bless (GRANTS.stage, the native drop record), the held
+## instance removed, in one save. {handled:false} when it is not held gear.
+static func convert_held(world: Node,id: String)->Dictionary:
+ var physical: Dictionary=world.item_instances.get(id,{});var record: Dictionary=physical.get("record",{})
+ var key: String=str(physical.get("name",""))
+ var item_class: int=int(record.get("source_item_class_id",0))
+ if item_class<=0 or not key.begins_with("[원본 보상] ") or not record.get("source_pending_use",false):return {"handled":false}
+ var definition: Dictionary=D.definition_id(str(item_class))
+ if definition.is_empty() or not D.equipment(definition.get("native_record",{})):return {"handled":false}
+ var bless: int=int(record.get("source_bless_code_id",physical.get("source_bless_code_id",1)))
+ if bless not in [1,2,3]:bless=1
+ var staged: Dictionary=GRANTS.stage(world,[{"item_class_id":item_class,"amount":1,"bless_raw":bless,"enchant":0}],{"kind":"held_quest_reward_gear","reward_id":int(record.get("source_reward_id",0)),"held_instance":id})
+ if not staged.get("ok",false):return {"handled":true,"ok":false,"reason":str(staged.get("error",""))}
+ var overrides: Dictionary=staged.overrides
+ var before: Dictionary=world.item_instances
+ overrides.item_instances.erase(id)
+ var left: int=int(overrides.inventory.get(key,0))-1
+ if left>0:overrides.inventory[key]=left
+ else:overrides.inventory.erase(key)
+ var created: String=""
+ for uid: String in overrides.item_instances:
+  if not before.has(uid):created=uid
+ if created.is_empty():return {"handled":true,"ok":false,"reason":"장비를 착용할 수 없습니다"}
+ if world._save_game(true,overrides)!=OK:return {"handled":true,"ok":false,"reason":"저장 실패 · 기존 보유 보존"}
+ world.inventory=overrides.inventory;world.item_instances=overrides.item_instances;world.gold=int(overrides.gold)
+ return {"handled":true,"ok":true,"id":created,"name":str(overrides.item_instances[created].name)}

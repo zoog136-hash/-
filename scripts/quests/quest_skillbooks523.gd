@@ -151,7 +151,7 @@ func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
    world.quest_service.save_blocked=true
    return fail(world,"공동 학습 저장 결과 미확정 · 재사용 중지")
   var durable: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
-  var normalized: Dictionary=JSON.parse_string(JSON.stringify(payload,"",true,true))
+  var normalized: Dictionary=preload("res://scripts/loot/save_provenance_trim.gd").durable(payload)
   var confirmed: bool=durable is Dictionary
   if confirmed:
    for field: String in normalized:

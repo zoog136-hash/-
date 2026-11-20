@@ -5,6 +5,11 @@ const PICKUP_RADIUS: float = 60.0
 const SCAN_RADIUS: float = 460.0
 const SCAN_INTERVAL: float = 0.25
 const BLOCKED_RETRY: float = 15.0
+## Path searches for new targets stop for this frame once this much time is
+## spent (the first one always runs); the scan continues next frame. Up to 8
+## unreachable drops each ran a full search in one frame (523.699: auto.pickup
+## 454 ms once on the phone).
+const SCAN_PATH_BUDGET_USEC: int = 6000
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var world: Node
 var player: TwilightPlayer
@@ -235,7 +240,12 @@ func run_auto() -> bool:
 	candidates.sort_custom(_priority)
 	# Bound path searches even with many inaccessible drops. Rejected IDs are
 	# retried after a cooldown, allowing the existing combat AI to continue.
+	var scan_started: int = Time.get_ticks_usec()
 	for index: int in range(mini(candidates.size(), 8)):
+		if index > 0 and Time.get_ticks_usec() - scan_started >= SCAN_PATH_BUDGET_USEC:
+			# Rejected drops are blocked; the rest are tried on the next frame.
+			scan_time = 0.0
+			return false
 		target_id = candidates[index]
 		mode = "auto"
 		stuck_time = 0.0

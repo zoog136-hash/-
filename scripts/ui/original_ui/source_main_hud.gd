@@ -2,6 +2,7 @@ extends Node
 ## Existing game's update_player -> original main HUD components. This node
 ## adds no gameplay logic or artwork. Component positions are read from the
 ## supplied MainScene, not from renewal_theme/reference_layout coordinates.
+const PackVersion=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MENU_TRACE = preload("res://scripts/boot/menu_memory_trace.gd")
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
@@ -34,6 +35,8 @@ const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_wind
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
+## Above the original windows (150-170) and popups.
+const SYSTEM_MESSAGE_Z: int=180
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -260,6 +263,12 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	var pad_scope: Variant=pack.manifest.get("node_scopes",{}).get(Combat.PAD)
 	var has_pickup: bool=pack.manifest.get("scenes",{}).has(Combat.PAD) and (not pad_scope is Array or pad_scope.has(Combat.PICKUP_GROUP))
 	set_process(pack.manifest.get("scenes",{}).has(Target.MEMBER) or has_pickup or _inventory_view!=null or pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER) or pack.manifest.get("scenes",{}).has(Blessing.MEMBER) or _dungeon_controls!=null or _workspace_controls!=null or pack.manifest.get("files",{}).has(SystemMessage.PARENT_MEMBER) or _joystick_view!=null)
+	# An old UI add-on still plays (windows it lacks keep their fallback);
+	# the player is told once to reinstall it.
+	var pack_info: Dictionary=PackVersion.describe(str(pack.get("manifest_sha256")),pack.get("manifest").get("scenes",{}) if pack.get("manifest") is Dictionary else null)
+	if pack_info.outdated and hud.is_inside_tree():
+		hud.get_tree().create_timer(3.0).timeout.connect(func() -> void:
+			if is_instance_valid(hud):PackVersion.warn_once(hud,pack_info))
 	return {"ok":true,"source_design_size":_design_size,"game_state_written":false,"complete_screen_contract":false}
 
 func _input(event: InputEvent) -> void:
@@ -462,19 +471,29 @@ func _process_step(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	# Stage times for the phone record (523.699: hud_main 101 ms/s, no split).
+	var stage: int=FRAME_HITCH.now()
 	if _joystick_view!=null:_joystick_view.refresh()
+	stage=FRAME_HITCH.detail_next("hud.joystick",stage)
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
+	stage=FRAME_HITCH.detail_next("hud.blessing",stage)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.dungeon",stage)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.workspace",stage)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
+	stage=FRAME_HITCH.detail_next("hud.vitals_quickslots",stage)
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()
+	stage=FRAME_HITCH.detail_next("hud.messages",stage)
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
 			if signature!=_inventory_signature:
-				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh()
+				# Header only -> chrome; counts/markers/selection over the same rows
+				# -> rows-only patch (it rebuilds itself when the rows changed).
+				_inventory_result=_inventory_view.refresh_chrome() if _inventory_model_signature(true,false)==_inventory_rows_signature else _inventory_view.refresh_rows()
 				if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
 					_inventory_signature=_inventory_model_signature()
 					_inventory_structure_signature=_inventory_model_signature(false)
@@ -482,6 +501,7 @@ func _process_step(_delta: float) -> void:
 	# A single bag tap keeps TWILIGHT's own floating item name (the bag's
 	# item_name_hint over the tapped slot, see inventory_name_hint_context);
 	# the original ToolTip header is not mounted for it.
+	stage=FRAME_HITCH.detail_next("hud.inventory",stage)
 	if _inventory_name_view!=null and _inventory_name_view.is_open():_inventory_name_view.close()
 	if _inventory_lock_view!=null and not _source_input_captured(hud):
 		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
@@ -494,9 +514,12 @@ func _process_step(_delta: float) -> void:
 	if _enhance_action!=null:
 		_enhance_action_result=_enhance_action.refresh()
 		if not _enhance_action_result.get("ok",false):_enhance_action=null
+	stage=FRAME_HITCH.detail_next("hud.lock_enhance",stage)
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
+	stage=FRAME_HITCH.detail_next("hud.pickup",stage)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
+	FRAME_HITCH.detail("hud.target",stage)
 	if not model.get("ok",false):
 		_target_result=model
 		return
@@ -757,6 +780,10 @@ func refresh_system_message() -> Dictionary:
 			previous.hide()
 			previous.queue_free()
 	if not result.get("ok",false):return _system_message_failed(result)
+	# The client's system message is drawn over its open windows (Shop_All,
+	# Store_All, Map_All ... at z 150-170 here); under them a refusal such as
+	# 다이아 부족 was invisible (TWILIGHT 근사: one layer above every window).
+	_system_message_scene.z_index=SYSTEM_MESSAGE_Z
 	_system_message_scene.show()
 	var label: Object=_legacy_message.get_ref() if _legacy_message!=null else null
 	if label!=null:label.visible=false
@@ -862,6 +889,7 @@ func close_inventory() -> void:
 	var owned_open: bool=inventory_is_open()
 	_cancel_native_buttons()
 	if _inventory_name_view!=null:_inventory_name_view.close()
+	close_item_tooltip()
 	if _inventory_view!=null:_inventory_view.close()
 	_clear_inventory_presentation()
 	var hud: Object=_hud.get_ref() if _hud!=null else null
@@ -1027,6 +1055,11 @@ func skill_window() -> RefCounted:
 func skill_window_is_open() -> bool:
 	return _skill_window!=null and _skill_window.is_open()
 
+## A skill slot under the point of the open original skill window (long-press
+## registration source for PointerTransfer), else {}.
+func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
+	return _skill_window.hit_at(viewport_point) if skill_window_is_open() else {}
+
 func close_skill_window() -> void:
 	if skill_window_is_open():
 		_cancel_native_buttons()
@@ -1141,6 +1174,7 @@ const FEATURE_WINDOWS={
 	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
 	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
+	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
 }
 var _feature_windows: Dictionary={}
 
@@ -1155,6 +1189,18 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
 	MENU_TRACE.end(trace,result.get("ok",false))
 	return result
+
+## --- Original 523 boss overhead mark (source_main_boss_overhead)
+const BossOverhead=preload("res://scripts/ui/original_ui/source_main_boss_overhead.gd")
+
+## The playing original boss mark of NPC class `npc_class_id`, or null when
+## the NPC has none or the UI pack lacks NameCardLayout_BossMonster.
+func boss_overhead(npc_class_id: int) -> Node2D:
+	if _pack==null:return null
+	var node: String=BossOverhead.resource_name(npc_class_id)
+	if node.is_empty():return null
+	var built: Dictionary=BossOverhead.build(_pack,node)
+	return built.scene if built.get("ok",false) else null
 
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.
@@ -1500,6 +1546,28 @@ func dissolve_confirm_is_open() -> bool:
 
 func close_dissolve_confirm() -> void:
 	if dissolve_confirm_is_open():_dissolve_popup.close()
+
+## --- One tap on a bag item: the original item information popup
+## (source_main_item_tooltip, ToolTip_CommonType).
+const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
+var _item_tooltip: RefCounted
+
+func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+	if _item_tooltip==null and _pack!=null:
+		var popup=ItemTooltip.new()
+		_window_problems["item_tooltip"]=popup.configure(_pack)
+		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
+	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record)
+
+func item_tooltip_is_open() -> bool:
+	return _item_tooltip!=null and _item_tooltip.is_open()
+
+func item_tooltip() -> RefCounted:
+	return _item_tooltip
+
+func close_item_tooltip() -> void:
+	if item_tooltip_is_open():_item_tooltip.close()
 
 ## --- Bag item -> floor (source_main_drop_popup: Common_Calculator quantity,
 ## then Common_MessageBox_Dissolution confirmation). `on_confirm(count)`.

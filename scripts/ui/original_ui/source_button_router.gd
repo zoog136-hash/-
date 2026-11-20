@@ -8,6 +8,7 @@ extends RefCounted
 ## that handler too, and a drag past DRAG_SLOP disarms the button, so the
 ## release scrolls the list instead of activating the row.
 const BUTTON_SCRIPT_PATH="res://scripts/ui/original_ui/source_button.gd"
+const CHECKBOX_SCRIPT_PATH:="res://scripts/ui/original_ui/source_checkbox.gd"
 const DRAG_META="source_drag_forward"
 const DRAG_SLOP: float=12.0
 var _captured: WeakRef
@@ -72,7 +73,10 @@ func cancel() -> void:
 static func _actual_button(value: Variant) -> bool:
 	if not value is Node2D or not is_instance_valid(value) or value.is_queued_for_deletion():return false
 	var script: Script=value.get_script()
-	return script!=null and script.resource_path==BUTTON_SCRIPT_PATH and value.has_method("handle_native_touch") and value.has_method("cancel_native_touch")
+	# An original CheckBox (source_checkbox extends source_button) is a button too.
+	return script!=null and script.resource_path in [BUTTON_SCRIPT_PATH,CHECKBOX_SCRIPT_PATH] and value.has_method("handle_native_touch") and value.has_method("cancel_native_touch")
 
 static func _available(value: Variant) -> bool:
-	return _actual_button(value) and value.is_visible_in_tree() and value.get("current_state")!="disabled"
+	# The disabled state is a look (Cocos setBright): the button's own
+	# _input_available decides (touchEnabled, callback, visibility).
+	return _actual_button(value) and value.is_visible_in_tree() and value.call("_input_available")

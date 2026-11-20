@@ -59,6 +59,17 @@ func _initialize() -> void:
 			if not owner.begins_with("func _perf_log"): left.append(path.get_file() + ":" + text.substr(line_start, at - line_start + 20).strip_edges())
 			at = text.find("OS.is_debug_build()", at + 1)
 	check(left.is_empty(), "only diagnostics use the debug template directly: " + str(left))
+	## 2026-11-20: review buttons are hidden on the phone (developer_ui), while the
+	## playtest card collection, the guardian diamond wallet and TestItem coupons
+	## stay as they are; the guardian wallet reads as plain "수호성 다이아".
+	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
+	check(hud.contains("card_draw_button.visible=card_controls.visible and developer_tools_visible()") and hud.contains("if developer_tools_visible() and CARD_RULES.CATEGORIES.has(catalog_category):"), "free test card draws are developer-only")
+	var tj: String = FileAccess.get_file_as_string("res://scripts/tj/view.gd")
+	check(tj.contains("playtest() and preload(\"res://scripts/boot/build_flags.gd\").developer_ui():\n\t\tvar grant := Button.new()"), "the test coupon grant button is developer-only")
+	var guardian: String = FileAccess.get_file_as_string("res://scripts/growth/growth_view.gd") + FileAccess.get_file_as_string("res://scripts/growth/growth_runtime.gd")
+	check(guardian.contains("else \"수호성 다이아 %d\")") and guardian.contains("else \"수호성 다이아 +%d\")") and guardian.contains("else \"\\n수호성 다이아 %d 사용\")"), "the guardian diamond wallet keeps working with player wording")
+	var coupons: String = FileAccess.get_file_as_string("res://scripts/tj/coupon_service.gd")
+	check(coupons.contains("not preload(\"res://scripts/boot/build_flags.gd\").playtest()"), "TestItem coupons keep the playtest rule")
 	var profile = load("res://scripts/characters/save_profile.gd")
 	check(profile.full_cards_for(PackedStringArray(), "Android", true) and str(profile.base_for(PackedStringArray(), "Android", true)) == "user://twilight_full_cards_test_v1.json", "the Android playtest save namespace is unchanged")
 	print("RELEASE_BUILD_FLAGS_RESULT " + JSON.stringify({"checks":checks, "failures":failures}))

@@ -53,6 +53,7 @@ var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
+const SAVE_TRIM = preload("res://scripts/loot/save_provenance_trim.gd")
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
@@ -155,6 +156,9 @@ const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
 ## TWILIGHT 근사: 획득 후 수명(Life) 장부, 지배 부적 소지 효과.
 const ITEM_LIFE523 = preload("res://scripts/loot/item_life523.gd")
 var item_life523 = ITEM_LIFE523.new()
+## Original 523 아이템 컬렉션 (ItemBook tables, source_main_item_book_window).
+const ITEM_BOOK523 = preload("res://scripts/collections/item_book523_runtime.gd")
+var item_book523 = ITEM_BOOK523.new()
 ## TWILIGHT 근사: 신화 무기 발동 교체 (ItemInvokeReplacementID) 한 번 추첨 장부.
 const ITEM_INVOKE523 = preload("res://scripts/loot/item_invoke_replacement523.gd")
 var item_invoke523 = ITEM_INVOKE523.new()
@@ -223,6 +227,16 @@ var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
+## HUD publish domains. A transaction names what it changed; only HP/MP/
+## EXP/gold bars (HUD_VITALS) and bag counts/weight/quick items (HUD_ITEMS)
+## have their own light publish. Anything else (equipment, buffs, cards,
+## transform, combination, level, load) is the full _update_hud.
+const HUD_VITALS: int = 1
+const HUD_ITEMS: int = 2
+const HUD_FULL: int = 1 << 30
+## Publish counters: full HUD rebuilds (each recalculates every derived stat),
+## light vitals/items publishes, and derived-stat snapshots.
+var hud_publish_counts: Dictionary = {"full":0,"vitals":0,"items":0,"stat_snapshots":0,"speed_refreshes":0}
 const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
 const SOURCE_OPTIMIZATION = preload("res://scripts/animation/source_optimization.gd")
 const LOCAL_PRESENTATION = preload("res://scripts/animation/local_presentation_region.gd")
@@ -439,6 +453,10 @@ const DEFERRED_SAVE_GATE = preload("res://scripts/deferred_save_gate.gd")
 # verification cache; pause/quit and transactions still save immediately.
 const AUTOSAVE_SECONDS: float = 60.0
 const DEFERRED_SAVE_SECONDS: float = 10.0
+## SHA-256 of the save file this session last wrote with the shop state in it.
+var _shop_key_saved_sha: String = ""
+## Full re-reads of the previous save file for the shop migration (diagnostics/tests).
+var previous_save_parses: int = 0
 const PERF_LOG_THRESHOLD_USEC: int = 30000
 var deferred_save: DEFERRED_SAVE_GATE = DEFERRED_SAVE_GATE.new(DEFERRED_SAVE_SECONDS)
 # Automated suites run headless and assert durable state right after each action.
@@ -566,6 +584,7 @@ func _finish_boot_loading() -> void:
 
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
+	preload("res://scripts/ui/dialog_korean_texts.gd").install(get_tree())
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
 	# Android: world canvas at 90% resolution, CanvasLayer UI stays native.
 	add_child(preload("res://scripts/boot/world_render_scale.gd").new())
@@ -869,9 +888,10 @@ func _process_frame(delta: float) -> void:
 	halphas_star.combat.tick(delta)
 	totem_combat.tick(delta)
 	_advance_skill_charge(delta)
+	_finish_background_save(false)
 	if deferred_save.tick(delta):
 		var hitch_10: int = FRAME_HITCH.now()
-		_save_game(true)
+		_save_game(true,{},{},false,true)
 		FRAME_HITCH.add("save", hitch_10)
 	# M81: the timer advances every frame; a fire runs the manager callback (enable gate, then
 	# the heal spell pass). Auto hunt itself keeps its per-frame cadence.
@@ -1095,6 +1115,7 @@ func _load_data() -> void:
 	item_appellation523.configure(self)
 	card_swap523.configure(self)
 	item_life523.configure(self)
+	item_book523.configure(self)
 	item_invoke523.configure(self)
 	equipment_buff523.configure(self)
 	dungeon_extras523.configure(self)
@@ -1553,7 +1574,7 @@ func _skill_cooldown_factor() -> float:
 func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -1601,57 +1622,92 @@ func _index_item_weights() -> void:
 	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
 	_craft_index_warm={}
+	var rules: Dictionary = _item_weight_rules()
 	var next_weight_index: Dictionary = {}
-	var type_defaults: Dictionary = {}
-	var overrides: Dictionary = {}
-	var source_weight_policy: Dictionary = {}
-	# User decision "원작대로": these keep the original estimate, including zero.
-	var original_weight_names: Dictionary = {}
-	var path: String = "res://data/item_weight_rules.json"
-	if FileAccess.file_exists(path):
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-		if parsed is Dictionary:
-			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
-			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
-			var declared_source_policy: Variant = parsed.get("current523_source_weight")
-			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
-			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
-			if original_items is Dictionary: original_weight_names = original_items
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
 		for entry: Variant in source as Array:
-			if not (entry is Dictionary):
-				continue
-			var record: Dictionary = entry as Dictionary
-			var name_value: String = str(record.get("name", ""))
-			if name_value.is_empty():
-				continue
-			var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,source_weight_policy)
-			if source_weight.get("applicable",false):
-				if not source_weight.get("ok",false):
-					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
-					return
-				# Exact source zero remains zero; host positive-default bounds below
-				# still belong only to the pre-existing legacy input path.
-				next_weight_index[name_value] = int(source_weight.weight)
-				continue
-			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
-			if original_weight_names.has(name_value) and overrides.has(name_value):
-				next_weight_index[name_value] = maxi(0, int(overrides[name_value]))
-				continue
-			if record.get("source_weight_origin") == "current523_original_estimate":
-				next_weight_index[name_value] = maxi(0, int(record.get("weight", 0)))
-				continue
-			if record.has("growth96_item_id"):
-				next_weight_index[name_value] = maxi(0,int(record.weight))
-				continue
-			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
-				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			next_weight_index[name_value] = maxi(0, raw_weight)
+			if not _weight_index_entry(entry, rules, next_weight_index):
+				return
 	# Keep existing dictionary aliases while publishing a complete input index.
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
+
+## The weight rules file (res://, read-only at run time): parsed once.
+var _item_weight_rules_cache: Dictionary = {}
+func _item_weight_rules() -> Dictionary:
+	if not _item_weight_rules_cache.is_empty(): return _item_weight_rules_cache
+	var rules: Dictionary = {"type_defaults":{}, "overrides":{}, "source_weight_policy":{}, "original_weight_names":{}}
+	var path: String = "res://data/item_weight_rules.json"
+	if FileAccess.file_exists(path):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary:
+			rules.type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
+			rules.overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: rules.source_weight_policy = declared_source_policy
+			# User decision "원작대로": these keep the original estimate, including zero.
+			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
+			if original_items is Dictionary: rules.original_weight_names = original_items
+	_item_weight_rules_cache = rules
+	return rules
+
+## One catalog entry's weight into `index`; false when an original weight
+## input is unresolved (the caller keeps the existing index).
+func _weight_index_entry(entry: Variant, rules: Dictionary, index: Dictionary) -> bool:
+	if not (entry is Dictionary):
+		return true
+	var record: Dictionary = entry as Dictionary
+	var name_value: String = str(record.get("name", ""))
+	if name_value.is_empty():
+		return true
+	var type_defaults: Dictionary = rules.type_defaults
+	var overrides: Dictionary = rules.overrides
+	var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,rules.source_weight_policy)
+	if source_weight.get("applicable",false):
+		if not source_weight.get("ok",false):
+			push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+			return false
+		# Exact source zero remains zero; host positive-default bounds below
+		# still belong only to the pre-existing legacy input path.
+		index[name_value] = int(source_weight.weight)
+		return true
+	var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+	if rules.original_weight_names.has(name_value) and overrides.has(name_value):
+		index[name_value] = maxi(0, int(overrides[name_value]))
+		return true
+	if record.get("source_weight_origin") == "current523_original_estimate":
+		index[name_value] = maxi(0, int(record.get("weight", 0)))
+		return true
+	if record.has("growth96_item_id"):
+		index[name_value] = maxi(0,int(record.weight))
+		return true
+	if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
+		raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
+	index[name_value] = maxi(0, raw_weight)
+	return true
+
+## Records appended to catalog_db["아이템"] / item_db after the sizes given
+## (e.g. a box's first-seen reward): their weights only, as the full pass
+## would publish them (a later entry of the same name wins, catalog first).
+## Anything else (shrunk lists, a name already indexed, a deferred start)
+## falls back to the full pass.
+func _index_item_weights_appended(catalog_size: int, item_db_size: int) -> void:
+	var catalog: Variant = catalog_db.get("아이템", [])
+	if not catalog is Array or not item_db is Array: _index_item_weights(); return
+	if catalog.size() == catalog_size and item_db.size() == item_db_size: return
+	if _weight_index_deferred or catalog.size() < catalog_size or item_db.size() < item_db_size: _index_item_weights(); return
+	var rules: Dictionary = _item_weight_rules()
+	var added: Dictionary = {}
+	for pair: Array in [[catalog, catalog_size], [item_db, item_db_size]]:
+		for position: int in range(int(pair[1]), (pair[0] as Array).size()):
+			var entry: Variant = pair[0][position]
+			if entry is Dictionary and item_weight_index.has(str(entry.get("name", ""))): _index_item_weights(); return
+			if not _weight_index_entry(entry, rules, added): return
+	patch523_craft_item_cache={}
+	_craft_index_warm={}
+	item_weight_index.merge(added, true)
 
 func _inventory_total_weight() -> int:
 	if _stat_memo_depth == 0: return _inventory_total_weight_uncached()
@@ -2006,6 +2062,7 @@ func _merge_local_consumables_into_catalog() -> void:
 			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
 	ITEM_CATALOG_LOOKUP.forget_misses()
+	preload("res://scripts/shop/source523_cash_packages.gd").forget_owner_index()
 
 func _connect_signals() -> void:
 	hud.connect("equipment523_open_requested", _equipment523_open)
@@ -2580,7 +2637,25 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
+## Original 523 town NPC tap: its function window opens directly, without the
+## NpcDialogue_All talk (user request 2026-11-19). Shop NPC -> original store
+## window, 창고지기 -> storage, 텔레포터 -> 지역 이동, quest -> quest window,
+## 사망 복구 -> recovery; an NPC with no function only shows its name.
+func _open_town_npc_function(npc: Dictionary) -> void:
+	var npc_id: String = str(npc.get("id",""))
+	match TOWN_NPCS.primary_action(self,npc_id):
+		"shop": hud.open_npc_shop(npc_id)
+		"warehouse": hud.call("open_warehouse")
+		"teleport": hud.call("open_npc_teleport")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"quest": hud.call("open_quests")
+		"restore": death_recovery.open_ui()
+		_: hud.show_message(str(npc.get("name","")))
 
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
@@ -2590,8 +2665,7 @@ func _set_click_destination(target: Vector2) -> void:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if TOWN_NPCS.is_town_npc_id(str(npc.get("id",""))):
-					# Original 523 town NPC: the original NpcDialogue_All talk window.
-					hud.call("open_npc_dialogue",str(npc.id))
+					_open_town_npc_function(npc)
 					return
 				if str(npc["role"]) == "shop":
 					hud.open_npc_shop()
@@ -3403,8 +3477,13 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	# Stage times for the phone record (523.681: auto_hunt 196 ms/s, no split).
+	var auto_stage: int = FRAME_HITCH.now()
 	if inventory_automation.maintenance.try_automatic(): return
-	if _run_auto_ground_pickup():
+	auto_stage = FRAME_HITCH.detail_next("auto.maintenance", auto_stage)
+	var picked: bool = _run_auto_ground_pickup()
+	auto_stage = FRAME_HITCH.detail_next("auto.pickup", auto_stage)
+	if picked:
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
@@ -3415,15 +3494,19 @@ func _run_auto_hunt() -> void:
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
 		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
 		if _native_route_pending():auto_stuck_time=0.0
+		auto_stage = FRAME_HITCH.detail_next("auto.search", auto_stage)
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
 		return
 	selected_monster = auto_target
 	var can_see: bool = _has_line_of_sight_world(player.global_position, auto_target.global_position)
+	auto_stage = FRAME_HITCH.detail_next("auto.sight", auto_stage)
 	# A registered, ready skill uses its own range even when the equipped weapon
 	# cannot reach the monster. Offensive skills always precede normal attacks.
-	if can_see and _run_auto_combat_quickslots():
+	var cast: bool = can_see and _run_auto_combat_quickslots()
+	auto_stage = FRAME_HITCH.detail_next("auto.quickslots", auto_stage)
+	if cast:
 		player.clear_click_path()
 		return
 	if _target_in_current_weapon_range(auto_target) and can_see:
@@ -3447,6 +3530,7 @@ func _run_auto_hunt() -> void:
 		# Field line_clear checks the same walkability used for combat sight.
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
+		auto_stage = FRAME_HITCH.detail_next("auto.path", auto_stage)
 		if path.is_empty():
 			if locked != null:
 				player.clear_click_path()
@@ -3483,6 +3567,19 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	# walking to. A route searched from the player starts at the centre of its
 	# own cell, usually already passed at the original walk (2.25 cells/s,
 	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	# Searches are bounded like monster chases: a hunt target is near, and a
+	# full-map search (8192 nodes) for an unreachable one cost the phone
+	# ~120 ms per second of auto-hunt (523.704: auto.path 117 ms/s).
+	var field: Object = field_map
+	var bounded: bool = field != null and "path_search_limit_override" in field
+	if bounded: field.set("path_search_limit_override", AUTO_PURSUIT_SEARCH_NODES)
+	var result: PackedVector2Array = _auto_pursuit_search(target)
+	if bounded: field.set("path_search_limit_override", -1)
+	return result
+
+const AUTO_PURSUIT_SEARCH_NODES: int = 2048
+
+func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
 	if player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
 		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
@@ -3490,6 +3587,9 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
 				return rest
+			# The player is walking to `via`: a target not reachable from it is
+			# not reachable from the player either. One search, not two.
+			return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -3824,31 +3924,56 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 		hud.call("refresh_quests")
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.append_log("%s ×%d 습득" % [item_name, quantity])
-	hud.show_message("%s 획득" % item_name)
+	# Original acquisition text (UITextData_Korean) with the original name.
+	var shown_name: String = preload("res://scripts/ui/source523_item_identity.gd").display_name(record.get("item_record",{}) if record.get("item_record") is Dictionary else {}, item_name)
+	var acquired_text: String = preload("res://scripts/ui/source523_item_identity.gd").acquire_text(shown_name, quantity)
+	hud.append_log(acquired_text)
+	hud.show_message(acquired_text)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
-	_refresh_inventory_hud()
-	if not wallet_item.is_empty(): _update_hud()
+	# Stacks fold at once (bag state); the bag/quickslot/weight/speed redraw
+	# runs in the next frame, coalesced for a burst of pickups, so the pickup
+	# frame does not also pay for the HUD.
+	_merge_native_stacks()
+	_queue_inventory_hud_refresh()
+	# A wallet pickup changes only the Adena readout (coins reach the HUD with the
+	# queued quickslot redraw above); no full character-sheet rebuild.
+	if not wallet_item.is_empty(): _refresh_combat_hud()
 	_perf_log("습득 HUD 갱신", pickup_hud_started_usec)
 	if bool(record.get("player_dropped",false)): _request_deferred_save()
 	return true
+
+var _inventory_hud_queued: bool = false
+
+func _queue_inventory_hud_refresh() -> void:
+	if _inventory_hud_queued or not is_inside_tree(): 
+		if not is_inside_tree(): _refresh_inventory_hud()
+		return
+	_inventory_hud_queued = true
+	get_tree().process_frame.connect(_flush_inventory_hud, CONNECT_ONE_SHOT)
+
+func _flush_inventory_hud() -> void:
+	_inventory_hud_queued = false
+	if is_inside_tree(): _refresh_inventory_hud()
 
 ## A pickup only changes item counts, physical IDs and carried weight. Rebuilding
 ## the whole character sheet (all derived stats, card/awakening state, portrait,
 ## a deep copy for the side panel) on every pickup stalled the frame; publish just
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
+	hud_publish_counts.items += 1
 	_merge_native_stacks()
 	_sync_item_instances()
 	combinations.invalidate();combinations.reconcile()
-	# Carried weight feeds the encumbrance movement multiplier.
-	_refresh_speed_modifiers()
+	var weight: int = _inventory_total_weight()
+	var capacity: int = _carrying_capacity()
+	var encumbrance: float = ITEM_OPTIONS.encumbrance_multiplier(weight, capacity)
+	# Carried weight feeds the encumbrance movement multiplier; the bag changes
+	# nothing else of the speeds (I09), so the same multiplier needs no refresh.
+	if encumbrance != _speed_encumbrance: _refresh_speed_modifiers()
 	var state: Variant = hud.get("character_state")
 	if state is Dictionary:
-		var weight: int = _inventory_total_weight()
-		var capacity: int = _carrying_capacity()
 		(state as Dictionary).merge({"inventory_weight":weight, "current_weight":weight, "carrying_capacity":capacity,
-			"max_weight":capacity, "encumbrance_multiplier":ITEM_OPTIONS.encumbrance_multiplier(weight, capacity),
+			"max_weight":capacity, "encumbrance_multiplier":encumbrance,
 			"item_instances":item_instances}, true)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
@@ -3918,6 +4043,8 @@ func _ground_drops_snapshot() -> Array:
 func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
+	for returned: Dictionary in ground_loot.recovered_to_bag:
+		hud.append_log("바닥 아이템 회수 · %s %d개를 가방으로 돌려놓았습니다" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(returned.item_name)),int(returned.quantity)])
 
 ## Quest window [모두 받기].
 func claim_all_quests() -> Dictionary:
@@ -4325,6 +4452,12 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	hud.append_log("스탯 투자 · %s +1" % stat_name)
 	_update_hud()
 	_request_deferred_save()
+
+## The original boss overhead mark for NPC class `npc_class_id` (null: none).
+func original_boss_overhead(npc_class_id: int) -> Node2D:
+	var controller: Variant = hud.get("original_main_ui_controller") if hud != null else null
+	if not is_instance_valid(controller) or not controller.has_method("boss_overhead"): return null
+	return controller.boss_overhead(npc_class_id)
 
 func _check_level_up(quiet: bool=false) -> void:
 	var gained_stat_points: bool = false
@@ -4749,6 +4882,17 @@ func _active_item_buff_total(key: String, item_buff_override: Variant = null) ->
 	# clan exists, like an always-on buff, and is not part of the timed set.
 	# Escaros artifact buff (BuffClass bonuses, user decision 2026-11-13: 15 minutes).
 	return total + clan523.buff_value(key) + content523.buff_value(key) + item_possession523.buff_value(key) + item_appellation523.buff_value(key) + equipment_buff523.buff_value(key) + dungeon_extras523.buff_value(key)
+
+## _active_item_buff_total for a percent that may hold a fraction of a point
+## (original 엘븐 와퍼 MoveSpeedBonus 125000 = 12.5 %); the other sources
+## stay the integer totals they always were.
+func _active_item_buff_percent(key: String) -> float:
+	var total: float = 0.0
+	for value: Variant in active_item_buffs.values():
+		if value is Dictionary:
+			var amount: Variant = (value as Dictionary).get(key, 0)
+			if amount is int or amount is float: total += float(amount)
+	return total + float(_active_item_buff_total(key, {}))
 
 func _format_seconds_short(seconds: float) -> String:
 	var whole: int = maxi(0, int(ceil(seconds)))
@@ -6322,10 +6466,11 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	var buffs_before: int=player_npc_buff_signature()
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name)
 	if native_stack.get("handled",false):
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
-		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		if native_stack.get("ok",false):hud.refresh_inventory(inventory);publish_hud(native_use_hud_domains(native_stack,buffs_before))
 		return
 	var native: Dictionary=_find_catalog_item_record(item_name)
 	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==233:
@@ -6446,7 +6591,30 @@ func _refresh_after_clan_change() -> void:
 	if hud != null and hud.has_method("refresh_inventory"): hud.refresh_inventory(inventory)
 	_update_hud()
 
+## Publishes the HUD for `domains` (HUD_* bits). Vitals/items only take the
+## light paths; any other bit rebuilds everything (_update_hud).
+func publish_hud(domains: int) -> void:
+	if domains & ~(HUD_VITALS | HUD_ITEMS) != 0 or domains == 0:
+		_update_hud()
+		return
+	if domains & HUD_ITEMS: _refresh_inventory_hud()
+	if domains & HUD_VITALS:
+		_refresh_combat_hud()
+		_update_ain_hud()
+
+## Identity of the NPC-cast buffs/debuffs on the player: healing can erase
+## some (IsEraseOnHealed), which changes stats and needs the full publish.
+## What a committed native-stack use changed: an HP/MP potion only its
+## vitals and the bag (unless healing erased a buff); anything else is full.
+func native_use_hud_domains(result: Dictionary, buffs_before: int) -> int:
+	if str(result.get("effect_kind","")) in ["hp","mp"] and player_npc_buff_signature()==buffs_before:return HUD_VITALS | HUD_ITEMS
+	return HUD_FULL
+
+func player_npc_buff_signature() -> int:
+	return hash(patch523_npc_spells.player_buffs.keys())
+
 func _update_hud() -> void:
+	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
 		title_badge.add_theme_color_override("font_color",titles.personal.display_color())
@@ -6516,6 +6684,7 @@ func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
 	# publish fresh limits through _update_hud; real damage still queries live stats.
 	# HP-only changes must not queue an equipment/character/inventory rebuild.
+	hud_publish_counts.vitals += 1
 	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
 	hud.character_state["gold"] = gold
@@ -6548,7 +6717,67 @@ func _request_general_save() -> void:
 func _commit_general_save() -> void:
 	if not general_save_pending:return
 	general_save_pending=false
-	_save_game(true)
+	_save_game(true,{},{},false,true)
+
+var background_save_enabled: bool = DisplayServer.get_name() != "headless"
+var _background_from_outer: bool = false
+var _background_save_task: int = -1
+var _background_save_job: Dictionary = {}
+
+func background_save_pending() -> bool:
+	return _background_save_task >= 0
+
+func _start_background_save(data: Dictionary, prior_hash: String, started_usec: int) -> Error:
+	var pre: Error = equipment_collections.precheck_write(save_path())
+	if pre != OK:
+		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % pre)
+		return pre
+	# The worker owns this copy; the live game keeps changing its own state.
+	var job: Dictionary = {"path":save_path(),"data":data.duplicate(true),"prior_hash":prior_hash,"error":ERR_BUSY}
+	# Everything changed so far is in this save; later changes queue a new one.
+	deferred_save.cancel()
+	_background_save_job = job
+	_background_save_task = WorkerThreadPool.add_task(_run_background_save.bind(job), false, "TWILIGHT save")
+	_perf_log("저장(준비)", started_usec)
+	return OK
+
+## Worker thread: no scene/HUD access, only the job's own data and files.
+static func _run_background_save(job: Dictionary) -> void:
+	var account: Script = preload("res://scripts/characters/account_store.gd")
+	var stage: Dictionary = account.stage_save(str(job.path), job.data)
+	if not stage.get("ok",false):
+		job["error"] = ERR_INVALID_DATA; job["problem"] = str(stage.get("problem",""))
+		return
+	var payload: Dictionary = stage.payload
+	job["envelope"] = payload.get(account.KEY)
+	payload = account.compact(payload)
+	account.forget_durable()
+	var text: String = JSON.stringify(payload, "", true, true)
+	job["payload_hash"] = text.sha256_text()
+	job["payload"] = payload
+	job["error"] = preload("res://scripts/skills/save_writer.gd").write_text(str(job.path), text)
+
+func _finish_background_save(wait: bool) -> void:
+	if _background_save_task < 0: return
+	if not wait and not WorkerThreadPool.is_task_completed(_background_save_task): return
+	WorkerThreadPool.wait_for_task_completion(_background_save_task)
+	_background_save_task = -1
+	var job: Dictionary = _background_save_job
+	_background_save_job = {}
+	if int(job.get("error",ERR_BUG)) == OK:
+		equipment_collections.commit_written(str(job.path), job.payload, str(job.payload_hash))
+		if job.get("envelope") is Dictionary: CHARACTER_ACCOUNT.remember_durable(str(job.path), job.envelope)
+		if not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==str(job.path): CHARACTER_ACCOUNT.session["initialized"]=true
+		for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
+			if job.payload.has(key):equipment_collections.extra_save_fields[key]=job.payload[key].duplicate(true)
+		return
+	CHARACTER_ACCOUNT.forget_durable()
+	if not str(job.get("problem","")).is_empty(): hud.append_log(str(job.problem))
+	hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % int(job.get("error",ERR_BUG)))
+	if FileAccess.file_exists(str(job.path)) and FileAccess.get_sha256(str(job.path)) != str(job.prior_hash):
+		patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
+	else:
+		deferred_save.request()
 
 ## Ask for a save after DEFERRED_SAVE_SECONDS of quiet. Use only for state that
 ## is consistent if the last few seconds are lost; RNG outcomes and item/skill
@@ -6630,14 +6859,32 @@ func set_field_camera_zoom(value: float, persist: bool = true) -> Error:
 		if field_map != null: _apply_field_camera_zoom()
 	return result
 
-func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}) -> Error:
+## validate_only: every ownership/namespace check of this payload, then OK
+## without building or writing the file (a staged owner may adopt it and
+## request the batched save; the next save writes it with everything else).
+## background: a plain (no staged payload) save builds and checks its data in
+## this frame, then a worker thread stages the account file, serialises and
+## writes it atomically (temp file + rename); the next save, load, pause or
+## quit waits for it. The file is always either the previous or the new
+## complete save. Transactions (staged payloads) still write before returning.
+func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}, validate_only: bool = false, background: bool = false) -> Error:
+	var want_background: bool = background or _background_from_outer
+	_background_from_outer = false
+	_finish_background_save(true)
+	# Stage times for the phone record (523.655: save 286 ms/s without a split).
+	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
 	if unconfirmed523.save_blocked or not unconfirmed523.validate(collection_override.get("unconfirmed523",unconfirmed523.state)).is_empty():return ERR_INVALID_DATA
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
 	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
 		# Native source cursors cannot authorize the host auto-movement save override.
 		if not movement_override.is_empty(): return ERR_UNAVAILABLE
-		return _current523_aden_play_controller.call("save_source_progress",quiet,collection_override)
+		# A check-only call writes nothing, so it needs no source-map snapshot swap.
+		if not validate_only:
+			_background_from_outer = want_background
+			var delegated: Error = _current523_aden_play_controller.call("save_source_progress",quiet,collection_override)
+			_background_from_outer = false
+			return delegated
 	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
 	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
 	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA
@@ -6657,8 +6904,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if protection523.save_blocked:
 		if not quiet: hud.show_message("가호 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
-	if not PROTECTION523.validate(collection_override.get("protection523",protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
-	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:collection_override.get(SOURCE_SHOP.SAVE_KEY, source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
+	if not PROTECTION523.validate((collection_override["protection523"] if collection_override.has("protection523") else protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
+	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:(collection_override[SOURCE_SHOP.SAVE_KEY] if collection_override.has(SOURCE_SHOP.SAVE_KEY) else source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
 	if not patch523_owner_state_problem.is_empty():return ERR_UNAVAILABLE
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	if protection523!=null and protection523.get("save_blocked")==true:return ERR_UNAVAILABLE
@@ -6693,12 +6940,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if source_item_save_blocked:
 		if not quiet: hud.show_message("전체 원본 아이템 팩 확인 필요 · 기존 저장 보존")
 		return ERR_UNAVAILABLE
+	FRAME_HITCH.detail("save.check", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
 	var source_backup_error: Error = _prepare_patch523_item_save_backup()
 	if source_backup_error != OK:
 		source_item_save_blocked = true
 		hud.show_message("전체 원본 아이템 이전 백업 실패 · 기존 저장 보존")
 		return source_backup_error
-	if expedition_local.save_blocked or not expedition_local.validate(collection_override.get(EXPEDITION_LOCAL.KEY, expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
+	if expedition_local.save_blocked or not expedition_local.validate((collection_override[EXPEDITION_LOCAL.KEY] if collection_override.has(EXPEDITION_LOCAL.KEY) else expedition_local.export_state())).is_empty():return ERR_INVALID_DATA
 	if not expedition_local.before_save(): return ERR_CANT_CREATE
 	if collection_override.has("card_skill_awakening") and not skill_awakening.check_load({"card_skill_awakening":collection_override.card_skill_awakening}).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("quest_state"):
@@ -6716,6 +6965,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	if collection_override.has("equipped_ammo") and not collection_override.equipped_ammo is String: return ERR_INVALID_PARAMETER
+	if collection_override.has(ITEM_BOOK523.SAVE_KEY) and (item_book523.preserved_raw != null or not ITEM_BOOK523.validate(collection_override[ITEM_BOOK523.SAVE_KEY]).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has(ROUTINE523.SAVE_KEY) and (routines.save_blocked or not ROUTINE523.validate(collection_override[ROUTINE523.SAVE_KEY]).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has("ammo_unequipped") and not collection_override.ammo_unequipped is bool: return ERR_INVALID_PARAMETER
 	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
@@ -6723,7 +6973,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -6744,6 +6994,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
 		return ERR_UNAVAILABLE
+	if validate_only: return OK
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
@@ -6777,7 +7028,6 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"gold": gold,
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
-		"source_item_catalog_history":source_item_catalog_history.duplicate(true),
 		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
 		"quest_state": quest_service.export_state(),
 		"monsterbook523": monsterbook523.export_state(),
@@ -6795,6 +7045,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		CONTENT523.SAVE_KEY: content523.export_state(),
 		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
 		ITEM_LIFE523.SAVE_KEY: item_life523.export_state(),
+		ITEM_BOOK523.SAVE_KEY: item_book523.export_state(),
 		ITEM_INVOKE523.SAVE_KEY: item_invoke523.export_state(),
 		DUNGEON_EXTRAS523.SAVE_KEY: dungeon_extras523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
@@ -6855,8 +7106,14 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		var peer_state:Dictionary=collection_override.get("source_shop",peer_shop.export_state())
 		if not peer_shop.validate(peer_state).is_empty():return ERR_UNAVAILABLE
 		if FileAccess.file_exists(save_path()):
-			var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
-			if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
+			# prepare_load only acts on a save that has no shop state yet. A file
+			# whose SHA-256 is the one this session last wrote with that state
+			# already has it: skip re-reading and parsing the whole previous
+			# save on every write (the largest single part of a phone save).
+			if preload("res://scripts/save/previous_save_check.gd").needs_reading(save_path(),_shop_key_saved_sha):
+				previous_save_parses+=1
+				var previous:Variant=JSON.parse_string(FileAccess.get_file_as_string(save_path()))
+				if not previous is Dictionary or not peer_shop.prepare_load(previous,save_path(),FileAccess.get_sha256(save_path())).is_empty():return ERR_UNAVAILABLE
 		data["source_shop"]=peer_state.duplicate(true)
 	data["source_map84_layouts"]=SOURCE_MAP84.saved_layouts()
 	data["source_map84_doors"]=SOURCE_MAP84.saved_doors(field_map)
@@ -6876,6 +7133,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not owner_boundary.protection_error(self,protection_state).is_empty():return ERR_INVALID_DATA
 		data["protection523"]=protection_state
 	data.merge(equipment_collections.extra_save_fields, false)
+	data.erase("source_item_catalog_history") # retired history, also not carried as an unknown field
 	var staged_overrides := collection_override.duplicate(true)
 	if staged_overrides.has("totem_combat_settings"):
 		data.ui_preferences = ui_preferences.duplicate(true)
@@ -6886,14 +7144,36 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not bool(observed_content.get("ok",false)): return ERR_INVALID_DATA
 	if observed_content.has("state"):
 		data["unconfirmed523"] = observed_content.state
+	# Live-event replay keys are session-only (unconfirmed523/runtime.gd).
+	data["unconfirmed523"] = UNCONFIRMED523.saved_form(data.get("unconfirmed523"))
+	FRAME_HITCH.detail("save.snapshot", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
 	var save_started_usec: int = Time.get_ticks_usec()
-	var prior_owner_hash: String=FileAccess.get_sha256(save_path()) if FileAccess.file_exists(save_path()) else ""
+	data = SAVE_TRIM.for_file(data)
+	# write_save() refuses any file whose SHA-256 is not the one it last wrote
+	# (external change -> save_blocked), so when this path is that file its
+	# recorded hash is the file's hash: no extra full read and hash per save.
+	var prior_owner_hash: String=""
+	if str(equipment_collections.get("_disk_path"))==save_path() and not str(equipment_collections.get("_disk_hash")).is_empty():
+		prior_owner_hash=str(equipment_collections.get("_disk_hash"))
+	elif FileAccess.file_exists(save_path()):
+		prior_owner_hash=FileAccess.get_sha256(save_path())
+	if want_background and background_save_enabled and collection_override.is_empty() and movement_override.is_empty() and pending_map_save_record.is_empty() and not observed_content.has("state") and not equipment_collections.test_save_writer.is_valid():
+		return _start_background_save(data, prior_owner_hash, save_started_usec)
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
 		return ERR_INVALID_DATA
 	data = account_stage.payload
+	var written_envelope: Variant = data.get(CHARACTER_ACCOUNT.KEY)
+	# The selected character's state is this body: written once (account_store.compact).
+	data = CHARACTER_ACCOUNT.compact(data)
+	FRAME_HITCH.detail("save.account", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.now()
+	CHARACTER_ACCOUNT.forget_durable()
 	var result: Error = equipment_collections.write_save(save_path(), data)
+	if result == OK and written_envelope is Dictionary: CHARACTER_ACCOUNT.remember_durable(save_path(), written_envelope)
+	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
 			result=OK
@@ -6901,6 +7181,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		elif FileAccess.file_exists(save_path()) and FileAccess.get_sha256(save_path())!=prior_owner_hash:
 			patch523_owner_state_problem="원본 거래 저장 결과 확인 필요 · 다시 불러오기 전 소모/지급 중지"
 	_perf_log("저장", save_started_usec)
+	if result == OK and data.has(SOURCE_SHOP.SAVE_KEY) and str(equipment_collections.get("_disk_path"))==save_path():
+		_shop_key_saved_sha=str(equipment_collections.get("_disk_hash"))
+	elif result != OK:
+		_shop_key_saved_sha=""
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
@@ -6926,6 +7210,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	return OK
 
 func _load_game(quiet: bool) -> void:
+	_finish_background_save(true)
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return
 	if BASE508_TEST.enabled():return
 	if not migration_pointer_error.is_empty():migration_path_checked=false
@@ -6959,6 +7244,7 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("저장 데이터가 손상되었습니다")
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
+	CHARACTER_ACCOUNT.expand(value)
 	var account_error: String = CHARACTER_ACCOUNT.validate(value)
 	if not account_error.is_empty():
 		source_save_blocked=true
@@ -6973,6 +7259,12 @@ func _load_game(quiet: bool) -> void:
 		if CHARACTER_ACCOUNT.session.get("path")!=save_path() or CHARACTER_ACCOUNT.session.get("id")!=selected.id:
 			source_save_blocked=true; hud.show_message("선택 캐릭터가 변경되었습니다. 로비에서 다시 접속하세요."); return
 	preload("res://scripts/resources/current523_definition_rows.gd").normalize_loaded_save(value)
+	# Older saves: drop acquisition history no rule reads (drop proofs, receipt
+	# row copies, per-floor pickup receipts). Owned state is unchanged.
+	SAVE_TRIM.loaded_save(value)
+	preload("res://scripts/loot/current523_native_stack.gd").clear_proof_cache()
+	# The validated file just read: the next save needs no second parse of it.
+	if value.has(CHARACTER_ACCOUNT.KEY) and loaded_save_sha==FileAccess.get_sha256(save_path()): CHARACTER_ACCOUNT.remember_durable(save_path(), value[CHARACTER_ACCOUNT.KEY])
 	character_dormant_physical = CHARACTER_ACCOUNT.dormant_items(value)
 	var data: Dictionary = value as Dictionary
 	var extra_error: String=unconfirmed523.check_load(data)
@@ -7062,8 +7354,9 @@ func _load_game(quiet: bool) -> void:
 	var old_history: Variant=data.get("source_item_catalog_history",[])
 	if not old_history is Array:
 		source_item_save_blocked=true;hud.show_message("기존 원본 정의 출처 이력 형식 확인 필요 · 저장 보존");return
-	source_item_catalog_history=old_history.duplicate(true)
-	if not saved_items.is_empty() and saved_items!=current_items and not saved_items in source_item_catalog_history:source_item_catalog_history.append(saved_items.duplicate(true))
+	# Earlier definition-pack identities were only kept as history; no rule
+	# reads them, so they are no longer carried (save_journal_trim_test).
+	source_item_catalog_history=[]
 	if int(saved_items.get("schema",0)) in [3,4] and current_items.is_empty():
 		source_item_save_blocked=true
 		hud.show_message("새 원본523 아이템 입력이 없어 기존 저장을 보존합니다")
@@ -7474,6 +7767,7 @@ func _load_game(quiet: bool) -> void:
 	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
 	# An older save has no ledger: its Life items start at this load time.
 	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
+	item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))
 	# An older save has no draws: its 신화 weapons draw once after this load.
 	item_invoke523.import_state(data.get(ITEM_INVOKE523.SAVE_KEY, {}))
 	dungeon_extras523.import_state(data.get(DUNGEON_EXTRAS523.SAVE_KEY, {}))
@@ -7984,6 +8278,10 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	var return_record: Dictionary = _find_catalog_item_record(item_name)
 	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
+	# Original 523 acceleration potions (초록 물약·용기의 물약·엘븐 와퍼 ...) are
+	# drunk from the quick slot like in the original.
+	var native_use: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(return_record)
+	if native_use.get("kind") == "buff" and not native_use.get("runtime_presentation", false) and int(native_use.get("spec", {}).get("acceleration_stage", 0)) > 0: return true
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
@@ -7999,7 +8297,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if original_skills!=null and skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029"]:skill=original_skills.catalog.resolve(skill)
 	var source_status: Dictionary=original_skills.catalog.source_learning_status(skill)
 	if not source_status.is_empty():return str(source_status.message)
-	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
+	if _is_passive_skill(skill) and not (original_skills!=null and original_skills.stackable.handles(skill)): return "패시브는 직접 사용할 수 없습니다"
 	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
 	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
@@ -8261,7 +8559,7 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 			continue
 		if not _skill_ready(skill):
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			break
 
 
@@ -8370,12 +8668,12 @@ func _run_auto_heal_quickslots() -> void:
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
+			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name), false)
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
 			continue
 		if _skill_ready(skill):
-			_cast_job_skill(str(skill.get("name", "")))
+			_cast_job_skill(str(skill.get("name", "")), false)
 			return
 
 func _run_auto_combat_quickslots() -> bool:
@@ -8402,7 +8700,7 @@ func _run_auto_combat_quickslots() -> bool:
 			continue
 		if SKILL_RULES.effect_kind(skill) == "turnUndead" and not selected_monster.is_undead():
 			continue
-		if _cast_job_skill(skill_name):
+		if _cast_job_skill(skill_name, false):
 			return true
 	return false
 
@@ -8540,13 +8838,13 @@ func _skill_record(skill_name: String) -> Dictionary:
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
-func _cast_job_skill(skill_name: String) -> bool:
+func _cast_job_skill(skill_name: String, manual: bool = true) -> bool:
 	if death_recovery.blocked(): return false
 	if skill_name.begins_with("guardian:"):
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill, manual)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -8623,6 +8921,9 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 func _quickslot_ammo_source(entry: Dictionary) -> Dictionary:
 	if str(entry.get("kind", "")) != "skill": return {}
 	var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
+	# 보고서2 R1: a stackable (충전형) spell shows its stored charges, not ammo.
+	var charges: int = original_skills.stackable.count_for(skill) if original_skills != null and not skill.is_empty() else -1
+	if charges >= 0: return {"ammo_count": charges, "stack_count": charges, "can_use_without_ammo": true}
 	if skill.is_empty() or int(skill.get("ammo_per_hit", 0)) <= 0: return {}
 	return {"ammo_count": int(inventory.get(_skill_ammo_name(), 0)), "can_use_without_ammo": false}
 
@@ -10326,7 +10627,7 @@ func _effective_move_speed_multiplier_uncached() -> float:
 	# Awakening adds percentage points before the existing buff/encumbrance factors.
 	multiplier += awakening_percent / 100.0
 	multiplier *= _passive_skill_speed_multiplier()
-	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= 1.0 + _active_item_buff_percent("move_speed") / 100.0
 	multiplier *= 1.0+dungeon_play.modifier("move_speed")/100.0
 	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
@@ -10336,7 +10637,7 @@ func _effective_attack_speed_bonus_percent() -> float:
 	total += weapon_mastery.catalog_bonus("attackSpeed", _mastery_actual_weapon_type())
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
-	total += float(_active_item_buff_total("attack_speed"))
+	total += _active_item_buff_percent("attack_speed")
 	total += dungeon_play.modifier("attack_speed")
 	return maxf(0.0, total)
 
@@ -10352,11 +10653,19 @@ func _effective_attack_speed_multiplier_uncached() -> float:
 func _normal_attack_interval() -> float:
 	return clampf(0.72 / _effective_attack_speed_multiplier(), 0.12, 1.50)
 
+## The encumbrance multiplier the player's speeds were last set with (NAN:
+## unknown); a bag-only publish with the same multiplier skips the refresh.
+var _speed_encumbrance: float = NAN
+
 func _refresh_speed_modifiers() -> void:
 	if player == null:
 		return
+	hud_publish_counts.speed_refreshes += 1
+	_stat_memo_begin()
 	player.set_source_weapon_visual(_current_weapon_type())
 	player.set_equipment_speed_multipliers(_effective_move_speed_multiplier(), _effective_attack_speed_multiplier())
+	_speed_encumbrance = _inventory_encumbrance_multiplier()
+	_stat_memo_end()
 
 func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	var delta: int = value - baseline
@@ -10776,6 +11085,7 @@ func _physical_damage_after_reduction(raw_damage: int) -> int:
 	return PHYSICAL_RESOLUTION.physical_after_flat_reduction(raw_damage,_damage_reduction_stat(),_active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
+	hud_publish_counts.stat_snapshots += 1
 	return {
 		"str": _effective_attribute("STR"),
 		"dex": _effective_attribute("DEX"),
@@ -11410,6 +11720,9 @@ func _refresh_presentation_settings() -> void:
 				if bool(presentation_settings.reduced_motion): monster.motion.visual_hold = 0.0
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE and _background_save_task >= 0:
+		# Never leave a save half-owned: the worker finishes its atomic write.
+		_finish_background_save(true)
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
 		# M87: after focus loss release held keys whose live state is exactly pressed, so
 		# movement/attack does not stay stuck (Android background, alt-tab). Keys the
@@ -12029,9 +12342,14 @@ func current523_map_teleport(id: String) -> Dictionary:
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
+	# A 하딘 (다이아) price was saved with the arrival as the bag after the
+	# debit; the live bag takes it now (the controller adopts only gold).
+	if (quote.changes as Dictionary).has("inventory") and bool(transition.get("saved",false)):
+		inventory = (quote.changes.inventory as Dictionary).duplicate(true)
+		if is_instance_valid(hud): hud.refresh_inventory(inventory)
 	if player.auto_enabled: player.set_auto_enabled(false)
 	_update_hud()
-	return {"ok":true,"reason":"텔레포트 완료 · %s · %d 아데나" % [str(row.name), int(row.price)],"land_id":int(row.land_id),"price":int(row.price),"saved":bool(transition.get("saved",false))}
+	return {"ok":true,"reason":"텔레포트 완료 · %s · %d %s" % [str(row.name), int(row.price), str(row.get("currency_name","아데나"))],"land_id":int(row.land_id),"price":int(row.price),"currency_id":int(row.get("currency_id",1)),"saved":bool(transition.get("saved",false))}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

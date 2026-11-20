@@ -975,7 +975,10 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	var buff: Dictionary=graph.get("buff_class",{});var group: Dictionary=graph.get("group",{})
 	if buff.get("ID")!=id or group.get("ID")!=buff.get("BuffGroupID") or not SOURCE.declared_exclusion("BuffClass",buff).is_empty() or not SOURCE.declared_exclusion("BuffGroup",group).is_empty():return {}
 	var raw: Dictionary=definition.original_item
-	var spec: Dictionary=consume_metadata(rows,raw,definition.category,{"BuffClassID":"BuffClassID","BuffDuration":"Seconds","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"})
+	var acceleration: int=acceleration_stage(graph)
+	var permitted: Dictionary={"BuffClassID":"BuffClassID","BuffDuration":"Seconds","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	if acceleration>0:permitted.merge(ACCELERATION_ITEM_UNITS)
+	var spec: Dictionary=consume_metadata(rows,raw,definition.category,permitted)
 	var reasons: Array=spec.blocked_reasons;var durations: Array=[]
 	for row: Dictionary in rows:
 		if row.bonus_type.Name=="BuffDuration" and direct(row) and row.unit.Name=="Seconds" and integer(row.bonus.get("Value")):durations.append(int(row.bonus.Value))
@@ -996,11 +999,21 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
+		# The acceleration stage (RunSpritePoint, applied per RunSpriteLevel)
+		# selects the run motion; the player reads it from the preserved
+		# source_buff_class (scripts/animation/source_run_points.gd).
+		if acceleration>0 and name_value=="RunSpritePoint" and run_sprite_level(effect)>0:
+			typed["run_sprite_stage"]=maxi(int(typed.get("run_sprite_stage",0)),run_sprite_level(effect));continue
 		if conditional:reasons.append("conditional_buff_effect:"+name_value)
-		elif percent_fields.has(name_value) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
+		elif (percent_fields.has(name_value) or acceleration>0 and ACCELERATION_PERCENT_FIELDS.has(name_value)) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
 			var scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
-			if scale.size()!=1 or whole(scale[0].get("Denominator"))!=10000 or int(bonus.Value)%10000!=0:reasons.append("unsupported_buff_effect:"+name_value)
-			else:typed[percent_fields[name_value]]=int(typed.get(percent_fields[name_value],0))+int(bonus.Value)/10000
+			var field: String=str(percent_fields.get(name_value,ACCELERATION_PERCENT_FIELDS.get(name_value,"")))
+			if scale.size()!=1 or whole(scale[0].get("Denominator"))!=10000:reasons.append("unsupported_buff_effect:"+name_value)
+			elif int(bonus.Value)%10000==0:typed[field]=typed.get(field,0)+int(bonus.Value)/10000
+			# A fraction of a point (엘븐 와퍼 125000 = 12.5 %) is kept exact for
+			# the acceleration speeds only; their readers sum it as a float.
+			elif acceleration>0 and ACCELERATION_PERCENT_FIELDS.values().has(field):typed[field]=float(typed.get(field,0))+float(bonus.Value)/10000.0
+			else:reasons.append("unsupported_buff_effect:"+name_value)
 		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
 		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
 	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
@@ -1010,7 +1023,11 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		if buff.get(key,0):reasons.append("unsupported_buff_action_rule:"+key)
 	for key: String in ["MaxHPPercent","EraseOnLevel","MaxStackCount","MPCostPercent","MinMPCost","IsAbsoluteTimeBuff","IsOverlapByPlayer","IsDecreaseStackOnTimeEnd","IsObtainItemBuff"]:
 		if buff.get(key,0):reasons.append("unsupported_buff_state_rule:"+key)
-	if group.get("IsAllowPriority")!=false or group.get("IsEraseBySpellLevel")!=false or buff.get("BuffGroupPriority")!=1:reasons.append("unsupported_buff_priority_or_spell_level_rule")
+	# TWILIGHT 근사: an acceleration group without priority (IsAllowPriority
+	# false, IsAllowOverlap false) keeps one buff and the newest replaces it,
+	# whatever its BuffGroupPriority (강화 초록 물약·드래곤의 진주 carry 2).
+	var priority_free: bool=acceleration>0 and group.get("IsAllowOverlap")==false and integer(buff.get("BuffGroupPriority")) and int(buff.BuffGroupPriority)>=1
+	if group.get("IsAllowPriority")!=false or group.get("IsEraseBySpellLevel")!=false or (buff.get("BuffGroupPriority")!=1 and not priority_free):reasons.append("unsupported_buff_priority_or_spell_level_rule")
 	if not group.get("IsAllowOverlap") is bool or not buff.get("IsImmuneToDead") is bool or not buff.get("IsImmuneToCancellation") is bool:reasons.append("missing_buff_lifecycle_flags")
 	var unique: Array=[]
 	for reason: String in reasons:
@@ -1019,8 +1036,45 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	spec["source_item_bonus_ids"]=[]
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
+	if acceleration>0:
+		spec["acceleration_stage"]=acceleration
+		var territories: Array=[]
+		for row: Dictionary in rows:
+			if row.bonus_type.Name=="ConsumeTerritoryClassID" and direct(row) and integer(row.bonus.get("Value")):territories.append(int(row.bonus.Value))
+		# Checked on use against the player's source cell (ConsumeTerritoryTypeId 2 = 사용 불가 지역).
+		spec["forbidden_territory_class_ids"]=territories
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
+
+## Original 523 acceleration buffs (1단 헤이스트·초록 물약, 2단 용기의 물약·
+## 엘븐 와퍼·악마의 피, 3단 드래곤의 진주 ...): the BuffClass carries BonusType
+## RunSpritePoint applied per BonusApplicationType RunSpriteLevel (target =
+## stage). Only those buffs take the rules below; every other timed buff is
+## projected exactly as before.
+const ACCELERATION_PERCENT_FIELDS: Dictionary={"MoveSpeedBonus":"move_speed","AttackSpeedBonus":"attack_speed","CastSpeedBonus":"cast_speed"}
+## Item rows of the acceleration potions besides the timed-buff ones:
+## ConsumeTerritoryClassID (사용 불가 지역, checked on use) and
+## SpellMaterialTypeID (엘븐 와퍼 is also the ElvenWhopper spell material; it
+## has no effect on drinking it).
+const ACCELERATION_ITEM_UNITS: Dictionary={"ConsumeTerritoryClassID":"ConsumeTerritoryClassID","SpellMaterialTypeID":"SpellMaterialTypeID"}
+
+static func run_sprite_level(effect: Dictionary) -> int:
+	var bonus: Dictionary=effect.get("bonus",{})
+	if str(effect.get("type",{}).get("Name",""))!="RunSpritePoint" or not integer(bonus.get("Value")) or int(bonus.Value)<=0:return 0
+	if not integer(bonus.get("BonusApplicationTypeID")) or not integer(bonus.get("BonusApplicationTargetID")):return 0
+	var application: Dictionary=effect.get("application_type",{})
+	if application.is_empty():application=SOURCE.row("BonusApplicationType",int(bonus.BonusApplicationTypeID))
+	if str(application.get("Name",""))!="RunSpriteLevel":return 0
+	var link: Dictionary=effect.get("link",{})
+	for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+		if link.get(key,0)!=0:return 0
+	return maxi(0,int(bonus.BonusApplicationTargetID))
+
+## Highest acceleration stage of a buff graph, 0 when it is not one.
+static func acceleration_stage(graph: Dictionary) -> int:
+	var stage: int=0
+	for effect: Dictionary in graph.get("bonuses",[]):stage=maxi(stage,run_sprite_level(effect))
+	return stage
 
 ## Item rows a lucky bag may carry. ResetAutoSlotByEmpty (TrueFalse) clears the
 ## auto-use slot when the stack runs out; a bag can only sit in one with an

@@ -6,7 +6,8 @@ const Transfer=preload("res://scripts/loot/inventory_ground_transfer.gd")
 const Supply=preload("res://scripts/cards/source_awakening_items.gd")
 const Identity=preload("res://scripts/equipment523/native_catalog.gd")
 const Dummy=preload("res://scripts/quests/source_dummy523.gd")
-const FIELD="source_ground_acquisitions"
+const FIELD="source_ground_acquisitions" ## retired save field (removed on load)
+const TRIM=preload("res://scripts/loot/save_provenance_trim.gd")
 var _busy: bool=false
 var _candidate: Dictionary={}
 
@@ -72,10 +73,11 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var deadline: String=D.deadline_problem(source.item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 	if not deadline.is_empty():return _fail(deadline)
 	var id: String=str(pending.get("id",""))
+	if id.is_empty():return _fail("바닥 개체 ID 확인 필요 · 원본 보존")
+	# No per-floor pickup receipt is kept (save_provenance_trim.gd): the floor
+	# entry leaves in this same save, so it cannot be picked up twice.
 	var state: Dictionary=world.consumable_service.export_state()
-	var receipts: Variant=state.get(FIELD,{})
-	if id.is_empty() or not receipts is Dictionary:return _fail("기존 원본 습득 영수증 형식 보존")
-	if receipts.has(id):return _fail("이미 기록된 바닥 개체의 습득 영수증 · 중복 지급 중지")
+	state.erase(FIELD)
 	var wallet: String=D.wallet_name(source.item)
 	var key: String=wallet if not wallet.is_empty() else str(pending.item_name)
 	var inventory: Dictionary=world.inventory.duplicate(true)
@@ -90,7 +92,10 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		var unit_weight: int=maxi(0,int(world.item_weight_index.get(key,3)))
 		if world._inventory_total_weight()+quantity*unit_weight>world._carrying_capacity():return _fail("기존 소지 무게 한도 초과 · 바닥 아이템 보존")
 	var physical:=PhysicalView.new()
-	physical.item_instances=world.item_instances.duplicate(true);physical.next_item_instance_id=world.next_item_instance_id
+	# Shallow: the suppliers below only add new physical IDs (each returns its
+	# own copy); existing entries are never edited here, and shared entries keep
+	# the ownership comparison against the live bag cheap.
+	physical.item_instances=world.item_instances.duplicate(false);physical.next_item_instance_id=world.next_item_instance_id
 	Transfer.restore_physical(physical,pending)
 	var acquired: Dictionary=Supply.prepare_pickup(pending,physical.item_instances,physical.next_item_instance_id)
 	var symbols: Dictionary=world.growth.source523.prepare_pickup(pending,acquired.item_instances,int(acquired.next_item_instance_id))
@@ -98,19 +103,14 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor","floor_id":id,"drop":source.proof.duplicate(true)})
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"},true)
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
-	var added: Array=[]
+	# Newly created entries only: existing ones must stay byte-identical here.
 	for uid: String in instances:
-		if not world.item_instances.has(uid):added.append(uid)
-	var source_rows: Array=[]
-	for row: Dictionary in source.proof.source_rows:source_rows.append(row.get("ID"))
-	var receipt: Dictionary={"schema":1,"source_snapshot":"patch523","source_pack_sha256":str(pack.sha256),"source_npc_id":int(source.proof.source_npc_id),"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key,"physical_ids":added,"source_row_ids":source_rows,"drop_proof_sha256":JSON.stringify(source.proof,"",true,true).sha256_text()}
-	if pack.get("schema")==4:
-		receipt.schema=2;receipt["source_input_marker"]=pack.duplicate(true);receipt["source_pack_sha256_scope"]="current_original_archive_not_legacy_bin"
-	receipts=receipts.duplicate(true);receipts[id]=receipt;state[FIELD]=receipts
+		if not world.item_instances.has(uid) and instances[uid] is Dictionary:instances[uid]=TRIM.entry(instances[uid])
+	var receipt: Dictionary={"item_class_id":int(source.item.source_item_class_id),"bless_raw":int(source.item.source_bless_raw),"quantity":quantity,"inventory_key":key}
 	var floor: Array=world._ground_drops_snapshot()
 	var after: Array=[];var found: bool=false
 	for entry: Dictionary in floor:
@@ -120,13 +120,18 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		else:after.append(entry)
 	if not found:return _fail("선택 바닥 개체가 없습니다")
 	var payload: Dictionary={"inventory":inventory,"item_instances":instances,"next_item_instance_id":next_id,"gold":gold,"ground_drops":after,"consumable_state":state}
+	# The pickup is checked by the full save validation now and written by the
+	# batched save (deferred_save, 10 s window; pause/quit save at once): one
+	# file write per window instead of one per item, so a pickup no longer
+	# serialises and writes the whole save in its frame. The floor removal and
+	# the grant are written by the same save, so a crash before it loses both
+	# together (the item is back on the floor, never duplicated).
 	_busy=true;_candidate=payload.duplicate(true)
-	var saved: Error=world._save_game(true,payload)
+	var checked: Error=world._save_game(true,payload,{},true)
 	_candidate.clear()
-	if saved!=OK:
-		world.patch523_owner_state_problem="원본 습득 저장 실패·결과 미확정 · 다시 불러오기 전 저장·중복 지급 중지"
+	if checked!=OK:
 		_busy=false
-		return _fail("원본 습득 저장 실패 또는 결과 미확정 · 바닥·소유 메모리 보존")
+		return _fail("원본 습득 검증 실패 · 바닥·소유 보존")
 	var taken: Dictionary=world.ground_loot.take(view,world.player.global_position,world.GROUND_PICKUP_RADIUS)
 	if taken.is_empty():
 		world.patch523_owner_state_problem="원본 습득은 저장됐지만 바닥 상태 채택 미확정 · 다시 불러오기 필요"
@@ -134,5 +139,6 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		return _fail(world.patch523_owner_state_problem)
 	world.inventory=inventory;world.item_instances=instances;world.next_item_instance_id=next_id;world.gold=gold
 	world.consumable_service.import_state(state)
-	world.deferred_save.cancel();_busy=false
-	return {"handled":true,"ok":true,"saved":true,"record":taken,"receipt":receipt}
+	_busy=false
+	world._request_deferred_save()
+	return {"handled":true,"ok":true,"saved":false,"save_pending":true,"record":taken,"receipt":receipt}

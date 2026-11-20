@@ -67,7 +67,7 @@ func _play_legacy_source_for_reference(manifest: String,sprite_id: int,facing: i
 	if sprite.get_parent()==null:add_child(sprite)
 	sprite.centered=false;sprite.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	sprite.scale=Vector2.ONE;sprite.rotation=0;sprite.modulate=Color(1,1,1,float(style.get("alpha",1)))
-	var material:=CanvasItemMaterial.new();material.blend_mode=int(style.blend_mode);sprite.material=material
+	sprite.material=preload("res://scripts/animation/source_sp2_compositor.gd").blend_material(int(style.blend_mode))
 	sprite.global_position=point;sprite.show()
 	var entry: Dictionary={"sprite":sprite,"frames":frames,"clock":0.0,"duration":duration,"sprite_id":sprite_id,"source_direction":direction,"timing_origin":"SPR_explicit" if track.get("fps")!=null else "compat_PC_default_unverified_M","source_frame":-1}
 	active.append(entry);_pose(entry);emitted+=1;set_process(true);return true
