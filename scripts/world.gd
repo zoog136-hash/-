@@ -3846,8 +3846,11 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 		hud.call("refresh_quests")
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.append_log("%s ×%d 습득" % [item_name, quantity])
-	hud.show_message("%s 획득" % item_name)
+	# Original acquisition text (UITextData_Korean) with the original name.
+	var shown_name: String = preload("res://scripts/ui/source523_item_identity.gd").display_name(record.get("item_record",{}) if record.get("item_record") is Dictionary else {}, item_name)
+	var acquired_text: String = preload("res://scripts/ui/source523_item_identity.gd").acquire_text(shown_name, quantity)
+	hud.append_log(acquired_text)
+	hud.show_message(acquired_text)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
 	_refresh_inventory_hud()
 	if not wallet_item.is_empty(): _update_hud()
