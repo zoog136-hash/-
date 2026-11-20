@@ -170,6 +170,12 @@ static func location_teleport(record: Dictionary) -> Dictionary:
 	if amulet: result.merge({"reusable":true,"approximation":"TWILIGHT_REUSABLE_TELEPORT_AMULET","ignored_rows":ignored})
 	return result
 
+## 보고서2 NEW04 (원본 소비 규칙): a ConsumeTerritories point is inside when
+## StartX <= x < EndX and StartY <= y < EndY (end exclusive; Rect2i.has_point is
+## the same half-open test). A row with End <= Start contains no cell.
+static func area_rect(territory: Dictionary) -> Rect2i:
+	return Rect2i(int(territory.StartX),int(territory.StartY),maxi(0,int(territory.EndX)-int(territory.StartX)),maxi(0,int(territory.EndY)-int(territory.StartY)))
+
 ## Rectangles [{land, rect}] of ConsumeTerritoryClass ids, or null when a
 ## referenced row is missing.
 static func consume_areas(class_ids: Array) -> Variant:
@@ -187,7 +193,7 @@ static func consume_areas(class_ids: Array) -> Variant:
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
 				if not _integer(territory.get(field)): return null
-			areas.append({"land":int(territory.LandID),"rect":Rect2i(int(territory.StartX),int(territory.StartY),int(territory.EndX)-int(territory.StartX)+1,int(territory.EndY)-int(territory.StartY)+1),"territory_id":int(territory.ID),"consume_territory_class_id":id})
+			areas.append({"land":int(territory.LandID),"rect":area_rect(territory),"territory_id":int(territory.ID),"consume_territory_class_id":id})
 	_areas[key] = areas
 	return areas
 
@@ -218,7 +224,7 @@ static func forbidden_areas(contract: Dictionary) -> Variant:
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
 				if not _integer(territory.get(field)): return null
-			areas.append({"land":int(territory.LandID),"rect":Rect2i(int(territory.StartX),int(territory.StartY),int(territory.EndX)-int(territory.StartX)+1,int(territory.EndY)-int(territory.StartY)+1),"territory_id":int(territory.ID),"consume_territory_class_id":id})
+			areas.append({"land":int(territory.LandID),"rect":area_rect(territory),"territory_id":int(territory.ID),"consume_territory_class_id":id})
 	_areas[key] = areas
 	return areas
 

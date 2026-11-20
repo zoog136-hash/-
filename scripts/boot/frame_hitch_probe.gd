@@ -125,8 +125,11 @@ static func world_fields(world: Node) -> Dictionary:
 
 ## Frame cap while nobody touches the screen and auto hunting is off: the
 ## world keeps running, it is just drawn less often (heat).
-const MAX_PHYSICS_STEPS: int = 3
-const ACTIVE_FPS: int = 30
+## Physics steps one frame may catch up (6 at 60 Hz: the same 100 ms of game
+## time that 3 steps covered at 30 Hz).
+const MAX_PHYSICS_STEPS: int = 6
+## Frame cap while playing (60 by the user's request, 2026-11-20; was 30).
+const ACTIVE_FPS: int = 60
 const IDLE_FPS: int = 15
 const IDLE_AFTER_MSEC: int = 15000
 static var last_input_msec: int = 0
