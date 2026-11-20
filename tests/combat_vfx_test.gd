@@ -32,9 +32,16 @@ func _run() -> void:
 	fx.impact(Vector2.ZERO, Vector2.RIGHT, "magic")
 	fx.clear()
 	check(fx.active.is_empty() and fx.available.size() == VFX.CAPACITY, "map transition fails to return records")
-	# The actual authored death lasts .65s. The former fixed .4s playback
-	# skipped phase 0/1 at the .14s render intervals seen in real Main captures.
-	var corpse_frames: SpriteFrames = load("res://assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres")
+	# Synthetic unequal-duration regression fixture: the old spear_captain
+	# asset was removed from main. Preserve the .65s/phase/lifetime assertions
+	# without claiming this fixture verifies an installed original animation.
+	var corpse_frames:=SpriteFrames.new()
+	corpse_frames.add_animation("death_0")
+	corpse_frames.set_animation_speed("death_0",1.0)
+	for index: int in range(3):
+		var image:=Image.create_empty(8,8,false,Image.FORMAT_RGBA8)
+		image.fill(Color(float(index)/2.0,0.5,1.0,1.0))
+		corpse_frames.add_frame("death_0",ImageTexture.create_from_image(image),[.2,.2,.25][index])
 	var corpse_texture: Texture2D = corpse_frames.get_frame_texture("death_0", 0)
 	fx.death_pose(Vector2.ZERO, corpse_texture, Vector2.ONE, Vector2.ZERO, corpse_frames, "death_0")
 	var corpse: Dictionary = fx.active.back()
@@ -47,7 +54,7 @@ func _run() -> void:
 	check(is_equal_approx(float(corpse.duration), .8), "short authored corpse changed the existing fade lifetime")
 	fx._process(.36)
 	check(corpse.is_empty() and fx.active.is_empty(), "authored corpse did not return its pool record")
-	# Reuse real textures only as a test fixture for unequal frame durations.
+	# Reuse the synthetic textures for the longer weighted-duration fixture.
 	# A longer track must finish before the pooled corpse is removed.
 	var weighted: SpriteFrames = corpse_frames.duplicate() as SpriteFrames
 	weighted.set_animation_speed("death_0", 4.0)
