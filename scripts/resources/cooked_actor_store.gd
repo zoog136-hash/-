@@ -37,6 +37,8 @@ class CookedActor:
 	## "runtime_tracks" shaped for the existing view API (duration/timing).
 	var entries: Dictionary = {}
 	var bytes: int = 0
+	## legacy_multiply_scope(): -1 unknown, 0 off, 1 clothes/effect items, 2 also body items.
+	var legacy_multiply: int = -1
 
 static var budget_bytes: int = DEFAULT_BUDGET_BYTES
 ## Tests and desktop: a cooked directory (the folder holding FORMAT_TAG).
@@ -305,15 +307,46 @@ static func state_for(entry: Dictionary, role: String, direction: int, frame: in
 		if offset < cooked.seg_end[segment]: break
 	return state if state >= 0 else int(cooked.end_state)
 
-static var _materials: Dictionary = {}
-
-static func _material(blend: int) -> CanvasItemMaterial:
+static func _material(blend: int) -> Material:
 	if blend == CanvasItemMaterial.BLEND_MODE_MIX: return null
-	if not _materials.has(blend):
-		var material := CanvasItemMaterial.new()
-		material.blend_mode = blend
-		_materials[blend] = material
-	return _materials[blend]
+	# Multiply (original attr128) is the alpha-aware multiply material.
+	return COMPOSITOR.blend_material(blend)
+
+## --- Original attr128 (multiply) in the already-installed cooked pack ---------
+## cooked-63fb1355-v2 was cooked while the Android copy-free policy drew own
+## attr128 ("_mu") layers as MIX with alpha 0.5 (a translucent white film over
+## actors; user report 2026-11-19/20 "케릭 뿌연건"). Original attr128 is the
+## multiply kernel. The cooked items keep the layer pixels, so this pack is
+## corrected at draw time without re-cooking: in this pack's 3,373 bundles a
+## MIX item with modulate (1,1,1,0.5) is
+##   - z >= 1 (SPR105 clothes / effect layers): own attr128. No bundle of this
+##     pack has an attr1 (average) clothes layer (checked against list_*.spr:
+##     the only such actors, 902/916/918/924/925/1090/2714, are not cooked);
+##   - z <= 0: an average shadow (parent flags | 1), except in the bundles below
+##     whose own body declaration is attr128 and which have no shadow layer
+##     (59 of 3,373; the one shadowed attr128 body, 5969, stays as cooked).
+## A pack cooked by the current cooker records BLEND_MODE_MUL itself, so the
+## correction is bound to this pack's cooked id and ends with the next pin.
+const LEGACY_MIX_HALF_COOKED_ID := "f35bb51523a1a8d439d649916a5351cf3d4ad56badaefd5ed50f9b2823590c0d"
+const LEGACY_BODY_MULTIPLY_SPRITES: Array[int] = [1571, 1794, 2175, 2228, 2230, 2975, 3363, 3364, 3365, 3393, 3700, 4073, 4184, 4185,
+	4410, 4539, 4631, 4655, 4656, 4785, 4846, 4847, 4848, 4849, 5524, 5532, 5561, 5637, 6082, 6387, 6388, 7093, 7095, 7116, 7117,
+	7179, 7579, 7795, 7797, 9227, 9750, 10425, 10607, 13486, 13504, 13506, 13931, 17161, 17198, 17201, 17353, 17610, 19018, 20471,
+	20472, 26186, 26187, 28665, 28684]
+static var legacy_multiply_enabled: bool = true
+
+static func legacy_multiply_scope(actor: CookedActor) -> int:
+	if actor.legacy_multiply < 0:
+		actor.legacy_multiply = 0
+		if legacy_multiply_enabled and PINS.cooked_id == LEGACY_MIX_HALF_COOKED_ID:
+			var sprite: String = actor.key.get_slice("_", actor.key.get_slice_count("_") - 1)
+			actor.legacy_multiply = 2 if sprite.is_valid_int() and int(sprite) in LEGACY_BODY_MULTIPLY_SPRITES else 1
+	return actor.legacy_multiply
+
+## True when a legacy cooked item is an original attr128 layer (see above).
+static func legacy_multiply_item(scope: int, blend: int, z: int, color: Color) -> bool:
+	if scope <= 0 or blend != CanvasItemMaterial.BLEND_MODE_MIX: return false
+	if not (is_equal_approx(color.a, 0.5) and is_equal_approx(color.r, 1.0) and is_equal_approx(color.g, 1.0) and is_equal_approx(color.b, 1.0)): return false
+	return z >= 1 or scope == 2
 
 ## Shows `state` with `sprites` (children of `owner`, grown on demand): one
 ## Sprite2D per recorded item, page texture + region, in recorded draw order.
@@ -322,6 +355,7 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 	var images: PackedInt32Array = actor.index.images
 	var colors: PackedFloat32Array = actor.index.colors
 	var count: int = items.size() / FORMAT.ITEM_STRIDE
+	var legacy: int = legacy_multiply_scope(actor)
 	while sprites.size() < count:
 		var sprite := Sprite2D.new()
 		sprite.name = "CookedLayer%d" % sprites.size()
@@ -344,11 +378,16 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 		if sprite.texture != texture: sprite.texture = texture
 		sprite.region_rect = Rect2(images[image + 1], images[image + 2], images[image + 3], images[image + 4])
 		sprite.position = Vector2(items[at + 1], items[at + 2])
-		sprite.material = _material(items[at + 3])
+		var blend: int = items[at + 3]
+		var color_at: int = items[at + 6] * 4
+		var color := Color(colors[color_at], colors[color_at + 1], colors[color_at + 2], colors[color_at + 3])
+		if legacy_multiply_item(legacy, blend, items[at + 4], color):
+			blend = CanvasItemMaterial.BLEND_MODE_MUL
+			color.a = 1.0
+		sprite.material = _material(blend)
 		sprite.z_index = items[at + 4]
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_PARENT_NODE if items[at + 5] == FORMAT.FILTER_INHERIT else items[at + 5] as CanvasItem.TextureFilter
-		var color: int = items[at + 6] * 4
-		sprite.modulate = Color(colors[color], colors[color + 1], colors[color + 2], colors[color + 3])
+		sprite.modulate = color
 		sprite.show()
 
 ## --- Effect action domains -------------------------------------------------

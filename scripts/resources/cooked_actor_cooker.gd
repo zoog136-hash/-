@@ -44,7 +44,7 @@ static func _collect(owner: Node2D, node: Node, inverse: Transform2D, z: int, co
 		var item_color: Color = color * item.modulate
 		var item_filter: int = filter if item.texture_filter == CanvasItem.TEXTURE_FILTER_PARENT_NODE else int(item.texture_filter)
 		order[0] += 1
-		if item.material != null and not item.material is CanvasItemMaterial: return "cooked_capture_shader_material"
+		if item.material != null and COMPOSITOR.material_blend(item.material) < 0: return "cooked_capture_shader_material"
 		if item is Sprite2D:
 			var sprite: Sprite2D = item
 			if sprite.texture != null:
@@ -62,20 +62,22 @@ static func _collect(owner: Node2D, node: Node, inverse: Transform2D, z: int, co
 					image.convert(Image.FORMAT_RGBA8)
 				if sprite.region_enabled: image = image.get_region(Rect2i(sprite.region_rect))
 				if Vector2(image.get_size()) != rect.size: return "cooked_capture_size"
-				var material: CanvasItemMaterial = _effective_material(sprite, owner)
-				if material != null and material.light_mode != CanvasItemMaterial.LIGHT_MODE_NORMAL: return "cooked_capture_light_mode"
-				out.append({"image":image,"position":Vector2i(at),"blend":int(material.blend_mode) if material != null else CanvasItemMaterial.BLEND_MODE_MIX,
+				var material: Material = _effective_material(sprite, owner)
+				if material is CanvasItemMaterial and (material as CanvasItemMaterial).light_mode != CanvasItemMaterial.LIGHT_MODE_NORMAL: return "cooked_capture_light_mode"
+				# The multiply material (original attr128) is recorded as BLEND_MODE_MUL;
+				# cooked_actor_store.gd draws it with the same material.
+				out.append({"image":image,"position":Vector2i(at),"blend":COMPOSITOR.material_blend(material),
 					"z":item_z,"filter":item_filter,"color":item_color * sprite.self_modulate,"order":order[0]})
 		var problem: String = _collect(owner, child, inverse, item_z, item_color, item_filter, out, order)
 		if not problem.is_empty(): return problem
 	return ""
 
-static func _effective_material(item: CanvasItem, owner: Node2D) -> CanvasItemMaterial:
+static func _effective_material(item: CanvasItem, owner: Node2D) -> Material:
 	var node: CanvasItem = item
 	while node != null and node.use_parent_material and node != owner:
 		node = node.get_parent() as CanvasItem
 	if node == null or node == owner: return null
-	return node.material as CanvasItemMaterial
+	return node.material
 
 static func _binary_alpha(image: Image) -> bool:
 	return image.detect_alpha() != Image.ALPHA_BLEND

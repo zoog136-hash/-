@@ -67,6 +67,16 @@ func _initialize() -> void:
 			check(pack.prefetch(2) and pack.atlas_loads == 35 and pack.texture_for(2) != null and pack.atlas_loads == 35, "a finished worker decode is cached once")
 			check(not pack.prefetch(3) and pack.texture_for(3) != null and pack.pending_jobs() == 0 and pack.atlas_loads == 36, "an atlas drawn before its worker finishes waits for that decode")
 			check(pack.prefetch(999) == false and pack.pending_jobs() == 0, "an unknown tile is never queued")
+			# Held atlases (523 play map): published atlases stay past the cache
+			# limit until released, so a block's atlases are decoded only once.
+			var held_pack = PACK.new()
+			held_pack.hold_published = true
+			check(held_pack.load_pack(fixture_root, fixture_sha), "held fixture loads")
+			for id: int in range(35): held_pack.texture_for(id)
+			var loads_held: int = held_pack.atlas_loads
+			check(held_pack.cache_size() == 32 and held_pack.held_size() == 35 and held_pack.prefetch(0) and held_pack.texture_for(0) != null and held_pack.atlas_loads == loads_held, "held atlases are served past the cache limit without a second decode")
+			held_pack.release_held()
+			check(held_pack.held_size() == 0 and held_pack.texture_for(0) != null and held_pack.atlas_loads == loads_held + 1, "released held atlases decode again when asked")
 		var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(fixture_root.path_join(PACK.MANIFEST_NAME)))
 		var mutation_root: String = ProjectSettings.globalize_path("user://generic-ti2-metadata-rejections")
 		for kind: String in ["edition", "version", "count", "duplicate", "path", "provenance_edition", "provenance_version", "wrong_current_container", "wrong_member", "layout", "png_bytes", "raw_sections", "raw_header", "raw_roundtrip", "alpha", "source_inventory", "rgba_inventory", "whole_input_inventory", "atlas_storage", "runtime_with_png", "missing_png_metadata"]:

@@ -3,7 +3,11 @@ extends SceneTree
 ## original feature windows (source_main_window_kit): each row button hands
 ## its drag to the list through the native button router (DRAG_META), as the
 ## NPC store and the shop already do. Lists whose rows are all buttons used to
-## stay put on a phone (문양 효과 목록, 카드 컬렉션 행).
+## stay put on a phone (문양 효과 목록, 카드 컬렉션 행). Every original
+## ListView with its own input handler does the same for the rows a window adds
+## (sprite_scene: 하딘의 텔레포트 목적지, 퀘스트, 변신 카드; user report
+## 2026-11-20 "하딘의 텔레포트 목록 드래그가 안되고").
+const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const KIT=preload("res://scripts/ui/original_ui/source_main_window_kit.gd")
 const ROUTER=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const BUTTON=preload("res://scripts/ui/original_ui/source_button.gd")
@@ -79,3 +83,65 @@ func _run() -> void:
 	holder.free()
 	print("ORIGINAL_UI_LIST_ROW_DRAG_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+var scrolled: float=0.0
+var pressed_list: int=0
+
+func _list_input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch and event.pressed:pressed_list+=1
+	if event is InputEventScreenDrag:scrolled+=event.relative.y
+
+func _ignore_input(_event: InputEvent) -> void:
+	pass
+
+func _row_button(content: Node2D) -> Object:
+	var row:=Node2D.new()
+	var button=BUTTON.new()
+	row.add_child(button)
+	button.bind_activation(func() -> Dictionary:
+		fired+=1
+		return {"ok":true},Vector2(50,50),true)
+	button.current_state="normal"
+	row.set_meta("source_button",button)
+	content.add_child(row)
+	return button
+
+## A ListView's rows, authored or added later (NamedTree.add_row, a window's
+## own placement), forward their buttons' drags to the list's input.
+func _list_view_rows() -> void:
+	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
+	check(text.contains("inner.child_entered_tree.connect(forward_row_drags.bind(direct_binding.input))"),"an original ListView with an input hands every row's drags to it")
+	check(SCENE.ROUTER_DRAG_META==ROUTER.DRAG_META,"the scene names the router's drag meta")
+	check(SCENE._list_drag_input(Callable(self,"_list_input")) and not SCENE._list_drag_input(Callable(self,"_ignore_input")) and not SCENE._list_drag_input(null),"an inert list input is not a scroll target")
+	var holder:=Node2D.new()
+	root.add_child(holder)
+	var content:=Node2D.new()
+	holder.add_child(content)
+	content.child_entered_tree.connect(SCENE.forward_row_drags.bind(Callable(self,"_list_input")))
+	var button: Object=_row_button(content)
+	check(button.get_meta(ROUTER.DRAG_META,Callable())==Callable(self,"_list_input") and button.has_meta(SCENE.LIST_DRAG_AUTO_META),"a row added to the list forwards its button's drag to the list")
+	var router=ROUTER.new()
+	var before: int=fired
+	var at: Vector2=(button.get("_input_area") as Control).get_global_rect().get_center()
+	router.route(_event("press",at),at,[button])
+	for i: int in 6:router.route(_event("drag",at+Vector2(0,-10*(i+1)),Vector2(0,-10)),at+Vector2(0,-10*(i+1)),[button])
+	router.route(_event("release",at+Vector2(0,-60)),at+Vector2(0,-60),[button])
+	check(scrolled<=-50.0 and pressed_list==1 and fired==before,"a drag on a teleport row scrolls the list without selecting it: "+str(scrolled))
+	router.route(_event("press",at),at,[button])
+	router.route(_event("release",at),at,[button])
+	check(fired==before+1,"a tap on the row still selects it")
+	# A window's own forwarding (window kit: nested lists) replaces the default.
+	var window=KIT.new()
+	window._scrolls["Rows"]={"content":content,"min":-500.0,"value":0.0}
+	window._forward_row_drags(button.get_parent(),"Rows")
+	var forward: Variant=button.get_meta(ROUTER.DRAG_META)
+	check(forward is Callable and (forward as Callable).get_method()==&"_list_input" and (forward as Callable).get_object()==window and not button.has_meta(SCENE.LIST_DRAG_AUTO_META),"the window kit's own row forward replaces the list default")
+	# A button that already forwards elsewhere keeps it.
+	var other:=Node2D.new()
+	holder.add_child(other)
+	var own: Object=_row_button(other)
+	own.set_meta(ROUTER.DRAG_META,Callable(self,"_initialize"))
+	other.remove_child(own.get_parent())
+	content.add_child(own.get_parent())
+	check(own.get_meta(ROUTER.DRAG_META)==Callable(self,"_initialize"),"a row button's own forward is kept by the list")
+	holder.free()

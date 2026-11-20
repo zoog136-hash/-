@@ -3526,6 +3526,19 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	# walking to. A route searched from the player starts at the centre of its
 	# own cell, usually already passed at the original walk (2.25 cells/s,
 	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	# Searches are bounded like monster chases: a hunt target is near, and a
+	# full-map search (8192 nodes) for an unreachable one cost the phone
+	# ~120 ms per second of auto-hunt (523.704: auto.path 117 ms/s).
+	var field: Object = field_map
+	var bounded: bool = field != null and "path_search_limit_override" in field
+	if bounded: field.set("path_search_limit_override", AUTO_PURSUIT_SEARCH_NODES)
+	var result: PackedVector2Array = _auto_pursuit_search(target)
+	if bounded: field.set("path_search_limit_override", -1)
+	return result
+
+const AUTO_PURSUIT_SEARCH_NODES: int = 2048
+
+func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
 	if player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
 		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
@@ -3533,6 +3546,9 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
 				return rest
+			# The player is walking to `via`: a target not reachable from it is
+			# not reachable from the player either. One search, not two.
+			return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
