@@ -73,7 +73,7 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
-          for test in source_sp2_compositor_test source_preview_copy_free_test lobby_spine_android_blend_test source_ui_copy_policy_gl_test current523_bank_object_layers_test source_material_display_updates_test current523_bank_object_refresh_test source_ui_draw_refresh_test source_text_costs_test cooked_actor_pack_test; do
+          for test in source_sp2_compositor_test source_preview_copy_free_test lobby_spine_android_blend_test source_ui_copy_policy_gl_test current523_bank_object_layers_test source_material_display_updates_test current523_bank_object_refresh_test source_ui_draw_refresh_test source_text_costs_test cooked_actor_pack_test vfx_draw_transform_test; do
             xvfb-run -a "$RUNNER_TEMP/Godot_v4.7.2-stable_linux.x86_64" --path "$RUNNER_TEMP/pixel-project" --audio-driver Dummy --rendering-method gl_compatibility --script "res://tests/$test.gd" -- --render 2>&1 | tee "pixel-results/$test.txt"
           done
           python3 - <<'PY'
