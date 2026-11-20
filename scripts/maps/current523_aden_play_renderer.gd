@@ -662,9 +662,12 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 	var bins: Dictionary = {}
 	for layer: int in packed:
 		var records: PackedInt64Array = packed[layer]
-		# Integer cell keys and shifts (floor division for negatives too);
-		# almost every 24 px record lies inside one block.
+		if records.is_empty(): continue
+		# Shifts floor-divide negative coordinates too. Adjacent records
+		# often belong to the same 512 px block.
 		var lanes: Dictionary = {}
+		var previous_cell := Vector2i(records[0] >> BLOCK_SHIFT, records[1] >> BLOCK_SHIFT)
+		var lane: Array[int] = _bin_lane(lanes, previous_cell)
 		for index: int in range(0, records.size(), 3):
 			var x: int = records[index]
 			var y: int = records[index + 1]
@@ -672,23 +675,29 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 			var y0: int = y >> BLOCK_SHIFT
 			var x1: int = (x + TILE_PX - 1) >> BLOCK_SHIFT
 			var y1: int = (y + TILE_PX - 1) >> BLOCK_SHIFT
-			var key: int = (x0 << 32) | (y0 & 0xffffffff)
-			var lane: PackedInt32Array = lanes.get(key, PackedInt32Array())
+			var cell := Vector2i(x0, y0)
+			if cell != previous_cell:
+				lane = _bin_lane(lanes, cell)
+				previous_cell = cell
 			lane.append(index)
-			lanes[key] = lane
 			if x1 != x0 or y1 != y0:
 				for bx: int in range(x0, x1 + 1):
 					for by: int in range(y0, y1 + 1):
 						if bx == x0 and by == y0: continue
-						var other: int = (bx << 32) | (by & 0xffffffff)
-						var extra: PackedInt32Array = lanes.get(other, PackedInt32Array())
-						extra.append(index)
-						lanes[other] = extra
-		for key: int in lanes:
-			var cell := Vector2i(key >> 32, (key << 32) >> 32)
+						_bin_lane(lanes, Vector2i(bx, by)).append(index)
+		for cell: Vector2i in lanes:
 			if not bins.has(cell): bins[cell] = {}
-			(bins[cell] as Dictionary)[layer] = lanes[key]
+			(bins[cell] as Dictionary)[layer] = PackedInt32Array(lanes[cell])
 	return bins
+
+
+## Avoid copying the packed buffer on each append while it is stored in the
+## dictionary. Pack each completed lane once before publishing the chunk.
+static func _bin_lane(lanes: Dictionary, cell: Vector2i) -> Array[int]:
+	if not lanes.has(cell):
+		var lane: Array[int] = []
+		lanes[cell] = lane
+	return lanes[cell]
 
 
 static func _block_rect(cell: Vector2i) -> Rect2:

@@ -172,6 +172,7 @@ func run() -> void:
 			var same: bool = fast.size() == slow.size() and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == slow_counts
 			for layer: int in slow: same = same and fast.has(layer) and fast[layer] == PackedInt64Array(slow[layer])
 			check(same, "one-pass chunk projection equals the per-record path (generic=%s origin=%s)" % [generic, origin])
+	_check_chunk_bins()
 	# A chunk read on a worker installs the same lanes, bins, tail and counters
 	# as the main-thread read of the same S32 sections.
 	var worker_sources := FakeChunkSources.new()
@@ -273,6 +274,22 @@ func run() -> void:
 	await process_frame
 	print("CURRENT523_ADEN_PLAY_RENDERER_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"scope":"SYNTHETIC_DISPLAY_AND_GUARDS; NO_NATIVE_M_BEHAVIOR_CLAIM"}))
 	quit(0 if failures.is_empty() else 1)
+
+func _check_chunk_bins() -> void:
+	var floor_lane := PackedInt64Array([-24,-24,1, -23,-23,2, 0,0,3, 489,489,4, 488,488,5, 512,512,6])
+	var bins: Dictionary = PLAY._bin_chunk({-2:floor_lane, 7:PackedInt64Array([489,489,7])})
+	var expected: Dictionary = {
+		Vector2i(-1,-1): {-2:PackedInt32Array([0,3])},
+		Vector2i(-1,0): {-2:PackedInt32Array([3])},
+		Vector2i(0,-1): {-2:PackedInt32Array([3])},
+		Vector2i.ZERO: {-2:PackedInt32Array([3,6,9,12]), 7:PackedInt32Array([0])},
+		Vector2i(0,1): {-2:PackedInt32Array([9]), 7:PackedInt32Array([0])},
+		Vector2i(1,0): {-2:PackedInt32Array([9]), 7:PackedInt32Array([0])},
+		Vector2i(1,1): {-2:PackedInt32Array([9,15]), 7:PackedInt32Array([0])},
+	}
+	check(bins == expected, "negative and positive seams preserve packed indices, order, and layer separation")
+	check(PLAY._bin_chunk({-2:PackedInt64Array()}).is_empty(), "an empty layer creates no block")
+
 
 func _check_block_reference_work(renderer: Node2D) -> void:
 	var tiles := CountedTiles.new()
