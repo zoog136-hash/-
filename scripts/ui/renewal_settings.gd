@@ -223,9 +223,9 @@ func configure(controller: Node) -> void:
 	# create file pickers/installers or read large original tables (Android
 	# closed the app while settings was being built, 2026-11-13).
 	stack.add_child(UI.label("세부 설정 · 누르면 열림",18,UI.GOLD))
-	_lazy_section(stack,"drops","원본 아이템·몬스터 드랍 · 523","",func(body: VBoxContainer) -> void:
+	_lazy_section(stack,"drops","아이템·몬스터 드랍","",func(body: VBoxContainer) -> void:
 		body.add_child(preload("res://scripts/ui/patch523_drop_settings.gd").new()))
-	_lazy_section(stack,"skills523","복합 회복·기존 스킬 전환 · 523","",func(body: VBoxContainer) -> void:
+	_lazy_section(stack,"skills523","복합 회복·스킬 전환","",func(body: VBoxContainer) -> void:
 		var recovery_settings:=preload("res://scripts/ui/skill_recovery523_settings.gd").new()
 		recovery_settings.configure(hud)
 		body.add_child(recovery_settings)
@@ -237,7 +237,8 @@ func configure(controller: Node) -> void:
 		var source_settings = preload("res://scripts/ui/source_optimization_settings.gd").new()
 		source_settings.configure(self)
 		body.add_child(source_settings))
-	_lazy_section(stack,"advanced","고급/개발","구 리니지M 팩·SP2 검토·맵 원문 검토 등 개발 확인용입니다. 일반 플레이에는 필요하지 않습니다.",func(body: VBoxContainer) -> void:
+	# Old-pack/SP2/map review tools: debug and twilight_dev_ui builds only.
+	if preload("res://scripts/boot/build_flags.gd").developer_ui(): _lazy_section(stack,"advanced","고급/개발","구 리니지M 팩·SP2 검토·맵 원문 검토 등 개발 확인용입니다. 일반 플레이에는 필요하지 않습니다.",func(body: VBoxContainer) -> void:
 		_lazy_section(body,"legacy_lineagem","구 리니지M 원본 팩 · 523 SP2 검토","변신·인형·성물 구팩, 현행523 표준 이미지·SP2 추정 재생, 정체 확인 변신",func(inner: VBoxContainer) -> void:
 			inner.add_child(preload("res://scripts/ui/lineagem_pack_settings.gd").new()))
 		_lazy_section(body,"aden_review","맵 원문 검토 · 523 원문 맵 실험 플레이","",func(inner: VBoxContainer) -> void:

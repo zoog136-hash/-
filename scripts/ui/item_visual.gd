@@ -141,7 +141,9 @@ func _configure_presentation(view: TextureRect, record: Dictionary, item_name: S
 	# An empty slot carries no substitute or "not installed" badge. An item whose
 	# original animated icon scene failed shows "효과 미연결" (reason in the
 	# tooltip) instead of an unexplained blank slot; no image is substituted.
-	substitute_mark.visible = missing_original and source_scene_requested and item_name.strip_edges() != ""
+	# Release screens show no status words on an icon (2026-11-20); the reason
+	# stays in the metadata and in debug/twilight_dev_ui builds.
+	substitute_mark.visible = missing_original and source_scene_requested and item_name.strip_edges() != "" and preload("res://scripts/boot/build_flags.gd").developer_ui()
 	if not target.visibility_changed.is_connected(refresh_visibility): target.visibility_changed.connect(refresh_visibility)
 	if is_inside_tree(): _register()
 	refresh_visibility()

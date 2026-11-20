@@ -1075,6 +1075,9 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	# Window subtitles such as "원본523 확률·재료 조회 · 현재 강화 정책 보존" are
+	# developer notes: release screens drop them (debug/twilight_dev_ui keep them).
+	description = preload("res://scripts/ui/source523_item_identity.gd").screen_note(description)
 	# Crash trail for the window's first seconds (523.607: the release APK
 	# closed the moment the exchange was entered, 30 minutes into a run).
 	FRAME_HITCH.arm_trail(WINDOW_TRAIL_SECONDS)
@@ -1864,7 +1867,7 @@ func open_status_board() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("현황판은 원본 523 UI 팩(StatusBoard_All)이 필요합니다.\n"+str(native.get("code",native.get("error",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("현황판은 원본 523 UI 팩(StatusBoard_All)이 필요합니다.\n"+str(native.get("code",native.get("error","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -1914,7 +1917,7 @@ func open_clan_emblem523() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -1950,7 +1953,7 @@ func open_domination_stone() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("지배석 창은 원본 523 UI 팩(DominationStoneScene)이 필요합니다.\n"+str(native.get("code",native.get("error",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("지배석 창은 원본 523 UI 팩(DominationStoneScene)이 필요합니다.\n"+str(native.get("code",native.get("error","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -3424,7 +3427,7 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 func open_skill_cards() -> void:
 	_open_window("skill_card523","스킬 카드","")
 	if _open_original_feature("skill_cards"):return
-	var note := UI.label("스킬 카드 창은 원본 523 UI 팩(SkillCard_All)이 필요합니다.",14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("스킬 카드 창은 원본 523 UI 팩(SkillCard_All)이 필요합니다."),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -3447,7 +3450,7 @@ func open_trial_dungeon() -> void:
 func open_card_change() -> void:
 	_open_window("card_swap523","카드 다시 뽑기","")
 	if _open_original_feature("card_change"):return
-	var note := UI.label("카드 다시 뽑기 창은 원본 523 UI 팩(CardChange_All)이 필요합니다.",14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("카드 다시 뽑기 창은 원본 523 UI 팩(CardChange_All)이 필요합니다."),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -3457,7 +3460,7 @@ func open_card_change() -> void:
 func open_quick_cards(key: String, title: String, member: String) -> void:
 	_open_window(key+"523",title,"")
 	if _open_original_feature(key):return
-	var note := UI.label("%s 창은 원본 523 UI 팩(%s)이 필요합니다." % [title,member],14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("%s 창은 원본 523 UI 팩(%s)이 필요합니다." % [title,member]),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
