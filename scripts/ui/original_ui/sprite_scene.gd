@@ -44,6 +44,11 @@ var _requested_source_nodes: Array[int]=[]
 ## pack and pruned it again (523.637: ui.scene_scope 1,976 ms over 613 calls).
 ## A pack's scenes do not change; a copy is handed out per configure.
 static var _scoped_trees: Dictionary={}
+## ListView content meta: the list's own input handler (its "input" binding).
+const LIST_INPUT_META="source_list_input"
+## source_button_router.DRAG_META (the router reads it on a captured press).
+const ROUTER_DRAG_META="source_drag_forward"
+const LIST_DRAG_AUTO_META="source_drag_forward_auto"
 const SCOPED_TREE_LIMIT: int=64
 var _external_texture_nodes: Array[int]=[]
 var _external_texture_tags: Dictionary={}
@@ -691,6 +696,11 @@ func _build(source: Dictionary) -> Node2D:
 		child_origin.add_child(inner)
 		child_origin=inner
 		node.set_meta("source_list_content",inner)
+		# The list's own input handler: every row added to it (authored or
+		# added by a window later) hands its buttons' finger drags to it.
+		if not inspection_only and _list_drag_input(direct_binding.get("input")):
+			inner.set_meta(LIST_INPUT_META,direct_binding.input)
+			inner.child_entered_tree.connect(forward_row_drags.bind(direct_binding.input))
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
@@ -719,6 +729,28 @@ func _build(source: Dictionary) -> Node2D:
 			if not position_value.is_finite():_build_error="source_list_position_invalid";node.free();return null
 			child_origin.position=Vector2(position_value.x,-position_value.y)
 	return node
+
+## A list's input that scrolls (not a binder's inert _ignore_input).
+static func _list_drag_input(input: Variant) -> bool:
+	return input is Callable and (input as Callable).is_valid() and (input as Callable).get_method()!=&"_ignore_input"
+
+## A ListView row's buttons hand their finger's drag to the list
+## (source_button_router DRAG_META, as a Cocos ListView child button passes
+## its move to the list): a list whose rows are all buttons (하딘의 텔레포트
+## 목적지, 퀘스트, 변신 카드) scrolls on a phone from a drag that starts on a
+## row. A button that already forwards (a nested list's row, a window's own
+## forward) keeps it. A mouse arrives as emulated touch through the router.
+## LIST_DRAG_AUTO_META marks this default so a window's own row forwarding
+## (source_main_window_kit nested lists) may replace it.
+static func forward_row_drags(node: Node, input: Callable) -> void:
+	if not is_instance_valid(node) or not input.is_valid():return
+	for meta: String in ["source_button","source_checkbox"]:
+		if not node.has_meta(meta):continue
+		var button: Variant=node.get_meta(meta)
+		if not is_instance_valid(button) or (button as Object).has_meta(ROUTER_DRAG_META):continue
+		(button as Object).set_meta(ROUTER_DRAG_META,input)
+		(button as Object).set_meta(LIST_DRAG_AUTO_META,true)
+	for child: Node in node.get_children():forward_row_drags(child,input)
 
 func _node_texture(source: Dictionary, original_reference: Dictionary) -> Texture2D:
 	var binding: Dictionary=_bindings.get(int(source._offset),{})
