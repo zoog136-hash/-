@@ -193,11 +193,15 @@ static func card_reference(item_id: int) -> Dictionary:
 
 ## Same TWILIGHT estimate as native 523 records (item_weight_rules.json
 ## current523_source_weight: ceil(raw * numerator / denominator)).
+## The rules file is part of the build: read once.
+static var _weight_policy: Dictionary = {}
 static func _weight(item_id: int) -> int:
 	var raw: Variant = SOURCE.row("ItemClass", item_id).get("Weight", 0)
 	if not integer(raw) or int(raw) <= 0: return 0
-	var rules: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/item_weight_rules.json"))
-	var policy: Dictionary = rules.get("current523_source_weight", {}) if rules is Dictionary else {}
+	if _weight_policy.is_empty():
+		var rules: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/item_weight_rules.json"))
+		_weight_policy = {"policy":rules.get("current523_source_weight", {}) if rules is Dictionary else {}}
+	var policy: Dictionary = _weight_policy.policy
 	var numerator: int = int(policy.get("points_numerator", 3))
 	var denominator: int = maxi(1, int(policy.get("source_units_denominator", 351)))
 	return int((int(raw) * numerator + denominator - 1) / denominator)
@@ -255,6 +259,9 @@ static func box_record(world, item_id: int) -> Dictionary:
 
 static func _box_record(world, item_id: int, lookup: LOOKUP.CashInstallScope) -> Dictionary:
 	var name: String = _box_name(world, item_id,lookup)
+	# Already registered: the record _register would return (no summary rebuild).
+	var existing: Dictionary = _find_record(world,name,"",lookup)
+	if not existing.is_empty(): return existing
 	return _register(world, {"name":name, "grade":_grade(item_id), "type":"상자", "slot":"consumable", "stackable":true,
 		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":TAG, "source_item_class_id":item_id,
 		"sourceId":"cash523:%d" % item_id, "cash_package":true, "desc":_summary(item_id)},lookup)
@@ -283,15 +290,20 @@ static func native_equipment(world, item_id: int) -> Dictionary:
 	return record
 
 ## The first catalog record that owns original item `item_id` (not a cash box
-## or native record), as the former per-call scan of the whole catalog found
-## it. Only while install() walks the offers (hundreds of lookups in one
-## loop, during which only cash records are appended) the positions are
-## indexed and extended on append; any other call scans as before.
-static var _owner_trusted: bool = false
+## or native record), as a scan of the whole catalog finds it. The owner
+## positions are indexed once and extended as rows are appended (install
+## and box openings only append); the index is rebuilt when the catalog is
+## another array, shrinks or its last indexed row is no longer the same row
+## (a removal followed by an append) or after forget_owner_index(), and an
+## indexed hit is checked against the row before use (a row changed in place
+## falls back to the scan).
 static var _owner_rows: Array = []
 static var _owner_size: int = 0
+static var _owner_last: Variant = null
 static var _owner_ids: Dictionary = {}
 static var _owner_inven: Dictionary = {}
+## Full index builds (tests).
+static var owner_index_builds: int = 0
 
 static func _owner_candidate(row: Variant) -> bool:
 	return row is Dictionary and not (row.get("source") in [TAG, ITEM_TAG] or bool(row.get("source_m_native_item", false)) or str(row.get("name", "")).contains(" · 원본#"))
@@ -299,16 +311,30 @@ static func _owner_candidate(row: Variant) -> bool:
 static func _owns(row: Dictionary, item_id: int) -> bool:
 	return int(row.get("source_item_class_id", -1)) == item_id or int(row.get("source523_shop_item_id", -1)) == item_id or (row.get("source") == "inven" and str(row.get("sourceId", "")) == str(item_id))
 
+## Forget the owner index (after rows were replaced in place with records
+## that may own other items: the world's catalog merges). A miss is otherwise
+## trusted until the catalog is replaced, shrinks or loses its last row, as
+## catalog_item_lookup trusts a remembered name miss.
+static func forget_owner_index() -> void:
+	_owner_rows = []
+	_owner_size = 0
+	_owner_last = null
+	_owner_ids = {}
+	_owner_inven = {}
+
+## The plain first-match scan (the reference the index must equal).
+static func _scan_owner(rows: Array, item_id: int) -> Dictionary:
+	for row: Variant in rows:
+		if _owner_candidate(row) and _owns(row, item_id): return row
+	return {}
+
 static func _exact_owner(rows: Array, item_id: int) -> Dictionary:
-	if not _owner_trusted:
-		for row: Variant in rows:
-			if _owner_candidate(row) and _owns(row, item_id): return row
-		return {}
-	if not is_same(_owner_rows, rows) or rows.size() < _owner_size:
+	if not is_same(_owner_rows, rows) or rows.size() < _owner_size or (_owner_size > 0 and not is_same(rows[_owner_size - 1], _owner_last)):
 		_owner_rows = rows
 		_owner_size = 0
 		_owner_ids = {}
 		_owner_inven = {}
+		owner_index_builds += 1
 	for position: int in range(_owner_size, rows.size()):
 		var row: Variant = rows[position]
 		if not _owner_candidate(row): continue
@@ -319,12 +345,11 @@ static func _exact_owner(rows: Array, item_id: int) -> Dictionary:
 			var sid: String = str(row.get("sourceId", ""))
 			if not _owner_inven.has(sid): _owner_inven[sid] = position
 	_owner_size = rows.size()
+	_owner_last = rows[_owner_size - 1] if _owner_size > 0 else null
 	var best: int = mini(int(_owner_ids.get(item_id, rows.size())), int(_owner_inven.get(str(item_id), rows.size())))
 	if best < rows.size() and _owner_candidate(rows[best]) and _owns(rows[best], item_id): return rows[best]
-	if best < rows.size():
-		# The indexed record changed in place: scan as before.
-		for row: Variant in rows:
-			if _owner_candidate(row) and _owns(row, item_id): return row
+	# The indexed record changed in place: scan as before.
+	if best < rows.size(): return _scan_owner(rows, item_id)
 	return {}
 
 static func resolve(world, item_id: int, allow_native: bool = true) -> Dictionary:
@@ -359,6 +384,8 @@ static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.Cas
 		if not native.is_empty(): return {"kind":"native", "name":str(native.name), "record":native}
 	# Original item without a TWILIGHT owner yet: kept as a plain inventory item.
 	var name: String = _box_name(world,item_id,lookup)
+	var registered: Dictionary = _find_record(world,name,"",lookup)
+	if not registered.is_empty(): return {"kind":"item", "name":name, "record":registered}
 	var usable: bool = not mastery_spec(item_id).is_empty()
 	var record: Dictionary = _register(world, {"name":name, "grade":_grade(item_id), "type":"소모품" if usable else "재료", "slot":"consumable" if usable else "material", "stackable":true,
 		"weight":_weight(item_id), "source_weight_origin":"current523_original_estimate", "droppable":false, "sellable":false, "source":ITEM_TAG, "source_item_class_id":item_id,
@@ -385,8 +412,6 @@ static func install(world, catalog) -> Dictionary:
 	if not available() or catalog == null: return bindings
 	var lookup: LOOKUP.CashInstallScope = _install_lookup(world,catalog)
 	var seen: Dictionary = {}
-	_owner_rows = []
-	_owner_trusted = true
 	for key: String in CashMarket.data().entries:
 		var offer: Dictionary = catalog.market_offer(int(key))
 		for link: Dictionary in offer.get("products", []):
@@ -396,8 +421,6 @@ static func install(world, catalog) -> Dictionary:
 			_walk(world,item_id,seen,0,lookup)
 			var target: Dictionary = _resolve(world,item_id,false,lookup)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
-	_owner_trusted = false
-	_owner_rows = []
 	if lookup != null: lookup.close()
 	world._index_item_weights()
 	return bindings
@@ -521,6 +544,8 @@ static func _choose(world, item_name: String, choices: Array) -> void:
 ## Debits one box and delivers the given original rewards in one save.
 static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	if busy: return {"ok":false, "reason":"상자 개봉 처리 중"}
+	var catalog_size: int = world.catalog_db["아이템"].size()
+	var item_db_size: int = world.item_db.size()
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var have: int = int(inventory.get(item_name, 0))
 	if have < 1: return {"ok":false, "reason":"상자가 없습니다"}
@@ -601,25 +626,57 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	var cards_after: Dictionary = world.card_draw_fusion.export_state()
 	world.card_draw_fusion.import_state(cards_before)
 	if not failure.is_empty(): return {"ok":false, "reason":failure + " · 상자 보존"}
-	world._index_item_weights()
+	if world.has_method("_index_item_weights_appended"): world._index_item_weights_appended(catalog_size, item_db_size)
+	else: world._index_item_weights()
 	if _weight_of(world, inventory) > int(world._carrying_capacity()): return {"ok":false, "reason":"무게 한도 초과 · 상자 보존"}
+	# The full save validation checks this payload now; the file is written by
+	# the general save in the next frame (background writer on the phone,
+	# #719). Box debit and rewards land in the same save, so a crash before it
+	# keeps the box and loses the rewards together (never duplicated).
+	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id, "card_draw_fusion":cards_after}
+	var batched: bool = world.has_method("_request_general_save")
 	busy = true
-	var saved: Error = world._save_game(true, {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id, "card_draw_fusion":cards_after})
+	var checked: Error = world._save_game(true, staged, {}, true) if batched else world._save_game(true, staged)
 	busy = false
-	if saved != OK: return {"ok":false, "reason":"상자 개봉 저장 실패 · 상자와 기존 보유 상태 보존"}
+	if checked != OK: return {"ok":false, "reason":"상자 개봉 저장 실패 · 상자와 기존 보유 상태 보존"}
 	world.inventory = inventory
 	world.item_instances = instances
 	world.next_item_instance_id = next_id
 	world.card_draw_fusion.import_state(cards_after)
+	if batched: _request_save(world)
 	if world.has_method("_invalidate_equipment_static"): world._invalidate_equipment_static()
-	world.hud.refresh_inventory(world.inventory)
-	if world.has_method("_update_hud"): world._update_hud()
+	_publish(world, not card_results.is_empty())
 	var message: String = "%s 개봉 · %s" % [item_name, ", ".join(received)]
 	if world.hud.has_method("append_log"): world.hud.append_log(message)
 	if not card_results.is_empty() and world.hud.has_method("present_card_reveal"):
 		var first: Dictionary = _card_target(world, int(rewards[0].card_id)) if int(rewards[0].get("card_id", 0)) > 0 else resolve(world, int(rewards[0].item_class_id))
 		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results}, false)
 	return {"ok":true, "message":message, "received":received}
+
+## The opened box's save: the next frame's general save (one per frame).
+static func _request_save(world) -> void:
+	if not world.is_inside_tree() or not world.has_method("_request_general_save"):
+		world._save_game(true)
+		return
+	var tree: SceneTree = world.get_tree()
+	var request: Callable = Callable(world, "_request_general_save")
+	if not tree.process_frame.is_connected(request): tree.process_frame.connect(request, CONNECT_ONE_SHOT)
+
+## Items only: the bag and quickslot counts and the carried weight, next
+## frame (as a pickup). Cards change the character sheet (collections,
+## stats): the full publish then runs one frame later, after the reveal
+## has been built.
+static func _publish(world, cards: bool) -> void:
+	if not world.has_method("_queue_inventory_hud_refresh") or not world.is_inside_tree():
+		world.hud.refresh_inventory(world.inventory)
+		if world.has_method("_update_hud"): world._update_hud()
+		return
+	world._queue_inventory_hud_refresh()
+	if not cards: return
+	if world.get("card_collections") != null: world.card_collections.invalidate()
+	var full: Callable = Callable(world, "_update_hud")
+	var tree: SceneTree = world.get_tree()
+	if not tree.process_frame.is_connected(full): tree.process_frame.connect(full, CONNECT_ONE_SHOT)
 
 static func definition_id_of(world, item_name: String) -> int:
 	return int(world._find_catalog_item_record(item_name).get("source_item_class_id", 0))

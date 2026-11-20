@@ -409,9 +409,16 @@ func _control_blocks_world_input(node: Node, point: Vector2) -> bool:
 func playtest_tools_enabled() -> bool:
 	return preload("res://scripts/boot/build_flags.gd").playtest()
 
-## Catalog grant tools and verification lines: debug/dev-UI builds only.
+## Verification lines (source ids, grade evidence): debug/dev-UI builds only.
 func developer_tools_visible() -> bool:
 	return playtest_tools_enabled() and preload("res://scripts/boot/build_flags.gd").developer_ui()
+
+## The item catalog's grant tools (선택 아이템 지급, 주문서 ×10, 변신·인형·성물
+## 뽑기권, 아데나 1억) stay on the phone's playtest APK too (user 2026-11-20:
+## "검수용 아이템지급 버튼은 일단 살려"); only the verification text above is
+## limited to debug/dev-UI builds.
+func catalog_grant_tools_visible() -> bool:
+	return playtest_tools_enabled()
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
@@ -1075,6 +1082,9 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	# Window subtitles such as "원본523 확률·재료 조회 · 현재 강화 정책 보존" are
+	# developer notes: release screens drop them (debug/twilight_dev_ui keep them).
+	description = preload("res://scripts/ui/source523_item_identity.gd").screen_note(description)
 	# Crash trail for the window's first seconds (523.607: the release APK
 	# closed the moment the exchange was entered, 30 minutes into a run).
 	FRAME_HITCH.arm_trail(WINDOW_TRAIL_SECONDS)
@@ -1094,6 +1104,8 @@ func _open_window(section: String,title: String,description: String) -> void:
 	_park_shared_panels()
 	workspace.clear()
 	workspace.open(section,title,description)
+	# Content is mounted by the caller right after this returns.
+	(func() -> void: preload("res://scripts/ui/release_text.gd").scrub(workspace)).call_deferred()
 	active_section = section
 	_sync_screen_focus()
 	workspace.set_back_available(navigation_memory.has_history())
@@ -1864,7 +1876,7 @@ func open_status_board() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("현황판은 원본 523 UI 팩(StatusBoard_All)이 필요합니다.\n"+str(native.get("code",native.get("error",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("현황판은 원본 523 UI 팩(StatusBoard_All)이 필요합니다.\n"+str(native.get("code",native.get("error","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -1914,7 +1926,7 @@ func open_clan_emblem523() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("혈맹 문장은 원본 523 UI 팩(Clan_Popup_Symbol)과 원본 정의 ZIP이 필요합니다.\n"+str(native.get("problem",native.get("code","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -1950,7 +1962,7 @@ func open_domination_stone() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	var note := UI.label("지배석 창은 원본 523 UI 팩(DominationStoneScene)이 필요합니다.\n"+str(native.get("code",native.get("error",""))),14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("지배석 창은 원본 523 UI 팩(DominationStoneScene)이 필요합니다.\n"+str(native.get("code",native.get("error","")))),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -2022,7 +2034,7 @@ func _open_catalog_browser(category: String) -> void:
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
 	catalog_clear_button.visible = category != "아이템"
-	catalog_test_toggle.visible = category == "아이템" and developer_tools_visible()
+	catalog_test_toggle.visible = category == "아이템" and catalog_grant_tools_visible()
 	if is_instance_valid(card_fusion_tab):
 		card_fusion_tab.visible = CARD_RULES.CATEGORIES.has(category)
 		card_awakening_tab.visible = CARD_RULES.CATEGORIES.has(category)
@@ -2185,6 +2197,16 @@ func _build_catalog_panel() -> void:
 	catalog_list.add_theme_constant_override("v_separation",12)
 	catalog_list.add_theme_constant_override("h_separation",8)
 	catalog_list.add_theme_font_size_override("font_size",13)
+	# Item icons (static PNG or animated CSB scene) are drawn by one
+	# TextureRect per row cell on top of the list, all the same size.
+	catalog_icon_layer = Control.new()
+	catalog_icon_layer.name = "CatalogItemIcons"
+	catalog_icon_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	catalog_icon_layer.clip_contents = true
+	catalog_list.add_child(catalog_icon_layer)
+	catalog_icon_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	catalog_list.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: _layout_catalog_icon_views())
+	catalog_list.resized.connect(func() -> void: _layout_catalog_icon_views.call_deferred())
 	var pager := HBoxContainer.new()
 	pager.custom_minimum_size = Vector2(0, 40)
 	pager.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -2303,8 +2325,8 @@ func _build_catalog_panel() -> void:
 	catalog_test_tools.hide()
 	card_draw_button.reparent(catalog_test_tools)
 	reveal_preview.reparent(catalog_test_tools)
-	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and developer_tools_visible())
-	catalog_test_tools.add_child(UI.label("개발 빌드 전용 지급 도구",11,UI.GOLD))
+	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and catalog_grant_tools_visible())
+	catalog_test_tools.add_child(UI.label("테스트 아이템 지급",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
 	playtest_grant_button.name = "PlaytestGrantSelected"
 	catalog_test_tools.add_child(playtest_grant_button)
@@ -2314,7 +2336,7 @@ func _build_catalog_panel() -> void:
 	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
 		var grant_name: String = scroll
 		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
-			if developer_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
+			if catalog_grant_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
@@ -2798,7 +2820,7 @@ func _fit_catalog_browser_layout() -> void:
 	collection_status.visible = not short
 	catalog_count.visible = not short
 	catalog_preview.custom_minimum_size = Vector2(150 if compact else 180,0)
-	catalog_list.fixed_icon_size = Vector2i(78,92) if short else Vector2i(94,116)
+	catalog_list.fixed_icon_size = _catalog_icon_size()
 	catalog_list.add_theme_constant_override("v_separation",10)
 	catalog_search.custom_minimum_size.y = 34
 	catalog_view_tabs.visible = (compact or CARD_RULES.CATEGORIES.has(active_section)) and active_section in ["아이템","변신","마법인형","성물"]
@@ -2895,6 +2917,7 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
+		if catalog_category == "아이템": catalog_list.set_item_icon(index,_catalog_icon_reserve())
 		if catalog_category != "아이템":
 			if SourceCardPresentation.native(record):
 				var acquired: bool = owned_cards.get(CARD_RULES.card_id(record),false) == true
@@ -2921,22 +2944,88 @@ func _apply_catalog_page() -> void:
 	SourceCardPresentation.apply(self)
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
-	if catalog_category == "아이템" and not catalog_results.is_empty():
-		call_deferred("_fill_catalog_page_icons", request_id)
+	if catalog_category == "아이템": catalog_list.fixed_icon_size = _catalog_icon_size()
+	call_deferred("_fill_catalog_page_icons", request_id)
+
+## Same-size original icon cells of the item catalog list. Card catalogs keep
+## their portrait art size.
+const CATALOG_ITEM_ICON := Vector2i(64,64)
+const CATALOG_ITEM_ICON_SHORT := Vector2i(52,52)
+var catalog_icon_layer: Control
+var catalog_icon_views: Array[TextureRect] = []
+var _catalog_icon_slot: PlaceholderTexture2D
+
+func _catalog_icon_size() -> Vector2i:
+	var short: bool = workspace != null and workspace.content.size.y < 430
+	if catalog_category == "아이템": return CATALOG_ITEM_ICON_SHORT if short else CATALOG_ITEM_ICON
+	return Vector2i(78,92) if short else Vector2i(94,116)
+
+## An empty, same-size icon slot for every item row: the list keeps one cell
+## size whether or not the row's picture is a texture or an animated scene.
+func _catalog_icon_reserve() -> Texture2D:
+	var wanted: Vector2 = Vector2(_catalog_icon_size())
+	if _catalog_icon_slot == null: _catalog_icon_slot = PlaceholderTexture2D.new()
+	_catalog_icon_slot.size = wanted
+	return _catalog_icon_slot
 
 func _fill_catalog_page_icons(request_id: int) -> void:
+	if catalog_list == null: return
+	catalog_list.fixed_icon_size = _catalog_icon_size()
+	var item_page: bool = catalog_category == "아이템"
+	for index: int in range(catalog_icon_views.size()):
+		if index >= catalog_results.size() or not item_page:
+			UI.clear_item_visual(catalog_icon_views[index])
+			catalog_icon_views[index].hide()
+	if not item_page or not is_instance_valid(catalog_icon_layer): return
+	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
+		catalog_list.set_item_icon(index, _catalog_icon_reserve())
+	_layout_catalog_icon_views()
 	for index: int in range(catalog_results.size()):
 		if request_id != catalog_icon_generation or catalog_category != "아이템":
 			return
+		if index >= catalog_list.item_count: break
 		var record: Dictionary = catalog_results[index]
-		var icon_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
-		if icon_texture != null and index < catalog_list.item_count:
-			catalog_list.set_item_icon(index, icon_texture)
-		if index % 3 == 2:
+		var view: TextureRect = _catalog_icon_view(index)
+		UI.apply_item_visual(view, record, str(record.get("name", "")), item_image_index.get("아이템", {}), "slot")
+		view.show()
+		if index % 4 == 3:
 			await get_tree().process_frame
+	_layout_catalog_icon_views()
+
+func _catalog_icon_view(index: int) -> TextureRect:
+	while catalog_icon_views.size() <= index:
+		var view := TextureRect.new()
+		view.name = "CatalogItemIcon%d" % catalog_icon_views.size()
+		view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		view.hide()
+		catalog_icon_layer.add_child(view)
+		catalog_icon_views.append(view)
+	return catalog_icon_views[index]
+
+## Puts each icon cell over its row's reserved icon slot (ItemList top-icon
+## layout: centered, icon_margin below the cell top, minus the scroll).
+func _layout_catalog_icon_views() -> void:
+	if catalog_list == null or not is_instance_valid(catalog_icon_layer): return
+	if catalog_category != "아이템":
+		for view: TextureRect in catalog_icon_views: view.hide()
+		return
+	catalog_list.force_update_list_size()
+	var icon: Vector2 = Vector2(catalog_list.fixed_icon_size)
+	var margin: float = float(catalog_list.get_theme_constant("icon_margin"))
+	var scroll: float = catalog_list.get_v_scroll_bar().value
+	for index: int in range(catalog_icon_views.size()):
+		var view: TextureRect = catalog_icon_views[index]
+		if index >= catalog_list.item_count or index >= catalog_results.size():
+			view.hide()
+			continue
+		var cell: Rect2 = catalog_list.get_item_rect(index)
+		view.position = Vector2(cell.position.x + floorf((cell.size.x - icon.x) * 0.5), cell.position.y + margin - scroll)
+		view.size = icon
 
 func _request_playtest_catalog_grant() -> void:
-	if not developer_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():
+	if not catalog_grant_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():
 		return
 	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
 	if source_id != "":
@@ -2945,7 +3034,7 @@ func _request_playtest_catalog_grant() -> void:
 		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
 
 func _request_playtest_aden() -> void:
-	if developer_tools_visible(): playtest_aden_grant_requested.emit()
+	if catalog_grant_tools_visible(): playtest_aden_grant_requested.emit()
 
 func _catalog_variant_count(item_name: String) -> int:
 	return int(catalog_variant_counts.get(item_name, 0))
@@ -3447,7 +3536,7 @@ func open_card_skill_awakening(category: String, identity: String) -> void:
 func open_skill_cards() -> void:
 	_open_window("skill_card523","스킬 카드","")
 	if _open_original_feature("skill_cards"):return
-	var note := UI.label("스킬 카드 창은 원본 523 UI 팩(SkillCard_All)이 필요합니다.",14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("스킬 카드 창은 원본 523 UI 팩(SkillCard_All)이 필요합니다."),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -3470,7 +3559,7 @@ func open_trial_dungeon() -> void:
 func open_card_change() -> void:
 	_open_window("card_swap523","카드 다시 뽑기","")
 	if _open_original_feature("card_change"):return
-	var note := UI.label("카드 다시 뽑기 창은 원본 523 UI 팩(CardChange_All)이 필요합니다.",14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("카드 다시 뽑기 창은 원본 523 UI 팩(CardChange_All)이 필요합니다."),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 
@@ -3480,7 +3569,7 @@ func open_card_change() -> void:
 func open_quick_cards(key: String, title: String, member: String) -> void:
 	_open_window(key+"523",title,"")
 	if _open_original_feature(key):return
-	var note := UI.label("%s 창은 원본 523 UI 팩(%s)이 필요합니다." % [title,member],14,UI.TEXT)
+	var note := UI.label(preload("res://scripts/ui/source523_item_identity.gd").screen_text("%s 창은 원본 523 UI 팩(%s)이 필요합니다." % [title,member]),14,UI.TEXT)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	workspace.mount(note)
 

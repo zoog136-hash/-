@@ -53,16 +53,26 @@ func _run() -> void:
 	var catalog: Array = [{"name":"a","source_item_class_id":5}, {"name":"b","source":"inven","sourceId":"7"}, {"name":"c","source523_shop_item_id":5},
 		{"name":"d · 원본#9","source_item_class_id":9}, {"name":"e","source":CASH.TAG,"source_item_class_id":11}, {"name":"f","source_m_native_item":true,"source_item_class_id":12}]
 	for id: int in [5, 7, 9, 11, 12, 13, -1]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "scanned owner %d" % id)
-	# The index is used only during install(); the same answers with it on.
+	# The persistent owner index gives the scan's answers.
 	CASH._owner_rows = []
-	CASH._owner_trusted = true
 	for id: int in [5, 7, 9, 11, 12, 13, -1]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "owner %d" % id)
 	catalog.append({"name":"g","source_item_class_id":13})
 	catalog.append({"name":"h","source":"inven","sourceId":"5"})
+	var owner_builds: int = CASH.owner_index_builds
 	for id: int in [5, 13]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "owner after append %d" % id)
-	CASH._owner_trusted = false
+	check(CASH.owner_index_builds == owner_builds, "appends extend the owner index")
 	catalog[0] = {"name":"a2","source_item_class_id":6}
+	check(CASH._exact_owner(catalog, 5) == _scan_owner(catalog, 5), "an indexed owner replaced in place is not returned")
+	# A slot replaced in place by a record owning another item (the world's
+	# catalog merges) is announced, as for remembered name misses.
+	CASH.forget_owner_index()
 	for id: int in [5, 6]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "owner after replace %d" % id)
+	# A removal followed by an append (same size) rebuilds the index.
+	catalog.remove_at(1)
+	catalog.append({"name":"i","source_item_class_id":21})
+	for id: int in [5, 6, 7, 13, 21]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "owner after removal and append %d" % id)
+	catalog.resize(3)
+	for id: int in [5, 13, 21]: check(CASH._exact_owner(catalog, id) == _scan_owner(catalog, id), "owner after shrink %d" % id)
 	var base: String = ""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--source523-pack="): base = value.trim_prefix("--source523-pack=")
@@ -81,13 +91,27 @@ func _run() -> void:
 	var items: Array = world.get("catalog_db").get("아이템", [])
 	var compared: int = 0
 	CASH._owner_rows = []
-	CASH._owner_trusted = true
 	for index: int in range(0, items.size(), maxi(1, items.size() / 400)):
 		var row: Dictionary = items[index]
 		for field: String in ["source_item_class_id", "source523_shop_item_id"]:
 			if row.has(field):
 				compared += 1
 				check(CASH._exact_owner(items, int(row[field])) == _scan_owner(items, int(row[field])), "live owner %d" % int(row[field]))
-	CASH._owner_trusted = false
+	# Records appended after the start (a box's first-seen reward): only their
+	# weights are added, the same as a full build.
+	var weight_items: Array = world.get("catalog_db")["아이템"]
+	var before_catalog: int = weight_items.size()
+	var before_db: int = (world.get("item_db") as Array).size()
+	var builds_before: int = int(world.get("item_weight_index_builds"))
+	var added_a: Dictionary = {"name":"boot-index-test 가","type":"재료","slot":"material","weight":7,"source_weight_origin":"current523_original_estimate"}
+	weight_items.append(added_a); (world.get("item_db") as Array).append(added_a.duplicate(true))
+	weight_items.append({"name":"boot-index-test 나","type":"소모품","slot":"consumable"})
+	world.call("_index_item_weights_appended", before_catalog, before_db)
+	var appended: Dictionary = (world.get("item_weight_index") as Dictionary).duplicate(true)
+	check(int(world.get("item_weight_index_builds")) == builds_before, "appended records do not rebuild the whole index")
+	world.call("_index_item_weights")
+	check(world.get("item_weight_index") == appended, "appended weights equal a full build")
+	weight_items.resize(before_catalog); (world.get("item_db") as Array).resize(before_db)
+	world.call("_index_item_weights")
 	print("BOOT_INDEX_ONCE_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not base.is_empty(),"weights":started.size(),"catalog":items.size(),"owners_compared":compared}))
 	quit(0 if failures.is_empty() else 1)
