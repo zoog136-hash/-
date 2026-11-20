@@ -2609,8 +2609,10 @@ func _refresh_card_controls() -> void:
 		return
 	var category: String = catalog_category
 	card_controls.visible = CARD_RULES.CATEGORIES.has(category)
-	card_draw_button.visible=card_controls.visible and playtest_tools_enabled()
-	card_reveal_preview.visible=card_controls.visible and playtest_tools_enabled()
+	# Free test draws are review tools: debug/twilight_dev_ui builds only
+	# (2026-11-20). The playtest card collection itself is unchanged.
+	card_draw_button.visible=card_controls.visible and developer_tools_visible()
+	card_reveal_preview.visible=card_controls.visible and developer_tools_visible()
 	if not card_controls.visible:
 		return
 	var all_owned: Dictionary = card_collection_state.get("owned", {}) as Dictionary
@@ -2650,7 +2652,7 @@ func _refresh_card_controls() -> void:
 	card_fusion_button.disabled = available < required
 
 func _request_card_pack_draw() -> void:
-	if playtest_tools_enabled() and CARD_RULES.CATEGORIES.has(catalog_category):
+	if developer_tools_visible() and CARD_RULES.CATEGORIES.has(catalog_category):
 		card_pack_draw_requested.emit(catalog_category)
 
 func _request_card_fusion() -> void:
