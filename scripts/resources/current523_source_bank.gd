@@ -349,7 +349,15 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 		var unit: Dictionary = table_row("Unit",int(option.get("UnitID",-1)))
 		if int(option.get("BuffCardID",-1)) != int(native.ID) or unit.get("Name","") != "PolymorphSetID": return fail("current523_active_option_not_declared_for_card")
 		if not _add_set(int(option.get("Value",-1)),path + [{"table":"BuffCardSpriteCustomizingOption","row":option.duplicate(true)},{"table":"Unit","row":unit.duplicate(true)}],chains): return fail("current523_active_option_entity_missing")
-	elif not _walk_buff(int(native.get("BuffClassID",-1)),path,[],chains,preserved_rule): return fail("current523_typed_buff_entity_chain_incomplete")
+	else:
+		# 보고서2 R2: a ClassifiedByClass card walks the BuffCardByClass row of this
+		# context's class/gender (same row the bonuses and screens use).
+		var buff_class: int = int(native.get("BuffClassID",-1))
+		var variant: Dictionary = BASE.CURRENT_CARD_CATALOG.variant_row(record,int(context.get("class_id",0)),int(context.get("gender_id",0)))
+		if not variant.is_empty():
+			buff_class = int(variant.BuffClassID)
+			if not variant.get("_bonus_only",false): path.append({"table":"BuffCardByClass","row":variant.duplicate(true)})
+		if not _walk_buff(buff_class,path,[],chains,preserved_rule): return fail("current523_typed_buff_entity_chain_incomplete")
 	var matches: Dictionary = {}
 	var selected_chains: Array = []
 	for chain: Dictionary in chains:
