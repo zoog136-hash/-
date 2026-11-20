@@ -1,0 +1,95 @@
+{
+  "retained": 927,
+  "excluded": 138,
+  "source_rows_recorded": 1974219,
+  "field_records": 4681,
+  "source_fields": 4607,
+  "source_tiers": {
+    "parser_available_behavior_open": 450,
+    "empty_payload_schema_available": 24,
+    "original_lookup_chain_only": 37,
+    "bounded_current_main_behavior": 261,
+    "bounded_original_native_behavior": 43,
+    "bounded_lookup_or_input_contract": 112
+  },
+  "domain_counts": {
+    "콘텐츠": 267,
+    "지원/공통": 58,
+    "경제/성장": 189,
+    "퀘스트/활동": 74,
+    "기존 클라이언트": 99,
+    "클라이언트": 147,
+    "기존 게임플레이": 93
+  },
+  "latest_evidence": {
+    "L5 최신 조회 근거 미확인": 502,
+    "empty": 24,
+    "L1 최신 리터럴 조회": 111,
+    "L3 기존 참조 혼합": 100,
+    "L2 기존 참조 파일 동일": 111,
+    "L4 기존 참조 파일 변경": 103
+  },
+  "phase3_records": 450,
+  "phase4_matched": 23,
+  "same523_525": 863,
+  "loader": 829,
+  "registration": 826,
+  "lookup_tables": 75,
+  "lookup_chains": 206,
+  "file_compare": {
+    "old_evidence_files": 106,
+    "same": 62,
+    "changed": 44,
+    "full_read": 68,
+    "additional": 24,
+    "unique_scope": 130,
+    "repo_script_total": 943,
+    "repo_old_scripts": 788,
+    "repo_same": 501,
+    "repo_changed": 271,
+    "repo_new": 171
+  },
+  "direct_unique_retained": 111,
+  "direct_unique_excluded": 2,
+  "dependencies": 48,
+  "dependency_tables": 32,
+  "dependency_targets": 9,
+  "duplicate_tables": [
+    "AutoQuickSlotData",
+    "BuffCardSourceCraftView",
+    "CompetitionDungeonLandAttributeView",
+    "MarketPayment_Korean",
+    "NpcNavigationView",
+    "WorldBossRaidView"
+  ],
+  "large_int_tables": [
+    "Experience"
+  ],
+  "manual_table_notes": 32,
+  "baseline": "7e4a05176b53a3cebe993d1994a5cbae814cdf5f",
+  "latest": "fed1e5b8a6043d2ed761b83920a62864caedaa29",
+  "raw_archive_rows_recomputed": false,
+  "complete_latest_call_graph": false,
+  "actual_exe_runtime": false,
+  "product_modified": false,
+  "source_archives": [
+    {
+      "file": "TWILIGHT_927표_JSON_native_2차상세재검토_20261110.zip",
+      "sha256": "e89886c2a687f15c34043e3a0754caf1a79e8a358ddaaa8f2e374299d63f4861",
+      "entries": 13,
+      "crc": "PASS"
+    },
+    {
+      "file": "TWILIGHT_927표_원본소비함수_3차추가검토_20261110.zip",
+      "sha256": "89c9ddd9ed86379c5879e715fc7dfdca95c2096269c71be579c3ee7f110ea071",
+      "entries": 1010,
+      "crc": "PASS"
+    },
+    {
+      "file": "TWILIGHT_원본UI소비_최신메인비교_4차_20261110.zip",
+      "sha256": "4e15548e38b88cf764cb5fd039472a44f0aa7fc4fb8b0ca8dd461d425a27ec41",
+      "entries": 385,
+      "crc": "PASS"
+    }
+  ]
+}
