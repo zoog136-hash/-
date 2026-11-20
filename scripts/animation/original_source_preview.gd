@@ -1152,9 +1152,16 @@ func advance_source(delta: float, state: String, facing: int, sequence: int, gam
 		_role = requested
 		if not keep_phase: _clock = 0.0
 		_annotation_clock = -0.000000001
-	# Visual inspection maps front bit5 to game S2. Keep this explicit and unapproved.
-	var source_direction: int = posmod(facing + 3, 8)
-	_advance_selected_source(delta, source_direction)
+	_advance_selected_source(delta, source_direction_for(facing))
+
+## Stored source direction (0..7) shown for TWILIGHT facing8 (clockwise from E:
+## E, SE, S, SW, W, NW, N, NE). The 523 player walk 15282 and its SpriteRun run
+## 15284 both store NW, N, NE, E, SE, S, SW, W as directions 0..7: each
+## direction's own frames travel that way (cooked anchors, one loop = one cell;
+## tests/heading_8dir_walk_run_test.gd). Visual inspection maps front bit5 to
+## game S2.
+static func source_direction_for(facing8: int) -> int:
+	return posmod(facing8 + 3, 8)
 
 func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var is_reference: bool = _reference_bank != null
