@@ -200,6 +200,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	else: record = value.get("runtime_record")
 	_raw_sources = originals
 	_tile_pack = tiles
+	# Atlases are only read to bake ground blocks (see compress_for_gpu).
+	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_drop_chunk_jobs()
