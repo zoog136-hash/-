@@ -98,6 +98,26 @@ func headless_checks() -> void:
 	check(distinct.size()==3,"6000 nodes in 3 colours share 3 materials (got %d)"%distinct.size())
 	for node: Sprite2D in many:node.free()
 	item.free();sibling.free()
+func check_cache_capacity() -> void:
+	MATERIAL._display_variants.clear()
+	MATERIAL._display_variant_count=0
+	var bases: Array[ShaderMaterial]=[MATERIAL.original_default(texture()),MATERIAL.original_default(texture(true))]
+	var item:=Sprite2D.new()
+	var keeper:=Sprite2D.new()
+	keeper.material=bases[0]
+	MATERIAL.bind_display(keeper,Color.BLACK)
+	var retained: Material=keeper.material
+	for index: int in range(1,MATERIAL.DISPLAY_CACHE_LIMIT):
+		item.material=bases[index&1]
+		MATERIAL.bind_display(item,Color(float(index)/MATERIAL.DISPLAY_CACHE_LIMIT,0.0,0.0))
+	check(MATERIAL._display_variant_count==MATERIAL.DISPLAY_CACHE_LIMIT and MATERIAL._display_variants.size()==2,"the total bound counts colours across both base materials")
+	MATERIAL.bind_display(keeper,Color.BLACK)
+	check(keeper.material==retained and MATERIAL._display_variant_count==MATERIAL.DISPLAY_CACHE_LIMIT,"a hit at capacity preserves the shared material")
+	MATERIAL.bind_display(item,Color.WHITE)
+	check(MATERIAL._display_variant_count==1 and MATERIAL._display_variants.size()==1,"a miss clears both buckets at the same global limit")
+	check(keeper.material==retained,"an evicted but live sprite keeps its material")
+	state(keeper,Color.BLACK,"evicted display")
+	item.free();keeper.free()
 func make_view(tex: Texture2D, transparent: bool) -> Dictionary:
 	var viewport:=SubViewport.new();viewport.size=Vector2i(24,20);viewport.disable_3d=true
 	viewport.transparent_bg=transparent;viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
@@ -167,6 +187,7 @@ func many_nodes_render() -> void:
 	viewport.free()
 func run() -> void:
 	headless_checks()
+	check_cache_capacity()
 	if "--render" in OS.get_cmdline_user_args():await render_comparisons()
 	print("SOURCE_MATERIAL_DISPLAY_UPDATES_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"render_checks":render_checks,"synthetic_only":true}))
 	quit(0 if failures.is_empty() else 1)

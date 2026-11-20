@@ -58,6 +58,9 @@ var _reference_frame_inputs: Dictionary = {}
 var _reference_texture_budget: Dictionary = {}
 var _reference_texture_charges: Dictionary = {}
 var _reference_child_problem: Dictionary = {}
+## Offline cooking has no live card/NPC owner, but must capture its
+## independently selected layers with the same pinned ancestry checks.
+var _reference_capture_lineage: Dictionary = {}
 var reference_bank_status: Dictionary = {}
 var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
@@ -84,7 +87,7 @@ var _texture_leases: Dictionary = {}
 var _asset_owner: int = SHARED_ASSETS.new_owner()
 var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
-var _source_body_material: CanvasItemMaterial
+var _source_body_material: Material
 var _role: String = "idle"
 var source_facing: int = 0
 var _clock: float = 0.0
@@ -492,9 +495,14 @@ func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) ->
 		shader_material.set_shader_parameter("screen_operation", id == 22260)
 		effect_node.material = shader_material
 	elif bool(style.get("enabled", false)):
-		var material: CanvasItemMaterial = CanvasItemMaterial.new()
-		material.blend_mode = int(style.blend_mode)
-		effect_node.material = material
+		# One material per attachment node (view-owned, as before); multiply is
+		# the alpha-aware multiply material.
+		if int(style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			effect_node.material = SP2_COMPOSITOR.new_multiply_material()
+		else:
+			var material: CanvasItemMaterial = CanvasItemMaterial.new()
+			material.blend_mode = int(style.blend_mode)
+			effect_node.material = material
 		effect_node.modulate.a = float(style.alpha)
 	effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	effect_node.set_meta("source_layer_id", id)
@@ -522,8 +530,12 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	_source_body_style = POLICY.effect(root_attributes, _playback_mode) if not root_attributes.is_empty() else {}
 	_source_body_material = null
 	if bool(_source_body_style.get("enabled", false)):
-		_source_body_material = CanvasItemMaterial.new()
-		_source_body_material.blend_mode = int(_source_body_style.blend_mode)
+		if int(_source_body_style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			_source_body_material = SP2_COMPOSITOR.new_multiply_material()
+		else:
+			var body_material := CanvasItemMaterial.new()
+			body_material.blend_mode = int(_source_body_style.blend_mode)
+			_source_body_material = body_material
 	_playback_tracks = tracks
 	_manifest_path = manifest_path
 	_is_overlay = bool(candidate.get("one_shot_overlay", false))
@@ -969,8 +981,7 @@ func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes:
 func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
 	var items: Array = []
 	for spec: Dictionary in drawn:
-		var material: CanvasItemMaterial = spec.material as CanvasItemMaterial
-		if not spec.recovered.is_empty() or spec.alpha != 1.0 or (material != null and material.blend_mode != CanvasItemMaterial.BLEND_MODE_MIX): composable = false
+		if not spec.recovered.is_empty() or spec.alpha != 1.0 or SP2_COMPOSITOR.material_blend(spec.material) != CanvasItemMaterial.BLEND_MODE_MIX: composable = false
 		if spec.position != Vector2(Vector2i(spec.position)): composable = false
 		if not spec.empty: items.append({"layer":spec.layer,"offset":Vector2i(spec.position)})
 	# A single layer gains nothing from a copy: it keeps its node and texture.
@@ -1156,8 +1167,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var static_track: bool = bool(track.get("static_pending_timing", false))
 	var total: float = 1.0
 	if not static_track:
-		total = 0.0
-		for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		if _cooked != null:
+			total = track.direction_totals[source_direction]
+		else:
+			total = 0.0
+			for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
 	# Floating boundary tolerance only; never hold a short pose for a render frame.
 	var boundary_epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
@@ -1166,11 +1180,12 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var selected_index: int = 0 if static_track else frames.size() - 1
 	var scan_index: int = 0
 	for item: Dictionary in ([] if static_track else frames):
-		if time + boundary_epsilon < preload("res://scripts/animation/source_presentation_policy.gd").duration(item):
+		var item_duration: float = preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		if time + boundary_epsilon < item_duration:
 			selected = item
 			selected_index = scan_index
 			break
-		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		time -= item_duration
 		scan_index += 1
 	var loop_position: float = float(selected_index)
 	if not static_track and bool(track.loop) and _role in ["walk", "run"]:
@@ -1181,19 +1196,17 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_source_attack = false
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
-	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	if _cooked != null:
 		# Cooked actor: the same clock and frame choice as above, then the
-		# frame's recorded draw state; no layer, style or byte work.
+		# frame's recorded draw state, with page reads only on cache misses.
 		var ended: bool = not static_track and not bool(track.loop) and _clock >= total
 		var state: int = COOKED_STORE.state_for(_cooked_entry, _role, source_direction, int(selected.get("cooked_index", 0)), time, ended)
-		if state != _cooked_state:
+		if state >= 0 and state != _cooked_state and COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state):
 			_cooked_state = state
-			COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state)
-		_last_token = token
 		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 			queue_free()
 		return
+	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
 	var body_attributes: Array = []
 	var body_attributes_unresolved: bool = true
@@ -1397,6 +1410,7 @@ func _shown_source_provenance(layer: Dictionary, attachment: Dictionary) -> Dict
 
 func _advance_reference_children(delta: float, stored_direction: int, parent_attributes: Array = [], parent_unresolved: bool = true, parent_projection_verified: bool = false) -> bool:
 	var lineage: Dictionary = _reference_card_context if not _reference_card_context.is_empty() else (_reference_attachment_parent if not _reference_attachment_parent.is_empty() else _reference_overlay_parent)
+	if lineage.is_empty(): lineage = _reference_capture_lineage
 	if lineage.is_empty(): return true
 	_reference_child_problem.clear()
 	var ready: bool = true
@@ -1450,6 +1464,10 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 			_reference_child_problem = child.reference_bank_status.duplicate(true)
 			_reference_child_problem["ok"] = false
 			if str(_reference_child_problem.get("error","")).is_empty(): _reference_child_problem["error"] = "Independent source layer frame is unavailable."
+			# A rejected child can no longer advance. Drop it so the next
+			# frame can admit it again from the currently verified source.
+			_reference_source_children.erase(key)
+			child.free()
 			ready = false
 	return ready
 
@@ -1559,16 +1577,11 @@ func attachment_status() -> Dictionary:
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
 	return {"recovered_source_compositors":compositors,"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
-## One read-only CanvasItemMaterial per blend mode, shared by every reference
-## layer (a new material per layer per frame used to be allocated here).
-static var _blend_materials: Dictionary = {}
-static func _blend_material(blend_mode: int) -> CanvasItemMaterial:
-	var material: CanvasItemMaterial = _blend_materials.get(blend_mode) as CanvasItemMaterial
-	if material == null:
-		material = CanvasItemMaterial.new()
-		material.blend_mode = blend_mode
-		_blend_materials[blend_mode] = material
-	return material
+## One read-only material per blend mode, shared by every reference layer
+## (a new material per layer per frame used to be allocated here). Multiply
+## (original attr128) is the compositor's copy-free multiply material.
+static func _blend_material(blend_mode: int) -> Material:
+	return SP2_COMPOSITOR.blend_material(blend_mode)
 
 static var _target_pattern: RegEx = null
 static func _overlay_target_pattern() -> RegEx:

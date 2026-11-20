@@ -151,7 +151,7 @@ func confirm() -> void:
 	var good: Array=[];var bad: Array=[]
 	for index: int in success.get_selected_items():good.append(str(success.get_item_metadata(index)))
 	for index: int in failure.get_selected_items():bad.append(str(failure.get_item_metadata(index)))
-	var popup := ConfirmationDialog.new();confirmation=popup;popup.name="TJSpendConfirmation";popup.title="TJ 재도전 확인";popup.dialog_text="선택한 쿠폰 1장과 실패 이력을 사용합니다. TWILIGHT 추가 비용은 %d 아데나이며, 옵션 각성은 기존 각성 비용도 필요합니다. 원자 저장에 성공한 결과만 지급합니다. 취소하면 변경하지 않습니다." % int(world.tj_coupons.core.settings.retry_gold_cost);add_child(popup)
+	var popup := ConfirmationDialog.new();confirmation=popup;popup.name="TJSpendConfirmation";popup.title="TJ 재도전 확인";popup.ok_button_text="확인";popup.cancel_button_text="취소";popup.dialog_text="선택한 쿠폰 1장과 실패 이력을 사용합니다. TWILIGHT 추가 비용은 %d 아데나이며, 옵션 각성은 기존 각성 비용도 필요합니다. 원자 저장에 성공한 결과만 지급합니다. 취소하면 변경하지 않습니다." % int(world.tj_coupons.core.settings.retry_gold_cost);add_child(popup)
 	popup.confirmed.connect(func():
 		var result: Dictionary=world.tj_coupons.redeem(item,event,revision,good,bad)
 		refresh();status.text=str(result.get("error","완료"));popup.hide();popup.queue_free())

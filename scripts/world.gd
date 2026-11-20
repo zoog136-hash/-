@@ -156,6 +156,9 @@ const CARD_SWAP523 = preload("res://scripts/cards/card_swap523.gd")
 ## TWILIGHT 근사: 획득 후 수명(Life) 장부, 지배 부적 소지 효과.
 const ITEM_LIFE523 = preload("res://scripts/loot/item_life523.gd")
 var item_life523 = ITEM_LIFE523.new()
+## Original 523 아이템 컬렉션 (ItemBook tables, source_main_item_book_window).
+const ITEM_BOOK523 = preload("res://scripts/collections/item_book523_runtime.gd")
+var item_book523 = ITEM_BOOK523.new()
 ## TWILIGHT 근사: 신화 무기 발동 교체 (ItemInvokeReplacementID) 한 번 추첨 장부.
 const ITEM_INVOKE523 = preload("res://scripts/loot/item_invoke_replacement523.gd")
 var item_invoke523 = ITEM_INVOKE523.new()
@@ -581,6 +584,7 @@ func _finish_boot_loading() -> void:
 
 func _ready() -> void:
 	var boot_started: int = BOOT_LOG.begin("world_ready")
+	preload("res://scripts/ui/dialog_korean_texts.gd").install(get_tree())
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
 	# Android: world canvas at 90% resolution, CanvasLayer UI stays native.
 	add_child(preload("res://scripts/boot/world_render_scale.gd").new())
@@ -1111,6 +1115,7 @@ func _load_data() -> void:
 	item_appellation523.configure(self)
 	card_swap523.configure(self)
 	item_life523.configure(self)
+	item_book523.configure(self)
 	item_invoke523.configure(self)
 	equipment_buff523.configure(self)
 	dungeon_extras523.configure(self)
@@ -1617,57 +1622,92 @@ func _index_item_weights() -> void:
 	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
 	_craft_index_warm={}
+	var rules: Dictionary = _item_weight_rules()
 	var next_weight_index: Dictionary = {}
-	var type_defaults: Dictionary = {}
-	var overrides: Dictionary = {}
-	var source_weight_policy: Dictionary = {}
-	# User decision "원작대로": these keep the original estimate, including zero.
-	var original_weight_names: Dictionary = {}
-	var path: String = "res://data/item_weight_rules.json"
-	if FileAccess.file_exists(path):
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-		if parsed is Dictionary:
-			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
-			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
-			var declared_source_policy: Variant = parsed.get("current523_source_weight")
-			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
-			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
-			if original_items is Dictionary: original_weight_names = original_items
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
 		for entry: Variant in source as Array:
-			if not (entry is Dictionary):
-				continue
-			var record: Dictionary = entry as Dictionary
-			var name_value: String = str(record.get("name", ""))
-			if name_value.is_empty():
-				continue
-			var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,source_weight_policy)
-			if source_weight.get("applicable",false):
-				if not source_weight.get("ok",false):
-					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
-					return
-				# Exact source zero remains zero; host positive-default bounds below
-				# still belong only to the pre-existing legacy input path.
-				next_weight_index[name_value] = int(source_weight.weight)
-				continue
-			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
-			if original_weight_names.has(name_value) and overrides.has(name_value):
-				next_weight_index[name_value] = maxi(0, int(overrides[name_value]))
-				continue
-			if record.get("source_weight_origin") == "current523_original_estimate":
-				next_weight_index[name_value] = maxi(0, int(record.get("weight", 0)))
-				continue
-			if record.has("growth96_item_id"):
-				next_weight_index[name_value] = maxi(0,int(record.weight))
-				continue
-			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
-				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			next_weight_index[name_value] = maxi(0, raw_weight)
+			if not _weight_index_entry(entry, rules, next_weight_index):
+				return
 	# Keep existing dictionary aliases while publishing a complete input index.
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
+
+## The weight rules file (res://, read-only at run time): parsed once.
+var _item_weight_rules_cache: Dictionary = {}
+func _item_weight_rules() -> Dictionary:
+	if not _item_weight_rules_cache.is_empty(): return _item_weight_rules_cache
+	var rules: Dictionary = {"type_defaults":{}, "overrides":{}, "source_weight_policy":{}, "original_weight_names":{}}
+	var path: String = "res://data/item_weight_rules.json"
+	if FileAccess.file_exists(path):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary:
+			rules.type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
+			rules.overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: rules.source_weight_policy = declared_source_policy
+			# User decision "원작대로": these keep the original estimate, including zero.
+			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
+			if original_items is Dictionary: rules.original_weight_names = original_items
+	_item_weight_rules_cache = rules
+	return rules
+
+## One catalog entry's weight into `index`; false when an original weight
+## input is unresolved (the caller keeps the existing index).
+func _weight_index_entry(entry: Variant, rules: Dictionary, index: Dictionary) -> bool:
+	if not (entry is Dictionary):
+		return true
+	var record: Dictionary = entry as Dictionary
+	var name_value: String = str(record.get("name", ""))
+	if name_value.is_empty():
+		return true
+	var type_defaults: Dictionary = rules.type_defaults
+	var overrides: Dictionary = rules.overrides
+	var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,rules.source_weight_policy)
+	if source_weight.get("applicable",false):
+		if not source_weight.get("ok",false):
+			push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+			return false
+		# Exact source zero remains zero; host positive-default bounds below
+		# still belong only to the pre-existing legacy input path.
+		index[name_value] = int(source_weight.weight)
+		return true
+	var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+	if rules.original_weight_names.has(name_value) and overrides.has(name_value):
+		index[name_value] = maxi(0, int(overrides[name_value]))
+		return true
+	if record.get("source_weight_origin") == "current523_original_estimate":
+		index[name_value] = maxi(0, int(record.get("weight", 0)))
+		return true
+	if record.has("growth96_item_id"):
+		index[name_value] = maxi(0,int(record.weight))
+		return true
+	if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
+		raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
+	index[name_value] = maxi(0, raw_weight)
+	return true
+
+## Records appended to catalog_db["아이템"] / item_db after the sizes given
+## (e.g. a box's first-seen reward): their weights only, as the full pass
+## would publish them (a later entry of the same name wins, catalog first).
+## Anything else (shrunk lists, a name already indexed, a deferred start)
+## falls back to the full pass.
+func _index_item_weights_appended(catalog_size: int, item_db_size: int) -> void:
+	var catalog: Variant = catalog_db.get("아이템", [])
+	if not catalog is Array or not item_db is Array: _index_item_weights(); return
+	if catalog.size() == catalog_size and item_db.size() == item_db_size: return
+	if _weight_index_deferred or catalog.size() < catalog_size or item_db.size() < item_db_size: _index_item_weights(); return
+	var rules: Dictionary = _item_weight_rules()
+	var added: Dictionary = {}
+	for pair: Array in [[catalog, catalog_size], [item_db, item_db_size]]:
+		for position: int in range(int(pair[1]), (pair[0] as Array).size()):
+			var entry: Variant = pair[0][position]
+			if entry is Dictionary and item_weight_index.has(str(entry.get("name", ""))): _index_item_weights(); return
+			if not _weight_index_entry(entry, rules, added): return
+	patch523_craft_item_cache={}
+	_craft_index_warm={}
+	item_weight_index.merge(added, true)
 
 func _inventory_total_weight() -> int:
 	if _stat_memo_depth == 0: return _inventory_total_weight_uncached()
@@ -2022,6 +2062,7 @@ func _merge_local_consumables_into_catalog() -> void:
 			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
 	ITEM_CATALOG_LOOKUP.forget_misses()
+	preload("res://scripts/shop/source523_cash_packages.gd").forget_owner_index()
 
 func _connect_signals() -> void:
 	hud.connect("equipment523_open_requested", _equipment523_open)
@@ -3526,6 +3567,19 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	# walking to. A route searched from the player starts at the centre of its
 	# own cell, usually already passed at the original walk (2.25 cells/s,
 	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	# Searches are bounded like monster chases: a hunt target is near, and a
+	# full-map search (8192 nodes) for an unreachable one cost the phone
+	# ~120 ms per second of auto-hunt (523.704: auto.path 117 ms/s).
+	var field: Object = field_map
+	var bounded: bool = field != null and "path_search_limit_override" in field
+	if bounded: field.set("path_search_limit_override", AUTO_PURSUIT_SEARCH_NODES)
+	var result: PackedVector2Array = _auto_pursuit_search(target)
+	if bounded: field.set("path_search_limit_override", -1)
+	return result
+
+const AUTO_PURSUIT_SEARCH_NODES: int = 2048
+
+func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
 	if player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
 		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
@@ -3533,6 +3587,9 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
 				return rest
+			# The player is walking to `via`: a target not reachable from it is
+			# not reachable from the player either. One search, not two.
+			return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -3986,6 +4043,8 @@ func _ground_drops_snapshot() -> Array:
 func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
+	for returned: Dictionary in ground_loot.recovered_to_bag:
+		hud.append_log("바닥 아이템 회수 · %s %d개를 가방으로 돌려놓았습니다" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(returned.item_name)),int(returned.quantity)])
 
 ## Quest window [모두 받기].
 func claim_all_quests() -> Dictionary:
@@ -6906,6 +6965,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("컬렉션 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	if collection_override.has("equipped_ammo") and not collection_override.equipped_ammo is String: return ERR_INVALID_PARAMETER
+	if collection_override.has(ITEM_BOOK523.SAVE_KEY) and (item_book523.preserved_raw != null or not ITEM_BOOK523.validate(collection_override[ITEM_BOOK523.SAVE_KEY]).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has(ROUTINE523.SAVE_KEY) and (routines.save_blocked or not ROUTINE523.validate(collection_override[ROUTINE523.SAVE_KEY]).is_empty()): return ERR_INVALID_DATA
 	if collection_override.has("ammo_unequipped") and not collection_override.ammo_unequipped is bool: return ERR_INVALID_PARAMETER
 	if collection_override.has("equipped_items") and not quest_item_provider.equipment_owner.authorizes_save(collection_override):return ERR_INVALID_PARAMETER
@@ -6913,7 +6973,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -6985,6 +7045,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		CONTENT523.SAVE_KEY: content523.export_state(),
 		CARD_SWAP523.SAVE_KEY: card_swap523.export_state(),
 		ITEM_LIFE523.SAVE_KEY: item_life523.export_state(),
+		ITEM_BOOK523.SAVE_KEY: item_book523.export_state(),
 		ITEM_INVOKE523.SAVE_KEY: item_invoke523.export_state(),
 		DUNGEON_EXTRAS523.SAVE_KEY: dungeon_extras523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
@@ -7705,6 +7766,7 @@ func _load_game(quiet: bool) -> void:
 	card_swap523.import_state(data.get(CARD_SWAP523.SAVE_KEY, {}))
 	# An older save has no ledger: its Life items start at this load time.
 	item_life523.import_state(data.get(ITEM_LIFE523.SAVE_KEY, {}))
+	item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))
 	# An older save has no draws: its 신화 weapons draw once after this load.
 	item_invoke523.import_state(data.get(ITEM_INVOKE523.SAVE_KEY, {}))
 	dungeon_extras523.import_state(data.get(DUNGEON_EXTRAS523.SAVE_KEY, {}))
@@ -12273,9 +12335,14 @@ func current523_map_teleport(id: String) -> Dictionary:
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
+	# A 하딘 (다이아) price was saved with the arrival as the bag after the
+	# debit; the live bag takes it now (the controller adopts only gold).
+	if (quote.changes as Dictionary).has("inventory") and bool(transition.get("saved",false)):
+		inventory = (quote.changes.inventory as Dictionary).duplicate(true)
+		if is_instance_valid(hud): hud.refresh_inventory(inventory)
 	if player.auto_enabled: player.set_auto_enabled(false)
 	_update_hud()
-	return {"ok":true,"reason":"텔레포트 완료 · %s · %d 아데나" % [str(row.name), int(row.price)],"land_id":int(row.land_id),"price":int(row.price),"saved":bool(transition.get("saved",false))}
+	return {"ok":true,"reason":"텔레포트 완료 · %s · %d %s" % [str(row.name), int(row.price), str(row.get("currency_name","아데나"))],"land_id":int(row.land_id),"price":int(row.price),"currency_id":int(row.get("currency_id",1)),"saved":bool(transition.get("saved",false))}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:

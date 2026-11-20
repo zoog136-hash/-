@@ -471,14 +471,22 @@ func _process_step(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	# Stage times for the phone record (523.699: hud_main 101 ms/s, no split).
+	var stage: int=FRAME_HITCH.now()
 	if _joystick_view!=null:_joystick_view.refresh()
+	stage=FRAME_HITCH.detail_next("hud.joystick",stage)
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
+	stage=FRAME_HITCH.detail_next("hud.blessing",stage)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.dungeon",stage)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.workspace",stage)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
+	stage=FRAME_HITCH.detail_next("hud.vitals_quickslots",stage)
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()
+	stage=FRAME_HITCH.detail_next("hud.messages",stage)
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
@@ -493,6 +501,7 @@ func _process_step(_delta: float) -> void:
 	# A single bag tap keeps TWILIGHT's own floating item name (the bag's
 	# item_name_hint over the tapped slot, see inventory_name_hint_context);
 	# the original ToolTip header is not mounted for it.
+	stage=FRAME_HITCH.detail_next("hud.inventory",stage)
 	if _inventory_name_view!=null and _inventory_name_view.is_open():_inventory_name_view.close()
 	if _inventory_lock_view!=null and not _source_input_captured(hud):
 		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
@@ -505,9 +514,12 @@ func _process_step(_delta: float) -> void:
 	if _enhance_action!=null:
 		_enhance_action_result=_enhance_action.refresh()
 		if not _enhance_action_result.get("ok",false):_enhance_action=null
+	stage=FRAME_HITCH.detail_next("hud.lock_enhance",stage)
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
+	stage=FRAME_HITCH.detail_next("hud.pickup",stage)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
+	FRAME_HITCH.detail("hud.target",stage)
 	if not model.get("ok",false):
 		_target_result=model
 		return
@@ -1162,6 +1174,7 @@ const FEATURE_WINDOWS={
 	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
 	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
+	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

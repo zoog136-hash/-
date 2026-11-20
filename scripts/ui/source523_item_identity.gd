@@ -53,7 +53,53 @@ static func item_class_id(record: Dictionary, key: String = "") -> int:
 	for suffix: String in BLESS_SUFFIXES:
 		if name.ends_with(suffix): name = name.trim_suffix(suffix)
 	if name.is_empty(): return -1
-	return by_name(name)
+	var named: int = by_name(name)
+	if named > 0: return named
+	# A legacy catalog row (inven) whose publisher sourceId is the ItemClass.ID
+	# of an item with exactly this original name: several original rows share
+	# the name (bless/engrave variants with their own pictures), so the name
+	# alone was ambiguous; the row's own ID picks its picture.
+	var source_id: String = str(record.get("sourceId", ""))
+	if source_id.is_valid_int() and int(source_id) > 0 and name == original_name(int(source_id)): return int(source_id)
+	return -1
+
+## Bag names that are not an original Korean item name (2026-11-20 phone
+## report: empty slots). data/ui/item_icon_identity.json (tools/
+## build_item_icon_identity.py) gives each one original ItemClass whose
+## original icon is shown: "exact" = the legacy catalog row's own original
+## item (publisher sourceId = ItemClass.ID, same icon file), "approx" =
+## TWILIGHT 근사 for TWILIGHT-local items (original icon of an original item
+## of the same kind). Icon only: name, grade and gameplay are unchanged.
+const ICON_IDENTITY_PATH := "res://data/ui/item_icon_identity.json"
+static var _icon_identity: Dictionary = {}
+static var _icon_identity_loaded: bool = false
+
+static func _bare_name(record: Dictionary, key: String) -> String:
+	var name: String = plain_text(key if not key.is_empty() else str(record.get("name", "")))
+	for suffix: String in BLESS_SUFFIXES:
+		if name.ends_with(suffix): name = name.trim_suffix(suffix)
+	return name
+
+## {item_class_id, icon_file, basis, approximation} or {} when the entry has
+## an original identity of its own or no mapping.
+static func icon_identity(record: Dictionary, key: String = "") -> Dictionary:
+	var name: String = _bare_name(record, key)
+	if name.is_empty(): return {}
+	if not _icon_identity_loaded:
+		_icon_identity_loaded = true
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ICON_IDENTITY_PATH)) if FileAccess.file_exists(ICON_IDENTITY_PATH) else null
+		if parsed is Dictionary and parsed.get("schema") == "twilight-item-icon-identity-v1":
+			for group: String in ["exact", "approx"]:
+				var entries: Variant = parsed.get(group)
+				if not entries is Dictionary: continue
+				for entry_name: Variant in entries:
+					var entry: Variant = entries[entry_name]
+					if entry is Dictionary and _integer(entry.get("item_class_id")) and entry.get("icon_file") is String:
+						_icon_identity[str(entry_name)] = {"item_class_id":int(entry.item_class_id),"icon_file":str(entry.icon_file),"basis":str(entry.get("basis","")),"approximation":group == "approx",
+							"ground_item_class_id":int(entry.ground_item_class_id) if _integer(entry.get("ground_item_class_id")) else int(entry.item_class_id)}
+	var found: Variant = _icon_identity.get(name)
+	if not found is Dictionary or item_class_id(record, key) > 0: return {}
+	return (found as Dictionary).duplicate()
 
 ## Unique original ItemClass for an exact original Korean item name. Several
 ## rows with one name count only when they share one IconID (the same
@@ -162,15 +208,43 @@ static func particles(text: String, word: String) -> String:
 ## generic notice (UITextData_Korean 16572 "지금은 이용할 수 없습니다.")
 ## instead; debug and twilight_dev_ui builds keep the full text.
 const UNAVAILABLE := 16572
-const DEVELOPER_WORDS: Array[String] = ["검증", "검수", "미설치", "연결 대기", "미연결", "영수증", "소유자", "owner", "TWILIGHT", "source", "SHA", "ABI", "DTO", "원문", "정의 미등록", "입력 확인"]
+const DEVELOPER_WORDS: Array[String] = ["검증", "검수", "미설치", "연결 대기", "미연결", "영수증", "소유자", "owner", "TWILIGHT", "source", "SHA", "ABI", "DTO", "원문", "정의 미등록", "입력 확인", "원본#", "UI 팩", "정의 ZIP", "원본 팩", "리소스 팩"]
+## Build/version tags inside ordinary text ("원본523 제작 · 장검"): release
+## screens drop the tag and keep the sentence.
+const BUILD_TAG := "(원본|최신|현재)\\s?523\\s*(·\\s*)?|\\b(patch|current|client)523\\b"
+## "523" naming the data version (not a number such as damage 523).
+const VERSION_WORD := "(?<![0-9])523 ?(아덴|원본|리소스|캐릭터|지도|팩|UI|표|정의|이전|교체|데이터|SP2|기준)"
+
+static var _version_word: RegEx = null
+static var _build_tag: RegEx = null
 
 static func developer_wording(text: String) -> bool:
 	for word: String in DEVELOPER_WORDS:
 		if text.contains(word): return true
-	return false
+	if not text.contains("523"): return false
+	if _version_word == null: _version_word = RegEx.create_from_string(VERSION_WORD)
+	return _version_word.search(text) != null
+
+static func strip_build_tags(text: String) -> String:
+	if not text.contains("523"): return text
+	if _build_tag == null: _build_tag = RegEx.create_from_string(BUILD_TAG)
+	var value: String = _build_tag.sub(text, "", true).strip_edges()
+	while value.begins_with("·"): value = value.trim_prefix("·").strip_edges()
+	while value.ends_with("·"): value = value.trim_suffix("·").strip_edges()
+	return value
+
+## Secondary text (window subtitles, notes): developer wording disappears on
+## release screens instead of becoming a notice.
+static func screen_note(text: String, developer: bool = preload("res://scripts/boot/build_flags.gd").developer_ui()) -> String:
+	var value: String = clean_message(text)
+	if developer: return value
+	value = strip_build_tags(value)
+	return "" if developer_wording(value) else value
 
 static func screen_text(text: String, developer: bool = preload("res://scripts/boot/build_flags.gd").developer_ui()) -> String:
 	var value: String = clean_message(text)
-	if developer or not developer_wording(value): return value
+	if developer: return value
+	value = strip_build_tags(value)
+	if not developer_wording(value): return value
 	var notice: String = "" if SOURCE.not_installed() else str(SOURCE.row("UITextData_Korean", UNAVAILABLE).get("Description", "")).strip_edges()
 	return notice if not notice.is_empty() else "지금은 이용할 수 없습니다."

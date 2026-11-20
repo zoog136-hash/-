@@ -50,9 +50,8 @@ NODE_SCOPES = [
     ("UI/ToolTip/ToolTip_HudType_Right.csb", [37228, 37860, 37284, 36120, 36708, 36176, 44536, 44160, 956]),
     ("UI/ToolTipScene.csb", [1012]),
     ("UI/Main/Hud_CharInfo.csb", [46576, 40620, 37172, 35464, 35528, 20552, 20060, 39796, 34940, 18508, 18556, 15324, 15372]),
-    # World map (source_main_map_bindings.build_map_scene): row, area with the
-    # World image slot 44440 (pixels come from the 523 image pack), Map_All, MapScene.
-    ("UI/Map/Map_Tab_Area.csb", [44440, 37316]),
+    # World map (source_main_map_bindings.build_map_scene): MapScene. The
+    # area tab itself is a whole scope (WHOLE_SCOPES).
     ("UI/MapScene.csb", [132]),
 ]
 # Clan_Slot_Join_Donate_Item Sp_IconSample 4788: the weekly donation reward's
@@ -110,6 +109,20 @@ WHOLE_SCOPES = [
     # star (Btn_CheckBox) neither window connects; the world map's
     # 7440/4508/7492/4560 scope stays covered (Android world-map contract).
     ("UI/Map/Map_List_Button.csb", [1784]),
+    # Map_Tab_Area whole (source_main_map_bindings + source_main_map_area_tab):
+    # the World image slot 44440 (pixels from the 523 image pack), the area
+    # list ListView_Button with its Map_List_Button rows, the 필드/던전/마을/
+    # 거점 filters, the 텔레포트 비용 / 이동하기 panel and the area title. The
+    # bookmark list toggles, the NPC filters and zoom are mounted inert.
+    ("UI/Map/Map_Tab_Area.csb", []),
+    # 지역 정보 (Map_All Btn_AreaInfo -> MapInfoScene, source_main_map_area_info):
+    # Map_Popup_AreaInfo without its two ProjectNodes whose fileName is empty
+    # in the 523 client (504, 268); its monster / info / drop rows whole.
+    ("UI/Map/Map_Popup_AreaInfo_List_Button.csb", []),
+    ("UI/Map/Map_Popup_AreaInfo_List_MonterInfo.csb", []),
+    ("UI/Map/Map_Popup_AreaInfo_List_DropItem.csb", []),
+    ("UI/Map/Map_Popup_AreaInfo.csb", [504, 268]),
+    ("UI/MapInfoScene.csb", []),
     # Map_All: the world map (source_main_map_bindings, Map_Tab_Area) and the
     # teleport tab (source_main_teleport_window, Map_Tab_Teleport) with the
     # frame and tab bar; the world / dungeon / siege tabs and the skill slots
@@ -171,7 +184,7 @@ def code_members(repo: Path) -> list[str]:
     return sorted(found)
 
 
-def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
+def build(source_index: Path, output: Path, repo: Path = REPO, extra_members: list[str] | None = None) -> dict:
     index = json.loads(source_index.read_text())
     files = index.get("source_files", index)
     # Completeness probes share read caches with each other, not with the
@@ -182,7 +195,9 @@ def build(source_index: Path, output: Path, repo: Path = REPO) -> dict:
         prober.node_scene(member, whole_scope_offsets(prober, member, excluded))
     scoped = {member for member, _ in NODE_SCOPES} | {member for member, _ in WHOLE_SCOPES}
     entries, skipped = [], {}
-    for member in code_members(repo):
+    # Scenes named by code not yet on this checkout (open PRs), so one pack
+    # serves every pending change; packed by the same closure rule.
+    for member in sorted(set(code_members(repo)) | set(extra_members or [])):
         if member in scoped or member in LAYOUT_ONLY:
             continue
         if member not in files:
@@ -218,10 +233,12 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--source-index", type=Path, required=True, help="client523_ui_inputs.py source-index.json")
     parser.add_argument("--output", type=Path, required=True, help="new private directory")
+    parser.add_argument("--extra-members", type=Path, help="text file: one UI/...csb per line named by code not yet on this checkout")
     args = parser.parse_args(argv)
     if args.output.resolve().is_relative_to(REPO):
         parser.error("Original UI packs must stay outside the public checkout")
-    receipt = build(args.source_index, args.output)
+    extra = [line.strip() for line in args.extra_members.read_text().splitlines() if line.strip()] if args.extra_members else []
+    receipt = build(args.source_index, args.output, extra_members=extra)
     print(json.dumps(receipt, ensure_ascii=False))
     return 0 if receipt["blockers"] == 0 else 1
 

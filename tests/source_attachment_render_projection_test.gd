@@ -82,6 +82,13 @@ func run() -> void:
 	check(child._layers[0].get_meta("source_compositor",{}).get("flags",-1) == 1,"effective shadow flags retain injected1")
 	check(child.get_parent() == preview and child.z_index == -1,"ownership and existing layer order retained")
 	check(child._reference_attachment_parent.has("parent_draw_attributes") and child._reference_attachment_parent.has("parent_draw_attributes_unresolved") and child._reference_attachment_parent.parent_draw_attributes.is_empty() and not child._reference_attachment_parent.parent_draw_attributes_unresolved,"resolved absent parent104 is carried to child")
+	child._abort_reference_source({"ok":false,"error":"fixture member temporarily unavailable"})
+	check(preview.advance_reference_source(0,"idle",0) and preview._layers[0].visible,"a failed shadow still keeps the parent body")
+	check(preview._reference_source_children.is_empty() and not is_instance_valid(child) and preview._reference_child_problem.get("error")=="fixture member temporarily unavailable","failed child is discarded and reports its source problem")
+	check(preview.advance_reference_source(0,"idle",0) and preview._reference_child_problem.is_empty() and preview._reference_source_children.size()==1,"the next frame can admit the restored shadow")
+	if not preview._reference_source_children.is_empty():
+		var restored: Preview=preview._reference_source_children.values()[0]
+		check(not restored._layers.is_empty() and restored._layers[0].visible and restored.z_index==-1,"restored child draws as a shadow")
 	preview.free()
 	# An inline101 projection explicitly delegates to parent draw context. Its
 	# own metadata is not unresolved source art; strict mode keeps the legacy

@@ -90,7 +90,7 @@ func snapshot(owner: Fixture) -> Array:
 	var result: Array=[]
 	for holder: Node2D in owner._nodes:
 		var layers: Array=[]
-		for child: Sprite2D in holder.get_children():layers.append([child.texture.get_instance_id(),child.position,child.z_index,child.centered,child.modulate,-1 if child.material==null else (child.material as CanvasItemMaterial).blend_mode])
+		for child: Sprite2D in holder.get_children():layers.append([child.texture.get_instance_id(),child.position,child.z_index,child.centered,child.modulate,-1 if child.material==null else preload("res://scripts/animation/source_sp2_compositor.gd").material_blend(child.material)])
 		result.append([holder.position,holder.get_meta("sprite_id"),holder.get_meta("frame"),layers])
 	return result
 func pixels(viewport: SubViewport) -> PackedByteArray:
@@ -146,7 +146,7 @@ func run() -> void:
 	for owner: Fixture in [old.owner,current.owner]:owner._sprites[2].frames[0].layers=[{"fixture_texture":a,"offset":[5,1],"source_attributes":[128]}]
 	refresh_pair(old,current,rows([2,1]))
 	await compare(old,current,"same-ID static record replaced at frame zero")
-	check(current.owner._nodes[0].get_child(0).texture==a and current.owner._nodes[0].get_child(0).material==null,"static replacement clears previous additive material")
+	check(current.owner._nodes[0].get_child(0).texture==a and preload("res://scripts/animation/source_sp2_compositor.gd").material_blend(current.owner._nodes[0].get_child(0).material)==CanvasItemMaterial.BLEND_MODE_MUL,"static replacement replaces previous additive material with attr128 multiply")
 	old.owner._mode="strict";current.owner._mode="strict"
 	refresh_pair(old,current,rows([2,1]))
 	await compare(old,current,"strict mode keeps valid empty holder")

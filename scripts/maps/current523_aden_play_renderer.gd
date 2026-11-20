@@ -43,8 +43,16 @@ const BLOCK_CACHE_LIMIT: int = 32
 ## New margin block images per refresh (blocks on screen always bake at once).
 const MARGIN_BAKES_PER_REFRESH: int = 6
 ## Longest a new on-screen block waits for worker decodes before decoding the
-## rest on the main thread (it shows nothing meanwhile).
-const ON_SCREEN_WAIT_MSEC: int = 250
+## rest on the main thread (it shows nothing meanwhile). 250 ms was too short
+## on the phone: after a teleport three blocks then decoded their atlases on
+## the main thread in one frame (523.699: map.block_commands 2066 ms x3, a
+## 2.1 s freeze). Workers finish well within this; it is only a safety net.
+const ON_SCREEN_WAIT_MSEC: int = 3000
+## On-screen blocks past the wait that may decode on the main thread in one
+## refresh; the rest wait for the next refresh (0.05 s later).
+const LATE_BAKES_PER_REFRESH: int = 1
+## Decoded atlases kept for blocks still waiting to bake (~0.6 MB each).
+const HELD_ATLAS_LIMIT: int = 128
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -202,6 +210,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	_tile_pack = tiles
 	# Atlases are only read to bake ground blocks (see compress_for_gpu).
 	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
+	# Decoded atlases stay until the blocks waiting for them have baked.
+	if "hold_published" in tiles: tiles.set("hold_published", true)
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_drop_chunk_jobs()
@@ -656,9 +666,12 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 	var bins: Dictionary = {}
 	for layer: int in packed:
 		var records: PackedInt64Array = packed[layer]
-		# Integer cell keys and shifts (floor division for negatives too);
-		# almost every 24 px record lies inside one block.
+		if records.is_empty(): continue
+		# Shifts floor-divide negative coordinates too. Adjacent records
+		# often belong to the same 512 px block.
 		var lanes: Dictionary = {}
+		var previous_cell := Vector2i(records[0] >> BLOCK_SHIFT, records[1] >> BLOCK_SHIFT)
+		var lane: Array[int] = _bin_lane(lanes, previous_cell)
 		for index: int in range(0, records.size(), 3):
 			var x: int = records[index]
 			var y: int = records[index + 1]
@@ -666,23 +679,29 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 			var y0: int = y >> BLOCK_SHIFT
 			var x1: int = (x + TILE_PX - 1) >> BLOCK_SHIFT
 			var y1: int = (y + TILE_PX - 1) >> BLOCK_SHIFT
-			var key: int = (x0 << 32) | (y0 & 0xffffffff)
-			var lane: PackedInt32Array = lanes.get(key, PackedInt32Array())
+			var cell := Vector2i(x0, y0)
+			if cell != previous_cell:
+				lane = _bin_lane(lanes, cell)
+				previous_cell = cell
 			lane.append(index)
-			lanes[key] = lane
 			if x1 != x0 or y1 != y0:
 				for bx: int in range(x0, x1 + 1):
 					for by: int in range(y0, y1 + 1):
 						if bx == x0 and by == y0: continue
-						var other: int = (bx << 32) | (by & 0xffffffff)
-						var extra: PackedInt32Array = lanes.get(other, PackedInt32Array())
-						extra.append(index)
-						lanes[other] = extra
-		for key: int in lanes:
-			var cell := Vector2i(key >> 32, (key << 32) >> 32)
+						_bin_lane(lanes, Vector2i(bx, by)).append(index)
+		for cell: Vector2i in lanes:
 			if not bins.has(cell): bins[cell] = {}
-			(bins[cell] as Dictionary)[layer] = lanes[key]
+			(bins[cell] as Dictionary)[layer] = PackedInt32Array(lanes[cell])
 	return bins
+
+
+## Avoid copying the packed buffer on each append while it is stored in the
+## dictionary. Pack each completed lane once before publishing the chunk.
+static func _bin_lane(lanes: Dictionary, cell: Vector2i) -> Array[int]:
+	if not lanes.has(cell):
+		var lane: Array[int] = []
+		lanes[cell] = lane
+	return lanes[cell]
 
 
 static func _block_rect(cell: Vector2i) -> Rect2:
@@ -893,6 +912,7 @@ func _build_frame() -> bool:
 	var margin_bakes: int = 0
 	var screen_ready: Dictionary = {}
 	var screen_waiting: bool = false
+	var late_bakes: int = 0
 	var now_msec: int = Time.get_ticks_msec()
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
@@ -922,10 +942,11 @@ func _build_frame() -> bool:
 				if on_screen and not bool(screen_ready.get(cell, true)):
 					var since: int = int(_screen_wait.get(cell, now_msec))
 					_screen_wait[cell] = since
-					if now_msec - since < ON_SCREEN_WAIT_MSEC:
+					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
 						continue
+					late_bakes += 1
 				_screen_wait.erase(cell)
 				var commands_started: int = FRAME_HITCH.now()
 				var built: Dictionary = _block_commands(cell)
@@ -960,6 +981,10 @@ func _build_frame() -> bool:
 	_frame_atlases = fresh_atlases
 	# Margin blocks still waiting bake on the next periodic refresh.
 	_built_view = Rect2() if partial else view
+	# Every block here is baked (blocks keep their own atlases until drawn):
+	# let go of the decoded atlases held for them. Bounded while blocks wait.
+	if _tile_pack != null and _tile_pack.has_method("release_held") and (not partial or int(_tile_pack.call("held_size")) > HELD_ATLAS_LIMIT):
+		_tile_pack.call("release_held")
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
 		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),

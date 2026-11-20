@@ -102,7 +102,11 @@ static func effect(attributes: Array, selected_mode: String) -> Dictionary:
 	if bits == 8:
 		return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_ADD,"alpha":1.0,"origin":"compat_PC_glowing_description_Godot_add_exact_M_equation_unverified"}
 	if bits == 128:
-		return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_MIX,"alpha":float(data().get("attr128_compat_alpha", 0.5)),"origin":"compat_PC_black_edge_translucent_description_alpha_0_5_host_choice_M_unverified"}
+		# Original attr128 is multiply (restored M 1.10.22.0 kernel 2, "_mu"
+		# sprites). The former MIX alpha0.5 host choice drew these mostly white
+		# layers as a translucent white film over actors. Draw with
+		# source_sp2_compositor.gd blend_material(BLEND_MODE_MUL).
+		return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_MUL,"alpha":1.0,"origin":"M_kernel2_multiply_equation_RGB565_truncation_omitted"}
 	if bits == 0 or bits == 4:
 		return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_MIX,"alpha":1.0,"origin":"compat_standard_RGBA_source_pixels"}
 	return {"enabled":false,"reason":"unmapped_native_attr_preserved"}

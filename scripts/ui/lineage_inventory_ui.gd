@@ -334,6 +334,13 @@ func _ref_instance_id(reference: String) -> String:
 	var pieces: PackedStringArray = reference.split("@@@", false, 1)
 	return pieces[1] if pieces.size() > 1 else ""
 
+## Wallet values without an original ItemClass row or picture: the
+## intangible currencies (source523_shop_runtime.INTANGIBLE_BINDINGS 다이아/
+## 마일리지, shown in the HUD/currency window) and 수호석 points (shown in the
+## guardian window, opened from original 수호석 상자). Like the original they
+## are not bag slots (phone 2026-11-20: empty "10000", "400", "2400" slots).
+const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
+
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
@@ -350,7 +357,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
-		if int(inventory.get(item_name, 0)) <= 0:
+		if int(inventory.get(item_name, 0)) <= 0 or WALLET_ONLY.has(item_name):
 			continue
 		var instance_ids: Array[String] = ids_by_name.get(item_name, [] as Array[String])
 		instance_ids.sort_custom(instance_id_less)
