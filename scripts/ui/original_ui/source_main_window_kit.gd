@@ -337,6 +337,11 @@ func _scroll_to(key: String, value: float) -> void:
 	state.value=clampf(value,float(state.min),0.0)
 	if state.get("axis","y")=="x":(state.content as Node2D).position.x=float(state.value)
 	else:(state.content as Node2D).position.y=float(state.value)
+	_scrolled(key)
+
+## Called after list `key` moved (overridden by windows with virtual lists).
+func _scrolled(_key: String) -> void:
+	pass
 
 ## True while the current press has moved like a list drag (row taps ignore it).
 ## A finger that lands on a row's button still scrolls its list: the native

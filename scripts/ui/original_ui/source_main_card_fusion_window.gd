@@ -16,7 +16,6 @@ extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## The page's own content sits under its Nd_Card_Change node.
 const P="Change_DetailView_Mix/Nd_Card_Change/"
 const MATERIAL_GRADES: Array[String]=["일반","고급","희귀","영웅","전설","신화"]
-const MAX_CARDS: int=150
 var grade: String="고급"
 var filter_grade: String="전체"
 var _owned_records: Array[Dictionary]=[]
@@ -72,8 +71,15 @@ func _collect() -> void:
 				_materials.append({"record":raw,"count":used})
 				remaining-=used
 		var copies: int=(1 if _owned(identity) else 0)+_spare(identity)
-		if copies>0 and (filter_grade=="전체" or current==filter_grade) and _owned_records.size()<MAX_CARDS:_owned_records.append(raw)
-	_owned_records.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:return Cards.GRADES.find(str(a.grade))>Cards.GRADES.find(str(b.grade)))
+		if copies>0 and (filter_grade=="전체" or current==filter_grade):_owned_records.append(raw)
+	# Every owned card of the filter, highest grade first (stable: ties keep
+	# the catalog order); the list builds only the rows in view.
+	var keyed: Array=[]
+	for index: int in range(_owned_records.size()):keyed.append([-Cards.GRADES.find(str(_owned_records[index].get("grade",""))),index])
+	keyed.sort()
+	var ordered: Array[Dictionary]=[]
+	for entry: Array in keyed:ordered.append(_owned_records[int(entry[1])])
+	_owned_records=ordered
 
 func _can_fuse() -> bool:
 	var required: int=int(Cards.FUSION_MATERIALS.get(grade,0))
@@ -141,21 +147,19 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	for record: Dictionary in _owned_records:
 		var card: Dictionary=_card_row(record,str(record.get("grade",""))==grade,Callable(self,"_card_pressed").bind(str(record.get("grade",""))))
 		if not card.is_empty():cards.append(card)
-	var owned: Dictionary=_optional(_fill_card_grid(root,out,P+"Nd_CardList/ListView",cards))
+	var decorate: Callable=func(scene: Node2D,card_out: Dictionary,card: Dictionary) -> bool:return _card_picture(scene,card_out,card.record)
+	var owned: Dictionary=_optional(_fill_card_grid(root,out,P+"Nd_CardList/ListView",cards,decorate))
 	if not owned.get("ok",false):return owned
-	var pictures: int=0
-	for index: int in range((owned.scenes as Array).size()):
-		if _card_picture(owned.scenes[index],owned.outs[index],cards[index].record):pictures+=1
+	var pictures: int=int(owned.get("pictures",0))
 	var registered: Array=[]
 	for entry: Dictionary in _materials:
 		for copy: int in range(int(entry.count)):
 			var card: Dictionary=_card_row(entry.record,false,Callable(self,"_registered_pressed"))
 			if not card.is_empty():registered.append(card)
-	var materials: Dictionary=_optional(_fill_card_grid(root,out,P+"Nd_CardMix/Nd_Card/ListView",registered))
+	var materials: Dictionary=_optional(_fill_card_grid(root,out,P+"Nd_CardMix/Nd_Card/ListView",registered,decorate))
 	if not materials.get("ok",false):return materials
-	for index: int in range((materials.scenes as Array).size()):
-		if _card_picture(materials.scenes[index],materials.outs[index],registered[index].record):pictures+=1
-	return {"ok":true,"category":category,"grade":grade,"filter":filter_grade,"cards":cards.size(),"registered":registered.size(),"pictures":pictures,"can_fuse":_can_fuse(),"available":_available(grade),"required":int(Cards.FUSION_MATERIALS.get(grade,0))}
+	pictures+=int(materials.get("pictures",0))
+	return {"ok":true,"category":category,"grade":grade,"filter":filter_grade,"cards":cards.size(),"built_cards":int(owned.get("built",0)),"registered":registered.size(),"pictures":pictures,"can_fuse":_can_fuse(),"available":_available(grade),"required":int(Cards.FUSION_MATERIALS.get(grade,0))}
 
 func _select_filter(value: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
