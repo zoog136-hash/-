@@ -405,6 +405,15 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 			if not physical_output:
 				for value: Variant in world.item_instances.values():
 					if value is Dictionary and value.get("name")==name:return fail("같은 보유 키의 물리 개체·소비 영수증 소유자 연결 필요 · 상점 잔량 보존")
+		if binding.is_empty() and int(token.unit_id) == 4:
+			# An original 523 item the game owns as a receipted physical stack
+			# (e.g. 지구라트 주화, 고급 상점 주화, 시간 충전석): paid through its
+			# receipts (current523_native_stack.stage_debit) or issued by the
+			# shared 523 supplier, as the NPC 상점 already issued native books.
+			var native: Dictionary = _native_supply_binding(int(token.class_id), 1)
+			if not native.is_empty():
+				if not giving: native["native_debit"] = true
+				return {"ok":true,"binding":native}
 		return {"ok":true,"binding":binding} if not binding.is_empty() else fail("아이템·재화의 실제 인벤토리 연결 미확인")
 	var currency: Dictionary = catalog.currency(int(token.class_id))
 	if currency.is_empty(): return fail("재화 정의 누락")
@@ -460,6 +469,9 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
 		if not resolved.ok: return resolved
 		if resolved.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
+		if resolved.binding.get("native_supply") == true:
+			token["native_supply"] = true
+			token["bless_raw"] = 1
 		goods.append(token)
 	if goods.is_empty(): return fail("지급 상품이 없습니다")
 	var result: Dictionary = {"ok":true,"goods":goods,"source_items":source_items}
@@ -593,7 +605,17 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var gold: int = int(world.gold)
 	var binding: Dictionary = prepared.payment_binding
+	var paid_extra: Dictionary = {}
+	var paid_instances: Variant = null
 	if binding.get("gold", false): gold -= int(prepared.payment.amount)
+	elif binding.get("native_debit") == true:
+		var debit: Dictionary = native_debit(str(binding.name), int(prepared.payment.amount))
+		if not debit.get("ok", false):
+			_busy = false
+			return fail(str(debit.get("reason", "원본 재화 차감 확인 필요")) + " · 구매하지 않았습니다")
+		inventory = debit.overrides.inventory
+		paid_instances = debit.overrides.item_instances
+		paid_extra["consumable_state"] = debit.overrides.consumable_state
 	else:
 		var name: String = str(binding.name)
 		inventory[name] = int(inventory.get(name, 0)) - int(prepared.payment.amount)
@@ -624,11 +646,11 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 		next.orders[order_id]["npc_reset_identity"]=str(prepared.npc_reset_identity)
 	if not next.purchases.has(counter_key): next.purchases[counter_key] = []
 	next.purchases[counter_key].append({"at":_now(),"quantity":quantity})
-	var instances: Dictionary = world.item_instances.duplicate(true)
+	var instances: Dictionary = paid_instances if paid_instances is Dictionary else world.item_instances.duplicate(true)
 	var next_instance: int = int(world.next_item_instance_id)
 	var delivered: bool = false
 	var plan: Dictionary = prepared.get("draw", {})
-	var extra: Dictionary = {}
+	var extra: Dictionary = paid_extra
 	var drawn: Dictionary = {}
 	# A draw is never left in the 보관함 (its result is drawn now, in this save).
 	if not plan.is_empty() and delivery == Delivery.BOX: delivery = Delivery.BAG
@@ -856,6 +878,31 @@ func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
 	if record.is_empty() or D.equipment(record) or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
 	if preload("res://scripts/loot/current523_native_stack.gd").supply_profile(record).is_empty():return {}
 	return {"name":str(record.name),"record":record,"native_supply":true}
+
+## Stages paying `amount` of the receipted original stacks named `name`
+## (oldest physical IDs first; locked stacks are not used): the shared
+## current523_native_stack debit with its use ledger, or the refusal.
+func native_debit(name: String, amount: int) -> Dictionary:
+	var STACK: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var ids: Array = []
+	for uid: Variant in world.item_instances:
+		var entry: Variant = world.item_instances[uid]
+		if entry is Dictionary and entry.get("name") == name and entry.has(STACK.RECEIPT) and not world._item_locked(name, str(uid)): ids.append(str(uid))
+	ids.sort()
+	var left: int = amount
+	var requests: Array = []
+	for uid: String in ids:
+		if left <= 0: break
+		var owned: Dictionary = STACK.proof(world, uid)
+		if owned.is_empty(): return fail("원본 물리 소유·잔량 증명 불일치")
+		var take: int = mini(left, int(owned.remaining))
+		if take < 1: continue
+		requests.append({"physical_id":uid,"quantity":take,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-take,"source_native_stack_receipt":owned.receipt.duplicate(true)})
+		left -= take
+	if left > 0 or requests.is_empty(): return fail("구매 재화가 부족합니다")
+	var staged: Dictionary = STACK.stage_debit(world, requests)
+	if not staged.get("ok", false): return fail(str(staged.get("reason", staged.get("error", "원본 재화 차감 확인 필요"))))
+	return staged
 
 func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionary, next_id: int) -> Dictionary:
 	for token: Dictionary in goods:
