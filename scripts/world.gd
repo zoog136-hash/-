@@ -3986,6 +3986,8 @@ func _ground_drops_snapshot() -> Array:
 func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
+	for returned: Dictionary in ground_loot.recovered_to_bag:
+		hud.append_log("바닥 아이템 회수 · %s %d개를 가방으로 돌려놓았습니다" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(returned.item_name)),int(returned.quantity)])
 
 ## Quest window [모두 받기].
 func claim_all_quests() -> Dictionary:
