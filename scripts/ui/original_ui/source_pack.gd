@@ -235,7 +235,11 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if original==null: return null
 	if cocos_pixels and premultiplied:
 		original=cocos_premultiply(original)
+	# Each new UI frame texture is its own GPU upload: its time and count go
+	# to the phone record (menus open slowly on 523.691; upload cost unknown).
+	var upload_started: int=FRAME_HITCH.now()
 	var result:=ImageTexture.create_from_image(original)
+	FRAME_HITCH.detail("ui.texture_new",upload_started)
 	result.set_meta("cocos_premultiplied",cocos_pixels and premultiplied)
 	_texture_cache.remember(key,result,original.get_data_size())
 	if not shared_key.is_empty():PAGE_CACHE.register_frame(shared_key,result)
