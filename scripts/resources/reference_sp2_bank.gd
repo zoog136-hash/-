@@ -903,7 +903,7 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	var matches: Array = []
 	for item: Variant in evidence:
 		if item is Dictionary and item.get("kind") == kind and integer(item.get("source_sprite_id")) and int(item.source_sprite_id) == sprite: matches.append(item)
-	if matches.size() != 1: return fail("Missing or ambiguous literal layer declaration.")
+	if matches.is_empty() or (matches.size() > 1 and kind != "clothes"): return fail("Missing or ambiguous literal layer declaration.")
 	var item: Dictionary = matches[0]
 	var path: Variant = item.get("declaration_path")
 	if not path is Array or path.is_empty(): return fail("Invalid literal layer declaration path.")
@@ -913,7 +913,9 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 		var candidate: Array = proof.declaration_path
 		if candidate.is_empty() or not candidate[-1] is Dictionary or not integer(candidate[-1].get("sprite_id")): return fail("Invalid source layer declaration identity.")
 		if proof.get("kind") == kind and int(candidate[-1].sprite_id) == sprite: matching_proofs.append(proof)
-	if matching_proofs.size() != 1: return fail("Missing or ambiguous source attribute declaration proof.")
+	if matching_proofs.size() != 1 or matches.size() != 1:
+		if kind != "clothes" or not _legacy_repeated_clothes_proven(record, sprite, matches, matching_proofs):
+			return fail("Missing or ambiguous source attribute declaration proof." if matches.size() == 1 else "Missing or ambiguous literal layer declaration.")
 	var selected_proof: Dictionary = matching_proofs[0]
 	var expected: Array = selected_proof.declaration_path
 	if expected.size() != path.size(): return fail("Layer declaration evidence differs from source proof.")
@@ -937,6 +939,41 @@ func _attributes(record: Dictionary, kind: String, sprite: int) -> Dictionary:
 	var projection: Dictionary = _attribute_projection(record,kind,sprite,path,selected_proof)
 	if not projection.ok: return projection
 	return {"ok":true,"attributes":attributes,"unresolved":unresolved,"declarations":path,"projection":projection.projection}
+
+## Older pinned banks identify the physical sprite in each ordered compact
+## layer. Admit repeated clothes only when distinct literal 105 paths agree
+## on the same attribute metadata. Native DTOs keep their own occurrence checks.
+func _legacy_repeated_clothes_proven(record: Dictionary, sprite: int, evidence: Array, proofs: Array) -> bool:
+	if evidence.size() < 2 or evidence.size() != proofs.size(): return false
+	var roles: Variant = record.get("compact_roles")
+	if not roles is Dictionary or roles.size() != 1: return false
+	var role: Variant = roles.values()[0]
+	if not role is Dictionary or not role.get("layers") is Array: return false
+	var occurrences: int = 0
+	for layer: Variant in role.layers:
+		if layer is Dictionary and layer.get("kind") == "clothes" and layer.get("source_sprite_id") == sprite:
+			occurrences += 1
+	if occurrences != evidence.size(): return false
+	var owner: Variant = evidence[0].declaration_path[0].get("sprite_id") if evidence[0].declaration_path[0] is Dictionary else null
+	var seen_paths: Dictionary = {}
+	for ordinal: int in range(evidence.size()):
+		if evidence[ordinal] != evidence[0] or proofs[ordinal].declaration_path != proofs[0].declaration_path or proofs[ordinal].get("role_policy") != proofs[0].get("role_policy"): return false
+		var edges: Variant = proofs[ordinal].get("edge_path")
+		if not edges is Array or edges.is_empty() or edges.size() > 64: return false
+		var current: Variant = record.source_proof.get("root_sprite_id")
+		if not integer(current, 1): return false
+		var visited: Array[int] = [int(current)]
+		for edge: Variant in edges:
+			if not edge is Dictionary or edge.get("kind") != "clothes" or edge.get("from_sprite_id") != current or not integer(edge.get("target_sprite_id"), 1) or not edge.get("source_reference") is String: return false
+			var target: int = int(edge.target_sprite_id)
+			var reference: PackedStringArray = edge.source_reference.split(" ", false)
+			if reference.size() < 2 or not reference[0].is_valid_int() or int(reference[0]) != reference.size() - 1 or not str(target) in reference.slice(1) or target in visited: return false
+			if not source_actor_admission(target).ok: return false
+			visited.append(target)
+			current = target
+		if current != owner or seen_paths.has(visited): return false
+		seen_paths[visited] = true
+	return true
 
 ## New native DTOs separate requested files, metadata owners and occurrences.
 ## These checks prove a pinned metadata connection, never native execution.
@@ -1241,12 +1278,23 @@ func _build_role(action_id: int, role_actor_id: int, source: Dictionary, contrac
 		var native_bindings: Dictionary = _native_binding_set(source,layer_specs,action_attributes,action,source_role)
 		if not native_bindings.ok: return native_bindings
 	var body_layers: int = 0
+	var legacy_clothes_ids: Dictionary = {}
+	var ordered_legacy_clothes: bool = false
 	for layer: Variant in layer_specs:
 		if not layer is Dictionary: return fail("Invalid compact layer specification.")
 		if layer.get("kind") == "body":
 			body_layers += 1
 			if layer.get("source_sprite_id") != proof.get("body_sprite_id"): return fail("Exact resolved body ID differs from source proof.")
+		elif not native_policy.native and layer.get("kind") == "clothes" and integer(layer.get("source_sprite_id"), 1):
+			var sprite: int = int(layer.source_sprite_id)
+			ordered_legacy_clothes = ordered_legacy_clothes or legacy_clothes_ids.has(sprite)
+			legacy_clothes_ids[sprite] = true
 	if body_layers != 1: return fail("Exact source action requires one body layer.")
+	var legacy_clothes_keys: Dictionary[int, String] = {}
+	if ordered_legacy_clothes:
+		for ordinal: int in range(layer_specs.size()):
+			if layer_specs[ordinal].get("kind") == "clothes":
+				legacy_clothes_keys[ordinal] = "legacy_clothes:%d:%s:%d" % [role_actor_id, source.action_key, ordinal]
 	var expanded: Array = []
 	var total_ticks: int = 0
 	for token: Variant in tokens:
@@ -1310,6 +1358,8 @@ func _build_role(action_id: int, role_actor_id: int, source: Dictionary, contrac
 				# that copy so immutable shared proofs retain their ownership too.
 				var converted_layer: Dictionary = layer if native_policy.native else layer.duplicate(true)
 				converted_layer.merge({"path":"raw/"+member,"texture_key":"%s:%d:%d" % [member,int(layer.group_bit),int(layer.frame_index)],"offset":[picture.offset.x,picture.offset.y],"layer_id":int(layer.source_sprite_id),"source_attributes":attributes.attributes,"source_attribute_declarations":attributes.declarations,"source_attributes_unresolved":attributes.unresolved,"source_attribute_projection":attributes.projection,"blend_status":"source_attributes_preserved_M_equation_unverified","frame_provenance":picture.provenance})
+				if ordered_legacy_clothes and layer.kind == "clothes":
+					converted_layer["source_layer_instance_key"] = legacy_clothes_keys[layer_index]
 				if not reference_binding.instances.is_empty():
 					converted_layer["source_reference_instances"] = reference_binding.instances
 					converted_layer.frame_provenance["source_reference_instances"] = reference_binding.instances.duplicate(true)

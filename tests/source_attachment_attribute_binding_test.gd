@@ -7,6 +7,7 @@ const PHYSICAL_BODY: int = ACTOR + 100
 const PHYSICAL_CLOTHES: int = ACTOR + 102
 const ROUTED_BINDINGS: Dictionary = {"idle":0,"alternate":3}
 const ROUTED_LOOPS: Dictionary = {"idle":true,"alternate":false}
+const LAYOUT = preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
 
 class MetadataBank:
 	extends "res://scripts/resources/reference_sp2_bank.gd"
@@ -70,6 +71,27 @@ func mutate(source: Dictionary, mutation: String) -> void:
 		"malformed_own": source.source_layer_declarations[0].declaration_path[0].literal_attribute_directives[0].body = "8 128"
 		"malformed_alias": source.source_layer_declarations[0].declaration_path[-1].literal_attribute_directives[0].body = "not own decimal"
 		"absent_own": source.source_layer_declarations[0].declaration_path[0].literal_attribute_directives = []
+	if mutation.begins_with("repeated_clothes"):
+		var specs: Array = source.compact_roles["source_action:0"].layers
+		specs.append(specs[-1].duplicate(true))
+		for frames: Array in source.actor.roles["source_action:0"].directions:
+			for frame: Dictionary in frames: frame.layers.append(frame.layers[-1].duplicate(true))
+		var evidence: Array = source.source_layer_declarations
+		var proofs: Array = source.source_proof.declarations
+		evidence.append(evidence[-1].duplicate(true))
+		proofs.append(proofs[-1].duplicate(true))
+		if mutation != "repeated_clothes_same_path":
+			var intermediate: int = ACTOR + 7
+			proofs[-1].edge_path = [
+				{"kind":"clothes","from_sprite_id":ACTOR,"target_sprite_id":intermediate,"source_reference":"1 %d" % intermediate},
+				{"kind":"clothes","from_sprite_id":intermediate,"target_sprite_id":ACTOR+2,"source_reference":"1 %d" % (ACTOR+2)},
+			]
+		if mutation == "repeated_clothes_disagree":
+			evidence[-1].declaration_path[0].literal_attribute_directives[0].body = "16"
+		if mutation == "repeated_clothes_wrong_reference":
+			proofs[-1].edge_path[0].source_reference = "1 %d" % ACTOR
+		if mutation == "repeated_clothes_wrong_count":
+			evidence.pop_back()
 
 func metadata_fixture(directory: String, mutation: String = "") -> Dictionary:
 	var actors: Dictionary = {}
@@ -139,6 +161,17 @@ func run() -> void:
 	for mutation: String in ["wrong_body_owner","wrong_clothes_owner","bad_alias_link","ambiguous_physical_proof","ambiguous_physical_evidence","bad_pin"]:
 		var rejected: Dictionary = load_metadata(MetadataBank.new(),metadata_fixture(scratch.path_join(mutation),mutation))
 		check(not rejected.get("ok",true),"reject mismatched own/physical proof: " + mutation)
+	var repeated: Dictionary = load_metadata(MetadataBank.new(),metadata_fixture(scratch.path_join("repeated_clothes"),"repeated_clothes"))
+	check(repeated.get("ok",false),"distinct pinned 105 paths may share one identical clothes declaration")
+	if repeated.get("ok",false):
+		var effects: Array = repeated.tracks.idle.directions[0][0].effect_layers
+		check(effects.size() == 2 and LAYOUT.effect_node_key(effects[0]) != LAYOUT.effect_node_key(effects[1]),"same physical sprite has two separate draw identities")
+		check(effects[0].texture_key == effects[1].texture_key and projection(effects[0]) == projection(effects[1]),"the two occurrences share texture and attribute identity")
+		var other_effects: Array = repeated.tracks.idle.directions[7][-1].effect_layers
+		check(LAYOUT.effect_node_key(effects[0]) == LAYOUT.effect_node_key(other_effects[0]) and LAYOUT.effect_node_key(effects[1]) == LAYOUT.effect_node_key(other_effects[1]),"ordered draw identities remain stable across frames and directions")
+	for mutation: String in ["repeated_clothes_same_path","repeated_clothes_disagree","repeated_clothes_wrong_reference","repeated_clothes_wrong_count"]:
+		var rejected: Dictionary = load_metadata(MetadataBank.new(),metadata_fixture(scratch.path_join(mutation),mutation))
+		check(not rejected.get("ok",true),"reject unproven repeats: " + mutation)
 	for mutation: String in ["malformed_own","malformed_alias","absent_own"]:
 		var result: Dictionary = load_metadata(MetadataBank.new(),metadata_fixture(scratch.path_join(mutation),mutation))
 		check(result.get("ok",false),"keep raw legacy metadata available: " + mutation)
