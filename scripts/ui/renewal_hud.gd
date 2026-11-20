@@ -2654,8 +2654,10 @@ func _refresh_card_controls() -> void:
 		return
 	var category: String = catalog_category
 	card_controls.visible = CARD_RULES.CATEGORIES.has(category)
-	card_draw_button.visible=card_controls.visible and playtest_tools_enabled()
-	card_reveal_preview.visible=card_controls.visible and playtest_tools_enabled()
+	# Free test draws are review tools: debug/twilight_dev_ui builds only
+	# (2026-11-20). The playtest card collection itself is unchanged.
+	card_draw_button.visible=card_controls.visible and developer_tools_visible()
+	card_reveal_preview.visible=card_controls.visible and developer_tools_visible()
 	if not card_controls.visible:
 		return
 	var all_owned: Dictionary = card_collection_state.get("owned", {}) as Dictionary
@@ -2695,7 +2697,7 @@ func _refresh_card_controls() -> void:
 	card_fusion_button.disabled = available < required
 
 func _request_card_pack_draw() -> void:
-	if playtest_tools_enabled() and CARD_RULES.CATEGORIES.has(catalog_category):
+	if developer_tools_visible() and CARD_RULES.CATEGORIES.has(catalog_category):
 		card_pack_draw_requested.emit(catalog_category)
 
 func _request_card_fusion() -> void:
@@ -3426,6 +3428,14 @@ func refresh_normal_card_collections() -> void:
 
 func open_equipment_collections() -> void:
 	_open_window("equipment_collections","장비 컬렉션","등록 장비 소모 · 요구 강화 일치 · 각인 구분 없음")
+	# The original 523 아이템 컬렉션 window (ItemBook tables, world.item_book523);
+	# the TWILIGHT guide-data view without the original tables or UI pack.
+	if _open_original_feature("item_book"):return
+	open_legacy_equipment_collections()
+
+## The TWILIGHT guide-data 장비 컬렉션 view (447 collections, equipment_collection_runtime).
+func open_legacy_equipment_collections() -> void:
+	_open_window("equipment_collections","장비 컬렉션","등록 장비 소모 · 요구 강화 일치 · 각인 구분 없음")
 	var screen := EquipmentCollectionsUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
@@ -3467,8 +3477,9 @@ func _mount_growth_view(section: String) -> Control:
 	screen.configure(self,section)
 	return screen
 
-## The original 523 아이템 컬렉션 window for the 96레벨 증표 컬렉션
-## (source_main_item_book_window); false keeps the growth96 view.
+## The original 523 아이템 컬렉션 window (the original ItemBook tables and
+## the 96레벨 증표 컬렉션, source_main_item_book_window); false keeps the
+## growth96 view.
 func open_item_book() -> bool:
 	_open_window("item_book","아이템 컬렉션","")
 	if _open_original_feature("item_book"):return true
