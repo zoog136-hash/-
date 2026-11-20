@@ -224,6 +224,16 @@ var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
+## HUD publish domains. A transaction names what it changed; only HP/MP/
+## EXP/gold bars (HUD_VITALS) and bag counts/weight/quick items (HUD_ITEMS)
+## have their own light publish. Anything else (equipment, buffs, cards,
+## transform, combination, level, load) is the full _update_hud.
+const HUD_VITALS: int = 1
+const HUD_ITEMS: int = 2
+const HUD_FULL: int = 1 << 30
+## Publish counters: full HUD rebuilds (each recalculates every derived stat),
+## light vitals/items publishes, and derived-stat snapshots.
+var hud_publish_counts: Dictionary = {"full":0,"vitals":0,"items":0,"stat_snapshots":0,"speed_refreshes":0}
 const PRESENTATION = preload("res://scripts/animation/presentation_preferences.gd")
 const SOURCE_OPTIMIZATION = preload("res://scripts/animation/source_optimization.gd")
 const LOCAL_PRESENTATION = preload("res://scripts/animation/local_presentation_region.gd")
@@ -3893,17 +3903,20 @@ func _flush_inventory_hud() -> void:
 ## a deep copy for the side panel) on every pickup stalled the frame; publish just
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
+	hud_publish_counts.items += 1
 	_merge_native_stacks()
 	_sync_item_instances()
 	combinations.invalidate();combinations.reconcile()
-	# Carried weight feeds the encumbrance movement multiplier.
-	_refresh_speed_modifiers()
+	var weight: int = _inventory_total_weight()
+	var capacity: int = _carrying_capacity()
+	var encumbrance: float = ITEM_OPTIONS.encumbrance_multiplier(weight, capacity)
+	# Carried weight feeds the encumbrance movement multiplier; the bag changes
+	# nothing else of the speeds (I09), so the same multiplier needs no refresh.
+	if encumbrance != _speed_encumbrance: _refresh_speed_modifiers()
 	var state: Variant = hud.get("character_state")
 	if state is Dictionary:
-		var weight: int = _inventory_total_weight()
-		var capacity: int = _carrying_capacity()
 		(state as Dictionary).merge({"inventory_weight":weight, "current_weight":weight, "carrying_capacity":capacity,
-			"max_weight":capacity, "encumbrance_multiplier":ITEM_OPTIONS.encumbrance_multiplier(weight, capacity),
+			"max_weight":capacity, "encumbrance_multiplier":encumbrance,
 			"item_instances":item_instances}, true)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
@@ -6394,10 +6407,11 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	var buffs_before: int=player_npc_buff_signature()
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name)
 	if native_stack.get("handled",false):
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
-		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		if native_stack.get("ok",false):hud.refresh_inventory(inventory);publish_hud(native_use_hud_domains(native_stack,buffs_before))
 		return
 	var native: Dictionary=_find_catalog_item_record(item_name)
 	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==233:
@@ -6518,7 +6532,30 @@ func _refresh_after_clan_change() -> void:
 	if hud != null and hud.has_method("refresh_inventory"): hud.refresh_inventory(inventory)
 	_update_hud()
 
+## Publishes the HUD for `domains` (HUD_* bits). Vitals/items only take the
+## light paths; any other bit rebuilds everything (_update_hud).
+func publish_hud(domains: int) -> void:
+	if domains & ~(HUD_VITALS | HUD_ITEMS) != 0 or domains == 0:
+		_update_hud()
+		return
+	if domains & HUD_ITEMS: _refresh_inventory_hud()
+	if domains & HUD_VITALS:
+		_refresh_combat_hud()
+		_update_ain_hud()
+
+## Identity of the NPC-cast buffs/debuffs on the player: healing can erase
+## some (IsEraseOnHealed), which changes stats and needs the full publish.
+## What a committed native-stack use changed: an HP/MP potion only its
+## vitals and the bag (unless healing erased a buff); anything else is full.
+func native_use_hud_domains(result: Dictionary, buffs_before: int) -> int:
+	if str(result.get("effect_kind","")) in ["hp","mp"] and player_npc_buff_signature()==buffs_before:return HUD_VITALS | HUD_ITEMS
+	return HUD_FULL
+
+func player_npc_buff_signature() -> int:
+	return hash(patch523_npc_spells.player_buffs.keys())
+
 func _update_hud() -> void:
+	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
 		title_badge.add_theme_color_override("font_color",titles.personal.display_color())
@@ -6588,6 +6625,7 @@ func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
 	# publish fresh limits through _update_hud; real damage still queries live stats.
 	# HP-only changes must not queue an equipment/character/inventory rebuild.
+	hud_publish_counts.vitals += 1
 	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
 	hud.character_state["gold"] = gold
@@ -10551,11 +10589,19 @@ func _effective_attack_speed_multiplier_uncached() -> float:
 func _normal_attack_interval() -> float:
 	return clampf(0.72 / _effective_attack_speed_multiplier(), 0.12, 1.50)
 
+## The encumbrance multiplier the player's speeds were last set with (NAN:
+## unknown); a bag-only publish with the same multiplier skips the refresh.
+var _speed_encumbrance: float = NAN
+
 func _refresh_speed_modifiers() -> void:
 	if player == null:
 		return
+	hud_publish_counts.speed_refreshes += 1
+	_stat_memo_begin()
 	player.set_source_weapon_visual(_current_weapon_type())
 	player.set_equipment_speed_multipliers(_effective_move_speed_multiplier(), _effective_attack_speed_multiplier())
+	_speed_encumbrance = _inventory_encumbrance_multiplier()
+	_stat_memo_end()
 
 func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	var delta: int = value - baseline
@@ -10975,6 +11021,7 @@ func _physical_damage_after_reduction(raw_damage: int) -> int:
 	return PHYSICAL_RESOLUTION.physical_after_flat_reduction(raw_damage,_damage_reduction_stat(),_active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
+	hud_publish_counts.stat_snapshots += 1
 	return {
 		"str": _effective_attribute("STR"),
 		"dex": _effective_attribute("DEX"),

@@ -308,12 +308,17 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	var buffs_before: int=world.player_npc_buff_signature() if world.has_method("player_npc_buff_signature") else 0
 	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
 		if stack.get("silent",false):return true # The owner shows its own chooser or message.
 		if stack.get("requires_original_selection",false) and open_owned_original_selection(item_name,stack):return true
 		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
-		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
+		if stack.get("ok",false):
+			world.hud.refresh_inventory(world.inventory)
+			# An HP/MP potion publishes its vitals and the bag only (B09/I09).
+			if world.has_method("publish_hud"):world.publish_hud(world.native_use_hud_domains(stack,buffs_before))
+			else:world._update_hud()
 		return true
 	var native: Dictionary=world.option_awakening.use_source_awakening_item(item_name,selected_instance)
 	if native.get("handled",false):
