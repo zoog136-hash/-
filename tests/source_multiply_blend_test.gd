@@ -48,6 +48,8 @@ func run() -> void:
 	var material: Material = COMPOSITOR.blend_material(CanvasItemMaterial.BLEND_MODE_MUL)
 	check(material is ShaderMaterial and material == COMPOSITOR.multiply_material(), "multiply uses the shared multiply material")
 	check(COMPOSITOR.material_blend(material) == CanvasItemMaterial.BLEND_MODE_MUL, "multiply material reports BLEND_MODE_MUL")
+	var own: ShaderMaterial = COMPOSITOR.new_multiply_material()
+	check(own != material and own.shader == (material as ShaderMaterial).shader and COMPOSITOR.material_blend(own) == CanvasItemMaterial.BLEND_MODE_MUL, "per-node multiply materials share the shader")
 	var code: String = (material as ShaderMaterial).shader.code
 	check("blend_mul" in code and not "hint_screen_texture" in code and not "SCREEN_" in code, "multiply reads no screen copy")
 	check(COMPOSITOR.blend_material(CanvasItemMaterial.BLEND_MODE_ADD) is CanvasItemMaterial and COMPOSITOR.material_blend(COMPOSITOR.blend_material(CanvasItemMaterial.BLEND_MODE_ADD)) == CanvasItemMaterial.BLEND_MODE_ADD, "add stays CanvasItemMaterial")

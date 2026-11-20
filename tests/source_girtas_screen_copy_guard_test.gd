@@ -37,7 +37,7 @@ func run() -> void:
 		var node: Sprite2D = fallback._effect_nodes[id]
 		var style: Dictionary = POLICY.effect(["8"] if id == 22260 else ["128"], "compatible")
 		# attr128 draws with the copy-free multiply material (no screen texture).
-		check(node.material is CanvasItemMaterial or node.material == COMPOSITOR.multiply_material(), "fallback uses existing policy material %d" % id)
+		check(node.material is CanvasItemMaterial or (node.material is ShaderMaterial and (node.material as ShaderMaterial).shader.code == COMPOSITOR.MULTIPLY_SHADER_CODE), "fallback uses existing policy material %d" % id)
 		check(COMPOSITOR.material_blend(node.material) == int(style.blend_mode) and is_equal_approx(node.modulate.a,float(style.alpha)), "fallback preserves policy blend and alpha %d" % id)
 		check(not node.has_meta("observed_backbuffer"), "fallback retains no observed shader ownership %d" % id)
 	fallback.free()

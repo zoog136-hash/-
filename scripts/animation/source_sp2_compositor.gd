@@ -123,15 +123,23 @@ static func fallback_style(layer: Dictionary, body_attributes: Array, body_unres
 ## carries meta source_blend_mode = BLEND_MODE_MUL so capture code can record
 ## it as the multiply blend.
 const MULTIPLY_SHADER_CODE := "shader_type canvas_item;\nrender_mode unshaded, blend_mul;\nvoid fragment() {\n\tCOLOR = vec4(mix(vec3(1.0), COLOR.rgb, COLOR.a), 1.0);\n}\n"
+static var _multiply_shader: Shader = null
 static var _multiply_material: ShaderMaterial = null
+## The shared read-only multiply material.
 static func multiply_material() -> ShaderMaterial:
-	if _multiply_material == null:
-		var shader := Shader.new()
-		shader.code = MULTIPLY_SHADER_CODE
-		_multiply_material = ShaderMaterial.new()
-		_multiply_material.shader = shader
-		_multiply_material.set_meta("source_blend_mode", CanvasItemMaterial.BLEND_MODE_MUL)
+	if _multiply_material == null: _multiply_material = new_multiply_material()
 	return _multiply_material
+
+## A separate multiply material (same shader) for owners that keep one
+## material per node, like CanvasItemMaterial.new() elsewhere.
+static func new_multiply_material() -> ShaderMaterial:
+	if _multiply_shader == null:
+		_multiply_shader = Shader.new()
+		_multiply_shader.code = MULTIPLY_SHADER_CODE
+	var material := ShaderMaterial.new()
+	material.shader = _multiply_shader
+	material.set_meta("source_blend_mode", CanvasItemMaterial.BLEND_MODE_MUL)
+	return material
 
 ## Blend mode a material draws with: CanvasItemMaterial.blend_mode, the
 ## multiply material's BLEND_MODE_MUL, MIX for null, -1 for other shaders.

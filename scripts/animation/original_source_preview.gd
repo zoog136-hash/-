@@ -492,7 +492,14 @@ func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) ->
 		shader_material.set_shader_parameter("screen_operation", id == 22260)
 		effect_node.material = shader_material
 	elif bool(style.get("enabled", false)):
-		effect_node.material = SP2_COMPOSITOR.blend_material(int(style.blend_mode))
+		# One material per attachment node (view-owned, as before); multiply is
+		# the alpha-aware multiply material.
+		if int(style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			effect_node.material = SP2_COMPOSITOR.new_multiply_material()
+		else:
+			var material: CanvasItemMaterial = CanvasItemMaterial.new()
+			material.blend_mode = int(style.blend_mode)
+			effect_node.material = material
 		effect_node.modulate.a = float(style.alpha)
 	effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	effect_node.set_meta("source_layer_id", id)
@@ -521,7 +528,7 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	_source_body_material = null
 	if bool(_source_body_style.get("enabled", false)):
 		if int(_source_body_style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
-			_source_body_material = SP2_COMPOSITOR.multiply_material()
+			_source_body_material = SP2_COMPOSITOR.new_multiply_material()
 		else:
 			var body_material := CanvasItemMaterial.new()
 			body_material.blend_mode = int(_source_body_style.blend_mode)
