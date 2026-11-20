@@ -51,6 +51,8 @@ const ON_SCREEN_WAIT_MSEC: int = 3000
 ## On-screen blocks past the wait that may decode on the main thread in one
 ## refresh; the rest wait for the next refresh (0.05 s later).
 const LATE_BAKES_PER_REFRESH: int = 1
+## Decoded atlases kept for blocks still waiting to bake (~0.6 MB each).
+const HELD_ATLAS_LIMIT: int = 128
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -208,6 +210,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	_tile_pack = tiles
 	# Atlases are only read to bake ground blocks (see compress_for_gpu).
 	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
+	# Decoded atlases stay until the blocks waiting for them have baked.
+	if "hold_published" in tiles: tiles.set("hold_published", true)
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_drop_chunk_jobs()
@@ -977,6 +981,10 @@ func _build_frame() -> bool:
 	_frame_atlases = fresh_atlases
 	# Margin blocks still waiting bake on the next periodic refresh.
 	_built_view = Rect2() if partial else view
+	# Every block here is baked (blocks keep their own atlases until drawn):
+	# let go of the decoded atlases held for them. Bounded while blocks wait.
+	if _tile_pack != null and _tile_pack.has_method("release_held") and (not partial or int(_tile_pack.call("held_size")) > HELD_ATLAS_LIMIT):
+		_tile_pack.call("release_held")
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
 		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
