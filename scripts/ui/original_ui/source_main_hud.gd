@@ -1176,6 +1176,18 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 	MENU_TRACE.end(trace,result.get("ok",false))
 	return result
 
+## --- Original 523 boss overhead mark (source_main_boss_overhead)
+const BossOverhead=preload("res://scripts/ui/original_ui/source_main_boss_overhead.gd")
+
+## The playing original boss mark of NPC class `npc_class_id`, or null when
+## the NPC has none or the UI pack lacks NameCardLayout_BossMonster.
+func boss_overhead(npc_class_id: int) -> Node2D:
+	if _pack==null:return null
+	var node: String=BossOverhead.resource_name(npc_class_id)
+	if node.is_empty():return null
+	var built: Dictionary=BossOverhead.build(_pack,node)
+	return built.scene if built.get("ok",false) else null
+
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.
 func try_open_overlay_window(key: String, args: Array=[]) -> Dictionary:

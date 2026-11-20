@@ -306,8 +306,11 @@ func _observe_source_ground_acquisition(overrides: Dictionary) -> Dictionary:
 	# The item owner has sealed exact original drop membership, physical IDs,
 	# quantities and the removed floor record. Reuse the existing event owner.
 	if busy or save_blocked or not problem.is_empty() or not source.ready() or not _source_configured:return {"ok":true}
-	var before: Variant=world.consumable_service.export_state().get("source_ground_acquisitions",{})
 	var after: Variant=overrides.get("consumable_state",{}).get("source_ground_acquisitions",{})
+	# Pickup receipts are no longer written (save_provenance_trim.gd): nothing
+	# to observe, and no copy of the whole state per pickup.
+	if after is Dictionary and after.is_empty():return {"ok":true}
+	var before: Variant=world.consumable_service.export_state().get("source_ground_acquisitions",{})
 	if not before is Dictionary or not after is Dictionary:return _fail("원본 습득 이벤트 영수증 형식 오류")
 	var next: Dictionary=state.duplicate(true)
 	var changed: bool=false
@@ -755,18 +758,22 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 	if source_id > 0:
 		var counter_key: String = "%s:%d" % [kind,source_id]
 		state.event_counters[counter_key] = int(state.event_counters.get(counter_key,0))+amount
+	# Event progress reads only clock, level, class, region, map, counters and
+	# policies (challenge/events domains' event()); never the full bag/quest
+	# export context() builds for claims (was ~100 ms per kill/pickup).
+	var event_context: Dictionary = _fresh_context(state)
 	if kind in ["kill","item_use","territory_enter","npc_transform","npc_hp","player_death","map_change"] and domains.has("challenge") and domains.challenge.has_method("event"):
 		var event: Dictionary = payload.duplicate(true)
 		event.kind = kind
 		event.event_id = event_id
 		if not event.has("npc_id"): event.npc_id = source_id
-		var response: Dictionary = domains.challenge.event(event,context(),state.domains.challenge)
+		var response: Dictionary = domains.challenge.event(event,event_context,state.domains.challenge)
 		if bool(response.get("ok",false)): state.domains.challenge = response.state
 	if domains.has("events") and domains.events.has_method("event"):
 		var event: Dictionary = payload.duplicate(true)
 		event.kind = kind
 		event.event_id = event_id
-		var response: Dictionary = domains.events.event(event,context(),state.domains.events)
+		var response: Dictionary = domains.events.event(event,event_context,state.domains.events)
 		if bool(response.get("ok",false)): state.domains.events = response.state
 	state.revision = int(state.revision)+1
 
