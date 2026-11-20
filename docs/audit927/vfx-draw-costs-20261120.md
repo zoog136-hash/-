@@ -1,6 +1,6 @@
 # OPT07 / OPT39: reduce combat VFX CPU submission work
 
-Base main cc42973 (including #720). Current frame-delay work elsewhere includes map chunk workers and background saves; this change is limited to the existing combat_vfx drawing node and its frame diagnostics.
+Base main 3a7e2b9 (including #720/#721). Current frame-delay work elsewhere includes map chunk workers and background saves; this change is limited to the existing combat_vfx drawing node and its frame diagnostics.
 
 ## Confirmed code cost
 
@@ -20,7 +20,7 @@ New fixed inclusive detail `vfx.draw` and exclusive CPU section `combat_vfx_draw
 
 ## Verification
 
-Godot 4.7.2: 489 headless checks; 598 checks with Compatibility OpenGL/llvmpipe, including 28 exact full-RGBA comparisons against the previous draw routing. Synthetic corpse textures, rings, impacts and font numbers cover 1/40/160 records, animation ages, translated/rotated/nonuniformly scaled parents and parent movement between draws. Large-coordinate world/local comparisons preserve positions. Impact counters/budgets match. Pool stress emits 3000 records, retains the 160 limit/no child allocation, returns expired records and stops idle processing. Unequal synthetic death-frame durations retain the same phase at low rendering cadence.
+Godot 4.7.2: 489 headless checks; 599 checks with Compatibility OpenGL/llvmpipe, including 28 exact full-RGBA comparisons against the previous draw routing. Synthetic corpse textures, rings, impacts and font numbers cover 1/40/160 records, animation ages, translated/rotated/nonuniformly scaled parents and parent movement between draws. Large-coordinate world/local comparisons preserve positions. Impact counters/budgets match. Pool stress emits 3000 records, retains the 160 limit/no child allocation, returns expired records and stops idle processing. Unequal synthetic death-frame durations retain the same phase at low rendering cadence.
 
 The existing projectile lifecycle check also passes (`logical_hits=256 visual_cap=64 reuse_cap=128`), as does frame logging (26 checks), clean import, Python staging tests (14), and the tracked-resource guard. The new regression is registered in core and pixel CI without removing any existing check.
 
