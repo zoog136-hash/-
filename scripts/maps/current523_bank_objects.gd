@@ -165,7 +165,7 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 		var sprite: Dictionary = entry[1]
 		var key: String = entry[2]
 		var node: Node2D = by_key.get(key) as Node2D if claimed.has(key) else null
-		var same: bool = node != null and is_same(node.get_meta("shown_sprite", null), sprite) and str(node.get_meta("shown_mode", "")) == _mode
+		var same: bool = node != null and node.has_meta("shown_sprite") and is_same(node.get_meta("shown_sprite"), sprite) and str(node.get_meta("shown_mode", "")) == _mode
 		if node != null:
 			reused += 1
 		elif pool_at < pool.size():
