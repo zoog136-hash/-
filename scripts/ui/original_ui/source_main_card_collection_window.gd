@@ -22,7 +22,9 @@ const ROW="UI/Change/Change_List_Collection.csb"
 const EFFECT_ROW="UI/Change/Change_List_Collection_Text.csb"
 const P="Change_CollectionView/"
 const STATES: Array[String]=["전체","진행 중","미완성","완성"]
-const MAX_ROWS: int=60
+const COLLECTION_LIST: String=P+"Nd_Collection/ListView_Button"
+const MEMBER_LIST: String="Panel_Collection/CardListView"
+const ROW_OVERSCAN: int=1
 var focus: String=""
 var grade: String="전체"
 var state: int=0
@@ -31,6 +33,7 @@ var query: String=""
 var effect_key: String=""
 var _search_editor: LineEdit
 var _rows: Array=[]
+var _filtered_rows: Array=[]
 var _records: Dictionary={}
 
 func required_members() -> Array[String]:
@@ -50,6 +53,7 @@ func open(parent: Node, category_name: String, identity: String="") -> Dictionar
 		query=""
 		effect_key=""
 	category=category_name
+	_reset_collection_scroll()
 	focus=identity
 	_records.clear()
 	return open_window(parent)
@@ -74,10 +78,11 @@ func _filtered() -> Array:
 func _spec() -> Dictionary:
 	var runtime: Object=_runtime()
 	_rows=runtime.snapshot(category,focus) if runtime!=null else []
+	_filtered_rows=_filtered()
 	var spec: Dictionary=_frame_spec()
 	spec[P+"ItemBook_Tab_Filter"]={"exclude":true}
 	spec[P+"ItemBook_Popup_Keypad"]={"exclude":true}
-	spec[P+"Nd_Collection/Text_Message"]={"visible":_filtered().is_empty()}
+	spec[P+"Nd_Collection/Text_Message"]={"visible":_filtered_rows.is_empty()}
 	spec[P+"Btn_Sort"]={"activate":Callable(self,"_cycle_state")}
 	spec[P+"Btn_Sort/Text_Sort"]={"role":"source_text","text":STATES[state]}
 	var effect_title: String=_effect_title(effect_key)
@@ -130,23 +135,109 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var grades: Dictionary=_optional(_fill_list(root,out,P+"Nd_Tab/ListView_Class",sidebar))
 	if not grades.get("ok",false):return grades
 	# Collection rows.
-	var shown: Array=_filtered()
-	var rows: Array=[]
-	for index: int in range(mini(shown.size(),MAX_ROWS)):rows.append(_collection_row(shown[index]))
-	var listed: Dictionary=_optional(_fill_list(root,out,P+"Nd_Collection/ListView_Button",rows))
+	var listed: Dictionary=_optional(_mount_collection_rows(root,out))
 	if not listed.get("ok",false):return listed
-	var cards: int=0
-	var pictures: int=0
-	for index: int in range((listed.scenes as Array).size()):
-		var placed: Dictionary=_fill_cards(listed.scenes[index],listed.outs[index],shown[index])
-		if not placed.get("ok",false):return placed
-		cards+=int(placed.cards)
-		pictures+=int(placed.pictures)
 	# Effect totals: current (completed) | possible (every available row).
 	var effects: Array=_effect_rows()
 	var lines: Dictionary=_optional(_fill_list(root,out,P+"Nd_Info_Set/Nd_Info_Effect/ListView_Effect",effects))
 	if not lines.get("ok",false):return lines
-	return {"ok":true,"category":category,"collections":_rows.size(),"shown":rows.size(),"cards":cards,"card_pictures":pictures,"effects":effects.size(),"grade":grade,"state":STATES[state],"status":showing_status}
+	return {"ok":true,"category":category,"collections":_rows.size(),"shown":int(listed.rows),"built_rows":int(listed.get("built_rows",0)),"cards":int(listed.get("cards",0)),"card_pictures":int(listed.get("pictures",0)),"effects":effects.size(),"grade":grade,"state":STATES[state],"status":showing_status}
+
+func _mount_collection_rows(root: Node2D, out: Dictionary) -> Dictionary:
+	var list: Dictionary=_list(root,out,COLLECTION_LIST)
+	if not list.get("ok",false):return list
+	var geometry: Dictionary=_row_geometry(ROW)
+	var gap: float=float(_node_options(out,COLLECTION_LIST).get("itemMargin",0))
+	var height: float=geometry.size.y
+	var pitch: float=height+gap
+	if height<=0.0 or pitch<=0.0:return _fail("source_collection_row_geometry_invalid")
+	var key: String=list.key
+	var used: float=0.0 if _filtered_rows.is_empty() else float(_filtered_rows.size()-1)*pitch+height
+	_scrolls[key]={"content":list.content,"min":minf(0.0,list.size.y-used),"value":0.0,
+		"collection_rows":_filtered_rows,"built":{},"size":list.size,"geometry":geometry,"pitch":pitch}
+	var synced: Dictionary=_sync_collection_rows(key)
+	if not synced.get("ok",false):return synced
+	var built: Dictionary=_scrolls[key].built
+	var cards: int=0
+	var pictures: int=0
+	for row: Dictionary in built.values():
+		cards+=int(row.cards)
+		pictures+=int(row.pictures)
+	return {"ok":true,"rows":_filtered_rows.size(),"built_rows":built.size(),"cards":cards,"pictures":pictures}
+
+func _sync_collection_rows(key: String) -> Dictionary:
+	var list: Dictionary=_scrolls[key]
+	var rows: Array=list.collection_rows
+	var size: Vector2=list.size
+	var geometry: Dictionary=list.geometry
+	var extent: Vector2=geometry.size
+	var pitch: float=list.pitch
+	var top: float=-float(list.value)
+	var first: int=maxi(0,floori(top/pitch)-ROW_OVERSCAN)
+	var end: int=mini(rows.size(),ceili((top+size.y)/pitch)+ROW_OVERSCAN)
+	var built: Dictionary=list.built
+	for index: int in built.keys():
+		if (index>=first and index<end) or index==int(list.get("drag_row",-1)):continue
+		_scrolls.erase(built[index].member_key)
+		built[index].scene.hide()
+		built[index].scene.queue_free()
+		built.erase(index)
+	for index: int in range(first,end):
+		if built.has(index):continue
+		var member_key: String="%s/members/%d" % [key,index]
+		var row_out: Dictionary={}
+		var made: Dictionary=_scene_of(ROW,_collection_row(rows[index]),row_out,key)
+		if not made.get("ok",false):return made
+		var row_scene: Node2D=made.scene
+		row_scene.set_meta(ROW_LIST_META,key)
+		var placed: Dictionary=_fill_cards(row_scene,row_out,rows[index],member_key)
+		if not placed.get("ok",false):
+			row_scene.free()
+			return placed
+		_forward_row_drags(row_scene,key)
+		_keep_row_during_drag(row_scene,key,index)
+		_place(list.content,row_scene,geometry,Vector2((size.x-extent.x)*0.5,size.y-extent.y-float(index)*pitch))
+		built[index]={"scene":row_scene,"member_key":member_key,"cards":placed.cards,"pictures":placed.pictures}
+	return {"ok":true}
+
+## The native router owns a touch by its original button. Keep at most that
+## one clipped row until release so crossing the viewport cannot end a swipe.
+func _keep_row_during_drag(node: Node, key: String, index: int) -> void:
+	for meta: String in ["source_button","source_checkbox"]:
+		if not node.has_meta(meta):continue
+		var button: Object=node.get_meta(meta)
+		if not is_instance_valid(button):continue
+		var forward: Variant=button.get_meta(Router.DRAG_META,Callable())
+		if forward is Callable and forward.is_valid():
+			button.set_meta(Router.DRAG_META,Callable(self,"_collection_row_drag").bind(key,index,forward))
+	for child: Node in node.get_children():_keep_row_during_drag(child,key,index)
+
+func _collection_row_drag(event: InputEvent, key: String, index: int, forward: Callable) -> void:
+	var list: Dictionary=_scrolls.get(key,{})
+	if list.is_empty():return
+	if event is InputEventScreenTouch and event.pressed and not event.canceled:
+		list.drag_row=index
+	forward.call(event)
+	if event is InputEventScreenTouch and (not event.pressed or event.canceled):
+		list.erase("drag_row")
+		_scrolled(key)
+
+func _scrolled(key: String) -> void:
+	if not _scrolls.get(key,{}).has("collection_rows"):
+		super._scrolled(key)
+		return
+	var previous: Variant=_stage_trees
+	if previous==null:_stage_trees={}
+	var result: Dictionary=_sync_collection_rows(key)
+	_stage_trees=previous
+	if not result.get("ok",false):last_result=result
+
+func _reset_collection_scroll() -> void:
+	for list: Dictionary in _scrolls.values():
+		if not list.has("collection_rows"):continue
+		list.value=0.0
+		for row: Dictionary in list.built.values():
+			_scrolls.erase(row.member_key)
 
 func _collection_row(row: Dictionary) -> Dictionary:
 	var done: bool=bool(row.get("completed",false))
@@ -161,10 +252,10 @@ func _collection_row(row: Dictionary) -> Dictionary:
 		"ListView_Title/Label_Title":{"role":"source_text","text":title},
 		"ListView_Title/Image_Complete":{"visible":done},
 		"ListView_Option/Label_Option":{"role":"source_text","text":", ".join(effects)}}
-	return {"member":ROW,"spec":spec}
+	return spec
 
 ## Member cards of one collection row in its CardListView.
-func _fill_cards(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
+func _fill_cards(scene: Node2D, out: Dictionary, row: Dictionary, member_key: String) -> Dictionary:
 	var lookup: Dictionary=_lookup()
 	var cards: Array=[]
 	var records: Array[Dictionary]=[]
@@ -178,7 +269,7 @@ func _fill_cards(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 		cards.append(card)
 		records.append(record)
 		owned.append(bool(requirement.get("met",false)))
-	var placed: Dictionary=_fill_list(scene,out,"Panel_Collection/CardListView",cards,NAN,true)
+	var placed: Dictionary=_fill_list(scene,out,MEMBER_LIST,cards,NAN,true,1,member_key)
 	if not placed.get("ok",false):return placed
 	var pictures: int=0
 	for index: int in range(cards.size()):
@@ -234,10 +325,12 @@ static func _value(value: float) -> String:
 func _select_grade(value: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	grade=value
+	_reset_collection_scroll()
 	return _stage()
 
 func _cycle_state() -> Dictionary:
 	state=(state+1)%STATES.size()
+	_reset_collection_scroll()
 	return _stage()
 
 func _toggle_status() -> Dictionary:
@@ -250,6 +343,7 @@ func _reset() -> Dictionary:
 	focus=""
 	query=""
 	effect_key=""
+	_reset_collection_scroll()
 	if is_instance_valid(_search_editor):_search_editor.text=""
 	var owner: Object=hud()
 	if owner!=null and owner.get("normal_card_collection_focus")!=null:owner.set("normal_card_collection_focus","")
@@ -283,6 +377,7 @@ func _editor() -> LineEdit:
 
 func set_query(value: String) -> Dictionary:
 	query=value.strip_edges()
+	_reset_collection_scroll()
 	return _stage() if is_open() else {"ok":true,"query":query}
 
 func close() -> void:
@@ -297,10 +392,12 @@ func _effect_filter() -> Dictionary:
 	var choices: Array[String]=effect_choices()
 	if choices.is_empty():
 		effect_key=""
+		_reset_collection_scroll()
 		_message("효과로 고를 컬렉션이 없습니다")
 		return _stage() if is_open() else {"ok":true}
 	var at: int=choices.find(effect_key)
 	effect_key=choices[at+1] if at+1<choices.size() else ""
+	_reset_collection_scroll()
 	_message("효과: "+_effect_title(effect_key))
 	return _stage() if is_open() else {"ok":true,"effect":effect_key}
 
