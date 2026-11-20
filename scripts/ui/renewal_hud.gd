@@ -2574,6 +2574,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	if views.is_empty():
 		return
 	if is_fusion and _present_original_fusion(views,category,bool(awarded.get("success",false))): return
+	if not is_fusion and _present_original_gacha(views,category,str(awarded.get("title",""))): return
 	var stage: Control = _new_card_reveal_stage()
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
@@ -2594,6 +2595,28 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 		_refresh_card_controls()
 	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release])
 	original_main_ui_status["fusion_result_window"] = native
+	if native.get("handled",false): return true
+	card_reveal_stage = null
+	guard.queue_free()
+	return false
+
+## 카드 뽑기 결과 in the original 523 BM_Gacha window (UI pack only), with
+## the same hidden busy guard as the fusion result; false keeps the existing
+## CardRevealStage.
+func _present_original_gacha(views: Array[Dictionary], category: String, title: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
+	var guard := Control.new()
+	guard.name = "OriginalGachaRevealGuard"
+	guard.visible = false
+	guard.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(guard)
+	card_reveal_stage = guard
+	var release := func() -> void:
+		if card_reveal_stage == guard: card_reveal_stage = null
+		if is_instance_valid(guard): guard.queue_free()
+		_refresh_card_controls()
+	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("card_gacha_result",[views,category,title,release])
+	original_main_ui_status["card_gacha_result_window"] = native
 	if native.get("handled",false): return true
 	card_reveal_stage = null
 	guard.queue_free()

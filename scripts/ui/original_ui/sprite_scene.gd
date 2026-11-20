@@ -928,6 +928,11 @@ func _inner_range(nested: Node2D, frame: Dictionary) -> Dictionary:
 	else:
 		for clip: Dictionary in nested.source_tree.animationList:
 			if clip.name==name_value:span=clip.duplicate(true);break
+		# A name the nested scene does not list (client data such as
+		# CardChange_Result "Fx_Start" on Change_Fusion_Card): Cocos
+		# InnerActionFrame::onEnter logs "Animation %s not exists!" and plays
+		# the frame's own range, 0..0 (the nested scene's first frame).
+		if span.is_empty() and not name_value.is_empty():span={"name":name_value,"startIndex":0,"endIndex":0,"source_clip_missing":true}
 	if span.is_empty():return {}
 	# InnerActionFrame limits the child range by the remaining parent duration.
 	var difference: int=int(source_tree.action.duration)-int(frame.frameIndex)-int(span.endIndex)+int(span.startIndex)
