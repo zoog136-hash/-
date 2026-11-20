@@ -17,6 +17,9 @@ extends SceneTree
 ## picture's position relative to the player node stays within a few pixels
 ## over whole walk cycles in 3 directions (it swept 22-42 px before).
 const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
+## One walk frame's step (48 px cell / 8 frames) plus the sampling slack.
+const FRAME_STEP_SPAN: float = 8.0
+const FRAME_STEP_JUMP: float = 6.5
 const HOST = preload("res://scripts/maps/current523_host.gd")
 const PACK = preload("res://scripts/boot/source523_pack.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
@@ -32,6 +35,32 @@ func check(condition: bool, label: String) -> bool:
 	return condition
 
 func _initialize() -> void: _run.call_deferred()
+
+class FakeCoords extends RefCounted:
+	var basis_x := Vector2(24, -12)
+	var basis_y := Vector2(24, 12)
+	func world_to_grid(p: Vector2) -> Vector2:
+		var d: float = basis_x.x * basis_y.y - basis_x.y * basis_y.x
+		return Vector2((p.x * basis_y.y - p.y * basis_y.x) / d, (p.y * basis_x.x - p.x * basis_x.y) / d)
+	func grid_to_world(x: float, y: float) -> Vector2: return basis_x * x + basis_y * y
+
+## Stick and route moves use the original's eight cell directions.
+func walk_cells() -> void:
+	var walk := preload("res://scripts/maps/source_walk_speed.gd")
+	var c := FakeCoords.new()
+	var expect: Dictionary = {0: Vector2(48, 0), 15: Vector2(48, 0), 30: Vector2(24, -12), 45: Vector2(24, -12), 60: Vector2(24, -12), 90: Vector2(0, -24), 180: Vector2(-48, 0), 225: Vector2(-24, 12), 270: Vector2(0, 24)}
+	var bad: Array = []
+	for deg: int in expect:
+		var got: Vector2 = walk.cell_direction(c, Vector2.RIGHT.rotated(deg_to_rad(-float(deg))))
+		if not got.is_equal_approx((expect[deg] as Vector2).normalized()): bad.append([deg, str(got)])
+	check(bad.is_empty(), "a stick picks the cell step of its 45-degree sector: %s" % str(bad))
+	check(walk.cell_direction(null, Vector2(1, 2)) == Vector2(1, 2), "off an original Land the stick is unchanged")
+	var leg: Dictionary = walk.cell_leg(c, Vector2.ZERO, c.grid_to_world(3.0, 1.0))
+	check(leg.get("kind") == "diagonal" and (leg.direction as Vector2).is_equal_approx(Vector2(48, 0).normalized()) and is_equal_approx(float(leg.length), 48.0), "a route leg walks the diagonal cell step first (%s)" % str(leg))
+	var straight: Dictionary = walk.cell_leg(c, c.grid_to_world(1.0, 1.0), c.grid_to_world(3.0, 1.0))
+	check(straight.get("kind") == "straight" and (straight.direction as Vector2).is_equal_approx(Vector2(24, -12).normalized()), "then straight along the remaining grid axis")
+	var blocked: Dictionary = walk.cell_leg(c, Vector2.ZERO, c.grid_to_world(3.0, 1.0), func(a: Vector2, b: Vector2) -> bool: return not (a == Vector2.ZERO and b.is_equal_approx(c.grid_to_world(1.0, 1.0))))
+	check(blocked.get("kind") == "straight_first", "a blocked diagonal corner walks the straight part first")
 
 func _pack_root() -> String:
 	for value: String in OS.get_cmdline_user_args():
@@ -98,6 +127,17 @@ func _run() -> void:
 	for k: int in 8: no_body.append({"source_frame": k, "layers": [{"kind": "effect", "offset": [0, -k * 3]}]})
 	preview._apply_walk_root_motion({"loop": true, "source_sprite_id": 1, "source_action_id": 0}, no_body, 0, 6, false)
 	check(preview.position == Vector2.ZERO, "frames without a body layer are drawn unchanged")
+	# 2026-11-20 "손발은 아직 살짝 어색": inside a shown frame the cancel is
+	# continuous (the loop position), so the cell origin and the planted
+	# foot stay put while the host node moves on.
+	preview._role = "walk"
+	preview._apply_walk_root_motion(track, frames, 4, 2.0, false)
+	var at_two: Vector2 = preview.position
+	preview._apply_walk_root_motion(track, frames, 4, 2.5, false)
+	var at_half: Vector2 = preview.position
+	preview._apply_walk_root_motion(track, frames, 4, 3.0, false)
+	check(at_half.is_equal_approx((at_two + preview.position) * 0.5) and at_half != at_two, "the cancel moves continuously within a frame (2 -> 2.5 -> 3)")
+	walk_cells()
 	preview.clear()
 	check(preview.position == Vector2.ZERO and preview._root_motion_fits.is_empty(), "clear() resets the offset and fits")
 	preview.queue_free()
@@ -162,5 +202,9 @@ func real_main(base: String) -> void:
 		for k: int in range(1, along.size()): jump = maxf(jump, absf(float(along[k]) - float(along[k - 1])))
 		directions[str(stick)] = {"samples": along.size(), "frames": frames_seen.size(), "span_px": snappedf(span, 0.01), "max_step_px": snappedf(jump, 0.01)}
 		check(along.size() >= 25 and frames_seen.size() >= 6, "%s: walks through a whole cycle" % str(stick))
-		check(span >= 0.0 and span <= 6.0 and jump <= 4.0, "%s: the picture stays on the moving node (span %.2f, step %.2f; was 22-42 px)" % [str(stick), span, jump])
+		# Since 2026-11-20 the body keeps its cell origin while a frame is
+		# shown (planted feet) and steps with the authored frame offset, so it
+		# may lead or trail the node by up to one frame's step (1/8 of a cell:
+		# 6 px sideways, 3 px up), never the old whole-cycle sweep.
+		check(span >= 0.0 and span <= FRAME_STEP_SPAN and jump <= FRAME_STEP_JUMP, "%s: the picture stays on the moving node within one frame step (span %.2f, step %.2f; was 22-42 px)" % [str(stick), span, jump])
 	evidence["main_directions"] = directions

@@ -669,12 +669,19 @@ var root_motion_cell_steps: Array[Vector2] = []:
 const ROOT_MOTION_SNAP_FRACTION: float = 0.6
 const ROOT_MOTION_MIN_R2: float = 0.6
 
-func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: int, static_track: bool) -> void:
+## `index` is the loop position in frames, fractional inside a frame: the
+## body's cell origin (host position minus the travel the loop has covered)
+## stays put while a frame is shown, so the authored feet stay planted on the
+## ground and the body steps with the authored frame offsets, as the client
+## draws an actor at its cell plus the frame offset (user report 2026-11-20,
+## "손발은 아직 살짝 어색": cancelling whole frames moved the planted foot
+## with the body by the full walk speed, 3.6 px per frame at 30 fps).
+func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: float, static_track: bool) -> void:
 	var correction: Vector2 = Vector2.ZERO
 	if cancel_walk_root_motion and not static_track and _role in ["walk", "run"] and bool(track.get("loop", false)) and frames.size() >= 3:
 		var key: String = "%s:%d:%d:%s:%s:%s" % [_role, source_direction, frames.size(), str(track.get("source_sprite_id", "")), str(track.get("source_action_id", "")), _cooked.key if _cooked != null else "sp2"]
 		if not _root_motion_fits.has(key): _root_motion_fits[key] = _fit_walk_root_motion(frames, source_direction)
-		correction = -(_root_motion_fits[key] as Vector2) * float(index)
+		correction = -(_root_motion_fits[key] as Vector2) * index
 	if correction != walk_root_motion_offset or (cancel_walk_root_motion and position != correction * scale):
 		walk_root_motion_offset = correction
 		# Offsets are in this node's (source pixel) space; position is the parent's.
@@ -1173,7 +1180,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			break
 		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 		scan_index += 1
-	_apply_walk_root_motion(track, frames, source_direction, selected_index, static_track)
+	var loop_position: float = float(selected_index)
+	if not static_track and bool(track.loop) and _role in ["walk", "run"]:
+		var shown: float = preload("res://scripts/animation/source_presentation_policy.gd").duration(selected)
+		if shown > 0.0: loop_position += clampf(time / shown, 0.0, 1.0)
+	_apply_walk_root_motion(track, frames, source_direction, loop_position, static_track)
 	if (_reference_bank == null or not _reference_card_context.is_empty()) and _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true

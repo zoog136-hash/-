@@ -141,11 +141,21 @@ func _source_ground_request(item: Dictionary, ground_id: String = "") -> Diction
 		# the floor like a native drop (presentation only, no ownership).
 		var identity: int = IDENTITY.item_class_id(item, str(item.get("name","")))
 		var row: Dictionary = IDENTITY.row(identity)
+		var approximation: bool = false
+		if row.is_empty() and identity <= 0:
+			# Names without an original Korean name (item_icon_identity.json):
+			# the floor body of the mapped original item (a TestItem row uses an
+			# original row with the same floor SpriteID).
+			var mapped: Dictionary = IDENTITY.icon_identity(item, str(item.get("name","")))
+			if not mapped.is_empty() and not IDENTITY.SOURCE.not_installed():
+				var source_row: Dictionary = IDENTITY.SOURCE.row("ItemClass", int(mapped.ground_item_class_id))
+				if source_row.get("ID") == int(mapped.ground_item_class_id): row = source_row
+				approximation = mapped.get("approximation", false) == true
 		if row.is_empty(): return {}
 		var visual_context: Dictionary = {}
 		var owner: Variant = world.get("player")
 		if is_instance_valid(owner) and owner.get("source_visual_context") is Dictionary: visual_context = owner.get("source_visual_context").duplicate(true)
-		return {"required":true,"original_item":row.duplicate(true),"source_bank_context":visual_context,"source_owner_context":{},"source_binding":{},"identity_only":true}
+		return {"required":true,"original_item":row.duplicate(true),"source_bank_context":visual_context,"source_owner_context":{},"source_binding":{},"identity_only":true,"twilight_approximation":approximation}
 	var owner_context: Dictionary = {}
 	var has_owner_context: bool = not ground_id.is_empty() and has_method("source_item_context")
 	var original: Dictionary = {}

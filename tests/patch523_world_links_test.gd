@@ -38,6 +38,7 @@ func fixture() -> Dictionary:
 	tables.LandTeleport = [{"ID": 31, "TeleportCost": 10000, "AllowMapTeleport": false}]
 	tables.LandTeleportPrerequisite = [{"LandTeleportID": 31, "PrerequisiteID": 32}]
 	tables.Prerequisite = [{"ID": 32, "PrerequisiteTypeID": 1, "Value": 91}]
+	tables.LandAttribute = [{"ID": 14, "LandID": 4, "Value": 1}, {"ID": 15, "LandID": 9, "Value": 0}, {"ID": 13, "LandID": 4, "Value": 0}, {"ID": 14, "LandID": 4, "Value": 1}]
 	tables.DateTimes_Korean = [{"ID": 5, "Year": 2024, "Month": 1, "Day": 2, "Hour": 5, "Minute": 0}, {"ID": 6, "Year": 2024, "Month": 2, "Day": 3, "Hour": 5, "Minute": 30}, {"ID": 6, "Year": 2025, "Month": 2, "Day": 3, "Hour": 5, "Minute": 30}, {"Name": "no id"}]
 	var context_spec: Dictionary = write_json(path.path_join("conditions.json"), {"schema": 1, "source_snapshot": "patch523", "tables": tables})
 	var manifest: Dictionary = {"schema": 1, "source_snapshot": "patch523", "source_zip_sha256": LINKS.SOURCE_SHA256, "lands": {"4": shard_spec}, "conditions": context_spec}
@@ -48,6 +49,10 @@ func _initialize() -> void:
 	var spec: Dictionary = fixture()
 	var links = LINKS.new()
 	check(links.load_land(spec.root, 4, "Aden/", spec.sha), "fixture loads through production loader")
+	var land_attributes: Array = links.land_attribute_rows(4)
+	check(land_attributes.map(func(row): return int(row.ID)) == [14, 13, 14], "scoped attributes retain order and duplicate rows")
+	land_attributes[0].Value = 99
+	check(links.land_attribute_rows(9).is_empty() and links.land_attribute_rows(4)[0].Value == 1 and links.context_rows("LandAttribute").size() == 4, "scoped reads isolate other Lands and protect shared rows")
 	check(links.spawn_evidence().size() == 2, "separate Territory relations")
 	var evidence: Array = links.spawn_evidence(11)
 	check(evidence[0].classes.size() == 3, "levels and IsSpawn variants retained")

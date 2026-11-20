@@ -12273,9 +12273,14 @@ func current523_map_teleport(id: String) -> Dictionary:
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
+	# A 하딘 (다이아) price was saved with the arrival as the bag after the
+	# debit; the live bag takes it now (the controller adopts only gold).
+	if (quote.changes as Dictionary).has("inventory") and bool(transition.get("saved",false)):
+		inventory = (quote.changes.inventory as Dictionary).duplicate(true)
+		if is_instance_valid(hud): hud.refresh_inventory(inventory)
 	if player.auto_enabled: player.set_auto_enabled(false)
 	_update_hud()
-	return {"ok":true,"reason":"텔레포트 완료 · %s · %d 아데나" % [str(row.name), int(row.price)],"land_id":int(row.land_id),"price":int(row.price),"saved":bool(transition.get("saved",false))}
+	return {"ok":true,"reason":"텔레포트 완료 · %s · %d %s" % [str(row.name), int(row.price), str(row.get("currency_name","아데나"))],"land_id":int(row.land_id),"price":int(row.price),"currency_id":int(row.get("currency_id",1)),"saved":bool(transition.get("saved",false))}
 
 func _aden_play_controller() -> RefCounted:
 	if _current523_aden_play_controller == null:
