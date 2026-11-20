@@ -94,7 +94,7 @@ func _sample() -> bool:
 		sprite.texture=ImageTexture.create_from_image(image);sprite.position=Vector2(layer.offset[0],layer.offset[1])
 		var style:Dictionary=POLICY.effect(layer.get("source_attributes",[]),_mode)
 		if bool(style.get("enabled",false)):
-			var material:=CanvasItemMaterial.new();material.blend_mode=int(style.blend_mode);sprite.material=material;sprite.modulate.a=float(style.alpha);sprite.show();visible_count+=1
+			sprite.material=preload("res://scripts/animation/source_sp2_compositor.gd").blend_material(int(style.blend_mode));sprite.modulate.a=float(style.alpha);sprite.show();visible_count+=1
 	source_status["decoded_source_frames"]=_decoded_pixels;source_status["visible_source_layers"]=visible_count;source_status["source_frame_index"]=selected.source_frame
 	return true
 func clear() -> void:
