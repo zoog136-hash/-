@@ -9,9 +9,14 @@ extends SceneTree
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_currency_window.gd")
 const WALLET=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd")
 const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
-const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 var checks: int=0
 var failures: Array[String]=[]
+
+class CountedPack extends "res://scripts/ui/original_ui/source_pack.gd":
+	var scene_reads: Dictionary={}
+	func scene(member: String) -> Dictionary:
+		scene_reads[member]=int(scene_reads.get(member,0))+1
+		return super.scene(member)
 
 class FakeWorld extends Node:
 	var gold: int=1234567
@@ -59,7 +64,7 @@ func _real_pack(pack_dir: String) -> void:
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(pack_dir.path_join("receipt.json")))
 	check(receipt is Dictionary,"pack receipt readable")
 	if not receipt is Dictionary:return
-	var pack=SOURCE_PACK.new()
+	var pack:=CountedPack.new()
 	var loaded: Dictionary=pack.open(pack_dir,str(receipt.manifest_sha256))
 	check(loaded.get("ok",false),"pack opens: "+str(loaded))
 	if not loaded.get("ok",false):return
@@ -79,8 +84,20 @@ func _real_pack(pack_dir: String) -> void:
 	root.add_child(parent)
 	var window=WINDOW.new()
 	check(window.configure(pack,host.hud).get("ok",false),"window configures")
+	pack.scene_reads.clear()
 	var shown: Dictionary=window.open(parent)
 	check(shown.get("handled",false) and int(shown.filled.rows)==6,"Gem_All mounts one row per currency: "+str(shown).left(300))
+	check(int(pack.scene_reads.get(WINDOW.ROW,0)) in [1,2],"six rows share one metadata read, plus at most one scoped renderer read")
+	pack.scene_reads.clear()
+	host.world.gold=7654321
+	var refreshed: Dictionary=window.refresh()
+	check(refreshed.get("ok",false) and int(refreshed.get("filled",{}).get("amounts",{}).get("아데나",0))==7654321,"a new stage takes live balances")
+	var displayed: Array[String]=[]
+	if window.is_open():
+		for label: Node in window._scene.find_children("OriginalText","Node2D",true,false):displayed.append(str(label.original_options.text))
+		for label: Node in window._scene.find_children("OriginalBitmapText","Node2D",true,false):displayed.append(str(label._options.text))
+	check("7,654,321" in displayed,"the original text node receives the updated balance")
+	check(int(pack.scene_reads.get(WINDOW.ROW,0)) in [1,2],"the next stage reads the row afresh and shares it within the stage")
 	window.close()
 	await process_frame
 	parent.queue_free()
