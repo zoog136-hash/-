@@ -52,7 +52,7 @@
 초기66,D08,P1,테이블 검색/ID 인덱스/초기화 최적화,재검증/제안,pending_current_execution_review,,,
 초기66,U01,P1,UI 경로 인덱스,재검증/제안,pending_current_execution_review,,,
 초기66,U02,P1,동일 노드 이름/경로 충돌 검증,재검증/제안,pending_current_execution_review,,,
-초기66,U03,P1,검증된 원본 UI 구조 재사용,재검증/제안,original_wallet_render_and_stage_reuse_verified_linux;specific_scope;scripts_in_report,docs/audit927/original-ui-live-scene-reuse.md,real Twm pack and Main; 23 to 4 scene reads,feature/source-ui-stage-tree-reuse-20261120
+초기66,U03,P1,검증된 원본 UI 구조 재사용,재검증/제안,original_wallet_render_and_stage_reuse_verified_linux;specific_scope;scripts_in_report,docs/audit927/original-ui-live-scene-reuse.md,real Twm pack and Main; 23 to 4 scene reads,#747 merged
 초기66,U04,P1,창 닫기·맵 전환 시 콜백/입력·장면 정리,재검증/제안,pending_current_execution_review,,,
 초기66,U05,P1,숨겨진 UI 불필요 갱신 제한,재검증/제안,pending_current_execution_review,,,
 초기66,U06,P1,스킬 정령·특수·착용 탭 연결,최신 일부 연결·회귀,pending_current_execution_review,,,
@@ -82,7 +82,7 @@
 최적화,OPT05,검토,스프라이트·GPU / 동일 텍스처 공유,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT06,검토,스프라이트·GPU / 보이지 않는 객체 외형 갱신 제한,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT07,검토,이펙트 / SPX 객체 재사용,개선/검증 (중복 가능),bounded_vfx_draw_improvement_merged; Android pending,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,"489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified; required CI passed, 379 core suites",#725 merged c15a364ac8d862593bea805cd4fb6112b813ec85
-최적화,OPT08,검토,이펙트 / CSB 객체 재사용,개선/검증 (중복 가능),ordered_CSB_keyframe_lookup_verified_linux; other_reuse_open,docs/audit927/native-runtime-keyframe-review.md,pinned Twm 2 scenes and 10 pixel matches; 2093 related checks,feature/source-ui-keyframe-index-20261120
+최적화,OPT08,검토,이펙트 / CSB 객체 재사용,개선/검증 (중복 가능),ordered_CSB_keyframe_lookup_verified_linux; other_reuse_open,docs/audit927/native-runtime-keyframe-review.md,pinned Twm 2 scenes and 10 pixel matches; 2093 related checks,#751 merged; material lookup follow-up in docs/audit927/original-ui-display-material-lookup.md
 최적화,OPT09,검토,이펙트 / 이펙트 매니페스트 캐시,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT10,검토,이펙트 / 원본 FPS 기반 최적화 조건 추가 복원,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT11,검토,이펙트 / 지역 최적화 반복 계산 제거,개선/검증 (중복 가능),pending_current_execution_review,,,
