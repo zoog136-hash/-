@@ -43,8 +43,14 @@ const BLOCK_CACHE_LIMIT: int = 32
 ## New margin block images per refresh (blocks on screen always bake at once).
 const MARGIN_BAKES_PER_REFRESH: int = 6
 ## Longest a new on-screen block waits for worker decodes before decoding the
-## rest on the main thread (it shows nothing meanwhile).
-const ON_SCREEN_WAIT_MSEC: int = 250
+## rest on the main thread (it shows nothing meanwhile). 250 ms was too short
+## on the phone: after a teleport three blocks then decoded their atlases on
+## the main thread in one frame (523.699: map.block_commands 2066 ms x3, a
+## 2.1 s freeze). Workers finish well within this; it is only a safety net.
+const ON_SCREEN_WAIT_MSEC: int = 3000
+## On-screen blocks past the wait that may decode on the main thread in one
+## refresh; the rest wait for the next refresh (0.05 s later).
+const LATE_BAKES_PER_REFRESH: int = 1
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -875,6 +881,7 @@ func _build_frame() -> bool:
 	var margin_bakes: int = 0
 	var screen_ready: Dictionary = {}
 	var screen_waiting: bool = false
+	var late_bakes: int = 0
 	var now_msec: int = Time.get_ticks_msec()
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
@@ -904,10 +911,11 @@ func _build_frame() -> bool:
 				if on_screen and not bool(screen_ready.get(cell, true)):
 					var since: int = int(_screen_wait.get(cell, now_msec))
 					_screen_wait[cell] = since
-					if now_msec - since < ON_SCREEN_WAIT_MSEC:
+					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
 						continue
+					late_bakes += 1
 				_screen_wait.erase(cell)
 				var commands_started: int = FRAME_HITCH.now()
 				var built: Dictionary = _block_commands(cell)
