@@ -718,6 +718,23 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
 
 
+## ref -> tile corners (x, y, ...) of one block's draw commands.
+static func _usage_pending(commands: Dictionary) -> Dictionary:
+	var lanes: Dictionary = {}
+	for layer: int in commands:
+		var lane: PackedInt64Array = commands[layer]
+		for index: int in range(0, lane.size(), 3):
+			var ref: int = lane[index + 2]
+			var corners: Variant = lanes.get(ref)
+			if corners == null:
+				corners = []
+				lanes[ref] = corners
+			(corners as Array).append(lane[index]); (corners as Array).append(lane[index + 1])
+	var pending: Dictionary = {}
+	for ref: int in lanes: pending[ref] = PackedInt64Array(lanes[ref])
+	return pending
+
+
 func _free_block(cell: Vector2i) -> void:
 	var block: Dictionary = _blocks.get(cell, {})
 	_blocks.erase(cell)
@@ -885,12 +902,18 @@ func _draw_tiles(canvas: Node2D) -> void:
 		if not is_instance_valid(viewport): continue
 		canvas.draw_texture((viewport as SubViewport).get_texture(), Vector2(cell * BLOCK))
 		if observe and _block_rect(cell).intersects(view):
-			var commands: Dictionary = block.commands
-			for layer: int in commands:
-				var lane: PackedInt64Array = commands[layer]
-				for index: int in range(0, lane.size(), 3):
-					var ref: int = lane[index + 2]
-					if not observed_refs.has(ref) and Rect2(Vector2(lane[index],lane[index+1]),Vector2(TILE_PX,TILE_PX)).intersects(view): observed_refs[ref]=true
+			# Each ref is observed once: refs not yet seen on screen keep their
+			# tile corners; a ref leaves the list when one of them is in view.
+			# (Every rebuild used to walk every tile of every visible block.)
+			if not block.has("usage_pending"): block["usage_pending"] = _usage_pending(block.commands)
+			var pending: Dictionary = block.usage_pending
+			for ref: int in pending.keys():
+				var corners: PackedInt64Array = pending[ref]
+				for index: int in range(0, corners.size(), 2):
+					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
+						observed_refs[ref] = true
+						pending.erase(ref)
+						break
 	if observe:
 		for ref: int in observed_refs:
 			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
