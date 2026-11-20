@@ -5772,10 +5772,12 @@ func _patch523_craft_item_index() -> Dictionary:
 		# Finish a started warm build here: the remaining items in their order.
 		var ids: Array=_craft_index_warm.ids
 		var partial: Dictionary=_craft_index_warm.result
+		_craft_warm_drop_prefetch()
 		for index: int in range(int(_craft_index_warm.cursor),ids.size()):_patch523_craft_index_item(partial,str(ids[index]))
 		_craft_index_warm={}
 		patch523_craft_item_cache=partial
 		return partial
+	if not _craft_warm_ahead.is_empty():_craft_warm_drop_prefetch()
 	var result: Dictionary = _craft_item_index().duplicate()
 	# The current non-equipment inventory is name-keyed. Bind only its unique
 	# catalog identity to the compiler-verified ItemClass ID; never merge aliases.
@@ -5806,22 +5808,60 @@ func _tick_craft_index_warm(delta: float) -> bool:
 	var items: Variant=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
 	if not items is Dictionary or (items as Dictionary).is_empty():return false
 	if _craft_index_warm.is_empty():
+		if not _craft_warm_ahead.is_empty():_craft_warm_drop_prefetch()
 		craft_index_warm_seconds-=delta
 		if craft_index_warm_seconds>0.0:return true
 		_craft_index_warm={"ids":(items as Dictionary).keys(),"cursor":0,"result":_craft_item_index().duplicate()}
 		return true
-	var started: int=Time.get_ticks_usec()
 	var ids: Array=_craft_index_warm.ids
 	var cursor: int=int(_craft_index_warm.cursor)
-	while cursor<ids.size() and Time.get_ticks_usec()-started<CRAFT_INDEX_WARM_BUDGET_USEC:
+	# Item templates of the current block are read on worker threads first
+	# (as the full build does); reading them here one by one was most of this
+	# slice's cost (523.699 trace: ~10 disk reads per frame for minutes).
+	var block: int=cursor/PATCH523_CRAFT_INDEX_BLOCK
+	if int(_craft_index_warm.get("block",-1))!=block:
+		if _craft_warm_ahead.is_empty():
+			_craft_warm_ahead=NATIVE_FIELDS.prefetch_begin(_craft_warm_block(ids,block))
+			_craft_warm_ahead_block=block
+		if _craft_warm_ahead_block==block and not _craft_warm_ahead.is_empty():
+			for thread: Thread in _craft_warm_ahead.threads:
+				if thread.is_alive():return true
+		if _craft_warm_ahead_block==block:
+			NATIVE_FIELDS.prefetch_install(_craft_warm_ahead)
+			_craft_warm_ahead={}
+		_craft_index_warm["block"]=block
+		# The next block reads while this one is indexed.
+		if (block+1)*PATCH523_CRAFT_INDEX_BLOCK<ids.size():
+			_craft_warm_ahead=NATIVE_FIELDS.prefetch_begin(_craft_warm_block(ids,block+1))
+			_craft_warm_ahead_block=block+1
+	var block_end: int=mini(ids.size(),(block+1)*PATCH523_CRAFT_INDEX_BLOCK)
+	var started: int=Time.get_ticks_usec()
+	while cursor<block_end and Time.get_ticks_usec()-started<CRAFT_INDEX_WARM_BUDGET_USEC:
 		_patch523_craft_index_item(_craft_index_warm.result,str(ids[cursor]))
 		cursor+=1
 	_craft_index_warm.cursor=cursor
 	if cursor>=ids.size():
 		patch523_craft_item_cache=_craft_index_warm.result
 		_craft_index_warm={}
+		_craft_warm_drop_prefetch()
 		return false
 	return true
+
+## Read-ahead of the warm build's next block: {"jobs","threads"} or {}.
+var _craft_warm_ahead: Dictionary={}
+var _craft_warm_ahead_block: int=-1
+
+func _craft_warm_block(ids: Array, block: int) -> PackedStringArray:
+	var out := PackedStringArray()
+	for index: int in range(block*PATCH523_CRAFT_INDEX_BLOCK,mini(ids.size(),(block+1)*PATCH523_CRAFT_INDEX_BLOCK)):out.append(str(ids[index]))
+	return out
+
+## Joins any warm read-ahead threads and drops the served templates.
+func _craft_warm_drop_prefetch() -> void:
+	if not _craft_warm_ahead.is_empty():NATIVE_FIELDS.prefetch_install(_craft_warm_ahead)
+	_craft_warm_ahead={}
+	_craft_warm_ahead_block=-1
+	NATIVE_FIELDS.end_prefetch()
 
 func _patch523_craft_index_item(result: Dictionary, source_id: String) -> void:
 	# Read-only identity for the branch checks (no deep copy of ~30,000
