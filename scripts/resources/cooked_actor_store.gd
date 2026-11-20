@@ -283,6 +283,7 @@ static func load_actor(path: String) -> Dictionary:
 			var track: Variant = entry.tracks[role]
 			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return {"ok":false,"error":"cooked_actor_track"}
 			var directions: Array = []
+			var direction_totals := PackedFloat64Array()
 			for direction: Variant in track.directions:
 				if not direction is Dictionary or not direction.get("durations") is PackedFloat64Array or direction.durations.is_empty(): return {"ok":false,"error":"cooked_actor_direction"}
 				if direction.seg_start.size() != direction.durations.size() + 1 or direction.seg_end.size() != direction.seg_state.size(): return {"ok":false,"error":"cooked_actor_segments"}
@@ -290,14 +291,19 @@ static func load_actor(path: String) -> Dictionary:
 					if state < 0 or state >= index.states.size(): return {"ok":false,"error":"cooked_actor_segment_state"}
 				if int(direction.get("end_state", -1)) >= index.states.size(): return {"ok":false,"error":"cooked_actor_end_state"}
 				var frames: Array = []
+				var total: float = 0.0
+				var has_presentation_duration: bool = bool(direction.get("eps", false))
 				for frame: int in range(direction.durations.size()):
-					var cooked_frame: Dictionary = {"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
+					var duration: float = direction.durations[frame]
+					total += duration
+					var cooked_frame: Dictionary = {"duration":duration,"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
 					# The original preview's boundary epsilon depends on this key.
-					if bool(direction.get("eps", false)): cooked_frame["presentation_duration"] = direction.durations[frame]
+					if has_presentation_duration: cooked_frame["presentation_duration"] = duration
 					frames.append(cooked_frame)
 				directions.append(frames)
+				direction_totals.append(total)
 			runtime_tracks[str(role)] = {"loop":bool(track.loop),"static_pending_timing":bool(track.static_pending_timing),"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
-				"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"cooked":true}
+				"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"direction_totals":direction_totals,"cooked":true}
 		entry["runtime_tracks"] = runtime_tracks
 		actor.entries[entry_key(entry.inputs)] = entry
 	return {"ok":true,"actor":actor}

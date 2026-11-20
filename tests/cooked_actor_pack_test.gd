@@ -224,6 +224,7 @@ func run() -> void:
 	var selected: Dictionary = selection(data)
 	var actor: Dictionary = STORE.lookup(selected)
 	check(not actor.is_empty(), "installed cooked actor found: " + str(STORE.stats()))
+	if not actor.is_empty(): check_direction_totals(actor.entry)
 	check(not STORE.lookup(variant(data)).is_empty() and STORE.lookup(variant(data)).actor == actor.actor, "the variant entry comes from the same bundle")
 	check(STORE.lookup(selection(data, ACTOR + 77)).is_empty(), "actor missing from the cooked pack -> original path")
 	var other_roles: Dictionary = selection(data)
@@ -411,6 +412,18 @@ func read_cooked_pose(viewport: SubViewport) -> Image:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	return viewport.get_texture().get_image()
+
+func check_direction_totals(entry: Dictionary) -> void:
+	const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
+	for role: String in entry.runtime_tracks:
+		var track: Dictionary = entry.runtime_tracks[role]
+		var expected := PackedFloat64Array()
+		for frames: Array in track.directions:
+			var total: float = 0.0
+			for frame: Dictionary in frames:
+				total += PRESENTATION.duration(frame)
+			expected.append(total)
+		check(track.get("direction_totals") == expected, "shared cooked clock totals match the runtime policy in all directions for " + role)
 
 ## The block-compression (ASTC 4x4) acceptance rule on synthetic cells: a smooth opaque cell passes,
 ## a high-contrast noise cell and a cell whose binary alpha would not survive
