@@ -35,6 +35,8 @@ const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_wind
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
+## Above the original windows (150-170) and popups.
+const SYSTEM_MESSAGE_Z: int=180
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -766,6 +768,10 @@ func refresh_system_message() -> Dictionary:
 			previous.hide()
 			previous.queue_free()
 	if not result.get("ok",false):return _system_message_failed(result)
+	# The client's system message is drawn over its open windows (Shop_All,
+	# Store_All, Map_All ... at z 150-170 here); under them a refusal such as
+	# 다이아 부족 was invisible (TWILIGHT 근사: one layer above every window).
+	_system_message_scene.z_index=SYSTEM_MESSAGE_Z
 	_system_message_scene.show()
 	var label: Object=_legacy_message.get_ref() if _legacy_message!=null else null
 	if label!=null:label.visible=false
@@ -1169,6 +1175,18 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
 	MENU_TRACE.end(trace,result.get("ok",false))
 	return result
+
+## --- Original 523 boss overhead mark (source_main_boss_overhead)
+const BossOverhead=preload("res://scripts/ui/original_ui/source_main_boss_overhead.gd")
+
+## The playing original boss mark of NPC class `npc_class_id`, or null when
+## the NPC has none or the UI pack lacks NameCardLayout_BossMonster.
+func boss_overhead(npc_class_id: int) -> Node2D:
+	if _pack==null:return null
+	var node: String=BossOverhead.resource_name(npc_class_id)
+	if node.is_empty():return null
+	var built: Dictionary=BossOverhead.build(_pack,node)
+	return built.scene if built.get("ok",false) else null
 
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.

@@ -79,7 +79,7 @@ func _info_spec(spec: Dictionary) -> void:
 	# 버전 정보: the project version, then the installed UI add-on (two lines
 	# of the authored 500x45 text).
 	var pack_info: Dictionary=PackVersion.describe(str(_pack.get("manifest_sha256")) if _pack!=null else "",_pack.get("manifest").get("scenes",{}) if _pack!=null and _pack.get("manifest") is Dictionary else null)
-	spec[p+"RightContents/Version/Text_Desc"]={"role":"source_text","text":(version if not version.is_empty() else "TWILIGHT")+"\n"+PackVersion.label(pack_info)}
+	spec[p+"RightContents/Version/Text_Desc"]={"role":"source_text","text":(version if not version.is_empty() else "TWILIGHT")+"\n"+PackVersion.label(pack_info)+"\n"+preload("res://scripts/ui/item_icon_resource_status.gd").label(preload("res://scripts/ui/item_icon_resource_status.gd").check(true))}
 	spec[p+"RightContents/Coupon/TextField"]={"role":"source_text_field","editor":_editor()}
 	spec[p+"RightContents/Coupon/Btn_Confirm"]={"activate":Callable(self,"_coupon_requested")}
 	for absent: String in ["RightContents/Achievement","RightContents/Google","RightContents/Contact/Btn_Logout","RightContents/Btn_Credit"]:spec[p+absent]={"exclude":true}

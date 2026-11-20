@@ -31,11 +31,10 @@ func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground:
 	var item_record: Variant = record.get("item_record")
 	if item_record is Dictionary and item_record.get("source_m_native_item") == true:
 		set_meta("source_display_name",str(preload("res://scripts/loot/current523_native_fields.gd").field(item_record,"source_display_name","")))
+	elif source_ground.get("identity_only",false):
+		set_meta("source_display_name",preload("res://scripts/ui/source523_item_identity.gd").display_name(item_record if item_record is Dictionary else {},str(record["item_name"])))
 	set_meta("world_position", Vector2(float(record["position"][0]), float(record["position"][1])))
-	tooltip_text = "%s · %s ×%d · 선택 후 다시 눌러 줍기" % [record["item_name"], record["grade"], record["quantity"]]
-	var proof: Dictionary = record.get("item_record", {}).get("source_m_drop_proof", {})
-	if proof.get("source_snapshot") == "patch523":
-		tooltip_text += "\n523 드랍원 #%d · %s · TWILIGHT 확률·수량" % [int(proof.get("source_npc_id", 0)), {1:"일반", 2:"축복", 3:"저주"}.get(int(proof.get("bless_raw", 0)), "미지원 상태")]
+	tooltip_text = "%s ×%d" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(record["item_name"])), record["quantity"]]
 	var empty := StyleBoxEmpty.new()
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(state, empty)
@@ -44,8 +43,7 @@ func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground:
 	visual.configure(str(record["grade"]), null if source_ground.get("required",false) else icon, slot)
 	visual.source_missing=not source_ground.get("required",false) and icon==null and record.get("item_record") is Dictionary and preload("res://scripts/cards/source_awakening_items.gd").recognized(record.item_record)
 	if visual.source_missing:
-		var missing:=Label.new();missing.text="원본 미설치";missing.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		missing.position=Vector2(-8,10);missing.add_theme_font_size_override("font_size",10);add_child(missing)
+		pass # No developer text on the floor (2026-11-20); the slot stays empty.
 	add_child(visual)
 	if source_ground.get("required",false): configure_source_ground(source_ground)
 
@@ -78,7 +76,7 @@ func configure_source_ground(request: Dictionary) -> void:
 			body.queue_free()
 	if not is_instance_valid(source_ground_label):
 		source_ground_label = Label.new()
-		source_ground_label.text = "원본 지면 표시 대기"
+		source_ground_label.text = "" # No developer text on the floor (2026-11-20).
 		source_ground_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		source_ground_label.position = Vector2(20,46)
 		source_ground_label.add_theme_font_size_override("font_size",10)

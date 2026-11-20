@@ -3436,8 +3436,13 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	# Stage times for the phone record (523.681: auto_hunt 196 ms/s, no split).
+	var auto_stage: int = FRAME_HITCH.now()
 	if inventory_automation.maintenance.try_automatic(): return
-	if _run_auto_ground_pickup():
+	auto_stage = FRAME_HITCH.detail_next("auto.maintenance", auto_stage)
+	var picked: bool = _run_auto_ground_pickup()
+	auto_stage = FRAME_HITCH.detail_next("auto.pickup", auto_stage)
+	if picked:
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
@@ -3448,15 +3453,19 @@ func _run_auto_hunt() -> void:
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
 		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
 		if _native_route_pending():auto_stuck_time=0.0
+		auto_stage = FRAME_HITCH.detail_next("auto.search", auto_stage)
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
 		return
 	selected_monster = auto_target
 	var can_see: bool = _has_line_of_sight_world(player.global_position, auto_target.global_position)
+	auto_stage = FRAME_HITCH.detail_next("auto.sight", auto_stage)
 	# A registered, ready skill uses its own range even when the equipped weapon
 	# cannot reach the monster. Offensive skills always precede normal attacks.
-	if can_see and _run_auto_combat_quickslots():
+	var cast: bool = can_see and _run_auto_combat_quickslots()
+	auto_stage = FRAME_HITCH.detail_next("auto.quickslots", auto_stage)
+	if cast:
 		player.clear_click_path()
 		return
 	if _target_in_current_weapon_range(auto_target) and can_see:
@@ -3480,6 +3489,7 @@ func _run_auto_hunt() -> void:
 		# Field line_clear checks the same walkability used for combat sight.
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
+		auto_stage = FRAME_HITCH.detail_next("auto.path", auto_stage)
 		if path.is_empty():
 			if locked != null:
 				player.clear_click_path()
@@ -3857,8 +3867,11 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 		hud.call("refresh_quests")
 	if is_instance_valid(presentation_audio): presentation_audio.play_world("pickup", player.global_position)
 	if pending_ground_pickup == drop: pending_ground_pickup = null
-	hud.append_log("%s ×%d 습득" % [item_name, quantity])
-	hud.show_message("%s 획득" % item_name)
+	# Original acquisition text (UITextData_Korean) with the original name.
+	var shown_name: String = preload("res://scripts/ui/source523_item_identity.gd").display_name(record.get("item_record",{}) if record.get("item_record") is Dictionary else {}, item_name)
+	var acquired_text: String = preload("res://scripts/ui/source523_item_identity.gd").acquire_text(shown_name, quantity)
+	hud.append_log(acquired_text)
+	hud.show_message(acquired_text)
 	var pickup_hud_started_usec: int = Time.get_ticks_usec()
 	# Stacks fold at once (bag state); the bag/quickslot/weight/speed redraw
 	# runs in the next frame, coalesced for a burst of pickups, so the pickup
@@ -4380,6 +4393,12 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	hud.append_log("스탯 투자 · %s +1" % stat_name)
 	_update_hud()
 	_request_deferred_save()
+
+## The original boss overhead mark for NPC class `npc_class_id` (null: none).
+func original_boss_overhead(npc_class_id: int) -> Node2D:
+	var controller: Variant = hud.get("original_main_ui_controller") if hud != null else null
+	if not is_instance_valid(controller) or not controller.has_method("boss_overhead"): return null
+	return controller.boss_overhead(npc_class_id)
 
 func _check_level_up(quiet: bool=false) -> void:
 	var gained_stat_points: bool = false
