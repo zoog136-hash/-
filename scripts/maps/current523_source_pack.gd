@@ -362,33 +362,41 @@ func read_metadata(member: String = "") -> Dictionary:
 
 func read_member(member: String) -> Dictionary:
 	problem = ""
-	if not loaded or not _supported.has(member):
-		_fail("Generic source member not registered in selected AssetPath")
+	var result: Dictionary = read_member_job(member)
+	if result.has("_problem"):
+		_fail(str(result._problem))
 		return {}
+	return result
+
+## read_member for a worker thread: the same checks and result, but it never
+## writes this object (a failure comes back as {"_problem": text}).
+func read_member_job(member: String) -> Dictionary:
+	if not loaded or not _supported.has(member):
+		return {"_problem":"Generic source member not registered in selected AssetPath"}
 	var metadata: Dictionary = _members[member]
 	var storage: Dictionary = _storage(metadata)
-	if storage.is_empty() or metadata.get("path") != storage.path: _fail("Invalid stored source metadata"); return {}
+	if storage.is_empty() or metadata.get("path") != storage.path: return {"_problem":"Invalid stored source metadata"}
 	var path: String = _root.path_join(str(metadata.path))
-	if not _no_links(path): _fail("Symlink in generic source path"); return {}
+	if not _no_links(path): return {"_problem":"Symlink in generic source path"}
 	var file := FileAccess.open(path,FileAccess.READ)
-	if file == null or file.get_length() != int(storage.bytes): _fail("Missing or wrong-sized stored source"); return {}
+	if file == null or file.get_length() != int(storage.bytes): return {"_problem":"Missing or wrong-sized stored source"}
 	var stored: PackedByteArray = file.get_buffer(int(storage.bytes))
-	if stored.size() != int(storage.bytes) or _hash(stored) != storage.sha256: _fail("Stored source SHA256 mismatch"); return {}
+	if stored.size() != int(storage.bytes) or _hash(stored) != storage.sha256: return {"_problem":"Stored source SHA256 mismatch"}
 	var bytes: PackedByteArray = stored
 	if storage.gzip:
-		if not _gzip_header_valid(stored,int(metadata.bytes)): _fail("Invalid gzip header or original ISIZE"); return {}
+		if not _gzip_header_valid(stored,int(metadata.bytes)): return {"_problem":"Invalid gzip header or original ISIZE"}
 		bytes = stored.decompress(int(metadata.bytes),FileAccess.COMPRESSION_GZIP)
-	if bytes.size() != int(metadata.bytes) or _hash(bytes) != metadata.sha256: _fail("Original source SHA256 mismatch after storage decode"); return {}
+	if bytes.size() != int(metadata.bytes) or _hash(bytes) != metadata.sha256: return {"_problem":"Original source SHA256 mismatch after storage decode"}
 	var observed: Dictionary = S32_FORMAT.scan_sections(bytes)
-	if observed.is_empty(): _fail("Malformed generic S32 source"); return {}
+	if observed.is_empty(): return {"_problem":"Malformed generic S32 source"}
 	var result: Dictionary = {"member":member,"asset_path":source_asset,"source_sha256":metadata.sha256,"source_bytes":bytes.size(),"sections":{}}
 	for name: String in S32_FORMAT.SECTION_NAMES:
 		var section: Dictionary = metadata.sections[name]
 		var actual: Dictionary = observed[name]
 		if actual.offset != int(section.offset) or actual.bytes != int(section.bytes) or (name in ["covers","objects","opacity","declared"] and actual.get("count") != int(section.count)):
-			_fail("Generic raw section partition mismatch"); return {}
+			return {"_problem":"Generic raw section partition mismatch"}
 		var raw: PackedByteArray = bytes.slice(int(section.offset),int(section.offset)+int(section.bytes))
-		if _hash(raw) != section.sha256: _fail("Generic raw section SHA256 mismatch"); return {}
+		if _hash(raw) != section.sha256: return {"_problem":"Generic raw section SHA256 mismatch"}
 		result.sections[name] = raw
-	if observed.objects.object_part_count != int(metadata.object_part_count): _fail("Generic raw object count mismatch"); return {}
+	if observed.objects.object_part_count != int(metadata.object_part_count): return {"_problem":"Generic raw object count mismatch"}
 	return result
