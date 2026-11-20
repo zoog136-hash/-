@@ -520,6 +520,7 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 	# frame on a crowded field (Aden: ~360 actors) stall for tens of seconds
 	# while hundreds of offscreen labels were laid out and drawn at once.
 	_refresh_overhead_ui()
+	_attach_boss_overhead()
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
 	trace.phase("animation")
@@ -840,6 +841,19 @@ func _tick_ai(delta: float) -> void:
 const OVERHEAD_UI_DISTANCE: float = 520.0
 
 ## Name and HP bar are only shown for actors near the player.
+## The original 523 boss mark (UIBossNpcClass -> NameCardLayout_BossMonster)
+## centred on top of the name label; it shows and hides with the label.
+func _attach_boss_overhead() -> void:
+	var old: Node = name_label.get_node_or_null("SourceBossOverhead")
+	if old != null:
+		name_label.remove_child(old)
+		old.queue_free()
+	if not is_boss or source_m_npc_id < 0 or not is_instance_valid(world_controller) or not world_controller.has_method("original_boss_overhead"): return
+	var mark: Variant = world_controller.original_boss_overhead(source_m_npc_id)
+	if not mark is Node2D: return
+	(mark as Node2D).position = Vector2(name_label.size.x * 0.5, 0.0)
+	name_label.add_child(mark)
+
 func _refresh_overhead_ui(distance: float = -1.0) -> void:
 	if distance < 0.0:
 		distance = global_position.distance_to(target_player.global_position) if is_instance_valid(target_player) else INF
