@@ -169,14 +169,20 @@ const BUILD_TAG := "(원본|최신|현재)\\s?523\\s*(·\\s*)?|\\b(patch|current
 ## "523" naming the data version (not a number such as damage 523).
 const VERSION_WORD := "(?<![0-9])523 ?(아덴|원본|리소스|캐릭터|지도|팩|UI|표|정의|이전|교체|데이터|SP2|기준)"
 
+static var _version_word: RegEx = null
+static var _build_tag: RegEx = null
+
 static func developer_wording(text: String) -> bool:
 	for word: String in DEVELOPER_WORDS:
 		if text.contains(word): return true
-	return RegEx.create_from_string(VERSION_WORD).search(text) != null
+	if not text.contains("523"): return false
+	if _version_word == null: _version_word = RegEx.create_from_string(VERSION_WORD)
+	return _version_word.search(text) != null
 
 static func strip_build_tags(text: String) -> String:
 	if not text.contains("523"): return text
-	var value: String = RegEx.create_from_string(BUILD_TAG).sub(text, "", true).strip_edges()
+	if _build_tag == null: _build_tag = RegEx.create_from_string(BUILD_TAG)
+	var value: String = _build_tag.sub(text, "", true).strip_edges()
 	while value.begins_with("·"): value = value.trim_prefix("·").strip_edges()
 	while value.ends_with("·"): value = value.trim_suffix("·").strip_edges()
 	return value

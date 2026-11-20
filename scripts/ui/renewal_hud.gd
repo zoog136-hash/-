@@ -1097,6 +1097,8 @@ func _open_window(section: String,title: String,description: String) -> void:
 	_park_shared_panels()
 	workspace.clear()
 	workspace.open(section,title,description)
+	# Content is mounted by the caller right after this returns.
+	(func() -> void: preload("res://scripts/ui/release_text.gd").scrub(workspace)).call_deferred()
 	active_section = section
 	_sync_screen_focus()
 	workspace.set_back_available(navigation_memory.has_history())

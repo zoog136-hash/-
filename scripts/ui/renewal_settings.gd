@@ -291,6 +291,7 @@ func expand_section(id: String) -> bool:
 		entry.built = true
 		var builder: Callable = entry.builder
 		builder.call(entry.body)
+		preload("res://scripts/ui/release_text.gd").scrub(entry.body)
 	entry.body.visible = true
 	entry.toggle.set_pressed_no_signal(true)
 	entry.toggle.text = "▼ " + str(entry.title)
