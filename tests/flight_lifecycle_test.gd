@@ -3,10 +3,12 @@ extends SceneTree
 const FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var callbacks: int = 0
 var failures: int = 0
+var failure_details: Array[String] = []
 func _initialize() -> void: call_deferred("_run")
 func check(ok: bool, label: String) -> void:
 	if not ok:
 		failures += 1
+		failure_details.append(label)
 		print("FLIGHT FAIL: " + label)
 
 func _run() -> void:
@@ -32,5 +34,6 @@ func _run() -> void:
 	manager.queue_free()
 	target.queue_free()
 	await process_frame
+	print("FLIGHT_LIFECYCLE_RESULT ",JSON.stringify({"failures":failure_details,"logical_hits":256,"visual_cap":64,"reuse_cap":128}))
 	if failures == 0: print("FLIGHT_LIFECYCLE_OK logical_hits=256 visual_cap=64 reuse_cap=128")
 	quit(0 if failures == 0 else 1)

@@ -409,6 +409,10 @@ func _control_blocks_world_input(node: Node, point: Vector2) -> bool:
 func playtest_tools_enabled() -> bool:
 	return preload("res://scripts/boot/build_flags.gd").playtest()
 
+## Catalog grant tools and verification lines: debug/dev-UI builds only.
+func developer_tools_visible() -> bool:
+	return playtest_tools_enabled() and preload("res://scripts/boot/build_flags.gd").developer_ui()
+
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
 	s.set_corner_radius_all(radius)
@@ -900,6 +904,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_quickslots()
 
 func append_log(value: String) -> void:
+	value = preload("res://scripts/ui/source523_item_identity.gd").screen_text(value)
 	log_history.append(value)
 	if log_history.size()>120:
 		log_history.pop_front()
@@ -2017,7 +2022,7 @@ func _open_catalog_browser(category: String) -> void:
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
 	catalog_clear_button.visible = category != "아이템"
-	catalog_test_toggle.visible = category == "아이템" and playtest_tools_enabled()
+	catalog_test_toggle.visible = category == "아이템" and developer_tools_visible()
 	if is_instance_valid(card_fusion_tab):
 		card_fusion_tab.visible = CARD_RULES.CATEGORIES.has(category)
 		card_awakening_tab.visible = CARD_RULES.CATEGORIES.has(category)
@@ -2298,7 +2303,7 @@ func _build_catalog_panel() -> void:
 	catalog_test_tools.hide()
 	card_draw_button.reparent(catalog_test_tools)
 	reveal_preview.reparent(catalog_test_tools)
-	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and playtest_tools_enabled())
+	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and developer_tools_visible())
 	catalog_test_tools.add_child(UI.label("개발 빌드 전용 지급 도구",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
 	playtest_grant_button.name = "PlaytestGrantSelected"
@@ -2309,7 +2314,7 @@ func _build_catalog_panel() -> void:
 	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
 		var grant_name: String = scroll
 		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
-			if playtest_tools_enabled(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
+			if developer_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
@@ -2908,7 +2913,7 @@ func _fill_catalog_page_icons(request_id: int) -> void:
 			await get_tree().process_frame
 
 func _request_playtest_catalog_grant() -> void:
-	if not playtest_tools_enabled() or catalog_category != "아이템" or selected_catalog_record.is_empty():
+	if not developer_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():
 		return
 	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
 	if source_id != "":
@@ -2917,7 +2922,7 @@ func _request_playtest_catalog_grant() -> void:
 		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
 
 func _request_playtest_aden() -> void:
-	if playtest_tools_enabled(): playtest_aden_grant_requested.emit()
+	if developer_tools_visible(): playtest_aden_grant_requested.emit()
 
 func _catalog_variant_count(item_name: String) -> int:
 	return int(catalog_variant_counts.get(item_name, 0))
@@ -2967,8 +2972,9 @@ func _on_catalog_item_selected(index: int) -> void:
 		catalog_detail.text+="\n보유 수량: %d" % owned
 		var native_details: String = preload("res://scripts/loot/patch523_monster_drops.gd").item_details(selected_catalog_record)
 		if not native_details.is_empty(): catalog_detail.text += "\n\n" + UI.safe(native_details)
-		catalog_detail.text += "\n\n" + UI.safe(preload("res://scripts/loot/patch523_monster_drops.gd").source_text(selected_catalog_record))
-		match str(selected_catalog_record.get("grade_evidence","")):
+		var developer: bool = developer_tools_visible()
+		if developer: catalog_detail.text += "\n\n" + UI.safe(preload("res://scripts/loot/patch523_monster_drops.gd").source_text(selected_catalog_record))
+		match str(selected_catalog_record.get("grade_evidence","")) if developer else "":
 			"inven_item_quality":
 				catalog_detail.text+="\n등급 판정: 원본 아이템 DB 등급 확인"
 			"inven_original_artwork_filename":
@@ -2977,7 +2983,7 @@ func _on_catalog_item_selected(index: int) -> void:
 				catalog_detail.text+="\n등급 판정: 원본 특수 분류 · 표준 등급 미확인"
 		var variants: int = _catalog_variant_count(item_name)
 		var pinned_id: String = _catalog_pinned_instance_id(selected_catalog_record) if variants > 1 else ""
-		if variants > 1:
+		if variants > 1 and developer:
 			catalog_detail.text+="\n동일 이름 %d종 · 원본 ID %s · 다른 ID와 구별" % [variants,selected_catalog_record.get("sourceId","")]
 			if owned > 0 and pinned_id.is_empty():
 				catalog_detail.text+="\n이 원본 ID로 지급한 장비 없음 · 이름만 같은 장비를 대신 장착하지 않습니다"
