@@ -55,6 +55,44 @@ static func item_class_id(record: Dictionary, key: String = "") -> int:
 	if name.is_empty(): return -1
 	return by_name(name)
 
+## Bag names that are not an original Korean item name (2026-11-20 phone
+## report: empty slots). data/ui/item_icon_identity.json (tools/
+## build_item_icon_identity.py) gives each one original ItemClass whose
+## original icon is shown: "exact" = the legacy catalog row's own original
+## item (publisher sourceId = ItemClass.ID, same icon file), "approx" =
+## TWILIGHT 근사 for TWILIGHT-local items (original icon of an original item
+## of the same kind). Icon only: name, grade and gameplay are unchanged.
+const ICON_IDENTITY_PATH := "res://data/ui/item_icon_identity.json"
+static var _icon_identity: Dictionary = {}
+static var _icon_identity_loaded: bool = false
+
+static func _bare_name(record: Dictionary, key: String) -> String:
+	var name: String = plain_text(key if not key.is_empty() else str(record.get("name", "")))
+	for suffix: String in BLESS_SUFFIXES:
+		if name.ends_with(suffix): name = name.trim_suffix(suffix)
+	return name
+
+## {item_class_id, icon_file, basis, approximation} or {} when the entry has
+## an original identity of its own or no mapping.
+static func icon_identity(record: Dictionary, key: String = "") -> Dictionary:
+	var name: String = _bare_name(record, key)
+	if name.is_empty(): return {}
+	if not _icon_identity_loaded:
+		_icon_identity_loaded = true
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ICON_IDENTITY_PATH)) if FileAccess.file_exists(ICON_IDENTITY_PATH) else null
+		if parsed is Dictionary and parsed.get("schema") == "twilight-item-icon-identity-v1":
+			for group: String in ["exact", "approx"]:
+				var entries: Variant = parsed.get(group)
+				if not entries is Dictionary: continue
+				for entry_name: Variant in entries:
+					var entry: Variant = entries[entry_name]
+					if entry is Dictionary and _integer(entry.get("item_class_id")) and entry.get("icon_file") is String:
+						_icon_identity[str(entry_name)] = {"item_class_id":int(entry.item_class_id),"icon_file":str(entry.icon_file),"basis":str(entry.get("basis","")),"approximation":group == "approx",
+							"ground_item_class_id":int(entry.ground_item_class_id) if _integer(entry.get("ground_item_class_id")) else int(entry.item_class_id)}
+	var found: Variant = _icon_identity.get(name)
+	if not found is Dictionary or item_class_id(record, key) > 0: return {}
+	return (found as Dictionary).duplicate()
+
 ## Unique original ItemClass for an exact original Korean item name. Several
 ## rows with one name count only when they share one IconID (the same
 ## picture); the lowest ID is returned.

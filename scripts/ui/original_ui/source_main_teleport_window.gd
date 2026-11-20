@@ -26,6 +26,10 @@ const LAYOUT_POSITION=Vector2(600.0,-337.5)
 const P_TAB="Map_Tab_Teleport/Map_Tab_Teleport/"
 ## Com_Icn_Adena of Atlas_Common (the atlas of the authored Com_Icn_Gem).
 const ADENA_ICON={"path":"Com_Icn_Adena.png","plistFile":"UI_Resource/Atlas_Common.plist","resourceType":1}
+## Com_Icn_Gem of Atlas_Common: the 다이아 price of a 하딘 row.
+const GEM_ICON={"path":"Com_Icn_Gem.png","plistFile":"UI_Resource/Atlas_Common.plist","resourceType":1}
+## Map_Tab_Teleport's opening clip (frames 5-45).
+const INTRO_CLIP: String="NPC_On"
 const OTHER_TABS: Array[String]=["Btn_World","Btn_Island","Btn_Aden","Btn_Dungeon","Btn_Siege"]
 signal closed
 var _pack: RefCounted
@@ -93,7 +97,7 @@ static func destinations(world: Node) -> Array[Dictionary]:
 	var rows: Array[Dictionary]=[]
 	if source523(world):
 		for row: Dictionary in MAP_TELEPORT.destinations():
-			rows.append({"id":str(row.id),"name":str(row.name),"min_level":int(row.min_level),"price":int(row.price),"type_id":int(row.type_id)})
+			rows.append({"id":str(row.id),"name":str(row.name),"min_level":int(row.min_level),"price":int(row.price),"type_id":int(row.type_id),"currency_id":int(row.get("currency_id",MAP_TELEPORT.ADENA))})
 		return rows
 	for raw: Variant in world.get("maps"):
 		if not raw is Dictionary:continue
@@ -127,7 +131,8 @@ func _stage() -> Dictionary:
 		last_result=built
 		return built
 	var next: Node2D=built.scene
-	var paid: bool=_adena_icon(next,out)
+	# 하딘 (다이아) rows show the pack's Com_Icn_Gem (the tab's authored icon).
+	var paid: bool=_price_icon(next,out,GEM_ICON if _gem(chosen) else ADENA_ICON)
 	var list: Dictionary=NamedTree.locate(next,out,P_TAB+"ListView_Button")
 	var node: Variant=list.player.source_nodes.get(list.offset) if list.get("ok",false) else null
 	var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) and node.has_meta("source_list_content") else null
@@ -144,6 +149,7 @@ func _stage() -> Dictionary:
 			return row
 		height+=_tree.add_row(content,ROW,row.scene,index,size)
 	var previous: Node2D=_scene
+	_intro(next,out,not is_instance_valid(previous) or previous.is_queued_for_deletion())
 	next.position=LAYOUT_POSITION
 	parent.add_child(next)
 	next.z_index=150
@@ -188,6 +194,25 @@ func _spec(world: Node, chosen: Dictionary, quote: Dictionary) -> Dictionary:
 	spec[P_TAB+"Teleport_Disabled"]={"visible":has and not ok,"title":str(quote.get("reason","")),"activate":Callable(self,"_teleport_requested")}
 	return spec
 
+## The tab's own NPC_On clip fades in Hadin (Nd_Npc), the 텔레포트 비용 and
+## 이동하기 (Teleport_Enabled / Teleport_Disabled: Alpha 0 at frame 5 -> 255 at
+## 25). Unplayed, its first key left them at alpha 0: the button and the price
+## were invisible (user report 2026-11-20 "하딘의 텔레포트도 안되고"). The
+## first opening plays it; a rebuild for another row shows its end state.
+func _intro(scene: Node2D, out: Dictionary, opening: bool) -> void:
+	var located: Dictionary=NamedTree.locate(scene,out,P_TAB+"Teleport_Enabled")
+	var player: Variant=located.get("player") if located.get("ok",false) else null
+	if not is_instance_valid(player) or not player.has_method("play"):return
+	if not player.play(INTRO_CLIP,false).get("ok",false):return
+	if opening:return
+	for clip: Dictionary in player.source_tree.get("animationList",[]):
+		if str(clip.get("name",""))==INTRO_CLIP:
+			player.seek_frame(float(clip.endIndex))
+			player.stop()
+
+static func _gem(row: Dictionary) -> bool:
+	return int(row.get("currency_id",MAP_TELEPORT.ADENA))==MAP_TELEPORT.GEM
+
 func _row(world: Node, row: Dictionary) -> Dictionary:
 	var chosen: bool=str(row.id)==_selected
 	var locked: bool=int(world.get("level"))<int(row.min_level)
@@ -208,14 +233,14 @@ func _row(world: Node, row: Dictionary) -> Dictionary:
 	if not built.get("ok",false):return built
 	return {"ok":true,"scene":built.scene}
 
-## 텔레포트 비용 is paid in Adena here: the original Adena picture of the pack
-## takes the authored diamond's place.
-func _adena_icon(root: Node2D, out: Dictionary) -> bool:
+## 텔레포트 비용 of an Adena row: the original Adena picture of the pack
+## takes the authored diamond's place (a 하딘 row is paid in 다이아 and keeps it).
+func _price_icon(root: Node2D, out: Dictionary, icon: Dictionary) -> bool:
 	var located: Dictionary=NamedTree.locate(root,out,P_TAB+"Teleport_Enabled/Payment/Icon")
 	if not located.get("ok",false):return false
-	var texture: Texture2D=_pack.texture(ADENA_ICON,true)
+	var texture: Texture2D=_pack.texture(icon,true)
 	if texture==null:return false
-	var picture: Dictionary={"ok":true,"texture":texture,"status":"original_ui_pack_atlas_frame","provenance":{"member":{"path":"UI/"+str(ADENA_ICON.plistFile).replace(".plist",".png"),"format":"PNG","atlas":"UI/"+str(ADENA_ICON.plistFile),"frame":str(ADENA_ICON.path)},"pack_manifest_sha256":str(_pack.manifest_sha256)}}
+	var picture: Dictionary={"ok":true,"texture":texture,"status":"original_ui_pack_atlas_frame","provenance":{"member":{"path":"UI/"+str(icon.plistFile).replace(".plist",".png"),"format":"PNG","atlas":"UI/"+str(icon.plistFile),"frame":str(icon.path)},"pack_manifest_sha256":str(_pack.manifest_sha256)}}
 	if not located.player.set_bound_source_visual_result(located.offset,picture).get("ok",false):return false
 	return located.player.set_bound_visible(located.offset,true).get("ok",false)
 

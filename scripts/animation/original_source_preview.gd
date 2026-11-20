@@ -84,7 +84,7 @@ var _texture_leases: Dictionary = {}
 var _asset_owner: int = SHARED_ASSETS.new_owner()
 var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
-var _source_body_material: CanvasItemMaterial
+var _source_body_material: Material
 var _role: String = "idle"
 var source_facing: int = 0
 var _clock: float = 0.0
@@ -492,9 +492,14 @@ func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) ->
 		shader_material.set_shader_parameter("screen_operation", id == 22260)
 		effect_node.material = shader_material
 	elif bool(style.get("enabled", false)):
-		var material: CanvasItemMaterial = CanvasItemMaterial.new()
-		material.blend_mode = int(style.blend_mode)
-		effect_node.material = material
+		# One material per attachment node (view-owned, as before); multiply is
+		# the alpha-aware multiply material.
+		if int(style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			effect_node.material = SP2_COMPOSITOR.new_multiply_material()
+		else:
+			var material: CanvasItemMaterial = CanvasItemMaterial.new()
+			material.blend_mode = int(style.blend_mode)
+			effect_node.material = material
 		effect_node.modulate.a = float(style.alpha)
 	effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	effect_node.set_meta("source_layer_id", id)
@@ -522,8 +527,12 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	_source_body_style = POLICY.effect(root_attributes, _playback_mode) if not root_attributes.is_empty() else {}
 	_source_body_material = null
 	if bool(_source_body_style.get("enabled", false)):
-		_source_body_material = CanvasItemMaterial.new()
-		_source_body_material.blend_mode = int(_source_body_style.blend_mode)
+		if int(_source_body_style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			_source_body_material = SP2_COMPOSITOR.new_multiply_material()
+		else:
+			var body_material := CanvasItemMaterial.new()
+			body_material.blend_mode = int(_source_body_style.blend_mode)
+			_source_body_material = body_material
 	_playback_tracks = tracks
 	_manifest_path = manifest_path
 	_is_overlay = bool(candidate.get("one_shot_overlay", false))
@@ -660,12 +669,19 @@ var root_motion_cell_steps: Array[Vector2] = []:
 const ROOT_MOTION_SNAP_FRACTION: float = 0.6
 const ROOT_MOTION_MIN_R2: float = 0.6
 
-func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: int, static_track: bool) -> void:
+## `index` is the loop position in frames, fractional inside a frame: the
+## body's cell origin (host position minus the travel the loop has covered)
+## stays put while a frame is shown, so the authored feet stay planted on the
+## ground and the body steps with the authored frame offsets, as the client
+## draws an actor at its cell plus the frame offset (user report 2026-11-20,
+## "손발은 아직 살짝 어색": cancelling whole frames moved the planted foot
+## with the body by the full walk speed, 3.6 px per frame at 30 fps).
+func _apply_walk_root_motion(track: Dictionary, frames: Array, source_direction: int, index: float, static_track: bool) -> void:
 	var correction: Vector2 = Vector2.ZERO
 	if cancel_walk_root_motion and not static_track and _role in ["walk", "run"] and bool(track.get("loop", false)) and frames.size() >= 3:
 		var key: String = "%s:%d:%d:%s:%s:%s" % [_role, source_direction, frames.size(), str(track.get("source_sprite_id", "")), str(track.get("source_action_id", "")), _cooked.key if _cooked != null else "sp2"]
 		if not _root_motion_fits.has(key): _root_motion_fits[key] = _fit_walk_root_motion(frames, source_direction)
-		correction = -(_root_motion_fits[key] as Vector2) * float(index)
+		correction = -(_root_motion_fits[key] as Vector2) * index
 	if correction != walk_root_motion_offset or (cancel_walk_root_motion and position != correction * scale):
 		walk_root_motion_offset = correction
 		# Offsets are in this node's (source pixel) space; position is the parent's.
@@ -962,8 +978,7 @@ func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes:
 func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
 	var items: Array = []
 	for spec: Dictionary in drawn:
-		var material: CanvasItemMaterial = spec.material as CanvasItemMaterial
-		if not spec.recovered.is_empty() or spec.alpha != 1.0 or (material != null and material.blend_mode != CanvasItemMaterial.BLEND_MODE_MIX): composable = false
+		if not spec.recovered.is_empty() or spec.alpha != 1.0 or SP2_COMPOSITOR.material_blend(spec.material) != CanvasItemMaterial.BLEND_MODE_MIX: composable = false
 		if spec.position != Vector2(Vector2i(spec.position)): composable = false
 		if not spec.empty: items.append({"layer":spec.layer,"offset":Vector2i(spec.position)})
 	# A single layer gains nothing from a copy: it keeps its node and texture.
@@ -1165,7 +1180,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			break
 		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 		scan_index += 1
-	_apply_walk_root_motion(track, frames, source_direction, selected_index, static_track)
+	var loop_position: float = float(selected_index)
+	if not static_track and bool(track.loop) and _role in ["walk", "run"]:
+		var shown: float = preload("res://scripts/animation/source_presentation_policy.gd").duration(selected)
+		if shown > 0.0: loop_position += clampf(time / shown, 0.0, 1.0)
+	_apply_walk_root_motion(track, frames, source_direction, loop_position, static_track)
 	if (_reference_bank == null or not _reference_card_context.is_empty()) and _role == "attack" and (static_track or _clock >= total):
 		_source_attack = false
 		_attack_completed = true
@@ -1548,16 +1567,11 @@ func attachment_status() -> Dictionary:
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
 	return {"recovered_source_compositors":compositors,"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
-## One read-only CanvasItemMaterial per blend mode, shared by every reference
-## layer (a new material per layer per frame used to be allocated here).
-static var _blend_materials: Dictionary = {}
-static func _blend_material(blend_mode: int) -> CanvasItemMaterial:
-	var material: CanvasItemMaterial = _blend_materials.get(blend_mode) as CanvasItemMaterial
-	if material == null:
-		material = CanvasItemMaterial.new()
-		material.blend_mode = blend_mode
-		_blend_materials[blend_mode] = material
-	return material
+## One read-only material per blend mode, shared by every reference layer
+## (a new material per layer per frame used to be allocated here). Multiply
+## (original attr128) is the compositor's copy-free multiply material.
+static func _blend_material(blend_mode: int) -> Material:
+	return SP2_COMPOSITOR.blend_material(blend_mode)
 
 static var _target_pattern: RegEx = null
 static func _overlay_target_pattern() -> RegEx:
