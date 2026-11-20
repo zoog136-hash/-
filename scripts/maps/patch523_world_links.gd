@@ -14,6 +14,7 @@ var contexts: Dictionary = {}
 var territories: Dictionary = {}
 var npcs: Dictionary = {}
 var views_by_pack: Dictionary = {}
+var _scoped_land_attributes: Variant = null
 
 func _fail(message: String) -> bool:
 	problem = message
@@ -152,6 +153,7 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	loaded = false
 	manifest_sha256 = ""
 	shard = {}; contexts = {}; land = {}; territories = {}; npcs = {}; views_by_pack = {}
+	_scoped_land_attributes = null
 	root = path
 	var manifest_path: String = root.path_join("manifest.json")
 	if expected_manifest_sha256.length() != 64 or not FileAccess.file_exists(manifest_path) or FileAccess.get_sha256(manifest_path) != expected_manifest_sha256:
@@ -261,6 +263,17 @@ func context_rows(table: String) -> Array:
 	if not loaded: return []
 	var value: Variant = contexts.get(table, [])
 	return (value as ColdRows).rows() if value is ColdRows else (value as Array).duplicate(true)
+
+## The Land owner reuses references into the verified shared table. Callers
+## receive copies of just the applicable rows, in their original order.
+func land_attribute_rows(land_id: int) -> Array:
+	if not loaded or int(land.ID) != land_id: return []
+	if _scoped_land_attributes == null:
+		var rows: Array = []
+		for row: Dictionary in _table_rows("LandAttribute"):
+			if int(row.get("LandID", -1)) == land_id: rows.append(row)
+		_scoped_land_attributes = rows
+	return (_scoped_land_attributes as Array).duplicate(true)
 
 func spawn_evidence(pack_id: int = -1) -> Array:
 	var result: Array = []
