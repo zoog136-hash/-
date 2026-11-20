@@ -7705,6 +7705,7 @@ func _load_game(quiet: bool) -> void:
 		if source_gender_id not in [0,1,2]: source_gender_id = 0
 		var saved_options: Variant = source_context.get("active_card_options", {})
 		source_card_visual_options = saved_options.duplicate(true) if saved_options is Dictionary else {}
+	_sync_card_class_variant()
 	var saved_ui: Variant = data.get("ui_preferences", {})
 	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
 	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
@@ -7990,6 +7991,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	_clear_combat_actions()
 	if original_skills != null: original_skills.catalog.class_slots[job_class] = quickslots.duplicate(true)
 	job_class = job_name
+	if _sync_card_class_variant(): _invalidate_equipment_static()
 	if original_skills != null and original_skills.catalog.class_slots.has(job_name):
 		quickslots = original_skills.catalog.class_slots[job_name].duplicate(true)
 	var record: Dictionary = _job_transform_record(job_class)
@@ -11850,6 +11852,10 @@ func _on_secondary_relic_requested(identity: String) -> void:
 	if is_instance_valid(hud.relic_reference_view):hud.relic_reference_view.refresh_state()
 	hud.show_message("추가 성물 소환 해제" if identity.is_empty() else "추가 성물 선택 완료"+(" · 성물 원본 리소스 설치 필요" if not is_instance_valid(secondary_relic_visual) or secondary_relic_visual.status!="source_native" else ""))
 
+## 보고서2 R2: class/gender cards (BuffCardByClass) follow the playing character.
+func _sync_card_class_variant() -> bool:
+	return BASE508.set_character_context(BASE508.source_class_id(job_class),source_gender_id)
+
 func _source_visual_context() -> Dictionary:
 	var options: Dictionary = source_card_visual_options.duplicate(true)
 	for record: Dictionary in equipped_catalog.values():
@@ -11883,6 +11889,7 @@ func set_source_character_gender(gender_id: int) -> bool:
 	if gender_id not in [0,1,2]: return false
 	if not CHARACTER_ACCOUNT.session.is_empty() and source_gender_id!=gender_id: return false
 	source_gender_id = gender_id
+	if _sync_card_class_variant(): _invalidate_equipment_static()
 	_restore_equipped_visuals()
 	_update_hud()
 	_save_game(true)

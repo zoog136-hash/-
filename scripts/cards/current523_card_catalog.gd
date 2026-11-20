@@ -93,9 +93,20 @@ static func _card(raw: Dictionary, deck: Dictionary, source_id: String, identity
 		"source_declared_patch523_sprite_ids":[],"source_inworld_sprite_ids":[],
 		"source_visual_status":"patch523_original_pixels_unconnected","image_path":""}
 	if saved_namespace == "m523": record["source_draw_pool_pending"] = true
+	_apply_buff(record,int(raw.BuffClassID),blockers)
+	if not blockers.is_empty(): return {}
+	record["source_original"] = {"source_snapshot":"patch523","content_snapshot":"patch523", "card_id":raw.ID,"deck_id":raw.BuffCardDeckID,
+		"grade_id":raw.GradeID,"grade_tier_id":raw.GradeTierID,"buff_class_id":raw.BuffClassID,
+		"server_limit_set_id":raw.ServerLimitSetID,"start_datetime_id":raw.StartDateTimeID,"end_datetime_id":raw.EndDateTimeID,
+		"source_definition_archive":identity.duplicate(true)}
+	return record
+
+## Bonus-derived fields of a card record from one BuffClass (BuffBonus rows):
+## source_bonuses, options, flat stat fields, typed sprite references.
+static func _apply_buff(record: Dictionary, buff_class_id: int, blockers: Array[String]) -> void:
 	var options: Array[String] = []
 	var sprites: Dictionary = {}
-	for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",int(raw.BuffClassID)):
+	for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",buff_class_id):
 		var bonus: Dictionary = _reference("Bonus",link.get("BonusID"),blockers)
 		var type: Dictionary = _reference("BonusType",bonus.get("BonusTypeID"),blockers) if not bonus.is_empty() else {}
 		var unit: Dictionary = _reference("Unit",type.get("UnitID"),blockers) if not type.is_empty() else {}
@@ -117,18 +128,57 @@ static func _card(raw: Dictionary, deck: Dictionary, source_id: String, identity
 		record.source_bonuses.append(detail)
 		if not type.is_empty() and not bonus.is_empty() and not unit.is_empty():
 			record.sourceOptionsRaw.append({"type_id":type.ID,"value":bonus.get("Value"),"unit_id":unit.ID})
-	if not blockers.is_empty(): return {}
+	if not blockers.is_empty(): return
 	var sprite_ids: Array = sprites.keys()
 	sprite_ids.sort()
 	record.source_declared_patch523_sprite_ids = sprite_ids.duplicate()
 	record.source_inworld_sprite_ids = sprite_ids.duplicate()
 	record.sourceOptions = options
 	record["desc"] = " · ".join(options)
-	record["source_original"] = {"source_snapshot":"patch523","content_snapshot":"patch523", "card_id":raw.ID,"deck_id":raw.BuffCardDeckID,
-		"grade_id":raw.GradeID,"grade_tier_id":raw.GradeTierID,"buff_class_id":raw.BuffClassID,
-		"server_limit_set_id":raw.ServerLimitSetID,"start_datetime_id":raw.StartDateTimeID,"end_datetime_id":raw.EndDateTimeID,
-		"source_definition_archive":identity.duplicate(true)}
-	return record
+
+## 보고서2 R2 (BuffCardByClass, 138행): a ClassifiedByClass card has one row per
+## character class and gender. The row for the playing character replaces the
+## BuffClassID (bonuses, options, polymorph chain) and the display sprite/assets.
+## The saved identity is never changed: sourceId, source_card_id, name and
+## source_original_card stay the base card's, so ownership and collections are the
+## same. No exact row -> the base card. Gender unknown (0) -> only the bonuses,
+## when every row of the class shares one BuffClassID.
+static func variant_row(record: Dictionary, class_id: int, gender_id: int) -> Dictionary:
+	var raw: Variant = record.get("source_original_card")
+	if class_id<=0 or not raw is Dictionary or raw.get("ClassifiedByClass")!=true: return {}
+	var exact: Array = []; var by_class: Array = []
+	for row: Variant in record.get("source_class_variants",[]):
+		if not row is Dictionary or not _integer(row.get("ClassID")) or int(row.ClassID)!=class_id or int(row.get("BuffCardID",-1))!=int(raw.get("ID",-2)): continue
+		by_class.append(row)
+		if _integer(row.get("Gender")) and int(row.Gender)==gender_id: exact.append(row)
+	if gender_id in [1,2]: return exact[0] if exact.size()==1 else {}
+	var buffs: Dictionary = {}
+	for row: Dictionary in by_class: buffs[int(row.get("BuffClassID",-1))] = true
+	return {"BuffClassID":buffs.keys()[0],"ClassID":class_id,"Gender":0,"_bonus_only":true} if by_class.size()>0 and buffs.size()==1 else {}
+
+static var _variant_cache: Dictionary = {}
+const VARIANT_CLEARED_FIELDS: Array[String] = ["source_bonuses","source_stat_application","sourceOptions","sourceOptionsRaw","source_typed_sprite_references","source_declared_patch523_sprite_ids","source_inworld_sprite_ids","desc"]
+static func class_variant(record: Dictionary, class_id: int, gender_id: int) -> Dictionary:
+	var row: Dictionary = variant_row(record,class_id,gender_id)
+	if row.is_empty(): return record
+	var key: String = "%s|%d|%d|%s|%d" % [str(record.get("sourceId","")),class_id,gender_id,str(SOURCE.identity().get("source_sha256","")),SOURCE.cache_generation()]
+	if _variant_cache.has(key): return _variant_cache[key]
+	var result: Dictionary = record.duplicate(false)
+	for field: String in VARIANT_CLEARED_FIELDS: result[field] = [] if field!="desc" else ""
+	for field: String in FLAT_FIELDS.values(): result.erase(field)
+	var blockers: Array[String] = []
+	_apply_buff(result,int(row.BuffClassID),blockers)
+	if not blockers.is_empty(): return record
+	var applied: Dictionary = {"basis":"BuffCardByClass","class_id":class_id,"gender_id":gender_id,"buff_class_id":int(row.BuffClassID),"base_buff_class_id":int(record.source_original_card.get("BuffClassID",0))}
+	if not row.get("_bonus_only",false):
+		result["source_display_sprite_id"] = row.get("DisplaySpriteID")
+		result["source_ui_assets"] = _assets(row)
+		applied.merge({"row_id":int(row.ID),"display_sprite_id":row.get("DisplaySpriteID"),"base_display_sprite_id":record.get("source_display_sprite_id"),
+			"display_name":_description(row.get("DescID"),str(record.get("name",""))),"history":_description(row.get("HistoryDescID"))})
+	result["source_class_variant"] = applied
+	if _variant_cache.size()>=256: _variant_cache.clear()
+	_variant_cache[key] = result
+	return result
 
 static func _classes() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
