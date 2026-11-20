@@ -1,4 +1,5 @@
 extends RefCounted
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## UI-only consumer of PR270's existing exact source-UI image resolver.
 ## Asset joins, exclusions and file identity remain with that owner. This
 ## adapter only carries its original pixels into the source renderer.
@@ -48,7 +49,9 @@ static func consume_owner_result(owner_result: Dictionary) -> Dictionary:
 		image=image.duplicate() as Image
 		if image.is_compressed() and image.decompress()!=OK:return {"ok":false,"error":"source_image_original_pixels_unavailable"}
 		image.convert(Image.FORMAT_RGBA8)
+		var upload_started: int=FRAME_HITCH.now()
 		original=ImageTexture.create_from_image(PMA_PIXELS.convert(image))
+		FRAME_HITCH.detail("ui.texture_new",upload_started)
 		original.set_meta("cocos_premultiplied",true)
 		original.set_meta("source523_original_asset",evidence)
 		_pma_cache.remember(request,source,original,original.get_width()*original.get_height()*4)

@@ -44,6 +44,7 @@ class FixtureChoicePlanner extends "res://scripts/unconfirmed523/source523.gd":
 func setup(source: Object) -> void:
 	_source = source
 	_servers.clear()
+	_goal_kinds_by_quest.clear()
 	_attendance.clear()
 	_levels.clear()
 	_quests.clear()
@@ -1354,6 +1355,13 @@ func event(event_data: Dictionary, context: Dictionary, state: Dictionary) -> Di
 	next.latest_at = int(context.get("now", 0))
 	if not next.has("quest_progress"):
 		next.quest_progress = {}
+	# Only goals of these types can match an event (_goal_event_matches); for
+	# any other kind (pickup, item_use ...) the scan below cannot change
+	# progress, so it is skipped. Quests without a goal of the event's kind are
+	# skipped the same way (each scan was ~100 ms per kill/pickup).
+	var kind := str(event_data.get("kind", ""))
+	if goal_kind_filter and not GOAL_TYPES_BY_KIND.has(kind):
+		return _success(next, [], [])
 	for pass_row in _rows("PassSystem"):
 		if int(pass_row.get("PassSystemTypeID", 0)) != 12 or not _pass_available(pass_row, context).is_empty():
 			continue
@@ -1363,6 +1371,8 @@ func event(event_data: Dictionary, context: Dictionary, state: Dictionary) -> Di
 				if seen.has(str(quest_id)):
 					continue
 				seen[str(quest_id)] = true
+				if goal_kind_filter and not _quest_has_goal_kind(str(quest_id), kind):
+					continue
 				var quest := _row("QuestView", int(quest_id))
 				if not _pass_quest_eligible(pass_row, quest, context).is_empty():
 					continue
@@ -1378,6 +1388,21 @@ func event(event_data: Dictionary, context: Dictionary, state: Dictionary) -> Di
 				if not progress.is_empty():
 					next.quest_progress[token] = progress
 	return _success(next, [], [])
+
+const GOAL_TYPES_BY_KIND := {"kill":[62,72],"blessing_use":[10],"enchant_success":[17],"craft":[21],"card_compose":[142],"challenge_complete":[211],"party_dungeon_complete":[324],"card_buy_adena":[742],"fishing_success":[851]}
+var _goal_kinds_by_quest: Dictionary = {}
+## Test seam: false runs the full scan (the result must be identical).
+var goal_kind_filter: bool = true
+
+func _quest_has_goal_kind(quest_id: String, kind: String) -> bool:
+	if not _goal_kinds_by_quest.has(quest_id):
+		var kinds: Dictionary = {}
+		for link in _quest_goal_links(quest_id):
+			var goal_type := int(_row("Goal", int(link.get("GoalID", 0))).get("GoalTypeID", 0))
+			for name: String in GOAL_TYPES_BY_KIND:
+				if goal_type in GOAL_TYPES_BY_KIND[name]: kinds[name] = true
+		_goal_kinds_by_quest[quest_id] = kinds
+	return (_goal_kinds_by_quest[quest_id] as Dictionary).has(kind)
 
 func _pass_quest_eligible(pass_row: Dictionary, quest: Dictionary, context: Dictionary) -> String:
 	context = _pass_ctx(pass_row, context)

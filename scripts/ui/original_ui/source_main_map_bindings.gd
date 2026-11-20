@@ -20,6 +20,11 @@ const AREA_AUTHORED_ROW=37316
 signal world_selection_changed(result: Dictionary)
 signal world_image_clicked(payload: Dictionary)
 const OwnerPixels=preload("res://scripts/ui/original_ui/source_asset_pixels.gd")
+## The area list / filters / 텔레포트 / 지역 정보 of Map_Tab_Area (UI pack ui43+).
+const AreaTab=preload("res://scripts/ui/original_ui/source_main_map_area_tab.gd")
+## Map_All Btn_AreaInfo (지역 정보) and its two label states.
+const AREA_INFO_SCOPE: Array[int]=[2032,3856,4612,4280,3916,2084,3300,2864,2528,2148]
+var area_tab: RefCounted
 var _displayed_world_id: int=0
 var _displayed_texture: Texture2D
 var _field_map: WeakRef
@@ -40,7 +45,11 @@ func configure(pack: RefCounted, hud: Node, image_adapter: RefCounted=null) -> D
 	_pack=pack
 	_hud=weakref(hud)
 	_image_adapter=image_adapter
-	return {"ok":true,"requirements":requirements(),"complete_screen_contract":false}
+	area_tab=null
+	if AreaTab.available(pack):
+		var tab=AreaTab.new()
+		if tab.configure(pack,hud).get("ok",false):area_tab=tab
+	return {"ok":true,"area_tab":area_tab!=null,"requirements":requirements(),"complete_screen_contract":false}
 
 func build_name(map_name: String, include_safe_label: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MINIMAP_MEMBER,{}).get("sha256","")!=MINIMAP_SHA256:return _fail("source_main_map_minimap_identity_mismatch")
@@ -163,7 +172,18 @@ func build_area(field_map: Object, offered_world_id: int, world_label: String, r
 	]
 	if scroll_binding.get("role")=="source_scroll" and scroll_binding.get("input") is Callable and scroll_binding.input.is_valid():area_bindings[44388]=scroll_binding.duplicate(true)
 	else:unresolved.append({"field":"existing_original_scroll_input","member":AREA,"offset":44388})
-	return {"ok":true,"member":AREA,"sha256":AREA_SHA,"source_node_offsets":[AREA_IMAGE,AREA_AUTHORED_ROW],"bindings":area_bindings,"offered_candidate":candidate.candidate,"selected_world_id":_selected_world_id,"world_label_basis":"explicit caller localized label","role_declaration":role_declaration.duplicate(true),"draft_image_visible_before_apply":false,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved}
+	var area_offsets: Array[int]=[AREA_IMAGE,AREA_AUTHORED_ROW]
+	if area_tab!=null:
+		# The map's own area list replaces the single world row (its label
+		# moves to the area title); the world picture and selection stay.
+		var tab: Dictionary=area_tab.bind(field_map,offered_world_id,world_label)
+		if tab.get("ok",false):
+			for offset: int in tab.scope:
+				if not area_offsets.has(offset):area_offsets.append(offset)
+			for offset: Variant in tab.bindings:
+				if not area_bindings.has(offset):area_bindings[offset]=tab.bindings[offset]
+			area_bindings[AREA_AUTHORED_ROW]["visible"]=false
+	return {"ok":true,"member":AREA,"sha256":AREA_SHA,"source_node_offsets":area_offsets,"bindings":area_bindings,"offered_candidate":candidate.candidate,"selected_world_id":_selected_world_id,"world_label_basis":"explicit caller localized label","role_declaration":role_declaration.duplicate(true),"draft_image_visible_before_apply":false,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved}
 
 func build_map_scene(field_map: Object, offered_world_id: int, world_label: String, role_declaration: Dictionary={}, scroll_binding: Dictionary={}) -> Dictionary:
 	var area: Dictionary=build_area(field_map,offered_world_id,world_label,role_declaration,scroll_binding)
@@ -177,6 +197,10 @@ func build_map_scene(field_map: Object, offered_world_id: int, world_label: Stri
 		# Aden tab IDs, category types or preview On variants are guessed.
 		31656:{"role":"project","visible":true,"source_node_offsets":area.source_node_offsets,"bindings":area.bindings}
 	}
+	if area_tab!=null:
+		all_scope.append_array(AREA_INFO_SCOPE)
+		all_bindings[AREA_INFO_SCOPE[0]]=area_tab.area_info_binding()
+		for label: int in [3916,2148]:all_bindings[label]={"role":"static_source_text"}
 	var bindings: Dictionary={132:{"role":"project","source_node_offsets":all_scope,"bindings":all_bindings}}
 	return {"ok":true,"member":MAP_SCENE,"sha256":MAP_SCENE_SHA,"source_node_offsets":[132],"bindings":bindings,"child_member":MAP_ALL,"child_sha256":MAP_ALL_SHA,"child_source_node_offsets":all_scope,"child_bindings":all_bindings,"area_contract":area,"native_parent":map_scene_contract(),"partial_source_scene":true,"complete_screen_contract":false}
 
@@ -317,6 +341,7 @@ func submit_world_image_click(viewport_point: Vector2, caller_event_metadata: Di
 	return pixel
 
 func close_map() -> Dictionary:
+	if area_tab!=null:area_tab.close()
 	var scene: Object=_map_scene.get_ref() if _map_scene!=null else null
 	_map_scene=null
 	_area_scene=null

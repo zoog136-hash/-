@@ -41,7 +41,9 @@ class Baseline extends Fixture:
 				var rendered: Dictionary = _bank.render_layer(layer, false)
 				if rendered.get("ok", false): picture.position = Vector2(rendered.offset)
 			picture.z_index = -1 if layer.get("kind") == "shadow" else order
-			if int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
+			if int(style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+				picture.material = preload("res://scripts/animation/source_sp2_compositor.gd").multiply_material()
+			elif int(style.blend_mode) != CanvasItemMaterial.BLEND_MODE_MIX:
 				var material := CanvasItemMaterial.new()
 				material.blend_mode = int(style.blend_mode)
 				picture.material = material
@@ -85,7 +87,7 @@ func view(baseline: bool) -> Dictionary:
 func describe(holder: Node2D) -> Array:
 	var result: Array=[]
 	for child: Sprite2D in holder.get_children():
-		result.append([child.texture.get_instance_id(),child.position,child.z_index,child.centered,child.modulate,-1 if child.material==null else (child.material as CanvasItemMaterial).blend_mode])
+		result.append([child.texture.get_instance_id(),child.position,child.z_index,child.centered,child.modulate,-1 if child.material==null else preload("res://scripts/animation/source_sp2_compositor.gd").material_blend(child.material)])
 	return result
 func pixels(viewport: SubViewport) -> PackedByteArray:
 	var image: Image=viewport.get_texture().get_image()

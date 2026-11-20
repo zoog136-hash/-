@@ -7,6 +7,8 @@ const ITEM_NAME_DURATION_MS: int = 5000
 const ITEM_NAME_GAP: float = 4.0
 const ITEM_NAME_NATIVE_Z: int = 400
 var item_name_hint: Label
+## The original item information popup is showing the selected item.
+var item_tooltip_open: bool = false
 var item_name_reference: String = ""
 var item_name_until: int = 0
 var controller: Node
@@ -236,15 +238,33 @@ func _show_item_name(reference: String) -> void:
 	var record: Dictionary = _find_item_record(reference)
 	item_name_reference = reference
 	item_name_hint.text = _enhanced_display_name(record,reference)
-	item_name_hint.add_theme_color_override("font_color",_grade_color(str(record.get("grade","일반"))))
+	# Original Grade.ColorID -> ColorTable of the entry's ItemClass when known.
+	var original_color: Dictionary = preload("res://scripts/loot/current523_item_grade.gd").color_info({"source_grade_id":preload("res://scripts/ui/source523_item_identity.gd").grade_id(record,reference)})
+	item_name_hint.add_theme_color_override("font_color",original_color.color if original_color.get("ok",false) else _grade_color(str(record.get("grade","일반"))))
 	# One deadline, replaced on each click; old callbacks cannot hide a new name.
 	item_name_until = Time.get_ticks_msec()+ITEM_NAME_DURATION_MS
+	# With the original bag the original item information popup
+	# (ToolTip_CommonType) replaces the small TWILIGHT name label.
+	item_tooltip_open = false
+	if native.get("ok",false):
+		var original_hud: Variant = controller.get("original_main_ui_controller") if is_instance_valid(controller) else null
+		if is_instance_valid(original_hud) and original_hud.has_method("try_open_item_tooltip"):
+			var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
+			var opened: Variant = original_hud.call("try_open_item_tooltip",reference,item_name_hint.text,identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record))
+			item_tooltip_open = opened is Dictionary and opened.get("ok",false)
+	if item_tooltip_open:
+		item_name_hint.hide()
+		item_name_until = 9223372036854775807 # stays until another tap / the bag closes
 	set_process(true)
 	_update_item_name()
 
 func _hide_item_name() -> void:
 	item_name_reference = ""
 	item_name_until = 0
+	if item_tooltip_open:
+		item_tooltip_open = false
+		var original_hud: Variant = controller.get("original_main_ui_controller") if is_instance_valid(controller) else null
+		if is_instance_valid(original_hud) and original_hud.has_method("close_item_tooltip"): original_hud.call("close_item_tooltip")
 	if item_name_hint != null: item_name_hint.hide()
 	set_process(false)
 	# Deliberately do not clear selected_item or its highlighted item border.
@@ -289,6 +309,9 @@ func _update_item_name() -> void:
 	# The original bag hides this bag's workspace, so the same label is drawn
 	# from the HUD canvas over the tapped original slot (TWILIGHT's single-tap
 	# name, not the original ToolTip header); it returns here otherwise.
+	if item_tooltip_open:
+		item_name_hint.hide()
+		return
 	_host_item_name(native.get("host") as Control if native_active else self)
 	var inverse: Transform2D = (item_name_hint.get_parent() as CanvasItem).get_global_transform_with_canvas().affine_inverse()
 	var local_slot: Rect2 = inverse*slot_rect

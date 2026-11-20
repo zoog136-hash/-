@@ -395,10 +395,13 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 	tween.tween_callback(overlay.queue_free)
 
 func show_message(text: String) -> void:
+	# Internal item keys (" · 원본#N", "[원본 보상] ") never reach the screen.
+	text = preload("res://scripts/ui/source523_item_identity.gd").screen_text(text)
 	message_label.text = text
 	message_time = 2.6
 
 func append_log(text: String) -> void:
+	text = preload("res://scripts/ui/source523_item_identity.gd").screen_text(text)
 	log_label.append_text(text + "\n")
 	if log_label.get_line_count() > 8:
 		log_label.clear()

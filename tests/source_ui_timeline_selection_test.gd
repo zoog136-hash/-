@@ -23,6 +23,7 @@ const OLD_SELECTION="""		var selected: Dictionary={}
 """
 class Pack extends RefCounted:
 	var manifest: Dictionary={}
+	var manifest_sha256: String=""
 	var tree: Dictionary={}
 	func scene(_member: String) -> Dictionary:return tree.duplicate(true)
 var checks: int=0
@@ -40,7 +41,8 @@ func instrument(old: bool) -> GDScript:
 	if old:source=source.left(begin)+OLD_SELECTION+source.substr(end)
 	# Count actual union decoder calls in test copies, never a production hook.
 	source=source.replace("extends Node2D\n","extends Node2D\nvar _test_decodes: int=0\n")
-	source=source.replace("\t\t\tvar value: Dictionary=_frame_value(raw)","\t\t\t_test_decodes+=1\n\t\t\tvar value: Dictionary=_frame_value(raw)")
+	var indent: String="\t\t\t" if old else "\t\t\t\t"
+	source=source.replace("\n"+indent+"var value: Dictionary=_frame_value(raw)","\n"+indent+"_test_decodes+=1\n"+indent+"var value: Dictionary=_frame_value(raw)")
 	var script:=GDScript.new();script.source_code=source
 	check(script.reload()==OK,"instrumented actual scene compiles")
 	return script
@@ -94,6 +96,41 @@ func failures_unchanged() -> void:
 	var p:=SCENE.new();var result: Dictionary=p.configure(pack,"synthetic")
 	check(not result.get("ok",false) and result.get("details",[]).has("unsupported_timeline:Unknown"),"unknown property remains rejected")
 	p.free()
+func ordered_configuration(counted: Script) -> void:
+	var times: Array=[]
+	for i: int in 64:times.append(float(i>>1))
+	var tree: Dictionary=action(times,true)
+	var widget: Dictionary={"name":"Indexed","actionTag":10,"rotationSkew":[0.0,0.0],"zOrder":0,"visible":true,"alpha":255,"position":[0,0],"scale":[1,1],"anchorPoint":[0,0],"color":[255,255,255,255],"size":[0,0]}
+	tree["nodeTree"]={"classname":"Node","_offset":10,"options":widget,"children":[]}
+	var source:=Pack.new()
+	source.tree=tree
+	var indexed: Node2D=counted.new()
+	var scan: Node2D=counted.new()
+	var configured: Dictionary=indexed.configure(source,"ordered",true)
+	var scan_result: Dictionary=scan.configure(source,"ordered",true)
+	check(configured.get("ok",false) and scan_result.get("ok",false),"ordered original shape configures")
+	if configured.get("ok",false) and scan_result.get("ok",false):
+		check(indexed.get("_indexed_keyframes").size()==2,"both long ordered tracks indexed")
+		scan.set("_indexed_keyframes",{})
+		for at: float in [-1.0,0.0,0.2,1.0,11.5,31.0,32.0,INF,NAN,0.0]:
+			indexed.set("_test_decodes",0)
+			scan.set("_test_decodes",0)
+			indexed.seek_frame(at)
+			scan.seek_frame(at)
+			check(indexed.source_nodes[10].position==scan.source_nodes[10].position and indexed.get("_entered_frames")==scan.get("_entered_frames"),"ordered seek matches scan at %s"%at)
+			check(is_nan(at) or (indexed.get("_test_decodes")==0 and scan.get("_test_decodes")==128),"indexed seeks skip the original frame union decoding")
+		check(var_to_bytes(indexed.source_tree)==var_to_bytes(tree),"the indexed tree still contains the exact authored records")
+		indexed.source_tree=action([0,4,8],true)
+		check(indexed.get("_indexed_keyframes").is_empty(),"replacing the source tree clears the old track index")
+	indexed.free()
+	scan.free()
+	# An unordered long track keeps the serialized tie order via the scan.
+	source.tree=tree.duplicate(true)
+	source.tree.action.timeLines[0].frames.reverse()
+	var unordered: Node2D=counted.new()
+	var unordered_result: Dictionary=unordered.configure(source,"unordered",true)
+	check(unordered_result.get("ok",false) and unordered.get("_indexed_keyframes").keys()==[1],"only the ordered track is indexed")
+	unordered.free()
 func run() -> void:
 	var old:=instrument(true)
 	var counted:=instrument(false)
@@ -117,6 +154,7 @@ func run() -> void:
 	compare(players,action([0,4],true),1)
 	compare(players,{},1)
 	for p: Node2D in players:p.free()
+	ordered_configuration(counted)
 	failures_unchanged()
 	print("SOURCE_UI_TIMELINE_SELECTION_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"decode_comparisons":decode_proofs,"synthetic_only":true}))
 	quit(0 if failures.is_empty() else 1)

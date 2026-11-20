@@ -274,6 +274,24 @@ func build_jobs(kinds: PackedStringArray, context: Dictionary, options: Dictiona
 					continue
 				var selected: Dictionary = SOURCE.card_visual_selection("transform", sprite, weapon, options)
 				if selected.ok: add.call({"kind":"transform","sprite":sprite,"label":"transform:%d:%d" % [sprite, weapon],"selected":selected,"inputs":STORE.selection_inputs(selected)})
+	# Magic doll / relic bodies: the summoned NpcClass sprite of every non-test
+	# card of the deck (select_card's typed chain), idle + walk (+ run) only,
+	# weapon 0 as select_card asks for (card_visual_selection, non-transform).
+	for consumer: String in ["doll", "relic"]:
+		if not consumer in kinds: continue
+		var card_bodies: Dictionary = card_sprites(int(SOURCE.DECKS[consumer]))
+		var card_ids: Array = card_bodies.keys()
+		card_ids.sort()
+		_effect_index_stats[consumer + "_bodies_reachable"] = card_ids.size()
+		var primary: Dictionary = SOURCE.PRIMARY_ACTIONS[0].duplicate()
+		primary.erase("attack")
+		for sprite: int in card_ids:
+			if not _actor_usable(sprite, primary.values()):
+				_filtered(consumer + "_actions_absent_in_bank")
+				continue
+			var selected: Dictionary = SOURCE.card_visual_selection(consumer, sprite, 0, options)
+			if selected.ok: add.call({"kind":consumer,"sprite":sprite,"label":"%s:%d" % [consumer, sprite],"selected":selected,"inputs":STORE.selection_inputs(selected)})
+			else: _filtered(consumer + "_selection:" + str(selected.get("reason", "")))
 	if "effect" in kinds:
 		_effect_index = effect_domain_index(base.path_join("bank"), options)
 		EFFECT.cooked_domain_index = _effect_index
@@ -314,6 +332,21 @@ func transform_sprites() -> Dictionary:
 			if unit.get("Name", "") == "PolymorphSetID": SOURCE._add_set(int(option.get("Value", -1)), [], chains)
 		for chain: Dictionary in chains: out[int(chain.sprite_id)] = true
 	_effect_index_stats["transform_cards"] = cards
+	return out
+
+## Summoned bodies of every non-test card of a doll / relic deck: the same
+## typed BuffClass chain select_card walks (BuffCardSummonNPCClassID ->
+## NpcClass.Sprite, sub-slot buffs included).
+func card_sprites(deck_id: int) -> Dictionary:
+	var out: Dictionary = {}
+	var cards: int = 0
+	for card: Dictionary in SOURCE.table_rows("BuffCard"):
+		if int(card.get("BuffCardDeckID", -1)) != deck_id or bool(card.get("IsTest", false)): continue
+		cards += 1
+		var chains: Array = []
+		SOURCE._walk_buff(int(card.get("BuffClassID", -1)), [{"table":"BuffCard","row":card}], [], chains)
+		for chain: Dictionary in chains: out[int(chain.sprite_id)] = true
+	_effect_index_stats["deck_%d_cards" % deck_id] = cards
 	return out
 
 ## Cook-time action domains for the effect selection (see
