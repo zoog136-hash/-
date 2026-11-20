@@ -99,15 +99,59 @@ static func _native_style(layer: Dictionary, body_attributes: Array, body_unreso
 
 ## Copy-free compatibility for the cases the old attr-only fallback loses.
 ## Average is alpha0.5 MIX (without RGB565 truncation); screen9 uses the existing
-## host ADD approximation. Other attributes retain their existing POLICY values.
+## host ADD approximation; own multiply128 uses the copy-free multiply material
+## (same equation as kernel 2 without RGB565 truncation). Other attributes
+## retain their existing POLICY values.
 ## Shadow draw flags come from the parent, never the shadow file's own104.
 static func fallback_style(layer: Dictionary, body_attributes: Array, body_unresolved: bool, mode: String, body_projection_verified: bool = false) -> Dictionary:
 	if screen_copy_available: return {}
 	var selected: Dictionary = _native_style(layer,body_attributes,body_unresolved,mode,body_projection_verified)
-	if selected.is_empty() or int(selected.flags) not in [1,9,129]: return {}
+	if selected.is_empty() or int(selected.flags) not in [1,9,128,129]: return {}
+	if int(selected.flags) == 128:
+		return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_MUL,"alpha":1.0,"flags":128,
+			"origin":"copy_free_multiply_kernel2_equation_RGB565_truncation_omitted"}
 	return {"enabled":true,"blend_mode":CanvasItemMaterial.BLEND_MODE_ADD if selected.flags == 9 else CanvasItemMaterial.BLEND_MODE_MIX,
 		"alpha":1.0 if selected.flags == 9 else 0.5,"flags":selected.flags,
 		"origin":"copy_free_parent_flags_host_approximation_RGB565_and_Android_pixels_unverified"}
+
+## Original attr128 is the multiply kernel: result = mix(dst, dst * src, src.a)
+## (restored M 1.10.22.0 kernel 2; P02/P13). Godot's built-in BLEND_MODE_MUL
+## ignores source alpha (a transparent texel multiplies the background by its
+## RGB, usually black), so this material keeps blend_mul and writes
+## mix(1, src, src.a): uncovered texels multiply by white. It reads no screen
+## texture, so it is valid on Android without a screen copy. The material
+## carries meta source_blend_mode = BLEND_MODE_MUL so capture code can record
+## it as the multiply blend.
+const MULTIPLY_SHADER_CODE := "shader_type canvas_item;\nrender_mode unshaded, blend_mul;\nvoid fragment() {\n\tCOLOR = vec4(mix(vec3(1.0), COLOR.rgb, COLOR.a), 1.0);\n}\n"
+static var _multiply_material: ShaderMaterial = null
+static func multiply_material() -> ShaderMaterial:
+	if _multiply_material == null:
+		var shader := Shader.new()
+		shader.code = MULTIPLY_SHADER_CODE
+		_multiply_material = ShaderMaterial.new()
+		_multiply_material.shader = shader
+		_multiply_material.set_meta("source_blend_mode", CanvasItemMaterial.BLEND_MODE_MUL)
+	return _multiply_material
+
+## Blend mode a material draws with: CanvasItemMaterial.blend_mode, the
+## multiply material's BLEND_MODE_MUL, MIX for null, -1 for other shaders.
+static func material_blend(material: Material) -> int:
+	if material == null: return CanvasItemMaterial.BLEND_MODE_MIX
+	if material is CanvasItemMaterial: return int((material as CanvasItemMaterial).blend_mode)
+	if material.has_meta("source_blend_mode"): return int(material.get_meta("source_blend_mode"))
+	return -1
+
+static var _blend_materials: Dictionary = {}
+## One shared read-only material per source blend mode (MIX gives a plain
+## CanvasItemMaterial, as before). BLEND_MODE_MUL gives multiply_material().
+static func blend_material(blend_mode: int) -> Material:
+	if blend_mode == CanvasItemMaterial.BLEND_MODE_MUL: return multiply_material()
+	var material: CanvasItemMaterial = _blend_materials.get(blend_mode) as CanvasItemMaterial
+	if material == null:
+		material = CanvasItemMaterial.new()
+		material.blend_mode = blend_mode
+		_blend_materials[blend_mode] = material
+	return material
 
 ## Independent integer oracle for diagnostics; no source texture is rewritten.
 static func blend565(destination: int, source: int, operation: int) -> int:

@@ -84,7 +84,7 @@ var _texture_leases: Dictionary = {}
 var _asset_owner: int = SHARED_ASSETS.new_owner()
 var _layers: Array[Sprite2D] = []
 var _source_body_style: Dictionary = {}
-var _source_body_material: CanvasItemMaterial
+var _source_body_material: Material
 var _role: String = "idle"
 var source_facing: int = 0
 var _clock: float = 0.0
@@ -492,9 +492,7 @@ func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) ->
 		shader_material.set_shader_parameter("screen_operation", id == 22260)
 		effect_node.material = shader_material
 	elif bool(style.get("enabled", false)):
-		var material: CanvasItemMaterial = CanvasItemMaterial.new()
-		material.blend_mode = int(style.blend_mode)
-		effect_node.material = material
+		effect_node.material = SP2_COMPOSITOR.blend_material(int(style.blend_mode))
 		effect_node.modulate.a = float(style.alpha)
 	effect_node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	effect_node.set_meta("source_layer_id", id)
@@ -522,8 +520,12 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 	_source_body_style = POLICY.effect(root_attributes, _playback_mode) if not root_attributes.is_empty() else {}
 	_source_body_material = null
 	if bool(_source_body_style.get("enabled", false)):
-		_source_body_material = CanvasItemMaterial.new()
-		_source_body_material.blend_mode = int(_source_body_style.blend_mode)
+		if int(_source_body_style.blend_mode) == CanvasItemMaterial.BLEND_MODE_MUL:
+			_source_body_material = SP2_COMPOSITOR.multiply_material()
+		else:
+			var body_material := CanvasItemMaterial.new()
+			body_material.blend_mode = int(_source_body_style.blend_mode)
+			_source_body_material = body_material
 	_playback_tracks = tracks
 	_manifest_path = manifest_path
 	_is_overlay = bool(candidate.get("one_shot_overlay", false))
@@ -962,8 +964,7 @@ func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes:
 func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
 	var items: Array = []
 	for spec: Dictionary in drawn:
-		var material: CanvasItemMaterial = spec.material as CanvasItemMaterial
-		if not spec.recovered.is_empty() or spec.alpha != 1.0 or (material != null and material.blend_mode != CanvasItemMaterial.BLEND_MODE_MIX): composable = false
+		if not spec.recovered.is_empty() or spec.alpha != 1.0 or SP2_COMPOSITOR.material_blend(spec.material) != CanvasItemMaterial.BLEND_MODE_MIX: composable = false
 		if spec.position != Vector2(Vector2i(spec.position)): composable = false
 		if not spec.empty: items.append({"layer":spec.layer,"offset":Vector2i(spec.position)})
 	# A single layer gains nothing from a copy: it keeps its node and texture.
@@ -1548,16 +1549,11 @@ func attachment_status() -> Dictionary:
 		if track.has("presentation_observation"): presentation_observations.append(track.presentation_observation.duplicate(true))
 	return {"recovered_source_compositors":compositors,"source_layer_nodes":_effect_nodes.size(),"active_compatibility_layers":active,"mode":_playback_mode,"unresolved_tracks":pending,"timing_origins":origins,"M_visual_equivalence_verified":false,"native_pixels":true,"presentation_observations":presentation_observations,"user_reference_exclusions":reference_exclusion_status.duplicate(true),"source_weapon_selection":source_weapon_status.duplicate(true)}
 
-## One read-only CanvasItemMaterial per blend mode, shared by every reference
-## layer (a new material per layer per frame used to be allocated here).
-static var _blend_materials: Dictionary = {}
-static func _blend_material(blend_mode: int) -> CanvasItemMaterial:
-	var material: CanvasItemMaterial = _blend_materials.get(blend_mode) as CanvasItemMaterial
-	if material == null:
-		material = CanvasItemMaterial.new()
-		material.blend_mode = blend_mode
-		_blend_materials[blend_mode] = material
-	return material
+## One read-only material per blend mode, shared by every reference layer
+## (a new material per layer per frame used to be allocated here). Multiply
+## (original attr128) is the compositor's copy-free multiply material.
+static func _blend_material(blend_mode: int) -> Material:
+	return SP2_COMPOSITOR.blend_material(blend_mode)
 
 static var _target_pattern: RegEx = null
 static func _overlay_target_pattern() -> RegEx:

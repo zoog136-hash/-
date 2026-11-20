@@ -64,10 +64,11 @@ func run() -> void:
 	for flags: int in [1,8,128]:
 		var p = configured(root,flags,"")
 		var body: Sprite2D = p._layers[0]
-		check(body.visible and body.material is CanvasItemMaterial,"copy-free body retains drawable canvas material "+str(flags))
-		check(body.material.blend_mode == (CanvasItemMaterial.BLEND_MODE_ADD if flags == 8 else CanvasItemMaterial.BLEND_MODE_MIX),"body uses copy-free blend "+str(flags))
-		check(is_equal_approx(body.modulate.a,1.0 if flags == 8 else 0.5),"body uses copy-free opacity "+str(flags))
-		check(not body.material is ShaderMaterial and no_copies(p),"body never samples destination "+str(flags))
+		# Original attr128 is multiply: the alpha-aware multiply material, opaque modulate.
+		check(body.visible and (body.material is CanvasItemMaterial or (flags == 128 and body.material == COMPOSITOR.multiply_material())),"copy-free body retains drawable material "+str(flags))
+		check(COMPOSITOR.material_blend(body.material) == {1:CanvasItemMaterial.BLEND_MODE_MIX,8:CanvasItemMaterial.BLEND_MODE_ADD,128:CanvasItemMaterial.BLEND_MODE_MUL}[flags],"body uses copy-free blend "+str(flags))
+		check(is_equal_approx(body.modulate.a,0.5 if flags == 1 else 1.0),"body uses copy-free opacity "+str(flags))
+		check(not (body.material is ShaderMaterial and (body.material as ShaderMaterial).shader == COMPOSITOR.SHADER) and not "hint_screen_texture" in COMPOSITOR.MULTIPLY_SHADER_CODE and no_copies(p),"body never samples destination "+str(flags))
 		check(body.texture == p.fixture_texture and body.position == Vector2.ZERO,"body texels and source offset unchanged")
 		p.free()
 	for flags: int in [0,8,128]:
