@@ -68,7 +68,7 @@
 맵,MAP01,P0,타일 로딩 worker: 읽기·hash·decode,개선/검증,pending_current_execution_review,,,
 맵,MAP02,P0,타일 활성/대기 참조 분리 및 해제 분산,개선/검증,pending_current_execution_review,,,
 맵,MAP03,P0,렌더·충돌 S32 원본 읽기 공유,개선/검증,pending_current_execution_review,,,
-맵,MAP04,P0,화면 청크 좌표 인덱스·기존 프레임 재사용,개선/검증,bounded_renderer_lookup_reduction; device timing pending,scripts/maps/current523_aden_play_renderer.gd::_block_commands; report p4 and 523.699 device log,"Godot renderer 128 checks; baseline versus changed 1537→3 tile checks, 1025→2 subimage checks",feature/android-map-block-refs-20261120
+맵,MAP04,P0,화면 청크 좌표 인덱스·기존 프레임 재사용,개선/검증,block_reference_pr740_merged; s32_chunk_bins_verified_on_linux; android_pending,scripts/maps/current523_aden_play_renderer.gd::_block_commands and _bin_chunk; Android/Windows native evidence in docs/audit927/s32-chunk-bin-costs.md,"PR740: reference counts 1537→3 and 1025→2; Godot renderer 130 checks; synthetic 8,342-record bins output equal",#740 merged; feature/s32-chunk-bins-20261120
 맵,MAP05,P0,정적 SPR frame/child/modifier 합성 캐시,개선/검증,pending_current_execution_review,,,
 맵,MAP06,P0,충돌 bitset/edge 및 경로 상태 분리,개선/검증,pending_current_execution_review,,,
 맵,MAP07,P1,경로 요청 중복 제거 및 생명주기,개선/검증,pending_current_execution_review,,,
