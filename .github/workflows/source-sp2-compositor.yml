@@ -20,6 +20,8 @@ on:
       - 'scripts/ui/original_ui/source_text.gd'
       - 'tests/source_ui_draw_refresh_test.gd'
       - 'tests/source_text_costs_test.gd'
+      - 'scripts/animation/combat_vfx.gd'
+      - 'tests/vfx_draw_transform_test.gd'
       - 'tests/source_ui_copy_policy_gl_test.gd'
       - 'scripts/maps/current523_bank_objects.gd'
       - 'scripts/ui/original_ui/source_material.gd'
@@ -84,6 +86,7 @@ jobs:
               'source_ui_copy_policy_gl_test': ('SOURCE_UI_COPY_POLICY_GL_RESULT', 120, 'pixel_comparisons'),
               'current523_bank_object_layers_test': ('CURRENT523_BANK_OBJECT_LAYERS_RESULT', 36, 'pixel_comparisons'),
               'current523_bank_object_refresh_test': ('CURRENT523_BANK_OBJECT_REFRESH_RESULT', 24, 'pixel_comparisons'),
+              'vfx_draw_transform_test': ('VFX_DRAW_TRANSFORM_RESULT', 28, 'pixel_comparisons'),
               'source_text_costs_test': ('SOURCE_TEXT_COSTS_RESULT', 56, 'pixel_comparisons'),
               'source_ui_draw_refresh_test': ('SOURCE_UI_DRAW_REFRESH_RESULT', 75, 'pixel_comparisons'),
               'source_material_display_updates_test': ('SOURCE_MATERIAL_DISPLAY_UPDATES_RESULT', 24, 'render_checks'),
