@@ -438,7 +438,8 @@ static func _identity_fallback(record: Dictionary, fallback_name: String, info: 
 		mapped_image["source_record_kind"] = "item_icon_identity"
 		return mapped_image
 	var image: Dictionary = describe_item_class(id, IDENTITY.display_name(record, fallback_name))
-	if image.get("status") != "original_linked": return info
+	# An animated original icon (CSB scene) is that item's own picture too.
+	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb": return info
 	image["source_id"] = str(record.get("sourceId", ""))
 	image["source_record_kind"] = "original_item_identity"
 	image.provenance["caller_item_identity_field"] = "source523_item_identity"

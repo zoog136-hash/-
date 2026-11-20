@@ -72,6 +72,54 @@ func cook(data: Dictionary, directory: String, compress: int) -> Dictionary:
 	check(written.get("ok", false), "cooked file written: " + str(written.get("error", "")))
 	return {"path":path,"session":session,"entries":entries,"written":written}
 
+func check_incomplete_attachment(data: Dictionary) -> void:
+	var selected: Dictionary=selection(data)
+	var preview: Node2D=runtime_preview(root,selected)
+	STORE.disabled=true
+	preview._record=preview._record.duplicate()
+	preview._record.independent_source_layers={"idle":[{"kind":"shadow","from_sprite_id":ACTOR,"target_sprite_id":ACTOR+778,"child_action_id":3,"child_source_action_key":"missing-action"}]}
+	preview._reference_card_context={"consumer":"npc","manifest_sha256":data.sha}
+	check(preview.advance_reference_source(0.0,"idle",0) and not preview._reference_child_problem.is_empty(),"live body continues when a declared shadow cannot be loaded")
+	preview._reference_card_context.clear()
+	var result: Dictionary=COOKER.cook_preview(preview,STORE.selection_inputs(selected),true)
+	check(not result.get("ok",false) and str(result.get("error","")).begins_with("cooked_source_layer_incomplete:") and not result.has("entry"),"cooker rejects partial actor instead of baking its missing shadow")
+	preview.free()
+	STORE.disabled=false
+
+func check_cooked_attachment(data: Dictionary) -> void:
+	var directory: String=data.path.get_base_dir()
+	var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(data.path))
+	var sprite: int=ACTOR+100
+	for offset: int in 3:
+		var member: String="Sprite/%d-0.sp2" % (sprite+offset)
+		var spec: Dictionary=manifest.members["Sprite/%d-0.sp2" % (ACTOR+offset)].duplicate()
+		write_bytes(directory.path_join("raw/"+member),FileAccess.get_file_as_bytes(directory.path_join(spec.path)))
+		spec.member=member
+		spec.path="raw/"+member
+		manifest.members[member]=spec
+	var child_action: String=JSON.stringify(source_action(3))
+	for offset: int in 3:
+		child_action=child_action.replace(str(ACTOR+offset),str(sprite+offset))
+	var relative: String="actors/%d/action-3.json" % sprite
+	write_bytes(directory.path_join(relative),child_action.to_utf8_buffer())
+	manifest.actors["sprite:%d" % sprite]={"3":{"path":relative,"sha256":FileAccess.get_sha256(directory.path_join(relative))}}
+	var manifest_path: String=directory.path_join("manifest-with-child.json")
+	var selected: Dictionary=selection({"path":manifest_path,"sha":write_json(manifest_path,manifest)})
+	var preview: Node2D=runtime_preview(root,selected)
+	STORE.disabled=true
+	preview._record=preview._record.duplicate()
+	preview._record.independent_source_layers={"idle":[{"kind":"shadow","from_sprite_id":ACTOR,"target_sprite_id":sprite,"child_action_id":3,"child_source_action_key":"list_9.spr:B%d:A3" % sprite,"source_declaration":{},"dispatch_policy":"fixture"}]}
+	var cooked: Dictionary=COOKER.cook_preview(preview,STORE.selection_inputs(selected),true)
+	var shadow_seen: bool=false
+	if cooked.get("ok",false):
+		var state_id: int=cooked.entry.tracks.idle.directions[0].seg_state[0]
+		var draw: PackedInt32Array=cooked.session.states[state_id]
+		for at: int in range(0,draw.size(),FORMAT.ITEM_STRIDE):
+			if draw[at+4]==-1:shadow_seen=true
+	check(cooked.get("ok",false) and shadow_seen,"a valid independent shadow is written behind the parent in an offline cook: " + str(cooked.get("error","")))
+	preview.free()
+	STORE.disabled=false
+
 ## CPU oracle of the canvas draw (MIX and ADD with texel alpha * modulate).
 func flatten(items: Array, background: Color) -> Image:
 	var canvas := Image.create_empty(CANVAS, CANVAS, false, Image.FORMAT_RGBAF)
@@ -133,6 +181,8 @@ func run() -> void:
 	BANK.forget_verified_members()
 	STORE.reset_for_tests()
 	var data: Dictionary = fixture(scratch.path_join("bank"))
+	check_incomplete_attachment(data)
+	check_cooked_attachment(data)
 	var lossless_dir: String = scratch.path_join("cooked_lossless")
 	var made: Dictionary = cook(data, lossless_dir, -1)
 	if made.is_empty():

@@ -1174,6 +1174,7 @@ const FEATURE_WINDOWS={
 	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
 	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
+	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
 }
 var _feature_windows: Dictionary={}
 

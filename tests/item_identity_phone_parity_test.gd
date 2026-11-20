@@ -57,7 +57,11 @@ func synthetic() -> void:
 
 func sources() -> void:
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud.contains("catalog_test_toggle.visible = category == \"아이템\" and developer_tools_visible()"), "the 검수용 지급 도구 button is a developer-only control")
+	# The grant tools stay on the phone's playtest APK (user 2026-11-20 "검수용
+	# 아이템지급 버튼은 일단 살려"); only verification text is developer-only.
+	check(hud.contains("catalog_test_toggle.visible = category == \"아이템\" and catalog_grant_tools_visible()") and hud.contains("func catalog_grant_tools_visible() -> bool:\n\treturn playtest_tools_enabled()\n"), "the 검수용 지급 도구 button follows the playtest APK, not developer UI")
+	for gate: String in ["catalog_test_tools.visible = enabled and catalog_grant_tools_visible()", "if catalog_grant_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10)", "if not catalog_grant_tools_visible() or catalog_category != \"아이템\"", "if catalog_grant_tools_visible(): playtest_aden_grant_requested.emit()"]:
+		check(hud.contains(gate), "grant tool gate: " + gate)
 	check(hud.contains("if developer: catalog_detail.text += \"\\n\\n\" + UI.safe(preload(\"res://scripts/loot/patch523_monster_drops.gd\").source_text("), "drop-source lines are developer-only")
 	var flags: String = FileAccess.get_file_as_string("res://scripts/boot/build_flags.gd")
 	check(flags.contains("static func developer_ui() -> bool:\n\treturn OS.is_debug_build() or OS.has_feature(DEV_UI_FEATURE)"), "the playtest feature alone does not show developer UI")
