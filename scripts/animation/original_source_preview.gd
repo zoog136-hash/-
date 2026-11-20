@@ -1167,8 +1167,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var static_track: bool = bool(track.get("static_pending_timing", false))
 	var total: float = 1.0
 	if not static_track:
-		total = 0.0
-		for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		if _cooked != null:
+			total = track.direction_totals[source_direction]
+		else:
+			total = 0.0
+			for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
 	# Floating boundary tolerance only; never hold a short pose for a render frame.
 	var boundary_epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
@@ -1177,11 +1180,12 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var selected_index: int = 0 if static_track else frames.size() - 1
 	var scan_index: int = 0
 	for item: Dictionary in ([] if static_track else frames):
-		if time + boundary_epsilon < preload("res://scripts/animation/source_presentation_policy.gd").duration(item):
+		var item_duration: float = preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		if time + boundary_epsilon < item_duration:
 			selected = item
 			selected_index = scan_index
 			break
-		time -= preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		time -= item_duration
 		scan_index += 1
 	var loop_position: float = float(selected_index)
 	if not static_track and bool(track.loop) and _role in ["walk", "run"]:
@@ -1192,19 +1196,17 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		_source_attack = false
 		_attack_completed = true
 	last_source_frame = int(selected.source_frame)
-	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	if _cooked != null:
 		# Cooked actor: the same clock and frame choice as above, then the
-		# frame's recorded draw state; no layer, style or byte work.
+		# frame's recorded draw state, with page reads only on cache misses.
 		var ended: bool = not static_track and not bool(track.loop) and _clock >= total
 		var state: int = COOKED_STORE.state_for(_cooked_entry, _role, source_direction, int(selected.get("cooked_index", 0)), time, ended)
-		if state != _cooked_state:
+		if state >= 0 and state != _cooked_state and COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state):
 			_cooked_state = state
-			COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state)
-		_last_token = token
 		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 			queue_free()
 		return
+	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
 	var body_attributes: Array = []
 	var body_attributes_unresolved: bool = true

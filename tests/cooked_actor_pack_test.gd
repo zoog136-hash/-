@@ -224,6 +224,7 @@ func run() -> void:
 	var selected: Dictionary = selection(data)
 	var actor: Dictionary = STORE.lookup(selected)
 	check(not actor.is_empty(), "installed cooked actor found: " + str(STORE.stats()))
+	if not actor.is_empty(): check_direction_totals(actor.entry)
 	check(not STORE.lookup(variant(data)).is_empty() and STORE.lookup(variant(data)).actor == actor.actor, "the variant entry comes from the same bundle")
 	check(STORE.lookup(selection(data, ACTOR + 77)).is_empty(), "actor missing from the cooked pack -> original path")
 	var other_roles: Dictionary = selection(data)
@@ -325,7 +326,104 @@ func run() -> void:
 	install_checks()
 	effect_domain_checks(data)
 	content_key_checks(data)
+	await check_lazy_page_recovery(render)
 	finish(previous_copy, previous_gpu)
+
+func check_lazy_page_recovery(render: bool) -> void:
+	STORE.reset_for_tests()
+	var bg:=Image.create_empty(4,4,false,Image.FORMAT_RGBA8)
+	bg.fill(Color.RED)
+	var fg:=Image.create_empty(4,4,false,Image.FORMAT_RGBA8)
+	fg.fill(Color.GREEN)
+	var direction: Dictionary={"durations":PackedFloat64Array([1,1]),"source_frames":PackedInt32Array([0,1]),"source_groups":PackedInt32Array([0,0]),"seg_start":PackedInt32Array([0,1,2]),"seg_end":PackedFloat64Array([1,1]),"seg_state":PackedInt32Array([0,1]),"end_state":1}
+	var directions: Array=[]
+	directions.resize(8)
+	directions.fill(direction)
+	var index: Dictionary={
+		"images":PackedInt32Array([0,0,0,4,4, 1,0,0,4,4]),
+		"states":[PackedInt32Array([0,0,0,0,0,0,0,0]),PackedInt32Array([0,8,0,0,0,0,0,0, 1,12,0,0,1,0,0,0, 0,16,0,0,2,0,0,0])],
+		"entries":[{"inputs":{"manifest_sha256":"a".repeat(64)},"tracks":{"idle":{"loop":true,"static_pending_timing":false,"directions":directions}}}],
+		"colors":PackedFloat32Array([1,1,1,1]),
+	}
+	var path: String=scratch.path_join("two-pages.twca")
+	check(FORMAT.write(path,index,[bg,fg]).ok,"two-page recovery fixture writes")
+	var loaded: Dictionary=STORE.load_actor(path)
+	check(loaded.get("ok",false),"two-page index loads")
+	if not loaded.get("ok",false): return
+	var actor: STORE.CookedActor=loaded.actor
+	var cooked={"actor":actor,"entry":actor.entries.values()[0]}
+	var view:=PREVIEW.new()
+	var viewport: SubViewport
+	if render:
+		viewport=SubViewport.new()
+		viewport.size=Vector2i(CANVAS,CANVAS)
+		viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+		root.add_child(viewport)
+		var background:=ColorRect.new()
+		background.color=Color.BLACK
+		background.size=Vector2(CANVAS,CANVAS)
+		viewport.add_child(background)
+		view.position=Vector2(2,2)
+		viewport.add_child(view)
+	else:
+		root.add_child(view)
+	check(view._configure_cooked(cooked,path,"idle","npc",ACTOR),"real cooked preview configures")
+	view.advance_reference_source(0.0,"idle",0)
+	check(view._cooked_state==0 and view._cooked_sprites.size()==1,"the first complete pose is visible")
+	var original_pixels: Image
+	if render:
+		original_pixels=await read_cooked_pose(viewport)
+		check(original_pixels.get_pixel(3,3)==Color.RED,"OpenGL shows the initial pose")
+	actor.path=path+".temporarily-missing"
+	view.advance_reference_source(1.0,"idle",0)
+	check(view._cooked_state==0 and view._cooked_sprites.size()==1 and view._cooked_sprites[0].visible and view._cooked_sprites[0].position==Vector2.ZERO,"a missing lazy page leaves the previous pose intact")
+	var reads: int=int(STORE.stats().counters.get("page_unreadable",0))
+	view.advance_reference_source(0.0,"idle",0)
+	check(reads==1 and int(STORE.stats().counters.get("page_unreadable",0))==1,"immediate retry of the failed page is throttled")
+	if render:
+		var held_pixels: Image=await read_cooked_pose(viewport)
+		check(held_pixels.get_data()==original_pixels.get_data(),"OpenGL keeps the whole previous pose on a failed page")
+	actor.path=path
+	var retries: Variant=actor.get("page_retry_after")
+	if retries is Dictionary: retries.clear() # Advance the retry window without a wall-clock sleep.
+	view.advance_reference_source(0.0,"idle",0)
+	check(view._cooked_state==1 and view._cooked_sprites.size()==3 and view._cooked_sprites[1].visible,"the unchanged desired state recovers all layers")
+	if render:
+		var recovered: Image=await read_cooked_pose(viewport)
+		var all_layers: bool=recovered.get_pixel(11,3)==Color.RED and recovered.get_pixel(15,3)==Color.GREEN and recovered.get_pixel(19,3)==Color.RED
+		check(all_layers and recovered.get_pixel(3,3)==Color.BLACK,"OpenGL replaces the held pose with all three recovered layers")
+		render_checks+=3
+		viewport.free()
+	else:
+		view.free()
+	STORE.reset_for_tests()
+	STORE.budget_bytes=64 # One RGBA8 page: A/B/A must still resolve A only once.
+	actor=STORE.load_actor(path).actor
+	var owner:=Node2D.new()
+	root.add_child(owner)
+	var sprites: Array[Sprite2D]=[]
+	STORE.apply_state(owner,sprites,actor,1)
+	var loaded_pages: int=int(STORE.stats().counters.get("page_loaded",0))
+	check(loaded_pages==2 and sprites.size()==3 and sprites[0].texture==sprites[2].texture,"A/B/A loads two pages and shares A across its layers (loaded %d)" % loaded_pages)
+	check(int(STORE.stats().bytes)<=64,"preflight does not raise the shared page cache budget")
+	owner.free()
+
+func read_cooked_pose(viewport: SubViewport) -> Image:
+	await process_frame
+	await RenderingServer.frame_post_draw
+	return viewport.get_texture().get_image()
+
+func check_direction_totals(entry: Dictionary) -> void:
+	const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
+	for role: String in entry.runtime_tracks:
+		var track: Dictionary = entry.runtime_tracks[role]
+		var expected := PackedFloat64Array()
+		for frames: Array in track.directions:
+			var total: float = 0.0
+			for frame: Dictionary in frames:
+				total += PRESENTATION.duration(frame)
+			expected.append(total)
+		check(track.get("direction_totals") == expected, "shared cooked clock totals match the runtime policy in all directions for " + role)
 
 ## The block-compression (ASTC 4x4) acceptance rule on synthetic cells: a smooth opaque cell passes,
 ## a high-contrast noise cell and a cell whose binary alpha would not survive
