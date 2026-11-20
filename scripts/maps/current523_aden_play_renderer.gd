@@ -238,6 +238,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	# Decoded atlases stay until the blocks waiting for them have baked.
 	if "hold_published" in tiles: tiles.set("hold_published", true)
+	# Draw lists on workers with the real pack (its tile table is read-only).
+	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_drop_chunk_jobs()
@@ -806,6 +808,124 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 	return {"commands": commands, "atlases": atlases, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
 
 
+## Block draw lists built on worker threads (523.704: map.block_commands
+## ~106 ms/s on the phone while walking: one GDScript pass over every record
+## of a block). The pass only reads installed chunk lanes/bins and the tile
+## pack's immutable tile table; atlases are taken on the main thread.
+const MAX_BLOCK_JOBS: int = 4
+var block_jobs_enabled: bool = false
+var _block_jobs: Dictionary = {}
+
+## Starts the worker pass for `cell` when its chunks are installed.
+## On-screen blocks start regardless of MAX_BLOCK_JOBS (it bounds margin work).
+func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
+	if _block_jobs.has(cell): return true
+	if not on_screen and _block_jobs.size() >= MAX_BLOCK_JOBS: return false
+	var members: Array[String] = _block_members(cell)
+	var inputs: Array = []
+	for member: String in members:
+		if not _raw_chunks.has(member): return false
+		var layers: Dictionary = _raw_chunks[member]
+		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		inputs.append([layers, (_chunk_bins[member] as Dictionary).get(cell, {})])
+	var job: Dictionary = {"cell": cell, "inputs": inputs, "include_objects": include_objects, "tiles": _tile_pack,
+		"has_subimage": _tile_pack.has_method("has_subimage")}
+	job["task"] = WorkerThreadPool.add_task(_block_job.bind(job), false, "Current523 block draw list")
+	_block_jobs[cell] = job
+	return true
+
+## Worker: _block_commands without the atlas lookups and logging.
+static func _block_job(job: Dictionary) -> void:
+	var cell: Vector2i = job.cell
+	var tiles: Object = job.tiles
+	var has_subimage: bool = job.has_subimage
+	var by_layer: Dictionary = {}
+	var tile_ids: Dictionary = {}
+	var valid_refs: Dictionary = {}
+	var invalid: Array = []
+	var draws: int = 0
+	var count: int = 0
+	var raw_ff: int = 0
+	var unresolved: int = 0
+	for input: Array in job.inputs:
+		var layers: Dictionary = input[0]
+		var bins: Dictionary = input[1]
+		for layer: int in bins:
+			if not job.include_objects and layer >= 0: continue
+			var records: PackedInt64Array = layers[layer]
+			for index: int in (bins[layer] as PackedInt32Array):
+				var ref: int = records[index + 2]
+				var owned: bool = floori(float(records[index]) / BLOCK) == cell.x and floori(float(records[index + 1]) / BLOCK) == cell.y
+				if ref == 4294967295:
+					if owned: raw_ff += 1
+					continue
+				var tile_id: int = ref >> 8
+				if not valid_refs.has(ref):
+					var valid: bool = tiles.call("has_tile", tile_id)
+					if not valid:
+						invalid.append([tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id)])
+					elif has_subimage and not tiles.call("has_subimage", tile_id, ref & 255):
+						invalid.append([tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id, ref & 255]])
+						valid = false
+					valid_refs[ref] = valid
+				if not valid_refs[ref]:
+					unresolved += int(owned)
+					continue
+				if draws >= DRAW_COMMAND_LIMIT or (not tile_ids.has(tile_id) and tile_ids.size() >= VISIBLE_ATLAS_LIMIT):
+					job["problem"] = "M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다."
+					return
+				tile_ids[tile_id] = true
+				var lane: Variant = by_layer.get(layer)
+				if lane == null:
+					lane = []
+					by_layer[layer] = lane
+				var target: Array = lane
+				target.append(records[index])
+				target.append(records[index + 1])
+				target.append(ref)
+				draws += 1
+				count += int(owned)
+	var commands: Dictionary = {}
+	for layer: int in by_layer: commands[layer] = PackedInt64Array(by_layer[layer])
+	job["result"] = {"commands": commands, "tile_ids": tile_ids.keys(), "invalid": invalid, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
+
+## Chunks whose records may draw into `cell`, sorted.
+func _block_members(cell: Vector2i) -> Array[String]:
+	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
+	var members: Array[String] = []
+	for member: String in _chunk_rects:
+		if (_chunk_rects[member] as Rect2).intersects(near): members.append(member)
+	members.sort()
+	return members
+
+## Main thread: a finished job -> the dictionary _block_commands returns,
+## or {} when it is not finished (or an atlas could not be taken).
+func _take_block_job(cell: Vector2i) -> Dictionary:
+	var job: Dictionary = _block_jobs.get(cell, {})
+	if job.is_empty() or not WorkerThreadPool.is_task_completed(int(job.task)): return {}
+	WorkerThreadPool.wait_for_task_completion(int(job.task))
+	_block_jobs.erase(cell)
+	if bool(job.include_objects) != include_objects: return {}
+	if job.has("problem"): return {"problem": job.problem}
+	var result: Dictionary = job.result
+	for entry: Array in result.invalid: _unresolved_tile(int(entry[0]), str(entry[1]))
+	var atlases: Dictionary = {}
+	for tile_id: int in result.tile_ids:
+		var texture: Texture2D = _frame_atlases.get(tile_id)
+		if texture == null:
+			var atlas_started: int = FRAME_HITCH.now()
+			texture = _tile_pack.texture_for(tile_id)
+			FRAME_HITCH.detail("map.block_atlas_acquire", atlas_started)
+		# A missing atlas: the synchronous pass skips its records and logs it.
+		if texture == null: return {"sync": true}
+		atlases[tile_id] = texture
+	return {"commands": result.commands, "atlases": atlases, "count": result.count, "draws": result.draws, "raw_ff": result.raw_ff, "unresolved": result.unresolved}
+
+func _drop_block_jobs() -> void:
+	for cell: Vector2i in _block_jobs: WorkerThreadPool.wait_for_task_completion(int((_block_jobs[cell] as Dictionary).task))
+	_block_jobs.clear()
+
+
 ## Asks the tile pack to decode, on workers, every atlas the block draws;
 ## true when all of them are ready (or the pack decodes only on demand).
 ## `collected` (optional) receives {"tiles": the block's atlas IDs,
@@ -940,6 +1060,7 @@ func _free_block(cell: Vector2i) -> void:
 
 
 func _clear_blocks() -> void:
+	_drop_block_jobs()
 	for cell: Vector2i in _blocks.keys(): _free_block(cell)
 	_block_recent.clear()
 	_visible_blocks.clear()
@@ -1007,9 +1128,24 @@ func _build_frame() -> bool:
 						continue
 					late_bakes += 1
 				_screen_wait.erase(cell)
-				var commands_started: int = FRAME_HITCH.now()
-				var built: Dictionary = _block_commands(cell)
-				FRAME_HITCH.detail("map.block_commands", commands_started)
+				var built: Dictionary = {}
+				var forced: bool = on_screen and not bool(screen_ready.get(cell, true))
+				# A block no chunk reaches has nothing to list: build it here.
+				if block_jobs_enabled and not forced and not _block_members(cell).is_empty():
+					built = _take_block_job(cell)
+					if built.is_empty():
+						# Built on a worker; baked on a later refresh.
+						if not _start_block_job(cell, on_screen) or _block_jobs.has(cell):
+							partial = true
+							if on_screen: screen_waiting = true
+							continue
+				if built.is_empty() or built.has("sync"):
+					if _block_jobs.has(cell):
+						WorkerThreadPool.wait_for_task_completion(int((_block_jobs[cell] as Dictionary).task))
+						_block_jobs.erase(cell)
+					var commands_started: int = FRAME_HITCH.now()
+					built = _block_commands(cell)
+					FRAME_HITCH.detail("map.block_commands", commands_started)
 				if built.has("problem"):
 					if problem.is_empty(): return _fail(str(built.problem))
 					return false
