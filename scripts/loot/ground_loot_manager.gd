@@ -6,6 +6,7 @@ const LOOT = preload("res://scripts/loot/ground_loot.gd")
 const GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const GROUND_SOURCE = preload("res://scripts/resources/current523_source_ground_selection.gd")
 const SOURCE_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
 const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
 const OCCUPANCY_CELL: float = 64.0
@@ -134,7 +135,17 @@ func _create_view(record: Dictionary) -> Button:
 	return view
 
 func _source_ground_request(item: Dictionary, ground_id: String = "") -> Dictionary:
-	if item.get("source_m_native_item") != true: return {}
+	if item.get("source_m_native_item") != true:
+		# Entries of older suppliers (legacy name rows, held quest rewards)
+		# still name one original ItemClass: its own SpriteID body is shown on
+		# the floor like a native drop (presentation only, no ownership).
+		var identity: int = IDENTITY.item_class_id(item, str(item.get("name","")))
+		var row: Dictionary = IDENTITY.row(identity)
+		if row.is_empty(): return {}
+		var visual_context: Dictionary = {}
+		var owner: Variant = world.get("player")
+		if is_instance_valid(owner) and owner.get("source_visual_context") is Dictionary: visual_context = owner.get("source_visual_context").duplicate(true)
+		return {"required":true,"original_item":row.duplicate(true),"source_bank_context":visual_context,"source_owner_context":{},"source_binding":{},"identity_only":true}
 	var owner_context: Dictionary = {}
 	var has_owner_context: bool = not ground_id.is_empty() and has_method("source_item_context")
 	var original: Dictionary = {}

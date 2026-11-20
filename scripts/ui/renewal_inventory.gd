@@ -236,7 +236,9 @@ func _show_item_name(reference: String) -> void:
 	var record: Dictionary = _find_item_record(reference)
 	item_name_reference = reference
 	item_name_hint.text = _enhanced_display_name(record,reference)
-	item_name_hint.add_theme_color_override("font_color",_grade_color(str(record.get("grade","일반"))))
+	# Original Grade.ColorID -> ColorTable of the entry's ItemClass when known.
+	var original_color: Dictionary = preload("res://scripts/loot/current523_item_grade.gd").color_info({"source_grade_id":preload("res://scripts/ui/source523_item_identity.gd").grade_id(record,reference)})
+	item_name_hint.add_theme_color_override("font_color",original_color.color if original_color.get("ok",false) else _grade_color(str(record.get("grade","일반"))))
 	# One deadline, replaced on each click; old callbacks cannot hide a new name.
 	item_name_until = Time.get_ticks_msec()+ITEM_NAME_DURATION_MS
 	set_process(true)

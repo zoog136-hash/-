@@ -11,6 +11,11 @@ const TI2_DECODER = preload("res://scripts/maps/current523_ti2_decoder.gd")
 ## Atlases are swapped to GPU block compression off the main thread.
 const TILE_GPU = preload("res://scripts/maps/current523_tile_gpu.gd")
 var gpu := TILE_GPU.new()
+## Compress decoded atlases for the GPU (ETC2/S3TC on a worker, then a second
+## upload). Off for the 523 play map: it bakes atlases into ground blocks and
+## lets go of them, so compressing them was worker CPU (heat) and a main-thread
+## re-upload for a texture no longer drawn.
+var compress_for_gpu: bool = true
 const SEMANTICS = {"geometry":"CANDIDATE_24X24", "palette":"CANDIDATE_RGB565", "coverage_alpha":"STORED_255_UNSTORED_0", "runtime_alpha":"UNKNOWN", "coordinates":"UNKNOWN", "projection":"UNKNOWN", "layers":"UNKNOWN", "movement":"UNKNOWN", "collision":"UNKNOWN"}
 var problem: String = ""
 var loaded: bool = false
@@ -267,7 +272,7 @@ func _publish(tile_id: int, job: Dictionary) -> Texture2D:
 	var image: Image = job.image
 	var texture := ImageTexture.create_from_image(image)
 	# The decoded image is not used after this; the worker may change it.
-	gpu.queue(texture, image)
+	if compress_for_gpu: gpu.queue(texture, image)
 	atlas_loads += 1
 	_cache[tile_id] = texture
 	_recent.append(tile_id)
