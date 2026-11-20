@@ -101,7 +101,9 @@ func compare(old: Dictionary,current: Dictionary,label: String) -> void:
 	check(snapshot(old.owner)==snapshot(current.owner),label+" ordered holders/layers/frame/coordinates match")
 	check(old.owner.metrics()==current.owner.metrics(),label+" metrics unchanged")
 	check(old.owner.loads==current.owner.loads,label+" exact cold source requests preserved")
-	check(old.owner.texture_calls==current.owner.texture_calls,label+" texture path calls preserved")
+	# Kept holders (same record, sprite and mode) are not shown again (frame
+	# spread, 2026-11-20): the same picture with no more texture work.
+	check(int(current.owner.texture_calls)<=int(old.owner.texture_calls),label+" texture path calls no more than the rebuilding path")
 	check(current.owner.get_children()==current.owner._nodes,label+" current child order is dense source order")
 	check(old.owner.get_child_count()==old.owner._nodes.size(),label+" baseline deletion completed before comparison")
 	if render:pixel_comparisons+=1;check(pixels(old.viewport)==pixels(current.viewport),label+" complete RGBA equal")
@@ -132,14 +134,19 @@ func run() -> void:
 		refresh_pair(old,current,rows(ids),7)
 		await compare(old,current,"reorder/duplicate/empty/invalid "+str(ids))
 		check(current.owner._records==rows(ids),"input records retained without normalization")
-	# Existing shared animation clock advances, but refresh always starts display at zero.
+	# Existing shared animation clock advances. A refresh with the same records
+	# keeps each holder's shown frame (2026-11-20 frame spread: an unchanged
+	# record is not shown again); the next tick shows the clock's frame, the
+	# same picture as the rebuilding path after its next tick.
 	old.owner._process_step(0.6);current.owner._process_step(0.6)
 	check(int(current.owner._nodes[0].get_meta("frame"))==1,"fixture advanced before refresh")
 	refresh_pair(old,current,rows([1,1,2,3]))
-	await compare(old,current,"refresh resets display to zero")
-	check(int(current.owner._nodes[0].get_meta("frame"))==0 and current.owner._clock==0.6,"refresh preserves clock but forces frame zero")
+	check(int(current.owner._nodes[0].get_meta("frame"))==1 and current.owner._clock==0.6,"refresh preserves clock and a kept holder's frame")
+	old.owner._process_step(0.0);current.owner._process_step(0.0)
+	await compare(old,current,"kept holders after the next tick")
 	(old.owner.coordinates as Mapping).shift=Vector2(-4,6);(current.owner.coordinates as Mapping).shift=Vector2(-4,6)
 	refresh_pair(old,current,rows([1,2,3]))
+	old.owner._process_step(0.0);current.owner._process_step(0.0)
 	await compare(old,current,"coordinate mapping changed")
 	check(current.owner._nodes[0].position==Vector2(-4,6),"reused slot gets current coordinate mapping")
 	# Same-ID static frame-zero replacement must refresh texture/style/offset too.

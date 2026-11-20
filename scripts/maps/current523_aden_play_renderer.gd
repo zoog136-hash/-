@@ -56,6 +56,23 @@ const HELD_ATLAS_LIMIT: int = 128
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
+## Frame spread (user report 2026-11-20, phone recording: running diagonally
+## into new ground stalled about every 0.25 s). A frame build that left margin
+## blocks unbaked used to clear the built view, so every 0.25 s refresh
+## re-walked the whole screen, re-requested every block's atlases and re-laid
+## out the map objects until the last margin block was baked (Linux, 1.8x run
+## into new ground: map.build_frame 22 times in 4 s). Now the built view stays
+## and only the blocks still missing bake, a few per frame within this budget
+## (on-screen blocks first). Measured on the device itself.
+const PENDING_BAKE_BUDGET_USEC: int = 4000
+## Margin blocks a frame build bakes itself stop at this much work; the rest
+## join the pending blocks.
+const BUILD_BAKE_BUDGET_USEC: int = 4000
+## A pending block whose atlases are still decoding is asked again after this.
+const PENDING_RETRY_MSEC: int = 50
+## Name labels of NPCs and portals (within 1400 px) are refreshed when the
+## actor moved this far since the last refresh, not on every 0.25 s tick.
+const MARKER_REFRESH_DISTANCE: float = 96.0
 ## Position problems (scope / entry) the owner can repair by moving the actor.
 const POSITION_SCOPE_PROBLEM: String = "원문 자체 통행의 지원 영역 밖이므로 복귀합니다."
 const POSITION_ENTRY_PROBLEM: String = "기존 통행 API에서 현재 위치를 확인하지 못했습니다."
@@ -94,6 +111,15 @@ var _blocks: Dictionary = {}
 var _block_recent: Array[Vector2i] = []
 var _blocks_include_objects: bool = true
 var _visible_blocks: Array[Vector2i] = []
+## Blocks of the built view not baked yet (atlas decode pending, or past the
+## build's bake budget), baked by _bake_pending within the frame budget.
+var _pending_blocks: Array[Vector2i] = []
+## Pending block cell -> earliest msec to ask its atlases again.
+var _pending_retry: Dictionary = {}
+## Pending block cell -> its atlas IDs (PackedInt32Array), see _pending_tiles_ready.
+var _pending_tiles: Dictionary = {}
+var _markers_at := Vector2.INF
+var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
@@ -782,16 +808,21 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 
 ## Asks the tile pack to decode, on workers, every atlas the block draws;
 ## true when all of them are ready (or the pack decodes only on demand).
-func _request_block_tiles(cell: Vector2i) -> bool:
+## `collected` (optional) receives {"tiles": the block's atlas IDs,
+## "complete": every chunk near it was read}, so a pending block can later ask
+## only those atlases again instead of walking its records.
+func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 	if not _tile_pack.has_method("prefetch"): return true
 	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
 	var ready: bool = true
 	var asked: Dictionary = {}
+	var complete: bool = true
 	for member: String in _chunk_rects:
 		if not (_chunk_rects[member] as Rect2).intersects(near): continue
 		# A chunk not read yet is read on a worker; the block waits for it.
 		if not _prefetch_chunk(member):
 			ready = false
+			complete = false
 			continue
 		var layers: Dictionary = _read_chunk(member)
 		if layers.is_empty(): continue
@@ -808,6 +839,27 @@ func _request_block_tiles(cell: Vector2i) -> bool:
 				asked[tile_id] = true
 				if not _tile_pack.has_tile(tile_id): continue
 				if not _tile_pack.call("prefetch", tile_id): ready = false
+	if collected is Dictionary:
+		var tiles := PackedInt32Array()
+		for tile_id: int in asked:
+			if _tile_pack.has_tile(tile_id): tiles.append(tile_id)
+		(collected as Dictionary)["tiles"] = tiles
+		(collected as Dictionary)["complete"] = complete
+	return ready
+
+
+## A pending block's readiness: its recorded atlas IDs only, once every chunk
+## near it was read; else the full record walk (which records them).
+func _pending_tiles_ready(cell: Vector2i) -> bool:
+	if not _tile_pack.has_method("prefetch"): return true
+	var tiles: Variant = _pending_tiles.get(cell)
+	if tiles is PackedInt32Array:
+		for tile_id: int in (tiles as PackedInt32Array):
+			if not _tile_pack.call("prefetch", tile_id): return false
+		return true
+	var collected: Dictionary = {}
+	var ready: bool = _request_block_tiles(cell, collected)
+	if bool(collected.get("complete", false)): _pending_tiles[cell] = collected.tiles
 	return ready
 
 
@@ -892,6 +944,9 @@ func _clear_blocks() -> void:
 	_block_recent.clear()
 	_visible_blocks.clear()
 	_screen_wait.clear()
+	_pending_blocks.clear()
+	_pending_retry.clear()
+	_pending_tiles.clear()
 
 
 func _build_frame() -> bool:
@@ -914,6 +969,8 @@ func _build_frame() -> bool:
 	var screen_waiting: bool = false
 	var late_bakes: int = 0
 	var now_msec: int = Time.get_ticks_msec()
+	var build_started: int = Time.get_ticks_usec()
+	var pending: Array[Vector2i] = []
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
 			var wanted := Vector2i(bx, by)
@@ -933,8 +990,9 @@ func _build_frame() -> bool:
 				# and decode in parallel); margin blocks bake a few per refresh,
 				# once every atlas they use has decoded on a worker.
 				var on_screen: bool = _block_rect(cell).intersects(screen)
-				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or not _request_block_tiles(cell)):
+				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or Time.get_ticks_usec() - build_started >= BUILD_BAKE_BUDGET_USEC or not _request_block_tiles(cell)):
 					partial = true
+					pending.append(cell)
 					continue
 				# A new block on screen waits up to ON_SCREEN_WAIT_MSEC for its
 				# atlases to decode on workers instead of decoding them here (on
@@ -945,6 +1003,7 @@ func _build_frame() -> bool:
 					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
+						pending.push_front(cell)
 						continue
 					late_bakes += 1
 				_screen_wait.erase(cell)
@@ -966,8 +1025,13 @@ func _build_frame() -> bool:
 			for tile_id: int in block.atlas_ids: atlases[tile_id] = true
 			for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
 	if draws == 0 and unresolved == 0 and not screen_waiting: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
-	# Look again next frame or two while on-screen blocks wait for decodes.
-	if screen_waiting: _refresh_clock = minf(_refresh_clock, 0.05)
+	# Blocks still missing bake a few per frame (_bake_pending); the frame
+	# itself stays built for this view.
+	_pending_blocks = pending
+	for cell: Vector2i in _pending_retry.keys():
+		if not pending.has(cell): _pending_retry.erase(cell)
+	for cell: Vector2i in _pending_tiles.keys():
+		if not pending.has(cell): _pending_tiles.erase(cell)
 	while _block_recent.size() > BLOCK_CACHE_LIMIT:
 		var oldest: Vector2i = _block_recent[0]
 		if cells.has(oldest): break
@@ -979,8 +1043,9 @@ func _build_frame() -> bool:
 	_visible_blocks = cells
 	# Only atlases of blocks still waiting their first draw are held here.
 	_frame_atlases = fresh_atlases
-	# Margin blocks still waiting bake on the next periodic refresh.
-	_built_view = Rect2() if partial else view
+	# Blocks still missing are pending; the built view stays (no full rebuild
+	# on every refresh until the last margin block is baked).
+	_built_view = view
 	# Every block here is baked (blocks keep their own atlases until drawn):
 	# let go of the decoded atlases held for them. Bounded while blocks wait.
 	if _tile_pack != null and _tile_pack.has_method("release_held") and (not partial or int(_tile_pack.call("held_size")) > HELD_ATLAS_LIMIT):
@@ -1021,6 +1086,7 @@ func refresh_visible() -> void:
 	_built_view = Rect2()
 	_force_objects_refresh = true
 	_refresh_view()
+	if _configured: _refresh_markers_if_moved(true)
 
 
 func _refresh_view() -> void:
@@ -1033,11 +1099,106 @@ func _refresh_view() -> void:
 		var built_ok: bool = _build_frame()
 		FRAME_HITCH.detail("map.build_frame", build_started)
 		if not built_ok: return
-	var markers_started: int = FRAME_HITCH.now()
-	_refresh_markers()
-	markers_started = FRAME_HITCH.detail_next("map.markers", markers_started)
-	_refresh_collision()
-	FRAME_HITCH.detail("map.collision", markers_started)
+	_refresh_markers_if_moved(false)
+
+
+## Name labels within 1400 px and the collision stream follow the actor: the
+## labels after MARKER_REFRESH_DISTANCE of movement, the collision stream when
+## the actor's cell changed (it keeps its own chunk early-out). Forced by
+## refresh_visible() and configuration.
+func _refresh_markers_if_moved(force: bool) -> void:
+	if not is_instance_valid(player): return
+	var at: Vector2 = player.global_position
+	if force or not _markers_at.is_finite() or at.distance_to(_markers_at) >= MARKER_REFRESH_DISTANCE:
+		_markers_at = at
+		var markers_started: int = FRAME_HITCH.now()
+		_refresh_markers()
+		FRAME_HITCH.detail("map.markers", markers_started)
+	var cell: Vector2i = field.world_to_cell(at) if field != null else Vector2i.ZERO
+	if force or cell != _collision_cell:
+		_collision_cell = cell
+		var collision_started: int = FRAME_HITCH.now()
+		_refresh_collision()
+		FRAME_HITCH.detail("map.collision", collision_started)
+
+
+## True when `cell` is one of the blocks a frame build of `view` walks.
+static func _view_has_cell(view: Rect2, cell: Vector2i) -> bool:
+	return cell.x >= floori(view.position.x / BLOCK) and cell.x <= floori(view.end.x / BLOCK) and cell.y >= floori(view.position.y / BLOCK) and cell.y <= floori(view.end.y / BLOCK)
+
+
+## Bakes pending blocks of the built view, on-screen ones first, until
+## `budget_usec` of work is spent (at least one bake per call; < 0 = all ready).
+## A block whose atlases are still decoding is asked again PENDING_RETRY_MSEC
+## later; an on-screen one bakes regardless after ON_SCREEN_WAIT_MSEC.
+## Returns the number of blocks baked.
+func _bake_pending(budget_usec: int) -> int:
+	if _pending_blocks.is_empty(): return 0
+	var started: int = Time.get_ticks_usec()
+	var now_msec: int = Time.get_ticks_msec()
+	var screen: Rect2 = _view_rect()
+	var keep: Rect2 = _built_view
+	var baked: int = 0
+	var late_bakes: int = 0
+	var order: Array[Vector2i] = []
+	var later: Array[Vector2i] = []
+	for cell: Vector2i in _pending_blocks:
+		if _block_rect(cell).intersects(screen): order.append(cell)
+		else: later.append(cell)
+	order.append_array(later)
+	var remaining: Array[Vector2i] = []
+	for index: int in order.size():
+		var cell: Vector2i = order[index]
+		if _blocks.has(cell): continue
+		# A block outside the current built view is no longer wanted.
+		if keep.has_area() and not _view_has_cell(keep, cell): _pending_retry.erase(cell); _pending_tiles.erase(cell); continue
+		if budget_usec >= 0 and baked > 0 and Time.get_ticks_usec() - started >= budget_usec:
+			remaining.append_array(order.slice(index))
+			break
+		if now_msec < int(_pending_retry.get(cell, 0)):
+			remaining.append(cell)
+			continue
+		var on_screen: bool = _block_rect(cell).intersects(screen)
+		if not _pending_tiles_ready(cell):
+			var waited: bool = false
+			if on_screen:
+				var since: int = int(_screen_wait.get(cell, now_msec))
+				_screen_wait[cell] = since
+				waited = now_msec - since >= ON_SCREEN_WAIT_MSEC and late_bakes < LATE_BAKES_PER_REFRESH
+			if not waited:
+				_pending_retry[cell] = now_msec + PENDING_RETRY_MSEC
+				remaining.append(cell)
+				continue
+			late_bakes += 1
+		_screen_wait.erase(cell)
+		_pending_retry.erase(cell)
+		_pending_tiles.erase(cell)
+		var commands_started: int = FRAME_HITCH.now()
+		var built: Dictionary = _block_commands(cell)
+		FRAME_HITCH.detail("map.block_commands", commands_started)
+		if built.has("problem"):
+			if problem.is_empty(): _fail(str(built.problem))
+			return baked
+		_blocks[cell] = _bake_block(cell, built)
+		_block_recent.erase(cell); _block_recent.append(cell)
+		if not _visible_blocks.has(cell): _visible_blocks.append(cell)
+		_frame_commands[cell] = (_blocks[cell] as Dictionary).commands
+		for tile_id: int in built.get("atlases", {}): _frame_atlases[tile_id] = built.atlases[tile_id]
+		baked += 1
+	_pending_blocks = remaining
+	if baked > 0:
+		FRAME_HITCH.count("map.pending_blocks_baked", baked)
+		while _block_recent.size() > BLOCK_CACHE_LIMIT:
+			var oldest: Vector2i = _block_recent[0]
+			if _visible_blocks.has(oldest): break
+			_free_block(oldest)
+		_metrics["visible_blocks"] = _visible_blocks.size()
+		_metrics["cached_blocks"] = _blocks.size()
+		_draw_generation += 1
+		if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
+	if _pending_blocks.is_empty() and _tile_pack != null and _tile_pack.has_method("release_held"):
+		_tile_pack.call("release_held")
+	return baked
 
 
 func _refresh_collision() -> void:
@@ -1072,6 +1233,10 @@ func _process_step(delta: float) -> void:
 	if _refresh_clock <= 0.0:
 		_refresh_clock = 0.25
 		_refresh_view()
+	if _configured and not _pending_blocks.is_empty():
+		var pending_started: int = FRAME_HITCH.now()
+		_bake_pending(PENDING_BAKE_BUDGET_USEC)
+		FRAME_HITCH.detail("map.pending_bake", pending_started)
 
 
 func _draw_tiles(canvas: Node2D) -> void:
