@@ -42,6 +42,9 @@ const TILE_PX: int = 24
 const BLOCK_CACHE_LIMIT: int = 32
 ## New margin block images per refresh (blocks on screen always bake at once).
 const MARGIN_BAKES_PER_REFRESH: int = 6
+## Longest a new on-screen block waits for worker decodes before decoding the
+## rest on the main thread (it shows nothing meanwhile).
+const ON_SCREEN_WAIT_MSEC: int = 250
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -83,6 +86,8 @@ var _blocks: Dictionary = {}
 var _block_recent: Array[Vector2i] = []
 var _blocks_include_objects: bool = true
 var _visible_blocks: Array[Vector2i] = []
+## On-screen block cell -> msec it started waiting for atlas decodes.
+var _screen_wait: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
 var _metrics: Dictionary = {}
@@ -718,6 +723,23 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
 
 
+## ref -> tile corners (x, y, ...) of one block's draw commands.
+static func _usage_pending(commands: Dictionary) -> Dictionary:
+	var lanes: Dictionary = {}
+	for layer: int in commands:
+		var lane: PackedInt64Array = commands[layer]
+		for index: int in range(0, lane.size(), 3):
+			var ref: int = lane[index + 2]
+			var corners: Variant = lanes.get(ref)
+			if corners == null:
+				corners = []
+				lanes[ref] = corners
+			(corners as Array).append(lane[index]); (corners as Array).append(lane[index + 1])
+	var pending: Dictionary = {}
+	for ref: int in lanes: pending[ref] = PackedInt64Array(lanes[ref])
+	return pending
+
+
 func _free_block(cell: Vector2i) -> void:
 	var block: Dictionary = _blocks.get(cell, {})
 	_blocks.erase(cell)
@@ -730,6 +752,7 @@ func _clear_blocks() -> void:
 	for cell: Vector2i in _blocks.keys(): _free_block(cell)
 	_block_recent.clear()
 	_visible_blocks.clear()
+	_screen_wait.clear()
 
 
 func _build_frame() -> bool:
@@ -748,10 +771,13 @@ func _build_frame() -> bool:
 	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
 	var cells: Array[Vector2i] = []
 	var margin_bakes: int = 0
+	var screen_ready: Dictionary = {}
+	var screen_waiting: bool = false
+	var now_msec: int = Time.get_ticks_msec()
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
 			var wanted := Vector2i(bx, by)
-			if not _blocks.has(wanted) and _block_rect(wanted).intersects(screen): _request_block_tiles(wanted)
+			if not _blocks.has(wanted) and _block_rect(wanted).intersects(screen): screen_ready[wanted] = _request_block_tiles(wanted)
 	var draws: int = 0
 	var fresh_atlases: Dictionary = {}
 	var partial: bool = false
@@ -770,6 +796,17 @@ func _build_frame() -> bool:
 				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or not _request_block_tiles(cell)):
 					partial = true
 					continue
+				# A new block on screen waits up to ON_SCREEN_WAIT_MSEC for its
+				# atlases to decode on workers instead of decoding them here (on
+				# the phone ~60 ms each, several per teleport or fast walk).
+				if on_screen and not bool(screen_ready.get(cell, true)):
+					var since: int = int(_screen_wait.get(cell, now_msec))
+					_screen_wait[cell] = since
+					if now_msec - since < ON_SCREEN_WAIT_MSEC:
+						partial = true
+						screen_waiting = true
+						continue
+				_screen_wait.erase(cell)
 				var built: Dictionary = _block_commands(cell)
 				if built.has("problem"):
 					if problem.is_empty(): return _fail(str(built.problem))
@@ -785,7 +822,9 @@ func _build_frame() -> bool:
 			unresolved += int(block.unresolved)
 			for tile_id: int in block.atlas_ids: atlases[tile_id] = true
 			for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
-	if draws == 0 and unresolved == 0: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	if draws == 0 and unresolved == 0 and not screen_waiting: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
+	# Look again next frame or two while on-screen blocks wait for decodes.
+	if screen_waiting: _refresh_clock = minf(_refresh_clock, 0.05)
 	while _block_recent.size() > BLOCK_CACHE_LIMIT:
 		var oldest: Vector2i = _block_recent[0]
 		if cells.has(oldest): break
@@ -885,12 +924,18 @@ func _draw_tiles(canvas: Node2D) -> void:
 		if not is_instance_valid(viewport): continue
 		canvas.draw_texture((viewport as SubViewport).get_texture(), Vector2(cell * BLOCK))
 		if observe and _block_rect(cell).intersects(view):
-			var commands: Dictionary = block.commands
-			for layer: int in commands:
-				var lane: PackedInt64Array = commands[layer]
-				for index: int in range(0, lane.size(), 3):
-					var ref: int = lane[index + 2]
-					if not observed_refs.has(ref) and Rect2(Vector2(lane[index],lane[index+1]),Vector2(TILE_PX,TILE_PX)).intersects(view): observed_refs[ref]=true
+			# Each ref is observed once: refs not yet seen on screen keep their
+			# tile corners; a ref leaves the list when one of them is in view.
+			# (Every rebuild used to walk every tile of every visible block.)
+			if not block.has("usage_pending"): block["usage_pending"] = _usage_pending(block.commands)
+			var pending: Dictionary = block.usage_pending
+			for ref: int in pending.keys():
+				var corners: PackedInt64Array = pending[ref]
+				for index: int in range(0, corners.size(), 2):
+					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
+						observed_refs[ref] = true
+						pending.erase(ref)
+						break
 	if observe:
 		for ref: int in observed_refs:
 			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)

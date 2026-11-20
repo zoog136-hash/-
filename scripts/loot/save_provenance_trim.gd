@@ -20,6 +20,14 @@ extends RefCounted
 ## element, lock, equip, warehouse/floor placement, IDs) is untouched.
 ## Functions return the input itself when nothing is removed, else a copy
 ## that shares every untouched part (no deep copy per save).
+##
+## On disk only (for_file / loaded_save): an owned item record's heavy
+## definition fields (current523_native_fields.HEAVY: the original ItemClass
+## row, use spec, bonus lists ...) that are exactly the installed definition
+## template's values are left out and the record is marked; loading puts the
+## template's values back, so memory holds the same full record as before.
+## A record is only shortened when that round trip is exact, and without an
+## installed definition a marked record is kept marked (never saved bare).
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const RECEIPT := "source_native_stack_receipt"
 const AWAKENING := "source_awakening_supply"
@@ -192,6 +200,13 @@ static func payload(data: Dictionary) -> Dictionary:
 ## character's state, so shared quantity journals and offline characters'
 ## items keep one identical receipt form.
 static func loaded_save(data: Dictionary) -> void:
+	_expand_in_place(data)
+	var account_value: Variant = data.get("character_account")
+	if account_value is Dictionary:
+		if account_value.get("shared") is Dictionary: _expand_in_place(account_value.shared)
+		if account_value.get("characters") is Array:
+			for character: Variant in account_value.characters:
+				if character is Dictionary and character.get("state") is Dictionary: _expand_in_place(character.state)
 	var flat: Dictionary = payload(data)
 	for key: Variant in flat: data[key] = flat[key]
 	var account: Variant = data.get("character_account")
@@ -208,5 +223,96 @@ static func loaded_save(data: Dictionary) -> void:
 ## A payload as the save file holds it after JSON (for "was this written?"
 ## comparisons against the durable file).
 static func durable(data: Dictionary) -> Dictionary:
-	var parsed: Variant = JSON.parse_string(JSON.stringify(payload(data), "", true, true))
+	var parsed: Variant = JSON.parse_string(JSON.stringify(for_file(data), "", true, true))
 	return parsed if parsed is Dictionary else {}
+const SAVED_TEMPLATE := "twilight_saved_template_fields"
+
+static func _record_template(value: Dictionary) -> Dictionary:
+	if value.get("source_m_native_item") != true or not _whole(value.get("source_item_class_id")): return {}
+	return NATIVE_FIELDS._template(str(int(value.source_item_class_id)))
+
+## The on-disk form of one item record.
+static func slim_record(value: Dictionary) -> Dictionary:
+	if value.has(SAVED_TEMPLATE) or NATIVE_FIELDS.lazy(value): return value
+	var template: Dictionary = _record_template(value)
+	if template.is_empty(): return value
+	var dropped: Array = []
+	for key: String in NATIVE_FIELDS.HEAVY:
+		if not template.has(key): continue
+		if not value.has(key): return value # would come back on load: keep as is
+		if value[key] == template[key]: dropped.append(key)
+	if dropped.is_empty(): return value
+	var result: Dictionary = value.duplicate(false)
+	for key: String in dropped: result.erase(key)
+	result[SAVED_TEMPLATE] = true
+	return result
+
+## The memory form of a record read from disk (template values put back).
+static func expand_record(value: Dictionary) -> Dictionary:
+	if not value.has(SAVED_TEMPLATE): return value
+	var template: Dictionary = _record_template(value)
+	if template.is_empty(): return value
+	var result: Dictionary = value.duplicate(false)
+	result.erase(SAVED_TEMPLATE)
+	for key: String in NATIVE_FIELDS.HEAVY:
+		if template.has(key) and not result.has(key):
+			var field: Variant = template[key]
+			result[key] = field.duplicate(true) if field is Dictionary or field is Array else field
+	return result
+
+static func _map_records(entry_value: Dictionary, map: Callable) -> Dictionary:
+	if not entry_value.get("record") is Dictionary: return entry_value
+	var mapped: Dictionary = map.call(entry_value.record)
+	if is_same(mapped, entry_value.record): return entry_value
+	var result: Dictionary = entry_value.duplicate(false); result.record = mapped
+	return result
+
+static func _records_in(data: Dictionary, map: Callable) -> Dictionary:
+	var result: Dictionary = data
+	var each: Callable = func(values: Variant) -> Variant:
+		if not values is Dictionary: return values
+		var out: Dictionary = values
+		for uid: Variant in values:
+			if not values[uid] is Dictionary: continue
+			var mapped: Dictionary = _map_records(values[uid], map)
+			if is_same(mapped, values[uid]): continue
+			if is_same(out, values): out = values.duplicate(false)
+			out[uid] = mapped
+		return out
+	var instances: Variant = each.call(data.get("item_instances"))
+	if data.has("item_instances") and not is_same(instances, data.item_instances):
+		result = data.duplicate(false); result.item_instances = instances
+	if data.get("warehouse") is Dictionary and data.warehouse.has("instances"):
+		var stored: Variant = each.call(data.warehouse.instances)
+		if not is_same(stored, data.warehouse.instances):
+			if is_same(result, data): result = data.duplicate(false)
+			var warehouse: Dictionary = data.warehouse.duplicate(false); warehouse.instances = stored; result.warehouse = warehouse
+	if data.get("ground_drops") is Array:
+		var floor: Array = data.ground_drops
+		for index: int in floor.size():
+			var drop: Variant = floor[index]
+			if not drop is Dictionary: continue
+			var next: Dictionary = drop
+			if drop.get("item_record") is Dictionary:
+				var item: Dictionary = map.call(drop.item_record)
+				if not is_same(item, drop.item_record): next = drop.duplicate(false); next.item_record = item
+			if drop.get("physical_item") is Dictionary and drop.physical_item.get("data") is Dictionary:
+				var physical_data: Dictionary = _map_records(drop.physical_item.data, map)
+				if not is_same(physical_data, drop.physical_item.data):
+					if is_same(next, drop): next = drop.duplicate(false)
+					var physical: Dictionary = drop.physical_item.duplicate(false); physical.data = physical_data; next.physical_item = physical
+			if is_same(next, drop): continue
+			if is_same(floor, data.ground_drops):
+				floor = floor.duplicate(false)
+				if is_same(result, data): result = data.duplicate(false)
+				result.ground_drops = floor
+			floor[index] = next
+	return result
+
+## What a world save writes: trimmed history and template-shortened records.
+static func for_file(data: Dictionary) -> Dictionary:
+	return _records_in(payload(data), slim_record)
+
+static func _expand_in_place(data: Dictionary) -> void:
+	var expanded: Dictionary = _records_in(data, expand_record)
+	for key: Variant in expanded: data[key] = expanded[key]

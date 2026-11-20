@@ -214,6 +214,29 @@ func next_safe_id() -> int:
 		if id.is_valid_int() and id.length() <= 18: result = maxi(result,int(id)+1)
 	return result
 
+## Background save (world._save_game background): the same disk-identity
+## checks as write_save, on the main thread before the worker writes.
+func precheck_write(path: String) -> Error:
+	if save_blocked or not problem.is_empty(): return ERR_UNAVAILABLE
+	var current_hash: String = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+	if _disk_path == path and current_hash != _disk_hash:
+		save_blocked = true
+		world.hud.append_log("외부 저장 변경 감지 · 다시 불러오기 전 저장 차단")
+		return ERR_BUSY
+	if _disk_path != path and not current_hash.is_empty(): return ERR_BUSY
+	return OK
+
+## Background save finished writing `payload_hash` bytes of `data` to path.
+func commit_written(path: String, data: Dictionary, payload_hash: String) -> void:
+	_disk_path = path
+	_disk_hash = FileAccess.get_sha256(path)
+	_last_payload_hash = payload_hash if _disk_hash==payload_hash else ""
+	_last_payload_revision = hash(data)
+	# No snapshot copy on the main thread: the next save is written in full.
+	_last_payload_snapshot = {}
+	_last_payload_snapshot_valid = false
+	save_writes += 1
+
 func write_save(path: String, data: Dictionary) -> Error:
 	if save_blocked or not problem.is_empty(): return ERR_UNAVAILABLE
 	# Refuse an external/stale save replacement rather than resurrecting consumed gear.

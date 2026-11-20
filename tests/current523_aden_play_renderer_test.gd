@@ -158,6 +158,7 @@ func run() -> void:
 	# Margin blocks wait for their atlases' worker decode; on-screen ones never wait.
 	# Shift the screen so its right edge (1500) is just before a block edge (1536).
 	var async_tiles := FakeAsyncTiles.new()
+	async_tiles.ready[2147483903 >> 8] = true  # the on-screen block's atlas is already decoded
 	renderer._tile_pack = async_tiles
 	var saved_canvas: Transform2D = root.canvas_transform
 	root.canvas_transform = Transform2D(0.0, Vector2(renderer._view_rect().end.x - 1500.0, 0.0)) * saved_canvas
@@ -173,6 +174,14 @@ func run() -> void:
 	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
 	async_tiles.pump()
 	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	# A new on-screen block waits briefly for its decode, then bakes regardless.
+	renderer._raw_chunks["synthetic"] = {-2:PackedInt64Array([here.x,here.y,(8 << 8) | 1])}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	renderer._refresh_clock = 0.25
+	var waited_ok: bool = renderer._build_frame()
+	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._refresh_clock <= 0.05 and renderer.problem.is_empty(), "an on-screen block waits for its worker decode without failing the map")
+	renderer._screen_wait[near_cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
+	check(renderer._build_frame() and renderer._blocks.has(near_cell), "after the wait limit it bakes with what the pack gives")
 	root.canvas_transform = saved_canvas
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}

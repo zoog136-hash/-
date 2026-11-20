@@ -295,6 +295,8 @@ func runtime() -> void:
 		var started: int = Time.get_ticks_usec()
 		check(is_instance_valid(view) and world._collect_ground_drop(view), "actual floor pickup")
 		evidence["pickup_usec"] = Time.get_ticks_usec()-started
+		# The pickup is written by the batched save (deferred_save); flush it.
+		check(world._save_game(true) == OK, "batched save after the pickup")
 		var text: String = FileAccess.get_file_as_string(path)
 		check(not text.contains("source_m_drop_proof") and not text.contains("source_rows") and not text.contains("source_ground_acquisitions"), "pickup saves no monster/drop rows or floor receipt")
 		check(int(world.inventory.get(str(entry.item_name),0)) == int(before_counts.get(str(entry.item_name),0))+1, "picked item counted once")
