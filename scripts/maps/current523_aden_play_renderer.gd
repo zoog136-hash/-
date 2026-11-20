@@ -200,6 +200,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	else: record = value.get("runtime_record")
 	_raw_sources = originals
 	_tile_pack = tiles
+	# Atlases are only read to bake ground blocks (see compress_for_gpu).
+	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
 	_drop_chunk_jobs()
@@ -907,7 +909,9 @@ func _build_frame() -> bool:
 						screen_waiting = true
 						continue
 				_screen_wait.erase(cell)
+				var commands_started: int = FRAME_HITCH.now()
 				var built: Dictionary = _block_commands(cell)
+				FRAME_HITCH.detail("map.block_commands", commands_started)
 				if built.has("problem"):
 					if problem.is_empty(): return _fail(str(built.problem))
 					return false
@@ -954,8 +958,10 @@ func _build_frame() -> bool:
 	if is_instance_valid(_static_spr):
 		var built_for: Array=[_static_spr.get_instance_id(),visible.duplicate()]
 		if _force_objects_refresh or built_for!=_objects_built_for:
+			var objects_started: int = FRAME_HITCH.now()
 			var static_records: Dictionary=_visible_static_records()
 			_static_spr.refresh(static_records.records,int(static_records.malformed))
+			FRAME_HITCH.detail("map.objects_refresh", objects_started)
 			_objects_built_for=built_for
 		else:
 			FRAME_HITCH.count("map.object_refresh_skipped")
@@ -980,9 +986,15 @@ func _refresh_view() -> void:
 	if not scope.is_empty(): _fail(scope); return
 	# Rebuild only when the screen leaves the area the frame was built for.
 	if not (_built_view.has_area() and _built_view.encloses(_view_rect())):
-		if not _build_frame(): return
+		var build_started: int = FRAME_HITCH.now()
+		var built_ok: bool = _build_frame()
+		FRAME_HITCH.detail("map.build_frame", build_started)
+		if not built_ok: return
+	var markers_started: int = FRAME_HITCH.now()
 	_refresh_markers()
+	markers_started = FRAME_HITCH.detail_next("map.markers", markers_started)
 	_refresh_collision()
+	FRAME_HITCH.detail("map.collision", markers_started)
 
 
 func _refresh_collision() -> void:
@@ -999,8 +1011,13 @@ func _process(delta: float) -> void:
 func _process_step(delta: float) -> void:
 	if not _configured: return
 	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
-	if not _chunk_jobs.is_empty(): _pump_chunk_jobs()
+	if not _chunk_jobs.is_empty():
+		var chunks_started: int = FRAME_HITCH.now()
+		_pump_chunk_jobs()
+		FRAME_HITCH.detail("map.chunk_install", chunks_started)
+	var scope_started: int = FRAME_HITCH.now()
 	var scope: String = _scope_problem()
+	FRAME_HITCH.detail("map.scope", scope_started)
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
 	# The tile ground only draws _frame_commands, which change only in
