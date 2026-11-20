@@ -2185,6 +2185,16 @@ func _build_catalog_panel() -> void:
 	catalog_list.add_theme_constant_override("v_separation",12)
 	catalog_list.add_theme_constant_override("h_separation",8)
 	catalog_list.add_theme_font_size_override("font_size",13)
+	# Item icons (static PNG or animated CSB scene) are drawn by one
+	# TextureRect per row cell on top of the list, all the same size.
+	catalog_icon_layer = Control.new()
+	catalog_icon_layer.name = "CatalogItemIcons"
+	catalog_icon_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	catalog_icon_layer.clip_contents = true
+	catalog_list.add_child(catalog_icon_layer)
+	catalog_icon_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	catalog_list.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: _layout_catalog_icon_views())
+	catalog_list.resized.connect(func() -> void: _layout_catalog_icon_views.call_deferred())
 	var pager := HBoxContainer.new()
 	pager.custom_minimum_size = Vector2(0, 40)
 	pager.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -2775,7 +2785,7 @@ func _fit_catalog_browser_layout() -> void:
 	collection_status.visible = not short
 	catalog_count.visible = not short
 	catalog_preview.custom_minimum_size = Vector2(150 if compact else 180,0)
-	catalog_list.fixed_icon_size = Vector2i(78,92) if short else Vector2i(94,116)
+	catalog_list.fixed_icon_size = _catalog_icon_size()
 	catalog_list.add_theme_constant_override("v_separation",10)
 	catalog_search.custom_minimum_size.y = 34
 	catalog_view_tabs.visible = (compact or CARD_RULES.CATEGORIES.has(active_section)) and active_section in ["아이템","변신","마법인형","성물"]
@@ -2872,6 +2882,7 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
+		if catalog_category == "아이템": catalog_list.set_item_icon(index,_catalog_icon_reserve())
 		if catalog_category != "아이템":
 			if SourceCardPresentation.native(record):
 				var acquired: bool = owned_cards.get(CARD_RULES.card_id(record),false) == true
@@ -2898,19 +2909,85 @@ func _apply_catalog_page() -> void:
 	SourceCardPresentation.apply(self)
 	# Render the original source-ID icons in small batches so all item names
 	# appear immediately instead of the browser blocking during 40 image effects.
-	if catalog_category == "아이템" and not catalog_results.is_empty():
-		call_deferred("_fill_catalog_page_icons", request_id)
+	if catalog_category == "아이템": catalog_list.fixed_icon_size = _catalog_icon_size()
+	call_deferred("_fill_catalog_page_icons", request_id)
+
+## Same-size original icon cells of the item catalog list. Card catalogs keep
+## their portrait art size.
+const CATALOG_ITEM_ICON := Vector2i(64,64)
+const CATALOG_ITEM_ICON_SHORT := Vector2i(52,52)
+var catalog_icon_layer: Control
+var catalog_icon_views: Array[TextureRect] = []
+var _catalog_icon_slot: PlaceholderTexture2D
+
+func _catalog_icon_size() -> Vector2i:
+	var short: bool = workspace != null and workspace.content.size.y < 430
+	if catalog_category == "아이템": return CATALOG_ITEM_ICON_SHORT if short else CATALOG_ITEM_ICON
+	return Vector2i(78,92) if short else Vector2i(94,116)
+
+## An empty, same-size icon slot for every item row: the list keeps one cell
+## size whether or not the row's picture is a texture or an animated scene.
+func _catalog_icon_reserve() -> Texture2D:
+	var wanted: Vector2 = Vector2(_catalog_icon_size())
+	if _catalog_icon_slot == null: _catalog_icon_slot = PlaceholderTexture2D.new()
+	_catalog_icon_slot.size = wanted
+	return _catalog_icon_slot
 
 func _fill_catalog_page_icons(request_id: int) -> void:
+	if catalog_list == null: return
+	catalog_list.fixed_icon_size = _catalog_icon_size()
+	var item_page: bool = catalog_category == "아이템"
+	for index: int in range(catalog_icon_views.size()):
+		if index >= catalog_results.size() or not item_page:
+			UI.clear_item_visual(catalog_icon_views[index])
+			catalog_icon_views[index].hide()
+	if not item_page or not is_instance_valid(catalog_icon_layer): return
+	for index: int in range(mini(catalog_results.size(), catalog_list.item_count)):
+		catalog_list.set_item_icon(index, _catalog_icon_reserve())
+	_layout_catalog_icon_views()
 	for index: int in range(catalog_results.size()):
 		if request_id != catalog_icon_generation or catalog_category != "아이템":
 			return
+		if index >= catalog_list.item_count: break
 		var record: Dictionary = catalog_results[index]
-		var icon_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
-		if icon_texture != null and index < catalog_list.item_count:
-			catalog_list.set_item_icon(index, icon_texture)
-		if index % 3 == 2:
+		var view: TextureRect = _catalog_icon_view(index)
+		UI.apply_item_visual(view, record, str(record.get("name", "")), item_image_index.get("아이템", {}), "slot")
+		view.show()
+		if index % 4 == 3:
 			await get_tree().process_frame
+	_layout_catalog_icon_views()
+
+func _catalog_icon_view(index: int) -> TextureRect:
+	while catalog_icon_views.size() <= index:
+		var view := TextureRect.new()
+		view.name = "CatalogItemIcon%d" % catalog_icon_views.size()
+		view.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		view.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		view.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		view.hide()
+		catalog_icon_layer.add_child(view)
+		catalog_icon_views.append(view)
+	return catalog_icon_views[index]
+
+## Puts each icon cell over its row's reserved icon slot (ItemList top-icon
+## layout: centered, icon_margin below the cell top, minus the scroll).
+func _layout_catalog_icon_views() -> void:
+	if catalog_list == null or not is_instance_valid(catalog_icon_layer): return
+	if catalog_category != "아이템":
+		for view: TextureRect in catalog_icon_views: view.hide()
+		return
+	catalog_list.force_update_list_size()
+	var icon: Vector2 = Vector2(catalog_list.fixed_icon_size)
+	var margin: float = float(catalog_list.get_theme_constant("icon_margin"))
+	var scroll: float = catalog_list.get_v_scroll_bar().value
+	for index: int in range(catalog_icon_views.size()):
+		var view: TextureRect = catalog_icon_views[index]
+		if index >= catalog_list.item_count or index >= catalog_results.size():
+			view.hide()
+			continue
+		var cell: Rect2 = catalog_list.get_item_rect(index)
+		view.position = Vector2(cell.position.x + floorf((cell.size.x - icon.x) * 0.5), cell.position.y + margin - scroll)
+		view.size = icon
 
 func _request_playtest_catalog_grant() -> void:
 	if not developer_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():

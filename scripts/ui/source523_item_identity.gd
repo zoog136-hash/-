@@ -53,7 +53,15 @@ static func item_class_id(record: Dictionary, key: String = "") -> int:
 	for suffix: String in BLESS_SUFFIXES:
 		if name.ends_with(suffix): name = name.trim_suffix(suffix)
 	if name.is_empty(): return -1
-	return by_name(name)
+	var named: int = by_name(name)
+	if named > 0: return named
+	# A legacy catalog row (inven) whose publisher sourceId is the ItemClass.ID
+	# of an item with exactly this original name: several original rows share
+	# the name (bless/engrave variants with their own pictures), so the name
+	# alone was ambiguous; the row's own ID picks its picture.
+	var source_id: String = str(record.get("sourceId", ""))
+	if source_id.is_valid_int() and int(source_id) > 0 and name == original_name(int(source_id)): return int(source_id)
+	return -1
 
 ## Bag names that are not an original Korean item name (2026-11-20 phone
 ## report: empty slots). data/ui/item_icon_identity.json (tools/
