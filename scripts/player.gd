@@ -220,7 +220,7 @@ func _physics_step(delta: float) -> void:
 	if manual.length_squared() > 0.01:
 		cancel_attack()
 		clear_click_path()
-		velocity = _walk_velocity(manual, move_speed)
+		velocity = _walk_velocity(SOURCE_WALK.cell_direction(_route_coordinates(), manual), move_speed)
 	else:
 		velocity = _click_path_velocity()
 
@@ -245,8 +245,15 @@ func _click_path_velocity() -> Vector2:
 		next_point = click_path[path_index]
 		distance = global_position.distance_to(next_point)
 	var direction: Vector2 = global_position.direction_to(next_point)
+	var room: float = distance
+	# On an original Land the leg is walked in the original's eight cell
+	# directions (diagonal steps, then straight), never an off-grid line.
+	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, next_point, Callable(self, "_route_line_clear") if _route_has_field() else Callable())
+	if not leg.is_empty():
+		direction = leg.direction
+		room = maxf(float(leg.length), 0.0)
 	var speed: float = _walk_velocity(direction, click_move_speed).length()
-	return direction * minf(speed, distance / maxf(physics_delta, 0.001))
+	return direction * minf(speed, room / maxf(physics_delta, 0.001))
 
 ## Walk animation clock on an original 523 Land: one walk loop of the
 ## original actor is one cell step, so its own clock is scaled to finish the
@@ -704,7 +711,8 @@ func _route_has_field() -> bool:
 ## Speed (px/s) the current route walk wants this frame, 0 without a route.
 func intended_walk_speed() -> float:
 	if path_index >= click_path.size(): return 0.0
-	return _walk_velocity(global_position.direction_to(click_path[path_index]), click_move_speed).length()
+	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, click_path[path_index])
+	return _walk_velocity(leg.direction if not leg.is_empty() else global_position.direction_to(click_path[path_index]), click_move_speed).length()
 
 func clear_click_path() -> void:
 	manual_navigation = false
