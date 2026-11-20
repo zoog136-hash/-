@@ -8,9 +8,12 @@ extends RefCounted
 ## `Prerequisite`). Only original rows are listed; nothing is invented.
 ##
 ## Listed: not IsHide, a Territories box, a LandTeleport row with
-## AllowMapTeleport and CurrencyID 1 (Adena), no test tag. Rows paid in
-## CurrencyID 4 (Gem, the 하딘 텔레포트 tab) and rows without a tariff
-## (LandTeleportID 0) are not listed. Prerequisites: MinLevel (type 1) is
+## AllowMapTeleport and CurrencyID 1 (Adena) or 4 (Gem = 다이아: the
+## "[맵텔] [하딘]" rows of 하딘의 텔레포트, the Map_Tab_Teleport tab Hadin
+## presents; user report 2026-11-20 "하딘의 텔레포트도 안되고"), no test tag.
+## A Gem row is paid with the game's own 다이아 (no real payment); its
+## TerritoryID 0 row (이계의 균열) lands in its LandTeleportTerritories box.
+## Rows without a tariff (LandTeleportID 0) are not listed. Prerequisites: MinLevel (type 1) is
 ## judged; a row with any other prerequisite type is listed but locked
 ## ("원본 전제조건 미지원"), never waived.
 ## The move itself is world.current523_map_teleport (current Land rules except
@@ -20,6 +23,13 @@ const DEF = preload("res://scripts/resources/current523_definition_rows.gd")
 const PAYMENT = preload("res://scripts/maps/current523_map_travel_payment.gd")
 const ID_PREFIX: String = "m523area:"
 const ADENA: int = 1
+## Currency 4 "Gem" (DescData 729861 다이아), the game's diamond stack.
+const GEM: int = 4
+const DIAMOND: String = "다이아"
+const CURRENCY_NAMES: Dictionary = {ADENA: "아데나", GEM: DIAMOND}
+## Hadin (다이아) rows follow the Adena rows in the list (TWILIGHT 근사:
+## the client shows them on the same tab; no order field).
+const GEM_ORDER_OFFSET: int = 10
 const MIN_LEVEL_TYPE: int = 1
 ## UIMapAreaType: 3 Village, 4 Dungeon, 5 Field (8: 장소, no type row).
 const TYPE_ORDER: Dictionary = {3: 0, 5: 1, 8: 2, 4: 3}
@@ -56,9 +66,15 @@ static func _destination(area: Dictionary) -> Dictionary:
 		if source_name.contains(tag): return {}
 	var teleport_id: int = int(area.get("LandTeleportID", 0))
 	var territory_id: int = int(area.get("TerritoryID", 0))
-	if teleport_id <= 0 or territory_id <= 0: return {}
+	if teleport_id <= 0: return {}
 	var tariff: Dictionary = DEF.row("LandTeleport", teleport_id)
-	if tariff.is_empty() or tariff.get("AllowMapTeleport") != true or int(tariff.get("CurrencyID", 0)) != ADENA: return {}
+	var currency: int = int(tariff.get("CurrencyID", 0))
+	if tariff.is_empty() or tariff.get("AllowMapTeleport") != true or not CURRENCY_NAMES.has(currency): return {}
+	if territory_id <= 0:
+		# The original landing set of the tariff (LandTeleportTerritories).
+		for link: Dictionary in DEF.related("LandTeleportTerritories", "LandTeleportID", teleport_id):
+			if int(link.get("TerritoryID", 0)) > 0: territory_id = int(link.TerritoryID); break
+	if territory_id <= 0: return {}
 	var territory: Dictionary = DEF.row("Territories", territory_id)
 	if territory.is_empty(): return {}
 	var bounds: Array = [int(territory.StartX), int(territory.StartY), int(territory.EndX), int(territory.EndY)]
@@ -76,9 +92,9 @@ static func _destination(area: Dictionary) -> Dictionary:
 	var type_id: int = int(area.get("TypeID", 0))
 	return {"id": ID_PREFIX + str(area_id), "area_id": area_id, "name": name, "source_name": source_name,
 		"land_id": int(territory.LandID), "bounds": bounds, "territory_id": territory_id,
-		"land_teleport_id": teleport_id, "price": int(tariff.get("TeleportCost", 0)), "currency_id": ADENA,
+		"land_teleport_id": teleport_id, "price": int(tariff.get("TeleportCost", 0)), "currency_id": currency, "currency_name": str(CURRENCY_NAMES[currency]),
 		"min_level": min_level, "unsupported_prerequisites": unsupported, "type_id": type_id,
-		"world_id": int(area.get("WorldID", 0)), "order": int(TYPE_ORDER.get(type_id, 9))}
+		"world_id": int(area.get("WorldID", 0)), "order": int(TYPE_ORDER.get(type_id, 9)) + (GEM_ORDER_OFFSET if currency == GEM else 0)}
 
 static func _strip_tags(text: String) -> String:
 	var result: String = text
@@ -100,6 +116,23 @@ static func quote(world: Node, id: String) -> Dictionary:
 		var b: Array = row.bounds
 		if int(cell[0]) >= int(b[0]) and int(cell[0]) <= int(b[2]) and int(cell[1]) >= int(b[1]) and int(cell[1]) <= int(b[3]):
 			return {"ok": false, "reason": "이미 이 지역에 있습니다", "row": row}
-	var paid: Dictionary = PAYMENT.quote(world, int(row.price))
+	var paid: Dictionary = gem_quote(world, int(row.price)) if int(row.currency_id) == GEM else PAYMENT.quote(world, int(row.price))
 	if not paid.get("ok", false): return {"ok": false, "reason": str(paid.get("reason", "아데나가 부족합니다")), "row": row}
 	return {"ok": true, "price": int(row.price), "changes": paid.changes, "row": row}
+
+## The 다이아 price of a Hadin row: the bag's 다이아 stack after the debit,
+## saved with the arrival through the same move save as an Adena price.
+static func gem_quote(world: Node, amount: int) -> Dictionary:
+	var protection: Dictionary = PAYMENT._save_protection(world)
+	if not protection.is_empty(): return protection
+	if amount < 0 or amount > PAYMENT.MAX_AMOUNT: return {"ok": false, "reason": "이동 비용은 0~100000000의 정수여야 합니다"}
+	var bag: Variant = world.get("inventory")
+	if not bag is Dictionary: return {"ok": false, "reason": "현재 소지품 상태 확인 필요"}
+	var owned: Variant = (bag as Dictionary).get(DIAMOND, 0)
+	if not (owned is int or (owned is float and float(owned) == floorf(float(owned)))) or int(owned) < 0: return {"ok": false, "reason": "현재 다이아 정수 상태 확인 필요"}
+	if amount > int(owned): return {"ok": false, "reason": "이동 비용 다이아가 부족합니다"}
+	if amount == 0: return {"ok": true, "changes": {}, "amount": 0}
+	var next: Dictionary = (bag as Dictionary).duplicate(true)
+	next[DIAMOND] = int(owned) - amount
+	if int(next[DIAMOND]) == 0: next.erase(DIAMOND)
+	return {"ok": true, "changes": {"inventory": next}, "amount": amount, "currency_id": GEM}
