@@ -409,9 +409,16 @@ func _control_blocks_world_input(node: Node, point: Vector2) -> bool:
 func playtest_tools_enabled() -> bool:
 	return preload("res://scripts/boot/build_flags.gd").playtest()
 
-## Catalog grant tools and verification lines: debug/dev-UI builds only.
+## Verification lines (source ids, grade evidence): debug/dev-UI builds only.
 func developer_tools_visible() -> bool:
 	return playtest_tools_enabled() and preload("res://scripts/boot/build_flags.gd").developer_ui()
+
+## The item catalog's grant tools (선택 아이템 지급, 주문서 ×10, 변신·인형·성물
+## 뽑기권, 아데나 1억) stay on the phone's playtest APK too (user 2026-11-20:
+## "검수용 아이템지급 버튼은 일단 살려"); only the verification text above is
+## limited to debug/dev-UI builds.
+func catalog_grant_tools_visible() -> bool:
+	return playtest_tools_enabled()
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
@@ -2022,7 +2029,7 @@ func _open_catalog_browser(category: String) -> void:
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
 	catalog_clear_button.visible = category != "아이템"
-	catalog_test_toggle.visible = category == "아이템" and developer_tools_visible()
+	catalog_test_toggle.visible = category == "아이템" and catalog_grant_tools_visible()
 	if is_instance_valid(card_fusion_tab):
 		card_fusion_tab.visible = CARD_RULES.CATEGORIES.has(category)
 		card_awakening_tab.visible = CARD_RULES.CATEGORIES.has(category)
@@ -2303,8 +2310,8 @@ func _build_catalog_panel() -> void:
 	catalog_test_tools.hide()
 	card_draw_button.reparent(catalog_test_tools)
 	reveal_preview.reparent(catalog_test_tools)
-	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and developer_tools_visible())
-	catalog_test_tools.add_child(UI.label("개발 빌드 전용 지급 도구",11,UI.GOLD))
+	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and catalog_grant_tools_visible())
+	catalog_test_tools.add_child(UI.label("테스트 아이템 지급",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
 	playtest_grant_button.name = "PlaytestGrantSelected"
 	catalog_test_tools.add_child(playtest_grant_button)
@@ -2314,7 +2321,7 @@ func _build_catalog_panel() -> void:
 	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
 		var grant_name: String = scroll
 		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
-			if developer_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
+			if catalog_grant_tools_visible(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
@@ -2913,7 +2920,7 @@ func _fill_catalog_page_icons(request_id: int) -> void:
 			await get_tree().process_frame
 
 func _request_playtest_catalog_grant() -> void:
-	if not developer_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():
+	if not catalog_grant_tools_visible() or catalog_category != "아이템" or selected_catalog_record.is_empty():
 		return
 	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
 	if source_id != "":
@@ -2922,7 +2929,7 @@ func _request_playtest_catalog_grant() -> void:
 		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
 
 func _request_playtest_aden() -> void:
-	if developer_tools_visible(): playtest_aden_grant_requested.emit()
+	if catalog_grant_tools_visible(): playtest_aden_grant_requested.emit()
 
 func _catalog_variant_count(item_name: String) -> int:
 	return int(catalog_variant_counts.get(item_name, 0))
