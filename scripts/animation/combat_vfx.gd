@@ -4,6 +4,7 @@ signal source_frame_marker(sprite_id: String, source_frame: int)
 
 ## One drawing node, bounded reusable records. No per-hit nodes, tweens or RNG.
 const FRAME_REGISTRATION = preload("res://scripts/animation/reviewed_frame_registration.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const CAPACITY: int = 160
 const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
 const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
@@ -183,18 +184,25 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	if font == null: return
+	var started: int=FRAME_HITCH.now()
+	var nested_before: int=FRAME_HITCH.nested()
+	# Canvas draw transforms do not change this Node2D world transform.
 	detailed_draws = 0
 	impact_draws = 0
+	if active.is_empty():return
+	var draw_inverse: Transform2D=get_global_transform().affine_inverse()
 	var view: Rect2 = get_viewport_rect().grow(160)
 	var canvas: Transform2D = get_global_transform_with_canvas()
 	# Corpse/rings below impacts, all text above them; pool insertion order must
 	# not let a later impact obscure an earlier damage number.
 	for entry: Dictionary in active:
-		var point: Vector2 = to_local(entry.point)
+		var kind: String=str(entry.kind)
+		if kind!="death" and kind!="ring":continue
+		var point: Vector2 = draw_inverse * (entry.point as Vector2)
 		if not view.has_point(canvas * point): continue
 		var p: float = float(entry.age) / float(entry.duration)
 		var alpha: float = 1.0 - p
-		match str(entry.kind):
+		match kind:
 			"death":
 				var texture: Texture2D = entry.texture
 				var lean: float = 0.0 if reduced_motion else minf(1.0, p * 2.0) * 1.3
@@ -217,7 +225,7 @@ func _draw() -> void:
 		for i: int in range(active.size() - 1, -1, -1):
 			var entry: Dictionary = active[i]
 			if str(entry.kind) != "impact" or bool(entry.critical) != priority: continue
-			var point: Vector2 = to_local(entry.point)
+			var point: Vector2 = draw_inverse * (entry.point as Vector2)
 			if not view.has_point(canvas * point): continue
 			if impact_draws >= impact_visual_limit: continue
 			impact_draws += 1
@@ -226,8 +234,10 @@ func _draw() -> void:
 			visuals.draw_impact(self, point, entry, detailed, impact_intensity)
 	for entry: Dictionary in active:
 		if str(entry.kind) != "number": continue
-		var point: Vector2 = to_local(entry.point)
+		var point: Vector2 = draw_inverse * (entry.point as Vector2)
 		if view.has_point(canvas * point): _draw_number(point, entry)
+	FRAME_HITCH.detail("vfx.draw",started)
+	FRAME_HITCH.add_self("combat_vfx_draw",started,nested_before)
 
 func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	var critical: bool = entry.critical

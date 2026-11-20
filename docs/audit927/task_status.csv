@@ -81,7 +81,7 @@
 최적화,OPT04,검토,스프라이트·GPU / 원본 스프라이트 중복 디코딩 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT05,검토,스프라이트·GPU / 동일 텍스처 공유,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT06,검토,스프라이트·GPU / 보이지 않는 객체 외형 갱신 제한,개선/검증 (중복 가능),pending_current_execution_review,,,
-최적화,OPT07,검토,이펙트 / SPX 객체 재사용,개선/검증 (중복 가능),pending_current_execution_review,,,
+최적화,OPT07,검토,이펙트 / SPX 객체 재사용,개선/검증 (중복 가능),bounded_vfx_draw_improvement_pending_CI,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified,#725 pending required CI/merge
 최적화,OPT08,검토,이펙트 / CSB 객체 재사용,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT09,검토,이펙트 / 이펙트 매니페스트 캐시,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT10,검토,이펙트 / 원본 FPS 기반 최적화 조건 추가 복원,개선/검증 (중복 가능),pending_current_execution_review,,,
@@ -113,7 +113,7 @@
 최적화,OPT36,검토,타이머·측정 / 콜백 생명주기 검증,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT37,검토,타이머·측정 / 프레임 시간 P95·P99 측정,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT38,검토,타이머·측정 / 33.3ms 초과 프레임 집계,개선/검증 (중복 가능),pending_current_execution_review,,,
-최적화,OPT39,검토,타이머·측정 / CPU·GPU 비용 분리 측정,개선/검증 (중복 가능),pending_current_execution_review,,,
+최적화,OPT39,검토,타이머·측정 / CPU·GPU 비용 분리 측정,개선/검증 (중복 가능),bounded_vfx_draw_improvement_pending_CI,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified,#725 pending required CI/merge
 최적화,OPT40,검토,타이머·측정 / 자동사냥 장시간 메모리 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
 게임,GAME01,검토,전투 / 일반 공격 처리 순서,개선/검증 (중복 가능),pending_current_execution_review,,,
 게임,GAME02,검토,전투 / 공격 대체 스킬,개선/검증 (중복 가능),pending_current_execution_review,,,
@@ -171,7 +171,7 @@ UI,UI04,검토,공통 UI 엔진 / UI 템플릿 캐싱,개선/검증 (중복 가�
 UI,UI05,검토,공통 UI 엔진 / 타임라인 독립 재생,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI06,검토,공통 UI 엔진 / 닫힌 화면 콜백 해제,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI07,검토,공통 UI 엔진 / 터치 판정과 스크롤 충돌 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
-UI,UI08,검토,공통 UI 엔진 / UI 데이터와 실제 실행 결과 일치,개선/검증 (중복 가능),bounded_display_fix_pending_CI,PDF p37; domination_stone_runtime.merge_quote/merge -> source.pick; source_main_domination_stone_window._fusion_probability,13 synthetic probability/UI checks; 1000000 production picker rolls enumerated; existing domination runtime + 10 UI inventory checks passed; original/Android unverified,#720 pending required CI/merge
+UI,UI08,검토,공통 UI 엔진 / UI 데이터와 실제 실행 결과 일치,개선/검증 (중복 가능),bounded_display_fix_merged; original/Android pending,PDF p37; domination_stone_runtime.merge_quote/merge -> source.pick; source_main_domination_stone_window._fusion_probability,core370/resources/pixels/exchange succeeded; synthetic probability13 + picker1000000,#720 merged cc42973e9fc300fcfa2739d2c355dc34f7bd7bc3
 UI,UI09,검토,카드 / 직업·성별 카드 정의 선택,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI10,검토,카드 / 각성 이미지 제외 정책 검토,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI11,검토,카드 / 카드 150개 표시 제한 제거,개선/검증 (중복 가능),pending_current_execution_review,,,
