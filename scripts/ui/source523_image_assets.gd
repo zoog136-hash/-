@@ -4,6 +4,7 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
 const MONSTERBOOK_ITEMS = preload("res://scripts/monsterbook/monsterbook523_items.gd")
+const IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
 const ORIGINAL_UI_SELECTION_SCHEMA = "source523-original-ui-icon-selection-v1"
 const ORIGINAL_UI_SELECTION_MAX_BYTES: int = 2 * 1024 * 1024
 static var _pack: RefCounted
@@ -421,7 +422,20 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
 
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0 or IDENTITY.item_class_id(record, "") > 0)
+
+## Entries no supplier above declares (legacy name-catalog rows such as
+## "각인 장비 상자", held "[원본 보상]" keys, " · 원본#N" keys) still name one
+## original ItemClass: its own original icon is shown (presentation only).
+static func _identity_fallback(record: Dictionary, fallback_name: String, info: Dictionary) -> Dictionary:
+	var id: int = IDENTITY.item_class_id(record, fallback_name)
+	if id <= 0: return info
+	var image: Dictionary = describe_item_class(id, IDENTITY.display_name(record, fallback_name))
+	if image.get("status") != "original_linked": return info
+	image["source_id"] = str(record.get("sourceId", ""))
+	image["source_record_kind"] = "original_item_identity"
+	image.provenance["caller_item_identity_field"] = "source523_item_identity"
+	return image
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -471,9 +485,9 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
 		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "expedition_issued_item" if expedition_record else "card_skill_material" if card_skill_material else "declared_current_item" if declared_item else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
 		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
-		return supplied
+		return supplied if supplied.get("status") == "original_linked" else _identity_fallback(record,fallback_name,supplied)
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
-	if not recognized_item(record): return info
+	if not recognized_item(record): return _identity_fallback(record,fallback_name,info)
 	if record.get("source_test_item",false) == true:
 		info.reason = "source_test_item_excluded"
 		return info
