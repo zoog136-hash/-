@@ -87,7 +87,8 @@ static func icon_identity(record: Dictionary, key: String = "") -> Dictionary:
 				for entry_name: Variant in entries:
 					var entry: Variant = entries[entry_name]
 					if entry is Dictionary and _integer(entry.get("item_class_id")) and entry.get("icon_file") is String:
-						_icon_identity[str(entry_name)] = {"item_class_id":int(entry.item_class_id),"icon_file":str(entry.icon_file),"basis":str(entry.get("basis","")),"approximation":group == "approx"}
+						_icon_identity[str(entry_name)] = {"item_class_id":int(entry.item_class_id),"icon_file":str(entry.icon_file),"basis":str(entry.get("basis","")),"approximation":group == "approx",
+							"ground_item_class_id":int(entry.ground_item_class_id) if _integer(entry.get("ground_item_class_id")) else int(entry.item_class_id)}
 	var found: Variant = _icon_identity.get(name)
 	if not found is Dictionary or item_class_id(record, key) > 0: return {}
 	return (found as Dictionary).duplicate()

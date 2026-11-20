@@ -41,6 +41,9 @@ func synthetic() -> void:
 		check(exact.has(name), "%s has its own original item" % name)
 	for name: String in ["철 광석", "동 광석", "가죽 조각", "약초", "천 조각", "정제된 목재", "마력 결정", "연마석", "미스릴 원석", "정령의 가루", "강철 활", "낡은 장검", "HP 물약", "용기의 수정"]:
 		check(approx.has(name), "%s has a TWILIGHT 근사 original icon" % name)
+	check(int(exact.get("드래곤의 다이아몬드 상자", {}).get("ground_item_class_id", 0)) > 0, "a retired (TestItem) row names an original row with the same floor sprite")
+	var ground: String = FileAccess.get_file_as_string("res://scripts/loot/ground_loot_manager.gd")
+	check(ground.contains("IDENTITY.icon_identity(item") and ground.contains("mapped.ground_item_class_id"), "mapped names also get the original floor body")
 	check(not exact.has("각인 장비 상자") and not approx.has("공성 포인트"), "names with an original Korean name keep that identity")
 	var entry: Dictionary = IDENTITY.icon_identity({"name":"철 광석"})
 	check(entry.get("approximation") == true and int(entry.get("item_class_id", 0)) == 379, "철 광석 -> original 철 (#379), marked as an approximation")

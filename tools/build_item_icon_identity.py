@@ -101,6 +101,12 @@ def main():
             ok = status == "verified_original" and got == want
         if ok:
             exact[n] = {"item_class_id": sid, "icon_file": path.rsplit("/", 1)[-1], "basis": "catalog_inven_source_id_same_icon_file"}
+            if it.get("TestItem"):
+                # The floor selector admits no TestItem row: an original row
+                # with the same floor sprite (SpriteID) supplies the floor body.
+                same = sorted(i for i, other in items.items() if not other.get("TestItem") and other.get("SpriteID") == it.get("SpriteID") and int(it.get("SpriteID") or 0) > 0)
+                if same:
+                    exact[n]["ground_item_class_id"] = same[0]
 
     db = json.load(open(os.path.join(repo, "data/game_db_v17.json"), encoding="utf-8"))
     equip = collections.defaultdict(set)
