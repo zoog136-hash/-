@@ -16,6 +16,12 @@ extends SceneTree
 ## the bag; the HUD 상점 -> original Shop_All with the original category tabs
 ## (MarketDisplayCategoryType) -> card drag scrolls -> tab tap switches the
 ## list -> card tap -> keypad -> game diamonds paid, goods in the bag.
+## User report 2026-11-20 ("유료상점 구매안돼"): a refusal (다이아 0) was drawn
+## under the full-screen window — the system message now sits above every
+## original window, in the client's own words (DescData 268491); the original
+## draw offers (MarketProduct UnitID 35, GotChaClass pools: 상급 변신/성물/
+## 마법인형 뽑기) are bought and drawn from the original pools and weights; the
+## tab bar / card list end at the shown screen, so every tab is reachable.
 const ROUTER = preload("res://scripts/ui/original_ui/source_button_router.gd")
 const BUTTON = preload("res://scripts/ui/original_ui/source_button.gd")
 const CALCULATOR = preload("res://scripts/ui/original_ui/source_main_calculator.gd")
@@ -149,6 +155,21 @@ func sources() -> void:
 	for path: String in ["res://scripts/ui/original_ui/source_main_calculator.gd", "res://scripts/ui/original_ui/source_main_shop_window.gd", "res://scripts/ui/original_ui/source_main_store_window.gd"]:
 		var text: String = FileAccess.get_file_as_string(path)
 		check(not text.contains("Image.create") and not text.contains("draw_rect") and not text.contains("Image.new"), "no picture is drawn: " + path.get_file())
+	# 2026-11-20: refusal above the window, original words, draw offers.
+	var hud_text: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
+	check(hud_text.contains("_system_message_scene.z_index=SYSTEM_MESSAGE_Z") and preload("res://scripts/ui/original_ui/source_main_hud.gd").SYSTEM_MESSAGE_Z > 170, "the system message is drawn over every original window (z %d > 170)" % preload("res://scripts/ui/original_ui/source_main_hud.gd").SYSTEM_MESSAGE_Z)
+	check(SHOP_WINDOW.DIAMOND_SHORT_DESC == 268491 and shop.contains("reason==SHORT_REASON:reason=shortage_text(id)"), "다이아 부족 uses the client's DescData 268491 line")
+	check(not SHOP_WINDOW._has_final("마일리지") and SHOP_WINDOW._has_final("명예 코인") and not SHOP_WINDOW._has_final(""), "the particle follows the currency name (마일리지가 / 명예 코인이)")
+	check(RUNTIME.DRAW_UNIT == 35 and runtime.contains("inventory_tickets.market_draw_quote(draws)") and runtime.contains("inventory_tickets.market_draw(plan"), "draw offers (UnitID 35) are drawn through the original pool engine")
+	var eleven: Array = [{"product_id": 1, "pool_id": 9, "count": 10}]
+	RUNTIME._named_bonus_draw("상급 성물 뽑기 11회", eleven, 1)
+	check(eleven.size() == 2 and int(eleven[1].count) == 1 and int(eleven[1].pool_id) == 9, "11회 with a 10-card product draws the named 11th from the same pool (TWILIGHT 근사)")
+	var one: Array = [{"product_id": 1, "pool_id": 9, "count": 1}]
+	RUNTIME._named_bonus_draw("상급 성물 뽑기 1회", one, 1)
+	var twice: Array = [{"product_id": 1, "pool_id": 9, "count": 20}]
+	RUNTIME._named_bonus_draw("상급 성물 뽑기 11회", twice, 2)
+	check(one.size() == 1 and twice.size() == 2 and int(twice[1].count) == 2, "1회 is unchanged; 11회 x2 adds two")
+	check(shop.contains("fit_list(_tab_content,TAB_BAR_WIDTH)") and shop.contains("fit_list(content,LIST_SIZE.x)"), "the tab bar and the card list end at the shown screen")
 	# No real payment path.
 	check(not shop.contains("OS.shell_open") and not shop.contains("billing"), "the 유료 상점 has no real payment")
 
@@ -385,6 +406,49 @@ func npc_store(world: Node, ctl: Object) -> void:
 	hud.call("_close_workspace")
 	for frame: int in 3: await process_frame
 
+## 카드&장비 (first tab): 다이아 0 -> the client's refusal above the window;
+## funded -> the draw card -> keypad -> 확 인 -> drawn from the original pool.
+func draw_offer(world: Node, ctl: Object, window: Object) -> void:
+	window.select_tab(0)
+	for frame: int in 3: await process_frame
+	var products: Array = window.call("_products")
+	var at_card: int = -1
+	for at: int in products.size():
+		for relation: Dictionary in world.source_shop.catalog._related("MarketPurchaseProduct", int(products[at].id)):
+			if int(world.source_shop.catalog.record("MarketProduct", int(relation.MarketProductID)).get("UnitID", 0)) == RUNTIME.DRAW_UNIT: at_card = at
+		if at_card >= 0: break
+	if not check(at_card >= 0, "카드&장비 lists an original draw offer"): return
+	var saved_diamonds: int = int(world.inventory.get("다이아", 0))
+	world.inventory["다이아"] = 0
+	# The list is virtual: the built card of that product (first tab, scrolled to the start).
+	var built: Dictionary = window.get("_cards")
+	if not check(built.has(at_card), "the draw offer's card is built"): return
+	var card: Variant = routable_button(built[at_card])
+	await tap(button_point(card))
+	for frame: int in 3: await process_frame
+	var message: Dictionary = world.hud.original_main_ui_status.get("system_message", {})
+	var scene: Variant = ctl.get("_system_message_scene")
+	evidence["draw_refusal"] = {"text": message.get("text", ""), "z": scene.z_index if scene is Node2D else -1}
+	check(not window.calculator.is_open() and str(message.get("text", "")) == "보유한 다이아가 부족하여 아이템을 구매할 수 없습니다.", "다이아 0: the client's own refusal line (%s)" % str(message.get("text", "")))
+	check(scene is Node2D and (scene as Node2D).visible and (scene as Node2D).z_index > int(window.get("_scene").z_index), "the refusal is drawn above Shop_All")
+	world.inventory["다이아"] = 100000
+	var cards_before: Dictionary = world.card_draw_fusion.export_state()
+	await tap(button_point(routable_button(built[at_card])))
+	for frame: int in 2: await process_frame
+	if not check(window.calculator.is_open(), "a funded draw card opens the keypad"): return
+	await tap(keypad_point(window.calculator, "Btn_Select"))
+	for frame: int in 5: await process_frame
+	var bought: Dictionary = window.get("last_purchase")
+	evidence["draw_purchase"] = {"name": bought.get("name", ""), "reason": bought.get("reason", ""), "draws": bought.get("draw_results", []).size(), "diamonds": world.inventory.get("다이아", 0)}
+	check(bought.get("ok", false) and bought.get("draw_results", []).size() >= 1, "the draw offer is bought and drawn: " + str(bought.get("reason", "")))
+	check(world.card_draw_fusion.export_state() != cards_before, "the drawn cards are owned")
+	var stage: Variant = world.hud.get("card_reveal_stage")
+	if is_instance_valid(stage):
+		stage.emit_signal("finished"); stage.queue_free()
+	for frame: int in 3: await process_frame
+	world.inventory["다이아"] = saved_diamonds
+	window.set("last_purchase", {})
+
 func cash_shop(world: Node, ctl: Object) -> void:
 	var hud: Node = world.hud
 	hud.open_shop()
@@ -397,6 +461,7 @@ func cash_shop(world: Node, ctl: Object) -> void:
 	evidence["tabs"] = tabs.map(func(t: Dictionary) -> Array: return [t.id, t.name, t.products.size()])
 	check(tabs.size() >= 5 and int(status.get("tabs_built", 0)) == tabs.size(), "the original BM shop category tabs are built (%d)" % tabs.size())
 	check(tabs.map(func(t: Dictionary) -> int: return int(t.id)).has(5) and tabs.map(func(t: Dictionary) -> int: return int(t.id)).has(31), "카드&장비 and 마일리지 categories are tabs")
+	await draw_offer(world, ctl, window)
 	# Card drag scrolls the horizontal list.
 	var content: Node2D = window.get("_content")
 	var before_x: float = content.position.x
@@ -420,7 +485,7 @@ func cash_shop(world: Node, ctl: Object) -> void:
 		await tap(tab_point)
 		for frame: int in 3: await process_frame
 		evidence["tab_tap"] = {"point": str(tab_point), "tab": window.tab, "target": target_tab, "result": window.get("last_result")}
-		check(window.tab == target_tab and int(window.get("last_result").get("cards", -1)) == mini(tabs[target_tab].products.size(), SHOP_WINDOW.MAX_CARDS), "tapping a tab lists that category (%s)" % str(tabs[target_tab].name))
+		check(window.tab == target_tab and int(window.get("last_result").get("cards", -1)) == tabs[target_tab].products.size(), "tapping a tab lists that category (%s)" % str(tabs[target_tab].name))
 	# Buy one offer paid in a game currency.
 	var offer: int = -1
 	var quote: Dictionary = {}
@@ -467,8 +532,9 @@ func cash_shop(world: Node, ctl: Object) -> void:
 	window.set("_scroll", -SHOP_WINDOW.COLUMN_WIDTH * float(floori(at_card / 2.0)))
 	window.refresh()
 	for frame: int in 3: await process_frame
-	var cards: Node2D = window.get("_content")
-	var card_button: Variant = routable_button(cards.get_child(at_card)) if at_card >= 0 and at_card < cards.get_child_count() else null
+	# The list is virtual: the built card of that product (scrolled into view).
+	var built: Dictionary = window.get("_cards")
+	var card_button: Variant = routable_button(built[at_card]) if built.has(at_card) else null
 	var card_point: Vector2 = button_point(card_button)
 	evidence["card_hit"] = hit_report(ctl, card_point, card_button)
 	await tap(card_point)

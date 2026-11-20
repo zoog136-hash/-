@@ -14,8 +14,15 @@ var visual: TwilightDropVisual
 var source_ground_view: Node2D
 var source_ground_label: Label
 var source_ground_status: Dictionary = {}
+## Original inventory icon (ItemClass IconID) used when no original floor body
+## can be drawn, so a dropped item is never an invisible floor record.
+var fallback_icon: Texture2D
+var fallback_icon_source: Callable
+var fallback_sprite: Sprite2D
+var fallback_name_label: Label
 
-func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground: Dictionary = {}) -> void:
+func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground: Dictionary = {}, inventory_icon: Callable = Callable()) -> void:
+	fallback_icon_source = inventory_icon
 	loot_id = str(record["id"])
 	name = "GroundLoot_" + loot_id
 	flat = true
@@ -31,11 +38,10 @@ func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground:
 	var item_record: Variant = record.get("item_record")
 	if item_record is Dictionary and item_record.get("source_m_native_item") == true:
 		set_meta("source_display_name",str(preload("res://scripts/loot/current523_native_fields.gd").field(item_record,"source_display_name","")))
+	elif source_ground.get("identity_only",false):
+		set_meta("source_display_name",preload("res://scripts/ui/source523_item_identity.gd").display_name(item_record if item_record is Dictionary else {},str(record["item_name"])))
 	set_meta("world_position", Vector2(float(record["position"][0]), float(record["position"][1])))
-	tooltip_text = "%s · %s ×%d · 선택 후 다시 눌러 줍기" % [record["item_name"], record["grade"], record["quantity"]]
-	var proof: Dictionary = record.get("item_record", {}).get("source_m_drop_proof", {})
-	if proof.get("source_snapshot") == "patch523":
-		tooltip_text += "\n523 드랍원 #%d · %s · TWILIGHT 확률·수량" % [int(proof.get("source_npc_id", 0)), {1:"일반", 2:"축복", 3:"저주"}.get(int(proof.get("bless_raw", 0)), "미지원 상태")]
+	tooltip_text = "%s ×%d" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(record["item_name"])), record["quantity"]]
 	var empty := StyleBoxEmpty.new()
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		add_theme_stylebox_override(state, empty)
@@ -44,10 +50,10 @@ func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground:
 	visual.configure(str(record["grade"]), null if source_ground.get("required",false) else icon, slot)
 	visual.source_missing=not source_ground.get("required",false) and icon==null and record.get("item_record") is Dictionary and preload("res://scripts/cards/source_awakening_items.gd").recognized(record.item_record)
 	if visual.source_missing:
-		var missing:=Label.new();missing.text="원본 미설치";missing.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		missing.position=Vector2(-8,10);missing.add_theme_font_size_override("font_size",10);add_child(missing)
+		pass # No developer text on the floor (2026-11-20); the slot stays empty.
 	add_child(visual)
 	if source_ground.get("required",false): configure_source_ground(source_ground)
+	_refresh_fallback()
 
 func configure_source_ground(request: Dictionary) -> void:
 	if not request.get("required",false) or not is_instance_valid(visual): return
@@ -78,7 +84,7 @@ func configure_source_ground(request: Dictionary) -> void:
 			body.queue_free()
 	if not is_instance_valid(source_ground_label):
 		source_ground_label = Label.new()
-		source_ground_label.text = "원본 지면 표시 대기"
+		source_ground_label.text = "" # No developer text on the floor (2026-11-20).
 		source_ground_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		source_ground_label.position = Vector2(20,46)
 		source_ground_label.add_theme_font_size_override("font_size",10)
@@ -123,6 +129,54 @@ func _configure_source_presentation(request: Dictionary) -> void:
 func _on_source_ground_status(status: Dictionary) -> void:
 	source_ground_status = status.duplicate(true)
 	if is_instance_valid(source_ground_label): source_ground_label.visible = not status.get("ok",false)
+	_refresh_fallback()
+
+## True when the floor shows a picture of the item (original floor body or an
+## original texture on the visual).
+func body_drawn() -> bool:
+	if not is_instance_valid(visual): return false
+	if visual.texture != null and not visual.source_missing: return true
+	return source_ground_status.get("ok",false) == true or source_ground_status.get("status") == "selected_body_action"
+
+## An item whose original floor body cannot be drawn (no ItemClass row for a
+## legacy catalog name, a missing SP2 sprite ...) still shows its original
+## inventory icon and its name, so the floor record can be seen and picked up
+## (user 2026-11-20: "바닥에 안떨어지고 삭제되고").
+func _refresh_fallback() -> void:
+	var drawn: bool = body_drawn()
+	if not drawn and fallback_icon == null and fallback_icon_source.is_valid():
+		var resolved: Variant = fallback_icon_source.call()
+		fallback_icon_source = Callable()
+		if resolved is Texture2D: fallback_icon = resolved
+	if not drawn and fallback_icon != null and not is_instance_valid(fallback_sprite) and is_instance_valid(visual):
+		fallback_sprite = Sprite2D.new()
+		fallback_sprite.name = "InventoryIconFallback"
+		fallback_sprite.texture = fallback_icon
+		fallback_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		fallback_sprite.position = Vector2(0,-14)
+		var size: Vector2 = fallback_icon.get_size()
+		if size.x > 0 and size.y > 0: fallback_sprite.scale = Vector2.ONE * (32.0 / maxf(size.x,size.y))
+		visual.add_child(fallback_sprite)
+	if is_instance_valid(fallback_sprite): fallback_sprite.visible = not drawn
+	var named: bool = is_instance_valid(source_name_label) and source_name_label.visible
+	if not drawn and not named and not is_instance_valid(fallback_name_label):
+		fallback_name_label = Label.new()
+		fallback_name_label.name = "FloorItemName"
+		fallback_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fallback_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		fallback_name_label.add_theme_font_size_override("font_size",11)
+		fallback_name_label.add_theme_constant_override("outline_size",3)
+		fallback_name_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9))
+		var title: String = str(get_meta("source_display_name",""))
+		if title.is_empty(): title = preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(get_meta("item_name","")))
+		var quantity: int = int(get_meta("quantity",1))
+		fallback_name_label.text = title if quantity <= 1 else "%s (%d)" % [title,quantity]
+		fallback_name_label.add_theme_color_override("font_color",VISUAL.grade_color(str(get_meta("grade","일반"))))
+		fallback_name_label.size = Vector2(160,16)
+		fallback_name_label.position = Vector2(28-80,-14)
+		add_child(fallback_name_label)
+		FIELD_CAMERA.keep_screen_size(fallback_name_label, Vector2(80,8))
+	if is_instance_valid(fallback_name_label): fallback_name_label.visible = not drawn and not named
 
 func set_selected(value: bool) -> void:
 	visual.selected = value

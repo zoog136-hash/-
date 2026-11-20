@@ -426,6 +426,7 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 
 func _products(offer: Dictionary, quantity: int) -> Dictionary:
 	var goods: Array = []
+	var draws: Array = []
 	var source_items: Dictionary = {}
 	var cash: bool = CashMarket.listed(int(offer.purchase.get("ID", 0)))
 	for link: Dictionary in offer.products + offer.bonuses:
@@ -436,6 +437,11 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 		var multiplied: Dictionary = Catalog._checked_product([product.get("Amount", -1), quantity])
 		if not multiplied.ok or int(multiplied.value) < 1: return fail("상품 지급 수량 오류")
 		var token: Dictionary = _token(int(product.UnitID),int(product.ClassID),int(multiplied.value))
+		if int(token.unit_id) == DRAW_UNIT:
+			# Original draw offer (GotChaClassID pool): drawn at purchase.
+			draws.append({"product_id":int(product.ID),"pool_id":int(token.class_id),"count":int(token.amount)})
+			goods.append(token)
+			continue
 		if int(token.unit_id) == 4:
 			var identity: Dictionary = _source_item_identity(int(token.class_id))
 			if identity.get("excluded") == true and not (cash and CashPackages.is_package(int(token.class_id))): return fail("원본 아이템 선언으로 제외된 상품입니다")
@@ -452,7 +458,23 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 		if resolved.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
 		goods.append(token)
 	if goods.is_empty(): return fail("지급 상품이 없습니다")
-	return {"ok":true,"goods":goods,"source_items":source_items}
+	var result: Dictionary = {"ok":true,"goods":goods,"source_items":source_items}
+	if not draws.is_empty():
+		_named_bonus_draw(str(offer.get("name", "")), draws, quantity)
+		var plan: Dictionary = inventory_tickets.market_draw_quote(draws)
+		if not plan.ok: return plan
+		result["draw"] = plan
+	return result
+
+## "… 뽑기 11회" lists one pool product of Amount 10: the client's 11th card
+## has no product row (TWILIGHT 근사: one more draw from the same original
+## pool and weights, so the count matches the offer's own name).
+static func _named_bonus_draw(name: String, draws: Array, quantity: int) -> void:
+	var found: RegExMatch = RegEx.create_from_string("(\\d+)회").search(name)
+	if found == null or draws.size() != 1: return
+	var named: int = int(found.get_string(1)) * quantity
+	if named - int(draws[0].count) != quantity: return
+	draws.append({"product_id":int(draws[0].product_id),"pool_id":int(draws[0].pool_id),"count":quantity,"twilight_named_bonus":true})
 
 func quote(id: int, quantity: int = 1) -> Dictionary:
 	return _quote(id, quantity, false)
@@ -488,7 +510,7 @@ func _quote(id: int, quantity: int, internal: bool) -> Dictionary:
 		if world._item_locked(str(binding.name), ""): return fail("잠긴 결제 재료입니다")
 	var goods: Dictionary = _products(offer, quantity)
 	if not goods.ok: return goods
-	return {"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":offer.name,"payment":payment,"payment_binding":binding,"goods":goods.goods,
+	return {"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":offer.name,"payment":payment,"payment_binding":binding,"goods":goods.goods,"draw":goods.get("draw",{}),
 		"source_reference":{"items":goods.source_items,"purchase":offer.purchase,"restrictions":offer.restrictions,"server_limits":offer.server_limits,"reference_only":true,"can_purchase":false}}
 
 func _start() -> Dictionary:
@@ -537,6 +559,8 @@ func _commit(next: Dictionary, inventory: Dictionary, gold: int, instances: Dict
 ## original NPC 상점 purchase), or the bag with the order box kept when the bag
 ## cannot take it yet.
 enum Delivery {BOX, BAG, BAG_OR_BOX}
+## MarketProduct UnitID 35 (Unit "GotChaClassID"): an original draw pool.
+const DRAW_UNIT: int = 35
 
 func buy(id: int, quantity: int = 1, delivery: int = Delivery.BOX) -> Dictionary:
 	var prepared: Dictionary = quote(id, quantity)
@@ -588,10 +612,25 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 	var instances: Dictionary = world.item_instances.duplicate(true)
 	var next_instance: int = int(world.next_item_instance_id)
 	var delivered: bool = false
+	var plan: Dictionary = prepared.get("draw", {})
+	var extra: Dictionary = {}
+	var drawn: Dictionary = {}
+	# A draw is never left in the 보관함 (its result is drawn now, in this save).
+	if not plan.is_empty() and delivery == Delivery.BOX: delivery = Delivery.BAG
 	if delivery != Delivery.BOX:
 		# The payment and the goods land in one save: the order is recorded
 		# already received (the same record a 보관함 claim writes).
-		var granted: Dictionary = _grant(next.orders[order_id].goods, inventory, gold, instances, next_instance)
+		var physical: Array = next.orders[order_id].goods.filter(func(token: Dictionary) -> bool: return int(token.unit_id) != DRAW_UNIT)
+		var granted: Dictionary = _grant(physical, inventory, gold, instances, next_instance) if not physical.is_empty() else {"ok":true,"inventory":inventory,"gold":gold,"instances":instances,"next_id":next_instance}
+		if granted.ok and not plan.is_empty():
+			drawn = inventory_tickets.market_draw(plan, granted.inventory, granted.instances)
+			if not drawn.ok:
+				_busy = false
+				return fail(str(drawn.get("reason", "원본 뽑기 실패")) + " · 구매하지 않았습니다")
+			granted.inventory = drawn.inventory
+			granted.instances = drawn.item_instances
+			next["ticket_redemption"] = drawn.ticket_state
+			extra["card_draw_fusion"] = drawn.card_state
 		if granted.ok:
 			var received: Array = []
 			for physical_id: String in granted.instances:
@@ -605,12 +644,16 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 			next.orders[order_id]["received_physical_ids"] = received
 			if kind == "market": _activate_cumulative(next, id)
 			delivered = true
-		elif delivery == Delivery.BAG:
+		elif delivery == Delivery.BAG or not plan.is_empty():
 			_busy = false
 			return fail(str(granted.get("reason", "가방에 넣을 수 없습니다")).replace(" · 보관함 주문은 유지됩니다", "").replace(" · 보관함 주문 유지", "") + " · 구매하지 않았습니다")
-	var result: Dictionary = _commit(next, inventory, gold, instances, next_instance)
-	if result.ok: result.merge({"order_id":order_id,"name":prepared.name,"quantity":quantity,"delivered":delivered,
-		"reason":"구매 완료 · 가방에 넣었습니다" if delivered else "구매 완료 · 보관함에서 수령하세요"})
+	var result: Dictionary = _commit(next, inventory, gold, instances, next_instance, extra)
+	if result.ok:
+		result.merge({"order_id":order_id,"name":prepared.name,"quantity":quantity,"delivered":delivered,
+			"reason":"구매 완료 · 가방에 넣었습니다" if delivered else "구매 완료 · 보관함에서 수령하세요"})
+		if not drawn.is_empty():
+			result["draw_results"] = drawn.results
+			result["reason"] = "구매 완료 · " + inventory_tickets.market_draw_presented(plan, drawn, str(prepared.name))
 	return result
 
 func merchant_signature(id: int) -> String:

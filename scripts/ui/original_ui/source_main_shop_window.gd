@@ -63,7 +63,17 @@ const HIDDEN_TEXTS: Array[int]=[13448,13072,12296]
 const COLUMN_WIDTH: float=294.0
 const CARD_X: float=147.0
 const CARD_Y: Array[float]=[346.0,121.0]
-const MAX_CARDS: int=120
+## Space kept between a list cut back to the screen and the screen edge.
+const LIST_EDGE_MARGIN: float=8.0
+## The runtime's refusal for an unaffordable price, and the client's line.
+const SHORT_REASON: String="구매 재화가 부족합니다"
+const DIAMOND: String="다이아"
+const DIAMOND_SHORT_DESC: int=268491
+## Card columns built beyond each edge of the list's view (the list is
+## virtual: every product keeps its column, only those near the view exist);
+## columns past KEEP_COLUMNS are freed.
+const BUILD_COLUMNS: int=2
+const KEEP_COLUMNS: int=4
 signal closed
 var _pack: RefCounted
 var _hud: WeakRef
@@ -83,6 +93,11 @@ var _tab_scroll: float=0.0
 var _tab_scroll_min: float=0.0
 var _tab_moved: float=0.0
 var calculator: RefCounted=Calculator.new()
+## The current tab's products (every one; no cap) and the built cards
+## (product index -> scene).
+var products: Array[Dictionary]=[]
+var _cards: Dictionary={}
+var card_builds: int=0
 var last_purchase: Dictionary={}
 var last_result: Dictionary={}
 
@@ -130,7 +145,6 @@ func _products() -> Array[Dictionary]:
 		for entry: Dictionary in panel.get("entries"):
 			if str(entry.get("source_table",""))!=MARKET:continue
 			result.append(entry)
-			if result.size()>=MAX_CARDS:break
 		return result
 	if tab<0 or tab>=tabs.size():return result
 	var by_id: Dictionary={}
@@ -138,7 +152,6 @@ func _products() -> Array[Dictionary]:
 		if str(entry.get("source_table",""))==MARKET:by_id[int(entry.id)]=entry
 	for id: int in tabs[tab].products:
 		if by_id.has(id):result.append(by_id[id])
-		if result.size()>=MAX_CARDS:break
 	return result
 
 ## Original BM shop categories holding at least one of `entries` (the market
@@ -160,10 +173,10 @@ static func tabs_of(entries: Array) -> Array:
 		if row.get("DisplayOnBmShopCategory")!=true or not by_category.has(category):continue
 		var shown: Array=by_category[category]
 		shown.sort()
-		var products: Array[int]=[]
+		var listed_ids: Array[int]=[]
 		for item: Array in shown:
-			if not products.has(int(item[2])):products.append(int(item[2]))
-		result.append({"id":category,"order":int(row.get("DisplayOrder",0)),"name":_label(int(row.get("DescID",0)),str(row.get("Name",""))),"products":products})
+			if not listed_ids.has(int(item[2])):listed_ids.append(int(item[2]))
+		result.append({"id":category,"order":int(row.get("DisplayOrder",0)),"name":_label(int(row.get("DescID",0)),str(row.get("Name",""))),"products":listed_ids})
 	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.order<b.order or (a.order==b.order and a.id<b.id))
 	return result
 
@@ -206,18 +219,7 @@ func _stage() -> Dictionary:
 			if not button.get("ok",false):continue
 			tab_content.add_child(button.scene)
 			tabs_built+=1
-		_tab_scroll_min=minf(0.0,TAB_BAR_WIDTH-TAB_PITCH*float(tabs.size()))
-		_tab_scroll=clampf(_tab_scroll,_tab_scroll_min,0.0)
-		tab_content.position.x=_tab_scroll
-	var products: Array[Dictionary]=_products()
-	for index: int in range(products.size()):
-		var card: Dictionary=_card(products[index],panel)
-		if not card.get("ok",false):continue
-		var column: int=index/2
-		# Cards are centred on (147 + column*294, 346|121) in the SlotSet's
-		# 294x466 panel; the panel's lower-left is the list's lower-left.
-		card.scene.position=Vector2(CARD_X+COLUMN_WIDTH*float(column),-CARD_Y[index%2])
-		content.add_child(card.scene)
+	products=_products()
 	var previous: Node2D=_scene
 	next.position=Vector2(600.0,-337.5)
 	parent.add_child(next)
@@ -225,15 +227,74 @@ func _stage() -> Dictionary:
 	_scene=next
 	_content=content
 	_tab_content=tab_content if tab_content is Node2D else null
+	if _tab_content!=null:
+		_tab_scroll_min=minf(0.0,fit_list(_tab_content,TAB_BAR_WIDTH)-TAB_PITCH*float(tabs.size()))
+		_tab_scroll=clampf(_tab_scroll,_tab_scroll_min,0.0)
+		_tab_content.position.x=_tab_scroll
 	var columns: int=ceili(float(products.size())/2.0)
-	_scroll_min=minf(0.0,LIST_SIZE.x-COLUMN_WIDTH*float(columns))
+	_scroll_min=minf(0.0,fit_list(content,LIST_SIZE.x)-COLUMN_WIDTH*float(columns))
 	_scroll=clampf(_scroll,_scroll_min,0.0)
 	content.position.x=_scroll
+	_cards.clear()
+	_sync_cards()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"cards":products.size(),"tabs":tabs.size(),"tabs_built":tabs_built,"tab":tab,"tab_name":str(tabs[tab].name) if tab<tabs.size() else ""}
+	last_result={"ok":true,"handled":true,"member":ROOT,"cards":products.size(),"built_cards":_cards.size(),"tabs":tabs.size(),"tabs_built":tabs_built,"tab":tab,"tab_name":str(tabs[tab].name) if tab<tabs.size() else ""}
 	return last_result
+
+## A clipped original list (Tab_1 tab bar, the card ListView) ends at the
+## screen's edge when the 16:9 layout is wider than what the screen shows
+## (Shop_All is authored wider than 1280): its clip is cut back to the shown
+## width, so the list ends at a ListView edge as in the client and its last
+## tab / column can be scrolled fully into view. Returns the width used.
+static func fit_list(content: Node2D, nominal: float) -> float:
+	var origin: Node=content.get_parent()
+	var clip: Variant=origin.get_parent() if origin!=null else null
+	if not clip is Control or not (clip as Control).is_inside_tree():return nominal
+	var control: Control=clip
+	var at: Transform2D=control.get_global_transform_with_canvas()
+	var scale: float=absf(at.get_scale().x)
+	if scale<=0.0:return nominal
+	var shown: float=clampf((control.get_viewport_rect().end.x-at.origin.x)/scale-LIST_EDGE_MARGIN,TAB_PITCH,nominal)
+	control.size.x=shown
+	return shown
+
+## Card columns [first, last] within `margin` columns of the list's view.
+func card_columns(margin: int) -> Vector2i:
+	var columns: int=ceili(float(products.size())/2.0)
+	if columns==0:return Vector2i(0,-1)
+	var first: int=floori(-_scroll/COLUMN_WIDTH)-margin
+	var last: int=ceili((-_scroll+LIST_SIZE.x)/COLUMN_WIDTH)-1+margin
+	return Vector2i(maxi(0,first),mini(columns-1,last))
+
+## Builds the cards of columns that came near the view; frees far ones.
+func _sync_cards() -> void:
+	if not is_instance_valid(_content):return
+	var panel: Object=_panel.get_ref() if _panel!=null else null
+	if panel==null:return
+	var keep: Vector2i=card_columns(KEEP_COLUMNS)
+	for index: Variant in _cards.keys():
+		var column: int=int(index)/2
+		if column>=keep.x and column<=keep.y:continue
+		var old: Variant=_cards[index]
+		_cards.erase(index)
+		if is_instance_valid(old):
+			old.hide()
+			old.queue_free()
+	var wanted: Vector2i=card_columns(BUILD_COLUMNS)
+	for column: int in range(wanted.x,wanted.y+1):
+		for row: int in 2:
+			var index: int=column*2+row
+			if index>=products.size() or _cards.has(index):continue
+			var card: Dictionary=_card(products[index],panel)
+			if not card.get("ok",false):continue
+			# Cards are centred on (147 + column*294, 346|121) in the SlotSet's
+			# 294x466 panel; the panel's lower-left is the list's lower-left.
+			card.scene.position=Vector2(CARD_X+COLUMN_WIDTH*float(column),-CARD_Y[row])
+			_content.add_child(card.scene)
+			_cards[index]=card.scene
+			card_builds+=1
 
 ## One category tab: a copy of the page's original tab button (Panel_Recommend
 ## of Tab_2) placed in slot `index` of the Tab_1 bar.
@@ -338,16 +399,38 @@ func _buy(id: int) -> Dictionary:
 	if runtime==null:return _fail("source_shop_window_runtime_missing")
 	var quote: Dictionary=runtime.call("quote",id,1)
 	if not quote.get("ok",false):
-		hud.call("show_message",str(quote.get("reason","구매할 수 없는 상품입니다")))
-		return {"ok":true,"refused":str(quote.get("reason",""))}
+		var reason: String=str(quote.get("reason","구매할 수 없는 상품입니다"))
+		if reason==SHORT_REASON:reason=shortage_text(id)
+		hud.call("show_message",reason)
+		return {"ok":true,"refused":reason}
 	var limit: int=Store.affordable(quote,hud.get_parent())
 	if limit<1:
-		hud.call("show_message","구매 재화가 부족합니다")
-		return {"ok":true,"refused":"구매 재화가 부족합니다"}
+		var short: String=shortage_text(id)
+		hud.call("show_message",short)
+		return {"ok":true,"refused":short}
 	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"purchase").bind(id))
 	if opened.get("handled",false):return {"ok":true,"requested":id,"calculator":true,"maximum":limit}
 	hud.call("confirm_action","유료 상점 · 구매","%s\n구매할 수량을 선택하세요" % str(quote.get("name","")),"구매",func(amount: int) -> void: purchase(amount,id),limit)
 	return {"ok":true,"requested":id,"calculator":false,"maximum":limit}
+
+## The refusal of an offer the wallet cannot pay: the client's own line for
+## 다이아 (DescData 268491); other game currencies use the same sentence with
+## their name (TWILIGHT 근사: the client text names only 다이아).
+func shortage_text(id: int) -> String:
+	var panel: Object=_panel.get_ref() if _panel!=null else null
+	var catalog: Object=panel.get("catalog") if panel!=null else null
+	var name: String=""
+	if catalog!=null:
+		var price: Dictionary=catalog.payment_quote(id,1)
+		if price.get("ok",false):name=str(panel.call("_value_name",int(price.unit_id),int(price.class_id)))
+	var original: String=str(DEF.row("DescData_Korean",DIAMOND_SHORT_DESC).get("Description","")).strip_edges()
+	if original.is_empty():original="보유한 다이아가 부족하여 아이템을 구매할 수 없습니다."
+	if name.is_empty() or name==DIAMOND:return original
+	return original.replace(DIAMOND+"가",name+("이" if _has_final(name) else "가"))
+
+static func _has_final(word: String) -> bool:
+	var code: int=word.unicode_at(word.length()-1) if not word.is_empty() else 0
+	return code>=0xAC00 and code<=0xD7A3 and (code-0xAC00)%28!=0
 
 ## Pays `amount` of offer `id` with game currency; the goods go to the bag
 ## (the 보관함 keeps them when the bag cannot take them).
@@ -402,6 +485,7 @@ func _list_input(event: InputEvent) -> void:
 	_moved+=absf(delta)
 	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
 	_content.position.x=_scroll
+	_sync_cards()
 
 ## Touch-enabled original nodes in the mounted subtrees with no action of
 ## their own swallow their touch (as the client's modal window does).

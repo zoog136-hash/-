@@ -18,8 +18,12 @@ extends RefCounted
 ## name contains the query, applied on 검색), 초기화 clears the three filters
 ## and 각 성 asks the existing option awakening (option_awakening_open_requested,
 ## the same request as the catalog's 각성 tab).
-## Not connected (no TWILIGHT feature): 성급 강화 (BuffCardTranscendence has no
-## game rule here), 변신 등록 (quick registration), the keypad's result list, 도펠겡어/이름 옵션,
+## 성급 강화 (Btn_Transcend) shows for a card with an original star-enchant
+## group (BuffCardStarEnchantGroup: 해방된 할파스 in 523) and opens the
+## existing star-enchant owner (native_halphas_star_enchant, its view);
+## BuffCardTranscendence rows have no cost or rule table, so other cards keep
+## the button hidden as authored for them.
+## Not connected (no TWILIGHT feature): 변신 등록 (quick registration), the keypad's result list, 도펠겡어/이름 옵션,
 ## 사용 가능 기간 and the 합성 시도 보상 gauges.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
@@ -85,6 +89,11 @@ const POPUP_CLOSE=760
 const TYPE_PROJECT=488
 const KEYPAD_PROJECT=1460
 const AWAKEN=23432
+## 성급 강화: Btn_Transcend and its glow, label and icon (its particle stays out).
+const TRANSCEND=14884
+const TRANSCEND_PARTS: Array[int]=[15972,15620,15268]
+const TRANSCEND_LABEL=15620
+const StarEnchant=preload("res://scripts/cards/native_halphas_star_enchant.gd")
 const AWAKEN_STATES: Array[int]=[24088,23484]
 ## Change_WinTotal_Class row nodes.
 const ROW_PANEL=176
@@ -429,6 +438,11 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 	bindings[AWAKEN]={"role":"button","displaystate":can_awaken,"activate":Callable(self,"_awaken_requested")}
 	bindings[AWAKEN_STATES[0]]={"visible":can_awaken}
 	bindings[AWAKEN_STATES[1]]={"visible":not can_awaken}
+	if star_target(_world_node(),_category,_selected):
+		scope.append(TRANSCEND)
+		scope.append_array(TRANSCEND_PARTS)
+		bindings[TRANSCEND]={"role":"button","activate":Callable(self,"_star_requested")}
+		bindings[TRANSCEND_LABEL]={"role":"static_source_text"}
 	# Grade list (Change_WinTotal_Class rows are added after the mount).
 	if _available(GRADE_ROW):
 		scope.append(CLASS_LIST)
@@ -603,6 +617,25 @@ func _fusion_requested() -> Dictionary:
 	close()
 	if hud!=null and hud.has_method("open_card_fusion"):hud.call("open_card_fusion",target)
 	return {"ok":true,"existing_fusion":true}
+
+## True when the existing star-enchant owner accepts this card.
+static func star_target(world: Object, category: String, identity: String) -> bool:
+	if world==null or identity.is_empty() or category!=StarEnchant.CATEGORY:return false
+	return bool(StarEnchant.from_world(world,category,identity).get("ok",false))
+
+func _world_node() -> Node:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	return hud.get_parent() if hud is Node else null
+
+## 성급 강화: the existing star-enchant window of the selected card.
+func _star_requested() -> Dictionary:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud==null or not hud.has_method("open_halphas_star_enchant"):return _fail("source_change_window_star_enchant_unavailable")
+	var target: String=_category
+	var focus: String=_selected
+	close()
+	hud.call("open_halphas_star_enchant",target,focus)
+	return {"ok":true,"existing_star_enchant":true,"id":focus}
 
 func _collection_requested() -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null

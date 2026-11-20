@@ -4,6 +4,7 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const PACK = preload("res://scripts/resources/source523_image_pack.gd")
 const ORIGINAL_UI_ICONS = preload("res://scripts/ui/source523_original_ui_icons.gd")
 const MONSTERBOOK_ITEMS = preload("res://scripts/monsterbook/monsterbook523_items.gd")
+const IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
 const ORIGINAL_UI_SELECTION_SCHEMA = "source523-original-ui-icon-selection-v1"
 const ORIGINAL_UI_SELECTION_MAX_BYTES: int = 2 * 1024 * 1024
 static var _pack: RefCounted
@@ -421,7 +422,28 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
 
 static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0)
+	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0 or IDENTITY.item_class_id(record, "") > 0 or not IDENTITY.icon_identity(record, "").is_empty())
+
+## Entries no supplier above declares (legacy name-catalog rows such as
+## "각인 장비 상자", held "[원본 보상]" keys, " · 원본#N" keys) still name one
+## original ItemClass: its own original icon is shown (presentation only).
+static func _identity_fallback(record: Dictionary, fallback_name: String, info: Dictionary) -> Dictionary:
+	var id: int = IDENTITY.item_class_id(record, fallback_name)
+	if id <= 0:
+		var mapped: Dictionary = IDENTITY.icon_identity(record, fallback_name)
+		if mapped.is_empty(): return info
+		var mapped_image: Dictionary = describe_icon_identity(mapped, IDENTITY.display_name(record, fallback_name))
+		if mapped_image.get("status") != "original_linked" and mapped_image.get("reason") != "unsupported_csb": return info
+		mapped_image["source_id"] = str(record.get("sourceId", ""))
+		mapped_image["source_record_kind"] = "item_icon_identity"
+		return mapped_image
+	var image: Dictionary = describe_item_class(id, IDENTITY.display_name(record, fallback_name))
+	# An animated original icon (CSB scene) is that item's own picture too.
+	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb": return info
+	image["source_id"] = str(record.get("sourceId", ""))
+	image["source_record_kind"] = "original_item_identity"
+	image.provenance["caller_item_identity_field"] = "source523_item_identity"
+	return image
 
 static func _item_presentation_info(id: int, title: String, source_id: String = "") -> Dictionary:
 	return {"source_id":source_id,"name":title,
@@ -471,9 +493,9 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		supplied["source_record_snapshot"] = str(record.get("source_snapshot",""))
 		supplied["source_record_kind"] = "quest_pending_reward" if quest_record else "symbol_material" if symbol_record else "expedition_issued_item" if expedition_record else "card_skill_material" if card_skill_material else "declared_current_item" if declared_item else "monsterbook_source_item" if record.get("monsterbook_source_item",false) == true else "growth96_item"
 		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
-		return supplied
+		return supplied if supplied.get("status") == "original_linked" else _identity_fallback(record,fallback_name,supplied)
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
-	if not recognized_item(record): return info
+	if not recognized_item(record): return _identity_fallback(record,fallback_name,info)
 	if record.get("source_test_item",false) == true:
 		info.reason = "source_test_item_excluded"
 		return info
@@ -509,6 +531,40 @@ static func describe_item_class(id: int, title: String = "") -> Dictionary:
 		return info
 	if title.is_empty(): info.name = str(canonical.get("Name",""))
 	return _resolve_item_presentation(info,identity)
+
+## Original icon of a mapped ItemClass (IDENTITY.icon_identity). The row may
+## be a 523 TestItem (retired legacy item): only its own IconID picture is
+## read, and only when the icon file is the one the map was built from.
+## "twilight_approximation" marks TWILIGHT 근사 pairings (evidence/tooltip only).
+static func describe_icon_identity(entry: Dictionary, title: String = "") -> Dictionary:
+	var id: int = int(entry.get("item_class_id", -1))
+	var info: Dictionary = _item_presentation_info(id,title)
+	info["presentation_only"] = true
+	info["item_class_namespace"] = "ItemClass.ID"
+	info["icon_identity_basis"] = str(entry.get("basis",""))
+	info["twilight_approximation"] = entry.get("approximation",false) == true
+	if id <= 0:
+		info.reason = "source_item_class_identity_required"
+		return info
+	if active() == null:
+		info.reason = _error if not _error.is_empty() else "source523_image_pack_not_selected"
+		info["source_status"] = info.reason
+		return info
+	var result: Dictionary = resolve_consumer("ItemClass",id,"IconID")
+	info.provenance = result.get("provenance",{}).duplicate(true)
+	info.provenance["caller_item_identity_field"] = "data/ui/item_icon_identity.json"
+	info["source_status"] = str(result.get("status","source523_image_unavailable"))
+	info["reason"] = info.source_status
+	info["path"] = str(info.provenance.get("path",""))
+	if str(info.path).get_file().to_lower() != str(entry.get("icon_file","")).to_lower():
+		info.reason = "item_icon_identity_file_differs"
+		info["source_status"] = info.reason
+		return info
+	if bool(result.get("ok",false)) and result.get("texture") is Texture2D:
+		info.status = "original_linked"
+		info.texture = result.texture
+		info.original_bytes_unchanged = true
+	return info
 
 static func describe_item_class_row(source_row: Dictionary, title: String = "") -> Dictionary:
 	# Read-only suppliers can present an exact original ItemClass row without

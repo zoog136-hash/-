@@ -308,12 +308,17 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	var buffs_before: int=world.player_npc_buff_signature() if world.has_method("player_npc_buff_signature") else 0
 	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
 		if stack.get("silent",false):return true # The owner shows its own chooser or message.
 		if stack.get("requires_original_selection",false) and open_owned_original_selection(item_name,stack):return true
 		_message(str(stack.get("message",stack.get("reason","원본 물리 수량 확인 필요"))))
-		if stack.get("ok",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
+		if stack.get("ok",false):
+			world.hud.refresh_inventory(world.inventory)
+			# An HP/MP potion publishes its vitals and the bag only (B09/I09).
+			if world.has_method("publish_hud"):world.publish_hud(world.native_use_hud_domains(stack,buffs_before))
+			else:world._update_hud()
 		return true
 	var native: Dictionary=world.option_awakening.use_source_awakening_item(item_name,selected_instance)
 	if native.get("handled",false):
@@ -878,9 +883,12 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 		return
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "%s 선택" % item_name
-	dialog.dialog_text = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
+	dialog.ok_button_text = "확인"
+	dialog.cancel_button_text = "취소"
+	var guide: String = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
 	if purpose in ["element_change", "element_reset"]:
-		dialog.dialog_text += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
+		guide += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
+	var column: VBoxContainer = preload("res://scripts/ui/dialog_korean_texts.gd").content(dialog, guide)
 	var selector: OptionButton = OptionButton.new()
 	selector.custom_minimum_size = Vector2(330, 42)
 	for candidate: String in candidates:
@@ -908,14 +916,14 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 			if purpose != "blessing":
 				display_name = "%s %s [%s] %s" % [grade_text, parts[0], instance_id, ("%s %d단계" % [element_name, element_level]) if element_level > 0 else ""]
 		selector.add_item(display_name)
-	dialog.get_vbox().add_child(selector)
+	column.add_child(selector)
 	var element_selector: OptionButton = null
 	if choose_element:
 		element_selector = OptionButton.new()
 		element_selector.custom_minimum_size = Vector2(330, 42)
 		for element_code: String in ["fire", "water", "earth", "wind"]:
 			element_selector.add_item(str(RULES.ELEMENT_NAMES[element_code]))
-		dialog.get_vbox().add_child(element_selector)
+		column.add_child(element_selector)
 	world.add_child(dialog)
 	dialog.confirmed.connect(func() -> void:
 		if selector.selected >= 0 and selector.selected < candidates.size():
