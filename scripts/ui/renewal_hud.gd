@@ -904,7 +904,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_quickslots()
 
 func append_log(value: String) -> void:
-	value = preload("res://scripts/ui/source523_item_identity.gd").clean_message(value)
+	value = preload("res://scripts/ui/source523_item_identity.gd").screen_text(value)
 	log_history.append(value)
 	if log_history.size()>120:
 		log_history.pop_front()

@@ -91,6 +91,12 @@ func synthetic() -> void:
 		check(not MAP_TELEPORT.quote(Node.new(), "m523area:20").get("ok", true), "no original archive: quote refuses")
 	check(MAP_TELEPORT.is_destination_id("m523area:20") and not MAP_TELEPORT.is_destination_id("aden_world"), "destination ids are namespaced")
 	check(MAP_TELEPORT._strip_tags("[던전] [기란] 용의 던전") == "용의 던전", "tag stripping fallback for names")
+	# 2026-11-20 "하딘의 텔레포트도 안되고": Gem (다이아) rows are listed and
+	# paid with the game's 다이아; the tab's NPC_On clip shows 이동하기.
+	check(MAP_TELEPORT.CURRENCY_NAMES.get(MAP_TELEPORT.GEM) == "다이아" and MAP_TELEPORT.CURRENCY_NAMES.has(MAP_TELEPORT.ADENA), "LandTeleport CurrencyID 1 (아데나) and 4 (Gem = 다이아) are listed")
+	var window_text: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_teleport_window.gd")
+	check(TELEPORT_WINDOW.INTRO_CLIP == "NPC_On" and window_text.contains("_intro(next,out,"), "the teleport tab plays its NPC_On clip (이동하기 and 비용 fade in from alpha 0)")
+	check(window_text.contains("GEM_ICON if _gem(chosen) else ADENA_ICON"), "a 하딘 row shows the pack's Com_Icn_Gem price icon")
 
 func _cell() -> Vector2i:
 	return world.field_map.world_to_cell(world.player.global_position) + world.field_map.coordinates.origin
@@ -200,6 +206,32 @@ func real_main(base: String) -> void:
 	check(not world.player.auto_enabled, "auto hunting is off on arrival")
 	check(not MAP_TELEPORT.quote(world, str(gludin.get("id", ""))).get("ok", true), "already there: the quote refuses")
 	world.player.set_auto_enabled(false)
+	# 3b) 하딘의 텔레포트 (다이아): the window's own 이동하기 after NPC_On.
+	var hadin: Dictionary = MAP_TELEPORT.destination("m523area:913")
+	check(hadin.get("currency_id") == MAP_TELEPORT.GEM and hadin.get("price") == 10 and hadin.get("land_id") == 4, "[맵텔] [하딘] 용의 계곡 정상: LandTeleport 613 = 10 Gem (다이아), Land 4")
+	check(not MAP_TELEPORT.destination("m523area:1061").is_empty(), "이계의 균열 (TerritoryID 0) lands in its LandTeleportTerritories box")
+	world.inventory["다이아"] = 0
+	check(str(MAP_TELEPORT.quote(world, "m523area:913").get("reason", "")) == "이동 비용 다이아가 부족합니다", "다이아 0: the 하딘 row refuses")
+	world.inventory["다이아"] = 25
+	world.hud.call("open_npc_teleport")
+	for i: int in 5: await process_frame
+	window = controller.call("teleport_window") if is_instance_valid(controller) and controller.has_method("teleport_window") else null
+	var hadin_result: Dictionary = {}
+	if window != null and window.is_open():
+		window._select("m523area:913")
+		var located: Dictionary = preload("res://scripts/ui/original_ui/source_main_named_tree.gd").locate(window.get("_scene"), window.node_keys(), window.P_TAB + "Teleport_Enabled")
+		var player: Variant = located.get("player")
+		check(is_instance_valid(player) and str(player.playback_status().get("clip", "")) == "NPC_On", "the rebuilt tab shows its NPC_On end state")
+		hadin_result = window._teleport_requested()
+	else:
+		hadin_result = {"result": world.current523_map_teleport("m523area:913")}
+	for i: int in 30: await process_frame
+	evidence["hadin_result"] = hadin_result
+	var hb: Array = hadin.get("bounds", [0, 0, -1, -1])
+	var hc: Vector2i = _cell()
+	check(bool(hadin_result.get("moved", hadin_result.get("result", {}).get("ok", false))) and hc.x >= int(hb[0]) and hc.x <= int(hb[2]) and hc.y >= int(hb[1]) and hc.y <= int(hb[3]), "하딘 이동하기 moved into the destination box: " + str(hadin_result))
+	check(int(world.inventory.get("다이아", 0)) == 15, "10 다이아 debited (%d left)" % int(world.inventory.get("다이아", 0)))
+	world.inventory.erase("다이아")
 	# 4) walk-in portal on this Land
 	var cells: Dictionary = world.call("_aden_play_controller").call("source_portal_cells")
 	evidence["portal_cells"] = cells.size()

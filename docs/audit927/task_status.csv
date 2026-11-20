@@ -68,7 +68,7 @@
 맵,MAP01,P0,타일 로딩 worker: 읽기·hash·decode,개선/검증,pending_current_execution_review,,,
 맵,MAP02,P0,타일 활성/대기 참조 분리 및 해제 분산,개선/검증,pending_current_execution_review,,,
 맵,MAP03,P0,렌더·충돌 S32 원본 읽기 공유,개선/검증,pending_current_execution_review,,,
-맵,MAP04,P0,화면 청크 좌표 인덱스·기존 프레임 재사용,개선/검증,pending_current_execution_review,,,
+맵,MAP04,P0,화면 청크 좌표 인덱스·기존 프레임 재사용,개선/검증,bounded_renderer_lookup_reduction; device timing pending,scripts/maps/current523_aden_play_renderer.gd::_block_commands; report p4 and 523.699 device log,"Godot renderer 128 checks; baseline versus changed 1537→3 tile checks, 1025→2 subimage checks",feature/android-map-block-refs-20261120
 맵,MAP05,P0,정적 SPR frame/child/modifier 합성 캐시,개선/검증,pending_current_execution_review,,,
 맵,MAP06,P0,충돌 bitset/edge 및 경로 상태 분리,개선/검증,pending_current_execution_review,,,
 맵,MAP07,P1,경로 요청 중복 제거 및 생명주기,개선/검증,pending_current_execution_review,,,
@@ -81,7 +81,7 @@
 최적화,OPT04,검토,스프라이트·GPU / 원본 스프라이트 중복 디코딩 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT05,검토,스프라이트·GPU / 동일 텍스처 공유,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT06,검토,스프라이트·GPU / 보이지 않는 객체 외형 갱신 제한,개선/검증 (중복 가능),pending_current_execution_review,,,
-최적화,OPT07,검토,이펙트 / SPX 객체 재사용,개선/검증 (중복 가능),bounded_vfx_draw_improvement_pending_CI,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified,#725 pending required CI/merge
+최적화,OPT07,검토,이펙트 / SPX 객체 재사용,개선/검증 (중복 가능),bounded_vfx_draw_improvement_merged; Android pending,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,"489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified; required CI passed, 379 core suites",#725 merged c15a364ac8d862593bea805cd4fb6112b813ec85
 최적화,OPT08,검토,이펙트 / CSB 객체 재사용,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT09,검토,이펙트 / 이펙트 매니페스트 캐시,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT10,검토,이펙트 / 원본 FPS 기반 최적화 조건 추가 복원,개선/검증 (중복 가능),pending_current_execution_review,,,
@@ -113,7 +113,7 @@
 최적화,OPT36,검토,타이머·측정 / 콜백 생명주기 검증,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT37,검토,타이머·측정 / 프레임 시간 P95·P99 측정,개선/검증 (중복 가능),pending_current_execution_review,,,
 최적화,OPT38,검토,타이머·측정 / 33.3ms 초과 프레임 집계,개선/검증 (중복 가능),pending_current_execution_review,,,
-최적화,OPT39,검토,타이머·측정 / CPU·GPU 비용 분리 측정,개선/검증 (중복 가능),bounded_vfx_draw_improvement_pending_CI,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified,#725 pending required CI/merge
+최적화,OPT39,검토,타이머·측정 / CPU·GPU 비용 분리 측정,개선/검증 (중복 가능),bounded_vfx_draw_improvement_merged; Android pending,combat_vfx._draw: per-draw inverse and corpse/ring pass; frame_hitch_log combat_vfx_draw/vfx.draw,"489 headless + 28 RGBA comparisons; synthetic inverse calls 240->1 at160mixed; Android unverified; required CI passed, 379 core suites",#725 merged c15a364ac8d862593bea805cd4fb6112b813ec85
 최적화,OPT40,검토,타이머·측정 / 자동사냥 장시간 메모리 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
 게임,GAME01,검토,전투 / 일반 공격 처리 순서,개선/검증 (중복 가능),pending_current_execution_review,,,
 게임,GAME02,검토,전투 / 공격 대체 스킬,개선/검증 (중복 가능),pending_current_execution_review,,,
