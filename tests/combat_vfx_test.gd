@@ -3,10 +3,12 @@ extends SceneTree
 const VFX = preload("res://scripts/animation/combat_vfx.gd")
 const IMPACT = preload("res://scripts/animation/impact_visuals.gd")
 var failures: int = 0
+var failure_details: Array[String] = []
 func _initialize() -> void: call_deferred("_run")
 func check(ok: bool, detail: String) -> void:
 	if not ok:
 		failures += 1
+		failure_details.append(detail)
 		print("VFX FAIL: " + detail)
 
 func _run() -> void:
@@ -82,5 +84,6 @@ func _run() -> void:
 	check(fx.source_effects.is_empty() and fx.source_csb_effects.is_empty(),"completed source references safely pruned on replay")
 	fx.queue_free()
 	await process_frame
+	print("COMBAT_VFX_RESULT ",JSON.stringify({"failures":failure_details,"stress":3000,"pool":160,"per_hit_nodes":0}))
 	if failures == 0: print("COMBAT_VFX_OK stress=3000 pool=160 per_hit_nodes=0")
 	quit(0 if failures == 0 else 1)
