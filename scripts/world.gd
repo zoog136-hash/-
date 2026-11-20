@@ -3425,8 +3425,13 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	# Stage times for the phone record (523.681: auto_hunt 196 ms/s, no split).
+	var auto_stage: int = FRAME_HITCH.now()
 	if inventory_automation.maintenance.try_automatic(): return
-	if _run_auto_ground_pickup():
+	auto_stage = FRAME_HITCH.detail_next("auto.maintenance", auto_stage)
+	var picked: bool = _run_auto_ground_pickup()
+	auto_stage = FRAME_HITCH.detail_next("auto.pickup", auto_stage)
+	if picked:
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
@@ -3437,15 +3442,19 @@ func _run_auto_hunt() -> void:
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
 		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
 		if _native_route_pending():auto_stuck_time=0.0
+		auto_stage = FRAME_HITCH.detail_next("auto.search", auto_stage)
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
 		return
 	selected_monster = auto_target
 	var can_see: bool = _has_line_of_sight_world(player.global_position, auto_target.global_position)
+	auto_stage = FRAME_HITCH.detail_next("auto.sight", auto_stage)
 	# A registered, ready skill uses its own range even when the equipped weapon
 	# cannot reach the monster. Offensive skills always precede normal attacks.
-	if can_see and _run_auto_combat_quickslots():
+	var cast: bool = can_see and _run_auto_combat_quickslots()
+	auto_stage = FRAME_HITCH.detail_next("auto.quickslots", auto_stage)
+	if cast:
 		player.clear_click_path()
 		return
 	if _target_in_current_weapon_range(auto_target) and can_see:
@@ -3469,6 +3478,7 @@ func _run_auto_hunt() -> void:
 		# Field line_clear checks the same walkability used for combat sight.
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
+		auto_stage = FRAME_HITCH.detail_next("auto.path", auto_stage)
 		if path.is_empty():
 			if locked != null:
 				player.clear_click_path()
