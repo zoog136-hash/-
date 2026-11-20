@@ -459,7 +459,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			text="명예 코인 10개 · %d 아데나 (TWILIGHT 재료 상점 가격)" % gold_cost
 		"guardian_debug_gems":
 			if not preload("res://scripts/boot/build_flags.gd").playtest():return fail("개발 빌드 전용 검증 재화")
-			text="검증용 다이아 %d 추가 · 개발 편의 기능" % int(guardian_local_rules.development.gem_grant)
+			text=("검증용 다이아 %d 추가 · 개발 편의 기능" if preload("res://scripts/boot/build_flags.gd").developer_ui() else "수호성 다이아 %d 추가") % int(guardian_local_rules.development.gem_grant)
 		"guardian_reset":
 			var group: Dictionary=guardian_group(id)
 			if group.is_empty():return fail("알 수 없는 수호성 분류")
@@ -474,7 +474,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			if debug_gem_cost>debug_balance:return fail("다이아 부족 · 필요 %d / 게임 보유 %d" % [price,earned])
 			if price>debug_gem_cost:costs["다이아"]=price-debug_gem_cost
 			text="%s 분류 초기화 · 다이아 %d · 기록으로 확인되는 수호석 %d개 환급\n이 분류의 개방/강화를 초기화합니다. 재사용 대기시간 유지 · 분류/환급 범위는 TWILIGHT 자체 설정입니다." % [str(group.name),price,guardian_refund(int(group.category_id))]
-			if debug_gem_cost>0:text+="\n개발 검증 다이아 %d 사용 · 출시 재화와 별도" % debug_gem_cost
+			if debug_gem_cost>0:text+=("\n개발 검증 다이아 %d 사용 · 출시 재화와 별도" if preload("res://scripts/boot/build_flags.gd").developer_ui() else "\n수호성 다이아 %d 사용") % debug_gem_cost
 			if not state.get("guardian_spent",{}).has(str(int(group.category_id))) or bool(state.get("guardian_legacy_refund_uncertain",{}).get(str(int(group.category_id)),false)):text+="\n이전 버전의 실패 강화 비용은 기록이 없어 환급액에 포함할 수 없습니다."
 		"representative":
 			if not state.nodes.has(id) or node(id).get("kind") == "stat": return fail("개방된 스킬 슬롯을 선택하세요")
