@@ -29,7 +29,7 @@ func _tables(sub_condition: int, main_condition: int) -> void:
 		"Bonus":[{"ID":329281,"BonusTypeID":10,"Value":28871,"BonusApplicationTypeID":main_condition,"BonusApplicationTargetID":0},
 			{"ID":329681,"BonusTypeID":11,"Value":1,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0},
 			{"ID":2187631,"BonusTypeID":12,"Value":92001,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0},
-			{"ID":2179891,"BonusTypeID":10,"Value":28871,"BonusApplicationTypeID":sub_condition,"BonusApplicationTargetID":1}],
+			{"ID":2179891,"BonusTypeID":10,"Value":28871,"BonusApplicationTypeID":sub_condition,"BonusApplicationTargetID":1 if sub_condition!=0 else 0}],
 		"BonusType":[{"ID":10,"Name":"BuffCardSummonNPCClassID","UnitID":20},{"ID":11,"Name":"MeleeDamage","UnitID":0},{"ID":12,"Name":"SubSlotBuffClassID","UnitID":21}],
 		"Unit":[{"ID":20,"Name":"NPCClassID"},{"ID":21,"Name":"BuffClassID"}],
 		"BonusApplicationType":[{"ID":0,"Name":"Character"},{"ID":461,"Name":"BuffCardSummonSlotType"}],
