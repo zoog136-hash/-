@@ -246,6 +246,25 @@ func run() -> void:
 	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._refresh_clock <= 0.05 and renderer.problem.is_empty(), "an on-screen block waits for its worker decode without failing the map")
 	renderer._screen_wait[near_cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
 	check(renderer._build_frame() and renderer._blocks.has(near_cell), "after the wait limit it bakes with what the pack gives")
+	# Worker draw lists (real pack): the first refresh starts the pass, a later
+	# one bakes the same commands the synchronous pass builds.
+	renderer._raw_chunks["synthetic"] = {-2:PackedInt64Array([here.x,here.y,(9 << 8) | 1, here.x + 24,here.y,2147483903])}
+	async_tiles.ready[9] = true
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	var sync_built: Dictionary = renderer._block_commands(near_cell)
+	renderer.block_jobs_enabled = true
+	check(renderer._build_frame() and not renderer._blocks.has(near_cell) and renderer._block_jobs.has(near_cell) and renderer.problem.is_empty(), "a block's draw list starts on a worker without failing the map")
+	# Poll (waiting here would consume the task id the renderer checks).
+	var job_task: int = int((renderer._block_jobs[near_cell] as Dictionary).task)
+	var job_polls: int = 0
+	while not WorkerThreadPool.is_task_completed(job_task) and job_polls < 5000:
+		OS.delay_msec(1); job_polls += 1
+	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._block_jobs.has(near_cell), "the worker draw list bakes on the next refresh")
+	var job_block: Dictionary = renderer._blocks[near_cell]
+	check(str(job_block.commands) == str(sync_built.commands) and int(job_block.count) == int(sync_built.count) and int(job_block.draws) == int(sync_built.draws) and (job_block.atlas_ids as Array).size() == (sync_built.atlases as Dictionary).size(), "worker draw list equals the synchronous one")
+	renderer._clear_blocks()
+	check(renderer._block_jobs.is_empty(), "clearing blocks drops worker draw lists")
+	renderer.block_jobs_enabled = false
 	root.canvas_transform = saved_canvas
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}
