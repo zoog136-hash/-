@@ -154,10 +154,11 @@ func _run() -> void:
 	FIELDS.bind(store)
 	check(same(interned,FIELDS.full(own)), "interning values/order unchanged")
 	store.interning = false
-	# The public 128-entry cache remains bounded and existing hot IDs win.
+	# The public CACHE_LIMIT-entry cache remains bounded and existing hot IDs win.
 	FIELDS.bind(store)
-	for id: int in range(100,240): FIELDS.full({FIELDS.MARK:true,"source_item_class_id":id,"name":"item"+str(id)})
-	check(FIELDS._cache.size() == FIELDS.CACHE_LIMIT and not FIELDS._cache.has("100") and FIELDS._cache.has("239"), "public full cache eviction contract retained")
+	var last_id: int = 100 + FIELDS.CACHE_LIMIT + 11
+	for id: int in range(100,last_id+1): FIELDS.full({FIELDS.MARK:true,"source_item_class_id":id,"name":"item"+str(id)})
+	check(FIELDS._cache.size() == FIELDS.CACHE_LIMIT and not FIELDS._cache.has("100") and FIELDS._cache.has(str(last_id)), "public full cache eviction contract retained")
 	store.file = null
 	check(FIELDS._full_for_binding({FIELDS.MARK:true,"source_item_class_id":239,"name":"item239"}).source_class_ids == [239], "cached ID after boundary stays on cache")
 	store.file = saved_file

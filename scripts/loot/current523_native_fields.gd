@@ -28,7 +28,11 @@ const HEAVY: Array[String] = ["source_use_spec","source_original_item","source_u
 	"source_level_limit_min","source_level_limit_max","source_delete_time_raw","source_is_stackable","tradable",
 	"deletable","source_display_name","source_category_name"]
 const MARK := "twilight_lazy_native_fields"
-const CACHE_LIMIT := 128
+## Item templates kept in memory (~4 KB each). 128 was smaller than one
+## inventory pass: about 100 items are checked every frame, so with more items
+## than this each frame read ~10 templates from disk again (523.699 trace:
+## native item record reads ~1.1 ms per frame on a PC, ~4 ms on the phone).
+const CACHE_LIMIT := 512
 
 static var _store: Object = null
 static var _cache: Dictionary = {}
