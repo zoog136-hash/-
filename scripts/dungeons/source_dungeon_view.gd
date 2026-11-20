@@ -186,7 +186,7 @@ func _set_orim_buff_icon(button: Button, service: RefCounted) -> void:
 func _play_action(action: String) -> void:
 	if action=="settings":
 		if not is_instance_valid(play_settings_dialog):
-			play_settings_dialog=AcceptDialog.new();play_settings_dialog.title="TWILIGHT 자체 던전 규칙 · 원본값과 별도";play_settings_dialog.min_size=Vector2i(680,520);add_child(play_settings_dialog)
+			play_settings_dialog=AcceptDialog.new();play_settings_dialog.ok_button_text="확인";play_settings_dialog.title="TWILIGHT 자체 던전 규칙 · 원본값과 별도";play_settings_dialog.min_size=Vector2i(680,520);add_child(play_settings_dialog)
 			var content:=VBoxContainer.new();play_settings_dialog.add_child(content)
 			var label:=Label.new();label.text="enabled 실행 허용 / entry_* 입장재화(1아데나,4다이아,174아인)·비용\ncare: timeout/always/off · replacement 복원추첨 · preserve_items 자체 만료 보존\ncarry_bonus 충전시간 이월 · zero_cap 0상한 자체값 · specific_daily 미확인주기 일일대체\nduration 실행초 / live_limit 대체형 상한 / group_size 그룹 자체크기\nspeed_percent·pearl_percent 자체 속도 / token_chance 자체 증표 드랍률\nreroll_currency·reroll_percent 자체 재선택 · 기존 게임 한국시간05시 유지\n맵 이동 없음. 특수 시간은 접속종료 중에도 차감. 설정 변경은 실행 종료 후.";content.add_child(label)
 			play_settings_text=TextEdit.new();play_settings_text.custom_minimum_size=Vector2(650,300);play_settings_text.size_flags_vertical=Control.SIZE_EXPAND_FILL;content.add_child(play_settings_text)

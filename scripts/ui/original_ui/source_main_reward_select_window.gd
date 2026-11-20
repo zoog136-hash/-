@@ -23,6 +23,13 @@ const BLESSING={2:"축복받은 ",3:"저주받은 "}
 var chosen: int=-1
 var _dialog: WeakRef
 var _rows: Array=[]
+## The mounted rows' Sp_Select nodes ([player, offset] per row): a tap only
+## moves the selection mark, renames the chosen reward and enables 보상 받기
+## in place instead of building the window again (a 40-row card box).
+var _marks: Array=[]
+var _labels: Array=[]
+## Full builds of the window (tests).
+var builds: int=0
 
 func required_members() -> Array[String]:
 	return [ROOT,BOX,SLOT]
@@ -88,6 +95,9 @@ func _slot_spec(spec: Dictionary, p: String) -> void:
 ## --- Fill -----------------------------------------------------------------------
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
+	builds+=1
+	_marks=[]
+	_labels=[]
 	var pictures: int=0
 	var owner: Object=dialog()
 	var box: Dictionary=owner.box_info() if owner!=null and owner.has_method("box_info") else {}
@@ -108,11 +118,22 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var located: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_IconSample")
 		var row: Dictionary=_rows[index]
 		if located.get("ok",false) and _show_picture(located.player,located.offset,_item_picture(int(row.get("item_class_id",0)),str(row.get("name","")))):pictures+=1
+		var mark: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_Select")
+		_marks.append([mark.player,int(mark.offset)] if mark.get("ok",false) else [])
+	for suffix: String in [P+"Nd_Amount/Label_Num",P+"Btn_OK",P+"Btn_OK/Normal",P+"Btn_OK/Disabled"]:
+		var found: Dictionary=_locate(root,out,suffix)
+		_labels.append([found.player,int(found.offset)] if found.get("ok",false) else [])
 	return {"ok":true,"rows":rows.size(),"chosen":chosen,"pictures":pictures}
 
 static func _item_picture(item_class_id: int, title: String) -> Dictionary:
 	if item_class_id<=0:return {"ok":false}
 	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
+	if not info.get("texture") is Texture2D:
+		# Rows whose item the bag does not carry (e.g. the 변신 카드 items of a
+		# card selection box, ItemClass.TestItem): the row's own original
+		# ItemClass.IconID picture.
+		var icon: Dictionary=SourceImages.resolve_consumer("ItemClass",item_class_id,"IconID")
+		if icon.get("texture") is Texture2D:return {"ok":true,"texture":icon.texture,"status":str(icon.get("status","")),"provenance":icon.get("provenance",{})}
 	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
 
 ## --- Actions --------------------------------------------------------------------
@@ -122,7 +143,22 @@ func _choose(index: int) -> Dictionary:
 	if index<0 or index>=_rows.size():return {"ok":false}
 	chosen=index
 	_message(reward_name(_rows[index]))
+	if _mark_in_place():return {"ok":true,"handled":true,"in_place":true,"chosen":chosen}
 	return _stage()
+
+## Moves the selection to `chosen` in the mounted window; false when it has
+## to be built again (not open, or a node is missing).
+func _mark_in_place() -> bool:
+	if not is_open() or _marks.size()!=_rows.size() or _labels.size()!=4:return false
+	for entry: Array in _marks+_labels:
+		if entry.is_empty() or not is_instance_valid(entry[0]):return false
+	for index: int in range(_marks.size()):
+		if not _marks[index][0].set_bound_visible(_marks[index][1],index==chosen).get("ok",false):return false
+	var ok: bool=_labels[0][0].set_bound_text(_labels[0][1],reward_name(_rows[chosen])).get("ok",false)
+	ok=ok and _labels[1][0].set_bound_displaystate(_labels[1][1],true).get("ok",false)
+	ok=ok and _labels[2][0].set_bound_visible(_labels[2][1],true).get("ok",false)
+	ok=ok and _labels[3][0].set_bound_visible(_labels[3][1],false).get("ok",false)
+	return ok
 
 ## 보상 받기: the dialog's own claim of the chosen row.
 func _confirm() -> Dictionary:
