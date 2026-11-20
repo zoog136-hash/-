@@ -57,7 +57,9 @@ static func original_default(texture: Texture2D, grayscale: bool=false) -> Shade
 ## variables") and the nodes read other slots: original windows and quick
 ## slots showed random colour blocks instead of their art on the phone.
 const DISPLAY_CACHE_LIMIT: int=4096
-static var _display_variants: Dictionary={}
+## Material instance ID -> display colour -> shared variant.
+static var _display_variants: Dictionary[int,Dictionary]={}
+static var _display_variant_count: int=0
 static var _display_shaders: Dictionary={}
 ## Only shaders that declare the display parameters take them; a foreign
 ## shader (SP2 kernels, panel layers) is left alone.
@@ -69,19 +71,27 @@ static func takes_display(material: ShaderMaterial) -> bool:
 		_display_shaders[key]=shader.code.contains("uniform vec4 source_display_color") and shader.code.contains("uniform bool source_display_bound") and not shader.code.contains("instance uniform")
 	return _display_shaders[key]
 static func bind_display(item: CanvasItem, color: Color) -> void:
-	if not item.material is ShaderMaterial or not takes_display(display_base(item.material)):return
-	var current: ShaderMaterial=item.material
+	var current: ShaderMaterial=item.material as ShaderMaterial
+	if current==null:return
 	var base: ShaderMaterial=display_base(current)
-	var key: Array=[base.get_instance_id(),color]
-	var variant: Variant=_display_variants.get(key)
+	if not takes_display(base):return
+	var base_id: int=base.get_instance_id()
+	var colors: Variant=_display_variants.get(base_id)
+	var variant: ShaderMaterial=(colors as Dictionary).get(color) as ShaderMaterial if colors!=null else null
 	# A cached variant whose parameters were written externally is replaced.
-	if not variant is ShaderMaterial or variant.shader!=base.shader or not _bound_to(variant,color):
-		if _display_variants.size()>=DISPLAY_CACHE_LIMIT:_display_variants.clear()
+	if variant==null or variant.shader!=base.shader or not _bound_to(variant,color):
+		if _display_variant_count>=DISPLAY_CACHE_LIMIT:
+			_display_variants.clear()
+			_display_variant_count=0
+			colors=null
+		if colors==null:colors={}
+		if not colors.has(color):_display_variant_count+=1
 		variant=base.duplicate()
 		variant.set_meta("source_display_base",base)
 		variant.set_shader_parameter("source_display_bound",true)
 		variant.set_shader_parameter("source_display_color",color)
-		_display_variants[key]=variant
+		colors[color]=variant
+		_display_variants[base_id]=colors
 	if current!=variant:item.material=variant
 static func _bound_to(material: ShaderMaterial, color: Color) -> bool:
 	var bound: Variant=material.get_shader_parameter("source_display_bound")
