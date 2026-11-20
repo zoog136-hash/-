@@ -17,28 +17,49 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## - 뽑기 확률 / 목록 보기 / 주의 사항 of the retry popup: the quote's
 ##   candidates (each 1 / count, the feature draws evenly) and the feature's
 ##   own rules.
+## - The reveal as in the client: after 다시 뽑기 CardChange_Gacha flips the
+##   card (the card before in Nd_Card_Before, the card back of its kind, the
+##   result in the Change_Fusion_Card cell; the clip of the card's kind);
+##   after 카드 확정 CardChange_Result shows the confirmed card, and a card of
+##   영웅 이상 lights up in its grade (source_main_card_grade_fx). A tap or
+##   the close button returns to the list.
 ## Left empty (no TWILIGHT data): 상품 안내 (cash goods),
-## the collection view, 전체 선택 / 선택 확정 (bulk), the confirm time limit,
-## the cash notice and the gacha reveal.
+## the collection view, 전체 선택 / 선택 확정 (bulk), the confirm time limit
+## and the cash notice.
 const ROOT="UI/CardChange/CardChange_All.csb"
 const SLOT="UI/CardChange/CardChange_Slot_Card.csb"
 const RETRY="UI/CardChange/CardChange_Popup_Retry.csb"
 const CONFIRM="UI/CardChange/CardChange_Popup_Confirm.csb"
 const PICK="UI/CardChange/CardChange_Popup_RetrySpecial_Select.csb"
 const PICK_ROW="UI/CardChange/CardChange_List_RetrySpecial_Select.csb"
+const GACHA="UI/CardChange/CardChange_Gacha.csb"
+const RESULT="UI/CardChange/CardChange_Result.csb"
+const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
+## CardChange_Gacha clips by card kind (Nd_Card_Before shows until frame 265,
+## the result from there: the name follows).
+const GACHA_CLIPS={"변신":"CardSet_One","마법인형":"Doll_CardSet_One","성물":"HolyStuff_CardSet_One"}
+const GACHA_REVEAL_FRAMES: float=65.0
+const CELL="Nd_Card/Change_Fusion_Card"
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const CATEGORIES: Array[String]=["변신","마법인형","성물"]
 const GRADES: Array[String]=["영웅","전설","신화","유일"]
-## "" / retry / confirm / pick
+## "" / retry / confirm / pick / gacha / result
 var popup: String=""
+## The reveal: {before{name,grade,record}, after{name,grade,record}}.
+var reveal: Dictionary={}
 var target: Dictionary={}
 var quote: Dictionary={}
 var pick: String=""
 
 func required_members() -> Array[String]:
 	return [ROOT,SLOT,RETRY,CONFIRM,PICK,PICK_ROW]
+
+## The reveal scenes come with the ui43 pack; without them the list and
+## the messages stay as before.
+func _reveal_available() -> bool:
+	return _pack!=null and _pack.manifest.get("scenes",{}).has(GACHA) and _pack.manifest.get("scenes",{}).has(RESULT)
 
 func _root_member() -> String:
 	return ROOT
@@ -167,6 +188,7 @@ func _prefab_picture(scene: Node2D, out: Dictionary, raw: Dictionary) -> bool:
 
 func _popup(root: Node2D) -> Dictionary:
 	var spec: Dictionary={}
+	if popup in ["gacha","result"]:return _reveal_popup(root)
 	var member: String={"retry":RETRY,"confirm":CONFIRM,"pick":PICK}[popup]
 	var card: Dictionary=shown(target)
 	match popup:
@@ -303,11 +325,17 @@ func _swap() -> Dictionary:
 	if int(quote.get("pick_count",0))>0 and pick.is_empty():
 		_message("후보 카드를 선택하세요")
 		return {"ok":false}
+	var before: Dictionary=shown(target)
 	var result: Variant=_call("card523_swap_execute",[str(quote.token),pick])
 	var done: Dictionary=result if result is Dictionary else {}
-	if done.get("ok",false):_message("다시 뽑기 결과: %s · 카드 확정으로 획득합니다" % str(done.get("pending",{}).get("result",{}).get("name","")))
-	else:_message(str(done.get("reason","다시 뽑기 실패")))
 	popup=""
+	if done.get("ok",false):
+		var after: Dictionary=done.get("pending",{}).get("result",{})
+		_message("다시 뽑기 결과: %s · 카드 확정으로 획득합니다" % str(after.get("name","")))
+		if _reveal_available():
+			reveal={"category":str(target.category),"before":before,"after":{"name":str(after.get("name","")),"grade":str(after.get("grade","")),"record":record(str(target.category),str(after.get("identity","")))}}
+			popup="gacha"
+	else:_message(str(done.get("reason","다시 뽑기 실패")))
 	return _stage()
 
 ## 카드 확정: the original card becomes the waiting result.
@@ -316,4 +344,74 @@ func _confirm_result() -> Dictionary:
 	var done: Dictionary=result if result is Dictionary else {}
 	_message(("카드 확정: "+str(done.get("result",{}).get("name",""))) if done.get("ok",false) else str(done.get("reason","확정 실패")))
 	popup=""
+	if done.get("ok",false) and _reveal_available():
+		var got: Dictionary=done.get("result",{})
+		var identity: String=str(got.get("identity",got.get("id","")))
+		var raw: Dictionary=record(str(done.get("category",target.get("category",""))),identity)
+		reveal={"category":str(done.get("category","")),"after":{"name":str(got.get("name",raw.get("name",""))),"grade":str(got.get("grade",raw.get("grade",""))),"record":raw}}
+		popup="result"
 	return _stage()
+
+## --- Reveal (CardChange_Gacha / CardChange_Result) ----------------------------
+
+func _reveal_popup(root: Node2D) -> Dictionary:
+	var after: Dictionary=reveal.get("after",{})
+	var gacha: bool=popup=="gacha"
+	var grade: String=str(after.get("grade",""))
+	var spec: Dictionary={}
+	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_popup")}
+	spec["Nd_ButtonSet/Btn_Open"]={"activate":Callable(self,"_close_popup")}
+	spec["FullFrameType_A/Fx_Img_BG_Particle"]={"exclude":true}
+	if gacha:
+		for name: String in ["Nd_Skill_Card","Fx_Skill_Screen"]:spec[name]={"exclude":true}
+	else:
+		spec["Btn_Close"]={"activate":Callable(self,"_close_popup")}
+		# The authored sample card (a fixed 영웅 prefab) gives way to the result.
+		spec["Nd_Card/Change_Card_A_Legend"]={"exclude":true}
+	# The flip shows the light of the clip itself; the grade light is the
+	# confirmed card's.
+	GradeFx.cell_spec(self,spec,CELL+"/",grade if not gacha else "")
+	spec[CELL+"/Text_Card_Name"]={"role":"source_text","text":str(after.get("name",""))}
+	spec[CELL+"/Btn_Card"]={"activate":Callable(self,"_close_popup")}
+	var popup_out: Dictionary={}
+	var built: Dictionary=_scene_of(GACHA if gacha else RESULT,spec,popup_out)
+	if not built.get("ok",false):return built
+	var scene: Node2D=built.scene
+	root.add_child(scene)
+	var filled: Dictionary={"ok":true,"popup":popup,"pictures":0}
+	if _cell_prefab(scene,popup_out,CELL+"/Panel",after):filled.pictures+=1
+	if gacha:
+		var before: Dictionary=reveal.get("before",{})
+		if _cell_prefab(scene,popup_out,"Nd_Card_Before",before):filled.pictures+=1
+		filled["clip"]=str(GACHA_CLIPS.get(str(reveal.get("category","")),"CardSet_One"))
+		scene.play(str(filled.clip),false)
+		var nested: Node2D=GradeFx.project(self,scene,popup_out,CELL)
+		if nested!=null:
+			var ref: WeakRef=weakref(nested)
+			(Engine.get_main_loop() as SceneTree).create_timer(GACHA_REVEAL_FRAMES/60.0).timeout.connect(func() -> void:
+				var live: Variant=ref.get_ref()
+				if live!=null and is_instance_valid(live):live.play("Fx_Cardname",false))
+	else:
+		filled["clip"]="CardSet_One"
+		scene.play("CardSet_One",false)
+		var lit: Dictionary=GradeFx.light(self,scene,popup_out,CELL,grade)
+		filled["lit"]=bool(lit.get("lit",false))
+		if not filled.lit:
+			var nested: Node2D=GradeFx.project(self,scene,popup_out,CELL)
+			if nested!=null:nested.play("Fx_Cardname",false)
+	return filled
+
+## The client card prefab of `card` (Change_Card_A_<grade> with its picture)
+## under the node at `suffix`.
+func _cell_prefab(scene: Node2D, out: Dictionary, suffix: String, card: Dictionary) -> bool:
+	var grade: String=str(card.get("grade",""))
+	if not Page.GRADE_MEMBERS.has(grade):return false
+	var located: Dictionary=_locate(scene,out,suffix)
+	if not located.get("ok",false):return false
+	var host: Variant=located.player.source_nodes.get(located.offset)
+	if not host is Node2D:return false
+	var card_out: Dictionary={}
+	var built: Dictionary=_scene_of(str(Page.GRADE_MEMBERS[grade]),_prefab_spec(Callable()),card_out)
+	if not built.get("ok",false):return false
+	(host as Node2D).add_child(built.scene)
+	return _prefab_picture(built.scene,card_out,card.get("record",{}))

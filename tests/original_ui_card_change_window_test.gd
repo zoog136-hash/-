@@ -26,10 +26,13 @@ class FakeWorld extends Node:
 			"can_confirm":pending,"confirm_reason":"" if pending else "확정할 결과가 없습니다","confirm_token":"c%d" % calls.size() if pending else ""}
 	func card523_swap_execute(token: String, pick: String="") -> Dictionary:
 		calls.append(["execute",token,pick])
-		return {"ok":true,"pending":{"result":{"name":"영웅 Z"}}}
+		return {"ok":true,"pending":{"result":{"identity":"source:101","name":"영웅 Z","grade":"영웅"}}}
 	func card523_swap_confirm(token: String) -> Dictionary:
 		calls.append(["confirm",token])
-		return {"ok":true,"result":{"name":"전설 C"}}
+		return {"ok":true,"category":"변신","result":{"identity":"source:203","name":"전설 C","grade":"전설"}}
+
+class FakePack extends RefCounted:
+	var manifest: Dictionary={"scenes":{"UI/CardChange/CardChange_Gacha.csb":{},"UI/CardChange/CardChange_Result.csb":{}}}
 
 class FakeHud extends Node:
 	var messages: Array[String]=[]
@@ -77,6 +80,21 @@ func _run() -> void:
 	check(window.popup=="confirm","카드 확정 opens the confirm popup")
 	window._confirm_result()
 	check(world.calls[-1][0]=="confirm" and str(world.calls[-1][1]).begins_with("c") and window.popup=="","카드 확정 runs the confirm token")
+	# The client reveal: CardChange_Gacha after 다시 뽑기, CardChange_Result
+	# after 카드 확정 (only when the UI pack has them; above, without them,
+	# the list stays).
+	world.picks=0
+	window._pack=FakePack.new()
+	window._retry(1)
+	window._swap()
+	check(window.popup=="gacha" and window.reveal.after.name=="영웅 Z" and window.reveal.before.name=="영웅 A" and window.reveal.category=="변신","다시 뽑기 shows the flip of the card before and the result: "+str(window.reveal))
+	window._close_popup()
+	check(window.popup=="","a tap returns to the list")
+	window._confirm(0)
+	window._confirm_result()
+	check(window.popup=="result" and window.reveal.after.name=="전설 C" and window.reveal.after.grade=="전설","카드 확정 shows the confirmed card: "+str(window.reveal))
+	window._close_popup()
+	window._pack=null
 	var offer: Dictionary={"candidate_count":3,"candidates":[{"name":"가"},{"name":"나"},{"name":"다"}]}
 	check(WINDOW.probability_text(offer)=="같은 등급 카드 3종 중 1장이 나옵니다 (각 33.3333%, 지금 카드 제외)","뽑기 확률: each candidate 1 / count: "+WINDOW.probability_text(offer))
 	check(WINDOW.list_text(offer)=="다시 뽑기 후보 3종: 가 · 나 · 다" and WINDOW.probability_text({}).contains("없습니다"),"목록 보기 lists the quote's candidates")
@@ -114,6 +132,17 @@ func _real_pack(pack_dir: String) -> void:
 	check(window._choose("source:301").get("handled",false),"a picked candidate mounts")
 	var confirm: Dictionary=window._confirm(0)
 	check(confirm.get("handled",false) and confirm.filled.popup=="confirm","CardChange_Popup_Confirm mounts: "+str(confirm).left(300))
+	if pack.manifest.get("scenes",{}).has(WINDOW.GACHA):
+		host.world.picks=0
+		window._retry(1)
+		var flipped: Dictionary=window._swap()
+		check(flipped.get("handled",false) and flipped.filled.popup_fill.popup=="gacha" and flipped.filled.popup_fill.clip=="CardSet_One","CardChange_Gacha mounts and flips: "+str(flipped).left(300))
+		window._close_popup()
+		window._confirm(0)
+		var shown_result: Dictionary=window._confirm_result()
+		check(shown_result.get("handled",false) and shown_result.filled.popup_fill.popup=="result" and shown_result.filled.popup_fill.lit,"CardChange_Result mounts and a 전설 card lights up: "+str(shown_result).left(300))
+	else:
+		print("original_ui_card_change_window_test: pack without CardChange_Gacha (before ui43); reveal not mounted")
 	window.close()
 	await process_frame
 	parent.queue_free()

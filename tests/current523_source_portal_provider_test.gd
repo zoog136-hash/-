@@ -1,6 +1,7 @@
 extends SceneTree
 const PROVIDER=preload("res://scripts/maps/current523_source_portal_provider.gd")
 const OWNER=preload("res://scripts/maps/patch523_world_links.gd")
+const OPTIONS=preload("res://scripts/maps/current523_aden_play_options.gd")
 var checks: int=0
 var failures: Array[String]=[]
 class RuleFixture extends RefCounted:
@@ -51,11 +52,18 @@ func _initialize() -> void:
 				check(int(provider.portal_context_for_land(1,"1/",1101).Portal.SourceX)==32668,"context consumer cannot mutate owning definitions")
 			var inactive_context: Dictionary=provider.portal_context_for_land(47111,"13313/",18111)
 			check(inactive_context.declared_inactive_restrictions.size()==2 and int(inactive_context.declared_inactive_restrictions[0].row.ID)==152191 and inactive_context.declared_inactive_restrictions[0].side=="source" and inactive_context.declared_inactive_restrictions[1].side=="target","actual original NoTeleport=false retains both endpoint scopes and raw row")
-			var retains_other: bool=false; var false_held: bool=false
-			for item: Dictionary in inactive_context.source_travel_holds:
-				retains_other=retains_other or item.get("table")=="LandTimeLimit"
+			var strict_context: Dictionary=provider.portal_context_for_actor_state(47111,"13313/",18111,{"map_open_policy":OPTIONS.SOURCE_CONDITIONS_V1})
+			var retains_time: bool=false; var false_held: bool=false
+			for item: Dictionary in strict_context.source_travel_holds:
+				retains_time=retains_time or item.get("reason")=="native_land_time_pool_owner_required"
 				false_held=false_held or int(item.get("row",{}).get("ID",-1))==152191
-			check(retains_other and not false_held and not inactive_context.source_travel_hold.is_empty() and not inactive_context.native_definition_contract.activation_known,"inactive restriction neither suppresses other holds nor verifies native activation")
+			check(retains_time and not false_held and not strict_context.source_travel_hold.is_empty() and not strict_context.native_definition_contract.activation_known,"source conditions keep the time-pool hold and native activation is unknown")
+			var waived_time: bool=false; var default_time_held: bool=false
+			for item: Dictionary in inactive_context.waived_time_conditions:
+				waived_time=waived_time or item.get("table")=="LandTimeLimit"
+			for item: Dictionary in inactive_context.source_travel_holds:
+				default_time_held=default_time_held or item.get("reason")=="native_land_time_pool_owner_required"
+			check(waived_time and not default_time_held and not inactive_context.source_travel_hold.is_empty() and not inactive_context.native_definition_contract.activation_known,"the local default waives the time limit and retains other holds")
 			inactive_context.declared_inactive_restrictions[0].row.Value=1
 			check(provider.portal_context_for_land(47111,"13313/",18111).declared_inactive_restrictions[0].row.Value==0,"inactive evidence is copied without mutating source")
 			var exception: Dictionary=provider.portal_context_for_land(4,"Aden/",350)

@@ -1617,57 +1617,92 @@ func _index_item_weights() -> void:
 	item_weight_index_builds += 1
 	patch523_craft_item_cache={}
 	_craft_index_warm={}
+	var rules: Dictionary = _item_weight_rules()
 	var next_weight_index: Dictionary = {}
-	var type_defaults: Dictionary = {}
-	var overrides: Dictionary = {}
-	var source_weight_policy: Dictionary = {}
-	# User decision "원작대로": these keep the original estimate, including zero.
-	var original_weight_names: Dictionary = {}
-	var path: String = "res://data/item_weight_rules.json"
-	if FileAccess.file_exists(path):
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-		if parsed is Dictionary:
-			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
-			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
-			var declared_source_policy: Variant = parsed.get("current523_source_weight")
-			if declared_source_policy is Dictionary: source_weight_policy = declared_source_policy
-			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
-			if original_items is Dictionary: original_weight_names = original_items
 	for source: Variant in [catalog_db.get("아이템", []), item_db]:
 		if not (source is Array):
 			continue
 		for entry: Variant in source as Array:
-			if not (entry is Dictionary):
-				continue
-			var record: Dictionary = entry as Dictionary
-			var name_value: String = str(record.get("name", ""))
-			if name_value.is_empty():
-				continue
-			var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,source_weight_policy)
-			if source_weight.get("applicable",false):
-				if not source_weight.get("ok",false):
-					push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
-					return
-				# Exact source zero remains zero; host positive-default bounds below
-				# still belong only to the pre-existing legacy input path.
-				next_weight_index[name_value] = int(source_weight.weight)
-				continue
-			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
-			if original_weight_names.has(name_value) and overrides.has(name_value):
-				next_weight_index[name_value] = maxi(0, int(overrides[name_value]))
-				continue
-			if record.get("source_weight_origin") == "current523_original_estimate":
-				next_weight_index[name_value] = maxi(0, int(record.get("weight", 0)))
-				continue
-			if record.has("growth96_item_id"):
-				next_weight_index[name_value] = maxi(0,int(record.weight))
-				continue
-			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
-				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
-			next_weight_index[name_value] = maxi(0, raw_weight)
+			if not _weight_index_entry(entry, rules, next_weight_index):
+				return
 	# Keep existing dictionary aliases while publishing a complete input index.
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
+
+## The weight rules file (res://, read-only at run time): parsed once.
+var _item_weight_rules_cache: Dictionary = {}
+func _item_weight_rules() -> Dictionary:
+	if not _item_weight_rules_cache.is_empty(): return _item_weight_rules_cache
+	var rules: Dictionary = {"type_defaults":{}, "overrides":{}, "source_weight_policy":{}, "original_weight_names":{}}
+	var path: String = "res://data/item_weight_rules.json"
+	if FileAccess.file_exists(path):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary:
+			rules.type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
+			rules.overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+			var declared_source_policy: Variant = parsed.get("current523_source_weight")
+			if declared_source_policy is Dictionary: rules.source_weight_policy = declared_source_policy
+			# User decision "원작대로": these keep the original estimate, including zero.
+			var original_items: Variant = parsed.get("current523_original_weight_overrides",{}).get("items",{}) if parsed.get("current523_original_weight_overrides") is Dictionary else {}
+			if original_items is Dictionary: rules.original_weight_names = original_items
+	_item_weight_rules_cache = rules
+	return rules
+
+## One catalog entry's weight into `index`; false when an original weight
+## input is unresolved (the caller keeps the existing index).
+func _weight_index_entry(entry: Variant, rules: Dictionary, index: Dictionary) -> bool:
+	if not (entry is Dictionary):
+		return true
+	var record: Dictionary = entry as Dictionary
+	var name_value: String = str(record.get("name", ""))
+	if name_value.is_empty():
+		return true
+	var type_defaults: Dictionary = rules.type_defaults
+	var overrides: Dictionary = rules.overrides
+	var source_weight: Dictionary = ITEM_OPTIONS._bulk_source_weight_input(record,rules.source_weight_policy)
+	if source_weight.get("applicable",false):
+		if not source_weight.get("ok",false):
+			push_warning("원문 무게 입력 보류 · 기존 인덱스 보존: "+str(source_weight.get("problem","입력 미확정")))
+			return false
+		# Exact source zero remains zero; host positive-default bounds below
+		# still belong only to the pre-existing legacy input path.
+		index[name_value] = int(source_weight.weight)
+		return true
+	var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+	if rules.original_weight_names.has(name_value) and overrides.has(name_value):
+		index[name_value] = maxi(0, int(overrides[name_value]))
+		return true
+	if record.get("source_weight_origin") == "current523_original_estimate":
+		index[name_value] = maxi(0, int(record.get("weight", 0)))
+		return true
+	if record.has("growth96_item_id"):
+		index[name_value] = maxi(0,int(record.weight))
+		return true
+	if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐" and not record.get("monsterbook_source_item",false):
+		raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
+	index[name_value] = maxi(0, raw_weight)
+	return true
+
+## Records appended to catalog_db["아이템"] / item_db after the sizes given
+## (e.g. a box's first-seen reward): their weights only, as the full pass
+## would publish them (a later entry of the same name wins, catalog first).
+## Anything else (shrunk lists, a name already indexed, a deferred start)
+## falls back to the full pass.
+func _index_item_weights_appended(catalog_size: int, item_db_size: int) -> void:
+	var catalog: Variant = catalog_db.get("아이템", [])
+	if not catalog is Array or not item_db is Array: _index_item_weights(); return
+	if catalog.size() == catalog_size and item_db.size() == item_db_size: return
+	if _weight_index_deferred or catalog.size() < catalog_size or item_db.size() < item_db_size: _index_item_weights(); return
+	var rules: Dictionary = _item_weight_rules()
+	var added: Dictionary = {}
+	for pair: Array in [[catalog, catalog_size], [item_db, item_db_size]]:
+		for position: int in range(int(pair[1]), (pair[0] as Array).size()):
+			var entry: Variant = pair[0][position]
+			if entry is Dictionary and item_weight_index.has(str(entry.get("name", ""))): _index_item_weights(); return
+			if not _weight_index_entry(entry, rules, added): return
+	patch523_craft_item_cache={}
+	_craft_index_warm={}
+	item_weight_index.merge(added, true)
 
 func _inventory_total_weight() -> int:
 	if _stat_memo_depth == 0: return _inventory_total_weight_uncached()
@@ -2022,6 +2057,7 @@ func _merge_local_consumables_into_catalog() -> void:
 			catalog_items.append(pack_record)
 	catalog_db["아이템"] = catalog_items
 	ITEM_CATALOG_LOOKUP.forget_misses()
+	preload("res://scripts/shop/source523_cash_packages.gd").forget_owner_index()
 
 func _connect_signals() -> void:
 	hud.connect("equipment523_open_requested", _equipment523_open)
@@ -3526,6 +3562,19 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 	# walking to. A route searched from the player starts at the centre of its
 	# own cell, usually already passed at the original walk (2.25 cells/s,
 	# 1.46 cells per 0.65 s search), which turned it back and forth.
+	# Searches are bounded like monster chases: a hunt target is near, and a
+	# full-map search (8192 nodes) for an unreachable one cost the phone
+	# ~120 ms per second of auto-hunt (523.704: auto.path 117 ms/s).
+	var field: Object = field_map
+	var bounded: bool = field != null and "path_search_limit_override" in field
+	if bounded: field.set("path_search_limit_override", AUTO_PURSUIT_SEARCH_NODES)
+	var result: PackedVector2Array = _auto_pursuit_search(target)
+	if bounded: field.set("path_search_limit_override", -1)
+	return result
+
+const AUTO_PURSUIT_SEARCH_NODES: int = 2048
+
+func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
 	if player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
 		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
@@ -3533,6 +3582,9 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
 				return rest
+			# The player is walking to `via`: a target not reachable from it is
+			# not reachable from the player either. One search, not two.
+			return rest
 	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -3986,6 +4038,8 @@ func _ground_drops_snapshot() -> Array:
 func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
+	for returned: Dictionary in ground_loot.recovered_to_bag:
+		hud.append_log("바닥 아이템 회수 · %s %d개를 가방으로 돌려놓았습니다" % [preload("res://scripts/ui/source523_item_identity.gd").plain_text(str(returned.item_name)),int(returned.quantity)])
 
 ## Quest window [모두 받기].
 func claim_all_quests() -> Dictionary:
