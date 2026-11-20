@@ -420,7 +420,10 @@ func draw_offer(world: Node, ctl: Object, window: Object) -> void:
 	if not check(at_card >= 0, "카드&장비 lists an original draw offer"): return
 	var saved_diamonds: int = int(world.inventory.get("다이아", 0))
 	world.inventory["다이아"] = 0
-	var card: Variant = routable_button(window.get("_content").get_child(at_card))
+	# The list is virtual: the built card of that product (first tab, scrolled to the start).
+	var built: Dictionary = window.get("_cards")
+	if not check(built.has(at_card), "the draw offer's card is built"): return
+	var card: Variant = routable_button(built[at_card])
 	await tap(button_point(card))
 	for frame: int in 3: await process_frame
 	var message: Dictionary = world.hud.original_main_ui_status.get("system_message", {})
@@ -430,7 +433,7 @@ func draw_offer(world: Node, ctl: Object, window: Object) -> void:
 	check(scene is Node2D and (scene as Node2D).visible and (scene as Node2D).z_index > int(window.get("_scene").z_index), "the refusal is drawn above Shop_All")
 	world.inventory["다이아"] = 100000
 	var cards_before: Dictionary = world.card_draw_fusion.export_state()
-	await tap(button_point(routable_button(window.get("_content").get_child(at_card))))
+	await tap(button_point(routable_button(built[at_card])))
 	for frame: int in 2: await process_frame
 	if not check(window.calculator.is_open(), "a funded draw card opens the keypad"): return
 	await tap(keypad_point(window.calculator, "Btn_Select"))
