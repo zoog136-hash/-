@@ -24,7 +24,7 @@ func compare(image: Image,label: String) -> void:
 	var before: PackedByteArray=image.get_data()
 	var actual: Image=OPT.convert(image)
 	check(actual.get_data()==scalar_reference(image),label+": every output byte matches the Cocos equation")
-	check(actual.get_data()==PACK.cocos_premultiply(image).get_data(),label+": complete bytes match the unchanged source-pack atlas path")
+	check(actual.get_data()==PACK.cocos_premultiply(image).get_data(),label+": source-pack atlas wrapper uses the same exact conversion")
 	check(actual.get_size()==image.get_size() and actual.get_format()==Image.FORMAT_RGBA8,label+": dimensions and RGBA8 format preserved")
 	check(image.get_data()==before and image.get_format()==Image.FORMAT_RGBA8,label+": source pixels remain unchanged")
 	var converted: PackedByteArray=actual.get_data()
@@ -47,6 +47,12 @@ func _run() -> void:
 			var at: int=(alpha*256+channel)*4
 			sweep[at]=channel;sweep[at+1]=255-channel;sweep[at+2]=(channel*73+7)%256;sweep[at+3]=alpha
 	compare(Image.create_from_data(256,256,false,Image.FORMAT_RGBA8,sweep),"all channel/alpha pairs")
+	var opaque:=Image.create_empty(127,93,false,Image.FORMAT_RGBA8)
+	opaque.fill(Color8(183,44,79,255))
+	compare(opaque,"fully opaque RGBA8")
+	var transparent:=Image.create_empty(17,21,false,Image.FORMAT_RGBA8)
+	transparent.fill(Color8(183,44,79,0))
+	compare(transparent,"transparent pixels with nonzero stored RGB")
 	var random:=RandomNumberGenerator.new()
 	random.seed=20261112
 	for size_value: Vector2i in [Vector2i(1,1),Vector2i(3,7),Vector2i(64,63),Vector2i(257,259),Vector2i(1024,1024)]:
