@@ -87,7 +87,12 @@ func _real_pack(pack_dir: String) -> void:
 	var opened: Dictionary=window.open(parent,host.dialog)
 	check(opened.get("handled",false) and int(opened.filled.rows)==2,"RewardSelectBoxScene mounts the rewards: "+str(opened).left(300))
 	var chosen: Dictionary=window._choose(0)
-	check(chosen.get("handled",false) and int(chosen.filled.chosen)==0,"a chosen reward mounts")
+	check(chosen.get("handled",false) and int(chosen.chosen)==0 and chosen.get("in_place",false) and window.builds==1,"a tap marks the reward in place (no rebuild): "+str(chosen).left(200))
+	check(window._marks[0][0].source_nodes.get(window._marks[0][1]).visible and not window._marks[1][0].source_nodes.get(window._marks[1][1]).visible,"only the chosen row carries Sp_Select")
+	window._choose(1)
+	check(window.chosen==1 and window.builds==1 and window._marks[1][0].source_nodes.get(window._marks[1][1]).visible and not window._marks[0][0].source_nodes.get(window._marks[0][1]).visible,"another tap moves the mark")
+	host.dialog.accept=true
+	check(window._confirm().get("claimed",false) and host.dialog.claims==[12],"보상 받기 claims the marked row")
 	host.dialog.queue_free()
 	await process_frame
 	check(not window.is_open(),"the window closes with its dialog")

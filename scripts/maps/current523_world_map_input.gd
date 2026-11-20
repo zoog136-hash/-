@@ -171,7 +171,13 @@ func input(event: InputEvent, supplied: Dictionary) -> Dictionary:
 	_remember(_fail("world_map_click_not_consumed"))
 	var submitted: Dictionary=ui.call("submit_world_image_click",point,{"owner":"current523_world_map_input","nonce":_nonce,"event_class":event.get_class(),"input_policy":INPUT_POLICY})
 	_submission={}
-	return {"ok":submitted.get("ok",false) and last_result.get("ok",false),"pixel_submission":submitted,"movement":last_result.duplicate(true)}
+	# The original area tab (ui43+): the tapped cell's area and coordinates.
+	var area: Dictionary={}
+	var projected: Variant=last_result.get("coordinate_registration")
+	if projected is Dictionary and projected.get("source_components") is Array and ui.has_method("select_area_at_cell"):
+		var components: Array=projected.source_components
+		area=ui.call("select_area_at_cell",Vector2(float(components[0]),float(components[1])))
+	return {"ok":submitted.get("ok",false) and last_result.get("ok",false),"pixel_submission":submitted,"movement":last_result.duplicate(true),"area":area}
 
 func _on_image_clicked(pixel: Dictionary) -> void:
 	if _submission.is_empty():return

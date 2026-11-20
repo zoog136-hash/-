@@ -22,6 +22,7 @@ const STATE := "user://source523/cooked_actors.json"
 const SETTINGS := "user://twilight_cooked_actors.cfg"
 const DEFAULT_BUDGET_BYTES: int = 96 * 1024 * 1024
 const MISSING_MAX: int = 4096
+const PAGE_RETRY_MSEC: int = 250
 
 ## One bundle file: shared pages/images/states and its entries (one per
 ## cooked selection/request of this body, e.g. every weapon family).
@@ -33,6 +34,8 @@ class CookedActor:
 	var index: Dictionary = {}
 	## Page textures, null until a state that draws from the page is shown.
 	var textures: Array = []
+	## Retry transient reads per bundle page, shared by actors using the bundle.
+	var page_retry_after: Dictionary[int,int] = {}
 	## entry key (var_to_str of its inputs) -> entry; each entry also holds
 	## "runtime_tracks" shaped for the existing view API (duration/timing).
 	var entries: Dictionary = {}
@@ -219,11 +222,14 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 			_pages.erase(key)
 			_pages[key] = known
 		return texture
+	if actor.page_retry_after.get(page, 0) > Time.get_ticks_msec(): return null
 	var file := FileAccess.open(actor.path, FileAccess.READ)
 	var image: Image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start) if file != null else null
 	if image == null:
 		_count("page_unreadable")
+		actor.page_retry_after[page] = Time.get_ticks_msec() + PAGE_RETRY_MSEC
 		return null
+	actor.page_retry_after.erase(page)
 	var made: ImageTexture = ImageTexture.create_from_image(image)
 	actor.textures[page] = made
 	var bytes: int = image.get_data_size()
@@ -277,6 +283,7 @@ static func load_actor(path: String) -> Dictionary:
 			var track: Variant = entry.tracks[role]
 			if not track is Dictionary or not track.get("directions") is Array or track.directions.size() != 8: return {"ok":false,"error":"cooked_actor_track"}
 			var directions: Array = []
+			var direction_totals := PackedFloat64Array()
 			for direction: Variant in track.directions:
 				if not direction is Dictionary or not direction.get("durations") is PackedFloat64Array or direction.durations.is_empty(): return {"ok":false,"error":"cooked_actor_direction"}
 				if direction.seg_start.size() != direction.durations.size() + 1 or direction.seg_end.size() != direction.seg_state.size(): return {"ok":false,"error":"cooked_actor_segments"}
@@ -284,14 +291,19 @@ static func load_actor(path: String) -> Dictionary:
 					if state < 0 or state >= index.states.size(): return {"ok":false,"error":"cooked_actor_segment_state"}
 				if int(direction.get("end_state", -1)) >= index.states.size(): return {"ok":false,"error":"cooked_actor_end_state"}
 				var frames: Array = []
+				var total: float = 0.0
+				var has_presentation_duration: bool = bool(direction.get("eps", false))
 				for frame: int in range(direction.durations.size()):
-					var cooked_frame: Dictionary = {"duration":direction.durations[frame],"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
+					var duration: float = direction.durations[frame]
+					total += duration
+					var cooked_frame: Dictionary = {"duration":duration,"source_frame":direction.source_frames[frame],"source_group":direction.source_groups[frame],"cooked_index":frame}
 					# The original preview's boundary epsilon depends on this key.
-					if bool(direction.get("eps", false)): cooked_frame["presentation_duration"] = direction.durations[frame]
+					if has_presentation_duration: cooked_frame["presentation_duration"] = duration
 					frames.append(cooked_frame)
 				directions.append(frames)
+				direction_totals.append(total)
 			runtime_tracks[str(role)] = {"loop":bool(track.loop),"static_pending_timing":bool(track.static_pending_timing),"fps":track.get("fps"),"effective_fps":track.get("effective_fps"),
-				"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"cooked":true}
+				"timing_origin":track.get("timing_origin"),"source_action_id":track.get("source_action_id"),"source_sprite_id":track.get("source_sprite_id"),"directions":directions,"direction_totals":direction_totals,"cooked":true}
 		entry["runtime_tracks"] = runtime_tracks
 		actor.entries[entry_key(entry.inputs)] = entry
 	return {"ok":true,"actor":actor}
@@ -350,11 +362,21 @@ static func legacy_multiply_item(scope: int, blend: int, z: int, color: Color) -
 
 ## Shows `state` with `sprites` (children of `owner`, grown on demand): one
 ## Sprite2D per recorded item, page texture + region, in recorded draw order.
-static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedActor, state: int) -> void:
+## Keep the last complete pose if any lazy page is temporarily unreadable.
+static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedActor, state: int) -> bool:
 	var items: PackedInt32Array = actor.index.states[state]
 	var images: PackedInt32Array = actor.index.images
 	var colors: PackedFloat32Array = actor.index.colors
 	var count: int = items.size() / FORMAT.ITEM_STRIDE
+	# Resolve each page once and hold its texture through application, even
+	# when later page resolutions evict it from the shared reserve.
+	var textures: Dictionary[int,Texture2D] = {}
+	for at: int in range(0, items.size(), FORMAT.ITEM_STRIDE):
+		var page: int = images[items[at] * 5]
+		if textures.has(page): continue
+		var texture: Texture2D = page_texture(actor, page)
+		if texture == null: return false
+		textures[page] = texture
 	var legacy: int = legacy_multiply_scope(actor)
 	while sprites.size() < count:
 		var sprite := Sprite2D.new()
@@ -371,10 +393,7 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 			continue
 		var at: int = slot * FORMAT.ITEM_STRIDE
 		var image: int = items[at] * 5
-		var texture: Texture2D = page_texture(actor, images[image])
-		if texture == null:
-			sprite.hide()
-			continue
+		var texture: Texture2D = textures[images[image]]
 		if sprite.texture != texture: sprite.texture = texture
 		sprite.region_rect = Rect2(images[image + 1], images[image + 2], images[image + 3], images[image + 4])
 		sprite.position = Vector2(items[at + 1], items[at + 2])
@@ -389,6 +408,7 @@ static func apply_state(owner: Node2D, sprites: Array[Sprite2D], actor: CookedAc
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_PARENT_NODE if items[at + 5] == FORMAT.FILTER_INHERIT else items[at + 5] as CanvasItem.TextureFilter
 		sprite.modulate = color
 		sprite.show()
+	return true
 
 ## --- Effect action domains -------------------------------------------------
 ## The installed 523 bank manifest has no source_action_domains, which the

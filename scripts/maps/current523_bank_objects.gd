@@ -98,6 +98,12 @@ func configure(selection: Dictionary, mapping: RefCounted) -> bool:
 	set_process(true)
 	return true
 
+## Lays out `records` in their dense source order. A holder already showing
+## the same record (sprite ID, raw point and occurrence) with the same loaded
+## sprite and mode is kept as it is; only new or changed records are shown
+## again (user report 2026-11-20: while running into new ground every visible
+## record was re-laid out on each refresh, and a refresh repeats each time a
+## worker delivers a sprite, a stall about every 0.25 s on the phone).
 func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	var started: int = FRAME_HITCH.now()
 	_records = records
@@ -115,8 +121,16 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 	var trimmed: int = 0
 	var drawn: int = 0
 	var unresolved: Dictionary = {}
+	# Existing holders by record key; duplicates keep their occurrence order.
+	var by_key: Dictionary = {}
+	for node: Node2D in _nodes:
+		var held: String = str(node.get_meta("record_key", ""))
+		if held.is_empty(): continue
+		by_key[held] = node
+	var seen: Dictionary = {}
+	var entries: Array = []
 	for row: Dictionary in records:
-		if drawn >= MAX_DRAWN: break
+		if entries.size() >= MAX_DRAWN: break
 		if sprite_load_budget_usec >= 0 and not _sprites.has(int(row.sprite_id)):
 			if load_spent >= sprite_load_budget_usec:
 				deferred += 1
@@ -131,30 +145,61 @@ func refresh(records: Array[Dictionary], malformed: int = 0) -> void:
 		if not sprite.ok:
 			unresolved[str(row.sprite_id)] = sprite.get("error", "unresolved")
 			continue
-		# These holders have no gameplay identity: keep the exact dense visible
-		# source order, including duplicates, while reusing private presentation.
-		var node: Node2D
-		if drawn < _nodes.size():
-			node = _nodes[drawn]
+		var base_key: String = "%d:%s:%s" % [int(row.sprite_id), str(row.raw_x), str(row.raw_y)]
+		var occurrence: int = int(seen.get(base_key, 0))
+		seen[base_key] = occurrence + 1
+		entries.append([row, sprite, base_key + "#" + str(occurrence)])
+	# Holders of records no longer listed are reused for new records (bounded
+	# allocation), then the rest are detached.
+	var claimed: Dictionary = {}
+	for entry: Array in entries:
+		if by_key.has(entry[2]): claimed[entry[2]] = true
+	var pool: Array[Node2D] = []
+	for node: Node2D in _nodes:
+		if not is_instance_valid(node) or node.get_parent() != self: continue
+		if not claimed.has(str(node.get_meta("record_key", ""))): pool.append(node)
+	var next_nodes: Array[Node2D] = []
+	var pool_at: int = 0
+	for entry: Array in entries:
+		var row: Dictionary = entry[0]
+		var sprite: Dictionary = entry[1]
+		var key: String = entry[2]
+		var node: Node2D = by_key.get(key) as Node2D if claimed.has(key) else null
+		var same: bool = node != null and node.has_meta("shown_sprite") and is_same(node.get_meta("shown_sprite"), sprite) and str(node.get_meta("shown_mode", "")) == _mode
+		if node != null:
+			reused += 1
+		elif pool_at < pool.size():
+			node = pool[pool_at]
+			pool_at += 1
 			reused += 1
 		else:
 			node = Node2D.new()
 			add_child(node)
-			_nodes.append(node)
 			created += 1
+		next_nodes.append(node)
 		node.position = coordinates.to_world(Vector2(row.raw_x, row.raw_y), false)
 		node.set_meta("sprite_id", int(row.sprite_id))
+		node.set_meta("record_key", key)
 		_placement_sprite_ids[int(row.sprite_id)] = true
-		# Refresh has always displayed frame zero, even for an unchanged ID.
-		# Force the layer update so replacement records never keep old visuals.
-		node.set_meta("frame", -1)
-		_show(node, sprite, 0)
+		if not same:
+			# A new record, a replaced sprite record or another playback mode
+			# shows frame zero again; a kept one keeps its current frame.
+			node.set_meta("frame", -1)
+			node.set_meta("shown_sprite", sprite)
+			node.set_meta("shown_mode", _mode)
+			_show(node, sprite, 0)
+		else:
+			FRAME_HITCH.count("map.object_holders_kept")
 		drawn += 1
-	while _nodes.size() > drawn:
-		var unused: Node2D = _nodes.pop_back()
-		remove_child(unused)
-		unused.queue_free()
+	# Unused holders are detached at once (never drawn again).
+	for index: int in range(pool_at, pool.size()):
+		remove_child(pool[index])
+		pool[index].queue_free()
 		trimmed += 1
+	# Children follow the dense source order (draw order).
+	for index: int in next_nodes.size():
+		if next_nodes[index].get_index() != index: move_child(next_nodes[index], index)
+	_nodes = next_nodes
 	FRAME_HITCH.count("map.object_holders_created", created)
 	FRAME_HITCH.count("map.object_holders_reused", reused)
 	FRAME_HITCH.count("map.object_holders_trimmed", trimmed)

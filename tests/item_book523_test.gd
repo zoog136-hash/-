@@ -1,0 +1,246 @@
+extends SceneTree
+## Original 523 아이템 컬렉션 (scripts/collections/item_book523_*.gd) over a
+## fixture of the original ItemBook tables (no original files needed):
+## tab classification and the left-out rows (혈맹, 다른 서버 전용, growth96's
+## Level 96), card alternatives, bag possibility, registration commit /
+## refusal / failed save, legacy 장비 컬렉션 links that never edit the legacy
+## records, preserved unreadable saves, the window's page/tab rows, and the
+## world/menu wiring.
+const Source = preload("res://scripts/collections/item_book523_source.gd")
+const Runtime = preload("res://scripts/collections/item_book523_runtime.gd")
+const WINDOW = preload("res://scripts/ui/original_ui/source_main_item_book_window.gd")
+var checks: int = 0
+var failures: Array[String] = []
+
+class Reader extends RefCounted:
+	var tables: Dictionary = {}
+	func rows(table: String) -> Array:
+		return tables.get(table, [])
+	func row(table: String, id: int) -> Dictionary:
+		for value: Dictionary in tables.get(table, []):
+			if int(value.ID) == id: return value
+		return {}
+	func related(table: String, field: String, id: int) -> Array:
+		var found: Array = []
+		for value: Dictionary in tables.get(table, []):
+			if int(value.get(field, -1)) == id: found.append(value)
+		return found
+	func problem() -> String:
+		return ""
+
+class Legacy extends RefCounted:
+	var progress: Dictionary = {}
+	var defs: Array = []
+	func definitions() -> Array:
+		return defs.duplicate(true)
+
+class FakeHud extends Node:
+	var logs: Array = []
+	func append_log(text: String) -> void: logs.append(text)
+	func refresh_inventory(_items: Dictionary) -> void: pass
+
+class Host extends Node:
+	var inventory: Dictionary = {}
+	var item_instances: Dictionary = {}
+	var equipped_items: Dictionary = {}
+	var equipment_collections = Legacy.new()
+	var item_book523
+	var growth96
+	var hud
+	var saves: Array = []
+	var fail_save: bool = false
+	func _save_game(_quiet: bool, overrides: Dictionary = {}) -> Error:
+		if fail_save: return ERR_CANT_CREATE
+		saves.append(overrides.duplicate(true))
+		return OK
+	func _update_hud() -> void: pass
+
+## Registration with a fixture proof (the real proof needs original records).
+class TestRuntime extends "res://scripts/collections/item_book523_runtime.gd":
+	func _prove(option: Dictionary) -> Dictionary:
+		var found: Array = []
+		for uid: Variant in world.item_instances:
+			var entry: Dictionary = world.item_instances[uid]
+			if int(entry.record.source_item_class_id) == int(option.item_class_id) and int(entry.level) == int(option.enchant) and int(entry.record.get("source_bless_raw", 1)) == int(option.bless):
+				found.append({"uid":str(uid),"name":str(entry.name)})
+		if found.size() >= int(option.amount): return {"ok":true,"kind":"equipment","items":found.slice(0, int(option.amount)),"option":option}
+		return {"ok":false,"reasons":["없음"]}
+
+func check(ok: bool, label: String) -> void:
+	checks += 1
+	if not ok:
+		failures.append(label)
+		printerr("ITEM_BOOK523_FAIL: ", label)
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+static func fixture() -> Reader:
+	var reader := Reader.new()
+	reader.tables = {
+		"ItemBookCollectionMainTabType":[{"ID":2,"Name":"UnIdentified"},{"ID":12,"Name":"Identified"},{"ID":22,"Name":"Dungeon"},{"ID":32,"Name":"Level"},{"ID":42,"Name":"Event"},{"ID":58,"Name":"Alchemy"},{"ID":68,"Name":"All"},{"ID":78,"Name":"Clan"}],
+		"ItemBookCollection":[
+			{"ID":100,"DescID":9100,"GradeID":2,"IsEvent":false,"DisplayPriority":20,"IsRecommend":true,"Level":0,"ServerLimitSetID":0,"MainTabType":12,"Alchemy":false,"ExpireDateTimeID":0},
+			{"ID":110,"DescID":9110,"GradeID":2,"IsEvent":false,"DisplayPriority":10,"IsRecommend":false,"Level":0,"ServerLimitSetID":0,"MainTabType":12,"Alchemy":false,"ExpireDateTimeID":0},
+			{"ID":120,"DescID":9120,"GradeID":1,"IsEvent":true,"DisplayPriority":1,"IsRecommend":false,"Level":0,"ServerLimitSetID":0,"MainTabType":42,"Alchemy":false,"ExpireDateTimeID":7},
+			{"ID":130,"DescID":9130,"GradeID":1,"IsEvent":false,"DisplayPriority":1,"IsRecommend":false,"Level":0,"ServerLimitSetID":0,"MainTabType":78,"Alchemy":false,"ExpireDateTimeID":0},
+			{"ID":140,"DescID":9140,"GradeID":1,"IsEvent":false,"DisplayPriority":1,"IsRecommend":false,"Level":0,"ServerLimitSetID":522,"MainTabType":12,"Alchemy":false,"ExpireDateTimeID":0},
+			{"ID":150,"DescID":9150,"GradeID":1,"IsEvent":false,"DisplayPriority":1,"IsRecommend":false,"Level":96,"ServerLimitSetID":0,"MainTabType":32,"Alchemy":false,"ExpireDateTimeID":0},
+			{"ID":160,"DescID":9160,"GradeID":1,"IsEvent":false,"DisplayPriority":1,"IsRecommend":false,"Level":0,"ServerLimitSetID":512,"MainTabType":22,"Alchemy":false,"ExpireDateTimeID":0}],
+		"ItemBookCardForCollection":[{"ID":1,"ItemBookCollectionID":100,"ItemBookCardID":1001},{"ID":2,"ItemBookCollectionID":100,"ItemBookCardID":1002},
+			{"ID":3,"ItemBookCollectionID":110,"ItemBookCardID":1101},{"ID":4,"ItemBookCollectionID":120,"ItemBookCardID":1201},{"ID":5,"ItemBookCollectionID":130,"ItemBookCardID":1301},
+			{"ID":6,"ItemBookCollectionID":140,"ItemBookCardID":1401},{"ID":7,"ItemBookCollectionID":150,"ItemBookCardID":1501},{"ID":8,"ItemBookCollectionID":160,"ItemBookCardID":1601},
+			{"ID":9,"ItemBookCollectionID":110,"ItemBookCardID":1102}],
+		"ItemBookCardForItem":[{"ID":1,"ItemBookCardID":1001,"ItemBookItemID":1},{"ID":2,"ItemBookCardID":1001,"ItemBookItemID":2},{"ID":3,"ItemBookCardID":1002,"ItemBookItemID":3},
+			{"ID":4,"ItemBookCardID":1101,"ItemBookItemID":4},{"ID":5,"ItemBookCardID":1201,"ItemBookItemID":5},{"ID":6,"ItemBookCardID":1301,"ItemBookItemID":5},
+			{"ID":7,"ItemBookCardID":1401,"ItemBookItemID":5},{"ID":8,"ItemBookCardID":1501,"ItemBookItemID":5},{"ID":9,"ItemBookCardID":1601,"ItemBookItemID":5},{"ID":10,"ItemBookCardID":1102,"ItemBookItemID":6}],
+		"ItemBookItem":[{"ID":1,"ItemClassID":501,"Enchant":7,"BlessCode":1,"Amount":1,"ElementalType":0,"ElementalEnchant":0},{"ID":2,"ItemClassID":501,"Enchant":7,"BlessCode":2,"Amount":1,"ElementalType":0,"ElementalEnchant":0},
+			{"ID":3,"ItemClassID":502,"Enchant":5,"BlessCode":1,"Amount":1,"ElementalType":0,"ElementalEnchant":0},{"ID":4,"ItemClassID":503,"Enchant":7,"BlessCode":1,"Amount":1,"ElementalType":0,"ElementalEnchant":0},
+			{"ID":5,"ItemClassID":504,"Enchant":0,"BlessCode":1,"Amount":20,"ElementalType":0,"ElementalEnchant":0},{"ID":6,"ItemClassID":505,"Enchant":7,"BlessCode":1,"Amount":1,"ElementalType":0,"ElementalEnchant":0}],
+		"ItemBookCollectionSlot":[{"ID":1,"ItemBookCollectionID":100,"SlotNo":1},{"ID":2,"ItemBookCollectionID":100,"SlotNo":2},{"ID":3,"ItemBookCollectionID":110,"SlotNo":1}],
+		"ItemBookCollectionSlotBonus":[{"ID":1,"ItemBookCollectionSlotID":2,"BonusID":71,"GameClassID":0},{"ID":2,"ItemBookCollectionSlotID":1,"BonusID":70,"GameClassID":0},{"ID":3,"ItemBookCollectionSlotID":3,"BonusID":72,"GameClassID":0}],
+		"Bonus":[{"ID":70,"BonusTypeID":1,"Value":30,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0},{"ID":71,"BonusTypeID":2,"Value":150,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0},{"ID":72,"BonusTypeID":1,"Value":10,"BonusApplicationTypeID":0,"BonusApplicationTargetID":0}],
+		"BonusType":[{"ID":1,"Name":"HPPlus","UnitID":1,"DescID":8001},{"ID":2,"Name":"ExperienceAdditionPercent","UnitID":3,"DescID":8002}],
+		"Unit":[{"ID":1,"Name":"Value"},{"ID":3,"Name":"Percentage"}],
+		"UIUnit":[{"ID":3,"UnitID":3,"Denominator":100}],
+		"ServerLimit":[{"ID":1,"ServerLimitSetID":512,"WorldNo":1,"ServiceRegionCode":"KR"},{"ID":2,"ServerLimitSetID":522,"WorldNo":1,"ServiceRegionCode":"TW"}],
+		"ItemClass":[{"ID":501,"Name":"a","IdentifiedDescID":7501,"DescID":0},{"ID":502,"Name":"b","IdentifiedDescID":7502,"DescID":0},{"ID":503,"Name":"c","IdentifiedDescID":7503,"DescID":0},{"ID":504,"Name":"d","IdentifiedDescID":7504,"DescID":0},{"ID":505,"Name":"e","IdentifiedDescID":7505,"DescID":0}],
+		"DescData_Korean":[{"ID":9100,"Description":"MP를 위한 투자 Ⅰ"},{"ID":9110,"Description":"(각인) MP를 위한 투자 I"},{"ID":9120,"Description":"이벤트 모음"},{"ID":9130,"Description":"혈맹 모음"},{"ID":9140,"Description":"대만 전용"},{"ID":9150,"Description":"96 증표"},{"ID":9160,"Description":"던전 모음"},
+			{"ID":7501,"Description":"마법 망토"},{"ID":7502,"Description":"마법 방어 투구"},{"ID":7503,"Description":"마법 망토 (각인)"},{"ID":7504,"Description":"조각"},{"ID":7505,"Description":"마법 방어 투구 (각인)"},
+			{"ID":8001,"Description":"최대 HP"},{"ID":8002,"Description":"경험치 추가"}]}
+	return reader
+
+static func equipment(id: int, enchant: int, bless: int = 1) -> Dictionary:
+	return {"name":"장비#%d" % id,"level":enchant,"record":{"source_m_native_item":true,"source_item_class_id":id,"source_bless_raw":bless,"name":"장비#%d" % id}}
+
+func _run() -> void:
+	_source()
+	_runtime()
+	_legacy()
+	_window()
+	_wiring()
+	print("ITEM_BOOK523_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
+	quit(1 if not failures.is_empty() else 0)
+
+func _source() -> void:
+	var source := Source.new()
+	check(source.load_source(fixture()), "the fixture tables load: " + source.problem)
+	check(source.order == ["120","160","110","100"], "listed in DisplayPriority then ID order: " + str(source.order))
+	check(source.excluded == {"clan":1,"server":1,"growth96":1,"empty":0}, "혈맹, 다른 서버 전용 and growth96's Level 96 rows are left out: " + str(source.excluded))
+	check(source.collection("160").tab_button == "Btn_Dungeon", "a KR world-1 server set stays listed")
+	check(source.tab_rows("Btn_Identified").size() == 2 and source.tab_rows("Btn_All").size() == 4 and source.tab_rows("Btn_Level").is_empty(), "tabs split by MainTabType")
+	var cards: Array = source.collection("100").cards
+	check(cards.size() == 2 and (cards[0].items as Array).size() == 2 and int(cards[0].items[1].bless) == 2, "a card keeps its normal and blessed alternatives")
+	check(source.collection("120").approximations == [Source.APPROX_NO_DEADLINE], "a 기간 collection has no deadline (TWILIGHT 근사)")
+	var effects: Array = source.effects_of("100")
+	check(effects.size() == 2 and effects[0].display == "최대 HP +30" and effects[1].display == "경험치 추가 +1.5%", "slot bonuses in SlotNo order with Unit/UIUnit values: " + str(effects.map(func(e: Dictionary) -> String: return str(e.display))))
+	check(source.option_label(cards[0].items[1]) == "+7 축복받은 마법 망토" and source.option_label(source.collection("120").cards[0].items[0]) == "조각 x20", "slot labels: enchant, bless and amount")
+	var empty := Source.new()
+	check(not empty.load_source(Reader.new()) and not empty.problem.is_empty(), "no original tables: not ready, with a reason")
+
+func _host(runtime_script: Script = TestRuntime) -> Host:
+	var host := Host.new()
+	host.hud = FakeHud.new()
+	host.add_child(host.hud)
+	root.add_child(host)
+	host.item_book523 = runtime_script.new()
+	host.item_book523.test_reader = fixture()
+	host.item_book523.configure(host)
+	return host
+
+func _runtime() -> void:
+	var host := _host()
+	var book = host.item_book523
+	host.item_instances = {"9":equipment(501, 7, 2), "8":equipment(502, 4), "7":equipment(503, 7)}
+	host.inventory = {"장비#501":1,"장비#502":1,"장비#503":1}
+	host.equipped_items = {"cloak":{"instance_id":"7"}}
+	var rows: Array = book.rows("Btn_Identified")
+	var invest: Dictionary = rows[1]
+	check(rows[0].id == "110" and invest.id == "100" and invest.required == 2 and invest.registered == 0, "rows of a tab")
+	check(invest.cards[0].possible and not invest.cards[1].possible, "a blessed +7 copy makes its card possible; a +4 does not fill a +5 card")
+	check(not rows[0].cards[0].possible, "an equipped item is not offered")
+	var refused: Dictionary = book.quote("100", "1002")
+	check(not refused.ok and refused.code == "missing" and str(refused.message).contains("+5 마법 방어 투구"), "missing item: the wanted original item is named")
+	var offer: Dictionary = book.quote("100", "1001")
+	check(offer.ok and offer.kind == "equipment" and int(offer.option.bless) == 2, "the blessed alternative is quoted")
+	host.fail_save = true
+	var failed: Dictionary = book.execute("100", "1001", int(offer.revision))
+	check(not failed.ok and failed.code == "save" and host.item_instances.has("9") and book.state.registered.is_empty(), "a failed save changes nothing")
+	host.fail_save = false
+	var stale: Dictionary = book.execute("100", "1001", int(offer.revision) + 5)
+	check(not stale.ok and stale.code == "stale", "a stale quote is refused")
+	var done: Dictionary = book.execute("100", "1001", int(offer.revision))
+	check(done.ok and not done.completed and not host.item_instances.has("9") and not host.inventory.has("장비#501"), "registering consumes the bag item")
+	var saved: Dictionary = host.saves[-1]
+	check(saved.has(Runtime.SAVE_KEY) and saved.has("inventory") and saved.has("item_instances") and not saved.item_instances.has("9"), "bag and registration are one save")
+	var record: Dictionary = book.state.registered["100"]["1001"]
+	check(int(record.item_class_id) == 501 and int(record.bless) == 2 and record.physical_ids == ["9"], "the registration keeps the original row it used")
+	check(not book.quote("100", "1001").ok and book.quote("100", "1001").code == "registered", "a registered card is not registered twice")
+	check(book.rows("Btn_Identified")[1].registered == 1 and str(book.detail(book.rows("Btn_Identified")[1]).cards[0].label) == "+7 축복받은 마법 망토", "the row shows the registered alternative")
+	host.item_instances["11"] = equipment(502, 5)
+	host.inventory["장비#502"] = 2
+	var second: Dictionary = book.quote("100", "1002")
+	check(book.execute("100", "1002", int(second.revision)).completed and book.complete("100"), "the last card completes the collection")
+	# Saves.
+	var exported: Dictionary = book.export_state()
+	check(Runtime.validate(exported).is_empty(), "the exported state validates")
+	var other := _host()
+	other.item_book523.import_state(exported)
+	check(other.item_book523.complete("100") or (other.item_book523.prepare() and other.item_book523.complete("100")), "a loaded state keeps its registrations")
+	other.item_book523.import_state({"schema":99,"registered":[]})
+	check(other.item_book523.export_state() == {"schema":99,"registered":[]} and not other.item_book523.quote("100", "1001").ok, "an unreadable save is preserved as it was and blocks registering")
+	other.item_book523.import_state(null)
+	check(other.item_book523.export_state() == Runtime.fresh(), "no save: a fresh state")
+	host.queue_free()
+	other.queue_free()
+
+func _legacy() -> void:
+	var host := _host()
+	var legacy: Legacy = host.equipment_collections
+	legacy.defs = [{"id":"eqc_a","name":"MP를 위한 투자 I","source_names":["MP를 위한 투자 I","(각인) MP를 위한 투자 I"],
+		"requirements":[{"slot_id":"eqc_a:slot:1","name":"마법 망토","enchant":7,"quantity":1},{"slot_id":"eqc_a:slot:2","name":"마법 방어 투구","enchant":5,"quantity":1}]},
+		{"id":"eqc_b","name":"다른 이름","source_names":[],"requirements":[{"slot_id":"eqc_b:slot:1","name":"마법 망토","enchant":7,"quantity":1}]}]
+	legacy.progress = {"schema_version":2,"revision":3,"gear":{},"progress":{"eqc_a":{"eqc_a:slot:1":["41","42"],"eqc_a:slot:2":["43"]},"eqc_b":{"eqc_b:slot:1":["44"]}},
+		"receipts":{"41":{"original_name":"마법 망토 (각인) · 원본#503","enchant":7},"42":{"original_name":"마법 망토","enchant":7},"43":{"original_name":"마법 방어 투구","enchant":6},"44":{"original_name":"마법 망토","enchant":7}}}
+	var before: Dictionary = legacy.progress.duplicate(true)
+	var book = host.item_book523
+	check(book.prepare(), "the runtime prepares")
+	var links: Dictionary = book.state.legacy_links
+	check(links.get("110", {}).has("1101") and links["110"]["1101"].legacy_receipt_ids == ["41"], "an engraved legacy item links to the 각인 collection")
+	check(links.get("100", {}).has("1001") and links["100"]["1001"].legacy_receipt_ids == ["42"], "a plain legacy item links to the plain collection")
+	check(not links.get("100", {}).has("1002"), "a legacy item of another enchant is not linked (kept in the legacy save only)")
+	var linked: Array = []
+	for cid: String in links:
+		for card: String in links[cid]: linked.append_array(links[cid][card].legacy_receipt_ids)
+	check(not linked.has("44"), "a legacy collection without a same-named original collection stays legacy-only")
+	check(legacy.progress == before, "legacy records are never edited")
+	check(book.card_registered("110", "1101") and book.registered_count("100") == 1, "linked cards count as registered")
+	var again: int = book.link_legacy()
+	check(again == 0, "linking is idempotent")
+	check(not book.quote("110", "1101").ok, "a linked card is not registered again")
+	host.queue_free()
+
+func _window() -> void:
+	var rows: Array = []
+	for index: int in range(WINDOW.PAGE*2+5): rows.append({"id":str(index),"complete":index % 2 == 0,"registered":1})
+	var first: Dictionary = WINDOW.page_of(rows, 0)
+	var last: Dictionary = WINDOW.page_of(rows, 9)
+	check(first.pages == 3 and (first.rows as Array).size() == WINDOW.PAGE and last.page == 2 and (last.rows as Array).size() == 5, "pages of PAGE rows, clamped")
+	check(WINDOW.page_of([], 0).pages == 1, "an empty tab has one page")
+	check(WINDOW.TABS == ["Btn_All","Btn_UnIdentified","Btn_Identified","Btn_Dungeon","Btn_Event","Btn_Level","Btn_Alchemy"] and Source.TAB_BUTTONS.values().all(func(b: String) -> bool: return WINDOW.TABS.has(b)), "every original tab button has a source tab")
+	var host := _host()
+	var window := WINDOW.new()
+	window._hud = weakref(host.hud)
+	check(window._book() == host.item_book523 and window._book_ready(), "the window reads world.item_book523")
+	check(window._rows_of("Btn_Event").size() == 1 and window._rows_of("Btn_All").size() == 4, "tab rows come from the original tables")
+	var spec: Dictionary = window._spec()
+	check(spec["ListView_Tab/Btn_Event"].visible and spec["ListView_Tab/Btn_All/On"].visible and spec["ListView_Tab/Btn_Event/Off"].visible, "all tabs show; the selected one is On")
+	window._select_tab("Btn_Event")
+	check(window.tab == "Btn_Event", "a tab button selects its tab")
+	host.queue_free()
+
+func _wiring() -> void:
+	var world: String = FileAccess.get_file_as_string("res://scripts/world.gd")
+	check(world.contains("ITEM_BOOK523.SAVE_KEY: item_book523.export_state(),") and world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))") and world.contains("DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]"), "world saves, loads and admits the new save key")
+	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
+	check(hud.contains("if _open_original_feature(\"item_book\"):return\n\topen_legacy_equipment_collections()"), "장비 컬렉션 opens the original window, else the TWILIGHT view")

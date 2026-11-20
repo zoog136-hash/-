@@ -235,15 +235,19 @@ func run() -> void:
 	var near_cell := Vector2i(here.x >> PLAY.BLOCK_SHIFT, here.y >> PLAY.BLOCK_SHIFT)
 	var far_cell := Vector2i(margin_point.x >> PLAY.BLOCK_SHIFT, margin_point.y >> PLAY.BLOCK_SHIFT)
 	check(not PLAY._block_rect(far_cell).intersects(view_now) and view_now.grow(PLAY.BUILD_MARGIN).has_point(Vector2(margin_point)), "fixture: the far block is in the margin only")
-	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
+	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and renderer._built_view.has_area() and renderer._pending_blocks.has(far_cell), "an on-screen block bakes now; a margin block waits for its decode as a pending block and the built view stays")
+	check(renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC) == 0 and renderer._pending_blocks.has(far_cell), "a pending block whose atlas is still decoding is not baked")
 	async_tiles.pump()
-	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	renderer._pending_retry.clear()
+	check(renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC) == 1 and renderer._blocks.has(far_cell) and renderer._visible_blocks.has(far_cell) and renderer._pending_blocks.is_empty(), "the margin block bakes once its atlas is ready, without a new frame build")
+	renderer._clear_blocks()
+	check(renderer._build_frame() and renderer._blocks.has(far_cell), "a frame build bakes a ready margin block itself")
 	# A new on-screen block waits briefly for its decode, then bakes regardless.
 	renderer._raw_chunks["synthetic"] = {-2:PackedInt64Array([here.x,here.y,(8 << 8) | 1])}
 	renderer._chunk_bins.clear(); renderer._clear_blocks()
 	renderer._refresh_clock = 0.25
 	var waited_ok: bool = renderer._build_frame()
-	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._refresh_clock <= 0.05 and renderer.problem.is_empty(), "an on-screen block waits for its worker decode without failing the map")
+	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._pending_blocks.has(near_cell) and renderer._pending_blocks[0] == near_cell and renderer.problem.is_empty(), "an on-screen block waits for its worker decode (first in the pending blocks) without failing the map")
 	renderer._screen_wait[near_cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
 	check(renderer._build_frame() and renderer._blocks.has(near_cell), "after the wait limit it bakes with what the pack gives")
 	root.canvas_transform = saved_canvas

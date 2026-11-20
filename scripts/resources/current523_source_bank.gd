@@ -230,7 +230,15 @@ static func _walk_buff(buff_id: int, path: Array, seen: Array, output: Array, pr
 		if kind.get("Name","") in ["PolymorphSetID","SpecialPolymorphSetID"]:
 			if not _add_set(int(bonus.get("Value",-1)),extended,output): return false
 		elif kind.get("Name","") == "SubSlotBuffClassID":
-			if not _walk_buff(int(bonus.get("Value",-1)),extended,seen + [buff_id],output,preserved_rule): return false
+			# The 추가 슬롯 buff applies only while the card sits in the extra
+			# slot: the 523 tables give nearly every doll / relic one whose
+			# summon carries BonusApplicationType 461 (BuffCardSummonSlotType).
+			# That conditional branch is not admitted (unchanged), but it no
+			# longer voids the card's own unconditional summon: every 523
+			# doll and relic failed here and never appeared on the field
+			# (user report 2026-11-20 "인형 성물 안나오고").
+			var sub_slot: Array = []
+			if _walk_buff(int(bonus.get("Value",-1)),extended,seen + [buff_id],sub_slot,preserved_rule): output.append_array(sub_slot)
 		elif kind.get("Name","") == "BuffCardSummonNPCClassID":
 			if not _add_npc_summon(bonus,kind,extended,output,preserved_rule): return false
 	return true
@@ -341,7 +349,15 @@ static func select_card(key: String, context: Dictionary = {}) -> Dictionary:
 		var unit: Dictionary = table_row("Unit",int(option.get("UnitID",-1)))
 		if int(option.get("BuffCardID",-1)) != int(native.ID) or unit.get("Name","") != "PolymorphSetID": return fail("current523_active_option_not_declared_for_card")
 		if not _add_set(int(option.get("Value",-1)),path + [{"table":"BuffCardSpriteCustomizingOption","row":option.duplicate(true)},{"table":"Unit","row":unit.duplicate(true)}],chains): return fail("current523_active_option_entity_missing")
-	elif not _walk_buff(int(native.get("BuffClassID",-1)),path,[],chains,preserved_rule): return fail("current523_typed_buff_entity_chain_incomplete")
+	else:
+		# 보고서2 R2: a ClassifiedByClass card walks the BuffCardByClass row of this
+		# context's class/gender (same row the bonuses and screens use).
+		var buff_class: int = int(native.get("BuffClassID",-1))
+		var variant: Dictionary = BASE.CURRENT_CARD_CATALOG.variant_row(record,int(context.get("class_id",0)),int(context.get("gender_id",0)))
+		if not variant.is_empty():
+			buff_class = int(variant.BuffClassID)
+			if not variant.get("_bonus_only",false): path.append({"table":"BuffCardByClass","row":variant.duplicate(true)})
+		if not _walk_buff(buff_class,path,[],chains,preserved_rule): return fail("current523_typed_buff_entity_chain_incomplete")
 	var matches: Dictionary = {}
 	var selected_chains: Array = []
 	for chain: Dictionary in chains:

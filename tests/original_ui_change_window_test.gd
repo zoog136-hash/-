@@ -91,9 +91,10 @@ func _grades_and_slots() -> void:
 		check(int(WINDOW.CARD_NODES[member].sample) in external.get(member,[]),"card picture node declared external: "+member)
 		check(member in WINDOW.GRADE_MEMBERS.values(),"prefab is used by a grade: "+member)
 	check(WINDOW.SAMPLE in external.get(WINDOW.DETAIL,[]),"detail illustration node declared external")
-	# Transcend frames are 508-only; the window mounts no transcend node.
+	# Transcend frames (Transcend.csb) are 508-only; only the detail view's own
+	# 성급 강화 button (Btn_Transcend) mounts, for a star-enchant card.
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_change_window.gd")
-	check(not source.contains("Transcend.csb") and not source.contains("14884"),"no transcend node is mounted")
+	check(not source.contains("Transcend.csb") and WINDOW.TRANSCEND==14884 and not WINDOW.TRANSCEND_PARTS.has(14944),"no transcend frame is mounted; the 성급 강화 button leaves its particle out")
 
 func _fails_closed() -> void:
 	var window=WINDOW.new()
