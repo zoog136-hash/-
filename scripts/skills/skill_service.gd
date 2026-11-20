@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
@@ -71,16 +72,26 @@ func clear() -> void:
 
 func tick(delta: float) -> void:
 	vfx.set_detail(str(world.presentation_settings.get("effect_detail", "full")), bool(world.presentation_settings.get("limit_effect_count", false)))
+	# Stage times for the phone record (523.681: skills 78 ms/s, no split).
+	var stage: int = FRAME_HITCH.now()
 	local_runtime.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.local", stage)
 	estimated_nodes.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.estimated", stage)
 	spell_move.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.move", stage)
 	stackable.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.stackable", stage)
 	status.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.status", stage)
 	summons.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.summons", stage)
 	progression.tick(delta)
+	stage = FRAME_HITCH.detail_next("skills.progression", stage)
 	combat_elapsed += delta
 	recovery_elapsed += delta
 	refresh_relic_buffs()
+	stage = FRAME_HITCH.detail_next("skills.relic", stage)
 	for id: String in shields.keys():
 		shields[id].remaining -= delta
 		if float(shields[id].remaining) <= 0:
@@ -105,7 +116,9 @@ func tick(delta: float) -> void:
 				world.mp = maxi(0, world.mp - maxi(1, int(ceil(world._effective_max_mp() * drain))))
 				if world.mp <= 0: world.active_skill_buffs.erase(name)
 		if not world.active_skill_buffs.has(name): vfx.remove_persistent(id)
+	stage = FRAME_HITCH.detail_next("skills.timers", stage)
 	refresh_buff_visuals()
+	FRAME_HITCH.detail("skills.buff_visuals", stage)
 	if recovery_elapsed >= 1:
 		recovery_elapsed -= 1
 		# Mode and delay are plain fields; catalog.enabled() (ownership, level,

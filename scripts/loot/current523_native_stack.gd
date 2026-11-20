@@ -159,7 +159,9 @@ static func draw_ticket_profile(record: Dictionary) -> Dictionary:
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	return {"kind":"draw_ticket","standalone_effect_complete":false,"use_owner":"source523_inventory_tickets"}
 
-static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary) -> Dictionary:
+## shallow: the caller only adds this entry and never edits existing ones in
+## place (floor pickup); existing entries stay shared with the live bag.
+static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool=false) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
@@ -168,14 +170,39 @@ static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,o
 	# reads the row from the installed definition by ItemClass ID.
 	if not integer(record.get("source_item_class_id")) or int(record.source_item_class_id)<1:return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var receipt: Dictionary=TRIM.receipt({"schema":1,"issued_physical_id":uid,"item_class_id":record.source_item_class_id,"bless_raw":record.source_bless_raw,"granted_quantity":quantity,NATIVE_FIELDS.MARK:true,"source_item_class_id":int(record.source_item_class_id),"origin":origin.duplicate(true)})
-	var result: Dictionary=instances.duplicate(true)
+	var result: Dictionary=instances.duplicate(not shallow)
 	result[uid]={"name":str(record.name),"record":TRIM.record(NATIVE_FIELDS.full(record).duplicate(true)),"level":0,QUANTITY:quantity,RECEIPT:receipt,"source_native_stack_used_quantity":0}
 	return {"ok":true,"item_instances":result,"id":uid}
 
 static func proof(world: Node,uid: String) -> Dictionary:
 	return proof_entry(world.item_instances.get(uid),uid)
 
+## proof_entry is pure for (uid, entry, installed definition): the ownership
+## checks call it for every physical stack on every save, pickup and bag merge
+## (~1 ms each: the definition record is rebuilt). Results are reused while
+## the entry is equal to the one proven and the definition identity is the
+## same; callers get their own top-level copy.
+const PROOF_CACHE_LIMIT := 4096
+static var _proof_cache: Dictionary = {}
+static var _proof_identity: Variant = null
+
+static var _last_valid_inputs: Array = []
+
+static func clear_proof_cache() -> void:
+	_proof_cache.clear();_proof_identity=null;_last_valid_inputs=[]
+
 static func proof_entry(entry: Variant,uid: String) -> Dictionary:
+	if not entry is Dictionary:return {}
+	var identity: Variant=SOURCE.identity()
+	if identity!=_proof_identity:_proof_cache.clear();_proof_identity=identity
+	var cached: Variant=_proof_cache.get(uid)
+	if cached is Array and cached[0]==entry:return (cached[1] as Dictionary).duplicate(false)
+	var result: Dictionary=_proof_entry(entry,uid)
+	if _proof_cache.size()>=PROOF_CACHE_LIMIT:_proof_cache.clear()
+	_proof_cache[uid]=[(entry as Dictionary).duplicate(true),result.duplicate(true)]
+	return result
+
+static func _proof_entry(entry: Variant,uid: String) -> Dictionary:
 	if not entry is Dictionary or not entry.get("record") is Dictionary or not entry.get(RECEIPT) is Dictionary:return {}
 	var record: Dictionary=D.current_owned_record(entry.record)
 	if supply_profile(record).is_empty() or entry.get("name")!=record.get("name") or entry.get("level")!=0:return {}
@@ -371,7 +398,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
-	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message}
+	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 
 # Existing save/load owner uses these pure candidate guards. No game load or
@@ -454,12 +481,18 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 static func override_error(world: Node,overrides: Dictionary) -> String:
 	var inventory: Variant=overrides.get("inventory",world.inventory)
 	var instances: Variant=overrides.get("item_instances",world.item_instances)
-	var state: Variant=overrides.get("consumable_state",world.consumable_service.export_state())
-	var warehouse: Variant=overrides.get("warehouse",world.warehouse.snapshot())
+	var state: Variant=(overrides["consumable_state"] if overrides.has("consumable_state") else world.consumable_service.export_state())
+	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else world.warehouse.snapshot())
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
-	var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
-	if not issue.is_empty():return issue
+	# A plain save of state already proven unchanged (same definition) skips
+	# the whole-bag proof; any difference re-runs it.
+	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
+	var unchanged: bool=overrides.is_empty() and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
+	if not unchanged:
+		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
+		if not issue.is_empty():_last_valid_inputs=[];return issue
+		_last_valid_inputs=inputs.duplicate(true) if overrides.is_empty() else []
 	var ledger: Dictionary=state.get(USES,{})
 	for uid: String in world.item_instances:
 		var previous: Variant=world.item_instances[uid]

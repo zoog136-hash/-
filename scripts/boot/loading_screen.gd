@@ -17,6 +17,7 @@ const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selectio
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
 const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const PACK_VERSION := preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
+const ICON_STATUS := preload("res://scripts/ui/item_icon_resource_status.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
@@ -168,7 +169,7 @@ func _ready() -> void:
 	column.add_child(_bar)
 	_count = STYLE.label("완료 작업 0/0 · 작업 수 기준", 16, STYLE.GOLD)
 	column.add_child(_count)
-	column.add_child(STYLE.label("검증 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
+	column.add_child(STYLE.label("준비 중에는 완료한 작업만 표시합니다. 단계별 소요 시간은 다릅니다.", 16, STYLE.MUTED))
 	_stage = STYLE.label("지난 실행 중단 단계: " + _previous if not _previous.is_empty() else "", 14, STYLE.MUTED)
 	column.add_child(_stage)
 	_cache_warning = STYLE.label("", 14, STYLE.GOLD)
@@ -213,7 +214,12 @@ func _refresh_ui_pack() -> void:
 	_ui_pack_sha = sha
 	var info: Dictionary = PACK_VERSION.installed()
 	_ui_pack.text = PACK_VERSION.label(info) + ("\n" + PACK_VERSION.WARNING if bool(info.outdated) else "")
-	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) else Color(STYLE.MUTED, 0.75))
+	# Item icons (images section of the resource pack), checked without
+	# opening the image list: only a missing one is announced here.
+	var icons: Dictionary = ICON_STATUS.check(false)
+	var icons_missing: bool = not bool(icons.ok) and not OS.get_environment("TWILIGHT_PATCH523_CONTENT").is_empty()
+	if icons_missing: _ui_pack.text += "\n" + ICON_STATUS.label(icons)
+	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) or icons_missing else Color(STYLE.MUTED, 0.75))
 
 func _version_text() -> String:
 	var updater: Node = get_node_or_null("/root/Updater")
@@ -268,7 +274,7 @@ func _boot() -> void:
 	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
 	for step: Dictionary in steps:
-		_progress.begin_task(str(step.id), "원본 %s 검증·정리 중…" % str(step.label))
+		_progress.begin_task(str(step.id), "%s 준비 중…" % str(step.label))
 		_render("현재 단계의 남은 시간은 계산할 수 없습니다.")
 		await get_tree().process_frame
 		_job = JOB.new()
@@ -276,16 +282,16 @@ func _boot() -> void:
 		var error: Error = _job.start(step)
 		if error == OK:
 			while not _job.completed():
-				_render("검증 단계: " + BOOT_LOG.current_stage())
+				_render("준비 단계: " + BOOT_LOG.current_stage() if preload("res://scripts/boot/build_flags.gd").developer_ui() else "준비 중…")
 				await get_tree().process_frame
 			result = _job.finish()
 		else:
-			_render("백그라운드 검증을 시작하지 못해 현재 단계에서 직접 검증합니다.")
+			_render("준비를 계속하는 중…")
 			await get_tree().process_frame
 			result = PREBAKE.run_result(step)
 		_job = null
 		if not result.get("ok", false):
-			_fail("원본 %s 검증 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
+			_fail("%s 준비 실패 · 파일과 저장 공간을 확인한 뒤 다시 시도하세요." % str(step.label))
 			return
 		if not result.get("baked", false):
 			_cache_misses.append(str(step.label))
@@ -293,7 +299,7 @@ func _boot() -> void:
 			_cache_warning.show()
 		_progress.complete_task(str(step.id))
 		_attach_original_loading_fx()
-		_render("검증 완료" if result.get("baked", false) else "검증 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
+		_render("준비 완료" if result.get("baked", false) else "준비 완료 · 기기 캐시 저장 실패, 다음 실행에 다시 정리합니다.")
 	if not tables.is_empty():
 		_progress.begin_task("definitions", "원본 표를 준비하는 중…")
 		var definitions_started: int = BOOT_LOG.begin("definitions_prepare", {"tables": tables.size()})

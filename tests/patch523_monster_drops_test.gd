@@ -147,7 +147,7 @@ func world_checks() -> void:
 			view.set("visible_since", Time.get_ticks_msec()-900)
 			var floor_record: Dictionary = world.ground_loot.records[str(view.get_meta("id"))]
 			var id: String = floor_record.physical_item.id
-			check(view.tooltip_text.contains("523 드랍원 #382") and view.tooltip_text.contains("축복"), "actual ground UI source and bless")
+			check(not view.tooltip_text.contains("523") and not view.tooltip_text.contains("원본#"), "the floor tooltip shows no developer source text (2026-11-20)")
 			check(world._collect_ground_drop(view), "actual ground pickup")
 			check(world.item_instances.has(id) and world.item_instances[id].bless_state == "blessed" and world.item_instances[id].record.source_m_drop_proof.source_npc_id == 382, "physical ownership and bless provenance survive pickup")
 			check(world._save_game(true) == OK, "source physical equipment saved")

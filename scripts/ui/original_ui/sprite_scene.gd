@@ -9,7 +9,10 @@ const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
 var source_member: String=""
-var source_tree: Dictionary={}
+var source_tree: Dictionary={}:
+	set(value):
+		source_tree=value
+		_indexed_keyframes.clear()
 var source_nodes: Dictionary={}
 var _tags: Dictionary={}
 var _clip: Dictionary={}
@@ -28,6 +31,10 @@ var _project_root_options: Dictionary={}
 var _bindings: Dictionary={}
 var excluded_audio_events: Array[Dictionary]=[]
 var _entered_frames: Dictionary={}
+## Read-only frame references from a configured scene. Short or unordered
+## tracks use the live scan; larger ordered tracks can seek by index.
+var _indexed_keyframes: Dictionary={}
+const MIN_INDEXED_KEYS: int=8
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
 var _requested_source_nodes: Array[int]=[]
@@ -37,6 +44,11 @@ var _requested_source_nodes: Array[int]=[]
 ## pack and pruned it again (523.637: ui.scene_scope 1,976 ms over 613 calls).
 ## A pack's scenes do not change; a copy is handed out per configure.
 static var _scoped_trees: Dictionary={}
+## ListView content meta: the list's own input handler (its "input" binding).
+const LIST_INPUT_META="source_list_input"
+## source_button_router.DRAG_META (the router reads it on a captured press).
+const ROUTER_DRAG_META="source_drag_forward"
+const LIST_DRAG_AUTO_META="source_drag_forward_auto"
 const SCOPED_TREE_LIMIT: int=64
 var _external_texture_nodes: Array[int]=[]
 var _external_texture_tags: Dictionary={}
@@ -175,11 +187,24 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		return {"ok":false,"error":"unsupported_source_scene","details":problems}
 	source_tree=tree
 	# Validate every original timeline frame before creating a visible scene.
-	for timeline: Dictionary in action.get("timeLines",[]):
-		for frame: Dictionary in timeline.get("frames",[]):
+	var timelines: Array=action.get("timeLines",[])
+	for track_index: int in timelines.size():
+		var timeline: Dictionary=timelines[track_index]
+		var frames: Array=timeline.get("frames",[])
+		var ordered: Variant=[] if frames.size()>=MIN_INDEXED_KEYS else null
+		var previous: float=-INF
+		for frame: Dictionary in frames:
 			var value: Dictionary=_frame_value(frame)
 			if value.get("_type")=="TextureFrame" and source_pack.texture(value.textureFile,true)==null:
 				source_tree={}; return {"ok":false,"error":"source_texture_missing"}
+			if ordered!=null:
+				var at: float=float(value.get("frameIndex",NAN))
+				if not is_finite(at) or at<previous:
+					ordered=null
+				else:
+					(ordered as Array).append(value)
+					previous=at
+		if ordered!=null:_indexed_keyframes[track_index]=ordered
 	var root_node: Node2D=_build(tree.nodeTree)
 	if root_node==null:
 		_clear(); return {"ok":false,"error":_build_error if not _build_error.is_empty() else "source_texture_or_identity_missing"}
@@ -671,6 +696,11 @@ func _build(source: Dictionary) -> Node2D:
 		child_origin.add_child(inner)
 		child_origin=inner
 		node.set_meta("source_list_content",inner)
+		# The list's own input handler: every row added to it (authored or
+		# added by a window later) hands its buttons' finger drags to it.
+		if not inspection_only and _list_drag_input(direct_binding.get("input")):
+			inner.set_meta(LIST_INPUT_META,direct_binding.input)
+			inner.child_entered_tree.connect(forward_row_drags.bind(direct_binding.input))
 	for child: Dictionary in source.children:
 		var built: Node2D=_build(child)
 		if built==null: node.free(); return null
@@ -699,6 +729,28 @@ func _build(source: Dictionary) -> Node2D:
 			if not position_value.is_finite():_build_error="source_list_position_invalid";node.free();return null
 			child_origin.position=Vector2(position_value.x,-position_value.y)
 	return node
+
+## A list's input that scrolls (not a binder's inert _ignore_input).
+static func _list_drag_input(input: Variant) -> bool:
+	return input is Callable and (input as Callable).is_valid() and (input as Callable).get_method()!=&"_ignore_input"
+
+## A ListView row's buttons hand their finger's drag to the list
+## (source_button_router DRAG_META, as a Cocos ListView child button passes
+## its move to the list): a list whose rows are all buttons (하딘의 텔레포트
+## 목적지, 퀘스트, 변신 카드) scrolls on a phone from a drag that starts on a
+## row. A button that already forwards (a nested list's row, a window's own
+## forward) keeps it. A mouse arrives as emulated touch through the router.
+## LIST_DRAG_AUTO_META marks this default so a window's own row forwarding
+## (source_main_window_kit nested lists) may replace it.
+static func forward_row_drags(node: Node, input: Callable) -> void:
+	if not is_instance_valid(node) or not input.is_valid():return
+	for meta: String in ["source_button","source_checkbox"]:
+		if not node.has_meta(meta):continue
+		var button: Variant=node.get_meta(meta)
+		if not is_instance_valid(button) or (button as Object).has_meta(ROUTER_DRAG_META):continue
+		(button as Object).set_meta(ROUTER_DRAG_META,input)
+		(button as Object).set_meta(LIST_DRAG_AUTO_META,true)
+	for child: Node in node.get_children():forward_row_drags(child,input)
 
 func _node_texture(source: Dictionary, original_reference: Dictionary) -> Texture2D:
 	var binding: Dictionary=_bindings.get(int(source._offset),{})
@@ -737,17 +789,26 @@ func seek_frame(frame_number: float) -> void:
 func _seek_frame(frame_number: float) -> void:
 	_frame=frame_number
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
+	var use_index: bool=not _indexed_keyframes.is_empty() and not is_nan(frame_number)
+	var track_index: int=0
 	for timeline: Dictionary in action.get("timeLines",[]):
 		var selected: Dictionary={}
 		var following: Dictionary={}
-		# Read live frames once. Keep the last equal predecessor and first
-		# equal successor, including unordered serialized timelines.
-		for raw: Dictionary in timeline.frames:
-			var value: Dictionary=_frame_value(raw)
-			var at: float=float(value.frameIndex)
-			if at<=frame_number:
-				if selected.is_empty() or at>=float(selected.frameIndex): selected=value
-			elif at>frame_number and (following.is_empty() or at<float(following.frameIndex)): following=value
+		var keys: Variant=_indexed_keyframes.get(track_index) if use_index else null
+		track_index+=1
+		if keys is Array:
+			var next: int=_keyframe_upper_bound(keys,frame_number)
+			if next>0:selected=keys[next-1]
+			if next<keys.size():following=keys[next]
+		else:
+			# Keep the last equal predecessor and first equal successor even
+			# when an original track was serialized out of order.
+			for raw: Dictionary in timeline.frames:
+				var value: Dictionary=_frame_value(raw)
+				var at: float=float(value.frameIndex)
+				if at<=frame_number:
+					if selected.is_empty() or at>=float(selected.frameIndex): selected=value
+				elif at>frame_number and (following.is_empty() or at<float(following.frameIndex)): following=value
 		# Before a track's first keyframe Cocos (Timeline::binarySearchKeyFrame)
 		# enters that first keyframe (from = to = frames[0]), so its value
 		# applies from the clip start. Events and inner actions keep firing
@@ -849,6 +910,17 @@ func _process(delta: float) -> void:
 	_advance_playback(delta)
 	FRAME_HITCH.add_self("ui_animation",started,nested)
 
+## First key strictly after the requested frame. Equal keys stay in source
+## order so the predecessor remains the last equal key, as in the live scan.
+static func _keyframe_upper_bound(keys: Array, requested: float) -> int:
+	var low: int=0
+	var high: int=keys.size()
+	while low<high:
+		var middle: int=(low+high)>>1
+		if float(keys[middle].frameIndex)<=requested:low=middle+1
+		else:high=middle
+	return low
+
 func _advance_playback(delta: float) -> void:
 	# Cocos ActionTimeline uses a 60-frame clock; source speed is preserved.
 	var speed_value: float=float(get_meta("source_inner_action_speed",source_tree.get("action",{}).get("speed",1.0)))
@@ -890,6 +962,7 @@ static func _frame_value(raw: Dictionary) -> Dictionary:
 
 func _clear() -> void:
 	source_tree.clear()
+	_indexed_keyframes.clear()
 	source_nodes.clear()
 	_tags.clear()
 	_texture_refs.clear()
@@ -928,6 +1001,11 @@ func _inner_range(nested: Node2D, frame: Dictionary) -> Dictionary:
 	else:
 		for clip: Dictionary in nested.source_tree.animationList:
 			if clip.name==name_value:span=clip.duplicate(true);break
+		# A name the nested scene does not list (client data such as
+		# CardChange_Result "Fx_Start" on Change_Fusion_Card): Cocos
+		# InnerActionFrame::onEnter logs "Animation %s not exists!" and plays
+		# the frame's own range, 0..0 (the nested scene's first frame).
+		if span.is_empty() and not name_value.is_empty():span={"name":name_value,"startIndex":0,"endIndex":0,"source_clip_missing":true}
 	if span.is_empty():return {}
 	# InnerActionFrame limits the child range by the remaining parent duration.
 	var difference: int=int(source_tree.action.duration)-int(frame.frameIndex)-int(span.endIndex)+int(span.startIndex)

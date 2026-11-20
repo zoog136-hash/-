@@ -91,7 +91,8 @@ func _attribute_evaluation(definition: RefCounted, land_id: int, point: Vector2i
 	var inactive: Array=[]
 	var actor_conditions: Array=[]
 	var waived: Array=[]
-	for row: Dictionary in definition.context_rows("LandAttribute"):
+	var rows: Array = definition.land_attribute_rows(land_id) if definition.has_method("land_attribute_rows") else definition.context_rows("LandAttribute")
+	for row: Dictionary in rows:
 		if int(row.get("LandID",-1))!=land_id: continue
 		var territory_id: int=int(row.get("TerritoryID",0))
 		if territory_id!=0:

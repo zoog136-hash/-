@@ -46,6 +46,10 @@ func _draw_static_picture() -> bool:
 		sprite.name = "Static" + str(layer.kind).capitalize()
 		sprite.centered = false
 		sprite.texture = ImageTexture.create_from_image(picture.image)
+		# Source pixels 1:1 like SP2 actors and the drop effect: under the
+		# 1.75x field camera the inherited linear filter blurred the item body
+		# while its counter-scaled name stayed sharp (phone 2026-11-20).
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.position = Vector2(picture.offset)
 		sprite.z_index = -index if layer.kind == "shadow" else 0
 		add_child(sprite)
