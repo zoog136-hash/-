@@ -583,13 +583,16 @@ func _process_step(delta: float) -> void:
 	FRAME_HITCH.detail("population.wake", wake_started)
 
 func _wake_slots(delta: float, refresh: bool) -> void:
+	var trim_started: int = Time.get_ticks_usec()
 	_trim_pool(IDLE_POOL_TARGET,false)
+	FRAME_HITCH.detail("population.wake_trim", trim_started)
 	# Camera geometry is constant during this synchronous wake sweep. Build it
 	# lazily so empty populations and non-Escaros fields do no extra work.
 	var activity_view := Rect2()
 	var activity_radius: float = -1.0
 	var escaros_refresh: bool = refresh and field is NativePngField and str(field.data.map_id)=="escaros_world"
 	var search_spent: int = 0
+	var activity_spent: int = 0
 	var woken: Array[TwilightMonster] = []
 	for slot: Dictionary in slots:
 		if pending_spawn_ids.has(int(slot.slot_id)):continue
@@ -606,6 +609,7 @@ func _wake_slots(delta: float, refresh: bool) -> void:
 				if not boss_slot and not _take_spawn_token():continue
 				var search_started: int = Time.get_ticks_usec()
 				_spawn_slot(slot)
+				FRAME_HITCH.detail("population.wake_spawn", search_started)
 				if not boss_slot:search_spent += Time.get_ticks_usec()-search_started
 				if slot.has("patch523_spawn_hold"): continue
 				# Full/blocked regions can fail all 64–160 candidate probes. Do not
@@ -627,9 +631,15 @@ func _wake_slots(delta: float, refresh: bool) -> void:
 				var extent: Vector2 = get_viewport().get_visible_rect().size/camera.zoom
 				activity_view = Rect2(camera.get_screen_center_position()-extent*.5,extent).grow(240.0)
 				activity_radius = extent.length()*.5+320.0
+			var activity_started: int = Time.get_ticks_usec()
 			_update_activity(monster, activity_view, activity_radius)
+			activity_spent += Time.get_ticks_usec()-activity_started
 			if refresh and monster.is_physics_processing(): woken.append(monster)
+	# One summed row for the per-actor activity pass (not one row per actor).
+	if activity_spent > 0: FRAME_HITCH.detail("population.wake_activity", Time.get_ticks_usec()-activity_spent)
+	var cap_started: int = Time.get_ticks_usec()
 	if refresh: _cap_awake(woken)
+	FRAME_HITCH.detail("population.wake_cap", cap_started)
 
 ## At most MAX_AWAKE actors run AI and physics at once. Actors on or near the
 ## screen and busy ones (dead, engaged, returning, status-affected, bosses)

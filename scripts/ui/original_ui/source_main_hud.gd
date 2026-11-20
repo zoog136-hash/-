@@ -35,6 +35,8 @@ const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_wind
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
+## Above the original windows (150-170) and popups.
+const SYSTEM_MESSAGE_Z: int=180
 signal world_image_clicked(payload: Dictionary)
 signal inventory_return_to_current_requested(reason: Dictionary)
 signal inventory_closed
@@ -766,6 +768,10 @@ func refresh_system_message() -> Dictionary:
 			previous.hide()
 			previous.queue_free()
 	if not result.get("ok",false):return _system_message_failed(result)
+	# The client's system message is drawn over its open windows (Shop_All,
+	# Store_All, Map_All ... at z 150-170 here); under them a refusal such as
+	# 다이아 부족 was invisible (TWILIGHT 근사: one layer above every window).
+	_system_message_scene.z_index=SYSTEM_MESSAGE_Z
 	_system_message_scene.show()
 	var label: Object=_legacy_message.get_ref() if _legacy_message!=null else null
 	if label!=null:label.visible=false
@@ -871,6 +877,7 @@ func close_inventory() -> void:
 	var owned_open: bool=inventory_is_open()
 	_cancel_native_buttons()
 	if _inventory_name_view!=null:_inventory_name_view.close()
+	close_item_tooltip()
 	if _inventory_view!=null:_inventory_view.close()
 	_clear_inventory_presentation()
 	var hud: Object=_hud.get_ref() if _hud!=null else null
@@ -1169,6 +1176,18 @@ func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
 	var result: Dictionary=_feature_windows[key].callv("open",[_coordinates]+args)
 	MENU_TRACE.end(trace,result.get("ok",false))
 	return result
+
+## --- Original 523 boss overhead mark (source_main_boss_overhead)
+const BossOverhead=preload("res://scripts/ui/original_ui/source_main_boss_overhead.gd")
+
+## The playing original boss mark of NPC class `npc_class_id`, or null when
+## the NPC has none or the UI pack lacks NameCardLayout_BossMonster.
+func boss_overhead(npc_class_id: int) -> Node2D:
+	if _pack==null:return null
+	var node: String=BossOverhead.resource_name(npc_class_id)
+	if node.is_empty():return null
+	var built: Dictionary=BossOverhead.build(_pack,node)
+	return built.scene if built.get("ok",false) else null
 
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.
@@ -1514,6 +1533,28 @@ func dissolve_confirm_is_open() -> bool:
 
 func close_dissolve_confirm() -> void:
 	if dissolve_confirm_is_open():_dissolve_popup.close()
+
+## --- One tap on a bag item: the original item information popup
+## (source_main_item_tooltip, ToolTip_CommonType).
+const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
+var _item_tooltip: RefCounted
+
+func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+	if _item_tooltip==null and _pack!=null:
+		var popup=ItemTooltip.new()
+		_window_problems["item_tooltip"]=popup.configure(_pack)
+		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
+	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record)
+
+func item_tooltip_is_open() -> bool:
+	return _item_tooltip!=null and _item_tooltip.is_open()
+
+func item_tooltip() -> RefCounted:
+	return _item_tooltip
+
+func close_item_tooltip() -> void:
+	if item_tooltip_is_open():_item_tooltip.close()
 
 ## --- Bag item -> floor (source_main_drop_popup: Common_Calculator quantity,
 ## then Common_MessageBox_Dissolution confirmation). `on_confirm(count)`.

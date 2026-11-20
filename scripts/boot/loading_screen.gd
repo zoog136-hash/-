@@ -17,6 +17,7 @@ const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selectio
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
 const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const PACK_VERSION := preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
+const ICON_STATUS := preload("res://scripts/ui/item_icon_resource_status.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
@@ -213,7 +214,12 @@ func _refresh_ui_pack() -> void:
 	_ui_pack_sha = sha
 	var info: Dictionary = PACK_VERSION.installed()
 	_ui_pack.text = PACK_VERSION.label(info) + ("\n" + PACK_VERSION.WARNING if bool(info.outdated) else "")
-	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) else Color(STYLE.MUTED, 0.75))
+	# Item icons (images section of the resource pack), checked without
+	# opening the image list: only a missing one is announced here.
+	var icons: Dictionary = ICON_STATUS.check(false)
+	var icons_missing: bool = not bool(icons.ok) and not OS.get_environment("TWILIGHT_PATCH523_CONTENT").is_empty()
+	if icons_missing: _ui_pack.text += "\n" + ICON_STATUS.label(icons)
+	_ui_pack.add_theme_color_override("font_color", Color(1.0, 0.72, 0.35) if bool(info.outdated) or icons_missing else Color(STYLE.MUTED, 0.75))
 
 func _version_text() -> String:
 	var updater: Node = get_node_or_null("/root/Updater")

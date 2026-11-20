@@ -90,6 +90,10 @@ var _visible_blocks: Array[Vector2i] = []
 var _screen_wait: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
+## Chunk member -> worker read job (see _prefetch_chunk).
+var _chunk_jobs: Dictionary = {}
+## S32 chunk reads in flight at once.
+const MAX_CHUNK_JOBS: int = 4
 var _metrics: Dictionary = {}
 var _last_actor_cell := Vector2i(-2147483648, -2147483648)
 var _refresh_clock: float = 0.0
@@ -196,8 +200,11 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	else: record = value.get("runtime_record")
 	_raw_sources = originals
 	_tile_pack = tiles
+	# Atlases are only read to bake ground blocks (see compress_for_gpu).
+	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	_visual_delta = visual_delta
 	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	_drop_chunk_jobs()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
 	_chunk_bins.clear(); _clear_blocks()
 	_scope_clipped_records = 0
@@ -436,23 +443,74 @@ func _read_chunk(member: String) -> Dictionary:
 		_raw_recent.erase(member); _raw_recent.append(member)
 		return _raw_chunks[member]
 	if _unreadable_chunks.has(member): return {}
-	var decoded: Dictionary = _raw_sources.read_member(member)
-	if decoded.is_empty():
-		# One unreadable S32 member is a hole in the picture (its cells are
-		# already non-walkable for the source field), not a session close.
-		_unreadable_chunks[member] = str(_raw_sources.problem)
-		print("CURRENT523_CHUNK_UNREADABLE ", JSON.stringify({"member":member,"problem":_unreadable_chunks[member]}))
-		return {}
-	var origin: Vector2i = _member_origins[member]
-	# Retain the same currently loaded S32 tail even while SPR display is off.
-	# Enabling the existing consumer does not need another map entry or a source scan.
-	var tail: Dictionary=STATIC_SPR.parse_tail(decoded.sections.tail,int(_raw_sources.source_metadata(member).get("core_end",0)))
+	var job: Dictionary = _chunk_jobs.get(member, {})
+	if not job.is_empty():
+		# Already reading on a worker: wait for that one result.
+		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		_chunk_jobs.erase(member)
+		return _install_chunk(member, job)
+	if not _raw_sources.has_method("read_member_job"):
+		# Packs without a worker-safe reader (tests, Aden review pack).
+		var decoded: Dictionary = _raw_sources.read_member(member)
+		if decoded.is_empty():
+			return _install_chunk(member, {"problem": str(_raw_sources.problem)})
+		return _install_chunk(member, _decode_chunk(_chunk_params(member), decoded))
+	job = _chunk_params(member)
+	_chunk_job(job)
+	return _install_chunk(member, job)
+
+## Starts reading, checking and projecting `member` on a worker; true when it
+## is already loaded. S32 reading, its SHA-256 checks and the record projection
+## (~20 ms per chunk on a PC) used to run on the main thread while walking.
+func _prefetch_chunk(member: String) -> bool:
+	if _raw_chunks.has(member) or _unreadable_chunks.has(member): return true
+	if _chunk_jobs.has(member) or _chunk_jobs.size() >= MAX_CHUNK_JOBS: return false
+	if _raw_sources == null or not _raw_sources.has_method("read_member_job"): return true
+	var job: Dictionary = _chunk_params(member)
+	job["task"] = WorkerThreadPool.add_task(_chunk_job.bind(job), false, "S32 chunk read")
+	_chunk_jobs[member] = job
+	return false
+
+## Installs finished worker reads (main thread).
+func _pump_chunk_jobs() -> void:
+	for member: String in _chunk_jobs.keys():
+		var job: Dictionary = _chunk_jobs[member]
+		if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		_chunk_jobs.erase(member)
+		_install_chunk(member, job)
+
+func _drop_chunk_jobs() -> void:
+	for job: Dictionary in _chunk_jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+	_chunk_jobs.clear()
+
+## Everything a chunk read needs, copied for a worker (the pack, field
+## coordinates and overlap set are not changed while the map is configured).
+func _chunk_params(member: String) -> Dictionary:
+	var coordinates: RefCounted = field.coordinates
+	return {"member": member, "sources": _raw_sources, "origin": _member_origins[member],
+		"core_end": int(_raw_sources.source_metadata(member).get("core_end", 0)),
+		"valid": bool(coordinates.valid), "basis_x": coordinates.basis_x, "basis_y": coordinates.basis_y,
+		"shift": coordinates.translation, "grid_origin": coordinates.origin, "overlap": _overlap,
+		"generic": bool(field.get_meta("current523_generic_field", false))}
+
+static func _chunk_job(job: Dictionary) -> void:
+	var decoded: Dictionary = (job.sources as Object).call("read_member_job", str(job.member))
+	if decoded.has("_problem"):
+		job["problem"] = str(decoded._problem)
+		return
+	job.merge(_decode_chunk(job, decoded), true)
+
+## S32 sections -> static tail, projected lanes, block bins and clip counts.
+static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	var tail: Dictionary = STATIC_SPR.parse_tail(decoded.sections.tail, int(params.core_end))
 	if tail.ok:
 		for row: Dictionary in tail.records:
-			row["source_member"]=member
-			row["source_sha256"]=decoded.source_sha256
-			row["source_bytes"]=decoded.source_bytes
-	_static_tails[member]=tail
+			row["source_member"] = str(params.member)
+			row["source_sha256"] = decoded.source_sha256
+			row["source_bytes"] = decoded.source_bytes
+	out["tail"] = tail
 	# Records in file order (floor, covers, objects), then projected in one pass.
 	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var refs := PackedInt64Array()
 	var floor_bytes: PackedByteArray = decoded.sections.floor
@@ -471,8 +529,33 @@ func _read_chunk(member: String) -> Dictionary:
 		for _part: int in range(count):
 			halves.append(objects[cursor]); rows.append(objects[cursor + 1]); kinds.append(objects[cursor + 2]); refs.append(objects.decode_u32(cursor + 3))
 			cursor += 7
-	var packed: Dictionary = _project_records(origin, halves, rows, kinds, refs)
-	_chunk_bins[member] = _bin_chunk(packed)
+	out["halves"] = halves; out["rows"] = rows; out["kinds"] = kinds; out["refs"] = refs
+	if bool(params.valid):
+		var projected: Dictionary = _project_static(params, halves, rows, kinds, refs)
+		out["packed"] = projected.packed
+		out["clipped"] = projected.clipped
+		out["off_floor"] = projected.off_floor
+		out["bins"] = _bin_chunk(projected.packed)
+	return out
+
+func _install_chunk(member: String, job: Dictionary) -> Dictionary:
+	if job.has("problem") or not job.has("tail"):
+		# One unreadable S32 member is a hole in the picture (its cells are
+		# already non-walkable for the source field), not a session close.
+		_unreadable_chunks[member] = str(job.get("problem", "unread"))
+		print("CURRENT523_CHUNK_UNREADABLE ", JSON.stringify({"member":member,"problem":_unreadable_chunks[member]}))
+		return {}
+	# Retain the same currently loaded S32 tail even while SPR display is off.
+	_static_tails[member] = job.tail
+	var packed: Dictionary
+	if job.has("packed"):
+		packed = job.packed
+		_scope_clipped_records += int(job.clipped)
+		_off_floor_decoration_records += int(job.off_floor)
+		_chunk_bins[member] = job.bins
+	else:
+		packed = _project_records(_member_origins[member], job.halves, job.rows, job.kinds, job.refs)
+		_chunk_bins[member] = _bin_chunk(packed)
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
@@ -487,17 +570,32 @@ func _read_chunk(member: String) -> Dictionary:
 ## was the largest map cost while moving (837,955 projections in 40 s).
 func _project_records(origin: Vector2i, halves: PackedInt32Array, rows: PackedInt32Array, kinds: PackedInt32Array, refs: PackedInt64Array) -> Dictionary:
 	var coordinates: RefCounted = field.coordinates
-	var lanes: Dictionary = {}
 	if not bool(coordinates.valid):
 		var slow: Dictionary = {}
 		for index: int in halves.size(): _append(slow, origin, halves[index], rows[index], refs[index], kinds[index])
+		var lanes: Dictionary = {}
 		for layer: int in slow: lanes[layer] = PackedInt64Array(slow[layer])
 		return lanes
-	var generic: bool = bool(field.get_meta("current523_generic_field",false))
-	var bx: Vector2 = coordinates.basis_x
-	var by: Vector2 = coordinates.basis_y
-	var shift: Vector2 = coordinates.translation
-	var grid_origin: Vector2i = coordinates.origin
+	var params: Dictionary = {"origin": origin, "overlap": _overlap, "generic": bool(field.get_meta("current523_generic_field",false)),
+		"basis_x": coordinates.basis_x, "basis_y": coordinates.basis_y, "shift": coordinates.translation, "grid_origin": coordinates.origin}
+	var projected: Dictionary = _project_static(params, halves, rows, kinds, refs)
+	_scope_clipped_records += int(projected.clipped)
+	_off_floor_decoration_records += int(projected.off_floor)
+	return projected.packed
+
+
+## Worker-safe projection (valid coordinates only): lanes plus clip counts.
+static func _project_static(params: Dictionary, halves: PackedInt32Array, rows: PackedInt32Array, kinds: PackedInt32Array, refs: PackedInt64Array) -> Dictionary:
+	var lanes: Dictionary = {}
+	var origin: Vector2i = params.origin
+	var overlap: Dictionary = params.overlap
+	var generic: bool = bool(params.generic)
+	var bx: Vector2 = params.basis_x
+	var by: Vector2 = params.basis_y
+	var shift: Vector2 = params.shift
+	var grid_origin: Vector2i = params.grid_origin
+	var clipped: int = 0
+	var off_floor: int = 0
 	var odd: Vector2 = (bx + by) * 0.5
 	var last_cover := Vector2i(-2147483647, -2147483647)
 	var last_inside: bool = false
@@ -510,12 +608,12 @@ func _project_records(origin: Vector2i, halves: PackedInt32Array, rows: PackedIn
 		var cover := Vector2i(floori(float(sx) / 64.0) * 64, floori(float(sy) / 64.0) * 64)
 		if cover != last_cover:
 			last_cover = cover
-			last_inside = _overlap.has(cover)
+			last_inside = overlap.has(cover)
 		if not last_inside:
 			if layer == -2 or not generic:
-				_scope_clipped_records += 1
+				clipped += 1
 				continue
-			_off_floor_decoration_records += 1
+			off_floor += 1
 		# source_coordinates.half_tile_position -> to_world -> grid_to_world,
 		# same operations in the same order (Vector2 float32 results).
 		var gx: float = float(float(sx) - grid_origin.x + 0.5)
@@ -532,7 +630,7 @@ func _project_records(origin: Vector2i, halves: PackedInt32Array, rows: PackedIn
 		items.append(int(point.x)); items.append(int(point.y)); items.append(refs[index])
 	var packed: Dictionary = {}
 	for layer: int in lanes: packed[layer] = PackedInt64Array(lanes[layer])
-	return packed
+	return {"packed": packed, "clipped": clipped, "off_floor": off_floor}
 
 
 func _append(layers: Dictionary, origin: Vector2i, half_x: int, row_y: int, raw_ref: int, layer: int) -> void:
@@ -654,6 +752,10 @@ func _request_block_tiles(cell: Vector2i) -> bool:
 	var asked: Dictionary = {}
 	for member: String in _chunk_rects:
 		if not (_chunk_rects[member] as Rect2).intersects(near): continue
+		# A chunk not read yet is read on a worker; the block waits for it.
+		if not _prefetch_chunk(member):
+			ready = false
+			continue
 		var layers: Dictionary = _read_chunk(member)
 		if layers.is_empty(): continue
 		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
@@ -807,7 +909,9 @@ func _build_frame() -> bool:
 						screen_waiting = true
 						continue
 				_screen_wait.erase(cell)
+				var commands_started: int = FRAME_HITCH.now()
 				var built: Dictionary = _block_commands(cell)
+				FRAME_HITCH.detail("map.block_commands", commands_started)
 				if built.has("problem"):
 					if problem.is_empty(): return _fail(str(built.problem))
 					return false
@@ -854,8 +958,10 @@ func _build_frame() -> bool:
 	if is_instance_valid(_static_spr):
 		var built_for: Array=[_static_spr.get_instance_id(),visible.duplicate()]
 		if _force_objects_refresh or built_for!=_objects_built_for:
+			var objects_started: int = FRAME_HITCH.now()
 			var static_records: Dictionary=_visible_static_records()
 			_static_spr.refresh(static_records.records,int(static_records.malformed))
+			FRAME_HITCH.detail("map.objects_refresh", objects_started)
 			_objects_built_for=built_for
 		else:
 			FRAME_HITCH.count("map.object_refresh_skipped")
@@ -880,9 +986,15 @@ func _refresh_view() -> void:
 	if not scope.is_empty(): _fail(scope); return
 	# Rebuild only when the screen leaves the area the frame was built for.
 	if not (_built_view.has_area() and _built_view.encloses(_view_rect())):
-		if not _build_frame(): return
+		var build_started: int = FRAME_HITCH.now()
+		var built_ok: bool = _build_frame()
+		FRAME_HITCH.detail("map.build_frame", build_started)
+		if not built_ok: return
+	var markers_started: int = FRAME_HITCH.now()
 	_refresh_markers()
+	markers_started = FRAME_HITCH.detail_next("map.markers", markers_started)
 	_refresh_collision()
+	FRAME_HITCH.detail("map.collision", markers_started)
 
 
 func _refresh_collision() -> void:
@@ -899,7 +1011,13 @@ func _process(delta: float) -> void:
 func _process_step(delta: float) -> void:
 	if not _configured: return
 	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
+	if not _chunk_jobs.is_empty():
+		var chunks_started: int = FRAME_HITCH.now()
+		_pump_chunk_jobs()
+		FRAME_HITCH.detail("map.chunk_install", chunks_started)
+	var scope_started: int = FRAME_HITCH.now()
 	var scope: String = _scope_problem()
+	FRAME_HITCH.detail("map.scope", scope_started)
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
 	# The tile ground only draws _frame_commands, which change only in
@@ -992,6 +1110,7 @@ func _notification(what: int) -> void:
 
 func _exit_tree() -> void:
 	_configured = false
+	_drop_chunk_jobs()
 	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(); _chunk_bins.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()

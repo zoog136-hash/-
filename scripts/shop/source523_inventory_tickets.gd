@@ -12,6 +12,9 @@ const SCHEMAS:Array[String]=["twilight.source523.inventory-ticket-extension.v1",
 ## a saved draw stream continues instead of being refused as a policy change.
 const PREVIOUS_POLICY_SHA256:Array[String]=["8077b46948a3de832a9275b24a195b9a32346cff07ece8cdba798ee46d763388"]
 const CATEGORY:String="LinMarketProduct"
+## Most draws one shop purchase may make (11회 x 10; TWILIGHT 근사, keeps a
+## save and the reveal bounded).
+const MAX_MARKET_DRAWS:int=110
 const UI_POLICY_TEXT:String="TWILIGHT 소지 티켓1개 소비 정책 · 원본 무작위 풀/지급량 · 추가 구매 비용 없음 · 미연결 대상은 소지품 보존"
 const CardEngine=preload("res://scripts/card_draw_fusion.gd")
 const OriginalInput=preload("res://scripts/shop/current523_ticket_input.gd")
@@ -202,6 +205,13 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 	for row:Dictionary in runtime.catalog._related("MarketPurchaseServerLimitGroup",int(spec.market_id)):sets.append(int(row.ServerLimitSetID))
 	var server:Dictionary=runtime._server(sets)
 	if not server.ok:return server
+	var drawn:Dictionary=_candidates(spec.grants)
+	if not drawn.ok:return drawn
+	return {"ok":true,"can_use":true,"inventory_key":name,"source_item_id":id,"bless_raw":1,"enchant":0,"draw_count":drawn.count,"category":drawn.category,"grants":spec.grants.duplicate(true),"pools":drawn.pools,"origin":"TWILIGHT 소지 티켓1개 소비 · 원본 풀/가중치/지급량 · 마켓 판매 상태는 유지"}
+
+## The original candidates of `grants` ([{pool_id, count}], pools of this
+## model): {ok, pools, category, count} or the refusal.
+func _candidates(grants:Array) -> Dictionary:
 	var index:Dictionary={}
 	for category:String in CardEngine.CATEGORIES:
 		for card:Dictionary in runtime.world.catalog_db.get(category,[]):
@@ -210,7 +220,7 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 			if index.has(source_id):return runtime.fail("중복 원본 카드 정체 · 풀 보존")
 			index[source_id]={"category":category,"record":card,"id":CardEngine.card_id(card)}
 	var pools:Dictionary={};var category:String="";var count:int=0;var missing:Array=[]
-	for grant:Dictionary in spec.grants:
+	for grant:Dictionary in grants:
 		var pool_id:String=str(int(grant.pool_id));var candidates:Array=[]
 		for entry:Dictionary in document.pools[pool_id]:
 			if int(entry.weight)==0:continue
@@ -248,7 +258,8 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 	if not missing.is_empty():
 		var blocked:Dictionary=runtime.fail("추첨 대상 카드 자료가 미설치 상태입니다 · 티켓 보존")
 		blocked["missing_card_ids"]=missing;return blocked
-	return {"ok":true,"can_use":true,"inventory_key":name,"source_item_id":id,"bless_raw":1,"enchant":0,"draw_count":count,"category":category,"grants":spec.grants.duplicate(true),"pools":pools,"origin":"TWILIGHT 소지 티켓1개 소비 · 원본 풀/가중치/지급량 · 마켓 판매 상태는 유지"}
+	if category.is_empty():return runtime.fail("추첨 대상이 없는 원본 풀입니다")
+	return {"ok":true,"pools":pools,"category":category,"count":count}
 
 func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	var prepared:Dictionary=quote(name,selection)
@@ -261,23 +272,9 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	var previous:Dictionary=runtime.state.get("ticket_redemption",{})
 	rng.state=int(previous.rng_state) if not previous.is_empty() else random.state
 	var scratch=CardEngine.new();scratch.configure(runtime.world.catalog_db);scratch.import_state(runtime.world.card_draw_fusion.export_state())
-	var results:Array=[]
-	for grant:Dictionary in prepared.grants:
-		for draw:int in range(int(grant.count)):
-			var roll:int=rng.randi_range(1,1000000);var cursor:int=0;var chosen:Dictionary={}
-			for candidate:Dictionary in prepared.pools[str(int(grant.pool_id))]:
-				cursor+=int(candidate.weight)
-				if roll<=cursor:chosen=candidate.entry;break
-			if chosen.is_empty():runtime._busy=false;return runtime.fail("원본 추첨 구간 누락 · 티켓/난수 보존")
-			if chosen.get("kind")=="skill_book":
-				results.append({"category":SKILL_BOOKS,"source_buff_card_id":int(chosen.spell_card_id),"item_class_id":int(chosen.item_class_id),"name":str(chosen.name)})
-				continue
-			if scratch.owned[str(prepared.category)].has(str(chosen.id)) and int(scratch.spare[str(prepared.category)].get(str(chosen.id),0))>=1000000:
-				runtime._busy=false;return runtime.fail("중복 카드 저장 한도 초과 · 티켓/난수 보존")
-			var received:Dictionary=scratch._receive(str(prepared.category),chosen)
-			received["source_buff_card_id"]=int(chosen.record.source_card_id)
-			received["category"]=str(prepared.category)
-			results.append(received)
+	var drawn:Dictionary=draw(prepared,rng,scratch)
+	if not drawn.ok:runtime._busy=false;return runtime.fail(str(drawn.reason)+" · 티켓/난수 보존")
+	var results:Array=drawn.results
 	var inventory:Dictionary=runtime.world.inventory.duplicate(true)
 	var instances:Dictionary=runtime.world.item_instances.duplicate(true)
 	var extra:Dictionary={"card_draw_fusion":scratch.export_state()}
@@ -320,6 +317,87 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	runtime.world.hud.set_card_draw_fusion_result(str(prepared.category),str(outcome.message))
 	runtime.world.hud.present_card_reveal(str(prepared.category),outcome,false)
 	return outcome
+
+## Draws every grant of `prepared` ({grants, pools, category}) with `rng`
+## into the scratch card engine: {ok, results} (skill cards as book rows).
+func draw(prepared:Dictionary,rng:RandomNumberGenerator,scratch) -> Dictionary:
+	var results:Array=[]
+	for grant:Dictionary in prepared.grants:
+		for count:int in range(int(grant.count)):
+			var roll:int=rng.randi_range(1,1000000);var cursor:int=0;var chosen:Dictionary={}
+			for candidate:Dictionary in prepared.pools[str(int(grant.pool_id))]:
+				cursor+=int(candidate.weight)
+				if roll<=cursor:chosen=candidate.entry;break
+			if chosen.is_empty():return {"ok":false,"reason":"원본 추첨 구간 누락"}
+			if chosen.get("kind")=="skill_book":
+				results.append({"category":SKILL_BOOKS,"source_buff_card_id":int(chosen.spell_card_id),"item_class_id":int(chosen.item_class_id),"name":str(chosen.name)})
+				continue
+			if scratch.owned[str(prepared.category)].has(str(chosen.id)) and int(scratch.spare[str(prepared.category)].get(str(chosen.id),0))>=1000000:
+				return {"ok":false,"reason":"중복 카드 저장 한도 초과"}
+			var received:Dictionary=scratch._receive(str(prepared.category),chosen)
+			received["source_buff_card_id"]=int(chosen.record.source_card_id)
+			received["category"]=str(prepared.category)
+			results.append(received)
+	return {"ok":true,"results":results}
+
+## An original market draw offer (MarketProduct UnitID 35 = GotChaClassID, e.g.
+## 상급 변신 뽑기 1회): `grants` [{product_id, pool_id, count}] are drawn from the
+## same original pools and weights as an owned ticket of this model.
+func market_draw_quote(grants:Array) -> Dictionary:
+	if loaded_sha.is_empty() or not problem.is_empty():return runtime.fail(problem if not problem.is_empty() else "검증된 원본 뽑기 풀이 필요합니다")
+	if runtime.world.hud.is_card_reveal_busy():return runtime.fail("카드 결과 연출 중입니다")
+	var prior:Dictionary=runtime.state.get("ticket_redemption",{})
+	if not prior.is_empty() and prior.get("policy_sha256")!=loaded_sha and prior.get("policy_sha256") not in PREVIOUS_POLICY_SHA256:return runtime.fail("뽑기 풀·정책 변경 감지 · 기존 정책 필요")
+	var total:int=0
+	for grant:Dictionary in grants:
+		if not document.pools.get(str(int(grant.pool_id))) is Array:return runtime.fail("원본 뽑기 풀 연결 없음 (%d)" % int(grant.pool_id))
+		total+=int(grant.count)
+	if total<1 or total>MAX_MARKET_DRAWS:return runtime.fail("한 번에 %d회까지 뽑을 수 있습니다" % MAX_MARKET_DRAWS)
+	var drawn:Dictionary=_candidates(grants)
+	if not drawn.ok:return drawn
+	return {"ok":true,"grants":grants.duplicate(true),"pools":drawn.pools,"category":drawn.category,"count":drawn.count}
+
+## Draws a paid market draw `plan` (market_draw_quote) on the shared ticket
+## stream: {ok, results, card_state, inventory, item_instances, ticket_state}
+## for the shop's one save, or the refusal (nothing changed).
+func market_draw(plan:Dictionary,inventory:Dictionary,instances:Dictionary) -> Dictionary:
+	var rng:=RandomNumberGenerator.new()
+	var previous:Dictionary=runtime.state.get("ticket_redemption",{})
+	rng.state=int(previous.rng_state) if not previous.is_empty() else random.state
+	var scratch=CardEngine.new();scratch.configure(runtime.world.catalog_db);scratch.import_state(runtime.world.card_draw_fusion.export_state())
+	var drawn:Dictionary=draw(plan,rng,scratch)
+	if not drawn.ok:return runtime.fail(str(drawn.reason))
+	if plan.category==SKILL_BOOKS:
+		var counts:Dictionary={}
+		for result:Dictionary in drawn.results:counts[int(result.item_class_id)]=int(counts.get(int(result.item_class_id),0))+1
+		var books:Array=[]
+		for book:int in counts:books.append({"item_class_id":book,"amount":int(counts[book]),"bless_raw":1,"enchant":0})
+		var view:=STACK.SupplierView.new();view.host=runtime.world;view.inventory=inventory;view.item_instances=instances;view.gold=int(runtime.world.gold)
+		var staged:Dictionary=load("res://scripts/loot/patch523_item_inventory.gd").stage(view,books,{"kind":"source523_market_draw_skill_card","policy_sha256":loaded_sha})
+		view.free()
+		if not staged.get("ok",false):return runtime.fail(str(staged.get("error","원본 스킬서 지급 후보 실패")))
+		inventory=staged.overrides.inventory;instances=staged.overrides.item_instances
+	var uses:int=int(previous.get("uses",0))
+	if uses>=runtime.LIMIT:return runtime.fail("뽑기 이력 범위 초과")
+	return {"ok":true,"results":drawn.results,"card_state":scratch.export_state(),"inventory":inventory,"item_instances":instances,"rng_state":rng.state,
+		"ticket_state":{"version":1,"policy_sha256":loaded_sha,"rng_state":str(rng.state),"uses":uses+1}}
+
+## After the shop saved a market draw: live card state, stream and the reveal.
+func market_draw_presented(plan:Dictionary,outcome:Dictionary,name:String) -> String:
+	random.state=int(outcome.rng_state)
+	runtime.world.card_draw_fusion.import_state(outcome.card_state)
+	runtime.world._invalidate_equipment_static();runtime.world.card_collections.invalidate()
+	var results:Array=outcome.results
+	if plan.category==SKILL_BOOKS:
+		var names:PackedStringArray=[]
+		for result:Dictionary in results:names.append(str(result.name))
+		var line:String="%s · 원본 스킬 카드 %d회 추첨 · 원본 스킬서 지급: %s" % [name,results.size(),", ".join(names)]
+		runtime.world.hud.append_log(line)
+		return line
+	var message:String="%s · 원본 가중치 %d회 추첨" % [name,results.size()]
+	runtime.world.hud.set_card_draw_fusion_result(str(plan.category),message)
+	runtime.world.hud.present_card_reveal(str(plan.category),{"ok":true,"category":plan.category,"results":results,"count":results.size(),"message":message},false)
+	return message
 
 ## {} when the owned ticket is not a physical original stack; otherwise the
 ## native stack's staged one-unit debit (or its refusal).
