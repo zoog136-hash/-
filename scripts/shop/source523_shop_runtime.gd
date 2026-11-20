@@ -344,6 +344,9 @@ func _server(sets: Array) -> Dictionary:
 	if sets.is_empty(): return {"ok":true}
 	var context: Dictionary = effective_server_context()
 	for set: Variant in sets:
+		# ServerLimitSetID 0 names no server set (no ServerLimit rows): unlimited,
+		# as CumulativePurchase's 0 already reads (11 BM offers were refused).
+		if int(set) == 0: continue
 		if not SERVER_PROFILE.rows_allow(catalog._related("ServerLimit", int(set)), str(context.region), int(context.world_no)): return fail("서버 조건 미충족 또는 미해석 서버세트")
 	return {"ok":true}
 
@@ -475,6 +478,17 @@ static func _named_bonus_draw(name: String, draws: Array, quantity: int) -> void
 	var named: int = int(found.get_string(1)) * quantity
 	if named - int(draws[0].count) != quantity: return
 	draws.append({"product_id":int(draws[0].product_id),"pool_id":int(draws[0].pool_id),"count":quantity,"twilight_named_bonus":true})
+
+## Whether this game's server may list market offer `id`: a converted cash
+## offer always; another offer when its original server sets name the offline
+## server profile (offers of other servers are not shown by the client either).
+func served_here(id: int) -> bool:
+	if CashMarket.listed(id): return true
+	if catalog == null or not catalog.available(): return true
+	var offer: Dictionary = catalog.market_offer(id)
+	var sets: Array = []
+	for row: Dictionary in offer.get("server_limits", []): sets.append(int(row.ServerLimitSetID))
+	return _server(sets).ok
 
 func quote(id: int, quantity: int = 1) -> Dictionary:
 	return _quote(id, quantity, false)
