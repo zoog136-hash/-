@@ -471,14 +471,22 @@ func _process_step(_delta: float) -> void:
 	if not is_instance_valid(_coordinates):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return
+	# Stage times for the phone record (523.699: hud_main 101 ms/s, no split).
+	var stage: int=FRAME_HITCH.now()
 	if _joystick_view!=null:_joystick_view.refresh()
+	stage=FRAME_HITCH.detail_next("hud.joystick",stage)
 	if _pack.manifest.get("scenes",{}).has(Blessing.MEMBER):_refresh_blessing(hud)
+	stage=FRAME_HITCH.detail_next("hud.blessing",stage)
 	if _dungeon_controls!=null:_dungeon_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.dungeon",stage)
 	if _workspace_controls!=null:_workspace_controls.refresh(_coordinates)
+	stage=FRAME_HITCH.detail_next("hud.workspace",stage)
 	if is_instance_valid(_char_scene):Vitals.refresh_poison(_char_scene,hud)
 	if _icons_refresh_pending:refresh_quickslots()
+	stage=FRAME_HITCH.detail_next("hud.vitals_quickslots",stage)
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()
+	stage=FRAME_HITCH.detail_next("hud.messages",stage)
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
@@ -493,6 +501,7 @@ func _process_step(_delta: float) -> void:
 	# A single bag tap keeps TWILIGHT's own floating item name (the bag's
 	# item_name_hint over the tapped slot, see inventory_name_hint_context);
 	# the original ToolTip header is not mounted for it.
+	stage=FRAME_HITCH.detail_next("hud.inventory",stage)
 	if _inventory_name_view!=null and _inventory_name_view.is_open():_inventory_name_view.close()
 	if _inventory_lock_view!=null and not _source_input_captured(hud):
 		_inventory_lock_result=_inventory_lock_view.refresh(_coordinates)
@@ -505,9 +514,12 @@ func _process_step(_delta: float) -> void:
 	if _enhance_action!=null:
 		_enhance_action_result=_enhance_action.refresh()
 		if not _enhance_action_result.get("ok",false):_enhance_action=null
+	stage=FRAME_HITCH.detail_next("hud.lock_enhance",stage)
 	if _combat_owns_pickup and _combat!=null and is_instance_valid(_combat_scene):_combat.refresh_pickup(_combat_scene)
+	stage=FRAME_HITCH.detail_next("hud.pickup",stage)
 	if not _pack.manifest.get("scenes",{}).has(Target.MEMBER):return
 	var model: Dictionary=Target.selected_name(hud.get_parent())
+	FRAME_HITCH.detail("hud.target",stage)
 	if not model.get("ok",false):
 		_target_result=model
 		return
@@ -877,6 +889,7 @@ func close_inventory() -> void:
 	var owned_open: bool=inventory_is_open()
 	_cancel_native_buttons()
 	if _inventory_name_view!=null:_inventory_name_view.close()
+	close_item_tooltip()
 	if _inventory_view!=null:_inventory_view.close()
 	_clear_inventory_presentation()
 	var hud: Object=_hud.get_ref() if _hud!=null else null
@@ -1532,6 +1545,28 @@ func dissolve_confirm_is_open() -> bool:
 
 func close_dissolve_confirm() -> void:
 	if dissolve_confirm_is_open():_dissolve_popup.close()
+
+## --- One tap on a bag item: the original item information popup
+## (source_main_item_tooltip, ToolTip_CommonType).
+const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
+var _item_tooltip: RefCounted
+
+func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+	if _item_tooltip==null and _pack!=null:
+		var popup=ItemTooltip.new()
+		_window_problems["item_tooltip"]=popup.configure(_pack)
+		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
+	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record)
+
+func item_tooltip_is_open() -> bool:
+	return _item_tooltip!=null and _item_tooltip.is_open()
+
+func item_tooltip() -> RefCounted:
+	return _item_tooltip
+
+func close_item_tooltip() -> void:
+	if item_tooltip_is_open():_item_tooltip.close()
 
 ## --- Bag item -> floor (source_main_drop_popup: Common_Calculator quantity,
 ## then Common_MessageBox_Dissolution confirmation). `on_confirm(count)`.

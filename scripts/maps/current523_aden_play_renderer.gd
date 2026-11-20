@@ -43,8 +43,14 @@ const BLOCK_CACHE_LIMIT: int = 32
 ## New margin block images per refresh (blocks on screen always bake at once).
 const MARGIN_BAKES_PER_REFRESH: int = 6
 ## Longest a new on-screen block waits for worker decodes before decoding the
-## rest on the main thread (it shows nothing meanwhile).
-const ON_SCREEN_WAIT_MSEC: int = 250
+## rest on the main thread (it shows nothing meanwhile). 250 ms was too short
+## on the phone: after a teleport three blocks then decoded their atlases on
+## the main thread in one frame (523.699: map.block_commands 2066 ms x3, a
+## 2.1 s freeze). Workers finish well within this; it is only a safety net.
+const ON_SCREEN_WAIT_MSEC: int = 3000
+## On-screen blocks past the wait that may decode on the main thread in one
+## refresh; the rest wait for the next refresh (0.05 s later).
+const LATE_BAKES_PER_REFRESH: int = 1
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
@@ -656,9 +662,12 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 	var bins: Dictionary = {}
 	for layer: int in packed:
 		var records: PackedInt64Array = packed[layer]
-		# Integer cell keys and shifts (floor division for negatives too);
-		# almost every 24 px record lies inside one block.
+		if records.is_empty(): continue
+		# Shifts floor-divide negative coordinates too. Adjacent records
+		# often belong to the same 512 px block.
 		var lanes: Dictionary = {}
+		var previous_cell := Vector2i(records[0] >> BLOCK_SHIFT, records[1] >> BLOCK_SHIFT)
+		var lane: Array[int] = _bin_lane(lanes, previous_cell)
 		for index: int in range(0, records.size(), 3):
 			var x: int = records[index]
 			var y: int = records[index + 1]
@@ -666,23 +675,29 @@ static func _bin_chunk(packed: Dictionary) -> Dictionary:
 			var y0: int = y >> BLOCK_SHIFT
 			var x1: int = (x + TILE_PX - 1) >> BLOCK_SHIFT
 			var y1: int = (y + TILE_PX - 1) >> BLOCK_SHIFT
-			var key: int = (x0 << 32) | (y0 & 0xffffffff)
-			var lane: PackedInt32Array = lanes.get(key, PackedInt32Array())
+			var cell := Vector2i(x0, y0)
+			if cell != previous_cell:
+				lane = _bin_lane(lanes, cell)
+				previous_cell = cell
 			lane.append(index)
-			lanes[key] = lane
 			if x1 != x0 or y1 != y0:
 				for bx: int in range(x0, x1 + 1):
 					for by: int in range(y0, y1 + 1):
 						if bx == x0 and by == y0: continue
-						var other: int = (bx << 32) | (by & 0xffffffff)
-						var extra: PackedInt32Array = lanes.get(other, PackedInt32Array())
-						extra.append(index)
-						lanes[other] = extra
-		for key: int in lanes:
-			var cell := Vector2i(key >> 32, (key << 32) >> 32)
+						_bin_lane(lanes, Vector2i(bx, by)).append(index)
+		for cell: Vector2i in lanes:
 			if not bins.has(cell): bins[cell] = {}
-			(bins[cell] as Dictionary)[layer] = lanes[key]
+			(bins[cell] as Dictionary)[layer] = PackedInt32Array(lanes[cell])
 	return bins
+
+
+## Avoid copying the packed buffer on each append while it is stored in the
+## dictionary. Pack each completed lane once before publishing the chunk.
+static func _bin_lane(lanes: Dictionary, cell: Vector2i) -> Array[int]:
+	if not lanes.has(cell):
+		var lane: Array[int] = []
+		lanes[cell] = lane
+	return lanes[cell]
 
 
 static func _block_rect(cell: Vector2i) -> Rect2:
@@ -701,6 +716,10 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 	members.sort()
 	var by_layer: Dictionary = {}
 	var atlases: Dictionary = {}
+	# Validity is fixed for this synchronous build. Retry failed texture
+	# loads as before, and revalidate all references on the next build.
+	var valid_refs: Dictionary = {}
+	var has_subimage: bool = _tile_pack.has_method("has_subimage")
 	var draws: int = 0
 	# Metrics count a record once, in the block holding its top-left corner.
 	var count: int = 0
@@ -721,21 +740,35 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 					if owned: raw_ff += 1
 					continue
 				var tile_id: int = ref >> 8
-				# A tile the installed pack lacks is a hole, not a reason to close the map.
-				if not _tile_pack.has_tile(tile_id): _unresolved_tile(tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id)); unresolved += int(owned); continue
-				if _tile_pack.has_method("has_subimage") and not _tile_pack.call("has_subimage",tile_id,ref & 255): _unresolved_tile(tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id,ref & 255]); unresolved += int(owned); continue
+				if not valid_refs.has(ref):
+					var valid: bool = _tile_pack.has_tile(tile_id)
+					if not valid:
+						_unresolved_tile(tile_id, "해결되지 않은 M 타일 원문: " + str(tile_id))
+					elif has_subimage and not _tile_pack.call("has_subimage", tile_id, ref & 255):
+						_unresolved_tile(tile_id, "원문에 없는 하위 타일 번호: %d/%d" % [tile_id, ref & 255])
+						valid = false
+					valid_refs[ref] = valid
+				if not valid_refs[ref]:
+					unresolved += int(owned)
+					continue
 				if draws >= DRAW_COMMAND_LIMIT or (not atlases.has(tile_id) and atlases.size() >= VISIBLE_ATLAS_LIMIT):
 					return {"problem": "M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다."}
 				if not atlases.has(tile_id):
 					var texture: Texture2D = _frame_atlases.get(tile_id)
-					if texture == null: texture = _tile_pack.texture_for(tile_id)
+					if texture == null:
+						var atlas_started: int = FRAME_HITCH.now()
+						texture = _tile_pack.texture_for(tile_id)
+						FRAME_HITCH.detail("map.block_atlas_acquire", atlas_started)
 					if texture == null: _unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)]); unresolved += int(owned); continue
 					atlases[tile_id] = texture
 				var lane: Variant = by_layer.get(layer)
 				if lane == null:
 					lane = []
 					by_layer[layer] = lane
-				(lane as Array).append_array([records[index], records[index + 1], ref])
+				var target: Array = lane
+				target.append(records[index])
+				target.append(records[index + 1])
+				target.append(ref)
 				draws += 1
 				count += int(owned)
 	var commands: Dictionary = {}
@@ -875,6 +908,7 @@ func _build_frame() -> bool:
 	var margin_bakes: int = 0
 	var screen_ready: Dictionary = {}
 	var screen_waiting: bool = false
+	var late_bakes: int = 0
 	var now_msec: int = Time.get_ticks_msec()
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
@@ -904,10 +938,11 @@ func _build_frame() -> bool:
 				if on_screen and not bool(screen_ready.get(cell, true)):
 					var since: int = int(_screen_wait.get(cell, now_msec))
 					_screen_wait[cell] = since
-					if now_msec - since < ON_SCREEN_WAIT_MSEC:
+					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
 						continue
+					late_bakes += 1
 				_screen_wait.erase(cell)
 				var commands_started: int = FRAME_HITCH.now()
 				var built: Dictionary = _block_commands(cell)
