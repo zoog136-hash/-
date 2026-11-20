@@ -4461,9 +4461,11 @@ func original_boss_overhead(npc_class_id: int) -> Node2D:
 
 func _check_level_up(quiet: bool=false) -> void:
 	var gained_stat_points: bool = false
+	var reached: Array = []
 	while experience >= exp_need:
 		experience -= exp_need
 		level += 1
+		reached.append(level)
 		exp_need = EXP_PROGRESSION.required_for_level(level, exp_need)
 		max_hp += 45
 		max_mp += 9
@@ -4483,6 +4485,15 @@ func _check_level_up(quiet: bool=false) -> void:
 	if gained_stat_points and not quiet:
 		_update_hud()
 		hud.call_deferred("open_character")
+	if not quiet and not reached.is_empty(): _play_original_level_up(reached)
+
+## The original Hud_LevelUp presentation with this class's LevelUpEffectDesc
+## guidance for every level reached (presentation only).
+func _play_original_level_up(reached: Array) -> void:
+	var controller: Variant = hud.get("original_main_ui_controller") if hud != null else null
+	if not is_instance_valid(controller) or not controller.has_method("play_level_up"): return
+	var guidance: Array[Dictionary] = preload("res://scripts/ui/original_ui/source_main_level_up.gd").rows_for(BASE508.source_class_id(job_class), reached)
+	controller.play_level_up(int(reached[-1]), guidance)
 
 func _select_nearest_target() -> void:
 	# An explicit tap must retry even if AUTO recently cached a failed route.
