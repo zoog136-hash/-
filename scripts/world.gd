@@ -6934,7 +6934,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	FRAME_HITCH.detail("save.snapshot", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
 	var save_started_usec: int = Time.get_ticks_usec()
-	data = SAVE_TRIM.payload(data)
+	data = SAVE_TRIM.for_file(data)
 	# write_save() refuses any file whose SHA-256 is not the one it last wrote
 	# (external change -> save_blocked), so when this path is that file its
 	# recorded hash is the file's hash: no extra full read and hash per save.
