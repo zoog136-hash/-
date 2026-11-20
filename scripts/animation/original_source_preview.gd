@@ -1195,12 +1195,11 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
 	if _cooked != null:
 		# Cooked actor: the same clock and frame choice as above, then the
-		# frame's recorded draw state; no layer, style or byte work.
+		# frame's recorded draw state, with page reads only on cache misses.
 		var ended: bool = not static_track and not bool(track.loop) and _clock >= total
 		var state: int = COOKED_STORE.state_for(_cooked_entry, _role, source_direction, int(selected.get("cooked_index", 0)), time, ended)
-		if state != _cooked_state:
+		if state >= 0 and state != _cooked_state and COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state):
 			_cooked_state = state
-			COOKED_STORE.apply_state(self, _cooked_sprites, _cooked, state)
 		_last_token = token
 		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 			queue_free()
