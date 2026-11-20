@@ -458,8 +458,8 @@ func _build_reference_frame_status(inputs: Dictionary) -> Dictionary:
 	return {"purpose":inputs.purpose,"consumer":inputs.consumer,"request_key":card.get("request_key",overlay.get("request_key",attachment.get("request_key",""))),"overlay_parent":overlay.duplicate(true),"attachment_parent":attachment.duplicate(true),"role":inputs.role,"source_action_id":track.source_action_id,"source_action_key":track.source_action_key,"source_actor_id":track.get("source_sprite_id",inputs.record_sprite_id),"source_body_id":track.get("source_body_id"),"selected_identity_actor_id":inputs.record_sprite_id,"stored_direction":inputs.direction,"selected_layers":shown,"actual_observed_original_bytes":null,"whole_file_use":false,"actual_main_game_feature_use":bool(inputs.in_main) and not shown.is_empty(),"M_visual_equivalence_verified":false}
 
 static func _effect_node_key(layer: Dictionary) -> Variant:
-	# Only new, explicitly verified DTOs separate ordered source instances.
-	# A legacy binding trace alone is not an upgrade to native multiplicity.
+	# The bank assigns ordered identities for verified native bindings and
+	# for legacy compact clothes with independently proven literal paths.
 	return PREPARED_LAYOUT.effect_node_key(layer)
 
 func _configure_source_effect_node(effect: Dictionary, candidate: Dictionary) -> void:
