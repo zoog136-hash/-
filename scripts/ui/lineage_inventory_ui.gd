@@ -334,10 +334,12 @@ func _ref_instance_id(reference: String) -> String:
 	var pieces: PackedStringArray = reference.split("@@@", false, 1)
 	return pieces[1] if pieces.size() > 1 else ""
 
-## Intangible currencies (source523_shop_runtime.INTANGIBLE_BINDINGS: no
-## ItemClass row, no picture) live in the HUD/currency window like the
-## original, not in a bag slot (phone 2026-11-20: an empty "10000" slot).
-const WALLET_ONLY: Array[String] = ["다이아", "마일리지"]
+## Wallet values without an original ItemClass row or picture: the
+## intangible currencies (source523_shop_runtime.INTANGIBLE_BINDINGS 다이아/
+## 마일리지, shown in the HUD/currency window) and 수호석 points (shown in the
+## guardian window, opened from original 수호석 상자). Like the original they
+## are not bag slots (phone 2026-11-20: empty "10000", "400", "2400" slots).
+const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
 
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []

@@ -47,12 +47,12 @@ func synthetic() -> void:
 	check(IDENTITY.icon_identity({}, "드래곤의 다이아몬드 상자 · 축복").get("approximation") == false, "bless suffix and exact entries")
 	check(IDENTITY.icon_identity({"source_item_class_id":305}, "철 광석").is_empty(), "an explicit original identity wins over the map")
 	var bag: Control = BAG.new()
-	bag.inventory = {"다이아":10000, "마일리지":5, "철 광석":36}
+	bag.inventory = {"다이아":400, "마일리지":2400, "수호석":7, "철 광석":36}
 	bag.character_state = {"item_instances":{}}
 	var names: Array = []
 	for row: Dictionary in bag._inventory_entries(): names.append(row.name)
 	evidence["bag"] = names
-	check(names == ["철 광석"], "diamonds and mileage are wallet values, not bag slots")
+	check(names == ["철 광석"], "diamonds, mileage and 수호석 are wallet values, not bag slots")
 	bag.free()
 
 func installed() -> void:
