@@ -16,6 +16,14 @@ var gpu := TILE_GPU.new()
 ## lets go of them, so compressing them was worker CPU (heat) and a main-thread
 ## re-upload for a texture no longer drawn.
 var compress_for_gpu: bool = true
+## Keep every published atlas (also past MAX_CACHED_ATLASES) until
+## release_held(). The 523 play map asks for all atlases of the blocks it is
+## about to bake (~90 on one screen) and bakes once they are decoded; with only
+## the 32-atlas cache the first ones were evicted again before the bake and
+## decoded a second time on the main thread (523.704: map.block_atlas_acquire
+## 1453 ms x90 in one frame).
+var hold_published: bool = false
+var _held: Dictionary = {}
 const SEMANTICS = {"geometry":"CANDIDATE_24X24", "palette":"CANDIDATE_RGB565", "coverage_alpha":"STORED_255_UNSTORED_0", "runtime_alpha":"UNKNOWN", "coordinates":"UNKNOWN", "projection":"UNKNOWN", "layers":"UNKNOWN", "movement":"UNKNOWN", "collision":"UNKNOWN"}
 var problem: String = ""
 var loaded: bool = false
@@ -53,6 +61,7 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_records = null
 	_cache.clear()
 	_recent.clear()
+	_held.clear()
 	_drop_jobs()
 	problem = ""
 	atlas_loads = 0
@@ -176,6 +185,7 @@ func texture_for(tile_id: int) -> Texture2D:
 		_recent.erase(tile_id)
 		_recent.append(tile_id)
 		return _cache[tile_id]
+	if _held.has(tile_id): return _held[tile_id]
 	var job: Dictionary = _jobs.get(tile_id, {})
 	if job.is_empty():
 		job = _new_job(tile_id)
@@ -192,7 +202,7 @@ func texture_for(tile_id: int) -> Texture2D:
 ## made on the main thread (pump_jobs). A miss used to stall the frame for
 ## the whole decode (about 15 ms per atlas on a PC, ~60 ms on the phone).
 func prefetch(tile_id: int) -> bool:
-	if _cache.has(tile_id): return true
+	if _cache.has(tile_id) or _held.has(tile_id): return true
 	if not has_tile(tile_id) or _jobs.has(tile_id): return false
 	if _jobs.size() >= MAX_DECODE_JOBS: return false
 	var job: Dictionary = _new_job(tile_id)
@@ -276,12 +286,20 @@ func _publish(tile_id: int, job: Dictionary) -> Texture2D:
 	atlas_loads += 1
 	_cache[tile_id] = texture
 	_recent.append(tile_id)
+	if hold_published: _held[tile_id] = texture
 	while _recent.size() > MAX_CACHED_ATLASES:
 		_cache.erase(_recent.pop_front())
 	return texture
 
 func cache_size() -> int:
 	return _cache.size()
+
+## Lets go of the atlases kept by hold_published.
+func release_held() -> void:
+	_held.clear()
+
+func held_size() -> int:
+	return _held.size()
 
 ## Called every frame by the map renderer: applies finished compressions.
 func pump_gpu() -> void:
