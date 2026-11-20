@@ -171,7 +171,7 @@ UI,UI04,검토,공통 UI 엔진 / UI 템플릿 캐싱,개선/검증 (중복 가�
 UI,UI05,검토,공통 UI 엔진 / 타임라인 독립 재생,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI06,검토,공통 UI 엔진 / 닫힌 화면 콜백 해제,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI07,검토,공통 UI 엔진 / 터치 판정과 스크롤 충돌 검사,개선/검증 (중복 가능),pending_current_execution_review,,,
-UI,UI08,검토,공통 UI 엔진 / UI 데이터와 실제 실행 결과 일치,개선/검증 (중복 가능),pending_current_execution_review,,,
+UI,UI08,검토,공통 UI 엔진 / UI 데이터와 실제 실행 결과 일치,개선/검증 (중복 가능),bounded_display_fix_pending_CI,PDF p37; domination_stone_runtime.merge_quote/merge -> source.pick; source_main_domination_stone_window._fusion_probability,13 synthetic probability/UI checks; 1000000 production picker rolls enumerated; existing domination runtime + 10 UI inventory checks passed; original/Android unverified,#720 pending required CI/merge
 UI,UI09,검토,카드 / 직업·성별 카드 정의 선택,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI10,검토,카드 / 각성 이미지 제외 정책 검토,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI11,검토,카드 / 카드 150개 표시 제한 제거,개선/검증 (중복 가능),pending_current_execution_review,,,
@@ -208,8 +208,8 @@ UI,UI41,검토,성장·콘텐츠 / 상점 가상 스크롤,개선/검증 (중복
 UI,UI42,검토,성장·콘텐츠 / 퀘스트 보상 표시 검증,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI43,검토,성장·콘텐츠 / 미션 레벨별 보상,개선/검증 (중복 가능),pending_current_execution_review,,,
 UI,UI44,검토,성장·콘텐츠 / 콘텐츠 UI 실행 상태 검증,개선/검증 (중복 가능),pending_current_execution_review,,,
-신규 비교,NEW01,P0,일반 용해 ceilf vs 정수 절사,한정 원본 근거 / 실행 검증 필요,arithmetic_present_in_667; bounds_hardened_pending_CI,scripts/refine523/bless_refine523_rules.gd:normal_amount; scripts/refine523/bless_refine523_service.gd:dissolve_quote/dissolve_advanced_quote -> dissolve/dissolve_advanced,13 arithmetic bounds + 16 absent-source refusal checks; original installed table/grant not verified,#667 arithmetic merged; #716 bounds awaiting required CI/merge
-신규 비교,NEW02,P0,상급 용해 safe / pow / truncate / 수량,한정 원본 근거 / 실행 검증 필요,arithmetic_present_in_667; bounds_hardened_pending_CI,scripts/refine523/bless_refine523_rules.gd:normal_amount; scripts/refine523/bless_refine523_service.gd:dissolve_quote/dissolve_advanced_quote -> dissolve/dissolve_advanced,13 arithmetic bounds + 16 absent-source refusal checks; original installed table/grant not verified,#667 arithmetic merged; #716 bounds awaiting required CI/merge
+신규 비교,NEW01,P0,일반 용해 ceilf vs 정수 절사,한정 원본 근거 / 실행 검증 필요,bounded_fix_merged; original_installed_runtime_pending,scripts/refine523/bless_refine523_rules.gd:normal_amount; scripts/refine523/bless_refine523_service.gd:dissolve_quote/dissolve_advanced_quote -> dissolve/dissolve_advanced,core369 + resources/pixels/exchange passed; 13 bounds;16 absent-source checks; Android/installed grants unverified,#667 arithmetic; #716 merged 6582bdbc7bd5c622c2aa10e496436d78a011dbfe
+신규 비교,NEW02,P0,상급 용해 safe / pow / truncate / 수량,한정 원본 근거 / 실행 검증 필요,bounded_fix_merged; original_installed_runtime_pending,scripts/refine523/bless_refine523_rules.gd:normal_amount; scripts/refine523/bless_refine523_service.gd:dissolve_quote/dissolve_advanced_quote -> dissolve/dissolve_advanced,core369 + resources/pixels/exchange passed; 13 bounds;16 absent-source checks; Android/installed grants unverified,#667 arithmetic; #716 merged 6582bdbc7bd5c622c2aa10e496436d78a011dbfe
 신규 비교,NEW03,P1,ItemUsageLimitGroup override 우선순위,한정 원본 근거 / 실행 검증 필요,pending_current_execution_review,,,
 신규 비교,NEW04,P1,ConsumeTerritories 사각형과 type gate,한정 원본 근거 / 실행 검증 필요,pending_current_execution_review,,,
 신규 비교,NEW05,P1,CraftableItemSortOrder 우선순위,한정 원본 근거 / 실행 검증 필요,pending_current_execution_review,,,
