@@ -183,7 +183,9 @@ static func _texture(source_path: String, layer: Dictionary = {}) -> Texture2D:
 		_texture_order.append(path)
 	return texture
 
-static func _material(blend_mode: int) -> CanvasItemMaterial:
+static func _material(blend_mode: int) -> Material:
+	# Multiply (original attr128) needs the alpha-aware multiply material.
+	if blend_mode == CanvasItemMaterial.BLEND_MODE_MUL: return preload("res://scripts/animation/source_sp2_compositor.gd").multiply_material()
 	if not _materials.has(blend_mode):
 		var material := CanvasItemMaterial.new()
 		material.blend_mode = blend_mode
