@@ -92,7 +92,10 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		var unit_weight: int=maxi(0,int(world.item_weight_index.get(key,3)))
 		if world._inventory_total_weight()+quantity*unit_weight>world._carrying_capacity():return _fail("기존 소지 무게 한도 초과 · 바닥 아이템 보존")
 	var physical:=PhysicalView.new()
-	physical.item_instances=world.item_instances.duplicate(true);physical.next_item_instance_id=world.next_item_instance_id
+	# Shallow: the suppliers below only add new physical IDs (each returns its
+	# own copy); existing entries are never edited here, and shared entries keep
+	# the ownership comparison against the live bag cheap.
+	physical.item_instances=world.item_instances.duplicate(false);physical.next_item_instance_id=world.next_item_instance_id
 	Transfer.restore_physical(physical,pending)
 	var acquired: Dictionary=Supply.prepare_pickup(pending,physical.item_instances,physical.next_item_instance_id)
 	var symbols: Dictionary=world.growth.source523.prepare_pickup(pending,acquired.item_instances,int(acquired.next_item_instance_id))
@@ -100,7 +103,7 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"})
+		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"},true)
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
@@ -117,13 +120,18 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		else:after.append(entry)
 	if not found:return _fail("선택 바닥 개체가 없습니다")
 	var payload: Dictionary={"inventory":inventory,"item_instances":instances,"next_item_instance_id":next_id,"gold":gold,"ground_drops":after,"consumable_state":state}
+	# The pickup is checked by the full save validation now and written by the
+	# batched save (deferred_save, 10 s window; pause/quit save at once): one
+	# file write per window instead of one per item, so a pickup no longer
+	# serialises and writes the whole save in its frame. The floor removal and
+	# the grant are written by the same save, so a crash before it loses both
+	# together (the item is back on the floor, never duplicated).
 	_busy=true;_candidate=payload.duplicate(true)
-	var saved: Error=world._save_game(true,payload)
+	var checked: Error=world._save_game(true,payload,{},true)
 	_candidate.clear()
-	if saved!=OK:
-		world.patch523_owner_state_problem="원본 습득 저장 실패·결과 미확정 · 다시 불러오기 전 저장·중복 지급 중지"
+	if checked!=OK:
 		_busy=false
-		return _fail("원본 습득 저장 실패 또는 결과 미확정 · 바닥·소유 메모리 보존")
+		return _fail("원본 습득 검증 실패 · 바닥·소유 보존")
 	var taken: Dictionary=world.ground_loot.take(view,world.player.global_position,world.GROUND_PICKUP_RADIUS)
 	if taken.is_empty():
 		world.patch523_owner_state_problem="원본 습득은 저장됐지만 바닥 상태 채택 미확정 · 다시 불러오기 필요"
@@ -131,5 +139,6 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 		return _fail(world.patch523_owner_state_problem)
 	world.inventory=inventory;world.item_instances=instances;world.next_item_instance_id=next_id;world.gold=gold
 	world.consumable_service.import_state(state)
-	world.deferred_save.cancel();_busy=false
-	return {"handled":true,"ok":true,"saved":true,"record":taken,"receipt":receipt}
+	_busy=false
+	world._request_deferred_save()
+	return {"handled":true,"ok":true,"saved":false,"save_pending":true,"record":taken,"receipt":receipt}

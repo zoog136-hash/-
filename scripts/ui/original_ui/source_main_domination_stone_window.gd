@@ -623,7 +623,9 @@ func _fusion_probability() -> Dictionary:
 	var parts: PackedStringArray=[]
 	for pair: Array in quote.grades:parts.append("%s %s%%" % [str(SRC.GRADE_NAMES.get(int(pair[0]),pair[0])),String.num(float(pair[1])/10000.0,2)])
 	var text: String="합성 가격 %d · %s" % [int(quote.price)," · ".join(parts)]
-	if int(quote.same_group)>0:text+=" · 같은 종류 유지 %s%%" % String.num(float(quote.same_group_probability_raw)/10000.0,2)
+	if int(quote.same_group)>0:
+		var final_percent: float=float(SRC.same_group_outcome_numerator(quote))*100.0/(float(SRC.PROBABILITY_SCALE)*SRC.PROBABILITY_SCALE)
+		text+=" · 같은 종류 최종 %s%% (우선 추첨 %s%% · 실패 시 기본 추첨 포함)" % [String.num(final_percent,2),String.num(float(quote.same_group_probability_raw)/10000.0,2)]
 	_message(text)
 	return quote
 

@@ -23,6 +23,20 @@ class FakeTiles extends RefCounted:
 		return image
 	func cache_size() -> int: return 1
 
+## S32 sections for the worker chunk read (a floor with a few tiles, covers and objects).
+class FakeChunkSources extends RefCounted:
+	var problem: String = ""
+	var broken: bool = false
+	func source_metadata(_member: String) -> Dictionary: return {"core_end": 0}
+	func read_member(member: String) -> Dictionary: return read_member_job(member)
+	func read_member_job(_member: String) -> Dictionary:
+		if broken: return {"_problem": "synthetic failure"}
+		var floor_bytes := PackedByteArray(); floor_bytes.resize(8192 * 4)
+		for index: int in 8192: floor_bytes.encode_u32(index * 4, 4294967295 if index % 7 else (3 << 8) | (index & 255))
+		var covers := PackedByteArray([2, 0, 5, 9, 1, 2, 0, 0, 40, 3, 7, 1, 0, 0])
+		var objects := PackedByteArray([1, 0, 0, 0, 0, 0, 2, 0, 10, 12, 0, 9, 2, 0, 0, 11, 30, 1, 5, 4, 0, 0])
+		return {"source_sha256": "a".repeat(64), "source_bytes": 1, "sections": {"floor": floor_bytes, "covers": covers, "objects": objects, "tail": PackedByteArray()}}
+
 ## Decodes on a "worker": an atlas is ready only after a request and a pump.
 class FakeAsyncTiles extends FakeTiles:
 	var requested: Dictionary = {}
@@ -137,6 +151,33 @@ func run() -> void:
 			var same: bool = fast.size() == slow.size() and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == slow_counts
 			for layer: int in slow: same = same and fast.has(layer) and fast[layer] == PackedInt64Array(slow[layer])
 			check(same, "one-pass chunk projection equals the per-record path (generic=%s origin=%s)" % [generic, origin])
+	# A chunk read on a worker installs the same lanes, bins, tail and counters
+	# as the main-thread read of the same S32 sections.
+	var worker_sources := FakeChunkSources.new()
+	var saved_sources: Variant = renderer._raw_sources
+	renderer._raw_sources = worker_sources
+	renderer._member_origins["worker_a"] = PLAY.GRID_ORIGIN
+	renderer._member_origins["worker_b"] = PLAY.GRID_ORIGIN
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+	var direct: Dictionary = renderer._install_chunk("worker_a", PLAY._decode_chunk(renderer._chunk_params("worker_a"), worker_sources.read_member_job("worker_a")))
+	var direct_counts: Array = [renderer._scope_clipped_records, renderer._off_floor_decoration_records]
+	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
+	check(not renderer._prefetch_chunk("worker_b") and renderer._chunk_jobs.has("worker_b"), "an unread chunk is read on a worker")
+	var waited_chunk: int = 0
+	while not renderer._chunk_jobs.is_empty() and waited_chunk < 5000:
+		renderer._pump_chunk_jobs(); OS.delay_msec(1); waited_chunk += 1
+	check(renderer._raw_chunks.get("worker_b") == direct and renderer._chunk_bins.get("worker_b") == renderer._chunk_bins.get("worker_a") and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == direct_counts and renderer._static_tails.has("worker_b"), "the worker read equals the main-thread read")
+	check(renderer._prefetch_chunk("worker_b"), "a loaded chunk is ready")
+	worker_sources.broken = true
+	renderer._member_origins["worker_c"] = PLAY.GRID_ORIGIN
+	renderer._prefetch_chunk("worker_c")
+	waited_chunk = 0
+	while not renderer._chunk_jobs.is_empty() and waited_chunk < 5000:
+		renderer._pump_chunk_jobs(); OS.delay_msec(1); waited_chunk += 1
+	check(renderer._unreadable_chunks.has("worker_c") and not renderer._raw_chunks.has("worker_c"), "a failed worker read becomes an unreadable hole")
+	for member: String in ["worker_a", "worker_b", "worker_c"]:
+		renderer._raw_chunks.erase(member); renderer._chunk_bins.erase(member); renderer._static_tails.erase(member); renderer._unreadable_chunks.erase(member); renderer._member_origins.erase(member); renderer._raw_recent.erase(member)
+	renderer._raw_sources = saved_sources
 	field.remove_meta("current523_generic_field")
 	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
 	var tiles := FakeTiles.new()
@@ -158,6 +199,7 @@ func run() -> void:
 	# Margin blocks wait for their atlases' worker decode; on-screen ones never wait.
 	# Shift the screen so its right edge (1500) is just before a block edge (1536).
 	var async_tiles := FakeAsyncTiles.new()
+	async_tiles.ready[2147483903 >> 8] = true  # the on-screen block's atlas is already decoded
 	renderer._tile_pack = async_tiles
 	var saved_canvas: Transform2D = root.canvas_transform
 	root.canvas_transform = Transform2D(0.0, Vector2(renderer._view_rect().end.x - 1500.0, 0.0)) * saved_canvas
@@ -173,6 +215,14 @@ func run() -> void:
 	check(renderer._build_frame() and renderer._blocks.has(near_cell) and not renderer._blocks.has(far_cell) and async_tiles.requested.has(7) and not renderer._built_view.has_area(), "an on-screen block bakes now; a margin block waits for its decode and the next refresh retries")
 	async_tiles.pump()
 	check(renderer._build_frame() and renderer._blocks.has(far_cell), "the margin block bakes once its atlas is ready")
+	# A new on-screen block waits briefly for its decode, then bakes regardless.
+	renderer._raw_chunks["synthetic"] = {-2:PackedInt64Array([here.x,here.y,(8 << 8) | 1])}
+	renderer._chunk_bins.clear(); renderer._clear_blocks()
+	renderer._refresh_clock = 0.25
+	var waited_ok: bool = renderer._build_frame()
+	check(waited_ok and not renderer._blocks.has(near_cell) and async_tiles.requested.has(8) and renderer._refresh_clock <= 0.05 and renderer.problem.is_empty(), "an on-screen block waits for its worker decode without failing the map")
+	renderer._screen_wait[near_cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
+	check(renderer._build_frame() and renderer._blocks.has(near_cell), "after the wait limit it bakes with what the pack gives")
 	root.canvas_transform = saved_canvas
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}

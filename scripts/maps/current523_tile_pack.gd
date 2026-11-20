@@ -32,7 +32,7 @@ var _recent: Array[int] = []
 ## tile_id -> {task, row, root, storage, image, problem} decoding on a worker.
 var _jobs: Dictionary = {}
 ## Worker decodes in flight at once (each holds ~1.2 MiB while decoding).
-const MAX_DECODE_JOBS: int = 6
+const MAX_DECODE_JOBS: int = 8
 
 func _fail(message: String) -> bool:
 	problem = message

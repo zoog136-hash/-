@@ -6,7 +6,7 @@ config_version=5
 config/name="황혼의 기사 · Offline RPG V20 LINEAGE HUD"
 run/main_scene="res://scenes/boot/Loading.tscn"
 config/features=PackedStringArray("4.7")
-run/max_fps=30
+run/max_fps=60
 config/icon="res://assets/boot/twilight_icon.png"
 boot_splash/bg_color=Color(0.023, 0.035, 0.086, 1)
 boot_splash/show_image=false
@@ -58,7 +58,7 @@ load_game={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194
 toggle_collision_debug={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194330)]}
 
 [physics]
-common/physics_ticks_per_second=30
+common/physics_ticks_per_second=60
 
 [editor_plugins]
 
