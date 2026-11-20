@@ -523,23 +523,18 @@ static func try_use(world, item_name: String) -> bool:
 	world.hud.show_message(str(result.get("message", result.get("reason", ""))))
 	return true
 
-static func _choose(world, item_name: String, choices: Array) -> void:
-	var dialog: ConfirmationDialog = ConfirmationDialog.new()
-	dialog.title = "%s 선택" % item_name
-	dialog.dialog_text = "받을 구성품을 고른 다음 확인하세요. 확인 전에는 상자가 소모되지 않습니다."
-	var selector: OptionButton = OptionButton.new()
-	selector.custom_minimum_size = Vector2(360, 44)
-	for entry: Dictionary in choices:
-		selector.add_item("%s ×%d" % [label(int(entry.item_class_id)), int(entry.amount)])
-	dialog.add_child(selector)
-	world.add_child(dialog)
-	dialog.confirmed.connect(func() -> void:
-		if selector.selected >= 0 and selector.selected < choices.size():
-			var result: Dictionary = open(world, item_name, [choices[selector.selected]])
-			world.hud.show_message(str(result.get("message", result.get("reason", ""))))
-		dialog.queue_free())
-	dialog.canceled.connect(func() -> void: dialog.queue_free())
-	dialog.popup_centered()
+## The original 선택 보상 window over this box's eligible rows
+## (source523_cash_select); nothing is used until a row is confirmed.
+static func _choose(world, item_name: String, choices: Array) -> Node:
+	var previous: Node = world.get_node_or_null("Source523CashSelect")
+	if previous != null:
+		previous.name = "Source523CashSelectClosed"
+		previous.queue_free()
+	var owner: Node = load("res://scripts/shop/source523_cash_select.gd").new()
+	owner.configure(world, item_name, choices)
+	world.add_child(owner)
+	owner.present()
+	return owner
 
 ## Debits one box and delivers the given original rewards in one save.
 static func open(world, item_name: String, rewards: Array) -> Dictionary:
@@ -650,7 +645,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	if world.hud.has_method("append_log"): world.hud.append_log(message)
 	if not card_results.is_empty() and world.hud.has_method("present_card_reveal"):
 		var first: Dictionary = _card_target(world, int(rewards[0].card_id)) if int(rewards[0].get("card_id", 0)) > 0 else resolve(world, int(rewards[0].item_class_id))
-		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results}, false)
+		var box_title: String = label(definition_id_of(world, item_name))
+		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results, "title":box_title if not box_title.is_empty() else item_name}, false)
 	return {"ok":true, "message":message, "received":received}
 
 ## The opened box's save: the next frame's general save (one per frame).

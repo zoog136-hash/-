@@ -883,9 +883,12 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 		return
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
 	dialog.title = "%s 선택" % item_name
-	dialog.dialog_text = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
+	dialog.ok_button_text = "확인"
+	dialog.cancel_button_text = "취소"
+	var guide: String = "대상을 고른 다음 확인하세요. 확인 전에는 아이템이 소모되지 않습니다."
 	if purpose in ["element_change", "element_reset"]:
-		dialog.dialog_text += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
+		guide += "\n속성 변경·초기화 시 기존 속성 세공 효과가 사라집니다."
+	var column: VBoxContainer = preload("res://scripts/ui/dialog_korean_texts.gd").content(dialog, guide)
 	var selector: OptionButton = OptionButton.new()
 	selector.custom_minimum_size = Vector2(330, 42)
 	for candidate: String in candidates:
@@ -913,14 +916,14 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 			if purpose != "blessing":
 				display_name = "%s %s [%s] %s" % [grade_text, parts[0], instance_id, ("%s %d단계" % [element_name, element_level]) if element_level > 0 else ""]
 		selector.add_item(display_name)
-	dialog.get_vbox().add_child(selector)
+	column.add_child(selector)
 	var element_selector: OptionButton = null
 	if choose_element:
 		element_selector = OptionButton.new()
 		element_selector.custom_minimum_size = Vector2(330, 42)
 		for element_code: String in ["fire", "water", "earth", "wind"]:
 			element_selector.add_item(str(RULES.ELEMENT_NAMES[element_code]))
-		dialog.get_vbox().add_child(element_selector)
+		column.add_child(element_selector)
 	world.add_child(dialog)
 	dialog.confirmed.connect(func() -> void:
 		if selector.selected >= 0 and selector.selected < candidates.size():
