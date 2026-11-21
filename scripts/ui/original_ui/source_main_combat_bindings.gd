@@ -55,8 +55,10 @@ func build(member: String, remaining: Dictionary={}) -> Dictionary:
 		bindings[22536]={"role":"button","activate":Callable(self,"toggle_self")}
 		_set_visible_binding(bindings,23168,state.self_mode_enabled)
 		var pickup: Dictionary=pickup_snapshot()
-		bindings[PICKUP_BUTTON]={"role":"button","activate":Callable(self,"request_selected_pickup"),"displaystate":pickup.selected,"visible":true}
-		_set_visible_binding(bindings,PICKUP_GROUP,pickup.selected)
+		# The original Nd_PickUp (Hud_Btn_Pad_Get.png) beside Nd_Self stays
+		# shown while the ground-loot service exists (user list 2026-11-21 #25).
+		bindings[PICKUP_BUTTON]={"role":"button","activate":Callable(self,"request_pickup"),"displaystate":pickup.service_available,"visible":true}
+		_set_visible_binding(bindings,PICKUP_GROUP,pickup.service_available)
 		for offset: int in CLICK_PROJECTS:
 			if not bindings.has(offset):bindings[offset]={"role":"project","bindings":{}}
 		for offset: int in [16156,15084]:
@@ -109,7 +111,7 @@ func build_core(availability: Dictionary, remaining: Dictionary={}) -> Dictionar
 	_set_visible_binding(bindings,23168,built.state.self_mode_enabled and availability.self)
 	if includes_pickup_scope():
 		var pickup: Dictionary=pickup_snapshot()
-		_set_visible_binding(bindings,PICKUP_GROUP,pickup.selected)
+		_set_visible_binding(bindings,PICKUP_GROUP,pickup.service_available)
 		_last_pickup_model=pickup.duplicate(true)
 	_core_availability=availability.duplicate(true)
 	return {"ok":true,"member":PAD,"sha256":ROOTS[PAD].sha256,"source_node_offsets":scope.source_node_offsets,"bindings":bindings,"state":built.state,"host_control_availability":availability.duplicate(true),"availability_basis":"existing_game_host_control_visibility_and_exact_ground_drop_selection","partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original_client_mode_switch_contracts","attack_class_icon_and_rank_variants","special_actions_excluded_from_scope","original_effect_animation_start_stop_contract"]}
@@ -135,12 +137,25 @@ func refresh_pickup(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or not scene.get("source_nodes").has(PICKUP_BUTTON):return {"ok":true,"source_pickup_presented":false}
 	var model: Dictionary=pickup_snapshot()
 	if model==_last_pickup_model:return {"ok":true,"selection":model}
-	var result: Dictionary=scene.set_bound_visible(PICKUP_GROUP,model.selected)
+	var result: Dictionary=scene.set_bound_visible(PICKUP_GROUP,model.service_available)
 	if not result.get("ok",false):return result
-	result=scene.set_bound_displaystate(PICKUP_BUTTON,model.selected)
+	result=scene.set_bound_displaystate(PICKUP_BUTTON,model.service_available)
 	if not result.get("ok",false):return result
 	_last_pickup_model=model.duplicate(true)
 	return {"ok":true,"selection":model,"game_state_written":false}
+
+## The always-shown pickup button: the selected drop first, then the other
+## nearby drops (existing manual pickup owns movement, reachability and
+## inventory receipt; loot_pickup.request_nearby).
+func request_pickup() -> Dictionary:
+	var model: Dictionary=pickup_snapshot()
+	if not model.service_available:return _fail("source_main_pickup_service_unavailable")
+	var world: Object=_world.get_ref() if _world!=null else null
+	if world==null:return _fail("source_main_combat_host_unavailable")
+	var controller: Variant=world.get("loot_pickup")
+	if not controller.has_method("request_nearby"):return _fail("source_main_pickup_nearby_unavailable")
+	var started: bool=bool(controller.call("request_nearby"))
+	return {"ok":true,"dispatched":true,"method":"loot_pickup.request_nearby","started":started,"action_result_known":false}
 
 func request_selected_pickup() -> Dictionary:
 	var model: Dictionary=pickup_snapshot()
