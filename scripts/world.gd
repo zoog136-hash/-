@@ -4723,7 +4723,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if item_name.begins_with("m523-growth-item:"):
 		if item_name == GROWTH96.Source.item_key(GROWTH96.Source.TOKEN): hud.open_growth96()
-		else: hud.show_message("미개봉 성장 보상 상자입니다. 다른 출처의 뽑기권으로 자동 교환하거나 개봉하지 않습니다.")
+		else:
+			var opened: Dictionary = _open_growth_reward_box(item_name)
+			if not opened.get("ok", false): hud.show_message(str(opened.get("reason", "미개봉 성장 보상 상자입니다")))
 		return
 	var issued_scroll: Dictionary=patch523_open_expedition_enhancement(item_name)
 	if issued_scroll.get("handled",false):
@@ -4796,6 +4798,30 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		_use_healing_item(item_name, int(record.get("heal", 0)))
 		return
 	hud.show_message("이 아이템은 직접 사용할 수 없습니다")
+
+## 성장 보상 상자 (m523-growth-item:<ItemClassID>): one box of the stack
+## becomes the original box item of that ItemClassID (a physical receipted
+## stack, same save) and is opened by its original box rule from the bag.
+func _open_growth_reward_box(item_name: String) -> Dictionary:
+	var id_text: String = item_name.trim_prefix("m523-growth-item:")
+	if not id_text.is_valid_int() or int(inventory.get(item_name, 0)) < 1: return {"ok":false,"reason":"성장 보상 상자를 확인할 수 없습니다"}
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var summary: Dictionary = LOOT_DROP.PATCH523_DROPS.definition_id(id_text)
+	var record: Dictionary = LOOT_DROP.PATCH523_DROPS.variant_item(summary.get("native_record", {}), 1)
+	if record.is_empty() or str(stack.profile(record).get("kind", "")) not in ["bag","selection"]:
+		return {"ok":false,"reason":"이 성장 보상 상자는 원본 상자 규칙이 없어 열 수 없습니다 · 상자 보존"}
+	var view = stack.SupplierView.new()
+	view.host = self; view.inventory = inventory.duplicate(true); view.item_instances = item_instances.duplicate(true); view.gold = gold
+	view.inventory[item_name] = int(view.inventory[item_name]) - 1
+	if int(view.inventory[item_name]) <= 0: view.inventory.erase(item_name)
+	var staged: Dictionary = preload("res://scripts/loot/patch523_item_inventory.gd").stage(view, [{"item_class_id":int(id_text),"amount":1,"bless_raw":1,"enchant":0}], {"kind":"growth96_reward_box","growth_item":item_name})
+	view.free()
+	if not staged.get("ok", false): return {"ok":false,"reason":str(staged.get("error","성장 보상 상자 변환 실패")) + " · 상자 보존"}
+	if _save_game(true, staged.overrides) != OK: return {"ok":false,"reason":"성장 보상 상자 저장 실패 · 상자 보존"}
+	inventory = staged.overrides.inventory; item_instances = staged.overrides.item_instances
+	if staged.overrides.has("gold"): gold = int(staged.overrides.gold)
+	_on_inventory_item_activated(str(record.name))
+	return {"ok":true}
 
 func _first_number(text: String) -> int:
 	var digits: String = ""

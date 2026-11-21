@@ -289,6 +289,10 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		var handed: Dictionary=handoff_plain(world,item_name)
 		if not handed.get("ok",false):return handed
 		return {"handled":false}
+	if effect.is_empty() and str(NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]:
+		# A box whose original rewards are all test/excluded rows (or another
+		# unsupported rule) is kept and says so instead of staying silent.
+		return _failure("원본 보상 구성을 지원하지 않는 상자라 열 수 없습니다 · 상자 보존")
 	if effect.is_empty() and supply_profile(record).get("kind")=="storage":return _failure("원본 표에 이 아이템의 사용 규칙이 없거나 아직 연결되지 않았습니다 · 보관용 · 아이템 보존")
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.

@@ -1395,7 +1395,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	for class_id: int in domain:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
 	selectable_rule(root_node,active,reasons)
-	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false
+	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false;var dropped: Array=[]
 	if root_node.get("reward_type",{}).get("ID")!=111 or root_node.get("reward_type",{}).get("Name")!="SelectReward":reasons.append("unsupported_select_reward_root_type")
 	else:
 		var selected_node: Dictionary=graph.get("selections",{}).get(str(int(root.get("RewardClassID",0))),{})
@@ -1405,7 +1405,11 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 		if selected_node.get("entities",[]).is_empty():reasons.append("empty_select_reward")
 		for edge: Dictionary in selected_node.get("entities",[]):
 			var entity: Dictionary=edge.get("row",{});var child: Dictionary=graph.get("rewards",{}).get(str(int(entity.get("RewardID",0))),{});var row: Dictionary=child.get("row",{})
-			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty():reasons.append("source_excluded_select_reward_entity")
+			# 2026-11-21: a choice the original declares excluded or whose item is a
+			# test/excluded row is left out of the window; the other choices stay.
+			var reward_item: Dictionary=child.get("item_class",{})
+			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or child.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
+				dropped.append(entity.get("ID"));continue
 			selectable_rule(child,active,reasons)
 			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
 			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
@@ -1418,6 +1422,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			if not integer(row.get("Amount")) or int(row.Amount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
 			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0))).is_empty();initial_rule=initial_rule or needs
 			rewards.append({"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs})
+	if rewards.is_empty() and not selection.is_empty():reasons.append("empty_select_reward")
 	var counts: Dictionary={}
 	for class_id: int in domain:
 		var count: int=0
@@ -1430,6 +1435,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	for reason: String in reasons:
 		if reason not in unique:unique.append(reason)
 	spec["kind"]="source_selectable_reward";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["reward_id"]=id;spec["original_reward"]=root_node.duplicate(true);spec["select_reward_id"]=selection.get("ID");spec["original_select_reward"]=selection;spec["select_max_count"]=selection.get("SelectMaxCount");spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	if not dropped.is_empty():spec["dropped_source_entity_ids"]=dropped
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
 	if initial_rule:spec["local_rule_required"]="select_reward_initial_enchant";spec["source_initial_enchant"]=null;spec["initial_enchant_configuration_key"]="patch523_select_reward_initial_enchant"
