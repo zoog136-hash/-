@@ -1017,6 +1017,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	# A reward's item information popup (source_reward_item_info) closes with its window.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
@@ -1094,6 +1096,7 @@ func _open_window(section: String,title: String,description: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
@@ -1250,6 +1253,7 @@ func _navigate(section: String) -> void:
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
+		"save": save_now()
 		"auto": open_schedule()
 		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
@@ -1261,6 +1265,11 @@ func _navigate(section: String) -> void:
 		"forge523": open_forge()
 		"sell": open_item_sell()
 		_: open_catalog(section)
+
+## 저장 (전체 메뉴, user list 2026-11-21 #18): the existing manual save (the
+## same save_pressed as 설정 > 세부 설정 "지금 저장"); the menu stays open.
+func save_now() -> void:
+	save_pressed.emit()
 
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
 	for dialog: Node in $Root.get_children():
@@ -1766,6 +1775,22 @@ func _select_menu_category(index: int) -> void:
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
 
+## The original 523 전체 메뉴 order (MainMenuUIButtons, row by row: 제작 거래소
+## 변신 마법인형 성물 / 던전 · · 스킬 카드 컬렉션 / 혈맹 · 기억 · · / · 연금 · 수호성
+## 문양 / 엘릭서 스케줄 숙련 토템 지배석 / 작위 · · 설정 · / 몬스터 도감) for the
+## sections with an original tile (user list 2026-11-21 #3: 인형·성물 beside 변신).
+const ORIGINAL_MENU_ORDER: Array[String] = ["crafting","exchange","변신","마법인형","성물","source_dungeons","skill_card523","equipment_collections","clan523","refine523","guardians","emblems","half_elixir","auto","weapon_mastery","totems","domination_stone","titles","settings","monsterbook523"]
+
+## `pairs` ([section, caption]) with the original-order sections first, the
+## rest after them in their own order.
+static func ordered_menu_pairs(pairs: Array) -> Array:
+	var ranked: Array = []
+	for index: int in pairs.size():
+		var rank: int = ORIGINAL_MENU_ORDER.find(str(pairs[index][0]))
+		ranked.append([rank if rank >= 0 else ORIGINAL_MENU_ORDER.size() + index, pairs[index]])
+	ranked.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
+	return ranked.map(func(entry: Array) -> Array: return entry[1])
+
 func _build_menu_page() -> void:
 	var col := VBoxContainer.new()
 	col.name = "MenuPage"
@@ -1807,7 +1832,11 @@ func _build_menu_page() -> void:
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["sell","판매"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]:
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
+	# original tile first in the client's order, then the TWILIGHT-only ones.
+	menu_pairs = ordered_menu_pairs(menu_pairs)
+	for pair: Array in menu_pairs:
 		var section_id: String = str(pair[0])
 		if section_id in RETIRED_SECTIONS: continue
 		var button: Button = UI.button("",func() -> void:
@@ -3827,6 +3856,12 @@ func original_skill_window_is_open() -> bool:
 
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
+
+func original_inventory_refresh_actions() -> Dictionary:
+	return original_main_ui_controller.inventory_refresh_actions() if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_refresh_actions") else {}
+
+func original_ui_font(path: String) -> FontFile:
+	return original_main_ui_controller.original_font(path) if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("original_font") else null
 
 func original_inventory_name_hint_context(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}

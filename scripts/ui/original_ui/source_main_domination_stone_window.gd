@@ -688,10 +688,16 @@ func _quest_spec(runtime: Object) -> Dictionary:
 	spec[P_QUEST+"Nd_List_Quest/Label_Time"]={"role":"source_text","text":"%d일" % days}
 	spec[P_QUEST+"Nd_List_Quest/Label_Time_R"]={"visible":false}
 	spec[P_QUEST+"Nd_List_Quest/Label_Title"]={"role":"source_text","text":"퀘스트 선택" if accepted.is_empty() else "이번 주 수락한 퀘스트"}
-	var reward_count: int=_selected_rewards(runtime).size()
+	var selected_rewards: Array=_selected_rewards(runtime)
+	var reward_count: int=selected_rewards.size()
 	for index: int in range(1,6):
 		spec[P_QUEST+"Nd_List_Reward/Quest_Slot_Set/Slot_%d/Sp_SlotBg" % index]={"visible":index<=reward_count}
+		# A tap on a reward opens its original item information popup.
+		if index<=reward_count:spec[P_QUEST+"Nd_List_Reward/Quest_Slot_Set/Slot_%d/Btn" % index]={"activate":Callable(self,"_reward_info").bind(int(selected_rewards[index-1].get("item_class_id",0)))}
 	return spec
+
+func _reward_info(item_class_id: int) -> Dictionary:
+	return preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(_hud.get_ref() if _hud!=null else null,item_class_id)
 
 func _selected_rewards(runtime: Object) -> Array:
 	for floor: Dictionary in runtime.board():

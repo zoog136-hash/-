@@ -115,6 +115,23 @@ func _run() -> void:
 	var opened: Dictionary=window.open(parent)
 	check(opened.get("native_panel",false) and host.hud.native==2,"opening on a partially owned weapon opens the existing panel")
 	parent.queue_free()
+	# 사용자 목록 17: the weapon row's original gauge ring fills with the progress.
+	var levels: Array=runtime.core.levels[1]
+	var low: int=int(levels[1].CumulativePoint)
+	var high: int=int(levels[2].CumulativePoint)
+	runtime.state.weapons["1"]["points"]=str(low+(high-low)/2)
+	var half: float=WINDOW.gauge_ratio(runtime,1)
+	check(absf(half-float((high-low)/2)/float(high-low))<0.001,"the gauge ratio is the progress to the next level: "+str(half))
+	runtime.state.weapons["1"]["points"]=str(int(levels[-1].CumulativePoint))
+	check(is_equal_approx(WINDOW.gauge_ratio(runtime,1),1.0),"the last level fills the ring")
+	var ring:=Sprite2D.new()
+	ring.texture=ImageTexture.create_from_image(Image.create(8,8,false,Image.FORMAT_RGBA8))
+	ring.rotation=PI
+	var Radial=preload("res://scripts/ui/original_ui/source_radial_fill.gd")
+	check(Radial.apply(ring,0.25) and is_equal_approx(float((ring.material as ShaderMaterial).get_shader_parameter("fill_ratio")),0.25),"the ring shows a quarter of its picture")
+	check(is_equal_approx(float((ring.material as ShaderMaterial).get_shader_parameter("start_turn")),0.5),"a ring authored at 180 degrees still starts at the top of the screen")
+	check(not Radial.apply(Sprite2D.new(),0.5),"no picture: nothing is drawn")
+	ring.free()
 	# The shared player takes a stated colour into its per-colour materials.
 	var player: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
 	check(player.contains(".get(\"color\")") and not player.contains("instance uniform vec"),"the shared player reads a colour binding (no instance uniform)")

@@ -419,46 +419,105 @@ func _slot_spec(prefix: String) -> Dictionary:
 	return spec
 
 func _fill_items(root: Node2D, out: Dictionary) -> Dictionary:
-	var items: Array=_view.get("items",[])
-	var rows: Array=[]
-	for row: Dictionary in items:
-		var spec: Dictionary=_slot_spec("Common_Slim_ItemSlot/")
-		spec["Panel/Btn_SellList"]={"activate":Callable(self,"_item_pressed").bind(int(row.item_class_id))}
-		spec["Panel/Text_Volume"]={"role":"source_text","text":_money(int(row.min_price))}
-		spec["Panel/Text_Class"]={"visible":false}
-		spec["Panel/Text_Info"]={"role":"source_text","text":"매물 %d건" % int(row.count)+(" · "+APPROX if bool(row.approx) else "")}
-		spec["Panel/Text__ItemName"]={"role":"source_text","text":str(row.name)}
-		rows.append({"member":ITEM_ROW,"spec":spec})
-	var listed: Dictionary=_fill_list(root,out,SEARCH+"Tab_Search_Category/ListView",rows)
-	if not listed.get("ok",false):return listed
-	var pictures: int=0
-	for index: int in range((listed.scenes as Array).size()):
-		if _class_picture(listed.scenes[index],listed.outs[index],"Common_Slim_ItemSlot/Sp_IconSample",int(items[index].item_class_id)):pictures+=1
-	return {"ok":true,"rows":rows.size(),"pictures":pictures}
+	return _fill_market_list(root,out,SEARCH+"Tab_Search_Category/ListView",_view.get("items",[]),ITEM_ROW,_item_spec)
+
+func _item_spec(row: Dictionary) -> Dictionary:
+	var spec: Dictionary=_slot_spec("Common_Slim_ItemSlot/")
+	spec["Panel/Btn_SellList"]={"activate":Callable(self,"_item_pressed").bind(int(row.item_class_id))}
+	spec["Panel/Text_Volume"]={"role":"source_text","text":_money(int(row.min_price))}
+	spec["Panel/Text_Class"]={"visible":false}
+	spec["Panel/Text_Info"]={"role":"source_text","text":"매물 %d건" % int(row.count)+(" · "+APPROX if bool(row.approx) else "")}
+	spec["Panel/Text__ItemName"]={"role":"source_text","text":str(row.name)}
+	return spec
 
 func _fill_results(root: Node2D, out: Dictionary) -> Dictionary:
-	var listings: Array=_view.get("listings",[])
-	var rows: Array=[]
-	for row: Dictionary in listings:
-		var spec: Dictionary=_slot_spec("Common_Slim_ItemSlot/")
-		spec["Panel/Btn_Normal"]={"activate":Callable(self,"_listing_pressed").bind(str(row.key))}
-		spec["Panel/Btn_Pressed"]={"visible":false}
-		spec["Panel/Btn_CheckBox"]={"visible":false}
-		spec["Panel/Text_Volume_1"]={"role":"source_text","text":_money(int(row.bundle_price))}
-		spec["Panel/Text_Volume_2"]={"role":"source_text","text":_unit(float(row.unit_price))}
-		spec["Panel/Text_Time"]={"role":"source_text","text":"%s개" % _money(int(row.bundle_size))}
-		spec["Panel/Text_Class"]={"visible":false}
-		spec["Panel/Nd_TextSet/Text_Info"]={"role":"source_text","text":(APPROX+" 매물" if bool(row.approx) else "실측 매물")+(" · 남은 %d건" % int(row.available) if int(row.available)>1 else "")}
-		spec["Panel/Nd_TextSet/Text_Info_Skill"]={"visible":false}
-		spec["Panel/Nd_TextSet/Nd_Set"]={"visible":false}
-		spec["Panel/Text_Info"]={"visible":false}
-		spec["Panel/Text__ItemName"]={"role":"source_text","text":str(row.name)}
-		rows.append({"member":RESULT_ROW,"spec":spec})
-	var listed: Dictionary=_fill_list(root,out,SEARCH+"Tab_Search_Result/ListView",rows)
-	if not listed.get("ok",false):return listed
-	for index: int in range((listed.scenes as Array).size()):
-		_class_picture(listed.scenes[index],listed.outs[index],"Common_Slim_ItemSlot/Sp_IconSample",int(listings[index].item_class_id))
-	return {"ok":true,"rows":rows.size()}
+	return _fill_market_list(root,out,SEARCH+"Tab_Search_Result/ListView",_view.get("listings",[]),RESULT_ROW,_result_spec)
+
+func _result_spec(row: Dictionary) -> Dictionary:
+	var spec: Dictionary=_slot_spec("Common_Slim_ItemSlot/")
+	spec["Panel/Btn_Normal"]={"activate":Callable(self,"_listing_pressed").bind(str(row.key))}
+	spec["Panel/Btn_Pressed"]={"visible":false}
+	spec["Panel/Btn_CheckBox"]={"visible":false}
+	spec["Panel/Text_Volume_1"]={"role":"source_text","text":_money(int(row.bundle_price))}
+	spec["Panel/Text_Volume_2"]={"role":"source_text","text":_unit(float(row.unit_price))}
+	spec["Panel/Text_Time"]={"role":"source_text","text":"%s개" % _money(int(row.bundle_size))}
+	spec["Panel/Text_Class"]={"visible":false}
+	spec["Panel/Nd_TextSet/Text_Info"]={"role":"source_text","text":(APPROX+" 매물" if bool(row.approx) else "실측 매물")+(" · 남은 %d건" % int(row.available) if int(row.available)>1 else "")}
+	spec["Panel/Nd_TextSet/Text_Info_Skill"]={"visible":false}
+	spec["Panel/Nd_TextSet/Nd_Set"]={"visible":false}
+	spec["Panel/Text_Info"]={"visible":false}
+	spec["Panel/Text__ItemName"]={"role":"source_text","text":str(row.name)}
+	return spec
+
+## Search summaries and individual listings are the large market lists.
+## Keep their full data and original spacing, but prepare and paint just the
+## rows in and near the original clip. Other tabs use their existing lists.
+func _fill_market_list(root: Node2D, out: Dictionary, suffix: String, items: Array, member: String, spec: Callable) -> Dictionary:
+	var list: Dictionary=_list(root,out,suffix)
+	if not list.get("ok",false):return list
+	var size: Vector2=list.size
+	var geometry: Dictionary=_row_geometry(member)
+	var gap: float=float(_node_options(out,suffix).get("itemMargin",0))
+	var pitch: float=float(geometry.size.y)+gap
+	if size.y<=0.0 or pitch<=0.0:return _fail("source_trade_window_market_list_geometry_invalid")
+	var key: String=list.key
+	var state: Dictionary={
+		"content":list.content,"min":minf(0.0,size.y-items.size()*pitch+gap),"value":0.0,
+		"market_rows":items,"member":member,"spec":spec,"size":size,"geometry":geometry,
+		"pitch":pitch,"mounted":{},"span":Vector2i(-1,-1),
+	}
+	var mounted: Dictionary=_mount_market_rows(key,state,0.0)
+	if not mounted.get("ok",false):return mounted
+	_scrolls[key]=state
+	return {"ok":true,"rows":items.size(),"pictures":mounted.pictures}
+
+static func _market_span(count: int, scroll: float, height: float, pitch: float) -> Vector2i:
+	var top: float=-scroll
+	return Vector2i(maxi(0,floori(top/pitch)-1),mini(count,ceili((top+height)/pitch)+1))
+
+func _mount_market_rows(key: String, state: Dictionary, scroll: float) -> Dictionary:
+	var items: Array=state.market_rows
+	var size: Vector2=state.size
+	var span: Vector2i=_market_span(items.size(),scroll,size.y,state.pitch)
+	if span==state.span:return {"ok":true,"pictures":0}
+	var mounted: Dictionary=state.mounted
+	var prepared: Dictionary={}
+	var pictures: int=0
+	var spec: Callable=state.spec
+	for index: int in range(span.x,span.y):
+		if mounted.has(index):continue
+		var row: Dictionary=items[index]
+		var row_out: Dictionary={}
+		var built: Dictionary=_scene_of(state.member,spec.call(row),row_out,key)
+		if not built.get("ok",false):
+			for pending: Node2D in prepared.values():pending.free()
+			return built
+		var scene: Node2D=built.scene
+		if _class_picture(scene,row_out,"Common_Slim_ItemSlot/Sp_IconSample",int(row.item_class_id)):pictures+=1
+		prepared[index]=scene
+	# Keep the committed rows and hit targets on a failed scroll build.
+	for index: int in mounted.keys():
+		if index>=span.x and index<span.y:continue
+		var previous: Node2D=mounted[index]
+		mounted.erase(index)
+		previous.hide()
+		previous.queue_free()
+	var extent: Vector2=state.geometry.size
+	for index: int in prepared:
+		var scene: Node2D=prepared[index]
+		_place(state.content,scene,state.geometry,Vector2((size.x-extent.x)*0.5,size.y-extent.y-state.pitch*float(index)))
+		scene.set_meta(ROW_LIST_META,key)
+		_forward_row_drags(scene,key)
+		mounted[index]=scene
+	state.span=span
+	return {"ok":true,"pictures":pictures}
+
+func _scroll_to(key: String, value: float) -> void:
+	var state: Dictionary=_scrolls.get(key,{})
+	if state.has("market_rows") and is_instance_valid(state.content):
+		var mounted: Dictionary=_mount_market_rows(key,state,clampf(value,float(state.min),0.0))
+		if not mounted.get("ok",false):return
+	super._scroll_to(key,value)
 
 func _fill_mine(root: Node2D, out: Dictionary) -> Dictionary:
 	var mine: Array=[]

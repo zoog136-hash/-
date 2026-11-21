@@ -1728,7 +1728,7 @@ func _carrying_capacity() -> int:
 
 func _carrying_capacity_uncached() -> int:
 	var skill_capacity := int(original_skills.stat("weight")) if original_skills != null else 0
-	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity")
+	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity") + _active_item_buff_total("carry")
 
 func _inventory_encumbrance_multiplier() -> float:
 	if _stat_memo_depth == 0: return _inventory_encumbrance_multiplier_uncached()
@@ -4723,7 +4723,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if item_name.begins_with("m523-growth-item:"):
 		if item_name == GROWTH96.Source.item_key(GROWTH96.Source.TOKEN): hud.open_growth96()
-		else: hud.show_message("미개봉 성장 보상 상자입니다. 다른 출처의 뽑기권으로 자동 교환하거나 개봉하지 않습니다.")
+		else:
+			var opened: Dictionary = _open_growth_reward_box(item_name)
+			if not opened.get("ok", false): hud.show_message(str(opened.get("reason", "미개봉 성장 보상 상자입니다")))
 		return
 	var issued_scroll: Dictionary=patch523_open_expedition_enhancement(item_name)
 	if issued_scroll.get("handled",false):
@@ -4796,6 +4798,30 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		_use_healing_item(item_name, int(record.get("heal", 0)))
 		return
 	hud.show_message("이 아이템은 직접 사용할 수 없습니다")
+
+## 성장 보상 상자 (m523-growth-item:<ItemClassID>): one box of the stack
+## becomes the original box item of that ItemClassID (a physical receipted
+## stack, same save) and is opened by its original box rule from the bag.
+func _open_growth_reward_box(item_name: String) -> Dictionary:
+	var id_text: String = item_name.trim_prefix("m523-growth-item:")
+	if not id_text.is_valid_int() or int(inventory.get(item_name, 0)) < 1: return {"ok":false,"reason":"성장 보상 상자를 확인할 수 없습니다"}
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var summary: Dictionary = LOOT_DROP.PATCH523_DROPS.definition_id(id_text)
+	var record: Dictionary = LOOT_DROP.PATCH523_DROPS.variant_item(summary.get("native_record", {}), 1)
+	if record.is_empty() or str(stack.profile(record).get("kind", "")) not in ["bag","selection"]:
+		return {"ok":false,"reason":"이 성장 보상 상자는 원본 상자 규칙이 없어 열 수 없습니다 · 상자 보존"}
+	var view = stack.SupplierView.new()
+	view.host = self; view.inventory = inventory.duplicate(true); view.item_instances = item_instances.duplicate(true); view.gold = gold
+	view.inventory[item_name] = int(view.inventory[item_name]) - 1
+	if int(view.inventory[item_name]) <= 0: view.inventory.erase(item_name)
+	var staged: Dictionary = preload("res://scripts/loot/patch523_item_inventory.gd").stage(view, [{"item_class_id":int(id_text),"amount":1,"bless_raw":1,"enchant":0}], {"kind":"growth96_reward_box","growth_item":item_name})
+	view.free()
+	if not staged.get("ok", false): return {"ok":false,"reason":str(staged.get("error","성장 보상 상자 변환 실패")) + " · 상자 보존"}
+	if _save_game(true, staged.overrides) != OK: return {"ok":false,"reason":"성장 보상 상자 저장 실패 · 상자 보존"}
+	inventory = staged.overrides.inventory; item_instances = staged.overrides.item_instances
+	if staged.overrides.has("gold"): gold = int(staged.overrides.gold)
+	_on_inventory_item_activated(str(record.name))
+	return {"ok":true}
 
 func _first_number(text: String) -> int:
 	var digits: String = ""
@@ -4974,6 +5000,10 @@ func _tick_item_buffs(delta: float) -> void:
 				hp = mini(_effective_max_hp(), hp + maxi(0, int(buff.get("hp_regen_tick", 0))) * ticks)
 				changed = true
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
+		# 원본 IsAbsoluteTimeBuff: real time, also while the game was closed.
+		if buff.has("absolute_until"): buff["remaining"] = maxf(0.0, float(buff.absolute_until) - Time.get_unix_time_from_system())
+		# 원본 EraseBuffOnExperience / EraseOnLevel: ends at that level.
+		if int(buff.get("erase_at_level", 0)) > 0 and level >= int(buff.erase_at_level): buff["remaining"] = 0.0
 		active_item_buffs[key] = buff
 		if float(buff.get("remaining", 0.0)) <= 0.0:
 			expired.append(key)
@@ -6443,12 +6473,62 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 
 func _use_potion() -> void:
 	if death_recovery.blocked(): return
-	# The original 523 HP potion; the pre-November "HP 물약" is not used.
-	var names: Array[String] = preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self)
-	if names.is_empty():
-		hud.show_message("원본 체력 회복제가 없습니다")
+	# The HUD potion slot (왼쪽 위 캐릭터 정보 옆): the potion the player chose
+	# there, else the original 523 HP potion (#233).
+	var chosen: String = hud_potion_name()
+	if chosen.is_empty():
+		# The chooser lists the owned ones (a rule-refused potion greyed) or
+		# says none is owned.
+		if hud.has_method("open_hud_potion_choice"): hud.open_hud_potion_choice()
+		else: hud.show_message("보유한 체력 회복 물약이 없습니다")
 		return
-	_use_quick_item(names[0])
+	_use_quick_item(chosen)
+
+const HUD_POTION_KEY := "hud_potion_item"
+## Owned HP-restoring items for the HUD potion slot, each with the reason it
+## cannot be drunk now (원본 레벨·직업 제한 등; empty when usable).
+func hud_potion_candidates() -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var native_use: Script = preload("res://scripts/loot/patch523_item_use.gd")
+	for key: Variant in inventory:
+		var name_value: String = str(key)
+		if int(inventory.get(name_value, 0)) <= 0: continue
+		var record: Dictionary = _find_catalog_item_record(name_value)
+		if record.is_empty(): continue
+		var native_hp: bool = str(stack.profile(record).get("kind", "")) == "hp"
+		if not native_hp and not (str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0): continue
+		var reason: String = PATCH523_ITEM_USE.reason(_patch523_use_record(name_value), level, BASE508.source_class_id(job_class))
+		if reason.is_empty() and native_hp: reason = str(native_use.eligibility(self, record))
+		rows.append({"name":name_value,"count":int(inventory[name_value]),"reason":reason,"item_class_id":int(record.get("source_item_class_id", 0)),"heal":int(record.get("heal", 0))})
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.heal) < int(b.heal) if int(a.heal) != int(b.heal) else str(a.name) < str(b.name))
+	return rows
+
+## The potion the HUD slot drinks: the chosen one while owned and usable,
+## else the first usable owned original HP potion (#233 first).
+func hud_potion_name() -> String:
+	var chosen: String = str(ui_preferences.get(HUD_POTION_KEY, ""))
+	var candidates: Array[Dictionary] = hud_potion_candidates()
+	for row: Dictionary in candidates:
+		if row.name == chosen and str(row.reason).is_empty(): return chosen
+	for name_value: String in preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self):
+		for row: Dictionary in candidates:
+			if row.name == name_value and str(row.reason).is_empty(): return name_value
+	for row: Dictionary in candidates:
+		if str(row.reason).is_empty(): return str(row.name)
+	return ""
+
+func select_hud_potion(item_name: String) -> bool:
+	for row: Dictionary in hud_potion_candidates():
+		if row.name != item_name: continue
+		if not str(row.reason).is_empty():
+			hud.show_message(str(row.reason))
+			return false
+		ui_preferences[HUD_POTION_KEY] = item_name
+		hud.set_quick_items(inventory)
+		_request_deferred_save()
+		return true
+	return false
 
 func _use_quick_item(item_name: String) -> void:
 	if death_recovery.blocked(): return
@@ -6536,7 +6616,7 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 	# Existing host potion bonuses and shared cooldown, used by the verified
 	# source dice consumer without replacing the NPC healing adjustment/event.
 	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
-	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct"))/100.0))
+	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct")+_active_item_buff_total("potion_heal_pct"))/100.0))
 	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
 
 func _source_hp_potion_committed(amount: int) -> void:
@@ -11232,6 +11312,7 @@ func _blessing_consumption_reduction_percent() -> float:
 		reduction += AIN_OPTION_RULES.reduction_percent(record)
 	reduction += _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "ain_saving_pct")
 	reduction += TwilightAinhasadService.level_reduction_percent(level)
+	reduction += float(_active_item_buff_total("ain_saving_pct"))
 	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:

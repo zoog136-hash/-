@@ -949,6 +949,13 @@ func inventory_gesture_bounds() -> Control:
 func inventory_select(reference: String) -> Dictionary:
 	return _inventory_view.select(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
+func inventory_refresh_actions() -> Dictionary:
+	return _inventory_view.refresh_actions() if inventory_is_open() else _fail("source_inventory_not_open")
+
+## An original font of the pack (Font/font_B.ttf for slot/tooltip text).
+func original_font(path: String) -> FontFile:
+	return _pack.font({"path":path,"plistFile":"","resourceType":0}) if _pack!=null and _pack.has_method("font") else null
+
 func inventory_activate_selected(reference: String) -> Dictionary:
 	return _inventory_view.activate_selected(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
