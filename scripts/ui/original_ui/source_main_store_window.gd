@@ -11,9 +11,11 @@ extends RefCounted
 ## the quantity confirmation and payment stay with world.source_shop
 ## (quote_merchant / buy_merchant, delivered through the order box as in the
 ## 원본 상점 panel). An NPC with no merchant link lists no goods.
+## At a 잡화상인 a 소지품 grid tap sells that item (original keypad count,
+## see sells()); elsewhere the grid is shown only.
 ## Left out (no rule here): 자동 주문 (target amount slider, 1/2/3 SET), the
-## cart, 판매 / 자동 판매 modes, the batch count buttons, 혈맹 코인, tax,
-## help, tooltips and every effect layer; the 소지품 grid is shown only.
+## cart, the 판매 / 자동 판매 mode scenes (not in the UI pack), the batch count
+## buttons, 혈맹 코인, tax, help, tooltips and every effect layer.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
@@ -49,6 +51,9 @@ var _parent: WeakRef
 var _npc_id: String=""
 ## The talking NPC's original EarthObject class (0: none).
 var npc_class: int=0
+## The talking NPC's shown name ("[잡화상인] 세린").
+var npc_name: String=""
+var last_sale: Dictionary={}
 var _merchants: Array[int]=[]
 var _scene: Node2D
 var _tab: String="all"
@@ -82,6 +87,7 @@ func open(parent: Node, npc_id: String) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var npc: Dictionary=TownNpcs.record(hud.get_parent(),npc_id) if hud!=null and not npc_id.is_empty() and hud.get_parent().get("field_map")!=null else {}
 	npc_class=int(npc.get("source523_earth_object_class_id",0))
+	npc_name=str(npc.get("name",""))
 	_tab="all"
 	_bag.y=null
 	_list.y=null
@@ -299,12 +305,14 @@ func _add_bag_lines(world: Object, content: Node2D) -> Dictionary:
 			spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 			spec[key+"Sp_Select"]={"visible":false}
 			spec[key+"Text_Amount"]={"role":"source_text","text":text,"visible":not text.is_empty()}
-			spec[key+"Btn"]={"activate":Callable(self,"_bag_tapped")}
+			spec[key+"Btn"]={"activate":Callable(self,"_bag_tapped").bind(at)}
 		var built: Dictionary=_tree.scene_of(SET,spec,row_out)
 		if not built.get("ok",false):return built
 		var scene: Node2D=built.scene
 		for index: int in range(SET_SLOTS.size()):forward_drag(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Btn",Callable(_bag,"input"))
 		scene.position=BAG_ROW_POSITION+Vector2(0.0,Storage.ROW_PITCH*float(line))
+		# A 잡화상인 buys from this grid: its slots answer the HUD router.
+		if sells():_route_slots(scene)
 		content.add_child(scene)
 		for index: int in range(SET_SLOTS.size()):
 			var at: int=line*SET_SLOTS.size()+index
@@ -332,9 +340,65 @@ func _class_picture(root: Node2D, out: Dictionary, suffix: String, class_id: int
 
 ## --- Actions -----------------------------------------------------------------
 
-## The 소지품 grid is shown only (selling has its own 판매 window).
-func _bag_tapped() -> Dictionary:
-	return {"ok":true,"shown_only":true}
+## Whether the talking NPC buys items (user list 2026-11-21 #16 "잡화 NPC에게
+## 판매 가능하게"): a 잡화상인. The client sells to its 아이템 매입 상인
+## (BuyList, MerchantGoods DialogActionTypeID 2): the price is that original
+## buy row (source_shop.sale_quote), else TWILIGHT's existing buyback price
+## (inventory_automation.sale_quote) (TWILIGHT 근사: the 잡화상인 buys).
+func sells() -> bool:
+	return npc_name.contains("잡화상인")
+
+## A 소지품 grid item at a 잡화상인: the sale quote, the original quantity
+## keypad (Common_Calculator, up to the owned count; equipment one by one),
+## then world._sell_shop_item (adena in, item out, one save). Elsewhere the
+## grid is shown only.
+func _bag_tapped(at: int = -1) -> Dictionary:
+	if calculator.is_open():return {"ok":true,"ignored_under_keypad":true}
+	if _bag.moved>12.0:return {"ok":true,"ignored_after_drag":true}
+	if not sells() or at<0 or at>=_bag_rows.size():return {"ok":true,"shown_only":true}
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	if hud==null or parent==null:return _fail("source_store_window_host_unavailable")
+	var world: Object=hud.get_parent()
+	var row: Dictionary=_bag_rows[at]
+	var name: String=str(row.get("name",""))
+	var id: String=str(row.get("instance_id",""))
+	# The original buy row first (source523 BuyList), else the existing sale.
+	var quote: Dictionary=world.get("source_shop").call("sale_quote",name,1,id)
+	if not quote.get("ok",false):
+		var existing: Dictionary=world.get("inventory_automation").call("sale_quote",name,1,id,world.get("inventory"),world.get("item_instances"),int(world.get("gold")),false)
+		if existing.get("ok",false):quote=existing
+	if not quote.get("ok",false):
+		hud.show_message(str(quote.get("reason","판매할 수 없는 아이템입니다")))
+		return {"ok":true,"refused":str(quote.get("reason",""))}
+	var limit: int=1 if not id.is_empty() else clampi(int(world.get("inventory").get(name,0)),1,SELL_MAX)
+	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"sell").bind(name,id))
+	if opened.get("handled",false):return {"ok":true,"requested_sale":name,"calculator":true,"maximum":limit}
+	hud.confirm_action("원본 상점 · 판매","%s\n개당 %s 아데나 · 판매할 수량을 선택하세요" % [name,price_text(int(quote.get("payment",0)))],"판매",func(amount: int) -> void: sell(amount,name,id),limit)
+	return {"ok":true,"requested_sale":name,"calculator":false,"maximum":limit}
+
+## The most one sale takes (the existing buyback's single-stack limit).
+const SELL_MAX: int=99
+
+## Sells `amount` of `name` (equipment: its physical `id`) for adena.
+func sell(amount: int, name: String, id: String) -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_store_window_host_unavailable")
+	var world: Object=hud.get_parent()
+	var gold_before: int=int(world.get("gold"))
+	var count_before: int=int(world.get("inventory").get(name,0))
+	var original: Dictionary=world.get("source_shop").call("sale_quote",name,amount,id)
+	if original.get("ok",false):
+		var sold: Dictionary=world.get("source_shop").call("sell_to_merchant",name,amount,id)
+		hud.show_message(str(sold.get("reason","판매할 수 없습니다")))
+		if sold.get("ok",false):
+			world.call("_update_hud")
+			hud.refresh_inventory(world.get("inventory"))
+	else:world.call("_sell_shop_item",name,amount,id)
+	var paid: int=int(world.get("gold"))-gold_before
+	last_sale={"ok":paid>0 and int(world.get("inventory").get(name,0))==count_before-amount,"name":name,"quantity":amount,"payment":paid}
+	refresh()
+	return last_sale
 
 ## A product row -> the original merchant quote, the original quantity keypad
 ## (Common_Calculator) and world.source_shop.buy_merchant: the price is paid
