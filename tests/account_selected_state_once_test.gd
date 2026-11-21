@@ -40,10 +40,20 @@ func run() -> void:
 	var items: Dictionary = {}
 	for index: int in 200: items["%032x" % index] = {"name":"가죽","level":0,"record":{"name":"가죽","slot":"material","note":"x".repeat(40)}}
 	body.item_instances = items; body.gold = 777; body.inventory = {"가죽":200}
+	body.consumable_state = {"source_native_stack_uses":{"receipt":{"used":1}}, "private_test":{"value":2}}
+	var input_text: String = JSON.stringify(body,"",true,true)
 	var staged: Dictionary = STORE.stage_save(store.path, body)
 	check(staged.get("ok",false), "a selected-character save seals: %s" % str(staged.get("problem","")))
 	if not staged.get("ok",false):
 		finish(base); return
+	check(JSON.stringify(body,"",true,true) == input_text, "staging leaves the caller's account and nested consumables unchanged")
+	var own_state: Dictionary = STORE.selected_record(staged.payload).state
+	check(own_state.consumable_state == {"private_test":{"value":2}} and staged.payload[STORE.KEY].shared.consumable_state == {"source_native_stack_uses":{"receipt":{"used":1}}}, "private state and shared receipt go to their respective owners")
+	var private_copy: Dictionary = STORE.private_fields(body)
+	private_copy.consumable_state.private_test.value = 3
+	staged.payload.consumable_state.source_native_stack_uses.receipt.used = 4
+	check(staged.payload[STORE.KEY].shared.consumable_state.source_native_stack_uses.receipt.used == 1 and JSON.stringify(body,"",true,true) == input_text, "private extraction and staging retain independent copies of the input")
+	staged.payload.consumable_state.source_native_stack_uses.receipt.used = 1
 	var full_text: String = JSON.stringify(staged.payload,"",true,true)
 	var compact: Dictionary = STORE.compact(staged.payload)
 	check(compact != staged.payload and STORE.validate(staged.payload).is_empty(), "compact() returns a copy; the input stays valid")

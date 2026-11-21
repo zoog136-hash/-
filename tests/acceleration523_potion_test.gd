@@ -14,6 +14,7 @@ const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const MERGE = preload("res://scripts/loot/native_stack_merge.gd")
 ## ItemClass -> [BuffClass, stage, move/attack/cast percent, seconds].
 const ITEMS = {380:[40,1,25,300],235:[11111,1,25,1800],19413:[11111,1,25,1800],335:[41,2,25,300],19423:[41,2,25,300],
 	321:[42,2,12.5,300],19463:[42,2,12.5,300],317:[43,2,25,600],887:[237,3,10,600]}
@@ -58,10 +59,12 @@ func rules() -> void:
 		check(wafer.get("activation_status") == "unrestricted" and is_equal_approx(float(wafer.typed_effects.get("move_speed",0)), 12.5), "a 12.5 % acceleration is kept exact")
 		var plain_fraction: Dictionary = PROJECTION.timed_buff(definition([effect("MoveSpeedBonus","Percentage",125000.0)], 1.0))
 		check(plain_fraction.get("activation_status") == "blocked", "a fractional percent outside acceleration still blocks")
-	# Every other timed buff is unchanged: priority 2, the territory row and an
-	# applied RunSpritePoint without RunSpriteLevel still block.
+	# Every other timed buff: the territory row and an applied RunSpritePoint
+	# without RunSpriteLevel still block. Since 2026-11-21 (item_use523_buffs)
+	# BuffGroupPriority 2 in a non-overlapping group is the same "newest
+	# replaces" approximation for every item buff.
 	var other: Dictionary = PROJECTION.timed_buff(definition([effect("PVEDamageReduction","Value",3.0)], 2.0, territory))
-	check(other.get("activation_status") == "blocked" and other.blocked_reasons.has("unsupported_buff_priority_or_spell_level_rule") and other.blocked_reasons.has("unsupported_item_bonus:ConsumeTerritoryClassID") and not other.has("acceleration_stage"), "non-acceleration buffs keep their old blockers")
+	check(other.get("activation_status") == "blocked" and not other.blocked_reasons.has("unsupported_buff_priority_or_spell_level_rule") and other.blocked_reasons.has("unsupported_item_bonus:ConsumeTerritoryClassID") and not other.has("acceleration_stage"), "non-acceleration buffs keep the territory blocker")
 	var odd: Dictionary = PROJECTION.timed_buff(definition([effect("PVEDamageReduction","Value",3.0),effect("RunSpritePoint","Value",1.0,"Other",1.0)], 1.0))
 	check(odd.get("activation_status") == "blocked" and odd.blocked_reasons.has("conditional_buff_effect:RunSpritePoint"), "a RunSpritePoint of another application type stays conditional")
 
@@ -77,6 +80,18 @@ func table() -> void:
 		rows[str(id)] = {"status":spec.get("activation_status"),"reasons":spec.get("blocked_reasons"),"typed":typed,"stage":spec.get("acceleration_stage"),"seconds":spec.get("duration_seconds")}
 		check(ok, "original acceleration item projects usable: " + str(id))
 	evidence["items"] = rows
+	var brave: Dictionary = D.variant_item(D.definition_id("335").get("native_record",{}),1)
+	var castle: Dictionary = D.variant_item(D.definition_id("19423").get("native_record",{}),1)
+	var first: Dictionary = STACK.stage_grant(brave,5,{},{"kind":"test_original_grant"})
+	var second: Dictionary = STACK.stage_grant(brave,5,first.item_instances,{"kind":"test_original_shop"})
+	var third: Dictionary = STACK.stage_grant(brave,5,second.item_instances,{"kind":"test_original_grant"})
+	var distinct: Dictionary = STACK.stage_grant(castle,5,third.item_instances,{"kind":"test_original_shop"})
+	var lock_key: String = str(brave.name)+"@@@"+str(first.id)
+	var plan: Dictionary = MERGE.plan(distinct.item_instances,{},{lock_key:true})
+	check(plan.get("merged_slots",0)==1 and plan.get("item_instances",{}).has(first.id) and plan.get("item_instances",{}).has(distinct.id), "same-ID unlocked potions merge; a locked potion and a second ItemClass stay independent")
+	if plan.get("changed",false):
+		var counts: Dictionary = {brave.name:15,castle.name:5}
+		check(int(plan.item_instances[second.id][STACK.QUANTITY])==10 and plan.item_locks=={lock_key:true} and STACK.state_error(counts,plan.item_instances,plan.consumable_state).is_empty(), "remaining stack quantity and full receipt journal validate")
 
 func use(world: Node, id: int) -> Dictionary:
 	var staged: Dictionary = preload("res://scripts/loot/patch523_item_inventory.gd").stage(world, [{"item_class_id":id,"amount":2,"bless_raw":1,"enchant":0}], {"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
@@ -84,7 +99,13 @@ func use(world: Node, id: int) -> Dictionary:
 	world.inventory = staged.overrides.inventory; world.item_instances = staged.overrides.item_instances
 	var name: String = str(D.variant_item(D.definition_id(str(id)).get("native_record", {}), 1).name)
 	world.hud.message_label.text = ""
-	world._on_inventory_item_activated(name)
+	var reference: String = name
+	if id==335:
+		for uid: String in world.item_instances:
+			if world.item_instances[uid].get("name")==name:
+				reference=name+"@@@"+uid
+				break
+	world._on_inventory_item_activated(reference)
 	return {"granted":true,"name":name,"count":int(world.inventory.get(name,0)),"message":world.hud.message_label.text,"buff":world.active_item_buffs.get(name,{})}
 
 func runtime() -> void:
@@ -122,6 +143,18 @@ func runtime() -> void:
 	evidence["class"] = world.job_class; evidence["second_stage"] = others
 	world._tick_item_buffs(700.0)
 	check(world.active_item_buffs.is_empty() and is_equal_approx(world._effective_move_speed_multiplier(), move0), "expired acceleration restores the speed")
+	# A balance from an older name-keyed save has no physical receipt. The
+	# regular bag action must use that balance rather than demanding a UUID.
+	var plain_name: String = str(D.variant_item(D.definition_id("19423").get("native_record",{}),1).name)
+	world.inventory[plain_name] = 2
+	world.item_use_cooldowns.clear()
+	world.ui_preferences.item_locks[plain_name] = true
+	world._on_inventory_item_activated(plain_name)
+	check(int(world.inventory.get(plain_name,0))==2 and not world.active_item_buffs.has(plain_name), "a locked older balance stays untouched")
+	world.ui_preferences.item_locks.erase(plain_name)
+	world._on_inventory_item_activated(plain_name)
+	check(int(world.inventory.get(plain_name,0))==1 and world.active_item_buffs.get(plain_name,{}).get("source_buff_class",{}).get("ID")==41, "older name-keyed bravery potion uses its original buff and consumes exactly one")
+	check(world.item_instances.values().all(func(entry: Dictionary) -> bool: return entry.get("name")!=plain_name), "the plain debit creates no physical item or receipt")
 	world.queue_free()
 	await process_frame
 	if had_save:

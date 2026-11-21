@@ -22,6 +22,13 @@ func _initialize() -> void:
 	HITCH.add("monsters", HITCH.now())
 	HITCH.count("spawn.rate_capped")
 	check(HITCH._trail_seq == armed + 2, "measured sections and counters are traced while armed")
+	# A frame prints at most TRAIL_LINES_PER_FRAME lines; the boundary still prints.
+	var capped: int = HITCH._trail_seq
+	for index: int in range(HITCH.TRAIL_LINES_PER_FRAME * 3): HITCH.detail("detail.%d" % index, HITCH.now())
+	check(HITCH._trail_seq - capped <= HITCH.TRAIL_LINES_PER_FRAME and HITCH._trail_skipped > 0, "one frame prints a bounded number of trail lines")
+	var before_frame: int = HITCH._trail_seq
+	HITCH.trail("frame")
+	check(HITCH._trail_seq == before_frame + 1 and HITCH._trail_skipped == 0, "the frame boundary prints and reports the skipped lines")
 	HITCH._trail_until_msec = Time.get_ticks_msec() - 1
 	HITCH.trail("late")
 	check(HITCH._trail_until_msec == 0, "the window closes by itself")

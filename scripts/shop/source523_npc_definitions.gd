@@ -2,6 +2,7 @@ extends RefCounted
 ## Source facts and explicitly local availability stay separate from paid orders.
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const OriginalInput = preload("res://scripts/shop/source523_npc_input_projection.gd")
+const TownNpcs = preload("res://scripts/npc/source523_town_npcs.gd")
 const RULES_PATH: String="res://data/shop/source523_npc_local_rules.json"
 const MAX_INPUT_BYTES: int=8*1024*1024
 var records: Dictionary={}
@@ -114,6 +115,8 @@ func supports_normal_equipment(merchant_id: int, bless_code: int) -> bool:
 
 func rule_hash(merchant_id: int = 0) -> String:
 	var effective: Dictionary=rules.duplicate(true)
+	# The default switch is not part of a listed merchant's saved identity.
+	effective.erase("default_placed_merchants")
 	if merchant_id>0:effective.merchants=[rule_for(merchant_id)]
 	return JSON.stringify(effective,"",true,true).sha256_text()
 
@@ -121,7 +124,36 @@ func rule_for(merchant_id: int) -> Dictionary:
 	if not validate_rules(rules).is_empty() or not rules.enabled:return {}
 	for row: Dictionary in rules.merchants:
 		if int(row.merchant_id)==merchant_id:return row
+	return default_rule(merchant_id)
+
+## Every merchant of a town NPC the game places (source523_town_npcs: its
+## original EarthObject with a SellList action, a spawn of no test/unused tag
+## and a local server set) sells there with the same offline reading as the
+## listed merchants (user report 2026-11-21 "상점에 구매 안 되는 거 많아": only
+## five merchants had a rule, so e.g. 기란 테르·키리 refused every row).
+## TWILIGHT 근사: the first such spawn names the merchant; a manual spawn the
+## town placer places anyway counts as placed; the Range attribute is the
+## talk distance only; equipment is the original +0 normal row.
+func default_rule(merchant_id: int) -> Dictionary:
+	if rules.get("default_placed_merchants")!=true:return {}
+	var row: Dictionary=records.get(str(merchant_id),{})
+	for obj: Dictionary in row.get("object_links",[]):
+		if not obj.get("object_defined",false) or obj.sell_action_row_ids.is_empty() or not obj.get("currency_defined_and_unique",false):continue
+		if _excluded_name(str(obj.get("name",""))):continue
+		var chosen: Dictionary={}
+		for spawn: Dictionary in obj.spawns:
+			if _excluded_name(str(spawn.get("Name",""))):continue
+			if int(spawn.ServerLimitSetID)!=0 and not TownNpcs.local_server_set(int(spawn.ServerLimitSetID)):continue
+			if chosen.is_empty() or (chosen.SpawnManually and not spawn.SpawnManually):chosen=spawn
+		if chosen.is_empty():continue
+		return {"merchant_id":merchant_id,"earth_object_id":int(obj.earth_object_id),"spawn_id":int(chosen.ID),"label":str(obj.get("name","NPC %d" % merchant_id)),
+			"allow_range_attribute":true,"equipment_mode":"normal_zero_only","spawn_manually_placed":true,"twilight_default":true}
 	return {}
+
+static func _excluded_name(text: String) -> bool:
+	for tag: String in TownNpcs.EXCLUDED_NAME_TAGS:
+		if text.contains(tag):return true
+	return false
 
 func currency_for(merchant_id: int) -> int:
 	var row: Dictionary=records.get(str(merchant_id),{})
@@ -147,7 +179,7 @@ func context(merchant_id: int, goods_id: int, world: Variant = null) -> Dictiona
 		if not obj.get("object_defined",false) or obj.sell_action_row_ids.is_empty() or not _attributes_supported(obj.attributes,rule):return {"ok":false,"reason":"NPC 객체의 동작·별도 권한 조건 확인 필요"}
 		for spawn: Dictionary in obj.spawns:
 			if int(spawn.ID)!=int(rule.spawn_id):continue
-			if spawn.SpawnManually:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
+			if spawn.SpawnManually and rule.get("spawn_manually_placed")!=true:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}
 			var server_note: String=""
 			if int(spawn.ServerLimitSetID)!=0:
 				if world==null:return {"ok":false,"reason":"NPC 수동·서버 스폰 조건 확인 필요"}

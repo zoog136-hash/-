@@ -38,7 +38,10 @@ func allowance(row: Dictionary, history: Array, quantity: int, now: int, saved_i
 	if policy.is_empty():return {"ok":false,"reason":"NPC 초기화 코드 자체 연결 미설정"}
 	var effective: Dictionary={"offset":int(rules.offset_minutes),"unit":int(policy.unit),"hour":int(policy.hour),"account":bool(row.LimitCountPerAccount),"limit":int(row.LimitCount)}
 	var identity: String=JSON.stringify(effective,"",true,true).sha256_text()
-	if not saved_identity.is_empty() and saved_identity!=identity:return {"ok":false,"reason":"NPC 구매 한도 규칙 변경 감지 · 기존 규칙 확인 필요"}
+	# A counter bought under an earlier calendar (the former UTC reset) is
+	# counted again under this one; the next purchase saves the new identity.
+	# Refusing here locked every limited row of such a save for good.
+	var migrated: bool=not saved_identity.is_empty() and saved_identity!=identity
 	var current: Dictionary=calendar(now,int(policy.unit),int(policy.hour))
 	var count: int=0
 	for purchase: Dictionary in history:
@@ -49,4 +52,4 @@ func allowance(row: Dictionary, history: Array, quantity: int, now: int, saved_i
 	var scope: String="저장 프로필" if row.LimitCountPerAccount else "현재 캐릭터 저장"
 	var reset: String="초기화 없음" if int(current.next)==0 else "다음 초기화 %s UTC" % Time.get_datetime_string_from_unix_time(int(current.next))
 	var text: String="%s 잔여 %d/%d회 · %s · %s" % [scope,remaining,int(row.LimitCount),reset,str(rules.origin)]
-	return {"ok":quantity<=remaining,"reason":"NPC 구매 한도 초과 · "+text if quantity>remaining else "","remaining":remaining,"next_reset_at":int(current.next),"quota_text":text,"reset_identity":identity}
+	return {"ok":quantity<=remaining,"migrated_rule":migrated,"reason":"NPC 구매 한도 초과 · "+text if quantity>remaining else "","remaining":remaining,"next_reset_at":int(current.next),"quota_text":text,"reset_identity":identity}

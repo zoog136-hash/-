@@ -282,7 +282,7 @@ func runtime() -> void:
 	evidence["after_load_slots"] = after_load
 	check(after_load.leather == [5], "3 leather grants of 2 (1 used) -> one slot of 5")
 	check(after_load.potion == [5], "3 potion grants of 2 (1 used) -> one slot of 5")
-	check(after_load.scroll == [10], "2 scroll grants of 5 -> one slot of 10")
+	check(after_load.scroll == [5,5], "a locked scroll stack and an unlocked one keep their separate quantities")
 	check(after_load.armor == [1,1], "2 pieces of the same equipment item ID stay 2 separate instances")
 	var armor_ids: Array = world.item_instances.keys().filter(func(id: String) -> bool: return world.item_instances[id].get("name")==record(ARMOR).name)
 	check(armor_ids.size() == 2 and armor_ids[0] != armor_ids[1], "each equipment piece keeps its own physical ID")
@@ -307,15 +307,15 @@ func runtime() -> void:
 	for uid: String in ledger_before:
 		if kept.has(uid) and int(kept[uid].used_quantity) == int(ledger_before[uid].used_quantity): used_rows += 1
 	check(used_rows == ledger_before.size(), "every prior use-ledger row moved into the journal with its used quantity (%d/%d)" % [used_rows, ledger_before.size()])
-	var scroll_uid: String = ""
+	var scroll_locks: Array[bool] = []
 	for uid: String in world.item_instances:
-		if world.item_instances[uid].get("name") == record(SCROLL).name: scroll_uid = uid
-	check(world._item_locked(str(record(SCROLL).name), scroll_uid), "a locked member keeps the merged stack locked")
+		if world.item_instances[uid].get("name") == record(SCROLL).name: scroll_locks.append(world._item_locked(str(record(SCROLL).name), uid))
+	check(scroll_locks.size()==2 and scroll_locks[0]!=scroll_locks[1], "only the selected scroll stack is locked")
 	evidence["journal_events"] = journal.size()
 	check(STACK.state_error(world.inventory,world.item_instances,world.consumable_service.export_state(),world.warehouse.snapshot(),world._ground_drops_snapshot(),world.dormant_character_items()).is_empty(), "merged state validates")
 	check(world._save_game(true) == OK, "merged save")
 	reload(world)
-	check(slots(world,LEATHER) == [5] and slots(world,POTION) == [5] and slots(world,SCROLL) == [10] and diff(counts_before, counts(world)).is_empty(), "merged stacks survive another reload")
+	check(slots(world,LEATHER) == [5] and slots(world,POTION) == [5] and slots(world,SCROLL) == [5,5] and diff(counts_before, counts(world)).is_empty(), "merged and separately locked stacks survive another reload")
 	# Floor pickups of one original material end in one slot. Let the reload's
 	# deferred map/floor restoration settle first.
 	for frame: int in range(30): await process_frame

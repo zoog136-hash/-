@@ -17,6 +17,10 @@ const MOUSE_DRAG_DISTANCE = 8.0
 const TOUCH_SCROLL_DISTANCE = 10.0
 const TOUCH_HOLD_SECONDS = 0.30
 const AUTO_DISTANCE = 28.0
+## A slight pull on a quick slot (a quarter of its size) already switches
+## AUTO while the finger moves: the bottom-row slots leave little room below
+## them and a touch that slides off the screen edge is canceled.
+const AUTO_PULL_DISTANCE = 16.0
 const QUICK_PAGE_SWIPE_DISTANCE = 42.0
 const TOUCH_PREVIEW_OFFSET = Vector2(0,-62)
 
