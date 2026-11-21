@@ -12,6 +12,11 @@ const SLOT_PROJECT=9056
 const BUTTON=9336
 const AMOUNT=792
 const INFO: Array[int]=[8312,7924,6656,6324,5992,4560,4232]
+## The tooltip's 드래곤의 보호 rows (Text_List_Buff_On / _Off): the existing
+## 드래곤의 용옥 timer (ainhasad_service dragon_orb_remaining).
+const BUFF_ON=3148
+const BUFF_OFF=2788
+const BUFF: Array[int]=[BUFF_ON,BUFF_OFF]
 
 class BlessingInput extends RefCounted:
 	var host: WeakRef
@@ -37,7 +42,17 @@ static func source_state(hud: Object) -> Dictionary:
 		# This is the existing hud_v20.set_ain_state display conversion. Rates
 		# come from the owner; no source preview700% or drop/EXP rule is used.
 		info={"exp_text":"%d%%" % int(float(exp_rate)*100.0),"adena_text":"%d%%" % int(float(adena_rate)*100.0)}
+		var orb: int=maxi(0,int(state.get("dragon_orb_remaining",0))) if typeof(state.get("dragon_orb_remaining")) in [TYPE_INT,TYPE_FLOAT] else 0
+		info["buff_on"]=orb>0
+		info["buff_text"]=buff_text(orb)
 	return {"ok":true,"amount":state.blessing,"disabled":button.disabled,"info":info,"info_visible":panel.visible and not info.is_empty()}
+
+## "드래곤의 보호 버프 적용 중 (20일)" as the client's row reads; under a day
+## in hours.
+static func buff_text(seconds: int) -> String:
+	if seconds<=0:return "드래곤의 보호 버프 없음"
+	var days: int=int(seconds/86400)
+	return "드래곤의 보호 버프 적용 중 (%s)" % ("%d일" % days if days>0 else "%d시간" % maxi(1,int(seconds/3600)))
 
 static func build(pack: RefCounted, hud: Object) -> Dictionary:
 	for spec: Array in [[WALLET,WALLET_SHA,[PROJECT]],[MEMBER,SHA256,[BUTTON,SLOT_PROJECT]],[SLOT,SLOT_SHA,[3496,AMOUNT]]]:
@@ -63,6 +78,14 @@ static func build(pack: RefCounted, hud: Object) -> Dictionary:
 		for offset: int in [6656,6324,5992]:bindings[offset]={"role":"static_source_text"}
 		bindings[4560]={"role":"source_text","text":str(state.info.get("exp_text",""))}
 		bindings[4232]={"role":"source_text","text":str(state.info.get("adena_text",""))}
+		var buff_in_scope: bool=true
+		if allowed is Array:
+			for offset: int in BUFF:
+				if not allowed.has(offset):buff_in_scope=false
+		if buff_in_scope and state.info.has("buff_text"):
+			scope.append_array(BUFF)
+			bindings[BUFF_ON]={"role":"source_text","text":str(state.info.buff_text),"visible":bool(state.info.buff_on)}
+			bindings[BUFF_OFF]={"role":"source_text","text":str(state.info.buff_text),"visible":not bool(state.info.buff_on)}
 	return {"ok":true,"state":state,"info_in_scope":info_in_scope,"source_node_offsets":[PROJECT],"bindings":{PROJECT:{"role":"project","source_node_offsets":scope,"bindings":bindings}},"partial_source_scene":true,"complete_screen_contract":false}
 
 static func refresh(scene: Node2D, state: Dictionary, info_in_scope: bool) -> Dictionary:
@@ -82,5 +105,11 @@ static func refresh(scene: Node2D, state: Dictionary, info_in_scope: bool) -> Di
 		for pair: Array in [[4560,"exp_text"],[4232,"adena_text"]]:
 			result=parent.player.set_bound_text(pair[0],str(state.info.get(pair[1],"")))
 			if not result.get("ok",false):return result
+		if state.info.has("buff_text") and parent.player.source_nodes.has(BUFF_ON) and parent.player.source_nodes.has(BUFF_OFF):
+			for pair: Array in [[BUFF_ON,true],[BUFF_OFF,false]]:
+				result=parent.player.set_bound_text(pair[0],str(state.info.buff_text))
+				if not result.get("ok",false):return result
+				result=parent.player.set_bound_visible(pair[0],bool(state.info.buff_on)==pair[1])
+				if not result.get("ok",false):return result
 		result=parent.player.set_bound_visible(172,state.info_visible)
 	return result
