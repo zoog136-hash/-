@@ -259,15 +259,26 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not claims:return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 소비 저장 보호 중 · 물리 수량 보존")
 	if not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():return _failure("현재 사용·생존 상태 조건 미충족")
-	var uid: String="";var owned: Dictionary={};var total: int=0
+	var uid: String="";var owned: Dictionary={};var total: int=0;var has_physical: bool=false
 	for id: String in world.item_instances:
 		var entry: Variant=world.item_instances[id]
-		if not entry is Dictionary or entry.get("name")!=item_name or not entry.has(RECEIPT):continue
+		if not entry is Dictionary or entry.get("name")!=item_name:continue
+		has_physical=true
+		if not entry.has(RECEIPT):continue
 		var current: Dictionary=proof(world,id)
 		if current.is_empty():return _failure("원본 물리 소유·최초량·잔량 증명 불일치")
 		if total>9007199254740991-int(current.remaining):return _failure("물리 수량 정수 범위 초과")
 		total+=int(current.remaining)
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
+	if not has_physical and selected.is_empty() and named.get("name")==item_name and integer(world.inventory.get(item_name,0)) and int(world.inventory.get(item_name,0))>0 and not world._item_locked(item_name):
+		# Older name-keyed acceleration stacks have no physical receipt. Their
+		# existing atomic buff owner can debit the exact catalog balance directly.
+		var plain: Dictionary=profile(named)
+		var plain_spec: Dictionary=plain.get("spec",{})
+		if plain.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
+			var restriction: String=_buff_territory_problem(world,plain_spec)
+			if not restriction.is_empty():return _failure(restriction)
+			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
@@ -294,10 +305,9 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
-	if effect.kind=="buff" and not spec.get("forbidden_territory_class_ids",[]).is_empty():
-		var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
-		if areas==null:return _failure("원본 사용 불가 지역 입력 확인 실패 · 아이템 보존")
-		if EFFECTS._forbidden(world,areas,world.player.global_position):return _failure("원본 조건: 이 지역에서는 사용할 수 없습니다")
+	if effect.kind=="buff":
+		var restriction: String=_buff_territory_problem(world,spec)
+		if not restriction.is_empty():return _failure(restriction)
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
@@ -411,6 +421,12 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
+
+static func _buff_territory_problem(world: Node,spec: Dictionary) -> String:
+	if spec.get("forbidden_territory_class_ids",[]).is_empty():return ""
+	var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
+	if areas==null:return "원본 사용 불가 지역 입력 확인 실패 · 아이템 보존"
+	return "원본 조건: 이 지역에서는 사용할 수 없습니다" if EFFECTS._forbidden(world,areas,world.player.global_position) else ""
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
