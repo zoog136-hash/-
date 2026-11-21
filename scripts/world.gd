@@ -6517,13 +6517,14 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
 	var adjusted_heal: int = patch523_npc_spells.extensions.healing(maxi(1, enhanced_heal),true)
 	var next_hp: int = clampi(hp + adjusted_heal,0,effective_max_hp)
-	if is_source and _save_game(true, {"inventory":next_inventory,"item_use_cooldowns":next_cooldowns,"hp":next_hp}) != OK:
-		rng.state = rng_before
-		hud.show_message("회복 저장 실패 · 원본 물약과 HP 보존")
-		return
+	# Consumables commit in memory and join the coalesced background save
+	# (user decision 2026-11-21, option A): a full synchronous save per potion
+	# was ~0.4 s on the phone (523.747: five saves in one 7.3 s frame). A
+	# crash before that save can return the last few seconds of potions.
 	inventory = next_inventory
 	item_use_cooldowns = next_cooldowns
 	apply_patch523_healing(maxi(1,enhanced_heal),true)
+	if is_source: _request_general_save()
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	if is_source:
@@ -8941,10 +8942,8 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	mp -= mp_cost
 	if required_ammo > 0:
 		inventory[ammo_key] = old_ammo - required_ammo
-		if source_ammo and _save_game(true)!=OK:
-			mp=old_mp;inventory[ammo_key]=old_ammo
-			hud.show_message("스킬 탄약 저장 실패 · MP·탄약 보존")
-			return false
+		# Coalesced background save, not one full save per skill (option A).
+		if source_ammo: _request_general_save()
 	return true
 
 ## M100 data for the original quickslot count: only a skill that consumes ammo has the
@@ -10495,10 +10494,9 @@ func _consume_weapon_ammo() -> bool:
 			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
 	inventory[ammo_name] = count-1
-	if is_source and _save_game(true)!=OK:
-		inventory[ammo_name]=count
-		hud.show_message("탄약 저장 실패 · 발사 취소·수량 보존")
-		return false
+	# One full save per arrow was ~0.4 s on the phone: the shot commits in
+	# memory and joins the coalesced background save (option A).
+	if is_source: _request_general_save()
 	# One arrow per shot used to rebuild the whole HUD (equipment, cards,
 	# collections, inventory) on every bow attack, which stuttered combat.
 	# Only the counters that show ammo need refreshing.
