@@ -14,6 +14,17 @@ class WindowProbe extends "res://scripts/ui/original_ui/source_main_quest_window
 			if host!=null:host.add_child(_scene)
 		return {"ok":true,"handled":true,"selected_id":_selected_id}
 
+class RowProbe extends "res://scripts/ui/original_ui/source_main_quest_window.gd":
+	var builds: int=0
+	var reject: String=""
+	func _row(quest: Dictionary,is_selected: bool) -> Dictionary:
+		if quest.id==reject:return {"ok":false,"code":"rejected_row"}
+		builds+=1
+		var scene:=Node2D.new()
+		scene.set_meta("quest_id",quest.id)
+		scene.set_meta("selected",is_selected)
+		return {"ok":true,"scene":scene,"panel_x":0.0}
+
 class NativeController extends Node:
 	var handled: bool=true
 	var succeeded: bool=true
@@ -105,10 +116,32 @@ func _run() -> void:
 	_routing()
 	_hud_retirement()
 	_row_models()
+	await _virtual_rows()
 	await _selection_batches()
 	await _hud_refresh_sessions()
 	print("ORIGINAL_UI_QUEST_PREPARATION_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"private_pack_used":false}))
 	quit(0 if failures.is_empty() else 1)
+
+func _virtual_rows() -> void:
+	var content:=Node2D.new()
+	root.add_child(content)
+	var window:=RowProbe.new()
+	window._rows_content=content
+	for index: int in 60:window._quest_rows.append({"id":str(index)})
+	window._selected_id="59"
+	window._scroll_min=window.LIST_SIZE.y-window.ROW_HEIGHT*60.0
+	check(window._scroll_to(0.0).ok and window._row_scenes.size()==7 and window.builds==7,"open mounts seven authored row positions out of 60")
+	var first: Node2D=window._row_scenes[0]
+	check(window._scroll_to(-10.0).ok and window.builds==7 and window._row_scenes[0]==first,"scrolling inside the same range does not rebuild rows")
+	check(window._scroll_to(-100.0).ok and window._row_scenes[0]==first and window._row_scenes.size()==8,"overlapping rows are reused as new rows enter")
+	window.reject="58"
+	check(not window._scroll_to(window._scroll_min).ok and content.position.y==-100.0 and first.visible and not first.is_queued_for_deletion(),"a failed row leaves the original range and input targets active")
+	window.reject=""
+	check(window._scroll_to(window._scroll_min).ok and window._row_scenes.has(59) and window._row_scenes[59].get_meta("selected"),"the last quest keeps its exact index and selection")
+	check(first.is_queued_for_deletion() and not first.visible,"offscreen rows immediately stop drawing and stop receiving input")
+	await _frames()
+	check(content.get_child_count()==window._row_scenes.size() and content.get_child_count()<=9,"old rows are freed and the active node count stays bounded")
+	content.free()
 
 func _routing() -> void:
 	var hud: HudProbe=_hud()
