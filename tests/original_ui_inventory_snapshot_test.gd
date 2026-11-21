@@ -77,8 +77,18 @@ func _run() -> void:
 	_filter_and_action_guards()
 	_duplicate_guards()
 	_legacy_rows()
+	_missing_icon_keeps_name()
 	print("ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"samples":samples}))
 	quit(0 if failures.is_empty() else 1)
+
+func _missing_icon_keeps_name() -> void:
+	var view = VIEW.new()
+	var control := Control.new()
+	control.size = Vector2(56,56)
+	view._label_missing_icon(control,{"name":"용기의 물약 (각인) · 원본#335","reference":"fixture"})
+	var label := control.get_node_or_null("MissingIconItemName") as Label
+	check(label!=null and label.text=="용기의 물약 (각인)" and label.mouse_filter==Control.MOUSE_FILTER_IGNORE, "an unavailable image still shows the item name without intercepting the slot")
+	control.free()
 
 func _staged_rows(count: int) -> void:
 	var fixture: Dictionary=_fixture(count)

@@ -4,7 +4,6 @@ extends SceneTree
 ## Run: godot --headless --path <repo> --script res://tests/original_ui_page_cache_test.gd
 const PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const CACHE=preload("res://scripts/ui/original_ui/source_pack_page_cache.gd")
-const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 
 var failures: Array[String]=[]
 var passes: int=0
@@ -35,7 +34,8 @@ func _write_pack(dir: String, variant: int) -> String:
 		"atlases":{"UI/a.plist":{"page":"UI/a.png","frames":{
 			"plain":{"rect":[0,0,10,12],"source_rect":[0,0,10,12],"source_size":[10,12]},
 			"trim":{"rect":[12,0,8,6],"source_rect":[3,2,8,6],"source_size":[16,12]},
-			"rot":{"rect":[24,0,10,7],"rotated":true,"source_rect":[1,1,10,7],"source_size":[12,9]}}}}}
+			"rot":{"rect":[24,0,10,7],"rotated":true,"source_rect":[1,1,10,7],"source_size":[12,9]},
+			"rot_full":{"rect":[36,5,10,7],"rotated":true,"source_rect":[0,0,10,7],"source_size":[10,7]}}}}}
 	var raw: PackedByteArray=JSON.stringify(manifest).to_utf8_buffer()
 	var f:=FileAccess.open(dir.path_join("original_ui.json"),FileAccess.WRITE)
 	f.store_buffer(raw); f.close()
@@ -43,7 +43,7 @@ func _write_pack(dir: String, variant: int) -> String:
 
 const REFS: Array[Dictionary]=[
 	{"plistFile":"a.plist","path":"plain"},{"plistFile":"a.plist","path":"trim"},{"plistFile":"a.plist","path":"rot"},
-	{"path":"a.png","resourceType":0},{"path":"b.png","resourceType":0}]
+	{"path":"a.png","resourceType":0},{"path":"b.png","resourceType":0},{"plistFile":"a.plist","path":"rot_full"}]
 
 func _fingerprint(t: Texture2D) -> Dictionary:
 	var img: Image=t.get_image()
@@ -58,7 +58,13 @@ func _baseline(dir: String, ref: Dictionary, cocos: bool) -> Dictionary:
 	var img: Image=page
 	if ref.has("plistFile"):
 		var manifest: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(dir.path_join("original_ui.json")))
-		img=PIXELS.decode(page,manifest.atlases["UI/a.plist"].frames[ref.path]).image
+		var frame: Dictionary=manifest.atlases["UI/a.plist"].frames[ref.path]
+		var rect: Array=frame.rect
+		var rotated: bool=frame.get("rotated",false)
+		var crop: Image=page.get_region(Rect2i(rect[0],rect[1],rect[3] if rotated else rect[2],rect[2] if rotated else rect[3]))
+		if rotated:crop.rotate_90(COUNTERCLOCKWISE)
+		img=Image.create_empty(int(frame.source_size[0]),int(frame.source_size[1]),false,Image.FORMAT_RGBA8)
+		img.blit_rect(crop,Rect2i(Vector2i.ZERO,crop.get_size()),Vector2i(frame.source_rect[0],frame.source_rect[1]))
 	if cocos and pma: img=PACK.cocos_premultiply(img)
 	return {"size":img.get_size(),"format":img.get_format(),"data":img.get_data(),"pma":cocos and pma}
 

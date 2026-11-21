@@ -715,6 +715,10 @@ static func exchange_rate(currency_id: int) -> int:
 	var value: Variant=row.get("ExchangeRate",1)
 	return int(value) if integer(value) and int(value)>0 else 1
 
+## No local siege exists: never running (TWILIGHT 근사).
+func siege_running() -> bool:
+	return false
+
 func npc_label(merchant_id: int) -> String:
 	if npc_definitions.loaded_sha256.is_empty():return ""
 	return str(npc_definitions.rule_for(merchant_id).get("label",""))
@@ -745,7 +749,12 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		else:
 			var qualification: Dictionary=SkillBooks.qualification(world,row)
 			if not qualification.ok:return fail(str(qualification.reason))
-	if row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
+	# AvailableSiegeTime false = not sold while a siege runs; LimitNotInSiegeTime
+	# true = sold only outside a siege. TWILIGHT has no siege (offline, no
+	# castle war), so no siege is ever running and both rows are on sale
+	# (user report 2026-11-21: 664 such rows, e.g. 무기 방어구 상인 배틀 사이드).
+	if not row.get("AvailableSiegeTime") is bool or not row.get("LimitNotInSiegeTime") is bool:return fail("NPC 공성 시간 조건 형식 오류")
+	if siege_running() and (row.AvailableSiegeTime!=true or row.LimitNotInSiegeTime==true):return fail("공성 중에는 구매할 수 없습니다")
 	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
 	var local_context: Dictionary={}
 	if profile.get("time_unrestricted")!=true:

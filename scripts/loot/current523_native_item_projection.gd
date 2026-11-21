@@ -1381,7 +1381,9 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true:return {}
 	var root_node: Dictionary=graph.get("rewards",{}).get(str(id),{});var root: Dictionary=root_node.get("row",{})
 	if root.get("ID")!=id:return {}
-	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID"},false)
+	# UIShowFilter is a 0/1 display flag of the box (as in APPROX_BAG_IGNORED
+	# and patch523_item_use.PRESENTATION_FLAGS); it is no use condition.
+	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID","UIShowFilter":"Value"},false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
 	var reasons: Array=spec.blocked_reasons;var active: Dictionary={};var domain: Array=[]
 	active = _active_classes()
