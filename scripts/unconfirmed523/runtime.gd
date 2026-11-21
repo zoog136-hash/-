@@ -865,6 +865,13 @@ func try_use(item_name: String) -> bool:
 		if not matches: continue
 		var category: int = int(source.row("ItemClass",id).get("CategoryID",0))
 		if category not in [10291,10622,78,10381,10394]: return false
+		# A box or selection box with an exact native 523 use rule opens from
+		# the bag itself (current523_native_stack); only boxes without one are
+		# kept for this events window.
+		if category in [78,10381] and str(preload("res://scripts/loot/current523_native_stack.gd").profile(world._find_catalog_item_record(item_name)).get("kind","")) in ["bag","selection"]: return false
+		# A box whose native rule refuses it says why from the bag, and a 성장
+		# 보상 상자 (m523-growth-item) opens through its original box rule.
+		if category in [78,10381] and (item_name.begins_with("m523-growth-item:") or str(NATIVE_FIELDS.full(world._find_catalog_item_record(item_name)).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]): return false
 		request_presentation("jade_grail" if category in [10291,10622] else "events",{"item_id":id})
 		# The item belongs to this consumer even while the original UI is absent.
 		# Falling through could consume it through an unrelated item handler.

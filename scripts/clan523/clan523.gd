@@ -314,15 +314,20 @@ static func _class_id(world: Object) -> int:
 
 ## --- Creation ---------------------------------------------------------------
 
+const SOLO_ANY_CLASS: bool = true
+
 func create_quote(world: Object) -> Dictionary:
 	var data: Dictionary = definition()
 	if not data.get("ok",false): return {"ok":false,"reason":str(data.get("problem",""))}
 	if has_clan(): return {"ok":false,"reason":"이미 혈맹이 있습니다"}
 	if not problem.is_empty(): return {"ok":false,"reason":"혈맹 저장 보호 중: "+problem}
 	if world==null: return {"ok":false,"reason":"게임 연결 없음"}
-	if _class_id(world) not in data.create_classes: return {"ok":false,"reason":"혈맹 창설은 %s만 가능합니다 (ClanCreateGameClass) · 다른 직업은 다른 군주의 혈맹 가입(온라인)" % "/".join(data.create_class_names)}
+	# TWILIGHT 근사 (decision 2026-11-21, user list #7): a single-player game
+	# has no other 군주 to join, so every class may found its one-person clan.
+	# The original ClanCreateGameClass rows stay in the data (create_classes).
+	if not SOLO_ANY_CLASS and _class_id(world) not in data.create_classes: return {"ok":false,"reason":"혈맹 창설은 %s만 가능합니다" % "/".join(data.create_class_names)}
 	var need_level: int = int(data.policies.CreateLevelCondition.value)
-	if int(world.get("level"))<need_level: return {"ok":false,"reason":"혈맹 창설은 %d레벨 이상 (CreateLevelCondition)" % need_level}
+	if int(world.get("level"))<need_level: return {"ok":false,"reason":"혈맹 창설은 %d레벨 이상" % need_level}
 	var fee: int = int(data.policies.CreateCommission.value)
 	if int(world.get("gold"))<fee: return {"ok":false,"reason":"창설 수수료 아데나 %d 부족" % fee}
 	return {"ok":true,"fee":fee,"level":need_level}

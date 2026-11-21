@@ -1,6 +1,7 @@
 extends Control
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const RELEASE_TEXT = preload("res://scripts/ui/release_text.gd")
 var committed: bool = false
 var confirm_button: Button
 var cancel_button: Button
@@ -11,6 +12,10 @@ var previous_focus: Control
 
 func configure(title: String, description: String, action: String, accept: Callable, maximum: int = 0) -> void:
 	name = "TwilightConfirmation"
+	# Release screens: no developer words in the title or the body lines.
+	var shown_title: String = RELEASE_TEXT.line(title)
+	title = shown_title if not shown_title.is_empty() else title.replace("TWILIGHT", "").strip_edges()
+	description = RELEASE_TEXT.body(description)
 	z_index = 400
 	theme = UI.make_theme()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

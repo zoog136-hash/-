@@ -102,7 +102,6 @@ func refresh() -> void:
 			var quote: Dictionary = runtime.weekly_quote(host,int(row.id))
 			_button("%d 포인트 · %s %d%s" % [int(row.points),str(row.name),int(row.amount),"" if quote.ok else " · "+str(quote.reason)],"Clan523Weekly_%d" % int(row.id),body,func() -> void: _done(runtime.claim_weekly(host,int(row.id))),quote.ok)
 		_button("혈맹 상인 (린 · 기란)","Clan523Merchant",body,_open_merchant)
-		_button("혈맹 문장","Clan523Emblem",body,func() -> void: hud.call("_navigate","clan_emblem523"))
 	_label("혈맹 레벨 혜택 (UIClanBenefit · ClanReward)",body,15,UI.GOLD)
 	for level: int in range(1,int(data.max_level)+1):
 		var row := HBoxContainer.new()

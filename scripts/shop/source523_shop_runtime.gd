@@ -344,6 +344,9 @@ func _server(sets: Array) -> Dictionary:
 	if sets.is_empty(): return {"ok":true}
 	var context: Dictionary = effective_server_context()
 	for set: Variant in sets:
+		# ServerLimitSetID 0 names no server set (no ServerLimit rows): unlimited,
+		# as CumulativePurchase's 0 already reads (11 BM offers were refused).
+		if int(set) == 0: continue
 		if not SERVER_PROFILE.rows_allow(catalog._related("ServerLimit", int(set)), str(context.region), int(context.world_no)): return fail("서버 조건 미충족 또는 미해석 서버세트")
 	return {"ok":true}
 
@@ -402,6 +405,15 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 			if not physical_output:
 				for value: Variant in world.item_instances.values():
 					if value is Dictionary and value.get("name")==name:return fail("같은 보유 키의 물리 개체·소비 영수증 소유자 연결 필요 · 상점 잔량 보존")
+		if binding.is_empty() and int(token.unit_id) == 4:
+			# An original 523 item the game owns as a receipted physical stack
+			# (e.g. 지구라트 주화, 고급 상점 주화, 시간 충전석): paid through its
+			# receipts (current523_native_stack.stage_debit) or issued by the
+			# shared 523 supplier, as the NPC 상점 already issued native books.
+			var native: Dictionary = _native_supply_binding(int(token.class_id), 1)
+			if not native.is_empty() and not (not giving and native.get("native_equipment", false)):
+				if not giving: native["native_debit"] = true
+				return {"ok":true,"binding":native}
 		return {"ok":true,"binding":binding} if not binding.is_empty() else fail("아이템·재화의 실제 인벤토리 연결 미확인")
 	var currency: Dictionary = catalog.currency(int(token.class_id))
 	if currency.is_empty(): return fail("재화 정의 누락")
@@ -444,18 +456,25 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 			continue
 		if int(token.unit_id) == 4:
 			var identity: Dictionary = _source_item_identity(int(token.class_id))
-			if identity.get("excluded") == true and not (cash and CashPackages.is_package(int(token.class_id))): return fail("원본 아이템 선언으로 제외된 상품입니다")
+			# An original box (LuckyBag/SelectReward/draw pack) of any BM offer
+			# opens through source523_cash_packages; its internal name carries the
+			# client's BM deletion note, which offline TWILIGHT keeps.
+			var package: bool = CashPackages.is_package(int(token.class_id)) and _bindings.has("4:%d" % int(token.class_id))
+			if identity.get("excluded") == true and not package: return fail("원본 아이템 선언으로 제외된 상품입니다")
 			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
-			var package: bool = cash and CashPackages.is_package(int(token.class_id))
-			# Cash package boxes carry the original BM deletion note in their internal
-			# name; offline TWILIGHT keeps them (see source523_cash_packages.gd).
-			if (item.get("TestItem", false) and not package) or (not package and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
+			# A native 523 item (no other binding) is admitted by the 523 supplier
+			# only with a resolved lifetime; its name note is no refusal of its own.
+			var native_goods: bool = not package and not _bindings.has("4:%d" % int(token.class_id)) and not _native_supply_binding(int(token.class_id), 1).is_empty()
+			if (item.get("TestItem", false) and not package) or (not package and not native_goods and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
 				return fail("테스트·기간제 상품의 사용·만료 조건 미확인")
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
 		if not resolved.ok: return resolved
 		if resolved.binding.get("name")=="드래곤의 용옥":return fail("드래곤의 용옥은 기존 전용 상점의 월 1회·가격 규칙을 이용하세요")
+		if resolved.binding.get("native_supply") == true:
+			token["native_supply"] = true
+			token["bless_raw"] = 1
 		goods.append(token)
 	if goods.is_empty(): return fail("지급 상품이 없습니다")
 	var result: Dictionary = {"ok":true,"goods":goods,"source_items":source_items}
@@ -475,6 +494,17 @@ static func _named_bonus_draw(name: String, draws: Array, quantity: int) -> void
 	var named: int = int(found.get_string(1)) * quantity
 	if named - int(draws[0].count) != quantity: return
 	draws.append({"product_id":int(draws[0].product_id),"pool_id":int(draws[0].pool_id),"count":quantity,"twilight_named_bonus":true})
+
+## Whether this game's server may list market offer `id`: a converted cash
+## offer always; another offer when its original server sets name the offline
+## server profile (offers of other servers are not shown by the client either).
+func served_here(id: int) -> bool:
+	if CashMarket.listed(id): return true
+	if catalog == null or not catalog.available(): return true
+	var offer: Dictionary = catalog.market_offer(id)
+	var sets: Array = []
+	for row: Dictionary in offer.get("server_limits", []): sets.append(int(row.ServerLimitSetID))
+	return _server(sets).ok
 
 func quote(id: int, quantity: int = 1) -> Dictionary:
 	return _quote(id, quantity, false)
@@ -578,7 +608,17 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var gold: int = int(world.gold)
 	var binding: Dictionary = prepared.payment_binding
+	var paid_extra: Dictionary = {}
+	var paid_instances: Variant = null
 	if binding.get("gold", false): gold -= int(prepared.payment.amount)
+	elif binding.get("native_debit") == true:
+		var debit: Dictionary = native_debit(str(binding.name), int(prepared.payment.amount))
+		if not debit.get("ok", false):
+			_busy = false
+			return fail(str(debit.get("reason", "원본 재화 차감 확인 필요")) + " · 구매하지 않았습니다")
+		inventory = debit.overrides.inventory
+		paid_instances = debit.overrides.item_instances
+		paid_extra["consumable_state"] = debit.overrides.consumable_state
 	else:
 		var name: String = str(binding.name)
 		inventory[name] = int(inventory.get(name, 0)) - int(prepared.payment.amount)
@@ -609,11 +649,11 @@ func _purchase(prepared: Dictionary, kind: String, counter_key: String, delivery
 		next.orders[order_id]["npc_reset_identity"]=str(prepared.npc_reset_identity)
 	if not next.purchases.has(counter_key): next.purchases[counter_key] = []
 	next.purchases[counter_key].append({"at":_now(),"quantity":quantity})
-	var instances: Dictionary = world.item_instances.duplicate(true)
+	var instances: Dictionary = paid_instances if paid_instances is Dictionary else world.item_instances.duplicate(true)
 	var next_instance: int = int(world.next_item_instance_id)
 	var delivered: bool = false
 	var plan: Dictionary = prepared.get("draw", {})
-	var extra: Dictionary = {}
+	var extra: Dictionary = paid_extra
 	var drawn: Dictionary = {}
 	# A draw is never left in the 보관함 (its result is drawn now, in this save).
 	if not plan.is_empty() and delivery == Delivery.BOX: delivery = Delivery.BAG
@@ -701,6 +741,10 @@ static func exchange_rate(currency_id: int) -> int:
 	var value: Variant=row.get("ExchangeRate",1)
 	return int(value) if integer(value) and int(value)>0 else 1
 
+## No local siege exists: never running (TWILIGHT 근사).
+func siege_running() -> bool:
+	return false
+
 func npc_label(merchant_id: int) -> String:
 	if npc_definitions.loaded_sha256.is_empty():return ""
 	return str(npc_definitions.rule_for(merchant_id).get("label",""))
@@ -714,8 +758,15 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["LimitServerCount","Enchant","ElementalEnchant"]:
+	for key: String in ["Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 서버·카드·장비 조건 미해석")
+	# LimitServerCount: the whole server's stock per refresh. Offline TWILIGHT
+	# is one player on one server (TWILIGHT 근사), so the stock caps this
+	# save's own counter on the same refresh; the original personal LimitCount
+	# (1 on every such row, stock 5 or 10) stays the smaller limit.
+	if int(row.get("LimitServerCount",0))>0:
+		row=row.duplicate()
+		row.LimitCount=int(row.LimitServerCount) if int(row.LimitCount)<=0 else mini(int(row.LimitCount),int(row.LimitServerCount))
 	# TWILIGHT 근사: LimitBuffCardID = that card owned (card_requirement523).
 	var card_rule = preload("res://scripts/cards/card_requirement523.gd")
 	if int(row.get("LimitBuffCardID",0))!=0 and not card_rule.satisfied(world,int(row.LimitBuffCardID)):return fail("원본 조건: %s 카드 보유 필요" % card_rule.label(int(row.LimitBuffCardID)))
@@ -727,11 +778,21 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		if not gate.ok:return fail(str(gate.reason))
 	var native_repeat: bool=false
 	if int(row.get("LimitRepeatedBuyCardID",0))>0:
-		if SkillBooks.contract(int(row.get("ItemClassID",0))).is_empty():native_repeat=true
+		var book: Dictionary=SkillBooks.contract(int(row.get("ItemClassID",0)))
+		# A merchant-10 book whose local skill is not installed has no shop
+		# book record (source523_skill_books.install skips it): it is sold as
+		# the native 523 skill book with that book's own learn checks, as the
+		# 기란 혈맹 상인's books already are (30 books were refused before).
+		if book.is_empty() or not SkillBooks.registered(world,str(book.name),str(book.skill_id)):native_repeat=true
 		else:
 			var qualification: Dictionary=SkillBooks.qualification(world,row)
 			if not qualification.ok:return fail(str(qualification.reason))
-	if row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
+	# AvailableSiegeTime false = not sold while a siege runs; LimitNotInSiegeTime
+	# true = sold only outside a siege. TWILIGHT has no siege (offline, no
+	# castle war), so no siege is ever running and both rows are on sale
+	# (user report 2026-11-21: 664 such rows, e.g. 무기 방어구 상인 배틀 사이드).
+	if not row.get("AvailableSiegeTime") is bool or not row.get("LimitNotInSiegeTime") is bool:return fail("NPC 공성 시간 조건 형식 오류")
+	if siege_running() and (row.AvailableSiegeTime!=true or row.LimitNotInSiegeTime==true):return fail("공성 중에는 구매할 수 없습니다")
 	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
 	var local_context: Dictionary={}
 	if profile.get("time_unrestricted")!=true:
@@ -784,7 +845,11 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		var record: Dictionary=target.binding.get("record",{})
 		if local_context.is_empty() or not npc_definitions.supports_normal_equipment(int(row.MerchantsID),int(row.get("ItemBlessCodeID",0))) or record.get("blessed",false) or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"] or str(record.get("name","")).begins_with("축복받은 "):return fail("NPC 장비 축복·강화 지급 조건 미확정")
 	var original_name: String=str(offer.item.get("Name",""))
-	if offer.item.get("TestItem",false) or original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"):return fail("NPC 기간제·테스트 상품 조건 미확정")
+	# A native 523 item is admitted by the 523 supplier only with a resolved
+	# lifetime (current523_native_stack.supply_profile), so its internal
+	# "이벤트/기간/삭제" name note is no refusal of its own.
+	var native_goods: bool=token.get("native_supply",false)==true
+	if offer.item.get("TestItem",false) or (not native_goods and (original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"))):return fail("NPC 기간제·테스트 상품 조건 미확정")
 	var identity: Dictionary=_source_item_identity(int(row.ItemClassID))
 	if identity.get("excluded")==true:return fail("원본 아이템 선언으로 제외된 NPC 상품입니다")
 	var quoted: Dictionary={"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
@@ -808,6 +873,104 @@ func buy_merchant(id: int, quantity: int = 1, delivery: int = Delivery.BOX) -> D
 	if not prepared.ok:_busy=false;return prepared
 	return _purchase(prepared,"merchant","merchant:"+str(catalog.merchant_offer(id).goods.get("MerchantGoodGUID",id)),delivery)
 
+## --- Selling to a merchant (original BuyList) -------------------------------
+## The client's 아이템 매입 상인 rows: MerchantGoods with DialogActionTypeID 2
+## (BuyList), one per ItemClassID (normal bless, +0), price = ItemClass.Cost ×
+## Percentage / 100 × Amount adena (user list 2026-11-21 #16: the 잡화상인
+## buys with these rows, TWILIGHT 근사 for the seller NPC).
+const BUY_LIST_ACTION: int = 2
+var _buy_rows: Dictionary = {}
+
+func buy_row(item_class_id: int) -> Dictionary:
+	if _buy_rows.is_empty() and catalog != null and catalog.available():
+		for row: Dictionary in catalog.rows("MerchantGoods"):
+			if int(row.get("DialogActionTypeID", 0)) != BUY_LIST_ACTION or int(row.get("ItemBlessCodeID", 0)) != 1 or int(row.get("Enchant", 0)) != 0: continue
+			var id: int = int(row.get("ItemClassID", 0))
+			if not _buy_rows.has(id) or int(row.ID) < int(_buy_rows[id].ID): _buy_rows[id] = row
+	return _buy_rows.get(item_class_id, {})
+
+## The original ItemClass of an owned item (a physical `id`, else the stack).
+func _owned_class(name: String, id: String) -> Dictionary:
+	var record: Dictionary = world._find_catalog_item_record(name)
+	if not id.is_empty():
+		var entry: Variant = world.item_instances.get(id, {})
+		if not entry is Dictionary or entry.get("name") != name: return {}
+		record = entry.get("record", record)
+	var class_id: int = int(record.get("source_item_class_id", 0))
+	if class_id <= 0 and str(record.get("sourceId", "")).is_valid_int(): class_id = int(str(record.sourceId))
+	return {"record": record, "class_id": class_id, "bless": int(record.get("source_bless_raw", 1))}
+
+## Sale of `quantity` of `name` (equipment: its physical `id`) at the original
+## buy row: {ok, payment, unit, row, ...} or the refusal.
+func sale_quote(name: String, quantity: int, id: String = "") -> Dictionary:
+	var ready: Dictionary = _ready_for_action()
+	if not ready.ok: return ready
+	if quantity < 1 or quantity > 1000: return fail("판매 수량 오류")
+	var owned: Dictionary = _owned_class(name, id)
+	if owned.is_empty() or int(owned.class_id) <= 0: return fail("원본 매입 대상이 아닙니다")
+	var row: Dictionary = buy_row(int(owned.class_id))
+	if row.is_empty(): return fail("원본 매입 대상이 아닙니다")
+	if int(owned.bless) != 1: return fail("원본 매입은 일반 아이템만 받습니다")
+	var item: Dictionary = catalog.record("ItemClass", int(owned.class_id))
+	var unit: Dictionary = Catalog._checked_product([item.get("Cost", 0), row.get("Percentage", 0), row.get("Amount", 1)])
+	if not unit.ok: return fail("매입가 계산 범위 오류")
+	@warning_ignore("integer_division")
+	var each: int = int(unit.value) / 100
+	if each < 1: return fail("원본 매입가 0")
+	if int(world.inventory.get(name, 0)) < quantity: return fail("판매할 수량이 부족합니다")
+	if world._item_locked(name, id): return fail("잠긴 아이템은 판매할 수 없습니다")
+	var equipment: bool = not world._enhancement_kind_for_record(owned.record).is_empty()
+	if equipment:
+		if id.is_empty() or quantity != 1: return fail("장비는 한 개씩 판매합니다")
+		if int(world.item_instances[id].get("level", 0)) != 0: return fail("원본 매입은 +0 장비만 받습니다")
+		for slot: Variant in world.equipped_items.values():
+			if slot is Dictionary and str(slot.get("instance_id", "")) == id: return fail("장착 중인 장비는 판매할 수 없습니다")
+	elif not id.is_empty(): return fail("소모품에 장비 ID를 사용할 수 없습니다")
+	var total: Dictionary = Catalog._checked_product([each, quantity])
+	if not total.ok or int(world.gold) > LIMIT - int(total.value): return fail("판매 금액 범위 초과")
+	return {"ok": true, "name": name, "id": id, "quantity": quantity, "unit": each, "payment": int(total.value), "equipment": equipment, "item_class_id": int(owned.class_id), "buy_row": int(row.ID), "price_basis": "원본 매입행 #%d · Cost %d × %d%%" % [int(row.ID), int(item.get("Cost", 0)), int(row.get("Percentage", 0))]}
+
+## Sells at the original buy row: the item leaves (a receipted original stack
+## through its receipts, an equipment instance whole) and the adena arrives in
+## one save.
+func sell_to_merchant(name: String, quantity: int, id: String = "") -> Dictionary:
+	var quote: Dictionary = sale_quote(name, quantity, id)
+	if not quote.ok: return quote
+	var started: Dictionary = _start()
+	if not started.ok: return started
+	quote = sale_quote_internal(name, quantity, id)
+	if not quote.ok: _busy = false; return quote
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var extra: Dictionary = {}
+	var STACK: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var receipted: bool = false
+	for value: Variant in world.item_instances.values():
+		if value is Dictionary and value.get("name") == name and value.has(STACK.RECEIPT): receipted = true; break
+	if quote.equipment:
+		instances.erase(id)
+		inventory[name] = int(inventory.get(name, 0)) - 1
+	elif receipted:
+		var debit: Dictionary = native_debit(name, quantity)
+		if not debit.get("ok", false): _busy = false; return fail(str(debit.get("reason", "원본 물리 차감 실패")) + " · 판매하지 않았습니다")
+		inventory = debit.overrides.inventory
+		instances = debit.overrides.item_instances
+		extra["consumable_state"] = debit.overrides.consumable_state
+	else:
+		for value: Variant in world.item_instances.values():
+			if value is Dictionary and value.get("name") == name: _busy = false; return fail("같은 이름의 물리 개체 소유자 확인 필요 · 판매하지 않았습니다")
+		inventory[name] = int(inventory.get(name, 0)) - quantity
+	if int(inventory.get(name, 0)) <= 0: inventory.erase(name)
+	var result: Dictionary = _commit(export_state(), inventory, int(world.gold) + int(quote.payment), instances, int(world.next_item_instance_id), extra)
+	if result.ok: result.merge({"name": name, "quantity": quantity, "payment": int(quote.payment), "reason": "판매 완료 · %s 아데나" % str(int(quote.payment))})
+	return result
+
+func sale_quote_internal(name: String, quantity: int, id: String) -> Dictionary:
+	_busy = false
+	var quote: Dictionary = sale_quote(name, quantity, id)
+	_busy = true
+	return quote
+
 func orders() -> Array:
 	var result: Array = []
 	for id: String in state.orders:
@@ -822,9 +985,37 @@ func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
 	var summary: Dictionary=D.definition_id(str(item_class_id))
 	if summary.is_empty() or summary.get("original_item",{}).get("TestItem",true):return {}
 	var record: Dictionary=D.variant_item(summary.get("native_record",{}),bless)
-	if record.is_empty() or D.equipment(record) or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
+	if record.is_empty() or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
+	# Original equipment (e.g. 무관의 장검, 몽둥이) is issued as +0 physical
+	# instances by the same 523 supplier; other items need a stack owner.
+	if D.equipment(record):return {"name":str(record.name),"record":record,"native_supply":true,"native_equipment":true}
 	if preload("res://scripts/loot/current523_native_stack.gd").supply_profile(record).is_empty():return {}
 	return {"name":str(record.name),"record":record,"native_supply":true}
+
+## Stages paying `amount` of the receipted original stacks named `name`
+## (oldest physical IDs first; locked stacks are not used): the shared
+## current523_native_stack debit with its use ledger, or the refusal.
+func native_debit(name: String, amount: int) -> Dictionary:
+	var STACK: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var ids: Array = []
+	for uid: Variant in world.item_instances:
+		var entry: Variant = world.item_instances[uid]
+		if entry is Dictionary and entry.get("name") == name and entry.has(STACK.RECEIPT) and not world._item_locked(name, str(uid)): ids.append(str(uid))
+	ids.sort()
+	var left: int = amount
+	var requests: Array = []
+	for uid: String in ids:
+		if left <= 0: break
+		var owned: Dictionary = STACK.proof(world, uid)
+		if owned.is_empty(): return fail("원본 물리 소유·잔량 증명 불일치")
+		var take: int = mini(left, int(owned.remaining))
+		if take < 1: continue
+		requests.append({"physical_id":uid,"quantity":take,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-take,"source_native_stack_receipt":owned.receipt.duplicate(true)})
+		left -= take
+	if left > 0 or requests.is_empty(): return fail("구매 재화가 부족합니다")
+	var staged: Dictionary = STACK.stage_debit(world, requests)
+	if not staged.get("ok", false): return fail(str(staged.get("reason", staged.get("error", "원본 재화 차감 확인 필요"))))
+	return staged
 
 func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionary, next_id: int) -> Dictionary:
 	for token: Dictionary in goods:

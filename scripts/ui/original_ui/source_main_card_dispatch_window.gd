@@ -25,6 +25,8 @@ const CARD_STATE="UI/Change/Change_Card_A_Dispatch.csb"
 const SET_POPUP="UI/Change/Change_Popup_Dispatch_Set.csb"
 const INFO_POPUP="UI/Change/Change_Popup_Dispatch_Info.csb"
 const DECK: int=1
+## The MagicDollExpedition deck this window shows (2 in the 인형 탐험 subclass).
+var deck: int=DECK
 const POPUP_Z: int=100
 ## Change_Card_A_Dispatch's root panel centre (its 124x142 panel matches the
 ## card prefab's, whose centre is the card origin).
@@ -48,6 +50,14 @@ func required_members() -> Array[String]:
 func _page() -> String:
 	return "Change_DispatchView"
 
+## The page's node path prefix (overridden by the 인형 탐험 window).
+func _p() -> String:
+	return P
+
+## The spot button scene of the page.
+func _spot_member() -> String:
+	return SPOT_BUTTON
+
 func _tab() -> String:
 	return "dispatch"
 
@@ -69,7 +79,7 @@ func _catalogue() -> Object:
 func _spots() -> Array:
 	var result: Array=[]
 	for spot: Dictionary in _catalogue().spots():
-		if int(spot.get("BuffCardDeckID",0))==DECK:result.append(spot)
+		if int(spot.get("BuffCardDeckID",0))==deck:result.append(spot)
 	return result
 
 func _spot(id: int) -> Dictionary:
@@ -79,7 +89,7 @@ func _spot(id: int) -> Dictionary:
 func _jobs() -> Dictionary:
 	var result: Dictionary={}
 	for job: Dictionary in _runtime().jobs_view():
-		if int(job.get("deck_id",0))==DECK:result[int(job.spot_id)]=job
+		if int(job.get("deck_id",0))==deck:result[int(job.spot_id)]=job
 	return result
 
 ## Owned deck-1 cards: {identity: {card, record}} (record is the catalog card
@@ -92,7 +102,7 @@ func _owned_cards() -> Array:
 	var result: Array=[]
 	for card: Dictionary in world().call("expedition_owned_cards"):
 		var source: Dictionary=_catalogue().record("BuffCard",int(card.source_id))
-		if int(source.get("BuffCardDeckID",0))!=DECK:continue
+		if int(source.get("BuffCardDeckID",0))!=deck:continue
 		result.append({"card":card,"record":records.get(str(card.identity),{}),"source":source})
 	return result
 
@@ -109,12 +119,12 @@ func _prepare() -> Dictionary:
 
 func _spec() -> Dictionary:
 	var spec: Dictionary=_frame_spec()
-	spec[P+"Nd_CardList/Nd_Notice"]={"visible":_owned_cards().is_empty()}
-	spec[P+"Nd_Map/Nd_Option/Nd_Storage/Nd_Use"]={"visible":false}
-	spec[P+"Nd_Map/Nd_Option/Nd_Storage/Btn_Storage"]={"activate":Callable(self,"_storage")}
-	spec[P+"Nd_Map/Nd_Option/Nd_Retry"]={"visible":false}
-	spec[P+"Nd_Map/Nd_Option/Nd_Reset"]={"visible":false}
-	spec[P+"Btn_Help"]={"activate":Callable(self,"_help")}
+	spec[_p()+"Nd_CardList/Nd_Notice"]={"visible":_owned_cards().is_empty()}
+	spec[_p()+"Nd_Map/Nd_Option/Nd_Storage/Nd_Use"]={"visible":false}
+	spec[_p()+"Nd_Map/Nd_Option/Nd_Storage/Btn_Storage"]={"activate":Callable(self,"_storage")}
+	spec[_p()+"Nd_Map/Nd_Option/Nd_Retry"]={"visible":false}
+	spec[_p()+"Nd_Map/Nd_Option/Nd_Reset"]={"visible":false}
+	spec[_p()+"Btn_Help"]={"activate":Callable(self,"_help")}
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
@@ -129,7 +139,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		if row.is_empty():continue
 		cards.append(row)
 		shown.append(entry)
-	var grid: Dictionary=_optional(_fill_card_grid(root,out,P+"Nd_CardList/ListView",cards))
+	var grid: Dictionary=_optional(_fill_card_grid(root,out,_p()+"Nd_CardList/ListView",cards))
 	if not grid.get("ok",false):return grid
 	var pictures: int=0
 	var states: int=0
@@ -166,13 +176,13 @@ func _card_state(card: Node2D, job: Dictionary) -> Dictionary:
 
 ## The deck's Change_Dispatch_Btn spots as a list grid in the empty Panel_Map.
 func _place_spots(root: Node2D, out: Dictionary) -> Dictionary:
-	var located: Dictionary=_locate(root,out,P+"Nd_Map/Panel_Map")
+	var located: Dictionary=_locate(root,out,_p()+"Nd_Map/Panel_Map")
 	if not located.get("ok",false):return {"ok":true,"spots":0,"missing":"Panel_Map"}
 	var panel: Node=located.player.source_nodes.get(located.offset)
 	var host: Node=panel.find_child("SourceClippedOrigin",true,false) if is_instance_valid(panel) else null
 	if host==null:return {"ok":true,"spots":0,"missing":"Panel_Map/SourceClippedOrigin"}
-	var size: Vector2=_node_size(out,P+"Nd_Map/Panel_Map")
-	var geometry: Dictionary=_row_geometry(SPOT_BUTTON)
+	var size: Vector2=_node_size(out,_p()+"Nd_Map/Panel_Map")
+	var geometry: Dictionary=_row_geometry(_spot_member())
 	var cell: Vector2=geometry.size
 	var spots: Array=_spots()
 	var rows: int=ceili(float(spots.size())/float(SPOT_COLUMNS))
@@ -180,7 +190,7 @@ func _place_spots(root: Node2D, out: Dictionary) -> Dictionary:
 	var jobs: Dictionary=_jobs()
 	for index: int in range(spots.size()):
 		var spot: Dictionary=spots[index]
-		var built: Dictionary=_scene_of(SPOT_BUTTON,_spot_spec(spot,jobs.get(int(spot.ID),{})),{})
+		var built: Dictionary=_scene_of(_spot_member(),_spot_spec(spot,jobs.get(int(spot.ID),{})),{})
 		if not built.get("ok",false):return built
 		var column: int=index%SPOT_COLUMNS
 		var row: int=index/SPOT_COLUMNS
@@ -230,7 +240,7 @@ func _set_spec() -> Dictionary:
 	spec["Nd_Card/Nd_Info"]={"visible":prepared.get("ok",false)}
 	spec["Nd_Card/Nd_Info/Text_Class_Value"]={"role":"source_text","text":str(GRADE_NAMES.get(int(rep_source.get("GradeID",0)),""))}
 	spec["Nd_Card/Nd_Info/Text_HP_Value"]={"role":"source_text","text":str(int(prepared.get("profile",{}).get("hp",0)))}
-	var options: Array=_runtime().buff_options(DECK)
+	var options: Array=_runtime().buff_options(deck)
 	for index: int in range(BUFF_PANELS.size()):
 		var panel: String="Nd_Buff/ListView/"+BUFF_PANELS[index]
 		if index>=options.size():

@@ -940,11 +940,21 @@ func inventory_lock_blocks_point(viewport_point: Vector2) -> bool:
 		if control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*viewport_point):return true
 	return false
 
+func inventory_scroll_by(screen_delta_y: float) -> Dictionary:
+	return _inventory_view.scroll_by(screen_delta_y) if inventory_is_open() and not inventory_search_is_open() else _fail("source_inventory_not_open")
+
 func inventory_gesture_bounds() -> Control:
 	return _inventory_view.gesture_bounds() if inventory_is_open() else null
 
 func inventory_select(reference: String) -> Dictionary:
 	return _inventory_view.select(reference) if inventory_is_open() else _fail("source_inventory_not_open")
+
+func inventory_refresh_actions() -> Dictionary:
+	return _inventory_view.refresh_actions() if inventory_is_open() else _fail("source_inventory_not_open")
+
+## An original font of the pack (Font/font_B.ttf for slot/tooltip text).
+func original_font(path: String) -> FontFile:
+	return _pack.font({"path":path,"plistFile":"","resourceType":0}) if _pack!=null and _pack.has_method("font") else null
 
 func inventory_activate_selected(reference: String) -> Dictionary:
 	return _inventory_view.activate_selected(reference) if inventory_is_open() else _fail("source_inventory_not_open")
@@ -1149,6 +1159,7 @@ const FEATURE_WINDOWS={
 	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
 	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
 	"card_dispatch":preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd"),
+	"doll_explore":preload("res://scripts/ui/original_ui/source_main_doll_explore_window.gd"),
 	"item_book":preload("res://scripts/ui/original_ui/source_main_item_book_window.gd"),
 	"emblems":preload("res://scripts/ui/original_ui/source_main_symbol_window.gd"),
 	"guardians":preload("res://scripts/ui/original_ui/source_main_guardian_window.gd"),
@@ -1699,11 +1710,17 @@ func update_map_name(map_name: String) -> Dictionary:
 		return configured
 	var name_contract: Dictionary=_map_bindings.build_name(map_name)
 	_map_name_result=_mount_main_project(21588,name_contract)
+	if not _map_name_result.get("ok",false) and bool(name_contract.get("change_card_connected",false)):
+		# The 카드 교체 side button must never cost the map name.
+		var with_card: Dictionary=_map_name_result.duplicate(true)
+		name_contract=_map_bindings.build_name(map_name,true,false)
+		_map_name_result=_mount_main_project(21588,name_contract)
+		_map_name_result["optional_change_card_result"]=with_card
 	if not _map_name_result.get("ok",false) and name_contract.get("source_node_offsets",[]).has(MainMap.ZONE_TEXT):
 		# Optional source zone text must not remove the existing complete
 		# owner map-name string when its source font/scope is unavailable.
 		var with_zone: Dictionary=_map_name_result.duplicate(true)
-		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false))
+		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false,false))
 		_map_name_result["optional_safe_label_result"]=with_zone
 	if _map_name_result.get("ok",false):
 		_map_name_scene=_map_name_result.scene

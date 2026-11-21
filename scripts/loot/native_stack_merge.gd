@@ -16,7 +16,8 @@ extends RefCounted
 ## journal (consumable_state.source_native_stack_merges) keeps every absorbed
 ## stack's exact receipt, used, transferred and remaining quantity. Absorbed
 ## stacks' use-ledger rows move into that journal; partition history keeps
-## resolving through it. The survivor keeps its physical ID (locks, ammo
+## resolving through it. Locked stacks merge only with locked stacks.
+## The survivor keeps its physical ID (locks, ammo
 ## selection follow it) unless every member has partition history.
 ## TWILIGHT 근사: an original row whose MaxStackAmount is not a positive
 ## integer (none in the 523 tables) stacks up to 9999.
@@ -138,7 +139,9 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 		# User 2026-11-17: equipment never merges, whatever its MaxStackAmount;
 		# each piece keeps its own enchant/bless/element/option/lifetime/lock.
 		if equipment(owned.record) or str(owned.record.get("slot","")) not in STACK_SLOTS:continue
-		var key: String="%s|%d|%d" % [str(entry.get("name","")),int(owned.receipt.item_class_id),int(owned.receipt.bless_raw)]
+		var name_value: String=str(entry.get("name",""))
+		var locked: bool=bool(locks.get(name_value+"@@@"+uid,false))
+		var key: String="%s|%d|%d|%d" % [name_value,int(owned.receipt.item_class_id),int(owned.receipt.bless_raw),int(locked)]
 		if not groups.has(key):groups[key]=[];order.append(key)
 		groups[key].append({"uid":uid,"owned":owned,"entry":entry,"other":stack_identity(entry)})
 	var bins: Array=[]

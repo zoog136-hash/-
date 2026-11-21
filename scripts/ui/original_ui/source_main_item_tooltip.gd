@@ -34,6 +34,39 @@ var reference: String=""
 var last_result: Dictionary={}
 var last_rows_problem: String=""
 
+## The client's popup has no X: a tap outside its panel closes it. The tap
+## is not consumed (the input is never marked handled), so the button, item or slot
+## under the finger still gets it; a tap inside the panel keeps it open.
+class OutsideCloser extends Node:
+	var popup: WeakRef
+	var panel: WeakRef
+	var _pressed_outside: bool=false
+	func _input(event: InputEvent) -> void:
+		var touch: bool=event is InputEventScreenTouch or (event is InputEventMouseButton and (event as InputEventMouseButton).button_index==MOUSE_BUTTON_LEFT)
+		if not touch:return
+		var viewport: Viewport=get_viewport()
+		var to_canvas: Transform2D=viewport.get_final_transform().affine_inverse() if viewport!=null else Transform2D.IDENTITY
+		var outside: bool=not panel_rect().has_point(to_canvas*(event as InputEvent).position)
+		if event.pressed:
+			_pressed_outside=outside
+			return
+		if outside and _pressed_outside:_close.call_deferred()
+		_pressed_outside=false
+	## The popup's Bg panel in canvas coordinates (empty when gone).
+	func panel_rect() -> Rect2:
+		var node: Variant=panel.get_ref() if panel!=null else null
+		if not node is Node2D or not is_instance_valid(node):return Rect2()
+		var size: Array=(node as Node2D).get_meta("source_size",[0,0])
+		var origin: Node2D=(node as Node2D).get_node_or_null("SourceContentOrigin")
+		var xf: Transform2D=(origin if origin!=null else node as Node2D).get_global_transform_with_canvas()
+		return Rect2(xf*Vector2(0.0,-float(size[1])),xf.basis_xform(Vector2(float(size[0]),float(size[1])))).abs()
+	func _close() -> void:
+		var owner: Variant=popup.get_ref() if popup!=null else null
+		# Only the popup this closer belongs to (another item may have opened since).
+		if owner!=null and owner.get("_scene")==get_parent():owner.call("close")
+
+const OUTSIDE_PANEL: String="Bg/Bg"
+
 func configure(pack: RefCounted) -> Dictionary:
 	for member: String in [MEMBER,SLOT]:
 		if pack==null or not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_item_tooltip_member_missing","member":member}
@@ -138,8 +171,21 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 		if located.get("ok",false) and info.get("texture") is Texture2D:
 			var owner: Dictionary={"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
 			picture=located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false) and located.player.set_bound_visible(located.offset,true).get("ok",false)
-	last_result={"ok":true,"handled":true,"member":MEMBER,"reference":item_reference,"title":title,"item_class_id":item_class_id,"grade_color":color.get("hex",""),"description":body,"rows":rows,"extra_rows":extra,"rows_problem":last_rows_problem,"picture":picture}
+	var closer: bool=_attach_outside_closer()
+	last_result={"ok":true,"handled":true,"outside_close":closer,"member":MEMBER,"reference":item_reference,"title":title,"item_class_id":item_class_id,"grade_color":color.get("hex",""),"description":body,"rows":rows,"extra_rows":extra,"rows_problem":last_rows_problem,"picture":picture}
 	return last_result
+
+func _attach_outside_closer() -> bool:
+	var located: Dictionary=NamedTree.locate(_scene,_out,OUTSIDE_PANEL)
+	if not located.get("ok",false):return false
+	var node: Variant=located.player.source_nodes.get(located.offset)
+	if not node is Node2D:return false
+	var closer:=OutsideCloser.new()
+	closer.name="ItemTooltipOutsideClose"
+	closer.popup=weakref(self)
+	closer.panel=weakref(node)
+	_scene.add_child(closer)
+	return true
 
 ## Further rows: the same original Panel_set (its own Text_Title/Text_Desc),
 ## stacked under the first one with the list's item margin.

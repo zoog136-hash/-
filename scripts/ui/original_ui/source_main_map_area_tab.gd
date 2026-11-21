@@ -11,9 +11,14 @@ extends RefCounted
 ## A tap on the map picture keeps walking there (current523_world_map_input)
 ## and also selects the area at that cell with its coordinates in the title
 ## (TWILIGHT 근사: nearest area box of the same Land).
+## Zoom (Nd_Page): Btn_Plus / Btn_Minus step the picture through the three
+## page marks (Sp_PageOn_0..2) around the view's middle (ZOOM_SCALES: TWILIGHT
+## 근사, the client's zoom table is not in the 523 data); taps and drags keep
+## working on the scaled picture. Map_All 내 위치 보기 (Btn_SelfPosition)
+## scrolls back to the player and selects the player's area.
 ## Left inert (no rule here): the NPC filters (CheckBox_Area), bookmarks
-## (Btn_CheckBox, Nd_Collection), zoom (Nd_Page) and the Slot_Skill quick
-## teleport slots of Map_All.
+## (Btn_CheckBox, Nd_Collection) and the Slot_Skill quick teleport slots of
+## Map_All.
 ## An older UI pack (ui42 and before: Map_Tab_Area scoped to the picture and
 ## the world row) has none of these nodes: available() is false and the map
 ## stays as it was.
@@ -32,6 +37,12 @@ const DROP_ROW="UI/Map/Map_Popup_AreaInfo_List_DropItem.csb"
 const ROOTS: Array[int]=[37984,37560,11324,9140,3672]
 ## Map_All Btn_AreaInfo (지역 정보).
 const AREA_INFO_BUTTON=2032
+## Nd_Page (zoom) and Map_All Btn_SelfPosition with its icon and label.
+const ZOOM_ROOT=4588
+const SELF_POSITION: Array[int]=[5852,6292,5904]
+const ZOOM_SCALES: Array[float]=[1.0,1.5,2.0]
+## The ScrollView holding the map picture.
+const MAP_SCROLL=44388
 const FILTER_NAMES: Dictionary={"field":"Field","dungeon":"Dungeon","village":"Village","base":"Base"}
 var _pack: RefCounted
 var _tree: RefCounted
@@ -56,6 +67,8 @@ var _moved: float=0.0
 var _popup: Node2D
 var _popup_monster: int=-1
 var _popup_content: Dictionary={}
+var _zoom: int=0
+var _zoom_connected: bool=false
 var last_result: Dictionary={}
 
 static func available(pack: RefCounted) -> bool:
@@ -73,8 +86,12 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	if not available(pack):return {"ok":false,"code":"source_map_area_tab_pack_without_area_list"}
 	_pack=pack
 	_hud=weakref(hud)
-	_tree=NamedTree.new(pack,{AREA:ROOTS})
-	return {"ok":true}
+	var scope: Variant=pack.manifest.get("node_scopes",{}).get(AREA)
+	_zoom_connected=scope is Array and (scope as Array).has(ZOOM_ROOT)
+	var roots: Array[int]=ROOTS.duplicate()
+	if _zoom_connected:roots.append(ZOOM_ROOT)
+	_tree=NamedTree.new(pack,{AREA:roots})
+	return {"ok":true,"zoom":_zoom_connected}
 
 ## Offsets and bindings the area project (Map_Tab_Area) adds for this tab.
 func bind(field_map: Object, world_id: int, world_label: String) -> Dictionary:
@@ -86,6 +103,7 @@ func bind(field_map: Object, world_id: int, world_label: String) -> Dictionary:
 	_content=null
 	_scroll=0.0
 	_cell=null
+	_zoom=0
 	var here: Dictionary=_player_area()
 	_selected=int(here.get("area_id",0))
 	_filter=str(here.get("filter","")) if not here.is_empty() else "field"
@@ -102,6 +120,13 @@ func bind(field_map: Object, world_id: int, world_label: String) -> Dictionary:
 		var name: String=FILTER_NAMES[key]
 		spec["CheckBox_Land/Btn_%s_On" % name]={"visible":_filter==key,"activate":Callable(self,"_set_filter").bind(key)}
 		spec["CheckBox_Land/Btn_%s_Off" % name]={"visible":_filter!=key,"activate":Callable(self,"_set_filter").bind(key)}
+	if _zoom_connected:
+		spec["Nd_Page"]={"visible":true}
+		spec["Nd_Page/Btn_Plus"]={"activate":Callable(self,"zoom").bind(1)}
+		spec["Nd_Page/Btn_Minus"]={"activate":Callable(self,"zoom").bind(-1)}
+		for index: int in ZOOM_SCALES.size():
+			spec["Nd_Page/Sp_PageOn_%d" % index]={"visible":index==_zoom}
+			spec["Nd_Page/Sp_PageOff_%d" % index]={"visible":index!=_zoom}
 	_out={}
 	var bound: Dictionary=_tree.bind(AREA,"",[],spec,_out)
 	return {"ok":true,"scope":bound.scope,"bindings":bound.bindings}
@@ -109,6 +134,54 @@ func bind(field_map: Object, world_id: int, world_label: String) -> Dictionary:
 ## Map_All binding of 지역 정보.
 func area_info_binding() -> Dictionary:
 	return {"role":"button","activate":Callable(self,"open_area_info")}
+
+## Map_All 내 위치 보기 (offset -> binding; empty without its nodes in the pack).
+func self_position_bindings() -> Dictionary:
+	var scope: Variant=_pack.manifest.get("node_scopes",{}).get("UI/Map/Map_All.csb") if _pack!=null else null
+	if not scope is Array:return {}
+	for offset: int in SELF_POSITION:
+		if not (scope as Array).has(offset):return {}
+	return {5852:{"role":"button","activate":Callable(self,"self_position")},5904:{"role":"static_source_text"}}
+
+## --- Zoom / 내 위치 ----------------------------------------------------------------
+
+func zoom_level() -> int:
+	return _zoom
+
+## One Nd_Page step (+1 closer, -1 back) around the middle of the view.
+func zoom(step: int) -> Dictionary:
+	var player: Object=_area_player.get_ref() if _area_player!=null else null
+	var node: Variant=player.get("source_nodes").get(MAP_SCROLL) if player!=null else null
+	var scroll: Variant=node.get_meta("source_scroll") if is_instance_valid(node) and node.has_meta("source_scroll") else null
+	var control: Control=scroll.input_control() if is_instance_valid(scroll) and scroll.has_method("input_control") else null
+	if control==null or not is_instance_valid(scroll.content):return {"ok":false,"code":"source_map_area_tab_zoom_unavailable"}
+	var next: int=clampi(_zoom+step,0,ZOOM_SCALES.size()-1)
+	if next==_zoom:return {"ok":true,"unchanged":true,"zoom":_zoom}
+	var content: Node2D=scroll.content
+	var middle: Vector2=control.position+control.size*0.5
+	var at: Vector2=content.transform.affine_inverse()*middle
+	content.scale=Vector2.ONE*ZOOM_SCALES[next]
+	content.position=middle-content.scale*at
+	_zoom=next
+	for index: int in ZOOM_SCALES.size():
+		for state: String in ["On","Off"]:
+			var offset: int=_offset("Nd_Page/Sp_Page%s_%d" % [state,index])
+			if offset>=0:player.set_bound_visible(offset,(state=="On")==(index==_zoom))
+	return {"ok":true,"zoom":_zoom,"scale":ZOOM_SCALES[_zoom]}
+
+## 내 위치 보기: back to the player's spot, the player's area selected.
+func self_position() -> Dictionary:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var centred: Dictionary=hud.call("center_world_map_on_player") if hud!=null and hud.has_method("center_world_map_on_player") else {"ok":false}
+	var here: Dictionary=_player_area()
+	_cell=null
+	if not here.is_empty():
+		_selected=int(here.get("area_id",0))
+		if str(here.get("filter",""))!=_filter and not str(here.get("filter","")).is_empty():
+			_filter=str(here.filter)
+			_fill_rows()
+	_show_selection()
+	return {"ok":bool(centred.get("ok",false)),"selected":_selected,"centred":centred}
 
 func presented(area_player: Node2D, mount: Node2D) -> Dictionary:
 	_area_player=weakref(area_player)

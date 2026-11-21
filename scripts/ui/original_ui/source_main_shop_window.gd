@@ -125,7 +125,7 @@ func open(parent: Node, panel: Control) -> Dictionary:
 	_panel=weakref(panel)
 	_scroll=0.0
 	_tab_scroll=0.0
-	tabs=tabs_of(panel.get("entries"))
+	tabs=tabs_of(served_entries(panel.get("entries")))
 	tab=0
 	return _stage()
 
@@ -160,6 +160,14 @@ func _products() -> Array[Dictionary]:
 	for id: int in tabs[tab].products:
 		if by_id.has(id):result.append(by_id[id])
 	return result
+
+## The market entries this game's server sells (world.source_shop.served_here):
+## an offer of another server group (e.g. new-server event rows) is not listed.
+func served_entries(entries: Array) -> Array:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	var runtime: Object=hud.get_parent().get("source_shop") if hud!=null and hud.get_parent()!=null else null
+	if runtime==null or not runtime.has_method("served_here"):return entries
+	return entries.filter(func(entry: Variant) -> bool: return not entry is Dictionary or str(entry.get("source_table",""))!=MARKET or runtime.served_here(int(entry.id)))
 
 ## Original BM shop categories holding at least one of `entries` (the market
 ## rows the shop panel lists), each with its products in DisplayIndex order.
