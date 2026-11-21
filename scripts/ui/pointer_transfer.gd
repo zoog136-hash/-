@@ -27,6 +27,9 @@ const DOUBLE_TAP_MS: int = 360
 ## selects, drag scrolls); holding still for TOUCH_HOLD_SECONDS hands the
 ## gesture to this transfer so the skill can be dropped on a quick slot.
 var held_watch: Dictionary = {}
+## A quick slot moved before the hold time: a pull, not a held drag (held
+## drags still move/remove slots and decide AUTO on release).
+var quick_pull_armed: bool = false
 
 func reset_tap_history() -> void:
 	last_tap_id = ""
@@ -184,7 +187,9 @@ func _input(event: InputEvent) -> void:
 					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(_inventory_gesture_frame(),origin) else "drag"
 				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
-				else: mode = "drag"
+				else:
+					mode = "drag"
+					quick_pull_armed = true
 			else: mode = "drag"
 		# Captured scrolling never turns into an item drop at the window edge.
 		# Deliberate hold/horizontal drags retain the existing transfer path.
@@ -200,7 +205,7 @@ func _input(event: InputEvent) -> void:
 			elif source.from == "skill" and is_instance_valid(hud.skills_view): bar = hud.skills_view.cards.get_v_scroll_bar()
 			elif source.from == "warehouse" and is_instance_valid(hud.transaction_view): bar = hud.transaction_view.listing.get_v_scroll_bar()
 			if bar != null: bar.value -= (position-previous).y
-		elif mode == "drag": _show_drag()
+		elif mode == "drag" and not (source.from == "quick" and _quick_pull(position-origin)): _show_drag()
 		elif mode == "page":
 			hint.text = "다음 페이지" if distance.x < 0 else "이전 페이지"
 			hint.position = origin-Vector2(40,65)
@@ -223,6 +228,21 @@ func _input(event: InputEvent) -> void:
 			handled_touch_position = event.position
 		_finish_gesture()
 		get_viewport().set_input_as_handled()
+
+## A short vertical pull on a filled quick slot: down switches AUTO (on, or
+## off again when it is on), up switches it off. Committed during the move so
+## the release (or a cancel at the screen edge) cannot lose it.
+func _quick_pull(delta: Vector2) -> bool:
+	if not quick_pull_armed or source.entry.is_empty() or absf(delta.x) >= L.QUICK_SIZE*.5 or absf(delta.y) < L.AUTO_PULL_DISTANCE or absf(delta.y) <= absf(delta.x): return false
+	var world: Node = hud.get_parent()
+	if world.quickslots[int(source.slot)] != source.entry: return false
+	var auto_on: bool = bool(source.entry.get("auto",false))
+	var request: String = "auto_off" if delta.y < 0 or auto_on else "auto_on"
+	hud.quickslot_edit_requested.emit(request,int(source.slot),-1)
+	mode = "pulled"
+	if is_instance_valid(preview): preview.hide()
+	if is_instance_valid(hint): hint.hide()
+	return true
 
 func _held_source_at(point: Vector2) -> Dictionary:
 	if hud.class_picker_initial or not hud.has_method("original_skill_window_hit_at"): return {}
@@ -423,6 +443,7 @@ func _finish_gesture() -> void:
 	pointer = -2
 	source.clear()
 	mode = ""
+	quick_pull_armed = false
 	suppress_click = false
 	if is_instance_valid(preview): preview.hide()
 	if is_instance_valid(preview): preview.material=null
