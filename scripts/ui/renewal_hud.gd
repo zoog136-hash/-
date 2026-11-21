@@ -1017,6 +1017,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	# A reward's item information popup (source_reward_item_info) closes with its window.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
@@ -1094,6 +1096,7 @@ func _open_window(section: String,title: String,description: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()
@@ -1829,7 +1832,7 @@ func _build_menu_page() -> void:
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["sell","판매"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
 	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
 	# original tile first in the client's order, then the TWILIGHT-only ones.
 	menu_pairs = ordered_menu_pairs(menu_pairs)
