@@ -16,10 +16,16 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## with partially owned (legacy) levels opens the existing mastery panel,
 ## which keeps 부분 옵션 복구. Left empty: the roulette effects, the level
 ## arrows, the detail sub lists (their row members are not in the window),
-## the gauge sprite (a plain Sprite, no percent in the original node) and an
-## icon whose original picture is not in the image pack.
+## and an icon whose original picture is not in the image pack.
+## The weapon row's gauge ring (Mastery_List_Weapon ProgressBg / ProgressBar,
+## Com_Skillful_Gauge of Atlas_Common2 around the weapon icon) fills with the
+## weapon's progress to its next level: the original ProgressBar picture,
+## revealed clockwise from the top by a radial shader (source_radial_fill;
+## TWILIGHT 근사 of the client's radial ProgressTimer, whose start and
+## direction are not in the CSB).
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const RadialFill=preload("res://scripts/ui/original_ui/source_radial_fill.gd")
 const ROOT="UI/Mastery/Mastery_All.csb"
 const WEAPON_ROW="UI/Mastery/Mastery_List_Weapon.csb"
 const OPTION_ROW="UI/Mastery/Mastery_List_Option.csb"
@@ -150,20 +156,37 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		weapons.append({"member":WEAPON_ROW,"spec":{"Panel/Btn_Normal":{"visible":not on,"activate":Callable(self,"_select").bind(weapon)},
 			"Panel/Btn_Pressed":{"visible":on,"activate":Callable(self,"_select").bind(weapon)},
 			"Nd_Contents/Sp_Equip":{"visible":weapon==equipped},"Nd_Contents/Sp_New":{"visible":false},
-			"Nd_Contents/Icn_Type":{"role":"source_asset_slot","visible":false},"Nd_Contents/ProgressBar":{"visible":false},
+			"Nd_Contents/Icn_Type":{"role":"source_asset_slot","visible":false},"Nd_Contents/ProgressBar":{"visible":true},
 			"Nd_Contents/Label_Level_Num":{"role":"source_text","text":"%d/%d" % [runtime.core.achieved_level(weapon,str(entry.points)),_max_level(runtime,weapon)]},
 			"Panel/Btn_Disabled":{"exclude":true},"Panel/Fx_Start":{"exclude":true}}})
 		weapon_ids.append(weapon)
 	var listed: Dictionary=_fill_list(root,out,"Nd_Weapon_List/ListView_List",weapons,NAN,true)
 	if not listed.get("ok",false):return listed
 	var icons: int=0
+	var gauges: int=0
 	for index: int in range((listed.get("scenes",[]) as Array).size()):
 		var located: Dictionary=_locate(listed.scenes[index],listed.outs[index],"Nd_Contents/Icn_Type")
 		if located.get("ok",false) and _show_picture(located.player,located.offset,weapon_icon(runtime,weapon_ids[index])):icons+=1
+		if _fill_gauge(listed.scenes[index],listed.outs[index],gauge_ratio(runtime,weapon_ids[index])):gauges+=1
 	var rows: Array=_option_rows(runtime)
 	var options: Dictionary=_fill_list(root,out,"ListView_Option",rows)
 	if not options.get("ok",false):return options
-	return {"ok":true,"selected":selected,"weapons":weapons.size(),"icons":icons,"option_rows":rows.size(),"help":help}
+	return {"ok":true,"selected":selected,"weapons":weapons.size(),"icons":icons,"gauges":gauges,"option_rows":rows.size(),"help":help}
+
+## 0..1: the weapon's mastery points between its current and next level
+## (1 at the last level), the same figure as the info panel's ( n% ).
+static func gauge_ratio(runtime: Object, weapon: int) -> float:
+	var entry: Dictionary=runtime.core.record(runtime.state,weapon)
+	var level: int=runtime.core.achieved_level(weapon,str(entry.points))
+	return clampf(_progress(runtime,weapon,str(entry.points),level)/100.0,0.0,1.0)
+
+## The row's original ProgressBar picture, shown up to `ratio` of the ring.
+func _fill_gauge(scene: Node2D, out: Dictionary, ratio: float) -> bool:
+	var located: Dictionary=_locate(scene,out,"Nd_Contents/ProgressBar")
+	if not located.get("ok",false):return false
+	var node: Variant=located.player.source_nodes.get(located.offset)
+	var sprite: Variant=node.get_meta("source_sprite") if is_instance_valid(node) and node.has_meta("source_sprite") else null
+	return sprite is Sprite2D and RadialFill.apply(sprite,ratio)
 
 ## The weapon's own original icon (MasteryWeaponType.AssetID of its base
 ## row); not ok (the slot stays empty) when the image pack lacks it.

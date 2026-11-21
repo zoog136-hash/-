@@ -56,7 +56,13 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 		var base: Dictionary = summary.get("native_record",{})
 		var record: Dictionary = D.variant_item(base,bless)
 		if record.is_empty():return {"ok":false,"error":"새 원문 아이템 DTO 참조 미해결 · 기존 소유 보존"}
-		if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {"ok":false,"error":"원본 공급 카탈로그 미등록"}
+		var catalog_row: Dictionary = world._catalog_item_from_source_id(str(record.sourceId))
+		# A blessed/cursed non-equipment stack (" · 축복"/" · 저주") is no catalog
+		# row: it is the variant of its registered base row (bless_stack_record).
+		if catalog_row.is_empty() and bless != 1 and not D.equipment(record):
+			var base_row: Dictionary = world._catalog_item_from_source_id(str(base.sourceId))
+			if D.matches(base_row, base): catalog_row = D.variant_item(base_row, bless)
+		if not D.matches(catalog_row,record): return {"ok":false,"error":"원본 공급 카탈로그 미등록"}
 		if enchant > 0 and not D.equipment(record): return {"ok":false,"error":"비장비 원본 강화값 미지원"}
 		var wallet: String = D.currency_identity_name(record)
 		var stock: Script=load("res://scripts/loot/current523_native_stack.gd")

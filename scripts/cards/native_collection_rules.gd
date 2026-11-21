@@ -112,13 +112,25 @@ func configure(data: Dictionary, catalog: Dictionary) -> bool:
 func derive(card_state: Dictionary) -> Dictionary:
 	# Rows share their source sub-values with the definitions (view_row); this
 	# only reads those and writes the row's and requirements' own keys.
-	var result: Dictionary = super.derive(card_state)
+	# One collection contributes each source reward once (totals start empty on
+	# every derive): a server change removes prior conditional totals.
+	return super.derive(card_state)
+
+## Interval rewards are applied by HP (collection_runtime.interval_bonus).
+func add_totals(row: Dictionary, totals: Dictionary) -> void:
+	for effect: Dictionary in row.effects:
+		if interval_supported(effect):continue
+		var code: String=effect_code(effect)
+		totals[code]=float(totals.get(code,0))+float(effect.value)
+
+func derive_rows(card_state: Dictionary, indices: Array[int]) -> Array:
+	var rows: Array=super.derive_rows(card_state,indices)
 	var context: Dictionary=card_state.get("source_server_context",{})
 	# Only exact original SlotIndex1 option bindings can satisfy IsAwaken.
 	# Numeric legacy flags, card skill awakening and aura never enter this ledger.
 	var option: Dictionary=card_state.get("source_option_awakening",{})
 	var bound: bool=option.get("source_snapshot","")=="base508" and option.get("kind","")=="BuffCardOptionAwakenGroup.SlotIndex1"
-	for row: Dictionary in result.rows:
+	for row: Dictionary in rows:
 		if row.problems.has("native_server_context_required"):
 			row.problems.erase("native_server_context_required")
 			var limits: Array[int]=[]
@@ -156,17 +168,7 @@ func derive(card_state: Dictionary) -> Dictionary:
 			row["conditions_met"]=met==row.requirements.size()
 		row["available"]=row.problems.is_empty()
 		row["completed"]=row.available and row.conditions_met
-	# One collection contributes each source reward once. A server change must
-	# remove prior conditional totals rather than accumulating another award.
-	result.totals={};result.completed={}
-	for row: Dictionary in result.rows:
-		if not row.completed:continue
-		result.completed[str(row.id)]=true
-		for effect: Dictionary in row.effects:
-			if interval_supported(effect):continue
-			var code: String=effect_code(effect)
-			result.totals[code]=float(result.totals.get(code,0))+float(effect.value)
-	return result
+	return rows
 
 # TWILIGHT compatibility policy, not a recovered client formula: ceil the
 # clamped living HP percentage, inclusive integer source bounds, no dead bonus.
