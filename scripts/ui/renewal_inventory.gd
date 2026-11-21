@@ -3,11 +3,16 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
-const ITEM_NAME_DURATION_MS: int = 5000
+## One tap shows the item's name over its slot for about three seconds
+## (user list 2026-11-21 #20) and arms its 사용/장착/해제 marker for as long.
+const ITEM_NAME_DURATION_MS: int = 3000
+const ORIGINAL_NAME_FONT: String = "Font/font_B.ttf"
 const ITEM_NAME_GAP: float = 4.0
 const ITEM_NAME_NATIVE_Z: int = 400
 var item_name_hint: Label
-## The original item information popup is showing the selected item.
+## The original item information popup is showing the selected item. It is
+## opened only by a long press on the slot (the original detail gesture), never
+## by a single tap, and it is independent of the timed name.
 var item_tooltip_open: bool = false
 var item_name_reference: String = ""
 var item_name_until: int = 0
@@ -227,6 +232,7 @@ func _select_item(reference: String) -> void:
 	_refresh_slot_states([previous,reference])
 	# A selection never opens details, including when changing the selected item.
 	detail_active = false
+	close_item_info()
 	_reflow()
 	_show_item_name(reference)
 
@@ -243,36 +249,77 @@ func _show_item_name(reference: String) -> void:
 	item_name_hint.add_theme_color_override("font_color",original_color.color if original_color.get("ok",false) else _grade_color(str(record.get("grade","일반"))))
 	# One deadline, replaced on each click; old callbacks cannot hide a new name.
 	item_name_until = Time.get_ticks_msec()+ITEM_NAME_DURATION_MS
-	# With the original bag the original item information popup
-	# (ToolTip_CommonType) replaces the small TWILIGHT name label.
-	item_tooltip_open = false
-	if native.get("ok",false):
-		var original_hud: Variant = controller.get("original_main_ui_controller") if is_instance_valid(controller) else null
-		if is_instance_valid(original_hud) and original_hud.has_method("try_open_item_tooltip"):
-			var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
-			var opened: Variant = original_hud.call("try_open_item_tooltip",reference,item_name_hint.text,identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record))
-			item_tooltip_open = opened is Dictionary and opened.get("ok",false)
-	if item_tooltip_open:
-		item_name_hint.hide()
-		item_name_until = 9223372036854775807 # stays until another tap / the bag closes
+	# Over the original bag the name uses the original slot font.
+	var original_font: Variant = controller.call("original_ui_font",ORIGINAL_NAME_FONT) if native.get("ok",false) and is_instance_valid(controller) and controller.has_method("original_ui_font") else null
+	if original_font is Font: item_name_hint.add_theme_font_override("font",original_font)
+	else: item_name_hint.remove_theme_font_override("font")
 	set_process(true)
 	_update_item_name()
+	_refresh_native_actions()
+
+## 사용 (consumables and other usable items), 장착 (equipment, ammunition)
+## or 해제 (worn) while the tapped item's name is shown; "" otherwise.
+func item_action_label(reference: String) -> String:
+	if reference.is_empty() or reference != item_name_reference or reference != selected_item or Time.get_ticks_msec() >= item_name_until: return ""
+	return item_action_kind(reference)
+
+func item_action_kind(reference: String) -> String:
+	if _is_item_equipped(reference): return "해제"
+	var record: Dictionary = _find_item_record(reference)
+	if record.is_empty(): return ""
+	var host: Node = controller.get_parent() if is_instance_valid(controller) else null
+	var item_name: String = _base_item_name(reference)
+	var is_ammo: bool = item_name in ["화살", "총알"] or not preload("res://scripts/loot/patch523_ammo.gd").profile(record).is_empty() or not preload("res://scripts/shop/source523_ammo.gd").definition(record).is_empty()
+	if is_ammo or host != null and host.has_method("_equipment_slot_for_record") and not str(host.call("_equipment_slot_for_record",record)).is_empty(): return "장착"
+	# Materials (slot material, 재료 types): name only.
+	if str(record.get("slot","")) == "material" or str(record.get("type","")).ends_with("재료"): return ""
+	return "사용"
+
+## The second tap on the same slot while its marker shows uses/equips it.
+func item_action_armed(reference: String) -> bool:
+	return not item_action_label(reference).is_empty()
+
+func disarm_item_action() -> void:
+	_hide_item_name()
+
+## Long press: the original item information popup (ToolTip_CommonType).
+func open_item_info(reference: String) -> bool:
+	if reference.is_empty() or not is_instance_valid(controller): return false
+	if selected_item != reference: _select_item(reference)
+	var original_hud: Variant = controller.get("original_main_ui_controller")
+	if not is_instance_valid(original_hud) or not original_hud.has_method("try_open_item_tooltip"):
+		open_detail()
+		return detail_active
+	var record: Dictionary = _find_item_record(reference)
+	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
+	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record))
+	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
+	if item_tooltip_open: _hide_item_name()
+	return item_tooltip_open
+
+func close_item_info() -> void:
+	if not item_tooltip_open: return
+	item_tooltip_open = false
+	var original_hud: Variant = controller.get("original_main_ui_controller") if is_instance_valid(controller) else null
+	if is_instance_valid(original_hud) and original_hud.has_method("close_item_tooltip"): original_hud.call("close_item_tooltip")
+
+func _refresh_native_actions() -> void:
+	if is_instance_valid(controller) and controller.has_method("original_inventory_refresh_actions"): controller.call("original_inventory_refresh_actions")
 
 func _hide_item_name() -> void:
+	var was_armed: bool = not item_name_reference.is_empty()
 	item_name_reference = ""
 	item_name_until = 0
-	if item_tooltip_open:
-		item_tooltip_open = false
-		var original_hud: Variant = controller.get("original_main_ui_controller") if is_instance_valid(controller) else null
-		if is_instance_valid(original_hud) and original_hud.has_method("close_item_tooltip"): original_hud.call("close_item_tooltip")
 	if item_name_hint != null: item_name_hint.hide()
 	set_process(false)
+	if was_armed: _refresh_native_actions()
 	# Deliberately do not clear selected_item or its highlighted item border.
 
 func _inventory_visibility_changed() -> void:
 	var native_open: bool=is_instance_valid(controller) and controller.has_method("original_inventory_is_open") and controller.call("original_inventory_is_open")
 	if (not is_visible_in_tree() or not inventory_panel.is_visible_in_tree()) and not native_open:
 		_hide_item_name()
+		close_item_info()
 		detail_active = false
 		detail_panel.hide()
 	elif inventory_grid_dirty:

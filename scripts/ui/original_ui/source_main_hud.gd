@@ -949,6 +949,13 @@ func inventory_gesture_bounds() -> Control:
 func inventory_select(reference: String) -> Dictionary:
 	return _inventory_view.select(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
+func inventory_refresh_actions() -> Dictionary:
+	return _inventory_view.refresh_actions() if inventory_is_open() else _fail("source_inventory_not_open")
+
+## An original font of the pack (Font/font_B.ttf for slot/tooltip text).
+func original_font(path: String) -> FontFile:
+	return _pack.font({"path":path,"plistFile":"","resourceType":0}) if _pack!=null and _pack.has_method("font") else null
+
 func inventory_activate_selected(reference: String) -> Dictionary:
 	return _inventory_view.activate_selected(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
@@ -1702,11 +1709,17 @@ func update_map_name(map_name: String) -> Dictionary:
 		return configured
 	var name_contract: Dictionary=_map_bindings.build_name(map_name)
 	_map_name_result=_mount_main_project(21588,name_contract)
+	if not _map_name_result.get("ok",false) and bool(name_contract.get("change_card_connected",false)):
+		# The 카드 교체 side button must never cost the map name.
+		var with_card: Dictionary=_map_name_result.duplicate(true)
+		name_contract=_map_bindings.build_name(map_name,true,false)
+		_map_name_result=_mount_main_project(21588,name_contract)
+		_map_name_result["optional_change_card_result"]=with_card
 	if not _map_name_result.get("ok",false) and name_contract.get("source_node_offsets",[]).has(MainMap.ZONE_TEXT):
 		# Optional source zone text must not remove the existing complete
 		# owner map-name string when its source font/scope is unavailable.
 		var with_zone: Dictionary=_map_name_result.duplicate(true)
-		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false))
+		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false,false))
 		_map_name_result["optional_safe_label_result"]=with_zone
 	if _map_name_result.get("ok",false):
 		_map_name_scene=_map_name_result.scene

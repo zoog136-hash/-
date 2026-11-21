@@ -46,6 +46,36 @@ void fragment() {
 static func original_default(texture: Texture2D, grayscale: bool=false) -> ShaderMaterial:
 	return for_blend(texture,"1:771" if bool(texture.get_meta("cocos_premultiplied",false)) else "770:771",grayscale)
 
+## A not-yet-owned slot icon: ccShader_UI_Gray's luminance over a small
+## 3x3 blur, slightly darkened. A shader on the original picture only (no
+## new image). Shared per PMA kind.
+static var _gray_blur: Dictionary={}
+static func gray_blur(texture: Texture2D) -> ShaderMaterial:
+	var pma: bool=bool(texture.get_meta("cocos_premultiplied",false))
+	if _gray_blur.has(pma):return _gray_blur[pma]
+	var shader:=Shader.new()
+	shader.code="""shader_type canvas_item;
+render_mode unshaded, %s;
+uniform float blur_texels = 1.2;
+uniform float brightness = 0.78;
+void fragment() {
+    vec2 step = TEXTURE_PIXEL_SIZE * blur_texels;
+    vec4 sum = vec4(0.0);
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            sum += texture(TEXTURE, UV + vec2(float(x), float(y)) * step) * ((x == 0 && y == 0) ? 4.0 : 1.0);
+        }
+    }
+    vec4 sampled = sum / 12.0;
+    float luminance = dot(sampled.rgb, vec3(0.2126, 0.7152, 0.0722)) * brightness;
+    COLOR = vec4(vec3(luminance), sampled.a);
+}
+"""%("blend_premul_alpha" if pma else "blend_mix")
+	var material:=ShaderMaterial.new()
+	material.shader=shader
+	_gray_blur[pma]=material
+	return material
+
 ## Cocos display colour/opacity per node. Nodes with the same base material
 ## and the same display colour share one material, so an original window
 ## with thousands of nodes holds only a few materials (2026-11-14 phone:
