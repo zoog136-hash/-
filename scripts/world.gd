@@ -4707,6 +4707,8 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
+		# 선택 상자: the original selection window (patch523_reward_choice).
+		if native_stack.get("requires_original_selection",false) and consumable_service.open_owned_original_selection(item_name,native_stack):return
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
 		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
 		return
