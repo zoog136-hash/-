@@ -1016,6 +1016,8 @@ func _close_workspace() -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	# A reward's item information popup (source_reward_item_info) closes with its window.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_quest_window"):original_main_ui_controller.close_quest_window()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_shop_window"):original_main_ui_controller.close_shop_window()
@@ -1093,6 +1095,7 @@ func _open_window(section: String,title: String,description: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_character()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_npc_dialogue()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_enhance_action()
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.close_quest_controls()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.world_map_is_open():original_main_ui_controller.close_world_map()
 	_presentation_transition()

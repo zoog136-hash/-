@@ -23,6 +23,7 @@ const ROW_PROGRESS="UI/Quest/Quest_List_Progress.csb"
 const ROW_COMPLETE="UI/Quest/Quest_List_Complete.csb"
 const SLOT_SET="UI/Quest/Quest_Slot_Set.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
+const RewardInfo=preload("res://scripts/ui/original_ui/source_reward_item_info.gd")
 const MAIN_PROJECT=1728
 const CLOSE=2412
 const TITLE=3176
@@ -326,6 +327,9 @@ func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 		var common_scope: Array[int]=[SLOT_BUTTON,SLOT_BACKGROUND]
 		var common: Dictionary={SLOT_BUTTON:{"role":"button","displaystate":false,"activate":Callable()}}
 		if index<rewards.size():
+			# A tap on the reward opens its original item information popup.
+			var reward_item: Dictionary=rewards[index].get("source_item",{})
+			common[SLOT_BUTTON]={"role":"button","activate":Callable(self,"_reward_info").bind(int(reward_item.get("ItemClassID",reward_item.get("ID",0))))}
 			var owner: Dictionary=_reward_picture(rewards[index],offset)
 			if owner.get("ok",false):
 				owners.append(owner)
@@ -342,6 +346,10 @@ func _problem() -> String:
 	var service: Variant=world.get("quest_service") if world!=null else null
 	if service==null or not (service.get("quests") is Array) or not (service.quests as Array).is_empty():return ""
 	return str(service.get("problem")) if service.get("problem")!=null else ""
+
+## The original item information popup of a reward (source_reward_item_info).
+func _reward_info(item_class_id: int) -> Dictionary:
+	return RewardInfo.toggle(_hud.get_ref() if _hud!=null else null,item_class_id)
 
 func _reward_picture(reward: Dictionary, offset: int) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
