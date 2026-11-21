@@ -23,6 +23,9 @@ var motion: TwilightActorMotion = MOTION.new()
 var appear_speed: float = 4.0
 var disappear_speed: float = 4.0
 
+func _init() -> void:
+	native_actor.use_companion_frame_plans()
+
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
 	native_actor.clear()
 	native_enabled = false
