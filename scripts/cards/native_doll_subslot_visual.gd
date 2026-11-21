@@ -28,7 +28,10 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	if record.is_empty() or int(world.hp)<=0:clear();return
 	var path: String="res://scripts/animation/original_source_preview.gd"
 	if not preload("res://scripts/resources/retired_assets.gd").usable(path):status="source_engine_unavailable";hide();return
-	if not is_instance_valid(actor):actor=load(path).new();add_child(actor)
+	if not is_instance_valid(actor):
+		actor=load(path).new()
+		actor.use_companion_frame_plans()
+		add_child(actor)
 	var source_key: String=("relic:" if category=="성물" else "doll:")+str(record.get("sourceId",""))
 	var source_only: bool=actor.current523_source_required(source_key)
 	if not source_only:

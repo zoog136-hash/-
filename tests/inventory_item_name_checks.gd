@@ -19,7 +19,7 @@ static func run(suite: Variant, ref0: String, ref1: String) -> void:
 	suite.check(label_rect.end.y <= slot.position.y and slot.position.y-label_rect.end.y <= 8.0,"name sits directly above the selected item border")
 	suite.check(hint.mouse_filter == Control.MOUSE_FILTER_IGNORE and bag.slot_buttons[ref0].tooltip_text.is_empty(),"name cannot intercept gestures or leave a default hover tooltip")
 	var remaining: int = bag.item_name_until-Time.get_ticks_msec()
-	suite.check(remaining > 4500 and remaining <= 5000,"single click starts approximately five real seconds")
+	suite.check(remaining > 2500 and remaining <= 3000,"single click starts approximately three real seconds")
 
 	var details: Button = bag.find_child("InventoryDetail",true,false)
 	var close: Button = bag.find_child("InventoryDetailClose",true,false)
@@ -34,11 +34,12 @@ static func run(suite: Variant, ref0: String, ref1: String) -> void:
 	await suite.tap(suite.point(close))
 	suite.check(not bag.detail_active,"mouse close dismisses details")
 
-	# A fresh tap replaces the sole deadline, including another tap on the same item.
+	# A fresh tap replaces the sole deadline. A tap on the same item while its
+	# name shows is the use/equip tap, so the refresh is checked after expiry.
 	suite.hud.pointer_transfer.cancel()
 	await suite.tap(suite.point(bag.slot_buttons[ref0]),true)
 	var first_deadline: int = bag.item_name_until
-	await suite.create_timer(2.0,true,false,true).timeout
+	await suite.create_timer(3.2,true,false,true).timeout
 	suite.hud.pointer_transfer.cancel()
 	await suite.tap(suite.point(bag.slot_buttons[ref0]),true)
 	suite.check(bag.item_name_until >= first_deadline+1800,"same-item single tap refreshes the full name duration")
@@ -48,11 +49,11 @@ static func run(suite: Variant, ref0: String, ref1: String) -> void:
 	bag._refresh_inventory_grid()
 	await suite.frames(4)
 	suite.check(bag.item_name_until == final_deadline and hint.is_visible_in_tree(),"grid rebuild reanchors label without restarting its deadline")
-	await suite.create_timer(3.2,true,false,true).timeout
+	await suite.create_timer(1.0,true,false,true).timeout
 	suite.check(Time.get_ticks_msec() > first_deadline and hint.is_visible_in_tree(),"old selection expiry cannot hide the newer selection's name")
 	await suite.create_timer(2.1,true,false,true).timeout
 	await suite.frames(2)
-	suite.check(Time.get_ticks_msec() >= final_deadline and not hint.visible,"name disappears after five seconds without mouse exit")
+	suite.check(Time.get_ticks_msec() >= final_deadline and not hint.visible,"name disappears after three seconds without mouse exit")
 	suite.check(bag.selected_item == ref1 and not bag.detail_active,"name expiry preserves selection and never opens details")
 	if bag.slot_buttons[ref1].has_meta("original_inventory_slot"):
 		var selected_style: StyleBoxTexture=bag.slot_buttons[ref1].get_theme_stylebox("normal") as StyleBoxTexture

@@ -21,6 +21,10 @@ static func decode(page: Image, spec: Dictionary) -> Dictionary:
 	var target:=Rect2i(Vector2i(source_rect[0],source_rect[1]),trimmed.get_size())
 	if canvas.x<=0 or canvas.y<=0 or canvas.x>16384 or canvas.y>16384 or not Rect2i(Vector2i.ZERO,canvas).encloses(target):
 		return {"error":"trim_out_of_canvas"}
+	# get_region() already owns its pixels. A full-size RGBA8 crop can go
+	# straight to the caller, including after rotation, without a second image.
+	if target.position==Vector2i.ZERO and target.size==canvas and trimmed.get_format()==Image.FORMAT_RGBA8 and not trimmed.has_mipmaps():
+		return {"error":"","image":trimmed}
 	var result:=Image.create(canvas.x,canvas.y,false,Image.FORMAT_RGBA8)
 	result.blit_rect(trimmed,Rect2i(Vector2i.ZERO,trimmed.get_size()),target.position)
 	return {"error":"", "image":result}

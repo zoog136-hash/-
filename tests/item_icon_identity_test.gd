@@ -56,6 +56,12 @@ func synthetic() -> void:
 	for row: Dictionary in bag._inventory_entries(): names.append(row.name)
 	evidence["bag"] = names
 	check(names == ["철 광석"], "diamonds, mileage and 수호석 are wallet values, not bag slots")
+	var name_value: String = "용기의 물약 (각인) · 원본#335"
+	var record: Dictionary = {"name":name_value,"source_item_class_id":335,"source_bless_raw":1,"slot":"consumable"}
+	bag.inventory[name_value] = 5
+	bag.character_state.item_instances["potion"] = {"name":name_value,"record":record,"source_native_stack_quantity":5,"source_native_stack_receipt":{"issued_physical_id":"potion","item_class_id":335,"bless_raw":1}}
+	check(bag._find_item_record(name_value+"@@@potion")==record and bag._owned_slot_amount(bag.character_state.item_instances.potion)==5, "a receipt-backed slot without a catalog row keeps its own record and quantity")
+	check(bag._find_item_record("다른 물약@@@potion").get("slot")=="other", "a stale reference cannot resolve another item's record")
 	bag.free()
 
 func installed() -> void:

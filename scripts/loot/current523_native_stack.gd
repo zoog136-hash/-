@@ -260,15 +260,26 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not claims:return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 소비 저장 보호 중 · 물리 수량 보존")
 	if not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():return _failure("현재 사용·생존 상태 조건 미충족")
-	var uid: String="";var owned: Dictionary={};var total: int=0
+	var uid: String="";var owned: Dictionary={};var total: int=0;var has_physical: bool=false
 	for id: String in world.item_instances:
 		var entry: Variant=world.item_instances[id]
-		if not entry is Dictionary or entry.get("name")!=item_name or not entry.has(RECEIPT):continue
+		if not entry is Dictionary or entry.get("name")!=item_name:continue
+		has_physical=true
+		if not entry.has(RECEIPT):continue
 		var current: Dictionary=proof(world,id)
 		if current.is_empty():return _failure("원본 물리 소유·최초량·잔량 증명 불일치")
 		if total>9007199254740991-int(current.remaining):return _failure("물리 수량 정수 범위 초과")
 		total+=int(current.remaining)
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
+	if not has_physical and selected.is_empty() and named.get("name")==item_name and integer(world.inventory.get(item_name,0)) and int(world.inventory.get(item_name,0))>0 and not world._item_locked(item_name):
+		# Older name-keyed acceleration stacks have no physical receipt. Their
+		# existing atomic buff owner can debit the exact catalog balance directly.
+		var plain: Dictionary=profile(named)
+		var plain_spec: Dictionary=plain.get("spec",{})
+		if plain.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
+			var restriction: String=_buff_territory_problem(world,plain_spec)
+			if not restriction.is_empty():return _failure(restriction)
+			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
@@ -301,10 +312,9 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
-	if effect.kind=="buff" and not spec.get("forbidden_territory_class_ids",[]).is_empty():
-		var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
-		if areas==null:return _failure("원본 사용 불가 지역 입력 확인 실패 · 아이템 보존")
-		if EFFECTS._forbidden(world,areas,world.player.global_position):return _failure("원본 조건: 이 지역에서는 사용할 수 없습니다")
+	if effect.kind=="buff":
+		var restriction: String=_buff_territory_problem(world,spec)
+		if not restriction.is_empty():return _failure(restriction)
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
@@ -377,6 +387,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
 	var saved: Error=OK
+	var potion_deferred: bool=false
 	if prepared.has("travel"):
 		# Fixed-destination teleport: the arrival's checkpoint save carries the
 		# physical debit (current523_map_travel_payment); a refused move keeps it.
@@ -386,6 +397,14 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 			busy=false
 			if moved.get("uncertain",false):world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 			return _failure(str(moved.get("reason","이동 실패"))+(" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
+	elif effect.kind in ["hp","mp"] and not prepared.has("destination"):
+		# HP/MP potions: checked as their save would check them, committed in
+		# memory, written by the coalesced background save (user decision
+		# 2026-11-21, option A: a full save per potion was ~0.4 s on the phone).
+		potion_deferred=true
+		if not override_error(world,payload).is_empty():
+			_candidate.clear();busy=false
+			return _failure("원본 물약 사용 후보 확인 실패 · 물약 보존")
 	else:
 		saved=world._save_game(true,payload)
 	_candidate.clear()
@@ -401,12 +420,20 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	else:
 		world.active_item_buffs=payload.active_item_buffs;world.hp=int(payload.hp);world.mp=int(payload.mp)
 		world._invalidate_equipment_static();world._refresh_speed_modifiers()
-	world.deferred_save.cancel();busy=false
+	if potion_deferred:world._request_general_save()
+	else:world.deferred_save.cancel()
+	busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
+
+static func _buff_territory_problem(world: Node,spec: Dictionary) -> String:
+	if spec.get("forbidden_territory_class_ids",[]).is_empty():return ""
+	var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
+	if areas==null:return "원본 사용 불가 지역 입력 확인 실패 · 아이템 보존"
+	return "원본 조건: 이 지역에서는 사용할 수 없습니다" if EFFECTS._forbidden(world,areas,world.player.global_position) else ""
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
@@ -1523,16 +1550,27 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	state.erase(AMMO_USES);payload["mp"]=int(world.mp)-mp_cost
 	if roll_damage:state[AMMO_RNG]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
 	if not paid.quest_step.is_empty() and not QUEST_CONSUME.matches_payload(world,paid.quest_step,payload):return _failure("퀘스트 탄약 잔량·최초 사용 증명·MP 결과 공동 후보 불일치")
+	# The payload is checked exactly as its save would check it (the sealed
+	# owner rules), then committed in memory; the coalesced background save
+	# writes it (user decision 2026-11-21, option A: a full save per shot was
+	# ~0.4 s on the phone). Quest-step shots keep the synchronous save.
 	busy=true;_candidate_kind="ammo_consume";_candidate=payload.duplicate(true)
-	var saved: Error=world._save_game(true,payload)
+	var deferred: bool=paid.quest_step.is_empty()
+	var saved: Error=OK
+	if deferred:
+		if not override_error(world,payload).is_empty():saved=ERR_INVALID_DATA
+	else:
+		saved=world._save_game(true,payload)
 	_candidate.clear();_candidate_kind="";busy=false
 	if saved!=OK:
+		if deferred:return _failure("원본 탄약 발사 후보 확인 실패 · 탄약·MP 보존")
 		world.patch523_owner_state_problem="원본 탄약 발사 저장 실패·결과 미확정 · 정상 불러오기 전 재발사 중지";return _failure(world.patch523_owner_state_problem)
 	if payload.has("quest_state") and not world.quest_service.import_state(payload.quest_state):
 		world.patch523_owner_state_problem="퀘스트 탄약 저장 후 장부 채택 미확정 · 정상 불러오기 전 재시도 중지";return _failure(world.patch523_owner_state_problem)
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.mp=int(payload.mp);world.hp=int(payload.hp);world.consumable_service.import_state(state)
 	if payload.has("equipped_ammo"):world.equipped_ammo=payload.equipped_ammo;world.ammo_unequipped=payload.ammo_unequipped
-	world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
+	if deferred:world._request_general_save()
+	else:world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
 	return {"handled":true,"ok":true,"saved":true,"consumed":quantity,"physical_id":uid,"remaining_quantity":int(owned.remaining)-quantity,"source_ammo_receipt_id":id,"damage_bonus":damage,"message":"원본 물리 탄약·MP·발사 기록 저장"}
 
 
