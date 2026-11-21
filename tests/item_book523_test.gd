@@ -243,7 +243,8 @@ func _window() -> void:
 	check(window.tab == "Btn_Event", "a tab button selects its tab")
 	# 사용자 목록 9: no item name under a slot (the original keeps it hidden).
 	var slot: Dictionary = WINDOW.slot_spec(false, true, false, 3, Callable())
-	check(slot["Panel/Text_ItemName"] == {"visible":false} and not slot["Panel/Item_Own"].visible and slot["Panel/Item_Possible"].visible and slot["Panel/Text_Amount"].text == "3", "a slot shows its icon, marks and amount, never the item name")
+	check(slot["Panel/Fx_Registration"] == {"exclude":true} and WINDOW.UNUSED_SLOT_NODES.all(func(name: String) -> bool: return slot["CommonSlot/"+name] == {"exclude":true}) and not slot.has("CommonSlot/Sp_IconSample") and not slot.has("CommonSlot/Sp_SlotBg"), "unused hidden slot layers are not built (icon and frame stay)")
+	check(slot["Panel/Text_ItemName"] == {"exclude":true} and not slot["Panel/Item_Own"].visible and slot["Panel/Item_Possible"].visible and slot["Panel/Text_Amount"].text == "3", "a slot shows its icon, marks and amount, never the item name")
 	check(WINDOW.slot_spec(true, false, false, 1, Callable())["Panel/Item_Own"].visible, "a registered slot shows Item_Own")
 	var plain := ImageTexture.create_from_image(Image.create(4, 4, false, Image.FORMAT_RGBA8))
 	var gray: ShaderMaterial = preload("res://scripts/ui/original_ui/source_material.gd").gray_blur(plain)
