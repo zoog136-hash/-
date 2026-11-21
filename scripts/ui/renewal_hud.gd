@@ -1229,7 +1229,7 @@ func _navigate(section: String) -> void:
 		"clan523": open_clan523()
 		"content523": open_content523()
 		"titles": open_titles523()
-		"expedition": open_expedition()
+		"expedition": open_doll_explore()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -3527,6 +3527,13 @@ func open_growth96() -> void:
 func open_card_dispatch() -> void:
 	_open_window("card_dispatch","변신 파견","")
 	if _open_original_feature("card_dispatch"):return
+	open_expedition()
+
+## The original 523 마법인형 탐험 window (source_main_doll_explore_window,
+## Change_ExploreView); the TWILIGHT expedition screen without the pack.
+func open_doll_explore() -> void:
+	_open_window("doll_explore","인형 탐험","")
+	if _open_original_feature("doll_explore"):return
 	open_expedition()
 
 func open_expedition() -> void:
