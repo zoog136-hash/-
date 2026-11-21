@@ -888,11 +888,7 @@ func _process_frame(delta: float) -> void:
 	halphas_star.combat.tick(delta)
 	totem_combat.tick(delta)
 	_advance_skill_charge(delta)
-	_finish_background_save(false)
-	if deferred_save.tick(delta):
-		var hitch_10: int = FRAME_HITCH.now()
-		_save_game(true,{},{},false,true)
-		FRAME_HITCH.add("save", hitch_10)
+	_tick_automatic_save(delta)
 	# M81: the timer advances every frame; a fire runs the manager callback (enable gate, then
 	# the heal spell pass). Auto hunt itself keeps its per-frame cadence.
 	var heal_tick: Dictionary = ORIGINAL_AUTOSLOT.timer_step(auto_heal_sweep_elapsed, delta)
@@ -6723,12 +6719,22 @@ func _request_general_save() -> void:
 	# saves still call _save_game directly and complete before returning.
 	if general_save_pending:return
 	general_save_pending=true
-	call_deferred("_commit_general_save")
+	if not background_save_pending(): _commit_general_save.call_deferred()
+
+func _tick_automatic_save(delta: float) -> void:
+	_finish_background_save(false)
+	# A busy writer keeps a single reservation. Once it finishes, save the
+	# latest state rather than preparing a second snapshot or blocking here.
+	if general_save_pending and not background_save_pending(): _commit_general_save.call_deferred()
+	if deferred_save.tick(delta): _request_general_save()
 
 func _commit_general_save() -> void:
-	if not general_save_pending:return
-	general_save_pending=false
+	if not general_save_pending or background_save_pending(): return
+	general_save_pending = false
+	var started: int = FRAME_HITCH.now()
+	var nested: int = FRAME_HITCH.nested()
 	_save_game(true,{},{},false,true)
+	FRAME_HITCH.add_self("save", started, nested)
 
 var background_save_enabled: bool = DisplayServer.get_name() != "headless"
 var _background_from_outer: bool = false
@@ -6881,7 +6887,10 @@ func set_field_camera_zoom(value: float, persist: bool = true) -> Error:
 func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_override: Dictionary = {}, validate_only: bool = false, background: bool = false) -> Error:
 	var want_background: bool = background or _background_from_outer
 	_background_from_outer = false
-	_finish_background_save(true)
+	if background_save_pending():
+		var wait_started: int = FRAME_HITCH.now()
+		_finish_background_save(true)
+		FRAME_HITCH.detail("save.wait", wait_started)
 	# Stage times for the phone record (523.655: save 286 ms/s without a split).
 	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
