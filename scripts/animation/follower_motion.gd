@@ -20,6 +20,9 @@ var follow_offset: Vector2 = Vector2(-54, 24)
 var appear_speed: float = 5.0
 var disappear_speed: float = 5.0
 
+func _init() -> void:
+	native_actor.use_companion_frame_plans()
+
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	native_actor.clear()
 	native_enabled = false
