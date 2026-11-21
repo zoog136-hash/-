@@ -118,14 +118,35 @@ static func arm_trail(seconds: int = TRAIL_SECONDS) -> void:
 	# A shorter request never cuts an open window short.
 	_trail_until_msec = maxi(_trail_until_msec, Time.get_ticks_msec() + seconds * 1000)
 	trail("armed")
+## Lines printed per frame while armed. Every measured detail used to be a
+## logcat line: ~5,400 lines/s on a PC trace (combat, 523.747 main), 20% of
+## the main thread there and more on the phone, for 40 s after loading and
+## 10 s after every window opened. The first lines of a frame and the frame
+## boundary (with the number skipped) still name where a crash happened.
+const TRAIL_LINES_PER_FRAME: int = 16
+static var _trail_frame: int = -1
+static var _trail_frame_lines: int = 0
+static var _trail_skipped: int = 0
 static func trail(name: String) -> void:
 	if _trail_until_msec == 0: return
 	if Time.get_ticks_msec() > _trail_until_msec:
 		_trail_until_msec = 0
 		print("TRAIL end")
 		return
+	var frame: int = Engine.get_process_frames()
+	if frame != _trail_frame:
+		_trail_frame = frame
+		_trail_frame_lines = 0
+	_trail_frame_lines += 1
+	if _trail_frame_lines > TRAIL_LINES_PER_FRAME and name != "frame":
+		_trail_skipped += 1
+		return
 	_trail_seq += 1
-	print("TRAIL %d f%d %s" % [_trail_seq, Engine.get_process_frames(), name])
+	if _trail_skipped > 0 and name == "frame":
+		print("TRAIL %d f%d frame (skipped %d)" % [_trail_seq, frame, _trail_skipped])
+		_trail_skipped = 0
+		return
+	print("TRAIL %d f%d %s" % [_trail_seq, frame, name])
 
 ## Diagnose a single long spawn/cache miss without double-counting its parent.
 ## Records `name` from `started` and returns now, for consecutive phases.

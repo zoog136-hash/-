@@ -228,7 +228,9 @@ func _info_spec(world: Node, data: Dictionary, snap: Dictionary) -> Dictionary:
 	for name: String in INFO_OFFLINE:spec[p+name]={"exclude":true}
 	# The clan mark is the 혈맹 문장 window's; the authored dummy stays hidden.
 	spec[p+"Nd_Symbol/Icn_Mark_Dummy"]={"visible":false}
-	spec[p+"Nd_Symbol/Btn_Set"]={"activate":Callable(self,"_emblem_requested")}
+	# 혈맹 문장 (a TWILIGHT screen) is off the player's screens (user list
+	# 2026-11-21 #6): the mark's set button stays hidden.
+	spec[p+"Nd_Symbol/Btn_Set"]={"visible":false,"activate":Callable(self,"_emblem_requested")}
 	var info: String=p+"Nd_Info/Nd_Info/"
 	spec[info+"Text_Name_1"]={"role":"source_text","text":str(snap.get("name",""))}
 	spec[info+"Text_Leader_1"]={"role":"source_text","text":_leader(world)}
