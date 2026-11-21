@@ -8,6 +8,7 @@ extends RefCounted
 ## Not connected (reported): the row 바로 가기 button (the missions' RoutineView
 ## TeleportTerritoriesID is 0: no destination in the tables).
 const RoutineTree=preload("res://scripts/ui/original_ui/source_main_routine_tree.gd")
+const RewardInfo=preload("res://scripts/ui/original_ui/source_reward_item_info.gd")
 const SRC=preload("res://scripts/routine523/routine523_source.gd")
 const TAB_MISSION="UI/Quest/Quest_Tab_Mission.csb"
 const ROW_PROGRESS="UI/Quest/Quest_List_Mission_Progress.csb"
@@ -21,6 +22,7 @@ const P=""
 const ROW_HEIGHT: float=80.0
 var _tree: RefCounted
 var _world: WeakRef
+var _hud: WeakRef
 var _refresh: Callable
 var _type: int=4
 var _content: Node2D
@@ -33,6 +35,7 @@ func configure(pack: RefCounted, hud: Node, refresh: Callable) -> Dictionary:
 	for member: String in REQUIRED:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"code":"source_routine_page_member_missing","member":member}
 	_tree=RoutineTree.new(pack,hud)
+	_hud=weakref(hud)
 	_refresh=refresh
 	return {"ok":true}
 
@@ -79,7 +82,9 @@ func project_binding(world: Node, out: Dictionary) -> Dictionary:
 ## Reward slot of Common_Slot: original picture (item) and amount.
 func _slot_spec(spec: Dictionary, prefix: String, rewards: Array) -> void:
 	var first: Dictionary=rewards[0] if not rewards.is_empty() else {}
-	spec[prefix+"Btn"]={"displaystate":false}
+	# A tap on the item reward opens its original item information popup.
+	var item_class: int=int(first.get("item_class_id",0)) if str(first.get("kind",""))=="item" else 0
+	spec[prefix+"Btn"]={"activate":Callable(self,"_reward_info").bind(item_class)} if item_class>0 else {"displaystate":false}
 	spec[prefix+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 	spec[prefix+"Text_Amount"]={"role":"source_text","text":str(int(first.get("amount",0))),"visible":not first.is_empty()}
 
@@ -118,7 +123,7 @@ func fill(root: Node2D, out: Dictionary, staged: Dictionary) -> Dictionary:
 		var member: String=ROW_COMPLETE if row.status=="claimed" else (ROW_REWARD if row.status=="receivable" else ROW_PROGRESS)
 		var amount: int=maxi(1,int(row.amount))
 		var goal: String=str(row.goal_text) if not str(row.goal_text).is_empty() else str(row.scenario)
-		var detail: String="%s (%d/%d)" % [goal,int(row.progress),int(row.amount)] if int(row.amount)>0 else "%s · 목표 미연결" % goal
+		var detail: String="%s (%d/%d)" % [goal,int(row.progress),int(row.amount)] if int(row.amount)>0 else goal
 		var blessing: int=0
 		for reward: Dictionary in row.rewards:
 			if reward.kind=="blessing":blessing+=int(reward.amount)
@@ -153,6 +158,9 @@ func _reward_picture(root: Node2D, out: Dictionary, suffix: String, rewards: Arr
 		var located: Dictionary=RoutineTree.locate(root,out,suffix)
 		return located.get("ok",false) and _tree.picture(located.player,located.offset,record)
 	return false
+
+func _reward_info(item_class_id: int) -> Dictionary:
+	return RewardInfo.toggle(_hud.get_ref() if _hud!=null else null,item_class_id)
 
 func _select_type(type_id: int) -> Dictionary:
 	_type=type_id
