@@ -344,6 +344,9 @@ func _server(sets: Array) -> Dictionary:
 	if sets.is_empty(): return {"ok":true}
 	var context: Dictionary = effective_server_context()
 	for set: Variant in sets:
+		# ServerLimitSetID 0 names no server set (no ServerLimit rows): unlimited,
+		# as CumulativePurchase's 0 already reads (11 BM offers were refused).
+		if int(set) == 0: continue
 		if not SERVER_PROFILE.rows_allow(catalog._related("ServerLimit", int(set)), str(context.region), int(context.world_no)): return fail("서버 조건 미충족 또는 미해석 서버세트")
 	return {"ok":true}
 
@@ -444,13 +447,14 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 			continue
 		if int(token.unit_id) == 4:
 			var identity: Dictionary = _source_item_identity(int(token.class_id))
-			if identity.get("excluded") == true and not (cash and CashPackages.is_package(int(token.class_id))): return fail("원본 아이템 선언으로 제외된 상품입니다")
+			# An original box (LuckyBag/SelectReward/draw pack) of any BM offer
+			# opens through source523_cash_packages; its internal name carries the
+			# client's BM deletion note, which offline TWILIGHT keeps.
+			var package: bool = CashPackages.is_package(int(token.class_id)) and _bindings.has("4:%d" % int(token.class_id))
+			if identity.get("excluded") == true and not package: return fail("원본 아이템 선언으로 제외된 상품입니다")
 			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
-			var package: bool = cash and CashPackages.is_package(int(token.class_id))
-			# Cash package boxes carry the original BM deletion note in their internal
-			# name; offline TWILIGHT keeps them (see source523_cash_packages.gd).
 			if (item.get("TestItem", false) and not package) or (not package and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
 				return fail("테스트·기간제 상품의 사용·만료 조건 미확인")
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
@@ -475,6 +479,17 @@ static func _named_bonus_draw(name: String, draws: Array, quantity: int) -> void
 	var named: int = int(found.get_string(1)) * quantity
 	if named - int(draws[0].count) != quantity: return
 	draws.append({"product_id":int(draws[0].product_id),"pool_id":int(draws[0].pool_id),"count":quantity,"twilight_named_bonus":true})
+
+## Whether this game's server may list market offer `id`: a converted cash
+## offer always; another offer when its original server sets name the offline
+## server profile (offers of other servers are not shown by the client either).
+func served_here(id: int) -> bool:
+	if CashMarket.listed(id): return true
+	if catalog == null or not catalog.available(): return true
+	var offer: Dictionary = catalog.market_offer(id)
+	var sets: Array = []
+	for row: Dictionary in offer.get("server_limits", []): sets.append(int(row.ServerLimitSetID))
+	return _server(sets).ok
 
 func quote(id: int, quantity: int = 1) -> Dictionary:
 	return _quote(id, quantity, false)
@@ -701,6 +716,10 @@ static func exchange_rate(currency_id: int) -> int:
 	var value: Variant=row.get("ExchangeRate",1)
 	return int(value) if integer(value) and int(value)>0 else 1
 
+## No local siege exists: never running (TWILIGHT 근사).
+func siege_running() -> bool:
+	return false
+
 func npc_label(merchant_id: int) -> String:
 	if npc_definitions.loaded_sha256.is_empty():return ""
 	return str(npc_definitions.rule_for(merchant_id).get("label",""))
@@ -714,8 +733,15 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["LimitServerCount","Enchant","ElementalEnchant"]:
+	for key: String in ["Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 서버·카드·장비 조건 미해석")
+	# LimitServerCount: the whole server's stock per refresh. Offline TWILIGHT
+	# is one player on one server (TWILIGHT 근사), so the stock caps this
+	# save's own counter on the same refresh; the original personal LimitCount
+	# (1 on every such row, stock 5 or 10) stays the smaller limit.
+	if int(row.get("LimitServerCount",0))>0:
+		row=row.duplicate()
+		row.LimitCount=int(row.LimitServerCount) if int(row.LimitCount)<=0 else mini(int(row.LimitCount),int(row.LimitServerCount))
 	# TWILIGHT 근사: LimitBuffCardID = that card owned (card_requirement523).
 	var card_rule = preload("res://scripts/cards/card_requirement523.gd")
 	if int(row.get("LimitBuffCardID",0))!=0 and not card_rule.satisfied(world,int(row.LimitBuffCardID)):return fail("원본 조건: %s 카드 보유 필요" % card_rule.label(int(row.LimitBuffCardID)))
@@ -727,11 +753,21 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		if not gate.ok:return fail(str(gate.reason))
 	var native_repeat: bool=false
 	if int(row.get("LimitRepeatedBuyCardID",0))>0:
-		if SkillBooks.contract(int(row.get("ItemClassID",0))).is_empty():native_repeat=true
+		var book: Dictionary=SkillBooks.contract(int(row.get("ItemClassID",0)))
+		# A merchant-10 book whose local skill is not installed has no shop
+		# book record (source523_skill_books.install skips it): it is sold as
+		# the native 523 skill book with that book's own learn checks, as the
+		# 기란 혈맹 상인's books already are (30 books were refused before).
+		if book.is_empty() or not SkillBooks.registered(world,str(book.name),str(book.skill_id)):native_repeat=true
 		else:
 			var qualification: Dictionary=SkillBooks.qualification(world,row)
 			if not qualification.ok:return fail(str(qualification.reason))
-	if row.get("AvailableSiegeTime")!=true or row.get("LimitNotInSiegeTime")!=false:return fail("NPC 공성·혈맹 권한 조건 미해석")
+	# AvailableSiegeTime false = not sold while a siege runs; LimitNotInSiegeTime
+	# true = sold only outside a siege. TWILIGHT has no siege (offline, no
+	# castle war), so no siege is ever running and both rows are on sale
+	# (user report 2026-11-21: 664 such rows, e.g. 무기 방어구 상인 배틀 사이드).
+	if not row.get("AvailableSiegeTime") is bool or not row.get("LimitNotInSiegeTime") is bool:return fail("NPC 공성 시간 조건 형식 오류")
+	if siege_running() and (row.AvailableSiegeTime!=true or row.LimitNotInSiegeTime==true):return fail("공성 중에는 구매할 수 없습니다")
 	if int(row.get("DialogActionTypeID",0))!=1:return fail("NPC 원본 판매 동작 조건 미충족")
 	var local_context: Dictionary={}
 	if profile.get("time_unrestricted")!=true:

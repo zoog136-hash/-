@@ -396,6 +396,10 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 
 func show_message(text: String) -> void:
 	# Internal item keys (" · 원본#N", "[원본 보상] ") never reach the screen.
+	# Release: developer words inside a sentence go first (line by line), so
+	# a needed message is not replaced by the generic notice.
+	var release_lines: String = preload("res://scripts/ui/release_text.gd").body(text)
+	if not release_lines.is_empty(): text = release_lines
 	text = preload("res://scripts/ui/source523_item_identity.gd").screen_text(text)
 	message_label.text = text
 	message_time = 2.6

@@ -46,5 +46,29 @@ func _initialize() -> void:
 	panel.free()
 	var settings_src: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_settings.gd")
 	check(settings_src.contains("release_text.gd\").scrub(entry.body)") and hud.contains("release_text.gd\").scrub(workspace)"), "settings sections and workspace windows are scrubbed")
+	_ui_audit_2026_11_21(hud)
 	print("RELEASE_SCREEN_TEXT_RESULT " + JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+## 2026-11-21 UI audit (every menu, HUD button and feature window touched in
+## the real Main): developer words left outside the scrubbed workspace -
+## the field coordinates, the 아인하사드 panel, confirmation dialogs, HUD
+## messages and the 질서의 연금 notice.
+func _ui_audit_2026_11_21(hud: String) -> void:
+	var release := preload("res://scripts/ui/release_text.gd")
+	check(release.line("TWILIGHT 추가 비용 500 아데나", false) == "추가 비용 500 아데나", "a needed line keeps its sentence without TWILIGHT")
+	check(release.line("원본 파견 비용 50다이아 · HP 50%로 부활합니다.", false) == "파견 비용 50다이아 · HP 50%로 부활합니다.", "원본 is dropped inside a cost line")
+	check(release.line("원본 수치를 우선하며, 부족한 규칙은 TWILIGHT 추정 설정으로 진행합니다", false) == "", "a policy note line disappears")
+	check(release.line("원본523 정의 미등록", false) == "", "a developer-only line disappears")
+	check(release.line("탐험 출발", false) == "탐험 출발" and release.line("TWILIGHT 근사", true) == "TWILIGHT 근사", "plain lines stay; debug keeps everything")
+	check(release.body("아데나 100 소모 · 8시간\n원본 수치를 우선하며 TWILIGHT 추정 설정", false) == "아데나 100 소모 · 8시간", "a dialog body keeps its cost lines only")
+	check(release.line("TWILIGHT 탐험 로컬다이아", false) == "탐험 로컬다이아", "a dialog title loses TWILIGHT")
+	var confirmation: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_confirmation.gd")
+	check(confirmation.contains("RELEASE_TEXT.line(title)") and confirmation.contains("description = RELEASE_TEXT.body(description)"), "confirmation dialogs pass the release line filter")
+	var base_hud: String = FileAccess.get_file_as_string("res://scripts/hud.gd")
+	check(base_hud.contains("release_text.gd\").body(text)"), "HUD messages drop developer words line by line before the notice")
+	check(not hud.contains("\"원본 좌표  %d, %d\"") and hud.contains("coordinates_readout.text = \"좌표  %d, %d\" % [source_cell.x,source_cell.y]"), "the field coordinates read 좌표, not 원본 좌표")
+	var v20: String = FileAccess.get_file_as_string("res://scripts/hud_v20.gd")
+	check(v20.contains("\"\\n※ 기본 축복 소모량은 TWILIGHT 조정값\" if preload(\"res://scripts/boot/build_flags.gd\").developer_ui() else \"\""), "the 아인하사드 tuning note is debug-only")
+	var refine: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_refine_window.gd")
+	check(refine.contains("refine_contents_enabled\")==false and preload(\"res://scripts/boot/build_flags.gd\").developer_ui()") and refine.contains("_mode.begins_with(\"amount:\") and preload(\"res://scripts/boot/build_flags.gd\").developer_ui()"), "질서의 연금 developer notes are debug-only")

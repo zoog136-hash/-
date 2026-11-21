@@ -14,9 +14,12 @@ extends RefCounted
 ## TWILIGHT 근사, the existing panel), the class filter,
 ## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
-## The list's Btn_Sort (Normal / Enable) toggles 제작 가능 우선: recipes the
-## existing quote allows first, the rest after in their own order (TWILIGHT
-## 근사(근거 약함), docs/original_ui523_approx.md).
+## The recipe list shows 제작 가능 우선 from the start (사용자 목록 28): recipes
+## the existing quote allows first, the rest after in their own order; the
+## list's Btn_Sort (Normal / Enable) turns it off and on again (TWILIGHT
+## 근사(근거 약함), docs/original_ui523_approx.md). A recipe that cannot be
+## made now shows the row's original Btn_Disabled dim layer (Img_Bg, black
+## at 40%; its 품절 mark stays hidden) and stays selectable.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
@@ -58,7 +61,7 @@ var _count: int=1
 ## The craft this window asked for: {recipe, at (the last log entry's
 ## time)}; the next stage after the log grows opens the original 제작 결과.
 var _awaiting: Dictionary={}
-var _ready_first: bool=false
+var _ready_first: bool=true
 var _scrolls: Dictionary={}
 var _last_out: Dictionary={}
 var last_result: Dictionary={}
@@ -389,7 +392,10 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	for state: String in ["Btn_Normal","Btn_Pressed"]:
 		spec[state+"/Sp_Arrow_Close"]={"visible":not chosen}
 		spec[state+"/Sp_Arrow_Open"]={"visible":chosen}
-	spec["Btn_Disabled"]={"visible":false}
+	# Not craftable now: the original dim layer over the row (Img_Bg, 40%
+	# black); the row still selects (its tap goes to the same select).
+	spec["Btn_Disabled"]={"visible":not ok,"activate":Callable(self,"_select").bind(id)}
+	spec["Btn_Disabled/Nd_SoldOut"]={"visible":false}
 	spec["Nd_Collection"]={"visible":false}
 	spec["Label_Production"]={"visible":ok}
 	spec["Label_Item"]={"role":"source_text","text":_title(recipe,result,id)}

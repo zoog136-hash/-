@@ -363,5 +363,11 @@ func _panel() -> StyleBoxFlat:
 func _gui_input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed)
 	if pressed and area.has_point(event.position):
+		# 사용자 목록 11: as on the client's HUD, a tap on the minimap opens the
+		# original world map (once; the touch's mouse twin finds it open). Without
+		# the original map the tap keeps walking there.
+		if world.hud.has_method("open_world_map_from_minimap") and bool(world.hud.call("open_world_map_from_minimap")):
+			accept_event()
+			return
 		world._set_click_destination(COORD.minimap_to_world(event.position,bounds,area))
 		accept_event()

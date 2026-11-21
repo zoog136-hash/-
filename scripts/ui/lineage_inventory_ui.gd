@@ -369,10 +369,13 @@ func _inventory_entries() -> Array[Dictionary]:
 			for id: String in instance_ids:
 				# A 523 native stack instance carries its remaining count in
 				# source_native_stack_quantity (a 100 potion stack showed "1").
-				var physical: Dictionary=instances[id]
-				var amount: Variant=physical.get("source_native_stack_quantity",physical.get("source_reward_quantity",physical.get("source_awakening_quantity",physical.get("source_card_currency_quantity",1))))
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":maxi(1,int(amount))})
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(instances[id])})
 	return entries
+
+static func _owned_slot_amount(physical: Dictionary) -> int:
+	for field: String in ["source_native_stack_quantity", "source_reward_quantity", "source_awakening_quantity", "source_card_currency_quantity"]:
+		if physical.has(field): return maxi(0, int(physical[field]))
+	return 1
 
 func _refresh_inventory_grid() -> void:
 	if item_grid == null:return
@@ -636,7 +639,13 @@ func _find_item_record(item_name: String) -> Dictionary:
 	item_name = _base_item_name(item_name)
 	if not selected_id.is_empty():
 		var selected: Variant=character_state.get("item_instances",{}).get(selected_id)
-		if selected is Dictionary and selected.get("name")==item_name and selected.get("record") is Dictionary and (selected.record.get("source_pending_use",false) or preload("res://scripts/cards/source_awakening_items.gd").recognized(selected.record)):return selected.record
+		if selected is Dictionary and selected.get("name")==item_name and selected.get("record") is Dictionary:
+			var receipt: Variant = selected.get("source_native_stack_receipt")
+			if receipt is Dictionary and receipt.get("issued_physical_id")==selected_id \
+					and int(receipt.get("item_class_id",0))>0 and receipt.get("item_class_id")==selected.record.get("source_item_class_id") \
+					and int(receipt.get("bless_raw",0)) in [1,2,3] and receipt.get("bless_raw")==selected.record.get("source_bless_raw"):
+				return selected.record
+			if selected.record.get("source_pending_use",false) or preload("res://scripts/cards/source_awakening_items.gd").recognized(selected.record): return selected.record
 	var records: Array = catalog_data.get("아이템", []) as Array
 	# Same first match as the old linear scan; the bag redraw and grade sort call
 	# this per entry/comparison, which made sorting a large bag take seconds.
@@ -664,7 +673,7 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 	var instances: Variant = character_state.get("item_instances",{})
 	if not instances is Dictionary: return fallback
 	var physical: Variant = instances.get(instance_id,{})
-	if not physical is Dictionary: return fallback
+	if not physical is Dictionary or physical.get("name") != _base_item_name(reference): return fallback
 	var original: Variant = physical.get("record",{})
 	if original is Dictionary and (preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original) or preload("res://scripts/ui/source523_image_assets.gd").handles_item(original)):
 		return original
@@ -687,7 +696,7 @@ func _refresh_detail(item_name: String) -> void:
 	item_name = _base_item_name(item_name)
 	var record := _find_item_record(selected_reference)
 	var selected_physical: Dictionary=character_state.get("item_instances",{}).get(selected_id,{})
-	var amount: int = int(selected_physical.get("source_reward_quantity",selected_physical.get("source_awakening_quantity",selected_physical.get("source_card_currency_quantity",1)))) if selected_id != "" else int(inventory.get(item_name, 0))
+	var amount: int = (_owned_slot_amount(selected_physical) if not selected_physical.is_empty() else 0) if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
