@@ -940,6 +940,9 @@ func inventory_lock_blocks_point(viewport_point: Vector2) -> bool:
 		if control is Control and control.is_visible_in_tree() and Rect2(Vector2.ZERO,control.size).has_point(control.get_global_transform_with_canvas().affine_inverse()*viewport_point):return true
 	return false
 
+func inventory_scroll_by(screen_delta_y: float) -> Dictionary:
+	return _inventory_view.scroll_by(screen_delta_y) if inventory_is_open() and not inventory_search_is_open() else _fail("source_inventory_not_open")
+
 func inventory_gesture_bounds() -> Control:
 	return _inventory_view.gesture_bounds() if inventory_is_open() else null
 

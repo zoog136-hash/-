@@ -1303,6 +1303,9 @@ func open_tj_coupons_native() -> void:
 
 func open_promo_code() -> void:
 	_open_window("promo_code", "쿠폰 코드", "코드 입력 · 보상 지급")
+	# The original 523 쿠폰 field is in 설정 > 정보 (Option_Tab_Info Coupon,
+	# the same World.redeem_promo_code); the TWILIGHT page without the pack.
+	if _open_original_feature("options",["info"]):return
 	var view = preload("res://scripts/ui/promo_code_view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent())
@@ -3839,6 +3842,9 @@ func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on
 		if opened.get("handled",false):return opened
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
+
+func original_inventory_scroll_by(screen_delta_y: float) -> Dictionary:
+	return original_main_ui_controller.inventory_scroll_by(screen_delta_y) if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_scroll_by") else {}
 
 func original_inventory_gesture_bounds() -> Control:
 	return original_main_ui_controller.inventory_gesture_bounds() if original_inventory_is_open() else null

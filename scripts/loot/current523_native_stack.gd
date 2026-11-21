@@ -370,6 +370,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
 	var saved: Error=OK
+	var potion_deferred: bool=false
 	if prepared.has("travel"):
 		# Fixed-destination teleport: the arrival's checkpoint save carries the
 		# physical debit (current523_map_travel_payment); a refused move keeps it.
@@ -379,6 +380,14 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 			busy=false
 			if moved.get("uncertain",false):world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 			return _failure(str(moved.get("reason","이동 실패"))+(" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
+	elif effect.kind in ["hp","mp"] and not prepared.has("destination"):
+		# HP/MP potions: checked as their save would check them, committed in
+		# memory, written by the coalesced background save (user decision
+		# 2026-11-21, option A: a full save per potion was ~0.4 s on the phone).
+		potion_deferred=true
+		if not override_error(world,payload).is_empty():
+			_candidate.clear();busy=false
+			return _failure("원본 물약 사용 후보 확인 실패 · 물약 보존")
 	else:
 		saved=world._save_game(true,payload)
 	_candidate.clear()
@@ -394,7 +403,9 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	else:
 		world.active_item_buffs=payload.active_item_buffs;world.hp=int(payload.hp);world.mp=int(payload.mp)
 		world._invalidate_equipment_static();world._refresh_speed_modifiers()
-	world.deferred_save.cancel();busy=false
+	if potion_deferred:world._request_general_save()
+	else:world.deferred_save.cancel()
+	busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
@@ -1474,16 +1485,27 @@ static func consume_ammo(world: Node,name_value: String,quantity: int,mp_cost: i
 	state.erase(AMMO_USES);payload["mp"]=int(world.mp)-mp_cost
 	if roll_damage:state[AMMO_RNG]={"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
 	if not paid.quest_step.is_empty() and not QUEST_CONSUME.matches_payload(world,paid.quest_step,payload):return _failure("퀘스트 탄약 잔량·최초 사용 증명·MP 결과 공동 후보 불일치")
+	# The payload is checked exactly as its save would check it (the sealed
+	# owner rules), then committed in memory; the coalesced background save
+	# writes it (user decision 2026-11-21, option A: a full save per shot was
+	# ~0.4 s on the phone). Quest-step shots keep the synchronous save.
 	busy=true;_candidate_kind="ammo_consume";_candidate=payload.duplicate(true)
-	var saved: Error=world._save_game(true,payload)
+	var deferred: bool=paid.quest_step.is_empty()
+	var saved: Error=OK
+	if deferred:
+		if not override_error(world,payload).is_empty():saved=ERR_INVALID_DATA
+	else:
+		saved=world._save_game(true,payload)
 	_candidate.clear();_candidate_kind="";busy=false
 	if saved!=OK:
+		if deferred:return _failure("원본 탄약 발사 후보 확인 실패 · 탄약·MP 보존")
 		world.patch523_owner_state_problem="원본 탄약 발사 저장 실패·결과 미확정 · 정상 불러오기 전 재발사 중지";return _failure(world.patch523_owner_state_problem)
 	if payload.has("quest_state") and not world.quest_service.import_state(payload.quest_state):
 		world.patch523_owner_state_problem="퀘스트 탄약 저장 후 장부 채택 미확정 · 정상 불러오기 전 재시도 중지";return _failure(world.patch523_owner_state_problem)
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.mp=int(payload.mp);world.hp=int(payload.hp);world.consumable_service.import_state(state)
 	if payload.has("equipped_ammo"):world.equipped_ammo=payload.equipped_ammo;world.ammo_unequipped=payload.ammo_unequipped
-	world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
+	if deferred:world._request_general_save()
+	else:world.deferred_save.cancel() # Ordinary combat/draw RNG is not advanced by this owner.
 	return {"handled":true,"ok":true,"saved":true,"consumed":quantity,"physical_id":uid,"remaining_quantity":int(owned.remaining)-quantity,"source_ammo_receipt_id":id,"damage_bonus":damage,"message":"원본 물리 탄약·MP·발사 기록 저장"}
 
 
