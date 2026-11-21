@@ -32,6 +32,8 @@ const T="ItemBook_Tab_Collection/"
 const TABS: Array[String]=["Btn_All","Btn_UnIdentified","Btn_Identified","Btn_Dungeon","Btn_Event","Btn_Level","Btn_Alchemy"]
 const GROWTH96_TABS: Array[String]=["Btn_All","Btn_Level"]
 const PAGE: int=12
+## Common_Slot nodes hidden as authored that a collection slot never turns on.
+const UNUSED_SLOT_NODES: Array[String]=["Nd_Properties","Nd_Properties_Smelt","Nd_Lock","Nd_Wrong","Sp_Select","Sp_Center","Sp_Left_Top","Sp_Left_Middle","Sp_Right_Top","Sp_Left_Bottom","Text_Amount","Label_Center","Sp_Random","Sp_Choice","Sp_Infinity","Sp_Check","Img_Enchant","Sp_Pause","Btn_Probability","Btn_Detail","Nd_Collected"]
 var showing_status: bool=false
 const STATES: Array[String]=["전체","진행 중","미완성","완성"]
 var state: int=0
@@ -217,10 +219,10 @@ func _collection_row(row: Dictionary) -> Dictionary:
 	var done: bool=bool(row.complete)
 	var recommend: bool=bool(row.get("recommend",false)) and not done
 	var spec: Dictionary={"Panel_Itembook/Bg":{"visible":not done and not recommend},"Panel_Itembook/Bg_Complete":{"visible":done},
-		"Panel_Itembook/Bg_Recommend":{"visible":recommend},"Panel_Itembook/Bg_Recommend_01":{"visible":false},
-		"Panel_Itembook/Fx_Select":{"visible":false},"Panel_Itembook/Icn_BookMark":{"visible":false},"Panel_Itembook/Icon_New":{"visible":false},
+		"Panel_Itembook/Bg_Recommend":{"visible":recommend},"Panel_Itembook/Bg_Recommend_01":{"exclude":true},
+		"Panel_Itembook/Fx_Select":{"exclude":true},"Panel_Itembook/Icn_BookMark":{"exclude":true},"Panel_Itembook/Icon_New":{"exclude":true},
 		"ListView_Title/Label_Title":{"role":"source_text","text":"%s (%d/%d)" % [str(row.name),int(row.registered),int(row.required)]},
-		"Panel_Badge/Image_Complete":{"visible":done},"Panel_Badge/Image_Recommend":{"visible":recommend},"Panel_Badge/Image_Recommend_01":{"visible":false},
+		"Panel_Badge/Image_Complete":{"visible":done},"Panel_Badge/Image_Recommend":{"visible":recommend},"Panel_Badge/Image_Recommend_01":{"exclude":true},
 		"ListView_Title/Label_Lv":{"visible":false},
 		"ListView_Option/Label_Option":{"role":"source_text","text":_effect_summary(row)}}
 	return {"member":ROW,"spec":spec}
@@ -229,10 +231,15 @@ func _collection_row(row: Dictionary) -> Dictionary:
 ## bag holds it, the amount above 1, and no name (the original keeps
 ## Text_ItemName hidden: the slot is the icon alone).
 static func slot_spec(registered: bool, possible: bool, growth: bool, amount: int, press: Callable) -> Dictionary:
-	return {"Panel/Item_Own":{"visible":registered},"Panel/Item_Possible":{"visible":possible},
-		"Panel/Text_ItemName":{"visible":false},
+	var spec: Dictionary={"Panel/Item_Own":{"visible":registered},"Panel/Item_Possible":{"visible":possible},
+		"Panel/Text_ItemName":{"exclude":true},
 		"Panel/Text_Amount":{"visible":not growth and amount>1,"role":"source_text","text":_number(amount)},
-		"Panel/Fx_Registration":{"visible":false},"CommonSlot/Btn":{"activate":press}}
+		"Panel/Fx_Registration":{"exclude":true},"CommonSlot/Btn":{"activate":press}}
+	# 사용자 목록 8: the Common_Slot layers a collection slot never shows (all
+	# hidden as authored) are not built; a page of 40-50 slots built each one
+	# with its sprites, materials and back buffers (~10 ms a slot).
+	for name: String in UNUSED_SLOT_NODES:spec["CommonSlot/"+name]={"exclude":true}
+	return spec
 
 ## One ItemBook_Slot per card (growth96: per token requirement).
 func _fill_slots(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:

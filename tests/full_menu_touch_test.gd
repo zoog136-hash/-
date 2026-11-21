@@ -65,10 +65,13 @@ func run() -> void:
 	var tile: Button = hud.workspace.find_child("MenuTile_character", true, false) as Button
 	check(tile != null and tile.is_visible_in_tree(), "character tile shown on 전체")
 	if tile != null:
+		# The original menu order (2026-11-21) puts 캐릭터 after the original tiles.
+		hud.menu_scroll_view.ensure_control_visible(tile); await frames(3)
 		await touch(tile)
 		check(str(hud.active_section) == "character", "a tile tap opens its window")
 	if str(hud.active_section) != "": hud.call("_close_workspace")
 	await frames(3)
+	await original_order_and_save(hud)
 	await dropdown(hud)
 	await finish(world)
 
@@ -115,3 +118,35 @@ func finish(world: Node) -> void:
 	await process_frame
 	print("FULL_MENU_TOUCH_RESULT " + JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+## User list 2026-11-21 #3 / #18: the tiles follow the original 523 전체 메뉴
+## order (MainMenuUIButtons: 제작, 거래소, 변신, 마법인형, 성물, ...), the
+## TWILIGHT-only ones after them, and a 저장 tile runs the manual save.
+func original_order_and_save(hud: Node) -> void:
+	hud.toggle_menu(); await frames(5)
+	var ids: Array[String] = []
+	for tile: Control in hud.menu_tiles: ids.append(str(tile.name).trim_prefix("MenuTile_"))
+	var order: Array = hud.get_script().get_script_constant_map().get("ORIGINAL_MENU_ORDER", [])
+	check(ids.slice(0, 5) == ["crafting","exchange","변신","마법인형","성물"], "the menu starts like the original grid: " + str(ids.slice(0, 6)))
+	var positions: Array[int] = []
+	for id: String in order:
+		if ids.has(id): positions.append(ids.find(id))
+	var sorted_positions: Array[int] = positions.duplicate(); sorted_positions.sort()
+	check(positions == sorted_positions and positions.size() >= 18, "every original-tile section keeps the client's order")
+	check(ids.find("character") > ids.find("monsterbook523"), "TWILIGHT-only tiles come after the original ones")
+	# The real save handler is held off (CI shares user://); only the signal is counted.
+	var held: Array = hud.save_pressed.get_connections()
+	for connection: Dictionary in held: hud.save_pressed.disconnect(connection.callable)
+	var saved: Array = [0]
+	var on_save := func() -> void: saved[0] += 1
+	hud.save_pressed.connect(on_save)
+	var save: Button = hud.workspace.find_child("MenuTile_save", true, false) as Button
+	check(save != null, "a 저장 tile is in the menu")
+	if save != null:
+		hud.menu_scroll_view.ensure_control_visible(save); await frames(3)
+		await touch(save)
+		check(int(saved[0]) == 1, "the 저장 tile runs the manual save once")
+	hud.save_pressed.disconnect(on_save)
+	for connection: Dictionary in held: hud.save_pressed.connect(connection.callable)
+	if str(hud.active_section) != "": hud.call("_close_workspace")
+	await frames(3)

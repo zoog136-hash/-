@@ -62,6 +62,7 @@ func _run() -> void:
 	check(scroll.minimum==0.0 and scroll.y==0.0,"a short list does not scroll")
 	content.free()
 	_confirmation()
+	_ready_rows()
 	_sources()
 	print("ORIGINAL_UI_PRODUCTION_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
@@ -78,6 +79,24 @@ func _confirmation() -> void:
 	check(not CRAFT.confirm_craft(host,game,"r1",1) and host.asked.size()==1,"a refused quote asks nothing")
 	check(CRAFT.recipe_of(game,"r1").get("category")=="물약","recipe_of reads the existing registry")
 	host.free();game.free()
+
+## 사용자 목록 28: craftable recipes first from the start, the others dimmed
+## with the row's original Btn_Disabled layer and still selectable.
+func _ready_rows() -> void:
+	var window=WINDOW.new()
+	check(window._ready_first,"제작 가능 우선 is on when the window opens")
+	var ids: Array[String]=["a","b","c","d"]
+	check(WINDOW.ready_first(ids,func(id: String) -> bool:return id in ["c","a"])==["a","c","b","d"],"craftable recipes come first, each group in its own order")
+	for name: String in ["sort","items","materials"]:window._scrolls[name]=WINDOW.ListScroll.new()
+	var game:=FakeGame.new()
+	game.crafting.recipes["r1"]["result"]["source_id"]="77"
+	var ready: Dictionary=window._item_row(game,"r1")
+	check(not ready.spec.Btn_Disabled.visible and ready.spec.Label_Production.visible and ready.ok,"a craftable row has no dim layer")
+	game.ok=false
+	var blocked: Dictionary=window._item_row(game,"r1")
+	check(blocked.spec.Btn_Disabled.visible and not blocked.spec["Btn_Disabled/Nd_SoldOut"].visible and not blocked.spec.Label_Production.visible and not blocked.ok,"a recipe that cannot be made shows the original dim layer, not 품절")
+	check((blocked.spec.Btn_Disabled.activate as Callable).get_method()=="_select" and (blocked.spec.Btn_Disabled.activate as Callable).get_bound_arguments()==["r1"],"a dimmed row still selects its recipe")
+	game.free()
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")

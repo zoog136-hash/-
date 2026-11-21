@@ -1728,7 +1728,7 @@ func _carrying_capacity() -> int:
 
 func _carrying_capacity_uncached() -> int:
 	var skill_capacity := int(original_skills.stat("weight")) if original_skills != null else 0
-	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity")
+	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "capacity") + _equipped_bless_bonus("capacity") + _active_item_buff_total("carry")
 
 func _inventory_encumbrance_multiplier() -> float:
 	if _stat_memo_depth == 0: return _inventory_encumbrance_multiplier_uncached()
@@ -5000,6 +5000,10 @@ func _tick_item_buffs(delta: float) -> void:
 				hp = mini(_effective_max_hp(), hp + maxi(0, int(buff.get("hp_regen_tick", 0))) * ticks)
 				changed = true
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
+		# 원본 IsAbsoluteTimeBuff: real time, also while the game was closed.
+		if buff.has("absolute_until"): buff["remaining"] = maxf(0.0, float(buff.absolute_until) - Time.get_unix_time_from_system())
+		# 원본 EraseBuffOnExperience / EraseOnLevel: ends at that level.
+		if int(buff.get("erase_at_level", 0)) > 0 and level >= int(buff.erase_at_level): buff["remaining"] = 0.0
 		active_item_buffs[key] = buff
 		if float(buff.get("remaining", 0.0)) <= 0.0:
 			expired.append(key)
@@ -6612,7 +6616,7 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 	# Existing host potion bonuses and shared cooldown, used by the verified
 	# source dice consumer without replacing the NPC healing adjustment/event.
 	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
-	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct"))/100.0))
+	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct")+_active_item_buff_total("potion_heal_pct"))/100.0))
 	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
 
 func _source_hp_potion_committed(amount: int) -> void:
@@ -11308,6 +11312,7 @@ func _blessing_consumption_reduction_percent() -> float:
 		reduction += AIN_OPTION_RULES.reduction_percent(record)
 	reduction += _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "ain_saving_pct")
 	reduction += TwilightAinhasadService.level_reduction_percent(level)
+	reduction += float(_active_item_buff_total("ain_saving_pct"))
 	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:
