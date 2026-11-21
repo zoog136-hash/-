@@ -705,7 +705,8 @@ func _process_step(delta: float) -> void:
 		var current_field = get_parent().field_map
 		if current_field is OriginalPlayableField:
 			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
-			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
+			# The field cell in the original map grid; "원본" is a developer word.
+			coordinates_readout.text = "좌표  %d, %d" % [source_cell.x,source_cell.y]
 	var cds: Dictionary = world.get("skill_cooldowns")
 	for index: int in range(quickslot_cooldown_labels.size()):
 		var remain: float = 0
