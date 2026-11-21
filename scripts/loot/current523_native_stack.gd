@@ -237,10 +237,11 @@ static func first_grant_receipt(receipt: Dictionary) -> Dictionary:
 		root=root.origin.parent_receipt
 	return {}
 
-static func ledger_row(owned: Dictionary,used: int,remaining: int,discarded: int=0) -> Dictionary:
+const DISCARD_REASONS: Array[String]=["TWILIGHT_existing_ground_lifetime","TWILIGHT_plain_stack_handoff"]
+static func ledger_row(owned: Dictionary,used: int,remaining: int,discarded: int=0,reason: String="TWILIGHT_existing_ground_lifetime") -> Dictionary:
 	var row: Dictionary={"receipt":owned.receipt.duplicate(true),"used_quantity":used,"remaining_quantity":remaining}
 	if int(owned.get("transferred",0))>0:row["transferred_quantity"]=int(owned.transferred)
-	if discarded>0:row["discarded_quantity"]=discarded;row["discard_reason"]="TWILIGHT_existing_ground_lifetime"
+	if discarded>0:row["discarded_quantity"]=discarded;row["discard_reason"]=reason
 	return row
 
 static func _failure(reason: String) -> Dictionary:
@@ -282,6 +283,12 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
+	if effect.is_empty() and plain_owner(world,item_name,record):
+		# 주문서 (강화·귀환): the existing name-keyed owner (as the 523 shop
+		# sells it) uses the item; the receipted stack is handed to it first.
+		var handed: Dictionary=handoff_plain(world,item_name)
+		if not handed.get("ok",false):return handed
+		return {"handled":false}
 	if effect.is_empty() and supply_profile(record).get("kind")=="storage":return _failure("원본 표에 이 아이템의 사용 규칙이 없거나 아직 연결되지 않았습니다 · 보관용 · 아이템 보존")
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
@@ -430,6 +437,47 @@ static func _buff_territory_problem(world: Node,spec: Dictionary) -> String:
 
 # Existing save/load owner uses these pure candidate guards. No game load or
 # validation command is executed while implementing this boundary.
+## A stored original item whose use the existing name-keyed owner performs
+## exactly like the 523 shop's plain stack: 강화 주문서 (World._scroll_kind,
+## the enhancement window) and 귀환 주문서 (regional_return, original 239).
+static func plain_owner(world: Node,item_name: String,record: Dictionary) -> bool:
+	if not storage_profile(record).get("kind")=="storage":return false
+	if world.has_method("_scroll_kind") and not str(world._scroll_kind(item_name)).is_empty():return true
+	return preload("res://scripts/quickslots/regional_return.gd").supported(item_name,record)
+
+## Hands every receipted physical stack named `item_name` to the plain
+## name-keyed stack: the bag count is unchanged, each physical entry leaves
+## with a ledger row whose remaining units are discarded with the reason
+## TWILIGHT_plain_stack_handoff, and the change is saved before the plain
+## owner runs. A locked entry or a refused save keeps everything.
+static func handoff_plain(world: Node,item_name: String) -> Dictionary:
+	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 소비 저장 보호 중 · 물리 수량 보존")
+	var instances: Dictionary=world.item_instances.duplicate(true)
+	var state: Dictionary=world.consumable_service.export_state()
+	var ledger: Variant=state.get(USES,{})
+	if not ledger is Dictionary:return _failure("원본 물리 사용 장부 형식 보존")
+	ledger=ledger.duplicate(true)
+	var handed: int=0
+	for uid: String in world.item_instances:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary or entry.get("name")!=item_name or not entry.has(RECEIPT):continue
+		if world._item_locked(item_name,uid):return _failure("잠긴 개체가 있어 사용할 수 없습니다 · 아이템 보존")
+		var owned: Dictionary=proof(world,uid)
+		if owned.is_empty():return _failure("원본 물리 소유·최초량·잔량 증명 불일치")
+		ledger[uid]=ledger_row(owned,int(owned.used),0,int(owned.remaining),"TWILIGHT_plain_stack_handoff")
+		instances.erase(uid);handed+=1
+	if handed==0:return {"ok":true,"handed":0}
+	state[USES]=ledger
+	var overrides: Dictionary={"inventory":world.inventory.duplicate(true),"item_instances":instances,"consumable_state":state}
+	busy=true;_candidate_kind="plain_handoff";_candidate=overrides.duplicate(true)
+	var issue: String=override_error(world,overrides)
+	var saved: Error=world._save_game(true,overrides) if issue.is_empty() else ERR_INVALID_DATA
+	_candidate.clear();_candidate_kind="";busy=false
+	if not issue.is_empty():return _failure(issue)
+	if saved!=OK:return _failure("원본 물리 묶음 저장 실패 · 아이템 보존")
+	world.item_instances=instances;world.consumable_service.import_state(state);clear_proof_cache()
+	return {"ok":true,"handed":handed}
+
 static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[],dormant: Dictionary={}) -> String:
 	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
 	var stored: Variant=warehouse.get("instances",{});var stored_counts: Variant=warehouse.get("stacks",{})
@@ -498,7 +546,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not receipt_valid(receipt,uid):return "원본 소비 장부 출처 확인 필요"
 		var disposed: Variant=entry.get("discarded_quantity",0);var transferred: Variant=entry.get("transferred_quantity",0)
 		if not integer(disposed) or not integer(transferred) or int(entry.used_quantity)+int(disposed)+int(transferred)<1 or int(entry.used_quantity)>int(receipt.granted_quantity)-int(disposed)-int(transferred) or int(entry.remaining_quantity)!=int(receipt.granted_quantity)-int(entry.used_quantity)-int(disposed)-int(transferred):return "원본 장부 최초량·사용량·잔량·분할량·소멸량 불일치"
-		if int(disposed)>0 and (entry.get("discard_reason")!="TWILIGHT_existing_ground_lifetime" or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
+		if int(disposed)>0 and (entry.get("discard_reason") not in DISCARD_REASONS or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
 		if int(entry.remaining_quantity)>0 and not all.has(uid):return "남은 원본 물리 개체가 없습니다 · 소비 장부 보존"
 		if int(entry.remaining_quantity)==0 and all.has(uid):return "소비 완료 원본 개체의 중복 소유 보존 중지"
 	var merged: String=MERGE.merges_error(all,ledger,state.get(MERGES,{}),state.get(PARTITIONS,{}))
@@ -531,6 +579,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
 		if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
 		if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
+		if next==null and authorizes(overrides) and _candidate_kind=="plain_handoff" and ledger.get(uid)==ledger_row(before,int(before.used),0,int(before.remaining),"TWILIGHT_plain_stack_handoff"):continue
 		var remaining: int=0
 		if next!=null:
 			var after: Dictionary=proof_entry(next,uid)
