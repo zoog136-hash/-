@@ -75,6 +75,8 @@ func use_scroll(world: Node, id: int, target_ids: Dictionary) -> Dictionary:
 	for slot: String in world.equipped_items.keys(): world.equipped_items.erase(slot)
 	world.consumable_service.import_state(baseline.duplicate(true))
 	world._save_game(true)
+	# No travel lock from the map entry (portal cooldown, auto hunting).
+	world.portal_cooldown = 0.0; world.player.auto_enabled = false; world.player.movement_locked = false
 	world.hud.message_label.text = ""
 	var record: Dictionary = D.variant_item(D.definition_id(str(id)).get("native_record", {}), 1)
 	if record.is_empty(): return {"ok":false,"reason":"no record"}
@@ -97,7 +99,9 @@ func use_scroll(world: Node, id: int, target_ids: Dictionary) -> Dictionary:
 	outcome["handed"] = handed
 	if kind.is_empty():
 		# 귀환 주문서: one scroll is read (a return or its own map refusal).
-		outcome["ok"] = handed and (int(world.inventory.get(name, 0)) == 1 or message.contains("귀환") or message.contains("지역"))
+		# One scroll is read: a return (an infinite one keeps its count) or the
+		# scroll's own region rule (잊혀진 귀환 주문서).
+		outcome["ok"] = handed and (int(world.inventory.get(name, 0)) == 1 or message.contains("귀환했습니다") or message.contains("에서만 사용할 수 있습니다"))
 	else:
 		outcome["window"] = world.hud.active_section in ["enhance","patch523_equipment"]
 		var target: String = ""
