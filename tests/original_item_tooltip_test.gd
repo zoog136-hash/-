@@ -25,6 +25,7 @@ func _initialize() -> void:
 	sources()
 	values()
 	real_pack()
+	outside_close()
 	print("ORIGINAL_ITEM_TOOLTIP_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)
 
@@ -70,3 +71,40 @@ func real_pack() -> void:
 	popup.close()
 	check(not popup.is_open(), "the popup closes")
 	parent.free()
+
+class FakePopup extends RefCounted:
+	var _scene: Node2D
+	var closed: int = 0
+	func close() -> void: closed += 1
+
+## The popup has no X (2026-11-21): a tap outside its Bg panel closes it, a
+## tap inside keeps it, and a closer of a replaced popup closes nothing.
+func outside_close() -> void:
+	var text: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
+	check(text.contains("var closer: bool=_attach_outside_closer()") and not text.contains("set_input_as_handled"), "every opened popup gets the outside closer, which never consumes the tap")
+	var scene := Node2D.new()
+	root.add_child(scene)
+	var panel := Node2D.new()
+	panel.position = Vector2(200, 200)
+	panel.set_meta("source_size", [100, 50])
+	scene.add_child(panel)
+	var popup := FakePopup.new()
+	popup._scene = scene
+	var closer = TOOLTIP.OutsideCloser.new()
+	closer.popup = weakref(popup)
+	closer.panel = weakref(panel)
+	scene.add_child(closer)
+	check(closer.panel_rect().is_equal_approx(Rect2(200, 150, 100, 50)), "the closer reads the panel's area: " + str(closer.panel_rect()))
+	var press := InputEventScreenTouch.new(); press.pressed = true; press.position = Vector2(250, 175)
+	closer._input(press)
+	check(not closer._pressed_outside, "a press inside the panel is not an outside tap")
+	press.position = Vector2(10, 10)
+	closer._input(press)
+	check(closer._pressed_outside, "a press outside the panel starts an outside tap")
+	closer._close()
+	check(popup.closed == 1, "the outside tap closes its own popup")
+	popup._scene = Node2D.new()
+	closer._close()
+	check(popup.closed == 1, "a newer popup (another item tapped) is not closed by the old closer")
+	popup._scene.free()
+	scene.free()
