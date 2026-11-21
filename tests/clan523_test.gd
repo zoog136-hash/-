@@ -111,10 +111,12 @@ func flow(data: Dictionary) -> void:
 	clan.now_override = 1800000000
 	var world := FakeWorld.new()
 	check(CLAN._class_id(world)==8,"군주 is original class 8")
-	world.job_class = "기사"
-	check(not clan.create_quote(world).ok,"a 기사 cannot found a clan")
+	world.job_class = "기사"; world.level = 30; world.gold = 1000000
+	# TWILIGHT 근사 (2026-11-21): any class founds its one-person clan; the
+	# original 군주 rows stay in the data.
+	check(CLAN.SOLO_ANY_CLASS and clan.create_quote(world).ok and data.create_classes == [8],"a 기사 may found a one-person clan, ClanCreateGameClass kept")
 	world.job_class = "군주"; world.level = 29
-	check(not clan.create_quote(world).ok,"below CreateLevelCondition")
+	check(not clan.create_quote(world).ok and str(clan.create_quote(world).get("reason","")) == "혈맹 창설은 30레벨 이상","below CreateLevelCondition, refusal without the table name")
 	world.level = 30; world.gold = 99999
 	check(not clan.create_quote(world).ok,"commission not affordable")
 	world.gold = 1000000
