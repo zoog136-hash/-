@@ -77,12 +77,26 @@ static func view_row(definition: Dictionary) -> Dictionary:
 	return row
 
 func derive(card_state: Dictionary) -> Dictionary:
-	var owned: Dictionary=card_state.get("owned",{})
-	var views: Array[Dictionary]=[]
+	var indices: Array[int]=[]
+	for index: int in definitions.size():indices.append(index)
+	var views: Array=derive_rows(card_state,indices)
 	var totals: Dictionary={}
 	var completed: Dictionary={}
-	for definition: Dictionary in definitions:
-		var row: Dictionary=view_row(definition)
+	for row: Dictionary in views:
+		if not row.completed:continue
+		completed[str(row.id)]=true
+		add_totals(row,totals)
+	return {"rows":views,"totals":totals,"completed":completed}
+
+## The derived rows of definitions[indices] only (one row per index, in
+## order). A row depends on its own definition and the card state, never on
+## another row, so a card acquisition re-derives just the collections that
+## hold that card (collection_runtime).
+func derive_rows(card_state: Dictionary, indices: Array[int]) -> Array:
+	var owned: Dictionary=card_state.get("owned",{})
+	var views: Array=[]
+	for index: int in indices:
+		var row: Dictionary=view_row(definitions[index])
 		var met: int=0
 		for requirement: Dictionary in row.requirements:
 			# First acquisition is retained after all spendable duplicates are gone.
@@ -94,10 +108,11 @@ func derive(card_state: Dictionary) -> Dictionary:
 		row["problems"]=(availability[str(row.id)] as Array).duplicate()
 		row["available"]=row.problems.is_empty()
 		row["completed"]=row.available and row.conditions_met
-		if row.completed:
-			completed[str(row.id)]=true
-			for effect: Dictionary in row.effects:
-				var code: String=effect_code(effect)
-				totals[code]=float(totals.get(code,0.0))+float(effect.value)
 		views.append(row)
-	return {"rows":views,"totals":totals,"completed":completed}
+	return views
+
+## A completed row's contribution to the totals.
+func add_totals(row: Dictionary, totals: Dictionary) -> void:
+	for effect: Dictionary in row.effects:
+		var code: String=effect_code(effect)
+		totals[code]=float(totals.get(code,0.0))+float(effect.value)

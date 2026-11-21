@@ -1,4 +1,5 @@
 extends VBoxContainer
+const PROTECTION_ENTRY_SHOWN: bool = false
 ## Inspection of exact source branches; spending remains in authoritative Main.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
@@ -62,7 +63,9 @@ func configure(controller: Node) -> void:
 	catalog_status.name="Patch523CraftCatalogStatus"
 	if world.patch523_craft_catalog_status.get("ok",false):catalog_status.text="공통 제작 아이템 %d개 등록됨 · 검증된 설치 자료" % int(world.patch523_craft_catalog_status.get("registered_count",0))
 	add_child(catalog_status)
-	if world.protection523!=null and not world.protection523.get("source").is_empty():
+	# 불멸·파멸 가호 is off the player's screens (user list 2026-11-21 #5;
+	# renewal_hud RETIRED_SECTIONS); its saved state is kept.
+	if PROTECTION_ENTRY_SHOWN and world.protection523!=null and not world.protection523.get("source").is_empty():
 		var protection_button: Button=UI.button("불멸·파멸의 가호 제작",func() -> void:world.open_patch523_protection_owner())
 		protection_button.name="Patch523OpenProtectionOwner"
 		add_child(protection_button)

@@ -705,7 +705,8 @@ func _process_step(delta: float) -> void:
 		var current_field = get_parent().field_map
 		if current_field is OriginalPlayableField:
 			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
-			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
+			# The field cell in the original map grid; "원본" is a developer word.
+			coordinates_readout.text = "좌표  %d, %d" % [source_cell.x,source_cell.y]
 	var cds: Dictionary = world.get("skill_cooldowns")
 	for index: int in range(quickslot_cooldown_labels.size()):
 		var remain: float = 0
@@ -1193,8 +1194,15 @@ func complete_class_selection() -> void:
 		actor.set_physics_process(true)
 	_close_workspace()
 
+## TWILIGHT screens taken off the player's screens (user list 2026-11-21:
+## #1 스킬 계열 전환, #5 불멸·파멸 가호, #6 혈맹 문장). Their saved state stays
+## in the save file untouched; only the menu tiles and entries are gone.
+const RETIRED_SECTIONS: Array[String] = ["spell_groups","protection523","clan_emblem523"]
+
 func _navigate(section: String) -> void:
 	if class_picker_initial:
+		return
+	if section in RETIRED_SECTIONS:
 		return
 	match section:
 		"card_fusion": open_card_fusion(card_fusion_return_category)
@@ -1242,6 +1250,7 @@ func _navigate(section: String) -> void:
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
+		"save": save_now()
 		"auto": open_schedule()
 		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
@@ -1253,6 +1262,11 @@ func _navigate(section: String) -> void:
 		"forge523": open_forge()
 		"sell": open_item_sell()
 		_: open_catalog(section)
+
+## 저장 (전체 메뉴, user list 2026-11-21 #18): the existing manual save (the
+## same save_pressed as 설정 > 세부 설정 "지금 저장"); the menu stays open.
+func save_now() -> void:
+	save_pressed.emit()
 
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
 	for dialog: Node in $Root.get_children():
@@ -1295,6 +1309,9 @@ func open_tj_coupons_native() -> void:
 
 func open_promo_code() -> void:
 	_open_window("promo_code", "쿠폰 코드", "코드 입력 · 보상 지급")
+	# The original 523 쿠폰 field is in 설정 > 정보 (Option_Tab_Info Coupon,
+	# the same World.redeem_promo_code); the TWILIGHT page without the pack.
+	if _open_original_feature("options",["info"]):return
 	var view = preload("res://scripts/ui/promo_code_view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent())
@@ -1755,6 +1772,22 @@ func _select_menu_category(index: int) -> void:
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
 
+## The original 523 전체 메뉴 order (MainMenuUIButtons, row by row: 제작 거래소
+## 변신 마법인형 성물 / 던전 · · 스킬 카드 컬렉션 / 혈맹 · 기억 · · / · 연금 · 수호성
+## 문양 / 엘릭서 스케줄 숙련 토템 지배석 / 작위 · · 설정 · / 몬스터 도감) for the
+## sections with an original tile (user list 2026-11-21 #3: 인형·성물 beside 변신).
+const ORIGINAL_MENU_ORDER: Array[String] = ["crafting","exchange","변신","마법인형","성물","source_dungeons","skill_card523","equipment_collections","clan523","refine523","guardians","emblems","half_elixir","auto","weapon_mastery","totems","domination_stone","titles","settings","monsterbook523"]
+
+## `pairs` ([section, caption]) with the original-order sections first, the
+## rest after them in their own order.
+static func ordered_menu_pairs(pairs: Array) -> Array:
+	var ranked: Array = []
+	for index: int in pairs.size():
+		var rank: int = ORIGINAL_MENU_ORDER.find(str(pairs[index][0]))
+		ranked.append([rank if rank >= 0 else ORIGINAL_MENU_ORDER.size() + index, pairs[index]])
+	ranked.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
+	return ranked.map(func(entry: Array) -> Array: return entry[1])
+
 func _build_menu_page() -> void:
 	var col := VBoxContainer.new()
 	col.name = "MenuPage"
@@ -1796,8 +1829,13 @@ func _build_menu_page() -> void:
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["sell","판매"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]:
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["growth96","96레벨 보상·증표"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["sell","판매"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
+	# original tile first in the client's order, then the TWILIGHT-only ones.
+	menu_pairs = ordered_menu_pairs(menu_pairs)
+	for pair: Array in menu_pairs:
 		var section_id: String = str(pair[0])
+		if section_id in RETIRED_SECTIONS: continue
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),Vector2(92,88))
@@ -3188,6 +3226,22 @@ func _center_world_map(view: Object, world_id: int, world_node: Node) -> Diction
 	var local: Vector2=transform.affine_inverse().basis_xform(-move)
 	return view.call("set_scroll_position",Vector2(geometry.content_position)+Vector2(local.x,-local.y))
 
+## 사용자 목록 11: the minimap's tap opens the original world map (false: no
+## original map is connected, the minimap keeps its walk). An open map stays open.
+func open_world_map_from_minimap() -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_world_map_binding():return false
+	if not original_main_ui_controller.world_map_is_open():toggle_map()
+	return true
+
+## Map_All 내 위치 보기: the open map scrolls back to the player's spot.
+func center_world_map_on_player() -> Dictionary:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.world_map_is_open():return {"ok":false,"reason":"world_map_not_open"}
+	var offered: Variant=original_main_ui_status.get("world_map",{}).get("offered_world_id")
+	var view: Variant=original_main_ui_controller.get("_world_map")
+	var world_node: Node=get_parent()
+	if typeof(offered)!=TYPE_INT or not is_instance_valid(view) or not is_instance_valid(world_node) or world_node.get("field_map")==null:return {"ok":false,"reason":"world_map_center_unavailable"}
+	return _center_world_map(view,int(offered),world_node)
+
 func toggle_map() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_world_map_binding():
 		if not original_main_ui_controller.world_map_is_open():_close_workspace()
@@ -3407,8 +3461,6 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 	if get_parent().field_map is OriginalPlayableField and get_parent().field_map.uses_original_gameplay_rules():
 		selector.select(1)
 		populate.call()
-	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
-	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))
 
 
 func open_normal_card_collections(category: String,identity: String="") -> void:
@@ -3795,6 +3847,12 @@ func original_skill_window_is_open() -> bool:
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
+func original_inventory_refresh_actions() -> Dictionary:
+	return original_main_ui_controller.inventory_refresh_actions() if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_refresh_actions") else {}
+
+func original_ui_font(path: String) -> FontFile:
+	return original_main_ui_controller.original_font(path) if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("original_font") else null
+
 func original_inventory_name_hint_context(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}
 
@@ -3830,6 +3888,9 @@ func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on
 		if opened.get("handled",false):return opened
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
+
+func original_inventory_scroll_by(screen_delta_y: float) -> Dictionary:
+	return original_main_ui_controller.inventory_scroll_by(screen_delta_y) if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_scroll_by") else {}
 
 func original_inventory_gesture_bounds() -> Control:
 	return original_main_ui_controller.inventory_gesture_bounds() if original_inventory_is_open() else null
