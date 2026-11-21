@@ -108,7 +108,7 @@ func _build_stage() -> Dictionary:
 		next.free()
 		last_result=filled
 		return filled
-	for key: String in _scrolls:
+	for key: String in _scrolls.keys():
 		if keep.has(key):_scroll_to(key,float(keep[key]))
 	var previous: Node2D=_scene
 	next.position=_root_position()
@@ -251,9 +251,10 @@ static func _place(content: Node2D, scene: Node2D, geometry: Dictionary, bottom_
 
 ## Builds `rows` ([{member, spec}]) top-down (or left to right) in the list
 ## at `suffix`; returns {ok, rows, scenes, outs}. Vertical lists scroll.
-func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap: float=NAN, horizontal: bool=false, columns: int=1) -> Dictionary:
+func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap: float=NAN, horizontal: bool=false, columns: int=1, scroll_key: String="") -> Dictionary:
 	var list: Dictionary=_list(root,out,suffix)
 	if not list.get("ok",false):return list
+	var key: String=str(list.key) if scroll_key.is_empty() else scroll_key
 	# The ListView's own itemMargin unless the caller names the spacing.
 	if is_nan(gap):gap=float(_node_options(out,suffix).get("itemMargin",0))
 	var size: Vector2=list.size
@@ -266,7 +267,7 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 	for row: Dictionary in rows:
 		var member: String=str(row.member)
 		var row_out: Dictionary={}
-		var built: Dictionary=_scene_of(member,row.get("spec",{}),row_out,str(list.key))
+		var built: Dictionary=_scene_of(member,row.get("spec",{}),row_out,key)
 		if not built.get("ok",false):return built
 		var geometry: Dictionary=_row_geometry(member)
 		var extent: Vector2=geometry.size
@@ -285,17 +286,17 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 				line_height=0.0
 		# A row of an outer list is marked so a list inside it (a row's own
 		# horizontal card list) can hand vertical drags to the outer list.
-		built.scene.set_meta(ROW_LIST_META,str(list.key))
-		_forward_row_drags(built.scene,str(list.key),_outer_list_key(root))
+		built.scene.set_meta(ROW_LIST_META,key)
+		_forward_row_drags(built.scene,key,_outer_list_key(root))
 		scenes.append(built.scene)
 		outs.append(row_out)
 	if column>0:y-=line_height+gap
 	if not horizontal:
 		var used: float=size.y-y-gap
-		_scrolls[str(list.key)]={"content":list.content,"min":minf(0.0,size.y-used),"value":0.0}
+		_scrolls[key]={"content":list.content,"min":minf(0.0,size.y-used),"value":0.0}
 	elif x-gap>size.x:
 		# A horizontal list wider than its ListView scrolls along x.
-		_scrolls[str(list.key)]={"content":list.content,"min":size.x-(x-gap),"value":0.0,"axis":"x"}
+		_scrolls[key]={"content":list.content,"min":size.x-(x-gap),"value":0.0,"axis":"x"}
 	return {"ok":true,"rows":rows.size(),"scenes":scenes,"outs":outs}
 
 ## Repeats an authored ListView row (a template with no row member of its
