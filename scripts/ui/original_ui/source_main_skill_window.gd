@@ -140,6 +140,8 @@ static func tabs_for(job: String) -> Array[String]:
 	return names
 
 ## The 계열 전환 button the job shows: 속성 변경 (요정), 디버프 (마법사) or none.
+const GROUP_CONVERSION_SHOWN: bool=false
+
 static func group_button(job: String) -> String:
 	return {"요정":"Btn_Property","마법사":"Btn_MagicMaster"}.get(job,"")
 
@@ -173,7 +175,9 @@ func _stage() -> Dictionary:
 		"Menu_Button/Btn_MagicMaster":{"visible":false},
 	}
 	spec[scroll_name]={"visible":true,"role":"source_scroll","input":Callable(self,"_list_input")}
-	var group: String=group_button(job)
+	# 스킬 계열 전환 (a TWILIGHT screen) is off the player's screens (user list
+	# 2026-11-21 #1): the 속성 변경 / 디버프 buttons stay hidden.
+	var group: String=group_button(job) if GROUP_CONVERSION_SHOWN else ""
 	if not group.is_empty():
 		var ready: bool=_group_conversion_ready(hud)
 		spec["Menu_Button/"+group]={"visible":true,"activate":Callable(self,"_group_requested"),"displaystate":ready}

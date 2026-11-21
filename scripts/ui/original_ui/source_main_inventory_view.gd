@@ -357,6 +357,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
 		var raw: Dictionary=entries_by_reference[reference]
+		if not slot_contract.owner_results.has(offset): _label_missing_icon(control,raw)
 		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":model.get("selected_reference")==reference}
 	for reference: String in hits:
 		var hit_control: Variant=hits[reference].get("control")
@@ -499,6 +500,22 @@ func _forward_scroll_input(event: InputEvent) -> void:
 	var lined: Dictionary=_sync_lines()
 	if not lined.get("ok",false):_fallback(_unsupported_result(lined))
 
+## A drag that the HUD's pointer transfer captured on a slot (it consumes
+## the touch so the slot never sees it): move the rows by the finger's screen
+## delta like a drag on the empty list. Returns the content offset after it.
+func scroll_by(screen_delta_y: float) -> Dictionary:
+	if not is_open() or not is_instance_valid(_scroll_content) or not is_finite(screen_delta_y):return _unsupported("source_inventory_view_scroll_unavailable")
+	var delta: float=screen_delta_y
+	var scale_y: float=absf(_scroll_content.get_global_transform_with_canvas().get_scale().y)
+	if scale_y>0.0:delta/=scale_y
+	_scroll_moved+=absf(delta)
+	_scroll_content.position.y=clampf(_scroll_content.position.y+delta,_scroll_bottom,_scroll_top)
+	var lined: Dictionary=_sync_lines()
+	if not lined.get("ok",false):
+		_fallback(_unsupported_result(lined))
+		return lined
+	return {"ok":true,"position":_scroll_content.position.y,"top":_scroll_top,"bottom":_scroll_bottom}
+
 ## Rows below the authored one extend the original inner container; the
 ## content may move from its authored top position down to the last row.
 func _bind_scroll(inventory_scene: Node2D, slot_set: int, extra_lines: int) -> void:
@@ -614,6 +631,7 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 		if not row_raw is Dictionary:
 			row_scene.free()
 			return {"ok":false,"code":"source_inventory_view_owner_reference_missing","reference":row_reference}
+		if not row_contract.owner_results.has(offset): _label_missing_icon(row_control,row_raw)
 		hits[row_reference]={"from":"inventory","id":row_reference,"reference":row_reference,"entry":{"kind":"item","id":row_raw.get("name")},"owned_row":(row_raw as Dictionary).duplicate(true),"texture":row_accepted.get("texture"),"native_icon_scene":row_accepted.get("player"),"control":row_control,"button":row_control,"native_slot_scene":row_native,"slot_project_offset":offset,"slot_set_project_offset":_line_slot_set,"row":line,"source_asset_evidence":row_accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":bag!=null and bag.get("selected_item")==row_reference}
 	row_scene.position=authored_row.position+Vector2(0.0,ROW_PITCH*float(line))
 	authored_row.get_parent().add_child(row_scene)
@@ -629,6 +647,30 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 	_row_scenes.append(row_scene)
 	stats.line_builds+=1
 	return {"ok":true,"line":line}
+
+func _label_missing_icon(control: Control, entry: Dictionary) -> void:
+	# Keep the owned slot identifiable when its original image is missing.
+	# The label leaves the quantity, gesture target and original asset alone.
+	var bag: Object=_bag.get_ref() if _bag!=null else null
+	var name_value: String=str(entry.get("name",""))
+	var record: Dictionary=bag.call("_find_item_record",str(entry.reference)) if bag!=null and bag.has_method("_find_item_record") else {}
+	var title: String=preload("res://scripts/ui/source523_item_identity.gd").display_name(record,name_value)
+	if title.is_empty(): return
+	var label:=Label.new()
+	label.name="MissingIconItemName"
+	label.text=title
+	label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	label.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
+	label.add_theme_font_size_override("font_size",11)
+	control.add_child(label)
+	label.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	label.offset_left=2.0
+	label.offset_right=-2.0
+	label.offset_top=4.0
+	label.offset_bottom=maxf(18.0,control.size.y*0.62)
+	control.tooltip_text=title
 
 ## Everything the built slots take from the owner besides amounts, markers
 ## and selection: layout, the displayed order of references, each row

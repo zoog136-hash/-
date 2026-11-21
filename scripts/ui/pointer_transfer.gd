@@ -190,6 +190,11 @@ func _input(event: InputEvent) -> void:
 		# Deliberate hold/horizontal drags retain the existing transfer path.
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
+			if source.from == "inventory" and bool(source.get("source_native",false)) and hud.has_method("original_inventory_scroll_by"):
+				# The original bag's rows: this transfer consumed the touch on a
+				# slot, so the native list never saw the drag (only drags that
+				# started between slots scrolled it).
+				hud.original_inventory_scroll_by((position-previous).y)
 			var bar: VScrollBar
 			if source.from == "inventory" and not bool(source.get("source_native",false)): bar = hud.lineage_inventory_ui.grid_scroll.get_v_scroll_bar()
 			elif source.from == "skill" and is_instance_valid(hud.skills_view): bar = hud.skills_view.cards.get_v_scroll_bar()

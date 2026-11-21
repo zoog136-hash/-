@@ -22,6 +22,11 @@ var v20_stat_text: Label
 var v20_map_name: Label
 var v20_potion_count: Label
 var v20_potion_button: Button
+var _potion_long_pressed: bool = false
+var _potion_press_serial: int = 0
+var _v20_potion_item_class: int = 0
+var _v20_potion_icon_shown: int = -1
+var hud_potion_choice: PopupPanel
 var _v20_potion_icon_revision: int = -1
 var v20_leaf_count: Label
 var v20_leaf_button: Button
@@ -390,7 +395,18 @@ func _build_v20_status() -> void:
 
 	# Two immediate-use item slots next to the status block.
 	var red: Button = _make_icon_button(v20_layer, "", "", Rect2(380.0, 15.0, 58.0, 66.0), 12)
-	red.pressed.connect(func() -> void: potion_pressed.emit())
+	red.pressed.connect(func() -> void:
+		if _potion_long_pressed: _potion_long_pressed = false; return
+		potion_pressed.emit())
+	# 길게 누르기: 슬롯에 넣을 체력 회복 물약 선택 (원본 HUD 물약 슬롯).
+	red.button_down.connect(func() -> void:
+		_potion_press_serial += 1
+		var serial: int = _potion_press_serial
+		get_tree().create_timer(0.45).timeout.connect(func() -> void:
+			if serial == _potion_press_serial and is_instance_valid(red) and red.button_pressed:
+				_potion_long_pressed = true
+				open_hud_potion_choice()))
+	red.button_up.connect(func() -> void: _potion_press_serial += 1)
 	v20_potion_button = red
 	v20_potion_count = Label.new()
 	v20_potion_count.text = "100"
@@ -990,10 +1006,12 @@ func _bind_v20_potion_icon() -> void:
 		return
 	var pack: RefCounted = images.active()
 	var revision: int = pack.get_instance_id() if pack != null else 0
-	if revision == _v20_potion_icon_revision: return
-	_v20_potion_icon_revision = revision
 	var ids: Array[int] = preload("res://scripts/loot/current523_starter_kit.gd").QUICKSLOT_ITEMS
-	var info: Dictionary = images.describe_item_class(ids[0]) if not ids.is_empty() else {}
+	var shown: int = _v20_potion_item_class if _v20_potion_item_class > 0 else (ids[0] if not ids.is_empty() else 0)
+	if revision == _v20_potion_icon_revision and shown == _v20_potion_icon_shown: return
+	_v20_potion_icon_revision = revision
+	_v20_potion_icon_shown = shown
+	var info: Dictionary = images.describe_item_class(shown) if shown > 0 else {}
 	var linked: bool = info.get("status") == "original_linked" and info.get("texture") is Texture2D
 	v20_potion_button.icon = info.texture if linked else null
 	var evidence: Dictionary = info.duplicate(true)
@@ -1002,13 +1020,61 @@ func _bind_v20_potion_icon() -> void:
 
 func set_quick_items(inventory: Dictionary) -> void:
 	if v20_potion_count != null:
-		# The original 523 HP potion (체력 회복제 (각인) · 원본#233); no legacy names.
-		var potions: int = 0
-		for key: Variant in inventory:
-			if str(key).ends_with("· 원본#233"): potions += int(inventory[key])
+		# The potion the slot drinks (chosen by a long press), else the
+		# original 523 HP potion (체력 회복제 (각인) · 원본#233).
+		var chosen: String = str(get_parent().call("hud_potion_name")) if get_parent() != null and get_parent().has_method("hud_potion_name") else ""
+		var potions: int = int(inventory.get(chosen, 0)) if not chosen.is_empty() else 0
+		if chosen.is_empty():
+			for key: Variant in inventory:
+				if str(key).ends_with("· 원본#233"): potions += int(inventory[key])
 		v20_potion_count.text = str(potions)
+		var record: Dictionary = get_parent().call("_find_catalog_item_record", chosen) if not chosen.is_empty() else {}
+		_v20_potion_item_class = int(record.get("source_item_class_id", 0)) if not record.is_empty() else 0
 	_bind_v20_potion_icon()
 	for item_name: String in v20_quick_item_buttons:
 		var button: Button = v20_quick_item_buttons[item_name] as Button
 		if button != null:
 			button.text = str(int(inventory.get(item_name, 0)))
+
+
+## HUD 물약 슬롯 선택: the owned HP-restoring potions; one that its original
+## level/class rule refuses is shown greyed with that rule.
+func open_hud_potion_choice() -> void:
+	var host: Node = get_parent()
+	if host == null or not host.has_method("hud_potion_candidates"): return
+	if is_instance_valid(hud_potion_choice): hud_potion_choice.queue_free()
+	var rows: Array = host.call("hud_potion_candidates")
+	if rows.is_empty():
+		show_message("보유한 체력 회복 물약이 없습니다")
+		return
+	var popup := PopupPanel.new()
+	popup.name = "HudPotionChoice"
+	var box := VBoxContainer.new()
+	popup.add_child(box)
+	var title := Label.new()
+	title.text = "물약 선택"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(title)
+	var chosen: String = str(host.call("hud_potion_name"))
+	for row: Dictionary in rows:
+		var button := Button.new()
+		var display: String = preload("res://scripts/ui/source523_item_identity.gd").screen_text(str(row.name))
+		button.text = "%s ×%d%s" % [display, int(row.count), "  ✓" if row.name == chosen else ""]
+		button.custom_minimum_size = Vector2(320, 44)
+		button.disabled = not str(row.reason).is_empty()
+		if button.disabled: button.tooltip_text = str(row.reason)
+		var item_name: String = str(row.name)
+		button.pressed.connect(func() -> void:
+			if bool(host.call("select_hud_potion", item_name)): popup.hide()
+			)
+		box.add_child(button)
+		if button.disabled:
+			var why := Label.new()
+			why.text = str(row.reason)
+			why.add_theme_font_size_override("font_size", 12)
+			why.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+			box.add_child(why)
+	popup.popup_hide.connect(func() -> void: popup.queue_free())
+	hud_potion_choice = popup
+	add_child(popup)
+	popup.popup_centered()
