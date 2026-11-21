@@ -1699,11 +1699,17 @@ func update_map_name(map_name: String) -> Dictionary:
 		return configured
 	var name_contract: Dictionary=_map_bindings.build_name(map_name)
 	_map_name_result=_mount_main_project(21588,name_contract)
+	if not _map_name_result.get("ok",false) and bool(name_contract.get("change_card_connected",false)):
+		# The 카드 교체 side button must never cost the map name.
+		var with_card: Dictionary=_map_name_result.duplicate(true)
+		name_contract=_map_bindings.build_name(map_name,true,false)
+		_map_name_result=_mount_main_project(21588,name_contract)
+		_map_name_result["optional_change_card_result"]=with_card
 	if not _map_name_result.get("ok",false) and name_contract.get("source_node_offsets",[]).has(MainMap.ZONE_TEXT):
 		# Optional source zone text must not remove the existing complete
 		# owner map-name string when its source font/scope is unavailable.
 		var with_zone: Dictionary=_map_name_result.duplicate(true)
-		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false))
+		_map_name_result=_mount_main_project(21588,_map_bindings.build_name(map_name,false,false))
 		_map_name_result["optional_safe_label_result"]=with_zone
 	if _map_name_result.get("ok",false):
 		_map_name_scene=_map_name_result.scene

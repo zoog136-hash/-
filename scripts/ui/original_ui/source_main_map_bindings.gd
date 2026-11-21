@@ -51,7 +51,27 @@ func configure(pack: RefCounted, hud: Node, image_adapter: RefCounted=null) -> D
 		if tab.configure(pack,hud).get("ok",false):area_tab=tab
 	return {"ok":true,"area_tab":area_tab!=null,"requirements":requirements(),"complete_screen_contract":false}
 
-func build_name(map_name: String, include_safe_label: bool=true) -> Dictionary:
+## 카드 교체 (Hud_ChangeCard) in the minimap's side button group, where the
+## client places it (StringTable MINIMAP_CHANGE_BUFF_CARD_NODE
+## "Nd_Side_Btn.Hud_ChangeCard"): it opens the 카드 다시 뽑기 window
+## (CardChange_All, HUD section card_swap523). User list 2026-11-21 #2.
+const SIDE_GROUP=1864
+const CHANGE_CARD_PROJECT=11600
+const CHANGE_CARD_MEMBER="UI/Main/Hud_ChangeCard.csb"
+const CHANGE_CARD_BUTTON=212
+## Button, Nd_Outer, Img_Icon, Label (its glow sprites are left out).
+const CHANGE_CARD_SCOPE: Array[int]=[212,260,700,324]
+
+func change_card_available() -> bool:
+	return _pack!=null and _pack.manifest.get("scenes",{}).has(CHANGE_CARD_MEMBER) and not _node_at(_pack.scene(MINIMAP_MEMBER).get("nodeTree",{}),CHANGE_CARD_PROJECT).is_empty()
+
+func _change_card_pressed() -> Dictionary:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	if hud==null or not hud.has_method("_navigate"):return _fail("source_main_map_hud_unavailable")
+	hud.call("_navigate","card_swap523")
+	return {"ok":true,"routed":"card_swap523"}
+
+func build_name(map_name: String, include_safe_label: bool=true, include_change_card: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MINIMAP_MEMBER,{}).get("sha256","")!=MINIMAP_SHA256:return _fail("source_main_map_minimap_identity_mismatch")
 	var has_zone: bool=include_safe_label and not _node_at(_pack.scene(MINIMAP_MEMBER).get("nodeTree",{}),ZONE_TEXT).is_empty()
 	var model: Dictionary=_existing_name_model(map_name,has_zone)
@@ -60,9 +80,14 @@ func build_name(map_name: String, include_safe_label: bool=true) -> Dictionary:
 	if has_zone:
 		scope.append(ZONE_TEXT)
 		bindings[ZONE_TEXT]={"role":"source_text","text":model.zone,"visible":not str(model.zone).is_empty()}
+	var change_card: bool=include_change_card and change_card_available()
+	if change_card:
+		scope.append(SIDE_GROUP)
+		scope.append(CHANGE_CARD_PROJECT)
+		bindings[CHANGE_CARD_PROJECT]={"role":"project","visible":true,"source_node_offsets":CHANGE_CARD_SCOPE.duplicate(),"bindings":{CHANGE_CARD_BUTTON:{"role":"button","activate":Callable(self,"_change_card_pressed")},324:{"role":"static_source_text"}}}
 	# This is the existing owner's formatted safety suffix only, never a
 	# region.type/Normal/PvP classification or UIMapWorld/image selection.
-	return {"ok":true,"member":MINIMAP_MEMBER,"sha256":MINIMAP_SHA256,"source_node_offsets":scope,"bindings":bindings,"name_model":model,"safe_label_connected":has_zone,"zone_enum_mapping_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"world_image_connected":false,"unresolved_fields":requirements()}
+	return {"ok":true,"member":MINIMAP_MEMBER,"sha256":MINIMAP_SHA256,"source_node_offsets":scope,"bindings":bindings,"name_model":model,"safe_label_connected":has_zone,"change_card_connected":change_card,"zone_enum_mapping_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"world_image_connected":false,"unresolved_fields":requirements()}
 
 func refresh_name(scene: Node2D, map_name: String) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=MINIMAP_MEMBER:return _fail("source_main_map_minimap_scene_mismatch")
