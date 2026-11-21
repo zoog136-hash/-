@@ -727,7 +727,12 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		if not gate.ok:return fail(str(gate.reason))
 	var native_repeat: bool=false
 	if int(row.get("LimitRepeatedBuyCardID",0))>0:
-		if SkillBooks.contract(int(row.get("ItemClassID",0))).is_empty():native_repeat=true
+		var book: Dictionary=SkillBooks.contract(int(row.get("ItemClassID",0)))
+		# A merchant-10 book whose local skill is not installed has no shop
+		# book record (source523_skill_books.install skips it): it is sold as
+		# the native 523 skill book with that book's own learn checks, as the
+		# 기란 혈맹 상인's books already are (30 books were refused before).
+		if book.is_empty() or not SkillBooks.registered(world,str(book.name),str(book.skill_id)):native_repeat=true
 		else:
 			var qualification: Dictionary=SkillBooks.qualification(world,row)
 			if not qualification.ok:return fail(str(qualification.reason))
