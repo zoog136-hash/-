@@ -3835,6 +3835,9 @@ func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
 
+func original_inventory_scroll_by(screen_delta_y: float) -> Dictionary:
+	return original_main_ui_controller.inventory_scroll_by(screen_delta_y) if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_scroll_by") else {}
+
 func original_inventory_gesture_bounds() -> Control:
 	return original_main_ui_controller.inventory_gesture_bounds() if original_inventory_is_open() else null
 

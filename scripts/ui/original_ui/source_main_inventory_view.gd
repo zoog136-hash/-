@@ -488,6 +488,22 @@ func _forward_scroll_input(event: InputEvent) -> void:
 	var lined: Dictionary=_sync_lines()
 	if not lined.get("ok",false):_fallback(_unsupported_result(lined))
 
+## A drag that the HUD's pointer transfer captured on a slot (it consumes
+## the touch so the slot never sees it): move the rows by the finger's screen
+## delta like a drag on the empty list. Returns the content offset after it.
+func scroll_by(screen_delta_y: float) -> Dictionary:
+	if not is_open() or not is_instance_valid(_scroll_content) or not is_finite(screen_delta_y):return _unsupported("source_inventory_view_scroll_unavailable")
+	var delta: float=screen_delta_y
+	var scale_y: float=absf(_scroll_content.get_global_transform_with_canvas().get_scale().y)
+	if scale_y>0.0:delta/=scale_y
+	_scroll_moved+=absf(delta)
+	_scroll_content.position.y=clampf(_scroll_content.position.y+delta,_scroll_bottom,_scroll_top)
+	var lined: Dictionary=_sync_lines()
+	if not lined.get("ok",false):
+		_fallback(_unsupported_result(lined))
+		return lined
+	return {"ok":true,"position":_scroll_content.position.y,"top":_scroll_top,"bottom":_scroll_bottom}
+
 ## Rows below the authored one extend the original inner container; the
 ## content may move from its authored top position down to the last row.
 func _bind_scroll(inventory_scene: Node2D, slot_set: int, extra_lines: int) -> void:
