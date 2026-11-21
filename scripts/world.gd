@@ -6517,13 +6517,14 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
 	var adjusted_heal: int = patch523_npc_spells.extensions.healing(maxi(1, enhanced_heal),true)
 	var next_hp: int = clampi(hp + adjusted_heal,0,effective_max_hp)
-	if is_source and _save_game(true, {"inventory":next_inventory,"item_use_cooldowns":next_cooldowns,"hp":next_hp}) != OK:
-		rng.state = rng_before
-		hud.show_message("회복 저장 실패 · 원본 물약과 HP 보존")
-		return
+	# Consumables commit in memory and join the coalesced background save
+	# (user decision 2026-11-21, option A): a full synchronous save per potion
+	# was ~0.4 s on the phone (523.747: five saves in one 7.3 s frame). A
+	# crash before that save can return the last few seconds of potions.
 	inventory = next_inventory
 	item_use_cooldowns = next_cooldowns
 	apply_patch523_healing(maxi(1,enhanced_heal),true)
+	if is_source: _request_general_save()
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	if is_source:
@@ -6910,15 +6911,18 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
 	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
 	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if titles.blocked or not titles.validate(collection_override.get("title523",titles.state)).is_empty(): return ERR_INVALID_DATA
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if totem_combat.settings_blocked or not totem_combat.check_settings_load({"ui_preferences":ui_preferences}).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("totem_combat_settings") and not totem_combat.valid_settings(collection_override.totem_combat_settings):return ERR_INVALID_DATA
 	if collection_override.has("totem_state") and not totems.check_state(collection_override.totem_state).is_empty(): return ERR_INVALID_DATA
 	if totems.save_blocked or not totems.check_state(totems.export_state()).is_empty():
 		if not quiet: hud.show_message("토템 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if monsterbook523_runtime.save_blocked: return ERR_FILE_CORRUPT
 	if collection_override.has("monsterbook523") and not monsterbook523.valid_state(collection_override.monsterbook523): return ERR_INVALID_DATA
 	if tj_coupons.core.blocked or not tj_coupons.core.validate(tj_coupons.core.export_state()).is_empty():return ERR_FILE_CORRUPT
@@ -6927,14 +6931,18 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("가호 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	if not PROTECTION523.validate((collection_override["protection523"] if collection_override.has("protection523") else protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:(collection_override[SOURCE_SHOP.SAVE_KEY] if collection_override.has(SOURCE_SHOP.SAVE_KEY) else source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if not patch523_owner_state_problem.is_empty():return ERR_UNAVAILABLE
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	if protection523!=null and protection523.get("save_blocked")==true:return ERR_UNAVAILABLE
 	if expedition_local!=null and expedition_local.get("save_blocked")==true:return ERR_UNAVAILABLE
 	if quest_auto!=null and quest_service.get("save_blocked")==true:return ERR_UNAVAILABLE
 	var owner_error: String=owner_boundary.override_error(self,collection_override)
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").override_error(self,collection_override)
+	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
 	if not owner_error.is_empty():
 		if not quiet:hud.show_message(owner_error)
 		return ERR_INVALID_DATA
@@ -8934,10 +8942,8 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	mp -= mp_cost
 	if required_ammo > 0:
 		inventory[ammo_key] = old_ammo - required_ammo
-		if source_ammo and _save_game(true)!=OK:
-			mp=old_mp;inventory[ammo_key]=old_ammo
-			hud.show_message("스킬 탄약 저장 실패 · MP·탄약 보존")
-			return false
+		# Coalesced background save, not one full save per skill (option A).
+		if source_ammo: _request_general_save()
 	return true
 
 ## M100 data for the original quickslot count: only a skill that consumes ammo has the
@@ -10488,10 +10494,9 @@ func _consume_weapon_ammo() -> bool:
 			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
 	inventory[ammo_name] = count-1
-	if is_source and _save_game(true)!=OK:
-		inventory[ammo_name]=count
-		hud.show_message("탄약 저장 실패 · 발사 취소·수량 보존")
-		return false
+	# One full save per arrow was ~0.4 s on the phone: the shot commits in
+	# memory and joins the coalesced background save (option A).
+	if is_source: _request_general_save()
 	# One arrow per shot used to rebuild the whole HUD (equipment, cards,
 	# collections, inventory) on every bow attack, which stuttered combat.
 	# Only the counters that show ammo need refreshing.

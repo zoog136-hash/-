@@ -226,6 +226,11 @@ func build_map_scene(field_map: Object, offered_world_id: int, world_label: Stri
 		all_scope.append_array(AREA_INFO_SCOPE)
 		all_bindings[AREA_INFO_SCOPE[0]]=area_tab.area_info_binding()
 		for label: int in [3916,2148]:all_bindings[label]={"role":"static_source_text"}
+		# 내 위치 보기 (Btn_SelfPosition, its icon and label).
+		var self_position: Dictionary=area_tab.self_position_bindings()
+		if not self_position.is_empty():
+			all_scope.append_array(AreaTab.SELF_POSITION)
+			all_bindings.merge(self_position)
 	var bindings: Dictionary={132:{"role":"project","source_node_offsets":all_scope,"bindings":all_bindings}}
 	return {"ok":true,"member":MAP_SCENE,"sha256":MAP_SCENE_SHA,"source_node_offsets":[132],"bindings":bindings,"child_member":MAP_ALL,"child_sha256":MAP_ALL_SHA,"child_source_node_offsets":all_scope,"child_bindings":all_bindings,"area_contract":area,"native_parent":map_scene_contract(),"partial_source_scene":true,"complete_screen_contract":false}
 
