@@ -19,6 +19,9 @@ const BACKGROUND=15316
 const ICON=15012
 const SELECTED=9004
 const AMOUNT=6880
+## Common_Slot Label_Center (Font/font_B.ttf 20, outlined, hidden): the
+## original slot's centre text, used for the armed 사용/장착/해제 marker.
+const ACTION=6500
 signal selection_changed(reference: String)
 var _pack: RefCounted
 var _bag: WeakRef
@@ -133,7 +136,23 @@ func refresh_slot(slot_scene: Node2D, reference: String, current_model: Dictiona
 		if not slot_scene.get("source_nodes").has(offset):continue
 		result=slot_scene.set_bound_visible(offset,bool(markers.bindings[offset].visible))
 		if not result.get("ok",false):return result
+	result=refresh_action(slot_scene,reference)
+	if not result.get("ok",false):return result
 	return {"ok":true,"reference":reference,"partial_source_scene":true,"game_state_written":false}
+
+## The bag owner's armed action text for this slot ("" hides Label_Center).
+func action_text(reference: String) -> String:
+	var bag: Object=_live_bag()
+	if bag==null or reference.is_empty() or not bag.has_method("item_action_label"):return ""
+	return str(bag.call("item_action_label",reference))
+
+func refresh_action(slot_scene: Node2D, reference: String) -> Dictionary:
+	if not is_instance_valid(slot_scene) or not slot_scene.get("source_nodes").has(ACTION):return {"ok":true,"action_presented":false}
+	var text: String=action_text(reference)
+	if not text.is_empty():
+		var written: Dictionary=slot_scene.set_bound_text(ACTION,text)
+		if not written.get("ok",false):return written
+	return slot_scene.set_bound_visible(ACTION,not text.is_empty())
 
 func select_reference(reference: String) -> Dictionary:
 	var owned: Dictionary=_resolve_reference(reference)
@@ -179,6 +198,9 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		# Text_Amount is preview-hidden. An actual owned entry supplies its
 		# amount before making this existing original text node visible.
 		bindings[AMOUNT]={"role":"source_text","text":str(entry.amount),"visible":true}
+		var action: String=action_text(reference)
+		scope.append(ACTION)
+		bindings[ACTION]={"role":"source_text","text":action if not action.is_empty() else "사용","visible":not action.is_empty()}
 		if not _icon_binding_provider.is_valid():return {"ok":false,"handled":false,"code":"source_inventory_slots_existing_icon_provider_required","reference":reference,"slot_project_offset":offset}
 		# The current image owner provides pixels/provenance, not an asset-ref
 		# for a second lookup. Native renderer handles its existing upload API.

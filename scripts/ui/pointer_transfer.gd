@@ -195,6 +195,11 @@ func _input(event: InputEvent) -> void:
 		# Deliberate hold/horizontal drags retain the existing transfer path.
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
+			if source.from == "inventory" and bool(source.get("source_native",false)) and hud.has_method("original_inventory_scroll_by"):
+				# The original bag's rows: this transfer consumed the touch on a
+				# slot, so the native list never saw the drag (only drags that
+				# started between slots scrolled it).
+				hud.original_inventory_scroll_by((position-previous).y)
 			var bar: VScrollBar
 			if source.from == "inventory" and not bool(source.get("source_native",false)): bar = hud.lineage_inventory_ui.grid_scroll.get_v_scroll_bar()
 			elif source.from == "skill" and is_instance_valid(hud.skills_view): bar = hud.skills_view.cards.get_v_scroll_bar()
@@ -209,6 +214,10 @@ func _input(event: InputEvent) -> void:
 	elif release:
 		position = event.position
 		if mode == "pending": _tap()
+		elif mode == "drag" and source.from == "inventory" and pointer >= 0 and position.distance_to(origin) <= L.TOUCH_SCROLL_DISTANCE*2.0 and hud.lineage_inventory_ui.has_method("open_item_info"):
+			# A long press released where it started: the item information
+			# popup (the original detail gesture; a single tap never opens it).
+			hud.lineage_inventory_ui.open_item_info(str(source.id))
 		elif mode == "drag": _drop()
 		elif mode == "page" and absf(position.x-origin.x) >= L.QUICK_PAGE_SWIPE_DISTANCE and absf(position.x-origin.x) > absf(position.y-origin.y)*1.5:
 			var group: int = int(source.visible)/L.QUICK_GROUP_SIZE
@@ -302,7 +311,18 @@ func _tap() -> void:
 				reset_tap_history()
 				return
 			var now: int = Time.get_ticks_msec()
-			var activate: bool = last_tap_id == reference and now-last_tap_at <= DOUBLE_TAP_MS and position.distance_to(last_tap_position) <= 24.0 and last_tap_touch == (pointer >= 0) and hud.lineage_inventory_ui.selected_item == reference
+			var bag: Control = hud.lineage_inventory_ui
+			# User list 2026-11-21 #22/#23: the first tap shows the item's name
+			# and its 사용/장착/해제 marker; a tap on the same slot while that
+			# marker shows uses / equips / unequips it.
+			if bag.has_method("item_action_armed"):
+				if bag.item_action_armed(reference):
+					reset_tap_history()
+					if native:hud.original_inventory_activate_selected(reference)
+					else:bag._activate_selected()
+					if bag.has_method("disarm_item_action"):bag.disarm_item_action()
+					return
+			var activate: bool = not bag.has_method("item_action_armed") and last_tap_id == reference and now-last_tap_at <= DOUBLE_TAP_MS and position.distance_to(last_tap_position) <= 24.0 and last_tap_touch == (pointer >= 0) and bag.selected_item == reference
 			if native:
 				var selected: Dictionary=hud.original_inventory_select(reference)
 				if not selected.get("ok",false):

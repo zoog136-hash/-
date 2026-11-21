@@ -57,18 +57,22 @@ static func _shared_fields(payload: Dictionary, private_options: Array) -> Dicti
 	return result
 
 static func _private_fields(payload: Dictionary, private_options: Array) -> Dictionary:
-	var result: Dictionary = payload.duplicate(true)
+	# Filter first. The discarded account can hold several complete characters,
+	# and the shared quantity journals may be larger than the active character.
+	var result: Dictionary = payload.duplicate(false)
 	result.erase(KEY)
 	for key: String in SHARED: result.erase(key)
 	var options: Dictionary = {}
 	if payload.get("card_option_awakening") is Dictionary:
 		for key: String in private_options:
-			if payload.card_option_awakening.has(key): options[key] = _copy(payload.card_option_awakening[key])
+			if payload.card_option_awakening.has(key): options[key] = payload.card_option_awakening[key]
 	if not options.is_empty(): result["card_option_awakening"] = options
 	if result.get("consumable_state") is Dictionary:
-		for key: String in SHARED_PROOFS: result.consumable_state.erase(key)
-		if result.consumable_state.is_empty(): result.erase("consumable_state")
-	return result
+		var private_consumables: Dictionary = result.consumable_state.duplicate(false)
+		for key: String in SHARED_PROOFS: private_consumables.erase(key)
+		if private_consumables.is_empty(): result.erase("consumable_state")
+		else: result["consumable_state"] = private_consumables
+	return result.duplicate(true)
 
 static func shared_fields(payload: Dictionary) -> Dictionary:
 	var result: Dictionary = _shared_fields(payload, PRIVATE_OPTION)
@@ -566,7 +570,9 @@ static func stage_save(path: String, payload: Dictionary) -> Dictionary:
 	var account: Dictionary=(prior_envelope as Dictionary).duplicate(true)
 	if account.get("schema")!=SCHEMA: return fail("v1 캐릭터 계정을 로비에서 먼저 백업 후 v2로 이전해 주세요.")
 	if account.get("selected")!=session.get("id"): return fail("다른 캐릭터로 선택이 변경되었습니다. 다시 접속하세요.")
-	var data: Dictionary=payload.duplicate(true)
+	# _seal changes only the top-level keys and the private account copy. It
+	# deep-copies retained state when building both the envelope and flat body.
+	var data: Dictionary=payload.duplicate(false)
 	data[KEY]=account
 	for record: Dictionary in account.characters:
 		if record.id==session.id: record.initialized=true
