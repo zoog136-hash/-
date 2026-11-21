@@ -868,6 +868,104 @@ func buy_merchant(id: int, quantity: int = 1, delivery: int = Delivery.BOX) -> D
 	if not prepared.ok:_busy=false;return prepared
 	return _purchase(prepared,"merchant","merchant:"+str(catalog.merchant_offer(id).goods.get("MerchantGoodGUID",id)),delivery)
 
+## --- Selling to a merchant (original BuyList) -------------------------------
+## The client's 아이템 매입 상인 rows: MerchantGoods with DialogActionTypeID 2
+## (BuyList), one per ItemClassID (normal bless, +0), price = ItemClass.Cost ×
+## Percentage / 100 × Amount adena (user list 2026-11-21 #16: the 잡화상인
+## buys with these rows, TWILIGHT 근사 for the seller NPC).
+const BUY_LIST_ACTION: int = 2
+var _buy_rows: Dictionary = {}
+
+func buy_row(item_class_id: int) -> Dictionary:
+	if _buy_rows.is_empty() and catalog != null and catalog.available():
+		for row: Dictionary in catalog.rows("MerchantGoods"):
+			if int(row.get("DialogActionTypeID", 0)) != BUY_LIST_ACTION or int(row.get("ItemBlessCodeID", 0)) != 1 or int(row.get("Enchant", 0)) != 0: continue
+			var id: int = int(row.get("ItemClassID", 0))
+			if not _buy_rows.has(id) or int(row.ID) < int(_buy_rows[id].ID): _buy_rows[id] = row
+	return _buy_rows.get(item_class_id, {})
+
+## The original ItemClass of an owned item (a physical `id`, else the stack).
+func _owned_class(name: String, id: String) -> Dictionary:
+	var record: Dictionary = world._find_catalog_item_record(name)
+	if not id.is_empty():
+		var entry: Variant = world.item_instances.get(id, {})
+		if not entry is Dictionary or entry.get("name") != name: return {}
+		record = entry.get("record", record)
+	var class_id: int = int(record.get("source_item_class_id", 0))
+	if class_id <= 0 and str(record.get("sourceId", "")).is_valid_int(): class_id = int(str(record.sourceId))
+	return {"record": record, "class_id": class_id, "bless": int(record.get("source_bless_raw", 1))}
+
+## Sale of `quantity` of `name` (equipment: its physical `id`) at the original
+## buy row: {ok, payment, unit, row, ...} or the refusal.
+func sale_quote(name: String, quantity: int, id: String = "") -> Dictionary:
+	var ready: Dictionary = _ready_for_action()
+	if not ready.ok: return ready
+	if quantity < 1 or quantity > 1000: return fail("판매 수량 오류")
+	var owned: Dictionary = _owned_class(name, id)
+	if owned.is_empty() or int(owned.class_id) <= 0: return fail("원본 매입 대상이 아닙니다")
+	var row: Dictionary = buy_row(int(owned.class_id))
+	if row.is_empty(): return fail("원본 매입 대상이 아닙니다")
+	if int(owned.bless) != 1: return fail("원본 매입은 일반 아이템만 받습니다")
+	var item: Dictionary = catalog.record("ItemClass", int(owned.class_id))
+	var unit: Dictionary = Catalog._checked_product([item.get("Cost", 0), row.get("Percentage", 0), row.get("Amount", 1)])
+	if not unit.ok: return fail("매입가 계산 범위 오류")
+	@warning_ignore("integer_division")
+	var each: int = int(unit.value) / 100
+	if each < 1: return fail("원본 매입가 0")
+	if int(world.inventory.get(name, 0)) < quantity: return fail("판매할 수량이 부족합니다")
+	if world._item_locked(name, id): return fail("잠긴 아이템은 판매할 수 없습니다")
+	var equipment: bool = not world._enhancement_kind_for_record(owned.record).is_empty()
+	if equipment:
+		if id.is_empty() or quantity != 1: return fail("장비는 한 개씩 판매합니다")
+		if int(world.item_instances[id].get("level", 0)) != 0: return fail("원본 매입은 +0 장비만 받습니다")
+		for slot: Variant in world.equipped_items.values():
+			if slot is Dictionary and str(slot.get("instance_id", "")) == id: return fail("장착 중인 장비는 판매할 수 없습니다")
+	elif not id.is_empty(): return fail("소모품에 장비 ID를 사용할 수 없습니다")
+	var total: Dictionary = Catalog._checked_product([each, quantity])
+	if not total.ok or int(world.gold) > LIMIT - int(total.value): return fail("판매 금액 범위 초과")
+	return {"ok": true, "name": name, "id": id, "quantity": quantity, "unit": each, "payment": int(total.value), "equipment": equipment, "item_class_id": int(owned.class_id), "buy_row": int(row.ID), "price_basis": "원본 매입행 #%d · Cost %d × %d%%" % [int(row.ID), int(item.get("Cost", 0)), int(row.get("Percentage", 0))]}
+
+## Sells at the original buy row: the item leaves (a receipted original stack
+## through its receipts, an equipment instance whole) and the adena arrives in
+## one save.
+func sell_to_merchant(name: String, quantity: int, id: String = "") -> Dictionary:
+	var quote: Dictionary = sale_quote(name, quantity, id)
+	if not quote.ok: return quote
+	var started: Dictionary = _start()
+	if not started.ok: return started
+	quote = sale_quote_internal(name, quantity, id)
+	if not quote.ok: _busy = false; return quote
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var extra: Dictionary = {}
+	var STACK: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var receipted: bool = false
+	for value: Variant in world.item_instances.values():
+		if value is Dictionary and value.get("name") == name and value.has(STACK.RECEIPT): receipted = true; break
+	if quote.equipment:
+		instances.erase(id)
+		inventory[name] = int(inventory.get(name, 0)) - 1
+	elif receipted:
+		var debit: Dictionary = native_debit(name, quantity)
+		if not debit.get("ok", false): _busy = false; return fail(str(debit.get("reason", "원본 물리 차감 실패")) + " · 판매하지 않았습니다")
+		inventory = debit.overrides.inventory
+		instances = debit.overrides.item_instances
+		extra["consumable_state"] = debit.overrides.consumable_state
+	else:
+		for value: Variant in world.item_instances.values():
+			if value is Dictionary and value.get("name") == name: _busy = false; return fail("같은 이름의 물리 개체 소유자 확인 필요 · 판매하지 않았습니다")
+		inventory[name] = int(inventory.get(name, 0)) - quantity
+	if int(inventory.get(name, 0)) <= 0: inventory.erase(name)
+	var result: Dictionary = _commit(export_state(), inventory, int(world.gold) + int(quote.payment), instances, int(world.next_item_instance_id), extra)
+	if result.ok: result.merge({"name": name, "quantity": quantity, "payment": int(quote.payment), "reason": "판매 완료 · %s 아데나" % str(int(quote.payment))})
+	return result
+
+func sale_quote_internal(name: String, quantity: int, id: String) -> Dictionary:
+	_busy = false
+	var quote: Dictionary = sale_quote(name, quantity, id)
+	_busy = true
+	return quote
+
 func orders() -> Array:
 	var result: Array = []
 	for id: String in state.orders:
