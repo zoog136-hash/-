@@ -411,7 +411,7 @@ func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int)
 			# receipts (current523_native_stack.stage_debit) or issued by the
 			# shared 523 supplier, as the NPC 상점 already issued native books.
 			var native: Dictionary = _native_supply_binding(int(token.class_id), 1)
-			if not native.is_empty():
+			if not native.is_empty() and not (not giving and native.get("native_equipment", false)):
 				if not giving: native["native_debit"] = true
 				return {"ok":true,"binding":native}
 		return {"ok":true,"binding":binding} if not binding.is_empty() else fail("아이템·재화의 실제 인벤토리 연결 미확인")
@@ -464,7 +464,10 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
-			if (item.get("TestItem", false) and not package) or (not package and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
+			# A native 523 item (no other binding) is admitted by the 523 supplier
+			# only with a resolved lifetime; its name note is no refusal of its own.
+			var native_goods: bool = not package and not _bindings.has("4:%d" % int(token.class_id)) and not _native_supply_binding(int(token.class_id), 1).is_empty()
+			if (item.get("TestItem", false) and not package) or (not package and not native_goods and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
 				return fail("테스트·기간제 상품의 사용·만료 조건 미확인")
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
 		if not resolved.ok: return resolved
@@ -837,7 +840,11 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 		var record: Dictionary=target.binding.get("record",{})
 		if local_context.is_empty() or not npc_definitions.supports_normal_equipment(int(row.MerchantsID),int(row.get("ItemBlessCodeID",0))) or record.get("blessed",false) or str(record.get("bless_state","")).to_lower() in ["blessed","cursed","축복","저주"] or str(record.get("name","")).begins_with("축복받은 "):return fail("NPC 장비 축복·강화 지급 조건 미확정")
 	var original_name: String=str(offer.item.get("Name",""))
-	if offer.item.get("TestItem",false) or original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"):return fail("NPC 기간제·테스트 상품 조건 미확정")
+	# A native 523 item is admitted by the 523 supplier only with a resolved
+	# lifetime (current523_native_stack.supply_profile), so its internal
+	# "이벤트/기간/삭제" name note is no refusal of its own.
+	var native_goods: bool=token.get("native_supply",false)==true
+	if offer.item.get("TestItem",false) or (not native_goods and (original_name.contains("기간") or original_name.contains("삭제") or original_name.contains("이벤트"))):return fail("NPC 기간제·테스트 상품 조건 미확정")
 	var identity: Dictionary=_source_item_identity(int(row.ItemClassID))
 	if identity.get("excluded")==true:return fail("원본 아이템 선언으로 제외된 NPC 상품입니다")
 	var quoted: Dictionary={"ok":true,"can_purchase":true,"offer_id":id,"quantity":quantity,"name":str(target.binding.name),"payment":payment,"payment_binding":binding,"goods":[token],"price_origin":str(price.origin)}
@@ -875,7 +882,10 @@ func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
 	var summary: Dictionary=D.definition_id(str(item_class_id))
 	if summary.is_empty() or summary.get("original_item",{}).get("TestItem",true):return {}
 	var record: Dictionary=D.variant_item(summary.get("native_record",{}),bless)
-	if record.is_empty() or D.equipment(record) or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
+	if record.is_empty() or not D.matches(world._catalog_item_from_source_id(str(record.get("sourceId",""))),record):return {}
+	# Original equipment (e.g. 무관의 장검, 몽둥이) is issued as +0 physical
+	# instances by the same 523 supplier; other items need a stack owner.
+	if D.equipment(record):return {"name":str(record.name),"record":record,"native_supply":true,"native_equipment":true}
 	if preload("res://scripts/loot/current523_native_stack.gd").supply_profile(record).is_empty():return {}
 	return {"name":str(record.name),"record":record,"native_supply":true}
 
