@@ -421,9 +421,34 @@ static func install(world, catalog) -> Dictionary:
 			_walk(world,item_id,seen,0,lookup)
 			var target: Dictionary = _resolve(world,item_id,false,lookup)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
+	# The same original boxes sold for game currency (다이아, 명예 코인, 아데나,
+	# 마일리지 …) in the displayed BM shop (user report 2026-11-21: 52 box
+	# products, e.g. 발라카스의 전투 스톤 패키지, were refused). Only boxes are
+	# bound here; their contents open through the same original rules.
+	for purchase_id: int in displayed_purchases(catalog):
+		if CashMarket.listed(purchase_id): continue
+		var offer: Dictionary = catalog.market_offer(purchase_id)
+		for link: Dictionary in offer.get("products", []) + offer.get("bonuses", []):
+			var product: Dictionary = link.product.definition
+			if int(product.get("UnitID", 0)) != 4 or not is_package(int(product.get("ClassID", 0))): continue
+			var box_id: int = int(product.ClassID)
+			if bindings.has("4:%d" % box_id): continue
+			_walk(world,box_id,seen,0,lookup)
+			var box: Dictionary = _resolve(world,box_id,false,lookup)
+			if box.kind == "box": bindings["4:%d" % box_id] = {"name":str(box.name), "record":box.record.duplicate(true)}
 	if lookup != null: lookup.close()
 	world._index_item_weights()
 	return bindings
+
+## Purchase IDs the original MarketDisplay lists, ascending.
+static func displayed_purchases(catalog) -> Array[int]:
+	var found: Dictionary = {}
+	for row: Dictionary in catalog.rows("MarketDisplay"): found[int(row.get("PurchaseID", 0))] = true
+	var ids: Array[int] = []
+	for id: Variant in found.keys():
+		if int(id) > 0: ids.append(int(id))
+	ids.sort()
+	return ids
 
 static func current_class(world) -> int:
 	return int(preload("res://scripts/loot/current523_native_stack.gd").current_class(world))

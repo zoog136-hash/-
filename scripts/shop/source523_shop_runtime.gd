@@ -447,13 +447,14 @@ func _products(offer: Dictionary, quantity: int) -> Dictionary:
 			continue
 		if int(token.unit_id) == 4:
 			var identity: Dictionary = _source_item_identity(int(token.class_id))
-			if identity.get("excluded") == true and not (cash and CashPackages.is_package(int(token.class_id))): return fail("원본 아이템 선언으로 제외된 상품입니다")
+			# An original box (LuckyBag/SelectReward/draw pack) of any BM offer
+			# opens through source523_cash_packages; its internal name carries the
+			# client's BM deletion note, which offline TWILIGHT keeps.
+			var package: bool = CashPackages.is_package(int(token.class_id)) and _bindings.has("4:%d" % int(token.class_id))
+			if identity.get("excluded") == true and not package: return fail("원본 아이템 선언으로 제외된 상품입니다")
 			source_items[str(int(token.class_id))] = identity
 			var item: Dictionary = catalog.record("ItemClass", int(token.class_id))
 			var original_name: String = str(item.get("Name", ""))
-			var package: bool = cash and CashPackages.is_package(int(token.class_id))
-			# Cash package boxes carry the original BM deletion note in their internal
-			# name; offline TWILIGHT keeps them (see source523_cash_packages.gd).
 			if (item.get("TestItem", false) and not package) or (not package and (original_name.contains("삭제") or original_name.contains("기간") or original_name.contains("이벤트"))):
 				return fail("테스트·기간제 상품의 사용·만료 조건 미확인")
 		var resolved: Dictionary = _resolve(token, true, world.inventory, int(world.gold))
