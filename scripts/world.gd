@@ -6445,12 +6445,62 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 
 func _use_potion() -> void:
 	if death_recovery.blocked(): return
-	# The original 523 HP potion; the pre-November "HP 물약" is not used.
-	var names: Array[String] = preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self)
-	if names.is_empty():
-		hud.show_message("원본 체력 회복제가 없습니다")
+	# The HUD potion slot (왼쪽 위 캐릭터 정보 옆): the potion the player chose
+	# there, else the original 523 HP potion (#233).
+	var chosen: String = hud_potion_name()
+	if chosen.is_empty():
+		# The chooser lists the owned ones (a rule-refused potion greyed) or
+		# says none is owned.
+		if hud.has_method("open_hud_potion_choice"): hud.open_hud_potion_choice()
+		else: hud.show_message("보유한 체력 회복 물약이 없습니다")
 		return
-	_use_quick_item(names[0])
+	_use_quick_item(chosen)
+
+const HUD_POTION_KEY := "hud_potion_item"
+## Owned HP-restoring items for the HUD potion slot, each with the reason it
+## cannot be drunk now (원본 레벨·직업 제한 등; empty when usable).
+func hud_potion_candidates() -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var native_use: Script = preload("res://scripts/loot/patch523_item_use.gd")
+	for key: Variant in inventory:
+		var name_value: String = str(key)
+		if int(inventory.get(name_value, 0)) <= 0: continue
+		var record: Dictionary = _find_catalog_item_record(name_value)
+		if record.is_empty(): continue
+		var native_hp: bool = str(stack.profile(record).get("kind", "")) == "hp"
+		if not native_hp and not (str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0): continue
+		var reason: String = PATCH523_ITEM_USE.reason(_patch523_use_record(name_value), level, BASE508.source_class_id(job_class))
+		if reason.is_empty() and native_hp: reason = str(native_use.eligibility(self, record))
+		rows.append({"name":name_value,"count":int(inventory[name_value]),"reason":reason,"item_class_id":int(record.get("source_item_class_id", 0)),"heal":int(record.get("heal", 0))})
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.heal) < int(b.heal) if int(a.heal) != int(b.heal) else str(a.name) < str(b.name))
+	return rows
+
+## The potion the HUD slot drinks: the chosen one while owned and usable,
+## else the first usable owned original HP potion (#233 first).
+func hud_potion_name() -> String:
+	var chosen: String = str(ui_preferences.get(HUD_POTION_KEY, ""))
+	var candidates: Array[Dictionary] = hud_potion_candidates()
+	for row: Dictionary in candidates:
+		if row.name == chosen and str(row.reason).is_empty(): return chosen
+	for name_value: String in preload("res://scripts/loot/current523_starter_kit.gd").quickslot_names(self):
+		for row: Dictionary in candidates:
+			if row.name == name_value and str(row.reason).is_empty(): return name_value
+	for row: Dictionary in candidates:
+		if str(row.reason).is_empty(): return str(row.name)
+	return ""
+
+func select_hud_potion(item_name: String) -> bool:
+	for row: Dictionary in hud_potion_candidates():
+		if row.name != item_name: continue
+		if not str(row.reason).is_empty():
+			hud.show_message(str(row.reason))
+			return false
+		ui_preferences[HUD_POTION_KEY] = item_name
+		hud.set_quick_items(inventory)
+		_request_deferred_save()
+		return true
+	return false
 
 func _use_quick_item(item_name: String) -> void:
 	if death_recovery.blocked(): return
