@@ -348,6 +348,7 @@ func run() -> void:
 		BANK.forget_verified_members()
 		var trial_bank: CountingBank = open_bank(trial_info)
 		var trial: Node2D = make_view(root, trial_bank, make_track(trial_bank, {"effect_attrs":["999"] if mutation == "hidden_effect_member" else []}), trial_info.path, true)
+		if mutation == "deleted": trial.use_companion_frame_plans()
 		check(trial.advance_reference_source(0.0, "idle", 0) and trial.advance_reference_source(0.0, "idle", 0), mutation + ": warm cached frame")
 		var target: String = trial_info.raws[9004 if mutation == "hidden_effect_member" else 9002]
 		match mutation:
@@ -378,6 +379,21 @@ func run() -> void:
 	budgeted._reference_texture_budget = {"limit":1024 * 1024, "used":0}
 	check(budgeted.advance_reference_source(0.0, "idle", 0) and not budgeted.cached_frame_status().active, "texture-budgeted effect owner keeps the per-layer path")
 	budgeted.free()
+	var companion_bank: CountingBank = open_bank(info)
+	var companion_track: Dictionary = make_track(companion_bank, {"effect_attrs":["8"]})
+	var companion: Node2D = make_view(root, companion_bank, companion_track, info.path, false)
+	var per_layer: Node2D = make_view(root, companion_bank, companion_track, info.path, false)
+	companion.use_companion_frame_plans()
+	for direction: int in 8:
+		for _frame: int in 3:
+			check(companion.advance_reference_source(0.1,"idle",direction) and per_layer.advance_reference_source(0.1,"idle",direction), "companion preserves playback")
+			same_output(companion, per_layer, "companion direction %d" % direction)
+	check(companion.cached_frame_status().plans == 16, "companion plans stay at their own cap")
+	check(companion.cached_frame_status().groups == {"body":"nodes","effects":"nodes"} and companion._composite_nodes.is_empty(), "companion keeps layer textures without composite uploads")
+	companion_bank.reset_counts()
+	check(companion.advance_reference_source(0.0,"idle",7) and companion_bank.rechecks == 1 and companion_bank.validations == 0, "warm companion pose uses the existing pin/member recheck")
+	companion.free()
+	per_layer.free()
 	# 6. CPU per advance (synthetic, this machine; phone ~30-60x slower).
 	measure(info)
 	# 7. GPU pixels (gl_compatibility) for every config.
@@ -386,6 +402,7 @@ func run() -> void:
 			COMPOSITOR.screen_copy_available = copy
 			for config: Dictionary in configs:
 				await gpu_compare(info, config, copy)
+			await gpu_compare(info, {"name":"companion","effect_attrs":["8"]}, copy, true)
 	COMPOSITOR.screen_copy_available = previous_copy
 	print("ACTOR_FRAME_COMPOSITE_CACHE_RESULT " + JSON.stringify({"checks":checks,"render_checks":render_checks,"failures":failures,"timings_usec_per_advance":timings,"cache":COMPOSITES.stats(),"synthetic_only":true}))
 	quit(0 if failures.is_empty() else 1)
@@ -415,7 +432,7 @@ func measure(info: Dictionary) -> void:
 			timings["%s_%s" % [config.name, "cached" if cached else "per_layer"]] = {"same_frame":snappedf(same, 0.1),"changing_frame":snappedf(changing, 0.1),"same_frame_unshared_file_checks":snappedf(cold, 0.1)}
 			view.free()
 
-func gpu_compare(info: Dictionary, config: Dictionary, copy: bool) -> void:
+func gpu_compare(info: Dictionary, config: Dictionary, copy: bool, companion_mode: bool = false) -> void:
 	var bank: CountingBank = open_bank(info)
 	var track: Dictionary = make_track(bank, config)
 	var viewports: Array = []
@@ -432,6 +449,7 @@ func gpu_compare(info: Dictionary, config: Dictionary, copy: bool) -> void:
 		background.z_index = -10
 		viewport.add_child(background)
 		var view: Node2D = make_view(viewport, bank, track, info.path, cached)
+		if cached and companion_mode: view.use_companion_frame_plans()
 		view.position = Vector2(8, 8)
 		view.modulate.a = float(config.get("alpha", 1.0))
 		if config.get("strict", false): view._playback_mode = "strict"

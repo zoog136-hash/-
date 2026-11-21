@@ -38,13 +38,23 @@ class FakeMarket extends RefCounted:
 	var registered: Array=[]
 	var settled: int=0
 	var sold: bool=false
+	var large_count: int=0
 	func categories() -> Array:
 		return [{"id":1,"name":"무 기","children":[{"id":61,"name":"한손검"},{"id":71,"name":"도 끼"}]},{"id":41,"name":"소모품","children":[{"id":331,"name":"물 약"}]}]
 	func category_name(id: int) -> String:
 		return {1:"무 기",61:"한손검",41:"소모품"}.get(id,"")
 	func search(_category: int, _query: String="") -> Array:
+		if large_count>0:
+			var rows: Array=[]
+			for index: int in large_count:
+				rows.append({"item_class_id":40001+index,"name":"근사 검 %d"%index,"min_price":120+index,"count":3,"approx":true,"grade":3})
+			return rows
 		return [{"item_class_id":366,"name":"가죽","min_price":1,"count":3,"approx":false,"grade":1},{"item_class_id":40001,"name":"근사 검","min_price":120,"count":3,"approx":true,"grade":3}]
 	func listings(_id: int) -> Array:
+		if large_count>0:
+			var rows: Array=[]
+			for index: int in large_count:rows.append(_row("approx:40001:%d"%index,true))
+			return rows
 		return [_row("snapshot:a",false),_row("approx:40001:0",true)]
 	func _row(key: String, approx: bool) -> Dictionary:
 		return {"key":key,"name":"근사 검","item_class_id":40001,"bundle_size":1,"bundle_price":120,"unit_price":120.0,"unit_price_display":120,"available":1,"enchant":0,"approx":approx,"grade":3}
@@ -116,6 +126,7 @@ func _rules() -> void:
 	check(MARKET.validate_state(bad).is_empty(),"a stack listing validates")
 	bad.listings["5"].kind="instance"
 	check(not MARKET.validate_state(bad).is_empty(),"an equipment listing needs its stored instance")
+	check(WINDOW._market_span(240,0,400,80)==Vector2i(0,6) and WINDOW._market_span(240,-18800,400,80)==Vector2i(234,240),"market spans include the first and last visible rows with one buffer row")
 	check(WINDOW._money(9999)=="9999" and WINDOW._money(99999)=="9만9999" and WINDOW._money(20000)=="2만","the original 9만9999 money format")
 	check(WINDOW._unit(0.005)=="0.01" and WINDOW._unit(120.0)=="120","unit prices keep two decimals below 100")
 	check(HUD_CONTROLLER.FEATURE_WINDOWS.get("trade")==WINDOW,"the trade window is a registered feature window")
@@ -126,7 +137,9 @@ func _rules() -> void:
 	var world:=FakeWorld.new()
 	world.add_child(hud)
 	root.add_child(world)
-	check(window.open(Node2D.new()).get("code")!="","the window does not open before it is configured")
+	var parent:=Node2D.new()
+	check(window.open(parent).get("code")!="","the window does not open before it is configured")
+	parent.free()
 	world.queue_free()
 
 func _real_pack(pack_dir: String) -> void:
@@ -188,11 +201,55 @@ func _real_pack(pack_dir: String) -> void:
 	check(history.get("handled",false) and int(history.filled.rows)==1,"정산 내역 lists the history")
 	window._world_pressed()
 	check(hud.shown.has("월드 거래소는 온라인 전용입니다 · 서버 거래소를 이용하세요"),"월드 거래소 explains it is online-only")
+	await _large_lists(window,fake)
 	window._close_requested()
 	check(not window.is_open(),"Btn_Close closes the window")
 	await process_frame
 	parent.queue_free()
 	world.queue_free()
+
+func _large_lists(window: RefCounted, fake: FakeMarket) -> void:
+	fake.large_count=240
+	var opened: Dictionary=window._set_tab("search")
+	check(opened.get("ok",false) and opened.filled.items==240,"large category retains all 240 item rows")
+	if not opened.get("ok",false):return
+	var key: String=_list_key(window,WINDOW.ITEM_ROW)
+	check(not key.is_empty(),"item list has a virtual scroll state")
+	if key.is_empty():return
+	var state: Dictionary=window._scrolls[key]
+	var first: Node2D=state.mounted[0]
+	window._scroll_to(key,-1.0)
+	check(state.mounted.get(0)==first and state.mounted.size()<12,"same visible range reuses original item rows")
+	window._scroll_to(key,state.min)
+	await process_frame
+	await process_frame
+	check(state.mounted.has(239) and state.content.get_child_count()==state.mounted.size() and state.mounted.size()<12,"item scrolling reaches the final row and frees old scenes")
+	var button: Callable=_row_action(state.mounted.get(239),&"_item_pressed")
+	check(button.is_valid(),"the last row binds its original sale list button")
+	if not button.is_valid():return
+	var listings: Dictionary=button.call()
+	check(listings.get("ok",false) and window.result_item==40240 and listings.filled.listings==240,"last item opens its exact ID and all listings")
+	if not listings.get("ok",false):return
+	key=_list_key(window,WINDOW.RESULT_ROW)
+	check(not key.is_empty(),"listing list has a virtual scroll state")
+	if key.is_empty():return
+	state=window._scrolls[key]
+	window._scroll_to(key,state.min)
+	check(state.mounted.has(239) and state.mounted.size()<12,"last listing stays reachable with bounded live rows")
+	button=_row_action(state.mounted.get(239),&"_listing_pressed")
+	check(button.is_valid() and button.call().get("ok",false) and window.popup_key=="approx:40001:239","last listing opens the exact purchase popup")
+
+static func _row_action(scene: Node2D, method: StringName) -> Callable:
+	if not is_instance_valid(scene):return Callable()
+	for binding: Dictionary in scene._bindings.values():
+		var action: Variant=binding.get("activate")
+		if action is Callable and action.get_method()==method:return action
+	return Callable()
+
+static func _list_key(window: RefCounted, member: String) -> String:
+	for key: String in window._scrolls:
+		if window._scrolls[key].get("member")==member:return key
+	return ""
 
 ## The real Main: the HUD menu opens the original window over the real
 ## definitions, frozen snapshot and saves (test wallet only).

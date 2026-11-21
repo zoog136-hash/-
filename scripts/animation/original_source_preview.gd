@@ -816,6 +816,7 @@ func _verify_unchanged_layers(selected: Dictionary) -> bool:
 ## render_layer()), instead of render_layer() plus style work per layer.
 const COMPOSITES = preload("res://scripts/resources/actor_frame_composite_cache.gd")
 const FRAME_PLAN_MAX: int = 512
+const COMPANION_FRAME_PLAN_MAX: int = 16
 static var cached_frames_enabled: bool = not "--twilight-actor-frame-cache-off" in OS.get_cmdline_user_args()
 ## Plans without compositing (every group keeps its nodes): diagnostics.
 static var composite_groups_enabled: bool = not "--twilight-actor-composite-off" in OS.get_cmdline_user_args()
@@ -825,10 +826,17 @@ var cached_frames: bool = false
 ## textures alive (523.652 in town: app memory 2,158 MB and still growing).
 ## Actors shown in large numbers lower it.
 var frame_plan_max: int = FRAME_PLAN_MAX
+var _compose_frame_groups: bool = true
 var _frame_plans: Dictionary = {} # applied frame hash -> plan, oldest first
 var _cached_applied_plan: Dictionary = {}
 var _cached_applied_translucent: bool = false
 var _composite_nodes: Dictionary = {} # group -> Sprite2D
+
+## Followers reuse draw plans while retaining their existing layer textures.
+func use_companion_frame_plans() -> void:
+	cached_frames = true
+	frame_plan_max = COMPANION_FRAME_PLAN_MAX
+	_compose_frame_groups = false
 
 func _cached_frames_allowed() -> bool:
 	# Shared effect texture budgets charge per-layer textures: keep that path.
@@ -979,6 +987,7 @@ func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes:
 	return plan
 
 func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
+	if not _compose_frame_groups: return {"mode":"nodes"}
 	var items: Array = []
 	for spec: Dictionary in drawn:
 		if not spec.recovered.is_empty() or spec.alpha != 1.0 or SP2_COMPOSITOR.material_blend(spec.material) != CanvasItemMaterial.BLEND_MODE_MIX: composable = false
@@ -1445,6 +1454,7 @@ func _advance_reference_children(delta: float, stored_direction: int, parent_att
 			child.playback_mode_override = _playback_mode
 			child.cached_frames = cached_frames
 			child.frame_plan_max = frame_plan_max
+			child._compose_frame_groups = _compose_frame_groups
 			add_child(child)
 			if not child._configure_reference_bank(_manifest_path,str(lineage.get("manifest_sha256","")),int(attachment.target_sprite_id),{"source_layer":int(attachment.child_action_id)},{"source_layer":bool(_playback_tracks[_role].loop)},"source_layer","overlay") or child._playback_tracks.source_layer.get("source_action_key","") != attachment.child_source_action_key:
 				_reference_child_problem = child.reference_bank_status.duplicate(true)

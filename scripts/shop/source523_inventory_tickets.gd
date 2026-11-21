@@ -38,6 +38,10 @@ var model_input_identity:Dictionary={}
 var last_input_attempt:Dictionary={}
 var problem:String=""
 var random:=RandomNumberGenerator.new()
+## Original pools only a market draw offer names (e.g. 상급 성물/마법인형
+## 뽑기(아데나) pools 1688/1308): read on demand with the same whole-pool rule
+## as the ticket model; kept out of `document` so its policy identity stays.
+var market_pools:Dictionary={}
 
 func _init() -> void:
 	random.randomize()
@@ -222,7 +226,7 @@ func _candidates(grants:Array) -> Dictionary:
 	var pools:Dictionary={};var category:String="";var count:int=0;var missing:Array=[]
 	for grant:Dictionary in grants:
 		var pool_id:String=str(int(grant.pool_id));var candidates:Array=[]
-		for entry:Dictionary in document.pools[pool_id]:
+		for entry:Dictionary in pool_entries(int(grant.pool_id)):
 			if int(entry.weight)==0:continue
 			var card_id:int=int(entry.card_id)
 			var spell:Dictionary=runtime.catalog.record("BuffCard",card_id)
@@ -340,6 +344,17 @@ func draw(prepared:Dictionary,rng:RandomNumberGenerator,scratch) -> Dictionary:
 			results.append(received)
 	return {"ok":true,"results":results}
 
+## The weighted entries of original pool `pool_id`: the ticket model's, else
+## the market-only pool read whole from GotChaEntityView ([] when the pool is
+## missing, mistyped, not totalling 1,000,000 or declared excluded).
+func pool_entries(pool_id:int) -> Array:
+	var key:String=str(pool_id)
+	if document.get("pools",{}).get(key) is Array:return document.pools[key]
+	if not market_pools.has(key):
+		var input=OriginalInput.new()
+		market_pools[key]=input._pool(pool_id)
+	return market_pools[key]
+
 ## An original market draw offer (MarketProduct UnitID 35 = GotChaClassID, e.g.
 ## 상급 변신 뽑기 1회): `grants` [{product_id, pool_id, count}] are drawn from the
 ## same original pools and weights as an owned ticket of this model.
@@ -350,7 +365,7 @@ func market_draw_quote(grants:Array) -> Dictionary:
 	if not prior.is_empty() and prior.get("policy_sha256")!=loaded_sha and prior.get("policy_sha256") not in PREVIOUS_POLICY_SHA256:return runtime.fail("뽑기 풀·정책 변경 감지 · 기존 정책 필요")
 	var total:int=0
 	for grant:Dictionary in grants:
-		if not document.pools.get(str(int(grant.pool_id))) is Array:return runtime.fail("원본 뽑기 풀 연결 없음 (%d)" % int(grant.pool_id))
+		if pool_entries(int(grant.pool_id)).is_empty():return runtime.fail("원본 뽑기 풀 연결 없음 (%d)" % int(grant.pool_id))
 		total+=int(grant.count)
 	if total<1 or total>MAX_MARKET_DRAWS:return runtime.fail("한 번에 %d회까지 뽑을 수 있습니다" % MAX_MARKET_DRAWS)
 	var drawn:Dictionary=_candidates(grants)

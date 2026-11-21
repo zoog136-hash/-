@@ -30,6 +30,12 @@ var cleanup_time: float = 0.0
 var overlay: PanelContainer
 var info: Label
 var pickup_button: Button
+## The HUD pickup button (next to 셀프): keep collecting the next nearby drop
+## after each one until none is left, the player moves or a drop is
+## unreachable (user list 2026-11-21 #25).
+var sweep: bool = false
+var sweep_picked: int = 0
+const SWEEP_LIMIT: int = 50
 
 func configure(owner_world: Node, service: TwilightGroundLootManager) -> void:
 	world = owner_world
@@ -141,7 +147,39 @@ func request_selected() -> void:
 	world.set("pending_ground_pickup", manager.views[target_id])
 	_advance_target()
 
+## The HUD pickup button: the selected drop, else the nearest reachable
+## drops around the player within SCAN_RADIUS, one after another. Returns
+## whether a pickup started.
+func request_nearby(continuing: bool = false) -> bool:
+	if not selected_id.is_empty() and manager.views.has(selected_id):
+		# Set before the request: a drop already in reach is collected inside it.
+		sweep = true
+		request_selected()
+		if mode != "manual": sweep = false
+		return true
+	if not continuing: sweep_picked = 0
+	if player.is_stunned() or player.is_feared() or player.is_held():
+		world.hud.show_message("이동 불가 상태에서는 아이템을 주울 수 없습니다")
+		return false
+	var candidates: Array[String] = []
+	for id: String in manager.views.keys():
+		if float(blocked.get(id, 0)) > clock: continue
+		if manager.valid_view(manager.views[id]) and player.global_position.distance_to(_destination(id)) <= SCAN_RADIUS: candidates.append(id)
+	if candidates.is_empty() or sweep_picked >= SWEEP_LIMIT:
+		sweep = false
+		return false
+	candidates.sort_custom(_priority)
+	var id: String = candidates[0]
+	cancel()
+	selected_id = id
+	(manager.views[id] as TwilightGroundLoot).set_selected(true)
+	sweep = true
+	request_selected()
+	if mode != "manual": sweep = false
+	return true
+
 func cancel() -> void:
+	sweep = false
 	if manager != null and manager.views.has(selected_id):
 		(manager.views[selected_id] as TwilightGroundLoot).set_selected(false)
 	if not target_id.is_empty() and is_instance_valid(player): player.clear_click_path()
@@ -184,8 +222,12 @@ func _destination(id: String) -> Vector2:
 
 func _reject_target() -> void:
 	var was_manual: bool = mode == "manual"
+	var sweeping: bool = sweep and was_manual
 	blocked[target_id] = clock + BLOCKED_RETRY
 	cancel()
+	# The pickup button goes on with the next nearby drop (blocked ones are
+	# skipped); only a single chosen drop reports that it cannot be reached.
+	if sweeping and request_nearby(true): return
 	if was_manual: world.hud.show_message("아이템에 접근할 수 없습니다")
 
 func _advance_target() -> bool:
@@ -196,7 +238,11 @@ func _advance_target() -> bool:
 	if player.global_position.distance_to(destination) <= PICKUP_RADIUS and bool(world.call("_has_line_of_sight_world", player.global_position, destination)):
 		player.clear_click_path()
 		if bool(world.call("_collect_ground_drop", view)):
+			var again: bool = sweep and mode == "manual"
 			cancel()
+			if again:
+				sweep_picked += 1
+				request_nearby(true)
 		return true
 	if stuck_time > 2.2:
 		_reject_target()
