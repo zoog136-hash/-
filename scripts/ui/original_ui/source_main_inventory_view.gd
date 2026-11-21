@@ -174,6 +174,17 @@ func select(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
 	return _slots.select_reference(reference)
 
+## The bag armed or disarmed an item (single tap / timeout / use): update
+## the original Label_Center marker on every built slot.
+func refresh_actions() -> Dictionary:
+	if not is_open():return _unsupported("source_inventory_view_not_open")
+	var shown: int=0
+	for reference: String in _hits:
+		var result: Dictionary=_slots.refresh_action(_hits[reference].native_slot_scene,reference)
+		if not result.get("ok",false):return result
+		if not _slots.action_text(reference).is_empty():shown+=1
+	return {"ok":true,"shown":shown}
+
 func activate_selected(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
 	# The existing PointerTransfer/host decides double-tap or explicit use.

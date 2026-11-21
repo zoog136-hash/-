@@ -3796,6 +3796,12 @@ func original_skill_window_is_open() -> bool:
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
+func original_inventory_refresh_actions() -> Dictionary:
+	return original_main_ui_controller.inventory_refresh_actions() if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_refresh_actions") else {}
+
+func original_ui_font(path: String) -> FontFile:
+	return original_main_ui_controller.original_font(path) if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("original_font") else null
+
 func original_inventory_name_hint_context(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}
 
