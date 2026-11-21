@@ -3189,6 +3189,22 @@ func _center_world_map(view: Object, world_id: int, world_node: Node) -> Diction
 	var local: Vector2=transform.affine_inverse().basis_xform(-move)
 	return view.call("set_scroll_position",Vector2(geometry.content_position)+Vector2(local.x,-local.y))
 
+## 사용자 목록 11: the minimap's tap opens the original world map (false: no
+## original map is connected, the minimap keeps its walk). An open map stays open.
+func open_world_map_from_minimap() -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_world_map_binding():return false
+	if not original_main_ui_controller.world_map_is_open():toggle_map()
+	return true
+
+## Map_All 내 위치 보기: the open map scrolls back to the player's spot.
+func center_world_map_on_player() -> Dictionary:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.world_map_is_open():return {"ok":false,"reason":"world_map_not_open"}
+	var offered: Variant=original_main_ui_status.get("world_map",{}).get("offered_world_id")
+	var view: Variant=original_main_ui_controller.get("_world_map")
+	var world_node: Node=get_parent()
+	if typeof(offered)!=TYPE_INT or not is_instance_valid(view) or not is_instance_valid(world_node) or world_node.get("field_map")==null:return {"ok":false,"reason":"world_map_center_unavailable"}
+	return _center_world_map(view,int(offered),world_node)
+
 func toggle_map() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_world_map_binding():
 		if not original_main_ui_controller.world_map_is_open():_close_workspace()
@@ -3408,8 +3424,6 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 	if get_parent().field_map is OriginalPlayableField and get_parent().field_map.uses_original_gameplay_rules():
 		selector.select(1)
 		populate.call()
-	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
-	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))
 
 
 func open_normal_card_collections(category: String,identity: String="") -> void:
