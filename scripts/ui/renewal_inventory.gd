@@ -458,6 +458,7 @@ func set_character_state(value: Dictionary) -> void:
 	if fingerprint == inventory_fingerprint:
 		return
 	inventory_fingerprint = fingerprint
+	_grouped_reward_amounts.clear()
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)
@@ -546,7 +547,7 @@ func _bind_reusable_slot(button: Button,reference: String) -> void:
 	var grade: String = str(record.get("grade","일반"))
 	var level: int = _enhance_level(reference)
 	var equipped: bool = _is_item_equipped(reference)
-	var amount: int = 1 if not _ref_instance_id(reference).is_empty() else int(inventory.get(item_name,0))
+	var amount: int = _bag_display_amount(reference)
 	var locked: bool = bool(character_state.get("item_locks",{}).get(reference,false))
 	var signature: int = hash([reference,record,level,equipped,amount,locked,reference==selected_item])
 	if int(button.get_meta("signature",-1)) == signature:return

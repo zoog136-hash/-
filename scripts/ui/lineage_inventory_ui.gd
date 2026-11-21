@@ -5,6 +5,8 @@ const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const QUEST_GEAR=preload("res://scripts/quests/quest_equipment523.gd")
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
+const REWARD_STACKS=preload("res://scripts/ui/quest_reward_bag_stacks.gd")
+var _grouped_reward_amounts: Dictionary = {}
 
 static func instance_id_less(a: String,b: String) -> bool:
 	# IDs are opaque ownership keys. Compare decimal legacy IDs without an
@@ -284,6 +286,7 @@ func set_character_state(state: Dictionary) -> void:
 	var fingerprint: int = hash([state.get("equipped_items",{}),state.get("enhancement_levels",{}),state.get("item_instances",{}),state.get("item_locks",{})])
 	if fingerprint == state_item_fingerprint:return
 	state_item_fingerprint = fingerprint
+	_grouped_reward_amounts.clear()
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)
@@ -291,6 +294,7 @@ func set_character_state(state: Dictionary) -> void:
 func set_inventory(value: Dictionary) -> void:
 	if inventory == value:return
 	inventory = value.duplicate(true)
+	_grouped_reward_amounts.clear()
 	if selected_item != "" and int(inventory.get(_base_item_name(selected_item), 0)) <= 0:
 		selected_item = ""
 	_refresh_inventory_grid()
@@ -343,7 +347,10 @@ const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
 
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
+	_grouped_reward_amounts.clear()
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var locks: Dictionary = character_state.get("item_locks", {})
+	var reward_caps: Dictionary = {}
 	var names: Array = inventory.keys()
 	names.sort()
 	# Group physical IDs by name in one pass instead of rescanning every
@@ -366,16 +373,26 @@ func _inventory_entries() -> Array[Dictionary]:
 		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
+			var reward_bins: Dictionary = {}
 			for id: String in instance_ids:
-				# A 523 native stack instance carries its remaining count in
-				# source_native_stack_quantity (a 100 potion stack showed "1").
-				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(instances[id])})
+				var physical: Dictionary = instances[id]
+				var entry: Dictionary = {"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(physical)}
+				var grouped: Dictionary = REWARD_STACKS.grouped_row(entry,physical,locks,reward_caps,reward_bins)
+				if grouped.is_empty(): entries.append(entry)
+				else: _grouped_reward_amounts[grouped.reference] = grouped.amount
 	return entries
 
 static func _owned_slot_amount(physical: Dictionary) -> int:
 	for field: String in ["source_native_stack_quantity", "source_reward_quantity", "source_awakening_quantity", "source_card_currency_quantity"]:
 		if physical.has(field): return maxi(0, int(physical[field]))
 	return 1
+
+func _bag_display_amount(reference: String) -> int:
+	if _grouped_reward_amounts.has(reference): return int(_grouped_reward_amounts[reference])
+	var id: String = _ref_instance_id(reference)
+	if id.is_empty(): return int(inventory.get(_base_item_name(reference),0))
+	var physical: Dictionary = character_state.get("item_instances",{}).get(id,{})
+	return _owned_slot_amount(physical) if not physical.is_empty() else 0
 
 func _refresh_inventory_grid() -> void:
 	if item_grid == null:return
@@ -695,8 +712,7 @@ func _refresh_detail(item_name: String) -> void:
 	var selected_id: String = _ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
 	var record := _find_item_record(selected_reference)
-	var selected_physical: Dictionary=character_state.get("item_instances",{}).get(selected_id,{})
-	var amount: int = (_owned_slot_amount(selected_physical) if not selected_physical.is_empty() else 0) if selected_id != "" else int(inventory.get(item_name, 0))
+	var amount: int = _bag_display_amount(selected_reference)
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
