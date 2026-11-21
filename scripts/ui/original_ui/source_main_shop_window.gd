@@ -35,12 +35,19 @@ const SHOP_TAB_PRESSED=14484
 const STORAGE_TAB_NORMAL=12376
 const STORAGE_TAB_PRESSED=10248
 const STORAGE_NEW=9868
-const PAGE_SCOPE: Array[int]=[41516,40880,32588,32156]
+## Img_Line_1, Bg, ListView. The page's left column (Img_Line_2 over the
+## Tab_2 / Shop_Tab_Recommend side list, 276 wide) is not mounted: this game
+## has no side list, so the column was an empty space (user list 2026-11-21
+## #14 "상점 탭 왼쪽 빈 공간 삭제"). The tab bar, line, frame and card list move
+## left by its width and the tab bar / card list use that width.
+const PAGE_SCOPE: Array[int]=[41516,32588,32156]
+const LEFT_COLUMN: float=276.0
+const SHIFTED: Array[int]=[41516,32588,32156,30896]
 const LIST=32156
-const LIST_SIZE:=Vector2(900,470)
+const LIST_SIZE:=Vector2(900.0+LEFT_COLUMN,470)
 ## The category tab bar (empty ListView) and the page's own tab button.
 const TAB_BAR=30896
-const TAB_BAR_WIDTH: float=910.0
+const TAB_BAR_WIDTH: float=910.0+LEFT_COLUMN
 const TAB_SAMPLE_LIST=32900
 const TAB_SAMPLE=36504
 const TAB_NORMAL=38396
@@ -207,6 +214,10 @@ func _stage() -> Dictionary:
 	if not result.get("ok",false):next.free();return result
 	var page: Dictionary=next.project_player([TAB_PROJECT])
 	if not page.get("ok",false):next.free();return page
+	for offset: int in SHIFTED:
+		var moved: Variant=page.player.get("source_nodes").get(offset)
+		if moved is Node2D:(moved as Node2D).position.x-=LEFT_COLUMN
+		elif moved is Control:(moved as Control).position.x-=LEFT_COLUMN
 	var list_node: Variant=page.player.get("source_nodes").get(LIST)
 	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:next.free();return _fail("source_shop_window_list_content_missing")
