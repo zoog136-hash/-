@@ -714,8 +714,15 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var profile: Dictionary=merchant_prices.get(str(id),{})
 	if quantity<1 or quantity>1000:return fail("구매 수량 오류")
 	var row: Dictionary=offer.goods
-	for key: String in ["LimitServerCount","Enchant","ElementalEnchant"]:
+	for key: String in ["Enchant","ElementalEnchant"]:
 		if int(row.get(key,0))!=0:return fail("NPC의 서버·카드·장비 조건 미해석")
+	# LimitServerCount: the whole server's stock per refresh. Offline TWILIGHT
+	# is one player on one server (TWILIGHT 근사), so the stock caps this
+	# save's own counter on the same refresh; the original personal LimitCount
+	# (1 on every such row, stock 5 or 10) stays the smaller limit.
+	if int(row.get("LimitServerCount",0))>0:
+		row=row.duplicate()
+		row.LimitCount=int(row.LimitServerCount) if int(row.LimitCount)<=0 else mini(int(row.LimitCount),int(row.LimitServerCount))
 	# TWILIGHT 근사: LimitBuffCardID = that card owned (card_requirement523).
 	var card_rule = preload("res://scripts/cards/card_requirement523.gd")
 	if int(row.get("LimitBuffCardID",0))!=0 and not card_rule.satisfied(world,int(row.LimitBuffCardID)):return fail("원본 조건: %s 카드 보유 필요" % card_rule.label(int(row.LimitBuffCardID)))
