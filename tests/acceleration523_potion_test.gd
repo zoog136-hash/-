@@ -59,10 +59,12 @@ func rules() -> void:
 		check(wafer.get("activation_status") == "unrestricted" and is_equal_approx(float(wafer.typed_effects.get("move_speed",0)), 12.5), "a 12.5 % acceleration is kept exact")
 		var plain_fraction: Dictionary = PROJECTION.timed_buff(definition([effect("MoveSpeedBonus","Percentage",125000.0)], 1.0))
 		check(plain_fraction.get("activation_status") == "blocked", "a fractional percent outside acceleration still blocks")
-	# Every other timed buff is unchanged: priority 2, the territory row and an
-	# applied RunSpritePoint without RunSpriteLevel still block.
+	# Every other timed buff: the territory row and an applied RunSpritePoint
+	# without RunSpriteLevel still block. Since 2026-11-21 (item_use523_buffs)
+	# BuffGroupPriority 2 in a non-overlapping group is the same "newest
+	# replaces" approximation for every item buff.
 	var other: Dictionary = PROJECTION.timed_buff(definition([effect("PVEDamageReduction","Value",3.0)], 2.0, territory))
-	check(other.get("activation_status") == "blocked" and other.blocked_reasons.has("unsupported_buff_priority_or_spell_level_rule") and other.blocked_reasons.has("unsupported_item_bonus:ConsumeTerritoryClassID") and not other.has("acceleration_stage"), "non-acceleration buffs keep their old blockers")
+	check(other.get("activation_status") == "blocked" and not other.blocked_reasons.has("unsupported_buff_priority_or_spell_level_rule") and other.blocked_reasons.has("unsupported_item_bonus:ConsumeTerritoryClassID") and not other.has("acceleration_stage"), "non-acceleration buffs keep the territory blocker")
 	var odd: Dictionary = PROJECTION.timed_buff(definition([effect("PVEDamageReduction","Value",3.0),effect("RunSpritePoint","Value",1.0,"Other",1.0)], 1.0))
 	check(odd.get("activation_status") == "blocked" and odd.blocked_reasons.has("conditional_buff_effect:RunSpritePoint"), "a RunSpritePoint of another application type stays conditional")
 

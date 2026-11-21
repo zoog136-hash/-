@@ -315,6 +315,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="buff":
 		var restriction: String=_buff_territory_problem(world,spec)
 		if not restriction.is_empty():return _failure(restriction)
+		var rule: String=buff_rule_problem(world,spec)
+		if not rule.is_empty():return _failure(rule)
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
@@ -377,6 +379,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 			if old.get("ID")==source.get("ID") or (not group.get("IsAllowOverlap",false) and old.get("BuffGroupID")==source.get("BuffGroupID")):buffs.erase(key)
 		var value: Dictionary=spec.typed_effects.duplicate(true)
 		value.merge({"remaining":float(spec.duration_seconds),"duration":float(spec.duration_seconds),"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
+		buff_runtime_fields(world,spec,value)
 		buffs[item_name]=value;payload["active_item_buffs"]=buffs
 		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
 	elif effect.kind in ["teleport","ain","teleport_location"]:
@@ -477,6 +480,32 @@ static func handoff_plain(world: Node,item_name: String) -> Dictionary:
 	if saved!=OK:return _failure("원본 물리 묶음 저장 실패 · 아이템 보존")
 	world.item_instances=instances;world.consumable_service.import_state(state);clear_proof_cache()
 	return {"ok":true,"handed":handed}
+
+## 원본 버프 사용 규칙 (2026-11-21): the level its effect ends at
+## (EraseBuffOnExperience / EraseOnLevel), IgnoreUseItemDuringBuff (not while
+## the same buff runs) and CannotUseBuffGroup (not while that group runs).
+static func buff_rule_problem(world: Node,spec: Dictionary) -> String:
+	var erase_level: int=int(spec.get("erase_at_level",0))
+	if erase_level>0 and int(world.level)>=erase_level:return "원본 조건: 버프 효과는 Lv.%d까지만 적용됩니다 · 아이템 보존" % (erase_level-1)
+	var own: int=int(spec.get("buff_class_id",0))
+	var groups: Array=spec.get("cannot_use_buff_groups",[])
+	for value: Variant in world.active_item_buffs.values():
+		if not value is Dictionary or not value.get("source_buff_class") is Dictionary:continue
+		var active: Dictionary=value.source_buff_class
+		if spec.get("ignore_use_during_buff",false) and int(active.get("ID",0))==own:return "이미 같은 효과가 적용 중입니다 · 아이템 보존"
+		if int(active.get("BuffGroupID",0)) in groups:return "함께 사용할 수 없는 효과가 적용 중입니다 · 아이템 보존"
+	return ""
+
+## Runtime fields of an applied original item buff: regeneration ticks on
+## the existing TWILIGHT regeneration interval, the absolute end of a real-time
+## buff and the level it ends at.
+static func buff_runtime_fields(world: Node,spec: Dictionary,value: Dictionary) -> void:
+	var regen_hp: int=int(value.get("regen_hp",0));var regen_mp: int=int(value.get("regen_mp",0))
+	if regen_hp>0 or regen_mp>0:
+		value["hp_regen_tick"]=regen_hp;value["mp_regen_tick"]=regen_mp
+		value["tick_interval"]=float(load("res://scripts/quests/quest_regen523.gd").call("interval",world));value["tick_elapsed"]=0.0
+	if spec.get("absolute_time",false):value["absolute_until"]=Time.get_unix_time_from_system()+float(spec.get("duration_seconds",0))
+	if int(spec.get("erase_at_level",0))>0:value["erase_at_level"]=int(spec.erase_at_level)
 
 static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[],dormant: Dictionary={}) -> String:
 	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
