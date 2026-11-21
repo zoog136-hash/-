@@ -241,6 +241,14 @@ func _window() -> void:
 	check(spec["ListView_Tab/Btn_Event"].visible and spec["ListView_Tab/Btn_All/On"].visible and spec["ListView_Tab/Btn_Event/Off"].visible, "all tabs show; the selected one is On")
 	window._select_tab("Btn_Event")
 	check(window.tab == "Btn_Event", "a tab button selects its tab")
+	# 사용자 목록 9: no item name under a slot (the original keeps it hidden).
+	var slot: Dictionary = WINDOW.slot_spec(false, true, false, 3, Callable())
+	check(slot["Panel/Text_ItemName"] == {"visible":false} and not slot["Panel/Item_Own"].visible and slot["Panel/Item_Possible"].visible and slot["Panel/Text_Amount"].text == "3", "a slot shows its icon, marks and amount, never the item name")
+	check(WINDOW.slot_spec(true, false, false, 1, Callable())["Panel/Item_Own"].visible, "a registered slot shows Item_Own")
+	var plain := ImageTexture.create_from_image(Image.create(4, 4, false, Image.FORMAT_RGBA8))
+	var gray: ShaderMaterial = preload("res://scripts/ui/original_ui/source_material.gd").gray_blur(plain)
+	check(gray != null and gray.shader.code.contains("luminance") and gray.shader.code.contains("blend_mix") and preload("res://scripts/ui/original_ui/source_material.gd").gray_blur(plain) == gray, "an unregistered icon gets the shared gray blur shader")
+	check(not preload("res://scripts/ui/original_ui/source_material.gd").takes_display(gray), "display colour binding leaves the gray icon alone")
 	host.queue_free()
 
 ## 2단계: complete original collections add their effects; a legacy
