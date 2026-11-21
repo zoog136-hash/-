@@ -72,7 +72,7 @@ func _tab_requested(tab: String) -> Dictionary:
 		"mix":return _route("open_card_fusion",[target])
 		"collection":return _route("open_normal_card_collections",[target,""])
 		"dispatch":return _route("open_card_dispatch")
-		"explore":return _route("open_expedition")
+		"explore":return _route("open_doll_explore")
 	return {"ok":false}
 
 ## One original Change_Card_A_<grade> card: its own picture through
