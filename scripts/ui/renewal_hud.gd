@@ -1296,6 +1296,9 @@ func open_tj_coupons_native() -> void:
 
 func open_promo_code() -> void:
 	_open_window("promo_code", "쿠폰 코드", "코드 입력 · 보상 지급")
+	# The original 523 쿠폰 field is in 설정 > 정보 (Option_Tab_Info Coupon,
+	# the same World.redeem_promo_code); the TWILIGHT page without the pack.
+	if _open_original_feature("options",["info"]):return
 	var view = preload("res://scripts/ui/promo_code_view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent())
