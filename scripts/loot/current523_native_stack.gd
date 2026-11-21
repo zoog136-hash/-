@@ -283,12 +283,17 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
+	if effect.is_empty() and not mystery_card_rule(record).is_empty():return use_mystery_card(world,uid,owned,record)
 	if effect.is_empty() and plain_owner(world,item_name,record):
 		# 주문서 (강화·귀환): the existing name-keyed owner (as the 523 shop
 		# sells it) uses the item; the receipted stack is handed to it first.
 		var handed: Dictionary=handoff_plain(world,item_name)
 		if not handed.get("ok",false):return handed
 		return {"handled":false}
+	if effect.is_empty() and str(NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]:
+		# A box whose original rewards are all test/excluded rows (or another
+		# unsupported rule) is kept and says so instead of staying silent.
+		return _failure("원본 보상 구성을 지원하지 않는 상자라 열 수 없습니다 · 상자 보존")
 	if effect.is_empty() and supply_profile(record).get("kind")=="storage":return _failure("원본 표에 이 아이템의 사용 규칙이 없거나 아직 연결되지 않았습니다 · 보관용 · 아이템 보존")
 	if effect.is_empty():return _failure("원본 소비 재료입니다 · 해당 스킬·제작에서 물리 개체와 수량을 확인하세요")
 	if effect.kind=="ammo":return {"handled":false} # Existing inventory activation wears the selected physical ammunition.
@@ -315,6 +320,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="buff":
 		var restriction: String=_buff_territory_problem(world,spec)
 		if not restriction.is_empty():return _failure(restriction)
+		var rule: String=buff_rule_problem(world,spec)
+		if not rule.is_empty():return _failure(rule)
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
@@ -377,6 +384,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 			if old.get("ID")==source.get("ID") or (not group.get("IsAllowOverlap",false) and old.get("BuffGroupID")==source.get("BuffGroupID")):buffs.erase(key)
 		var value: Dictionary=spec.typed_effects.duplicate(true)
 		value.merge({"remaining":float(spec.duration_seconds),"duration":float(spec.duration_seconds),"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
+		buff_runtime_fields(world,spec,value)
 		buffs[item_name]=value;payload["active_item_buffs"]=buffs
 		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
 	elif effect.kind in ["teleport","ain","teleport_location"]:
@@ -477,6 +485,32 @@ static func handoff_plain(world: Node,item_name: String) -> Dictionary:
 	if saved!=OK:return _failure("원본 물리 묶음 저장 실패 · 아이템 보존")
 	world.item_instances=instances;world.consumable_service.import_state(state);clear_proof_cache()
 	return {"ok":true,"handed":handed}
+
+## 원본 버프 사용 규칙 (2026-11-21): the level its effect ends at
+## (EraseBuffOnExperience / EraseOnLevel), IgnoreUseItemDuringBuff (not while
+## the same buff runs) and CannotUseBuffGroup (not while that group runs).
+static func buff_rule_problem(world: Node,spec: Dictionary) -> String:
+	var erase_level: int=int(spec.get("erase_at_level",0))
+	if erase_level>0 and int(world.level)>=erase_level:return "원본 조건: 버프 효과는 Lv.%d까지만 적용됩니다 · 아이템 보존" % (erase_level-1)
+	var own: int=int(spec.get("buff_class_id",0))
+	var groups: Array=spec.get("cannot_use_buff_groups",[])
+	for value: Variant in world.active_item_buffs.values():
+		if not value is Dictionary or not value.get("source_buff_class") is Dictionary:continue
+		var active: Dictionary=value.source_buff_class
+		if spec.get("ignore_use_during_buff",false) and int(active.get("ID",0))==own:return "이미 같은 효과가 적용 중입니다 · 아이템 보존"
+		if int(active.get("BuffGroupID",0)) in groups:return "함께 사용할 수 없는 효과가 적용 중입니다 · 아이템 보존"
+	return ""
+
+## Runtime fields of an applied original item buff: regeneration ticks on
+## the existing TWILIGHT regeneration interval, the absolute end of a real-time
+## buff and the level it ends at.
+static func buff_runtime_fields(world: Node,spec: Dictionary,value: Dictionary) -> void:
+	var regen_hp: int=int(value.get("regen_hp",0));var regen_mp: int=int(value.get("regen_mp",0))
+	if regen_hp>0 or regen_mp>0:
+		value["hp_regen_tick"]=regen_hp;value["mp_regen_tick"]=regen_mp
+		value["tick_interval"]=float(load("res://scripts/quests/quest_regen523.gd").call("interval",world));value["tick_elapsed"]=0.0
+	if spec.get("absolute_time",false):value["absolute_until"]=Time.get_unix_time_from_system()+float(spec.get("duration_seconds",0))
+	if int(spec.get("erase_at_level",0))>0:value["erase_at_level"]=int(spec.erase_at_level)
 
 static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[],dormant: Dictionary={}) -> String:
 	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
@@ -1361,6 +1395,51 @@ static func _apply_bag(world: Node,payload: Dictionary) -> void:
 
 ## A card item: one physical unit is debited through its grant receipt and the
 ## exact original card is credited to the existing card owner in one save.
+## 미스터리 카드 (ItemCategory ScrollBuffCardRetry with BuffDeckID + GradeID,
+## e.g. "[미스터리 변신 카드] 영웅"): one card of that deck and grade. The
+## original pool and weights are not in the tables: TWILIGHT 근사, an equal
+## draw over that deck's cards of the grade that are not declared excluded,
+## not test rows, have no date or server condition and exist in the card
+## catalog; the drawn card is given like a fixed card item.
+static func mystery_card_rule(record: Dictionary) -> Dictionary:
+	if record.get("source_m_native_item")!=true or NATIVE_FIELDS.field(record,"source_category_name")!="ScrollBuffCardRetry":return {}
+	var definition: Dictionary=D.item_definition(record)
+	var deck: Variant=null;var grade: Variant=null
+	for row: Dictionary in definition.get("item_bonus",[]):
+		var name_value: String=str(row.get("bonus_type",{}).get("Name",""))
+		if name_value in ["PlayerValueReturn","TJCouponSeason"]:return {}
+		if row.get("IsPossession")!=false:continue
+		if name_value=="BuffDeckID":deck=whole(row.get("bonus",{}).get("Value"))
+		elif name_value=="GradeID":grade=whole(row.get("bonus",{}).get("Value"))
+	if not deck is int or not grade is int or not PROJECTION_DECKS.has(deck):return {}
+	return {"deck_id":deck,"grade_id":grade,"card_kind":PROJECTION_DECKS[deck][1]}
+
+const PROJECTION_DECKS={1:["PolymorphCardDeck","변신"],2:["MagicDollCardDeck","마법인형"],98:["HolyStuffCardDeck","성물"]}
+static func mystery_card_pool(world: Node,rule: Dictionary) -> Array:
+	var pool: Array=[]
+	for card: Dictionary in SOURCE.rows("BuffCard"):
+		if whole(card.get("BuffCardDeckID"))!=rule.deck_id or whole(card.get("GradeID"))!=rule.grade_id:continue
+		if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0 or whole(card.get("ServerLimitSetID",0))!=0:continue
+		if not SOURCE.declared_exclusion("BuffCard",card).is_empty():continue
+		var lowered: String=str(card.get("Name","")).to_lower()
+		if lowered.contains("테스트") or lowered.contains("test"):continue
+		if card_binding(world,str(rule.card_kind),int(card.ID)).is_empty():continue
+		pool.append(card)
+	return pool
+
+static func use_mystery_card(world: Node,uid: String,owned: Dictionary,record: Dictionary) -> Dictionary:
+	var rule: Dictionary=mystery_card_rule(record)
+	var pool: Array=mystery_card_pool(world,rule)
+	if pool.is_empty():return _failure("이 등급의 원본 카드가 없어 사용할 수 없습니다 · 아이템 보존")
+	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
+	var card: Dictionary=pool[candidate_rng.randi_range(0,pool.size()-1)]
+	var deck: Dictionary=SOURCE.row("BuffCardDeck",int(rule.deck_id))
+	var spec: Dictionary={"kind":"fixed_card","activation_status":"unrestricted","card_kind":rule.card_kind,"card_id":int(card.ID),"deck_id":rule.deck_id,"original_card":card,"original_deck":deck,"buff_card_cannot_swap":false,"server_limit_set_id":0,
+		"item_requirements":{"targetting_type_id":D.item_definition(record).get("original_item",{}).get("TargettingTypeID"),"service_region_code":D.item_definition(record).get("original_item",{}).get("ServiceRegionCode",""),"can_use_when_invisible":true},"approximation":"TWILIGHT 근사: 같은 덱·등급 카드 균등 추첨"}
+	var result: Dictionary=use_fixed_card(world,uid,owned,record,spec)
+	if result.get("ok",false):world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
+	return result
+
 static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
 	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})

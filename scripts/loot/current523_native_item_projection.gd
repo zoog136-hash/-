@@ -977,8 +977,16 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	var raw: Dictionary=definition.original_item
 	var acceleration: int=acceleration_stage(graph)
 	var permitted: Dictionary={"BuffClassID":"BuffClassID","BuffDuration":"Seconds","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	permitted.merge(BUFF_ITEM_RULE_UNITS)
 	if acceleration>0:permitted.merge(ACCELERATION_ITEM_UNITS)
-	var spec: Dictionary=consume_metadata(rows,raw,definition.category,permitted)
+	# TWILIGHT 근사: an item without ItemConsumeDelay uses no consume delay.
+	var spec: Dictionary=consume_metadata(rows,raw,definition.category,permitted,false)
+	if spec.get("consume_delay_ms")==null:spec["consume_delay_ms"]=0
+	var ignore_during: bool=false;var blocked_groups: Array=[]
+	for row: Dictionary in rows:
+		if not direct(row) or not integer(row.get("bonus",{}).get("Value")):continue
+		if row.bonus_type.Name=="IgnoreUseItemDuringBuff" and int(row.bonus.Value)==1:ignore_during=true
+		elif row.bonus_type.Name=="CannotUseBuffGroup" and int(row.bonus.Value)>0:blocked_groups.append(int(row.bonus.Value))
 	var reasons: Array=spec.blocked_reasons;var durations: Array=[]
 	for row: Dictionary in rows:
 		if row.bonus_type.Name=="BuffDuration" and direct(row) and row.unit.Name=="Seconds" and integer(row.bonus.get("Value")):durations.append(int(row.bonus.Value))
@@ -990,6 +998,11 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	# ExperienceAdditionPercent 100000 = 10 %. A fraction of a point is not
 	# truncated; that effect stays unsupported.
 	var percent_fields: Dictionary={"ExperienceAdditionPercent":"xp","MoveSpeedBonus":"move_speed","AttackSpeedBonus":"attack_speed"}
+	# 물약·버프 (2026-11-21): 성장 물약의 AbsoluteExperienceAdditionPercent is
+	# read as the same experience percent (TWILIGHT 근사), plus 물약 회복률,
+	# 아인하사드 절약 and cast speed percent points.
+	percent_fields.merge({"AbsoluteExperienceAdditionPercent":"xp","HPPotionIncreasePercent":"potion_heal_pct","EinasadSavingPercent":"ain_saving_pct","CastSpeedBonus":"cast_speed"})
+	var erase_level: int=0
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
 		var row: Dictionary=effect.get("link",{}).duplicate(true);var bonus: Dictionary=effect.get("bonus",{});var kind: Dictionary=effect.get("type",{});var unit: Dictionary=effect.get("unit",{})
@@ -1014,6 +1027,21 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 			# the acceleration speeds only; their readers sum it as a float.
 			elif acceleration>0 and ACCELERATION_PERCENT_FIELDS.values().has(field):typed[field]=float(typed.get(field,0))+float(bonus.Value)/10000.0
 			else:reasons.append("unsupported_buff_effect:"+name_value)
+		elif name_value=="CarryPlus" and unit.get("Name")=="Weight" and integer(bonus.get("Value")):
+			# 소지 무게: the value over its UIUnit Denominator (100).
+			var weight_scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
+			var denominator: Variant=whole(weight_scale[0].get("Denominator")) if weight_scale.size()==1 else null
+			if denominator is int and denominator>0 and int(bonus.Value)%denominator==0:typed["carry"]=int(typed.get("carry",0))+int(bonus.Value)/denominator
+			else:reasons.append("unsupported_buff_effect:"+name_value)
+		elif name_value in ["RegenHP","RegenMP"] and unit.get("Name")=="Value" and integer(bonus.get("Value")) and int(bonus.Value)>0:
+			# Recovered per regeneration tick; the tick is the existing TWILIGHT
+			# regeneration interval (quest_regen523, 원본 주기 미확인).
+			var regen_key: String="regen_hp" if name_value=="RegenHP" else "regen_mp"
+			typed[regen_key]=int(typed.get(regen_key,0))+int(bonus.Value)
+		elif name_value=="EraseBuffOnExperience" and unit.get("Name")=="CharacterLevel" and integer(bonus.get("Value")) and int(bonus.Value)>0:
+			# The buff ends when the character reaches this level (원본 설명:
+			# "버프 효과는 Lv.79까지만 적용 됨" with value 80).
+			erase_level=int(bonus.Value) if erase_level==0 else mini(erase_level,int(bonus.Value))
 		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
 		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
 	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
@@ -1021,12 +1049,18 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	if buff.get("IsEraseOnTimeEnd")!=true:reasons.append("source_buff_timer_semantics_unresolved")
 	for key: String in ["IsEraseOnAttack","IsEraseOnAttacked","IsEraseOnMove","IsEraseOnSpellCastAndShieldIt","IsEraseOnSkillCastAndShieldIt","IsEraseOnItemUse","IsEraseOnSpellAttacked","IsEraseOnSkillAttacked","IsEraseOnCast","IsEraseOnHealed","IsEraseOnTargetChanged","IsEraseOnAttackedLimitations"]:
 		if buff.get(key,0):reasons.append("unsupported_buff_action_rule:"+key)
-	for key: String in ["MaxHPPercent","EraseOnLevel","MaxStackCount","MPCostPercent","MinMPCost","IsAbsoluteTimeBuff","IsOverlapByPlayer","IsDecreaseStackOnTimeEnd","IsObtainItemBuff"]:
+	for key: String in ["MaxHPPercent","MaxStackCount","MPCostPercent","MinMPCost","IsOverlapByPlayer","IsDecreaseStackOnTimeEnd","IsObtainItemBuff"]:
 		if buff.get(key,0):reasons.append("unsupported_buff_state_rule:"+key)
+	# EraseOnLevel: the buff ends at that level, like EraseBuffOnExperience.
+	if integer(buff.get("EraseOnLevel",0)) and int(buff.get("EraseOnLevel",0))>0:erase_level=int(buff.EraseOnLevel) if erase_level==0 else mini(erase_level,int(buff.EraseOnLevel))
+	elif buff.get("EraseOnLevel",0):reasons.append("unsupported_buff_state_rule:EraseOnLevel")
+	if not buff.get("IsAbsoluteTimeBuff",false) is bool and buff.get("IsAbsoluteTimeBuff",0):reasons.append("unsupported_buff_state_rule:IsAbsoluteTimeBuff")
 	# TWILIGHT 근사: an acceleration group without priority (IsAllowPriority
 	# false, IsAllowOverlap false) keeps one buff and the newest replaces it,
 	# whatever its BuffGroupPriority (강화 초록 물약·드래곤의 진주 carry 2).
-	var priority_free: bool=acceleration>0 and group.get("IsAllowOverlap")==false and integer(buff.get("BuffGroupPriority")) and int(buff.BuffGroupPriority)>=1
+	# The same approximation for every item buff group without overlap: the
+	# newest buff of the group replaces the older one (2026-11-21).
+	var priority_free: bool=group.get("IsAllowOverlap")==false and integer(buff.get("BuffGroupPriority")) and int(buff.BuffGroupPriority)>=1
 	if group.get("IsAllowPriority")!=false or group.get("IsEraseBySpellLevel")!=false or (buff.get("BuffGroupPriority")!=1 and not priority_free):reasons.append("unsupported_buff_priority_or_spell_level_rule")
 	if not group.get("IsAllowOverlap") is bool or not buff.get("IsImmuneToDead") is bool or not buff.get("IsImmuneToCancellation") is bool:reasons.append("missing_buff_lifecycle_flags")
 	var unique: Array=[]
@@ -1036,6 +1070,11 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	spec["source_item_bonus_ids"]=[]
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
+	if erase_level>0:spec["erase_at_level"]=erase_level
+	# IsAbsoluteTimeBuff: the duration runs in real time, also while the game is closed.
+	if buff.get("IsAbsoluteTimeBuff",false)==true:spec["absolute_time"]=true
+	if ignore_during:spec["ignore_use_during_buff"]=true
+	if not blocked_groups.is_empty():spec["cannot_use_buff_groups"]=blocked_groups
 	if acceleration>0:
 		spec["acceleration_stage"]=acceleration
 		var territories: Array=[]
@@ -1056,6 +1095,10 @@ const ACCELERATION_PERCENT_FIELDS: Dictionary={"MoveSpeedBonus":"move_speed","At
 ## ConsumeTerritoryClassID (사용 불가 지역, checked on use) and
 ## SpellMaterialTypeID (엘븐 와퍼 is also the ElvenWhopper spell material; it
 ## has no effect on drinking it).
+## Item rows of any timed buff item that only decide when it may be used:
+## IgnoreUseItemDuringBuff (refused while the same buff runs) and
+## CannotUseBuffGroup (refused while a buff of that group runs).
+const BUFF_ITEM_RULE_UNITS: Dictionary={"IgnoreUseItemDuringBuff":"TrueFalse","CannotUseBuffGroup":"BuffGroupID"}
 const ACCELERATION_ITEM_UNITS: Dictionary={"ConsumeTerritoryClassID":"ConsumeTerritoryClassID","SpellMaterialTypeID":"SpellMaterialTypeID"}
 
 static func run_sprite_level(effect: Dictionary) -> int:
@@ -1395,7 +1438,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	for class_id: int in domain:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
 	selectable_rule(root_node,active,reasons)
-	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false
+	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false;var dropped: Array=[]
 	if root_node.get("reward_type",{}).get("ID")!=111 or root_node.get("reward_type",{}).get("Name")!="SelectReward":reasons.append("unsupported_select_reward_root_type")
 	else:
 		var selected_node: Dictionary=graph.get("selections",{}).get(str(int(root.get("RewardClassID",0))),{})
@@ -1405,7 +1448,11 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 		if selected_node.get("entities",[]).is_empty():reasons.append("empty_select_reward")
 		for edge: Dictionary in selected_node.get("entities",[]):
 			var entity: Dictionary=edge.get("row",{});var child: Dictionary=graph.get("rewards",{}).get(str(int(entity.get("RewardID",0))),{});var row: Dictionary=child.get("row",{})
-			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty():reasons.append("source_excluded_select_reward_entity")
+			# 2026-11-21: a choice the original declares excluded or whose item is a
+			# test/excluded row is left out of the window; the other choices stay.
+			var reward_item: Dictionary=child.get("item_class",{})
+			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or child.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
+				dropped.append(entity.get("ID"));continue
 			selectable_rule(child,active,reasons)
 			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
 			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
@@ -1418,6 +1465,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			if not integer(row.get("Amount")) or int(row.Amount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
 			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0))).is_empty();initial_rule=initial_rule or needs
 			rewards.append({"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs})
+	if rewards.is_empty() and not selection.is_empty():reasons.append("empty_select_reward")
 	var counts: Dictionary={}
 	for class_id: int in domain:
 		var count: int=0
@@ -1430,6 +1478,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	for reason: String in reasons:
 		if reason not in unique:unique.append(reason)
 	spec["kind"]="source_selectable_reward";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["reward_id"]=id;spec["original_reward"]=root_node.duplicate(true);spec["select_reward_id"]=selection.get("ID");spec["original_select_reward"]=selection;spec["select_max_count"]=selection.get("SelectMaxCount");spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	if not dropped.is_empty():spec["dropped_source_entity_ids"]=dropped
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}
 	if initial_rule:spec["local_rule_required"]="select_reward_initial_enchant";spec["source_initial_enchant"]=null;spec["initial_enchant_configuration_key"]="patch523_select_reward_initial_enchant"

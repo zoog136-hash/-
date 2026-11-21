@@ -58,8 +58,9 @@ const ROW_HEIGHT: float=80.0
 const LIST_SIZE:=Vector2(450,460)
 ## The list content origin sits this far below the ListView's top edge.
 const LIST_TOP_INSET: float=50.0
-## Rows shown at once in the list (the client lists the current chapter).
+## Rows offered by the existing quest model (the client lists the current chapter).
 const MAX_ROWS: int=60
+const ROW_OVERSCAN: int=1
 signal closed
 var _pack: RefCounted
 var _hud: WeakRef
@@ -68,7 +69,9 @@ var _claim: Callable
 var _scene: Node2D
 var _page: Node2D
 var _rows_content: Node2D
-var _row_scenes: Array[Node2D]=[]
+var _quest_rows: Array[Dictionary]=[]
+var _row_scenes: Dictionary={}
+var _row_window: Vector2i=Vector2i.ZERO
 var _category: String="main"
 var _selected_id: String=""
 var _scroll: float=0.0
@@ -104,7 +107,7 @@ func open(parent: Node, world: Node, claim: Callable) -> Dictionary:
 
 func refresh() -> Dictionary:
 	if not is_open():return {"ok":true,"handled":false}
-	if _refresh_pending:return {"ok":true,"handled":true,"member":ROOT,"category":_category,"rows":_row_scenes.size(),"selected_id":_selected_id}
+	if _refresh_pending:return {"ok":true,"handled":true,"member":ROOT,"category":_category,"rows":_quest_rows.size(),"selected_id":_selected_id}
 	return _stage()
 
 func close() -> void:
@@ -113,7 +116,7 @@ func close() -> void:
 	_scene=null
 	_page=null
 	_rows_content=null
-	_row_scenes.clear()
+	_clear_row_window()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -246,7 +249,7 @@ func _stage_mission(parent: Object) -> Dictionary:
 	_scene=next
 	_page=null
 	_rows_content=null
-	_row_scenes.clear()
+	_clear_row_window()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -288,19 +291,12 @@ func _stage() -> Dictionary:
 	var list_node: Variant=page_player.get("source_nodes").get(LIST)
 	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:next.free();return _fail("source_quest_window_list_content_missing")
-	var row_scenes: Array[Node2D]=[]
-	for index: int in range(rows.size()):
-		var row: Dictionary=_row(rows[index],str(rows[index].id)==_selected_id)
-		if not row.get("ok",false):
-			for built: Node2D in row_scenes:built.free()
-			next.free()
-			return row
-		var row_scene: Node2D=row.scene
-		# Row panels are 450x80 with their origin at the lower-left; rows run
-		# top-down from the list's top edge.
-		row_scene.position=Vector2(-float(row.panel_x),-LIST_SIZE.y-LIST_TOP_INSET+ROW_HEIGHT*float(index+1))
-		content.add_child(row_scene)
-		row_scenes.append(row_scene)
+	var scroll_min: float=minf(0.0,LIST_SIZE.y-ROW_HEIGHT*float(rows.size()))
+	var scroll: float=clampf(_scroll,scroll_min,0.0)
+	var visible_rows: Vector2i=_visible_rows(rows.size(),scroll)
+	var row_scenes: Dictionary={}
+	var mounted: Dictionary=_mount_rows(content,rows,visible_rows,row_scenes)
+	if not mounted.get("ok",false):next.free();return mounted
 	var previous: Node2D=_scene
 	# QuestScene places Quest_All_Layout at the design centre (600, 337.5).
 	next.position=Vector2(600.0,-337.5)
@@ -309,14 +305,52 @@ func _stage() -> Dictionary:
 	_scene=next
 	_page=page_player
 	_rows_content=content
+	_quest_rows=rows
 	_row_scenes=row_scenes
-	_scroll_min=minf(0.0,LIST_SIZE.y-ROW_HEIGHT*float(rows.size()))
-	_scroll=clampf(_scroll,_scroll_min,0.0)
+	_row_window=visible_rows
+	_scroll_min=scroll_min
+	_scroll=scroll
 	content.position.y=_scroll
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
 	return {"ok":true,"handled":true,"member":ROOT,"category":_category,"rows":rows.size(),"selected_id":_selected_id}
+
+func _clear_row_window() -> void:
+	_quest_rows.clear()
+	_row_scenes.clear()
+	_row_window=Vector2i.ZERO
+
+## Scroll is the unscaled displacement of the list. The extra row on each
+## side covers the authored inset/alignment; the range end is exclusive.
+static func _visible_rows(count: int,scroll: float) -> Vector2i:
+	var top: float=-scroll
+	return Vector2i(maxi(0,floori(top/ROW_HEIGHT)-ROW_OVERSCAN),mini(count,ceili((top+LIST_SIZE.y)/ROW_HEIGHT)+ROW_OVERSCAN))
+
+func _mount_rows(content: Node2D,rows: Array[Dictionary],window: Vector2i,mounted: Dictionary) -> Dictionary:
+	var prepared: Dictionary={}
+	for index: int in range(window.x,window.y):
+		if mounted.has(index):continue
+		var row: Dictionary=_row(rows[index],str(rows[index].id)==_selected_id)
+		if not row.get("ok",false):
+			for pending: Node2D in prepared.values():pending.free()
+			return row
+		var scene: Node2D=row.scene
+		scene.position=Vector2(-float(row.panel_x),-LIST_SIZE.y-LIST_TOP_INSET+ROW_HEIGHT*float(index+1))
+		prepared[index]=scene
+	# A failed row keeps the previous clip and hit targets live. Retire the
+	# old rows only after all incoming rows have been verified and built.
+	for index: int in mounted.keys():
+		if index>=window.x and index<window.y:continue
+		var previous: Node2D=mounted[index]
+		mounted.erase(index)
+		previous.hide()
+		previous.queue_free()
+	for index: int in prepared:
+		var scene: Node2D=prepared[index]
+		content.add_child(scene)
+		mounted[index]=scene
+	return {"ok":true}
 
 func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 	var scope: Array[int]=PAGE_SCOPE.duplicate()
@@ -488,8 +522,18 @@ func _list_input(event: InputEvent) -> void:
 	if delta==0.0:return
 	var scale_y: float=absf(_rows_content.get_global_transform_with_canvas().get_scale().y)
 	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
-	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
-	_rows_content.position.y=_scroll
+	_scroll_to(_scroll+delta)
+
+func _scroll_to(requested: float) -> Dictionary:
+	var scroll: float=clampf(requested,_scroll_min,0.0)
+	var window: Vector2i=_visible_rows(_quest_rows.size(),scroll)
+	if window!=_row_window:
+		var mounted: Dictionary=_mount_rows(_rows_content,_quest_rows,window,_row_scenes)
+		if not mounted.get("ok",false):return mounted
+		_row_window=window
+	_scroll=scroll
+	_rows_content.position.y=scroll
+	return {"ok":true}
 
 ## Touch-enabled original nodes inside the mounted subtrees that this window
 ## gives no action swallow their touch (as the client's modal window does).
