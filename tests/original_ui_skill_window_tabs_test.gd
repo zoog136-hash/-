@@ -122,7 +122,7 @@ func _real_pack(pack_dir: String) -> void:
 	var window=SKILL.new()
 	check(window.configure(pack,host.hud).get("ok",false),"window configures")
 	var opened: Dictionary=window.open(parent)
-	check(opened.get("handled",false) and int(opened.skills)==203 and int(opened.tab_scenes)==4 and str(opened.group_button)=="Btn_Property","Skill_All mounts 203 skills and the four 요정 tabs: "+str(opened).left(300))
+	check(opened.get("handled",false) and int(opened.skills)==203 and int(opened.tab_scenes)==4 and str(opened.group_button)=="","Skill_All mounts 203 skills and the four 요정 tabs, 속성 변경 hidden (스킬 계열 전환 retired 2026-11-21): "+str(opened).left(300))
 	check(int(opened.built_slots)<60,"only the rows near the view are built: "+str(opened.built_slots))
 	var first: Dictionary=window._slots.get(0,{})
 	check(first.has("cooldown") and str(first.cooldown.text)=="5.0","a cooling skill shows its Label_CoolTime")

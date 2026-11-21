@@ -125,9 +125,12 @@ static func world_fields(world: Node) -> Dictionary:
 
 ## Frame cap while nobody touches the screen and auto hunting is off: the
 ## world keeps running, it is just drawn less often (heat).
-## Physics steps one frame may catch up (6 at 60 Hz: the same 100 ms of game
-## time that 3 steps covered at 30 Hz).
-const MAX_PHYSICS_STEPS: int = 6
+## Physics steps one frame may catch up. 6 fed a spiral on the phone: a slow
+## frame ran six full monster/player steps, which made the next frame slower
+## (523.747: 6 steps 158 ms in the worst frame, 5 fps at the end, player
+## 367 ms/s, monsters 288 ms/s). 2 steps still keep full game speed down to
+## 30 fps at 60 Hz; below that the world runs slower instead of stalling.
+const MAX_PHYSICS_STEPS: int = 2
 ## Frame cap while playing (60 by the user's request, 2026-11-20; was 30).
 const ACTIVE_FPS: int = 60
 const IDLE_FPS: int = 15

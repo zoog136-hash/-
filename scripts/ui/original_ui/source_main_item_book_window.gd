@@ -9,8 +9,9 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##
 ## Each collection is one ItemBook_List_Button row (name (등록/전체), 완성 and
 ## 추천 badges, effect text) with one ItemBook_Slot per card (the original
-## item's own icon, its +강화 이름, Item_Own when registered, Item_Possible
-## when the bag holds it). Tapping a slot registers it: the owner's quote ->
+## item's own icon (no name: the original Text_ItemName stays hidden), Item_Own
+## when registered, Item_Possible when the bag holds it; an unregistered card's
+## icon is gray and softly blurred). Tapping a slot registers it: the owner's quote ->
 ## confirmation -> execute consumes the bag item and saves (rules stay in the
 ## owners). The right side is the shown rows' effects (ItemBook_List_Effect)
 ## or 컬렉션 현황. Btn_Sort cycles 전체 / 진행 중 / 미완성 / 완성 (TWILIGHT
@@ -25,6 +26,7 @@ const ROW="UI/ItemBook/ItemBook_List_Button.csb"
 const SLOT="UI/ItemBook/ItemBook_Slot.csb"
 const EFFECT_ROW="UI/ItemBook/ItemBook_List_Effect.csb"
 const Images=preload("res://scripts/ui/source523_image_assets.gd")
+const SourceMaterial=preload("res://scripts/ui/original_ui/source_material.gd")
 const Growth96Source=preload("res://scripts/progression/growth96_source.gd")
 const T="ItemBook_Tab_Collection/"
 const TABS: Array[String]=["Btn_All","Btn_UnIdentified","Btn_Identified","Btn_Dungeon","Btn_Event","Btn_Level","Btn_Alchemy"]
@@ -223,6 +225,15 @@ func _collection_row(row: Dictionary) -> Dictionary:
 		"ListView_Option/Label_Option":{"role":"source_text","text":_effect_summary(row)}}
 	return {"member":ROW,"spec":spec}
 
+## One card's ItemBook_Slot: Item_Own when registered, Item_Possible when the
+## bag holds it, the amount above 1, and no name (the original keeps
+## Text_ItemName hidden: the slot is the icon alone).
+static func slot_spec(registered: bool, possible: bool, growth: bool, amount: int, press: Callable) -> Dictionary:
+	return {"Panel/Item_Own":{"visible":registered},"Panel/Item_Possible":{"visible":possible},
+		"Panel/Text_ItemName":{"visible":false},
+		"Panel/Text_Amount":{"visible":not growth and amount>1,"role":"source_text","text":_number(amount)},
+		"Panel/Fx_Registration":{"visible":false},"CommonSlot/Btn":{"activate":press}}
+
 ## One ItemBook_Slot per card (growth96: per token requirement).
 func _fill_slots(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 	var growth: bool=str(row.get("owner",""))=="growth96"
@@ -231,21 +242,34 @@ func _fill_slots(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 	for card: Dictionary in row.get("cards",[]):
 		var registered: bool=bool(card.registered)
 		var possible: bool=not registered and (tokens>0 if growth else bool(card.get("possible",false)))
-		var label: String=str(card.get("label",""))
 		var amount: int=int(card.get("amount",1))
 		var press: Callable=Callable(self,"_slot_pressed").bind(str(card.id),registered) if growth else Callable(self,"_card_pressed").bind(str(row.id),str(card.id),registered)
-		specs.append({"member":SLOT,"spec":{"Panel/Item_Own":{"visible":registered},"Panel/Item_Possible":{"visible":possible},
-			"Panel/Text_ItemName":{"visible":not growth and not label.is_empty(),"role":"source_text","text":label},
-			"Panel/Text_Amount":{"visible":not growth and amount>1,"role":"source_text","text":_number(amount)},
-			"Panel/Fx_Registration":{"visible":false},"CommonSlot/Btn":{"activate":press}}})
+		specs.append({"member":SLOT,"spec":slot_spec(registered,possible,growth,amount,press)})
 	var placed: Dictionary=_fill_list(scene,out,"Panel_Itembook/CardListView",specs,NAN,true)
 	if not placed.get("ok",false):return placed
 	var pictures: int=0
 	var cards: Array=row.get("cards",[])
+	var dimmed: int=0
 	for index: int in range((placed.scenes as Array).size()):
 		var raw: Dictionary=_growth_item_row(str(cards[index].id)) if growth else _item_row(int(cards[index].get("item_class_id",0)))
-		if _item_picture(placed.scenes[index],placed.outs[index],raw):pictures+=1
-	return {"ok":true,"slots":specs.size(),"pictures":pictures}
+		if not _item_picture(placed.scenes[index],placed.outs[index],raw):continue
+		pictures+=1
+		# Not yet registered: the icon in gray, softly blurred (shader only).
+		if not bool(cards[index].registered) and _dim_picture(placed.scenes[index],placed.outs[index]):dimmed+=1
+	return {"ok":true,"slots":specs.size(),"pictures":pictures,"dimmed":dimmed}
+
+## The slot icon of an unregistered card: gray + soft blur material
+## (source_material.gray_blur, TWILIGHT 근사 of the client's gray UI shader).
+func _dim_picture(scene: Node2D, out: Dictionary) -> bool:
+	var located: Dictionary=_locate(scene,out,"CommonSlot/Sp_IconSample")
+	if not located.get("ok",false):return false
+	var node: Variant=located.player.source_nodes.get(located.offset)
+	var sprite: Variant=node.get_meta("source_sprite") if is_instance_valid(node) and node.has_meta("source_sprite") else null
+	if not sprite is Sprite2D or (sprite as Sprite2D).texture==null:return false
+	var material: ShaderMaterial=SourceMaterial.gray_blur((sprite as Sprite2D).texture)
+	if material==null:return false
+	(sprite as Sprite2D).material=material
+	return true
 
 func _growth_item_row(card_id: String) -> Dictionary:
 	var runtime: Object=_runtime()

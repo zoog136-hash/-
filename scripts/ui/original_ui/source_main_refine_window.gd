@@ -243,7 +243,8 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	spec[P_ALL+"Btn_Alchemy/Normal/Label_Amount"]={"role":"source_text","text":_number(cost)}
 	var notice: String=_notice
 	if notice.is_empty() and not target.is_empty() and not can:notice=str(quote.get("reason",""))
-	if notice.is_empty() and snapshot.get("refine_contents_enabled")==false:notice="원본 523에서는 질서의 연금이 꺼져 있습니다 (ContentsControl Refine)"
+	# The ContentsControl note is a developer note (release shows no notice).
+	if notice.is_empty() and snapshot.get("refine_contents_enabled")==false and preload("res://scripts/boot/build_flags.gd").developer_ui():notice="원본 523에서는 질서의 연금이 꺼져 있습니다 (ContentsControl Refine)"
 	spec[P_ALL+"Label_Notice"]={"role":"source_text","text":notice,"visible":not notice.is_empty()}
 	var targets: int=materials.filter(func(e: Dictionary) -> bool: return e.kind=="target").size()
 	spec[P_ALL+"Nd_NoItem"]={"visible":targets==0}
@@ -253,7 +254,7 @@ func _spec(snapshot: Dictionary, materials: Array[Dictionary], target: Dictionar
 	var max_amount: int=int(target.get("max",0))
 	var amount: int=amount_of(target)
 	var percent: String=percent_of(target)
-	if _mode.begins_with("amount:"):percent+=" (TWILIGHT 근사)"
+	if _mode.begins_with("amount:") and preload("res://scripts/boot/build_flags.gd").developer_ui():percent+=" (TWILIGHT 근사)"
 	spec[P_ITEM+"Nd_Probability"]={"visible":has}
 	spec[P_ITEM+"Nd_Probability/Label"]={"role":"source_text","text":"성공 확률 %s" % percent}
 	for slot: String in ["Nd_Slot","Nd_Slot_Target","Nd_Slot_Special"]:
