@@ -16,6 +16,8 @@ extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 const RoutinePage=preload("res://scripts/ui/original_ui/source_main_routine_page.gd")
+## 업적 tab: the level growth rewards (former 96레벨 보상 screen, world.growth96).
+const GrowthRows=preload("res://scripts/progression/growth96_achievements.gd")
 const ROOT="UI/Quest/Quest_All.csb"
 const TAB_MAIN="UI/Quest/Quest_Tab_Main.csb"
 const ROW_REWARD="UI/Quest/Quest_List_Reward.csb"
@@ -127,8 +129,8 @@ func _rows() -> Array[Dictionary]:
 	var world: Object=_world.get_ref() if _world!=null else null
 	if world==null:return shown
 	var service: Variant=world.get("quest_service")
-	if service!=null and service.has_method("text_page"):return _text_rows(world,service)
-	if service==null or not service.has_method("entries"):return shown
+	if service!=null and service.has_method("text_page"):return _with_growth(world,_text_rows(world,service))
+	if service==null or not service.has_method("entries"):return _with_growth(world,shown)
 	var auto: Variant=world.get("quest_auto")
 	if auto!=null and auto.has_method("refresh_context"):auto.refresh_context(world)
 	var ready: Array[Dictionary]=[]
@@ -143,9 +145,34 @@ func _rows() -> Array[Dictionary]:
 	# Receivable first, then the next ones still waiting, then finished ones.
 	for group: Array[Dictionary] in [ready,waiting,done]:
 		for quest: Dictionary in group:
-			if shown.size()>=MAX_ROWS:return shown
+			if shown.size()>=MAX_ROWS:return _with_growth(world,shown)
 			shown.append(quest)
-	return shown
+	return _with_growth(world,shown)
+
+## 업적 tab: the growth reward rows join the list (receivable ones first, then
+## the next one still waiting; received ones after the other rows).
+func _with_growth(world: Object, shown: Array[Dictionary]) -> Array[Dictionary]:
+	if _category!="achievement":return shown
+	var ready: Array[Dictionary]=[]
+	var waiting: Array[Dictionary]=[]
+	var done: Array[Dictionary]=[]
+	for row: Dictionary in GrowthRows.rows(world.get("growth96")):
+		if bool(row.completed):done.append(row)
+		elif _receivable(row):ready.append(row)
+		elif waiting.is_empty():waiting.append(row)
+	var merged: Array[Dictionary]=[]
+	merged.append_array(ready)
+	var unfinished: Array[Dictionary]=[]
+	var finished: Array[Dictionary]=[]
+	for row: Dictionary in shown:
+		if bool(row.get("completed",false)):finished.append(row)
+		elif _receivable(row):merged.append(row)
+		else:unfinished.append(row)
+	merged.append_array(waiting)
+	merged.append_array(unfinished)
+	merged.append_array(finished)
+	merged.append_array(done)
+	return merged
 
 ## Resident text rows (quest_service.text_page): acceptable, then still
 ## waiting, then completed, at most MAX_ROWS.
@@ -436,6 +463,13 @@ func _select_category(category: String) -> Dictionary:
 
 func _receive(id: String) -> Dictionary:
 	_selected_id=id
+	if GrowthRows.is_row(id):
+		var world: Object=_world.get_ref() if _world!=null else null
+		var result: Dictionary=GrowthRows.claim(world.get("growth96") if world!=null else null,id)
+		var hud: Node=_hud.get_ref() if _hud!=null else null
+		if hud!=null and hud.has_method("show_message"):hud.call("show_message","성장 보상을 받았습니다." if result.get("ok",false) else str(result.get("message","")))
+		_request_refresh()
+		return {"ok":bool(result.get("ok",false)),"growth96":true,"quest_id":id}
 	if _claim.is_valid():_claim.call(id)
 	_request_refresh()
 	return {"ok":true,"emitted":true,"quest_id":id}
