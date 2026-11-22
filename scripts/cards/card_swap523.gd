@@ -288,7 +288,7 @@ func _restore_progress(category: String, before: Dictionary) -> void:
 		if owner == "equipped": world.equipped_catalog[category] = before[owner]
 		else: _put_state(world.get(owner), before[owner])
 
-func _plan(category: String, identity: String) -> Dictionary:
+func _plan(category: String, identity: String, confirmation_only: bool = false) -> Dictionary:
 	if world == null: return _fail("게임 연결 전")
 	if not problem.is_empty(): return _fail("카드 다시 뽑기 저장을 읽지 못해 막았습니다: " + problem)
 	if not DECKS.has(category): return _fail("다시 뽑기를 지원하지 않는 카드 종류입니다")
@@ -299,7 +299,8 @@ func _plan(category: String, identity: String) -> Dictionary:
 	var raw: Dictionary = SOURCE.row("BuffCard", int(record.source_card_id))
 	if raw.is_empty() or int(raw.get("BuffCardDeckID",-1)) != deck: return _fail("원본 카드 정의가 바뀌었습니다")
 	var grade_id: int = int(raw.GradeID)
-	var cards: Dictionary = world.card_draw_fusion.export_state()
+	var owner = world.card_draw_fusion
+	var cards: Dictionary = {"owned":owner.owned,"spare":owner.spare,"source_card_receipts":owner.source_card_receipts}
 	if cards.get("owned",{}).get(category,{}).get(identity,false) != true: return _fail("보유하지 않은 카드입니다")
 	var grade_value: int = int(SOURCE.row("Grade", grade_id).get("GradeValue", 0))
 	if grade_value < int(SOURCE.row("Grade", 4).get("GradeValue", 4)) or grade_value > int(SOURCE.row("Grade", 52).get("GradeValue", 7)): return _fail("영웅 등급 이상 카드만 다시 뽑을 수 있습니다")
@@ -322,7 +323,7 @@ func _plan(category: String, identity: String) -> Dictionary:
 		if spares > free: copy_reason = "퀘스트로 받아 보류 중인 중복분이 있어 마지막 1장은 바꿀 수 없습니다"
 		else:
 			copy_reason = _last_copy_guard(category, identity)
-			if APPROX_MOVE_PROGRESS and copy_reason.is_empty(): info["progress_moves"] = progress_report(category, identity)
+			if not confirmation_only and APPROX_MOVE_PROGRESS and copy_reason.is_empty(): info["progress_moves"] = progress_report(category, identity)
 	var held: Dictionary = state.pending.get(category + "|" + identity, {})
 	if not held.is_empty():
 		var result_record: Dictionary = card_record(category, str(held.result))
@@ -330,6 +331,10 @@ func _plan(category: String, identity: String) -> Dictionary:
 			"swap_count":int(held.swap_count), "picked":bool(held.picked)}
 		info.can_confirm = copy_reason.is_empty() and not result_record.is_empty()
 		info.confirm_reason = copy_reason if not copy_reason.is_empty() else ("" if not result_record.is_empty() else "대기 결과 카드 정의를 찾을 수 없습니다")
+		if info.can_confirm and int(cards.get("spare",{}).get(category,{}).get(str(held.result),0)) >= MAX_SPARE:
+			info.can_confirm = false
+			info.confirm_reason = "결과 카드 저장 한도"
+	if confirmation_only: return info
 	if used >= limit: return _fail("다시 뽑기 최대 횟수(%d회)를 모두 썼습니다" % limit, info)
 	var next: int = used + 1
 	var cost: Dictionary = cost_row(deck, grade_id, next)
@@ -376,15 +381,15 @@ func _pick_candidates(category: String, identity: String, count: int, pool: Arra
 ## copies_available, uses_last_copy, candidates[...], candidate_count, pick_count,
 ## pick_candidates[...], pending{result{identity,card_id,name,grade},swap_count,picked}|{},
 ## can_confirm, confirm_reason. ok:false still carries the known fields for display.
-func quote(category: String, identity: String) -> Dictionary:
+func quote(category: String, identity: String, confirmation_only: bool = false) -> Dictionary:
 	_picks_dirty = false
-	var plan: Dictionary = _plan(category, identity)
+	var plan: Dictionary = _plan(category, identity, confirmation_only)
 	# Newly shown pick candidates are saved at once, so restarting the game
 	# does not show a different 5 (a refused save keeps them for this session).
 	if _picks_dirty and world != null: world.call("_save_game", true)
 	_picks_dirty = false
 	_quotes.clear() # one confirmation at a time
-	if bool(plan.get("ok", false)):
+	if not confirmation_only and bool(plan.get("ok", false)):
 		plan["token"] = Crypto.new().generate_random_bytes(16).hex_encode()
 		_quotes[plan.token] = _fingerprint(plan)
 	if bool(plan.get("can_confirm", false)):
@@ -478,39 +483,85 @@ func confirm(token: String) -> Dictionary:
 	var held: Dictionary = _quotes.get(token, {})
 	if held.is_empty() or held.get("kind") != "confirm": return _fail("확정할 대기 결과가 없거나 견적이 만료되었습니다 · 다시 확인하세요")
 	_quotes.erase(token)
-	var plan: Dictionary = _plan(str(held.category), str(held.identity))
-	if not bool(plan.get("can_confirm", false)): return _fail(str(plan.get("confirm_reason", plan.get("reason", "확정할 수 없습니다"))), plan)
-	if _confirm_fingerprint(plan) != held: return _fail("카드·대기 결과가 바뀌었습니다 · 다시 확인하세요")
+	var committed: Dictionary = _commit_confirmations([held])
+	return committed.results[0] if committed.get("ok",false) else committed
+
+## Snapshot only payable pending results; quoting confirmation must never roll
+## new candidates, touch the wallet, or save.
+func quote_all() -> Dictionary:
+	_quotes.clear()
+	var eligible: Array[Dictionary] = []
+	for row: Dictionary in pending_results():
+		var plan: Dictionary = _plan(str(row.category),str(row.identity),true)
+		if plan.get("can_confirm",false):
+			eligible.append(_confirm_fingerprint(plan))
+	var blocked: int = state.pending.size() - eligible.size()
+	if eligible.is_empty(): return _fail("확정할 수 있는 대기 결과가 없습니다 · 조건 미충족 %d장" % blocked)
+	var token: String = Crypto.new().generate_random_bytes(16).hex_encode()
+	_quotes[token] = {"kind":"confirm_all","entries":eligible}
+	return {"ok":true,"token":token,"count":eligible.size(),"blocked":blocked}
+
+func confirm_all(token: String) -> Dictionary:
+	var held: Dictionary = _quotes.get(token,{})
+	if held.get("kind") != "confirm_all": return _fail("전체 확정 견적이 만료되었습니다 · 다시 확인하세요")
+	_quotes.erase(token)
+	return _commit_confirmations(held.entries)
+
+func _commit_confirmations(entries: Array[Dictionary]) -> Dictionary:
+	var cards_before: Dictionary = world.card_draw_fusion.export_state()
+	var pending_before: Dictionary = state.pending.duplicate(true)
+	var results: Array[Dictionary] = []
+	var moved: Array[Dictionary] = []
+	var reason: String = ""
+	for expected: Dictionary in entries:
+		var plan: Dictionary = _plan(str(expected.category),str(expected.identity),true)
+		if not plan.get("can_confirm",false) or _confirm_fingerprint(plan) != expected:
+			reason = str(plan.get("confirm_reason",plan.get("reason","")))
+			if reason.is_empty(): reason = "카드·대기 결과가 바뀌었습니다 · 다시 확인하세요"
+			break
+		var result: Dictionary = _apply_confirmation(plan,moved)
+		if not result.get("ok",false):
+			reason = str(result.reason)
+			break
+		results.append(result)
+	var bag: Dictionary = world.inventory.duplicate(true)
+	if reason.is_empty() and _saved_world(bag) != OK:
+		reason = "확정 저장 실패 · 원래 카드와 대기 결과를 그대로 두었습니다"
+	revision += 1
+	if not reason.is_empty():
+		state.pending = pending_before
+		world.card_draw_fusion.import_state(cards_before)
+		moved.reverse()
+		for entry: Dictionary in moved:
+			_restore_progress(str(entry.category),entry.before)
+		return _fail(reason)
+	var message: String = "카드 다시 뽑기 전체 확정 · %d장" % results.size()
+	if results.size() == 1:
+		var result: Dictionary = results[0]
+		message = "카드 다시 뽑기 확정 · %s → %s (%s)" % [str(result.from.name),str(result.result.get("name","")),str(result.category)]
+	_after_save(bag,message)
+	return {"ok":true,"saved":true,"results":results,"count":results.size()}
+
+func _apply_confirmation(plan: Dictionary, progress: Array[Dictionary]) -> Dictionary:
 	var category: String = str(plan.category)
 	var identity: String = str(plan.card.identity)
-	var key: String = category + "|" + identity
 	var result_identity: String = str(plan.pending.result.identity)
-	var result_record: Dictionary = card_record(category, result_identity)
+	var result_record: Dictionary = card_record(category,result_identity)
 	var cards = world.card_draw_fusion
-	if int(cards.spare.get(category,{}).get(result_identity,0)) >= MAX_SPARE: return _fail("결과 카드 저장 한도")
-	var cards_before: Dictionary = cards.export_state()
-	var state_before: Dictionary = state.duplicate(true)
 	var extras: Dictionary = cards.spare[category]
-	var from_spare: int = mini(int(plan.copies_required), CARDS.outgoing_material_spare(cards_before, category, identity))
-	var last_copy: bool = from_spare < int(plan.copies_required)
-	var left: int = int(extras.get(identity, 0)) - from_spare
+	var copies: int = int(plan.copies_required)
+	var from_spare: int = mini(copies,int(plan.copies_available)-1)
+	var last_copy: bool = from_spare < copies
+	var left: int = int(extras.get(identity,0)) - from_spare
+	if last_copy and left > 0: return _fail("퀘스트 보류 중복분이 있어 마지막 1장은 바꿀 수 없습니다")
 	if left > 0: extras[identity] = left
 	else: extras.erase(identity)
-	if last_copy:
-		if int(extras.get(identity, 0)) > 0: cards.import_state(cards_before); return _fail("퀘스트 보류 중복분이 있어 마지막 1장은 바꿀 수 없습니다")
-		(cards.owned[category] as Dictionary).erase(identity)
-	var received: Dictionary = cards._receive(category, {"id":result_identity, "record":result_record})
-	received["identity"] = str(received.get("id", ""))
+	if last_copy: (cards.owned[category] as Dictionary).erase(identity)
+	var received: Dictionary = cards._receive(category,{"id":result_identity,"record":result_record})
+	received["identity"] = str(received.get("id",""))
 	var moved: Dictionary = {}
-	if last_copy and APPROX_MOVE_PROGRESS: moved = _move_progress(category, identity, result_identity, result_record)
-	state.pending.erase(key)
-	revision += 1
-	var bag: Dictionary = world.inventory.duplicate(true)
-	if _saved_world(bag) != OK:
-		state = state_before
-		cards.import_state(cards_before)
-		_restore_progress(category, moved)
-		revision += 1
-		return _fail("확정 저장 실패 · 원래 카드와 대기 결과를 그대로 두었습니다")
-	_after_save(bag, "카드 다시 뽑기 확정 · %s → %s (%s)" % [str(plan.card.name), str(received.get("name","")), category])
-	return {"ok":true, "reason":"", "saved":true, "category":category, "from":plan.card, "result":received, "consumed":int(plan.copies_required), "used_last_copy":last_copy, "moved_progress":moved.keys()}
+	if last_copy and APPROX_MOVE_PROGRESS:
+		moved = _move_progress(category,identity,result_identity,result_record)
+		progress.append({"category":category,"before":moved})
+	state.pending.erase(category+"|"+identity)
+	return {"ok":true,"reason":"","saved":true,"category":category,"from":plan.card,"result":received,"consumed":copies,"used_last_copy":last_copy,"moved_progress":moved.keys()}
