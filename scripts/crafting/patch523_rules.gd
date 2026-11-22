@@ -1117,12 +1117,17 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 	var canonical: Dictionary = record(str(material.source_id))
 	if canonical.is_empty():
 		return false
+	# Compare the same verified ItemClass data whether a saved record stores
+	# its template fields inline or loads them lazily.
+	canonical = NATIVE_FIELDS.full(canonical)
 	var annotated: Dictionary = OPTIONS.annotate(canonical)
-	var pinned: Dictionary = physical.get("record", {})
+	var pinned: Dictionary = NATIVE_FIELDS.full(physical.get("record", {}))
 	if not catalog_identity_matches(pinned,str(material.source_id)): return false
 	if canonical.get("source_m_native_item",false):
+		# The catalog can regenerate tooltip copy as display tables become
+		# available. It has no bearing on a saved seal's identity or modifiers.
 		for key: Variant in canonical:
-			if key not in ["bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
+			if key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
 	for key: Variant in pinned:
 		if key == "originalSourceOptions":
 			if pinned[key] != canonical.get("sourceOptions", []):

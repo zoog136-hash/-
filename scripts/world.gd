@@ -4695,6 +4695,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var selected_source: Dictionary=item_instances.get(str(selected.get("id","")),{}).get("record",source_reward)
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
+	if _open_owned_seal_scroll(item_name,str(selected.get("id","")),selected_source):return
 	if preload("res://scripts/shop/source523_cash_packages.gd").try_use(self,item_name):return
 	if alchemy_held_items.try_use(self,item_name,str(selected.get("id",""))):return
 	if unconfirmed523.try_use(item_name):return
@@ -4714,7 +4715,6 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
-	if _open_owned_seal_scroll(item_name,str(selected.get("id","")),selected_source): return
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
@@ -6197,20 +6197,28 @@ func _patch523_open_box(source_id: String) -> void:
 ## Permanent seal scrolls use their own source group and never the generic
 ## item-use fallback. Keep the exact bag reference until an enhancement commits.
 func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
-	var scroll_id: String = str(record.get("source_item_class_id",""))
-	if scroll_id not in PATCH523_SEAL_ACTIONS.SCROLLS:
+	var raw_id: Variant=record.get("source_item_class_id")
+	var scroll_id: String=PATCH523_ENHANCE.item_id(record)
+	if (raw_id is int or raw_id is float) and is_finite(float(raw_id)) and raw_id==floorf(float(raw_id)):
+		scroll_id=str(int(raw_id))
+	if scroll_id.is_empty():
 		for candidate: String in PATCH523_SEAL_ACTIONS.SCROLLS:
 			if patch523_equipment.record_view(candidate).get("name","")==item_name:
 				scroll_id=candidate
 				break
 	if scroll_id not in PATCH523_SEAL_ACTIONS.SCROLLS: return false
-	if patch523_equipment.record_view(scroll_id).get("name","")!=item_name:
-		hud.show_message("원본 인장 강화 규칙을 확인할 수 없습니다 · 주문서 보존")
+	if patch523_equipment.record_view(scroll_id).is_empty():
+		hud.show_message("이 주문서의 인장 강화 규칙을 불러오지 못했습니다.")
 		return true
 	if not _patch523_item_allowed(): return true
 	if int(inventory.get(item_name,0))<1 or _item_locked(item_name) or _item_locked(item_name,scroll_uid):
 		hud.show_message("주문서 소지 수량과 잠금을 확인하세요")
 		return true
+	if scroll_uid.is_empty():
+		var matches: Array[String]=[]
+		for uid: String in item_instances:
+			if item_instances[uid].get("name")==item_name:matches.append(uid)
+		if matches.size()==1:scroll_uid=matches[0]
 	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	return true
 
@@ -6219,14 +6227,32 @@ func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String 
 	var physical: Dictionary = item_instances[item_id]
 	if int(inventory.get(str(physical.get("name","")),0))<1: return PATCH523_EQUIPMENT.denied("보유 장비가 없습니다")
 	var scroll_name: String = str(patch523_equipment.record(scroll_id).get("name",""))
-	var quote: Dictionary = PATCH523_SEAL_ACTIONS.quote(patch523_equipment, physical, scroll_id, inventory, gold,
-		_item_locked(str(physical.name),item_id) or _item_locked(scroll_name))
-	if not quote.get("ok",false): return quote
 	var stock = preload("res://scripts/loot/current523_native_stack.gd")
+	var owned: Dictionary={}
+	var legacy: bool=false
 	if not scroll_uid.is_empty():
-		var owned: Dictionary = stock.proof(self,scroll_uid)
-		if owned.is_empty() or owned.record.get("source_item_class_id")!=int(scroll_id) or owned.record.get("name")!=scroll_name or int(owned.receipt.bless_raw)!=1 or _item_locked(scroll_name,scroll_uid):
-			return PATCH523_EQUIPMENT.denied("선택한 일반 주문서의 원본 ID·소지·잠금을 확인하세요")
+		var scroll: Dictionary=item_instances.get(scroll_uid,{})
+		owned=stock.proof(self,scroll_uid)
+		if not owned.is_empty() and owned.record.get("source_item_class_id")==int(scroll_id) and int(owned.receipt.bless_raw)==1:
+			scroll_name=str(owned.record.name)
+		else:
+			var record: Dictionary=scroll.get("record",{})
+			var stored_name: String=str(scroll.get("name",""))
+			var current_name: String=str(source_item_record(int(scroll_id)).get("name",""))
+			# Old saves sometimes pin one ordinary scroll as a physical unit.
+			# An invalid or foreign receipt must never fall back to legacy use.
+			legacy=owned.is_empty() and not scroll.has(stock.RECEIPT) and not scroll.has(stock.QUANTITY) and not scroll.has("quest_reward_receipt") and not scroll.has("source_reward_quantity") \
+				and (record.get("source_item_class_id")==int(scroll_id) or PATCH523_ENHANCE.item_id(record)==scroll_id) and int(scroll.get("level",-1))==0 \
+				and patch523_equipment.bless_code(scroll)==1 and not stored_name.is_empty() and stored_name in [scroll_name,current_name]
+			if not legacy:return PATCH523_EQUIPMENT.denied("가방에서 보유한 일반 인장 강화 주문서를 다시 선택하세요")
+			scroll_name=stored_name
+	var quote: Dictionary = PATCH523_SEAL_ACTIONS.quote(patch523_equipment,physical,scroll_id,inventory,gold,
+		_item_locked(str(physical.name),item_id) or _item_locked(scroll_name) or _item_locked(scroll_name,scroll_uid),scroll_name)
+	if not quote.get("ok",false):return quote
+	if legacy:
+		if int(quote.count)!=1:return PATCH523_EQUIPMENT.denied("선택한 주문서 개체의 수량이 부족합니다")
+		quote["legacy_scroll_uid"]=scroll_uid
+	elif not scroll_uid.is_empty():
 		if int(owned.remaining)<int(quote.count): return PATCH523_EQUIPMENT.denied("선택한 주문서 묶음의 수량이 부족합니다")
 		quote["scroll_request"]={"physical_id":scroll_uid,"quantity":int(quote.count),"expected_quantity":int(owned.remaining),
 			"expected_remaining":int(owned.remaining)-int(quote.count),"source_native_stack_receipt":owned.receipt}
@@ -6252,6 +6278,11 @@ func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: Stri
 			hud.show_message(str(debit.get("reason","선택한 주문서를 사용할 수 없습니다")))
 			return
 		staged = debit.overrides
+	elif quote.has("legacy_scroll_uid"):
+		staged={"inventory":inventory.duplicate(true),"item_instances":item_instances.duplicate(true)}
+		staged.item_instances.erase(quote.legacy_scroll_uid)
+		staged.inventory[quote.scroll_name]=int(staged.inventory[quote.scroll_name])-int(quote.count)
+		if int(staged.inventory[quote.scroll_name])==0:staged.inventory.erase(quote.scroll_name)
 	var before: Dictionary = {"inventory":inventory.duplicate(true),"instances":item_instances.duplicate(true),
 		"equipped":equipped_items.duplicate(true),"gold":gold,"rng":rng.state,"hp":hp,"mp":mp,"next_id":next_item_instance_id}
 	gold-=int(quote.cost)
@@ -6291,7 +6322,7 @@ func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: Stri
 	if not staged.is_empty():
 		inventory=staged.inventory
 		item_instances=staged.item_instances
-		consumable_service.import_state(staged.consumable_state)
+		if staged.has("consumable_state"):consumable_service.import_state(staged.consumable_state)
 	_update_hud()
 	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	hud.append_log("원본 인장 강화 · %s +%d · %s" % [target_name,int(quote.level),result_type])
@@ -10109,6 +10140,9 @@ func card523_swap_confirm_all(token: String) -> Dictionary:
 ## Every saved pending reroll result (e.g. to reopen the window after a reload).
 func card523_swap_pending() -> Array:
 	return card_swap523.pending_results()
+
+func card523_swap_confirmed() -> Dictionary:
+	return card_swap523.confirmed_cards()
 
 func skill_card523_materials(grade_id: int = -1) -> Array:
 	return skill_cards523.materials(grade_id)
