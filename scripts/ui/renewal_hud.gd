@@ -1512,11 +1512,11 @@ func refresh_inventory(items: Dictionary) -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open():
 		original_main_ui_status["production_window"] = original_main_ui_controller.refresh_production_window()
 
-func open_patch523_equipment_info() -> void:
+func open_patch523_equipment_info(scroll_id: String = "", scroll_uid: String = "") -> void:
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
 	var screen := Patch523EquipmentInfo.new()
 	workspace.mount(screen)
-	screen.configure(self)
+	screen.configure(self,scroll_id,scroll_uid)
 
 func open_item_sell() -> void:
 	_open_window("sell","아이템 매입","아이템 검색 · 강화 장비 ID 확인 · 판매")

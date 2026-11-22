@@ -8,6 +8,7 @@ extends SceneTree
 ## -- --pack=<private original main UI pack directory>: CardChange_All mounts
 ## with the retry, pick and confirm popups.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_card_change_window.gd")
+const ROUTER=preload("res://scripts/ui/original_ui/source_button_router.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 var checks: int=0
 var failures: Array[String]=[]
@@ -18,7 +19,7 @@ class FakeWorld extends Node:
 	var picks: int=0
 	func card523_swap_pending() -> Array:
 		return waiting.duplicate(true)
-	func card523_swap_quote(category: String, identity: String) -> Dictionary:
+	func card523_swap_quote(category: String, identity: String, _confirmation_only: bool = false) -> Dictionary:
 		calls.append(["quote",category,identity])
 		var pending: bool=identity=="source:202"
 		return {"ok":true,"token":"t%d" % calls.size(),"remaining":4,"cost":{"amount":2900},"diamonds":10000,"pick_count":picks,
@@ -30,6 +31,12 @@ class FakeWorld extends Node:
 	func card523_swap_confirm(token: String) -> Dictionary:
 		calls.append(["confirm",token])
 		return {"ok":true,"category":"변신","result":{"identity":"source:203","name":"전설 C","grade":"전설"}}
+
+	func card523_swap_quote_all() -> Dictionary:
+		return {"ok":true,"token":"bulk","count":1,"blocked":0}
+	func card523_swap_confirm_all(token: String) -> Dictionary:
+		calls.append(["confirm_all",token])
+		return {"ok":true,"count":1}
 
 class FakePack extends RefCounted:
 	var manifest: Dictionary={"scenes":{"UI/CardChange/CardChange_Gacha.csb":{},"UI/CardChange/CardChange_Result.csb":{}}}
@@ -75,8 +82,8 @@ func _run() -> void:
 	window._choose("source:302")
 	window._swap()
 	check(world.calls[-1][0]=="execute" and world.calls[-1][2]=="source:302","the picked candidate runs with the token")
-	check(not window._confirm(1).get("ok",true),"a card without a waiting result has nothing to confirm")
-	window._confirm(0)
+	check(not window._confirm_entry(window.cards()[1]).get("ok",true),"a card without a waiting result has nothing to confirm")
+	window._confirm_entry(window.cards()[0])
 	check(window.popup=="confirm","카드 확정 opens the confirm popup")
 	window._confirm_result()
 	check(world.calls[-1][0]=="confirm" and str(world.calls[-1][1]).begins_with("c") and window.popup=="","카드 확정 runs the confirm token")
@@ -90,11 +97,15 @@ func _run() -> void:
 	check(window.popup=="gacha" and window.reveal.after.name=="영웅 Z" and window.reveal.before.name=="영웅 A" and window.reveal.category=="변신","다시 뽑기 shows the flip of the card before and the result: "+str(window.reveal))
 	window._close_popup()
 	check(window.popup=="","a tap returns to the list")
-	window._confirm(0)
+	window._confirm_entry(window.cards()[0])
 	window._confirm_result()
 	check(window.popup=="result" and window.reveal.after.name=="전설 C" and window.reveal.after.grade=="전설","카드 확정 shows the confirmed card: "+str(window.reveal))
 	window._close_popup()
 	window._pack=null
+	window._confirm_all()
+	check(window.popup=="confirm_all","전체 확정 opens the confirmation popup")
+	window._confirm_all_results()
+	check(world.calls[-1]==["confirm_all","bulk"] and window.popup=="","전체 확정 submits the exact bulk quote")
 	var offer: Dictionary={"candidate_count":3,"candidates":[{"name":"가"},{"name":"나"},{"name":"다"}]}
 	check(WINDOW.probability_text(offer)=="같은 등급 카드 3종 중 1장이 나옵니다 (각 33.3333%, 지금 카드 제외)","뽑기 확률: each candidate 1 / count: "+WINDOW.probability_text(offer))
 	check(WINDOW.list_text(offer)=="다시 뽑기 후보 3종: 가 · 나 · 다" and WINDOW.probability_text({}).contains("없습니다"),"목록 보기 lists the quote's candidates")
@@ -107,6 +118,23 @@ func _run() -> void:
 	host.world.queue_free()
 	print("ORIGINAL_UI_CARD_CHANGE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
+
+func tap_button(located: Dictionary) -> bool:
+	if not located.get("ok",false):return false
+	var node: Node=located.player.source_nodes.get(located.offset)
+	if not is_instance_valid(node) or not node.has_meta("source_button"):return false
+	var button: Node=node.get_meta("source_button")
+	var area: Control=button.get("_input_area")
+	if not is_instance_valid(area):return false
+	var at: Vector2=area.get_global_rect().get_center()
+	var router=ROUTER.new()
+	for pressed: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.index=0
+		event.position=at
+		event.pressed=pressed
+		router.route(event,at,[button])
+	return true
 
 func _real_pack(pack_dir: String) -> void:
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(pack_dir.path_join("receipt.json")))
@@ -130,15 +158,22 @@ func _real_pack(pack_dir: String) -> void:
 	var pick: Dictionary=window._swap()
 	check(pick.get("handled",false) and int(pick.filled.popup_fill.candidates)==2,"CardChange_Popup_RetrySpecial_Select mounts the candidates: "+str(pick).left(300))
 	check(window._choose("source:301").get("handled",false),"a picked candidate mounts")
-	var confirm: Dictionary=window._confirm(0)
-	check(confirm.get("handled",false) and confirm.filled.popup=="confirm","CardChange_Popup_Confirm mounts: "+str(confirm).left(300))
+	window._close_popup()
+	var list: Dictionary=window._list(window._scene,window._out,"Nd_PageView/ListView_Swipe")
+	var row_out: Dictionary={}
+	window._bind(WINDOW.SLOT,"",[],{},row_out)
+	var first: Node2D=list.content.get_child(0)
+	check(tap_button(window._locate(first,row_out,"Panel/Btn_Select")) and window.popup=="confirm","tapping the authored pending card button mounts the confirmation")
+	window._close_popup()
+	check(tap_button(window._locate(window._scene,window._out,"Btn_Confirm")) and window.popup=="confirm_all","tapping the authored footer opens bulk confirmation")
+	window._close_popup()
 	if pack.manifest.get("scenes",{}).has(WINDOW.GACHA):
 		host.world.picks=0
 		window._retry(1)
 		var flipped: Dictionary=window._swap()
 		check(flipped.get("handled",false) and flipped.filled.popup_fill.popup=="gacha" and flipped.filled.popup_fill.clip=="CardSet_One","CardChange_Gacha mounts and flips: "+str(flipped).left(300))
 		window._close_popup()
-		window._confirm(0)
+		window._confirm_entry(window.cards()[0])
 		var shown_result: Dictionary=window._confirm_result()
 		check(shown_result.get("handled",false) and shown_result.filled.popup_fill.popup=="result" and shown_result.filled.popup_fill.lit,"CardChange_Result mounts and a 전설 card lights up: "+str(shown_result).left(300))
 	else:

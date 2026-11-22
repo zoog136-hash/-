@@ -180,6 +180,27 @@ func reroll(world: Node) -> void:
 	check(not world.card523_swap_confirm(str(seventh.confirm_token)).get("ok", true), "a confirm token works once")
 	on_disk = save_data(world)
 	check(not on_disk.card_draw_fusion.owned["변신"].has(target) and on_disk.card_draw_fusion.owned["변신"].get(chosen) == true and (on_disk.card_swap523.pending as Dictionary).is_empty() and int(on_disk.card_swap523.counts["변신"][target]) == 6, "save after confirm: replaced card, no pending, count 6")
+	# Two independently saved results: quote must not generate candidates or
+	# charge, refusal rolls both back, and one successful save settles both.
+	for idx: int in [2,3]:
+		var id: String = str(hero[idx].identity)
+		cards.owned["변신"][id] = true
+		var pending_roll: Dictionary = reroll_once(world,"변신",id)
+		check(pending_roll.get("ok",false),"queue result for bulk confirmation")
+	var held_before: Dictionary = swap.state.pending.duplicate(true)
+	var cards_before: Dictionary = cards.export_state()
+	var wallet: int = int(world.inventory["다이아"])
+	var before_file: Dictionary = save_data(world)
+	var bulk: Dictionary = world.card523_swap_quote_all()
+	check(bulk.get("count",0)==2 and before_file==save_data(world),"bulk quote offers both results without saving")
+	world.patch523_owner_state_problem = "test: save refused"
+	var rollback: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
+	world.patch523_owner_state_problem = ""
+	check(not rollback.get("ok",true) and cards.export_state()==cards_before and swap.state.pending==held_before,"bulk refusal rolls both results back")
+	bulk = world.card523_swap_quote_all()
+	var complete: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
+	check(complete.get("count",0)==2 and swap.state.pending.is_empty() and int(world.inventory["다이아"])==wallet and save_data(world).card_swap523.pending.is_empty(),"bulk saves both results without further charge")
+	check(not world.card523_swap_confirm_all(str(bulk.get("token",""))).get("ok",true),"bulk token is single-use")
 	# Existing owner state on the last copy: TWILIGHT 근사 — moved to the result card.
 	var guarded: String = str(hero[1].identity)
 	cards.owned["변신"][guarded] = true; cards.spare["변신"].erase(guarded)

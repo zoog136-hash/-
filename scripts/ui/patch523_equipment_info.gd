@@ -18,7 +18,12 @@ var catalog_dialog: FileDialog
 var catalog_status: Label
 const DEFAULT_SHA: String = "e362bbaf4e957863397808127485f3dbab47ce1c7010bb47766f381ae891b7d1"
 
-func configure(controller: Node) -> void:
+var bag_scroll_id: String = ""
+var bag_scroll_uid: String = ""
+
+func configure(controller: Node, selected_scroll: String = "", selected_uid: String = "") -> void:
+	bag_scroll_id = selected_scroll
+	bag_scroll_uid = selected_uid
 	hud = controller
 	world = hud.get_parent()
 	name = "Patch523EquipmentInfo"
@@ -97,6 +102,8 @@ func configure(controller: Node) -> void:
 		var source_id: String = book.identity(physical)
 		if source_id.is_empty() or not book.data.get("items", {}).has(source_id):
 			continue
+		if not bag_scroll_id.is_empty() and source_id not in ["30671","130551"]:
+			continue
 		ids.append(str(id))
 		equipment.add_item("%s +%d · %s · ID %s" % [str(physical.name), int(physical.level), "축복" if book.bless_code(physical) == 2 else "일반", str(id)])
 		_option_source_image(equipment,equipment.item_count-1,int(source_id))
@@ -111,6 +118,8 @@ func configure(controller: Node) -> void:
 		scroll_ids.append(source_id)
 		scroll.add_item(str(book.catalog_record_of(source_id).get("name","")))
 		_option_source_image(scroll,scroll.item_count-1,int(source_id))
+	var selected_index: int = scroll_ids.find(bag_scroll_id)
+	if selected_index>=0: scroll.select(selected_index)
 	equipment.item_selected.connect(func(_i: int) -> void: _refresh())
 	scroll.item_selected.connect(func(_i: int) -> void: _refresh())
 	# Keep source actions inside short windows while the growing installation/
@@ -147,7 +156,7 @@ func _option_source_image(choice: OptionButton, index: int, item_class_id: int) 
 func _refresh() -> void:
 	source_action.disabled = true
 	if ids.is_empty() or scroll_ids.is_empty():
-		detail.text = "원본523 규칙 팩과 정확한 원본 ID를 가진 보유 장비가 필요합니다. 기존 장비·세이브는 유지됩니다."
+		detail.text = "보유한 수호의 인장 또는 회복의 인장이 필요합니다." if not bag_scroll_id.is_empty() else "원본523 규칙 팩과 정확한 원본 ID를 가진 보유 장비가 필요합니다."
 		return
 	var book: Object = world.patch523_equipment
 	var physical: Dictionary = world.item_instances.get(ids[equipment.selected], {})
@@ -170,7 +179,7 @@ func _refresh() -> void:
 		text+="\n[b]현재 단계 적용 효과[/b]\n%s\n축복 옵션: %s\n" % [UI.safe(world.ENCHANT.summary(world._enhancement_kind_for_record(record),level_value,prepared)),UI.safe(world.EQUIPMENT_BLESSING.effect_text(str(record.get("grade","")),world._enhancement_kind_for_record(record),prepared))]
 		var unconnected: Array=prepared.patch523_effect_basis.get("unconnected_effect_row_ids",[])
 		if not unconnected.is_empty(): text+="이 아이템의 전체 단계 중 조건부·발동 등 미연결 원본 행 %d개: 원문 보존, 수치로 대체 적용하지 않음\n" % unconnected.size()
-	var quote: Dictionary = world.patch523_seal_quote(ids[equipment.selected],str(scroll_id))
+	var quote: Dictionary = world.patch523_seal_quote(ids[equipment.selected],str(scroll_id),_selected_scroll_uid(str(scroll_id)))
 	if bool(quote.get("ok",false)):
 		source_action.disabled = false
 		text += "\n[b]원본 인장 강화 실행[/b]\n공식 확률 %.4f%% · 현재 +%d → +%d · 실패 %s\n주문서 %d개 · %d 아데나\n%s\n" % [float(quote.success),level_value,level_value+1,"유지" if bool(quote.protected) else "소실",int(quote.count),int(quote.cost),UI.safe(quote.economy_label)]
@@ -269,13 +278,17 @@ func _install_selected(path: String) -> void:
 	hud.show_message("원본523 규칙 팩 설치 완료")
 	hud.open_patch523_equipment_info()
 
+func _selected_scroll_uid(scroll_id: String) -> String:
+	return bag_scroll_uid if scroll_id==bag_scroll_id else ""
+
 func _confirm_source() -> void:
 	if ids.is_empty() or scroll_ids.is_empty(): return
 	var item_id: String = ids[equipment.selected]
 	var scroll_id: String = scroll_ids[scroll.selected]
-	var quote: Dictionary = world.patch523_seal_quote(item_id,scroll_id)
+	var scroll_uid: String = _selected_scroll_uid(scroll_id)
+	var quote: Dictionary = world.patch523_seal_quote(item_id,scroll_id,scroll_uid)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","실행 조건을 확인하세요")))
 		_refresh()
 		return
-	hud.confirm_action("원본 인장 강화 확인", "%s +%d → +%d\n성공 %.4f%% · 실패 %s\n%s %d개 + %d 아데나\n%s" % [str(quote.item),int(quote.level),int(quote.level)+1,float(quote.success),"유지" if bool(quote.protected) else "장비 소실",str(quote.scroll_name),int(quote.count),int(quote.cost),str(quote.economy_label)],"강화",func(_count: int) -> void: world._patch523_attempt_seal(item_id,scroll_id))
+	hud.confirm_action("원본 인장 강화 확인", "%s +%d → +%d\n성공 %.4f%% · 실패 %s\n%s %d개 + %d 아데나\n%s" % [str(quote.item),int(quote.level),int(quote.level)+1,float(quote.success),"유지" if bool(quote.protected) else "장비 소실",str(quote.scroll_name),int(quote.count),int(quote.cost),str(quote.economy_label)],"강화",func(_count: int) -> void: world._patch523_attempt_seal(item_id,scroll_id,scroll_uid))
