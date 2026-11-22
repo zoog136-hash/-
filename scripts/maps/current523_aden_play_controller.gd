@@ -1185,6 +1185,25 @@ func use_walk_in_portal(id: int) -> Dictionary:
 	last_walk_in_portal={"ok":moved,"id":id,"land_id":int(territory.LandID),"bounds":bounds,"reason":"" if moved else problem}
 	return last_walk_in_portal
 
+## Whether `land_id` can be entered by enter_source_land at all: the 523
+## original field is active and the installed map pack holds a ready bundle
+## for that Land. "" when it can; otherwise the reason shown to the player.
+## Reads only the already loaded catalog; nothing is moved or saved.
+func source_land_ready(land_id: int) -> String:
+	var world: Node=_world()
+	if not active or not source_owned or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC:
+		return "원본 지도에서만 입장할 수 있습니다."
+	var catalog: RefCounted=_catalog_for(settings)
+	if catalog==null: return "지도 자료를 읽을 수 없어 입장할 수 없습니다."
+	var land: Dictionary=catalog.call("land_record",land_id)
+	if land.is_empty(): return "설치된 리소스 팩에 이 던전 지도가 없어 입장할 수 없습니다."
+	var declaration: Variant=land.get("declaration",{})
+	var asset_path: String=str(declaration.get("AssetPath","")) if declaration is Dictionary else ""
+	var asset: Dictionary=catalog.call("asset_record",asset_path) if not asset_path.is_empty() else {}
+	if asset.is_empty() or str(asset.get("status",""))!="ready" or int(asset.get("ready_count",0))<=0:
+		return "설치된 리소스 팩에 이 던전 지도가 없어 입장할 수 없습니다."
+	return ""
+
 ## Result of the last save-carrying transition: {"ok","saved","uncertain"}.
 func last_source_transition() -> Dictionary:
 	return _last_source_transition.duplicate(true)
@@ -1248,7 +1267,10 @@ func _village_return_point(field: OriginalPlayableField, radius: int) -> Diction
 				if field.point_clear(position,4.0):return {"ok":true,"source_cell":cell,"position":position,"ring":ring}
 	return {"ok":false,"reason":"기란 마을 원문 리스타트 좌표 주변에 자체 통행에서 확인된 착지 셀이 없습니다."}
 
-func return_to_aden(save_changes: Dictionary={}) -> Dictionary:
+## `departure_waive`: in-Land rule names whose departure hold does not stop
+## this return (a 특수 던전 sends the player out of its own Land, e.g. under
+## NoTeleport, when its time is over or on 나가기). Empty: every hold stops it.
+func return_to_aden(save_changes: Dictionary={}, departure_waive: Array=[]) -> Dictionary:
 	problem="";_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	var world: Node=_world()
 	if _source_travel_busy or not active or not source_owned or not is_instance_valid(world):
@@ -1262,6 +1284,11 @@ func return_to_aden(save_changes: Dictionary={}) -> Dictionary:
 	if settings.navigation_profile==OPTIONS.GENERIC:
 		var current_cell: Vector2i=_source_field.world_to_cell(world.player.global_position)+_source_field.coordinates.origin
 		var departure: Dictionary=_entry_context(int(settings.native_land_id),str(_source_field.get("source_asset")),current_cell,_actor_state(world))
+		if not departure_waive.is_empty() and departure.get("source_travel_holds") is Array:
+			var kept: Array=[]
+			for hold: Variant in departure.source_travel_holds:
+				if not (hold is Dictionary and hold.get("reason")=="native_attribute_requires_policy" and str(hold.get("type",{}).get("Name","")) in departure_waive):kept.append(hold)
+			if kept.is_empty():departure.source_travel_hold=""
 		if not str(departure.get("source_travel_hold","missing")).is_empty():
 			problem="현재 원문 지역의 이동 제한으로 귀환을 보류합니다."
 			_source_travel_busy=false

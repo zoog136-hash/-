@@ -133,14 +133,11 @@ func run() -> void:
 	check(service.stop().ok,"explicit own forfeit")
 	view.family.select(4);view.family.item_selected.emit(4)
 	gold=world.gold;view.play_buttons.begin.pressed.emit()
-	check(service.state.active.get("kind","")=="special" and world.gold==gold-10000,"actual special session consumes exact declaration cost")
-	var special_start: int=int(service.state.active.started)
-	var group: int=int(service.state.active.groups[0]);var base: int=int(service.state.pools[str(group)].base)
-	check(service.account_special(special_start+30).ok and int(service.state.pools[str(group)].base)==base-30,"actual time pool debit persisted")
-	world._load_game(true)
-	check(int(service.state.pools[str(group)].base)==base-30 and service.state.active.kind=="special","special session and clock survive reload")
-	check(service.account_special(special_start+130).ok and int(service.state.pools[str(group)].base)==base-130,"configured offline elapsed consumption")
-	check(service.stop(special_start+130).ok,"special stop preserves unspent pool")
+	# 2026-11-22: a special dungeon moves into its original Land; off the 523
+	# original field (this legacy pack test) it is refused before any charge.
+	check(service.state.active.is_empty() and world.gold==gold,"special entry off the original field charges nothing")
+	var special_start: int=int(Time.get_unix_time_from_system())
+	var group: int=int(world.source_dungeon_entries("special")[0].destinations[0].place.time_groups[0].row.ID)
 	view.family.select(5);view.family.item_selected.emit(5)
 	var charger: Dictionary={};var charger_index: int=-1
 	for i in range(view.rows.size()):

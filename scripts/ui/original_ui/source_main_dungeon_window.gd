@@ -800,7 +800,10 @@ func _fill_special(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
 	for i: int in range(rows.size()):
 		var entry: Dictionary=rows[i]
 		var level: int=special_level(entry)
-		var locked: bool=int(world.level)<level
+		# A dungeon whose map is not in the installed pack (or no original
+		# field) is locked with that reason instead of its level.
+		var blocked: String=world.dungeon_play.special_block(entry)
+		var locked: bool=int(world.level)<level or not blocked.is_empty()
 		var groups: Array[int]=special_groups(entry)
 		var seconds: int=0
 		var limit: int=0
@@ -823,7 +826,7 @@ func _fill_special(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
 			"Panel/Nd_Timebar/Bar":{"role":"source_percent","percent":clampf(100.0*float(seconds)/float(maxi(1,limit)),0.0,100.0)},
 			"Panel/Nd_Timebar/Btn_Recharge":{"activate":Callable(self,"_open_time").bind(groups[0] if not groups.is_empty() else 0)},
 			"Panel/Nd_Lock":{"visible":locked},
-			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"Lv %d" % level},
+			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"Lv %d" % level if blocked.is_empty() else "입장 불가"},
 		}
 		for name: String in ["Panel/Btn_Fix","Panel/Btn_Item","Panel/Btn_Notice","Panel/Btn_Share","Panel/Btn_HelpBox","Panel/Nd_Penalty","Panel/Nd_Round","Panel/Nd_Closed","Panel/Nd_Timebar_Share","Panel/Nd_Time","Panel/Sp_New","Panel/Sp_Event","Panel/Label_Retry"]:spec[name]={"exclude":true}
 		var row_out: Dictionary={}
@@ -1161,11 +1164,30 @@ func _special_pressed(i: int) -> Dictionary:
 	var view: Object=_bind_view("special",i)
 	if view==null:return _fail("source_dungeon_window_host_unavailable")
 	var entry: Dictionary=rows[i]
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var play: RefCounted=hud.get_parent().dungeon_play if hud!=null else null
+	# Inside a special dungeon its row button is 나가기 (back to the village).
+	if play!=null and str(play.state.active.get("kind",""))=="special":
+		var current: Dictionary=play.rules.special_by_id.get(int(play.state.active.stage_id),{})
+		return _confirm("특수 던전 · 나가기","%s\n남은 이용 시간: %s\n던전에서 나가 마을로 귀환합니다." % [special_name(current) if not current.is_empty() else special_name(entry),clock_text(play.special_left())],"나가기",func() -> void:
+			var result: Dictionary=play.stop()
+			if hud!=null and not result.get("ok",false):hud.show_message(str(result.get("reason",""))))
+	# A dungeon that cannot be entered says why; nothing is charged.
+	var blocked: String=play.special_block(entry) if play!=null else ""
+	if not blocked.is_empty():
+		if hud!=null:hud.show_message(blocked)
+		return {"ok":true,"blocked":blocked}
 	var body: String="%s\n이동 비용: %s %s\n필요 레벨: %d" % [special_name(entry),number_text(int(entry.teleport.TeleportCost)),str(entry.currency.name),special_level(entry)]
+	var title: String=special_name(entry)
 	return _confirm("특수 던전 · 입장",body,"입장",func() -> void:
 		var bound: Object=_bind_view("special",i)
 		if bound==null:return
 		bound._play_action("begin")
+		if play!=null and str(play.state.active.get("kind",""))=="special":
+			# Entered: the window closes over the dungeon Land.
+			call_deferred("_close_requested")
+			if hud!=null:hud.show_message("%s에 입장했습니다." % title)
+			return
 		_notice(bound))
 
 func _recharge_pressed(i: int) -> Dictionary:

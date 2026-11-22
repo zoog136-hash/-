@@ -40,7 +40,7 @@ static func defaults() -> Dictionary:
 	return {"enabled":true,"entry_currency":174,"entry_cost":10,"attempts":1,"duration":420,"live_limit":16,"group_size":1,"care":"timeout","replacement":true,"preserve_items":true,"carry_bonus":true,"zero_cap":86400,"ungrouped_time":3600,"speed_percent":25,"pearl_percent":10,"token_chance":10,"reroll_currency":4,"reroll_percent":10,"specific_daily":true,"holy_ain":900,"heal_percent":20,"boss_hp_multiplier":1,"hard_multiplier":1,"group_time_scale":1,"recharger_price":100000}
 
 static func empty_state() -> Dictionary:
-	return {"schema":1,"revision":0,"settings":defaults(),"next":1,"day":0,"active":{},"pools":{},"attempts":{},"receipts":{},"default_on_v2":true}
+	return {"schema":1,"revision":0,"settings":defaults(),"next":1,"day":0,"active":{},"pools":{},"attempts":{},"receipts":{},"default_on_v2":true,"special_travel_v1":true}
 
 func configure(owner: Node, source: RefCounted) -> void:
 	world=owner;rules=source
@@ -123,6 +123,9 @@ func restore(value: Dictionary) -> bool:
 	cleanup();state=value.duplicate(true);pending.clear()
 	# Dungeons are on by default now; saves from before that are switched on once.
 	if not state.get("default_on_v2",false):state.settings.enabled=true;state["default_on_v2"]=true
+	migrate_special_sessions(int(Time.get_unix_time_from_system()))
+	# The time between the last save and this load is not dungeon time.
+	special_last_tick=0;special_skip=0;special_return_land=-1
 	changed.emit();return true
 
 func commit(candidate: Dictionary, changes: Dictionary = {}) -> Dictionary:
@@ -251,13 +254,17 @@ func begin(kind: String, identifier: int, now: int = -1, character_id: int = 0) 
 		if int(next.attempts.get(budget,0))>=int(state.settings.attempts):return {"ok":false,"reason":"오늘 이 모드 도전 횟수 소진"}
 		cost=payment(int(state.settings.entry_currency),int(state.settings.entry_cost));next.attempts[budget]=int(next.attempts.get(budget,0))+1
 	else:
+		# Every refusal comes before anything is charged (user report
+		# 2026-11-22 "던전 입장 안 됨, 시간만 지나감").
+		var blocked: String=special_block(entry)
+		if not blocked.is_empty():return {"ok":false,"reason":blocked}
 		var currency:=int(entry.teleport.CurrencyID)
 		cost=payment(currency,int(entry.teleport.TeleportCost)) if currency in [1,4,174] else consume_source(int(entry.currency.sources[0].ClassID),int(entry.teleport.TeleportCost))
 		for g: Dictionary in entry.destinations[0].place.time_groups:groups.append(int(g.row.ID))
 		if groups.is_empty():groups=[-identifier] # Clearly own ungrouped-session pool.
 		for group_id: int in groups:
 			var p:=pool(group_id,now)
-			if int(p.base)+int(p.bonus)<=0:return {"ok":false,"reason":"던전 이용시간 소진"}
+			if int(p.base)+int(p.bonus)<=0:return {"ok":false,"reason":"던전 이용 시간이 남아 있지 않습니다."}
 			next.pools[str(group_id)]=p
 	if not cost.get("ok",false):return cost
 	cost.erase("ok");cost.erase("reason")
@@ -265,11 +272,123 @@ func begin(kind: String, identifier: int, now: int = -1, character_id: int = 0) 
 	next.active={"kind":kind,"id":kind+":"+str(int(next.next)),"stage_id":identifier,"map_id":world.active_map_id,"status":"active","started":now,"last":now,"duration":int(state.settings.duration) if kind=="orim" else 0,"seed":rng.randi_range(1,2000000000),"cursor":0,"remaining_count":0,"groups":groups,"buffs":{},"events":{},"rewards":[],"issued":{},"rerolls":0,"reroll_stat":""}
 	if kind=="orim":next.active.orim=ORIM_RUN.start(orim_model(),character_id)
 	next.next=int(next.next)+1;next.day=day(now)
+	if kind=="special":return _special_enter(next,cost,entry,now)
 	var result:=commit(next,cost)
 	if result.get("ok",false) and kind=="orim":
 		_reset_orim_clock()
 		result.merge(_orim_travel(int(identifier)),true)
 	return result
+
+## --- 특수 던전 (시간 던전): real entry into the original Land -----------------
+## The original SpecialDungeon row is a LandTeleport: its cost is paid and the
+## player is moved into one of its LandTeleportTerritories boxes (the Land of
+## the dungeon). The Land's LandTimeLimit groups drain only while the player is
+## inside that Land; leaving it ends the session, and an empty pool or 나가기
+## sends the player back to the village (기란 마을, the game's start village).
+## Earlier builds started the session on the current field without any move
+## (time drained while the player never entered): see migrate_special_sessions.
+## Seconds of one accounting step: a gap longer than this (app paused, game
+## closed, a long hitch) is not charged.
+const SPECIAL_MAX_STEP := 5
+## The session is saved at most this often while inside (the 10-second
+## batching of non-critical saves); leaving / exhaustion save at once.
+const SPECIAL_SAVE_SECONDS := 10
+var special_last_tick := 0
+var special_skip := 0
+var special_note := ""
+## Land a closed session still has to leave (the return was refused, e.g.
+## while stunned): retried every accounting step until out of that Land.
+var special_return_land := -1
+
+## "" when a special dungeon row can be entered now (apart from the level,
+## the time pool and the cost, which begin() judges), else the reason.
+func special_block(entry: Dictionary) -> String:
+	var lands: Array=special_lands(entry)
+	if lands.is_empty():return "입장 지역 정보가 없어 입장할 수 없습니다."
+	if not world.has_method("dungeon523_land_ready"):return "원본 지도에서만 입장할 수 있습니다."
+	for land_id: int in lands:
+		var reason: String=world.dungeon523_land_ready(land_id)
+		if not reason.is_empty():return reason
+	return ""
+
+## The original Lands of a special dungeon's LandTeleportTerritories boxes.
+static func special_lands(entry: Dictionary) -> Array:
+	var out: Array=[]
+	for d: Dictionary in entry.get("destinations",[]):
+		var land_id: int=int(d.get("place",{}).get("land",{}).get("ID",d.get("place",{}).get("territory",{}).get("LandID",0)))
+		if land_id>0 and not land_id in out:out.append(land_id)
+	return out
+
+func _special_enter(next: Dictionary, cost: Dictionary, entry: Dictionary, now: int) -> Dictionary:
+	var home: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
+	var changes: Dictionary={}
+	for key: String in cost:
+		if key not in ["gold","inventory","item_instances"]:return {"ok":false,"reason":"이 입장 재화는 아직 사용할 수 없습니다."}
+		changes[key]=cost[key]
+	var boxes: Array=entry.destinations.duplicate()
+	boxes.shuffle() # The original server picks one of the declared boxes.
+	var last_reason: String="입장할 수 없습니다."
+	for d: Dictionary in boxes:
+		var t: Dictionary=d.place.territory
+		var land_id: int=int(t.LandID)
+		var candidate: Dictionary=next.duplicate(true)
+		candidate.active.land=land_id
+		candidate.active.home=home
+		candidate.active.last=now
+		candidate=snapshot(candidate)
+		candidate.revision=int(state.get("revision",0))+1
+		var error:=valid(candidate)
+		if not error.is_empty():return {"ok":false,"reason":error}
+		var save: Dictionary=changes.duplicate(true)
+		save["source_dungeon_play"]=candidate
+		var moved: Dictionary=world.dungeon523_enter_land(land_id,[int(t.StartX),int(t.StartY),int(t.EndX),int(t.EndY)],save)
+		if moved.get("ok",false):
+			state=candidate;problem=""
+			if changes.has("inventory"):world.inventory=changes.inventory
+			if changes.has("item_instances"):world.item_instances=changes.item_instances;world._invalidate_equipment_static()
+			special_last_tick=now;special_skip=0;special_note="";special_return_land=-1
+			world._update_hud();changed.emit()
+			return {"ok":true,"travel":true,"land_id":land_id}
+		if moved.get("uncertain",false):
+			save_blocked=true;problem="던전 입장 저장 결과가 확정되지 않았습니다. 저장을 다시 불러오세요."
+			return {"ok":false,"reason":problem}
+		last_reason=str(moved.get("reason",last_reason))
+	return {"ok":false,"reason":"던전으로 이동하지 못해 입장하지 않았습니다. 비용과 시간은 차감되지 않았습니다. ("+last_reason+")"}
+
+## Leaves the dungeon Land for the village (나가기 / time over). The session
+## is already closed by the caller.
+func _special_return(message: String) -> void:
+	special_note=message
+	if not world.has_method("dungeon523_return_to_village"):return
+	var here: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
+	var moved: Dictionary=world.dungeon523_return_to_village()
+	if moved.get("ok",false):
+		special_return_land=-1;world.hud.show_message(message)
+	else:
+		if special_return_land<0:world.hud.show_message(message)
+		special_return_land=int(here.get("land_id",-1))
+
+func _retry_special_return() -> void:
+	var here: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
+	if here.is_empty() or int(here.land_id)!=special_return_land:special_return_land=-1;return
+	_special_return(special_note)
+
+## Before 2026-11-22 a special session never moved the player and drained its
+## pools on the current field, also while the game was closed. Such a session
+## is closed and the base time of the current period is given back (the bonus
+## time from 충전석 cannot be told apart from a real use and is kept as is).
+func migrate_special_sessions(now: int) -> bool:
+	if bool(state.get("special_travel_v1",false)):return false
+	var run: Dictionary=state.active
+	if not run.is_empty() and run.get("kind","")=="special" and not run.has("land"):state.active={}
+	for key: String in state.pools:
+		var group_id: int=int(key)
+		var group: Dictionary=rules.time_by_id.get(group_id,{})
+		var full: int=int(group.row.TimeLimit)*int(state.settings.group_time_scale) if not group.is_empty() else int(state.settings.ungrouped_time)
+		var p: Dictionary=state.pools[key]
+		if int(p.period)==period(group,now) and int(p.base)<full:p.base=full
+	state["special_travel_v1"]=true
+	return true
 
 ## Move to the stage's original Land (Stage.TeleportTerritoryID box). Without
 ## a 523 source field the run stays on the current field (stated in status).
@@ -373,10 +492,11 @@ func tick(delta: float, now: int = -1) -> void:
 			if state.active.is_empty() or state.active.status!="active":cleanup()
 			if changes.has("experience"):world._check_level_up();world._request_deferred_save()
 		return
+	if special_return_land>=0 and state.active.is_empty():_retry_special_return()
 	if state.active.is_empty() or state.active.status!="active":return
 	var run: Dictionary=state.active
 	if run.kind=="special":
-		account_special(now,str(run.map_id)!=world.active_map_id);changed.emit();return
+		_tick_special(run,now);changed.emit();return
 	if str(run.map_id)!=world.active_map_id:stop(now);return
 	if run.has("land") and world.has_method("orim_current_land"):
 		var here: Dictionary=world.orim_current_land()
@@ -387,10 +507,33 @@ func tick(delta: float, now: int = -1) -> void:
 	spawn_due(now)
 	changed.emit()
 
+## One accounting step inside the dungeon Land: a gap since the previous
+## step longer than SPECIAL_MAX_STEP (pause, closed game) is skipped; outside
+## the Land the session ends without returning (the player already left).
+func _tick_special(run: Dictionary, now: int) -> void:
+	var gap: int=now-special_last_tick if special_last_tick>0 else now-int(run.last)
+	if gap>SPECIAL_MAX_STEP or gap<0:special_skip+=maxi(0,gap)
+	special_last_tick=now
+	var here: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
+	if here.is_empty() or int(here.land_id)!=int(run.get("land",-1)):
+		account_special(now,true);special_note="던전에서 나왔습니다.";return
+	var result: Dictionary=account_special(now)
+	if result.get("exhausted",false):_special_return("던전 이용 시간이 모두 소진되어 마을로 귀환합니다.")
+
+## Seconds left in a special session (the smallest of its pools).
+func special_left(now: int = -1) -> int:
+	if now<0:now=int(Time.get_unix_time_from_system())
+	var run: Dictionary=state.active
+	if run.is_empty() or run.get("kind","")!="special":return 0
+	var left:=2147483647
+	for id: int in run.groups:
+		var p: Dictionary=state.pools[str(id)];left=mini(left,maxi(0,int(p.base)+int(p.bonus)-maxi(0,now-int(run.last)-special_skip)))
+	return left
+
 func account_special(now: int, stop: bool = false) -> Dictionary:
 	var next:=state.duplicate(true);var run: Dictionary=next.active
 	if run.is_empty() or run.kind!="special":return {"ok":false,"reason":"시간 세션 없음"}
-	var elapsed:=maxi(0,now-int(run.last));var exhausted:=false
+	var elapsed:=maxi(0,now-int(run.last)-special_skip);var exhausted:=false
 	for id: int in run.groups:
 		var p: Dictionary=next.pools[str(id)]
 		var drain:=mini(elapsed,int(p.base)+int(p.bonus));var from_base:=mini(drain,int(p.base))
@@ -398,7 +541,11 @@ func account_special(now: int, stop: bool = false) -> Dictionary:
 		exhausted=exhausted or int(p.base)+int(p.bonus)==0
 	run.last=maxi(now,int(run.last))
 	if stop or exhausted:next.active={}
-	return commit(next) if elapsed>=5 or stop or exhausted else {"ok":true}
+	if not (elapsed>=SPECIAL_SAVE_SECONDS or stop or exhausted):return {"ok":true}
+	var result:=commit(next)
+	if result.get("ok",false):special_skip=0
+	result["exhausted"]=exhausted and result.get("ok",false)
+	return result
 
 func timeline(stage_id: int) -> Array:
 	var rows: Array=rules.waves(stage_id)
@@ -846,7 +993,11 @@ func try_enhancement(scroll_name: String, target_reference: String) -> bool:
 func stop(now: int = -1, return_home: bool = true) -> Dictionary:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	if state.active.is_empty():return {"ok":true}
-	if state.active.kind=="special":return account_special(now,true)
+	if state.active.kind=="special":
+		var inside: bool=state.active.has("land") and world.has_method("orim_current_land") and int(world.orim_current_land().get("land_id",-1))==int(state.active.land)
+		var closed:=account_special(now,true)
+		if closed.get("ok",false) and return_home and inside:_special_return("던전에서 나와 마을로 귀환합니다.")
+		return closed
 	if return_home:_orim_return()
 	var next:=state.duplicate(true);next.active={}
 	var result:=commit(next)
@@ -903,10 +1054,7 @@ func status_text(now: int = -1) -> String:
 		var at: int=int(run.get("completed_at",now)) if run.status!="active" else now
 		var ability: String={"move_speed":"이동속도","attack_speed":"공격속도","boss_damage":"기본공격 보스피해"}.get(str(run.get("reroll_stat","")),"없음")
 		return "오림 자체 실행 · %s · 남은 %d초 · 웨이브 %d · 외형 대체 %d · 이동+%d%% 공격+%d%% · 능력 %s%s%s" % [str(run.status),maxi(0,int(run.started)+int(run.duration)-at),int(run.cursor),actors.size(),int(modifier("move_speed")),int(modifier("attack_speed")),ability," · 배치 공간 대기" if placement_blocked else "","" if ability=="없음" else " +%d%%" % int(state.settings.reroll_percent)]
-	var left:=2147483647
-	for id: int in run.groups:
-		var p: Dictionary=state.pools[str(id)];left=mini(left,maxi(0,int(p.base)+int(p.bonus)-maxi(0,now-int(run.last))))
-	return "특수던전 자체 시간 세션 · 남은 %d초 · 현재 지역 유지" % left
+	return "특수 던전 · 남은 시간 %d초" % special_left(now)
 
 # --- 오림의 흔적: hero, skill cards, auto-cast -------------------------------
 

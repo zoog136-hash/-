@@ -13,7 +13,9 @@ const FREE_POLICY: String = "OWN_TRAVEL_FREE_V1"
 ## consumable_state / item_use_cooldowns / patch523_transaction_rng: the
 ## physical-stack debit of a fixed-destination teleport item
 ## (current523_native_stack.try_use), saved with its arrival.
-const _OVERRIDE_KEYS: Array[String] = ["gold", "inventory", "item_instances", "quest_state", "consumable_state", "item_use_cooldowns", "patch523_transaction_rng"]
+## source_dungeon_play: a 특수 던전 session (dungeon_play_service.begin), saved
+## with its arrival so a failed move never charges the entry or the time pool.
+const _OVERRIDE_KEYS: Array[String] = ["gold", "inventory", "item_instances", "quest_state", "consumable_state", "item_use_cooldowns", "patch523_transaction_rng", "source_dungeon_play"]
 const _SAVE_GUARDS: Dictionary = {
 	"quest_service": "save_blocked",
 	"equipment_collections": "save_blocked",
