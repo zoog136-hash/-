@@ -7088,18 +7088,18 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if death_recovery.save_blocked or (not death_recovery.pending.is_empty() and not collection_override.has(death_recovery.KEY)): return ERR_UNAVAILABLE
 	var death_state: Dictionary = collection_override.get(death_recovery.KEY,death_recovery.export_state())
 	if not death_recovery.validate(death_state,collection_override.get("item_instances",item_instances)).is_empty(): return ERR_INVALID_DATA
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_death", save_stage_usec)
 	if dungeon_play.save_blocked or not dungeon_play.valid(collection_override.get("source_dungeon_play",dungeon_play.state)).is_empty():return ERR_INVALID_DATA
 	if source_dungeon_runs.save_blocked or not source_dungeon_runs.validate(collection_override.get("source_dungeon523",source_dungeon_runs.state)).is_empty(): return ERR_INVALID_DATA
 	if titles.blocked or not titles.validate(collection_override.get("title523",titles.state)).is_empty(): return ERR_INVALID_DATA
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_dungeon_titles", save_stage_usec)
 	if totem_combat.settings_blocked or not totem_combat.check_settings_load({"ui_preferences":ui_preferences}).is_empty():return ERR_INVALID_DATA
 	if collection_override.has("totem_combat_settings") and not totem_combat.valid_settings(collection_override.totem_combat_settings):return ERR_INVALID_DATA
 	if collection_override.has("totem_state") and not totems.check_state(collection_override.totem_state).is_empty(): return ERR_INVALID_DATA
 	if totems.save_blocked or not totems.check_state(totems.export_state()).is_empty():
 		if not quiet: hud.show_message("토템 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_totems", save_stage_usec)
 	if monsterbook523_runtime.save_blocked: return ERR_FILE_CORRUPT
 	if collection_override.has("monsterbook523") and not monsterbook523.valid_state(collection_override.monsterbook523): return ERR_INVALID_DATA
 	if tj_coupons.core.blocked or not tj_coupons.core.validate(tj_coupons.core.export_state()).is_empty():return ERR_FILE_CORRUPT
@@ -7108,18 +7108,18 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet: hud.show_message("가호 저장 보호 중 · 정상 저장을 다시 불러오세요")
 		return ERR_UNAVAILABLE
 	if not PROTECTION523.validate((collection_override["protection523"] if collection_override.has("protection523") else protection523.snapshot())).is_empty(): return ERR_INVALID_DATA
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_book_coupon_protection", save_stage_usec)
 	if source_shop.save_blocked or not source_shop.check_load({SOURCE_SHOP.SAVE_KEY:(collection_override[SOURCE_SHOP.SAVE_KEY] if collection_override.has(SOURCE_SHOP.SAVE_KEY) else source_shop.export_state())}).is_empty(): return ERR_INVALID_DATA
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_shop", save_stage_usec)
 	if not patch523_owner_state_problem.is_empty():return ERR_UNAVAILABLE
 	var owner_boundary=preload("res://scripts/crafting/patch523_owner_transactions.gd")
 	if protection523!=null and protection523.get("save_blocked")==true:return ERR_UNAVAILABLE
 	if expedition_local!=null and expedition_local.get("save_blocked")==true:return ERR_UNAVAILABLE
 	if quest_auto!=null and quest_service.get("save_blocked")==true:return ERR_UNAVAILABLE
 	var owner_error: String=owner_boundary.override_error(self,collection_override)
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_owner", save_stage_usec)
 	if owner_error.is_empty():owner_error=preload("res://scripts/loot/current523_native_stack.gd").override_error(self,collection_override)
-	save_stage_usec = FRAME_HITCH.detail_next("save.%s", save_stage_usec)
+	save_stage_usec = FRAME_HITCH.detail_next("save.check_native_stack", save_stage_usec)
 	if not owner_error.is_empty():
 		if not quiet:hud.show_message(owner_error)
 		return ERR_INVALID_DATA

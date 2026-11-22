@@ -364,8 +364,9 @@ func run() -> void:
 			"manifest":
 				var text: String = FileAccess.get_file_as_string(trial_info.path)
 				write_bytes(trial_info.path, (text + " ").to_utf8_buffer())
-		# Successful file checks are shared within one rendered frame; the
-		# change is rejected by the first advance of the next frame.
+		# Successful file checks are shared for up to RECHECK_MEMO_MSEC; once
+		# that memo ends, the first advance of the next frame rejects the change.
+		BANK.expire_recheck_memo()
 		var frame: int = Engine.get_process_frames()
 		while Engine.get_process_frames() == frame: await process_frame
 		check(not trial.advance_reference_source(0.0, "idle", 0), mutation + ": next frame's advance rejects")
