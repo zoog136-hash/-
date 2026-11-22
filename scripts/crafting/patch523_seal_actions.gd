@@ -1,6 +1,7 @@
 extends RefCounted
 ## Narrow, checked source contract. Generic host enhancement stays independent.
 const RULES = preload("res://scripts/crafting/patch523_rules.gd")
+const SCROLLS: Array[String] = ["320802","166044"]
 const POLICY_PATH: String = "res://data/crafting/patch523_seal_policy.json"
 
 static func policy() -> Dictionary:
@@ -13,7 +14,7 @@ static func quote(book: Object, physical: Dictionary, scroll_id: String, invento
 	var source_id: String = book.identity(physical)
 	var level: int = int(physical.get("level", -1))
 	var blessing: int = book.bless_code(physical)
-	if source_id not in ["30671","130551"] or scroll_id not in ["320802","166044"]:
+	if source_id not in ["30671","130551"] or scroll_id not in SCROLLS:
 		return RULES.denied("이 경로는 수호·회복 인장과 영구 빛나는 강화·보호 주문서 전용입니다")
 	if not book._state_matches(physical, {"source_id":source_id,"level":level,"bless_code":blessing}, false):
 		return RULES.denied("원본 장비 상태·추가 옵션을 확인하세요")
@@ -80,7 +81,7 @@ static func open_box(book: Object, source_id: String, inventory: Dictionary, phy
 		if id in ["30671","130551"]:
 			while staged_physical.has(str(counter)): counter+=1
 			staged_physical[str(counter)] = {"name":item_name,"level":0,"element":"","element_level":0,
-				"sourceId":id,"source_snapshot":"patch523","source_bless_code":1,"bless_state":"normal","record":rec}
+				"sourceId":str(rec.get("sourceId",id)),"source_snapshot":"patch523","source_bless_code":1,"bless_state":"normal","record":rec}
 			counter+=1
 	if weight>capacity: return RULES.denied("상자 보상을 받을 무게가 부족합니다")
 	return {"ok":true,"inventory":staged_inventory,"item_instances":staged_physical,"next_item_instance_id":counter}

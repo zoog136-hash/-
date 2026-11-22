@@ -4700,6 +4700,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
+	if _open_owned_seal_scroll(item_name,str(selected.get("id","")),selected_source): return
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
@@ -4735,10 +4736,6 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		for source_id: String in ["30701","130611"]:
 			if patch523_equipment.record(source_id).get("name","")==item_name and patch523_equipment.data.get("guaranteed_boxes",{}).has(source_id):
 				hud.confirm_action("인장 상자 개봉", "상자 1개를 소비하여 일반 +0 인장 1개와 빛나는 장비 강화 주문서 8개를 확정 지급합니다.", "개봉", func(_count: int) -> void: _patch523_open_box(source_id))
-				return
-		for source_id: String in ["320802","166044"]:
-			if patch523_equipment.record(source_id).get("name","")==item_name:
-				hud.open_patch523_equipment_info()
 				return
 	var source_use_record: Dictionary = _patch523_use_record(str(selected.get("name",item_name))+ ("@@@"+str(selected.id) if not str(selected.get("id","")).is_empty() else ""))
 	var source_use_reason: String = PATCH523_ITEM_USE.reason(source_use_record,level,BASE508.source_class_id(job_class))
@@ -6183,37 +6180,88 @@ func _patch523_open_box(source_id: String) -> void:
 	_update_hud()
 	hud.show_message("상자 개봉 완료 · 일반 +0 인장과 강화 주문서 8개")
 
-func patch523_seal_quote(item_id: String, scroll_id: String) -> Dictionary:
+## Permanent seal scrolls use their own source group and never the generic
+## item-use fallback. Keep the exact bag reference until an enhancement commits.
+func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
+	var scroll_id: String = str(record.get("source_item_class_id",""))
+	if scroll_id not in PATCH523_SEAL_ACTIONS.SCROLLS:
+		for candidate: String in PATCH523_SEAL_ACTIONS.SCROLLS:
+			if patch523_equipment.record_view(candidate).get("name","")==item_name:
+				scroll_id=candidate
+				break
+	if scroll_id not in PATCH523_SEAL_ACTIONS.SCROLLS: return false
+	if patch523_equipment.record_view(scroll_id).get("name","")!=item_name:
+		hud.show_message("원본 인장 강화 규칙을 확인할 수 없습니다 · 주문서 보존")
+		return true
+	if not _patch523_item_allowed(): return true
+	if int(inventory.get(item_name,0))<1 or _item_locked(item_name) or _item_locked(item_name,scroll_uid):
+		hud.show_message("주문서 소지 수량과 잠금을 확인하세요")
+		return true
+	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
+	return true
+
+func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String = "") -> Dictionary:
 	if not item_instances.has(item_id): return PATCH523_EQUIPMENT.denied("선택한 장비가 없습니다")
 	var physical: Dictionary = item_instances[item_id]
 	if int(inventory.get(str(physical.get("name","")),0))<1: return PATCH523_EQUIPMENT.denied("보유 장비가 없습니다")
 	var scroll_name: String = str(patch523_equipment.record(scroll_id).get("name",""))
-	return PATCH523_SEAL_ACTIONS.quote(patch523_equipment, physical, scroll_id, inventory, gold,
+	var quote: Dictionary = PATCH523_SEAL_ACTIONS.quote(patch523_equipment, physical, scroll_id, inventory, gold,
 		_item_locked(str(physical.name),item_id) or _item_locked(scroll_name))
+	if not quote.get("ok",false): return quote
+	var stock = preload("res://scripts/loot/current523_native_stack.gd")
+	if not scroll_uid.is_empty():
+		var owned: Dictionary = stock.proof(self,scroll_uid)
+		if owned.is_empty() or owned.record.get("source_item_class_id")!=int(scroll_id) or owned.record.get("name")!=scroll_name or int(owned.receipt.bless_raw)!=1 or _item_locked(scroll_name,scroll_uid):
+			return PATCH523_EQUIPMENT.denied("선택한 일반 주문서의 원본 ID·소지·잠금을 확인하세요")
+		if int(owned.remaining)<int(quote.count): return PATCH523_EQUIPMENT.denied("선택한 주문서 묶음의 수량이 부족합니다")
+		quote["scroll_request"]={"physical_id":scroll_uid,"quantity":int(quote.count),"expected_quantity":int(owned.remaining),
+			"expected_remaining":int(owned.remaining)-int(quote.count),"source_native_stack_receipt":owned.receipt}
+	else:
+		var plain: int = int(inventory.get(scroll_name,0))
+		for entry: Variant in item_instances.values():
+			if entry is Dictionary and entry.get("name")==scroll_name:
+				plain-=int(entry.get(stock.QUANTITY,entry.get("source_reward_quantity",1)))
+		if plain<int(quote.count): return PATCH523_EQUIPMENT.denied("가방에서 사용할 주문서 묶음을 선택하세요")
+	return quote
 
-func _patch523_attempt_seal(item_id: String, scroll_id: String) -> void:
+func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: String = "") -> void:
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")): return
-	var quote: Dictionary = patch523_seal_quote(item_id,scroll_id)
+	if not _patch523_item_allowed(): return
+	var quote: Dictionary = patch523_seal_quote(item_id,scroll_id,scroll_uid)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","원본 강화를 실행할 수 없습니다")))
 		return
+	var staged: Dictionary = {}
+	if quote.has("scroll_request"):
+		var debit: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").stage_debit(self,[quote.scroll_request])
+		if not debit.get("ok",false):
+			hud.show_message(str(debit.get("reason","선택한 주문서를 사용할 수 없습니다")))
+			return
+		staged = debit.overrides
 	var before: Dictionary = {"inventory":inventory.duplicate(true),"instances":item_instances.duplicate(true),
 		"equipped":equipped_items.duplicate(true),"gold":gold,"rng":rng.state,"hp":hp,"mp":mp,"next_id":next_item_instance_id}
 	gold-=int(quote.cost)
-	inventory[str(quote.scroll_name)] = int(inventory[str(quote.scroll_name)])-int(quote.count)
-	if int(inventory[str(quote.scroll_name)])==0: inventory.erase(str(quote.scroll_name))
+	if staged.is_empty():
+		inventory[str(quote.scroll_name)] = int(inventory[str(quote.scroll_name)])-int(quote.count)
+		if int(inventory[str(quote.scroll_name)])==0: inventory.erase(str(quote.scroll_name))
 	var result_type: String = "maintain" if bool(quote.protected) else "destroy"
 	var result_level: int = int(quote.level)
+	var target_name: String = str(quote.item)
 	if rng.randf_range(0.0,100.0)<float(quote.success):
 		result_type="success"
 		result_level+=1
 		item_instances[item_id]["level"]=result_level
+		if not staged.is_empty(): staged.item_instances[item_id]["level"]=result_level
 	elif result_type=="destroy":
-		_destroy_enhancement_target(str(quote.item),item_id)
+		_destroy_enhancement_target(target_name,item_id)
+		if not staged.is_empty():
+			staged.item_instances.erase(item_id)
+			if inventory.has(target_name): staged.inventory[target_name]=inventory[target_name]
+			else: staged.inventory.erase(target_name)
 		result_level=0
 	_invalidate_equipment_static()
 	hp=mini(hp,_effective_max_hp())
-	if _save_game(true)!=OK:
+	if _save_game(true,staged)!=OK:
 		inventory=before.inventory
 		item_instances=before.instances
 		equipped_items=before.equipped
@@ -6226,10 +6274,14 @@ func _patch523_attempt_seal(item_id: String, scroll_id: String) -> void:
 		_update_hud()
 		hud.show_message("저장 실패 · 주문서·아데나·장비·난수 상태 보존")
 		return
+	if not staged.is_empty():
+		inventory=staged.inventory
+		item_instances=staged.item_instances
+		consumable_service.import_state(staged.consumable_state)
 	_update_hud()
-	hud.open_patch523_equipment_info()
-	hud.append_log("원본 인장 강화 · %s +%d · %s" % [str(quote.item),int(quote.level),result_type])
-	hud.show_enhancement_result(result_type,str(quote.item),int(quote.level),result_level)
+	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
+	hud.append_log("원본 인장 강화 · %s +%d · %s" % [target_name,int(quote.level),result_type])
+	hud.show_enhancement_result(result_type,target_name,int(quote.level),result_level)
 
 # Inspection API: exact original branches, not a replacement economy/rate table.
 func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: int, target_bless: int, scroll_bless: int) -> Dictionary:
