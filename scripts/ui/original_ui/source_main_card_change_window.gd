@@ -86,12 +86,14 @@ func record(category: String, identity: String) -> Dictionary:
 		if raw is Dictionary and Cards.card_id(raw)==identity:return raw
 	return {}
 
-## The swappable cards: [{category, identity, name, grade, record, pending}],
-## waiting results first, then by category and grade.
+## Unconfirmed owned cards and pending results, waiting results first.
+## Each row carries its category, identity, name, grade and source record.
 func cards() -> Array:
 	var owner: Object=hud()
 	var catalog: Variant=owner.get("catalog_data") if owner!=null else null
 	var state: Variant=owner.get("card_collection_state") if owner!=null else null
+	var confirmed: Variant=_call("card523_swap_confirmed")
+	if not confirmed is Dictionary:confirmed={}
 	var waiting: Dictionary={}
 	for row: Dictionary in pending():waiting[str(row.category)+"|"+str(row.identity)]=row
 	var found: Array=[]
@@ -103,6 +105,7 @@ func cards() -> Array:
 			if not raw is Dictionary or not str(raw.get("grade","")) in GRADES:continue
 			var identity: String=Cards.card_id(raw)
 			if seen.has(identity) or owned.get(identity,false)!=true:continue
+			if confirmed.get(category,{}).has(identity) and not waiting.has(category+"|"+identity):continue
 			seen[identity]=true
 			found.append({"category":category,"identity":identity,"name":str(raw.get("name","")),"grade":str(raw.grade),"record":raw,"pending":waiting.get(category+"|"+identity,{})})
 	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -125,11 +128,11 @@ func _spec() -> Dictionary:
 	var all: Array=cards()
 	var waiting: int=pending().size()
 	spec["Nd_PageView/Label_Num"]={"role":"source_text","text":"총 %d개" % all.size()}
-	spec["Btn_Confirm"]={"activate":Callable(self,"_confirm_all"),"displaystate":waiting>0}
+	spec["Btn_Confirm"]={"activate":Callable(self,"_confirm_all"),"displaystate":not all.is_empty()}
 	for state: String in ["Nd_Normal","Nd_Disable"]:
 		spec["Btn_Confirm/"+state+"/Label"]={"role":"source_text","text":"전체 확정"}
 	var hint: String = "확정 대기 %d장 · 다시 뽑은 카드를 확정하면 획득합니다." % waiting
-	if waiting==0: hint = "다시 뽑은 결과가 생기면 카드 확정을 할 수 있습니다."
+	if waiting==0: hint = "보유 카드를 그대로 확정하거나 다시 뽑을 수 있습니다."
 	spec["Nd_PageView/Label_01"]={"role":"source_text","text":hint}
 	spec["Nd_PageView/Nd_Notice"]={"visible":all.is_empty()}
 	return spec
@@ -140,13 +143,12 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	for index: int in range(all.size()):
 		var entry: Dictionary=all[index]
 		var card: Dictionary=shown(entry)
-		var waiting: bool=not (entry.pending as Dictionary).is_empty()
 		rows.append({"member":SLOT,"entry":entry,"card":card,"spec":{
 			"Panel/Label_Card":{"role":"source_text","text":str(card.name)},
 			"Panel/Btn_Normal":{"activate":Callable(self,"_ignore")},
 			"Panel/Btn_Pressed":{"visible":false},
 			"Panel/Btn_Retry":{"activate":Callable(self,"_retry").bind(index)},
-			"Panel/Btn_Select":{"activate":Callable(self,"_confirm_entry").bind(entry),"displaystate":waiting},
+			"Panel/Btn_Select":{"activate":Callable(self,"_confirm_entry").bind(entry),"displaystate":true},
 			"Btn_Select/Sp_Icon":{"visible":false},
 			"Btn_Select/Label_Time":{"visible":false},
 			"Panel/Btn_Special":{"exclude":true}}})
@@ -223,7 +225,7 @@ func _popup(root: Node2D) -> Dictionary:
 			spec["Nd_Confirm/Nd_Card"]={"exclude":true}
 			spec["Nd_Confirm/Label_Card"]={"role":"source_text","text":"카드 %d장 전체 확정" % int(quote.count)}
 			var blocked: int=int(quote.get("blocked",0))
-			var detail: String="다시 뽑은 결과 %d장을 받습니다." % int(quote.count)
+			var detail: String="카드 %d장을 확정하고 목록에서 닫습니다." % int(quote.count)
 			if blocked>0:detail+="\n조건을 충족하지 않은 %d장은 대기 상태로 유지됩니다." % blocked
 			spec["Nd_Confirm/Label_01"]={"role":"source_text","text":detail}
 			spec["Nd_Confirm/Btn_Ok"]={"activate":Callable(self,"_confirm_all_results")}

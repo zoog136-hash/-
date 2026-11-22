@@ -9,7 +9,7 @@ static func policy() -> Dictionary:
 	if parser.parse(FileAccess.get_file_as_string(POLICY_PATH)) != OK or not parser.data is Dictionary: return {}
 	return parser.data
 
-static func quote(book: Object, physical: Dictionary, scroll_id: String, inventory: Dictionary, gold: int, locked: bool) -> Dictionary:
+static func quote(book: Object, physical: Dictionary, scroll_id: String, inventory: Dictionary, gold: int, locked: bool, inventory_key: String = "") -> Dictionary:
 	if locked: return RULES.denied("잠금을 해제하세요")
 	var source_id: String = book.identity(physical)
 	var level: int = int(physical.get("level", -1))
@@ -52,6 +52,7 @@ static func quote(book: Object, physical: Dictionary, scroll_id: String, invento
 	var scroll_record: Dictionary = book.record(scroll_id)
 	var scroll_name: String = str(scroll_record.get("name",""))
 	if scroll_name.is_empty() or bool(book.item_entry(scroll_id).item_class.TestItem): return RULES.denied("영구 주문서 정보를 확인하세요")
+	if not inventory_key.is_empty():scroll_name=inventory_key
 	if int(inventory.get(scroll_name,0))<count or gold<expected_cost: return RULES.denied("주문서 또는 아데나가 부족합니다")
 	return {"ok":true,"scroll_name":scroll_name,"scroll_id":scroll_id,"count":count,"cost":expected_cost,
 		"success":expected_rate,"protected":protected,"level":level,"item":str(physical.name),

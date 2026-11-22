@@ -682,16 +682,31 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 ## (process) frame: every actor that draws the same member in that frame reuses
 ## the result instead of repeating the stats (on this server one stat call is
 ## ~5 us and FileAccess.get_size() opens the file; 13 monsters of one kind
-## repeated them per layer). A file changed after its check is therefore seen
-## on the next rendered frame at the latest. Failures are never shared.
+## repeated them per layer). Failures are never shared.
+##
+## Kept for RECHECK_MEMO_MSEC, not only one frame: town NPCs and companions
+## re-statted every member of every actor each rendered frame (523.802 town:
+## preview.cached 328 ms/s over 190 advances; get_size() opens the file). A
+## file changed after its check is seen within that time, on the first frame
+## after it.
+const RECHECK_MEMO_MSEC: int = 1000
 static var _recheck_frame: int = -1
+static var _recheck_cleared_msec: int = -RECHECK_MEMO_MSEC
 static var _recheck_ok: Dictionary = {}
 
 static func _recheck_memo_frame() -> void:
 	var frame: int = Engine.get_process_frames()
 	if frame != _recheck_frame:
 		_recheck_frame = frame
-		_recheck_ok.clear()
+		var now: int = Time.get_ticks_msec()
+		if now - _recheck_cleared_msec >= RECHECK_MEMO_MSEC:
+			_recheck_cleared_msec = now
+			_recheck_ok.clear()
+
+## Ends the shared file-check memo now (the next frame checks files again).
+static func expire_recheck_memo() -> void:
+	_recheck_ok.clear()
+	_recheck_cleared_msec = -RECHECK_MEMO_MSEC
 
 func _pins_valid_this_frame() -> bool:
 	_recheck_memo_frame()

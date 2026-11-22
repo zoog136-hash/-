@@ -13,12 +13,19 @@ func check(ok: bool, detail: String) -> void:
 		print("ENHANCEMENT_REVEAL_FAIL: "+detail)
 
 func _run() -> void:
+	var sample := Image.create(16,16,false,Image.FORMAT_RGBA8)
+	sample.fill(Color.WHITE)
+	var icon: Texture2D=ImageTexture.create_from_image(sample)
 	for outcome: String in ["success","maintain","decrease","destroy"]:
 		var stage: Control = Reveal.new()
 		stage.silent = true
 		root.add_child(stage)
 		stage.set_process(false)
-		stage.present(outcome,"검증 장검",7,9 if outcome == "success" else 6,null)
+		stage.present(outcome,"검증 장검 (각인) · 원본#2803",7,9 if outcome == "success" else 6,icon)
+		var panel: StyleBoxFlat=stage.board.get_theme_stylebox("panel")
+		check(panel.bg_color.a==1.0,outcome+" panel blocks the underlying enhancement text")
+		check(stage.item_label.text=="검증 장검 (각인)",outcome+" result uses the player's item name")
+		check(stage.item_preview.visible and stage.item_preview.texture==icon,outcome+" keeps the supplied item icon")
 		var completed := {"count":0}
 		stage.finished.connect(func() -> void: completed.count += 1)
 		check(stage.result_label.text.is_empty(),outcome+" result hidden during charge")
@@ -31,6 +38,7 @@ func _run() -> void:
 		check(stage.revealed and not stage.confirm_button.disabled,outcome+" reveal occurs once")
 		check(stage.result_label.text.contains({"success":"성공","maintain":"유지","decrease":"하락","destroy":"소실"}[outcome]),outcome+" correct result copy")
 		check(stage.level_label.text == ("" if outcome == "destroy" else "+9" if outcome == "success" else "+6" if outcome == "decrease" else "+7"),outcome+" level display")
+		check(stage.item_preview.visible==(outcome!="destroy"),outcome+" item icon follows the outcome")
 		stage._process(10.0)
 		check(not stage.playing and stage.clock == Reveal.SETTLE_AT,outcome+" stops redrawing when settled")
 		stage.close_reveal()
