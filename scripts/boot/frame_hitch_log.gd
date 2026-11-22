@@ -414,7 +414,8 @@ static func take_window(top: int = 4) -> Dictionary:
 	for key: String in _window_details: detail_parts.append([key, int(_window_details[key][0]), int(_window_details[key][1])])
 	detail_parts.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
 	var detail_names: PackedStringArray = []
-	for part: Array in detail_parts.slice(0, top): detail_names.append("%s:%d*%d" % [part[0], int(float(part[1]) / 1000.0 / seconds), int(round(float(part[2]) / seconds))])
+	# Eight detail rows (sections keep `top`): nested wrappers hid inner rows.
+	for part: Array in detail_parts.slice(0, maxi(top, 8)): detail_names.append("%s:%d*%d" % [part[0], int(float(part[1]) / 1000.0 / seconds), int(round(float(part[2]) / seconds))])
 	result["detail_top"] = ",".join(detail_names)
 	_window_details.clear()
 	_window_sections.clear()
@@ -500,7 +501,9 @@ static func previous_line() -> String:
 		if top.has("slow_spawn") and part is Array and not part.is_empty():
 			var operation: String = str(part[0])
 			if operation.begins_with("setup.") or operation in ["spawn.total","spawn.setup","view.roles"]: continue
-		if part is Array and part.size() >= 3 and int(part[1]) > 0 and details.size() < 3:
+		# Six, not three: nested wrappers (player.visual > player.strike >
+		# player.impact) filled all three and hid what was inside them.
+		if part is Array and part.size() >= 3 and int(part[1]) > 0 and details.size() < 6:
 			details.append("%s %dms×%d" % [str(part[0]), int(part[1]), int(part[2])])
 	if not details.is_empty(): line += " · 세부 " + ", ".join(details)
 	var spawn: Variant = top.get("slow_spawn",{})
