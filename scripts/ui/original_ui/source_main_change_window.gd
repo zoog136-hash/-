@@ -551,10 +551,11 @@ func _show_selected() -> Dictionary:
 	for child: Node in _option_content.get_children():
 		_option_content.remove_child(child)
 		child.queue_free()
-	var lines: Array=record.get("sourceOptions",[]) if record.get("sourceOptions") is Array else []
+	var offered_lines: Variant=record.get("source_card_display_options",record.get("sourceOptions",[]))
+	var lines: Array=offered_lines if offered_lines is Array else []
 	var options: int=0
 	for line: Variant in lines:
-		var row: Dictionary=_option_row(str(line))
+		var row: Dictionary=_option_row(line)
 		if not row.get("ok",false):continue
 		# Rows run top-down from the option list's top edge.
 		var list_height: float=260.0 if _category=="변신" else 230.0
@@ -568,14 +569,15 @@ func _show_selected() -> Dictionary:
 	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
 	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"applied":applied}
 
-func _option_row(line: String) -> Dictionary:
+func _option_row(line: Variant) -> Dictionary:
 	# "SP +1" -> desc "SP", value "+1" (the row's two original labels).
-	var desc: String=line
-	var value: String=""
-	var cut: int=line.rfind(" ")
-	if cut>0 and line.substr(cut+1).left(1) in ["+","-"]:
-		desc=line.left(cut)
-		value=line.substr(cut+1)
+	var desc: String=str(line.get("label","")) if line is Dictionary else str(line)
+	var value: String=str(line.get("value","")) if line is Dictionary else ""
+	if line is String:
+		var cut: int=line.rfind(" ")
+		if cut>0 and line.substr(cut+1).left(1) in ["+","-"]:
+			desc=line.left(cut)
+			value=line.substr(cut+1)
 	var bindings: Dictionary={OPTION_PANEL:{"role":"consume"},OPTION_DESC:{"role":"source_text","text":desc},OPTION_VALUE:{"role":"source_text","text":value,"visible":not value.is_empty()}}
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,OPTION_ROW,[OPTION_PANEL,OPTION_DESC,OPTION_VALUE],bindings)
