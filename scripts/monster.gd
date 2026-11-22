@@ -28,6 +28,7 @@ const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
 var source_option_debuffs: Dictionary={}
+var _source_option_move_multiplier: float=1.0
 var source_option_sequence := 0
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
@@ -220,6 +221,7 @@ func retire_for_pool() -> void:
 	damage_hit_count = 0
 	special_attack.clear()
 	source_option_debuffs.clear()
+	_source_option_move_multiplier=1.0
 	patch523_weapon_bleed.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
@@ -274,6 +276,7 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 	if source523 != null: source523.forget(self)
 	source_targeting.clear()
 	source_option_debuffs.clear()
+	_source_option_move_multiplier=1.0
 	source_boss_combat.clear()
 	_clear_source_m_view()
 	_source_only_native_visuals = false
@@ -1526,15 +1529,31 @@ func _patrol_allows(point: Vector2) -> bool:
 	var population: Node = world_controller.field_population
 	return not is_instance_valid(population) or not population.has_method("destination_allowed") or population.destination_allowed(self,point)
 
-func apply_source_option_debuff(origin: String,duration: float,effects: Array) -> bool:
+func apply_source_option_debuff(origin: String,duration: float,effects: Array,source_darkness: bool=false) -> bool:
 	if dead or duration<=0:return false
+	var movement: float=1.0
+	var darkness_rows: Dictionary={}
 	for effect: Dictionary in effects:
 		if int(effect.bonus.BonusApplicationTypeID)!=0 or int(effect.bonus.BonusApplicationTargetID)!=0:return false
-		if effect.type.Name == "CannotSee":
+		var kind: String=effect.type.Name
+		if source_darkness:
+			if darkness_rows.has(kind) or int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0:return false
+			darkness_rows[kind]=true
+		if kind == "CannotSee":
 			if effect.unit.Name != "TrueFalse" or int(effect.bonus.Value) != 1:return false
-		elif effect.type.Name not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage":return false
+		elif source_darkness and kind=="MoveSpeedDecrease":
+			var weight: int=int(effect.bonus.Value)
+			if effect.unit.Name!="Percentage" or weight<=0 or weight>=1000000:return false
+			movement=1.0-float(weight)/1000000.0
+		elif source_darkness and kind=="StatusEffectID":
+			if effect.unit.Name!="StatusEffectID" or int(effect.bonus.Value)!=1831:return false
+		elif source_darkness or kind not in ["HPHealDecreasePercent","HPPotionDecreasePercent"] or effect.unit.Name!="Percentage":return false
+	if source_darkness and darkness_rows.size()!=3:return false
+	var was_slowed: bool=source_option_debuffs.get(origin,{}).has("movement")
 	source_option_sequence += 1
 	source_option_debuffs[origin]={"remaining":duration,"effects":effects.duplicate(true),"sequence":source_option_sequence}
+	if source_darkness:source_option_debuffs[origin].movement=movement
+	if source_darkness or was_slowed:_refresh_source_option_speed()
 	if source_option_cannot_see():
 		motion.cancel_attack()
 		_stop_chasing_concealed_player()
@@ -1560,10 +1579,19 @@ func configure_totem_venom(origin: String, interval: float, raw_percent: int, mi
 	if is_inside_tree():show_status_text("중독 [자체 주기]")
 	return true
 func prune_source_option_debuffs(enabled: Dictionary, origin_prefix: String = "") -> void:
+	var speed_changed: bool=false
 	for origin: String in source_option_debuffs.keys():
 		if origin_prefix.is_empty() and origin.begins_with("totem:"): continue
 		if not origin_prefix.is_empty() and not origin.begins_with(origin_prefix): continue
-		if dead or not enabled.has(origin):source_option_debuffs.erase(origin)
+		if dead or not enabled.has(origin):
+			speed_changed=source_option_debuffs[origin].has("movement") or speed_changed
+			source_option_debuffs.erase(origin)
+	if speed_changed:_refresh_source_option_speed()
+
+func _refresh_source_option_speed() -> void:
+	_source_option_move_multiplier=1.0
+	for origin: String in source_option_debuffs:
+		_source_option_move_multiplier=minf(_source_option_move_multiplier,float(source_option_debuffs[origin].get("movement",1.0)))
 func source_equipment_modifier(key: String) -> float:
 	if not is_instance_valid(world_controller) or world_controller.original_skills==null:return 0
 	return world_controller.original_skills.status.modifier(self,key)
@@ -1578,6 +1606,7 @@ func source_option_healing(amount: int,potion: bool=false) -> int:
 	return maxi(0,int(float(amount)*(1.0-clampf(float(maximum)/1000000.0,0,1))))
 
 func advance_source_option_debuffs(delta: float) -> void:
+	var speed_changed: bool=false
 	for origin: String in source_option_debuffs.keys():
 		if not source_option_debuffs.has(origin):continue
 		var entry: Dictionary = source_option_debuffs[origin]
@@ -1591,7 +1620,10 @@ func advance_source_option_debuffs(delta: float) -> void:
 				if life_id != born or int(source_option_debuffs.get(origin,{}).get("sequence",-2)) != sequence:break
 				entry.venom.clock += float(entry.venom.interval)
 				take_damage(int(entry.venom.damage),false,"poison")
-		if life_id == born and int(source_option_debuffs.get(origin,{}).get("sequence",-2)) == sequence and (dead or float(entry.remaining) <= 0):source_option_debuffs.erase(origin)
+		if life_id == born and int(source_option_debuffs.get(origin,{}).get("sequence",-2)) == sequence and (dead or float(entry.remaining) <= 0):
+			speed_changed=entry.has("movement") or speed_changed
+			source_option_debuffs.erase(origin)
+	if speed_changed:_refresh_source_option_speed()
 
 func hit_armor_class() -> int:
 	# Existing local formula expects nonpositive armor; preserve raw native AC for display/audit.
@@ -1604,7 +1636,8 @@ func _patch523_service() -> RefCounted:
 
 func source_523_speed_factor() -> float:
 	var source523 = _patch523_service()
-	return source523.extensions.remaining.speed(self) if source523 != null else 1.0
+	var native_speed: float=source523.extensions.remaining.speed(self) if source523 != null else 1.0
+	return native_speed*_source_option_move_multiplier
 
 func effective_source_attribute(attribute: String) -> float:
 	if is_instance_valid(world_controller) and world_controller.get("growth")!=null:return float(world_controller.growth.guardian_combat.attribute(self,attribute).after)
