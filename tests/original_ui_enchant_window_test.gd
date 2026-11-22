@@ -3,7 +3,7 @@ extends SceneTree
 ## original files): the window names the exact client CSBs and fails closed
 ## without them, its texts come from the existing candidate fields, the HUD
 ## opens it before the TWILIGHT forge (and reports the fallback), and the
-## 강화 시작 button asks through the forge's existing confirmation.
+## 강화 시작 button requests the roll at once (no 강화 확인 step).
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 const FORGE=preload("res://scripts/ui/renewal_forge.gd")
 const ENCHANT=preload("res://scripts/original_enhancement.gd")
@@ -84,10 +84,10 @@ func _confirmation() -> void:
 	var emitted: Array=[]
 	host.enhancement_requested.connect(func(scroll: String, target: String) -> void: emitted.append([scroll,target]))
 	var entry: Dictionary={"name":"장검","level":2,"target_id":"장검@@@abc","count":1,"cost":1000,"success_chance":50.0,"decrease_chance":0.0,"destroy_chance":10.0}
-	check(FORGE.confirm_target(host,"무기 마법 주문서",entry),"the forge confirmation accepts the target")
-	check(host.asked.size()==1 and host.asked[0][0]=="강화 확인" and str(host.asked[0][1]).contains("장검 +2"),"강화 시작 asks through the existing 강화 확인")
-	check(emitted==[["무기 마법 주문서","장검@@@abc"]],"accepting emits the existing enhancement request")
-	check(not FORGE.confirm_target(host,"무기 마법 주문서",{}) and host.asked.size()==1,"an entry without a target is not asked")
+	check(FORGE.request_target(host,"무기 마법 주문서",entry),"the forge request accepts the target")
+	check(host.asked.is_empty(),"강화 시작 asks nothing (no 강화 확인)")
+	check(emitted==[["무기 마법 주문서","장검@@@abc"]],"강화 시작 emits the existing enhancement request at once")
+	check(not FORGE.request_target(host,"무기 마법 주문서",{}) and emitted.size()==1,"an entry without a target is not requested")
 	host.free()
 
 func _hud_routing() -> void:
@@ -121,4 +121,4 @@ func _sources() -> void:
 	check(world_text.contains("\"stats_now\": ENCHANT.stat_values") and world_text.contains("\"stats_next\": ENCHANT.stat_values"),"the candidates carry the numbers behind bonus_text")
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 	check(not text.contains("Image.create") and not text.contains("ImageTexture.create_from_image") and not text.contains("draw_rect"),"no picture is drawn in the enchant window")
-	check(text.contains("Forge.confirm_target(") and text.contains("inventory_item_activated.emit"),"강화 시작 and the 주문서 tab use the existing owners")
+	check(text.contains("Forge.request_target(") and text.contains("inventory_item_activated.emit"),"강화 시작 and the 주문서 tab use the existing owners")

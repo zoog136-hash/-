@@ -9,6 +9,12 @@ const WINDOW=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd
 var checks: int=0
 var failures: Array[String]=[]
 
+class FakeWorld extends Node:
+	var series: Array=[]
+	func attempt_enhancement_series(scroll: String, targets: Array, goal: int) -> Dictionary:
+		series.append([scroll,targets,goal])
+		return {"ok":true,"rolls":0,"stop":""}
+
 class FakeHud extends Node:
 	var shown: Array[String]=[]
 	var asked: Array=[]
@@ -33,8 +39,10 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _window_state() -> void:
+	var world:=FakeWorld.new()
 	var hud:=FakeHud.new()
-	root.add_child(hud)
+	world.add_child(hud)
+	root.add_child(world)
 	var window=WINDOW.new()
 	window._hud=weakref(hud)
 	window._scroll="무기 마법 주문서"
@@ -53,13 +61,13 @@ func _window_state() -> void:
 	check(window._multi_requested().has("notice"),"강화 시작 without picks says so")
 	window._toggle_pick("검@@@a");window._set_goal(3)
 	var asked: Dictionary=window._multi_requested()
-	check(asked.get("asked","")=="multi" and hud.asked.size()==1 and str(hud.asked[0][1]).contains("그 자리에서 멈춥니다"),"강화 시작 asks once and names the stop rule")
+	check(asked.get("started","")=="multi" and hud.asked.is_empty() and world.series.size()==1 and int(world.series[0][2])==3,"강화 시작 starts the series at once (no confirmation)")
 	window._candidates=[{"target_id":"검@@@c","level":5,"count":2}]
 	window._prune_picked()
 	check(window.picked().is_empty(),"a target that left the list is dropped")
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 	check(not source.contains("다중 강화는 원본 규칙이 없어") and source.contains("\"Nd_Enchant_Bless\",\"Nd_Enchant_Smelt\",\"Nd_Enchant_Grace\""),"the 다중 강화 page is mounted (no longer kept out)")
-	hud.queue_free()
+	world.queue_free()
 
 ## user:// as it was: later suites in the same run read the saved character.
 static func _snapshot(dir: String, into: Dictionary) -> void:
