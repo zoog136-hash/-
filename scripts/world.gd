@@ -1415,6 +1415,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if main_target and not equipment523_can_detect(target): return
 	var locked: TwilightMonster = _equipment523_locked_target()
 	if main_target and locked != null and target != locked: return
+	var deal_stage: int = FRAME_HITCH.now()
 	normal_damage+=card_collections.death_damage_bonus()
 	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
 	normal_damage+=PATCH523_EQUIPMENT_COMBAT.fear_flat_ignore(self,target,by_spell)
@@ -1445,7 +1446,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
+	deal_stage = FRAME_HITCH.detail_next("deal.bonuses_drain", deal_stage)
 	_refresh_equipment_effects()
+	deal_stage = FRAME_HITCH.detail_next("deal.equipment_effects", deal_stage)
 	if ordinary_attack: stolen += preload("res://scripts/loot/patch523_passive_items.gd").drain(self,target,stolen)
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
 	var kind: String = attack_kind
@@ -1495,13 +1498,16 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	equipment523_extra += EQUIPMENT523_COMBAT.death_extra(source_records,float(equipment523.policy.get("death_damage_per_point",0.0)))
 	patch523_npc_spells.extensions.begin_incoming(target,int(final.damage)+equipment523_extra+stolen,kind,by_spell)
 	target.set_meta("title523_direct_life",target.life_id)
+	deal_stage = FRAME_HITCH.detail_next("deal.damage_math", deal_stage)
 	target.take_damage(int(final.damage) + equipment523_extra + stolen, critical or bool(final.triggered))
+	deal_stage = FRAME_HITCH.detail_next("deal.take_damage", deal_stage)
 	if not target.dead: target.set_meta("title523_direct_life",-1)
 	patch523_npc_spells.extensions.incoming.erase(target.get_instance_id())
 	growth.guardian_combat.after_hit(target,critical,kind,main_target,by_spell,available_hp,available_mp)
 	equipment523.on_hit(self,target,kind,main_target,by_spell,available_hp,available_mp)
 	if stolen > 0 or hp!=prior_hp or mp!=prior_mp:
 		_refresh_combat_hud()
+	FRAME_HITCH.detail("deal.after_hit", deal_stage)
 
 func _tick_catalog_recovery(delta: float) -> void:
 	source_deadline_check_elapsed += maxf(0.0,delta)
@@ -3341,6 +3347,9 @@ func _attack(automatic_acquisition: bool = false) -> void:
 func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1, source_ammo: Dictionary = {}, native_ammo_bonus: int=-1) -> void:
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
+	# Stage times inside one hit (523.800/804: one impact ~120-130 ms on the
+	# phone with no inner row in the record).
+	var hit_stage: int = FRAME_HITCH.now()
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
 		target.show_miss()
@@ -3366,10 +3375,14 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
+	hit_stage = FRAME_HITCH.detail_next("hit.roll", hit_stage)
 	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false,{},true)
+	hit_stage = FRAME_HITCH.detail_next("hit.deal", hit_stage)
 	preload("res://scripts/loot/patch523_weapon_bleed.gd").on_normal_hit(self,target)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
+	hit_stage = FRAME_HITCH.detail_next("hit.passives", hit_stage)
 	_try_extra_weapon_hit(target, damage, attack_kind)
+	hit_stage = FRAME_HITCH.detail_next("hit.extra", hit_stage)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
 		"원거리" if attack_kind == "ranged" else "근거리",
@@ -3377,7 +3390,9 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 		_current_attack_range_cells(),
 		critical_chance * 100.0
 	])
+	hit_stage = FRAME_HITCH.detail_next("hit.log", hit_stage)
 	_update_target_hud()
+	FRAME_HITCH.detail("hit.target_hud", hit_stage)
 
 func auto_hunting_destinations() -> Dictionary:
 	if not auto_hunting_schedule_checked:
