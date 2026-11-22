@@ -9,6 +9,12 @@ const DARKNESS_SPELL_UNITS := {
 	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
 	"BuffClassID":"BuffClassID","SpecialResistanceTypeID":"SpecialResistanceTypeID",
 }
+const ANTARAS_HOLD_OPTION := 751
+const ANTARAS_HOLD_UNITS := {
+	"SpecialResistanceTypeID":"SpecialResistanceTypeID","BuffClassID":"BuffClassID",
+	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
+	"SpellHitProbabilityBase":"Percentage","SpellHitProbabilityMax":"Percentage",
+}
 var runtime_ref: WeakRef
 var runtime: RefCounted:
 	get:return runtime_ref.get_ref() if runtime_ref!=null else null
@@ -49,7 +55,13 @@ func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
-		if effect.type.Name=="InvokeOption":rows.append(effect)
+		if effect.type.Name!="InvokeOption":continue
+		if not secondary and int(row.card.ID)==11692 and int(effect.bonus.BonusApplicationTargetID)==ANTARAS_HOLD_OPTION:
+			var primary_effect: Dictionary=effect.duplicate()
+			primary_effect["base_card"]=true
+			rows.append(primary_effect)
+		else:
+			rows.append(effect)
 	if rows.is_empty():return
 	_append_base_invokes(out,identity,row.card,rows)
 
@@ -141,6 +153,9 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if float(cooldowns.get(key,0))>0:continue
 		var spell: Dictionary=_invoke_spell(int(option.Param1))
 		if spell.is_empty():continue
+		if effect.get("base_card",false) and int(option.ID)==ANTARAS_HOLD_OPTION:
+			_apply_antaras_hold(effect,spell,target,key)
+			continue
 		var fixed: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount","FixedMagicDamage","IgnoreMagicResistance","IgnoreDamageReductionCalculation"])
 		if _free_spell(spell,2) and fixed.size()==6 and int(fixed.FixedMagicDamage)==1 and int(fixed.IgnoreMagicResistance)==1 and int(fixed.IgnoreDamageReductionCalculation)==1:
 			if int(fixed.SpellDamageBase)<0 or int(fixed.SpellDamageDiceNumber)<0 or int(fixed.SpellDamageDiceSpotCount)<1:continue
@@ -177,6 +192,34 @@ func _finish_debuff(option: Dictionary,raw: Dictionary,target: Node,cooldown_key
 	for ref: WeakRef in targets:
 		if ref.get_ref()==target:return
 	targets.append(weakref(target))
+
+func _apply_antaras_hold(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
+	var option: Dictionary=effect.option
+	if not target is TwilightMonster or not _single_target_base_spell(spell,option) or target.source_option_petrified() or target.status_immunities.has("lapidification"):return
+	var raw: Dictionary=spell.source_spell
+	if int(raw.ID)!=33102 or not option.Param4 or not roll(int(effect.weight)):return
+	var values: Dictionary={}
+	for row: Dictionary in spell.effects:
+		var kind: String=row.type.Name
+		if values.has(kind) or ANTARAS_HOLD_UNITS.get(kind)!=row.unit.Name or int(row.link.MinSpellLevel)!=0 or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return
+		values[kind]=int(row.bonus.Value)
+	if values.size()!=6 or int(values.BuffClassID)!=115 or int(values.SpecialResistanceTypeID)!=2 or float(values.SpellDebuffMinDuration)<=0.0 or float(values.SpellDebuffMaxDuration)<float(values.SpellDebuffMinDuration):return
+	var hit: int=mini(int(values.SpellHitProbabilityBase),int(values.SpellHitProbabilityMax))
+	# The original row exceeds 100%, which saturates under the existing
+	# proc roll. Then apply the host's axis-2 and boss control policy.
+	var world: Node=runtime.world
+	var resistance: float=target.source_equipment_modifier("status_resistance_2")
+	var chance: float=clampf(float(hit)/1000000.0,0.0,1.0)*(1.0-clampf(resistance/100.0,0.0,1.0))
+	var duration_factor: float=1.0
+	if target.is_boss:
+		var policy: Dictionary=world.PATCH523_ENHANCE.policy()
+		chance*=clampf(float(policy.get("invoke_debuff_boss_chance_factor",0.35)),0.0,1.0)
+		duration_factor=clampf(float(policy.get("invoke_debuff_boss_duration_factor",0.35)),0.0,1.0)
+	if chance<=0.0 or duration_factor<=0.0 or (chance<1.0 and world.rng.randf()>=chance):return
+	var buffs: Array=INPUT.invoke_buff(str(values.BuffClassID))
+	var duration: float=world.rng.randf_range(values.SpellDebuffMinDuration,values.SpellDebuffMaxDuration)*duration_factor
+	if target.apply_source_option_petrification(str(effect.origin),duration,buffs):
+		_finish_debuff(option,raw,target,cooldown_key)
 
 func _apply_base_darkness(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
 	if not target is TwilightMonster or not _single_target_base_spell(spell,effect.option):return
