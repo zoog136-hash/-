@@ -6,6 +6,7 @@ extends SceneTree
 ## then in actual Main a grade-5 polymorph, magic doll and holy-stuff card are
 ## equipped and the stats are compared with and without the deck bonus, an
 ## awakening level is set, and the save is reloaded.
+const CATALOG = preload("res://scripts/cards/current523_card_catalog.gd")
 const DECK = preload("res://scripts/cards/card_deck_bonus523.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
@@ -60,6 +61,24 @@ func table() -> void:
 	check(is_equal_approx(float(values.get("AttackSpeedBonus",-1)),expected(1,5,"AttackSpeedBonus")) and is_equal_approx(float(values.get("MoveSpeedBonus",-1)),expected(1,5,"MoveSpeedBonus")) and is_equal_approx(float(values.get("CastSpeedBonus",-1)),expected(1,5,"CastSpeedBonus")), "grade-5 polymorph deck bonus equals the rows "+str(values))
 	evidence["polymorph_grade5"] = values
 	check(runtime.effects_for(1,52).is_empty() and runtime.effects_for(2,52).is_empty(), "grade 52 polymorph/doll have no deck bonus rows")
+
+func companion_options() -> void:
+	var entries: Dictionary = CATALOG.build().get("catalog",{})
+	var found: Dictionary = {}
+	for category: String in ["마법인형","성물"]:
+		for record: Dictionary in entries.get(category,[]):
+			var id: int = int(record.get("source_card_id",0))
+			if id in [13763,21518]: found[id]=record
+	if not check(found.size()==2,"reported doll and relic resolve from the original archive"): return
+	var doll: Dictionary = found[13763]
+	var relic: Dictionary = found[21518]
+	var doll_lines: Array = doll.get("source_card_display_options",[])
+	var relic_lines: Array = relic.get("source_card_display_options",[])
+	check(doll_lines.size()==6 and doll_lines.any(func(line: Dictionary) -> bool: return line.label.contains("파푸리온") and line.value=="3%"),"Papurion displays all six tooltip rows, including its named proc")
+	check(relic_lines.size()==5 and relic_lines.any(func(line: Dictionary) -> bool: return line.label.contains("스킬 레벨") and line.value=="+1") and relic_lines.any(func(line: Dictionary) -> bool: return line.label.contains("섬광") and line.value=="1%"),"Ainhasad's Avatar displays all five rows including the skill modifier and proc")
+	check(float(doll.get("blessing_consumption_reduction_pct",0))==22.0 and float(doll.get("pve_damage_reduction_pct",0))==3.0 and float(doll.get("stun_accuracy",0))==15.0 and float(doll.get("stun_resistance",0))==10.0 and float(doll.get("fear_resistance",0))==7.0,"Papurion options feed the existing equipped-stat keys")
+	check(is_equal_approx(float(relic.get("hpPct",0)),0.1) and float(relic.get("stun_resistance",0))==5.0 and float(relic.get("fear_resistance",0))==5.0,"Ainhasad's Avatar projects HP and resistances in their runtime units")
+	evidence["reported_card_options"]={"papurion":doll_lines,"ainhasad_avatar":relic_lines}
 
 func pick(world: Node, category: String, deck: int, grade: int) -> Dictionary:
 	for record: Dictionary in world.catalog_db.get(category,[]):
@@ -132,13 +151,21 @@ func runtime() -> void:
 	var spell: int = int(core.candidates(poly_id)[0].spell_id)
 	var profile: Dictionary = core.profile(poly_id,10)
 	check(not profile.is_empty() and not profile.stat_set.is_empty(), "awakening profile names its BuffCardSkillAwakenStat set")
+	var baseline: Dictionary = world.skill_awakening.export_state()
+	baseline.cards.erase(poly_id)
+	check(world.skill_awakening.accept_load({"card_skill_awakening":baseline}), "awakening test starts without progress on the selected card")
+	world._invalidate_equipment_static()
 	var hp_before: int = world._effective_max_hp()
+	var equipped_hp_multiplier: float = 1.0 + world.original_skills.stat("hpPct")
+	for record: Dictionary in world._all_equipped_records():
+		equipped_hp_multiplier += float(record.get("hpPct",0.0))
 	var state: Dictionary = world.skill_awakening.export_state()
 	state.cards[poly_id] = {"spell_id":spell,"level":10,"experience":"0"}
 	check(world.skill_awakening.accept_load({"card_skill_awakening":state}), "awakening level 10 accepted")
 	world._invalidate_equipment_static()
 	var hp_after: int = world._effective_max_hp()
-	check(hp_after-hp_before==int(profile.hp), "max HP rises by the level-10 BuffCardSkillAwakenStatPerLevel HP")
+	var expected_gain: float = float(profile.hp)*equipped_hp_multiplier
+	check(hp_after-hp_before in [floori(expected_gain),ceili(expected_gain)], "max HP applies the level-10 flat awakening HP before equipped percentage and final rounding")
 	evidence["skill_awakening"] = {"card":poly_id,"stat_set":profile.get("stat_set",{}),"level":10,"table_hp":int(profile.get("hp",0)),"max_hp_before":hp_before,"max_hp_after":hp_after}
 	var profiles: int = 0
 	for identity: String in core.cards: if not core.profile(identity,1).is_empty(): profiles += 1
@@ -164,6 +191,7 @@ func run() -> void:
 	hold()
 	if not SOURCE.not_installed():
 		table()
+		companion_options()
 		await runtime()
 	print("CARD_DECK_BONUS523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)

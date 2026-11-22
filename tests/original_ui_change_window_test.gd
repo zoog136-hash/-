@@ -11,11 +11,15 @@ extends SceneTree
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const CARDS=preload("res://scripts/card_draw_fusion.gd")
+const SOURCE_CARDS=preload("res://scripts/lineagem_base508.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
 class FakePack extends RefCounted:
 	var manifest: Dictionary={"scenes":{}}
+
+class FakeWorld extends Node:
+	var catalog_db: Dictionary={}
 
 class FakeHud extends Node:
 	signal catalog_equip_requested(category: String, record: Dictionary)
@@ -282,8 +286,10 @@ func _real_pack(pack_dir: String) -> void:
 	var loaded: Dictionary=pack.open(pack_dir,str(receipt.manifest_sha256))
 	check(loaded.get("ok",false),"pack opens: "+str(loaded))
 	if not loaded.get("ok",false):return
+	var host:=FakeWorld.new()
 	var hud:=FakeHud.new()
-	root.add_child(hud)
+	host.add_child(hud)
+	root.add_child(host)
 	var configured: Dictionary=WINDOW.new().configure(pack,hud)
 	check(configured.get("ok",false),"window configures from the original pack: "+str(configured))
 	var window=WINDOW.new()
@@ -323,7 +329,18 @@ func _real_pack(pack_dir: String) -> void:
 	opened=window.open(parent,"성물")
 	check(opened.get("handled",false) and opened.get("category")=="성물" and opened.get("cards")==1,"성물 lists its owned card in Change_WinTotal: "+str(opened).left(300))
 	check(window._type_label(0)=="" and not window._toggle_type_popup().get("type_popup",false),"성물 has no 모든 유형 popup")
+	var original: Dictionary=SOURCE_CARDS.cards().get("catalog",{})
+	if not original.is_empty():
+		for example: Array in [["마법인형",13763,6],["성물",21518,5]]:
+			var choices: Array=original[example[0]].filter(func(record: Dictionary) -> bool: return int(record.source_card_id)==int(example[1]))
+			check(choices.size()==1,"original card selected for option rows")
+			if choices.size()!=1:continue
+			var card: Dictionary=choices[0]
+			hud.catalog_data[example[0]]=choices
+			hud.card_collection_state.owned[example[0]]={CARDS.card_id(card):true}
+			opened=window.open(parent,example[0])
+			check(opened.get("detail",{}).get("options",0)==example[2],"authored detail renders every reported option row for "+str(card.name))
 	window.close()
 	await process_frame
 	parent.queue_free()
-	hud.queue_free()
+	host.queue_free()
