@@ -6,6 +6,7 @@ signal closed
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 const SafeArea = preload("res://scripts/ui/safe_area.gd")
+const MENU_WINDOW_SIZE := Vector2(378,576)
 const Surface = preload("res://scripts/ui/renewal_surface.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var heading: Label
@@ -210,7 +211,11 @@ func fit_viewport() -> void:
 	var fullscreen: bool = current_section in ["변신","마법인형","성물","card_collections","shop","map","class_select","아이템","option_awakening","emblems","guardians","expedition"]
 	var width: float = 378 if shelf or left else 840
 	var height: float = minf(508,viewport.y-150)
-	if current_section == "menu": width = 450
+	# 전체 메뉴: the original 5x7 grid of 70x67 tiles (Hud_TopMenu ListView
+	# 350x470) plus the title, category row and scroll bar.
+	if current_section == "menu":
+		width = MENU_WINDOW_SIZE.x
+		height = minf(MENU_WINDOW_SIZE.y,viewport.y-24)
 	if current_section == "inventory" and get_meta("expanded",false): width = 692
 	if current_section == "detailed_status": width = 680
 	if fullscreen:
