@@ -89,7 +89,8 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 		actor.hide();status="source_asset_pending";hide();return
 	if status!="source_native":return
 	show()
-	actor.root_motion_cell_steps=player.original_source_preview.root_motion_cell_steps
+	var owner_preview: Variant=player.get("original_source_preview")
+	if owner_preview is Object:actor.root_motion_cell_steps=owner_preview.root_motion_cell_steps
 	var previous: Vector2=visual_position
 	visual_position=_follow(maxf(0,delta),player)
 	_apply_position(player)
