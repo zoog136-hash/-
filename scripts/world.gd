@@ -12538,6 +12538,40 @@ func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
 func orim_current_land() -> Dictionary:
 	return _aden_play_controller().call("current_source_land")
 
+## 특수 던전 (시간 던전): "" when the original Land can be entered (523 field
+## active, its map bundle in the installed pack), else the reason.
+func dungeon523_land_ready(land_id: int) -> String:
+	return str(_aden_play_controller().call("source_land_ready", land_id))
+
+## 특수 던전 entry waive (TWILIGHT 근사, 2026-11-22): the dungeon's own
+## SpecialDungeon LandTeleport is the way in, so besides the map-teleport list
+## the in-Land rules its Lands declare do not gate that entry: NoDropItem,
+## NoLoseExperience (death penalties inside), NoBookmark, Underground,
+## TakeDeathPenaltyFromNPC, BlockLoginEnter (logging in there, not teleporting
+## in), NoSpell, NoHellVirtuePoint, KillStreakClassID. MinLevel / MaxLevel and
+## every other declaration still hold.
+const DUNGEON523_ENTRY_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTeleport","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand","NoDropItem","NoLoseExperience","NoBookmark","Underground","TakeDeathPenaltyFromNPC","BlockLoginEnter","NoSpell","NoHellVirtuePoint","KillStreakClassID"]
+
+## 특수 던전 나가기 / time over: back to the start village (기란 마을); the
+## dungeon Land's own rules (NoTeleport, ...) do not keep the player inside.
+func dungeon523_return_to_village() -> Dictionary:
+	if player.auto_enabled: player.set_auto_enabled(false)
+	portal_cooldown = 0.0
+	return return_current523_source_to_aden({}, DUNGEON523_ENTRY_WAIVE.duplicate())
+
+## 특수 던전 entry: moves into the dungeon's original Land (LandTeleport
+## Territories box) under DUNGEON523_ENTRY_WAIVE (MinLevel judged) and saves `save_changes` (the entry cost and the dungeon
+## session) with the arrival. Not moved = nothing saved, nothing charged.
+func dungeon523_enter_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 입장할 수 없습니다."}
+	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
+	var controller: RefCounted = _aden_play_controller()
+	var moved: bool = controller.call("enter_source_land", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
+	var transition: Dictionary = controller.call("last_source_transition")
+	current523_aden_play_active = bool(controller.get("active"))
+	if moved and player.auto_enabled: player.set_auto_enabled(false)
+	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false))}
+
 func content523_spawn_metrics() -> Dictionary:
 	return _aden_play_controller().call("source_spawn_metrics")
 
@@ -12767,9 +12801,9 @@ func use_current523_aden_source_portal(id: int) -> bool:
 	current523_aden_play_changed.emit(current523_aden_play_active,"원문 포탈로 이동했습니다." if result else current523_aden_play_problem)
 	return result
 
-func return_current523_source_to_aden(save_changes: Dictionary={}) -> Dictionary:
+func return_current523_source_to_aden(save_changes: Dictionary={}, departure_waive: Array=[]) -> Dictionary:
 	var controller: RefCounted=_aden_play_controller()
-	var result: Dictionary=controller.call("return_to_aden",save_changes)
+	var result: Dictionary=controller.call("return_to_aden",save_changes,departure_waive)
 	current523_aden_play_active=bool(controller.get("active"))
 	current523_aden_play_problem=str(result.get("reason","")) if not result.get("ok",false) else ""
 	current523_aden_play_changed.emit(current523_aden_play_active,str(result.get("reason","아덴 귀환 보류")))
