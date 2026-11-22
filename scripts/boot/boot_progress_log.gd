@@ -232,7 +232,8 @@ static func _emit(event: String, stage: String, fields: Dictionary, memory: bool
 static func _clean(value: String) -> String:
 	if value.is_empty(): return "-"
 	var result: String = value.replace(" ", "_").replace("\t", "_").replace("\n", "_").replace("\r", "_").replace("=", "-").replace(":", ".")
-	return result.substr(0, 120)
+	# 320, not 120: the eight per-second detail rows (#828) were cut mid-name.
+	return result.substr(0, 320)
 
 static func _start() -> void:
 	if _started: return
