@@ -28,6 +28,7 @@ const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
 var source_option_debuffs: Dictionary={}
+var _source_petrification_origin: String=""
 var source_option_sequence := 0
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
@@ -220,6 +221,7 @@ func retire_for_pool() -> void:
 	damage_hit_count = 0
 	special_attack.clear()
 	source_option_debuffs.clear()
+	_source_petrification_origin=""
 	patch523_weapon_bleed.clear()
 	if is_instance_valid(world_controller):
 		var died_callback:=Callable(world_controller,"_on_monster_died")
@@ -274,6 +276,7 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 	if source523 != null: source523.forget(self)
 	source_targeting.clear()
 	source_option_debuffs.clear()
+	_source_petrification_origin=""
 	source_boss_combat.clear()
 	_clear_source_m_view()
 	_source_only_native_visuals = false
@@ -726,7 +729,7 @@ func _tick_ai(delta: float) -> void:
 	if is_stunned() or is_feared() or custom_frozen():
 		motion.cancel_attack()
 		if is_instance_valid(species_visual): species_visual.warning_active = false
-		velocity = _fear_velocity() if is_feared() and not is_held() and not custom_frozen() else Vector2.ZERO
+		velocity = _fear_velocity() if is_feared() and not is_held() and not custom_frozen() and not source_option_petrified() else Vector2.ZERO
 		path = PackedVector2Array(); path_index = 0
 		_move_on_map()
 		return
@@ -1170,7 +1173,7 @@ func _tick_stun(delta: float) -> void:
 	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
-	return stun_remaining > 0.0 or EQUIPMENT523_INVOKE_DEBUFF.control_active(self,"stun")
+	return stun_remaining > 0.0 or source_option_petrified() or EQUIPMENT523_INVOKE_DEBUFF.control_active(self,"stun")
 
 func on_equipment523_control(kind: String) -> void:
 	# The equipment layer owns its timer. Preserve timers from every other
@@ -1542,6 +1545,40 @@ func apply_source_option_debuff(origin: String,duration: float,effects: Array) -
 		sight_clock = 0
 		if is_inside_tree():show_status_text("시야 차단")
 	return true
+
+const PETRIFICATION_CONTROL_FLAGS := [
+	"CannotMove","CannotAttack","CannotCastSpell","CannotCastSkill",
+	"CannotUseItem","CannotTeleport","CannotLoot",
+]
+
+func apply_source_option_petrification(origin: String,duration: float,effects: Array) -> bool:
+	if dead or origin.is_empty() or duration<=0.0 or status_immunities.has("lapidification") or source_option_petrified():return false
+	var seen: Dictionary={}
+	for effect: Dictionary in effects:
+		var kind: String=effect.type.Name
+		var bonus: Dictionary=effect.bonus
+		if seen.has(kind) or int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0:return false
+		seen[kind]=true
+		if kind=="SpecialResistance":
+			if effect.unit.Name!="Percentage" or int(bonus.BonusApplicationTypeID)!=2 or int(bonus.BonusApplicationTargetID)!=2 or int(bonus.Value)!=1000000:return false
+		else:
+			if int(bonus.BonusApplicationTypeID)!=0 or int(bonus.BonusApplicationTargetID)!=0:return false
+			if kind=="StatusEffectID":
+				if effect.unit.Name!="StatusEffectID" or int(bonus.Value)!=51:return false
+			elif kind not in PETRIFICATION_CONTROL_FLAGS or effect.unit.Name!="TrueFalse" or int(bonus.Value)!=1:return false
+	if seen.size()!=PETRIFICATION_CONTROL_FLAGS.size()+2:return false
+	source_option_sequence+=1
+	source_option_debuffs[origin]={"remaining":duration,"effects":[],"sequence":source_option_sequence,"petrified":true}
+	_source_petrification_origin=origin
+	motion.cancel_attack()
+	_stop_chasing_concealed_player()
+	if is_inside_tree():show_status_text("석화")
+	return true
+
+func source_option_petrified() -> bool:
+	if _source_petrification_origin.is_empty():return false
+	var entry: Variant=source_option_debuffs.get(_source_petrification_origin)
+	return entry is Dictionary and entry.has("petrified")
 
 func source_option_cannot_see() -> bool:
 	if dead:return false

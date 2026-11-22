@@ -189,7 +189,56 @@ func primary_relic_spell(world: Node) -> void:
 	world._invalidate_equipment_static()
 	check(not combat.active().has(identity) or Cards.card_id(equipped)==identity,"unequipping disables the base proc")
 	primary_doll_recovery(world,monster)
+	primary_doll_antaras_hold(world,monster)
 	monster.free()
+
+func primary_doll_antaras_hold(world: Node,monster: TwilightMonster) -> void:
+	var doll: Dictionary={}
+	for record: Dictionary in world.catalog_db.get("마법인형",[]):
+		if int(record.get("source_card_id",0))==11692:
+			doll=record
+			break
+	if not check(not doll.is_empty(),"Antaras is in the original live catalog"):return
+	var identity: String=Cards.card_id(doll)
+	var equipped: Dictionary=world.equipped_catalog.get("마법인형",{})
+	var owned: Dictionary=world.card_draw_fusion.owned["마법인형"]
+	var was_owned: bool=owned.get(identity,false)
+	var rng_before: int=world.rng.state
+	owned[identity]=true
+	world.equipped_catalog["마법인형"]=doll
+	world._invalidate_equipment_static()
+	var combat:=ForcedCardProc.new()
+	combat.configure(world.option_awakening)
+	combat.on_hit(monster,"melee",false)
+	check(combat.weights.is_empty(),"Antaras checks the main target")
+	monster.status_immunities.append("lapidification")
+	combat.on_hit(monster)
+	check(combat.weights.is_empty() and not monster.source_option_petrified(),"lapidification immunity blocks Antaras")
+	monster.status_immunities.erase("lapidification")
+	monster.motion.begin_attack(1.0,Vector2.RIGHT,"melee",0.5)
+	monster.velocity=Vector2.RIGHT*40.0
+	combat.on_hit(monster)
+	var duration: float=monster.source_option_debuffs.get(identity,{}).get("remaining",0.0)
+	check(combat.fired==[751] and combat.weights==[10000] and duration>=2.0 and duration<=3.0,"Antaras uses the original 1% trigger and 2–3 second duration")
+	check(monster.is_stunned() and not monster.motion.active and monster.velocity==Vector2.ZERO,"petrification cancels windup and pauses movement")
+	combat.on_hit(monster)
+	check(combat.weights==[10000] and monster.source_option_debuffs[identity].remaining==duration,"Antaras cannot refresh a target already protected by petrification")
+	monster.advance_source_option_debuffs(duration+0.01)
+	check(not monster.source_option_petrified() and not monster.is_stunned(),"expiry restores monster control")
+	combat.on_hit(monster)
+	check(monster.source_option_petrified(),"a later attack can trigger the effect again")
+	world.equipped_catalog["마법인형"]=equipped
+	combat.tick(0.0)
+	check(not monster.source_option_petrified() and not monster.is_stunned(),"unequip clears the petrification")
+	world.equipped_catalog["마법인형"]=doll
+	combat.on_hit(monster)
+	check(monster.source_option_petrified(),"re-equipping restores the Antaras effect")
+	monster.retire_for_pool()
+	check(not monster.source_option_petrified() and monster.source_option_debuffs.is_empty(),"a reused monster keeps no petrification")
+	world.equipped_catalog["마법인형"]=equipped
+	if not was_owned:owned.erase(identity)
+	world.rng.state=rng_before
+	world._invalidate_equipment_static()
 
 func primary_doll_recovery(world: Node,monster: TwilightMonster) -> void:
 	var doll: Dictionary = {}

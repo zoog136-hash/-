@@ -3,6 +3,12 @@ extends RefCounted
 const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const ANTARAS_HOLD_OPTION := 751
+const ANTARAS_HOLD_UNITS := {
+	"SpecialResistanceTypeID":"SpecialResistanceTypeID","BuffClassID":"BuffClassID",
+	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
+	"SpellHitProbabilityBase":"Percentage","SpellHitProbabilityMax":"Percentage",
+}
 var runtime_ref: WeakRef
 var runtime: RefCounted:
 	get:return runtime_ref.get_ref() if runtime_ref!=null else null
@@ -43,7 +49,13 @@ func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
-		if effect.type.Name=="InvokeOption":rows.append(effect)
+		if effect.type.Name!="InvokeOption":continue
+		if not secondary and int(row.card.ID)==11692 and int(effect.bonus.BonusApplicationTargetID)==ANTARAS_HOLD_OPTION:
+			var primary_effect: Dictionary=effect.duplicate()
+			primary_effect["base_card"]=true
+			rows.append(primary_effect)
+		else:
+			rows.append(effect)
 	if rows.is_empty():return
 	_append_base_invokes(out,identity,row.card,rows)
 
@@ -135,6 +147,9 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if float(cooldowns.get(key,0))>0:continue
 		var spell: Dictionary=_invoke_spell(int(option.Param1))
 		if spell.is_empty():continue
+		if effect.get("base_card",false) and int(option.ID)==ANTARAS_HOLD_OPTION:
+			_apply_antaras_hold(effect,spell,target)
+			continue
 		var fixed: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount","FixedMagicDamage","IgnoreMagicResistance","IgnoreDamageReductionCalculation"])
 		if _free_spell(spell,2) and fixed.size()==6 and int(fixed.FixedMagicDamage)==1 and int(fixed.IgnoreMagicResistance)==1 and int(fixed.IgnoreDamageReductionCalculation)==1:
 			if int(fixed.SpellDamageBase)<0 or int(fixed.SpellDamageDiceNumber)<0 or int(fixed.SpellDamageDiceSpotCount)<1:continue
@@ -164,6 +179,43 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 				if ref.get_ref()==target:found=true;break
 			if not found:targets.append(weakref(target))
 	busy=false
+
+func _apply_antaras_hold(effect: Dictionary,spell: Dictionary,target: Node) -> void:
+	if not target is TwilightMonster or not _free_spell(spell,2) or target.source_option_petrified() or target.status_immunities.has("lapidification"):return
+	var raw: Dictionary=spell.source_spell
+	var option: Dictionary=effect.option
+	if int(raw.ID)!=33102 or int(raw.TargetKindID)!=11 or int(raw.SiegeTargetKindID)!=0 or raw.IncludeTargettingTarget!=true or not option.Param4:return
+	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
+		if int(option.get(field,0))!=0:return
+	if option.get("IsAmmoAttack",false) or not roll(int(effect.weight)):return
+	var values: Dictionary={}
+	for row: Dictionary in spell.effects:
+		var kind: String=row.type.Name
+		if values.has(kind) or ANTARAS_HOLD_UNITS.get(kind)!=row.unit.Name or int(row.link.MinSpellLevel)!=0 or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return
+		values[kind]=int(row.bonus.Value)
+	if values.size()!=6 or int(values.BuffClassID)!=115 or int(values.SpecialResistanceTypeID)!=2 or float(values.SpellDebuffMinDuration)<=0.0 or float(values.SpellDebuffMaxDuration)<float(values.SpellDebuffMinDuration):return
+	var hit: int=mini(int(values.SpellHitProbabilityBase),int(values.SpellHitProbabilityMax))
+	# The original row exceeds 100%, which saturates under the existing
+	# proc roll. Then apply the host's axis-2 and boss control policy.
+	var world: Node=runtime.world
+	var resistance: float=target.source_equipment_modifier("status_resistance_2")
+	var chance: float=clampf(float(hit)/1000000.0,0.0,1.0)*(1.0-clampf(resistance/100.0,0.0,1.0))
+	var duration_factor: float=1.0
+	if target.is_boss:
+		var policy: Dictionary=world.PATCH523_ENHANCE.policy()
+		chance*=clampf(float(policy.get("invoke_debuff_boss_chance_factor",0.35)),0.0,1.0)
+		duration_factor=clampf(float(policy.get("invoke_debuff_boss_duration_factor",0.35)),0.0,1.0)
+	if chance<=0.0 or duration_factor<=0.0 or (chance<1.0 and world.rng.randf()>=chance):return
+	var buffs: Array=INPUT.invoke_buff(str(values.BuffClassID))
+	var duration: float=world.rng.randf_range(values.SpellDebuffMinDuration,values.SpellDebuffMaxDuration)*duration_factor
+	if not target.apply_source_option_petrification(str(effect.origin),duration,buffs):return
+	fired.append(int(option.ID))
+	emit_spell(raw,target)
+	emit_option_pair(option,runtime.world.player,target)
+	for ref: WeakRef in targets:
+		if ref.get_ref()==target:return
+	targets.append(weakref(target))
+
 ## Plain direct spell: exact source dice, one target, and the current
 ## magic hit/element/reduction pipeline. Never recurse into another proc.
 func _apply_base_damage_proc(effect: Dictionary, spell: Dictionary, target: Node, cooldown_key: String) -> void:
