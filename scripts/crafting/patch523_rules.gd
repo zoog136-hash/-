@@ -1002,10 +1002,13 @@ static func identity(physical: Dictionary) -> String:
 	if not pinned is Dictionary:
 		return ""
 	var source_id: String = str(pinned.get("sourceId", ""))
-	if physical.has("sourceId") and str(physical.sourceId) != source_id:
-		return ""
-	if pinned.get("source")=="inven": return source_id
-	if pinned.get("source")=="lineagem_patch523" and pinned.get("source_snapshot")=="patch523" and pinned.get("source_m_native_item",false) and source_id=="m523:item:"+str(int(pinned.get("source_item_class_id",0))) and int(pinned.get("source_item_class_id",0))>0: return str(int(pinned.source_item_class_id))
+	var stored_id: String = str(physical.get("sourceId",source_id))
+	if pinned.get("source")=="inven": return source_id if stored_id==source_id else ""
+	var native_id: String = str(int(pinned.get("source_item_class_id",0)))
+	if pinned.get("source")=="lineagem_patch523" and pinned.get("source_snapshot")=="patch523" and pinned.get("source_m_native_item",false) and source_id=="m523:item:"+native_id and int(native_id)>0:
+		# Old seal boxes wrote the bare ID on the instance and the canonical
+		# namespaced ID on its pinned record. Both must describe the same seal.
+		if stored_id==source_id or (native_id in ["30671","130551"] and stored_id==native_id): return native_id
 	return ""
 
 static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false) -> bool:
