@@ -1775,6 +1775,13 @@ func _select_menu_category(index: int) -> void:
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
 
+## The original 523 전체 메뉴 grid (Hud_TopMenu ListView 350x470 of 70x67
+## MainMenu_* panels with no item margin; MainMenuUIButtons FixedColumn 1-5,
+## FixedRow 1-7): five columns, seven rows on screen, the rest by scrolling.
+const MENU_GRID_COLUMNS: int = 5
+const MENU_TILE_SIZE: Vector2 = Vector2(70,67)
+const MENU_VISIBLE_ROWS: int = 7
+
 ## The original 523 전체 메뉴 order (MainMenuUIButtons, row by row: 제작 거래소
 ## 변신 마법인형 성물 / 던전 · · 스킬 카드 컬렉션 / 혈맹 · 기억 · · / · 연금 · 수호성
 ## 문양 / 엘릭서 스케줄 숙련 토템 지배석 / 작위 · · 설정 · / 몬스터 도감) for the
@@ -1820,16 +1827,24 @@ func _build_menu_page() -> void:
 	menu_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	menu_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO
 	menu_scroll.scroll_deadzone=8
+	# No panel inset: the 470-high original list shows exactly seven 67 rows.
+	menu_scroll.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	menu_scroll.add_theme_stylebox_override("focus",StyleBoxEmpty.new())
 	col.add_child(menu_scroll)
+	# 원본 그리드: Hud_TopMenu ListView 350x470, MainMenu_* Panel 70x67, item
+	# margin 0, MainMenuUIButtons FixedColumn 1-5 / FixedRow 1-7 (5열, 7행 표시).
 	var grid:=GridContainer.new()
 	grid.name="MenuGrid"
-	grid.columns=4
-	grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	grid.columns=MENU_GRID_COLUMNS
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
-	grid.add_theme_constant_override("h_separation",6)
-	grid.add_theme_constant_override("v_separation",6)
-	menu_scroll.add_child(grid)
-	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
+	grid.add_theme_constant_override("h_separation",0)
+	grid.add_theme_constant_override("v_separation",0)
+	var grid_center:=CenterContainer.new()
+	grid_center.name="MenuGridCenter"
+	grid_center.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	grid_center.mouse_filter = Control.MOUSE_FILTER_PASS
+	grid_center.add_child(grid)
+	menu_scroll.add_child(grid_center)
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
 	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
@@ -1841,7 +1856,7 @@ func _build_menu_page() -> void:
 		if section_id in RETIRED_SECTIONS: continue
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
-				_navigate(section_id),Vector2(92,88))
+				_navigate(section_id),MENU_TILE_SIZE)
 		if section_id in ["emblems","guardians","growth96","combinations","titles","totems","monsterbook523"]:
 			button.set_script(preload("res://scripts/growth/growth_touch_button.gd"))
 			button.scroll_host = workspace
@@ -1855,20 +1870,21 @@ func _build_menu_page() -> void:
 		artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id in ["quests","monsterbook523"] else ("inventory" if section_id in ["equipment_collections","totems"] else ("shop" if section_id == "promo_code" else section_id))))))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		artwork.position = Vector2(26,8)
-		artwork.size = Vector2(40,40)
+		artwork.position = Vector2(19,4)
+		artwork.size = Vector2(32,32)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(artwork)
-		var caption:=UI.label(str(pair[1]),12,UI.TEXT)
+		# A tile without a client MainMenu_* scene: picture on top, the caption
+		# (at most two lines) below it inside the 70x67 cell.
+		var caption:=UI.label(str(pair[1]),11,UI.TEXT)
 		caption.anchor_right=1
-		caption.offset_left=2;caption.offset_right=-2
-		caption.offset_top=58;caption.offset_bottom=78
+		caption.offset_left=1;caption.offset_right=-1
+		caption.offset_top=37;caption.offset_bottom=66
 		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		if section_id == "growth96":
-			caption.add_theme_font_size_override("font_size",11)
-			caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			caption.offset_top=50;caption.offset_bottom=86
+		caption.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		caption.add_theme_constant_override("line_spacing",-2)
+		caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(caption)
 		if section_id == "domination_stone": _mount_domination_menu_tile(button,artwork,caption)
 		else: _mount_original_menu_tile(section_id,button,artwork,caption)
@@ -1885,7 +1901,7 @@ func _mount_domination_menu_tile(button: Button, artwork: TextureRect, caption: 
 	if not tile.get("ok",false): return
 	var scene: Node2D = tile.scene
 	# MainMenu_DominationStone's 70x67 panel is anchored at its centre.
-	scene.position = Vector2(46,40)
+	scene.position = MENU_TILE_SIZE*0.5
 	button.add_child(scene)
 	caption.hide()
 
@@ -1899,7 +1915,7 @@ func _mount_original_menu_tile(section_id: String, button: Button, artwork: Text
 	if not tile.get("ok",false): return
 	var scene: Node2D = tile.scene
 	# MainMenu_*'s 70x67 panel is anchored at its centre.
-	scene.position = Vector2(46,40)
+	scene.position = MENU_TILE_SIZE*0.5
 	button.add_child(scene)
 	preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")._ignore_input(scene)
 	artwork.texture = null
