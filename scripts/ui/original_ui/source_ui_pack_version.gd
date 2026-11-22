@@ -7,9 +7,13 @@ extends RefCounted
 ## when it has every scene the expected add-on added; otherwise it is old.
 ## An old pack never blocks the game: the windows it lacks keep their
 ## TWILIGHT fallback; the player is told once to reinstall.
-const EXPECTED_NAME: String="ui42"
-const EXPECTED_SHA256: String="335af82d2794bafa4a9273cb309cde3a59f06a764467e66b58e29321c98eebaa"
+const EXPECTED_NAME: String="ui44"
+const EXPECTED_SHA256: String="5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c"
+## Every published build by SHA: an installed one is never "확인되지 않은 팩",
+## and only an unknown SHA makes installed() read the whole manifest (66 MB).
 const KNOWN: Dictionary={
+	"5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c":"ui44",
+	"7a2b59859b8c8abdead63e19fa4cd1c602c0324b7e0ca81d3e36e37186122371":"ui43",
 	"335af82d2794bafa4a9273cb309cde3a59f06a764467e66b58e29321c98eebaa":"ui42",
 	"1137ccbca08c61fb64607c01bb4ccd1b19d06dd58b34b95320b0ab74656b87ef":"ui41",
 	"21daecf510dc83ca9b155c80227b2d6812dd34155a3a69dbbbdd3b4354092d3d":"ui40",
@@ -23,8 +27,8 @@ const KNOWN: Dictionary={
 	"e1e8295c1105e786706b7ce4ef6fa97ca253be985d5b73882e48c8f2428beb88":"ui32",
 	"d587efcb87cd7bcfa1b6a2bdd5fa31619595d4c7d450e5fc9d1c165d04417e10":"ui31",
 }
-## Scenes ui42 added over ui41 (레벨업 연출, 보스 이름표).
-const EXPECTED_SCENES: Array[String]=["UI/Effect/Effect_Source/Fx_Level_Up_Bottom.csb","UI/Effect/Effect_Source/Fx_Level_Up_Top.csb","UI/Main/Hud_LevelUp.csb","UI/Overhead/NameCardLayout_BossMonster.csb"]
+## Scenes ui44 added over ui43 (마법인형 탐험 창, #811).
+const EXPECTED_SCENES: Array[String]=["UI/Change/Change_Card_A_Explore.csb","UI/Change/Change_Explore_Btn.csb","UI/Change/Change_List_Explore_Buff.csb","UI/Change/Change_Popup_Explore_Info.csb","UI/Change/Change_Popup_Explore_Set.csb"]
 const WARNING: String="UI 리소스 팩이 오래됐습니다. twilight523-addon-ui.zip(최신)을 다시 설치하세요"
 static var _warned: bool=false
 
@@ -42,7 +46,7 @@ static func describe(sha256: String, scenes: Variant=null) -> Dictionary:
 	else:missing.assign(EXPECTED_SCENES)
 	return {"installed":true,"name":"확인되지 않은 팩","sha8":sha.left(8),"outdated":not missing.is_empty(),"missing_scenes":missing}
 
-## One line: "UI 팩 ui42 (335af82d)" (+ " · 오래됨").
+## One line: "UI 팩 ui44 (5263d925)" (+ " · 오래됨").
 static func label(info: Dictionary) -> String:
 	if not bool(info.get("installed",false)):return "UI 팩 설치 안 됨"
 	return "UI 팩 %s (%s)%s" % [str(info.name),str(info.sha8)," · 오래됨" if bool(info.outdated) else ""]

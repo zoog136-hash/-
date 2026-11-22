@@ -1,6 +1,6 @@
 extends SceneTree
 ## The installed original UI add-on is shown (설정 정보 tab, loading screen)
-## and an add-on older than the expected one (ui42) asks once for a reinstall
+## and an add-on older than the expected one (ui44) asks once for a reinstall
 ## without holding the game (source_ui_pack_version).
 const VERSION=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 var checks: int=0
@@ -19,8 +19,15 @@ func check(ok: bool, label: String) -> void:
 
 func _initialize() -> void:
 	var current: Dictionary=VERSION.describe(VERSION.EXPECTED_SHA256)
-	check(current.installed and current.name=="ui42" and current.sha8=="335af82d" and not current.outdated,"ui42 is current: "+str(current))
-	check(VERSION.label(current)=="UI 팩 ui42 (335af82d)","the readable label")
+	check(current.installed and current.name=="ui44" and current.sha8=="5263d925" and not current.outdated,"ui44 is current: "+str(current))
+	check(VERSION.label(current)=="UI 팩 ui44 (5263d925)","the readable label")
+	# 2026-11-22: ui43 (7a2b5985) and ui44 were not in the table, so the phone
+	# showed "확인되지 않은 팩" and installed() parsed the whole 66 MB manifest
+	# on every loading screen. ui43 lacks the 마법인형 탐험 scenes (#811).
+	var ui43: Dictionary=VERSION.describe("7a2b59859b8c8abdead63e19fa4cd1c602c0324b7e0ca81d3e36e37186122371")
+	check(ui43.name=="ui43" and ui43.outdated and VERSION.label(ui43)=="UI 팩 ui43 (7a2b5985) · 오래됨","ui43 is a known old build: "+str(ui43))
+	check(VERSION.EXPECTED_SCENES.has("UI/Change/Change_Popup_Explore_Set.csb") and VERSION.EXPECTED_SCENES.size()==5,"the scenes ui44 added (인형 탐험)")
+	check(VERSION.describe("335af82d2794bafa4a9273cb309cde3a59f06a764467e66b58e29321c98eebaa").outdated,"ui42 is old now")
 	var old: Dictionary=VERSION.describe("1137CCBCA08C61FB64607C01BB4CCD1B19D06DD58B34B95320B0AB74656B87EF")
 	check(old.name=="ui41" and old.outdated and VERSION.label(old)=="UI 팩 ui41 (1137ccbc) · 오래됨","ui41 is old (any case): "+str(old))
 	check(VERSION.describe("21daecf510dc83ca9b155c80227b2d6812dd34155a3a69dbbbdd3b4354092d3d").name=="ui40","older published builds have names")
@@ -28,13 +35,13 @@ func _initialize() -> void:
 	for member: String in VERSION.EXPECTED_SCENES:scenes[member]={}
 	var newer: Dictionary=VERSION.describe("ab".repeat(32),scenes)
 	check(newer.name=="확인되지 않은 팩" and not newer.outdated,"an unknown pack with every expected scene is current")
-	scenes.erase("UI/Main/Hud_LevelUp.csb")
+	scenes.erase("UI/Change/Change_Explore_Btn.csb")
 	var lacking: Dictionary=VERSION.describe("ab".repeat(32),scenes)
-	check(lacking.outdated and lacking.missing_scenes==["UI/Main/Hud_LevelUp.csb"],"an unknown pack without an expected scene is old")
+	check(lacking.outdated and lacking.missing_scenes==["UI/Change/Change_Explore_Btn.csb"],"an unknown pack without an expected scene is old")
 	check(VERSION.describe("ab".repeat(32)).outdated,"an unknown pack whose scenes are unknown is old")
 	var none: Dictionary=VERSION.describe("")
 	check(not none.installed and not none.outdated and VERSION.label(none)=="UI 팩 설치 안 됨","no pack: nothing to warn")
-	check(VERSION.KNOWN.get(VERSION.EXPECTED_SHA256)==VERSION.EXPECTED_NAME and VERSION.KNOWN.size()==12,"the expected build is in the table")
+	check(VERSION.KNOWN.get(VERSION.EXPECTED_SHA256)==VERSION.EXPECTED_NAME and VERSION.KNOWN.size()==14,"the expected build is in the table")
 	var hud:=FakeHud.new()
 	check(not VERSION.warn_once(hud,current) and hud.messages.is_empty(),"a current pack says nothing")
 	check(VERSION.warn_once(hud,old) and hud.messages==[VERSION.WARNING],"an old pack asks for a reinstall")
