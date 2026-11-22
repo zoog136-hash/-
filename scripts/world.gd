@@ -10014,9 +10014,9 @@ func _restore_equipped_visuals() -> void:
 ## --- 523 카드 다시 뽑기 · 스킬 카드 합성/강화 (견적 → 확인 → 실행) -------------
 ## UI 창은 이 함수들만 부른다. 규칙·저장은 scripts/cards/card_swap523.gd,
 ## scripts/cards/skill_card523.gd (docs/cards523_reroll_skillcard.md).
-func card523_swap_quote(category: String, identity: String) -> Dictionary:
+func card523_swap_quote(category: String, identity: String, confirmation_only: bool = false) -> Dictionary:
 	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
-	return card_swap523.quote(category, identity)
+	return card_swap523.quote(category, identity, confirmation_only)
 
 func card523_swap_execute(token: String, pick: String = "") -> Dictionary:
 	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
@@ -10029,6 +10029,15 @@ func card523_swap_confirm(confirm_token: String) -> Dictionary:
 	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
 	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
 	return card_swap523.confirm(confirm_token)
+
+func card523_swap_quote_all() -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	return card_swap523.quote_all()
+
+func card523_swap_confirm_all(token: String) -> Dictionary:
+	if _option_awakening_busy(): return {"ok":false,"reason":"각성 처리 중"}
+	if hud != null and hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")): return {"ok":false,"reason":"카드 결과 연출 중"}
+	return card_swap523.confirm_all(token)
 
 ## Every saved pending reroll result (e.g. to reopen the window after a reload).
 func card523_swap_pending() -> Array:

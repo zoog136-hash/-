@@ -24,7 +24,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   영웅 이상 lights up in its grade (source_main_card_grade_fx). A tap or
 ##   the close button returns to the list.
 ## Left empty (no TWILIGHT data): 상품 안내 (cash goods),
-## the collection view, 전체 선택 / 선택 확정 (bulk), the confirm time limit
+## the collection view, the confirm time limit
 ## and the cash notice.
 const ROOT="UI/CardChange/CardChange_All.csb"
 const SLOT="UI/CardChange/CardChange_Slot_Card.csb"
@@ -45,7 +45,7 @@ const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const CATEGORIES: Array[String]=["변신","마법인형","성물"]
 const GRADES: Array[String]=["영웅","전설","신화","유일"]
-## "" / retry / confirm / pick / gacha / result
+## "" / retry / confirm / confirm_all / pick / gacha / result
 var popup: String=""
 ## The reveal: {before{name,grade,record}, after{name,grade,record}}.
 var reveal: Dictionary={}
@@ -121,9 +121,16 @@ func shown(entry: Dictionary) -> Dictionary:
 func _spec() -> Dictionary:
 	var spec: Dictionary={}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
-	for name: String in ["Btn_Probability","Btn_CollectionView","Nd_CheckBox_All","Btn_Confirm","Nd_Touch"]:spec[name]={"exclude":true}
+	for name: String in ["Btn_Probability","Btn_CollectionView","Nd_CheckBox_All","Nd_Touch"]:spec[name]={"exclude":true}
 	var all: Array=cards()
+	var waiting: int=pending().size()
 	spec["Nd_PageView/Label_Num"]={"role":"source_text","text":"총 %d개" % all.size()}
+	spec["Btn_Confirm"]={"activate":Callable(self,"_confirm_all"),"displaystate":waiting>0}
+	for state: String in ["Nd_Normal","Nd_Disable"]:
+		spec["Btn_Confirm/"+state+"/Label"]={"role":"source_text","text":"전체 확정"}
+	var hint: String = "확정 대기 %d장 · 다시 뽑은 카드를 확정하면 획득합니다." % waiting
+	if waiting==0: hint = "다시 뽑은 결과가 생기면 카드 확정을 할 수 있습니다."
+	spec["Nd_PageView/Label_01"]={"role":"source_text","text":hint}
 	spec["Nd_PageView/Nd_Notice"]={"visible":all.is_empty()}
 	return spec
 
@@ -139,7 +146,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			"Panel/Btn_Normal":{"activate":Callable(self,"_ignore")},
 			"Panel/Btn_Pressed":{"visible":false},
 			"Panel/Btn_Retry":{"activate":Callable(self,"_retry").bind(index)},
-			"Panel/Btn_Select":{"activate":Callable(self,"_confirm").bind(index),"displaystate":waiting},
+			"Panel/Btn_Select":{"activate":Callable(self,"_confirm_entry").bind(entry),"displaystate":waiting},
 			"Btn_Select/Sp_Icon":{"visible":false},
 			"Btn_Select/Label_Time":{"visible":false},
 			"Panel/Btn_Special":{"exclude":true}}})
@@ -189,8 +196,8 @@ func _prefab_picture(scene: Node2D, out: Dictionary, raw: Dictionary) -> bool:
 func _popup(root: Node2D) -> Dictionary:
 	var spec: Dictionary={}
 	if popup in ["gacha","result"]:return _reveal_popup(root)
-	var member: String={"retry":RETRY,"confirm":CONFIRM,"pick":PICK}[popup]
-	var card: Dictionary=shown(target)
+	var member: String={"retry":RETRY,"confirm":CONFIRM,"confirm_all":CONFIRM,"pick":PICK}[popup]
+	var card: Dictionary=shown(target) if popup!="confirm_all" else {}
 	match popup:
 		"retry":
 			spec["Btn_Close"]={"activate":Callable(self,"_close_popup")}
@@ -209,6 +216,18 @@ func _popup(root: Node2D) -> Dictionary:
 			spec["Nd_Confirm/ListView"]={"exclude":true}
 			spec["Nd_Confirm/Label_Card"]={"role":"source_text","text":str(card.name)}
 			spec["Nd_Confirm/Btn_Ok"]={"activate":Callable(self,"_confirm_result")}
+			spec["Nd_Confirm/Btn_No"]={"activate":Callable(self,"_close_popup")}
+		"confirm_all":
+			spec["Btn_Close"]={"activate":Callable(self,"_close_popup")}
+			spec["Nd_Confirm/ListView"]={"exclude":true}
+			spec["Nd_Confirm/Nd_Card"]={"exclude":true}
+			spec["Nd_Confirm/Label_Card"]={"role":"source_text","text":"카드 %d장 전체 확정" % int(quote.count)}
+			var blocked: int=int(quote.get("blocked",0))
+			var detail: String="다시 뽑은 결과 %d장을 받습니다." % int(quote.count)
+			if blocked>0:detail+="\n조건을 충족하지 않은 %d장은 대기 상태로 유지됩니다." % blocked
+			spec["Nd_Confirm/Label_01"]={"role":"source_text","text":detail}
+			spec["Nd_Confirm/Btn_Ok"]={"activate":Callable(self,"_confirm_all_results")}
+			spec["Nd_Confirm/Btn_Ok/Label"]={"role":"source_text","text":"전체 확정"}
 			spec["Nd_Confirm/Btn_No"]={"activate":Callable(self,"_close_popup")}
 		"pick":
 			spec["Nd_Popup_Daily/Btn_Close"]={"activate":Callable(self,"_close_popup")}
@@ -262,16 +281,31 @@ func _retry(index: int) -> Dictionary:
 	popup="retry"
 	return _stage()
 
-func _confirm(index: int) -> Dictionary:
+func _confirm_entry(entry: Dictionary) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
-	var all: Array=cards()
-	if index<0 or index>=all.size():return {"ok":false}
-	target=all[index]
-	quote=_quote(target)
+	target=entry
+	var value: Variant=_call("card523_swap_quote",[str(entry.category),str(entry.identity),true])
+	quote=value if value is Dictionary else {}
 	if not bool(quote.get("can_confirm",false)):
-		_message(str(quote.get("confirm_reason","확정할 결과가 없습니다")))
+		_message(str(quote.get("confirm_reason",quote.get("reason","확정할 결과가 없습니다"))))
 		return {"ok":false}
 	popup="confirm"
+	return _stage()
+
+func _confirm_all() -> Dictionary:
+	var value: Variant=_call("card523_swap_quote_all")
+	quote=value if value is Dictionary else {}
+	if not quote.get("ok",false):
+		_message(str(quote.get("reason","확정할 수 있는 대기 결과가 없습니다")))
+		return {"ok":false}
+	popup="confirm_all"
+	return _stage()
+
+func _confirm_all_results() -> Dictionary:
+	var value: Variant=_call("card523_swap_confirm_all",[str(quote.get("token",""))])
+	var done: Dictionary=value if value is Dictionary else {}
+	_message(("카드 전체 확정: %d장" % int(done.count)) if done.get("ok",false) else str(done.get("reason","전체 확정 실패")))
+	popup=""
 	return _stage()
 
 func _choose(identity: String) -> Dictionary:
