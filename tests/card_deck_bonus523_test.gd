@@ -189,7 +189,64 @@ func primary_relic_spell(world: Node) -> void:
 	world._invalidate_equipment_static()
 	check(not combat.active().has(identity) or Cards.card_id(equipped)==identity,"unequipping disables the base proc")
 	primary_doll_recovery(world,monster)
+	primary_relic_darkness(world,monster)
 	monster.free()
+
+func primary_relic_darkness(world: Node,monster: TwilightMonster) -> void:
+	var relic: Dictionary = {}
+	for record: Dictionary in world.catalog_db.get("성물",[]):
+		if int(record.get("source_card_id",0))==21528:
+			relic=record
+			break
+	if not check(not relic.is_empty(),"Gran Kain's Avatar is in the live catalog"):return
+	var identity: String=Cards.card_id(relic)
+	var key: String="native_option|"+identity+"|86588"
+	var original_context: Dictionary=world.card_collections.source_server_context()
+	var region: Dictionary=SOURCE.related("ServerLimit","ServerLimitSetID",int(relic.source_original_card.ServerLimitSetID))[0]
+	world.card_collections.set_source_server_context({"source_snapshot":"base508","ServiceRegionCode":str(region.ServiceRegionCode),"WorldNo":int(region.WorldNo)})
+	var owned: Dictionary=world.card_draw_fusion.owned["성물"]
+	var was_owned: bool=owned.get(identity,false)
+	var equipped: Dictionary=world.equipped_catalog.get("성물",{})
+	var rng_before: int=world.rng.state
+	owned[identity]=true
+	world.equipped_catalog["성물"]=relic
+	world._invalidate_equipment_static()
+	var combat:=ForcedCardProc.new()
+	combat.configure(world.option_awakening)
+	combat.on_hit(monster,"melee",false)
+	check(combat.weights.is_empty(),"Darkness checks the source main-target condition")
+	monster.status_immunities.append("dark")
+	combat.on_hit(monster)
+	check(combat.weights.is_empty() and not monster.source_option_cannot_see(),"Dark immunity blocks the status")
+	monster.status_immunities.erase("dark")
+	var base_speed: float=monster.source_523_speed_factor()
+	monster.velocity=Vector2.RIGHT*40.0
+	combat.on_hit(monster)
+	var duration: float=monster.source_option_debuffs.get(identity,{}).get("remaining",0.0)
+	check(combat.fired==[15138] and combat.weights==[10000] and duration>=4.0 and duration<=6.0,"original 1% trigger and 4–6 second status")
+	check(monster.source_option_cannot_see() and monster.velocity==Vector2.ZERO and is_equal_approx(monster.source_523_speed_factor(),base_speed*0.4),"Darkness blocks sight, stops pursuit and reduces movement by 60%")
+	combat.on_hit(monster)
+	check(combat.weights==[10000] and world.skill_cooldowns.get(key,0.0)==3.0,"source cast delay blocks another roll")
+	monster.advance_source_option_debuffs(duration+0.1)
+	check(not monster.source_option_cannot_see() and is_equal_approx(monster.source_523_speed_factor(),base_speed),"expiry restores sight and movement")
+	world.skill_cooldowns.erase(key)
+	combat.on_hit(monster)
+	check(monster.source_option_cannot_see(),"a later valid hit can apply the status again")
+	world.equipped_catalog["성물"]=equipped
+	combat.tick(0.0)
+	check(not monster.source_option_cannot_see() and is_equal_approx(monster.source_523_speed_factor(),base_speed),"unequip prunes both effects from the target")
+	world.equipped_catalog["성물"]=relic
+	world.skill_cooldowns.erase(key)
+	combat.on_hit(monster)
+	check(monster.source_option_cannot_see(),"re-equipping restores the source trigger")
+	monster.retire_for_pool()
+	check(not monster.source_option_cannot_see() and is_equal_approx(monster.source_523_speed_factor(),1.0),"a pooled monster keeps no darkness or slowdown from its last life")
+	world.equipped_catalog["성물"]=equipped
+	if not was_owned:owned.erase(identity)
+	world.skill_cooldowns.erase(key)
+	world.rng.state=rng_before
+	world.card_collections.set_source_server_context(original_context)
+	world._invalidate_equipment_static()
 
 func primary_doll_recovery(world: Node,monster: TwilightMonster) -> void:
 	var doll: Dictionary = {}

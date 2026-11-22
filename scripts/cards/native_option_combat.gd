@@ -3,6 +3,12 @@ extends RefCounted
 const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const DARKNESS_OPTION := 15138 # InvokeOption -> SpellClass 86588 -> BuffClass 75428
+const DARKNESS_STATUS := {"status":"dark","status_chance":1.0}
+const DARKNESS_SPELL_UNITS := {
+	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
+	"BuffClassID":"BuffClassID","SpecialResistanceTypeID":"SpecialResistanceTypeID",
+}
 var runtime_ref: WeakRef
 var runtime: RefCounted:
 	get:return runtime_ref.get_ref() if runtime_ref!=null else null
@@ -146,7 +152,10 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			target.take_damage(damage,false,"magic")
 			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));continue
 		if effect.get("base_card",false):
-			_apply_base_damage_proc(effect,spell,target,key)
+			if int(option.ID)==DARKNESS_OPTION:
+				_apply_base_darkness(effect,spell,target,key)
+			else:
+				_apply_base_damage_proc(effect,spell,target,key)
 			continue
 		var buffs: Array=[];var low: int=0;var high: int=0
 		for bonus: Dictionary in spell.effects:
@@ -157,26 +166,58 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if low<=0 or high!=low or buffs.is_empty():continue
 		if not roll(int(effect.weight)):continue
 		if target.apply_source_option_debuff(str(effect.origin),low,buffs):
-			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));emit_spell(spell.source_spell,target)
-			emit_option_pair(option,runtime.world.player,target)
-			var found: bool=false
-			for ref: WeakRef in targets:
-				if ref.get_ref()==target:found=true;break
-			if not found:targets.append(weakref(target))
+			_finish_debuff(option,spell.source_spell,target,key)
 	busy=false
+
+func _finish_debuff(option: Dictionary,raw: Dictionary,target: Node,cooldown_key: String) -> void:
+	cooldowns[cooldown_key]=float(raw.CastDelay)/1000.0
+	fired.append(int(option.ID))
+	emit_spell(raw,target)
+	emit_option_pair(option,runtime.world.player,target)
+	for ref: WeakRef in targets:
+		if ref.get_ref()==target:return
+	targets.append(weakref(target))
+
+func _apply_base_darkness(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
+	if not target is TwilightMonster or not _single_target_base_spell(spell,effect.option):return
+	var raw: Dictionary=spell.source_spell
+	var option: Dictionary=effect.option
+	var world: Node=runtime.world
+	if int(raw.ID)!=86588 or not option.Param4 or world.original_skills==null:return
+	# No source hit formula is declared. The existing TWILIGHT status policy
+	# handles immunity, resistance and bosses after the source invoke roll.
+	var status: RefCounted=world.original_skills.status
+	if not status.can_affect(DARKNESS_STATUS,target) or not roll(int(effect.weight)):return
+	var stats: Dictionary={}
+	for row: Dictionary in spell.effects:
+		var kind: String=row.type.Name
+		if stats.has(kind) or DARKNESS_SPELL_UNITS.get(kind)!=row.unit.Name or int(row.link.MinSpellLevel)!=0 or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return
+		stats[kind]=int(row.bonus.Value)
+	if stats.size()!=4 or stats.BuffClassID!=75428 or stats.SpecialResistanceTypeID!=5 or stats.SpellDebuffMinDuration<=0 or stats.SpellDebuffMaxDuration<stats.SpellDebuffMinDuration:return
+	var buffs: Array=INPUT.invoke_buff(str(stats.BuffClassID))
+	if buffs.is_empty():return
+	var chance: float=status.chance(DARKNESS_STATUS,target,world)
+	if chance<1.0 and world.rng.randf()>=chance:return
+	var duration: float=world.rng.randf_range(stats.SpellDebuffMinDuration,stats.SpellDebuffMaxDuration)
+	if target.apply_source_option_debuff(str(effect.origin),duration,buffs,true):
+		_finish_debuff(option,raw,target,cooldown_key)
+
+func _single_target_base_spell(spell: Dictionary, option: Dictionary) -> bool:
+	if not _free_spell(spell,2):return false
+	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
+		if int(option.get(field,0))!=0:return false
+	var raw: Dictionary=spell.source_spell
+	# The supported single-target source profile uses AllButMe.
+	return not option.get("IsAmmoAttack",false) and int(raw.get("TargetKindID",-1))==11 and int(raw.get("SiegeTargetKindID",-1))==0 and raw.get("IncludeTargettingTarget")==true
+
 ## Plain direct spell: exact source dice, one target, and the current
 ## magic hit/element/reduction pipeline. Never recurse into another proc.
 func _apply_base_damage_proc(effect: Dictionary, spell: Dictionary, target: Node, cooldown_key: String) -> void:
-	if not _free_spell(spell,2):return
 	var option: Dictionary=effect.option
-	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
-		if int(option.get(field,0))!=0:return
-	if option.get("IsAmmoAttack",false):return
+	if not _single_target_base_spell(spell,option):return
 	var values: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount"])
 	if values.size()!=3 or int(values.SpellDamageBase)<0 or int(values.SpellDamageDiceNumber)<0 or int(values.SpellDamageDiceSpotCount)<1:return
 	var raw: Dictionary=spell.source_spell
-	# The existing single-target source damage owner only admits AllButMe.
-	if int(raw.get("TargetKindID",-1))!=11 or int(raw.get("SiegeTargetKindID",-1))!=0 or raw.get("IncludeTargettingTarget")!=true:return
 	var element: String=str({0:"physical",1:"fire",2:"water",3:"wind",4:"earth"}.get(int(raw.get("ElementalTypeID",-1)),""))
 	var world: Node=runtime.world
 	if element.is_empty() or world.get("original_skills")==null or not target is TwilightMonster:return
