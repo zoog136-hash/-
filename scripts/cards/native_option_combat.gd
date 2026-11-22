@@ -22,6 +22,11 @@ func active() -> Dictionary:
 		if not preload("res://scripts/lineagem_base508.gd").native(record):continue
 		var identity: String=Cards.card_id(record)
 		if runtime.is_awakened(category,identity):out[identity]=runtime.core.definition(category,identity)
+		if category in ["변신","성물"] and runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},category,identity):
+			var verified: Dictionary = preload("res://scripts/lineagem_base508.gd").canonical(record)
+			var base_rows: Array = verified.get("source_card_base_invokes",[])
+			if not base_rows.is_empty() and runtime.core.native_material_available(verified):
+				_append_base_invokes(out,identity,verified.get("source_original_card",{}),base_rows)
 	var main: Dictionary=runtime.world.equipped_catalog.get("마법인형",{})
 	if preload("res://scripts/lineagem_base508.gd").native(main):
 		var identity: String=Cards.card_id(main)
@@ -40,10 +45,28 @@ func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void
 	for effect: Dictionary in row.effects:
 		if effect.type.Name=="InvokeOption":rows.append(effect)
 	if rows.is_empty():return
-	if not out.has(identity):out[identity]={"native_source":{"card":row.card,"effects":[]}}
-	else:out[identity]=out[identity].duplicate(true)
-	out[identity].native_source.effects.append_array(rows)
+	_append_base_invokes(out,identity,row.card,rows)
+
+static func _append_base_invokes(out: Dictionary,identity: String,card: Dictionary,rows: Array) -> void:
+	if not out.has(identity):out[identity]={"native_source":{"card":card,"effects":[]}}
+	else:
+		# The underlying source rows are read-only. Only detach the array and
+		# the two dictionaries that own it before appending equipped effects.
+		var combined: Dictionary=out[identity].duplicate()
+		var source: Dictionary=combined.native_source.duplicate()
+		source.effects=source.effects.duplicate()
+		combined.native_source=source
+		out[identity]=combined
+	var effects_for_card: Array = out[identity].native_source.effects
+	var bonus_ids: Dictionary = {}
+	for effect: Dictionary in effects_for_card:bonus_ids[int(effect.bonus.ID)]=true
+	for effect: Dictionary in rows:
+		var id: int = int(effect.bonus.ID)
+		if bonus_ids.has(id):continue
+		bonus_ids[id]=true
+		effects_for_card.append(effect)
 func tick(_delta: float) -> void:
+	if targets.is_empty():return
 	var enabled: Dictionary=active()
 	var retained: Array[WeakRef]=[]
 	for ref: WeakRef in targets:
@@ -54,16 +77,21 @@ func tick(_delta: float) -> void:
 	targets=retained
 func effects(rows: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
+	var by_scope: Dictionary={}
 	for identity: String in rows:
 		for effect: Dictionary in rows[identity].native_source.effects:
 			if effect.type.Name!="InvokeOption" or effect.unit.Name!="Percentage" or int(effect.bonus.BonusApplicationTypeID)!=10:continue
 			if effect.link.has("Level") and int(effect.link.Level)!=1:continue
 			if effect.link.has("CharacterLevel") and (int(effect.link.CharacterLevel)!=0 or int(effect.link.CharacterClass)!=0 or int(effect.link.MinSpellLevel)!=0):continue
-			var candidates: Array=INPUT.session().invoke_options.duplicate()
-			if identity.begins_with("relic_subslot11:"):candidates.append_array(RELIC.relic_combat.invoke_options)
-			candidates=INPUT.union_options(candidates)
-			for option: Dictionary in candidates:
-				if int(option.ID)==int(effect.bonus.BonusApplicationTargetID):result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value)})
+			var subslot: bool=identity.begins_with("relic_subslot11:")
+			if not by_scope.has(subslot):
+				var candidates: Array=INPUT.session().invoke_options.duplicate()
+				if subslot:candidates.append_array(RELIC.relic_combat.invoke_options)
+				var by_id: Dictionary={}
+				for option: Dictionary in INPUT.union_options(candidates):by_id[int(option.ID)]=option
+				by_scope[subslot]=by_id
+			var option: Dictionary=by_scope[subslot].get(int(effect.bonus.BonusApplicationTargetID),{})
+			if not option.is_empty():result.append({"origin":identity,"option":option,"weight":int(effect.bonus.Value),"base_card":bool(effect.get("base_card",false))})
 	return result
 func roll(weight: int) -> bool:
 	# Percentage has 10,000 raw units per percent: 80,000 = 8%.
@@ -117,6 +145,9 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 			emit_option_pair(option,runtime.world.player,target)
 			target.take_damage(damage,false,"magic")
 			cooldowns[key]=float(spell.source_spell.CastDelay)/1000.0;fired.append(int(option.ID));continue
+		if effect.get("base_card",false):
+			_apply_base_damage_proc(effect,spell,target,key)
+			continue
 		var buffs: Array=[];var low: int=0;var high: int=0
 		for bonus: Dictionary in spell.effects:
 			match str(bonus.type.Name):
@@ -133,6 +164,37 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 				if ref.get_ref()==target:found=true;break
 			if not found:targets.append(weakref(target))
 	busy=false
+## Plain direct spell: exact source dice, one target, and the current
+## magic hit/element/reduction pipeline. Never recurse into another proc.
+func _apply_base_damage_proc(effect: Dictionary, spell: Dictionary, target: Node, cooldown_key: String) -> void:
+	if not _free_spell(spell,2):return
+	var option: Dictionary=effect.option
+	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
+		if int(option.get(field,0))!=0:return
+	if option.get("IsAmmoAttack",false):return
+	var values: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount"])
+	if values.size()!=3 or int(values.SpellDamageBase)<0 or int(values.SpellDamageDiceNumber)<0 or int(values.SpellDamageDiceSpotCount)<1:return
+	var raw: Dictionary=spell.source_spell
+	# The existing single-target source damage owner only admits AllButMe.
+	if int(raw.get("TargetKindID",-1))!=11 or int(raw.get("SiegeTargetKindID",-1))!=0 or raw.get("IncludeTargettingTarget")!=true:return
+	var element: String=str({0:"physical",1:"fire",2:"water",3:"wind",4:"earth"}.get(int(raw.get("ElementalTypeID",-1)),""))
+	var world: Node=runtime.world
+	if element.is_empty() or world.get("original_skills")==null or not target is TwilightMonster:return
+	if not roll(int(effect.weight)):return
+	if float(raw.CastDelay)>0.0:cooldowns[cooldown_key]=float(raw.CastDelay)/1000.0
+	if world.rng.randf()>=world.original_skills.hit_chance({"attack_type":"magic"},target):
+		target.show_miss()
+		return
+	var damage: int=int(values.SpellDamageBase)
+	for die: int in range(int(values.SpellDamageDiceNumber)):
+		damage+=world.rng.randi_range(1,int(values.SpellDamageDiceSpotCount))
+	damage=world._elemental_damage_to_monster(maxi(1,damage),element,target)
+	damage=world.original_skills.target_damage(damage,target,"magic")
+	emit_spell(raw,target)
+	emit_option_pair(option,world.player,target)
+	target.take_damage(maxi(0,damage),false,"magic")
+	fired.append(int(option.ID))
+
 func emit_spell(spell: Dictionary,target: Node2D) -> void:
 	var seen: Dictionary={}
 	var player: Node=runtime.world.player

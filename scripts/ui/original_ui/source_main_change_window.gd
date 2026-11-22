@@ -32,6 +32,7 @@ const ROOT="UI/Change/Change_WinTotal.csb"
 const DETAIL="UI/Change/Change_DetailView.csb"
 const INFO="UI/Change/Change_Upgrade_Info_Swap.csb"
 const SET="UI/Change/Change_Card_Set.csb"
+const CARD_DEFINITIONS=preload("res://scripts/lineagem_base508.gd")
 const OPTION_ROW="UI/Change/Change_CardGradeOption_Text.csb"
 const GRADE_ROW="UI/Change/Change_WinTotal_Class.csb"
 const TYPE_SET="UI/CommonUi/Common_ButtonSet_Type.csb"
@@ -551,7 +552,11 @@ func _show_selected() -> Dictionary:
 	for child: Node in _option_content.get_children():
 		_option_content.remove_child(child)
 		child.queue_free()
-	var offered_lines: Variant=record.get("source_card_display_options",record.get("sourceOptions",[]))
+	var options_record: Dictionary=record
+	if record.get("source_snapshot")=="patch523":
+		var selected_variant: Dictionary=CARD_DEFINITIONS.canonical(record)
+		if not selected_variant.is_empty():options_record=selected_variant
+	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
 	var lines: Array=offered_lines if offered_lines is Array else []
 	var options: int=0
 	for line: Variant in lines:

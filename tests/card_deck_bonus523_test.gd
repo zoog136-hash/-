@@ -11,6 +11,13 @@ const DECK = preload("res://scripts/cards/card_deck_bonus523.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const COMBAT = preload("res://scripts/cards/native_option_combat.gd")
+class ForcedCardProc extends "res://scripts/cards/native_option_combat.gd":
+	var weights: Array[int] = []
+	func roll(weight: int) -> bool:
+		weights.append(weight)
+		return true
+
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -80,6 +87,38 @@ func companion_options() -> void:
 	check(is_equal_approx(float(relic.get("hpPct",0)),0.1) and float(relic.get("stun_resistance",0))==5.0 and float(relic.get("fear_resistance",0))==5.0,"Ainhasad's Avatar projects HP and resistances in their runtime units")
 	evidence["reported_card_options"]={"papurion":doll_lines,"ainhasad_avatar":relic_lines}
 
+func full_deck_options() -> void:
+	var catalog: Dictionary = CATALOG.build().get("catalog",{})
+	var ids: Dictionary = {}
+	var totals: Dictionary = {}
+	for category: String in catalog:
+		var compiled_rows: int = 0
+		var displayed: int = 0
+		for record: Dictionary in catalog[category]:
+			ids[int(record.source_card_id)]=record
+			compiled_rows+=record.get("source_stat_application",[]).size()
+			displayed+=record.get("source_card_display_options",[]).size()
+		totals[category]={"cards":catalog[category].size(),"display_rows":displayed,"direct_stat_rows":compiled_rows}
+		check(displayed>200 and compiled_rows>150,"each playable deck compiles original display and gameplay options: "+category)
+	evidence["deck_base_option_coverage"]=totals
+	check(ids.size()==720,"all 720 base cards across the three pinned source decks resolve")
+	check(float(ids.get(122,{}).get("attackSpeed",0.0))==13.0,"legendary transformation base attack speed is 130000 / 10000")
+	check(float(ids.get(4,{}).get("speedBonusPct",0.0))==11.0,"Black Wizard base movement modifier is 11 percentage points")
+	check(float(ids.get(25,{}).get("weightBonus",0.0))==200.0 and float(ids.get(51,{}).get("equipment523_regen_mp",0.0))==12.0,"doll weight and regeneration respect the source unit")
+	var spells: Dictionary = ids.get(11642,{}).get("source_card_spell_options",{})
+	check(spells.get(77761,{}).get("damage")==2.0 and spells.get(120712,{}).get("damage")==2.0 and not spells.has(17564),"transformation spell damage is isolated to the exact two source spell IDs")
+	check(ids.get(11482,{}).get("source_card_spell_options",{}).get(29152,{}).get("hit")==3.0,"Thunder Grab gets three hit percentage points from its declared card row")
+	check(ids.get(13763,{}).get("stun_resistance")==10.0 and ids.get(21518,{}).get("source_card_base_invokes",[]).size()==1,"doll resistance and the Avatar's base invoke retain their scope")
+	check(float(ids.get(24504,{}).get("source_card_immune_dark",0.0))==1.0,"Halphas has the explicit Dark immunity flag")
+	check(is_equal_approx(float(ids.get(21518,{}).get("hpPct",0.0)),0.1),"relic HP uses a fractional host multiplier")
+	var base_effect: Dictionary = ids[21518].source_card_base_invokes[0]
+	var card: Dictionary = ids[21518].source_original_card
+	var awakened_effect: Dictionary = {"bonus":{"ID":-1}}
+	var definition: Dictionary = {"native_source":{"card":card,"effects":[awakened_effect]}}
+	var active: Dictionary = {"example":definition}
+	COMBAT._append_base_invokes(active,"example",card,[base_effect,base_effect])
+	check(definition.native_source.effects==[awakened_effect] and active.example.native_source.effects==[awakened_effect,base_effect],"joining a base invoke retains the original awakening rows and deduplicates the base ID")
+
 func pick(world: Node, category: String, deck: int, grade: int) -> Dictionary:
 	for record: Dictionary in world.catalog_db.get(category,[]):
 		var original: Variant = record.get("source_original_card")
@@ -108,6 +147,82 @@ func with_and_without(world: Node) -> Array:
 	var on: Dictionary = stats(world)
 	return [off,on]
 
+func primary_relic_spell(world: Node) -> void:
+	var avatar: Dictionary = {}
+	for record: Dictionary in world.catalog_db.get("성물",[]):
+		if int(record.get("source_card_id",0))==21518:
+			avatar=record
+			break
+	if not check(not avatar.is_empty(),"base Avatar is in the live catalog"):return
+	var identity: String = Cards.card_id(avatar)
+	var was_owned: bool = world.card_draw_fusion.owned["성물"].get(identity,false)
+	var equipped: Dictionary = world.equipped_catalog.get("성물",{})
+	world.card_draw_fusion.owned["성물"][identity]=true
+	world.equipped_catalog["성물"]=avatar
+	world._invalidate_equipment_static()
+	var combat := ForcedCardProc.new()
+	combat.configure(world.option_awakening)
+	var monster: TwilightMonster=load("res://scenes/Monster.tscn").instantiate()
+	root.add_child(monster)
+	monster.set_physics_process(false)
+	monster.hp=10000
+	monster.magic_resistance=0
+	check(combat.active().has(identity),"primary Avatar invokes without awakening")
+	combat.on_hit(monster,"melee",false,false)
+	check(monster.hp==10000 and combat.weights.is_empty(),"main-target condition prevents a secondary-target roll")
+	var chance: float = world.original_skills.hit_chance({"attack_type":"magic"},monster)
+	var rng_before: int = world.rng.state
+	var probe:=RandomNumberGenerator.new()
+	for n: int in range(1,100):
+		probe.seed=n
+		if probe.randf()<chance:
+			world.rng.seed=n
+			break
+	combat.on_hit(monster)
+	check(combat.fired==[15128] and monster.hp<10000 and combat.weights==[10000],"the 1% Flash row reaches the actual spell damage owner")
+	combat.on_hit(monster)
+	check(int(SOURCE.row("SpellClass",86578).CastDelay)==0 and combat.weights==[10000,10000],"Flash has zero CastDelay and retries the next eligible hit")
+	world.skill_cooldowns.erase("native_option|"+identity+"|86578")
+	world.rng.state=rng_before
+	world.equipped_catalog["성물"]=equipped
+	if not was_owned:world.card_draw_fusion.owned["성물"].erase(identity)
+	world._invalidate_equipment_static()
+	check(not combat.active().has(identity) or Cards.card_id(equipped)==identity,"unequipping disables the base proc")
+	primary_doll_recovery(world,monster)
+	monster.free()
+
+func primary_doll_recovery(world: Node,monster: TwilightMonster) -> void:
+	var doll: Dictionary = {}
+	for record: Dictionary in world.catalog_db.get("마법인형",[]):
+		if int(record.get("source_card_id",0))==13763:
+			doll=record
+			break
+	if not check(not doll.is_empty(),"base Papurion is in the live catalog"):return
+	var identity: String = Cards.card_id(doll)
+	var was_owned: bool = world.card_draw_fusion.owned["마법인형"].get(identity,false)
+	var equipped: Dictionary = world.equipped_catalog.get("마법인형",{})
+	world.card_draw_fusion.owned["마법인형"][identity]=true
+	world.equipped_catalog["마법인형"]=doll
+	world._invalidate_equipment_static()
+	var combat := ForcedCardProc.new()
+	combat.configure(world.option_awakening)
+	var rng_before: int = world.rng.state
+	var original_context: Dictionary = world.card_collections.source_server_context()
+	world.card_collections.set_source_server_context({})
+	check(combat.incoming(monster,"melee",10).heal==0 and combat.weights.is_empty(),"Papurion retains its original server restriction")
+	var region: Dictionary = SOURCE.related("ServerLimit","ServerLimitSetID",int(doll.source_original_card.ServerLimitSetID))[0]
+	check(world.card_collections.set_source_server_context({"source_snapshot":"base508","ServiceRegionCode":str(region.ServiceRegionCode),"WorldNo":int(region.WorldNo)}),"Papurion uses an explicitly eligible source region and world")
+	var ineligible: Dictionary = combat.incoming(monster,"melee",9)
+	check(ineligible.heal==0 and combat.weights.is_empty(),"Papurion skips damage below its source threshold")
+	var eligible: Dictionary = combat.incoming(monster,"melee",10)
+	check(combat.fired==[3323] and combat.weights==[30000] and int(eligible.heal)>=491 and int(eligible.heal)<=510,"Papurion keeps the 3% defense roll and heals the original 490 + 1d20")
+	world.skill_cooldowns.erase("native_option|"+identity+"|55653")
+	world.rng.state=rng_before
+	world.card_collections.set_source_server_context(original_context)
+	world.equipped_catalog["마법인형"]=equipped
+	if not was_owned:world.card_draw_fusion.owned["마법인형"].erase(identity)
+	world._invalidate_equipment_static()
+
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
@@ -116,6 +231,7 @@ func runtime() -> void:
 	world._clear_monsters(); world._clear_drops()
 	check(world.card_deck_bonus.problem.is_empty(), "deck bonus configured from the original archive")
 	for category: String in Cards.CATEGORIES: world.equipped_catalog[category] = {}
+	primary_relic_spell(world)
 	var base: Dictionary = stats(world)
 	evidence["no_card"] = base
 	var cards: Dictionary = {"변신":pick(world,"변신",1,5),"마법인형":pick(world,"마법인형",2,5),"성물":pick(world,"성물",98,5)}
@@ -138,6 +254,7 @@ func runtime() -> void:
 	evidence["equipped_without_deck_bonus"] = off
 	evidence["equipped_with_deck_bonus"] = on
 	evidence["deck_bonus_view"] = world.card_deck_bonus.view().decks
+	check(is_equal_approx(float(off.attack_speed_pct)-float(base.attack_speed_pct),float(cards["변신"].get("attackSpeed",0.0))),"equipping a transformation applies its base attack speed without the deck bonus")
 	check(is_equal_approx(float(on.attack_speed_pct)-float(off.attack_speed_pct),expected(1,5,"AttackSpeedBonus")), "attack speed rises by the grade-5 polymorph row")
 	check(float(on.move_speed_x)>float(off.move_speed_x) and expected(1,5,"MoveSpeedBonus")>0.0, "move speed rises with the polymorph MoveSpeedBonus row (percent points before the existing factors)")
 	var xp_rows: float = (expected(2,5,"ExperienceAdditionPercent")+expected(98,5,"ExperienceAdditionPercent"))/100.0
@@ -192,6 +309,7 @@ func run() -> void:
 	if not SOURCE.not_installed():
 		table()
 		companion_options()
+		full_deck_options()
 		await runtime()
 	print("CARD_DECK_BONUS523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)

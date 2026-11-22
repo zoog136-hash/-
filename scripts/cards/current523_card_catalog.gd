@@ -2,12 +2,13 @@ extends RefCounted
 ## Numeric card definitions come only from the supplied current523 archive.
 ## Saved namespaces are code ABI; they are never an old asset/data dependency.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const ACTIVE_OPTIONS = preload("res://scripts/cards/active_card_options523.gd")
 const IDENTITIES = preload("res://scripts/cards/current523_card_identity.gd")
 const CATEGORIES = {1:"변신",2:"마법인형",98:"성물"}
 const DECK_NAMES = {1:"PolymorphCardDeck",2:"MagicDollCardDeck",98:"HolyStuffCardDeck"}
 const FLAT_FIELDS = {"HPPlus":"hpFlat","MPPlus":"mpFlat","Strength":"strFlat","Dexterity":"dexFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Constitution":"conFlat","Charisma":"chaFlat","MagicResist":"mr","DamageReduction":"damage_reduction"}
 const ASSET_FIELDS = ["DisplayBaseAssetID","DisplayScreenAssetID","DisplayDecoAssetID","IllustrationAssetID","HidedIllustrationAssetID"]
-const TABLES = ["BuffCard","BuffCardDeck","BuffCardByClass","BuffBonus","Bonus","BonusType","Unit","UIUnit","BonusApplicationType","SpecialResistanceType","InvokeOption","Grade","DescData_Korean","Class","PolymorphEntityForSet","PolymorphEntity","NpcClass","AssetView","AssetType"]
+const TABLES = ["BuffCard","BuffCardDeck","BuffCardByClass","BuffBonus","Bonus","BonusType","Unit","UIUnit","BonusApplicationType","SpecialResistanceType","InvokeOption","InvokeOptionType","SpellClass","ItemClass","ElementalType","NpcGroup","NpcClassForNpcGroup","Grade","DescData_Korean","Class","PolymorphEntityForSet","PolymorphEntity","NpcClass","AssetView","AssetType"]
 static var problem: String = ""
 static var npc_problem: String = ""
 
@@ -106,7 +107,9 @@ static func _card(raw: Dictionary, deck: Dictionary, source_id: String, identity
 static func _apply_buff(record: Dictionary, buff_class_id: int, blockers: Array[String]) -> void:
 	var options: Array[String] = []
 	var display: Array[Dictionary] = []
-	var companion: bool = int(record.get("source_deck_id",0)) in [2,98]
+	var spell_options: Dictionary = {}
+	var npc_group_damage: Dictionary = {}
+	var invokes: Array[Dictionary] = []
 	var sprites: Dictionary = {}
 	for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",buff_class_id):
 		var bonus: Dictionary = _reference("Bonus",link.get("BonusID"),blockers)
@@ -122,15 +125,30 @@ static func _apply_buff(record: Dictionary, buff_class_id: int, blockers: Array[
 				var field: String = FLAT_FIELDS[type_name]
 				record[field] = int(record.get(field,0))+int(bonus.Value)
 				record.source_stat_application.append({"field":field,"source_bonus_id":bonus.ID,"rule":"Unit1_Value_direct"})
-		if companion:
-			var line: Dictionary = _companion_option(link,bonus,type,unit,text)
-			if not line.is_empty():
-				display.append(line)
-				var stat: Dictionary = _companion_stat(link,bonus,type,unit,line)
-				if not stat.is_empty():
-					record[stat.field] = record.get(stat.field,0.0)+stat.amount
-					detail.application = "native_companion_stat"
-					record.source_stat_application.append({"field":stat.field,"source_bonus_id":bonus.ID,"rule":"verified_native_companion_unit"})
+		var line: Dictionary = _card_option(link,bonus,type,unit,text)
+		if not line.is_empty(): display.append(line)
+		var stat: Dictionary = _active_stat(link,bonus,type,unit,line)
+		if not stat.is_empty():
+			record[stat.field] = record.get(stat.field,0.0)+stat.amount
+			detail.application = "native_active_card_stat"
+			record.source_stat_application.append({"field":stat.field,"source_bonus_id":bonus.ID,"rule":"verified_native_card_unit"})
+		elif _is_unconditional(link) and line.has("amount") and int(bonus.get("BonusApplicationTypeID",0))==1:
+			var spell_field: String = ACTIVE_OPTIONS.spell_field(str(type.get("Name","")),str(unit.get("Name","")))
+			if not spell_field.is_empty():
+				var spell_id: int = int(bonus.BonusApplicationTargetID)
+				if not spell_options.has(spell_id):spell_options[spell_id]={}
+				spell_options[spell_id][spell_field] = float(spell_options[spell_id].get(spell_field,0.0))+float(line.amount)
+				detail.application = "native_active_card_spell"
+		elif _is_unconditional(link) and line.has("amount") and type.get("Name")=="TargetDamageBonus" and unit.get("Name")=="Value":
+			var app: Dictionary = SOURCE.row("BonusApplicationType",int(bonus.get("BonusApplicationTypeID",-1)))
+			if app.get("Name")=="NpcGroup":
+				for member: Dictionary in SOURCE.related("NpcClassForNpcGroup","NpcGroupID",int(bonus.BonusApplicationTargetID)):
+					var npc_id: int = int(member.get("NpcClassID",0))
+					if npc_id>0 and int(member.get("ServerLimitSetID",-1))==0:npc_group_damage[npc_id]=int(npc_group_damage.get(npc_id,0))+int(line.amount)
+				if not npc_group_damage.is_empty():detail.application = "native_active_card_npc_group"
+		if int(record.source_deck_id) in [1,98] and type.get("Name")=="InvokeOption" and unit.get("Name")=="Percentage" and int(bonus.get("BonusApplicationTypeID",0))==10 and _is_unconditional(link):
+			invokes.append({"link":link,"type":type,"unit":unit,"bonus":bonus,"base_card":true})
+			detail.application = "native_card_invoke_candidate"
 		for reference: Dictionary in _sprite_references(unit,bonus):
 			record.source_typed_sprite_references.append(reference)
 			var actor: Dictionary = reference.get("entity",reference.get("npc",{}))
@@ -145,14 +163,16 @@ static func _apply_buff(record: Dictionary, buff_class_id: int, blockers: Array[
 	record.source_declared_patch523_sprite_ids = sprite_ids.duplicate()
 	record.source_inworld_sprite_ids = sprite_ids.duplicate()
 	record.sourceOptions = options
-	if companion:
-		display.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return a.priority>b.priority)
-		record["source_card_display_options"] = display
+	display.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return a.priority>b.priority)
+	record["source_card_display_options"] = display
+	record["source_card_spell_options"] = spell_options
+	record["source_card_npc_group_damage"] = npc_group_damage
+	record["source_card_base_invokes"] = invokes
 	record["desc"] = " · ".join(options)
 
 ## Original tooltips have their own units and application targets. Keep these
 ## display rows separate from the older flat-stat text consumed by gameplay.
-static func _companion_option(link: Dictionary, bonus: Dictionary, type: Dictionary, unit: Dictionary, text: String) -> Dictionary:
+static func _card_option(link: Dictionary, bonus: Dictionary, type: Dictionary, unit: Dictionary, text: String) -> Dictionary:
 	if type.get("IsShowOnToolTip")!=true or not _integer(bonus.get("Value")): return {}
 	var label: String = text
 	var amount: int = int(bonus.Value)
@@ -166,18 +186,32 @@ static func _companion_option(link: Dictionary, bonus: Dictionary, type: Diction
 		"SpecialResistanceType":
 			var scope: String = _description(SOURCE.row("SpecialResistanceType",target).get("DescID"))
 			if scope.is_empty(): return {}
+			if label.is_empty() and kind=="ImmuneSpecialResistance":label="면역"
 			label = scope+" "+label
 		"InvokeOption":
 			var invoke: Dictionary = SOURCE.row("InvokeOption",target)
+			if invoke.get("IsShowOnToolTip")!=true:return {}
 			var effect: String = _description(invoke.get("DescID"))
-			if invoke.get("IsShowOnToolTip")!=true or effect.is_empty(): return {}
+			if effect.is_empty():
+				var invoke_type: Dictionary = SOURCE.row("InvokeOptionType",int(invoke.get("InvokeOptionTypeID",-1)))
+				if SOURCE.row("Unit",int(invoke_type.get("Param1Unit",-1))).get("Name")=="SpellClassID":
+					var spell: Dictionary = SOURCE.row("SpellClass",int(invoke.get("Param1",-1)))
+					effect = _description(spell.get("DescID"))
+			if effect.is_empty():return {}
 			label += " "+effect
 		"DescID":
-			if kind!="FixedDesc" or unit_name!="DescID": return {}
 			var title: String = _plain_tooltip(_description(target))
-			var value: String = _description(amount)
-			if title.is_empty() or value.is_empty(): return {}
-			return {"label":title,"value":value,"priority":int(type.get("DescPriority",0))}
+			if title.is_empty():return {}
+			if kind=="FixedDesc" and unit_name=="DescID":
+				var value_text: String = _description(amount)
+				return {"label":title,"value":value_text,"priority":int(type.get("DescPriority",0))}
+			if not label.is_empty():label+=" · "+title
+		"SpellClass","ItemClass","NpcGroup","ElementalResistanceType":
+			var table: String = str(app.Name) if app.Name!="ElementalResistanceType" else "ElementalType"
+			var scoped: Dictionary = SOURCE.row(table,target)
+			if scoped.is_empty(): return {}
+			var scope: String = _description(scoped.get("DescID"),str(scoped.get("Name","")))
+			if not scope.is_empty(): label=scope+" · "+label
 		_:
 			return {}
 	if label.strip_edges().is_empty(): return {}
@@ -186,6 +220,9 @@ static func _companion_option(link: Dictionary, bonus: Dictionary, type: Diction
 	match unit_name:
 		"Value":
 			pass
+		"TrueFalse":
+			if amount!=1:return {}
+			return {"label":_plain_tooltip(label),"value":"","priority":int(type.get("DescPriority",0)),"amount":1}
 		"Percentage","ValuePercent","Weight":
 			var units: Array[Dictionary] = SOURCE.related("UIUnit","UnitID",int(unit.ID))
 			if units.size()!=1: return {}
@@ -215,20 +252,34 @@ static func _plain_tooltip(source: String) -> String:
 
 ## Existing runtime consumers have different numeric scales. Only connect
 ## source rows with an exact unit, target and no unsatisfied condition.
-static func _companion_stat(link: Dictionary, bonus: Dictionary, type: Dictionary, unit: Dictionary, display: Dictionary) -> Dictionary:
-	if not display.has("amount"): return {}
+static func _is_unconditional(link: Dictionary) -> bool:
+	for field: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
+		if int(link.get(field,0))!=0:return false
+	return true
+
+static func _active_stat(link: Dictionary, bonus: Dictionary, type: Dictionary, unit: Dictionary, display: Dictionary) -> Dictionary:
+	if not display.has("amount") or not _is_unconditional(link): return {}
 	var kind: String = str(type.get("Name",""))
 	var unit_name: String = str(unit.get("Name",""))
 	var amount: float = float(display.amount)
-	if _direct(link,bonus):
-		if kind=="HPPlusPercent" and unit_name=="ValuePercent": return {"field":"hpPct","amount":amount/100.0}
-		if kind=="EinasadSavingPercent" and unit_name=="Percentage": return {"field":"blessing_consumption_reduction_pct","amount":amount}
-		if kind=="DamageReductionPercent" and unit_name=="Percentage": return {"field":"pve_damage_reduction_pct","amount":amount}
-	if int(link.get("CharacterLevel",0))!=0 or int(link.get("CharacterClass",0))!=0 or int(link.get("MinSpellLevel",0))!=0: return {}
-	if kind not in ["SpecialResistance","HitSpecialResistance"] or unit_name!="Percentage" or int(bonus.get("BonusApplicationTypeID",0))!=2: return {}
-	var status: String = str(SOURCE.row("SpecialResistanceType",int(bonus.BonusApplicationTargetID)).get("Name","")).to_lower()
-	if status not in ["stun","fear","silence","hold"]: return {}
-	return {"field":status+("_accuracy" if kind=="HitSpecialResistance" else "_resistance"),"amount":amount}
+	if _direct(link,bonus): return ACTIVE_OPTIONS.direct_stat(kind,unit_name,amount)
+	match int(bonus.get("BonusApplicationTypeID",0)):
+		2:
+			var status: String = str(SOURCE.row("SpecialResistanceType",int(bonus.BonusApplicationTargetID)).get("Name","")).to_lower()
+			if kind=="ImmuneSpecialResistance" and unit_name=="TrueFalse" and status in ["dark","ice"] and amount==1:
+				return {"field":"source_card_immune_"+status,"amount":amount}
+			if kind not in ["SpecialResistance","HitSpecialResistance"] or unit_name!="Percentage":return {}
+			if status not in ["stun","fear","silence","hold","poison","dark","ice"]:return {}
+			return {"field":status+("_accuracy" if kind=="HitSpecialResistance" else "_resistance"),"amount":amount}
+		3:
+			if kind!="ElementalDamage" or unit_name!="Value":return {}
+			var element: String = str(SOURCE.row("ElementalType",int(bonus.BonusApplicationTargetID)).get("Name",""))
+			if not ACTIVE_OPTIONS.ELEMENTS.has(element):return {}
+			return {"field":"equipment523_element_flat_"+ACTIVE_OPTIONS.ELEMENTS[element],"amount":amount}
+		5:
+			if kind=="IncreaseNpcItemDropAmount" and unit_name=="ValuePercent" and int(bonus.BonusApplicationTargetID)==26:
+				return {"field":"adena_drop_pct","amount":amount}
+	return {}
 
 ## 보고서2 R2 (BuffCardByClass, 138행): a ClassifiedByClass card has one row per
 ## character class and gender. The row for the playing character replaces the
@@ -251,7 +302,7 @@ static func variant_row(record: Dictionary, class_id: int, gender_id: int) -> Di
 	return {"BuffClassID":buffs.keys()[0],"ClassID":class_id,"Gender":0,"_bonus_only":true} if by_class.size()>0 and buffs.size()==1 else {}
 
 static var _variant_cache: Dictionary = {}
-const VARIANT_CLEARED_FIELDS: Array[String] = ["source_bonuses","source_stat_application","sourceOptions","sourceOptionsRaw","source_card_display_options","source_typed_sprite_references","source_declared_patch523_sprite_ids","source_inworld_sprite_ids","desc"]
+const VARIANT_CLEARED_FIELDS: Array[String] = ["source_bonuses","source_stat_application","sourceOptions","sourceOptionsRaw","source_card_display_options","source_card_spell_options","source_card_npc_group_damage","source_card_base_invokes","source_typed_sprite_references","source_declared_patch523_sprite_ids","source_inworld_sprite_ids","desc"]
 static func class_variant(record: Dictionary, class_id: int, gender_id: int) -> Dictionary:
 	var row: Dictionary = variant_row(record,class_id,gender_id)
 	if row.is_empty(): return record
