@@ -18,7 +18,17 @@ var state: String = "despawn"
 var base_scale: Vector2 = Vector2.ONE
 var profile: TwilightAnimationProfile
 var material: ShaderMaterial
-var follow_offset: Vector2 = Vector2(48, 18)
+const PLACEMENT = preload("res://scripts/animation/companion_placement.gd")
+## Current screen offset from the owner: behind its head (lifted), never in front.
+var follow_offset: Vector2 = PLACEMENT.relic_offset(2)
+var placement = PLACEMENT.new()
+## Y-sort key of the original relic actor. World sorts children by their y, so
+## the holder stays just above the owner's foot line while the actor itself is
+## offset to the floating point: the relic is drawn behind the character in all
+## eight facings (facing N its point is south of the owner).
+var sort_anchor: Node2D
+## Smoothed visual point (global) of the relic, independent of its sort key.
+var visual_position: Vector2 = Vector2.ZERO
 var motion: TwilightActorMotion = MOTION.new()
 var appear_speed: float = 4.0
 var disappear_speed: float = 4.0
@@ -26,20 +36,58 @@ var disappear_speed: float = 4.0
 func _init() -> void:
 	native_actor.use_companion_frame_plans()
 
+func _place_now(player: TwilightPlayer) -> void:
+	placement.reset(player.motion.facing8)
+	follow_offset = PLACEMENT.relic_offset(player.motion.facing8)
+	visual_position = player.global_position + follow_offset
+
+func _follow_target(delta: float, player: TwilightPlayer) -> Vector2:
+	follow_offset = placement.relic(delta, player.motion.facing8)
+	return player.global_position + follow_offset
+
+static func sort_y(player: Node2D) -> float:
+	return player.global_position.y - PLACEMENT.RELIC_SORT_BEHIND
+
+func _attach_native(world: Node) -> void:
+	if not is_instance_valid(sort_anchor):
+		sort_anchor = Node2D.new()
+		sort_anchor.name = "RelicSortAnchor"
+	if sort_anchor.get_parent() != world:
+		if sort_anchor.get_parent() != null: sort_anchor.get_parent().remove_child(sort_anchor)
+		world.add_child(sort_anchor)
+	if native_actor.get_parent() != sort_anchor:
+		if native_actor.get_parent() != null: native_actor.get_parent().remove_child(native_actor)
+		sort_anchor.add_child(native_actor)
+
+## Visual point and sort key are separate: see sort_anchor.
+func _apply_native_position(player: TwilightPlayer) -> void:
+	sort_anchor.global_position = Vector2(visual_position.x, sort_y(player))
+	native_actor.global_position = visual_position
+
+## Moves the original relic actor toward its point behind the owner's head;
+## returns "walk" while it travels, else "idle".
+func follow_native(delta: float, player: TwilightPlayer) -> String:
+	var old: Vector2 = visual_position
+	var target: Vector2 = _follow_target(delta, player)
+	visual_position = target if old.distance_to(target)>900.0 else old.lerp(target,1.0-exp(-8.0*delta))
+	_apply_native_position(player)
+	return "walk" if old.distance_to(visual_position)>0.1 else "idle"
+
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
 	native_actor.clear()
 	native_enabled = false
+	_place_now(player)
 	var source_key: String = "relic:" + str(record.get("sourceId",""))
 	source_only = native_actor.current523_source_required(source_key)
 	if SOURCE.native(record) or source_only:
-		if native_actor.get_parent() == null: sprite.get_parent().add_child(native_actor)
+		_attach_native(sprite.get_parent())
 		if source_only:
 			sprite.texture = null
 			sprite.material = null
 		native_enabled = native_actor.configure(source_key, player.original_source_manifest, player.source_visual_context)
 		enabled = native_enabled
 		sprite.hide()
-		native_actor.global_position = player.global_position + follow_offset
+		_apply_native_position(player)
 		native_actor.advance_source(0.0, "idle", player.motion.facing8, player.motion.sequence, false)
 		if source_only and not native_actor.installed():
 			native_enabled = false
@@ -73,7 +121,8 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 	material.set_shader_parameter("aura_color", grade_color)
 	sprite.material = material
 	sprite.z_index = 0 # root position is the foot; texture offset carries the elevation
-	sprite.global_position = player.global_position + follow_offset
+	visual_position = player.global_position + follow_offset
+	sprite.global_position = Vector2(visual_position.x, sort_y(player))
 	sprite.visible = true
 	opacity = 0.0
 	clock = 0.0
@@ -94,10 +143,7 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 		native_actor.hide()
 		return
 	if native_enabled:
-		var old: Vector2 = native_actor.global_position
-		var target: Vector2 = player.global_position + follow_offset
-		native_actor.global_position = target if old.distance_to(target)>900.0 else old.lerp(target,1.0-exp(-8.0*delta))
-		var native_state: String = "walk" if old.distance_to(native_actor.global_position)>0.1 else "idle"
+		var native_state: String = follow_native(delta, player)
 		if native_state == "walk" and player.motion.state == "run" and native_actor.current523_role_available("run"): native_state = "run"
 		native_actor.advance_source(delta, native_state, player.motion.facing8, player.motion.sequence, false)
 		return
@@ -111,14 +157,15 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 		sprite.texture = null
 		return
 	clock += delta
-	var target: Vector2 = player.global_position + follow_offset
-	var previous: Vector2 = sprite.global_position
-	if sprite.global_position.distance_to(target) > 900.0:
-		sprite.global_position = target
+	var target: Vector2 = _follow_target(delta, player)
+	var previous: Vector2 = visual_position
+	if visual_position.distance_to(target) > 900.0:
+		visual_position = target
 		opacity = 0.0
 	else:
-		sprite.global_position = sprite.global_position.lerp(target, 1.0 - exp(-8.0 * delta))
-	var real_velocity: Vector2 = (sprite.global_position - previous) / maxf(delta, 0.001)
+		visual_position = visual_position.lerp(target, 1.0 - exp(-8.0 * delta))
+	sprite.global_position = Vector2(visual_position.x, sort_y(player))
+	var real_velocity: Vector2 = (visual_position - previous) / maxf(delta, 0.001)
 	if previous.distance_to(target) > 900.0: real_velocity = Vector2.ZERO
 	var prior_state: String = motion.state
 	var prior_clock: float = motion.state_clock
@@ -137,7 +184,8 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 	motion.apply_frames(sprite)
 	var elevation: float = profile.sprite_offset.y if profile != null else -64.0
 	sprite.scale = base_scale * (1.0 + reaction * 0.16)
-	sprite.offset = Vector2(0, elevation + sin(clock * 2.4) * 3.5) / sprite.scale
+	var sort_lift: float = visual_position.y - sprite.global_position.y
+	sprite.offset = Vector2(0, sort_lift + elevation + sin(clock * 2.4) * 3.5) / sprite.scale
 	sprite.rotation = sin(clock * 1.6) * 0.045
 	sprite.modulate.a = opacity
 	if material != null: material.set_shader_parameter("strength", 0.18 + sin(clock * 2.1) * 0.035 + reaction)
@@ -146,5 +194,6 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 func _notification(what: int) -> void:
 	# Source views are constructed before equipment selection. If never attached,
 	# the motion owner must release them; attached nodes belong to the scene tree.
-	if what == NOTIFICATION_PREDELETE and is_instance_valid(native_actor) and native_actor.get_parent() == null:
-		native_actor.free()
+	if what == NOTIFICATION_PREDELETE:
+		if is_instance_valid(native_actor) and native_actor.get_parent() == null: native_actor.free()
+		if is_instance_valid(sort_anchor) and sort_anchor.get_parent() == null: sort_anchor.free()
