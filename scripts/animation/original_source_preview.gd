@@ -668,6 +668,14 @@ var root_motion_cell_steps: Array[Vector2] = []:
 		if value == root_motion_cell_steps: return
 		root_motion_cell_steps = value
 		_root_motion_fits.clear()
+## Followers (magic doll, relic) measure the step end to end instead: the 523
+## relic 29540 floats up and down while it steps (S: body y -58, -63, -70, -71,
+## -66, -57, -50, -42), so the least-squares line misses the fit quality and
+## its step stayed in the frames (drawn back by about 14 px at every loop), and
+## on the doll 9699 (N) the line left 2 px of jump back at the seam. The loop's
+## own travel from frame 0 to its last frame (one frame short of the next loop)
+## keeps the authored float and always continues forward across the seam.
+var root_motion_endpoint_fit: bool = false
 ## A fitted travel snaps to a step within this fraction of the step length.
 const ROOT_MOTION_SNAP_FRACTION: float = 0.6
 const ROOT_MOTION_MIN_R2: float = 0.6
@@ -722,7 +730,17 @@ func _walk_anchor_points(frames: Array, source_direction: int) -> Array[Vector2]
 ## Linear drift per frame of the body anchor, or ZERO for an in-place cycle.
 func _fit_walk_root_motion(frames: Array, source_direction: int) -> Vector2:
 	var points: Array[Vector2] = _walk_anchor_points(frames, source_direction)
-	return snap_root_motion(fit_root_motion(points), points.size(), root_motion_cell_steps)
+	var slope: Vector2 = endpoint_root_motion(points) if root_motion_endpoint_fit else fit_root_motion(points)
+	return snap_root_motion(slope, points.size(), root_motion_cell_steps)
+
+## Per-frame travel of a loop from its first to its last frame, or ZERO for an
+## in-place cycle (see root_motion_endpoint_fit).
+static func endpoint_root_motion(points: Array[Vector2]) -> Vector2:
+	var n: int = points.size()
+	if n < 3: return Vector2.ZERO
+	var slope: Vector2 = (points[n - 1] - points[0]) / float(n - 1)
+	if slope.length() * float(n) < ROOT_MOTION_MIN_TRAVEL: return Vector2.ZERO
+	return slope
 
 ## `slope` (per frame) replaced by the nearest one-cell step over `count`
 ## frames when the loop's fitted travel is close to it; unchanged otherwise.

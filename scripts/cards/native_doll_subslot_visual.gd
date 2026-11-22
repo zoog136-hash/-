@@ -17,16 +17,17 @@ const PLACEMENT=preload("res://scripts/animation/companion_placement.gd")
 var follow_offset: Vector2=PLACEMENT.doll_offset(2,true)
 var placement=PLACEMENT.new()
 var visual_position: Vector2=Vector2.ZERO
-func _offset(delta: float,facing8: int) -> Vector2:
-	follow_offset=placement.relic(delta,facing8,true) if category=="성물" else placement.doll(delta,facing8,true)
-	return follow_offset
+## Carries the visual point; the actor's own position stays with its walk
+## root-motion cancel (as follower_motion.gd / relic_motion.gd).
+var point_node: Node2D
+func _follow(delta: float,player: Node2D) -> Vector2:
+	var point: Vector2=placement.follow(delta,player.global_position,player.velocity,player.motion.facing8,category=="성물",true)
+	follow_offset=point-player.global_position
+	return point
 func _apply_position(player: Node2D) -> void:
-	if category=="성물":
-		global_position=Vector2(visual_position.x,player.global_position.y-PLACEMENT.RELIC_SORT_BEHIND)
-		if is_instance_valid(actor):actor.global_position=visual_position
-	else:
-		global_position=visual_position
-		if is_instance_valid(actor):actor.position=Vector2.ZERO
+	if category=="성물":global_position=Vector2(visual_position.x,player.global_position.y-PLACEMENT.RELIC_SORT_BEHIND)
+	else:global_position=visual_position
+	if is_instance_valid(point_node):point_node.global_position=visual_position
 var _next_source_check_msec: int=0
 var _next_aura_check_msec: int=0
 var _requested_aura_signature: String=""
@@ -47,7 +48,9 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 	if not is_instance_valid(actor):
 		actor=load(path).new()
 		actor.use_companion_frame_plans()
-		add_child(actor)
+		actor.cancel_walk_root_motion=true;actor.root_motion_endpoint_fit=true
+		point_node=Node2D.new();point_node.name="FollowerPoint";add_child(point_node)
+		point_node.add_child(actor)
 	var source_key: String=("relic:" if category=="성물" else "doll:")+str(record.get("sourceId",""))
 	var source_only: bool=actor.current523_source_required(source_key)
 	if not source_only:
@@ -78,7 +81,7 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 		actor.clear();binding=key
 		if not actor.configure(source_key,manifest,context) or not actor.installed():status="source_asset_pending";hide();return
 		placement.reset(player.motion.facing8)
-		visual_position=player.global_position+_offset(0.0,player.motion.facing8)
+		visual_position=_follow(0.0,player)
 		_apply_position(player)
 		status="source_native"
 	if source_only and not actor.installed():
@@ -86,9 +89,9 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 		actor.hide();status="source_asset_pending";hide();return
 	if status!="source_native":return
 	show()
+	actor.root_motion_cell_steps=player.original_source_preview.root_motion_cell_steps
 	var previous: Vector2=visual_position
-	var point: Vector2=player.global_position+_offset(maxf(0,delta),player.motion.facing8)
-	visual_position=point if previous.distance_to(point)>900 else previous.move_toward(point,minf(maxf(300,player.velocity.length()*1.35),previous.distance_to(point)*7)*maxf(0,delta))
+	visual_position=_follow(maxf(0,delta),player)
 	_apply_position(player)
 	sync_existing_source_aura(world,record,manifest)
 	var native_state: String="walk" if previous.distance_to(visual_position)>.1 else "idle"
