@@ -4,6 +4,7 @@ extends Control
 # Receives a committed result: no RNG, inventory writes, or transaction callbacks.
 signal finished
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const ITEM_IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
 const REVEAL_AT: float = 1.85
 const SETTLE_AT: float = 3.45
 const DESIGN = Vector2(1000,640)
@@ -26,6 +27,7 @@ var playing: bool = false
 var revealed: bool = false
 var closed: bool = false
 var board: Control
+var item_preview: TextureRect
 var heading: Label
 var item_label: Label
 var level_label: Label
@@ -43,10 +45,26 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_ALL
 	theme = UI.make_theme()
-	board = Control.new()
+	var backdrop := ColorRect.new()
+	backdrop.name = "EnhancementBackdrop"
+	backdrop.color = Color(0,0,0,0.60)
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(backdrop)
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var panel := Panel.new()
+	panel.add_theme_stylebox_override("panel",UI.chrome_panel(UI.SLATE,UI.BRONZE))
+	board = panel
+	board.name = "EnhancementResultPanel"
 	board.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(board)
 	heading = _label("장비 강화",28,UI.GOLD,Rect2(80,28,840,48))
+	item_preview = TextureRect.new()
+	item_preview.position = Vector2(448,160)
+	item_preview.size = Vector2(104,104)
+	item_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	item_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	item_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	board.add_child(item_preview)
 	item_label = _label("",20,UI.TEXT,Rect2(70,372,860,40))
 	item_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	level_label = _label("",30,UI.GOLD,Rect2(340,318,320,45))
@@ -83,7 +101,7 @@ func _label(value: String, font_size: int, tint: Color, rect: Rect2) -> Label:
 
 func present(outcome: String, display_name: String, before: int, after: int, texture: Texture2D) -> void:
 	result = outcome if outcome in ["success","maintain","decrease","destroy"] else "maintain"
-	item_name = display_name
+	item_name = ITEM_IDENTITY.plain_text(display_name)
 	from_level = before
 	to_level = after
 	item_texture = texture
@@ -91,7 +109,9 @@ func present(outcome: String, display_name: String, before: int, after: int, tex
 	revealed = false
 	closed = false
 	playing = true
-	item_label.text = display_name
+	item_label.text = item_name
+	item_preview.texture = texture
+	item_preview.visible = texture != null
 	level_label.text = "+%d" % from_level
 	result_label.text = ""
 	_play("charge")
@@ -129,6 +149,7 @@ func _reveal() -> void:
 			result_label.text = "강화 실패 · 장비 소실"
 			result_label.add_theme_color_override("font_color",Color("f18167"))
 			level_label.text = ""
+			item_preview.hide()
 			note.text = "강화한 장비가 소실되었습니다"
 		"decrease":
 			result_label.text = "강화 실패 · 수치 하락"
