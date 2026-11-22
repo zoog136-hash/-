@@ -303,15 +303,15 @@ func _execute() -> void:
 		if int(hud.lineage_inventory_ui.inventory.get(item,0)) > 0:
 			hud.inventory_item_activated.emit(item)
 	else:
-		confirm_target(hud,scroll_name,entry)
+		request_target(hud,scroll_name,entry)
 
-## The existing enhancement confirmation; 강화 there emits the request the
-## world rolls. Shared with the original Enchant window's 강화 시작.
-static func confirm_target(controller: Node, scroll: String, entry: Dictionary) -> bool:
+## 강화 시작 emits the request the world rolls at once: no extra 강화 확인
+## step (the original client has none; user request 2026-11-22). Shared with
+## the original Enchant window's 강화 시작.
+static func request_target(controller: Node, scroll: String, entry: Dictionary) -> bool:
 	var target := str(entry.get("target_id", entry.get("name","")))
-	if target == "": return false
-	controller.confirm_action("강화 확인","%s +%d\n%s %d장 · %d 아데나\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%\n%s" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,int(entry.get("count",1)),int(entry.get("cost",0)),float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0)),str(entry.get("basis","TWILIGHT 기존 강화 규칙"))],"강화",func(_count: int) -> void:
-		controller.enhancement_requested.emit(scroll,target))
+	if target == "" or scroll == "": return false
+	controller.enhancement_requested.emit(scroll,target)
 	return true
 func _slot(parent: VBoxContainer, title: String, extent: Vector2) -> TextureRect:
 	var caption: Label=UI.label(title,12,UI.MUTED)

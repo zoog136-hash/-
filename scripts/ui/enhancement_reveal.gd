@@ -2,11 +2,15 @@ extends Control
 
 # Authored, bounded CanvasItem animation for Compatibility / Android.
 # Receives a committed result: no RNG, inventory writes, or transaction callbacks.
+# Fallback only (the original 523 Enchant window plays its own in-window
+# result). No extra confirmation step: a tap skips to the result, the next
+# tap closes it, and it closes by itself HOLD_SECONDS after settling.
 signal finished
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ITEM_IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
 const REVEAL_AT: float = 1.85
 const SETTLE_AT: float = 3.45
+const HOLD_SECONDS: float = 1.2
 const DESIGN = Vector2(1000,640)
 const CENTER = Vector2(500,270)
 const BLUE = Color("69caff")
@@ -33,8 +37,7 @@ var item_label: Label
 var level_label: Label
 var result_label: Label
 var note: Label
-var skip_button: Button
-var confirm_button: Button
+var held: float = 0.0
 var sound: AudioStreamPlayer
 var design_offset: Vector2
 var design_scale: float = 1.0
@@ -71,17 +74,6 @@ func _ready() -> void:
 	result_label = _label("",32,BLUE,Rect2(70,418,860,52))
 	note = _label("마력이 장비에 모이고 있습니다",17,UI.MUTED,Rect2(70,477,860,42))
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	skip_button = UI.button("연출 건너뛰기",skip_to_result,Vector2(180,52))
-	skip_button.name = "SkipEnhancement"
-	board.add_child(skip_button)
-	skip_button.position = Vector2(302,554)
-	skip_button.size = Vector2(180,52)
-	confirm_button = UI.button("확인",close_reveal,Vector2(180,52))
-	confirm_button.name = "ConfirmEnhancement"
-	board.add_child(confirm_button)
-	confirm_button.position = Vector2(518,554)
-	confirm_button.size = Vector2(180,52)
-	confirm_button.disabled = true
 	sound = AudioStreamPlayer.new()
 	sound.volume_db = -12
 	add_child(sound)
@@ -106,6 +98,7 @@ func present(outcome: String, display_name: String, before: int, after: int, tex
 	to_level = after
 	item_texture = texture
 	clock = 0.0
+	held = 0.0
 	revealed = false
 	closed = false
 	playing = true
@@ -126,7 +119,13 @@ func _fit() -> void:
 	queue_redraw()
 
 func _process(delta: float) -> void:
-	if not playing or closed: return
+	if closed: return
+	if not playing:
+		# Settled: closes by itself (no 확인 button).
+		if revealed:
+			held += maxf(0.0,delta)
+			if held >= HOLD_SECONDS: close_reveal()
+		return
 	clock = minf(SETTLE_AT,clock+maxf(0.0,delta))
 	if clock >= REVEAL_AT and not revealed:
 		_reveal()
@@ -136,9 +135,6 @@ func _process(delta: float) -> void:
 
 func _reveal() -> void:
 	revealed = true
-	confirm_button.disabled = false
-	skip_button.disabled = true
-	confirm_button.grab_focus()
 	match result:
 		"success":
 			result_label.text = "강화 성공"
@@ -187,10 +183,15 @@ func _input(event: InputEvent) -> void:
 			if revealed: close_reveal()
 			else: skip_to_result()
 			get_viewport().set_input_as_handled()
-	elif event is InputEventMouseButton or event is InputEventScreenTouch:
-		# GUI must receive pointer events for the two buttons. Full-screen STOP
-		# consumes them before the world's unhandled input path.
-		pass
+
+func _gui_input(event: InputEvent) -> void:
+	# Full-screen STOP: a tap skips to the result, the next one closes it.
+	if closed: return
+	# Mouse clicks arrive as emulated touches too (emulate_touch_from_mouse).
+	if event is InputEventScreenTouch and event.pressed:
+		accept_event()
+		if revealed: close_reveal()
+		else: skip_to_result()
 
 func _unhandled_input(_event: InputEvent) -> void:
 	# GUI handles Tab/Enter and controller focus first; remaining gameplay keys

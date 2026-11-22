@@ -5,18 +5,25 @@ extends RefCounted
 ## and Enchant_Inventory (장비 / 주문서 tabs over Inventory_Slot_Set rows,
 ## 보유 아데나, close). Candidates, chances, costs, the confirmation and the
 ## roll stay with the existing owners: world._enhancement_candidates supplies
-## the rows, renewal_forge.confirm_target asks and emits
-## hud.enhancement_requested, the world rolls and reopens this window.
+## the rows, 강화 시작 emits hud.enhancement_requested at once (no extra
+## confirmation: the original window has none, user request 2026-11-22),
+## the world rolls and reopens this window.
+## The result is the client's own in-window presentation: Enchant_All's
+## Fx_Enchant_Start (slot glow) and Enchant_Popup_Message (Success / Fail
+## banner, Text_Item) play over the window for the clip's length, then hide;
+## a tap anywhere ends it early. No TWILIGHT full-screen result is drawn over
+## the original window. Text_Item's result text is a TWILIGHT 근사 (the
+## client's string is not in the 523 tables).
 ## 다중 강화 (Nd_Enchant_Multi, TWILIGHT 근사: the existing single roll run in
 ## turn): bag taps pick up to MULTI_MAX targets, Nd_Btn_01..10 choose the goal
-## +N, 강화 시작 asks once and World.attempt_enhancement_series rolls each
+## +N, 강화 시작 starts World.attempt_enhancement_series, which rolls each
 ## target up to the goal; the series stops at the first failure (유지 / 하락),
 ## a destroyed target or too few scrolls. Label_Num shows the fewest scrolls
 ## the goal needs; the picked list (ListView_Item) stays empty.
 ## Left inert or empty (no rule for them in this project): the other Enchant_All pages
 ## (축복 부여 / 제련 / 속성 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
-## the grade filters, 상세보기 / 일괄 선택, the result popup, tooltips and
-## every effect layer.
+## the grade filters, 상세보기 / 일괄 선택, tooltips and the other effect
+## layers.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Forge=preload("res://scripts/ui/renewal_forge.gd")
@@ -31,6 +38,20 @@ const SLOT="UI/CommonUi/Common_Slot.csb"
 ## Common_Slot keeps its button, frame, item picture, selection and amount.
 const MEMBER_SCOPES={SLOT:[15728,15316,15012,9004,6880]}
 const REQUIRED: Array[String]=[ROOT,ALL,INVENTORY,TEXT_SET,TITLE,SET,SLOT]
+## The result presentation members (an older UI pack without them keeps the
+## window and leaves the result to the HUD's fallback).
+const FX_START="UI/Effect/Effect_Source/Fx_Enchant_Start.csb"
+const POPUP="UI/FloatingUi/Enchant_Popup_Message.csb"
+const PRESENTATION: Array[String]=[FX_START,POPUP]
+const P_FX="Enchant_All_Layout/Fx_Enchant_Start"
+const P_POPUP="Enchant_All_Layout/Enchant_Popup_Message"
+const POPUP_SETS: Array[String]=["EnChant_Success","EnChant_Fail"]
+## The tab row Enchant_Popup_Message's banner lies on: its texts are hidden
+## while the banner plays, so no window text shows through the banner.
+const P_TAB="Enchant_All_Layout/Nd_Common/Tab"
+## Fx_Enchant_Start's clip (frames 5..115) at the Cocos 60 fps timeline: the
+## longer of the two clips (Success 0..80, Fail 100..165).
+const PRESENT_SECONDS: float=110.0/60.0
 const P_ALL="Enchant_All_Layout/"
 const P_COMMON="Enchant_All_Layout/Nd_Common/"
 const P_ENCHANT="Enchant_All_Layout/Nd_Enchant/"
@@ -47,7 +68,7 @@ const TEXT_TAIL: float=20.0
 const MULTI_MAX: int=10
 const P_MULTI="Enchant_All_Layout/Nd_Enchant_Multi/"
 const OTHER_PAGES: Array[String]=["Nd_Enchant_Bless","Nd_Enchant_Smelt","Nd_Enchant_Grace","Nd_ChangeProperty","Nd_Enchant_Properties_Smelt","Nd_Enchant_Skill","Nd_Dissolve","Nd_Delete",
-	"Nd_Btn_Auto","Nd_Enchant_Btn/Nd_Auto_Enchant","Fx_Enchant_Start","Enchant_Popup_Message","Enchant_ToolTip_Bless","Enchant_ToolTip_Skill","Enchant_ToolTip_Smelt","Enchant_ToolTip_Grace","Enchant_ToolTip_Properties_Smelt","Btn_FailHistory"]
+	"Nd_Btn_Auto","Nd_Enchant_Btn/Nd_Auto_Enchant","Enchant_ToolTip_Bless","Enchant_ToolTip_Skill","Enchant_ToolTip_Smelt","Enchant_ToolTip_Grace","Enchant_ToolTip_Properties_Smelt","Btn_FailHistory"]
 const OTHER_TABS: Array[String]=["Nd_Properties","Nd_Bless","Nd_Magic","Nd_Smelt","Nd_Grace","Nd_Properties_Smelt","Nd_Label"]
 signal closed
 var _pack: RefCounted
@@ -66,6 +87,12 @@ var _bag: Scroller=Scroller.new()
 var _text: Scroller=Scroller.new()
 var _last_out: Dictionary={}
 var last_result: Dictionary={}
+## The pack has Fx_Enchant_Start and Enchant_Popup_Message.
+var _presents: bool=false
+## {kind: "success" | "fail", text, token} while the result plays.
+var _presentation: Dictionary={}
+var _blocker: Control
+var _token: int=0
 
 ## Drag scrolling of one original ScrollView whose authored first line is
 ## extended by added lines (the refine window's rule).
@@ -118,6 +145,7 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_enchant_window_member_missing","member":member}
 	_pack=pack
+	_presents=PRESENTATION.all(func(member: String) -> bool: return pack.manifest.get("scenes",{}).has(member))
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
 	return {"ok":true,"configured":true}
@@ -149,6 +177,8 @@ func update(scroll: String, candidates: Array) -> Dictionary:
 	return _restage()
 
 func close() -> void:
+	_presentation={}
+	_blocker=null
 	var previous: Node2D=_scene
 	_scene=null
 	_bag.content=null
@@ -210,8 +240,11 @@ static func _delta(value: float) -> String:
 static func _title(entry: Dictionary) -> String:
 	var name: String=str(entry.get("name","")).get_slice(" · 원본#",0)
 	var particle: String="를"
-	if not name.is_empty():
-		var code: int=name.unicode_at(name.length()-1)
+	# "장갑 (각인)" takes the particle of 장갑, not of the closing bracket.
+	var spoken: String=name
+	while spoken.ends_with(")") and spoken.rfind("(")>0:spoken=spoken.left(spoken.rfind("(")).strip_edges()
+	if not spoken.is_empty():
+		var code: int=spoken.unicode_at(spoken.length()-1)
 		if code>=0xAC00 and code<=0xD7A3 and (code-0xAC00)%28!=0:particle="을"
 	var level: int=int(entry.get("level",0))
 	return "%s%s%s 강화 하시겠습니까?" % ["+%d " % level if level>0 else "",name,particle]
@@ -261,6 +294,9 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
+	# The world reopens the window right after the roll: the result plays on
+	# the new scene.
+	if not _presentation.is_empty():_play_presentation()
 	last_result={"ok":true,"handled":true,"member":ROOT,"scroll":_scroll,"tab":_tab,"candidates":_candidates.size(),"listed":listing.size(),"selected":_selected,
 		"stat_rows":rows.size(),"pictures":pictures,"bag_pictures":int(filled.get("bag_pictures",0)),"can_enchant":not entry.is_empty()}
 	return last_result
@@ -270,6 +306,14 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	for page: String in OTHER_PAGES:spec[P_ALL+page]={"exclude":true}
 	for tab_name: String in OTHER_TABS:spec[P_COMMON+"Tab/"+tab_name]={"exclude":true}
 	for fx: String in ["Fx_Popup_LeftUp","Fx_Popup_RightBottom","Fx_Enchant_Safety","Fx_Item_Active_Right"]:spec[fx]={"exclude":true}
+	# The result presentation rests hidden; _play_presentation shows and plays it.
+	if _presents:
+		spec[P_FX]={"visible":false}
+		spec[P_POPUP]={"visible":false}
+		for set_name: String in POPUP_SETS:spec[P_POPUP+"/Set/"+set_name+"/Text_Item"]={"role":"source_text","text":" "}
+	else:
+		spec[P_FX]={"exclude":true}
+		spec[P_POPUP]={"exclude":true}
 	var has: bool=not entry.is_empty()
 	var level: int=int(entry.get("level",0))
 	var safe: bool=has and level<int(entry.get("safe_level",0))
@@ -278,7 +322,8 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	spec[P_COMMON+"Enchant_Base_Curse"]={"visible":cursed}
 	spec[P_COMMON+"Enchant_Base_Unsafety"]={"visible":not cursed and has and not safe}
 	spec[P_COMMON+"Enchant_Base_Bless"]={"visible":not cursed and not (has and not safe)}
-	# 단일 강화 / 다중 강화 tabs.
+	# 단일 강화 / 다중 강화 tabs (hidden under the result banner while it plays).
+	spec[P_COMMON+"Tab"]={"visible":true}
 	spec[P_COMMON+"Tab/Nd_Single"]={"visible":true}
 	spec[P_COMMON+"Tab/Nd_Multi"]={"visible":true}
 	spec[P_COMMON+"Tab/Nd_Single/Btn_Single_On"]={"visible":not multi}
@@ -485,6 +530,8 @@ func _probability() -> Dictionary:
 ## --- 다중 강화 ----------------------------------------------------------------
 
 func _multi_spec(hud: Node, spec: Dictionary) -> void:
+	# Nd_Enchant_Multi is authored hidden: the 다중 강화 tab shows it.
+	spec[P_ALL+"Nd_Enchant_Multi"]={"visible":true}
 	spec[P_MULTI+"Nd_Fx_Enchant_Sound"]={"exclude":true}
 	spec[P_MULTI+"Nd_Money"]={"visible":false}
 	spec[P_MULTI+"Label_Num"]={"role":"source_text","text":"주문서 필요 수량 %s" % _number(scrolls_needed())}
@@ -542,13 +589,19 @@ func _multi_requested() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return _fail("source_enchant_window_host_unavailable")
 	if _picked.is_empty() or _goal<=0:return _notice("강화할 장비와 목표 단계를 고르세요")
+	if is_presenting():return {"ok":true,"ignored_while_presenting":true}
 	var targets: Array[String]=_picked.duplicate()
 	var goal_level: int=_goal
 	var scroll: String=_scroll
-	hud.call("confirm_action","다중 강화 확인","%d개 장비를 +%d까지 차례로 강화합니다\n%s 최소 %d장\n실패·하락·소실이나 주문서 부족 시 그 자리에서 멈춥니다" % [targets.size(),goal_level,scroll,scrolls_needed()],"강화",func(_count: int) -> void:
-		var world: Node=hud.get_parent()
-		if world!=null and world.has_method("attempt_enhancement_series"):world.call("attempt_enhancement_series",scroll,targets,goal_level))
-	return {"ok":true,"asked":"multi","targets":targets.size(),"goal":goal_level}
+	# 강화 시작 starts the series at once (no confirmation step).
+	var world: Node=hud.get_parent()
+	if world==null or not world.has_method("attempt_enhancement_series"):return _fail("source_enchant_window_series_unavailable")
+	var series: Variant=world.call("attempt_enhancement_series",scroll,targets,goal_level)
+	var outcome: Dictionary=series if series is Dictionary else {}
+	var stop: String=str(outcome.get("stop",""))
+	if int(outcome.get("rolls",0))>0:
+		present("success" if stop.is_empty() else "fail","+%d 다중 강화 완료" % goal_level if stop.is_empty() else "다중 강화 중단")
+	return {"ok":true,"started":"multi","targets":targets.size(),"goal":goal_level,"series":outcome}
 
 ## Drops picked targets that left the candidate list (sold, destroyed).
 func _prune_picked() -> void:
@@ -556,13 +609,95 @@ func _prune_picked() -> void:
 	_picked=_picked.filter(func(id: String) -> bool: return id in ids)
 
 func _enchant_requested() -> Dictionary:
+	if is_presenting():return {"ok":true,"ignored_while_presenting":true}
 	if multi:return _multi_requested()
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var entry: Dictionary=_entry()
 	if hud==null or entry.is_empty() or _scroll.is_empty():
 		if hud!=null and hud.has_method("show_message"):hud.call("show_message","강화할 장비를 고르세요" if entry.is_empty() else "강화 주문서가 없습니다")
 		return _fail("source_enchant_window_target_unselected")
-	return {"ok":Forge.confirm_target(hud,_scroll,entry),"confirmation_owner":"renewal_forge.confirm_target"}
+	# 강화 시작 rolls at once: the original window has no confirmation step.
+	return {"ok":Forge.request_target(hud,_scroll,entry),"request_owner":"renewal_forge.request_target"}
+
+## --- Result presentation ---------------------------------------------------
+
+func presents() -> bool:
+	return _presents
+
+func is_presenting() -> bool:
+	return not _presentation.is_empty() and is_open()
+
+## The committed result `result` (success / maintain / decrease / destroy)
+## of a roll from +from_level to +to_level, shown by the window's own
+## presentation. False (nothing shown) when the window is closed or the pack
+## lacks the presentation members.
+func present_result(result: String, from_level: int, to_level: int) -> bool:
+	return present("success" if result=="success" else "fail",result_text(result,from_level,to_level))
+
+## TWILIGHT 근사: the banner's Text_Item text (the client's string is not in
+## the 523 tables). Item names are not repeated here (Label_Title has it).
+static func result_text(result: String, from_level: int, to_level: int) -> String:
+	match result:
+		"success":return "+%d 강화 성공" % to_level
+		"decrease":return "강화 실패 +%d → +%d" % [from_level,to_level]
+		"destroy":return "강화 실패 · 장비 소실"
+	return "강화 실패"
+
+func present(kind: String, text: String) -> bool:
+	if not _presents or not is_open():return false
+	_token+=1
+	_presentation={"kind":"success" if kind=="success" else "fail","text":text,"token":_token}
+	_play_presentation()
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud!=null and hud.is_inside_tree():
+		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(end_presentation.bind(_token))
+	return true
+
+## Ends the presentation `token` (the latest when -1): hides both members.
+func end_presentation(token: int=-1) -> void:
+	if _presentation.is_empty() or (token>=0 and token!=int(_presentation.get("token",-1))):return
+	_presentation={}
+	if is_instance_valid(_blocker):_blocker.queue_free()
+	_blocker=null
+	if not is_open():return
+	for pair: Array in [[P_FX,false],[P_POPUP,false],[P_TAB,true]]:
+		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
+		if located.get("ok",false):located.player.set_bound_visible(located.offset,bool(pair[1]))
+
+func _play_presentation() -> void:
+	if _presentation.is_empty() or not is_open():return
+	var played: Array[String]=[]
+	for set_name: String in POPUP_SETS:
+		var label: Dictionary=NamedTree.locate(_scene,_last_out,P_POPUP+"/Set/"+set_name+"/Text_Item")
+		if label.get("ok",false):label.player.set_bound_text(label.offset,str(_presentation.text))
+	for pair: Array in [[P_FX,"Fx_Enchant_Start"],[P_POPUP,"Success" if _presentation.kind=="success" else "Fail"]]:
+		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
+		if not located.get("ok",false):continue
+		located.player.set_bound_visible(located.offset,true)
+		var player: Dictionary=located.player.project_player([located.offset])
+		if player.get("ok",false) and player.player.play(str(pair[1]),false).get("ok",false):played.append(str(pair[1]))
+	_presentation["played"]=played
+	var tab: Dictionary=NamedTree.locate(_scene,_last_out,P_TAB)
+	if tab.get("ok",false):tab.player.set_bound_visible(tab.offset,false)
+	_block()
+
+## A tap anywhere during the presentation ends it (and cannot reach the
+## window's buttons underneath, so it never starts another roll).
+func _block() -> void:
+	if is_instance_valid(_blocker) and _blocker.get_parent()==_scene:return
+	var blocker:=Control.new()
+	blocker.name="EnchantResultTouch"
+	blocker.mouse_filter=Control.MOUSE_FILTER_STOP
+	blocker.position=Vector2(-4000.0,-4000.0)
+	blocker.size=Vector2(8000.0,8000.0)
+	var token: int=int(_presentation.get("token",-1))
+	blocker.gui_input.connect(func(event: InputEvent) -> void:
+		# Mouse clicks arrive as emulated touches too (emulate_touch_from_mouse).
+		if event is InputEventScreenTouch or event is InputEventMouseButton:blocker.accept_event()
+		if event is InputEventScreenTouch and event.pressed:
+			end_presentation(token))
+	_scene.add_child(blocker)
+	_blocker=blocker
 
 func _close_requested() -> Dictionary:
 	close()
