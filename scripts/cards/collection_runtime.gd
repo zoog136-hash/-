@@ -348,13 +348,15 @@ func blocks_weapon_hit(kind: String,rng: RandomNumberGenerator) -> bool:
 	var chance: float=clampf(bonus("weapon_block:percent"),0.0,100.0)
 	return chance>0.0 and rng.randf()<chance/100.0
 
-func final_blow(amount: int,rng: RandomNumberGenerator) -> Dictionary:
-	var chance: float=clampf(bonus("final_blow_probability:percent"),0.0,100.0) if estimated() else 0.0
+func final_blow(amount: int,rng: RandomNumberGenerator,card_chance: float=0.0,card_damage: int=0,card_scale: float=0.0) -> Dictionary:
+	var collection_chance: float=bonus("final_blow_probability:percent") if estimated() else 0.0
+	var chance: float=clampf(collection_chance+card_chance,0.0,100.0)
 	if chance<=0.0 or rng.randf()>=chance/100.0:return {"damage":amount,"triggered":false}
 	# Explicit local fallback: reuse the game's1.5x critical base, then source
 	# final-blow flat/percent. Called once for an ordinary successful attack only.
-	var base: int=int(round(amount*float(policy_values.final_blow_multiplier)))+int(bonus("final_blow_damage:flat"))
-	return {"damage":maxi(1,int(round(base*(1.0+clampf(bonus("final_blow_amplification:percent"),0.0,300.0)/100.0)))),"triggered":true}
+	var base: int=int(round(amount*float(policy_values.final_blow_multiplier)))+card_damage+int(bonus("final_blow_damage:flat") if estimated() else 0)
+	var amplification: float=card_scale+(bonus("final_blow_amplification:percent") if estimated() else 0.0)
+	return {"damage":maxi(1,int(round(base*(1.0+clampf(amplification,0.0,300.0)/100.0)))),"triggered":true}
 
 func estimated() -> bool:return bool(policy_values.estimates_enabled)
 
@@ -413,8 +415,19 @@ func native_spell_id(skill: Dictionary) -> int:
 	if estimated() and bool(policy_values.bleed_status_alias) and skill.get("status","")=="bleed":return 17564
 	return 0
 
-func spell_damage_bonus(skill: Dictionary) -> int:return int(bonus("spell_"+str(native_spell_id(skill))+"_damage:flat"))
-func spell_hit_bonus(skill: Dictionary) -> float:return bonus("spell_"+str(native_spell_id(skill))+"_hit:percent")
+func spell_damage_bonus(skill: Dictionary) -> int:
+	var spell_id: int=native_spell_id(skill)
+	return int(bonus("spell_"+str(spell_id)+"_damage:flat")+_active_card_spell(spell_id,"damage"))
+
+func spell_hit_bonus(skill: Dictionary) -> float:
+	var spell_id: int=native_spell_id(skill)
+	return bonus("spell_"+str(spell_id)+"_hit:percent")+_active_card_spell(spell_id,"hit")
+
+func active_card_spell_hit_bonus(skill: Dictionary) -> float:
+	return _active_card_spell(native_spell_id(skill),"hit")
+
+func _active_card_spell(spell_id: int, field: String) -> float:
+	return float(world.source_active_card_spell_bonus(spell_id,field)) if spell_id>0 and world!=null and world.has_method("source_active_card_spell_bonus") else 0.0
 
 func ranged_burst(kind: String,context: Dictionary) -> bool:
 	if context.has("spell_tags"):return kind=="ranged" and context.spell_tags is Array and 1 in context.spell_tags

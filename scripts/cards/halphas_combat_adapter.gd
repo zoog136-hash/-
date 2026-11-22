@@ -25,12 +25,15 @@ func remaining(actor: Node, kind: String) -> float:return float(state(actor).get
 func frozen(actor: Node) -> bool:return owner.settings.get("custom_combat",{}).get("ice_blocks_movement_and_actions",true)==true and remaining(actor,"ice")>0.0
 func hit_factor(actor: Node) -> float:return number("dark_hit_multiplier",.5,.05,1.0) if remaining(actor,"dark")>0.0 else 1.0
 func resistance(actor: Node, kind: String) -> float:
-	if actor==world().get("player"):return float(owner.catalog_bonus(kind+"_resistance"))
+	if actor==world().get("player"):
+		return float(world()._equipped_numeric_sum(kind+"_resistance")) if world().has_method("_equipped_numeric_sum") else float(owner.catalog_bonus(kind+"_resistance"))
 	return float(actor.get(kind+"_resistance")) if actor is TwilightMonster else 0.0
 func apply_status(actor: Node, kind: String, duration: float) -> bool:
 	if not enabled() or kind not in ["dark","ice"] or not is_instance_valid(actor) or not (actor is TwilightPlayer or actor is TwilightMonster) or not is_finite(duration) or duration<=0:return false
 	if actor is TwilightMonster and (actor.dead or actor.status_immunities.has(kind)):return false
-	if actor==world().get("player") and int(world().hp)<=0:return false
+	if actor==world().get("player"):
+		if int(world().hp)<=0:return false
+		if world().has_method("_equipped_numeric_sum") and float(world()._equipped_numeric_sum("source_card_immune_"+kind))>0:return false
 	var row: Dictionary=state(actor)
 	if row.is_empty():row={"target":weakref(actor),"generation":world().combat_generation,"life":actor.life_id if actor is TwilightMonster else -1}
 	row[kind]=maxf(float(row.get(kind,0)),minf(duration,30.0));states[actor.get_instance_id()]=row
@@ -79,6 +82,7 @@ func restore_player() -> void:
 	pending_player.clear()
 func step_seconds(source_msec: float) -> float:
 	var percent: float=float(owner.effects(int(owner.progress.level)).get("charge_time_reduction_pct",0)) if owner.active() else 0.0
+	if world()!=null and world().has_method("_equipped_numeric_sum"):percent+=float(world()._equipped_numeric_sum("source_card_charge_reduction_pct"))
 	# Custom reciprocal rule remains positive above100%; source min100ms.
 	if owner.settings.get("custom_combat",{}).get("charge_time_formula")=="linear_percent_with_source_minimum":return maxf(.1,source_msec/1000.0*(1.0-maxf(0.0,percent)/100.0))
 	return maxf(.1,source_msec/1000.0/(1.0+maxf(0.0,percent)/100.0))

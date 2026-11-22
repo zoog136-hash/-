@@ -91,6 +91,21 @@ static func _collect_invokes(effects: Array, targets: Dictionary) -> void:
 		var target: Variant = effect.bonus.BonusApplicationTargetID
 		if _integer(target) and int(target) >= 0: targets[int(target)] = true
 
+## Collect base invoke rows for the other two decks. The spell and effect
+## checks in _invoke are shared with the existing doll and awakening owner.
+static func _base_invokes(card: Dictionary, targets: Dictionary) -> void:
+	var buffs: Dictionary = {int(card.BuffClassID):true}
+	if card.get("ClassifiedByClass",false):
+		for variant: Dictionary in SOURCE.related("BuffCardByClass","BuffCardID",int(card.ID)):
+			buffs[int(variant.BuffClassID)] = true
+	for buff_id: int in buffs:
+		for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",buff_id):
+			var bonus: Dictionary = SOURCE.row("Bonus",int(link.get("BonusID",-1)))
+			if int(bonus.get("BonusApplicationTypeID",0))!=10:continue
+			_issue = ""
+			var effect: Dictionary = _effect("BuffBonus",link)
+			if not effect.is_empty():_collect_invokes([effect],targets)
+
 static func _summon(card: Dictionary, primary: Array, secondary: Array) -> Dictionary:
 	var selected: Array = []
 	for effect: Dictionary in secondary:
@@ -293,7 +308,7 @@ const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const RECORDS = preload("res://scripts/resources/current523_keyed_records.gd")
 const RECORDS_NAME := "option_combat523_records"
 const RECORDS_PRODUCER := "option_combat523"
-const RECORDS_SCHEMA := "option_combat_input.v1|records.v1"
+const RECORDS_SCHEMA := "option_combat_input.v2|records.v1"
 ## Per-key sections kept on storage.
 const KEYED: Array[String] = ["primary_doll_buffs","subslot_buffs","subslot_npc_bindings","invoke_spells","invoke_buffs"]
 ## Parts only the build uses (no reader); kept on storage as one diagnostics record.
@@ -439,7 +454,7 @@ static func _build(identity: Dictionary) -> Dictionary:
 	result.subslot_unlock_item = _unlock(result)
 	var targets: Dictionary = {}
 	for raw: Dictionary in originals:
-		if not _integer(raw.get("BuffCardDeckID")) or int(raw.BuffCardDeckID) not in [1,2]: continue
+		if not _integer(raw.get("BuffCardDeckID")) or int(raw.BuffCardDeckID) not in [1,2,98]: continue
 		_issue = ""
 		var card: Dictionary = _row("BuffCard",raw.get("ID"))
 		if card.is_empty():
@@ -450,6 +465,9 @@ static func _build(identity: Dictionary) -> Dictionary:
 			_note(result,{"table":"BuffCard","row_id":card.ID},"saved_namespace_not_declared")
 			continue
 		var identity_key: String = "source:"+stable
+		var deck: int = int(card.BuffCardDeckID)
+		if deck in [1,98]: _base_invokes(card,targets)
+		if deck==98: continue # Relic awakening/subslot inputs retain their own owner.
 		for slot: int in [1,11]:
 			var present: bool = false
 			for raw_group: Dictionary in SOURCE.related("BuffCardOptionAwakenGroup","BuffCardID",int(card.ID)):

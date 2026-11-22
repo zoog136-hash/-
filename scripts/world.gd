@@ -1390,7 +1390,7 @@ func _refresh_equipment_effects() -> void:
 				source_mp_regeneration+=base_value
 				continue
 			if base_value>0:flags[key]=true
-		if bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수"):
+		if not record.has("source_card_attack_drain_hp") and (bool(record.get("hpAbsorption",record.get("hp_absorption",false))) or str(record.get("desc","")).contains("HP 흡수")):
 			flags.hp_absorption=true
 		flags.damage_amp_pct=float(flags.damage_amp_pct)+float(record.get("damage_amp_pct",0.0))
 	flags.hp_tick_amount=quest_recovery_hp+(UNIQUE_RECOVERY_AMOUNT if bool(flags.hpAbsoluteRecovery) or bool(flags.hpRecoveryTick) else 0)+int(card_collections.bonus("hp_regeneration:flat"))+halphas_star.catalog_bonus("hp_regen")
@@ -1432,7 +1432,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var settings: Dictionary=PATCH523_ENHANCE.policy()
 	var source_attack: bool=not by_spell or settings.get("source_drain_scope","")=="all_successful_hits"
 	if source_attack:
-		stolen+=mini(maxi(0,target.hp-stolen),maxi(0,int(_equipment_inven_sum("source_attack_drain_hp"))))
+		stolen+=mini(maxi(0,target.hp-stolen),maxi(0,int(_equipment_inven_sum("source_attack_drain_hp")+_equipped_numeric_sum("source_card_attack_drain_hp"))))
 		var drain_mp: int=maxi(0,int(_equipment_inven_sum("source_attack_drain_mp")))
 		for worn: Dictionary in _all_equipped_records():
 			if str(worn.get("slot","")).is_empty():continue
@@ -1454,6 +1454,10 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	adjusted_damage=preload("res://scripts/crafting/patch523_final_blow.gd").damage(self,adjusted_damage,by_spell,target)
 	adjusted_damage+=_source_elemental_flat_damage(target,by_spell)
+	if target.source_m_npc_id>0:
+		for record: Dictionary in _all_equipped_records():
+			var scoped: Variant = record.get("source_card_npc_group_damage")
+			if scoped is Dictionary:adjusted_damage+=int(scoped.get(target.source_m_npc_id,0))
 	if target.is_undead() and (not by_spell or settings.get("source_undead_scope","")=="all_successful_hits"):
 		var maximum: int=maxi(0,int(_equipment_inven_sum("source_undead_damage_max")))
 		if maximum>0:
@@ -1464,7 +1468,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var hit_context: Dictionary=context.duplicate(true)
 	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
 	if attack_kind == "magic" and target.has_meta("magic_shield_reduction_percent"):
-		adjusted_damage = half_elixir.shield_damage(adjusted_damage, float(target.get_meta("magic_shield_reduction_percent")))
+		var shield: float = float(target.get_meta("magic_shield_reduction_percent"))
+		var pierce: float = clampf(_equipped_numeric_sum("source_card_magic_penetration_pct"),0.0,100.0)
+		adjusted_damage = half_elixir.shield_damage(adjusted_damage, shield*(1.0-pierce/100.0))
 	hit_context.pvp=bool(target.get_meta("is_player_combatant",false))
 	hit_context.undead=target.is_undead()
 	if not hit_context.has("final_blow"):hit_context.final_blow=growth.guardian_combat.roll(growth.guardian_combat.final_blow_chance())
@@ -1475,7 +1481,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	hit_context=unconfirmed523.outgoing_context(kind,hit_context)
 	adjusted_damage=growth.guardian_combat.outgoing(target,adjusted_damage,critical,kind,hit_context)
 	if titles.bonus("FinalBlowProbability")>0: adjusted_damage=titles.outgoing(adjusted_damage,rng.randf())
-	var final: Dictionary=card_collections.final_blow(adjusted_damage,rng) if ordinary_attack else {"damage":adjusted_damage,"triggered":false}
+	var final: Dictionary=card_collections.final_blow(adjusted_damage,rng,_equipped_numeric_sum("source_card_final_blow_pct"),int(_equipped_numeric_sum("source_card_final_blow_damage")),_equipped_numeric_sum("source_card_final_blow_scale")) if ordinary_attack else {"damage":adjusted_damage,"triggered":false}
 	if final.triggered:hud.append_log("결정타 · "+target.monster_name)
 	var available_hp: int=maxi(0,target.hp-stolen)
 	var available_mp: int=target.mp
@@ -1554,6 +1560,14 @@ func _catalog_stat_sum_uncached(key: String) -> int:
 			result += int(entry.get(key, 0))
 	return result + equipment_collections.catalog_bonus(key) + card_collections.catalog_bonus(key) + option_awakening.catalog_bonus(key) + growth.catalog_bonus(key) + halphas_star.catalog_bonus(key) + weapon_mastery.catalog_bonus(key, _mastery_actual_weapon_type()) + combinations.catalog_bonus(key) + int(half_elixir.stat_record().get(key, 0)) + (totems.bonus("PVEDamageReduction") if key == "pve_damage_reduction" else 0) + monsterbook523_runtime.catalog_bonus(key) + unconfirmed523.catalog_bonus(key) + card_deck_bonus.catalog_bonus(key)
 
+func source_active_card_spell_bonus(spell_id: int, field: String) -> float:
+	if spell_id<=0:return 0.0
+	var sum_value: float = 0.0
+	for record: Dictionary in _all_equipped_records():
+		var spells: Variant = record.get("source_card_spell_options")
+		if spells is Dictionary and spells.has(spell_id):sum_value+=float(spells[spell_id].get(field,0.0))
+	return sum_value
+
 func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	var record_value: Variant = equipped_catalog.get("변신", {})
 	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
@@ -1570,7 +1584,7 @@ func _skill_cooldown_factor() -> float:
 func _skill_cooldown_factor_uncached() -> float:
 	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
 	cast_bonus += unconfirmed523.bonus("cast_speed:percent")
-	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
+	if PATCH523_ENHANCE.policy().get("cast_speed_consumer","")=="existing_skill_cooldown_factor":cast_bonus+=_equipment_inven_sum("castSpeed")+_equipped_numeric_sum("source_card_cast_speed_pct")+card_deck_bonus.catalog_bonus("castSpeed")+_active_item_buff_percent("cast_speed")
 
 	if equipment523.policy.get("set_cast_speed_mode","") == "cooldown":
 		cast_bonus += _equipped_numeric_sum("equipment523_set_cast_speed_pct")
@@ -9383,7 +9397,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
 	var skill_name: String = str(skill.get("name", ""))
-	var transform_flat: int = int(round(_transformation_skill_bonus(skill_name, "damage_flat")))
+	var source_spell: int = card_collections.native_spell_id(skill)
+	var transform_flat: int = int(round(_transformation_skill_bonus(skill_name, "damage_flat")+source_active_card_spell_bonus(source_spell,"damage")))
 	var transform_multiplier: float = 1.0 + clampf(_transformation_skill_bonus(skill_name, "damage_pct"), 0.0, 200.0) / 100.0
 	var transform_accuracy: float = clampf(_transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.0, 0.90)
 	var volley: Dictionary = skill.get("_volley_runtime", {})
@@ -11572,7 +11587,7 @@ func _skill_attack_kind(skill: Dictionary) -> String:
 
 func _skill_motion_duration(skill: Dictionary) -> float:
 	if skill.has("combination_charge_step_seconds"):
-		return combinations.charge_step_duration(float(skill.combination_charge_step_seconds))
+		return combinations.charge_step_duration(float(skill.combination_charge_step_seconds))*(1.0-clampf(_equipped_numeric_sum("source_card_charge_reduction_pct"),0.0,100.0)/100.0)
 	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
 
 func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> bool:

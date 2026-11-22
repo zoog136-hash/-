@@ -3114,10 +3114,19 @@ func _on_catalog_item_selected(index: int) -> void:
 	var item_name := str(selected_catalog_record.get("name",""))
 	var grade_name := str(selected_catalog_record.get("grade","일반"))
 	var option_lines := PackedStringArray()
-	for value: Variant in selected_catalog_record.get("sourceOptions",[]):
-		var option: String = str(value).replace("PVP","PVE").replace("PvP","PvE")
-		if option.contains("손상") or option.contains("저주"): continue
-		option_lines.append("• "+UI.safe(option)+CARD_OPTION_VISIBILITY.suffix(catalog_category,option,selected_catalog_record))
+	var option_record: Dictionary = selected_catalog_record
+	if catalog_category in ["변신","마법인형","성물"] and option_record.get("source_snapshot")=="patch523":
+		var current: Dictionary=preload("res://scripts/lineagem_base508.gd").canonical(option_record)
+		if not current.is_empty():option_record=current
+	var shown_options: Variant=option_record.get("source_card_display_options")
+	if shown_options is Array:
+		for row: Dictionary in shown_options:
+			option_lines.append("• "+UI.safe((str(row.label)+" "+str(row.value)).strip_edges()))
+	else:
+		for value: Variant in option_record.get("sourceOptions",[]):
+			var option: String = str(value).replace("PVP","PVE").replace("PvP","PvE")
+			if option.contains("손상") or option.contains("저주"): continue
+			option_lines.append("• "+UI.safe(option)+CARD_OPTION_VISIBILITY.suffix(catalog_category,option,option_record))
 	catalog_detail.text = "[font_size=18][b]%s[/b][/font_size]\n%s\n\n%s" % [UI.safe(item_name),UI.safe(selected_catalog_record.get("type","")),"\n".join(option_lines) if not option_lines.is_empty() else UI.safe(selected_catalog_record.get("desc",""))]
 	if catalog_category == "아이템":
 		UI.apply_item_visual(catalog_preview,selected_catalog_record,item_name,item_image_index.get("아이템",{}),"detail")
