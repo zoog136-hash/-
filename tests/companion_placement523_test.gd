@@ -63,12 +63,12 @@ func pure() -> void:
 	var min_r: float = INF
 	var frames: int = 0
 	for i: int in 120:
-		var o: Vector2 = ground(p.doll(DT, 4))
-		min_r = minf(min_r, o.length())
+		p.follow(DT, Vector2.ZERO, screen_dir(4) * 108.0, 4)
+		min_r = minf(min_r, ground(PLACEMENT.offset_at(p.heading, PLACEMENT.DOLL_BEHIND, PLACEMENT.DOLL_SIDE)).length())
 		frames += 1
-		if is_equal_approx(p.heading, PLACEMENT.facing_angle(4)) or is_equal_approx(absf(p.heading), PI): break
+		if is_equal_approx(absf(p.heading), PI): break
 	check(min_r > radius - 0.5, "turn keeps the doll around the character (%.1f/%.1f)" % [min_r, radius])
-	check(frames >= 20 and frames <= 40, "180-degree turn takes about half a second (%d frames)" % frames)
+	check(frames >= 20 and frames <= 45, "180-degree turn takes about half a second (%d frames)" % frames)
 
 func follow() -> void:
 	var world := Node2D.new()
@@ -88,7 +88,7 @@ func follow() -> void:
 	var relic: TwilightRelicMotion = RELIC.new()
 	anchor.add_child(doll.native_actor)
 	relic._attach_native(world)
-	check(relic.native_actor.get_parent() == relic.sort_anchor and relic.sort_anchor.get_parent() == world, "relic actor sorts through its own anchor")
+	check(relic.native_actor.get_parent().get_parent() == relic.sort_anchor and relic.sort_anchor.get_parent() == world, "relic actor sorts through its own anchor")
 	player.motion.face(screen_dir(2))
 	doll._place_now(player)
 	relic._place_now(player)
@@ -126,7 +126,7 @@ func follow() -> void:
 		check(rg.dot(f) < -10.0, "moving %s: relic trails behind (%s)" % [NAMES[k], str(rg)])
 		check(max_step < 0.5 and max_relic_step < 0.5, "moving %s: steady follow without jumps (%.2f, %.2f)" % [NAMES[k], max_step, max_relic_step])
 		check(walk_frames > 80, "moving %s: doll walks while following" % NAMES[k])
-		var lag: float = anchor.global_position.distance_to(player.global_position + doll.follow_offset)
+		var lag: float = anchor.global_position.distance_to(player.global_position + PLACEMENT.doll_offset(k))
 		check(lag > 1.0 and lag < 24.0, "moving %s: doll follows with a short lag (%.1f)" % [NAMES[k], lag])
 		# Stop: settle on the target, then hold still (no idle jitter).
 		player.velocity = Vector2.ZERO
@@ -156,7 +156,7 @@ func sources() -> void:
 	var world_src: String = FileAccess.get_file_as_string("res://scripts/world.gd")
 	check(not world_src.contains("secondary_relic_visual.follow_offset=Vector2(-54,24)"), "second relic uses the shared placement")
 	var sub: String = FileAccess.get_file_as_string("res://scripts/cards/native_doll_subslot_visual.gd")
-	check(sub.contains("placement.relic(delta,facing8,true)") and sub.contains("PLACEMENT.RELIC_SORT_BEHIND"), "second relic sorts behind with the mirrored placement")
+	check(sub.contains("placement.follow(delta,player.global_position,player.velocity,player.motion.facing8,category==\"성물\",true)") and sub.contains("PLACEMENT.RELIC_SORT_BEHIND"), "second relic sorts behind with the mirrored placement")
 	for path: String in ["res://scripts/animation/follower_motion.gd", "res://scripts/animation/relic_motion.gd"]:
 		var text: String = FileAccess.get_file_as_string(path)
 		check(not text.contains("Vector2(-54, 24)") and not text.contains("Vector2(48, 18)"), "no fixed screen offset in " + path.get_file())

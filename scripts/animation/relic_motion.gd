@@ -29,12 +29,18 @@ var placement = PLACEMENT.new()
 var sort_anchor: Node2D
 ## Smoothed visual point (global) of the relic, independent of its sort key.
 var visual_position: Vector2 = Vector2.ZERO
+## Carries the visual point under sort_anchor; the actor's own position stays
+## with its walk root-motion cancel.
+var lift_point: Node2D
 var motion: TwilightActorMotion = MOTION.new()
 var appear_speed: float = 4.0
 var disappear_speed: float = 4.0
 
 func _init() -> void:
 	native_actor.use_companion_frame_plans()
+	# As follower_motion.gd: the original walk frames' step is cancelled.
+	native_actor.cancel_walk_root_motion = true
+	native_actor.root_motion_endpoint_fit = true
 
 func _place_now(player: TwilightPlayer) -> void:
 	placement.reset(player.motion.facing8)
@@ -42,8 +48,9 @@ func _place_now(player: TwilightPlayer) -> void:
 	visual_position = player.global_position + follow_offset
 
 func _follow_target(delta: float, player: TwilightPlayer) -> Vector2:
-	follow_offset = placement.relic(delta, player.motion.facing8)
-	return player.global_position + follow_offset
+	var point: Vector2 = placement.follow(delta, player.global_position, player.velocity, player.motion.facing8, true)
+	follow_offset = point - player.global_position
+	return point
 
 static func sort_y(player: Node2D) -> float:
 	return player.global_position.y - PLACEMENT.RELIC_SORT_BEHIND
@@ -55,21 +62,27 @@ func _attach_native(world: Node) -> void:
 	if sort_anchor.get_parent() != world:
 		if sort_anchor.get_parent() != null: sort_anchor.get_parent().remove_child(sort_anchor)
 		world.add_child(sort_anchor)
-	if native_actor.get_parent() != sort_anchor:
+	if not is_instance_valid(lift_point):
+		lift_point = Node2D.new()
+		lift_point.name = "RelicPoint"
+	if lift_point.get_parent() != sort_anchor:
+		if lift_point.get_parent() != null: lift_point.get_parent().remove_child(lift_point)
+		sort_anchor.add_child(lift_point)
+	if native_actor.get_parent() != lift_point:
 		if native_actor.get_parent() != null: native_actor.get_parent().remove_child(native_actor)
-		sort_anchor.add_child(native_actor)
+		lift_point.add_child(native_actor)
 
 ## Visual point and sort key are separate: see sort_anchor.
 func _apply_native_position(player: TwilightPlayer) -> void:
 	sort_anchor.global_position = Vector2(visual_position.x, sort_y(player))
-	native_actor.global_position = visual_position
+	lift_point.global_position = visual_position
 
 ## Moves the original relic actor toward its point behind the owner's head;
 ## returns "walk" while it travels, else "idle".
 func follow_native(delta: float, player: TwilightPlayer) -> String:
+	native_actor.root_motion_cell_steps = player.original_source_preview.root_motion_cell_steps
 	var old: Vector2 = visual_position
-	var target: Vector2 = _follow_target(delta, player)
-	visual_position = target if old.distance_to(target)>900.0 else old.lerp(target,1.0-exp(-8.0*delta))
+	visual_position = _follow_target(delta, player)
 	_apply_native_position(player)
 	return "walk" if old.distance_to(visual_position)>0.1 else "idle"
 
@@ -157,13 +170,10 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 		sprite.texture = null
 		return
 	clock += delta
-	var target: Vector2 = _follow_target(delta, player)
 	var previous: Vector2 = visual_position
-	if visual_position.distance_to(target) > 900.0:
-		visual_position = target
-		opacity = 0.0
-	else:
-		visual_position = visual_position.lerp(target, 1.0 - exp(-8.0 * delta))
+	var target: Vector2 = _follow_target(delta, player)
+	if previous.distance_to(target) > 900.0: opacity = 0.0
+	visual_position = target
 	sprite.global_position = Vector2(visual_position.x, sort_y(player))
 	var real_velocity: Vector2 = (visual_position - previous) / maxf(delta, 0.001)
 	if previous.distance_to(target) > 900.0: real_velocity = Vector2.ZERO
