@@ -921,6 +921,9 @@ func append_log(value: String) -> void:
 		combat_log_view.text = "\n".join(log_history)
 
 func show_message(text: String) -> void:
+	# The original 카드 뽑기 window covers the screen: the grant line stays in
+	# the log (callers append it) and does not lie over the cards.
+	if original_gacha_reveal_open():return
 	super.show_message(text)
 	_original_system_message_priority=LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE
 	_original_system_message_routing={"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false}
@@ -2684,8 +2687,15 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 ## CardRevealStage.
 func _present_original_gacha(views: Array[Dictionary], category: String, title: String) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
+	if not original_main_ui_controller.has_method("feature_window_available") or not original_main_ui_controller.feature_window_available("card_gacha_result"): return false
+	# As the client: the draw screen replaces the bag (and its item popup)
+	# it was used from, and the toast of the grant is cleared.
+	if original_inventory_is_open():original_main_ui_controller.close_inventory()
+	elif original_main_ui_controller.has_method("close_item_tooltip"):original_main_ui_controller.close_item_tooltip()
+	_clear_message()
 	var guard := Control.new()
 	guard.name = "OriginalGachaRevealGuard"
+	guard.set_meta("original_gacha_reveal",true)
 	guard.visible = false
 	guard.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(guard)
@@ -2700,6 +2710,16 @@ func _present_original_gacha(views: Array[Dictionary], category: String, title: 
 	card_reveal_stage = null
 	guard.queue_free()
 	return false
+
+## True while the original 카드 뽑기 window (BM_Gacha) is open.
+func original_gacha_reveal_open() -> bool:
+	return is_instance_valid(card_reveal_stage) and card_reveal_stage.has_meta("original_gacha_reveal")
+
+func _clear_message() -> void:
+	message_label.text=""
+	message_time=0.0
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_system_message"):
+		original_main_ui_status["system_message"]=original_main_ui_controller.refresh_system_message()
 
 func _refresh_card_controls() -> void:
 	if not is_instance_valid(catalog_panel) or not catalog_panel.is_visible_in_tree():return
