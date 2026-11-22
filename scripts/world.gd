@@ -11474,7 +11474,7 @@ func _update_secondary_relic(delta: float) -> void:
 		return
 	if not is_instance_valid(secondary_relic_visual):
 		secondary_relic_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
-		secondary_relic_visual.category="성물";secondary_relic_visual.follow_offset=Vector2(-54,24)
+		secondary_relic_visual.category="성물"
 		secondary_relic_visual.name="SecondarySourceRelic";add_child(secondary_relic_visual)
 	var record: Dictionary=option_awakening.core.catalog["성물"].get(state.identity,{})
 	secondary_relic_visual.update_source(delta,self,record)

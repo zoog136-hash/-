@@ -10,7 +10,23 @@ var actor: Node2D
 var binding: String=""
 var status: String="inactive"
 var category: String="마법인형"
-var follow_offset: Vector2=Vector2(54,24)
+const PLACEMENT=preload("res://scripts/animation/companion_placement.gd")
+## The second doll/relic stands on the other side of the owner (mirrored
+## placement); a relic keeps its sort key on the owner's foot line so it is
+## drawn behind the character in all facings (see relic_motion.gd).
+var follow_offset: Vector2=PLACEMENT.doll_offset(2,true)
+var placement=PLACEMENT.new()
+var visual_position: Vector2=Vector2.ZERO
+func _offset(delta: float,facing8: int) -> Vector2:
+	follow_offset=placement.relic(delta,facing8,true) if category=="성물" else placement.doll(delta,facing8,true)
+	return follow_offset
+func _apply_position(player: Node2D) -> void:
+	if category=="성물":
+		global_position=Vector2(visual_position.x,player.global_position.y-PLACEMENT.RELIC_SORT_BEHIND)
+		if is_instance_valid(actor):actor.global_position=visual_position
+	else:
+		global_position=visual_position
+		if is_instance_valid(actor):actor.position=Vector2.ZERO
 var _next_source_check_msec: int=0
 var _next_aura_check_msec: int=0
 var _requested_aura_signature: String=""
@@ -61,18 +77,21 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 		_deactivate_source_aura()
 		actor.clear();binding=key
 		if not actor.configure(source_key,manifest,context) or not actor.installed():status="source_asset_pending";hide();return
-		global_position=player.global_position+follow_offset
+		placement.reset(player.motion.facing8)
+		visual_position=player.global_position+_offset(0.0,player.motion.facing8)
+		_apply_position(player)
 		status="source_native"
 	if source_only and not actor.installed():
 		_deactivate_source_aura()
 		actor.hide();status="source_asset_pending";hide();return
 	if status!="source_native":return
 	show()
-	var previous: Vector2=global_position
-	var point: Vector2=player.global_position+follow_offset
-	global_position=point if previous.distance_to(point)>900 else previous.move_toward(point,minf(maxf(300,player.velocity.length()*1.35),previous.distance_to(point)*7)*maxf(0,delta))
+	var previous: Vector2=visual_position
+	var point: Vector2=player.global_position+_offset(maxf(0,delta),player.motion.facing8)
+	visual_position=point if previous.distance_to(point)>900 else previous.move_toward(point,minf(maxf(300,player.velocity.length()*1.35),previous.distance_to(point)*7)*maxf(0,delta))
+	_apply_position(player)
 	sync_existing_source_aura(world,record,manifest)
-	var native_state: String="walk" if previous.distance_to(global_position)>.1 else "idle"
+	var native_state: String="walk" if previous.distance_to(visual_position)>.1 else "idle"
 	if native_state=="walk" and player.motion.state=="run" and actor.current523_role_available("run"):native_state="run"
 	actor.advance_source(delta,native_state,player.motion.facing8,player.motion.sequence,false)
 

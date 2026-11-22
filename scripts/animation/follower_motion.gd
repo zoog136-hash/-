@@ -16,15 +16,35 @@ var base_scale: Vector2 = Vector2.ONE
 var state: String = "despawn"
 var combat_reaction: float = 0.0
 var previous_sequence: int = -1
-var follow_offset: Vector2 = Vector2(-54, 24)
+const PLACEMENT = preload("res://scripts/animation/companion_placement.gd")
+## Current screen offset from the owner (behind and to the side of its facing).
+var follow_offset: Vector2 = PLACEMENT.doll_offset(2)
+var placement = PLACEMENT.new()
 var appear_speed: float = 5.0
 var disappear_speed: float = 5.0
 
 func _init() -> void:
 	native_actor.use_companion_frame_plans()
 
+func _place_now(player: TwilightPlayer) -> void:
+	placement.reset(player.motion.facing8)
+	follow_offset = PLACEMENT.doll_offset(player.motion.facing8)
+
+func _follow_target(delta: float, player: TwilightPlayer) -> Vector2:
+	follow_offset = placement.doll(delta, player.motion.facing8)
+	return player.global_position + follow_offset
+
+## Moves the doll's anchor toward its point behind and beside the owner;
+## returns "walk" while it travels, else "idle".
+func follow_native(delta: float, anchor: Node2D, player: TwilightPlayer) -> String:
+	var old: Vector2 = anchor.global_position
+	var target: Vector2 = _follow_target(delta, player)
+	anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
+	return "walk" if old.distance_to(anchor.global_position)>0.1 else "idle"
+
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	native_actor.clear()
+	_place_now(player)
 	native_enabled = false
 	var source_key: String = "doll:" + str(record.get("sourceId",""))
 	source_only = native_actor.current523_source_required(source_key)
@@ -78,6 +98,7 @@ func set_presentation_hidden(hidden: bool, anchor: Node2D, sprite: AnimatedSprit
 	anchor.visible = not hidden
 	if hidden: return
 	if changed:
+		_place_now(player)
 		anchor.global_position = player.global_position + follow_offset
 		previous_sequence = player.motion.sequence
 		combat_reaction = 0.0
@@ -95,10 +116,7 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 		native_actor.hide()
 		return
 	if native_enabled:
-		var old: Vector2 = anchor.global_position
-		var target: Vector2 = player.global_position + follow_offset
-		anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
-		var native_state: String = "walk" if old.distance_to(anchor.global_position)>0.1 else "idle"
+		var native_state: String = follow_native(delta, anchor, player)
 		if native_state == "walk" and player.motion.state == "run" and native_actor.current523_role_available("run"): native_state = "run"
 		native_actor.advance_source(delta, native_state, player.motion.facing8, player.motion.sequence, false)
 		return
@@ -113,7 +131,7 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 		sprite.visible = false
 		sprite.stop()
 		return
-	var target: Vector2 = player.global_position + follow_offset
+	var target: Vector2 = _follow_target(delta, player)
 	var old_position: Vector2 = anchor.global_position
 	var distance: float = old_position.distance_to(target)
 	if distance > 900.0:
