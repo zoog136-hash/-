@@ -970,7 +970,9 @@ func _process_slow(delta: float) -> void:
 	FRAME_HITCH.add("quests", hitch_1)
 	var hitch_5: int = FRAME_HITCH.now()
 	dungeon_play.tick(delta)
+	var dungeon_split: int = FRAME_HITCH.detail_next("dungeon.play", hitch_5)
 	content523.tick(delta)
+	FRAME_HITCH.detail("dungeon.content523", dungeon_split)
 	FRAME_HITCH.add("dungeon", hitch_5)
 	expedition_local.tick(delta)
 	_tick_item_buffs(delta)
@@ -10518,11 +10520,28 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 		hud.show_message("현재 무기와 방패를 함께 착용할 수 없어 방패가 해제되었습니다")
 	hud.append_log("방패 자동 해제 · %s / 무기 %s" % [offhand_name, _current_weapon_type()])
 
+## One resolved weapon record per frame for the same worn weapon. A single
+## normal hit resolved it 3-5 times (weapon size roll, invoke roll, element
+## bonus, bleed, ammo), each a catalog lookup plus a deep copy of the native
+## record (523.808: hit.roll 28 ms on the phone). Callers only read it.
+var _weapon_memo_frame: int = -1
+var _weapon_memo_source: Variant = null
+var _weapon_memo: Dictionary = {}
+
 func _equipped_weapon_record() -> Dictionary:
 	var value: Variant = equipped_items.get("weapon", {})
-	if value is Dictionary:
-		return _source_catalog_record("아이템", value as Dictionary)
-	return {}
+	if not value is Dictionary: return {}
+	var frame: int = Engine.get_process_frames()
+	var fingerprint: int = hash(value)
+	if frame == _weapon_memo_frame and is_same(value, _weapon_memo_source) and _weapon_memo_size == fingerprint:
+		return _weapon_memo
+	_weapon_memo = _source_catalog_record("아이템", value as Dictionary)
+	_weapon_memo_frame = frame
+	_weapon_memo_source = value
+	_weapon_memo_size = fingerprint
+	return _weapon_memo
+## Content hash of the worn weapon entry the memo was built from.
+var _weapon_memo_size: int = 0
 
 func _weapon_allowed_for_job(record: Dictionary, target_job: String) -> bool:
 	if record.is_empty():

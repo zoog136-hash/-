@@ -1280,7 +1280,9 @@ func confirm_action(title: String, body: String, action: String, callback: Calla
 	if pointer_transfer != null: pointer_transfer.cancel()
 	var dialog := preload("res://scripts/ui/renewal_confirmation.gd").new()
 	$Root.add_child(dialog)
-	dialog.configure(title,body,action,callback,maximum)
+	# Internal item keys (" · 원본#N", "@@@id") never reach the screen.
+	var identity := preload("res://scripts/ui/source523_item_identity.gd")
+	dialog.configure(identity.clean_message(title),identity.clean_message(body),action,callback,maximum)
 	return dialog
 
 func _on_lineage_side_action(action_id: String) -> void:
@@ -3403,11 +3405,24 @@ func _open_enhance_chooser() -> void:
 	forge.configure_scrolls(self)
 
 func is_enhancement_presenting() -> bool:
-	return is_instance_valid(enhancement_reveal) and not enhancement_reveal.is_queued_for_deletion()
+	if is_instance_valid(enhancement_reveal) and not enhancement_reveal.is_queued_for_deletion(): return true
+	var window: Variant = _original_enchant_window()
+	return window != null and bool(window.call("is_presenting"))
+
+## The open original 523 Enchant window (source_main_enchant_window), or null.
+func _original_enchant_window() -> Variant:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("enchant_window_is_open") or not original_main_ui_controller.enchant_window_is_open(): return null
+	var window: Variant = original_main_ui_controller.enchant_window()
+	return window if window != null and window.has_method("present_result") else null
 
 func show_enhancement_result(result_type: String, item_name: String, from_level: int, to_level: int) -> void:
 	# The authoritative transaction has already rolled. This screen only presents it.
 	if is_enhancement_presenting(): return
+	# Over the original window the client's own in-window presentation plays
+	# (Fx_Enchant_Start + Enchant_Popup_Message); no full-screen layer covers
+	# the window, so its texts never mix with result texts.
+	var window: Variant = _original_enchant_window()
+	if window != null and bool(window.call("present_result",result_type,from_level,to_level)): return
 	var layer := CanvasLayer.new()
 	layer.name = "EnhancementRevealLayer"
 	layer.layer = 110

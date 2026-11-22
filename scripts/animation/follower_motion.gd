@@ -25,22 +25,30 @@ var disappear_speed: float = 5.0
 
 func _init() -> void:
 	native_actor.use_companion_frame_plans()
+	# The anchor moves smoothly like the character's node, so the original walk
+	# frames' built-in step is cancelled the same way (player.gd, #687/#733);
+	# drawn unchanged it ran ahead and jumped back every cycle ("앞뒤로 왔다 갔다").
+	native_actor.cancel_walk_root_motion = true
+	native_actor.root_motion_endpoint_fit = true
 
 func _place_now(player: TwilightPlayer) -> void:
 	placement.reset(player.motion.facing8)
 	follow_offset = PLACEMENT.doll_offset(player.motion.facing8)
 
+## Smoothed point behind and beside the owner (companion_placement.gd follow).
 func _follow_target(delta: float, player: TwilightPlayer) -> Vector2:
-	follow_offset = placement.doll(delta, player.motion.facing8)
-	return player.global_position + follow_offset
+	var point: Vector2 = placement.follow(delta, player.global_position, player.velocity, player.motion.facing8)
+	follow_offset = point - player.global_position
+	return point
 
-## Moves the doll's anchor toward its point behind and beside the owner;
-## returns "walk" while it travels, else "idle".
+## Moves the doll's anchor to its point behind and beside the owner; returns
+## "walk" while it travels, else "idle". The actor's own position belongs to
+## its walk root-motion cancel and is never written here.
 func follow_native(delta: float, anchor: Node2D, player: TwilightPlayer) -> String:
+	native_actor.root_motion_cell_steps = player.original_source_preview.root_motion_cell_steps
 	var old: Vector2 = anchor.global_position
-	var target: Vector2 = _follow_target(delta, player)
-	anchor.global_position = target if old.distance_to(target) > 900.0 else old.move_toward(target, minf(maxf(300.0, player.velocity.length()*1.35),old.distance_to(target)*7.0)*delta)
-	return "walk" if old.distance_to(anchor.global_position)>0.1 else "idle"
+	anchor.global_position = _follow_target(delta, player)
+	return "walk" if old.distance_to(anchor.global_position) > 0.1 else "idle"
 
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	native_actor.clear()
@@ -131,17 +139,14 @@ func update(delta: float, anchor: Node2D, sprite: AnimatedSprite2D, player: Twil
 		sprite.visible = false
 		sprite.stop()
 		return
-	var target: Vector2 = _follow_target(delta, player)
 	var old_position: Vector2 = anchor.global_position
+	var target: Vector2 = _follow_target(delta, player)
 	var distance: float = old_position.distance_to(target)
 	if distance > 900.0:
 		# Region/teleport relocation is masked by a fresh summon fade.
-		anchor.global_position = target
 		opacity = 0.0
 		state = "summon"
-	elif distance > 0.65:
-		var cap: float = maxf(300.0, player.velocity.length() * 1.35)
-		anchor.global_position = old_position.move_toward(target, minf(cap, distance * 7.0) * delta)
+	anchor.global_position = target
 	var actual_velocity: Vector2 = (anchor.global_position - old_position) / maxf(delta, 0.001)
 	if distance > 900.0: actual_velocity = Vector2.ZERO
 	var prior_state: String = motion.state
