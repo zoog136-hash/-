@@ -48,7 +48,7 @@ func _init() -> void:
 	rng.randomize()
 
 static func empty_state() -> Dictionary:
-	return {"schema":SCHEMA, "counts":{}, "picks":{}, "pending":{}}
+	return {"schema":SCHEMA, "counts":{}, "picks":{}, "pending":{}, "confirmed":{}}
 
 func configure(owner: Object) -> void:
 	world = owner
@@ -76,6 +76,12 @@ static func validate(value: Variant) -> String:
 	for key: Variant in pending:
 		var entry: Variant = pending[key]
 		if not key is String or not entry is Dictionary or not entry.get("result") is String or not _whole(entry.get("swap_count")) or not entry.get("picked") is bool: return "카드 다시 뽑기 대기 결과 기록 오류"
+	var confirmed: Variant = value.get("confirmed", {})
+	if not confirmed is Dictionary: return "카드 확정 기록 오류"
+	for category: Variant in confirmed:
+		if not DECKS.has(category) or not confirmed[category] is Dictionary: return "카드 확정 덱 기록 오류"
+		for identity: Variant in confirmed[category]:
+			if not identity is String or identity.is_empty() or confirmed[category][identity] != true: return "카드 확정 정체 기록 오류"
 	return ""
 
 func export_state() -> Variant:
@@ -103,6 +109,7 @@ func import_state(value: Variant) -> void:
 	for key: String in state.picks:
 		state.picks[key].swap_count = int(state.picks[key].swap_count)
 	if not state.has("pending"): state["pending"] = {}
+	if not state.has("confirmed"): state["confirmed"] = {}
 	for key: String in state.pending:
 		state.pending[key].swap_count = int(state.pending[key].swap_count)
 
@@ -304,6 +311,12 @@ func _plan(category: String, identity: String, confirmation_only: bool = false) 
 	if cards.get("owned",{}).get(category,{}).get(identity,false) != true: return _fail("보유하지 않은 카드입니다")
 	var grade_value: int = int(SOURCE.row("Grade", grade_id).get("GradeValue", 0))
 	if grade_value < int(SOURCE.row("Grade", 4).get("GradeValue", 4)) or grade_value > int(SOURCE.row("Grade", 52).get("GradeValue", 7)): return _fail("영웅 등급 이상 카드만 다시 뽑을 수 있습니다")
+	var held: Dictionary = state.pending.get(category + "|" + identity, {})
+	if held.is_empty():
+		if state.confirmed.get(category,{}).has(identity): return _fail("이미 확정한 카드입니다")
+		if confirmation_only:
+			var card: Dictionary = {"identity":identity,"card_id":int(raw.ID),"name":str(record.get("name","")),"grade":str(record.get("grade","")),"grade_id":grade_id}
+			return {"category":category,"card":card,"pending":{},"copies_required":0,"can_confirm":true}
 	var swap: Dictionary = rule(deck, grade_id)
 	if swap.is_empty(): return _fail("이 등급은 다시 뽑기 대상이 아닙니다 (원본 표)")
 	var used: int = swap_count(category, identity)
@@ -324,7 +337,6 @@ func _plan(category: String, identity: String, confirmation_only: bool = false) 
 		else:
 			copy_reason = _last_copy_guard(category, identity)
 			if not confirmation_only and APPROX_MOVE_PROGRESS and copy_reason.is_empty(): info["progress_moves"] = progress_report(category, identity)
-	var held: Dictionary = state.pending.get(category + "|" + identity, {})
 	if not held.is_empty():
 		var result_record: Dictionary = card_record(category, str(held.result))
 		info.pending = {"result":{"identity":str(held.result), "card_id":int(result_record.get("source_card_id", 0)), "name":str(result_record.get("name","")), "grade":str(result_record.get("grade",""))},
@@ -411,6 +423,9 @@ func pending_results() -> Array:
 			"swap_count":int(entry.swap_count), "picked":bool(entry.picked)})
 	return result
 
+func confirmed_cards() -> Dictionary:
+	return state.confirmed.duplicate(true)
+
 func _fingerprint(plan: Dictionary) -> Dictionary:
 	return {"kind":"reroll", "category":plan.category, "identity":plan.card.identity, "swap_count":plan.swap_count, "cost":plan.cost.amount, "copies":plan.copies_required,
 		"pick":plan.pick_candidates.map(func(entry: Dictionary) -> String: return str(entry.identity)), "pending":plan.pending, "revision":revision}
@@ -486,17 +501,28 @@ func confirm(token: String) -> Dictionary:
 	var committed: Dictionary = _commit_confirmations([held])
 	return committed.results[0] if committed.get("ok",false) else committed
 
-## Snapshot only payable pending results; quoting confirmation must never roll
-## new candidates, touch the wallet, or save.
+## Snapshot payable pending results and owned cards that can be kept. Quoting
+## confirmation must never roll new candidates, touch the wallet, or save.
 func quote_all() -> Dictionary:
 	_quotes.clear()
 	var eligible: Array[Dictionary] = []
+	var settled_by_pending: Dictionary = {}
 	for row: Dictionary in pending_results():
 		var plan: Dictionary = _plan(str(row.category),str(row.identity),true)
 		if plan.get("can_confirm",false):
 			eligible.append(_confirm_fingerprint(plan))
+			settled_by_pending[str(row.category)+"|"+str(row.result.identity)] = true
 	var blocked: int = state.pending.size() - eligible.size()
-	if eligible.is_empty(): return _fail("확정할 수 있는 대기 결과가 없습니다 · 조건 미충족 %d장" % blocked)
+	for category: String in DECKS:
+		var owned: Dictionary = world.card_draw_fusion.owned.get(category,{})
+		for identity: String in owned:
+			var key: String = category+"|"+identity
+			if owned[identity]!=true or state.pending.has(key) or settled_by_pending.has(key) or state.confirmed.get(category,{}).has(identity):continue
+			var record: Dictionary = card_record(category,identity)
+			if str(record.get("grade","")) not in ["영웅","전설","신화","유일"]:continue
+			var plan: Dictionary = _plan(category,identity,true)
+			if plan.get("can_confirm",false):eligible.append(_confirm_fingerprint(plan))
+	if eligible.is_empty(): return _fail("확정할 수 있는 카드가 없습니다 · 조건 미충족 %d장" % blocked)
 	var token: String = Crypto.new().generate_random_bytes(16).hex_encode()
 	_quotes[token] = {"kind":"confirm_all","entries":eligible}
 	return {"ok":true,"token":token,"count":eligible.size(),"blocked":blocked}
@@ -510,6 +536,7 @@ func confirm_all(token: String) -> Dictionary:
 func _commit_confirmations(entries: Array[Dictionary]) -> Dictionary:
 	var cards_before: Dictionary = world.card_draw_fusion.export_state()
 	var pending_before: Dictionary = state.pending.duplicate(true)
+	var confirmed_before: Dictionary = state.confirmed.duplicate(true)
 	var results: Array[Dictionary] = []
 	var moved: Array[Dictionary] = []
 	var reason: String = ""
@@ -530,6 +557,7 @@ func _commit_confirmations(entries: Array[Dictionary]) -> Dictionary:
 	revision += 1
 	if not reason.is_empty():
 		state.pending = pending_before
+		state.confirmed = confirmed_before
 		world.card_draw_fusion.import_state(cards_before)
 		moved.reverse()
 		for entry: Dictionary in moved:
@@ -545,6 +573,10 @@ func _commit_confirmations(entries: Array[Dictionary]) -> Dictionary:
 func _apply_confirmation(plan: Dictionary, progress: Array[Dictionary]) -> Dictionary:
 	var category: String = str(plan.category)
 	var identity: String = str(plan.card.identity)
+	if not state.confirmed.has(category):state.confirmed[category]={}
+	if plan.pending.is_empty():
+		state.confirmed[category][identity]=true
+		return {"ok":true,"reason":"","saved":true,"category":category,"from":plan.card,"result":plan.card,"consumed":0,"used_last_copy":false,"moved_progress":[]}
 	var result_identity: String = str(plan.pending.result.identity)
 	var result_record: Dictionary = card_record(category,result_identity)
 	var cards = world.card_draw_fusion
@@ -564,4 +596,6 @@ func _apply_confirmation(plan: Dictionary, progress: Array[Dictionary]) -> Dicti
 		moved = _move_progress(category,identity,result_identity,result_record)
 		progress.append({"category":category,"before":moved})
 	state.pending.erase(category+"|"+identity)
+	state.confirmed[category][identity]=true
+	state.confirmed[category][result_identity]=true
 	return {"ok":true,"reason":"","saved":true,"category":category,"from":plan.card,"result":received,"consumed":copies,"used_last_copy":last_copy,"moved_progress":moved.keys()}

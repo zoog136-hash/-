@@ -16,12 +16,17 @@ var failures: Array[String]=[]
 class FakeWorld extends Node:
 	var calls: Array=[]
 	var waiting: Array=[{"category":"변신","identity":"source:202","name":"전설 B","result":{"identity":"source:203","name":"전설 C","grade":"전설"},"swap_count":1,"picked":false}]
+	var confirmed: Dictionary={}
+	var last_quoted: String=""
 	var picks: int=0
 	func card523_swap_pending() -> Array:
 		return waiting.duplicate(true)
+	func card523_swap_confirmed() -> Dictionary:
+		return confirmed
 	func card523_swap_quote(category: String, identity: String, _confirmation_only: bool = false) -> Dictionary:
 		calls.append(["quote",category,identity])
-		var pending: bool=identity=="source:202"
+		last_quoted=identity
+		var pending: bool=identity=="source:202" or _confirmation_only
 		return {"ok":true,"token":"t%d" % calls.size(),"remaining":4,"cost":{"amount":2900},"diamonds":10000,"pick_count":picks,
 			"pick_candidates":[{"identity":"source:301","name":"영웅 X","grade":"영웅"},{"identity":"source:302","name":"영웅 Y","grade":"영웅"}] if picks>0 else [],
 			"can_confirm":pending,"confirm_reason":"" if pending else "확정할 결과가 없습니다","confirm_token":"c%d" % calls.size() if pending else ""}
@@ -30,6 +35,10 @@ class FakeWorld extends Node:
 		return {"ok":true,"pending":{"result":{"identity":"source:101","name":"영웅 Z","grade":"영웅"}}}
 	func card523_swap_confirm(token: String) -> Dictionary:
 		calls.append(["confirm",token])
+		if last_quoted=="source:101":
+			confirmed={"변신":{"source:101":true}}
+			return {"ok":true,"category":"변신","result":{"identity":"source:101","name":"영웅 A","grade":"영웅"}}
+		confirmed={"변신":{"source:202":true,"source:203":true}}
 		return {"ok":true,"category":"변신","result":{"identity":"source:203","name":"전설 C","grade":"전설"}}
 
 	func card523_swap_quote_all() -> Dictionary:
@@ -82,11 +91,21 @@ func _run() -> void:
 	window._choose("source:302")
 	window._swap()
 	check(world.calls[-1][0]=="execute" and world.calls[-1][2]=="source:302","the picked candidate runs with the token")
-	check(not window._confirm_entry(window.cards()[1]).get("ok",true),"a card without a waiting result has nothing to confirm")
+	window._confirm_entry(window.cards()[1])
+	check(window.popup=="confirm","an owned card can be kept without a reroll")
+	window._confirm_result()
+	check(window.cards().size()==1 and window.cards()[0].identity=="source:202","the kept card disappears from the live list")
+	world.confirmed={}
 	window._confirm_entry(window.cards()[0])
 	check(window.popup=="confirm","카드 확정 opens the confirm popup")
 	window._confirm_result()
 	check(world.calls[-1][0]=="confirm" and str(world.calls[-1][1]).begins_with("c") and window.popup=="","카드 확정 runs the confirm token")
+	world.waiting.clear()
+	host.hud.card_collection_state.owned["변신"]["source:203"]=true
+	check(window.cards().size()==1 and window.cards()[0].identity=="source:101","neither the confirmed original nor the received card remains in the list")
+	world.confirmed={}
+	host.hud.card_collection_state.owned["변신"].erase("source:203")
+	world.waiting=[all[0].pending]
 	# The client reveal: CardChange_Gacha after 다시 뽑기, CardChange_Result
 	# after 카드 확정 (only when the UI pack has them; above, without them,
 	# the list stays).
@@ -164,6 +183,10 @@ func _real_pack(pack_dir: String) -> void:
 	window._bind(WINDOW.SLOT,"",[],{},row_out)
 	var first: Node2D=list.content.get_child(0)
 	check(tap_button(window._locate(first,row_out,"Panel/Btn_Select")) and window.popup=="confirm","tapping the authored pending card button mounts the confirmation")
+	window._close_popup()
+	list=window._list(window._scene,window._out,"Nd_PageView/ListView_Swipe")
+	var owned_card: Node2D=list.content.get_child(1)
+	check(tap_button(window._locate(owned_card,row_out,"Panel/Btn_Select")) and window.popup=="confirm" and window.target.identity=="source:101","the actual owned-card confirmation button responds to touch without a pending reroll")
 	window._close_popup()
 	check(tap_button(window._locate(window._scene,window._out,"Btn_Confirm")) and window.popup=="confirm_all","tapping the authored footer opens bulk confirmation")
 	window._close_popup()

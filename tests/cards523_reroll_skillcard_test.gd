@@ -180,6 +180,7 @@ func reroll(world: Node) -> void:
 	check(not world.card523_swap_confirm(str(seventh.confirm_token)).get("ok", true), "a confirm token works once")
 	on_disk = save_data(world)
 	check(not on_disk.card_draw_fusion.owned["변신"].has(target) and on_disk.card_draw_fusion.owned["변신"].get(chosen) == true and (on_disk.card_swap523.pending as Dictionary).is_empty() and int(on_disk.card_swap523.counts["변신"][target]) == 6, "save after confirm: replaced card, no pending, count 6")
+	check(world.card523_swap_confirmed()["변신"].has(target) and world.card523_swap_confirmed()["변신"].has(chosen) and not world.card523_swap_quote("변신",chosen,true).get("can_confirm",false),"both the original and resulting identity close once")
 	# Two independently saved results: quote must not generate candidates or
 	# charge, refusal rolls both back, and one successful save settles both.
 	for idx: int in [2,3]:
@@ -188,21 +189,38 @@ func reroll(world: Node) -> void:
 		var pending_roll: Dictionary = reroll_once(world,"변신",id)
 		check(pending_roll.get("ok",false),"queue result for bulk confirmation")
 	var held_before: Dictionary = swap.state.pending.duplicate(true)
+	var keeper: String=""
+	for row: Dictionary in hero.slice(4):
+		var id: String=str(row.identity)
+		if world.card523_swap_confirmed().get("변신",{}).has(id) or held_before.values().any(func(entry: Dictionary) -> bool:return entry.result==id):continue
+		keeper=id
+		break
+	check(not keeper.is_empty(),"an independent owned card can also be kept")
+	cards.owned["변신"][keeper]=true
+	var kept_only: Dictionary=world.card523_swap_quote("변신",keeper,true)
+	check(kept_only.get("can_confirm",false) and kept_only.get("copies_required",-1)==0,"keep an owned card without drawing or spending")
+	var settled_before: Dictionary=world.card523_swap_confirmed()
 	var cards_before: Dictionary = cards.export_state()
 	var wallet: int = int(world.inventory["다이아"])
 	var before_file: Dictionary = save_data(world)
 	var bulk: Dictionary = world.card523_swap_quote_all()
-	check(bulk.get("count",0)==2 and before_file==save_data(world),"bulk quote offers both results without saving")
+	check(bulk.get("count",0)>=3 and before_file==save_data(world),"bulk quote offers both rerolls and the owned card without saving")
 	world.patch523_owner_state_problem = "test: save refused"
 	var rollback: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
 	world.patch523_owner_state_problem = ""
-	check(not rollback.get("ok",true) and cards.export_state()==cards_before and swap.state.pending==held_before,"bulk refusal rolls both results back")
+	check(not rollback.get("ok",true) and cards.export_state()==cards_before and swap.state.pending==held_before and world.card523_swap_confirmed()==settled_before,"bulk refusal rolls back holdings, pending results and hidden markers")
 	bulk = world.card523_swap_quote_all()
 	var complete: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
-	check(complete.get("count",0)==2 and swap.state.pending.is_empty() and int(world.inventory["다이아"])==wallet and save_data(world).card_swap523.pending.is_empty(),"bulk saves both results without further charge")
+	check(complete.get("count",0)==bulk.get("count",-1) and swap.state.pending.is_empty() and int(world.inventory["다이아"])==wallet and save_data(world).card_swap523.pending.is_empty(),"bulk saves both results without further charge")
+	check(cards.owned["변신"].has(keeper) and save_data(world).card_swap523.confirmed["변신"].has(keeper),"keeping a card preserves ownership and saves removal")
 	check(not world.card523_swap_confirm_all(str(bulk.get("token",""))).get("ok",true),"bulk token is single-use")
 	# Existing owner state on the last copy: TWILIGHT 근사 — moved to the result card.
-	var guarded: String = str(hero[1].identity)
+	var guarded: String = ""
+	for row: Dictionary in hero:
+		if not world.card523_swap_confirmed().get("변신",{}).has(str(row.identity)):
+			guarded=str(row.identity)
+			break
+	if not check(not guarded.is_empty(),"a different card remains eligible for the owner transfer test"):return
 	cards.owned["변신"][guarded] = true; cards.spare["변신"].erase(guarded)
 	world.equipped_catalog["변신"] = world.card_swap523.card_record("변신", guarded)
 	var awaken: Dictionary = world.skill_awakening.progress.duplicate(true)
@@ -250,9 +268,17 @@ func reroll(world: Node) -> void:
 			# 원본 표: 할파스와 같은 덱·등급의 다른 카드가 없으면 다시 뽑기 자체가 성립하지 않는다.
 			check(str(h_quote.get("reason","")).contains("같은 등급"), "할파스: 원본 표의 같은 등급 후보 없음으로만 거부 %s" % str(evidence.halphas))
 		world.halphas_star.progress = star_before
-	var with_spare: Dictionary = reroll_once(world, "변신", guarded)
-	var spare_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", guarded).get("confirm_token", "")))
-	check(with_spare.get("ok", false) and spare_confirm.get("ok", false) and not bool(spare_confirm.used_last_copy) and cards.owned["변신"].get(guarded) == true and not cards.spare["변신"].has(guarded), "with a duplicate, the duplicate is used and the permanent copy stays")
+	var duplicate_card: String=""
+	for row: Dictionary in hero:
+		if not world.card523_swap_confirmed().get("변신",{}).has(str(row.identity)):
+			duplicate_card=str(row.identity)
+			break
+	if not check(not duplicate_card.is_empty(),"separate unconfirmed card for the duplicate test"):return
+	cards.owned["변신"][duplicate_card]=true
+	cards.spare["변신"][duplicate_card]=1
+	var with_spare: Dictionary = reroll_once(world, "변신", duplicate_card)
+	var spare_confirm: Dictionary = world.card523_swap_confirm(str(world.card523_swap_quote("변신", duplicate_card).get("confirm_token", "")))
+	check(with_spare.get("ok", false) and spare_confirm.get("ok", false) and not bool(spare_confirm.used_last_copy) and cards.owned["변신"].get(duplicate_card) == true and not cards.spare["변신"].has(duplicate_card), "with a duplicate, the duplicate is used and the permanent copy stays")
 	# 신화 (ActivateCardAmount 1): one more copy of the same card.
 	var myth: Array = swap.candidates("변신", 32)
 	evidence["myth_candidates"] = myth.size()

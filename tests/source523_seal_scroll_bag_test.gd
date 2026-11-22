@@ -53,7 +53,9 @@ func _exercise() -> void:
 	world.item_instances[seal_id]={"name":BAG_SEAL,"level":0,"element":"","element_level":0,"record":equipment,"sourceId":"30671","bless_state":"normal"}
 	check(world.patch523_equipment.identity(world.item_instances[seal_id])=="30671","the previously saved bare-ID seal box reward remains selectable")
 	var before: Dictionary=world.item_instances[uid].duplicate(true)
-	world.hud.inventory_item_activated.emit(scroll_name+"@@@"+uid)
+	world.hud.refresh_inventory(world.inventory)
+	world.hud.lineage_inventory_ui._select_item(scroll_name+"@@@"+uid)
+	world.hud.lineage_inventory_ui._activate_selected()
 	await process_frame
 	var picker: Node=world.hud.workspace.find_child("Patch523EquipmentInfo",true,false)
 	check(picker!=null and picker.bag_scroll_uid==uid and picker.bag_scroll_id==str(SCROLL_ID),"bag activation opens the seal screen with the exact physical scroll reference")
@@ -80,5 +82,34 @@ func _exercise() -> void:
 	check(left.get("remaining")==8 and left.get("used")==1 and int(world.inventory[scroll_name])==8 and world.item_instances[seal_id].level==1 and world.gold==saved_gold-int(quote.cost),"successful reinforcement consumes one physical scroll and persists the original seal level")
 	world._load_game(true)
 	check(STOCK.proof(world,uid).get("remaining")==8 and world.item_instances.get(seal_id,{}).get("level")==1,"receipt and seal reload together")
+	var legacy_uid: String=str(world.next_item_instance_id)
+	world.next_item_instance_id+=1
+	world.item_instances[legacy_uid]={"name":scroll_name,"level":0,"record":world.patch523_equipment.record(str(SCROLL_ID)),"bless_state":"normal"}
+	world.inventory[scroll_name]+=1
+	var legacy_quote: Dictionary=world.patch523_seal_quote(seal_id,str(SCROLL_ID),legacy_uid)
+	if not legacy_quote.get("ok",false):
+		var fields=preload("res://scripts/loot/current523_native_fields.gd")
+		var saved_seal: Dictionary=fields.full(world.item_instances[seal_id].record)
+		var definition: Dictionary=fields.full(world.patch523_equipment.record("30671"))
+		print("SEAL_RECORD_FIELDS ",definition.keys().filter(func(key: Variant)->bool:return definition[key]!=saved_seal.get(key)), " · saved only ",saved_seal.keys().filter(func(key: Variant)->bool:return not definition.has(key)))
+	check(legacy_quote.get("legacy_scroll_uid","")==legacy_uid,"legacy pinned scrolls without receipts get a single-unit quote: "+str(legacy_quote))
+	var seal_record: Dictionary=world.item_instances[seal_id].record
+	var changed: Dictionary=seal_record.duplicate(true)
+	changed["enhancement_options"]={"0":{"xp_pct":9999}}
+	world.item_instances[seal_id].record=changed
+	check(not world.patch523_seal_quote(seal_id,str(SCROLL_ID),legacy_uid).get("ok",false),"tooltip differences can pass, but altered enhancement options cannot")
+	world.item_instances[seal_id].record=seal_record
+	world.item_instances[legacy_uid][STOCK.RECEIPT]={"schema":1}
+	check(not world.patch523_seal_quote(seal_id,str(SCROLL_ID),legacy_uid).get("ok",false),"an invalid receipt never falls back to legacy use")
+	world.item_instances[legacy_uid].erase(STOCK.RECEIPT)
+	if legacy_quote.get("ok",false):
+		if is_instance_valid(world.hud.enhancement_reveal):world.hud.enhancement_reveal.queue_free()
+		for seed_value: int in range(1,100):
+			probe.seed=seed_value
+			if probe.randf_range(0.0,100.0)<float(legacy_quote.success):
+				world.rng.seed=seed_value
+				break
+		world._patch523_attempt_seal(seal_id,str(SCROLL_ID),legacy_uid)
+		check(not world.item_instances.has(legacy_uid) and STOCK.proof(world,uid).get("remaining")==8 and int(world.inventory[scroll_name])==8 and world.item_instances[seal_id].level==2,"using the legacy unit leaves the other scroll receipt unchanged")
 	world.queue_free()
 	await process_frame
