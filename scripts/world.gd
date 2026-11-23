@@ -12294,7 +12294,44 @@ func install_source_dungeon_pack(path: String) -> Dictionary:
 	return result
 
 func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
+	var competition: Script=load("res://scripts/dungeons/competition_dungeon523.gd")
+	if competition.FAMILY.has(kind): return competition.entries(int(competition.FAMILY[kind]))
 	return source_dungeons.entries(kind,hard)
+
+func competition523_quote(id: int) -> Dictionary:
+	return preload("res://scripts/dungeons/competition_dungeon523.gd").quote(self,id)
+
+func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
+	if death_recovery.blocked() or int(hp)<=0 or player.movement_locked or player.is_stunned() or player.is_held() or player.is_feared() or not charge_skill.is_empty() or patch523_npc_spells.blocks("CannotTeleport"):
+		return {"ok":false,"reason":"현재 이동 상태에서는 던전 입구에 갈 수 없습니다."}
+	var fresh: Dictionary=competition523_quote(id)
+	if not fresh.get("ok",false):return fresh
+	if ticket!=fresh.ticket:return {"ok":false,"reason":"목적지 또는 비용이 바뀌었습니다. 다시 선택하세요."}
+	if (fresh.changes as Dictionary).is_empty():return {"ok":false,"reason":"원본 비용 저장을 확인할 수 없습니다."}
+	var row: Dictionary=fresh.row
+	var controller: RefCounted=_aden_play_controller()
+	var policy: String=preload("res://scripts/dungeons/competition_dungeon523.gd").POLICY
+	var moved: bool=controller.call("enter_source_land",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
+	var state: Dictionary=controller.call("last_source_transition")
+	current523_aden_play_active=bool(controller.get("active"))
+	if not moved or not state.get("saved",false):
+		var detail: String=str(controller.get("problem"))
+		return {"ok":false,"reason":"입구 이동 보류 · "+(detail if not detail.is_empty() else "지도 또는 저장 확인 필요"),"uncertain":bool(state.get("uncertain",false))}
+	if fresh.changes.has("inventory"):
+		inventory=fresh.changes.inventory
+		hud.refresh_inventory(inventory)
+		_update_hud()
+	if player.auto_enabled:player.set_auto_enabled(false)
+	return {"ok":true,"saved":true,"land_id":row.arrival.land_id,"cost":row.tariff.TeleportCost,
+		"reason":str(row.name)+" 원본 입구로 이동했습니다 · 오프라인 탐방"}
+
+func competition523_return() -> Dictionary:
+	var model: Script=preload("res://scripts/dungeons/competition_dungeon523.gd")
+	if model.lobby(int(orim_current_land().get("land_id",-1))).is_empty():return {"ok":false,"reason":"현재 월드 던전 입구에 있지 않습니다."}
+	# Preserve the wallet, but require the same atomic cursor save as a paid entry.
+	var permitted: Dictionary=preload("res://scripts/maps/current523_map_travel_payment.gd").quote(self,0)
+	if not permitted.get("ok",false):return permitted
+	return return_current523_source_to_aden({"gold":gold})
 
 func source_dungeon_entry_check(kind: String, identifier: int) -> Dictionary:
 	return source_dungeon_runs.check(identifier) if kind == "tower" else source_dungeons.entry_check(kind,identifier,level)

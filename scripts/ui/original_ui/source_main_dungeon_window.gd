@@ -36,6 +36,7 @@ extends RefCounted
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Rows=preload("res://scripts/resources/current523_definition_rows.gd")
+const COMPETITION=preload("res://scripts/dungeons/competition_dungeon523.gd")
 const HelpBox=preload("res://scripts/ui/original_ui/source_main_help_box.gd")
 const ROOT="UI/Mission/Mission_Dungeon_All.csb"
 const TAB="UI/Mission/Mission_List_Dungeon.csb"
@@ -59,7 +60,7 @@ const REQUIRED: Array[String]=[ROOT,TAB,TOWER,ORIM,SPECIAL,SPECIAL_ROW,TIME,TIME
 ## Mission_Dungeon_All_Layout in MissionScene (600, 337.5).
 const LAYOUT_POSITION=Vector2(600.0,-337.5)
 ## Tab order: UIDungeonCategory ViewOrder (특수 0, 시련 1), then 오림.
-const TABS: Array=[["special","특수 던전"],["tower","시련"],["orim","오림의 흔적"]]
+const TABS: Array=[["special","특수 던전"],["tower","시련"],["orim","오림의 흔적"],["world","월드 던전"],["master","마스터 던전"]]
 ## 시련 tab (user decision 2026-11-16): the original 시련 page
 ## Mission_Dungeon_Trial lists 시련의 탑 (this window's TrialTower page, whose
 ## Btn_Back returns here) and 시련 던전 (the Dungeon_Trial_All window over the
@@ -74,7 +75,7 @@ const PAGES={"special":"Mission_Dungeon_Special","tower":"Mission_Dungeon_TrialT
 ## Pages of Mission_Dungeon_All this window never mounts (party excluded).
 const OTHER: Array[String]=["Mission_Dungeon_MasterDungeon","Mission_Dungeon_GlobalMaster","Mission_Dungeon_Competition_Theberas","Mission_Dungeon_Competition_Lastavard","Mission_Dungeon_Siege","Mission_Dungeon_Defense","Mission_Dungeon_Arena","Mission_Dungeon_ElfDefense","Mission_Dungeon_Season","Mission_Dungeon_PartyDungeon","Fx_Loading"]
 ## The existing view's families (source_dungeon_view.FAMILIES).
-const FAMILY={"tower":0,"tower_hard":1,"orim":2,"orim_hard":3,"special":4,"rechargers":5}
+const FAMILY={"tower":0,"tower_hard":1,"orim":2,"orim_hard":3,"special":4,"rechargers":5,"world":6,"master":7}
 const P_TOWER="Mission_Dungeon_TrialTower/"
 const P_ORIM="Mission_Dungeon_TracesOrim/"
 const P_SPECIAL="Mission_Dungeon_Special/"
@@ -121,6 +122,7 @@ class Scroller extends RefCounted:
 	var minimum: float=0.0
 	var drag: bool=false
 	var moved: float=0.0
+	var visible_row: Callable
 
 	func bind(list_content: Node2D, row_nodes: Array[Node2D], row_pitch: float, view_size: float, along_x: bool) -> void:
 		content=list_content
@@ -161,6 +163,7 @@ class Scroller extends RefCounted:
 			var start: float=pitch*float(i)+at
 			# Only whole rows show: the list does not clip a row cut by its edge.
 			items[i].visible=start>=-0.5 and start+pitch<=view+0.5
+			if items[i].visible and visible_row.is_valid():visible_row.call(items[i],i)
 
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
@@ -214,6 +217,9 @@ func _family() -> String:
 	if time_open:return "rechargers"
 	if tab in ["tower","orim"] and hard:return tab+"_hard"
 	return tab
+
+func _competition_page() -> bool:
+	return COMPETITION.FAMILY.has(tab)
 
 ## The existing view on this window's family (its _refresh reads the rows
 ## from world.source_dungeon_entries), with `row` selected.
@@ -302,7 +308,7 @@ func _stage() -> Dictionary:
 	spec["Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["ListView_Button"]={"input":Callable(self,"_ignore_input")}
 	for page: String in PAGES:
-		if page==tab and not _trial_mode():spec[PAGES[page]]={"visible":true}
+		if (page==tab or (page=="special" and _competition_page())) and not _trial_mode():spec[PAGES[page]]={"visible":true}
 		else:spec[PAGES[page]]={"exclude":true}
 	if _trial_mode():spec.merge(_trial_spec(world),true)
 	else:spec["Mission_Dungeon_Trial"]={"exclude":true}
@@ -339,7 +345,7 @@ func _stage() -> Dictionary:
 				if filled.get("ok",false) and _pack.manifest.get("scenes",{}).has(BUFF_ROW):
 					var buffs: Dictionary=_fill_buff_rows(next,out,P_ORIM+"Nd_OrimInfo_All/Nd_Info/Nd_Buff/ListView",ORIM,_orim_buff_rows(world))
 					filled=buffs if not buffs.get("ok",false) else filled.merged({"buffs":int(buffs.buffs),"pictures":int(filled.get("pictures",0))+int(buffs.pictures)},true)
-			_:filled=_fill_special(next,out,world)
+			_:filled=_fill_competition(next,out,world) if _competition_page() else _fill_special(next,out,world)
 		pictures+=int(filled.get("pictures",0))
 	if filled.get("ok",false) and time_open:
 		filled=_fill_time(next,out,world,time_rows)
@@ -580,12 +586,13 @@ func _fill_tabs(root: Node2D, out: Dictionary) -> Dictionary:
 	for i: int in range(TABS.size()):
 		var id: String=str(TABS[i][0])
 		var on: bool=id==tab
+		var caption: String=COMPETITION.title(id) if COMPETITION.FAMILY.has(id) else str(TABS[i][1])
 		var built: Dictionary=_tree.scene_of(TAB,{
 			"Panel":{"input":Callable(self,"_ignore_input")},
 			"Panel/Btn_Normal":{"visible":not on,"activate":Callable(self,"_set_tab").bind(id)},
 			"Panel/Btn_Pressed":{"visible":on,"activate":Callable(self,"_set_tab").bind(id)},
-			"Btn_Normal/Label":{"role":"source_text","text":str(TABS[i][1])},
-			"Btn_Pressed/Label":{"role":"source_text","text":str(TABS[i][1])},
+			"Btn_Normal/Label":{"role":"source_text","text":caption},
+			"Btn_Pressed/Label":{"role":"source_text","text":caption},
 			"Panel/Sp_RedDot":{"visible":false},
 		},{})
 		if not built.get("ok",false):return built
@@ -783,13 +790,14 @@ func _orim_spec(world: Node, view: Object) -> Dictionary:
 
 func _special_spec() -> Dictionary:
 	var spec: Dictionary={}
-	spec[P_SPECIAL+"Label_Notice"]={"exclude":true}
+	spec[P_SPECIAL+"Label_Notice"]={"role":"source_text","text":"오프라인 원본 입구 이동 · 서버 던전 입장 아님" if not rows.is_empty() else "원본 523 던전 정의를 설치하세요."} if _competition_page() else {"exclude":true}
 	spec[P_SPECIAL+"Nd_Touchable"]={"exclude":true}
 	spec[P_SPECIAL+"Fx_HighLight"]={"exclude":true}
 	spec[P_SPECIAL+"ListView_Daily"]={"input":Callable(_special,"input")}
 	return spec
 
 func _fill_special(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
+	_special.visible_row=Callable()
 	var content: Variant=_list_content(root,out,P_SPECIAL+"ListView_Daily")
 	if not content is Node2D:return _fail("source_dungeon_window_special_list_missing")
 	var size: Vector2=NamedTree.list_size(out,_pack,SPECIAL,"ListView_Daily")
@@ -837,6 +845,60 @@ func _fill_special(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
 		Storage_forward(built.scene,row_out,"Panel/Button",_special)
 	_special.bind(content,built_rows,width+SPECIAL_GAP,size.x,true)
 	return {"ok":true,"pictures":0}
+
+## Uses the installed source mission tab/card component, not mock-up artwork.
+## The competition card slot only accepts the exact source role for this ID.
+func _fill_competition(root: Node2D, out: Dictionary, world: Node) -> Dictionary:
+	var content: Variant=_list_content(root,out,P_SPECIAL+"ListView_Daily")
+	if not content is Node2D:return _fail("source_dungeon_window_competition_list_missing")
+	var size: Vector2=NamedTree.list_size(out,_pack,SPECIAL,"ListView_Daily")
+	var width: float=float(_tree.row_panel(SPECIAL_ROW).size[0])
+	var list: Array[Node2D]=[]
+	var here: int=int(world.orim_current_land().get("land_id",-1))
+	var lobby: Dictionary=COMPETITION.lobby(here)
+	for i: int in range(rows.size()):
+		var entry: Dictionary=rows[i]
+		var id: int=int(entry.id)
+		var can_return: bool=id in lobby.get("ids",[])
+		var quote: Dictionary=world.competition523_quote(id)
+		var label: String=str(entry.name)
+		if rows.any(func(v: Dictionary) -> bool: return v.id!=id and v.name==entry.name):label+=" #%d" % id
+		var price: String=number_text(int(entry.tariff.get("TeleportCost",0)))
+		var adena: bool=int(entry.tariff.get("CurrencyID",0))==1
+		var spec: Dictionary={
+			"Panel":{"input":Callable(_special,"input")},
+			# NamedTree supplies the external slot role when the installed
+			# source manifest declares it; older packs keep a working list.
+			"Panel/Img_Special":{"visible":false},
+			"Panel/Button":{"activate":Callable(self,"_competition_pressed").bind(id)},
+			"Panel/Label_Dungeon":{"role":"source_text","text":label},
+			"Panel/Label_Charge":{"role":"source_text","text":"기란으로 귀환" if can_return else (price if adena else price+" "+str(entry.currency_name))},
+			"Panel/Sp_Adena":{"visible":adena and not can_return},
+			"Panel/Nd_Lock":{"visible":not can_return and not quote.get("ok",false)},
+			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"이동 보류 · 눌러서 이유 확인"},
+		}
+		for name: String in ["Btn_Fix","Btn_Item","Btn_Notice","Btn_Share","Btn_HelpBox","Nd_Penalty","Nd_Round","Nd_Closed","Nd_Timebar","Nd_Timebar_Share","Nd_Time","Sp_New","Sp_Event","Label_Retry"]:spec["Panel/"+name]={"exclude":true}
+		var row_out: Dictionary={}
+		var built: Dictionary=_tree.scene_of(SPECIAL_ROW,spec,row_out)
+		if not built.get("ok",false):return built
+		var node: Node2D=built.scene
+		node.set_meta("competition523_dungeon_id",id)
+		node.set_meta("competition523_art_tree",row_out)
+		_add_column(content,SPECIAL_ROW,node,i,size,SPECIAL_GAP)
+		list.append(node)
+		Storage_forward(node,row_out,"Panel/Button",_special)
+	_special.visible_row=Callable(self,"_competition_picture")
+	_special.bind(content,list,width+SPECIAL_GAP,size.x,true)
+	return {"ok":true,"pictures":list.filter(func(n: Node2D) -> bool: return n.get_meta("competition523_art_loaded",false)).size()}
+
+func _competition_picture(node: Node2D, _index: int) -> void:
+	if not node.has_meta("competition523_art_tree"):return
+	var out: Dictionary=node.get_meta("competition523_art_tree")
+	node.remove_meta("competition523_art_tree")
+	var info: Dictionary=COMPETITION.picture(COMPETITION.entry(int(node.get_meta("competition523_dungeon_id"))))
+	var shown: bool=_apply_picture(node,out,"Panel/Img_Special",info)
+	node.set_meta("competition523_art_status","source_competition_entrance_slot_unavailable" if info.get("ok",false) and not shown else str(info.get("status","")))
+	node.set_meta("competition523_art_loaded",shown)
 
 ## --- 시련 (Mission_Dungeon_Trial) -------------------------------------------------
 
@@ -1189,6 +1251,27 @@ func _special_pressed(i: int) -> Dictionary:
 			if hud!=null:hud.show_message("%s에 입장했습니다." % title)
 			return
 		_notice(bound))
+
+func _competition_pressed(id: int) -> Dictionary:
+	if _special.moved>12.0:return {"ok":true,"ignored_after_drag":true}
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if hud==null:return _fail("source_dungeon_window_host_unavailable")
+	var world: Node=hud.get_parent()
+	var here: Dictionary=COMPETITION.lobby(int(world.orim_current_land().get("land_id",-1)))
+	if id in here.get("ids",[]):
+		return _confirm("원본 입구 · 귀환","기란 마을로 돌아갑니다. 이동 비용 없음.","귀환",func() -> void:
+			var result: Dictionary=world.competition523_return()
+			hud.show_message(str(result.get("reason","귀환 보류")))
+			if result.get("ok",false):call_deferred("_close_requested"))
+	var quote: Dictionary=world.competition523_quote(id)
+	if not quote.get("ok",false):
+		hud.show_message(str(quote.get("reason","입구 이동 보류")))
+		return {"ok":false,"handled":true,"blocked":str(quote.get("reason",""))}
+	var entry: Dictionary=quote.row
+	return _confirm("원본 입구 이동 · 오프라인","%s\n이동 비용: %s %s\n원본 서버·전투 입장이 아닌 입구 탐방입니다." % [str(entry.name),number_text(int(entry.tariff.TeleportCost)),str(entry.currency_name)],"입구 이동",func() -> void:
+		var result: Dictionary=world.competition523_enter(id,quote.ticket)
+		hud.show_message(str(result.get("reason","입구 이동 보류")))
+		if result.get("ok",false):call_deferred("_close_requested"))
 
 func _recharge_pressed(i: int) -> Dictionary:
 	if _time.moved>12.0:return {"ok":true,"ignored_after_drag":true}

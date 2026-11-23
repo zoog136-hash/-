@@ -27,11 +27,11 @@ func _run() -> void:
 	check(WINDOW.TIME=="UI/Mission/Mission_Popup_Time.csb" and WINDOW.TIME_ROW=="UI/Mission/Mission_List_Time.csb" and WINDOW.SPECIAL_ROW=="UI/Mission/Mission_DungeonSpecial_Btn.csb","시간 충전석 is Mission_Popup_Time; special rows are Mission_DungeonSpecial_Btn")
 	check(WINDOW.OTHER.has("Mission_Dungeon_PartyDungeon") and not WINDOW.OTHER.has("Mission_Dungeon_Trial") and not WINDOW.OTHER.has("Mission_Dungeon_TrialTower"),"party and the other categories are never mounted")
 	check(WINDOW.TRIAL=="UI/Mission/Mission_Dungeon_Trial.csb" and WINDOW.TRIAL_ROW=="UI/Mission/Mission_DungeonTrial_Btn.csb" and WINDOW.TRIAL_ROWS==[["tower","시련의 탑"],["dungeon","시련 던전"]] and not WINDOW.REQUIRED.has(WINDOW.TRIAL),"the 시련 tab lists 시련의 탑 and 시련 던전 on Mission_Dungeon_Trial (optional members)")
-	check(WINDOW.FAMILY=={"tower":0,"tower_hard":1,"orim":2,"orim_hard":3,"special":4,"rechargers":5},"the families are the existing view's")
+	check(WINDOW.FAMILY=={"tower":0,"tower_hard":1,"orim":2,"orim_hard":3,"special":4,"rechargers":5,"world":6,"master":7},"the existing families keep their indices and both new tabs match the view")
 	check(WINDOW.LAYOUT_POSITION==Vector2(600.0,-337.5),"the window sits at MissionScene's Mission_Dungeon_All_Layout")
 	var tabs: Array=[]
 	for pair: Array in WINDOW.TABS:tabs.append(pair[0])
-	check(tabs==["special","tower","orim"],"tabs follow UIDungeonCategory ViewOrder (특수, 시련), then 오림")
+	check(tabs==["special","tower","orim","world","master"],"existing tabs plus world and master in their original relative order")
 	var pack:=FakePack.new()
 	var host:=Node.new()
 	check(WINDOW.new().configure(pack,host).get("member")==WINDOW.ROOT,"the window fails closed without its CSBs")

@@ -1,6 +1,7 @@
 extends VBoxContainer
 ## Game menu view for verified dungeon declarations; actions expose actual readiness.
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+const COMPETITION = preload("res://scripts/dungeons/competition_dungeon523.gd")
 var world: Node
 var family: OptionButton
 var listing: ItemList
@@ -20,7 +21,7 @@ var play_buttons: Dictionary = {}
 var play_settings_dialog: AcceptDialog
 var play_settings_text: TextEdit
 var orim_hero: OptionButton
-const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false]]
+const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false],["world",false],["master",false]]
 
 func configure(controller: Node) -> void:
 	world = controller
@@ -33,6 +34,7 @@ func configure(controller: Node) -> void:
 	family.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for caption: String in ["시련의 탑 · 일반","시련의 탑 · 하드","오림의 흔적 · 일반","오림의 흔적 · 하드","특수던전","시간 충전석"]:
 		family.add_item(caption)
+	for kind: String in ["world", "master"]: family.add_item(COMPETITION.title(kind))
 	family.item_selected.connect(func(_index: int) -> void: _refresh())
 	tools.add_child(family)
 	var load_button := Button.new()
@@ -239,6 +241,7 @@ func _refresh() -> void:
 	reward_mode.visible = _kind() == "tower"
 	condition_button.visible = _kind() != "rechargers"
 	condition_button.disabled = rows.is_empty()
+	condition_button.text = "입구 이동 조건" if COMPETITION.FAMILY.has(_kind()) else "입장 조건 확인"
 	for button: Button in execution_buttons.values(): button.visible = _kind() == "tower"; button.disabled = true
 	if rows.is_empty():
 		notice.text = "던전 자료를 불러오면 입장 조건과 보상을 확인할 수 있습니다."
@@ -246,7 +249,10 @@ func _refresh() -> void:
 		_update_play();return
 	notice.text = "%d개 항목 · %s" % [rows.size(),"시간 충전 연결 준비 중" if _kind() == "rechargers" else "입장·전투 연결 준비 중"]
 	for entry: Dictionary in rows:
-		if _kind() == "special":
+		if COMPETITION.FAMILY.has(_kind()):
+			var saved_index: int=listing.add_item("%s · #%d" % [str(entry.name),int(entry.id)])
+			listing.set_item_metadata(saved_index,{"competition523_dungeon_id":entry.id})
+		elif _kind() == "special":
 			var names: Array[String] = []
 			for destination: Dictionary in entry.destinations: names.append(str(destination.place.name))
 			listing.add_item(" / ".join(names) if not names.is_empty() else "목적지 확인 필요")
@@ -300,7 +306,23 @@ func _select(index: int) -> void:
 	selected = index
 	var entry: Dictionary = rows[index]
 	var lines: Array[String] = []
-	if _kind() == "rechargers":
+	if COMPETITION.FAMILY.has(_kind()):
+		var quote: Dictionary=world.competition523_quote(int(entry.id))
+		var returning: bool=_competition_is_here(entry)
+		condition_button.text="기란으로 귀환" if returning else ("원본 입구 이동" if quote.get("ok",false) else "이동 보류 이유")
+		var art: Dictionary=COMPETITION.picture(entry)
+		listing.set_item_icon(index,art.get("texture") as Texture2D)
+		listing.set_item_metadata(index,{"competition523_dungeon_id":entry.id,"source_art_status":art.get("status","")})
+		lines.append(str(entry.name)+" · 원본 입구")
+		lines.append("도착: "+str(entry.arrival.get("territory_name","원본 이동 정의 없음")))
+		var levels: String="필요 Lv.%d" % int(entry.levels.min)
+		if int(entry.levels.max)>0:levels+="–%d" % int(entry.levels.max)
+		lines.append("비용: %d %s · %s" % [int(entry.tariff.get("TeleportCost",0)),str(entry.currency_name),levels])
+		lines.append("오프라인 입구 이동만 지원하며 서버 입장·전투와는 다릅니다.")
+		if not returning and not quote.get("ok",false):lines.append(str(quote.get("reason","이동 보류")))
+		if not art.get("ok",false):lines.append("원본 입구 이미지 미설치 또는 확인 불가")
+		notice.text="%d개 원본 던전 · 일반 이동과 서버 입장을 구분합니다." % rows.size()
+	elif _kind() == "rechargers":
 		var preview: Dictionary = world.source_dungeon_recharge_preview(int(entry.item.row.ID))
 		_set_recharger_icons(preview.item.row,str(preview.item.name))
 		lines.append(str(preview.item.name))
@@ -392,9 +414,35 @@ func _save_local_settings() -> void:
 func _check_entry() -> void:
 	if selected < 0 or selected >= rows.size(): return
 	var entry: Dictionary = rows[selected]
+	if COMPETITION.FAMILY.has(_kind()):
+		_competition_check(entry)
+		return
 	var identifier := int(entry.row.ID) if _kind() == "special" else int(entry.stage.ID)
 	var result: Dictionary = world.source_dungeon_entry_check(_kind(),identifier)
 	notice.text = " ".join(result.get("reasons",[]))
+
+func _competition_is_here(entry: Dictionary) -> bool:
+	var land_id: int = int(world.orim_current_land().get("land_id",-1))
+	return entry.id in COMPETITION.lobby(land_id).get("ids",[])
+
+func _competition_check(entry: Dictionary) -> void:
+	var hud: Node=world.hud
+	if _competition_is_here(entry):
+		hud.confirm_action("원본 입구 · 귀환","기란 마을로 돌아갑니다. 이동 비용 없음.","귀환",func(_count: int) -> void:
+			var result: Dictionary=world.competition523_return()
+			hud.show_message(str(result.get("reason","귀환 보류")))
+			if result.get("ok",false):hud.call_deferred("_close_workspace"))
+		return
+	var id: int=int(entry.id)
+	var quote: Dictionary=world.competition523_quote(id)
+	if not quote.get("ok",false):
+		notice.text=str(quote.get("reason","이동 보류"))
+		hud.show_message(notice.text)
+		return
+	hud.confirm_action("원본 입구 이동 · 오프라인","%s\n비용: %d %s\n원본 서버·전투 입장은 아닙니다." % [str(entry.name),int(entry.tariff.TeleportCost),str(entry.currency_name)],"입구 이동",func(_count: int) -> void:
+		var result: Dictionary=world.competition523_enter(id,quote.ticket)
+		hud.show_message(str(result.get("reason","이동 보류")))
+		if result.get("ok",false):hud.call_deferred("_close_workspace"))
 
 
 func _update_actions(entry: Dictionary) -> void:
