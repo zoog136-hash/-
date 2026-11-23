@@ -24,10 +24,20 @@ static func adapt(legacy: Dictionary, catalog: Dictionary) -> Dictionary:
 		return result
 	var source_aura_component: bool=preload("res://scripts/resources/retired_assets.gd").usable("res://scripts/animation/source_awakening_aura.gd")
 	var identities: Dictionary={}
+	var base_limit_sets: Dictionary={}
 	for category: String in Cards.CATEGORIES:
 		for record: Dictionary in catalog.get(category,[]):
 			var identity: String=Cards.card_id(record)
 			identities[identity]=int(identities.get(identity,0))+1
+			var raw: Dictionary=record.get("source_original",{})
+			if raw.get("source_snapshot")=="patch523" and int(raw.get("server_limit_set_id",0))>0:
+				base_limit_sets[int(raw.server_limit_set_id)]=true
+	# Base-card activation is independent of the optional awakening slot.
+	# Use every current base card's exact server rows, including cards that
+	# have no source awakening definition.
+	for limit_id: int in base_limit_sets:
+		for row: Dictionary in Source.related("ServerLimit","ServerLimitSetID",limit_id):
+			if Source.declared_exclusion("ServerLimit",row).is_empty():result.patch523_server_limits.append(row)
 	for category: String in Cards.CATEGORIES:
 		for record: Dictionary in catalog.get(category,[]):
 			var identity: String=Cards.card_id(record)

@@ -3,11 +3,22 @@ extends RefCounted
 const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
 const RELIC=preload("res://scripts/cards/patch523_slot_data.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const AREA_INVOKES := {
+	9512:{"spell":64022,"target_kind":374,"siege_kind":234,"fixed":false},
+	20894:{"spell":119094,"target_kind":10,"siege_kind":0,"fixed":true},
+}
+const SOURCE_AREA_POLICY=preload("res://data/skills/current523_distance_input_policy.json")
 const DARKNESS_OPTION := 15138 # InvokeOption -> SpellClass 86588 -> BuffClass 75428
 const DARKNESS_STATUS := {"status":"dark","status_chance":1.0}
 const DARKNESS_SPELL_UNITS := {
 	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
 	"BuffClassID":"BuffClassID","SpecialResistanceTypeID":"SpecialResistanceTypeID",
+}
+const ANTARAS_HOLD_OPTION := 751
+const ANTARAS_HOLD_UNITS := {
+	"SpecialResistanceTypeID":"SpecialResistanceTypeID","BuffClassID":"BuffClassID",
+	"SpellDebuffMinDuration":"Seconds","SpellDebuffMaxDuration":"Seconds",
+	"SpellHitProbabilityBase":"Percentage","SpellHitProbabilityMax":"Percentage",
 }
 var runtime_ref: WeakRef
 var runtime: RefCounted:
@@ -49,7 +60,13 @@ func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void
 	if row.is_empty():return
 	var rows: Array=[]
 	for effect: Dictionary in row.effects:
-		if effect.type.Name=="InvokeOption":rows.append(effect)
+		if effect.type.Name!="InvokeOption":continue
+		if not secondary and int(row.card.ID)==11692 and int(effect.bonus.BonusApplicationTargetID)==ANTARAS_HOLD_OPTION:
+			var primary_effect: Dictionary=effect.duplicate()
+			primary_effect["base_card"]=true
+			rows.append(primary_effect)
+		else:
+			rows.append(effect)
 	if rows.is_empty():return
 	_append_base_invokes(out,identity,row.card,rows)
 
@@ -141,6 +158,9 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if float(cooldowns.get(key,0))>0:continue
 		var spell: Dictionary=_invoke_spell(int(option.Param1))
 		if spell.is_empty():continue
+		if effect.get("base_card",false) and int(option.ID)==ANTARAS_HOLD_OPTION:
+			_apply_antaras_hold(effect,spell,target,key)
+			continue
 		var fixed: Dictionary=_spell_values(spell,["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount","FixedMagicDamage","IgnoreMagicResistance","IgnoreDamageReductionCalculation"])
 		if _free_spell(spell,2) and fixed.size()==6 and int(fixed.FixedMagicDamage)==1 and int(fixed.IgnoreMagicResistance)==1 and int(fixed.IgnoreDamageReductionCalculation)==1:
 			if int(fixed.SpellDamageBase)<0 or int(fixed.SpellDamageDiceNumber)<0 or int(fixed.SpellDamageDiceSpotCount)<1:continue
@@ -154,6 +174,8 @@ func on_hit(target: Node,attack_kind: String="melee",main_target: bool=true,by_s
 		if effect.get("base_card",false):
 			if int(option.ID)==DARKNESS_OPTION:
 				_apply_base_darkness(effect,spell,target,key)
+			elif AREA_INVOKES.has(int(option.ID)):
+				_apply_base_area_proc(effect,spell,target,key)
 			else:
 				_apply_base_damage_proc(effect,spell,target,key)
 			continue
@@ -177,6 +199,34 @@ func _finish_debuff(option: Dictionary,raw: Dictionary,target: Node,cooldown_key
 	for ref: WeakRef in targets:
 		if ref.get_ref()==target:return
 	targets.append(weakref(target))
+
+func _apply_antaras_hold(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
+	var option: Dictionary=effect.option
+	if not target is TwilightMonster or not _single_target_base_spell(spell,option) or target.source_option_petrified() or target.status_immunities.has("lapidification"):return
+	var raw: Dictionary=spell.source_spell
+	if int(raw.ID)!=33102 or not option.Param4 or not roll(int(effect.weight)):return
+	var values: Dictionary={}
+	for row: Dictionary in spell.effects:
+		var kind: String=row.type.Name
+		if values.has(kind) or ANTARAS_HOLD_UNITS.get(kind)!=row.unit.Name or int(row.link.MinSpellLevel)!=0 or int(row.bonus.BonusApplicationTypeID)!=0 or int(row.bonus.BonusApplicationTargetID)!=0:return
+		values[kind]=int(row.bonus.Value)
+	if values.size()!=6 or int(values.BuffClassID)!=115 or int(values.SpecialResistanceTypeID)!=2 or float(values.SpellDebuffMinDuration)<=0.0 or float(values.SpellDebuffMaxDuration)<float(values.SpellDebuffMinDuration):return
+	var hit: int=mini(int(values.SpellHitProbabilityBase),int(values.SpellHitProbabilityMax))
+	# The original row exceeds 100%, which saturates under the existing
+	# proc roll. Then apply the host's axis-2 and boss control policy.
+	var world: Node=runtime.world
+	var resistance: float=target.source_equipment_modifier("status_resistance_2")
+	var chance: float=clampf(float(hit)/1000000.0,0.0,1.0)*(1.0-clampf(resistance/100.0,0.0,1.0))
+	var duration_factor: float=1.0
+	if target.is_boss:
+		var policy: Dictionary=world.PATCH523_ENHANCE.policy()
+		chance*=clampf(float(policy.get("invoke_debuff_boss_chance_factor",0.35)),0.0,1.0)
+		duration_factor=clampf(float(policy.get("invoke_debuff_boss_duration_factor",0.35)),0.0,1.0)
+	if chance<=0.0 or duration_factor<=0.0 or (chance<1.0 and world.rng.randf()>=chance):return
+	var buffs: Array=INPUT.invoke_buff(str(values.BuffClassID))
+	var duration: float=world.rng.randf_range(values.SpellDebuffMinDuration,values.SpellDebuffMaxDuration)*duration_factor
+	if target.apply_source_option_petrification(str(effect.origin),duration,buffs):
+		_finish_debuff(option,raw,target,cooldown_key)
 
 func _apply_base_darkness(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
 	if not target is TwilightMonster or not _single_target_base_spell(spell,effect.option):return
@@ -204,11 +254,55 @@ func _apply_base_darkness(effect: Dictionary,spell: Dictionary,target: Node,cool
 
 func _single_target_base_spell(spell: Dictionary, option: Dictionary) -> bool:
 	if not _free_spell(spell,2):return false
-	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
-		if int(option.get(field,0))!=0:return false
+	if not _ordinary_attack_invoke(option):return false
 	var raw: Dictionary=spell.source_spell
 	# The supported single-target source profile uses AllButMe.
-	return not option.get("IsAmmoAttack",false) and int(raw.get("TargetKindID",-1))==11 and int(raw.get("SiegeTargetKindID",-1))==0 and raw.get("IncludeTargettingTarget")==true
+	return int(raw.get("TargetKindID",-1))==11 and int(raw.get("SiegeTargetKindID",-1))==0 and raw.get("IncludeTargettingTarget")==true
+
+func _ordinary_attack_invoke(option: Dictionary) -> bool:
+	for field: String in ["AttackTypeID","WeaponGroupID","Param2","Param3","Param5","ShieldTypeID","SuccessedInvokeOptionID","TargetKind","SiegeTargetKind"]:
+		if int(option.get(field,0))!=0:return false
+	return not option.get("IsAmmoAttack",false)
+
+func _apply_base_area_proc(effect: Dictionary,spell: Dictionary,target: Node,cooldown_key: String) -> void:
+	var world: Node=runtime.world
+	if not target is TwilightMonster or world.original_skills==null or world.monsters_root==null:return
+	var option: Dictionary=effect.option
+	if not _ordinary_attack_invoke(option) or not option.Param4:return
+	var raw: Dictionary=spell.source_spell
+	var profile: Dictionary=AREA_INVOKES[int(option.ID)]
+	if int(raw.ID)!=profile.spell or int(raw.TargetKindID)!=profile.target_kind or int(raw.SiegeTargetKindID)!=profile.siege_kind:return
+	if raw.IncludeTargettingTarget!=true or bool(raw.IsAttackRange) or int(raw.TargetAreaRadius)<=0 or not _free_spell(spell,2,true):return
+	for field: String in ["CopySpellClassID","SpellCompositionNode","BackwardPathCount","MinCastRange"]:
+		if int(raw.get(field,0))!=0:return
+	var expected: Array=["SpellDamageBase","SpellDamageDiceNumber","SpellDamageDiceSpotCount"]
+	if profile.fixed:expected.append("FixedMagicDamage")
+	var values: Dictionary=_spell_values(spell,expected)
+	if values.size()!=expected.size() or values.SpellDamageBase<0 or values.SpellDamageDiceNumber<0 or values.SpellDamageDiceSpotCount<1:return
+	if profile.fixed and values.FixedMagicDamage!=1:return
+	var element: String=str({0:"physical",1:"fire",2:"water",3:"wind",4:"earth"}.get(int(raw.get("ElementalTypeID",-1)),""))
+	var distance_policy: Dictionary=SOURCE_AREA_POLICY.data
+	var radius: float=float(raw.TargetAreaRadius)*float(distance_policy.get("area_radius_to_host_length",0.0))
+	if element.is_empty() or not distance_policy.get("enabled",false) or radius<=0.0 or not roll(int(effect.weight)):return
+	# TWILIGHT offline PvE uses existing visible hostile monsters. Official
+	# clan/party siege eligibility and raw distance conversion are unavailable.
+	var limit: int=int(raw.TargetLimitCount)
+	if limit<=0:limit=world.monsters_root.get_child_count()
+	var victims: Array[TwilightMonster]=world.original_skills.targets({"shape":"circle","radius":radius,"targets":limit},target)
+	cooldowns[cooldown_key]=float(raw.CastDelay)/1000.0
+	emit_spell(raw,target)
+	emit_option_pair(option,world.player,target)
+	fired.append(int(option.ID))
+	for victim: TwilightMonster in victims:
+		if not is_instance_valid(victim) or victim.dead or victim.get_meta("is_player_combatant",false):continue
+		if not profile.fixed and world.rng.randf()>=world.original_skills.hit_chance({"attack_type":"magic"},victim):
+			victim.show_miss()
+			continue
+		var damage: int=int(values.SpellDamageBase)
+		for die: int in range(int(values.SpellDamageDiceNumber)):
+			damage+=world.rng.randi_range(1,int(values.SpellDamageDiceSpotCount))
+		damage=world._elemental_damage_to_monster(maxi(1,damage),element,victim)
+		victim.take_damage(world.original_skills.target_damage(damage,victim,"magic"),false,"magic")
 
 ## Plain direct spell: exact source dice, one target, and the current
 ## magic hit/element/reduction pipeline. Never recurse into another proc.
@@ -305,10 +399,10 @@ func _invoke_spell(identity: int) -> Dictionary:
 	var own: Variant=INPUT.invoke_spell(str(identity))
 	return own if own!=null else RELIC.relic_combat.invoke_spells.get(str(identity),{})
 
-func _free_spell(spell: Dictionary,target: int) -> bool:
+func _free_spell(spell: Dictionary,target: int,allow_area: bool=false) -> bool:
 	if spell.is_empty():return false
 	var raw: Dictionary=spell.source_spell
-	if bool(raw.TestSpell) or int(raw.TargettingTypeID)!=target or int(raw.TargetAreaRadius)!=0 or int(raw.HPCost)!=0 or int(raw.MPCost)!=0 or int(raw.get("VPCost",0))!=0:return false
+	if bool(raw.TestSpell) or int(raw.TargettingTypeID)!=target or (not allow_area and int(raw.TargetAreaRadius)!=0) or int(raw.HPCost)!=0 or int(raw.MPCost)!=0 or int(raw.get("VPCost",0))!=0:return false
 	# The source's explicit None material type overrides an unused default amount.
 	for kind: Dictionary in INPUT.session().spell_material_types:
 		if int(kind.ID)==int(raw.SpellMaterialTypeID):return kind.Name=="None"

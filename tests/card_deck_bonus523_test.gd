@@ -190,6 +190,7 @@ func primary_relic_spell(world: Node) -> void:
 	check(not combat.active().has(identity) or Cards.card_id(equipped)==identity,"unequipping disables the base proc")
 	primary_doll_recovery(world,monster)
 	primary_relic_darkness(world,monster)
+	primary_doll_antaras_hold(world,monster)
 	monster.free()
 
 func primary_relic_darkness(world: Node,monster: TwilightMonster) -> void:
@@ -248,6 +249,121 @@ func primary_relic_darkness(world: Node,monster: TwilightMonster) -> void:
 	world.card_collections.set_source_server_context(original_context)
 	world._invalidate_equipment_static()
 
+func primary_doll_antaras_hold(world: Node,monster: TwilightMonster) -> void:
+	var doll: Dictionary={}
+	for record: Dictionary in world.catalog_db.get("마법인형",[]):
+		if int(record.get("source_card_id",0))==11692:
+			doll=record
+			break
+	if not check(not doll.is_empty(),"Antaras is in the original live catalog"):return
+	var identity: String=Cards.card_id(doll)
+	var equipped: Dictionary=world.equipped_catalog.get("마법인형",{})
+	var owned: Dictionary=world.card_draw_fusion.owned["마법인형"]
+	var was_owned: bool=owned.get(identity,false)
+	var rng_before: int=world.rng.state
+	owned[identity]=true
+	world.equipped_catalog["마법인형"]=doll
+	world._invalidate_equipment_static()
+	var combat:=ForcedCardProc.new()
+	combat.configure(world.option_awakening)
+	combat.on_hit(monster,"melee",false)
+	check(combat.weights.is_empty(),"Antaras checks the main target")
+	monster.status_immunities.append("lapidification")
+	combat.on_hit(monster)
+	check(combat.weights.is_empty() and not monster.source_option_petrified(),"lapidification immunity blocks Antaras")
+	monster.status_immunities.erase("lapidification")
+	monster.motion.begin_attack(1.0,Vector2.RIGHT,"melee",0.5)
+	monster.velocity=Vector2.RIGHT*40.0
+	combat.on_hit(monster)
+	var duration: float=monster.source_option_debuffs.get(identity,{}).get("remaining",0.0)
+	check(combat.fired==[751] and combat.weights==[10000] and duration>=2.0 and duration<=3.0,"Antaras uses the original 1% trigger and 2–3 second duration")
+	check(monster.is_stunned() and not monster.motion.active and monster.velocity==Vector2.ZERO,"petrification cancels windup and pauses movement")
+	combat.on_hit(monster)
+	check(combat.weights==[10000] and monster.source_option_debuffs[identity].remaining==duration,"Antaras cannot refresh a target already protected by petrification")
+	monster.advance_source_option_debuffs(duration+0.01)
+	check(not monster.source_option_petrified() and not monster.is_stunned(),"expiry restores monster control")
+	combat.on_hit(monster)
+	check(monster.source_option_petrified(),"a later attack can trigger the effect again")
+	world.equipped_catalog["마법인형"]=equipped
+	combat.tick(0.0)
+	check(not monster.source_option_petrified() and not monster.is_stunned(),"unequip clears the petrification")
+	world.equipped_catalog["마법인형"]=doll
+	combat.on_hit(monster)
+	check(monster.source_option_petrified(),"re-equipping restores the Antaras effect")
+	monster.retire_for_pool()
+	check(not monster.source_option_petrified() and monster.source_option_debuffs.is_empty(),"a reused monster keeps no petrification")
+	world.equipped_catalog["마법인형"]=equipped
+	if not was_owned:owned.erase(identity)
+	world.rng.state=rng_before
+	world._invalidate_equipment_static()
+
+func transformation_area_procs(world: Node) -> void:
+	var candidates: Dictionary={}
+	for card: Dictionary in world.catalog_db.get("변신",[]):
+		if int(card.get("source_card_id",0)) in [18722,24784]:candidates[int(card.source_card_id)]=card
+	if not check(candidates.size()==2,"both area invokers exist in the original catalog"):return
+	# Keep the real Main combat owners, with an open tile grid so the
+	# distance and concealment assertions do not depend on the boot map.
+	var original_field: PlayableField=world.field_map
+	var original_grid: AStarGrid2D=world.astar
+	var original_position: Vector2=world.player.global_position
+	world.field_map=null
+	world.astar=AStarGrid2D.new()
+	world.astar.region=Rect2i(0,0,64,64)
+	world.astar.update()
+	world.player.global_position=world._cell_to_world(Vector2i(5,5))
+	var actors: Array[TwilightMonster]=[]
+	for offset: Vector2 in [Vector2.ZERO,Vector2(4,0),Vector2(400,0),Vector2(2,0)]:
+		var actor: TwilightMonster=load("res://scenes/Monster.tscn").instantiate()
+		world.monsters_root.add_child(actor)
+		actor.set_physics_process(false)
+		actor.global_position=world.player.global_position+offset
+		actor.magic_resistance=0
+		actors.append(actor)
+	actors[3].concealed523=true
+	var equipped: Dictionary=world.equipped_catalog.get("변신",{})
+	var original_context: Dictionary=world.card_collections.source_server_context()
+	var owned: Dictionary=world.card_draw_fusion.owned["변신"]
+	var rng_before: int=world.rng.state
+	for row: Array in [[18722,9512,64022,301],[24784,20894,119094,101]]:
+		var card: Dictionary=candidates[row[0]]
+		var identity: String=Cards.card_id(card)
+		var was_owned: bool=owned.get(identity,false)
+		var region: Dictionary=SOURCE.related("ServerLimit","ServerLimitSetID",int(card.source_original_card.ServerLimitSetID))[0]
+		world.card_collections.set_source_server_context({"source_snapshot":"base508","ServiceRegionCode":str(region.ServiceRegionCode),"WorldNo":int(region.WorldNo)})
+		owned[identity]=true
+		world.equipped_catalog["변신"]=card
+		world._invalidate_equipment_static()
+		for actor: TwilightMonster in actors:actor.hp=10000
+		var combat:=ForcedCardProc.new()
+		combat.configure(world.option_awakening)
+		combat.on_hit(actors[0],"melee",false)
+		check(combat.weights.is_empty(),"an area spell does not roll for a secondary hit")
+		var chance: float=world.original_skills.hit_chance({"attack_type":"magic"},actors[0])
+		var probe:=RandomNumberGenerator.new()
+		for n: int in range(1,1000):
+			probe.seed=n
+			if probe.randf()<chance and probe.randf()<chance and probe.randf()<chance:
+				world.rng.seed=n
+				break
+		combat.on_hit(actors[0])
+		evidence["area_"+str(row[1])]={"active":combat.active().has(identity),"spell":not (preload("res://scripts/cards/current523_option_combat_input.gd").invoke_spell(str(row[2])) as Dictionary).is_empty(),"fired":combat.fired.duplicate(),"weights":combat.weights.duplicate(),"hp":actors.map(func(actor: TwilightMonster) -> int:return actor.hp),"sight":actors.map(func(actor: TwilightMonster) -> bool:return world._has_line_of_sight_world(world.player.global_position,actor.global_position))}
+		check(combat.fired==[row[1]] and combat.weights==[20000],"the 2% area option rolls once for the entire cast "+str(row[1]))
+		check(actors[0].hp==10000-row[3] and actors[1].hp==10000-row[3] and actors[2].hp==10000 and actors[3].hp==10000,"typed damage reaches the primary and visible neighbour, never distant or concealed actors "+str(row[1]))
+		var key: String="native_option|"+identity+"|"+str(row[2])
+		combat.on_hit(actors[0])
+		check(combat.weights==[20000] and world.skill_cooldowns.get(key,0.0)==3.0,"area spell observes its source cooldown")
+		world.skill_cooldowns.erase(key)
+		if not was_owned:owned.erase(identity)
+	world.rng.state=rng_before
+	world.equipped_catalog["변신"]=equipped
+	world.card_collections.set_source_server_context(original_context)
+	world._invalidate_equipment_static()
+	for actor: TwilightMonster in actors:actor.free()
+	world.field_map=original_field
+	world.astar=original_grid
+	world.player.global_position=original_position
+
 func primary_doll_recovery(world: Node,monster: TwilightMonster) -> void:
 	var doll: Dictionary = {}
 	for record: Dictionary in world.catalog_db.get("마법인형",[]):
@@ -289,6 +405,7 @@ func runtime() -> void:
 	check(world.card_deck_bonus.problem.is_empty(), "deck bonus configured from the original archive")
 	for category: String in Cards.CATEGORIES: world.equipped_catalog[category] = {}
 	primary_relic_spell(world)
+	transformation_area_procs(world)
 	var base: Dictionary = stats(world)
 	evidence["no_card"] = base
 	var cards: Dictionary = {"변신":pick(world,"변신",1,5),"마법인형":pick(world,"마법인형",2,5),"성물":pick(world,"성물",98,5)}
