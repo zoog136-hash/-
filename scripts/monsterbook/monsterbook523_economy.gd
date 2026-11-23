@@ -23,6 +23,7 @@ func gems() -> int:
 	return int(wallet(runtime.catalog.export_state()).gems)
 
 func exchange(amount: int) -> Dictionary:
+	if not runtime.progression_enabled(): return {"ok":false,"message":runtime.PAUSED_MESSAGE}
 	if runtime.transaction_busy or runtime.catalog._busy: return {"ok":false,"message":"도감 거래 처리 중"}
 	runtime.transaction_busy = true
 	var result := _exchange(amount)

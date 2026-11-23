@@ -55,6 +55,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	ProjectSettings.set_setting("twilight/monsterbook/progression_enabled", true)
 	_registry()
 	_binding()
 	_placement()
