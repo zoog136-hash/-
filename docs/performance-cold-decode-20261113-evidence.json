@@ -1,0 +1,615 @@
+{
+  "base_commit": "3ea41de9dee65cf3cbe2c65c9f68e6d3cbaa5b45",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "scope": "Exploratory synthetic Linux measurements. No actual Android, original SP2 or gameplay setup reproduced. Compressed/bank probes overlapped core validation; timings are observations, not limits or FPS claims.",
+  "decoder_sha256": "d12ecd7e255feb0767b2925ca76d2ff9852af935bfee625603f6b94f1a1349a8",
+  "decoder_initial": [
+    {
+      "after_us": [
+        26779,
+        27256,
+        27463,
+        27954,
+        28070,
+        28080,
+        28229,
+        28359,
+        28394,
+        28461,
+        37242
+      ],
+      "before_us": [
+        36618,
+        36790,
+        37392,
+        38389,
+        38466,
+        38486,
+        38541,
+        38727,
+        39240,
+        39499,
+        39678
+      ],
+      "bytes": 833335,
+      "last_after_counters": {
+        "sp2.decoder_blocks": 800,
+        "sp2.decoder_body_bytes": 833335,
+        "sp2.decoder_commands": 24800,
+        "sp2.decoder_input_bytes": 833335,
+        "sp2.decoder_ok": 1,
+        "sp2.decoder_references": 800,
+        "sp2.decoder_samples": 768800
+      },
+      "last_after_details": {
+        "sp2.decoder_bounds": [
+          576,
+          1,
+          576
+        ],
+        "sp2.decoder_candidate": [
+          26927,
+          1,
+          26927
+        ],
+        "sp2.decoder_geometry": [
+          1958,
+          4,
+          505
+        ],
+        "sp2.decoder_metadata": [
+          12402,
+          1,
+          12402
+        ],
+        "sp2.decoder_samples": [
+          11954,
+          4,
+          3071
+        ],
+        "sp2.decoder_total": [
+          26944,
+          1,
+          26944
+        ]
+      },
+      "parse_sha256": "fca47dd00d003c5a98eee6d3dc30df61f57197e5a9031a425d22f84485ef5d8a",
+      "spec": [
+        4,
+        200,
+        31,
+        0
+      ]
+    },
+    {
+      "after_us": [
+        68730,
+        68819,
+        68935,
+        69556,
+        69560,
+        69671,
+        69687,
+        70053,
+        70823,
+        72816,
+        80648
+      ],
+      "before_us": [
+        87830,
+        89416,
+        90938,
+        91385,
+        92593,
+        92619,
+        92785,
+        93240,
+        93753,
+        93864,
+        94446
+      ],
+      "bytes": 1922235,
+      "last_after_counters": {
+        "sp2.decoder_blocks": 2040,
+        "sp2.decoder_body_bytes": 1922235,
+        "sp2.decoder_commands": 57120,
+        "sp2.decoder_input_bytes": 1922235,
+        "sp2.decoder_ok": 1,
+        "sp2.decoder_references": 2040,
+        "sp2.decoder_samples": 1770720
+      },
+      "last_after_details": {
+        "sp2.decoder_bounds": [
+          1559,
+          1,
+          1559
+        ],
+        "sp2.decoder_candidate": [
+          66175,
+          1,
+          66175
+        ],
+        "sp2.decoder_geometry": [
+          5904,
+          8,
+          887
+        ],
+        "sp2.decoder_metadata": [
+          30684,
+          1,
+          30684
+        ],
+        "sp2.decoder_samples": [
+          27965,
+          8,
+          3683
+        ],
+        "sp2.decoder_total": [
+          66198,
+          1,
+          66198
+        ]
+      },
+      "parse_sha256": "4d1cd9201f5c7047e67a4bc38003541b459166977e25c9c05b1bb55351f2a076",
+      "spec": [
+        8,
+        255,
+        28,
+        0
+      ]
+    },
+    {
+      "after_us": [
+        16449,
+        16611,
+        16673,
+        16839,
+        16888,
+        17501,
+        17990,
+        18448,
+        18647,
+        18810,
+        19147
+      ],
+      "before_us": [
+        17724,
+        18327,
+        18429,
+        18566,
+        18618,
+        18670,
+        19027,
+        19366,
+        19539,
+        20713,
+        21519
+      ],
+      "bytes": 135621,
+      "last_after_counters": {
+        "sp2.decoder_blocks": 200,
+        "sp2.decoder_body_bytes": 135621,
+        "sp2.decoder_commands": 4000,
+        "sp2.decoder_input_bytes": 135621,
+        "sp2.decoder_ok": 1,
+        "sp2.decoder_references": 200,
+        "sp2.decoder_samples": 124000
+      },
+      "last_after_details": {
+        "sp2.decoder_bounds": [
+          224,
+          1,
+          224
+        ],
+        "sp2.decoder_candidate": [
+          18466,
+          1,
+          18466
+        ],
+        "sp2.decoder_geometry": [
+          534,
+          2,
+          307
+        ],
+        "sp2.decoder_metadata": [
+          2622,
+          1,
+          2622
+        ],
+        "sp2.decoder_samples": [
+          15058,
+          2,
+          8352
+        ],
+        "sp2.decoder_total": [
+          18481,
+          1,
+          18481
+        ]
+      },
+      "parse_sha256": "f37329732f83f2650975a1e8135b0cdcaeb3c96d10b1899bc5d2652a9fdf6bdb",
+      "spec": [
+        2,
+        100,
+        20,
+        4
+      ]
+    }
+  ],
+  "compressed_initial": [
+    {
+      "after_us": [
+        412110,
+        424540,
+        432197,
+        449249,
+        469141
+      ],
+      "before_us": [
+        619290,
+        629596,
+        630049,
+        635471,
+        719593
+      ],
+      "bytes": 1230,
+      "last_after_counters": {
+        "sp2.decoder_blocks": 2040,
+        "sp2.decoder_body_bytes": 17203875,
+        "sp2.decoder_commands": 520200,
+        "sp2.decoder_input_bytes": 1230,
+        "sp2.decoder_ok": 1,
+        "sp2.decoder_references": 2040,
+        "sp2.decoder_samples": 16126200
+      },
+      "last_after_details": {
+        "sp2.decoder_bounds": [
+          2160,
+          1,
+          2160
+        ],
+        "sp2.decoder_brotli": [
+          17388,
+          1,
+          17388
+        ],
+        "sp2.decoder_candidate": [
+          424740,
+          1,
+          424740
+        ],
+        "sp2.decoder_geometry": [
+          7473,
+          8,
+          1123
+        ],
+        "sp2.decoder_metadata": [
+          172212,
+          1,
+          172212
+        ],
+        "sp2.decoder_samples": [
+          242731,
+          8,
+          35206
+        ],
+        "sp2.decoder_total": [
+          442181,
+          1,
+          442181
+        ]
+      },
+      "parse_sha256": "f25cd9968dffd11dfbad2e9081c04c68a392a83e149190821f918501385bdea0",
+      "spec": [
+        8,
+        255,
+        255,
+        0
+      ]
+    }
+  ],
+  "bank_initial": {
+    "action_bytes": 464185,
+    "android_measured": false,
+    "body_bytes": 1666155,
+    "body_sha256": "52d487caa3d1c9dbca1f22e7009d85c0c3ee1be3fab9e22d57a2559b4585424e",
+    "engine": "4.7.2-stable (official)",
+    "failures": [],
+    "rows": [
+      {
+        "asset_status": {
+          "budgets": {
+            "idle_parsed_bytes": 33554432,
+            "idle_texture_bytes": 67108864
+          },
+          "bytes_are_payload_estimates": true,
+          "compositor_version": "reference_sp2_bank.packed_rgba_le+ImageTexture.create_from_image:v2",
+          "external_owners_counted": false,
+          "generation": 2,
+          "parsed": {
+            "cache_owned_entries": 3,
+            "counters": {
+              "created": 3,
+              "misses": 6
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 3,
+            "live_bytes": 4223857,
+            "live_count": 3,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          },
+          "parsed_payload_accounting": "allocated_packed_buffers_excludes_containers_allocator_GPU_RSS",
+          "pixel_policy": "alpha=opaque_samples;rgb=bit_replication;alpha_mode=straight;format=RGBA8;mipmaps=none;compression=none;trim=none",
+          "schema": "reference_sp2_asset_service_v1",
+          "texture": {
+            "cache_owned_entries": 2,
+            "counters": {
+              "created": 2,
+              "misses": 2
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 2,
+            "live_bytes": 3860,
+            "live_count": 2,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          }
+        },
+        "cache_hits_cumulative": 0,
+        "cache_misses_cumulative": 3,
+        "configure_us": 268158,
+        "drawing": {
+          "counters": {
+            "sp2.texture_created": 2
+          },
+          "details": {
+            "sp2.pixel_render": [
+              204,
+              2,
+              185
+            ],
+            "sp2.texture_create": [
+              10,
+              2,
+              9
+            ]
+          }
+        },
+        "first_frame_us": 3041,
+        "preparation": {
+          "counters": {
+            "sp2.attribute_validate": 15,
+            "sp2.decoder_blocks": 1612,
+            "sp2.decoder_body_bytes": 1666689,
+            "sp2.decoder_commands": 49624,
+            "sp2.decoder_input_bytes": 1666689,
+            "sp2.decoder_ok": 3,
+            "sp2.decoder_references": 1616,
+            "sp2.decoder_samples": 1537648,
+            "sp2.disk_miss": 3,
+            "sp2.layer_validate": 3840,
+            "sp2.member_verify": 3,
+            "sp2.parsed_payload_measured": 3
+          },
+          "details": {
+            "sp2.bank_load": [
+              260070,
+              1,
+              260070
+            ],
+            "sp2.decoder_bounds": [
+              1478,
+              3,
+              1459
+            ],
+            "sp2.decoder_candidate": [
+              59167,
+              3,
+              58727
+            ],
+            "sp2.decoder_geometry": [
+              4861,
+              20,
+              668
+            ],
+            "sp2.decoder_metadata": [
+              26556,
+              3,
+              26351
+            ],
+            "sp2.decoder_samples": [
+              26179,
+              20,
+              4294
+            ],
+            "sp2.decoder_total": [
+              59196,
+              3,
+              58739
+            ],
+            "sp2.parse": [
+              80580,
+              3,
+              79722
+            ]
+          }
+        },
+        "state": "cold",
+        "tracks_sha256": "8b221af03a6f84f90a8e52f22ac9ea64c502002add433241c00b26d697bb72d5"
+      },
+      {
+        "asset_status": {
+          "budgets": {
+            "idle_parsed_bytes": 33554432,
+            "idle_texture_bytes": 67108864
+          },
+          "bytes_are_payload_estimates": true,
+          "compositor_version": "reference_sp2_bank.packed_rgba_le+ImageTexture.create_from_image:v2",
+          "external_owners_counted": false,
+          "generation": 2,
+          "parsed": {
+            "cache_owned_entries": 3,
+            "counters": {
+              "created": 3,
+              "hits": 3,
+              "misses": 6
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 3,
+            "live_bytes": 4223857,
+            "live_count": 3,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          },
+          "parsed_payload_accounting": "allocated_packed_buffers_excludes_containers_allocator_GPU_RSS",
+          "pixel_policy": "alpha=opaque_samples;rgb=bit_replication;alpha_mode=straight;format=RGBA8;mipmaps=none;compression=none;trim=none",
+          "schema": "reference_sp2_asset_service_v1",
+          "texture": {
+            "cache_owned_entries": 2,
+            "counters": {
+              "created": 2,
+              "hits": 2,
+              "misses": 2
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 2,
+            "live_bytes": 3860,
+            "live_count": 2,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          }
+        },
+        "cache_hits_cumulative": 0,
+        "cache_misses_cumulative": 3,
+        "configure_us": 145089,
+        "drawing": {
+          "counters": {},
+          "details": {}
+        },
+        "first_frame_us": 893,
+        "preparation": {
+          "counters": {
+            "sp2.attribute_validate": 15,
+            "sp2.layer_validate": 3840,
+            "sp2.member_verify": 3
+          },
+          "details": {
+            "sp2.bank_load": [
+              141934,
+              1,
+              141934
+            ]
+          }
+        },
+        "state": "shared_warm",
+        "tracks_sha256": "8b221af03a6f84f90a8e52f22ac9ea64c502002add433241c00b26d697bb72d5"
+      },
+      {
+        "asset_status": {
+          "budgets": {
+            "idle_parsed_bytes": 33554432,
+            "idle_texture_bytes": 67108864
+          },
+          "bytes_are_payload_estimates": true,
+          "compositor_version": "reference_sp2_bank.packed_rgba_le+ImageTexture.create_from_image:v2",
+          "external_owners_counted": false,
+          "generation": 3,
+          "parsed": {
+            "cache_owned_entries": 3,
+            "counters": {
+              "created": 3,
+              "misses": 6
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 3,
+            "live_bytes": 4223857,
+            "live_count": 3,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          },
+          "parsed_payload_accounting": "allocated_packed_buffers_excludes_containers_allocator_GPU_RSS",
+          "pixel_policy": "alpha=opaque_samples;rgb=bit_replication;alpha_mode=straight;format=RGBA8;mipmaps=none;compression=none;trim=none",
+          "schema": "reference_sp2_asset_service_v1",
+          "texture": {
+            "cache_owned_entries": 2,
+            "counters": {
+              "created": 2,
+              "misses": 2
+            },
+            "idle_bytes": 0,
+            "idle_count": 0,
+            "leases": 2,
+            "live_bytes": 3860,
+            "live_count": 2,
+            "pending_bytes": 0,
+            "pending_count": 0,
+            "stale_live_bytes": 0,
+            "stale_live_count": 0
+          }
+        },
+        "cache_hits_cumulative": 3,
+        "cache_misses_cumulative": 3,
+        "configure_us": 140240,
+        "drawing": {
+          "counters": {
+            "sp2.texture_created": 2
+          },
+          "details": {
+            "sp2.pixel_render": [
+              241,
+              2,
+              221
+            ],
+            "sp2.texture_create": [
+              12,
+              2,
+              10
+            ]
+          }
+        },
+        "first_frame_us": 1169,
+        "preparation": {
+          "counters": {
+            "sp2.attribute_validate": 15,
+            "sp2.disk_hit": 3,
+            "sp2.layer_validate": 3840,
+            "sp2.member_verify": 3,
+            "sp2.parsed_payload_measured": 3
+          },
+          "details": {
+            "sp2.bank_load": [
+              136704,
+              1,
+              136704
+            ],
+            "sp2.parse": [
+              22095,
+              3,
+              21839
+            ]
+          }
+        },
+        "state": "disk_warm",
+        "tracks_sha256": "8b221af03a6f84f90a8e52f22ac9ea64c502002add433241c00b26d697bb72d5"
+      }
+    ],
+    "scope": "Diagnostic reference preview; excludes NPC admission, pool, map/physics, actual GPU upload and full original manifest bake.",
+    "synthetic_only": true
+  }
+}
