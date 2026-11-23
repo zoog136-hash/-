@@ -10,7 +10,11 @@ class TestWorld extends Node:
 	var maps_by_id: Dictionary = {"a":{},"b":{}}
 	var item_instances: Dictionary = {}
 	var next_item_instance_id: int = 1
-	func _is_walkable_world(point: Vector2) -> bool: return point.is_finite()
+	var walkability_checks: int = 0
+	var walkable: bool = true
+	func _is_walkable_world(point: Vector2) -> bool:
+		walkability_checks += 1
+		return walkable and point.is_finite()
 	func _has_line_of_sight_world(_from: Vector2, _to: Vector2) -> bool: return true
 	func _world_to_cell(point: Vector2) -> Vector2i: return Vector2i(point)
 	func _nearest_walkable_cell(cell: Vector2i) -> Vector2i: return cell
@@ -59,6 +63,16 @@ func run() -> void:
 	for index: int in range(250):
 		var point := Vector2(rng.randf_range(1950,4200),rng.randf_range(1950,4200))
 		check(manager._occupied(point)==linear_occupied(manager,point),"equivalent occupancy %d" % index)
+	# Immediate spawn already checked its accepted position. A transaction
+	# staging a record separately still has to reject later collision/map changes.
+	world.walkability_checks = 0
+	var ordinary: Button = manager.spawn("물약",Vector2(-1000,-1000))
+	check(ordinary != null and world.walkability_checks == 1,"immediate spawn checks walkability once")
+	var staged: Dictionary = manager.stage_spawn("물약",Vector2(-1500,-1500))
+	world.walkable = false
+	check(not staged.is_empty() and manager.publish_spawn(staged) == null and not manager.records.has(staged.id),"staged publish still rejects changed walkability")
+	world.walkable = true
+	check(manager.spawn("물약",Vector2(-1500,-1500)) != null and manager.publish_spawn(staged) == null,"staged publish still rejects occupied position")
 	var dropped: Array[Button] = []
 	for _index: int in range(12):
 		var view: Button = manager.spawn("물약",Vector2.ZERO)
