@@ -12,8 +12,13 @@ classification. It now accepts a small scalar observation into a bounded inbox.
 Its return value means **accepted**, not durable. Repeated observations hit a
 bounded recent cache. `flush`, including calls from ground and static-SPR draw,
 only sets a flag: it performs no read, parse, serialization, write or worker wait.
-Ground refs leave their observation list only after acceptance; backpressure
-keeps them for a later draw. Static SPR observations already repeat on draws.
+Ground and static-SPR draws transfer validated scalar evidence to the broker.
+Transient pressure is retained in a bounded overflow queue and replayed by the
+autoload when capacity returns; no later camera update, redraw, frame repetition
+or visible renderer is needed. Invalid/disabled inputs are terminal and never
+enter that queue. Ground removes handled refs without forcing observation redraws.
+`observe_result` distinguishes ACCEPTED, RETAINED, INVALID, DISABLED and DROPPED;
+the compatibility bool entry returns true for accepted/retained observations.
 
 The always-processing MapUsagePump autoload owns scheduling across scene changes.
 One low-priority WorkerThreadPool task at a time accesses one private LedgerWorker.
@@ -35,18 +40,25 @@ mutable Dictionary crosses the boundary. The worker does not call gameplay code.
 ## Bounds and loss semantics
 
 - One pending batch and one in-flight batch, each at most 2,048 events and a
-  4 MiB conservative UTF-8 scalar-payload bound. Godot container overhead is extra.
+  4 MiB conservative UTF-8 scalar-payload bound. A retained queue adds at most
+  256 events / 512 KiB of scalar payload. Promotion swaps arrays in O(1), preserving
+  captured origin, frame and range. Godot container overhead is extra.
 - Recent dedup cache: at most 2,048 bounded keys. Older repeats can enter another
   batch; the worker's v1 units/ranges still deduplicate them without rewriting an
   unchanged ledger. Accepted/committed counters count accepted events, not unique
   global source coverage.
 - Members above 1,024 characters are rejected; units retain the previous 256
   character limit. Overload/disabled ingress increments rejected-attempt status;
-  it is never marked accepted or durable. Capacity is finite: a one-time rejected
-  observation that is never drawn again may be absent. This remains partial
-  evidence, not a complete gameplay-event journal.
-- Normal writes retain the 10-second interval. Scene exit/explicit force and
-  application pause request a flush. The autoload continues through scene changes.
+  invalid/disabled inputs do not retry. Only exhaustion of both pending and
+  retained bounds produces DROPPED. `dropped_observation_attempts` explicitly
+  counts those attempts, separately from rejection and force-kill loss. The next
+  successful atomic save records cumulative `recording_dropped_observation_attempts`
+  as an optional v1 top-level field; v1 members/schema remain compatible and the
+  count survives reload. A dropped one-time frame/range can be absent, never
+  falsely acknowledged. If storage is disabled/unwritable or the process dies
+  before that save, the new counter is not yet durable; status exposes this too.
+- Normal writes retain the 10-second interval. Retention pressure, scene exit/
+  explicit force and application pause request a prompt drain. The autoload continues through scene changes.
 - Only final process teardown uses `finish`: at most three drain attempts,
   including transient write retry. It can wait for disk I/O; it is deliberately
   outside gameplay. It does not impose an OS I/O timeout or alter quit/save routes.
@@ -72,7 +84,7 @@ godot --headless --path . --script res://tests/map_usage_async_test.gd
 godot --headless --path . --script res://tests/map_usage_cost_test.gd
 ```
 
-The async test is registered in the core gate. Its 35 checks cover v1 merging,
+The async test is registered in the core gate. Its original 35 checks cover v1 merging,
 exact origins/units/ranges, source identity conflict, rejection of fixture Main
 ownership, immutable handoff, repeated pumping against a semaphore-blocked
 worker, both queue bounds, deduplication, multiple batches, scene-flush lifetime,
@@ -127,3 +139,37 @@ The worker's 16 MiB file limit does not mean its decoded Dictionary uses 16 MiB.
 No physical Android run, original-pack gameplay, FPS claim, APK/OTA deployment or
 main merge. These measurements do not establish the cause of the reported
 Android 12.79-second freeze.
+
+
+## Pending-observation follow-up
+
+The ff5768f draft retained ground refs for a future draw but did not own a retry
+for cached/idle ground or short-lived static frames. The follow-up fixes that at
+the scalar ingress and removes the dependency on another draw. Only a genuine
+visible-Main draw can enter the public observation API; replay does not invent
+observations or re-check a now-hidden scene. Already captured scalars survive
+scene destruction and normal shutdown.
+
+Additional tests fill the inbox, retain known ground and static frame/range
+observations, and drain with only the normal pump (no camera/redraw/second observe).
+They verify invalid/disabled results do not retain, both memory bounds, dedup,
+shutdown of a new retained frame, explicit hard-drop absence, durable drop count,
+and v1 counter reload. A real child-process exit begins with a full inbox plus a
+retained observation and verifies that the autoload commits all 2,049 events.
+
+The desktop-only integration harness calls the actual production ground and
+static-SPR draw callbacks in a visible Main-ownership context, then hides the
+scene. It verifies the three captured identities/ranges commit with zero further
+draw callbacks. The harness attaches the real world inheritance chain after
+ready to suppress gameplay bootstrap; all inputs and the ledger path are
+synthetic and isolated. This is not original-pack gameplay or Android evidence.
+
+Follow-up verification: **46 headless checks / 50 desktop OpenGL checks** pass,
+plus a fresh full staged import and the eight focused runtime suites listed
+above. The separate real process-exit check persisted the retained 2,049th
+observation. Resource policy and seven Python tests pass. The desktop run emitted
+only the llvmpipe V-sync warning. The added world/draw harness preloads production
+world classes, so its roughly 700 MB whole-test static peak is not comparable to
+the earlier smaller benchmark process or a worker-memory claim. Observed
+poll/submit maxima varied across concurrent runs (0.126–5.385 ms); they remain
+samples, not a fixed frame-time guarantee. Android hardware remains untested.

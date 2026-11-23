@@ -19,6 +19,10 @@ func reset(path: String) -> void:
 	USAGE._recorded.clear()
 	USAGE._pending = []
 	USAGE._pending_bytes = 0
+	USAGE._retained = []
+	USAGE._retained_bytes = 0
+	USAGE._dropped = 0
+	USAGE._committed_drops = 0
 	USAGE._result = []
 	USAGE._task = -1
 	USAGE._force = false
@@ -40,7 +44,7 @@ func settle() -> void:
 		var started: int = Time.get_ticks_usec()
 		USAGE.pump()
 		maximum_pump_usec = maxi(maximum_pump_usec, Time.get_ticks_usec()-started)
-		if USAGE._task < 0 and (USAGE._disabled or (USAGE._pending.is_empty() and not USAGE._dirty)): return
+		if USAGE._task < 0 and (USAGE._disabled or (USAGE._pending.is_empty() and USAGE._retained.is_empty() and not USAGE._dirty and USAGE._dropped == USAGE._committed_drops)): return
 		await process_frame
 	check(false,"worker finishes within fixture frame limit")
 
@@ -93,7 +97,8 @@ func bounded_and_lifetime() -> void:
 	var returned: int = Time.get_ticks_usec()-start
 	check(USAGE._task >= 0 and not WorkerThreadPool.is_task_completed(USAGE._task),"repeated pump never joins a blocked worker")
 	for i: int in USAGE.MAX_PENDING: offer("pending%d" % i)
-	check(USAGE._pending.size() <= USAGE.MAX_PENDING and USAGE._pending_bytes <= USAGE.MAX_PENDING_BYTES and USAGE._recorded.size() <= USAGE.MAX_RECENT,"inbox, byte reservation and dedup memory bounded")
+	check(USAGE._pending.size() <= USAGE.MAX_PENDING and USAGE._pending_bytes <= USAGE.MAX_PENDING_BYTES and USAGE._retained_bytes <= USAGE.MAX_RETAINED_BYTES and USAGE._retained.size() <= USAGE.MAX_RETAINED and USAGE._recorded.size() <= USAGE.MAX_RECENT,"inbox, byte reservation and dedup memory bounded")
+	for i: int in USAGE.MAX_RETAINED: offer("retained%d" % i)
 	check(not offer("overflow") and USAGE.status().rejected_observation_attempts == 1,"overload is reported, never falsely marked accepted")
 	# A scene's exit flush only signals; process-owned worker and inbox survive.
 	USAGE.flush(true)
@@ -101,13 +106,116 @@ func bounded_and_lifetime() -> void:
 	slow.gate.post()
 	# One signal for the in-flight batch and another for the queued batch.
 	slow.gate.post()
+	slow.gate.post()
 	await settle()
-	check(read(path).members["Map/test.s32|"+SHA].origins.USER_MAIN.units.size() == USAGE.MAX_PENDING+1,"both bounded batches survive scene change and commit")
+	check(read(path).members["Map/test.s32|"+SHA].origins.USER_MAIN.units.size() == USAGE.MAX_PENDING+USAGE.MAX_RETAINED+1,"all bounded batches survive scene change and commit")
 	check(offer("overflow"),"rejected observation can be retried after capacity returns")
 	slow.gate.post()
 	USAGE.finish()
 	check(read(path).members["Map/test.s32|"+SHA].origins.USER_MAIN.units.has("overflow"),"normal teardown drains final observations")
 	evidence.append({"blocked_worker_100_pumps_usec":returned})
+
+func retained_without_draw() -> void:
+	var path: String = folder.path_join("retained.json")
+	reset(path)
+	for i: int in USAGE.MAX_PENDING: offer("fill%d" % i)
+	var ground: Array = ["Tile/1.til",1000,SHA,"subimage:1",-1,0,"AUTOMATED_ACTUAL_MAIN"]
+	var sprite: Array = ["Sprite/test.sp2",1000,SHA,"stored-bit:0/frame:7",4,8,"AUTOMATED_ACTUAL_MAIN"]
+	check(USAGE._enqueue_result.callv(ground) == USAGE.Observation.RETAINED and USAGE._enqueue_result.callv(sprite) == USAGE.Observation.RETAINED,"ground and short-lived static scalars retained under transient pressure")
+	check(USAGE._enqueue_result.callv(sprite) == USAGE.Observation.ACCEPTED and USAGE._retained.size() == 2,"retained observations deduplicate")
+	check(USAGE._enqueue_result("Map/bad",0,SHA,"bad",0,1,"USER_MAIN") == USAGE.Observation.INVALID and USAGE._retained.size() == 2,"invalid input never enters retry queue")
+	# No flush, camera update, redraw or repeated observe: pressure drives pump.
+	for _i: int in 1000:
+		USAGE.pump()
+		if not USAGE.status().uncommitted: break
+		await process_frame
+	var value: Dictionary = read(path)
+	check(value.members[ground[0]+"|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.units.has(ground[3]) and value.members[sprite[0]+"|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.source_ranges == {"4:8":true},"retained ground and static evidence commits without another draw")
+	reset(path)
+	for i: int in USAGE.MAX_PENDING: offer("shutdown%d" % i)
+	var shutdown_event: Array = sprite.duplicate()
+	shutdown_event[3] = "shutdown-static-frame"
+	shutdown_event[4] = 88
+	USAGE._enqueue_result.callv(shutdown_event)
+	USAGE.finish()
+	check(read(path).members[sprite[0]+"|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.units.has("shutdown-static-frame"),"shutdown persists a new retained short-lived frame")
+	check(USAGE._retained.is_empty() and not USAGE.status().uncommitted,"normal shutdown drains retained observations too")
+	reset(path)
+	USAGE._disabled = true
+	check(USAGE._enqueue_result.callv(sprite) == USAGE.Observation.DISABLED and USAGE._retained.is_empty(),"disabled recording never spins a retry")
+	reset(path)
+	for i: int in USAGE.MAX_PENDING + USAGE.MAX_RETAINED: offer("drop-fill%d" % i)
+	var missing: Array = sprite.duplicate()
+	missing[3] = "hard-never-observed-again"
+	missing[4] = 80
+	missing[5] = 4
+	check(USAGE._enqueue_result.callv(missing) == USAGE.Observation.DROPPED and USAGE.status().dropped_observation_attempts == 1,"hard bound has a distinct drop outcome and counter")
+	USAGE.finish()
+	check(read(path).recording_dropped_observation_attempts == 1 and USAGE.status().committed_drop_attempts == 1,"drop attempt is recorded durably without claiming the missing unit")
+	check(not read(path).members[sprite[0]+"|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.units.has(missing[3]) and not read(path).members[sprite[0]+"|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.source_ranges.has("80:4"),"hard-dropped frame/range is absent rather than falsely acknowledged")
+	reset(path); offer("after-drop-restart"); await settle()
+	check(read(path).recording_dropped_observation_attempts == 1,"v1 reload preserves the prior drop counter")
+
+# Real production draw callbacks in a visible synthetic Main-owned harness.
+# Suppress gameplay setup; never select or modify the player's ledger/profile.
+class DrawWorld extends "res://scripts/world.gd":
+	func _ready() -> void: set_process(false)
+	func _exit_tree() -> void: pass
+
+class DrawGround extends "res://scripts/maps/current523_aden_play_renderer.gd":
+	func _view_rect() -> Rect2: return Rect2(-100,-100,1000,1000)
+
+class UsageTiles extends RefCounted:
+	func source_usage_identity(_id: int) -> Dictionary:
+		return {"member":"Tile/1.til","bytes":1000,"sha256":SHA}
+
+func visible_draw_retention() -> void:
+	if DisplayServer.get_name() == "headless": return
+	var path: String = folder.path_join("visible-draw.json")
+	reset(path)
+	for i: int in USAGE.MAX_PENDING: offer("draw-fill%d" % i)
+	var world := Node2D.new()
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	root.add_child(world)
+	world.set_script(DrawWorld) # Attach after ready: no gameplay onready/bootstrap.
+	world.scene_file_path = "res://Main.tscn"
+	var ground := DrawGround.new()
+	world.set("field_renderer", ground)
+	world.set("current523_aden_play_active", true)
+	ground.field = PlayableField.new()
+	ground.field.set_meta("current523_source_field",true)
+	ground._configured = true
+	ground._tile_pack = UsageTiles.new()
+	ground._visible_blocks.assign([Vector2i.ZERO])
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(4,4)
+	ground.add_child(viewport)
+	ground._blocks[Vector2i.ZERO] = {"viewport":viewport,"commands":{-2:PackedInt64Array([0,0,0x101])}}
+	var canvas := Node2D.new()
+	ground.add_child(canvas)
+	var draws: Array = [0,0]
+	canvas.draw.connect(func() -> void: draws[0] += 1; ground._draw_tiles(canvas))
+	var static_spr = load("res://scripts/maps/current523_static_spr.gd").new()
+	static_spr.set_process(false)
+	var pixels := Image.create_empty(4,4,false,Image.FORMAT_RGBA8)
+	pixels.fill(Color.WHITE)
+	static_spr._draws.assign([{"texture":ImageTexture.create_from_image(pixels),"point":Vector2.ZERO,"member":"Sprite/test.sp2","source_sp2_bytes":1000,"source_sp2_sha256":SHA,"stored_group_bit":0,"frame":7,"source_token":{},"record":{"source_member":"Map/test.s32","source_bytes":1000,"source_sha256":SHA,"source_byte_offset":40,"raw_bytes":PackedByteArray([1,2,3,4])}}])
+	static_spr.draw.connect(func() -> void: draws[1] += 1)
+	ground.add_child(static_spr)
+	world.add_child(ground)
+	check(USAGE.actual_main(ground),"visible harness passes unchanged production Main gate")
+	await RenderingServer.frame_post_draw
+	check(draws[0] > 0 and draws[1] > 0 and USAGE._retained.size() == 3,"real ground/static draw callbacks retain all three observed identities")
+	world.hide() # The short-lived static frame disappears, and camera is idle.
+	check(USAGE.observe_result(ground,"Sprite/test.sp2",1000,SHA,"unseen-hidden-frame") == USAGE.Observation.INVALID and USAGE._retained.size() == 3,"hidden Main cannot create new evidence while already observed scalars remain retryable")
+	var prior_draws: Array = draws.duplicate()
+	for _i: int in 1000:
+		USAGE.pump()
+		if not USAGE.status().uncommitted: break
+		await process_frame
+	var value: Dictionary = read(path)
+	check(draws == prior_draws and value.members.has("Tile/1.til|"+SHA) and value.members.has("Sprite/test.sp2|"+SHA) and value.members["Map/test.s32|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.source_ranges.has("40:4"),"production draw evidence drains after hiding without any redraw or camera update")
+	world.free()
 
 class MissingResultWorker extends USAGE.LedgerWorker:
 	func run(envelope: USAGE.Batch, _result: Array) -> void:
@@ -128,8 +236,8 @@ func payload_bound() -> void:
 	var member: String = "Map/" + "p".repeat(1020)
 	for i: int in 1000:
 		if USAGE._enqueue(member,1000,SHA,("u%04d" % i)+"x".repeat(250),0,1,"USER_MAIN"): accepted += 1
-	check(accepted > 0 and accepted < 1000 and USAGE._pending_bytes <= USAGE.MAX_PENDING_BYTES,"byte cap applies independently of event-count cap")
-	check(USAGE._pending.size() == accepted and USAGE.status().rejected_observation_attempts == 1000-accepted,"saturated byte queue never claims rejected events")
+	check(accepted > 0 and accepted < 1000 and USAGE._pending_bytes <= USAGE.MAX_PENDING_BYTES and USAGE._retained_bytes <= USAGE.MAX_RETAINED_BYTES,"byte cap applies independently of event-count cap")
+	check(USAGE._pending.size() + USAGE._retained.size() == accepted and USAGE.status().rejected_observation_attempts == 1000-accepted,"saturated byte queue never claims rejected events")
 	await settle()
 	check(read(path).members[member+"|"+SHA].origins.USER_MAIN.units.size() == accepted,"all accepted byte-bound events survive persistence")
 
@@ -203,6 +311,7 @@ func run() -> void:
 			return
 		if arg.begins_with("--exit-fixture="):
 			reset(arg.trim_prefix("--exit-fixture="))
+			for i: int in USAGE.MAX_PENDING: offer("exit-fill%d" % i)
 			offer("exit-unflushed")
 			quit() # Autoload teardown, not an explicit test drain.
 			return
@@ -211,6 +320,8 @@ func run() -> void:
 	DirAccess.make_dir_recursive_absolute(folder)
 	await contract()
 	await bounded_and_lifetime()
+	await retained_without_draw()
+	await visible_draw_retention()
 	await missing_result()
 	await payload_bound()
 	await failures_and_recovery()
