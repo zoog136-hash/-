@@ -7,6 +7,7 @@ signal safe_return_requested(reason: String)
 ## the map (nearest own-clear cell, else the owner's village fallback).
 signal actor_position_recovered(detail: Dictionary)
 
+const RETIRED_MAP_JOBS = preload("res://scripts/maps/current523_retired_map_jobs.gd")
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
 const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
@@ -244,7 +245,9 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	# Draw lists on workers with the real pack (its tile table is read-only).
 	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
-	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	_member_origins.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	# Old workers may still own the previous immutable overlap table.
+	_overlap = {}
 	_drop_chunk_jobs()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
 	_chunk_bins.clear(); _clear_blocks()
@@ -507,6 +510,7 @@ func _prefetch_chunk(member: String) -> bool:
 	if _raw_chunks.has(member) or _unreadable_chunks.has(member): return true
 	if _chunk_jobs.has(member) or _chunk_jobs.size() >= MAX_CHUNK_JOBS: return false
 	if _raw_sources == null or not _raw_sources.has_method("read_member_job"): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	var job: Dictionary = _chunk_params(member)
 	job["task"] = WorkerThreadPool.add_task(_chunk_job.bind(job), false, "S32 chunk read")
 	_chunk_jobs[member] = job
@@ -521,8 +525,10 @@ func _pump_chunk_jobs() -> void:
 		_chunk_jobs.erase(member)
 		_install_chunk(member, job)
 
-func _drop_chunk_jobs() -> void:
-	for job: Dictionary in _chunk_jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+func _drop_chunk_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _chunk_jobs.values():
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_chunk_jobs.clear()
 
 ## Everything a chunk read needs, copied for a worker (the pack, field
@@ -830,6 +836,7 @@ var _block_jobs: Dictionary = {}
 ## On-screen blocks start regardless of MAX_BLOCK_JOBS (it bounds margin work).
 func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
 	if _block_jobs.has(cell): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	if not on_screen and _block_jobs.size() >= MAX_BLOCK_JOBS: return false
 	var members: Array[String] = _block_members(cell)
 	var inputs: Array = []
@@ -991,9 +998,11 @@ func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) ->
 	return built
 
 
-func _drop_block_jobs() -> void:
-	for cell: Vector2i in _block_jobs:
-		if _block_jobs[cell].has("task"): WorkerThreadPool.wait_for_task_completion(int(_block_jobs[cell].task))
+func _drop_block_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _block_jobs.values():
+		if not job.has("task"): continue
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_block_jobs.clear()
 
 
@@ -1144,8 +1153,8 @@ func _free_block(cell: Vector2i) -> void:
 	if is_instance_valid(viewport): (viewport as Node).queue_free()
 
 
-func _clear_blocks() -> void:
-	_drop_block_jobs()
+func _clear_blocks(retire: bool = false) -> void:
+	_drop_block_jobs(retire)
 	for cell: Vector2i in _blocks.keys(): _free_block(cell)
 	_block_recent.clear()
 	_visible_blocks.clear()
@@ -1585,7 +1594,11 @@ func _notification(what: int) -> void:
 
 func _exit_tree() -> void:
 	_configured = false
-	_drop_chunk_jobs()
-	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(); _chunk_bins.clear()
+	var started: int = FRAME_HITCH.now()
+	# No scene operations in either worker. Discard their outputs, but keep
+	# their source and draw-list inputs alive until the map pump reaps them.
+	_drop_chunk_jobs(true)
+	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(true); _chunk_bins.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()
+	FRAME_HITCH.detail("map.renderer_retire", started)
