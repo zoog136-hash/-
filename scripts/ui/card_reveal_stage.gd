@@ -120,7 +120,6 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 ## window owns input, paging, dismissal, and the grade effect after the reel.
 static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, settled: Callable, category_name: String,
 		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary) -> bool:
-	if not SourceCardPresentation.native(record) or source_candidates.is_empty(): return false
 	var card: Control = CARD.new()
 	card.name = "CardRevealEffect"
 	card.position = area.position
@@ -136,15 +135,15 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	shuffled.shuffle()
 	var no_legacy: Array[Texture2D] = []
 	card.configure(record, no_legacy, category_name, shuffled, false)
-	# Leave the native result unobstructed when its reel art is unavailable.
-	if card.art_missing or not card.face.candidates.any(func(texture: Texture2D) -> bool: return texture != null):
-		card.free()
-		return false
 	var upgraded: bool = is_fusion and bool(record.get("fusion_success", succeeded))
 	_mount_result_cell(host, card, settled, upgraded)
 	return true
 
 static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, upgraded: bool) -> void:
+	# Leave missing slots out of the reel. Missing art never cancels the
+	# original card-back, illumination, or native result timing.
+	card.face.candidates = card.face.candidates.filter(func(texture: Texture2D) -> bool: return texture != null)
+	card.result_cell_illumination = true
 	card.name_label.modulate.a = 0.0
 	card.grade_label.modulate.a = 0.0
 	card.seek(0.0, upgraded)
@@ -279,14 +278,9 @@ func _draw() -> void:
 	# Illumination is separate from smoke, card movement and surface discharges.
 	if not reduced_motion:
 		for card: Control in cards:
-			if card.waiting_for_press:
-				continue
-			var elapsed: float = clock-card.lightning_at()
-			var power: float = PROFILES.pulse(card.grade,elapsed,card.extra_lightning_seconds)
-			if fusion and _card_upgraded(card):
-				power += PROFILES.pulse(card.grade,clock-card.promotion_at())
-			if power > 0.03:
-				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
+			var light: Color = card.light_color(fusion and _card_upgraded(card))
+			if light.a > 0.0:
+				draw_rect(Rect2(Vector2.ZERO,size),light)
 
 func _refresh_transport() -> void:
 	for card: Control in cards:

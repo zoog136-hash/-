@@ -23,6 +23,7 @@ var promotion_fx: Control
 var face: Control
 var confirmed_chrome: Control
 var art_missing: bool=false
+var result_cell_illumination: bool = false
 var name_label: Label
 var grade_label: Label
 var grade_heading: Label
@@ -40,6 +41,7 @@ class Face extends Control:
 	var elapsed: float = -1.0
 	var duration: float = 3.0
 	var tint: Color = Color.WHITE
+	var illumination: Color = Color.TRANSPARENT
 	var category: String = "변신"
 
 	func _art(texture: Texture2D, at: Vector2) -> void:
@@ -50,6 +52,11 @@ class Face extends Control:
 		draw_texture_rect(texture,Rect2(at+(size-fitted)*0.5,fitted),false)
 
 	func _draw() -> void:
+		_draw_surface()
+		if illumination.a > 0.0:
+			draw_rect(Rect2(Vector2.ZERO,size),illumination)
+
+	func _draw_surface() -> void:
 		draw_rect(Rect2(Vector2.ZERO,size),Color("0a1119"))
 		if elapsed < 0:
 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
@@ -198,6 +205,13 @@ func promotion_at() -> float:
 	# The second signal stays inside the anticipation, on its own clock.
 	return open_at+reel_seconds+0.5
 
+func light_color(successful_fusion: bool) -> Color:
+	if reduced_motion or waiting_for_press: return Color.TRANSPARENT
+	var power: float = PROFILES.pulse(grade, clock-lightning_at(), extra_lightning_seconds)
+	if successful_fusion:
+		power += PROFILES.pulse(grade, clock-promotion_at())
+	return Color(PROFILES.color(grade),minf(0.055,power*0.023*intensity_scale)) if power > 0.03 else Color.TRANSPARENT
+
 func seek(value: float, successful_fusion: bool = false) -> void:
 	clock = value
 	if waiting_for_press:
@@ -210,6 +224,8 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	var revealed: bool = clock >= reveal_at()
 	face.elapsed = local
 	face.duration = reveal_at()-open_at
+	if result_cell_illumination:
+		face.illumination = light_color(successful_fusion)
 	face.queue_redraw()
 	# Shared bitmap atmosphere replaces the older persistent aura. Inside-card
 	# lightning and the confirmation clock remain on their original passes.

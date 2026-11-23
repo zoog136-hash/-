@@ -48,9 +48,18 @@ func native_cell_timeline() -> void:
 	card.reel_seconds = 0.1
 	var no_legacy: Array[Texture2D] = []
 	card.configure({"name":"검증","grade":"영웅"}, no_legacy, "변신")
+	var image := Image.create_empty(1, 1, false, Image.FORMAT_RGBA8)
+	var texture := ImageTexture.create_from_image(image)
+	card.face.candidates.append(null)
+	card.face.candidates.append(texture)
 	var completed: Array[bool] = []
 	STAGE._mount_result_cell(parent, card, func() -> void: completed.append(not card.visible), true)
+	check(card.art_missing and card.face.candidates.size() == 1 and card.face.candidates[0] == texture, "one missing candidate and a missing result leave the verified reel image in place")
 	check(card.clock == 0.0 and completed.is_empty(), "off-tree fusion cell waits for the page to mount")
+	card.seek(card.promotion_at()+0.028, true)
+	var primary: float = PROFILES.pulse("영웅", card.clock-card.lightning_at())
+	var promotion: float = PROFILES.pulse("영웅", 0.028)
+	check(promotion > 0.0 and is_equal_approx(card.face.illumination.a, minf(0.055,(primary+promotion)*0.023)), "successful fusion retains the old stacked promotion illumination")
 	root.add_child(parent)
 	await create_timer(0.15).timeout
 	check(card.clock > 0.0 and completed.is_empty(), "mounted result cell advances the existing reel before settlement")
@@ -62,3 +71,19 @@ func native_cell_timeline() -> void:
 	parent.queue_free()
 	await process_frame
 	check(completed == [true] and not is_instance_valid(cancelled), "closing a native page removes its pending reel")
+	for fusion: bool in [false, true]:
+		var missing := Node2D.new()
+		var awarded := {"name":"원화 없음","grade":"영웅","source":"lineagem_patch523"}
+		# No candidate texture can resolve in this fixture. Exercise the real
+		# entry point even though neither the candidate nor the award has art.
+		check(STAGE.play_result_cell(missing, Rect2(0, 0, 80, 130), awarded, func() -> void: completed.append(false), "변신", fusion, true, [awarded], {}), "missing source art still starts the result timeline")
+		var hidden: Control = missing.get_child(0)
+		check(hidden.art_missing and hidden.face.candidates.is_empty(), "no portrait is substituted for missing source art")
+		hidden.seek(hidden.lightning_at()-0.01, fusion)
+		check(hidden.face.illumination.a == 0.0, "pre-lightning result cell has no grade illumination")
+		hidden.seek(hidden.lightning_at()+0.028, fusion)
+		var extra: float = 0.0 if fusion else STAGE.CARD.DRAW_EXTRA_LIGHTNING_SECONDS
+		var alpha: float = minf(0.055, PROFILES.pulse("영웅", 0.028, extra)*0.023*0.85)
+		check(alpha > 0.0 and is_equal_approx(hidden.face.illumination.a, alpha) and completed == [true], "missing art preserves the old primary light before native grade and name")
+		check(is_equal_approx(hidden.reveal_at()-hidden.lightning_at(), STAGE.CARD.CONFIRM_DELAY_SECONDS+extra), "missing art preserves the delay before the native grade and name")
+		missing.free()
