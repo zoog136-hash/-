@@ -271,6 +271,8 @@ func _boot() -> void:
 	# outdated are converted here, not one by one during play.
 	var tables: PackedStringArray = DEFINITIONS.tables_to_prepare()
 	if not tables.is_empty(): counted.append({"id": "definitions", "label": "원본 표"})
+	var encounter_tables: PackedStringArray = DEFINITIONS.encounter_tables_to_prepare()
+	if not encounter_tables.is_empty(): counted.append({"id": "npc_inputs", "label": "몬스터 데이터"})
 	if _prepares_main(): counted.append({"id": "main_prepare", "label": "게임 장면"})
 	_progress.configure(counted)
 	BOOT_LOG.mark("loading_plan", {"verification_items": steps.size(), "scene": destination})
@@ -311,6 +313,21 @@ func _boot() -> void:
 		DEFINITIONS.release_caches()
 		BOOT_LOG.end("definitions_prepare", definitions_started, {"tables": tables.size()})
 		_progress.complete_task("definitions")
+	if not encounter_tables.is_empty():
+		_progress.begin_task("npc_inputs", "몬스터 데이터를 준비하는 중…")
+		var npc_started: int = BOOT_LOG.begin("npc_inputs_prepare", {"tables": encounter_tables.size()})
+		var prepared: int = 0
+		for table: String in encounter_tables:
+			_render("몬스터 데이터 준비 %d/%d" % [prepared + 1, encounter_tables.size()])
+			await get_tree().process_frame
+			# Main thread only. A failed optional preparation retains the normal
+			# reader/admission failure path; it must not block missing-pack play.
+			var ok: bool = DEFINITIONS.prepare_encounter_table(table)
+			BOOT_LOG.mark("npc_input_prepared", {"table": table, "ok": ok})
+			if ok: prepared += 1
+			DEFINITIONS.release_caches()
+		BOOT_LOG.end("npc_inputs_prepare", npc_started, {"prepared": prepared, "tables": encounter_tables.size()})
+		_progress.complete_task("npc_inputs")
 	if _prepares_main():
 		# The roster does not consume map readers; their bakes are on disk.
 		HANDOFF.clear()

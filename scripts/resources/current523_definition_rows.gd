@@ -56,11 +56,11 @@ static func reset() -> void:
 ## Drops what the reader keeps only to answer later queries faster, after
 ## start-up has read what it needs (Lineage M style: rows stay on storage):
 ## the columns read from disk tables, the small packed tables (read again from
-## their verified device bake on the next query), the relation indexes and the
+## their verified device bake on the next query), most relation indexes and the
 ## parsed archive index. The verified archive, its identity, disk table handles
 ## (row offsets; reopening one would hash the whole file again), the problem
 ## and store-failure records stay. Every later query returns the same values.
-## Returns {tables, disk_columns, relations} counts that were released.
+## Returns released counts plus the number of bounded encounter indexes kept.
 ## This only frees acceleration data for the same verified archive; logical
 ## source values and cache_generation() remain unchanged. reset() invalidates
 ## source-dependent read lifetimes instead.
@@ -134,8 +134,51 @@ static func tables_to_prepare() -> PackedStringArray:
 static func prepare_table(table: String) -> bool:
 	return not _store(table).is_empty()
 
+## Fixed first-encounter inputs, not the whole NPC/spell closure. Prepare one
+## at a time on the loading screen, through the ordinary verified reader.
+## Later spell/buff dependencies remain lazy. No actor is admitted here.
+const ENCOUNTER_RELATIONS: Dictionary = {
+	"NpcAttack": "NpcClassID", "NpcAttribute": "NpcClassID",
+	"NpcSpecialResistance": "NpcClassID", "SpellClass": "ID",
+}
+const ENCOUNTER_INDEX_BYTES: int = 2 * 1024 * 1024
+
+static func encounter_tables_to_prepare() -> PackedStringArray:
+	var pending := PackedStringArray()
+	if not _open(): return pending
+	for table: String in ENCOUNTER_RELATIONS:
+		if not _tables.has(table) or not _relations.has(table + ":" + str(ENCOUNTER_RELATIONS[table])):
+			pending.append(table)
+	return pending
+
+static func prepare_encounter_table(table: String) -> bool:
+	if not ENCOUNTER_RELATIONS.has(table) or not prepare_table(table): return false
+	var field: String = ENCOUNTER_RELATIONS[table]
+	# The ordinary builder checks every owner value and persists the index
+	# under the measured source + table format + field key. No special cache.
+	related_indices(table, field, 0)
+	return _relations.has(table + ":" + field)
+
+## Keep only compact indexes within a fixed total budget across both loading
+## and World's release. Disk handles already survive release; columns do not.
+## reset()/source changes still discard everything. Fallback group dictionaries
+## are not retained, and a too-large index simply uses the normal later read.
+static func _encounter_indexes() -> Dictionary:
+	var retained: Dictionary = {}
+	var remaining: int = ENCOUNTER_INDEX_BYTES
+	for table: String in ENCOUNTER_RELATIONS:
+		var key: String = table + ":" + str(ENCOUNTER_RELATIONS[table])
+		var relation: Dictionary = _relations.get(key, {})
+		if not relation.get("keys") is PackedInt64Array or not relation.get("starts") is PackedInt32Array or not relation.get("rows") is PackedInt32Array: continue
+		var bytes: int = relation.keys.size() * 8 + relation.starts.size() * 4 + relation.rows.size() * 4
+		if bytes > remaining: continue
+		retained[key] = relation
+		remaining -= bytes
+	return retained
+
 static func release_caches() -> Dictionary:
-	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size()}
+	var retained: Dictionary = _encounter_indexes()
+	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size() - retained.size(), "encounter_indexes": retained.size()}
 	for table: String in _tables.keys():
 		var store: Variant = _tables[table]
 		if store is Dictionary and (store as Dictionary).has("disk"):
@@ -145,7 +188,7 @@ static func release_caches() -> Dictionary:
 		else:
 			_tables.erase(table)
 			released.tables += 1
-	_relations.clear()
+	_relations = retained
 	_metadata.clear()
 	return released
 
@@ -985,6 +1028,9 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 ## Table positions (0-based, table order) of the rows related() returns for
 ## the same arguments, from the same relation index (no rows decoded here).
 static func related_indices(table: String, foreign_key: String, id: int) -> PackedInt32Array:
+	# Retained indexes are acceleration data, never permission to use an old
+	# source after the configured archive changes (including a missing pack).
+	if _store(table).is_empty(): return PackedInt32Array()
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
 		related(table, foreign_key, id)
