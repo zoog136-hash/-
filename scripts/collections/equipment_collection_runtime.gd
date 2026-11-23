@@ -256,11 +256,13 @@ func precheck_write(path: String) -> Error:
 	return OK
 
 ## Background save finished writing `payload_hash` bytes of `data` to path.
-func commit_written(path: String, data: Dictionary, payload_hash: String) -> void:
+func commit_written(path: String, _data: Dictionary, payload_hash: String) -> void:
 	_disk_path = path
 	_disk_hash = FileAccess.get_sha256(path)
 	_last_payload_hash = payload_hash if _disk_hash==payload_hash else ""
-	_last_payload_revision = hash(data)
+	# No revision can be reused without a typed snapshot (invalid below).
+	# Hashing this entire payload on the main thread served no consumer.
+	_last_payload_revision = 0
 	# No snapshot copy on the main thread: the next save is written in full.
 	_last_payload_snapshot = {}
 	_last_payload_snapshot_valid = false
