@@ -1125,9 +1125,18 @@ const CONTENT_ENTRY_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePus
 ## `save_changes`: prepared save overrides (current523_map_travel_payment)
 ## saved with the arrival, e.g. a teleport item's debit.
 func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE, save_changes: Dictionary={}) -> bool:
+	if _source_travel_busy: problem="다른 지도 이동을 준비하고 있습니다."; return false
 	_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	_content_entry_land=land_id;_content_entry_waive=waive.duplicate()
 	var moved: bool=_enter_source_land(land_id,bounds,save_changes)
+	_content_entry_land=-1;_content_entry_waive=[]
+	return moved
+
+func enter_source_land_loading(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE, save_changes: Dictionary={}) -> bool:
+	if _source_travel_busy: problem="다른 지도 이동을 준비하고 있습니다."; return false
+	_last_source_transition={"ok":false,"saved":false,"uncertain":false}
+	_content_entry_land=land_id;_content_entry_waive=waive.duplicate()
+	var moved: bool = await _enter_source_land_impl(land_id,bounds,save_changes,true)
 	_content_entry_land=-1;_content_entry_waive=[]
 	return moved
 
@@ -1167,6 +1176,12 @@ func source_portal_cells() -> Dictionary:
 ## Called by the world's field trigger tick. Returns the walk-in result when
 ## a portal fired, else {}.
 func step_source_portal() -> Dictionary:
+	return call("_step_source_portal_impl",false)
+
+func step_source_portal_loading() -> Dictionary:
+	return await _step_source_portal_impl(true)
+
+func _step_source_portal_impl(loading: bool) -> Dictionary:
 	var world: Node=_world()
 	if not active or not source_owned or _source_field==null or not is_instance_valid(world) or str(settings.get("navigation_profile",""))!=OPTIONS.GENERIC: return {}
 	var land_changed: bool=int(settings.get("native_land_id",-1))!=_portal_cells_land
@@ -1183,10 +1198,16 @@ func step_source_portal() -> Dictionary:
 	var steps: int=maxi(absi(cell.x-was.x),absi(cell.y-was.y))
 	for step: int in range(1,steps+1):
 		var passed: Vector2i=Vector2i(roundi(lerpf(was.x,cell.x,float(step)/steps)),roundi(lerpf(was.y,cell.y,float(step)/steps)))
-		if cells.has(passed): return use_walk_in_portal(int(cells[passed]))
+		if cells.has(passed):
+			if loading:
+				return await preload("res://scripts/boot/dungeon_loading.gd").run(world,Callable(self,"_use_walk_in_portal_impl").bind(int(cells[passed]),true))
+			return use_walk_in_portal(int(cells[passed]))
 	return {}
 
 func use_walk_in_portal(id: int) -> Dictionary:
+	return call("_use_walk_in_portal_impl",id,false)
+
+func _use_walk_in_portal_impl(id: int, loading: bool) -> Dictionary:
 	var world: Node=_world()
 	var portal: Dictionary=PORTAL_DEF.row("Portal",id)
 	var territory: Dictionary=PORTAL_DEF.row("Territories",int(portal.get("TargetTerritoryID",0))) if not portal.is_empty() else {}
@@ -1194,7 +1215,9 @@ func use_walk_in_portal(id: int) -> Dictionary:
 		last_walk_in_portal={"ok":false,"id":id,"reason":"포탈 도착 지역(Territories) 원본 행이 없습니다"}
 		return last_walk_in_portal
 	var bounds: Array=[int(territory.StartX),int(territory.StartY),int(territory.EndX),int(territory.EndY)]
-	var moved: bool=enter_source_land(int(territory.LandID),bounds,WALK_IN_WAIVE)
+	var moved: bool
+	if loading: moved=await enter_source_land_loading(int(territory.LandID),bounds,WALK_IN_WAIVE)
+	else: moved=enter_source_land(int(territory.LandID),bounds,WALK_IN_WAIVE)
 	world.portal_cooldown=2.0
 	if moved:
 		world.player.clear_click_path(); world.player.velocity=Vector2.ZERO; world.player.set_touch_vector(Vector2.ZERO)
@@ -1237,6 +1260,10 @@ static func valid_landing_bounds(bounds: Array) -> bool:
 	return int(bounds[0])<=int(bounds[2]) and int(bounds[1])<=int(bounds[3])
 
 func _enter_source_land(land_id: int, bounds: Array, save_changes: Dictionary={}) -> bool:
+	# This branch never yields. Keep existing synchronous consumers/fixtures.
+	return call("_enter_source_land_impl",land_id,bounds,save_changes,false)
+
+func _enter_source_land_impl(land_id: int, bounds: Array, save_changes: Dictionary, loading: bool) -> bool:
 	problem=""
 	if not valid_landing_bounds(bounds):
 		problem="도착 범위 오류: "+str(bounds); return false
@@ -1252,7 +1279,11 @@ func _enter_source_land(land_id: int, bounds: Array, save_changes: Dictionary={}
 		if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,land_id,{"attribute_rule":str(settings.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
 			var landing: Dictionary=proposed.choose_source_landing(bounds,"OWN_FIRST_CLEAR_IN_DECLARED_REGION_V1" if bounds[0]!=bounds[2] or bounds[1]!=bounds[3] else "EXACT_POINT_ONLY")
 			if landing.get("ok",false):
-				completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
+				if loading:
+					var candidate: Node = await _prepare_arrival(world,proposed,settings,landing.source_cell,catalog)
+					if is_instance_valid(candidate): completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes,candidate)
+					else: proposed.close()
+				else: completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
 				if not completed and problem.contains("native_definition_conditions_require_policy"):
 					var holds: Array=[]
 					for hold: Variant in _entry_context(land_id,str(proposed.get("source_asset")),landing.source_cell,_actor_state(world)).get("source_travel_holds",[]):
@@ -1358,7 +1389,59 @@ func _return_within_aden(world: Node,save_changes: Dictionary) -> bool:
 	if save_changes.has("gold"):world.set("gold",int(save_changes.gold))
 	return true
 
-func _commit_source_destination(world: Node,proposed: OriginalPlayableField,options: Dictionary,destination: Vector2i,catalog: RefCounted,context: Dictionary={},id: int=-1,save_changes: Dictionary={}) -> bool:
+var arrival_timeout_msec: int = 60000
+
+## No save/fee/map ownership change until visible ground has actually rendered.
+## Only the loading UI opts into yielding; synchronous fixtures/API stay intact.
+func _prepare_arrival(world: Node, proposed: OriginalPlayableField, options: Dictionary, destination: Vector2i, catalog: RefCounted) -> Node:
+	var loader = preload("res://scripts/boot/dungeon_loading.gd")
+	loader.report(world,"도착 지역의 바닥을 준비하는 중")
+	var tiles: RefCounted = _tiles_for(options)
+	if tiles == null: return null
+	var player: Node2D = world.player
+	var position: Vector2 = player.global_position
+	var camera: Camera2D = player.camera
+	var limits: Array = [camera.limit_left,camera.limit_top,camera.limit_right,camera.limit_bottom]
+	player.global_position=proposed.coordinates.to_world(Vector2(destination))
+	camera.limit_left=floori(proposed.bounds.position.x); camera.limit_top=floori(proposed.bounds.position.y)
+	camera.limit_right=ceili(proposed.bounds.end.x); camera.limit_bottom=ceili(proposed.bounds.end.y)
+	camera.reset_smoothing(); camera.force_update_scroll()
+	var candidate = RENDERER.new()
+	candidate.process_mode=Node.PROCESS_MODE_DISABLED
+	candidate.hide()
+	world.add_child(candidate)
+	var valid: bool = candidate.try_configure(proposed,player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256),catalog,tiles)
+	if valid: valid = await _wait_arrival(world,candidate)
+	else: problem="도착 화면 확인 실패: "+str(candidate.problem)
+	if is_instance_valid(player): player.global_position=position
+	if is_instance_valid(camera):
+		camera.limit_left=limits[0]; camera.limit_top=limits[1]; camera.limit_right=limits[2]; camera.limit_bottom=limits[3]
+		camera.reset_smoothing(); camera.force_update_scroll()
+	if not valid:
+		if problem.is_empty(): problem="도착 화면 확인 실패"
+		if is_instance_valid(candidate): candidate.queue_free()
+		return null
+	loader.arrival_ready(world)
+	loader.report(world,"통행과 캐릭터 배치를 확인하고 입장을 확정하는 중")
+	return candidate
+
+## Wait only on bounded renderer work. All fallible preparation precedes payment.
+func _wait_arrival(world: Node, candidate: Node) -> bool:
+	var tree: SceneTree = world.get_tree()
+	var started: int = Time.get_ticks_msec()
+	while is_instance_valid(world) and world.is_inside_tree() and is_instance_valid(candidate):
+		var readiness: Dictionary = candidate.arrival_readiness()
+		if readiness.get("failed",false): problem=str(readiness.get("reason","도착 화면 준비 실패")); return false
+		if readiness.get("ready",false): return true
+		if Time.get_ticks_msec()-started >= arrival_timeout_msec:
+			problem="도착 화면 준비 시간이 초과되었습니다. 현재 지역과 비용을 보존했습니다."
+			return false
+		await tree.process_frame
+		if is_instance_valid(world) and world.is_inside_tree() and is_instance_valid(candidate): candidate._process_step(0.0)
+	problem="도착 화면 준비가 취소되었습니다."
+	return false
+
+func _commit_source_destination(world: Node,proposed: OriginalPlayableField,options: Dictionary,destination: Vector2i,catalog: RefCounted,context: Dictionary={},id: int=-1,save_changes: Dictionary={},prepared_candidate: Node=null) -> bool:
 	_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	var target_id: int=int(proposed.get("native_land").ID)
 	var position: Vector2=proposed.coordinates.to_world(Vector2(destination))
@@ -1372,15 +1455,22 @@ func _commit_source_destination(world: Node,proposed: OriginalPlayableField,opti
 	camera.limit_left=floori(proposed.bounds.position.x); camera.limit_top=floori(proposed.bounds.position.y)
 	camera.limit_right=ceili(proposed.bounds.end.x); camera.limit_bottom=ceili(proposed.bounds.end.y)
 	camera.reset_smoothing(); camera.force_update_scroll()
-	var candidate=RENDERER.new()
-	candidate.name="Current523GenericTravelRenderer"
-	candidate.process_mode=Node.PROCESS_MODE_DISABLED; candidate.hide(); world.add_child(candidate)
-	var valid: bool=candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256),catalog,tiles)
-	world.player.global_position=previous_position
-	camera.limit_left=previous_camera.left; camera.limit_top=previous_camera.top; camera.limit_right=previous_camera.right; camera.limit_bottom=previous_camera.bottom
-	camera.reset_smoothing(); camera.force_update_scroll()
-	if not valid:
-		problem="도착 화면 확인 실패: "+str(candidate.problem); candidate.queue_free(); proposed.close(); return false
+	var candidate: Node = prepared_candidate
+	if candidate == null:
+		candidate=RENDERER.new()
+		candidate.name="Current523GenericTravelRenderer"
+		candidate.process_mode=Node.PROCESS_MODE_DISABLED; candidate.hide(); world.add_child(candidate)
+		var valid: bool=candidate.try_configure(proposed,world.player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256),catalog,tiles)
+		world.player.global_position=previous_position
+		camera.limit_left=previous_camera.left; camera.limit_top=previous_camera.top; camera.limit_right=previous_camera.right; camera.limit_bottom=previous_camera.bottom
+		camera.reset_smoothing(); camera.force_update_scroll()
+		if not valid:
+			problem="도착 화면 확인 실패: "+str(candidate.problem); candidate.queue_free(); proposed.close(); return false
+	else:
+		# Prepared while the world was paused; no repeat cold configure here.
+		world.player.global_position=previous_position
+		camera.limit_left=previous_camera.left; camera.limit_top=previous_camera.top; camera.limit_right=previous_camera.right; camera.limit_bottom=previous_camera.bottom
+		camera.reset_smoothing(); camera.force_update_scroll()
 	var actor_state: Dictionary=_actor_state(world)
 	# Rendering may take wall time. Consume the current source AND target
 	# conditions again before committing a transition across a date boundary.

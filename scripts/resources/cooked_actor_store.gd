@@ -67,6 +67,7 @@ static func _count(name: String, amount: int = 1) -> void:
 	_counters[name] = int(_counters.get(name, 0)) + amount
 
 static func reset_for_tests() -> void:
+	finish_prepared_pages()
 	_cache.clear()
 	_live_actors.clear()
 	_new_actor_loads = 0
@@ -91,6 +92,7 @@ static func setting_enabled() -> bool:
 	return bool(config.get_value("cooked", "enabled", true))
 
 static func set_setting_enabled(value: bool) -> Error:
+	cancel_prepared_pages()
 	var config := ConfigFile.new()
 	config.load(SETTINGS)
 	config.set_value("cooked", "enabled", value)
@@ -234,7 +236,7 @@ static func _trim() -> void:
 
 ## The texture of one page, loaded on first use. Pages past the byte budget
 ## are dropped oldest first (a sprite showing one keeps it alive).
-static func page_texture(actor: CookedActor, page: int) -> Texture2D:
+static func cached_page_texture(actor: CookedActor, page: int) -> Texture2D:
 	var key: String = actor.path + "#" + str(page)
 	var texture: Variant = actor.textures[page]
 	if texture is Texture2D:
@@ -252,6 +254,11 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 			_count("page_live_reuse")
 			return still_live
 		actor.live_textures.erase(page)
+	return null
+
+static func page_texture(actor: CookedActor, page: int) -> Texture2D:
+	var cached: Texture2D = cached_page_texture(actor, page)
+	if cached != null: return cached
 	if actor.page_retry_after.get(page, 0) > Time.get_ticks_msec(): return null
 	var file := FileAccess.open(actor.path, FileAccess.READ)
 	var image: Image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start) if file != null else null
@@ -261,9 +268,13 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 		return null
 	actor.page_retry_after.erase(page)
 	var made: ImageTexture = ImageTexture.create_from_image(image)
+	_install_page_texture(actor, page, made, image.get_data_size())
+	return made
+
+static func _install_page_texture(actor: CookedActor, page: int, made: Texture2D, bytes: int) -> void:
+	var key: String = actor.path + "#" + str(page)
 	actor.textures[page] = made
 	actor.live_textures[page] = weakref(made)
-	var bytes: int = image.get_data_size()
 	# Direct tooling callers can load the same bundle outside the runtime index
 	# cache. If they replace a reserved key, release its old accounting first.
 	if _pages.has(key): _demote_page(key)
@@ -273,13 +284,214 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 	while _page_bytes > budget_bytes and _pages.size() > 1:
 		_demote_page(_pages.keys()[0])
 		_count("page_evicted")
-	return made
 
 static func _demote_page(key: String) -> void:
 	var entry: Array = _pages[key]
 	_pages.erase(key)
 	_page_bytes -= int(entry[2])
 	entry[0].textures[int(entry[1])] = null
+
+## Opt-in pilot: only the gameplay NPC view calls this before admission. The
+## player, cards, effects and later animation pages keep synchronous semantics.
+static var npc_page_prewarm: bool = "--twilight-cooked-npc-prewarm" in OS.get_cmdline_user_args() or OS.get_environment("TWILIGHT_COOKED_NPC_PREWARM") == "1"
+const PREPARE_MAX_JOBS: int = 8
+const PREPARE_PACKED_BYTES: int = 8 * 1024 * 1024
+## Charge twice the unpacked bytes (decompress buffer + Image / upload copy),
+## even after a result becomes a held texture. Packed input is charged separately.
+const PREPARE_RAW_BYTES: int = 32 * 1024 * 1024
+const PREPARE_IDLE_MSEC: int = 2000
+const PREPARE_UPLOADS_PER_FRAME: int = 1
+static var _page_jobs: Dictionary = {} # immutable page identity -> main-owned job
+static var _page_groups: Dictionary = {} # whole pose reservations, shared pages refcounted
+static var _prepare_packed: int = 0
+static var _prepare_raw: int = 0
+static var _prepare_root: String = ""
+static var _prepare_frame: int = -1
+static var _prepare_uploads: int = 0
+
+static func prepared_page_stats() -> Dictionary:
+	return {"jobs":_page_jobs.size(), "groups":_page_groups.size(), "packed_bytes":_prepare_packed, "raw_bytes":_prepare_raw,
+		"frame":_prepare_frame, "uploads":_prepare_uploads}
+
+## These scalar inputs are a snapshot of an already accepted cooked index.
+## No actor, track, store Dictionary, GPU object or file handle crosses threads.
+static func _page_input(actor: CookedActor, page: int) -> Array:
+	var row: Dictionary = actor.index.pages[page]
+	var input: Array = [actor.path, actor.data_start, int(row.offset), int(row.bytes), int(row.raw), int(row.w), int(row.h), int(row.format)]
+	input.make_read_only()
+	return input
+
+static func _read_prepared_page(input: Array, result: Array) -> void:
+	var file := FileAccess.open(str(input[0]), FileAccess.READ)
+	var entry: Dictionary = {"offset":input[2], "bytes":input[3], "raw":input[4], "w":input[5], "h":input[6], "format":input[7]}
+	# Same bounds, Zstd size, format and image validation as synchronous reads.
+	result[0] = FORMAT.read_page(file, entry, int(input[1])) if file != null else null
+
+static func _forget_prepared(key: String) -> void:
+	var job: Dictionary = _page_jobs[key]
+	_prepare_packed -= int(job.input[3])
+	_prepare_raw -= int(job.input[4]) * 2
+	_page_jobs.erase(key)
+
+## Cancel without joining an in-flight worker. Its reservation remains charged
+## until it actually finishes; obsolete results can never be published.
+static func cancel_prepared_pages() -> void:
+	_page_groups.clear()
+	for job: Dictionary in _page_jobs.values(): job.cancelled = true
+	pump_prepared_pages()
+
+## Explicit teardown/tests may join; normal request/pump/cancel never does.
+static func finish_prepared_pages() -> void:
+	for job: Dictionary in _page_jobs.values():
+		if job.has("task"): WorkerThreadPool.wait_for_task_completion(int(job.task))
+	_page_jobs.clear()
+	_page_groups.clear()
+	_prepare_packed = 0
+	_prepare_raw = 0
+	_prepare_root = ""
+
+static func pump_prepared_pages() -> void:
+	var folder: String = root()
+	if folder != _prepare_root:
+		_prepare_root = folder
+		_page_groups.clear()
+		for job: Dictionary in _page_jobs.values(): job.cancelled = true
+	var frame: int = Engine.get_process_frames()
+	if _prepare_frame != frame:
+		_prepare_frame = frame
+		_prepare_uploads = 0
+	var now: int = Time.get_ticks_msec()
+	for group: String in _page_groups.keys():
+		if now - int(_page_groups[group].touched) > PREPARE_IDLE_MSEC: _release_prepared_group(group)
+	for key: String in _page_jobs.keys():
+		var job: Dictionary = _page_jobs[key]
+		if job.has("task"):
+			if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+			WorkerThreadPool.wait_for_task_completion(int(job.task))
+			job.erase("task")
+		if job.cancelled:
+			_forget_prepared(key)
+			continue
+		if job.has("texture") or job.has("failed"): continue
+		var image: Image = job.result[0]
+		if image == null:
+			job.failed = true
+			continue
+		if _prepare_uploads >= PREPARE_UPLOADS_PER_FRAME: continue
+		job.texture = ImageTexture.create_from_image(image)
+		job.result[0] = null
+		_prepare_uploads += 1
+		_count("page_prepared_upload")
+
+## {status: ready, textures: ...} holds the entire first pose through admission,
+## including pages evicted from the reserve while another page was installed.
+## pending never starts an actor's animation clock; unsupported uses the existing
+## synchronous path (oversized poses must not wait forever on a bounded queue).
+static func prepare_state(actor: CookedActor, state: int) -> Dictionary:
+	var folder: String = root()
+	if folder != _prepare_root:
+		cancel_prepared_pages()
+		_prepare_root = folder
+	if folder.is_empty() or not actor.path.begins_with(folder + "/"): return {"status":"unsupported"}
+	var pages: Dictionary = {}
+	var items: PackedInt32Array = actor.index.states[state]
+	for at: int in range(0, items.size(), FORMAT.ITEM_STRIDE): pages[int(actor.index.images[items[at] * 5])] = true
+	var inputs: Dictionary = {}
+	var keys: Array[String] = []
+	var packed: int = 0
+	var raw: int = 0
+	for page: int in pages:
+		var input: Array = _page_input(actor, page)
+		inputs[page] = input
+		keys.append(var_to_str(input))
+		packed += int(input[3])
+		raw += int(input[4]) * 2
+	if pages.size() > PREPARE_MAX_JOBS or packed > PREPARE_PACKED_BYTES or raw > PREPARE_RAW_BYTES:
+		_count("page_prepare_sync_oversize")
+		return {"status":"unsupported"}
+	var group: String = var_to_str(keys)
+	var now: int = Time.get_ticks_msec()
+	if _page_groups.has(group): _page_groups[group].touched = now
+	pump_prepared_pages()
+	if not _page_groups.has(group):
+		var warm: Dictionary = {}
+		var needed: int = 0
+		packed = 0
+		raw = 0
+		for page: int in pages:
+			var texture: Texture2D = cached_page_texture(actor, page)
+			if texture != null: warm[page] = texture
+			var input: Array = inputs[page]
+			var key: String = var_to_str(input)
+			if _page_jobs.has(key):
+				if _page_jobs[key].cancelled: return {"status":"pending"}
+			else:
+				if texture == null and int(actor.page_retry_after.get(page, 0)) > now: return {"status":"pending"}
+				needed += 1
+				packed += int(input[3])
+				raw += int(input[4]) * 2
+		if warm.size() == pages.size(): return {"status":"ready", "textures":warm}
+		# Reserve the WHOLE pose atomically, including warm pages. Partial
+		# admissions could fill the queue with groups none of which can finish.
+		if _page_jobs.size() + needed > PREPARE_MAX_JOBS or _prepare_packed + packed > PREPARE_PACKED_BYTES or _prepare_raw + raw > PREPARE_RAW_BYTES: return {"status":"pending"}
+		_page_groups[group] = {"keys":keys, "touched":now}
+		for page: int in pages:
+			var input: Array = inputs[page]
+			var key: String = var_to_str(input)
+			if _page_jobs.has(key):
+				_page_jobs[key].users += 1
+				continue
+			var result: Array = [null]
+			var job: Dictionary = {"input":input, "result":result, "cancelled":false, "users":1}
+			_prepare_packed += int(input[3])
+			_prepare_raw += int(input[4]) * 2
+			if warm.has(page): job.texture = warm[page]
+			else:
+				job.task = WorkerThreadPool.add_task(_read_prepared_page.bind(input, result), false, "cooked NPC first page")
+				_count("page_prepare_submitted")
+			_page_jobs[key] = job
+	var held: Dictionary = {}
+	for page: int in pages:
+		var job: Dictionary = _page_jobs[var_to_str(inputs[page])]
+		if job.has("failed"):
+			_count("page_unreadable")
+			actor.page_retry_after[page] = now + PAGE_RETRY_MSEC
+			_release_prepared_group(group)
+			pump_prepared_pages()
+			return {"status":"pending", "error":"cooked_actor_page"}
+		if job.has("texture"): held[page] = job.texture
+	if held.size() != pages.size(): return {"status":"pending"}
+	for page: int in held:
+		if cached_page_texture(actor, page) != held[page]: _install_page_texture(actor, page, held[page], int(inputs[page][4]))
+		actor.page_retry_after.erase(page)
+	_release_prepared_group(group)
+	pump_prepared_pages()
+	return {"status":"ready", "textures":held}
+
+## Same zero-clock frame selection as the preview (including zero-duration
+## source frames and its recorded boundary epsilon), without advancing it.
+static func initial_state(entry: Dictionary, role: String, direction: int) -> int:
+	var track: Dictionary = entry.runtime_tracks[role]
+	var frames: Array = track.directions[direction]
+	var is_static: bool = bool(track.get("static_pending_timing", false))
+	var selected: Dictionary = frames[0] if is_static else frames[-1]
+	var time: float = 0.0
+	var epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
+	if not is_static:
+		for frame: Dictionary in frames:
+			var duration: float = float(frame.get("presentation_duration", frame.duration))
+			if time + epsilon < duration:
+				selected = frame
+				break
+			time -= duration
+	var ended: bool = not is_static and not bool(track.loop) and float(track.direction_totals[direction]) <= 0.0
+	return state_for(entry, role, direction, int(selected.cooked_index), time, ended)
+
+static func _release_prepared_group(group: String) -> void:
+	for key: String in _page_groups[group]["keys"]:
+		_page_jobs[key].users -= 1
+		if int(_page_jobs[key].users) == 0: _page_jobs[key].cancelled = true
+	_page_groups.erase(group)
 
 ## Reads one cooked actor file into textures and runtime tracks.
 ## Reads a cooked file's index (no pixels; pages load on first use).

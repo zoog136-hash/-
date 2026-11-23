@@ -178,6 +178,7 @@ var companion_window: PanelContainer
 var transaction_view: Control
 var shop_view: Control
 var catalog_view_state: Dictionary = {}
+var _catalog_restore_id: String = ""
 var pending_quickslot_binding: Dictionary = {}
 var quickslot_picker_hint: Label
 var catalog_test_toggle: Button
@@ -2061,7 +2062,10 @@ func open_card_fusion(category: String) -> void:
 func open_catalog(category: String) -> void:
 	var started: int = FRAME_HITCH.now()
 	_open_catalog_impl(category)
-	FRAME_HITCH.detail("ui.catalog_open", started)
+	# Use a bounded ASCII vocabulary so the Android report keeps the category.
+	var category_key: String = {"변신":"transform","마법인형":"doll","성물":"relic","아이템":"item"}.get(category,"other")
+	var route: String = "browser" if catalog_browser_active else "native"
+	FRAME_HITCH.detail("ui.catalog_open." + category_key + "." + route, started)
 
 func _open_catalog_impl(category: String) -> void:
 	_reset_catalog_drag()
@@ -2082,16 +2086,18 @@ func _open_catalog_browser(category: String) -> void:
 		equipment_collection_button.disabled = false
 		equipment_collection_button.text = "장비 컬렉션"
 		equipment_collection_button.tooltip_text = "장비 등록 컬렉션 열기 · 각인 구분 없음"
-	catalog_grade_filter = "전체"
-	item_grade_filter = "전체"
+	# Restore the saved filters before building any rows or loading any previews.
+	var saved: Dictionary = catalog_view_state.get(category,{})
+	catalog_grade_filter = str(saved.get("grade","전체"))
+	item_grade_filter = catalog_grade_filter
 	item_slot_filter = "all"
-	rarity_filter.select(0)
+	_refresh_item_filter_controls()
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
-	catalog_search.set_text("")
+	catalog_search.set_text(str(saved.get("query","")))
 	collection_status.text = "아이템 정보" if category=="아이템" else "현재 적용: "+str(character_state.get("equipped",{}).get(category,{}).get("name","없음"))
 	for grade_name: String in catalog_grade_buttons:
-		catalog_grade_buttons[grade_name].button_pressed = grade_name == "전체"
+		catalog_grade_buttons[grade_name].set_pressed_no_signal(grade_name == catalog_grade_filter)
 	playtest_grant_button.visible = category == "아이템"
 	playtest_grant_button.disabled = true
 	playtest_aden_button.visible = category == "아이템"
@@ -2104,25 +2110,19 @@ func _open_catalog_browser(category: String) -> void:
 		card_awakening_tab.visible = CARD_RULES.CATEGORIES.has(category)
 	catalog_test_tools.hide()
 	catalog_test_toggle.button_pressed = false
-	_refresh_catalog_list("")
-	var saved: Dictionary = catalog_view_state.get(category,{})
+	_filter_catalog_results(catalog_search.text)
+	catalog_page = clampi(int(saved.get("page",0)),0,_catalog_page_count()-1)
+	_catalog_restore_id = str(saved.get("id",""))
+	if not _catalog_restore_id.is_empty() and CARD_RULES.CATEGORIES.has(category):
+		for index: int in range(catalog_filtered_results.size()):
+			var record: Dictionary = catalog_filtered_results[index]
+			if str(record.get("sourceId",record.get("name",""))) == _catalog_restore_id:
+				catalog_page = index / catalog_page_size
+				break
+	_apply_catalog_page()
+	_catalog_restore_id = ""
 	if not saved.is_empty():
-		catalog_grade_filter = str(saved.get("grade","전체"))
-		item_grade_filter = catalog_grade_filter
-		catalog_search.text = str(saved.get("query",""))
-		_refresh_catalog_list(catalog_search.text)
-		catalog_page = clampi(int(saved.get("page",0)),0,maxi(0,_catalog_page_count()-1))
-		if CARD_RULES.CATEGORIES.has(category):
-			for index: int in range(catalog_filtered_results.size()):
-				var record: Dictionary=catalog_filtered_results[index]
-				if str(record.get("sourceId",record.get("name","")))==str(saved.get("id","")):
-					catalog_page=index/catalog_page_size
-					break
-		_apply_catalog_page()
-		for i: int in range(catalog_results.size()):
-			if str(catalog_results[i].get("sourceId",catalog_results[i].get("name",""))) == str(saved.get("id","")): _select_catalog_index(i)
-		catalog_list.get_v_scroll_bar().set_deferred("value",float(saved.get("scroll",0)))
-		for grade_name: String in catalog_grade_buttons: catalog_grade_buttons[grade_name].button_pressed = grade_name == catalog_grade_filter
+		_restore_catalog_scroll_for_open.call_deferred(category,float(saved.get("scroll",0)),catalog_icon_generation)
 	catalog_details_active = false
 	_fit_catalog_browser_layout()
 	if card_result_label != null:
@@ -2163,6 +2163,10 @@ func _open_original_change_window(category: String) -> bool:
 	workspace.hide()
 	_sync_screen_focus()
 	return true
+
+func _restore_catalog_scroll_for_open(category: String, scroll: float, generation: int) -> void:
+	if catalog_category != category or catalog_icon_generation != generation or not catalog_panel.is_visible_in_tree(): return
+	catalog_list.get_v_scroll_bar().value = scroll
 
 func _restore_native_catalog_scroll(category: String, scroll: float, generation: int) -> void:
 	# Container reparenting and icon-size changes settle after the first frame.
@@ -2963,8 +2967,9 @@ func _filter_catalog_results(filter_text: String) -> void:
 		if catalog_category=="아이템" and record.get("source_preserved_legacy_catalog",false): continue
 		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
-		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
-		if query!="" and not searchable.to_lower().contains(query): continue
+		if not query.is_empty():
+			var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
+			if not searchable.to_lower().contains(query): continue
 		if catalog_category=="성물" and is_instance_valid(relic_reference_view) and not relic_reference_view.matches_type(record):continue
 		catalog_filtered_results.append(record)
 	if CARD_RULES.CATEGORIES.has(catalog_category):
@@ -2983,6 +2988,14 @@ func _refresh_catalog_owned_order() -> void:
 	_apply_catalog_page()
 	if selected_index>=0:_select_catalog_index(selected_index%catalog_page_size)
 	catalog_list.get_v_scroll_bar().set_deferred("value",scroll)
+
+func _catalog_initial_selection() -> int:
+	if not _catalog_restore_id.is_empty():
+		for index: int in range(catalog_results.size()):
+			var record: Dictionary = catalog_results[index]
+			if str(record.get("sourceId", record.get("name",""))) == _catalog_restore_id:
+				return index
+	return 0
 
 func _apply_catalog_page() -> void:
 	UI.clear_item_visual(catalog_preview)
@@ -3055,7 +3068,7 @@ func _catalog_icon_reserve() -> Texture2D:
 	return _catalog_icon_slot
 
 func _fill_catalog_page_icons(request_id: int) -> void:
-	if catalog_list == null: return
+	if catalog_list == null or request_id != catalog_icon_generation: return
 	catalog_list.fixed_icon_size = _catalog_icon_size()
 	var item_page: bool = catalog_category == "아이템"
 	for index: int in range(catalog_icon_views.size()):

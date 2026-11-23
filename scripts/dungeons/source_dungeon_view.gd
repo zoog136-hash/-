@@ -201,7 +201,7 @@ func _play_action(action: String) -> void:
 	if selected<0 or selected>=rows.size():return
 	var service: RefCounted=world.dungeon_play;var result: Dictionary
 	match action:
-		"begin":result=service.begin(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID),-1,orim_hero.get_selected_id() if _kind()=="orim" and orim_hero.item_count>0 else 0)
+		"begin":result=await world.run_dungeon_loading(Callable(service,"begin_loading").bind(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID),-1,orim_hero.get_selected_id() if _kind()=="orim" and orim_hero.item_count>0 else 0))
 		"claim":result=service.claim()
 		"stop":result=service.stop()
 		"recharge":result=service.recharge(int(rows[selected].item.row.ID))
@@ -440,7 +440,7 @@ func _competition_check(entry: Dictionary) -> void:
 		hud.show_message(notice.text)
 		return
 	hud.confirm_action("원본 입구 이동 · 오프라인","%s\n비용: %d %s\n원본 서버·전투 입장은 아닙니다." % [str(entry.name),int(entry.tariff.TeleportCost),str(entry.currency_name)],"입구 이동",func(_count: int) -> void:
-		var result: Dictionary=world.competition523_enter(id,quote.ticket)
+		var result: Dictionary=await world.run_dungeon_loading(Callable(world,"competition523_enter_loading").bind(id,quote.ticket))
 		hud.show_message(str(result.get("reason","이동 보류")))
 		if result.get("ok",false):hud.call_deferred("_close_workspace"))
 
@@ -473,6 +473,8 @@ func _update_actions(entry: Dictionary) -> void:
 
 func _perform(action: String) -> void:
 	if selected < 0 or selected >= rows.size() or _kind() != "tower": return
-	var result: Dictionary = world.source_dungeon_action(action,int(rows[selected].stage.ID))
+	var result: Dictionary
+	if action == "begin": result = await world.run_dungeon_loading(Callable(world,"source_dungeon_action").bind(action,int(rows[selected].stage.ID)))
+	else: result = world.source_dungeon_action(action,int(rows[selected].stage.ID))
 	_select(selected)
 	notice.text = "처리를 저장했습니다." if result.get("ok",false) else str(result.get("reason"," ".join(result.get("reasons",[]))))

@@ -1068,7 +1068,7 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	# skip both scene objects and the empty GPU render target.
 	if int(built.draws) == 0 and built.commands.is_empty() and built.atlases.is_empty():
 		FRAME_HITCH.count("map.empty_block_viewport_skipped")
-		return {"commands": built.commands, "atlas_ids": [],
+		return {"presented": true, "commands": built.commands, "atlas_ids": [],
 			"count": int(built.count), "draws": 0, "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
 	var viewport := SubViewport.new()
 	viewport.name = "Current523GroundBlock_%d_%d" % [cell.x, cell.y]
@@ -1099,6 +1099,7 @@ var _unreleased: Array = [] # [block, canvas] drawn in the coming frame
 
 func _release_baked() -> void:
 	for pair: Array in _unreleased:
+		(pair[0] as Dictionary)["presented"] = true
 		(pair[0] as Dictionary).erase("atlases")
 		if is_instance_valid(pair[1]): (pair[1] as Node).queue_free()
 	_unreleased.clear()
@@ -1314,6 +1315,24 @@ func _refresh_static_objects() -> void:
 
 
 ## Callers outside the periodic refresh change what is shown: always rebuild.
+## Arrival readiness is visible ground, not margin prefetch or NPC counts.
+## A baked viewport is ready only after its first actual render submission.
+func arrival_readiness() -> Dictionary:
+	if not problem.is_empty(): return {"ready":false,"failed":true,"reason":problem}
+	if not _configured or field == null or not is_instance_valid(player): return {"ready":false,"failed":true,"reason":"도착 화면의 연결이 사라졌습니다."}
+	var screen: Rect2 = _view_rect()
+	for member: String in _unreadable_chunks:
+		if (_chunk_rects.get(member,Rect2()) as Rect2).intersects(screen):
+			return {"ready":false,"failed":true,"reason":"도착 지역 원문 청크를 읽지 못했습니다: "+member}
+	var pending: int = 0
+	for x: int in range(floori(screen.position.x/BLOCK), floori(screen.end.x/BLOCK)+1):
+		for y: int in range(floori(screen.position.y/BLOCK), floori(screen.end.y/BLOCK)+1):
+			var cell := Vector2i(x,y)
+			if not _block_rect(cell).intersects(screen): continue
+			var block: Dictionary = _blocks.get(cell,{})
+			if block.is_empty() or not bool(block.get("presented",false)): pending += 1
+	return {"ready":pending==0,"failed":false,"pending_visible_blocks":pending,"reason":""}
+
 func refresh_visible() -> void:
 	_built_view = Rect2()
 	_force_objects_refresh = true
@@ -1504,14 +1523,17 @@ func _draw_tiles(canvas: Node2D) -> void:
 				var corners: PackedInt64Array = pending[ref]
 				for index: int in range(0, corners.size(), 2):
 					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
-						observed_refs[ref] = true
-						pending.erase(ref)
+						if not observed_refs.has(ref): observed_refs[ref] = []
+						observed_refs[ref].append(pending)
 						break
 	if observe:
 		for ref: int in observed_refs:
 			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
-			if not source.is_empty():USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
-		_usage_generation=_draw_generation
+			if not source.is_empty(): USAGE.observe_result(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
+			# Broker retains transient pressure. Invalid/disabled/hard-dropped
+			# attempts are terminal here; never poll by redrawing an idle map.
+			for pending: Dictionary in observed_refs[ref]: pending.erase(ref)
+		_usage_generation = _draw_generation
 		USAGE.flush()
 
 

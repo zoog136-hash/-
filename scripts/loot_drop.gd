@@ -26,6 +26,8 @@ const BASE508_DROPS=preload("res://scripts/loot/base508_monster_drops.gd")
 const SOURCE3_REVIEWED = preload("res://scripts/loot/source3_reviewed_drop.gd")
 const CURRENCY_DROPS = preload("res://scripts/loot/currency_drops.gd")
 const PATCH523_DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const BUILD_FLAGS = preload("res://scripts/boot/build_flags.gd")
 
 static func is_boss_record(record: Dictionary) -> bool:
 	if record.has("is_boss"):
@@ -348,7 +350,17 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 		quest_eligibility=map_id;map_id=""
 	elif not map_id is String:return []
 	if PATCH523_DROPS.native(monster_identity):
-		return roll_patch523(PATCH523_DROPS.candidates(monster_identity, catalog), is_boss, rng)
+		# These source reads cannot affect the RNG. Start them only if a roll
+		# actually needs candidates, then reuse exactly one result per death.
+		var provider := func() -> Dictionary:
+			var started: int = FRAME_HITCH.now()
+			var groups: Dictionary = PATCH523_DROPS.candidates(monster_identity, catalog, true)
+			FRAME_HITCH.detail("drop.candidates", started)
+			return groups
+		# Developer drop-source UI observes all admitted killed NPCs, even
+		# when no chance passes. Retain that evidence behavior in dev builds.
+		if BUILD_FLAGS.developer_ui(): return roll_patch523(provider.call(), is_boss, rng)
+		return roll_patch523_lazy(provider, is_boss, rng)
 	var earned: Array[Dictionary] = []
 	if BASE508_DROPS.native(monster_identity):
 		var source: Dictionary=BASE508_DROPS.candidates(monster_identity,catalog,quest_eligibility)
@@ -392,24 +404,44 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 	return earned
 
 static func roll_patch523(groups: Dictionary, is_boss: bool, rng: RandomNumberGenerator) -> Array[Dictionary]:
+	return _roll_patch523(groups, Callable(), is_boss, rng)
+
+## Resolves once on the first actual pick (even if the result is empty).
+## Never move RNG draws ahead of a pick: selecting advances the same RNG.
+static func roll_patch523_lazy(provider: Callable, is_boss: bool, rng: RandomNumberGenerator) -> Array[Dictionary]:
+	return _roll_patch523({}, provider, is_boss, rng)
+
+static func _roll_patch523(groups: Dictionary, provider: Callable, is_boss: bool, rng: RandomNumberGenerator) -> Array[Dictionary]:
 	# Same host chances and number/order of potion/gear/material rolls.
 	# No name fallback, extra chance for duplicate source rows or inferred currency.
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
+		if provider.is_valid():
+			groups = provider.call()
+			provider = Callable()
 		var potion: Dictionary = PATCH523_DROPS.pick(groups, "potion", "", rng)
 		if not potion.is_empty(): earned.append(potion)
 	for attempt: int in range(MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1):
 		var grade: String = _roll_equipment_grade(is_boss, rng)
 		if grade.is_empty(): continue
+		if provider.is_valid():
+			groups = provider.call()
+			provider = Callable()
 		var equipment: Dictionary = PATCH523_DROPS.pick(groups, "equipment", grade, rng)
 		if not equipment.is_empty(): earned.append(equipment)
 	if rng.randf() < (BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+		if provider.is_valid():
+			groups = provider.call()
+			provider = Callable()
 		var material: Dictionary = PATCH523_DROPS.pick(groups, "material", "", rng)
 		if not material.is_empty(): earned.append(material)
 	# Same additional currency chance and plain configured-row quantity=1 as
 	# currency_drops.gd. Membership is explicit; no global currency fallback.
 	if rng.randf() < (BOSS_MATERIAL_DROP_RATE if is_boss else MATERIAL_DROP_RATE):
+		if provider.is_valid():
+			groups = provider.call()
+			provider = Callable()
 		var currency: Dictionary = PATCH523_DROPS.pick(groups, "currency", "", rng)
 		if not currency.is_empty(): earned.append(currency)
 	return earned

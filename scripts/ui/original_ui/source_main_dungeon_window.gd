@@ -1181,7 +1181,7 @@ func _tower_pressed(action: String) -> Dictionary:
 	var floor: String="%d층 · %s" % [int(entry.stage.StageIndex),str(entry.place.name)]
 	var run: Callable=func() -> void:
 		var bound: Object=_bind_view(_family(),index)
-		if bound!=null:bound._perform(action)
+		if bound!=null:await bound._perform(action)
 	match action:
 		"begin":
 			var costs: Dictionary=world.source_dungeon_tower_cost(hard)
@@ -1211,7 +1211,7 @@ func _orim_pressed(action: String) -> Dictionary:
 		var bound: Object=_bind_view(_family(),index)
 		if bound==null:return
 		if action=="begin" and chosen>=0 and chosen<bound.orim_hero.item_count:bound.orim_hero.select(chosen)
-		bound._play_action(action)
+		await bound._play_action(action)
 		_notice(bound)
 	match action:
 		"begin":return _confirm("오림의 흔적 · 도전",stage+"\n캐릭터: "+str(view.orim_hero.get_item_text(chosen)).get_slice(" · ",0),"도전",run)
@@ -1244,7 +1244,7 @@ func _special_pressed(i: int) -> Dictionary:
 	return _confirm("특수 던전 · 입장",body,"입장",func() -> void:
 		var bound: Object=_bind_view("special",i)
 		if bound==null:return
-		bound._play_action("begin")
+		await bound._play_action("begin")
 		if play!=null and str(play.state.active.get("kind",""))=="special":
 			# Entered: the window closes over the dungeon Land.
 			call_deferred("_close_requested")
@@ -1269,7 +1269,7 @@ func _competition_pressed(id: int) -> Dictionary:
 		return {"ok":false,"handled":true,"blocked":str(quote.get("reason",""))}
 	var entry: Dictionary=quote.row
 	return _confirm("원본 입구 이동 · 오프라인","%s\n이동 비용: %s %s\n원본 서버·전투 입장이 아닌 입구 탐방입니다." % [str(entry.name),number_text(int(entry.tariff.TeleportCost)),str(entry.currency_name)],"입구 이동",func() -> void:
-		var result: Dictionary=world.competition523_enter(id,quote.ticket)
+		var result: Dictionary=await world.run_dungeon_loading(Callable(world,"competition523_enter_loading").bind(id,quote.ticket))
 		hud.show_message(str(result.get("reason","입구 이동 보류")))
 		if result.get("ok",false):call_deferred("_close_requested"))
 
@@ -1287,7 +1287,7 @@ func _recharge_pressed(i: int) -> Dictionary:
 	return _confirm("시간 충전석 사용" if not buy else "시간 충전석 구입",body,"구입" if buy else "사용",func() -> void:
 		var bound: Object=_bind_view("rechargers",row)
 		if bound==null:return
-		bound._play_action(action)
+		await bound._play_action(action)
 		_notice(bound))
 
 func _close_requested() -> Dictionary:

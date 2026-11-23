@@ -577,6 +577,8 @@ func _update_draws() -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# USAGE owns retained scalar observations, including one-tick frames and
+	# ranges. A later draw is never required to retry transient queue pressure.
 	var renderer: Node=get_parent()
 	var observe: bool=USAGE.actual_main(renderer)
 	var view: Rect2=(renderer.call("_view_rect") as Rect2).grow(-64.0) if observe else Rect2()
