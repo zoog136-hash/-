@@ -541,7 +541,9 @@ func use_source_awakening_item(item_name: String,selected: String="") -> Diction
 			var amount: Variant=cards.spare["마법인형"].get(Acquisition.CARD,0)
 			if not Supply.integer(amount) or int(amount)>=1000000:_busy=false;return {"handled":true,"ok":false,"error":"중복 카드 수량 확인 필요 · 카드권 보존"}
 			cards.spare["마법인형"][Acquisition.CARD]=int(amount)+1
-		else:cards.owned["마법인형"][Acquisition.CARD]=true
+		else:
+			cards.owned["마법인형"][Acquisition.CARD]=true
+			Cards.mark_acquisition_confirmation(cards.pending_acquisition_confirmation,"마법인형",Acquisition.CARD,str(world.card_draw_fusion.known_ids.get("마법인형",{}).get(Acquisition.CARD,"")),25152)
 		staged.card_draw_fusion=cards
 	if not Supply.matches_payload(world,paid,staged):_busy=false;return {"handled":true,"ok":false,"error":"원본 선택 아이템의 물리 잔량·최종 사용 영수증 불일치 · 보유 보존"}
 	if world._save_game(true,staged)!=OK:_busy=false;return {"handled":true,"ok":false,"error":"저장 실패 · 원본 아이템·카드·해금·지급 영수증 보존"}

@@ -134,7 +134,9 @@ func _award(card_id: int, state: Dictionary, results: Array) -> bool:
 		state["preserved_unmapped_collection"] = preserved
 	var fresh: bool = not owned.get(identity,false)
 	if not fresh and int(spare.get(identity,0)) >= 1000000: return false
-	if fresh: owned[identity] = true
+	if fresh:
+		owned[identity] = true
+		Cards.mark_acquisition_confirmation(state.pending_acquisition_confirmation,category,identity,grade,card_id)
 	else: spare[identity] = int(spare.get(identity,0))+1
 	results.append({"kind":"card","card_id":card_id,"category":category,"identity":identity,"name":title,"grade":grade,"new":fresh,"deferred":deferred})
 	return true
@@ -236,7 +238,9 @@ func _use(name: String, choice: int = 0) -> Dictionary:
 			var entry: Dictionary = pool[rng.randi_range(0,pool.size()-1)]
 			var owned: Dictionary = cards.owned[action.category]
 			var fresh: bool = not owned.get(entry.id,false)
-			if fresh: owned[entry.id] = true
+			if fresh:
+				owned[entry.id] = true
+				Cards.mark_acquisition_confirmation(cards.pending_acquisition_confirmation,str(action.category),str(entry.id),grade,int(entry.record.get("source_card_id",0)))
 			elif int(cards.spare[action.category].get(entry.id,0)) >= 1000000: error = "중복 카드 보관 상한 초과"
 			else: cards.spare[action.category][entry.id] = int(cards.spare[action.category].get(entry.id,0))+1
 			results.append({"kind":"card","card_id":int(entry.record.get("source_card_id",0)),"category":action.category,"identity":entry.id,"name":entry.record.name,"grade":grade,"new":fresh,"deferred":false})
