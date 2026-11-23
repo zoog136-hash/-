@@ -406,6 +406,18 @@ func check_lazy_page_recovery(render: bool) -> void:
 	var loaded_pages: int=int(STORE.stats().counters.get("page_loaded",0))
 	check(loaded_pages==2 and sprites.size()==3 and sprites[0].texture==sprites[2].texture,"A/B/A loads two pages and shares A across its layers (loaded %d)" % loaded_pages)
 	check(int(STORE.stats().bytes)<=64,"preflight does not raise the shared page cache budget")
+	# A was dropped from the reserve while B was fetched, but two visible A
+	# layers still own the exact same GPU texture. Reuse it without recaching.
+	var first: Texture2D=sprites[0].texture
+	check(actor.textures[0]==null and actor.textures[1]!=null,"only B remains in the strong reserve")
+	check(STORE.page_texture(actor,0)==first and int(STORE.stats().counters.get("page_loaded",0))==2,"a visible A page is reused without a cold read or GPU upload")
+	check(int(STORE.stats().bytes)==64 and actor.textures[0]==null and actor.textures[1]!=null,"weak reuse does not bring A back into the reserve or evict B")
+	# Negative control: if there are no longer any owners, a request must
+	# load the verified page normally, without retaining released textures.
+	sprites[0].texture=null
+	sprites[2].texture=null
+	first=null
+	check(STORE.page_texture(actor,0)!=null and int(STORE.stats().counters.get("page_loaded",0))==3,"released page is read once on the next request")
 	owner.free()
 
 func read_cooked_pose(viewport: SubViewport) -> Image:

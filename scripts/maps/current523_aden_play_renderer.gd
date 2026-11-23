@@ -588,6 +588,7 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 		return {}
 	# Retain the same currently loaded S32 tail even while SPR display is off.
 	_static_tails[member] = job.tail
+	_mark_visible_static_tail_changed(member)
 	var packed: Dictionary
 	if job.has("packed"):
 		packed = job.packed
@@ -602,6 +603,7 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
 		var oldest: String=_raw_recent.pop_front()
 		_raw_chunks.erase(oldest);_static_tails.erase(oldest);_chunk_bins.erase(oldest)
+		_mark_visible_static_tail_changed(oldest)
 	return packed
 
 
@@ -1008,6 +1010,14 @@ func _pending_tiles_ready(cell: Vector2i) -> bool:
 
 ## One block's render target, drawn once (UPDATE_ONCE) from its commands.
 func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
+	FRAME_HITCH.count("map.block_baked")
+	# A transparent viewport with no draw commands is an identity operation
+	# in the ground layer. Keep the completed block and its diagnostics, but
+	# skip both scene objects and the empty GPU render target.
+	if int(built.draws) == 0 and built.commands.is_empty() and built.atlases.is_empty():
+		FRAME_HITCH.count("map.empty_block_viewport_skipped")
+		return {"commands": built.commands, "atlas_ids": [],
+			"count": int(built.count), "draws": 0, "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
 	var viewport := SubViewport.new()
 	viewport.name = "Current523GroundBlock_%d_%d" % [cell.x, cell.y]
 	viewport.size = Vector2i(BLOCK, BLOCK)
@@ -1023,7 +1033,6 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
 	viewport.add_child(canvas)
 	add_child(viewport)
-	FRAME_HITCH.count("map.block_baked")
 	# After the frame that drew it the block is only its image: let go of the
 	# atlases (the tile cache may free them) and the drawing node.
 	# One connection for all blocks baked this frame (bound callables of the
@@ -1216,22 +1225,34 @@ func _build_frame() -> bool:
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	_visible_members=visible.duplicate()
-	if is_instance_valid(_static_spr):
-		var built_for: Array=[_static_spr.get_instance_id(),visible.duplicate()]
-		if _force_objects_refresh or built_for!=_objects_built_for:
-			var objects_started: int = FRAME_HITCH.now()
-			var static_records: Dictionary=_visible_static_records()
-			_static_spr.refresh(static_records.records,int(static_records.malformed))
-			FRAME_HITCH.detail("map.objects_refresh", objects_started)
-			_objects_built_for=built_for
-		else:
-			FRAME_HITCH.count("map.object_refresh_skipped")
-		_metrics["static_spr"]=_static_spr.metrics()
-	_force_objects_refresh=false
+	_refresh_static_objects()
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
 	return true
+
+
+## Worker arrivals can change the static records without a camera/view change.
+## Coalesce changes until the proper visible list and all completed jobs for
+## this step are known. No new IO or collision refresh is needed.
+func _mark_visible_static_tail_changed(member: String) -> void:
+	if is_instance_valid(_static_spr) and member in _visible_members:
+		_force_objects_refresh = true
+
+
+func _refresh_static_objects() -> void:
+	if is_instance_valid(_static_spr):
+		var built_for: Array = [_static_spr.get_instance_id(), _visible_members]
+		if _force_objects_refresh or built_for != _objects_built_for:
+			var objects_started: int = FRAME_HITCH.now()
+			var static_records: Dictionary = _visible_static_records()
+			_static_spr.refresh(static_records.records, int(static_records.malformed))
+			FRAME_HITCH.detail("map.objects_refresh", objects_started)
+			_objects_built_for = built_for
+		else:
+			FRAME_HITCH.count("map.object_refresh_skipped")
+		_metrics["static_spr"] = _static_spr.metrics()
+	_force_objects_refresh = false
 
 
 ## Callers outside the periodic refresh change what is shown: always rebuild.
@@ -1392,6 +1413,7 @@ func _process_step(delta: float) -> void:
 		var pending_started: int = FRAME_HITCH.now()
 		_bake_pending(PENDING_BAKE_BUDGET_USEC)
 		FRAME_HITCH.detail("map.pending_bake", pending_started)
+	if _configured and _force_objects_refresh: _refresh_static_objects()
 
 
 func _draw_tiles(canvas: Node2D) -> void:

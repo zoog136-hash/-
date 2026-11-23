@@ -34,6 +34,9 @@ class CookedActor:
 	var index: Dictionary = {}
 	## Page textures, null until a state that draws from the page is shown.
 	var textures: Array = []
+	## Weak refs to immutable pages that may still have an on-screen owner
+	## after reserve eviction. Their lifetime is not extended by this table.
+	var live_textures: Dictionary[int,WeakRef] = {}
 	## Retry transient reads per bundle page, shared by actors using the bundle.
 	var page_retry_after: Dictionary[int,int] = {}
 	## entry key (var_to_str of its inputs) -> entry; each entry also holds
@@ -222,6 +225,15 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 			_pages.erase(key)
 			_pages[key] = known
 		return texture
+	var known_live: WeakRef = actor.live_textures.get(page)
+	if known_live != null:
+		var still_live: Variant = known_live.get_ref()
+		if still_live is Texture2D:
+			# Do not promote: an actor already owns the page and another
+			# reserve entry should not be displaced by its visible layers.
+			_count("page_live_reuse")
+			return still_live
+		actor.live_textures.erase(page)
 	if actor.page_retry_after.get(page, 0) > Time.get_ticks_msec(): return null
 	var file := FileAccess.open(actor.path, FileAccess.READ)
 	var image: Image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start) if file != null else null
@@ -232,6 +244,7 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 	actor.page_retry_after.erase(page)
 	var made: ImageTexture = ImageTexture.create_from_image(image)
 	actor.textures[page] = made
+	actor.live_textures[page] = weakref(made)
 	var bytes: int = image.get_data_size()
 	_pages[key] = [actor, page, bytes]
 	_page_bytes += bytes

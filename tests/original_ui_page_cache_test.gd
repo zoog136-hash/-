@@ -74,10 +74,35 @@ func _all(pack: RefCounted) -> Dictionary:
 		for cocos: bool in [false,true]: out["%d:%s"%[i,cocos]]=pack.texture(REFS[i],cocos)
 	return out
 
+func _verify_cold_pngs(base: String) -> void:
+	# Tiny synthetic RGB/palette fixtures with and without PNG tRNS; the
+	# pre-existing suite covers RGBA, atlas crop/rotate and PMA frame pixels.
+	var encoded: Array[String]=[
+		"iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAF0lEQVR4nGMMMHdjYGBgYGBgYoABBAsAFu4A044Koo0AAAAASUVORK5CYII=",
+		"iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAABnRSTlMAUAA3AEboLt/qAAAAF0lEQVR4nGMMMHdjYGBgYGBgYoABBAsAFu4A044Koo0AAAAASUVORK5CYII=",
+		"iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAABlBMVEVQN0YAAAAEl9JPAAAADklEQVR4nGNgYGBgYAAAAAYAAXKCmeoAAAAASUVORK5CYII=",
+		"iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAABlBMVEVQN0YAAAAEl9JPAAAAAXRSTlMAQObYZgAAAA5JREFUeJxjYGBgYGAAAAAGAAFygpnqAAAAAElFTkSuQmCC",
+	]
+	var pack=PACK.new()
+	for i: int in encoded.size():
+		var member: String="UI/test%d.png"%i
+		var path: String=base.path_join(member.get_file())
+		var file:=FileAccess.open(path,FileAccess.WRITE)
+		file.store_buffer(Marshalls.base64_to_raw(encoded[i]))
+		file.close()
+		var sha: String=FileAccess.get_sha256(path)
+		var prechange: Image=Image.load_from_file(path)
+		var actual: Image=pack._read_verified_page(path,sha,member)
+		prechange.convert(Image.FORMAT_RGBA8)
+		check(actual!=null and actual.get_data()==prechange.get_data(),"buffer and file loaders read identical RGB/palette pixels "+str(i))
+		check(actual!=null and actual.get_meta("cocos_png_pma",null)==(i%2==1) and PACK._png_premultiplies(path)==(i%2==1),"same Cocos tRNS detection as file parser "+str(i))
+		check(pack._read_verified_page(path,"0".repeat(64),member)==null and pack.last_error=="source_hash_or_size:"+member,"wrong hash fails closed "+str(i))
+
 func _init() -> void:
 	var base: String=ProjectSettings.globalize_path("user://original_ui_page_cache_test_synthetic")
 	var root1: String=base.path_join("pack1"); var root2: String=base.path_join("pack2")
 	var sha1: String=_write_pack(root1,1); var sha2: String=_write_pack(root2,2)
+	_verify_cold_pngs(base)
 	check(sha1!=sha2,"synthetic packs have distinct manifest identity")
 	var key_a1: String=CACHE.page_key(sha1,root1,"UI/a.png",JSON.parse_string(FileAccess.get_file_as_string(root1.path_join("original_ui.json"))).files["UI/a.png"].sha256)
 
