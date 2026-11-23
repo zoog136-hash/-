@@ -327,7 +327,41 @@ func run() -> void:
 	effect_domain_checks(data)
 	content_key_checks(data)
 	await check_lazy_page_recovery(render)
+	check_index_eviction_reuses_live_bundle(lossless_dir, selected)
 	finish(previous_copy, previous_gpu)
+
+func check_index_eviction_reuses_live_bundle(directory: String, selected: Dictionary) -> void:
+	STORE.reset_for_tests()
+	STORE.root_override = directory
+	var first: Dictionary = STORE.lookup(selected)
+	check(not first.is_empty(), "index eviction fixture loads")
+	if first.is_empty(): return
+	var texture: Texture2D = STORE.page_texture(first.actor, 0)
+	var before: Dictionary = STORE.stats()
+	var path: String = first.actor.path
+	# Force the real index LRU boundary without cooking 192 unrelated actors.
+	for index: int in STORE.INDEX_CACHE_MAX:
+		STORE._cache["fixture_%d" % index] = STORE.CookedActor.new()
+	STORE._trim()
+	check(not STORE._cache.values().has(first.actor), "the oldest bundle left the index reserve")
+	var revisit: Dictionary = STORE.lookup(selected)
+	check(not revisit.is_empty() and revisit.actor == first.actor, "lookup after index eviction rejoins its live bundle")
+	if revisit.is_empty(): return
+	var same_page: Texture2D = STORE.page_texture(revisit.actor, 0)
+	var after: Dictionary = STORE.stats()
+	check(texture != null and texture == same_page, "returning to the bundle reuses the immutable page texture")
+	check(after.pages == before.pages and after.bytes == before.bytes and after.counters.get("page_loaded") == before.counters.get("page_loaded"), "page reserve and decode counters remain unchanged")
+	var other_directory: String = scratch.path_join("other_cooked_root")
+	var other_path: String = other_directory.path_join(FORMAT.FORMAT_TAG).path_join(STORE.file_for(STORE.selection_inputs(selected)))
+	write_bytes(other_path, FileAccess.get_file_as_bytes(path))
+	STORE.root_override = other_directory
+	STORE._root_known = false
+	var other: Dictionary = STORE.lookup(selected)
+	check(not other.is_empty() and other.actor != first.actor and other.actor.path == other_path, "a different full bundle path never borrows the former pack's index")
+	var direct: Dictionary = STORE.load_actor(path)
+	check(direct.get("ok", false) and STORE.page_texture(direct.actor, 0) != null, "direct tool lookup can still load pages")
+	check(STORE.stats().bytes == after.bytes and STORE.stats().pages == after.pages, "direct replacement of a reserved page key is counted once")
+	STORE.reset_for_tests()
 
 func check_lazy_page_recovery(render: bool) -> void:
 	STORE.reset_for_tests()

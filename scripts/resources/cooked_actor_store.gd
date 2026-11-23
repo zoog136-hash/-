@@ -53,7 +53,12 @@ static var root_override: String = ""
 static var disabled: bool = false
 static var _root: String = ""
 static var _root_known: bool = false
-static var _cache: Dictionary = {} # key -> CookedActor, oldest first
+static var _cache: Dictionary = {} # absolute path -> CookedActor, oldest first
+# Index LRU eviction doesn't destroy an actor still owned by a view or page.
+# Remember these actors weakly so the next lookup can reuse both its index and
+# live page textures without enlarging the strong index reserve.
+static var _live_actors: Dictionary[String,WeakRef] = {}
+static var _new_actor_loads: int = 0
 static var _bytes: int = 0
 static var _missing: Dictionary = {}
 static var _counters: Dictionary = {}
@@ -63,6 +68,8 @@ static func _count(name: String, amount: int = 1) -> void:
 
 static func reset_for_tests() -> void:
 	_cache.clear()
+	_live_actors.clear()
+	_new_actor_loads = 0
 	_missing.clear()
 	_counters.clear()
 	_bytes = 0
@@ -175,26 +182,37 @@ static func lookup_inputs(inputs: Dictionary) -> Dictionary:
 	if not cookable_consumer(str(inputs.get("consumer", ""))): return {}
 	var folder: String = root()
 	if folder.is_empty(): return {}
-	var file: String = file_for(inputs)
-	var actor: Variant = _cache.get(file)
+	var path: String = folder.path_join(file_for(inputs))
+	var actor: Variant = _cache.get(path)
 	if actor is CookedActor:
-		_cache.erase(file)
-		_cache[file] = actor
+		_cache.erase(path)
+		_cache[path] = actor
 		_count("hit")
-	elif _missing.has(file):
-		_count("missing_memo")
-		return {}
 	else:
-		var loaded: Dictionary = load_actor(folder.path_join(file))
-		if not loaded.ok:
-			while _missing.size() >= MISSING_MAX: _missing.erase(_missing.keys()[0])
-			_missing[file] = loaded.error
-			_count("miss:" + str(loaded.error))
-			return {}
-		actor = loaded.actor
-		_cache[file] = actor
+		var live: WeakRef = _live_actors.get(path)
+		actor = live.get_ref() if live != null else null
+		if actor is CookedActor:
+			_count("index_live_reuse")
+		else:
+			_live_actors.erase(path)
+			if _missing.has(path):
+				_count("missing_memo")
+				return {}
+			var loaded: Dictionary = load_actor(path)
+			if not loaded.ok:
+				while _missing.size() >= MISSING_MAX: _missing.erase(_missing.keys()[0])
+				_missing[path] = loaded.error
+				_count("miss:" + str(loaded.error))
+				return {}
+			actor = loaded.actor
+			_live_actors[path] = weakref(actor)
+			_new_actor_loads += 1
+			if _new_actor_loads % 64 == 0:
+				for stale_path: String in _live_actors.keys():
+					if _live_actors[stale_path].get_ref() == null: _live_actors.erase(stale_path)
+			_count("loaded")
+		_cache[path] = actor
 		_bytes += actor.bytes
-		_count("loaded")
 		_trim()
 	var entry: Variant = actor.entries.get(entry_key(inputs))
 	if not entry is Dictionary or entry.get("inputs") != inputs:
@@ -246,17 +264,22 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 	actor.textures[page] = made
 	actor.live_textures[page] = weakref(made)
 	var bytes: int = image.get_data_size()
+	# Direct tooling callers can load the same bundle outside the runtime index
+	# cache. If they replace a reserved key, release its old accounting first.
+	if _pages.has(key): _demote_page(key)
 	_pages[key] = [actor, page, bytes]
 	_page_bytes += bytes
 	_count("page_loaded")
 	while _page_bytes > budget_bytes and _pages.size() > 1:
-		var oldest: String = _pages.keys()[0]
-		var entry: Array = _pages[oldest]
-		_pages.erase(oldest)
-		_page_bytes -= int(entry[2])
-		entry[0].textures[int(entry[1])] = null
+		_demote_page(_pages.keys()[0])
 		_count("page_evicted")
 	return made
+
+static func _demote_page(key: String) -> void:
+	var entry: Array = _pages[key]
+	_pages.erase(key)
+	_page_bytes -= int(entry[2])
+	entry[0].textures[int(entry[1])] = null
 
 ## Reads one cooked actor file into textures and runtime tracks.
 ## Reads a cooked file's index (no pixels; pages load on first use).
