@@ -170,6 +170,28 @@ func renderer_spread() -> void:
 	check(renderer.markers == 3, "a forced refresh (refresh_visible) rebuilds the labels")
 	reference.queue_free(); renderer.queue_free()
 
+func worker_blocks() -> void:
+	var tiles := CountingAsyncTiles.new()
+	var renderer := _renderer(tiles, Vector2.ZERO)
+	renderer.block_jobs_enabled = true
+	var cells: Array[Vector2i] = _ground(renderer, renderer._view_rect().grow(PLAY.BUILD_MARGIN))
+	check(renderer._build_frame() and renderer._blocks.is_empty(), "real job branch defers unready blocks")
+	renderer._bake_pending(-1)
+	tiles.pump()
+	renderer._pending_retry.clear()
+	check(renderer._bake_pending(-1) == 0 and not renderer._block_jobs.is_empty(), "ready pending blocks dispatch workers without a synchronous bake")
+	for _frame: int in 100:
+		if renderer._pending_blocks.is_empty(): break
+		await create_timer(0.003).timeout
+		renderer._bake_pending(-1)
+	check(renderer._blocks.size() == cells.size() and renderer._block_jobs.is_empty(), "pending blocks eventually consume all completed jobs")
+	var same: bool = renderer._blocks.size() == cells.size()
+	for cell: Vector2i in renderer._blocks:
+		same = same and (renderer._blocks[cell] as Dictionary).commands == renderer._block_commands(cell).commands
+	check(same, "worker-produced commands match the synchronous reference in each block")
+	renderer.queue_free()
+	await process_frame
+
 func _rows(ids: Array, start: int = 0) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for i: int in ids.size(): result.append({"sprite_id":ids[i], "raw_x":float((start + i) * 4), "raw_y":float((start + i) % 3) * 3.0})
@@ -233,6 +255,7 @@ func objects_spread() -> void:
 
 func _run() -> void:
 	renderer_spread()
+	await worker_blocks()
 	await objects_spread()
 	var result: Dictionary = {"checks": checks, "failures": failures, "evidence": evidence, "synthetic_only": true}
 	print("MAP_FRAME_SPREAD_RESULT ", JSON.stringify(result))
