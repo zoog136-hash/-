@@ -315,6 +315,7 @@ func _plan(category: String, identity: String, confirmation_only: bool = false) 
 	if held.is_empty():
 		if state.confirmed.get(category,{}).has(identity): return _fail("이미 확정한 카드입니다")
 		if confirmation_only:
+			if owner.pending_acquisition_confirmation.get(category, {}).get(identity, false) != true: return _fail("새로 획득한 확정 대기 카드가 아닙니다")
 			var card: Dictionary = {"identity":identity,"card_id":int(raw.ID),"name":str(record.get("name","")),"grade":str(record.get("grade","")),"grade_id":grade_id}
 			return {"category":category,"card":card,"pending":{},"copies_required":0,"can_confirm":true}
 	var swap: Dictionary = rule(deck, grade_id)
@@ -501,7 +502,7 @@ func confirm(token: String) -> Dictionary:
 	var committed: Dictionary = _commit_confirmations([held])
 	return committed.results[0] if committed.get("ok",false) else committed
 
-## Snapshot payable pending results and owned cards that can be kept. Quoting
+## Snapshot payable pending results and new acquisitions that can be kept. Quoting
 ## confirmation must never roll new candidates, touch the wallet, or save.
 func quote_all() -> Dictionary:
 	_quotes.clear()
@@ -514,10 +515,10 @@ func quote_all() -> Dictionary:
 			settled_by_pending[str(row.category)+"|"+str(row.result.identity)] = true
 	var blocked: int = state.pending.size() - eligible.size()
 	for category: String in DECKS:
-		var owned: Dictionary = world.card_draw_fusion.owned.get(category,{})
-		for identity: String in owned:
+		var markers: Dictionary = world.card_draw_fusion.pending_acquisition_confirmation.get(category,{})
+		for identity: String in markers:
 			var key: String = category+"|"+identity
-			if owned[identity]!=true or state.pending.has(key) or settled_by_pending.has(key) or state.confirmed.get(category,{}).has(identity):continue
+			if markers[identity]!=true or state.pending.has(key) or settled_by_pending.has(key) or state.confirmed.get(category,{}).has(identity):continue
 			var record: Dictionary = card_record(category,identity)
 			if str(record.get("grade","")) not in ["영웅","전설","신화","유일"]:continue
 			var plan: Dictionary = _plan(category,identity,true)
@@ -575,6 +576,7 @@ func _apply_confirmation(plan: Dictionary, progress: Array[Dictionary]) -> Dicti
 	var identity: String = str(plan.card.identity)
 	if not state.confirmed.has(category):state.confirmed[category]={}
 	if plan.pending.is_empty():
+		world.card_draw_fusion.clear_acquisition_confirmation(category, identity)
 		state.confirmed[category][identity]=true
 		return {"ok":true,"reason":"","saved":true,"category":category,"from":plan.card,"result":plan.card,"consumed":0,"used_last_copy":false,"moved_progress":[]}
 	var result_identity: String = str(plan.pending.result.identity)
@@ -589,7 +591,9 @@ func _apply_confirmation(plan: Dictionary, progress: Array[Dictionary]) -> Dicti
 	if left > 0: extras[identity] = left
 	else: extras.erase(identity)
 	if last_copy: (cards.owned[category] as Dictionary).erase(identity)
-	var received: Dictionary = cards._receive(category,{"id":result_identity,"record":result_record})
+	var received: Dictionary = cards._receive(category,{"id":result_identity,"record":result_record},false)
+	cards.clear_acquisition_confirmation(category, identity)
+	cards.clear_acquisition_confirmation(category, result_identity)
 	received["identity"] = str(received.get("id",""))
 	var moved: Dictionary = {}
 	if last_copy and APPROX_MOVE_PROGRESS:

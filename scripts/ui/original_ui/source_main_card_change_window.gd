@@ -3,8 +3,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## card swap feature (#556/#565: world.card523_swap_quote / _execute /
 ## _confirm / _pending, docs/cards523_reroll_skillcard.md). Rules, costs,
 ## counts and saves are the feature's.
-## - The list (ListView_Swipe of CardChange_Slot_Card): every owned 변신 /
-##   마법인형 / 성물 card of 영웅 grade or above (cards with a waiting result
+## - The list (ListView_Swipe of CardChange_Slot_Card): newly acquired 변신 /
+##   마법인형 / 성물 cards awaiting confirmation (cards with a paid waiting result
 ##   first). A slot shows its card (the client card prefab
 ##   Change_Card_A_<grade> with its own picture in Nd_Card) or, while a result
 ##   waits, that result; 다시 뽑기 opens CardChange_Popup_Retry (remaining
@@ -45,6 +45,9 @@ const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const CATEGORIES: Array[String]=["변신","마법인형","성물"]
 const GRADES: Array[String]=["영웅","전설","신화","유일"]
+const CARD_PAGE_SIZE: int=12
+var _owned_mode: bool=false
+var _owned_page: int=0
 ## "" / retry / confirm / confirm_all / pick / gacha / result
 var popup: String=""
 ## The reveal: {before{name,grade,record}, after{name,grade,record}}.
@@ -67,6 +70,8 @@ func _root_member() -> String:
 func open(parent: Node) -> Dictionary:
 	if world()==null or not world().has_method("card523_swap_quote"):return _fail("source_card_change_window_runtime_unavailable")
 	popup=""
+	_owned_mode=false
+	_owned_page=0
 	return open_window(parent)
 
 func _call(method: String, args: Array=[]) -> Variant:
@@ -86,9 +91,12 @@ func record(category: String, identity: String) -> Dictionary:
 		if raw is Dictionary and Cards.card_id(raw)==identity:return raw
 	return {}
 
-## Unconfirmed owned cards and pending results, waiting results first.
+## Persisted acquisition markers and paid reroll results, paid results first.
 ## Each row carries its category, identity, name, grade and source record.
 func cards() -> Array:
+	return _rows(false)
+
+func _rows(include_existing: bool) -> Array:
 	var owner: Object=hud()
 	var catalog: Variant=owner.get("catalog_data") if owner!=null else null
 	var state: Variant=owner.get("card_collection_state") if owner!=null else null
@@ -100,12 +108,13 @@ func cards() -> Array:
 	if not catalog is Dictionary or not state is Dictionary:return found
 	for category: String in CATEGORIES:
 		var owned: Dictionary=state.get("owned",{}).get(category,{})
+		var markers: Dictionary=state.get("pending_acquisition_confirmation",{}).get(category,{})
 		var seen: Dictionary={}
 		for raw: Variant in catalog.get(category,[]):
 			if not raw is Dictionary or not str(raw.get("grade","")) in GRADES:continue
 			var identity: String=Cards.card_id(raw)
 			if seen.has(identity) or owned.get(identity,false)!=true:continue
-			if confirmed.get(category,{}).has(identity) and not waiting.has(category+"|"+identity):continue
+			if not waiting.has(category+"|"+identity) and (confirmed.get(category,{}).has(identity) or (not include_existing and markers.get(identity,false)!=true)):continue
 			seen[identity]=true
 			found.append({"category":category,"identity":identity,"name":str(raw.get("name","")),"grade":str(raw.grade),"record":raw,"pending":waiting.get(category+"|"+identity,{})})
 	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -113,6 +122,28 @@ func cards() -> Array:
 		if a.category!=b.category:return CATEGORIES.find(a.category)<CATEGORIES.find(b.category)
 		return GRADES.find(a.grade)>GRADES.find(b.grade))
 	return found
+
+func _visible_cards() -> Array:
+	var rows: Array=_rows(_owned_mode)
+	var start: int=clampi(_owned_page,0,_last_owned_page(rows.size()))*CARD_PAGE_SIZE
+	return rows.slice(start,start+CARD_PAGE_SIZE)
+
+static func _last_owned_page(count: int) -> int:
+	return maxi(0,ceili(float(count)/CARD_PAGE_SIZE)-1)
+
+func _toggle_owned() -> Dictionary:
+	_owned_mode=not _owned_mode
+	_owned_page=0
+	return _stage()
+
+func _next_owned_page() -> Dictionary:
+	var last: int=_last_owned_page(_rows(_owned_mode).size())
+	_owned_page=(mini(_owned_page,last)+1)%(last+1)
+	return _stage()
+
+func _set_button_text(spec: Dictionary, path: String, text: String) -> void:
+	for suffix: String in ["/Label","/Nd_Normal/Label","/Nd_Disable/Label"]:
+		spec[path+suffix]={"role":"source_text","text":text}
 
 ## The card a slot shows: the waiting result, else the card itself.
 func shown(entry: Dictionary) -> Dictionary:
@@ -124,21 +155,30 @@ func shown(entry: Dictionary) -> Dictionary:
 func _spec() -> Dictionary:
 	var spec: Dictionary={}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
-	for name: String in ["Btn_Probability","Btn_CollectionView","Nd_CheckBox_All","Nd_Touch"]:spec[name]={"exclude":true}
-	var all: Array=cards()
+	for name: String in ["Nd_CheckBox_All","Nd_Touch"]:spec[name]={"exclude":true}
+	spec["Btn_CollectionView"]={"activate":Callable(self,"_toggle_owned"),"displaystate":true}
+	_set_button_text(spec,"Btn_CollectionView","확정 대기" if _owned_mode else "보유 카드")
+	var all: Array=_rows(_owned_mode)
+	var max_page: int=_last_owned_page(all.size())
+	spec["Btn_Probability"]={"activate":Callable(self,"_next_owned_page"),"displaystate":true} if max_page>0 else {"exclude":true}
+	_set_button_text(spec,"Btn_Probability","다음 페이지")
 	var waiting: int=pending().size()
-	spec["Nd_PageView/Label_Num"]={"role":"source_text","text":"총 %d개" % all.size()}
-	spec["Btn_Confirm"]={"activate":Callable(self,"_confirm_all"),"displaystate":not all.is_empty()}
+	spec["Nd_PageView/Label_Num"]={"role":"source_text","text":("총 %d개 · %d/%d쪽" % [all.size(),mini(_owned_page,max_page)+1,max_page+1]) if max_page>0 else ("총 %d개" % all.size())}
+	spec["Btn_Confirm"]={"activate":Callable(self,"_confirm_all"),"displaystate":not _owned_mode and not all.is_empty()}
 	for state: String in ["Nd_Normal","Nd_Disable"]:
 		spec["Btn_Confirm/"+state+"/Label"]={"role":"source_text","text":"전체 확정"}
 	var hint: String = "확정 대기 %d장 · 다시 뽑은 카드를 확정하면 획득합니다." % waiting
-	if waiting==0: hint = "보유 카드를 그대로 확정하거나 다시 뽑을 수 있습니다."
+	if waiting==0: hint = "새로 획득한 카드를 그대로 확정하거나 다시 뽑을 수 있습니다."
+	if _owned_mode:hint="보유 카드 다시 뽑기 · 전체 확정은 확정 대기 화면에서 할 수 있습니다."
 	spec["Nd_PageView/Label_01"]={"role":"source_text","text":hint}
 	spec["Nd_PageView/Nd_Notice"]={"visible":all.is_empty()}
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
-	var all: Array=cards()
+	var all: Array=_visible_cards()
+	var confirmable: Dictionary={}
+	if _owned_mode:
+		for row: Dictionary in cards():confirmable[str(row.category)+"|"+str(row.identity)]=true
 	var rows: Array=[]
 	for index: int in range(all.size()):
 		var entry: Dictionary=all[index]
@@ -148,7 +188,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			"Panel/Btn_Normal":{"activate":Callable(self,"_ignore")},
 			"Panel/Btn_Pressed":{"visible":false},
 			"Panel/Btn_Retry":{"activate":Callable(self,"_retry").bind(index)},
-			"Panel/Btn_Select":{"activate":Callable(self,"_confirm_entry").bind(entry),"displaystate":true},
+			"Panel/Btn_Select":{"activate":Callable(self,"_confirm_entry").bind(entry),"displaystate":not _owned_mode or confirmable.has(str(entry.category)+"|"+str(entry.identity))},
 			"Btn_Select/Sp_Icon":{"visible":false},
 			"Btn_Select/Label_Time":{"visible":false},
 			"Panel/Btn_Special":{"exclude":true}}})
@@ -275,7 +315,7 @@ func _quote(entry: Dictionary) -> Dictionary:
 
 func _retry(index: int) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
-	var all: Array=cards()
+	var all: Array=_visible_cards()
 	if index<0 or index>=all.size():return {"ok":false}
 	target=all[index]
 	quote=_quote(target)
@@ -295,6 +335,7 @@ func _confirm_entry(entry: Dictionary) -> Dictionary:
 	return _stage()
 
 func _confirm_all() -> Dictionary:
+	if _owned_mode:return {"ok":false}
 	var value: Variant=_call("card523_swap_quote_all")
 	quote=value if value is Dictionary else {}
 	if not quote.get("ok",false):
@@ -304,10 +345,15 @@ func _confirm_all() -> Dictionary:
 	return _stage()
 
 func _confirm_all_results() -> Dictionary:
-	var value: Variant=_call("card523_swap_confirm_all",[str(quote.get("token",""))])
+	var token: String=str(quote.get("token",""))
+	if popup!="confirm_all" or token.is_empty():return {"ok":false}
+	# A stale button signal must not submit the same token or rebuild the list
+	# after the first activation.
+	quote={}
+	popup=""
+	var value: Variant=_call("card523_swap_confirm_all",[token])
 	var done: Dictionary=value if value is Dictionary else {}
 	_message(("카드 전체 확정: %d장" % int(done.count)) if done.get("ok",false) else str(done.get("reason","전체 확정 실패")))
-	popup=""
 	return _stage()
 
 func _choose(identity: String) -> Dictionary:

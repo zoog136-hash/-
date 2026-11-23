@@ -1,7 +1,7 @@
 extends SceneTree
 ## The original 523 카드 다시 뽑기 window (source_main_card_change_window.gd)
 ## over the existing card swap feature (world.card523_swap_*). Without
-## arguments (no original files): only owned 영웅+ cards are listed, waiting
+## arguments (no original files): only new eligible acquisitions or paid results are listed, waiting
 ## results first and shown as their result, 다시 뽑기 runs the quote token
 ## (the result waits), the 6th swap takes a picked candidate first, 카드 확정
 ## runs the confirm token, and the menu opens the window. Real input:
@@ -52,8 +52,8 @@ class FakePack extends RefCounted:
 
 class FakeHud extends Node:
 	var messages: Array[String]=[]
-	var catalog_data: Dictionary={"변신":[{"sourceId":"101","name":"영웅 A","grade":"영웅"},{"sourceId":"202","name":"전설 B","grade":"전설"},{"sourceId":"203","name":"전설 C","grade":"전설"},{"sourceId":"9","name":"희귀 Q","grade":"희귀"}],"마법인형":[],"성물":[]}
-	var card_collection_state: Dictionary={"owned":{"변신":{"source:101":true,"source:202":true,"source:9":true}}}
+	var catalog_data: Dictionary={"변신":[{"sourceId":"101","name":"영웅 A","grade":"영웅"},{"sourceId":"202","name":"전설 B","grade":"전설"},{"sourceId":"203","name":"전설 C","grade":"전설"},{"sourceId":"9","name":"희귀 Q","grade":"희귀"},{"sourceId":"204","name":"기존 영웅","grade":"영웅"}],"마법인형":[],"성물":[]}
+	var card_collection_state: Dictionary={"owned":{"변신":{"source:101":true,"source:202":true,"source:9":true,"source:204":true}},"pending_acquisition_confirmation":{"변신":{"source:101":true}}}
 	func show_message(text: String) -> void:
 		messages.append(text)
 
@@ -76,9 +76,24 @@ func _run() -> void:
 	var world: FakeWorld=host.world
 	var window=WINDOW.new()
 	window._hud=weakref(host.hud)
+	for number: int in range(500,809):
+		host.hud.catalog_data["변신"].append({"sourceId":str(number),"name":"기존 카드 %d" % number,"grade":"영웅"})
+		host.hud.card_collection_state.owned["변신"]["source:"+str(number)]=true
+	var owned_before: Dictionary=host.hud.card_collection_state.owned.duplicate(true)
 	var all: Array=window.cards()
-	check(all.size()==2 and all[0].identity=="source:202" and all[1].identity=="source:101","owned 영웅+ cards, waiting results first: "+str(all.map(func(e: Dictionary) -> String:return e.identity)))
+	check(all.size()==2 and all[0].identity=="source:202" and all[1].identity=="source:101","paid old-save result then new acquisition; old owned hero excluded: "+str(all.map(func(e: Dictionary) -> String:return e.identity)))
+	check(host.hud.card_collection_state.owned==owned_before,"listing ignores the 309 legacy cards without changing ownership")
 	check(window.shown(all[0]).name=="전설 C" and window.shown(all[1]).name=="영웅 A","a waiting slot shows its result")
+	window._toggle_owned()
+	check(window._visible_cards().size()==12 and window._rows(true).size()==312,"old owned cards can still be browsed twelve at a time")
+	var page_first: String=str(window._visible_cards()[0].identity)
+	window._next_owned_page()
+	check(window._visible_cards().size()==12 and str(window._visible_cards()[0].identity)!=page_first,"next page exposes different reroll cards")
+	window._retry(0)
+	check(world.last_quoted==window._visible_cards()[0].identity,"reroll resolves the selected card on a later page, not the first page")
+	check(not window._confirm_all().get("ok",true),"bulk confirm is unavailable in owned-card browsing")
+	window._toggle_owned()
+	check(window._visible_cards().size()==2,"return to the two genuine pending rows")
 	window._retry(1)
 	check(window.popup=="retry" and window.target.identity=="source:101","다시 뽑기 opens the retry popup with the quote")
 	window._swap()
@@ -125,6 +140,8 @@ func _run() -> void:
 	check(window.popup=="confirm_all","전체 확정 opens the confirmation popup")
 	window._confirm_all_results()
 	check(world.calls[-1]==["confirm_all","bulk"] and window.popup=="","전체 확정 submits the exact bulk quote")
+	var call_count: int=world.calls.size()
+	check(not window._confirm_all_results().get("ok",true) and world.calls.size()==call_count,"repeat activation of the removed popup cannot submit again")
 	var offer: Dictionary={"candidate_count":3,"candidates":[{"name":"가"},{"name":"나"},{"name":"다"}]}
 	check(WINDOW.probability_text(offer)=="같은 등급 카드 3종 중 1장이 나옵니다 (각 33.3333%, 지금 카드 제외)","뽑기 확률: each candidate 1 / count: "+WINDOW.probability_text(offer))
 	check(WINDOW.list_text(offer)=="다시 뽑기 후보 3종: 가 · 나 · 다" and WINDOW.probability_text({}).contains("없습니다"),"목록 보기 lists the quote's candidates")

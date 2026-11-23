@@ -67,6 +67,50 @@ func synthetic() -> void:
 	check(int(stage3_relic.power) == 120, "stage 3 + relic 1 reaches the MinSpellLevel 4 row (+20)")
 	check(EFFECTS.detail_text(stage2).begins_with("스킬 카드 강화 2단계"), "skill detail names the card stage")
 
+func acquisition_provenance() -> void:
+	var first: Dictionary = {"sourceId":"m523:1:101","source_card_id":101,"grade":"영웅","name":"first"}
+	var second: Dictionary = {"sourceId":"m523:1:102","source_card_id":102,"grade":"전설","name":"second"}
+	var lower: Dictionary = {"sourceId":"m523:1:103","source_card_id":103,"grade":"희귀","name":"lower"}
+	var fixed: Dictionary = {"sourceId":"m523:1:104","source_card_id":104,"grade":"영웅","name":"fixed","source":"lineagem_patch523"}
+	var catalog: Dictionary = {"변신":[first,second,lower,fixed]}
+	var cards = CARDS.new()
+	cards.configure(catalog)
+	var first_id: String = CARDS.card_id(first)
+	var second_id: String = CARDS.card_id(second)
+	var lower_id: String = CARDS.card_id(lower)
+	var fixed_id: String = CARDS.card_id(fixed)
+	cards.import_state({"version":1,"owned":{"변신":{first_id:true}},"spare":{"변신":{first_id:12}}})
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",first_id)==13, "legacy owns and spares retained without inferred pending")
+	cards._receive("변신",{"id":first_id,"record":first})
+	cards._receive("변신",{"id":lower_id,"record":lower})
+	cards.receive_source_card("변신",fixed,{"card_id":104,"buff_card_cannot_swap":true})
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",first_id)==14 and cards.total_count("변신",fixed_id)==1, "legacy duplicate, rare and exact non-swap grant do not create pending")
+	var before: Dictionary = cards.export_state()
+	cards._receive("변신",{"id":second_id,"record":second})
+	cards._receive("변신",{"id":second_id,"record":second})
+	var won: Dictionary = JSON.parse_string(JSON.stringify(cards.export_state()))
+	check(won.pending_acquisition_confirmation == {"변신":{second_id:true}} and cards.total_count("변신",second_id)==2, "first eligible acquisition creates one marker, duplicates do not multiply it")
+	cards.import_state(before)
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",second_id)==0, "transaction restore rolls back marker and ownership")
+	cards.import_state(won)
+	check(cards.pending_acquisition_confirmation == {"변신":{second_id:true}}, "marker survives JSON export and reload")
+	cards.configure({})
+	cards.import_state(won)
+	var unavailable: Dictionary = cards.export_state()
+	check(unavailable.pending_acquisition_confirmation == {"변신":{second_id:true}} and cards.total_count("변신",second_id)==0, "optional pack absence does not discard acquired pending")
+	cards.configure(catalog)
+	cards.import_state(unavailable)
+	check(cards.pending_acquisition_confirmation == {"변신":{second_id:true}} and cards.total_count("변신",second_id)==2, "restored catalog reactivates the same marker and copies")
+	cards.clear_acquisition_confirmation("변신",second_id)
+	cards.import_state(cards.export_state())
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",second_id)==2, "settled marker stays gone after reload without loss of copies")
+	cards.configure(catalog)
+	cards.grant_full_collection_for_playtest()
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",second_id)>0, "full debug grant creates no pending markers")
+	cards.configure(catalog)
+	cards._receive("변신",{"id":second_id,"record":second},false)
+	check(cards.pending_acquisition_confirmation.is_empty() and cards.total_count("변신",second_id)==1, "already confirmed reroll credit never creates a marker")
+
 func tables() -> void:
 	var swap = SWAP.new()
 	check(swap.rule(1, 4).get("MaxSwapCount") == 6 and swap.rule(1, 32).get("MaxSwapCount") == 5 and int(swap.rule(1, 32).get("ActivateCardAmount", 0)) == 1, "BuffCardRuleSwap: 변신 영웅 6회, 신화 5회 + 1장")
@@ -197,6 +241,11 @@ func reroll(world: Node) -> void:
 		break
 	check(not keeper.is_empty(),"an independent owned card can also be kept")
 	cards.owned["변신"][keeper]=true
+	var old_owned: Dictionary = world.card523_swap_quote("변신",keeper,true)
+	var paid_only: Dictionary = world.card523_swap_quote_all()
+	check(not old_owned.get("can_confirm",false) and int(paid_only.get("count",-1))==held_before.size(), "legacy owned cards do not offer keep action or join genuine paid results")
+	cards.owned["변신"].erase(keeper)
+	cards._receive("변신",{"id":keeper,"record":swap.card_record("변신",keeper)})
 	var kept_only: Dictionary=world.card523_swap_quote("변신",keeper,true)
 	check(kept_only.get("can_confirm",false) and kept_only.get("copies_required",-1)==0,"keep an owned card without drawing or spending")
 	var settled_before: Dictionary=world.card523_swap_confirmed()
@@ -212,7 +261,7 @@ func reroll(world: Node) -> void:
 	bulk = world.card523_swap_quote_all()
 	var complete: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
 	check(complete.get("count",0)==bulk.get("count",-1) and swap.state.pending.is_empty() and int(world.inventory["다이아"])==wallet and save_data(world).card_swap523.pending.is_empty(),"bulk saves both results without further charge")
-	check(cards.owned["변신"].has(keeper) and save_data(world).card_swap523.confirmed["변신"].has(keeper),"keeping a card preserves ownership and saves removal")
+	check(cards.owned["변신"].has(keeper) and save_data(world).card_swap523.confirmed["변신"].has(keeper) and not save_data(world).card_draw_fusion.pending_acquisition_confirmation.get("변신",{}).has(keeper),"keeping a card preserves ownership and saves removal")
 	check(not world.card523_swap_confirm_all(str(bulk.get("token",""))).get("ok",true),"bulk token is single-use")
 	# Existing owner state on the last copy: TWILIGHT 근사 — moved to the result card.
 	var guarded: String = ""
@@ -411,6 +460,7 @@ func run() -> void:
 			pack.apply(pack.selections(base, read.descriptor, pack.read_addons(base)))
 			load("res://scripts/maps/current523_host.gd").refresh()
 	synthetic()
+	acquisition_provenance()
 	if not SOURCE.not_installed() and not SOURCE.identity().is_empty():
 		tables()
 		await runtime()

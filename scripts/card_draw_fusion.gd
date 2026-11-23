@@ -5,6 +5,7 @@ class_name TwilightCardDrawFusion
 # 10,000-point scale so grades are never reweighted by the card population.
 const CATEGORIES: Array[String] = ["변신", "마법인형", "성물"]
 const GRADES: Array[String] = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
+const CONFIRM_GRADES: Array[String] = ["영웅", "전설", "신화", "유일"]
 const DRAW_ORDER: Array[String] = ["고급", "희귀", "영웅", "전설"]
 const DRAW_WEIGHTS: Dictionary = {"고급": 9359, "희귀": 550, "영웅": 90, "전설": 1}
 const FUSION_NEXT: Dictionary = {
@@ -30,6 +31,8 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var pools: Dictionary = {} # category -> grade -> [{id, record}, ...]
 var known_ids: Dictionary = {} # category -> id -> grade
 var owned: Dictionary = {} # category -> id -> true (permanently unlocked)
+# Positive provenance only: no backfill from owned, spares or older receipts.
+var pending_acquisition_confirmation: Dictionary = {} # category -> id -> true
 var spare: Dictionary = {} # category -> id -> duplicate count (consumable)
 var pity: Dictionary = {} # category -> source grade -> consecutive accumulated failures
 
@@ -48,6 +51,7 @@ static func card_id(record: Dictionary) -> String:
 
 func configure(catalog: Dictionary) -> void:
 	source_card_receipts.clear()
+	pending_acquisition_confirmation.clear()
 	preserved_unmapped_collection.clear()
 	source_merge_blocked.clear()
 	pools.clear()
@@ -127,7 +131,7 @@ func _sample_card(category: String, grade: String) -> Dictionary:
 		return {}
 	return cards[rng.randi_range(0, cards.size() - 1)] as Dictionary
 
-func _receive(category: String, entry: Dictionary) -> Dictionary:
+func _receive(category: String, entry: Dictionary, track_confirmation: bool = true) -> Dictionary:
 	var identity: String = str(entry.get("id", ""))
 	var record: Dictionary = entry.get("record", {}) as Dictionary
 	var unlocked: Dictionary = owned[category] as Dictionary
@@ -135,6 +139,8 @@ func _receive(category: String, entry: Dictionary) -> Dictionary:
 	var is_new: bool = not unlocked.has(identity)
 	if is_new:
 		unlocked[identity] = true
+		if track_confirmation:
+			mark_acquisition_confirmation(pending_acquisition_confirmation,category,identity,str(known_ids.get(category,{}).get(identity,"")),int(record.get("source_card_id",0)))
 	else:
 		extras[identity] = int(extras.get(identity, 0)) + 1
 	return {
@@ -147,7 +153,8 @@ func receive_source_card(category:String,record:Dictionary,receipt:Dictionary)->
 	if not CATEGORIES.has(category) or record.get("source") not in ["lineagem_base508","lineagem_patch523"] or int(receipt.get("card_id",-1))!=int(record.get("source_card_id",-2)) or str(known_ids.get(category,{}).get(identity,""))!=str(record.get("grade","")):
 		return {"ok":false,"error":"지급할 원본 카드 ID가 등록되지 않았습니다"}
 	if int(spare.get(category,{}).get(identity,0))>=1000000:return {"ok":false,"error":"중복 카드 저장 한도"}
-	var result:Dictionary=_receive(category,{"id":identity,"record":record})
+	var track_confirmation: bool = not bool(receipt.get("cannot_swap", false)) and not bool(receipt.get("buff_card_cannot_swap", false)) and receipt.get("approximation") != "TWILIGHT_BAG_TEST_CARD_REWARD"
+	var result:Dictionary=_receive(category,{"id":identity,"record":record},track_confirmation)
 	var proof:Dictionary=receipt.duplicate(true);proof.category=category;proof.identity=identity
 	source_card_receipts.append(proof)
 	return {"ok":true,"category":category,"results":[result]}
@@ -307,11 +314,24 @@ func fuse_many(category: String, grade: String, times: int) -> Dictionary:
 		"pity_progress": int(last.get("pity_progress", 0))
 	}
 
+# Some native reward owners mutate a detached save payload rather than this
+# instance. They call the same marker helper only in their fresh-unlock branch.
+static func mark_acquisition_confirmation(markers: Dictionary, category: String, identity: String, grade: String, source_card_id: int) -> void:
+	if source_card_id <= 0 or not CATEGORIES.has(category) or identity.is_empty() or not CONFIRM_GRADES.has(grade): return
+	if not markers.has(category): markers[category] = {}
+	markers[category][identity] = true
+
+func clear_acquisition_confirmation(category: String, identity: String) -> void:
+	if not pending_acquisition_confirmation.has(category): return
+	pending_acquisition_confirmation[category].erase(identity)
+	if pending_acquisition_confirmation[category].is_empty(): pending_acquisition_confirmation.erase(category)
+
 func export_state() -> Dictionary:
 	var result: Dictionary={
 		"version": 1,
 		"source_card_receipts":source_card_receipts.duplicate(true),
 		"owned": owned.duplicate(true),
+		"pending_acquisition_confirmation": pending_acquisition_confirmation.duplicate(true),
 		"spare": spare.duplicate(true),
 		"pity": pity.duplicate(true),
 		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
@@ -322,6 +342,7 @@ func export_state() -> Dictionary:
 
 func import_state(input: Variant) -> void:
 	source_card_receipts.clear()
+	pending_acquisition_confirmation.clear()
 	for category: String in CATEGORIES:
 		owned[category] = {}
 		spare[category] = {}
@@ -374,6 +395,20 @@ func import_state(input: Variant) -> void:
 			var counter: Dictionary = pity[category] as Dictionary
 			for grade: String in PITY_GRADES:
 				counter[grade] = clampi(int((saved_pity as Dictionary).get(grade, 0)), 0, PITY_LIMIT - 1)
+
+	# A temporarily absent optional catalog must not erase a genuine marker.
+	var saved_pending: Variant = state.get("pending_acquisition_confirmation", {})
+	if saved_pending is Dictionary:
+		for category: String in CATEGORIES:
+			var markers: Variant = saved_pending.get(category, {})
+			if not markers is Dictionary: continue
+			var preserved_owned: Dictionary = preserved_unmapped_collection.get(category, {}).get("owned", {})
+			for identity: Variant in markers:
+				if not identity is String or identity.is_empty() or markers[identity] != true: continue
+				var grade: String = str(known_ids[category].get(identity, ""))
+				if (owned[category].get(identity, false) == true and CONFIRM_GRADES.has(grade)) or (not known_ids[category].has(identity) and preserved_owned.get(identity, false) == true):
+					if not pending_acquisition_confirmation.has(category): pending_acquisition_confirmation[category] = {}
+					pending_acquisition_confirmation[category][identity] = true
 
 func _tj_candidate_ids(category: String, grade: String) -> Array:
 	var ids: Array=[]
