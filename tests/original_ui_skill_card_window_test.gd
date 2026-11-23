@@ -50,6 +50,29 @@ class FakeHud extends Node:
 		callback.call(1)
 		return null
 
+class LargeWorld extends FakeWorld:
+	const COUNT: int=289
+	func skill_card523_deck() -> Array:
+		var cards: Array=super.skill_card523_deck()
+		for i: int in COUNT-1:
+			cards.append({"card_id":5000+i,"name":"스킬 카드 %d" % i,"grade_id":1,"spell_class_id":0,
+				"level":2,"max_level":3,"exp":42,"required_exp":100,"enhanceable":true,"stage_descriptions":{}})
+		return cards
+	func skill_card523_materials(id: int=-1) -> Array:
+		var books: Array=[]
+		if id==1:
+			for i: int in COUNT:
+				books.append({"physical_id":"book-%d" % i,"name":"스킬서 %d" % i,"grade_id":id,"remaining":2})
+		return books
+
+class CheckedWindow extends WINDOW:
+	var slots_before_failure: int=-1
+	func _scene_of(member: String, spec: Dictionary, out: Dictionary, list_key: String="") -> Dictionary:
+		if member==SLOT:
+			if slots_before_failure==0:return {"ok":false,"code":"fixture_source_slot_read_failed"}
+			if slots_before_failure>0:slots_before_failure-=1
+		return super._scene_of(member,spec,out,list_key)
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label)
@@ -124,6 +147,7 @@ func _real_pack(pack_dir: String) -> void:
 	if not loaded.get("ok",false):return
 	var host: Dictionary=_host()
 	var parent:=Node2D.new()
+	parent.position=Vector2(0,675)
 	root.add_child(parent)
 	var window=WINDOW.new()
 	check(window.configure(pack,host.hud).get("ok",false),"window configures")
@@ -139,6 +163,112 @@ func _real_pack(pack_dir: String) -> void:
 	var auto: Dictionary=window._auto_register()
 	check(auto.get("handled",false) and int(auto.filled.registered)==8,"카드 자동 등록 mounts the registered cards")
 	window.close()
+	await _large_grid(pack,parent)
 	await process_frame
 	parent.queue_free()
 	host.world.queue_free()
+
+func _large_grid(pack: RefCounted, parent: Node2D) -> void:
+	var world:=LargeWorld.new()
+	var hud:=FakeHud.new()
+	world.add_child(hud)
+	root.add_child(world)
+	var window:=CheckedWindow.new()
+	window.configure(pack,hud)
+	var opened: Dictionary=window.open(parent)
+	if not opened.get("ok",false):
+		check(false,"large skill grid opens: "+str(opened))
+		world.queue_free()
+		return
+	var key: String=_grid_key(window)
+	var state: Dictionary=window._scrolls[key]
+	var mounted: Dictionary=state.mounted
+	var capacity: int=(ceili(state.size.y/state.pitch)+3)*WINDOW.GRID_COLUMNS
+	check(opened.filled.cards==LargeWorld.COUNT and mounted.size()<=capacity and opened.filled.icons==0,"missing optional pictures keep a bounded grid with the full card count")
+	var extent: Vector2=state.geometry.size
+	check(is_equal_approx(mounted[3].position.x-mounted[0].position.x,3.0*(extent.x+state.gap))
+		and is_equal_approx(mounted[4].position.y-mounted[0].position.y,state.pitch),
+		"the original slot size and gap still place four cards per row")
+	await process_frame
+	var first_slot: Node2D=mounted[0]
+	var root_scene: Node2D=window._scene
+	_touch_slot(window,first_slot)
+	await process_frame
+	check(window.selected==0 and window._scene==root_scene and mounted[0]==first_slot,"tap updates the detail without rebuilding the window or slot")
+	var title: String=WINDOW.SKILL_DETAIL+"/Nd_Detail/Nd_Title/Label_Skill"
+	check(_label_text(window,title)=="아이스 스파이크","the authored detail displays the selected card name")
+	var old_nodes: Dictionary=mounted.duplicate()
+	window.slots_before_failure=1
+	window._scroll_to(key,state.min)
+	check(state.value==0 and state.content.position.y==0 and mounted==old_nodes and state.content.get_child_count()==mounted.size(),"failure after one prepared slot preserves the old scroll and rows")
+	window.slots_before_failure=-1
+	_touch_slot(window,first_slot,float(state.min))
+	await process_frame
+	check(window.selected==0 and state.value==state.min and not mounted.has(0),"fast drag reaches the bottom and releases the old hit control without selecting a card")
+	var last: int=LargeWorld.COUNT-1
+	check(mounted.has(last) and state.content.get_child_count()==mounted.size() and mounted.size()<=capacity,"bottom includes the partial last row without retaining offscreen scenes")
+	if not mounted.has(last):
+		window.close()
+		world.queue_free()
+		return
+	var last_slot: Node2D=mounted[last]
+	_touch_slot(window,last_slot)
+	await process_frame
+	check(window.selected==last and window._scene==root_scene and mounted[last]==last_slot and state.value==state.min,"last card can be tapped without resetting the window or scroll")
+	check(_label_text(window,title)=="스킬 카드 287","last card binds the correct detail rather than the local slot index")
+	for i: int in 4:
+		window._scroll_to(key,0.0)
+		window._scroll_to(key,state.min)
+	check(mounted.size()<=capacity and mounted.has(last) and window.selected==last,"quick round trips keep scenes bounded and preserve selection")
+	var compose: Dictionary=window._tab("compose")
+	var compose_key: String=_grid_key(window)
+	var compose_state: Dictionary=window._scrolls[compose_key]
+	check(compose.get("ok",false) and compose.filled.cards==LargeWorld.COUNT and compose_state.mounted.size()<=capacity,"large compose material grid is also bounded")
+	window._scroll_to(compose_key,compose_state.min)
+	_touch_slot(window,compose_state.mounted[last])
+	await process_frame
+	var rebuilt: Dictionary=window._scrolls[compose_key]
+	check(window.registered=={"book-288":1} and rebuilt.value==compose_state.min and rebuilt.mounted.has(last),"last material touch registers the correct physical book and preserves compose scroll")
+	window.slots_before_failure=0
+	check(not window._unregister("book-288").get("ok",false) and window.registered=={"book-288":1} and window._scrolls[compose_key]==rebuilt,"failed compose refresh keeps the visible rows and registered material")
+	window.slots_before_failure=-1
+	window._tab("skill")
+	state=window._scrolls[key]
+	check(state.value==state.min and state.mounted.has(last) and window.selected==last and _label_text(window,title)=="스킬 카드 287","returning from compose restores the skill selection and scroll")
+	window._grade(4)
+	check(window._scrolls[key].value==0 and window._scrolls[key].mounted.size()==1 and window.selected==-1,"a different grade starts at its own scroll position")
+	window._grade(1)
+	state=window._scrolls[key]
+	check(state.min<0 and state.value==state.min and state.mounted.has(last),"filter re-entry restores its earlier scroll and the final card")
+	window.close()
+	world.queue_free()
+
+func _grid_key(window: RefCounted) -> String:
+	for key: String in window._scrolls:
+		if window._scrolls[key].has("skill_grid"):return key
+	return ""
+
+func _label_text(window: RefCounted, suffix: String) -> String:
+	var found: Dictionary=window._locate(window._scene,window._out,suffix)
+	var node: Node=found.player.source_nodes.get(found.offset)
+	return str(node.get_meta("source_text").original_options.text)
+
+func _touch_slot(window: RefCounted, scene: Node2D, drag: float=0.0) -> void:
+	var out: Dictionary={}
+	window._bind(WINDOW.SLOT,"",[],{},out)
+	var located: Dictionary=window._locate(scene,out,"Panel/Panel_Slot")
+	var node: Node=located.player.source_nodes.get(located.offset)
+	var control: Control=node.get_node("SourceContentOrigin/OriginalSourceInput")
+	var point: Vector2=control.get_global_transform_with_canvas()*(control.size*0.5)
+	var touch:=InputEventScreenTouch.new()
+	touch.position=point
+	touch.pressed=true
+	root.push_input(touch,true)
+	if drag!=0.0:
+		var movement:=InputEventScreenDrag.new()
+		movement.position=point+Vector2(0,drag)
+		movement.relative.y=drag
+		root.push_input(movement,true)
+	touch.position=point+Vector2(0,drag)
+	touch.pressed=false
+	root.push_input(touch,true)

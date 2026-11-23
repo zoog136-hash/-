@@ -41,6 +41,8 @@ const MERGE_TARGET={1:4,4:5,5:32}
 const SLOT_EXCLUDED: Array[String]=["Nd_Grace","Nd_Properties","Nd_Properties_Smelt","Nd_Lock","Nd_Wrong","Sp_Select","Sp_Center","Sp_Left_Top","Sp_Left_Middle","Sp_Right_Top","Sp_Left_Bottom","Text_Amount","Label_Center","Sp_Random","Sp_Choice","Sp_Infinity","Sp_Check","Img_Enchant","Sp_Pause","Btn_Probability","Btn_Detail","Nd_Collected"]
 const PAGE_SIZE: int=9
 const PAGE_ROWS: Array[String]=["ListView_1","ListView_2","ListView_3"]
+const GRID_COLUMNS: int=4
+const SKILL_DETAIL="SkillCard_Tab_Skill_Info"
 ## skill / compose / enchant
 var tab: String="skill"
 var grade: int=1
@@ -53,6 +55,9 @@ var page: int=0
 ## docs/original_ui523_approx.md.
 const BOOK_ORDERS: Array[String]=["전체","수량순","이름순"]
 var book_order: int=0
+var _grid_positions: Dictionary={}
+var _held_slot: int=-1
+var _stage_deck: Variant=null
 
 func required_members() -> Array[String]:
 	return [ROOT,POPUP,CLASS_ROW,SLOT,SLOT_B,COMMON_SLOT]
@@ -70,6 +75,7 @@ func open(parent: Node) -> Dictionary:
 	selected=-1
 	registered.clear()
 	feed.clear()
+	_grid_positions.clear()
 	var deck: Array=deck()
 	grade=int(deck[0].grade_id) if not deck.is_empty() else 1
 	return open_window(parent)
@@ -84,7 +90,7 @@ func materials(grade_id: int) -> Array:
 
 func _deck_of(grade_id: int) -> Array:
 	var found: Array=[]
-	for card: Dictionary in deck():
+	for card: Dictionary in (deck() if _stage_deck==null else _stage_deck):
 		if int(card.grade_id)==grade_id:found.append(card)
 	return found
 
@@ -124,12 +130,13 @@ func _skill_spec(spec: Dictionary) -> void:
 	var p: String="SkillCard_Tab_Skill/"
 	spec[p+"Nd_SelectEffect"]={"exclude":true}
 	spec[p+"Nd_SkillList/Label_Notice"]={"visible":_deck_of(grade).is_empty()}
-	var card: Dictionary=_card()
-	var i: String="SkillCard_Tab_Skill_Info/Nd_Detail/"
-	spec["SkillCard_Tab_Skill_Info"]={"visible":not card.is_empty()}
-	if card.is_empty():return
-	spec[i+"Nd_Title/Label_Skill"]={"role":"source_text","text":str(card.name)}
-	spec[i+"Nd_Info/Label_Class_Value"]={"role":"source_text","text":grade_text(int(card.grade_id))}
+	_skill_detail_spec(spec,_card())
+
+func _skill_detail_spec(spec: Dictionary, card: Dictionary) -> void:
+	var i: String=SKILL_DETAIL+"/Nd_Detail/"
+	spec[SKILL_DETAIL]={"visible":not card.is_empty()}
+	spec[i+"Nd_Title/Label_Skill"]={"role":"source_text","text":str(card.get("name",""))}
+	spec[i+"Nd_Info/Label_Class_Value"]={"role":"source_text","text":grade_text(int(card.get("grade_id",0)))}
 	spec[i+"Nd_Info/ListView"]={"exclude":true}
 	spec[i+"Nd_LvInfo/ListView"]={"exclude":true}
 	spec[i+"Nd_LvInfo/Label_None"]={"visible":(card.get("stage_descriptions",{}) as Dictionary).is_empty()}
@@ -137,11 +144,12 @@ func _skill_spec(spec: Dictionary) -> void:
 	var e: String=i+"Nd_Btn_Set/Nd_Enchant/"
 	var maxed: bool=not bool(card.get("enhanceable",false))
 	var required: int=maxi(1,int(card.get("required_exp",0)))
-	spec[e+"Nd_ProgressBar/Label_Level"]={"role":"source_text","text":"Lv.%d" % int(card.level)}
+	var progress: float=100.0*float(card.get("exp",0))/float(required)
+	spec[e+"Nd_ProgressBar/Label_Level"]={"role":"source_text","text":"Lv.%d" % int(card.get("level",0))}
 	spec[e+"Nd_ProgressBar/Label_Effect"]={"visible":false}
-	spec[e+"Nd_ProgressBar/Label_Value"]={"role":"source_text","text":percent_text(100.0*float(card.exp)/float(required)),"visible":not maxed}
+	spec[e+"Nd_ProgressBar/Label_Value"]={"role":"source_text","text":percent_text(progress),"visible":not maxed}
 	spec[e+"Nd_ProgressBar/Label_Value_Max"]={"visible":maxed}
-	spec[e+"Nd_ProgressBar/ProgressBar"]={"role":"source_percent","percent":100.0 if maxed else clampf(100.0*float(card.exp)/float(required),0.0,100.0)}
+	spec[e+"Nd_ProgressBar/ProgressBar"]={"role":"source_percent","percent":100.0 if maxed else clampf(progress,0.0,100.0)}
 	spec[e+"Btn_Skill"]={"activate":Callable(self,"_enchant")}
 	spec[e+"Btn_Skill/Normal"]={"visible":not maxed}
 	spec[e+"Btn_Skill/Disabled"]={"visible":maxed}
@@ -258,23 +266,10 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		classes.append({"member":CLASS_ROW,"spec":spec})
 	var placed: Dictionary=_fill_list(root,out,list+"ListView_Class",classes)
 	if not placed.get("ok",false):return placed
-	var grid_key: String=str(_list(root,out,list+"Nd_SkillList/ListView").get("key",""))
-	var cards: Array=[]
 	var shown: Array=_deck_of(grade) if tab=="skill" else materials(compose_grade)
-	for index: int in range(shown.size()):
-		var entry: Dictionary=shown[index]
-		var spec: Dictionary={}
-		_slot_spec(spec,"",int(entry.grade_id),int(entry.get("level",0)) if tab=="skill" else -1)
-		spec["Label_Level"]={"role":"source_text","text":"Lv.%d" % int(entry.get("level",0)) if tab=="skill" else "%d" % int(entry.get("remaining",0)),"visible":true}
-		spec["Panel_Fx"]={"exclude":true}
-		var key: String=str(entry.get("physical_id",""))
-		spec["Panel/Panel_Slot"]={"input":Callable(self,"_slot_input").bind(grid_key,index)}
-		if tab=="compose":spec["Nd_Grade/Item_Disabled"]={"visible":int(registered.get(key,0))>=int(entry.get("remaining",0))}
-		cards.append({"member":SLOT,"spec":spec,"entry":entry})
-	var grid: Dictionary=_fill_list(root,out,list+"Nd_SkillList/ListView",cards,NAN,false,4)
+	var grid: Dictionary=_fill_skill_grid(root,out,list+"Nd_SkillList/ListView",shown,current)
 	if not grid.get("ok",false):return grid
-	var icons: int=_icons(grid,cards)
-	var filled: Dictionary={"ok":true,"tab":tab,"grade":current,"cards":cards.size(),"icons":icons}
+	var filled: Dictionary={"ok":true,"tab":tab,"grade":current,"cards":shown.size(),"icons":grid.icons,"mounted_cards":grid.mounted}
 	if tab=="compose":
 		var chosen: Array=[]
 		for entry: Dictionary in shown:
@@ -287,9 +282,120 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 				chosen.append({"member":SLOT,"spec":spec,"entry":entry})
 		var reg: Dictionary=_fill_list(root,out,"SkillCard_Tab_Compose_Info/Nd_Compose/Nd_Card/ListView",chosen,NAN,false,4)
 		if not reg.get("ok",false):return reg
-		icons+=_icons(reg,chosen)
+		filled["icons"]+=_icons(reg,chosen)
 		filled["registered"]=chosen.size()
 	return filled
+
+func _fill_skill_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array, current: int) -> Dictionary:
+	var list: Dictionary=_list(root,out,suffix)
+	if not list.get("ok",false):return list
+	var geometry: Dictionary=_row_geometry(SLOT)
+	var gap: float=float(_node_options(out,suffix).get("itemMargin",0))
+	var size: Vector2=list.size
+	var pitch: float=geometry.size.y+gap
+	if size.y<=0.0 or geometry.size.x<=0.0 or geometry.size.y<=0.0 or pitch<=0.0:
+		return _fail("source_skill_card_grid_geometry_invalid")
+	var key: String=list.key
+	var view: String="%s:%d" % [tab,current]
+	var rows: int=ceili(float(cards.size())/GRID_COLUMNS)
+	var minimum: float=minf(0.0,size.y-(rows*pitch-gap))
+	var value: float=clampf(float(_grid_positions.get(view,0.0)),minimum,0.0)
+	var state: Dictionary={"content":list.content,"min":minimum,"value":value,"skill_grid":cards,"geometry":geometry,
+		"size":size,"gap":gap,"pitch":pitch,"view":view,"mounted":{},"span":Vector2i(-1,-1)}
+	var built: Dictionary=_mount_skill_grid(key,state,value)
+	if not built.get("ok",false):return built
+	_scrolls[key]=state
+	(list.content as Node2D).position.y=value
+	return {"ok":true,"mounted":state.mounted.size(),"icons":built.icons}
+
+func _mount_skill_grid(key: String, state: Dictionary, value: float) -> Dictionary:
+	var size: Vector2=state.size
+	var cards: Array=state.skill_grid
+	var pitch: float=state.pitch
+	var first: int=maxi(0,floori(-value/pitch)-1)*GRID_COLUMNS
+	var end: int=mini(cards.size(),(ceili((size.y-value)/pitch)+1)*GRID_COLUMNS)
+	var span:=Vector2i(first,end)
+	if span==state.span:return {"ok":true,"icons":0}
+	var cached_trees: Variant=_stage_trees
+	if cached_trees==null:_stage_trees={}
+	var prepared: Dictionary=_prepare_skill_slots(key,cards,state.mounted,span)
+	_stage_trees=cached_trees
+	if not prepared.get("ok",false):return prepared
+	var mounted: Dictionary=state.mounted
+	var content: Node2D=state.content
+	for index: int in mounted.keys():
+		if (index>=first and index<end) or (index==_held_slot and _dragging==key):continue
+		var old: Node2D=mounted[index]
+		content.remove_child(old)
+		old.queue_free()
+		mounted.erase(index)
+	var extent: Vector2=state.geometry.size
+	var gap: float=state.gap
+	var left: float=(size.x-extent.x*GRID_COLUMNS-gap*(GRID_COLUMNS-1))*0.5
+	for index: int in prepared.scenes:
+		var scene: Node2D=prepared.scenes[index]
+		@warning_ignore("integer_division")
+		var row: int=index/GRID_COLUMNS
+		_place(content,scene,state.geometry,Vector2(left+float(index%GRID_COLUMNS)*(extent.x+gap),size.y-extent.y-row*pitch))
+		scene.set_meta(ROW_LIST_META,key)
+		_forward_row_drags(scene,key)
+		mounted[index]=scene
+	state.span=span
+	return {"ok":true,"icons":prepared.icons}
+
+func _prepare_skill_slots(key: String, cards: Array, mounted: Dictionary, span: Vector2i) -> Dictionary:
+	var scenes: Dictionary={}
+	var icons: int=0
+	for index: int in range(span.x,span.y):
+		if mounted.has(index):continue
+		var entry: Dictionary=cards[index]
+		var spec: Dictionary={}
+		var remaining: int=int(entry.get("remaining",0))
+		_slot_spec(spec,"",int(entry.grade_id),int(entry.get("level",0)) if tab=="skill" else -1)
+		spec["Label_Level"]={"role":"source_text","text":"Lv.%d" % int(entry.get("level",0)) if tab=="skill" else str(remaining),"visible":true}
+		spec["Panel_Fx"]={"exclude":true}
+		# The inner icon button has no action here. Let the slot own touches
+		# across its entire surface, including drags that start on the icon.
+		spec["Common_Slot/Btn"]["touch_enabled"]=false
+		spec["Panel/Panel_Slot"]={"input":Callable(self,"_slot_input").bind(key,index)}
+		if tab=="compose":spec["Nd_Grade/Item_Disabled"]={"visible":int(registered.get(str(entry.physical_id),0))>=remaining}
+		var out: Dictionary={}
+		var built: Dictionary=_scene_of(SLOT,spec,out,key)
+		if not built.get("ok",false):
+			for pending: Node2D in scenes.values():pending.free()
+			return built
+		var scene: Node2D=built.scene
+		scenes[index]=scene
+		if _slot_icon(scene,out,entry):icons+=1
+	return {"ok":true,"scenes":scenes,"icons":icons}
+
+func _scroll_to(key: String, value: float) -> void:
+	var state: Dictionary=_scrolls.get(key,{})
+	if state.has("skill_grid") and is_instance_valid(state.content):
+		var clamped: float=clampf(value,float(state.min),0.0)
+		if not _mount_skill_grid(key,state,clamped).get("ok",false):return
+		_grid_positions[state.view]=clamped
+	super._scroll_to(key,value)
+
+func _stage() -> Dictionary:
+	# The kit remembers ordinary lists by authored node path. The virtual
+	# grid restores its own tab/grade position before mounting any slots.
+	var previous: Dictionary=_scrolls.duplicate()
+	var previous_out: Dictionary=_out
+	var previous_drag: String=_dragging
+	var previous_held: int=_held_slot
+	for key: String in previous:
+		if previous[key].has("skill_grid"):_scrolls.erase(key)
+	_held_slot=-1
+	if tab=="skill":_stage_deck=deck()
+	var result: Dictionary=super._stage()
+	_stage_deck=null
+	if not result.get("ok",false):
+		_scrolls=previous
+		_out=previous_out
+		_dragging=previous_drag
+		_held_slot=previous_held
+	return result
 
 ## The card's material books in the popup's order.
 func _books(card: Dictionary) -> Array:
@@ -349,11 +455,13 @@ func _fill_enchant(root: Node2D, out: Dictionary) -> Dictionary:
 func _icons(placed: Dictionary, rows: Array) -> int:
 	var count: int=0
 	for index: int in range(rows.size()):
-		var entry: Dictionary=rows[index].entry
-		var info: Dictionary=_spell_icon(int(entry.spell_class_id)) if entry.has("spell_class_id") else _book_icon(entry)
-		var located: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Common_Slot/Sp_IconSample")
-		if located.get("ok",false) and _show_picture(located.player,located.offset,info):count+=1
+		if _slot_icon(placed.scenes[index],placed.outs[index],rows[index].entry):count+=1
 	return count
+
+func _slot_icon(scene: Node2D, out: Dictionary, entry: Dictionary) -> bool:
+	var info: Dictionary=_spell_icon(int(entry.spell_class_id)) if entry.has("spell_class_id") else _book_icon(entry)
+	var located: Dictionary=_locate(scene,out,"Common_Slot/Sp_IconSample")
+	return located.get("ok",false) and _show_picture(located.player,located.offset,info)
 
 ## The learned card's spell icon (SpellClass IconID).
 static func _spell_icon(spell_class_id: int) -> Dictionary:
@@ -400,8 +508,25 @@ static func _released(event: InputEvent) -> bool:
 
 func _slot_input(event: InputEvent, key: String, index: int) -> void:
 	var dragging: bool=_dragging==key
+	if event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT):
+		if event.pressed:_held_slot=index
 	_list_input(event,key)
-	if _released(event) and dragging and not _dragged():_slot_tap.call_deferred(index)
+	if not _released(event):return
+	var tap: bool=dragging and _held_slot==index and not _dragged() and not (event is InputEventScreenTouch and event.canceled)
+	_held_slot=-1
+	_finish_slot_gesture.call_deferred(_scene,key,index,tap)
+
+func _finish_slot_gesture(owner: Node2D, key: String, index: int, tap: bool) -> void:
+	if not is_open() or owner!=_scene:return
+	var state: Dictionary=_scrolls.get(key,{})
+	if not state.has("skill_grid"):return
+	if not tap:
+		# Release the mounted slot that kept the active drag alive.
+		state.span=Vector2i(-1,-1)
+		_mount_skill_grid(key,state,state.value)
+		return
+	var entry: Dictionary=state.skill_grid[index]
+	_slot_tap(index,entry)
 
 func _registered_input(event: InputEvent, physical_id: String) -> void:
 	if _released(event):_unregister.call_deferred(physical_id)
@@ -412,24 +537,50 @@ func _feed_input(event: InputEvent, physical_id: String, remaining: int) -> void
 ## --- Actions --------------------------------------------------------------------
 
 func _tab(name: String) -> Dictionary:
-	if name=="skill" and tab=="enchant":feed.clear()
+	var previous: String=tab
+	var leaving_enchant: bool=name=="skill" and tab=="enchant"
+	var was_open: bool=is_open()
+	if leaving_enchant and not was_open:feed.clear()
 	tab=name
-	return _stage()
+	var result: Dictionary=_stage()
+	if result.get("ok",false) and leaving_enchant:feed.clear()
+	if not result.get("ok",false) and was_open:tab=previous
+	return result
 
 func _grade(id: int) -> Dictionary:
+	var previous_grade: int=grade if tab=="skill" else compose_grade
+	var previous_selected: int=selected
+	var previous_registered: Dictionary=registered.duplicate()
 	if tab=="skill":
 		grade=id
 		selected=-1
 	else:
 		compose_grade=id
 		registered.clear()
-	return _stage()
+	var result: Dictionary=_stage()
+	if not result.get("ok",false) and is_open():
+		if tab=="skill":
+			grade=previous_grade
+			selected=previous_selected
+		else:
+			compose_grade=previous_grade
+			registered=previous_registered
+	return result
 
-func _slot_tap(index: int) -> Dictionary:
+func _slot_tap(index: int, entry: Dictionary={}) -> Dictionary:
 	if tab=="skill":
+		var previous: int=selected
 		selected=index
-		return _stage()
+		if not is_open():return {"ok":false}
+		var changed: Dictionary=_update_skill_detail(_card() if entry.is_empty() else entry)
+		if not changed.get("ok",false):
+			selected=previous
+			_update_skill_detail(_card())
+		return changed
 	var books: Array=materials(compose_grade)
+	if not entry.is_empty():
+		var physical_id: String=str(entry.physical_id)
+		index=books.find_custom(func(book: Dictionary) -> bool:return str(book.physical_id)==physical_id)
 	if index<0 or index>=books.size():return {"ok":false}
 	var key: String=str(books[index].physical_id)
 	var quote: Dictionary=_merge_quote()
@@ -438,23 +589,47 @@ func _slot_tap(index: int) -> Dictionary:
 		_message("합성에는 %d장이 필요합니다" % need)
 		return {"ok":false}
 	if int(registered.get(key,0))>=int(books[index].remaining):return {"ok":false}
+	var previous: Dictionary=registered.duplicate()
 	registered[key]=int(registered.get(key,0))+1
-	return _stage()
+	return _stage_registration(previous)
+
+func _update_skill_detail(card: Dictionary) -> Dictionary:
+	var spec: Dictionary={}
+	_skill_detail_spec(spec,card)
+	for suffix: String in spec:
+		var binding: Dictionary=spec[suffix]
+		if not (binding.has("text") or binding.has("visible") or binding.has("percent")):continue
+		var located: Dictionary=_locate(_scene,_out,suffix)
+		if not located.get("ok",false):continue
+		var player: Node2D=located.player
+		var offset: int=located.offset
+		for property: String in ["text","percent","visible"]:
+			if not binding.has(property):continue
+			var result: Dictionary=player.call("set_bound_"+property,offset,binding[property])
+			if not result.get("ok",false):return result
+	return {"ok":true,"handled":true,"card":int(card.get("card_id",0))}
 
 func _unregister(physical_id: String) -> Dictionary:
 	if not registered.has(physical_id):return {"ok":false}
+	var previous: Dictionary=registered.duplicate()
 	registered[physical_id]=int(registered[physical_id])-1
 	if int(registered[physical_id])<=0:registered.erase(physical_id)
-	return _stage()
+	return _stage_registration(previous)
 
 ## 카드 자동 등록: the feature's own automatic pick (an empty selection).
 func _auto_register() -> Dictionary:
+	var previous: Dictionary=registered.duplicate()
 	registered.clear()
 	var value: Variant=_call("skill_card523_merge_quote",[compose_grade,{}])
 	var quote: Dictionary=value if value is Dictionary else {}
 	for material: Dictionary in quote.get("materials",[]):registered[str(material.physical_id)]=int(registered.get(str(material.physical_id),0))+int(material.get("quantity",1))
 	if registered.is_empty():_message(str(quote.get("reason","등록할 카드가 없습니다")))
-	return _stage()
+	return _stage_registration(previous)
+
+func _stage_registration(previous: Dictionary) -> Dictionary:
+	var result: Dictionary=_stage()
+	if not result.get("ok",false) and is_open():registered=previous
+	return result
 
 func _merge_probability() -> Dictionary:
 	var quote: Dictionary=_merge_quote()
