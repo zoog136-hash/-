@@ -438,29 +438,15 @@ func _compose_node(row: Dictionary, sprite_id: int, tick: int, ancestors: Array[
 	# name does not introduce a PC alpha, layer, tuple or offset rule.
 	var frame: int=0 if bool(source_info.stored_frame0) else int(selected_token.frame)
 	var key: String="%s:%d:%d"%[source_info.member,int(source_info.stored_group_bit),frame]
-	var own_reason: String=""
-	if not _textures.has(key):
-		var rendered: Dictionary=DECODER.render(source_info.parsed,int(source_info.group),frame,{"alpha_policy":"opaque_samples","rgb_policy":"bit_replication"})
-		if not rendered.ok:own_reason="original_frame_render_failed";state.missing+=1
-		elif rendered.get("empty",false):own_reason="empty_original_frame";state.empty+=1
-		else:
-			var image: Image=rendered.image
-			var cost: int=image.get_data_size()
-			if cost>MAX_CACHE_BYTES:own_reason="texture_cache_budget";state.missing+=1
-			else:
-				while not _texture_recent.is_empty() and (_texture_bytes+cost>MAX_CACHE_BYTES or _textures.size()>=128):
-					var oldest: String=_texture_recent.pop_front()
-					_texture_bytes-=int(_textures[oldest].cost);_textures.erase(oldest)
-				_texture_bytes+=cost
-				_textures[key]={"texture":ImageTexture.create_from_image(image),"bounds":rendered.bounds,"cost":cost}
+	var frame_result: Dictionary = _frame_display(source_info, frame, key, state)
+	var own_reason: String = str(frame_result.get("reason", ""))
 	if own_reason.is_empty():
-		var display: Dictionary=_textures[key]
-		_texture_recent.erase(key);_texture_recent.append(key)
+		var display: Dictionary = frame_result.display
 		if not state.visible_textures.has(key) and int(state.visible_bytes)+int(display.cost)>MAX_CACHE_BYTES:
 			own_reason="visible_texture_budget";state.missing+=1
 		else:
 			if not state.visible_textures.has(key):
-				state.visible_bytes+=int(display.cost);state.visible_textures[key]=true
+				state.visible_bytes+=int(display.cost);state.visible_textures[key]=display
 			var point: Vector2=coordinates.to_world(Vector2(row.raw_x,row.raw_y),false)+Vector2(options.anchor_x,options.anchor_y)
 			var selection_policy: String=CHILD_STORED_FRAME_POLICY if bool(source_info.stored_frame0) else str(declaration.get("sequence_origin","LIST29_ACTION3"))
 			var ignored: Array[Dictionary]=_active_modifier_entries(modifiers,selected_token,bool(source_info.stored_frame0))
@@ -474,12 +460,55 @@ func _compose_node(row: Dictionary, sprite_id: int, tick: int, ancestors: Array[
 				state.ignored_modifiers[sprite_id]=ignored
 	return "" if _draws.size()>before else own_reason
 
+## A currently visible draw already owns its texture independently of the
+## persistent cache. Reuse that same texture if the global 128-entry cache
+## rotates it out during this rebuild; do not pin a second copy. Unrenderable
+## results are memoized only during this rebuild, not across ticks/refreshes.
+func _frame_display(source_info: Dictionary, frame: int, key: String, state: Dictionary) -> Dictionary:
+	if state.visible_textures.has(key):
+		FRAME_HITCH.count("map.static_visible_frame_reused")
+		if _textures.has(key):
+			_texture_recent.erase(key)
+			_texture_recent.append(key)
+		return {"display": state.visible_textures[key]}
+	var reason: String = str(state.frame_failures.get(key, ""))
+	if reason.is_empty() and not _textures.has(key):
+		var started: int = FRAME_HITCH.now()
+		var rendered: Dictionary = _render_static_frame(source_info, frame)
+		FRAME_HITCH.detail("map.static_frame_decode", started)
+		if not rendered.ok: reason = "original_frame_render_failed"
+		elif rendered.get("empty", false): reason = "empty_original_frame"
+		else:
+			var image: Image = rendered.image
+			var cost: int = image.get_data_size()
+			if cost > MAX_CACHE_BYTES: reason = "texture_cache_budget"
+			else:
+				while not _texture_recent.is_empty() and (_texture_bytes + cost > MAX_CACHE_BYTES or _textures.size() >= 128):
+					var oldest: String = _texture_recent.pop_front()
+					_texture_bytes -= int(_textures[oldest].cost)
+					_textures.erase(oldest)
+				_texture_bytes += cost
+				started = FRAME_HITCH.now()
+				_textures[key] = {"texture": ImageTexture.create_from_image(image), "bounds": rendered.bounds, "cost": cost}
+				FRAME_HITCH.detail("map.static_frame_upload", started)
+		if not reason.is_empty(): state.frame_failures[key] = reason
+	if not reason.is_empty():
+		if reason == "empty_original_frame": state.empty += 1
+		else: state.missing += 1
+		return {"reason": reason}
+	_texture_recent.erase(key)
+	_texture_recent.append(key)
+	return {"display": _textures[key]}
+
+func _render_static_frame(source_info: Dictionary, frame: int) -> Dictionary:
+	return DECODER.render(source_info.parsed, int(source_info.group), frame, {"alpha_policy": "opaque_samples", "rgb_policy": "bit_replication"})
+
 func _update_draws() -> void:
 	var tick: int=floori(_clock*float(options.fps)) if float(options.fps)>0 else 0
 	if tick==_frame:return
 	_frame=tick
 	_draws.clear();_failed.clear()
-	var state: Dictionary={"missing":0,"empty":0,"budget_skips":maxi(0,_candidate_indices.size()-MAX_RECORDS),"visible_textures":{},"visible_bytes":0,"declared":0,"composition_nodes":0,"drawn_parent_records":0,"drawn_child_records":0,"drawn_child_stored_frame0_records":0,"child_reference_visits":0,"drawn_child_reference_count":0,"unresolved_child_reference_count":0,"unvisited_child_references_due_to_budget":0,"unresolved_attachments":{},"header_alias_source_nodes":0,"header_alias_reference_visits":0,"drawn_header_alias_reference_count":0,"unresolved_header_alias_reference_count":0,"unvisited_header_aliases_due_to_budget":0,"drawn_header_alias_records":0,"unresolved_header_aliases":{},"unresolved_modifiers":{},"ignored_modifiers":{},"ignored_modifier_records":0,"ignored_modifier_occurrences":0}
+	var state: Dictionary={"missing":0,"empty":0,"budget_skips":maxi(0,_candidate_indices.size()-MAX_RECORDS),"visible_textures":{},"frame_failures":{},"visible_bytes":0,"declared":0,"composition_nodes":0,"drawn_parent_records":0,"drawn_child_records":0,"drawn_child_stored_frame0_records":0,"child_reference_visits":0,"drawn_child_reference_count":0,"unresolved_child_reference_count":0,"unvisited_child_references_due_to_budget":0,"unresolved_attachments":{},"header_alias_source_nodes":0,"header_alias_reference_visits":0,"drawn_header_alias_reference_count":0,"unresolved_header_alias_reference_count":0,"unvisited_header_aliases_due_to_budget":0,"drawn_header_alias_records":0,"unresolved_header_aliases":{},"unresolved_modifiers":{},"ignored_modifiers":{},"ignored_modifier_records":0,"ignored_modifier_occurrences":0}
 	for i: int in mini(_candidate_indices.size(),MAX_RECORDS):
 		var row: Dictionary=_records[_candidate_indices[i]]
 		var ancestors: Array[int]=[]
