@@ -345,6 +345,11 @@ var auto_target_failed_paths: Dictionary = {}
 var auto_target_next_search_ms: int = 0
 var auto_target_failed_search_actor_count: int = -1
 var auto_target_path_checks: int = 0
+var auto_search_candidates: Array[Dictionary] = []
+var auto_search_index: int = 0
+var auto_search_cell: Vector2i
+var auto_search_actor_count: int = -1
+var auto_search_generation: int = -1
 var manual_route_pending_target: Vector2 = Vector2.INF
 var region_id: String = ""
 var return_gate: Node2D = null
@@ -2306,6 +2311,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	ground_loot.hide_map()
 	# Cached failed routes are map- and life-specific; never retain them on travel.
 	auto_target_failed_paths.clear()
+	_clear_auto_target_search()
 	auto_target_next_search_ms = 0
 	auto_target_failed_search_actor_count = -1
 	if active_map_id != map_id:
@@ -3459,6 +3465,7 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 	selected_monster = null
 	auto_target = null
 	auto_target_failed_paths.clear()
+	_clear_auto_target_search()
 	auto_target_next_search_ms = 0
 	auto_target_failed_search_actor_count = -1
 	auto_repath_timer = 0.0
@@ -3480,6 +3487,7 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 
 func _run_auto_hunt() -> void:
 	if player.has_manual_movement():
+		_clear_auto_target_search()
 		auto_stuck_time = 0.0
 		return
 	var manual_priority: TwilightMonster = null
@@ -3512,16 +3520,24 @@ func _run_auto_hunt() -> void:
 	auto_stage = FRAME_HITCH.detail_next("auto.pickup", auto_stage)
 	if picked:
 		return
+	var acquired_path := PackedVector2Array()
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
 			selected_monster = null
 			player.clear_click_path()
 			return
-		auto_target = _nearest_reachable_monster(99999.0, false, true)
+		acquired_path = _acquire_auto_target()
 		auto_target_failed_search_actor_count = monsters_root.get_child_count()
-		auto_target_next_search_ms = 0 if auto_target != null else Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
-		if _native_route_pending():auto_stuck_time=0.0
+		if _native_route_pending():
+			auto_target_next_search_ms = Time.get_ticks_msec() + 50
+			auto_stuck_time = 0.0
+		elif auto_target != null or not auto_search_candidates.is_empty():
+			auto_target_next_search_ms = 0
+		else:
+			auto_target_next_search_ms = Time.get_ticks_msec() + AUTO_TARGET_EMPTY_RETRY_MS
 		auto_stage = FRAME_HITCH.detail_next("auto.search", auto_stage)
+	elif not auto_search_candidates.is_empty():
+		_clear_auto_target_search()
 	if auto_target == null:
 		selected_monster = null
 		player.clear_click_path()
@@ -3544,7 +3560,7 @@ func _run_auto_hunt() -> void:
 	if player.is_held():
 		player.clear_click_path()
 		return
-	if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
+	if not acquired_path.is_empty() or player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
 		auto_repath_timer = 0.65
 		if auto_stuck_time > 2.0:
 			auto_target = null
@@ -3556,7 +3572,9 @@ func _run_auto_hunt() -> void:
 		# when the direct segment is already clear, causing a long pursuit stall.
 		# Field line_clear checks the same walkability used for combat sight.
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
-		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
+		var path: PackedVector2Array = acquired_path
+		if path.is_empty() or can_see:
+			path = _auto_pursuit_path(auto_target, can_see)
 		auto_stage = FRAME_HITCH.detail_next("auto.path", auto_stage)
 		if path.is_empty():
 			if locked != null:
@@ -3568,20 +3586,13 @@ func _run_auto_hunt() -> void:
 				return
 			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 			_remember_auto_target_path_failure(auto_target)
-			auto_target = _nearest_reachable_monster(99999.0, false, true)
-			if auto_target == null:
-				auto_target_failed_search_actor_count = monsters_root.get_child_count()
-				auto_target_next_search_ms = Time.get_ticks_msec() + (50 if _native_route_pending() else AUTO_TARGET_EMPTY_RETRY_MS)
-				if _native_route_pending():auto_stuck_time=0.0
-				selected_monster = null
-				player.clear_click_path()
-				return
-			selected_monster = auto_target
-			path = find_world_path(player.global_position, auto_target.global_position)
-			if path.is_empty() and _native_route_pending():
-				auto_repath_timer=0.05
-				auto_stuck_time=0.0
-				return
+			# An obstructed pursuit already spent this frame's route search.
+			# Acquisition resumes next frame without starting a second route here.
+			auto_target = null
+			auto_target_next_search_ms = 0
+			selected_monster = null
+			player.clear_click_path()
+			return
 		player.set_click_path(path, auto_target.global_position)
 
 func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
@@ -3700,8 +3711,53 @@ func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
 	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
 	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
-func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false, automatic_acquisition: bool = false) -> TwilightMonster:
-	if _source_combat_targets_hidden(): return null
+func _clear_auto_target_search() -> void:
+	auto_search_candidates.clear()
+	auto_search_index = 0
+
+func _acquire_auto_target() -> PackedVector2Array:
+	auto_target = null
+	if _source_combat_targets_hidden():
+		_clear_auto_target_search()
+		return PackedVector2Array()
+	var origin: Vector2 = player.global_position
+	var cell: Vector2i = _world_to_cell(origin)
+	var actor_count: int = monsters_root.get_child_count()
+	if auto_search_candidates.is_empty() or auto_search_cell != cell or auto_search_actor_count != actor_count or auto_search_generation != combat_generation:
+		auto_search_candidates = _reachable_target_candidates(99999.0, true)
+		auto_search_cell = cell
+		auto_search_actor_count = actor_count
+		auto_search_generation = combat_generation
+		auto_search_index = 0
+	var now: int = Time.get_ticks_msec()
+	while auto_search_index < auto_search_candidates.size():
+		var candidate: Dictionary = auto_search_candidates[auto_search_index]
+		auto_search_index += 1
+		if not is_instance_id_valid(int(candidate.actor_id)): continue
+		var monster: TwilightMonster = instance_from_id(int(candidate.actor_id)) as TwilightMonster
+		if monster == null or monster.get_parent() != monsters_root or monster.life_id != int(candidate.life_id): continue
+		if monster.dead or monster.is_queued_for_deletion() or not monster.permits_auto_selection() or not equipment523_can_detect(monster): continue
+		var key: String = _auto_target_failure_key(monster)
+		if int(auto_target_failed_paths.get(key, 0)) > now: continue
+		auto_target_path_checks += 1
+		var started: int = FRAME_HITCH.now()
+		var route: PackedVector2Array = find_world_path(origin, monster.global_position)
+		FRAME_HITCH.detail("auto.search_route", started)
+		if not route.is_empty():
+			auto_target_failed_paths.erase(key)
+			_clear_auto_target_search()
+			auto_target = monster
+			return route
+		if _native_route_pending():
+			auto_search_index -= 1
+		else:
+			_remember_auto_target_path_failure(monster)
+		# Preserve the field's full route limit, but run only one route per frame.
+		break
+	if auto_search_index >= auto_search_candidates.size(): _clear_auto_target_search()
+	return PackedVector2Array()
+
+func _reachable_target_candidates(max_distance: float, automatic_acquisition: bool) -> Array[Dictionary]:
 	# Distance-first preserves the previous nearest-reachable rule, while
 	# avoiding an expensive A*/source route for every closer actor seen so far.
 	var candidates: Array[Dictionary] = []
@@ -3717,15 +3773,22 @@ func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false
 		if not equipment523_can_detect(monster): continue
 		var distance_squared: float = origin.distance_squared_to(monster.global_position)
 		if distance_squared < max_distance_squared:
-			candidates.append({"actor":monster, "distance_squared":distance_squared, "order":order})
+			candidates.append({"actor_id":monster.get_instance_id(), "life_id":monster.life_id, "distance_squared":distance_squared, "order":order})
 		order += 1
 	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		if float(a.distance_squared) == float(b.distance_squared):
 			return int(a.order) < int(b.order)
 		return float(a.distance_squared) < float(b.distance_squared))
+	return candidates
+
+func _nearest_reachable_monster(max_distance: float, force_refresh: bool = false, automatic_acquisition: bool = false) -> TwilightMonster:
+	if _source_combat_targets_hidden(): return null
+	var origin: Vector2 = player.global_position
+	var candidates: Array[Dictionary] = _reachable_target_candidates(max_distance, automatic_acquisition)
 	var now: int = Time.get_ticks_msec()
 	for candidate: Dictionary in candidates:
-		var monster: TwilightMonster = candidate.actor
+		var monster: TwilightMonster = instance_from_id(int(candidate.actor_id)) as TwilightMonster
+		if not is_instance_valid(monster): continue
 		var key: String = _auto_target_failure_key(monster)
 		if not force_refresh and int(auto_target_failed_paths.get(key, 0)) > now: continue
 		auto_target_path_checks += 1
@@ -6760,6 +6823,7 @@ func _on_auto_toggled(enabled: bool) -> void:
 	loot_pickup.cancel()
 	hud.set_auto(enabled)
 	if not enabled:
+		_clear_auto_target_search()
 		auto_target = null
 		player.clear_click_path()
 

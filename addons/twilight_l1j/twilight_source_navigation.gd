@@ -66,14 +66,15 @@ func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[
 				result.append(current)
 			result.reverse()
 			return result
+		var cost: int = int(costs[current]) + 1
 		for heading: int in range(8):
-			if not can_step(current, heading): continue
 			var next: Vector2i = current + DIRECTIONS[heading]
-			var cost: int = int(costs[current])+1
-			if costs.has(next) and int(costs[next]) <= cost: continue
-			# Once the budget is full, finish searching already stored cells. One
-			# unrelated new neighbor must not discard a reachable queued goal.
-			if not costs.has(next) and costs.size() >= max_nodes: continue
+			var known_cost: int = int(costs.get(next, -1))
+			if known_cost >= 0 and known_cost <= cost: continue
+			# A full budget can still reach a goal already queued. Skip terrain
+			# lookups for edges that cannot add or improve any stored route.
+			if known_cost < 0 and costs.size() >= max_nodes: continue
+			if not can_step(current, heading): continue
 			previous[next] = current
 			costs[next] = cost
 			_push_frontier(frontier,Vector3i(next.x,next.y,cost+_distance(next,goal)),goal)
