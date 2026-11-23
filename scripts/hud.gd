@@ -750,6 +750,10 @@ func _catalog_page_count() -> int:
 		return 1
 	return int(ceil(float(catalog_filtered_results.size()) / float(catalog_page_size)))
 
+## Returns the page-local selection to bind when its rows have been mounted.
+func _catalog_initial_selection() -> int:
+	return 0
+
 func _apply_catalog_page() -> void:
 	catalog_list.clear()
 	catalog_results.clear()
@@ -780,8 +784,9 @@ func _apply_catalog_page() -> void:
 	catalog_equip_button.text = "획득 / 장착" if catalog_category == "아이템" else "장착"
 	catalog_equip_button.disabled = catalog_results.is_empty()
 	if catalog_results.size() > 0:
-		catalog_list.select(0)
-		_on_catalog_item_selected(0)
+		var chosen: int = clampi(_catalog_initial_selection(), 0, catalog_results.size() - 1)
+		catalog_list.select(chosen)
+		_on_catalog_item_selected(chosen)
 
 func _catalog_first_page() -> void:
 	if catalog_page == 0:

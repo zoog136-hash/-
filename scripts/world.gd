@@ -54,6 +54,7 @@ var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const SAVE_TRIM = preload("res://scripts/loot/save_provenance_trim.gd")
+const SAVE_SNAPSHOT = preload("res://scripts/save/owned_snapshot.gd")
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
@@ -7011,13 +7012,17 @@ var _background_save_job: Dictionary = {}
 func background_save_pending() -> bool:
 	return _background_save_task >= 0
 
-func _start_background_save(data: Dictionary, prior_hash: String, started_usec: int) -> Error:
+func _start_background_save(data: Dictionary, prior_hash: String, started_usec: int, owned_fields: Dictionary = {}) -> Error:
 	var pre: Error = equipment_collections.precheck_write(save_path())
 	if pre != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % pre)
 		return pre
-	# The worker owns this copy; the live game keeps changing its own state.
-	var job: Dictionary = {"path":save_path(),"data":data.duplicate(true),"prior_hash":prior_hash,"error":ERR_BUSY}
+	# Exporters below already detached some fields. Transfer only those exact
+	# roots; copy every live/overridden/trimmed replacement as before.
+	var freeze_started: int = FRAME_HITCH.now()
+	var frozen: Dictionary = SAVE_SNAPSHOT.freeze(data, owned_fields)
+	FRAME_HITCH.detail("save.freeze", freeze_started)
+	var job: Dictionary = {"path":save_path(),"data":frozen,"prior_hash":prior_hash,"error":ERR_BUSY}
 	# Everything changed so far is in this save; later changes queue a new one.
 	deferred_save.cancel()
 	_background_save_job = job
@@ -7293,9 +7298,13 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if validate_only: return OK
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
+	# Preserve exporter order. Capture only audited, independently owned roots.
+	var owned_save_fields: Dictionary = {}
 	var data: Dictionary = {
 		"unconfirmed523":unconfirmed523.snapshot(),
-		"source_dungeon_play":dungeon_play.snapshot(),
+		# The staged dungeon candidate already captured actors' HP/MP; it is
+		# still detached by staged_overrides below. Do not rebuild the live copy.
+		"source_dungeon_play":{} if collection_override.has("source_dungeon_play") else dungeon_play.snapshot(),
 		"source_dungeon523": source_dungeon_runs.state.duplicate(true),
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -7325,11 +7334,11 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
 		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
-		"quest_state": quest_service.export_state(),
-		"monsterbook523": monsterbook523.export_state(),
+		"quest_state": SAVE_SNAPSHOT.capture(owned_save_fields,"quest_state",quest_service.export_state()),
+		"monsterbook523": SAVE_SNAPSHOT.capture(owned_save_fields,"monsterbook523",monsterbook523.export_state()),
 		"tj_coupons523": tj_coupons.core.export_state(),
 		"protection523": protection523.snapshot(),
-		"equipment_collections": equipment_collections.export_state(),
+		"equipment_collections": SAVE_SNAPSHOT.capture(owned_save_fields,"equipment_collections",equipment_collections.export_state()),
 		"totem_state": totems.export_state(),
 		"growth": growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
@@ -7346,7 +7355,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		DUNGEON_EXTRAS523.SAVE_KEY: dungeon_extras523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
-		"warehouse": warehouse.snapshot(),
+		"warehouse": SAVE_SNAPSHOT.capture(owned_save_fields,"warehouse",warehouse.snapshot()),
 		"inventory_automation": inventory_automation.state.duplicate(true),
 		"crafting_log": crafting_log,
 		"patch523_crafting_usage":patch523_crafting_usage,
@@ -7370,7 +7379,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
-		"consumable_state": consumable_service.call("export_state"),
+		"consumable_state": SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"combination523":combinations.export_state(),
@@ -7455,7 +7464,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	elif FileAccess.file_exists(save_path()):
 		prior_owner_hash=FileAccess.get_sha256(save_path())
 	if want_background and background_save_enabled and collection_override.is_empty() and movement_override.is_empty() and pending_map_save_record.is_empty() and not observed_content.has("state") and not equipment_collections.test_save_writer.is_valid():
-		return _start_background_save(data, prior_owner_hash, save_started_usec)
+		return _start_background_save(data, prior_owner_hash, save_started_usec, owned_save_fields)
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
@@ -11609,7 +11618,7 @@ func _update_field_triggers() -> void:
 		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · " + str(field_map.data.get("short_name", "아덴"))))
 	# Original 523 walk-in portals (Portal table) on a 523 Land field.
 	if current523_aden_source_active():
-		var walked: Dictionary = _aden_play_controller().call("step_source_portal")
+		var walked: Dictionary = await _aden_play_controller().call("step_source_portal_loading")
 		if not walked.is_empty():
 			current523_aden_play_active = bool(_aden_play_controller().get("active"))
 			if not bool(walked.get("ok",false)): hud.show_message("포탈 이동 보류: "+str(walked.get("reason","")))
@@ -12306,10 +12315,21 @@ func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
 	if competition.FAMILY.has(kind): return competition.entries(int(competition.FAMILY[kind]))
 	return source_dungeons.entries(kind,hard)
 
+## Entry UIs share one overlay/duplicate-input gate; transactional owners
+## retain level, tariff, ticket, save and current-game access policy checks.
+func run_dungeon_loading(operation: Callable) -> Dictionary:
+	return await preload("res://scripts/boot/dungeon_loading.gd").run(self,operation)
+
 func competition523_quote(id: int) -> Dictionary:
 	return preload("res://scripts/dungeons/competition_dungeon523.gd").quote(self,id)
 
 func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
+	return call("_competition523_enter_impl",id,ticket,false)
+
+func competition523_enter_loading(id: int, ticket: Dictionary) -> Dictionary:
+	return await _competition523_enter_impl(id,ticket,true)
+
+func _competition523_enter_impl(id: int, ticket: Dictionary, loading: bool) -> Dictionary:
 	if death_recovery.blocked() or int(hp)<=0 or player.movement_locked or player.is_stunned() or player.is_held() or player.is_feared() or not charge_skill.is_empty() or patch523_npc_spells.blocks("CannotTeleport"):
 		return {"ok":false,"reason":"현재 이동 상태에서는 던전 입구에 갈 수 없습니다."}
 	var fresh: Dictionary=competition523_quote(id)
@@ -12319,7 +12339,9 @@ func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
 	var row: Dictionary=fresh.row
 	var controller: RefCounted=_aden_play_controller()
 	var policy: String=preload("res://scripts/dungeons/competition_dungeon523.gd").POLICY
-	var moved: bool=controller.call("enter_source_land",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
+	else: moved = controller.call("enter_source_land",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
 	var state: Dictionary=controller.call("last_source_transition")
 	current523_aden_play_active=bool(controller.get("active"))
 	if not moved or not state.get("saved",false):
@@ -12640,8 +12662,16 @@ func _bind_current523_world_map_from_settings() -> void:
 
 ## 오림의 흔적: move to a stage's original Land / back to the starting point.
 func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
+	return call("_orim_enter_land_impl",land_id,bounds,false)
+
+func orim_enter_land_loading(land_id: int, bounds: Array) -> Dictionary:
+	return await _orim_enter_land_impl(land_id,bounds,true)
+
+func _orim_enter_land_impl(land_id: int, bounds: Array, loading: bool) -> Dictionary:
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", land_id, bounds)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds)
+	else: moved = controller.call("enter_source_land", land_id, bounds)
 	return {"ok": moved, "reason": str(controller.get("problem"))}
 
 func orim_current_land() -> Dictionary:
@@ -12672,10 +12702,18 @@ func dungeon523_return_to_village() -> Dictionary:
 ## Territories box) under DUNGEON523_ENTRY_WAIVE (MinLevel judged) and saves `save_changes` (the entry cost and the dungeon
 ## session) with the arrival. Not moved = nothing saved, nothing charged.
 func dungeon523_enter_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return call("_dungeon523_enter_land_impl",land_id,bounds,save_changes,false)
+
+func dungeon523_enter_land_loading(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return await _dungeon523_enter_land_impl(land_id,bounds,save_changes,true)
+
+func _dungeon523_enter_land_impl(land_id: int, bounds: Array, save_changes: Dictionary, loading: bool) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 입장할 수 없습니다."}
 	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
+	else: moved = controller.call("enter_source_land", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if moved and player.auto_enabled: player.set_auto_enabled(false)

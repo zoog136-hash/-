@@ -39,6 +39,7 @@ class Host extends Node:
 	var land: int = 4
 	var land_ready_map: Dictionary = {}
 	var move_ok: bool = true
+	var save_ok: bool = true
 	var saved: Array = []
 	var moves: Array = []
 	var returns: int = 0
@@ -58,6 +59,7 @@ class Host extends Node:
 		returns += 1; land = 4
 		return {"ok": true}
 	func commit_dungeon_play(candidate: Dictionary, changes: Dictionary) -> Error:
+		if not save_ok: return ERR_CANT_CREATE
 		saved.append({"source_dungeon_play": candidate.duplicate(true)})
 		if changes.has("gold"): gold = int(changes.gold)
 		return OK
@@ -116,7 +118,16 @@ func fixture() -> void:
 		check(host.gold == gold - 10000, "%d entry cost charged once with the move" % id)
 		check(host.saved[-1].has("source_dungeon_play") and host.saved[-1].has("gold"), "%d cost and session saved together with the arrival" % id)
 		check(int(play.state.pools[g].base) == before, "%d nothing drained at the moment of entry" % id)
-		for s: int in range(1, 13): play.tick(1.0, now + s)
+		var saves_before: int = host.saved.size()
+		for s: int in range(1, 10): play.tick(1.0, now + s)
+		check(host.saved.size() == saves_before and int(play.state.pools[g].base) == before, "%d pre-checkpoint polls don't mutate or write" % id)
+		host.save_ok = false
+		play.tick(1.0, now + 10)
+		check(host.saved.size() == saves_before and int(play.state.pools[g].base) == before, "%d checkpoint failure doesn't publish unsaved time" % id)
+		host.save_ok = true
+		play.tick(1.0, now + 10)
+		check(host.saved.size() == saves_before+1, "%d unchanged checkpoint is retried exactly once" % id)
+		for s: int in range(11, 13): play.tick(1.0, now + s)
 		check(int(play.state.pools[g].base) == before - 10, "%d inside: drained 10 s and saved at the 10-second step (base %d)" % [id, int(play.state.pools[g].base)])
 		check(play.special_left(now + 12) == before - 12, "%d remaining time counts the unsaved seconds" % id)
 		# A pause / closed game: the gap is not dungeon time.

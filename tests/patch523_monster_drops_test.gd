@@ -41,6 +41,30 @@ func unit_checks() -> void:
 	check(DROPS.catalog_index([f.catalog.by_name["fixture1"], f.catalog.by_name["fixture1"]]).is_empty(), "ambiguous runtime inventory name rejected")
 	var separate: Dictionary = {"by_name":{}, "patch523_by_name":f.catalog.by_name}
 	check(DROPS.resolve(f.document, f.identity, separate).size() == 3 and separate.by_name.is_empty(), "source encyclopedia lookup keeps legacy loot pool unchanged")
+	var deferred: Dictionary = DROPS.resolve(f.document, f.identity, f.catalog, true)
+	check(not deferred["1"].variants["1:0"].has("variant_record"), "host candidate binding does not clone every variant")
+	var frozen := RandomNumberGenerator.new()
+	var on_demand := RandomNumberGenerator.new()
+	for seed_value: int in range(100):
+		frozen.seed = seed_value
+		on_demand.seed = seed_value
+		var expected: Array[Dictionary] = LOOT.roll_patch523(groups, true, frozen)
+		var actual: Array[Dictionary] = LOOT.roll_patch523(deferred, true, on_demand)
+		check(expected == actual and frozen.state == on_demand.state, "deferred variants preserve complete loot/proof and RNG %d" % seed_value)
+	var native_source: Dictionary = f.document.duplicate(true)
+	var native_catalog: Dictionary = f.catalog.duplicate(true)
+	var native_item: Dictionary = native_catalog.by_name["fixture2"]
+	native_item["source_m_native_item"] = true
+	var eager_native: Dictionary = DROPS.resolve(native_source, f.identity, native_catalog)
+	var lazy_native: Dictionary = DROPS.resolve(native_source, f.identity, native_catalog, true)
+	for seed_value: int in range(100):
+		frozen.seed = seed_value
+		on_demand.seed = seed_value
+		var eager_pick: Dictionary = DROPS.pick(eager_native, "potion", "", frozen)
+		var lazy_pick: Dictionary = DROPS.pick(lazy_native, "potion", "", on_demand)
+		check(eager_pick == lazy_pick and frozen.state == on_demand.state, "exact native bless ownership keys remain identical %d" % seed_value)
+		lazy_pick.item_record["name"] = "caller mutation"
+		check(native_item.name == "fixture2", "picked DTO does not alias its catalog record")
 	var rng := RandomNumberGenerator.new(); rng.seed = 523
 	var reduced: Dictionary = f.document.duplicate(true)
 	reduced.drops["100"].remove_at(1)
