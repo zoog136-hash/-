@@ -1004,6 +1004,7 @@ func _drop_block_jobs() -> void:
 ## only those atlases again instead of walking its records.
 func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 	var prefetch_atlases: bool = _tile_pack.has_method("prefetch")
+	var prioritize: bool = _tile_pack.has_method("prioritize") and _block_rect(cell).intersects(_view_rect())
 	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
 	var ready: bool = true
 	var asked: Dictionary = {}
@@ -1029,6 +1030,7 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 				if asked.has(tile_id): continue
 				asked[tile_id] = true
 				if not _tile_pack.has_tile(tile_id): continue
+				if prioritize: _tile_pack.call("prioritize", tile_id)
 				if not _tile_pack.call("prefetch", tile_id): ready = false
 	if collected is Dictionary:
 		var tiles := PackedInt32Array()
@@ -1044,10 +1046,12 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 func _pending_tiles_ready(cell: Vector2i) -> bool:
 	var tiles: Variant = _pending_tiles.get(cell)
 	if tiles is PackedInt32Array:
+		var prioritize: bool = _tile_pack.has_method("prioritize") and _block_rect(cell).intersects(_view_rect())
 		var ready: bool = true
 		# A miss means "not ready yet", but the call can queue that atlas.
 		# Keep offering the remaining IDs so the decode slots can fill.
 		for tile_id: int in (tiles as PackedInt32Array):
+			if prioritize: _tile_pack.call("prioritize", tile_id)
 			if not _tile_pack.call("prefetch", tile_id): ready = false
 		return ready
 	var collected: Dictionary = {}
@@ -1446,6 +1450,14 @@ func _process(delta: float) -> void:
 
 func _process_step(delta: float) -> void:
 	if not _configured: return
+	if _tile_pack != null and _tile_pack.has_method("prioritize"):
+		# Refresh cheap cached hints before publication, even during the 50 ms
+		# readiness retry interval. No chunk/record walk or texture acquisition.
+		var screen: Rect2 = _view_rect()
+		for pending: Vector2i in _pending_blocks:
+			if not _block_rect(pending).intersects(screen): continue
+			for tile_id: int in _pending_tiles.get(pending, PackedInt32Array()):
+				_tile_pack.call("prioritize", tile_id)
 	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
 	if not _chunk_jobs.is_empty():
 		var chunks_started: int = FRAME_HITCH.now()

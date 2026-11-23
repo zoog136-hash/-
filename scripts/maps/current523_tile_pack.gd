@@ -51,6 +51,25 @@ var _jobs: Dictionary = {}
 ## Worker decodes in flight at once (each holds ~1.2 MiB while decoding).
 const MAX_DECODE_JOBS: int = 8
 
+## Publication is counted by engine process frame, not pump invocation: a
+## frame may call pump_gpu, texture_for and pump_jobs many times. Keep the
+## first ready result progressing; a single driver upload is not preemptible.
+const MAX_PUBLISH_PER_FRAME: int = 2
+const PUBLISH_BUDGET_USEC: int = 2000
+var _publish_frame: int = -1
+var _published_this_frame: int = 0
+var _publish_usec: int = 0
+var _publish_sequence: int = 0
+var _priority: Dictionary = {} # tile ID -> last visible request frame
+
+## Optional renderer hint; legacy packs need not implement it. Priority lasts
+## through the next frame's pump. Every fourth result is oldest-ready so a
+## stream of visible requests cannot starve other completed decodes.
+func prioritize(tile_id: int) -> void:
+	_priority[tile_id] = Engine.get_process_frames()
+	var texture: Texture2D = _cache.get(tile_id, _held.get(tile_id))
+	if compress_for_gpu and texture is ImageTexture: gpu.prioritize(texture)
+
 func _fail(message: String) -> bool:
 	problem = message
 	return false
@@ -67,6 +86,7 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_recent.clear()
 	_held.clear()
 	_prefetch_errors.clear()
+	_priority.clear()
 	_drop_jobs()
 	problem = ""
 	atlas_loads = 0
@@ -221,18 +241,38 @@ func prefetch(tile_id: int) -> bool:
 	_jobs[tile_id] = job
 	return false
 
-## Publishes finished worker decodes (main thread). Returns how many.
+## Publishes completed decodes within a shared per-frame allowance. Returns
+## completed results (including diagnosed failures); never waits for a decode.
 func pump_jobs() -> int:
+	var frame: int = Engine.get_process_frames()
+	if _publish_frame != frame:
+		_publish_frame = frame
+		_published_this_frame = 0
+		_publish_usec = 0
+		for tile_id: int in _priority.keys():
+			if int(_priority[tile_id]) < frame - 1: _priority.erase(tile_id)
 	var done: int = 0
-	for tile_id: int in _jobs.keys():
-		var job: Dictionary = _jobs[tile_id]
-		if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+	while _published_this_frame < MAX_PUBLISH_PER_FRAME and (_published_this_frame == 0 or _publish_usec < PUBLISH_BUDGET_USEC):
+		var selected: int = -1
+		for tile_id: int in _jobs:
+			if not WorkerThreadPool.is_task_completed(int(_jobs[tile_id].task)): continue
+			if selected < 0: selected = tile_id
+			if _publish_sequence % 4 == 3: break
+			if int(_priority.get(tile_id, -2)) >= frame - 1:
+				selected = tile_id
+				break
+		if selected < 0: break
+		var started: int = Time.get_ticks_usec()
+		var job: Dictionary = _jobs[selected]
 		WorkerThreadPool.wait_for_task_completion(int(job.task))
-		_jobs.erase(tile_id)
+		_jobs.erase(selected)
 		var saved: String = problem
-		var texture: Texture2D = _publish(tile_id, job)
-		if background_only and texture == null: _prefetch_errors[tile_id] = problem
+		var texture: Texture2D = _publish(selected, job)
+		if background_only and texture == null: _prefetch_errors[selected] = problem
 		problem = saved
+		_publish_usec += Time.get_ticks_usec() - started
+		_published_this_frame += 1
+		_publish_sequence += 1
 		done += 1
 	return done
 
@@ -294,7 +334,10 @@ func _publish(tile_id: int, job: Dictionary) -> Texture2D:
 	var image: Image = job.image
 	var texture := ImageTexture.create_from_image(image)
 	# The decoded image is not used after this; the worker may change it.
-	if compress_for_gpu: gpu.queue(texture, image)
+	if compress_for_gpu:
+		gpu.queue(texture, image, false)
+		if int(_priority.get(tile_id, -2)) >= Engine.get_process_frames() - 1: gpu.prioritize(texture)
+		gpu.pump()
 	atlas_loads += 1
 	_cache[tile_id] = texture
 	_recent.append(tile_id)
