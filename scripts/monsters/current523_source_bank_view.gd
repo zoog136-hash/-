@@ -24,6 +24,15 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 			selection_status["reason"] = "current523_active_actor_registry_required_for_view"
 			selection_status["selection_phase"] = "awaiting_active_actor_registry"
 			return false
+	# Keep these strong references through the first actual pose application,
+	# even if publication of its later pages evicted an earlier cache entry.
+	var prepared: Dictionary = prepare_first_cooked_pose(selected)
+	if prepared.get("status") == "pending":
+		selection_status = selected.duplicate(true)
+		selection_status["ok"] = false
+		selection_status["status"] = "selection_pending"
+		selection_status["reason"] = PREVIEW.REFERENCE_BANK.ROLE_DEFERRED
+		return false
 	var candidate := PREVIEW.new()
 	# Cached frame plans / composited layer groups (original_source_preview.gd).
 	candidate.cached_frames = true
@@ -64,6 +73,7 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 	HITCH.detail("view.attach",started)
 	started = HITCH.now()
 	var initial_frame: bool = _preview.advance_reference_source(0.0,"idle",posmod(2 + 3,8))
+	prepared.clear() # The applied sprites now own the complete initial pose.
 	HITCH.detail("view.first_frame",started)
 	if not initial_frame:
 		selection_status["ok"] = false
@@ -71,6 +81,17 @@ func configure_admitted(record: Dictionary, admission: Dictionary) -> bool:
 		selection_status["reason"] = _preview.reference_bank_status.get("error","current523_npc_initial_source_frame_unavailable")
 		return false
 	return true
+
+## Only this gameplay NPC admission path opts in. Shared previews (player,
+## UI cards, effects) never wait on the pilot queue or advance unseen frames.
+static func prepare_first_cooked_pose(selected: Dictionary) -> Dictionary:
+	var store = PREVIEW.COOKED_STORE
+	if not store.npc_page_prewarm or selected.get("consumer") != "npc" or not store.available(): return {"status":"unsupported"}
+	var cooked: Dictionary = store.lookup(selected)
+	if cooked.is_empty() or not cooked.entry.runtime_tracks.has("idle"): return {"status":"unsupported"}
+	# Matches configure_admitted's exact initial role/direction/time below.
+	var state: int = store.initial_state(cooked.entry, "idle", 5)
+	return store.prepare_state(cooked.actor, state) if state >= 0 else {"status":"unsupported"}
 
 func duration(role: String) -> float:
 	var track: Dictionary = _tracks.get(role,{})

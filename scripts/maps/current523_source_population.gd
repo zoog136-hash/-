@@ -117,7 +117,15 @@ func configure(controller: Node, value: PlayableField) -> void:
 	# bank manifest inside a hit (current523_source_effect_selection.prewarm).
 	if value != null and background_loading: EFFECT_SELECTION.prewarm()
 
+func _exit_tree() -> void:
+	# No actor owns pending results. Leaving a field invalidates its admission
+	# tickets without waiting for I/O; a subsequent pump reaps finished jobs.
+	preload("res://scripts/resources/cooked_actor_store.gd").cancel_prepared_pages()
+
 func _process(delta: float) -> void:
+	# Main-thread publication only; independent of the disabled Android SP2
+	# worker policy. Also reaps abandoned first-page requests after a slot left.
+	preload("res://scripts/resources/cooked_actor_store.gd").pump_prepared_pages()
 	super._process(delta)
 	if _retry.is_empty(): return
 	var hitch_started: int = FRAME_HITCH.now()
