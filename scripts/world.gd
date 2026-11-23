@@ -6565,6 +6565,12 @@ func _npc_teleport_requested(map_id: String) -> void:
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
 	if death_recovery.blocked(): return
+	# Do not build a candidate or join an autosave on a warehouse tap. This
+	# request is NOT accepted/queued; a later explicit tap validates fresh state.
+	# The normal save pump owns completion (including errors), not this UI call.
+	if background_save_pending():
+		hud.show_message("저장 처리 중 · 창고 이동은 실행하지 않았습니다. 완료 후 다시 눌러 주세요.")
+		return
 	if direction == "deposit" and not half_elixir.storable(item_name):
 		hud.show_message("원본에서 보관할 수 없는 하프 엘릭서 품목입니다.")
 		return
@@ -7033,7 +7039,7 @@ static func _run_background_save(job: Dictionary) -> void:
 	var text: String = JSON.stringify(payload, "", true, true)
 	job["payload_hash"] = text.sha256_text()
 	job["payload"] = payload
-	job["error"] = preload("res://scripts/skills/save_writer.gd").write_text(str(job.path), text)
+	job["error"] = preload("res://scripts/skills/save_writer.gd").write_text_if_unchanged(str(job.path), text, str(job.prior_hash))
 
 func _finish_background_save(wait: bool) -> void:
 	if _background_save_task < 0: return
@@ -7043,12 +7049,14 @@ func _finish_background_save(wait: bool) -> void:
 	var job: Dictionary = _background_save_job
 	_background_save_job = {}
 	if int(job.get("error",ERR_BUG)) == OK:
-		equipment_collections.commit_written(str(job.path), job.payload, str(job.payload_hash))
-		if job.get("envelope") is Dictionary: CHARACTER_ACCOUNT.remember_durable(str(job.path), job.envelope)
-		if not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==str(job.path): CHARACTER_ACCOUNT.session["initialized"]=true
-		for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
-			if job.payload.has(key):equipment_collections.extra_save_fields[key]=job.payload[key].duplicate(true)
-		return
+		var completed: Error=equipment_collections.commit_written(str(job.path), job.payload, str(job.payload_hash))
+		if completed == OK:
+			if job.get("envelope") is Dictionary: CHARACTER_ACCOUNT.remember_durable(str(job.path), job.envelope)
+			if not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==str(job.path): CHARACTER_ACCOUNT.session["initialized"]=true
+			for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
+				if job.payload.has(key):equipment_collections.extra_save_fields[key]=job.payload[key].duplicate(true)
+			return
+		job["error"]=completed
 	CHARACTER_ACCOUNT.forget_durable()
 	if not str(job.get("problem","")).is_empty(): hud.append_log(str(job.problem))
 	hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % int(job.get("error",ERR_BUG)))

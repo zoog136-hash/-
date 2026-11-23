@@ -256,15 +256,21 @@ func precheck_write(path: String) -> Error:
 	return OK
 
 ## Background save finished writing `payload_hash` bytes of `data` to path.
-func commit_written(path: String, data: Dictionary, payload_hash: String) -> void:
+func commit_written(path: String, data: Dictionary, payload_hash: String) -> Error:
+	var actual_hash: String=FileAccess.get_sha256(path)
+	if actual_hash != payload_hash:
+		save_blocked=true
+		world.hud.append_log("저장 완료 전 외부 변경 감지 · 파일 보존 · 다시 불러오기 전 저장 차단")
+		return ERR_BUSY
 	_disk_path = path
-	_disk_hash = FileAccess.get_sha256(path)
+	_disk_hash = actual_hash
 	_last_payload_hash = payload_hash if _disk_hash==payload_hash else ""
 	_last_payload_revision = hash(data)
 	# No snapshot copy on the main thread: the next save is written in full.
 	_last_payload_snapshot = {}
 	_last_payload_snapshot_valid = false
 	save_writes += 1
+	return OK
 
 func write_save(path: String, data: Dictionary) -> Error:
 	if save_blocked or not problem.is_empty(): return ERR_UNAVAILABLE
