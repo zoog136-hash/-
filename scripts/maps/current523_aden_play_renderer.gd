@@ -1504,14 +1504,17 @@ func _draw_tiles(canvas: Node2D) -> void:
 				var corners: PackedInt64Array = pending[ref]
 				for index: int in range(0, corners.size(), 2):
 					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
-						observed_refs[ref] = true
-						pending.erase(ref)
+						if not observed_refs.has(ref): observed_refs[ref] = []
+						observed_refs[ref].append(pending)
 						break
 	if observe:
+		var usage_deferred: bool = false
 		for ref: int in observed_refs:
 			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
-			if not source.is_empty():USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
-		_usage_generation=_draw_generation
+			if not source.is_empty() and USAGE.observe(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255)):
+				for pending: Dictionary in observed_refs[ref]: pending.erase(ref)
+			else: usage_deferred = true
+		_usage_generation = -1 if usage_deferred else _draw_generation
 		USAGE.flush()
 
 
