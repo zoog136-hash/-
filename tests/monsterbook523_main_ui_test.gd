@@ -52,6 +52,7 @@ func all_text(node: Node) -> String:
 	return value
 
 func run() -> void:
+	ProjectSettings.set_setting("twilight/monsterbook/progression_enabled", true)
 	check(not OS.get_environment("TWILIGHT_SOURCE_MAP_PACK").is_empty(), "explicit current map pack")
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)

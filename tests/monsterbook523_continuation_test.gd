@@ -65,6 +65,7 @@ func reward_item(item_id: int) -> Dictionary:
 	return {}
 
 func run() -> void:
+	ProjectSettings.set_setting("twilight/monsterbook/progression_enabled", true)
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	world.set_process(false)

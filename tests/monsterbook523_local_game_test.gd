@@ -43,6 +43,7 @@ func tap(control: Control) -> void:
 	await process_frame
 
 func run() -> void:
+	ProjectSettings.set_setting("twilight/monsterbook/progression_enabled", true)
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	world.set_process(false)

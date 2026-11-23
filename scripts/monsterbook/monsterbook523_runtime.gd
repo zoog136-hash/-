@@ -2,6 +2,8 @@ extends RefCounted
 ## Optional source pack and host-facing integration; no spawn/population mutation.
 const Catalog = preload("res://scripts/monsterbook/monsterbook523.gd")
 const Exact=preload("res://scripts/equipment523/native_catalog.gd")
+const PROGRESSION_SETTING := "twilight/monsterbook/progression_enabled"
+const PAUSED_MESSAGE := "몬스터 도감 진행이 일시 중지되었습니다."
 const PROGRESSION_KEYS=["level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]
 var _reward_quote: Dictionary={}
 var _save_seal: Dictionary={}
@@ -32,6 +34,11 @@ var clock_authority: Callable
 ## original costs/rewards and proposed ownership together before publishing.
 ## The default adapter keeps exact source costs/items and labels custom EXP rates.
 var settlement: Callable
+
+## The pause affects only new progression. Existing state and awarded effects
+## remain active, as do independently owned reward items and their lifecycle.
+static func progression_enabled() -> bool:
+	return bool(ProjectSettings.get_setting(PROGRESSION_SETTING, false))
 
 func configure(world: Node) -> void:
 	host = world
@@ -112,7 +119,7 @@ func commit(before: Dictionary, proposed: Dictionary, quote: Dictionary) -> bool
 	return persist(proposed)
 
 func apply_confirmed(receipt: Dictionary) -> bool:
-	if save_blocked or transaction_busy: return false
+	if not progression_enabled() or save_blocked or transaction_busy: return false
 	var checked := receipt.duplicate(true)
 	if checked.get("action") == "claim_rewards" and settlement == Callable(items,"settle"):
 		var records: Dictionary = {}
@@ -135,6 +142,7 @@ func apply_confirmed(receipt: Dictionary) -> bool:
 	return applied
 
 func action_status(action: String, book_id: int, level_id: int) -> String:
+	if not progression_enabled(): return PAUSED_MESSAGE
 	if save_blocked: return "저장 기록 확인 필요"
 	if not catalog.loaded(): return "도감 자료 필요"
 	if action_authority == Callable(local,"action_receipt"): return local.status(action,book_id,level_id)
@@ -164,7 +172,7 @@ func request_action(action: String, book_id: int, level_id: int) -> Dictionary:
 	return {"ok": ok, "message": ("즉시 완료 · 원본 다이아 비용 차감" if action == "instant" else ("등록 완료" if action == "register" else ("보상 수령 완료" if catalog.progress(book_id).get("claimed",[]).has(level_id) else "보상 일부 수령 완료 · 남은 보상은 별도 표시"))) if ok else "처리 실패 · 이전 기록과 보상을 유지합니다."}
 
 func on_death(monster: Node) -> void:
-	if not catalog.loaded() or not credit_authority.is_valid() or bool(monster.get_meta("summoned", false)): return
+	if not progression_enabled() or not catalog.loaded() or not credit_authority.is_valid() or bool(monster.get_meta("summoned", false)): return
 	# source_m_npc_id is explicit class identity. No name, sprite or map matching.
 	var npc_id: int = int(monster.get("source_m_npc_id"))
 	if npc_id <= 0 or catalog.target_books(npc_id).is_empty(): return
@@ -180,7 +188,7 @@ func on_death(monster: Node) -> void:
 	retry_pending(true)
 
 func retry_pending(force: bool = false) -> void:
-	if pending_deaths.is_empty() or save_blocked: return
+	if not progression_enabled() or pending_deaths.is_empty() or save_blocked: return
 	if not force and Time.get_ticks_msec() < next_retry_ms: return
 	next_retry_ms = Time.get_ticks_msec() + 1000
 	while not pending_deaths.is_empty():

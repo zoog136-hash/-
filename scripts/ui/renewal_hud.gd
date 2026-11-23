@@ -1204,6 +1204,7 @@ func complete_class_selection() -> void:
 ## TWILIGHT screens taken off the player's screens (user list 2026-11-21:
 ## #1 스킬 계열 전환, #5 불멸·파멸 가호, #6 혈맹 문장). Their saved state stays
 ## in the save file untouched; only the menu tiles and entries are gone.
+const MONSTERBOOK_RUNTIME := preload("res://scripts/monsterbook/monsterbook523_runtime.gd")
 const RETIRED_SECTIONS: Array[String] = ["spell_groups","protection523","clan_emblem523"]
 
 func _navigate(section: String) -> void:
@@ -1860,6 +1861,7 @@ func _build_menu_page() -> void:
 	for pair: Array in menu_pairs:
 		var section_id: String = str(pair[0])
 		if section_id in RETIRED_SECTIONS: continue
+		if section_id == "monsterbook523" and not MONSTERBOOK_RUNTIME.progression_enabled(): continue
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),MENU_TILE_SIZE)
@@ -3822,6 +3824,7 @@ func open_mystery_card523(item_name: String) -> bool:
 	return _open_original_feature("mystery_card",[item_name])
 
 func open_monsterbook523() -> void:
+	if not MONSTERBOOK_RUNTIME.progression_enabled(): return
 	_open_window("monsterbook523", "몬스터 도감", "처치 누적 · 단계 등록 · 옵션 · 보상 기록")
 	if _open_original_feature("monsterbook"):return
 	var screen := preload("res://scripts/monsterbook/monsterbook523_panel.gd").new()

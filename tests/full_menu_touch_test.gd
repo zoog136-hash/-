@@ -133,7 +133,7 @@ func original_order_and_save(hud: Node) -> void:
 		if ids.has(id): positions.append(ids.find(id))
 	var sorted_positions: Array[int] = positions.duplicate(); sorted_positions.sort()
 	check(positions == sorted_positions and positions.size() >= 18, "every original-tile section keeps the client's order")
-	check(ids.find("character") > ids.find("monsterbook523"), "TWILIGHT-only tiles come after the original ones")
+	check(not ids.has("monsterbook523") and not positions.is_empty() and ids.find("character") > positions[-1], "paused monster book stays hidden and TWILIGHT-only tiles still come after the original ones")
 	# The real save handler is held off (CI shares user://); only the signal is counted.
 	var held: Array = hud.save_pressed.get_connections()
 	for connection: Dictionary in held: hud.save_pressed.disconnect(connection.callable)

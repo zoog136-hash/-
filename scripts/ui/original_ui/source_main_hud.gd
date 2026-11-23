@@ -1239,6 +1239,7 @@ func try_open_overlay_window(key: String, args: Array=[]) -> Dictionary:
 
 ## Configures feature window `key` once (its pack members); opens nothing.
 func _configure_feature_window(key: String) -> Dictionary:
+	if key == "monsterbook" and not preload("res://scripts/monsterbook/monsterbook523_runtime.gd").progression_enabled(): return _fail("source_monsterbook_progression_paused")
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not _feature_windows.has(key) and _pack!=null and hud!=null:
 		var window: RefCounted=FEATURE_WINDOWS[key].new()
