@@ -16,6 +16,55 @@ class FakeHud extends Node:
 	func show_message(text: String) -> void:
 		messages.append(text)
 
+class CellScene extends Node2D:
+	var source_nodes: Dictionary = {}
+
+class EffectWindow extends WINDOW:
+	var settled: Array[String] = []
+	func _node_size(_out: Dictionary, _suffix: String) -> Vector2:
+		return Vector2(90, 120)
+	func _scene_of(_member: String, _spec: Dictionary, out: Dictionary, _list_key: String = "") -> Dictionary:
+		var scene := CellScene.new()
+		for index: int in range(PER_PAGE):
+			var panel := Node2D.new()
+			scene.add_child(panel)
+			var origin := Node2D.new()
+			origin.name = "SourceContentOrigin"
+			panel.add_child(origin)
+			scene.source_nodes[index] = panel
+			out["Root/Panel/Card_%02d/Panel" % index] = {"chain":[], "offset":index, "member":"fixture"}
+		return {"ok":true, "scene":scene}
+	func _reveal(_scene: Node2D, _out: Dictionary, cell: String, _grade: String) -> bool:
+		settled.append(cell)
+		return true
+
+func _check_effect_dispatch() -> void:
+	var window := EffectWindow.new()
+	window.results = _views(12)
+	# The fixture exercises the authored cell attachment without loading pack art.
+	for card: Dictionary in window.results: card.grade = ""
+	var requested: Array[Dictionary] = []
+	var callbacks: Array[Callable] = []
+	window.reveal_effect = func(_host: Node2D, _area: Rect2, result: Dictionary, done: Callable) -> bool:
+		requested.append(result)
+		callbacks.append(done)
+		return true
+	var page := Node2D.new()
+	root.add_child(page)
+	check(window._fill(page, {}).shown == 10 and requested.size() == 10 and window.settled.is_empty(),
+		"fusion schedules the existing animation for each visible award before settling")
+	callbacks[0].call()
+	check(window.settled == ["Panel/Card_00"], "fusion completion starts the original result effect")
+	var redraw := Node2D.new()
+	root.add_child(redraw)
+	window._fill(redraw, {})
+	check(requested.size() == 10, "rebuilding the same page does not replay its reels")
+	window.page = 1
+	window._fill(redraw, {})
+	check(requested.size() == 12 and requested[-1].pity_reward, "the next page has its own reels and preserves the last pity reward")
+	page.free()
+	redraw.free()
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label)
@@ -30,6 +79,7 @@ func _views(count: int) -> Array:
 	return views
 
 func _run() -> void:
+	_check_effect_dispatch()
 	var hud:=FakeHud.new()
 	root.add_child(hud)
 	var window=WINDOW.new()
@@ -47,7 +97,8 @@ func _run() -> void:
 	window.close()
 	check(released[0]==1,"the guard runs once")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(renewal.contains("if is_fusion and _present_original_fusion(views,category,bool(awarded.get(\"success\",false))): return") and renewal.contains("try_open_overlay_window(\"fusion_result\""),"fusion reveals use the original window through the overlay path")
+	check(renewal.contains("try_open_overlay_window(\"fusion_result\",[views,category,success,release,effect])"),
+		"fusion retains the native overlay and passes the stage's result effect")
 	var controller: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	check(controller.contains("func try_open_overlay_window("),"the overlay path keeps the other windows open")
 	var pack_dir: String=""

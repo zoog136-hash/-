@@ -70,7 +70,7 @@ class Face extends Control:
 		# Surface reflection follows the result color and leaves the figure legible.
 		draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
 
-func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = []) -> void:
+func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = [], detail_view: bool = true) -> void:
 	record = value.duplicate(true)
 	grade = str(record.get("grade","일반"))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -96,7 +96,7 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		face.set_meta("source_candidate_assets",{"status":"source_card_identity_required"})
 	face.tint = PROFILES.color(grade)
 	if SourceCard.native(record):
-		var original: Dictionary = SourceCard.detail(record,true)
+		var original: Dictionary = SourceCard.detail(record, true, detail_view)
 		face.artwork = original.get("texture") as Texture2D
 		var evidence: Dictionary = original.duplicate(true)
 		evidence.erase("texture")

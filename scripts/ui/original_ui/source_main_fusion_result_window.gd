@@ -11,7 +11,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## - The full-screen Btn_Close turns to the next page, then closes; the top
 ##   Btn_Close closes.
 ## - 영웅 이상 results light up in their grade (source_main_card_grade_fx).
-## Left out (no TWILIGHT feature): the roulette, 모두 열기
+## Left out (no TWILIGHT feature): 모두 열기
 ## (the results are shown open), the collection notice and 카드교체 바로가기.
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
@@ -28,6 +28,8 @@ var success: bool=false
 var page: int=0
 ## Called once when the window closes (the HUD's reveal guard).
 var on_closed: Callable=Callable()
+var reveal_effect: Callable
+var _animated_pages: Dictionary = {}
 
 func required_members() -> Array[String]:
 	var members: Array[String]=[ROOT,CARD_SET,CARD]
@@ -39,13 +41,15 @@ func _root_member() -> String:
 
 ## `views`: the reveal's result cards (catalog record merged with the
 ## result: name, grade, ...); `done` runs when the window closes.
-func open(parent: Node, views: Array, category_name: String, succeeded: bool, done: Callable=Callable()) -> Dictionary:
+func open(parent: Node, views: Array, category_name: String, succeeded: bool, done: Callable=Callable(), effect: Callable=Callable()) -> Dictionary:
 	if views.is_empty():return _fail("source_fusion_result_empty")
 	results=views.duplicate(true)
 	category=category_name
 	success=succeeded
 	page=0
 	on_closed=done
+	reveal_effect=effect
+	_animated_pages.clear()
 	return open_window(parent)
 
 func pages() -> int:
@@ -80,15 +84,15 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var pictures: int=0
 	var shown: int=0
 	var lights: int=0
+	var animate: bool = reveal_effect.is_valid() and not _animated_pages.has(page)
 	for index: int in range(mini(PER_PAGE,results.size()-start)):
 		var card: Dictionary=results[start+index]
-		# Text_Card_Name stays transparent until the client's Fx_Cardname clip;
-		# 영웅 이상 first light up in their grade (source_main_card_grade_fx).
-		var lit: Dictionary=GradeFx.light(self,scene,set_out,"Panel/Card_%02d" % index,str(card.get("grade","")))
-		if lit.get("lit",false):lights+=1
-		else:
-			var nested: Node2D=_project(scene,set_out,"Panel/Card_%02d" % index)
-			if nested!=null:nested.play("Fx_Cardname",false)
+		var cell_path: String = "Panel/Card_%02d" % index
+		var settled: Callable = _reveal.bind(scene, set_out, cell_path, str(card.get("grade", "")))
+		if animate and _play_card_effect(reveal_effect, scene, set_out, cell_path + "/Panel", card, settled):
+			if GradeFx.available(self, str(card.get("grade", ""))): lights += 1
+		elif bool(settled.call()):
+			lights += 1
 		var located: Dictionary=_locate(scene,set_out,"Panel/Card_%02d/Panel" % index)
 		var cell: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
 		shown+=1
@@ -99,7 +103,15 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		if not prefab.get("ok",false):return prefab
 		(cell as Node2D).add_child(prefab.scene)
 		if _prefab_picture(prefab.scene,prefab_out,card):pictures+=1
+	if animate: _animated_pages[page] = true
 	return {"ok":true,"page":page,"pages":pages(),"shown":shown,"pictures":pictures,"lights":lights,"success":success}
+
+func _reveal(scene: Node2D, out: Dictionary, cell: String, grade: String) -> bool:
+	var lit: Dictionary = GradeFx.light(self, scene, out, cell, grade)
+	if lit.get("lit", false): return true
+	var nested: Node2D = _project(scene, out, cell)
+	if nested != null: nested.play("Fx_Cardname", false)
+	return false
 
 ## The nested player of the ProjectNode at `suffix`.
 func _project(root: Node2D, out: Dictionary, suffix: String) -> Node2D:
@@ -139,6 +151,7 @@ func close() -> void:
 	super.close()
 	var done: Callable=on_closed
 	on_closed=Callable()
+	reveal_effect=Callable()
 	if done.is_valid():done.call()
 
 ## Only this window closes (the card window under it stays).

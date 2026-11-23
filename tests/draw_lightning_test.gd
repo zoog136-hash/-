@@ -38,4 +38,27 @@ func run() -> void:
 		check(PROFILES.pulse(grade,.028,2)==PROFILES.pulse(grade,.028),grade+" original first pulse strength")
 	stage.close_reveal();check(stage.closing and not stage.visible and not stage.playing,"close hides immediately")
 	stage.close_reveal();await process_frame
+	await native_cell_timeline()
 	print("LIGHTNING_RESULT ",JSON.stringify({"checks":checks,"failures":failures}));quit(0 if failures.is_empty() else 1)
+
+func native_cell_timeline() -> void:
+	var parent := Node2D.new()
+	var card: Control = STAGE.CARD.new()
+	card.open_at = 0.0
+	card.reel_seconds = 0.1
+	var no_legacy: Array[Texture2D] = []
+	card.configure({"name":"검증","grade":"영웅"}, no_legacy, "변신")
+	var completed: Array[bool] = []
+	STAGE._mount_result_cell(parent, card, func() -> void: completed.append(not card.visible), true)
+	check(card.clock == 0.0 and completed.is_empty(), "off-tree fusion cell waits for the page to mount")
+	root.add_child(parent)
+	await create_timer(0.15).timeout
+	check(card.clock > 0.0 and completed.is_empty(), "mounted result cell advances the existing reel before settlement")
+	await create_timer(2.05).timeout
+	check(completed == [true] and not is_instance_valid(card), "result cell hands off once, after clearing the reel")
+	var cancelled: Control = STAGE.CARD.new()
+	cancelled.configure({"name":"검증","grade":"영웅"}, no_legacy, "변신")
+	STAGE._mount_result_cell(parent, cancelled, func() -> void: completed.append(false), false)
+	parent.queue_free()
+	await process_frame
+	check(completed == [true] and not is_instance_valid(cancelled), "closing a native page removes its pending reel")

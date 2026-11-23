@@ -22,6 +22,49 @@ class FakeHud extends Node:
 class FakePack extends RefCounted:
 	var manifest: Dictionary={"scenes":{}}
 
+class CellScene extends Node2D:
+	var source_nodes: Dictionary = {}
+
+class EffectWindow extends WINDOW:
+	var settled_cards: Array[String] = []
+	func _node_size(_out: Dictionary, _suffix: String) -> Vector2:
+		return Vector2(90, 120)
+	func _reveal(_root: Node2D, _out: Dictionary, _cell: String, card: Dictionary) -> Dictionary:
+		settled_cards.append(card.name)
+		return {"lit":true}
+
+func _check_effect_dispatch() -> void:
+	var window := EffectWindow.new()
+	window.results = cards(2)
+	var scene := CellScene.new()
+	root.add_child(scene)
+	window._scene = scene
+	var requested: Array[String] = []
+	var callbacks: Array[Callable] = []
+	for i: int in range(2):
+		var panel := Node2D.new()
+		panel.hide()
+		scene.add_child(panel)
+		var origin := Node2D.new()
+		origin.name = "SourceContentOrigin"
+		panel.add_child(origin)
+		scene.source_nodes[i] = panel
+		window._out["Root/Nd_CardSet_Five/Card_%02d/Panel" % i] = {"chain":[], "offset":i, "member":"fixture"}
+	window.reveal_effect = func(host: Node2D, area: Rect2, result: Dictionary, settled: Callable) -> bool:
+		check(host.name == "SourceContentOrigin" and area == Rect2(0, -120, 90, 120), "reel uses the authored panel's bounds")
+		requested.append(result.name)
+		callbacks.append(settled)
+		return true
+	check(window.open_card(0).opened and not window.open_card(0).opened and not window.is_opened(1),
+		"the first tap requests a reel once without opening another card")
+	check(requested == ["카드 0"] and window.settled_cards.is_empty(), "the native grade effect waits for the existing reel")
+	callbacks[0].call()
+	check(window.settled_cards == ["카드 0"], "reel completion plays the original result effect")
+	check(window.open_all().opened == 1 and requested == ["카드 0", "카드 1"] and window.page_open(),
+		"open-all starts only remaining reels and leaves paging available")
+	window.close()
+	check(not window.is_open() and not window.reveal_effect.is_valid(), "closing releases the native window without waiting for a reel")
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label)
@@ -35,6 +78,7 @@ static func cards(count: int, grade: String="영웅") -> Array:
 	return rows
 
 func _run() -> void:
+	_check_effect_dispatch()
 	var window=WINDOW.new()
 	window.results=cards(1)
 	check(window._card_set()[0]=="Nd_CardSet_One","one card: Nd_CardSet_One")
@@ -67,7 +111,7 @@ func _run() -> void:
 	GRADE_FX.cell_spec(window,spec,"Nd_CardSet_One/Card_00/","전설")
 	check(not spec.has("Nd_CardSet_One/Card_00/Fx_Glow") and spec.get("Nd_CardSet_One/Card_00/Fx_Glow/Fx_Greade",{}).get("exclude",false) and spec.get("Nd_CardSet_One/Card_00/Fx_Outline_Front",{}).get("visible",false),"with the scenes the glow stays and the light is mounted in place")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(renewal.contains("_present_original_gacha(views,category,str(awarded.get(\"title\",\"\")))") and renewal.contains("\"card_gacha_result\""),"the HUD routes card acquisitions to the original window")
+	check(renewal.contains("try_open_overlay_window(\"card_gacha_result\",[views,category,title,release,effect])") and renewal.contains("\"card_gacha_result\""),"the HUD routes card acquisitions to the original window")
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")

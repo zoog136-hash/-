@@ -196,6 +196,20 @@ static func _locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary
 		return {"ok":true,"player":player.player,"offset":int(entry.offset),"key":key,"member":str(entry.member)}
 	return {"ok":false,"error":"source_window_node_missing","suffix":suffix}
 
+## Attach a presentation to the authored panel without adding an input owner.
+func _play_card_effect(effect: Callable, root: Node2D, out: Dictionary, panel: String, card: Dictionary, settled: Callable) -> bool:
+	if not effect.is_valid(): return false
+	var located: Dictionary = _locate(root, out, panel)
+	if not located.get("ok", false): return false
+	var host: Variant = located.player.source_nodes.get(located.offset)
+	if not host is Node2D: return false
+	var origin: Node2D = host.get_node_or_null("SourceContentOrigin")
+	var extent: Vector2 = _node_size(out, panel)
+	if origin == null or extent.x <= 0.0 or extent.y <= 0.0: return false
+	if not bool(effect.call(origin, Rect2(Vector2(0.0, -extent.y), extent), card, settled)): return false
+	host.show()
+	return true
+
 func _scene_of(member: String, spec: Dictionary, out: Dictionary, list_key: String="") -> Dictionary:
 	var bound: Dictionary=_bind(member,"",[],spec,out,list_key)
 	var scene:=Scene.new()

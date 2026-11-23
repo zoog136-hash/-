@@ -51,6 +51,7 @@ var category: String=""
 var title: String=""
 var page: int=0
 var on_closed: Callable=Callable()
+var reveal_effect: Callable
 
 func required_members() -> Array[String]:
 	var members: Array[String]=[ROOT,CARD]
@@ -62,13 +63,14 @@ func _root_member() -> String:
 
 ## `views`: the granted cards (catalog record merged with the result: name,
 ## grade, ...); `done` runs when the window closes.
-func open(parent: Node, views: Array, category_name: String, box_title: String="", done: Callable=Callable()) -> Dictionary:
+func open(parent: Node, views: Array, category_name: String, box_title: String="", done: Callable=Callable(), effect: Callable=Callable()) -> Dictionary:
 	if views.is_empty():return _fail("source_card_gacha_empty")
 	results=views.duplicate(true)
 	category=category_name
 	title=box_title
 	page=0
 	on_closed=done
+	reveal_effect=effect
 	opened.clear()
 	opened.resize(results.size())
 	opened.fill(false)
@@ -232,7 +234,12 @@ func open_card(index: int) -> Dictionary:
 	var lit: Dictionary={}
 	if is_open():
 		var cell: String="%s/Card_%02d" % [str(_card_set()[0]),index-page*PER_PAGE]
-		lit=_reveal(_scene,_out,cell,results[index])
+		var card: Dictionary = results[index]
+		var settled: Callable = _reveal.bind(_scene, _out, cell, card)
+		if _play_card_effect(reveal_effect, _scene, _out, cell + "/Panel", card, settled):
+			lit = {"lit": GradeFx.available(self, str(card.get("grade", "")))}
+		else:
+			lit = settled.call()
 	if page_open():_set_visible(_scene,_out,"Nd_ButtonSet/Btn_Open",false)
 	return {"ok":true,"opened":true,"lit":bool(lit.get("lit",false))}
 
@@ -271,6 +278,7 @@ func close() -> void:
 	super.close()
 	var done: Callable=on_closed
 	on_closed=Callable()
+	reveal_effect=Callable()
 	if done.is_valid():done.call()
 
 func _close_requested() -> Dictionary:
