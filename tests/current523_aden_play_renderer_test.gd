@@ -44,6 +44,21 @@ class CountedTiles extends FakeTiles:
 			return null
 		return texture
 
+class StaticProbe extends Node2D:
+	var calls: int = 0
+	var last_records: Array[Dictionary] = []
+	var last_malformed: int = 0
+	func refresh(records: Array[Dictionary], malformed: int) -> void:
+		calls += 1
+		last_records = records
+		last_malformed = malformed
+	func metrics() -> Dictionary:
+		return {"drawn_records": last_records.size()}
+
+class StationaryScope extends "res://scripts/maps/current523_aden_play_renderer.gd":
+	func _scope_problem() -> String:
+		return ""
+
 ## S32 sections for the worker chunk read (a floor with a few tiles, covers and objects).
 class FakeChunkSources extends RefCounted:
 	var problem: String = ""
@@ -69,6 +84,43 @@ class FakeAsyncTiles extends FakeTiles:
 	func pump() -> void:
 		for id: int in requested: ready[id] = true
 		requested.clear()
+
+func _check_static_tail_arrival(field: RefCounted, actor: Node2D, sources: FakeChunkSources) -> void:
+	var display := StationaryScope.new()
+	root.add_child(display)
+	display.field = field
+	display.player = actor
+	display._raw_sources = sources
+	display._member_origins["worker_c"] = PLAY.GRID_ORIGIN
+	var static_probe := StaticProbe.new()
+	display.add_child(static_probe)
+	display._static_spr = static_probe
+	var shown_members: Array[String] = ["worker_c"]
+	display._visible_members = shown_members
+	display._configured = true
+	display._refresh_clock = 100.0
+	static_probe.refresh([], 1)
+	display._force_objects_refresh = false
+	display._objects_built_for = [static_probe.get_instance_id(), shown_members]
+	var tail_job: Dictionary = PLAY._decode_chunk(display._chunk_params("worker_c"), sources.read_member_job("worker_c"))
+	var rows_for_probe: Array[Dictionary] = [{"sprite_id":12}, {"sprite_id":34}]
+	tail_job.tail = {"ok": true, "records": rows_for_probe}
+	display._install_chunk("worker_c", tail_job)
+	check(static_probe.calls == 1, "chunk installation only marks dirty, without rendering")
+	display._process_step(0.0)
+	check(static_probe.calls == 2 and static_probe.last_records == rows_for_probe and static_probe.last_malformed == 0, "late tail appears in original order with stationary view")
+	check(display._visible_members == ["worker_c"] and field.raw_grid.bytes.count(0) == field.raw_grid.bytes.size(), "late tail does not replace view or change collision bytes")
+	display._process_step(0.0)
+	check(static_probe.calls == 2, "unchanged view does not recompose static records next frame")
+	display.free()
+
+func _check_empty_block(renderer: Node2D) -> void:
+	var before: int = renderer.get_child_count()
+	var block: Dictionary = renderer._bake_block(Vector2i(-77, 112), {"commands":{}, "atlases":{}, "count":0, "draws":0, "raw_ff":8192, "unresolved":0})
+	check(renderer.get_child_count() == before and block.get("viewport") == null, "empty original command block creates no viewport or canvas")
+	check(block.count == 0 and block.raw_ff == 8192 and block.draws == 0 and block.commands.is_empty(), "empty block accounting/commands still retained")
+	if block.get("viewport") is Node:
+		(block.viewport as Node).queue_free()
 
 func check(value: bool, message: String) -> void:
 	checks += 1
@@ -190,6 +242,8 @@ func run() -> void:
 		renderer._pump_chunk_jobs(); OS.delay_msec(1); waited_chunk += 1
 	check(renderer._raw_chunks.get("worker_b") == direct and renderer._chunk_bins.get("worker_b") == renderer._chunk_bins.get("worker_a") and [renderer._scope_clipped_records, renderer._off_floor_decoration_records] == direct_counts and renderer._static_tails.has("worker_b"), "the worker read equals the main-thread read")
 	check(renderer._prefetch_chunk("worker_b"), "a loaded chunk is ready")
+	_check_static_tail_arrival(field, actor, worker_sources)
+
 	worker_sources.broken = true
 	renderer._member_origins["worker_c"] = PLAY.GRID_ORIGIN
 	renderer._prefetch_chunk("worker_c")
@@ -203,6 +257,7 @@ func run() -> void:
 	field.remove_meta("current523_generic_field")
 	renderer._scope_clipped_records = 0; renderer._off_floor_decoration_records = 0
 	_check_block_reference_work(renderer)
+	_check_empty_block(renderer)
 	var tiles := FakeTiles.new()
 	renderer._tile_pack = tiles
 	renderer._chunk_rects = {"synthetic":Rect2(-32,-32,64,64)}

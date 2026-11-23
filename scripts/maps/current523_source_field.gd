@@ -4,6 +4,7 @@ extends "res://scripts/maps/current523_aden_source_field.gd"
 const GEOGRAPHIC_CONTRACT="CURRENT523_S32_OWN_SOURCE_FIELD_V1"
 const SOURCE_PACK = preload("res://scripts/maps/current523_source_pack.gd")
 const MAP_IMAGES = preload("res://scripts/maps/current523_map_images.gd")
+const MAP_BACKGROUND = preload("res://scripts/maps/current523_map_background.gd")
 var native_land: Dictionary = {}
 var source_asset: String = ""
 var catalog_root: String = ""
@@ -79,6 +80,12 @@ func configure_verified_catalog(catalog: RefCounted, expected_manifest_sha256: S
 	set_meta("current523_source_field",true)
 	set_meta("current523_generic_field",true)
 	return true
+
+## On-demand diagnostic, not a background draw or a terrain admission gate.
+func source_background_binding() -> Dictionary:
+	if not loaded or not has_meta("current523_generic_field"):
+		return {"ok": false, "reason": "background_requires_current523_field", "draw_ready": false}
+	return MAP_BACKGROUND.describe(int(native_land.get("ID", -1)))
 
 func region_at(point: Vector2) -> Dictionary:
 	# Original UIMapArea zone name (e.g. 기란 마을) when the player stands in

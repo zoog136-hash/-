@@ -3,6 +3,10 @@ extends RefCounted
 const PMA_PIXELS=preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
+# A cold PNG normally needs three opens (SHA, decoder, Cocos metadata).
+# Cap the same-byte buffer so unusually large/non-PNG pages retain the
+# existing streaming verification path instead of increasing memory unboundedly.
+const BUFFERED_PNG_MAX_BYTES: int=8*1024*1024
 ## Decoded CPU pages and reconstructed frames are shared across instances that
 ## opened the same verified pack; see source_pack_page_cache.gd for identity,
 ## leases and the idle byte budget. This instance holds a lease on every page
@@ -257,17 +261,59 @@ func _page(member: String) -> Image:
 			_pages[member]=shared
 			return shared
 	var path: String=root.path_join("originals").path_join(member)
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=manifest.files[member].sha256:
-		last_error="source_hash_or_size:"+member; return null
-	var original: Image=Image.load_from_file(path)
-	if original==null or original.is_empty(): return null
-	original.convert(Image.FORMAT_RGBA8)
-	original.set_meta("cocos_png_pma",_png_premultiplies(path))
+	var original: Image=_read_verified_page(path, str(manifest.files[member].sha256), member)
+	if original==null: return null
 	if not cache_key.is_empty():
 		original=PAGE_CACHE.store_page(cache_key,_lease_owner,original)
 		_page_leases[cache_key]=true
 	_pages[member]=original
 	return original
+
+## Verify and decode exactly the same bytes for ordinary PNGs. The first
+## branch never falls back after a bad read or hash; doing so could render a
+## different version of a file from the one just verified.
+func _read_verified_page(path: String, expected_sha: String, member: String) -> Image:
+	var original: Image
+	var pma: bool
+	if member.get_extension().to_lower()=="png":
+		var file:=FileAccess.open(path,FileAccess.READ)
+		if file==null:
+			last_error="source_hash_or_size:"+member; return null
+		var length: int=file.get_length()
+		if length<=BUFFERED_PNG_MAX_BYTES:
+			var raw: PackedByteArray=file.get_buffer(length)
+			file.close()
+			if raw.size()!=length or _sha256(raw)!=expected_sha:
+				last_error="source_hash_or_size:"+member; return null
+			original=Image.new()
+			if original.load_png_from_buffer(raw)!=OK or original.is_empty(): return null
+			pma=_png_bytes_premultiplies(raw)
+			original.convert(Image.FORMAT_RGBA8)
+			original.set_meta("cocos_png_pma",pma)
+			return original
+		file.close()
+	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected_sha:
+		last_error="source_hash_or_size:"+member; return null
+	original=Image.load_from_file(path)
+	if original==null or original.is_empty(): return null
+	original.convert(Image.FORMAT_RGBA8)
+	original.set_meta("cocos_png_pma",_png_premultiplies(path))
+	return original
+
+static func _png_bytes_premultiplies(raw: PackedByteArray) -> bool:
+	if raw.size()<33 or raw.decode_u64(0)!=0x0a1a0a0d474e5089: return false
+	var color_type: int=raw[25]
+	if color_type==6: return true
+	if color_type not in [2,3]: return false
+	var at: int=8
+	while at+12<=raw.size():
+		var length: int=(int(raw[at])<<24)|(int(raw[at+1])<<16)|(int(raw[at+2])<<8)|int(raw[at+3])
+		var kind: int=raw.decode_u32(at+4)
+		if kind==0x534e5274: return true # tRNS
+		if kind in [0x54414449,0x444e4549]: return false # IDAT, IEND
+		if length>raw.size()-at-12: return false
+		at+=length+12
+	return false
 
 ## Cocos (channel*(alpha+1))>>8 for every frame/page this pack decodes. The
 ## two-lane form (cocos_premultiply_pixels.gd) gives the same bytes
