@@ -24,6 +24,10 @@ var compress_for_gpu: bool = true
 ## 1453 ms x90 in one frame).
 var hold_published: bool = false
 var _held: Dictionary = {}
+## The live map polls readiness before taking an atlas. A pending atlas must
+## never turn into a blocking worker join or inline decode in that renderer.
+var background_only: bool = false
+var _prefetch_errors: Dictionary = {}
 const SEMANTICS = {"geometry":"CANDIDATE_24X24", "palette":"CANDIDATE_RGB565", "coverage_alpha":"STORED_255_UNSTORED_0", "runtime_alpha":"UNKNOWN", "coordinates":"UNKNOWN", "projection":"UNKNOWN", "layers":"UNKNOWN", "movement":"UNKNOWN", "collision":"UNKNOWN"}
 var problem: String = ""
 var loaded: bool = false
@@ -62,6 +66,7 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_cache.clear()
 	_recent.clear()
 	_held.clear()
+	_prefetch_errors.clear()
 	_drop_jobs()
 	problem = ""
 	atlas_loads = 0
@@ -186,6 +191,9 @@ func texture_for(tile_id: int) -> Texture2D:
 		_recent.append(tile_id)
 		return _cache[tile_id]
 	if _held.has(tile_id): return _held[tile_id]
+	if background_only:
+		_fail(str(_prefetch_errors.get(tile_id, "Original atlas is still pending")))
+		return null
 	var job: Dictionary = _jobs.get(tile_id, {})
 	if job.is_empty():
 		job = _new_job(tile_id)
@@ -203,6 +211,9 @@ func texture_for(tile_id: int) -> Texture2D:
 ## the whole decode (about 15 ms per atlas on a PC, ~60 ms on the phone).
 func prefetch(tile_id: int) -> bool:
 	if _cache.has(tile_id) or _held.has(tile_id): return true
+	# Ready means the request finished, including a verified read failure.
+	# The block assembler can then report it and skip only the failed tiles.
+	if background_only and _prefetch_errors.has(tile_id): return true
 	if not has_tile(tile_id) or _jobs.has(tile_id): return false
 	if _jobs.size() >= MAX_DECODE_JOBS: return false
 	var job: Dictionary = _new_job(tile_id)
@@ -219,7 +230,8 @@ func pump_jobs() -> int:
 		WorkerThreadPool.wait_for_task_completion(int(job.task))
 		_jobs.erase(tile_id)
 		var saved: String = problem
-		_publish(tile_id, job)
+		var texture: Texture2D = _publish(tile_id, job)
+		if background_only and texture == null: _prefetch_errors[tile_id] = problem
 		problem = saved
 		done += 1
 	return done
@@ -297,6 +309,8 @@ func cache_size() -> int:
 ## Lets go of the atlases kept by hold_published.
 func release_held() -> void:
 	_held.clear()
+	# Failed files can be tried again in the next set of block requests.
+	_prefetch_errors.clear()
 
 func held_size() -> int:
 	return _held.size()

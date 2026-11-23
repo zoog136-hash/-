@@ -29,6 +29,8 @@ var _source_chunks: Dictionary = {}
 var _raw_cache: Dictionary = {}
 var _raw_recent: Array[String] = []
 var _raw_failures: Dictionary = {}
+var _last_raw_origin: Vector2i
+var _last_raw_chunk: Dictionary = {}
 var _allowed_words: Dictionary = {}
 var _use_allowlist: bool = true
 var _raw_reads: int = 0
@@ -147,12 +149,18 @@ func _source_origin(source: Vector2i) -> Vector2i:
 	return Vector2i(floori(float(source.x)/64.0)*64,floori(float(source.y)/64.0)*64)
 
 func _source_chunk(origin: Vector2i) -> Dictionary:
-	if not loaded or not _source_chunks.has(origin): return {}
-	var member: String = _source_chunks[origin]
+	if not loaded: return {}
+	# Collision and A* often consult many cells in a single chunk. The last
+	# successful read is already newest in the LRU, so leave the queue alone.
+	if origin == _last_raw_origin and not _last_raw_chunk.is_empty(): return _last_raw_chunk
+	var member: String = _source_chunks.get(origin, "")
+	if member.is_empty(): return {}
 	if _raw_cache.has(member):
 		_raw_recent.erase(member)
 		_raw_recent.append(member)
-		return _raw_cache[member]
+		_last_raw_origin = origin
+		_last_raw_chunk = _raw_cache[member]
+		return _last_raw_chunk
 	if _raw_failures.has(member): return {}
 	var row: Dictionary = _raw.read_member(member)
 	_raw_reads += 1
@@ -163,6 +171,8 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 	if _raw_recent.size() >= RAW_CACHE_LIMIT: _raw_cache.erase(_raw_recent.pop_front())
 	_raw_cache[member] = row
 	_raw_recent.append(member)
+	_last_raw_origin = origin
+	_last_raw_chunk = row
 	return row
 
 func _allows_word(word: int) -> bool:
@@ -301,6 +311,7 @@ func close() -> void:
 	_raw_cache.clear()
 	_raw_recent.clear()
 	_raw_failures.clear()
+	_last_raw_chunk = {}
 	_source_chunks.clear()
 	source_origins.clear()
 	unplaced_members.clear()

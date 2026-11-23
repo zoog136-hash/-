@@ -122,6 +122,7 @@ var _markers_at := Vector2.INF
 var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
+var _background_atlases: bool = false
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
 ## Chunk member -> worker read job (see _prefetch_chunk).
@@ -238,6 +239,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	# Decoded atlases stay until the blocks waiting for them have baked.
 	if "hold_published" in tiles: tiles.set("hold_published", true)
+	_background_atlases = "background_only" in tiles
+	if _background_atlases: tiles.set("background_only", true)
 	# Draw lists on workers with the real pack (its tile table is read-only).
 	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
@@ -919,7 +922,24 @@ func _take_block_job(cell: Vector2i) -> Dictionary:
 		# A missing atlas: the synchronous pass skips its records and logs it.
 		if texture == null: return {"sync": true}
 		atlases[tile_id] = texture
+	FRAME_HITCH.count("map.block_commands_worker")
 	return {"commands": result.commands, "atlases": atlases, "count": result.count, "draws": result.draws, "raw_ff": result.raw_ff, "unresolved": result.unresolved}
+
+## Both fresh and pending blocks consume completed jobs without waiting.
+## A verified failed atlas is filtered by the existing block assembler.
+func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) -> Dictionary:
+	var built: Dictionary = {}
+	if _block_jobs.has(cell) or (block_jobs_enabled and not force_sync and not _block_members(cell).is_empty()):
+		built = _take_block_job(cell)
+		if built.is_empty():
+			_start_block_job(cell, on_screen)
+			return {}
+	if built.is_empty() or built.has("sync"):
+		var started: int = FRAME_HITCH.now()
+		built = _block_commands(cell)
+		FRAME_HITCH.detail("map.block_commands", started)
+	return built
+
 
 func _drop_block_jobs() -> void:
 	for cell: Vector2i in _block_jobs: WorkerThreadPool.wait_for_task_completion(int((_block_jobs[cell] as Dictionary).task))
@@ -974,9 +994,12 @@ func _pending_tiles_ready(cell: Vector2i) -> bool:
 	if not _tile_pack.has_method("prefetch"): return true
 	var tiles: Variant = _pending_tiles.get(cell)
 	if tiles is PackedInt32Array:
+		var ready: bool = true
+		# A miss means "not ready yet", but the call can queue that atlas.
+		# Keep offering the remaining IDs so the decode slots can fill.
 		for tile_id: int in (tiles as PackedInt32Array):
-			if not _tile_pack.call("prefetch", tile_id): return false
-		return true
+			if not _tile_pack.call("prefetch", tile_id): ready = false
+		return ready
 	var collected: Dictionary = {}
 	var ready: bool = _request_block_tiles(cell, collected)
 	if bool(collected.get("complete", false)): _pending_tiles[cell] = collected.tiles
@@ -1072,6 +1095,12 @@ func _clear_blocks() -> void:
 
 func _build_frame() -> bool:
 	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
+	for cell: Vector2i in _block_jobs.keys():
+		if _view_has_cell(view, cell): continue
+		var task: int = int(_block_jobs[cell].task)
+		if not WorkerThreadPool.is_task_completed(task): continue
+		WorkerThreadPool.wait_for_task_completion(task)
+		_block_jobs.erase(cell)
 	var visible: Array[String] = []
 	for member: String in _chunk_rects:
 		if (_chunk_rects[member] as Rect2).intersects(view): visible.append(member)
@@ -1121,31 +1150,19 @@ func _build_frame() -> bool:
 				if on_screen and not bool(screen_ready.get(cell, true)):
 					var since: int = int(_screen_wait.get(cell, now_msec))
 					_screen_wait[cell] = since
-					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
+					if _background_atlases or now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
 						pending.push_front(cell)
 						continue
 					late_bakes += 1
 				_screen_wait.erase(cell)
-				var built: Dictionary = {}
-				var forced: bool = on_screen and not bool(screen_ready.get(cell, true))
-				# A block no chunk reaches has nothing to list: build it here.
-				if block_jobs_enabled and not forced and not _block_members(cell).is_empty():
-					built = _take_block_job(cell)
-					if built.is_empty():
-						# Built on a worker; baked on a later refresh.
-						if not _start_block_job(cell, on_screen) or _block_jobs.has(cell):
-							partial = true
-							if on_screen: screen_waiting = true
-							continue
-				if built.is_empty() or built.has("sync"):
-					if _block_jobs.has(cell):
-						WorkerThreadPool.wait_for_task_completion(int((_block_jobs[cell] as Dictionary).task))
-						_block_jobs.erase(cell)
-					var commands_started: int = FRAME_HITCH.now()
-					built = _block_commands(cell)
-					FRAME_HITCH.detail("map.block_commands", commands_started)
+				var built: Dictionary = _ready_block_commands(cell, on_screen, on_screen and not bool(screen_ready.get(cell, true)))
+				if built.is_empty():
+					partial = true
+					if on_screen: screen_waiting = true
+					pending.append(cell)
+					continue
 				if built.has("problem"):
 					if problem.is_empty(): return _fail(str(built.problem))
 					return false
@@ -1295,9 +1312,10 @@ func _bake_pending(budget_usec: int) -> int:
 			remaining.append(cell)
 			continue
 		var on_screen: bool = _block_rect(cell).intersects(screen)
-		if not _pending_tiles_ready(cell):
+		var force_sync: bool = not _pending_tiles_ready(cell)
+		if force_sync:
 			var waited: bool = false
-			if on_screen:
+			if on_screen and not _background_atlases:
 				var since: int = int(_screen_wait.get(cell, now_msec))
 				_screen_wait[cell] = since
 				waited = now_msec - since >= ON_SCREEN_WAIT_MSEC and late_bakes < LATE_BAKES_PER_REFRESH
@@ -1305,13 +1323,14 @@ func _bake_pending(budget_usec: int) -> int:
 				_pending_retry[cell] = now_msec + PENDING_RETRY_MSEC
 				remaining.append(cell)
 				continue
-			late_bakes += 1
+		var built: Dictionary = _ready_block_commands(cell, on_screen, force_sync)
+		if built.is_empty():
+			remaining.append(cell)
+			continue
+		late_bakes += int(force_sync)
 		_screen_wait.erase(cell)
 		_pending_retry.erase(cell)
 		_pending_tiles.erase(cell)
-		var commands_started: int = FRAME_HITCH.now()
-		var built: Dictionary = _block_commands(cell)
-		FRAME_HITCH.detail("map.block_commands", commands_started)
 		if built.has("problem"):
 			if problem.is_empty(): _fail(str(built.problem))
 			return baked
