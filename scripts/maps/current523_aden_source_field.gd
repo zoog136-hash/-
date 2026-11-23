@@ -298,12 +298,21 @@ class Source523Search extends TwilightL1JSourceNavigation:
 		return sideways and _allowed(cell + Vector2i(0, offset.y))
 
 func line_clear(from: Vector2, to: Vector2) -> bool:
-	return loaded and walkable(from) and walkable(to) and super.line_clear(from,to)
+	return loaded and super.line_clear(from,to)
 
 func path(from: Vector2, to: Vector2) -> PackedVector2Array:
-	# No implicit nearest-cell replacement of a blocked click or starting point.
-	if not walkable(from) or not walkable(to): return PackedVector2Array()
-	return super.path(from,to)
+	# Validate exact endpoints only once. Unlike generic source fields, 523
+	# never snaps a blocked click or start to some other nearest cell.
+	if not loaded or not from.is_finite() or not to.is_finite(): return PackedVector2Array()
+	var from_grid: Array = coordinates.grid_components(from)
+	var to_grid: Array = coordinates.grid_components(to)
+	var start: Vector2i = coordinates.world_to_cell(from,from_grid)
+	var goal: Vector2i = coordinates.world_to_cell(to,to_grid)
+	if not _cell_allowed(start) or (goal != start and not _cell_allowed(goal)): return PackedVector2Array()
+	# The 523 line_clear wrapper only added the endpoint checks already done.
+	# DDA and its edge rules are unchanged, including fractional coordinates.
+	if _line_between_validated_cells(from_grid,to_grid,start,goal): return PackedVector2Array([to])
+	return _route_between_validated_cells(from,to,start,goal)
 
 func navigation_search_limit() -> int: return int(policy.get("path_search_limit",8192))
 

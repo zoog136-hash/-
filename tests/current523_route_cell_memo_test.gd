@@ -67,7 +67,12 @@ func _run() -> void:
 		var start: Vector2 = f.cell_to_world(Vector2i(42,12))
 		var target: Vector2 = f.cell_to_world(Vector2i(85,12))
 		var local: Vector2 = f.cell_to_world(Vector2i(43,12))
+		f.cell_reads = 0
 		check(f.path(start,local) == PackedVector2Array([local]), rule+" direct route still bypasses A*")
+		check(f.cell_reads == 4, rule+" direct ray reads two endpoints once plus the edge check")
+		f.cell_reads = 0
+		check(f.path(start,start) == PackedVector2Array([start]) and f.cell_reads == 1,
+			rule+" same-cell endpoints share one verdict")
 		check(f.path(start,f.cell_to_world(Vector2i(64,12))).is_empty(),rule+" blocked endpoint rejected")
 		check(f.path(start,Vector2.INF).is_empty(),rule+" nonfinite endpoint rejected")
 		var before: Dictionary = {}

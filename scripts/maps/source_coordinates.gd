@@ -63,8 +63,8 @@ func world_to_grid(pixel: Vector2) -> Vector2:
 
 func cell_to_world(cell: Vector2i) -> Vector2: return grid_to_world(cell.x+0.5,cell.y+0.5)
 
-func world_to_cell(pixel: Vector2) -> Vector2i:
-	var xy: Array = grid_components(pixel)
+func world_to_cell(pixel: Vector2, projected: Variant = null) -> Vector2i:
+	var xy: Array = grid_components(pixel) if projected == null else projected
 	if not is_finite(xy[0]) or not is_finite(xy[1]) or absf(xy[0]) > 2147480000 or absf(xy[1]) > 2147480000: return Vector2i(-1,-1)
 	return Vector2i(floori(xy[0]),floori(xy[1]))
 

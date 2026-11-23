@@ -58,6 +58,10 @@ func staged_transition_rules() -> void:
 	STACK._proof_identity = SOURCE.identity()
 	STACK._proof_cache[uid] = [entry.duplicate(true),{"remaining":1,"used":0,"transferred":0}]
 	owner.item_instances[uid] = entry
+	var returned: Dictionary = STACK.proof_entry(entry,uid)
+	returned.remaining = 99
+	check(STACK.proof_entry(entry,uid).remaining == 1,
+		"public receipt proof output cannot mutate cached top-level values")
 	var pending: Dictionary = {"inventory":{"fixture":2},"item_instances":owner.item_instances.duplicate(false)}
 	check(is_same(pending.item_instances[uid],entry) and STACK.override_error(owner,pending).is_empty(),
 		"staged pickup can reuse exact candidate-validated shared inventory entry")

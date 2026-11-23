@@ -39,3 +39,12 @@ Evidence: docs/MOVE_SPEED_MAP_TRAVEL523.md, docs/ITEM_STACKING523.md,
 docs/audit927/source/, tools/lineagem_original/README.md, and movement-edge
 analysis cited by 24910639f33ea1db2e01f8d306c6cbe8b201034e. Do not publish
 the original binaries, private source packs or raw phone reports.
+
+Second dedup pass: perform one 523 endpoint projection and validation per
+route, then pass the validated grid endpoints to the existing DDA. Keep
+the regular line check available to other callers. Native ownership checks
+select the original archive once on first use, read cached projections
+without copying them within the one validator, and reuse proof for floor
+entries already checked in the same call. External proof callers still get
+their own top-level copy. Card-save export deep-copies the receipt array
+once rather than twice; it has the same fields, including an empty array.

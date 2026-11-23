@@ -211,10 +211,19 @@ static func clear_proof_cache() -> void:
 
 static func proof_entry(entry: Variant,uid: String) -> Dictionary:
 	if not entry is Dictionary:return {}
+	_select_proof_archive()
+	return _proof_entry_readonly(entry,uid).duplicate(false)
+
+static func _select_proof_archive() -> void:
 	var identity: Variant=SOURCE.identity()
 	if identity!=_proof_identity:_proof_cache.clear();_proof_identity=identity
+
+## Cache projections are read-only to callers of this internal validator.
+## Public proof_entry still hands out a separate top-level dictionary.
+static func _proof_entry_readonly(entry: Variant,uid: String) -> Dictionary:
+	if not entry is Dictionary:return {}
 	var cached: Variant=_proof_cache.get(uid)
-	if cached is Array and cached[0]==entry:return (cached[1] as Dictionary).duplicate(false)
+	if cached is Array and cached[0]==entry:return cached[1]
 	var result: Dictionary=_proof_entry(entry,uid)
 	if _proof_cache.size()>=PROOF_CACHE_LIMIT:_proof_cache.clear()
 	_proof_cache[uid]=[(entry as Dictionary).duplicate(true),result.duplicate(true)]
@@ -542,15 +551,21 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not stored[uid] is Dictionary or not stored[uid].has(RECEIPT):continue
 		if all.has(uid):return "소지·창고 원본 개체 ID 중복 · 저장 보존"
 		all[uid]=stored[uid]
-	var floor_ids: Dictionary={}
+	# Resolve at most once per synchronous validation, and only if there is
+	# a receipt to prove. Empty/legacy bags don't touch the original archive.
+	var proof_archive_selected: bool=false
+	var floor_proofs: Dictionary={}
 	for entry: Variant in floor:
 		if not entry is Dictionary:return "바닥 소유 기록 형식 확인 필요"
 		var physical: Variant=entry.get("physical_item",{})
 		if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):continue
 		var uid: String=str(physical.get("id",""))
-		var owned: Dictionary=proof_entry(physical.data,uid)
+		if not proof_archive_selected:
+			_select_proof_archive()
+			proof_archive_selected=true
+		var owned: Dictionary=_proof_entry_readonly(physical.data,uid)
 		if uid.is_empty() or all.has(uid) or owned.is_empty() or entry.get("player_dropped")!=true or not integer(entry.get("quantity")) or int(entry.quantity)<1 or int(owned.remaining)!=int(entry.quantity) or entry.get("item_name")!=physical.data.get("name") or entry.get("item_record")!=physical.data.get("record"):return "바닥 원본 개체·잔량·출처 중복 또는 불일치"
-		all[uid]=physical.data;floor_ids[uid]=true
+		all[uid]=physical.data;floor_proofs[uid]=owned
 	# Offline character ownership proves shared quantity journals without
 	# granting their items or counting their bag weight in this session.
 	for uid: String in dormant:
@@ -565,7 +580,10 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 			if not issue.is_empty():return issue
 		else:
 			if selected_ammo.size()!=3 or not selected_ammo.get("physical_id") is String:return "원본 탄약 선택 개체 증명 필요"
-			var selected: Dictionary=proof_entry(instances.get(selected_ammo.physical_id),selected_ammo.physical_id)
+			if not proof_archive_selected:
+				_select_proof_archive()
+				proof_archive_selected=true
+			var selected: Dictionary=_proof_entry_readonly(instances.get(selected_ammo.physical_id),selected_ammo.physical_id)
 			if selected.is_empty():
 				# Pure staged last-unit debit keeps only its inactive spent receipt.
 				var spent: Variant=state.get(USES,{}).get(selected_ammo.physical_id,{})
@@ -580,11 +598,14 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 	for uid: String in all:
 		var entry: Variant=all[uid]
 		if not entry is Dictionary or not entry.has(RECEIPT):continue
-		var owned: Dictionary=proof_entry(entry,uid)
+		if not proof_archive_selected:
+			_select_proof_archive()
+			proof_archive_selected=true
+		var owned: Dictionary=floor_proofs[uid] if floor_proofs.has(uid) else _proof_entry_readonly(entry,uid)
 		if owned.is_empty():return "원본 물리 개체·최초량·잔량 증명 불일치"
 		if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return "원본 최초 소유와 소비 장부 불일치"
 		if int(owned.used)+int(owned.transferred)>0 and ledger.get(uid)!=ledger_row(owned,int(owned.used),int(owned.remaining)):return "원본 물리 잔량·소비 장부 불일치"
-		if floor_ids.has(uid) or dormant.has(uid):continue
+		if floor_proofs.has(uid) or dormant.has(uid):continue
 		var name_value: String=str(entry.name)
 		var amounts: Dictionary=stored_totals if stored.has(uid) else totals
 		var previous: int=int(amounts.get(name_value,0))

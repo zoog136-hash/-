@@ -37,6 +37,13 @@ func _run() -> void:
 	_check(RULES.FUSION_MATERIALS["전설"] == 2 and RULES.FUSION_MATERIALS["영웅"] == 4, "fusion recipe counts")
 	var rules = RULES.new()
 	rules.configure(_fixture())
+	_check(rules.export_state().source_card_receipts == [], "the empty source receipt array is still exported")
+	rules.source_card_receipts = [{"card_id":123,"nested":{"source_quantity":1}}]
+	var receipt_snapshot: Dictionary = rules.export_state()
+	receipt_snapshot.source_card_receipts[0].nested.source_quantity = 9
+	_check(rules.source_card_receipts[0].nested.source_quantity == 1,
+		"export copies nested source receipts without sharing live save data")
+	rules.source_card_receipts.clear()
 	rules.rng.seed = 81495
 	var counts: Dictionary = {"고급": 0, "희귀": 0, "영웅": 0, "전설": 0}
 	var seen_common: Dictionary = {}
