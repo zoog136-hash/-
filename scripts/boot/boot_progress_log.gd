@@ -41,6 +41,7 @@ static var _run: String = ""
 static var _stack: PackedStringArray = PackedStringArray()
 static var _previous_unfinished: String = ""
 static var _proc_readable: bool = true
+static var _android_needs_exec: bool = false
 
 ## Starts a stage; returns the start time for end().
 static func begin(stage: String, fields: Dictionary = {}) -> int:
@@ -95,8 +96,8 @@ static func step(name: String, fields: Dictionary = {}) -> void:
 	if not name.is_empty(): _step_started = begin(name, fields)
 
 ## A one-off event (e.g. "boot_done").
-static func mark(event: String, fields: Dictionary = {}) -> void:
-	_emit(event, "-", fields, true)
+static func mark(event: String, fields: Dictionary = {}) -> String:
+	return _emit(event, "-", fields, true)
 
 static func normalize_reason(reason: String) -> String:
 	return reason if REASONS.has(reason) else "other"
@@ -213,7 +214,7 @@ static func reset_for_test(directory: String, cap: int = CAP_BYTES, echo: bool =
 
 # --- internals ---------------------------------------------------------------
 
-static func _emit(event: String, stage: String, fields: Dictionary, memory: bool) -> void:
+static func _emit(event: String, stage: String, fields: Dictionary, memory: bool) -> String:
 	_mutex.lock()
 	_start()
 	_seq += 1
@@ -221,11 +222,13 @@ static func _emit(event: String, stage: String, fields: Dictionary, memory: bool
 		"ev=" + _clean(event), "stage=" + _clean(stage)]
 	for key: Variant in fields: parts.append(_clean(str(key)) + "=" + _clean(str(fields[key])))
 	parts.append("cur=" + (_stack[_stack.size() - 1] if not _stack.is_empty() else "-"))
-	if memory: parts.append(_memory())
+	var memory_fields: String = _memory() if memory else ""
+	if memory: parts.append(memory_fields)
 	var line: String = " ".join(parts)
 	_store(line)
 	_mutex.unlock()
 	if _echo: print(PREFIX + line)
+	return memory_fields
 
 ## Values never carry spaces, '=' or ':' (keeps lines parseable and keeps the
 ## CI log scanner's error patterns out of them).
@@ -308,19 +311,22 @@ static func _memory() -> String:
 		parts.append("buf_kb=" + str(int(Performance.get_monitor(Performance.RENDER_BUFFER_MEM_USED)) / 1024))
 		parts.append("vid_kb=" + str(int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED)) / 1024))
 	if _proc_readable and OS.get_name() in ["Linux", "Android"]:
-		var status_parts: PackedStringArray = _status_fields(_read_status_file())
-		if status_parts.is_empty() and OS.get_name() == "Android":
-			# Godot's Android file access sizes files before reading and /proc
-			# files report size 0, so nothing was read (release builds also count
-			# no engine memory: 2026-11-15 523.514 crashed with no memory shown).
-			# Ask the system's cat instead, at most every few seconds.
-			status_parts = _status_fields(_exec_status())
-		if status_parts.is_empty(): _proc_readable = false
+		var status_parts := PackedStringArray()
+		if not _android_needs_exec:
+			status_parts = _status_fields(_read_status_file())
+			if status_parts.is_empty():
+				_android_needs_exec = OS.get_name() == "Android"
+				_proc_readable = _android_needs_exec
+		# Android FileAccess can see an empty size-zero procfs file. The
+		# fallback child process never runs under the frame/logging mutex.
+		if _android_needs_exec: status_parts = _status_fields(_exec_status())
 		parts.append_array(status_parts)
 	return " ".join(parts)
 
 static var _exec_text: String = ""
 static var _exec_msec: int = -100000
+static var _exec_task: int = -1
+static var _exec_result_lock := Mutex.new()
 const EXEC_STATUS_MSEC: int = 3000
 
 static func _read_status_file() -> String:
@@ -334,15 +340,24 @@ static func _read_status_file() -> String:
 
 static func _exec_status() -> String:
 	var now_msec: int = Time.get_ticks_msec()
-	if now_msec - _exec_msec < EXEC_STATUS_MSEC: return _exec_text
-	_exec_msec = now_msec
+	if _exec_task >= 0 and WorkerThreadPool.is_task_completed(_exec_task):
+		WorkerThreadPool.wait_for_task_completion(_exec_task)
+		_exec_task = -1
+	if _exec_task < 0 and now_msec - _exec_msec >= EXEC_STATUS_MSEC:
+		_exec_msec = now_msec
+		_exec_task = WorkerThreadPool.add_task(_collect_status, false, "TWILIGHT proc status")
+	_exec_result_lock.lock()
+	var cached: String = _exec_text
+	_exec_result_lock.unlock()
+	return cached
+
+static func _collect_status() -> void:
 	var output: Array = []
 	# Own pid: /proc/self in a child would describe cat itself.
-	if OS.execute("/system/bin/cat", ["/proc/%d/status" % OS.get_process_id(), "/proc/meminfo"], output, true) != 0 or output.is_empty():
-		_exec_text = ""
-	else:
-		_exec_text = str(output[0])
-	return _exec_text
+	var succeeded: bool = OS.execute("/system/bin/cat", ["/proc/%d/status" % OS.get_process_id(), "/proc/meminfo"], output, true) == 0
+	_exec_result_lock.lock()
+	if succeeded and not output.is_empty(): _exec_text = str(output[0])
+	_exec_result_lock.unlock()
 
 ## VmRSS/VmHWM/RssAnon of this process and, when present, MemAvailable.
 static func _status_fields(text: String) -> PackedStringArray:

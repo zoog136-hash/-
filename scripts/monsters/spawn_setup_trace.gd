@@ -27,5 +27,5 @@ func finish(accepted: bool) -> void:
 	if not _enabled: return
 	phase("")
 	# Bound retained diagnostics to the slowest setup in each recorded frame.
-	HITCH.slow_spawn({"usec":_boundary-_started,"npc":_npc,"sprite":_sprite,
+	HITCH.slow_spawn({"start_usec":_started,"usec":_boundary-_started,"npc":_npc,"sprite":_sprite,
 		"accepted":accepted,"phases_usec":_phases})

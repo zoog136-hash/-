@@ -130,6 +130,7 @@ func _ready() -> void:
 	var error_line: String = ERROR_RECORD.previous_line()
 	BOOT_LOG.mark("loading_screen", {"previous_unfinished": _previous})
 	FRAME_HITCH.start()
+	preload("res://scripts/boot/performance_report_session.gd").ensure(get_tree())
 	var hitch_line: String = FRAME_HITCH.previous_line()
 	if not hitch_line.is_empty(): BOOT_LOG.mark("previous_frame_hitch", {"line": hitch_line})
 	if destination.is_empty(): destination = initial_destination()

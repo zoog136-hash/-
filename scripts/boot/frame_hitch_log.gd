@@ -73,10 +73,14 @@ static var _pre_draw_usec: int = 0
 static var _post_draw_usec: int = 0
 static var _pre_draw_count: int = 0
 static var _post_draw_count: int = 0
+static var _dispatch_usec: int = 0
+static var _dispatch_was_physics: bool = false
+static var _process_dispatch_usec: int = 0
 ## Work done by the previous probe/flush belongs to the next raw wall interval.
 ## It never enters exclusive sections or creates another diagnostic event.
 static var _logger_usec: int = 0
 static var _inside_probe: bool = false
+static var _flush_worker: Thread
 ## A late-priority callback in the probe's process group, not completion of
 ## all nodes, physics, deferred work, other thread groups or rendering.
 static var _process_tail_usec: int = 0
@@ -158,11 +162,13 @@ static func detail(operation: String, started_usec: int) -> void:
 	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail(operation)
 	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
-	if not _details.has(operation): _details[operation] = [0, 0, 0]
+	if not _details.has(operation): _details[operation] = [0, 0, 0, 0]
 	var row: Array = _details[operation]
 	row[0] += elapsed
 	row[1] += 1
-	row[2] = maxi(int(row[2]), elapsed)
+	if elapsed > int(row[2]):
+		row[2] = elapsed
+		row[3] = started_usec
 
 static func count(operation: String, amount: int = 1) -> void:
 	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail("#" + operation)
@@ -174,6 +180,8 @@ static func slow_spawn(sample: Dictionary) -> void:
 	if not enabled or int(sample.get("usec",0)) < THRESHOLD_USEC: return
 	if int(sample.usec) > int(_slow_spawn.get("usec",0)):
 		_slow_spawn = sample.duplicate(true)
+		if _last_frame > 0 and sample.has("start_usec"):
+			_slow_spawn["start_offset_usec"] = int(sample.start_usec) - _last_frame
 
 static func add(section: String, started_usec: int) -> void:
 	if _trail_until_msec != 0: trail(section)
@@ -196,9 +204,9 @@ static func add_self(section: String, started_usec: int, nested_before: int) -> 
 
 ## Called once per frame, before any other node processes.
 static func frame(map_id: String = "") -> void:
+	var at: int = Time.get_ticks_usec()
 	if _trail_until_msec != 0: trail("frame")
 	if not enabled: return
-	var at: int = Time.get_ticks_usec()
 	_close_frame(at, map_id)
 	_logger_usec += maxi(0, Time.get_ticks_usec() - at)
 
@@ -217,7 +225,9 @@ static func _close_frame(at: int, map_id: String) -> void:
 			_window_details[key] = [int(total_row[0]) + int(row[0]), int(total_row[1]) + int(row[1])]
 	_last_frame = at
 	_clear_pending()
-	if _dirty and at - _last_flush >= FLUSH_USEC: flush()
+	if _dirty and at - _last_flush >= FLUSH_USEC:
+		if OS.has_feature("android"): _flush_periodic(at)
+		else: flush()
 	_inside_probe = false
 
 static func _clear_pending() -> void:
@@ -312,6 +322,9 @@ static func _clear_draw_callbacks() -> void:
 	_post_draw_usec = 0
 	_pre_draw_count = 0
 	_post_draw_count = 0
+	_dispatch_usec = 0
+	_dispatch_was_physics = false
+	_process_dispatch_usec = 0
 
 ## Called from the main-thread probe, using the actual RenderingServer thread
 ## identity instead of a project setting which a command-line flag can override.
@@ -362,6 +375,32 @@ static func _draw_sample(at: int) -> Dictionary:
 		}
 	return result
 
+## First SceneTree callback delivery after the measured post-draw signal.
+## The earlier span can still contain engine/driver work, OS delay or pacing.
+static func scene_dispatch(physics: bool) -> void:
+	if not enabled or _draw_delivery != "main_thread" or _post_draw_count != 1: return
+	if _dispatch_usec != 0 and (physics or _process_dispatch_usec != 0): return
+	_mark_dispatch(physics, Time.get_ticks_usec())
+
+static func _mark_dispatch(physics: bool, at: int) -> void:
+	if not enabled or _draw_delivery != "main_thread" or _post_draw_count != 1 or at < _post_draw_usec: return
+	if _dispatch_usec == 0:
+		_dispatch_usec = at
+		_dispatch_was_physics = physics
+	if not physics and _process_dispatch_usec == 0: _process_dispatch_usec = at
+
+static func _dispatch_sample(at: int, draw: Dictionary) -> Dictionary:
+	if draw.get("status") != "ordered_synchronous_pair": return {"status":"unpaired_draw"}
+	if _dispatch_usec == 0: return {"status":"missing"}
+	if not (_post_draw_usec <= _dispatch_usec and _dispatch_usec <= at): return {"status":"out_of_order"}
+	var result: Dictionary = {"status":"ordered_signal", "signal":"physics" if _dispatch_was_physics else "process",
+		"dispatch_usec":_dispatch_usec, "post_to_dispatch_usec":_dispatch_usec - _post_draw_usec,
+		"dispatch_to_probe_usec":at - _dispatch_usec}
+	if _dispatch_usec <= _process_dispatch_usec and _process_dispatch_usec <= at:
+		result["process_usec"] = _process_dispatch_usec
+		result["process_to_probe_usec"] = at - _process_dispatch_usec
+	return result
+
 static func _record(total: int, map_id: String, at: int) -> void:
 	_hitches += 1
 	var parts: Array = []
@@ -376,7 +415,7 @@ static func _record(total: int, map_id: String, at: int) -> void:
 		"at_s":int(Time.get_ticks_msec() / 1000), "frame":_frames}
 	var draw: Dictionary = _draw_sample(at)
 	entry["diagnostics"] = {"logger_usec":_logger_usec, "draw_callbacks":draw,
-		"process_tail":_process_tail_sample(at, draw), "lifecycle":_lifecycle_sample(),
+		"process_tail":_process_tail_sample(at, draw), "next_scene_dispatch":_dispatch_sample(at, draw), "lifecycle":_lifecycle_sample(),
 		"physics":_physics_sample(),
 		# Instantaneous record-time counters, not interval peaks or GC evidence.
 		"record_snapshot":{"sampled_usec":Time.get_ticks_usec(), "static_memory_bytes":OS.get_static_memory_usage(),
@@ -388,7 +427,15 @@ static func _record(total: int, map_id: String, at: int) -> void:
 		if int(row[0]) >= 1000:
 			details.append([operation, int(row[0]) / 1000, int(row[1]), int(row[2]) / 1000])
 	details.sort_custom(func(a: Array, b: Array) -> bool: return int(a[1]) > int(b[1]))
-	if not details.is_empty(): entry["details"] = details
+	if not details.is_empty():
+		entry["details"] = details
+		var spans: Array = []
+		for part: Array in details.slice(0, 6):
+			var row: Array = _details[part[0]]
+			if int(row[2]) >= 16000:
+				var offset: int = int(row[3]) - _last_frame
+				spans.append([part[0], offset, offset + int(row[2])])
+		if not spans.is_empty(): entry.diagnostics["detail_spans"] = spans
 	if not _counters.is_empty(): entry["counters"] = _counters.duplicate()
 	if not _slow_spawn.is_empty(): entry["slow_spawn"] = _slow_spawn.duplicate(true)
 	print(PREFIX + JSON.stringify(entry))
@@ -429,22 +476,39 @@ static func summary() -> Dictionary:
 
 static func flush() -> void:
 	var at: int = Time.get_ticks_usec()
-	_flush_record(at)
+	_join_flush()
+	_last_flush = at
+	_dirty = false
+	_write_record(_dir.path_join(FILE_NAME), summary())
 	# frame() already measures its whole bookkeeping, including automatic
 	# flush. A pause/focus flush outside that call is accounted for separately.
 	if enabled and not _inside_probe and _last_frame > 0:
 		_logger_usec += maxi(0, Time.get_ticks_usec() - at)
 
-static func _flush_record(at: int) -> void:
-	_last_flush = at
-	_dirty = false
-	var path: String = _dir.path_join(FILE_NAME)
+static func _join_flush() -> void:
+	if _flush_worker == null: return
+	_flush_worker.wait_to_finish()
+	_flush_worker = null
+
+static func _flush_periodic(at: int) -> void:
+	if _flush_worker != null and _flush_worker.is_alive(): return
+	_join_flush()
+	_flush_worker = Thread.new()
+	var task: Callable = _write_record.bind(_dir.path_join(FILE_NAME), summary())
+	if _flush_worker.start(task, Thread.PRIORITY_LOW) == OK:
+		_last_flush = at
+		_dirty = false
+	else:
+		_flush_worker = null
+
+static func _write_record(path: String, snapshot: Dictionary) -> void:
 	var temporary: String = path + ".part"
 	var file := FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null: return
-	file.store_string(JSON.stringify(summary()))
+	file.store_string(JSON.stringify(snapshot))
+	var ok: bool = file.get_error() == OK
 	file.close()
-	DirAccess.rename_absolute(temporary, path)
+	if ok: DirAccess.rename_absolute(temporary, path)
 
 ## Once per process start: keep the previous run's record for the loading screen.
 static func start() -> void:
@@ -525,6 +589,11 @@ static func previous_line() -> String:
 		var delivery: String = str({"main_thread":"동기", "separate_thread":"별도", "unknown":"미상"}.get(callbacks.get("delivery", ""), "미상"))
 		line += " · 콜백 %s %d/%d(%s)" % [status, clampi(int(callbacks.get("pre_count",0)),0,9999), clampi(int(callbacks.get("post_count",0)),0,9999), delivery]
 	else: line += " · 콜백 미기록"
+	var dispatch: Variant = diagnostics.get("next_scene_dispatch")
+	if dispatch is Dictionary and dispatch.get("status") == "ordered_signal":
+		line += " · 다음 콜백까지 %dms / 탐침까지 %dms" % [int(dispatch.get("post_to_dispatch_usec",0))/1000, int(dispatch.get("dispatch_to_probe_usec",0))/1000]
+	var logger: int = int(diagnostics.get("logger_usec", 0))
+	if logger >= 10000: line += " · 기록기 %dms" % (logger / 1000)
 	var tail: Variant = diagnostics.get("process_tail", {})
 	if tail is Dictionary and tail.get("status") == "ordered_marker" and tail.get("wall_usec") is Dictionary:
 		line += " · 후순위표식 %d/%dms(전/후)" % [int(tail.wall_usec.get("probe_to_tail",0))/1000,int(tail.wall_usec.get("tail_to_probe",0))/1000]
@@ -548,6 +617,7 @@ static func previous_line() -> String:
 	return line
 
 static func reset_for_test(directory: String) -> void:
+	_join_flush()
 	_dir = directory
 	_sections.clear()
 	_details.clear()
@@ -597,3 +667,6 @@ static func physics_at_for_test(is_head: bool, at: int) -> void:
 
 static func lifecycle_at_for_test(event: int, at: int) -> void:
 	_mark_lifecycle(event, at)
+
+static func scene_dispatch_at_for_test(physics: bool, at: int) -> void:
+	_mark_dispatch(physics, at)
