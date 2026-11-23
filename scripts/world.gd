@@ -11601,7 +11601,7 @@ func _update_field_triggers() -> void:
 		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · " + str(field_map.data.get("short_name", "아덴"))))
 	# Original 523 walk-in portals (Portal table) on a 523 Land field.
 	if current523_aden_source_active():
-		var walked: Dictionary = _aden_play_controller().call("step_source_portal")
+		var walked: Dictionary = await _aden_play_controller().call("step_source_portal_loading")
 		if not walked.is_empty():
 			current523_aden_play_active = bool(_aden_play_controller().get("active"))
 			if not bool(walked.get("ok",false)): hud.show_message("포탈 이동 보류: "+str(walked.get("reason","")))
@@ -12298,10 +12298,21 @@ func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
 	if competition.FAMILY.has(kind): return competition.entries(int(competition.FAMILY[kind]))
 	return source_dungeons.entries(kind,hard)
 
+## Entry UIs share one overlay/duplicate-input gate; transactional owners
+## retain level, tariff, ticket, save and current-game access policy checks.
+func run_dungeon_loading(operation: Callable) -> Dictionary:
+	return await preload("res://scripts/boot/dungeon_loading.gd").run(self,operation)
+
 func competition523_quote(id: int) -> Dictionary:
 	return preload("res://scripts/dungeons/competition_dungeon523.gd").quote(self,id)
 
 func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
+	return call("_competition523_enter_impl",id,ticket,false)
+
+func competition523_enter_loading(id: int, ticket: Dictionary) -> Dictionary:
+	return await _competition523_enter_impl(id,ticket,true)
+
+func _competition523_enter_impl(id: int, ticket: Dictionary, loading: bool) -> Dictionary:
 	if death_recovery.blocked() or int(hp)<=0 or player.movement_locked or player.is_stunned() or player.is_held() or player.is_feared() or not charge_skill.is_empty() or patch523_npc_spells.blocks("CannotTeleport"):
 		return {"ok":false,"reason":"현재 이동 상태에서는 던전 입구에 갈 수 없습니다."}
 	var fresh: Dictionary=competition523_quote(id)
@@ -12311,7 +12322,9 @@ func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
 	var row: Dictionary=fresh.row
 	var controller: RefCounted=_aden_play_controller()
 	var policy: String=preload("res://scripts/dungeons/competition_dungeon523.gd").POLICY
-	var moved: bool=controller.call("enter_source_land",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
+	else: moved = controller.call("enter_source_land",int(row.arrival.land_id),row.arrival.bounds,[policy],fresh.changes)
 	var state: Dictionary=controller.call("last_source_transition")
 	current523_aden_play_active=bool(controller.get("active"))
 	if not moved or not state.get("saved",false):
@@ -12632,8 +12645,16 @@ func _bind_current523_world_map_from_settings() -> void:
 
 ## 오림의 흔적: move to a stage's original Land / back to the starting point.
 func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
+	return call("_orim_enter_land_impl",land_id,bounds,false)
+
+func orim_enter_land_loading(land_id: int, bounds: Array) -> Dictionary:
+	return await _orim_enter_land_impl(land_id,bounds,true)
+
+func _orim_enter_land_impl(land_id: int, bounds: Array, loading: bool) -> Dictionary:
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", land_id, bounds)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds)
+	else: moved = controller.call("enter_source_land", land_id, bounds)
 	return {"ok": moved, "reason": str(controller.get("problem"))}
 
 func orim_current_land() -> Dictionary:
@@ -12664,10 +12685,18 @@ func dungeon523_return_to_village() -> Dictionary:
 ## Territories box) under DUNGEON523_ENTRY_WAIVE (MinLevel judged) and saves `save_changes` (the entry cost and the dungeon
 ## session) with the arrival. Not moved = nothing saved, nothing charged.
 func dungeon523_enter_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return call("_dungeon523_enter_land_impl",land_id,bounds,save_changes,false)
+
+func dungeon523_enter_land_loading(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return await _dungeon523_enter_land_impl(land_id,bounds,save_changes,true)
+
+func _dungeon523_enter_land_impl(land_id: int, bounds: Array, save_changes: Dictionary, loading: bool) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 입장할 수 없습니다."}
 	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
+	else: moved = controller.call("enter_source_land", land_id, bounds, DUNGEON523_ENTRY_WAIVE.duplicate(), save_changes)
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if moved and player.auto_enabled: player.set_auto_enabled(false)
