@@ -86,7 +86,8 @@ func _post_draw_dispatch() -> void:
 	HITCH.scene_dispatch_at_for_test(true, ORIGIN + 196000)
 	HITCH.scene_dispatch_at_for_test(true, ORIGIN + 197000)
 	HITCH.scene_dispatch_at_for_test(false, ORIGIN + 199800)
-	HITCH._details["save.write"] = [42000, 2, 29000, ORIGIN + 78000]
+	HITCH._details["save.write"] = [42000, 2, 29000]
+	HITCH._detail_peak_start["save.write"] = ORIGIN + 78000
 	HITCH.frame_at_for_test(ORIGIN + 200000)
 	var row: Dictionary = _latest().diagnostics
 	var dispatch: Dictionary = row.next_scene_dispatch
@@ -96,6 +97,13 @@ func _post_draw_dispatch() -> void:
 	check(dispatch.post_to_dispatch_usec + dispatch.dispatch_to_probe_usec == row.draw_callbacks.wall_usec.post_to_probe,
 		"next dispatch partitions the same existing post draw span")
 	check(row.detail_spans == [["save.write", 78000, 107000]], "absolute longest detail is located in the recorded probe interval")
+	check(HITCH._detail_peak_start.is_empty(), "detail location resets between probe spans")
+	var started: int = HITCH.now() - 20000
+	HITCH.detail("save.write", started)
+	check(HITCH._details["save.write"].size() == 3 and HITCH._detail_peak_start["save.write"] == started,
+		"production timing preserves the bounded total/calls/max tuple with a separate peak location")
+	HITCH.detail("save.write", HITCH.now())
+	check(HITCH._detail_peak_start["save.write"] == started, "shorter calls keep the recorded peak location")
 	_pair(ORIGIN + 201000, ORIGIN + 202000)
 	HITCH.frame_at_for_test(ORIGIN + 400000)
 	check(_latest().diagnostics.next_scene_dispatch.status == "missing", "a later interval cannot reuse an earlier dispatch")

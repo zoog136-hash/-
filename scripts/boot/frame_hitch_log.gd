@@ -33,6 +33,9 @@ static var _sections: Dictionary = {}
 ## Inclusive sub-operation timings, separate from the exclusive section totals.
 ## Each row keeps [total usec, calls, longest call usec] for this frame only.
 static var _details: Dictionary = {}
+## Only retain the start of the longest call for operations over this limit.
+const DETAIL_SPAN_USEC: int = 16000
+static var _detail_peak_start: Dictionary = {}
 static var _counters: Dictionary = {}
 static var _slow_spawn: Dictionary = {}
 static var _build: Dictionary = {}
@@ -162,13 +165,13 @@ static func detail(operation: String, started_usec: int) -> void:
 	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail(operation)
 	if not enabled or OS.get_thread_caller_id() != _main_thread: return
 	var elapsed: int = maxi(0, Time.get_ticks_usec() - started_usec)
-	if not _details.has(operation): _details[operation] = [0, 0, 0, 0]
+	if not _details.has(operation): _details[operation] = [0, 0, 0]
 	var row: Array = _details[operation]
 	row[0] += elapsed
 	row[1] += 1
 	if elapsed > int(row[2]):
 		row[2] = elapsed
-		row[3] = started_usec
+		if elapsed >= DETAIL_SPAN_USEC: _detail_peak_start[operation] = started_usec
 
 static func count(operation: String, amount: int = 1) -> void:
 	if _trail_until_msec != 0 and OS.get_thread_caller_id() == _main_thread: trail("#" + operation)
@@ -233,6 +236,7 @@ static func _close_frame(at: int, map_id: String) -> void:
 static func _clear_pending() -> void:
 	_sections.clear()
 	_details.clear()
+	_detail_peak_start.clear()
 	_counters.clear()
 	_slow_spawn = {}
 	_logger_usec = 0
@@ -432,8 +436,8 @@ static func _record(total: int, map_id: String, at: int) -> void:
 		var spans: Array = []
 		for part: Array in details.slice(0, 6):
 			var row: Array = _details[part[0]]
-			if int(row[2]) >= 16000:
-				var offset: int = int(row[3]) - _last_frame
+			if _detail_peak_start.has(part[0]):
+				var offset: int = int(_detail_peak_start[part[0]]) - _last_frame
 				spans.append([part[0], offset, offset + int(row[2])])
 		if not spans.is_empty(): entry.diagnostics["detail_spans"] = spans
 	if not _counters.is_empty(): entry["counters"] = _counters.duplicate()
