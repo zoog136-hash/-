@@ -29,6 +29,7 @@ var sort_mode: int = 0
 var inventory_fingerprint: int = -1
 var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
+var native_inventory_asset_revision: int = 0
 var weight_readout: Label
 var weight_gauge: ProgressBar
 var compact_tabs: HBoxContainer
@@ -406,6 +407,13 @@ func open_detail() -> void:
 	_reflow()
 	_queue_detail_layout()
 
+## For a native open, establish the same host width and gesture state without
+## building the discarded legacy slots. The failure path calls show_inventory.
+func prepare_native_inventory() -> void:
+	gesture_dragged = false
+	inventory_panel.hide()
+	_reflow()
+
 func show_inventory() -> void:
 	gesture_dragged = false
 	super.show_inventory()
@@ -445,6 +453,10 @@ func _icon_for_reference(record: Dictionary, name_value: String, item_reference:
 func _grade_color(value: String) -> Color:
 	return UI.grade(value)
 
+func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
+	native_inventory_asset_revision += 1
+	super.set_catalog_data(data,images)
+
 func set_inventory(value: Dictionary) -> void:
 	if inventory == value:
 		return
@@ -477,11 +489,18 @@ func _refresh_inventory_grid() -> void:
 	_reflow()
 	if grid_scroll != null: grid_scroll.set_deferred("scroll_vertical",old_scroll)
 
-func prepare_source_inventory_model() -> void:
+## Use the rows just produced while preparing the owner model. If already
+## prepared, rebuild the ownership read exactly as before: no persistent
+## transaction/selection cache can admit a stale physical reference.
+func source_inventory_entries_for_view() -> Array[Dictionary]:
+	var prepared: Variant=prepare_source_inventory_model()
+	return prepared if prepared is Array else _inventory_entries()
+
+func prepare_source_inventory_model() -> Variant:
 	# The same owner reference/filter/order producer can serve a native CSB
 	# while these older controls are hidden. Keep its existing UI preference
 	# normalization; do not duplicate filters/order or rebuild another grid.
-	if not inventory_grid_dirty:return
+	if not inventory_grid_dirty:return null
 	inventory_grid_dirty = false
 	inventory_list_rebuilds += 1
 	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
@@ -497,6 +516,7 @@ func prepare_source_inventory_model() -> void:
 		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
 			sorted_references.append(reference)
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
+	return entries
 
 func _new_reusable_slot() -> Button:
 	var button := Button.new()

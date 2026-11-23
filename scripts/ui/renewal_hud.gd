@@ -1690,18 +1690,23 @@ func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:
 		_close_workspace()
 		return
+	var started: int=FRAME_HITCH.now()
 	_open_window("inventory","가방","")
 	workspace.mount(lineage_inventory_ui)
+	lineage_inventory_ui.prepare_native_inventory()
 	lineage_inventory_ui.show()
-	lineage_inventory_ui.show_inventory()
 	if is_instance_valid(original_main_ui_controller):
 		var native: Dictionary=original_main_ui_controller.try_open_inventory()
 		original_main_ui_status["inventory"]=native
 		if native.get("handled",false):
 			if pointer_transfer!=null:pointer_transfer.cancel()
 			workspace.hide()
-		else:_report_original_fallback("가방",native)
+			FRAME_HITCH.detail("ui.inventory_open.native",started)
+			return
+		_report_original_fallback("가방",native)
 	else:_report_original_fallback("가방",original_main_ui_bind_problem)
+	lineage_inventory_ui.show_inventory()
+	FRAME_HITCH.detail("ui.inventory_open.fallback",started)
 
 func open_character() -> void:
 	_open_window("character","캐릭터 정보","")

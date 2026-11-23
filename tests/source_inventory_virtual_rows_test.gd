@@ -196,6 +196,15 @@ func _real(root_path: String) -> void:
 	stages=int(view.stats.stages)
 	var reordered: Dictionary=view.refresh_rows()
 	check(not reordered.get("rows_only",false) and int(view.stats.stages)==stages+1,"a changed order rebuilds")
-	samples["stats"]=view.stats.duplicate()
+	# Reopen must use the retained authored shell, never a fake or legacy row.
+	var open_identity: Node2D=view._scene
 	view.close()
+	check(not view.is_open() and not open_identity.visible,"original closed shell is hidden")
+	started=Time.get_ticks_usec()
+	var reopened: Dictionary=view.open(f.host)
+	samples["reopen_ms"]=float(Time.get_ticks_usec()-started)/1000.0
+	check(reopened.get("reused_scene",false) and view._scene==open_identity,"reopen replays the original native shell")
+	check(is_equal_approx(view._scroll_content.position.y,view._scroll_top),"reopen resets original scroll to its authored top")
+	samples["stats"]=view.stats.duplicate()
+	view.close(false)
 	f.host.free()
