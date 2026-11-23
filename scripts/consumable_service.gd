@@ -594,6 +594,62 @@ func _use_elixir(item_name: String, spec: Dictionary) -> void:
 	else:
 		_select_option(item_name, RULES.STAT_KEYS, "elixir", false)
 
+func open_owned_elixir(uid: String, owned: Dictionary) -> void:
+	if elixirs_used >= ELIXIR_LIMIT:
+		_message("엘릭서는 최대 %d회까지 사용할 수 있습니다" % ELIXIR_LIMIT)
+		return
+	var choices: Array[String] = []
+	for stat_name: String in RULES.STAT_KEYS:
+		if _stat_value(stat_name) < STAT_CAP: choices.append(stat_name)
+	if choices.is_empty():
+		_message("상승 가능한 스탯이 없습니다 · 엘릭서 보존")
+		return
+	_select_option("엘릭서", choices, "elixir", false, apply_owned_elixir.bind(uid, owned.receipt.duplicate(true), int(owned.remaining)))
+
+func apply_owned_elixir(stat_name: String, uid: String, receipt: Dictionary, expected_remaining: int) -> bool:
+	if not RULES.STAT_KEYS.has(stat_name) or _stat_value(stat_name) >= STAT_CAP or elixirs_used >= ELIXIR_LIMIT:
+		_message("엘릭서 스탯·사용 한도 초과 · 아이템 보존")
+		return false
+	if NATIVE_STACK.busy or world.hp <= 0 or world.death_recovery.blocked() or not world._patch523_item_allowed() or world._option_awakening_busy():
+		_message("현재 엘릭서를 사용할 수 없습니다 · 아이템 보존")
+		return false
+	var owned: Dictionary = NATIVE_STACK.proof(world,uid)
+	if owned.is_empty() or NATIVE_STACK.profile(owned.record).get("kind") != "elixir":
+		_message("선택한 원본 엘릭서를 확인할 수 없습니다")
+		return false
+	var eligibility: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,owned.record)
+	if not eligibility.is_empty():
+		_message(eligibility)
+		return false
+	var paid: Dictionary = NATIVE_STACK.stage_debit(world,[{
+		"physical_id":uid,"quantity":1,"expected_quantity":expected_remaining,
+		"expected_remaining":expected_remaining-1,"source_native_stack_receipt":receipt}])
+	if not paid.get("ok",false):
+		_message(str(paid.get("reason","선택한 엘릭서 수량이 바뀌었습니다 · 아이템 보존")))
+		return false
+	var payload: Dictionary = paid.overrides
+	payload.consumable_state["elixirs_used"] = elixirs_used + 1
+	# The existing save schema serializes the selected base stat from World.
+	# Install it temporarily so the physical debit, shared use counter and
+	# stat adjustment are written in the same validated transaction.
+	var stat_field: String = stat_name.to_lower() + "_stat"
+	var before: int = _stat_value(stat_name)
+	_increase_stat(stat_name)
+	var saved: Error = NATIVE_STACK.sealed_save(world,payload)
+	if saved != OK:
+		world.set(stat_field,before)
+		_message("엘릭서 저장 실패 · 스탯과 아이템 보존")
+		return false
+	world.inventory = payload.inventory
+	world.item_instances = payload.item_instances
+	import_state(payload.consumable_state)
+	NATIVE_STACK.clear_proof_cache()
+	world.deferred_save.cancel()
+	world.hud.refresh_inventory(world.inventory)
+	world._update_hud()
+	_message("엘릭서 사용 · %s 영구 +1 (%d/%d)" % [stat_name, elixirs_used, ELIXIR_LIMIT])
+	return true
+
 func apply_elixir(item_name: String, stat_name: String) -> void:
 	var inv: Dictionary = world.get("inventory") as Dictionary
 	if int(inv.get(item_name, 0)) <= 0 or int(world.get("level")) < 50 or elixirs_used >= ELIXIR_LIMIT:
@@ -878,7 +934,7 @@ func _apply_processed_element_management(scroll_name: String, item_id: String, i
 	world.call("_update_hud")
 	_message("%s [%s] 속성 %s · 기존 속성 세공 효과 소실" % [item_name,item_id,"변경 완료" if kind == "element_change" else "초기화 완료"])
 
-func _select_option(item_name: String, candidates: Array[String], purpose: String, choose_element: bool) -> void:
+func _select_option(item_name: String, candidates: Array[String], purpose: String, choose_element: bool, apply_choice: Callable = Callable()) -> void:
 	if candidates.is_empty():
 		return
 	var dialog: ConfirmationDialog = ConfirmationDialog.new()
@@ -928,7 +984,9 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 	dialog.confirmed.connect(func() -> void:
 		if selector.selected >= 0 and selector.selected < candidates.size():
 			var candidate: String = candidates[selector.selected]
-			if purpose == "elixir":
+			if apply_choice.is_valid():
+				apply_choice.call(candidate)
+			elif purpose == "elixir":
 				apply_elixir(item_name, candidate)
 			elif purpose == "blessing":
 				apply_bless_scroll(item_name, candidate)

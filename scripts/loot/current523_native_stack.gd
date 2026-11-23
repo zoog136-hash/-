@@ -65,6 +65,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	# TWILIGHT 근사: a reusable TeleportAmulet is projected as a material.
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
+	if elixir_rule(record,definition):return {"kind":"elixir","spec":{"can_use_when_invisible":true}}
 	if record.get("source_item_class_id")==310:
 		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").call("profile",record)
 		if not cure.is_empty():return {"kind":"cure","spec":NATIVE_FIELDS.full(cure).source_use_spec}
@@ -95,6 +96,23 @@ static func profile(record: Dictionary) -> Dictionary:
 	if source_effect=="food":return {"kind":"buff","runtime_food":true}
 	if source_effect in ["teleport","ain","teleport_location"]:return {"kind":source_effect}
 	return {}
+
+## ItemClass 4151 grants one ordinary stat point. Keep the existing TWILIGHT
+## chosen-stat UI and shared character/stat caps for both forms of elixir.
+static func elixir_rule(record: Dictionary, definition: Dictionary) -> bool:
+	if whole(record.get("source_item_class_id")) != 4151 or NATIVE_FIELDS.field(record,"source_category_name") != "BonusStatRecharger":
+		return false
+	var original: Dictionary = definition.get("original_item",{})
+	if original.get("TestItem") != false or whole(original.get("LevelLimitMin")) != 50 or whole(original.get("TargettingTypeID")) != 1 or original.get("ServiceRegionCode") != "" or original.get("CanUseWhenInvisible") != true:
+		return false
+	var rows: Array = definition.get("item_bonus",[])
+	if rows.size() != 1: return false
+	var row: Dictionary = rows[0]
+	var bonus: Dictionary = row.get("bonus",{})
+	return (row.get("IsPossession") == false
+		and row.get("bonus_type",{}).get("Name") == "BonusStatAmount"
+		and row.get("unit",{}).get("Name") == "Value" and whole(bonus.get("Value")) == 1
+		and whole(bonus.get("BonusApplicationTypeID")) == 0 and whole(bonus.get("BonusApplicationTargetID")) == 0)
 
 static func supply_profile(record: Dictionary) -> Dictionary:
 	var effect: Dictionary=profile(record)
@@ -322,6 +340,9 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if not restriction.is_empty():return _failure(restriction)
 		var rule: String=buff_rule_problem(world,spec)
 		if not rule.is_empty():return _failure(rule)
+	if effect.kind=="elixir":
+		world.consumable_service.open_owned_elixir(uid,owned)
+		return {"handled":true,"silent":true}
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
