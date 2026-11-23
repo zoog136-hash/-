@@ -132,6 +132,23 @@ func _initialize() -> void:
 			while pack.pending_jobs() > 0 and waits < 2000:
 				pack.pump_jobs(); OS.delay_msec(1); waits += 1
 			check(pack.pending_jobs() == 0 and pack.cache_size() == 0, "bad/missing bytes on a worker are not cached either: " + kind)
+			if kind == "missing_original":
+				pack.background_only = true
+				check(pack.texture_for(0) == null and pack.pending_jobs() == 0, "live map texture acquisition never decodes a cold miss inline")
+				check(not pack.prefetch(0) and pack.pending_jobs() == 1, "live map queues a missing atlas")
+				check(pack.texture_for(0) == null and pack.pending_jobs() == 1, "live map cannot join a pending decode synchronously")
+				waits = 0
+				while pack.pending_jobs() > 0 and waits < 2000:
+					pack.pump_jobs(); OS.delay_msec(1); waits += 1
+				check(pack.prefetch(0) and pack.pending_jobs() == 0 and pack.texture_for(0) == null and pack.problem.contains("Missing"), "live map sees completion with the original failure, without requeuing")
+				_store(root.path_join(row.original_path), original_source)
+				pack.release_held()
+				check(not pack.prefetch(0) and pack.pending_jobs() == 1, "next atlas batch can retry a repaired source")
+				waits = 0
+				while pack.pending_jobs() > 0 and waits < 2000:
+					pack.pump_jobs(); OS.delay_msec(1); waits += 1
+				check(pack.prefetch(0) and pack.texture_for(0) != null and pack.atlas_loads == 1, "repaired bytes pass the pinned worker decode once")
+				pack.background_only = false
 	var real_count: int = 0
 	var real_bytes: int = 0
 	if not real_root.is_empty():

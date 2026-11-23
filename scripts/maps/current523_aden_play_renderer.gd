@@ -122,6 +122,7 @@ var _markers_at := Vector2.INF
 var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
+var _background_atlases: bool = false
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
 ## Chunk member -> worker read job (see _prefetch_chunk).
@@ -238,6 +239,8 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	if "compress_for_gpu" in tiles: tiles.set("compress_for_gpu", false)
 	# Decoded atlases stay until the blocks waiting for them have baked.
 	if "hold_published" in tiles: tiles.set("hold_published", true)
+	_background_atlases = "background_only" in tiles
+	if _background_atlases: tiles.set("background_only", true)
 	# Draw lists on workers with the real pack (its tile table is read-only).
 	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
@@ -923,7 +926,7 @@ func _take_block_job(cell: Vector2i) -> Dictionary:
 	return {"commands": result.commands, "atlases": atlases, "count": result.count, "draws": result.draws, "raw_ff": result.raw_ff, "unresolved": result.unresolved}
 
 ## Both fresh and pending blocks consume completed jobs without waiting.
-## A late or unavailable atlas keeps the existing synchronous fallback.
+## A verified failed atlas is filtered by the existing block assembler.
 func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) -> Dictionary:
 	var built: Dictionary = {}
 	if _block_jobs.has(cell) or (block_jobs_enabled and not force_sync and not _block_members(cell).is_empty()):
@@ -991,9 +994,12 @@ func _pending_tiles_ready(cell: Vector2i) -> bool:
 	if not _tile_pack.has_method("prefetch"): return true
 	var tiles: Variant = _pending_tiles.get(cell)
 	if tiles is PackedInt32Array:
+		var ready: bool = true
+		# A miss means "not ready yet", but the call can queue that atlas.
+		# Keep offering the remaining IDs so the decode slots can fill.
 		for tile_id: int in (tiles as PackedInt32Array):
-			if not _tile_pack.call("prefetch", tile_id): return false
-		return true
+			if not _tile_pack.call("prefetch", tile_id): ready = false
+		return ready
 	var collected: Dictionary = {}
 	var ready: bool = _request_block_tiles(cell, collected)
 	if bool(collected.get("complete", false)): _pending_tiles[cell] = collected.tiles
@@ -1144,7 +1150,7 @@ func _build_frame() -> bool:
 				if on_screen and not bool(screen_ready.get(cell, true)):
 					var since: int = int(_screen_wait.get(cell, now_msec))
 					_screen_wait[cell] = since
-					if now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
+					if _background_atlases or now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 						partial = true
 						screen_waiting = true
 						pending.push_front(cell)
@@ -1309,7 +1315,7 @@ func _bake_pending(budget_usec: int) -> int:
 		var force_sync: bool = not _pending_tiles_ready(cell)
 		if force_sync:
 			var waited: bool = false
-			if on_screen:
+			if on_screen and not _background_atlases:
 				var since: int = int(_screen_wait.get(cell, now_msec))
 				_screen_wait[cell] = since
 				waited = now_msec - since >= ON_SCREEN_WAIT_MSEC and late_bakes < LATE_BAKES_PER_REFRESH
