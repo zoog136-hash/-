@@ -597,33 +597,38 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	# A plain save of state already proven unchanged (same definition) skips
 	# the whole-bag proof; any difference re-runs it.
 	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
-	var unchanged: bool=overrides.is_empty() and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
+	var plain: bool=overrides.is_empty()
+	var unchanged: bool=plain and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
 	if not unchanged:
 		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
 		if not issue.is_empty():_last_valid_inputs=[];return issue
-		_last_valid_inputs=inputs.duplicate(true) if overrides.is_empty() else []
+		_last_valid_inputs=inputs.duplicate(true) if plain else []
 	var ledger: Dictionary=state.get(USES,{})
-	for uid: String in world.item_instances:
-		var previous: Variant=world.item_instances[uid]
-		if not previous is Dictionary or not previous.has(RECEIPT):continue
-		var before: Dictionary=proof_entry(previous,uid)
-		if before.is_empty():return "기존 원본 물리 증명 보존 필요"
-		var next: Variant=instances.get(uid)
-		if next==previous:continue
-		if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
-		if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
-		if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
-		if next==null and authorizes(overrides) and _candidate_kind=="plain_handoff" and ledger.get(uid)==ledger_row(before,int(before.used),0,int(before.remaining),"TWILIGHT_plain_stack_handoff"):continue
-		var remaining: int=0
-		if next!=null:
-			var after: Dictionary=proof_entry(next,uid)
-			if after.is_empty():return "원본 물리 잔량 변경 후보 불일치"
-			remaining=int(after.remaining)
-			var expected: Dictionary=previous.duplicate(true)
-			expected[QUANTITY]=remaining;expected.source_native_stack_used_quantity=int(before.used)+int(before.remaining)-remaining
-			if next!=expected:return "원본 물리 개체의 출처·다른 필드 변경 금지"
-		var consumed: int=int(before.remaining)-remaining
-		if consumed<1 or ledger.get(uid)!=ledger_row(before,int(before.used)+consumed,remaining):return "원본 물리 차감과 사용 장부 공동 저장 필요"
+	# A plain save uses the unchanged live bag as the candidate. The ownership
+	# proof above (or an exact cached match) already checked every receipt.
+	# The second pass exists to check before/after transitions of staged saves.
+	if not plain:
+		for uid: String in world.item_instances:
+			var previous: Variant=world.item_instances[uid]
+			if not previous is Dictionary or not previous.has(RECEIPT):continue
+			var before: Dictionary=proof_entry(previous,uid)
+			if before.is_empty():return "기존 원본 물리 증명 보존 필요"
+			var next: Variant=instances.get(uid)
+			if next==previous:continue
+			if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
+			if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
+			if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
+			if next==null and authorizes(overrides) and _candidate_kind=="plain_handoff" and ledger.get(uid)==ledger_row(before,int(before.used),0,int(before.remaining),"TWILIGHT_plain_stack_handoff"):continue
+			var remaining: int=0
+			if next!=null:
+				var after: Dictionary=proof_entry(next,uid)
+				if after.is_empty():return "원본 물리 잔량 변경 후보 불일치"
+				remaining=int(after.remaining)
+				var expected: Dictionary=previous.duplicate(true)
+				expected[QUANTITY]=remaining;expected.source_native_stack_used_quantity=int(before.used)+int(before.remaining)-remaining
+				if next!=expected:return "원본 물리 개체의 출처·다른 필드 변경 금지"
+			var consumed: int=int(before.remaining)-remaining
+			if consumed<1 or ledger.get(uid)!=ledger_row(before,int(before.used)+consumed,remaining):return "원본 물리 차감과 사용 장부 공동 저장 필요"
 	for uid: String in world.warehouse.instances:
 		var previous: Variant=world.warehouse.instances[uid]
 		if not previous is Dictionary or not previous.has(RECEIPT):continue
@@ -642,7 +647,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 			var owned: Dictionary=proof_entry(physical.data,uid)
 			if not owned.is_empty() and ledger.get(uid)==ledger_row(owned,int(owned.used),0,int(owned.remaining)):continue
 		return "바닥 원본 물리 개체의 정확한 습득·소멸 소유자 필요"
-	var old_consumables: Dictionary=world.consumable_service.export_state()
+	var old_consumables: Dictionary=state if not overrides.has("consumable_state") else world.consumable_service.export_state()
 	if old_consumables.get(AMMO_EQUIPPED,{})!=state.get(AMMO_EQUIPPED,{}) and not (authorizes(overrides) and _candidate_kind in ["ammo_equip","ammo_consume"]):return "원본 탄약 개체 착용은 정확한 소유자 저장이 필요합니다"
 	if old_consumables.get(AMMO_RNG,{})!=state.get(AMMO_RNG,{}) and not (authorizes(overrides) and _candidate_kind=="ammo_consume"):return "원본 탄약 독립 난수 변경은 실제 소비 소유자 저장이 필요합니다"
 	# Shot, skill-material and box-result journals are no longer kept
