@@ -1,6 +1,7 @@
 extends Node
 ## First node processed every frame: closes the previous frame's hitch record.
 ## See frame_hitch_log.gd. Runs while paused so a stalled menu is measured too.
+const REPORT := preload("res://scripts/boot/performance_report_session.gd")
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows.gd")
@@ -38,9 +39,12 @@ func _enter_tree() -> void:
 		RenderingServer.frame_pre_draw.connect(_on_pre_draw)
 	if not RenderingServer.frame_post_draw.is_connected(_on_post_draw):
 		RenderingServer.frame_post_draw.connect(_on_post_draw)
+	get_tree().physics_frame.connect(_on_physics_dispatch)
+	get_tree().process_frame.connect(_on_process_dispatch)
 
 func _ready() -> void:
 	FRAME_HITCH.start()
+	REPORT.ensure(get_tree())
 	# Priority orders this process group only; deferred work, physics and
 	# other groups are not bounded by this marker. Keep the child on re-entry.
 	if _tail == null:
@@ -52,6 +56,14 @@ func _exit_tree() -> void:
 		RenderingServer.frame_pre_draw.disconnect(_on_pre_draw)
 	if RenderingServer.frame_post_draw.is_connected(_on_post_draw):
 		RenderingServer.frame_post_draw.disconnect(_on_post_draw)
+	get_tree().physics_frame.disconnect(_on_physics_dispatch)
+	get_tree().process_frame.disconnect(_on_process_dispatch)
+
+func _on_physics_dispatch() -> void:
+	FRAME_HITCH.scene_dispatch(true)
+
+func _on_process_dispatch() -> void:
+	FRAME_HITCH.scene_dispatch(false)
 
 func _physics_process(_delta: float) -> void:
 	FRAME_HITCH.physics_head()
@@ -76,6 +88,7 @@ func _process(_delta: float) -> void:
 		if Engine.max_fps != cap: Engine.max_fps = cap
 	if now - _alive_at >= ALIVE_MSEC:
 		_alive_at = now
+		var started: int = FRAME_HITCH.now()
 		var fields: Dictionary = alive_fields(map_id)
 		fields.merge(world_fields(host), true)
 		var window: Dictionary = FRAME_HITCH.take_window()
@@ -84,8 +97,9 @@ func _process(_delta: float) -> void:
 		if not str(window.cpu_top).is_empty(): fields["cpu_top"] = window.cpu_top
 		if not str(window.get("detail_top", "")).is_empty(): fields["detail_top"] = window.detail_top
 		fields["max_fps"] = Engine.max_fps
-		BOOT_LOG.mark("alive", fields)
+		REPORT.sample(fields, BOOT_LOG.mark("alive", fields))
 		DEFINITIONS.remember_used_tables()
+		FRAME_HITCH.detail("diag.heartbeat", started)
 
 ## What holds memory, so the next loading screen can name it (MB, counts).
 static func alive_fields(map_id: String) -> Dictionary:
@@ -148,7 +162,9 @@ func _input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed)
 	if not pressed: return
 	var control: Control = get_viewport().gui_get_hovered_control()
+	var started: int = FRAME_HITCH.now()
 	BOOT_LOG.mark("touch", {"at": str(control.name) if control != null else "world"})
+	FRAME_HITCH.detail("diag.touch", started)
 
 func _notification(what: int) -> void:
 	match what:

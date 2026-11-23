@@ -78,6 +78,41 @@ func _ordered_boundaries() -> void:
 	HITCH.frame_at_for_test(ORIGIN + 600000, "equal_boundaries")
 	_check_wall(_callbacks(_latest()), {"probe_to_pre":0, "pre_to_post":200000, "post_to_probe":0}, "equal boundaries")
 
+func _post_draw_dispatch() -> void:
+	_reset()
+	HITCH.frame_at_for_test(ORIGIN)
+	HITCH.scene_dispatch_at_for_test(true, ORIGIN + 1000)
+	_pair(ORIGIN + 3000, ORIGIN + 6000)
+	HITCH.scene_dispatch_at_for_test(true, ORIGIN + 196000)
+	HITCH.scene_dispatch_at_for_test(true, ORIGIN + 197000)
+	HITCH.scene_dispatch_at_for_test(false, ORIGIN + 199800)
+	HITCH._details["save.write"] = [42000, 2, 29000]
+	HITCH._detail_peak_start["save.write"] = ORIGIN + 78000
+	HITCH.frame_at_for_test(ORIGIN + 200000)
+	var row: Dictionary = _latest().diagnostics
+	var dispatch: Dictionary = row.next_scene_dispatch
+	check(dispatch.signal == "physics" and dispatch.post_to_dispatch_usec == 190000
+		and dispatch.dispatch_to_probe_usec == 4000 and dispatch.process_to_probe_usec == 200,
+		"first next SceneTree signal separates the long wait from subsequent physics and process delivery")
+	check(dispatch.post_to_dispatch_usec + dispatch.dispatch_to_probe_usec == row.draw_callbacks.wall_usec.post_to_probe,
+		"next dispatch partitions the same existing post draw span")
+	check(row.detail_spans == [["save.write", 78000, 107000]], "absolute longest detail is located in the recorded probe interval")
+	check(HITCH._detail_peak_start.is_empty(), "detail location resets between probe spans")
+	var started: int = HITCH.now() - 20000
+	HITCH.detail("save.write", started)
+	check(HITCH._details["save.write"].size() == 3 and HITCH._detail_peak_start["save.write"] == started,
+		"production timing preserves the bounded total/calls/max tuple with a separate peak location")
+	HITCH.detail("save.write", HITCH.now())
+	check(HITCH._detail_peak_start["save.write"] == started, "shorter calls keep the recorded peak location")
+	_pair(ORIGIN + 201000, ORIGIN + 202000)
+	HITCH.frame_at_for_test(ORIGIN + 400000)
+	check(_latest().diagnostics.next_scene_dispatch.status == "missing", "a later interval cannot reuse an earlier dispatch")
+	_pair(ORIGIN + 401000, ORIGIN + 402000)
+	HITCH.scene_dispatch_at_for_test(false, ORIGIN + 410000)
+	HITCH.draw_at_for_test(false, ORIGIN + 420000)
+	HITCH.frame_at_for_test(ORIGIN + 600000)
+	check(_latest().diagnostics.next_scene_dispatch.status == "unpaired_draw", "ambiguous post-draw marker suppresses dispatch split")
+
 func _invalid_boundaries() -> void:
 	var cases: Array = [
 		{"label":"no callbacks", "events":[], "status":"no_draw_callbacks"},
@@ -159,6 +194,16 @@ func _accounting_and_logger() -> void:
 	HITCH.frame_at_for_test(6200000, "automatic_flush", 17)
 	check(FileAccess.file_exists(DIR.path_join(HITCH.FILE_NAME)), "automatic flush exercised the real write path")
 	check(HITCH._logger_usec == 17 and not HITCH._inside_probe, "automatic flush cannot recursively add another logger measurement")
+	HITCH._flush_periodic(6300000)
+	var worker: Thread = HITCH._flush_worker
+	check(worker != null, "Android periodic writer stages a detached snapshot on a worker")
+	# Record an additional frame before joining; an explicit exit flush must
+	# win over the previously staged checkpoint regardless of worker timing.
+	HITCH.frame_at_for_test(6400000)
+	HITCH.flush()
+	var persisted: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIR.path_join(HITCH.FILE_NAME)))
+	check(HITCH._flush_worker == null and persisted.frames == HITCH.summary().frames,
+		"explicit flush joins the periodic writer before publishing newer data")
 	_reset()
 	var real_started: int = HITCH.now()
 	HITCH.frame("real_probe")
@@ -213,7 +258,7 @@ func _disabled_reset_and_bounds() -> void:
 	check(summary.worst.size() == HITCH.KEEP and summary.hitches == 21, "callback diagnostics preserve bounded worst-frame retention and total hitch count")
 	for kept: Dictionary in summary.worst:
 		var diag: Dictionary = kept.get("diagnostics", {})
-		check(diag.size() == 6 and diag.physics.size() == 4 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
+		check(diag.size() == 7 and diag.next_scene_dispatch.size() <= 7 and diag.physics.size() == 4 and _callbacks(kept).size() <= 9 and diag.process_tail.size() <= 5 and diag.lifecycle.size() == 7 and diag.record_snapshot.size() == 4, "retained diagnostics have fixed-size callback, lifecycle, tail and record-time fields")
 	check(JSON.stringify(summary).length() < 65536, "bounded callback fixture remains readable under the previous-record size limit")
 
 func _persistence() -> void:
@@ -358,6 +403,7 @@ func _probe_lifecycle() -> void:
 	var pre := Callable(probe, "_on_pre_draw")
 	var post := Callable(probe, "_on_post_draw")
 	check(probe.process_priority == -2147483647 and probe.process_mode == Node.PROCESS_MODE_ALWAYS, "actual probe remains first-priority and active while paused")
+	check(physics_frame.is_connected(probe._on_physics_dispatch) and process_frame.is_connected(probe._on_process_dispatch), "probe connects both SceneTree dispatch markers")
 	check(_connections("frame_pre_draw", pre) == 1 and _connections("frame_post_draw", post) == 1, "probe connects each callback once on tree entry")
 	var tail: Node = probe._tail
 	check(tail != null and tail.process_priority == 2147483647 and tail.process_mode == Node.PROCESS_MODE_ALWAYS, "probe owns one late-priority always-processing tail child")
@@ -387,6 +433,7 @@ func _probe_lifecycle() -> void:
 		probe.notification(notification_id)
 		check(FileAccess.file_exists(DIR.path_join(HITCH.FILE_NAME)), "probe notification flushes current record: " + str(notification_id))
 	host.remove_child(probe)
+	check(not physics_frame.is_connected(probe._on_physics_dispatch) and not process_frame.is_connected(probe._on_process_dispatch), "probe does not leave SceneTree listeners behind")
 	check(_connections("frame_pre_draw", pre) == 0 and _connections("frame_post_draw", post) == 0, "probe disconnects both callbacks on tree exit")
 	host.add_child(probe)
 	check(_connections("frame_pre_draw", pre) == 1 and _connections("frame_post_draw", post) == 1, "probe reconnects once on re-entry without another ready call")
@@ -434,6 +481,7 @@ func _run() -> void:
 	_clean()
 	_physics_steps()
 	_ordered_boundaries()
+	_post_draw_dispatch()
 	_invalid_boundaries()
 	_accounting_and_logger()
 	_disabled_reset_and_bounds()
