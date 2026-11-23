@@ -193,6 +193,19 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 	var result: Dictionary=_with_map_time_quote(raw,actor_state,time_policy)
 	result["runtime_condition_identity"]=_condition_identity(actor_state)
 	var waive: Array=_content_entry_waive if land_id==_content_entry_land else []
+	var competition: Script=load("res://scripts/dungeons/competition_dungeon523.gd")
+	var lobby: Dictionary={}
+	if competition.POLICY in waive or land_id==_resume_land or _active_entry_context.get("competition_lobby_land",-1)==land_id:
+		lobby=competition.lobby(land_id,asset)
+		if not lobby.is_empty():
+			var held: Array=[]
+			for condition: Variant in result.get("source_travel_holds",[]):
+				if condition is Dictionary and condition.get("table")=="CompetitionDungeonLand" and int(condition.get("row",{}).get("ID",-1)) in lobby.links:continue
+				held.append(condition)
+			result["source_travel_holds"]=held
+			result["source_travel_hold"]="native_definition_conditions_require_policy" if not held.is_empty() else ""
+			result["competition_lobby_land"]=land_id
+			waive=competition.IN_LOBBY.duplicate()
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/orim523/orim523.gd").stage_land_ids().has(land_id):
 		waive=CONTENT_ENTRY_WAIVE # A saved position inside an Orim stage Land.
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/content523/content523.gd").content_land_ids().has(land_id):
@@ -1107,6 +1120,7 @@ const CONTENT_ENTRY_WAIVE := ["NoTeleport","TurnOffAutoForTeleport","NoPurplePus
 ## `save_changes`: prepared save overrides (current523_map_travel_payment)
 ## saved with the arrival, e.g. a teleport item's debit.
 func enter_source_land(land_id: int, bounds: Array, waive: Array = CONTENT_ENTRY_WAIVE, save_changes: Dictionary={}) -> bool:
+	_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	_content_entry_land=land_id;_content_entry_waive=waive.duplicate()
 	var moved: bool=_enter_source_land(land_id,bounds,save_changes)
 	_content_entry_land=-1;_content_entry_waive=[]
