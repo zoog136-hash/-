@@ -26,6 +26,16 @@ func _section(name: String, usec: int) -> void:
 func _run() -> void:
 	_clean()
 	HITCH.reset_for_test(DIR)
+	# Exact 16 ms user budget versus the 60fps cadence and repeated stutters.
+	for usec: int in [16000,16001,16667,16668,33000,33001,3999999,4000000]:
+		HITCH.frame_at_for_test(2000000)
+		HITCH.frame_at_for_test(2000000 + usec)
+		HITCH.enabled = false
+		HITCH.enabled = true
+	var budget: Dictionary = HITCH.summary()
+	check(budget.frames == 8 and budget.over_16ms == 7 and budget.over_16667us == 5
+		and budget.over_33ms == 3 and budget.at_least_4s == 1, "exact budget boundaries are retained separately")
+	HITCH.reset_for_test(DIR)
 	HITCH.frame("aden_world")
 	# A fast frame is not recorded.
 	_section("quests", 5000)

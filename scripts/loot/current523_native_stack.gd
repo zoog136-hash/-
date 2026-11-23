@@ -634,9 +634,12 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		for uid: String in world.item_instances:
 			var previous: Variant=world.item_instances[uid]
 			if not previous is Dictionary or not previous.has(RECEIPT):continue
+			var next: Variant=instances.get(uid)
+			# The full candidate proof above already validated this exact entry.
+			# A changed or removed live entry still needs both transition proofs.
+			if is_same(next,previous):continue
 			var before: Dictionary=proof_entry(previous,uid)
 			if before.is_empty():return "기존 원본 물리 증명 보존 필요"
-			var next: Variant=instances.get(uid)
 			if next==previous:continue
 			if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
 			if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue

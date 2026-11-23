@@ -16,6 +16,7 @@ const CATEGORY:String="LinMarketProduct"
 ## save and the reveal bounded).
 const MAX_MARKET_DRAWS:int=110
 const UI_POLICY_TEXT:String="TWILIGHT 소지 티켓1개 소비 정책 · 원본 무작위 풀/지급량 · 추가 구매 비용 없음 · 미연결 대상은 소지품 보존"
+const HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const CardEngine=preload("res://scripts/card_draw_fusion.gd")
 const OriginalInput=preload("res://scripts/shop/current523_ticket_input.gd")
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
@@ -181,6 +182,9 @@ func _identity(name:String,spec:Dictionary,record:Dictionary) -> bool:
 	return definition.get("original_item")==original and DROPS.matches(record,DROPS.variant_item(definition.get("native_record",{}),1))
 
 func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionary:
+	return _quote(name,selection,internal,true)
+
+func _quote(name:String,selection:Dictionary,internal:bool,materialize_pool:bool) -> Dictionary:
 	var ready:Dictionary=runtime._ready_for_action(internal)
 	if not ready.ok:return ready
 	if runtime.world.hud.is_card_reveal_busy():return runtime.fail("카드 결과 연출 중 · 티켓 보존")
@@ -209,13 +213,13 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 	for row:Dictionary in runtime.catalog._related("MarketPurchaseServerLimitGroup",int(spec.market_id)):sets.append(int(row.ServerLimitSetID))
 	var server:Dictionary=runtime._server(sets)
 	if not server.ok:return server
-	var drawn:Dictionary=_candidates(spec.grants)
+	var drawn:Dictionary=_candidates(spec.grants,materialize_pool)
 	if not drawn.ok:return drawn
 	return {"ok":true,"can_use":true,"inventory_key":name,"source_item_id":id,"bless_raw":1,"enchant":0,"draw_count":drawn.count,"category":drawn.category,"grants":spec.grants.duplicate(true),"pools":drawn.pools,"origin":"TWILIGHT 소지 티켓1개 소비 · 원본 풀/가중치/지급량 · 마켓 판매 상태는 유지"}
 
 ## The original candidates of `grants` ([{pool_id, count}], pools of this
 ## model): {ok, pools, category, count} or the refusal.
-func _candidates(grants:Array) -> Dictionary:
+func _candidates(grants:Array,materialize_pool:bool=true) -> Dictionary:
 	var index:Dictionary={}
 	for category:String in CardEngine.CATEGORIES:
 		for card:Dictionary in runtime.world.catalog_db.get(category,[]):
@@ -241,10 +245,10 @@ func _candidates(grants:Array) -> Dictionary:
 					if not spell_window.ok:return spell_window
 				if category.is_empty():category=SKILL_BOOKS
 				if category!=SKILL_BOOKS:return runtime.fail("복수 분류 카드의 원본 선택 계약 필요")
-				candidates.append({"weight":int(entry.weight),"entry":{"kind":"skill_book","id":str(card_id),"spell_card_id":card_id,"item_class_id":book,"name":str(book_record.name)}})
+				if materialize_pool:candidates.append({"weight":int(entry.weight),"entry":{"kind":"skill_book","id":str(card_id),"spell_card_id":card_id,"item_class_id":book,"name":str(book_record.name)}})
 				continue
 			if not index.has(card_id):missing.append(card_id);continue
-			var bound:Dictionary=index[card_id];var original:Dictionary=runtime.catalog.record("BuffCard",card_id)
+			var bound:Dictionary=index[card_id];var original:Dictionary=spell
 			if original.is_empty() or int(original.GradeID)!=int(entry.grade_id) or int(bound.record.get("source_grade_id",0))!=int(original.GradeID) or bound.record.get("source_merge_out_disabled",false)!=original.IsNoMergeOut or bound.record.get("source_swap_out_disabled",false)!=original.IsNoSwapOut:return runtime.fail("원본 카드 등급·교체/합성 제한 정체 불일치")
 			var deck:int=int(original.BuffCardDeckID)
 			var suffix:String=str(deck)+":"+str(card_id)
@@ -257,8 +261,9 @@ func _candidates(grants:Array) -> Dictionary:
 				if not card_window.ok:return card_window
 			if category.is_empty():category=str(bound.category)
 			if category!=str(bound.category):return runtime.fail("복수 분류 카드의 원본 선택 계약 필요")
-			candidates.append({"weight":int(entry.weight),"entry":{"id":str(bound.id),"record":bound.record.duplicate(true)}})
-		pools[pool_id]=candidates;count+=int(grant.count)
+			if materialize_pool:candidates.append({"weight":int(entry.weight),"entry":{"id":str(bound.id),"record":bound.record.duplicate(true)}})
+		if materialize_pool:pools[pool_id]=candidates
+		count+=int(grant.count)
 	if not missing.is_empty():
 		var blocked:Dictionary=runtime.fail("추첨 대상 카드 자료가 미설치 상태입니다 · 티켓 보존")
 		blocked["missing_card_ids"]=missing;return blocked
@@ -266,11 +271,17 @@ func _candidates(grants:Array) -> Dictionary:
 	return {"ok":true,"pools":pools,"category":category,"count":count}
 
 func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
-	var prepared:Dictionary=quote(name,selection)
+	# Validate before starting a transaction, but only build the drawable pool
+	# after _start(): it may flush a map save, so revalidation is still required.
+	var measure:int=HITCH.now()
+	var prepared:Dictionary=_quote(name,selection,false,false)
+	HITCH.detail("card.ticket_preflight",measure)
 	if not prepared.ok:return prepared
 	var started:Dictionary=runtime._start()
 	if not started.ok:return started
+	measure=HITCH.now()
 	prepared=quote(name,selection,true)
+	HITCH.detail("card.ticket_pool",measure)
 	if not prepared.ok:runtime._busy=false;return prepared
 	var rng:=RandomNumberGenerator.new()
 	var previous:Dictionary=runtime.state.get("ticket_redemption",{})
@@ -305,7 +316,9 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	var uses:int=int(previous.get("uses",0))
 	if uses>=runtime.LIMIT:runtime._busy=false;return runtime.fail("티켓 소비 이력 범위 초과")
 	next["ticket_redemption"]={"version":1,"policy_sha256":loaded_sha,"rng_state":str(rng.state),"uses":uses+1}
+	measure=HITCH.now()
 	var saved:Dictionary=runtime._commit(next,inventory,int(runtime.world.gold),instances,int(runtime.world.next_item_instance_id),extra)
+	HITCH.detail("card.ticket_commit",measure)
 	if not saved.ok:return saved
 	random.state=rng.state
 	runtime.world.card_draw_fusion.import_state(scratch.export_state())
@@ -319,7 +332,9 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 		runtime.world.hud.append_log(str(outcome.message))
 		return outcome
 	runtime.world.hud.set_card_draw_fusion_result(str(prepared.category),str(outcome.message))
+	measure=HITCH.now()
 	runtime.world.hud.present_card_reveal(str(prepared.category),outcome,false)
+	HITCH.detail("card.ticket_reveal_setup",measure)
 	return outcome
 
 ## Draws every grant of `prepared` ({grants, pools, category}) with `rng`

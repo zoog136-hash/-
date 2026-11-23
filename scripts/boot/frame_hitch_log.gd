@@ -41,6 +41,10 @@ static var _slow_spawn: Dictionary = {}
 static var _build: Dictionary = {}
 static var _frames: int = 0
 static var _hitches: int = 0
+static var _over_16ms: int = 0
+static var _over_16667us: int = 0
+static var _over_33ms: int = 0
+static var _at_least_4s: int = 0
 static var _worst: Array = []
 static var _last_frame: int = 0
 static var _dirty: bool = false
@@ -218,6 +222,10 @@ static func _close_frame(at: int, map_id: String) -> void:
 	if _last_frame > 0:
 		_frames += 1
 		var total: int = at - _last_frame
+		if total > 16000: _over_16ms += 1
+		if total > 16667: _over_16667us += 1
+		if total > 33000: _over_33ms += 1
+		if total >= 4000000: _at_least_4s += 1
 		if total >= THRESHOLD_USEC: _record(total, map_id, at)
 		_window_frames += 1
 		_window_usec += total
@@ -476,7 +484,8 @@ static func take_window(top: int = 4) -> Dictionary:
 
 static func summary() -> Dictionary:
 	return {"schema":1, "build":_build.duplicate(), "frames":_frames, "hitches":_hitches, "threshold_ms":THRESHOLD_USEC / 1000,
-		"worst":_worst.duplicate(true)}
+		"worst":_worst.duplicate(true), "over_16ms":_over_16ms, "over_16667us":_over_16667us,
+		"over_33ms":_over_33ms, "at_least_4s":_at_least_4s}
 
 static func flush() -> void:
 	var at: int = Time.get_ticks_usec()
@@ -630,6 +639,10 @@ static func reset_for_test(directory: String) -> void:
 	_build = {}
 	_frames = 0
 	_hitches = 0
+	_over_16ms = 0
+	_over_16667us = 0
+	_over_33ms = 0
+	_at_least_4s = 0
 	_worst.clear()
 	_last_frame = 0
 	_dirty = false

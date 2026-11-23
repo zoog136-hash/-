@@ -190,7 +190,7 @@ static func clean_snapshot(snapshot: Dictionary) -> Dictionary:
 		for key: String in METRICS + MEMORY + ["at_usec"]:
 			if raw_sample.has(key): result.last_sample[key] = _number(raw_sample[key])
 	if not raw_log is Dictionary: return result
-	var log: Dictionary = _numbers(raw_log, ["schema", "frames", "hitches", "threshold_ms"])
+	var log: Dictionary = _numbers(raw_log, ["schema", "frames", "hitches", "threshold_ms", "over_16ms", "over_16667us", "over_33ms", "at_least_4s"])
 	log["build"] = _build(raw_log.get("build"))
 	var worst: Array = []
 	var entries: Variant = raw_log.get("worst", [])
