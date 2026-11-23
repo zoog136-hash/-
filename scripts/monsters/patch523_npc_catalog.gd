@@ -13,18 +13,7 @@ const NUMERIC_INPUT_POLICY_PATH = "res://data/monsters/current523_numeric_input_
 const NPC_RANGE_INPUT_POLICY_PATH = "res://data/monsters/current523_npc_range_input_policy.json"
 const NPC_RESISTANCE_FIELDS = {"fire":"FireResistance","water":"WaterResistance","earth":"EarthResistance","wind":"AirResistance"}
 const NPC_SPECIAL_RESISTANCE_FIELDS = {"Stun":"stun_resistance","Hold":"hold_resistance","Fear":"fear_resistance"}
-## Derived, successful policy projections only. This cache owns no actor or
-## admission. Bounded per catalog and invalidated when the registry publishes.
-const ACTOR_PROJECTION_CACHE_LIMIT := 128
-const SPECIAL_PROJECTION_KEY := "source_m_special_resistance_input_policy"
-const RANGE_PROJECTION_KEY := "source_m_npc_range_input_policy"
-var _actor_projection_cache: Dictionary = {}
-var _actor_projection_stamp: Array = []
-var actor_projection_cache_enabled: bool = true # A/B test switch; no game setting.
-var content: Dictionary = {}:
-	set(value):
-		content = value
-		_actor_projection_cache.clear()
+var content: Dictionary = {}
 var error: String = ""
 var indexes: Dictionary = {}
 var source_mode: String = "current523_original"
@@ -378,74 +367,8 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	for field_name: String in NPC_STAT_FIELDS:
 		result[field_name] = int(source[NPC_STAT_FIELDS[field_name]])
 	result = _project_numeric_resistance_input(result,source)
-	return _project_actor_policy_inputs(result,source)
-
-## Source rows and policy proof are fixed for a verified input lifetime, but an
-## actor's prior fields are not: e.g. an elite variant may have a different
-## range/resistance. Restore those fields on every hit, never share evidence
-## dictionaries with an actor, and never cache a failed/missing lookup.
-func _project_actor_policy_inputs(record: Dictionary, source: Dictionary) -> Dictionary:
-	var cache: Dictionary = _actor_projection_bucket(source)
-	if cache.has("special"):
-		_apply_cached_special(record,cache.special)
-	else:
-		var prior_evidence: Variant = record.get(SPECIAL_PROJECTION_KEY)
-		record = _project_named_special_resistance_input(record,source)
-		var evidence: Variant = record.get(SPECIAL_PROJECTION_KEY)
-		if not cache.is_empty() and evidence is Dictionary and not is_same(evidence,prior_evidence):
-			var detached: Dictionary = evidence.duplicate(true)
-			for detail: Dictionary in detached.fields.values():
-				detail["prior"] = null
-				detail["prior_present"] = false
-			cache["special"] = detached
-			_store_actor_projection(source,cache)
-	if cache.has("range"):
-		var range_evidence: Dictionary = cache.range.duplicate(true)
-		range_evidence["prior_host_attack_range"] = record.get("attack_range")
-		record["attack_range"] = range_evidence.host_length_input
-		record[RANGE_PROJECTION_KEY] = range_evidence
-	else:
-		var prior_evidence: Variant = record.get(RANGE_PROJECTION_KEY)
-		record = _project_uniform_attack_range_input(record,source)
-		var evidence: Variant = record.get(RANGE_PROJECTION_KEY)
-		if not cache.is_empty() and evidence is Dictionary and not is_same(evidence,prior_evidence):
-			var detached: Dictionary = evidence.duplicate(true)
-			detached["prior_host_attack_range"] = null
-			cache["range"] = detached
-			_store_actor_projection(source,cache)
-	return record
-
-func _actor_projection_bucket(source: Dictionary) -> Dictionary:
-	if not actor_projection_cache_enabled or not source_available or source_mode!="current523_original": return {}
-	var identity: Dictionary = DEFINITIONS.identity()
-	if identity.is_empty() or identity!=source_identity or identity.get("source_sha256")!=SOURCE_SHA: return {}
-	var stamp: Array = [DEFINITIONS.cache_generation(),identity,content.get("schema"),
-		content.get("input_kind"),content.get("source_snapshot"),content.get("source_archive_sha256"),
-		_policy_file(NUMERIC_INPUT_POLICY_PATH).get("sha256"),_policy_file(NPC_RANGE_INPUT_POLICY_PATH).get("sha256")]
-	if _actor_projection_stamp!=stamp:
-		_actor_projection_stamp=stamp
-		_actor_projection_cache.clear()
-	var npc_id: int = int(source.ID)
-	var admitted: Dictionary = admitted_source_identities.get(str(npc_id),{})
-	if admitted.is_empty(): return {}
-	var cached: Dictionary = _actor_projection_cache.get(npc_id,{})
-	if not cached.is_empty() and cached.source==source and cached.admitted==admitted: return cached
-	return {"source":source.duplicate(true),"admitted":admitted.duplicate(true)}
-
-func _store_actor_projection(source: Dictionary, projection: Dictionary) -> void:
-	var npc_id: int = int(source.ID)
-	if _actor_projection_cache.size()>=ACTOR_PROJECTION_CACHE_LIMIT and not _actor_projection_cache.has(npc_id):
-		_actor_projection_cache.erase(_actor_projection_cache.keys()[0])
-	_actor_projection_cache[npc_id] = projection
-
-static func _apply_cached_special(record: Dictionary, template: Dictionary) -> void:
-	var evidence: Dictionary = template.duplicate(true)
-	for detail: Dictionary in evidence.fields.values():
-		var field: String = detail.field
-		detail["prior_present"] = record.has(field)
-		detail["prior"] = record.get(field)
-		if detail.applied: record[field] = detail.receiver_value
-	record[SPECIAL_PROJECTION_KEY] = evidence
+	result = _project_named_special_resistance_input(result,source)
+	return _project_uniform_attack_range_input(result,source)
 
 func _project_numeric_resistance_input(record: Dictionary, source: Dictionary) -> Dictionary:
 	# Called only after the same exact actor/source admission above. This is an
