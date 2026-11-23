@@ -615,17 +615,19 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else world.warehouse.snapshot())
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
-	# A plain save of state already proven unchanged (same definition) skips
-	# the whole-bag proof; any difference re-runs it.
+	# A dungeon-ledger-only save stages no native ownership fields. It has the
+	# same native inputs and transition as an ordinary save. Reuse proof only
+	# on the same deeply compared inventory/instances/consumables/warehouse/
+	# floor/dormant characters and source definition; any change revalidates.
 	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
-	var plain: bool=overrides.is_empty()
+	var plain: bool=overrides.is_empty() or (overrides.size()==1 and overrides.has("source_dungeon_play"))
 	var unchanged: bool=plain and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
 	if not unchanged:
 		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
 		if not issue.is_empty():_last_valid_inputs=[];return issue
 		_last_valid_inputs=inputs.duplicate(true) if plain else []
 	var ledger: Dictionary=state.get(USES,{})
-	# A plain save uses the unchanged live bag as the candidate. The ownership
+	# A plain/native-neutral save uses the live bag as the candidate. The ownership
 	# proof above (or an exact cached match) already checked every receipt.
 	# The second pass exists to check before/after transitions of staged saves.
 	if not plain:
