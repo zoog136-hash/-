@@ -134,30 +134,18 @@ static func tables_to_prepare() -> PackedStringArray:
 static func prepare_table(table: String) -> bool:
 	return not _store(table).is_empty()
 
-## Fixed first-encounter inputs, not the whole NPC/spell closure. Prepare one
-## at a time on the loading screen, through the ordinary verified reader.
-## Later spell/buff dependencies remain lazy. No actor is admitted here.
+## Only indexes of actually queried NPC inputs may survive World release.
+## Never open an extra table on the loading screen. The switch is diagnostic:
+## off retains the former lazy index builder/release policy for total-cost A/B.
 const ENCOUNTER_RELATIONS: Dictionary = {
 	"NpcAttack": "NpcClassID", "NpcAttribute": "NpcClassID",
 	"NpcSpecialResistance": "NpcClassID", "SpellClass": "ID",
 }
 const ENCOUNTER_INDEX_BYTES: int = 2 * 1024 * 1024
+static var npc_fast_index_builds: int = 0
 
-static func encounter_tables_to_prepare() -> PackedStringArray:
-	var pending := PackedStringArray()
-	if not _open(): return pending
-	for table: String in ENCOUNTER_RELATIONS:
-		if not _tables.has(table) or not _relations.has(table + ":" + str(ENCOUNTER_RELATIONS[table])):
-			pending.append(table)
-	return pending
-
-static func prepare_encounter_table(table: String) -> bool:
-	if not ENCOUNTER_RELATIONS.has(table) or not prepare_table(table): return false
-	var field: String = ENCOUNTER_RELATIONS[table]
-	# The ordinary builder checks every owner value and persists the index
-	# under the measured source + table format + field key. No special cache.
-	related_indices(table, field, 0)
-	return _relations.has(table + ":" + field)
+static func npc_index_fast_enabled() -> bool:
+	return OS.get_environment("TWILIGHT_NPC_RELATION_FAST") != "0"
 
 ## Keep only compact indexes within a fixed total budget across both loading
 ## and World's release. Disk handles already survive release; columns do not.
@@ -177,7 +165,7 @@ static func _encounter_indexes() -> Dictionary:
 	return retained
 
 static func release_caches() -> Dictionary:
-	var retained: Dictionary = _encounter_indexes()
+	var retained: Dictionary = _encounter_indexes() if npc_index_fast_enabled() else {}
 	var released: Dictionary = {"tables": 0, "disk_columns": 0, "relations": _relations.size() - retained.size(), "encounter_indexes": retained.size()}
 	for table: String in _tables.keys():
 		var store: Variant = _tables[table]
@@ -977,6 +965,14 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 		if not store.has("rows"):
 			var position: int = (store.columns as PackedStringArray).find(foreign_key)
 			if position >= 0: column = _column_data(store, position)
+		if column is PackedFloat64Array and ENCOUNTER_RELATIONS.get(table) == foreign_key and npc_index_fast_enabled():
+			var fast: Dictionary = _npc_compact_relation(column)
+			if not fast.is_empty():
+				npc_fast_index_builds += 1
+				_relations[key] = fast
+				_write_relation(table, foreign_key, fast)
+				for index: int in _relation_rows(fast, id): result.append(_view(table, _row_at(store, index)))
+				return result
 		# Compact sorted index (keys, starts, rows) instead of a Dictionary of
 		# per-ID arrays: ~1.2M groups cost ~15 MB instead of ~190 MB. Rows
 		# within one ID stay in table order.
@@ -1025,12 +1021,51 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 	for index: int in _relation_rows(_relations[key], id): result.append(_view(table, _row_at(store, index)))
 	return result
 
+## Equivalent compact index for numeric NPC columns. Typed checks avoid the
+## per-row Variant type test and temporary type-list allocation. Every integer
+## is still validated. Compact bounds are stricter than the original integer
+## bounds. Anything else uses the unchanged builder (including its diagnostics).
+## Sorted owner columns need one script pass, no composite sort or division.
+static func _npc_compact_relation(column: PackedFloat64Array) -> Dictionary:
+	var count: int = column.size()
+	if count >= RELATION_ROW_LIMIT: return {}
+	var composite := PackedInt64Array()
+	composite.resize(count)
+	var keys := PackedInt64Array()
+	var starts := PackedInt32Array()
+	var rows := PackedInt32Array()
+	rows.resize(count)
+	var ordered: bool = true
+	for index: int in count:
+		var value: float = column[index]
+		if not is_finite(value) or value != floorf(value) or absf(value) >= RELATION_VALUE_LIMIT: return {}
+		var identifier: int = int(value)
+		composite[index] = identifier * RELATION_ROW_LIMIT + index
+		if index > 0 and value < column[index - 1]: ordered = false
+		if ordered:
+			if keys.is_empty() or keys[keys.size() - 1] != identifier:
+				keys.append(identifier)
+				starts.append(index)
+			rows[index] = index
+	if not ordered:
+		keys.clear(); starts.clear()
+		composite.sort()
+		for position: int in count:
+			var index: int = posmod(composite[position], RELATION_ROW_LIMIT)
+			var identifier: int = (composite[position] - index) / RELATION_ROW_LIMIT
+			if keys.is_empty() or keys[keys.size() - 1] != identifier:
+				keys.append(identifier)
+				starts.append(position)
+			rows[position] = index
+	starts.append(count)
+	return {"keys": keys, "starts": starts, "rows": rows}
+
 ## Table positions (0-based, table order) of the rows related() returns for
 ## the same arguments, from the same relation index (no rows decoded here).
 static func related_indices(table: String, foreign_key: String, id: int) -> PackedInt32Array:
 	# Retained indexes are acceleration data, never permission to use an old
 	# source after the configured archive changes (including a missing pack).
-	if _store(table).is_empty(): return PackedInt32Array()
+	if table in EXCLUDED_TABLES or not _open(): return PackedInt32Array()
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
 		related(table, foreign_key, id)
