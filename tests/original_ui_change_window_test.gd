@@ -15,6 +15,15 @@ const SOURCE_CARDS=preload("res://scripts/lineagem_base508.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
+class VirtualWindow extends "res://scripts/ui/original_ui/source_main_change_window.gd":
+	var mounted_ids: Array[String]=[]
+	func _card(record: Dictionary) -> Dictionary:
+		var scene:=Node2D.new()
+		var id: String=Cards.card_id(record)
+		mounted_ids.append(id)
+		scene.set_meta("source_change_card",{"picture":true,"id":id})
+		return {"ok":true,"scene":scene,"picture":true}
+
 class FakePack extends RefCounted:
 	var manifest: Dictionary={"scenes":{}}
 
@@ -80,12 +89,60 @@ func _run() -> void:
 	_catalog_routing()
 	_hidden_browser_state()
 	_hud_hooks()
+	await _virtual_rows()
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
 	if not pack_dir.is_empty():await _real_pack(pack_dir)
 	print("ORIGINAL_UI_CHANGE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
+
+func _virtual_rows() -> void:
+	var window:=VirtualWindow.new()
+	window._scene=Node2D.new()
+	window._content=Node2D.new()
+	window._scene.add_child(window._content)
+	root.add_child(window._scene)
+	window._card_geometry={"row_height":150.0,"slots":[Vector2(5,25),Vector2(110,25),Vector2(215,25)],"row_x":20.0}
+	for index: int in range(150):window._cards.append({"name":"Card %d"%index,"sourceId":"test:%d"%index})
+	window._scroll_min=-6879.0
+	window._selected=CARDS.card_id(window._cards[0])
+	check(window._refresh_visible_cards()==12 and window.mounted_ids.size()==12,"150-card catalog builds just the first 4 rows")
+	var first: Node2D=window._card_scenes[0]
+	var kept: Node2D=window._card_scenes[6]
+	var wheel:=InputEventMouseButton.new()
+	wheel.pressed=true;wheel.button_index=MOUSE_BUTTON_WHEEL_DOWN
+	window._list_input(wheel)
+	window._list_input(wheel)
+	check(window.mounted_ids.size()==12,"scroll batches its mounts until outside the input callback")
+	await process_frame
+	check(window._card_scenes.get(6)==kept and window._card_scenes.get(0)==first,"overlapping rows reuse existing nodes")
+	check(window._card_scenes.has(17) and not window._card_scenes.has(22),"scroll mounts newly revealed rows only")
+	window._scroll=window._scroll_min
+	window._refresh_visible_cards()
+	check(window._card_scenes.has(149) and not window._card_scenes.has(0),"last card remains reachable without retaining top rows")
+	check(window._selected==CARDS.card_id(window._cards[0]),"scroll does not change selection")
+	var touch:=InputEventScreenTouch.new()
+	touch.pressed=true
+	window._list_input(touch)
+	var captured: Node2D=window._card_scenes[149]
+	var drag:=InputEventScreenDrag.new()
+	drag.relative=Vector2(0,10000)
+	window._list_input(drag)
+	await process_frame
+	check(window._card_scenes.get(149)==captured and window._card_scenes.has(0),"retain the down row while a forwarded drag crosses the list")
+	touch.pressed=false
+	window._list_input(touch)
+	await process_frame
+	check(not window._card_scenes.has(149),"release evicts the pinned offscreen row")
+	window._scroll=0.0
+	window._refresh_visible_cards()
+	check(window._card_scenes.has(0) and window._card_scenes.size()==12 and window._card_scenes[0]!=first,"top rows re-enter within the same bounded mount")
+	window._list_input(wheel)
+	window.close()
+	await process_frame
+	check(not window.is_open() and window._card_scenes.is_empty(),"a pending scroll cannot reopen a closed catalog")
+	check(WINDOW.visible_card_range(2,0.0,150.0)==Vector2i(0,2),"a short catalog mounts both cards")
 
 func _grades_and_slots() -> void:
 	for grade: String in CARDS.GRADES:
