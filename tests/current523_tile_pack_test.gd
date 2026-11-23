@@ -29,6 +29,9 @@ func _store(path: String, data: PackedByteArray) -> void:
 	file.close()
 
 func _initialize() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
 	var pack = PACK.new()
 	check(not pack.load_pack("/nonexistent/current523-tiles", ""), "empty manifest trust pin rejects")
 	check(not pack.load_pack("/nonexistent/current523-tiles", "0".repeat(64)), "missing manifest rejects safely")
@@ -63,7 +66,7 @@ func _initialize() -> void:
 			check(not pack.prefetch(2) and pack.pending_jobs() == 1, "a second request joins the same decode")
 			var waited: int = 0
 			while pack.pending_jobs() > 0 and waited < 2000:
-				pack.pump_jobs(); OS.delay_msec(1); waited += 1
+				pack.pump_jobs(); await process_frame; waited += 1
 			check(pack.prefetch(2) and pack.atlas_loads == 35 and pack.texture_for(2) != null and pack.atlas_loads == 35, "a finished worker decode is cached once")
 			check(not pack.prefetch(3) and pack.texture_for(3) != null and pack.pending_jobs() == 0 and pack.atlas_loads == 36, "an atlas drawn before its worker finishes waits for that decode")
 			check(pack.prefetch(999) == false and pack.pending_jobs() == 0, "an unknown tile is never queued")
@@ -130,7 +133,7 @@ func _initialize() -> void:
 			pack.prefetch(0)
 			var waits: int = 0
 			while pack.pending_jobs() > 0 and waits < 2000:
-				pack.pump_jobs(); OS.delay_msec(1); waits += 1
+				pack.pump_jobs(); await process_frame; waits += 1
 			check(pack.pending_jobs() == 0 and pack.cache_size() == 0, "bad/missing bytes on a worker are not cached either: " + kind)
 			if kind == "missing_original":
 				pack.background_only = true
@@ -139,14 +142,14 @@ func _initialize() -> void:
 				check(pack.texture_for(0) == null and pack.pending_jobs() == 1, "live map cannot join a pending decode synchronously")
 				waits = 0
 				while pack.pending_jobs() > 0 and waits < 2000:
-					pack.pump_jobs(); OS.delay_msec(1); waits += 1
+					pack.pump_jobs(); await process_frame; waits += 1
 				check(pack.prefetch(0) and pack.pending_jobs() == 0 and pack.texture_for(0) == null and pack.problem.contains("Missing"), "live map sees completion with the original failure, without requeuing")
 				_store(root.path_join(row.original_path), original_source)
 				pack.release_held()
 				check(not pack.prefetch(0) and pack.pending_jobs() == 1, "next atlas batch can retry a repaired source")
 				waits = 0
 				while pack.pending_jobs() > 0 and waits < 2000:
-					pack.pump_jobs(); OS.delay_msec(1); waits += 1
+					pack.pump_jobs(); await process_frame; waits += 1
 				check(pack.prefetch(0) and pack.texture_for(0) != null and pack.atlas_loads == 1, "repaired bytes pass the pinned worker decode once")
 				pack.background_only = false
 	var real_count: int = 0
