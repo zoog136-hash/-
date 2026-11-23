@@ -130,10 +130,11 @@ func renderer_spread() -> void:
 	renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC)
 	check(tiles.prefetch_calls - calls_before == cells.size(), "a retry asks one atlas per block, not a record walk (%d)" % (tiles.prefetch_calls - calls_before))
 	check(renderer._bake_pending(PLAY.PENDING_BAKE_BUDGET_USEC) == 0 and tiles.prefetch_calls - calls_before == cells.size(), "within PENDING_RETRY_MSEC a decoding block is not asked again")
-	# Decoded: one block per call at a zero budget, the rest stay pending.
+	# Decoded: an exhausted budget starts no work, the next slice makes progress.
 	tiles.pump()
 	renderer._pending_retry.clear()
-	check(renderer._bake_pending(0) == 1 and renderer._pending_blocks.size() == cells.size() - 1, "a zero budget bakes one block per frame")
+	check(renderer._bake_pending(0) == 0 and renderer._pending_blocks.size() == cells.size(), "a zero budget starts no readiness or bake work")
+	check(renderer._bake_pending(1000) > 0, "a positive slice makes progress")
 	check(PLAY._block_rect(renderer._blocks.keys()[0]).intersects(screen), "the first baked block is on screen")
 	var frames: int = 1
 	while not renderer._pending_blocks.is_empty() and frames < 100:

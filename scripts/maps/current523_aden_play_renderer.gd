@@ -40,7 +40,7 @@ const TILE_PX: int = 24
 ## again (523.637 ran with only 178 MB of device memory free, so this stays
 ## close to one screen and its margin).
 const BLOCK_CACHE_LIMIT: int = 32
-## New margin block images per refresh (blocks on screen always bake at once).
+## Maximum new margin block images per refresh (also subject to the budget).
 const MARGIN_BAKES_PER_REFRESH: int = 6
 ## Longest a new on-screen block waits for worker decodes before decoding the
 ## rest on the main thread (it shows nothing meanwhile). 250 ms was too short
@@ -65,8 +65,8 @@ const BUILD_MARGIN: float = 192.0
 ## and only the blocks still missing bake, a few per frame within this budget
 ## (on-screen blocks first). Measured on the device itself.
 const PENDING_BAKE_BUDGET_USEC: int = 4000
-## Margin blocks a frame build bakes itself stop at this much work; the rest
-## join the pending blocks.
+## Worker-capable frame builds stop starting blocks at this much work; the
+## rest join the pending blocks. A single operation cannot be preempted.
 const BUILD_BAKE_BUDGET_USEC: int = 4000
 ## A pending block whose atlases are still decoding is asked again after this.
 const PENDING_RETRY_MSEC: int = 50
@@ -486,7 +486,8 @@ func _read_chunk(member: String) -> Dictionary:
 	if _unreadable_chunks.has(member): return {}
 	var job: Dictionary = _chunk_jobs.get(member, {})
 	if not job.is_empty():
-		# Already reading on a worker: wait for that one result.
+		# Never join an unfinished read from the active foreground path.
+		if not WorkerThreadPool.is_task_completed(int(job.task)): return {}
 		WorkerThreadPool.wait_for_task_completion(int(job.task))
 		_chunk_jobs.erase(member)
 		return _install_chunk(member, job)
@@ -496,9 +497,8 @@ func _read_chunk(member: String) -> Dictionary:
 		if decoded.is_empty():
 			return _install_chunk(member, {"problem": str(_raw_sources.problem)})
 		return _install_chunk(member, _decode_chunk(_chunk_params(member), decoded))
-	job = _chunk_params(member)
-	_chunk_job(job)
-	return _install_chunk(member, job)
+	_prefetch_chunk(member)
+	return {}
 
 ## Starts reading, checking and projecting `member` on a worker; true when it
 ## is already loaded. S32 reading, its SHA-256 checks and the record projection
@@ -751,6 +751,11 @@ func _block_commands(cell: Vector2i) -> Dictionary:
 	for member: String in _chunk_rects:
 		if (_chunk_rects[member] as Rect2).intersects(near): members.append(member)
 	members.sort()
+	# A pending member is not an empty chunk: never cache a partial picture.
+	var chunks_ready: bool = true
+	for member: String in members:
+		if not _prefetch_chunk(member): chunks_ready = false
+	if not chunks_ready: return {}
 	var by_layer: Dictionary = {}
 	var atlases: Dictionary = {}
 	# Validity is fixed for this synchronous build. Retry failed texture
@@ -829,6 +834,7 @@ func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
 	var members: Array[String] = _block_members(cell)
 	var inputs: Array = []
 	for member: String in members:
+		if _unreadable_chunks.has(member): continue
 		if not _raw_chunks.has(member): return false
 		var layers: Dictionary = _raw_chunks[member]
 		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
@@ -907,31 +913,73 @@ func _block_members(cell: Vector2i) -> Array[String]:
 ## or {} when it is not finished (or an atlas could not be taken).
 func _take_block_job(cell: Vector2i) -> Dictionary:
 	var job: Dictionary = _block_jobs.get(cell, {})
-	if job.is_empty() or not WorkerThreadPool.is_task_completed(int(job.task)): return {}
-	WorkerThreadPool.wait_for_task_completion(int(job.task))
-	_block_jobs.erase(cell)
-	if bool(job.include_objects) != include_objects: return {}
-	if job.has("problem"): return {"problem": job.problem}
+	if job.is_empty(): return {}
+	if job.has("task"):
+		if not WorkerThreadPool.is_task_completed(int(job.task)): return {}
+		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		job.erase("task")
+	if bool(job.include_objects) != include_objects:
+		_block_jobs.erase(cell)
+		return {}
+	if job.has("problem"):
+		_block_jobs.erase(cell)
+		return {"problem": job.problem}
 	var result: Dictionary = job.result
+	if _background_atlases:
+		# Held atlases can be released between readiness and acquisition. Keep
+		# the completed command list until all requests finish; do not rebuild.
+		var ready: bool = true
+		for tile_id: int in result.tile_ids:
+			if not _frame_atlases.has(tile_id) and not _tile_pack.call("prefetch", tile_id): ready = false
+		if not ready: return {}
+	_block_jobs.erase(cell)
 	for entry: Array in result.invalid: _unresolved_tile(int(entry[0]), str(entry[1]))
 	var atlases: Dictionary = {}
+	var failed: Dictionary = {}
 	for tile_id: int in result.tile_ids:
 		var texture: Texture2D = _frame_atlases.get(tile_id)
 		if texture == null:
 			var atlas_started: int = FRAME_HITCH.now()
 			texture = _tile_pack.texture_for(tile_id)
 			FRAME_HITCH.detail("map.block_atlas_acquire", atlas_started)
-		# A missing atlas: the synchronous pass skips its records and logs it.
-		if texture == null: return {"sync": true}
+		if texture == null:
+			if not _background_atlases: return {"sync": true}
+			# prefetch reports terminal failures as ready. Keep the same hole
+			# and diagnostic as the synchronous assembler, without rewalking chunks.
+			_unresolved_tile(tile_id, "M 타일 아틀라스를 읽지 못함: %d %s" % [tile_id, str(_tile_pack.problem)])
+			failed[tile_id] = true
+			continue
 		atlases[tile_id] = texture
+	if not failed.is_empty(): result = _without_failed_atlases(cell, result, failed)
 	FRAME_HITCH.count("map.block_commands_worker")
 	return {"commands": result.commands, "atlases": atlases, "count": result.count, "draws": result.draws, "raw_ff": result.raw_ff, "unresolved": result.unresolved}
+
+## Filter only terminal atlas failures, retaining layer/record order and the
+## top-left ownership accounting used by the synchronous assembler.
+static func _without_failed_atlases(cell: Vector2i, result: Dictionary, failed: Dictionary) -> Dictionary:
+	var out: Dictionary = result.duplicate()
+	var commands: Dictionary = {}
+	for layer: int in result.commands:
+		var lane: PackedInt64Array = result.commands[layer]
+		var kept := PackedInt64Array()
+		for index: int in range(0, lane.size(), 3):
+			if failed.has(lane[index + 2] >> 8):
+				var owned: int = int(Vector2i(lane[index] >> BLOCK_SHIFT, lane[index + 1] >> BLOCK_SHIFT) == cell)
+				out.draws -= 1
+				out.count -= owned
+				out.unresolved += owned
+			else:
+				kept.append(lane[index]); kept.append(lane[index + 1]); kept.append(lane[index + 2])
+		if not kept.is_empty(): commands[layer] = kept
+	out.commands = commands
+	return out
+
 
 ## Both fresh and pending blocks consume completed jobs without waiting.
 ## A verified failed atlas is filtered by the existing block assembler.
 func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) -> Dictionary:
 	var built: Dictionary = {}
-	if _block_jobs.has(cell) or (block_jobs_enabled and not force_sync and not _block_members(cell).is_empty()):
+	if _block_jobs.has(cell) or (block_jobs_enabled and (_background_atlases or not force_sync) and not _block_members(cell).is_empty()):
 		built = _take_block_job(cell)
 		if built.is_empty():
 			_start_block_job(cell, on_screen)
@@ -944,7 +992,8 @@ func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) ->
 
 
 func _drop_block_jobs() -> void:
-	for cell: Vector2i in _block_jobs: WorkerThreadPool.wait_for_task_completion(int((_block_jobs[cell] as Dictionary).task))
+	for cell: Vector2i in _block_jobs:
+		if _block_jobs[cell].has("task"): WorkerThreadPool.wait_for_task_completion(int(_block_jobs[cell].task))
 	_block_jobs.clear()
 
 
@@ -954,7 +1003,7 @@ func _drop_block_jobs() -> void:
 ## "complete": every chunk near it was read}, so a pending block can later ask
 ## only those atlases again instead of walking its records.
 func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
-	if not _tile_pack.has_method("prefetch"): return true
+	var prefetch_atlases: bool = _tile_pack.has_method("prefetch")
 	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
 	var ready: bool = true
 	var asked: Dictionary = {}
@@ -967,7 +1016,7 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 			complete = false
 			continue
 		var layers: Dictionary = _read_chunk(member)
-		if layers.is_empty(): continue
+		if layers.is_empty() or not prefetch_atlases: continue
 		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
 		var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell, {})
 		for layer: int in bins:
@@ -993,7 +1042,6 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 ## A pending block's readiness: its recorded atlas IDs only, once every chunk
 ## near it was read; else the full record walk (which records them).
 func _pending_tiles_ready(cell: Vector2i) -> bool:
-	if not _tile_pack.has_method("prefetch"): return true
 	var tiles: Variant = _pending_tiles.get(cell)
 	if tiles is PackedInt32Array:
 		var ready: bool = true
@@ -1106,9 +1154,10 @@ func _build_frame() -> bool:
 	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
 	for cell: Vector2i in _block_jobs.keys():
 		if _view_has_cell(view, cell): continue
-		var task: int = int(_block_jobs[cell].task)
-		if not WorkerThreadPool.is_task_completed(task): continue
-		WorkerThreadPool.wait_for_task_completion(task)
+		if _block_jobs[cell].has("task"):
+			var task: int = int(_block_jobs[cell].task)
+			if not WorkerThreadPool.is_task_completed(task): continue
+			WorkerThreadPool.wait_for_task_completion(task)
 		_block_jobs.erase(cell)
 	var visible: Array[String] = []
 	for member: String in _chunk_rects:
@@ -1124,16 +1173,20 @@ func _build_frame() -> bool:
 	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
 	var cells: Array[Vector2i] = []
 	var margin_bakes: int = 0
-	var screen_ready: Dictionary = {}
 	var screen_waiting: bool = false
 	var late_bakes: int = 0
 	var now_msec: int = Time.get_ticks_msec()
 	var build_started: int = Time.get_ticks_usec()
 	var pending: Array[Vector2i] = []
+	var order: Array[Vector2i] = []
+	var margin: Array[Vector2i] = []
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
 			var wanted := Vector2i(bx, by)
-			if not _blocks.has(wanted) and _block_rect(wanted).intersects(screen): screen_ready[wanted] = _request_block_tiles(wanted)
+			if _block_rect(wanted).intersects(screen): order.append(wanted)
+			else: margin.append(wanted)
+	order.append_array(margin)
+	var sliced: bool = _background_atlases or block_jobs_enabled or (_raw_sources != null and _raw_sources.has_method("read_member_job"))
 	var draws: int = 0
 	var fresh_atlases: Dictionary = {}
 	var partial: bool = false
@@ -1141,51 +1194,52 @@ func _build_frame() -> bool:
 	var raw_ff: int = 0
 	var unresolved: int = 0
 	var atlases: Dictionary = {}
-	for bx: int in range(first.x, last.x + 1):
-		for by: int in range(first.y, last.y + 1):
-			var cell := Vector2i(bx, by)
-			if not _blocks.has(cell):
-				# Blocks on screen bake now (their atlases were requested above
-				# and decode in parallel); margin blocks bake a few per refresh,
-				# once every atlas they use has decoded on a worker.
-				var on_screen: bool = _block_rect(cell).intersects(screen)
-				if not on_screen and (margin_bakes >= MARGIN_BAKES_PER_REFRESH or Time.get_ticks_usec() - build_started >= BUILD_BAKE_BUDGET_USEC or not _request_block_tiles(cell)):
+	for cell: Vector2i in order:
+		if not _blocks.has(cell):
+			var on_screen: bool = _block_rect(cell).intersects(screen)
+			if (sliced and Time.get_ticks_usec() - build_started >= BUILD_BAKE_BUDGET_USEC) or (not on_screen and margin_bakes >= MARGIN_BAKES_PER_REFRESH):
+				partial = true
+				screen_waiting = screen_waiting or on_screen
+				pending.append(cell)
+				continue
+			var ready: bool = _pending_tiles_ready(cell)
+			if not on_screen and not ready:
+				partial = true
+				pending.append(cell)
+				continue
+			# A new block on screen waits up to ON_SCREEN_WAIT_MSEC for its
+			# atlases to decode on workers instead of decoding them here (on
+			# the phone ~60 ms each, several per teleport or fast walk).
+			if on_screen and not ready:
+				var since: int = int(_screen_wait.get(cell, now_msec))
+				_screen_wait[cell] = since
+				if _background_atlases or now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
 					partial = true
+					screen_waiting = true
 					pending.append(cell)
 					continue
-				# A new block on screen waits up to ON_SCREEN_WAIT_MSEC for its
-				# atlases to decode on workers instead of decoding them here (on
-				# the phone ~60 ms each, several per teleport or fast walk).
-				if on_screen and not bool(screen_ready.get(cell, true)):
-					var since: int = int(_screen_wait.get(cell, now_msec))
-					_screen_wait[cell] = since
-					if _background_atlases or now_msec - since < ON_SCREEN_WAIT_MSEC or late_bakes >= LATE_BAKES_PER_REFRESH:
-						partial = true
-						screen_waiting = true
-						pending.push_front(cell)
-						continue
-					late_bakes += 1
-				_screen_wait.erase(cell)
-				var built: Dictionary = _ready_block_commands(cell, on_screen, on_screen and not bool(screen_ready.get(cell, true)))
-				if built.is_empty():
-					partial = true
-					if on_screen: screen_waiting = true
-					pending.append(cell)
-					continue
-				if built.has("problem"):
-					if problem.is_empty(): return _fail(str(built.problem))
-					return false
-				if not on_screen: margin_bakes += 1
-				_blocks[cell] = _bake_block(cell, built)
-			_block_recent.erase(cell); _block_recent.append(cell)
-			var block: Dictionary = _blocks[cell]
-			cells.append(cell)
-			count += int(block.count)
-			draws += int(block.draws)
-			raw_ff += int(block.raw_ff)
-			unresolved += int(block.unresolved)
-			for tile_id: int in block.atlas_ids: atlases[tile_id] = true
-			for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
+				late_bakes += 1
+			_screen_wait.erase(cell)
+			var built: Dictionary = _ready_block_commands(cell, on_screen, on_screen and not ready)
+			if built.is_empty():
+				partial = true
+				if on_screen: screen_waiting = true
+				pending.append(cell)
+				continue
+			if built.has("problem"):
+				if problem.is_empty(): return _fail(str(built.problem))
+				return false
+			if not on_screen: margin_bakes += 1
+			_blocks[cell] = _bake_block(cell, built)
+		_block_recent.erase(cell); _block_recent.append(cell)
+		var block: Dictionary = _blocks[cell]
+		cells.append(cell)
+		count += int(block.count)
+		draws += int(block.draws)
+		raw_ff += int(block.raw_ff)
+		unresolved += int(block.unresolved)
+		for tile_id: int in block.atlas_ids: atlases[tile_id] = true
+		for tile_id: int in block.get("atlases", {}): fresh_atlases[tile_id] = block.atlases[tile_id]
 	if draws == 0 and unresolved == 0 and not screen_waiting: return _fail("현재 화면의 M 원문 타일을 표시하지 못했습니다.")
 	# Blocks still missing bake a few per frame (_bake_pending); the frame
 	# itself stays built for this view.
@@ -1302,9 +1356,11 @@ static func _view_has_cell(view: Rect2, cell: Vector2i) -> bool:
 
 
 ## Bakes pending blocks of the built view, on-screen ones first, until
-## `budget_usec` of work is spent (at least one bake per call; < 0 = all ready).
+## `budget_usec` of work is spent (< 0 = all ready; 0 = no new work).
+## Check before each block, including readiness attempts that bake nothing.
+## One operation may overrun; the next block is deferred.
 ## A block whose atlases are still decoding is asked again PENDING_RETRY_MSEC
-## later; an on-screen one bakes regardless after ON_SCREEN_WAIT_MSEC.
+## later; only legacy packs may fall back after ON_SCREEN_WAIT_MSEC.
 ## Returns the number of blocks baked.
 func _bake_pending(budget_usec: int) -> int:
 	if _pending_blocks.is_empty(): return 0
@@ -1326,7 +1382,7 @@ func _bake_pending(budget_usec: int) -> int:
 		if _blocks.has(cell): continue
 		# A block outside the current built view is no longer wanted.
 		if keep.has_area() and not _view_has_cell(keep, cell): _pending_retry.erase(cell); _pending_tiles.erase(cell); continue
-		if budget_usec >= 0 and baked > 0 and Time.get_ticks_usec() - started >= budget_usec:
+		if budget_usec >= 0 and Time.get_ticks_usec() - started >= budget_usec:
 			remaining.append_array(order.slice(index))
 			break
 		if now_msec < int(_pending_retry.get(cell, 0)):
