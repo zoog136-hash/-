@@ -6,6 +6,7 @@ const CLOCK = preload("res://scripts/quests/quest_service.gd")
 const ORIM = preload("res://scripts/orim523/orim523.gd")
 const ORIM_RUN = preload("res://scripts/orim523/orim523_run.gd")
 const ORIM_VIEW = preload("res://scripts/orim523/orim523_actor_view.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 ## Own: kill records of an Orim run are saved at most this often (the user's
 ## 10-second batching of non-critical saves); boss/finish/claim save at once.
 const ORIM_SAVE_MSEC := 10000
@@ -486,24 +487,43 @@ func tick(delta: float, now: int = -1) -> void:
 	if not pending.is_empty():
 		var changes:=pending_changes()
 		if changes.get("blocked",false):problem=str(changes.reason);return
+		var save_started := FRAME_HITCH.now()
 		var done:=commit(pending.candidate,changes)
+		FRAME_HITCH.detail("dungeon.save_retry", save_started)
 		if done.get("ok",false):
 			pending.clear()
 			if state.active.is_empty() or state.active.status!="active":cleanup()
 			if changes.has("experience"):world._check_level_up();world._request_deferred_save()
 		return
-	if special_return_land>=0 and state.active.is_empty():_retry_special_return()
+	if special_return_land>=0 and state.active.is_empty():
+		var return_started := FRAME_HITCH.now()
+		_retry_special_return()
+		FRAME_HITCH.detail("dungeon.return_retry", return_started)
 	if state.active.is_empty() or state.active.status!="active":return
 	var run: Dictionary=state.active
 	if run.kind=="special":
 		_tick_special(run,now);changed.emit();return
-	if str(run.map_id)!=world.active_map_id:stop(now);return
+	if str(run.map_id)!=world.active_map_id:
+		var leave_started := FRAME_HITCH.now()
+		stop(now)
+		FRAME_HITCH.detail("dungeon.leave_map", leave_started)
+		return
 	if run.has("land") and world.has_method("orim_current_land"):
 		var here: Dictionary=world.orim_current_land()
-		if not here.is_empty() and int(here.land_id)!=int(run.land):stop(now,false);return
-	if orim_dirty and Time.get_ticks_msec()-orim_last_save_ms>=ORIM_SAVE_MSEC:_orim_flush()
+		if not here.is_empty() and int(here.land_id)!=int(run.land):
+			var leave_started := FRAME_HITCH.now()
+			stop(now,false)
+			FRAME_HITCH.detail("dungeon.leave_land", leave_started)
+			return
+	if orim_dirty and Time.get_ticks_msec()-orim_last_save_ms>=ORIM_SAVE_MSEC:
+		var save_started := FRAME_HITCH.now()
+		_orim_flush()
+		FRAME_HITCH.detail("dungeon.orim_checkpoint", save_started)
 	if now>=int(run.started)+int(run.duration):
-		finish_orim(false,now);return
+		var finish_started := FRAME_HITCH.now()
+		finish_orim(false,now)
+		FRAME_HITCH.detail("dungeon.orim_timeout", finish_started)
+		return
 	spawn_due(now)
 	changed.emit()
 
@@ -518,7 +538,10 @@ func _tick_special(run: Dictionary, now: int) -> void:
 	if here.is_empty() or int(here.land_id)!=int(run.get("land",-1)):
 		account_special(now,true);special_note="던전에서 나왔습니다.";return
 	var result: Dictionary=account_special(now)
-	if result.get("exhausted",false):_special_return("던전 이용 시간이 모두 소진되어 마을로 귀환합니다.")
+	if result.get("exhausted",false):
+		var return_started := FRAME_HITCH.now()
+		_special_return("던전 이용 시간이 모두 소진되어 마을로 귀환합니다.")
+		FRAME_HITCH.detail("dungeon.special_return", return_started)
 
 ## Seconds left in a special session (the smallest of its pools).
 func special_left(now: int = -1) -> int:
@@ -531,18 +554,34 @@ func special_left(now: int = -1) -> int:
 	return left
 
 func account_special(now: int, stop: bool = false) -> Dictionary:
-	var next:=state.duplicate(true);var run: Dictionary=next.active
-	if run.is_empty() or run.kind!="special":return {"ok":false,"reason":"시간 세션 없음"}
-	var elapsed:=maxi(0,now-int(run.last)-special_skip);var exhausted:=false
+	var active: Dictionary=state.active
+	if active.is_empty() or active.kind!="special":return {"ok":false,"reason":"시간 세션 없음"}
+	var elapsed:=maxi(0,now-int(active.last)-special_skip)
+	# Do not clone the entire ledger (including unrelated rewards and receipts)
+	# on each half-second poll. An already-empty pool still commits immediately.
+	var exhausted:=false
+	for id: int in active.groups:
+		var pool_state: Dictionary=state.pools[str(id)]
+		if elapsed>=int(pool_state.base)+int(pool_state.bonus):
+			exhausted=true
+			break
+	if not (elapsed>=SPECIAL_SAVE_SECONDS or stop or exhausted):return {"ok":true}
+	# Stage just the changed dictionaries; commit() deep-copies the complete
+	# candidate before validation and disk write. Live state stays untouched.
+	var next:=state.duplicate()
+	var run: Dictionary=active.duplicate()
+	next.active=run
+	next.pools=state.pools.duplicate()
 	for id: int in run.groups:
-		var p: Dictionary=next.pools[str(id)]
+		var p: Dictionary=state.pools[str(id)].duplicate()
+		next.pools[str(id)]=p
 		var drain:=mini(elapsed,int(p.base)+int(p.bonus));var from_base:=mini(drain,int(p.base))
 		p.base=int(p.base)-from_base;p.bonus=int(p.bonus)-(drain-from_base)
-		exhausted=exhausted or int(p.base)+int(p.bonus)==0
 	run.last=maxi(now,int(run.last))
 	if stop or exhausted:next.active={}
-	if not (elapsed>=SPECIAL_SAVE_SECONDS or stop or exhausted):return {"ok":true}
+	var save_started := FRAME_HITCH.now()
 	var result:=commit(next)
+	FRAME_HITCH.detail("dungeon.special_exhausted" if exhausted else ("dungeon.special_stop" if stop else "dungeon.special_checkpoint"), save_started)
 	if result.get("ok",false):special_skip=0
 	result["exhausted"]=exhausted and result.get("ok",false)
 	return result

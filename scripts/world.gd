@@ -7287,7 +7287,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if collection_override.is_empty(): _sync_item_instances()
 	var data: Dictionary = {
 		"unconfirmed523":unconfirmed523.snapshot(),
-		"source_dungeon_play":dungeon_play.snapshot(),
+		# The staged dungeon candidate already captured actors' HP/MP; it is
+		# still detached by staged_overrides below. Do not rebuild the live copy.
+		"source_dungeon_play":{} if collection_override.has("source_dungeon_play") else dungeon_play.snapshot(),
 		"source_dungeon523": source_dungeon_runs.state.duplicate(true),
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
