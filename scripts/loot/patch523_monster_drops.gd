@@ -1,4 +1,5 @@
 extends RefCounted
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
 const KIND = "patch523_monster_drop_membership"
@@ -601,7 +602,7 @@ static func _working_document(original: Dictionary) -> Dictionary:
 		if value is Dictionary or value is Array: document[key] = value.duplicate(false)
 	return document
 
-static func _current_host_bindings(original: Dictionary, catalog: Dictionary) -> Dictionary:
+static func _current_host_bindings(original: Dictionary, catalog: Dictionary, admissions: Dictionary = {}) -> Dictionary:
 	# Same bounded public compiler binding: exact Inven ID/URL, one current
 	# inventory name, and one of the two declared localized descriptors.
 	# A former native sidecar DTO/alias is never accepted as this host source.
@@ -622,6 +623,7 @@ static func _current_host_bindings(original: Dictionary, catalog: Dictionary) ->
 		# and unsupported conditions; no unsupported effect becomes a dummy.
 		if detail.get("excluded",false): continue
 		var admission: Dictionary = _current_host_condition_admission(detail)
+		admissions[id] = admission
 		if not admission.is_empty():
 			document.unresolved_item_ids[id] = admission.reason
 			document.host_binding_problems[id] = admission.reason
@@ -659,7 +661,7 @@ static func _current_host_bindings(original: Dictionary, catalog: Dictionary) ->
 		document.host_binding_problems[id] = reason
 	return document
 
-static func _current_native_bindings(document: Dictionary,catalog: Dictionary,context: Dictionary) -> Dictionary:
+static func _current_native_bindings(document: Dictionary,catalog: Dictionary,context: Dictionary,admissions: Dictionary = {}) -> Dictionary:
 	if document.is_empty():return {}
 	var index: Variant=catalog.get("patch523_by_name",{})
 	if not index is Dictionary:return document
@@ -670,7 +672,9 @@ static func _current_native_bindings(document: Dictionary,catalog: Dictionary,co
 		var detail: Dictionary=document.source_item_references[id]
 		var current: Dictionary=definition_id(id).get("native_record",{})
 		if current.is_empty() or detail.get("excluded",false):continue
-		var condition: Dictionary=_current_host_condition_admission(detail)
+		# The host phase already walked this same immutable ItemData tree.
+		# Cache only for this resolution, never across clock/catalog changes.
+		var condition: Dictionary=admissions[id] if admissions.has(id) else _current_host_condition_admission(detail)
 		if not condition.is_empty():
 			var unresolved: bool=false
 			for evidence: Dictionary in condition.get("evidence",[]):
@@ -1022,7 +1026,7 @@ static func currency_identity_name(item: Dictionary) -> String:
 	if not labels.has(id) or NATIVE_FIELDS.field(item,"source_display_name") != labels[id]: return ""
 	return preload("res://scripts/loot/currency_drops.gd").canonical_name(str(labels[id]))
 
-static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary) -> Dictionary:
+static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary, defer_variant_records: bool = false) -> Dictionary:
 	var id: String = str(int(value.get("source_npc_id", -1)))
 	var npc: Dictionary = document.get("npcs", {}).get(id, {})
 	var report: Dictionary = {"npc_id":id, "missing_item_bindings":0, "quest_rows_blocked":0, "test_item_rows_blocked":0, "unsupported_bless_rows":0, "unsupported_currency_rows":0, "duplicate_rows_ignored":0}
@@ -1044,25 +1048,36 @@ static func resolve(document: Dictionary, value: Dictionary, catalog: Dictionary
 		if bless not in [1, 2, 3] or (bless != 1 and not item.get("source_m_native_item", false) and (not equipment(item) or item.get("slot") == "consumable")):
 			report.unsupported_bless_rows += 1; continue
 		var kind: String = item_kind(item)
-		if not groups.has(item_id): groups[item_id] = {"item_class_id":int(item_id), "item":item, "kind":kind, "variants":{}}
+		if not groups.has(item_id):
+			groups[item_id] = {"item_class_id":int(item_id), "item":item, "kind":kind, "variants":{}}
+			if defer_variant_records: groups[item_id]["deferred_variant_records"] = true
 		var key: String = "%d:%d" % [bless, int(row.RequiredQuestID)]
 		var variants: Dictionary = groups[item_id].variants
 		if variants.has(key):
 			variants[key].source_rows.append(row.duplicate(true))
 			report.duplicate_rows_ignored += 1
 			continue
-		variants[key] = {"source_snapshot":"patch523", "source_npc_id":int(id), "source_item_class_id":int(item_id), "bless_raw":bless, "bless_state":str(document.bless_codes[str(bless)]), "required_quest_id":int(row.RequiredQuestID), "source_rows":[row.duplicate(true)], "selection_policy":"host_uniform_distinct_items_then_distinct_variants", "quantity_policy":"host_one", "variant_record":variant_item(item, bless)}
+		var proof: Dictionary = {"source_snapshot":"patch523", "source_npc_id":int(id), "source_item_class_id":int(item_id), "bless_raw":bless, "bless_state":str(document.bless_codes[str(bless)]), "required_quest_id":int(row.RequiredQuestID), "source_rows":[row.duplicate(true)], "selection_policy":"host_uniform_distinct_items_then_distinct_variants", "quantity_policy":"host_one"}
+		if not defer_variant_records: proof["variant_record"] = variant_item(item, bless)
+		variants[key] = proof
 	return groups
 
-static func candidates(value: Dictionary, catalog: Dictionary) -> Dictionary:
+static func candidates(value: Dictionary, catalog: Dictionary, defer_variant_records: bool = false) -> Dictionary:
 	# data() and this actual membership read both use current originals. The
 	# preserved legacy decoder/installer is never a final input or fallback.
+	var started: int = FRAME_HITCH.now()
 	var original: Dictionary = _current_source_document(value)
-	var document: Dictionary = _current_native_bindings(_current_host_bindings(original,catalog),catalog,value) if not original.is_empty() else {}
-	if document.is_empty():
+	started = FRAME_HITCH.detail_next("drop.membership", started)
+	if original.is_empty():
 		diagnostics = {"status":"current523_drop_input_unavailable","reason":_current_input_problem if not _current_input_problem.is_empty() else "current523_original_membership_unavailable","source_problem":CURRENT_SOURCE.problem()}
 		return {}
-	var groups: Dictionary = resolve(document,value,catalog)
+	var admissions: Dictionary = {}
+	var host: Dictionary = _current_host_bindings(original,catalog,admissions)
+	started = FRAME_HITCH.detail_next("drop.host_bind", started)
+	var document: Dictionary = _current_native_bindings(host,catalog,value,admissions)
+	started = FRAME_HITCH.detail_next("drop.native_bind", started)
+	var groups: Dictionary = resolve(document,value,catalog,defer_variant_records)
+	FRAME_HITCH.detail("drop.resolve", started)
 	diagnostics["input_kind"] = document.input_kind
 	diagnostics["source_input_identity"] = document.source_input_identity.duplicate(true)
 	diagnostics["binding_provenance"] = document.binding_provenance.duplicate(true)
@@ -1089,9 +1104,13 @@ static func pick(groups: Dictionary, kind: String, grade: String, rng: RandomNum
 	var selected: Dictionary = choices[rng.randi_range(0, choices.size()-1)]
 	var keys: Array = selected.variants.keys()
 	keys.sort()
-	var proof: Dictionary = selected.variants[keys[rng.randi_range(0, keys.size()-1)]].duplicate(true)
-	var item: Dictionary = proof.get("variant_record", selected.item).duplicate(true)
+	var variant: Dictionary = selected.variants[keys[rng.randi_range(0, keys.size()-1)]]
+	# Caller receives an owned item DTO and proof, but a candidate list does
+	# not need copies of every unselected blessed/normal/cursed record.
+	var item: Dictionary = variant_item(selected.item, int(variant.bless_raw)) if selected.get("deferred_variant_records",false) else variant.get("variant_record", selected.item).duplicate(true)
+	var proof: Dictionary = variant.duplicate(false)
 	proof.erase("variant_record")
+	proof = proof.duplicate(true)
 	item["source_m_item_id"] = selected.item_class_id
 	item["bless_state"] = proof.bless_state
 	item["source_m_drop_proof"] = proof

@@ -1,5 +1,6 @@
 extends RefCounted
 class_name TwilightGroundLootManager
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const LOOT = preload("res://scripts/loot/ground_loot.gd")
@@ -98,13 +99,19 @@ func _find_spot(origin: Vector2) -> Vector2:
 
 func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "", metadata: Dictionary = {}) -> Button:
 	var staged: Dictionary=stage_spawn(item_name,origin,quantity,batch,metadata)
-	return publish_spawn(staged) if not staged.is_empty() else null
+	# No call/yield from a transaction can change geometry between the
+	# immediately paired stage and commit. Never skip the revalidation on
+	# externally staged records (inventory transfer can save before publish).
+	return _commit_spawn(staged) if not staged.is_empty() else null
 
 func stage_spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "", metadata: Dictionary = {}) -> Dictionary:
-	var item: Dictionary = metadata.get("item_record",item_record(item_name))
+	var item: Dictionary = metadata["item_record"] if metadata.has("item_record") else item_record(item_name)
 	if item.is_empty() or quantity < 1 or not origin.is_finite(): return {}
+	var started: int = FRAME_HITCH.now()
 	var point: Vector2 = _find_spot(origin)
+	FRAME_HITCH.detail("drop.position", started)
 	if not point.is_finite(): return {}
+	started = FRAME_HITCH.now()
 	var now: float = Time.get_unix_time_from_system()
 	var record: Dictionary = {"id":new_id(), "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 		"map_id":current_map, "position":[point.x, point.y], "created_at":now, "expires_at":now + LIFETIME, "state":"ground", "hunt_batch":batch}
@@ -115,6 +122,7 @@ func stage_spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: S
 	# Snapshot only explicitly identified awakening materials at spawn time.
 	# Old name-only floor saves never acquire provenance during reload.
 	if preload("res://scripts/cards/source_awakening_items.gd").recognized(item):record["item_record"]=item.duplicate(true)
+	FRAME_HITCH.detail("drop.stage", started)
 	return record
 
 func publish_spawn(staged: Dictionary) -> Button:
@@ -123,15 +131,24 @@ func publish_spawn(staged: Dictionary) -> Button:
 	if not point is Array or point.size()!=2:return null
 	var position:=Vector2(float(point[0]),float(point[1]))
 	if not position.is_finite() or not bool(world.call("_is_walkable_world",position)) or _occupied(position):return null
+	return _commit_spawn(staged)
+
+func _commit_spawn(staged: Dictionary) -> Button:
+	var started: int = FRAME_HITCH.now()
 	var record: Dictionary=staged.duplicate(true)
 	records[record.id]=record;_index_record(record);revision+=1
-	return _create_view(record)
+	started = FRAME_HITCH.detail_next("drop.commit", started)
+	var view: Button = _create_view(record)
+	FRAME_HITCH.detail("drop.view", started)
+	return view
 
 func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
 	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
+	var started: int = FRAME_HITCH.now()
 	var ground_request: Dictionary = _source_ground_request(item_data,str(record["id"]))
+	FRAME_HITCH.detail("drop.visual_request", started)
 	var icon: Texture2D = null
 	var images: Dictionary = world.catalog_image_index.get("아이템",{})
 	if ground_request.is_empty():
