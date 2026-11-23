@@ -54,6 +54,7 @@ var totem_combat = preload("res://scripts/progression/totem_combat.gd").new()
 
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const SAVE_TRIM = preload("res://scripts/loot/save_provenance_trim.gd")
+const SAVE_SNAPSHOT = preload("res://scripts/save/owned_snapshot.gd")
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
 const CATALOG_PATH: String = "res://data/catalog_v19.json"
@@ -7005,13 +7006,17 @@ var _background_save_job: Dictionary = {}
 func background_save_pending() -> bool:
 	return _background_save_task >= 0
 
-func _start_background_save(data: Dictionary, prior_hash: String, started_usec: int) -> Error:
+func _start_background_save(data: Dictionary, prior_hash: String, started_usec: int, owned_fields: Dictionary = {}) -> Error:
 	var pre: Error = equipment_collections.precheck_write(save_path())
 	if pre != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % pre)
 		return pre
-	# The worker owns this copy; the live game keeps changing its own state.
-	var job: Dictionary = {"path":save_path(),"data":data.duplicate(true),"prior_hash":prior_hash,"error":ERR_BUSY}
+	# Exporters below already detached some fields. Transfer only those exact
+	# roots; copy every live/overridden/trimmed replacement as before.
+	var freeze_started: int = FRAME_HITCH.now()
+	var frozen: Dictionary = SAVE_SNAPSHOT.freeze(data, owned_fields)
+	FRAME_HITCH.detail("save.freeze", freeze_started)
+	var job: Dictionary = {"path":save_path(),"data":frozen,"prior_hash":prior_hash,"error":ERR_BUSY}
 	# Everything changed so far is in this save; later changes queue a new one.
 	deferred_save.cancel()
 	_background_save_job = job
@@ -7285,6 +7290,8 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if validate_only: return OK
 	# Transactions supply validated staged state. Commit it before mutating live resources.
 	if collection_override.is_empty(): _sync_item_instances()
+	# Preserve exporter order. Capture only audited, independently owned roots.
+	var owned_save_fields: Dictionary = {}
 	var data: Dictionary = {
 		"unconfirmed523":unconfirmed523.snapshot(),
 		"source_dungeon_play":dungeon_play.snapshot(),
@@ -7317,11 +7324,11 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
 		SOURCE_SHOP.SAVE_KEY: source_shop.export_state(),
-		"quest_state": quest_service.export_state(),
-		"monsterbook523": monsterbook523.export_state(),
+		"quest_state": SAVE_SNAPSHOT.capture(owned_save_fields,"quest_state",quest_service.export_state()),
+		"monsterbook523": SAVE_SNAPSHOT.capture(owned_save_fields,"monsterbook523",monsterbook523.export_state()),
 		"tj_coupons523": tj_coupons.core.export_state(),
 		"protection523": protection523.snapshot(),
-		"equipment_collections": equipment_collections.export_state(),
+		"equipment_collections": SAVE_SNAPSHOT.capture(owned_save_fields,"equipment_collections",equipment_collections.export_state()),
 		"totem_state": totems.export_state(),
 		"growth": growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
@@ -7338,7 +7345,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		DUNGEON_EXTRAS523.SAVE_KEY: dungeon_extras523.export_state(),
 		SKILL_CARD523.SAVE_KEY: skill_cards523.export_state(),
 		"ground_drops": _ground_drops_snapshot(),
-		"warehouse": warehouse.snapshot(),
+		"warehouse": SAVE_SNAPSHOT.capture(owned_save_fields,"warehouse",warehouse.snapshot()),
 		"inventory_automation": inventory_automation.state.duplicate(true),
 		"crafting_log": crafting_log,
 		"patch523_crafting_usage":patch523_crafting_usage,
@@ -7362,7 +7369,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
-		"consumable_state": consumable_service.call("export_state"),
+		"consumable_state": SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"combination523":combinations.export_state(),
@@ -7447,7 +7454,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	elif FileAccess.file_exists(save_path()):
 		prior_owner_hash=FileAccess.get_sha256(save_path())
 	if want_background and background_save_enabled and collection_override.is_empty() and movement_override.is_empty() and pending_map_save_record.is_empty() and not observed_content.has("state") and not equipment_collections.test_save_writer.is_valid():
-		return _start_background_save(data, prior_owner_hash, save_started_usec)
+		return _start_background_save(data, prior_owner_hash, save_started_usec, owned_save_fields)
 	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
