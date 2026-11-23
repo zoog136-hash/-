@@ -487,7 +487,6 @@ func _process_step(_delta: float) -> void:
 	if _pack.manifest.get("scenes",{}).has(AutoMessage.MEMBER):_refresh_auto_message()
 	if _system_message_priority!=0:refresh_system_message()
 	stage=FRAME_HITCH.detail_next("hud.messages",stage)
-	if _inventory_view!=null:_inventory_view.expire_cache()
 	if inventory_is_open():
 		if not _source_input_captured(hud):
 			var signature: int=_inventory_model_signature()
@@ -806,7 +805,6 @@ func refresh_quickslots() -> Dictionary:
 	if _source_input_captured(hud):return {"ok":true,"handled":_quickslot_view!=null and _quickslot_view.is_open(),"refresh_pending":true}
 	if _icons_refresh_pending:
 		_icons_refresh_pending=false
-		if _inventory_view!=null:_inventory_view.invalidate_parked_cache()
 		if inventory_is_open():
 			_inventory_result=_inventory_view.refresh()
 			if _inventory_result.get("handled",false) and not _inventory_result.get("refresh_pending",false):
@@ -2081,9 +2079,7 @@ func _exit_tree() -> void:
 func _notification(what: int) -> void:
 	if not is_inside_tree() or _pack==null:return
 	match what:
-		NOTIFICATION_APPLICATION_PAUSED:
-			if _inventory_view!=null:_inventory_view.invalidate_parked_cache()
-			MENU_TRACE.lifecycle("paused")
+		NOTIFICATION_APPLICATION_PAUSED:MENU_TRACE.lifecycle("paused")
 		NOTIFICATION_APPLICATION_RESUMED:MENU_TRACE.lifecycle("resumed")
 		NOTIFICATION_APPLICATION_FOCUS_IN:MENU_TRACE.lifecycle("focus_in")
 		NOTIFICATION_APPLICATION_FOCUS_OUT:MENU_TRACE.lifecycle("focus_out")
@@ -2106,7 +2102,6 @@ func release(restore_legacy: bool=true) -> void:
 	close_change_window()
 	if _inventory_lock_view!=null:_inventory_lock_view.close()
 	close_inventory()
-	if _inventory_view!=null:_inventory_view.invalidate_parked_cache()
 	if _quickslot_view!=null:_quickslot_view.close()
 	if _joystick_view!=null:
 		_joystick_view.close(restore_legacy)

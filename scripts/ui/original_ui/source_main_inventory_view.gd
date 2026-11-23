@@ -32,16 +32,6 @@ var _inventory_scene: Node2D
 var _hits: Dictionary={}
 var _bounds: Control
 var _refreshing: bool=false
-# One hidden bounded viewport for somebody reopening the same bag soon.
-# It is never input-active, never retained across pack/controller changes,
-# and is released by the HUD after this short inactivity window.
-const REOPEN_WINDOW_MS: int=5000
-const REOPEN_HIT_LIMIT: int=80
-var _parked_until: int=0
-var _resume_process_mode: int=Node.PROCESS_MODE_INHERIT
-var _bound_inputs: Array=[]
-var _bound_asset_key: Array=[]
-var _authored_assignments: Dictionary={}
 var _search: RefCounted
 var search_result: Dictionary={}
 ## Vertical pitch between original slot rows (the authored horizontal slot
@@ -52,7 +42,6 @@ const ROW_TAIL: float=40.0
 var _scroll_content: Node2D
 var _scroll_top: float=0.0
 var _scroll_bottom: float=0.0
-var _scroll_view_height: float=-1.0
 var _scroll_dragging: bool=false
 var _scroll_moved: float=0.0
 var _row_scenes: Array[Node2D]=[]
@@ -73,7 +62,7 @@ var _layout: int=0
 var _marker_key: int=0
 ## Work counters: full stages, row scenes built, rows-only refreshes and
 ## slots patched by them.
-var stats: Dictionary={"stages":0,"line_builds":0,"lines_freed":0,"rows_only":0,"slot_patches":0,"reopens":0}
+var stats: Dictionary={"stages":0,"line_builds":0,"lines_freed":0,"rows_only":0,"slot_patches":0}
 
 func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(hud):return _unsupported("source_inventory_view_hud_unavailable")
@@ -100,102 +89,22 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 func open(parent: Node) -> Dictionary:
 	if not is_instance_valid(parent):return _unsupported("source_inventory_view_existing_canvas_required")
 	_parent=weakref(parent)
-	var started: int=FRAME_HITCH.now()
-	var reused: Dictionary=_try_reopen(parent)
-	if reused.get("ok",false):
-		FRAME_HITCH.detail("ui.inventory_reopen",started)
-		return reused
-	if _parked_until!=0: invalidate_cache()
 	return _stage(parent,true)
 
 func is_open() -> bool:
-	return _parked_until==0 and is_instance_valid(_scene) and not _scene.is_queued_for_deletion() and _scene.is_inside_tree()
+	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion() and _scene.is_inside_tree()
 
-func close(keep_warm: bool=true) -> void:
+func close() -> void:
 	close_search()
-	if not keep_warm: invalidate_cache(); return
-	if not is_open():return
-	if _hits.size()>REOPEN_HIT_LIMIT or not is_instance_valid(_scroll_content): invalidate_cache(); return
-	_parked_until=Time.get_ticks_msec()+REOPEN_WINDOW_MS
-	_resume_process_mode=_scene.process_mode
-	_scene.hide()
-	_scene.process_mode=Node.PROCESS_MODE_DISABLED
-	_scroll_dragging=false
-	_scroll_moved=0.0
-	# Closing this native presentation never clears selection or owns saves.
-
-func expire_cache() -> void:
-	if _parked_until!=0 and Time.get_ticks_msec()>=_parked_until:invalidate_cache()
-
-func invalidate_parked_cache() -> void:
-	if _parked_until!=0:invalidate_cache()
-
-func invalidate_cache() -> void:
 	var previous: Node2D=_scene
-	_parked_until=0
 	_scene=null
 	_inventory_scene=null
 	_bounds=null
-	_scroll_content=null
-	_scroll_view_height=-1.0
 	_hits.clear()
-	_row_scenes.clear()
-	_line_scenes.clear()
-	_lines.clear()
-	_bound_inputs.clear()
-	_bound_asset_key.clear()
-	_authored_assignments.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-
-func _source_asset_key() -> Array:
-	var bag: Object=_bag.get_ref() if _bag!=null else null
-	return [str(_pack.get("manifest_sha256")) if _pack!=null else "",str(_pack.get("root")) if _pack!=null else "",bag.get("native_inventory_asset_revision") if bag!=null else null]
-
-# These scalars are supplied by the existing owner. An unknown revision never
-# takes the no-snapshot path (e.g. external legacy hosts).
-func _owner_inputs() -> Array:
-	var bag: Object=_bag.get_ref() if _bag!=null else null
-	if bag==null:return []
-	var revision: Variant=bag.get("inventory_list_rebuilds")
-	if not revision is int or bag.get("inventory_grid_dirty")!=false:return []
-	var search: Variant=bag.get("search_line")
-	return [revision,bag.get("category_filter"),search.text if search is LineEdit else "",bag.get("selected_item"),_marker_inputs()]
-
-func _try_reopen(parent: Node) -> Dictionary:
-	expire_cache()
-	if _parked_until==0 or not is_instance_valid(_scene) or _scene.is_queued_for_deletion() or _scene.get_parent()!=parent:return {}
-	if _bound_asset_key!=_source_asset_key() or not _slots._identities().get("ok",false):return {}
-	var bag: Object=_bag.get_ref() if _bag!=null else null
-	if bag==null or bag.get("detail_active")==true:return {}
-	var branch: Dictionary=_owner_branch(bag)
-	if not branch.get("ok",false) or int(branch.capacity)!=_native_capacity:return {}
-	var inputs: Array=_owner_inputs()
-	var model: Dictionary={}
-	if inputs.is_empty() or inputs!=_bound_inputs:
-		model=_eligible_model()
-		if not model.get("ok",false) or _layout_key(model)!=_layout:return {}
-	if not _scene.play("Inventory_All_On",false).get("ok",false):return {}
-	_inventory_scene.seek_frame(70.0 if _native_capacity==8 else 86.0)
-	if not _chrome.refresh_existing(_inventory_scene).get("ok",false):return {}
-	if not _chrome.bind_presented(_inventory_scene).get("ok",false):return {}
-	if not model.is_empty() and _patch_current_rows(model)<0:return {}
-	# Match fresh-open scroll behavior; scrolling while closed is impossible.
-	_scroll_content.position.y=_scroll_top
-	if not _sync_lines(model).get("ok",false):return {}
-	# An armed use label may have expired while the panel was hidden.
-	for reference: String in _hits:
-		if not _slots.refresh_action(_hits[reference].native_slot_scene,reference).get("ok",false):return {}
-	_parked_until=0
-	_scene.process_mode=_resume_process_mode
-	_scene.show()
-	_bound_inputs=_owner_inputs()
-	stats.reopens+=1
-	var shown: Dictionary=_open_result()
-	shown["reused_scene"]=true
-	native_scene_changed.emit(shown.duplicate(true))
-	return shown
+	# Closing this native presentation never clears selection or owns saves.
 
 func refresh() -> Dictionary:
 	if _refreshing:return {"ok":true,"handled":is_open(),"refresh_pending":true}
@@ -228,15 +137,29 @@ func refresh_chrome() -> Dictionary:
 func refresh_rows() -> Dictionary:
 	if _refreshing:return {"ok":true,"handled":is_open(),"refresh_pending":true}
 	if not is_open():return _unsupported("source_inventory_view_not_open")
-	if _chrome==null or _slots==null or not is_instance_valid(_inventory_scene) or _layout==0 or _source_asset_key()!=_bound_asset_key:return refresh()
-	var started: int=FRAME_HITCH.now()
+	if _chrome==null or _slots==null or not is_instance_valid(_inventory_scene) or _layout==0:return refresh()
 	var model: Dictionary=_eligible_model()
 	if not model.get("ok",false) or _layout_key(model)!=_layout:return refresh()
+	var started: int=FRAME_HITCH.now()
 	var result: Dictionary=_chrome.refresh_existing(_inventory_scene)
 	if not result.get("ok",false):return refresh()
-	var patched: int=_patch_current_rows(model)
-	if patched<0:return refresh()
-	_bound_inputs=_owner_inputs()
+	var markers: int=_marker_inputs()
+	var marker_changed: bool=markers!=_marker_key
+	var bag: Object=_bag.get_ref() if _bag!=null else null
+	var selected: Variant=bag.get("selected_item") if bag!=null else null
+	var patched: int=0
+	for reference: String in _hits:
+		var hit: Dictionary=_hits[reference]
+		var current: Variant=model.owned_by_reference.get(reference)
+		if not current is Dictionary:return refresh()
+		var was_selected: bool=bool(hit.get("shown_selected",false))
+		if not marker_changed and int((hit.owned_row as Dictionary).get("amount",-1))==int(current.get("amount",-2)) and was_selected==(selected==reference):continue
+		var patch: Dictionary=_slots.refresh_slot(hit.native_slot_scene,reference,model)
+		if not patch.get("ok",false):return refresh()
+		hit["owned_row"]=(current as Dictionary).duplicate(true)
+		hit["shown_selected"]=selected==reference
+		patched+=1
+	_marker_key=markers
 	stats.rows_only+=1
 	stats.slot_patches+=patched
 	FRAME_HITCH.detail("ui.inventory_rows",started)
@@ -246,28 +169,6 @@ func refresh_rows() -> Dictionary:
 	shown["rows_only"]=true
 	shown["slots_patched"]=patched
 	return shown
-
-## Shared by a live refresh and a still-hidden eligible reopen. A failed
-## patch must not expose any partially refreshed slot.
-func _patch_current_rows(model: Dictionary) -> int:
-	var markers: int=_marker_inputs()
-	var marker_changed: bool=markers!=_marker_key
-	var bag: Object=_bag.get_ref() if _bag!=null else null
-	var selected: Variant=bag.get("selected_item") if bag!=null else null
-	var patched: int=0
-	for reference: String in _hits:
-		var hit: Dictionary=_hits[reference]
-		var current: Variant=model.owned_by_reference.get(reference)
-		if not current is Dictionary:return -1
-		var was_selected: bool=bool(hit.get("shown_selected",false))
-		if not marker_changed and int((hit.owned_row as Dictionary).get("amount",-1))==int(current.get("amount",-2)) and was_selected==(selected==reference):continue
-		var patch: Dictionary=_slots.refresh_slot(hit.native_slot_scene,reference,model)
-		if not patch.get("ok",false):return -1
-		hit["owned_row"]=(current as Dictionary).duplicate(true)
-		hit["shown_selected"]=selected==reference
-		patched+=1
-	_marker_key=markers
-	return patched
 
 func select(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
@@ -331,7 +232,6 @@ func name_hint_context(reference: String) -> Dictionary:
 	return {"ok":true,"reference":reference,"control":control,"scroll":bounds,"source_native":true}
 
 func presentation() -> Dictionary:
-	if _parked_until!=0:return {"partial_source_scene":true,"complete_screen_contract":false}
 	return {"scene":_scene,"inventory_scene":_inventory_scene,"hit_controls":_hits.duplicate(true),"gesture_bounds":gesture_bounds(),"native_capacity":_native_capacity,"search":search_presentation(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func search_is_open() -> bool:
@@ -404,6 +304,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	var columns: int=slot_offsets.size()
 	var assignments: Dictionary={}
 	var extra_rows: Array[Dictionary]=[]
+	var entries_by_reference: Dictionary={}
 	for index: int in range(model.current_display_rows.size()):
 		var row: Dictionary=model.current_display_rows[index]
 		var reference: Variant=row.get("reference")
@@ -415,6 +316,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		else:
 			while extra_rows.size()<line:extra_rows.append({})
 			extra_rows[line-1][slot_offsets[index%columns]]=reference
+		entries_by_reference[reference]=row.duplicate(true)
 	var slot_contract: Dictionary=_slots.build(slot_set,assignments,{"role":"source_scroll","input":Callable(self,"_forward_scroll_input")},model.authored_variant,model)
 	if not slot_contract.get("ok",false):
 		_refreshing=false
@@ -454,7 +356,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
-		var raw: Dictionary=(model.owned_by_reference[reference] as Dictionary).duplicate(true)
+		var raw: Dictionary=entries_by_reference[reference]
 		if not slot_contract.owner_results.has(offset): _label_missing_icon(control,raw)
 		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":model.get("selected_reference")==reference}
 	for reference: String in hits:
@@ -510,9 +412,6 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	_line_variant=str(model.authored_variant)
 	_layout=_layout_key(model)
 	_marker_key=_marker_inputs()
-	_bound_inputs=_owner_inputs()
-	_bound_asset_key=_source_asset_key()
-	_authored_assignments=assignments
 	_bind_scroll(inventory_scene,slot_set,extra_rows.size())
 	if kept_scroll!=null and is_instance_valid(_scroll_content):_scroll_content.position.y=clampf(float(kept_scroll),_scroll_bottom,_scroll_top)
 	# Rows below the authored one are built only while in (or near) view;
@@ -530,20 +429,16 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		previous.hide()
 		previous.queue_free()
 	_refreshing=false
-	var shown: Dictionary=_open_result()
-	native_scene_changed.emit(shown.duplicate(true))
-	return shown
-
-func _open_result() -> Dictionary:
 	var shown: Dictionary=presentation()
 	shown["ok"]=true
 	shown["handled"]=true
-	shown["assignments"]=_authored_assignments.duplicate()
-	shown["expanded"]=_native_capacity==8
-	shown["authored_slot_set_project"]=_line_slot_set
-	shown["authored_variant"]=_line_variant
+	shown["assignments"]=assignments
+	shown["expanded"]=model.expanded
+	shown["authored_slot_set_project"]=slot_set
+	shown["authored_variant"]=model.authored_variant
 	shown["parent_contract"]=Chrome.parent_contract(PARENT)
 	shown["logical_open_clip_consumption"]="one_shot_Inventory_All_On_5_17"
+	native_scene_changed.emit(shown.duplicate(true))
 	return shown
 
 func _reject_staged(scene: Node2D, reason: Dictionary) -> Dictionary:
@@ -555,7 +450,7 @@ func _stage_failed(reason: Dictionary) -> Dictionary:
 	return _fallback(reason) if is_open() else reason
 
 func _fallback(reason: Dictionary) -> Dictionary:
-	close(false)
+	close()
 	return_to_current_requested.emit(reason.duplicate(true))
 	return reason
 
@@ -563,7 +458,7 @@ func _on_category_changed(_model: Dictionary) -> void:
 	if is_open() and not _refreshing:refresh()
 
 func _on_selection_changed(_reference: String) -> void:
-	if _parked_until!=0 or _hits.is_empty():return
+	if _hits.is_empty():return
 	var model: Dictionary=_slots.entries()
 	if not model.get("ok",false):
 		_fallback(_unsupported_result(model))
@@ -582,7 +477,6 @@ func _on_native_closed() -> void:
 	closed.emit()
 
 func _forward_scroll_input(event: InputEvent) -> void:
-	if _parked_until!=0:return
 	source_scroll_input.emit(event)
 	if not is_instance_valid(_scroll_content):return
 	var pressed: Variant=null
@@ -626,7 +520,6 @@ func scroll_by(screen_delta_y: float) -> Dictionary:
 ## content may move from its authored top position down to the last row.
 func _bind_scroll(inventory_scene: Node2D, slot_set: int, extra_lines: int) -> void:
 	_scroll_content=null
-	_scroll_view_height=-1.0
 	var row: Variant=inventory_scene.get("source_nodes").get(slot_set)
 	if not row is Node2D:return
 	var content: Node=row.get_parent()
@@ -661,13 +554,11 @@ func line_range(margin: int) -> Vector2i:
 var _row_y: float=0.0
 
 func _view_height() -> float:
-	if _scroll_view_height>=0.0:return _scroll_view_height
 	if _pack==null:return 0.0
 	var node: Dictionary=Scene._node_at_offset(_pack.scene(Slots.PARENT).get("nodeTree",{}),int(Slots.PARENTS.get(_line_slot_set,0)))
 	var options: Dictionary=node.get("options",{})
 	var size: Array=options.get("widgetOptions",options.get("nodeOptions",{})).get("size",[0,0])
-	_scroll_view_height=float(size[1]) if size.size()>1 else 0.0
-	return _scroll_view_height
+	return float(size[1]) if size.size()>1 else 0.0
 
 ## Builds the lines that came near the view and frees those far from it.
 ## `model` (optional) is the owner snapshot to build from; `reuse` maps

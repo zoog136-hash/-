@@ -43,7 +43,7 @@ func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable
 	_dismiss_presenter=dismiss_presenter
 	return snapshot()
 
-func snapshot(include_rows: bool=true) -> Dictionary:
+func snapshot() -> Dictionary:
 	var inventory_ui: Object=_live_inventory()
 	if inventory_ui==null:return _fail("source_main_inventory_existing_bag_unavailable")
 	var category: Variant=inventory_ui.get("category_filter")
@@ -51,10 +51,7 @@ func snapshot(include_rows: bool=true) -> Dictionary:
 	var inventory: Variant=inventory_ui.get("inventory")
 	var rows: Variant=inventory_ui.get("legacy_rows")
 	if not inventory is Dictionary or not rows is Array:return _fail("source_main_inventory_existing_rows_unavailable")
-	var model: Dictionary={"ok":true,"category":category,"selected_reference":inventory_ui.get("selected_item"),"partial_source_scene":true,"complete_screen_contract":false}
-	if include_rows:
-		model["inventory"]=inventory.duplicate(true)
-		model["rows"]=rows.duplicate(true)
+	var model: Dictionary={"ok":true,"category":category,"inventory":inventory.duplicate(true),"rows":rows.duplicate(true),"selected_reference":inventory_ui.get("selected_item"),"partial_source_scene":true,"complete_screen_contract":false}
 	# Use the existing bag's formatter/labels. No amount, capacity, stack,
 	# ownership, item lookup or historical image-pack fallback is recreated.
 	var state: Variant=inventory_ui.get("character_state")
@@ -133,7 +130,7 @@ func refresh_existing(scene: Node2D) -> Dictionary:
 	# Header-only updates must not silently retain a field that disappeared,
 	# or introduce text outside the originally constructed source scope.
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
-	var model: Dictionary=snapshot(false)
+	var model: Dictionary=snapshot()
 	if not model.get("ok",false):return model
 	var nodes: Variant=scene.get("source_nodes")
 	if not nodes is Dictionary:return _fail("source_main_inventory_existing_scope_unavailable")
@@ -198,8 +195,8 @@ func close() -> Dictionary:
 	inventory_ui.call("hide_inventory")
 	var scene: Object=_scene.get_ref() if _scene!=null else null
 	_scene=null
+	if is_instance_valid(scene):scene.queue_free()
 	if _dismiss_presenter.is_valid():_dismiss_presenter.call()
-	elif is_instance_valid(scene):scene.queue_free()
 	return {"ok":true,"closed":true,"game_state_written":false}
 
 func _live_inventory() -> Object:

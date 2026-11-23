@@ -43,12 +43,8 @@ func configure(pack: RefCounted, hud: Node, icon_binding_provider: Callable=Call
 func entries() -> Dictionary:
 	var bag: Object=_live_bag()
 	if bag==null:return _fail("source_inventory_slots_existing_bag_unavailable")
-	var offered: Variant
-	if bag.has_method("source_inventory_entries_for_view"):
-		offered=bag.call("source_inventory_entries_for_view")
-	else:
-		if bag.has_method("prepare_source_inventory_model"):bag.call("prepare_source_inventory_model")
-		offered=bag.call("_inventory_entries")
+	if bag.has_method("prepare_source_inventory_model"):bag.call("prepare_source_inventory_model")
+	var offered: Variant=bag.call("_inventory_entries")
 	var displayed: Variant=bag.get("legacy_rows")
 	if not offered is Array or not displayed is Array:return _fail("source_inventory_slots_existing_entries_unavailable")
 	# One owner snapshot serves every authored slot in this synchronous refresh.
