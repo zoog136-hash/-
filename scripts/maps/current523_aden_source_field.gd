@@ -257,6 +257,70 @@ func can_step(cell: Vector2i, heading: int) -> bool:
 		return _cell_allowed(cell+Vector2i(offset.x,0)) and _cell_allowed(cell+Vector2i(0,offset.y))
 	return true
 
+## Only the immutable 523 terrain query opts in. Keep one verdict per visited
+## cell for this A* call, not a reusable path or a cross-frame collision cache.
+## Manual DDA, live collisions, endpoint checks and non-523 fields are unchanged.
+func _new_path_navigator() -> TwilightL1JSourceNavigation:
+	var navigator := Source523Search.new()
+	navigator.source = self
+	navigator.diagonal_any = policy.get("attribute_rule") == CLIENT_RULE
+	return navigator
+
+class Source523Search extends TwilightL1JSourceNavigation:
+	const MAX_VERDICTS: int = 32768
+	var source: RefCounted
+	var diagonal_any: bool = false
+	var verdicts: Dictionary = {}
+
+	func _allowed(cell: Vector2i) -> bool:
+		var cached: int = int(verdicts.get(cell, -1))
+		if cached >= 0: return cached != 0
+		var allowed: bool = source._cell_allowed(cell)
+		if verdicts.size() < MAX_VERDICTS: verdicts[cell] = int(allowed)
+		return allowed
+
+	func can_step(cell: Vector2i, heading: int) -> bool:
+		# Same endpoint and diagonal rules as Current523AdenSourceField.can_step.
+		if heading < 0 or heading >= 8 or not _allowed(cell): return false
+		var offset: Vector2i = DIRECTIONS[heading]
+		if not _allowed(cell + offset): return false
+		if offset.x == 0 or offset.y == 0: return true
+		var sideways: bool = _allowed(cell + Vector2i(offset.x, 0))
+		if diagonal_any:
+			return sideways or _allowed(cell + Vector2i(0, offset.y))
+		return sideways and _allowed(cell + Vector2i(0, offset.y))
+
+const HUNT_SEARCH_BUDGET_USEC: int = 4000
+const HUNT_SEARCH_MAX_POPS: int = 512
+var _hunt_field_epoch: int = 0
+
+## Pass the state only for the same live field and source/target cells.
+## Direct routes still return immediately. A pending result is not a failure.
+func hunt_path_step(from: Vector2,to: Vector2,work: Dictionary = {}) -> Dictionary:
+	var deadline: int = Time.get_ticks_usec() + HUNT_SEARCH_BUDGET_USEC
+	if not walkable(from) or not walkable(to): return {"pending":false,"path":PackedVector2Array()}
+	var start: Vector2i = world_to_cell(from)
+	var goal: Vector2i = world_to_cell(to)
+	if not work.is_empty() and (work.field_id != get_instance_id() or work.epoch != _hunt_field_epoch or work.search.start != start or work.search.goal != goal or work.limit != _path_node_limit()):
+		work = {}
+	var nav: TwilightL1JSourceNavigation
+	var search: TwilightL1JSourceNavigation.PathSearch
+	if work.is_empty():
+		if line_clear(from,to): return {"pending":false,"path":PackedVector2Array([to])}
+		nav = _new_path_navigator()
+		nav.loaded = true
+		nav.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
+		search = nav.begin_search(start,goal,_path_node_limit())
+		work = {"nav":nav,"search":search,"field_id":get_instance_id(),"epoch":_hunt_field_epoch,"limit":_path_node_limit()}
+	else:
+		nav = work.nav
+		search = work.search
+	if not search.done:
+		var remaining: int = deadline - Time.get_ticks_usec()
+		if remaining <= 0 or not nav.advance_search(search,remaining,HUNT_SEARCH_MAX_POPS):
+			return {"pending":true,"work":work}
+	return {"pending":false,"path":_finish_cell_path(from,to,search.result)}
+
 func line_clear(from: Vector2, to: Vector2) -> bool:
 	return loaded and walkable(from) and walkable(to) and super.line_clear(from,to)
 
@@ -305,6 +369,7 @@ func cache_metrics() -> Dictionary:
 	return {"raw_reads":_raw_reads, "cached_chunks":_raw_cache.size(), "cache_limit":RAW_CACHE_LIMIT, "failed_chunks":_raw_failures.size(), "placed_chunks":source_origins.size(), "unplaced_members":unplaced_members.size(), "native_m_rules_verified":false}
 
 func close() -> void:
+	_hunt_field_epoch += 1
 	loaded = false
 	if has_meta("current523_source_field"): remove_meta("current523_source_field")
 	_raw = RAW.new()

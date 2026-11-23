@@ -41,44 +41,82 @@ func can_step(cell: Vector2i, heading: int) -> bool:
 		7: return (_value(cell+Vector2i(-1,0)) & 3) == 3 or ((first & 2) == 2 and (second & 1) == 1)
 	return false
 
-func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[Vector2i]:
+class PathSearch extends RefCounted:
+	var start: Vector2i
+	var goal: Vector2i
+	var max_nodes: int
+	var frontier: Array[Vector3i] = []
+	var previous: Dictionary = {}
+	var costs: Dictionary = {}
 	var result: Array[Vector2i] = []
-	if not loaded or not coordinates.in_bounds(start) or not coordinates.in_bounds(goal) or max_nodes < 1: return result
-	max_nodes = mini(max_nodes, 65536)
-	if start == goal: return [start]
-	if max_nodes == 1: return result
-	# A direct edge needs exactly two stored cells, regardless of neighbor order.
-	var direct_heading: int = DIRECTIONS.find(goal-start)
-	if direct_heading >= 0 and can_step(start,direct_heading): return [start,goal]
-	# Unit-cost A* retains the source's shortest-step semantics. Chebyshev distance
-	# is admissible for all eight headings, including blocked corner routes.
-	var frontier: Array[Vector3i] = [Vector3i(start.x,start.y,_distance(start,goal))]
-	var previous: Dictionary = {start:start}
-	var costs: Dictionary = {start:0}
+	var done: bool = false
+
+func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[Vector2i]:
+	var search := begin_search(start, goal, max_nodes)
+	advance_search(search)
+	return search.result
+
+func begin_search(start: Vector2i, goal: Vector2i, max_nodes: int) -> PathSearch:
+	var search := PathSearch.new()
+	search.start = start
+	search.goal = goal
+	search.max_nodes = mini(max_nodes, 65536)
+	if not loaded or not coordinates.in_bounds(start) or not coordinates.in_bounds(goal) or max_nodes < 1:
+		search.done = true
+	elif start == goal:
+		search.result = [start]
+		search.done = true
+	elif max_nodes == 1:
+		search.done = true
+	else:
+		# A direct edge needs exactly two stored cells.
+		var heading: int = DIRECTIONS.find(goal-start)
+		if heading >= 0 and can_step(start,heading):
+			search.result = [start,goal]
+			search.done = true
+		else:
+			search.frontier = [Vector3i(start.x,start.y,_distance(start,goal))]
+			search.previous = {start:start}
+			search.costs = {start:0}
+	return search
+
+## Cooperative wall-time/pop budget. One indivisible terrain read can overrun.
+## Without a budget this is the synchronous path used by other consumers.
+func advance_search(search: PathSearch, budget_usec: int = -1, max_pops: int = -1) -> bool:
+	if search.done: return true
+	var frontier: Array[Vector3i] = search.frontier
+	var previous: Dictionary = search.previous
+	var costs: Dictionary = search.costs
+	var goal: Vector2i = search.goal
+	var limit: int = search.max_nodes
+	var deadline: int = Time.get_ticks_usec() + budget_usec if budget_usec >= 0 else 0
+	var pops: int = 0
 	while not frontier.is_empty():
+		if pops > 0 and ((deadline > 0 and Time.get_ticks_usec() >= deadline) or (max_pops >= 0 and pops >= max_pops)): return false
+		pops += 1
 		var entry: Vector3i = _pop_frontier(frontier,goal)
 		var current := Vector2i(entry.x,entry.y)
 		if entry.z != int(costs[current]) + _distance(current,goal): continue
 		if current == goal:
-			result.append(current)
-			while current != start:
+			search.result.append(current)
+			while current != search.start:
 				current = previous[current]
-				result.append(current)
-			result.reverse()
-			return result
+				search.result.append(current)
+			search.result.reverse()
+			break
 		var cost: int = int(costs[current]) + 1
 		for heading: int in range(8):
 			var next: Vector2i = current + DIRECTIONS[heading]
 			var known_cost: int = int(costs.get(next, -1))
 			if known_cost >= 0 and known_cost <= cost: continue
-			# A full budget can still reach a goal already queued. Skip terrain
-			# lookups for edges that cannot add or improve any stored route.
-			if known_cost < 0 and costs.size() >= max_nodes: continue
+			# A full budget can still reach a goal already queued.
+			if known_cost < 0 and costs.size() >= limit: continue
 			if not can_step(current, heading): continue
 			previous[next] = current
 			costs[next] = cost
 			_push_frontier(frontier,Vector3i(next.x,next.y,cost+_distance(next,goal)),goal)
-	return result
+	search.done = true
+	return true
 
 func _distance(cell: Vector2i, goal: Vector2i) -> int:
 	return maxi(absi(cell.x-goal.x),absi(cell.y-goal.y))
