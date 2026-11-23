@@ -215,7 +215,14 @@ func _cell_allowed(cell: Vector2i) -> bool:
 	var row: Dictionary = _source_chunk(origin)
 	if row.is_empty(): return false
 	var index: int = (source.y-origin.y)*128+(source.x-origin.x)*2
-	return _pair_status(row.sections.attributes,row.sections.floor,index) == "allowed"
+	var attrs: PackedByteArray = row.sections.attributes
+	var floor_refs: PackedByteArray = row.sections.floor
+	if policy.get("attribute_rule") != CLIENT_RULE:
+		return _pair_status(attrs,floor_refs,index) == "allowed"
+	# Same guards as the diagnostic path. Both attribute words must have
+	# bit 0 clear; 0xffff already fails that test.
+	if (attrs.decode_u16(index*2) | attrs.decode_u16(index*2+2)) & 1: return false
+	return floor_refs.decode_u32(index*4) != 4294967295 and floor_refs.decode_u32(index*4+4) != 4294967295
 
 func value_at(cell: Vector2i, mask: bool = false) -> int:
 	if mask: return 1 if _cell_allowed(cell) else 0
@@ -256,6 +263,39 @@ func can_step(cell: Vector2i, heading: int) -> bool:
 			return _cell_allowed(cell+Vector2i(offset.x,0)) or _cell_allowed(cell+Vector2i(0,offset.y))
 		return _cell_allowed(cell+Vector2i(offset.x,0)) and _cell_allowed(cell+Vector2i(0,offset.y))
 	return true
+
+## Only the immutable 523 terrain query opts in. Keep one verdict per visited
+## cell for this A* call, not a reusable path or a cross-frame collision cache.
+## Manual DDA, live collisions, endpoint checks and non-523 fields are unchanged.
+func _new_path_navigator() -> TwilightL1JSourceNavigation:
+	var navigator := Source523Search.new()
+	navigator.source = self
+	navigator.diagonal_any = policy.get("attribute_rule") == CLIENT_RULE
+	return navigator
+
+class Source523Search extends TwilightL1JSourceNavigation:
+	const MAX_VERDICTS: int = 32768
+	var source: RefCounted
+	var diagonal_any: bool = false
+	var verdicts: Dictionary = {}
+
+	func _allowed(cell: Vector2i) -> bool:
+		var cached: int = int(verdicts.get(cell, -1))
+		if cached >= 0: return cached != 0
+		var allowed: bool = source._cell_allowed(cell)
+		if verdicts.size() < MAX_VERDICTS: verdicts[cell] = int(allowed)
+		return allowed
+
+	func can_step(cell: Vector2i, heading: int) -> bool:
+		# Same endpoint and diagonal rules as Current523AdenSourceField.can_step.
+		if heading < 0 or heading >= 8 or not _allowed(cell): return false
+		var offset: Vector2i = DIRECTIONS[heading]
+		if not _allowed(cell + offset): return false
+		if offset.x == 0 or offset.y == 0: return true
+		var sideways: bool = _allowed(cell + Vector2i(offset.x, 0))
+		if diagonal_any:
+			return sideways or _allowed(cell + Vector2i(0, offset.y))
+		return sideways and _allowed(cell + Vector2i(0, offset.y))
 
 func line_clear(from: Vector2, to: Vector2) -> bool:
 	return loaded and walkable(from) and walkable(to) and super.line_clear(from,to)

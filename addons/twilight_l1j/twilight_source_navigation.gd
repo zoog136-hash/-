@@ -52,64 +52,69 @@ func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[
 	if direct_heading >= 0 and can_step(start,direct_heading): return [start,goal]
 	# Unit-cost A* retains the source's shortest-step semantics. Chebyshev distance
 	# is admissible for all eight headings, including blocked corner routes.
-	var frontier: Array[Vector3i] = [Vector3i(start.x,start.y,_distance(start,goal))]
-	var previous: Dictionary = {start:start}
-	var costs: Dictionary = {start:0}
+	var start_h: int = _distance(start,goal)
+	# Cache both ordering keys at push time. The heap previously recalculated
+	# Chebyshev distance on every tie; preserve its exact (f, h) ordering.
+	var frontier: Array[Vector4i] = [Vector4i(start.x,start.y,start_h,start_h)]
+	var visited: Dictionary[Vector2i, Vector3i] = {start:Vector3i(start.x,start.y,0)}
 	while not frontier.is_empty():
-		var entry: Vector3i = _pop_frontier(frontier,goal)
+		var entry: Vector4i = _pop_frontier(frontier)
 		var current := Vector2i(entry.x,entry.y)
-		if entry.z != int(costs[current]) + _distance(current,goal): continue
+		var record: Vector3i = visited[current]
+		if entry.z != record.z + entry.w: continue
 		if current == goal:
 			result.append(current)
 			while current != start:
-				current = previous[current]
+				var parent: Vector3i = visited[current]
+				current = Vector2i(parent.x,parent.y)
 				result.append(current)
 			result.reverse()
 			return result
-		var cost: int = int(costs[current]) + 1
+		var cost: int = record.z + 1
 		for heading: int in range(8):
 			var next: Vector2i = current + DIRECTIONS[heading]
-			var known_cost: int = int(costs.get(next, -1))
+			var existing: Vector3i = visited.get(next, Vector3i(0,0,-1))
+			var known_cost: int = existing.z
 			if known_cost >= 0 and known_cost <= cost: continue
 			# A full budget can still reach a goal already queued. Skip terrain
 			# lookups for edges that cannot add or improve any stored route.
-			if known_cost < 0 and costs.size() >= max_nodes: continue
+			if known_cost < 0 and visited.size() >= max_nodes: continue
 			if not can_step(current, heading): continue
-			previous[next] = current
-			costs[next] = cost
-			_push_frontier(frontier,Vector3i(next.x,next.y,cost+_distance(next,goal)),goal)
+			visited[next] = Vector3i(current.x,current.y,cost)
+			var h: int = _distance(next,goal)
+			_push_frontier(frontier,Vector4i(next.x,next.y,cost+h,h))
 	return result
 
 func _distance(cell: Vector2i, goal: Vector2i) -> int:
 	return maxi(absi(cell.x-goal.x),absi(cell.y-goal.y))
 
-func _earlier(left: Vector3i, right: Vector3i, goal: Vector2i) -> bool:
-	if left.z != right.z: return left.z < right.z
-	return _distance(Vector2i(left.x,left.y),goal) < _distance(Vector2i(right.x,right.y),goal)
-
-func _push_frontier(frontier: Array[Vector3i], entry: Vector3i, goal: Vector2i) -> void:
+func _push_frontier(frontier: Array[Vector4i], entry: Vector4i) -> void:
 	frontier.append(entry)
 	var index: int = frontier.size()-1
 	while index > 0:
 		var parent: int = (index-1)/2
-		if not _earlier(frontier[index],frontier[parent],goal): break
-		var swap: Vector3i = frontier[parent]
-		frontier[parent] = frontier[index]
-		frontier[index] = swap
+		var above: Vector4i = frontier[parent]
+		if entry.z > above.z or (entry.z == above.z and entry.w >= above.w): break
+		frontier[index] = above
 		index = parent
+	frontier[index] = entry
 
-func _pop_frontier(frontier: Array[Vector3i], goal: Vector2i) -> Vector3i:
-	var result: Vector3i = frontier[0]
-	var last: Vector3i = frontier.pop_back()
+func _pop_frontier(frontier: Array[Vector4i]) -> Vector4i:
+	var result: Vector4i = frontier[0]
+	var last: Vector4i = frontier.pop_back()
 	if frontier.is_empty(): return result
-	frontier[0] = last
 	var index: int = 0
-	while index*2+1 < frontier.size():
+	var count: int = frontier.size()
+	while index*2+1 < count:
 		var child: int = index*2+1
-		if child+1 < frontier.size() and _earlier(frontier[child+1],frontier[child],goal): child += 1
-		if not _earlier(frontier[child],frontier[index],goal): break
-		var swap: Vector3i = frontier[index]
-		frontier[index] = frontier[child]
-		frontier[child] = swap
+		var below: Vector4i = frontier[child]
+		if child+1 < count:
+			var right: Vector4i = frontier[child+1]
+			if right.z < below.z or (right.z == below.z and right.w < below.w):
+				below = right
+				child += 1
+		if below.z > last.z or (below.z == last.z and below.w >= last.w): break
+		frontier[index] = below
 		index = child
+	frontier[index] = last
 	return result
