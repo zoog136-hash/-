@@ -29,6 +29,25 @@ var evidence: Dictionary = {}
 var user_files: Dictionary = {}
 var capture_dir: String = ""
 
+class OverlayProbe extends Node:
+	var key: String
+	var args: Array
+	var bag_open: bool = true
+
+	func feature_window_available(_key: String) -> bool:
+		return true
+
+	func inventory_is_open() -> bool:
+		return bag_open
+
+	func close_inventory() -> void:
+		bag_open = false
+
+	func try_open_overlay_window(window: String, values: Array) -> Dictionary:
+		key = window
+		args = values
+		return {"handled": true}
+
 func check(condition: bool, label: String) -> bool:
 	checks += 1
 	if not condition: failures.append(label); printerr("CARD_GACHA_FLIP_FAIL: ",label)
@@ -153,6 +172,7 @@ func run() -> void:
 	hud.show_message("시험 문구")
 	check(hud.message_label.text == "시험 문구", "toasts return once it is closed")
 	hud.message_label.text = ""
+	hud_native_handoff(hud)
 	if DEF.not_installed() or not is_instance_valid(hud.get("original_main_ui_controller")) or not hud.original_main_ui_controller.feature_window_available("card_gacha_result"):
 		evidence["mode"] = "no_original_pack"
 		await finish(world); return
@@ -165,6 +185,22 @@ func run() -> void:
 		if packs.has(category): await bag_use(world,str(packs[category]),category)
 	await shop_reveal(world)
 	await finish(world)
+
+func hud_native_handoff(hud: Node) -> void:
+	var original: Node = hud.original_main_ui_controller
+	var probe := OverlayProbe.new()
+	hud.original_main_ui_controller = probe
+	var result := {"id":"test_card", "name":"검증", "grade":"영웅"}
+	hud.present_card_reveal("변신", {"ok":true, "results":[result]}, false)
+	check(probe.key == "card_gacha_result" and probe.args.size() == 5 and probe.args[4].is_valid(), "Main HUD supplies the old reel to the native draw window")
+	check(hud.original_gacha_reveal_open() and not probe.bag_open, "native draw retains the guard and closes the bag")
+	if probe.args.size() >= 4: probe.args[3].call()
+	hud.present_card_reveal("성물", {"ok":true, "result":result, "success":true}, true)
+	check(probe.key == "fusion_result" and probe.args.size() == 5 and probe.args[4].is_valid() and probe.args[2], "Main HUD supplies the old reel and preserves fusion success")
+	if probe.args.size() >= 4: probe.args[3].call()
+	check(hud.card_reveal_stage == null, "native close releases the Main HUD")
+	hud.original_main_ui_controller = original
+	probe.free()
 
 ## {category: item name} of one original draw pack (gotcha) per category.
 func draw_packs(world: Node) -> Dictionary:

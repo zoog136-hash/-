@@ -116,6 +116,48 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 	_fit()
 	seek(0.0)
 
+## Reuse the reveal stage's reel inside an authored result cell. The native
+## window owns input, paging, dismissal, and the grade effect after the reel.
+static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, settled: Callable, category_name: String,
+		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary) -> bool:
+	var card: Control = CARD.new()
+	card.name = "CardRevealEffect"
+	card.position = area.position
+	card.size = area.size
+	card.z_index = 1
+	card.reduced_motion = bool(settings.get("reduced_motion", false))
+	card.intensity_scale = clampf(float(settings.get("impact_intensity", 0.85)), 0.0, 1.5)
+	card.detail_scale = 0.6 if OS.has_feature("mobile") or str(settings.get("effect_detail", "full")) == "low" else 1.0
+	card.extra_lightning_seconds = 0.0 if is_fusion else CARD.DRAW_EXTRA_LIGHTNING_SECONDS
+	card.open_at = 0.0
+	card.reel_seconds = 3.0 if int(PROFILES.profile(str(record.get("grade", "일반"))).get("tier", 0)) >= 1 else 0.65
+	var shuffled: Array = source_candidates.duplicate()
+	shuffled.shuffle()
+	var no_legacy: Array[Texture2D] = []
+	card.configure(record, no_legacy, category_name, shuffled, false)
+	var upgraded: bool = is_fusion and bool(record.get("fusion_success", succeeded))
+	_mount_result_cell(host, card, settled, upgraded)
+	return true
+
+static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, upgraded: bool) -> void:
+	# Leave missing slots out of the reel. Missing art never cancels the
+	# original card-back, illumination, or native result timing.
+	card.face.candidates = card.face.candidates.filter(func(texture: Texture2D) -> bool: return texture != null)
+	card.result_cell_illumination = true
+	card.name_label.modulate.a = 0.0
+	card.grade_label.modulate.a = 0.0
+	card.seek(0.0, upgraded)
+	# Fusion assembles the entire page before it joins the SceneTree.
+	card.ready.connect(func() -> void:
+		var motion: Tween = card.create_tween()
+		var duration: float = card.reveal_at()
+		motion.tween_method(card.seek.bind(upgraded), 0.0, duration, duration)
+		motion.tween_callback(func() -> void:
+			card.hide()
+			if settled.is_valid(): settled.call()
+			card.queue_free()), CONNECT_ONE_SHOT)
+	host.add_child(card)
+
 func present_showcase() -> void:
 	# The old synthetic showcase has no awarded source card identities. Do
 	# not substitute arbitrary originals or reuse its retired painted atlas.
@@ -236,14 +278,9 @@ func _draw() -> void:
 	# Illumination is separate from smoke, card movement and surface discharges.
 	if not reduced_motion:
 		for card: Control in cards:
-			if card.waiting_for_press:
-				continue
-			var elapsed: float = clock-card.lightning_at()
-			var power: float = PROFILES.pulse(card.grade,elapsed,card.extra_lightning_seconds)
-			if fusion and _card_upgraded(card):
-				power += PROFILES.pulse(card.grade,clock-card.promotion_at())
-			if power > 0.03:
-				draw_rect(Rect2(Vector2.ZERO,size),Color(PROFILES.color(card.grade),minf(0.055,power*0.023*intensity_scale)))
+			var light: Color = card.light_color(fusion and _card_upgraded(card))
+			if light.a > 0.0:
+				draw_rect(Rect2(Vector2.ZERO,size),light)
 
 func _refresh_transport() -> void:
 	for card: Control in cards:

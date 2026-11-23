@@ -2657,15 +2657,18 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 			views.append((by_id.get(str(result.get("id","")),{}) as Dictionary).merged(result,true).duplicate(true))
 	if views.is_empty():
 		return
-	if is_fusion and _present_original_fusion(views,category,bool(awarded.get("success",false))): return
-	if not is_fusion and _present_original_gacha(views,category,str(awarded.get("title",""))): return
+	var success: bool = bool(awarded.get("success", false))
+	var effect: Callable = CARD_REVEAL.play_result_cell.bind(category, is_fusion, success,
+		source_candidate_records, get_parent().presentation_settings)
+	if is_fusion and _present_original_fusion(views, category, success, effect): return
+	if not is_fusion and _present_original_gacha(views, category, str(awarded.get("title","")), effect): return
 	var stage: Control = _new_card_reveal_stage()
 	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
 
 ## 합성 결과 in the original 523 Change_Fusion_All window (UI pack only). A
 ## hidden guard holds card_reveal_stage while it is open, so the busy rule is
 ## the stage's own; false keeps the existing CardRevealStage.
-func _present_original_fusion(views: Array[Dictionary], category: String, success: bool) -> bool:
+func _present_original_fusion(views: Array[Dictionary], category: String, success: bool, effect: Callable) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
 	var guard := Control.new()
 	guard.name = "OriginalFusionRevealGuard"
@@ -2677,7 +2680,7 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 		if card_reveal_stage == guard: card_reveal_stage = null
 		if is_instance_valid(guard): guard.queue_free()
 		_refresh_card_controls()
-	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release])
+	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release,effect])
 	original_main_ui_status["fusion_result_window"] = native
 	if native.get("handled",false): return true
 	card_reveal_stage = null
@@ -2687,7 +2690,7 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 ## 카드 뽑기 결과 in the original 523 BM_Gacha window (UI pack only), with
 ## the same hidden busy guard as the fusion result; false keeps the existing
 ## CardRevealStage.
-func _present_original_gacha(views: Array[Dictionary], category: String, title: String) -> bool:
+func _present_original_gacha(views: Array[Dictionary], category: String, title: String, effect: Callable) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
 	if not original_main_ui_controller.has_method("feature_window_available") or not original_main_ui_controller.feature_window_available("card_gacha_result"): return false
 	# As the client: the draw screen replaces the bag (and its item popup)
@@ -2706,7 +2709,7 @@ func _present_original_gacha(views: Array[Dictionary], category: String, title: 
 		if card_reveal_stage == guard: card_reveal_stage = null
 		if is_instance_valid(guard): guard.queue_free()
 		_refresh_card_controls()
-	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("card_gacha_result",[views,category,title,release])
+	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("card_gacha_result",[views,category,title,release,effect])
 	original_main_ui_status["card_gacha_result_window"] = native
 	if native.get("handled",false): return true
 	card_reveal_stage = null
