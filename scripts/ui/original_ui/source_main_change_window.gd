@@ -157,7 +157,13 @@ var _content: Node2D
 var _option_content: Node2D
 var _category: String="변신"
 var _cards: Array[Dictionary]=[]
+# Positions are the keys so duplicate source IDs do not hide a card's scene.
 var _card_scenes: Dictionary={}
+var _card_mount_failed: Dictionary={}
+var _card_geometry: Dictionary={}
+var _card_range:=Vector2i(-1,-1)
+var _card_refresh_queued: bool=false
+var _card_hold_indices: Array[int]=[]
 var _selected: String=""
 var _scroll: float=0.0
 var _scroll_min: float=0.0
@@ -218,7 +224,7 @@ func close() -> void:
 	_content=null
 	_option_content=null
 	_class_content=null
-	_card_scenes.clear()
+	_reset_card_rows()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -319,6 +325,8 @@ func _stage() -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	if parent==null or hud==null:return _fail("source_change_window_host_unavailable")
 	_release_field()
+	var previous_cards: Array[Dictionary]=_cards
+	var previous_selection: String=_selected
 	var owned: Array[Dictionary]=_owned_cards()
 	_cards=_filtered(owned)
 	var equipped: String=_equipped_id()
@@ -351,33 +359,19 @@ func _stage() -> Dictionary:
 	_consume_touch(ROOT,root_scope,bindings)
 	var next:=Scene.new()
 	var result: Dictionary=next.configure_nodes(_pack,ROOT,root_scope,bindings)
-	if not result.get("ok",false):next.free();last_result=result;return result
+	if not result.get("ok",false):return _stage_failure(next,result,previous_cards,previous_selection)
 	var detail: Dictionary=next.project_player([DETAIL_PROJECT])
-	if not detail.get("ok",false):next.free();last_result=detail;return detail
+	if not detail.get("ok",false):return _stage_failure(next,detail,previous_cards,previous_selection)
 	var info: Dictionary=detail.player.project_player([INFO_PROJECT])
-	if not info.get("ok",false):next.free();last_result=info;return info
+	if not info.get("ok",false):return _stage_failure(next,info,previous_cards,previous_selection)
 	var list_node: Variant=detail.player.get("source_nodes").get(LIST)
 	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	var info_list: Variant=info.player.get("source_nodes").get(int((INFO_DOLL if doll else INFO_CARD).list))
 	var option_content: Variant=(info_list.get_meta("source_list_content") if info_list.has_meta("source_list_content") else null) if is_instance_valid(info_list) else null
-	if not content is Node2D or not option_content is Node2D:next.free();return _fail("source_change_window_list_content_missing")
+	if not content is Node2D or not option_content is Node2D:return _stage_failure(next,_fail("source_change_window_list_content_missing"),previous_cards,previous_selection)
 	var geometry: Dictionary=_set_geometry()
-	var card_scenes: Dictionary={}
-	var pictures: int=0
-	for index: int in range(_cards.size()):
-		var card: Dictionary=_card(_cards[index])
-		if not card.get("ok",false):continue
-		if card.get("picture",false):pictures+=1
-		var row: int=index/3
-		var slot: Vector2=geometry.slots[index%3]
-		# Rows run top-down from the list's top edge; a card's origin is its
-		# Change_Card_Set ProjectNode position inside the centred row panel.
-		var top: float=LIST_SIZE.y-float(row)*(geometry.row_height+ROW_MARGIN)
-		card.scene.position=Vector2(geometry.row_x+slot.x,-(top-geometry.row_height+slot.y))
-		content.add_child(card.scene)
-		card_scenes[Cards.card_id(_cards[index])]=card.scene
 	var class_rows: Dictionary=_fill_classes(detail.player,owned)
-	if not class_rows.get("ok",false):next.free();last_result=class_rows;return class_rows
+	if not class_rows.get("ok",false):return _stage_failure(next,class_rows,previous_cards,previous_selection)
 	var previous: Node2D=_scene
 	# Change_WinTotal is laid out on the design centre (600, 337.5).
 	next.position=Vector2(600.0,-337.5)
@@ -388,7 +382,8 @@ func _stage() -> Dictionary:
 	_info=info.player
 	_content=content
 	_option_content=option_content
-	_card_scenes=card_scenes
+	_reset_card_rows()
+	_card_geometry=geometry
 	_class_content=class_rows.get("content")
 	_class_min=float(class_rows.get("min",0.0))
 	_class_scroll=clampf(_class_scroll,_class_min,0.0)
@@ -397,13 +392,85 @@ func _stage() -> Dictionary:
 	_scroll_min=minf(0.0,LIST_SIZE.y-(float(rows)*(geometry.row_height+ROW_MARGIN)-ROW_MARGIN))
 	_scroll=clampf(_scroll,_scroll_min,0.0)
 	content.position.y=_scroll
+	var pictures: int=_refresh_visible_cards()
 	var shown: Dictionary=_show_selected()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"category":_category,"cards":_cards.size(),"owned":owned.size(),"card_pictures":pictures,"selected":_selected,"equipped":equipped,"detail":shown,
+	last_result={"ok":true,"handled":true,"member":ROOT,"category":_category,"cards":_cards.size(),"owned":owned.size(),"card_pictures":pictures,"mounted_cards":_card_scenes.size(),"selected":_selected,"equipped":equipped,"detail":shown,
 		"grade":_grade,"type":_type,"query":_query,"grade_rows":int(class_rows.get("rows",0))}
 	return last_result
+
+func _stage_failure(next: Node2D, result: Dictionary, previous_cards: Array[Dictionary], previous_selection: String) -> Dictionary:
+	next.free()
+	_cards=previous_cards
+	_selected=previous_selection
+	last_result=result
+	return result
+
+func _reset_card_rows() -> void:
+	_card_scenes.clear()
+	_card_mount_failed.clear()
+	_card_geometry.clear()
+	_card_range=Vector2i(-1,-1)
+	_card_refresh_queued=false
+	_card_hold_indices.clear()
+	_drag=false
+
+## Half-open card indices. Keep one overscan row on either side, and include
+## overlapping row edges from the original negative margin.
+static func visible_card_range(count: int, scroll: float, row_height: float) -> Vector2i:
+	var pitch: float=row_height+ROW_MARGIN
+	if count<=0 or pitch<=0.0:return Vector2i.ZERO
+	var offset: float=absf(scroll)
+	var first: int=maxi(0,floori((offset-row_height)/pitch))
+	var end: int=ceili((offset+LIST_SIZE.y)/pitch)+1
+	return Vector2i(mini(first*3,count),mini(end*3,count))
+
+func _refresh_visible_cards() -> int:
+	if not is_instance_valid(_content) or _card_geometry.is_empty():return 0
+	var window: Vector2i=visible_card_range(_cards.size(),_scroll,_card_geometry.row_height)
+	if window!=_card_range:
+		_card_range=window
+		for index: int in _card_scenes.keys():
+			if (index>=window.x and index<window.y) or _card_hold_indices.has(index):continue
+			var evicted: Node2D=_card_scenes[index]
+			# Scroll refreshes are deferred outside the GUI input callback.
+			_content.remove_child(evicted)
+			evicted.queue_free()
+			_card_scenes.erase(index)
+		for index: int in range(window.x,window.y):
+			if _card_scenes.has(index) or _card_mount_failed.has(index):continue
+			var card: Dictionary=_card(_cards[index])
+			if not card.get("ok",false):
+				_card_mount_failed[index]=true
+				continue
+			var row: int=index/3
+			var slot: Vector2=_card_geometry.slots[index%3]
+			var row_height: float=_card_geometry.row_height
+			var top: float=LIST_SIZE.y-float(row)*(row_height+ROW_MARGIN)
+			var scene: Node2D=card.scene
+			scene.position=Vector2(_card_geometry.row_x+slot.x,-(top-row_height+slot.y))
+			_content.add_child(scene)
+			_card_scenes[index]=scene
+		# Negative row margin can overlap adjacent panels. Keep original draw order
+		# even when scrolling upwards adds a new row before retained children.
+		var indices: Array=_card_scenes.keys()
+		indices.sort()
+		for i: int in range(indices.size()):
+			_content.move_child(_card_scenes[indices[i]],i)
+	var pictures: int=0
+	for scene: Node2D in _card_scenes.values():
+		if scene.get_meta("source_change_card",{}).get("picture",false):pictures+=1
+	return pictures
+
+func _refresh_scrolled_cards(expected_content: Node2D) -> void:
+	if not is_instance_valid(expected_content) or expected_content!=_content:return
+	_card_refresh_queued=false
+	var pictures: int=_refresh_visible_cards()
+	if last_result.get("ok",false):
+		last_result["card_pictures"]=pictures
+		last_result["mounted_cards"]=_card_scenes.size()
 
 ## Row panel left edge and card positions from Change_Card_Set itself.
 func _set_geometry() -> Dictionary:
@@ -601,11 +668,10 @@ func _card_pressed(_checked: bool, id: String) -> Dictionary:
 	return _show_selected()
 
 func _sync_checks() -> void:
-	for id: String in _card_scenes:
-		var scene: Node2D=_card_scenes[id]
+	for scene: Node2D in _card_scenes.values():
 		if not is_instance_valid(scene):continue
 		var info: Dictionary=scene.get_meta("source_change_card",{})
-		scene.set_bound_selected_state(int(CARD_NODES[str(info.get("member",""))].check),id==_selected)
+		scene.set_bound_selected_state(int(CARD_NODES[str(info.get("member",""))].check),str(info.get("id",""))==_selected)
 
 ## The existing catalog equip: World._equip_catalog checks ownership, the
 ## original card conditions and saves; the window then shows the result.
@@ -859,8 +925,16 @@ func _ignore_input(_event: InputEvent) -> void:
 func _list_input(event: InputEvent) -> void:
 	if not is_instance_valid(_content):return
 	if event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT):
-		_drag=event.pressed
-		if event.pressed:_moved=0.0
+		_drag=event.pressed and not (event is InputEventScreenTouch and event.canceled)
+		if _drag:
+			_moved=0.0
+			# The source router owns the original pressed checkbox through release.
+			# Keep the rows from the start of the gesture mounted while it drags.
+			_card_hold_indices.assign(_card_scenes.keys())
+		elif not _card_hold_indices.is_empty():
+			_card_hold_indices.clear()
+			_card_range=Vector2i(-1,-1)
+			_queue_card_refresh()
 		return
 	var delta: float=0.0
 	if event is InputEventScreenDrag:delta=event.relative.y
@@ -874,6 +948,12 @@ func _list_input(event: InputEvent) -> void:
 	# Dragging up (negative) reveals lower rows.
 	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
 	_content.position.y=_scroll
+	_queue_card_refresh()
+
+func _queue_card_refresh() -> void:
+	if not _card_refresh_queued and not _card_geometry.is_empty() and visible_card_range(_cards.size(),_scroll,_card_geometry.row_height)!=_card_range:
+		_card_refresh_queued=true
+		_refresh_scrolled_cards.call_deferred(_content)
 
 ## Touch-enabled original nodes in the mounted subtrees with no action of
 ## their own swallow their touch; labels it does not drive keep their text.
