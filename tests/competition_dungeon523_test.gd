@@ -13,6 +13,7 @@ const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var checks := 0
 var failures: Array[String] = []
 var physical := false
+var physical_master := false
 var image_count := 0
 
 func check(ok: bool, label: String) -> bool:
@@ -41,7 +42,7 @@ class Recorder extends RefCounted:
 		last=PAYMENT.commit(owner,changes)
 		problem=str(last.get("reason",""))
 		if not last.get("ok",false):return false
-		owner.gold=changes.gold
+		if changes.has("gold"):owner.gold=changes.gold
 		here={"land_id":land,"cell":bounds.slice(0,2)}
 		return true
 	func return_to_aden(changes: Dictionary, _waive: Array) -> Dictionary:
@@ -61,15 +62,24 @@ func _tables() -> void:
 		var direct: Dictionary=SOURCE.row("Land",int(row.arrival.get("land_id",-1)))
 		check(not direct.is_empty() and direct.get("AssetPath")==row.arrival.get("asset_path"),"explicit arrival Land and path #%d" % int(row.id))
 		check(row.asset_id>0 and int(row.asset_type)==11 and not str(row.asset_path).is_empty(),"exact EntranceAssetId and original UI_Mission file #%d" % int(row.id))
-	var enabled: Array=world_rows.filter(func(row: Dictionary)->bool:return str(row.local_block).is_empty()).map(func(row: Dictionary)->int:return int(row.id))
-	enabled.sort()
-	check(enabled==DUNGEON.LOCAL_LOBBIES,"only five approved offline physical lobbies: "+str(enabled))
+	check(world_rows.filter(func(row: Dictionary)->bool:return str(row.local_block).is_empty()).size()==22,"22 world routes, including released former server/hour gates")
+	check(master_rows.filter(func(row: Dictionary)->bool:return str(row.local_block).is_empty()).size()==3,"three master routes use verified Adena payment")
 	var escaros: Dictionary=DUNGEON.entry(314)
 	check(escaros.arrival.territory_id==201094 and escaros.arrival.land_id==47954 and escaros.arrival.asset_path=="13410/" and escaros.levels.min==85 and escaros.asset_id==256534 and escaros.asset_path=="Image/Mission/WorldDungeon_Escaros.png","exact Escaros destination, minimum level, and typed literal entrance image")
 	check(DUNGEON.lobby(47954,"13410/").get("links",[])==[1314,2042] and DUNGEON.lobby(47954,"13411/").is_empty(),"bound exact physical lobby membership only, including same-lobby variant")
-	check(DUNGEON.lobby(47964).is_empty() and DUNGEON.lobby(47233).is_empty(),"combat Land and unapproved Master Land not authorized")
-	for row: Dictionary in master_rows:check(str(row.local_block).contains("서버 조건"),"Master stays visible, server condition held #%d" % int(row.id))
-	check(str(DUNGEON.entry(472).local_block).contains("미공개") and str(DUNGEON.entry(501).local_block).contains("재화") and str(DUNGEON.entry(82).local_block).contains("주간"),"global, fishing and normal weekly gates stay separate")
+	check(DUNGEON.lobby(47964).is_empty() and 233 in DUNGEON.lobby(47233).ids,"combat-only Land excluded; real Master entrance authorized")
+	for id: int in [233,274,372]:check(DUNGEON.entry(id).levels.min==85 and DUNGEON.entry(id).local_block.is_empty(),"Master level retained without server lock #%d" % id)
+	check(str(DUNGEON.entry(472).local_block).contains("미공개") and str(DUNGEON.entry(501).local_block).contains("제외") and DUNGEON.entry(82).local_block.is_empty(),"global/fishing excluded, World weekly gate not used")
+	check(str(DUNGEON.entry(221).local_block).contains("결제") and DUNGEON.entry(221).levels.min==80,"unbound original Master ticket fee not waived")
+	for id: int in [284,294]:check(DUNGEON.entry(id).wallet_key=="명예 코인" and DUNGEON.entry(id).tariff.TeleportCost==1000,"original ClanCoin currency binding #%d" % id)
+	check(DUNGEON.level_problem(84,{"min":45,"max":84}).is_empty() and DUNGEON.level_problem(85,{"min":45,"max":84}).contains("84레벨"),"max-level fixture remains inclusive and enforced")
+	var land_id: int=47954
+	var lobby_row: Dictionary=DUNGEON.lobby(land_id)
+	for pair: Array in [[91,"MinLevel"],[101,"MaxLevel"]]:
+		var condition: Dictionary={"row":{"LandID":land_id,"LandAttributeTypeID":pair[0]},"type":{"ID":pair[0],"Name":pair[1]},"reason":"native_attribute_requires_policy"}
+		check(not DUNGEON.nonlevel_lobby_hold(condition,land_id,lobby_row),"unresolved original level attribute cannot be waived: "+pair[1])
+		condition.reason="actor_level_requirement_not_met"
+		check(not DUNGEON.nonlevel_lobby_hold(condition,land_id,lobby_row),"failed original level attribute cannot be waived: "+pair[1])
 	var missing: Dictionary=DUNGEON.picture(escaros)
 	check(missing.get("texture")==null or missing.get("ok",false),"no placeholder if original art cannot load")
 
@@ -85,16 +95,15 @@ func _images(root_path: String) -> void:
 			image_count+=1
 	check(image_count==21,"all 21 distinct world/master original PNG roles decoded")
 
-func _confirm_escaros_menu(world: Node) -> bool:
+func _confirm_menu(world: Node,id: int) -> bool:
 	world.hud.open_source_dungeons()
 	var view: Node=world.hud.workspace.find_child("SourceDungeonView",true,false)
 	if not check(is_instance_valid(view) and view.family.item_count==8,"normal dungeon menu shows new categories"):return false
-	view.family.select(7);view._refresh()
-	check(view.rows.size()==4 and str(view.details.text).contains("서버 조건"),"master details surface the concrete lock")
-	view.family.select(6);view._refresh()
+	var master: bool=DUNGEON.entry(id).category_id==DUNGEON.MASTER
+	view.family.select(7 if master else 6);view._refresh()
 	for i: int in range(view.rows.size()):
-		if view.rows[i].id==314:view._select(i);break
-	check(view.rows.size()==23 and view.condition_button.text=="원본 입구 이동","world row offers original local entry")
+		if view.rows[i].id==id:view._select(i);break
+	check(view.rows.size()==(4 if master else 23) and view.condition_button.text=="원본 입구 이동","selected World/Master row offers original local entry")
 	if image_count>0:
 		check(view.listing.get_item_icon(view.selected) is Texture2D and view.listing.get_item_metadata(view.selected).get("source_art_status","")!="","real selected Escaros row consumes the original image")
 	view.condition_button.pressed.emit()
@@ -120,9 +129,12 @@ func _main() -> void:
 	recorder.owner=world
 	world._current523_aden_play_controller=recorder
 	world.current523_aden_play_active=true
-	check(not world.competition523_quote(233).ok and recorder.moves.is_empty(),"master never reaches travel receiver")
+	world.gold=900000
+	check(world.competition523_quote(233).ok and world.competition523_quote(274).ok and world.competition523_quote(82).ok,"previously gated Master and weekly World are quotable")
+	world.gold=400000
 	world.level=84
-	check(str(world.competition523_quote(314).reason).contains("85레벨"),"minimum rechecked")
+	var below: Dictionary=world.competition523_enter(314,{})
+	check(not below.ok and str(below.reason).contains("85레벨") and recorder.moves.is_empty() and world.gold==400000 and FileAccess.get_sha256(world.save_path())==hash_before,"below-minimum cannot move, debit or write")
 	world.level=85
 	recorder.missing=true
 	check(not world.competition523_quote(314).ok and recorder.moves.is_empty(),"missing target held")
@@ -138,12 +150,19 @@ func _main() -> void:
 		var failed: Dictionary=world.competition523_enter(314,q.ticket)
 		world.equipment_collections.test_save_writer=Callable()
 		check(not failed.ok and not failed.uncertain and recorder.here.land_id==4 and world.gold==400000 and FileAccess.get_sha256(world.save_path())==hash_before,"real writer refusal preserves old location, wallet and byte-identical save")
-		var menu_confirmed: bool=_confirm_escaros_menu(world)
+		var menu_confirmed: bool=_confirm_menu(world,314)
 		var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 		check(menu_confirmed and recorder.here.land_id==47954 and world.gold==300000 and int(saved.get("gold",-1))==300000,"menu-confirmed entry charges exact fee once with real writer")
 		check(recorder.moves[-1]==[47954,[32731,32784,32755,32810],[DUNGEON.POLICY],{"gold":300000}],"movement receiver gets exact location and scoped geographic policy")
 		check(not world.competition523_enter(314,q.ticket).ok and world.gold==300000,"repeat inside lobby cannot charge")
 		check(world.competition523_return().ok and recorder.here.land_id==4 and world.gold==300000,"confirmed return uses the save owner with no charge")
+		world.level=120
+		world.inventory["명예 코인"]=1200
+		var coin_quote: Dictionary=world.competition523_quote(284)
+		if check(coin_quote.get("ok",false),"original ClanCoin cost quoted: "+str(coin_quote.get("reason",""))):
+			var paid: Dictionary=world.competition523_enter(284,coin_quote.ticket)
+			var paid_save: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+			check(paid.ok and world.gold==300000 and int(world.inventory.get("명예 코인",0))==200 and int(paid_save.inventory.get("명예 코인",0))==200,"exact non-Adena fee changes only the coin wallet on real save")
 	world.current523_aden_play_active=false
 	world._current523_aden_play_controller=real
 	recorder.owner=null
@@ -175,13 +194,17 @@ func _terrain(base: String) -> void:
 	check(world._save_game(true)==OK,"real Giran save before Escaros")
 	var before: String=FileAccess.get_sha256(world.save_path())
 	var old: Dictionary=world.orim_current_land()
+	world.level=84
+	var under: Dictionary=world.competition523_enter(314,{})
+	check(not under.ok and str(under.reason).contains("85레벨") and world.orim_current_land()==old and world.gold==400000 and FileAccess.get_sha256(world.save_path())==before,"actual map remains unchanged below original required level")
+	world.level=85
 	var q: Dictionary=world.competition523_quote(314)
 	if check(q.get("ok",false),"real Escaros route is available in the original pack: "+str(q.get("reason",""))):
 		world.equipment_collections.test_save_writer=func(_path: String,_value: Dictionary)->Error:return ERR_FILE_CANT_WRITE
 		var failure: Dictionary=world.competition523_enter(314,q.ticket)
 		world.equipment_collections.test_save_writer=Callable()
 		check(not failure.ok and not failure.uncertain and world.orim_current_land()==old and world.gold==400000 and FileAccess.get_sha256(world.save_path())==before,"actual geometry and save failure roll back")
-		var menu_confirmed: bool=_confirm_escaros_menu(world)
+		var menu_confirmed: bool=_confirm_menu(world,314)
 		await process_frame
 		physical=menu_confirmed and int(world.orim_current_land().get("land_id",-1))==47954
 		if check(physical,"menu confirmation uses actual controller to enter original Escaros: "+str(world.hud.message_label.text)):
@@ -197,6 +220,21 @@ func _terrain(base: String) -> void:
 			world.portal_cooldown=0.0
 			var returned: Dictionary=world.competition523_return()
 			check(returned.get("ok",false) and int(world.orim_current_land().get("land_id",-1))==4 and world.gold==300000,"actual Giran return without debit: "+str(returned.get("reason","")))
+			if returned.get("ok",false):
+				world.gold=700000
+				world.portal_cooldown=0.0
+				var master_quote: Dictionary=world.competition523_quote(274)
+				if check(master_quote.get("ok",false),"old Master server/weekly gate no longer blocks: "+str(master_quote.get("reason",""))):
+					var confirmed: bool=_confirm_menu(world,274)
+					await process_frame
+					var master_here: Dictionary=world.orim_current_land()
+					physical_master=confirmed and master_here.get("land_id")==47804
+					check(physical_master and world.gold==200000,"real previously server-gated Master Land + fee: "+str(world.hud.message_label.text))
+					if physical_master:
+						var cell: Array=master_here.cell
+						check(cell[0]>=32706 and cell[0]<=32724 and cell[1]>=32789 and cell[1]<=32801 and world.field_map.walkable(world.player.global_position),"physical Master clear cell in original box")
+						world.portal_cooldown=0
+						check(world.competition523_return().get("ok",false) and world.gold==200000 and world.orim_current_land().get("land_id")==4,"real Master return is free")
 	world.queue_free()
 	await process_frame
 
@@ -213,5 +251,5 @@ func _run() -> void:
 	else:
 		check(not OS.has_environment("TWILIGHT_PATCH523_CONTENT"),"an explicit invalid archive must not masquerade as a no-pack run")
 		check(DUNGEON.entries(DUNGEON.WORLD).is_empty() and DUNGEON.entries(DUNGEON.MASTER).is_empty(),"absent source cannot invent a dungeon")
-	print("COMPETITION_DUNGEON523_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"exact_definitions":exact,"physical_terrain_tested":physical,"original_images_decoded_by_runtime":image_count,"original_ui_art_render_tested":false}))
+	print("COMPETITION_DUNGEON523_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"exact_definitions":exact,"physical_terrain_tested":physical,"physical_master_tested":physical_master,"original_images_decoded_by_runtime":image_count,"original_ui_art_render_tested":false}))
 	quit(0 if failures.is_empty() else 1)

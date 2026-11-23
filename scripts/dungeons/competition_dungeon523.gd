@@ -4,20 +4,16 @@ extends RefCounted
 const SRC = preload("res://scripts/resources/current523_definition_rows.gd")
 const PAYMENT = preload("res://scripts/maps/current523_map_travel_payment.gd")
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
+const ITEM_WALLETS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const WORLD: int = 274
 const MASTER: int = 284
 const GLOBAL_MASTER: int = 322
 const FAMILY := {"world": WORLD, "master": MASTER}
-const POLICY := "TWILIGHT_VERIFIED_COMPETITION_LOBBY_V1"
-## User-approved single-player geographic visits only. These retain a unique
-## source tariff and entrance on their HomeTerritories Land, without a normal
-## event/server/window dependency or a time-pool link on that entrance Land.
-const LOCAL_LOBBIES := [134, 182, 253, 314, 483]
-const LOCAL_LOBBY_LANDS := [44624, 46952, 47323, 47954, 49373]
-## These facts apply inside a lobby or describe client/session machinery;
-## other held attributes, level, time, and connection guards remain in force.
-const IN_LOBBY := ["NoTeleport", "TurnOffAutoForTeleport", "NoBookmark",
-	"LandPlayerSocketTimeoutSecond", "ObjectLazyLoad", "IdleTime", "Underground"]
+const POLICY := "TWILIGHT_LOCAL_COMPETITION_LOBBY_LEVEL_ONLY_V2"
+const FISHING := 501
+const GOLD := 1
+const CLAN_COIN := 21
+const MASTER_TICKET := 952
 static var _generation := -1
 static var _data: Dictionary = {}
 
@@ -77,49 +73,49 @@ static func _projection() -> Dictionary:
 		var image_path: String = asset_base.path_join(file_name) if not file_name.is_empty() and not asset_base.is_empty() else ""
 		var name: String = _desc(int(view.get("TitleDescId", 0)))
 		var levels: Dictionary = _levels(teleport_id, int(move.get("land_id", -1)))
+		var currency_id: int = int(tariff.get("CurrencyID",0))
 		var row: Dictionary = {"id": id, "category_id": category_id,
 			"name": name if not name.is_empty() else "원본 던전 #%d" % id,
 			"original": original, "view": view, "category": categories[category_id],
 			"arrival": move, "tariff": tariff, "levels": levels,
-			"asset_id": asset_id, "asset_type": asset_type, "asset_path": image_path, "local_block": ""}
+			"asset_id": asset_id, "asset_type": asset_type, "asset_path": image_path,
+			"currency_name": _currency_name(currency_id), "wallet_key": _currency_wallet(currency_id), "local_block": ""}
 		row.local_block = _local_block(row)
 		rows[id] = row
-	# Installed world-links can expose the same lobby under an inactive source
-	# variant. Only allow matching non-boss membership rows of the very same
-	# original entrance; no unrelated Land relation or server rule is removed.
 	var lobbies: Dictionary = {}
-	for id: int in LOCAL_LOBBIES:
-		var row: Dictionary = rows.get(id, {})
-		if row.is_empty() or not str(row.local_block).is_empty(): continue
+	for row: Dictionary in rows.values():
+		if not str(row.local_block).is_empty(): continue
 		var land_id: int = int(row.arrival.land_id)
-		if lobbies.has(land_id):
-			lobbies[land_id] = {}
-			continue
-		var allowed_links: Array[int] = []
+		if not lobbies.has(land_id): lobbies[land_id] = {"ids": [], "asset_path": str(row.arrival.asset_path), "links": []}
+		lobbies[land_id].ids.append(int(row.id))
+	# Variants may share a physical lobby and the same Land can belong to
+	# several World/Master rows. This removes their entry checks only on an
+	# authorized entrance Land, never on a linked combat field.
+	for land_id: int in lobbies:
 		for link: Dictionary in SRC.related("CompetitionDungeonLand", "LandID", land_id):
 			var other: Dictionary = rows.get(int(link.CompetitionDungeonID), {})
-			if link.get("IsBossLand") == false and not other.is_empty() and other.arrival.get("territory_id") == row.arrival.territory_id and other.arrival.get("bounds") == row.arrival.bounds:
-				allowed_links.append(int(link.ID))
-		lobbies[land_id] = {"id": id, "asset_path": str(row.arrival.asset_path), "links": allowed_links}
+			if not other.is_empty() and other.category_id in [WORLD,MASTER]:
+				lobbies[land_id].links.append(int(link.ID))
 	_data = {"rows": rows, "categories": categories, "lobbies": lobbies}
 	return _data
 
 static func _levels(teleport_id: int, land_id: int) -> Dictionary:
-	var result: Dictionary = {"min": 1, "max": 0, "unknown": false}
+	var result: Dictionary = {"min": 1, "max": 0, "invalid": false}
 	for link: Dictionary in SRC.related("LandTeleportPrerequisite", "LandTeleportID", teleport_id):
 		var condition: Dictionary = SRC.row("Prerequisite", int(link.get("PrerequisiteID", -1)))
+		if condition.is_empty():result.invalid=true;continue
 		var type_id: int = int(condition.get("PrerequisiteTypeID", 0))
-		if type_id not in [1, 2] or not _whole(condition.get("Value"), 1, 2147483647):
-			result.unknown = true
-			continue
+		if type_id not in [1, 2]: continue # Original non-level prerequisites are not entry gates here.
+		if not _whole(condition.get("Value"), 1, 2147483647): result.invalid = true; continue
 		_limit(result, type_id == 1, int(condition.Value))
 	for row: Dictionary in SRC.related("LandAttribute", "LandID", land_id):
 		# Region-scoped levels are checked by the actual landing provider, not
 		# applied indiscriminately to the entire Land.
 		if int(row.get("TerritoryID", -1)) != 0: continue
 		var kind: String = str(SRC.row("LandAttributeType", int(row.LandAttributeTypeID)).get("Name",""))
-		if kind in ["MinLevel", "MaxLevel"] and _whole(row.get("Value"), 1, 2147483647):
-			_limit(result, kind == "MinLevel", int(row.Value))
+		if kind not in ["MinLevel", "MaxLevel"]: continue
+		if not _whole(row.get("Value"), 1, 2147483647): result.invalid = true; continue
+		_limit(result, kind == "MinLevel", int(row.Value))
 	return result
 
 static func _limit(result: Dictionary, minimum: bool, value: int) -> void:
@@ -130,24 +126,42 @@ static func _local_block(row: Dictionary) -> String:
 	var src: Dictionary = row.original
 	var category: Dictionary = row.category.row
 	if category.get("Release") != true: return "원본 분류 미공개"
-	if int(category.get("ServerLimitSetId", 0)) > 0 or int(src.get("ServerLimitSetID", 0)) > 0 or int(src.get("EventServerLimitSetID", 0)) > 0:
-		return "원본 서버 조건 미확인 · 입장 보류"
+	if row.category_id not in [WORLD,MASTER] or int(row.id)==FISHING: return "이 콘텐츠는 TWILIGHT 이동 대상에서 제외됩니다."
 	if row.arrival.is_empty() or row.tariff.is_empty() or row.view.is_empty(): return "원본 도착 관계 확인 불가"
-	if int(row.tariff.get("CurrencyID", 0)) != 1: return "원본 이동 재화 처리 미지원"
 	if not _whole(row.tariff.get("TeleportCost"), 1, PAYMENT.MAX_AMOUNT): return "원본 이동 비용 확인 불가"
-	if int(src.get("WeeklyOpenTimeGroupId", 0)) > 0: return "원본 주간 입장 조건 미확인"
-	for key: String in ["IsEvent", "SeasonDurationMinute", "RequiredWorldBossRaidID", "WinnerWeeklyOpenTimeGroupId", "WarZoneHotTimeID"]:
-		if src.get(key) != 0: return "원본 이벤트·시즌·전투 조건 미확인"
-	if int(src.get("DungeonState", -1)) != 4: return "원본 던전 상태 확인 불가"
-	if int(row.id) not in LOCAL_LOBBIES: return "오프라인 입구 이동 미검증 · 원본 서버 입장 불가"
-	var home: Dictionary = SRC.row("Territories", int(src.get("HomeTerritoriesID", -1)))
-	if int(home.get("LandID", -1)) != int(row.arrival.land_id): return "원본 입구 지도 불일치"
-	if row.levels.unknown: return "원본 이동 전제조건 미지원"
+	if row.levels.invalid: return "원본 입장 레벨 확인 불가"
 	if row.view.get("LandTeleportId") != src.LandTeleportId or row.view.get("TeleportCost") != row.tariff.get("TeleportCost") or row.view.get("TeleportCostCurrencyId") != row.tariff.get("CurrencyID"):
 		return "원본 입장 비용 선언 불일치"
-	if not SRC.related("LandTimeLimit", "LandID", int(row.arrival.land_id)).is_empty() or not SRC.related("LandWeeklyOpenTime", "LandId", int(row.arrival.land_id)).is_empty():
-		return "원본 도착 지역 시간 조건 미확인"
+	if int(row.tariff.CurrencyID)==MASTER_TICKET: return "이동 비용: 원본 마스터 오만의 탑 입장권 결제 미연결"
+	if int(row.tariff.CurrencyID)!=GOLD and str(row.wallet_key).is_empty(): return "원본 이동 재화 결제 미연결"
 	return ""
+
+static func _currency_name(id: int) -> String:
+	if id==GOLD: return "아데나"
+	var currency: Dictionary=SRC.row("Currency",id)
+	var text: String=_desc(int(currency.get("DescID",0)))
+	return text if not text.is_empty() else str(currency.get("Name","원본 재화"))
+
+static func _currency_wallet(id: int) -> String:
+	if id!=CLAN_COIN: return ""
+	var row: Dictionary=_single("CurrencyUnitClass","CurrencyID",id)
+	if row.get("UnitID")!=4 or row.get("ClassID")!=3631: return ""
+	return ITEM_WALLETS.coin_wallet(3631)
+
+static func _payment(world: Node,row: Dictionary) -> Dictionary:
+	var amount: int=int(row.tariff.TeleportCost)
+	if int(row.tariff.CurrencyID)==GOLD: return PAYMENT.quote(world,amount)
+	var permitted: Dictionary=PAYMENT.quote(world,0)
+	if not permitted.ok: return permitted
+	var bag: Variant=world.get("inventory")
+	var key: String=str(row.wallet_key)
+	if key.is_empty() or not bag is Dictionary: return {"ok":false,"reason":"원본 이동 재화 결제 미연결"}
+	var have: Variant=bag.get(key,0)
+	if not _whole(have,0,9007199254740991) or have<amount: return {"ok":false,"reason":"이동 비용 %s 부족 (%d 필요)" % [key,amount]}
+	var next: Dictionary=bag.duplicate(true)
+	next[key]=int(have)-amount
+	if int(next[key])==0:next.erase(key)
+	return {"ok":true,"changes":{"inventory":next}}
 
 static func title(family: String) -> String:
 	var id: int = FAMILY.get(family, 0)
@@ -168,30 +182,44 @@ static func entry(id: int) -> Dictionary:
 	return _projection().get("rows", {}).get(id, {}).duplicate(true)
 
 static func lobby(land_id: int, asset_path: String = "") -> Dictionary:
-	if land_id not in LOCAL_LOBBY_LANDS: return {}
 	var row: Dictionary = _projection().get("lobbies", {}).get(land_id, {})
 	if asset_path != "" and row.get("asset_path") != asset_path: return {}
 	return row.duplicate(true)
+
+static func nonlevel_lobby_hold(hold: Dictionary,land_id: int,lobby_row: Dictionary) -> bool:
+	var row: Variant=hold.get("row")
+	if not row is Dictionary or row.get("LandID")!=land_id: return false
+	if hold.get("reason")=="native_land_condition_requires_policy" and hold.get("table")=="CompetitionDungeonLand":
+		return int(row.get("ID",-1)) in lobby_row.links
+	if hold.get("reason")!="native_attribute_requires_policy": return false
+	var attribute: Variant=hold.get("type")
+	if not attribute is Dictionary or not _whole(attribute.get("ID"),1,2147483647) or attribute.get("ID")!=row.get("LandAttributeTypeID"): return false
+	# Level failures (including unresolved forms) are never treated as waived.
+	return attribute.ID not in [91,101] and not str(attribute.get("Name","")).is_empty() and attribute.Name not in ["MinLevel","MaxLevel"]
 
 static func picture(row: Dictionary) -> Dictionary:
 	if int(row.get("asset_id", 0)) <= 0 or int(row.get("asset_type", -1)) != 11 or str(row.get("asset_path", "")).is_empty():
 		return {"ok": false, "status": "source_competition_entrance_asset_missing", "texture": null}
 	return IMAGES.resolve_asset_value(row.asset_id, row.asset_type, row.asset_path)
 
+static func level_problem(level: int,levels: Dictionary) -> String:
+	if level<int(levels.min):return "%d레벨부터 입구 이동 가능" % int(levels.min)
+	if int(levels.max)>0 and level>int(levels.max):return "%d레벨까지만 입구 이동 가능" % int(levels.max)
+	return ""
+
 static func quote(world: Node, id: int) -> Dictionary:
 	var row: Dictionary = entry(id)
 	if row.is_empty(): return {"ok": false, "reason": "원본 월드·마스터 던전 정의 없음"}
 	if not str(row.local_block).is_empty(): return {"ok": false, "reason": str(row.local_block), "row": row}
-	var level: int = int(world.get("level"))
-	if level < int(row.levels.min): return {"ok": false, "reason": "%d레벨부터 입구 이동 가능" % int(row.levels.min), "row": row}
-	if int(row.levels.max) > 0 and level > int(row.levels.max): return {"ok": false, "reason": "%d레벨까지만 입구 이동 가능" % int(row.levels.max), "row": row}
+	var level_gate: String=level_problem(int(world.get("level")),row.levels)
+	if not level_gate.is_empty():return {"ok":false,"reason":level_gate,"row":row}
 	var land_id: int = int(row.arrival.land_id)
 	if not world.has_method("dungeon523_land_ready"): return {"ok": false, "reason": "원본 지도 이동 연결 없음", "row": row}
 	var reason: String = world.call("dungeon523_land_ready", land_id)
 	if not reason.is_empty(): return {"ok": false, "reason": reason, "row": row}
 	if world.has_method("orim_current_land") and int(world.call("orim_current_land").get("land_id", -1)) == land_id:
 		return {"ok": false, "reason": "이미 이 입구 지도에 있습니다", "row": row}
-	var paid: Dictionary = PAYMENT.quote(world, int(row.tariff.TeleportCost))
+	var paid: Dictionary = _payment(world,row)
 	if not paid.ok: return paid.merged({"row": row})
 	var ticket: Dictionary = {"id": id, "arrival": row.arrival.duplicate(true),
 		"tariff": row.tariff.duplicate(true), "generation": SRC.cache_generation()}

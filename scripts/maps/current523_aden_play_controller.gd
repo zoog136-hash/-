@@ -113,7 +113,7 @@ func configure(world: Node) -> void:
 ## own map time is in effect (map_open_policy not always-open and map_time_policy
 ## OWN_MAP_TIME). Otherwise nothing is charged and in_effect is false.
 func map_time_in_effect() -> bool:
-	return _map_time!=null and settings.get("map_open_policy",OPTIONS.OWN_ALWAYS_OPEN_V1)!=OPTIONS.OWN_ALWAYS_OPEN_V1 and str(settings.get("map_time_policy",OPTIONS.OWN_MAP_TIME))==OPTIONS.OWN_MAP_TIME
+	return _map_time!=null and _active_entry_context.get("competition_lobby_land",-1)<0 and settings.get("map_open_policy",OPTIONS.OWN_ALWAYS_OPEN_V1)!=OPTIONS.OWN_ALWAYS_OPEN_V1 and str(settings.get("map_time_policy",OPTIONS.OWN_MAP_TIME))==OPTIONS.OWN_MAP_TIME
 
 func recharge_map_time(group_row: Dictionary, seconds: int) -> Dictionary:
 	var world: Node=_world()
@@ -187,25 +187,29 @@ func _with_map_time_quote(context: Dictionary, actor_state: Dictionary, policy: 
 func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_state: Dictionary, time_policy: String="") -> Dictionary:
 	if _source_portal_provider==null or not _source_portal_provider.has_method("land_entry_context_for_actor_state"):
 		return {"source_travel_hold":"map_entry_definition_provider_required"}
-	var raw: Variant=_source_portal_provider.call("land_entry_context_for_actor_state",land_id,asset,actor_state,source_cell)
-	if not raw is Dictionary or raw.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or not raw.get("Land") is Dictionary or raw.Land.get("ID")!=land_id or raw.Land.get("AssetPath")!=asset or raw.get("source_cell")!=[source_cell.x,source_cell.y]:
-		return {"source_travel_hold":"map_entry_definition_identity_invalid"}
-	var result: Dictionary=_with_map_time_quote(raw,actor_state,time_policy)
-	result["runtime_condition_identity"]=_condition_identity(actor_state)
 	var waive: Array=_content_entry_waive if land_id==_content_entry_land else []
 	var competition: Script=load("res://scripts/dungeons/competition_dungeon523.gd")
 	var lobby: Dictionary={}
 	if competition.POLICY in waive or land_id==_resume_land or _active_entry_context.get("competition_lobby_land",-1)==land_id:
 		lobby=competition.lobby(land_id,asset)
-		if not lobby.is_empty():
-			var held: Array=[]
-			for condition: Variant in result.get("source_travel_holds",[]):
-				if condition is Dictionary and condition.get("table")=="CompetitionDungeonLand" and int(condition.get("row",{}).get("ID",-1)) in lobby.links:continue
-				held.append(condition)
-			result["source_travel_holds"]=held
-			result["source_travel_hold"]="native_definition_conditions_require_policy" if not held.is_empty() else ""
-			result["competition_lobby_land"]=land_id
-			waive=competition.IN_LOBBY.duplicate()
+	var evaluated_state: Dictionary=actor_state.duplicate() if not lobby.is_empty() else actor_state
+	if not lobby.is_empty():evaluated_state["map_open_policy"]=OPTIONS.OWN_ALWAYS_OPEN_V1
+	var raw: Variant=_source_portal_provider.call("land_entry_context_for_actor_state",land_id,asset,evaluated_state,source_cell)
+	if not raw is Dictionary or raw.get("definition_manifest_sha256")!=DEFINITION_PACK_SHA256 or not raw.get("Land") is Dictionary or raw.Land.get("ID")!=land_id or raw.Land.get("AssetPath")!=asset or raw.get("source_cell")!=[source_cell.x,source_cell.y]:
+		return {"source_travel_hold":"map_entry_definition_identity_invalid"}
+	var result: Dictionary=_with_map_time_quote(raw,evaluated_state,time_policy)
+	result["runtime_condition_identity"]=_condition_identity(actor_state)
+	if not lobby.is_empty():
+		var held: Array=[]
+		var skipped: Array=[]
+		for condition: Variant in result.get("source_travel_holds",[]):
+			if condition is Dictionary and competition.nonlevel_lobby_hold(condition,land_id,lobby):skipped.append(condition)
+			else:held.append(condition)
+		result["source_travel_holds"]=held
+		result["source_travel_hold"]="native_definition_conditions_require_policy" if not held.is_empty() else ""
+		result["competition_lobby_land"]=land_id
+		result["content_entry_waived"]=skipped
+		return result
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/orim523/orim523.gd").stage_land_ids().has(land_id):
 		waive=CONTENT_ENTRY_WAIVE # A saved position inside an Orim stage Land.
 	if waive.is_empty() and not result.get("source_travel_holds",[]).is_empty() and preload("res://scripts/content523/content523.gd").content_land_ids().has(land_id):
@@ -233,7 +237,7 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 func _prepare_map_session(context: Dictionary, actor_state: Dictionary) -> bool:
 	if not str(context.get("source_travel_hold","map_entry_definition_missing")).is_empty():
 		problem="원문 지역 조건 보류: "+str(context.get("source_travel_hold"));return false
-	if _always_open(actor_state):
+	if _always_open(actor_state) or context.get("competition_lobby_land",-1)>=0:
 		if _map_time==null:problem="이전 맵 시간 세션의 종료 소비자가 없습니다.";return false
 		# The transition settles the old lease after its checkpoint succeeds.
 		_last_map_time=_always_open_quote();return true
@@ -285,14 +289,15 @@ func _map_time_tick() -> void:
 		var context: Dictionary=_entry_context(int(settings.native_land_id),str(_source_field.get("source_asset")),cell,state)
 		if not str(context.get("source_travel_hold","missing")).is_empty():reason="현재 지역의 원문 조건이 변경되거나 미확인 상태입니다."
 		else:_active_entry_context=context;_session_condition_identity=identity
-	if not _always_open(state):
+	var local_lobby: bool=_active_entry_context.get("competition_lobby_land",-1)>=0
+	if not _always_open(state) and not local_lobby:
 		for condition: Dictionary in _active_entry_context.get("land_time_conditions",[]):
 			var calendar: Dictionary=condition.get("calendar",{})
 			if calendar.get("status")=="open":
 				var window: Dictionary=calendar.get("window",{})
 				if not str(state.get("calendar_hold","missing")).is_empty() or state.now_unix<window.get("start_unix",0) or state.now_unix>=window.get("end_unix",0):reason="원문 지역의 기간이 종료되거나 달력 문맥을 사용할 수 없습니다."
 	if _map_time!=null and _map_time.active():
-		if _always_open(state):
+		if _always_open(state) or local_lobby:
 			_last_map_time=_map_time.end_session()
 			if not _last_map_time.get("ok",false):reason="이전 맵 시간 세션의 종료 정산을 저장할 수 없습니다."
 		elif not _map_time.pulse():reason="맵 잔여시간이 만료되었거나 시간 저장을 계속할 수 없습니다."

@@ -315,7 +315,9 @@ func _select(index: int) -> void:
 		listing.set_item_metadata(index,{"competition523_dungeon_id":entry.id,"source_art_status":art.get("status","")})
 		lines.append(str(entry.name)+" · 원본 입구")
 		lines.append("도착: "+str(entry.arrival.get("territory_name","원본 이동 정의 없음")))
-		lines.append("비용: %d %s · 필요 Lv.%d" % [int(entry.tariff.get("TeleportCost",0)),"아데나" if entry.tariff.get("CurrencyID")==1 else "기타 원본 재화",int(entry.levels.min)])
+		var levels: String="필요 Lv.%d" % int(entry.levels.min)
+		if int(entry.levels.max)>0:levels+="–%d" % int(entry.levels.max)
+		lines.append("비용: %d %s · %s" % [int(entry.tariff.get("TeleportCost",0)),str(entry.currency_name),levels])
 		lines.append("오프라인 입구 이동만 지원하며 서버 입장·전투와는 다릅니다.")
 		if not returning and not quote.get("ok",false):lines.append(str(quote.get("reason","이동 보류")))
 		if not art.get("ok",false):lines.append("원본 입구 이미지 미설치 또는 확인 불가")
@@ -421,7 +423,7 @@ func _check_entry() -> void:
 
 func _competition_is_here(entry: Dictionary) -> bool:
 	var land_id: int = int(world.orim_current_land().get("land_id",-1))
-	return COMPETITION.lobby(land_id).get("id",-1)==entry.id
+	return entry.id in COMPETITION.lobby(land_id).get("ids",[])
 
 func _competition_check(entry: Dictionary) -> void:
 	var hud: Node=world.hud
@@ -437,7 +439,7 @@ func _competition_check(entry: Dictionary) -> void:
 		notice.text=str(quote.get("reason","이동 보류"))
 		hud.show_message(notice.text)
 		return
-	hud.confirm_action("원본 입구 이동 · 오프라인","%s\n비용: %d 아데나\n원본 서버·전투 입장은 아닙니다." % [str(entry.name),int(entry.tariff.TeleportCost)],"입구 이동",func(_count: int) -> void:
+	hud.confirm_action("원본 입구 이동 · 오프라인","%s\n비용: %d %s\n원본 서버·전투 입장은 아닙니다." % [str(entry.name),int(entry.tariff.TeleportCost),str(entry.currency_name)],"입구 이동",func(_count: int) -> void:
 		var result: Dictionary=world.competition523_enter(id,quote.ticket)
 		hud.show_message(str(result.get("reason","이동 보류")))
 		if result.get("ok",false):hud.call_deferred("_close_workspace"))

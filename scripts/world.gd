@@ -12317,6 +12317,10 @@ func competition523_enter(id: int, ticket: Dictionary) -> Dictionary:
 	if not moved or not state.get("saved",false):
 		var detail: String=str(controller.get("problem"))
 		return {"ok":false,"reason":"입구 이동 보류 · "+(detail if not detail.is_empty() else "지도 또는 저장 확인 필요"),"uncertain":bool(state.get("uncertain",false))}
+	if fresh.changes.has("inventory"):
+		inventory=fresh.changes.inventory
+		hud.refresh_inventory(inventory)
+		_update_hud()
 	if player.auto_enabled:player.set_auto_enabled(false)
 	return {"ok":true,"saved":true,"land_id":row.arrival.land_id,"cost":row.tariff.TeleportCost,
 		"reason":str(row.name)+" 원본 입구로 이동했습니다 · 오프라인 탐방"}

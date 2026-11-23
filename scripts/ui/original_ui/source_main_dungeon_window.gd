@@ -859,7 +859,7 @@ func _fill_competition(root: Node2D, out: Dictionary, world: Node) -> Dictionary
 	for i: int in range(rows.size()):
 		var entry: Dictionary=rows[i]
 		var id: int=int(entry.id)
-		var can_return: bool=lobby.get("id",-1)==id
+		var can_return: bool=id in lobby.get("ids",[])
 		var quote: Dictionary=world.competition523_quote(id)
 		var label: String=str(entry.name)
 		if rows.any(func(v: Dictionary) -> bool: return v.id!=id and v.name==entry.name):label+=" #%d" % id
@@ -872,7 +872,7 @@ func _fill_competition(root: Node2D, out: Dictionary, world: Node) -> Dictionary
 			"Panel/Img_Special":{"visible":false},
 			"Panel/Button":{"activate":Callable(self,"_competition_pressed").bind(id)},
 			"Panel/Label_Dungeon":{"role":"source_text","text":label},
-			"Panel/Label_Charge":{"role":"source_text","text":"기란으로 귀환" if can_return else (price if adena else "기타 원본 재화")},
+			"Panel/Label_Charge":{"role":"source_text","text":"기란으로 귀환" if can_return else (price if adena else price+" "+str(entry.currency_name))},
 			"Panel/Sp_Adena":{"visible":adena and not can_return},
 			"Panel/Nd_Lock":{"visible":not can_return and not quote.get("ok",false)},
 			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"이동 보류 · 눌러서 이유 확인"},
@@ -1258,7 +1258,7 @@ func _competition_pressed(id: int) -> Dictionary:
 	if hud==null:return _fail("source_dungeon_window_host_unavailable")
 	var world: Node=hud.get_parent()
 	var here: Dictionary=COMPETITION.lobby(int(world.orim_current_land().get("land_id",-1)))
-	if here.get("id",-1)==id:
+	if id in here.get("ids",[]):
 		return _confirm("원본 입구 · 귀환","기란 마을로 돌아갑니다. 이동 비용 없음.","귀환",func() -> void:
 			var result: Dictionary=world.competition523_return()
 			hud.show_message(str(result.get("reason","귀환 보류")))
@@ -1268,7 +1268,7 @@ func _competition_pressed(id: int) -> Dictionary:
 		hud.show_message(str(quote.get("reason","입구 이동 보류")))
 		return {"ok":false,"handled":true,"blocked":str(quote.get("reason",""))}
 	var entry: Dictionary=quote.row
-	return _confirm("원본 입구 이동 · 오프라인","%s\n이동 비용: %s 아데나\n원본 서버·전투 입장이 아닌 입구 탐방입니다." % [str(entry.name),number_text(int(entry.tariff.TeleportCost))],"입구 이동",func() -> void:
+	return _confirm("원본 입구 이동 · 오프라인","%s\n이동 비용: %s %s\n원본 서버·전투 입장이 아닌 입구 탐방입니다." % [str(entry.name),number_text(int(entry.tariff.TeleportCost)),str(entry.currency_name)],"입구 이동",func() -> void:
 		var result: Dictionary=world.competition523_enter(id,quote.ticket)
 		hud.show_message(str(result.get("reason","입구 이동 보류")))
 		if result.get("ok",false):call_deferred("_close_requested"))
