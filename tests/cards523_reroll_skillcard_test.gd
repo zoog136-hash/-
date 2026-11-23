@@ -227,16 +227,23 @@ func reroll(world: Node) -> void:
 	check(world.card523_swap_confirmed()["변신"].has(target) and world.card523_swap_confirmed()["변신"].has(chosen) and not world.card523_swap_quote("변신",chosen,true).get("can_confirm",false),"both the original and resulting identity close once")
 	# Two independently saved results: quote must not generate candidates or
 	# charge, refusal rolls both back, and one successful save settles both.
-	for idx: int in [2,3]:
-		var id: String = str(hero[idx].identity)
+	var queued: int = 0
+	for row: Dictionary in hero:
+		var id: String = str(row.identity)
+		# The randomly selected sixth result is already confirmed and cannot
+		# seed a second reroll. Choose two independent, unused source cards.
+		if swap.state.confirmed.get("변신",{}).has(id) or swap.state.pending.values().any(func(entry: Dictionary) -> bool:return entry.result==id):continue
 		cards.owned["변신"][id] = true
 		var pending_roll: Dictionary = reroll_once(world,"변신",id)
-		check(pending_roll.get("ok",false),"queue result for bulk confirmation")
+		check(pending_roll.get("ok",false),"queue result for bulk confirmation: "+str(pending_roll.get("reason","")))
+		if pending_roll.get("ok",false):queued+=1
+		if queued==2:break
+	check(queued==2,"two independent results are queued")
 	var held_before: Dictionary = swap.state.pending.duplicate(true)
 	var keeper: String=""
 	for row: Dictionary in hero.slice(4):
 		var id: String=str(row.identity)
-		if world.card523_swap_confirmed().get("변신",{}).has(id) or held_before.values().any(func(entry: Dictionary) -> bool:return entry.result==id):continue
+		if world.card523_swap_confirmed().get("변신",{}).has(id) or held_before.has("변신|"+id) or held_before.values().any(func(entry: Dictionary) -> bool:return entry.result==id):continue
 		keeper=id
 		break
 	check(not keeper.is_empty(),"an independent owned card can also be kept")
@@ -253,7 +260,7 @@ func reroll(world: Node) -> void:
 	var wallet: int = int(world.inventory["다이아"])
 	var before_file: Dictionary = save_data(world)
 	var bulk: Dictionary = world.card523_swap_quote_all()
-	check(bulk.get("count",0)>=3 and before_file==save_data(world),"bulk quote offers both rerolls and the owned card without saving")
+	check(bulk.get("count",0)==3 and before_file==save_data(world),"bulk quote offers exactly two rerolls and the new card without saving")
 	world.patch523_owner_state_problem = "test: save refused"
 	var rollback: Dictionary = world.card523_swap_confirm_all(str(bulk.get("token","")))
 	world.patch523_owner_state_problem = ""
