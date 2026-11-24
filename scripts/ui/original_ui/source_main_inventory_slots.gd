@@ -1,4 +1,5 @@
 extends RefCounted
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const Markers=preload("res://scripts/ui/original_ui/source_main_inventory_markers.gd")
 ## Only authored slot instances. Host declares exact owned references for those
 ## positions; no row repetition, pagination, sorting, asset lookup or use gesture.
@@ -26,6 +27,7 @@ signal selection_changed(reference: String)
 var _pack: RefCounted
 var _bag: WeakRef
 var _icon_binding_provider: Callable
+var profile_icon_owner: bool=false
 
 func configure(pack: RefCounted, hud: Node, icon_binding_provider: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(hud):return _fail("source_inventory_slots_hud_unavailable")
@@ -54,6 +56,8 @@ func entries() -> Dictionary:
 	# One owner snapshot serves every authored slot in this synchronous refresh.
 	# Preserve opaque physical references and duplicate detection; never join by
 	# name or ask the owner to regenerate/sort its complete bag for each slot.
+	# Owned rows are detached once. Ordered rows borrow from that snapshot;
+	# legacy displayed rows come from the caller and need their own copy.
 	var owned: Array=offered.duplicate(true)
 	var owned_by_reference: Dictionary={}
 	var owned_reference_counts: Dictionary={}
@@ -72,11 +76,13 @@ func entries() -> Dictionary:
 		for reference: String in ordered:
 			if int(owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
 			displayed.append(owned_by_reference[reference])
+	else:
+		displayed=displayed.duplicate(true)
 	var displayed_reference_counts: Dictionary={}
 	for row: Dictionary in displayed:
 		var reference: Variant=row.get("reference")
 		if reference is String:displayed_reference_counts[reference]=int(displayed_reference_counts.get(reference,0))+1
-	return {"ok":true,"owned_entries":owned,"current_display_rows":displayed.duplicate(true),"owned_by_reference":owned_by_reference,"owned_reference_counts":owned_reference_counts,"displayed_reference_counts":displayed_reference_counts,"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"owned_entries":owned,"current_display_rows":displayed,"owned_by_reference":owned_by_reference,"owned_reference_counts":owned_reference_counts,"displayed_reference_counts":displayed_reference_counts,"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot", current_model: Dictionary={}) -> Dictionary:
 	var identity: Dictionary=_identities()
@@ -208,7 +214,9 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		if not _icon_binding_provider.is_valid():return {"ok":false,"handled":false,"code":"source_inventory_slots_existing_icon_provider_required","reference":reference,"slot_project_offset":offset}
 		# The current image owner provides pixels/provenance, not an asset-ref
 		# for a second lookup. Native renderer handles its existing upload API.
+		var started: int=FRAME_HITCH.now() if profile_icon_owner else 0
 		var supplied: Variant=_icon_binding_provider.call(entry.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":offset,"reference":reference})
+		if started>0:FRAME_HITCH.detail("ui.inventory_icon_owner",started)
 		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
 		if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):
 			# An item with no original picture keeps its original slot with
@@ -228,7 +236,9 @@ func _resolve_reference(reference: String, current_model: Dictionary={}) -> Dict
 	if not current.get("ok",false):return current
 	if reference.is_empty() or int(current.owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_owned_reference_not_unique")
 	if int(current.displayed_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_reference_not_in_current_bag_filter")
-	return {"ok":true,"entry":current.owned_by_reference[reference].duplicate(true)}
+	# Internal readers never mutate the snapshot. The icon provider is the
+	# separately bound callback and still receives its own deep copy.
+	return {"ok":true,"entry":current.owned_by_reference[reference]}
 
 func _identities() -> Dictionary:
 	if _pack==null:return _fail("source_inventory_slots_source_pack_required")

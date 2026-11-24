@@ -7,6 +7,8 @@ extends SceneTree
 ##   git show 8634f931b6b749865c52dd6437b2d18d5f91c174:scripts/ui/original_ui/source_main_inventory_slots.gd > /tmp/slots-before.gd
 ##   mkdir -p /tmp/twilight-inventory-benchmark/data /tmp/twilight-inventory-benchmark/config /tmp/twilight-inventory-benchmark/cache
 ##   XDG_DATA_HOME=/tmp/twilight-inventory-benchmark/data XDG_CONFIG_HOME=/tmp/twilight-inventory-benchmark/config XDG_CACHE_HOME=/tmp/twilight-inventory-benchmark/cache godot --headless --path . --script res://tests/benchmark_inventory_snapshot.gd -- --baseline=/tmp/slots-before.gd
+## With a recent producer baseline (already supports `build(...,model)`), add
+## --same-snapshot so both variants get exactly one owner snapshot.
 ## Use Godot 4.7.2. This opt-in benchmark has no elapsed-time pass threshold.
 const FIXTURE=preload("res://tests/original_ui_inventory_snapshot_test.gd")
 const AFTER=preload("res://scripts/ui/original_ui/source_main_inventory_slots.gd")
@@ -20,8 +22,10 @@ func _fail(reason: String) -> void:
 
 func _run() -> void:
 	var baseline_path: String=""
+	var same_snapshot: bool=false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--baseline="):baseline_path=argument.trim_prefix("--baseline=")
+		if argument=="--same-snapshot":same_snapshot=true
 	if baseline_path.is_empty() or not baseline_path.is_absolute_path():
 		_fail("Pass --baseline=/absolute/path.gd; see this script's reproduction commands.")
 		return
@@ -70,12 +74,12 @@ func _run() -> void:
 					for column: int in range(mini(offsets.size(),count-first)):
 						assignments[offsets[column]]=model.current_display_rows[first+column].reference
 					var args: Array=[parent,assignments,{},variant]
-					if improved:args.append(model)
+					if improved or same_snapshot:args.append(model)
 					if not slots.callv("build",args).get("ok",false):
 						hud.free()
 						_fail("Slot contract construction failed: "+variant)
 						return
 			results.append({"mode":"after" if improved else "before","owned":count,"staged_slots":count*2,"owner_reads":bag.entry_calls,"usec":Time.get_ticks_usec()-started})
 			hud.free()
-	print("INVENTORY_SLOT_SNAPSHOT_COMPARISON ",JSON.stringify({"scope":"synthetic_slot_binding_cpu_only","layouts":[4,8],"staged_slots_basis":"sum_of_both_layouts","baseline":baseline_path,"samples":results}))
+	print("INVENTORY_SLOT_SNAPSHOT_COMPARISON ",JSON.stringify({"scope":"synthetic_slot_binding_cpu_only","same_snapshot":same_snapshot,"layouts":[4,8],"staged_slots_basis":"sum_of_both_layouts","baseline":baseline_path,"samples":results}))
 	quit()
