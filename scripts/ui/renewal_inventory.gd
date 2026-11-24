@@ -521,10 +521,10 @@ func _paint_inventory_grid() -> void:
 ## prepared, rebuild the ownership read exactly as before: no persistent
 ## transaction/selection cache can admit a stale physical reference.
 func source_inventory_entries_for_view() -> Array[Dictionary]:
-	var prepared: Variant=prepare_source_inventory_model()
+	var prepared: Variant=prepare_source_inventory_model(true)
 	return prepared if prepared is Array else _inventory_entries()
 
-func prepare_source_inventory_model() -> Variant:
+func prepare_source_inventory_model(native_view: bool = false) -> Variant:
 	# The same owner reference/filter/order producer can serve a native CSB
 	# while these older controls are hidden. Keep its existing UI preference
 	# normalization; do not duplicate filters/order or rebuild another grid.
@@ -538,11 +538,18 @@ func prepare_source_inventory_model() -> Variant:
 		# Older capture tests set sort_mode directly; apply it once as the stored order.
 		_store_sorted_order(entries, sort_mode)
 		sort_mode = 0
-	for reference: String in _acquisition_order(entries):
-		var name: String = _base_item_name(reference)
-		var record: Dictionary = _find_item_record(reference)
-		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
-			sorted_references.append(reference)
+	var ordered: Array[String] = _acquisition_order(entries)
+	if native_view and category_filter == "전체" and search.is_empty():
+		# Every row passes the default filter without reading its item record.
+		# A cold 523 catalog lookup per *offscreen* row adds no information;
+		# visible slots still resolve their exact records and original icons.
+		sorted_references.append_array(ordered)
+	else:
+		for reference: String in ordered:
+			var name: String = _base_item_name(reference)
+			var record: Dictionary = _find_item_record(reference)
+			if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
+				sorted_references.append(reference)
 	# Acquisition order can normalize the saved array while preparing rows.
 	# Keep a detached snapshot so an in-place external edit is also detected.
 	var kept_order: Variant = _order_store().get("inventory_order", [])
