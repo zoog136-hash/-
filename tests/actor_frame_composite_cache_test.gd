@@ -393,8 +393,25 @@ func run() -> void:
 	check(companion.cached_frame_status().groups == {"body":"nodes","effects":"nodes"} and companion._composite_nodes.is_empty(), "companion keeps layer textures without composite uploads")
 	companion_bank.reset_counts()
 	check(companion.advance_reference_source(0.0,"idle",7) and companion_bank.rechecks == 1 and companion_bank.validations == 0, "warm companion pose uses the existing pin/member recheck")
+	# Direction 0's plan has fallen out of the 16-pose cache, but its local
+	# textures are still owned by this view. Recheck each exact layer once
+	# before using them, without repeating the same check during texture bind.
+	companion_bank.reset_counts()
+	check(companion.advance_reference_source(0.0,"idle",0), "evicted companion pose can be shown again immediately")
+	check(companion_bank.validations == 4 and companion_bank.pixel_requests == 0, "rebuilt pose verifies each of three body layers and one effect only once: " + str(companion_bank.validations))
+	per_layer.advance_reference_source(0.0,"idle",0)
+	same_output(companion, per_layer, "first frame after companion plan eviction")
 	companion.free()
 	per_layer.free()
+	var evicted_info: Dictionary = write_bank(directory.path_join("evicted_changed_member"))
+	var evicted_bank: CountingBank = open_bank(evicted_info)
+	var evicted: Node2D = make_view(root, evicted_bank, make_track(evicted_bank, {"effect_attrs":["8"]}), evicted_info.path, false)
+	evicted.use_companion_frame_plans()
+	evicted.frame_plan_max = 1
+	check(evicted.advance_reference_source(0.0,"idle",0) and evicted.advance_reference_source(0.0,"idle",1), "second direction evicts first plan without releasing local textures")
+	DirAccess.remove_absolute(evicted_info.raws[9002])
+	check(not evicted.advance_reference_source(0.0,"idle",0) and evicted._layers.is_empty(), "a deleted member still rejects a rebuilt pose with a local texture")
+	evicted.free()
 	# 6. CPU per advance (synthetic, this machine; phone ~30-60x slower).
 	measure(info)
 	# 7. GPU pixels (gl_compatibility) for every config.
@@ -410,6 +427,18 @@ func run() -> void:
 
 func measure(info: Dictionary) -> void:
 	COMPOSITOR.screen_copy_available = false
+	var companion_bank: CountingBank = open_bank(info)
+	var companion: Node2D = make_view(root, companion_bank, make_track(companion_bank, {"effect_attrs":["8"]}), info.path, false)
+	companion.use_companion_frame_plans()
+	for direction: int in 8:
+		for _pose: int in 3: companion.advance_reference_source(0.1,"idle",direction)
+	companion_bank.reset_counts()
+	var churn_started: int = Time.get_ticks_usec()
+	for _loop: int in 10:
+		for direction: int in 8:
+			for _pose: int in 3: companion.advance_reference_source(0.1,"idle",direction)
+	timings["companion_plan_churn"] = {"usec_per_advance":snappedf(float(Time.get_ticks_usec()-churn_started)/240.0,0.1),"validated_layers":companion_bank.validations,"decoded_layers":companion_bank.pixel_requests}
+	companion.free()
 	for config: Dictionary in [{"name":"plain","effect_attrs":[]}, {"name":"effect_add","effect_attrs":["8"]}]:
 		for cached: bool in [false, true]:
 			var bank: CountingBank = open_bank(info)

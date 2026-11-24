@@ -465,16 +465,26 @@ static func _wallet_item_class_id(record: Dictionary, fallback_name: String) -> 
 	return -1
 
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
-	if not recognized_item(record):
-		var wallet_id: int = _wallet_item_class_id(record, fallback_name)
-		if wallet_id > 0:
-			var wallet_image: Dictionary = describe_item_class(wallet_id, str(record.get("name", fallback_name)))
-			wallet_image["source_id"] = str(record.get("sourceId", ""))
-			wallet_image["source_record_kind"] = "original_coin_wallet"
-			wallet_image.provenance["caller_item_identity_field"] = "patch523_item_inventory.COIN_WALLETS"
-			return wallet_image
+	if recognized_item(record):
+		# These records already have the exact inventory consumer namespace.
+		# Alternate supplier predicates cannot change the decision and some
+		# expand the full on-disk native template just to reject this route.
+		var native: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
+		if record.get("source_test_item",false) == true:
+			native.reason = "source_test_item_excluded"
+			return native
+		var reader: RefCounted = active()
+		var identity: Dictionary = reader.source_consumer_row("ItemClass",native.item_class_id) if reader != null else {}
+		return _resolve_item_presentation(native,identity)
+	var wallet_id: int = _wallet_item_class_id(record, fallback_name)
+	if wallet_id > 0:
+		var wallet_image: Dictionary = describe_item_class(wallet_id, str(record.get("name", fallback_name)))
+		wallet_image["source_id"] = str(record.get("sourceId", ""))
+		wallet_image["source_record_kind"] = "original_coin_wallet"
+		wallet_image.provenance["caller_item_identity_field"] = "patch523_item_inventory.COIN_WALLETS"
+		return wallet_image
 	var shop_item_id: int = _shop_item_class_id(record)
-	if not recognized_item(record) and shop_item_id > 0:
+	if shop_item_id > 0:
 		var shop_image: Dictionary = describe_item_class(shop_item_id,str(record.get("name",fallback_name)))
 		shop_image["source_id"] = str(record.get("sourceId",""))
 		shop_image["source_record_snapshot"] = str(record.get("source_snapshot",""))
@@ -486,7 +496,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	var expedition_record: bool = _original_expedition_item(record)
 	var card_skill_material: bool = _original_card_skill_material(record)
 	var declared_item: bool = _declared_current_item(record)
-	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material or declared_item):
+	if _original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material or declared_item:
 		var original_row: Dictionary = NATIVE_FIELDS.full(record).source_original_item if quest_record or symbol_record or declared_item else record.source_item if expedition_record or card_skill_material else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
@@ -495,13 +505,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
 		return supplied if supplied.get("status") == "original_linked" else _identity_fallback(record,fallback_name,supplied)
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
-	if not recognized_item(record): return _identity_fallback(record,fallback_name,info)
-	if record.get("source_test_item",false) == true:
-		info.reason = "source_test_item_excluded"
-		return info
-	var reader: RefCounted = active()
-	var identity: Dictionary = reader.source_consumer_row("ItemClass",info.item_class_id) if reader != null else {}
-	return _resolve_item_presentation(info,identity)
+	return _identity_fallback(record,fallback_name,info)
 
 static func describe_item_class(id: int, title: String = "") -> Dictionary:
 	# The caller supplies an explicit ItemClass.ID namespace. This is an image

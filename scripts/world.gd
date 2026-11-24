@@ -4142,16 +4142,34 @@ func _merge_native_stacks() -> int:
 	var merge: Script=preload("res://scripts/loot/native_stack_merge.gd")
 	var repeated: Dictionary=merge.possible_names(item_instances)
 	if repeated.is_empty():return 0
-	var dormant: Dictionary=dormant_character_items()
-	var floor: Array=_ground_drops_snapshot()
-	var reserved: Dictionary={}
-	for uid: Variant in warehouse.instances: reserved[str(uid)]=true
-	for uid: Variant in dormant: reserved[str(uid)]=true
-	for record: Variant in floor:
-		if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
-	var planned: Dictionary=merge.plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved,repeated)
+	# Keep floor expiry and its transactional save at the previous boundary.
+	# An expiry save can change live owner state; take the attempt's inputs
+	# afterwards and fail closed if it blocked ownership.
+	var started: int=FRAME_HITCH.now()
+	ground_loot.prune()
+	FRAME_HITCH.detail("loot.fold_prune",started)
+	if stock.busy or quest_service.save_blocked or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
+	var owner_inputs: Array=[]
+	var snapshot := func() -> Dictionary:
+		var snapshot_started: int=FRAME_HITCH.now()
+		var floor: Array=ground_loot.records.values().duplicate(true)
+		var dormant: Dictionary=dormant_character_items()
+		owner_inputs.append_array([floor,dormant])
+		var reserved: Dictionary={}
+		for uid: Variant in warehouse.instances: reserved[str(uid)]=true
+		for uid: Variant in dormant: reserved[str(uid)]=true
+		for record: Variant in floor:
+			if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
+		var state: Dictionary=consumable_service.export_state()
+		FRAME_HITCH.detail("loot.fold_owner_snapshot",snapshot_started)
+		return {"state":state,"reserved":reserved}
+	started=FRAME_HITCH.now()
+	var planned: Dictionary=merge.plan(item_instances,{},ui_preferences.get("item_locks",{}),{},repeated,snapshot)
+	FRAME_HITCH.detail("loot.fold_plan",started)
 	if not planned.get("changed",false): return 0
-	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
+	started=FRAME_HITCH.now()
+	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),owner_inputs[0],owner_inputs[1])
+	FRAME_HITCH.detail("loot.fold_validate",started)
 	# A plan the full ownership check rejects is not adopted; the bag stays as
 	# it is (still valid) and nothing is saved.
 	if not issue.is_empty(): return 0
@@ -7521,8 +7539,13 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	FRAME_HITCH.detail("save.account", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
 	CHARACTER_ACCOUNT.forget_durable()
-	var result: Error = equipment_collections.write_save(save_path(), data)
-	if result == OK and written_envelope is Dictionary: CHARACTER_ACCOUNT.remember_durable(save_path(), written_envelope)
+	# Dungeon-only writes (periodic checkpoint, time exhaustion or stop) stage
+	# a new ledger revision. Don't hash and retain a second full typed save
+	# just for the fast path used by repeated identical saves.
+	var retain_typed_snapshot: bool=not (collection_override.size()==1 and collection_override.has("source_dungeon_play"))
+	var result: Error = equipment_collections.write_save(save_path(), data, retain_typed_snapshot)
+	if result==OK and written_envelope is Dictionary:
+		CHARACTER_ACCOUNT.remember_verified_durable(save_path(),written_envelope,equipment_collections.verified_payload_sha(save_path()))
 	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):
