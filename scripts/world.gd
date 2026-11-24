@@ -334,6 +334,7 @@ var original_population: OriginalSourcePopulation
 var source_save_blocked: bool = false
 var portal_cooldown: float = 2.0
 var auto_repath_timer: float = 0.0
+var _stable_auto_route: Dictionary = {}
 var auto_last_position: Vector2 = Vector2.ZERO
 var pending_ground_pickup: Button = null
 const GROUND_PICKUP_RADIUS: float = 60.0
@@ -3488,6 +3489,7 @@ func auto_hunting_move(schedule_id: int, landing_link_id: int) -> Dictionary:
 
 func _run_auto_hunt() -> void:
 	if player.has_manual_movement():
+		_stable_auto_route.clear()
 		_clear_auto_target_search()
 		auto_stuck_time = 0.0
 		return
@@ -3540,6 +3542,7 @@ func _run_auto_hunt() -> void:
 	elif not auto_search_candidates.is_empty():
 		_clear_auto_target_search()
 	if auto_target == null:
+		_stable_auto_route.clear()
 		selected_monster = null
 		player.clear_click_path()
 		return
@@ -3567,7 +3570,13 @@ func _run_auto_hunt() -> void:
 			auto_target = null
 			player.clear_click_path()
 			auto_stuck_time = 0.0
+			_stable_auto_route.clear()
 			return
+		if acquired_path.is_empty() and not can_see and _can_keep_stable_auto_route(auto_target):
+			FRAME_HITCH.count("auto.pursuit_path_kept")
+			FRAME_HITCH.detail("auto.path_reuse",auto_stage)
+			return
+		_stable_auto_route.clear()
 		# A moving target that is directly visible must not send AUTO around
 		# a distant A* waypoint. A grid route may include an old first turn even
 		# when the direct segment is already clear, causing a long pursuit stall.
@@ -3595,6 +3604,38 @@ func _run_auto_hunt() -> void:
 			player.clear_click_path()
 			return
 		player.set_click_path(path, auto_target.global_position)
+		if not can_see:
+			_remember_stable_auto_route(auto_target)
+
+# Only admitted static 523 terrain opts in. Never infer stability from the
+# map display name; legacy/native PNG fields keep their original cadence.
+func _static_auto_route_epoch() -> int:
+	if not is_instance_valid(field_map) or not field_map.has_method("static_pursuit_epoch"): return 0
+	return int(field_map.call("static_pursuit_epoch"))
+
+func _remember_stable_auto_route(target: TwilightMonster) -> void:
+	_stable_auto_route.clear()
+	var epoch: int = _static_auto_route_epoch()
+	if epoch == 0 or not is_instance_valid(target) or target.dead or player.manual_navigation: return
+	if player.path_index<0 or player.path_index>=player.click_path.size(): return
+	if player.click_path[-1] != target.global_position: return
+	_stable_auto_route = {"field":field_map.get_instance_id(),"epoch":epoch,"combat":combat_generation,
+		"actor":target.get_instance_id(),"life":target.life_id,"goal":target.global_position,
+		"points":player.click_path.duplicate(),"index":player.path_index}
+
+## Called only on the ordinary repath deadline, after attack and manual
+## priority. Confirm remaining path identity and the immediate walking leg.
+## No failed search is cached; stale or blocked state follows existing A*.
+func _can_keep_stable_auto_route(target: TwilightMonster) -> bool:
+	if _stable_auto_route.is_empty() or not is_instance_valid(target) or target.dead or target.is_queued_for_deletion(): return false
+	if player.manual_navigation or player.path_index<0 or player.path_index>=player.click_path.size() or auto_stuck_time>0.0: return false
+	var epoch: int = _static_auto_route_epoch()
+	if epoch==0 or field_map.get_instance_id()!=_stable_auto_route.field or epoch!=_stable_auto_route.epoch or combat_generation!=_stable_auto_route.combat: return false
+	if target.get_instance_id()!=_stable_auto_route.actor or target.life_id!=_stable_auto_route.life or target.global_position!=_stable_auto_route.goal: return false
+	if player.path_index<int(_stable_auto_route.index) or player.click_path!=_stable_auto_route.points: return false
+	if not field_map.line_clear(player.global_position,player.click_path[player.path_index]): return false
+	_stable_auto_route["index"]=player.path_index
+	return true
 
 func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
 	if not is_instance_valid(target) or target.dead:
@@ -11902,6 +11943,7 @@ func _impact_player_attack_timed(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	_stable_auto_route.clear()
 	EQUIPMENT523_INVOKE_DEBUFF.clear(self)
 	patch523_npc_spells.clear()
 	halphas_star.combat.reset()
