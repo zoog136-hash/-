@@ -471,9 +471,7 @@ func set_character_state(value: Dictionary) -> void:
 		return
 	inventory_fingerprint = fingerprint
 	_grouped_reward_amounts.clear()
-	_refresh_inventory_grid()
-	if selected_item != "":
-		_refresh_detail(selected_item)
+	_request_state_view_refresh()
 
 func _refresh_inventory_grid() -> void:
 	inventory_grid_dirty = true

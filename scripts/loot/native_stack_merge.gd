@@ -118,11 +118,27 @@ static func _canonical(value: Variant) -> Variant:
 
 const BLESS_LABELS: Dictionary={1:"normal",2:"blessed",3:"cursed"}
 
+## A same-name peer is necessary (not sufficient) for any merge. Inspect
+## only the shell here, before opening the original definition/cache or
+## validating a receipt. Use exactly the planner's name and level semantics.
+static func possible_names(instances: Dictionary) -> Dictionary:
+	var seen: Dictionary={}
+	var repeated: Dictionary={}
+	for uid: Variant in instances:
+		var entry: Variant=instances[uid]
+		if not entry is Dictionary or not entry.has(RECEIPT) or entry.get("level")!=0:continue
+		var name_value: String=str(entry.get("name",""))
+		if seen.has(name_value):repeated[name_value]=true
+		else:seen[name_value]=true
+	return repeated
+
 ## Plans the bag merge. Pure: returns new copies, never edits its inputs.
 ## {changed, item_instances, consumable_state, item_locks, merged_slots}
-static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reserved: Dictionary={}) -> Dictionary:
-	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reserved: Dictionary={}, repeated_names: Variant=null) -> Dictionary:
 	var unchanged: Dictionary={"changed":false,"merged_slots":0}
+	var candidates: Dictionary=possible_names(instances) if repeated_names==null else repeated_names
+	if candidates.is_empty():return unchanged
+	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	var ledger: Variant=state.get(USES,{});var partitions: Variant=state.get(PARTITIONS,{});var merges: Variant=state.get(MERGES,{})
 	if not ledger is Dictionary or not partitions is Dictionary or not merges is Dictionary:return unchanged
 	var involved: Dictionary={}
@@ -134,12 +150,13 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 	for raw: Variant in instances:
 		var uid: String=str(raw);var entry: Variant=instances[raw]
 		if not entry is Dictionary or not entry.has(RECEIPT) or entry.get("level")!=0:continue
+		var name_value: String=str(entry.get("name",""))
+		if not candidates.has(name_value):continue
 		var owned: Dictionary=stock.call("proof_entry",entry,uid)
 		if owned.is_empty() or max_stack(owned.receipt)<=1:continue
 		# User 2026-11-17: equipment never merges, whatever its MaxStackAmount;
 		# each piece keeps its own enchant/bless/element/option/lifetime/lock.
 		if equipment(owned.record) or str(owned.record.get("slot","")) not in STACK_SLOTS:continue
-		var name_value: String=str(entry.get("name",""))
 		var locked: bool=bool(locks.get(name_value+"@@@"+uid,false))
 		var key: String="%s|%d|%d|%d" % [name_value,int(owned.receipt.item_class_id),int(owned.receipt.bless_raw),int(locked)]
 		if not groups.has(key):groups[key]=[];order.append(key)

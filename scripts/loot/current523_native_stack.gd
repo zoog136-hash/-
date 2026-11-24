@@ -181,6 +181,19 @@ static func draw_ticket_profile(record: Dictionary) -> Dictionary:
 ## place (floor pickup); existing entries stay shared with the live bag.
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool=false) -> Dictionary:
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
+	return _stage_proven_grant(record,quantity,instances,origin,shallow)
+
+## One profile lookup determines both whether the floor item belongs to this
+## owner and whether a receipt may be issued. A claimed invalid grant is a
+## failure, not permission to fall back to the plain inventory.
+static func stage_floor_grant(record: Dictionary,quantity: int,instances: Dictionary) -> Dictionary:
+	if supply_profile(record).is_empty():return {"handled":false}
+	if quantity<1 or not integer(quantity):return {"handled":true,"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
+	var result: Dictionary=_stage_proven_grant(record,quantity,instances,{"kind":"source523_floor"},true)
+	result["handled"]=true
+	return result
+
+static func _stage_proven_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool) -> Dictionary:
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
 	# The original ItemClass row, definition identity and acquisition detail

@@ -73,7 +73,28 @@ func staged_transition_rules() -> void:
 	STACK.clear_proof_cache()
 	owner.free()
 
+func singleton_proof_pruning() -> void:
+	var items: Dictionary={}
+	for i: int in range(300):
+		items[str(i)]={"name":"fixture-"+str(i),"level":0,STACK.RECEIPT:{}}
+	items["same-name"]={"name":"fixture-77","level":0,STACK.RECEIPT:{}}
+	items["wrong-level"]={"name":"fixture-88","level":1,STACK.RECEIPT:{}}
+	items["not-receipted"]={"name":"fixture-99","level":0}
+	var candidates: Dictionary=MERGE.possible_names(items)
+	check(candidates=={"fixture-77":true},"only actual receipt peers can enter original stack proof")
+	STACK.clear_proof_cache()
+	var plan: Dictionary=MERGE.plan(items,{},{})
+	check(not plan.changed and STACK._proof_cache.size()==2 and STACK._proof_cache.has("77")
+		and STACK._proof_cache.has("same-name"),"only the two candidate receipts are proven in a 303-entry bag")
+	items["new-peer"]={"name":"fixture-99","level":0,STACK.RECEIPT:{}}
+	check(MERGE.possible_names(items)=={"fixture-77":true,"fixture-99":true},
+		"a later bag change recomputes qualification and is never skipped")
+	STACK.clear_proof_cache()
+
 func rules() -> void:
+	singleton_proof_pruning()
+	check(STACK.stage_floor_grant({"name":"unsupported fixture"},1,{})=={"handled":false},
+		"unsupported floor item is not claimed by physical grant owner")
 	staged_transition_rules()
 	var good: Dictionary = {"granted_quantity":3,"origin":{"kind":"owned_quantity_merge","merge_id":"0123456789abcdef0123456789abcdef","components":[{"physical_id":"a","quantity":1},{"physical_id":"b","quantity":2}]}}
 	check(MERGE.receipt_shape_valid(good), "a merge receipt whose parts add up is well formed")

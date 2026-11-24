@@ -1510,6 +1510,14 @@ func _open_original_production() -> bool:
 		CraftUI.last_focus = {"recipe_id":target,"focused":focused.get("ok",false) and original_main_ui_controller.production_window().selected()==target}
 	return true
 
+## Keep world/gameplay publication synchronous. Only coalesce the lineage
+## bag's row/detail rebuild while its two input snapshots are being supplied.
+func publish_committed_ticket_hud(publish: Callable) -> void:
+	var bag := lineage_inventory_ui
+	if is_instance_valid(bag): bag.begin_state_publish()
+	publish.call()
+	if is_instance_valid(bag): bag.end_state_publish()
+
 ## A craft (or any bag change) refreshes the open original 제작 window.
 func refresh_inventory(items: Dictionary) -> void:
 	super.refresh_inventory(items)
