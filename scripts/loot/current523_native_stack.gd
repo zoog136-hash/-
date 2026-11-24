@@ -66,6 +66,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
 	if elixir_rule(record,definition):return {"kind":"elixir","spec":{"can_use_when_invisible":true}}
+	if half_elixir_charge_rule(record,definition):return {"kind":"half_elixir_charge","spec":{"can_use_when_invisible":true}}
 	if record.get("source_item_class_id")==310:
 		var cure: Dictionary=load("res://scripts/quests/quest_cure310.gd").call("profile",record)
 		if not cure.is_empty():return {"kind":"cure","spec":NATIVE_FIELDS.full(cure).source_use_spec}
@@ -111,6 +112,22 @@ static func elixir_rule(record: Dictionary, definition: Dictionary) -> bool:
 	var bonus: Dictionary = row.get("bonus",{})
 	return (row.get("IsPossession") == false
 		and row.get("bonus_type",{}).get("Name") == "BonusStatAmount"
+		and row.get("unit",{}).get("Name") == "Value" and whole(bonus.get("Value")) == 1
+		and whole(bonus.get("BonusApplicationTypeID")) == 0 and whole(bonus.get("BonusApplicationTargetID")) == 0)
+
+## Original 523 self-use items 185094 and 199263 each charge one point
+## into the existing half-elixir owner (not the ordinary elixir stat pool).
+static func half_elixir_charge_rule(record: Dictionary, definition: Dictionary) -> bool:
+	if whole(record.get("source_item_class_id")) not in [185094,199263] or NATIVE_FIELDS.field(record,"source_category_name") != "HalfElixirRecharger":
+		return false
+	var original: Dictionary = definition.get("original_item",{})
+	if original.get("TestItem") != false or whole(original.get("LevelLimitMin")) != 50 or whole(original.get("TargettingTypeID")) != 1 or original.get("ServiceRegionCode") != "" or original.get("CanUseWhenInvisible") != true:
+		return false
+	var rows: Array = definition.get("item_bonus",[])
+	if rows.size() != 1:return false
+	var row: Dictionary = rows[0]
+	var bonus: Dictionary = row.get("bonus",{})
+	return (row.get("IsPossession") == false and row.get("bonus_type",{}).get("Name") == "HalfElixirPoint"
 		and row.get("unit",{}).get("Name") == "Value" and whole(bonus.get("Value")) == 1
 		and whole(bonus.get("BonusApplicationTypeID")) == 0 and whole(bonus.get("BonusApplicationTargetID")) == 0)
 
@@ -306,7 +323,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if selected.is_empty() and EFFECTS.try_use_plain(world,item_name):return {"handled":true,"ok":false,"silent":true}
 	var named: Dictionary=world._find_catalog_item_record(item_name)
 	var selected_entry: Variant=world.item_instances.get(selected,{})
-	var claims: bool=not profile(named).is_empty() or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
+	var named_profile: Dictionary=profile(named)
+	var claims: bool=(not named_profile.is_empty() and named_profile.get("kind")!="half_elixir_charge") or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
 	if not claims:
 		for entry: Variant in world.item_instances.values():
 			if entry is Dictionary and entry.get("name")==item_name and entry.has(RECEIPT):claims=true;break
@@ -381,6 +399,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
+	if effect.kind=="half_elixir_charge":return use_half_elixir_charge(world,uid,owned,record)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
 	if effect.kind=="bless_points":return use_bless_points(world,uid,owned,record,spec)
 	if effect.kind=="time_recharge":return use_time_recharge(world,uid,owned,record,spec)
@@ -1384,6 +1403,31 @@ static func bless_scroll_owned(world: Node,scroll_name: String) -> Dictionary:
 		if spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
 		return {"uid":id,"owned":owned,"record":owned.record,"spec":spec,"request":{"physical_id":id,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}}
 	return {"error":"선택 물리 개체·잠금·소지 수량 확인 필요"}
+
+## Use one exact physical receipt and stage the point and debit in one save.
+static func use_half_elixir_charge(world: Node,uid: String,owned: Dictionary,record: Dictionary) -> Dictionary:
+	var runtime: Variant=world.get("half_elixir")
+	if runtime==null:return _failure("하프 엘릭서 기능 연결 필요 · 아이템 보존")
+	var definition: Dictionary=D.item_definition(record)
+	var plan: Dictionary=runtime.plan_native_charge(whole(record.get("source_item_class_id")),definition.get("original_item",{}))
+	if not plan.get("ok",false):return _failure(str(plan.get("message"))+" · 아이템 보존")
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt}
+	var paid: Dictionary=stage_debit(world,[request])
+	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","하프 엘릭서 수량 차감 검증 실패"))))
+	var payload: Dictionary=paid.overrides
+	payload[runtime.KEY]=plan.state
+	busy=true
+	runtime.busy=true
+	var saved: Error=world._save_game(true,payload)
+	runtime.busy=false
+	busy=false
+	if saved!=OK:return _failure("하프 엘릭서 저장 실패 · 포인트와 아이템 보존")
+	world.inventory=payload.inventory
+	world.item_instances=payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	runtime.accept(plan.state)
+	world.deferred_save.cancel()
+	return {"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"message":"하프 엘릭서 능력치 포인트 +1"}
 
 ## A weapon mastery point item: the existing mastery owner plans the original
 ## points for the normalized weapon type and saves them together with the

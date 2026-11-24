@@ -421,8 +421,12 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
 
-static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0 or IDENTITY.item_class_id(record, "") > 0 or not IDENTITY.icon_identity(record, "").is_empty())
+static func handles_item(record: Dictionary, ground: bool = false, fallback_name: String = "") -> bool:
+	if ground or not selected(): return false
+	# Only a name-only caller can introduce the fallback identity. An explicit
+	# record must not accidentally claim another item's IconID.
+	var item_name := fallback_name if record.is_empty() else ""
+	return recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, item_name) > 0 or IDENTITY.item_class_id(record, item_name) > 0 or not IDENTITY.icon_identity(record, item_name).is_empty()
 
 ## Entries no supplier above declares (legacy name-catalog rows such as
 ## "각인 장비 상자", held "[원본 보상]" keys, " · 원본#N" keys) still name one
@@ -433,13 +437,17 @@ static func _identity_fallback(record: Dictionary, fallback_name: String, info: 
 		var mapped: Dictionary = IDENTITY.icon_identity(record, fallback_name)
 		if mapped.is_empty(): return info
 		var mapped_image: Dictionary = describe_icon_identity(mapped, IDENTITY.display_name(record, fallback_name))
-		if mapped_image.get("status") != "original_linked" and mapped_image.get("reason") != "unsupported_csb": return info
+		# An exact alias carries useful source identity even when its original
+		# member is missing. Never replace a stronger supplier or promote an
+		# unverified approximation.
+		if mapped_image.get("status") != "original_linked" and mapped_image.get("reason") != "unsupported_csb":
+			if mapped.get("approximation",false) or info.get("reason") != "source523_item_identity_required": return info
 		mapped_image["source_id"] = str(record.get("sourceId", ""))
 		mapped_image["source_record_kind"] = "item_icon_identity"
 		return mapped_image
 	var image: Dictionary = describe_item_class(id, IDENTITY.display_name(record, fallback_name))
 	# An animated original icon (CSB scene) is that item's own picture too.
-	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb": return info
+	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb" and info.get("reason") != "source523_item_identity_required": return info
 	image["source_id"] = str(record.get("sourceId", ""))
 	image["source_record_kind"] = "original_item_identity"
 	image.provenance["caller_item_identity_field"] = "source523_item_identity"
@@ -542,6 +550,7 @@ static func describe_icon_identity(entry: Dictionary, title: String = "") -> Dic
 	info["presentation_only"] = true
 	info["item_class_namespace"] = "ItemClass.ID"
 	info["icon_identity_basis"] = str(entry.get("basis",""))
+	info["declared_icon_file"] = str(entry.get("icon_file",""))
 	info["twilight_approximation"] = entry.get("approximation",false) == true
 	if id <= 0:
 		info.reason = "source_item_class_identity_required"
@@ -556,7 +565,9 @@ static func describe_icon_identity(entry: Dictionary, title: String = "") -> Dic
 	info["source_status"] = str(result.get("status","source523_image_unavailable"))
 	info["reason"] = info.source_status
 	info["path"] = str(info.provenance.get("path",""))
-	if str(info.path).get_file().to_lower() != str(entry.get("icon_file","")).to_lower():
+	# No declared path means admission failed before reaching AssetView,
+	# not that the known filename differs.
+	if not str(info.path).is_empty() and str(info.path).get_file().to_lower() != str(entry.get("icon_file","")).to_lower():
 		info.reason = "item_icon_identity_file_differs"
 		info["source_status"] = info.reason
 		return info
@@ -685,6 +696,8 @@ static func missing_label(info: Dictionary) -> String:
 		"source_reference_excluded": return "원문 참조 제외"
 		"source_dummy_excluded": return "원본 더미 제외"
 		"unsupported_csb": return "효과 미연결"
+		"missing_current_member": return "팩에 없음"
+		"manifest_sha_mismatch", "invalid_manifest_pin", "file_sha_mismatch", "file_bytes_mismatch": return "원본 확인 불가"
 		"source_test_item_excluded": return "원본 제외"
 		"missing_consumer_key", "missing_icon_key", "zero_sentinel": return "정체 미확인"
 	return "원본 미설치"
