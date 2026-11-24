@@ -320,6 +320,12 @@ func snapshot() -> Array:
 	prune()
 	return records.values().duplicate(true)
 
+## Same expiry boundary as snapshot(); native stack validation only reads
+## borrowed records synchronously. Saved/transaction snapshots stay detached.
+func native_stack_validation_records() -> Array:
+	prune()
+	return records.values()
+
 func restore(saved: Variant) -> void:
 	_restoring=true
 	recovered_to_bag.clear()

@@ -658,12 +658,40 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 	if not merged.is_empty():return merged
 	return partition_error(all,ledger,state.get(PARTITIONS,{}),state.get(MERGES,{}))
 
+## Borrowed views are private to this synchronous validator. Keep source
+## expiry at the same boundary; the proof memo still stores an owned copy.
+static func _validation_consumables(world: Node) -> Variant:
+	var service: Object=world.consumable_service
+	return service.native_stack_validation_state() if service.has_method("native_stack_validation_state") else service.export_state()
+
+static func _validation_warehouse(world: Node) -> Variant:
+	var warehouse: Object=world.warehouse
+	return warehouse.native_stack_validation_state() if warehouse.has_method("native_stack_validation_state") else warehouse.snapshot()
+
+static func _validation_floor(world: Node) -> Variant:
+	var ground: Object=world.ground_loot
+	return ground.native_stack_validation_records() if ground.has_method("native_stack_validation_records") else world._ground_drops_snapshot()
+
+## A staged floor may contain legacy non-receipted rows. Match the first row
+## for a physical ID exactly as floor_physical() did: no sorting, coercion of
+## numeric IDs, or overwriting the first row with a later duplicate.
+static func _floor_transition_index(floor: Array) -> Dictionary:
+	var result: Dictionary={}
+	for row: Dictionary in floor:
+		var physical: Variant=row.get("physical_item",{})
+		if not physical is Dictionary:continue
+		var uid: Variant=physical.get("id")
+		if not (uid is String or uid is StringName):continue
+		var key: String=str(uid)
+		if not result.has(key):result[key]=physical.get("data",{})
+	return result
+
 static func override_error(world: Node,overrides: Dictionary) -> String:
 	var inventory: Variant=overrides.get("inventory",world.inventory)
 	var instances: Variant=overrides.get("item_instances",world.item_instances)
-	var state: Variant=(overrides["consumable_state"] if overrides.has("consumable_state") else world.consumable_service.export_state())
-	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else world.warehouse.snapshot())
-	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else world._ground_drops_snapshot()
+	var state: Variant=(overrides["consumable_state"] if overrides.has("consumable_state") else _validation_consumables(world))
+	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else _validation_warehouse(world))
+	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else _validation_floor(world)
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
 	# A dungeon-ledger-only save stages no native ownership fields. It has the
 	# same native inputs and transition as an ordinary save. Reuse proof only
@@ -713,17 +741,19 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if authorizes(overrides) and _candidate_kind=="warehouse_transfer" and instances.get(uid)==previous:continue
 		return "창고 원본 개체의 정확한 이동 소유자 필요 · 영수증 보존"
 	var old_floor: Dictionary={}
+	var floor_index: Variant=null
 	for record: Dictionary in world.ground_loot.records.values():
 		var physical: Variant=record.get("physical_item",{})
 		if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):continue
 		var uid: String=str(physical.get("id",""));old_floor[uid]=record
-		if floor_physical(floor,uid)==physical.data:continue
+		if floor_index==null:floor_index=_floor_transition_index(floor)
+		if floor_index.get(uid,{})==physical.data:continue
 		if authorizes(overrides) and _candidate_kind=="floor_pickup" and instances.get(uid)==physical.data:continue
 		if authorizes(overrides) and _candidate_kind=="floor_expire" and _floor_record==record:
 			var owned: Dictionary=proof_entry(physical.data,uid)
 			if not owned.is_empty() and _ledger_row_matches(ledger.get(uid),owned,int(owned.used),0,int(owned.remaining)):continue
 		return "바닥 원본 물리 개체의 정확한 습득·소멸 소유자 필요"
-	var old_consumables: Dictionary=state if not overrides.has("consumable_state") else world.consumable_service.export_state()
+	var old_consumables: Dictionary=state if not overrides.has("consumable_state") else _validation_consumables(world)
 	if old_consumables.get(AMMO_EQUIPPED,{})!=state.get(AMMO_EQUIPPED,{}) and not (authorizes(overrides) and _candidate_kind in ["ammo_equip","ammo_consume"]):return "원본 탄약 개체 착용은 정확한 소유자 저장이 필요합니다"
 	if old_consumables.get(AMMO_RNG,{})!=state.get(AMMO_RNG,{}) and not (authorizes(overrides) and _candidate_kind=="ammo_consume"):return "원본 탄약 독립 난수 변경은 실제 소비 소유자 저장이 필요합니다"
 	# Shot, skill-material and box-result journals are no longer kept

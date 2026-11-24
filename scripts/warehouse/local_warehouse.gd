@@ -17,6 +17,10 @@ static func equipped_id(equipped: Dictionary, instance_id: String) -> bool:
 func snapshot() -> Dictionary:
 	return {"stacks":stacks.duplicate(true), "instances":instances.duplicate(true)}
 
+## Borrowed roots for synchronous validation; save/transactions use snapshot().
+func native_stack_validation_state() -> Dictionary:
+	return {"stacks":stacks, "instances":instances}
+
 func restore(raw: Variant) -> void:
 	stacks.clear()
 	instances.clear()
