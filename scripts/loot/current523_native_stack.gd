@@ -27,6 +27,7 @@ const MERGES="source_native_stack_merges"
 const MERGE=preload("res://scripts/loot/native_stack_merge.gd")
 const EFFECTS=preload("res://scripts/loot/source523_item_effects.gd")
 const TRIM=preload("res://scripts/loot/save_provenance_trim.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 static var busy: bool=false
 static var _candidate: Dictionary={}
 static var _candidate_kind: String=""
@@ -653,7 +654,10 @@ static func _ledger_row_matches(value: Variant,owned: Dictionary,used: int,remai
 static func _failure(reason: String) -> Dictionary:
 	return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":reason}
 
-static func try_use(world: Node,item_name: String,selected: String="") -> Dictionary:
+## Standalone callers keep immediate speed publication. The inventory
+## activation owner synchronously performs the full HUD/stat publish itself
+## after a committed buff, so that caller does not derive equipment twice.
+static func try_use(world: Node,item_name: String,selected: String="", update_buff_speed_now: bool=true) -> Dictionary:
 	var named: Dictionary=world._find_catalog_item_record(item_name)
 	if RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.record(named) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(named,item_name):return _failure(RETIRED_ITEMS.REASON)
 	if not selected.is_empty() and RETIRED_ITEMS.record(world.item_instances.get(selected,{}).get("record",{})):return _failure(RETIRED_ITEMS.REASON)
@@ -733,7 +737,9 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
 	if effect.kind=="buff":
+		var territory_started:int=FRAME_HITCH.now()
 		var restriction: String=_buff_territory_problem(world,spec)
+		FRAME_HITCH.detail("item.buff_territory",territory_started)
 		if not restriction.is_empty():return _failure(restriction)
 		var rule: String=buff_rule_problem(world,spec)
 		if not rule.is_empty():return _failure(rule)
@@ -771,6 +777,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind in ["hp","mp"] and before>=maximum:return _failure("HP가 가득 찼습니다" if effect.kind=="hp" else "MP가 가득 찼습니다")
 	var parameters: Dictionary=world._source_hp_potion_parameters(0) if effect.kind=="hp" else {}
 	if effect.kind=="hp" and float(world.item_use_cooldowns.get(str(parameters.cooldown_key),0.0))>0:return _failure("HP 물약 재사용 대기")
+	var is_buff: bool=effect.kind=="buff"
+	var buff_phase: int=FRAME_HITCH.now() if is_buff else 0
 	var state: Dictionary=world.consumable_service.export_state()
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("기존 원본 물리 소비 장부 형식 보존")
@@ -786,16 +794,25 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		amount=int(spec.base)
 		for die: int in range(int(spec.dice_number)):amount+=candidate_rng.randi_range(1,int(spec.dice_spot_count))
 	var after: int=mini(maximum,before+amount)
-	var bag: Dictionary=world.inventory.duplicate(true)
-	var instances: Dictionary=world.item_instances.duplicate(true)
+	# A timed buff edits only the selected physical's two scalar counters.
+	# All other rows are read-only until this synchronous commit returns.
+	# Keep the frozen authorization copy and the writer's detached payload.
+	var bag: Dictionary=world.inventory.duplicate(not is_buff)
+	var instances: Dictionary=world.item_instances.duplicate(not is_buff)
 	# TWILIGHT 근사: a reusable teleport amulet moves without a physical debit.
 	var reusable: bool=bool(prepared.get("reusable",false))
 	if not reusable:
 		bag[item_name]=int(bag[item_name])-1
 		if int(bag[item_name])==0:bag.erase(item_name)
 		if owned.remaining==1:instances.erase(uid)
-		else:instances[uid][QUANTITY]=int(owned.remaining)-1;instances[uid].source_native_stack_used_quantity=int(owned.used)+1
-		ledger=ledger.duplicate(true);ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1);state[USES]=ledger
+		else:
+			if is_buff:instances[uid]=(instances[uid] as Dictionary).duplicate()
+			instances[uid][QUANTITY]=int(owned.remaining)-1
+			instances[uid].source_native_stack_used_quantity=int(owned.used)+1
+		# export_state() already owns this ledger in the timed-buff candidate.
+		if not is_buff:ledger=ledger.duplicate(true)
+		ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1)
+		state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
 	var reuse_delay: float=float(details.get("source_reuse_delay_seconds",0)) if effect.kind=="hp" else (float(spec.get("reuse_delay_seconds",0)) if effect.kind=="mp" else 0.0)
 	var delay: float=maxf(float(details.get("source_consume_delay_ms",spec.get("consume_delay_ms",0)))/1000.0,reuse_delay)
@@ -823,6 +840,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var previous_position: Vector2=world.player.global_position
 	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
+	if is_buff:buff_phase=FRAME_HITCH.detail_next("item.buff_stage",buff_phase)
 	var saved: Error=OK
 	var potion_deferred: bool=false
 	if prepared.has("travel"):
@@ -845,6 +863,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	else:
 		saved=world._save_game(true,payload)
 	_candidate.clear()
+	if is_buff:buff_phase=FRAME_HITCH.detail_next("item.buff_save",buff_phase)
 	if saved!=OK:
 		if prepared.has("destination"):world.consumable_service._teleport_player(previous_position)
 		world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
@@ -856,13 +875,15 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	elif effect.kind in ["teleport","ain","teleport_location"]:EFFECTS.commit(world,prepared)
 	else:
 		world.active_item_buffs=payload.active_item_buffs;world.hp=int(payload.hp);world.mp=int(payload.mp)
-		world._invalidate_equipment_static();world._refresh_speed_modifiers()
+		if update_buff_speed_now:
+			world._invalidate_equipment_static();world._refresh_speed_modifiers()
 	if potion_deferred:world._request_general_save()
 	else:world.deferred_save.cancel()
 	busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
+	if is_buff:FRAME_HITCH.detail("item.buff_apply",buff_phase)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 

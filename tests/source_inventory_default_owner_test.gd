@@ -91,6 +91,7 @@ func _run() -> void:
 	var after: Dictionary = source.entries()
 	check(before.owned_by_reference.has(SWORD + "@@@9") and after.ok and not after.owned_by_reference.has(SWORD + "@@@9")
 		and not source.select_reference(SWORD + "@@@9").ok, "removed physical row cannot be seen or activated through a former hit")
+	_physical_name_scope(bag,source)
 	duration_old.sort()
 	duration_new.sort()
 	print("SOURCE_INVENTORY_DEFAULT_OWNER_RESULT ",JSON.stringify({"checks":checks,"failures":failures,
@@ -98,3 +99,38 @@ func _run() -> void:
 	host.queue_free()
 	await process_frame
 	quit(0 if failures.is_empty() else 1)
+
+func _physical_name_scope(bag: Control,source: RefCounted) -> void:
+	var title:String="기존 비전서"
+	var variant:String=title+" · 축복"
+	var cursed:String=title+" · 저주"
+	var unknown:String="이전 소지 기록"
+	var book:Dictionary={"name":title,"source":"lineagem_base508","source_snapshot":"base508","sourceId":"m508:item:75184","source_item_class_id":75184,"source_m_native_item":true,"slot":"material"}
+	var identity_clone:Dictionary={"name":title,"slot":"weapon","source_item_class_id":900000}
+	var records:Array=[book,identity_clone]
+	bag.set_catalog_data({"아이템":records},{})
+	bag.set_inventory({title:2,variant:1,cursed:1,unknown:2})
+	var physical:Dictionary={
+		"10":{"name":title,"record":book},
+		"20":{"name":title,"record":identity_clone},
+		"30":{"name":variant,"record":{"name":variant,"slot":"other"}},
+		"31":{"name":cursed,"record":{"name":cursed,"slot":"other"}},
+		"40":{"name":unknown,"record":{"name":unknown,"source_item_class_id":900001}},
+		"50":{"name":unknown,"record":{"name":unknown,"source_item_class_id":900002}},
+	}
+	bag.set_character_state({"item_instances":physical})
+	var first:Dictionary=source.entries()
+	var shown:Dictionary=first.get("owned_by_reference",{})
+	check(first.get("ok",false) and shown.size()==5 and shown.has(title) and shown.get(title,{}).get("amount")==2 and not shown.has(title+"@@@20"),"only the first approved record groups both same-name legacy book copies")
+	check(shown.has(variant+"@@@30") and shown.has(cursed+"@@@31"),"blessed/cursed variants retain old classification and exact physical IDs, never collapse into the base book")
+	check(shown.has(unknown+"@@@40") and shown.has(unknown+"@@@50") and bag._find_item_record(unknown+"@@@50").get("source_item_class_id")==900002,"unknown same-name copies keep their separate source provenance")
+	var added:Dictionary=book.duplicate()
+	added.name=unknown
+	records.append(added)
+	bag.inventory_grid_dirty=true
+	var after_add:Dictionary=source.entries().get("owned_by_reference",{})
+	check(after_add.get(unknown,{}).get("amount")==2 and not after_add.has(unknown+"@@@50"),"same-array new book after an earlier miss becomes available")
+	records[0]=identity_clone
+	bag.inventory_grid_dirty=true
+	var after_edit:Dictionary=source.entries().get("owned_by_reference",{})
+	check(after_edit.has(title+"@@@10") and after_edit.has(title+"@@@20") and bag._find_item_record(title+"@@@10").get("source_item_class_id")==75184,"in-place first book replacement changes stack presentation but not physical identity")
