@@ -16,6 +16,11 @@ var unavailable_sources: Dictionary = {}
 func configure_current523(_raw_root: String, _interpretation: Dictionary = {}) -> bool:
 	return _fail("공통 필드는 명시된 카탈로그 SHA와 논리 Land ID가 필요합니다.")
 
+## New reader for every configured or closed field. Never reuse a path
+## between two admissions, even when the Land and manifest pin look equal.
+func static_pursuit_epoch() -> int:
+	return _raw.get_instance_id() if loaded and has_meta("current523_generic_field") and not catalog_sha256.is_empty() else 0
+
 func configure_catalog(directory: String, expected_manifest_sha256: String, land_id: int, interpretation: Dictionary = {}) -> bool:
 	var originals = SOURCE_PACK.new()
 	if not originals.load_catalog(directory,expected_manifest_sha256): return _fail(originals.problem)
