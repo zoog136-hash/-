@@ -3,6 +3,7 @@ const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.g
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const MANUAL_SCROLLS=preload("res://scripts/loot/native_manual_scrolls523.gd")
 const PRESENTATION_FLAGS: Dictionary = {"UIShowFilter":"Value","NoAnnounce":"TrueFalse"}
 
 static func canonical(record: Dictionary) -> Dictionary:
@@ -20,6 +21,9 @@ static func canonical(record: Dictionary) -> Dictionary:
 
 static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	var record: Dictionary = preload("res://scripts/quests/quest_regen523.gd").action(world,canonical(saved))
+	if MANUAL_SCROLLS.RULES.has(int(record.get("source_item_class_id",0))):
+		var manual:Dictionary=MANUAL_SCROLLS.profile(record,DROPS.item_definition(record))
+		if not manual.is_empty():record["source_use_spec"]=manual
 	if int(record.get("source_item_class_id",0)) in [295544,302461,203422,295504,282793,295524]:
 		var reusable: Dictionary=load("res://scripts/quests/quest_reusable523.gd").profile(record)
 		if not reusable.is_empty():record=reusable
@@ -187,7 +191,7 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	var value: Dictionary = spec.typed_effects.duplicate(true)
 	value.merge({"remaining":duration,"duration":duration,"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
 	if spec.get("source_trial_tower_territory_id")==10353:value["source_trial_tower_territory_id"]=10353
-	buffs[str(record.name)] = value
+	buffs[MANUAL_SCROLLS.active_key(record,spec,str(record.name))] = value
 	var inventory: Dictionary = debit(world, str(record.name))
 	var cooldowns: Dictionary = next_cooldowns(world, record, spec)
 	if world._save_game(true, {"inventory":inventory,"active_item_buffs":buffs,"item_use_cooldowns":cooldowns}) != OK:

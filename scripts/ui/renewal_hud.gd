@@ -2096,8 +2096,10 @@ func open_card_fusion(category: String) -> void:
 	var view: Control = CardFusionView.new()
 	card_fusion_view = view
 	workspace.mount(view)
+	view.source_point_progress=Callable(self,"source_fusion_progress")
 	view.configure(catalog_data, card_collection_state, category)
 	view.fuse_requested.connect(_confirm_card_fusion_request)
+	view.point_reward_requested.connect(_claim_source_fusion_reward)
 
 func open_catalog(category: String) -> void:
 	var started: int = FRAME_HITCH.now()
@@ -2835,8 +2837,22 @@ func _request_card_fusion() -> void:
 	var grade_name: String = grades[clampi(card_fusion_grade_select.selected, 0, grades.size() - 1)]
 	_confirm_card_fusion_request(catalog_category, grade_name)
 
+func source_fusion_progress(category:String,grade:String)->Dictionary:
+	var host:Node=get_parent()
+	return host.call("source_fusion_progress",category,grade) if host!=null and host.has_method("source_fusion_progress") else {}
+
+func _claim_source_fusion_reward(category:String,grade:String)->Dictionary:
+	var host:Node=get_parent()
+	if host==null or not host.has_method("claim_source_fusion_reward"):return {"ok":false,"message":"원본 합성 보상 자료 없음"}
+	var result:Dictionary=host.call("claim_source_fusion_reward",category,grade)
+	if not result.get("ok",false):show_message(str(result.get("message","합성 시도 보상을 받을 수 없습니다")))
+	return result
+
 func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
 	if not CARD_RULES.CATEGORIES.has(category) or not CARD_RULES.FUSION_MATERIALS.has(grade_name) or is_card_reveal_busy(): return
+	if source_fusion_progress(category,grade_name).get("pending",false):
+		show_message("합성 시도 보상을 먼저 받으세요")
+		return
 	var required: int = int(CARD_RULES.FUSION_MATERIALS[grade_name])
 	# Like the 11-card draw, several fusions can run at once (up to 10).
 	var available: int = 0
@@ -3947,6 +3963,19 @@ func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	var view := preload("res://scripts/refine523/bless_refine523_panel.gd").new()
 	scroll.add_child(view)
 	view.configure(self,entry_solvent_uid)
+
+func open_native_smelt523(offer:Dictionary)->bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_smelt_window"):return false
+	_open_window("enhance","장비 제련","원본 장비와 재료를 선택합니다")
+	var result:Dictionary=original_main_ui_controller.try_open_smelt_window(offer)
+	original_main_ui_status["enchant_window"]=result
+	if result.get("ok",false):
+		if pointer_transfer!=null:pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+		return true
+	_close_workspace()
+	return false
 
 func open_equipment523(_snapshot: Dictionary) -> void:
 	show_message("원본 장비 가공 UI 연결 대기 · 거래 데이터와 소유 상태 보존")

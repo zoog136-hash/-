@@ -4,6 +4,7 @@ extends Control
 ## https://lineagem-jp.com/guides/lm/guides/beginner_community
 ## The authoritative Cards.fuse still chooses materials, consumes and rolls.
 signal fuse_requested(category: String, grade: String)
+signal point_reward_requested(category: String, grade: String)
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const SourceCard=preload("res://scripts/ui/source_card_presentation.gd")
@@ -38,6 +39,8 @@ var _right: VBoxContainer
 var _preview: HBoxContainer
 var _previews: Array[Control]=[]
 var _pity: Label
+var _point_reward:Button
+var source_point_progress:Callable
 var _chrome: Control
 var _details_scroll: ScrollContainer
 var _scroll_host: Node
@@ -178,6 +181,10 @@ func _build() -> void:
   if child!=actions and child!=_last_result:child.reparent(details)
  _right.add_child(_details_scroll);_right.move_child(_details_scroll,0)
  _pity=UI.label("",12,Color("b4bdbb"));_pity.name="CardFusionPity";_pity.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT;column.add_child(_pity)
+ _point_reward=_touch("보상 받기",func()->void:point_reward_requested.emit(category,grade),true)
+ _point_reward.name="OriginalFusionPointReward"
+ column.add_child(_point_reward)
+
  # Swap only the two equal-width panes; the existing filters and window stay put.
  _body.move_child(_right,1)
  resized.connect(_fit)
@@ -299,7 +306,16 @@ func _refresh() -> void:
  _empty.text="같은 등급의 중복 카드 %d장이 더 필요합니다." % maxi(0,required-available) if required>0 else "다른 등급의 카드를 선택해 주세요."
  _refresh_previews()
  var pity: Dictionary=collection.get("pity",{}).get(category,{})
- _pity.text="합성 시도 보상   희귀 %d/%d   영웅 %d/%d" % [int(pity.get("희귀",0)),Cards.PITY_LIMIT,int(pity.get("영웅",0)),Cards.PITY_LIMIT]
+ var active:Dictionary=collection.get("source_fusion_point_lanes",{}).get(category,{})
+ var pending:bool=active.get(grade,false)==true and int(pity.get(grade,0))>=Cards.PITY_LIMIT
+ _point_reward.visible=pending
+ _fuse.disabled=_fuse.disabled or pending
+ var rows:PackedStringArray=[]
+ for key:String in Cards.ORIGINAL_POINT_GRADES:
+  var original:Dictionary=source_point_progress.call(category,key) if source_point_progress.is_valid() else {}
+  if key in Cards.PITY_GRADES or active.get(key,false)==true or original.get("known",false):
+   rows.append("%s %d/%d"%[key,int(pity.get(key,0)),Cards.PITY_LIMIT])
+ _pity.text="합성 시도 보상   "+"   ".join(rows)
  _fit()
 
 func _refresh_previews() -> void:

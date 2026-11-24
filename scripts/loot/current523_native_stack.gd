@@ -2,6 +2,8 @@ extends RefCounted
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const CATALYST=preload("res://scripts/loot/native_growth_catalyst523.gd")
+const MANUAL_SCROLLS=preload("res://scripts/loot/native_manual_scrolls523.gd")
+const FUSION_POINTS=preload("res://scripts/cards/source_fusion_points523.gd")
 ## Existing HP/MP effects with exact current-source physical quantity ownership.
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -70,6 +72,12 @@ static func profile(record: Dictionary) -> Dictionary:
 	# TWILIGHT 근사: a reusable TeleportAmulet is projected as a material.
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
+	if MANUAL_SCROLLS.RULES.has(int(record.get("source_item_class_id",0))):
+		var scroll:Dictionary=MANUAL_SCROLLS.profile(record,definition)
+		if not scroll.is_empty():return {"kind":"buff","spec":scroll}
+	if FUSION_POINTS.SCROLLS.has(int(record.get("source_item_class_id",0))):
+		var points:Dictionary=FUSION_POINTS.profile(record,definition)
+		if not points.is_empty():return {"kind":"fusion_points","spec":points}
 	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
 	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
@@ -136,6 +144,29 @@ static func use_bonus_point(world:Node,uid:String,owned:Dictionary)->Dictionary:
 	world.consumable_service.import_state(payload.consumable_state)
 	world.stat_points=payload.stat_points;world.deferred_save.cancel()
 	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"보너스 스탯 +1 · 캐릭터 능력치에서 분배하세요"}
+
+## Take the selected physical scroll only after the entire original reward
+## lane (including all nonzero candidates) is playable for this installation.
+static func use_fusion_points(world:Node,uid:String,owned:Dictionary,spec:Dictionary)->Dictionary:
+	var live:Dictionary=proof(world,uid)
+	if live.is_empty() or live!=owned or world._item_locked(str(live.record.get("name","")),uid):return _failure("원본 합성 포인트 주문서의 선택 개체를 확인하지 못했습니다 · 아이템 보존")
+	var category:String=str(spec.get("category",""));var grade:String=str(spec.get("grade",""))
+	var cards:RefCounted=world.card_draw_fusion
+	if int(cards.pity.get(category,{}).get(grade,0))>=FUSION_POINTS.LIMIT:return _failure("합성 시도 보상을 먼저 받으세요 · 주문서 보존")
+	if not FUSION_POINTS.reward(world,category,grade).get("ok",false):return _failure("원본 합성 포인트 보상 자료 확인 필요 · 주문서 보존")
+	var paid:Dictionary=stage_debit(world,[{"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt}])
+	if not paid.get("ok",false):return _failure("원본 합성 포인트 주문서 수량 확인 실패 · 아이템 보존")
+	var before:Dictionary=cards.export_state()
+	if not cards.credit_original_points(category,grade):return _failure("합성 포인트가 가득 찼습니다 · 주문서 보존")
+	var payload:Dictionary=paid.overrides
+	payload["card_draw_fusion"]=cards.export_state()
+	cards.import_state(before)
+	if sealed_save(world,payload)!=OK:return _failure("합성 포인트 저장 실패 · 포인트와 주문서 보존")
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	cards.import_state(payload.card_draw_fusion);world.deferred_save.cancel()
+	var count:int=cards.pity[category][grade]
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"%s %s 합성 포인트 +1 · %d/%d" % [category,grade,count,FUSION_POINTS.LIMIT]}
 
 static func authorizes_bonus_point(world:Node,staged:Dictionary)->bool:
 	return _candidate_kind=="original_146402_point" and staged.size()==4 and staged.has("inventory") and staged.has("item_instances") and staged.has("consumable_state") and integer(world.stat_points) and staged.get("stat_points")==int(world.stat_points)+1 and authorizes(staged)
@@ -658,6 +689,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		# existing atomic buff owner can debit the exact catalog balance directly.
 		var plain: Dictionary=profile(named)
 		var plain_spec: Dictionary=plain.get("spec",{})
+		if plain.get("kind")=="buff" and MANUAL_SCROLLS.RULES.has(int(named.get("source_item_class_id",0))) and plain_spec.get("activation_status")=="unrestricted":
+			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
 		if plain.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
 			var restriction: String=_buff_territory_problem(world,plain_spec)
 			if not restriction.is_empty():return _failure(restriction)
@@ -715,6 +748,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
+	if effect.kind=="fusion_points":return use_fusion_points(world,uid,owned,spec)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)
 	if effect.kind=="half_elixir_charge":return use_half_elixir_charge(world,uid,owned,record)
@@ -780,7 +814,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		var value: Dictionary=spec.typed_effects.duplicate(true)
 		value.merge({"remaining":float(spec.duration_seconds),"duration":float(spec.duration_seconds),"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
 		buff_runtime_fields(world,spec,value)
-		buffs[item_name]=value;payload["active_item_buffs"]=buffs
+		buffs[MANUAL_SCROLLS.active_key(record,spec,item_name)]=value;payload["active_item_buffs"]=buffs
 		payload["hp"]=mini(world.hp,world._effective_max_hp(-1,buffs));payload["mp"]=mini(world.mp,world._effective_max_mp(buffs))
 	elif effect.kind in ["teleport","ain","teleport_location"]:
 		if prepared.has("ainhasad_state"):payload["ainhasad_state"]=prepared.ainhasad_state

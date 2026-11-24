@@ -473,7 +473,7 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var service: TwilightAinhasadService = world.ain_service
 		var cap: int = mini(int(contract.cap), service.charge_cap())
 		if service.blessing>=cap: return {"ok":false,"reason":"아인하사드 축복이 최대치입니다 · 아이템 보존"}
-		var amount: int = int(round(float(points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
+		var amount: int = world._amount_with_ainhasad_charge_bonuses(points) if world.has_method("_amount_with_ainhasad_charge_bonuses") else int(round(float(points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
 		amount = mini(amount, cap-service.blessing)
 		var before: Dictionary = service.export_state()
 		var after: Dictionary = before.duplicate(true)

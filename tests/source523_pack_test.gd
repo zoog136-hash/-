@@ -151,7 +151,14 @@ func run() -> void:
 	var lines: PackedStringArray = node.status_lines()
 	check(lines.size() == 2 + PACK.ADDON_SECTIONS.size(), "status lists the pack, every add-on section and the cooked actor pack")
 	check(lines[-1].begins_with("변환 액터 팩:"), "last status line is the cooked actor pack: " + lines[-1])
-	check(lines.size() == 5 and lines[1].contains("설치됨") and lines[2].contains("twilight523-addon-ui.zip") and lines[3].contains("twilight523-addon-ui.zip"), "status shows the installed travel definitions and which ZIP the missing UI needs")
+	check(lines.size() == 6 and lines[1].contains("설치됨") and lines[2].contains("twilight523-addon-ui.zip") and lines[3].contains("twilight523-addon-ui.zip") and lines[4].contains("twilight523-addon-equipment-smelt.zip"), "status shows the existing add-ons and the optional smelt ZIP")
+	var smelt_addon:String=OS.get_environment("TWILIGHT_NATIVE_SMELT_ADDON")
+	if not smelt_addon.is_empty():
+		await install(node,[smelt_addon])
+		addons=PACK.read_addons(ProjectSettings.globalize_path(target))
+		var rules:String=target.path_join(PACK.SMELT.SECTION).path_join(PACK.SMELT.MEMBER)
+		check(addons.has(PACK.SMELT.SECTION) and FileAccess.get_sha256(rules)==PACK.SMELT.SHA,"normal in-app ZIP picker path activates the exact additional smelt file")
+		check(not node._mounted and FileAccess.file_exists(target.path_join("source523_pack.json")) and addons.has("world_links"),"optional sidecar does not mount archive code, replace prior add-ons or reinstall the base")
 	check(not node._failed_on_device(), "no failure screen outside the exported app")
 	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false
