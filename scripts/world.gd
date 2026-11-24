@@ -1,5 +1,6 @@
 extends Node2D
 class_name TwilightWorld
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const CHARACTER_ACCOUNT = preload("res://scripts/characters/account_store.gd")
 const CHARACTER_PROFILE = preload("res://scripts/characters/save_profile.gd")
 var character_source_cursor: Dictionary = {}
@@ -1134,8 +1135,8 @@ func _load_data() -> void:
 func _refresh_patch523_drop_catalog() -> void:
 	_note_store_result("native_items", LOOT_DROP.PATCH523_DROPS.register_catalog(LOOT_DROP.PATCH523_DROPS.data(), catalog_db))
 	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(catalog_db)
-	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
 	_index_catalog_item_sources()
+	loot_catalog["patch523_by_name"] = LOOT_DROP.PATCH523_DROPS.catalog_index(catalog_db.get("아이템", []))
 	_index_item_weights()
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	_refresh_inventory_hud()
@@ -1182,6 +1183,8 @@ func _enrich_inven_catalog() -> void:
 		inven_record_index[category] = category_index
 
 func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
+	# Old physical receipts must not fall back to a same-name active variant.
+	if category=="아이템" and RETIRED_ITEMS.record(saved):return saved
 	if category == "아이템":
 		var migrated: Dictionary = LOOT_DROP.PATCH523_DROPS.migrate_legacy_record(saved)
 		if not migrated.is_empty():
@@ -1255,6 +1258,7 @@ func _equipped_numeric_sum(key: String) -> float:
 
 
 func _index_catalog_item_sources() -> void:
+	if catalog_db.has("아이템"):catalog_db["아이템"]=RETIRED_ITEMS.catalog(catalog_db["아이템"])
 	patch523_craft_item_cache={}
 	_craft_index_warm={}
 	catalog_item_by_source_id.clear()
@@ -4022,6 +4026,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 		return false
 	if not ground_loot.valid_view(drop): return false
 	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
+	if not pending.get("player_dropped",false) and RETIRED_ITEMS.record(pending.get("item_record",{})):hud.show_message(RETIRED_ITEMS.REASON);return false
 	if not titles.can_pickup(pending):
 		hud.show_message("상급 축복의 가루 원본 확인·최대 수량을 확인해 주세요.")
 		return false
@@ -4694,6 +4699,7 @@ func _scroll_mode(scroll_name: String) -> String:
 # Temporary catalog test grants. Never available in the production/main HUD.
 # Only catalog-backed names and the three known enhancement scrolls are accepted.
 func source_item_record(item_class_id: int, bless_raw: int = 1) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	var record: Dictionary = LOOT_DROP.PATCH523_DROPS.cached_definition(str(item_class_id)).get("native_record",{})
 	if record.is_empty() or record.get("source_test_item",true) or bless_raw not in [1,2,3]: return {}
 	return LOOT_DROP.PATCH523_DROPS.variant_item(record,bless_raw)
@@ -4707,6 +4713,7 @@ func stage_source_item_grants(grants: Array, supplier: Dictionary) -> Dictionary
 func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	if not preload("res://scripts/boot/build_flags.gd").playtest(): return
 	var source_record: Dictionary = _find_catalog_item_record(item_name)
+	if RETIRED_ITEMS.record(source_record):hud.show_message(RETIRED_ITEMS.REASON);return
 	if source_record.get("source_m_native_item",false) and LOOT_DROP.PATCH523_DROPS.data().get("full_item_catalog",false):
 		var grant: Dictionary = {"item_class_id":int(source_record.get("source_item_class_id",-1)),"amount":clampi(amount,1,10),"bless_raw":int(source_record.get("source_bless_raw",1)),"enchant":0}
 		if preload("res://scripts/loot/patch523_item_inventory.gd").commit(self,[grant],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}): hud.show_message("원본 도감 테스트 지급 · "+str(source_record.get("source_display_name",item_name)))
@@ -4859,6 +4866,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
 	var selected_source: Dictionary=item_instances.get(str(selected.get("id","")),{}).get("record",source_reward)
+	if RETIRED_ITEMS.record(selected_source):hud.show_message(RETIRED_ITEMS.REASON);return
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
 	if tj_coupons.try_open_owned_coupon(item_name,str(selected.get("id","")),selected_source):return
@@ -5442,10 +5450,12 @@ func _patch523_expedition_scroll(key: String) -> Dictionary:
 	return result if result.get("issued",false) else {"issued":true,"ok":false,"error":"탐험 주문서 소유자/정체 미설치 · 기존 소지 보존"}
 
 func _source_enhancement_rule(record: Dictionary, current_level: int, mode: String, scroll_name: String = "", physical: Dictionary = {}, scroll_override: Dictionary = {}, token: bool=false) -> Dictionary:
+	if RETIRED_ITEMS.record(record):return {"source_rule":true,"success":0.0,"reason":RETIRED_ITEMS.REASON}
 	if not physical.is_empty() and physical.has("sourceId") and str(physical.sourceId)!=str(record.get("sourceId","")):
 		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
 	var kind: String=_enhancement_kind_for_record(record)
 	var scroll: Dictionary=scroll_override if not scroll_override.is_empty() else (_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {})
+	if RETIRED_ITEMS.record(scroll):return {"source_rule":true,"success":0.0,"reason":RETIRED_ITEMS.REASON}
 	var exact_required: bool=bool(record.get("source_m_native_item",false)) or bool(scroll.get("source_m_native_item",false))
 	var issued: Dictionary=_patch523_expedition_scroll(scroll_name)
 	if issued.get("issued",false) and not issued.get("ok",false):return {"source_rule":true,"success":0.0,"reason":issued.error}
@@ -10140,11 +10150,13 @@ func _equip_reference_in_slot(reference: String, target: String) -> void:
 	var physical: Dictionary = item_instances[parts[1]]
 	if str(physical.get("name","")) != parts[0] or int(inventory.get(parts[0],0)) < 1: return
 	var record: Dictionary = physical.get("record",_find_catalog_item_record(parts[0]))
+	if RETIRED_ITEMS.record(record):hud.show_message(RETIRED_ITEMS.REASON);return
 	if quest_item_provider.equipment_owner.activate(self,parts[1],target):return
 	_equip_or_acquire_item(record,false,parts[1],target)
 	_request_deferred_save()
 
 func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "", requested_slot: String = "") -> void:
+	if RETIRED_ITEMS.record(record) or (not requested_id.is_empty() and RETIRED_ITEMS.record(item_instances.get(requested_id,{}).get("record",{}))):hud.show_message(RETIRED_ITEMS.REASON);return
 	if not add_to_inventory and requested_id.is_empty() and quest_item_provider.equipment_owner.requires_selected(self,str(record.get("name",""))):hud.show_message("실제 장비 개체를 선택하세요");return
 	if not add_to_inventory and quest_item_provider.equipment_owner.activate(self,requested_id,requested_slot):return
 	if bool(record.get("source_pending_use",false)):

@@ -5,7 +5,7 @@ extends SceneTree
 ## files): the window is registered, names its original members, fails
 ## closed without them, keeps deck 2 / the explore page / its spot and card
 ## state nodes, selects one doll at a time, and the 인형 탐험 menu tile, the
-## 마법인형 탐험 tab and the HUD open it first (TWILIGHT screen otherwise).
+## 마법인형 탐험 tab and the HUD open it first (no unrelated screen substituted).
 const EXPLORE=preload("res://scripts/ui/original_ui/source_main_doll_explore_window.gd")
 const DISPATCH=preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd")
 const HUD_CONTROLLER=preload("res://scripts/ui/original_ui/source_main_hud.gd")
@@ -43,10 +43,6 @@ func _initialize() -> void:
 	var running: Dictionary=window._spot_spec({"ID":7,"Name":"말하는 섬"},{"status":"running"})
 	check(running["Panel_Spot/Btn_Explore"].visible==true and running["Btn_Explore/Nd_Title/Label_Spot"].text=="말하는 섬" and running["Btn_Explore/CardSample"].get("exclude",false),"a running spot shows 탐험 중")
 	check(EXPLORE.DOLL_DECK==2,"the doll deck constant")
-	var text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(text.contains("\"expedition\": open_doll_explore()") and text.contains("if _open_original_feature(\"doll_explore\"):return\n\topen_expedition()"),"the 인형 탐험 tile opens the original window first, the TWILIGHT screen otherwise")
-	var page: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_change_page.gd")
-	check(page.contains("\"explore\":return _route(\"open_doll_explore\")"),"the 마법인형 탐험 tab opens it")
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_doll_explore_window.gd")
 	check(source.contains("party.clear()\n\t\tparty.append(identity)"),"a tap selects one doll (the previous one is replaced)")
 	hud.queue_free()

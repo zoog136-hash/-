@@ -3,6 +3,7 @@ extends RefCounted
 ## Every commit is one atomic save: the targets, the debited 상급 축복의 가루
 ## physical stacks (current523_native_stack ledger), the Adena cost, the
 ## granted output and the transaction RNG all persist together or not at all.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const RULES = preload("res://scripts/refine523/bless_refine523_rules.gd")
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const SUPPLY = preload("res://scripts/loot/patch523_item_inventory.gd")
@@ -26,6 +27,7 @@ static func equipment(world: Node, uid: String) -> Dictionary:
 	var entry: Variant = world.item_instances.get(uid)
 	if not entry is Dictionary or not entry.get("record") is Dictionary or entry.has(STACK.RECEIPT): return _fail("원본 장비 개체가 아닙니다","not_equipment")
 	var saved: Dictionary = entry.record
+	if RETIRED_ITEMS.record(saved):return _fail(RETIRED_ITEMS.REASON,"retired_item")
 	if saved.get("source_m_native_item")!=true or not D.equipment(saved): return _fail("원본 523 장비만 사용할 수 있습니다","not_native_equipment")
 	var record: Dictionary = D.current_owned_record(saved)
 	if record.is_empty(): return _fail("현재 원본 정의와 장비 정체가 맞지 않아 보존합니다","stale_record")

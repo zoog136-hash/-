@@ -1,4 +1,5 @@
 extends SceneTree
+const RETIRED = preload("res://scripts/loot/retired_enhancement_items523.gd")
 ## Actual newly received ZIP -> install -> Main -> source supplier variants,
 ## physical identities -> failed save -> committed save -> reentry -> UI.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -69,11 +70,16 @@ func run() -> void:
 	for item: Dictionary in world.hud.catalog_filtered_results:
 		if item.get("source_m_native_item",false): ui_ids[str(int(item.source_item_class_id))] = true
 		check(not item.get("source_test_item",false) and not item.get("source_preserved_legacy_catalog",false),"actual replacement catalog hides Test/archive rows")
-	for id: String in D.data().native_item_ids: check(ui_ids.has(id),"every normal item reachable in actual fresh-pack catalog UI "+id)
+	for id: String in D.data().native_item_ids: check(ui_ids.has(id)==(not RETIRED.item(int(id))),"fresh-pack UI includes exactly the active IDs "+id)
 	print("FULL_DELIVERY_STAGE catalog_and_drop_bindings ",ui_ids.size())
 	var expected: Variant = JSON.parse_string(FileAccess.get_file_as_string(OS.get_environment("TWILIGHT_SUPPLIER_BLESS_EXPECTATIONS")))
 	if not expected is Dictionary:printerr("private supplier source expectations required");quit(1);return
 	if expected.has("supplier_bless_grants"): expected["grants"] = expected.supplier_bless_grants
+	var active_grants: Array=[]
+	for grant: Dictionary in expected.grants:
+		if RETIRED.item(grant.item_class_id):check(not world.stage_source_item_grants([grant],{"kind":"excluded_variant"}).ok,"explicitly retired supplier row refused")
+		else:active_grants.append(grant)
+	expected.grants=active_grants
 	var valid: Dictionary = expected.grants[0]
 	for field: String in ["item_class_id","amount","bless_raw","enchant"]:
 		for invalid: Variant in [null,true,"1"]:
@@ -120,6 +126,7 @@ func run() -> void:
 	for row: Dictionary in world.BASE508.cards().get("classes",[]): jobs.append(str(row.name))
 	var weapons: int = 0
 	for key: String in D.data().native_item_ids:
+		if RETIRED.item(int(key)):continue
 		var item: Dictionary = world.source_item_record(int(key))
 		if item.slot != "weapon": continue
 		weapons += 1

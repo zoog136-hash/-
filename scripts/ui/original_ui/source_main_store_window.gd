@@ -16,6 +16,7 @@ extends RefCounted
 ## Left out (no rule here): 자동 주문 (target amount slider, 1/2/3 SET), the
 ## cart, the 판매 / 자동 판매 mode scenes (not in the UI pack), the batch count
 ## buttons, 혈맹 코인, tax, help, tooltips and every effect layer.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
@@ -177,6 +178,7 @@ func _merchant_goods(world: Object) -> Array:
 	for row: Dictionary in catalog.rows("MerchantGoods"):
 		if not wanted.has(int(row.ID)):continue
 		var class_id: int=int(row.get("ItemClassID",0))
+		if RETIRED_ITEMS.item(class_id):continue
 		var item: Dictionary=catalog.record("ItemClass",class_id)
 		var title: String=catalog.label(int(item.get("DescID",0)))
 		var quote: Dictionary=runtime.call("quote_merchant",int(row.ID),1)

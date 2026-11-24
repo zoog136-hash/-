@@ -220,14 +220,15 @@ func _run() -> void:
 	check(world.loot_pickup.blocked.has(impossible_id), "inaccessible ID is throttled")
 	for cell: Vector2i in changed_cells.keys(): world.astar.set_point_solid(cell, changed_cells[cell])
 	clear()
-	if source_isolation: world.player.global_position = origin
+	world.player.global_position = origin
 	var common_name: String = str(world.loot_catalog["equipment_by_grade"]["일반"][0])
 	var unique_name: String = str(world.loot_catalog["equipment_by_grade"]["유일"][0])
 	var lower: Button = world._spawn_ground_drop(common_name, origin + Vector2(90,0))
 	var higher: Button = world._spawn_ground_drop(unique_name, origin - Vector2(90,0))
 	var higher_id: String = str(higher.get_meta("id"))
+	world.ground_loot.records[str(lower.get_meta("id"))]["position"] = [origin.x + 90, origin.y]
 	world.ground_loot.records[higher_id]["position"] = [origin.x - 90, origin.y]
-	check(world.loot_pickup._priority(higher_id, str(lower.get_meta("id"))), "same-distance priority favors higher grade")
+	check(world.loot_pickup._ranked_candidates(false,2) == [higher_id,str(lower.get_meta("id"))], "same-distance priority favors higher grade")
 	clear()
 
 	# Save all maps; retain IDs and real-time expiry; discard collected/duplicate

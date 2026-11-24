@@ -1,0 +1,5 @@
+# Original artwork for inventory, skill and quest menu actions
+
+The distributed ui44 pack has no separate MainMenu_Inventory / Skill / Quest tile. It *does* have their original actionable controls in UI/Main/Hud_TopMenu.csb (SHA256 0b0fd7d02b604924dfb1a16f9ef35d71c0e1cfd19e634028b72837499a75ae85): Btn_Inventory at 31392 uses Hud_Menu_Inven0.png, Btn_Skill at 29848 uses Hud_Menu_Skill0.png and Btn_Quest at 27996 uses Hud_Menu_Quest0.png. The full menu now borrows the normal-state Texture2D and material from each matching currently mounted HUD button, without reading an atlas or generating an icon. The caption and existing tap action stay. If that source is unavailable the caption works alone. This connects the original same-action image to a TWILIGHT menu location; it is not a claim the client had these three separate full-menu tiles. We did not borrow the premium store's picture for the unrelated general goods shop.
+
+The actual Main menu test checks all three texture/material object identities, not just manifest names. With original UI + expedition data: 13/13 (including the previously verified doll routes); without the UI: 7/7.

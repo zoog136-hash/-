@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
@@ -872,6 +873,7 @@ static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> S
 	return ""
 
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
+	if RETIRED_ITEMS.record(item):return RETIRED_ITEMS.REASON
 	if not item.get("source_m_native_item", false): return ""
 	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
 	if not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"

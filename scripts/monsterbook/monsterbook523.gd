@@ -943,18 +943,35 @@ func _level_belongs(id: Variant, book_id: int) -> bool:
 ## Returns raw bonus rows selected by the authority, without stacking, scaling or
 ## currency/stat mapping. Expiration hides effects without deleting ownership.
 func effective_bonuses(book_id: int, source_clock: String) -> Array:
-	if not _within(book_id, source_clock, "EndDateTimeID"):
-		return []
+	var result: Array = []
+	_append_effective_bonuses(result, book_id, source_clock, _state.books.get(str(book_id), {}))
+	return result
+
+func _append_effective_bonuses(result: Array, book_id: int, source_clock: String, saved: Dictionary) -> void:
+	var current_epoch: String = str(saved.get("current_epoch", ""))
+	var levels: Array = saved.get("epochs", {}).get(current_epoch, {}).get("effective_levels", [])
+	if levels.is_empty() or not _within(book_id, source_clock, "EndDateTimeID"): return
 	# A previous season's (or rotation's) options never carry into the next one.
-	var current_epoch: String = str(_state.books.get(str(book_id), {}).get("current_epoch", ""))
 	if current_epoch.begins_with("source-season:"):
 		var turn := rotation(book_id, source_clock)
 		var suffix_at := current_epoch.find(":r")
 		var saved_turn: int = int(current_epoch.substr(suffix_at + 2)) if suffix_at >= 0 else 0
-		if saved_turn != turn: return []
-	var result: Array = []
-	for id: Variant in progress(book_id).get("effective_levels", []):
+		if saved_turn != turn: return
+	for id: Variant in levels:
 		result.append_array(_linked("MonsterBookLevelBonus", int(id), "BonusID", "Bonus"))
+
+## Only an effective level in the current saved epoch can contribute. Keep
+## source book order and the exact original season/rotation checks for owners.
+## A suspended/empty ledger must not copy the catalog or resolve 33 calendars.
+func all_effective_bonuses(source_clock: String) -> Array:
+	var result: Array = []
+	var owners: Dictionary = _state.books
+	if owners.is_empty(): return result
+	for book: Dictionary in _tables.get("MonsterBook", []):
+		if int(book.NpcGroupID) == 0: continue
+		var saved: Dictionary = owners.get(str(int(book.ID)), {})
+		if saved.is_empty(): continue
+		_append_effective_bonuses(result, int(book.ID), source_clock, saved)
 	return result
 
 func reward_claimed(book_id: int, level_id: int, reward_id: int) -> bool:

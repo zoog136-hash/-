@@ -15,6 +15,7 @@ extends RefCounted
 ##   sale_delay()).
 ## Only game currencies move (다이아 / 아데나); nothing calls a network or a
 ## real payment. Every change is one atomic save through the shop runtime.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const Frozen=preload("res://scripts/exchange/frozen_exchange.gd")
 const FrozenCatalog=preload("res://scripts/exchange/frozen_catalog.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
@@ -183,6 +184,7 @@ func reference_unit_price(item_class_id: int) -> float:
 
 ## {item_class_id, name, record, stackable} of a grantable original item, or {}.
 func item(item_class_id: int) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	if _item_cache.has(item_class_id):return _item_cache[item_class_id]
 	var found: Dictionary={}
 	var summary: Dictionary=D.definition_id(str(item_class_id))

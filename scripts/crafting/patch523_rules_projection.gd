@@ -1,6 +1,7 @@
 extends RefCounted
 ## UNVERIFIED: in-memory input port of tools/equipment/build_patch523_rules.py.
 ## Existing public policies only; no item registration, alias, grant, or save.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const POLICY_PATH = "res://data/crafting/patch523_crafting_policy.json"
@@ -641,6 +642,7 @@ func _project_outcome(row: Dictionary) -> Dictionary:
 func _recipe(craft_id: String, views: Array, ins: Array, outs: Array, restrictions: Array) -> Dictionary:
 	for pair: Array in [["ItemCraftView",views],["ItemCraftInput",ins],["ItemCraftOutputView",outs]]:
 		for row: Dictionary in pair[1]:
+			if RETIRED_ITEMS.item(row.get("ItemClassID")):return {"reason":"twilight_retired_enhancement_item","item_id":row.ItemClassID}
 			var exclusion: Dictionary = _declared_exclusion(pair[0],row)
 			if not exclusion.is_empty(): return {"reason":"source_declared_exclusion","source_exclusion":exclusion}
 	# TWILIGHT 근사 2026-11-16: TestItem rows use their same-name substitute.

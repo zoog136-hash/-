@@ -1237,7 +1237,7 @@ func _navigate(section: String) -> void:
 		"clan523": open_clan523()
 		"content523": open_content523()
 		"titles": open_titles523()
-		"expedition": open_doll_explore()
+		"expedition", "doll_explore": open_doll_explore()
 		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
@@ -1888,7 +1888,11 @@ func _build_menu_page() -> void:
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id in ["quests","monsterbook523"] else ("inventory" if section_id in ["equipment_collections","totems"] else ("shop" if section_id == "promo_code" else section_id))))))
+		if section_id in ["inventory","skills","quests"]:
+			artwork.name="SourceActionIcon"
+			_set_menu_source_action_art(section_id,artwork)
+		else:
+			artwork.texture = UI.icon("character" if section_id == "growth96" else ("log" if section_id == "death523" else ("map" if section_id == "source_dungeons" else ("quest" if section_id in ["quests","monsterbook523"] else ("inventory" if section_id in ["equipment_collections","totems"] else ("shop" if section_id == "promo_code" else section_id))))))
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		artwork.position = Vector2(19,4)
@@ -1912,6 +1916,21 @@ func _build_menu_page() -> void:
 		grid.add_child(button)
 		tiles.append(button)
 		workspace.register_scroll_drag(menu_scroll,button)
+
+func _set_menu_source_action_art(section: String, art: TextureRect) -> void:
+	var routed:Dictionary={}
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("menu_action_art"):
+		routed=original_main_ui_controller.menu_action_art(section)
+	art.texture=routed.get("texture")
+	art.material=routed.get("material")
+	# Without the original, the existing button caption remains usable.
+
+func _refresh_menu_action_art() -> void:
+	if not is_instance_valid(menu_page):return
+	for tile:Control in menu_tiles:
+		if not is_instance_valid(tile):continue
+		var art:=tile.get_node_or_null("SourceActionIcon") as TextureRect
+		if art!=null:_set_menu_source_action_art(str(tile.name).trim_prefix("MenuTile_"),art)
 
 ## The original MainMenu_DominationStone tile replaces the tile picture and
 ## caption when the original UI pack is bound (no picture otherwise).
@@ -3649,12 +3668,22 @@ func open_card_dispatch() -> void:
 	if _open_original_feature("card_dispatch"):return
 	open_expedition()
 
-## The original 523 마법인형 탐험 window (source_main_doll_explore_window,
-## Change_ExploreView); the TWILIGHT expedition screen without the pack.
-func open_doll_explore() -> void:
-	_open_window("doll_explore","인형 탐험","")
-	if _open_original_feature("doll_explore"):return
-	open_expedition()
+## One original screen for both entry points. Never replace a missing
+## 마법인형 page with the unrelated combined TWILIGHT expedition panel.
+func open_doll_explore() -> Dictionary:
+	var key: String="doll_explore"
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.feature_window_available(key):
+		show_message("마법인형 탐험 원본 화면 리소스가 없습니다.")
+		return {"ok":false,"handled":false,"code":"source_doll_explore_ui_unavailable"}
+	if not get_parent().get_expedition_catalog().ready():
+		show_message("마법인형 탐험 원본 데이터가 없습니다.")
+		return {"ok":false,"handled":false,"code":"source_doll_explore_catalogue_unavailable"}
+	_open_window(key,"마법인형 탐험","")
+	if _open_original_feature(key):return original_main_ui_status[key+"_window"]
+	var failure: Dictionary=original_main_ui_status.get(key+"_window",{"ok":false,"handled":false})
+	_go_back()
+	show_message("마법인형 탐험 원본 화면을 열 수 없습니다.")
+	return failure
 
 func open_expedition() -> void:
 	var world: Node = get_parent()
@@ -4111,6 +4140,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		original_main_ui_controller.release(false)
 		original_main_ui_controller.queue_free()
 	original_main_ui_controller=candidate
+	_refresh_menu_action_art()
 	candidate.inventory_return_to_current_requested.connect(_restore_current_inventory_view)
 	candidate.inventory_closed.connect(_original_inventory_closed)
 	candidate.world_image_clicked.connect(func(payload: Dictionary) -> void: original_world_map_image_clicked.emit(payload))

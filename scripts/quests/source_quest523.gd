@@ -1,5 +1,6 @@
 extends RefCounted
 ## Private, data-only quest projection. Missing semantics fail closed per quest.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const USER_PATH = "user://quests_current523.json"
 const DEV_PATH = "res://data/quests/private_current523.json"
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -500,6 +501,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 					return {"ok":false,"error":"축복 상한까지 여유가 부족합니다 · 사용 후 수령하세요"}
 			"Item":
 				var original: Dictionary = reward.get("source_item",{})
+				if RETIRED_ITEMS.item(reward.get("RewardClassID")):return {"ok":false,"error":RETIRED_ITEMS.REASON}
 				var excluded: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_evidence(original)
 				if not excluded.is_empty():
 					result.source_dummy_rewards.append({"reward_id":int(reward.ID),"item_class_id":int(reward.RewardClassID),"evidence":excluded})

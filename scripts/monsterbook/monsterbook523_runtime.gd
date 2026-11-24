@@ -220,12 +220,11 @@ func flat_bonus(type_name: String) -> int:
 	if stamp != flat_cache_stamp: flat_cache_stamp = stamp; flat_cache.clear()
 	if flat_cache.has(type_name): return int(flat_cache[type_name])
 	var total: int = 0
-	for book: Dictionary in catalog.books():
-		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID), clock):
-			var type: Dictionary = catalog.row("BonusType", int(bonus.BonusTypeID))
-			var unit: Dictionary = catalog.row("Unit", int(type.get("UnitID", 0)))
-			if type.get("Name") == type_name and unit.get("Name") == "Value" and int(bonus.BonusApplicationTypeID) == 0 and int(bonus.BonusApplicationTargetID) == 0:
-				total += int(bonus.Value)
+	for bonus: Dictionary in catalog.all_effective_bonuses(clock):
+		var type: Dictionary = catalog.row("BonusType", int(bonus.BonusTypeID))
+		var unit: Dictionary = catalog.row("Unit", int(type.get("UnitID", 0)))
+		if type.get("Name") == type_name and unit.get("Name") == "Value" and int(bonus.BonusApplicationTypeID) == 0 and int(bonus.BonusApplicationTargetID) == 0:
+			total += int(bonus.Value)
 	flat_cache[type_name] = total
 	return total
 
@@ -243,8 +242,7 @@ func _refresh_effect_fingerprint() -> void:
 	var clock: Variant = clock_authority.call()
 	if not clock is String: return
 	var effects: Array = []
-	for book: Dictionary in catalog.books():
-		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID),clock): effects.append(int(bonus.ID))
+	for bonus: Dictionary in catalog.all_effective_bonuses(clock): effects.append(int(bonus.ID))
 	var fingerprint: int = hash([catalog.pack_sha,economy.settings,effects])
 	if fingerprint != last_effect_hash:
 		last_effect_hash = fingerprint
@@ -281,21 +279,20 @@ func extra_stats() -> Dictionary:
 	if not clock is String: return stats
 	var stamp: String = str(revision)+":"+catalog.pack_sha+":"+clock+":"+str(hash(economy.settings))
 	if stamp == extra_cache_stamp: return extra_cache.duplicate()
-	for book: Dictionary in catalog.books():
-		for bonus: Dictionary in catalog.effective_bonuses(int(book.ID),clock):
-			var type: Dictionary = catalog.row("BonusType",int(bonus.BonusTypeID))
-			var key: String = _typed_stat_key(bonus,type)
-			if key.is_empty(): continue
-			var unit: Dictionary = catalog.row("Unit",int(type.UnitID))
-			var amount: float = float(bonus.Value)
-			if unit.get("Name") in ["Percentage","ValuePercent","Weight"]:
-				var denominator: float = 0
-				for display: Dictionary in catalog.table_rows("UIUnit"):
-					if int(display.UnitID) == int(type.UnitID): denominator = float(display.Denominator)
-				if denominator <= 0: continue
-				amount /= denominator
-			elif unit.get("Name") != "Value": continue
-			stats[key] = float(stats.get(key,0)) + amount
+	for bonus: Dictionary in catalog.all_effective_bonuses(clock):
+		var type: Dictionary = catalog.row("BonusType",int(bonus.BonusTypeID))
+		var key: String = _typed_stat_key(bonus,type)
+		if key.is_empty(): continue
+		var unit: Dictionary = catalog.row("Unit",int(type.UnitID))
+		var amount: float = float(bonus.Value)
+		if unit.get("Name") in ["Percentage","ValuePercent","Weight"]:
+			var denominator: float = 0
+			for display: Dictionary in catalog.table_rows("UIUnit"):
+				if int(display.UnitID) == int(type.UnitID): denominator = float(display.Denominator)
+			if denominator <= 0: continue
+			amount /= denominator
+		elif unit.get("Name") != "Value": continue
+		stats[key] = float(stats.get(key,0)) + amount
 	extra_cache_stamp = stamp
 	extra_cache = stats.duplicate()
 	return stats

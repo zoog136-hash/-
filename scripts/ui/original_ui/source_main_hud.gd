@@ -1646,6 +1646,19 @@ func close_orim_skill_choice() -> void:
 const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
 var _menu_tiles: RefCounted
 
+## These three actions have real HUD buttons, but no client MainMenu_* tile
+## in ui44. Reuse the mounted normal-state pixels and their original material,
+## never a guessed file, newly decoded atlas or homemade icon.
+const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST}
+func menu_action_art(section: String) -> Dictionary:
+	if not MENU_HUD_ACTIONS.has(section) or not is_instance_valid(_menu_scene) or _menu_scene.get("source_member")!=MainMenu.MEMBER:return {}
+	var authored:Variant=_menu_scene.source_nodes.get(MENU_HUD_ACTIONS[section])
+	if not is_instance_valid(authored) or not authored.has_meta("source_button"):return {}
+	var button:Node=authored.get_meta("source_button")
+	var normal:Variant=button.states.get("normal")
+	if not normal is TextureRect or normal.texture==null or normal.material==null:return {}
+	return {"texture":normal.texture,"material":normal.material,"member":MainMenu.MEMBER,"offset":MENU_HUD_ACTIONS[section]}
+
 func menu_tile(section: String) -> Dictionary:
 	if _menu_tiles==null and _pack!=null:
 		var tiles=MenuTiles.new()

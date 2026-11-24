@@ -1,4 +1,5 @@
 extends Control
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit source entity selection. Opening/cancelling never debits inventory.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -30,6 +31,7 @@ func _choice_rows() -> Array:
 	if not pending.is_empty(): return pending.get("choices", [])
 	var rows: Array = []
 	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
+		if RETIRED_ITEMS.item(reward.get("item_class_id")):continue
 		if use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): rows.append(reward)
 	return rows
 
