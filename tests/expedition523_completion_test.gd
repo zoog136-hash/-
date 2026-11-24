@@ -87,10 +87,11 @@ func run() -> void:
 	world.gold = 300000
 	check(world._save_game(true) == OK, "production baseline save")
 	var path := world.save_path()
-	world.hud.toggle_menu()
-	(world.hud.workspace.find_child("MenuTile_expedition", true, false) as Button).pressed.emit()
+	# Exercise this existing combined view explicitly; the doll menu now owns
+	# the original Change_ExploreView and no longer substitutes this panel.
+	world.hud.open_expedition()
 	view = world.hud.workspace.find_child("ExpeditionSourceView", true, false) as Control
-	check(view != null and view.is_visible_in_tree(), "actual expedition menu")
+	check(view != null and view.is_visible_in_tree(), "actual combined expedition view")
 	(view.find_child("ExpeditionRules", true, false) as Button).pressed.emit()
 	check(view.details.text.contains("TWILIGHT 추정") and view.details.text.contains("70.0"), "UI labels actual estimated rules")
 	for i in range(view.card_picker.item_count):
