@@ -22,12 +22,12 @@ class FixtureRuntime extends RefCounted:
 	func integer(value: Variant) -> bool: return Runtime.Catalog._integer(value)
 
 var count := 0
-var failures := 0
+var failures: Array[String] = []
 
 func check(condition: bool, label: String) -> void:
 	count += 1
 	if not condition:
-		failures += 1
+		failures.append(label)
 		printerr("FAIL " + label)
 
 func put(text: String) -> String:
@@ -89,5 +89,5 @@ func _initialize() -> void:
 	var equipment := Equipment.new()
 	equipment.configure(null)
 	check(equipment.data.is_empty() and equipment.problem=="정확한 장비 규칙 SHA 필요","real quest command-line route fails on missing/tampered pinned input")
-	print("VERIFIED_SOURCE_BYTES checks=%s failures=%s" % [count,failures])
-	quit(failures != 0)
+	print("VERIFIED_SOURCE_BYTES ", JSON.stringify({"checks":count,"failures":failures}))
+	quit(0 if failures.is_empty() else 1)
