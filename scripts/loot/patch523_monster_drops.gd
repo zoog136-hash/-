@@ -900,6 +900,9 @@ static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallbac
 	for die: int in range(count): amount += rng.randi_range(1, sides)
 	return amount
 
+## The currently unexpired manual HP6000 potion and its independent clock.
+## Other retired event HP items keep their existing eligibility.
+const LARGE_HP_ELIXIR_ID:int=263901
 static func hp_use_metadata(item: Dictionary) -> Dictionary:
 	var definition: Dictionary = item_definition(item)
 	var original: Dictionary = definition.get("original_item",{})
@@ -907,6 +910,8 @@ static func hp_use_metadata(item: Dictionary) -> Dictionary:
 	if original.is_empty() or category.get("Name") != "Potion" or not category.get("IsConsumable",false) or definition.get("native_record",{}).get("heal_spec",{}).is_empty(): return {"ok":false}
 	if original.get("TestItem",true) or int(original.get("TargettingTypeID",0)) != 1 or not str(original.get("ServiceRegionCode","")).is_empty(): return {"ok":false}
 	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID","AutoUseRegistrable":"TrueFalse"}
+	var manual_elixir:bool=int(original.get("ID",0))==LARGE_HP_ELIXIR_ID and original.get("StoryDescID")==1678231 and CURRENT_DTO.label(1678231).replace("\r","").strip_edges()=="HP 6000을 즉시 회복\n(재사용 시간 15분)"
+	if manual_elixir:allowed["ClassUsageInterval"]="Seconds"
 	var seen: Dictionary = {}
 	var metadata: Dictionary = {"ok":true,"can_use_when_invisible":bool(original.get("CanUseWhenInvisible",false)),"consume_effect_sprite_id":0}
 	for row: Dictionary in definition.get("item_bonus",[]):
@@ -925,9 +930,15 @@ static func hp_use_metadata(item: Dictionary) -> Dictionary:
 		if kind == "AutoUseRegistrable":
 			if not _source_integer(bonus.get("Value")) or int(bonus.Value)!=1:return {"ok":false}
 			metadata["auto_use_registrable"] = true
+		if kind == "ClassUsageInterval":
+			if not manual_elixir or bonus.get("Value")!=900:return {"ok":false}
+			metadata["source_reuse_delay_seconds"]=900
 		if kind == "ItemConsumeEffectSpriteID": metadata.consume_effect_sprite_id = int(bonus.get("Value",0))
 		if kind == "ItemConsumeDelay": metadata["source_consume_delay_ms"] = int(bonus.get("Value",-1))
 	if not seen.has("ItemConsumeDelay") or int(metadata.get("source_consume_delay_ms",-1)) < 0: return {"ok":false}
+	if manual_elixir:
+		var dice:Dictionary=definition.native_record.heal_spec
+		if seen.size()!=4 or dice.get("HPRestoration")!=6000 or dice.get("HPRestorationDiceNumber",0)!=0 or dice.get("HPRestorationDiceSpotCount",0)!=0 or metadata.get("source_reuse_delay_seconds")!=900 or metadata.get("source_consume_delay_ms")!=1000 or metadata.consume_effect_sprite_id!=189:return {"ok":false}
 	return metadata
 
 static func hp_use_problem(item: Dictionary, concealed: bool = false, timezone_minutes: int = 540) -> String:

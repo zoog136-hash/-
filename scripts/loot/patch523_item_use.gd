@@ -175,6 +175,9 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	var source: Dictionary = spec.get("source_buff_class", {})
 	var group: Dictionary = spec.get("source_buff_group", {})
 	if duration <= 0.0 or source.is_empty() or group.is_empty() or spec.get("typed_effects", {}).is_empty(): return
+	if spec.has("source_trial_tower_territory_id"):
+		var issue:String=load("res://scripts/loot/current523_native_stack.gd").call("_buff_territory_problem",world,spec)
+		if not issue.is_empty():world.hud.show_message(issue);return
 	var buffs: Dictionary = world.active_item_buffs.duplicate(true)
 	for key: String in buffs.keys():
 		var old: Dictionary = buffs[key]
@@ -183,6 +186,7 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 		if int(previous.ID) == int(source.ID) or (not group.get("IsAllowOverlap", false) and int(previous.BuffGroupID) == int(source.BuffGroupID)): buffs.erase(key)
 	var value: Dictionary = spec.typed_effects.duplicate(true)
 	value.merge({"remaining":duration,"duration":duration,"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
+	if spec.get("source_trial_tower_territory_id")==10353:value["source_trial_tower_territory_id"]=10353
 	buffs[str(record.name)] = value
 	var inventory: Dictionary = debit(world, str(record.name))
 	var cooldowns: Dictionary = next_cooldowns(world, record, spec)

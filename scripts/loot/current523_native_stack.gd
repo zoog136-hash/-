@@ -1,6 +1,7 @@
 extends RefCounted
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const CATALYST=preload("res://scripts/loot/native_growth_catalyst523.gd")
 ## Existing HP/MP effects with exact current-source physical quantity ownership.
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -70,8 +71,10 @@ static func profile(record: Dictionary) -> Dictionary:
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
 	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
-	var exact_exp: Dictionary=direct_experience_rule(record,definition)
+	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
+	var firework:Dictionary=direct_firework_rule(record,definition)
+	if not firework.is_empty():return {"kind":"exact_firework","spec":firework}
 	if elixir_rule(record,definition):return {"kind":"elixir","spec":{"can_use_when_invisible":true}}
 	if half_elixir_charge_rule(record,definition):return {"kind":"half_elixir_charge","spec":{"can_use_when_invisible":true}}
 	if half_elixir_reset_rule(record,definition):return {"kind":"half_elixir_reset","spec":{"can_use_when_invisible":true}}
@@ -137,13 +140,58 @@ static func use_bonus_point(world:Node,uid:String,owned:Dictionary)->Dictionary:
 static func authorizes_bonus_point(world:Node,staged:Dictionary)->bool:
 	return _candidate_kind=="original_146402_point" and staged.size()==4 and staged.has("inventory") and staged.has("item_instances") and staged.has("consumable_state") and integer(world.stat_points) and staged.get("stat_points")==int(world.stat_points)+1 and authorizes(staged)
 
+## The four permanent server-keeper items, not their same-color dated SKUs.
+## Reward is solely the exact authored above-player effect; no hidden buff.
+const DIRECT_FIREWORKS:Dictionary={
+	127971:[184341,585101,17447], 127981:[184361,585121,17446],
+	127991:[184381,585141,17458], 128001:[184401,585161,17459]
+}
+
+static func direct_firework_rule(record:Dictionary,definition:Dictionary)->Dictionary:
+	var id:int=int(record.get("source_item_class_id",0))
+	if not DIRECT_FIREWORKS.has(id) or NATIVE_FIELDS.field(record,"source_category_name")!="Potion":return {}
+	var expected:Array=DIRECT_FIREWORKS[id]
+	var raw:Dictionary=definition.get("original_item",{})
+	var rows:Array=definition.get("item_bonus",[])
+	if whole(raw.get("ID"))!=id or raw.get("TestItem")!=false or whole(raw.get("CategoryID"))!=3 or whole(raw.get("LevelLimitMin"))!=0 or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true or rows.size()!=1:return {}
+	var r:Dictionary=rows[0];var b:Dictionary=r.get("bonus",{})
+	if whole(r.get("ID"))!=expected[0] or r.get("IsPossession")!=false or whole(b.get("ID"))!=expected[1] or r.get("bonus_type",{}).get("Name")!="ItemConsumeEffectSpriteID" or r.get("unit",{}).get("Name")!="SpriteID" or whole(b.get("Value"))!=expected[2] or whole(b.get("BonusApplicationTypeID"))!=0 or whole(b.get("BonusApplicationTargetID"))!=0:return {}
+	return {"sprite_id":expected[2],"can_use_when_invisible":true}
+
+static func use_exact_firework(world:Node,uid:String,owned:Dictionary)->Dictionary:
+	if busy:return _failure("다른 아이템을 처리 중입니다 · 폭죽 보존")
+	var live:Dictionary=proof(world,uid)
+	if live.is_empty() or live!=owned:return _failure("원본 폭죽 실물 확인 실패 · 아이템 보존")
+	var definition:Dictionary=D.item_definition(live.record)
+	var rule:Dictionary=direct_firework_rule(live.record,definition)
+	if rule.is_empty():return _failure("원본 폭죽 규칙 확인 필요 · 아이템 보존")
+	var preview:Node2D=world.player.original_source_preview
+	if not is_instance_valid(preview) or not preview.is_inside_tree():return _failure("원본 폭죽 연출을 불러올 수 없습니다 · 아이템 보존")
+	var paid:Dictionary=stage_debit(world,[{"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt}])
+	if not paid.get("ok",false):return _failure("폭죽 수량 확인 실패 · 아이템 보존")
+	# Nothing is attached or visible until the existing writer commits. A
+	# missing/corrupt bank or a save failure neither consumes nor displays.
+	var overlay:Node2D=preview.prepare_current_source_item_consume(definition.original_item,int(rule.sprite_id),5)
+	if not is_instance_valid(overlay):return _failure("원본 폭죽 연출을 불러올 수 없습니다 · 아이템 보존")
+	var payload:Dictionary=paid.overrides
+	if sealed_save(world,payload)!=OK:
+		overlay.free()
+		return _failure("폭죽 저장 실패 · 아이템 보존")
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state);world.deferred_save.cancel()
+	preview.publish_prepared_item_consume(overlay,world.player.global_position)
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":str(live.record.name)+" 사용"}
+
 ## ItemClass -> [min level, raw EXP, exact ItemBonus ID, exact Bonus ID].
 ## Each original Korean description agrees with the numeric value and min level.
 ## The rank-four fruit (170214) declares 500000 and says 1000000: not bound.
 const DIRECT_EXP_REWARDS: Dictionary={
 	170184:[40,2000000,283204,969234], 170194:[40,1500000,283214,969244],
 	170204:[40,1000000,283224,969254], 181273:[45,2000000,315283,1046803],
-	234598:[40,4000000,449418,1413528]
+	234598:[40,4000000,449418,1413528], 234608:[40,3000000,449428,1413538],
+	234618:[40,2000000,449438,1413548], 328188:[40,4000000,695268,2027458],
+	328198:[40,3000000,695278,2027468], 328208:[40,2000000,695288,2027478],
+	216103:[70,356454638,403663,1252173]
 }
 
 static func direct_experience_rule(record:Dictionary,definition:Dictionary)->Dictionary:
@@ -152,19 +200,49 @@ static func direct_experience_rule(record:Dictionary,definition:Dictionary)->Dic
 	var expected:Array=DIRECT_EXP_REWARDS[id]
 	var raw:Dictionary=definition.get("original_item",{})
 	var rows:Array=definition.get("item_bonus",[])
-	if whole(raw.get("ID"))!=id or raw.get("TestItem")!=false or whole(raw.get("CategoryID"))!=3 or whole(raw.get("LevelLimitMin"))!=expected[0] or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true or rows.size()!=1:return {}
-	var r:Dictionary=rows[0];var b:Dictionary=r.get("bonus",{})
-	if whole(r.get("ID"))!=expected[2] or r.get("IsPossession")!=false or whole(b.get("ID"))!=expected[3] or r.get("bonus_type",{}).get("Name")!="Experience" or r.get("unit",{}).get("Name")!="Value" or whole(b.get("Value"))!=expected[1] or whole(b.get("BonusApplicationTypeID"))!=0 or whole(b.get("BonusApplicationTargetID"))!=0:return {}
-	var text:String=str(SOURCE.row("DescData_Korean",int(raw.get("StoryDescID",0))).get("Description","")).replace(",","")
+	if whole(raw.get("ID"))!=id or raw.get("TestItem")!=false or whole(raw.get("CategoryID"))!=3 or whole(raw.get("LevelLimitMin"))!=expected[0] or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true:return {}
+	var expected_rows:Dictionary={expected[2]:[expected[3],"Experience","Value",expected[1]]}
+	# The level-70 Arakne dose alone has these two extra direct-use rows.
+	# Neither same-name expired dose has this exact ItemClass ID.
+	if id==216103:
+		expected_rows[403643]=[1252153,"ItemConsumeDelay","MilliSeconds",3]
+		expected_rows[403653]=[1252163,"ItemConsumeEffectSpriteID","SpriteID",751]
+	if rows.size()!=expected_rows.size():return {}
+	for r:Dictionary in rows:
+		var key:Variant=whole(r.get("ID"))
+		if not expected_rows.has(key):return {}
+		var tuple:Array=expected_rows[key]
+		var bonus:Dictionary=r.get("bonus",{})
+		if r.get("IsPossession")!=false or whole(bonus.get("ID"))!=tuple[0] or r.get("bonus_type",{}).get("Name")!=tuple[1] or r.get("unit",{}).get("Name")!=tuple[2] or whole(bonus.get("Value"))!=tuple[3] or whole(bonus.get("BonusApplicationTypeID"))!=0 or whole(bonus.get("BonusApplicationTargetID"))!=0:return {}
+		expected_rows.erase(key)
+	var text:String=str(SOURCE.row("DescData_Korean",int(raw.get("StoryDescID",0))).get("Description","")).replace(",","").replace(char(13),"").replace(char(10)," ")
 	if not ("EXP %d을 획득" % int(expected[1])) in text or not ("%d레벨 부터 사용가능" % int(expected[0])) in text:return {}
-	return {"source_exp":expected[1],"minimum_level":expected[0],"can_use_when_invisible":true}
+
+	var rule:Dictionary={"source_exp":expected[1],"minimum_level":expected[0],"can_use_when_invisible":true}
+	if id==216103:
+		rule["consume_delay_ms"]=3
+		rule["consume_effect_sprite_id"]=751
+	return rule
+
+static func experience_rule(record:Dictionary,definition:Dictionary)->Dictionary:
+	if record.get("source_item_class_id")==CATALYST.ITEM_ID:return CATALYST.profile(record,definition)
+	return direct_experience_rule(record,definition)
 
 static func use_exact_experience(world:Node,uid:String,owned:Dictionary)->Dictionary:
 	if busy or not integer(world.experience) or not integer(world.exp_need) or world.exp_need<=0:return _failure("경험치 저장 상태 확인 필요 · 아이템 보존")
 	var live:Dictionary=proof(world,uid)
 	if live.is_empty() or live!=owned:return _failure("경험치 아이템 실물 확인 실패 · 아이템 보존")
-	var rule:Dictionary=direct_experience_rule(live.record,D.item_definition(live.record))
+	var definition:Dictionary=D.item_definition(live.record)
+	var rule:Dictionary=experience_rule(live.record,definition)
 	if rule.is_empty() or world.level<int(rule.minimum_level):return _failure("원본 경험치 아이템 레벨 조건 불충족 · 아이템 보존")
+	if float(world.item_use_cooldowns.get("m523:item:"+str(int(live.record.source_item_class_id)),0.0))>0:return _failure("원본 아이템 재사용 대기")
+	var catalyst:bool=rule.get("growth_catalyst",false)
+	if catalyst:
+		if not CATALYST.before_issue_end(Time.get_unix_time_from_system(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))):
+			return _failure("원본 물약 사용 기한이 끝났습니다 · 아이템 보존")
+		if world.active_item_buffs.has(CATALYST.ACTIVE_KEY):return _failure("이미 같은 효과가 적용 중이거나 보상 수령 대기 중입니다 · 아이템 보존")
+		var problem:String=buff_rule_problem(world,rule)
+		if not problem.is_empty():return _failure(problem)
 	var gained:int=EFFECTS.twilight_experience(int(rule.source_exp))
 	if gained<=0 or int(world.experience)>9007199254740991-gained:return _failure("경험치 결과 수치 범위 오류 · 아이템 보존")
 	var before_level:int=world.level
@@ -174,22 +252,60 @@ static func use_exact_experience(world:Node,uid:String,owned:Dictionary)->Dictio
 	if not paid.get("ok",false):return _failure("경험치 아이템 수량 확인 실패 · 아이템 보존")
 	var payload:Dictionary=paid.overrides
 	payload.merge(staged_growth,true)
+	if catalyst:
+		var buffs:Dictionary=world.active_item_buffs.duplicate(true)
+		var value:Dictionary=CATALYST.EFFECTS.duplicate()
+		value.merge({"remaining":3600.0,"duration":3600.0,"source_buff_class":rule.source_buff_class,"source_buff_group":rule.source_buff_group,
+			"source_item_class_id":CATALYST.ITEM_ID,"source_snapshot":"patch523",CATALYST.KEY:{"uid":uid,"receipt":owned.receipt.duplicate(true)}})
+		buffs[CATALYST.ACTIVE_KEY]=value
+		payload["active_item_buffs"]=buffs
+	if rule.has("consume_delay_ms"):
+		payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,live.record,rule)
 	busy=true;_candidate_kind="original_exp_reward";_candidate=payload.duplicate(true)
 	var saved:Error=world._save_game(true,payload)
 	_candidate.clear();_candidate_kind="";busy=false
 	if saved!=OK:return _failure("경험치 저장 실패 · 수량과 능력치 보존")
 	world.inventory=payload.inventory;world.item_instances=payload.item_instances
 	world.consumable_service.import_state(payload.consumable_state)
+	if payload.has("item_use_cooldowns"):world.item_use_cooldowns=payload.item_use_cooldowns
+	if catalyst:world.active_item_buffs=payload.active_item_buffs
 	for key: String in staged_growth:
 		world.set("attack_power" if key=="attack" else key,int(staged_growth[key]))
 	world.deferred_save.cancel()
 	if world.level>before_level:
 		var reached:Array=range(before_level+1,int(world.level)+1)
 		world._play_original_level_up(reached)
+	if rule.has("consume_effect_sprite_id"):
+		world.option_awakening.combat.emit_sprite(int(rule.consume_effect_sprite_id),world.player,definition.original_item)
 	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"경험치 +%d%s" % [gained, " · Lv.%d" % int(world.level) if world.level>before_level else ""]}
 
 static func authorizes_experience_reward(staged:Dictionary)->bool:
 	return _candidate_kind=="original_exp_reward" and authorizes(staged)
+
+## Commit the exact finished buff and its separate physical crafting material
+## in one snapshot. A failed grant or writer never clears the entitlement.
+static func finish_growth_catalyst(world:Node,key:String)->bool:
+	var buff:Dictionary=world.active_item_buffs.get(key,{})
+	var proof_row:Variant=buff.get(CATALYST.KEY)
+	if busy or not proof_row is Dictionary or float(buff.get("remaining",1.0))>0.0:return false
+	var receipt:Variant=proof_row.get("receipt")
+	if not receipt is Dictionary or receipt.get("item_class_id")!=CATALYST.ITEM_ID or not receipt_valid(receipt,str(proof_row.get("uid",""))):return false
+	var record:Dictionary=D.definition_id(str(CATALYST.ITEM_ID)).get("native_record",{})
+	if key!=CATALYST.ACTIVE_KEY or CATALYST.profile(record,D.item_definition(record)).is_empty() or not world._patch523_item_allowed():return false
+	var reward:Dictionary=CATALYST.reward()
+	if reward.is_empty():return false
+	var given:Dictionary=load("res://scripts/loot/patch523_item_inventory.gd").call("stage",world,[reward],{"kind":"source_growth_catalyst523_expiry","input_physical_id":proof_row.uid,"buff_class_id":CATALYST.BUFF_ID})
+	if not given.get("ok",false):return false
+	var payload:Dictionary=given.overrides
+	payload["active_item_buffs"]=world.active_item_buffs.duplicate(true)
+	payload.active_item_buffs.erase(key)
+	if sealed_save(world,payload)!=OK:return false
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances
+	world.active_item_buffs=payload.active_item_buffs
+	world.deferred_save.cancel()
+	world.hud.refresh_inventory(world.inventory)
+	world.hud.append_log("아우라키아 성장 버프 종료 · 명예 주화 15개")
+	return true
 
 ## ItemClass 4151 grants one ordinary stat point. Keep the existing TWILIGHT
 ## chosen-stat UI and shared character/stat caps for both forms of elixir.
@@ -600,6 +716,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
+	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)
 	if effect.kind=="half_elixir_charge":return use_half_elixir_charge(world,uid,owned,record)
 	if effect.kind=="half_elixir_reset":return open_half_elixir_reset(world,uid,owned,record)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
@@ -646,7 +763,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		else:instances[uid][QUANTITY]=int(owned.remaining)-1;instances[uid].source_native_stack_used_quantity=int(owned.used)+1
 		ledger=ledger.duplicate(true);ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1);state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
-	var reuse_delay: float=float(spec.get("reuse_delay_seconds",0)) if effect.kind=="mp" else 0.0
+	var reuse_delay: float=float(details.get("source_reuse_delay_seconds",0)) if effect.kind=="hp" else (float(spec.get("reuse_delay_seconds",0)) if effect.kind=="mp" else 0.0)
 	var delay: float=maxf(float(details.get("source_consume_delay_ms",spec.get("consume_delay_ms",0)))/1000.0,reuse_delay)
 	if delay>0:cooldowns[cooldown_key]=delay;cooldowns[item_name]=delay
 	if effect.kind=="hp":cooldowns[str(parameters.cooldown_key)]=float(parameters.cooldown_seconds)
@@ -716,6 +833,10 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
 
 static func _buff_territory_problem(world: Node,spec: Dictionary) -> String:
+	if spec.has("source_trial_tower_territory_id"):
+		if int(spec.source_trial_tower_territory_id)!=10353 or not world._trial_tower_item_land_active():return "원본 시련의 탑 층에서만 사용할 수 있습니다 · 아이템 보존"
+		var allowed:Variant=EFFECTS.consume_areas([10353])
+		if not allowed is Array or allowed.size()!=100 or not EFFECTS._inside(world,allowed,world.player.global_position):return "시련의 탑 원본 사용 좌표 밖입니다 · 아이템 보존"
 	if spec.get("forbidden_territory_class_ids",[]).is_empty():return ""
 	var areas: Variant=EFFECTS.forbidden_areas({"territory_class_ids":spec.forbidden_territory_class_ids})
 	if areas==null:return "원본 사용 불가 지역 입력 확인 실패 · 아이템 보존"
@@ -789,6 +910,7 @@ static func buff_runtime_fields(world: Node,spec: Dictionary,value: Dictionary) 
 		value["tick_interval"]=float(load("res://scripts/quests/quest_regen523.gd").call("interval",world));value["tick_elapsed"]=0.0
 	if spec.get("absolute_time",false):value["absolute_until"]=Time.get_unix_time_from_system()+float(spec.get("duration_seconds",0))
 	if int(spec.get("erase_at_level",0))>0:value["erase_at_level"]=int(spec.erase_at_level)
+	if spec.get("source_trial_tower_territory_id")==10353:value["source_trial_tower_territory_id"]=10353
 
 static func state_error(inventory: Variant,instances: Variant,state: Variant,warehouse: Variant={},floor: Variant=[],dormant: Dictionary={}) -> String:
 	if not inventory is Dictionary or not instances is Dictionary or not state is Dictionary or not warehouse is Dictionary or not floor is Array:return "원본 물리 수량 저장 후보 형식 확인 필요"
