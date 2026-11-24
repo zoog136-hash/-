@@ -168,7 +168,7 @@ static func seal_payload(payload: Dictionary) -> Dictionary:
 ## data is owned by the caller (already a private copy). The sealed body is
 ## built as _project(shared, state) from this very data, so validate() need
 ## not re-prove that identity with three sorted JSON copies of the save.
-static func _seal(data: Dictionary) -> Dictionary:
+static func _seal(data: Dictionary, compact_consumer: bool = false) -> Dictionary:
 	if not data.get(KEY) is Dictionary or data[KEY].get("schema")!=SCHEMA: return fail("계정 v2 저장으로 먼저 안전하게 이전해 주세요.")
 	var account: Dictionary=data[KEY]
 	if not account.get("characters") is Array or not account.get("selected") is String or not account.get("shared") is Dictionary: return fail("계정 공유·캐릭터 목록 저장 형식 오류")
@@ -189,7 +189,7 @@ static func _seal(data: Dictionary) -> Dictionary:
 	var state: Dictionary=private_fields(data)
 	account.shared=shared
 	selected.state=state
-	var sealed: Dictionary=_project(shared,state)
+	var sealed: Dictionary=_project(shared,state,compact_consumer)
 	sealed[KEY]=account
 	var error: String=validate(sealed,true)
 	return {"ok":true,"payload":sealed} if error.is_empty() else fail(error)
@@ -197,14 +197,18 @@ static func _seal(data: Dictionary) -> Dictionary:
 static func reseal_migration(payload: Dictionary) -> Dictionary:
 	return seal_payload(payload)
 
-static func _project(shared: Dictionary, state: Dictionary) -> Dictionary:
-	var result: Dictionary = state.duplicate(true)
+## For one synchronous compact writer only, both arguments are detached owned
+## dictionaries from _seal. The writer reads the projection and immediately
+## replaces the selected state with its file marker. Ordinary callers still
+## get independent state and projection copies that can be mutated separately.
+static func _project(shared: Dictionary, state: Dictionary, compact_consumer: bool = false) -> Dictionary:
+	var result: Dictionary = state.duplicate(not compact_consumer)
 	for key: String in shared:
 		if key in ["card_option_awakening","consumable_state"]:
-			var merged: Dictionary = shared[key].duplicate(true)
+			var merged: Dictionary = shared[key].duplicate(not compact_consumer)
 			merged.merge(state.get(key,{}),true)
 			result[key] = merged
-		else: result[key] = _copy(shared[key])
+		else: result[key] = shared[key] if compact_consumer else _copy(shared[key])
 	return result
 
 ## The selected character's state is the flat save body itself
@@ -546,6 +550,17 @@ func complete_legacy_gender(id: String, gender: int, catalog: RefCounted) -> Dic
 ## Called immediately before World's authoritative writer, after every owner
 ## has validated its staged override. Never mutates disk or live resources.
 static func stage_save(path: String, payload: Dictionary) -> Dictionary:
+	return _stage_save(path,payload,false)
+
+## Both returned views are read-only inputs to the synchronous durable writer,
+## not live gameplay state. Public stage_save retains its detached-copy contract.
+static func stage_checkpoint_write(path: String, payload: Dictionary) -> Dictionary:
+	var result:=_stage_save(path,payload,true)
+	if not result.ok: return result
+	var full: Dictionary=result.payload
+	return {"ok":true,"payload":compact(full),"envelope":full.get(KEY)}
+
+static func _stage_save(path: String, payload: Dictionary, compact_consumer: bool) -> Dictionary:
 	if session.is_empty() or session.get("path")!=path:
 		if payload.has(KEY): return fail("캐릭터 계정 접속 정보가 없습니다. 로비에서 다시 접속하세요.")
 		if FileAccess.file_exists(path):
@@ -594,7 +609,7 @@ static func stage_save(path: String, payload: Dictionary) -> Dictionary:
 	account["characters"]=characters
 	var data: Dictionary=payload.duplicate(false)
 	data[KEY]=account
-	var staged: Dictionary=_seal(data)
+	var staged: Dictionary=_seal(data,compact_consumer)
 	if not staged.ok: return staged
 	var changed: bool=staged.payload[KEY]!=prior_envelope if trusted else not _same(staged.payload[KEY],prior_envelope)
 	if changed: staged.payload[KEY].revision=int(account.revision)+1

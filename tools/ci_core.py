@@ -196,6 +196,8 @@ CHECKS = [
     ('current523_npc_enum_position_test', []),
     ('current523_npc_first_life_proof_test', []),
     ('field_minimap_overlay_title_test', []),
+    ('town_idle_clock_test', []),
+    ('dungeon_checkpoint_projection_test', []),
     ('dungeon_durable_cpu_test', []),
     ('dungeon_durable_cpu_main_test', []),
     ('source523_exact_item_icon_diagnostic_test', []),
@@ -737,6 +739,21 @@ def run(command: list[str], path: Path, log: Path, env: dict, timeout: int, mark
             print('::error title=Core runtime::' + line.replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
         raise RuntimeError(f'{log.name}: exit={result.returncode}, errors={len(errors)}, completion={marker_ok}')
 
+def run_check(name, command, target, log, env, marker):
+    # These checks require a missing prior save or map preference. Unrelated
+    # earlier checks may legitimately create either. Isolate only these
+    # fixtures; never delete previous data or weaken a gameplay assertion.
+    if name in {'loading_screen_test', 'loading_world_readiness_test',
+                'character_account_route_main_test', 'dungeon_durable_cpu_main_test',
+                'current523_aden_preferences_test', 'current523_aden_play_options_test',
+                'current523_aden_play_controller_test', 'current523_prior_renderer_release_test',
+                'native_stack_save_validation_budget_test'}:
+        with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
+            fixture = dict(env, XDG_DATA_HOME=profile + '/data',
+                           XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
+            return run(command, target, log, fixture, 180, marker)
+    return run(command, target, log, env, 180, marker)
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path('.'))
@@ -928,6 +945,8 @@ def main():
                       'current523_npc_enum_position_test':'CURRENT523_NPC_ENUM_POSITION_RESULT',
                       'current523_npc_first_life_proof_test':'NPC_FIRST_LIFE_PROOF_RESULT',
                       'field_minimap_overlay_title_test':'FIELD_MINIMAP_OVERLAY_TITLE_RESULT',
+                      'town_idle_clock_test':'TOWN_IDLE_CLOCK_RESULT',
+                      'dungeon_checkpoint_projection_test':'DUNGEON_CHECKPOINT_PROJECTION_RESULT',
                       'dungeon_durable_cpu_test':'DUNGEON_DURABLE_CPU_RESULT',
                       'dungeon_durable_cpu_main_test':'DUNGEON_DURABLE_MAIN_RESULT',
                       'source523_exact_item_icon_diagnostic_test':'EXACT_ITEM_ICON_DIAGNOSTICS',
@@ -1224,7 +1243,7 @@ def main():
                       'minigame523_scope_test':'MINIGAME523_RESULT',
                       'content523_test':'CONTENT523_RESULT',
                       'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
-            run(command, target, logs/(name+'.txt'), env, 180, marker)
+            run_check(name, command, target, logs/(name+'.txt'), env, marker)
             print('CORE_CHECK_OK', name, flush=True)
 
 if __name__ == '__main__':

@@ -7648,21 +7648,22 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		prior_owner_hash=FileAccess.get_sha256(save_path())
 	if want_background and background_save_enabled and collection_override.is_empty() and movement_override.is_empty() and pending_map_save_record.is_empty() and not observed_content.has("state") and not equipment_collections.test_save_writer.is_valid():
 		return _start_background_save(data, prior_owner_hash, save_started_usec, owned_save_fields)
-	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_save(save_path(),data)
+	var checkpoint_only: bool=collection_override.size()==1 and collection_override.has("source_dungeon_play")
+	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_checkpoint_write(save_path(),data) if checkpoint_only else CHARACTER_ACCOUNT.stage_save(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
 		return ERR_INVALID_DATA
 	data = account_stage.payload
-	var written_envelope: Variant = data.get(CHARACTER_ACCOUNT.KEY)
-	# The selected character's state is this body: written once (account_store.compact).
-	data = CHARACTER_ACCOUNT.compact(data)
+	var written_envelope: Variant = account_stage.envelope if checkpoint_only else data.get(CHARACTER_ACCOUNT.KEY)
+	# The synchronous checkpoint stage already returns its compact file view.
+	if not checkpoint_only: data = CHARACTER_ACCOUNT.compact(data)
 	FRAME_HITCH.detail("save.account", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
 	CHARACTER_ACCOUNT.forget_durable()
 	# Dungeon-only writes (periodic checkpoint, time exhaustion or stop) stage
 	# a new ledger revision. Don't hash and retain a second full typed save
 	# just for the fast path used by repeated identical saves.
-	var retain_typed_snapshot: bool=not (collection_override.size()==1 and collection_override.has("source_dungeon_play"))
+	var retain_typed_snapshot: bool=not checkpoint_only
 	var result: Error = equipment_collections.write_save(save_path(), data, retain_typed_snapshot)
 	if result==OK and written_envelope is Dictionary:
 		CHARACTER_ACCOUNT.remember_verified_durable(save_path(),written_envelope,equipment_collections.verified_payload_sha(save_path()))

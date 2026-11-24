@@ -35,6 +35,24 @@ func _run() -> void:
 	var budget: Dictionary = HITCH.summary()
 	check(budget.frames == 8 and budget.over_16ms == 7 and budget.over_16667us == 5
 		and budget.over_33ms == 3 and budget.at_least_4s == 1, "exact budget boundaries are retained separately")
+	check(budget.budget_examples[0].size()==1 and budget.budget_examples[0][0].total_usec==16001 and budget.budget_examples[1].size()==1 and budget.budget_examples[1][0].total_usec==33001,"sample exact short-frame bands, rate-limited separately, without counting hitches")
+	HITCH.reset_for_test(DIR)
+	var stamp: int=10000000
+	for batch: int in 9:
+		HITCH.enabled=false;HITCH.enabled=true
+		HITCH.frame_at_for_test(stamp)
+		HITCH.add("world",HITCH.now()-2000)
+		HITCH.detail("ui.example",HITCH.now()-1200)
+		HITCH.frame_at_for_test(stamp+36000)
+		stamp+=HITCH.BUDGET_SAMPLE_USEC+1
+	var batch_result:=HITCH.summary()
+	check(batch_result.budget_examples[1].size()==HITCH.BUDGET_KEEP and batch_result.budget_examples[1][0].frame==6 and batch_result.hitches==0,"keep only recent bounded examples; no 100ms hitch")
+	var last: Dictionary=batch_result.budget_examples[1].back()
+	check(last.section=="world" and last.detail=="ui.example" and last.unattributed_usec>30000,"report known scope separately from unmeasured elapsed time")
+	var hostile: Dictionary=last.duplicate(true)
+	hostile.map="/private/path";hostile.private="not-for-export"
+	var public_sample: Dictionary=preload("res://scripts/boot/performance_report_session.gd").clean_snapshot({"hitch_log":{"budget_examples":[[],[hostile,{"total_usec":16001}]]}}).hitch_log
+	check(public_sample.budget_examples[1].size()==1 and public_sample.budget_examples[1][0].map=="" and not public_sample.budget_examples[1][0].has("private"),"Android recovered export range-checks and allowlists")
 	HITCH.reset_for_test(DIR)
 	HITCH.frame("aden_world")
 	# A fast frame is not recorded.

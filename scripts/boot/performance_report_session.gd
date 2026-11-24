@@ -217,6 +217,19 @@ static func clean_snapshot(snapshot: Dictionary) -> Dictionary:
 		for entry: Variant in entries.slice(0, HITCH.KEEP):
 			if entry is Dictionary: worst.append(_hitch(entry))
 	log["worst"] = worst
+	var bands: Variant=raw_log.get("budget_examples")
+	if bands is Array and bands.size()==2:
+		var clean: Array=[[],[]]
+		for index: int in 2:
+			if not bands[index] is Array:continue
+			for sample: Variant in bands[index].slice(0,HITCH.BUDGET_KEEP):
+				if not sample is Dictionary:continue
+				var row: Dictionary=_numbers(sample,["frame","total_usec","section_usec","unattributed_usec","detail_usec"])
+				var us: int=int(row.get("total_usec",0))
+				if us<=16000 or us>=HITCH.THRESHOLD_USEC or int(us>33000)!=index:continue
+				for key: String in ["map","section","detail"]:row[key]=_label(sample.get(key))
+				clean[index].append(row)
+		log["budget_examples"]=clean
 	result.hitch_log = log
 	return result
 
