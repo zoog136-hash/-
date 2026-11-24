@@ -88,7 +88,7 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 	_bag=weakref(bag)
 	_chrome=Chrome.new()
 	_slots=Slots.new()
-	var result: Dictionary=_chrome.configure(pack,hud,Callable(self,"_on_native_closed"))
+	var result: Dictionary=_chrome.configure(pack,hud,Callable(self,"_on_native_closed"),false)
 	if not result.get("ok",false):return _unsupported_result(result)
 	result=_slots.configure(pack,hud,image_owner_provider)
 	if not result.get("ok",false):return _unsupported_result(result)
@@ -428,7 +428,11 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	if not slot_contract.get("ok",false):
 		_refreshing=false
 		return _stage_failed(_unsupported_result(slot_contract))
-	var chrome: Dictionary=_chrome.build({},model.expanded)
+	# Build chrome from its own header only; the slot owner already provided
+	# the complete, independent filtered inventory model for this stage.
+	var chrome_started: int=FRAME_HITCH.now()
+	var chrome: Dictionary=_chrome.build({},model.expanded,false)
+	FRAME_HITCH.detail("ui.inventory_chrome_bindings",chrome_started)
 	if not chrome.get("ok",false):
 		_refreshing=false
 		return _stage_failed(_unsupported_result(chrome))
@@ -484,14 +488,14 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		# Apply the existing source extension clip's exact end state. No new
 		# geometry is authored and no source loop/autoplay policy is inferred.
 		inventory_scene.seek_frame(70.0)
-		var refreshed: Dictionary=_chrome.refresh(inventory_scene)
+		var refreshed: Dictionary=_chrome.refresh(inventory_scene,false)
 		if not refreshed.get("ok",false):return _reject_staged(next,refreshed)
 	else:
 		# The normal (4-column) bag is the end state of the source
 		# Fx_Extension_Off clip (75-86): Nd_BG is authored at alpha 0 and only
 		# that clip brings it to 255, so without it the frame stayed invisible.
 		inventory_scene.seek_frame(86.0)
-		var refreshed_normal: Dictionary=_chrome.refresh(inventory_scene)
+		var refreshed_normal: Dictionary=_chrome.refresh(inventory_scene,false)
 		if not refreshed_normal.get("ok",false):return _reject_staged(next,refreshed_normal)
 	# Commit only after every owned row has its original slot, hit control and
 	# existing owner texture. The complete current bag remains caller-owned.
