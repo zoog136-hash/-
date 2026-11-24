@@ -158,8 +158,7 @@ func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	var goal: Vector2i=nearest_cell(to)
 	if start.x<0 or goal.x<0: return PackedVector2Array()
 	if line_clear(from,to): return PackedVector2Array([to])
-	var navigator := OriginalChunkNavigation.new()
-	navigator.source=self
+	var navigator: TwilightL1JSourceNavigation = _new_path_navigator()
 	navigator.loaded=true
 	navigator.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
 	var result:=PackedVector2Array()
@@ -169,6 +168,11 @@ func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	if result.size()>1 and line_clear(from,result[1]): result.remove_at(0)
 	if not result.is_empty() and walkable(to) and line_clear(result[-1],to): result.append(to)
 	return result
+func _new_path_navigator() -> TwilightL1JSourceNavigation:
+	var navigator := OriginalChunkNavigation.new()
+	navigator.source = self
+	return navigator
+
 func navigation_search_limit() -> int: return 8192
 ## A caller may lower (never raise) the A* node budget for one search, e.g.
 ## a monster chase, which must not stall a physics step; -1 = field policy.
