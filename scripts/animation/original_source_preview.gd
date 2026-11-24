@@ -335,7 +335,12 @@ func _configure_existing_source(key: String, manifest_path: String, context: Dic
 func configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String) -> bool:
 	return _configure_reference_bank(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,"")
 
-func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}, require_cooked: bool = false) -> bool:
+func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
+	return _configure_reference_bank_internal(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,card_consumer,role_actor_ids,false)
+
+## Keep the established override signature. Only the prepared item effect
+## asks for a cooked overlay without admitting the raw bank fallback.
+func _configure_reference_bank_internal(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary, require_cooked: bool) -> bool:
 	var phase_started: int = FRAME_HITCH.now()
 	clear()
 	FRAME_HITCH.detail("view.clear",phase_started)
@@ -1966,7 +1971,7 @@ func prepare_current_source_item_consume(original_item:Dictionary,requested_spri
 		source_effect_status={"ok":false,"status":"selection_pending","reason":"current523_item_effect_cooked_index_required"}
 		return null
 	var selected:Dictionary=CURRENT523_EFFECT.select_item_consume(original_item,requested_sprite,_reference_request_context)
-	var overlay:Node2D=_make_selected_current_source_effect(selected,facing,0,true)
+	var overlay:Node2D=_make_selected_current_source_effect_internal(selected,facing,0,true)
 	if not is_instance_valid(overlay):return null
 	var direction:int=overlay._overlay_facing
 	var frames:Array=overlay._playback_tracks.idle.directions[direction]
@@ -2058,7 +2063,10 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	source_effect_status["placement_policy"] = placement
 	return true
 
-func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0, require_cooked: bool = false) -> Node2D:
+func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
+	return _make_selected_current_source_effect_internal(selected,facing,texture_budget_bytes,false)
+
+func _make_selected_current_source_effect_internal(selected: Dictionary, facing: int, texture_budget_bytes: int, require_cooked: bool) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
 	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose","damage_effect"] or not selected.get("source_reference") is Dictionary: return null
@@ -2069,7 +2077,12 @@ func _make_selected_current_source_effect(selected: Dictionary, facing: int, tex
 		return null
 	var overlay = get_script().new()
 	overlay.playback_mode_override = playback_mode_override
-	if not overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay",{},require_cooked):
+	var configured:bool
+	if require_cooked:
+		configured=overlay._configure_reference_bank_internal(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay",{},true)
+	else:
+		configured=overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay")
+	if not configured:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_unavailable"))
