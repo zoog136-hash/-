@@ -73,6 +73,70 @@ func staged_transition_rules() -> void:
 	STACK.clear_proof_cache()
 	owner.free()
 
+func ledger_comparison_rules() -> void:
+	var uid: String = "active-ledger-fixture"
+	var receipt: Dictionary = {"schema":1,"granted_quantity":7,"issued_physical_id":uid,"origin":{"kind":"fixture","nested":[{"n":1}]}}
+	for transfer: int in [0,1]:
+		var owned: Dictionary = {"receipt":receipt,"used":1,"transferred":transfer,"remaining":6-transfer}
+		for discard: int in [0,2]:
+			var original: Dictionary = STACK.ledger_row(owned,1,6-transfer-discard,discard)
+			check(STACK._ledger_row_matches(original,owned,1,6-transfer-discard,discard), "exact native ledger row matches without copying")
+			check(not is_same(original.receipt,receipt), "published row still owns its own receipt")
+			for mutation: String in ["extra","missing","number_type","wrong_count","receipt_changed","nested_type","wrong_receipt_type"]:
+				var modified: Dictionary = original.duplicate(true)
+				match mutation:
+					"extra": modified["extra"] = 1
+					"missing": modified.erase("used_quantity")
+					"number_type": modified.used_quantity = 1.0
+					"wrong_count": modified.used_quantity = -1
+					"receipt_changed": modified.receipt.origin.nested[0].n = 2
+					"nested_type": modified.receipt.origin.nested[0].n = 1.0
+					"wrong_receipt_type": modified.receipt = null
+				check(STACK._ledger_row_matches(modified,owned,1,6-transfer-discard,discard) == (modified==original),
+					"ledger matcher preserves Dictionary equality: "+mutation)
+	var row: Dictionary = STACK.ledger_row({"receipt":receipt},1,6)
+	var active: Dictionary = {"name":"fixture",STACK.RECEIPT:receipt}
+	var journal: Dictionary = {STACK.USES:{uid:row}}
+	# Inject the output of the first proof only. With no source pack the
+	# fabricated receipt must still fail wherever no physical proof exists.
+	STACK.clear_proof_cache()
+	STACK._proof_identity = SOURCE.identity()
+	STACK._proof_cache[uid] = [active.duplicate(true),{"receipt":receipt,"used":1,"transferred":0,"remaining":6}]
+	check(STACK.state_error({"fixture":6},{uid:active},journal).is_empty(), "exact active ledger row reuses current ownership proof")
+	check(not STACK.state_error({"fixture":5},{uid:active},journal).is_empty(), "native inventory sum remains enforced")
+	check(not STACK.state_error({"fixture":6},{uid:{"name":"fixture"}},journal).is_empty(), "non-native entries do not prove native ledger rows")
+	var spent: Dictionary = {STACK.USES:{uid:STACK.ledger_row({"receipt":receipt},7,0)}}
+	check(not STACK.state_error({}, {}, spent).is_empty(), "ledger-only spent receipt still requires source proof")
+	var changed: Dictionary = journal.duplicate(true)
+	changed[STACK.USES][uid].receipt.origin.nested[0].n = 2
+	check(not STACK.state_error({"fixture":6},{uid:active},changed).is_empty(), "changed active ledger receipt rejected")
+	check(not STACK.state_error({"fixture":6},{uid:active},journal,{},[],{uid:active}).is_empty(), "duplicate ownership across characters still rejected")
+	STACK.clear_proof_cache()
+
+func _ledger_compare_benchmark() -> void:
+	var fixtures: Array[Dictionary] = []
+	for i: int in range(512):
+		var receipt: Dictionary = {"schema":1,"origin":{"kind":"fixture","nested":{"n":i}}}
+		for level: int in range(i%9):
+			receipt = {"schema":2,"origin":{"parent_receipt":receipt,"level":level}}
+		var owned: Dictionary = {"receipt":receipt,"transferred":int(i%4==0)}
+		fixtures.append({"owned":owned,"row":STACK.ledger_row(owned,3,7)})
+	var before: Array[int] = []
+	var after: Array[int] = []
+	for trial: int in range(9):
+		for fast: bool in [trial%2!=0,trial%2==0]:
+			var started: int = Time.get_ticks_usec()
+			var matched: int = 0
+			for repeat: int in range(12):
+				for fixture: Dictionary in fixtures:
+					matched += int(STACK._ledger_row_matches(fixture.row,fixture.owned,3,7) if fast else fixture.row==STACK.ledger_row(fixture.owned,3,7))
+			var elapsed: int = Time.get_ticks_usec()-started
+			(after if fast else before).append(elapsed)
+			check(matched == fixtures.size()*12, "timed comparison accepts all expected rows")
+	before.sort()
+	after.sort()
+	evidence["ledger_compare"] = {"rows":512,"baseline_ms":float(before[4])/12000.0,"without_copy_ms":float(after[4])/12000.0}
+
 func singleton_proof_pruning() -> void:
 	var items: Dictionary={}
 	for i: int in range(300):
@@ -96,6 +160,7 @@ func rules() -> void:
 	check(STACK.stage_floor_grant({"name":"unsupported fixture"},1,{})=={"handled":false},
 		"unsupported floor item is not claimed by physical grant owner")
 	staged_transition_rules()
+	ledger_comparison_rules()
 	var good: Dictionary = {"granted_quantity":3,"origin":{"kind":"owned_quantity_merge","merge_id":"0123456789abcdef0123456789abcdef","components":[{"physical_id":"a","quantity":1},{"physical_id":"b","quantity":2}]}}
 	check(MERGE.receipt_shape_valid(good), "a merge receipt whose parts add up is well formed")
 	var wrong: Dictionary = good.duplicate(true); wrong.granted_quantity = 4
@@ -440,6 +505,7 @@ func runtime() -> void:
 
 func run() -> void:
 	rules()
+	if OS.get_environment("TWILIGHT_BENCH_LEDGER_COMPARE")=="1": _ledger_compare_benchmark()
 	if not SOURCE.not_installed():
 		await runtime()
 	print("ITEM_STACKING523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))

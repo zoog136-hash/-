@@ -284,6 +284,19 @@ static func ledger_row(owned: Dictionary,used: int,remaining: int,discarded: int
 	if discarded>0:row["discarded_quantity"]=discarded;row["discard_reason"]=reason
 	return row
 
+# Comparison-only counterpart of ledger_row. Stored/output rows still own a
+# detached receipt. Dictionary equality is type-sensitive (1 != 1.0 there),
+# so use is_same for scalar fields rather than numeric Variant equality.
+static func _ledger_row_matches(value: Variant,owned: Dictionary,used: int,remaining: int,discarded: int=0,reason: String="TWILIGHT_existing_ground_lifetime") -> bool:
+	if not value is Dictionary: return false
+	var transferred: int=int(owned.get("transferred",0))
+	if value.size()!=3+int(transferred>0)+2*int(discarded>0): return false
+	if not is_same(value.get("used_quantity"),used) or not is_same(value.get("remaining_quantity"),remaining): return false
+	if transferred>0 and not is_same(value.get("transferred_quantity"),transferred): return false
+	if discarded>0 and (not is_same(value.get("discarded_quantity"),discarded) or not is_same(value.get("discard_reason"),reason)): return false
+	var receipt: Variant=value.get("receipt")
+	return receipt is Dictionary and receipt==owned.receipt
+
 static func _failure(reason: String) -> Dictionary:
 	return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":reason}
 
@@ -390,7 +403,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("기존 원본 물리 소비 장부 형식 보존")
 	if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return _failure("물리 공급 영수증과 기존 사용 장부 불일치")
-	if int(owned.used)+int(owned.transferred)>0 and ledger.get(uid)!=ledger_row(owned,int(owned.used),int(owned.remaining)):return _failure("물리 잔량과 원본 사용 장부 불일치")
+	if int(owned.used)+int(owned.transferred)>0 and not _ledger_row_matches(ledger.get(uid),owned,int(owned.used),int(owned.remaining)):return _failure("물리 잔량과 원본 사용 장부 불일치")
 	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
 	var amount: int=0
 	if effect.kind=="hp":
@@ -617,7 +630,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		var owned: Dictionary=floor_proofs[uid] if floor_proofs.has(uid) else _proof_entry_readonly(entry,uid)
 		if owned.is_empty():return "원본 물리 개체·최초량·잔량 증명 불일치"
 		if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return "원본 최초 소유와 소비 장부 불일치"
-		if int(owned.used)+int(owned.transferred)>0 and ledger.get(uid)!=ledger_row(owned,int(owned.used),int(owned.remaining)):return "원본 물리 잔량·소비 장부 불일치"
+		if int(owned.used)+int(owned.transferred)>0 and not _ledger_row_matches(ledger.get(uid),owned,int(owned.used),int(owned.remaining)):return "원본 물리 잔량·소비 장부 불일치"
 		if floor_proofs.has(uid) or dormant.has(uid):continue
 		var name_value: String=str(entry.name)
 		var amounts: Dictionary=stored_totals if stored.has(uid) else totals
@@ -632,7 +645,10 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		var entry: Variant=ledger[uid]
 		if not entry is Dictionary or not entry.get("receipt") is Dictionary or not integer(entry.get("used_quantity")) or not integer(entry.get("remaining_quantity")):return "원본 소비 장부 행 형식 확인 필요"
 		var receipt: Dictionary=entry.receipt
-		if not receipt_valid(receipt,uid):return "원본 소비 장부 출처 확인 필요"
+		# An exact active native match above already proved this receipt for
+		# the same uid and archive. Ledger-only rows still prove independently.
+		var physical: Variant=all.get(uid)
+		if not (physical is Dictionary and physical.has(RECEIPT)) and not receipt_valid(receipt,uid):return "원본 소비 장부 출처 확인 필요"
 		var disposed: Variant=entry.get("discarded_quantity",0);var transferred: Variant=entry.get("transferred_quantity",0)
 		if not integer(disposed) or not integer(transferred) or int(entry.used_quantity)+int(disposed)+int(transferred)<1 or int(entry.used_quantity)>int(receipt.granted_quantity)-int(disposed)-int(transferred) or int(entry.remaining_quantity)!=int(receipt.granted_quantity)-int(entry.used_quantity)-int(disposed)-int(transferred):return "원본 장부 최초량·사용량·잔량·분할량·소멸량 불일치"
 		if int(disposed)>0 and (entry.get("discard_reason") not in DISCARD_REASONS or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
@@ -678,7 +694,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 			if authorizes(overrides) and _candidate_kind in ["partition_warehouse","partition_drop"] and uid==_partition_parent:continue
 			if next==null and authorizes(overrides) and _candidate_kind=="warehouse_transfer" and warehouse.get("instances",{}).get(uid)==previous:continue
 			if next==null and authorizes(overrides) and _candidate_kind=="floor_drop" and floor_physical(floor,uid)==previous:continue
-			if next==null and authorizes(overrides) and _candidate_kind=="plain_handoff" and ledger.get(uid)==ledger_row(before,int(before.used),0,int(before.remaining),"TWILIGHT_plain_stack_handoff"):continue
+			if next==null and authorizes(overrides) and _candidate_kind=="plain_handoff" and _ledger_row_matches(ledger.get(uid),before,int(before.used),0,int(before.remaining),"TWILIGHT_plain_stack_handoff"):continue
 			var remaining: int=0
 			if next!=null:
 				var after: Dictionary=proof_entry(next,uid)
@@ -688,7 +704,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 				expected[QUANTITY]=remaining;expected.source_native_stack_used_quantity=int(before.used)+int(before.remaining)-remaining
 				if next!=expected:return "원본 물리 개체의 출처·다른 필드 변경 금지"
 			var consumed: int=int(before.remaining)-remaining
-			if consumed<1 or ledger.get(uid)!=ledger_row(before,int(before.used)+consumed,remaining):return "원본 물리 차감과 사용 장부 공동 저장 필요"
+			if consumed<1 or not _ledger_row_matches(ledger.get(uid),before,int(before.used)+consumed,remaining):return "원본 물리 차감과 사용 장부 공동 저장 필요"
 	for uid: String in world.warehouse.instances:
 		var previous: Variant=world.warehouse.instances[uid]
 		if not previous is Dictionary or not previous.has(RECEIPT):continue
@@ -705,7 +721,7 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 		if authorizes(overrides) and _candidate_kind=="floor_pickup" and instances.get(uid)==physical.data:continue
 		if authorizes(overrides) and _candidate_kind=="floor_expire" and _floor_record==record:
 			var owned: Dictionary=proof_entry(physical.data,uid)
-			if not owned.is_empty() and ledger.get(uid)==ledger_row(owned,int(owned.used),0,int(owned.remaining)):continue
+			if not owned.is_empty() and _ledger_row_matches(ledger.get(uid),owned,int(owned.used),0,int(owned.remaining)):continue
 		return "바닥 원본 물리 개체의 정확한 습득·소멸 소유자 필요"
 	var old_consumables: Dictionary=state if not overrides.has("consumable_state") else world.consumable_service.export_state()
 	if old_consumables.get(AMMO_EQUIPPED,{})!=state.get(AMMO_EQUIPPED,{}) and not (authorizes(overrides) and _candidate_kind in ["ammo_equip","ammo_consume"]):return "원본 탄약 개체 착용은 정확한 소유자 저장이 필요합니다"
