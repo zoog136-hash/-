@@ -23,6 +23,7 @@ class FakeBag extends Control:
 	var activations: int=0
 	var icons: Array[String]=[]
 	var texture: Texture2D=PlaceholderTexture2D.new()
+	var mutate_icon_input: bool=false
 	func prepare_source_inventory_model() -> void:prepare_calls+=1
 	func _inventory_entries() -> Array[Dictionary]:
 		entry_calls+=1
@@ -32,6 +33,7 @@ class FakeBag extends Control:
 	func _is_item_equipped(reference: String) -> bool:return reference==equipped
 	func image(entry: Dictionary, _context: Dictionary) -> Dictionary:
 		icons.append(entry.reference)
+		if mutate_icon_input:entry.amount=9999
 		return {"ok":true,"texture":texture}
 
 class FakeHud extends Node:
@@ -77,6 +79,7 @@ func _run() -> void:
 	_filter_and_action_guards()
 	_duplicate_guards()
 	_legacy_rows()
+	_ordered_snapshot_alias_boundary()
 	_missing_icon_keeps_name()
 	print("ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"samples":samples}))
 	quit(0 if failures.is_empty() else 1)
@@ -183,4 +186,20 @@ func _legacy_rows() -> void:
 	check(fixture.slots._resolve_reference(bag.offered[1].reference,model).get("code")=="source_inventory_slots_reference_not_in_current_bag_filter","legacy filter retained")
 	model.owned_entries[0].amount=999
 	check(bag.offered[0].amount==1,"snapshot cannot mutate owner rows")
+	fixture.hud.free()
+
+
+func _ordered_snapshot_alias_boundary() -> void:
+	var fixture: Dictionary=_fixture(8)
+	var bag: FakeBag=fixture.bag
+	var slots: RefCounted=fixture.slots
+	var model: Dictionary=slots.entries()
+	var row: Dictionary=model.current_display_rows[0]
+	var reference: String=row.reference
+	check(is_same(row,model.owned_by_reference[reference]),"ordered and owned lookup borrow one detached snapshot row")
+	check(not is_same(row,bag.offered[-1]),"ordered snapshot detached from original bag")
+	bag.mutate_icon_input=true
+	var slot: Dictionary=slots.build(56036,{5464:reference},{},"Nd_Slot",model)
+	check(slot.ok and row.amount==8 and bag.offered[-1].amount==8,
+		"external icon callback cannot mutate a selected snapshot or live inventory")
 	fixture.hud.free()

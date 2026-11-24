@@ -66,6 +66,10 @@ var _line_offsets: Array[int]=[]
 var _line_variant: String="Nd_Slot"
 ## Lines built beyond each edge of the view, and freed past KEEP_LINES.
 const BUILD_LINES: int=2
+# One complete extra row still covers partially visible slot art on a cold
+# open (row tail 40 < pitch 76). Avoid building the second offscreen row in
+# the tap handler; normal scroll continues to build ahead synchronously.
+const COLD_OPEN_BUILD_LINES: int=1
 const KEEP_LINES: int=4
 ## What the built slots depend on besides counts/markers/selection (order,
 ## references, item records, layout); equal keys allow a rows-only refresh.
@@ -388,13 +392,18 @@ func _owner_branch(bag: Object) -> Dictionary:
 
 func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	var started: int=FRAME_HITCH.now()
+	var previous_probe: bool=_slots.profile_icon_owner
+	_slots.profile_icon_owner=initial_open
 	var result: Dictionary=_stage_impl(parent,initial_open)
+	_slots.profile_icon_owner=previous_probe
 	FRAME_HITCH.detail("ui.inventory_stage",started)
 	return result
 
 func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	_refreshing=true
+	var phase: int=FRAME_HITCH.now()
 	var model: Dictionary=_eligible_model()
+	phase=FRAME_HITCH.detail_next("ui.inventory_owner_model",phase)
 	if not model.get("ok",false):
 		_refreshing=false
 		return _fallback(model) if is_open() else model
@@ -430,8 +439,10 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	var bindings: Dictionary=chrome.bindings.duplicate(true)
 	for key: Variant in slot_contract.bindings:bindings[key]=slot_contract.bindings[key]
 	var root_bindings: Dictionary={PROJECT:{"role":"project","source_node_offsets":scope,"bindings":bindings}}
+	phase=FRAME_HITCH.detail_next("ui.inventory_bindings",phase)
 	var next:=Scene.new()
 	var result: Dictionary=next.configure_nodes(_pack,PARENT,[PROJECT],root_bindings)
+	phase=FRAME_HITCH.detail_next("ui.inventory_authored_tree",phase)
 	if not result.get("ok",false):return _reject_staged(next,result)
 	var child: Dictionary=next.project_player([PROJECT])
 	if not child.get("ok",false):return _reject_staged(next,child)
@@ -517,7 +528,9 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	if kept_scroll!=null and is_instance_valid(_scroll_content):_scroll_content.position.y=clampf(float(kept_scroll),_scroll_bottom,_scroll_top)
 	# Rows below the authored one are built only while in (or near) view;
 	# scrolling builds the rows that come in (_sync_lines).
-	var lined: Dictionary=_sync_lines(model,previous_hits)
+	phase=FRAME_HITCH.detail_next("ui.inventory_bind_slots",phase)
+	var lined: Dictionary=_sync_lines(model,previous_hits,COLD_OPEN_BUILD_LINES if initial_open else BUILD_LINES)
+	FRAME_HITCH.detail("ui.inventory_visible_lines",phase)
 	if not lined.get("ok",false):
 		_refreshing=false
 		if is_instance_valid(previous) and not previous.is_queued_for_deletion():
@@ -672,7 +685,7 @@ func _view_height() -> float:
 ## Builds the lines that came near the view and frees those far from it.
 ## `model` (optional) is the owner snapshot to build from; `reuse` maps
 ## reference -> previous hit whose icon scene may be adopted.
-func _sync_lines(model: Dictionary={}, reuse: Dictionary={}) -> Dictionary:
+func _sync_lines(model: Dictionary={}, reuse: Dictionary={}, build_margin: int=BUILD_LINES) -> Dictionary:
 	if not is_instance_valid(_inventory_scene):return {"ok":true}
 	var keep: Vector2i=line_range(KEEP_LINES)
 	for line: Variant in _line_scenes.keys():
@@ -685,7 +698,7 @@ func _sync_lines(model: Dictionary={}, reuse: Dictionary={}) -> Dictionary:
 			old.hide()
 			old.queue_free()
 		stats.lines_freed+=1
-	var wanted: Vector2i=line_range(BUILD_LINES)
+	var wanted: Vector2i=line_range(build_margin)
 	for line: int in range(wanted.x,wanted.y+1):
 		if _line_scenes.has(line):continue
 		if model.is_empty():
