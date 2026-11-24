@@ -248,7 +248,7 @@ static func _typed_reference(detail: Dictionary, blockers: Array[String], includ
 		reference["spell"] = SPELLS.describe(id)
 	elif type == "LuckyBagClassID" and unit == "LuckyBagClassID":
 		reference["bag"] = REWARDS.bag(id)
-	elif type == "SelectRewardClassID" and unit == "RewardID":
+	elif type in ["SelectRewardClassID","ComplexRewardClassID"] and unit == "RewardID":
 		reference["reward"] = REWARDS.reward(id)
 	elif unit == "GachaCraftID":
 		# A crafting-book definition is not a directly activatable consumable.

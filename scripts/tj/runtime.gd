@@ -3,6 +3,8 @@ const Service = preload("res://scripts/tj/coupon_service.gd")
 const Source = preload("res://scripts/tj/source523.gd")
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
+const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const DROP = preload("res://scripts/loot/patch523_monster_drops.gd")
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 var core = Service.new()
 var world
@@ -107,25 +109,45 @@ func grant_for_test(item: String) -> Dictionary:
 ## Physical original TJ coupons in the bag (user decision 2026-11-13): the
 ## receipted stacks of this exact ItemClass. They count with this screen's own
 ## coupon record and are spent through the bag's physical debit, never copied.
-func bag_stacks(item: String) -> Array:
+## Route only original PlayerValueReturn card coupons, not the mystery-card
+## items that share the ScrollBuffCardRetry category.
+func try_open_owned_coupon(name: String, uid: String, record: Dictionary) -> bool:
+	if record.get("source_m_native_item")!=true or FIELDS.field(record,"source_category_name") not in ["ScrollBuffCardRetry","ScrollBuffCardAwakenRetry"]:return false
+	var id: Variant = STACK.whole(record.get("source_item_class_id"))
+	if not id is int or id <= 0:return false
+	var exact: Dictionary = DROP.item_definition(record)
+	var is_retry := false
+	for bonus: Dictionary in exact.get("item_bonus",[]):
+		if bonus.get("IsPossession")==false and bonus.get("bonus_type",{}).get("Name")=="PlayerValueReturn":is_retry=true;break
+	if not is_retry:return false
+	if uid.is_empty() or name!=record.get("name") or bag_count(str(id),uid)<1 or not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():
+		world.hud.show_message("실제 원본 TJ 쿠폰 개체와 사용 가능 상태를 확인하세요 · 아이템 보존")
+		return true
+	# Exact bag selection must not redirect to a similarly named coupon or
+	# debit the separate menu-owned balance. Opening the chooser spends none.
+	world.hud.open_tj_coupons_native(str(id),uid)
+	return true
+
+func bag_stacks(item: String, physical_id: String = "") -> Array:
 	var found: Array=[]
 	if world==null or not item.is_valid_int():return found
-	for uid: Variant in world.item_instances:
-		var entry: Variant=world.item_instances[uid]
+	var ids: Array = world.item_instances.keys() if physical_id.is_empty() else [physical_id]
+	for uid: Variant in ids:
+		var entry: Variant=world.item_instances.get(uid)
 		if not entry is Dictionary or not entry.has(STACK.RECEIPT):continue
 		var owned: Dictionary=STACK.proof(world,str(uid))
 		if owned.is_empty() or STACK.whole(owned.record.get("source_item_class_id"))!=int(item) or int(owned.record.get("source_bless_raw",1))!=1:continue
 		if world._item_locked(str(entry.get("name","")),str(uid)) or world._item_locked(str(entry.get("name",""))):continue
 		found.append({"uid":str(uid),"owned":owned})
 	return found
-func bag_count(item: String) -> int:
+func bag_count(item: String, physical_id: String = "") -> int:
 	var total: int=0
-	for stack: Dictionary in bag_stacks(item):total+=int(stack.owned.remaining)
+	for stack: Dictionary in bag_stacks(item,physical_id):total+=int(stack.owned.remaining)
 	return total
 func owned_count(item: String) -> int:
 	return int(core.state.coupons.get(item,0))+bag_count(item)
-func _bag_debit(item: String) -> Dictionary:
-	var stacks: Array=bag_stacks(item)
+func _bag_debit(item: String, physical_id: String = "") -> Dictionary:
+	var stacks: Array=bag_stacks(item,physical_id)
 	if stacks.is_empty():return {"ok":false,"error":"가방의 원본 TJ 쿠폰을 찾지 못했습니다 · 변경 없음"}
 	var owned: Dictionary=stacks[0].owned
 	var debit: Dictionary=STACK.stage_debit(world,[{"physical_id":str(stacks[0].uid),"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}])
@@ -136,16 +158,26 @@ func _apply_bag_debit(debit: Dictionary) -> void:
 	world.inventory=debit.overrides.inventory;world.item_instances=debit.overrides.item_instances
 	world.consumable_service.import_state(debit.overrides.consumable_state)
 	world.hud.refresh_inventory(world.inventory)
-func redeem(item: String, event_id: String, revision: int, success_ids: Array, fail_ids: Array) -> Dictionary:
+func redeem(item: String, event_id: String, revision: int, success_ids: Array, fail_ids: Array, physical_id: String = "") -> Dictionary:
+	if not physical_id.is_empty() and (world.death_recovery.blocked() or world.hp<=0 or not world._patch523_item_allowed()):return {"ok":false,"error":"현재 원본 쿠폰 사용 불가 · 아이템 보존"}
+	if not physical_id.is_empty():
+		var selected: Array = bag_stacks(item,physical_id)
+		if selected.is_empty(): return {"ok":false,"error":"선택한 실제 원본 TJ 쿠폰이 없습니다 · 다른 쿠폰은 소모하지 않습니다"}
+		var record: Dictionary = selected[0].owned.record
+		var eligibility: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,record)
+		if not eligibility.is_empty(): return {"ok":false,"error":eligibility}
+		var original: Dictionary = DROP.item_definition(record).get("original_item",{})
+		if original.get("TestItem")!=false or STACK.whole(original.get("TargettingTypeID"))!=1 or (original.get("CanUseWhenInvisible")!=true and world.is_player_concealed()):
+			return {"ok":false,"error":"원본 쿠폰의 사용 상태 조건을 충족하지 않습니다 · 아이템 보존"}
 	if world._option_awakening_busy():return {"ok":false,"error":"다른 카드 거래가 진행 중입니다"}
-	var prepared: Dictionary=core.prepare(item,event_id,context(),core.clock(),revision,success_ids,fail_ids,bag_count(item))
+	var prepared: Dictionary=core.prepare(item,event_id,context(),core.clock(),revision,success_ids,fail_ids,bag_count(item,physical_id),not physical_id.is_empty())
 	if not prepared.ok:return prepared
 	if int(world.gold)<int(core.settings.retry_gold_cost):return {"ok":false,"error":"TWILIGHT 추가 거래 비용 아데나가 부족합니다"}
 	core.busy=true
 	if int(prepared.event.get("deck",0))==41:
 		core.busy=false
 		return {"ok":false,"error":"기존 게임에 스킬 카드 합성 실패 엔진이 없어 별도 연결이 필요합니다. 소유 쿠폰은 유지됩니다"}
-	if str(prepared.event.get("adapter",""))=="awakening":return redeem_awakening(prepared)
+	if str(prepared.event.get("adapter",""))=="awakening":return redeem_awakening(prepared,physical_id)
 	var event: Dictionary=prepared.event
 	var rules: Array=[]
 	for row: Dictionary in core.definitions.merge_rules:
@@ -192,7 +224,7 @@ func redeem(item: String, event_id: String, revision: int, success_ids: Array, f
 	var overrides: Dictionary={Service.KEY:next,"card_draw_fusion":cards.export_state(),"gold":int(world.gold)-int(core.settings.retry_gold_cost)}
 	var debit: Dictionary={}
 	if prepared.get("bag_debit",false):
-		debit=_bag_debit(item)
+		debit=_bag_debit(item,physical_id)
 		if not debit.get("ok",false):core.busy=false;return debit
 		overrides.merge(debit.overrides)
 	var saved: Error=world._save_game(true,overrides)
@@ -211,7 +243,7 @@ func capture_awakening(category: String, identity: String, result: Dictionary) -
 	if raw.is_empty():return
 	var id: String=str(int(raw.ID))
 	core.record_failure({"adapter":"awakening","history_type":{"변신":41,"마법인형":51,"성물":61}.get(category,0),"deck":Service.DECK.get(category,0),"grade":int(raw.GradeID),"time":core.clock(),"context":context(),"success_candidates":[id],"fail_candidates":[id],"target_identity":identity,"category":category})
-func redeem_awakening(prepared: Dictionary) -> Dictionary:
+func redeem_awakening(prepared: Dictionary, physical_id: String = "") -> Dictionary:
 	var event: Dictionary=prepared.event
 	var adapter=world.option_awakening
 	if adapter.save_blocked or not adapter.problem.is_empty():core.busy=false;return {"ok":false,"error":"각성 저장 또는 원본 설정 보호 중"}
@@ -231,7 +263,7 @@ func redeem_awakening(prepared: Dictionary) -> Dictionary:
 	var overrides: Dictionary={Service.KEY:next,"card_option_awakening":result.state,"card_draw_fusion":result.card_state,"gold":result.gold}
 	var debit: Dictionary={}
 	if prepared.get("bag_debit",false):
-		debit=_bag_debit(str(prepared.item))
+		debit=_bag_debit(str(prepared.item),physical_id)
 		if not debit.get("ok",false):core.busy=false;return debit
 		overrides.merge(debit.overrides)
 	var saved: Error=world._save_game(true,overrides)

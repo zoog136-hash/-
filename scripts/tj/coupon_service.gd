@@ -138,9 +138,9 @@ func candidates(item: String, context: Dictionary, now: int) -> Dictionary:
 ## decision 2026-11-13). This record's own coupons are spent first; when it has
 ## none, the result says `bag_debit` and the caller debits one bag unit in the
 ## same save. Exactly one unit of one source is spent per use.
-func prepare(item: String, event_id: String, context: Dictionary, now: int, revision: int, success_ids: Array, fail_ids: Array, bag_units: int = 0) -> Dictionary:
+func prepare(item: String, event_id: String, context: Dictionary, now: int, revision: int, success_ids: Array, fail_ids: Array, bag_units: int = 0, physical_only: bool = false) -> Dictionary:
 	if busy or blocked or revision!=int(state.revision):return {"ok":false,"error":"이미 처리했거나 선택 후 상태가 바뀌었습니다"}
-	var own: int=int(state.coupons.get(item,0))
+	var own: int=0 if physical_only else int(state.coupons.get(item,0))
 	if own<1 and bag_units<1:return {"ok":false,"error":"소유한 쿠폰이 부족합니다"}
 	var view: Dictionary=candidates(item,context,now)
 	if not view.ok:return view

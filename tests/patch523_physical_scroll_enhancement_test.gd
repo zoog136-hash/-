@@ -5,7 +5,6 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
-const PROJECTION = preload("res://scripts/crafting/patch523_rules_projection.gd")
 const ACCOUNT = preload("res://scripts/characters/account_store.gd")
 const TARGET: int=3192
 const SCROLL: int=6401
@@ -34,24 +33,15 @@ func bind_targeted(world: TwilightWorld, path: String) -> bool:
 	OS.set_environment("TWILIGHT_PATCH523_CONTENT",path)
 	SOURCE.reset()
 	if SOURCE.identity().is_empty():return false
-	var items: Dictionary={}
-	var bonuses: Dictionary={}
 	for id: int in [TARGET,SCROLL]:
 		var k: String=str(id)
-		var item: Dictionary=PROJECTION.source_fields(k)
 		var native: Dictionary=DROPS.definition_id(k).get("native_record",{})
-		if item.is_empty() or native.is_empty():return false
-		item["catalog_record"]=native
-		items[k]=item
-		for link: Dictionary in item.item_bonuses:
-			var b: int=int(link.BonusID)
-			bonuses[str(b)]=SOURCE.row("Bonus",b)
+		if native.is_empty():return false
 		world.catalog_db["아이템"].append(native)
 	world._index_catalog_item_sources()
-	var tables: Dictionary={}
-	for table: String in ["BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView","ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroupMapping","ItemBlessEnchantProbability","Material"]:
-		tables[table]=SOURCE.rows(table)
-	world.patch523_equipment.data={"items":items,"bonuses":bonuses,"enchantment":tables}
+	# The native enhancement action must not depend on these definitions
+	# happening to be included in the separate legacy crafting compiler.
+	world.patch523_equipment.data={}
 	return true
 
 func run() -> void:

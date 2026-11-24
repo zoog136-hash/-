@@ -91,6 +91,8 @@ var last_result: Dictionary={}
 var _presents: bool=false
 ## {kind: "success" | "fail", text, token} while the result plays.
 var _presentation: Dictionary={}
+var _pending_result_refresh: Dictionary = {}
+var _last_presentation_problem: String = ""
 var _blocker: Control
 var _token: int=0
 
@@ -165,6 +167,12 @@ func open(parent: Node, scroll: String, candidates: Array) -> Dictionary:
 ## New candidates after an attempt (or another scroll): keeps the selected
 ## physical item when it is still listed.
 func update(scroll: String, candidates: Array) -> Dictionary:
+	# The committed world requests refreshed rows immediately. Keep the
+	# exact pre-roll slot (including a destroyed item) under the running
+	# authored proof, and apply the refreshed owner rows when it ends.
+	if is_presenting():
+		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true)}
+		return {"ok":true,"handled":true,"result_refresh_pending":true}
 	if scroll!=_scroll:
 		_bag.y=null
 		_picked.clear()
@@ -178,6 +186,7 @@ func update(scroll: String, candidates: Array) -> Dictionary:
 
 func close() -> void:
 	_presentation={}
+	_pending_result_refresh={}
 	_blocker=null
 	var previous: Node2D=_scene
 	_scene=null
@@ -294,9 +303,6 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	# The world reopens the window right after the roll: the result plays on
-	# the new scene.
-	if not _presentation.is_empty():_play_presentation()
 	last_result={"ok":true,"handled":true,"member":ROOT,"scroll":_scroll,"tab":_tab,"candidates":_candidates.size(),"listed":listing.size(),"selected":_selected,
 		"stat_rows":rows.size(),"pictures":pictures,"bag_pictures":int(filled.get("bag_pictures",0)),"can_enchant":not entry.is_empty()}
 	return last_result
@@ -641,45 +647,81 @@ static func result_text(result: String, from_level: int, to_level: int) -> Strin
 		"success":return "+%d 강화 성공" % to_level
 		"decrease":return "강화 실패 +%d → +%d" % [from_level,to_level]
 		"destroy":return "강화 실패 · 장비 소실"
-	return "강화 실패"
+	return "강화 실패 · +%d 유지" % from_level
+
+func presentation_problem() -> String:
+	return _last_presentation_problem
 
 func present(kind: String, text: String) -> bool:
-	if not _presents or not is_open():return false
+	_last_presentation_problem = ""
+	if not _presents or not is_open():
+		_last_presentation_problem = "source_enchant_result_members_unavailable"
+		return false
+	if is_presenting(): return false
 	_token+=1
 	_presentation={"kind":"success" if kind=="success" else "fail","text":text,"token":_token}
-	_play_presentation()
+	if not _play_presentation():
+		# A configured manifest alone does not prove the projections or
+		# clips mounted. Do not consume the committed result or block input.
+		end_presentation(_token)
+		return false
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud!=null and hud.is_inside_tree():
 		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(end_presentation.bind(_token))
 	return true
 
-## Ends the presentation `token` (the latest when -1): hides both members.
+## Ends the presentation `token` (the latest when -1): restore the window.
 func end_presentation(token: int=-1) -> void:
 	if _presentation.is_empty() or (token>=0 and token!=int(_presentation.get("token",-1))):return
+	for player: Variant in _presentation.get("players",[]):
+		if is_instance_valid(player):player.stop()
 	_presentation={}
 	if is_instance_valid(_blocker):_blocker.queue_free()
 	_blocker=null
-	if not is_open():return
+	if not is_open():
+		_pending_result_refresh={}
+		return
 	for pair: Array in [[P_FX,false],[P_POPUP,false],[P_TAB,true]]:
 		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
 		if located.get("ok",false):located.player.set_bound_visible(located.offset,bool(pair[1]))
+	var pending: Dictionary = _pending_result_refresh
+	_pending_result_refresh={}
+	if not pending.is_empty():update(pending.scroll,pending.candidates)
 
-func _play_presentation() -> void:
-	if _presentation.is_empty() or not is_open():return
+func _play_presentation() -> bool:
 	var played: Array[String]=[]
-	for set_name: String in POPUP_SETS:
-		var label: Dictionary=NamedTree.locate(_scene,_last_out,P_POPUP+"/Set/"+set_name+"/Text_Item")
-		if label.get("ok",false):label.player.set_bound_text(label.offset,str(_presentation.text))
+	var players: Array=[]
+	_presentation["players"]=players
 	for pair: Array in [[P_FX,"Fx_Enchant_Start"],[P_POPUP,"Success" if _presentation.kind=="success" else "Fail"]]:
 		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
-		if not located.get("ok",false):continue
-		located.player.set_bound_visible(located.offset,true)
-		var player: Dictionary=located.player.project_player([located.offset])
-		if player.get("ok",false) and player.player.play(str(pair[1]),false).get("ok",false):played.append(str(pair[1]))
+		if not located.get("ok",false):
+			_last_presentation_problem="source_enchant_result_projection_missing:"+str(pair[1])
+			return false
+		var projected: Dictionary=located.player.project_player([located.offset])
+		if not projected.get("ok",false):
+			_last_presentation_problem="source_enchant_result_player_missing:"+str(pair[1])
+			return false
+		var player: Variant=projected.player
+		if not player.play(str(pair[1]),false).get("ok",false):
+			_last_presentation_problem="source_enchant_result_clip_missing:"+str(pair[1])
+			return false
+		players.append(player)
+		played.append(str(pair[1]))
+		if not located.player.set_bound_visible(located.offset,true).get("ok",false):
+			_last_presentation_problem="source_enchant_result_visibility_failed:"+str(pair[1])
+			return false
+	# The failure branch keeps explicit maintain/decrease/destroy text even
+	# though they all use the one original Fail banner clip.
+	var label_path := P_POPUP+"/Set/"+("EnChant_Success" if _presentation.kind=="success" else "EnChant_Fail")+"/Text_Item"
+	var label: Dictionary=NamedTree.locate(_scene,_last_out,label_path)
+	if not label.get("ok",false) or not label.player.set_bound_text(label.offset,str(_presentation.text)).get("ok",false):
+		_last_presentation_problem="source_enchant_result_text_binding_missing"
+		return false
 	_presentation["played"]=played
 	var tab: Dictionary=NamedTree.locate(_scene,_last_out,P_TAB)
 	if tab.get("ok",false):tab.player.set_bound_visible(tab.offset,false)
 	_block()
+	return true
 
 ## A tap anywhere during the presentation ends it (and cannot reach the
 ## window's buttons underneath, so it never starts another roll).

@@ -60,6 +60,12 @@ func _ready() -> void:
 	note.text = "목록·수량·축복·강화·직업 조건: 원본 523 상자 행 · 1종 선택: 원본 아이템 설명" if bag else "목록·수량·축복·직업 조건: 원본 523\n장비 초기 강화 +0: 원본 수치 없음 · TWILIGHT 설정에서 사용/해제"
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(note)
+	for fixed: Dictionary in pending.get("fixed_rewards",[]):
+		var item: Dictionary=DROPS.definition_id(str(int(fixed.item_class_id))).get("native_record",{})
+		var guaranteed := Label.new()
+		guaranteed.text="확정 보상: %s ×%d" % [str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name",""))),int(fixed.amount)]
+		guaranteed.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		content.add_child(guaranteed)
 	choices = ItemList.new()
 	choices.name = "SourceRewardChoices"
 	choices.custom_minimum_size.y = 260
@@ -78,7 +84,7 @@ func _ready() -> void:
 		if use_source_images:
 			# This existing provider field is ItemClass.ID. Claim identity stays
 			# the separate source_entity_id stored below, never a numeric alias.
-			var original: Dictionary = IMAGES.describe_item_class(int(reward.item_class_id),str(NATIVE_FIELDS.field(item,"source_display_name","")))
+			var original: Dictionary = describe_choice_icon(int(reward.item_class_id),str(NATIVE_FIELDS.field(item,"source_display_name","")))
 			choices.set_item_icon(index,original.get("texture") as Texture2D)
 			var presentation: Dictionary = original.duplicate(true)
 			presentation.erase("texture")
@@ -111,6 +117,22 @@ func _ready() -> void:
 	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):
 		var native: Dictionary = controller.try_open_feature_window("reward_select",[self])
 		if native.get("handled",false): visible = false
+
+## A box may use an original TestItem solely as its already-exposed
+## option label. The native selector has always shown that exact ItemClass
+## icon. Give the fallback selector identical, display-only behavior.
+static func describe_choice_icon(item_id: int, title: String = "") -> Dictionary:
+	var info: Dictionary = IMAGES.describe_item_class(item_id,title)
+	if info.get("reason") != "source_test_item_excluded": return info
+	var icon: Dictionary = IMAGES.resolve_consumer("ItemClass",item_id,"IconID")
+	if icon.get("ok",false) and icon.get("texture") is Texture2D:
+		info.status = "choice_preview_original"
+		info.reason = ""
+		info.provenance = icon.get("provenance",{})
+		info.path = str(info.provenance.get("path",""))
+		info.texture = icon.texture
+		info.original_bytes_unchanged = true
+	return info
 
 func _sync_confirm_icon(index: int) -> void:
 	confirm.icon = null

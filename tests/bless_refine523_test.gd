@@ -11,6 +11,8 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const SUPPLY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const EFFECTS = preload("res://scripts/loot/source523_item_effects.gd")
+const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -99,6 +101,11 @@ func table() -> void:
 	evidence["advanced_dissolve"] = advanced
 	check(advanced.size()>=10, "advanced rows resolve to real soluble items: %d" % advanced.size())
 	check(int(RULES.solvent(118682).get("method",0))==24 and int(RULES.solvent(118682).get("output_item_class_id",0))==117544 and int(RULES.solvent(192664).get("method",0))==34 and int(RULES.solvent(192664).get("output_item_class_id",0))==192654, "상급/최상급 용해제 -> method and output from ItemBonus")
+	for solvent_id: int in [117534,118682,149423,192664]:
+		var definition: Dictionary=preload("res://scripts/loot/patch523_monster_drops.gd").definition_id(str(solvent_id))
+		var spec: Dictionary=SERVICE.solvent_use_profile(definition)
+		check(int(spec.get("item_class_id",0))==solvent_id,"verified method24/34 opens existing chooser, expiry remains separate #" + str(solvent_id))
+	check(SERVICE.solvent_use_profile(preload("res://scripts/loot/patch523_monster_drops.gd").definition_id("183")).is_empty(),"method14 is not the same as advanced dissolution")
 	var target: Dictionary = SOURCE.row_at("RefineItem",0)
 	var entry: Dictionary = RULES.refine_entry(int(target.ItemClassID),int(target.Enchant))
 	check(entry.get("ok",false) and int(entry.group_id)==int(target.RefineItemGroupID), "a RefineItem row resolves its group")
@@ -228,7 +235,18 @@ func runtime() -> void:
 	check(advanced_quote.get("ok",false) and int(advanced_quote.total)==expected_advanced and expected_advanced>int(RULES.advanced_dissolve_yield(advanced_weapon,0,24).get("amount",0)), "the advanced quote passes the item's +%d enchant (× Multiplier) %s" % [advanced_enchant,str(advanced_quote.get("total",advanced_quote.get("reason","")))])
 	var advanced_before: int = int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)
 	var advanced_targets: Array = physical_of(world,advanced_weapon)
-	var advanced: Dictionary = SERVICE.dissolve_advanced(world,advanced_targets,118682)
+	var original_stack: Dictionary=SERVICE.stacks_of(world,118682).stacks[0]
+	var source_uid: String=str(original_stack.uid)
+	var initial: String=FileAccess.get_sha256(world.save_path())
+	world.hud.inventory_item_activated.emit(str(original_stack.owned.record.name)+"@@@"+source_uid)
+	var solvent_panel: Node=world.hud.find_child("BlessRefine523Panel",true,false)
+	check(solvent_panel!=null and solvent_panel.get("_entry_solvent_uid")==source_uid,"actual inventory signal opens the choice panel pinned to the selected stack")
+	check(FileAccess.get_sha256(world.save_path())==initial and int(SERVICE.stacks_of(world,118682).total)==2,"opening the chooser does not save or consume")
+	check(SERVICE.dissolve_advanced_quote(world,advanced_targets,118682,advanced_targets[0]).get("code")=="solvent_selection_changed","bad or stale selected UID never takes another wallet")
+	world.equipment_collections.test_save_writer=func(_path: String,_data: Dictionary)->Error:return ERR_CANT_CREATE
+	check(not SERVICE.dissolve_advanced(world,advanced_targets,118682,source_uid).get("ok",false) and FileAccess.get_sha256(world.save_path())==initial and int(SERVICE.stacks_of(world,118682).total)==2,"failed durable save keeps the chosen solvent and target")
+	world.equipment_collections.test_save_writer=Callable()
+	var advanced: Dictionary = SERVICE.dissolve_advanced(world,advanced_targets,118682,source_uid)
 	evidence["advanced_runtime"] = {"result":advanced.get("detail",advanced.get("reason","")),"expected":expected_advanced,"powder":[advanced_before,int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)],"solvent_left":int(SERVICE.stacks_of(world,118682).total)}
 	check(advanced.get("ok",false) and expected_advanced>0 and int(SERVICE.stacks_of(world,RULES.ADVANCED_BLESS_POWDER_ITEM).total)==advanced_before+expected_advanced and int(SERVICE.stacks_of(world,118682).total)==1 and physical_of(world,advanced_weapon).is_empty(), "상급 용해: weapon gone, 상급 축복의 가루 +table amount, 용해제 2 -> 1 "+str(evidence.advanced_runtime))
 	world.inventory.erase(str(world.source_item_definition(118682).get("native_record",{}).get("name","")))
@@ -237,9 +255,55 @@ func runtime() -> void:
 	world.queue_free()
 	await process_frame
 
+func scoped_solvent(source_path: String) -> void:
+	var world: TwilightWorld=load("res://Main.tscn").instantiate()
+	root.add_child(world);world.set_process(false);world.save_timer=-100000
+	check(QA.enter_game(world),"actual Main enters gameplay before the exact original input is selected")
+	world.field_population.set_process(false);world.player.set_physics_process(false);world.player.auto_enabled=false
+	if world.skill_awakening.definitions_not_installed():world.skill_awakening.problem=""
+	OS.set_environment("TWILIGHT_PATCH523_CONTENT",source_path)
+	SOURCE.reset()
+	var source_ok: bool=SOURCE.identity().get("source_sha256")==SOURCE.SOURCE_SHA
+	check(source_ok,"the source archive is verified")
+	if source_ok:
+		for charge_id: int in [122744,123254,123572,123662,124342,125971,132933,157071]:
+			var native: Dictionary=DROPS.definition_id(str(charge_id)).get("native_record",{})
+			var spec: Dictionary=EFFECTS.ain(native)
+			var declared: int=500 if charge_id==124342 else 10 if charge_id==123254 else 100
+			check(int(spec.get("points",0))==declared and int(spec.get("cap",0))==99999 and int(spec.get("consume_rate_group",0))==12,"older pure charge matches voiced point count and exact rate #"+str(charge_id))
+		for solvent: int in [117534,118682,149423,192664]:
+			var def: Dictionary=preload("res://scripts/loot/patch523_monster_drops.gd").definition_id(str(solvent))
+			check(int(SERVICE.solvent_use_profile(def).get("item_class_id",0))==solvent,"exact advanced solvent role #"+str(solvent))
+		var target: int=soluble_weapon(3)
+		for id: int in [target,118682,117544]:
+			var current: Dictionary=DROPS.definition_id(str(id)).get("native_record",{})
+			if not current.is_empty():world.catalog_db["아이템"].append(current)
+		world._index_catalog_item_sources()
+		check(target>0 and grant(world,[{"item_class_id":target,"amount":1,"bless_raw":1,"enchant":0},{"item_class_id":118682,"amount":2,"bless_raw":1,"enchant":0}]),"actual selected equipment and solvent quantities granted")
+		var stacks: Array=SERVICE.stacks_of(world,118682).stacks
+		var targets: Array=physical_of(world,target)
+		if not stacks.is_empty() and not targets.is_empty():
+			var uid: String=str(stacks[0].uid)
+			var previous: String=FileAccess.get_sha256(world.save_path())
+			world.hud.inventory_item_activated.emit(str(stacks[0].owned.record.name)+"@@@"+uid)
+			var view: Node=world.hud.find_child("BlessRefine523Panel",true,false)
+			check(view!=null and view.get("_entry_solvent_uid")==uid,"Main bag opens the exact physical chooser")
+			check(FileAccess.get_sha256(world.save_path())==previous,"opening does not save or consume")
+			check(SERVICE.dissolve_advanced_quote(world,targets,118682,targets[0]).get("code")=="solvent_selection_changed","incorrect UID does not fall back")
+			world.equipment_collections.test_save_writer=func(_path:String,_data:Dictionary)->Error:return ERR_CANT_CREATE
+			check(not SERVICE.dissolve_advanced(world,targets,118682,uid).get("ok",false) and FileAccess.get_sha256(world.save_path())==previous and world.item_instances.has(targets[0]),"failed write preserves target and solvent")
+			world.equipment_collections.test_save_writer=Callable()
+			var result: Dictionary=SERVICE.dissolve_advanced(world,targets,118682,uid)
+			check(result.get("ok",false) and not world.item_instances.has(targets[0]) and int(SERVICE.stacks_of(world,118682).total)==1 and FileAccess.get_sha256(world.save_path())!=previous,"one chosen physical solvent and the quoted equipment commit together")
+		else:check(false,"selected stock and target are present")
+	world.queue_free()
+	await process_frame
+
 func run() -> void:
 	rules()
-	if not SOURCE.not_installed():
+	var scoped: String=OS.get_environment("TWILIGHT_TEST_SOLVENT_SOURCE")
+	if not scoped.is_empty():await scoped_solvent(scoped)
+	elif not SOURCE.not_installed():
 		table()
 		await runtime()
 	print("BLESS_REFINE523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))

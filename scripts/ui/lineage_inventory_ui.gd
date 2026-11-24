@@ -532,7 +532,7 @@ func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
 	var levels: Array[int] = []
 	for raw: Variant in instances.values():
 		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
-			levels.append(int((raw as Dictionary).get("level", 0)))
+			levels.append(int((raw as Dictionary).get("source_native_event_enhance_rank",(raw as Dictionary).get("level",0))))
 	levels.sort()
 	for rank: int in levels:
 		labels.append("+%d" % rank)
@@ -542,7 +542,8 @@ func _enhance_level(item_reference: String) -> int:
 	var id: String = _ref_instance_id(item_reference)
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
 	if id != "" and instances.has(id):
-		return maxi(0, int((instances[id] as Dictionary).get("level", 0)))
+		var row: Dictionary=instances[id]
+		return maxi(0,int(row.get("source_native_event_enhance_rank",row.get("level",0))))
 	var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
 	return maxi(0, int(legacy.get(_base_item_name(item_reference), 0))) if id == "" else 0
 
@@ -711,8 +712,16 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 	var physical: Variant = instances.get(instance_id,{})
 	if not physical is Dictionary or physical.get("name") != _base_item_name(reference): return fallback
 	var original: Variant = physical.get("record",{})
-	if original is Dictionary and (preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original) or preload("res://scripts/ui/source523_image_assets.gd").handles_item(original)):
-		return original
+	var images = preload("res://scripts/ui/source523_image_assets.gd")
+	if original is Dictionary:
+		if images.recognized_item(original): return original
+		# A compact older held quest copy can retain the immutable grant
+		# receipt without the full presentation row. Use receipt proof before
+		# any name-based inference; only this image lookup sees the DTO.
+		if not original.has("source_original_item") and physical.has("quest_reward_receipt") and images.selected():
+			var recovered: Dictionary = preload("res://scripts/ui/quest_reward_card_icon.gd").resolve(physical,original)
+			if not recovered.is_empty(): return recovered
+		if images.handles_item(original): return original
 	return fallback
 
 func _matches_category(record: Dictionary, item_name: String) -> bool:

@@ -188,6 +188,25 @@ func plan_native_charge(item_id: int, original_item: Dictionary) -> Dictionary:
 	if not problem.is_empty():return failure(problem)
 	return {"ok":true,"state":next}
 
+## Confirmed physical candle: only allocations are reset. Existing earned
+## points, expansion, context, and prior receipts stay attached to their owner.
+func plan_native_reset(item_id: int, original_item: Dictionary) -> Dictionary:
+	if busy or save_blocked:return failure("하프 엘릭서 처리 중이거나 저장 보호 중입니다.")
+	if state.get("source_sha256")!=DEFINITIONS.SOURCE_SHA:return failure("하프 엘릭서 메뉴에서 같은 원본과 지역·월드를 먼저 연결하세요.")
+	var data=source_for(state)
+	if data==null or not data.pairs.has(state.context):return failure("하프 엘릭서 메뉴에서 지역과 월드를 먼저 선택하세요.")
+	var item: Dictionary=data.resets.get(str(item_id),{})
+	if original_item.is_empty() or item.get("raw")!=original_item or item.get("blocked",true):return failure("하프 엘릭서 초기화 원본이 일치하지 않습니다.")
+	var original_error: String=validate(state)
+	if not original_error.is_empty():return failure(original_error)
+	if not data.enabled("HalfElixirInitialize",state.context) or state.allocations.is_empty():return failure("이 지역·월드에서 초기화할 능력치 투자가 없습니다.")
+	var next: Dictionary=state.duplicate(true)
+	next.allocations.clear()
+	next.revision+=1
+	var problem: String=validate(next)
+	if not problem.is_empty():return failure(problem)
+	return {"ok":true,"state":next}
+
 func execute(command: Dictionary) -> Dictionary:
 	if busy or save_blocked: return failure("다른 처리가 진행 중이거나 저장 보호 중입니다.")
 	if not command.get("action") is String or not command.get("id") is String or not command.get("nonce") is String or command.nonce.is_empty() or command.nonce.length() > 128 or not integer(command.get("count"), 1, 100) or not integer(command.get("revision")): return failure("요청 형식이 잘못됐습니다.")

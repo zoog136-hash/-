@@ -140,7 +140,7 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 	var settings: Dictionary=policy()
 	var probability: Dictionary=selected(evidence.probabilities,group,level,blessing,settings)
 	var cost: Dictionary=selected(evidence.costs,group,level,blessing,settings)
-	var tables: Dictionary=book.data.get("enchantment",{})
+	var tables: Dictionary=book.enhancement_group_tables(group) if book.has_method("enhancement_group_tables") else book.data.get("enchantment",{})
 	var view_ok: bool=false
 	for row: Dictionary in tables.get("ItemEnchantProbabilityView",[]):
 		if int(row.ItemEnchantProbabilityGroupID)==group and int(row.EnchantLevel)==level and int(row.ServerLimitSetID)==0: view_ok=true

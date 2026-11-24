@@ -40,6 +40,10 @@ const HOLY_WATER_SOURCE_EXP := 31920000
 ## Item lifetime rows: the projection resolves them and use eligibility
 ## refuses an expired item (patch523_item_use.eligibility).
 const LIFETIME: Array[String] = ["DeleteTime","CannotExtendDeleteTime"]
+## The eight already-expired historical event definitions express a direct
+## blessing charge, neutral cap and original rate group but omit the later
+## PlayerEinasadBless marker. Never bypass their existing lifetime/level gate.
+const EARLY_EXPLICIT_AIN={122744:600000,123254:60000,123572:600000,123662:600000,124342:3000000,125971:600000,132933:600000,157071:600000}
 ## TWILIGHT 근사 switch: false keeps TeleportAmulet items unclaimed as before.
 const AMULET_REUSABLE: bool = true
 ## TWILIGHT 근사 switch: ClassUsageInterval (seconds) on a fixed-destination
@@ -288,14 +292,15 @@ static func ain(record: Dictionary) -> Dictionary:
 				if player!=-1: return {}
 				player = int(bonus.Value)
 			_: return {}
-	if absolute<0 or (absolute==0 and level_group==0) or cap<=0 or player!=1: return {}
+	var raw: Dictionary = definition.get("original_item",{})
+	var early: bool=player==-1 and EARLY_EXPLICIT_AIN.get(int(raw.get("ID",0)),-2)==absolute and cap==599994000 and group==12 and level_group==0 and experience==-1 and experience_group==0
+	if absolute<0 or (absolute==0 and level_group==0) or cap<=0 or (player!=1 and not early): return {}
 	var variables: Array[Dictionary] = SOURCE.rows_matching("EinasadVariable","EinasadVariableTypeID",{EINASAD_POINT_VARIABLE_TYPE:true})
 	if variables.size()!=1 or not _integer(variables[0].get("Value")) or int(variables[0].Value)<=0: return {}
 	var unit: int = int(variables[0].Value)
 	if absolute%unit!=0 or cap%unit!=0: return {}
 	var points: int = absolute/unit
 	# The item's own description states the charge in points.
-	var raw: Dictionary = definition.get("original_item",{})
 	var story: String = str(SOURCE.row("DescData_Korean",int(raw.StoryDescID)).get("Description","")) if _integer(raw.get("StoryDescID")) and int(raw.StoryDescID)>0 else ""
 	if (experience>0)!=(experience_group>0): return {}
 	if experience>0:
