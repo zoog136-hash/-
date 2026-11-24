@@ -169,6 +169,20 @@ static func consume_metadata(rows: Array,raw: Dictionary,category: Dictionary,pe
 	if grouped.get("ItemConsumeEffectSpriteID",[]).size()>1:reasons.append("ambiguous_consume_sprite")
 	return {"targetting_type_id":raw.get("TargettingTypeID"),"can_use_when_invisible":raw.get("CanUseWhenInvisible"),"consume_delay_ms":grouped.get("ItemConsumeDelay",[null])[0],"consume_effect_sprite_id":grouped.get("ItemConsumeEffectSpriteID",[0])[0],"blocked_reasons":reasons}
 
+## The original witch mana potion family has a 1-second consume cue and
+## a separate item-class reuse interval. Both exact Korean stories specify
+## instantaneous 1000 MP and a 30-minute wait. No other interval is inferred.
+static func documented_mana_reuse(raw: Dictionary, category: Dictionary, rows: Array, mp: Dictionary) -> int:
+	if whole(raw.get("ID")) not in [2501,183493] or category.get("Name")!="Potion" or mp!={"MPRestoration":1000}:return 0
+	var story: String=label(raw.get("StoryDescID")).replace("\r","").strip_edges()
+	if story!="MP1000을 즉시 회복\n(재사용 시간 30분)":return 0
+	var count: int=0
+	for item: Dictionary in rows:
+		if item.get("bonus_type",{}).get("Name")!="ClassUsageInterval":continue
+		if not direct(item) or item.get("unit",{}).get("Name")!="Seconds" or whole(item.get("bonus",{}).get("Value"))!=1800:return 0
+		count+=1
+	return 1800 if count==1 else 0
+
 static func date_value(raw: Dictionary) -> int:
 	for field: String in ["Year","Month","Day","Hour","Minute"]:
 		if not integer(raw.get(field)):return 0
@@ -312,7 +326,11 @@ static func record(definition: Dictionary) -> Dictionary:
 			if rows[index].bonus_type.Name in HP and direct(rows[index]) and rows[index].unit.Name=="Value":handled[index]=true
 	var mp: Dictionary=formula(rows,MP)
 	if not mp.is_empty():
+		var full_reuse: int=documented_mana_reuse(raw,category,rows,mp)
 		var spec: Dictionary=consume_metadata(rows,raw,category)
+		if full_reuse>0:
+			spec.blocked_reasons.erase("unsupported_item_bonus:ClassUsageInterval")
+			spec["reuse_delay_seconds"]=full_reuse
 		spec.merge(mp);spec["kind"]="source_mp_dice";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=item_id;spec["base"]=int(mp.get("MPRestoration",0));spec["dice_number"]=int(mp.get("MPRestorationDiceNumber",0));spec["dice_spot_count"]=int(mp.get("MPRestorationDiceSpotCount",0));spec["source_item_bonus_ids"]=[]
 		for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 		spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
@@ -1030,6 +1048,13 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 			if not element.is_empty():
 				for key: String in element.fields:typed[key]=typed.get(key,0)+element.fields[key]
 				continue
+		# ItemClass is the affected drop channel here, not a requirement on
+		# the player. Only the four exact source growth-buff graphs are
+		# supported; unrelated loot probability rows still block item use.
+		if name_value=="IncreaseNpcItemDropAmount" and id in [75683,78858,83491,83664] and group.get("ID")==2903 and group.get("IsAllowOverlap")==false and kind.get("ID")==6322 and unit.get("ID")==211 and unit.get("Name")=="ValuePercent" and row.get("CharacterLevel")==0 and row.get("CharacterClass")==0 and row.get("MinSpellLevel")==0 and bonus.get("BonusApplicationTypeID")==5 and bonus.get("BonusApplicationTargetID")==26 and whole(bonus.get("Value"))==20 and label(raw.get("StoryDescID")).contains("아데나 드롭량 +20%"):
+			if typed.has("source_npc_adena_drop_pct"):reasons.append("duplicate_npc_adena_drop_bonus")
+			else:typed["source_npc_adena_drop_pct"]=20
+			continue
 		if conditional:reasons.append("conditional_buff_effect:"+name_value)
 		elif (percent_fields.has(name_value) or acceleration>0 and ACCELERATION_PERCENT_FIELDS.has(name_value)) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
 			var scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
@@ -1413,18 +1438,22 @@ static func selectable_bag(definition: Dictionary,graph: Dictionary,description:
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
-# The original Korean StoryDesc for these two selectors explicitly says
+# The original Korean StoryDesc for each of these selectors explicitly says
 # pick one at use. Do not infer a global meaning for timing enum 2: pin
 # each complete graph. The NC 2024-12-04 notice corroborates the 10,000-coin
 # fishing exchange box (https://lounge.plaync.com/feed/17105).
 const COIN_SELECTION_TIMING := {
 	307781: {"desc":2066161,"root":328581,"group":10661,"amount":10000,"choices":{50971:[328591,3631],50981:[328601,3242],50991:[328611,3252],51001:[328621,246058]}},
 	289702: {"desc":1844122,"root":298912,"group":9152,"amount":1,"choices":{44642:[298872,289842],44652:[298882,289862],44662:[298892,289852],44672:[298902,289872]}},
+	# This root is timing 2 but its exact four subordinate boxes are timing 1.
+	307971: {"desc":2067791,"root":328841,"group":10671,"amount":1,"child_timing":1,"choices":{51011:[328801,307931],51021:[328811,307941],51031:[328821,307951],51041:[328831,307961]}},
 }
 
 static func coin_selection_timing_at_use(definition: Dictionary,graph: Dictionary,root: Dictionary) -> int:
 	var source: Dictionary=COIN_SELECTION_TIMING.get(whole(definition.original_item.get("ID")),{})
-	if source.is_empty() or definition.original_item.get("StoryDescID")!=source.desc or described_selection_count(label(source.desc))!=1:return 0
+	if source.is_empty() or definition.original_item.get("StoryDescID")!=source.desc:return 0
+	var description: String=label(source.desc)
+	if not description.contains("사용 시") or described_selection_count(description)!=1:return 0
 	if root.get("ID")!=source.root or root.get("RewardTypeID")!=111 or root.get("RewardClassID")!=source.group or root.get("Amount")!=1 or root.get("RewardGetTimeTypeID")!=2 or root.get("CharacterClassID")!=0:return 0
 	var group: Dictionary=graph.get("selections",{}).get(str(source.group),{})
 	if group.get("row",{}).get("ID")!=source.group or group.get("row",{}).get("SelectMaxCount")!=1:return 0
@@ -1435,7 +1464,7 @@ static func coin_selection_timing_at_use(definition: Dictionary,graph: Dictionar
 		var entity_id: int=int(entity.ID);var ids: Array=expected.get(entity_id,[])
 		if ids.is_empty() or entity.get("SelectRewardID")!=source.group or entity.get("RewardID")!=ids[0]:return 0
 		var child: Dictionary=graph.get("rewards",{}).get(str(ids[0]),{});var row: Dictionary=child.get("row",{})
-		if row.get("ID")!=ids[0] or row.get("RewardTypeID")!=2 or row.get("RewardClassID")!=ids[1] or row.get("Amount")!=source.amount or row.get("RewardGetTimeTypeID")!=2 or row.get("CharacterClassID")!=0 or row.get("ItemBlessCodeID")!=1 or child.get("item_class",{}).get("TestItem")!=false:return 0
+		if row.get("ID")!=ids[0] or row.get("RewardTypeID")!=2 or row.get("RewardClassID")!=ids[1] or row.get("Amount")!=source.amount or row.get("RewardGetTimeTypeID")!=source.get("child_timing",2) or row.get("CharacterClassID")!=0 or row.get("ItemBlessCodeID")!=1 or child.get("item_class",{}).get("TestItem")!=false:return 0
 		expected.erase(entity_id)
 	return int(source.desc) if expected.is_empty() else 0
 
@@ -1521,6 +1550,20 @@ static func complex_selectable_reward(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	return spec
 
+## The existing persistent item lifetime owner can enforce these two
+## exact selection boxes. Do not admit an unknown Life unit or duplicate row.
+const EXACT_SELECT_LIFE := {189834:86400,353592:259200}
+static func exact_selection_life(definition: Dictionary) -> int:
+	var id: Variant=whole(definition.get("original_item",{}).get("ID"))
+	var expected: int=int(EXACT_SELECT_LIFE.get(id,0))
+	if expected<=0 or definition.get("category",{}).get("Name")!="SelectReward":return 0
+	var count: int=0
+	for item: Dictionary in definition.get("item_bonus",[]):
+		if item.get("bonus_type",{}).get("Name")!="Life":continue
+		if not direct(item) or item.get("unit",{}).get("Name")!="Seconds" or whole(item.get("bonus",{}).get("Value"))!=expected:return 0
+		count+=1
+	return expected if count==1 else 0
+
 static func selectable_reward(definition: Dictionary) -> Dictionary:
 	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
 	for row: Dictionary in rows:
@@ -1538,6 +1581,10 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	# and patch523_item_use.PRESENTATION_FLAGS); it is no use condition.
 	var spec: Dictionary=consume_metadata(rows,definition.original_item,definition.category,{"SelectRewardClassID":"RewardID","UIShowFilter":"Value"},false)
 	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var lifetime: int=exact_selection_life(definition)
+	if lifetime>0:
+		spec.blocked_reasons.erase("unsupported_item_bonus:Life")
+		spec["source_owned_lifetime_seconds"]=lifetime
 	var reasons: Array=spec.blocked_reasons;var active: Dictionary={};var domain: Array=[]
 	active = _active_classes()
 	for row: Dictionary in definition.get("class_rows",[]):
@@ -1549,6 +1596,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
 	var documented_timing_desc: int=coin_selection_timing_at_use(definition,graph,root)
 	var timing: int=2 if documented_timing_desc>0 else 1
+	var child_timing: int=COIN_SELECTION_TIMING[int(definition.original_item.ID)].get("child_timing",2) if documented_timing_desc>0 else 1
 	selectable_rule(root_node,active,reasons,timing)
 	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false;var dropped: Array=[]
 	if root_node.get("reward_type",{}).get("ID")!=111 or root_node.get("reward_type",{}).get("Name")!="SelectReward":reasons.append("unsupported_select_reward_root_type")
@@ -1565,7 +1613,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			var reward_item: Dictionary=child.get("item_class",{})
 			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or child.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
 				dropped.append(entity.get("ID"));continue
-			selectable_rule(child,active,reasons,timing)
+			selectable_rule(child,active,reasons,child_timing)
 			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
 			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
 			var item: Dictionary=child.get("item_class",{});var class_ids: Array=[]

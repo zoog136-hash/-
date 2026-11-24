@@ -363,6 +363,7 @@ func _ref_instance_id(reference: String) -> String:
 ## guardian window, opened from original 수호석 상자). Like the original they
 ## are not bag slots (phone 2026-11-20: empty "10000", "400", "2400" slots).
 const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
+const QUEST_ONLY_PRESENTATION=preload("res://scripts/quests/retired_quest_items523.gd")
 
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
@@ -390,11 +391,14 @@ func _inventory_entries() -> Array[Dictionary]:
 		# Verified book instances keep provenance for transactions, while the
 		# inventory still presents their source 10,000-capacity stack as one row.
 		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
+			if QUEST_ONLY_PRESENTATION.matches_reference({},item_name):continue
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			var reward_bins: Dictionary = {}
 			for id: String in instance_ids:
 				var physical: Dictionary = instances[id]
+				var data: Variant=physical.get("record")
+				if QUEST_ONLY_PRESENTATION.matches_reference(data if data is Dictionary else {},item_name):continue
 				var entry: Dictionary = {"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(physical)}
 				var grouped: Dictionary = REWARD_STACKS.grouped_row(entry,physical,locks,reward_caps,reward_bins)
 				if grouped.is_empty(): entries.append(entry)

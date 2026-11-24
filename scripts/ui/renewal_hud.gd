@@ -1235,7 +1235,8 @@ func _navigate(section: String) -> void:
 		"status_board": open_status_board()
 		"clan_emblem523": open_clan_emblem523()
 		"clan523": open_clan523()
-		"content523": open_content523()
+		"content523": open_escaros523()
+		"field_activities523": open_content523()
 		"titles": open_titles523()
 		"expedition", "doll_explore": open_doll_explore()
 		"class_select": open_class_selection()
@@ -1868,7 +1869,7 @@ func _build_menu_page() -> void:
 	menu_scroll.add_child(grid_center)
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스·요정 숲"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
 	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
 	# original tile first in the client's order, then the TWILIGHT-only ones.
 	menu_pairs = ordered_menu_pairs(menu_pairs)
@@ -1884,7 +1885,7 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","content523","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","content523","field_activities523","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
@@ -2003,10 +2004,13 @@ func open_clan523() -> void:
 	scroll.add_child(view)
 	view.configure(self, scroll)
 
-## 에스카로스 · 요정 숲 방어전 · 영지 퀘스트 (world.content523). No original
-## window CSB for these contents is in the 523 UI add-on: plain controls.
+## Original dungeon list restricted to the exact Escaros entry from the
+## Escaros menu tile. Remaining local field activities have their own route.
+func open_escaros523() -> void:
+	_open_source_dungeons("world",314,"content523","에스카로스")
+
 func open_content523() -> void:
-	_open_window("content523","에스카로스·요정 숲·영지 퀘스트","원본 523 표 · 오프라인 1인")
+	_open_window("field_activities523","요정 숲·영지 활동","")
 	var scroll := ScrollContainer.new()
 	scroll.name = "Content523Scroll"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -3771,36 +3775,59 @@ func open_quick_cards(key: String, title: String, member: String) -> void:
 	workspace.mount(note)
 
 func open_source_dungeons() -> void:
-	_open_window("source_dungeons","던전","입장 조건 · 목표 · 보상 · 등장 계획")
+	_open_source_dungeons("special",0,"source_dungeons","던전")
+
+func _open_source_dungeons(tab: String, focus: int, section: String, title: String) -> void:
+	_open_window(section,title,"" if focus>0 else "입장 조건 · 목표 · 보상 · 등장 계획")
 	var view := SourceDungeonUI.new()
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
-	view.configure(get_parent())
+	view.configure(get_parent(),6 if tab=="world" else 0)
 	# The dungeon model is released again when this window closes.
 	view.tree_exiting.connect(func() -> void:
 		var world: Node = get_parent()
 		if is_instance_valid(world) and world.has_method("_release_idle_original_models"): world._release_idle_original_models())
-	# The original 던전 list window over the same rows and actions (the view
-	# stays mounted in the hidden workspace); without it the view is shown.
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_dungeon_window"):
-		var native: Dictionary = original_main_ui_controller.try_open_dungeon_window(view)
+		var native: Dictionary = original_main_ui_controller.try_open_dungeon_window(view,tab,focus)
 		original_main_ui_status["dungeon_window"] = native
 		if native.get("handled",false):
 			if pointer_transfer != null: pointer_transfer.cancel()
 			workspace.hide()
 			_sync_screen_focus()
 			return
-		_report_original_fallback("던전",native)
+		_report_original_fallback(title,native)
+	if focus>0:
+		view.hide()
+		var service: RefCounted=get_parent().content523
+		var quote: Dictionary=service.escaros_entry_quote()
+		var box:=VBoxContainer.new()
+		workspace.mount(box)
+		var route: Dictionary=quote.get("route",{})
+		var text: String="에스카로스 원본 입장 화면을 사용할 수 없습니다."
+		if not route.is_empty():
+			text+="\n%s · Lv %d · 아데나 %d" % [str(route.land_name),int(route.min_level),int(route.cost)]
+		var notice:=UI.label(text,14,UI.TEXT)
+		notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(notice)
+		if not route.is_empty():
+			var enter:=UI.button("입장",func() -> void:
+				var checked: Dictionary=service.escaros_entry_quote()
+				if not checked.get("ok",false):show_message(str(checked.reason));return
+				confirm_action("에스카로스 · 입장","%s · 아데나 %d" % [str(route.land_name),int(route.cost)],"입장",func(_count: int) -> void:
+					var result: Dictionary=service.enter_escaros()
+					if result.get("ok",false):_close_workspace();show_message("에스카로스에 입장했습니다.")
+					else:show_message(str(result.get("reason","에스카로스 입장 불가")))),Vector2(0,43))
+			box.add_child(enter)
 
 
 func refresh_source_dungeon_progress() -> void:
-	if active_section != "source_dungeons" or dungeon_progress_refresh_pending: return
+	if active_section not in ["source_dungeons","content523"] or dungeon_progress_refresh_pending: return
 	dungeon_progress_refresh_pending = true
 	call_deferred("_refresh_source_dungeon_progress_deferred")
 
 func _refresh_source_dungeon_progress_deferred() -> void:
 	dungeon_progress_refresh_pending = false
-	if active_section != "source_dungeons" or not is_instance_valid(workspace): return
+	if active_section not in ["source_dungeons","content523"] or not is_instance_valid(workspace): return
 	var view: Node = workspace.find_child("SourceDungeonView",true,false)
 	if is_instance_valid(view) and not view.is_queued_for_deletion(): view._select(int(view.selected))
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("refresh_dungeon_window"): original_main_ui_controller.refresh_dungeon_window()

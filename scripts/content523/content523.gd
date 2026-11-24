@@ -317,11 +317,18 @@ func travel(route: Dictionary, waive: Array = ENTRY_WAIVE) -> Dictionary:
 	if not paid.get("ok",false): return {"ok":false,"reason":"이동 후 비용 저장 실패: "+str(paid.reason)}
 	return {"ok":true,"land_id":int(route.land_id),"cost":int(route.cost)}
 
-func enter_escaros() -> Dictionary:
+func escaros_entry_quote() -> Dictionary:
 	var model: Dictionary = models().escaros
 	if not model.get("ok",false): return {"ok":false,"reason":str(model.get("problem",""))}
-	var result: Dictionary = travel(model.dungeon.teleport)
-	if result.get("ok",false): last_note = "에스카로스 입장 · %s" % str(model.dungeon.teleport.land_name)
+	var route: Dictionary = model.dungeon.teleport
+	var reason: String = _route_check(route)
+	return {"ok":reason.is_empty(),"reason":reason,"route":route}
+
+func enter_escaros() -> Dictionary:
+	var quote: Dictionary = escaros_entry_quote()
+	if not quote.get("ok",false): return quote
+	var result: Dictionary = travel(quote.route)
+	if result.get("ok",false): last_note = "에스카로스 입장 · %s" % str(quote.route.land_name)
 	return result
 
 ## A village/field teleporter (EarthObjectSpawn with a LandTeleportID unit):
@@ -690,10 +697,8 @@ func tick(delta: float) -> void:
 	_quest_tick(at)
 
 func status_line() -> String:
-	var at: Dictionary = here()
 	var lines: Array = []
 	var progress: Dictionary = quest_progress()
 	if not progress.is_empty(): lines.append("영지 퀘스트 %d/%d · 남은 %d초" % [int(progress.count),int(progress.need),int(progress.left)])
-	if not at.is_empty(): lines.append("현재 Land %d (%d,%d)" % [int(at.land_id),int(at.cell[0]),int(at.cell[1])])
 	if not last_note.is_empty(): lines.append(last_note)
 	return " · ".join(lines)

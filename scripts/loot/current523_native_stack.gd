@@ -507,10 +507,12 @@ static func _failure(reason: String) -> Dictionary:
 	return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":reason}
 
 static func try_use(world: Node,item_name: String,selected: String="") -> Dictionary:
+	var named: Dictionary=world._find_catalog_item_record(item_name)
+	if RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.record(named) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(named,item_name):return _failure(RETIRED_ITEMS.REASON)
+	if not selected.is_empty() and RETIRED_ITEMS.record(world.item_instances.get(selected,{}).get("record",{})):return _failure(RETIRED_ITEMS.REASON)
 	# A plain name-keyed stack (as the 523 shop sells it) of an original
 	# teleport/Ainhasad/food item has its own owner; it shows its own message.
-	if selected.is_empty() and EFFECTS.try_use_plain(world,item_name):return {"handled":true,"ok":false,"silent":true}
-	var named: Dictionary=world._find_catalog_item_record(item_name)
+	if selected.is_empty() and EFFECTS.try_use_plain(world,item_name,named):return {"handled":true,"ok":false,"silent":true}
 	# Old name-keyed quest rewards predate physical receipts. The quest
 	# owner verifies their historical source before the native UID gate.
 	if int(named.get("source_item_class_id",0)) in [139781,289172,289182,289202,306611,306621,306631,306641] and load("res://scripts/quests/quest_fixed_cards523.gd").call("try_use_legacy",world,item_name,selected,named):
@@ -644,7 +646,8 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		else:instances[uid][QUANTITY]=int(owned.remaining)-1;instances[uid].source_native_stack_used_quantity=int(owned.used)+1
 		ledger=ledger.duplicate(true);ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1);state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
-	var delay: float=float(details.get("source_consume_delay_ms",spec.get("consume_delay_ms",0)))/1000.0
+	var reuse_delay: float=float(spec.get("reuse_delay_seconds",0)) if effect.kind=="mp" else 0.0
+	var delay: float=maxf(float(details.get("source_consume_delay_ms",spec.get("consume_delay_ms",0)))/1000.0,reuse_delay)
 	if delay>0:cooldowns[cooldown_key]=delay;cooldowns[item_name]=delay
 	if effect.kind=="hp":cooldowns[str(parameters.cooldown_key)]=float(parameters.cooldown_seconds)
 	var payload: Dictionary={"inventory":bag,"item_instances":instances,"consumable_state":state,"item_use_cooldowns":cooldowns,"patch523_transaction_rng":{"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}}
@@ -680,7 +683,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 			busy=false
 			if moved.get("uncertain",false):world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 			return _failure(str(moved.get("reason","이동 실패"))+(" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
-	elif effect.kind in ["hp","mp"] and not prepared.has("destination"):
+	elif effect.kind in ["hp","mp"] and reuse_delay<=0.0 and not prepared.has("destination"):
 		# HP/MP potions: checked as their save would check them, committed in
 		# memory, written by the coalesced background save (user decision
 		# 2026-11-21, option A: a full save per potion was ~0.4 s on the phone).
@@ -1314,7 +1317,11 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 	if not request.physical_id is String or request.physical_id.is_empty() or not integer(request.quantity) or int(request.quantity)!=1 or not integer(request.expected_quantity) or not integer(request.expected_remaining):return _failure("원문 소모품은 실제 선택 개체의1단위와 정확한 정수 잔량을 지정하세요")
 	if quest:return use_quest_original_bag(world,original_item,request)
 	var owned: Dictionary=proof(world,request.physical_id)
-	if owned.is_empty() or original_item!=NATIVE_FIELDS.full(owned.receipt).source_original_item or original_item!=SOURCE.row("ItemClass",int(owned.receipt.item_class_id)) or request.source_native_stack_receipt!=owned.receipt or request.expected_quantity!=owned.remaining or request.expected_remaining!=int(owned.remaining)-1:return _failure("원문 행·선택 개체·최초량·현재 잔량 증명 불일치")
+	if owned.is_empty():return _failure("원문 행·선택 개체·최초량·현재 잔량 증명 불일치")
+	# A receipt proves ownership, but compact receipts are not item records.
+	# proof() verifies and returns the canonical record separately.
+	var item: Dictionary=NATIVE_FIELDS.full(owned.record).get("source_original_item",{})
+	if item.is_empty() or original_item!=item or original_item!=SOURCE.row("ItemClass",int(owned.receipt.item_class_id)) or request.source_native_stack_receipt!=owned.receipt or request.expected_quantity!=owned.remaining or request.expected_remaining!=int(owned.remaining)-1:return _failure("원문 행·선택 개체·최초량·현재 잔량 증명 불일치")
 	if profile(owned.record).is_empty():
 		var result: Dictionary=_failure("해당 원문 소모품의 실제 효과 소유자 연결 대기 · 소유와 영수증 보존")
 		result["source_use_supported"]=false;result["source_problem"]="current_original_effect_owner_required"
@@ -1436,6 +1443,11 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 # Source UI receives this immutable proposal; it never creates a dialog or
 # consumes an input. Confirmation re-reads source/ownership rather than trusting it.
 static func selection_pending(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
+	var lifetime: int=int(spec.get("source_owned_lifetime_seconds",0))
+	if lifetime>0:
+		var owner: Variant=world.get("item_life523")
+		if not owner is RefCounted or owner.life_seconds(record)!=lifetime or owner.remaining(uid)<=0:
+			return _failure("선택 상자의 수명이 끝났거나 현재 소유 시점을 확인할 수 없습니다 · 상자 보존")
 	var bag: bool=spec.get("kind")=="source_selectable_bag"
 	if spec.get("kind") not in ["source_selectable_reward","source_selectable_bag"] or spec.get("activation_status")!="unrestricted" or whole(spec.get("select_max_count"))!=1:return _failure("원문 선택 보상 규칙 연결 대기")
 	var class_id: int=current_class(world)

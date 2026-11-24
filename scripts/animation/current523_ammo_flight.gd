@@ -78,6 +78,31 @@ static func options(world: Node, origin: Vector2, target: Node2D) -> Dictionary:
 	var token: Dictionary = {"node":flight_node,"inputs":inputs,"world":weakref(world),"target":weakref(target),"point":origin}
 	return {"visual_step":_step.bind(token),"visual_end":_end.bind(token),"current523_ammo_flight":last_status.duplicate(true)}
 
+## One exact already-admitted class spell uses its own EffectSpriteID for
+## travel. No general Arrow category or physical player stack is introduced.
+static func spell_options(world: Node, origin: Vector2, target: Node2D, row: Dictionary) -> Dictionary:
+	if world.combat_flights==null or not is_instance_valid(target) or row.get("ID")!=86758 or row.get("EffectSpriteID")!=25373 or row.get("EffectSpriteActionNo")!=0:return {}
+	var aim: Vector2=target.combat_hit_position() if target.has_method("combat_hit_position") else target.global_position
+	var flight_node: Node2D=world.player.original_source_preview.prepare_current_source_spell_flight(row,_facing(aim-origin))
+	if flight_node==null:return {}
+	flight_node.set_as_top_level(true)
+	world.combat_flights.add_child(flight_node)
+	flight_node.global_position=origin
+	TwilightWorldRenderScale.follow_world(flight_node)
+	if not flight_node.advance_reference_source(0.0,"idle",flight_node._overlay_facing):
+		flight_node.free()
+		return {}
+	flight_node.hide()
+	var token: Dictionary={"node":flight_node}
+	return {"visual_step":_step.bind(token),"visual_end":_remove_flight_visual.bind(token),"source_spell_flight_id":86758}
+
+static func _remove_flight_visual(token: Dictionary) -> void:
+	var node: Variant=token.get("node")
+	if is_instance_valid(node):
+		node.hide()
+		node.queue_free()
+	token.erase("node")
+
 static func _step(flight: Dictionary, token: Dictionary) -> bool:
 	token["point"] = flight.position
 	var node: Variant = token.get("node")

@@ -92,6 +92,8 @@ var _view: WeakRef
 var _scene: Node2D
 var _last_out: Dictionary={}
 var tab: String="special"
+const ESCAROS_ID: int=314
+var _focused_escaros: bool=false
 ## 시련 tab: the Mission_Dungeon_Trial list (true) or the TrialTower page.
 var trial_list: bool=true
 var hard: bool=false
@@ -178,11 +180,12 @@ func is_open() -> bool:
 
 ## `view` is the existing dungeon screen (source_dungeon_view) mounted in the
 ## hidden workspace: its rows, checks and actions are the window's.
-func open(parent: Node, view: Object) -> Dictionary:
+func open(parent: Node, view: Object, initial_tab: String="special", focus: int=0) -> Dictionary:
 	if not is_instance_valid(parent) or not is_instance_valid(view) or not view.has_method("_refresh"):return _fail("source_dungeon_window_host_unavailable")
 	_parent=weakref(parent)
 	_view=weakref(view)
-	tab="special"
+	tab=initial_tab if initial_tab in FAMILY and initial_tab not in ["rechargers","tower_hard","orim_hard"] else "special"
+	_focused_escaros=tab=="world" and focus==ESCAROS_ID
 	hard=false
 	index=0
 	hero=-1
@@ -302,6 +305,9 @@ func _stage() -> Dictionary:
 	if parent==null or hud==null or view==null:return _fail("source_dungeon_window_host_unavailable")
 	var world: Node=hud.get_parent()
 	rows=view.rows.duplicate()
+	if _focused_escaros:
+		rows=rows.filter(func(row: Dictionary) -> bool:return int(row.get("id",0))==ESCAROS_ID)
+		if rows.is_empty():return _fail("source_dungeon_escaros_declaration_unavailable")
 	index=clampi(index,0,maxi(0,rows.size()-1))
 	var spec: Dictionary={}
 	for name: String in OTHER:spec[name]={"exclude":true}
@@ -859,8 +865,9 @@ func _fill_competition(root: Node2D, out: Dictionary, world: Node) -> Dictionary
 	for i: int in range(rows.size()):
 		var entry: Dictionary=rows[i]
 		var id: int=int(entry.id)
-		var can_return: bool=id in lobby.get("ids",[])
-		var quote: Dictionary=world.competition523_quote(id)
+		var focused: bool=_focused_escaros and id==ESCAROS_ID
+		var can_return: bool=not focused and id in lobby.get("ids",[])
+		var quote: Dictionary=world.content523.escaros_entry_quote() if focused else world.competition523_quote(id)
 		var label: String=str(entry.name)
 		if rows.any(func(v: Dictionary) -> bool: return v.id!=id and v.name==entry.name):label+=" #%d" % id
 		var price: String=number_text(int(entry.tariff.get("TeleportCost",0)))
@@ -875,15 +882,29 @@ func _fill_competition(root: Node2D, out: Dictionary, world: Node) -> Dictionary
 			"Panel/Label_Charge":{"role":"source_text","text":"기란으로 귀환" if can_return else (price if adena else price+" "+str(entry.currency_name))},
 			"Panel/Sp_Adena":{"visible":adena and not can_return},
 			"Panel/Nd_Lock":{"visible":not can_return and not quote.get("ok",false)},
-			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":"이동 보류 · 눌러서 이유 확인"},
+			"Panel/Nd_Lock/Label_Condition":{"role":"source_text","text":("Lv %d" % int(quote.get("route",{}).get("min_level",0))) if focused and int(quote.get("route",{}).get("min_level",0))>int(world.level) else "이동 보류 · 눌러서 이유 확인"},
 		}
 		for name: String in ["Btn_Fix","Btn_Item","Btn_Notice","Btn_Share","Btn_HelpBox","Nd_Penalty","Nd_Round","Nd_Closed","Nd_Timebar","Nd_Timebar_Share","Nd_Time","Sp_New","Sp_Event","Label_Retry"]:spec["Panel/"+name]={"exclude":true}
+		# This exact CSB uses an ImageView with Mission_Dummy.png, not a
+		# declared dynamic Sprite slot. Bind the verified world entrance
+		# pixels through the existing ImageView owner at its authored geometry.
+		var painting: Dictionary=COMPETITION.picture(entry) if focused else {}
+		if painting.get("ok",false):
+			var raw: Array[Dictionary]=Rows.related("AssetView","AssetId",int(entry.asset_id))
+			var type: Dictionary=Rows.row("AssetType",int(entry.asset_type))
+			if raw.size()==1 and not type.is_empty():
+				spec["Panel/Img_Special"]={"role":"source_asset","visible":true,"asset_ref":{"AssetView":raw[0],"AssetType":type,"asset_id":int(entry.asset_id),"declared_path":str(entry.asset_path)}}
 		var row_out: Dictionary={}
 		var built: Dictionary=_tree.scene_of(SPECIAL_ROW,spec,row_out)
 		if not built.get("ok",false):return built
 		var node: Node2D=built.scene
 		node.set_meta("competition523_dungeon_id",id)
-		node.set_meta("competition523_art_tree",row_out)
+		if focused and painting.get("ok",false):
+			var slot: Dictionary=NamedTree.locate(node,row_out,"Panel/Img_Special")
+			var image: Node2D=slot.player.source_nodes.get(slot.offset) if slot.get("ok",false) else null
+			var pixels: Variant=image.get_meta("source_image") if is_instance_valid(image) and image.has_meta("source_image") else null
+			node.set_meta("competition523_art_loaded",is_instance_valid(image) and image.visible and pixels is TextureRect and pixels.texture!=null and spec["Panel/Img_Special"].get("role")=="source_asset")
+		else:node.set_meta("competition523_art_tree",row_out)
 		_add_column(content,SPECIAL_ROW,node,i,size,SPECIAL_GAP)
 		list.append(node)
 		Storage_forward(node,row_out,"Panel/Button",_special)
@@ -1110,6 +1131,7 @@ func _apply_picture(root: Node2D, out: Dictionary, suffix: String, info: Diction
 ## --- Actions -----------------------------------------------------------------
 
 func _set_tab(value: String) -> Dictionary:
+	_focused_escaros=false
 	tab=value
 	trial_list=true
 	hard=false
@@ -1252,11 +1274,27 @@ func _special_pressed(i: int) -> Dictionary:
 			return
 		_notice(bound))
 
+func _escaros_pressed(world: Node, hud: Node) -> Dictionary:
+	# Native card is presentation only; quote and execution stay with the
+	# existing actual Escaros activity, not the local lobby exploration owner.
+	var quote: Dictionary=world.content523.escaros_entry_quote()
+	if not quote.get("ok",false):
+		hud.show_message(str(quote.get("reason","에스카로스 입장 불가")))
+		return {"ok":false,"handled":true,"blocked":str(quote.get("reason",""))}
+	var route: Dictionary=quote.route
+	return _confirm("에스카로스 · 입장","%s\n필요 레벨 %d · 아데나 %s" % [str(route.land_name),int(route.min_level),number_text(int(route.cost))],"입장",func() -> void:
+		var entered: Dictionary=world.content523.enter_escaros()
+		if entered.get("ok",false):
+			hud.show_message("에스카로스에 입장했습니다.")
+			call_deferred("_close_requested")
+		else:hud.show_message(str(entered.get("reason","에스카로스 입장 불가"))))
+
 func _competition_pressed(id: int) -> Dictionary:
 	if _special.moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return _fail("source_dungeon_window_host_unavailable")
 	var world: Node=hud.get_parent()
+	if _focused_escaros and id==ESCAROS_ID:return _escaros_pressed(world,hud)
 	var here: Dictionary=COMPETITION.lobby(int(world.orim_current_land().get("land_id",-1)))
 	if id in here.get("ids",[]):
 		return _confirm("원본 입구 · 귀환","기란 마을로 돌아갑니다. 이동 비용 없음.","귀환",func() -> void:

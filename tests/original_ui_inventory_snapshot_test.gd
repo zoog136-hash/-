@@ -24,15 +24,19 @@ class FakeBag extends Control:
 	var icons: Array[String]=[]
 	var texture: Texture2D=PlaceholderTexture2D.new()
 	var mutate_icon_input: bool=false
+	var missing_icon: bool=false
+	var armed_action: String=""
 	func prepare_source_inventory_model() -> void:prepare_calls+=1
 	func _inventory_entries() -> Array[Dictionary]:
 		entry_calls+=1
 		return offered.duplicate(true)
 	func _select_item(reference: String) -> void:selected_item=reference
 	func _activate_selected() -> void:activations+=1
+	func item_action_label(_reference: String) -> String:return armed_action
 	func _is_item_equipped(reference: String) -> bool:return reference==equipped
 	func image(entry: Dictionary, _context: Dictionary) -> Dictionary:
 		icons.append(entry.reference)
+		if missing_icon:return {"ok":false,"code":"fixture_original_image_absent"}
 		if mutate_icon_input:entry.amount=9999
 		return {"ok":true,"texture":texture}
 
@@ -41,7 +45,7 @@ class FakeHud extends Node:
 
 class FakeSlot extends Node2D:
 	var source_member: String="UI/CommonUi/Common_Slot.csb"
-	var source_nodes: Dictionary={8328:true,7304:true}
+	var source_nodes: Dictionary={8328:true,7304:true,SLOTS.ACTION:true}
 	var texts: Dictionary={}
 	var shown: Dictionary={}
 	func set_bound_text(offset: int, text: String) -> Dictionary:
@@ -85,13 +89,26 @@ func _run() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _missing_icon_keeps_name() -> void:
+	var f: Dictionary=_fixture(1)
+	var bag: FakeBag=f.bag
+	var slots: RefCounted=f.slots
+	bag.offered[0].name="용기의 물약 (각인) · 원본#335"
+	bag.missing_icon=true
+	var reference: String=bag.offered[0].reference
+	var offset: int=SLOTS.VARIANTS.Nd_Slot.slots[0]
+	var built: Dictionary=slots.build(56036,{offset:reference})
+	var title: String="용기의 물약 (각인)"
+	check(built.get("ok",false) and built.missing_icon_titles.get(offset)==title and not built.owner_results.has(offset),"source label fallback uses exact displayed name and does not stage a substitute texture")
 	var view = VIEW.new()
 	var control := Control.new()
-	control.size = Vector2(56,56)
-	view._label_missing_icon(control,{"name":"용기의 물약 (각인) · 원본#335","reference":"fixture"})
-	var label := control.get_node_or_null("MissingIconItemName") as Label
-	check(label!=null and label.text=="용기의 물약 (각인)" and label.mouse_filter==Control.MOUSE_FILTER_IGNORE, "an unavailable image still shows the item name without intercepting the slot")
-	control.free()
+	var authored:=FakeSlot.new()
+	view._keep_missing_icon_title(authored,control,title)
+	check(slots.refresh_action(authored,reference).ok and authored.shown[SLOTS.ACTION] and authored.texts[SLOTS.ACTION]==title and control.tooltip_text==title and control.get_child_count()==0,"authored slot shows fallback name without intercepting taps")
+	bag.armed_action="사용"
+	check(slots.refresh_action(authored,reference).ok and authored.texts[SLOTS.ACTION]=="사용","actual action supersedes name while selected")
+	bag.armed_action=""
+	check(slots.refresh_action(authored,reference).ok and authored.texts[SLOTS.ACTION]==title,"unarmed slot shows name again")
+	authored.free();control.free();f.hud.free()
 
 func _staged_rows(count: int) -> void:
 	var fixture: Dictionary=_fixture(count)

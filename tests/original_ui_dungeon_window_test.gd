@@ -79,7 +79,7 @@ func _scroller() -> void:
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud_text.contains("try_open_dungeon_window(view)") and hud_text.contains("_report_original_fallback(\"던전\",native)"),"던전 opens the original window over the mounted screen and reports a fallback")
+	check(hud_text.contains("try_open_dungeon_window(view,tab,focus)") and hud_text.contains("_report_original_fallback(title,native)"),"던전 opens the original window over the mounted screen and reports a fallback")
 	check(hud_text.contains("close_dungeon_window()") and hud_text.contains("refresh_dungeon_window()") and hud_text.contains("original_main_ui_controller.dungeon_window_is_open()"),"closing, ESC and dungeon progress reach the window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	for method: String in ["func try_open_dungeon_window","func dungeon_window_is_open","func refresh_dungeon_window","func close_dungeon_window"," or dungeon_window_is_open() or "]:

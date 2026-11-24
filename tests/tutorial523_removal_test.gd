@@ -8,6 +8,7 @@ extends SceneTree
 ## 사용자 결정 2026-11-17) with tutorial items
 ## removed (amounts recorded), and the class skill book grant happens once.
 const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
+const RETIRED = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const DUMMY = preload("res://scripts/quests/source_dummy523.gd")
 const QUESTS = preload("res://scripts/quests/source_quest523.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
@@ -34,7 +35,7 @@ func quest_row(id: int, prerequisites: Array) -> Dictionary:
 func synthetic() -> void:
 	check(TUTORIAL.LAND_IDS.size() == 46 and TUTORIAL.QUEST_IDS.size() == 108 and TUTORIAL.ITEM_IDS.size() == 50, "46 Lands · 108 quests · 50 items")
 	check(TUTORIAL.land(44502) and TUTORIAL.land(44502.0) and not TUTORIAL.land(4) and TUTORIAL.land_declaration({"ID":999999,"Name":"[튜토리얼] 새 땅"}) and not TUTORIAL.land_declaration({"ID":4,"Name":"아덴"}), "Land identification")
-	check(TUTORIAL.quest(74792) and not TUTORIAL.quest(74802) and TUTORIAL.item(138531) and TUTORIAL.item(6171) and not TUTORIAL.item(26), "quest / item identification")
+	check(TUTORIAL.quest(74792) and not TUTORIAL.quest(74802) and RETIRED.item(138531) and not TUTORIAL.item(138531) and TUTORIAL.item(6171) and not TUTORIAL.item(26), "quest gates and separately retired scroll preserve prior ownership")
 	# Quest gates.
 	var quests = QUESTS.new()
 	check(quests.gate(quest_row(74792,[]),{"class_id":52,"level":1},{},1000) == TUTORIAL.DECISION, "a tutorial quest never starts")
@@ -43,7 +44,7 @@ func synthetic() -> void:
 	check(quests.gate(after,{"class_id":1,"level":1},{},1000) == "직업 조건 미충족", "it stays the tutorial chain's class only")
 	check(quests.gate(quest_row(5,[{"type_name":"Quest","Value":4}]),{"class_id":1,"level":1},{},1000).contains("선행 퀘스트 4"), "other prerequisites unchanged")
 	# Items.
-	check(not DUMMY.item_id_evidence(138531).is_empty() and DUMMY.item_id_evidence(26).is_empty(), "tutorial items are cut from every grant/use path")
+	check(not DUMMY.item_id_evidence(6171).is_empty() and DUMMY.item_id_evidence(139581).is_empty() and DUMMY.item_id_evidence(26).is_empty(), "original removed tutorial currency stays excluded but restored Dragon Diamond is not a dummy")
 	check(DUMMY.reason({"source_snapshot":"patch523","source":"lineagem_patch523","source_item_class_id":6171}).contains("튜토리얼"), "the refusal names the decision")
 	# Save migration.
 	var save: Dictionary = {"character_source_cursor":{"native_land_id":44502,"source_position":[10,20]},
@@ -53,8 +54,8 @@ func synthetic() -> void:
 	var moved: Dictionary = TUTORIAL.migrate_save(save)
 	check(moved.character_source_cursor == {"native_land_id":4,"source_position":[33441.5,32813.5]} and moved.character_source_cursor == START_VILLAGE.cursor(), "moved to Giran town (Locations473 리스타트 좌표 기란 마을)")
 	check(moved.tutorial523.relocated.to_source_position == [33441.5,32813.5] and moved.tutorial523.relocated.to_village == "기란 마을", "the Giran destination is recorded")
-	check(moved.inventory == {"빨간 물약":5} and moved.item_instances.keys() == ["8"], "tutorial items removed, others kept")
-	check(moved.tutorial523.removed_items == {"138531":3,"6171":2} and moved.tutorial523.relocated.from_native_land_id == 44502, "amounts and origin recorded")
+	check(moved.inventory == {"[퀘스트] 퀘스트 이동 주문서 · 원본#138531":3,"빨간 물약":5} and moved.item_instances.keys() == ["7","8"], "legacy retired scroll holdings remain, other tutorial items removed")
+	check(moved.tutorial523.removed_items == {"6171":2} and moved.tutorial523.relocated.from_native_land_id == 44502, "only still-removed amounts and original Land recorded")
 	check(not TUTORIAL.needed(moved) and save.inventory.size() == 3, "migration is one-shot and does not touch the input")
 	check(not TUTORIAL.needed({"character_source_cursor":{"native_land_id":4,"source_position":[]},"inventory":{"빨간 물약":1}}), "an ordinary save is untouched")
 	check(TUTORIAL.start_grants(52,{}).size() == 3 and TUTORIAL.start_grants(81,{}).size() == 2 and TUTORIAL.start_grants(1,{}).is_empty() and TUTORIAL.start_grants(52,{"start_grant":{}}).is_empty(), "class book grant once")
@@ -123,19 +124,21 @@ func actual_main() -> void:
 	var file: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
 	file["character_source_cursor"] = {"native_land_id":44502,"source_position":[100,200]}
 	file["inventory"]["[퀘스트] 퀘스트 이동 주문서 (004) · 원본#138531"] = 3
+	file["inventory"]["[튜토리얼][화폐] 뽑기용 화폐 · 원본#6171"] = 2
 	var writer := FileAccess.open(world.save_path(), FileAccess.WRITE); writer.store_string(JSON.stringify(file)); writer.close()
 	world._load_game(true)
 	evidence["cursor_after_load"] = world.character_source_cursor.duplicate(true)
 	check(world.character_source_cursor == START_VILLAGE.cursor(), "load moves the character to Giran town")
-	check(not world.inventory.has("[퀘스트] 퀘스트 이동 주문서 (004) · 원본#138531") and world.inventory == baseline, "tutorial items removed, others kept")
-	check(int(world.tutorial523.get("removed_items",{}).get("138531",0)) == 3 and int(world.tutorial523.get("relocated",{}).get("from_native_land_id",0)) == 44502, "removed amount and origin recorded")
+	baseline["[퀘스트] 퀘스트 이동 주문서 (004) · 원본#138531"]=3
+	check(world.inventory == baseline, "retired scroll stays in old save; remaining tutorial item is removed")
+	check(int(world.tutorial523.get("removed_items",{}).get("6171",0)) == 2 and int(world.tutorial523.get("relocated",{}).get("from_native_land_id",0)) == 44502, "removed amount and origin recorded")
 	var backups: int = 0
 	for name: String in DirAccess.get_files_at(world.save_path().get_base_dir()):
 		if name.contains(".pre-tutorial-523-"): backups += 1
 	check(backups >= 1, "the original save is backed up")
 	check(world._save_game(true) == OK, "saved after migration")
 	world._load_game(true)
-	check(int(world.tutorial523.get("removed_items",{}).get("138531",0)) == 3, "the record survives save/load")
+	check(int(world.tutorial523.get("removed_items",{}).get("6171",0)) == 2, "the record survives save/load")
 	evidence["record"] = world.tutorial523.duplicate(true)
 	# Class skill book grant (암흑기사).
 	world.job_class = "암흑기사"

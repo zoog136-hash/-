@@ -21,6 +21,7 @@ const RING_BOX := 187362
 ## +4 지휘관의 휘장 상자: one IsGiven row (+4 휘장) and ResetAutoSlotByEmpty 1.
 const FLAG_BOX := 193581
 const FISHING_COIN_BOX := 307781
+const BM_COIN_BOX := 307971
 const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 var checks: int = 0
 var failures: Array[String] = []
@@ -91,13 +92,14 @@ func grant(world: Node, id: int, amount: int) -> String:
 	world.inventory = staged.overrides.inventory; world.item_instances = staged.overrides.item_instances
 	return str(record(id).name)
 
-func open_dialog(world: Node, name: String) -> Control:
+func open_dialog(world: Node, name: String, from_bag: bool = false) -> Control:
 	world.item_use_cooldowns.clear()
 	if world.hud.has_meta("patch523_reward_choice"):
 		var old: Variant = world.hud.get_meta("patch523_reward_choice")
 		if is_instance_valid(old): old.free()
 		world.hud.remove_meta("patch523_reward_choice")
-	world.consumable_service.try_use(name)
+	if from_bag:world.hud.inventory_item_activated.emit(name)
+	else:world.consumable_service.try_use(name)
 	var dialog: Variant = world.hud.get_meta("patch523_reward_choice") if world.hud.has_meta("patch523_reward_choice") else null
 	return dialog if is_instance_valid(dialog) else null
 
@@ -136,9 +138,6 @@ func fishing_checks(world: Node) -> void:
 	var spec: Dictionary=FIELDS.full(item).get("source_use_spec",{})
 	var options: Dictionary={50971:"명예 코인",50981:"변신 제작 코인",50991:"마법인형 제작 코인",51001:"성물 제작 코인"}
 	check(spec.get("source_reward_timing_desc_id")==2066161 and STACK.profile(item).get("kind")=="selection", "exact documented fishing selector admitted")
-	for unverified: int in [307971]:
-		var other: Dictionary=FIELDS.full(record(unverified)).get("source_use_spec",{})
-		check(other.get("activation_status")=="blocked" and "unsupported_select_reward_rule:RewardGetTimeTypeID" in other.get("blocked_reasons",[]), "other timing-2 selectors are not admitted")
 	var name: String=grant(world,FISHING_COIN_BOX,4)
 	if name.is_empty(): return
 	for expected_entity: int in options:
@@ -194,6 +193,56 @@ func growth_coin_checks(world: Node) -> void:
 		await process_frame
 		check(int(world.inventory.get(output_name,0))==count+1 and physical(world,output_name)==count+1 and world.rng.state==rng,"one exact child box with physical receipt; no RNG")
 
+func bm_coin_checks(world: Node) -> void:
+	var spec: Dictionary=FIELDS.full(record(BM_COIN_BOX)).get("source_use_spec",{})
+	check(spec.get("source_reward_timing_desc_id")==2067791 and spec.get("select_reward_id")==10671 and STACK.profile(record(BM_COIN_BOX)).get("kind")=="selection","exact timing-2 root with timing-1 children admitted from original wording")
+	var name: String=grant(world,BM_COIN_BOX,4)
+	if name.is_empty():return
+	var expected: Dictionary={51011:307931,51021:307941,51031:307951,51041:307961}
+	for entity_id: int in expected:
+		var snapshot: Dictionary=world.inventory.duplicate(true)
+		var rng: int=world.rng.state
+		var before: PackedByteArray=FileAccess.get_file_as_bytes(world.save_path())
+		var dialog: Control=open_dialog(world,name,true)
+		if not check(dialog!=null and dialog.choices.item_count==4 and world.inventory==snapshot and before==FileAccess.get_file_as_bytes(world.save_path()),"actual bag opens exact four choices without debit"):return
+		await process_frame
+		var choice: int=-1
+		for index: int in dialog.choices.item_count:
+			if int(dialog.choices.get_item_metadata(index))==entity_id:choice=index
+		if not check(choice>=0,"source entity is present: "+str(entity_id)):return
+		var result: Dictionary=record(expected[entity_id])
+		var output: String=str(result.name)
+		dialog.choices.select(choice)
+		if entity_id==51011:
+			world.equipment_collections.test_save_writer=func(_path:String,_payload:Dictionary)->Error:return ERR_CANT_CREATE
+			dialog._claim()
+			check(not dialog.last_claim.is_empty() and not dialog.last_claim.get("ok",false) and world.inventory==snapshot and world.rng.state==rng and before==FileAccess.get_file_as_bytes(world.save_path()),"refused writer leaves the box, output, RNG and file unchanged")
+			world.equipment_collections.test_save_writer=Callable()
+			world._load_game(true)
+			world.field_population.set_process(false);world.player.set_physics_process(false)
+			dialog=open_dialog(world,name,true)
+			if not check(dialog!=null and int(dialog.choices.get_item_metadata(choice))==entity_id,"original choice can retry after safe reload"):return
+			dialog.choices.select(choice)
+		dialog._claim()
+		check(dialog.last_claim.get("ok",false) and dialog.last_claim.get("consumed")==1 and dialog.last_claim.get("saved",false),"confirmed source choice is paid and saved once: "+str(dialog.last_claim.get("reason","")))
+		await process_frame
+		snapshot[name]=int(snapshot[name])-1
+		if int(snapshot[name])==0:snapshot.erase(name)
+		snapshot[output]=int(snapshot.get(output,0))+1
+		check(world.inventory==snapshot and world.rng.state==rng and physical(world,output)==int(snapshot[output]),"only exact chosen child box and native physical receipt are granted without RNG")
+		world.inventory.erase(output);world._load_game(true)
+		world.field_population.set_process(false);world.player.set_physics_process(false)
+		check(int(world.inventory.get(output,0))==int(snapshot[output]) and physical(world,name)==int(snapshot.get(name,0)),"selected child and remaining input survive reload")
+	var exhausted: Dictionary=world.inventory.duplicate(true)
+	world.hud.inventory_item_activated.emit(name)
+	check(world.inventory==exhausted and not world.hud.has_meta("patch523_reward_choice"),"spent stack cannot reopen or grant another output")
+	var child_name: String=str(record(307931).name)
+	var known: int=int(world.inventory.get("명예 코인",0))
+	var exact_amounts: Array=[]
+	for row:Dictionary in STACK.profile(record(307931)).get("spec",{}).get("rewards",[]):exact_amounts.append(int(row.amount))
+	world.hud.inventory_item_activated.emit(child_name)
+	check(int(world.inventory.get("명예 코인",0))-known in exact_amounts and int(world.inventory.get(child_name,0))==0,"child opens via existing exact weighted bag, not a new guessed pool")
+
 func complex_checks(world: Node) -> void:
 	for held: int in [164643,165633]:
 		check(STACK.profile(record(held)).get("kind")!="selection", "unverified complex family members remain held")
@@ -237,13 +286,27 @@ func runtime() -> void:
 	world.field_population.set_process(false); world.player.set_physics_process(false); world.player.auto_enabled = false
 	world._clear_monsters(); world._clear_drops()
 	world.inventory = {}; world.item_instances = {}
+	if "--bm-coin-only" in OS.get_cmdline_user_args():
+		var limited: String=OS.get_environment("TWILIGHT_BM_COIN_DEFINITIONS")
+		if not limited.is_empty():
+			# Focused Main fixture: use pinned source & existing owners but only
+			# register these five offered IDs, not unrelated source catalogs.
+			OS.set_environment("TWILIGHT_PATCH523_CONTENT",limited);SOURCE.reset()
+			check(SOURCE.identity().get("source_sha256")==SOURCE.SOURCE_SHA,"pinned original definition for focused Main fixture")
+			world.skill_awakening=world.SKILL_AWAKENING.new();world.skill_awakening.configure(world)
+			for id: int in [BM_COIN_BOX,307931,307941,307951,307961]:world.catalog_db["아이템"].append(record(id))
+			world._index_catalog_item_sources()
+		await bm_coin_checks(world)
+		world.queue_free();await process_frame;return
 	if "--reward-gap-only" in OS.get_cmdline_user_args():
 		await fishing_checks(world)
 		await growth_coin_checks(world)
+		await bm_coin_checks(world)
 		await complex_checks(world)
 		world.queue_free();await process_frame;return
 	await fishing_checks(world)
 	await growth_coin_checks(world)
+	await bm_coin_checks(world)
 	await complex_checks(world)
 	var name: String = grant(world,RING_BOX,2)
 	if name.is_empty(): world.queue_free(); await process_frame; return
@@ -325,9 +388,11 @@ func runtime() -> void:
 
 func run() -> void:
 	rules()
-	if not SOURCE.not_installed():
-		if "--reward-gap-only" not in OS.get_cmdline_user_args():table()
+	if not OS.get_environment("TWILIGHT_BM_COIN_DEFINITIONS").is_empty() and "--bm-coin-only" in OS.get_cmdline_user_args():
 		await runtime()
-	elif "--reward-gap-only" in OS.get_cmdline_user_args():check(false,"verified source ZIP required")
+	elif not SOURCE.not_installed():
+		if "--reward-gap-only" not in OS.get_cmdline_user_args() and "--bm-coin-only" not in OS.get_cmdline_user_args():table()
+		await runtime()
+	elif "--reward-gap-only" in OS.get_cmdline_user_args() or "--bm-coin-only" in OS.get_cmdline_user_args():check(false,"verified source ZIP required")
 	print("ITEMS523_SELECTION_BOXES_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)

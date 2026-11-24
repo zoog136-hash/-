@@ -949,10 +949,22 @@ var _tutorial523_grant_retry_at: float = 0.0
 ## TWILIGHT 근사 (사용자 결정 2026-11-16, tutorial523.gd): class skill books only
 ## the deleted tutorial quests gave are granted once per character.
 func _tutorial523_start_grant() -> void:
-	if tutorial523.get("start_grant") is Dictionary or source_save_blocked or equipment_collections.save_blocked or not pending_map_save_record.is_empty(): return
+	if source_save_blocked or equipment_collections.save_blocked or not pending_map_save_record.is_empty(): return
+	if tutorial523.get("start_grant") is Dictionary and not tutorial523.get("removed_items") is Dictionary:return
 	var now: float = Time.get_unix_time_from_system()
 	if now < _tutorial523_grant_retry_at: return
 	_tutorial523_grant_retry_at = now + 5.0
+	var returning: Dictionary=TUTORIAL523.restored_grants(tutorial523)
+	if not returning.is_empty():
+		var previous: Dictionary=tutorial523.duplicate(true)
+		tutorial523["restored_items"]=returning.ledger
+		# Supplier stages physical receipts; that same save publishes our ledger.
+		# Neither balance nor the restoration marker moves on a refused save.
+		if not preload("res://scripts/loot/patch523_item_inventory.gd").commit(self,returning.grants,{"kind":"tutorial523_exact_item_restore"}):
+			tutorial523=previous
+			return
+		hud.append_log("이전 저장에 기록된 드래곤의 다이아몬드를 되돌렸습니다.")
+	if tutorial523.get("start_grant") is Dictionary:return
 	var class_id: int = 0
 	for id: int in preload("res://scripts/characters/account_store.gd").JOBS:
 		if str(preload("res://scripts/characters/account_store.gd").JOBS[id]) == str(job_class): class_id = id
@@ -3931,7 +3943,12 @@ func _on_monster_died_timed(monster: TwilightMonster) -> void:
 	var map_rate: float = EXP_PROGRESSION.map_exp_multiplier(_kill_map_id())
 	var source_experience: int = maxi(0,monster.exp_reward+int(source_reward.get("experience",0)))
 	var gained_experience: int = maxi(0 if not monster.source_m_original.is_empty() else 1, int(round(source_experience * _experience_multiplier() * exp_rate * map_rate)))
-	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
+	# Exact source growth potions affect the NPC Adena channel only. Compose
+	# the temporary factor over existing blessing and equipment multipliers.
+	var growth_drop_rate: float = 1.0
+	if not active_item_buffs.is_empty():
+		growth_drop_rate += clampf(_active_item_buff_total("source_npc_adena_drop_pct"), 0.0, 20.0) / 100.0
+	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate * growth_drop_rate)))
 	experience += gained_experience
 	gold += gained_adena
 	var clan_level_before: int = clan523.level()
@@ -4879,7 +4896,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
 	var selected_source: Dictionary=item_instances.get(str(selected.get("id","")),{}).get("record",source_reward)
-	if RETIRED_ITEMS.record(selected_source):hud.show_message(RETIRED_ITEMS.REASON);return
+	if RETIRED_ITEMS.record(selected_source) or RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(selected_source,item_name):
+		hud.show_message(RETIRED_ITEMS.REASON)
+		return
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
 	if tj_coupons.try_open_owned_coupon(item_name,str(selected.get("id","")),selected_source):return
@@ -4951,7 +4970,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		hud.show_message(str(converted.message))
 		return
 	if dungeon_play.try_use_item(item_name,str(selected.get("id",""))):return
-	if source_shop.try_use_inventory_ticket(item_name):return
+	# Pass the exact physical native ticket selected in the bag. Legacy
+	# expedition/catalog-only ticket lanes retain their name-based API.
+	var ticket_id: String=str(selected.get("id","")) if selected_source.get("source_m_native_item",false) else ""
+	if source_shop.try_use_inventory_ticket(item_name,ticket_id):return
 	if preload("res://scripts/shop/source523_skill_books.gd").try_use(self,item_name): return
 	if consumable_service.try_use_regional_return(item_name): return
 	if protection523.managed(_find_catalog_item_record(item_name)):

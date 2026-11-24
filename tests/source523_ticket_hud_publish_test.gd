@@ -54,11 +54,11 @@ class RuntimeStub extends RefCounted:
 		return {"ok":true}
 
 class FixtureTicket extends Tickets:
-	func _quote(_name: String, _selection: Dictionary, _internal: bool, _materialize: bool) -> Dictionary:
+	func _quote(_name: String, _selection: Dictionary, _internal: bool, _materialize: bool, _physical_id: String = "") -> Dictionary:
 		var id: String = CardEngine.card_id(CARD)
 		return {"ok":true,"category":FIXTURE_DECK,"grants":[{"count":1,"pool_id":1}],
 			"pools":{"1":[{"weight":1000000,"entry":{"id":id,"record":CARD}}]},"source_item_id":17}
-	func _native_debit(name: String) -> Dictionary:
+	func _native_debit(name: String, _physical_id: String, _item_id: int) -> Dictionary:
 		var remaining: int = int(runtime.world.inventory[name]) - 1
 		return {"ok":true,"overrides":{"inventory":{name:remaining} if remaining > 0 else {},
 			"item_instances":{"9":{"name":name,"source_native_stack_quantity":remaining}} if remaining > 0 else {},
