@@ -73,7 +73,6 @@ func build(member: String, remaining: Dictionary={}) -> Dictionary:
 func core_source_offsets() -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(PAD,{}).get("sha256","")!=ROOTS[PAD].sha256:return _fail("source_main_combat_identity_mismatch")
 	var tree: Dictionary=_layout_or_scene(PAD)
-	if tree.is_empty():tree=_pack.scene(PAD)
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_combat_original_layout_missing")
 	var roots: Array[int]=[31780,29032,24560,22536,12660,23168]
 	# These hit buttons use a transparent source texture. Their real source

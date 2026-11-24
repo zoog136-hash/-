@@ -150,9 +150,10 @@ static func _entry_spec(spec: Dictionary, prefix: String, entry: Dictionary) -> 
 	spec["Nd_Icn/Sp_Event"]={"visible":bool(entry.is_event)}
 
 func _fill_info(root: Node2D, out: Dictionary, boards: Dictionary) -> Dictionary:
+	var reads: Dictionary={}
 	var placed: Dictionary={}
 	for reset: String in BOARDS:
-		var list: Dictionary=_tree.list_content(root,out,ROOT,BOARDS[reset]+"/ListView")
+		var list: Dictionary=_tree.list_content(root,out,ROOT,BOARDS[reset]+"/ListView",reads)
 		if not list.get("ok",false):return list
 		var rows: Array=boards[reset]
 		var done: int=0
@@ -169,9 +170,9 @@ func _fill_info(root: Node2D, out: Dictionary, boards: Dictionary) -> Dictionary
 			spec["Panel/Nd_Lock"]={"visible":false}
 			if known and bool(status.done):done+=1
 			spec["Panel"]={"input":Callable(self,"_list_input").bind(BOARDS[reset]+"/ListView")}
-			var built: Dictionary=_tree.scene_of(ROW_CONTENTS,spec,{})
+			var built: Dictionary=_tree.scene_of(ROW_CONTENTS,spec,{},reads)
 			if not built.get("ok",false):return built
-			_tree.add_row(list.content,ROW_CONTENTS,built.scene,index,list.size,2.0)
+			_tree.add_row(list.content,ROW_CONTENTS,built.scene,index,list.size,2.0,reads)
 		_scroll_setup(BOARDS[reset]+"/ListView",list,ROW_CONTENTS,rows.size(),2.0)
 		placed[reset]={"rows":rows.size(),"done":done}
 	return {"ok":true,"boards":placed}
@@ -189,19 +190,20 @@ func _setting_spec(runtime: Object, spec: Dictionary) -> void:
 	spec[s+"Nd_Event_Check/Nd_CheckBox/Btn_On"]={"visible":auto,"activate":Callable(self,"_set_event_auto").bind(false)}
 
 func _fill_setting(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary:
+	var reads: Dictionary={}
 	var categories: Array=_categories(runtime)
 	var ids: Array=categories.map(func(c: Dictionary) -> int: return int(c.id))
 	if _category not in ids and not ids.is_empty():_category=int(ids[0])
-	var types: Dictionary=_tree.list_content(root,out,ROOT,"Nd_Type/ListView")
+	var types: Dictionary=_tree.list_content(root,out,ROOT,"Nd_Type/ListView",reads)
 	if not types.get("ok",false):return types
 	for index: int in range(categories.size()):
 		var category: Dictionary=categories[index]
 		var on: bool=int(category.id)==_category
 		var spec: Dictionary={"Panel_Type/Btn_Normal":{"visible":not on,"activate":Callable(self,"_select_category").bind(int(category.id))},"Panel_Type/Btn_Pressed":{"visible":on,"activate":Callable(self,"_select_category").bind(int(category.id))},"Btn_Normal/Label":{"role":"source_text","text":str(category.name)},"Btn_Pressed/Label":{"role":"source_text","text":str(category.name)},"Btn_Normal/Sp_Icon":{"visible":false},"Btn_Pressed/Sp_Icon":{"visible":false}}
-		var built: Dictionary=_tree.scene_of(ROW_TYPE,spec,{})
+		var built: Dictionary=_tree.scene_of(ROW_TYPE,spec,{},reads)
 		if not built.get("ok",false):return built
-		_tree.add_row(types.content,ROW_TYPE,built.scene,index,types.size,2.0)
-	var list: Dictionary=_tree.list_content(root,out,ROOT,"Nd_Contents_Setting/Nd_List/ListView")
+		_tree.add_row(types.content,ROW_TYPE,built.scene,index,types.size,2.0,reads)
+	var list: Dictionary=_tree.list_content(root,out,ROOT,"Nd_Contents_Setting/Nd_List/ListView",reads)
 	if not list.get("ok",false):return list
 	var catalog: Array[Dictionary]=[]
 	for row: Dictionary in runtime.todo_catalog(_reset,_category):
@@ -219,11 +221,11 @@ func _fill_setting(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary
 		spec["Panel/Nd_Lock"]={"visible":not bool(row.open)}
 		spec["Nd_Lock/Label_Condition"]={"role":"source_text","text":"최소 레벨 : Lv %d" % int(row.lock_level)}
 		spec["Panel"]={"input":Callable(self,"_list_input").bind("Nd_Contents_Setting/Nd_List/ListView")}
-		var built: Dictionary=_tree.scene_of(ROW_SETTING,spec,{})
+		var built: Dictionary=_tree.scene_of(ROW_SETTING,spec,{},reads)
 		if not built.get("ok",false):return built
-		_tree.add_row(list.content,ROW_SETTING,built.scene,index,list.size,2.0)
+		_tree.add_row(list.content,ROW_SETTING,built.scene,index,list.size,2.0,reads)
 	_scroll_setup("Nd_Contents_Setting/Nd_List/ListView",list,ROW_SETTING,catalog.size(),2.0)
-	var chosen: Dictionary=_tree.list_content(root,out,ROOT,"Nd_List_Select/ListView")
+	var chosen: Dictionary=_tree.list_content(root,out,ROOT,"Nd_List_Select/ListView",reads)
 	if not chosen.get("ok",false):return chosen
 	var registered: Array=runtime.state.todo.custom.get(_reset,[])
 	var entries: Dictionary=runtime.contract().get("todo",{}).get("entries",{})
@@ -243,9 +245,9 @@ func _fill_setting(root: Node2D, out: Dictionary, runtime: Object) -> Dictionary
 			spec["Panel_Normal/Label_Name"]={"role":"source_text","text":""}
 			spec["Panel_Normal/Label_Type"]={"role":"source_text","text":""}
 		spec["Panel"]={"input":Callable(self,"_list_input").bind("Nd_List_Select/ListView")}
-		var built: Dictionary=_tree.scene_of(ROW_SELECT,spec,{})
+		var built: Dictionary=_tree.scene_of(ROW_SELECT,spec,{},reads)
 		if not built.get("ok",false):return built
-		_tree.add_row(chosen.content,ROW_SELECT,built.scene,index,chosen.size,2.0)
+		_tree.add_row(chosen.content,ROW_SELECT,built.scene,index,chosen.size,2.0,reads)
 	_scroll_setup("Nd_List_Select/ListView",chosen,ROW_SELECT,slots,2.0)
 	return {"ok":true,"reset":_reset,"category":_category,"catalog":catalog.size(),"registered":registered.size()}
 

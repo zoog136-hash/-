@@ -1,5 +1,6 @@
 extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
@@ -228,11 +229,13 @@ func _source_item_identity(item_id: int) -> Dictionary:
 		"reference_only":true,"can_activate":false}
 
 func load_policy(path: String, expected_sha: String) -> Dictionary:
-	if expected_sha.length()!=64 or not expected_sha.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected_sha.to_lower(): return fail("상점 정책 파일의 해시 확인 실패")
+	if expected_sha.length()!=64 or not expected_sha.is_valid_hex_number(false) or not FileAccess.file_exists(path): return fail("상점 정책 파일의 해시 확인 실패")
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()>1024*1024: return fail("상점 정책 파일 크기·접근 오류")
+	var bytes := VerifiedBytes.read(file,1024*1024)
+	if VerifiedBytes.sha256(bytes)!=expected_sha.to_lower(): return fail("상점 정책 파일의 해시 확인 실패")
 	var parser:=JSON.new()
-	if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary: return fail("상점 정책 JSON 오류")
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return fail("상점 정책 JSON 오류")
 	var policy: Dictionary=parser.data
 	if policy.get("schema")!="twilight.source523.shop-policy.v1" or policy.get("pack_sha256")!=catalog.loaded_sha256: return fail("상점 정책의 원본 팩 불일치")
 	var offset: Variant=policy.get("calendar_offset_minutes",DEFAULT_CALENDAR_OFFSET_MINUTES)

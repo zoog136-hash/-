@@ -1,6 +1,7 @@
 extends RefCounted
 ## Exact supplied M files; candidate raster/timing/blend is visibly configurable.
 const EFFECT = preload("res://scripts/monsters/patch523_effect_sprite.gd")
+const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd")
 var records: Dictionary = {}
 var root_path: String = ""
 var error: String = "not_installed"
@@ -45,8 +46,10 @@ func load_pack(path: String, digest: String) -> bool:
 	records.clear(); root_path = ""; error = "manifest_rejected"
 	if digest.length() != 64 or not FileAccess.file_exists(path): return false
 	var file := FileAccess.open(path,FileAccess.READ)
-	if file == null or file.get_length() > 2*1024*1024 or FileAccess.get_sha256(path) != digest: return false
-	var value: Variant = JSON.parse_string(file.get_as_text())
+	if file == null or file.get_length() > 2*1024*1024: return false
+	var input: Dictionary = CHECKED_BYTES.read_json(file, file.get_length(), digest)
+	if not input.verified: return false
+	var value: Variant = input.value
 	if not value is Dictionary or int(value.get("schema",0)) != 1 or value.get("kind") != "patch523_source_effect_frames" or value.get("source_snapshot") != "patch523": return false
 	if value.get("mode") != "M_commandwise_RGB565_candidate" or value.get("native_runtime_verified") != false or not value.get("records") is Dictionary: return false
 	if value.get("catalog_sha256") != "2d43c3da5e26afc917cb73e599181eb0c57d7982cee13e496576cd6d9bda808b": return false

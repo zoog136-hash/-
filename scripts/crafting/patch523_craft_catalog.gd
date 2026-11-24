@@ -89,8 +89,11 @@ static func register(catalog: Dictionary, document: Dictionary) -> Dictionary:
 
 static func install_zip(path: String) -> Dictionary:
 	problem=""
-	if FileAccess.file_exists(path) and FileAccess.get_sha256(path)==FULL_ZIP_SHA: return install_full_zip(path)
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=ZIP_SHA:
+	# Both accepted edition pins refer to the same raw ZIP. Compare one
+	# fingerprint; keep member validation and on-disk installation checks.
+	var fingerprint: String=FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
+	if fingerprint==FULL_ZIP_SHA: return install_full_zip(path)
+	if fingerprint!=ZIP_SHA:
 		problem="제공된 공통 아이템 ZIP의 SHA가 아닙니다"; return {}
 	var checked: Dictionary=INSTALL.validate_zip(path)
 	if not checked.get("ok",false) or checked.get("entries",{}).size()!=2 or int(checked.entries.get("payload/monster_drops.bin",0))!=1806317:

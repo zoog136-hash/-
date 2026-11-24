@@ -6,6 +6,7 @@ extends RefCounted
 ## original string unless the spec gives one. Same scheme as
 ## source_main_domination_stone_window.gd.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const StageReads=preload("res://scripts/ui/original_ui/source_stage_tree_reads.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 const SLOT="UI/CommonUi/Common_Slot.csb"
 const SLOT_BUTTON=15728
@@ -22,8 +23,8 @@ func _init(source_pack: RefCounted, owner_hud: Node) -> void:
 
 ## {scope, bindings} for `member` mounted under `key`. `out` maps each node
 ## key to {chain, offset, kind}.
-func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary) -> Dictionary:
-	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
+func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary, reads: Dictionary={}) -> Dictionary:
+	var tree: Dictionary=StageReads.node_tree(pack,member,reads)
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
 	var external: Array=pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[])
@@ -31,10 +32,10 @@ func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dict
 	if MEMBER_SCOPES.has(member):
 		for offset: int in MEMBER_SCOPES[member]:roots.append(Scene._node_at_offset(tree,offset))
 	else:roots=tree.get("children",[])
-	for node: Dictionary in roots:_walk(node,key,chain,spec,scope,bindings,external,out)
+	for node: Dictionary in roots:_walk(node,key,chain,spec,scope,bindings,external,out,reads)
 	return {"scope":scope,"bindings":bindings}
 
-func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary) -> void:
+func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, reads: Dictionary) -> void:
 	if node.is_empty():return
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
@@ -53,7 +54,7 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 			if not member.begins_with("UI/"):member="UI/"+member
 			var next_chain: Array=chain.duplicate()
 			next_chain.append(offset)
-			var child: Dictionary=bind(member,key,next_chain,spec,out)
+			var child: Dictionary=bind(member,key,next_chain,spec,out,reads)
 			binding={"role":"project","source_node_offsets":child.scope,"bindings":child.bindings}
 		"Button":
 			binding={"role":"button","activate":Callable(self,"_ignore")}
@@ -74,7 +75,7 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 	if not binding.is_empty():bindings[offset]=binding
 	out[key]={"chain":chain,"offset":offset,"kind":kind}
 	if kind=="ProjectNode":return
-	for child: Dictionary in node.get("children",[]):_walk(child,key,chain,spec,scope,bindings,external,out)
+	for child: Dictionary in node.get("children",[]):_walk(child,key,chain,spec,scope,bindings,external,out,reads)
 
 ## The player owning the node whose key ends with `suffix`, and its offset.
 static func locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
@@ -86,8 +87,8 @@ static func locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
 		return {"ok":true,"player":player.player,"offset":int(entry.offset),"key":key}
 	return {"ok":false,"error":"source_routine_node_missing","suffix":suffix}
 
-func scene_of(member: String, spec: Dictionary, out: Dictionary) -> Dictionary:
-	var bound: Dictionary=bind(member,"",[],spec,out)
+func scene_of(member: String, spec: Dictionary, out: Dictionary, reads: Dictionary={}) -> Dictionary:
+	var bound: Dictionary=bind(member,"",[],spec,out,reads)
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(pack,member,bound.scope,bound.bindings)
 	if not result.get("ok",false):
@@ -96,7 +97,7 @@ func scene_of(member: String, spec: Dictionary, out: Dictionary) -> Dictionary:
 	return {"ok":true,"scene":scene}
 
 ## The content node of a mounted ListView and its original size.
-func list_content(root: Node2D, out: Dictionary, member: String, suffix: String) -> Dictionary:
+func list_content(root: Node2D, out: Dictionary, member: String, suffix: String, reads: Dictionary={}) -> Dictionary:
 	var list: Dictionary=locate(root,out,suffix)
 	if not list.get("ok",false):return list
 	var node: Node2D=list.player.source_nodes.get(list.offset)
@@ -105,15 +106,15 @@ func list_content(root: Node2D, out: Dictionary, member: String, suffix: String)
 	var size: Vector2=Vector2.ZERO
 	for key: String in out:
 		if key==list.key:
-			var raw: Dictionary=Scene._node_at_offset(pack.scene(member).get("nodeTree",{}),int(out[key].offset))
+			var raw: Dictionary=Scene._node_at_offset(StageReads.node_tree(pack,member,reads),int(out[key].offset))
 			var value: Array=raw.get("options",{}).get("widgetOptions",{}).get("size",[0,0])
 			size=Vector2(float(value[0]),float(value[1]))
 	return {"ok":true,"content":content,"size":size}
 
 ## Places an original row scene top-down in a ListView's content (Cocos y up,
 ## content origin at the list's lower-left).
-func add_row(content: Node2D, member: String, row: Node2D, index: int, list_size: Vector2, gap: float=0.0) -> void:
-	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
+func add_row(content: Node2D, member: String, row: Node2D, index: int, list_size: Vector2, gap: float=0.0, reads: Dictionary={}) -> void:
+	var tree: Dictionary=StageReads.node_tree(pack,member,reads)
 	var panel: Dictionary=(tree.get("children",[]) as Array)[0] if not (tree.get("children",[]) as Array).is_empty() else {}
 	var widget: Dictionary=panel.get("options",{}).get("widgetOptions",{})
 	var size: Array=widget.get("size",[0,0])

@@ -7,6 +7,7 @@ extends RefCounted
 ## stays on the first / last page at the ends; a single-page help is shown
 ## whole. Every text and picture is the member's own original record.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const StageReads=preload("res://scripts/ui/original_ui/source_stage_tree_reads.gd")
 const LAYOUT="UI/CsbFile/Help/HelpBoxLayout.csb"
 ## Help members of the connected windows (kept here so the UI pack builder
 ## packs them; a window passes its own).
@@ -54,9 +55,10 @@ func open(parent: Node, member: String) -> Dictionary:
 	if not available(member):return _fail("source_help_box_member_missing")
 	_parent=weakref(parent)
 	_member=member
-	_pages=_page_names(member)
+	var reads: Dictionary={}
+	_pages=_page_names(member,reads)
 	_page=0
-	return _stage()
+	return _stage(reads)
 
 func close() -> Dictionary:
 	var previous: Node2D=_scene
@@ -74,9 +76,9 @@ func step(delta: int) -> Dictionary:
 	return _stage()
 
 ## Panel_<n> nodes of the member, in page order.
-func _page_names(member: String) -> Array[String]:
+func _page_names(member: String, reads: Dictionary={}) -> Array[String]:
 	var found: Dictionary={}
-	_collect(_pack.scene(member).get("nodeTree",{}),found)
+	_collect(StageReads.node_tree(_pack,member,reads),found)
 	var names: Array[String]=[]
 	for index: int in range(1,found.size()+1):
 		if not found.has(index):break
@@ -85,9 +87,9 @@ func _page_names(member: String) -> Array[String]:
 
 ## Names of the member's custom-size Text nodes whose original text has
 ## several lines.
-func _wrapped_texts(member: String) -> Array[String]:
+func _wrapped_texts(member: String, reads: Dictionary={}) -> Array[String]:
 	var names: Array[String]=[]
-	_collect_wrapped(_pack.scene(member).get("nodeTree",{}),names)
+	_collect_wrapped(StageReads.node_tree(_pack,member,reads),names)
 	return names
 
 static func _collect_wrapped(node: Dictionary, names: Array[String]) -> void:
@@ -107,7 +109,7 @@ static func _collect(node: Dictionary, found: Dictionary) -> void:
 	if node.get("classname")=="ProjectNode":return
 	for child: Dictionary in node.get("children",[]):_collect(child,found)
 
-func _stage() -> Dictionary:
+func _stage(reads: Dictionary={}) -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	if parent==null:return _fail("source_help_box_host_unavailable")
 	var close_action: Callable=Callable(self,"close")
@@ -117,11 +119,11 @@ func _stage() -> Dictionary:
 		return layout
 	var spec: Dictionary={}
 	# Multi-line custom-size help texts wrap the way Cocos does (Label_Message).
-	for name: String in _wrapped_texts(_member):spec[name]={"cocos_wrap":true}
+	for name: String in _wrapped_texts(_member,reads):spec[name]={"cocos_wrap":true}
 	for index: int in range(_pages.size()):spec[_pages[index]]={"visible":index==_page}
 	spec["Btn_Left"]={"activate":Callable(self,"step").bind(-1)}
 	spec["Btn_Right"]={"activate":Callable(self,"step").bind(1)}
-	var help: Dictionary=_tree.scene_of(_member,spec,{})
+	var help: Dictionary=_tree.scene_of(_member,spec,{},reads)
 	if not help.get("ok",false):
 		layout.scene.free()
 		last_result=help

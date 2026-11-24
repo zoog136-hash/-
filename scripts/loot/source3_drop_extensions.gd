@@ -4,13 +4,20 @@ extends RefCounted
 const PATH="res://data/monsters/source3_drop_extensions.json"
 const SHA="94e1e5432ef68052917df5c1eca2b4e96e041753b876bc06780ce843384809a5"
 const LINKS=preload("res://scripts/loot/source3_item_links.gd")
+const MAX_BYTES:int=1024*1024
 static var loaded:bool=false
 static var entries:Dictionary={}
 static func registry() -> Dictionary:
  if loaded:return entries
  loaded=true
- if FileAccess.get_sha256(PATH)!=SHA:return entries
- var document:Variant=JSON.parse_string(FileAccess.get_file_as_string(PATH))
+ var file:=FileAccess.open(PATH,FileAccess.READ)
+ if file==null:return entries
+ var size:int=file.get_length()
+ if size<=0 or size>MAX_BYTES:return entries
+ var bytes:PackedByteArray=file.get_buffer(size)
+ file.close()
+ if bytes.size()!=size or preload("res://scripts/lineagem_pack_install.gd").sha(bytes)!=SHA:return entries
+ var document:Variant=JSON.parse_string(bytes.get_string_from_utf8())
  if not document is Dictionary or document.get("schema")!=1 or document.get("policy")!="EXISTING_SUCCESSFUL_GRADE_EMPTY_POOL_ONLY":return entries
  if FileAccess.get_sha256(LINKS.PATH)!=str(document.get("item_links_sha256","")):return entries
  entries=document.get("entries",{})
