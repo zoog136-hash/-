@@ -4,6 +4,7 @@ extends "res://scripts/maps/current523_aden_source_field.gd"
 const GEOGRAPHIC_CONTRACT="CURRENT523_S32_OWN_SOURCE_FIELD_V1"
 const SOURCE_PACK = preload("res://scripts/maps/current523_source_pack.gd")
 const MAP_IMAGES = preload("res://scripts/maps/current523_map_images.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const MAP_BACKGROUND = preload("res://scripts/maps/current523_map_background.gd")
 var native_land: Dictionary = {}
 var source_asset: String = ""
@@ -101,6 +102,60 @@ func region_at(point: Vector2) -> Dictionary:
 				id += ":area:"+str(zone.area_id)
 	return {"id":id,"name":name,"type":"neutral","color":"738e81","native_m_rules_verified":false}
 
+# Worker publications never modify the active navigation LRU. A small mailbox
+# only holds floor/attribute sections until a real collision lookup needs one.
+const RENDER_COLLISION_LIMIT: int=8
+var _render_collision: Dictionary={}
+var _render_collision_hits: int=0
+var _nav_to_render_hits: int=0
+
+func _same_chunk_source(member: String, root: String, pin: String, asset: String) -> bool:
+	return loaded and has_meta("current523_generic_field") and not pin.is_empty() \
+		and root==catalog_root and pin==catalog_sha256 and asset==source_asset and source_origins.has(member)
+
+## Called on the main thread after the renderer worker has finished validating
+## the exact manifest member. Do not publish worker failures or replace an
+## existing navigation verdict (including an already rejected read).
+func offer_renderer_collision(member: String, root: String, pin: String, asset: String, candidate: Dictionary) -> bool:
+	if not _same_chunk_source(member,root,pin,asset) or _raw_cache.has(member) or _raw_failures.has(member): return false
+	var meta: Dictionary = _raw.source_metadata(member)
+	if meta.is_empty() or candidate.get("member")!=member or candidate.get("source_sha256")!=meta.get("sha256") or candidate.get("asset_path")!=asset: return false
+	var sections: Variant = candidate.get("sections",{})
+	if not sections is Dictionary: return false
+	var floor_bytes: Variant = sections.get("floor")
+	var attributes: Variant = sections.get("attributes")
+	if not floor_bytes is PackedByteArray or floor_bytes.size()!=32768 or not attributes is PackedByteArray or attributes.size()!=16384: return false
+	_render_collision.erase(member)
+	while _render_collision.size()>=RENDER_COLLISION_LIMIT: _render_collision.erase(_render_collision.keys()[0])
+	_render_collision[member]={"source_sha256":candidate.source_sha256,"sections":{"floor":floor_bytes,"attributes":attributes}}
+	return true
+
+func _take_renderer_collision(member: String) -> Dictionary:
+	var verified: Dictionary = _render_collision.get(member,{})
+	if not verified.is_empty():
+		_render_collision.erase(member)
+		_render_collision_hits+=1
+		FRAME_HITCH.count("map.s32_renderer_to_nav")
+	return verified
+
+## A synchronous collision miss might have won the race. A full navigation
+## read already validated all original sections, so pass those read-only
+## bytes to the renderer worker rather than reopen and rehash the same file.
+func verified_navigation_chunk_for_renderer(member: String, root: String, pin: String, asset: String) -> Dictionary:
+	if not _same_chunk_source(member,root,pin,asset): return {}
+	var row: Dictionary = _raw_cache.get(member,{})
+	if row.get("asset_path")!=asset or not row.get("sections",{}).has("tail"): return {}
+	_nav_to_render_hits+=1
+	FRAME_HITCH.count("map.s32_nav_to_renderer")
+	# Return separate wrappers; packed bytes share storage until written.
+	var result: Dictionary=row.duplicate()
+	result.sections=(row.sections as Dictionary).duplicate()
+	return result
+
+func shared_chunk_metrics() -> Dictionary:
+	return {"renderer_to_nav":_render_collision_hits,"nav_to_renderer":_nav_to_render_hits,
+		"renderer_collision_waiting":_render_collision.size(),"renderer_collision_limit":RENDER_COLLISION_LIMIT}
+
 func scope_metrics() -> Dictionary:
 	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":_raw.source_members().size() if loaded else 0,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"inferred_placements":inferred_placements.duplicate(true),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
 
@@ -111,6 +166,9 @@ func _fail(message: String) -> bool:
 
 func close() -> void:
 	super.close()
+	_render_collision.clear()
+	_render_collision_hits=0
+	_nav_to_render_hits=0
 	native_land.clear(); source_asset=""; catalog_root=""; catalog_sha256=""
 	availability.clear(); unavailable_sources.clear()
 	if has_meta("current523_generic_field"): remove_meta("current523_generic_field")

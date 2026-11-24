@@ -162,8 +162,10 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 		_last_raw_chunk = _raw_cache[member]
 		return _last_raw_chunk
 	if _raw_failures.has(member): return {}
-	var row: Dictionary = _raw.read_member(member)
-	_raw_reads += 1
+	var row: Dictionary = _take_renderer_collision(member)
+	if row.is_empty():
+		row = _raw.read_member(member)
+		_raw_reads += 1
 	if row.is_empty():
 		_raw_failures[member] = _raw.problem
 		problem = _raw.problem
@@ -174,6 +176,10 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 	_last_raw_origin = origin
 	_last_raw_chunk = row
 	return row
+
+## Generic 523 may take fully verified floor/attribute bytes from a completed
+## renderer job. Review/Aden and other sources keep their original read path.
+func _take_renderer_collision(_member: String) -> Dictionary: return {}
 
 func _allows_word(word: int) -> bool:
 	if policy.get("attribute_rule") == CLIENT_RULE: return (word & 1) == 0

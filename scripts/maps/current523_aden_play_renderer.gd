@@ -508,6 +508,13 @@ func _prefetch_chunk(member: String) -> bool:
 	if _chunk_jobs.has(member) or _chunk_jobs.size() >= MAX_CHUNK_JOBS: return false
 	if _raw_sources == null or not _raw_sources.has_method("read_member_job"): return true
 	var job: Dictionary = _chunk_params(member)
+	if job.generic and _raw_sources.get_script()==GENERIC_RAW and field.has_method("verified_navigation_chunk_for_renderer"):
+		job["catalog_root"] = _raw_sources.catalog_directory()
+		job["catalog_pin"] = _raw_sources.catalog_identity().get("manifest_sha256","")
+		job["asset_path"] = str(_raw_sources.source_asset)
+		job["field_id"] = field.get_instance_id()
+		var cached: Dictionary = field.verified_navigation_chunk_for_renderer(member,job.catalog_root,job.catalog_pin,job.asset_path)
+		if not cached.is_empty(): job["verified_navigation"] = cached
 	job["task"] = WorkerThreadPool.add_task(_chunk_job.bind(job), false, "S32 chunk read")
 	_chunk_jobs[member] = job
 	return false
@@ -536,11 +543,17 @@ func _chunk_params(member: String) -> Dictionary:
 		"generic": bool(field.get_meta("current523_generic_field", false))}
 
 static func _chunk_job(job: Dictionary) -> void:
-	var decoded: Dictionary = (job.sources as Object).call("read_member_job", str(job.member))
+	var decoded: Dictionary = job.get("verified_navigation",{})
+	if decoded.is_empty():
+		decoded = (job.sources as Object).call("read_member_job", str(job.member))
 	if decoded.has("_problem"):
 		job["problem"] = str(decoded._problem)
 		return
+	if job.has("field_id") and not job.has("verified_navigation"):
+		job["verified_collision"] = {"member":decoded.member,"asset_path":decoded.asset_path,"source_sha256":decoded.source_sha256,
+			"sections":{"floor":decoded.sections.floor,"attributes":decoded.sections.attributes}}
 	job.merge(_decode_chunk(job, decoded), true)
+	job.erase("verified_navigation")
 
 ## S32 sections -> static tail, projected lanes, block bins and clip counts.
 static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary:
@@ -586,6 +599,9 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 		_unreadable_chunks[member] = str(job.get("problem", "unread"))
 		print("CURRENT523_CHUNK_UNREADABLE ", JSON.stringify({"member":member,"problem":_unreadable_chunks[member]}))
 		return {}
+	if job.has("verified_collision") and is_instance_valid(field) and field.get_instance_id()==job.field_id \
+		and field.has_method("offer_renderer_collision"):
+		field.offer_renderer_collision(member,job.catalog_root,job.catalog_pin,job.asset_path,job.verified_collision)
 	# Retain the same currently loaded S32 tail even while SPR display is off.
 	_static_tails[member] = job.tail
 	_mark_visible_static_tail_changed(member)

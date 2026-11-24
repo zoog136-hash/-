@@ -362,14 +362,20 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	_playback_mode = POLICY.mode(_root,playback_mode_override) if not card_consumer.is_empty() else (playback_mode_override if playback_mode_override in ["strict", "compatible"] else "strict")
 	# Source FPS remains null when absent. Existing production policy owns only
 	# the effective compatibility rate; strict mode holds unresolved actions.
-	var tracks: Dictionary = POLICY.tracks_from_prepared(loaded.record,card_consumer,_playback_mode) if shared_npc else (POLICY.tracks(loaded.record,card_consumer,_playback_mode) if not card_consumer.is_empty() else loaded.tracks)
-	FRAME_HITCH.detail("view.playback_tracks",phase_started)
-	phase_started = FRAME_HITCH.now()
-	var layer_count: int = 0
+	var tracks: Dictionary
 	var layout: Dictionary = {}
 	if shared_npc and bank._prepared_snapshot != null:
 		# Timing policy changes durations/observations, never source layer topology.
 		layout = bank._prepared_snapshot.layout()
+		tracks = bank._prepared_snapshot.npc_timing_tracks(_playback_mode)
+	elif shared_npc:
+		tracks = POLICY.tracks_from_prepared(loaded.record,card_consumer,_playback_mode)
+	else:
+		tracks = POLICY.tracks(loaded.record,card_consumer,_playback_mode) if not card_consumer.is_empty() else loaded.tracks
+	FRAME_HITCH.detail("view.playback_tracks",phase_started)
+	phase_started = FRAME_HITCH.now()
+	var layer_count: int = 0
+	if not layout.is_empty():
 		layer_count = int(layout.layer_count)
 	else:
 		for track: Dictionary in tracks.values():
