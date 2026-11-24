@@ -2,6 +2,7 @@ extends RefCounted
 ## Private 523 source evidence. No legacy-name joins or inferred server formulas.
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const ORIGINAL_INPUT = preload("res://scripts/monsters/current523_npc_input_projection.gd")
 const MAX_BYTES = 16 * 1024 * 1024
 const DEFINITION_TABLES = ["NpcClass","NpcAttribute","NpcSpecialResistance","NpcCategory","NpcRace","NpcAttack","SpellClass","SpellBonus","SpellCategory","TargettingType","TargetKind","BuffClass","BuffBonus","BuffGroup","Bonus","BonusType","BonusApplicationType","Unit","UIUnit","SpecialResistanceType","ElementalType","StatusEffectAttr","InvokeOption","InvokeOptionType","AttackType"]
@@ -170,7 +171,9 @@ func _admit_original_actor(source: Dictionary) -> bool:
 	var ids: Array = []
 	for admitted: String in admitted_source_identities: ids.append(int(admitted))
 	ids.append(int(source.ID))
+	var closure_started: int = FRAME_HITCH.now()
 	var candidate: Dictionary = _original_input.extend(ids)
+	FRAME_HITCH.detail("npc.project_typed_growth",closure_started)
 	if candidate.is_empty():
 		error = _original_input.problem
 		deferred_npc_inputs[id] = error
@@ -357,7 +360,9 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	if not prior is Dictionary or not source_integer(record.get("source_m_npc_id")): return record
 	var npc_id: int = int(record.source_m_npc_id)
 	if not source_integer(prior.get("ID")) or int(prior.ID) != npc_id: return record
+	var definition_started: int = FRAME_HITCH.now()
 	var source: Dictionary = DEFINITIONS.row("NpcClass",npc_id)
+	FRAME_HITCH.detail("npc.project_definition_read",definition_started)
 	if not definition_eligible(source): return record
 	for key: String in ["ID","Sprite","DescId"]:
 		if not source_integer(source.get(key)) or not source_integer(prior.get(key)) or source[key] != prior[key]: return record
@@ -366,7 +371,10 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 	if int(source.HP) <= 0 or int(source.MP) < 0 or int(source.MR) < 0 or int(source.Exp) < 0: return record
 	# Monster.setup already proves this is an existing actor. The exact prior
 	# ID/Sprite/DescId checks above gate admission; no actor/spawn is constructed.
-	if not _admit_original_actor(source): return record
+	var admission_started: int = FRAME_HITCH.now()
+	var accepted: bool = _admit_original_actor(source)
+	FRAME_HITCH.detail("npc.project_closure",admission_started)
+	if not accepted: return record
 	var result: Dictionary = record.duplicate(true)
 	var original: Dictionary = prior.duplicate(true)
 	original.merge(source,true)
@@ -385,6 +393,7 @@ func project_actor_record(record: Dictionary) -> Dictionary:
 ## range/resistance. Restore those fields on every hit, never share evidence
 ## dictionaries with an actor, and never cache a failed/missing lookup.
 func _project_actor_policy_inputs(record: Dictionary, source: Dictionary) -> Dictionary:
+	var special_started: int = FRAME_HITCH.now()
 	var cache: Dictionary = _actor_projection_bucket(source)
 	if cache.has("special"):
 		_apply_cached_special(record,cache.special)
@@ -399,6 +408,8 @@ func _project_actor_policy_inputs(record: Dictionary, source: Dictionary) -> Dic
 				detail["prior_present"] = false
 			cache["special"] = detached
 			_store_actor_projection(source,cache)
+	FRAME_HITCH.detail("npc.project_special",special_started)
+	var range_started: int = FRAME_HITCH.now()
 	if cache.has("range"):
 		var range_evidence: Dictionary = cache.range.duplicate(true)
 		range_evidence["prior_host_attack_range"] = record.get("attack_range")
@@ -413,6 +424,7 @@ func _project_actor_policy_inputs(record: Dictionary, source: Dictionary) -> Dic
 			detached["prior_host_attack_range"] = null
 			cache["range"] = detached
 			_store_actor_projection(source,cache)
+	FRAME_HITCH.detail("npc.project_range",range_started)
 	return record
 
 func _actor_projection_bucket(source: Dictionary) -> Dictionary:

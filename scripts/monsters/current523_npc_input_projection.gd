@@ -10,6 +10,12 @@ var _seen: Dictionary = {}
 var _ids: Array[int] = []
 var _fixed_done: bool = false
 var _valid: bool = false
+## Only successful ID proofs within one synchronous typed-closure growth.
+## A row reached via _owned is not a proof of globally unique ID.
+var _growth_id_proofs: Dictionary = {}
+var id_proof_reuse_enabled: bool = true # diagnostic test switch, not a game setting.
+var growth_id_reads: int = 0
+var growth_id_hits: int = 0
 
 static func integer(value: Variant) -> bool:
 	return typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) and absf(float(value))<=9007199254740991.0
@@ -51,11 +57,22 @@ func _keep(table: String, row: Dictionary, positions: Array) -> bool:
 
 func _by_id(table: String, value: Variant) -> Dictionary:
 	if not integer(value): problem = "non_integral_source_reference:"+table; return {}
-	var rows: Array[Dictionary] = SOURCE.related(table,"ID",int(value))
-	if rows.size()!=1: problem = "source_reference_missing_or_ambiguous:"+table+":"+str(int(value)); return {}
+	var id: int = int(value)
+	var prior: Dictionary = _growth_id_proofs.get(table,{})
+	if prior.has(id):
+		growth_id_hits += 1
+		return prior[id]
+	growth_id_reads += 1
+	var rows: Array[Dictionary] = SOURCE.related(table,"ID",id)
+	if rows.size()!=1: problem = "source_reference_missing_or_ambiguous:"+table+":"+str(id); return {}
 	var row: Dictionary = rows[0]
-	if _excluded(table,row): problem = "source_declared_exclusion:"+table+":"+str(int(value)); return {}
-	return row if _keep(table,row,_positions_in(table,row,SOURCE.related_indices(table,"ID",int(value)),rows)) else {}
+	if _excluded(table,row): problem = "source_declared_exclusion:"+table+":"+str(id); return {}
+	var positions: PackedInt32Array = SOURCE.related_indices(table,"ID",id)
+	if not _keep(table,row,_positions_in(table,row,positions,rows)): return {}
+	if id_proof_reuse_enabled:
+		prior[id] = row
+		_growth_id_proofs[table] = prior
+	return row
 
 func _owned(table: String, field: String, id: int) -> Array:
 	# The exact owner predicate is the compiler's admission boundary.
@@ -105,7 +122,12 @@ func extend(host_npc_ids: Array) -> Dictionary:
 	for npc_id: int in requested:
 		if not _ids.has(npc_id): fresh.append(npc_id)
 	fresh.sort()
-	if not _grow(fresh):
+	_growth_id_proofs.clear()
+	growth_id_reads = 0
+	growth_id_hits = 0
+	var grew: bool = _grow(fresh)
+	_growth_id_proofs.clear()
+	if not grew:
 		var failure: String = problem
 		_reset()
 		problem = failure
