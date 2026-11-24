@@ -33,7 +33,48 @@ func check(condition: bool, label: String) -> bool:
 
 func _initialize() -> void: call_deferred("run")
 
+class StackStateFixture extends RefCounted:
+	var records: Dictionary = {}
+	var instances: Dictionary = {}
+	func snapshot() -> Dictionary: return {"instances":instances,"stacks":{}}
+	func export_state() -> Dictionary: return {}
+
+class PickupProofFixture extends Node:
+	var inventory: Dictionary = {"fixture":1}
+	var item_instances: Dictionary = {}
+	var warehouse := StackStateFixture.new()
+	var ground_loot := StackStateFixture.new()
+	var consumable_service := StackStateFixture.new()
+	func _ground_drops_snapshot() -> Array: return []
+
+func staged_transition_rules() -> void:
+	var owner := PickupProofFixture.new()
+	var uid: String = "fixture-id"
+	var receipt: Dictionary = {"schema":1}
+	var entry: Dictionary = {"name":"fixture",STACK.RECEIPT:receipt}
+	# Seed only this fixture's decoded receipt result. The state and transition
+	# checks are production; this does not simulate original tables or issuance.
+	STACK.clear_proof_cache()
+	STACK._proof_identity = SOURCE.identity()
+	STACK._proof_cache[uid] = [entry.duplicate(true),{"remaining":1,"used":0,"transferred":0}]
+	owner.item_instances[uid] = entry
+	var returned: Dictionary = STACK.proof_entry(entry,uid)
+	returned.remaining = 99
+	check(STACK.proof_entry(entry,uid).remaining == 1,
+		"public receipt proof output cannot mutate cached top-level values")
+	var pending: Dictionary = {"inventory":{"fixture":2},"item_instances":owner.item_instances.duplicate(false)}
+	check(is_same(pending.item_instances[uid],entry) and STACK.override_error(owner,pending).is_empty(),
+		"staged pickup can reuse exact candidate-validated shared inventory entry")
+	pending["inventory"] = {"fixture":0}
+	check(not STACK.override_error(owner,pending).is_empty(), "shared receipt does not bypass candidate count validation")
+	pending["inventory"] = {"fixture":2}
+	owner.item_instances[uid] = {"name":"forged",STACK.RECEIPT:receipt}
+	check(not STACK.override_error(owner,pending).is_empty(), "replacing a live receipt still requires the prior proof")
+	STACK.clear_proof_cache()
+	owner.free()
+
 func rules() -> void:
+	staged_transition_rules()
 	var good: Dictionary = {"granted_quantity":3,"origin":{"kind":"owned_quantity_merge","merge_id":"0123456789abcdef0123456789abcdef","components":[{"physical_id":"a","quantity":1},{"physical_id":"b","quantity":2}]}}
 	check(MERGE.receipt_shape_valid(good), "a merge receipt whose parts add up is well formed")
 	var wrong: Dictionary = good.duplicate(true); wrong.granted_quantity = 4

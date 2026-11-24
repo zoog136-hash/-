@@ -327,7 +327,7 @@ func clear_acquisition_confirmation(category: String, identity: String) -> void:
 	if pending_acquisition_confirmation[category].is_empty(): pending_acquisition_confirmation.erase(category)
 
 func export_state() -> Dictionary:
-	var result: Dictionary={
+	return {
 		"version": 1,
 		"source_card_receipts":source_card_receipts.duplicate(true),
 		"owned": owned.duplicate(true),
@@ -336,9 +336,6 @@ func export_state() -> Dictionary:
 		"pity": pity.duplicate(true),
 		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
 	}
-
-	if not source_card_receipts.is_empty():result["source_card_receipts"]=source_card_receipts.duplicate(true)
-	return result
 
 func import_state(input: Variant) -> void:
 	source_card_receipts.clear()

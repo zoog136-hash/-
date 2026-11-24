@@ -126,13 +126,17 @@ func line_clear(from: Vector2, to: Vector2) -> bool:
 	# to float32, splitting simultaneous crossings into two forbidden edges.
 	var a: Array = coordinates.grid_components(from)
 	var b: Array = coordinates.grid_components(to)
+	var start: Vector2i = coordinates.world_to_cell(from,a)
+	var goal: Vector2i = coordinates.world_to_cell(to,b)
+	if value_at(start,true)==0 or value_at(goal,true)==0: return false
+	return _line_between_validated_cells(a,b,start,goal)
+
+## Run the existing DDA after validated endpoints; use the same double components.
+func _line_between_validated_cells(a: Array,b: Array,cell: Vector2i,target: Vector2i) -> bool:
 	var ax: float = a[0]
 	var ay: float = a[1]
 	var bx: float = b[0]
 	var by: float = b[1]
-	var cell:=Vector2i(floori(ax),floori(ay))
-	var target:=Vector2i(floori(bx),floori(by))
-	if value_at(cell,true)==0 or value_at(target,true)==0: return false
 	var sx: int=int(signf(bx-ax))
 	var sy: int=int(signf(by-ay))
 	var tx: float=INF if sx==0 else (cell.x+(1 if sx>0 else 0)-ax)/(bx-ax)
@@ -158,6 +162,10 @@ func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	var goal: Vector2i=nearest_cell(to)
 	if start.x<0 or goal.x<0: return PackedVector2Array()
 	if line_clear(from,to): return PackedVector2Array([to])
+	return _route_between_validated_cells(from,to,start,goal)
+
+## Only used after the caller validates the endpoints and tries its direct ray.
+func _route_between_validated_cells(from: Vector2,to: Vector2,start: Vector2i,goal: Vector2i) -> PackedVector2Array:
 	var navigator: TwilightL1JSourceNavigation = _new_path_navigator()
 	navigator.loaded=true
 	navigator.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
