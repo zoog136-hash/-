@@ -117,7 +117,12 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 			# already passed the checks below, as a fresh copy for this scene.
 			tree=(hit[1] as Dictionary).duplicate(true)
 	if tree.is_empty():
-		tree=pack.scene(member)
+		var owned_record: bool=false
+		if not _requested_source_nodes.is_empty() and pack.has_method("scope_input"):
+			var input: Dictionary=pack.scope_input(member)
+			tree=input.tree
+			owned_record=bool(input.owned)
+		else:tree=pack.scene(member)
 		if tree.is_empty(): return {"ok":false,"error":"source_scene_missing"}
 		if bool(tree.get("_partial_source_scene",false)):
 			if _requested_source_nodes.is_empty():return {"ok":false,"error":"partial_source_requires_explicit_node_scope"}
@@ -125,7 +130,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 			for offset: int in _requested_source_nodes:
 				if offset not in allowed:return {"ok":false,"error":"source_node_outside_pack_scope","offset":offset}
 		if not _requested_source_nodes.is_empty():
-			var scoped: Dictionary=NODE_SCOPE.select(tree,_requested_source_nodes)
+			var scoped: Dictionary=NODE_SCOPE.select(tree,_requested_source_nodes,owned_record)
 			if not scoped.get("ok",false):return scoped
 			tree=scoped.tree
 			if not scope_key.is_empty():

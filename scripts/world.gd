@@ -5524,15 +5524,21 @@ func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dic
 	return _find_catalog_item_record_cash_install(item_name,source_id,null)
 
 func _find_catalog_item_record_cash_install(item_name: String, source_id: String, scope: ITEM_CATALOG_LOOKUP.CashInstallScope) -> Dictionary:
-	if source_id.is_empty() and quest_auto!=null and quest_auto.has_method("held_record"):
-		var held: Variant=quest_auto.call("held_record",item_name,item_instances)
-		if held is Dictionary and not held.is_empty():return held
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
+	# The built-in quest owner accepts only the explicit held-reward prefix
+	# below. A missing held reward invalidates its index for the NEXT call:
+	# don't immediately scan the same bag twice. Custom owners retain their
+	# earlier opportunity to override any ordinary display name.
+	var built_in: bool=quest_auto!=null and quest_auto.get_script()==preload("res://scripts/quests/quest_auto_runner.gd")
+	if not built_in and quest_auto!=null and quest_auto.has_method("held_record"):
+		var held: Variant=quest_auto.call("held_record",item_name,item_instances)
+		if held is Dictionary and not held.is_empty():return held
 	# Indexed, self-validating equivalent of the previous one-name find_many scan.
 	if item_name.begins_with("[원본 보상] "):
-		return quest_auto.held_record(item_name,item_instances)
+		if built_in:return quest_auto.current_held_record(item_name,item_instances)
+		return quest_auto.held_record(item_name,item_instances) if quest_auto!=null and quest_auto.has_method("held_record") else {}
 	if scope != null:
 		var scoped: Variant = scope.find_one([catalog_db.get("아이템", []),item_db],item_instances,item_name)
 		if scoped is Dictionary: return scoped
@@ -7216,17 +7222,35 @@ func _start_background_save(data: Dictionary, prior_hash: String, started_usec: 
 ## Worker thread: no scene/HUD access, only the job's own data and files.
 static func _run_background_save(job: Dictionary) -> void:
 	var account: Script = preload("res://scripts/characters/account_store.gd")
-	var stage: Dictionary = account.stage_save(str(job.path), job.data)
+	# Flat saves have no account graph to transfer. Retain the original
+	# lifecycle there: changing which thread releases the large flat graph
+	# regressed a matched legacy completion benchmark.
+	var account_job: bool=not account.session.is_empty() and account.session.get("path")==job.path
+	var stage: Dictionary = account.stage_compact_write(str(job.path),job.data) if account_job else account.stage_save(str(job.path),job.data)
+	# This input belongs to the worker. Release the frozen snapshot here,
+	# not when the main loop drops the completed job after publication.
+	if account_job:job.erase("data")
 	if not stage.get("ok",false):
 		job["error"] = ERR_INVALID_DATA; job["problem"] = str(stage.get("problem",""))
 		return
 	var payload: Dictionary = stage.payload
-	job["envelope"] = payload.get(account.KEY)
-	payload = account.compact(payload)
+	if account_job:
+		job["envelope"] = stage.envelope
+	else:
+		job["envelope"] = payload.get(account.KEY)
+		payload=account.compact(payload)
 	account.forget_durable()
 	var text: String = JSON.stringify(payload, "", true, true)
 	job["payload_hash"] = text.sha256_text()
-	job["payload"] = payload
+	# Only these fields must be published separately after disk verification.
+	# Do not transfer the entire compact save back to the main thread merely
+	# to free it there; the account cache has its own sealed read-only graph.
+	if account_job:
+		var extras: Dictionary={}
+		for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
+			if payload.has(key): extras[key]=payload[key].duplicate(true)
+		job["extras"] = extras
+	else:job["payload"]=payload
 	job["error"] = preload("res://scripts/skills/save_writer.gd").write_text_if_unchanged(str(job.path), text, str(job.prior_hash))
 
 func _finish_background_save(wait: bool) -> void:
@@ -7237,12 +7261,16 @@ func _finish_background_save(wait: bool) -> void:
 	var job: Dictionary = _background_save_job
 	_background_save_job = {}
 	if int(job.get("error",ERR_BUG)) == OK:
-		var completed: Error=equipment_collections.commit_written(str(job.path), job.payload, str(job.payload_hash))
+		var completed: Error=equipment_collections.commit_written(str(job.path), job.get("payload",{}), str(job.payload_hash))
 		if completed == OK:
-			if job.get("envelope") is Dictionary: CHARACTER_ACCOUNT.remember_durable(str(job.path), job.envelope)
+			if job.get("envelope") is Dictionary:
+				CHARACTER_ACCOUNT.adopt_verified_worker_envelope(str(job.path),job,equipment_collections.verified_payload_sha(str(job.path)))
 			if not CHARACTER_ACCOUNT.session.is_empty() and CHARACTER_ACCOUNT.session.get("path")==str(job.path): CHARACTER_ACCOUNT.session["initialized"]=true
-			for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
-				if job.payload.has(key):equipment_collections.extra_save_fields[key]=job.payload[key].duplicate(true)
+			if job.has("extras"):
+				for key: String in job.extras: equipment_collections.extra_save_fields[key]=job.extras[key]
+			else:
+				for key: String in ["protection523","expedition523_local","patch523_transaction_rng"]:
+					if job.payload.has(key):equipment_collections.extra_save_fields[key]=job.payload[key].duplicate(true)
 			return
 		job["error"]=completed
 	CHARACTER_ACCOUNT.forget_durable()

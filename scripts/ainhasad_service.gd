@@ -162,6 +162,11 @@ static func charge_cap() -> int:
 	var source: int = RULES.max_points()
 	return mini(MAX_BLESSING, source) if source > 0 else MAX_BLESSING
 
+## Quest rewards are all-or-nothing alongside their receipt. Planning must
+## not mutate the live balance or silently discard an excess reward.
+func quest_reward_room() -> int:
+	return maxi(0, charge_cap() - blessing)
+
 func charge(points: int) -> int:
 	var cap: int = charge_cap()
 	if points <= 0 or blessing >= cap:

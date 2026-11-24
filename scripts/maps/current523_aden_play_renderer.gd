@@ -570,6 +570,12 @@ static func _chunk_job(job: Dictionary) -> void:
 
 ## S32 sections -> static tail, projected lanes, block bins and clip counts.
 static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary:
+	if not bool(params.valid):
+		return _decode_chunk_with_floor(params, decoded, false)
+	var origin: Vector2i = params.origin
+	return _decode_chunk_with_floor(params, decoded, origin.x % 64 == 0 and origin.y % 64 == 0)
+
+static func _decode_chunk_with_floor(params: Dictionary, decoded: Dictionary, direct_floor: bool) -> Dictionary:
 	var out: Dictionary = {}
 	var tail: Dictionary = STATIC_SPR.parse_tail(decoded.sections.tail, int(params.core_end))
 	if tail.ok:
@@ -581,9 +587,13 @@ static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary
 	# Records in file order (floor, covers, objects), then projected in one pass.
 	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var refs := PackedInt64Array()
 	var floor_bytes: PackedByteArray = decoded.sections.floor
-	halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
-	for index: int in range(8192):
-		halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
+	# Aligned S32 chunks always have 64x64 source cells, two consecutive
+	# halves per cell. Do not materialize four deterministic 8192-entry
+	# arrays just to look the positions up again in the generic projector.
+	if not direct_floor:
+		halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
+		for index: int in range(8192):
+			halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
 	var covers: PackedByteArray = decoded.sections.covers
 	for index: int in range(covers.decode_u16(0)):
 		var offset: int = 2 + index * 6
@@ -596,14 +606,41 @@ static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary
 		for _part: int in range(count):
 			halves.append(objects[cursor]); rows.append(objects[cursor + 1]); kinds.append(objects[cursor + 2]); refs.append(objects.decode_u32(cursor + 3))
 			cursor += 7
-	out["halves"] = halves; out["rows"] = rows; out["kinds"] = kinds; out["refs"] = refs
+	if not direct_floor:
+		out["halves"] = halves; out["rows"] = rows; out["kinds"] = kinds; out["refs"] = refs
 	if bool(params.valid):
 		var projected: Dictionary = _project_static(params, halves, rows, kinds, refs)
-		out["packed"] = projected.packed
+		var lanes: Dictionary={}
+		if direct_floor:
+			if (params.overlap as Dictionary).has(params.origin):
+				lanes[-2] = _project_s32_floor(params, floor_bytes)
+			else:
+				projected.clipped += 8192
+		lanes.merge(projected.packed)
+		out["packed"] = lanes
 		out["clipped"] = projected.clipped
 		out["off_floor"] = projected.off_floor
-		out["bins"] = _bin_chunk(projected.packed)
+		out["bins"] = _bin_chunk(lanes)
 	return out
+
+## Same basis and operation order as _project_static. Both halves share the
+## float32 cell anchor; apply the half-column offset only to the second.
+static func _project_s32_floor(params: Dictionary, source: PackedByteArray) -> PackedInt64Array:
+	var origin: Vector2i=params.origin;var grid: Vector2i=params.grid_origin
+	var bx: Vector2=params.basis_x;var by: Vector2=params.basis_y;var shift: Vector2=params.shift
+	var odd: Vector2=(bx+by)*0.5
+	var lane:=PackedInt64Array();lane.resize(8192*3)
+	var pos:=0;var byte_at:=0
+	for y: int in 64:
+		var gy: float=float(origin.y+y)-grid.y+0.5
+		for x: int in 64:
+			var gx: float=float(origin.x+x)-grid.x+0.5
+			var center:=Vector2(bx.x*gx+by.x*gy+shift.x,bx.y*gx+by.y*gy+shift.y)
+			var first: Vector2=center-by;var second: Vector2=first+odd
+			lane[pos]=int(first.x);lane[pos+1]=int(first.y);lane[pos+2]=source.decode_u32(byte_at)
+			lane[pos+3]=int(second.x);lane[pos+4]=int(second.y);lane[pos+5]=source.decode_u32(byte_at+4)
+			pos+=6;byte_at+=8
+	return lane
 
 func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 	if job.has("problem") or not job.has("tail"):

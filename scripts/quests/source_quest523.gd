@@ -461,6 +461,16 @@ func _gate_compact(row: Dictionary, lazy: Dictionary, context: Dictionary, claim
 		if int(context.get("level",1)) < int(goal[2]): return "레벨 %d부터 이용" % int(goal[2])
 	return ""
 
+## All 38 original QuestReward joins of type 5 have this completion-time,
+## unconditional base-award shape. Return 0 for any other shape; do not
+## interpret the display/reference class as a physical item or multiplier.
+static func base_blessing_points(reward: Dictionary) -> int:
+	if reward.get("type_name")!="Einasad" or reward.get("RewardTypeID")!=5 or reward.get("RewardGetTimeTypeID")!=2 or reward.get("RewardEnhancementTypeID")!=1: return 0
+	if (reward.get("RewardClassID")!=7049 and reward.get("RewardClassID")!=1859) or reward.get("UseImmediately")!=false or reward.get("ClanOnly")!=false or reward.get("CharacterClassID")!=0:return 0
+	var amount: Variant=reward.get("Amount")
+	if not (amount is int or amount is float) or not is_finite(float(amount)) or amount!=int(amount) or amount<=0 or amount>9007199254740991:return 0
+	return int(amount)
+
 func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	if row.has(LAZY_KEY):
 		row = full(row)
@@ -481,6 +491,13 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 		if amount < 0 or amount > 9007199254740991: return {"ok":false,"error":"보상 수량 오류"}
 		match str(reward.type_name):
 			"Exp": result.exp += amount
+			"Einasad":
+				if base_blessing_points(reward)<=0:
+					return {"ok":false,"error":"원본 축복 보상 종류/시점 확인 필요"}
+				result["blessing"]=int(result.get("blessing",0))+amount
+				var room: Callable=context.get("quest_reward_room",Callable())
+				if room.is_valid() and result.blessing>int(room.call()):
+					return {"ok":false,"error":"축복 상한까지 여유가 부족합니다 · 사용 후 수령하세요"}
 			"Item":
 				var original: Dictionary = reward.get("source_item",{})
 				var excluded: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_evidence(original)

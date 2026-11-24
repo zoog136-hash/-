@@ -36,6 +36,9 @@ const ITEM_BINDINGS = preload("res://scripts/quests/quest_item_bindings.gd")
 const FAILED_SCAN_SECONDS: float = 5.0
 
 func held_record(name_value: String, instances: Dictionary) -> Dictionary:
+	# An ordinary catalog lookup cannot consume these indexed rewards. Check
+	# before touching the physical bag, even if the bag identity just changed.
+	if not name_value.begins_with("[원본 보상] "): return {}
 	# These names deliberately have no legacy catalog row. Index the physical
 	# source records once per transaction instead of scanning 2,000+ unrelated
 	# catalog rows for every held stack on every HUD/save synchronization.
@@ -47,15 +50,20 @@ func held_record(name_value: String, instances: Dictionary) -> Dictionary:
 			var physical: Dictionary = instances[id]
 			var name: String = str(physical.get("name",""))
 			if name.begins_with("[원본 보상] ") and not held_index.has(name): held_index[name]=id
-	# Only "[원본 보상] " names are ever indexed. Any other name (every ordinary
-	# catalog lookup passes through here first) is a plain miss and must not
-	# invalidate the index, or each lookup rescans every item instance.
-	if not name_value.begins_with("[원본 보상] "): return {}
 	var id: String = str(held_index.get(name_value,""))
 	var candidate: Dictionary = instances.get(id,{})
 	if candidate.get("name")!=name_value: indexed_size=-1;return {}
 	var record: Dictionary = candidate.get("record",{})
 	return record.duplicate(true) if bool(record.get("source_pending_use",false)) else {}
+
+## World preserves immediate discovery after a same-size in-place edit. A
+## cold index already saw the live bag in this call, so never scan it twice.
+func current_held_record(name_value: String, instances: Dictionary) -> Dictionary:
+	var may_be_stale: bool=is_same(indexed_instances,instances) and indexed_size==instances.size()
+	var record: Dictionary=held_record(name_value,instances)
+	if may_be_stale and record.is_empty() and indexed_size<0:
+		return held_record(name_value,instances)
+	return record
 
 func refresh_context(world: Node) -> void:
 	var service: Variant = world.quest_service
@@ -64,6 +72,7 @@ func refresh_context(world: Node) -> void:
 	# Bind the existing production consumer directly: no speculative foreign
 	# provider and no Callable(self) cycle retaining this runner after restart.
 	context = {"level":world.level,"max_level":world.level,"class_id":service.source.class_ids.get(str(world.job_class),-1),"source_items":source_items,"source_item_consumer":Callable(world.growth.source523,"material"),"currency_items":world.loot_catalog.get("by_name",{})}
+	if world.get("ain_service")!=null: context["quest_reward_room"]=Callable(world.ain_service,"quest_reward_room")
 	context["quest_item_provider"]=Callable(world.quest_item_provider,"resolve")
 	context["held_native_rewards"]=world.quest_item_provider.supported_held(world)
 	service.source_context = context
@@ -182,9 +191,15 @@ func _source_lookup(catalogs: Array) -> RefCounted:
 		_lookup_key = key
 	return _lookup
 
+## Ordinary kills below the largest original 5,000-point reward must not
+## invalidate the ready list merely because one blessing point was used.
+func _near_cap_key(world: Node) -> int:
+	var owner: Variant=world.get("ain_service")
+	return mini(5000,owner.quest_reward_room()) if owner!=null else 0
+
 func state_key(world: Node) -> String:
 	var ledger: Variant = world.quest_service.get("repeats")
-	return "%s:%s:%d:%d:%d:%d:%d:%d" % [str(world.level),str(world.job_class),world.inventory.size(),world.item_instances.size(),int(world.next_item_instance_id),world.quest_service.claimed.size(),hash(world.inventory),hash(ledger) if ledger is Dictionary else 0]
+	return "%s:%s:%d:%d:%d:%d:%d:%d:%d" % [str(world.level),str(world.job_class),world.inventory.size(),world.item_instances.size(),int(world.next_item_instance_id),world.quest_service.claimed.size(),hash(world.inventory),hash(ledger) if ledger is Dictionary else 0,_near_cap_key(world)]
 
 func tick(world: Node) -> void:
 	if busy or world.quest_service.source.quests.is_empty(): return
@@ -242,6 +257,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	var next_id: int = world.next_item_instance_id
 	var adena: int = 0
 	var experience: int = 0
+	var blessing: int = 0
 	var completed: Array[String] = []
 	var native_grants: Array = []
 	var native_receipts: Array = []
@@ -261,6 +277,11 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		if repeat and not service.repeat_reward_problem(plan).is_empty():
 			failures[id] = service.repeat_reward_problem(plan)
 			continue
+		var points: int=int(plan.get("blessing",0))
+		if points>0 and (world.get("ain_service")==null or blessing+points>world.ain_service.quest_reward_room()):
+			failures[id]="축복 상한까지 여유가 부족합니다 · 사용 후 수령하세요"
+			continue
+		blessing+=points
 		for item: Dictionary in plan.items:
 			var record: Dictionary = item.record
 			var name_value: String = str(record.name)
@@ -305,6 +326,10 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	if staged_state.repeats.is_empty(): staged_state.erase("repeats")
 	if completed.is_empty(): return false
 	var staged: Dictionary = {"quest_state":staged_state,"inventory":staged_inventory,"item_instances":staged_instances,"next_item_instance_id":next_id,"gold":world.gold+adena,"experience":world.experience+experience}
+	if blessing>0:
+		var ain: Dictionary=world.ain_service.export_state()
+		ain["blessing"]=int(world.ain_service.blessing)+blessing
+		staged["ainhasad_state"]=ain
 	if not native_grants.is_empty():
 		# The shared supplier returns COMPLETE candidate values. Its base must
 		# already include this batch's held rewards and gold; never overwrite
@@ -355,6 +380,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 			service.save_blocked = true
 			busy = false
 			return false
+	if blessing>0: world.ain_service.blessing=int(staged.ainhasad_state.blessing)
 	world.gold = staged.gold
 	world.experience = staged.experience
 	world.inventory = staged_inventory
@@ -370,6 +396,6 @@ func complete(world: Node, ids: Array[String]) -> bool:
 		world._refresh_inventory_hud()
 		world._refresh_combat_hud()
 	if world.hud.has_method("refresh_quests"): world.hud.refresh_quests()
-	world.hud.append_log("원본 퀘스트 자동 완료 %d개 · 아데나 +%d · EXP +%d" % [completed.size(),adena,experience])
+	world.hud.append_log("원본 퀘스트 완료 %d개 · 아데나 +%d · EXP +%d%s" % [completed.size(),adena,experience," · 축복 +%d" % blessing if blessing>0 else ""])
 	busy = false
 	return true

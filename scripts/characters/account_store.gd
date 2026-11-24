@@ -197,7 +197,7 @@ static func _seal(data: Dictionary, compact_consumer: bool = false) -> Dictionar
 static func reseal_migration(payload: Dictionary) -> Dictionary:
 	return seal_payload(payload)
 
-## For one synchronous compact writer only, both arguments are detached owned
+## For the private compact writers only, both arguments are detached owned
 ## dictionaries from _seal. The writer reads the projection and immediately
 ## replaces the selected state with its file marker. Ordinary callers still
 ## get independent state and projection copies that can be mutated separately.
@@ -552,9 +552,12 @@ func complete_legacy_gender(id: String, gender: int, catalog: RefCounted) -> Dic
 static func stage_save(path: String, payload: Dictionary) -> Dictionary:
 	return _stage_save(path,payload,false)
 
-## Both returned views are read-only inputs to the synchronous durable writer,
+## Both returned views are read-only inputs to a single durable writer,
 ## not live gameplay state. Public stage_save retains its detached-copy contract.
 static func stage_checkpoint_write(path: String, payload: Dictionary) -> Dictionary:
+	return stage_compact_write(path,payload)
+
+static func stage_compact_write(path: String, payload: Dictionary) -> Dictionary:
 	var result:=_stage_save(path,payload,true)
 	if not result.ok: return result
 	var full: Dictionary=result.payload
@@ -631,6 +634,17 @@ static func remember_durable(path: String, envelope: Variant) -> void:
 static func remember_verified_durable(path: String, envelope: Variant, payload_sha: String) -> void:
 	if not envelope is Dictionary or payload_sha.is_empty(): _durable={};return
 	_durable={"path":path,"sha":payload_sha,"envelope":(envelope as Dictionary).duplicate(true)}
+
+## Only the finished background job can hand off its private sealed graph:
+## the scene never exposed its data, the worker is joined, and commit_written
+## just verified these exact bytes. Ordinary/sync callers still detach copies.
+static func adopt_verified_worker_envelope(path: String, job: Dictionary, verified_sha: String) -> void:
+	var owned: Variant=job.get("envelope")
+	job.erase("envelope")
+	if not owned is Dictionary or verified_sha.is_empty() or verified_sha!=job.get("payload_hash"):
+		forget_durable()
+		return
+	_durable={"path":path,"sha":verified_sha,"envelope":owned}
 
 static func forget_durable() -> void:
 	_durable = {}
