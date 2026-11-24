@@ -9,6 +9,8 @@ const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
 const EXTENSION_BUTTON=21648
 const SEARCH_BUTTON=44780
+const HAS_EXTENSION=1
+const HAS_SEARCH=2
 const FRAMES={
  false:{"parent":55184,"background":60672,"offsets":[60672,59888,59516,59136,58756,58376]},
  true:{"parent":43300,"background":54484,"offsets":[54484,53776,53404,53028,52648,52268,51888]}
@@ -31,7 +33,7 @@ static func parent_contract(parent_member: String) -> Dictionary:
 	if not PARENTS.has(parent_member):return _fail("source_main_inventory_explicit_parent_required")
 	return {"ok":true,"member":parent_member,"sha256":PARENTS[parent_member].sha256,"project_offset":PARENTS[parent_member].project_offset,"child_member":MEMBER,"child_sha256":SHA256,"original_clip":{"name":"Inventory_All_On","start_frame":5,"end_frame":17},"loop_declared":false,"original_design_size":[1200,675],"requires_parent_timeline":true,"complete_screen_contract":false}
 
-func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable()) -> Dictionary:
+func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable(), include_rows: bool=true) -> Dictionary:
 	if pack==null or pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
 	if not is_instance_valid(hud):return _fail("source_main_inventory_hud_unavailable")
 	var inventory_ui: Variant=hud.get("lineage_inventory_ui")
@@ -41,7 +43,7 @@ func configure(pack: RefCounted, hud: Node, dismiss_presenter: Callable=Callable
 	_pack=pack
 	_inventory=weakref(inventory_ui)
 	_dismiss_presenter=dismiss_presenter
-	return snapshot()
+	return snapshot(include_rows)
 
 func snapshot(include_rows: bool=true) -> Dictionary:
 	var inventory_ui: Object=_live_inventory()
@@ -70,11 +72,16 @@ func snapshot(include_rows: bool=true) -> Dictionary:
 		if fields.size()==2 and fields[0].strip_edges().is_valid_int() and fields[1].strip_edges().is_valid_int():model["capacity_text"]=count
 	return model
 
-func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
+func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
-	var model: Dictionary=snapshot()
+	var model: Dictionary=snapshot(include_rows)
 	if not model.get("ok",false):return model
-	var tree: Dictionary=_layout_or_scene(MEMBER)
+	# Scene trees are disk records on the installed pack, or detached copies
+	# of an in-memory tree. Resolve the active scene at most once here.
+	var layout: Dictionary=_pack.call("layout_source",MEMBER) if _pack.has_method("layout_source") else {}
+	var separate_layout: bool=layout.get("nodeTree") is Dictionary
+	var active: Dictionary={} if separate_layout else _pack.scene(MEMBER)
+	var tree: Dictionary=layout if separate_layout else active
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_inventory_original_layout_missing")
 	# Received tab/close subtrees contain only their original Sprite icons
 	# and title textures; they serialize no Text/TextBMFont literal children.
@@ -86,14 +93,20 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 	bindings[int(frame.background)]={"role":"consume"}
 	bindings[int(frame.parent)]={"visible":true}
 	var bag: Object=_live_inventory()
-	var active: Dictionary=_pack.scene(MEMBER)
+	var wants: int=0
+	if bag!=null and bag.has_method("_toggle_expanded"):wants|=HAS_EXTENSION
+	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb"):wants|=HAS_SEARCH
+	# Full layout geometry and the permitted, filtered active scene may differ.
+	# UI affordances must be admitted by the latter, never by layout alone.
+	if separate_layout and wants!=0:active=_pack.scene(MEMBER)
+	var found: int=_control_presence(active.get("nodeTree",{}),wants)
 	# Old normal-only packs keep working. Extension controls are included
 	# only when the permitted source scope actually contains their original.
-	if bag!=null and bag.has_method("_toggle_expanded") and not _node_at(active.get("nodeTree",{}),EXTENSION_BUTTON).is_empty():
+	if found & HAS_EXTENSION:
 		roots.append(EXTENSION_BUTTON)
 		bindings[EXTENSION_BUTTON]={"role":"button","activate":Callable(self,"toggle_expanded")}
 	# This entry belongs specifically to the authored extension branch.
-	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb") and not _node_at(active.get("nodeTree",{}),SEARCH_BUTTON).is_empty():
+	if found & HAS_SEARCH:
 		roots.append(SEARCH_BUTTON)
 		bindings[SEARCH_BUTTON]={"role":"button","activate":Callable(self,"_search_requested")}
 		bindings[46132]={"role":"static_source_text"}
@@ -112,7 +125,8 @@ func build(remaining: Dictionary={}, expanded: bool=false) -> Dictionary:
 		bindings[CAPACITY_TEXT]={"role":"source_text","text":model.capacity_text}
 	var selected: Array[int]=[]
 	var matches: Dictionary={}
-	_collect_offsets(tree.nodeTree,roots,matches,selected,false)
+	for offset: int in roots:matches[offset]=0
+	_collect_offsets(tree.nodeTree,matches,selected,{},false)
 	for offset: int in roots:
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_inventory_core_node_not_unique","offset":offset}
 	for offset: int in selected:
@@ -141,10 +155,10 @@ func refresh_existing(scene: Node2D) -> Dictionary:
 		if nodes.has(entry[0])!=model.has(entry[1]):return _fail("source_main_inventory_header_scope_changed")
 	return _refresh_model(scene,model)
 
-func refresh(scene: Node2D) -> Dictionary:
+func refresh(scene: Node2D, include_rows: bool=true) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
 	if not scene.has_method("set_bound_visible") or not scene.has_method("set_bound_text"):return _fail("source_main_inventory_scene_binding_api_missing")
-	var model: Dictionary=snapshot()
+	var model: Dictionary=snapshot(include_rows)
 	if not model.get("ok",false):return model
 	return _refresh_model(scene,model)
 
@@ -185,12 +199,18 @@ func toggle_expanded() -> Dictionary:
 	if model.get("ok",false):model_changed.emit(model.duplicate(true))
 	return model
 
-static func _node_at(node: Dictionary, offset: int) -> Dictionary:
-	if node.get("_offset")==offset:return node
+## Find each requested exact source control in the allowed scene in one pass.
+static func _control_presence(node: Dictionary, wanted: int) -> int:
+	if wanted==0:return 0
+	var offset: Variant=node.get("_offset")
+	var found: int=0
+	if offset==EXTENSION_BUTTON:found|=HAS_EXTENSION
+	elif offset==SEARCH_BUTTON:found|=HAS_SEARCH
 	for child: Dictionary in node.get("children",[]):
-		var found: Dictionary=_node_at(child,offset)
-		if not found.is_empty():return found
-	return {}
+		var pending: int=wanted & ~found
+		if pending==0:break
+		found|=_control_presence(child,pending)
+	return found & wanted
 
 func close() -> Dictionary:
 	var inventory_ui: Object=_live_inventory()
@@ -205,19 +225,15 @@ func close() -> Dictionary:
 func _live_inventory() -> Object:
 	return _inventory.get_ref() if _inventory!=null else null
 
-static func _collect_offsets(node: Dictionary, roots: Array[int], matches: Dictionary, selected: Array[int], inside: bool) -> void:
+static func _collect_offsets(node: Dictionary, matches: Dictionary, selected: Array[int], seen: Dictionary, inside: bool) -> void:
 	var offset: int=int(node.get("_offset",-1))
-	if offset in roots:matches[offset]=int(matches.get(offset,0))+1
-	var retain: bool=inside or offset in roots
-	if retain and offset not in selected:selected.append(offset)
-	for child: Dictionary in node.get("children",[]):_collect_offsets(child,roots,matches,selected,retain)
+	var root: bool=matches.has(offset)
+	if root:matches[offset]+=1
+	var retain: bool=inside or root
+	if retain and not seen.has(offset):
+		seen[offset]=true
+		selected.append(offset)
+	for child: Dictionary in node.get("children",[]):_collect_offsets(child,matches,selected,seen,retain)
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
-
-## A member listed in layout_sources (parent reference geometry) is read from
-## there; every other member is an ordinary pack scene. layout_source() returns
-## {} for scenes, which used to fail every original window as "layout missing".
-func _layout_or_scene(member: String) -> Dictionary:
-	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
-	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)
