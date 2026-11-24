@@ -4760,11 +4760,13 @@ func _use_card_pack_item(item_name: String) -> void:
 		return
 	# Persist an atomic (card ownership + ticket debit) transaction. Never show
 	# a new card or consume the ticket if the old save cannot be replaced.
-	var cards_before: Dictionary = card_draw_fusion.export_state()
-	var roll_before: int = card_draw_fusion.rng.state
+	var phase: int = FRAME_HITCH.now()
+	var cards_before: Dictionary = card_draw_fusion.draw_checkpoint(category)
 	var ticket_before: int = int(inventory.get(item_name, 0))
 	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
+	FRAME_HITCH.detail("card.normal_draw", phase)
 	if not bool(outcome.get("ok", false)):
+		card_draw_fusion.restore_draw_checkpoint(category, cards_before)
 		hud.show_message(str(outcome.get("error", "뽑기 실패")))
 		return
 	var remaining: int = ticket_before - 1
@@ -4780,21 +4782,35 @@ func _use_card_pack_item(item_name: String) -> void:
 	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
 		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
-	if _save_game(true) != OK:
-		card_draw_fusion.import_state(cards_before)
-		card_draw_fusion.rng.state = roll_before
+	phase = FRAME_HITCH.now()
+	var saved: Error = _save_game(true)
+	FRAME_HITCH.detail("card.normal_save", phase)
+	if saved != OK:
+		card_draw_fusion.restore_draw_checkpoint(category, cards_before)
 		_invalidate_equipment_static()
 		inventory[item_name] = ticket_before
 		hud.refresh_inventory(inventory)
 		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
 		return
 	routines.record("card_buy",{"deck":int(ROUTINE523.CARD_DECKS.get(category,0)),"amount":1})
-	hud.refresh_inventory(inventory)
-	_update_hud()
+	phase = FRAME_HITCH.now()
+	# Reuse the original-ticket publication batch for this normal ticket.
+	# Supplied counts, physical instances and cards reach the HUD before reveal.
+	if hud.has_method("publish_committed_ticket_hud"):
+		hud.publish_committed_ticket_hud(_publish_normal_card_pack_hud)
+	else:
+		_publish_normal_card_pack_hud()
+	FRAME_HITCH.detail("card.normal_hud_publish", phase)
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.show_message(message)
 	hud.append_log(message)
+	phase = FRAME_HITCH.now()
 	hud.call("present_card_reveal", category, outcome, false)
+	FRAME_HITCH.detail("card.normal_reveal", phase)
+
+func _publish_normal_card_pack_hud() -> void:
+	hud.refresh_inventory(inventory)
+	_update_hud()
 
 func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
 	if consumable_service == null: return

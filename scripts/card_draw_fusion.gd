@@ -159,6 +159,25 @@ func receive_source_card(category:String,record:Dictionary,receipt:Dictionary)->
 	source_card_receipts.append(proof)
 	return {"ok":true,"category":category,"results":[result]}
 
+## A normal draw mutates only this deck's ownership, duplicate counts and
+## positive confirmation IDs. The durable save still exports the whole state;
+## the rollback point does not copy receipts, pity or unaffected decks.
+func draw_checkpoint(category: String) -> Dictionary:
+	var had_confirmation: bool = pending_acquisition_confirmation.has(category)
+	return {"owned":owned[category].duplicate(), "spare":spare[category].duplicate(),
+		"had_confirmation":had_confirmation,
+		"confirmation":pending_acquisition_confirmation[category].duplicate() if had_confirmation else {},
+		"rng":rng.state}
+
+func restore_draw_checkpoint(category: String, checkpoint: Dictionary) -> void:
+	owned[category] = checkpoint.owned
+	spare[category] = checkpoint.spare
+	if checkpoint.had_confirmation:
+		pending_acquisition_confirmation[category] = checkpoint.confirmation
+	else:
+		pending_acquisition_confirmation.erase(category)
+	rng.state = checkpoint.rng
+
 func draw_pack(category: String) -> Dictionary:
 	return draw_cards(category, PACK_SIZE)
 
