@@ -15,6 +15,8 @@ const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 const BANK_OBJECTS = preload("res://scripts/maps/current523_bank_objects.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
+const MAP_BACKGROUND=preload("res://scripts/maps/current523_map_background.gd")
+const DREAM_SHADER=preload("res://scripts/maps/current523_dream_background.gdshader")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
@@ -123,6 +125,7 @@ var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
 var _background_atlases: bool = false
+var _dream_background: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
 ## Chunk member -> worker read job (see _prefetch_chunk).
@@ -227,6 +230,10 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	field = value
 	source = value as OriginalPlayableField
 	player = actor
+	_dream_background = {}
+	if generic and int(value.definition.get("source_land_id",-1)) == MAP_BACKGROUND.DREAM_LAND:
+		_dream_background = MAP_BACKGROUND.dream_layers(MAP_BACKGROUND.DREAM_LAND,str(value.get("source_asset")))
+		print("CURRENT523_DREAM_BACKGROUND ready=",not _dream_background.is_empty())
 	var source_owned: bool = bool(value.get_meta("current523_source_field",false))
 	if source_owned:
 		record = {"chunks":[]}
@@ -1098,6 +1105,21 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases, "atlas_ids": (built.atlases as Dictionary).keys(),
 		"count": int(built.count), "draws": int(built.draws), "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
+	var background: Node2D = null
+	if not _dream_background.is_empty() and built.commands.has(-2):
+		var flags: PackedInt64Array = _dream_floor_rects(built.commands[-2])
+		if not flags.is_empty():
+			background = Node2D.new()
+			background.name = "DreamIslandOriginalBackground"
+			var material := ShaderMaterial.new()
+			material.shader = DREAM_SHADER
+			material.set_shader_parameter("sky_image",_dream_background.sky)
+			material.set_shader_parameter("cloud_image",_dream_background.cloud)
+			material.set_shader_parameter("block_origin",Vector2(cell*BLOCK))
+			background.material = material
+			background.draw.connect(_draw_dream_floor.bind(background,cell,flags))
+			viewport.add_child(background)
+			block["dream_floor_replaced"] = flags.size()/2
 	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
 	viewport.add_child(canvas)
 	add_child(viewport)
@@ -1106,6 +1128,7 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	# One connection for all blocks baked this frame (bound callables of the
 	# same method count as one connection).
 	_unreleased.append([block, canvas])
+	if is_instance_valid(background): _unreleased.append([block,background])
 	if not RenderingServer.frame_post_draw.is_connected(_release_baked):
 		RenderingServer.frame_post_draw.connect(_release_baked, CONNECT_ONE_SHOT)
 	return block
@@ -1132,7 +1155,20 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
+			if block.has("dream_floor_replaced") and MAP_BACKGROUND.dream_floor_background(layer,ref): continue
 			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
+
+static func _dream_floor_rects(floor_lane: PackedInt64Array) -> PackedInt64Array:
+	var flags := PackedInt64Array()
+	for index: int in range(0,floor_lane.size(),3):
+		if MAP_BACKGROUND.dream_floor_background(-2,floor_lane[index+2]):
+			flags.append(floor_lane[index]); flags.append(floor_lane[index+1])
+	return flags
+
+static func _draw_dream_floor(canvas: Node2D, cell: Vector2i, flags: PackedInt64Array) -> void:
+	var origin: Vector2 = Vector2(cell*BLOCK)
+	for index: int in range(0,flags.size(),2):
+		canvas.draw_rect(Rect2(Vector2(flags[index],flags[index+1])-origin,Vector2(TILE_PX,TILE_PX)),Color.WHITE)
 
 
 ## ref -> tile corners (x, y, ...) of one block's draw commands.
