@@ -427,7 +427,7 @@ func measure(info: Dictionary) -> void:
 			# file checks (the per-frame memo is emptied before each advance).
 			started = Time.get_ticks_usec()
 			for index: int in range(count):
-				BANK._recheck_ok.clear()
+				BANK.expire_recheck_memo()
 				view.advance_reference_source(0.0, "idle", 0)
 			var cold: float = float(Time.get_ticks_usec() - started) / count
 			timings["%s_%s" % [config.name, "cached" if cached else "per_layer"]] = {"same_frame":snappedf(same, 0.1),"changing_frame":snappedf(changing, 0.1),"same_frame_unshared_file_checks":snappedf(cold, 0.1)}
