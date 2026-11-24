@@ -21,6 +21,15 @@ func configure_current523(_raw_root: String, _interpretation: Dictionary = {}) -
 func static_pursuit_epoch() -> int:
 	return _raw.get_instance_id() if loaded and has_meta("current523_generic_field") and not catalog_sha256.is_empty() else 0
 
+func _new_path_navigator() -> TwilightL1JSourceNavigation:
+	if static_pursuit_epoch() == 0 or policy.get("attribute_rule") != CLIENT_RULE:
+		return super._new_path_navigator()
+	var navigator := Verified523Search.new()
+	navigator.source = self
+	navigator.grid_size = Vector2i(width,height)
+	navigator.origin_offset = coordinates.origin
+	return navigator
+
 func configure_catalog(directory: String, expected_manifest_sha256: String, land_id: int, interpretation: Dictionary = {}) -> bool:
 	var originals = SOURCE_PACK.new()
 	if not originals.load_catalog(directory,expected_manifest_sha256): return _fail(originals.problem)

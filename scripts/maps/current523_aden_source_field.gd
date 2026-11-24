@@ -31,6 +31,7 @@ var _raw_recent: Array[String] = []
 var _raw_failures: Dictionary = {}
 var _last_raw_origin: Vector2i
 var _last_raw_chunk: Dictionary = {}
+var _route_verdict_chunks: Dictionary[String, RouteVerdictChunk] = {}
 var _allowed_words: Dictionary = {}
 var _use_allowlist: bool = true
 var _raw_reads: int = 0
@@ -170,7 +171,10 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 		_raw_failures[member] = _raw.problem
 		problem = _raw.problem
 		return {}
-	if _raw_recent.size() >= RAW_CACHE_LIMIT: _raw_cache.erase(_raw_recent.pop_front())
+	if _raw_recent.size() >= RAW_CACHE_LIMIT:
+		var retired: String = _raw_recent.pop_front()
+		_raw_cache.erase(retired)
+		_route_verdict_chunks.erase(retired)
 	_raw_cache[member] = row
 	_raw_recent.append(member)
 	_last_raw_origin = origin
@@ -279,6 +283,34 @@ func _new_path_navigator() -> TwilightL1JSourceNavigation:
 	navigator.diagonal_any = policy.get("attribute_rule") == CLIENT_RULE
 	return navigator
 
+func _route_verdict_chunk(origin: Vector2i) -> RouteVerdictChunk:
+	var row: Dictionary = _source_chunk(origin)
+	if row.is_empty(): return null
+	var member: String = _source_chunks[origin]
+	var existing: RouteVerdictChunk = _route_verdict_chunks.get(member)
+	if existing != null: return existing
+	var chunk := RouteVerdictChunk.new()
+	chunk.attributes = row.sections.attributes
+	chunk.floor_refs = row.sections.floor
+	chunk.verdicts.resize(4096)
+	_route_verdict_chunks[member] = chunk
+	return chunk
+
+# Lazy, byte-sized tri-state: unknown, blocked, open. No eager tile scan,
+# unpacking or new I/O. Projection belongs to the caller, not cached bytes.
+class RouteVerdictChunk extends RefCounted:
+	var attributes: PackedByteArray
+	var floor_refs: PackedByteArray
+	var verdicts := PackedByteArray()
+	var decoded: int = 0
+
+	func decode(index: int) -> bool:
+		var open: bool = ((attributes.decode_u16(index*4) | attributes.decode_u16(index*4+2)) & 1) == 0 \
+			and floor_refs.decode_u32(index*8) != 4294967295 and floor_refs.decode_u32(index*8+4) != 4294967295
+		verdicts[index] = 2 if open else 1
+		decoded += 1
+		return open
+
 class Source523Search extends TwilightL1JSourceNavigation:
 	const MAX_VERDICTS: int = 32768
 	var source: RefCounted
@@ -302,6 +334,43 @@ class Source523Search extends TwilightL1JSourceNavigation:
 		if diagonal_any:
 			return sideways or _allowed(cell + Vector2i(0, offset.y))
 		return sideways and _allowed(cell + Vector2i(0, offset.y))
+
+# Used only by the verified generic field with the native attribute rule.
+# Keep A* heap/ties, endpoints and the same at-least-one diagonal side.
+class Verified523Search extends TwilightL1JSourceNavigation:
+	var source: RefCounted
+	var grid_size := Vector2i.ZERO
+	var origin_offset := Vector2i.ZERO
+	var last_cell_origin := Vector2i.ZERO
+	var last_chunk: RouteVerdictChunk
+	var last_from := Vector2i(-1,-1)
+	var last_from_open: bool = false
+
+	func can_step(cell: Vector2i, heading: int) -> bool:
+		if heading < 0 or heading >= 8: return false
+		if cell != last_from:
+			last_from = cell
+			last_from_open = _allowed(cell)
+		if not last_from_open: return false
+		var offset: Vector2i = DIRECTIONS[heading]
+		if not _allowed(cell + offset): return false
+		return offset.x == 0 or offset.y == 0 \
+			or _allowed(cell + Vector2i(offset.x, 0)) or _allowed(cell + Vector2i(0, offset.y))
+
+	func _allowed(cell: Vector2i) -> bool:
+		if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y: return false
+		var local: Vector2i = cell - last_cell_origin
+		if last_chunk == null or local.x < 0 or local.x >= 64 or local.y < 0 or local.y >= 64:
+			var point: Vector2i = cell + origin_offset
+			var origin := Vector2i(point.x & -64, point.y & -64)
+			var chunk: RouteVerdictChunk = source._route_verdict_chunk(origin)
+			if chunk == null: return false
+			last_chunk = chunk
+			last_cell_origin = origin - origin_offset
+			local = point - origin
+		var index: int = local.y*64 + local.x
+		var stored: int = last_chunk.verdicts[index]
+		return stored == 2 if stored != 0 else last_chunk.decode(index)
 
 func line_clear(from: Vector2, to: Vector2) -> bool:
 	return loaded and super.line_clear(from,to)
@@ -364,6 +433,7 @@ func close() -> void:
 	if has_meta("current523_source_field"): remove_meta("current523_source_field")
 	_raw = RAW.new()
 	_raw_cache.clear()
+	_route_verdict_chunks.clear()
 	_raw_recent.clear()
 	_raw_failures.clear()
 	_last_raw_chunk = {}
