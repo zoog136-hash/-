@@ -212,26 +212,31 @@ func _draw_dynamic(canvas: CanvasItem) -> void:
 func _draw_markers(canvas: CanvasItem) -> void:
 	overlay_redraws += 1
 	var font: Font = get_theme_default_font()
+	var player_position: Vector2 = world.player.global_position
 	for child: Node in world.monsters_root.get_children():
 		var monster: TwilightMonster = child as TwilightMonster
-		if monster != null and monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
+		if monster != null and monster.global_position.distance_squared_to(player_position) < 1600000:
 			canvas.draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
 	var camera: Camera2D = world.player.camera
 	var extent: Vector2 = get_viewport_rect().size / camera.zoom
-	var top: Vector2 = _point(camera.get_screen_center_position()-extent*.5)
-	var bottom: Vector2 = _point(camera.get_screen_center_position()+extent*.5)
+	var camera_center: Vector2 = camera.get_screen_center_position()
+	var top: Vector2 = _point(camera_center-extent*.5)
+	var bottom: Vector2 = _point(camera_center+extent*.5)
 	canvas.draw_rect(Rect2(top,bottom-top).intersection(area),Color(1,1,1,.18),false,1)
-	var p: Vector2 = _point(world.player.global_position)
+	var p: Vector2 = _point(player_position)
 	var direction: Vector2 = [Vector2.DOWN,Vector2.UP,Vector2.LEFT,Vector2.RIGHT][world.player.facing]
 	var side := Vector2(-direction.y,direction.x)
 	canvas.draw_circle(p,5,Color("101a18"))
 	canvas.draw_colored_polygon(PackedVector2Array([p+direction*6,p-direction*3+side*3,p-direction*3-side*3]),Color("faf0bb"))
-	var title: String = "지역 지도"
-	if field != null:
-		var region: Dictionary = field.region_at(world.player.global_position)
-		title = str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
-		if field is OriginalPlayableField: title = str(field.data.short_name)
-	canvas.draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
+	canvas.draw_string(font,Vector2(9,181),_overlay_title(player_position),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
+
+func _overlay_title(player_position: Vector2) -> String:
+	# Original fields already render the static short name here. The
+	# discarded dynamic lookup can scan native area declarations on redraw.
+	if field is OriginalPlayableField: return str(field.data.short_name)
+	if field == null: return "지역 지도"
+	var region: Dictionary = field.region_at(player_position)
+	return str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
 
 func _map_polygon(record: Dictionary, key: String = "polygon") -> PackedVector2Array:
 	var points := PackedVector2Array()

@@ -4145,16 +4145,34 @@ func _merge_native_stacks() -> int:
 	var merge: Script=preload("res://scripts/loot/native_stack_merge.gd")
 	var repeated: Dictionary=merge.possible_names(item_instances)
 	if repeated.is_empty():return 0
-	var dormant: Dictionary=dormant_character_items()
-	var floor: Array=_ground_drops_snapshot()
-	var reserved: Dictionary={}
-	for uid: Variant in warehouse.instances: reserved[str(uid)]=true
-	for uid: Variant in dormant: reserved[str(uid)]=true
-	for record: Variant in floor:
-		if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
-	var planned: Dictionary=merge.plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved,repeated)
+	# Keep floor expiry and its transactional save at the previous boundary.
+	# An expiry save can change live owner state; take the attempt's inputs
+	# afterwards and fail closed if it blocked ownership.
+	var started: int=FRAME_HITCH.now()
+	ground_loot.prune()
+	FRAME_HITCH.detail("loot.fold_prune",started)
+	if stock.busy or quest_service.save_blocked or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
+	var owner_inputs: Array=[]
+	var snapshot := func() -> Dictionary:
+		var snapshot_started: int=FRAME_HITCH.now()
+		var floor: Array=ground_loot.records.values().duplicate(true)
+		var dormant: Dictionary=dormant_character_items()
+		owner_inputs.append_array([floor,dormant])
+		var reserved: Dictionary={}
+		for uid: Variant in warehouse.instances: reserved[str(uid)]=true
+		for uid: Variant in dormant: reserved[str(uid)]=true
+		for record: Variant in floor:
+			if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
+		var state: Dictionary=consumable_service.export_state()
+		FRAME_HITCH.detail("loot.fold_owner_snapshot",snapshot_started)
+		return {"state":state,"reserved":reserved}
+	started=FRAME_HITCH.now()
+	var planned: Dictionary=merge.plan(item_instances,{},ui_preferences.get("item_locks",{}),{},repeated,snapshot)
+	FRAME_HITCH.detail("loot.fold_plan",started)
 	if not planned.get("changed",false): return 0
-	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
+	started=FRAME_HITCH.now()
+	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),owner_inputs[0],owner_inputs[1])
+	FRAME_HITCH.detail("loot.fold_validate",started)
 	# A plan the full ownership check rejects is not adopted; the bag stays as
 	# it is (still valid) and nothing is saved.
 	if not issue.is_empty(): return 0
@@ -4766,11 +4784,13 @@ func _use_card_pack_item(item_name: String) -> void:
 		return
 	# Persist an atomic (card ownership + ticket debit) transaction. Never show
 	# a new card or consume the ticket if the old save cannot be replaced.
-	var cards_before: Dictionary = card_draw_fusion.export_state()
-	var roll_before: int = card_draw_fusion.rng.state
+	var phase: int = FRAME_HITCH.now()
+	var cards_before: Dictionary = card_draw_fusion.draw_checkpoint(category)
 	var ticket_before: int = int(inventory.get(item_name, 0))
 	var outcome: Dictionary = card_draw_fusion.draw_cards(category, count)
+	FRAME_HITCH.detail("card.normal_draw", phase)
 	if not bool(outcome.get("ok", false)):
+		card_draw_fusion.restore_draw_checkpoint(category, cards_before)
 		hud.show_message(str(outcome.get("error", "뽑기 실패")))
 		return
 	var remaining: int = ticket_before - 1
@@ -4786,21 +4806,35 @@ func _use_card_pack_item(item_name: String) -> void:
 	var message: String = "%s %d회 완료 · 고급 %d · 희귀 %d · 영웅 %d · 전설 %d" % [
 		category, count, int(grades.get("고급", 0)), int(grades.get("희귀", 0)),
 		int(grades.get("영웅", 0)), int(grades.get("전설", 0))]
-	if _save_game(true) != OK:
-		card_draw_fusion.import_state(cards_before)
-		card_draw_fusion.rng.state = roll_before
+	phase = FRAME_HITCH.now()
+	var saved: Error = _save_game(true)
+	FRAME_HITCH.detail("card.normal_save", phase)
+	if saved != OK:
+		card_draw_fusion.restore_draw_checkpoint(category, cards_before)
 		_invalidate_equipment_static()
 		inventory[item_name] = ticket_before
 		hud.refresh_inventory(inventory)
 		hud.show_message("뽑기 저장 실패 · 뽑기권과 카드 보유 상태를 복구했습니다")
 		return
 	routines.record("card_buy",{"deck":int(ROUTINE523.CARD_DECKS.get(category,0)),"amount":1})
-	hud.refresh_inventory(inventory)
-	_update_hud()
+	phase = FRAME_HITCH.now()
+	# Reuse the original-ticket publication batch for this normal ticket.
+	# Supplied counts, physical instances and cards reach the HUD before reveal.
+	if hud.has_method("publish_committed_ticket_hud"):
+		hud.publish_committed_ticket_hud(_publish_normal_card_pack_hud)
+	else:
+		_publish_normal_card_pack_hud()
+	FRAME_HITCH.detail("card.normal_hud_publish", phase)
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.show_message(message)
 	hud.append_log(message)
+	phase = FRAME_HITCH.now()
 	hud.call("present_card_reveal", category, outcome, false)
+	FRAME_HITCH.detail("card.normal_reveal", phase)
+
+func _publish_normal_card_pack_hud() -> void:
+	hud.refresh_inventory(inventory)
+	_update_hud()
 
 func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
 	if consumable_service == null: return
@@ -7625,8 +7659,13 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	FRAME_HITCH.detail("save.account", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
 	CHARACTER_ACCOUNT.forget_durable()
-	var result: Error = equipment_collections.write_save(save_path(), data)
-	if result == OK and written_envelope is Dictionary: CHARACTER_ACCOUNT.remember_durable(save_path(), written_envelope)
+	# Dungeon-only writes (periodic checkpoint, time exhaustion or stop) stage
+	# a new ledger revision. Don't hash and retain a second full typed save
+	# just for the fast path used by repeated identical saves.
+	var retain_typed_snapshot: bool=not (collection_override.size()==1 and collection_override.has("source_dungeon_play"))
+	var result: Error = equipment_collections.write_save(save_path(), data, retain_typed_snapshot)
+	if result==OK and written_envelope is Dictionary:
+		CHARACTER_ACCOUNT.remember_verified_durable(save_path(),written_envelope,equipment_collections.verified_payload_sha(save_path()))
 	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):

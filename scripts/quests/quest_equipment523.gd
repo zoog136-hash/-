@@ -1,4 +1,5 @@
 extends RefCounted
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Selected quest ownership -> staged physical gear/equip -> one durable save.
 ## Exact base AC/HP/MP/MR/STR and compiled rank0 XP; other positive effects stay held.
@@ -31,11 +32,12 @@ func configure(world: Node)->void:
   if arg.begins_with("--quest-equipment-view="):path=arg.trim_prefix("--quest-equipment-view=")
   if arg.begins_with("--quest-equipment-view-sha256="):sha=arg.trim_prefix("--quest-equipment-view-sha256=")
  if path.is_empty() and sha.is_empty():return
- if sha!=VIEW_SHA or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=sha:problem="정확한 장비 규칙 SHA 필요";return
+ if sha!=VIEW_SHA or not FileAccess.file_exists(path):problem="정확한 장비 규칙 SHA 필요";return
+ var bytes := VerifiedBytes.read(FileAccess.open(path,FileAccess.READ),36196)
+ if VerifiedBytes.sha256(bytes)!=sha:problem="정확한 장비 규칙 SHA 필요";return
  if cached.is_empty():
-  var file:=FileAccess.open(path,FileAccess.READ)
-  if file==null or file.get_length()!=36196:problem="장비 규칙 크기 불일치";return
-  var parsed: Variant=JSON.parse_string(file.get_as_text())
+  if bytes.size()!=36196:problem="장비 규칙 크기 불일치";return
+  var parsed: Variant=JSON.parse_string(bytes.get_string_from_utf8())
   if not parsed is Dictionary or parsed.get("schema")!="twilight-quest-equipment-view-v1" or parsed.get("source_rules_sha256")!=RULE_SHA or parsed.get("snapshot")!="patch523" or parsed.get("catalog_sha256")!=FileAccess.get_sha256("res://data/catalog_v19.json") or parsed.get("source_files",{}).size()!=38:problem="장비 규칙 원본·카탈로그 불일치";return
   cached=parsed
  data=cached;problem=""

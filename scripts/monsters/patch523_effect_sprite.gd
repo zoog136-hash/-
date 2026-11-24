@@ -1,5 +1,6 @@
 extends Node2D
 ## One source action, one layer, no replacement pixels or damage timing callbacks.
+const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd")
 var frames: Array = []
 var textures: Array[Texture2D] = []
 var durations: Array[float] = []
@@ -25,9 +26,9 @@ func configure(root: String, record: Dictionary, fallback_fps: float, alpha: flo
 	for frame: Dictionary in frames:
 		var path: String = root.path_join(frame.path)
 		var file := FileAccess.open(path,FileAccess.READ)
-		if file == null or file.get_length() > 4*1024*1024 or file.get_length() != int(frame.get("bytes",-1)) or FileAccess.get_sha256(path) != frame.get("sha256"): return false
-		var image := Image.new()
-		if image.load_png_from_buffer(file.get_buffer(file.get_length())) != OK or image.get_width() > 2048 or image.get_height() > 2048: return false
+		if file == null or file.get_length() > 4*1024*1024 or file.get_length() != int(frame.get("bytes",-1)): return false
+		var image: Image = _verified_frame(file, frame)
+		if image == null or image.get_width() > 2048 or image.get_height() > 2048: return false
 		budget += image.get_width()*image.get_height()*4
 		if budget > 64*1024*1024: return false
 		textures.append(ImageTexture.create_from_image(image))
@@ -51,6 +52,12 @@ func configure(root: String, record: Dictionary, fallback_fps: float, alpha: flo
 		add_child(child); layer_effects.append(child)
 		total = maxf(total,float(child.total))
 	return true
+
+func _verified_frame(file: FileAccess, frame: Dictionary) -> Image:
+	var bytes: PackedByteArray = CHECKED_BYTES.read(file, file.get_length(), str(frame.get("sha256","")))
+	if bytes.is_empty(): return null
+	var image := Image.new()
+	return image if image.load_png_from_buffer(bytes) == OK else null
 
 func show_frame(index: int) -> void:
 	frame_index = index; sprite.texture = textures[index]

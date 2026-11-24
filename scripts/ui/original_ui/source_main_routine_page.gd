@@ -93,9 +93,10 @@ func fill(root: Node2D, out: Dictionary, staged: Dictionary) -> Dictionary:
 	var runtime: Object=_runtime()
 	var c: Dictionary=runtime.contract() if runtime!=null else {}
 	var pictures: int=0
+	var reads: Dictionary={}
 	if not staged.complete.is_empty() and _reward_picture(root,out,"Nd_Achieve/Common_Slim_ItemSlot/Sp_IconSample",staged.complete.rewards):pictures+=1
 	# Mission type buttons.
-	var buttons: Dictionary=_tree.list_content(root,out,TAB_MISSION,"Nd_Button/ListView")
+	var buttons: Dictionary=_tree.list_content(root,out,TAB_MISSION,"Nd_Button/ListView",reads)
 	if not buttons.get("ok",false):return buttons
 	var types: Array[int]=SRC.TYPE_ORDER if c.get("ok",false) else []
 	for index: int in range(types.size()):
@@ -108,11 +109,11 @@ func fill(root: Node2D, out: Dictionary, staged: Dictionary) -> Dictionary:
 		for id: int in c.by_type.get(SRC.COMPLETE_TYPE,[]):
 			if int(c.missions[id].get("counts_type",0))==type_id and runtime.receivable(id):waiting=true
 		var spec: Dictionary={"Panel/Btn_Normal":{"visible":not on,"activate":Callable(self,"_select_type").bind(type_id)},"Panel/Btn_Pressed":{"visible":on,"activate":Callable(self,"_select_type").bind(type_id)},"Btn_Normal/Label":{"role":"source_text","text":label},"Btn_Pressed/Label":{"role":"source_text","text":label},"Panel/Sp_Lock":{"visible":false},"Panel/Sprite_New":{"visible":waiting},"Panel/Sp_Event":{"visible":false}}
-		var built: Dictionary=_tree.scene_of(ROW_BUTTON,spec,{})
+		var built: Dictionary=_tree.scene_of(ROW_BUTTON,spec,{},reads)
 		if not built.get("ok",false):return built
-		_tree.add_row(buttons.content,ROW_BUTTON,built.scene,index,buttons.size,0.0)
+		_tree.add_row(buttons.content,ROW_BUTTON,built.scene,index,buttons.size,0.0,reads)
 	# Mission rows: receivable first, then in progress, then received.
-	var list: Dictionary=_tree.list_content(root,out,TAB_MISSION,"Nd_List/ListView")
+	var list: Dictionary=_tree.list_content(root,out,TAB_MISSION,"Nd_List/ListView",reads)
 	if not list.get("ok",false):return list
 	var ordered: Array[Dictionary]=[]
 	for status: Array in [["receivable"],["progress","refused"],["claimed"]]:
@@ -137,12 +138,11 @@ func fill(root: Node2D, out: Dictionary, staged: Dictionary) -> Dictionary:
 			ROW_REWARD:
 				spec["Panel/Button"]={"activate":Callable(self,"_claim").bind(int(row.id))}
 				spec["Panel/Sprite_New"]={"visible":true}
-		var built: Dictionary=_tree.scene_of(member,spec,{})
-		if not built.get("ok",false):return built
 		var row_out: Dictionary={}
-		_tree.bind(member,"",[],{},row_out)
+		var built: Dictionary=_tree.scene_of(member,spec,row_out,reads)
+		if not built.get("ok",false):return built
 		if _reward_picture(built.scene,row_out,"Common_Slim_ItemSlot/Sp_IconSample",row.rewards):pictures+=1
-		_tree.add_row(list.content,member,built.scene,index,list.size,0.0)
+		_tree.add_row(list.content,member,built.scene,index,list.size,0.0,reads)
 	_content=list.content
 	_scroll_min=minf(0.0,list.size.y-ROW_HEIGHT*float(ordered.size()))
 	_scroll=clampf(_scroll,_scroll_min,0.0)

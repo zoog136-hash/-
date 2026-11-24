@@ -49,7 +49,6 @@ func build(member: String) -> Dictionary:
 	var buttons: Variant=side.get("equipment_buttons")
 	if not state is Dictionary or not state.get("equipped_items") is Dictionary or not buttons is Dictionary:return _fail("source_equipment_current_owner_model_required")
 	var tree: Dictionary=_layout_or_scene(member)
-	if tree.is_empty():tree=_pack.scene(member)
 	var panel: Dictionary=_node_at(tree.get("nodeTree",{}),int(spec.panel))
 	if panel.get("classname")!="Panel":return _fail("source_equipment_original_page_panel_missing")
 	var panel_widget: Dictionary=_widget(panel)

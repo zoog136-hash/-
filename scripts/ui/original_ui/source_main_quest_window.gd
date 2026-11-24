@@ -436,11 +436,12 @@ func _row(quest: Dictionary, is_selected: bool) -> Dictionary:
 	if spec.has("complete"):
 		scope.append(int(spec.complete))
 		bindings[int(spec.complete)]={"role":"static_source_text"}
-	_consume_touch(member,scope,bindings)
+	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	_consume_tree_touch(tree,scope,bindings)
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,member,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
-	var panel: Dictionary=Scene._node_at_offset(_pack.scene(member).get("nodeTree",{}),int(spec.panel))
+	var panel: Dictionary=Scene._node_at_offset(tree,int(spec.panel))
 	var widget: Dictionary=panel.get("options",{}).get("widgetOptions",{})
 	# Left edge of the row panel relative to the row root (position minus
 	# anchor share): Quest_List_Reward is anchored 0 at -225, the others 0.5 at 0.
@@ -546,7 +547,9 @@ func _scroll_to(requested: float) -> Dictionary:
 ## Touch-enabled original nodes inside the mounted subtrees that this window
 ## gives no action swallow their touch (as the client's modal window does).
 func _consume_touch(member: String, scope: Array[int], bindings: Dictionary) -> void:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+	_consume_tree_touch(_pack.scene(member).get("nodeTree",{}),scope,bindings)
+
+static func _consume_tree_touch(tree: Dictionary, scope: Array[int], bindings: Dictionary) -> void:
 	for offset: int in scope:
 		_consume_subtree(Scene._node_at_offset(tree,offset),bindings)
 

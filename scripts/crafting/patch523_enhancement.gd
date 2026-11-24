@@ -9,10 +9,12 @@ static var _invoke_tables: Dictionary={}
 
 static func policy() -> Dictionary:
 	if not _settings.is_empty(): return _settings
-	var parsed: Variant=JSON.parse_string(FileAccess.get_file_as_string(POLICY))
+	# The record's policy SHA describes the very same content we interpreted.
+	var bytes: PackedByteArray=FileAccess.get_file_as_bytes(POLICY)
+	var parsed: Variant=JSON.parse_string(bytes.get_string_from_utf8()) if not bytes.is_empty() else null
 	if parsed is Dictionary:
 		_settings=parsed
-		_policy_digest=FileAccess.get_sha256(POLICY)
+		_policy_digest=preload("res://scripts/lineagem_pack_install.gd").sha(bytes)
 	return _settings
 
 static func item_id(record: Dictionary) -> String:

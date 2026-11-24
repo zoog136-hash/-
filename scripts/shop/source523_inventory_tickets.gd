@@ -1,4 +1,5 @@
 extends RefCounted
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Owned-ticket redemption; no market purchase, new card pool, or free issuance.
 ## Every original LinMarketProduct draw ticket whose products are whole
@@ -95,11 +96,13 @@ func load_original() -> bool:
 	return true
 
 func load_pack(path:String,expected:String) -> bool:
-	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _reject("티켓 확장팩 해시 확인 실패")
+	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path):return _reject("티켓 확장팩 해시 확인 실패")
 	var file:=FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()>2*1024*1024:return _reject("티켓 확장팩 크기·접근 오류")
+	var bytes := VerifiedBytes.read(file,2*1024*1024)
+	if VerifiedBytes.sha256(bytes)!=expected.to_lower():return _reject("티켓 확장팩 해시 확인 실패")
 	var json:=JSON.new()
-	if json.parse(file.get_as_text())!=OK or not json.data is Dictionary:return _reject("티켓 확장팩 JSON 오류")
+	if json.parse(bytes.get_string_from_utf8())!=OK or not json.data is Dictionary:return _reject("티켓 확장팩 JSON 오류")
 	var data:Dictionary=json.data
 	return _accept_input(data,expected.to_lower(),{"kind":"twilight.source523.ticket-pack-input.v1","payload_sha256":expected.to_lower(),"declared_source_zip_sha256":runtime.Catalog.SOURCE_SHA256})
 
