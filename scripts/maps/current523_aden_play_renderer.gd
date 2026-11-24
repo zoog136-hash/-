@@ -59,6 +59,10 @@ const HELD_ATLAS_LIMIT: int = 128
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
+# Start the next window before the camera reaches its edge. Keep the same
+# number of blocks in a window, so anticipation does not raise GPU residency.
+const LOOK_AHEAD_SECONDS: float = 0.35
+const MAX_LOOK_AHEAD: float = BUILD_MARGIN * 0.5
 ## Frame spread (user report 2026-11-20, phone recording: running diagonally
 ## into new ground stalled about every 0.25 s). A frame build that left margin
 ## blocks unbaked used to clear the built view, so every 0.25 s refresh
@@ -107,6 +111,9 @@ var _raw_chunks: Dictionary = {}
 var _raw_recent: Array[String] = []
 var _frame_commands: Dictionary = {}
 var _built_view := Rect2() # World rect the current frame commands cover.
+var _arrival_view := Rect2()
+var _arrival_keep: Array[Vector2i] = []
+var _arrival_problem: String = ""
 var _frame_atlases: Dictionary = {}
 ## Block cell -> {viewport, canvas, commands {layer: PackedInt64Array},
 ## atlases {tile_id: Texture2D}, count (records owned), draws, raw_ff, unresolved}.
@@ -480,6 +487,7 @@ func _candidate_rect(origin: Vector2i) -> Rect2:
 
 
 func _view_rect() -> Rect2:
+	if _arrival_view.has_area(): return _arrival_view
 	var viewport: Rect2 = player.get_viewport_rect()
 	var inverse: Transform2D = player.get_canvas_transform().affine_inverse()
 	var view := Rect2(inverse * viewport.position, Vector2.ZERO)
@@ -1110,6 +1118,13 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 	return ready
 
 
+# Start CPU draw-list assembly while the atlases decode. Both jobs use the
+# same installed chunk data; none of this publishes texture work early.
+func _start_waiting_block_job(cell: Vector2i, urgent: bool) -> void:
+	if _background_atlases and block_jobs_enabled and _pending_tiles.has(cell) and not _block_jobs.has(cell):
+		_start_block_job(cell,urgent)
+
+
 ## A pending block's readiness: its recorded atlas IDs only, once every chunk
 ## near it was read; else the full record walk (which records them).
 func _pending_tiles_ready(cell: Vector2i) -> bool:
@@ -1280,8 +1295,26 @@ func _clear_blocks(retire: bool = false) -> void:
 	_pending_tiles.clear()
 
 
+# The camera follows the actor with smoothing. Prefer where movement is
+# taking it, but keep a margin on all sides for turns and reversal.
+func _motion_coverage(screen: Rect2) -> Rect2:
+	if _arrival_view.has_area() or not player is CharacterBody2D: return screen
+	var motion: Vector2 = (player as CharacterBody2D).get_real_velocity()
+	var lead: Vector2 = (motion * LOOK_AHEAD_SECONDS).limit_length(MAX_LOOK_AHEAD)
+	return screen.merge(Rect2(screen.position + lead, screen.size))
+
+
+func _trim_block_cache(needed: Array[Vector2i]) -> void:
+	if _block_recent.size() <= BLOCK_CACHE_LIMIT: return
+	for cell: Vector2i in _block_recent.duplicate():
+		if _block_recent.size() <= BLOCK_CACHE_LIMIT: break
+		if not needed.has(cell) and not _arrival_keep.has(cell): _free_block(cell)
+
+
 func _build_frame() -> bool:
-	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
+	var screen: Rect2 = _view_rect()
+	var view: Rect2 = screen.grow(BUILD_MARGIN)
+	var ahead: Rect2 = _motion_coverage(screen)
 	for cell: Vector2i in _block_jobs.keys():
 		if _view_has_cell(view, cell): continue
 		if _block_jobs[cell].has("task"):
@@ -1298,7 +1331,6 @@ func _build_frame() -> bool:
 	if _blocks_include_objects != include_objects:
 		_clear_blocks()
 		_blocks_include_objects = include_objects
-	var screen: Rect2 = _view_rect()
 	var first := Vector2i(floori(view.position.x / BLOCK), floori(view.position.y / BLOCK))
 	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
 	var cells: Array[Vector2i] = []
@@ -1309,12 +1341,15 @@ func _build_frame() -> bool:
 	var build_started: int = Time.get_ticks_usec()
 	var pending: Array[Vector2i] = []
 	var order: Array[Vector2i] = []
+	var approaching: Array[Vector2i] = []
 	var margin: Array[Vector2i] = []
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
 			var wanted := Vector2i(bx, by)
 			if _block_rect(wanted).intersects(screen): order.append(wanted)
+			elif _block_rect(wanted).intersects(ahead): approaching.append(wanted)
 			else: margin.append(wanted)
+	order.append_array(approaching)
 	order.append_array(margin)
 	var sliced: bool = _background_atlases or block_jobs_enabled or (_raw_sources != null and _raw_sources.has_method("read_member_job"))
 	var draws: int = 0
@@ -1333,6 +1368,7 @@ func _build_frame() -> bool:
 				pending.append(cell)
 				continue
 			var ready: bool = _pending_tiles_ready(cell)
+			if not ready: _start_waiting_block_job(cell,on_screen)
 			if not on_screen and not ready:
 				partial = true
 				pending.append(cell)
@@ -1378,10 +1414,9 @@ func _build_frame() -> bool:
 		if not pending.has(cell): _pending_retry.erase(cell)
 	for cell: Vector2i in _pending_tiles.keys():
 		if not pending.has(cell): _pending_tiles.erase(cell)
-	while _block_recent.size() > BLOCK_CACHE_LIMIT:
-		var oldest: Vector2i = _block_recent[0]
-		if cells.has(oldest): break
-		_free_block(oldest)
+	for cell: Vector2i in _screen_wait.keys():
+		if not pending.has(cell): _screen_wait.erase(cell)
+	_trim_block_cache(cells)
 	unresolved_tile_refs = unresolved
 	_frame_commands.clear()
 	_draw_generation+=1
@@ -1409,7 +1444,7 @@ func _build_frame() -> bool:
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
 	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	_visible_members=visible.duplicate()
-	_refresh_static_objects()
+	if not _arrival_view.has_area(): _refresh_static_objects()
 	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
@@ -1443,9 +1478,13 @@ func _refresh_static_objects() -> void:
 ## Arrival readiness is visible ground, not margin prefetch or NPC counts.
 ## A baked viewport is ready only after its first actual render submission.
 func arrival_readiness() -> Dictionary:
+	if not _arrival_problem.is_empty(): return {"ready":false,"failed":true,"reason":_arrival_problem}
+	return _ground_readiness(_view_rect())
+
+
+func _ground_readiness(screen: Rect2) -> Dictionary:
 	if not problem.is_empty(): return {"ready":false,"failed":true,"reason":problem}
 	if not _configured or field == null or not is_instance_valid(player): return {"ready":false,"failed":true,"reason":"도착 화면의 연결이 사라졌습니다."}
-	var screen: Rect2 = _view_rect()
 	for member: String in _unreadable_chunks:
 		if (_chunk_rects.get(member,Rect2()) as Rect2).intersects(screen):
 			return {"ready":false,"failed":true,"reason":"도착 지역 원문 청크를 읽지 못했습니다: "+member}
@@ -1458,6 +1497,48 @@ func arrival_readiness() -> Dictionary:
 			if block.is_empty() or not bool(block.get("presented",false)): pending += 1
 	return {"ready":pending==0,"failed":false,"pending_visible_blocks":pending,"reason":""}
 
+## Use the real camera projection (zoom, smoothing reset and map limits).
+## No provisional actor position is published while the destination streams.
+func destination_view(destination: Vector2, camera: Camera2D) -> Rect2:
+	var camera_position: Vector2 = camera.global_position
+	camera.global_position += destination - player.global_position
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	var screen: Rect2 = _view_rect()
+	camera.global_position = camera_position
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	return screen
+
+
+func is_ground_ready(screen: Rect2) -> bool:
+	return _ground_readiness(screen).get("ready",false)
+
+
+## Caller holds the loading cover. Pin source-screen blocks for rollback while
+## the existing bounded pump services the destination, with no player move.
+func begin_arrival_view(screen: Rect2) -> void:
+	var source_screen: Rect2 = _view_rect()
+	for cell: Vector2i in _visible_blocks:
+		if _block_rect(cell).intersects(source_screen): _arrival_keep.append(cell)
+	_arrival_view = screen
+	_arrival_problem = ""
+	_built_view = Rect2()
+	_refresh_clock = 0.0
+
+
+func end_arrival_view() -> void:
+	for cell: Vector2i in _visible_blocks:
+		if _block_rect(cell).intersects(_arrival_view) and not _arrival_keep.has(cell):
+			_arrival_keep.append(cell)
+	_arrival_view = Rect2()
+	_arrival_problem = ""
+	# Restore the old viewport first. A successful caller then moves and
+	# refreshes against the already-baked destination from the same cache.
+	refresh_visible()
+	_arrival_keep.clear()
+
+
 func refresh_visible() -> void:
 	_built_view = Rect2()
 	_force_objects_refresh = true
@@ -1467,15 +1548,16 @@ func refresh_visible() -> void:
 
 func _refresh_view() -> void:
 	if not _configured: return
-	var scope: String = _scope_problem()
-	if not scope.is_empty(): _fail(scope); return
+	if not _arrival_view.has_area():
+		var scope: String = _scope_problem()
+		if not scope.is_empty(): _fail(scope); return
 	# Rebuild only when the screen leaves the area the frame was built for.
-	if not (_built_view.has_area() and _built_view.encloses(_view_rect())):
+	if not _built_view.encloses(_motion_coverage(_view_rect())):
 		var build_started: int = FRAME_HITCH.now()
 		var built_ok: bool = _build_frame()
 		FRAME_HITCH.detail("map.build_frame", build_started)
 		if not built_ok: return
-	_refresh_markers_if_moved(false)
+	if not _arrival_view.has_area(): _refresh_markers_if_moved(false)
 
 
 ## Name labels within 1400 px and the collision stream follow the actor: the
@@ -1516,13 +1598,18 @@ func _bake_pending(budget_usec: int) -> int:
 	var now_msec: int = Time.get_ticks_msec()
 	var screen: Rect2 = _view_rect()
 	var keep: Rect2 = _built_view
+	var ahead: Rect2 = _motion_coverage(screen)
 	var baked: int = 0
 	var late_bakes: int = 0
 	var order: Array[Vector2i] = []
+	var approaching: Array[Vector2i] = []
 	var later: Array[Vector2i] = []
 	for cell: Vector2i in _pending_blocks:
-		if _block_rect(cell).intersects(screen): order.append(cell)
+		var rect: Rect2 = _block_rect(cell)
+		if rect.intersects(screen): order.append(cell)
+		elif rect.intersects(ahead): approaching.append(cell)
 		else: later.append(cell)
+	order.append_array(approaching)
 	order.append_array(later)
 	var remaining: Array[Vector2i] = []
 	for index: int in order.size():
@@ -1539,6 +1626,7 @@ func _bake_pending(budget_usec: int) -> int:
 		var on_screen: bool = _block_rect(cell).intersects(screen)
 		var force_sync: bool = not _pending_tiles_ready(cell)
 		if force_sync:
+			_start_waiting_block_job(cell,on_screen)
 			var waited: bool = false
 			if on_screen and not _background_atlases:
 				var since: int = int(_screen_wait.get(cell, now_msec))
@@ -1568,10 +1656,7 @@ func _bake_pending(budget_usec: int) -> int:
 	_pending_blocks = remaining
 	if baked > 0:
 		FRAME_HITCH.count("map.pending_blocks_baked", baked)
-		while _block_recent.size() > BLOCK_CACHE_LIMIT:
-			var oldest: Vector2i = _block_recent[0]
-			if _visible_blocks.has(oldest): break
-			_free_block(oldest)
+		_trim_block_cache(_visible_blocks)
 		_metrics["visible_blocks"] = _visible_blocks.size()
 		_metrics["cached_blocks"] = _blocks.size()
 		_draw_generation += 1
@@ -1597,9 +1682,9 @@ func _process_step(delta: float) -> void:
 	if _tile_pack != null and _tile_pack.has_method("prioritize"):
 		# Refresh cheap cached hints before publication, even during the 50 ms
 		# readiness retry interval. No chunk/record walk or texture acquisition.
-		var screen: Rect2 = _view_rect()
+		var ahead: Rect2 = _motion_coverage(_view_rect())
 		for pending: Vector2i in _pending_blocks:
-			if not _block_rect(pending).intersects(screen): continue
+			if not _block_rect(pending).intersects(ahead): continue
 			for tile_id: int in _pending_tiles.get(pending, PackedInt32Array()):
 				_tile_pack.call("prioritize", tile_id)
 	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
@@ -1608,7 +1693,7 @@ func _process_step(delta: float) -> void:
 		_pump_chunk_jobs()
 		FRAME_HITCH.detail("map.chunk_install", chunks_started)
 	var scope_started: int = FRAME_HITCH.now()
-	var scope: String = _scope_problem()
+	var scope: String = "" if _arrival_view.has_area() else _scope_problem()
 	FRAME_HITCH.detail("map.scope", scope_started)
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
@@ -1618,19 +1703,23 @@ func _process_step(delta: float) -> void:
 	if cell != _last_actor_cell:
 		_last_actor_cell = cell
 	_refresh_clock -= delta
-	if _refresh_clock <= 0.0:
+	var budget: int = PENDING_BAKE_BUDGET_USEC
+	var view_needed: bool = not _built_view.encloses(_motion_coverage(_view_rect()))
+	if (_built_view.has_area() and view_needed) or _refresh_clock <= 0.0:
 		_refresh_clock = 0.25
+		var refresh_started: int = Time.get_ticks_usec()
 		_refresh_view()
-	if _configured and not _pending_blocks.is_empty():
+		if view_needed: budget -= Time.get_ticks_usec() - refresh_started
+	if _configured and not _pending_blocks.is_empty() and budget > 0:
 		var pending_started: int = FRAME_HITCH.now()
-		_bake_pending(PENDING_BAKE_BUDGET_USEC)
+		_bake_pending(budget)
 		FRAME_HITCH.detail("map.pending_bake", pending_started)
-	if _configured and _force_objects_refresh: _refresh_static_objects()
+	if _configured and _force_objects_refresh and not _arrival_view.has_area(): _refresh_static_objects()
 
 
 func _draw_tiles(canvas: Node2D) -> void:
 	if not _configured: return
-	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
+	var observe: bool=not _arrival_view.has_area() and USAGE.actual_main(self) and _usage_generation!=_draw_generation
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
 	var observed_refs: Dictionary={}
 	for cell: Vector2i in _visible_blocks:
@@ -1684,6 +1773,9 @@ func _unresolved_tile(tile_id: int, detail: String) -> void:
 
 
 func _fail(reason: String) -> bool:
+	if _arrival_view.has_area():
+		_arrival_problem = reason
+		return false
 	problem = reason
 	failure = reason
 	var active: bool = _configured and is_inside_tree() and is_visible_in_tree()
@@ -1706,6 +1798,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_RESUMED and _configured:
 		_clear_blocks()
 		_built_view = Rect2()
+		_refresh_clock = 0.0
 
 
 func _exit_tree() -> void:

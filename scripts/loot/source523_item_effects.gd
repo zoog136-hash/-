@@ -494,6 +494,12 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 ## A plain name-keyed stack of a claimed item (no receipted physical stack of
 ## that name): true when handled here.
 static func try_use_plain(world: Node, item_name: String, known_record: Variant=null) -> bool:
+	return (load("res://scripts/loot/source523_item_effects.gd") as Script).call("_try_use_plain_impl",world,item_name,known_record,false)
+
+static func try_use_plain_loading(world: Node, item_name: String, known_record: Variant) -> bool:
+	return await _try_use_plain_impl(world,item_name,known_record,true)
+
+static func _try_use_plain_impl(world: Node, item_name: String, known_record: Variant, loading: bool) -> bool:
 	if item_name.is_empty(): return false
 	var record: Dictionary = known_record if known_record is Dictionary else world._find_catalog_item_record(item_name)
 	if record.is_empty() or str(record.get("name",""))!=item_name: return false
@@ -528,7 +534,9 @@ static func try_use_plain(world: Node, item_name: String, known_record: Variant=
 	if prepared.has("experience"): payload["experience"] = int(prepared.experience)
 	if prepared.has("travel"):
 		# The debit is saved by the arrival's own checkpoint save.
-		var moved: Dictionary = world.item523_teleport_land(int(prepared.travel.land_id), prepared.travel.bounds, payload)
+		var moved: Dictionary
+		if loading: moved = await world.item523_teleport_land_loading(int(prepared.travel.land_id),prepared.travel.bounds,payload)
+		else: moved = world.item523_teleport_land(int(prepared.travel.land_id),prepared.travel.bounds,payload)
 		if not moved.get("ok",false):
 			world.hud.show_message(str(moved.get("reason","이동 실패")) + (" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
 			return true
@@ -542,7 +550,9 @@ static func try_use_plain(world: Node, item_name: String, known_record: Variant=
 		world.hud.append_log(str(prepared.message))
 		return true
 	var previous: Vector2 = world.player.global_position
-	if prepared.has("destination"): world.consumable_service._teleport_player(prepared.destination)
+	if prepared.has("destination"):
+		if loading and not await world.prepare_map_point(prepared.destination): return true
+		world.consumable_service._teleport_player(prepared.destination)
 	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") else world._save_game(true, payload)
 	if saved!=OK:
 		if prepared.has("destination"): world.consumable_service._teleport_player(previous)

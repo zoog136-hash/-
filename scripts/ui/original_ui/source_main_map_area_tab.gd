@@ -112,7 +112,7 @@ func bind(field_map: Object, world_id: int, world_label: String) -> Dictionary:
 		"CheckBox_Land":{"visible":true},
 		"Teleport_Enabled":{"visible":false},
 		"Teleport_Enabled/Payment/Label":{"role":"source_text","text":"0"},
-		"Teleport_Enabled/Btn_Teleport":{"activate":Callable(self,"_teleport_requested")},
+		"Teleport_Enabled/Btn_Teleport":{"activate":Callable(self,"_teleport_input")},
 		"Nd_Title":{"visible":true},
 		"Nd_Title/Label":{"role":"source_text","text":world_label},
 	}
@@ -352,7 +352,16 @@ func _level() -> int:
 	var world: Node=_world()
 	return int(world.get("level")) if world!=null and world.get("level")!=null else 1
 
+func _teleport_input() -> Dictionary:
+	_teleport_requested_impl(true)
+	return {"ok":true}
+
+
 func _teleport_requested() -> Dictionary:
+	return call("_teleport_requested_impl",false)
+
+
+func _teleport_requested_impl(loading: bool) -> Dictionary:
 	var world: Node=_world()
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	var area: Dictionary=AREAS.area(_world_id,_selected)
@@ -361,7 +370,9 @@ func _teleport_requested() -> Dictionary:
 	if not quote.get("ok",false):
 		if hud.has_method("show_message"):hud.call("show_message",str(quote.get("reason","")))
 		return {"ok":false,"reason":str(quote.get("reason",""))}
-	var result: Dictionary=world.call("current523_map_teleport",str(area.destination_id))
+	var result: Dictionary
+	if loading and world.has_method("current523_map_teleport_loading"): result = await world.call("current523_map_teleport_loading",str(area.destination_id))
+	else: result = world.call("current523_map_teleport",str(area.destination_id))
 	if hud.has_method("show_message"):hud.call("show_message",str(result.get("reason","")))
 	# Arrived: the map closes (the field it showed is left behind).
 	if result.get("ok",false) and hud.has_method("toggle_map"):

@@ -190,8 +190,8 @@ func _spec(world: Node, chosen: Dictionary, quote: Dictionary) -> Dictionary:
 	spec[P_TAB+"Teleport_Enabled"]={"visible":has and ok}
 	spec[P_TAB+"Teleport_Enabled/Payment/Label"]={"role":"source_text","text":_number(int(chosen.get("price",0)))}
 	spec[P_TAB+"Teleport_Enabled/Payment/Icon"]={"role":"source_asset_slot","visible":false}
-	spec[P_TAB+"Teleport_Enabled/Btn_Teleport"]={"activate":Callable(self,"_teleport_requested")}
-	spec[P_TAB+"Teleport_Disabled"]={"visible":has and not ok,"title":str(quote.get("reason","")),"activate":Callable(self,"_teleport_requested")}
+	spec[P_TAB+"Teleport_Enabled/Btn_Teleport"]={"activate":Callable(self,"_teleport_input")}
+	spec[P_TAB+"Teleport_Disabled"]={"visible":has and not ok,"title":str(quote.get("reason","")),"activate":Callable(self,"_teleport_input")}
 	return spec
 
 ## The tab's own NPC_On clip fades in Hadin (Nd_Npc), the 텔레포트 비용 and
@@ -292,7 +292,16 @@ func _select(map_id: String) -> Dictionary:
 	_selected=map_id
 	return _stage()
 
+func _teleport_input() -> Dictionary:
+	_teleport_requested_impl(true)
+	return {"ok":true}
+
+
 func _teleport_requested() -> Dictionary:
+	return call("_teleport_requested_impl",false)
+
+
+func _teleport_requested_impl(loading: bool) -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if world==null or hud==null or _selected.is_empty():return _fail("source_teleport_window_destination_required")
@@ -302,7 +311,9 @@ func _teleport_requested() -> Dictionary:
 		return {"ok":false,"reason":str(quote.get("reason",""))}
 	if MAP_TELEPORT.is_destination_id(_selected):
 		# Original 523 map teleport: the world rechecks, moves and saves the debit.
-		var result: Dictionary=world.call("current523_map_teleport",_selected)
+		var result: Dictionary
+		if loading and world.has_method("current523_map_teleport_loading"): result = await world.call("current523_map_teleport_loading",_selected)
+		else: result = world.call("current523_map_teleport",_selected)
 		if hud.has_method("show_message"):hud.call("show_message",str(result.get("reason","")))
 		if result.get("ok",false):_close_requested()
 		elif is_open():_stage()

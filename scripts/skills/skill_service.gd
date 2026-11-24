@@ -293,6 +293,14 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 ## `manual`: a player's press (quick slot, 스킬 사용). Automatic passes keep
 ## their silent refusal so a polling loop never floods the message line.
 func cast(record: Dictionary, manual: bool = true) -> bool:
+	return call("_cast_impl",record,manual,false)
+
+
+func cast_loading(record: Dictionary, manual: bool) -> bool:
+	return await _cast_impl(record,manual,true)
+
+
+func _cast_impl(record: Dictionary, manual: bool, loading: bool) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
 	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
@@ -349,6 +357,15 @@ func cast(record: Dictionary, manual: bool = true) -> bool:
 		if not teleport_landing.is_finite():
 			world.hud.show_message("이동 가능한 위치가 없습니다")
 			return false
+	if loading and mode == "teleport" and world.has_method("travel_map_point"):
+		var commit: Callable = func() -> Dictionary:
+			return {"ok":_commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)}
+		var outcome: Dictionary = await world.travel_map_point(teleport_landing,commit)
+		return outcome.get("ok",false)
+	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)
+
+
+func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2) -> bool:
 	# Validation ends here. Order: register the attack motion (cancellable)
 	# -> pay the cost (MP/HP/materials/ammo; atomic and saved by its owner)
 	# -> cooldown and presentation. A refused registration pays nothing; a
@@ -430,6 +447,7 @@ func cast(record: Dictionary, manual: bool = true) -> bool:
 			world.player.global_position = teleport_landing
 			world.player.clear_click_path()
 			world.player.camera.reset_smoothing()
+			if world.has_method("refresh_map_after_jump"): world.refresh_map_after_jump()
 			vfx.emit_skill(id, "impact", world.player.global_position)
 			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"taunt":

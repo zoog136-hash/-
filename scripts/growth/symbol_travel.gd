@@ -147,6 +147,18 @@ func travel(index: int, source: Dictionary, origin: String, revision: int) -> Di
 	var offer: Dictionary=quote(index,source,origin,revision)
 	if not offer.ok: return offer
 	if bool(offer.landing.cross):return _cross(offer,source)
+	return _commit_same_land(index,source,offer)
+
+
+func travel_loading(index: int, source: Dictionary, origin: String, revision: int) -> Dictionary:
+	var offer: Dictionary = quote(index,source,origin,revision)
+	if not offer.ok: return offer
+	if bool(offer.landing.cross): return _cross(offer,source)
+	if not world.has_method("travel_map_point"): return _commit_same_land(index,source,offer)
+	return await world.travel_map_point(offer.destination,_commit_same_land.bind(index,source,offer),source.kind=="scroll")
+
+
+func _commit_same_land(index: int, source: Dictionary, offer: Dictionary) -> Dictionary:
 	runtime.busy=true
 	var inventory: Dictionary=world.inventory.duplicate(true)
 	for item: String in offer.costs: inventory[item]=int(inventory.get(item,0))-int(offer.costs[item])

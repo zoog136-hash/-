@@ -32,6 +32,9 @@ func use_owned_quest_return(physical_id: String) -> Dictionary:
 	return _commit_return239(str(input.inventory_key),input)
 
 func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Dictionary:
+	return call("_commit_return239_impl",item_name,quest_input,false)
+
+func _commit_return239_impl(item_name: String, quest_input: Dictionary, loading: bool) -> Dictionary:
 	var is_quest: bool=not quest_input.is_empty()
 	var record: Dictionary=quest_input.get("record",{}) if is_quest else world._find_catalog_item_record(item_name)
 	var stack: Dictionary=REGIONAL_RETURN.stack_identity(str(record.get("name","")) if is_quest else item_name,record)
@@ -58,7 +61,9 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 			source_inventory[item_name]=int(source_inventory[item_name])-1
 			if int(source_inventory[item_name])==0:source_inventory.erase(item_name)
 			source_overrides["inventory"]=source_inventory
-		var returned: Dictionary=world.return_current523_source_to_aden(source_overrides)
+		var returned: Dictionary
+		if loading: returned = await world.return_current523_source_to_aden_loading(source_overrides)
+		else: returned = world.return_current523_source_to_aden(source_overrides)
 		if not returned.get("ok",false):result.merge(returned,true);return result
 		world.inventory=source_overrides.inventory
 		if source_overrides.has("item_instances"):world.item_instances=source_overrides.item_instances
@@ -318,8 +323,16 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	return call("_try_use_impl",item_name,selected_instance,false)
+
+func try_use_loading(item_name: String,selected_instance: String) -> bool:
+	return await _try_use_impl(item_name,selected_instance,true)
+
+func _try_use_impl(item_name: String,selected_instance: String,loading: bool) -> bool:
 	var buffs_before: int=world.player_npc_buff_signature() if world.has_method("player_npc_buff_signature") else 0
-	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
+	var stack: Dictionary
+	if loading: stack = await NATIVE_STACK.try_use_loading(world,item_name,selected_instance)
+	else: stack = NATIVE_STACK.try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
 		if stack.get("silent",false):return true # The owner shows its own chooser or message.
 		if stack.get("requires_original_selection",false) and open_owned_original_selection(item_name,stack):return true
@@ -362,7 +375,9 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 			return true
 	# Original return scrolls have their own owner (their generic 523 use spec
 	# is "effect pending", so the generic path would only refuse them).
-	if try_use_regional_return(item_name): return true
+	if loading:
+		if await try_use_regional_return_loading(item_name): return true
+	elif try_use_regional_return(item_name): return true
 	var source_record: Dictionary = world.call("_find_catalog_item_record", item_name)
 	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
 	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
@@ -396,9 +411,11 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 			if bool(world.call("_apply_ain_consumable", item_name, spec)):
 				_consume(item_name)
 		"return":
-			_use_return(item_name)
+			if loading: await _use_return_impl(item_name,true)
+			else: _use_return(item_name)
 		"teleport":
-			_use_random_teleport(item_name)
+			if loading: await _use_random_teleport_impl(item_name,true)
+			else: _use_random_teleport(item_name)
 		"elixir":
 			_use_elixir(item_name, spec)
 		"half_elixir":
@@ -449,6 +466,7 @@ func _teleport_player(destination: Vector2) -> void:
 	world.player.velocity = Vector2.ZERO
 	world.player.global_position = destination
 	world.player.camera.reset_smoothing()
+	if world.has_method("refresh_map_after_jump"): world.refresh_map_after_jump()
 	world.set("selected_monster", null)
 	world.set("auto_target", null)
 	world.hud.clear_target()
@@ -475,8 +493,12 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
+	call("_use_return_impl",item_name,false)
+
+func _use_return_impl(item_name: String, loading: bool) -> void:
 	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active"):
-		_use_source_aden_return(item_name)
+		if loading: await _use_source_aden_return_impl(item_name,true)
+		else: _use_source_aden_return(item_name)
 		return
 	# A current source field cannot inherit a PC destination from its host ID.
 	var current_field: Variant = world.get("field_map")
@@ -510,6 +532,9 @@ func _use_return(item_name: String) -> void:
 	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
 
 func _use_source_aden_return(item_name: String) -> void:
+	call("_use_source_aden_return_impl",item_name,false)
+
+func _use_source_aden_return_impl(item_name: String, loading: bool) -> void:
 	var stack: Dictionary=world.regional_return_stack(item_name)
 	var count: int=int(world.inventory.get(item_name,0))
 	if int(stack.get("item_class_id",0))==126424 and not REGIONAL_RETURN.DATA.data.lands.has(str(world._regional_return_land())):
@@ -522,7 +547,9 @@ func _use_source_aden_return(item_name: String) -> void:
 		inventory[item_name]=count-1
 		if int(inventory[item_name])==0:inventory.erase(item_name)
 		changes["inventory"]=inventory
-	var result: Dictionary=world.return_current523_source_to_aden(changes)
+	var result: Dictionary
+	if loading: result = await world.return_current523_source_to_aden_loading(changes)
+	else: result = world.return_current523_source_to_aden(changes)
 	if result.get("ok",false):
 		if changes.has("inventory"):world.inventory=changes.inventory
 		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
@@ -558,6 +585,9 @@ func _random_destination() -> Vector2:
 	return Vector2.INF
 
 func _use_random_teleport(item_name: String) -> void:
+	call("_use_random_teleport_impl",item_name,false)
+
+func _use_random_teleport_impl(item_name: String, loading: bool) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 순간이동할 수 없습니다")
 		return
@@ -568,6 +598,7 @@ func _use_random_teleport(item_name: String) -> void:
 	if destination == Vector2.INF:
 		_message("이동 가능한 위치가 없습니다")
 		return
+	if loading and not await world.prepare_map_point(destination): return
 	_teleport_player(destination)
 	_consume(item_name)
 	_message("현재 맵 내 무작위 순간이동")
@@ -1112,6 +1143,12 @@ func _use_regional_return(item_name: String) -> void:
 	_message("잊혀진 섬 시작 지점으로 귀환 · TWILIGHT 대응 지도")
 
 func try_use_regional_return(item_name: String) -> bool:
+	return call("_try_use_regional_return_impl",item_name,false)
+
+func try_use_regional_return_loading(item_name: String) -> bool:
+	return await _try_use_regional_return_impl(item_name,true)
+
+func _try_use_regional_return_impl(item_name: String, loading: bool) -> bool:
 	var record: Dictionary = world._find_catalog_item_record(item_name)
 	if not REGIONAL_RETURN.claims_identity(item_name, record): return false
 	var stack: Dictionary = REGIONAL_RETURN.stack_identity(item_name, record)
@@ -1119,13 +1156,16 @@ func try_use_regional_return(item_name: String) -> bool:
 		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
 		return true
 	if stack.origin == "patch523_native_normal" and int(stack.item_class_id) == 239:
-		var outcome: Dictionary=use_owned_native_return(item_name)
+		var outcome: Dictionary
+		if loading: outcome = await _commit_return239_impl(item_name,{},true)
+		else: outcome = use_owned_native_return(item_name)
 		_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))
 		return true
 	if int(world.inventory.get(item_name, 0)) <= 0:
 		_message("아이템이 없습니다: "+item_name)
 		return true
-	_use_return(item_name)
+	if loading: await _use_return_impl(item_name,true)
+	else: _use_return(item_name)
 	return true
 
 ## Result contract for external reward producers. Issuance/receipt is their transaction.

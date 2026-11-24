@@ -654,12 +654,22 @@ static func _failure(reason: String) -> Dictionary:
 	return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":reason}
 
 static func try_use(world: Node,item_name: String,selected: String="") -> Dictionary:
+	return (load("res://scripts/loot/current523_native_stack.gd") as Script).call("_try_use_impl",world,item_name,selected,false)
+
+static func try_use_loading(world: Node,item_name: String,selected: String) -> Dictionary:
+	return await _try_use_impl(world,item_name,selected,true)
+
+static func _try_use_impl(world: Node,item_name: String,selected: String,loading: bool) -> Dictionary:
 	var named: Dictionary=world._find_catalog_item_record(item_name)
 	if RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.record(named) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(named,item_name):return _failure(RETIRED_ITEMS.REASON)
 	if not selected.is_empty() and RETIRED_ITEMS.record(world.item_instances.get(selected,{}).get("record",{})):return _failure(RETIRED_ITEMS.REASON)
 	# A plain name-keyed stack (as the 523 shop sells it) of an original
 	# teleport/Ainhasad/food item has its own owner; it shows its own message.
-	if selected.is_empty() and EFFECTS.try_use_plain(world,item_name,named):return {"handled":true,"ok":false,"silent":true}
+	if selected.is_empty():
+		var handled: bool
+		if loading: handled = await EFFECTS.try_use_plain_loading(world,item_name,named)
+		else: handled = EFFECTS.try_use_plain(world,item_name,named)
+		if handled: return {"handled":true,"ok":false,"silent":true}
 	# Old name-keyed quest rewards predate physical receipts. The quest
 	# owner verifies their historical source before the native UID gate.
 	if int(named.get("source_item_class_id",0)) in [139781,289172,289182,289202,306611,306621,306631,306641] and load("res://scripts/quests/quest_fixed_cards523.gd").call("try_use_legacy",world,item_name,selected,named):
@@ -821,14 +831,19 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 		if prepared.has("experience"):payload["experience"]=int(prepared.experience)
 	else:payload["hp" if effect.kind=="hp" else "mp"]=after
 	var previous_position: Vector2=world.player.global_position
-	if prepared.has("destination"):world.consumable_service._teleport_player(prepared.destination)
+	if prepared.has("destination"):
+		if loading and not await world.prepare_map_point(prepared.destination):
+			return {"handled":true,"ok":false,"silent":true}
+		world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
 	var saved: Error=OK
 	var potion_deferred: bool=false
 	if prepared.has("travel"):
 		# Fixed-destination teleport: the arrival's checkpoint save carries the
 		# physical debit (current523_map_travel_payment); a refused move keeps it.
-		var moved: Dictionary=world.item523_teleport_land(int(prepared.travel.land_id),prepared.travel.bounds,payload)
+		var moved: Dictionary
+		if loading: moved = await world.item523_teleport_land_loading(int(prepared.travel.land_id),prepared.travel.bounds,payload)
+		else: moved = world.item523_teleport_land(int(prepared.travel.land_id),prepared.travel.bounds,payload)
 		_candidate.clear()
 		if not moved.get("ok",false):
 			busy=false
