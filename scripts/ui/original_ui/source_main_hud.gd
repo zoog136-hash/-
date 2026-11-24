@@ -1310,7 +1310,7 @@ func close_refine_window() -> void:
 const DungeonWindow=preload("res://scripts/ui/original_ui/source_main_dungeon_window.gd")
 var _dungeon_window: RefCounted
 
-func try_open_dungeon_window(view: Object) -> Dictionary:
+func try_open_dungeon_window(view: Object, tab: String="special", focus: int=0) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _dungeon_window==null and _pack!=null and hud!=null:
 		var window=DungeonWindow.new()
@@ -1322,7 +1322,7 @@ func try_open_dungeon_window(view: Object) -> Dictionary:
 			_dungeon_window=window
 	if _dungeon_window==null or not is_instance_valid(_coordinates):return _window_problem("dungeon_window")
 	_cancel_native_buttons()
-	return _dungeon_window.open(_coordinates,view)
+	return _dungeon_window.open(_coordinates,view,tab,focus)
 
 func dungeon_window() -> RefCounted:
 	return _dungeon_window

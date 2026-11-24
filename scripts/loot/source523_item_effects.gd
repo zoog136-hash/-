@@ -493,9 +493,9 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 
 ## A plain name-keyed stack of a claimed item (no receipted physical stack of
 ## that name): true when handled here.
-static func try_use_plain(world: Node, item_name: String) -> bool:
+static func try_use_plain(world: Node, item_name: String, known_record: Variant=null) -> bool:
 	if item_name.is_empty(): return false
-	var record: Dictionary = world._find_catalog_item_record(item_name)
+	var record: Dictionary = known_record if known_record is Dictionary else world._find_catalog_item_record(item_name)
 	if record.is_empty() or str(record.get("name",""))!=item_name: return false
 	var kind: String = claims(record)
 	if kind.is_empty(): return false

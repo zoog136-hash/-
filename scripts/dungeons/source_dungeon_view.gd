@@ -23,7 +23,7 @@ var play_settings_text: TextEdit
 var orim_hero: OptionButton
 const FAMILIES: Array = [["tower",false],["tower",true],["orim",false],["orim",true],["special",false],["rechargers",false],["world",false],["master",false]]
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, initial_family: int=0) -> void:
 	world = controller
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -35,6 +35,7 @@ func configure(controller: Node) -> void:
 	for caption: String in ["시련의 탑 · 일반","시련의 탑 · 하드","오림의 흔적 · 일반","오림의 흔적 · 하드","특수던전","시간 충전석"]:
 		family.add_item(caption)
 	for kind: String in ["world", "master"]: family.add_item(COMPETITION.title(kind))
+	family.select(clampi(initial_family,0,FAMILIES.size()-1))
 	family.item_selected.connect(func(_index: int) -> void: _refresh())
 	tools.add_child(family)
 	var load_button := Button.new()

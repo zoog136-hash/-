@@ -479,7 +479,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	# QuestRewardEnhancement is an optional paid boost. The original base
 	# Reward rows are granted; automatic completion never spends diamonds.
 	# NC confirmation: 2019-01-30 patch notes, additional diamond consumption.
-	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"source_dummy_rewards":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
+	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"source_dummy_rewards":[],"source_retired_rewards":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
 	for reward: Dictionary in row.source_rewards:
 		var character: int = int(reward.CharacterClassID)
 		if character != 0 and int(context.get("class_id",-1)) < 0: return {"ok":false,"error":"직업별 보상 판별 대기"}
@@ -501,6 +501,11 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 					return {"ok":false,"error":"축복 상한까지 여유가 부족합니다 · 사용 후 수령하세요"}
 			"Item":
 				var original: Dictionary = reward.get("source_item",{})
+				if RETIRED_ITEMS.QUEST_ONLY.item(reward.get("RewardClassID")):
+					# This exact prop is disabled by the user's item policy;
+					# do not turn a remaining ordinary award into a refusal.
+					result.source_retired_rewards.append({"reward_id":int(reward.ID),"item_class_id":int(reward.RewardClassID),"reason":"user_quest_only_item_retirement"})
+					continue
 				if RETIRED_ITEMS.item(reward.get("RewardClassID")):return {"ok":false,"error":RETIRED_ITEMS.REASON}
 				var excluded: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_evidence(original)
 				if not excluded.is_empty():

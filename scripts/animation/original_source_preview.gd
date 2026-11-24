@@ -1916,6 +1916,16 @@ func notify_current_source_spell_event(spell: Dictionary, stage: String, world_p
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+## Produce presentation for an existing moving combat flight; never create
+## that flight or apply an effect at impact. The real flight owns anchoring,
+## facing, duration, cancellation and the original hit callback.
+func prepare_current_source_spell_flight(spell: Dictionary, facing: int) -> Node2D:
+	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,"effect","patch523",_reference_request_context)
+	if not selected.get("ok",false): return null
+	selected.loop_policy={"idle":true}
+	selected.host_policy="existing_combat_flight_controls_position_lifetime_and_hit"
+	return _make_selected_current_source_effect(selected,facing)
+
 ## Starts this spell row's effect banks for `stages` loading on worker threads
 ## (reference_sp2_bank.prefetch): reads/hashes/parses only, admits and shows
 ## nothing. The later notify_current_source_spell_event() validates as always

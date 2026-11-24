@@ -906,7 +906,7 @@ static func hp_use_metadata(item: Dictionary) -> Dictionary:
 	var category: Dictionary = definition.get("category",{})
 	if original.is_empty() or category.get("Name") != "Potion" or not category.get("IsConsumable",false) or definition.get("native_record",{}).get("heal_spec",{}).is_empty(): return {"ok":false}
 	if original.get("TestItem",true) or int(original.get("TargettingTypeID",0)) != 1 or not str(original.get("ServiceRegionCode","")).is_empty(): return {"ok":false}
-	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID","AutoUseRegistrable":"TrueFalse"}
 	var seen: Dictionary = {}
 	var metadata: Dictionary = {"ok":true,"can_use_when_invisible":bool(original.get("CanUseWhenInvisible",false)),"consume_effect_sprite_id":0}
 	for row: Dictionary in definition.get("item_bonus",[]):
@@ -920,6 +920,11 @@ static func hp_use_metadata(item: Dictionary) -> Dictionary:
 		if kind == "DeleteTime" and definition.get("native_record",{}).has("source_delete_time_raw") and row.get("unit",{}).get("Name") == "Time" and not row.get("IsPossession",true) and int(bonus.get("BonusApplicationTypeID",-1)) == 0 and int(bonus.get("BonusApplicationTargetID",-1)) == 0: continue
 		if row.get("IsPossession",true) or int(bonus.get("BonusApplicationTypeID",-1)) != 0 or int(bonus.get("BonusApplicationTargetID",-1)) != 0 or not allowed.has(kind) or row.get("unit",{}).get("Name") != allowed[kind] or seen.has(kind): return {"ok":false}
 		seen[kind] = true
+		# A checked original true flag only offers the already existing
+		# auto-quickslot route; it adds no effect and cannot bypass other rows.
+		if kind == "AutoUseRegistrable":
+			if not _source_integer(bonus.get("Value")) or int(bonus.Value)!=1:return {"ok":false}
+			metadata["auto_use_registrable"] = true
 		if kind == "ItemConsumeEffectSpriteID": metadata.consume_effect_sprite_id = int(bonus.get("Value",0))
 		if kind == "ItemConsumeDelay": metadata["source_consume_delay_ms"] = int(bonus.get("Value",-1))
 	if not seen.has("ItemConsumeDelay") or int(metadata.get("source_consume_delay_ms",-1)) < 0: return {"ok":false}

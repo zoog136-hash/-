@@ -14,7 +14,12 @@ static func profile(saved: Dictionary)->Dictionary:
 	if record.is_empty() or not D.matches(record,saved) or record.get("source_test_item",true):return {}
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
 	if spec.get("kind")!="source_timed_buff" or spec.get("duration_seconds")!=0 or spec.get("consume_delay_ms")!=500 or spec.get("buff_class_id")!=27 or not spec.get("typed_effects",{}).is_empty() or not spec.get("source_buff_bonus",[]).is_empty():return {}
-	if not C.same(spec.get("blocked_reasons"),["missing_or_ambiguous_positive_duration","no_supported_buff_effects","unsupported_buff_priority_or_spell_level_rule"]):return {}
+	# Current projection correctly treats the exact non-overlapping group
+	# priority as declared; older materialized DTOs also report the extra
+	# priority reason. No other failure is ignored by the instant owner.
+	var reasons:Array=spec.get("blocked_reasons",[])
+	var base:Array=["missing_or_ambiguous_positive_duration","no_supported_buff_effects"]
+	if not C.same(reasons,base) and not C.same(reasons,base+["unsupported_buff_priority_or_spell_level_rule"]):return {}
 	var source: Dictionary=spec.get("source_buff_class",{});var group: Dictionary=spec.get("source_buff_group",{})
 	if source.get("ID")!=27 or source.get("BuffGroupID")!=3 or source.get("BuffGroupPriority")!=11 or source.get("IsAuto")!=false or group.get("ID")!=3 or group.get("IsAllowOverlap")!=false or group.get("IsAllowPriority")!=false or group.get("IsEraseBySpellLevel")!=false:return {}
 	var expected: Dictionary={"ItemConsumeDelay":[500,"MilliSeconds"],"BuffClassID":[27,"BuffClassID"],"ItemConsumeEffectSpriteID":[192,"SpriteID"]};var seen: Dictionary={}
@@ -52,7 +57,9 @@ static func prepare(world: Node,saved: Dictionary,physical_id: String="")->Dicti
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	var native_quantity: Dictionary=stock.call("proof",world,physical_id) if not physical_id.is_empty() else {}
 	if not native_quantity.is_empty():
-		if native_quantity.record.get("source_item_class_id")!=310 or native_quantity.record.get("source_bless_raw")!=record.get("source_bless_raw") or NATIVE_FIELDS.full(native_quantity.receipt).get("source_original_item")!=D.definition_id("310").get("original_item"):return fail("선택한 원문 물리 해독제 정체 불일치")
+		# proof() already validated the original row for compact and historical
+		# receipts; the selected variant must match this exact #310 request.
+		if native_quantity.record.get("source_item_class_id")!=310 or native_quantity.record.get("source_bless_raw")!=record.get("source_bless_raw"):return fail("선택한 원문 물리 해독제 정체 불일치")
 		var native_step: Dictionary=stock.call("stage_debit",world,[{"physical_id":physical_id,"quantity":1,"expected_quantity":native_quantity.remaining,"expected_remaining":int(native_quantity.remaining)-1,"source_native_stack_receipt":native_quantity.receipt.duplicate(true)}])
 		if not native_step.get("ok",false):return fail(str(native_step.get("reason","원문 물리 해독제 차감 후보 연결 필요")))
 		payload=native_step.overrides.duplicate(true)

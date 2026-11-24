@@ -1174,17 +1174,17 @@ func claim_cumulative(id: int, step: int) -> Dictionary:
 	if result.ok: result["reason"] = "누적 보상 수령 완료"
 	return result
 
-func quote_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
-	return inventory_tickets.quote(item_key,selection)
+func quote_inventory_ticket(item_key: String, selection: Dictionary = {}, physical_id: String = "") -> Dictionary:
+	return inventory_tickets.quote(item_key,selection,false,physical_id)
 
-func use_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
-	var result: Dictionary=inventory_tickets.use_ticket(item_key,selection)
+func use_inventory_ticket(item_key: String, selection: Dictionary = {}, physical_id: String = "") -> Dictionary:
+	var result: Dictionary=inventory_tickets.use_ticket(item_key,selection,physical_id)
 	result["handled"]=InventoryTickets.claims(world._find_catalog_item_record(item_key))
 	return result
 
-func try_use_inventory_ticket(item_key: String) -> bool:
+func try_use_inventory_ticket(item_key: String, physical_id: String = "") -> bool:
 	if not InventoryTickets.claims(world._find_catalog_item_record(item_key)):return false
-	var result: Dictionary=use_inventory_ticket(item_key)
+	var result: Dictionary=use_inventory_ticket(item_key,{},physical_id)
 	world.hud.show_message(str(result.get("message",result.get("reason","티켓 처리 결과 확인 필요"))))
 	return true
 

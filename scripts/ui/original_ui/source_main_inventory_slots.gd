@@ -104,6 +104,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	var set_scope: Array[int]=[]
 	var unresolved: Array=[]
 	var owner_results: Dictionary={}
+	var missing_icon_titles: Dictionary={}
 	for offset: int in authored.slots:
 		set_scope.append(offset)
 		var reference: String=str(assignments.get(offset,""))
@@ -111,6 +112,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 		if not slot.get("ok",false):return slot
 		set_bindings[offset]=slot.binding
 		if slot.has("owner_result"):owner_results[offset]=slot.owner_result
+		if slot.has("missing_icon_title"):missing_icon_titles[offset]=slot.missing_icon_title
 		unresolved.append_array(slot.unresolved_fields)
 	# The exact authored variant is selected explicitly by the host. Its
 	# original parent geometry is untouched; no capacity/page rule is derived.
@@ -121,7 +123,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	if scroll_binding.get("role")=="source_scroll" and scroll_binding.get("input") is Callable and scroll_binding.input.is_valid():
 		parent_bindings[scroll_offset]=scroll_binding.duplicate(true)
 	else:unresolved.append({"field":"existing_native_scroll_input_binding","offset":scroll_offset,"required":"caller source_scroll binding with existing input Callable"})
-	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
+	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"missing_icon_titles":missing_icon_titles,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
 
 func refresh_slot(slot_scene: Node2D, reference: String, current_model: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(slot_scene) or str(slot_scene.get("source_member"))!=SLOT_MEMBER:return _fail("source_inventory_slots_original_scene_required")
@@ -159,6 +161,7 @@ func action_text(reference: String) -> String:
 func refresh_action(slot_scene: Node2D, reference: String) -> Dictionary:
 	if not is_instance_valid(slot_scene) or not slot_scene.get("source_nodes").has(ACTION):return {"ok":true,"action_presented":false}
 	var text: String=action_text(reference)
+	if text.is_empty():text=str(slot_scene.get_meta("missing_icon_title",""))
 	if not text.is_empty():
 		var written: Dictionary=slot_scene.set_bound_text(ACTION,text)
 		if not written.get("ok",false):return written
@@ -220,10 +223,13 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
 		if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):
 			# An item with no original picture keeps its original slot with
-			# the picture left empty (nothing drawn or substituted); one such
-			# item no longer sends the whole bag back to the TWILIGHT bag.
+			# no substitute picture. Reuse its authored action label instead
+			# of drawing text under the transparent input node/slot frame.
+			var title: String=str(entry.get("shown_name", ""))
+			if title.is_empty():title=preload("res://scripts/ui/source523_item_identity.gd").display_name(entry.get("record",{}),str(entry.get("name", "")))
+			if not title.is_empty() and action.is_empty():bindings[ACTION]={"role":"source_text","text":title,"visible":true}
 			unresolved.append({"field":"owned_original_icon_unavailable","reference":reference,"code":str(supplied.get("code",supplied.get("reason","")))})
-			return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"icon_missing":true,"unresolved_fields":unresolved}
+			return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"missing_icon_title":title,"unresolved_fields":unresolved}
 		scope.append(ICON)
 		bindings[ICON]={"role":"source_asset_slot","visible":false}
 		return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"owner_result":supplied,"unresolved_fields":unresolved}

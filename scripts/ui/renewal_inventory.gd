@@ -1,6 +1,7 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
 const EMPTY_ITEM_ROWS: Array = []
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
@@ -273,14 +274,31 @@ func item_action_label(reference: String) -> String:
 func item_action_kind(reference: String) -> String:
 	if _is_item_equipped(reference): return "해제"
 	var record: Dictionary = _find_item_record(reference)
-	if record.is_empty(): return ""
 	var host: Node = controller.get_parent() if is_instance_valid(controller) else null
-	var item_name: String = _base_item_name(reference)
+	return action_for_record(record,_base_item_name(reference),host)
+
+## The current bag button on a resolved, unworn record (both the stock and
+## original bag use this). The audit may supply an equipment slot resolver
+## or use the source canonical slot, without simulating a mouse tap.
+static func action_for_record(record: Dictionary, item_name: String, host: Node=null) -> String:
+	if record.is_empty() or RETIRED_ITEMS.record(record) or RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(record,item_name): return ""
 	var is_ammo: bool = item_name in ["화살", "총알"] or not preload("res://scripts/loot/patch523_ammo.gd").profile(record).is_empty() or not preload("res://scripts/shop/source523_ammo.gd").definition(record).is_empty()
-	if is_ammo or host != null and host.has_method("_equipment_slot_for_record") and not str(host.call("_equipment_slot_for_record",record)).is_empty(): return "장착"
-	# Materials (slot material, 재료 types): name only.
-	if str(record.get("slot","")) == "material" or str(record.get("type","")).ends_with("재료"): return ""
+	var equip_slot: bool
+	if is_instance_valid(host) and host.has_method("_equipment_slot_for_record"):
+		equip_slot=not str(host.call("_equipment_slot_for_record",record)).is_empty()
+	else:
+		equip_slot=str(NATIVE_FIELDS.field(record,"source_equipment_status"))=="mapped"
+	if is_ammo or equip_slot: return "장착"
+	# Some original reuse effects are intentionally stored in the materials
+	# slot. Only an explicitly supported TeleportAmulet may arm direct use;
+	# ordinary crafting, skill reagents and unsupported originals keep no action.
+	if str(record.get("slot","")) == "material" or str(record.get("type","")).ends_with("재료"):
+		if material_direct_use(record):return "사용"
+		return ""
 	return "사용"
+
+static func material_direct_use(record: Dictionary) -> bool:
+	return NATIVE_FIELDS.field(record,"source_category_name")=="TeleportAmulet" and preload("res://scripts/loot/current523_native_stack.gd").profile(record).get("kind")=="teleport_location"
 
 ## The second tap on the same slot while its marker shows uses/equips it.
 func item_action_armed(reference: String) -> bool:
