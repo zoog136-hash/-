@@ -35,15 +35,17 @@ const TABLE_COPIES := ["user://growth96_definitions/source.zip","user://source_r
 const BANK_SETTINGS := "user://current523_source_bank.json"
 const MAP_SETTINGS := "user://current523_aden_play.cfg"
 const GENERIC_MAP := "CURRENT523_GENERIC_S32_OWN_ALLOWLIST_V1"
-const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json","ui_icons":"icon-selection.json","world_links":"manifest.json","world_map":"contract.json"}
+const SMELT := preload("res://scripts/equipment523/native_smelt_rules.gd")
+const SECTIONS := {"bank":"manifest.json","images":"manifest.json","maps":"source523.json","tiles":"tilepack523.json","ui":"original_ui.json","ui_icons":"icon-selection.json","world_links":"manifest.json","world_map":"contract.json","equipment_smelt":"smelt.json"}
 ## Add-ons extend an installed pack without reinstalling its parts.
 const ADDON_SCHEMA := "twilight-client523-resource-addon-v1"
 const ADDON_DESCRIPTOR := "source523_addon.json"
 const ADDONS := "source523_addons.json"
-const ADDON_SECTIONS := ["world_links","ui","world_map"]
+const ADDON_SECTIONS := ["world_links","ui","world_map","equipment_smelt"]
+const OPTIONAL_ADDONS := ["equipment_smelt"]
 ## The add-on file that carries each section (what the installer asks for).
-const ADDON_FILES := {"world_links":"twilight523-addon-world-links.zip","ui":"twilight523-addon-ui.zip","world_map":"twilight523-addon-ui.zip"}
-const ADDON_NAMES := {"world_links":"523 맵 이동 정의","ui":"원작 메인 화면(UI)","world_map":"원작 월드맵"}
+const ADDON_FILES := {"world_links":"twilight523-addon-world-links.zip","ui":"twilight523-addon-ui.zip","world_map":"twilight523-addon-ui.zip","equipment_smelt":"twilight523-addon-equipment-smelt.zip"}
+const ADDON_NAMES := {"world_links":"523 맵 이동 정의","ui":"원작 메인 화면(UI)","world_map":"원작 월드맵","equipment_smelt":"원본 장비 제련"}
 ## The world map selection the world-map input reads at start.
 const WORLD_MAP_SETTINGS := "user://current523_world_map.cfg"
 const WORLD_MAP_SCHEMA := "twilight-source523-world-map-v1"
@@ -161,6 +163,7 @@ static func read_descriptor(path: String, tables_sha: String = TABLES_SHA) -> Di
 		if not entry is Dictionary or not _safe_relative(entry.get("root")) or not _sha(entry.get("manifest_sha256")): return {"ok":false,"reason":"source523_pack_section:" + section}
 		if entry.get("manifest") != str(entry.root) + "/" + str(SECTIONS[section]): return {"ok":false,"reason":"source523_pack_manifest_path:" + section}
 		if section == "world_links" and str(entry.manifest_sha256).to_lower() != world_links_sha: return {"ok":false,"reason":"source523_pack_world_links_pin"}
+		if section == SMELT.SECTION and not SMELT.selection_valid(entry):return {"ok":false,"reason":"source523_pack_smelt_pin"}
 	var land: Variant = value.get("start_land_id", 4)
 	if not (land is int or land is float) or float(land) != floorf(float(land)) or land < 0: return {"ok":false,"reason":"source523_pack_start_land"}
 	return {"ok":true,"descriptor":value}
@@ -177,6 +180,7 @@ static func read_addons(base: String) -> Dictionary:
 		if not entry is Dictionary or not _safe_relative(entry.get("root")) or not _sha(entry.get("manifest_sha256")): continue
 		if entry.get("manifest") != str(entry.root) + "/" + str(SECTIONS[section]): continue
 		if section == "world_links" and str(entry.manifest_sha256).to_lower() != world_links_sha: continue
+		if section == SMELT.SECTION and not SMELT.selection_valid(entry):continue
 		result[section] = entry
 	return result
 
@@ -188,6 +192,7 @@ static func has_world_links(descriptor: Dictionary, addons: Dictionary) -> bool:
 static func missing_addons(descriptor: Dictionary, addons: Dictionary) -> Array[String]:
 	var missing: Array[String] = []
 	for section: String in ADDON_SECTIONS:
+		if section in OPTIONAL_ADDONS:continue
 		if not descriptor.has(section) and not addons.has(section): missing.append(section)
 	return missing
 
@@ -206,6 +211,8 @@ static func selections(base: String, descriptor: Dictionary, addons: Dictionary 
 		# The selection names its CSB icon pack relative to its own folder.
 		environment.TWILIGHT_SOURCE523_UI_ICONS = base.path_join(descriptor.ui_icons.manifest)
 		environment.TWILIGHT_SOURCE523_UI_ICONS_SHA256 = str(descriptor.ui_icons.manifest_sha256).to_lower()
+	var smelt:Variant=descriptor.get(SMELT.SECTION,addons.get(SMELT.SECTION))
+	if smelt is Dictionary and SMELT.selection_valid(smelt):environment[SMELT.ENV]=base.path_join(smelt.manifest)
 	var bank: Dictionary = {"schema":1,"enabled":true,"source_snapshot":"patch523","tables_zip":tables,
 		"manifest_path":base.path_join(descriptor.bank.manifest),"manifest_sha256":str(descriptor.bank.manifest_sha256).to_lower()}
 	var maps: Dictionary = {"raw_root":base.path_join(descriptor.maps.root),"tile_root":base.path_join(descriptor.tiles.root),
@@ -318,10 +325,16 @@ func status_lines() -> PackedStringArray:
 	var addons: Dictionary = read_addons(base)
 	for section: String in ADDON_SECTIONS:
 		var entry: Variant = read.descriptor.get(section, addons.get(section)) if read.ok else addons.get(section)
-		if entry is Dictionary: lines.append("%s: 설치됨 (%s)" % [ADDON_NAMES[section], str(entry.manifest_sha256).left(8)])
+		if section==SMELT.SECTION and entry is Dictionary and not _smelt_file_intact(base.path_join(entry.manifest)):
+			lines.append("%s: 파일 누락/손상 → %s 다시 설치" % [ADDON_NAMES[section],ADDON_FILES[section]])
+		elif entry is Dictionary: lines.append("%s: 설치됨 (%s)" % [ADDON_NAMES[section], str(entry.manifest_sha256).left(8)])
+		elif section in OPTIONAL_ADDONS:lines.append("%s: 선택 설치 → %s" % [ADDON_NAMES[section],ADDON_FILES[section]])
 		else: lines.append("%s: 없음 → %s 설치 필요" % [ADDON_NAMES[section], ADDON_FILES[section]])
 	lines.append(cooked_status_line(cooked_state(root)))
 	return lines
+
+static func _smelt_file_intact(path:String)->bool:
+	return FileAccess.file_exists(path) and FileAccess.get_sha256(path)==SMELT.SHA
 
 ## --- Cooked actor pack -----------------------------------------------------
 
@@ -586,6 +599,13 @@ func _open_part(path: String) -> void:
 		if addon.is_empty():
 			_fail_part("추가 리소스 정보가 다릅니다: " + _copy_name)
 			return
+		if addon.sections.has(SMELT.SECTION):
+			if not install_smelt_sidecar(path,root):
+				_fail_part("원본 제련 추가 리소스가 손상되었습니다. 기존 데이터는 보존합니다.")
+				return
+			_addon=addon
+			_finish_addon()
+			return
 		if not ProjectSettings.load_resource_pack(path, true):
 			_fail_part("추가 리소스를 읽을 수 없습니다: " + _copy_name)
 			return
@@ -631,6 +651,9 @@ func _process(_delta: float) -> void:
 		var entry: Variant = members[_cursor]
 		if not entry is Array or entry.size() != 2 or not _safe_relative(entry[0]):
 			_fail_part("리소스 팩 조각의 파일 목록이 잘못되었습니다.")
+			return
+		if _index.get("addon",false) and str(entry[0]).begins_with(SMELT.SECTION+"/"):
+			_fail_part("원본 제련 파일은 검증된 전용 추가 리소스로만 설치할 수 있습니다.")
 			return
 		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(MOUNT + str(entry[0]))
 		if bytes.size() != int(entry[1]):
@@ -681,7 +704,39 @@ static func read_addon(bytes: PackedByteArray, index: Dictionary) -> Dictionary:
 		if not section in ADDON_SECTIONS or not entry is Dictionary or not _safe_relative(entry.get("root")) or not _sha(entry.get("manifest_sha256")): return {}
 		if entry.get("manifest") != str(entry.root) + "/" + str(SECTIONS[section]): return {}
 		if section == "world_links" and str(entry.manifest_sha256).to_lower() != world_links_sha: return {}
+		if section == SMELT.SECTION:
+			var members:Variant=index.get("members")
+			if not SMELT.selection_valid(entry) or value.sections.size()!=1 or not members is Array or members.size()!=1:return {}
+			var item:Variant=members[0]
+			if not item is Array or item.size()!=2 or item[0]!=SMELT.SECTION+"/"+SMELT.MEMBER or item[1]!=SMELT.BYTES:return {}
 	return value
+
+## This small, byte-pinned sidecar is installed without mounting its ZIP as
+## a resource pack; no code, extra entry or failed candidate reaches the app.
+static func install_smelt_sidecar(path:String,base:String)->bool:
+	var file:=FileAccess.open(path,FileAccess.READ)
+	if file==null or file.get_length()!=SMELT.ADDON_BYTES:return false
+	file.close()
+	if FileAccess.get_sha256(path)!=SMELT.ADDON_SHA:return false
+	var member:String=PREFIX+SMELT.SECTION+"/"+SMELT.MEMBER
+	var zip:=ZIPReader.new()
+	if zip.open(path)!=OK:return false
+	var files:=zip.get_files()
+	if files.size()!=3 or not files.has(PREFIX+PART_INDEX) or not files.has(PREFIX+ADDON_DESCRIPTOR) or not files.has(member):
+		zip.close();return false
+	# The exact whole ZIP pin above fixes both the stored member and its size.
+	var bytes:PackedByteArray=zip.read_file(member)
+	zip.close()
+	if not SMELT.verifies(bytes):return false
+	var target:String=base.path_join(SMELT.SECTION).path_join(SMELT.MEMBER)
+	if DirAccess.make_dir_recursive_absolute(target.get_base_dir())!=OK:return false
+	var pending:String=target+".pending"
+	var output:=FileAccess.open(pending,FileAccess.WRITE)
+	if output==null:return false
+	output.store_buffer(bytes);output.flush()
+	var status:Error=output.get_error()
+	output.close()
+	return status==OK and DirAccess.rename_absolute(pending,target)==OK
 
 func _finish_addon() -> void:
 	var addon: Dictionary = _addon
@@ -692,17 +747,7 @@ func _finish_addon() -> void:
 		if FileAccess.get_sha256(root.path_join(entry.manifest)) != str(entry.manifest_sha256).to_lower():
 			_fail_part("설치한 추가 리소스가 설명과 다릅니다: " + section)
 			return
-	var merged: Dictionary = {}
-	var current: Variant = JSON.parse_string(FileAccess.get_file_as_string(root.path_join(ADDONS))) if FileAccess.file_exists(root.path_join(ADDONS)) else {}
-	if current is Dictionary: merged = current
-	for section: String in addon.sections: merged[section] = addon.sections[section]
-	var pending := FileAccess.open(root.path_join(ADDONS + ".pending"), FileAccess.WRITE)
-	if pending == null:
-		_fail_part("앱 저장소에 쓸 수 없습니다.")
-		return
-	pending.store_string(JSON.stringify(merged, "\t", true))
-	pending.close()
-	if DirAccess.rename_absolute(root.path_join(ADDONS + ".pending"), root.path_join(ADDONS)) != OK:
+	if not record_addon_sections(root,addon.sections):
 		_fail_part("추가 리소스 기록을 저장하지 못했습니다.")
 		return
 	for section: String in addon.sections: _missing.erase(section)
@@ -723,6 +768,20 @@ func _finish_addon() -> void:
 		return
 	_status.text = "추가 리소스 설치 완료.\n앱을 완전히 닫고 다시 실행하세요.\n(설치에 쓴 zip은 지워도 됩니다)"
 	_offer_quit()
+
+static func record_addon_sections(base:String,sections:Dictionary)->bool:
+	var merged: Dictionary = {}
+	var current: Variant = JSON.parse_string(FileAccess.get_file_as_string(base.path_join(ADDONS))) if FileAccess.file_exists(base.path_join(ADDONS)) else {}
+	if current is Dictionary: merged = current
+	for section: String in sections: merged[section] = sections[section]
+	var pending_path:String=base.path_join(ADDONS+".pending")
+	var pending:=FileAccess.open(pending_path,FileAccess.WRITE)
+	if pending==null:return false
+	pending.store_string(JSON.stringify(merged, "\t", true))
+	pending.flush()
+	var status:Error=pending.get_error()
+	pending.close()
+	return status==OK and DirAccess.rename_absolute(pending_path,base.path_join(ADDONS))==OK
 
 func _finish_cooked() -> void:
 	var index: Dictionary = _index

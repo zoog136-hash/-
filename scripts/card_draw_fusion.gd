@@ -22,6 +22,7 @@ const FUSION_MATERIALS: Dictionary = {
 }
 const PITY_GRADES: Array[String] = ["희귀", "영웅"]
 const PITY_LIMIT: int = 20
+const ORIGINAL_POINT_GRADES: Array[String] = ["희귀", "영웅", "전설"]
 const PACK_SIZE: int = 11
 
 var preserved_unmapped_collection: Dictionary = {}
@@ -34,7 +35,10 @@ var owned: Dictionary = {} # category -> id -> true (permanently unlocked)
 # Positive provenance only: no backfill from owned, spares or older receipts.
 var pending_acquisition_confirmation: Dictionary = {} # category -> id -> true
 var spare: Dictionary = {} # category -> id -> duplicate count (consumable)
-var pity: Dictionary = {} # category -> source grade -> consecutive accumulated failures
+var pity: Dictionary = {} # category -> source grade -> accumulated failures
+## Persist the lanes that have used complete source rules. Without the pack,
+## a previously activated lane may not fall into the legacy auto reward.
+var original_point_lanes: Dictionary = {} # category -> source grade -> true
 
 func _init() -> void:
 	rng.randomize()
@@ -59,6 +63,7 @@ func configure(catalog: Dictionary) -> void:
 	owned.clear()
 	spare.clear()
 	pity.clear()
+	original_point_lanes.clear()
 	for category: String in CATEGORIES:
 		var grade_pools: Dictionary = {}
 		for grade: String in GRADES:
@@ -228,9 +233,30 @@ func spare_count(category: String, grade: String) -> int:
 			count += maxi(0, int(extras.get(identity, 0)))
 	return count
 
-func fuse(category: String, grade: String) -> Dictionary:
+func original_points_active(category:String,grade:String)->bool:
+	return original_point_lanes.get(category,{}).get(grade,false)==true
+
+func credit_original_points(category:String,grade:String)->bool:
+	if not CATEGORIES.has(category) or not ORIGINAL_POINT_GRADES.has(grade):return false
+	var counter:Dictionary=pity[category]
+	var count:int=int(counter.get(grade,0))
+	if count<0 or count>=PITY_LIMIT:return false
+	if not original_point_lanes.has(category):original_point_lanes[category]={}
+	original_point_lanes[category][grade]=true
+	counter[grade]=count+1
+	return true
+
+func claim_original_points(category:String,grade:String)->bool:
+	if not original_points_active(category,grade) or pity.get(category,{}).get(grade)!=PITY_LIMIT:return false
+	pity[category][grade]=0
+	return true
+
+func fuse(category: String, grade: String, original_points:bool=false) -> Dictionary:
 	if not CATEGORIES.has(category) or not FUSION_NEXT.has(grade):
 		return {"ok": false, "error": "지원하지 않는 합성입니다"}
+	if original_points_active(category,grade):
+		if not original_points:return {"ok":false,"error":"원본 합성 포인트 보상 자료 필요 · 기존 포인트와 재료 보존"}
+		if pity.get(category,{}).get(grade,0)>=PITY_LIMIT:return {"ok":false,"error":"합성 시도 보상을 먼저 받으세요 · 재료 보존"}
 	var target_grade: String = str(FUSION_NEXT[grade])
 	var grade_pools: Dictionary = pools[category] as Dictionary
 	if (grade_pools.get(grade, []) as Array).is_empty() or (grade_pools.get(target_grade, []) as Array).is_empty():
@@ -267,7 +293,9 @@ func fuse(category: String, grade: String) -> Dictionary:
 	var awarded: Dictionary = _receive(category, selected)
 	var bonus: Dictionary = {}
 	var counter: Dictionary = pity[category] as Dictionary
-	if not success and PITY_GRADES.has(grade):
+	if not success and original_points:
+		credit_original_points(category,grade)
+	elif not success and PITY_GRADES.has(grade):
 		var failures: int = int(counter.get(grade, 0)) + 1
 		if failures >= PITY_LIMIT:
 			# The target pool was validated above; compensation is additional
@@ -289,6 +317,7 @@ const MAX_FUSION_BATCH: int = 10
 func fusion_batch_limit(category: String, grade: String) -> int:
 	if not CATEGORIES.has(category) or not FUSION_MATERIALS.has(grade):
 		return 0
+	if original_points_active(category,grade) and pity.get(category,{}).get(grade,0)>=PITY_LIMIT:return 0
 	var required: int = int(FUSION_MATERIALS[grade])
 	if required <= 0:
 		return 0
@@ -297,14 +326,14 @@ func fusion_batch_limit(category: String, grade: String) -> int:
 ## Runs up to `times` independent fusions (max 10), like a multi-card draw.
 ## Every fusion uses the same validated single-fusion path. It stops early
 ## when the duplicates run out; it fails only if not even one fusion ran.
-func fuse_many(category: String, grade: String, times: int) -> Dictionary:
+func fuse_many(category: String, grade: String, times: int, original_points:bool=false) -> Dictionary:
 	var wanted: int = clampi(times, 1, MAX_FUSION_BATCH)
 	var results: Array = []
 	var successes: int = 0
 	var consumed: int = 0
 	var last: Dictionary = {}
 	for _attempt: int in range(wanted):
-		var single: Dictionary = fuse(category, grade)
+		var single: Dictionary = fuse(category, grade, original_points)
 		if not bool(single.get("ok", false)):
 			if results.is_empty():
 				return single
@@ -346,7 +375,7 @@ func clear_acquisition_confirmation(category: String, identity: String) -> void:
 	if pending_acquisition_confirmation[category].is_empty(): pending_acquisition_confirmation.erase(category)
 
 func export_state() -> Dictionary:
-	return {
+	var result:Dictionary={
 		"version": 1,
 		"source_card_receipts":source_card_receipts.duplicate(true),
 		"owned": owned.duplicate(true),
@@ -355,9 +384,12 @@ func export_state() -> Dictionary:
 		"pity": pity.duplicate(true),
 		"preserved_unmapped_collection": preserved_unmapped_collection.duplicate(true)
 	}
+	if not original_point_lanes.is_empty():result["source_fusion_point_lanes"]=original_point_lanes.duplicate(true)
+	return result
 
 func import_state(input: Variant) -> void:
 	source_card_receipts.clear()
+	original_point_lanes.clear()
 	pending_acquisition_confirmation.clear()
 	for category: String in CATEGORIES:
 		owned[category] = {}
@@ -376,6 +408,7 @@ func import_state(input: Variant) -> void:
 	var raw_owned: Variant = state.get("owned", {})
 	var raw_spare: Variant = state.get("spare", {})
 	var raw_pity: Variant = state.get("pity", {})
+	var raw_points:Variant=state.get("source_fusion_point_lanes",{})
 	if not (raw_owned is Dictionary) or not (raw_spare is Dictionary) or not (raw_pity is Dictionary):
 		return
 	for category: String in CATEGORIES:
@@ -409,8 +442,14 @@ func import_state(input: Variant) -> void:
 		if preserved.owned.is_empty() and preserved.spare.is_empty():preserved_unmapped_collection.erase(category)
 		if saved_pity is Dictionary:
 			var counter: Dictionary = pity[category] as Dictionary
-			for grade: String in PITY_GRADES:
-				counter[grade] = clampi(int((saved_pity as Dictionary).get(grade, 0)), 0, PITY_LIMIT - 1)
+			var activated:Variant=raw_points.get(category,{}) if raw_points is Dictionary else {}
+			for grade:String in ORIGINAL_POINT_GRADES:
+				var original:bool=activated is Dictionary and activated.get(grade,false)==true
+				if original:
+					if not original_point_lanes.has(category):original_point_lanes[category]={}
+					original_point_lanes[category][grade]=true
+				if original or grade in PITY_GRADES:
+					counter[grade]=clampi(int(saved_pity.get(grade,0)),0,PITY_LIMIT if original else PITY_LIMIT-1)
 
 	# A temporarily absent optional catalog must not erase a genuine marker.
 	var saved_pending: Variant = state.get("pending_acquisition_confirmation", {})

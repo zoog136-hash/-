@@ -1528,7 +1528,7 @@ func close_production_window() -> void:
 const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 var _enchant_window: RefCounted
 
-func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+func _ensure_enchant_window() -> bool:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _enchant_window==null and _pack!=null and hud!=null:
 		var window=EnchantWindow.new()
@@ -1538,10 +1538,18 @@ func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
 			window.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 			_enchant_window=window
-	if _enchant_window==null or not is_instance_valid(_coordinates):return _window_problem("enchant_window")
+	return _enchant_window!=null and is_instance_valid(_coordinates)
+
+func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
 	_cancel_native_buttons()
 	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
 	return _enchant_window.open(_coordinates,scroll,candidates)
+
+func try_open_smelt_window(offer:Dictionary)->Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	return _enchant_window.open_smelt(_coordinates,offer)
 
 func enchant_window() -> RefCounted:
 	return _enchant_window

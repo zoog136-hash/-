@@ -97,6 +97,26 @@ class AddonTest(unittest.TestCase):
         out = self.base / "out-map"
         self.assertEqual(addon.main(["--world-map", str(self._world_map(offers={})), "--output", str(out)]), 1)
 
+    def test_optional_smelt_only_contains_one_stored_member(self):
+        rules = self.base / "smelt"
+        rules.mkdir()
+        data = b"a" * addon.SMELT_BYTES
+        (rules / "smelt.json").write_bytes(data)
+        (rules / "not-shipped.txt").write_bytes(b"different resources must not be copied")
+        pin = hashlib.sha256(data).hexdigest()
+        addon.ADDON_SECTIONS["equipment_smelt"] = ("smelt.json", pin)
+        out = self.base / "out-smelt"
+        self.assertEqual(addon.main(["--equipment-smelt", str(rules), "--output", str(out)]), 0)
+        with zipfile.ZipFile(out / "twilight523-addon-equipment-smelt.zip") as archive:
+            names = archive.namelist()
+            self.assertEqual(len(names), 3)
+            self.assertEqual(names[-1], "source523/equipment_smelt/smelt.json")
+            self.assertEqual(archive.getinfo(names[-1]).compress_type, zipfile.ZIP_STORED)
+            self.assertEqual(archive.read(names[-1]), data)
+        self.assertEqual(addon.main(["--equipment-smelt", str(rules), "--world-links", str(self.links), "--output", str(self.base / "mixed")]), 1)
+        (rules / "smelt.json").write_bytes(b"b" * addon.SMELT_BYTES)
+        self.assertEqual(addon.main(["--equipment-smelt", str(rules), "--output", str(self.base / "bad")]), 1)
+
     def test_refuses_ui_pack_with_blockers(self):
         ui = self._ui_pack(blockers=[{"member": "UI/x.png", "reason": "missing"}])
         self.assertEqual(addon.main(["--ui", str(ui), "--output", str(self.base / "out")]), 1)

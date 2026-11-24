@@ -298,6 +298,8 @@ static func action_for_record(record: Dictionary, item_name: String, host: Node=
 	return "사용"
 
 static func material_direct_use(record: Dictionary) -> bool:
+	var smelt=preload("res://scripts/equipment523/native_smelt_input.gd")
+	if smelt.known(int(record.get("source_item_class_id",0))) and not smelt.kind(record).is_empty():return true
 	return NATIVE_FIELDS.field(record,"source_category_name")=="TeleportAmulet" and preload("res://scripts/loot/current523_native_stack.gd").profile(record).get("kind")=="teleport_location"
 
 ## The second tap on the same slot while its marker shows uses/equips it.

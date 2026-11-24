@@ -1481,7 +1481,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if ordinary_attack: stolen += preload("res://scripts/loot/patch523_passive_items.gd").drain(self,target,stolen)
 	if attack_kind not in ["melee","ranged","magic"]:attack_kind=feedback_kind if resolving_combat_action else _current_attack_kind()
 	var kind: String = attack_kind
-	var amplification: float = clampf(float(equipment_effects.damage_amp_pct)+weapon_mastery.damage_amplification(kind,_mastery_actual_weapon_type())+card_collections.damage_amplification(kind)+monsterbook523_runtime.outgoing_percent(attack_kind), 0.0, 300.0)
+	var oracle:Script=preload("res://scripts/loot/native_manual_scrolls523.gd")
+	var oracle_amp:int=oracle.oracle_damage_percent(active_item_buffs,bool(target.get_meta("is_player_combatant",false))) if active_item_buffs.has(oracle.ORACLE_KEY) else 0
+	var amplification: float = clampf(float(equipment_effects.damage_amp_pct)+weapon_mastery.damage_amplification(kind,_mastery_actual_weapon_type())+card_collections.damage_amplification(kind)+monsterbook523_runtime.outgoing_percent(attack_kind)+oracle_amp, 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
 	adjusted_damage=growth.combat.outgoing(adjusted_damage,attack_kind)
 	adjusted_damage=preload("res://scripts/crafting/patch523_final_blow.gd").damage(self,adjusted_damage,by_spell,target)
@@ -4443,8 +4445,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	var ignore_percent: float=card_collections.incoming_ignore(collection_context)
-	collection_context.ignore_remaining=maxf(0.0,ignore_percent-_pve_reduction_percent(normalized_type))
-	reduced = _pve_damage_after_item_buffs(reduced,ignore_percent,normalized_type)
+	collection_context.ignore_remaining=maxf(0.0,ignore_percent-_pve_reduction_percent(normalized_type,attacker_is_pc))
+	reduced = _pve_damage_after_item_buffs(reduced,ignore_percent,normalized_type,attacker_is_pc)
 	reduced = card_collections.incoming_damage(reduced,normalized_type,critical,collection_context)
 	reduced = half_elixir.incoming(reduced, normalized_type, attack_element != "physical")
 	var totem_reduction: int = totems.bonus({"melee":"MeleeDamageReductionPercent","ranged":"RangeDamageReductionPercent","magic":"MagicDamageReductionPercent"}.get(normalized_type,""))
@@ -4924,6 +4926,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
+	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
@@ -6037,7 +6040,7 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
 		return false
 	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
-	amount = int(round(float(amount)*(1.0+(growth.bonus("blessing_charge:percent")+card_collections.bonus("blessing_charge:percent"))/100.0)))
+	amount = _amount_with_ainhasad_charge_bonuses(amount)
 	var charged: int = ain_service.charge(amount)
 	if charged <= 0:
 		hud.show_message("아인하사드 축복이 최대치입니다")
@@ -6048,6 +6051,10 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 	hud.show_message("%s 사용 · 축복 +%d" % [item_name, charged])
 	_update_ain_hud()
 	return true
+
+func _amount_with_ainhasad_charge_bonuses(amount:int)->int:
+	var percent:float=growth.bonus("blessing_charge:percent")+card_collections.bonus("blessing_charge:percent")+_active_item_buff_total("source_manual_blessing_charge_pct")
+	return int(round(float(amount)*(1.0+percent/100.0)))
 
 func _auto_recharge_ain() -> void:
 	if not ain_service.auto_recharge or ain_service.blessing > 200:
@@ -7150,6 +7157,9 @@ func player_npc_buff_signature() -> int:
 	return hash(patch523_npc_spells.player_buffs.keys())
 
 func _update_hud() -> void:
+	_publish_player_hud(true)
+
+func _publish_player_hud(fold_native_stacks:bool) -> void:
 	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -7163,7 +7173,7 @@ func _update_hud() -> void:
 	# Every equipment, enhancement, card, collection, growth, awakening,
 	# passive-learning and load transaction publishes through this entry point.
 	_invalidate_equipment_static()
-	_merge_native_stacks()
+	if fold_native_stacks:_merge_native_stacks()
 	_sync_item_instances()
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
@@ -10039,15 +10049,55 @@ func _on_card_pack_draw_requested(category: String) -> void:
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("present_card_reveal", category, result, false)
 
+const SOURCE_FUSION_POINTS=preload("res://scripts/cards/source_fusion_points523.gd")
+
+## Display lookup is small and data-only; no card list or draw on a menu-open.
+func source_fusion_progress(category:String,grade:String)->Dictionary:
+	var count:int=int(card_draw_fusion.pity.get(category,{}).get(grade,0))
+	var available:bool=SOURCE_FUSION_POINTS.supported_threshold(category,grade)
+	var active:bool=card_draw_fusion.original_points_active(category,grade)
+	return {"source":available,"known":available or active,"count":count,"max":SOURCE_FUSION_POINTS.LIMIT,"pending":active and count>=SOURCE_FUSION_POINTS.LIMIT}
+
+func claim_source_fusion_reward(category:String,grade:String)->Dictionary:
+	if _option_awakening_busy() or hud.is_card_reveal_busy():return SOURCE_FUSION_POINTS.result(false,"다른 카드 동작 완료 후 다시 시도하세요")
+	if not card_draw_fusion.original_points_active(category,grade) or card_draw_fusion.pity.get(category,{}).get(grade,0)!=SOURCE_FUSION_POINTS.LIMIT:return SOURCE_FUSION_POINTS.result(false,"아직 합성 시도 보상 포인트가 부족합니다")
+	var verified:Dictionary=SOURCE_FUSION_POINTS.reward(self,category,grade)
+	if not verified.get("ok",false):return SOURCE_FUSION_POINTS.result(false,"원본 합성 포인트 지급 자료가 없습니다 · 포인트 보존")
+	var before:Dictionary=card_draw_fusion.export_state()
+	var old_rng:int=card_draw_fusion.rng.state
+	var selected:Dictionary=SOURCE_FUSION_POINTS.choose(verified.draw,card_draw_fusion.rng.randi_range(0,SOURCE_FUSION_POINTS.WEIGHT-1))
+	if selected.is_empty():card_draw_fusion.rng.state=old_rng;return SOURCE_FUSION_POINTS.result(false,"원본 보상 후보 없음 · 포인트 보존")
+	var card:Dictionary=selected.record
+	var receipt:Dictionary={"kind":"source523_fusion_point_reward","card_id":selected.source_id,"cannot_swap":bool(card.get("source_swap_out_disabled",false)),"purchase_id":verified.lane.offer,"pool_id":verified.lane.pool}
+	var awarded:Dictionary=card_draw_fusion.receive_source_card(category,card,receipt)
+	if not awarded.get("ok",false) or not card_draw_fusion.claim_original_points(category,grade):
+		card_draw_fusion.import_state(before);card_draw_fusion.rng.state=old_rng
+		return SOURCE_FUSION_POINTS.result(false,"원본 카드 지급 불가 · 포인트 보존")
+	var saved:Error=_save_game(true,{"card_draw_fusion":card_draw_fusion.export_state()})
+	if saved!=OK:
+		card_draw_fusion.import_state(before);card_draw_fusion.rng.state=old_rng
+		return SOURCE_FUSION_POINTS.result(false,"합성 시도 보상 저장 실패 · 포인트와 카드 상태 보존")
+	deferred_save.cancel()
+	var message:String="합성 시도 보상 · %s %s" % [category,str(card.get("name",""))]
+	_update_hud()
+	hud.show_message(message);hud.append_log(message)
+	hud.set_card_draw_fusion_result(category,message)
+	hud.present_card_reveal(category,awarded,false)
+	return {"ok":true,"message":message,"reward":awarded.results[0],"purchase_id":verified.lane.offer,"pool_id":verified.lane.pool}
+
 func _on_card_fusion_requested(category: String, grade: String, count: int = 1) -> void:
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
+		return
+	if card_draw_fusion.original_points_active(category,grade) and card_draw_fusion.pity.get(category,{}).get(grade,0)>=SOURCE_FUSION_POINTS.LIMIT:
+		hud.show_message("합성 시도 보상을 먼저 받으세요 · 재료 보존")
 		return
 	var tj_before: Dictionary = tj_coupons.core.export_state()
 	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var roll_before: int = card_draw_fusion.rng.state
 	var batch: bool = count > 1
-	var result: Dictionary = card_draw_fusion.fuse_many(category, grade, count) if batch else card_draw_fusion.fuse(category, grade)
+	var original_points:bool=SOURCE_FUSION_POINTS.supported_threshold(category,grade) and SOURCE_FUSION_POINTS.reward(self,category,grade).get("ok",false)
+	var result: Dictionary = card_draw_fusion.fuse_many(category, grade, count, original_points) if batch else card_draw_fusion.fuse(category, grade, original_points)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
 		return
@@ -11698,13 +11748,13 @@ func _source_dot_damage(raw_damage: int,kind: String) -> int:
 	if kind in PATCH523_ENHANCE.policy().get("source_dot_channels",[]):percent=clampf(_equipment_inven_sum("dot_damage_reduction_pct"),0,90)
 	return maxi(1,int(round(float(raw_damage)*(1.0-percent/100.0))))
 
-func _pve_damage_after_item_buffs(raw_damage: int,ignore_percent: float=0.0,attack_type: String="") -> int:
+func _pve_damage_after_item_buffs(raw_damage: int,ignore_percent: float=0.0,attack_type: String="",attacker_is_pc:bool=false) -> int:
 	var protection: Dictionary=_patch523_protection_effects()
 	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
 	var protection_flat: int=int(protection.get("possession_flat",0))+int(protection.get("active_flat",0)) if projection else 0
 	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
 	var reduced: int = maxi(1, raw_damage - titles.pve_reduction() - protection_flat - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - int(_equipment_inven_sum("pve_damage_reduction")))
-	var percent: float = maxf(0.0,_pve_reduction_percent(attack_type)-ignore_percent)
+	var percent: float = maxf(0.0,_pve_reduction_percent(attack_type,attacker_is_pc)-ignore_percent)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced
@@ -12862,11 +12912,13 @@ func _mastery_actual_weapon_type_uncached() -> int:
 	return preload("res://scripts/animation/source_weapon_banks.gd").local_type(_current_weapon_type())
 
 
-func _pve_reduction_percent(attack_type: String="") -> float:
+func _pve_reduction_percent(attack_type: String="",attacker_is_pc:bool=false) -> float:
 	var protection: Dictionary=_patch523_protection_effects()
 	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
 	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
-	var percent: float=clampf(protection_percent+_active_item_buff_total("pve_damage_reduction_pct")+_active_item_buff_total("pvp_damage_reduction_pct")+_catalog_stat_sum("pvp_damage_reduction_pct")+_catalog_stat_sum("pve_damage_reduction_pct")+_equipment_inven_sum("pve_damage_reduction_pct"),0.0,90.0)
+	var oracle:Script=preload("res://scripts/loot/native_manual_scrolls523.gd")
+	var oracle_guard:int=oracle.oracle_damage_percent(active_item_buffs,attacker_is_pc,"source_manual_pve_guard_pct") if active_item_buffs.has(oracle.ORACLE_KEY) else 0
+	var percent: float=clampf(protection_percent+oracle_guard+_active_item_buff_total("pve_damage_reduction_pct")+_active_item_buff_total("pvp_damage_reduction_pct")+_catalog_stat_sum("pvp_damage_reduction_pct")+_catalog_stat_sum("pve_damage_reduction_pct")+_equipment_inven_sum("pve_damage_reduction_pct"),0.0,90.0)
 	if attack_type in ["melee","ranged","magic"]:
 		var growth:int=0
 		if attack_type!="melee":
@@ -13455,6 +13507,29 @@ func _equipment523_invoke_owner(origin: Dictionary, spell_id: int) -> bool:
 		for effect: Dictionary in EQUIPMENT523_SET_INVOKE.effects(equipment523.store.pack,target,equipment523.policy):
 			if int(effect.get("slot",0)) == int(origin.get("slot",0)) and int(effect.get("bonus_id",0)) == int(origin.get("bonus_id",0)) and int(effect.get("option",{}).get("Param1",0)) == spell_id: return true
 	return false
+
+func _open_owned_native_smelt(uid:String,record:Dictionary)->bool:
+	var smelt:Script=EQUIPMENT523_SERVICE.NATIVE_SMELT
+	if not smelt.known(int(record.get("source_item_class_id",0))) or smelt.kind(record).is_empty():return false
+	var offer:Dictionary=equipment523.native_smelt_offer(self,uid)
+	if not offer.get("ok",false):
+		hud.show_message(str(offer.get("error","선택한 제련 재료를 확인하세요.")))
+		return true
+	if not hud.open_native_smelt523(offer):
+		hud.show_message("원본 제련 창을 불러올 수 없습니다 · 재료 보존")
+	return true
+
+func native_smelt523_quote(action:Dictionary)->Dictionary:
+	return equipment523.quote(self,action)
+
+func native_smelt523_commit(action:Dictionary)->Dictionary:
+	var result:Dictionary=equipment523.commit(self,action)
+	if result.get("ok",false):
+		# The original window still shows this selected physical receipt. Do
+		# not immediately fold it with a different same-name provenance stack.
+		_publish_player_hud(false)
+		hud.append_log(str(result.get("detail","제련 완료")))
+	return result
 
 func _equipment523_open() -> void:
 	hud.call("open_equipment523",equipment523.snapshot(self))

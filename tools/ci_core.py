@@ -356,6 +356,7 @@ CHECKS = [
     ('equipment523_set_invoke_test', []),
     ('equipment523_alchemy_test', []),
     ('equipment523_service_test', []),
+    ('native_smelt_inventory_main_test', []),
     ('equipment523_combat_test', []),
     ('equipment523_element_loss_test', []),
     ('equipment523_effect_store_test', []),
@@ -414,6 +415,8 @@ CHECKS = [
     ('native_exact_experience_main_test', []),
     ('native_firework_main_test', []),
     ('native_growth_catalyst_main_test', []),
+    ('native_manual_scrolls_main_test', []),
+    ('native_fusion_points_main_test', []),
     ('native_witch_mana_potions_main_test', []),
     ('native_auto_hp_potion_main_test', []),
     ('native_antidote_owner_main_test', []),
@@ -783,7 +786,8 @@ def run_check(name, command, target, log, env, marker):
                 'ground_pickup_shortlist_test','doll_explore_routes_main_test','native_bonus_stat_eye_main_test',
                 'native_exact_experience_main_test','native_firework_main_test','native_growth_catalyst_main_test','native_witch_mana_potions_main_test','native_auto_hp_potion_main_test','native_antidote_owner_main_test','native_trial_coin_main_test','native_timed_selection_boxes_main_test','native_growth_adena_potions_main_test',
                 'quest_only_retirement_main_test','escaros_original_card_main_test','source_item_visible_action_main_test',
-                'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test'}:
+                'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test',
+                'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test'}:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
             fixture = dict(env, XDG_DATA_HOME=profile + '/data',
                            XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
@@ -1142,6 +1146,7 @@ def main():
                       'equipment523_set_invoke_test':'EQUIPMENT523_SET_INVOKE_RESULT',
                       'equipment523_alchemy_test':'EQUIPMENT523_ALCHEMY_RESULT',
                       'equipment523_service_test':'EQUIPMENT523_SERVICE_RESULT',
+                      'native_smelt_inventory_main_test':'NATIVE_SMELT_INVENTORY_RESULT',
                       'equipment523_combat_test':'EQUIPMENT523_COMBAT_RESULT',
                       'equipment523_element_loss_test':'EQUIPMENT523_ELEMENT_LOSS_RESULT',
                       'equipment523_effect_store_test':'EQUIPMENT523_EFFECT_STORE_RESULT',
@@ -1200,6 +1205,8 @@ def main():
                       'native_exact_experience_main_test':'NATIVE_EXACT_EXPERIENCE_RESULT',
                       'native_firework_main_test':'NATIVE_FIREWORK_MAIN_RESULT',
                       'native_growth_catalyst_main_test':'NATIVE_GROWTH_CATALYST_MAIN_RESULT',
+                      'native_manual_scrolls_main_test':'NATIVE_MANUAL_SCROLLS_MAIN_RESULT',
+                      'native_fusion_points_main_test':'NATIVE_FUSION_POINTS_MAIN_RESULT',
                       'native_witch_mana_potions_main_test':'WITCH_MANA_MAIN_RESULT',
                       'native_auto_hp_potion_main_test':'NATIVE_AUTO_HP_MAIN_RESULT',
                       'native_antidote_owner_main_test':'ANTIDOTE_OWNER_MAIN_RESULT',

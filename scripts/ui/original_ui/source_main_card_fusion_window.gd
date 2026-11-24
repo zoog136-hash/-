@@ -11,8 +11,7 @@ extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## saves stay there. Change_Fusion_All is the client's result reveal page
 ## (PageView of Change_Fusion_CardSet): the existing card reveal keeps
 ## showing results. Not connected (no TWILIGHT rule): 확정 합성, the
-## 보상 받기 mileage reward and the third/fourth
-## mileage gauges.
+## fourth mileage gauge (no verified point lane).
 ## The page's own content sits under its Nd_Card_Change node.
 const P="Change_DetailView_Mix/Nd_Card_Change/"
 const MATERIAL_GRADES: Array[String]=["일반","고급","희귀","영웅","전설","신화"]
@@ -81,9 +80,13 @@ func _collect() -> void:
 	for entry: Array in keyed:ordered.append(_owned_records[int(entry[1])])
 	_owned_records=ordered
 
+func _point_progress(current:String)->Dictionary:
+	var owner:Object=hud()
+	return owner.call("source_fusion_progress",category,current) if owner!=null and owner.has_method("source_fusion_progress") else {}
+
 func _can_fuse() -> bool:
 	var required: int=int(Cards.FUSION_MATERIALS.get(grade,0))
-	return required>0 and _available(grade)>=required
+	return required>0 and not _point_progress(grade).get("pending",false) and _available(grade)>=required
 
 func _spec() -> Dictionary:
 	_collect()
@@ -96,15 +99,17 @@ func _spec() -> Dictionary:
 	# 실패 이력 조회: the original FailHistory_All over the TJ failure records.
 	spec[P+"Nd_Fail_History"]={"visible":true}
 	spec[P+"Nd_Fail_History/Btn_History"]={"activate":Callable(self,"_fail_history")}
-	# 합성 시도 보상: TWILIGHT keeps pity for 희귀 and 영웅 (PITY_LIMIT tries).
+	# The third original lane has 20 points as well. The unsupported fourth
+	# gauge stays absent; the source-less game keeps its existing two gauges.
 	var mileage: String=P+"Nd_Mileage/"
 	spec[mileage+"Btn_HelpBox"]={"activate":Callable(self,"_help")}
 	for index: int in range(4):
 		var gauge: String=mileage+"Nd_Gauge_0%d" % (index+1)
-		if index>=Cards.PITY_GRADES.size():
+		var tier:String=Cards.ORIGINAL_POINT_GRADES[index] if index<Cards.ORIGINAL_POINT_GRADES.size() else ""
+		if tier.is_empty() or (tier not in Cards.PITY_GRADES and not _point_progress(tier).get("known",false)):
 			spec[gauge]={"visible":false}
 			continue
-		var count: int=int(pity.get(Cards.PITY_GRADES[index],0))
+		var count:int=int(pity.get(tier,0))
 		spec[gauge+"/Gauge_Bar"]={"role":"source_percent","percent":100.0*float(count)/float(Cards.PITY_LIMIT)}
 		spec[gauge+"/Label_Num"]={"role":"source_text","text":"%02d" % count}
 		spec[gauge+"/Label_Num_1"]={"role":"source_text","text":"%02d" % Cards.PITY_LIMIT}
@@ -112,9 +117,11 @@ func _spec() -> Dictionary:
 	spec[mix+"Label_Tip"]={"visible":_materials.is_empty()}
 	spec[mix+"Label_Tip02"]={"role":"source_text","text":"%s ~ %s 1장 획득 가능!" % [grade,target] if required>0 else "유일 등급은 합성할 수 없습니다"}
 	spec[mix+"Btn_Probability"]={"activate":Callable(self,"_probability")}
-	var pity_grade: bool=Cards.PITY_GRADES.has(grade)
+	var points:Dictionary=_point_progress(grade)
+	var pity_grade:bool=Cards.PITY_GRADES.has(grade) or points.get("known",false)
+	var pending:bool=bool(points.get("pending",false))
 	spec[mix+"Nd_Mileage_Reward"]={"visible":pity_grade}
-	spec[mix+"Nd_Mileage_Reward/Btn_Reward"]={"visible":false}
+	spec[mix+"Nd_Mileage_Reward/Btn_Reward"]={"visible":pending,"displaystate":pending,"activate":Callable(self,"_claim_reward")}
 	var fails: int=int(pity.get(grade,0))
 	spec[mix+"Nd_Mileage_Reward/Gauge_Bar"]={"role":"source_percent","percent":100.0*float(fails)/float(Cards.PITY_LIMIT)}
 	spec[mix+"Nd_Mileage_Reward/Label_Num"]={"role":"source_text","text":"%02d" % fails}
@@ -207,8 +214,15 @@ func _fail_history() -> Dictionary:
 	if controller.has_method("try_open_overlay_window"):return controller.try_open_overlay_window("fail_history",[start])
 	return controller.try_open_feature_window("fail_history",[start])
 
+func _claim_reward() -> Dictionary:
+	var owner:Object=hud()
+	if owner==null or not owner.has_method("_claim_source_fusion_reward"):return _fail("source_fusion_reward_unavailable")
+	return owner.call("_claim_source_fusion_reward",category,grade)
+
 func _help() -> Dictionary:
-	_message("합성 시도 보상: 희귀·영웅 합성 %d회 연속 실패 시 상위 등급 카드 1장 추가 (TWILIGHT 규칙)" % Cards.PITY_LIMIT)
+	var points:Dictionary=_point_progress(grade)
+	if points.get("known",false):_message("합성 실패나 전용 주문서로 점수를 모으고, 20점에서 보상 받기를 누르세요.")
+	else:_message("TWILIGHT 기본 합성: 희귀·영웅 실패 %d회 누적 시 상위 등급 카드 1장 추가" % Cards.PITY_LIMIT)
 	return {"ok":true}
 
 func _fixed() -> Dictionary:

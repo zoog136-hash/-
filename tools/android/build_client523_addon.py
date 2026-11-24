@@ -12,6 +12,8 @@ reinstalling its parts. It is one ZIP picked in the same installer
   blockers), selected as TWILIGHT_SOURCE_UI;
 * world_map: the 523 world-map contract (tools/maps/build_client523_world_map.py),
   selected in user://current523_world_map.cfg. Shipped with ui in one file.
+* equipment_smelt: the optional byte-pinned private 523 smelt sidecar; the
+  installer does not mount it as a resource pack or require it on boot.
 
     python3 tools/map_restore/build_patch523_world_links.py \\
         --source-zip <523 tables ZIP> --output /private/world-links
@@ -36,16 +38,18 @@ import build_client523_resource_pack as pack  # noqa: E402
 ADDON_SCHEMA = "twilight-client523-resource-addon-v1"
 ADDON_DESCRIPTOR = "source523_addon.json"
 WORLD_LINKS_SHA256 = "2de8cebbcf486e5c2afa3e471ddc0cceeebe20ab8389916291eb24a5739ffa90"
+SMELT_SHA256 = "c2509aafb6eaade682ff5d82ba38c2e7e37fc44a529bef4b27b194a95cd2e61f"
+SMELT_BYTES = 129620
 UI_SCHEMA = "twilight-original-ui-v1"
 UI_MANIFEST_LIMIT = 128 * 1024 * 1024
 # section -> (manifest file, required manifest SHA-256 or None when the
 # runtime checks the section itself)
 ADDON_SECTIONS = {"world_links": ("manifest.json", WORLD_LINKS_SHA256),
                   "ui": ("original_ui.json", None),
-                  "world_map": ("contract.json", None)}
+                  "world_map": ("contract.json", None), "equipment_smelt": ("smelt.json", SMELT_SHA256)}
 WORLD_MAP_SCHEMA = "twilight-source523-world-map-v1"
 # Sections delivered in one file share its name (the installer asks for it).
-FILE_NAMES = {"ui": "ui", "world_map": "ui", "world_links": "world-links"}
+FILE_NAMES = {"ui": "ui", "world_map": "ui", "world_links": "world-links", "equipment_smelt": "equipment-smelt"}
 
 
 def check_world_map(root: Path, manifest: Path) -> None:
@@ -79,7 +83,7 @@ def build(args) -> dict:
     members = []
     sections = {}
     for section, (manifest_name, pin) in ADDON_SECTIONS.items():
-        root = getattr(args, section)
+        root = getattr(args, section, None)
         if root is None:
             continue
         root = root.resolve()
@@ -91,7 +95,12 @@ def build(args) -> dict:
             check_ui(root, manifest)
         if section == "world_map":
             check_world_map(root, manifest)
-        files = pack.walk(root)
+        if section == "equipment_smelt":
+            pack.require(not sections and not any(getattr(args,key,None) for key in ADDON_SECTIONS if key!=section), "equipment_smelt: install separately from other add-ons")
+            pack.require(manifest.stat().st_size == SMELT_BYTES and not manifest.is_symlink(), "equipment_smelt: unexpected sidecar size or path")
+            files = [(manifest_name, manifest, SMELT_BYTES)]
+        else:
+            files = pack.walk(root)
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
         sections[section] = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": digest}
     pack.require(sections, "no add-on section given")
@@ -113,7 +122,7 @@ def build(args) -> dict:
         archive.writestr(pack.entry(pack.PREFIX + pack.PART_INDEX), json.dumps(index, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode())
         archive.writestr(pack.entry(pack.PREFIX + ADDON_DESCRIPTOR), descriptor_bytes)
         for member, source, size in members:
-            info = pack.entry(pack.PREFIX + member, True)
+            info = pack.entry(pack.PREFIX + member, member != "equipment_smelt/smelt.json")
             with source.open("rb") as handle, archive.open(info, "w") as target:
                 for block in iter(lambda: handle.read(1 << 20), b""):
                     target.write(block)
@@ -128,6 +137,7 @@ def main(argv=None) -> int:
     parser.add_argument("--world-links", type=Path, help="world-links folder (manifest.json 2de8cebb...)")
     parser.add_argument("--ui", type=Path, help="original main UI pack folder (original_ui.json)")
     parser.add_argument("--world-map", type=Path, help="523 world-map contract folder (contract.json)")
+    parser.add_argument("--equipment-smelt", type=Path, help="private pinned equipment smelt folder (smelt.json)")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]
