@@ -1,5 +1,6 @@
 extends RefCounted
 ## Full private ItemClass sidecars. Two cached shards; no source code execution.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const ICON_IDENTITY = preload("res://scripts/ui/source_item_icon_identity.gd")
 const PACK = preload("res://scripts/lineagem_pack_install.gd")
 const MAX_SHARD = 8*1024*1024
@@ -88,6 +89,7 @@ static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
 	var added: int = 0
 	var updated: int = 0
 	for id: String in document.get("native_item_ids",[]):
+		if RETIRED_ITEMS.item(int(id)):continue
 		var source: Dictionary = document.item_definitions[id].native_record
 		var states: Array = [1]
 		if str(source.get("slot","")) in ["material","consumable","currency"]:
@@ -110,6 +112,7 @@ static func register(document: Dictionary, catalog: Dictionary) -> Dictionary:
 			if positions.has(key): records[int(positions[key])] = record;updated += 1
 			else: positions[key] = records.size();records.append(record);added += 1
 	for id: String in document.get("catalog_aliases",{}):
+		if RETIRED_ITEMS.item(int(id)):continue
 		var alias: Dictionary = document.catalog_aliases[id]
 		var key: String = str(alias.identity.sourceId)
 		if not positions.has(key): continue

@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Reuses exact PR238 modules; quest eligibility and receipts remain quest-owned.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -164,6 +165,7 @@ func configure(world: Node) -> void:
 	ready=not _definition_ids.is_empty()
 
 func _register(world: Node, original: Dictionary, bless: int) -> void:
+	if RETIRED_ITEMS.record(original):return
 	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(original).is_empty():return
 	var record: Dictionary = D.variant_item(original,bless)
 	if not world._catalog_item_from_source_id(str(record.sourceId)).is_empty(): return

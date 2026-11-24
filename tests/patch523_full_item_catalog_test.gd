@@ -1,4 +1,5 @@
 extends SceneTree
+const RETIRED = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const U = preload("res://scripts/loot/patch523_item_use.gd")
 const GRANTS = preload("res://scripts/loot/patch523_item_inventory.gd")
@@ -23,7 +24,7 @@ func run() -> void:
 	if not installed.get("ok",false): quit(1);return
 	var document: Dictionary = D.data()
 	check(int(document.counts.source_item_class_rows) == 34743 and D.definition_count() == 34743,"all 34743 source definitions indexed")
-	check(document.native_item_ids.size() == 30398,"every non-Test source class registered")
+	check(document.native_item_ids.size() == 30398,"all pre-retirement non-Test source definitions indexed")
 	check(document.source_exclusions.size() == 4345 and document.source_exclusions.get("0") == "source_none_sentinel","Test and None preserved with exact exclusion reason")
 	print("FULL_ITEM_STAGE source_installed ",D.definition_count())
 	var world: TwilightWorld = load("res://Main.tscn").instantiate()
@@ -61,6 +62,9 @@ func run() -> void:
 	var native_gear: int = 0
 	var expired: int = 0
 	for id: String in document.native_item_ids:
+		if RETIRED.item(int(id)):
+			check(world.source_item_record(int(id)).is_empty(),"retired item remains unavailable "+id)
+			continue
 		var record: Dictionary = world.source_item_record(int(id))
 		check(not record.is_empty() and int(record.get("source_item_class_id",-1)) == int(id) and D.matches(record,world._catalog_item_from_source_id("m523:item:"+id)),"runtime exact catalog identity "+id)
 		check(not record.get("source_test_item",true),"normal source flag "+id)
@@ -68,7 +72,10 @@ func run() -> void:
 		if D.equipment(record): native_gear += 1
 		if not D.deadline_problem(record).is_empty(): expired += 1
 		grants.append({"item_class_id":int(id),"amount":1,"bless_raw":1,"enchant":0})
-	check(trash == 1242,"all 1242 non-Test IsTrash rows preserved")
+	var retired_trash:=0
+	for id: int in RETIRED.IDS:
+		if D.cached_definition(str(id)).get("original_item",{}).get("IsTrash")==true:retired_trash+=1
+	check(trash+retired_trash == 1242,"all 1242 non-Test IsTrash rows preserved")
 	check(world.source_item_record(0).is_empty(),"sentinel never becomes normal inventory")
 	for id: String in document.source_exclusions:
 		check(world.source_item_record(int(id)).is_empty(),"excluded source remains ungrantable "+id)
@@ -101,6 +108,9 @@ func run() -> void:
 	world._load_game(true);world.field_population.set_process(false);world._clear_monsters()
 	check(same_inventory(world.inventory,owned),"every normal source inventory key and quantity survives real reentry")
 	for id: String in document.native_item_ids:
+		if RETIRED.item(int(id)):
+			check(world.source_item_record(int(id)).is_empty(),"retired item remains unavailable "+id)
+			continue
 		var record: Dictionary = world.source_item_record(int(id))
 		var wallet: String = D.currency_identity_name(record)
 		if wallet == "아데나": continue
@@ -112,7 +122,7 @@ func run() -> void:
 	for record: Dictionary in world.hud.catalog_filtered_results:
 		if record.get("source_m_native_item",false): ui_ids[str(int(record.get("source_item_class_id",-1)))] = true
 		check(not record.get("source_test_item",false) and not record.get("source_preserved_legacy_catalog",false),"replacement UI hides archived/Test rows")
-	for id: String in document.native_item_ids: check(ui_ids.has(id),"every normal source ID is reachable in actual catalog UI "+id)
+	for id: String in document.native_item_ids: check(ui_ids.has(id)==(not RETIRED.item(int(id))),"actual catalog includes all and only non-retired IDs "+id)
 	check(D.FULL_ITEMS.order.size() <= 2,"bounded detail shard cache")
 	# Losing one owned installed shard cannot replace a full-source save with an
 	# older/smaller catalog. Only this isolated profile's copied file is moved.

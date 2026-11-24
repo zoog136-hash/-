@@ -1,5 +1,6 @@
 extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
@@ -397,6 +398,7 @@ func _token(unit: int, id: int, amount: int) -> Dictionary:
 
 func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int) -> Dictionary:
 	if int(token.unit_id)==4:
+		if RETIRED_ITEMS.item(token.class_id):return fail(RETIRED_ITEMS.REASON)
 		var original: Dictionary=catalog.record("ItemClass",int(token.class_id))
 		var package: bool=giving and original.get("TestItem",false) and CashPackages.is_package(int(token.class_id))
 		if original.is_empty() or (original.get("TestItem",false) and not package) or not Dummy.item_evidence(original).is_empty():return fail("미확인·시험·원본 더미 품목은 상점 지급·차감 연결에서 제외")
@@ -756,6 +758,7 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var ready: Dictionary=_ready_for_action(internal)
 	if not ready.ok:return ready
 	var offer: Dictionary=catalog.merchant_offer(id)
+	if RETIRED_ITEMS.item(offer.get("goods",{}).get("ItemClassID")):return fail(RETIRED_ITEMS.REASON)
 	var price: Dictionary=merchant_price(id)
 	if not price.ok:return price
 	var profile: Dictionary=merchant_prices.get(str(id),{})
@@ -885,6 +888,7 @@ const BUY_LIST_ACTION: int = 2
 var _buy_rows: Dictionary = {}
 
 func buy_row(item_class_id: int) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	if _buy_rows.is_empty() and catalog != null and catalog.available():
 		for row: Dictionary in catalog.rows("MerchantGoods"):
 			if int(row.get("DialogActionTypeID", 0)) != BUY_LIST_ACTION or int(row.get("ItemBlessCodeID", 0)) != 1 or int(row.get("Enchant", 0)) != 0: continue
@@ -984,6 +988,7 @@ func orders() -> Array:
 	return result
 
 func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	var D: Script=preload("res://scripts/loot/patch523_monster_drops.gd")
 	var summary: Dictionary=D.definition_id(str(item_class_id))
 	if summary.is_empty() or summary.get("original_item",{}).get("TestItem",true):return {}

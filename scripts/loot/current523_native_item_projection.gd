@@ -2,6 +2,7 @@ extends RefCounted
 ## Current ItemData -> existing game DTO. This supplies no ownership or save.
 ## Slot/stat/formula mappings retain the public patch523_item_definitions.py ABI.
 ## TWILIGHT 근사 switches (LuckyBag, docs/items523_remaining_missing_rules.md 18).
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const APPROX_BAG_DROP_TEST_REWARDS: bool = true
 const APPROX_BAG_RENORMALIZE: bool = true
 ## TWILIGHT 근사 (2) — 남은 막힌 상자 (docs/items523_remaining_missing_rules.md 18.2).
@@ -805,7 +806,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	if templates==null and writer==null and lazy:return _template_stop("create",null,src.identity(),value_key)
 	# Records are replaced, never edited in place, so a shallow copy keeps the
 	# input catalog untouched without a second deep copy of every record.
-	var records: Array=catalog.get("아이템",[]).duplicate(false);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
+	var records: Array=RETIRED_ITEMS.catalog(catalog.get("아이템",[])).duplicate(false);var positions: Dictionary={};var pending: Dictionary={};var admitted: Array=[]
 	for index: int in range(records.size()):
 		if not records[index] is Dictionary:continue
 		var key: String=str(records[index].get("sourceId",""))
@@ -866,6 +867,8 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 				writer.abort();writer=null
 			built=writer!=null and lazy
 		if current.is_empty():pending[id]="current_native_dto_unavailable";continue
+		# Retain the canonical template for old receipts, never register it as playable.
+		if RETIRED_ITEMS.item(raw.ID):continue
 		var key: String=str(current.sourceId);var previous: Array=positions.get(key,[])
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue
 		if previous.size()==1:

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Native monster floor -> exact source ownership + removed floor + receipt.
 ## Uses existing data/physical suppliers and the existing full save writer.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const Transfer=preload("res://scripts/loot/inventory_ground_transfer.gd")
@@ -33,6 +34,7 @@ static func _source(pending: Dictionary) -> Dictionary:
 	return {"item":item,"proof":proof if proof is Dictionary else {}} if item.has("source_m_item_id") else {}
 
 static func _proof_problem(item: Dictionary,proof: Dictionary,quantity: int) -> String:
+	if RETIRED_ITEMS.record(item):return RETIRED_ITEMS.REASON
 	var id: int=_integer(item.get("source_item_class_id"),1)
 	if _integer(item.get("source_m_item_id"),1)!=id or _integer(proof.get("bless_raw"),1) not in [1,2,3]:return "원본 드랍 품목·축복 식별 불일치"
 	if quantity!=1 or proof.get("quantity_policy")!="host_one" or proof.get("selection_policy")!="host_uniform_distinct_items_then_distinct_variants":return "기존 원본 드랍 수량·선택 정책 확인 필요"

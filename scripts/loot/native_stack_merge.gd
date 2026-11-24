@@ -21,6 +21,7 @@ extends RefCounted
 ## selection follow it) unless every member has partition history.
 ## TWILIGHT 근사: an original row whose MaxStackAmount is not a positive
 ## integer (none in the 523 tables) stacks up to 9999.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const QUANTITY="source_native_stack_quantity"
 const RECEIPT="source_native_stack_receipt"
 const USED="source_native_stack_used_quantity"
@@ -148,6 +149,7 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 		if not entry is Dictionary or not entry.has(RECEIPT) or entry.get("level")!=0:continue
 		var name_value: String=str(entry.get("name",""))
 		if not candidates.has(name_value):continue
+		if entry.get("record") is Dictionary and RETIRED_ITEMS.record(entry.record):continue
 		var owned: Dictionary=stock.call("proof_entry",entry,uid)
 		if owned.is_empty():continue
 		var cap: int=max_stack(owned.receipt)

@@ -3,7 +3,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## close) hosting one of its own page ProjectNodes. The tabs route to the
 ## existing windows of the category: 변신/마법인형 list (open_catalog),
 ## 합성 (open_card_fusion), 컬렉션 (open_normal_card_collections) and the
-## category's fourth tab (마법인형 탐험 / 용병 파견 -> open_expedition; 성물
+## category's fourth tab (마법인형 탐험 / 용병 파견 -> their original windows; 성물
 ## 제단 has no TWILIGHT feature and stays hidden). Pages not shown are left
 ## out of the node scope.
 const Cards=preload("res://scripts/card_draw_fusion.gd")

@@ -72,14 +72,29 @@ func run() -> void:
 		check(not world.expedition_local.prepare(1, [identity]).ok, "current additional summon also prevents departure")
 		if had_secondary: world.option_awakening.progress[secondary_field] = old_secondary
 		else: world.option_awakening.progress.erase(secondary_field)
+	await process_frame
+	await process_frame
 	world.hud.toggle_menu()
 	var tile: Button = world.hud.workspace.find_child("MenuTile_expedition", true, false)
 	check(tile != null and tile.is_visible_in_tree(), "actual menu contains expedition tile")
+	var controller: Node = world.hud.original_main_ui_controller
+	var ui_ready: bool = is_instance_valid(controller) and controller.feature_window_available("doll_explore")
+	world.hud.message_label.text = ""
 	if tile != null:
 		tile.pressed.emit()
-	check(world.hud.active_section == "expedition", "menu opens expedition workspace")
+	if ui_ready and catalog.ready():
+		check(world.hud.active_section == "doll_explore" and controller.feature_window_is_open("doll_explore"), "menu opens the real original doll exploration window")
+	else:
+		var expected_refusal: String = "마법인형 탐험 원본 데이터가 없습니다." if ui_ready else "마법인형 탐험 원본 화면 리소스가 없습니다."
+		check(world.hud.active_section == "menu" and world.hud.workspace.visible and world.hud.message_label.text == expected_refusal, "missing original explains why and keeps the menu")
+	check(world.hud.workspace.find_child("ExpeditionSourceView", true, false) == null, "doll menu never substitutes the combined expedition view")
+	# The existing combined view still owns card dispatch's fallback route.
+	# Reach it explicitly to retain all eligibility, cost and persistence checks
+	# below; it is deliberately not the doll exploration menu's destination.
+	world.hud.open_expedition()
+	check(world.hud.active_section == "expedition", "explicit combined expedition route opens its own workspace")
 	var view: Control = world.hud.workspace.find_child("ExpeditionSourceView", true, false)
-	check(view != null and view.is_visible_in_tree(), "actual expedition view mounted")
+	check(view != null and view.is_visible_in_tree(), "combined expedition view mounted for its existing owner checks")
 	if view != null and expected_source:
 		check(view.spot_picker.item_count == 29, "all original523 locations selectable")
 		check(view.group_picker.item_count == 10, "reward groups displayed independently")

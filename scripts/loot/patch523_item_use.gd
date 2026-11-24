@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -51,6 +52,7 @@ static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	return record
 
 static func eligibility(world: Node, record: Dictionary) -> String:
+	if RETIRED_ITEMS.record(record):return RETIRED_ITEMS.REASON
 	if record.is_empty(): return "원본 아이템 자료를 확인할 수 없습니다"
 	var dummy: String=preload("res://scripts/quests/source_dummy523.gd").reason(record)
 	if not dummy.is_empty():return dummy
@@ -240,6 +242,9 @@ static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -
 	for reward: Dictionary in spec.get("rewards", []):
 		if not class_matches(reward.get("class_ids",[]),class_id): continue
 		if int(reward.get("entity_type_id",1)) == 0 and int(reward.get("probability_raw",0)) <= 0: continue
+		if RETIRED_ITEMS.item(reward.item_class_id):
+			world.hud.show_message(RETIRED_ITEMS.REASON+" · 상자 보존")
+			return
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(reward.item_class_id)).is_empty():
 			world.hud.show_message("원본 더미 보상이 포함된 상자는 보존합니다 · 후보 제거·확률 재배분 없음")
 			return
@@ -264,6 +269,8 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 	for reward: Dictionary in selected:
 		var classes: Array = reward.get("class_ids", [])
 		if not class_matches(classes,class_id): continue
+		if RETIRED_ITEMS.item(reward.item_class_id):
+			world.rng.state=rng_before;world.hud.show_message(RETIRED_ITEMS.REASON+" · 상자 보존");return false
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(reward.item_class_id)).is_empty():
 			world.rng.state=rng_before
 			world.hud.show_message("원본 더미 보상 연결 제외 · 상자와 기존 소유 보존")

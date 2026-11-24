@@ -722,9 +722,10 @@ func _collection_requested() -> Dictionary:
 
 func _explore_requested() -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
-	close()
-	if hud!=null and hud.has_method("open_expedition"):hud.call("open_expedition")
-	return {"ok":true,"existing_expedition":true}
+	if hud==null or not hud.has_method("open_doll_explore"):return _fail("source_doll_explore_owner_missing")
+	# The HUD owns both the menu tile and the real Change_WinTotal tab. It
+	# closes this view only when the original destination can be opened.
+	return hud.call("open_doll_explore")
 
 ## 각 성: the same request as the catalog's 각성 tab (World opens the
 ## existing option awakening for the card, or reports why it cannot).

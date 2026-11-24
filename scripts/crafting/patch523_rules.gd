@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Private 523 rules. Existing TWILIGHT recipes and economic tables stay separate.
 const BLESS = preload("res://scripts/equipment_blessing.gd")
@@ -529,6 +530,7 @@ func recipe_definition(craft_id: int) -> Dictionary:
 	return result
 
 func _source_item_allowed(source_id: int) -> bool:
+	if RETIRED_ITEMS.item(source_id):return false
 	var original: Dictionary = item_entry(str(source_id)).get("item_class",{})
 	if original.is_empty(): original = SOURCE_ITEMS.describe(source_id).get("item_class",{})
 	if not SOURCE_DEFINITIONS.declared_exclusion("ItemClass",original).is_empty():return false
@@ -552,6 +554,9 @@ func _source_recipe_contract(recipe: Dictionary) -> Dictionary:
 	if not CONDITIONS.integer(craft_id,1,2147483647) or recipe.get("id") != "patch523:"+str(int(craft_id)):
 		return denied("제작 원본 ID 관계가 필요합니다 · 재료 보존")
 	var source: Dictionary = recipe_evidence(int(craft_id))
+	for group: String in ["inputs","outputs","views"]:
+		for row: Dictionary in source.get(group,[]):
+			if RETIRED_ITEMS.item(row.get("ItemClassID")):return denied(RETIRED_ITEMS.REASON)
 	# TWILIGHT 근사 2026-11-16 (patch523_craft_approx.TEST_ITEM_SUBSTITUTES):
 	# the recorded TestItem substitutes are joined again from the const table.
 	var recorded: Dictionary = recipe.get("twilight_approx",{}).get("test_item_substitutes",{})

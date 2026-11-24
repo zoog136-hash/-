@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Existing HP/MP effects with exact current-source physical quantity ownership.
 ## No name-only conversion, reference effect activation, or live trial grant.
@@ -68,6 +69,7 @@ static func profile(record: Dictionary) -> Dictionary:
 	# TWILIGHT 근사: a reusable TeleportAmulet is projected as a material.
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
+	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
 	if elixir_rule(record,definition):return {"kind":"elixir","spec":{"can_use_when_invisible":true}}
 	if half_elixir_charge_rule(record,definition):return {"kind":"half_elixir_charge","spec":{"can_use_when_invisible":true}}
 	if half_elixir_reset_rule(record,definition):return {"kind":"half_elixir_reset","spec":{"can_use_when_invisible":true}}
@@ -101,6 +103,37 @@ static func profile(record: Dictionary) -> Dictionary:
 	if source_effect=="food":return {"kind":"buff","runtime_food":true}
 	if source_effect in ["teleport","ain","teleport_location"]:return {"kind":source_effect}
 	return {}
+
+## Original 146402 grants one unallocated bonus stat, not an ordinary elixir.
+## Never infer this consumer by display name or apply it to the two cap items.
+static func bonus_point_rule(record:Dictionary,definition:Dictionary)->bool:
+	if whole(record.get("source_item_class_id"))!=146402 or NATIVE_FIELDS.field(record,"source_category_name")!="BonusStatRecharger":return false
+	var raw:Dictionary=definition.get("original_item",{})
+	var rows:Array=definition.get("item_bonus",[])
+	if whole(raw.get("ID"))!=146402 or raw.get("TestItem")!=false or whole(raw.get("LevelLimitMin"))!=89 or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true or rows.size()!=1:return false
+	var r:Dictionary=rows[0];var b:Dictionary=r.get("bonus",{})
+	return whole(r.get("ID"))==228432 and r.get("IsPossession")==false and whole(b.get("ID"))==726502 and r.get("bonus_type",{}).get("Name")=="BonusSubStatAmount" and r.get("unit",{}).get("Name")=="Value" and whole(b.get("Value"))==1 and whole(b.get("BonusApplicationTypeID"))==0 and whole(b.get("BonusApplicationTargetID"))==0
+
+static func use_bonus_point(world:Node,uid:String,owned:Dictionary)->Dictionary:
+	if busy or world.level<89 or not integer(world.stat_points) or int(world.stat_points)>=9007199254740991:return _failure("보너스 스탯 조건 미충족 · 아이템 보존")
+	var live:Dictionary=proof(world,uid)
+	if live.is_empty() or live!=owned or not bonus_point_rule(live.record,D.definition_id("146402")):return _failure("깨달은자의 눈 원본 개체 확인 실패 · 아이템 보존")
+	var paid:Dictionary=stage_debit(world,[{"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt}])
+	if not paid.get("ok",false):return _failure("깨달은자의 눈 수량 확인 실패 · 아이템 보존")
+	var payload:Dictionary=paid.overrides
+	payload["stat_points"]=int(world.stat_points)+1
+	# This narrow seal is never acquired by generic consumables or an arbitrary save.
+	busy=true;_candidate_kind="original_146402_point";_candidate=payload.duplicate(true)
+	var saved:Error=world._save_game(true,payload)
+	_candidate.clear();_candidate_kind="";busy=false
+	if saved!=OK:return _failure("보너스 스탯 저장 실패 · 포인트와 아이템 보존")
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	world.stat_points=payload.stat_points;world.deferred_save.cancel()
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"보너스 스탯 +1 · 캐릭터 능력치에서 분배하세요"}
+
+static func authorizes_bonus_point(world:Node,staged:Dictionary)->bool:
+	return _candidate_kind=="original_146402_point" and staged.size()==4 and staged.has("inventory") and staged.has("item_instances") and staged.has("consumable_state") and integer(world.stat_points) and staged.get("stat_points")==int(world.stat_points)+1 and authorizes(staged)
 
 ## ItemClass 4151 grants one ordinary stat point. Keep the existing TWILIGHT
 ## chosen-stat UI and shared character/stat caps for both forms of elixir.
@@ -214,6 +247,7 @@ static func draw_ticket_profile(record: Dictionary) -> Dictionary:
 ## shallow: the caller only adds this entry and never edits existing ones in
 ## place (floor pickup); existing entries stay shared with the live bag.
 static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool=false) -> Dictionary:
+	if RETIRED_ITEMS.record(record):return {"ok":false,"error":RETIRED_ITEMS.REASON}
 	if quantity<1 or not integer(quantity) or origin.is_empty() or supply_profile(record).is_empty():return {"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	return _stage_proven_grant(record,quantity,instances,origin,shallow)
 
@@ -221,6 +255,7 @@ static func stage_grant(record: Dictionary,quantity: int,instances: Dictionary,o
 ## owner and whether a receipt may be issued. A claimed invalid grant is a
 ## failure, not permission to fall back to the plain inventory.
 static func stage_floor_grant(record: Dictionary,quantity: int,instances: Dictionary) -> Dictionary:
+	if RETIRED_ITEMS.record(record):return {"handled":true,"ok":false,"error":RETIRED_ITEMS.REASON}
 	if supply_profile(record).is_empty():return {"handled":false}
 	if quantity<1 or not integer(quantity):return {"handled":true,"ok":false,"error":"현재 원문 물리 공급 계약 미지원"}
 	var result: Dictionary=_stage_proven_grant(record,quantity,instances,{"kind":"source523_floor"},true)
@@ -505,6 +540,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="cure":return load("res://scripts/quests/quest_cure310.gd").call("perform",world,record,uid)
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
+	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
 	if effect.kind=="half_elixir_charge":return use_half_elixir_charge(world,uid,owned,record)
 	if effect.kind=="half_elixir_reset":return open_half_elixir_reset(world,uid,owned,record)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)
@@ -931,6 +967,7 @@ static func stage_debit(world: Node,requests: Array) -> Dictionary:
 		var owned: Dictionary=proof(world,uid)
 		if owned.is_empty() or not integer(request.quantity) or int(request.quantity)<1 or int(request.quantity)>int(owned.remaining) or request.expected_quantity!=owned.remaining or request.expected_remaining!=int(owned.remaining)-int(request.quantity) or request.source_native_stack_receipt!=owned.receipt:return _failure("선택한 원본 물리 재료·수량·예상 잔량 불일치")
 		var name_value: String=str(owned.record.name)
+		if RETIRED_ITEMS.record(owned.record):return _failure(RETIRED_ITEMS.REASON)
 		if world._item_locked(name_value,uid) or world._item_locked(name_value) or not integer(bag.get(name_value,0)) or int(bag.get(name_value,0))<int(request.quantity):return _failure("원본 재료 잠금·소지 수량 불일치")
 		var deadline: String=D.deadline_problem(owned.record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 		if not deadline.is_empty():return _failure(deadline)
@@ -1211,6 +1248,7 @@ static func prepare_partition(world: Node,parent: Dictionary,uid: String,quantit
 # Exact source-reader -> existing physical native-use boundary. Original raw
 # ItemClass and opaque immutable ownership proof stay separate arguments.
 static func use_owned_original(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
+	if RETIRED_ITEMS.item(original_item.get("ID")):return _failure(RETIRED_ITEMS.REASON)
 	if request.size()!=5:return _failure("원문 소모품 선택 소유 요청5필드 필요")
 	var quest: bool=request.has("quest_reward_receipt")
 	var field: String="quest_reward_receipt" if quest else "source_native_stack_receipt"
@@ -1349,6 +1387,7 @@ static func selection_pending(world: Node,uid: String,owned: Dictionary,record: 
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원문 선택 보상 사용 대상·서비스 조건 미지원")
 	var choices: Array=[]
 	for reward: Dictionary in spec.get("rewards",[]):
+		if RETIRED_ITEMS.item(reward.get("item_class_id")):continue
 		if reward.get("class_ids",[]).is_empty() or class_id in reward.class_ids:choices.append(reward.duplicate(true))
 	if choices.is_empty():return _failure("원문 직업에 맞는 선택 보상이 없습니다")
 	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1}
