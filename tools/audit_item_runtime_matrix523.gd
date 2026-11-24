@@ -14,6 +14,7 @@ const RET=preload("res://scripts/loot/retired_enhancement_items523.gd")
 const DUMMY=preload("res://scripts/quests/source_dummy523.gd")
 const TICKETS=preload("res://scripts/shop/source523_inventory_tickets.gd")
 const TICKET_INPUT=preload("res://scripts/shop/current523_ticket_input.gd")
+const MILEAGE=preload("res://scripts/shop/source523_permanent_mileage_tickets.gd")
 const RETURN=preload("res://scripts/quickslots/regional_return.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const VERIFIED={
@@ -33,6 +34,17 @@ const VERIFIED={
 	183493:"actual_bag_MPrestoration_exact_reuse_reload",
 	189834:"actual_UI_source_selection_open_and_claim_expiry_gate",
 	353592:"actual_UI_source_selection_open_and_claim_expiry_gate",
+	258463:"actual_growth_potion_debit_and_NPC_adena_fault_reload",
+	306601:"actual_growth_potion_nonstacked_debit_and_NPC_adena_reload",
+	342064:"actual_bag_selected_receipt_original_5_results_fault_reload",
+	200408:"actual_bag_1_original_doll_plus_240_mileage_fault_reload",
+	200458:"actual_bag_10_original_dolls_plus_2400_mileage_reload",
+	19473:"actual_bag_and_auto_quickslot_original_hp_dice_reload",
+	310:"actual_bag_poison_only_debit_fault_retry_reload",
+	263901:"actual_bag_HP6000_separate_900s_reuse_fault_retry_reload",
+	137513:"actual_bag_rank1_exact_source_coordinate_fixture_live_map_entry_unverified",
+	137523:"actual_bag_rank2_exact_source_coordinate_fixture_live_map_entry_unverified",
+	137533:"actual_bag_rank3_exact_source_coordinate_fixture_live_map_entry_unverified",
 }
 func _initialize()->void:run.call_deferred()
 func run()->void:
@@ -102,6 +114,9 @@ func run()->void:
 				if supported_tickets.has(ticket_key) and TICKETS.claims(record):
 					route="ticket_original_full_pool_model_not_tapped"
 					entry["ticket_original_grants"]=supported_tickets[ticket_key].grants
+				elif MILEAGE.VARIANTS.has(id) and not MILEAGE.spec(id,raw).is_empty():
+					route="ticket_permanent_card_and_mileage_live_tested"
+					entry["original_mileage"]=MILEAGE.VARIANTS[id][7]
 				elif blocked_tickets.has(ticket_key):
 					route="ticket_original_model_refusal"
 					entry["ticket_original_blocker"]=blocked_tickets[ticket_key]
@@ -112,7 +127,7 @@ func run()->void:
 				var profile:Dictionary=OWNER.profile(record)
 				if not profile.is_empty():
 					entry["owner_profile"]=profile.get("kind")
-					route="ready_owner_resolver_not_tapped"
+					route="original_trial_tower_land_and_cell_required" if profile.get("spec",{}).has("source_trial_tower_territory_id") else "ready_owner_resolver_not_tapped"
 				elif RETURN.supported(str(record.name),record):route="regional_return_owner_requires_map"
 				elif category=="ScrollBuffCardRetry" and not OWNER.mystery_card_rule(record).is_empty():route="mystery_card_requires_verified_pool"
 				else:

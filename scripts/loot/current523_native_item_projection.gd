@@ -981,6 +981,11 @@ static func enchant_stats(item: Dictionary,level: int,bless: int) -> Dictionary:
 			if not stat.is_empty():result[stat]=float(result.get(stat,0.0))+float(bonus.Value)/divisor
 	return result
 
+# The seven original enabled issues (three ranks) share the same exact
+# full-floor restrictions. The three rows marked 미사용 are not admitted.
+const TRIAL_COIN_IDS=[137513,137523,137533,141664,141674,141684,154793,154803,154813,165143,165153,165163,180904,180914,180924,194274,194284,194294,200018,200028,200038]
+const TRIAL_COIN_TERRITORY:int=10353
+
 # Port of the already-public _timed_buff_spec. The original read graph is
 # supplied by ItemData -> current523_buff_data; no duplicate table loader.
 static func timed_buff(definition: Dictionary) -> Dictionary:
@@ -998,9 +1003,11 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	if buff.get("ID")!=id or group.get("ID")!=buff.get("BuffGroupID") or not SOURCE.declared_exclusion("BuffClass",buff).is_empty() or not SOURCE.declared_exclusion("BuffGroup",group).is_empty():return {}
 	var raw: Dictionary=definition.original_item
 	var acceleration: int=acceleration_stage(graph)
+	var tower:bool=whole(raw.get("ID")) in TRIAL_COIN_IDS and id in [57793,57803,57823] and group.get("ID")==1063 and group.get("IsAllowOverlap")==false
 	var permitted: Dictionary={"BuffClassID":"BuffClassID","BuffDuration":"Seconds","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
 	permitted.merge(BUFF_ITEM_RULE_UNITS)
 	if acceleration>0:permitted.merge(ACCELERATION_ITEM_UNITS)
+	if tower:permitted["ConsumeTerritoryClassID"]="ConsumeTerritoryClassID"
 	# TWILIGHT 근사: an item without ItemConsumeDelay uses no consume delay.
 	var spec: Dictionary=consume_metadata(rows,raw,definition.category,permitted,false)
 	if spec.get("consume_delay_ms")==null:spec["consume_delay_ms"]=0
@@ -1025,6 +1032,7 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	# 아인하사드 절약 and cast speed percent points.
 	percent_fields.merge({"AbsoluteExperienceAdditionPercent":"xp","HPPotionIncreasePercent":"potion_heal_pct","EinasadSavingPercent":"ain_saving_pct","CastSpeedBonus":"cast_speed"})
 	var erase_level: int=0
+	var valid_tower_lands:Dictionary={}
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
 		var row: Dictionary=effect.get("link",{}).duplicate(true);var bonus: Dictionary=effect.get("bonus",{});var kind: Dictionary=effect.get("type",{});var unit: Dictionary=effect.get("unit",{})
@@ -1034,6 +1042,12 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
+		if tower and name_value=="ValidLand" and not conditional and unit.get("Name")=="LandID" and integer(bonus.get("Value")):
+			var target_land:int=int(bonus.Value)
+			if target_land<45374 or target_land>46364 or (target_land-45374)%10!=0 or valid_tower_lands.has(target_land):
+				reasons.append("original_trial_tower_land_scope_mismatch")
+			else:valid_tower_lands[target_land]=true
+			continue
 		# The acceleration stage (RunSpritePoint, applied per RunSpriteLevel)
 		# selects the run motion; the player reads it from the preserved
 		# source_buff_class (scripts/animation/source_run_points.gd).
@@ -1083,6 +1097,16 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		elif unit.get("Name")!="Value" or not integer(bonus.get("Value")) or not fields.has(name_value):reasons.append("unsupported_buff_effect:"+name_value)
 		else:typed[fields[name_value]]=int(typed.get(fields[name_value],0))+int(bonus.Value)
 	if linked.is_empty() or typed.is_empty():reasons.append("no_supported_buff_effects")
+	if tower:
+		var territory:Array=[]
+		for row:Dictionary in rows:
+			if row.get("bonus_type",{}).get("Name")=="ConsumeTerritoryClassID" and direct(row) and row.get("unit",{}).get("Name")=="ConsumeTerritoryClassID":
+				territory.append(whole(row.get("bonus",{}).get("Value")))
+		var declaration:Dictionary=SOURCE.row("ConsumeTerritoryClass",TRIAL_COIN_TERRITORY)
+		if valid_tower_lands.size()!=100 or territory!=[TRIAL_COIN_TERRITORY] or declaration.get("ConsumeTerritoryTypeId")!=1 or duration!=300 or not label(raw.get("StoryDescID")).contains("시련의 탑에서만 사용 가능"):
+			reasons.append("original_trial_tower_territory_scope_mismatch")
+		else:
+			spec["source_trial_tower_territory_id"]=TRIAL_COIN_TERRITORY
 	if buff.get("IsGood")!=true or buff.get("IsBuffGroup")!=true:reasons.append("unsupported_buff_kind")
 	if buff.get("IsEraseOnTimeEnd")!=true:reasons.append("source_buff_timer_semantics_unresolved")
 	for key: String in ["IsEraseOnAttack","IsEraseOnAttacked","IsEraseOnMove","IsEraseOnSpellCastAndShieldIt","IsEraseOnSkillCastAndShieldIt","IsEraseOnItemUse","IsEraseOnSpellAttacked","IsEraseOnSkillAttacked","IsEraseOnCast","IsEraseOnHealed","IsEraseOnTargetChanged","IsEraseOnAttackedLimitations"]:

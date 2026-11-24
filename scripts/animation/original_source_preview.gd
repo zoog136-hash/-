@@ -336,6 +336,11 @@ func configure_reference_bank(manifest_path: String, expected_manifest_sha: Stri
 	return _configure_reference_bank(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,"")
 
 func _configure_reference_bank(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary = {}) -> bool:
+	return _configure_reference_bank_internal(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,initial_role,card_consumer,role_actor_ids,false)
+
+## Keep the established override signature. Only the prepared item effect
+## asks for a cooked overlay without admitting the raw bank fallback.
+func _configure_reference_bank_internal(manifest_path: String, expected_manifest_sha: String, source_actor_id: int, explicit_role_action_bindings: Dictionary, caller_loop_policy: Dictionary, initial_role: String, card_consumer: String, role_actor_ids: Dictionary, require_cooked: bool) -> bool:
 	var phase_started: int = FRAME_HITCH.now()
 	clear()
 	FRAME_HITCH.detail("view.clear",phase_started)
@@ -346,6 +351,9 @@ func _configure_reference_bank(manifest_path: String, expected_manifest_sha: Str
 	if COOKED_STORE.available() and COOKED_STORE.cookable_consumer(card_consumer):
 		var cooked: Dictionary = COOKED_STORE.lookup_inputs(COOKED_STORE.request_inputs(manifest_path,expected_manifest_sha,source_actor_id,explicit_role_action_bindings,caller_loop_policy,card_consumer,role_actor_ids,playback_mode_override))
 		if not cooked.is_empty() and _configure_cooked(cooked,manifest_path,initial_role,card_consumer,source_actor_id): return true
+	if require_cooked:
+		reference_bank_status={"ok":false,"error":"current523_item_effect_cooked_overlay_missing"}
+		return false
 	var bank := REFERENCE_BANK.new()
 	var shared_npc: bool = card_consumer == "npc"
 	var loaded: Dictionary = bank.load_shared_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids) if shared_npc else bank.load_bank(manifest_path, expected_manifest_sha, source_actor_id, explicit_role_action_bindings, caller_loop_policy,card_consumer,role_actor_ids)
@@ -1952,6 +1960,52 @@ func notify_current_source_item_consume(original_item: Dictionary, requested_spr
 	var selected: Dictionary = CURRENT523_EFFECT.select_item_consume(original_item,requested_sprite,supplied_context)
 	return _spawn_current523_source_effect(selected,world_point,facing)
 
+## For a cosmetic-only consumable, the owner first verifies it can render.
+## Reuse ordinary exact item selection and the reference compositor, but do
+## not parent this overlay or publish it unless the owner saves the debit.
+func prepare_current_source_item_consume(original_item:Dictionary,requested_sprite:int,facing:int) -> Node2D:
+	# Never parse/decode the large raw bank on a bag tap. In production these
+	# four particles are already shipped in the optional cooked-v2 pack.
+	var supplied:Dictionary=CURRENT523_BANK.options(_reference_request_context)
+	if not supplied.get("ok",false) or COOKED_STORE.effect_index(str(supplied.options.manifest_sha256)).is_empty():
+		source_effect_status={"ok":false,"status":"selection_pending","reason":"current523_item_effect_cooked_index_required"}
+		return null
+	var selected:Dictionary=CURRENT523_EFFECT.select_item_consume(original_item,requested_sprite,_reference_request_context)
+	var overlay:Node2D=_make_selected_current_source_effect_internal(selected,facing,0,true)
+	if not is_instance_valid(overlay):return null
+	var direction:int=overlay._overlay_facing
+	var frames:Array=overlay._playback_tracks.idle.directions[direction]
+	# Fireworks begin on an authored blank frame. Validate the first actual
+	# drawable frame detached, then rewind; never skip the blank in live play.
+	var delta:float=0.0
+	for frame:Dictionary in frames:
+		if not overlay.advance_reference_source(delta,"idle",direction):break
+		for node:Node in overlay.get_children():
+			# Both cooked actors and raw reference sprites use actual textured
+			# Sprite2D children, while the cooked track has no raw layer array.
+			if node is Sprite2D and node.visible and node.texture!=null and overlay.restart_reference_source("idle",0):
+				return overlay
+		delta=preload("res://scripts/animation/source_presentation_policy.gd").duration(frame)
+	source_effect_status["ok"]=false
+	source_effect_status["status"]="selection_pending"
+	source_effect_status["reason"]="current523_item_effect_drawable_frame_unavailable"
+	overlay.free()
+	return null
+
+## Adopt the same detached exact effect only after the successful debit.
+func publish_prepared_item_consume(overlay:Node2D,world_point:Vector2) -> void:
+	var parent:Node=get_parent() if get_parent()!=null else self
+	parent.add_child(overlay)
+	overlay.set_as_top_level(true)
+	TwilightWorldRenderScale.follow_world(overlay)
+	overlay.global_position=world_point
+	overlay._reference_overlay_parent["placement_policy"]="existing_caller_world_point"
+	overlay.advance_reference_source(0.0,"idle",overlay._overlay_facing)
+	_prune_source_overlays()
+	_overlay_nodes.append(overlay)
+	source_effect_status["status"]="configured_existing_source_effect"
+	source_effect_status["placement_policy"]="existing_caller_world_point"
+
 func notify_current_source_invoke_effect(original_option: Dictionary, field: String, world_point: Vector2, facing: int, context: Dictionary = {}) -> bool:
 	var supplied_context: Dictionary = _reference_request_context.duplicate(true)
 	supplied_context.merge(context,true)
@@ -2010,6 +2064,9 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 	return true
 
 func _make_selected_current_source_effect(selected: Dictionary, facing: int, texture_budget_bytes: int = 0) -> Node2D:
+	return _make_selected_current_source_effect_internal(selected,facing,texture_budget_bytes,false)
+
+func _make_selected_current_source_effect_internal(selected: Dictionary, facing: int, texture_budget_bytes: int, require_cooked: bool) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
 	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose","damage_effect"] or not selected.get("source_reference") is Dictionary: return null
@@ -2020,7 +2077,12 @@ func _make_selected_current_source_effect(selected: Dictionary, facing: int, tex
 		return null
 	var overlay = get_script().new()
 	overlay.playback_mode_override = playback_mode_override
-	if not overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay"):
+	var configured:bool
+	if require_cooked:
+		configured=overlay._configure_reference_bank_internal(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay",{},true)
+	else:
+		configured=overlay._configure_reference_bank(str(selected.manifest_path),str(selected.manifest_sha256),int(selected.sprite_id),selected.role_actions,selected.loop_policy,"idle","overlay")
+	if not configured:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_unavailable"))

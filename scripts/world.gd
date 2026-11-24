@@ -394,6 +394,7 @@ var skill_cooldowns: Dictionary = {}
 var skill_global_cooldown: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
+var _growth_catalyst_retry_usec:int=0
 var consumable_service: Node = null
 var quickslots: Array = []
 var ui_preferences: Dictionary = {"quickslot_pages":{}, "edited_quickslots":{}, "item_locks":{}}
@@ -5130,11 +5131,18 @@ func _timed_item_buff_from_record(record: Dictionary) -> Dictionary:
 func _is_timed_buff_item(record: Dictionary) -> bool:
 	return not _timed_item_buff_from_record(record).is_empty()
 
+# Raw ValidLand lists 100 regular Trial Tower lands; do not classify a
+# local challenge on Aden, a hard-mode alias or a fake current map as one.
+func _trial_tower_item_land_active() -> bool:
+	if not current523_aden_source_active() or not field_map is OriginalPlayableField:return false
+	var land:int=int(field_map.definition.get("source_land_id",0))
+	return land>=45374 and land<=46364 and (land-45374)%10==0
+
 func _active_item_buff_total(key: String, item_buff_override: Variant = null) -> int:
 	var total: int = 0
 	var selected: Dictionary = item_buff_override if item_buff_override is Dictionary else active_item_buffs
 	for value: Variant in selected.values():
-		if value is Dictionary:
+		if value is Dictionary and (not value.has("source_trial_tower_territory_id") or _trial_tower_item_land_active()):
 			total += int((value as Dictionary).get(key, 0))
 	# The local clan's level buff (ClanReward -> BuffClass) is held while the
 	# clan exists, like an always-on buff, and is not part of the timed set.
@@ -5231,6 +5239,19 @@ func _tick_item_buffs(delta: float) -> void:
 		if float(buff.get("remaining", 0.0)) <= 0.0:
 			expired.append(key)
 	for key: String in expired:
+		var entry:Variant=active_item_buffs.get(key)
+		if entry is Dictionary and entry.has("source_growth_catalyst523_expiry"):
+			if entry.has("xp"):
+				# Expired stats stop even if the writer/reward supplier is busy.
+				# Keep only the receipt for a later exact claim, not a second buff.
+				active_item_buffs[key]={"remaining":0.0,"source_growth_catalyst523_expiry":entry.source_growth_catalyst523_expiry}
+				changed=true
+			var now:int=Time.get_ticks_usec()
+			if now>=_growth_catalyst_retry_usec:
+				_growth_catalyst_retry_usec=now+2000000
+				if preload("res://scripts/loot/current523_native_stack.gd").finish_growth_catalyst(self,key):
+					changed=true
+			continue
 		active_item_buffs.erase(key)
 		changed = true
 		hud.append_log("%s 버프 종료" % key)
@@ -5253,7 +5274,10 @@ func _combined_active_buffs() -> Dictionary:
 	var result: Dictionary = active_skill_buffs.duplicate(true)
 	for key_value: Variant in active_item_buffs.keys():
 		var key: String = str(key_value)
-		result[key] = active_item_buffs[key]
+		var value:Variant=active_item_buffs[key]
+		if value is Dictionary and value.has("source_trial_tower_territory_id") and not _trial_tower_item_land_active():continue
+		if value is Dictionary and value.has("source_growth_catalyst523_expiry") and not value.has("xp"):continue
+		result[key] = value
 	if ain_service.orb_active():
 		result["드래곤의 보호"] = {"remaining": maxi(0, ain_service.dragon_orb_expires_at - int(Time.get_unix_time_from_system()))}
 	return result
@@ -6982,6 +7006,9 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	var native: Dictionary=_find_catalog_item_record(item_name)
 	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==233:
 		preload("res://scripts/loot/quest_hp233_use.gd").use(self,native)
+		return
+	if native.get("source_m_native_item",false) and int(native.get("source_item_class_id",0))==LOOT_DROP.PATCH523_DROPS.LARGE_HP_ELIXIR_ID:
+		hud.show_message("원본 영약 실제 소지 개체를 선택하세요 · 아이템 보존")
 		return
 	if not _patch523_item_allowed(): return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -8924,6 +8951,7 @@ func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 		return SKILL_RULES.can_auto_cast(skill)
 	if option_awakening.source_scroll_supported(str(entry.get("id",""))):return true
 	var record: Dictionary = _find_catalog_item_record(str(entry.get("id","")))
+	if record.get("source_m_native_item",false) and int(record.get("source_item_class_id",0))==LOOT_DROP.PATCH523_DROPS.LARGE_HP_ELIXIR_ID:return false
 	var spec: Dictionary = CONSUMABLE_RULES.definition(str(entry.get("id","")))
 	return int(record.get("heal",0)) > 0 or str(spec.get("kind","")) in ["regen","food","buff","instant_mp"]
 
@@ -12839,7 +12867,12 @@ func _pve_reduction_percent(attack_type: String="") -> float:
 	var projection: bool=protection523!=null and bool(protection523.get("state").get("policy",{}).get("project_pvp_to_pve",false))
 	var protection_percent: float=float(protection.get("possession_percent_raw",0))/10000.0 if projection else 0.0
 	var percent: float=clampf(protection_percent+_active_item_buff_total("pve_damage_reduction_pct")+_active_item_buff_total("pvp_damage_reduction_pct")+_catalog_stat_sum("pvp_damage_reduction_pct")+_catalog_stat_sum("pve_damage_reduction_pct")+_equipment_inven_sum("pve_damage_reduction_pct"),0.0,90.0)
-	if attack_type in ["melee","ranged","magic"]:percent=clampf(percent+int(_equipment_inven_sum(attack_type+"_damage_reduction_pct")),0,90)
+	if attack_type in ["melee","ranged","magic"]:
+		var growth:int=0
+		if attack_type!="melee":
+			var catalyst:Variant=active_item_buffs.get("아우라키아의 성장 물약")
+			if catalyst is Dictionary: growth=int(catalyst.get("source_371558_magic_reduction" if attack_type=="magic" else "source_371558_ranged_reduction",0))
+		percent=clampf(percent+int(_equipment_inven_sum(attack_type+"_damage_reduction_pct"))+growth,0,90)
 	return percent
 
 func get_regional_return_enabled() -> bool:
