@@ -146,26 +146,36 @@ var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
 
 func export_state() -> Dictionary:
+	return _export_state(true)
+
+## Synchronous native ownership validation only. Never mutate, retain or send
+## these borrowed journals to a worker; the durable writer still exports copies.
+func native_stack_validation_state() -> Dictionary:
+	return _export_state(false)
+
+static func _export_value(value: Variant, owned: bool) -> Variant:
+	return value.duplicate(true) if owned and (value is Dictionary or value is Array) else value
+
+func _export_state(owned: bool) -> Dictionary:
 	var state: Dictionary={
-		"elemental_enchants": elemental_enchants.duplicate(true),
+		"elemental_enchants": _export_value(elemental_enchants,owned),
 		"elixirs_used": elixirs_used,
 		"half_elixirs_used": half_elixirs_used,
-		"permanent_damage_bonuses": permanent_damage_bonuses.duplicate(true),
-		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
+		"permanent_damage_bonuses": _export_value(permanent_damage_bonuses,owned),
+		"source_skill_book_receipts": _export_value(source_skill_book_receipts,owned)
 	}
 
-	if source_native_bag_uses_present:state["source_native_bag_uses"]=source_native_bag_uses.duplicate(true) if source_native_bag_uses is Dictionary or source_native_bag_uses is Array else source_native_bag_uses
-	if source_native_stack_merges_present:state["source_native_stack_merges"]=source_native_stack_merges.duplicate(true) if source_native_stack_merges is Dictionary or source_native_stack_merges is Array else source_native_stack_merges
-	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=source_native_stack_partitions.duplicate(true) if source_native_stack_partitions is Dictionary or source_native_stack_partitions is Array else source_native_stack_partitions
-	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
-	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
-	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
-	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=source_quest_craft_receipts.duplicate(true) if source_quest_craft_receipts is Dictionary or source_quest_craft_receipts is Array else source_quest_craft_receipts
-	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=source_monsterbook_grants.duplicate(true) if source_monsterbook_grants is Dictionary or source_monsterbook_grants is Array else source_monsterbook_grants
-	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
-	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
-	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
-	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=quest_equipment_receipts.duplicate(true) if quest_equipment_receipts is Array or quest_equipment_receipts is Dictionary else quest_equipment_receipts
+	if source_native_bag_uses_present:state["source_native_bag_uses"]=_export_value(source_native_bag_uses,owned)
+	if source_native_stack_merges_present:state["source_native_stack_merges"]=_export_value(source_native_stack_merges,owned)
+	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=_export_value(source_native_stack_partitions,owned)
+	if source_native_stack_uses_present:state["source_native_stack_uses"]=_export_value(source_native_stack_uses,owned)
+	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=_export_value(source_alchemy_item_uses,owned)
+	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=_export_value(source_ground_acquisitions,owned)
+	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=_export_value(source_quest_craft_receipts,owned)
+	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=_export_value(source_monsterbook_grants,owned)
+	if instant_cure_present:state["source_instant_cure_uses"]=_export_value(instant_cure_state,owned)
+	if reusable_state_present:state["source_reusable_item_uses"]=_export_value(reusable_state,owned)
+	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=_export_value(quest_equipment_receipts,owned)
 	return state
 
 func import_state(input: Variant) -> void:
