@@ -4024,7 +4024,9 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 	# Stacks fold at once (bag state); the bag/quickslot/weight/speed redraw
 	# runs in the next frame, coalesced for a burst of pickups, so the pickup
 	# frame does not also pay for the HUD.
+	var started: int=FRAME_HITCH.now()
 	_merge_native_stacks()
+	FRAME_HITCH.detail("loot.stack_fold_pickup",started)
 	_queue_inventory_hud_refresh()
 	# A wallet pickup changes only the Adena readout (coins reach the HUD with the
 	# queued quickslot redraw above); no full character-sheet rebuild.
@@ -4052,7 +4054,9 @@ func _flush_inventory_hud() -> void:
 ## what changed. Equipment, stats and buffs still go through _update_hud.
 func _refresh_inventory_hud() -> void:
 	hud_publish_counts.items += 1
+	var started: int=FRAME_HITCH.now()
 	_merge_native_stacks()
+	FRAME_HITCH.detail("loot.stack_fold_hud",started)
 	_sync_item_instances()
 	combinations.invalidate();combinations.reconcile()
 	var weight: int = _inventory_total_weight()
@@ -4093,13 +4097,10 @@ func _merge_native_stacks() -> int:
 	var stock: Script=preload("res://scripts/loot/current523_native_stack.gd")
 	if stock.busy or source_ground_acquisitions.get("_busy")==true or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
 	if quest_service==null or quest_service.save_blocked or consumable_service==null or warehouse==null or ground_loot==null: return 0
-	var counts: Dictionary={};var candidate: bool=false
-	for entry: Variant in item_instances.values():
-		if entry is Dictionary and entry.has(stock.RECEIPT):
-			var key: String=str(entry.get("name",""))
-			counts[key]=int(counts.get(key,0))+1
-			if int(counts[key])>1: candidate=true;break
-	if not candidate: return 0
+	# Only repeated receipted names can reach the expensive proof/grouping pass.
+	var merge: Script=preload("res://scripts/loot/native_stack_merge.gd")
+	var repeated: Dictionary=merge.possible_names(item_instances)
+	if repeated.is_empty():return 0
 	var dormant: Dictionary=dormant_character_items()
 	var floor: Array=_ground_drops_snapshot()
 	var reserved: Dictionary={}
@@ -4107,7 +4108,7 @@ func _merge_native_stacks() -> int:
 	for uid: Variant in dormant: reserved[str(uid)]=true
 	for record: Variant in floor:
 		if record is Dictionary and record.get("physical_item") is Dictionary: reserved[str(record.physical_item.get("id",""))]=true
-	var planned: Dictionary=preload("res://scripts/loot/native_stack_merge.gd").plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved)
+	var planned: Dictionary=merge.plan(item_instances,consumable_service.export_state(),ui_preferences.get("item_locks",{}),reserved,repeated)
 	if not planned.get("changed",false): return 0
 	var issue: String=stock.state_error(inventory,planned.item_instances,planned.consumable_state,warehouse.snapshot(),floor,dormant)
 	# A plan the full ownership check rejects is not adopted; the bag stays as

@@ -53,6 +53,8 @@ var catalog_data: Dictionary = {}
 var item_image_index: Dictionary = {}
 var character_state: Dictionary = {}
 var state_item_fingerprint: int = -1
+var _state_publish_depth: int = 0
+var _state_publish_dirty: bool = false
 var legacy_scroll: ScrollContainer
 var legacy_stack: VBoxContainer
 var legacy_top_space: Control
@@ -287,9 +289,7 @@ func set_character_state(state: Dictionary) -> void:
 	if fingerprint == state_item_fingerprint:return
 	state_item_fingerprint = fingerprint
 	_grouped_reward_amounts.clear()
-	_refresh_inventory_grid()
-	if selected_item != "":
-		_refresh_detail(selected_item)
+	_request_state_view_refresh()
 
 func set_inventory(value: Dictionary) -> void:
 	if inventory == value:return
@@ -297,6 +297,25 @@ func set_inventory(value: Dictionary) -> void:
 	_grouped_reward_amounts.clear()
 	if selected_item != "" and int(inventory.get(_base_item_name(selected_item), 0)) <= 0:
 		selected_item = ""
+	_request_state_view_refresh()
+
+## The committed ticket updates physical instances and stack counts during
+## the same HUD publication. Keep both inputs current but rebuild rows once
+## from the final pair, never from the intermediate mismatched pair.
+func begin_state_publish() -> void:
+	_state_publish_depth += 1
+
+func end_state_publish() -> void:
+	assert(_state_publish_depth > 0)
+	_state_publish_depth -= 1
+	if _state_publish_depth == 0 and _state_publish_dirty:
+		_state_publish_dirty = false
+		_request_state_view_refresh()
+
+func _request_state_view_refresh() -> void:
+	if _state_publish_depth > 0:
+		_state_publish_dirty = true
+		return
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)

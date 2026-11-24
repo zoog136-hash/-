@@ -1,6 +1,7 @@
 extends RefCounted
 ## Native monster floor -> exact source ownership + removed floor + receipt.
 ## Uses existing data/physical suppliers and the existing full save writer.
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const Transfer=preload("res://scripts/loot/inventory_ground_transfer.gd")
 const Supply=preload("res://scripts/cards/source_awakening_items.gd")
@@ -102,8 +103,8 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var instances: Dictionary=symbols.item_instances
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
-	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"},true)
+	var granted: Dictionary=stock.call("stage_floor_grant",source.item,quantity,instances)
+	if granted.get("handled",false):
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
@@ -127,7 +128,9 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	# the grant are written by the same save, so a crash before it loses both
 	# together (the item is back on the floor, never duplicated).
 	_busy=true;_candidate=payload.duplicate(true)
+	var validation_started: int=FRAME_HITCH.now()
 	var checked: Error=world._save_game(true,payload,{},true)
+	FRAME_HITCH.detail("loot.validate_staged_pickup",validation_started)
 	_candidate.clear()
 	if checked!=OK:
 		_busy=false

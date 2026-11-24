@@ -322,7 +322,14 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	if not saved.ok:return saved
 	random.state=rng.state
 	runtime.world.card_draw_fusion.import_state(scratch.export_state())
-	runtime.world._invalidate_equipment_static();runtime.world.card_collections.invalidate();runtime.world._update_hud()
+	# The full publication already invalidates/reconciles card-derived stats
+	# and synchronously updates gameplay speed. Only bag presentation batches.
+	measure=HITCH.now()
+	if runtime.world.hud.has_method("publish_committed_ticket_hud"):
+		runtime.world.hud.publish_committed_ticket_hud(runtime.world._update_hud)
+	else:
+		runtime.world._update_hud()
+	HITCH.detail("card.ticket_hud_publish",measure)
 	var outcome:Dictionary={"ok":true,"category":prepared.category,"results":results,"count":results.size(),"consumed":1,"inventory_key":name,"source_item_id":prepared.source_item_id,"message":"소지 티켓1개 소비 · 원본 가중치 %d회 추첨 · TWILIGHT 소지품 소비 정책" % results.size()}
 	if prepared.category==SKILL_BOOKS:
 		var names:PackedStringArray=[]
