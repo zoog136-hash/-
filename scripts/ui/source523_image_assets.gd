@@ -421,8 +421,12 @@ static func _declared_current_item(record: Dictionary) -> bool:
 	if not row is Dictionary or not PACK._integer(id) or int(id) <= 0: return false
 	return row.get("ID") == id and record.get("sourceId") == "m523:item:" + str(int(id))
 
-static func handles_item(record: Dictionary, ground: bool = false) -> bool:
-	return not ground and selected() and (recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, "") > 0 or IDENTITY.item_class_id(record, "") > 0 or not IDENTITY.icon_identity(record, "").is_empty())
+static func handles_item(record: Dictionary, ground: bool = false, fallback_name: String = "") -> bool:
+	if ground or not selected(): return false
+	# Only a name-only caller can introduce the fallback identity. An explicit
+	# record must not accidentally claim another item's IconID.
+	var item_name := fallback_name if record.is_empty() else ""
+	return recognized_item(record) or _original_reward_item(record) or _original_quest_item(record) or _original_symbol_item(record) or _original_expedition_item(record) or _original_card_skill_material(record) or _declared_current_item(record) or _shop_item_class_id(record) > 0 or _wallet_item_class_id(record, item_name) > 0 or IDENTITY.item_class_id(record, item_name) > 0 or not IDENTITY.icon_identity(record, item_name).is_empty()
 
 ## Entries no supplier above declares (legacy name-catalog rows such as
 ## "각인 장비 상자", held "[원본 보상]" keys, " · 원본#N" keys) still name one
@@ -433,13 +437,17 @@ static func _identity_fallback(record: Dictionary, fallback_name: String, info: 
 		var mapped: Dictionary = IDENTITY.icon_identity(record, fallback_name)
 		if mapped.is_empty(): return info
 		var mapped_image: Dictionary = describe_icon_identity(mapped, IDENTITY.display_name(record, fallback_name))
-		if mapped_image.get("status") != "original_linked" and mapped_image.get("reason") != "unsupported_csb": return info
+		# An exact alias carries useful source identity even when its original
+		# member is missing. Never replace a stronger supplier or promote an
+		# unverified approximation.
+		if mapped_image.get("status") != "original_linked" and mapped_image.get("reason") != "unsupported_csb":
+			if mapped.get("approximation",false) or info.get("reason") != "source523_item_identity_required": return info
 		mapped_image["source_id"] = str(record.get("sourceId", ""))
 		mapped_image["source_record_kind"] = "item_icon_identity"
 		return mapped_image
 	var image: Dictionary = describe_item_class(id, IDENTITY.display_name(record, fallback_name))
 	# An animated original icon (CSB scene) is that item's own picture too.
-	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb": return info
+	if image.get("status") != "original_linked" and image.get("reason") != "unsupported_csb" and info.get("reason") != "source523_item_identity_required": return info
 	image["source_id"] = str(record.get("sourceId", ""))
 	image["source_record_kind"] = "original_item_identity"
 	image.provenance["caller_item_identity_field"] = "source523_item_identity"
@@ -465,16 +473,26 @@ static func _wallet_item_class_id(record: Dictionary, fallback_name: String) -> 
 	return -1
 
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
-	if not recognized_item(record):
-		var wallet_id: int = _wallet_item_class_id(record, fallback_name)
-		if wallet_id > 0:
-			var wallet_image: Dictionary = describe_item_class(wallet_id, str(record.get("name", fallback_name)))
-			wallet_image["source_id"] = str(record.get("sourceId", ""))
-			wallet_image["source_record_kind"] = "original_coin_wallet"
-			wallet_image.provenance["caller_item_identity_field"] = "patch523_item_inventory.COIN_WALLETS"
-			return wallet_image
+	if recognized_item(record):
+		# These records already have the exact inventory consumer namespace.
+		# Alternate supplier predicates cannot change the decision and some
+		# expand the full on-disk native template just to reject this route.
+		var native: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
+		if record.get("source_test_item",false) == true:
+			native.reason = "source_test_item_excluded"
+			return native
+		var reader: RefCounted = active()
+		var identity: Dictionary = reader.source_consumer_row("ItemClass",native.item_class_id) if reader != null else {}
+		return _resolve_item_presentation(native,identity)
+	var wallet_id: int = _wallet_item_class_id(record, fallback_name)
+	if wallet_id > 0:
+		var wallet_image: Dictionary = describe_item_class(wallet_id, str(record.get("name", fallback_name)))
+		wallet_image["source_id"] = str(record.get("sourceId", ""))
+		wallet_image["source_record_kind"] = "original_coin_wallet"
+		wallet_image.provenance["caller_item_identity_field"] = "patch523_item_inventory.COIN_WALLETS"
+		return wallet_image
 	var shop_item_id: int = _shop_item_class_id(record)
-	if not recognized_item(record) and shop_item_id > 0:
+	if shop_item_id > 0:
 		var shop_image: Dictionary = describe_item_class(shop_item_id,str(record.get("name",fallback_name)))
 		shop_image["source_id"] = str(record.get("sourceId",""))
 		shop_image["source_record_snapshot"] = str(record.get("source_snapshot",""))
@@ -486,7 +504,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 	var expedition_record: bool = _original_expedition_item(record)
 	var card_skill_material: bool = _original_card_skill_material(record)
 	var declared_item: bool = _declared_current_item(record)
-	if not recognized_item(record) and (_original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material or declared_item):
+	if _original_reward_item(record) or quest_record or symbol_record or expedition_record or card_skill_material or declared_item:
 		var original_row: Dictionary = NATIVE_FIELDS.full(record).source_original_item if quest_record or symbol_record or declared_item else record.source_item if expedition_record or card_skill_material else record.source_original
 		var supplied: Dictionary = describe_item_class_row(original_row,str(record.get("name",fallback_name)))
 		supplied["source_id"] = str(record.get("sourceId",""))
@@ -495,13 +513,7 @@ static func describe_item(record: Dictionary, fallback_name: String = "") -> Dic
 		if expedition_record: supplied["source_expedition_issued_key"] = record.expedition_key
 		return supplied if supplied.get("status") == "original_linked" else _identity_fallback(record,fallback_name,supplied)
 	var info: Dictionary = _item_presentation_info(item_class_id(record),str(record.get("name",fallback_name)),str(record.get("sourceId","")))
-	if not recognized_item(record): return _identity_fallback(record,fallback_name,info)
-	if record.get("source_test_item",false) == true:
-		info.reason = "source_test_item_excluded"
-		return info
-	var reader: RefCounted = active()
-	var identity: Dictionary = reader.source_consumer_row("ItemClass",info.item_class_id) if reader != null else {}
-	return _resolve_item_presentation(info,identity)
+	return _identity_fallback(record,fallback_name,info)
 
 static func describe_item_class(id: int, title: String = "") -> Dictionary:
 	# The caller supplies an explicit ItemClass.ID namespace. This is an image
@@ -542,6 +554,7 @@ static func describe_icon_identity(entry: Dictionary, title: String = "") -> Dic
 	info["presentation_only"] = true
 	info["item_class_namespace"] = "ItemClass.ID"
 	info["icon_identity_basis"] = str(entry.get("basis",""))
+	info["declared_icon_file"] = str(entry.get("icon_file",""))
 	info["twilight_approximation"] = entry.get("approximation",false) == true
 	if id <= 0:
 		info.reason = "source_item_class_identity_required"
@@ -556,7 +569,9 @@ static func describe_icon_identity(entry: Dictionary, title: String = "") -> Dic
 	info["source_status"] = str(result.get("status","source523_image_unavailable"))
 	info["reason"] = info.source_status
 	info["path"] = str(info.provenance.get("path",""))
-	if str(info.path).get_file().to_lower() != str(entry.get("icon_file","")).to_lower():
+	# No declared path means admission failed before reaching AssetView,
+	# not that the known filename differs.
+	if not str(info.path).is_empty() and str(info.path).get_file().to_lower() != str(entry.get("icon_file","")).to_lower():
 		info.reason = "item_icon_identity_file_differs"
 		info["source_status"] = info.reason
 		return info
@@ -685,6 +700,8 @@ static func missing_label(info: Dictionary) -> String:
 		"source_reference_excluded": return "원문 참조 제외"
 		"source_dummy_excluded": return "원본 더미 제외"
 		"unsupported_csb": return "효과 미연결"
+		"missing_current_member": return "팩에 없음"
+		"manifest_sha_mismatch", "invalid_manifest_pin", "file_sha_mismatch", "file_bytes_mismatch": return "원본 확인 불가"
 		"source_test_item_excluded": return "원본 제외"
 		"missing_consumer_key", "missing_icon_key", "zero_sentinel": return "정체 미확인"
 	return "원본 미설치"

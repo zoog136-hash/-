@@ -4,9 +4,16 @@ extends SceneTree
 const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
 const VISUAL = preload("res://scripts/ui/item_visual.gd")
+const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var real_pack_checked: bool = false
+
+class TemplateStore extends RefCounted:
+	var reads: int = 0
+	func record(key: String) -> Dictionary:
+		reads += 1
+		return {"source_original_item":{"ID":int(key)}}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -25,6 +32,18 @@ func record_for(id: int) -> Dictionary:
 func _run() -> void:
 	var request: Dictionary = IMAGES.selection(OS.get_cmdline_user_args(),OS.get_environment("TWILIGHT_SOURCE523_IMAGES"),OS.get_environment("TWILIGHT_SOURCE523_IMAGES_SHA256"))
 	IMAGES.clear_selection()
+	var store := TemplateStore.new()
+	FIELDS.bind(store)
+	var thin: Dictionary = record_for(14032).merged({"source":"lineagem_patch523",FIELDS.MARK:true},true)
+	var thin_before: Dictionary = thin.duplicate(true)
+	var direct: Dictionary = IMAGES.describe_item(thin)
+	check(store.reads==0 and direct.item_class_id==14032 and thin==thin_before,"native icon route skips unused alternate supplier template expansion")
+	var excluded: Dictionary = IMAGES.describe_item(thin.merged({"source_test_item":true},true))
+	check(excluded.reason=="source_test_item_excluded" and store.reads==0,"native test item policy preserved before any template or asset read")
+	var alternate: Dictionary = thin.merged({"source_m_native_item":false,"sourceId":"m523:item:14032"},true)
+	IMAGES.describe_item(alternate)
+	check(store.reads==1,"non-native declared item still verifies the full record through its own route")
+	FIELDS.bind(null)
 	var record: Dictionary = record_for(1)
 	check(IMAGES.recognized_item(record),"exact native marker and integral class ID recognized")
 	for mutation: Dictionary in [{"source_snapshot":"base508"},{"source_snapshot":"current523"},

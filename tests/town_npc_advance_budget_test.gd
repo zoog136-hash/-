@@ -35,7 +35,7 @@ func _run() -> void:
 		holder.set_meta("role", "idle")
 		holder.set_meta("direction", 4)
 		bodies.add_child(holder)
-		bodies.bodies["npc:%d" % index] = holder
+		bodies._register_body("npc:%d" % index,holder)
 		previews.append(preview)
 	var frames: int = 30
 	var step: float = 1.0 / 30.0
@@ -60,7 +60,7 @@ func _run() -> void:
 	var total_time: float = 0.0
 	for index: int in previews.size():
 		var holder: Node = bodies.bodies["npc:%d" % index]
-		total_time += previews[index].received + float(holder.get_meta("pending_delta", 0.0))
+		total_time += previews[index].received + bodies._pending_idle(holder)
 	check(is_equal_approx(total_time, frames * step * previews.size()), "no animation time is lost (%.4f)" % total_time)
 	print("TOWN_NPC_ADVANCE_RESULT " + JSON.stringify({"checks": checks, "failures": failures, "max_per_frame": max_per_frame}))
 	quit(0 if failures.is_empty() else 1)

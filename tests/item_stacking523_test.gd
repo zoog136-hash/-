@@ -15,6 +15,7 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const ACQUIRE = preload("res://scripts/loot/source523_ground_acquisition.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const FOLD_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const LEATHER := 366 ## [재료] 가죽, MaxStackAmount 10000
 const HALPAS := 767 ## [재료] 할파스의 집념 (red flame icon), MaxStackAmount 10000
 const SIEGE_POINT := 195371 ## [화폐] 공성 포인트: the silver coin of the 2026-11-19 recording (Item/siege_point.png)
@@ -155,7 +156,56 @@ func singleton_proof_pruning() -> void:
 		"a later bag change recomputes qualification and is never skipped")
 	STACK.clear_proof_cache()
 
+## Native proof data is not shipped with public CI. Substitute only this proof
+## boundary; exercise the real cap/group/plan/journal copying code with it.
+func lazy_merge_owner_snapshot() -> void:
+	STACK.clear_proof_cache()
+	STACK._select_proof_archive()
+	var calls: Array[int]=[0]
+	var inputs: Dictionary={}
+	var source_state: Dictionary={"opaque":{"history":[{"uses":17}]}}
+	for uid: String in ["a","b"]:
+		var projected: Dictionary={"name":"same","slot":"material","source_item_class_id":11}
+		var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":11,"bless_raw":1,
+			"granted_quantity":2,"source_original_item":{"MaxStackAmount":4}}
+		var entry: Dictionary={"name":"same","level":0,"record":projected,STACK.RECEIPT:receipt,STACK.QUANTITY:2}
+		inputs[uid]=entry
+		STACK._proof_cache[uid]=[entry.duplicate(true),{"record":projected,"receipt":receipt,"remaining":2,"used":0,"transferred":0}]
+	var snapshot := func() -> Dictionary:
+		calls[0]+=1
+		return {"state":source_state,"reserved":{"occupied-id":true}}
+	var no_bin: Dictionary=MERGE.plan(inputs,{},{"same@@@a":true},{},null,snapshot)
+	check(not no_bin.changed and calls[0]==0,"incompatible locked peers don't copy any owner snapshots")
+	for uid: String in inputs:
+		var entry: Dictionary=inputs[uid]
+		entry[STACK.QUANTITY]=4
+		entry[STACK.RECEIPT].granted_quantity=4
+		STACK._proof_cache[uid][0]=entry.duplicate(true)
+		STACK._proof_cache[uid][1].remaining=4
+	no_bin=MERGE.plan(inputs,{},{},{},null,snapshot)
+	check(not no_bin.changed and calls[0]==0,"same-name capped peers don't copy any owner snapshots")
+	for uid: String in inputs:
+		var entry: Dictionary=inputs[uid]
+		entry[STACK.QUANTITY]=2
+		entry[STACK.RECEIPT].granted_quantity=2
+		STACK._proof_cache[uid][0]=entry.duplicate(true)
+		STACK._proof_cache[uid][1].remaining=2
+	var before: Dictionary=inputs.duplicate(true)
+	var result: Dictionary=MERGE.plan(inputs,{},{},{},null,snapshot)
+	check(result.changed and calls[0]==1 and result.merged_slots==1,"positive bin requests exactly one owner snapshot")
+	if result.changed:
+		var journal: Dictionary=result.consumable_state.get(MERGE.MERGES,{})
+		check(result.item_instances.keys()==["a"] and result.item_instances.a[STACK.QUANTITY]==4
+			and journal.size()==1 and journal.values()[0].components.size()==2,
+			"cap, survivor order, units and both component receipts survive")
+		check(inputs==before and result.consumable_state.opaque==source_state.opaque
+			and not is_same(result.consumable_state.opaque,source_state.opaque),"plan has no input mutation or state alias")
+	var bad_snapshot := func() -> Dictionary: return {"state":{STACK.USES:[]},"reserved":{}}
+	check(not MERGE.plan(inputs,{},{},{},null,bad_snapshot).changed,"malformed late ownership rejects the plan before adoption")
+	STACK.clear_proof_cache()
+
 func rules() -> void:
+	lazy_merge_owner_snapshot()
 	singleton_proof_pruning()
 	check(STACK.stage_floor_grant({"name":"unsupported fixture"},1,{})=={"handled":false},
 		"unsupported floor item is not claimed by physical grant owner")
@@ -503,8 +553,55 @@ func runtime() -> void:
 		if restore != null: restore.store_buffer(saved_bytes); restore.close()
 	elif FileAccess.file_exists(save_file): DirAccess.remove_absolute(ProjectSettings.globalize_path(save_file))
 
+## Exercise the actual World fold boundary even without a private pack.
+## Only candidate proof is substituted; write/validate/commit are real.
+func public_world_fold_path() -> void:
+	var world: Node=load("res://Main.tscn").instantiate()
+	root.add_child(world)
+	world.set_process(false)
+	world.set_physics_process(false)
+	world.ground_loot.records["plain-expired"]={"id":"plain-expired","map_id":"not-current","position":[0,0],"expires_at":0.0}
+	var old_instances: Dictionary=world.item_instances
+	var old_inventory: Dictionary=world.inventory
+	var old_locks: Dictionary=world.ui_preferences.get("item_locks",{})
+	var save_path: String=world.save_path()
+	var save_hash: String=FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else ""
+	var expiry_count: int=world.ground_loot.revision
+	world.inventory={"fixture":4}
+	world.item_instances={}
+	world.ui_preferences["item_locks"]={"fixture@@@a":true}
+	STACK.clear_proof_cache()
+	STACK._select_proof_archive()
+	for uid: String in ["a","b"]:
+		var projected: Dictionary={"name":"fixture","slot":"material","source_item_class_id":11}
+		var receipt: Dictionary={"schema":1,"issued_physical_id":uid,"item_class_id":11,"bless_raw":1,
+			"granted_quantity":2,"source_original_item":{"MaxStackAmount":4}}
+		var entry: Dictionary={"name":"fixture","level":0,"record":projected,STACK.RECEIPT:receipt,STACK.QUANTITY:2}
+		world.item_instances[uid]=entry
+		STACK._proof_cache[uid]=[entry.duplicate(true),{"record":projected,"receipt":receipt,"remaining":2,"used":0,"transferred":0}]
+	var before: Dictionary=world.item_instances.duplicate(true)
+	FOLD_HITCH._details.clear()
+	check(world._merge_native_stacks()==0 and FOLD_HITCH._details.has("loot.fold_plan")
+		and not FOLD_HITCH._details.has("loot.fold_owner_snapshot") and world.ground_loot.revision==expiry_count+1,
+		"world no-op fold keeps the existing floor prune but skips owner snapshots")
+	world.ui_preferences["item_locks"].clear()
+	FOLD_HITCH._details.clear()
+	check(world._merge_native_stacks()==0 and FOLD_HITCH._details.has("loot.fold_owner_snapshot")
+		and FOLD_HITCH._details.has("loot.fold_validate") and world.item_instances==before,
+		"changed inputs in the same frame are evaluated; unproven real commit is rejected")
+	check((FileAccess.get_sha256(save_path) if FileAccess.file_exists(save_path) else "")==save_hash,
+		"failed owner proof does not change the save")
+	world.item_instances=old_instances
+	world.inventory=old_inventory
+	world.ui_preferences["item_locks"]=old_locks
+	STACK.clear_proof_cache()
+	world.queue_free()
+	await process_frame
+
 func run() -> void:
 	rules()
+	if OS.get_environment("TWILIGHT_CHECK_FOLD_WORLD")=="1":
+		await public_world_fold_path()
 	if OS.get_environment("TWILIGHT_BENCH_LEDGER_COMPARE")=="1": _ledger_compare_benchmark()
 	if not SOURCE.not_installed():
 		await runtime()

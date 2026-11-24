@@ -1006,8 +1006,8 @@ func _build_frame_plan(selected: Dictionary, track: Dictionary, body_attributes:
 	plan.groups["effects"] = _group_plan("effects", effects_drawn, effects_composable)
 	# Per-layer textures are needed only by groups that keep their nodes. The
 	# per-layer path also assigns textures to style-hidden body layers.
-	if plan.groups.body.mode == "nodes" and not _plan_body_textures(plan): return {}
-	if plan.groups.effects.mode == "nodes" and not _plan_effect_textures(plan): return {}
+	if plan.groups.body.mode == "nodes" and not _plan_body_textures(plan, true): return {}
+	if plan.groups.effects.mode == "nodes" and not _plan_effect_textures(plan, true): return {}
 	return plan
 
 func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
@@ -1021,18 +1021,18 @@ func _group_plan(group: String, drawn: Array, composable: bool) -> Dictionary:
 	if not composable or drawn.size() < 2 or not composite_groups_enabled: return {"mode":"nodes"}
 	return {"mode":"composite","items":items,"key":COMPOSITES.key(_root, _reference_bank._manifest_sha, group, items) if not items.is_empty() else ""}
 
-func _plan_body_textures(plan: Dictionary) -> bool:
+func _plan_body_textures(plan: Dictionary, verified_in_this_build: bool = false) -> bool:
 	for spec: Dictionary in plan.body:
 		if spec.skip: continue
-		var texture: Texture2D = _source_texture(spec.layer)
+		var texture: Texture2D = _plan_texture(spec.layer, verified_in_this_build)
 		if texture == null: return false
 		spec["texture"] = texture
 	return true
 
-func _plan_effect_textures(plan: Dictionary) -> bool:
+func _plan_effect_textures(plan: Dictionary, verified_in_this_build: bool = false) -> bool:
 	for spec: Dictionary in plan.effects:
 		if not spec.drawn: continue
-		var texture: Texture2D = _source_texture(spec.layer)
+		var texture: Texture2D = _plan_texture(spec.layer, verified_in_this_build)
 		if texture == null: return false
 		spec["texture"] = texture
 	return true
@@ -1534,6 +1534,16 @@ func _abort_reference_source(problem: Dictionary) -> void:
 	clear()
 	reference_bank_status = problem
 	if one_shot and is_inside_tree(): queue_free()
+
+func _plan_texture(layer: Dictionary, verified_in_this_build: bool) -> Texture2D:
+	# The node-only plan just verified this exact layer with render_layer().
+	# Only a texture already owned by this preview may skip that duplicate
+	# synchronous verification. New/shared texture acquisition and later plan
+	# fallback still use the existing pin, member and texture-budget path.
+	if verified_in_this_build:
+		var key: String = str(layer.get("texture_key", layer.get("path", "")))
+		if _textures.has(key): return _textures[key] as Texture2D
+	return _source_texture(layer)
 
 func _source_texture(layer: Dictionary) -> Texture2D:
 	var key: String = str(layer.get("texture_key", layer.get("path", "")))

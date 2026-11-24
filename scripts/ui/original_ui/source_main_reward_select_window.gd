@@ -12,7 +12,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## Left empty (no TWILIGHT feature): the quantity buttons (+1 / +10 / Max /
 ## 직접입력 / 초기화: TWILIGHT opens one box at a time), the calculator and the
 ## LuckyBag layouts.
-const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const Choices=preload("res://scripts/ui/patch523_reward_choice.gd")
 const ROOT="UI/RewardSelectBoxScene.csb"
 const BOX="UI/CommonUi/Common_Reward_SelectBox.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
@@ -127,13 +127,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 
 static func _item_picture(item_class_id: int, title: String) -> Dictionary:
 	if item_class_id<=0:return {"ok":false}
-	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-	if not info.get("texture") is Texture2D:
-		# Rows whose item the bag does not carry (e.g. the 변신 카드 items of a
-		# card selection box, ItemClass.TestItem): the row's own original
-		# ItemClass.IconID picture.
-		var icon: Dictionary=SourceImages.resolve_consumer("ItemClass",item_class_id,"IconID")
-		if icon.get("texture") is Texture2D:return {"ok":true,"texture":icon.texture,"status":str(icon.get("status","")),"provenance":icon.get("provenance",{})}
+	var info: Dictionary=Choices.describe_choice_icon(item_class_id,title)
 	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
 
 ## --- Actions --------------------------------------------------------------------

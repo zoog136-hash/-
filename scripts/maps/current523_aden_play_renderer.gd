@@ -7,6 +7,7 @@ signal safe_return_requested(reason: String)
 ## the map (nearest own-clear cell, else the owner's village fallback).
 signal actor_position_recovered(detail: Dictionary)
 
+const RETIRED_MAP_JOBS = preload("res://scripts/maps/current523_retired_map_jobs.gd")
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
 const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
@@ -15,6 +16,8 @@ const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 const BANK_OBJECTS = preload("res://scripts/maps/current523_bank_objects.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
+const MAP_BACKGROUND=preload("res://scripts/maps/current523_map_background.gd")
+const DREAM_SHADER=preload("res://scripts/maps/current523_dream_background.gdshader")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
@@ -123,6 +126,7 @@ var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
 var _background_atlases: bool = false
+var _dream_background: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
 ## Chunk member -> worker read job (see _prefetch_chunk).
@@ -227,6 +231,10 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	field = value
 	source = value as OriginalPlayableField
 	player = actor
+	_dream_background = {}
+	if generic and int(value.definition.get("source_land_id",-1)) == MAP_BACKGROUND.DREAM_LAND:
+		_dream_background = MAP_BACKGROUND.dream_layers(MAP_BACKGROUND.DREAM_LAND,str(value.get("source_asset")))
+		print("CURRENT523_DREAM_BACKGROUND ready=",not _dream_background.is_empty())
 	var source_owned: bool = bool(value.get_meta("current523_source_field",false))
 	if source_owned:
 		record = {"chunks":[]}
@@ -244,7 +252,9 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	# Draw lists on workers with the real pack (its tile table is read-only).
 	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
-	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	_member_origins.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	# Old workers may still own the previous immutable overlap table.
+	_overlap = {}
 	_drop_chunk_jobs()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
 	_chunk_bins.clear(); _clear_blocks()
@@ -507,6 +517,7 @@ func _prefetch_chunk(member: String) -> bool:
 	if _raw_chunks.has(member) or _unreadable_chunks.has(member): return true
 	if _chunk_jobs.has(member) or _chunk_jobs.size() >= MAX_CHUNK_JOBS: return false
 	if _raw_sources == null or not _raw_sources.has_method("read_member_job"): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	var job: Dictionary = _chunk_params(member)
 	if job.generic and _raw_sources.get_script()==GENERIC_RAW and field.has_method("verified_navigation_chunk_for_renderer"):
 		job["catalog_root"] = _raw_sources.catalog_directory()
@@ -528,8 +539,10 @@ func _pump_chunk_jobs() -> void:
 		_chunk_jobs.erase(member)
 		_install_chunk(member, job)
 
-func _drop_chunk_jobs() -> void:
-	for job: Dictionary in _chunk_jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+func _drop_chunk_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _chunk_jobs.values():
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_chunk_jobs.clear()
 
 ## Everything a chunk read needs, copied for a worker (the pack, field
@@ -846,6 +859,7 @@ var _block_jobs: Dictionary = {}
 ## On-screen blocks start regardless of MAX_BLOCK_JOBS (it bounds margin work).
 func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
 	if _block_jobs.has(cell): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	if not on_screen and _block_jobs.size() >= MAX_BLOCK_JOBS: return false
 	var members: Array[String] = _block_members(cell)
 	var inputs: Array = []
@@ -1007,9 +1021,11 @@ func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) ->
 	return built
 
 
-func _drop_block_jobs() -> void:
-	for cell: Vector2i in _block_jobs:
-		if _block_jobs[cell].has("task"): WorkerThreadPool.wait_for_task_completion(int(_block_jobs[cell].task))
+func _drop_block_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _block_jobs.values():
+		if not job.has("task"): continue
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_block_jobs.clear()
 
 
@@ -1098,6 +1114,23 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases, "atlas_ids": (built.atlases as Dictionary).keys(),
 		"count": int(built.count), "draws": int(built.draws), "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
+	var background: Node2D = null
+	if not _dream_background.is_empty() and built.commands.has(-2):
+		var flags: PackedInt64Array = _dream_floor_rects(built.commands[-2])
+		if not flags.is_empty():
+			background = Node2D.new()
+			background.name = "DreamIslandOriginalBackground"
+			var material := ShaderMaterial.new()
+			material.shader = DREAM_SHADER
+			material.set_shader_parameter("sky_image",_dream_background.sky)
+			material.set_shader_parameter("cloud_image",_dream_background.cloud)
+			material.set_shader_parameter("block_origin",Vector2(cell*BLOCK))
+			background.material = material
+			var runs: PackedInt64Array = _dream_floor_runs(flags)
+			background.draw.connect(_draw_dream_floor.bind(background,cell,runs))
+			block["dream_draw_runs"] = runs.size()/3
+			viewport.add_child(background)
+			block["dream_floor_replaced"] = flags.size()/2
 	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
 	viewport.add_child(canvas)
 	add_child(viewport)
@@ -1106,6 +1139,7 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	# One connection for all blocks baked this frame (bound callables of the
 	# same method count as one connection).
 	_unreleased.append([block, canvas])
+	if is_instance_valid(background): _unreleased.append([block,background])
 	if not RenderingServer.frame_post_draw.is_connected(_release_baked):
 		RenderingServer.frame_post_draw.connect(_release_baked, CONNECT_ONE_SHOT)
 	return block
@@ -1132,7 +1166,45 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
+			if block.has("dream_floor_replaced") and MAP_BACKGROUND.dream_floor_background(layer,ref): continue
 			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
+
+static func _dream_floor_rects(floor_lane: PackedInt64Array) -> PackedInt64Array:
+	var flags := PackedInt64Array()
+	for index: int in range(0,floor_lane.size(),3):
+		if MAP_BACKGROUND.dream_floor_background(-2,floor_lane[index+2]):
+			flags.append(floor_lane[index]); flags.append(floor_lane[index+1])
+	return flags
+
+## Background rectangles all have the same terrain-space shader and opacity.
+## Coalesce only overlapping/touching spans on the same y; never bridge a
+## missing tile or move an ordinary terrain/cover/object command.
+static func _dream_floor_runs(flags: PackedInt64Array) -> PackedInt64Array:
+	var rows: Dictionary = {}
+	for i: int in range(0,flags.size(),2):
+		var y: int = flags[i+1]
+		if not rows.has(y): rows[y] = []
+		(rows[y] as Array).append(flags[i])
+	var runs := PackedInt64Array()
+	for y: int in rows:
+		var xs: Array = rows[y]
+		xs.sort()
+		var left: int = xs[0]
+		var right: int = left+TILE_PX
+		for i: int in range(1,xs.size()):
+			var x: int = xs[i]
+			if x<=right:
+				right=maxi(right,x+TILE_PX)
+			else:
+				runs.append(left); runs.append(y); runs.append(right-left)
+				left=x; right=x+TILE_PX
+		runs.append(left); runs.append(y); runs.append(right-left)
+	return runs
+
+static func _draw_dream_floor(canvas: Node2D, cell: Vector2i, runs: PackedInt64Array) -> void:
+	var origin: Vector2 = Vector2(cell*BLOCK)
+	for i: int in range(0,runs.size(),3):
+		canvas.draw_rect(Rect2(Vector2(runs[i],runs[i+1])-origin,Vector2(runs[i+2],TILE_PX)),Color.WHITE)
 
 
 ## ref -> tile corners (x, y, ...) of one block's draw commands.
@@ -1160,8 +1232,8 @@ func _free_block(cell: Vector2i) -> void:
 	if is_instance_valid(viewport): (viewport as Node).queue_free()
 
 
-func _clear_blocks() -> void:
-	_drop_block_jobs()
+func _clear_blocks(retire: bool = false) -> void:
+	_drop_block_jobs(retire)
 	for cell: Vector2i in _blocks.keys(): _free_block(cell)
 	_block_recent.clear()
 	_visible_blocks.clear()
@@ -1601,7 +1673,11 @@ func _notification(what: int) -> void:
 
 func _exit_tree() -> void:
 	_configured = false
-	_drop_chunk_jobs()
-	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(); _chunk_bins.clear()
+	var started: int = FRAME_HITCH.now()
+	# No scene operations in either worker. Discard their outputs, but keep
+	# their source and draw-list inputs alive until the map pump reaps them.
+	_drop_chunk_jobs(true)
+	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(true); _chunk_bins.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()
+	FRAME_HITCH.detail("map.renderer_retire", started)

@@ -37,6 +37,8 @@ const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
 var world: Node = null
 var records: Array = []
 var bodies: Dictionary = {} ## npc id -> Node2D (holder with preview + label)
+var _body_order: Array[Node2D] = [] # dictionary insertion order; changed on admission/release only
+var _idle_clock: float = 0.0
 var missing: Dictionary = {} ## npc id -> reason (no original body)
 var _deferrals: Dictionary = {}
 var _queue: Array[int] = []
@@ -64,6 +66,8 @@ func clear() -> void:
 			remove_child(holder)
 			holder.queue_free()
 	bodies.clear()
+	_body_order.clear()
+	_idle_clock=0.0
 	missing.clear()
 	_deferrals.clear()
 	_queue.clear()
@@ -98,6 +102,7 @@ func _scan() -> void:
 func _release(id: String) -> void:
 	var holder: Node = bodies.get(id)
 	bodies.erase(id)
+	_body_order.erase(holder)
 	released += 1
 	if is_instance_valid(holder):
 		remove_child(holder)
@@ -135,31 +140,38 @@ const TOWN_FRAME_PLANS: int = 24
 const ADVANCE_EVERY_FRAMES: int = 2
 const ANIMATE_RADIUS: float = 1000.0
 var _advance_cursor: int = 0
+func _register_body(id: String, holder: Node2D) -> void:
+	holder.set_meta("last_idle_clock",_idle_clock)
+	bodies[id]=holder
+	_body_order.append(holder)
+
+func _pending_idle(holder: Node2D) -> float:
+	return _idle_clock-float(holder.get_meta("last_idle_clock",_idle_clock))
+
 func _advance_bodies(delta: float) -> void:
-	if bodies.is_empty(): return
+	_advance_body_frame(delta,Engine.get_process_frames())
+
+func _advance_body_frame(delta: float, frame: int) -> void:
+	if _body_order.is_empty(): return
+	# All resident bodies experience the same simulation delta. Keep a clock
+	# instead of touching every idle node (even offscreen) on every frame.
+	_idle_clock+=delta
+	if frame%ADVANCE_EVERY_FRAMES!=0: return
 	var at: Vector2 = _player_position()
-	var holders: Array = bodies.values()
-	for holder: Variant in holders:
-		if is_instance_valid(holder): holder.set_meta("pending_delta", float(holder.get_meta("pending_delta", 0.0)) + delta)
-	# Idle loops are advanced on every other frame (15 per second at the 30
-	# fps cap); the skipped frame's time is banked above, so the original
-	# speed is kept (Twm diag 2026-11-19: town_npc_bodies was still the top
-	# per-frame detail in town).
-	if Engine.get_process_frames() % ADVANCE_EVERY_FRAMES != 0: return
-	var count: int = holders.size()
+	var count: int = _body_order.size()
 	var advanced: int = 0
 	var visited: int = 0
 	while advanced < ADVANCES_PER_FRAME and visited < count:
 		_advance_cursor = (_advance_cursor + 1) % count
 		visited += 1
-		var holder: Variant = holders[_advance_cursor]
-		if not is_instance_valid(holder) or not (holder as Node2D).is_visible_in_tree(): continue
-		if at.is_finite() and (holder as Node2D).position.distance_to(at) > ANIMATE_RADIUS: continue
+		var holder: Node2D = _body_order[_advance_cursor]
+		if not is_instance_valid(holder) or not holder.is_visible_in_tree(): continue
+		if at.is_finite() and holder.position.distance_to(at)>ANIMATE_RADIUS: continue
 		var preview: Node = holder.get_meta("preview") if holder.has_meta("preview") else null
 		if not is_instance_valid(preview): continue
-		var pending: float = float(holder.get_meta("pending_delta", 0.0))
-		holder.set_meta("pending_delta", 0.0)
-		preview.advance_reference_source(pending, str(holder.get_meta("role")), int(holder.get_meta("direction")))
+		var pending: float = _pending_idle(holder)
+		holder.set_meta("last_idle_clock",_idle_clock)
+		preview.advance_reference_source(pending,str(holder.get_meta("role")),int(holder.get_meta("direction")))
 		advanced += 1
 
 func _selected(sprite_id: int, action: int, options: Dictionary) -> Dictionary:
@@ -241,12 +253,17 @@ func _create(record: Dictionary) -> void:
 	# Same screen size under the field camera zoom, around the head point.
 	FIELD_CAMERA.keep_screen_size(label, Vector2(0.0, NAME_OFFSET.y + label.size.y) - NAME_OFFSET)
 	add_child(holder)
-	if not preview.advance_reference_source(0.0, "idle", int(holder.get_meta("direction"))):
-		_release(id)
-		released -= 1
-		missing[id] = "original_first_frame_unavailable"
+	_finish_first_frame(id,holder,preview)
+
+func _finish_first_frame(id: String, holder: Node2D, preview: Node) -> void:
+	if not preview.advance_reference_source(0.0,"idle",int(holder.get_meta("direction"))):
+		# This holder is not registered yet. Looking it up through _release
+		# leaked the staged preview and its visible name label into the map.
+		remove_child(holder)
+		holder.queue_free()
+		missing[id]="original_first_frame_unavailable"
 		return
-	bodies[id] = holder
+	_register_body(id,holder)
 
 func metrics() -> Dictionary:
 	var reasons: Dictionary = {}

@@ -334,6 +334,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		if skill_book.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
 	var selection: Dictionary=selectable_reward(definition)
+	if selection.is_empty() and category.get("Name")=="ComplexReward":selection=complex_selectable_reward(definition)
 	if not selection.is_empty():
 		out["source_use_spec"]=selection
 		if selection.get("activation_status")=="unrestricted":
@@ -1017,6 +1018,15 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		# source_buff_class (scripts/animation/source_run_points.gd).
 		if acceleration>0 and name_value=="RunSpritePoint" and run_sprite_level(effect)>0:
 			typed["run_sprite_stage"]=maxi(int(typed.get("run_sprite_stage",0)),run_sprite_level(effect));continue
+		# An elemental target selects a resistance channel, not a runtime
+		# condition. Keep genuine BuffBonus character/class/spell limits blocked.
+		if name_value=="ElementalResistance" and row.get("CharacterLevel")==0 and row.get("CharacterClass")==0 and row.get("MinSpellLevel")==0:
+			var element_row: Dictionary=row.duplicate()
+			element_row["IsPossession"]=false # BuffBonus is active while the buff runs.
+			var element: Dictionary=elemental_fields(element_row)
+			if not element.is_empty():
+				for key: String in element.fields:typed[key]=typed.get(key,0)+element.fields[key]
+				continue
 		if conditional:reasons.append("conditional_buff_effect:"+name_value)
 		elif (percent_fields.has(name_value) or acceleration>0 and ACCELERATION_PERCENT_FIELDS.has(name_value)) and unit.get("Name")=="Percentage" and integer(bonus.get("Value")):
 			var scale: Array[Dictionary]=SOURCE.related("UIUnit","UnitID",int(unit.get("ID",-1)))
@@ -1400,9 +1410,35 @@ static func selectable_bag(definition: Dictionary,graph: Dictionary,description:
 	spec["activation_status"]="unrestricted" if unique.is_empty() else "blocked";spec["blocked_reasons"]=unique
 	return spec
 
-static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array) -> void:
+# The original Korean StoryDesc for these two selectors explicitly says
+# pick one at use. Do not infer a global meaning for timing enum 2: pin
+# each complete graph. The NC 2024-12-04 notice corroborates the 10,000-coin
+# fishing exchange box (https://lounge.plaync.com/feed/17105).
+const COIN_SELECTION_TIMING := {
+	307781: {"desc":2066161,"root":328581,"group":10661,"amount":10000,"choices":{50971:[328591,3631],50981:[328601,3242],50991:[328611,3252],51001:[328621,246058]}},
+	289702: {"desc":1844122,"root":298912,"group":9152,"amount":1,"choices":{44642:[298872,289842],44652:[298882,289862],44662:[298892,289852],44672:[298902,289872]}},
+}
+
+static func coin_selection_timing_at_use(definition: Dictionary,graph: Dictionary,root: Dictionary) -> int:
+	var source: Dictionary=COIN_SELECTION_TIMING.get(whole(definition.original_item.get("ID")),{})
+	if source.is_empty() or definition.original_item.get("StoryDescID")!=source.desc or described_selection_count(label(source.desc))!=1:return 0
+	if root.get("ID")!=source.root or root.get("RewardTypeID")!=111 or root.get("RewardClassID")!=source.group or root.get("Amount")!=1 or root.get("RewardGetTimeTypeID")!=2 or root.get("CharacterClassID")!=0:return 0
+	var group: Dictionary=graph.get("selections",{}).get(str(source.group),{})
+	if group.get("row",{}).get("ID")!=source.group or group.get("row",{}).get("SelectMaxCount")!=1:return 0
+	var expected: Dictionary=source.choices.duplicate()
+	for edge: Dictionary in group.get("entities",[]):
+		var entity: Dictionary=edge.get("row",{})
+		if not integer(entity.get("ID")):return 0
+		var entity_id: int=int(entity.ID);var ids: Array=expected.get(entity_id,[])
+		if ids.is_empty() or entity.get("SelectRewardID")!=source.group or entity.get("RewardID")!=ids[0]:return 0
+		var child: Dictionary=graph.get("rewards",{}).get(str(ids[0]),{});var row: Dictionary=child.get("row",{})
+		if row.get("ID")!=ids[0] or row.get("RewardTypeID")!=2 or row.get("RewardClassID")!=ids[1] or row.get("Amount")!=source.amount or row.get("RewardGetTimeTypeID")!=2 or row.get("CharacterClassID")!=0 or row.get("ItemBlessCodeID")!=1 or child.get("item_class",{}).get("TestItem")!=false:return 0
+		expected.erase(entity_id)
+	return int(source.desc) if expected.is_empty() else 0
+
+static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array,timing: int=1) -> void:
 	var row: Dictionary=node.get("row",{})
-	for pair: Array in [["RewardGetTimeTypeID",1],["RewardEnhancementTypeID",1],["Ranking",0]]:
+	for pair: Array in [["RewardGetTimeTypeID",timing],["RewardEnhancementTypeID",1],["Ranking",0]]:
 		if not integer(row.get(pair[0])) or int(row[pair[0]])!=pair[1]:reasons.append("unsupported_select_reward_rule:"+pair[0])
 	for key: String in ["UseImmediately","ClanOnly"]:
 		if not row.get(key) is bool or row[key]!=false:reasons.append("unsupported_select_reward_rule:"+key)
@@ -1410,6 +1446,77 @@ static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array) 
 	var id: Variant=row.get("CharacterClassID")
 	if not integer(id) or (int(id)!=0 and not active.has(int(id))):reasons.append("unsupported_select_reward_class")
 	if node.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty():reasons.append("source_excluded_select_reward")
+
+# The original StoryDesc gives one guaranteed material + one selected item,
+# and the two branch DescIDs independently label the roles in Korean.
+# No other ComplexRewardType, multi-branch or random case is admitted.
+const COMPLEX_PAIRED_SELECT := {
+	164623:[134593,33,963883,160463,22,3],
+	164633:[134613,43,963913,160463,23,4],
+	167404:[138714,74,981844,155994,9,4],
+	167424:[138724,84,981904,155994,22,3],
+}
+
+static func complex_selectable_reward(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.original_item
+	var source: Array=COMPLEX_PAIRED_SELECT.get(whole(raw.get("ID")),[])
+	if source.is_empty() or raw.get("StoryDescID")!=source[2]:return {}
+	var story: String=label(source[2])
+	if not story.contains("사용 시") or not story.contains("1종") or not story.replace(" ","").contains("x"+str(source[4])+"개"):return {}
+	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name")=="ComplexRewardClassID":refs.append(row)
+	if refs.size()!=1 or refs[0].get("bonus",{}).get("Value")!=source[0]:return {}
+	var graph: Dictionary={}
+	for ref: Dictionary in definition.get("source_typed_references",[]):
+		if ref.get("item_bonus_id")==refs[0].ID and ref.get("id")==source[0]:graph=ref.get("reward",{})
+	if graph.get("identity")!=SOURCE.identity() or graph.get("join_complete")!=true:return {}
+	var root_node: Dictionary=graph.get("rewards",{}).get(str(source[0]),{});var root: Dictionary=root_node.get("row",{})
+	if root.get("ID")!=source[0] or root.get("RewardTypeID")!=124 or root_node.get("reward_type",{}).get("Name")!="ComplexReward" or root.get("RewardClassID")!=source[1] or root.get("CharacterClassID")!=0 or root.get("Amount")!=0:return {}
+	var group: Dictionary=graph.get("complex_groups",{}).get(str(source[1]),{})
+	if group.get("row",{}).get("ID")!=source[1] or group.get("groups",[]).size()!=2:return {}
+	var active: Dictionary=_active_classes();var domain: Array=[]
+	for row: Dictionary in definition.get("class_rows",[]):
+		if integer(row.get("ClassID")) and int(row.ClassID) not in domain:domain.append(int(row.ClassID))
+	if domain.is_empty():domain=active.keys()
+	domain.sort()
+	if domain.is_empty():return {}
+	for class_id: int in domain:
+		if not active.has(class_id):return {}
+	var spec: Dictionary=consume_metadata(rows,raw,definition.category,{"ComplexRewardClassID":"RewardID","UIShowFilter":"Value"},false)
+	if spec.get("consume_delay_ms")==null:spec.erase("consume_delay_ms")
+	var reasons: Array=spec.blocked_reasons
+	selectable_rule(root_node,active,reasons)
+	var fixed: Array=[];var choices: Array=[];var linked: Array=[];var ids: Dictionary={}
+	for branch: Dictionary in group.groups:
+		var branch_row: Dictionary=branch.get("row",{});var role: int=whole(branch_row.get("ComplexRewardTypeID"))
+		if role not in [4,14] or branch_row.get("ComplexRewardGroupID")!=source[1] or branch_row.get("MaxCount")!=1:return {}
+		if label(branch_row.get("DescID"))!=("확정 보상" if role==4 else "선택 보상"):return {}
+		var entities: Array=branch.get("entities",[])
+		if entities.size()!=(1 if role==4 else int(source[5])):return {}
+		for edge: Dictionary in entities:
+			var entity: Dictionary=edge.get("row",{})
+			if not integer(entity.get("ID")) or not integer(entity.get("RewardID")):return {}
+			var entity_id: int=int(entity.ID)
+			if entity_id<=0 or ids.has(entity_id) or entity.get("ComplexRewardID")!=branch_row.get("ID") or entity.get("Probability")!=0:return {}
+			ids[entity_id]=true
+			var child: Dictionary=graph.get("rewards",{}).get(str(whole(entity.get("RewardID"))),{});var original: Dictionary=child.get("row",{});var item: Dictionary=child.get("item_class",{})
+			if original.get("ID")!=entity.get("RewardID") or original.get("RewardTypeID")!=2 or child.get("reward_type",{}).get("Name")!="Item" or original.get("CharacterClassID")!=0 or item.get("TestItem")!=false or item.get("ID")!=original.get("RewardClassID") or whole(original.get("Amount"))<1 or whole(original.get("ItemBlessCodeID")) not in [1,2,3]:return {}
+			if not SOURCE.declared_exclusion("ItemClass",item).is_empty():return {}
+			selectable_rule(child,active,reasons)
+			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.ID)).is_empty()
+			var reward: Dictionary={"source_entity_id":entity_id,"reward_id":original.ID,"item_class_id":item.ID,"amount":original.Amount,"bless_raw":original.ItemBlessCodeID,"class_ids":[],"enchant":null,"requires_local_initial_enchant_rule":needs}
+			if role==4:
+				if item.ID!=source[3] or original.Amount!=source[4] or needs:return {}
+				fixed.append(reward)
+			else:
+				if original.Amount!=1 or not needs:return {}
+				choices.append(reward)
+				var detail: Dictionary=entity.duplicate(true);detail["reward"]=original.duplicate(true);linked.append(detail)
+	if fixed.size()!=1 or choices.size()!=source[5]:return {}
+	spec.merge({"kind":"source_selectable_reward","source_snapshot":"patch523","source_item_class_id":raw.ID,"reward_id":root.ID,"original_reward":root_node.duplicate(true),"select_reward_id":group.row.ID,"original_select_reward":group.row.duplicate(true),"source_complex_reward":true,"select_max_count":1,"source_entities":linked,"rewards":choices,"fixed_rewards":fixed,"source_class_domain":domain,"selection_model":"explicit_source_entity_choice_with_fixed_reward","source_item_bonus_ids":[],"local_rule_required":"select_reward_initial_enchant","source_initial_enchant":null,"initial_enchant_configuration_key":"patch523_select_reward_initial_enchant","item_requirements":{"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)},"activation_status":"unrestricted" if reasons.is_empty() else "blocked"})
+	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
+	return spec
 
 static func selectable_reward(definition: Dictionary) -> Dictionary:
 	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
@@ -1437,7 +1544,9 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	if domain.is_empty():reasons.append("unsupported_select_reward_root_class")
 	for class_id: int in domain:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
-	selectable_rule(root_node,active,reasons)
+	var documented_timing_desc: int=coin_selection_timing_at_use(definition,graph,root)
+	var timing: int=2 if documented_timing_desc>0 else 1
+	selectable_rule(root_node,active,reasons,timing)
 	var selection: Dictionary={};var linked: Array=[];var rewards: Array=[];var initial_rule: bool=false;var dropped: Array=[]
 	if root_node.get("reward_type",{}).get("ID")!=111 or root_node.get("reward_type",{}).get("Name")!="SelectReward":reasons.append("unsupported_select_reward_root_type")
 	else:
@@ -1453,7 +1562,7 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			var reward_item: Dictionary=child.get("item_class",{})
 			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or child.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
 				dropped.append(entity.get("ID"));continue
-			selectable_rule(child,active,reasons)
+			selectable_rule(child,active,reasons,timing)
 			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
 			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
 			var item: Dictionary=child.get("item_class",{});var class_ids: Array=[]
@@ -1478,6 +1587,9 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	for reason: String in reasons:
 		if reason not in unique:unique.append(reason)
 	spec["kind"]="source_selectable_reward";spec["source_snapshot"]="patch523";spec["source_item_class_id"]=definition.original_item.ID;spec["reward_id"]=id;spec["original_reward"]=root_node.duplicate(true);spec["select_reward_id"]=selection.get("ID");spec["original_select_reward"]=selection;spec["select_max_count"]=selection.get("SelectMaxCount");spec["source_entities"]=linked;spec["rewards"]=rewards;spec["source_class_domain"]=domain;spec["class_eligible_option_counts"]=counts;spec["selection_model"]="explicit_source_entity_choice";spec["source_item_bonus_ids"]=[]
+	if documented_timing_desc>0:
+		spec["source_reward_timing_desc_id"]=documented_timing_desc
+		if not dropped.is_empty():unique.append("documented_coin_select_option_excluded")
 	if not dropped.is_empty():spec["dropped_source_entity_ids"]=dropped
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":definition.original_item.get("TargettingTypeID"),"service_region_code":definition.original_item.get("ServiceRegionCode",""),"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}

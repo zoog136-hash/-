@@ -34,8 +34,11 @@ func _button(text: String, node_name: String, parent: Node, callback: Callable, 
 	if scroll_host != null: hud.workspace.register_scroll_drag(scroll_host,value)
 	return value
 
-func configure(owner_hud: Node) -> void:
+var _entry_solvent_uid: String=""
+
+func configure(owner_hud: Node, entry_solvent_uid: String="") -> void:
 	hud = owner_hud
+	_entry_solvent_uid=entry_solvent_uid
 	scroll_host = get_parent() as ScrollContainer
 	name = "BlessRefine523Panel"
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -53,6 +56,17 @@ func world() -> Node:
 
 func refresh() -> void:
 	for child: Node in body.get_children(): child.queue_free()
+	if not _entry_solvent_uid.is_empty():
+		var exact: Dictionary=SERVICE.selected_solvent(world(),_entry_solvent_uid)
+		if exact.is_empty():
+			_label("가방에서 선택한 원본 용해제의 보유·잠금·기간을 다시 확인하세요.",body)
+			return
+		var use_id: int=int(exact.spec.item_class_id)
+		_label("선택: %s ×%d · 용해할 장비를 선택하세요." % [str(exact.owned.record.name),int(exact.owned.remaining)],body)
+		var targets: Array=SERVICE.selected_solvent_targets(world(),exact)
+		for row: Dictionary in targets:_add_target(row,"%s → 가루 %d" % [row.label,int(row.amount)])
+		_button("선택한 장비 용해 (선택한 용해제 · 기존 근사 규칙)","DissolveExactSolvent",body,_dissolve_advanced.bind(use_id),not targets.is_empty())
+		return
 	var snapshot: Dictionary = SERVICE.snapshot(world())
 	if not snapshot.installed:
 		_label("원본 523 정의 ZIP이 설치되지 않아 용해·질서의 연금을 보류합니다.",body)
@@ -61,14 +75,7 @@ func refresh() -> void:
 	_label("[용해] 원본 BlessPowderAmount(등급·강화 수치)만큼 축복의 가루를 얻습니다. 상급·최상급 용해는 원본 표에 촉매 소모량·계산식이 없어 보류합니다.",body)
 	for row: Dictionary in snapshot.dissolve:
 		if not row.ok: continue
-		var check := CheckBox.new()
-		check.name = "Dissolve_" + str(row.uid)
-		check.text = "%s → 축복의 가루 %d" % [row.label,int(row.amount)]
-		check.button_pressed = selected.has(row.uid)
-		check.toggled.connect(func(on: bool) -> void:
-			if on: selected[row.uid] = true
-			else: selected.erase(row.uid))
-		body.add_child(check)
+		_add_target(row,"%s → 축복의 가루 %d" % [row.label,int(row.amount)])
 	_button("선택한 장비 용해","DissolveSelected",body,_dissolve)
 	# TWILIGHT 근사: 상급·최상급 용해 with an owned 상급/최상급 용해제 (1 per item).
 	for solvent: Dictionary in snapshot.get("solvents",[]):
@@ -96,6 +103,16 @@ func refresh() -> void:
 		_button(("%s (연마 완료)" % str(row.label)) if bool(row.honed) else ("%s 연마 (%s)" % [str(row.label),str(row.percent)] if bool(row.ok) else "%s · %s" % [str(row.label),str(row.reason)]),"Honing_"+str(row.uid),body,_hone.bind(str(row.uid)),bool(row.ok))
 	if honing.is_empty(): _label("가방에 연마할 수 있는 무기가 없습니다.",body)
 
+func _add_target(row: Dictionary, text: String) -> void:
+	var check := CheckBox.new()
+	check.name="Dissolve_"+str(row.uid)
+	check.text=text
+	check.button_pressed=selected.has(row.uid)
+	check.toggled.connect(func(on: bool) -> void:
+		if on: selected[row.uid]=true
+		else: selected.erase(row.uid))
+	body.add_child(check)
+
 func _show(result: Dictionary) -> void:
 	status.text = str(result.get("detail","")) if result.get("ok",false) else str(result.get("reason","실패"))
 	if result.get("ok",false) and hud.has_method("append_log"): hud.append_log(status.text)
@@ -120,7 +137,7 @@ func _dissolve() -> void:
 func _dissolve_advanced(solvent_item_class_id: int) -> void:
 	var ids: Array = selected.keys()
 	selected.clear()
-	_show(SERVICE.dissolve_advanced(world(),ids,solvent_item_class_id))
+	_show(SERVICE.dissolve_advanced(world(),ids,solvent_item_class_id,_entry_solvent_uid))
 
 func _hone(uid: String) -> void:
 	_show(HONING.attempt(world(),uid))

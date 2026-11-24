@@ -1,4 +1,5 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
+const EMPTY_ITEM_ROWS: Array = []
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -29,6 +30,11 @@ var sort_mode: int = 0
 var inventory_fingerprint: int = -1
 var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
+var _prepared_inventory_order: Array = []
+var _prepared_inventory_search: String = ""
+var _prepared_inventory_category: String = ""
+var _prepared_inventory_catalog: Array = []
+var _prepared_inventory_catalog_size: int = -1
 var native_inventory_asset_revision: int = 0
 var weight_readout: Label
 var weight_gauge: ProgressBar
@@ -323,14 +329,14 @@ func _inventory_visibility_changed() -> void:
 		close_item_info()
 		detail_active = false
 		detail_panel.hide()
-	elif inventory_grid_dirty:
+	elif inventory_grid_dirty or _fallback_model_inputs_changed():
 		# show_inventory also refreshes synchronously. Defer this fallback so
-		# showing an ancestor window flushes pending data without a double build.
+		# revealing an ancestor flushes pending data without a double build.
 		_flush_pending_inventory_grid.call_deferred()
 
 func _flush_pending_inventory_grid() -> void:
-	if inventory_grid_dirty and inventory_panel.is_visible_in_tree():
-		_refresh_inventory_grid()
+	if inventory_panel.is_visible_in_tree() and (inventory_grid_dirty or _fallback_model_inputs_changed()):
+		_paint_inventory_grid()
 
 func _process(_delta: float) -> void:
 	_update_item_name()
@@ -416,8 +422,11 @@ func prepare_native_inventory() -> void:
 
 func show_inventory() -> void:
 	gesture_dragged = false
-	super.show_inventory()
-	_reflow()
+	inventory_panel.visible = true
+	# Showing the existing fallback window does not itself mutate ownership.
+	# Still repaint the current viewport (ancestor, size or scroll may change).
+	if inventory_panel.is_visible_in_tree(): _paint_inventory_grid()
+	else: _reflow()
 
 func _toggle_lock() -> void:
 	if controller == null or selected_item.is_empty(): return
@@ -473,13 +482,34 @@ func set_character_state(value: Dictionary) -> void:
 	_grouped_reward_amounts.clear()
 	_request_state_view_refresh()
 
+func _fallback_model_inputs_changed() -> bool:
+	# Save loads or tools can replace stored order or change these controls
+	# without a bag event. Use exact comparison, never a hash-only verdict.
+	var current_order: Variant = _order_store().get("inventory_order", [])
+	var current_catalog: Array = catalog_data.get("아이템", EMPTY_ITEM_ROWS)
+	return sort_mode != 0 or _prepared_inventory_order != current_order or _prepared_inventory_category != category_filter \
+		or not is_same(_prepared_inventory_catalog, current_catalog) or _prepared_inventory_catalog_size != current_catalog.size() \
+		or _prepared_inventory_search != _inventory_search()
+
+func _inventory_search() -> String:
+	return search_line.text.strip_edges().to_lower() if search_line != null else ""
+
 func _refresh_inventory_grid() -> void:
 	inventory_grid_dirty = true
+	_paint_inventory_grid()
+
+## Navigation has written its filter, sort and selection controls. Revalidate
+## those model inputs, but don't scan the full bag just to restore selection.
+func repaint_restored_inventory_view() -> void:
+	_paint_inventory_grid()
+
+func _paint_inventory_grid() -> void:
 	# Gameplay and the shop still receive fresh inventory/state while hidden;
 	# only the expensive slot controls and item visuals wait for an open bag.
 	if item_grid == null or inventory_panel == null or not inventory_panel.is_visible_in_tree():
 		return
 	var old_scroll: int = grid_scroll.scroll_vertical if grid_scroll != null else 0
+	if not inventory_grid_dirty and _fallback_model_inputs_changed(): inventory_grid_dirty = true
 	prepare_source_inventory_model()
 	visible_first_row = -1
 	_refresh_visible_window()
@@ -491,28 +521,43 @@ func _refresh_inventory_grid() -> void:
 ## prepared, rebuild the ownership read exactly as before: no persistent
 ## transaction/selection cache can admit a stale physical reference.
 func source_inventory_entries_for_view() -> Array[Dictionary]:
-	var prepared: Variant=prepare_source_inventory_model()
+	var prepared: Variant=prepare_source_inventory_model(true)
 	return prepared if prepared is Array else _inventory_entries()
 
-func prepare_source_inventory_model() -> Variant:
+func prepare_source_inventory_model(native_view: bool = false) -> Variant:
 	# The same owner reference/filter/order producer can serve a native CSB
 	# while these older controls are hidden. Keep its existing UI preference
 	# normalization; do not duplicate filters/order or rebuild another grid.
 	if not inventory_grid_dirty:return null
 	inventory_grid_dirty = false
 	inventory_list_rebuilds += 1
-	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
+	var search: String = _inventory_search()
 	sorted_references.clear()
 	var entries: Array[Dictionary] = _inventory_entries()
 	if sort_mode != 0:
 		# Older capture tests set sort_mode directly; apply it once as the stored order.
 		_store_sorted_order(entries, sort_mode)
 		sort_mode = 0
-	for reference: String in _acquisition_order(entries):
-		var name: String = _base_item_name(reference)
-		var record: Dictionary = _find_item_record(reference)
-		if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
-			sorted_references.append(reference)
+	var ordered: Array[String] = _acquisition_order(entries)
+	if native_view and category_filter == "전체" and search.is_empty():
+		# Every row passes the default filter without reading its item record.
+		# A cold 523 catalog lookup per *offscreen* row adds no information;
+		# visible slots still resolve their exact records and original icons.
+		sorted_references.append_array(ordered)
+	else:
+		for reference: String in ordered:
+			var name: String = _base_item_name(reference)
+			var record: Dictionary = _find_item_record(reference)
+			if _matches_category(record,name) and (search.is_empty() or _display_item_name(record,reference).to_lower().contains(search)):
+				sorted_references.append(reference)
+	# Acquisition order can normalize the saved array while preparing rows.
+	# Keep a detached snapshot so an in-place external edit is also detected.
+	var kept_order: Variant = _order_store().get("inventory_order", [])
+	_prepared_inventory_order = kept_order.duplicate() if kept_order is Array else []
+	_prepared_inventory_search = search
+	_prepared_inventory_category = category_filter
+	_prepared_inventory_catalog = catalog_data.get("아이템", EMPTY_ITEM_ROWS)
+	_prepared_inventory_catalog_size = _prepared_inventory_catalog.size()
 	capacity_label.text = "%d / %d" % [entries.size(),max_slots]
 	return entries
 

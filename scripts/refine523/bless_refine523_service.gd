@@ -149,10 +149,57 @@ static func solvents_owned(world: Node) -> Array:
 	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.item_class_id)<int(b.item_class_id))
 	return result
 
+## A bag click can hand an exact held solvent to the *existing* equipment
+## chooser, never dissolve a target or debit first. Only existing method 24/34
+## consumers are admitted; method 14 has a separate normal-dissolve owner.
+static func solvent_use_profile(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary=definition.get("original_item",{})
+	var category: Dictionary=definition.get("category",{})
+	if category.get("Name")!="Solvent" or raw.get("TestItem")!=false or raw.get("TargettingTypeID")!=12 or str(raw.get("ServiceRegionCode",""))!="":return {}
+	var seen: Dictionary={}
+	for link: Dictionary in definition.get("item_bonus",[]):
+		var name: String=str(link.get("bonus_type",{}).get("Name",""))
+		var bonus: Dictionary=link.get("bonus",{})
+		if name not in ["DissolutionMethodID","SolutionItemClassID","DeleteTime"] or seen.has(name) or link.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:return {}
+		seen[name]=true
+	if not seen.has("DissolutionMethodID") or not seen.has("SolutionItemClassID"):return {}
+	var result: Dictionary=RULES.solvent(int(raw.get("ID",0)))
+	if result.is_empty() or not APPROVED_SOLVENT_OUTPUTS.has(int(result.method)) or int(result.output_item_class_id)!=int(APPROVED_SOLVENT_OUTPUTS[int(result.method)]):return {}
+	result["can_use_when_invisible"]=raw.get("CanUseWhenInvisible")==true
+	return result
+
+const APPROVED_SOLVENT_OUTPUTS={24:117544,34:192654}
+
+static func selected_solvent(world: Node, uid: String) -> Dictionary:
+	if uid.is_empty() or STACK.busy or not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():return {}
+	var owned: Dictionary=STACK.proof(world,uid)
+	if owned.is_empty() or world._item_locked(str(owned.record.name),uid) or world._item_locked(str(owned.record.name)):return {}
+	var problem: String=load("res://scripts/loot/patch523_item_use.gd").call("eligibility",world,owned.record)
+	if not problem.is_empty():return {}
+	var spec: Dictionary=solvent_use_profile(D.item_definition(owned.record))
+	if spec.is_empty() or (not spec.can_use_when_invisible and world.is_player_concealed()):return {}
+	return {"spec":spec,"uid":uid,"owned":owned}
+
+## Single synchronous preview, not a quote or a debit authority. The actual
+## confirmation revalidates all IDs/locks/source lifetime and its target batch.
+static func selected_solvent_targets(world: Node, exact: Dictionary) -> Array:
+	var ids: Array=world.item_instances.keys(); ids.sort()
+	var result: Array=[]
+	for key: Variant in ids:
+		var uid: String=str(key)
+		var entry: Variant=world.item_instances[key]
+		if not entry is Dictionary or entry.has(STACK.RECEIPT) or not entry.get("record") is Dictionary or not D.equipment(entry.record):continue
+		var info: Dictionary=equipment(world,uid)
+		if not info.get("ok",false):continue
+		var element_level: int=info.element_level if info.element.is_empty() or info.element_level!=0 else 1
+		var yielded: Dictionary=RULES.advanced_dissolve_yield(info.item_class_id,element_level,int(exact.spec.method),info.enchant)
+		if yielded.get("ok",false):result.append({"uid":uid,"label":"+%d %s" % [int(info.enchant),str(entry.get("name",""))],"amount":int(yielded.amount)})
+	return result
+
 ## 상급·최상급 용해 (TWILIGHT 근사): one solvent per item, output = the solvent's
 ## SolutionItemClassID, amount = RULES.advanced_dissolve_yield with the item's
 ## own enchant (원본 safe/pow rule). dissolve_advanced re-runs this same quote.
-static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class_id: int) -> Dictionary:
+static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class_id: int, selected_uid: String = "") -> Dictionary:
 	if uids.is_empty(): return _fail("용해할 장비를 선택하세요","empty")
 	var spec: Dictionary = RULES.solvent(solvent_item_class_id)
 	if spec.is_empty() or int(spec.method) not in [24,34]: return _fail("상급·최상급 용해제가 아닙니다","solvent")
@@ -171,12 +218,17 @@ static func dissolve_advanced_quote(world: Node, uids: Array, solvent_item_class
 		if total<0:return _fail("용해 합계가 안전한 정수 범위를 초과합니다","amount_overflow")
 		items.append(info)
 	var need: int = items.size()*RULES.ADVANCED_SOLVENT_PER_ITEM
-	var owned: Dictionary = stacks_of(world,solvent_item_class_id)
+	var owned: Dictionary={}
+	if selected_uid.is_empty(): owned=stacks_of(world,solvent_item_class_id)
+	else:
+		var exact: Dictionary=selected_solvent(world,selected_uid)
+		if exact.is_empty() or int(exact.spec.item_class_id)!=solvent_item_class_id:return _fail("선택한 원본 용해제의 보유·잠금·기간을 다시 확인하세요","solvent_selection_changed")
+		owned={"total":int(exact.owned.remaining),"stacks":[exact]}
 	if int(owned.total)<need: return _fail("용해제가 부족합니다 (%d/%d)" % [int(owned.total),need],"solvent_short")
 	return {"ok":true,"items":items,"output_item_class_id":int(spec.output_item_class_id),"total":total,"solvent":spec,"requests":_debit_requests(owned.stacks,need),"solvent_used":need}
 
-static func dissolve_advanced(world: Node, uids: Array, solvent_item_class_id: int) -> Dictionary:
-	var quote: Dictionary = dissolve_advanced_quote(world,uids,solvent_item_class_id)
+static func dissolve_advanced(world: Node, uids: Array, solvent_item_class_id: int, selected_uid: String = "") -> Dictionary:
+	var quote: Dictionary = dissolve_advanced_quote(world,uids,solvent_item_class_id,selected_uid)
 	if not quote.ok: return quote
 	var debit: Dictionary = STACK.stage_debit(world,quote.requests)
 	if not debit.get("ok",false): return _fail(str(debit.get("reason",debit.get("error","용해제 차감 준비 실패"))),"debit")

@@ -54,7 +54,7 @@ func _run() -> void:
 	# A created body releases when the player walks away (holder bookkeeping).
 	var holder := Node2D.new()
 	bodies.add_child(holder)
-	bodies.bodies["m523npc:2"] = holder
+	bodies._register_body("m523npc:2",holder)
 	bodies.missing.erase("m523npc:2")
 	world.player.global_position = Vector2(100000, 5000)
 	bodies._scan()

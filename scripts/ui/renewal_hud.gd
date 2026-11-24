@@ -1311,11 +1311,11 @@ func open_tj_coupons() -> void:
 	if _open_original_feature("tj_coupons"):return
 	open_tj_coupons_native()
 
-func open_tj_coupons_native() -> void:
+func open_tj_coupons_native(focused_item: String = "", physical_id: String = "") -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
-	view.configure(get_parent())
+	view.configure(get_parent(),focused_item,physical_id)
 
 func open_promo_code() -> void:
 	_open_window("promo_code", "쿠폰 코드", "코드 입력 · 보상 지급")
@@ -3878,7 +3878,7 @@ func open_forge() -> void:
 	if _open_original_feature("forge"):return
 	open_bless_refine523()
 
-func open_bless_refine523() -> void:
+func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	_open_window("bless_refine523","용해 · 질서의 연금","원본523 축복의 가루 용해 · 상급 축복의 가루 질서의 연금")
 	var scroll := ScrollContainer.new()
 	scroll.name = "BlessRefine523Scroll"
@@ -3886,7 +3886,7 @@ func open_bless_refine523() -> void:
 	workspace.mount(scroll)
 	var view := preload("res://scripts/refine523/bless_refine523_panel.gd").new()
 	scroll.add_child(view)
-	view.configure(self)
+	view.configure(self,entry_solvent_uid)
 
 func open_equipment523(_snapshot: Dictionary) -> void:
 	show_message("원본 장비 가공 UI 연결 대기 · 거래 데이터와 소유 상태 보존")

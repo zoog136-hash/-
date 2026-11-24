@@ -1,5 +1,6 @@
 extends RefCounted
 ## Exact item/scroll joins; economic/state interpretations are separate policy.
+const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const OPTIONS=preload("res://scripts/inven_option_adapter.gd")
 const POLICY="res://data/crafting/patch523_enhancement_policy.json"
 static var _settings: Dictionary={}
@@ -18,7 +19,16 @@ static func policy() -> Dictionary:
 
 static func item_id(record: Dictionary) -> String:
 	if record.get("source")=="inven": return str(record.get("sourceId",""))
-	if record.get("source")=="lineagem_patch523" and record.get("source_m_native_item",false) and record.get("source_snapshot")=="patch523" and str(record.get("sourceId",""))=="m523:item:"+str(int(record.get("source_item_class_id",0))): return str(int(record.source_item_class_id))
+	if record.get("source")!="lineagem_patch523" or not record.get("source_m_native_item",false) or record.get("source_snapshot")!="patch523": return ""
+	var raw: Variant=record.get("source_item_class_id")
+	if typeof(raw) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(raw)) or float(raw)!=floorf(float(raw)) or raw<=0:return ""
+	var id: String=str(int(raw))
+	var key: String=str(record.get("sourceId",""))
+	if key=="m523:item:"+id:return id
+	# Physical stack variants keep an exact suffix; the archive tables still
+	# join on the base ItemClass. A mismatched suffix never authenticates.
+	var bless: int=int(record.get("source_bless_raw",0))
+	if bless in [2,3] and NATIVE_FIELDS.field(record,"source_is_stackable",false) and key=="m523:item:%s:bless:%d"%[id,bless]:return id
 	return ""
 
 static func prepare(book: Object, record: Dictionary, blessing: int) -> Dictionary:
@@ -132,12 +142,17 @@ static func rule(book: Object, record: Dictionary, scroll_id: String, level: int
 	var settings: Dictionary=policy()
 	var probability: Dictionary=selected(evidence.probabilities,group,level,blessing,settings)
 	var cost: Dictionary=selected(evidence.costs,group,level,blessing,settings)
-	var tables: Dictionary=book.data.get("enchantment",{})
+	var tables: Dictionary=book.enhancement_group_tables(group) if book.has_method("enhancement_group_tables") else book.data.get("enchantment",{})
 	var view_ok: bool=false
 	for row: Dictionary in tables.get("ItemEnchantProbabilityView",[]):
 		if int(row.ItemEnchantProbabilityGroupID)==group and int(row.EnchantLevel)==level and int(row.ServerLimitSetID)==0: view_ok=true
 	var total: int=int(probability.get("Success",0))+int(probability.get("Remain",0))+int(probability.get("Vaporize",0))+int(probability.get("SideEffect",0))
-	if total!=1000000 or cost.is_empty() or not view_ok or settings.get("cost_currency")!="adena": return {"source_rule":true,"success":0.0,"reason":"원본 단계·확률·비용 조건을 확인하세요"}
+	if probability.is_empty() or total!=1000000:
+		return {"source_rule":true,"success":0.0,"reason":"원본 강화 확률 확인 불가 · 그룹 %d · +%d · 주문서 보존" % [group,level]}
+	if cost.is_empty() or settings.get("cost_currency")!="adena":
+		return {"source_rule":true,"success":0.0,"reason":"원본 강화 비용·소비량 확인 불가 · 그룹 %d · +%d · 주문서 보존" % [group,level]}
+	if not view_ok:
+		return {"source_rule":true,"success":0.0,"reason":"원본 강화 단계의 서버 자격 확인 불가 · 그룹 %d · +%d · 주문서 보존" % [group,level]}
 	var count: int=int(cost.ConsumeAmount) if int(cost.ConsumeAmount)>0 else int(settings.get("zero_consume_scrolls",0))
 	if count<1 or count>10000 or int(cost.Cost)<0: return {"source_rule":true,"success":0.0,"reason":"강화 소비 설정을 확인하세요"}
 	var safe: int=0
