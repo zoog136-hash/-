@@ -6,7 +6,8 @@ extends SceneTree
 ## menu shows five columns and seven full rows (35 tiles) without scrolling,
 ## no tile is cut or overlaps another, the rest is reached by scrolling, the
 ## #803 order and the 저장 tile stay, the retired tiles stay gone, and a real
-## InputEventScreenTouch on every tile opens its window.
+## InputEventScreenTouch opens every available window (a missing original
+## expedition shows its reason and preserves this menu instead).
 const QA = preload("res://tests/qa_class_selection.gd")
 const SCREENS: Array = [[Vector2i(2408,1080),null],[Vector2i(1280,720),null],[Vector2i(1920,1080),null],[Vector2i(2400,1080),Rect2(60,0,1160,720)],[Vector2i(1280,720),Rect2(0,40,1280,640)]]
 const FIRST_SCREEN_WANTED: Array[String] = ["character","inventory","skills","quests","map","shop","enhance","warehouse"]
@@ -154,6 +155,7 @@ func every_tile_opens(hud: Node) -> void:
 			check(false, id + " tile missing")
 			continue
 		hud.menu_scroll_view.ensure_control_visible(tile); await frames(3)
+		if id == "expedition": hud.message_label.text = ""
 		await touch(tile)
 		var section: String = str(hud.active_section)
 		var ok: bool = (saved[0] == 1) if id == "save" else (section != "menu" and section != "")
@@ -161,7 +163,17 @@ func every_tile_opens(hud: Node) -> void:
 		# Without it 무기 숙련 hands over to the existing mastery panel.
 		if id == "weapon_mastery" and not ok: ok = mastery[0] > 0
 		if id == "map" and not ok: ok = is_instance_valid(hud.original_main_ui_controller) and hud.original_main_ui_controller.world_map_is_open()
-		check(ok, "a touch on " + id + " opens it (section " + section + ")")
+		if id == "expedition":
+			var controller: Node = hud.original_main_ui_controller
+			var has_window: bool = is_instance_valid(controller) and controller.feature_window_available("doll_explore")
+			var expected: String = ""
+			if not has_window: expected = "마법인형 탐험 원본 화면 리소스가 없습니다."
+			elif not hud.get_parent().get_expedition_catalog().ready(): expected = "마법인형 탐험 원본 데이터가 없습니다."
+			if expected.is_empty():
+				ok = section == "doll_explore" and controller.feature_window_is_open("doll_explore")
+			else:
+				ok = section == "menu" and hud.workspace.visible and hud.message_label.text == expected
+		check(ok, "a touch on " + id + " opens it or shows the exact missing original dependency (section " + section + ")")
 		if ok: opened.append(id)
 		if id == "save": saved[0] = 0
 	print("FULL_MENU_FIVE_COLUMNS_OPENED " + JSON.stringify({"tiles":all.size(),"opened":opened.size()}))
