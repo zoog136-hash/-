@@ -70,6 +70,8 @@ static func profile(record: Dictionary) -> Dictionary:
 	if record.get("slot")=="material" and EFFECTS.AMULET_REUSABLE and str(EFFECTS.claims(record))=="teleport_location":return {"kind":"teleport_location"}
 	if record.get("slot")!="consumable":return {}
 	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
+	var exact_exp: Dictionary=direct_experience_rule(record,definition)
+	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
 	if elixir_rule(record,definition):return {"kind":"elixir","spec":{"can_use_when_invisible":true}}
 	if half_elixir_charge_rule(record,definition):return {"kind":"half_elixir_charge","spec":{"can_use_when_invisible":true}}
 	if half_elixir_reset_rule(record,definition):return {"kind":"half_elixir_reset","spec":{"can_use_when_invisible":true}}
@@ -134,6 +136,60 @@ static func use_bonus_point(world:Node,uid:String,owned:Dictionary)->Dictionary:
 
 static func authorizes_bonus_point(world:Node,staged:Dictionary)->bool:
 	return _candidate_kind=="original_146402_point" and staged.size()==4 and staged.has("inventory") and staged.has("item_instances") and staged.has("consumable_state") and integer(world.stat_points) and staged.get("stat_points")==int(world.stat_points)+1 and authorizes(staged)
+
+## ItemClass -> [min level, raw EXP, exact ItemBonus ID, exact Bonus ID].
+## Each original Korean description agrees with the numeric value and min level.
+## The rank-four fruit (170214) declares 500000 and says 1000000: not bound.
+const DIRECT_EXP_REWARDS: Dictionary={
+	170184:[40,2000000,283204,969234], 170194:[40,1500000,283214,969244],
+	170204:[40,1000000,283224,969254], 181273:[45,2000000,315283,1046803],
+	234598:[40,4000000,449418,1413528]
+}
+
+static func direct_experience_rule(record:Dictionary,definition:Dictionary)->Dictionary:
+	var id: int=int(record.get("source_item_class_id",0))
+	if not DIRECT_EXP_REWARDS.has(id) or NATIVE_FIELDS.field(record,"source_category_name")!="Potion":return {}
+	var expected:Array=DIRECT_EXP_REWARDS[id]
+	var raw:Dictionary=definition.get("original_item",{})
+	var rows:Array=definition.get("item_bonus",[])
+	if whole(raw.get("ID"))!=id or raw.get("TestItem")!=false or whole(raw.get("CategoryID"))!=3 or whole(raw.get("LevelLimitMin"))!=expected[0] or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true or rows.size()!=1:return {}
+	var r:Dictionary=rows[0];var b:Dictionary=r.get("bonus",{})
+	if whole(r.get("ID"))!=expected[2] or r.get("IsPossession")!=false or whole(b.get("ID"))!=expected[3] or r.get("bonus_type",{}).get("Name")!="Experience" or r.get("unit",{}).get("Name")!="Value" or whole(b.get("Value"))!=expected[1] or whole(b.get("BonusApplicationTypeID"))!=0 or whole(b.get("BonusApplicationTargetID"))!=0:return {}
+	var text:String=str(SOURCE.row("DescData_Korean",int(raw.get("StoryDescID",0))).get("Description","")).replace(",","")
+	if not ("EXP %d을 획득" % int(expected[1])) in text or not ("%d레벨 부터 사용가능" % int(expected[0])) in text:return {}
+	return {"source_exp":expected[1],"minimum_level":expected[0],"can_use_when_invisible":true}
+
+static func use_exact_experience(world:Node,uid:String,owned:Dictionary)->Dictionary:
+	if busy or not integer(world.experience) or not integer(world.exp_need) or world.exp_need<=0:return _failure("경험치 저장 상태 확인 필요 · 아이템 보존")
+	var live:Dictionary=proof(world,uid)
+	if live.is_empty() or live!=owned:return _failure("경험치 아이템 실물 확인 실패 · 아이템 보존")
+	var rule:Dictionary=direct_experience_rule(live.record,D.item_definition(live.record))
+	if rule.is_empty() or world.level<int(rule.minimum_level):return _failure("원본 경험치 아이템 레벨 조건 불충족 · 아이템 보존")
+	var gained:int=EFFECTS.twilight_experience(int(rule.source_exp))
+	if gained<=0 or int(world.experience)>9007199254740991-gained:return _failure("경험치 결과 수치 범위 오류 · 아이템 보존")
+	var before_level:int=world.level
+	var staged_growth:Dictionary=world.monsterbook523_runtime.progression_overrides(gained)
+	if staged_growth.is_empty():return _failure("경험치 증가가 확인되지 않았습니다 · 아이템 보존")
+	var paid:Dictionary=stage_debit(world,[{"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt}])
+	if not paid.get("ok",false):return _failure("경험치 아이템 수량 확인 실패 · 아이템 보존")
+	var payload:Dictionary=paid.overrides
+	payload.merge(staged_growth,true)
+	busy=true;_candidate_kind="original_exp_reward";_candidate=payload.duplicate(true)
+	var saved:Error=world._save_game(true,payload)
+	_candidate.clear();_candidate_kind="";busy=false
+	if saved!=OK:return _failure("경험치 저장 실패 · 수량과 능력치 보존")
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	for key: String in staged_growth:
+		world.set("attack_power" if key=="attack" else key,int(staged_growth[key]))
+	world.deferred_save.cancel()
+	if world.level>before_level:
+		var reached:Array=range(before_level+1,int(world.level)+1)
+		world._play_original_level_up(reached)
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"경험치 +%d%s" % [gained, " · Lv.%d" % int(world.level) if world.level>before_level else ""]}
+
+static func authorizes_experience_reward(staged:Dictionary)->bool:
+	return _candidate_kind=="original_exp_reward" and authorizes(staged)
 
 ## ItemClass 4151 grants one ordinary stat point. Keep the existing TWILIGHT
 ## chosen-stat UI and shared character/stat caps for both forms of elixir.
@@ -541,6 +597,7 @@ static func try_use(world: Node,item_name: String,selected: String="") -> Dictio
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
+	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="half_elixir_charge":return use_half_elixir_charge(world,uid,owned,record)
 	if effect.kind=="half_elixir_reset":return open_half_elixir_reset(world,uid,owned,record)
 	if effect.kind=="mastery":return use_mastery_points(world,uid,owned,record,spec)

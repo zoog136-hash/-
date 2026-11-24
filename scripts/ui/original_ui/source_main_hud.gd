@@ -1651,6 +1651,8 @@ var _menu_tiles: RefCounted
 ## never a guessed file, newly decoded atlas or homemade icon.
 const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST}
 func menu_action_art(section: String) -> Dictionary:
+	if section == "auto":
+		return _auto_pad_art()
 	if not MENU_HUD_ACTIONS.has(section) or not is_instance_valid(_menu_scene) or _menu_scene.get("source_member")!=MainMenu.MEMBER:return {}
 	var authored:Variant=_menu_scene.source_nodes.get(MENU_HUD_ACTIONS[section])
 	if not is_instance_valid(authored) or not authored.has_meta("source_button"):return {}
@@ -1658,6 +1660,17 @@ func menu_action_art(section: String) -> Dictionary:
 	var normal:Variant=button.states.get("normal")
 	if not normal is TextureRect or normal.texture==null or normal.material==null:return {}
 	return {"texture":normal.texture,"material":normal.material,"member":MainMenu.MEMBER,"offset":MENU_HUD_ACTIONS[section]}
+
+## The AUTO hit button is transparent. The authored sibling Sprite is the
+## actual original icon, not the touch target or the separate effect layer.
+func _auto_pad_art() -> Dictionary:
+	if not is_instance_valid(_combat_scene) or _combat_scene.get("source_member")!=Combat.PAD:return {}
+	const AUTO_SOURCE_ICON: int=29664
+	var node: Variant=_combat_scene.source_nodes.get(AUTO_SOURCE_ICON)
+	if not is_instance_valid(node) or not node.has_meta("source_sprite"):return {}
+	var art: Variant=node.get_meta("source_sprite")
+	if not art is Sprite2D or art.texture==null or art.material==null:return {}
+	return {"texture":art.texture,"material":art.material,"member":Combat.PAD,"offset":AUTO_SOURCE_ICON}
 
 func menu_tile(section: String) -> Dictionary:
 	if _menu_tiles==null and _pack!=null:

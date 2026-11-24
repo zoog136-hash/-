@@ -1903,14 +1903,14 @@ func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
 
-func _roll_weapon_damage(target: TwilightMonster, source_invokes: bool = false) -> int:
+func _roll_weapon_damage(target: TwilightMonster, source_invokes: bool = false, resolved_weapon: Variant = null) -> int:
 	if target == null:
 		return 0
 	var is_large: bool = str(target.get_meta("size_class", "small")).to_lower() == "large"
-	var maximum: int = ITEM_OPTIONS.weapon_size_damage(_equipped_weapon_record(), is_large)
+	var weapon: Dictionary = resolved_weapon if resolved_weapon is Dictionary else _equipped_weapon_record()
+	var maximum: int = ITEM_OPTIONS.weapon_size_damage(weapon, is_large)
 	var rolled: int = rng.randi_range(1, maximum) if maximum > 0 else 0
 	if not source_invokes or maximum <= 0: return rolled
-	var weapon: Dictionary = _equipped_weapon_record()
 	var extra: int = ITEM_OPTIONS.additional_damage(weapon, "melee") + _enhancement_weapon_stat("damage")
 	var scope: String = str(ui_preferences.get("patch523_weapon_double_scope", "base_flat_enchant"))
 	if scope not in ["base_flat_enchant","base_only","disabled"]: scope = "base_flat_enchant"
@@ -3381,17 +3381,10 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 		return
 	var actual_weapon: int = _mastery_actual_weapon_type()
 	if attack_weapon_type == -1 or attack_weapon_type == actual_weapon: weapon_mastery.normal_hit(actual_weapon)
-	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
-	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
-	var weapon_roll: int=_roll_weapon_damage(target, true)
-	weapon_roll=PATCH523_EQUIPMENT_COMBAT.weapon_scale(self,weapon_roll,attack_kind,target)
-	var damage: int = maxi(1,damage_stat+weapon_roll+(native_ammo_bonus if native_ammo_bonus>=0 else _roll_source_ammo_damage(target))+SOURCE_AMMO.roll(source_ammo,target,rng))
-	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
-	var critical: bool = rng.randf() < critical_chance
-	if critical:
-		damage = _player_critical_damage(damage, attack_kind)
-	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
+	var roll: Dictionary = _normal_hit_damage_roll(target, attack_kind, source_ammo, native_ammo_bonus)
+	var damage: int = roll.damage
+	var critical: bool = roll.critical
+	var critical_chance: float = roll.chance
 	hit_stage = FRAME_HITCH.detail_next("hit.roll", hit_stage)
 	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false,{},true)
 	hit_stage = FRAME_HITCH.detail_next("hit.deal", hit_stage)
@@ -3410,6 +3403,26 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 	hit_stage = FRAME_HITCH.detail_next("hit.log", hit_stage)
 	_update_target_hud()
 	FRAME_HITCH.detail("hit.target_hud", hit_stage)
+
+## Immutable part of one successful normal attack roll. Enter after mastery
+## updates and exit before the impact can kill, change gear, buff or reenter.
+## Same order of RNG draws, proc notes, mitigations and source element.
+func _normal_hit_damage_roll(target: TwilightMonster, attack_kind: String, source_ammo: Dictionary, native_ammo_bonus: int) -> Dictionary:
+	_stat_memo_begin()
+	var weapon: Dictionary = _equipped_weapon_record()
+	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
+	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
+	var weapon_roll: int=_roll_weapon_damage(target, true, weapon)
+	weapon_roll=PATCH523_EQUIPMENT_COMBAT.weapon_scale(self,weapon_roll,attack_kind,target)
+	var damage: int = maxi(1,damage_stat+weapon_roll+(native_ammo_bonus if native_ammo_bonus>=0 else _roll_source_ammo_damage(target))+SOURCE_AMMO.roll(source_ammo,target,rng))
+	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _player_critical_damage(damage, attack_kind)
+	damage = _elemental_damage_to_monster(damage, _normal_attack_element(weapon), target)
+	damage += int(consumable_service.call("weapon_element_bonus", weapon, target))
+	_stat_memo_end()
+	return {"damage":damage,"critical":critical,"chance":critical_chance}
 
 func auto_hunting_destinations() -> Dictionary:
 	if not auto_hunting_schedule_checked:
@@ -9503,13 +9516,14 @@ func _player_element_resistance(element_name: String) -> float:
 			total += float(record.get("element_resist_all",0.0))
 	return clampf(total, -80.0, 85.0)
 
-func _normal_attack_element() -> String:
+func _normal_attack_element(resolved_weapon: Variant = null) -> String:
 	if _active_skill_buff_total("element_bonus_holy") > 0:
 		return "holy"
-	var enchanted: String = str(consumable_service.call("weapon_element", _equipped_weapon_record()))
+	var weapon: Dictionary = resolved_weapon if resolved_weapon is Dictionary else _equipped_weapon_record()
+	var enchanted: String = str(consumable_service.call("weapon_element", weapon))
 	if enchanted != "":
 		return ELEMENT_RULES.channel(enchanted)
-	return ELEMENT_RULES.channel(str(_equipped_weapon_record().get("element", "physical")))
+	return ELEMENT_RULES.channel(str(weapon.get("element", "physical")))
 
 func _source_elemental_flat_damage(target: TwilightMonster, by_spell: bool=false) -> int:
 	if target==null:return 0

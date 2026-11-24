@@ -407,17 +407,24 @@ static func _walk(world, item_id: int, seen: Dictionary, depth: int, lookup: LOO
 
 ## Registers every box/reward item reachable from listed offers (also needed
 ## after a reload so saved stacks keep their record) and returns shop bindings.
+static func _install_products(catalog, id: int, include_bonuses: bool) -> PackedInt64Array:
+	if catalog is RefCounted and catalog.get_script() == preload("res://scripts/shop/source523_shop_catalog.gd"):
+		return catalog.install_item_products(id, include_bonuses)
+	# Custom source/test adapters retain their precise full offer contract.
+	var result := PackedInt64Array()
+	var offer: Dictionary = catalog.market_offer(id)
+	for link: Dictionary in offer.get("products", []) + (offer.get("bonuses", []) if include_bonuses else []):
+		var product: Dictionary = link.product.definition
+		if int(product.get("UnitID", 0)) == 4: result.append(int(product.ClassID))
+	return result
+
 static func install(world, catalog) -> Dictionary:
 	var bindings: Dictionary = {}
 	if not available() or catalog == null: return bindings
 	var lookup: LOOKUP.CashInstallScope = _install_lookup(world,catalog)
 	var seen: Dictionary = {}
 	for key: String in CashMarket.data().entries:
-		var offer: Dictionary = catalog.market_offer(int(key))
-		for link: Dictionary in offer.get("products", []):
-			var product: Dictionary = link.product.definition
-			if int(product.get("UnitID", 0)) != 4: continue
-			var item_id: int = int(product.ClassID)
+		for item_id: int in _install_products(catalog, int(key), false):
 			_walk(world,item_id,seen,0,lookup)
 			var target: Dictionary = _resolve(world,item_id,false,lookup)
 			if target.kind in ["box", "item"]: bindings["4:%d" % item_id] = {"name":str(target.name), "record":target.record.duplicate(true)}
@@ -427,11 +434,8 @@ static func install(world, catalog) -> Dictionary:
 	# bound here; their contents open through the same original rules.
 	for purchase_id: int in displayed_purchases(catalog):
 		if CashMarket.listed(purchase_id): continue
-		var offer: Dictionary = catalog.market_offer(purchase_id)
-		for link: Dictionary in offer.get("products", []) + offer.get("bonuses", []):
-			var product: Dictionary = link.product.definition
-			if int(product.get("UnitID", 0)) != 4 or not is_package(int(product.get("ClassID", 0))): continue
-			var box_id: int = int(product.ClassID)
+		for box_id: int in _install_products(catalog, purchase_id, true):
+			if not is_package(box_id): continue
 			if bindings.has("4:%d" % box_id): continue
 			_walk(world,box_id,seen,0,lookup)
 			var box: Dictionary = _resolve(world,box_id,false,lookup)

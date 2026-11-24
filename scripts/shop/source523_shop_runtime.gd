@@ -1,6 +1,7 @@
 extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
 const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
@@ -160,9 +161,11 @@ func configure(host: Node) -> void:
 		world.item_db.append(record.duplicate(true))
 		world.catalog_db["아이템"].append(record)
 	world._index_item_weights()
+	var source_start: int = BOOT_LOG.begin("shop_model")
 	var configured_source=Catalog.session()
+	BOOT_LOG.end("shop_model", source_start, {"available":configured_source.available()})
 	if configured_source.available():
-		bind_source(configured_source)
+		bind_source(configured_source, true)
 		release_catalog()
 
 ## Releases the original shop model until the shop is used again.
@@ -172,7 +175,7 @@ func release_catalog() -> void:
 	_catalog_released = true
 	Catalog.release()
 
-func bind_source(source) -> void:
+func bind_source(source, during_boot: bool = false) -> void:
 	if catalog == source and not _bindings.is_empty(): return
 	catalog = source
 	_bindings.clear()
@@ -201,14 +204,26 @@ func bind_source(source) -> void:
 		_bindings["34:%d" % id] = {"name":name,"record":world._find_catalog_item_record(name).duplicate(true)}
 	_bindings["4:26"] = {"gold":true,"name":"아데나"}
 	_bindings.merge(NpcConsumables.install(world,catalog))
-	_bindings.merge(SkillBooks.install(world,catalog))
+	var books_started: int = BOOT_LOG.begin("shop_skill_bind") if during_boot else 0
+	var book_scope = CashPackages._install_lookup(world,catalog)
+	var books: Dictionary = SkillBooks.install(world,catalog,book_scope)
+	if book_scope != null: book_scope.close()
+	_bindings.merge(books)
+	if during_boot: BOOT_LOG.end("shop_skill_bind", books_started, {"rows":books.size()})
 	_bindings.merge(preload("res://scripts/shop/source523_wisdom.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_ammo.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_restoration.gd").install(world,catalog))
-	_bindings.merge(CashPackages.install(world,catalog))
+	var boxes_started: int = BOOT_LOG.begin("shop_cash_bind") if during_boot else 0
+	var boxes: Dictionary = CashPackages.install(world,catalog)
+	_bindings.merge(boxes)
+	if during_boot: BOOT_LOG.end("shop_cash_bind", boxes_started, {"rows":boxes.size()})
+	var tickets_started: int = BOOT_LOG.begin("shop_ticket_bind") if during_boot else 0
 	inventory_tickets.configure(self)
 	_bindings.merge(inventory_tickets.install())
+	if during_boot: BOOT_LOG.end("shop_ticket_bind", tickets_started)
+	var npc_started: int = BOOT_LOG.begin("shop_npc_bind") if during_boot else 0
 	npc_definitions.configure(catalog)
+	if during_boot: BOOT_LOG.end("shop_npc_bind", npc_started)
 	for arg: String in OS.get_cmdline_user_args():
 		if not arg.begins_with("--source523-shop-policy="): continue
 		var expected: String = ""

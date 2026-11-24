@@ -1640,7 +1640,8 @@ func open_macro_info() -> void:
 	var row := HBoxContainer.new()
 	banner.add_child(row)
 	var emblem := TextureRect.new()
-	emblem.texture = UI.icon("auto")
+	emblem.name = "SourceAutoActionIcon"
+	_set_menu_source_action_art("auto",emblem)
 	emblem.custom_minimum_size = Vector2(64,64)
 	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -1888,7 +1889,7 @@ func _build_menu_page() -> void:
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		if section_id in ["inventory","skills","quests"]:
+		if section_id in ["inventory","skills","quests","auto"]:
 			artwork.name="SourceActionIcon"
 			_set_menu_source_action_art(section_id,artwork)
 		else:
@@ -1926,6 +1927,9 @@ func _set_menu_source_action_art(section: String, art: TextureRect) -> void:
 	# Without the original, the existing button caption remains usable.
 
 func _refresh_menu_action_art() -> void:
+	if is_instance_valid(workspace):
+		var emblem:=workspace.find_child("SourceAutoActionIcon",true,false) as TextureRect
+		if emblem!=null:_set_menu_source_action_art("auto",emblem)
 	if not is_instance_valid(menu_page):return
 	for tile:Control in menu_tiles:
 		if not is_instance_valid(tile):continue
