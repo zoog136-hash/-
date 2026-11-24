@@ -3,6 +3,10 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Native memberships select only verified existing item IDs. Host rolls remain authoritative.
 const DATA_SHA="df3ebf9c5bc2bd18d97014e377ee434fce7b412385a7cb720b037f30f6f18151"
 const DATA_PATH="res://data/lineagem_base508/monster_drops.bin"
+const MAX_RAW: int=64*1024*1024
+# The valid GZIP payload expands to at most MAX_RAW; allow framing and
+# incompressible overhead without whole-buffer reading an arbitrary file.
+const MAX_PACKED: int=MAX_RAW+1024*1024
 static var _data: Dictionary={}
 static var diagnostics: Dictionary={}
 static func data(pack_root: String="") -> Dictionary:
@@ -15,10 +19,23 @@ static func data(pack_root: String="") -> Dictionary:
  var install=load("res://scripts/lineagem_pack_install.gd")
  paths.append(install.monster_root().path_join("monster_drops.bin"))
  for path: String in paths:
-  if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=DATA_SHA: continue
-  var bytes: PackedByteArray=FileAccess.get_file_as_bytes(path).decompress_dynamic(64*1024*1024,FileAccess.COMPRESSION_GZIP)
-  var value: Variant=JSON.parse_string(bytes.get_string_from_utf8())
-  if value is Dictionary and value.get("kind")=="base508_monster_drop_membership" and value.get("source_snapshot")=="base508": _data=value;return _data
+  var value: Dictionary=_read_pinned(path,DATA_SHA)
+  if not value.is_empty():_data=value;return _data
+ return {}
+
+## One bounded read for both the compressed-file pin and the decompressor.
+static func _read_pinned(path: String, expected_sha: String) -> Dictionary:
+ var file:=FileAccess.open(path,FileAccess.READ)
+ if file==null:return {}
+ var size:int=file.get_length()
+ if size<=0 or size>MAX_PACKED:return {}
+ var packed:PackedByteArray=file.get_buffer(size)
+ file.close()
+ if packed.size()!=size or preload("res://scripts/lineagem_pack_install.gd").sha(packed)!=expected_sha:return {}
+ var bytes:PackedByteArray=packed.decompress_dynamic(MAX_RAW,FileAccess.COMPRESSION_GZIP)
+ if bytes.is_empty():return {}
+ var value:Variant=JSON.parse_string(bytes.get_string_from_utf8())
+ if value is Dictionary and value.get("kind")=="base508_monster_drop_membership" and value.get("source_snapshot")=="base508":return value
  return {}
 static func identity(record: Dictionary) -> Dictionary:
  var native: Dictionary=record.get("source_m_original",{})

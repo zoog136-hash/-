@@ -212,11 +212,13 @@ func _stage() -> Dictionary:
 	if not tabs.is_empty():
 		page_roots.append(TAB_BAR)
 		page_bindings[TAB_BAR]={"role":"source_list","row_offsets":[]}
-	var page_scope: Array[int]=_subtree(TAB_LIST,page_roots)
-	_consume_touch(TAB_LIST,PAGE_SCOPE,page_bindings)
+	var page_tree: Dictionary=_pack.scene(TAB_LIST).get("nodeTree",{})
+	var page_scope: Array[int]=_subtree(page_tree,page_roots)
+	_consume_touch(page_tree,PAGE_SCOPE,page_bindings)
 	bindings[TAB_PROJECT]={"role":"project","visible":true,"source_node_offsets":page_scope,"bindings":page_bindings}
-	_consume_touch(ROOT,ROOT_SCOPE,bindings)
-	var root_scope: Array[int]=_subtree(ROOT,ROOT_SCOPE)
+	var root_tree: Dictionary=_pack.scene(ROOT).get("nodeTree",{})
+	_consume_touch(root_tree,ROOT_SCOPE,bindings)
+	var root_scope: Array[int]=_subtree(root_tree,ROOT_SCOPE)
 	var next:=Scene.new()
 	var result: Dictionary=next.configure_nodes(_pack,ROOT,root_scope,bindings)
 	if not result.get("ok",false):next.free();return result
@@ -234,7 +236,7 @@ func _stage() -> Dictionary:
 	var tabs_built: int=0
 	if tab_content is Node2D:
 		for index: int in range(tabs.size()):
-			var button: Dictionary=_tab_button(index)
+			var button: Dictionary=_tab_button(index,page_tree)
 			if not button.get("ok",false):continue
 			tab_content.add_child(button.scene)
 			tabs_built+=1
@@ -317,16 +319,16 @@ func _sync_cards() -> void:
 
 ## One category tab: a copy of the page's original tab button (Panel_Recommend
 ## of Tab_2) placed in slot `index` of the Tab_1 bar.
-func _tab_button(index: int) -> Dictionary:
+func _tab_button(index: int, tree: Dictionary) -> Dictionary:
 	var on: bool=index==tab
 	var name: String=str(tabs[index].name)
-	var scope: Array[int]=_subtree(TAB_LIST,[TAB_SAMPLE])
+	var scope: Array[int]=_subtree(tree,[TAB_SAMPLE])
 	var bindings: Dictionary={TAB_SAMPLE_LIST:{"role":"source_list","row_offsets":[TAB_SAMPLE]},
 		TAB_NORMAL:{"role":"button","visible":not on,"activate":Callable(self,"select_tab").bind(index)},
 		TAB_PRESSED:{"role":"button","visible":on,"activate":Callable(self,"select_tab").bind(index)},
 		TAB_NORMAL_LABEL:{"role":"source_text","text":name},TAB_PRESSED_LABEL:{"role":"source_text","text":name}}
 	for offset: int in TAB_ICONS:bindings[offset]={"visible":false}
-	_consume_touch(TAB_LIST,[TAB_SAMPLE],bindings)
+	_consume_touch(tree,[TAB_SAMPLE],bindings)
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,TAB_LIST,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
@@ -389,14 +391,15 @@ func _card(entry: Dictionary, panel: Object) -> Dictionary:
 		var quote: Dictionary=catalog.payment_quote(id,1)
 		if quote.get("ok",false) and int(quote.get("total",0))>0:
 			price="%s %d"%[str(panel.call("_value_name",int(quote.unit_id),int(quote.class_id))),int(quote.total)]
-	var scope: Array[int]=_subtree(CARD,CARD_SCOPE)
 	var bindings: Dictionary={BUY:{"role":"button","activate":Callable(self,"_buy").bind(id)},PRICE:{"role":"source_text","text":price,"visible":not price.is_empty()},TITLE:{"role":"source_text","text":title}}
 	for offset: int in HIDDEN_TEXTS:bindings[offset]={"role":"static_source_text","visible":false}
 	var picture: Dictionary=panel.call("_entry_image",entry)
 	var has_picture: bool=picture.get("texture") is Texture2D
 	if has_picture:bindings[PICTURE]={"role":"source_asset_slot","visible":false}
 	else:bindings[PICTURE]={"visible":false}
-	_consume_touch(CARD,scope,bindings)
+	var tree: Dictionary=_pack.scene(CARD).get("nodeTree",{})
+	var scope: Array[int]=_subtree(tree,CARD_SCOPE)
+	_consume_touch(tree,scope,bindings)
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,CARD,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
@@ -508,8 +511,7 @@ func _list_input(event: InputEvent) -> void:
 
 ## Touch-enabled original nodes in the mounted subtrees with no action of
 ## their own swallow their touch (as the client's modal window does).
-func _consume_touch(member: String, scope: Array[int], bindings: Dictionary) -> void:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+static func _consume_touch(tree: Dictionary, scope: Array[int], bindings: Dictionary) -> void:
 	for offset: int in scope:_consume_subtree(Scene._node_at_offset(tree,offset),bindings)
 
 static func _consume_subtree(node: Dictionary, bindings: Dictionary) -> void:
@@ -532,8 +534,7 @@ static func _consume_subtree(node: Dictionary, bindings: Dictionary) -> void:
 
 ## A node scope keeps only the listed nodes and their ancestors: list every
 ## descendant of each mounted node (a nested ProjectNode keeps its own scope).
-func _subtree(member: String, roots: Array[int]) -> Array[int]:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+static func _subtree(tree: Dictionary, roots: Array[int]) -> Array[int]:
 	var result: Array[int]=[]
 	for offset: int in roots:_collect(Scene._node_at_offset(tree,offset),result)
 	return result

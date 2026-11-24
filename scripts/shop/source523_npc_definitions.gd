@@ -1,5 +1,6 @@
 extends RefCounted
 ## Source facts and explicitly local availability stay separate from paid orders.
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const OriginalInput = preload("res://scripts/shop/source523_npc_input_projection.gd")
 const TownNpcs = preload("res://scripts/npc/source523_town_npcs.gd")
@@ -32,10 +33,12 @@ func configure(source) -> void:
 	load_original(source)
 
 func load_pack(path: String, expected: String, shop_sha256: String) -> bool:
-	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _fail("NPC 원본 팩 해시 확인 실패")
+	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path):return _fail("NPC 원본 팩 해시 확인 실패")
 	var file:=FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()>MAX_INPUT_BYTES:return _fail("NPC 원본 팩 접근·크기 오류")
-	var bytes: PackedByteArray=file.get_buffer(file.get_length());file.close()
+	var bytes := VerifiedBytes.read(file,MAX_INPUT_BYTES)
+	file.close()
+	if VerifiedBytes.sha256(bytes)!=expected.to_lower():return _fail("NPC 원본 팩 해시 확인 실패")
 	return _load_payload(bytes,expected,shop_sha256,{"kind":"twilight.source523.npc-pack-input.v1","npc_model_sha256":expected.to_lower(),"npc_model_bytes":bytes.size(),"shop_model_sha256":shop_sha256,"declared_source_archive_sha256":Catalog.SOURCE_SHA256})
 
 func load_original(source) -> bool:

@@ -2,6 +2,7 @@ extends RefCounted
 ## Presentation selection for an awakening already enabled by its existing caller.
 ## Only the existing twelve complete source chains are admitted; Type48 is not
 ## treated as a general status-effect enum or an awakening activation rule.
+const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd")
 const BASE = preload("res://scripts/lineagem_base508.gd")
 const SOURCE = preload("res://scripts/resources/current523_source_bank.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
@@ -29,11 +30,15 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var expected: String = str(options.get("manifest_sha256",""))
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null or file.get_length() <= 0 or file.get_length() > BANK.MAX_MANIFEST_JSON or not BANK.valid_sha(expected): return fail("current523_awakening_bank_missing_or_oversized")
+	# Keep the existing full streaming verification of warm parsed inputs.
+	if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty():
+		file.close()
+		if FileAccess.get_sha256(path) != expected: return fail("current523_awakening_bank_pin_changed")
+		return {"ok":true,"manifest":_manifest}
+	var input: Dictionary = CHECKED_BYTES.read_json(file, file.get_length(), expected)
 	file.close()
-	# Ordinary production pin admission; this does not launch an asset audit.
-	if FileAccess.get_sha256(path) != expected: return fail("current523_awakening_bank_pin_changed")
-	if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
-	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not input.verified: return fail("current523_awakening_bank_pin_changed")
+	var value: Variant = input.value
 	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return fail("current523_awakening_original_action_domain_required")
 	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return fail("current523_awakening_source_dummy_policy_required")
 	_manifest_path = path

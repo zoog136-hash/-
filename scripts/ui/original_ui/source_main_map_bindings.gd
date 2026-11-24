@@ -73,14 +73,16 @@ func _change_card_pressed() -> Dictionary:
 
 func build_name(map_name: String, include_safe_label: bool=true, include_change_card: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MINIMAP_MEMBER,{}).get("sha256","")!=MINIMAP_SHA256:return _fail("source_main_map_minimap_identity_mismatch")
-	var has_zone: bool=include_safe_label and not _node_at(_pack.scene(MINIMAP_MEMBER).get("nodeTree",{}),ZONE_TEXT).is_empty()
+	var card_declared: bool=include_change_card and _pack.manifest.get("scenes",{}).has(CHANGE_CARD_MEMBER)
+	var active: Dictionary=_pack.scene(MINIMAP_MEMBER).get("nodeTree",{}) if include_safe_label or card_declared else {}
+	var has_zone: bool=include_safe_label and not _node_at(active,ZONE_TEXT).is_empty()
 	var model: Dictionary=_existing_name_model(map_name,has_zone)
 	var scope: Array[int]=[MAP_NAME_TEXT]
 	var bindings: Dictionary={MAP_NAME_TEXT:{"role":"source_text","text":model.name}}
 	if has_zone:
 		scope.append(ZONE_TEXT)
 		bindings[ZONE_TEXT]={"role":"source_text","text":model.zone,"visible":not str(model.zone).is_empty()}
-	var change_card: bool=include_change_card and change_card_available()
+	var change_card: bool=card_declared and not _node_at(active,CHANGE_CARD_PROJECT).is_empty()
 	if change_card:
 		scope.append(SIDE_GROUP)
 		scope.append(CHANGE_CARD_PROJECT)

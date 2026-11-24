@@ -1,0 +1,19 @@
+# Adjacent source reads: dungeon, shop, protection, growth, quests
+
+Scanned 85 runtime GDScript files in `scripts/{dungeons,shop,protection,growth,progression,quests}`, including all 20 files with `FileAccess.get_sha256`, and their parse/load call sites. This is a file-I/O count, not a measured device latency claim.
+
+| Route | Decision |
+|---|---|
+| Explicit shop policy, explicit inventory-ticket pack | Hash and parse one buffer. Retain prior 1 MiB and 2 MiB input limits, matching digests, JSON and policy contracts. |
+| Explicit NPC shop definitions | Hash and parse one buffer using the existing 8 MiB limit. Keep actual model hash, shop model binding and no original fallback for invalid explicit inputs. |
+| Explicit quest-equipment projection | Exact existing 36,196-byte/pinned-SHA shape. Reverify every selection even when the parsed view is already cached; parse the admitted bytes only on a cold view. |
+| Dungeon payload and Orim sidecar | Confirmed `_read_manifest` hashes the 6,050,456-byte payload separately before buffered parse. Optional sidecar is also hashed by manifest validation and by `_load_execution`, before that function's separate JSON read. Untouched: modifying this narrow producer root causes a one-time original-dungeon bake rebuild. Orim valid revision sizes were not verified locally, while installer staging intentionally rechecks installed bytes. |
+| Protection restore | Confirmed pointer open/reopen and pinned 98,166-byte capsule hash/parse split. Untouched: modifying this narrow producer root causes a one-time original-protection bake rebuild; actual capsule absent. Legacy ZIP resumption and write-and-reread activation are separate integrity checkpoints. |
+| Totem explicit file pack | Confirmed body hash→JSON, but no current runtime size ceiling and private full payload not available. A duplicate-pass removal would materialize arbitrarily large unauthenticated inputs or impose a new cap; neither is included. |
+| Guardian media page | Confirmed installed sprite page hash→image decode (11800946 exact bytes documented in repository); referred to resource lane. Guardian pack installer pre/post-write reads are out of scope. |
+| Registered inventory from approved PR238 archive | Confirmed 1,806,317-byte pin hash → gzip read. Outside scan directory; unchanged because neither the genuine pinned binary nor its paired inventory-rule fixture is available to exercise successful registration through the real process. |
+| Remaining cases | Quest save evidence/migration and backups, growth ZIP identity/read through ZIPReader, installed pack post-write verification, hashes of separate reference inputs, original projections already bytes-first, or repeated validation across separate invocations; no changes. |
+
+No narrow producer manifest dependency in this slice changes (including the local original ticket model's independent hash of `current523_ticket_input.gd`). If dungeon/protection edits had remained, two additional narrow producers would be invalidated. Existing *global*-key original shop catalog and two monster-book caches remain subject to the normal project-wide scripts/data digest change on any code update; this patch does not change that policy. Narrow producers that already fall back to global follow that same policy. No rebuild duration or Android benefit measured.
+
+Verification: focused production-loader fixture 19/19; ticket-pool preflight 6/6; bake atomic regression 67/67. The existing full shop runtime test failed early on identical payment fixture assertions on baseline and patched trees, before reaching its policy checks. The focused policy fixture therefore explicitly invokes the production loader. The private pinned quest equipment source was unavailable, so only its fail-closed command-line route is exercised here.

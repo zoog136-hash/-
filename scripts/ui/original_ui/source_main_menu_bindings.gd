@@ -33,9 +33,13 @@ func build(remaining: Dictionary={}) -> Dictionary:
 
 func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_menu_identity_mismatch")
-	var tree: Dictionary=_layout_or_scene(MEMBER)
-	if tree.is_empty():tree=_pack.scene(MEMBER)
+	var layout: Dictionary=_pack.call("layout_source",MEMBER) if _pack.has_method("layout_source") else {}
+	var distinct_layout: bool=layout.get("nodeTree") is Dictionary
+	var active: Dictionary=_pack.scene(MEMBER)
+	var tree: Dictionary=layout if distinct_layout else active
 	if not tree.get("nodeTree") is Dictionary:return _fail("source_main_menu_original_layout_missing")
+	# The active scene, not separate layout geometry, admits optional controls.
+	var active_tree: Dictionary=active.get("nodeTree",{})
 	var roots: Array[int]=CORE_ROOT_OFFSETS.duplicate()
 	if include_quest:
 		roots.append(QUEST)
@@ -43,11 +47,11 @@ func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	# An older partial pack has no weight text in its activated source scope.
 	# It must continue to build the same functioning core buttons unchanged.
 	var weight: Dictionary={"ok":false,"code":"source_main_menu_weight_not_in_pack_scope"}
-	if _active_source_node(WEIGHT_TEXT):
+	if not _source_node(active_tree,WEIGHT_TEXT).is_empty():
 		weight=_weight_display()
 		if weight.get("ok",false):
 			roots.append(WEIGHT_TEXT)
-			if _active_source_node(WEIGHT_BACKGROUND):roots.append(WEIGHT_BACKGROUND)
+			if not _source_node(active_tree,WEIGHT_BACKGROUND).is_empty():roots.append(WEIGHT_BACKGROUND)
 	var matches: Dictionary={}
 	var selected: Array[int]=[]
 	_collect_offsets(tree.nodeTree,roots,matches,selected,false)
@@ -112,11 +116,6 @@ func _weight_display() -> Dictionary:
 	if not text.ends_with("%") or not text.trim_suffix("%").is_valid_int():return _fail("source_main_menu_existing_weight_percent_not_formatted")
 	return {"ok":true,"text":text,"basis":"lineage_inventory_ui._refresh_weight capacity_label rounded-percent prefix","existing_readout":readout.text,"source_offset":WEIGHT_TEXT,"penalty_connected":false,"gauge_fill_connected":false}
 
-func _active_source_node(offset: int) -> bool:
-	# scene(), unlike layout_source(), is the actual permitted partial scope.
-	var active: Dictionary=_pack.scene(MEMBER)
-	return not _source_node(active.get("nodeTree",{}),offset).is_empty()
-
 static func _source_node(node: Dictionary, offset: int) -> Dictionary:
 	if node.get("_offset")==offset:return node
 	for child: Dictionary in node.get("children",[]):
@@ -169,10 +168,3 @@ func _live_hud() -> Object:
 
 static func _fail(code: String) -> Dictionary:
 	return {"ok":false,"code":code}
-
-## A member listed in layout_sources (parent reference geometry) is read from
-## there; every other member is an ordinary pack scene. layout_source() returns
-## {} for scenes, which used to fail every original window as "layout missing".
-func _layout_or_scene(member: String) -> Dictionary:
-	var tree: Dictionary=_pack.call("layout_source",member) if _pack.has_method("layout_source") else {}
-	return tree if tree.get("nodeTree") is Dictionary else _pack.scene(member)

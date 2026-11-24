@@ -42,14 +42,19 @@ func load_file(path: String, expected_sha256: String) -> bool:
 		problem = "원본523 제작 규칙 파일·해시가 필요합니다"
 		return false
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > MAX_BYTES:
+	var size: int = file.get_length() if file != null else -1
+	if size < 0 or size > MAX_BYTES:
 		problem = "원본523 제작 규칙 파일 크기를 확인하세요"
 		return false
+	var bytes: PackedByteArray = file.get_buffer(size)
 	file.close()
-	if FileAccess.get_sha256(path) != expected_sha256:
+	# Verify raw bytes before decoding, from the same read used for the model.
+	if bytes.size() != size or preload("res://scripts/lineagem_pack_install.gd").sha(bytes) != expected_sha256:
 		problem = "원본523 제작 규칙 SHA 불일치"
 		return false
-	return _load_payload(FileAccess.get_file_as_string(path),expected_sha256)
+	var text: String = bytes.get_string_from_utf8()
+	bytes = PackedByteArray()
+	return _load_payload(text,expected_sha256)
 
 func load_original(catalog_bytes: PackedByteArray, binding_catalog_bytes: PackedByteArray = PackedByteArray()) -> bool:
 	if not data.is_empty(): return true # Preserve an already accepted live model.
