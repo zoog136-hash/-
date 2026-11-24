@@ -184,6 +184,15 @@ func scene(member: String) -> Dictionary:
 		return tree if tree is Dictionary else {}
 	return manifest.get("scenes",{}).get(member,{}).duplicate(true)
 
+## Read for an immediately following node-scope projection. get_var returns
+## a fresh Variant graph; the in-memory manifest is borrowed and must never
+## be pruned in place. Never feed the borrowed tree to a scene instance.
+func scope_input(member: String) -> Dictionary:
+	if _records!=null:
+		var record: Variant=_records.read("s:"+member)
+		return {"tree":record if record is Dictionary else {},"owned":true}
+	return {"tree":manifest.get("scenes",{}).get(member,{}),"owned":false}
+
 func layout_source(member: String) -> Dictionary:
 	# Parent reference geometry is not an entry scene or gameplay use. Its
 	# optional siblings are neither loaded nor marked dependency-complete.

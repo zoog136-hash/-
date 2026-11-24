@@ -31,16 +31,21 @@ func check(ok: bool, label: String) -> void:
 func _initialize() -> void:run.call_deferred()
 func compiled(old: bool) -> GDScript:
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_node_scope.gd")
-	var begin: int=source.find("\tvar scoped: Dictionary=tree.duplicate(false)")
+	var begin: int=source.find("\tvar scoped: Dictionary=")
 	var end: int=source.find("\t# Durations, speed",begin)
 	check(begin>=0 and end>begin,"production copy block located")
 	if old:source=source.left(begin)+OLD_BLOCK+source.substr(end)
 	source=source.replace("extends RefCounted\n","extends RefCounted\nstatic var copied_frames: int=0\nstatic var copied_tracks: int=0\n")
-	source=source.replace("\tscoped=scoped.duplicate(true)","""	if scoped.get("action") is Dictionary and scoped.action.get("timeLines") is Array:
+	# Instrument exactly the metadata duplication, including its owned-record guard.
+	source=source.replace("scoped=scoped.duplicate(true)","scoped=_counted_copy(scoped)")
+	source+="""
+static func _counted_copy(scoped: Dictionary) -> Dictionary:
+	if scoped.get("action") is Dictionary and scoped.action.get("timeLines") is Array:
 		for track: Dictionary in scoped.action.timeLines:
 			copied_tracks+=1
 			copied_frames+=track.get("frames",[]).size()
-	scoped=scoped.duplicate(true)""")
+	return scoped.duplicate(true)
+"""
 	var script:=GDScript.new();script.source_code=source
 	check(script.reload()==OK,"instrumented selector compiles")
 	return script

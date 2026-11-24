@@ -380,8 +380,15 @@ func _page_bindings(selected: Dictionary, empty: bool) -> Dictionary:
 	var slot_bindings: Dictionary={}
 	var owners: Array[Dictionary]=[]
 	var rewards: Array=[]
+	var blessing_points: int=0
 	for reward: Variant in selected.get("source_rewards",[]):
-		if reward is Dictionary and int(reward.get("RewardEnhancementTypeID",1))==1 and reward.get("source_item") is Dictionary:rewards.append(reward)
+		if not reward is Dictionary:continue
+		if reward.get("type_name")=="Einasad":blessing_points+=preload("res://scripts/quests/source_quest523.gd").base_blessing_points(reward)
+		if int(reward.get("RewardEnhancementTypeID",1))==1 and reward.get("source_item") is Dictionary:rewards.append(reward)
+	if blessing_points>0:
+		# Points are not an ItemClass: use the existing detail text instead
+		# of rendering a fake clickable item or manufacturing an icon.
+		bindings[STORY_TEXT].text+="\n수령 보상 · 아인하사드의 축복 +%d" % blessing_points
 	for index: int in range(REWARD_SLOTS.size()):
 		var offset: int=REWARD_SLOTS[index]
 		slot_scope.append(offset)
