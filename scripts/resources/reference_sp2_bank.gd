@@ -35,6 +35,7 @@ var _index: RefCounted = null
 var _excluded_source_actors: Dictionary = {} # shared, read only (see _install_source_exclusions)
 static var _shared_exclusions: Dictionary = {} # manifest SHA -> [source registry, frozen copy]
 var _actor_pins: Dictionary = {}
+var _recheck_pins_key: String = ""
 # This bank's working set: member -> shared read-only parse. Each entry holds
 # one lease in ASSETS under _parsed_keys[member]. At most three members are
 # retained, bounded by their allocated packed buffers (not total heap/RSS).
@@ -198,6 +199,10 @@ func _pins_valid() -> bool:
 	for path: String in _actor_pins:
 		if not MANIFEST_INDEX.pinned(path, _actor_pins[path]): return false
 	return true
+
+func _remember_actor_pin(path: String, sha: String) -> void:
+	_actor_pins[path] = sha
+	_recheck_pins_key = ""
 
 func _actor_registry(key: String) -> Variant:
 	return _index.lookup("actors", key) if _index != null else null
@@ -436,7 +441,7 @@ func _read_verified(file_path: String, spec: Dictionary, supplied_sha: bool, rec
 ## within the same second at the same size).
 static func forget_verified_members() -> void:
 	_verified_members.clear()
-	_recheck_ok.clear()
+	_clear_recheck_memos()
 	_background_since.clear()
 	forget_member_meta()
 	PREPARED.clear()
@@ -544,6 +549,7 @@ func prefetch(manifest_path: String, expected_sha: String, source_actor_id: int,
 	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, true)
 	if not opened.ok: return 0
 	_root = manifest_path.get_base_dir()
+	_recheck_pins_key = ""
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
 	_index = opened.index
@@ -566,6 +572,7 @@ func _open_static(manifest_path: String, expected_sha: String) -> Dictionary:
 	_prepared_snapshot = null
 	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
+	_recheck_pins_key = ""
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
 	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
@@ -692,7 +699,8 @@ func render_layer(layer: Dictionary, pixels: bool = true) -> Dictionary:
 const RECHECK_MEMO_MSEC: int = 1000
 static var _recheck_frame: int = -1
 static var _recheck_cleared_msec: int = -RECHECK_MEMO_MSEC
-static var _recheck_ok: Dictionary = {}
+static var _recheck_pins_ok: Dictionary = {}
+static var _recheck_members_ok: Dictionary = {} # path -> exact verified stamp Array
 
 static func _recheck_memo_frame() -> void:
 	var frame: int = Engine.get_process_frames()
@@ -701,34 +709,47 @@ static func _recheck_memo_frame() -> void:
 		var now: int = Time.get_ticks_msec()
 		if now - _recheck_cleared_msec >= RECHECK_MEMO_MSEC:
 			_recheck_cleared_msec = now
-			_recheck_ok.clear()
+			_clear_recheck_memos()
+
+static func _clear_recheck_memos() -> void:
+	_recheck_pins_ok.clear()
+	_recheck_members_ok.clear()
 
 ## Ends the shared file-check memo now (the next frame checks files again).
 static func expire_recheck_memo() -> void:
-	_recheck_ok.clear()
+	_clear_recheck_memos()
 	_recheck_cleared_msec = -RECHECK_MEMO_MSEC
 
 func _pins_valid_this_frame() -> bool:
 	_recheck_memo_frame()
-	var key: String = "pins|%s|%s|%s" % [_manifest_path, _manifest_sha, str(_actor_pins)]
-	if _recheck_ok.has(key): return true
+	# The bank's file identities change only when it is opened or a role is
+	# installed. Rendering no longer serializes every action's pin per advance.
+	if _recheck_pins_key.is_empty():
+		_recheck_pins_key = var_to_str([_manifest_path, _manifest_sha, _actor_pins])
+	if _recheck_pins_ok.has(_recheck_pins_key): return true
 	if not _pins_valid(): return false
-	_recheck_ok[key] = true
+	_recheck_pins_ok[_recheck_pins_key] = true
 	return true
 
 func recheck_layers(stamps: Dictionary) -> Dictionary:
 	if not _pins_valid_this_frame(): return fail("Pinned source bank metadata changed.")
-	for actor: int in stamps.actors:
-		var admitted: Dictionary = source_actor_admission(actor)
-		if not admitted.ok: return admitted
+	# The plan already has the canonical key for each actor. Still consult
+	# the bank's active exclusion registry on every advance; only construct
+	# the full admission result when the actor is actually excluded.
+	var actors: Dictionary = stamps.actors
+	for key: String in actors:
+		if _excluded_source_actors.has(key):
+			return source_actor_admission(actors[key])
 	for entry: Array in stamps.members:
 		var path: String = entry[0]
 		var known: Variant = _verified_members.get(path)
 		if known is Array and known[0] == entry[1] and known[1] == entry[2]:
-			var memo_key: String = "%s|%s|%d" % [path, entry[1], int(known[2])]
-			if _recheck_ok.has(memo_key): continue
+			# Published verified stamps are replaced, never edited in place. A
+			# re-verification replaces this reference, so the old hit cannot
+			# hide a changed identity, byte count or modification time.
+			if is_same(_recheck_members_ok.get(path), known): continue
 			if FileAccess.file_exists(path) and int(FileAccess.get_size(path)) == int(entry[2]) and int(FileAccess.get_modified_time(path)) == int(known[2]):
-				_recheck_ok[memo_key] = true
+				_recheck_members_ok[path] = known
 				continue
 		FRAME_HITCH.count("sp2.recheck_full")
 		var full: Dictionary = render_layer(entry[3], false)
@@ -736,19 +757,21 @@ func recheck_layers(stamps: Dictionary) -> Dictionary:
 	return {"ok":true}
 
 ## The recheck input for `layers` (each already verified by render_layer()):
-## distinct actors and, per distinct member, [file, identity, bytes, layer].
+## distinct actor registry keys -> actor ID, and, per distinct member,
+## [file, identity, bytes, layer].
 func member_stamps(layers: Array) -> Dictionary:
 	var actors: Dictionary = {}
 	var members: Dictionary = {}
 	for layer: Dictionary in layers:
-		actors[int(layer.get("source_sprite_id", -1))] = true
+		var actor_id: int = int(layer.get("source_sprite_id", -1))
+		actors["sprite:" + str(actor_id)] = actor_id
 		var member: String = str(layer.get("member", ""))
 		if members.has(member): continue
 		var spec: Variant = _index.lookup("members", member) if _index != null else null
 		if not spec is Dictionary: return fail("Invalid exact raw member path: " + member)
 		var identity: String = ("sha256:" + str(spec.sha256)) if valid_sha(spec.get("sha256")) else ("crc32:" + str(spec.get("crc32")))
 		members[member] = [_root.path_join(str(spec.path)), identity, int(spec.bytes), layer]
-	return {"ok":true,"actors":PackedInt64Array(actors.keys()),"members":members.values()}
+	return {"ok":true,"actors":actors,"members":members.values()}
 
 func _render_verified_layer(layer: Dictionary, source: Dictionary, pixels: bool) -> Dictionary:
 	var parsed: Dictionary = source.parsed
@@ -1198,6 +1221,7 @@ func load_shared_bank(manifest_path: String, expected_sha: String, source_actor_
 	if snapshot != null and _prepared_valid(snapshot,manifest_path,expected_sha):
 		_release_parsed()
 		_root = manifest_path.get_base_dir()
+		_recheck_pins_key = ""
 		_manifest_path = manifest_path
 		_manifest_sha = expected_sha
 		_manifest = snapshot.manifest
@@ -1518,6 +1542,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	_prepared_snapshot = null
 	_prepared_members.clear()
 	_root = manifest_path.get_base_dir()
+	_recheck_pins_key = ""
 	_manifest_path = manifest_path
 	_manifest_sha = expected_sha
 	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
@@ -1588,7 +1613,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 				record.role_actor_ids[role] = role_actor_id
 				record.role_body_ids[role] = reused.body_id
 				independent_by_role[role] = reused.independent
-				_actor_pins[reused.actor_path] = reused.actor_sha
+				_remember_actor_pin(reused.actor_path, reused.actor_sha)
 				for member: String in reused.members:
 					if not member_metadata.has(member): member_metadata[member] = reused.members[member]
 				if reused.native:
@@ -1669,11 +1694,11 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 			actor_sha = str(entry.sha256)
 			loaded = {"ok":true,"value":handed_source} if handed_source is Dictionary else _json(actor_path, entry.sha256)
 			if not loaded.ok: return loaded
-			_actor_pins[actor_path] = entry.sha256
+			_remember_actor_pin(actor_path, entry.sha256)
 			built = _build_role(action_id, role_actor_id, loaded.value, contract, clothes_prefix_policy, loop_policy[role], member_metadata)
 			if not built.ok: return built
 		else:
-			_actor_pins[actor_path] = actor_sha
+			_remember_actor_pin(actor_path, actor_sha)
 		_apply_role(role, role_actor_id, built, tracks, record, independent_by_role)
 		_member_deferrals.erase(_member_budget_key)
 		_member_budget_active = false
