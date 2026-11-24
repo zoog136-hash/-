@@ -84,11 +84,11 @@ func _run() -> void:
 	_duplicate_guards()
 	_legacy_rows()
 	_ordered_snapshot_alias_boundary()
-	_missing_icon_keeps_name()
+	_missing_icon_keeps_name_out_of_grid()
 	print("ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"samples":samples}))
 	quit(0 if failures.is_empty() else 1)
 
-func _missing_icon_keeps_name() -> void:
+func _missing_icon_keeps_name_out_of_grid() -> void:
 	var f: Dictionary=_fixture(1)
 	var bag: FakeBag=f.bag
 	var slots: RefCounted=f.slots
@@ -99,15 +99,16 @@ func _missing_icon_keeps_name() -> void:
 	var built: Dictionary=slots.build(56036,{offset:reference})
 	var title: String="용기의 물약 (각인)"
 	check(built.get("ok",false) and built.missing_icon_titles.get(offset)==title and not built.owner_results.has(offset),"source label fallback uses exact displayed name and does not stage a substitute texture")
-	var view = VIEW.new()
 	var control := Control.new()
 	var authored:=FakeSlot.new()
-	view._keep_missing_icon_title(authored,control,title)
-	check(slots.refresh_action(authored,reference).ok and authored.shown[SLOTS.ACTION] and authored.texts[SLOTS.ACTION]==title and control.tooltip_text==title and control.get_child_count()==0,"authored slot shows fallback name without intercepting taps")
+	VIEW._show_missing_icon_tooltip(control,title)
+	var bound:Dictionary=built.bindings[56036].bindings[offset].bindings
+	check(not bound[SLOTS.ACTION].visible and bound[SLOTS.ACTION].text!=title,"initial authored slot never displays a long missing icon title")
+	check(slots.refresh_action(authored,reference).ok and not authored.shown[SLOTS.ACTION] and control.tooltip_text==title and control.get_child_count()==0,"the exact title remains in the tooltip without a slot overlay or a new input surface")
 	bag.armed_action="사용"
 	check(slots.refresh_action(authored,reference).ok and authored.texts[SLOTS.ACTION]=="사용","actual action supersedes name while selected")
 	bag.armed_action=""
-	check(slots.refresh_action(authored,reference).ok and authored.texts[SLOTS.ACTION]==title,"unarmed slot shows name again")
+	check(slots.refresh_action(authored,reference).ok and not authored.shown[SLOTS.ACTION],"disarming hides the action completely rather than showing the title")
 	authored.free();control.free();f.hud.free()
 
 func _staged_rows(count: int) -> void:

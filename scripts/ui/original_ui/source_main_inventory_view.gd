@@ -470,7 +470,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
 		var raw: Dictionary=(model.owned_by_reference[reference] as Dictionary).duplicate(true)
-		_keep_missing_icon_title(native_slot,control,slot_contract.missing_icon_titles.get(offset,""))
+		_show_missing_icon_tooltip(control,slot_contract.missing_icon_titles.get(offset,""))
 		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":model.get("selected_reference")==reference}
 	for reference: String in hits:
 		var hit_control: Variant=hits[reference].get("control")
@@ -757,7 +757,7 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 		if not row_raw is Dictionary:
 			row_scene.free()
 			return {"ok":false,"code":"source_inventory_view_owner_reference_missing","reference":row_reference}
-		_keep_missing_icon_title(row_native,row_control,row_contract.missing_icon_titles.get(offset,""))
+		_show_missing_icon_tooltip(row_control,row_contract.missing_icon_titles.get(offset,""))
 		hits[row_reference]={"from":"inventory","id":row_reference,"reference":row_reference,"entry":{"kind":"item","id":row_raw.get("name")},"owned_row":(row_raw as Dictionary).duplicate(true),"texture":row_accepted.get("texture"),"native_icon_scene":row_accepted.get("player"),"control":row_control,"button":row_control,"native_slot_scene":row_native,"slot_project_offset":offset,"slot_set_project_offset":_line_slot_set,"row":line,"source_asset_evidence":row_accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":bag!=null and bag.get("selected_item")==row_reference}
 	row_scene.position=authored_row.position+Vector2(0.0,ROW_PITCH*float(line))
 	authored_row.get_parent().add_child(row_scene)
@@ -774,10 +774,8 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 	stats.line_builds+=1
 	return {"ok":true,"line":line}
 
-func _keep_missing_icon_title(slot: Node2D, control: Control, title: String) -> void:
-	if title.is_empty():return
-	slot.set_meta("missing_icon_title",title)
-	control.tooltip_text=title
+static func _show_missing_icon_tooltip(control: Control, title: String) -> void:
+	if not title.is_empty():control.tooltip_text=title
 
 ## Everything the built slots take from the owner besides amounts, markers
 ## and selection: layout, the displayed order of references, each row
