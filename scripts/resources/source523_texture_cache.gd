@@ -45,7 +45,8 @@ func lookup(key: String) -> Texture2D:
 ## Caller supplies the decoded Image.get_data_size(), not compressed file bytes.
 func remember(key: String, texture: Texture2D, decoded_bytes: int) -> void:
 	prune()
-	_forget(key)
+	if _weak.has(key):
+		_forget(key)
 	if texture == null or decoded_bytes <= 0 or _max_entries == 0:
 		return
 	_weak[key] = weakref(texture)
@@ -102,6 +103,10 @@ func clear(forget_weak: bool = false) -> void:
 		prune()
 
 func prune() -> void:
+	# A resident texture has a strong reference here. If every tracked
+	# texture is resident, none can have expired since the last insertion.
+	if _weak.size() == _resident.size():
+		return
 	for key: String in _tracked_lru.duplicate():
 		if not _resident.has(key) and _weak[key].get_ref() == null:
 			_forget(key)
