@@ -23,7 +23,9 @@ func _root_member() -> String:
 
 func configure(active: RefCounted, host: Node) -> Dictionary:
 	var selected: RefCounted = ResultPack.resolve(active)
-	if selected == null: return _fail("source_awakening_result_unavailable")
+	if selected == null:
+		if active != null and not active.manifest.get("scenes", {}).has(ResultPack.MEMBER): return super.configure(active, host)
+		return _fail("source_awakening_result_unavailable")
 	_source_cards = Cards.new()
 	_source_cards._pack = active
 	return super.configure(selected, host)

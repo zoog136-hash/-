@@ -20,6 +20,8 @@ var identity: String=""
 var submitting: bool=false
 
 func configure(pack: RefCounted, host: Node) -> Dictionary:
+	for member: String in required_members():
+		if not pack.manifest.get("scenes",{}).has(member): return super.configure(pack, host)
 	var files: Dictionary = pack.manifest.get("files", {})
 	if files.get(ROOT, {}).get("sha256") != "1a790cb7a91c8eac69562dd904bc82c9bb52fe4ab7a8ab2c2202ea16b01d2836" or files.get(SKILL, {}).get("sha256") != "aa50bea00b320c43f01112cca2c49aee65293a7fc40852a78b7c23b6c5f99fdd":
 		return _fail("source_skill_awakening_identity_required")
