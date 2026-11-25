@@ -7,6 +7,8 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const POWDER_ITEM: int = 117544
 const POWDER_KEY: String = "상급 축복의 가루 · 원본#117544"
+const LEGACY_ITEMS = preload("res://scripts/loot/legacy_item_migration523.gd")
+const POWDER_SHOP_KEY: String = LEGACY_ITEMS.POWDER_SHOP_KEY
 var personal = Personal.new()
 const POLICY = "res://data/titles/local_policy523.json"
 var source = Source.new()
@@ -247,25 +249,57 @@ func _powder_stock() -> Dictionary:
 	for row: Dictionary in usable:usable_count+=int(row.owned.remaining)
 	return {"legacy":legacy,"total":total,"usable":usable_count,"stacks":usable}
 
-## Only this historically registered title supplier had a plain exact key
-## alongside receipt-based output. Promote the existing unrepresented units,
-## never issue more units or infer a different ID from the displayed name.
-## Caller is outside a transaction: the normal stack fold and deferred
-## atomic save then keep all original physical receipts and history.
+## The old shop credited an aggregate under its registered Inven source ID.
+## An unrecognised name, physical owner, lock or non-default level stays put.
+func _shop_powder_amount() -> int:
+	if not world.inventory.has(POWDER_SHOP_KEY) or world.source_shop.legacy_powder_key != POWDER_SHOP_KEY: return 0
+	var amount: Variant = world.inventory[POWDER_SHOP_KEY]
+	if not integer(amount,1,9007199254740991) or world.enhancement_levels.has(POWDER_SHOP_KEY): return 0
+	if world.item_instances.has(POWDER_SHOP_KEY) or world._item_locked(POWDER_SHOP_KEY): return 0
+	for ref: Variant in world.ui_preferences.get("item_locks",{}):
+		if str(ref).begins_with(POWDER_SHOP_KEY+"@@@") and world.ui_preferences.item_locks[ref]: return 0
+	for entry: Variant in world.item_instances.values():
+		if entry is Dictionary and entry.get("name") == POWDER_SHOP_KEY: return 0
+	return int(amount)
+
+## Convert only already-owned units with independently established supplier
+## identities. Keep separate provenance for each old representation. The
+## normal fold preserves existing receipts, lock groups and quantities.
 func reconcile_powder_stock() -> bool:
-	if not world.inventory.has(POWDER_KEY) or STACK.busy or not source.problem.is_empty():return false
+	if not world.inventory.has(POWDER_KEY) and not world.inventory.has(POWDER_SHOP_KEY):return false
+	if STACK.busy or not source.problem.is_empty() or world._item_locked(POWDER_KEY):return false
 	if CommonSource.identity().get("source_sha256")!=Source.SHA:return false
 	var stock: Dictionary=_powder_stock()
-	if int(stock.get("legacy",0))<=0:return false
+	if stock.is_empty() and world.inventory.has(POWDER_KEY):return false
+	var title_amount: int=int(stock.get("legacy",0))
+	var shop_amount: int=_shop_powder_amount()
+	if title_amount==0 and shop_amount==0:return false
 	var authored: Dictionary=CommonSource.row("ItemClass",POWDER_ITEM)
 	if authored.is_empty() or authored.get("TestItem")!=false or source.powder_record.get("source_item_row")!=authored:return false
-	if not integer(stock.total,1,int(authored.get("MaxStackAmount",0))):return false
+	var total: int=int(stock.get("total",0))+shop_amount
+	if not integer(total,1,int(authored.get("MaxStackAmount",0))):return false
 	var canonical: Dictionary=DROPS.definition_id(str(POWDER_ITEM)).get("native_record",{})
 	if canonical.get("name")!=POWDER_KEY or canonical.get("sourceId")!="m523:item:117544" or canonical.get("source_bless_raw")!=1:return false
-	var staged: Dictionary=STACK.stage_grant(canonical,int(stock.legacy),world.item_instances,{
-		"kind":"TWILIGHT_title523_existing_exact_key_reconciliation","inventory_key":POWDER_KEY,"item_class_id":POWDER_ITEM},true)
-	if not staged.get("ok",false) or world._save_game(true,{"item_instances":staged.item_instances},{},true)!=OK:return false
-	world.item_instances=staged.item_instances
+	var overrides: Dictionary={"item_instances":world.item_instances}
+	for key: String in [POWDER_KEY,POWDER_SHOP_KEY]:
+		var amount: int=title_amount if key==POWDER_KEY else shop_amount
+		if amount==0:continue
+		var origin: String="TWILIGHT_title523_existing_exact_key_reconciliation" if key==POWDER_KEY else "TWILIGHT_existing_shop_powder_117544"
+		var staged: Dictionary=STACK.stage_grant(canonical,amount,overrides.item_instances,{"kind":origin,"inventory_key":key,"item_class_id":POWDER_ITEM},true)
+		if not staged.get("ok",false):return false
+		overrides.item_instances=staged.item_instances
+	if shop_amount>0:
+		overrides.inventory=world.inventory.duplicate()
+		overrides.inventory.erase(POWDER_SHOP_KEY)
+		overrides.inventory[POWDER_KEY]=total
+	if world._save_game(true,overrides,{},true)!=OK:return false
+	world.item_instances=overrides.item_instances
+	if shop_amount>0:
+		world.inventory=overrides.inventory
+		var renamed: Dictionary={POWDER_SHOP_KEY:POWDER_KEY}
+		world.quickslots=LEGACY_ITEMS._rename_refs(world.quickslots,renamed)
+		if world.ui_preferences.has("quickslot_pages"):
+			world.ui_preferences.quickslot_pages=LEGACY_ITEMS._rename_refs(world.ui_preferences.quickslot_pages,renamed)
 	world._request_deferred_save()
 	return true
 

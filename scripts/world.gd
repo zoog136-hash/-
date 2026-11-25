@@ -4090,7 +4090,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 			inventory[inventory_key]=int(inventory.get(inventory_key,0))+int(record.quantity)
 	var item_name: String=str(record.item_name)
 	var quantity: int=int(record.quantity)
-	if item_name==titles.POWDER_KEY:titles.reconcile_powder_stock()
+	if item_name==titles.POWDER_KEY or item_name==titles.POWDER_SHOP_KEY:titles.reconcile_powder_stock()
 	_source_dungeon_pickup(record)
 	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
 	content523.record_pickup(UNCONFIRMED523.native_id(record.get("item_record",{})),quantity)
@@ -7169,6 +7169,9 @@ func _on_auto_toggled(enabled: bool) -> void:
 
 func _open_inventory() -> void:
 	var started_usec: int = Time.get_ticks_usec()
+	# A session can still receive an old catalog grant, or the player can
+	# unlock one that was protected during load.
+	if inventory.has(titles.POWDER_SHOP_KEY) and titles.reconcile_powder_stock(): _update_hud()
 	hud.refresh_inventory(inventory)
 	hud.toggle_inventory()
 	_perf_log("가방 열기", started_usec)
