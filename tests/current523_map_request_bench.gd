@@ -1,6 +1,8 @@
 extends SceneTree
 ## Optional Linux/OpenGL A/B. Pass --baseline-renderer and --baseline-field
 ## pointing to the two scripts extracted from the base commit with git show.
+## --fixture and --fixture-sha use the existing 35-tile PNG runtime_fixture
+## with a fresh texture cache per arrival instead of resident test textures.
 const PLAY = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const FIELD = preload("res://scripts/maps/current523_source_field.gd")
 const FIXTURE = preload("res://tests/current523_aden_play_renderer_test.gd")
@@ -21,6 +23,8 @@ class ResidentTiles extends RefCounted:
 
 var source := Catalog.new()
 var tiles := ResidentTiles.new()
+var fixture: String
+var fixture_sha: String
 
 func _initialize() -> void: run.call_deferred()
 
@@ -28,9 +32,13 @@ func make_input() -> void:
 	source.loaded = true
 	source.payload = FIXTURE.FakeChunkSources.new().read_member_job(MEMBER)
 	var words: PackedByteArray = source.payload.sections.floor
+	# Only subimages 0 and 1 contain painted pixels in the authored PNG fixture.
+	var disk_fixture: bool = not fixture.is_empty()
 	for i: int in 8192:
-		words.encode_u32(i * 4, 4294967295 if i % 23 == 0 else ((1 + i % 8) << 8) | (i & 255))
+		var subimage: int = ((i >> 3) & 1) if disk_fixture else (i & 255)
+		words.encode_u32(i * 4, 4294967295 if i % 23 == 0 else ((1 + i % 8) << 8) | subimage)
 	source.payload.sections.floor = words
+	if not fixture.is_empty(): return
 	for id: int in range(1,9):
 		var image := Image.create_empty(384,384,false,Image.FORMAT_RGBA8)
 		for frame: int in 256:
@@ -87,7 +95,18 @@ func sample(play: Script, field_script: Script) -> Dictionary:
 	renderer.player = Node2D.new()
 	renderer.add_child(renderer.player)
 	renderer._raw_sources = source
-	renderer._tile_pack = tiles
+	if fixture.is_empty():
+		renderer._tile_pack = tiles
+	else:
+		var pack := TILES.new()
+		if not pack.load_pack(fixture,fixture_sha):
+			printerr(pack.problem)
+			renderer.free()
+			return {}
+		pack.compress_for_gpu = false
+		pack.hold_published = true
+		pack.background_only = true
+		renderer._tile_pack = pack
 	renderer._member_origins[MEMBER] = PLAY.GRID_ORIGIN
 	renderer._overlap[PLAY.GRID_ORIGIN] = MEMBER
 	renderer._chunk_rects[MEMBER] = Rect2(-96,-96,3300,1800)
@@ -145,6 +164,12 @@ func run() -> void:
 	if old_play == null or old_field == null:
 		quit(1)
 		return
+	fixture = args.get("--fixture","")
+	fixture_sha = args.get("--fixture-sha","")
+	if fixture.is_empty() != fixture_sha.is_empty():
+		printerr("The PNG fixture and its manifest pin must be supplied together.")
+		quit(1)
+		return
 	make_input()
 	var zoom: Vector2 = root.get_visible_rect().size / VIEW.size
 	root.canvas_transform = Transform2D(Vector2(zoom.x,0),Vector2(0,zoom.y),-VIEW.position * zoom)
@@ -167,6 +192,6 @@ func run() -> void:
 					printerr("Map request A/B mismatch: ",key)
 					quit(1)
 					return
-		print("MAP_REQUEST_PAIRS ",JSON.stringify({"members":size,"samples":samples}))
+		print("MAP_REQUEST_PAIRS ",JSON.stringify({"members":size,"cold_textures":not fixture.is_empty(),"samples":samples}))
 	print("MAP_REQUEST_BENCH_OK")
 	quit()
