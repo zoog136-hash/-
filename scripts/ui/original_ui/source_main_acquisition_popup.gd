@@ -19,6 +19,7 @@ const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const Acquisition=preload("res://scripts/acquisition523/item_acquisition523.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const CraftUI=preload("res://scripts/ui/renewal_crafting.gd")
 const ROOT="UI/Production/Production_Popup_Source.csb"
 const ROW_DROP="UI/Production/Production_List_Source.csb"
@@ -204,10 +205,7 @@ func _slot_picture(root: Node2D, out: Dictionary, suffix: String, item_class_id:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## Existing destinations only: the crafting window on the recipe, the shop,
 ## the dungeon list.

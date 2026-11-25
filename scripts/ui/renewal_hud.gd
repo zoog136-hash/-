@@ -1322,6 +1322,7 @@ func open_tj_coupons() -> void:
 
 func open_tj_coupons_native(focused_item: String = "", physical_id: String = "") -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	if not physical_id.is_empty() and _open_original_feature("tj_coupons",["","",focused_item,physical_id]):return
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent(),focused_item,physical_id)
@@ -3578,6 +3579,7 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 
 func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	_open_window("enhance", "장비 축복 부여", scroll_name + " · 장비 개체별 축복")
+	if _open_original_enchant(scroll_name,candidates,true):return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
@@ -3587,9 +3589,9 @@ var enhancement_forge: Control
 
 ## The original 523 EnchantScene (source_main_enchant_window) over the same
 ## candidates; false -> the caller opens the TWILIGHT forge (reported).
-func _open_original_enchant(scroll_name: String, candidates: Array) -> bool:
+func _open_original_enchant(scroll_name: String, candidates: Array, blessing: bool=false) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_enchant_window"): return false
-	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates)
+	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates,blessing)
 	original_main_ui_status["enchant_window"] = native
 	if native.get("handled",false):
 		if pointer_transfer != null: pointer_transfer.cancel()

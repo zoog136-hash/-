@@ -4878,12 +4878,12 @@ func _publish_normal_card_pack_hud() -> void:
 	hud.refresh_inventory(inventory)
 	_update_hud()
 
-func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
-	if consumable_service == null: return
-	if int(inventory.get(scroll_name, 0)) < 1:
+func _on_blessing_target_requested(scroll_reference: String, target_reference: String) -> void:
+	if consumable_service == null or scroll_reference.is_empty(): return
+	if int(inventory.get(_parse_enhancement_target(scroll_reference).name, 0)) < 1:
 		hud.show_message("축복 주문서가 없습니다")
 		return
-	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
+	consumable_service.call("apply_bless_scroll", scroll_reference, target_reference)
 	_update_hud()
 
 func _item_requests_map_loading(reference: String) -> bool:

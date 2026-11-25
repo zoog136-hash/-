@@ -1,5 +1,5 @@
 extends SceneTree
-## Real Main, five retained 523 selectors, all 14 exact collection outcomes.
+## Real Main, original 523 selectors and dated aliases, every exact collection outcome.
 ## Set TWILIGHT_EXACT_CHOICE_DEFINITIONS and optional UI44/images selectors.
 const SRC=preload("res://scripts/resources/current523_definition_rows.gd")
 const QA=preload("res://tests/qa_class_selection.gd")
@@ -21,12 +21,12 @@ func ck(value:bool,title:String)->bool:
 	return value
 
 func run()->void:
-	ck(PROJ.EXACT_SELECTION_CARDS.size()==5,"scoped to five exact boxes")
+	ck(PROJ.EXACT_CARD_BOX_ROOTS.size()==36 and PROJ.EXACT_CARD_GROUPS.size()==10,"36 exact boxes retain ten complete source choice groups")
 	ck(PROJ.exact_selection_card(164643,{},{},{},{})=={},"does not admit the historical/complex box")
 	var source:String=OS.get_environment("TWILIGHT_EXACT_CHOICE_DEFINITIONS")
 	if not source.is_empty() and ck(not FileAccess.file_exists("user://twilight_v20_save.json"),"isolated profile"):
 		await live(source)
-		ck(grants==14,"all fourteen selection rows were actually consumed once")
+		ck(grants==129,"all 129 original box/choice rows were consumed once")
 	print("EXACT_CHOICE_RESULT ",JSON.stringify({"checks":checks,"grants":grants,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
 
@@ -53,6 +53,30 @@ func native_btn(window:RefCounted, suffix:String)->Control:
 func row_btn(window:RefCounted,index:int)->Control:
 	return window._row_buttons[index]._input_area if index<window._row_buttons.size() and is_instance_valid(window._row_buttons[index]) else null
 
+func reveal_choice(window:RefCounted,index:int)->bool:
+	var target:Control=row_btn(window,index)
+	if window._row_buttons[index]._hit_viewport(point(target)):return true
+	# Use a finger on the last visible row, just as on the original phone list.
+	var start:Vector2=Vector2.INF
+	for button:Variant in window._row_buttons:
+		var center:Vector2=point(button._input_area)
+		if button._hit_viewport(center) and (not start.is_finite() or center.y>start.y):start=center
+	if not start.is_finite():return false
+	var press:=InputEventScreenTouch.new()
+	press.index=14;press.pressed=true;press.position=start
+	root.push_input(press,true)
+	var step:=Vector2(0.0,-maxf(1.0,absf(target.get_global_transform_with_canvas().get_scale().y)*target.size.y/4.0))
+	var at:Vector2=start
+	for i:int in range(8):
+		at+=step
+		var drag:=InputEventScreenDrag.new()
+		drag.index=14;drag.position=at;drag.relative=step;drag.screen_relative=step
+		root.push_input(drag,true)
+	var release:=InputEventScreenTouch.new()
+	release.index=14;release.position=at
+	root.push_input(release,true)
+	return window.chosen<0 and window._row_buttons[index]._hit_viewport(point(target))
+
 func save_denied(_path:String,data:Dictionary)->Error:
 	denied=data
 	return ERR_CANT_CREATE
@@ -73,10 +97,10 @@ func live(source:String)->void:
 	w.card_draw_fusion.configure(w.catalog_db)
 	if IMG.selected():ck(IMG.selection_status().ready,"original image reader opened: "+str(IMG.selection_status()))
 	var h:Node=w.hud
-	for id:int in PROJ.EXACT_SELECTION_CARDS:
+	for id:int in PROJ.EXACT_CARD_BOX_ROOTS:
 		var record:Dictionary=w.source_item_definition(id).get("native_record",{})
 		var spec:Dictionary=STACK.profile(record).get("spec",{})
-		var expected:Array=PROJ.EXACT_SELECTION_CARDS[id][2]
+		var expected:Array=PROJ.exact_choice_rows(id)
 		if not ck(spec.get("kind")=="source_selectable_reward" and spec.get("rewards",[]).size()==expected.size(),"every actual original row is projected for #"+str(id)+" "+str(spec.get("blocked_reasons",[]))):continue
 		for r:Dictionary in spec.rewards:
 			ck(not STACK.card_binding(w,str(r.exact_choice_card.card_kind),int(r.exact_choice_card.card_id)).is_empty(),"real registered source collection card")
@@ -140,6 +164,7 @@ func live(source:String)->void:
 			if native:
 				var row:Control=row_btn(model,index)
 				if not ck(is_instance_valid(row),"original Common_Slot has a button role"):break
+				if not ck(reveal_choice(model,index),"visible or reachable by a genuine row swipe without a selection #"+str(id)+"/"+str(index)):break
 				tap(point(row),true)
 				if not ck(model.chosen==index,"actual touch selected the exact original row "+str(model.chosen)+" vs "+str(index)+" at "+str(point(row))):break
 			else:

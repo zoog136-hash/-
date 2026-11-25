@@ -19,6 +19,7 @@ extends RefCounted
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
 const TownNpcs=preload("res://scripts/npc/source523_town_npcs.gd")
 const ShopCatalog=preload("res://scripts/shop/source523_shop_catalog.gd")
@@ -326,19 +327,13 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item(record,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 func _class_picture(root: Node2D, out: Dictionary, suffix: String, class_id: int) -> bool:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false) or class_id<=0:return false
 	var info: Dictionary=SourceImages.describe_item_class(class_id)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 

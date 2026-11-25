@@ -725,58 +725,50 @@ func _use_half_elixir(item_name: String, spec: Dictionary) -> void:
 	_consume(item_name)
 	_message("%s 영구 대미지 +1 (%d/%d)" % [item_name, half_elixirs_used, ELIXIR_LIMIT])
 
-func _use_bless_scroll(scroll_name: String) -> void:
+func _use_bless_scroll(scroll_name: String, selected_uid: String = "") -> void:
 	world.call("_sync_item_instances")
+	var owned: Dictionary = NATIVE_STACK.bless_scroll_owned(world,scroll_name,selected_uid)
+	if owned.has("error"):
+		_message(str(owned.error))
+		return
+	var scroll_reference: String = scroll_name
+	if owned.has("uid"):scroll_reference += "@@@" + str(owned.uid)
 	var instances: Dictionary = world.get("item_instances") as Dictionary
 	var inv: Dictionary = world.get("inventory") as Dictionary
-	var candidates: Array[String] = []
-	for raw_id: Variant in instances.keys():
-		var id: String = str(raw_id)
-		var physical: Dictionary = instances[id] as Dictionary
-		var item_name: String = str(physical.get("name", ""))
-		if int(inv.get(item_name, 0)) <= 0:
-			continue
-		var record: Dictionary = world.call("_find_catalog_item_record", item_name)
-		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
-			record = physical["record"] as Dictionary
+	var views: Array = []
+	var guaranteed: bool = bool(owned.get("spec", {}).get("guaranteed", false))
+	for id: String in instances:
+		var physical: Dictionary = instances[id]
+		var item_name: String = str(physical.get("name",""))
+		if int(inv.get(item_name,0))<=0 or world._item_locked(item_name,id):continue
+		var record: Dictionary = physical.get("record",{})
+		if record.is_empty():record=world._find_catalog_item_record(item_name)
 		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
-		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		if kind not in ["weapon", "armor", "accessory"]:
-			continue
-		if BLESSING.bonus_for(str(record.get("grade", "")), kind, record).is_empty() or BLESSING.is_blessed(physical, record):
-			continue
-		candidates.append(item_name + "@@@" + id)
-	candidates.sort()
-	if candidates.is_empty():
+		var kind: String = world._enhancement_kind_for_record(record)
+		if kind not in ["weapon","armor","accessory"]:continue
+		var grade: String = str(record.get("grade",""))
+		if BLESSING.bonus_for(grade,kind,record).is_empty() or BLESSING.is_blessed(physical,record):continue
+		var chance: float=BLESSING.success_chance(grade,record,guaranteed)
+		if chance<=0.0:continue
+		views.append({"name":item_name, "target_id":item_name+"@@@"+id, "instance_id":id, "scroll_reference":scroll_reference,
+			"level":int(physical.get("level",0)), "success_chance":chance, "success_basis":BLESSING.success_basis(grade,record,guaranteed),
+			"bonus_text":BLESSING.effect_text(grade,kind,record), "equipped":world._is_instance_equipped(id)})
+	if views.is_empty():
 		_message("축복 부여가 가능한 미축복 장비가 없습니다")
 		return
-	var guaranteed: bool = bool(NATIVE_STACK.bless_scroll_owned(world, scroll_name).get("spec", {}).get("guaranteed", false))
-	# Use the game's native touch-friendly equipment chooser, not a floating
-	# ConfirmationDialog which can be unreachable in Android editor/play mode.
-	var views: Array = []
-	for reference: String in candidates:
-		var parts: PackedStringArray = reference.split("@@@", false, 1)
-		if parts.size() != 2: continue
-		var physical: Dictionary = instances.get(parts[1], {}) as Dictionary
-		var record: Dictionary = world.call("_find_catalog_item_record", parts[0])
-		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
-			record = physical["record"] as Dictionary
-		var grade: String = str(record.get("grade", "일반"))
-		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
-		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
-			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade, record, guaranteed),
-			"success_basis": BLESSING.success_basis(grade, record, guaranteed),
-			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
+	views.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:return str(a.target_id)<str(b.target_id))
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
 # The physical instance ID is mandatory: two copies of the same weapon can
 # have different blessings, enchants, pinned catalog variants and equip state.
-func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+func apply_bless_scroll(scroll_reference: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+	if scroll_reference.is_empty() or target_reference.is_empty():return false
 	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return false
 	# An original 523 bless scroll is a physical stack debited through its
 	# grant receipt; other scrolls keep the existing rule and name count.
-	var native: Dictionary = NATIVE_STACK.bless_scroll_owned(world, scroll_name)
+	var scroll: Dictionary = world._parse_enhancement_target(scroll_reference)
+	var scroll_name: String = scroll.name
+	var native: Dictionary = NATIVE_STACK.bless_scroll_owned(world, scroll_name, str(scroll.get("id","")))
 	if native.has("error"):
 		_message(str(native.error) + " · 주문서 보존")
 		return false
@@ -811,6 +803,9 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	if effect.is_empty():
 		_message("이 장비에는 확인된 축복 옵션이 없습니다")
 		return false
+	if BLESSING.success_chance(grade, record, guaranteed)<=0.0:
+		_message("이 장비에는 확인된 축복 성공률이 없습니다")
+		return false
 	if BLESSING.is_blessed(physical, record):
 		_message("이미 축복받은 장비입니다")
 		return false
@@ -823,6 +818,10 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
 	var success: bool = BLESSING.roll_succeeds(grade, roll, record, guaranteed)
 	if success:
+		# Preparation may return the catalog row or a record shared by two copies.
+		# Blessing changes only the selected instance's top-level state.
+		physical=physical.duplicate()
+		record=record.duplicate()
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
 		physical["source_bless_code"]=2

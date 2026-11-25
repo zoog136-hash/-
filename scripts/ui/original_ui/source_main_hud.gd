@@ -280,8 +280,11 @@ func _input(event: InputEvent) -> void:
 	if feature_window_is_open("reward_select"):
 		var reward_buttons: Array=[]
 		var chooser: RefCounted=feature_window("reward_select")
-		_collect_native_buttons(chooser.input_scene(),reward_buttons)
-		chooser.append_row_buttons(reward_buttons)
+		if item_tooltip_is_open() and _item_tooltip.blocks_point(event.position):
+			_collect_native_buttons(_item_tooltip.get("_scene"),reward_buttons)
+		else:
+			_collect_native_buttons(chooser.input_scene(),reward_buttons)
+			chooser.append_row_buttons(reward_buttons)
 		_native_buttons.route(event,event.position,reward_buttons)
 		get_viewport().set_input_as_handled()
 		return
@@ -1574,11 +1577,11 @@ func _ensure_enchant_window() -> bool:
 			_enchant_window=window
 	return _enchant_window!=null and is_instance_valid(_coordinates)
 
-func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+func try_open_enchant_window(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
 	if not _ensure_enchant_window():return _window_problem("enchant_window")
 	_cancel_native_buttons()
-	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
-	return _enchant_window.open(_coordinates,scroll,candidates)
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates,blessing)
+	return _enchant_window.open(_coordinates,scroll,candidates,blessing)
 
 func try_open_smelt_window(offer:Dictionary)->Dictionary:
 	if not _ensure_enchant_window():return _window_problem("enchant_window")
@@ -1605,7 +1608,7 @@ var _dissolve_popup: RefCounted
 func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
 	if _dissolve_popup==null and _pack!=null:
 		var popup=DissolvePopup.new()
-		_window_problems["dissolve_popup"]=popup.configure(_pack)
+		_window_problems["dissolve_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
 	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
 	for connection: Dictionary in _dissolve_popup.finished.get_connections():_dissolve_popup.finished.disconnect(connection.callable)
@@ -1630,7 +1633,7 @@ func try_open_item_tooltip(reference: String, title: String, item_class_id: int,
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
-	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions)
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions,_hud.get_ref())
 
 func item_tooltip_is_open() -> bool:
 	return _item_tooltip!=null and _item_tooltip.is_open()
@@ -1649,7 +1652,7 @@ var _drop_popup: RefCounted
 func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
 	if _drop_popup==null and _pack!=null:
 		var popup=DropPopup.new()
-		_window_problems["drop_popup"]=popup.configure(_pack)
+		_window_problems["drop_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
 	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
 	_cancel_native_buttons()

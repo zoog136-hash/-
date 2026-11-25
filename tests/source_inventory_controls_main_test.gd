@@ -37,8 +37,10 @@ func run() -> void:
 		if source.is_empty():await fallback()
 		else:await exact(source)
 		w.queue_free();await frames()
-	print("SOURCE_INVENTORY_CONTROLS_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"original_checked":not source.is_empty()}))
+	print(result_marker()," ",JSON.stringify({"checks":checks,"failures":failures,"original_checked":not source.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
+
+func result_marker() -> String:return "SOURCE_INVENTORY_CONTROLS_RESULT"
 
 func frames() -> void:
 	await process_frame

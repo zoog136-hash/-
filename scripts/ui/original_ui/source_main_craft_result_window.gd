@@ -68,7 +68,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var spec: Dictionary={"Panel_Result_List/Label_Item":{"role":"source_text","text":"%s ×%s" % [str(result.get("name","")),_number(int(result.quantity))]},"Fx_Point":{"exclude":true}}
 		spec["Production_Slot/Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 		for name: String in SLOT_EXCLUDED:spec["Production_Slot/"+name]={"exclude":true}
-		spec["Production_Slot/Btn"]={"activate":Callable(self,"_ignore")}
+		spec["Production_Slot/Btn"]={"activate":_open_item_info.bind(int(result.get("item_class_id",0))),"displaystate":int(result.get("item_class_id",0))>0}
 		rows.append({"member":ROW,"spec":spec})
 	var placed: Dictionary=_fill_list(root,out,P+"Nd_Floating_Result/ListView_Item",rows)
 	if not placed.get("ok",false):return placed
@@ -81,7 +81,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var id: int=int(result.get("item_class_id",0))
 		if icon.get("ok",false) and id>0:
 			var info: Dictionary=SourceImages.describe_item_class(id,str(result.get("name","")))
-			if _show_picture(icon.player,icon.offset,{"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}):pictures+=1
+			if _show_item_icon(icon.player, icon.offset, info):pictures+=1
 	return {"ok":true,"rows":rows.size(),"counts":counts(result),"pictures":pictures}
 
 ## 확 인: only this window closes (the 제작 window stays).

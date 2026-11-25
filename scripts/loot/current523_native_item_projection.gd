@@ -1588,25 +1588,100 @@ static func exact_selection_life(definition: Dictionary) -> int:
 		count+=1
 	return expected if count==1 else 0
 
-## In these exact authored boxes a TestItem is a presentation wrapper for
-## the destination collection card. It is never supplied as a real item.
-## Box -> root, choice list, [entity, reward, wrapper, card, deck] rows.
-const EXACT_SELECTION_CARDS := {
-	230602:[200101,4681,[[22821,200111,1017,85,1],[22831,200121,1018,86,1],[22841,200131,983,42,2],[22851,200141,984,43,2]]],
-	245991:[214431,5841,[[31111,214231,127484,11954,1]]],
-	246001:[214441,5851,[[31121,214241,127474,11964,1]]],
-	277372:[279802,8442,[[41362,279682,936,122,1],[41372,279692,961,10541,1],[41382,279702,1039,10551,1],[41392,279712,1077,10561,1]]],
-	277382:[279812,8452,[[41402,279722,938,48,2],[41412,279732,988,422,2],[41422,279742,29511,432,2],[41432,279752,990,11864,2]]],
+## Some original card selectors use a TestItem as a display-only wrapper.
+## Resolve only complete, verified choice groups. The wrapper is never granted.
+## Several dated boxes share exactly the same independently checked Reward.ID.
+const EXACT_CARD_BOX_ROOTS := {
+	227421:200101, 230602:200101, 235143:200101, 235411:200101, 235568:200101,
+	251492:200101, 271638:200101,
+	245991:214431,
+	246001:214441,
+	277372:279802,
+	277382:279812,
+	172943:142443, 182913:142443, 187552:142443, 222653:142443, 246583:142443,
+	254073:142443, 259724:142443, 277481:142443,
+	197931:164781, 202503:164781,
+	202603:168673, 225923:168673, 227431:168673,
+	246613:214573, 254043:214573, 258331:214573, 263882:214573, 267243:214573,
+	271718:214573, 311771:214573, 315723:214573, 332911:214573, 349901:214573,
+	365573:214573,
+	277501:280271,
+}
+## Root reward -> [SelectReward.ID, [entity, reward, wrapper, card, deck] rows].
+const EXACT_CARD_GROUPS := {
+	200101:[4681,[
+		[22821, 200111, 1017, 85, 1],
+		[22831, 200121, 1018, 86, 1],
+		[22841, 200131, 983, 42, 2],
+		[22851, 200141, 984, 43, 2],
+	]],
+	214431:[5841,[
+		[31111, 214231, 127484, 11954, 1],
+	]],
+	214441:[5851,[
+		[31121, 214241, 127474, 11964, 1],
+	]],
+	279802:[8442,[
+		[41362, 279682, 936, 122, 1],
+		[41372, 279692, 961, 10541, 1],
+		[41382, 279702, 1039, 10551, 1],
+		[41392, 279712, 1077, 10561, 1],
+	]],
+	279812:[8452,[
+		[41402, 279722, 938, 48, 2],
+		[41412, 279732, 988, 422, 2],
+		[41422, 279742, 29511, 432, 2],
+		[41432, 279752, 990, 11864, 2],
+	]],
+	142443:[873,[
+		[5963, 142353, 127444, 11984, 1],
+		[5973, 142363, 127454, 11994, 1],
+		[6033, 142423, 127464, 11974, 1],
+	]],
+	164781:[3251,[
+		[17011, 164761, 1017, 85, 1],
+		[17021, 164771, 1018, 86, 1],
+	]],
+	168673:[3773,[
+		[19063, 168653, 983, 42, 2],
+		[19073, 168663, 984, 43, 2],
+	]],
+	214573:[5913,[
+		[31323, 214533, 1198, 160, 1],
+		[31333, 214543, 6571, 301, 1],
+		[31343, 214553, 6591, 281, 1],
+		[31353, 214563, 6581, 291, 1],
+	]],
+	280271:[8441,[
+		[41531, 279861, 1019, 10422, 1],
+		[41541, 279871, 1020, 10432, 1],
+		[41551, 279881, 34031, 10501, 1],
+		[41561, 279891, 34041, 10511, 1],
+		[41571, 279901, 34051, 10521, 1],
+		[41581, 279911, 34061, 10531, 1],
+		[41591, 279921, 65401, 10601, 1],
+		[41601, 279931, 65411, 10611, 1],
+		[41611, 279941, 65421, 10621, 1],
+		[41621, 279951, 65431, 10631, 1],
+		[41631, 279961, 65441, 10641, 1],
+		[41641, 279971, 65451, 10651, 1],
+		[41651, 279981, 65461, 10661, 1],
+	]],
 }
 
+static func exact_choice_rows(box_id: int) -> Array:
+	var root_id: int=int(EXACT_CARD_BOX_ROOTS.get(box_id,0))
+	return EXACT_CARD_GROUPS[root_id][1] if EXACT_CARD_GROUPS.has(root_id) else []
+
 static func exact_selection_card(id: int, root: Dictionary, selection: Dictionary, entity: Dictionary, child: Dictionary) -> Dictionary:
-	var lane: Array=EXACT_SELECTION_CARDS.get(id,[])
-	if lane.is_empty() or root.get("ID")!=lane[0] or root.get("RewardClassID")!=lane[1] or selection.get("ID")!=lane[1] or selection.get("SelectMaxCount")!=1:return {}
+	var root_id: int=int(EXACT_CARD_BOX_ROOTS.get(id,0))
+	var lane: Array=EXACT_CARD_GROUPS.get(root_id,[])
+	if lane.is_empty() or root.get("ID")!=root_id or root.get("RewardClassID")!=lane[0] or selection.get("ID")!=lane[0] or selection.get("SelectMaxCount")!=1:return {}
 	var item: Dictionary=child.get("item_class",{})
 	var reward: Dictionary=child.get("row",{})
-	for expect: Array in lane[2]:
+	for expect: Array in lane[1]:
 		if entity.get("ID")!=expect[0]:continue
-		if entity.get("SelectRewardID")!=lane[1] or entity.get("RewardID")!=expect[1] or reward.get("ID")!=expect[1] or reward.get("RewardTypeID")!=2 or reward.get("RewardClassID")!=expect[2] or reward.get("Amount")!=1 or reward.get("CharacterClassID")!=0 or reward.get("ItemBlessCodeID")!=1:return {}
+		if entity.get("SelectRewardID")!=lane[0] or entity.get("RewardID")!=expect[1] or reward.get("ID")!=expect[1] or reward.get("RewardTypeID")!=2 or reward.get("RewardClassID")!=expect[2] or reward.get("Amount")!=1 or reward.get("CharacterClassID")!=0 or reward.get("ItemBlessCodeID")!=1:return {}
 		if child.get("exclusion_reason")!="source_test_item" or not child.get("declared_exclusion",{}).is_empty():return {}
 		if item.get("ID")!=expect[2] or item.get("TestItem")!=true or item.get("TargettingTypeID")!=1 or item.get("ServiceRegionCode")!="" or item.get("LevelLimitMin")!=0 or item.get("LevelLimitMax")!=0:return {}
 		if SOURCE.row("ItemCategory",whole(item.get("CategoryID"))).get("Name")!="BuffCardDrawer" or not SOURCE.declared_exclusion("ItemClass",item).is_empty():return {}
@@ -1652,11 +1727,11 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	if domain.is_empty():reasons.append("unsupported_select_reward_root_class")
 	for class_id: int in domain:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
-	var exact_card_box: bool=EXACT_SELECTION_CARDS.has(whole(definition.original_item.ID))
+	var exact_card_box: bool=EXACT_CARD_BOX_ROOTS.has(whole(definition.original_item.ID))
 	var exact_option_ids: Dictionary={}
 	if exact_card_box:
 		if definition.category.get("Name")!="SelectReward" or definition.original_item.get("TestItem")!=false or root.get("CharacterClassID")!=0 or root.get("Amount")!=0:return {}
-		for expect: Array in EXACT_SELECTION_CARDS[whole(definition.original_item.ID)][2]:exact_option_ids[expect[0]]=true
+		for expect: Array in exact_choice_rows(whole(definition.original_item.ID)):exact_option_ids[expect[0]]=true
 	var documented_timing_desc: int=coin_selection_timing_at_use(definition,graph,root)
 	var timing: int=2 if documented_timing_desc>0 else 1
 	var child_timing: int=COIN_SELECTION_TIMING[int(definition.original_item.ID)].get("child_timing",2) if documented_timing_desc>0 else 1

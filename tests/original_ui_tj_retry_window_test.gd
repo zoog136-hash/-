@@ -32,6 +32,10 @@ class FakeTj extends RefCounted:
 	var server: Dictionary={"service_region_code":"KR","world_no":1}
 	var loads: int=0
 	var redeemed: Array=[]
+	var stacks: Dictionary={"selected-stack":{"9001":1}}
+	var debited_uid: String=""
+	func bag_count(item: String, uid: String) -> int:
+		return int(stacks.get(uid,{}).get(item,0))
 	func context() -> Dictionary:
 		return server
 	func owned_count(item: String) -> int:
@@ -39,7 +43,8 @@ class FakeTj extends RefCounted:
 	func load_default_source() -> bool:
 		loads+=1
 		return false
-	func redeem(item: String, event_id: String, revision: int, good: Array, bad: Array) -> Dictionary:
+	func redeem(item: String, event_id: String, revision: int, good: Array, bad: Array, uid: String="") -> Dictionary:
+		debited_uid=uid
 		redeemed.append([item,event_id,revision,good,bad])
 		return {"ok":true,"success":true,"error":"재도전 결과를 저장했습니다"}
 
@@ -176,8 +181,23 @@ func _real_pack(pack_dir: String) -> void:
 	var retry: Dictionary=window._popup_ok()
 	check(retry.get("handled",false) and int(retry.filled.cards)==3,"Nd_ChangeRetry shows 1 + 2 chosen cards: "+str(retry).left(300))
 	check(window._cancel().get("handled",false),"취 소 returns to the grade cards")
+	var tj: FakeTj=host.world.tj_coupons
+	tj.core.definitions.coupons["9001"].item.CategoryID=10272
+	tj.core.definitions.coupons["9001"]["profile"]={"BuffCardDeckID":1,"TJCouponHistoryType":1,"UITypeID":161}
+	var physical: Dictionary=window.open(parent,"","","9001","selected-stack")
+	check(physical.get("handled",false) and physical.member==WINDOW.COMPOSE and window._usable_here().size()==1,"physical coupon opens only its original deck and failure lane")
+	window._grade(4)
+	window._pick("101")
+	window._pick("201")
+	window._pick("202")
+	window._popup_ok()
+	window._redeem()
+	check(tj.debited_uid=="selected-stack" and tj.redeemed[-1][0]=="9001","original confirmation passes the selected physical identity")
+	tj.stacks.clear()
+	check(window._usable_here().is_empty() and not window.open(parent,"","","9001","selected-stack").get("handled",false),"removed physical cannot use matching menu or other coupons")
 	var awaken: Dictionary=window.open(parent,"awakening","변신")
 	check(awaken.get("handled",false) and awaken.member==WINDOW.AWAKEN,"Recovery_All_Awaken mounts: "+str(awaken).left(300))
+	check(window._physical_id.is_empty() and window._focused_item.is_empty(),"menu opening clears prior physical focus")
 	var list: Dictionary=window._grade(4)
 	check(list.get("handled",false) and int(list.filled.cards)==1,"Recovery_Popup_Awaken_CardList lists the target: "+str(list).left(300))
 	window._pick("301")

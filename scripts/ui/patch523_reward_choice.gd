@@ -170,7 +170,7 @@ func original_rows() -> Array:
 ## The box's own name and ItemClassID (the original window's box slot).
 func box_info() -> Dictionary:
 	var original: Dictionary = pending.get("original_item",{}) if pending.get("original_item") is Dictionary else {}
-	var id: Variant = original.get("source_item_class_id", record.get("source_item_class_id", 0))
+	var id: Variant = original.get("ID", original.get("source_item_class_id", record.get("source_item_class_id", 0)))
 	return {"name":str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
 
 ## Claims the reward `entity_id` (the list's own claim); true when the box

@@ -227,6 +227,16 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		if (timeline.property=="FileData" and not _tags[int(timeline.actionTag)].has_meta("source_sprite")) or (timeline.property=="BlendFunc" and not _tags[int(timeline.actionTag)].has_meta("source_sprite") and not _tags[int(timeline.actionTag)].has_meta("source_particle")):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
+	# Common_Slot also supplies bag and quickslot visuals owned by pointer
+	# transfer. Only explicit feature actions opt their own hit path into the
+	# native router. Sibling badges and inert buttons stay outside that path.
+	if source_member=="UI/CommonUi/Common_Slot.csb":
+		for offset: Variant in _bindings:
+			if not _bindings[offset] is Dictionary or not _bindings[offset].get("route_feature_slot",false):continue
+			var ancestor: Node=source_nodes.get(offset)
+			while ancestor!=null and ancestor!=self:
+				if ancestor.has_meta("original_ui_source"):ancestor.set_meta("source_slot_routed",true)
+				ancestor=ancestor.get_parent()
 	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
@@ -309,9 +319,14 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 			var source_touch: bool=direct_input and ((field=="callBackType" and str(widget[field])=="Touch") or (field=="callBackName" and str(widget.get("callBackType",""))=="Touch" and str(binding.get("callback_name",""))==str(widget[field])))
 			if not inspection_only and not (source_touch or (connected_callback and (declared_type or declared_name))):problems.append("unconnected_source_callback:"+field)
 	if direct_input and not bool(widget.get("touchEnabled",false)):problems.append("source_input_not_declared")
+	# A verified embedded item icon may delegate its clipping panel's touch to
+	# the enclosing slot. Buttons, callbacks and non-clipping panels still
+	# require their own live binding.
+	var item_clip: bool = binding.get("role") == "item_slot_clip" and node.classname == "Panel" and bool(widget.get("touchEnabled",false)) and bool(options.get("clipEnabled",false)) and widget.get("callBackType","") == "" and widget.get("callBackName","") == ""
+	if binding.get("role") == "item_slot_clip" and not item_clip: problems.append("source_item_slot_clip_required")
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]):unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]: problems.append("unconnected_source_input")
+		if inspection_only or (not item_clip and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]):unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and not item_clip and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]: problems.append("unconnected_source_input")
 	if node.classname=="TextField":
 		if binding.get("role")!="source_text_field" or not binding.get("editor") is LineEdit:problems.append("source_text_field_existing_editor_binding_required")
 	if node.classname=="CheckBox":
