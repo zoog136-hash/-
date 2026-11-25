@@ -122,7 +122,89 @@ func _open(w: Node, category: String, id: String) -> RefCounted:
 func _confirm(h: Node, cancel: bool) -> bool:
 	var box: Node=h.get_node_or_null("Root/TwilightConfirmation")
 	if not check(is_instance_valid(box),"durable action requires a review dialog"):return false
+	if not cancel and box.get_script() == preload("res://scripts/ui/original_ui/source_main_awakening_review.gd"):
+		var before: Dictionary = _ledger(h.get_parent())
+		while box._page + 1 < box._pages.size():
+			var previous: int = box._page
+			await _tap(box.confirm_button)
+			if not check(is_instance_valid(box) and box._page == previous+1 and _ledger(h.get_parent()) == before, "next review page keeps the transaction uncommitted"): return false
 	return await _tap(box.cancel_button if cancel else box.confirm_button)
+
+func _read_result(w: Node, success: bool) -> void:
+	if not w.hud.source_awakening_result_is_open():
+		if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1":
+			check(false, "original result scene should be mounted for " + ("success" if success else "failure") + " " + str(w.hud.original_main_ui_status.get("awakening_result_window", {})))
+		var fallback: Node = w.hud.option_awakening_reveal
+		if is_instance_valid(fallback): fallback.finished.emit()
+		await settle()
+		return
+	var page: RefCounted = w.hud.original_main_ui_controller.feature_window("awakening_result")
+	var disk: String = FileAccess.get_sha256(w.save_path())
+	var before: Dictionary = _ledger(w)
+	var scene: Node2D = page._scene
+	var branch: String = "Success" if success else "Fail"
+	check(scene.source_member == "UI/Change/Change_Upgrade_Skill_Awaken.csb" and scene.playback_status().clip.begins_with("Fx_"+branch+"_"), "saved result selects its original effect")
+	await RenderingServer.frame_post_draw
+	if not page._steady:
+		# A late frame can span each clip. Exercise the real player and the
+		# registered transition to the held result, with no wall-clock sleep.
+		scene._process(20.0)
+		await process_frame
+		scene._process(20.0)
+		await process_frame
+	var label: Node2D = _node(page, branch+"_Text")
+	check(page._held and is_instance_valid(label) and label.is_visible_in_tree() and label.get_meta("source_display_color").a > 0.99, "original outcome text settles at full authored opacity")
+	if not page._options.is_empty():
+		var template: Node = _node(page, "ListView/Label_Option").get_meta("source_text")
+		check(template.get_child_count()>0, "awarded options are drawn in the original list")
+	check(w.hud.is_option_awakening_busy() and not is_instance_valid(w.hud.option_awakening_reveal), "original result covers the form")
+	var blocker: Control = scene.get_node("AwakeningResultTouch")
+	await _tap(blocker)
+	check(not page.is_open() and _ledger(w) == before and FileAccess.get_sha256(w.save_path()) == disk, "acknowledgement returns to the form without a second debit or roll")
+
+func _paid_skill(w: Node) -> void:
+	var runtime: RefCounted = w.skill_awakening
+	w.presentation_settings["reduced_motion"] = false
+	w.presentation_settings["impact_intensity"] = 1.0
+	var identity: String = ""
+	for id: String in runtime.core.cards:
+		if runtime.core.cards[id].category == "변신" and runtime.core.eligibility(id).ok and not runtime.core.book_requirement(id).is_empty():
+			identity = id
+			break
+	if not check(not identity.is_empty(), "original eligible skill target"): return
+	w.card_draw_fusion.owned["변신"][identity] = true
+	w.gold = 100000000
+	var required: Dictionary = runtime.core.book_requirement(identity)
+	var received: bool = preload("res://scripts/loot/patch523_item_inventory.gd").commit(w,
+		[{"item_class_id":required.item_class_id, "amount":2, "bless_raw":1, "enchant":0}], {"kind":"skill_result_regression"})
+	if not check(received, "two verified skill awakening books supplied"): return
+	w.hud.open_card_skill_awakening("변신", identity)
+	await settle()
+	var controller: Node = w.hud.original_main_ui_controller
+	if not check(controller.feature_window_is_open("card_awakening"), "registered original skill page opens"): return
+	var page: RefCounted = controller.feature_window("card_awakening")
+	var cost_before: int = w.gold
+	var revision: int = runtime.progress.revision
+	var price: Node2D = _node(page, page.P+"Btn_Production/Text_Price")
+	check(is_instance_valid(price) and price.get_meta("source_text").original_options.text == OPTION._number(int(required.fee)),
+		"original skill button shows the fee before the transaction")
+	await _tap(_hit(_node(page, page.P+"Btn_Production")))
+	var review: Node = w.hud.get_node_or_null("Root/TwilightConfirmation")
+	check(is_instance_valid(review) and review.get_script() == preload("res://scripts/ui/original_ui/source_main_awakening_review.gd"),
+		"original two-button confirmation displays skill materials and fee")
+	check(not runtime.request_operation(identity).ok and w.gold == cost_before, "an open review alone cannot consume a skill book")
+	await _confirm(w.hud, true)
+	check(w.gold == cost_before and runtime.progress.revision == revision, "cancelling the skill review preserves book and fee")
+	await _tap(_hit(_node(page, page.P+"Btn_Production")))
+	await _confirm(w.hud, false)
+	check(w.gold == cost_before - int(required.fee) and runtime.progress.revision == revision+1
+		and int(runtime.progress.cards.get(identity, {}).get("spell_id",0)) > 0, "original input commits exactly one paid skill selection")
+	check(not runtime.request_operation(identity).ok and runtime.progress.revision == revision+1, "result overlay prevents a duplicate charge")
+	await _read_result(w, true)
+	var saved: Dictionary = runtime.export_state()
+	w._load_game(true)
+	await settle()
+	check(runtime.export_state() == saved and w.gold == cost_before - int(required.fee), "committed skill, cost and revision survive reload")
 
 func _native() -> void:
 	root.size=Vector2i(2048,919)
@@ -211,8 +293,7 @@ func _native() -> void:
 	check(w.card_draw_fusion.export_state()==quoted.cards and w.skill_awakening.export_state()==quoted.skill,"attempt does not double-charge duplicates or modify skill state")
 	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(w.save_path()))
 	check(saved.get("card_option_awakening",{}).get("cards",{}).get("변신",{}).has(transform.target),"committed exact card is on disk")
-	var reveal: Node=w.hud.option_awakening_reveal
-	if is_instance_valid(reveal):reveal.finished.emit()
+	await _read_result(w, false)
 	await settle()
 	await _tap(_hit(_node(view,"Nd_Content/Btn_Back")))
 	check(w.hud.active_section=="변신" and not w.hud.source_option_awakening_is_open(),"authored back returns to the same transform catalog")
@@ -244,15 +325,19 @@ func _native() -> void:
 		check(success.awakened and success.attempts==int(doll_now.attempts)+1
 			and success.failures==doll_now.failures and w.gold==int(doll_now.gold)-int(doll_now.attempt_cost),
 			"actual doll option success charges only its separate attempt and updates the exact card")
+		await _read_result(w, true)
 		w._load_game(true)
 		await settle()
 		check(options.view("마법인형",doll.target).awakened and options.view("변신",transform.target).experience==failed.experience
 			and w.skill_awakening.export_state()==base.skill,"real reload keeps actual independent option outcomes")
+	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1": await _paid_skill(w)
 	w.queue_free()
 	await settle()
 
 func run() -> void:
 	check(OPTION.PAGE_SIZE==9,"three authored original rows of three cards")
+	var assets := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
+	check(assets.read_installed("user://missing-awakening-scene") == null,"absent local originals cannot mount the result")
 	if not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty():await _native()
 	print("SOURCE_OPTION_AWAKENING_RESULT ",JSON.stringify({"checks":_checks,"failures":_errors,"original_ui":not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty(),"touch_release_usec":_touch_usec}))
 	quit(0 if _errors.is_empty() else 1)

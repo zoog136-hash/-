@@ -146,7 +146,7 @@ func _spec() -> Dictionary:
 		else:tip="등록한 중복 카드만 소모됩니다. 최초 획득 카드는 보존됩니다."
 	var spec: Dictionary={"Change_Awaken_Skill":{"exclude":true},"Change_Awaken_SkillExp":{"exclude":true},
 		"Nd_Awaken_Tab_2":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Option_On":{"activate":Callable(self,"_ignore")},
-		"Nd_Awaken_Tab_1/Btn_Skill_Off":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
+		"Nd_Awaken_Tab_1/Btn_Skill_Off":{"visible":true, "activate":Callable(self, "_open_skill")},"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
 		"Nd_Awaken_Tab_1/Btn_Exp_Off":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Exp_On":{"exclude":true},
 		"Btn_Close":{"activate":Callable(self,"_close_requested")},
 		"Nd_Awaken_Clear":{"exclude":true},"CardChange_Popup_CollectionView":{"exclude":true},
@@ -405,6 +405,13 @@ func _auto_register() -> Dictionary:
 		available_gold-=count*cost
 	return _update_selection()
 
+func _open_skill() -> Dictionary:
+	if review_open(): return _fail("source_option_awakening_review_open")
+	var owner: Object = hud()
+	if not is_instance_valid(owner): return _fail("source_skill_awakening_host_missing")
+	owner.open_card_skill_awakening(category, str(_snapshot.target_id))
+	return {"ok":true}
+
 func _back() -> Dictionary:
 	return _route("open_catalog",[category])
 
@@ -439,7 +446,8 @@ func _review() -> Dictionary:
 			_experience_percent(int(_snapshot.experience)+mini(_remaining(),_gained())),_number(_fee())])
 		if _gained()>_remaining():body.append("필요량을 넘는 경험치는 사라집니다.")
 		body.append("최초 획득 카드는 보존됩니다.")
-	var dialog: Control=owner.confirm_action("옵션 각성 확인","\n".join(body),"각성 시도" if attempt else "경험치 주입",
+	var ask: String="confirm_awakening_action" if owner.has_method("confirm_awakening_action") else "confirm_action"
+	var dialog: Control=owner.call(ask,"옵션 각성 확인","\n".join(body),"각성 시도" if attempt else "경험치 주입",
 		Callable(self,"_confirm").bind(frozen))
 	if not is_instance_valid(dialog):return _fail("source_option_awakening_confirmation_unavailable")
 	_dialog=weakref(dialog)

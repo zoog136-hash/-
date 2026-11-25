@@ -946,6 +946,10 @@ func show_source_system_message(text: String, explicit_priority: int) -> Diction
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
+	if source_awakening_result_is_open() and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		original_main_ui_controller.feature_window("awakening_result").advance_or_dismiss()
+		get_viewport().set_input_as_handled()
+		return
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -1284,6 +1288,14 @@ func _navigate(section: String) -> void:
 ## same save_pressed as 설정 > 세부 설정 "지금 저장"); the menu stays open.
 func save_now() -> void:
 	save_pressed.emit()
+
+func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
+	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		var dialog: Control = original_main_ui_controller.awakening_review($Root,title,body,callback)
+		if dialog != null: return dialog
+	return confirm_action(title,body,action,callback)
 
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
 	for dialog: Node in $Root.get_children():
@@ -2584,7 +2596,16 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 func is_option_awakening_busy() -> bool:
 	# The form locks its own submission before emitting. Do not include that
 	# lock here: World's transaction guard must accept the request just emitted.
-	return is_instance_valid(option_awakening_reveal) and not option_awakening_reveal.is_queued_for_deletion()
+	return source_awakening_result_is_open() or (is_instance_valid(option_awakening_reveal) and not option_awakening_reveal.is_queued_for_deletion())
+
+func source_awakening_result_is_open() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("feature_window_is_open") and original_main_ui_controller.feature_window_is_open("awakening_result")
+
+func present_source_awakening_result(card: Dictionary, outcome: Dictionary, settings: Dictionary) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
+	var opened: Dictionary = original_main_ui_controller.try_open_overlay_window("awakening_result", [card, outcome, settings])
+	original_main_ui_status["awakening_result_window"] = opened
+	return opened.get("ok", false)
 
 func present_option_awakening_result(record: Dictionary, result: Dictionary, settings: Dictionary = {}) -> void:
 	if is_option_awakening_busy() or not bool(result.get("ok", false)) or not result.get("success") is bool:
@@ -2597,6 +2618,8 @@ func present_option_awakening_result(record: Dictionary, result: Dictionary, set
 		outcome["bonus_lines"] = snapshot.get("applied_options", [])
 	if not outcome.has("message"):
 		outcome["message"] = "옵션 각성이 완료되었습니다." if bool(outcome.get("success", false)) else "각성에 실패했습니다. 경험치 %d가 남았습니다." % int(snapshot.get("experience", 0))
+	if present_source_awakening_result(record, outcome, _option_awakening_settings() if settings.is_empty() else settings):
+		return
 	var layer := CanvasLayer.new()
 	layer.name = "OptionAwakeningRevealLayer"
 	layer.layer = 112
@@ -3794,22 +3817,29 @@ func open_native_card_craft() -> Dictionary:
 func open_card_skill_growth(_category: String,_identity: String) -> Dictionary:
 	return _unregistered_card_source_operation(CardSourcePresentation.GROWTH)
 
+func source_skill_awakening_registered() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("feature_window") and original_main_ui_controller.feature_window("card_awakening") != null and original_main_ui_controller.feature_window("awakening_result") != null
+
+func source_skill_awakening_active(identity: String) -> bool:
+	if not source_skill_awakening_registered() or source_awakening_result_is_open(): return false
+	var page: RefCounted = original_main_ui_controller.feature_window("card_awakening")
+	return page.is_open() and page.identity == identity and page.submitting
+
 func open_card_skill_awakening(category: String, identity: String) -> void:
-	if not CardSourcePresentation.available(CardSourcePresentation.AWAKENING):
-		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING);return
-	var runtime: Variant=get_parent().get("skill_awakening")
-	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
-	_open_window("card_skill_awakening",category+" 스킬 각성","")
-	if _open_original_feature("card_awakening",[category,identity]):return
-	var scroll:=ScrollContainer.new()
-	scroll.name="CardSkillAwakeningScroll"
-	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-	workspace.mount(scroll)
-	var view: Control=preload("res://scripts/ui/card_skill_awakening_view.gd").new()
-	card_skill_awakening_view=view
-	scroll.add_child(view)
-	view.configure(runtime,identity)
-	workspace.register_scroll_drag(scroll,view)
+	if category not in ["변신", "마법인형"] or not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("feature_window_available"):
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
+		return
+	if not original_main_ui_controller.feature_window_available("card_awakening") or not original_main_ui_controller.feature_window_available("awakening_result"):
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
+		return
+	var snapshot: Dictionary = get_parent().skill_awakening.view(identity)
+	if not snapshot.get("ok", false) or snapshot.card.category != category:
+		show_message(str(snapshot.get("error", "스킬 각성 대상 확인 필요")))
+		return
+	_open_window("card_skill_awakening", category+" 스킬 각성", "")
+	if not _open_original_feature("card_awakening", [category, identity]):
+		_close_workspace()
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
 
 
 ## 메뉴 스킬 카드: the original 523 스킬카드 window (source_main_skill_card_window)

@@ -13,9 +13,17 @@ const ROOT="UI/Change/Change_Awaken_All.csb"
 const SKILL="UI/Change/Change_Awaken_Skill.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
+const OptionWindow=preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd")
 const P="Nd_Skill/Nd_Skill/"
 var category: String="변신"
 var identity: String=""
+var submitting: bool=false
+
+func configure(pack: RefCounted, host: Node) -> Dictionary:
+	var files: Dictionary = pack.manifest.get("files", {})
+	if files.get(ROOT, {}).get("sha256") != "1a790cb7a91c8eac69562dd904bc82c9bb52fe4ab7a8ab2c2202ea16b01d2836" or files.get(SKILL, {}).get("sha256") != "aa50bea00b320c43f01112cca2c49aee65293a7fc40852a78b7c23b6c5f99fdd":
+		return _fail("source_skill_awakening_identity_required")
+	return super.configure(pack, host)
 
 func required_members() -> Array[String]:
 	return [ROOT,SKILL]
@@ -57,19 +65,18 @@ func _spec() -> Dictionary:
 	spec["Nd_Inventory/Btn_Production_Book"]={"visible":false}
 	spec["Nd_Inventory/Btn_Production_Piece"]={"visible":false}
 	var spell: int=int(snapshot.entry.spell_id)
-	var current: String="현재 각성 스킬 없음" if spell==0 else "%s · Lv.%d" % [str(runtime.core.DATA.data.spells.get(str(spell),{}).get("name","")),int(snapshot.entry.level)]
+	var current: String="현재 각성 스킬 없음" if spell==0 else "%s · Lv.%d" % [str(runtime.core.data.spells.get(str(spell),{}).get("name","")),int(snapshot.entry.level)]
 	spec[P+"Label_Title"]={"role":"source_text","text":"%s 각성" % str(snapshot.card.get("name",""))}
 	spec[P+"Label_Skill"]={"role":"source_text","text":current}
-	var can: bool=bool(snapshot.get("can_awaken",false)) and not bool(snapshot.get("save_blocked",false))
-	spec[P+"Btn_Production"]={"activate":Callable(self,"_awaken"),"displaystate":can}
-	spec["Text_Price"]={"visible":false}
+	var required: Dictionary=snapshot.get("book_requirement",{})
+	var cost: int=int(required.get("fee",0))
+	var can: bool=not required.is_empty() and world().gold>=cost and snapshot.get("can_awaken",false) and not snapshot.get("save_blocked",false)
+	spec[P+"Btn_Production"]={"activate":Callable(self,"_review"),"displaystate":can}
+	spec[P+"Btn_Production/Text_Price"]={"visible":true,"role":"source_text","text":OptionWindow._number(cost)}
 	spec[P+"Fx_Btn_Production"]={"visible":false}
 	spec[P+"Fx_Item_Active_Right"]={"visible":false}
 	spec["Btn_Back"]={"activate":Callable(self,"_back")}
-	# The page tip (two authored lines in a 508x36 box) is wider than its box
-	# in the pack font and the renderer does not re-wrap original text, so it
-	# is left out of the scope (the window stays registered-gate only).
-	spec["Change_Awaken_Skill/Nd_Skill/Label_Tip"]={"exclude":true}
+	spec["Change_Awaken_Skill/Nd_Skill/Label_Tip"]={"role":"source_text","text":"각성서 1장 소모\n재각성 시 스킬 Lv.1 · 경험치 0"}
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
@@ -85,14 +92,37 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		picture=_show_picture(located.player,located.offset,InventoryImages.resolve_owned(owner,{"name":name,"reference":name,"record":book},context))
 	return {"ok":true,"identity":identity,"can_awaken":bool(snapshot.get("can_awaken",false)),"book":str(book.get("name","")),"book_picture":picture,"candidates":(snapshot.get("candidates",[]) as Array).size()}
 
-func _awaken() -> Dictionary:
+func _review() -> Dictionary:
+	var owner: Node=hud()
+	if not is_open() or owner == null or owner.get_node_or_null("Root/TwilightConfirmation") != null:
+		return _fail("skill_awakening_review_unavailable")
+	var snapshot: Dictionary = _runtime().view(identity)
+	var requirement: Dictionary = snapshot.get("book_requirement",{})
+	if requirement.is_empty() or not snapshot.get("can_awaken",false): return _fail("skill_awakening_target_unavailable")
+	var body: String = "%s\n%s × 1장 · %s 아데나" % [snapshot.card.name, snapshot.book.name, OptionWindow._number(int(requirement.fee))]
+	if int(snapshot.entry.spell_id) > 0: body += "\n현재 스킬을 교체하고 Lv.1 · 경험치 0부터 시작합니다."
+	var revision: int = _runtime().progress.revision
+	var scene_at_review: int = _scene.get_instance_id()
+	owner.confirm_awakening_action("스킬 각성 확인",body,"각성",Callable(self,"_awaken").bind(identity, revision, scene_at_review))
+	return {"ok":true,"reviewing":true}
+
+func _awaken(_count: int, target: String, revision: int, scene_at_review: int) -> Dictionary:
+	if submitting or not is_open() or identity != target or _scene.get_instance_id() != scene_at_review: return _fail("skill_awakening_review_expired")
 	var runtime: Object=_runtime()
-	var result: Dictionary=runtime.request_operation(identity,{"expected_revision":int(runtime.progress.revision)})
+	submitting = true
+	var result: Dictionary=runtime.request_operation(identity,{"expected_revision":revision})
+	submitting = false
 	if result.get("ok",false):
-		var entry: Dictionary=runtime.view(identity).entry
-		_message("각성: %s · Lv.%d" % [str(runtime.core.DATA.data.spells.get(str(int(entry.spell_id)),{}).get("name","")),int(entry.level)])
-	else:_message(str(result.get("error","각성할 수 없습니다")))
-	_stage()
+		var snapshot: Dictionary = runtime.view(identity)
+		var entry: Dictionary = snapshot.entry
+		var spell: String = str(runtime.core.data.spells.get(str(int(entry.spell_id)),{}).get("name",""))
+		_stage()
+		var owner: Node = hud()
+		var outcome: Dictionary = {"ok":true, "success":true, "skill_name":spell+" · Lv."+str(entry.level)}
+		if not owner.present_source_awakening_result(snapshot.target_record, outcome, owner._option_awakening_settings()):
+			_message("각성: " + str(outcome.skill_name))
+	else:
+		_message(str(result.get("error","각성할 수 없습니다")))
 	return result
 
 func _back() -> Dictionary:

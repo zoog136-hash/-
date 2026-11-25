@@ -66,7 +66,11 @@ func view(identity: String,preview_level: int=1) -> Dictionary:
 		snapshot.growth_progress=Growth.view(core,progress,card_state.owned,identity,card_state.spare,int(world.gold),card_state)
 		snapshot.presentation=Presentation.capability(Presentation.AWAKENING)
 		snapshot.growth_progress.presentation=Presentation.capability(Presentation.GROWTH)
-		snapshot.can_awaken=bool(snapshot.can_awaken) and Presentation.available(Presentation.AWAKENING)
+		var hud: Variant = world.get("hud")
+		var registered: bool = is_instance_valid(hud) and hud.has_method("source_skill_awakening_registered") and hud.source_skill_awakening_registered()
+		snapshot.presentation.presentation_registered = registered
+		snapshot.presentation.original_renderer_registered = registered
+		snapshot.can_awaken=bool(snapshot.can_awaken) and registered
 		snapshot.can_feed=bool(snapshot.growth_progress.get("can_feed",false)) and not save_blocked and Presentation.available(Presentation.GROWTH)
 		snapshot.growth_progress.can_feed=bool(snapshot.can_feed)
 	return snapshot
@@ -133,7 +137,9 @@ func _book_debit_error(debit: Dictionary,requirement: Dictionary) -> String:
 	return ""
 
 func request_operation(identity: String,materials: Dictionary={}) -> Dictionary:
-	if not Presentation.available(Presentation.AWAKENING):return Presentation.request(Presentation.AWAKENING)
+	var hud: Variant = world.get("hud") if is_instance_valid(world) else null
+	if not is_instance_valid(hud) or not hud.has_method("source_skill_awakening_active") or not hud.source_skill_awakening_active(identity):
+		return Presentation.request(Presentation.AWAKENING)
 	if _reroll_busy:return Core.fail("busy","이전 각성 거래 처리 중")
 	if save_blocked or not problem.is_empty():return Core.fail("save_blocked","각성 저장 보호 중")
 	_context()
