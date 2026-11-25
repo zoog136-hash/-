@@ -86,6 +86,7 @@ var map_prior_process_mode: int=Node.PROCESS_MODE_INHERIT
 const BASE508_TEST = preload("res://scripts/maps/base508_game_mode.gd")
 const CURRENT523_ADEN_PACK = preload("res://scripts/maps/current523_aden_pack.gd")
 const CURRENT523_HOST = preload("res://scripts/maps/current523_host.gd")
+const MAP_LOADING = preload("res://scripts/boot/dungeon_loading.gd")
 const CURRENT523_MAP_TELEPORT = preload("res://scripts/maps/current523_map_teleport.gd")
 const WALK_PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 const OLD_MAP_RELOCATION523 = preload("res://scripts/maps/old_map_save_relocation523.gd")
@@ -2165,7 +2166,7 @@ func _connect_signals() -> void:
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
 	hud.potion_pressed.connect(_use_potion)
 	hud.quick_item_pressed.connect(_use_quick_item)
-	hud.return_pressed.connect(_return_to_spawn)
+	hud.return_pressed.connect(_return_to_spawn_input)
 	hud.inventory_pressed.connect(_open_inventory)
 	hud.menu_pressed.connect(hud.toggle_menu)
 	hud.weapon_mastery_requested.connect(weapon_mastery.show_panel)
@@ -2193,7 +2194,7 @@ func _connect_signals() -> void:
 	hud.job_class_selected.connect(_on_job_class_selected)
 	if hud.has_signal("source_gender_selected"):
 		hud.connect("source_gender_selected", func(gender_id: int) -> void: set_source_character_gender(gender_id))
-	hud.job_skill_pressed.connect(_cast_job_skill)
+	hud.job_skill_pressed.connect(_cast_job_skill_input)
 	hud.quickslot_pressed.connect(_on_quickslot_pressed)
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
 	hud.quickslot_edit_requested.connect(_on_quickslot_edit_requested)
@@ -2221,7 +2222,7 @@ func _connect_signals() -> void:
 		hud.connect("ain_shop_requested", _on_ain_shop_requested)
 	if hud.has_signal("ain_auto_changed"):
 		hud.connect("ain_auto_changed", _on_ain_auto_changed)
-	hud.inventory_item_activated.connect(_on_inventory_item_activated)
+	hud.inventory_item_activated.connect(_activate_inventory_input)
 	if hud.has_signal("blessing_target_requested"):
 		hud.connect("blessing_target_requested", _on_blessing_target_requested)
 	hud.enhancement_requested.connect(_attempt_enhancement)
@@ -4884,7 +4885,36 @@ func _on_blessing_target_requested(scroll_name: String, target_reference: String
 	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
 	_update_hud()
 
+func _item_requests_map_loading(reference: String) -> bool:
+	if not current523_aden_source_active(): return false
+	var selection: Dictionary = _parse_enhancement_target(reference)
+	var item_name: String = selection.name
+	var record: Dictionary = item_instances.get(str(selection.get("id","")),{}).get("record",{})
+	if record.is_empty(): record = _find_catalog_item_record(item_name)
+	var effects: Script = preload("res://scripts/loot/source523_item_effects.gd")
+	if not effects.teleport(record).is_empty() or not effects.location_teleport(record).is_empty():
+		return true
+	var kind: String = str(CONSUMABLE_RULES.definition(item_name).get("kind",""))
+	return kind == "return" or (kind == "teleport" and not growth.travel.enabled()) or REGIONAL_RETURN.claims_identity(item_name,record)
+
+
+func _activate_inventory_input(reference: String) -> void:
+	if MAP_LOADING.busy(self): return
+	if _item_requests_map_loading(reference):
+		await run_map_loading(_activate_travel_item.bind(reference))
+		return
+	_on_inventory_item_activated(reference)
+
+
+func _activate_travel_item(reference: String) -> Dictionary:
+	await _activate_inventory_impl(reference,true)
+	return {}
+
+
 func _on_inventory_item_activated(item_name: String) -> void:
+	call("_activate_inventory_impl",item_name,false)
+
+func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 	if death_recovery.blocked(): return
 	var source_reward: Dictionary = _find_catalog_item_record(_parse_enhancement_target(item_name).name)
 	if source_reward.get("monsterbook_source_item",false):
@@ -4927,7 +4957,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
-	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(self,item_name,str(selected.get("id","")))
+	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var selected_id: String = str(selected.get("id",""))
+	var native_stack: Dictionary
+	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id)
+	else: native_stack = stack_owner.try_use(self,item_name,selected_id)
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
 		# 선택 상자: the original selection window (patch523_reward_choice).
@@ -4979,7 +5013,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var ticket_id: String=str(selected.get("id","")) if selected_source.get("source_m_native_item",false) else ""
 	if source_shop.try_use_inventory_ticket(item_name,ticket_id):return
 	if preload("res://scripts/shop/source523_skill_books.gd").try_use(self,item_name): return
-	if consumable_service.try_use_regional_return(item_name): return
+	if loading:
+		if await consumable_service.try_use_regional_return_loading(item_name): return
+	elif consumable_service.try_use_regional_return(item_name): return
 	if protection523.managed(_find_catalog_item_record(item_name)):
 		_request_protection523_use(item_name)
 		return
@@ -5000,8 +5036,9 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name),item_name)
 		hud.call("open_enhancement", item_name, candidates)
 		return
-	if bool(consumable_service.call("try_use", item_name,str(selected.get("id","")))):
-		return
+	if loading:
+		if await consumable_service.try_use_loading(item_name,selected_id): return
+	elif consumable_service.try_use(item_name,selected_id): return
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	var requested_id: String = str(selected.get("id", ""))
 	if requested_id != "" and item_instances.has(requested_id):
@@ -6981,6 +7018,9 @@ func select_hud_potion(item_name: String) -> bool:
 
 func _use_quick_item(item_name: String) -> void:
 	if death_recovery.blocked(): return
+	if _item_requests_map_loading(item_name):
+		_activate_inventory_input(item_name)
+		return
 	if item_name.begins_with("[원본 보상] "):
 		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
 		return
@@ -7073,6 +7113,15 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 
 func _source_hp_potion_committed(amount: int) -> void:
 	if amount>0:patch523_npc_spells.extensions.on_player_event("healed")
+
+func _return_to_spawn_input() -> void:
+	if MAP_LOADING.busy(self) or death_recovery.blocked() or patch523_npc_spells.blocks("CannotTeleport"): return
+	if current523_aden_source_active():
+		var outcome: Dictionary = await run_map_loading(return_current523_source_to_aden_loading)
+		hud.show_message(str(outcome.get("reason","아덴 귀환 결과 확인 필요")))
+		return
+	_return_to_spawn()
+
 
 func _return_to_spawn() -> void:
 	if death_recovery.blocked(): return
@@ -8865,7 +8914,7 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 	var kind: String = str(entry.get("kind", ""))
 	var entry_id: String = str(entry.get("skill_id", entry.get("id", ""))) if kind == "skill" else str(entry.get("id", ""))
 	if kind == "skill":
-		_cast_job_skill(entry_id)
+		_cast_job_skill_input(entry_id)
 	elif kind == "item":
 		_use_quickslot_item(entry_id)
 
@@ -8875,7 +8924,7 @@ func _use_quickslot_item(item_name: String) -> void:
 		_update_hud()
 		return
 	if _quickslot_item_supported(item_name):
-		_on_inventory_item_activated(item_name)
+		_activate_inventory_input(item_name)
 	else:
 		hud.show_message("직접 사용할 수 없는 아이템입니다")
 
@@ -9446,13 +9495,24 @@ func _skill_record(skill_name: String) -> Dictionary:
 	_ensure_skill_record_index()
 	return skill_record_index.get(skill_name, {})
 
+func _cast_job_skill_input(skill_name: String) -> void:
+	if MAP_LOADING.busy(self): return
+	await _cast_job_skill_impl(skill_name,true,true)
+
+
 func _cast_job_skill(skill_name: String, manual: bool = true) -> bool:
+	return call("_cast_job_skill_impl",skill_name,manual,false)
+
+
+func _cast_job_skill_impl(skill_name: String, manual: bool, loading: bool) -> bool:
 	if death_recovery.blocked(): return false
 	if skill_name.begins_with("guardian:"):
 		var response: Dictionary=growth.execute("guardian_cast",skill_name.trim_prefix("guardian:"),1,int(growth.state.revision))
 		hud.show_message(str(response.message));return bool(response.ok)
 	var skill: Dictionary = _skill_record(skill_name)
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return original_skills.cast(skill, manual)
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
+		if loading: return await original_skills.cast_loading(skill,manual)
+		return original_skills.cast(skill,manual)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -9472,7 +9532,8 @@ func _cast_job_skill(skill_name: String, manual: bool = true) -> bool:
 		"atkBuff", "defBuff", "hpBuff", "speedBuff":
 			success = _cast_job_buff_skill(skill)
 		"teleport":
-			success = _cast_job_teleport_skill(skill)
+			if loading: success = await _cast_job_teleport_impl(skill,true)
+			else: success = _cast_job_teleport_skill(skill)
 		"invisibility":
 			success = _cast_job_invisibility_skill(skill)
 		"stun", "silence", "poison", "bleed", "hold", "fear":
@@ -9948,6 +10009,10 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	return call("_cast_job_teleport_impl",skill,false)
+
+
+func _cast_job_teleport_impl(skill: Dictionary, loading: bool) -> bool:
 	if patch523_npc_spells.blocks("CannotTeleport"): return false
 	if growth.travel.enabled():
 		growth.travel.open({"kind":"job","name":str(skill.name)})
@@ -9959,15 +10024,24 @@ func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
 		var safe_only: bool = bool(skill.get("safe_zone_only", false))
 		if _teleport_landing_clear(candidate) if safe_only else _is_walkable_world(candidate):
-			if not _spend_skill_mp(skill):
-				return false
-			player.global_position = candidate
-			player.clear_click_path()
-			player.camera.reset_smoothing()
-			hud.show_message("%s" % str(skill.get("name", "텔레포트")))
-			return true
+			if loading:
+				var task: Callable = func() -> Dictionary:
+					return {"ok":_commit_job_teleport(skill,candidate)}
+				var result: Dictionary = await travel_map_point(candidate,task)
+				return result.get("ok",false)
+			return _commit_job_teleport(skill,candidate)
 	hud.show_message("안전하게 이동할 위치를 찾지 못했습니다")
 	return false
+
+func _commit_job_teleport(skill: Dictionary,destination: Vector2) -> bool:
+	if not _spend_skill_mp(skill): return false
+	player.global_position = destination
+	player.clear_click_path()
+	player.camera.reset_smoothing()
+	refresh_map_after_jump()
+	hud.show_message(str(skill.get("name","텔레포트")))
+	return true
+
 
 func _active_skill_buff_total(key: String) -> int:
 	var total: int = int(original_skills.stat("hp")) if original_skills != null and key == "hp" else 0
@@ -12665,6 +12739,41 @@ func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
 func run_dungeon_loading(operation: Callable) -> Dictionary:
 	return await preload("res://scripts/boot/dungeon_loading.gd").run(self,operation)
 
+func run_map_loading(operation: Callable) -> Dictionary:
+	return await MAP_LOADING.run(self,operation,"지도 이동 준비")
+
+
+# Prepared spell destinations commit in the same input call. A cold point
+# enters the same loading/rollback flow as a scroll, with payment still owned
+# by the spell or bookmark.
+func travel_map_point(destination: Vector2, commit: Callable, always_load: bool = false) -> Dictionary:
+	if MAP_LOADING.busy(self): return {"ok":false}
+	if not current523_aden_source_active(): return commit.call()
+	var controller: RefCounted = _aden_play_controller()
+	if not always_load and controller.call("same_land_prepared",destination): return commit.call()
+	return await run_map_loading(_commit_prepared_map_point.bind(destination,commit))
+
+
+func _commit_prepared_map_point(destination: Vector2, commit: Callable) -> Dictionary:
+	if not commit.is_valid() or not await prepare_map_point(destination): return {"ok":false}
+	return commit.call()
+
+
+# Called inside the travel transaction before any item debit or MP spend.
+func prepare_map_point(destination: Vector2) -> bool:
+	if not current523_aden_source_active(): return true
+	var controller: RefCounted = _aden_play_controller()
+	if await controller.call("prepare_same_land",destination): return true
+	hud.show_message(str(controller.get("problem")))
+	return false
+
+
+func refresh_map_after_jump() -> void:
+	player.camera.force_update_scroll()
+	if current523_aden_source_active() and is_instance_valid(field_renderer):
+		field_renderer.refresh_visible()
+
+
 func competition523_quote(id: int) -> Dictionary:
 	return preload("res://scripts/dungeons/competition_dungeon523.gd").quote(self,id)
 
@@ -13099,9 +13208,17 @@ const ITEM523_TELEPORT_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTelep
 ## except ITEM523_TELEPORT_WAIVE and saves `save_changes` (the item debit)
 ## with the arrival checkpoint. Not moved = nothing saved, item kept.
 func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return call("_item523_teleport_land_impl",land_id,bounds,save_changes,false)
+
+func item523_teleport_land_loading(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
+	return await _item523_teleport_land_impl(land_id,bounds,save_changes,true)
+
+func _item523_teleport_land_impl(land_id: int, bounds: Array, save_changes: Dictionary, loading: bool) -> Dictionary:
 	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", land_id, bounds, ITEM523_TELEPORT_WAIVE.duplicate(), save_changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading",land_id,bounds,ITEM523_TELEPORT_WAIVE.duplicate(),save_changes)
+	else: moved = controller.call("enter_source_land",land_id,bounds,ITEM523_TELEPORT_WAIVE.duplicate(),save_changes)
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	var auto_off: bool = false
@@ -13117,6 +13234,12 @@ func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary
 ## (ITEM523_TELEPORT_WAIVE; MinLevel judged), the LandTeleport Adena price is
 ## saved with the arrival, auto hunting is turned off on arrival.
 func current523_map_teleport(id: String) -> Dictionary:
+	return call("_current523_map_teleport_impl",id,false)
+
+func current523_map_teleport_loading(id: String) -> Dictionary:
+	return await run_map_loading(_current523_map_teleport_impl.bind(id,true))
+
+func _current523_map_teleport_impl(id: String, loading: bool) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 이동할 수 없습니다"}
 	if patch523_npc_spells.blocks("CannotTeleport") or player.is_stunned() or player.is_feared() or player.is_held() or int(hp)<=0 or not charge_skill.is_empty():
 		return {"ok":false,"reason":"이동 불가 상태에서는 텔레포트할 수 없습니다"}
@@ -13125,7 +13248,9 @@ func current523_map_teleport(id: String) -> Dictionary:
 	if not quote.get("ok",false): return {"ok":false,"reason":str(quote.get("reason","텔레포트할 수 없습니다"))}
 	var row: Dictionary = quote.row
 	var controller: RefCounted = _aden_play_controller()
-	var moved: bool = controller.call("enter_source_land", int(row.land_id), row.bounds, ITEM523_TELEPORT_WAIVE.duplicate(), quote.changes)
+	var moved: bool
+	if loading: moved = await controller.call("enter_source_land_loading",int(row.land_id),row.bounds,ITEM523_TELEPORT_WAIVE.duplicate(),quote.changes)
+	else: moved = controller.call("enter_source_land",int(row.land_id),row.bounds,ITEM523_TELEPORT_WAIVE.duplicate(),quote.changes)
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	if not moved: return {"ok":false,"reason":"이동 보류: "+str(controller.get("problem")),"uncertain":bool(transition.get("uncertain",false))}
@@ -13301,8 +13426,16 @@ func use_current523_aden_source_portal(id: int) -> bool:
 	return result
 
 func return_current523_source_to_aden(save_changes: Dictionary={}, departure_waive: Array=[]) -> Dictionary:
+	return call("_return_current523_source_to_aden_impl",save_changes,departure_waive,false)
+
+func return_current523_source_to_aden_loading(save_changes: Dictionary={}, departure_waive: Array=[]) -> Dictionary:
+	return await _return_current523_source_to_aden_impl(save_changes,departure_waive,true)
+
+func _return_current523_source_to_aden_impl(save_changes: Dictionary, departure_waive: Array, loading: bool) -> Dictionary:
 	var controller: RefCounted=_aden_play_controller()
-	var result: Dictionary=controller.call("return_to_aden",save_changes,departure_waive)
+	var result: Dictionary
+	if loading: result=await controller.call("return_to_aden_loading",save_changes,departure_waive)
+	else: result=controller.call("return_to_aden",save_changes,departure_waive)
 	current523_aden_play_active=bool(controller.get("active"))
 	current523_aden_play_problem=str(result.get("reason","")) if not result.get("ok",false) else ""
 	current523_aden_play_changed.emit(current523_aden_play_active,str(result.get("reason","아덴 귀환 보류")))

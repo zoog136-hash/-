@@ -71,9 +71,9 @@ func bind_source_icon() -> void:
 	confirm.set_meta("source523_image_status",str(original.get("source_status",original.get("reason",""))))
 
 func show_result(outcome: Dictionary) -> void:
-	result.text=str(outcome.message);result.show();refresh()
+	result.text=str(outcome.get("message","이동을 완료하지 못했습니다"));result.show();refresh()
 
 func commit() -> void:
-	var outcome: Dictionary=service.travel(selected,source,origin,revision)
+	var outcome: Dictionary=await service.travel_loading(selected,source,origin,revision)
 	if outcome.ok:source={};origin=service.world.active_map_id
 	show_result(outcome)

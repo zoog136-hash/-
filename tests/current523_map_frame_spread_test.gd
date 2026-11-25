@@ -31,6 +31,10 @@ var evidence: Dictionary = {}
 class CountingPlay extends PLAY:
 	var markers: int = 0
 	var collisions: int = 0
+	var sync_block_builds: int = 0
+	func _block_commands(cell: Vector2i) -> Dictionary:
+		sync_block_builds += 1
+		return super._block_commands(cell)
 	func _refresh_markers() -> void: markers += 1
 	func _refresh_collision() -> void: collisions += 1
 
@@ -192,14 +196,16 @@ func worker_blocks() -> void:
 	for cell: Vector2i in renderer._screen_wait:
 		renderer._screen_wait[cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
 	check(renderer._bake_pending(-1) == 0 and renderer._blocks.is_empty(), "expired atlas deadline does not force a live-map decode")
+	check(not renderer._block_jobs.is_empty(), "CPU draw lists are assembled while atlases still decode")
 	tiles.pump()
 	renderer._pending_retry.clear()
-	check(renderer._bake_pending(-1) == 0 and not renderer._block_jobs.is_empty(), "ready pending blocks dispatch workers without a synchronous bake")
+	renderer._bake_pending(-1)
+	check(renderer.sync_block_builds == 0, "ready pending blocks consume or await workers without a synchronous rebuild")
 	for _frame: int in 100:
 		if renderer._pending_blocks.is_empty(): break
 		await create_timer(0.003).timeout
 		renderer._bake_pending(-1)
-	check(renderer._blocks.size() == cells.size() and renderer._block_jobs.is_empty(), "pending blocks eventually consume all completed jobs")
+	check(renderer._blocks.size() == cells.size() and renderer._block_jobs.is_empty() and renderer.sync_block_builds == 0, "pending blocks consume all completed jobs without rebuilding their draw lists")
 	var same: bool = renderer._blocks.size() == cells.size()
 	for cell: Vector2i in renderer._blocks:
 		same = same and (renderer._blocks[cell] as Dictionary).commands == renderer._block_commands(cell).commands

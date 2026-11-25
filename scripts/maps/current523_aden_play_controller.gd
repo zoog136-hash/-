@@ -1321,6 +1321,12 @@ func _village_return_point(field: OriginalPlayableField, radius: int) -> Diction
 ## this return (a 특수 던전 sends the player out of its own Land, e.g. under
 ## NoTeleport, when its time is over or on 나가기). Empty: every hold stops it.
 func return_to_aden(save_changes: Dictionary={}, departure_waive: Array=[]) -> Dictionary:
+	return call("_return_to_aden_impl",save_changes,departure_waive,false)
+
+func return_to_aden_loading(save_changes: Dictionary, departure_waive: Array) -> Dictionary:
+	return await _return_to_aden_impl(save_changes,departure_waive,true)
+
+func _return_to_aden_impl(save_changes: Dictionary, departure_waive: Array, loading: bool) -> Dictionary:
 	problem="";_last_source_transition={"ok":false,"saved":false,"uncertain":false}
 	var world: Node=_world()
 	if _source_travel_busy or not active or not source_owned or not is_instance_valid(world):
@@ -1349,10 +1355,20 @@ func return_to_aden(save_changes: Dictionary={}, departure_waive: Array=[]) -> D
 			var proposed: OriginalPlayableField=script.new()
 			if proposed.configure_verified_catalog(catalog,settings.source_manifest_sha256,4,{"attribute_rule":str(settings.get("attribute_rule","client523_attr_bit0")),"allowed_raw_words":settings.allowed_raw_words,"path_search_limit":settings.get("path_search_limit",8192),"aden_inferred_placement_enabled":settings.get("aden_inferred_placement_enabled",true)}):
 				var landing: Dictionary=_village_return_point(proposed,int(settings.get("aden_return_radius",8)))
-				if landing.get("ok",false):completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
+				if landing.get("ok",false):
+					if loading:
+						var candidate: Node = await _prepare_arrival(world,proposed,settings,landing.source_cell,catalog)
+						if is_instance_valid(candidate):
+							completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes,candidate)
+						else: proposed.close()
+					else: completed=_commit_source_destination(world,proposed,settings.duplicate(true),landing.source_cell,catalog,{},-1,save_changes)
 				else:problem=str(landing.reason);proposed.close()
 			else:problem=str(proposed.get("problem"));proposed.close()
-	else:completed=_return_within_aden(world,save_changes)
+	elif loading:
+		var landing: Dictionary = _village_return_point(_source_field,int(settings.get("aden_return_radius",8)))
+		if not landing.get("ok",false): problem=str(landing.reason)
+		elif await prepare_same_land(landing.position): completed=_return_within_aden(world,save_changes)
+	else: completed=_return_within_aden(world,save_changes)
 	_source_travel_busy=false
 	var result: Dictionary=_last_source_transition.duplicate(true)
 	result.merge({"ok":completed,"handled":true,"policy":ADEN_RETURN_POLICY,"source_location":ADEN_RETURN_LOCATION.duplicate(true),"native_return_relation_verified":false,"reason":"기란 마을로 귀환했습니다 · 자체 지정 목적지" if completed else problem},true)
@@ -1389,6 +1405,35 @@ func _return_within_aden(world: Node,save_changes: Dictionary) -> bool:
 	if save_changes.has("gold"):world.set("gold",int(save_changes.gold))
 	return true
 
+func same_land_prepared(destination: Vector2) -> bool:
+	var world: Node = _world()
+	if not active or not is_instance_valid(world) or not is_instance_valid(_renderer): return false
+	return _renderer.actor_point_ok(destination) and _renderer.is_ground_ready(_renderer.destination_view(destination,world.player.camera))
+
+
+## For point travel under the loading cover. Prepare ground without publishing
+## a provisional player location, collision change or save.
+func prepare_same_land(destination: Vector2) -> bool:
+	var world: Node = _world()
+	var renderer: Node = _renderer
+	if not active or not is_instance_valid(world) or not is_instance_valid(renderer):
+		problem = "현재 원문 화면을 사용할 수 없습니다."
+		return false
+	if not renderer.actor_point_ok(destination):
+		problem = "도착 위치를 확인할 수 없습니다."
+		return false
+	var loader = preload("res://scripts/boot/dungeon_loading.gd")
+	var screen: Rect2 = renderer.destination_view(destination,world.player.camera)
+	if not renderer.is_ground_ready(screen):
+		loader.report(world,"도착 지역의 바닥을 준비하는 중")
+		renderer.begin_arrival_view(screen)
+		var ready: bool = await _wait_arrival(world,renderer)
+		if is_instance_valid(renderer) and renderer.is_inside_tree(): renderer.end_arrival_view()
+		if not ready: return false
+	loader.arrival_ready(world)
+	return true
+
+
 var arrival_timeout_msec: int = 60000
 
 ## No save/fee/map ownership change until visible ground has actually rendered.
@@ -1411,12 +1456,19 @@ func _prepare_arrival(world: Node, proposed: OriginalPlayableField, options: Dic
 	candidate.hide()
 	world.add_child(candidate)
 	var valid: bool = candidate.try_configure(proposed,player,options.raw_root,options.tile_root,Vector2(options.offset_x,options.offset_y),str(options.tile_manifest_sha256),catalog,tiles)
-	if valid: valid = await _wait_arrival(world,candidate)
-	else: problem="도착 화면 확인 실패: "+str(candidate.problem)
+	# Configuration still validates the real destination projection. Restore
+	# the source actor before yielding; the candidate streams that saved view.
+	var screen: Rect2 = candidate._view_rect()
 	if is_instance_valid(player): player.global_position=position
 	if is_instance_valid(camera):
 		camera.limit_left=limits[0]; camera.limit_top=limits[1]; camera.limit_right=limits[2]; camera.limit_bottom=limits[3]
 		camera.reset_smoothing(); camera.force_update_scroll()
+	if valid:
+		candidate._arrival_view = screen
+		valid = await _wait_arrival(world,candidate)
+		if is_instance_valid(candidate): candidate._arrival_view = Rect2()
+	else:
+		problem = "도착 화면 확인 실패: " + str(candidate.problem)
 	if not valid:
 		if problem.is_empty(): problem="도착 화면 확인 실패"
 		if is_instance_valid(candidate): candidate.queue_free()
@@ -1429,7 +1481,7 @@ func _prepare_arrival(world: Node, proposed: OriginalPlayableField, options: Dic
 func _wait_arrival(world: Node, candidate: Node) -> bool:
 	var tree: SceneTree = world.get_tree()
 	var started: int = Time.get_ticks_msec()
-	while is_instance_valid(world) and world.is_inside_tree() and is_instance_valid(candidate):
+	while is_instance_valid(world) and world.is_inside_tree() and not world.is_queued_for_deletion() and is_instance_valid(candidate):
 		var readiness: Dictionary = candidate.arrival_readiness()
 		if readiness.get("failed",false): problem=str(readiness.get("reason","도착 화면 준비 실패")); return false
 		if readiness.get("ready",false): return true
@@ -1437,7 +1489,7 @@ func _wait_arrival(world: Node, candidate: Node) -> bool:
 			problem="도착 화면 준비 시간이 초과되었습니다. 현재 지역과 비용을 보존했습니다."
 			return false
 		await tree.process_frame
-		if is_instance_valid(world) and world.is_inside_tree() and is_instance_valid(candidate): candidate._process_step(0.0)
+		if is_instance_valid(world) and world.is_inside_tree() and not world.is_queued_for_deletion() and is_instance_valid(candidate): candidate._process_step(0.0)
 	problem="도착 화면 준비가 취소되었습니다."
 	return false
 
