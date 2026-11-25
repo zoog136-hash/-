@@ -12,6 +12,8 @@ const WINDOW=preload("res://scripts/ui/original_ui/source_main_change_window.gd"
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const CARDS=preload("res://scripts/card_draw_fusion.gd")
 const SOURCE_CARDS=preload("res://scripts/lineagem_base508.gd")
+const SOURCE_HUD=preload("res://scripts/ui/original_ui/source_main_hud.gd")
+const ROUTER=preload("res://scripts/ui/original_ui/source_button_router.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -335,6 +337,23 @@ func _hud_hooks() -> void:
 	var window: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_change_window.gd")
 	check(window.contains("\"catalog_equip_requested\""),"window applies through the existing equip signal")
 
+func _tap_button(window: RefCounted, offset: int, player: Node2D=null) -> Dictionary:
+	if player==null:player=window._detail
+	var node: Node2D=player.source_nodes.get(offset)
+	if not is_instance_valid(node) or not node.has_meta("source_button"):return {}
+	var area: Control=node.get_meta("source_button").get("_input_area")
+	var point: Vector2=area.get_global_transform_with_canvas()*(area.size*0.5)
+	var buttons: Array=[]
+	SOURCE_HUD._collect_native_buttons(window._scene,buttons)
+	var router=ROUTER.new()
+	var result: Dictionary={}
+	for pressed: bool in [true,false]:
+		var touch:=InputEventScreenTouch.new()
+		touch.pressed=pressed
+		touch.position=point
+		result=router.route(touch,point,buttons)
+	return result.get("result",{}) if result.get("activated",false) else {}
+
 func _real_pack(pack_dir: String) -> void:
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(pack_dir.path_join("receipt.json")))
 	check(receipt is Dictionary,"pack receipt readable")
@@ -364,18 +383,28 @@ func _real_pack(pack_dir: String) -> void:
 	opened=window.open(parent,"변신")
 	check(opened.get("handled",false) and opened.get("cards")==2 and opened.get("owned")==2,"owned cards are listed: "+str(opened))
 	check(window._type_label(0)=="모든 유형" and window._type_label(51)=="근거리" and window._type_label(1)=="만능","type labels are the popup's own texts")
-	var popup: Dictionary=window._toggle_type_popup()
+	check(not window._detail.project_player([WINDOW.TYPE_PROJECT]).ok
+		and not window._detail.project_player([WINDOW.KEYPAD_PROJECT]).ok,"opening the original list leaves both popups unbuilt")
+	var popup: Dictionary=_tap_button(window,WINDOW.SORT)
 	check(popup.get("type_popup",false) and window._detail.source_nodes.get(WINDOW.TYPE_PROJECT).visible,"모든 유형 shows the type popup")
-	var typed: Dictionary=window._select_type(31)
+	var type_player: Dictionary=window._detail.project_player([WINDOW.TYPE_PROJECT])
+	window._close_popups()
+	check(_tap_button(window,WINDOW.SORT).get("type_popup",false)
+		and window._detail.project_player([WINDOW.TYPE_PROJECT])==type_player,"reopening the type popup reuses the original player")
+	var typed: Dictionary={}
+	for button: Array in WINDOW.TYPE_SETS["변신"].buttons:
+		if int(button[3])==31:typed=_tap_button(window,int(button[0]),type_player.get("player"))
 	check(typed.get("cards")==1 and typed.get("type")==31 and not window._detail.source_nodes.get(WINDOW.TYPE_PROJECT).visible,"a type button filters and closes the popup: "+str(typed))
 	var graded: Dictionary=window._select_grade("전설")
 	check(graded.get("cards")==0 and graded.get("grade")=="전설","the grade list filters: "+str(graded))
 	var reset: Dictionary=window._reset_filters()
 	check(reset.get("cards")==2 and reset.get("grade")=="전체" and reset.get("type")==0,"초기화 clears the filters: "+str(reset))
-	var keypad: Dictionary=window._open_keypad()
+	var keypad: Dictionary=_tap_button(window,WINDOW.SEARCH)
 	check(keypad.get("keypad",false) and window._detail.source_nodes.get(WINDOW.KEYPAD_PROJECT).visible,"the search bar opens the original keypad: "+str(keypad))
+	check(window._editor.visible and not window._detail.project_player([WINDOW.TYPE_PROJECT]).ok,"search mounts only the keypad and attaches the editor")
 	window._editor.text="다크"
-	var searched: Dictionary=window._apply_query()
+	window._editor.text_submitted.emit(window._editor.text)
+	var searched: Dictionary=window.last_result
 	check(searched.get("cards")==1 and searched.get("query")=="다크" and is_instance_valid(window._editor) and not window._editor.visible,"검색 applies the query and hides the keypad: "+str(searched))
 	opened=window.open(parent,"마법인형")
 	check(opened.get("handled",false) and opened.get("cards")==1 and opened.get("query")=="","the doll list has its own filters: "+str(opened))

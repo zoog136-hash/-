@@ -7,6 +7,7 @@ const Menu=preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
 const Minimap=preload("res://scripts/ui/original_ui/source_main_map_bindings.gd")
 const Cards=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
 const Shop=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
+const SpriteScene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const QA=preload("res://tests/qa_class_selection.gd")
 const WINDOW: String="UI/fixture/Window.csb"
 const ROW: String="UI/fixture/Row.csb"
@@ -70,6 +71,51 @@ func setup_nested(pack: Pack, projects: int, filler: int) -> void:
 		rows.append(row_node(150+index,"Node","Unused%d"%index,[],{"padding":{"nested":range(16)}}))
 	pack.scenes[WINDOW]=var_to_bytes({"nodeTree":row_node(1,"Node","Root",columns)})
 	pack.scenes[ROW]=var_to_bytes({"nodeTree":row_node(2,"Node","Row",rows)})
+
+func deferred_projects() -> void:
+	var pack:=Pack.new()
+	setup_nested(pack,2,0)
+	var lazy: Dictionary={"role":"project","visible":false,"bindings":{},"defer_until_shown":true}
+	var eager: Dictionary={"role":"project","bindings":{}}
+	var scene:=SpriteScene.new()
+	var configured: Dictionary=scene.configure(pack,WINDOW,false,{100:lazy,101:eager})
+	check(configured.ok and pack.counts.get(ROW)==1,"the hidden project creates no child scene on open")
+	if not configured.ok:
+		scene.free()
+		return
+	root.add_child(scene)
+	var slot: Node2D=scene.source_nodes[100]
+	var unbuilt: bool=not scene.project_player([100]).ok
+	check(not slot.visible and unbuilt,"the unopened project has no input or player")
+	if not unbuilt:
+		scene.free()
+		return
+	var before: int=slot.get_index()
+	var home: Node=slot.get_parent()
+	var sibling: Node=home.get_child(before+1)
+	var row: PackedByteArray=pack.scenes[ROW]
+	pack.scenes.erase(ROW)
+	check(not scene.set_bound_visible(100,true).ok and scene.source_nodes[100]==slot and not slot.visible,
+		"a failed popup leaves the hidden slot and eager sibling intact")
+	pack.scenes[ROW]=row
+	check(scene.set_bound_visible(100,true).ok,"retry builds the exact child after the source is available")
+	var player: Dictionary=scene.project_player([100])
+	check(player.ok and scene.source_nodes[100].visible and home.get_child(before)==player.get("player")
+		and home.get_child(before+1)==sibling,"mount preserves same-z sibling order")
+	var reads: int=pack.counts[ROW]
+	check(scene.set_bound_visible(100,false).ok and scene.set_bound_visible(100,true).ok
+		and pack.counts[ROW]==reads and scene.project_player([100])==player,"hide and reopen reuse the live popup")
+	scene.free()
+
+	# An outer timeline acts on the original child root, so this project must
+	# still mount eagerly even if the owner asks to defer it.
+	var animated: Dictionary=pack.scene(WINDOW)
+	animated.action={"timeLines":[{"actionTag":100,"property":"VisibleForFrame","frames":[]}]}
+	pack.scenes[WINDOW]=var_to_bytes(animated)
+	scene=SpriteScene.new()
+	check(scene.configure(pack,WINDOW,false,{100:lazy,101:eager}).ok and scene.project_player([100]).ok,
+		"a parent timeline keeps its original target")
+	scene.free()
 
 func menu_nodes(weight: bool) -> Dictionary:
 	var nodes: Array=[]
@@ -173,6 +219,7 @@ func run() -> void:
 	hud_contracts(hud,pack)
 	nested_contracts(pack,hud)
 	card_contracts(pack)
+	deferred_projects()
 	var evidence: Dictionary=benchmark(pack) if "--benchmark" in args else {}
 	hud.free()
 	if "--main" in args:
