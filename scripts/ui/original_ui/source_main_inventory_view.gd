@@ -639,7 +639,7 @@ func _sync_detail_control() -> void:
 	var button_node: Node2D=scene.source_nodes.get(DETAIL_BUTTON)
 	var icon: Node2D=scene.source_nodes.get(DETAIL_ICON)
 	var origin: Node2D=icon.get_node_or_null("SourceContentOrigin") if is_instance_valid(icon) else null
-	var button: Node=button_node.get_meta("source_button",null) if is_instance_valid(button_node) else null
+	var button: Node=button_node.get_meta("source_button") if is_instance_valid(button_node) and button_node.has_meta("source_button") else null
 	var area: Control=button.get("_input_area") if is_instance_valid(button) else null
 	if origin==null or area==null:
 		scene.free()

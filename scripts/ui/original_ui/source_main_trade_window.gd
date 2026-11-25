@@ -305,7 +305,7 @@ func _fit_reclaim_label(root: Node2D, out: Dictionary) -> void:
 	var located: Dictionary=_locate(root,out,S+"Nd_TabMenu/"+suffix+"/Label")
 	if not located.get("ok",false):return
 	var owner: Node=located.player.source_nodes.get(located.offset)
-	var label: Node2D=owner.get_meta("source_text",null) if is_instance_valid(owner) else null
+	var label: Node2D=owner.get_meta("source_text") if is_instance_valid(owner) and owner.has_meta("source_text") else null
 	if not is_instance_valid(label):return
 	# Authored button width 165, left-aligned text at x≈66, and a small
 	# right inset. The replacement caption is longer than the original.
