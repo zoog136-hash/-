@@ -27,6 +27,7 @@ var _maximum: int=1
 var _count: int=1
 var _typed: String=""
 var _on_confirm: Callable
+var _delete: bool=false
 var stage: String=""
 var last_result: Dictionary={}
 
@@ -41,7 +42,7 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## `maximum` > 1 starts with the keypad; otherwise the confirmation directly.
-func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
 	if not is_instance_valid(parent) or item_name.is_empty() or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
 	_parent=parent
 	_item_name=item_name
@@ -50,6 +51,7 @@ func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_
 	_count=1
 	_typed=""
 	_on_confirm=on_confirm
+	_delete=permanent_delete
 	return _open_keypad() if maximum > 1 else _open_box()
 
 func _open_keypad() -> Dictionary:
@@ -69,7 +71,7 @@ func _open_keypad() -> Dictionary:
 func _open_box() -> Dictionary:
 	var spec: Dictionary={
 		"Fx_Popup_LeftUp":{"exclude":true},"Fx_Popup_RightBottom":{"exclude":true},
-		"Text_Message":{"role":"source_text","text":"%s %d개를 바닥에 내려놓으시겠습니까?" % [_item_name,_count]},
+		"Text_Message":{"role":"source_text","text":"선택한 아이템 %d개를 영구 삭제하시겠습니까?" % _count if _delete else "%s %d개를 바닥에 내려놓으시겠습니까?" % [_item_name,_count]},
 		"Text_Info":{"visible":false},
 		"Nd_Result/Label_Notice":{"visible":false},
 		"Nd_Result/Nd_Slot/Label_Title":{"visible":false},
@@ -114,7 +116,7 @@ func _show(member: String, spec: Dictionary, next_stage: String) -> Dictionary:
 	_scene=next
 	_out=out
 	stage=next_stage
-	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum}
+	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum,"permanent_delete":_delete}
 	return last_result
 
 func _refresh_volume() -> void:
@@ -152,6 +154,7 @@ func _keypad_done() -> Dictionary:
 	return _open_box()
 
 func _confirm() -> Dictionary:
+	if stage!="confirm" or not is_open():return {"ok":false,"code":"inventory_confirmation_not_open"}
 	var callback: Callable=_on_confirm
 	var count: int=_count
 	close()
@@ -173,4 +176,5 @@ func close(emit: bool=true) -> void:
 		previous.queue_free()
 	if emit:
 		stage=""
+		_on_confirm=Callable()
 		closed.emit()

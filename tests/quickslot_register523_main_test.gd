@@ -250,11 +250,12 @@ func run() -> void:
 			var before_tap: String = JSON.stringify(world.quickslots)
 			await tap(held)
 			evidence["tap_selected"] = str(window.selected())
-			check(controller.skill_window_is_open() and hud.pointer_transfer.pointer == -2 and hud.pointer_transfer.held_watch.is_empty() and JSON.stringify(world.quickslots) == before_tap, "a short tap starts no transfer and leaves the quick slots (the slot keeps its own tap)")
+			check(controller.skill_window_is_open() and hud.pointer_transfer.pointer == -2 and str(window.selected()) == held_id and JSON.stringify(world.quickslots) == before_tap, "a short tap selects the exact source row without registering or casting")
 			var to: Vector2 = center(slot_control(hud,visible))
 			touch(held,true)
 			await process_frame
-			evidence["held_watch_after_press"] = not hud.pointer_transfer.held_watch.is_empty()
+			check(hud.pointer_transfer.source.get("id")==held_id and hud.pointer_transfer.mode=="pending","the first press captures the same original skill ID")
+			evidence["captured_source_id"] = str(hud.pointer_transfer.source.get("id",""))
 			await create_timer(L.TOUCH_HOLD_SECONDS+0.15).timeout
 			check(str(hud.pointer_transfer.mode) == "drag", "holding the skill slot starts a quick slot drag")
 			for step: int in range(1,9):
@@ -263,7 +264,7 @@ func run() -> void:
 			touch(to,false)
 			await frames(8)
 			var entry: Dictionary = world.quickslots[hud.quickslot_index(visible)]
-			check(str(entry.get("kind","")) == "skill" and str(entry.get("id","")) == held_id, "dropping it on the quick slot registers the skill (%s)" % JSON.stringify(entry))
+			check(str(entry.get("kind",""))=="skill" and str(entry.get("skill_id",entry.get("id","")))==held_id,"dropping it on the quick slot registers the exact skill (%s)" % JSON.stringify(entry))
 			world.quickslots[hud.quickslot_index(visible)] = {}
 		if controller.has_method("close_skill_window"): controller.close_skill_window()
 	finish(world)

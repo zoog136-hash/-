@@ -12581,6 +12581,9 @@ func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)
 
 ## Bag item dragged onto the field: confirmation (quantity for stacks) first.
+func request_inventory_delete(reference: String) -> Dictionary:
+	return preload("res://scripts/loot/inventory_item_delete.gd").request(self,reference)
+
 func request_inventory_ground_drop(reference: String, target: Vector2) -> Dictionary:
 	return INVENTORY_GROUND_TRANSFER.request(self,reference,target)
 

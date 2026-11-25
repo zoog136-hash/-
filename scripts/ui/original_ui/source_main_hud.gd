@@ -275,6 +275,22 @@ func _input(event: InputEvent) -> void:
 	if _native_buttons==null or (not event is InputEventScreenTouch and not event is InputEventScreenDrag):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return
+	# The reward selector is modal even when the bag remains visible behind
+	# it. Route its rows, Cancel, and Confirm before the normal bag/chrome.
+	if feature_window_is_open("reward_select"):
+		var reward_buttons: Array=[]
+		var chooser: RefCounted=feature_window("reward_select")
+		_collect_native_buttons(chooser.input_scene(),reward_buttons)
+		chooser.append_row_buttons(reward_buttons)
+		_native_buttons.route(event,event.position,reward_buttons)
+		get_viewport().set_input_as_handled()
+		return
+	if drop_confirm_is_open():
+		var modal: Array=[]
+		_collect_native_buttons(_drop_popup.get("_scene"),modal)
+		_native_buttons.route(event,event.position,modal)
+		get_viewport().set_input_as_handled()
+		return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
 	var crafting_search: bool=crafting_search_is_open()
@@ -330,7 +346,13 @@ func _input(event: InputEvent) -> void:
 	elif character_inside:
 		var character: Dictionary=_character_view.presentation()
 		if is_instance_valid(character.get("scene")):_collect_native_buttons(character.scene,candidates)
+	elif item_tooltip_is_open() and _item_tooltip.blocks_point(point):
+		_collect_native_buttons(_item_tooltip.get("_scene"),candidates)
 	elif inventory_is_open() and inventory_blocks_point(point):
+		# Explicit single selected detail control; the normal Common_Slot
+		# subtree remains outside this router and owned by PointerTransfer.
+		var detail_button: Node=_inventory_view.detail_button_at(point)
+		if detail_button!=null:candidates.append(detail_button)
 		if _inventory_name_view!=null and _inventory_name_view.is_open():
 			var name_hint: Dictionary=_inventory_name_view.presentation()
 			if is_instance_valid(name_hint.get("scene")):_collect_native_buttons(name_hint.scene,candidates)
@@ -930,10 +952,11 @@ func inventory_name_hint_context(reference: String) -> Dictionary:
 	return context
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
+	if item_tooltip_is_open() and _item_tooltip.blocks_point(viewport_point):return {}
 	return _inventory_view.hit_at(viewport_point) if inventory_is_open() and not inventory_search_is_open() else {}
 
 func inventory_blocks_point(viewport_point: Vector2) -> bool:
-	return inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point))
+	return (item_tooltip_is_open() and _item_tooltip.blocks_point(viewport_point)) or (inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point)))
 
 func inventory_lock_blocks_point(viewport_point: Vector2) -> bool:
 	if _inventory_lock_view==null:return false
@@ -1067,10 +1090,18 @@ func skill_window() -> RefCounted:
 func skill_window_is_open() -> bool:
 	return _skill_window!=null and _skill_window.is_open()
 
-## A skill slot under the point of the open original skill window (long-press
-## registration source for PointerTransfer), else {}.
+## The original skill viewport's current hit owns one physical gesture.
 func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
 	return _skill_window.hit_at(viewport_point) if skill_window_is_open() else {}
+
+func skill_window_gesture_is_live(epoch: int) -> bool:
+	return _skill_window!=null and _skill_window.gesture_is_live(epoch)
+
+func skill_window_gesture_tap(epoch: int, skill_id: String, release: Vector2) -> void:
+	if _skill_window!=null:_skill_window.tap_from_pointer(epoch,skill_id,release)
+
+func skill_window_gesture_scroll(epoch: int, delta_y: float) -> void:
+	if _skill_window!=null:_skill_window.scroll_from_pointer(epoch,delta_y)
 
 func close_skill_window() -> void:
 	if skill_window_is_open():
@@ -1590,13 +1621,13 @@ func close_dissolve_confirm() -> void:
 const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
 var _item_tooltip: RefCounted
 
-func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}) -> Dictionary:
 	if _item_tooltip==null and _pack!=null:
 		var popup=ItemTooltip.new()
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
-	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record)
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions)
 
 func item_tooltip_is_open() -> bool:
 	return _item_tooltip!=null and _item_tooltip.is_open()
@@ -1612,14 +1643,14 @@ func close_item_tooltip() -> void:
 const DropPopup=preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
 var _drop_popup: RefCounted
 
-func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
 	if _drop_popup==null and _pack!=null:
 		var popup=DropPopup.new()
 		_window_problems["drop_popup"]=popup.configure(_pack)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
 	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
 	_cancel_native_buttons()
-	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm)
+	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm,permanent_delete)
 
 func drop_confirm_is_open() -> bool:
 	return _drop_popup!=null and _drop_popup.is_open()

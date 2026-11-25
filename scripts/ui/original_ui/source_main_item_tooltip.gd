@@ -6,9 +6,9 @@ extends RefCounted
 ## (Grade.ColorID -> ColorTable), the original icon in the popup's own
 ## Common_Slot, and the original description (ItemClass.StoryDescID /
 ## UseDescID from DescData_Korean) in ListView_BasicInfo. The popup's
-## exchange/delete/warehouse/safe-enchant/probability/collection/registration/
+## exchange/warehouse/safe-enchant/probability/collection/registration/
 ## set-effect controls belong to online or unconnected systems and are not
-## shown. Nothing here changes an item.
+## shown. Exact selected routes may open acquisition or a separate confirmed delete.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const IDENTITY=preload("res://scripts/ui/source523_item_identity.gd")
@@ -18,7 +18,7 @@ const SLOT="UI/CommonUi/Common_Slot.csb"
 ## Common_Slot: Btn, Sp_SlotBg, Sp_IconSample only.
 const MEMBER_SCOPES={SLOT:[15728,15316,15012]}
 ## Online / unconnected controls of the popup.
-const HIDDEN: Array[String]=["Fx_Popup_LeftUp","Fx_Popup_RightBottom","Icon_Set","SetBuff_On","SetBuff_Off","BasicInfo","Nd_Btn_Collection","Nd_Btn","Btn_Compare","ListView_SetBuff","Nd_List_Location","ND_ItemList/Text_Amount"]
+const HIDDEN: Array[String]=["Fx_Popup_LeftUp","Fx_Popup_RightBottom","SetBuff_On","SetBuff_Off","BasicInfo","Nd_Btn_Collection","Nd_Btn","Btn_Compare","ListView_SetBuff","Nd_List_Location","ND_ItemList/Text_Amount"]
 const POSITION=Vector2(600.0,-337.5)
 ## ListView_BasicInfo is 195 high; a Panel_set row is 20 plus the list's
 ## itemMargin 3.
@@ -33,6 +33,7 @@ var _out: Dictionary={}
 var reference: String=""
 var last_result: Dictionary={}
 var last_rows_problem: String=""
+var _closer: Node
 
 ## The client's popup has no X: a tap outside its panel closes it. The tap
 ## is not consumed (the input is never marked handled), so the button, item or slot
@@ -126,10 +127,23 @@ static func native_record(item_class_id: int) -> Dictionary:
 
 ## Opens the popup for a bag entry. `title` is the shown name (enhancement
 ## prefix and blessing included), `item_class_id` its original ItemClass.
-func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(parent) or title.is_empty():return {"ok":false,"handled":false,"code":"source_item_tooltip_input_invalid"}
 	var spec: Dictionary={}
 	for name: String in HIDDEN:spec[name]={"exclude":true}
+	var delete_action: Callable=actions.get("delete",Callable())
+	var acquisition: Callable=actions.get("acquisition",Callable())
+	if not delete_action.is_valid() and not acquisition.is_valid():spec["Icon_Set"]={"exclude":true}
+	else:
+		for group: String in ["Business","Del","Warehouse","Enchant","Probability","Detail"]:
+			var action: Callable=delete_action if group=="Del" else (acquisition if group=="Detail" else Callable())
+			spec["Icon_Set/"+group+"_Off"]={"exclude":true}
+			if action.is_valid():
+				spec["Icon_Set/"+group+"_On"]={"visible":true}
+				# These original buttons are caller-configured: Del_On is
+				# preview-visible with touchEnabled off, Detail_On starts hidden.
+				spec["Icon_Set/"+group+"_On/Btn_Icon"]={"activate":action,"touch_enabled":true}
+			else:spec["Icon_Set/"+group+"_On"]={"exclude":true}
 	spec["ItemInfo/Img_Title"]={"visible":false}
 	spec["ItemInfo/Text_1"]={"visible":false}
 	spec["ItemInfo/Text_1_0"]={"visible":false}
@@ -185,7 +199,11 @@ func _attach_outside_closer() -> bool:
 	closer.popup=weakref(self)
 	closer.panel=weakref(node)
 	_scene.add_child(closer)
+	_closer=closer
 	return true
+
+func blocks_point(point: Vector2) -> bool:
+	return is_open() and is_instance_valid(_closer) and _closer.panel_rect().has_point(point)
 
 ## Further rows: the same original Panel_set (its own Text_Title/Text_Desc),
 ## stacked under the first one with the list's item margin.
@@ -210,6 +228,7 @@ func _add_rows(rows: Array) -> int:
 func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null
+	_closer=null
 	_out={}
 	reference=""
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():

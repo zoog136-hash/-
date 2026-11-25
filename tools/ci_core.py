@@ -384,6 +384,7 @@ CHECKS = [
     ('equipment523_alchemy_pending_migration_test', []),
     ('source_spawn_admission_cache_test', []),
     ('quickslot_register523_main_test', []),
+    ('source_skill_scroll_drag_main_test', []),
     ('quickslot_slight_pull_test', []),
     ('source523_pack_test', []),
     ('current523_item_use_numeric_test', []),
@@ -420,6 +421,7 @@ CHECKS = [
     ('native_fusion_points_main_test', []),
     ('native_inventory_slot_names_main_test', []),
     ('native_timed_buff_publish_main_test', []),
+    ('native_exact_card_choice_main_test', []),
     ('native_witch_mana_potions_main_test', []),
     ('native_auto_hp_potion_main_test', []),
     ('native_antidote_owner_main_test', []),
@@ -461,6 +463,7 @@ CHECKS = [
     ('current523_bank_animation_visits_test', []),
     ('source_inventory_selection_ack_test', []),
     ('source_inventory_tap_action_test', []),
+    ('source_inventory_controls_main_test', []),
     ('source_inventory_header_refresh_test', []),
     ('source_inventory_chrome_stage_budget_test', []),
     ('source_inventory_virtual_rows_test', []),
@@ -793,7 +796,8 @@ def run_check(name, command, target, log, env, marker):
                 'native_exact_experience_main_test','native_firework_main_test','native_growth_catalyst_main_test','native_witch_mana_potions_main_test','native_auto_hp_potion_main_test','native_antidote_owner_main_test','native_trial_coin_main_test','native_timed_selection_boxes_main_test','native_growth_adena_potions_main_test',
                 'quest_only_retirement_main_test','escaros_original_card_main_test','source_item_visible_action_main_test',
                 'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test',
-                'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test','native_inventory_slot_names_main_test','native_timed_buff_publish_main_test'}:
+                'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test','native_inventory_slot_names_main_test','native_timed_buff_publish_main_test','native_exact_card_choice_main_test',
+                'source_inventory_controls_main_test','source_skill_scroll_drag_main_test'}:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
             fixture = dict(env, XDG_DATA_HOME=profile + '/data',
                            XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
@@ -1180,6 +1184,7 @@ def main():
                       'equipment523_alchemy_pending_migration_test':'EQUIPMENT523_ALCHEMY_PENDING_MIGRATION_RESULT',
                       'source_spawn_admission_cache_test':'SPAWN_ADMISSION_CACHE_RESULT',
                       'quickslot_register523_main_test':'QUICKSLOT_REGISTER_RESULT',
+                      'source_skill_scroll_drag_main_test':'SKILL_SCROLL_DRAG_RESULT',
                       'quickslot_slight_pull_test':'QUICKSLOT_SLIGHT_PULL_RESULT',
                       'source523_pack_test':'SOURCE523_PACK_RESULT',
                       'current523_item_use_numeric_test':'CURRENT523_ITEM_USE_NUMERIC_RESULT',
@@ -1216,6 +1221,7 @@ def main():
                       'native_fusion_points_main_test':'NATIVE_FUSION_POINTS_MAIN_RESULT',
                       'native_inventory_slot_names_main_test':'NATIVE_INVENTORY_SLOT_NAMES_RESULT',
                       'native_timed_buff_publish_main_test':'NATIVE_TIMED_BUFF_PUBLISH_RESULT',
+                      'native_exact_card_choice_main_test':'EXACT_CHOICE_RESULT',
                       'native_witch_mana_potions_main_test':'WITCH_MANA_MAIN_RESULT',
                       'native_auto_hp_potion_main_test':'NATIVE_AUTO_HP_MAIN_RESULT',
                       'native_antidote_owner_main_test':'ANTIDOTE_OWNER_MAIN_RESULT',
@@ -1255,6 +1261,7 @@ def main():
                       'current523_bank_animation_visits_test':'MAP_ANIMATION_VISITS_RESULT',
                       'source_inventory_selection_ack_test':'SOURCE_INVENTORY_SELECTION_ACK_RESULT',
                       'source_inventory_tap_action_test':'INVENTORY_TAP_ACTION_RESULT',
+                      'source_inventory_controls_main_test':'SOURCE_INVENTORY_CONTROLS_RESULT',
                       'source_inventory_header_refresh_test':'SOURCE_INVENTORY_HEADER_REFRESH_RESULT',
                       'source_inventory_chrome_stage_budget_test':'SOURCE_INVENTORY_CHROME_STAGE_BUDGET_RESULT',
                       'source_inventory_virtual_rows_test':'SOURCE_INVENTORY_VIRTUAL_ROWS_RESULT',

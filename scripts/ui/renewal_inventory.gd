@@ -176,6 +176,10 @@ func _ready() -> void:
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
 	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,44))
+	var delete_button: Button=UI.button("삭제",func() -> void: request_selected_delete(),Vector2(56,44))
+	delete_button.set_script(NATIVE_BUTTON)
+	delete_button.name="InventoryDelete"
+	actions.add_child(delete_button)
 	UI.primary_button(detail_button)
 	detail_button.set_script(NATIVE_BUTTON)
 	detail_button.name = "InventoryDetail"
@@ -319,10 +323,27 @@ func open_item_info(reference: String) -> bool:
 		return detail_active
 	var record: Dictionary = _find_item_record(reference)
 	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
-	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record))
+	var actions: Dictionary={"delete":Callable(self,"_tooltip_delete").bind(reference)}
+	if _item_class_id(record)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
+	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record),actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
 	return item_tooltip_open
+
+func _tooltip_delete(reference: String) -> Dictionary:
+	return request_selected_delete() if reference==selected_item else {"ok":false}
+
+func _tooltip_acquisition(reference: String) -> Dictionary:
+	if reference!=selected_item:return {"ok":false}
+	close_item_info()
+	_open_acquisition()
+	return {"ok":true}
+
+func request_selected_delete() -> Dictionary:
+	if not is_instance_valid(controller) or controller.get_parent()==null:return {"ok":false}
+	_hide_item_name()
+	close_item_info()
+	return controller.get_parent().request_inventory_delete(selected_item)
 
 func close_item_info() -> void:
 	if not item_tooltip_open: return
@@ -450,6 +471,9 @@ func show_inventory() -> void:
 
 func _toggle_lock() -> void:
 	if controller == null or selected_item.is_empty(): return
+	# An explicit lock operation is not the second tap that activates the
+	# selected item. Keep the selection border, but clear Use/Equip arming.
+	disarm_item_action()
 	controller.get_parent()._set_item_locked(selected_item,not bool(character_state.get("item_locks",{}).get(selected_item,false)))
 	_refresh_detail(selected_item)
 
@@ -738,9 +762,40 @@ func reorder(source: String, target: String) -> void:
 ## Sort once by grade (highest first), then name, then physical ID, and keep it
 ## as the stored order. Later pickups stack after it again.
 func sort_inventory_now() -> void:
+	disarm_item_action()
 	_store_sorted_order(_inventory_entries(), 1)
 	_refresh_inventory_grid()
 	_request_order_save()
+
+## One-shot original criteria. Keep old acquisition order as the stable
+## tie-breaker, and keep unknown/undated items after verified values.
+func sort_inventory_source(field: String, descending: bool) -> bool:
+	if field not in ["expiry","weight","category"]:return false
+	disarm_item_action()
+	var order: Array[String]=_acquisition_order(_inventory_entries())
+	var keys: Dictionary={}
+	var positions: Dictionary={}
+	for reference: String in order:
+		positions[reference]=positions.size()
+		var record: Dictionary=_find_item_record(reference)
+		var key: Variant
+		match field:
+			"expiry":
+				key=NATIVE_FIELDS.field(record,"source_delete_time_raw",null)
+				if (not key is int and not key is float) or not is_finite(float(key)):key=null
+				elif str(int(key)).length() not in [10,12]:key=null
+				elif str(int(key)).length()==10:key=int(key)*100
+			"weight":key=NATIVE_FIELDS.field(record,"source_weight",record.get("source_weight_raw"))
+			"category":key=NATIVE_FIELDS.field(record,"source_category_id",null)
+		if (key is int or key is float) and is_finite(float(key)) and float(key)>=0.0:keys[reference]=key
+	order.sort_custom(func(a: String,b: String) -> bool:
+		if keys.has(a)!=keys.has(b):return keys.has(a)
+		if keys.has(a) and keys[a]!=keys[b]:return keys[a]>keys[b] if descending else keys[a]<keys[b]
+		return int(positions[a])<int(positions[b]))
+	_order_store()["inventory_order"]=Array(order)
+	_refresh_inventory_grid()
+	_request_order_save()
+	return true
 
 var local_order_store: Dictionary = {}
 
