@@ -243,16 +243,17 @@ static func contracts(pack: Dictionary) -> Array[Dictionary]:
 static func resolve(pack: Dictionary, targets: Array, policy: Dictionary = {}) -> Dictionary:
 	# The verified pack is immutable. Runtime-only indexes/cache never enter the
 	# private source file or saves. A changed physical membership invalidates it.
-	var identities: Array[String] = []
+	var identities: Array[Array] = []
 	for target: Variant in targets:
 		if target is Dictionary:
-			identities.append(JSON.stringify([str(target.get("instance_id","")),int(target.get("source_id",0)),bool(target.get("equipped",true)),int(target.get("level",0)),int(target.get("bless_code",0))]))
-	identities.sort()
-	var signature: String = JSON.stringify([pack.get("source_sha256",""),pack.get("equipment523_effect_audit",{}),identities,policy.get("set_threshold_mode","cumulative")])
+			identities.append([str(target.get("instance_id","")),int(target.get("source_id",0)),bool(target.get("equipped",true)),int(target.get("level",0)),int(target.get("bless_code",0))])
+	# Preserve order: if malformed input repeats a physical ID with conflicting
+	# source IDs, the first valid owner is the one _resolve uses.
+	var signature: Array = [pack.get("source_sha256",""),pack.get("equipment523_effect_audit",{}),identities,str(policy.get("set_threshold_mode","cumulative"))]
 	var cached: Dictionary = pack.get("_equipment523_set_cache",{})
-	if cached.get("signature","") == signature: return cached.value
+	if cached.get("signature") is Array and cached.signature == signature: return cached.value
 	var result: Dictionary = _resolve(pack,targets,policy)
-	pack["_equipment523_set_cache"] = {"signature":signature,"value":result}
+	pack["_equipment523_set_cache"] = {"signature":signature.duplicate(true),"value":result}
 	return result
 
 static func _resolve(pack: Dictionary, targets: Array, policy: Dictionary = {}) -> Dictionary:
