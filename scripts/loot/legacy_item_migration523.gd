@@ -37,6 +37,9 @@ const KEY: String = "legacy_item_migration523"
 ## 1: exact-name replacement (#455). 2: + smallest ID for shared names and
 ## deletion of unmatched legacy items; a schema-1 save gets one schema-2 pass.
 const SCHEMA: int = 2
+## This aggregate had a second, still-active shop identity. Its own
+## reconciliation checks that binding, receipts and locks after load.
+const POWDER_SHOP_KEY: String = "상급 축복의 가루"
 const ORIGIN: Dictionary = {"kind":"twilight_legacy_item_migration523","schema":1}
 const BACKUP_SUFFIX: String = ".pre-legacy523-items-"
 ## Owned keys the current game itself keeps without a 523 identity: wallets
@@ -101,6 +104,7 @@ static func name_index(world: Node) -> Dictionary:
 ## identity in its name or catalog record, and no 523 icon route.
 static func is_legacy(world: Node, name_value: String) -> bool:
 	if name_value.is_empty() or name_value in SYSTEM_KEYS or _id_suffix(name_value) > 0: return false
+	if name_value == POWDER_SHOP_KEY or name_value.begins_with(POWDER_SHOP_KEY+" · 원본#"): return false
 	if name_value.begins_with("[원본") or name_value.begins_with("TWILIGHT · "): return false
 	if name_value in CURRENCY.CURRENCY_NAMES or CURRENCY.NAME_ALIASES.has(name_value) or CARD_PACKS.is_pack(name_value): return false
 	var record: Dictionary = world._find_catalog_item_record(name_value)
