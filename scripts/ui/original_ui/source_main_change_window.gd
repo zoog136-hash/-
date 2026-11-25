@@ -544,7 +544,7 @@ func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -
 			type_bindings[int(button[0])]={"role":"button","visible":not on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
 			type_bindings[int(button[1])]={"role":"button","visible":on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
 		_consume_touch(TYPE_SET,type_scope,type_bindings,reads)
-		bindings[TYPE_PROJECT]={"role":"project","visible":false,"source_node_offsets":type_scope,"bindings":type_bindings}
+		bindings[TYPE_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":type_scope,"bindings":type_bindings}
 	# Search bar: ItemBook_Popup_Keypad with the window's own editor.
 	if _available(KEYPAD) and host!=null:
 		scope.append_array(_subtree(DETAIL,[SEARCH],reads))
@@ -562,7 +562,7 @@ func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -
 			KEYPAD_CLOSE:{"role":"button","activate":Callable(self,"_close_popups")},
 			KEYPAD_CANCEL:{"role":"button","activate":Callable(self,"_clear_query")},
 			5132:{"role":"static_source_text"},2868:{"role":"static_source_text"}}
-		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
+		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
 	var info_scope: Array[int]=[int(info_nodes.name),int(info_nodes.grade),int(info_nodes.title),int(info_nodes.list)]
 	for offset: Variant in info_nodes.decor:info_scope.append(int(offset))
 	var info_bindings: Dictionary={int(info_nodes.name):{"role":"source_text","text":str(selected.get("name",""))},
@@ -823,15 +823,16 @@ func _type_label(id: int) -> String:
 
 func _toggle_type_popup() -> Dictionary:
 	if not is_instance_valid(_detail):return _fail("source_change_window_not_open")
-	var player: Dictionary=_detail.project_player([TYPE_PROJECT])
-	var shown: bool=player.get("ok",false) and not bool(_detail.get("source_nodes").get(TYPE_PROJECT).visible)
+	var node: Node2D=_detail.source_nodes.get(TYPE_PROJECT)
+	var should_show: bool=is_instance_valid(node) and not node.visible
 	_close_popups()
-	if shown:
-		_detail.set_bound_visible(TYPE_PROJECT,true)
-		_detail.set_bound_visible(POPUP_CLOSE,true)
-		_detail.set_bound_visible(SORT_STATES[0],false)
-		_detail.set_bound_visible(SORT_STATES[1],true)
-	return {"ok":true,"type_popup":shown}
+	if not should_show:return {"ok":true,"type_popup":false}
+	var shown: Dictionary=_detail.set_bound_visible(TYPE_PROJECT,true)
+	if not shown.ok:return shown
+	_detail.set_bound_visible(POPUP_CLOSE,true)
+	_detail.set_bound_visible(SORT_STATES[0],false)
+	_detail.set_bound_visible(SORT_STATES[1],true)
+	return {"ok":true,"type_popup":true}
 
 func _select_type(id: int) -> Dictionary:
 	_close_popups()
@@ -871,10 +872,14 @@ func _keypad_field() -> Variant:
 	return node.get_meta("source_text_field") if is_instance_valid(node) and node.has_meta("source_text_field") else null
 
 func _open_keypad() -> Dictionary:
-	var field: Variant=_keypad_field()
-	if field==null:return _fail("source_change_window_keypad_unavailable")
+	if not is_instance_valid(_detail):return _fail("source_change_window_keypad_unavailable")
 	_close_popups()
-	_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	var shown: Dictionary=_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	if not shown.ok:return _fail("source_change_window_keypad_unavailable")
+	var field: Variant=_keypad_field()
+	if field==null:
+		_close_popups()
+		return _fail("source_change_window_keypad_unavailable")
 	_detail.set_bound_visible(POPUP_CLOSE,true)
 	var attached: Dictionary=field.attach_editor()
 	if not attached.get("ok",false):
