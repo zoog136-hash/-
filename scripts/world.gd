@@ -4960,14 +4960,16 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
 	var selected_id: String = str(selected.get("id",""))
 	var native_stack: Dictionary
-	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id)
-	else: native_stack = stack_owner.try_use(self,item_name,selected_id)
+	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id,false)
+	else: native_stack = stack_owner.try_use(self,item_name,selected_id,false)
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
 		# 선택 상자: the original selection window (patch523_reward_choice).
 		if native_stack.get("requires_original_selection",false) and consumable_service.open_owned_original_selection(item_name,native_stack):return
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
-		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		if native_stack.get("ok",false):
+			if native_stack.get("effect_kind")=="buff":_publish_timed_buff_hud()
+			else:hud.refresh_inventory(inventory);_update_hud()
 		return
 	if quest_item_provider.try_use_inventory(self,item_name): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
@@ -7208,7 +7210,23 @@ func player_npc_buff_signature() -> int:
 func _update_hud() -> void:
 	_publish_player_hud(true)
 
-func _publish_player_hud(fold_native_stacks:bool) -> void:
+## All combat/character stats are still published immediately. Only group
+## the bag's count and physical-record changes and omit unrelated card UI
+## exports; the native timed-buff owner did not modify a card ledger.
+func _publish_timed_buff_hud() -> void:
+	var since:int=FRAME_HITCH.now()
+	var bag:Variant=hud.get("lineage_inventory_ui")
+	var batch:bool=is_instance_valid(bag) and bag.has_method("begin_state_publish") and bag.has_method("end_state_publish")
+	if batch:bag.begin_state_publish()
+	_publish_player_hud(true,true)
+	if batch:
+		var finish:int=FRAME_HITCH.now()
+		bag.end_state_publish()
+		FRAME_HITCH.detail("item.buff_bag_publish",finish)
+	FRAME_HITCH.detail("item.buff_hud",since)
+
+func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void:
+	var phase:int=FRAME_HITCH.now() if timed_item else 0
 	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -7224,6 +7242,7 @@ func _publish_player_hud(fold_native_stacks:bool) -> void:
 	_invalidate_equipment_static()
 	if fold_native_stacks:_merge_native_stacks()
 	_sync_item_instances()
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_prepare",phase)
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -7258,22 +7277,29 @@ func _publish_player_hud(fold_native_stacks:bool) -> void:
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	_stat_memo_end()
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_stats",phase)
 	hud.set_character_state(character_state)
-	if hud.has_method("set_card_collection_state"):
-		hud.call("set_card_collection_state", card_draw_fusion.export_state())
-	if hud.has_method("set_option_awakening_state"):
-		hud.call("set_option_awakening_state", option_awakening.export_state())
-	var completed_cards: Array[String] = card_collections.reconcile()
-	if not completed_cards.is_empty():
-		hud.append_log("카드 컬렉션 자동 완성 · %d개" % completed_cards.size())
-	if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
-	if hud.inventory_panel.visible:
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_sheet",phase)
+	if not timed_item:
+		if hud.has_method("set_card_collection_state"):
+			hud.call("set_card_collection_state", card_draw_fusion.export_state())
+		if hud.has_method("set_option_awakening_state"):
+			hud.call("set_option_awakening_state", option_awakening.export_state())
+		var completed_cards: Array[String] = card_collections.reconcile()
+		if not completed_cards.is_empty():
+			hud.append_log("카드 컬렉션 자동 완성 · %d개" % completed_cards.size())
+		if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
+	# Use the loaded physical records and stack counts together. The final
+	# quickslot feed sees the same inventory and cannot trigger another bag publish.
+	if timed_item or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", effective_quickslots())
 	regional_return_settings_updated.emit()
+	if timed_item:FRAME_HITCH.detail("item.buff_hud_final",phase)
 
 func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
@@ -7721,7 +7747,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
-		"consumable_state": SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
+		# A staged transaction already supplied and validated its replacement
+		# journal. The staged merge below detaches it; don't export the old
+		# live ledger just to discard that copy.
+		"consumable_state": {} if collection_override.has("consumable_state") else SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"combination523":combinations.export_state(),

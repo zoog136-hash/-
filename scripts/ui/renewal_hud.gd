@@ -129,6 +129,7 @@ var menu_category_filter: HBoxContainer
 var menu_category_buttons: Array[Button] = []
 var menu_category_index: int = 0
 var menu_tiles: Array[Control] = []
+var menu_original_spaces: Array[Control] = []
 var active_section: String = ""
 var totem_view: Control
 var buff_row: HBoxContainer
@@ -1793,6 +1794,7 @@ func _select_menu_category(index: int) -> void:
 		menu_category_buttons[position].set_pressed_no_signal(position == menu_category_index)
 	var category: String = names[menu_category_index]
 	for tile: Control in menu_tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
+	for space: Control in menu_original_spaces:space.visible=category=="전체"
 	if is_instance_valid(menu_scroll_view): menu_scroll_view.scroll_vertical = 0
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
@@ -1804,21 +1806,30 @@ const MENU_GRID_COLUMNS: int = 5
 const MENU_TILE_SIZE: Vector2 = Vector2(70,67)
 const MENU_VISIBLE_ROWS: int = 7
 
-## The original 523 전체 메뉴 order (MainMenuUIButtons, row by row: 제작 거래소
-## 변신 마법인형 성물 / 던전 · · 스킬 카드 컬렉션 / 혈맹 · 기억 · · / · 연금 · 수호성
-## 문양 / 엘릭서 스케줄 숙련 토템 지배석 / 작위 · · 설정 · / 몬스터 도감) for the
-## sections with an original tile (user list 2026-11-21 #3: 인형·성물 beside 변신).
-const ORIGINAL_MENU_ORDER: Array[String] = ["crafting","exchange","변신","마법인형","성물","source_dungeons","skill_card523","equipment_collections","clan523","refine523","guardians","emblems","half_elixir","auto","weapon_mastery","totems","domination_stone","titles","settings","monsterbook523"]
+## Pinned original 523 MainMenuUIButtons.FixedRow/FixedColumn, joined by
+## AssetView.FilePath, flattened to 7×5. Empty is a reserved original cell
+## without an equivalent active owner here, not an invitation to compress.
+## MainMenu_Schedule (5,2) is not TWILIGHT's auto-combat options.
+const ORIGINAL_MENU_CELLS: Array[String] = [
+	"crafting","exchange","변신","마법인형","성물",
+	"source_dungeons","","","skill_card523","equipment_collections",
+	"clan523","","","","",
+	"","refine523","","guardians","emblems",
+	"half_elixir","","weapon_mastery","totems","domination_stone",
+	"titles","","","settings","",
+	"monsterbook523","","","","",
+]
 
-## `pairs` ([section, caption]) with the original-order sections first, the
-## rest after them in their own order.
-static func ordered_menu_pairs(pairs: Array) -> Array:
-	var ranked: Array = []
-	for index: int in pairs.size():
-		var rank: int = ORIGINAL_MENU_ORDER.find(str(pairs[index][0]))
-		ranked.append([rank if rank >= 0 else ORIGINAL_MENU_ORDER.size() + index, pairs[index]])
-	ranked.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
-	return ranked.map(func(entry: Array) -> Array: return entry[1])
+## Preserve source cell indices even for unavailable/paused owners. Only
+## available local tiles go after the entire seven-row original block.
+static func place_menu_pairs(pairs: Array) -> Array:
+	var by_section: Dictionary = {}
+	for pair: Array in pairs:by_section[str(pair[0])]=pair
+	var result: Array = []
+	for id: String in ORIGINAL_MENU_CELLS:result.append(by_section.get(id,[]))
+	for pair: Array in pairs:
+		if not str(pair[0]) in ORIGINAL_MENU_CELLS:result.append(pair)
+	return result
 
 func _build_menu_page() -> void:
 	var col := VBoxContainer.new()
@@ -1870,13 +1881,22 @@ func _build_menu_page() -> void:
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
 	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
-	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
-	# original tile first in the client's order, then the TWILIGHT-only ones.
-	menu_pairs = ordered_menu_pairs(menu_pairs)
-	for pair: Array in menu_pairs:
+	menu_pairs = menu_pairs.filter(func(pair: Array) -> bool:
+		var id: String = str(pair[0])
+		return not id in RETIRED_SECTIONS and (id!="monsterbook523" or MONSTERBOOK_RUNTIME.progression_enabled()))
+	menu_pairs = place_menu_pairs(menu_pairs)
+	menu_original_spaces.clear()
+	for index: int in menu_pairs.size():
+		var pair: Array = menu_pairs[index]
+		if pair.is_empty():
+			var space := Control.new()
+			space.name="OriginalMenuSpace_%d" % index
+			space.custom_minimum_size=MENU_TILE_SIZE
+			space.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			grid.add_child(space)
+			menu_original_spaces.append(space)
+			continue
 		var section_id: String = str(pair[0])
-		if section_id in RETIRED_SECTIONS: continue
-		if section_id == "monsterbook523" and not MONSTERBOOK_RUNTIME.progression_enabled(): continue
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),MENU_TILE_SIZE)
