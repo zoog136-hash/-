@@ -81,6 +81,7 @@ func exact(archive: String, required: Dictionary) -> void:
 		for reward: Array in Boxes.RULES[id][1]:
 			if reward[3] in [0,class_id]: expected[reward[0]] = [reward[1],reward[2]]
 		if id == 212671:
+			rejected_selection(w,uid,record,spec)
 			w._set_item_locked(reference,true)
 			w.hud.inventory_item_activated.emit(reference)
 			check(w.item_instances.has(uid),"locked receipt preserved")
@@ -112,3 +113,20 @@ func exact(archive: String, required: Dictionary) -> void:
 		check(actual == expected,"all counts and enchant values #"+str(id)+" expected "+str(expected)+" got "+str(actual))
 	w.queue_free()
 	await process_frame
+
+## The real output is supplyable. An unsupported entity kind is rejected only
+## after that preflight, at select_rewards(), before the physical debit.
+func rejected_selection(w: Node, uid: String, record: Dictionary, source_spec: Dictionary) -> void:
+	var owned := Stack.proof(w,uid)
+	var count := int(w.inventory.get(record.name,0))
+	var remaining := int(owned.remaining)
+	var disk := FileAccess.get_sha256(w.save_path())
+	var seed_before := int(w.rng.seed)
+	var state_before := int(w.rng.state)
+	var spec := source_spec.duplicate(true)
+	spec.rewards[0]["entity_type_id"] = 2
+	var result := Stack.use_bag(w,uid,owned,record,spec)
+	check(result.get("handled")==true and result.get("ok")==false and result.get("saved")==false and result.get("consumed")==0 and result.get("reason")=="원본 전체 보상 풀·선택 계약 불일치","unselectable candidate returns the player's refusal")
+	check(int(w.inventory.get(record.name,0))==count and int(Stack.proof(w,uid).remaining)==remaining,"rejected selection keeps the original box stack")
+	check(not disk.is_empty() and FileAccess.get_sha256(w.save_path())==disk,"rejected selection preserves durable save bytes")
+	check(int(w.rng.seed)==seed_before and int(w.rng.state)==state_before,"rejected selection preserves world RNG seed and position")

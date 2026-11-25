@@ -1665,7 +1665,7 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 	view.free()
 	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
 	var selected: Dictionary=executor.call("select_rewards",spec,class_id,candidate_rng,clampi(int(world.ui_preferences.get("patch523_reward_bag_draw_count",1)),1,10))
-	if not selected.get("ok",false):view.free();return _failure("원본 전체 보상 풀·선택 계약 불일치")
+	if not selected.get("ok",false):return _failure("원본 전체 보상 풀·선택 계약 불일치")
 	var origin: Dictionary
 	var evidence: Dictionary
 	if described:
