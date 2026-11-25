@@ -98,10 +98,13 @@ func exact(archive: String, required: Dictionary) -> void:
 		var actual := {}
 		for key: String in w.item_instances:
 			var entry: Dictionary = w.item_instances[key]
-			var receipt: Dictionary = entry.get(Stack.RECEIPT,{})
 			var count := int(entry.get(Stack.QUANTITY,1))
-			var origin: Dictionary = receipt.get("origin",entry.get("source_m_reward_proof",{}).get("supplier",{}))
-			if origin.get("input_physical_id") != uid: continue
+			# Stack origins deliberately retain only their kind after save compaction.
+			# Compare against the pre-grant inventory; this also counts merged stacks.
+			var original: Dictionary = instances.get(key,{})
+			if not original.is_empty():
+				count -= int(original.get(Stack.QUANTITY,1))
+			if count <= 0 or not entry.get("record",{}).has("source_item_class_id"): continue
 			var output := int(entry.record.source_item_class_id)
 			var received: Array = actual.get(output,[0,int(entry.level)])
 			received[0] += count
