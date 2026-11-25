@@ -21,6 +21,7 @@ func refuse(_path:String,payload:Dictionary)->Error:
 	return ERR_CANT_CREATE
 func _initialize()->void:run.call_deferred()
 func run()->void:
+	preload("res://tests/native_growth_deadline_cases.gd").clock_cases(ck)
 	var source:String=OS.get_environment("TWILIGHT_GROWTH_ADENA_DEFINITIONS")
 	if not source.is_empty() and ck(not FileAccess.file_exists("user://twilight_v20_save.json"),"isolated Main file"):
 		await exact(source)
@@ -102,6 +103,7 @@ func exact(source:String)->void:
 	expire(w)
 	ck(w._active_item_buff_total("source_npc_adena_drop_pct")==0,"normal expiration stops temporary boost")
 	kill(w,0)
+	preload("res://tests/native_growth_deadline_cases.gd").from_bag(w,ck)
 	w.queue_free();await process_frame
 
 static func expire(w:Node)->void:

@@ -858,15 +858,21 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 ## the future still does. false = source dates only.
 static var rotate_ended_dates: bool = true
 
+static func source_deadline_unix(raw: int, timezone_minutes: int) -> int:
+	var encoded := str(raw)
+	if encoded.length() not in [10,12]: return -1
+	var minute := encoded.substr(10,2) if encoded.length() == 12 else "00"
+	var local_time := "%s-%s-%sT%s:%s:00" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),minute]
+	var stamp := Time.get_unix_time_from_datetime_string(local_time)
+	if Time.get_datetime_string_from_unix_time(stamp) != local_time: return -1
+	return stamp - clampi(timezone_minutes,-720,840) * 60
+
 static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> String:
 	if item.get("source_delete_time_unresolved",false): return "원본 아이템 수명 조건 미지원 · 아이템 보존"
 	for key: String in ["source_start_time_raw","source_end_time_raw","source_delete_time_raw"]:
 		if not NATIVE_FIELDS.has_field(item,key): continue
-		var encoded: String = str(int(NATIVE_FIELDS.field(item,key)))
-		if encoded.length() not in [10,12]: return "원본 기간 형식 확인 실패 · 아이템 보존"
-		var minute: String = encoded.substr(10,2) if encoded.length() == 12 else "00"
-		var local_time: String = "%s-%s-%sT%s:%s:00" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),minute]
-		var deadline: int = Time.get_unix_time_from_datetime_string(local_time)-clampi(timezone_minutes,-720,840)*60
+		var deadline := source_deadline_unix(int(NATIVE_FIELDS.field(item,key)),timezone_minutes)
+		if deadline == -1: return "원본 기간 형식 확인 실패 · 아이템 보존"
 		var now: int = int(Time.get_unix_time_from_system())
 		if key == "source_start_time_raw" and now < deadline: return "원본 사용 기간 시작 전 · 보유 아이템 보존"
 		if key != "source_start_time_raw" and now >= deadline and not rotate_ended_dates: return "원본 사용 기한 만료 · 보유 아이템은 보존"

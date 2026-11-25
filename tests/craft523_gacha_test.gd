@@ -87,11 +87,31 @@ func original_tables() -> void:
 func owned_total(world: Node, id: int) -> int:
 	return int(GACHA.stacks_of(world,id).total)
 
-func actual_main() -> void:
+func actual_main(archive: String = "") -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
 	check(QA.enter_game(world), "actual Main map entry")
 	for frame: int in 10: await process_frame
+	if not archive.is_empty():
+		OS.set_environment("TWILIGHT_PATCH523_CONTENT",archive)
+		SOURCE.reset()
+		world.skill_awakening = world.SKILL_AWAKENING.new()
+		world.skill_awakening.configure(world)
+		original_tables()
+		var ids := {}
+		for caller: int in GACHA.callers():
+			var rule := GACHA.spec(caller)
+			ids[caller] = true
+			ids[int(rule.material_id)] = true
+			for outcome: Dictionary in GACHA.table(int(rule.gacha_id),GACHA.class_of(world)).entries:
+				var output := int(outcome.row.ItemClassID)
+				ids[output] = true
+				for bound: Dictionary in SOURCE.related("GachaCraftBoundItem","ItemClassID",output):
+					ids[int(bound.BoundItemClassID)] = true
+		for id: int in ids:
+			var item: Dictionary = world.source_item_definition(id).get("native_record",{})
+			if not item.is_empty(): world.catalog_db["아이템"].append(item)
+		world._index_catalog_item_sources()
 	# A book whose material is a physical stack and one paid in 아데나.
 	var samples: Array = []
 	for id: int in GACHA.callers():
@@ -155,12 +175,79 @@ func actual_main() -> void:
 		check(forced.get("ok",false) and int(forced.output.amount) == int(big.amount) and int(forced.output.item_class_id) == int(big.item), "forced draw grants ItemAmount %d: %s" % [int(big.amount),str(forced.get("reason",forced.get("output","")))])
 		evidence["forced_amount"] = forced.get("output",{})
 	evidence["main_runs"] = runs
+	await bag_books(world)
 	world.queue_free()
 	await process_frame
 
+func bag_books(world: Node) -> void:
+	var callers := GACHA.callers()
+	check(callers.size() == 13 and not callers.has(241972) and not callers.has(125883),"test-labelled book and a book requiring a test-only material stay excluded")
+	var grants := []
+	for id: int in callers:
+		grants.append({"item_class_id":id,"amount":1,"bless_raw":1,"enchant":0})
+	for grant: Dictionary in grants:
+		var received := SUPPLY.commit(world,[grant],{"kind":"qa_gacha_bag"})
+		check(received,"grant book #"+str(grant.item_class_id)+": "+str(world.hud.message_label.text))
+	for id: int in callers:
+		var books := GACHA.stacks_of(world,id)
+		if not check(not books.stacks.is_empty(),"owned book #"+str(id)): continue
+		var chosen: Dictionary = books.stacks.back()
+		var uid: String = chosen.uid
+		var remaining := int(chosen.owned.remaining)
+		var gold_before: int = world.gold
+		world.hud.inventory_item_activated.emit(str(chosen.owned.record.name)+"@@@"+uid)
+		var panel: Control = world.hud.workspace.find_child("Patch523GachaCraft",true,false)
+		if not check(is_instance_valid(panel) and panel.is_visible_in_tree(),"bag opens book #"+str(id)): continue
+		var screen: Control = panel.get_parent()
+		check(screen.gacha_ids == [id] and screen.bag_book_uid == uid and screen.gacha_books.disabled,"confirmed screen pins this receipt #"+str(id))
+		check(int(STACK.proof(world,uid).remaining) == remaining and world.gold == gold_before,"opening spends nothing")
+		world.hud._close_workspace()
+		await process_frame
+	evidence["bag_opened"] = callers.size()
+	var id: int = 754
+	var spec := GACHA.spec(id)
+	var cap := int(SOURCE.row("ItemClass",id).MaxStackAmount)
+	# Leave two receipts with the same name. A stale or locked selection must never spend the other.
+	var supply := [{"item_class_id":id,"amount":cap,"bless_raw":1,"enchant":0},{"item_class_id":int(spec.material_id),"amount":int(spec.material_amount)*3,"bless_raw":1,"enchant":0}]
+	if not check(SUPPLY.commit(world,supply,{"kind":"qa_gacha_second_book"}),"second book and enough material"): return
+	var found := GACHA.stacks_of(world,id)
+	if not check(found.stacks.size() >= 2,"at least two same-name receipts"): return
+	var uid: String = found.stacks.back().uid
+	var other: String = found.stacks.front().uid
+	var other_count := int(STACK.proof(world,other).remaining)
+	var chosen: Dictionary = STACK.proof(world,uid)
+	var label: String = chosen.record.name
+	world.gold = 100000000
+	var before: int = world.gold
+	world.hud.inventory_item_activated.emit(label+"@@@"+uid)
+	var panel: Control = world.hud.workspace.find_child("Patch523GachaCraft",true,false)
+	if not check(is_instance_valid(panel),"chosen original inventory input opens live book confirmation"): return
+	var screen: Control = panel.get_parent()
+	screen.gacha_action.pressed.emit()
+	var dialog: Control = world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if not check(is_instance_valid(dialog),"craft press opens a quote"): return
+	world._set_item_locked(label+"@@@"+uid,true)
+	dialog.confirm_button.pressed.emit()
+	check(world.gold == before and int(STACK.proof(world,uid).remaining) == int(chosen.remaining) and int(STACK.proof(world,other).remaining) == other_count,"lock between quote and confirmation preserves both receipts")
+	world._set_item_locked(label+"@@@"+uid,false)
+	await process_frame
+	screen._refresh_gacha()
+	screen.gacha_action.pressed.emit()
+	dialog = world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if not check(is_instance_valid(dialog),"renewed quote after unlock"): return
+	dialog.confirm_button.pressed.emit()
+	check(int(STACK.proof(world,uid).get("remaining",0)) == int(chosen.remaining)-1 and int(STACK.proof(world,other).remaining) == other_count and world.gold == before-int(spec.cost),"live confirmation spends the selected UID, material and original price")
+	var after: int = world.gold
+	check(not world.patch523_gacha_craft_execute(id,uid,int(chosen.remaining)).ok and world.gold == after,"stale confirmation cannot spend a second time")
+	world._load_game(true)
+	check(world.gold == after and int(STACK.proof(world,other).remaining) == other_count,"exact debit survives reload")
+
 func run() -> void:
 	synthetic()
-	if not SOURCE.not_installed():
+	var archive := OS.get_environment("TWILIGHT_GACHA_DEFINITIONS")
+	if not archive.is_empty():
+		await actual_main(archive)
+	elif not SOURCE.not_installed():
 		original_tables()
 		await actual_main()
 	print("CRAFT523_GACHA_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))

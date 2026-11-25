@@ -343,6 +343,8 @@ static func record(definition: Dictionary) -> Dictionary:
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
 	var bag: Dictionary=reward_bag(definition,false)
+	if bag.is_empty() and category.get("Name") == "LuckyBag":
+		bag = described_event_box(definition)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
@@ -1032,6 +1034,7 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	# 아인하사드 절약 and cast speed percent points.
 	percent_fields.merge({"AbsoluteExperienceAdditionPercent":"xp","HPPotionIncreasePercent":"potion_heal_pct","EinasadSavingPercent":"ain_saving_pct","CastSpeedBonus":"cast_speed"})
 	var erase_level: int=0
+	var buff_deadline: int = 0
 	var valid_tower_lands:Dictionary={}
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
@@ -1042,6 +1045,15 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
+		if name_value == "DeleteTime" and row.get("CharacterLevel") == 0 and row.get("CharacterClass") == 0 and row.get("MinSpellLevel") == 0:
+			var active_row := row.duplicate()
+			active_row["IsPossession"] = false
+			var stamp := delete_time_stamp(active_row)
+			if stamp <= 0 or (buff_deadline > 0 and stamp != buff_deadline):
+				reasons.append("source_buff_lifetime_unresolved")
+			else:
+				buff_deadline = stamp
+			continue
 		if tower and name_value=="ValidLand" and not conditional and unit.get("Name")=="LandID" and integer(bonus.get("Value")):
 			var target_land:int=int(bonus.Value)
 			if target_land<45374 or target_land>46364 or (target_land-45374)%10!=0 or valid_tower_lands.has(target_land):
@@ -1133,6 +1145,7 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
 	if erase_level>0:spec["erase_at_level"]=erase_level
+	if buff_deadline > 0: spec["buff_delete_time_raw"] = buff_deadline
 	# IsAbsoluteTimeBuff: the duration runs in real time, also while the game is closed.
 	if buff.get("IsAbsoluteTimeBuff",false)==true:spec["absolute_time"]=true
 	if ignore_during:spec["ignore_use_during_buff"]=true
@@ -1190,6 +1203,33 @@ static func bag_flags_valid(rows: Array) -> bool:
 	for row: Dictionary in rows:
 		if str(row.get("bonus_type",{}).get("Name",""))=="ResetAutoSlotByEmpty" and whole(row.get("bonus",{}).get("Value")) not in [0,1]:return false
 	return true
+
+static func described_event_box(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary = definition.original_item
+	var rule: Array = preload("res://scripts/loot/native_event_boxes523.gd").RULES.get(int(raw.ID),[])
+	if rule.is_empty() or rule[0] != raw.get("StoryDescID"):
+		return {}
+	var rows: Array = definition.item_bonus
+	if rows.size() != 1 or delete_time_stamp(rows[0]) <= 0:
+		return {}
+	var spec := consume_metadata(rows,raw,definition.category,{},false)
+	if not spec.blocked_reasons.is_empty(): return {}
+	var rewards := []
+	var omitted := []
+	for output: Array in rule[1]:
+		var id: int = output[0]
+		if output[3] == -1:
+			if not preload("res://scripts/quests/retired_quest_items523.gd").IDS.has(id): return {}
+			omitted.append(id)
+			continue
+		rewards.append({"item_class_id":id,"amount":output[1],"enchant":output[2],"class_ids":[output[3]] if output[3] > 0 else [],"bless_raw":1,"entity_type_id":1})
+	if rewards.is_empty(): return {}
+	spec.merge({"kind":"source_event_box","source_snapshot":"patch523","source_item_class_id":int(raw.ID),
+		"story_desc_id":int(raw.StoryDescID),"source_item_bonus_ids":[rows[0].ID],"consume_delay_ms":0,
+		"rewards":rewards,"omitted_quest_ids":omitted,"activation_status":"unrestricted",
+		"approximation":"원본 설명을 따른 발록 이벤트 구성품 · 서버 지급 대상 ID와 일반 축복은 TWILIGHT 추정",
+		"item_requirements":{"targetting_type_id":raw.TargettingTypeID,"service_region_code":raw.ServiceRegionCode,"can_use_when_invisible":raw.CanUseWhenInvisible}},true)
+	return spec
 
 # Same public compiler _source_reward_bag_spec contract, supplied by the
 # existing ItemData -> RewardData graph. This does not grant any reward.
