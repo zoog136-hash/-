@@ -3,6 +3,7 @@ extends "res://tests/map_usage_async_test.gd"
 ## tools/map_restore/test_current523_tile_pack.py, its SHA, and the base
 ## revision's two scripts from git show. Both sides use the same verified
 ## rows and a fresh texture cache. Timers end before readback/ledger I/O.
+## Add --pan to reveal three overlapping strips and return to a warm strip.
 
 const TILES = preload("res://scripts/maps/current523_tile_pack.gd")
 const GROUND = preload("res://scripts/maps/current523_aden_play_renderer.gd")
@@ -19,6 +20,13 @@ class CountedRows extends RefCounted:
 var fixture: String
 var pin: String
 var iteration: int = 0
+var pan: bool = false
+
+func show_strip(left: int) -> void:
+	var screen: Rect2 = root.get_visible_rect()
+	var zoom: Vector2 = screen.size / Vector2(160, 512)
+	root.canvas_transform = Transform2D(Vector2(zoom.x, 0), Vector2(0, zoom.y),
+		screen.position - Vector2(left, -4) * zoom)
 
 func sample(pack_script: Script, ground_script: Script, per_atlas: int) -> Dictionary:
 	var pack = pack_script.new()
@@ -73,6 +81,8 @@ func sample(pack_script: Script, ground_script: Script, per_atlas: int) -> Dicti
 			return {}
 	var prepared_us: int = Time.get_ticks_usec()-t0
 	var built: Dictionary = {"commands":{-2:lane}, "atlases":atlases, "count":per_atlas*8, "draws":per_atlas*8, "raw_ff":0, "unresolved":0}
+	var previous_transform: Transform2D = root.canvas_transform
+	if pan: show_strip(-4)
 	var block: Dictionary = ground._bake_block(Vector2i.ZERO,built)
 	ground._blocks[Vector2i.ZERO] = block
 	ground._visible_blocks.assign([Vector2i.ZERO])
@@ -88,6 +98,17 @@ func sample(pack_script: Script, ground_script: Script, per_atlas: int) -> Dicti
 		if not measured.is_empty() and block.get("presented",false): break
 	var first_us: int = Time.get_ticks_usec()-t0
 	check(measured.size() == 1 and block.get("presented",false),"one presented ground draw")
+	var counts: Array[int] = [USAGE._accepted]
+	if pan:
+		for left: int in [140, 284, 140]:
+			show_strip(left)
+			ground._draw_generation += 1
+			canvas.queue_redraw()
+			await RenderingServer.frame_post_draw
+			counts.append(USAGE._accepted)
+		root.canvas_transform = previous_transform
+		check(measured.size() == 4 and counts[0] > 0 and counts[0] < counts[1] and counts[1] < counts[2] and counts[2] == per_atlas * 8 and counts[2] == counts[3],
+			"each newly visible strip admits its units and a return to the warm strip admits none")
 	var image: Image = block.viewport.get_texture().get_image()
 	if image == null or not image.get_used_rect().has_area():
 		check(false,"fixture renders visible ground pixels")
@@ -102,11 +123,12 @@ func sample(pack_script: Script, ground_script: Script, per_atlas: int) -> Dicti
 	host.free()
 	return {"submit":submit_usec,"prepare":prepared_us,"draw":measured[0] if not measured.is_empty() else -1,
 		"first":first_us,"main_reads":rows.main_reads,"worker_reads":rows.worker_reads,"pixels":painted,
-		"units":count,"evidence":TILES._hash(var_to_bytes(members))}
+		"units":count,"evidence":TILES._hash(var_to_bytes(members)),"pan_draw":measured.slice(1),"units_by_view":counts}
 
 func run() -> void:
 	var args: Dictionary = {}
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--pan": pan = true
 		var pair: PackedStringArray = arg.split("=",true,1)
 		if pair.size() == 2: args[pair[0]] = pair[1]
 	if DisplayServer.get_name() == "headless" or not args.has_all(["--fixture","--fixture-sha","--baseline-pack","--baseline-renderer"]):
@@ -142,7 +164,7 @@ func run() -> void:
 					return
 				pairs[side] = row
 				if repeat > 0: samples[side].append(row)
-			check(pairs[0].pixels == pairs[1].pixels and pairs[0].evidence == pairs[1].evidence,"same block pixels and confirmed units")
+			check(pairs[0].pixels == pairs[1].pixels and pairs[0].evidence == pairs[1].evidence and pairs[0].units_by_view == pairs[1].units_by_view,"same block pixels and confirmed units for each view")
 		print("TILE_DRAW_PAIRS ",JSON.stringify({"refs":8*n,"samples":samples}))
 	print("TILE_DRAW_BENCH_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

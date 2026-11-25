@@ -1337,21 +1337,40 @@ static func _draw_dream_floor(canvas: Node2D, cell: Vector2i, runs: PackedInt64A
 		canvas.draw_rect(Rect2(Vector2(runs[i],runs[i+1])-origin,Vector2(runs[i+2],TILE_PX)),Color.WHITE)
 
 
-## ref -> tile corners (x, y, ...) of one block's draw commands.
-static func _usage_pending(commands: Dictionary) -> Dictionary:
-	var lanes: Dictionary = {}
+## Keep corners only for refs still outside the first view of this block.
+static func _first_draw_usage(commands: Dictionary, view: Rect2, observed: Dictionary) -> Dictionary:
+	var by_ref: Dictionary = {}
 	for layer: int in commands:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
-			var corners: Variant = lanes.get(ref)
-			if corners == null:
-				corners = []
-				lanes[ref] = corners
-			(corners as Array).append(lane[index]); (corners as Array).append(lane[index + 1])
+			var corners: Variant = by_ref.get(ref)
+			if corners is bool: continue # Another copy of this ref is already visible.
+			if Rect2(lane[index], lane[index + 1], TILE_PX, TILE_PX).intersects(view):
+				by_ref[ref] = true
+			else:
+				if corners == null:
+					corners = []
+					by_ref[ref] = corners
+				corners.append(lane[index])
+				corners.append(lane[index + 1])
+	# First command order determines admission when the ledger reaches its limit,
+	# including when a later copy of the same ref was the one inside the view.
 	var pending: Dictionary = {}
-	for ref: int in lanes: pending[ref] = PackedInt64Array(lanes[ref])
+	for ref: int in by_ref:
+		if by_ref[ref] is bool: observed[ref] = true
+		else: pending[ref] = PackedInt64Array(by_ref[ref])
 	return pending
+
+
+static func _reveal_usage(pending: Dictionary, view: Rect2, observed: Dictionary) -> void:
+	for ref: int in pending.keys():
+		var corners: PackedInt64Array = pending[ref]
+		for index: int in range(0, corners.size(), 2):
+			if Rect2(corners[index], corners[index + 1], TILE_PX, TILE_PX).intersects(view):
+				observed[ref] = true
+				pending.erase(ref)
+				break
 
 
 func _free_block(cell: Vector2i) -> void:
@@ -1826,7 +1845,7 @@ func _process_step(delta: float) -> void:
 
 func _draw_tiles(canvas: Node2D) -> void:
 	if not _configured: return
-	var observe: bool=not _arrival_view.has_area() and USAGE.actual_main(self) and _usage_generation!=_draw_generation
+	var observe: bool = _usage_generation != _draw_generation and not _arrival_view.has_area() and USAGE.actual_main(self)
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
 	var observed_refs: Dictionary={}
 	for cell: Vector2i in _visible_blocks:
@@ -1835,28 +1854,12 @@ func _draw_tiles(canvas: Node2D) -> void:
 		if not is_instance_valid(viewport): continue
 		canvas.draw_texture((viewport as SubViewport).get_texture(), Vector2(cell * BLOCK))
 		if observe and _block_rect(cell).intersects(view):
-			# Each ref is observed once: refs not yet seen on screen keep their
-			# tile corners; a ref leaves the list when one of them is in view.
-			# (Every rebuild used to walk every tile of every visible block.)
-			if not block.has("usage_pending"): block["usage_pending"] = _usage_pending(block.commands)
-			var pending: Dictionary = block.usage_pending
-			for ref: int in pending.keys():
-				var corners: PackedInt64Array = pending[ref]
-				for index: int in range(0, corners.size(), 2):
-					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
-						if not observed_refs.has(ref): observed_refs[ref] = []
-						observed_refs[ref].append(pending)
-						break
+			if block.has("usage_pending"):
+				_reveal_usage(block.usage_pending, view, observed_refs)
+			else:
+				block["usage_pending"] = _first_draw_usage(block.commands, view, observed_refs)
 	if observe:
-		var sources: Dictionary = {}
-		for ref: int in observed_refs:
-			var tile_id: int = ref >> 8
-			if not sources.has(tile_id): sources[tile_id] = _tile_pack.source_usage_identity(tile_id)
-			var source: Dictionary = sources[tile_id]
-			if not source.is_empty(): USAGE.observe_result(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
-			# Broker retains transient pressure. Invalid/disabled/hard-dropped
-			# attempts are terminal here; never poll by redrawing an idle map.
-			for pending: Dictionary in observed_refs[ref]: pending.erase(ref)
+		USAGE.observe_ground_refs(self, _tile_pack, observed_refs)
 		_usage_generation = _draw_generation
 		USAGE.flush()
 
