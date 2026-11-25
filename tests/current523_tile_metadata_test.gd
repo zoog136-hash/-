@@ -3,6 +3,7 @@ extends SceneTree
 ## worker at the cursor while the real live-map API continues running.
 const PACK = preload("res://scripts/maps/current523_tile_pack.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const PLAY = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -24,6 +25,11 @@ class DelayedRecords extends RefCounted:
 				release.wait()
 		return null if key == missing_key else records.read(key)
 
+class CameraProbe extends PLAY:
+	var screen: Rect2 = Rect2(0,0,320,240)
+	func _view_rect() -> Rect2:
+		return _arrival_view if _arrival_view.has_area() else screen
+
 func _initialize() -> void:
 	run.call_deferred()
 
@@ -42,6 +48,61 @@ func drain(pack: RefCounted) -> bool:
 		if pack.pending_jobs() == 0: return true
 		await process_frame
 	return false
+
+func camera_probe(pack: RefCounted) -> CameraProbe:
+	var renderer := CameraProbe.new()
+	root.add_child(renderer)
+	renderer.field = PlayableField.new()
+	renderer.field.set_meta("current523_source_field",true)
+	renderer.player = Node2D.new()
+	renderer.add_child(renderer.player)
+	renderer._tile_pack = pack
+	renderer._background_atlases = true
+	renderer._configured = true
+	return renderer
+
+func obsolete_atlases(pack: RefCounted, reader: DelayedRecords, colors: Dictionary) -> void:
+	pack._cache.clear()
+	pack._recent.clear()
+	var active := camera_probe(pack)
+	var arrival := camera_probe(pack)
+	arrival.hide()
+	arrival.process_mode = Node.PROCESS_MODE_DISABLED
+	var destination := Rect2(4096,0,320,240)
+	var old_cell := Vector2i.ZERO
+	var new_cell := Vector2i(8,0)
+	# Both renderers share a pack. A covered arrival still claims its pages.
+	active._prefetch_atlas(7,old_cell)
+	active._prefetch_atlas(52,old_cell)
+	active._prefetch_atlas(1200,old_cell)
+	arrival.begin_arrival_view(destination)
+	arrival._prefetch_atlas(52,new_cell)
+	pack.prefetch(1200)
+	check(pack.pending_jobs() == 3,"block owners and direct requests share existing decode jobs")
+	active.screen = Rect2(-4096,0,320,240)
+	await process_frame
+	var uploads: int = pack.atlas_loads
+	check(await drain(pack),"obsolete, shared, and direct worker jobs all retire")
+	check(pack.atlas_loads == uploads + 2 and not pack._cache.has(7) and pack._cache.has(52) and pack._cache.has(1200),
+		"only the covered arrival and the direct consumer publish")
+	active.screen = Rect2(0,0,320,240)
+	check(not active._prefetch_atlas(7,old_cell),"return to a previously abandoned block can request its page again")
+	check(await drain(pack) and pack.atlas_loads == uploads + 3,"returning uploads one verified page")
+	if DisplayServer.get_name() != "headless":
+		for id: int in [7,52]:
+			var texture: Texture2D = pack.texture_for(id)
+			var expected := Image.create_empty(384,384,false,Image.FORMAT_RGBA8)
+			expected.fill(colors[id])
+			check(texture != null and texture.get_image().get_data() == expected.get_data(),"revisited and shared atlas pixels match exactly")
+	reader.missing_key = "t:16777215"
+	active._prefetch_atlas(16777215, old_cell)
+	active.free()
+	await process_frame
+	check(await drain(pack) and not pack._prefetch_errors.has(16777215),"a detached owner cannot publish an obsolete error")
+	reader.missing_key = ""
+	arrival._prefetch_atlas(16777215,new_cell)
+	check(await drain(pack) and pack.texture_for(16777215) != null,"another renderer can request a repaired page without resetting the pack")
+	arrival.free()
 
 func run() -> void:
 	var pack := PACK.new()
@@ -124,6 +185,7 @@ func run() -> void:
 		elif DisplayServer.get_name() != "headless":
 			shown = shown and texture.get_image().get_pixel(3,5).to_rgba32() == (colors[id] as Color).to_rgba32()
 	check(shown,"each published texture belongs to its own row, including alpha on a rendering display")
+	await obsolete_atlases(pack,reader,colors)
 	pack._cache.clear()
 	pack._recent.clear()
 	reader.missing_key = "t:52"
