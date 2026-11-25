@@ -8,6 +8,7 @@ const MAX_PNG_BYTES = 2 * 1024 * 1024
 const MAX_METADATA_BYTES = 64 * 1024 * 1024
 const MAX_TILES = 20000
 const TI2_DECODER = preload("res://scripts/maps/current523_ti2_decoder.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 ## Atlases are swapped to GPU block compression off the main thread.
 const TILE_GPU = preload("res://scripts/maps/current523_tile_gpu.gd")
 var gpu := TILE_GPU.new()
@@ -54,10 +55,12 @@ var _source_sizes := PackedInt32Array()
 var _source_digests := PackedByteArray()
 var _cache: Dictionary = {}
 var _recent: Array[int] = []
-## tile_id -> {task, decode}. Only the worker touches decode until joined.
+## tile_id -> {task, decode, optional claims}. Claims stay on the main thread.
 var _jobs: Dictionary = {}
 ## Worker decodes in flight at once (each holds ~1.2 MiB while decoding).
 const MAX_DECODE_JOBS: int = 8
+const MAX_CLAIM_OWNERS: int = 4
+const MAX_CLAIM_BLOCKS: int = 64
 
 ## Publication is counted by engine process frame, not pump invocation: a
 ## frame may call pump_gpu, texture_for and pump_jobs many times. Keep the
@@ -273,15 +276,47 @@ func texture_for(tile_id: int) -> Texture2D:
 ## made on the main thread (pump_jobs). A miss used to stall the frame for
 ## the whole decode (about 15 ms per atlas on a PC, ~60 ms on the phone).
 func prefetch(tile_id: int) -> bool:
+	return _offer_atlas(tile_id, 0, Vector2i.ZERO)
+
+## A shared pack may service the active map and a covered arrival at once.
+## Attach each block's demand to the existing decode, without owning the node.
+func prefetch_for_block(tile_id: int, renderer: Node, cell: Vector2i) -> bool:
+	return _offer_atlas(tile_id, renderer.get_instance_id(), cell)
+
+func _offer_atlas(tile_id: int, owner: int, cell: Vector2i) -> bool:
 	if _cache.has(tile_id) or _held.has(tile_id): return true
 	# Ready means the request finished, including a verified read failure.
 	# The block assembler can then report it and skip only the failed tiles.
 	if background_only and _prefetch_errors.has(tile_id): return true
-	if not has_tile(tile_id) or _jobs.has(tile_id): return false
-	if _jobs.size() >= MAX_DECODE_JOBS: return false
-	var job: Dictionary = _new_job(tile_id)
-	var task: int = WorkerThreadPool.add_task(_decode_job.bind(job), false, "TI2 atlas decode")
-	_jobs[tile_id] = {"task": task, "decode": job}
+	if not _jobs.has(tile_id):
+		if not has_tile(tile_id) or _jobs.size() >= MAX_DECODE_JOBS: return false
+		var decode: Dictionary = _new_job(tile_id)
+		var task: int = WorkerThreadPool.add_task(_decode_job.bind(decode), false, "TI2 atlas decode")
+		_jobs[tile_id] = {"task": task, "decode": decode}
+		if owner != 0: _jobs[tile_id].claims = {}
+	var pending: Dictionary = _jobs[tile_id]
+	if pending.has("claims"):
+		var claims: Dictionary = pending.claims
+		var cells: Variant = claims.get(owner)
+		# An ordinary/tool request or unusually large view keeps its result.
+		if owner == 0 or (cells == null and claims.size() >= MAX_CLAIM_OWNERS) \
+			or (cells != null and cells.size() >= MAX_CLAIM_BLOCKS and not cells.has(cell)):
+			pending.erase("claims")
+		elif cells == null:
+			claims[owner] = {cell: true}
+		else:
+			cells[cell] = true
+	return false
+
+func _still_requested(pending: Dictionary, views: Dictionary) -> bool:
+	if not pending.has("claims"): return true
+	for owner: int in pending.claims:
+		if not views.has(owner):
+			var renderer: Object = instance_from_id(owner)
+			views[owner] = renderer.atlas_request_bounds() if is_instance_valid(renderer) else Rect2i()
+		var bounds: Rect2i = views[owner]
+		for cell: Vector2i in pending.claims[owner]:
+			if bounds.has_point(cell): return true
 	return false
 
 ## Publishes completed decodes within a shared per-frame allowance. Returns
@@ -296,10 +331,20 @@ func pump_jobs() -> int:
 		for tile_id: int in _priority.keys():
 			if int(_priority[tile_id]) < frame - 1: _priority.erase(tile_id)
 	var done: int = 0
-	while _published_this_frame < MAX_PUBLISH_PER_FRAME and (_published_this_frame == 0 or _publish_usec < PUBLISH_BUDGET_USEC):
+	if _jobs.is_empty(): return done
+	var views: Dictionary = {}
+	while not _jobs.is_empty() and _published_this_frame < MAX_PUBLISH_PER_FRAME and (_published_this_frame == 0 or _publish_usec < PUBLISH_BUDGET_USEC):
 		var selected: int = -1
-		for tile_id: int in _jobs:
-			if not WorkerThreadPool.is_task_completed(int(_jobs[tile_id].task)): continue
+		for tile_id: int in _jobs.keys():
+			var job: Dictionary = _jobs[tile_id]
+			if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+			if not _still_requested(job, views):
+				# This slot is released without a texture, failure, or upload
+				# budget charge. A later request can read the same pinned bytes.
+				WorkerThreadPool.wait_for_task_completion(int(job.task))
+				_jobs.erase(tile_id)
+				FRAME_HITCH.count("map.atlas_obsolete")
+				continue
 			if selected < 0: selected = tile_id
 			if _publish_sequence % 4 == 3: break
 			if int(_priority.get(tile_id, -2)) >= frame - 1:

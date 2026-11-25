@@ -3,6 +3,8 @@ extends SceneTree
 ## pointing to the two scripts extracted from the base commit with git show.
 ## --fixture and --fixture-sha use the existing 35-tile PNG runtime_fixture
 ## with a fresh texture cache per arrival instead of resident test textures.
+## --baseline-tiles enables the rapid-travel replay with seven finished
+## decodes for the abandoned view and a cold destination.
 const PLAY = preload("res://scripts/maps/current523_aden_play_renderer.gd")
 const FIELD = preload("res://scripts/maps/current523_source_field.gd")
 const FIXTURE = preload("res://tests/current523_aden_play_renderer_test.gd")
@@ -25,6 +27,7 @@ var source := Catalog.new()
 var tiles := ResidentTiles.new()
 var fixture: String
 var fixture_sha: String
+var baseline_tiles: Script
 
 func _initialize() -> void: run.call_deferred()
 
@@ -54,18 +57,24 @@ func time_arrival(renderer: Node2D) -> Dictionary:
 	renderer.set_process(true)
 	var first: int = -1
 	var frames: int = 0
+	var previous: int = began
+	var max_gap: int = 0
+	var uploads: int = -1
 	for tick: int in 120:
 		await RenderingServer.frame_post_draw
 		var presented_at: int = Time.get_ticks_usec()
 		# Let all post-draw callbacks mark their blocks before checking. The
 		# next process_frame signal fires before the next renderer _process.
 		await process_frame
+		if first < 0: max_gap = maxi(max_gap,presented_at - previous)
+		previous = presented_at
 		if first < 0 and renderer.is_ground_ready(VIEW):
 			first = presented_at - began
 			frames = tick + 1
+			if not fixture.is_empty(): uploads = renderer._tile_pack.atlas_loads
 		if first >= 0 and renderer._pending_blocks.is_empty():
 			renderer.set_process(false)
-			return {"usec":first,"frames":frames}
+			return {"usec":first,"frames":frames,"max_gap":max_gap,"uploads":uploads}
 	renderer.set_process(false)
 	return {}
 
@@ -82,7 +91,20 @@ func painted_ground(renderer: Node2D) -> Dictionary:
 		commands.append(block.commands)
 	return {"pixels":pixels.finish().hex_encode(),"commands":TILES._hash(var_to_bytes(commands))}
 
-func sample(play: Script, field_script: Script) -> Dictionary:
+func stage_abandoned_requests(renderer: Node2D) -> void:
+	var cell := Vector2i(-20,0)
+	renderer._arrival_view = Rect2(Vector2(cell * PLAY.BLOCK),VIEW.size)
+	var pack: RefCounted = renderer._tile_pack
+	for id: int in range(21,28):
+		if renderer.has_method("_prefetch_atlas"): renderer._prefetch_atlas(id,cell)
+		else: pack.prefetch(id)
+	# Stage completed CPU decodes, without running either renderer or doing
+	# any upload, for the same queue contents in each replay.
+	for job: Dictionary in pack._jobs.values():
+		while not WorkerThreadPool.is_task_completed(int(job.task)):
+			await process_frame
+
+func sample(play: Script, field_script: Script, pack_script: Script) -> Dictionary:
 	var renderer = play.new()
 	root.add_child(renderer)
 	renderer.field = field_script.new()
@@ -98,7 +120,7 @@ func sample(play: Script, field_script: Script) -> Dictionary:
 	if fixture.is_empty():
 		renderer._tile_pack = tiles
 	else:
-		var pack := TILES.new()
+		var pack: RefCounted = pack_script.new()
 		if not pack.load_pack(fixture,fixture_sha):
 			printerr(pack.problem)
 			renderer.free()
@@ -114,6 +136,7 @@ func sample(play: Script, field_script: Script) -> Dictionary:
 	renderer.block_jobs_enabled = true
 	renderer._configured = true
 	renderer._ensure_ground()
+	if baseline_tiles != null: await stage_abandoned_requests(renderer)
 	var first: Dictionary = await time_arrival(renderer)
 	if first.is_empty():
 		renderer.free()
@@ -146,6 +169,7 @@ func sample(play: Script, field_script: Script) -> Dictionary:
 	var counts: Array = [metrics.registered_sources, metrics.expected_sources]
 	renderer.free()
 	return {"first_usec":first.usec,"first_frames":first.frames,"revisit_usec":revisit.usec,"revisit_frames":revisit.frames,
+		"first_max_gap_usec":first.max_gap,"first_uploads":first.uploads,"revisit_uploads":revisit.uploads,
 		"rebuild_usec":rebuild,"cold_discovery_usec":cold_discovery,"discovery_usec":discovery,
 		"lists":lists.size(),"id_bytes":id_bytes,"counts":counts,"pixels":initial.pixels,
 		"commands":initial.commands,"requests":TILES._hash(var_to_bytes(requests))}
@@ -170,10 +194,16 @@ func run() -> void:
 		printerr("The PNG fixture and its manifest pin must be supplied together.")
 		quit(1)
 		return
+	if args.has("--baseline-tiles"):
+		baseline_tiles = load(args["--baseline-tiles"])
+		if baseline_tiles == null or fixture.is_empty():
+			printerr("Rapid-travel replay needs both tile readers and the PNG fixture.")
+			quit(1)
+			return
 	make_input()
 	var zoom: Vector2 = root.get_visible_rect().size / VIEW.size
 	root.canvas_transform = Transform2D(Vector2(zoom.x,0),Vector2(0,zoom.y),-VIEW.position * zoom)
-	for size: int in [64,1024,4096]:
+	for size: int in ([64,1024,4096] if baseline_tiles == null else [1024]):
 		source._members.clear()
 		for i: int in size: source._members["Map/test/%08x.s32" % i] = {}
 		var samples: Array = [[],[]]
@@ -181,7 +211,8 @@ func run() -> void:
 			var pair: Array = [{},{}]
 			for i: int in 2:
 				var side: int = (repeat + i) % 2
-				pair[side] = await sample(old_play if side == 0 else PLAY, old_field if side == 0 else FIELD)
+				var pack_script: Script = baseline_tiles if side == 0 and baseline_tiles != null else TILES
+				pair[side] = await sample(old_play if side == 0 else PLAY, old_field if side == 0 else FIELD, pack_script)
 				if repeat > 0: samples[side].append(pair[side])
 			if pair[0].is_empty() or pair[1].is_empty() or pair[1].counts != [size,size]:
 				printerr("Missing destination or count at size ",size)
@@ -192,6 +223,7 @@ func run() -> void:
 					printerr("Map request A/B mismatch: ",key)
 					quit(1)
 					return
-		print("MAP_REQUEST_PAIRS ",JSON.stringify({"members":size,"cold_textures":not fixture.is_empty(),"samples":samples}))
+		print("MAP_REQUEST_PAIRS ",JSON.stringify({"members":size,"cold_textures":not fixture.is_empty(),
+			"superseded":baseline_tiles!=null,"samples":samples}))
 	print("MAP_REQUEST_BENCH_OK")
 	quit()
