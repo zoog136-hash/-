@@ -21,6 +21,7 @@ func _initialize() -> void:
 	_lru_order_and_byte_budget()
 	_oversize_and_zero_budget()
 	_entry_cap()
+	_independent_resident_and_tracked_order()
 	_weak_reuse_and_release()
 	_prune_on_insert()
 	_trim_keeps_budget()
@@ -56,7 +57,7 @@ func _lru_order_and_byte_budget() -> void:
 	# b is no longer resident; this test still owns it, so it is found again.
 	check(cache.lookup("b") == b and cache.metrics().weak_hits == 1, "an evicted texture that is still owned is reused")
 	check(cache._resident.has("b") and cache._resident.has("d") and not cache._resident.has("a"), "re-admission evicts the oldest resident (a)")
-	check(cache._resident_lru == ["d", "b"], "resident order is oldest first")
+	check(cache._resident.keys() == ["d", "b"], "resident order is oldest first")
 	cache.configure(16, 10)
 	check(cache._resident.has("b") and cache.metrics().resident_entries == 1 and cache.metrics().resident_decoded_bytes_estimate == 16, "a smaller budget evicts at once, oldest first")
 	check(cache.metrics().tracked_entries == 3, "eviction keeps weak tracking of owned textures")
@@ -96,6 +97,23 @@ func _entry_cap() -> void:
 	cache.configure(1024, 1)
 	check(cache.metrics().tracked_entries == 1 and cache.metrics().resident_entries == 1, "a smaller cap forgets at once")
 	check(cache.lookup("k4") == owned[4], "the most recently used key survives the smaller cap")
+
+func _independent_resident_and_tracked_order() -> void:
+	var cache: RefCounted = CACHE.new()
+	cache.configure(16, 3)
+	var resident: Texture2D = tex()
+	var oversize: Texture2D = tex()
+	var next: Texture2D = tex()
+	cache.remember("", resident, 16)
+	cache.remember("big", oversize, 32)
+	cache.remember("next", next, 16)
+	check(cache.lookup("") == resident, "a weak hit with an empty key can become resident again")
+	check(cache.lookup("big") == oversize, "an oversized weak hit updates only the tracking order")
+	cache.configure(16, 2)
+	check(cache.lookup("next") == null and cache.lookup("") == resident and cache.lookup("big") == oversize, "the cap keeps both recently touched textures")
+	oversize = null
+	cache.prune()
+	check(cache.metrics().tracked_entries == 1 and cache.metrics().resident_entries == 1, "pruning removes the expired oversized entry and retains the resident")
 
 func _prune_on_insert() -> void:
 	var cache: RefCounted = CACHE.new()
@@ -169,7 +187,7 @@ func _clear_modes() -> void:
 	check(a.get_width() == 2 and b.get_width() == 2, "clear(true) leaves owned textures usable")
 	var misses: int = metrics.misses
 	check(cache.lookup("a") == null and cache.lookup("b") == null and cache.metrics().misses == misses + 2, "after clear(true) owned textures are no longer found")
-	check(cache._weak.is_empty() and cache._cost.is_empty() and cache._tracked_lru.is_empty() and cache._resident_lru.is_empty(), "clear(true) leaves no bookkeeping")
+	check(cache._weak.is_empty() and cache._cost.is_empty() and cache._resident.is_empty() and cache._nonresident.is_empty(), "clear(true) leaves no bookkeeping")
 
 func _metrics_snapshot() -> void:
 	var cache: RefCounted = CACHE.new()
@@ -215,5 +233,7 @@ func _bounded_under_churn() -> void:
 		if index % 7 == 0: cache.lookup("k%d" % (index / 2))
 		var metrics: Dictionary = cache.metrics()
 		if metrics.resident_decoded_bytes_estimate > 48 or metrics.tracked_entries > 5 or metrics.resident_entries > 3: within = false
-		if cache._resident.size() != cache._resident_lru.size() or cache._weak.size() != cache._tracked_lru.size() or cache._weak.size() != cache._cost.size(): within = false
+		if cache._weak.size() != cache._resident.size() + cache._nonresident.size() or cache._weak.size() != cache._cost.size(): within = false
+		for key: String in cache._nonresident:
+			if cache._resident.has(key) or cache._weak.get(key) != cache._nonresident[key]: within = false
 	check(within, "limits and bookkeeping hold after every one of 300 insertions")
