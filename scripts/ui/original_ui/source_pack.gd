@@ -34,6 +34,7 @@ var _pages: Dictionary={}
 var _texture_cache=TEXTURE_CACHE.new()
 var _settings_frames: RefCounted
 var _settings_frames_checked := false
+var _building_settings := false
 var _fonts: Dictionary={}
 var _bitmap_fonts: Dictionary={}
 var _page_leases: Dictionary={}
@@ -218,10 +219,13 @@ func _find(node: Dictionary, source_name: String, result: Array[Dictionary]) -> 
 	if widget.get("name")==source_name: result.append(node)
 	for child: Dictionary in node.get("children",[]): _find(child,source_name,result)
 
-## Opening settings is the first time its optional private bundle is needed.
-## Desktop overrides or other pack instances must match the selected root and pin.
-func enable_settings_frames() -> void:
-	if _settings_frames_checked or manifest.is_empty(): return
+## Only a cache miss during a synchronous settings build needs the optional file.
+func set_settings_frame_scope(active: bool) -> bool:
+	var previous := _building_settings
+	_building_settings = active
+	return previous
+
+func _load_settings_frames() -> void:
 	_settings_frames_checked = true
 	var selected_root := OS.get_environment("TWILIGHT_SOURCE_UI").simplify_path().trim_suffix("/")
 	if root.simplify_path().trim_suffix("/") != selected_root or manifest_sha256 != OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").to_lower():
@@ -258,9 +262,12 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 		var atlas: Dictionary=manifest.atlases.get(_member(plist),{})
 		var frame: Dictionary=atlas.get("frames",{}).get(str(reference.path),{})
 		if frame.is_empty(): return null
-		if cocos_pixels and _settings_frames != null:
-			original = _settings_frames.frame_image(_member(plist), str(reference.path), atlas, frame, self)
-			premultiplied = original != null
+		if cocos_pixels and _building_settings:
+			if not _settings_frames_checked:
+				_load_settings_frames()
+			if _settings_frames != null:
+				original = _settings_frames.frame_image(_member(plist), str(reference.path), atlas, frame, self)
+				premultiplied = original != null
 		if original == null:
 			var page: Image=_page(str(atlas.get("page","")))
 			if page==null: return null

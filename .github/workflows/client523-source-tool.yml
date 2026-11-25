@@ -9,6 +9,8 @@ on:
       - 'tools/lineagem_original/test_client523_bank_metadata.py'
       - 'tools/lineagem_original/build_reference_sp2_bank.py'
       - 'tools/lineagem_original/original_spr.py'
+      - 'tools/lineagem_original/requirements.txt'
+      - 'tools/android/prepared_settings_frames.py'
       - 'tools/android/build_client523_resource_pack.py'
       - 'tools/android/test_client523_resource_pack.py'
       - 'tools/android/build_client523_addon.py'
@@ -44,10 +46,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: tools/android
+          sparse-checkout: |
+            tools/android
+            tools/lineagem_original
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install private UI packing dependencies
+        run: python -m pip install -r tools/lineagem_original/requirements.txt
       - name: Run tests
         working-directory: tools/android
         run: python -m unittest test_client523_resource_pack test_client523_addon test_update_pack -v

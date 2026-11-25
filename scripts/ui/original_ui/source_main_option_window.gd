@@ -42,10 +42,17 @@ func _root_member() -> String:
 	return ROOT
 
 func open(parent: Node, first_tab: String="sound") -> Dictionary:
-	if _pack != null and _pack.has_method("enable_settings_frames"):
-		_pack.enable_settings_frames()
 	tab=first_tab if TABS.has(first_tab) and first_tab in CONNECTED else "sound"
 	return open_window(parent)
+
+## Opening, switching tabs, and refreshing all stage their textures here.
+func _stage() -> Dictionary:
+	if _pack == null or not _pack.has_method("set_settings_frame_scope"):
+		return super._stage()
+	var previous: bool = _pack.set_settings_frame_scope(true)
+	var result := super._stage()
+	_pack.set_settings_frame_scope(previous)
+	return result
 
 ## The saved master volume, 0..100.
 static func volume() -> float:

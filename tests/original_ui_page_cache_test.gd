@@ -133,6 +133,8 @@ func _verify_prepared_frames(dir: String, pin: String) -> void:
 	reader._ranges = ranges
 	reader._bytes = compressed
 	pack._settings_frames = reader
+	pack._settings_frames_checked = true
+	pack.set_settings_frame_scope(true)
 	var tex := pack.texture(ref, true)
 	check(tex != null and _fingerprint(tex).data == raw and tex.get_meta("cocos_premultiplied"), "decoded Zstd fixture matches rotated, padded PMA pixels")
 	check(pack._pages.is_empty() and is_same(tex, pack.texture(ref, true)), "prepared texture uses the resident cache without decoding a page")
@@ -150,6 +152,8 @@ func _verify_prepared_frames(dir: String, pin: String) -> void:
 	check(straight != null and _fingerprint(straight).data == _baseline(dir, ref, false).data, "straight-alpha mode keeps the original source decoder")
 	pack.release_cache_leases()
 	check(pack._settings_frames == null and not pack._settings_frames_checked, "lease release drops optional bytes and source-page verification")
+	check(is_same(tex, pack.texture(ref, true)) and not pack._settings_frames_checked, "warm settings texture skips all preparation file I/O")
+	pack.set_settings_frame_scope(false)
 	CACHE.reset()
 
 func _init() -> void:
