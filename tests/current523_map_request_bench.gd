@@ -38,20 +38,27 @@ func make_input() -> void:
 		tiles.images[id] = ImageTexture.create_from_image(image)
 
 func time_arrival(renderer: Node2D) -> Dictionary:
-	renderer.begin_arrival_view(VIEW)
-	# The harness drives _process_step itself. Start both sides on the same
-	# presentation boundary, after the previous sample's readback and teardown.
+	# Start both sides at the same display boundary. Let Godot run the
+	# normal _process, including its elapsed-time budget, before drawing.
 	await RenderingServer.frame_post_draw
+	renderer.begin_arrival_view(VIEW)
 	var began: int = Time.get_ticks_usec()
+	renderer.set_process(true)
 	var first: int = -1
 	var frames: int = 0
 	for tick: int in 120:
-		renderer._process_step(1.0 / 60.0)
 		await RenderingServer.frame_post_draw
+		var presented_at: int = Time.get_ticks_usec()
+		# Let all post-draw callbacks mark their blocks before checking. The
+		# next process_frame signal fires before the next renderer _process.
+		await process_frame
 		if first < 0 and renderer.is_ground_ready(VIEW):
-			first = Time.get_ticks_usec() - began
+			first = presented_at - began
 			frames = tick + 1
-		if first >= 0 and renderer._pending_blocks.is_empty(): return {"usec":first,"frames":frames}
+		if first >= 0 and renderer._pending_blocks.is_empty():
+			renderer.set_process(false)
+			return {"usec":first,"frames":frames}
+	renderer.set_process(false)
 	return {}
 
 func painted_ground(renderer: Node2D) -> Dictionary:
