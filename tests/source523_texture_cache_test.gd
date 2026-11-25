@@ -22,6 +22,7 @@ func _initialize() -> void:
 	_oversize_and_zero_budget()
 	_entry_cap()
 	_weak_reuse_and_release()
+	_prune_on_insert()
 	_trim_keeps_budget()
 	_clear_modes()
 	_metrics_snapshot()
@@ -95,6 +96,19 @@ func _entry_cap() -> void:
 	cache.configure(1024, 1)
 	check(cache.metrics().tracked_entries == 1 and cache.metrics().resident_entries == 1, "a smaller cap forgets at once")
 	check(cache.lookup("k4") == owned[4], "the most recently used key survives the smaller cap")
+
+func _prune_on_insert() -> void:
+	var cache: RefCounted = CACHE.new()
+	cache.configure(32, 8)
+	var held: Texture2D = tex()
+	cache.remember("first", tex(), 16)
+	cache.remember("held", held, 16)
+	cache.remember("third", tex(), 16)
+	check(cache._weak.has("first") and cache._weak["first"].get_ref() == null, "evicted texture is eligible for pruning on next admission")
+	cache.remember("fourth", tex(), 16)
+	check(not cache._weak.has("first") and cache.lookup("held") == held, "insertion prunes expired weak entries while retaining externally owned textures")
+	cache.remember("held", null, 0)
+	check(cache.lookup("held") == null, "rejected replacement forgets the previous key")
 
 func _weak_reuse_and_release() -> void:
 	var cache: RefCounted = CACHE.new()
