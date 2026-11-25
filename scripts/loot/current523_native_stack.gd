@@ -96,6 +96,7 @@ static func profile(record: Dictionary) -> Dictionary:
 		elif whole(record.get("source_item_class_id")) in [237,236]:metadata=restoration_metadata(record)
 		if metadata.get("ok",false):return {"kind":"hp","metadata":metadata}
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
+	if spec.get("kind") == "source_event_box" and spec.get("activation_status") == "unrestricted": return {"kind":"bag","spec":spec}
 	if spec.get("kind")=="source_skill_book" and (spec.get("activation_status")=="unrestricted" or presentation_only(record,spec)):return {"kind":"skill_book","spec":spec,"runtime_presentation":spec.get("activation_status")!="unrestricted"}
 	if spec.get("kind")=="source_mp_dice" and spec.get("activation_status")=="unrestricted":return {"kind":"mp","spec":spec}
 	if spec.get("kind")=="fixed_card" and spec.get("activation_status")=="unrestricted":return {"kind":"card","spec":spec}
@@ -981,6 +982,10 @@ static func handoff_plain(world: Node,item_name: String) -> Dictionary:
 ## (EraseBuffOnExperience / EraseOnLevel), IgnoreUseItemDuringBuff (not while
 ## the same buff runs) and CannotUseBuffGroup (not while that group runs).
 static func buff_rule_problem(world: Node,spec: Dictionary) -> String:
+	if spec.has("buff_delete_time_raw"):
+		var deadline := D.source_deadline_unix(int(spec.buff_delete_time_raw), int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+		if deadline == -1 or (not D.rotate_ended_dates and deadline <= Time.get_unix_time_from_system()):
+			return "원본 버프 적용 기한 만료 · 아이템 보존"
 	var erase_level: int=int(spec.get("erase_at_level",0))
 	if erase_level>0 and int(world.level)>=erase_level:return "원본 조건: 버프 효과는 Lv.%d까지만 적용됩니다 · 아이템 보존" % (erase_level-1)
 	var own: int=int(spec.get("buff_class_id",0))
@@ -1001,6 +1006,12 @@ static func buff_runtime_fields(world: Node,spec: Dictionary,value: Dictionary) 
 		value["hp_regen_tick"]=regen_hp;value["mp_regen_tick"]=regen_mp
 		value["tick_interval"]=float(load("res://scripts/quests/quest_regen523.gd").call("interval",world));value["tick_elapsed"]=0.0
 	if spec.get("absolute_time",false):value["absolute_until"]=Time.get_unix_time_from_system()+float(spec.get("duration_seconds",0))
+	if spec.has("buff_delete_time_raw"):
+		var deadline := D.source_deadline_unix(int(spec.buff_delete_time_raw), int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+		# Historical event windows follow the same offline rotation as bag items.
+		if not D.rotate_ended_dates or deadline > Time.get_unix_time_from_system():
+			value["source_buff_delete_at"] = deadline
+			value["remaining"] = minf(float(value.remaining), maxf(0.0, deadline - Time.get_unix_time_from_system()))
 	if int(spec.get("erase_at_level",0))>0:value["erase_at_level"]=int(spec.erase_at_level)
 	if spec.get("source_trial_tower_territory_id")==10353:value["source_trial_tower_territory_id"]=10353
 
@@ -1611,11 +1622,13 @@ static func current_class(world: Node) -> int:
 	return int(matches[0]) if matches.size()==1 else 0
 
 static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary) -> Dictionary:
-	if spec.get("activation_status")!="unrestricted" or spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:return _failure("원본 상자 실행 정의 연결 필요")
+	var described: bool = spec.get("kind") == "source_event_box"
+	var weighted: bool = spec.get("kind") in ["source_weighted_bag","mixed_rewards_bag"]
+	if spec.get("activation_status")!="unrestricted" or (not described and not weighted and spec.get("kind")!="guaranteed_bag"):return _failure("원본 상자 실행 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 상자 사용 대상·서비스 조건 미지원")
-	if spec.kind!="guaranteed_bag" and not world.ui_preferences.get("patch523_source_reward_bags_enabled",true):return _failure("기존 원본 확률상자 선택 정책이 꺼져 있습니다 · 상자 보존")
-	var class_id: int=current_class(world);var needs_class: bool=spec.kind!="guaranteed_bag"
+	if weighted and not world.ui_preferences.get("patch523_source_reward_bags_enabled",true):return _failure("기존 원본 확률상자 선택 정책이 꺼져 있습니다 · 상자 보존")
+	var class_id: int=current_class(world);var needs_class: bool=weighted
 	for reward: Dictionary in spec.get("rewards",[]):
 		if not reward.get("class_ids",[]).is_empty():needs_class=true
 	if needs_class and class_id<=0:return _failure("정확한 현재 원본 직업 정체 연결 필요 · 클래스 풀을 합치지 않습니다")
@@ -1644,14 +1657,23 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
 		var deadline: String=D.deadline_problem(item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 		if not deadline.is_empty():view.free();return _failure(deadline)
-		var ready: Dictionary=supplier.call("stage",view,[{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)}],{"kind":"source_native_bag_candidate_quote","input_physical_id":uid,"entity_id":reward.source_entity_id})
+		var quote_origin := {"kind":"source_native_bag_candidate_quote","input_physical_id":uid}
+		if described: quote_origin["story_desc_id"] = spec.story_desc_id
+		else: quote_origin["entity_id"] = reward.source_entity_id
+		var ready: Dictionary=supplier.call("stage",view,[{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)}],quote_origin)
 		if not ready.get("ok",false):view.free();return _failure(str(ready.get("error","전체 원본 보상 공급자 연결 대기")))
+	view.free()
 	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
 	var selected: Dictionary=executor.call("select_rewards",spec,class_id,candidate_rng,clampi(int(world.ui_preferences.get("patch523_reward_bag_draw_count",1)),1,10))
 	if not selected.get("ok",false):view.free();return _failure("원본 전체 보상 풀·선택 계약 불일치")
-	view.free()
-	var origin: Dictionary={"kind":"current_original_native_bag","lucky_bag_class_id":spec.lucky_bag_class_id,"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven")}
-	var evidence: Dictionary={"original_lucky_bag_class":spec.original_lucky_bag_class.duplicate(true),"class_id":class_id,"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven")}
+	var origin: Dictionary
+	var evidence: Dictionary
+	if described:
+		origin = {"kind":"twilight_event_box_from_description","story_desc_id":spec.story_desc_id,"omitted_quest_ids":spec.omitted_quest_ids,"approximation":spec.approximation}
+		evidence = {"story_desc_id":spec.story_desc_id,"class_id":class_id}
+	else:
+		origin = {"kind":"current_original_native_bag","lucky_bag_class_id":spec.lucky_bag_class_id,"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven")}
+		evidence = {"original_lucky_bag_class":spec.original_lucky_bag_class.duplicate(true),"class_id":class_id,"draw_count_origin":spec.get("draw_count_origin","all_source_IsGiven")}
 	return commit_owned_rewards(world,uid,owned,record,spec,selected.rewards,candidate_rng,origin,evidence)
 
 # Source UI receives this immutable proposal; it never creates a dialog or
@@ -1835,6 +1857,9 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	var kept: bool=bool(spec.get("approx_reusable",false)) and not is_quest
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if kept else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if kept else int(owned.remaining)-1,"source_bag_receipt_id":receipt_id,"rewards":rewards,"cards":card_outcomes,"message":"원본 선택 보상을 지급했습니다" if spec.kind in ["source_selectable_reward","source_selectable_bag"] else "원본 상자 보상을 지급했습니다"}
+	if spec.kind == "source_event_box":
+		result.message = "발록 이벤트 상자 보상을 지급했습니다 · TWILIGHT 추정"
+		if not spec.omitted_quest_ids.is_empty(): result.message += " · 종료된 퀘스트 이용권 제외"
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.commit_owned_rewards")
 
 

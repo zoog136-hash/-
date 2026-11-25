@@ -4936,6 +4936,14 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
 	if tj_coupons.try_open_owned_coupon(item_name,str(selected.get("id","")),selected_source):return
+	if selected_source.get("source_m_native_item") == true and NATIVE_FIELDS.field(selected_source,"source_category_name") == "ScrollGachaCraft":
+		var book_id := int(selected_source.get("source_item_class_id",0))
+		var book_uid := str(selected.get("id",""))
+		if book_uid.is_empty() or item_name != selected_source.get("name") or not _patch523_item_allowed() or hp <= 0 or _option_awakening_busy():
+			hud.show_message("사용할 수 있는 가방의 비법서를 선택하세요")
+		else:
+			hud.open_gacha_craft523(book_id,book_uid)
+		return
 	if _open_owned_seal_scroll(item_name,str(selected.get("id","")),selected_source):return
 	if preload("res://scripts/shop/source523_cash_packages.gd").try_use(self,item_name):return
 	if alchemy_held_items.try_use(self,item_name,str(selected.get("id",""))):return
@@ -5264,9 +5272,12 @@ func _tick_item_buffs(delta: float) -> void:
 			continue
 		var buff: Dictionary = value as Dictionary
 		var remaining_before: float = maxf(0.0, float(buff.get("remaining", 0.0)))
+		var deadline_left := INF
+		if buff.has("source_buff_delete_at"):
+			deadline_left = float(buff.source_buff_delete_at) - Time.get_unix_time_from_system()
 		var interval: float = float(buff.get("tick_interval", 0.0))
 		if interval > 0.0 and remaining_before > 0.0:
-			var elapsed: float = float(buff.get("tick_elapsed", 0.0)) + minf(delta, remaining_before)
+			var elapsed: float = float(buff.get("tick_elapsed", 0.0)) + minf(delta, minf(remaining_before, maxf(0.0, deadline_left + delta)))
 			var ticks: int = maxi(0, int(floor(elapsed / interval)))
 			buff["tick_elapsed"] = fmod(elapsed, interval)
 			if ticks > 0:
@@ -5276,6 +5287,7 @@ func _tick_item_buffs(delta: float) -> void:
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
 		# 원본 IsAbsoluteTimeBuff: real time, also while the game was closed.
 		if buff.has("absolute_until"): buff["remaining"] = maxf(0.0, float(buff.absolute_until) - Time.get_unix_time_from_system())
+		if buff.has("source_buff_delete_at"): buff["remaining"] = minf(buff.remaining, maxf(0.0, deadline_left))
 		# 원본 EraseBuffOnExperience / EraseOnLevel: ends at that level.
 		if int(buff.get("erase_at_level", 0)) > 0 and level >= int(buff.erase_at_level): buff["remaining"] = 0.0
 		active_item_buffs[key] = buff
@@ -6799,14 +6811,15 @@ func patch523_gacha_craft_owned() -> Array:
 	_sync_item_instances()
 	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
 
-func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+func patch523_gacha_craft_quote(item_class_id: int, book_uid: String = "") -> Dictionary:
 	_sync_item_instances()
-	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id,book_uid)
 
-func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+func patch523_gacha_craft_execute(item_class_id: int, book_uid: String = "", quoted_quantity: int = -1) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
 	_sync_item_instances()
-	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
+	if hp <= 0 or not _patch523_item_allowed() or _option_awakening_busy(): return {"ok":false,"reason":"현재 상태에서는 제작할 수 없습니다"}
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id,-1,-1,book_uid,quoted_quantity)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return
@@ -8409,6 +8422,10 @@ func _load_game(quiet: bool) -> void:
 		original_skills.catalog.import_state(data)
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
+	for key: Variant in active_item_buffs.keys():
+		var entry: Variant = active_item_buffs[key]
+		if entry is Dictionary and entry.has("source_buff_delete_at") and float(entry.source_buff_delete_at) <= Time.get_unix_time_from_system():
+			active_item_buffs.erase(key)
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
 	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
 	consumable_service.call("import_state", data.get("consumable_state", {}))

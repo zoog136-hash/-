@@ -1494,12 +1494,12 @@ func open_crafting() -> void:
 ## 비법서 제작 (원본 GachaCraft, TWILIGHT 근사): the TWILIGHT crafting screen
 ## with its 비법서 제작 panel open; the original production window's 이벤트
 ## tab routes here (the original UI has no GachaCraft entry).
-func open_gacha_craft523() -> void:
+func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> void:
 	_open_window("crafting","제작 장인","비법서 제작")
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
-	if screen.has_method("_toggle_gacha") and not screen.gacha_box.visible: screen._toggle_gacha()
+	screen.show_gacha_books(book_id,book_uid)
 
 ## The original 523 ProductionScene (source_main_production_window) over the
 ## same recipes; false -> the TWILIGHT crafting screen opens (reported).
