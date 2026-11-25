@@ -22,7 +22,7 @@ func _initialize() -> void:
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var zip_path := args[0] if args.size() == 2 else ""
-	if args.size() != 2 or DisplayServer.get_name() == "headless" or FileAccess.get_sha256(zip_path) != Rows.SOURCE_SHA:
+	if args.size() != 2 or not args[1].ends_with(".jsonl") or DisplayServer.get_name() == "headless" or FileAccess.get_sha256(zip_path) != Rows.SOURCE_SHA:
 		printerr("A display, pinned definition ZIP and private output path are required")
 		quit(1)
 		return

@@ -12,7 +12,7 @@ func _initialize() -> void:
 
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size()!=1 or FileAccess.file_exists("user://twilight_v20_save.json") or OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").is_empty():
+	if args.size()!=1 or not args[0].ends_with(".jsonl") or FileAccess.file_exists("user://twilight_v20_save.json") or OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").is_empty():
 		printerr("Provide a fresh user directory, selected original UI and private JSONL output path")
 		quit(1)
 		return
@@ -61,6 +61,27 @@ func run() -> void:
 			record_buttons(controller.feature_window(key)._scene,key)
 			controller.feature_window(key).close()
 			await process_frame
+	# These screens are entered through dedicated HUD methods instead of
+	# FEATURE_WINDOWS. The next open follows the same close path as play.
+	var hud_entries := {
+		"quest_window":"open_quests", "shop_window":"open_shop",
+		"storage_window":"open_warehouse", "teleport_window":"open_npc_teleport",
+		"production_window":"open_crafting", "stat_detail_window":"open_detailed_status",
+		"clan_window":"open_clan523", "emblem_window":"open_clan_emblem523",
+		"domination_window":"open_domination_stone", "skill_window":"open_skills",
+		"dungeon_window":"open_source_dungeons", "refine_window":"open_refine523"
+	}
+	for key: String in hud_entries:
+		hud.call(hud_entries[key])
+		await process_frame
+		var view: RefCounted=controller.get("_"+key)
+		if view!=null and view.is_open():
+			results[key]="opened"
+			record_buttons(view._scene,key)
+		else:
+			results[key]="original window did not open"
+		hud._close_workspace()
+		await process_frame
 	for values: Dictionary in buttons.values(): output.store_line(JSON.stringify(values))
 	output.close()
 	print("UI_BUTTON_RESULT ",JSON.stringify({"distinct_button_nodes":buttons.size(),"first_screen":results}))

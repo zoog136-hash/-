@@ -63,8 +63,41 @@ func exact(archive: String) -> void:
 	if h.original_inventory_is_open():h.toggle_inventory()
 	await frames()
 	await coupon_result_routes()
+	await production_tooltips()
 	await enchant_routes()
 	await bless_routes(references(326)[0])
+
+func production_tooltips() -> void:
+	# The disposable recipe deliberately gives both slots the same display
+	# name. The result and material still carry independent original ItemClass IDs.
+	var recipe_key: String="qa_source_tooltip_identity"
+	var title: String=references(DaggerID)[0].get_slice("@@@",0)
+	var material_title: String=references(326)[0].get_slice("@@@",0)
+	w.crafting.recipes[recipe_key]={"name":title,"category":"무기","result":{"item":title,"source_id":str(DaggerID),"quantity":1},"materials":[{"item":title,"source_id":"326","quantity":1}]}
+	h.open_crafting()
+	var window: RefCounted=controller.production_window()
+	if not ck(window!=null and window.is_open() and window.select_recipe(recipe_key).get("ok",false),"original Production screen displays the recipe"):return
+	await frames()
+	var before: String=hash_file()
+	if not await tap(enchant_button(window,window.P_PROD+"Fx_Slot_Gauge/Btn_Tooltip"),"original product tooltip button"):return
+	ck(controller.item_tooltip_is_open() and controller.item_tooltip().reference==title,"product button opens the original product card")
+	controller.close_item_tooltip()
+	await frames()
+	var material_area: Control
+	for node: Node in window._scene.find_children("*","Node2D",true,false):
+		if not node.has_meta("source_button"):continue
+		var button: Node2D=node.get_meta("source_button")
+		var action: Callable=button._activation
+		if action.is_valid() and action.get_method()=="_material_info" and action.get_bound_arguments()==[0] and button._input_available():
+			material_area=button._input_area
+			break
+	if not await tap(material_area,"original recipe material slot"):return
+	ck(controller.item_tooltip_is_open() and controller.item_tooltip().reference==material_title,"material button uses its exact source ID despite the shared display name")
+	ck(hash_file()==before,"opening either recipe tooltip keeps inventory and save intact")
+	controller.close_item_tooltip()
+	h._close_workspace()
+	w.crafting.recipes.erase(recipe_key)
+	await frames()
 
 ## Both reviewed shine panels retain their pixels and leave touch with the
 ## actual result button. Opening an item card never replays the craft.

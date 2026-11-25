@@ -13,7 +13,7 @@ func _initialize() -> void:
 
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size() != 3 or FileAccess.get_sha256(args[0]) != Source.SOURCE_SHA:
+	if args.size() != 3 or not args[2].ends_with(".jsonl") or args[1]==args[2] or FileAccess.get_sha256(args[0]) != Source.SOURCE_SHA:
 		printerr("A pinned definition ZIP, full item matrix and private output path are required")
 		quit(1)
 		return
@@ -36,7 +36,7 @@ func run() -> void:
 				"level":int(fixture.level), "target_bless":int(fixture.target_bless), "scroll_bless":int(fixture.scroll_bless), "result":result}))
 	output.close()
 	print("ENHANCEMENT_PAIRS_RESULT ", JSON.stringify({"groups":matrix.size(), "distinct_items":items.size(), "quotes":counts}))
-	quit(1 if counts.has("numeric_difference") else 0)
+	quit(0 if counts.size()==1 and counts.has("quote_matches_source") else 1)
 
 func compare(group: int, fixture: Dictionary) -> String:
 	var target_id := str(int(fixture.target))

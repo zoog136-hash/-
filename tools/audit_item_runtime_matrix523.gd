@@ -16,6 +16,7 @@ const TICKETS=preload("res://scripts/shop/source523_inventory_tickets.gd")
 const TICKET_INPUT=preload("res://scripts/shop/current523_ticket_input.gd")
 const MILEAGE=preload("res://scripts/shop/source523_permanent_mileage_tickets.gd")
 const RETURN=preload("res://scripts/quickslots/regional_return.gd")
+const SMELT=preload("res://scripts/equipment523/native_smelt_input.gd")
 const TJ_SOURCE=preload("res://scripts/tj/source523.gd")
 const TJ_WINDOW=preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
@@ -59,7 +60,7 @@ const VERIFIED={
 func _initialize()->void:run.call_deferred()
 func run()->void:
 	var args:PackedStringArray=OS.get_cmdline_user_args()
-	if args.size()!=2:
+	if args.size()!=2 or not args[1].ends_with(".jsonl"):
 		printerr("ITEM_AUDIT requires original zip and JSONL output");quit(1);return
 	OS.set_environment("TWILIGHT_PATCH523_CONTENT",args[0]);SRC.reset()
 	if SRC.identity().get("source_sha256")!=SRC.SOURCE_SHA:
@@ -138,6 +139,8 @@ func run()->void:
 				var retry: Dictionary=TJ_WINDOW.physical_route(tj.coupons[str(id)])
 				entry["coupon_ui"]=retry
 				route="tj_physical_requires_history_context_and_eligibility" if not retry.is_empty() else "tj_policy_present_original_adapter_unavailable"
+			elif category=="ScrollSmelt" and SMELT.known(id) and not SMELT.kind(record).is_empty():
+				route="smelt_requires_exact_material_and_equipped_target"
 			elif category in SPECIAL_ENCHANT:route="enhancement_target_and_original_rule_required"
 			elif DROPS.equipment(record):route="equipment_requires_equip_slot_and_class"
 			else:
@@ -159,6 +162,8 @@ func run()->void:
 			accepted_counts[route]=int(accepted_counts.get(route,0))+1
 		entry["resolution"]=route
 		entry["actual_transaction_evidence"]=str(VERIFIED.get(id,"none"))
+		if DTO.EXACT_CARD_BOX_ROOTS.has(id):entry["actual_transaction_evidence"]="actual_bag_original_selection_each_option_one_debit_and_reload"
+		if id==323211:entry["actual_transaction_evidence"]="actual_original_focused_tj_one_bag_debit_saved_reload"
 		if id in OWNER.DATED_FIREWORKS or OWNER.DIRECT_FIREWORKS.has(id):
 			entry["actual_transaction_evidence"]="actual_bag_firework_original_overlay_one_debit"
 		f.store_line(JSON.stringify(entry))

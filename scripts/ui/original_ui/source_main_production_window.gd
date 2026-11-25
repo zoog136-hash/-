@@ -651,13 +651,21 @@ func _material_info(index: int) -> Dictionary:
 	var rows: Array[Dictionary]=_material_rows(world)
 	if index<0 or index>=rows.size():return {"ok":true}
 	var row: Dictionary=rows[index]
+	var detail: Dictionary=_recipe_item_info(world,row)
+	if detail.get("handled",false):return detail
 	return _notice("%s · 보유 %s / 필요 %s" % [str(row.item).get_slice(" · 원본#",0),_number(int(row.available)),_number(int(row.required))])
 
 func _product_info() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null or _selected.is_empty():return _fail("source_production_window_recipe_missing")
+	var detail: Dictionary=_recipe_item_info(world,Craft.recipe_of(world,_selected).get("result",{}))
+	if detail.get("handled",false):return detail
 	var quote: Dictionary=world._craft_quote(_selected,_count)
 	return _notice("제작 가능" if quote.get("ok",false) else str(quote.get("reason","제작 불가")))
+
+func _recipe_item_info(world: Node, row: Dictionary) -> Dictionary:
+	var record: Dictionary=_record(world,str(row.get("item","")),str(row.get("source_id","")),row.get("record",{}))
+	return preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(_hud.get_ref() if _hud!=null else null,int(record.get("source_item_class_id",0)))
 
 func _probability() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
