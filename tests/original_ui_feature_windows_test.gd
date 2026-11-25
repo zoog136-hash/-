@@ -13,6 +13,7 @@ const HUD_CONTROLLER=preload("res://scripts/ui/original_ui/source_main_hud.gd")
 const FUSION=preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd")
 const COLLECTION=preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd")
 const ELIXIR=preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd")
+const OPTION_AWAKENING=preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd")
 const BUTTON=preload("res://scripts/ui/original_ui/source_button.gd")
 const SCENE=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const CARDS=preload("res://scripts/card_draw_fusion.gd")
@@ -82,8 +83,30 @@ func _registry() -> void:
 		var result: Dictionary=window.configure(FakePack.new(),hud)
 		check(not result.get("ok",true) and result.get("code")=="source_window_member_missing" and not result.get("handled",true),key+" fails closed without its members")
 		check(not window.is_open(),key+" is closed before opening")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","doll_explore","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","mystery_card","guardian_find","buff_info","oman_tower","currency_info","skill_cards","memory_places","trial_dungeon","card_change","fusion_result","forge","fail_history","reward_select","craft_result","quick_change","quick_summon","box_probability","trade","options","card_gacha_result"],"the registered feature windows")
+	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","option_awakening","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","doll_explore","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","mystery_card","guardian_find","buff_info","oman_tower","currency_info","skill_cards","memory_places","trial_dungeon","card_change","fusion_result","forge","fail_history","reward_select","craft_result","quick_change","quick_summon","box_probability","trade","options","card_gacha_result"],"the registered feature windows")
+	_option_awakening_admission(hud)
 	hud.free()
+
+func _option_awakening_admission(hud: Node) -> void:
+	var window:=OPTION_AWAKENING.new()
+	var pack:=FakePack.new()
+	for member: String in window.required_members():pack.manifest.scenes[member]={}
+	pack.manifest.files={window.ROOT:{"sha256":window.ROOT_SHA},window.OPTION:{"sha256":window.OPTION_SHA}}
+	pack.manifest.scenes.erase(window.OPTION)
+	var missing: Dictionary=window.configure(pack,hud)
+	check(missing=={"ok":false,"handled":false,"code":"source_window_member_missing","member":window.OPTION},
+		"root alone cannot admit option awakening without its exact authored page")
+	pack.manifest.scenes[window.OPTION]={}
+	for member: String in [window.ROOT,window.OPTION]:
+		var correct: String=pack.manifest.files[member].sha256
+		pack.manifest.files[member].sha256="a".repeat(64)
+		var mismatched: Dictionary=window.configure(pack,hud)
+		check(not mismatched.get("ok",true) and not mismatched.get("handled",true)
+			and mismatched.get("code")=="source_option_awakening_identity_mismatch" and window.hud()==null and not window.is_open(),
+			"authored but wrong option-awakening member fails before binding: "+member)
+		pack.manifest.files[member].sha256=correct
+	check(window.configure(pack,hud).get("configured",false) and window.hud()==hud and not window.is_open(),
+		"the complete exact manifest admits the distinct option window without prematurely mounting it")
 
 func _binding() -> void:
 	var pack:=FakePack.new()

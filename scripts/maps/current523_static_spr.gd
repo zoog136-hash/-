@@ -3,6 +3,8 @@ extends Node2D
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const PACK = preload("res://scripts/resources/current523_pack.gd")
+const ATTRIBUTES = preload("res://scripts/animation/source_attachment_attributes.gd")
+const COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const GLOBAL_DECLARATIONS=preload("res://scripts/maps/current523_spr_declarations.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
 const EXCLUSIONS=preload("res://scripts/maps/current523_static_spr_exclusions.gd")
@@ -18,6 +20,8 @@ const MAX_RECORDS = 4096
 const MAX_CHILD_DEPTH = 8
 const MAX_REFERENCE_VISITS = MAX_RECORDS * 4
 const MAX_CACHE_BYTES = 32 * 1024 * 1024
+const MIX_BLEND = CanvasItemMaterial.BLEND_MODE_MIX
+const MULTIPLY_BLEND = CanvasItemMaterial.BLEND_MODE_MUL
 var problem: String = ""
 var options: Dictionary = {}
 var coordinates: RefCounted
@@ -32,6 +36,8 @@ var _texture_bytes: int = 0
 var _records: Array[Dictionary] = []
 var _candidate_indices: Array[int] = []
 var _draws: Array[Dictionary] = []
+var _blend_runs: Array[RID] = []
+var _blended_draw_count: int = 0
 var _clock: float = 0.0
 var _frame: int = -1
 var _stats: Dictionary = {}
@@ -193,6 +199,7 @@ func _load_declarations(path: String) -> bool:
 			var b_offset: int=int(b.get("source_byte_offset",-1))
 			return int(a.own_source_order)<int(b.own_source_order) if a_offset==b_offset else a_offset<b_offset)
 		definition["own_ordered_references"]=ordered
+		definition["own_source_blend"]=_own_source_blend(definition)
 		_declarations[id]=definition
 	_declaration_identity=GLOBAL_DECLARATIONS.MANIFEST_SHA if all30 else DECLARATION_SHA
 	_declaration_file_count=source.source_files.size()
@@ -288,6 +295,20 @@ func _unresolved(sprite_id: int, reason: String, attempt: String="") -> Dictiona
 	_failed[sprite_id]=reason
 	if not attempt.is_empty() and _source_failures.size()<MAX_RECORDS:_source_failures[attempt]=reason
 	return {}
+
+## Project only the ordinary direct own104 multiply case. Shadow call flags
+## and alias inheritance are different native operations and stay unchanged.
+static func _own_source_blend(definition: Dictionary) -> int:
+	var bodies: Array[String] = []
+	for modifier: Dictionary in definition.get("unresolved_modifiers", []):
+		if int(modifier.get("code", -1)) != 104: continue
+		if str(modifier.get("name", "")).strip_edges().to_lower() != "attr": return MIX_BLEND
+		var body: Variant = modifier.get("raw_body")
+		if not body is String: return MIX_BLEND
+		bodies.append(body)
+	if bodies.is_empty(): return MIX_BLEND
+	var own: Dictionary = ATTRIBUTES.resolve(bodies)
+	return MULTIPLY_BLEND if bool(own.ok) and int(own.flags) == 128 else MIX_BLEND
 
 func _modifier_entries(definition: Dictionary) -> Array[Dictionary]:
 	var entries: Array[Dictionary]=[]
@@ -398,19 +419,29 @@ func _compose_node(row: Dictionary, sprite_id: int, tick: int, ancestors: Array[
 	var selector: int=int(selected_token.get("selector",0))
 	var attachment_path: Array[Dictionary]=[]
 	var header_alias_path: Array[Dictionary]=[]
+	var shadow_context: bool=false
 	for reference: Dictionary in path:
 		if str(reference.get("kind",""))=="header_alias":header_alias_path.append(reference)
-		else:attachment_path.append(reference)
+		else:
+			attachment_path.append(reference)
+			if str(reference.get("kind",""))=="shadow":shadow_context=true
 	var child: bool=not attachment_path.is_empty()
 	var source_info: Dictionary=_source(sprite_id,selector,child)
 	if source_info.is_empty():
 		state.missing+=1;return str(_failed.get(sprite_id,"source_unavailable"))
 	var declaration: Dictionary=source_info.declaration
+	var blend: int=int(declaration.get("own_source_blend",MIX_BLEND)) if not shadow_context and header_alias_path.is_empty() else MIX_BLEND
 	var modifiers: Array[Dictionary]=_modifier_entries(declaration)
-	if not modifiers.is_empty():state.unresolved_modifiers[sprite_id]=modifiers
 	if not modifiers.is_empty() and options.unresolved_modifier_policy=="DISABLED":
+		state.unresolved_modifiers[sprite_id]=modifiers
 		_unresolved(sprite_id,"unresolved_modifiers_policy_disabled")
 		state.missing+=1;return "unresolved_modifiers_policy_disabled"
+	if blend==MULTIPLY_BLEND:
+		var unapplied: Array[Dictionary]=[]
+		for modifier: Dictionary in modifiers:
+			if int(modifier.get("code",-1))!=104:unapplied.append(modifier)
+		modifiers=unapplied
+	if not modifiers.is_empty():state.unresolved_modifiers[sprite_id]=modifiers
 	if not bool(source_info.stored_frame0):state.declared+=1
 	var before: int=_draws.size()
 	var next_ancestors: Array[int]=ancestors.duplicate()
@@ -451,6 +482,9 @@ func _compose_node(row: Dictionary, sprite_id: int, tick: int, ancestors: Array[
 			var selection_policy: String=CHILD_STORED_FRAME_POLICY if bool(source_info.stored_frame0) else str(declaration.get("sequence_origin","LIST29_ACTION3"))
 			var ignored: Array[Dictionary]=_active_modifier_entries(modifiers,selected_token,bool(source_info.stored_frame0))
 			_draws.append({"point":point+Vector2((display.bounds as Rect2i).position),"texture":display.texture,"record":row,"drawn_sprite_id":sprite_id,"is_declared_child":child,"child_depth":attachment_path.size(),"composition_depth":path.size(),"header_alias_depth":header_alias_path.size(),"child_composition_policy":options.child_composition_policy,"header_alias_policy":HEADER_ALIAS_POLICY if not header_alias_path.is_empty() else "NONE","attachment_references":attachment_path.duplicate(true),"header_alias_references":header_alias_path.duplicate(true),"composition_references":path.duplicate(true),"member":source_info.member,"source_sp2_sha256":source_info.sha256,"source_sp2_bytes":int(source_info.source_bytes),"stored_group_bit":int(source_info.stored_group_bit),"source_selector":selector,"selector_dispatch":source_info.dispatch,"frame":frame,"sequence_source":selection_policy,"own_frame_selection_policy":selection_policy,"uses_declared_frame_token":not bool(source_info.stored_frame0),"declaration_action":int(declaration.action_id),"declaration_line":declaration.get("source_line",0),"declaration_source":declaration.get("source_file","Client/Text/list_29.spr"),"declaration_sha256":declaration.get("source_sha256",""),"declaration_bytes":int(declaration.get("source_file_bytes",0)),"source_token":selected_token,"unapplied_modifiers":declaration.get("unapplied_modifiers",[]),"unresolved_modifiers":modifiers,"ignored_modifiers":ignored,"ignored_header_alias_modifiers":{},"unresolved_modifier_policy":options.unresolved_modifier_policy})
+			if blend==MULTIPLY_BLEND:
+				_draws.back()["source_blend_mode"]=blend
+				_blended_draw_count+=1
 			if child:state.drawn_child_records+=1
 			else:state.drawn_parent_records+=1
 			if bool(source_info.stored_frame0):state.drawn_child_stored_frame0_records+=1
@@ -508,6 +542,7 @@ func _update_draws() -> void:
 	if tick==_frame:return
 	_frame=tick
 	_draws.clear();_failed.clear()
+	_blended_draw_count=0
 	var state: Dictionary={"missing":0,"empty":0,"budget_skips":maxi(0,_candidate_indices.size()-MAX_RECORDS),"visible_textures":{},"frame_failures":{},"visible_bytes":0,"declared":0,"composition_nodes":0,"drawn_parent_records":0,"drawn_child_records":0,"drawn_child_stored_frame0_records":0,"child_reference_visits":0,"drawn_child_reference_count":0,"unresolved_child_reference_count":0,"unvisited_child_references_due_to_budget":0,"unresolved_attachments":{},"header_alias_source_nodes":0,"header_alias_reference_visits":0,"drawn_header_alias_reference_count":0,"unresolved_header_alias_reference_count":0,"unvisited_header_aliases_due_to_budget":0,"drawn_header_alias_records":0,"unresolved_header_aliases":{},"unresolved_modifiers":{},"ignored_modifiers":{},"ignored_modifier_records":0,"ignored_modifier_occurrences":0}
 	for i: int in mini(_candidate_indices.size(),MAX_RECORDS):
 		var row: Dictionary=_records[_candidate_indices[i]]
@@ -574,16 +609,57 @@ func _update_draws() -> void:
 	_stats.ignored_modifier_records=state.ignored_modifier_records
 	_stats.ignored_modifier_occurrences=state.ignored_modifier_occurrences
 	_stats.zero_tick_policy="OWN_HOLD_SOURCE_FRAME_WITHOUT_SYNTHESIZING_DURATION"
+	_stats.source_own104_multiply_records=_blended_draw_count
+	if is_inside_tree():_sync_blend_runs()
 	queue_redraw()
+
+## Canvas items have one material, so retain one RID per consecutive run.
+## Never group equal materials across intervening draws: the destination of a
+## multiply sprite is exactly the terrain/objects submitted before that row.
+## Maps with no proved multiply keep their original single _draw batch.
+func _sync_blend_runs() -> void:
+	var used: int=0
+	var previous: int=-1
+	var run: RID
+	if _blended_draw_count>0:
+		for item: Dictionary in _draws:
+			var blend: int=int(item.get("source_blend_mode",MIX_BLEND))
+			if blend!=previous:
+				previous=blend
+				if used==_blend_runs.size():
+					run=RenderingServer.canvas_item_create()
+					RenderingServer.canvas_item_set_parent(run,get_canvas_item())
+					RenderingServer.canvas_item_set_draw_index(run,used)
+					RenderingServer.canvas_item_set_default_texture_filter(run,RenderingServer.CANVAS_ITEM_TEXTURE_FILTER_NEAREST)
+					_blend_runs.append(run)
+				else:
+					run=_blend_runs[used]
+					RenderingServer.canvas_item_clear(run)
+				var material_rid: RID=COMPOSITOR.multiply_material().get_rid() if blend==MULTIPLY_BLEND else RID()
+				RenderingServer.canvas_item_set_material(run,material_rid)
+				used+=1
+			var texture: Texture2D=item.texture
+			RenderingServer.canvas_item_add_texture_rect(run,Rect2(item.point,texture.get_size()),texture.get_rid())
+	_clear_blend_runs(used)
+	_stats["static_blend_run_count"]=_blend_runs.size()
+
+func _clear_blend_runs(keep: int=0) -> void:
+	while _blend_runs.size()>keep:
+		RenderingServer.free_rid(_blend_runs.pop_back())
+
+func _enter_tree() -> void:
+	if _blended_draw_count>0:_sync_blend_runs()
 
 func _draw() -> void:
 	# USAGE owns retained scalar observations, including one-tick frames and
 	# ranges. A later draw is never required to retry transient queue pressure.
 	var renderer: Node=get_parent()
 	var observe: bool=USAGE.actual_main(renderer)
+	var draw_on_parent: bool=_blend_runs.is_empty()
+	if not observe and not draw_on_parent:return
 	var view: Rect2=(renderer.call("_view_rect") as Rect2).grow(-64.0) if observe else Rect2()
 	for draw: Dictionary in _draws:
-		draw_texture(draw.texture,draw.point)
+		if draw_on_parent:draw_texture(draw.texture,draw.point)
 		if not observe or not Rect2(draw.point,(draw.texture as Texture2D).get_size()).intersects(view):continue
 		var row: Dictionary=draw.record
 		USAGE.observe(renderer,str(draw.member),int(draw.source_sp2_bytes),str(draw.source_sp2_sha256),"stored-bit:%d/frame:%d"%[int(draw.stored_group_bit),int(draw.frame)])
@@ -614,6 +690,8 @@ func _process_step(delta: float) -> void:
 func metrics() -> Dictionary:
 	var result: Dictionary=_stats.duplicate(true);result["consumption_observation"]=USAGE.status();return result
 
-func _exit_tree() -> void:USAGE.flush(true)
+func _exit_tree() -> void:
+	_clear_blend_runs()
+	USAGE.flush(true)
 
 func displayed_records() -> Array[Dictionary]: return _draws.duplicate(true)
