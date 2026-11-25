@@ -8,6 +8,7 @@ extends SceneTree
 ## pack directory>: Change_Fusion_All mounts the result cards.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
+const STAGE=preload("res://scripts/ui/card_reveal_stage.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -133,5 +134,42 @@ func _real_pack(pack_dir: String) -> void:
 	window._next()
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
+	await _check_authored_phases(window,parent,pack)
 	parent.queue_free()
 	host.queue_free()
+
+func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted) -> void:
+	var record: Dictionary={"id":"fixture-legend","name":"결과","grade":"전설"}
+	var effect: Callable=STAGE.play_result_cell.bind("변신",true,true,[],{},pack)
+	for upgraded: bool in [false,true]:
+		record["fusion_success"]=upgraded # individual outcome in a successful batch
+		var response: Dictionary=window.open(parent,[record],"변신",true,Callable(),effect)
+		if not response.get("handled",false):
+			check(false,"mount exact UI with a single fusion result")
+			return
+		var result_scene: Node2D=window._scene
+		var face: Node2D=result_scene.find_child("SourceAwardFace",true,false)
+		var reel: Control=result_scene.find_child("CardRevealEffect",true,false)
+		if not is_instance_valid(face) or not is_instance_valid(reel):
+			check(false,"mount authored face and separate reel")
+			return
+		var panel: Node2D=face.get_parent()
+		var center: Vector2=result_scene.to_local(panel.global_position)
+		check(center.length()<0.5,"one result uses the existing page center")
+		var cell: Node2D=panel.get_parent()
+		var outline: Node2D=cell.find_child("Fx_Outline_Front*",true,false)
+		check(not face.visible and (outline==null or not outline.is_visible_in_tree()),"spinner has no final grade face or outline")
+		var bolt: Node2D=reel.find_child("SourceCardLightning",true,false)
+		check(reel.get_node_or_null("MetalRim")==null,"native reel contains no fixed gold frame")
+		check((bolt!=null)==upgraded,"only a successful fusion builds the original discharge")
+		if bolt!=null:
+			check(not bolt.visible and bolt.source_member==WINDOW.GradeFx.ACTIVE_GRADE["전설"],"exact lightning is initially hidden")
+			check(bolt.get_parent().clip_contents,"native discharge stays inside the card clip")
+			await create_timer(reel.lightning_at()+0.25).timeout
+			var sprite_node: Node2D=bolt.source_nodes.get(WINDOW.GradeFx.LIGHTNING_SPRITES["전설"])
+			var sprite: Sprite2D=sprite_node.get_meta("source_sprite",null) if sprite_node!=null else null
+			check(bolt.is_visible_in_tree() and bolt.playback_status().playing and sprite!=null and sprite.texture!=null and not face.visible,"verified atlas pixels play during the success reel")
+		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
+		check(not is_instance_valid(reel) and face.is_visible_in_tree(),"settled result has its grade face")
+		window.close()
+		await process_frame

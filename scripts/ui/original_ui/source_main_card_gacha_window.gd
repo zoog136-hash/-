@@ -26,7 +26,6 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## 합성하러 가기, the bonus slot, the collection notice, 카드교체 바로가기 and
 ## the skill card sets.
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
-const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const ROOT="UI/BMShop/BM_Gacha.csb"
 const CARD="UI/Change/Change_Fusion_Card.csb"
@@ -135,13 +134,12 @@ func _spec() -> Dictionary:
 				continue
 			var card: Dictionary=results[start+index]
 			var grade: String=str(card.get("grade",""))
-			GradeFx.cell_spec(self,spec,key,grade)
-			if not is_opened(start+index):
+			var opened_card: bool=is_opened(start+index)
+			GradeFx.cell_spec(self,spec,key,grade,not opened_card)
+			if not opened_card:
 				# Fx_Glow holds Card_Back; the outline lights only once open.
 				spec.erase(key+"Fx_Glow")
-				if GradeFx.available(self,grade):spec[key+"Fx_Outline_Front"]={"visible":false}
-				else:spec[key+"Fx_Outline_Front"]={"exclude":true}
-			spec[key+"Text_Card_Name"]={"role":"source_text","text":str(card.get("name",""))}
+			spec[key+"Text_Card_Name"]={"role":"source_text","text":str(card.get("name","")),"visible":opened_card}
 			spec[key+"Btn_Card"]={"activate":Callable(self,"open_card").bind(start+index)}
 	return spec
 
@@ -157,18 +155,12 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var card: Dictionary=results[start+index]
 		var cell: String="%s/Card_%02d" % [node,index]
 		shown+=1
+		var face: Dictionary=GradeFx.prepare_face(self,root,out,cell,card,is_opened(start+index))
+		if not face.get("ok",false):return face
+		if face.picture:pictures+=1
 		if is_opened(start+index):
 			if _reveal(root,out,cell,card).get("lit",false):lights+=1
 		elif _show_back(root,out,cell,str(card.get("category",category))):backs+=1
-		var grade: String=str(card.get("grade",""))
-		var located: Dictionary=_locate(root,out,cell+"/Panel")
-		var host: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
-		if not host is Node2D or not Page.GRADE_MEMBERS.has(grade):continue
-		var prefab_out: Dictionary={}
-		var prefab: Dictionary=_scene_of(str(Page.GRADE_MEMBERS[grade]),_prefab_spec(),prefab_out)
-		if not prefab.get("ok",false):return prefab
-		(host as Node2D).add_child(prefab.scene)
-		if _prefab_picture(prefab.scene,prefab_out,card):pictures+=1
 	# The set deals its cells in; each cell then holds its card back.
 	var dealing: bool=backs>0 and root.play(str(DEAL[node]),false).get("ok",false)
 	return {"ok":true,"set":node,"page":page,"pages":pages(),"shown":shown,"pictures":pictures,"lights":lights,"backs":backs,"dealing":dealing}
@@ -194,10 +186,10 @@ func _show_back(root: Node2D, out: Dictionary, cell: String, card_category: Stri
 
 ## Shows the face of the cell at `cell`: {lit}.
 func _reveal(root: Node2D, out: Dictionary, cell: String, card: Dictionary) -> Dictionary:
-	_set_visible(root,out,cell+"/Panel",true)
+	GradeFx.finish_reel(self,root,out,cell)
+	GradeFx.set_visible(self,root,out,cell+"/Fx_Glow",true)
 	var grade: String=str(card.get("grade",""))
-	if GradeFx.available(self,grade):_set_visible(root,out,cell+"/Fx_Outline_Front",true)
-	var lit: Dictionary=GradeFx.light(self,root,out,cell,grade)
+	var lit: Dictionary=GradeFx.light(self,root,out,cell,grade,not reveal_effect.is_valid())
 	if not lit.get("lit",false):
 		# Text_Card_Name stays transparent until the client's Fx_Cardname
 		# clip; Card_Back is off from frame 184 on.
@@ -210,17 +202,6 @@ func _set_visible(root: Node2D, out: Dictionary, suffix: String, value: bool) ->
 	if not located.get("ok",false):return
 	var node: Variant=located.player.source_nodes.get(located.offset)
 	if node is CanvasItem:(node as CanvasItem).visible=value
-
-static func _prefab_spec() -> Dictionary:
-	return {"Panel_Root":{"role":"consume"},"Panel_Root/CB_Check":{"exclude":true},"Nd_Character/CardSample":{"role":"source_asset_slot","visible":false},
-		"Nd_Character/CardSample_A":{"exclude":true},"Panel_Root/Panel_Fx":{"exclude":true},"Panel_Root/Sp_Lock":{"exclude":true},"Panel_Root/Nd_Attribute":{"exclude":true}}
-
-func _prefab_picture(scene: Node2D, out: Dictionary, raw: Dictionary) -> bool:
-	var card: Dictionary=_locate(scene,out,"Nd_Character/CardSample")
-	if not card.get("ok",false):return false
-	var detail: Dictionary=Presentation.detail(raw,true,false)
-	if detail.get("status","")!="original" or not detail.get("texture") is Texture2D:return false
-	return _show_picture(card.player,card.offset,{"ok":true,"texture":detail.texture,"provenance":detail.get("provenance",{}).duplicate(true),"role":str(detail.get("role",""))})
 
 ## --- Actions --------------------------------------------------------------------
 
@@ -237,11 +218,24 @@ func open_card(index: int) -> Dictionary:
 		var card: Dictionary = results[index]
 		var settled: Callable = _reveal.bind(_scene, _out, cell, card)
 		if _play_card_effect(reveal_effect, _scene, _out, cell + "/Panel", card, settled):
+			_start_reel(cell)
 			lit = {"lit": GradeFx.available(self, str(card.get("grade", "")))}
 		else:
 			lit = settled.call()
 	if page_open():_set_visible(_scene,_out,"Nd_ButtonSet/Btn_Open",false)
 	return {"ok":true,"opened":true,"lit":bool(lit.get("lit",false))}
+
+func _start_reel(cell: String) -> void:
+	var nested: Node2D=GradeFx.project(self,_scene,_out,cell)
+	if nested!=null:nested.stop()
+	var back: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Fx_Glow/Card_Back")
+	if back!=null:
+		var sprite: Sprite2D=back.get_meta("source_sprite",null)
+		var panel: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Panel")
+		var reel: Node=panel.get_node_or_null("SourceContentOrigin/CardRevealEffect") if panel!=null else null
+		if sprite!=null and sprite.texture!=null and reel!=null and reel.has_method("set_native_card_back"):
+			reel.set_native_card_back(sprite.texture)
+	GradeFx.set_visible(self,_scene,_out,cell+"/Fx_Glow",false)
 
 ## 모두 확인: opens every closed card of the page.
 func open_all() -> Dictionary:

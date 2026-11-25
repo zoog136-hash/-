@@ -19,6 +19,8 @@ var grade: String="고급"
 var filter_grade: String="전체"
 var _owned_records: Array[Dictionary]=[]
 var _materials: Array[Dictionary]=[]
+var _covered_by_reveal: bool=false
+var _refresh_when_uncovered: bool=false
 
 func required_members() -> Array[String]:
 	var members: Array[String]=[WIN_TOTAL,GRADE_ROW,CARD_SET]
@@ -36,6 +38,25 @@ func open(parent: Node, category_name: String) -> Dictionary:
 	if category_name!=category:filter_grade="전체"
 	category=category_name
 	return open_window(parent)
+
+func set_reveal_covered(value: bool) -> void:
+	if _covered_by_reveal==value or not is_open():return
+	_covered_by_reveal=value
+	_scene.visible=not value
+	if not value and _refresh_when_uncovered:
+		_refresh_when_uncovered=false
+		refresh()
+
+func refresh() -> Dictionary:
+	if _covered_by_reveal:
+		_refresh_when_uncovered=true
+		return {"ok":true,"handled":true,"refresh_pending":true}
+	return super.refresh()
+
+func close() -> void:
+	_covered_by_reveal=false
+	_refresh_when_uncovered=false
+	super.close()
 
 func _catalog() -> Array:
 	var owner: Object=hud()
