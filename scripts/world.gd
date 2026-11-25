@@ -4742,6 +4742,9 @@ func source_item_record(item_class_id: int, bless_raw: int = 1) -> Dictionary:
 func source_item_definition(item_class_id: int) -> Dictionary:
 	return LOOT_DROP.PATCH523_DROPS.definition_id(str(item_class_id))
 
+func source_symbol_reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+	return growth.source523.reward_record(item_id, registered, authored)
+
 func stage_source_item_grants(grants: Array, supplier: Dictionary) -> Dictionary:
 	return preload("res://scripts/loot/patch523_item_inventory.gd").stage(self,grants,supplier)
 
@@ -5014,7 +5017,11 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		hud.show_message(source_use_reason)
 		return
 	var symbol_instance_id: String = str(selected.get("id",""))
-	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
+	var symbol_unit: Dictionary = item_instances.get(symbol_instance_id,{})
+	if not symbol_instance_id.is_empty() and growth.source523.reset_material(symbol_unit):
+		hud.open_growth("emblems")
+		return
+	if not symbol_instance_id.is_empty() and not growth.source523.recharge(symbol_unit).is_empty():
 		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
 		hud.show_message(str(converted.message))
 		return

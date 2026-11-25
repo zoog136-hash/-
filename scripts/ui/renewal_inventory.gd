@@ -279,6 +279,10 @@ func item_action_kind(reference: String) -> String:
 	if _is_item_equipped(reference): return "해제"
 	var record: Dictionary = _find_item_record(reference)
 	var host: Node = controller.get_parent() if is_instance_valid(controller) else null
+	if record.get("type") == "문양 재료" and is_instance_valid(host) and host.has_method("source_symbol_reward_record"):
+		var entry: Dictionary = host.item_instances.get(_ref_instance_id(reference), {})
+		if entry.get("name") == _base_item_name(reference) and host.growth.source523.material(entry):
+			return "사용"
 	return action_for_record(record,_base_item_name(reference),host)
 
 ## The current bag button on a resolved, unworn record (both the stock and

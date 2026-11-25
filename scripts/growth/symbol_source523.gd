@@ -269,6 +269,17 @@ func install(catalog: Dictionary, loot: Dictionary) -> void:
 		if not exists: catalog["아이템"].append(record)
 		if not loot.get("by_name",{}).has(str(record.name)): loot.by_name[str(record.name)] = record
 
+## Normal shop/box/book rewards use this owner's exact item too. Match the
+## installed ItemClass and the actually registered specialist record. Event,
+## expiry and reset conditions are checked by the same owner as a floor pickup.
+func reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+	if authored.get("ID") != item_id or authored.get("TestItem") != false or data.get("items", {}).get(str(item_id)) != authored:
+		return {}
+	var expected: Dictionary = item_record(item_id)
+	if expected.is_empty() or NATIVE_FIELDS.full(registered) != expected:
+		return {}
+	return expected if material({"name":expected.name, "record":expected}) else {}
+
 func prepare_pickup(drop: Dictionary, instances: Dictionary, next_id: int) -> Dictionary:
 	var unchanged: Dictionary = {"item_instances":instances,"next_item_instance_id":next_id}
 	if drop.has("physical_item") or not drop.get("item_record") is Dictionary: return unchanged
