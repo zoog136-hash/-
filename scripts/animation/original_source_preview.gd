@@ -6,6 +6,7 @@ signal native_effect_frame(event: Dictionary)
 const WEAPON_BANKS=preload("res://scripts/animation/source_weapon_banks.gd")
 var source_weapon_status:Dictionary={}
 const POLICY = preload("res://scripts/animation/source_playback_policy.gd")
+const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
 const SP2_COMPOSITOR = preload("res://scripts/animation/source_sp2_compositor.gd")
 const REFERENCE_EXCLUSIONS = preload("res://scripts/animation/source_reference_exclusions.gd")
 
@@ -66,6 +67,7 @@ var playback_mode_override: String = ""
 var source_selection_status: Dictionary = {}
 var _current523_source_only: bool = false
 var _playback_tracks: Dictionary = {}
+var _prepared_direction_totals: Dictionary = {}
 var _playback_mode: String = "strict"
 var _manifest_path: String = ""
 var _manifest_records: Dictionary = {}
@@ -376,6 +378,7 @@ func _configure_reference_bank_internal(manifest_path: String, expected_manifest
 		# Timing policy changes durations/observations, never source layer topology.
 		layout = bank._prepared_snapshot.layout()
 		tracks = bank._prepared_snapshot.npc_timing_tracks(_playback_mode)
+		_prepared_direction_totals = bank._prepared_snapshot.npc_timing_totals(_playback_mode, tracks)
 	elif shared_npc:
 		tracks = POLICY.tracks_from_prepared(loaded.record,card_consumer,_playback_mode)
 	else:
@@ -600,6 +603,7 @@ func clear() -> void:
 	_source_body_material = null
 	source_selection_status.clear()
 	_playback_tracks.clear()
+	_prepared_direction_totals = {}
 	_manifest_records.clear()
 	_annotation_clock = -0.000000001
 	_annotation_track_key = ""
@@ -647,9 +651,11 @@ func role_cycle_seconds(role: String) -> float:
 	if not track is Dictionary or bool(track.get("static_pending_timing",false)): return 0.0
 	var directions: Array=track.get("directions",[])
 	if directions.is_empty() or not directions[0] is Array: return 0.0
+	var totals: Variant=_prepared_direction_totals.get(role)
+	if totals is PackedFloat64Array and not totals.is_empty():return totals[0]
 	var total: float=0.0
 	for item: Variant in directions[0]:
-		if item is Dictionary: total+=preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+		if item is Dictionary:total+=PRESENTATION.duration(item)
 	return total
 
 ## --- Walk root motion ------------------------------------------------------
@@ -1218,8 +1224,12 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		if _cooked != null:
 			total = track.direction_totals[source_direction]
 		else:
-			total = 0.0
-			for item: Dictionary in frames: total += preload("res://scripts/animation/source_presentation_policy.gd").duration(item)
+			var totals: Variant = _prepared_direction_totals.get(_role)
+			if totals is PackedFloat64Array:
+				total = totals[source_direction]
+			else:
+				total = 0.0
+				for item: Dictionary in frames: total += PRESENTATION.duration(item)
 	var time: float = fmod(_clock, total) if bool(track.loop) else minf(_clock, total)
 	# Floating boundary tolerance only; never hold a short pose for a render frame.
 	var boundary_epsilon: float = 0.000000001 if frames[0].has("presentation_duration") else 0.0
