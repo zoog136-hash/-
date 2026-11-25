@@ -130,6 +130,8 @@ var menu_category_buttons: Array[Button] = []
 var menu_category_index: int = 0
 var menu_tiles: Array[Control] = []
 var menu_original_spaces: Array[Control] = []
+var menu_original_shell: Dictionary={}
+var _menu_shell_controller_id: int=0
 var active_section: String = ""
 var totem_view: Control
 var buff_row: HBoxContainer
@@ -1088,6 +1090,10 @@ func _park_shared_panels() -> void:
 		if panel.get_parent() != $Root:
 			panel.reparent($Root)
 		panel.hide()
+	var shell: Node2D=menu_original_shell.get("scene")
+	if is_instance_valid(shell):
+		if shell.get_parent()!=null and shell.get_parent()!=$Root:shell.reparent($Root,false)
+		shell.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
 	# Window subtitles such as "원본523 확률·재료 조회 · 현재 강화 정책 보존" are
@@ -1780,10 +1786,33 @@ func toggle_menu() -> void:
 		_close_workspace()
 		return
 	_open_window("menu","전체 메뉴","")
+	var controller_id: int=original_main_ui_controller.get_instance_id() if is_instance_valid(original_main_ui_controller) else 0
+	if controller_id!=_menu_shell_controller_id:
+		var outdated: Node2D=menu_original_shell.get("scene")
+		if is_instance_valid(outdated):outdated.queue_free()
+		menu_original_shell={}
+		_menu_shell_controller_id=controller_id
+		if is_instance_valid(menu_page):menu_page.queue_free();menu_page=null
+		if controller_id!=0:
+			menu_original_shell=original_main_ui_controller.full_menu_shell(_close_workspace)
+			original_main_ui_status["full_menu"]=_inventory_status_summary(menu_original_shell)
 	# Build the menu tiles once and re-mount them; _park_shared_panels moves the
 	# page out of the workspace before it is cleared, so it is never freed.
 	if not is_instance_valid(menu_page): _build_menu_page()
 	workspace.mount(menu_page)
+	var shell: Node2D=menu_original_shell.get("scene")
+	var native: bool=is_instance_valid(shell)
+	menu_category_filter.visible=not native
+	menu_scroll_view.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER if native else ScrollContainer.SCROLL_MODE_AUTO
+	if native:
+		workspace.use_original_menu_frame(menu_original_shell.size)
+		if shell.get_parent()==null:workspace.content.add_child(shell)
+		else:shell.reparent(workspace.content,false)
+		shell.show()
+		var list: Rect2=menu_original_shell.list_rect
+		menu_page.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		menu_page.position=list.position
+		menu_page.size=list.size
 	menu_page.show()
 	# A freshly opened menu always starts on "전체" at the top, as before.
 	_select_menu_category(0)
@@ -1795,7 +1824,7 @@ func _select_menu_category(index: int) -> void:
 		menu_category_buttons[position].set_pressed_no_signal(position == menu_category_index)
 	var category: String = names[menu_category_index]
 	for tile: Control in menu_tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
-	for space: Control in menu_original_spaces:space.visible=category=="전체"
+	for space: Control in menu_original_spaces:space.visible=category=="전체" and menu_original_shell.get("ok",false)
 	if is_instance_valid(menu_scroll_view): menu_scroll_view.scroll_vertical = 0
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
@@ -1969,6 +1998,8 @@ func _mount_domination_menu_tile(button: Button, artwork: TextureRect, caption: 
 	# MainMenu_DominationStone's 70x67 panel is anchored at its centre.
 	scene.position = MENU_TILE_SIZE*0.5
 	button.add_child(scene)
+	# Its existing outer tile is the only owner of taps and swipe cancellation.
+	preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")._ignore_input(scene)
 	caption.hide()
 
 ## The client's MainMenu_* tile (picture and caption) of a menu section that

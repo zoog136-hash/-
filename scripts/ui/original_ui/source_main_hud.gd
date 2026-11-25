@@ -460,6 +460,8 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if is_instance_valid(_full_menu_shell) and _full_menu_shell.is_visible_in_tree():
+		_collect_native_buttons(_full_menu_shell,buttons)
 	if _workspace_controls!=null:
 		var shown: Dictionary=_workspace_controls.presentation()
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
@@ -1684,6 +1686,51 @@ func close_orim_skill_choice() -> void:
 ## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
 const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
 var _menu_tiles: RefCounted
+var _full_menu_shell: Node2D
+
+## Original Hud_TopMenu's open tray. The owner's existing scroll and item
+## routes mount into its measured ListView rectangle; no synthetic menu
+## border, tabs or close icon are drawn on top of this source branch.
+func full_menu_shell(on_close: Callable) -> Dictionary:
+	if _pack==null or _pack.manifest.get("files",{}).get(MainMenu.MEMBER,{}).get("sha256")!=MainMenu.SHA256:
+		return _fail("source_full_menu_identity_mismatch")
+	const BG: int=39228
+	const DECOR: int=38104
+	const LIST: int=35788
+	const CLOSE: int=36572
+	var scene:=Scene.new()
+	var scope: Array[int]=[BG,DECOR,LIST,CLOSE]
+	var built: Dictionary=scene.configure_nodes(_pack,MainMenu.MEMBER,scope,{
+		LIST:{"role":"source_list","row_offsets":[],"visible":true},
+		CLOSE:{"role":"button","activate":on_close,"visible":true}})
+	if not built.get("ok",false) or not scene.play("Ani_On").get("ok",false):
+		scene.free()
+		return _fail(str(built.get("error","source_full_menu_original_open_clip_missing")))
+	# The authored setup is transparent at frame 0. Show the actual open
+	# endpoint before enabling input rather than re-creating the art or animation.
+	scene.seek_frame(30)
+	scene.stop()
+	var bg: Rect2=_full_menu_node_rect(scene,BG)
+	var list: Rect2=_full_menu_node_rect(scene,LIST)
+	var close: Rect2=_full_menu_node_rect(scene,CLOSE)
+	if not bg.has_area() or list.size!=Vector2(350,470) or not bg.encloses(list) or not close.has_area():
+		scene.free()
+		return _fail("source_full_menu_original_bounds_invalid")
+	var shell: Rect2=bg.merge(close)
+	_full_menu_shell=scene
+	scene.name="OriginalFullMenuShell"
+	scene.z_index=-1
+	scene.position=-shell.position
+	return {"ok":true,"member":MainMenu.MEMBER,"scene":scene,"size":shell.size,"list_rect":Rect2(list.position-shell.position,list.size)}
+
+static func _full_menu_node_rect(scene: Node2D, offset: int) -> Rect2:
+	var node: Node2D=scene.source_nodes.get(offset)
+	if not is_instance_valid(node) or not node.visible:return Rect2()
+	var origin: Node2D=node.get_node_or_null("SourceContentOrigin")
+	if not is_instance_valid(origin):return Rect2()
+	var extent: Array=node.get_meta("source_size",[0,0])
+	var relative: Transform2D=scene.global_transform.affine_inverse()*origin.global_transform
+	return (relative*Rect2(Vector2(0,-float(extent[1])),Vector2(float(extent[0]),float(extent[1])))).abs()
 
 ## These three actions have real HUD buttons, but no client MainMenu_* tile
 ## in ui44. Reuse the mounted normal-state pixels and their original material,

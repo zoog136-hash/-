@@ -91,6 +91,7 @@ func layout(hud: Node, size: Vector2i, safe: Variant) -> void:
 	var first: int = 0
 	var rects: Array[Rect2] = []
 	for tile: Control in grid.get_children():
+		if not tile.visible: continue
 		var rect: Rect2 = tile.get_global_rect()
 		check(tile.size == Vector2(70,67), tag + ": " + str(tile.name) + " is a 70x67 cell " + str(tile.size))
 		for other: Rect2 in rects:
@@ -115,14 +116,25 @@ func order_and_retired(hud: Node) -> void:
 		16:"refine523",18:"guardians",19:"emblems",20:"half_elixir",22:"weapon_mastery",
 		23:"totems",24:"domination_stone",25:"titles",28:"settings",
 	}
-	for index: int in 35:
-		var cell: Control=grid.get_child(index)
-		var id:String=str(source.get(index,""))
-		if id.is_empty():
-			check(str(cell.name)=="OriginalMenuSpace_%d"%index and cell.mouse_filter==Control.MOUSE_FILTER_IGNORE and not cell is Button,"an original unavailable or empty cell cannot be filled or tapped: %d"%index)
-		else:
-			check(str(cell.name)=="MenuTile_"+id and cell is Button,"live original tile held its row/column: "+id)
-		check(cell.position.is_equal_approx(Vector2((index%5)*70,floori(float(index)/5.0)*67)),"actual laid out original grid index %d"%index)
+	var original: bool=hud.menu_original_shell.get("ok",false)
+	var visible_cells: Array=grid.get_children().filter(func(cell: Control) -> bool:return cell.visible)
+	if original:
+		for index: int in 35:
+			var cell: Control=visible_cells[index]
+			var id:String=str(source.get(index,""))
+			if id.is_empty():
+				check(str(cell.name)=="OriginalMenuSpace_%d"%index and cell.mouse_filter==Control.MOUSE_FILTER_IGNORE and not cell is Button,"an original unavailable or empty cell cannot be filled or tapped: %d"%index)
+			else:
+				check(str(cell.name)=="MenuTile_"+id and cell is Button,"live original tile held its row/column: "+id)
+			check(cell.position.is_equal_approx(Vector2((index%5)*70,floori(float(index)/5.0)*67)),"actual laid out original grid index %d"%index)
+	else:
+		check(visible_cells.size()==shown.size() and visible_cells.size()>=35,"fallback has every live tile and no visible holes")
+		for index: int in visible_cells.size():
+			var cell: Control=visible_cells[index]
+			check(cell is Button and cell.position.is_equal_approx(Vector2((index%5)*70,floori(float(index)/5.0)*67)),"compact fallback has a live button every cell: %d"%index)
+		var ordered: Array=[]
+		for id: String in source.values():ordered.append(id)
+		check(shown.slice(0,ordered.size())==ordered,"fallback compacts without changing original relative order")
 	check(not shown.has("monsterbook523"), "the paused monster book tile is not shown")
 	check(shown.has("save"), "the 저장 tile stays")
 	for id: String in GONE: check(not shown.has(id), id + " stays out of the menu")
@@ -143,7 +155,7 @@ func scrolling(hud: Node) -> void:
 	check(view.encloses(hud.menu_tiles[0].get_global_rect().grow(-0.25)), "back at the top the first tile is whole")
 	hud.call("_select_menu_category", 1); await frames(3)
 	var filtered: Array = hud.menu_tiles.filter(func(tile: Control) -> bool: return tile.visible)
-	check(filtered.size() > 0 and filtered.all(func(tile: Control) -> bool: return tile.size == Vector2(70,67)) and hud.menu_original_spaces.all(func(space:Control)->bool:return not space.visible), "a category page retains the compact 70x67 cells, without reserved spaces")
+	check(filtered.size() > 0 and filtered.all(func(tile: Control) -> bool: return tile.size == Vector2(70,67)) and hud.menu_original_spaces.all(func(space:Control)->bool:return not space.visible), "the legacy category function retains compact 70x67 cells, without reserved spaces")
 	hud.call("_select_menu_category", 0); await frames(3)
 
 ## Every tile by a real touch (the save handler is held off: CI shares user://).

@@ -4090,6 +4090,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 			inventory[inventory_key]=int(inventory.get(inventory_key,0))+int(record.quantity)
 	var item_name: String=str(record.item_name)
 	var quantity: int=int(record.quantity)
+	if item_name==titles.POWDER_KEY:titles.reconcile_powder_stock()
 	_source_dungeon_pickup(record)
 	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
 	content523.record_pickup(UNCONFIRMED523.native_id(record.get("item_record",{})),quantity)
@@ -8537,6 +8538,7 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
+	titles.reconcile_powder_stock()
 	# _update_hud also folds an old save's separate receipted stacks of one
 	# item into one slot (_merge_native_stacks).
 	_update_hud()

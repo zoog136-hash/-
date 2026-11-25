@@ -3,6 +3,10 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const Source = preload("res://scripts/titles/title_source523.gd")
 const Personal = preload("res://scripts/titles/title_personal523.gd")
 const CommonSource = preload("res://scripts/resources/current523_definition_rows.gd")
+const STACK = preload("res://scripts/loot/current523_native_stack.gd")
+const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const POWDER_ITEM: int = 117544
+const POWDER_KEY: String = "상급 축복의 가루 · 원본#117544"
 var personal = Personal.new()
 const POLICY = "res://data/titles/local_policy523.json"
 var source = Source.new()
@@ -159,19 +163,25 @@ func gate(expected_revision: int) -> String:
 	if next_stage().is_empty(): return "최고 작위 달성"
 	return ""
 
-func commit(candidate: Dictionary, inventory: Variant = null) -> Dictionary:
+func commit(candidate: Dictionary, inventory: Variant = null, native: Dictionary = {}) -> Dictionary:
 	if busy: return {"ok":false,"message":"작위 처리 중"}
 	busy=true
 	candidate.revision=int(state.revision)+1
 	candidate.last_clock=now()
 	var overrides := {"title523":candidate}
 	if inventory!=null: overrides.inventory=inventory
+	if not native.is_empty():
+		overrides.item_instances=native.item_instances
+		overrides.consumable_state=native.consumable_state
 	var problem := validate(candidate)
 	var saved: Error = ERR_INVALID_DATA if not problem.is_empty() else world._save_game(true,overrides)
 	if saved!=OK:
 		busy=false; return {"ok":false,"message":"작위 저장 실패 · 재료와 이전 상태 보존"}
 	state=candidate
 	if inventory!=null: world.inventory=inventory
+	if not native.is_empty():
+		world.item_instances=native.item_instances
+		world.consumable_service.import_state(native.consumable_state)
 	busy=false
 	world._update_hud()
 	return {"ok":true,"message":"작위 상태 저장 완료"}
@@ -211,26 +221,59 @@ func record_last_hit(npc_id: int, token: String, direct_player: bool, native_row
 	return true
 
 func powder_keys() -> Array[String]:
-	var result: Array[String]=[]
-	for key: String in world.inventory:
-		if int(world.inventory[key])<=0 or world.item_instances.has(key) or world._item_locked(key): continue
-		var record: Dictionary=world.loot_catalog.get("by_name",{}).get(key,{})
-		# A same-name unknown stack is not evidence of native material ownership.
-		if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true: continue
-		if int(record.get("source_item_class_id",-1))!=117544 or str(record.get("sourceId",""))!="m523:item:117544": continue
-		if NATIVE_FIELDS.field(record,"source_category_name")!="StackableItem" or NATIVE_FIELDS.field(record,"source_display_name")!="상급 축복의 가루" or record.get("name")!="상급 축복의 가루 · 원본#117544": continue
-		if int(record.get("source_bless_raw",1))!=1 or record.get("source_test_item",false): continue
-		result.append(key)
-	result.sort()
-	return result
+	if not integer(world.inventory.get(POWDER_KEY,0),1,9007199254740991) or world.item_instances.has(POWDER_KEY) or world._item_locked(POWDER_KEY):return []
+	var record: Dictionary=world.loot_catalog.get("by_name",{}).get(POWDER_KEY,{})
+	# A same-display-name unknown item is not evidence of this exact key.
+	if record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or record.get("source_m_native_item")!=true:return []
+	if int(record.get("source_item_class_id",-1))!=POWDER_ITEM or record.get("sourceId")!="m523:item:117544":return []
+	if NATIVE_FIELDS.field(record,"source_category_name")!="StackableItem" or NATIVE_FIELDS.field(record,"source_display_name")!="상급 축복의 가루" or record.get("name")!=POWDER_KEY:return []
+	if int(record.get("source_bless_raw",1))!=1 or record.get("source_test_item",false):return []
+	return [POWDER_KEY]
+
+func _powder_stock() -> Dictionary:
+	if powder_keys().is_empty():return {}
+	var total: int=int(world.inventory[POWDER_KEY])
+	var legacy: int=total
+	var usable: Array=[]
+	for uid: String in world.item_instances:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary or entry.get("name")!=POWDER_KEY:continue
+		var owned: Dictionary=STACK.proof_entry(entry,uid)
+		if owned.is_empty() or owned.receipt.item_class_id!=POWDER_ITEM or owned.receipt.bless_raw!=1:return {}
+		legacy-=int(owned.remaining)
+		if legacy<0:return {}
+		if not world._item_locked(POWDER_KEY,uid):usable.append({"uid":uid,"owned":owned})
+	var usable_count: int=legacy
+	for row: Dictionary in usable:usable_count+=int(row.owned.remaining)
+	return {"legacy":legacy,"total":total,"usable":usable_count,"stacks":usable}
+
+## Only this historically registered title supplier had a plain exact key
+## alongside receipt-based output. Promote the existing unrepresented units,
+## never issue more units or infer a different ID from the displayed name.
+## Caller is outside a transaction: the normal stack fold and deferred
+## atomic save then keep all original physical receipts and history.
+func reconcile_powder_stock() -> bool:
+	if not world.inventory.has(POWDER_KEY) or STACK.busy or not source.problem.is_empty():return false
+	if CommonSource.identity().get("source_sha256")!=Source.SHA:return false
+	var stock: Dictionary=_powder_stock()
+	if int(stock.get("legacy",0))<=0:return false
+	var authored: Dictionary=CommonSource.row("ItemClass",POWDER_ITEM)
+	if authored.is_empty() or authored.get("TestItem")!=false or source.powder_record.get("source_item_row")!=authored:return false
+	if not integer(stock.total,1,int(authored.get("MaxStackAmount",0))):return false
+	var canonical: Dictionary=DROPS.definition_id(str(POWDER_ITEM)).get("native_record",{})
+	if canonical.get("name")!=POWDER_KEY or canonical.get("sourceId")!="m523:item:117544" or canonical.get("source_bless_raw")!=1:return false
+	var staged: Dictionary=STACK.stage_grant(canonical,int(stock.legacy),world.item_instances,{
+		"kind":"TWILIGHT_title523_existing_exact_key_reconciliation","inventory_key":POWDER_KEY,"item_class_id":POWDER_ITEM},true)
+	if not staged.get("ok",false) or world._save_game(true,{"item_instances":staged.item_instances},{},true)!=OK:return false
+	world.item_instances=staged.item_instances
+	world._request_deferred_save()
+	return true
 
 func powder_count() -> int:
-	var result:=0
-	for key: String in powder_keys(): result+=int(world.inventory[key])
-	return result
+	return int(_powder_stock().get("usable",0))
 
 func can_pickup(record: Dictionary) -> bool:
-	var key: String="상급 축복의 가루 · 원본#117544"
+	var key: String=POWDER_KEY
 	if record.get("item_name")!=key: return true
 	if not source.problem.is_empty() or source.powder_record.is_empty(): return false
 	var amount: Variant=record.get("quantity")
@@ -260,16 +303,30 @@ func attempt(route: String, revision: int) -> Dictionary:
 	var stage:=next_stage()
 	var candidate:=state.duplicate(true)
 	var next_inventory: Dictionary=world.inventory.duplicate(true)
+	var native: Dictionary={}
 	var rng:=RandomNumberGenerator.new(); rng.state=int(state.rng)
 	var success:=false
 	if route=="donation":
-		var remaining:=int(stage.cost)
-		for key: String in powder_keys():
-			var take:=mini(remaining,int(next_inventory[key]))
-			next_inventory[key]=int(next_inventory[key])-take; remaining-=take
-			if int(next_inventory[key])==0: next_inventory.erase(key)
-			if remaining==0: break
+		var stock: Dictionary=_powder_stock()
+		var legacy: int=mini(int(stage.cost),int(stock.get("legacy",0)))
+		var remaining: int=int(stage.cost)-legacy
+		var requests: Array=[]
+		for row: Dictionary in stock.get("stacks",[]):
+			if remaining==0:break
+			var owned: Dictionary=row.owned
+			var take: int=mini(remaining,int(owned.remaining))
+			requests.append({"physical_id":row.uid,"quantity":take,"expected_quantity":owned.remaining,
+				"expected_remaining":int(owned.remaining)-take,"source_native_stack_receipt":owned.receipt})
+			remaining-=take
 		if remaining!=0: return {"ok":false,"message":"기부 재료가 변경되었습니다."}
+		if not requests.is_empty():
+			var staged: Dictionary=STACK.stage_debit(world,requests)
+			if not staged.get("ok",false):return {"ok":false,"message":"기부 재료가 변경되었습니다."}
+			native=staged.overrides
+			next_inventory=native.inventory
+		if legacy>0:
+			next_inventory[POWDER_KEY]=int(next_inventory[POWDER_KEY])-legacy
+			if next_inventory[POWDER_KEY]==0:next_inventory.erase(POWDER_KEY)
 		success=rng.randi_range(0,int(policy.donation_denominator)-1)<int(stage.probability_raw)
 	else:
 		candidate.day=day(now()); candidate.attempts=(int(state.attempts) if int(state.day)==day(now()) else 0)+1
@@ -278,7 +335,7 @@ func attempt(route: String, revision: int) -> Dictionary:
 	candidate.rng=str(rng.state)
 	if success: candidate.achieved.append(int(stage.id)); candidate.active={}
 	candidate.last_result={"route":route,"stage":int(stage.id),"success":success,"cost":int(stage.cost) if route=="donation" else 0}
-	var result:=commit(candidate,next_inventory if route=="donation" else null)
+	var result:=commit(candidate,next_inventory if route=="donation" else null,native)
 	if result.ok: result.message=source.result_text(int(stage.id),success,int(state.revision))
 	return result
 
