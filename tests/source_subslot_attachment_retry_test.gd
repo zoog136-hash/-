@@ -3,6 +3,11 @@ extends SceneTree
 ## fields. Controlled readiness boundaries count reconfigure/match operations;
 ## this is not source admission, twelve-chain activation or render evidence.
 const VIEW = preload("res://scripts/cards/native_doll_subslot_visual.gd")
+const RUNTIME = preload("res://scripts/cards/option_awakening_runtime.gd")
+const DOLL = preload("res://scripts/cards/native_doll_subslot.gd")
+const RELIC = preload("res://scripts/cards/native_relic_subslot.gd")
+const SLOT_DATA = preload("res://scripts/cards/patch523_slot_data.gd")
+const COMBAT_INPUT = preload("res://scripts/cards/current523_option_combat_input.gd")
 const READY = "compatible_native_anchor_unverified_M_placement_and_blend"
 class Pose:
 	extends RefCounted
@@ -15,6 +20,10 @@ class Player:
 	var source_visual_context: Dictionary = {}
 	var velocity: Vector2 = Vector2.ZERO
 	var motion := Pose.new()
+	var property_list_reads: int = 0
+	func _get_property_list() -> Array[Dictionary]:
+		property_list_reads += 1
+		return []
 class Eligibility:
 	extends RefCounted
 	var awake: bool = false
@@ -44,15 +53,17 @@ class Actor:
 	var clear_calls: int = 0
 	var advance_calls: int = 0
 	var supplied_key: String = ""
+	var supplied_manifest: String = ""
 	var supplied_context: Dictionary = {}
 	func current523_source_required(_key: String) -> bool: return true
 	func installed() -> bool: return installed_flag
 	func clear() -> void:
 		clear_calls += 1
 		installed_flag = false
-	func configure(key: String, _manifest: String, context: Dictionary) -> bool:
+	func configure(key: String, manifest: String, context: Dictionary) -> bool:
 		configure_calls += 1
 		supplied_key = key
+		supplied_manifest = manifest
 		supplied_context = context.duplicate(true)
 		selected_pin = available_pin
 		installed_flag = configure_result and can_install
@@ -86,8 +97,23 @@ class Aura:
 		visual.ready = false
 		status = "inactive"
 		hide()
+
+class SourceContext extends RefCounted:
+	var reads: int = 0
+	func source_server_context() -> Dictionary:
+		reads += 1
+		return {"source_snapshot":"patch523","ServiceRegionCode":"KR","WorldNo":1}
+
+class SlotHost extends Node:
+	var level: int = 95
+	var active_skill_buffs: Dictionary = {}
+	var card_collections := SourceContext.new()
+	var card_draw_fusion := preload("res://scripts/card_draw_fusion.gd").new()
+	var equipped_catalog: Dictionary = {}
+
 var checks: int = 0
 var failures: Array[String] = []
+var evidence: Dictionary = {}
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok:
@@ -108,8 +134,96 @@ func make_view(world: World, actor: Actor, aura: Aura) -> Node2D:
 	view.add_child(actor)
 	view.add_child(aura)
 	return view
+
+func empty_slot_benchmark(runtime: RefCounted) -> void:
+	var samples: Array[Array] = [[],[]]
+	for pair: int in 8:
+		for offset: int in 2:
+			var side: int = (pair + offset) % 2
+			var began: int = Time.get_ticks_usec()
+			if side == 0:
+				for frame: int in 2000:
+					runtime.subslot_view(false)
+					runtime.relic_subslot_view(false)
+			else:
+				for frame: int in 2000:
+					runtime.active_subslot_identity()
+					runtime.active_subslot_identity(true)
+			var elapsed: int = Time.get_ticks_usec() - began
+			if pair > 0: samples[side].append(elapsed)
+	for side: Array in samples: side.sort()
+	evidence["empty_slots_2000_updates_full_view_p50_usec"] = samples[0][3]
+	evidence["empty_slots_2000_updates_active_only_p50_usec"] = samples[1][3]
+
+func check_slot_eligibility() -> void:
+	var host := SlotHost.new()
+	var runtime := RUNTIME.new()
+	runtime.world = host
+	runtime.combat.configure(runtime)
+	runtime.core.native_mode = true
+	var before: Dictionary = runtime.progress.duplicate(true)
+	check(runtime.active_subslot_identity().is_empty() and runtime.active_subslot_identity(true).is_empty() and host.card_collections.reads == 0,
+		"empty slots skip source context lookup and do not change saved progress")
+	check(runtime.progress == before and not runtime.subslot_view(false).active and not runtime.relic_subslot_view(false).active,
+		"full UI views remain available for an empty slot")
+	if "--subslot-bench" in OS.get_cmdline_user_args():
+		for index: int in 32: host.active_skill_buffs[index] = {"remaining":30}
+		empty_slot_benchmark(runtime)
+		host.active_skill_buffs.clear()
+
+	var old_doll: Array = [COMBAT_INPUT._identity_for_test,COMBAT_INPUT._data,COMBAT_INPUT._store]
+	var old_relic: Array = [SLOT_DATA.pack,SLOT_DATA.problem,SLOT_DATA.relic,SLOT_DATA.relic_combat,SLOT_DATA._store]
+	var doll: String = "source:m508:2:42"
+	var main: String = "source:m508:2:43"
+	var relic: String = "source:m523:98:44"
+	var native: Dictionary = {"source_snapshot":"base508","server_limit_set_id":0}
+	var origin: Dictionary = {"ID":42,"GradeID":3}
+	var effect: Dictionary = {"type":{"Name":"InvokeOption"},"bonus":{"ID":1}}
+	COMBAT_INPUT._identity_for_test = {"fixture":"slot-hot-path"}
+	COMBAT_INPUT._store = null
+	COMBAT_INPUT._data = {"ready":true,"source_input_identity":COMBAT_INPUT._identity_for_test,
+		"subslot_buffs":{doll:{"card":origin,"effects":[effect]}}}
+	var relic_row: Dictionary = {"ID":44,"GradeID":4,"BuffCardDeckID":98,"ServerLimitSetID":0}
+	SLOT_DATA.pack = {"fixture":true}
+	SLOT_DATA.problem = ""
+	SLOT_DATA._store = null
+	SLOT_DATA.relic = {"cards":{"98:44":{"card":relic_row,"subslot_buff":1,"effects":[]}}}
+	SLOT_DATA.relic_combat = {"relic_subslot_buffs":{"98:44":{"card":relic_row,"effects":[effect]}}}
+	runtime.core.catalog = {
+		"마법인형":{doll:{"source_original":native}},
+		"성물":{relic:{"source":"lineagem_patch523","sourceId":"m523:98:44","source_card_id":44,"source_deck_id":98,"source_grade_id":4}}}
+	host.equipped_catalog = {"마법인형":{"source":"lineagem_base508","sourceId":"m508:2:43","source_card_id":43,
+		"source_grade_id":2,"source_original":native}}
+	host.card_draw_fusion.owned = {"마법인형":{doll:true,main:true},"성물":{relic:true}}
+	runtime.progress[DOLL.FIELD] = doll
+	runtime.progress[RELIC.FIELD] = relic
+	check(runtime.active_subslot_identity().is_empty() and runtime.active_subslot_identity(true).is_empty(),"selected but locked slots remain inactive")
+	host.active_skill_buffs = {"doll":{"source_snapshot":"base508","source_buff_class_id":91531},
+		"relic":{"source_snapshot":"patch523","source_buff_class_id":RELIC.Unlock.BUFF}}
+	check(runtime.active_subslot_identity() == doll and runtime.subslot_view(false).active,"owned, unlocked doll is still admitted")
+	check(runtime.active_subslot_identity(true) == relic and runtime.relic_subslot_view(false).active,"legacy untimed relic is still admitted")
+	var active: Dictionary = runtime.combat.active()
+	check(active.has(doll) and active.has("relic_subslot11:"+relic),"combat uses the same admitted doll and relic rows")
+	host.equipped_catalog["마법인형"].source_grade_id = 3
+	check(runtime.active_subslot_identity().is_empty() and not runtime.subslot_view(false).active,"same-grade conflict suspends the doll immediately")
+	runtime.progress[RUNTIME.RELIC_SUMMON_TIME] = {"schema":1,"item_class_id":365758,"identity":relic,"expires_utc":int(Time.get_unix_time_from_system())+60}
+	check(runtime.active_subslot_identity(true) == relic,"matching future relic timer keeps the slot active")
+	runtime.progress[RUNTIME.RELIC_SUMMON_TIME].expires_utc = 0
+	check(runtime.active_subslot_identity(true).is_empty() and not runtime.relic_subslot_view(false).active,"expired relic loses eligibility in the next lookup")
+	check(runtime.combat.active().is_empty(),"inactive secondary rows are removed from combat immediately")
+	COMBAT_INPUT._identity_for_test = old_doll[0]
+	COMBAT_INPUT._data = old_doll[1]
+	COMBAT_INPUT._store = old_doll[2]
+	SLOT_DATA.pack = old_relic[0]
+	SLOT_DATA.problem = old_relic[1]
+	SLOT_DATA.relic = old_relic[2]
+	SLOT_DATA.relic_combat = old_relic[3]
+	SLOT_DATA._store = old_relic[4]
+	host.free()
+
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	check_slot_eligibility()
 	var world := World.new()
 	root.add_child(world)
 	world.add_child(world.player)
@@ -131,10 +245,12 @@ func run() -> void:
 	var configured: int = actor.configure_calls
 	var cleared: int = actor.clear_calls
 	var advanced: int = actor.advance_calls
+	var property_reads: int = world.player.property_list_reads
 	deadline(view,"_next_source_check_msec",false)
 	for frame: int in 30: view.update_source(0.0,world,record)
 	check(actor.configure_calls == configured and actor.match_calls == 0 and actor.clear_calls == cleared,"ready frames add no repeated reconfigure or match I/O")
 	check(actor.advance_calls == advanced+30,"healthy body playback continues without resets")
+	check(world.player.property_list_reads == property_reads,"ready playback never enumerates all player properties")
 	deadline(view,"_next_source_check_msec",true)
 	view.update_source(0.0,world,record)
 	check(actor.match_calls == 1 and actor.configure_calls == configured and actor.clear_calls == cleared,"due matching bank check preserves running body")
@@ -158,6 +274,10 @@ func run() -> void:
 	world.player.source_visual_context = {"class_id":2}
 	view.update_source(0.0,world,record)
 	check(actor.configure_calls == configured+1 and actor.supplied_context == {"class_id":2},"changed owner context bypasses old retry cooldown")
+	configured = actor.configure_calls
+	world.player.original_source_manifest = "res://fixture-changed-manifest.json"
+	view.update_source(0.0,world,record)
+	check(actor.configure_calls == configured+1 and actor.supplied_manifest == world.player.original_source_manifest,"changed manifest is read immediately")
 	view.clear()
 	check(view.binding.is_empty() and view.aura_signature.is_empty() and view.status == "inactive" and not view.visible,"clear invalidates body and aura state")
 	configured = actor.configure_calls
@@ -171,6 +291,9 @@ func run() -> void:
 	check(view.status == "source_native","existing request can resume after death clear")
 	view.update_source(0.0,world,{})
 	check(view.status == "inactive" and view.binding.is_empty(),"empty subslot clears its binding")
+	cleared = actor.clear_calls
+	view.update_source(0.0,world,{})
+	check(actor.clear_calls == cleared,"already released body is not cleared again every frame")
 	view.free()
 
 	actor = Actor.new()
@@ -241,5 +364,5 @@ func run() -> void:
 	check(aura.status == "inactive" and view.aura_signature.is_empty(),"release clears successful or pending aura cache")
 	view.free()
 	world.free()
-	print("SOURCE_SUBSLOT_ATTACHMENT_RETRY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"host resilience with controlled readiness boundaries; no original admission or rendering claim"}))
+	print("SOURCE_SUBSLOT_ATTACHMENT_RETRY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence,"scope":"synthetic source eligibility and visual readiness; no original admission or rendering claim"}))
 	quit(0 if failures.is_empty() else 1)
