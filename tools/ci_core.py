@@ -263,6 +263,7 @@ CHECKS = [
     ('original_ui_menu_retirement_test', []),
     ('full_menu_five_columns_test', []),
     ('source_full_menu_shell_main_test', []),
+    ('source_option_awakening_main_test', []),
     ('native_advanced_powder_stock_main_test', []),
     ('original_ui_sprite_copy_letterbox_test', []),
     ('original_ui_android_blend_test', []),
@@ -797,7 +798,7 @@ def run_check(name, command, target, log, env, marker):
                 'ground_pickup_shortlist_test','doll_explore_routes_main_test','native_bonus_stat_eye_main_test',
                 'native_exact_experience_main_test','native_firework_main_test','native_growth_catalyst_main_test','native_witch_mana_potions_main_test','native_auto_hp_potion_main_test','native_antidote_owner_main_test','native_trial_coin_main_test','native_timed_selection_boxes_main_test','native_growth_adena_potions_main_test',
                 'quest_only_retirement_main_test','escaros_original_card_main_test','source_item_visible_action_main_test',
-                'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test','source_full_menu_shell_main_test','native_advanced_powder_stock_main_test',
+                'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test','source_full_menu_shell_main_test','source_option_awakening_main_test','native_advanced_powder_stock_main_test',
                 'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test','native_inventory_slot_names_main_test','native_timed_buff_publish_main_test','native_exact_card_choice_main_test',
                 'source_inventory_controls_main_test','source_skill_scroll_drag_main_test'}:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
@@ -1065,6 +1066,7 @@ def main():
                       'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
                       'full_menu_five_columns_test':'FULL_MENU_FIVE_COLUMNS_RESULT',
                       'source_full_menu_shell_main_test':'SOURCE_FULL_MENU_SHELL_RESULT',
+                      'source_option_awakening_main_test':'SOURCE_OPTION_AWAKENING_RESULT',
                       'native_advanced_powder_stock_main_test':'NATIVE_ADVANCED_POWDER_STOCK_RESULT',
                       'original_ui_sprite_copy_letterbox_test':'ORIGINAL_UI_SPRITE_COPY_LETTERBOX_RESULT',
                       'original_ui_android_blend_test':'ORIGINAL_UI_ANDROID_BLEND_RESULT',

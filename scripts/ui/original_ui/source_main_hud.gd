@@ -1188,6 +1188,7 @@ func close_emblem_window() -> void:
 const FEATURE_WINDOWS={
 	"card_collection":preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd"),
 	"card_fusion":preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd"),
+	"option_awakening":preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd"),
 	"card_awakening":preload("res://scripts/ui/original_ui/source_main_card_awakening_window.gd"),
 	"titles":preload("res://scripts/ui/original_ui/source_main_title_window.gd"),
 	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),

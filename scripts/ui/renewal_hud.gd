@@ -389,7 +389,7 @@ func blocks_keyboard_input_except_source_editor(editor: Control) -> bool:
 	return false
 
 func blocks_world_input(point: Vector2) -> bool:
-	if is_enhancement_presenting() or is_option_awakening_busy(): return true
+	if is_enhancement_presenting() or is_option_awakening_busy() or source_option_awakening_is_open(): return true
 	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
 	# Use the same canvas and clipping coordinates as the real controls so
 	# responsive shelves and dragged windows cannot issue a world destination.
@@ -1148,8 +1148,9 @@ func _go_back() -> void:
 	if is_instance_valid(companion_detail_view) and companion_detail_view.active and companion_detail_view.active_tab==1:
 		companion_detail_view.select_tab(0)
 		return
-	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():
-		return
+	if active_section == "option_awakening":
+		if source_option_awakening_is_open() and original_main_ui_controller.feature_window("option_awakening").cancel_review():return
+		if is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():return
 	if active_section == "growth96" and is_instance_valid(growth96_view) and growth96_view.cancel_review():
 		return
 	var restore_card_details: bool = active_section == "option_awakening" and option_awakening_source_detail
@@ -2537,6 +2538,10 @@ func set_option_awakening_state(value: Dictionary) -> void:
 	_refresh_option_awakening_markers()
 	_refresh_option_awakening_entry()
 
+func source_option_awakening_is_open() -> bool:
+	return active_section=="option_awakening" and is_instance_valid(original_main_ui_controller) \
+		and original_main_ui_controller.has_method("feature_window_is_open") and original_main_ui_controller.feature_window_is_open("option_awakening")
+
 func set_option_awakening_view(snapshot: Dictionary) -> void:
 	if not bool(snapshot.get("ok", false)):
 		if active_section == "option_awakening" and is_instance_valid(option_awakening_view):
@@ -2547,6 +2552,10 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	var target_id: String = str(snapshot.get("target_id", ""))
 	var same_target: bool = category == str(option_awakening_snapshot.get("category", "")) and target_id == str(option_awakening_snapshot.get("target_id", ""))
 	option_awakening_snapshot = snapshot.duplicate(true)
+	if same_target and source_option_awakening_is_open():
+		var updated: Dictionary=original_main_ui_controller.feature_window("option_awakening").apply_snapshot(snapshot)
+		original_main_ui_status["option_awakening_window"]=updated
+		if updated.get("ok",false):return
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion() and same_target:
 		option_awakening_view.collection_catalog=catalog_data
 		option_awakening_view.collection_ownership=card_collection_state
@@ -2556,6 +2565,7 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	if CARD_RULES.CATEGORIES.has(active_section):
 		option_awakening_source_detail = catalog_details_active
 	_open_window("option_awakening", category + " 옵션 각성", "")
+	if _open_original_feature("option_awakening",[option_awakening_snapshot]):return
 	var view: Control = OptionAwakeningView.new()
 	view.collection_catalog=catalog_data;view.collection_ownership=card_collection_state;view.collection_scroll_host=workspace
 	option_awakening_view = view
