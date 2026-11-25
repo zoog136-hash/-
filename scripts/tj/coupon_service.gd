@@ -1,6 +1,7 @@
 extends RefCounted
 ## Offline transactions. Source policies remain separate from local adapters.
 const Source = preload("res://scripts/tj/source523.gd")
+const Skill = preload("res://scripts/tj/skill_retry523.gd")
 const KEY = "tj_coupons523"
 const DECK = {"변신":1, "마법인형":2, "성물":98, "스킬":41}
 var definitions: Dictionary = {}
@@ -82,6 +83,7 @@ func resolve(item: String, context: Dictionary, now: int) -> Dictionary:
 	if coupon.is_empty():return {"ok":false,"error":"카드 재도전 쿠폰이 아닙니다. 장비 복구는 별도 어댑터가 필요합니다"}
 	if bool(coupon.item.get("TestItem",false)) and not preload("res://scripts/boot/build_flags.gd").playtest():return {"ok":false,"error":"원본 테스트 아이템은 일반 실행에서 사용할 수 없습니다"}
 	var policy: Dictionary=coupon.profile
+	var skill := Skill.matches(policy)
 	var history: Dictionary={}
 	for row: Dictionary in definitions.histories:
 		if int(row.HistoryType)==int(policy.TJCouponHistoryType):history=row
@@ -98,23 +100,28 @@ func resolve(item: String, context: Dictionary, now: int) -> Dictionary:
 		if int(effect.BonusTypeID)==11551:season=int(effect.Value)
 		if int(effect.BonusTypeID)==492:
 			if int(effect.Value)==0 and int(effect.BonusApplicationTypeID)==298:expiry=date_value(int(effect.BonusApplicationTargetID))
-			elif str(settings.legacy_time_mode)=="calendar_yyyymmddhh" and int(effect.Value)>0 and int(effect.BonusApplicationTypeID)==0 and int(effect.BonusApplicationTargetID)==0:
+			elif (skill or str(settings.legacy_time_mode)=="calendar_yyyymmddhh") and int(effect.Value)>0 and int(effect.BonusApplicationTypeID)==0 and int(effect.BonusApplicationTargetID)==0:
 				var raw: String=str(int(effect.Value))
 				if raw.length()!=10:return {"ok":false,"error":"설정한 구형 날짜 형식과 맞지 않습니다"}
 				expiry=int(raw)*100
 			else:return {"ok":false,"error":"구형 소멸 시간 인코딩의 실행 해석이 확인되지 않았습니다"}
-	if expiry<0 and not bool(settings.allow_unknown_expiry):return {"ok":false,"error":"소멸 조건이 없는 쿠폰의 실행 정책은 확인 대기입니다"}
-	if expiry>=0 and (expiry==0 or wall(now)>=expiry):return {"ok":false,"error":"쿠폰 소멸일이 지났거나 날짜가 손상됐습니다"}
+	if not skill and expiry<0 and not bool(settings.allow_unknown_expiry):return {"ok":false,"error":"소멸 조건이 없는 쿠폰의 실행 정책은 확인 대기입니다"}
+	if not skill and expiry>=0 and (expiry==0 or wall(now)>=expiry):return {"ok":false,"error":"쿠폰 소멸일이 지났거나 날짜가 손상됐습니다"}
 	var window: Dictionary={}
 	if season<0:
-		if not bool(settings.allow_no_season):return {"ok":false,"error":"시즌 없는 쿠폰의 이력 기간은 확인 대기입니다"}
+		if not skill and not bool(settings.allow_no_season):return {"ok":false,"error":"시즌 없는 쿠폰의 이력 기간은 확인 대기입니다"}
 	else:
 		for row: Dictionary in definitions.seasons:
 			if int(row.HistoryType)==int(history.HistoryType) and int(row.Season)==season and server_matches(int(row.ServerLimitSetID),context):
 				if not window.is_empty():return {"ok":false,"error":"서버와 시즌에 둘 이상의 기간이 연결됩니다"}
 				window=row
 		if window.is_empty():return {"ok":false,"error":"현재 지역과 월드에 맞는 시즌이 없습니다"}
-	return {"ok":true,"coupon":coupon,"policy":policy,"history":history,"window":window,"season":season}
+	var result := {"ok":true,"coupon":coupon,"policy":policy,"history":history,"window":window,"season":season}
+	if skill:
+		var bounds := Skill.range_for(self,window,expiry,now,int(item),context)
+		if bounds.is_empty(): return {"ok":false,"error":"스킬 쿠폰의 기간이 만료됐거나 유효하지 않습니다"}
+		result["skill_window"] = bounds
+	return result
 func candidates(item: String, context: Dictionary, now: int) -> Dictionary:
 	var result: Dictionary=resolve(item,context,now)
 	if not result.ok:return result
@@ -126,10 +133,13 @@ func candidates(item: String, context: Dictionary, now: int) -> Dictionary:
 		var scope: String=str(settings.owner_scope.get(str(int(result.policy.OwnerTypeID)),""))
 		if scope.is_empty() or scope=="character" and str(event.character)!=str(settings.character):continue
 		if event.context!=context:continue
-		if not result.window.is_empty():
+		if result.has("skill_window"):
+			if event.get("adapter") != "skill_fusion" or int(event.get("target_grade",0)) not in [4,5,32]: continue
+			if int(event.time)>now or int(event.time)<int(result.skill_window.start) or int(event.time)>=int(result.skill_window.end): continue
+		elif not result.window.is_empty():
 			var t: int=wall(int(event.time))
 			if t<date_value(int(result.window.StartDateTimeID)) or t>=date_value(int(result.window.EndDateTimeID)):continue
-		if event.success_candidates.is_empty() or event.fail_candidates.is_empty():continue
+		if event.success_candidates.is_empty() or (not result.has("skill_window") and event.fail_candidates.is_empty()):continue
 		found.append(event.duplicate(true))
 	result["events"]=found
 	if found.is_empty():result["error"]="이 쿠폰에 해당하는 실제 실패 이력이 없습니다"
@@ -149,34 +159,42 @@ func prepare(item: String, event_id: String, context: Dictionary, now: int, revi
 		if str(row.id)==event_id:event=row
 	if event.is_empty():return {"ok":false,"error":"사용 가능한 실패 이력이 아닙니다"}
 	# Unknown native output/awakening/skill rules are not guessed from the catalog.
-	if str(event.get("adapter","")) not in ["fusion","awakening"]:return {"ok":false,"error":"이 이력의 실제 실행 어댑터 연결이 필요합니다. 쿠폰은 유지됩니다"}
-	var count: int=int(view.policy.ChoiceFailCardCount)
-	var expected_fail: int=count if count>0 else 1
-	if success_ids.size()!=1 or fail_ids.size()!=expected_fail:return {"ok":false,"error":"성공 후보 한 개와 원본 정책 수의 실패 후보를 선택하세요"}
-	for pair: Array in [[success_ids,event.success_candidates],[fail_ids,event.fail_candidates]]:
-		var unique: Dictionary={}
-		for id: Variant in pair[0]:
-			if unique.has(str(id)) or not pair[1].has(str(id)):return {"ok":false,"error":"기록에 없거나 중복된 후보입니다"}
-			var card: Dictionary=definitions.cards.get(str(id),{})
-			if card.is_empty() or int(card.BuffCardDeckID)!=int(view.policy.BuffCardDeckID) or int(card.GradeID)<int(view.policy.BuffCardMinGrade):return {"ok":false,"error":"쿠폰의 덱 또는 최소 등급과 맞지 않습니다"}
-			if not server_matches(int(card.get("ServerLimitSetID",0)),context):return {"ok":false,"error":"선택 카드의 서버 조건이 맞지 않습니다"}
-			var start: int=int(card.get("StartDateTimeID",0))
-			var end: int=int(card.get("EndDateTimeID",0))
-			if start!=0 and (date_value(start)==0 or wall(now)<date_value(start)):return {"ok":false,"error":"선택 카드의 시작 기간 조건이 맞지 않습니다"}
-			if end!=0 and (date_value(end)==0 or wall(now)>=date_value(end)):return {"ok":false,"error":"선택 카드의 종료 기간 조건이 맞지 않습니다"}
-			unique[str(id)]=true
+	if str(event.get("adapter","")) not in ["fusion","awakening","skill_fusion"]:return {"ok":false,"error":"이 이력의 실제 실행 어댑터 연결이 필요합니다. 쿠폰은 유지됩니다"}
+	if view.has("skill_window") != (event.get("adapter")=="skill_fusion"):return {"ok":false,"error":"쿠폰과 합성 이력의 종류가 다릅니다"}
+	if view.has("skill_window"):
+		if not success_ids.is_empty() or not fail_ids.is_empty(): return {"ok":false,"error":"재합성할 스킬 등급 하나를 선택하세요"}
+	else:
+		var count: int=int(view.policy.ChoiceFailCardCount)
+		var expected_fail: int=count if count>0 else 1
+		if success_ids.size()!=1 or fail_ids.size()!=expected_fail:return {"ok":false,"error":"성공 후보 한 개와 원본 정책 수의 실패 후보를 선택하세요"}
+		for pair: Array in [[success_ids,event.success_candidates],[fail_ids,event.fail_candidates]]:
+			var unique: Dictionary={}
+			for id: Variant in pair[0]:
+				if unique.has(str(id)) or not pair[1].has(str(id)):return {"ok":false,"error":"기록에 없거나 중복된 후보입니다"}
+				var card: Dictionary=definitions.cards.get(str(id),{})
+				if card.is_empty() or int(card.BuffCardDeckID)!=int(view.policy.BuffCardDeckID) or int(card.GradeID)<int(view.policy.BuffCardMinGrade):return {"ok":false,"error":"쿠폰의 덱 또는 최소 등급과 맞지 않습니다"}
+				if not server_matches(int(card.get("ServerLimitSetID",0)),context):return {"ok":false,"error":"선택 카드의 서버 조건이 맞지 않습니다"}
+				var start: int=int(card.get("StartDateTimeID",0))
+				var end: int=int(card.get("EndDateTimeID",0))
+				if start!=0 and (date_value(start)==0 or wall(now)<date_value(start)):return {"ok":false,"error":"선택 카드의 시작 기간 조건이 맞지 않습니다"}
+				if end!=0 and (date_value(end)==0 or wall(now)>=date_value(end)):return {"ok":false,"error":"선택 카드의 종료 기간 조건이 맞지 않습니다"}
+				unique[str(id)]=true
 	var next: Dictionary=export_state()
 	next.revision=int(next.revision)+1;next.last_time=now
 	if own>=1:next.coupons[item]=own-1
 	next.used[event_id]=str(next.revision)
 	return {"ok":true,"state":next,"event":event,"success_ids":success_ids.duplicate(),"fail_ids":fail_ids.duplicate(),"item":item,"bag_debit":own<1}
-func record_failure(event: Dictionary) -> bool:
-	if blocked or state.history.size()>=10000:return false
+func stage_failure(event: Dictionary) -> Dictionary:
+	if busy or blocked or state.history.size()>=10000:return {}
 	var next: Dictionary=export_state()
 	var copy: Dictionary=event.duplicate(true)
 	copy["id"]="failure-"+str(int(next.revision)+1)
 	copy["account"]=str(settings.account);copy["character"]=str(settings.character)
 	next.history.append(copy);next.revision=int(next.revision)+1
-	if not validate(next).is_empty():return false
+	return next if validate(next).is_empty() else {}
+
+func record_failure(event: Dictionary) -> bool:
+	var next := stage_failure(event)
+	if next.is_empty(): return false
 	state=next
 	return true
