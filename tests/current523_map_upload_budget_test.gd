@@ -32,7 +32,8 @@ static func completed() -> void: pass
 
 func queue_decoded(pack: RefCounted, id: int, failed: bool = false) -> void:
 	pack._blocks[id] = 256
-	pack._jobs[id] = {"task":WorkerThreadPool.add_task(completed), "image":null if failed else pixels(id), "problem":"synthetic pinned decode failure" if failed else ""}
+	var decode: Dictionary = {"image":null if failed else pixels(id), "problem":"synthetic pinned decode failure" if failed else ""}
+	pack._jobs[id] = {"task":WorkerThreadPool.add_task(completed), "decode":decode}
 
 func wait_decoded(pack: RefCounted) -> void:
 	for _step: int in 200:
@@ -78,7 +79,7 @@ func publish_frames() -> void:
 	# Check pixels via the actual publication method's job, not a replacement.
 	var image: Image = pixels(11)
 	queue_decoded(pack, 11)
-	var supplied: Image = pack._jobs[11].image
+	var supplied: Image = pack._jobs[11].decode.image
 	check(supplied.get_data() == image.get_data(), "test supplies deterministic pixels")
 	await wait_decoded(pack)
 	await next_frame()
