@@ -15,6 +15,9 @@ func cpu_usec()->int:
 	return int(fields[0])/1000 if fields.size()>0 and fields[0].is_valid_int() else -1
 func _initialize()->void:
 	var sizes:Dictionary={}
+	# These large members all participate in the first projection of NPC 71634.
+	for table: String in ["NpcAttack", "NpcAttribute", "NpcSpecialResistance", "SpellBonus", "BuffClass", "BuffBonus"]:
+		ck(SPANS.TABLES.has(table), "first-encounter input is covered: " + table)
 	for table:String in SPANS.TABLES:
 		var spec:Dictionary=SPANS.TABLES[table]
 		var total:int=0;var previous:int=0
