@@ -147,6 +147,11 @@ var _background_atlases: bool = false
 var _dream_background: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
+## Resident S32 member -> (block x, block y, object policy) -> atlas IDs.
+## Keep dense request lists across viewport eviction without retaining textures.
+var _chunk_atlas_ids: Dictionary = {}
+const MIN_ATLAS_CACHE_RECORDS: int = 64
+const MAX_ATLAS_LISTS_PER_CHUNK: int = 64
 ## Chunk member -> worker read job (see _prefetch_chunk).
 var _chunk_jobs: Dictionary = {}
 ## S32 chunk reads in flight at once.
@@ -276,7 +281,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	_overlap = {}
 	_drop_chunk_jobs()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
-	_chunk_bins.clear(); _clear_blocks()
+	_chunk_bins.clear(); _chunk_atlas_ids.clear(); _clear_blocks()
 	_scope_clipped_records = 0
 	_off_floor_decoration_records = 0
 	for row: Variant in record.chunks:
@@ -742,11 +747,13 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 	else:
 		packed = _project_records(_member_origins[member], job.halves, job.rows, job.kinds, job.refs)
 		_chunk_bins[member] = _bin_chunk(packed)
+	_chunk_atlas_ids.erase(member)
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
 		var oldest: String=_raw_recent.pop_front()
 		_raw_chunks.erase(oldest);_static_tails.erase(oldest);_chunk_bins.erase(oldest)
+		_chunk_atlas_ids.erase(oldest)
 		_mark_visible_static_tail_changed(oldest)
 	return packed
 
@@ -1179,20 +1186,38 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 
 
 func _member_block_tiles(member: String, cell: Vector2i, layers: Dictionary) -> PackedInt32Array:
-	if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+	if not _chunk_bins.has(member):
+		_chunk_bins[member] = _bin_chunk(layers)
+		_chunk_atlas_ids.erase(member)
+	var lists: Dictionary = _chunk_atlas_ids.get(member,{})
+	var key := Vector3i(cell.x,cell.y,int(include_objects))
+	var cached: Variant = lists.get(key)
+	if cached != null: return _available_atlases(cached)
 	var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell,{})
 	var asked: Dictionary = {}
-	var tiles := PackedInt32Array()
+	var record_count: int = 0
 	for layer: int in bins:
 		if not include_objects and layer >= 0: continue
 		var records: PackedInt64Array = layers[layer]
-		for index: int in (bins[layer] as PackedInt32Array):
+		var indices: PackedInt32Array = bins[layer]
+		record_count += indices.size()
+		for index: int in indices:
 			var ref: int = records[index+2]
-			if ref == 4294967295: continue
-			var tile_id: int = ref >> 8
-			if asked.has(tile_id): continue
-			asked[tile_id] = true
-			if _tile_pack.has_tile(tile_id): tiles.append(tile_id)
+			if ref != 4294967295: asked[ref >> 8] = true
+	# The first request already collected these IDs in source order. Keep only
+	# compact lists; misses, sparse bins and overflow use the same discovery.
+	if record_count >= MIN_ATLAS_CACHE_RECORDS and asked.size() <= mini(record_count >> 2, VISIBLE_ATLAS_LIMIT) \
+		and lists.size() < MAX_ATLAS_LISTS_PER_CHUNK and _raw_chunks.has(member):
+		lists[key] = PackedInt32Array(asked.keys())
+		_chunk_atlas_ids[member] = lists
+	return _available_atlases(asked)
+
+
+## First discovery supplies ordered dictionary keys; revisits use packed IDs.
+func _available_atlases(ids: Variant) -> PackedInt32Array:
+	var tiles := PackedInt32Array()
+	for tile_id: int in ids:
+		if _tile_pack.has_tile(tile_id): tiles.append(tile_id)
 	return tiles
 
 
@@ -1530,8 +1555,12 @@ func _build_frame() -> bool:
 	if _tile_pack != null and _tile_pack.has_method("release_held") and (not partial or int(_tile_pack.call("held_size")) > HELD_ATLAS_LIMIT):
 		_tile_pack.call("release_held")
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
+	var scope_metrics: Dictionary = field.scope_metrics() if bool(field.get_meta("current523_generic_field",false)) else {}
+	var registered: int = 0
+	if scope_metrics.has("expected_sources"): registered = int(scope_metrics.expected_sources)
+	elif _raw_sources != null: registered = _raw_sources.source_members().size()
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
-		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
+		"registered_sources": registered, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,registered-_member_origins.size()),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
 		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count, "block_draw_commands": draws,
 		"visible_blocks": cells.size(), "cached_blocks": _blocks.size(), "block_size": BLOCK,
@@ -1540,10 +1569,10 @@ func _build_frame() -> bool:
 		"scope_clipped_records": _scope_clipped_records,
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
-	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	_visible_members=visible.duplicate()
 	if not _arrival_view.has_area(): _refresh_static_objects()
-	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
+	if not scope_metrics.is_empty(): _metrics.merge(scope_metrics,true)
+	elif source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
 	return true
@@ -1921,6 +1950,7 @@ func _exit_tree() -> void:
 	# their source and draw-list inputs alive until the map pump reaps them.
 	_drop_chunk_jobs(true)
 	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(true); _chunk_bins.clear()
+	_chunk_atlas_ids.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()
 	FRAME_HITCH.detail("map.renderer_retire", started)
