@@ -184,6 +184,47 @@ func resident_atlas_bound() -> void:
 	check(not renderer._chunk_atlas_ids.has("slots"), "replacement cannot use a prior selection's atlas list")
 	renderer.free()
 
+func resident_arrival_jobs() -> void:
+	var renderer := Probe.new()
+	var tiles := Tiles.new()
+	renderer._tile_pack = tiles
+	renderer._background_atlases = true
+	renderer.block_jobs_enabled = true
+	var view := Rect2(-512,0,3072,512)
+	renderer._chunk_rects["ground"] = view
+	renderer._chunk_bins["elsewhere"] = {}
+	renderer.begin_arrival_view(view)
+	check(renderer._block_jobs.is_empty() and renderer._chunk_jobs.is_empty(), "arrival hint starts no reads for an absent destination member")
+	var lane := PackedInt64Array()
+	for x: int in range(-1,5): lane.append_array(PackedInt64Array([512*x+8,8,257]))
+	var layers: Dictionary = {-2:lane}
+	renderer._raw_chunks["ground"] = layers
+	renderer.begin_arrival_view(view)
+	check(renderer._block_jobs.is_empty() and not renderer._chunk_bins.has("ground"), "arrival hint performs no projection or bin construction on the caller")
+	renderer._chunk_bins["ground"] = RENDERER._bin_chunk(layers)
+	renderer._blocks[Vector2i.ZERO] = {"presented":true}
+	renderer._background_atlases = false
+	renderer.begin_arrival_view(view)
+	check(renderer._block_jobs.is_empty(), "synchronous tile packs keep their original arrival path")
+	renderer._background_atlases = true
+	renderer.begin_arrival_view(Rect2(2,2,0,40))
+	check(renderer._block_jobs.is_empty(), "an empty camera view cannot prestart a block")
+	renderer.include_objects = false
+	renderer.begin_arrival_view(view)
+	check(renderer._block_jobs.is_empty(), "object policy change leaves scheduling to the ordinary rebuild")
+	renderer.include_objects = true
+	renderer.begin_arrival_view(view)
+	var tasks: Array[int] = []
+	for cell: Vector2i in renderer._block_jobs: tasks.append(int(renderer._block_jobs[cell].task))
+	var expected: Array[Vector2i] = [Vector2i(-1,0), Vector2i(1,0), Vector2i(2,0), Vector2i(3,0)]
+	check(renderer._block_jobs.keys() == expected, "only missing visible blocks start, within the existing four-job allowance")
+	renderer.begin_arrival_view(view)
+	var repeated: Array[int] = []
+	for cell: Vector2i in renderer._block_jobs: repeated.append(int(renderer._block_jobs[cell].task))
+	check(tasks == repeated and tiles.loads.is_empty() and renderer._blocks.size() == 1, "repeated arrivals neither duplicate jobs nor install or present ground early")
+	renderer._drop_block_jobs()
+	renderer.free()
+
 func catalog_counts() -> void:
 	var pack := CountingCatalog.new()
 	pack._members = {"third":{}, "first":{}, "second":{}}
@@ -251,6 +292,7 @@ func run() -> void:
 	atlas_discovery()
 	resident_atlas_lists()
 	resident_atlas_bound()
+	resident_arrival_jobs()
 	catalog_counts()
 	await wake_dependencies()
 	print("MAP_STREAMING_WORK_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"synthetic":true,"evidence":evidence}))

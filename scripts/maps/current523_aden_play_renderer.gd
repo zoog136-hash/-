@@ -977,7 +977,7 @@ var _block_jobs: Dictionary = {}
 
 ## Starts the worker pass for `cell` when its chunks are installed.
 ## On-screen blocks start regardless of MAX_BLOCK_JOBS (it bounds margin work).
-func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
+func _start_block_job(cell: Vector2i, on_screen: bool, resident_only: bool = false) -> bool:
 	if _block_jobs.has(cell): return true
 	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	if not on_screen and _block_jobs.size() >= MAX_BLOCK_JOBS: return false
@@ -987,8 +987,11 @@ func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
 		if _unreadable_chunks.has(member): continue
 		if not _raw_chunks.has(member): return false
 		var layers: Dictionary = _raw_chunks[member]
-		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		if not _chunk_bins.has(member):
+			if resident_only: return false
+			_chunk_bins[member] = _bin_chunk(layers)
 		inputs.append([layers, (_chunk_bins[member] as Dictionary).get(cell, {})])
+	if resident_only and inputs.is_empty(): return false
 	var job: Dictionary = {"cell": cell, "inputs": inputs, "include_objects": include_objects, "tiles": _tile_pack,
 		"has_subimage": _tile_pack.has_method("has_subimage")}
 	job["task"] = WorkerThreadPool.add_task(_block_job.bind(job), false, "Current523 block draw list")
@@ -1652,6 +1655,18 @@ func begin_arrival_view(screen: Rect2) -> void:
 	_arrival_problem = ""
 	_built_view = Rect2()
 	_refresh_clock = 0.0
+	# The cover is visible. Workers can assemble the destination's draw lists
+	# before the next pump if the original lanes and bins are already resident.
+	if not screen.has_area() or not _background_atlases or not block_jobs_enabled: return
+	if _chunk_bins.is_empty() or _blocks_include_objects != include_objects: return
+	var attempts: int = MAX_BLOCK_JOBS - _block_jobs.size()
+	for x: int in range(floori(screen.position.x / BLOCK), ceili(screen.end.x / BLOCK)):
+		for y: int in range(floori(screen.position.y / BLOCK), ceili(screen.end.y / BLOCK)):
+			if attempts <= 0: return
+			var cell := Vector2i(x,y)
+			if _blocks.has(cell) or _block_jobs.has(cell): continue
+			_start_block_job(cell, true, true)
+			attempts -= 1
 
 
 func end_arrival_view() -> void:

@@ -41,8 +41,8 @@ func time_arrival(renderer: Node2D) -> Dictionary:
 	# Start both sides at the same display boundary. Let Godot run the
 	# normal _process, including its elapsed-time budget, before drawing.
 	await RenderingServer.frame_post_draw
-	renderer.begin_arrival_view(VIEW)
 	var began: int = Time.get_ticks_usec()
+	renderer.begin_arrival_view(VIEW)
 	renderer.set_process(true)
 	var first: int = -1
 	var frames: int = 0
