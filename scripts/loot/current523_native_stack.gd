@@ -773,7 +773,9 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="time_recharge":return use_time_recharge(world,uid,owned,record,spec)
 	# A bless scroll needs a target: the existing blessing chooser opens and its
 	# confirmation debits the physical scroll (consumable_service.apply_bless_scroll).
-	if effect.kind=="bless":world.consumable_service.call("_use_bless_scroll",item_name);return {"handled":true,"ok":false,"silent":true}
+	if effect.kind=="bless":
+		world.consumable_service.call("_use_bless_scroll",item_name,uid)
+		return {"handled":true,"ok":false,"silent":true}
 	if effect.kind=="selection":return selection_pending(world,uid,owned,record,spec)
 	if effect.kind=="bag":return use_bag(world,uid,owned,record,spec)
 	var prepared: Dictionary={}
@@ -1834,19 +1836,25 @@ static func card_binding(world: Node,category: String,card_id: int) -> Dictionar
 
 ## The owned physical stack of an original bless scroll, ready for one debit:
 ## {} when the name is not one; {"error"} when its conditions refuse it.
-static func bless_scroll_owned(world: Node,scroll_name: String) -> Dictionary:
-	var named: Dictionary=world._find_catalog_item_record(scroll_name)
-	if profile(named).get("kind")!="bless":return {}
+static func bless_scroll_owned(world: Node,scroll_name: String,selected_uid: String="") -> Dictionary:
+	if selected_uid.is_empty() and profile(world._find_catalog_item_record(scroll_name)).get("kind")!="bless":
+		var has_receipt: bool=world.item_instances.values().any(func(entry: Variant) -> bool:return entry is Dictionary and entry.get("name")==scroll_name and entry.has(RECEIPT))
+		if not has_receipt:return {}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return {"error":"원본 소비 저장 보호 중 · 물리 수량 보존"}
-	for id: String in world.item_instances:
-		var entry: Variant=world.item_instances[id]
+	if world.hp<=0 or world._option_awakening_busy() or world._item_locked(scroll_name):return {"error":"현재 사용·잠금 조건 미충족"}
+	var ids: Array=[selected_uid] if not selected_uid.is_empty() else world.item_instances.keys()
+	for id: String in ids:
+		var entry: Variant=world.item_instances.get(id)
 		if not entry is Dictionary or entry.get("name")!=scroll_name or not entry.has(RECEIPT) or world._item_locked(scroll_name,id):continue
 		var owned: Dictionary=proof(world,id)
 		if owned.is_empty():return {"error":"원본 물리 소유·최초량·잔량 증명 불일치"}
 		var problem: String=str(load("res://scripts/loot/patch523_item_use.gd").call("eligibility",world,owned.record))
 		if not problem.is_empty():return {"error":problem}
-		var spec: Dictionary=profile(owned.record).get("spec",{})
-		if spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
+		var effect: Dictionary=profile(owned.record)
+		var spec: Dictionary=effect.get("spec",{})
+		if effect.get("kind")!="bless" or spec.get("kind")!="equipment_bless":return {"error":"원본 축복 주문서 정의 연결 필요"}
+		if not effect.get("metadata",{}).get("can_use_when_invisible",spec.get("can_use_when_invisible",false)) and world.is_player_concealed():return {"error":"원본 조건: 은신 중 사용할 수 없습니다"}
+		if float(world.item_use_cooldowns.get("m523:item:"+str(owned.record.source_item_class_id),0))>0:return {"error":"원본 아이템 재사용 대기"}
 		return {"uid":id,"owned":owned,"record":owned.record,"spec":spec,"request":{"physical_id":id,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}}
 	return {"error":"선택 물리 개체·잠금·소지 수량 확인 필요"}
 

@@ -6,11 +6,11 @@ extends RefCounted
 ## (Grade.ColorID -> ColorTable), the original icon in the popup's own
 ## Common_Slot, and the original description (ItemClass.StoryDescID /
 ## UseDescID from DescData_Korean) in ListView_BasicInfo. The popup's
-## exchange/warehouse/safe-enchant/probability/collection/registration/
-## set-effect controls belong to online or unconnected systems and are not
-## shown. Exact selected routes may open acquisition or a separate confirmed delete.
+## acquisition, probability and deletion controls use the selected item's
+## available actions. The probability flag belongs to its original ItemClass.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const IDENTITY=preload("res://scripts/ui/source523_item_identity.gd")
 const GRADE=preload("res://scripts/loot/current523_item_grade.gd")
 const MEMBER="UI/ToolTip/ToolTip_CommonType.csb"
@@ -127,16 +127,18 @@ static func native_record(item_class_id: int) -> Dictionary:
 
 ## Opens the popup for a bag entry. `title` is the shown name (enhancement
 ## prefix and blessing included), `item_class_id` its original ItemClass.
-func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}) -> Dictionary:
+func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}, hud: Node=null) -> Dictionary:
 	if not is_instance_valid(parent) or title.is_empty():return {"ok":false,"handled":false,"code":"source_item_tooltip_input_invalid"}
 	var spec: Dictionary={}
 	for name: String in HIDDEN:spec[name]={"exclude":true}
-	var delete_action: Callable=actions.get("delete",Callable())
-	var acquisition: Callable=actions.get("acquisition",Callable())
-	if not delete_action.is_valid() and not acquisition.is_valid():spec["Icon_Set"]={"exclude":true}
+	var callbacks: Dictionary={"Del":actions.get("delete",Callable()),"Detail":actions.get("acquisition",Callable()),"Probability":actions.get("probability",Callable())}
+	# Detail and Probability occupy the same authored button position.
+	# An eligible bag uses Probability in that slot.
+	if (callbacks.Probability as Callable).is_valid():callbacks.erase("Detail")
+	if not callbacks.values().any(func(action: Callable) -> bool: return action.is_valid()):spec["Icon_Set"]={"exclude":true}
 	else:
 		for group: String in ["Business","Del","Warehouse","Enchant","Probability","Detail"]:
-			var action: Callable=delete_action if group=="Del" else (acquisition if group=="Detail" else Callable())
+			var action: Callable=callbacks.get(group,Callable())
 			spec["Icon_Set/"+group+"_Off"]={"exclude":true}
 			if action.is_valid():
 				spec["Icon_Set/"+group+"_On"]={"visible":true}
@@ -182,9 +184,8 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 	if item_class_id>0:
 		var located: Dictionary=NamedTree.locate(_scene,_out,"ND_ItemList/Slot/Sp_IconSample")
 		var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-		if located.get("ok",false) and info.get("texture") is Texture2D:
-			var owner: Dictionary={"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-			picture=located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false) and located.player.set_bound_visible(located.offset,true).get("ok",false)
+		if located.get("ok",false):
+			picture=NativeIcons.show_item(located.player,located.offset,info,hud)
 	var closer: bool=_attach_outside_closer()
 	last_result={"ok":true,"handled":true,"outside_close":closer,"member":MEMBER,"reference":item_reference,"title":title,"item_class_id":item_class_id,"grade_color":color.get("hex",""),"description":body,"rows":rows,"extra_rows":extra,"rows_problem":last_rows_problem,"picture":picture}
 	return last_result

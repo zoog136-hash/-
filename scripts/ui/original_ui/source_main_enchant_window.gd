@@ -21,11 +21,12 @@ extends RefCounted
 ## a destroyed target or too few scrolls. Label_Num shows the fewest scrolls
 ## the goal needs; the picked list (ListView_Item) stays empty.
 ## Left inert or empty (no rule for them in this project): the other Enchant_All pages
-## (축복 부여 / 속성 부여 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
+## (속성 부여 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
 ## the grade filters, 상세보기 / 일괄 선택, tooltips and the other effect
 ## layers.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Forge=preload("res://scripts/ui/renewal_forge.gd")
 const ENCHANT=preload("res://scripts/original_enhancement.gd")
 const ROOT="UI/EnchantScene.csb"
@@ -80,6 +81,8 @@ var _hud: WeakRef
 var _parent: WeakRef
 var _scene: Node2D
 var _scroll: String=""
+var _scroll_row: Dictionary={}
+var _blessing: bool=false
 var _candidates: Array=[]
 var _selected: String=""
 var _tab: String="equip"
@@ -162,13 +165,13 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## Opens on `scroll`'s targets (장비 tab), or on the 주문서 tab without one.
-func open(parent: Node, scroll: String, candidates: Array) -> Dictionary:
+func open(parent: Node, scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_enchant_window_host_unavailable")
 	_parent=weakref(parent)
 	_bag.y=null
 	_text.y=null
 	_selected=""
-	return update(scroll,candidates)
+	return update(scroll,candidates,blessing)
 
 ## The native inventory chose this exact physical material. The source
 ## EnchantScene still owns the layout and touch controls; only its confirmed
@@ -191,17 +194,23 @@ func open_smelt(parent:Node,offer:Dictionary)->Dictionary:
 
 ## New candidates after an attempt (or another scroll): keeps the selected
 ## physical item when it is still listed.
-func update(scroll: String, candidates: Array) -> Dictionary:
+func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
 	# The committed world requests refreshed rows immediately. Keep the
 	# exact pre-roll slot (including a destroyed item) under the running
 	# authored proof, and apply the refreshed owner rows when it ends.
 	if is_presenting():
-		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true)}
+		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true),"blessing":blessing}
 		return {"ok":true,"handled":true,"result_refresh_pending":true}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
-	if scroll!=_scroll:
+	_blessing=blessing
+	if blessing:multi=false
+	var blessing_reference: String=str(candidates[0].get("scroll_reference",scroll)) if blessing and not candidates.is_empty() else ""
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var selected_scroll: Dictionary=Forge.selected_scroll(hud,scroll,blessing_reference) if is_instance_valid(hud) else {"reference":scroll}
+	if selected_scroll.reference!=_scroll_row.get("reference",""):
 		_bag.y=null
 		_picked.clear()
+	_scroll_row=selected_scroll
 	_scroll=scroll
 	_candidates=candidates.duplicate(true)
 	_prune_picked()
@@ -211,6 +220,8 @@ func update(scroll: String, candidates: Array) -> Dictionary:
 	return _restage()
 
 func close() -> void:
+	_blessing=false
+	_scroll_row={}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
 	_presentation={}
 	_pending_result_refresh={}
@@ -312,7 +323,7 @@ func _stage() -> Dictionary:
 			next.free()
 			return _fail("source_smelt_controls_unavailable")
 	var pictures: int=0
-	var material:Dictionary=_scroll_record(hud,_scroll) if _smelt.is_empty() else _smelt.get("record",{})
+	var material:Dictionary=Forge.image_record_of(hud,_scroll_row) if not _scroll.is_empty() and _smelt.is_empty() else _smelt.get("record",{})
 	if not _scroll.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot0/Sp_IconSample",material,_scroll):pictures+=1
 	if not entry.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot1/Sp_IconSample",Forge.image_record_of(hud,entry),str(entry.get("name",""))):pictures+=1
 	var filled: Dictionary=_fill_bag(hud,next,out,listing)
@@ -379,7 +390,7 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	else:spec[P_ALL+"Nd_Enchant_Multi"]={"exclude":true}
 	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":_title(entry) if has else ("강화할 장비를 선택하세요" if not _scroll.is_empty() else "강화 주문서를 선택하세요")}
 	# Slot0: the scroll; Slot1: the target (TWILIGHT forge order 주문서 + 대상).
-	var owned: int=int(hud.lineage_inventory_ui.inventory.get(_scroll,0)) if not _scroll.is_empty() else 0
+	var owned: int=int(_scroll_row.get("count",0))
 	for slot: String in ["Inventory_Slot0","Inventory_Slot1"]:
 		var key: String=P_COMMON+"Nd_Slot/"+slot+"/"
 		spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
@@ -423,6 +434,19 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	spec[P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot_Extension"]={"exclude":true}
 	spec[P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot_Extension_Lock"]={"exclude":true}
 	spec.merge(_row_spec(listing,0,P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot/"),true)
+	if _blessing:
+		var tab_path: String=P_COMMON+"Tab/Nd_Bless"
+		spec[tab_path]={"visible":true}
+		spec[tab_path+"/Btn_Bless_On"]={"visible":true}
+		spec[tab_path+"/Btn_Bless_Off"]={"exclude":true}
+		spec[P_COMMON+"Tab/Nd_Single"]={"exclude":true}
+		spec[P_COMMON+"Tab/Nd_Multi"]={"exclude":true}
+		for suffix: String in ["Label_Safe","Label_Unsafe","Nd_Money","Nd_Blessed_Cost","Btn_Probability"]:
+			spec[P_ENCHANT+suffix]={"exclude":true}
+		spec[P_COMMON+"Enchant_Base_Unsafety"]={"visible":false}
+		spec[P_COMMON+"Enchant_Base_Bless"]={"visible":true}
+		spec[P_COMMON+"Label_Title"]={"role":"source_text","text":str(entry.get("name","장비 선택")).get_slice(" · 원본#",0)+" · 축복 부여"}
+		spec[P_ENCHANT+"Btn_Probability_Bless"]={"visible":has,"activate":Callable(self,"_probability"),"touch_enabled":has}
 	if not _smelt.is_empty():_apply_smelt_spec(spec)
 	return spec
 
@@ -498,14 +522,15 @@ func _row_spec(listing: Array, line: int, prefix: String) -> Dictionary:
 		var at: int=line*SET_SLOTS.size()+index
 		var entry: Dictionary=listing[at] if at<listing.size() else {}
 		spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
-		var chosen: bool=not entry.is_empty() and ((str(entry.get("target_id","")) in _picked if multi else str(entry.get("target_id",""))==_selected) if _tab=="equip" else str(entry.get("name",""))==_scroll)
+		var reference: String=str(entry.get("target_id",entry.get("reference","")))
+		var chosen: bool=not entry.is_empty() and ((reference in _picked if multi else reference==_selected) if _tab=="equip" else reference==_scroll_row.get("reference",""))
 		spec[key+"Sp_Select"]={"visible":chosen}
 		var text: String=""
 		if not entry.is_empty():
 			if _tab=="equip":text="+%d" % int(entry.get("level",0)) if int(entry.get("level",0))>0 else ""
 			else:text=_number(int(entry.get("count",0)))
 		spec[key+"Text_Amount"]={"role":"source_text","text":text,"visible":not text.is_empty()}
-		spec[key+"Btn"]={"activate":Callable(self,"_slot_pressed").bind(at)}
+		spec[key+"Btn"]={"activate":Callable(self,"_slot_pressed").bind(at,reference)}
 	return spec
 
 func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dictionary:
@@ -514,7 +539,7 @@ func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dict
 	var prefix: String=P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot/"
 	for index: int in range(SET_SLOTS.size()):
 		_forward(root,out,prefix+SET_SLOTS[index]+"/Btn",_bag)
-		if index<listing.size() and _picture(root,out,prefix+SET_SLOTS[index]+"/Sp_IconSample",_listing_record(hud,listing[index]),str(listing[index].get("name",""))):pictures+=1
+		if index<listing.size() and _picture(root,out,prefix+SET_SLOTS[index]+"/Sp_IconSample",Forge.image_record_of(hud,listing[index]),str(listing[index].get("name",""))):pictures+=1
 	if lines>1:
 		var row: Variant=_row(root,out,P_INV+"ScrollView_Item/Inventory_Slot_Set")
 		if not row is Node2D or row.get_parent()==null:return _fail("source_enchant_window_slot_row_missing")
@@ -532,7 +557,7 @@ func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dict
 			for index: int in range(SET_SLOTS.size()):
 				_forward(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Btn",_bag)
 				var at: int=line*SET_SLOTS.size()+index
-				if at<listing.size() and _picture(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample",_listing_record(hud,listing[at]),str(listing[at].get("name",""))):pictures+=1
+				if at<listing.size() and _picture(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample",Forge.image_record_of(hud,listing[at]),str(listing[at].get("name",""))):pictures+=1
 	return {"ok":true,"bag_pictures":pictures,"pictures":pictures}
 
 func _fill_text(root: Node2D, out: Dictionary, rows: Array[Dictionary]) -> Dictionary:
@@ -551,12 +576,6 @@ func _row(root: Node2D, out: Dictionary, suffix: String) -> Variant:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return null
 	return located.player.source_nodes.get(located.offset)
-
-func _listing_record(hud: Node, entry: Dictionary) -> Dictionary:
-	return Forge.image_record_of(hud,entry) if _tab=="equip" else _scroll_record(hud,str(entry.get("name","")))
-
-static func _scroll_record(hud: Node, name: String) -> Dictionary:
-	return hud.lineage_inventory_ui._find_item_record(name)
 
 ## The ScrollView's drag area is created above its content; under the
 ## content the slot buttons receive their taps (drags over them are forwarded
@@ -592,14 +611,11 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item(record,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 
-func _slot_pressed(index: int) -> Dictionary:
+func _slot_pressed(index: int, expected: Variant=null) -> Dictionary:
 	if not _smelt.is_empty():
 		if _bag.moved>12.0 or index<0 or index>=_candidates.size() or int(_smelt.get("quantity",0))<=0:return {"ok":false,"handled":true}
 		return _smelt_select(_candidates[index])
@@ -609,16 +625,18 @@ func _slot_pressed(index: int) -> Dictionary:
 	var listing: Array=_listing(hud)
 	if index<0 or index>=listing.size():return {"ok":true,"empty_slot":true}
 	var entry: Dictionary=listing[index]
+	var reference: String=str(entry.get("target_id",entry.get("reference","")))
+	if expected!=null and expected!=reference:return _restage()
 	if _tab=="equip":
 		if multi:return _toggle_pick(str(entry.get("target_id","")))
 		_selected=str(entry.get("target_id",""))
 		return _restage()
 	var name: String=str(entry.get("name",""))
-	if name==_scroll:return _set_tab("equip")
+	if reference==_scroll_row.get("reference",""):return _set_tab("equip")
 	# The existing scroll activation: the world reopens this window with that
 	# scroll's targets (a 축복 부여 scroll opens its own blessing list).
-	hud.inventory_item_activated.emit(name)
-	return {"ok":true,"scroll_activated":name}
+	hud.inventory_item_activated.emit(reference)
+	return {"ok":true,"scroll_activated":name,"reference":reference}
 
 func select_target(target_id: String) -> Dictionary:
 	_selected=target_id
@@ -640,6 +658,8 @@ func _notice(text: String) -> Dictionary:
 func _probability() -> Dictionary:
 	var entry: Dictionary=_entry()
 	if entry.is_empty():return _fail("source_enchant_window_target_unselected")
+	if _blessing:
+		return _notice("축복 부여 %.1f%% · %s\n%s" % [float(entry.get("success_chance",0)),str(entry.get("success_basis","")),str(entry.get("bonus_text",""))])
 	return _notice("성공 %.1f%% · 유지 %.1f%% · 하락 %.1f%% · 소실 %.1f%% · 성공 강화폭 %s" % [float(entry.get("success_chance",0.0)),float(entry.get("no_change_chance",0.0)),float(entry.get("decrease_chance",0.0)),float(entry.get("destroy_chance",0.0)),str(entry.get("gain_text","+1"))])
 
 ## --- 다중 강화 ----------------------------------------------------------------
@@ -731,8 +751,13 @@ func _enchant_requested() -> Dictionary:
 	if hud==null or entry.is_empty() or _scroll.is_empty():
 		if hud!=null and hud.has_method("show_message"):hud.call("show_message","강화할 장비를 고르세요" if entry.is_empty() else "강화 주문서가 없습니다")
 		return _fail("source_enchant_window_target_unselected")
+	if _blessing:
+		return {"ok":Forge.request_blessing(hud,_scroll,entry,Callable(self,"_finish_blessing").bind(_scroll_row.reference,_selected))}
 	# 강화 시작 rolls at once: the original window has no confirmation step.
 	return {"ok":Forge.request_target(hud,_scroll,entry),"request_owner":"renewal_forge.request_target"}
+
+func _finish_blessing(reference: String, target: String) -> void:
+	if is_open() and _blessing and _scroll_row.get("reference")==reference and _selected==target:_close_requested()
 
 ## --- Result presentation ---------------------------------------------------
 
@@ -795,7 +820,7 @@ func end_presentation(token: int=-1) -> void:
 		if located.get("ok",false):located.player.set_bound_visible(located.offset,bool(pair[1]))
 	var pending: Dictionary = _pending_result_refresh
 	_pending_result_refresh={}
-	if not pending.is_empty():update(pending.scroll,pending.candidates)
+	if not pending.is_empty():update(pending.scroll,pending.candidates,bool(pending.get("blessing",false)))
 
 func _play_presentation() -> bool:
 	var played: Array[String]=[]

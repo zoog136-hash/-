@@ -22,6 +22,7 @@ extends RefCounted
 ## at 40%; its 품절 mark stays hidden) and stays selectable.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
 ## ProductionScene is a layout source only; Production_All is mounted at
 ## its Production_All_Layout position (600, 337.5).
@@ -553,10 +554,7 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item_class(int(record.source_item_class_id),title) if record.get("_item_class_only",false) else SourceImages.describe_item(record,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 

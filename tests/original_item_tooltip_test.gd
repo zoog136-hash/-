@@ -59,7 +59,7 @@ func action_projection() -> void:
 	var capture := CaptureTree.new()
 	popup._tree = capture
 	var action := func() -> Dictionary: return {"ok":true}
-	for actions: Dictionary in [{}, {"delete":Callable(),"acquisition":Callable(),"business":action}, {"delete":action}, {"acquisition":action}, {"delete":action,"acquisition":action}]:
+	for actions: Dictionary in [{}, {"delete":Callable(),"acquisition":Callable(),"business":action}, {"delete":action}, {"acquisition":action}, {"probability":action}, {"delete":action,"acquisition":action,"probability":action}]:
 		var result: Dictionary = popup.open(parent,"held@@@verified","상세",0,0,{},actions)
 		check(result.get("code")=="capture_original_tooltip_spec", "production popup supplied its original node scope")
 		var allowed: Array[String] = allowed_groups(actions)
@@ -78,7 +78,8 @@ func action_projection() -> void:
 static func allowed_groups(actions: Dictionary) -> Array[String]:
 	var result: Array[String] = []
 	if (actions.get("delete",Callable()) as Callable).is_valid(): result.append("Del")
-	if (actions.get("acquisition",Callable()) as Callable).is_valid(): result.append("Detail")
+	if (actions.get("probability",Callable()) as Callable).is_valid(): result.append("Probability")
+	elif (actions.get("acquisition",Callable()) as Callable).is_valid(): result.append("Detail")
 	return result
 
 func values() -> void:
@@ -120,7 +121,7 @@ func real_pack() -> void:
 
 func real_action_visibility(popup: RefCounted, parent: Node2D) -> void:
 	var action := func() -> Dictionary: return {"ok":true}
-	for actions: Dictionary in [{}, {"delete":action}, {"acquisition":action}, {"delete":action,"acquisition":action}]:
+	for actions: Dictionary in [{}, {"delete":action}, {"acquisition":action}, {"probability":action}, {"delete":action,"acquisition":action,"probability":action}]:
 		var result: Dictionary = popup.open(parent,"held@@@verified","상세",0,0,{},actions)
 		check(result.get("ok",false) and popup.is_open(), "original tooltip stages with its item action scope")
 		if not result.get("ok",false): continue

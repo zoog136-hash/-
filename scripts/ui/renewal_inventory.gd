@@ -325,6 +325,10 @@ func open_item_info(reference: String) -> bool:
 	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
 	var actions: Dictionary={"delete":Callable(self,"_tooltip_delete").bind(reference)}
 	if _item_class_id(record)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
+	if BOX_PROBABILITY.is_bag(record) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
+		var host: Node=controller.get_parent()
+		if BOX_PROBABILITY.disclosed(record,int(host.BASE508.source_class_id(str(host.job_class)))):
+			actions["probability"]=Callable(self,"_tooltip_probability").bind(reference,_item_class_id(record))
 	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record),actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
@@ -338,6 +342,21 @@ func _tooltip_acquisition(reference: String) -> Dictionary:
 	close_item_info()
 	_open_acquisition()
 	return {"ok":true}
+
+func _tooltip_probability(reference: String, item_class_id: int) -> Dictionary:
+	if not item_tooltip_open or selected_item!=reference:return {"ok":false}
+	var host: Node=controller.get_parent()
+	var name_value: String=_base_item_name(reference)
+	var uid: String=_ref_instance_id(reference)
+	if int(host.inventory.get(name_value,0))<=0:return {"ok":false}
+	var physical: Dictionary=host.item_instances.get(uid,{})
+	if not uid.is_empty() and physical.get("name")!=name_value:return {"ok":false}
+	var item: Dictionary=_find_item_record(reference) if uid.is_empty() else physical.get("record",{})
+	var class_id: int=int(host.BASE508.source_class_id(str(host.job_class)))
+	if _item_class_id(item)!=item_class_id or not BOX_PROBABILITY.disclosed(item,class_id):return {"ok":false}
+	var native: Dictionary=controller.original_main_ui_controller.try_open_overlay_window("box_probability",[item,class_id])
+	if native.get("handled",false):close_item_info()
+	return native
 
 func request_selected_delete() -> Dictionary:
 	if not is_instance_valid(controller) or controller.get_parent()==null:return {"ok":false}
@@ -947,7 +966,8 @@ func _refresh_detail(item_reference: String) -> void:
 	if acquisition_button != null:
 		acquisition_button.visible = _item_class_id(item) > 0 and ACQUISITION523.available()
 	if probability_button != null:
-		probability_button.visible = BOX_PROBABILITY.is_bag(item)
+		var world: Node=controller.get_parent() if is_instance_valid(controller) else null
+		probability_button.visible = is_instance_valid(world) and BOX_PROBABILITY.is_bag(item) and BOX_PROBABILITY.available_for(item,int(world.BASE508.source_class_id(str(world.job_class))))
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
 	if controller!=null and not _is_item_equipped(item_reference):
@@ -999,9 +1019,9 @@ const BOX_PROBABILITY = preload("res://scripts/ui/original_ui/source_main_box_pr
 func _open_box_probability() -> void:
 	if selected_item.is_empty() or controller == null: return
 	var item: Dictionary = _find_item_record(selected_item)
-	if not BOX_PROBABILITY.is_bag(item): return
 	var host: Node = controller.get_parent()
 	var class_id: int = int(host.BASE508.source_class_id(str(host.job_class)))
+	if not BOX_PROBABILITY.available_for(item,class_id):return
 	var native: Variant = controller.original_main_ui_controller.try_open_feature_window("box_probability",[item,class_id]) if is_instance_valid(controller.get("original_main_ui_controller")) else {}
 	if native is Dictionary and (native as Dictionary).get("handled",false): return
 	var lines: PackedStringArray = []

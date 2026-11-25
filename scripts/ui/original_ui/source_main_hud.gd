@@ -1571,11 +1571,11 @@ func _ensure_enchant_window() -> bool:
 			_enchant_window=window
 	return _enchant_window!=null and is_instance_valid(_coordinates)
 
-func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+func try_open_enchant_window(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
 	if not _ensure_enchant_window():return _window_problem("enchant_window")
 	_cancel_native_buttons()
-	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
-	return _enchant_window.open(_coordinates,scroll,candidates)
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates,blessing)
+	return _enchant_window.open(_coordinates,scroll,candidates,blessing)
 
 func try_open_smelt_window(offer:Dictionary)->Dictionary:
 	if not _ensure_enchant_window():return _window_problem("enchant_window")
@@ -1627,7 +1627,7 @@ func try_open_item_tooltip(reference: String, title: String, item_class_id: int,
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
-	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions)
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions,_hud.get_ref())
 
 func item_tooltip_is_open() -> bool:
 	return _item_tooltip!=null and _item_tooltip.is_open()

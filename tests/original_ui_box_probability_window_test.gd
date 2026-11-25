@@ -35,7 +35,7 @@ func _run() -> void:
 	check(mage.size()==3 and mage[1].name.begins_with("+7 ") and WINDOW.percent_text(mage[1].percent)=="10.000000%","class 3 also sees its own row")
 	check(is_equal_approx(float(WINDOW.bag_rows(bag(false),1)[0].percent),62.5),"without a source denominator: over the class total")
 	var inventory: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_inventory.gd")
-	check(inventory.contains("try_open_feature_window(\"box_probability\",[item,class_id])") and inventory.contains("BOX_PROBABILITY.is_bag(item)"),"the inventory's 확률 button opens the window")
+	check(inventory.contains("try_open_feature_window(\"box_probability\",[item,class_id])") and inventory.contains("BOX_PROBABILITY.available_for(item,class_id)"),"the inventory's 확률 button opens the eligible window")
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
@@ -60,7 +60,28 @@ func _real_pack(pack_dir: String) -> void:
 	var window=WINDOW.new()
 	check(window.configure(pack,hud).get("ok",false),"window configures")
 	var opened: Dictionary=window.open(parent,bag(),3)
-	check(opened.get("handled",false) and int(opened.filled.rows)==3,"Probability_All mounts one row per reward: "+str(opened).left(300))
+	check(opened.get("handled",false) and int(opened.get("filled",{}).get("rows",0))==1,"fixed rewards initially occupy the original fixed tab: "+str(opened).left(300))
+	if opened.get("ok",false):
+		for kind: String in ["Probability","Fix"]:
+			var path: String="Nd_Type02/Nd_Tab/Btn_"+kind+"_Reward_Off"
+			var target: Dictionary=window._locate(window._scene,window._out,path)
+			if not target.get("ok",false):
+				check(false,"original tab button present "+kind)
+				break
+			var button: Node=target.player.source_nodes[target.offset].get_meta("source_button")
+			var area: Control=button.get("_input_area")
+			check(area.is_visible_in_tree(),"inactive tab can receive touch")
+			var point: Vector2=area.get_global_transform_with_canvas()*(area.size*0.5)
+			for pressed: bool in [true,false]:
+				var touch:=InputEventScreenTouch.new()
+				touch.pressed=pressed;touch.position=point
+				root.push_input(touch,true)
+				await process_frame
+			check(window.last_result.filled.rows==(2 if kind=="Probability" else 1),"touch switches to its original reward list: "+kind)
+	var single: Dictionary=bag()
+	single.source_use_spec.rewards=[single.source_use_spec.rewards[0]]
+	opened=window.open(parent,single,3)
+	check(opened.get("handled",false) and opened.filled.rows==1 and window._locate(window._scene,window._out,"Nd_Type03/ListView_ItemList").get("ok",false),"one kind retains the authored single list")
 	window.close()
 	await process_frame
 	parent.queue_free()
