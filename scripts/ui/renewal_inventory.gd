@@ -323,13 +323,20 @@ func open_item_info(reference: String) -> bool:
 		return detail_active
 	var record: Dictionary = _find_item_record(reference)
 	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
+	var physical_record: Dictionary=_item_visual_record(reference,record)
 	var actions: Dictionary={"delete":Callable(self,"_tooltip_delete").bind(reference)}
+	var world: Node=controller.get_parent()
+	if physical_record.get("source_m_native_item",false) and world.has_method("_source_enhancement_rule") and not str(world._enhancement_kind_for_record(physical_record)).is_empty():
+		var physical: Dictionary=world.item_instances.get(_ref_instance_id(reference),{})
+		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
+		if rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level"):
+			actions["safe_level"]=int(rule.safe_level)
 	if _item_class_id(record)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
 	if BOX_PROBABILITY.is_bag(record) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
 		var host: Node=controller.get_parent()
 		if BOX_PROBABILITY.disclosed(record,int(host.BASE508.source_class_id(str(host.job_class)))):
 			actions["probability"]=Callable(self,"_tooltip_probability").bind(reference,_item_class_id(record))
-	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),_item_visual_record(reference,record),actions)
+	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),physical_record,actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
 	return item_tooltip_open

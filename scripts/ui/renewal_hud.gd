@@ -1315,6 +1315,7 @@ func open_tj_coupons() -> void:
 
 func open_tj_coupons_native(focused_item: String = "", physical_id: String = "") -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	if not physical_id.is_empty() and _open_original_feature("tj_coupons",["","",focused_item,physical_id]):return
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent(),focused_item,physical_id)

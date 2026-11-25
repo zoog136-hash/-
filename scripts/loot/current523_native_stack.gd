@@ -179,16 +179,37 @@ const DIRECT_FIREWORKS:Dictionary={
 	127991:[184381,585141,17458], 128001:[184401,585161,17459]
 }
 
-static func direct_firework_rule(record:Dictionary,definition:Dictionary)->Dictionary:
-	var id:int=int(record.get("source_item_class_id",0))
-	if not DIRECT_FIREWORKS.has(id) or NATIVE_FIELDS.field(record,"source_category_name")!="Potion":return {}
-	var expected:Array=DIRECT_FIREWORKS[id]
-	var raw:Dictionary=definition.get("original_item",{})
-	var rows:Array=definition.get("item_bonus",[])
-	if whole(raw.get("ID"))!=id or raw.get("TestItem")!=false or whole(raw.get("CategoryID"))!=3 or whole(raw.get("LevelLimitMin"))!=0 or whole(raw.get("LevelLimitMax"))!=0 or whole(raw.get("TargettingTypeID"))!=1 or raw.get("ServiceRegionCode")!="" or raw.get("CanUseWhenInvisible")!=true or rows.size()!=1:return {}
-	var r:Dictionary=rows[0];var b:Dictionary=r.get("bonus",{})
-	if whole(r.get("ID"))!=expected[0] or r.get("IsPossession")!=false or whole(b.get("ID"))!=expected[1] or r.get("bonus_type",{}).get("Name")!="ItemConsumeEffectSpriteID" or r.get("unit",{}).get("Name")!="SpriteID" or whole(b.get("Value"))!=expected[2] or whole(b.get("BonusApplicationTypeID"))!=0 or whole(b.get("BonusApplicationTargetID"))!=0:return {}
-	return {"sprite_id":expected[2],"can_use_when_invisible":true}
+## Dated fireworks have a separate DeleteTime relation (direct or Korean
+## DateTimes ID). They use the game's existing date policy and the same
+## atomic original effect transaction as the permanent fireworks.
+const DATED_FIREWORKS: Array[int] = [
+	126533,126543,126553,126563,126573,126583,126593,126603,126613,126623,
+	127133,127143,127153,127163,127173,127183,127193,127203,127213,127223,
+	127233,127243,127253,168564,222753,271828,271848,
+]
+
+static func direct_firework_rule(record: Dictionary, definition: Dictionary) -> Dictionary:
+	var id: int = int(record.get("source_item_class_id",0))
+	var dated: bool = id in DATED_FIREWORKS
+	if not dated and not DIRECT_FIREWORKS.has(id): return {}
+	if NATIVE_FIELDS.field(record,"source_category_name") != "Potion": return {}
+	var raw: Dictionary = definition.get("original_item",{})
+	var rows: Array = definition.get("item_bonus",[])
+	if whole(raw.get("ID")) != id or raw.get("TestItem") != false or whole(raw.get("CategoryID")) != 3 or whole(raw.get("TargettingTypeID")) != 1 or raw.get("ServiceRegionCode") != "": return {}
+	if not dated and (whole(raw.get("LevelLimitMin")) != 0 or whole(raw.get("LevelLimitMax")) != 0 or raw.get("CanUseWhenInvisible") != true): return {}
+	if rows.size() != (2 if dated else 1): return {}
+	var sprite: int = 0
+	var deadline: int = 0
+	for row: Dictionary in rows:
+		if row.get("bonus_type",{}).get("Name") == "DeleteTime":
+			deadline = preload("res://scripts/loot/current523_native_item_projection.gd").delete_time_stamp(row)
+			continue
+		var bonus: Dictionary = row.get("bonus",{})
+		if sprite != 0 or row.get("IsPossession") != false or row.get("bonus_type",{}).get("Name") != "ItemConsumeEffectSpriteID" or row.get("unit",{}).get("Name") != "SpriteID" or bonus.get("BonusApplicationTypeID") != 0 or bonus.get("BonusApplicationTargetID") != 0 or not integer(bonus.get("Value")): return {}
+		sprite = int(bonus.Value)
+		if not dated and [whole(row.get("ID")),whole(bonus.get("ID")),sprite] != DIRECT_FIREWORKS[id]: return {}
+	if sprite <= 0 or (dated and (deadline <= 0 or deadline != NATIVE_FIELDS.field(record,"source_delete_time_raw",-1))): return {}
+	return {"sprite_id":sprite,"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
 
 static func use_exact_firework(world:Node,uid:String,owned:Dictionary)->Dictionary:
 	if busy:return _failure("다른 아이템을 처리 중입니다 · 폭죽 보존")

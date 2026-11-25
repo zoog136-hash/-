@@ -58,7 +58,7 @@ func append_row_buttons(found: Array) -> void:
 	# Common_Slot controls are intentionally skipped by the ordinary bag
 	# router. Here these exact buttons are owned by the displayed chooser.
 	for button: Variant in _row_buttons:
-		if is_instance_valid(button):found.append(button)
+		if is_instance_valid(button) and not found.has(button):found.append(button)
 
 func dialog() -> Object:
 	return _dialog.get_ref() if _dialog!=null else null
@@ -89,7 +89,7 @@ func _spec() -> Dictionary:
 	_slot_spec(spec,P+"Nd_Slot/Common_Slot/")
 	spec[P+"Nd_Slot/Common_Slot/Sp_Select"]={"visible":false}
 	spec[P+"Nd_Slot/Common_Slot/Text_Amount"]={"visible":false}
-	spec[P+"Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_ignore")}
+	spec[P+"Nd_Slot/Common_Slot/Btn"]={"activate":_open_item_info.bind(int(box.get("item_class_id",0))),"displaystate":int(box.get("item_class_id",0))>0}
 	var ready: bool=chosen>=0
 	spec[P+"Btn_OK"]={"activate":Callable(self,"_confirm"),"displaystate":ready}
 	spec[P+"Btn_OK/Normal"]={"visible":ready}
@@ -113,7 +113,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var owner: Object=dialog()
 	var box: Dictionary=owner.box_info() if owner!=null and owner.has_method("box_info") else {}
 	var icon: Dictionary=_locate(root,out,"Nd_Slot/Common_Slot/Sp_IconSample")
-	if icon.get("ok",false) and _show_picture(icon.player,icon.offset,_item_picture(int(box.get("item_class_id",0)),str(box.get("name","")))):pictures+=1
+	if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,_item_picture(int(box.get("item_class_id",0)),str(box.get("name","")))):pictures+=1
 	var rows: Array=[]
 	for index: int in range(_rows.size()):
 		var row: Dictionary=_rows[index]
@@ -131,7 +131,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		_row_buttons.append(action_node.get_meta("source_button",null) if is_instance_valid(action_node) and action_node.has_meta("source_button") else null)
 		var located: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_IconSample")
 		var row: Dictionary=_rows[index]
-		if located.get("ok",false) and _show_picture(located.player,located.offset,_item_picture(int(row.get("item_class_id",0)),str(row.get("name","")))):pictures+=1
+		if located.get("ok",false) and _show_item_icon(located.player,located.offset,_item_picture(int(row.get("item_class_id",0)),str(row.get("name","")))):pictures+=1
 		var mark: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_Select")
 		_marks.append([mark.player,int(mark.offset)] if mark.get("ok",false) else [])
 	for suffix: String in [P+"Nd_Amount/Label_Num",P+"Btn_OK",P+"Btn_OK/Normal",P+"Btn_OK/Disabled"]:
@@ -141,8 +141,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 
 static func _item_picture(item_class_id: int, title: String) -> Dictionary:
 	if item_class_id<=0:return {"ok":false}
-	var info: Dictionary=Choices.describe_choice_icon(item_class_id,title)
-	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
+	return Choices.describe_choice_icon(item_class_id,title)
 
 ## --- Actions --------------------------------------------------------------------
 

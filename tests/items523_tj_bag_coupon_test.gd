@@ -148,7 +148,20 @@ func runtime(late_archive: String = "") -> void:
 	var stale: Dictionary = world.tj_coupons.redeem(item,str(event.id),int(service.state.revision),good,bad,"missing-fixture-uid")
 	check(not stale.ok and service.state.coupons[item] == 1 and FileAccess.get_sha256(world.save_path()) == durable,
 		"invalid selected physical UID never substitutes a matching stack or menu-owned coupon")
-	var result: Dictionary = world.tj_coupons.redeem(item,str(event.id),int(service.state.revision),good,bad,selected_uid)
+	var result: Dictionary
+	if not OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").is_empty():
+		var window: RefCounted=world.hud.original_main_ui_controller.feature_window("tj_coupons")
+		if not check(window!=null and window.is_open() and window._physical_id==selected_uid and window._root_member()==window.COMPOSE,"bag entry mounts original compose retry with the same UID"):return
+		var selection_view: Dictionary=window._grade(int(event.grade))
+		if not check(selection_view.get("handled",false) and str(window.retry_event.id)==str(event.id),"original grade button selects the real failed fusion"):return
+		for choice: String in good+bad:window._pick(choice)
+		if not check(window._popup_ok().get("handled",false) and window._redeem().get("ok",false),"original selected candidates reach confirmation"):return
+		var confirm: Node=world.hud.get_node_or_null("Root/TwilightConfirmation")
+		if not check(confirm!=null and FileAccess.get_sha256(world.save_path())==durable,"confirmation displays before any write"):return
+		confirm.confirm_button.pressed.emit()
+		result={"ok":service.state.used.has(str(event.id)),"via_original_window":true}
+	else:
+		result=world.tj_coupons.redeem(item,str(event.id),int(service.state.revision),good,bad,selected_uid)
 	evidence["redeem"] = {"ok":result.get("ok"),"error":result.get("error","")}
 	check(result.get("ok",false), "redeem with a bag coupon: %s" % str(result.get("error","")))
 	check(world.tj_coupons.bag_count(item)==1 and int(world.inventory.get(name_value,0))==1 and int(service.state.coupons.get(item,0))==1 and service.state.used.has(str(event.id)), "exactly one selected bag coupon spent; unrelated menu coupon and used-event guard stay intact")

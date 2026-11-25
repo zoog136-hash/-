@@ -11,7 +11,7 @@ from pathlib import Path
 SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 
 
-def matrix(archive: Path) -> dict:
+def matrix(archive: Path, cover_items: bool = False) -> dict:
     if hashlib.sha256(archive.read_bytes()).hexdigest() != SOURCE_SHA:
         raise ValueError("Original 523 ZIP does not match the pinned SHA")
     with zipfile.ZipFile(archive) as z:
@@ -70,7 +70,20 @@ def matrix(archive: Path) -> dict:
                     continue
                 ts = sorted((i for i, groups in equip.items() if group in groups), key=priority)
                 ss = sorted((key for key, groups in scrolls.items() if group in groups), key=lambda key: (*priority(key[0]), key[1]))
-                pairs = itertools.islice(((t, s, sb) for t in ts for s, sb in ss if equip[t] & scrolls[s, sb] == {group}), 180)
+                compatible = ((t, s, sb) for t in ts for s, sb in ss if equip[t] & scrolls[s, sb] == {group})
+                if cover_items:
+                    # Retain one partner for each declared target and scroll variant, per
+                    # group. Thousands of equivalent pairs add no new item identities.
+                    seen_targets = set()
+                    seen_scrolls = set()
+                    pairs = []
+                    for target_id, scroll_id, scroll_bless in compatible:
+                        if target_id not in seen_targets or (scroll_id, scroll_bless) not in seen_scrolls:
+                            pairs.append((target_id, scroll_id, scroll_bless))
+                            seen_targets.add(target_id)
+                            seen_scrolls.add((scroll_id, scroll_bless))
+                else:
+                    pairs = itertools.islice(compatible, 180)
                 fixtures = [dict(target=t, scroll=s, level=level, target_bless=blessing, scroll_bless=sb,
                                  cost=c["Cost"], count=c["ConsumeAmount"] or 1, success=p["Success"],
                                  destroy=p["Vaporize"], remain=p["Remain"], side=p["SideEffect"])
@@ -85,8 +98,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--cover-items", action="store_true", help="include one partner per target and scroll variant in each resolved family")
     args = parser.parse_args()
-    rows = matrix(args.archive)
+    rows = matrix(args.archive, args.cover_items)
     args.output.write_text(json.dumps(rows, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"{len(rows)} groups with exact non-test target/scroll/level selectors")
     return 0 if len(rows) == 71 else 1

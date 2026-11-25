@@ -197,6 +197,9 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, r
 	if candidates!=null:
 		for rule: Array in candidates:
 			if key.ends_with(rule[0]):binding.merge(rule[1],true)
+	if member=="UI/CommonUi/Common_Slot.csb" and kind=="Button":
+		var handler: Callable=binding.get("activate",Callable())
+		if handler.is_valid() and handler.get_method()!=&"_ignore":binding["route_feature_slot"]=true
 	if not binding.is_empty():bindings[offset]=binding
 	out[key]={"chain":chain,"offset":offset,"kind":kind,"member":member}
 	if kind=="ProjectNode":return
@@ -459,6 +462,14 @@ func _list_input(event: InputEvent, key: String) -> void:
 	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
 	_moved+=delta
 	_scroll_to(key,float(_scrolls[key].value)+delta)
+
+## Common item picture and information routes for original feature windows.
+func _show_item_icon(player: Node2D, offset: int, info: Dictionary) -> bool:
+	return preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").show_item(player, offset, info, hud())
+
+func _open_item_info(item_class_id: int) -> Dictionary:
+	if _dragged():return {"ok":true,"ignored_after_drag":true}
+	return preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(hud(), item_class_id)
 
 ## Uploads an owner-resolved original picture into a source_asset_slot.
 static func _show_picture(player: Node2D, offset: int, owner: Dictionary) -> bool:

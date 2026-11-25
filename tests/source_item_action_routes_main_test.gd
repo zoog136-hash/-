@@ -62,8 +62,39 @@ func exact(archive: String) -> void:
 	if overlay!=null:overlay.close()
 	if h.original_inventory_is_open():h.toggle_inventory()
 	await frames()
+	await coupon_result_routes()
 	await enchant_routes()
 	await bless_routes(references(326)[0])
+
+## Both reviewed shine panels retain their pixels and leave touch with the
+## actual result button. Opening an item card never replays the craft.
+func coupon_result_routes() -> void:
+	for id: int in [266828,266848]:
+		var canonical: Dictionary=w.source_item_definition(id).get("native_record",{})
+		if not ck(not canonical.is_empty(),"coupon canonical item "+str(id)):return
+		w.catalog_db["아이템"].append(canonical)
+		w._index_catalog_item_sources()
+		var before: String=hash_file()
+		var name: String=str(canonical.name)
+		var opened: Dictionary=controller.try_open_feature_window("craft_result",[{"name":name,"item_class_id":id,"quantity":1,"batch":1}])
+		if not ck(opened.get("filled",{}).get("pictures")==1,"original animated coupon in result "+str(id)):return
+		var result: RefCounted=controller.feature_window("craft_result")
+		var button: Control
+		var activations: Array=[]
+		for child: Node in result._scene.find_children("*","Node2D",true,false):
+			if child.get_script()!=preload("res://scripts/ui/original_ui/sprite_scene.gd") or child.source_member!=result.SLOT:continue
+			var player: Dictionary=child.bound_source_scene(15012)
+			if player.get("ok",false):
+				ck(player.evidence.playback.clip=="normal" and player.evidence.playback.repeat,"authored coupon clip")
+				button=area(child.source_nodes.get(15728))
+				child.source_nodes[15728].get_meta("source_button").activation_result.connect(func(result_value:Dictionary)->void:activations.append(result_value.get("ok",false)))
+				break
+		await frames()
+		if not await tap(button,"original coupon slot "+str(id)):return
+		ck(controller.item_tooltip_is_open() and controller.item_tooltip().reference==name and before==hash_file() and activations==[true],"slot opens the selected original item without saving "+str([id,activations,controller.item_tooltip().reference,name]))
+		controller.close_item_tooltip()
+		result.close()
+		await frames()
 
 func item_detail_routes() -> void:
 	var dagger: String=references(DaggerID)[0]
@@ -99,6 +130,9 @@ func item_detail_routes() -> void:
 	bag.close_item_info()
 	var weapon: String=references(326)[0]
 	ck(bag.open_item_info(weapon) and popup_button(popup,"Icon_Set/Probability_On/Btn_Icon")==null,"original weapon does not offer bag probability")
+	var safe: Dictionary=TREE.locate(popup._scene,popup._out,"Icon_Set/Enchant_On/Text_Enchant")
+	var rule: Dictionary=w._source_enhancement_rule(w.item_instances[weapon.get_slice("@@@",1)].record,0,"normal","",w.item_instances[weapon.get_slice("@@@",1)])
+	ck(int(rule.get("safe_level",0))>0 and safe.get("ok",false) and safe.player._bindings[safe.offset].text=="+%d" % int(rule.safe_level),"tooltip displays the selected weapon's source safe level")
 
 ## Only the attached item scene changes visibility. Count pixels that return
 ## to their original colors at the same location. Keep all frames in memory.

@@ -135,9 +135,10 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 	# Detail and Probability occupy the same authored button position.
 	# An eligible bag uses Probability in that slot.
 	if (callbacks.Probability as Callable).is_valid():callbacks.erase("Detail")
-	if not callbacks.values().any(func(action: Callable) -> bool: return action.is_valid()):spec["Icon_Set"]={"exclude":true}
+	var safe_level: int=int(actions.get("safe_level",-1))
+	if safe_level<0 and not callbacks.values().any(func(action: Callable) -> bool: return action.is_valid()):spec["Icon_Set"]={"exclude":true}
 	else:
-		for group: String in ["Business","Del","Warehouse","Enchant","Probability","Detail"]:
+		for group: String in ["Business","Del","Warehouse","Probability","Detail"]:
 			var action: Callable=callbacks.get(group,Callable())
 			spec["Icon_Set/"+group+"_Off"]={"exclude":true}
 			if action.is_valid():
@@ -146,6 +147,11 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 				# preview-visible with touchEnabled off, Detail_On starts hidden.
 				spec["Icon_Set/"+group+"_On/Btn_Icon"]={"activate":action,"touch_enabled":true}
 			else:spec["Icon_Set/"+group+"_On"]={"exclude":true}
+		# 안전강화 is a label and original state image, with no Button in the
+		# CSB. Use the same normal-scroll source rule as the actual forge.
+		spec["Icon_Set/Enchant_On"]={"visible":true} if safe_level>0 else {"exclude":true}
+		spec["Icon_Set/Enchant_Off"]={"visible":true} if safe_level==0 else {"exclude":true}
+		if safe_level>0:spec["Icon_Set/Enchant_On/Text_Enchant"]={"role":"source_text","text":"+%d" % safe_level}
 	spec["ItemInfo/Img_Title"]={"visible":false}
 	spec["ItemInfo/Text_1"]={"visible":false}
 	spec["ItemInfo/Text_1_0"]={"visible":false}

@@ -280,8 +280,11 @@ func _input(event: InputEvent) -> void:
 	if feature_window_is_open("reward_select"):
 		var reward_buttons: Array=[]
 		var chooser: RefCounted=feature_window("reward_select")
-		_collect_native_buttons(chooser.input_scene(),reward_buttons)
-		chooser.append_row_buttons(reward_buttons)
+		if item_tooltip_is_open() and _item_tooltip.blocks_point(event.position):
+			_collect_native_buttons(_item_tooltip.get("_scene"),reward_buttons)
+		else:
+			_collect_native_buttons(chooser.input_scene(),reward_buttons)
+			chooser.append_row_buttons(reward_buttons)
 		_native_buttons.route(event,event.position,reward_buttons)
 		get_viewport().set_input_as_handled()
 		return
@@ -1602,7 +1605,7 @@ var _dissolve_popup: RefCounted
 func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
 	if _dissolve_popup==null and _pack!=null:
 		var popup=DissolvePopup.new()
-		_window_problems["dissolve_popup"]=popup.configure(_pack)
+		_window_problems["dissolve_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
 	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
 	for connection: Dictionary in _dissolve_popup.finished.get_connections():_dissolve_popup.finished.disconnect(connection.callable)
@@ -1646,7 +1649,7 @@ var _drop_popup: RefCounted
 func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
 	if _drop_popup==null and _pack!=null:
 		var popup=DropPopup.new()
-		_window_problems["drop_popup"]=popup.configure(_pack)
+		_window_problems["drop_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
 	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
 	_cancel_native_buttons()

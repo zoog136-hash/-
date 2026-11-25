@@ -51,6 +51,9 @@ var category: String="변신"
 var stage: String="select"
 var grade: int=0
 var coupon: String=""
+## Empty for menu entry. Both fields identify one selected bag stack.
+var _focused_item: String=""
+var _physical_id: String=""
 var retry_event: Dictionary={}
 var fail_count: int=1
 var revision: int=-1
@@ -70,11 +73,20 @@ func _tj() -> Object:
 
 ## Opens the window of `retry_kind` (fusion / awakening) and `category_name`;
 ## empty picks the first one with a usable record (else 변신 합성).
-func open(parent: Node, retry_kind: String="", category_name: String="") -> Dictionary:
+func open(parent: Node, retry_kind: String="", category_name: String="", focused_item: String="", physical_id: String="") -> Dictionary:
 	var tj: Object=_tj()
 	if tj==null:return _fail("source_tj_window_runtime_unavailable")
 	if tj.core.definitions.is_empty() and not tj.load_default_source():return _fail("source_tj_window_source_unavailable")
 	if tj.core.blocked or tj.context().is_empty():return _fail("source_tj_window_context_unavailable")
+	if focused_item.is_empty() != physical_id.is_empty():return _fail("source_tj_window_incomplete_selection")
+	if not focused_item.is_empty():
+		var entry: Dictionary=tj.core.definitions.get("coupons",{}).get(focused_item,{})
+		var route: Dictionary=physical_route(entry)
+		if route.is_empty() or tj.bag_count(focused_item,physical_id)<1:return _fail("source_tj_window_unsupported_selection")
+		retry_kind=route.kind
+		category_name=route.category
+	_focused_item=focused_item
+	_physical_id=physical_id
 	if retry_kind.is_empty():
 		var usable: Array=usable_records()
 		retry_kind=str(usable[0].kind) if not usable.is_empty() else "fusion"
@@ -86,6 +98,23 @@ func open(parent: Node, retry_kind: String="", category_name: String="") -> Dict
 	_records.clear()
 	return open_window(parent)
 
+## The type, deck, history lane and category must agree in the selected
+## PlayerValueReturn policy. Skill-card and equipment histories have
+## different screens and separate rules.
+static func physical_route(entry: Dictionary) -> Dictionary:
+	var policy: Dictionary=entry.get("profile",{})
+	var deck: int=int(policy.get("BuffCardDeckID",0))
+	var category: Variant=DECKS.find_key(deck)
+	if category==null:return {}
+	var type_id: int=int(policy.get("UITypeID",0))
+	var history: int=int(policy.get("TJCouponHistoryType",0))
+	var item_category: int=int(entry.get("item",{}).get("CategoryID",0))
+	if item_category==10272 and type_id==161 and history==int({1:1,2:11,98:21}[deck]):
+		return {"kind":"fusion","category":category}
+	if item_category==10542 and type_id==(132 if deck==1 else 142) and history==int({1:41,2:51,98:61}[deck]):
+		return {"kind":"awakening","category":category}
+	return {}
+
 ## Every unused failure record an owned coupon can retry, as
 ## {coupon, retry_event, kind, category, grade, fail_count} (the coupon's own
 ## candidates() filter: deck, history type, season, server, minimum grade).
@@ -94,8 +123,10 @@ func usable_records() -> Array:
 	var found: Array=[]
 	if tj==null:return found
 	var context: Dictionary=tj.context()
-	for id: String in tj.core.definitions.get("coupons",{}):
-		if int(tj.owned_count(id))<1:continue
+	var ids: Array=tj.core.definitions.get("coupons",{}).keys() if _focused_item.is_empty() else [_focused_item]
+	for id: String in ids:
+		var count_owned: int=tj.owned_count(id) if _physical_id.is_empty() else tj.bag_count(id,_physical_id)
+		if count_owned<1:continue
 		var view: Dictionary=tj.core.candidates(id,context,tj.core.clock())
 		if not view.get("ok",false):continue
 		for row: Dictionary in view.get("events",[]):
@@ -384,7 +415,12 @@ func _grade(id: int) -> Dictionary:
 	for row: Dictionary in _usable_here():
 		if int(row.grade)==id:rows.append(row)
 	if rows.is_empty():
-		_message("이 등급의 재도전 이력이 없습니다")
+		var reason: String="이 등급의 재도전 이력이 없습니다"
+		if not _physical_id.is_empty():
+			var service: Object=_tj()
+			if service.bag_count(_focused_item,_physical_id)<1:reason="선택한 가방 쿠폰이 없거나 잠겨 있습니다"
+			else:reason=str(service.core.candidates(_focused_item,service.context(),service.core.clock()).get("error",reason))
+		_message(reason)
 		return {"ok":false,"grade":id}
 	var tj: Object=_tj()
 	_reset("popup")
@@ -454,6 +490,7 @@ func _redeem() -> Dictionary:
 	if coupon.is_empty() or retry_event.is_empty():return {"ok":false}
 	var item: String=coupon
 	var event_id: String=str(retry_event.id)
+	var selected_uid: String=_physical_id
 	var at: int=revision
 	var good: Array=picked_success.duplicate()
 	var bad: Array=picked_fail.duplicate()
@@ -462,7 +499,7 @@ func _redeem() -> Dictionary:
 	var body: String="%s 1장을 사용합니다.\n%s" % [name,"기존 각성 비용이 함께 필요합니다." if kind=="awakening" else "성공 후보 %s · 실패 후보 %d장" % [_card_name(good[0]),bad.size()]]
 	if fee>0:body+="\nTWILIGHT 추가 비용 %s 아데나" % _number(fee)
 	owner.call("confirm_action","TJ의 쿠폰",body,"도전",func(_count: int) -> void:
-		var result: Dictionary=tj.redeem(item,event_id,at,good,bad)
+		var result: Dictionary=tj.redeem(item,event_id,at,good,bad,selected_uid)
 		var success: String=" · 성공" if result.get("ok",false) and bool(result.get("success",false)) else (" · 실패" if result.get("ok",false) else "")
 		_message(str(result.get("error","완료"))+success)
 		if result.get("ok",false):_reset("select")

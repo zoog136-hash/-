@@ -52,28 +52,20 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var amounts: Dictionary=balances()
 	var rows: Array=[]
 	for name: String in CURRENCIES:
+		var record: Variant=world().call("_find_catalog_item_record",name) if world().has_method("_find_catalog_item_record") else null
+		var info: Dictionary=SourceImages.describe_item(record,name) if record is Dictionary and not record.is_empty() else {}
+		var id: int=int(info.get("item_class_id",0))
 		var spec: Dictionary={"Panel/Label_Name":{"role":"source_text","text":name},
 			"Panel/Label_Amount":{"role":"source_text","text":_number(int(amounts[name]))},
 			"Panel/Nd_Tooltip":{"exclude":true},"Panel/Nd_BtnSet":{"exclude":true},
-			"Common_Slot/Btn":{"activate":Callable(self,"_ignore")},
+			"Common_Slot/Btn":{"activate":_open_item_info.bind(id),"displaystate":id>0},
 			"Common_Slot/Sp_IconSample":{"role":"source_asset_slot","visible":false}}
 		for node: String in SLOT_EXCLUDED:spec["Common_Slot/"+node]={"exclude":true}
-		rows.append({"member":ROW,"spec":spec,"name":name})
+		rows.append({"member":ROW,"spec":spec,"info":info})
 	var placed: Dictionary=_fill_list(root,out,"ListView",rows)
 	if not placed.get("ok",false):return placed
 	var icons: int=0
 	for index: int in range(rows.size()):
-		if _icon(placed.scenes[index],placed.outs[index],str(rows[index].name)):icons+=1
+		var icon: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Common_Slot/Sp_IconSample")
+		if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,rows[index].info):icons+=1
 	return {"ok":true,"rows":rows.size(),"icons":icons,"amounts":amounts}
-
-## The currency item's own original icon (its catalog record).
-func _icon(scene: Node2D, out: Dictionary, name: String) -> bool:
-	var game: Object=world()
-	if game==null or not game.has_method("_find_catalog_item_record"):return false
-	var record: Variant=game.call("_find_catalog_item_record",name)
-	if not record is Dictionary or (record as Dictionary).is_empty():return false
-	var info: Dictionary=SourceImages.describe_item(record,name)
-	if not info.get("texture") is Texture2D:return false
-	var located: Dictionary=_locate(scene,out,"Common_Slot/Sp_IconSample")
-	if not located.get("ok",false):return false
-	return _show_picture(located.player,located.offset,{"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})})

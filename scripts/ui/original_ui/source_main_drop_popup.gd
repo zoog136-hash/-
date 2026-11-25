@@ -10,6 +10,7 @@ extends RefCounted
 ##   original slot; 확인 calls `on_confirm(count)`, 취소 closes.
 ## Nothing here moves an item: the caller's existing transfer does that.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const BOX="UI/CommonUi/Common_MessageBox_Dissolution.csb"
 const KEYPAD="UI/CommonUi/Common_Calculator.csb"
@@ -18,6 +19,7 @@ const MEMBER_SCOPES={SLOT:[15728,15316,15012,6880]}
 signal closed
 var _pack: RefCounted
 var _tree: RefCounted
+var _hud: WeakRef
 var _scene: Node2D
 var _parent: Node
 var _out: Dictionary={}
@@ -31,10 +33,11 @@ var _delete: bool=false
 var stage: String=""
 var last_result: Dictionary={}
 
-func configure(pack: RefCounted) -> Dictionary:
+func configure(pack: RefCounted, hud: Node=null) -> Dictionary:
 	for member: String in [BOX,KEYPAD,SLOT]:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_drop_popup_member_missing","member":member}
 	_pack=pack
+	_hud=weakref(hud) if hud!=null else null
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	return {"ok":true,"configured":true}
 
@@ -88,9 +91,7 @@ func _open_box() -> Dictionary:
 	var located: Dictionary=NamedTree.locate(_scene,_out,"Nd_Result/Nd_Slot/Common_Slot/Sp_IconSample")
 	if located.get("ok",false):
 		var info: Dictionary=SourceImages.describe_item_class(_item_class_id,_item_name)
-		if info.get("texture") is Texture2D:
-			var owner: Dictionary={"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-			shown["picture"]=located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false) and located.player.set_bound_visible(located.offset,true).get("ok",false)
+		shown["picture"]=NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref() if _hud!=null else null)
 	last_result=shown
 	return shown
 
