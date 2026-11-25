@@ -994,7 +994,8 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 	if not _tables.has(table): return result
 	var key: String = table+":"+foreign_key
 	if not _relations.has(key):
-		var saved: Dictionary = _read_relation(table, foreign_key, store)
+		var saved: Dictionary = _ordered_bonus_ids(store) if key == "Bonus:ID" else {}
+		if saved.is_empty(): saved = _read_relation(table, foreign_key, store)
 		if not saved.is_empty(): _relations[key] = saved
 	if not _relations.has(key):
 		var column: Variant = null
@@ -1150,8 +1151,28 @@ static func _write_relation(table: String, foreign_key: String, relation: Dictio
 const RELATION_ROW_LIMIT: int = 1048576
 const RELATION_VALUE_LIMIT: int = 4398046511104 # 2^42 keeps value * 2^20 + row in 63 bits
 
+## The original 523 Bonus.ID column is strictly increasing and integral.
+## Its index in the column is already its source row. Verify the actual
+## packed column before relying on this property. Every other layout uses
+## the ordinary relation builder, including its duplicate/error handling.
+const BONUS_ID_COLUMN_SHA256 := "b122b12509ac10cc3ef0204c873993b0113abbb356c04e51ce18c2af352aad26"
+
+static func _ordered_bonus_ids(store: Dictionary) -> Dictionary:
+	if int(store.get("count", 0)) != 217916 or not store.has("disk"): return {}
+	var position: int = (store.columns as PackedStringArray).find("ID")
+	if position < 0: return {}
+	var column: Variant = _column_data(store, position)
+	if not column is PackedFloat64Array or column.size() != store.count: return {}
+	var hash := HashingContext.new()
+	if hash.start(HashingContext.HASH_SHA256) != OK or hash.update(column.to_byte_array()) != OK: return {}
+	if hash.finish().hex_encode() != BONUS_ID_COLUMN_SHA256: return {}
+	return {"ordered_ids": column}
+
 static func _relation_rows(relation: Dictionary, id: int) -> PackedInt32Array:
 	if relation.has("groups"): return relation.groups.get(id, PackedInt32Array())
+	if relation.has("ordered_ids"):
+		var index: int = _unique_relation_row(relation, id)
+		return PackedInt32Array([index]) if index >= 0 else PackedInt32Array()
 	var keys: PackedInt64Array = relation.keys
 	var position: int = keys.bsearch(id, true)
 	if position >= keys.size() or keys[position] != id: return PackedInt32Array()
@@ -1162,6 +1183,10 @@ static func _relation_rows(relation: Dictionary, id: int) -> PackedInt32Array:
 ## Rejected duplicate groups still take row()'s former path below, preserving
 ## its row decoding and diagnostics; accepted rows are reconstructed fresh.
 static func _unique_relation_row(relation: Dictionary, id: int) -> int:
+	if relation.has("ordered_ids"):
+		var ids: PackedFloat64Array = relation.ordered_ids
+		var index: int = ids.bsearch(float(id))
+		return index if index < ids.size() and int(ids[index]) == id else -1
 	if relation.has("groups"):
 		var groups: Dictionary = relation.groups
 		if not groups.has(id): return -1
