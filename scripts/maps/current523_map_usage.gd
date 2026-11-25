@@ -65,6 +65,31 @@ static func observe_result(renderer: Node, member: String, original_bytes: int, 
 	if not actual_main(renderer): return Observation.INVALID
 	return _enqueue_result(member, original_bytes, sha256, unit, source_offset, source_length, _origin(), seen_key)
 
+## One synchronous ground draw has one visible Main and one observation origin.
+## Keep ref order across atlases so the same events survive queue pressure.
+static func observe_ground_refs(renderer: Node, tile_pack: RefCounted, refs: Dictionary) -> void:
+	if refs.is_empty() or not actual_main(renderer): return
+	var origin: String = _origin()
+	var sources: Dictionary = {}
+	for ref: int in refs:
+		var tile_id: int = ref >> 8
+		if not sources.has(tile_id):
+			var identity: Dictionary = tile_pack.source_usage_identity(tile_id)
+			if identity.is_empty():
+				sources[tile_id] = {}
+			else:
+				var member: String = str(identity.member)
+				var sha: String = str(identity.sha256)
+				var bytes: int = int(identity.bytes)
+				sources[tile_id] = {"member": member, "sha": sha, "bytes": bytes,
+					"key_prefix": member + "|" + sha + "|" + str(bytes) + "|"}
+		var source: Dictionary = sources[tile_id]
+		if source.is_empty(): continue
+		var unit: String = "subimage:" + str(ref & 255)
+		var seen_key: String = source.key_prefix + unit + "|-1|0"
+		if not _recorded.has(seen_key):
+			_enqueue_result(source.member, source.bytes, source.sha, unit, -1, 0, origin, seen_key)
+
 ## Internal synthetic ingress. Public entry retains the visible Main gate;
 ## replay uses only captured scalars, never a renderer or a new visibility check.
 static func _enqueue(member: String, original_bytes: int, sha256: String, unit: String, offset: int, length: int, origin: String, seen_key: String = "") -> bool:

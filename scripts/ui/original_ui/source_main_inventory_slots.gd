@@ -161,7 +161,6 @@ func action_text(reference: String) -> String:
 func refresh_action(slot_scene: Node2D, reference: String) -> Dictionary:
 	if not is_instance_valid(slot_scene) or not slot_scene.get("source_nodes").has(ACTION):return {"ok":true,"action_presented":false}
 	var text: String=action_text(reference)
-	if text.is_empty():text=str(slot_scene.get_meta("missing_icon_title",""))
 	if not text.is_empty():
 		var written: Dictionary=slot_scene.set_bound_text(ACTION,text)
 		if not written.get("ok",false):return written
@@ -222,12 +221,11 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		if started>0:FRAME_HITCH.detail("ui.inventory_icon_owner",started)
 		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
 		if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):
-			# An item with no original picture keeps its original slot with
-			# no substitute picture. Reuse its authored action label instead
-			# of drawing text under the transparent input node/slot frame.
+			# The authored centre label is for the short selected action only.
+			# A full title here is not clipped to the slot and covers neighbours.
+			# No substitute art: keep the amount, selection, tooltip and detail.
 			var title: String=str(entry.get("shown_name", ""))
 			if title.is_empty():title=preload("res://scripts/ui/source523_item_identity.gd").display_name(entry.get("record",{}),str(entry.get("name", "")))
-			if not title.is_empty() and action.is_empty():bindings[ACTION]={"role":"source_text","text":title,"visible":true}
 			unresolved.append({"field":"owned_original_icon_unavailable","reference":reference,"code":str(supplied.get("code",supplied.get("reason","")))})
 			return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"missing_icon_title":title,"unresolved_fields":unresolved}
 		scope.append(ICON)
