@@ -12004,26 +12004,26 @@ func _update_secondary_doll(delta: float) -> void:
 	if bool(presentation_settings.hide_doll):
 		if is_instance_valid(secondary_doll_visual): secondary_doll_visual.hide()
 		return
-	var state: Dictionary=option_awakening.subslot_view(false)
-	if not state.get("active",false):
+	var identity: String=option_awakening.active_subslot_identity()
+	if identity.is_empty():
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
 		return
 	if not is_instance_valid(secondary_doll_visual):
 		secondary_doll_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
 		secondary_doll_visual.name="SecondarySourceDoll";add_child(secondary_doll_visual)
-	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(state.identity,{})
+	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(identity,{})
 	secondary_doll_visual.update_source(delta,self,record)
 
 func _update_secondary_relic(delta: float) -> void:
-	var state: Dictionary=option_awakening.relic_subslot_view(false)
-	if not state.get("active",false):
+	var identity: String=option_awakening.active_subslot_identity(true)
+	if identity.is_empty():
 		if is_instance_valid(secondary_relic_visual):secondary_relic_visual.clear()
 		return
 	if not is_instance_valid(secondary_relic_visual):
 		secondary_relic_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
 		secondary_relic_visual.category="성물"
 		secondary_relic_visual.name="SecondarySourceRelic";add_child(secondary_relic_visual)
-	var record: Dictionary=option_awakening.core.catalog["성물"].get(state.identity,{})
+	var record: Dictionary=option_awakening.core.catalog["성물"].get(identity,{})
 	secondary_relic_visual.update_source(delta,self,record)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.

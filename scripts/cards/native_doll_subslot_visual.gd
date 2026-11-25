@@ -37,6 +37,7 @@ func _deactivate_source_aura() -> void:
 	_requested_aura_signature=""
 	_next_aura_check_msec=0
 func clear() -> void:
+	if status=="inactive" and not visible and _requested_aura_signature.is_empty():return
 	_deactivate_source_aura()
 	if is_instance_valid(actor):actor.clear()
 	_next_source_check_msec=0
@@ -61,10 +62,10 @@ func update_source(delta: float,world: Node,record: Dictionary) -> void:
 		if not bool(source_binding.get("display_sprite_verified",false)) or int(source_binding.get("sprite_id",0))!=int(record.get("source_display_sprite_id",0)):
 			clear();status="source_npc_binding_unverified";return
 	var player: Node2D=world.player
-	var manifest: String="";var context: Dictionary={}
-	for property: Dictionary in player.get_property_list():
-		if property.name=="original_source_manifest":manifest=str(player.get(property.name))
-		if property.name=="source_visual_context":context=player.get(property.name)
+	var manifest_value: Variant=player.get("original_source_manifest")
+	var manifest: String=str(manifest_value) if manifest_value!=null else ""
+	var context_value: Variant=player.get("source_visual_context")
+	var context: Dictionary=context_value if context_value is Dictionary else {}
 	var key: String=Cards.card_id(record)+"|"+manifest+"|"+str(hash(context))
 	if source_only:key+="|current523_only"
 	var now: int=Time.get_ticks_msec()
