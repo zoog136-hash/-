@@ -1848,8 +1848,11 @@ func _draw_tiles(canvas: Node2D) -> void:
 						observed_refs[ref].append(pending)
 						break
 	if observe:
+		var sources: Dictionary = {}
 		for ref: int in observed_refs:
-			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
+			var tile_id: int = ref >> 8
+			if not sources.has(tile_id): sources[tile_id] = _tile_pack.source_usage_identity(tile_id)
+			var source: Dictionary = sources[tile_id]
 			if not source.is_empty(): USAGE.observe_result(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
 			# Broker retains transient pressure. Invalid/disabled/hard-dropped
 			# attempts are terminal here; never poll by redrawing an idle map.

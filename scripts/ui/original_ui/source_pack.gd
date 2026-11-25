@@ -233,7 +233,10 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if plist.is_empty():
 		if int(reference.get("resourceType",0))!=0: return null
 		original=_page(_member(str(reference.path)))
-		if original!=null:premultiplied=bool(original.get_meta("cocos_png_pma",false))
+		if original!=null:
+			premultiplied=bool(original.get_meta("cocos_png_pma",false))
+			if cocos_pixels and premultiplied:
+				original=cocos_premultiply(original)
 	else:
 		var atlas: Dictionary=manifest.atlases.get(_member(plist),{})
 		var frame: Dictionary=atlas.get("frames",{}).get(str(reference.path),{})
@@ -241,13 +244,11 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 		var page: Image=_page(str(atlas.get("page","")))
 		if page==null: return null
 		premultiplied=bool(page.get_meta("cocos_png_pma",false))
-		var decoded: Dictionary=PIXELS.decode(page,frame)
+		var decoded: Dictionary=PIXELS.decode(page,frame,cocos_pixels and premultiplied)
 		if not str(decoded.get("error","")).is_empty():
 			last_error=str(decoded.error); return null
 		original=decoded.image
 	if original==null: return null
-	if cocos_pixels and premultiplied:
-		original=cocos_premultiply(original)
 	# Each new UI frame texture is its own GPU upload: its time and count go
 	# to the phone record (menus open slowly on 523.691; upload cost unknown).
 	var upload_started: int=FRAME_HITCH.now()
@@ -272,6 +273,7 @@ func _page(member: String) -> Image:
 	var path: String=root.path_join("originals").path_join(member)
 	var original: Image=_read_verified_page(path, str(manifest.files[member].sha256), member)
 	if original==null: return null
+	original.set_meta(PIXELS.OPAQUE_CROPS, {})
 	if not cache_key.is_empty():
 		original=PAGE_CACHE.store_page(cache_key,_lease_owner,original)
 		_page_leases[cache_key]=true

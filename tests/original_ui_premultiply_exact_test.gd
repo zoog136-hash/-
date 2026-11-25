@@ -2,6 +2,7 @@ extends SceneTree
 ## Full-byte comparison with the source Cocos scalar equation. This checks
 ## CPU RGBA8 conversion only, not a native GPU upload or private-pack render.
 const PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
+const ATLAS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
 const OPT=preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
 var checks: int=0
 var failures: Array[String]=[]
@@ -34,6 +35,41 @@ func compare(image: Image,label: String) -> void:
 	check(alpha_preserved,label+": every alpha byte remains unchanged")
 	checked_pixels+=image.get_width()*image.get_height()
 
+func check_atlas_crop() -> void:
+	var page:=Image.create_empty(6,5,false,Image.FORMAT_RGBA8)
+	for y: int in page.get_height():
+		for x: int in page.get_width():
+			page.set_pixel(x,y,Color8(x*31+1,y*43+1,x+y,[0,1,128,254,255][y]))
+	var before: PackedByteArray=page.get_data()
+	for rotated: bool in [false,true]:
+		for padded: bool in [false,true]:
+			var spec: Dictionary={"rect":[1,1,3,2],"source_rect":[2,1,3,2] if padded else [0,0,3,2],
+				"source_size":[7,5] if padded else [3,2],"rotated":rotated}
+			var raw: Dictionary=ATLAS.decode(page,spec)
+			var converted: Dictionary=ATLAS.decode(page,spec,true)
+			check(raw.error=="" and converted.error=="","valid atlas geometry")
+			check(converted.image.get_size()==raw.image.get_size() and converted.image.get_data()==scalar_reference(raw.image),
+				"trim, rotation and padding preserve full-canvas scalar PMA")
+	var tile: Dictionary={"rect":[0,0,1,1],"source_rect":[1,0,1,1],"source_size":[3,2]}
+	var verified:=Image.create_empty(2,2,false,Image.FORMAT_RGBA8)
+	verified.fill(Color8(254,254,254,255))
+	verified.set_pixel(1,0,Color8(254,254,254,254))
+	verified.set_meta(ATLAS.OPAQUE_CROPS,{})
+	for _repeat: int in 2:
+		check(ATLAS.decode(verified,tile,true).image.get_pixel(1,0)==Color8(254,254,254,255),"reused opaque crop keeps its original placement")
+	check(verified.get_meta(ATLAS.OPAQUE_CROPS).size()==1,"repeated crop records a single opaque rectangle")
+	tile.rect[0]=1
+	check(ATLAS.decode(verified,tile,true).image.get_pixel(1,0)==Color8(253,253,253,254),"other rectangles still convert their partial alpha")
+	var replacement:=Image.create_empty(2,2,false,Image.FORMAT_RGBA8)
+	replacement.fill(Color8(254,254,254,254))
+	replacement.set_meta(ATLAS.OPAQUE_CROPS,{})
+	tile.rect[0]=0
+	check(ATLAS.decode(replacement,tile,true).image.get_pixel(1,0)==Color8(253,253,253,254) and replacement.get_meta(ATLAS.OPAQUE_CROPS).is_empty(),"replacement page cannot inherit an opaque proof")
+	check(not page.has_meta(ATLAS.OPAQUE_CROPS),"caller-owned images do not retain opacity proofs")
+	var invalid: Dictionary={"rect":[0,0,3,2],"source_rect":[1,1,3,2],"source_size":[3,2]}
+	check(ATLAS.decode(page,invalid,true)=={"error":"trim_out_of_canvas"},"PMA preserves invalid frame rejection")
+	check(before==page.get_data(),"PMA reconstruction leaves the shared atlas unchanged")
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -50,6 +86,21 @@ func _run() -> void:
 	var opaque:=Image.create_empty(127,93,false,Image.FORMAT_RGBA8)
 	opaque.fill(Color8(183,44,79,255))
 	compare(opaque,"fully opaque RGBA8")
+	var near_opaque:=Image.create_empty(11,9,false,Image.FORMAT_RGBA8)
+	near_opaque.fill(Color8(253,128,17,255))
+	near_opaque.set_pixel(10,8,Color8(253,128,17,254))
+	compare(near_opaque,"near-opaque RGBA8 including alpha 254")
+	var gray:=Image.create_empty(2,2,false,Image.FORMAT_RGBA8)
+	gray.fill(Color8(171,171,171,254))
+	compare(gray,"grayscale alpha 254")
+	var bright:=Image.create_empty(256,3,false,Image.FORMAT_RGBA8)
+	bright.fill(Color8(254,254,254,255))
+	compare(bright,"opaque despite many RGB bytes of 254")
+	check(not is_same(OPT.convert(bright),bright) and is_same(OPT.convert(bright,true),bright),"only an owned opaque crop is returned by identity")
+	bright.set_pixel(255,2,Color8(127,71,43,254))
+	compare(bright,"one alpha 254 after many bright RGB bytes")
+	check(not is_same(OPT.convert(bright,true),bright),"a near-opaque crop still requires conversion")
+	check_atlas_crop()
 	var transparent:=Image.create_empty(17,21,false,Image.FORMAT_RGBA8)
 	transparent.fill(Color8(183,44,79,0))
 	compare(transparent,"transparent pixels with nonzero stored RGB")
