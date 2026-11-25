@@ -333,6 +333,9 @@ func restore(saved: Variant) -> void:
 	records.clear()
 	occupancy.clear()
 	var now: float = Time.get_unix_time_from_system()
+	# Only accepted floor records reserve an ID. Keep the first valid record
+	# across maps without rescanning the records already restored.
+	var restored_physical_ids: Dictionary = {}
 	if saved is Array:
 		for entry: Variant in saved:
 			if not entry is Dictionary: continue
@@ -343,12 +346,9 @@ func restore(saved: Variant) -> void:
 			if record.get("item_record") is Dictionary and str(record.item_record.get("name","")) == item_name: item = record.item_record
 			if item.is_empty() or not point is Array or point.size() < 2: continue
 			if not preload("res://scripts/loot/inventory_ground_transfer.gd").can_collect(world,record): continue
-			if record.has("physical_item"):
-				var physical_id: String = str(record.physical_item.id)
-				var duplicate: bool = false
-				for existing: Dictionary in records.values():
-					if str(existing.get("physical_item",{}).get("id","")) == physical_id: duplicate = true
-				if duplicate: continue
+			var physical_id: String = str(record.physical_item.id) if record.has("physical_item") else ""
+			if not physical_id.is_empty():
+				if restored_physical_ids.has(physical_id): continue
 				if physical_id.is_valid_int(): world.next_item_instance_id = maxi(world.next_item_instance_id,int(physical_id)+1)
 			if not (point[0] is float or point[0] is int) or not (point[1] is float or point[1] is int): continue
 			if not Vector2(float(point[0]), float(point[1])).is_finite(): continue
@@ -365,6 +365,7 @@ func restore(saved: Variant) -> void:
 			record.merge({"id":id, "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 				"map_id":map_id, "created_at":float(record.get("created_at", now)), "expires_at":expires, "state":"ground", "hunt_batch":str(record.get("hunt_batch", ""))}, true)
 			records[id] = record
+			if not physical_id.is_empty(): restored_physical_ids[physical_id] = true
 	var source_catalog: Variant = world.get("catalog_db")
 	var gameplay_items: Variant = world.get("item_db")
 	if source_catalog is Dictionary and gameplay_items is Array:
