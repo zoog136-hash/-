@@ -11,7 +11,10 @@ var _checks: int=0
 var _errors: Array[String]=[]
 var _touch_usec: Array[int]=[]
 
-func _initialize() -> void:run.call_deferred()
+func _initialize() -> void:
+	var assets := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
+	check(assets.read_installed("user://missing-awakening-scene") == null,"absent local originals cannot mount the result")
+	run.call_deferred()
 
 func check(value: bool, label: String) -> bool:
 	_checks+=1
@@ -336,8 +339,6 @@ func _native() -> void:
 
 func run() -> void:
 	check(OPTION.PAGE_SIZE==9,"three authored original rows of three cards")
-	var assets := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
-	check(assets.read_installed("user://missing-awakening-scene") == null,"absent local originals cannot mount the result")
 	if not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty():await _native()
 	print("SOURCE_OPTION_AWAKENING_RESULT ",JSON.stringify({"checks":_checks,"failures":_errors,"original_ui":not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty(),"touch_release_usec":_touch_usec}))
 	quit(0 if _errors.is_empty() else 1)
