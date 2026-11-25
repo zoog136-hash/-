@@ -294,10 +294,13 @@ static func _place(content: Node2D, scene: Node2D, geometry: Dictionary, bottom_
 
 ## Builds `rows` ([{member, spec}]) top-down (or left to right) in the list
 ## at `suffix`; returns {ok, rows, scenes, outs}. Vertical lists scroll.
-func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap: float=NAN, horizontal: bool=false, columns: int=1, scroll_key: String="") -> Dictionary:
+## A detached staging node receives rows before a live list replaces them.
+## Its scroll bounds are returned without changing the live scroll state.
+func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap: float=NAN, horizontal: bool=false, columns: int=1, scroll_key: String="", staging: Node2D=null) -> Dictionary:
 	var list: Dictionary=_list(root,out,suffix)
 	if not list.get("ok",false):return list
 	var key: String=str(list.key) if scroll_key.is_empty() else scroll_key
+	var content: Node2D=list.content if staging==null else staging
 	# The ListView's own itemMargin unless the caller names the spacing.
 	if is_nan(gap):gap=float(_node_options(out,suffix).get("itemMargin",0))
 	var size: Vector2=list.size
@@ -315,12 +318,12 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 		var geometry: Dictionary=_row_geometry(member)
 		var extent: Vector2=geometry.size
 		if horizontal:
-			_place(list.content,built.scene,geometry,Vector2(x,size.y-extent.y))
+			_place(content,built.scene,geometry,Vector2(x,size.y-extent.y))
 			x+=extent.x+gap
 		else:
 			var width: float=extent.x*float(columns)+gap*float(columns-1)
 			var left: float=(size.x-width)*0.5+float(column)*(extent.x+gap)
-			_place(list.content,built.scene,geometry,Vector2(left,y-extent.y))
+			_place(content,built.scene,geometry,Vector2(left,y-extent.y))
 			line_height=maxf(line_height,extent.y)
 			column+=1
 			if column>=columns:
@@ -334,13 +337,20 @@ func _fill_list(root: Node2D, out: Dictionary, suffix: String, rows: Array, gap:
 		scenes.append(built.scene)
 		outs.append(row_out)
 	if column>0:y-=line_height+gap
+	var result: Dictionary={"ok":true,"rows":rows.size(),"scenes":scenes,"outs":outs}
+	var scroll: Dictionary={}
 	if not horizontal:
 		var used: float=size.y-y-gap
-		_scrolls[key]={"content":list.content,"min":minf(0.0,size.y-used),"value":0.0}
+		scroll={"content":list.content,"min":minf(0.0,size.y-used),"value":0.0}
 	elif x-gap>size.x:
 		# A horizontal list wider than its ListView scrolls along x.
-		_scrolls[key]={"content":list.content,"min":size.x-(x-gap),"value":0.0,"axis":"x"}
-	return {"ok":true,"rows":rows.size(),"scenes":scenes,"outs":outs}
+		scroll={"content":list.content,"min":size.x-(x-gap),"value":0.0,"axis":"x"}
+	if staging!=null:
+		result["scroll"]=scroll
+		result["key"]=key
+	elif not scroll.is_empty():
+		_scrolls[key]=scroll
+	return result
 
 ## Repeats an authored ListView row (a template with no row member of its
 ## own, e.g. "ListView_Effect/Panel_set") once per spec: each copy is the

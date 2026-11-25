@@ -19,7 +19,7 @@ class FakeWorld extends Node:
 		return [{"card_id":4101,"name":"아이스 스파이크","grade_id":1,"grade":"일반","spell_class_id":0,"level":1,"max_level":3,"exp":20,"required_exp":100,"enhanceable":true,"stage_descriptions":{1:"피해 +5"}},
 			{"card_id":4401,"name":"헬 사이드","grade_id":4,"grade":"영웅","spell_class_id":0,"level":3,"max_level":3,"exp":0,"required_exp":0,"enhanceable":false,"stage_descriptions":{}}]
 	func skill_card523_materials(grade_id: int=-1) -> Array:
-		if grade_id!=1:return []
+		if grade_id not in [-1,1]:return []
 		return [{"physical_id":"b1","name":"스킬서 A","card_id":4102,"card_name":"A","grade_id":1,"grade":"일반","remaining":5,"locked":false},
 			{"physical_id":"b2","name":"스킬서 B","card_id":4103,"card_name":"B","grade_id":1,"grade":"일반","remaining":4,"locked":false}]
 	func skill_card523_merge_quote(grade_id: int, selection: Dictionary={}) -> Dictionary:
@@ -52,6 +52,7 @@ class FakeHud extends Node:
 
 class LargeWorld extends FakeWorld:
 	const COUNT: int=289
+	var last_remaining: int=2
 	func skill_card523_deck() -> Array:
 		var cards: Array=super.skill_card523_deck()
 		for i: int in COUNT-1:
@@ -60,9 +61,9 @@ class LargeWorld extends FakeWorld:
 		return cards
 	func skill_card523_materials(id: int=-1) -> Array:
 		var books: Array=[]
-		if id==1:
+		if id in [-1,1]:
 			for i: int in COUNT:
-				books.append({"physical_id":"book-%d" % i,"name":"스킬서 %d" % i,"grade_id":id,"remaining":2})
+				books.append({"physical_id":"book-%d" % i,"name":"스킬서 %d" % i,"grade_id":1,"remaining":last_remaining if i==COUNT-1 else 2})
 		return books
 
 class CheckedWindow extends WINDOW:
@@ -225,13 +226,30 @@ func _large_grid(pack: RefCounted, parent: Node2D) -> void:
 	var compose_state: Dictionary=window._scrolls[compose_key]
 	check(compose.get("ok",false) and compose.filled.cards==LargeWorld.COUNT and compose_state.mounted.size()<=capacity,"large compose material grid is also bounded")
 	window._scroll_to(compose_key,compose_state.min)
+	var compose_root: Node2D=window._scene
+	var material_slot: Node2D=compose_state.mounted[last]
 	_touch_slot(window,compose_state.mounted[last])
 	await process_frame
 	var rebuilt: Dictionary=window._scrolls[compose_key]
 	check(window.registered=={"book-288":1} and rebuilt.value==compose_state.min and rebuilt.mounted.has(last),"last material touch registers the correct physical book and preserves compose scroll")
+	_touch_slot(window,material_slot)
+	await process_frame
+	var disabled: Node2D=material_slot.get_meta("compose_disabled")
+	check(window._scene==compose_root and rebuilt.mounted[last]==material_slot and window.registered=={"book-288":2} and disabled.visible,
+		"registering the second copy keeps the material scene and updates its disabled state")
+	check(_label_text(window,WINDOW.COMPOSE_INFO+"Label_Title")=="등록한 카드 2 / 8","the original compose title updates in place")
 	window.slots_before_failure=0
-	check(not window._unregister("book-288").get("ok",false) and window.registered=={"book-288":1} and window._scrolls[compose_key]==rebuilt,"failed compose refresh keeps the visible rows and registered material")
+	check(not window._unregister("book-288").get("ok",false) and window.registered=={"book-288":2} and window._scrolls[compose_key]==rebuilt and disabled.visible,
+		"failed compose refresh keeps the visible rows and registered material")
 	window.slots_before_failure=-1
+	var registered: Dictionary=window._list(window._scene,window._out,WINDOW.REGISTERED_LIST)
+	_touch_slot(window,registered.content.get_child(0))
+	await process_frame
+	check(window._scene==compose_root and window.registered=={"book-288":1} and not disabled.visible,"registered slot touch releases a copy and keeps the material grid")
+	world.last_remaining=3
+	window._slot_tap(last)
+	check(window._scene!=compose_root and window._scrolls[compose_key].value==compose_state.min and window.registered=={"book-288":2},
+		"changed inventory refreshes the authoritative material list at the saved scroll position")
 	window._tab("skill")
 	state=window._scrolls[key]
 	check(state.value==state.min and state.mounted.has(last) and window.selected==last and _label_text(window,title)=="스킬 카드 287","returning from compose restores the skill selection and scroll")
