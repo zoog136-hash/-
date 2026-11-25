@@ -107,6 +107,7 @@ func _independent_resident_and_tracked_order() -> void:
 	cache.remember("", resident, 16)
 	cache.remember("big", oversize, 32)
 	cache.remember("next", next, 16)
+	check(cache._weak.has("") and not cache._weak.has("next"), "only nonresident textures have weak tracking objects")
 	check(cache.lookup("") == resident, "a weak hit with an empty key can become resident again")
 	check(cache.lookup("big") == oversize, "an oversized weak hit updates only the tracking order")
 	cache.configure(16, 2)
@@ -187,7 +188,7 @@ func _clear_modes() -> void:
 	check(a.get_width() == 2 and b.get_width() == 2, "clear(true) leaves owned textures usable")
 	var misses: int = metrics.misses
 	check(cache.lookup("a") == null and cache.lookup("b") == null and cache.metrics().misses == misses + 2, "after clear(true) owned textures are no longer found")
-	check(cache._weak.is_empty() and cache._cost.is_empty() and cache._resident.is_empty() and cache._nonresident.is_empty(), "clear(true) leaves no bookkeeping")
+	check(cache._weak.is_empty() and cache._cost.is_empty() and cache._resident.is_empty(), "clear(true) leaves no bookkeeping")
 
 func _metrics_snapshot() -> void:
 	var cache: RefCounted = CACHE.new()
@@ -233,7 +234,7 @@ func _bounded_under_churn() -> void:
 		if index % 7 == 0: cache.lookup("k%d" % (index / 2))
 		var metrics: Dictionary = cache.metrics()
 		if metrics.resident_decoded_bytes_estimate > 48 or metrics.tracked_entries > 5 or metrics.resident_entries > 3: within = false
-		if cache._weak.size() != cache._resident.size() + cache._nonresident.size() or cache._weak.size() != cache._cost.size(): within = false
-		for key: String in cache._nonresident:
-			if cache._resident.has(key) or cache._weak.get(key) != cache._nonresident[key]: within = false
+		if cache._cost.size() != cache._resident.size() + cache._weak.size(): within = false
+		for key: String in cache._weak:
+			if cache._resident.has(key) or not cache._cost.has(key): within = false
 	check(within, "limits and bookkeeping hold after every one of 300 insertions")
