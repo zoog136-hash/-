@@ -104,7 +104,23 @@ func run() -> void:
 	for record: Dictionary in manager.records.values(): record.expires_at = 0.0
 	manager.prune()
 	check(manager.records.is_empty() and manager.occupancy.is_empty(),"expiry removes all remaining index entries")
+	_test_floor_id_restore(world,manager)
 	world.queue_free()
 	await process_frame
 	print("GROUND_LOOT_SPATIAL_INDEX_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+func _test_floor_id_restore(world: TestWorld, manager: TestManager) -> void:
+	var expires: float = Time.get_unix_time_from_system()+300
+	var records: Array = []
+	for row: Array in [["bad-position","a","91"],["first","b","91"],["duplicate","a","91"],["first","a","92"],["other","a","92"],["bag","a","93"]]:
+		records.append({"id":row[0],"map_id":row[1],"position":[] if row[0]=="bad-position" else [200,200],
+			"expires_at":expires,"state":"ground","item_name":"물약","quantity":1,
+			"physical_item":{"id":row[2],"data":{"name":"물약","level":9}}})
+	world.item_instances["93"] = {"name":"물약"}
+	var original: Array = records.duplicate(true)
+	manager.restore(records)
+	check(manager.records.keys()==["first","other"],"only accepted floor rows reserve IDs, even across maps")
+	check(manager.records.first.map_id=="b" and manager.records.first.physical_item.id=="91","first valid owner survives a later duplicate")
+	check(manager.records.other.physical_item.id=="92" and records==original,"duplicate ground ID leaves later valid physical owner and input intact")
+	check(world.item_instances.has("93") and world.next_item_instance_id==93,"bag collision remains rejected and numeric allocator is preserved")

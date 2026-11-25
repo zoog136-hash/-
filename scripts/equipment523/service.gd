@@ -270,13 +270,12 @@ func _sync_sets(world: Node, incoming_context: Dictionary = {}) -> Dictionary:
 		_emit_set_visuals(world)
 		return {}
 	var maximum: int = int(world.call("_effective_max_hp")) if world.has_method("_effective_max_hp") else 0
-	var health: int = 0
-	for property: Dictionary in world.get_property_list():
-		if property.name == "hp": health = int(world.get("hp"))
+	var hp_value: Variant = world.get("hp")
+	var health: int = int(hp_value) if hp_value != null else 0
 	var zone_allowed: bool = bool(world.call("_equipment523_set_zone_allowed")) if world.has_method("_equipment523_set_zone_allowed") else false
 	var context: Dictionary = {"hp":health,"max_hp":maximum,"zone_allowed":zone_allowed,"alive":health > 0}
 	context.merge(incoming_context,true)
-	var resolved: Dictionary = set_effects.sync(store.pack,_equipped(world),policy,context)
+	var resolved: Dictionary = set_effects.sync(store.pack,_equipped(world,{},true),policy,context)
 	_emit_set_visuals(world)
 	return resolved
 
@@ -293,11 +292,11 @@ func locked_target(world: Node) -> Node:
 
 func capability(world: Node, flag: String) -> bool:
 	if store.pack.is_empty() or save_blocked: return false
-	return bool(SetEffects.resolve(store.pack,_equipped(world),policy).get("capabilities",{}).get(flag,false))
+	return bool(SetEffects.resolve(store.pack,_equipped(world,{},true),policy).get("capabilities",{}).get(flag,false))
 
 func capabilities(world: Node) -> Dictionary:
 	if store.pack.is_empty() or save_blocked: return {}
-	return SetEffects.resolve(store.pack,_equipped(world),policy).get("capabilities",{}).duplicate(true)
+	return SetEffects.resolve(store.pack,_equipped(world,{},true),policy).get("capabilities",{}).duplicate(true)
 
 func on_death(world: Node) -> void:
 	set_effects.on_death()
@@ -746,7 +745,7 @@ func _bless_code(record: Dictionary, physical: Dictionary = {}) -> int:
 	if physical.has("blessed") or physical.has("bless_state") or record.has("blessed") or record.has("bless_state") or name.begins_with("축복받은 "): bless = 2 if blessed else 1
 	return bless
 
-func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary = {}, scoped_rules:Dictionary={}) -> Dictionary:
+func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary = {}, scoped_rules:Dictionary={}, set_member_only: bool=false) -> Dictionary:
 	var name: String = str(physical.get("name",""))
 	var record: Variant = physical.get("record",{})
 	if not record is Dictionary: return {}
@@ -769,6 +768,14 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	var bless:int=NativeCatalog.processing_bless(record,physical,native) if compact else _bless_code(record,physical)
 	if bless not in [1,2]: return {}
 	if physical.has("quest_reward_receipt") and int(physical.quest_reward_receipt.bless_code_id) != bless: return {}
+	var native_stack: bool = physical.has(NATIVE_STACK.RECEIPT) and NATIVE_SMELT.known(source)
+	if native_stack:
+		var owned: Dictionary = NATIVE_STACK.proof(world,id)
+		if owned.is_empty() or int(owned.remaining) != quantity or NATIVE_SMELT.kind(record).is_empty(): return {}
+	# The set resolver consumes only these fields. _equipped has already
+	# checked the worn ID. Keep the ownership checks above for both views.
+	if set_member_only:
+		return {"source_id":source,"instance_id":id,"level":int(physical.get("level",0)),"bless_code":bless,"equipped":true}
 	var worn: bool = false
 	for equipped: Variant in world.equipped_items.values():
 		if equipped is Dictionary and str(equipped.get("instance_id","")) == id: worn = true
@@ -777,10 +784,7 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 		"element_type":int({"fire":1,"water":2,"wind":3,"earth":4}.get(str(physical.get("element","")),0)),"element_level":int(physical.get("element_level",0)),
 		"state":state.duplicate(true),"record":record.duplicate(true),"equipped":worn,"locked":locked,"quantity":quantity,"amount":quantity,
 		"quest_reward_receipt":physical.has("quest_reward_receipt")}
-	if physical.has(NATIVE_STACK.RECEIPT) and NATIVE_SMELT.known(source):
-		var owned:Dictionary=NATIVE_STACK.proof(world,id)
-		if owned.is_empty() or int(owned.remaining)!=quantity or NATIVE_SMELT.kind(record).is_empty():return {}
-		info["native_stack"]=true
+	if native_stack: info["native_stack"] = true
 	for key: String in ["expires_unix","expiry_unix"]:
 		if physical.has(key): info[key] = physical[key]
 		elif record.has(key): info[key] = record[key]
@@ -820,7 +824,7 @@ func _positive_integer(value: Variant) -> int:
 	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floorf(float(value)) or value < 1 or value > 9007199254740991: return 0
 	return int(value)
 
-func _equipped(world: Node, scoped_rules:Dictionary={}) -> Array:
+func _equipped(world: Node, scoped_rules:Dictionary={}, set_members_only: bool=false) -> Array:
 	var out: Array = []
 	var visited: Dictionary = {}
 	for worn: Variant in world.equipped_items.values():
@@ -828,7 +832,7 @@ func _equipped(world: Node, scoped_rules:Dictionary={}) -> Array:
 		var id: String = str(worn.get("instance_id",""))
 		if id.is_empty() or visited.has(id) or not world.item_instances.get(id) is Dictionary: continue
 		visited[id] = true
-		var info: Dictionary = _info(world,id,world.item_instances[id],worn,scoped_rules)
+		var info: Dictionary = _info(world,id,world.item_instances[id],worn,scoped_rules,set_members_only)
 		if not info.is_empty(): out.append(info)
 	return out
 
