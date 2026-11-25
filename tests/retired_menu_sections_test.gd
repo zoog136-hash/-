@@ -53,9 +53,10 @@ func check_live_menu(retired: Array) -> void:
 		for id: String in retired:
 			check(grid.get_node_or_null("MenuTile_"+id)==null, "retired tile is not instantiated: "+id)
 		var gap: Control = grid.get_child(7) as Control
+		var native: bool=hud.menu_original_shell.get("ok",false)
 		check(gap != null and str(gap.name)=="OriginalMenuSpace_7" and not gap is Button
-			and gap.mouse_filter==Control.MOUSE_FILTER_IGNORE and gap.position.is_equal_approx(Vector2(140,67)),
-			"the original unavailable cell stays a non-interactive gap at row 2, column 3")
+			and gap.mouse_filter==Control.MOUSE_FILTER_IGNORE and (gap.visible and gap.position.is_equal_approx(Vector2(140,67)) if native else not gap.visible),
+			"the unavailable cell is non-interactive in the original tray and never occupies screen space in fallback")
 		var settings: Button = grid.get_node_or_null("MenuTile_settings") as Button
 		check(settings != null and settings.get_index()==28, "the neighboring live menu structure keeps settings at the original index")
 		if settings != null:

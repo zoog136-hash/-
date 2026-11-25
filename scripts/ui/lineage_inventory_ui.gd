@@ -353,7 +353,8 @@ func _clear(node: Node) -> void:
 		child.queue_free()
 
 func _base_item_name(reference: String) -> String:
-	return reference.split("@@@", false, 1)[0]
+	var pieces: PackedStringArray = reference.split("@@@", false, 1)
+	return pieces[0] if not pieces.is_empty() else ""
 
 func _ref_instance_id(reference: String) -> String:
 	var pieces: PackedStringArray = reference.split("@@@", false, 1)
