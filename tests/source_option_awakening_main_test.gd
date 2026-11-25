@@ -187,6 +187,16 @@ func _descriptor_smoke() -> void:
 		var detail: Dictionary=catalog._show_selected()
 		var applied: Array=w.option_awakening.core.definition(category,id).applied_options
 		check(not applied.is_empty() and detail.awakening_options==applied.size(),"owned awakened %s displays all applied source options in ordinary detail" % category)
+		if category=="변신":
+			await _tap(_hit(catalog._scene.source_nodes.get(CHANGE.MIX_OFF)))
+			var setup: RefCounted=w.hud.original_main_ui_controller.feature_window("card_fusion")
+			if check(setup!=null and setup.is_open() and w.hud.original_main_ui_status.get("card_fusion_window",{}).get("handled",false),"cold catalog Mix touch mounts native fusion setup"):
+				var list_entry: Dictionary=setup._locate(setup._scene,setup._out,"Nd_CardMix/Nd_Card/ListView")
+				var prompt: Node2D=_node(setup,"Nd_Card/Label_Message")
+				check(list_entry.get("member")=="UI/Change/Change_DetailView_Mix.csb" and list_entry.get("offset")==5392
+					and prompt!=null and prompt.is_visible_in_tree() and not setup.last_result.filled.can_fuse,
+					"ordinary fusion has its original empty registration panel before a roll")
+			w.hud._close_workspace()
 	w.queue_free()
 	await settle()
 

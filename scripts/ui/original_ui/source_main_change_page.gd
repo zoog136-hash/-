@@ -136,7 +136,7 @@ func _spare(id: String, member_category: String="") -> int:
 ## (scene, out, card) -> bool runs once per built card (its picture).
 ## Returns {ok, cards, built, pictures, scenes, outs} (scenes/outs: the
 ## cards built now, in card order; `first` is the first built index).
-func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array, decorate: Callable=Callable()) -> Dictionary:
+func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array, decorate: Callable=Callable(), margin: float=CARD_SET_MARGIN) -> Dictionary:
 	var list: Dictionary=_list(root,out,suffix)
 	if not list.get("ok",false):return list
 	var tree: Dictionary=_pack.scene(CARD_SET).get("nodeTree",{})
@@ -150,10 +150,11 @@ func _fill_card_grid(root: Node2D, out: Dictionary, suffix: String, cards: Array
 	var size: Vector2=list.size
 	var row_height: float=float(panel_size[1])
 	var rows: int=ceili(float(cards.size())/3.0)
-	var grid: Dictionary={"cards":cards,"decorate":decorate,"slots":slots,"size":size,"row_height":row_height,
+	var pitch: float=row_height+margin
+	var grid: Dictionary={"cards":cards,"decorate":decorate,"slots":slots,"size":size,"row_height":row_height,"pitch":pitch,
 		"row_x":(size.x-float(panel_size[0]))*0.5,"key":str(list.key),"built":{},"pictures":0,"builds":0}
 	var key: String=str(list.key)
-	_scrolls[key]={"content":list.content,"min":minf(0.0,size.y-(float(rows)*(row_height+CARD_SET_MARGIN)-CARD_SET_MARGIN)),"value":0.0,"grid":grid}
+	_scrolls[key]={"content":list.content,"min":minf(0.0,size.y-(float(rows)*pitch-margin)),"value":0.0,"grid":grid}
 	var synced: Dictionary=_sync_card_grid(key)
 	if not synced.get("ok",false):return synced
 	var scenes: Array[Node2D]=[]
@@ -170,7 +171,7 @@ func card_grid_rows(key: String) -> Vector2i:
 	var state: Dictionary=_scrolls.get(key,{})
 	var grid: Dictionary=state.get("grid",{})
 	if grid.is_empty():return Vector2i(0,-1)
-	var pitch: float=float(grid.row_height)+CARD_SET_MARGIN
+	var pitch: float=grid.pitch
 	var rows: int=ceili(float((grid.cards as Array).size())/3.0)
 	var top: float=-float(state.get("value",0.0))
 	var first: int=maxi(0,floori(top/pitch)-CARD_GRID_MARGIN)
@@ -204,7 +205,7 @@ func _sync_card_grid(key: String) -> Dictionary:
 			var card_out: Dictionary={}
 			var made: Dictionary=_scene_of(str(cards[index].member),cards[index].spec,card_out,key)
 			if not made.get("ok",false):return made
-			var top: float=(grid.size as Vector2).y-float(row)*(float(grid.row_height)+CARD_SET_MARGIN)
+			var top: float=(grid.size as Vector2).y-float(row)*float(grid.pitch)
 			var slot: Vector2=grid.slots[column]
 			made.scene.position=Vector2(float(grid.row_x)+slot.x,-(top-float(grid.row_height)+slot.y))
 			content.add_child(made.scene)

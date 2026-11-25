@@ -229,8 +229,8 @@ func _start_reel(cell: String) -> void:
 	var nested: Node2D=GradeFx.project(self,_scene,_out,cell)
 	if nested!=null:nested.stop()
 	var back: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Fx_Glow/Card_Back")
-	if back!=null:
-		var sprite: Sprite2D=back.get_meta("source_sprite",null)
+	if back!=null and back.has_meta("source_sprite"):
+		var sprite:=back.get_meta("source_sprite") as Sprite2D
 		var panel: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Panel")
 		var reel: Node=panel.get_node_or_null("SourceContentOrigin/CardRevealEffect") if panel!=null else null
 		if sprite!=null and sprite.texture!=null and reel!=null and reel.has_method("set_native_card_back"):

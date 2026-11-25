@@ -5,7 +5,8 @@ extends SceneTree
 ## newly shown rows and frees the rows that left, and each built card is
 ## decorated (its picture) once. The card fusion window lists every owned
 ## card of the filter (no 150 cap), highest grade first, stable.
-## Synthetic only (no original files).
+## Add -- --pack=<original UI directory> to exercise the native material
+## checkboxes, the registration prompt and row geometry from the pack.
 ##   godot --headless --path <repo> --script res://tests/original_ui_card_grid_virtual_test.gd
 const PAGE=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const FUSION=preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd")
@@ -47,6 +48,8 @@ func _initialize() -> void:
 func _run() -> void:
 	_virtual_grid()
 	_fusion_list()
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--pack="):await _original_setup(arg.trim_prefix("--pack="))
 	print("ORIGINAL_UI_CARD_GRID_VIRTUAL_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
 
@@ -126,3 +129,114 @@ func _fusion_list() -> void:
 	window._collect()
 	check(window._owned_records.size()==100 and window._owned_records.all(func(r: Dictionary) -> bool:return r.grade=="희귀"),"the grade filter runs over the whole list")
 	hud.free()
+
+func _original_setup(directory: String) -> void:
+	var pack:=preload("res://scripts/ui/original_ui/source_pack.gd").new()
+	var receipt: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
+	if not pack.open(directory,str(receipt.manifest_sha256)).get("ok",false):
+		check(false,"open the original UI pack")
+		return
+	var host:=Node2D.new()
+	host.position=Vector2(0,675)
+	var hud:=FakeHud.new()
+	root.add_child(host)
+	host.add_child(hud)
+	var records: Array=[]
+	var owned: Dictionary={}
+	var spares: Dictionary={}
+	for i: int in 9:
+		var row: Dictionary={"sourceId":"material-%d" % i,"name":"재료 %d" % i,"grade":"고급"}
+		if i==0:row["source_draw_pool_pending"]=true
+		if i==3:row["source_merge_out_disabled"]=true
+		records.append(row)
+		var id: String=CARDS.card_id(row)
+		owned[id]=true
+		if i<4:spares[id]=1 if i==1 else 4
+	records.append({"sourceId":"upper","name":"결과","grade":"희귀"})
+	hud.catalog_data={"변신":records}
+	hud.card_collection_state={"owned":{"변신":owned},"spare":{"변신":spares}}
+	var saved: Dictionary=hud.card_collection_state.duplicate(true)
+	var window:=FUSION.new()
+	if not window.configure(pack,hud).get("ok",false) or not window.open(host,"변신").get("handled",false):
+		check(false,"original Change_WinTotal normal fusion setup opens")
+		host.free()
+		return
+	var path: String=FUSION.P+"Nd_CardList/ListView"
+	var roster: Dictionary=window._list(window._scene,window._out,path)
+	var grid: Dictionary=window._scrolls[roster.key].grid
+	var pending: Dictionary=window._list(window._scene,window._out,FUSION.P+"Nd_CardMix/Nd_Card/ListView")
+	var mix: Dictionary=window._locate(window._scene,window._out,path)
+	var original_gap: float=float(PAGE.Scene._node_at_offset(mix.player.source_tree.nodeTree,mix.offset).options.itemMargin)
+	var pitch: float=(grid.built[3].scene.position-grid.built[0].scene.position).y
+	check(mix.member=="UI/Change/Change_DetailView_Mix.csb" and mix.offset==3256 and roster.size==Vector2(498,475) and pending.size==Vector2(480,270),"catalog and materials mount the original two ordinary-fusion lists")
+	check(is_equal_approx(pitch,150.0+original_gap),"roster pitch follows its own authored margin")
+	var tip: Dictionary=window._locate(window._scene,window._out,"Nd_Card/Label_Message")
+	check(tip.player.source_nodes[tip.offset].is_visible_in_tree() and window.last_result.filled.registered==0 and not window.last_result.filled.can_fuse,"entry waits for registration even when enough duplicates are owned")
+	var first: Node2D=_roster_check(window,grid,1)
+	check(first.current_state=="normal" and not first.selected,"an available original checkbox opens bright and unmarked")
+	var router:=PAGE.Router.new()
+	var point: Vector2=first._input_area.get_global_transform_with_canvas()*(first._input_area.size*0.5)
+	for down: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.index=9;event.position=point;event.pressed=down
+		var tap: Dictionary=router.route(event,point,[first])
+		check(tap.get("handled",false),"original material checkbox handles the finger")
+	await process_frame
+	grid=window._scrolls[roster.key].grid
+	var marked: Array[int]=[]
+	for i: int in grid.built:
+		if _roster_check(window,grid,i).selected:marked.append(i)
+	marked.sort()
+	var plans: Array=[]
+	for item: Dictionary in window._materials:plans.append([CARDS.card_id(item.record),item.count])
+	check(marked==[1,2] and plans==[[CARDS.card_id(records[1]),1],[CARDS.card_id(records[2]),3]] and window.last_result.filled.can_fuse,"only the exact spendable identities in the grade plan are marked")
+	var model:=CARDS.new()
+	model.configure(hud.catalog_data)
+	model.owned["변신"]=owned.duplicate()
+	model.spare["변신"]=spares.duplicate()
+	model.rng.seed=4
+	var outcome: Dictionary=model.fuse("변신","고급")
+	check(outcome.get("ok",false),"the original transaction accepts the shown grade")
+	if outcome.get("ok",false):
+		var consumed: Array=[]
+		for id: String in spares:
+			var returned: int=int(id==outcome.result.id and not outcome.result.new)
+			var spent: int=int(spares[id])+returned-int(model.spare["변신"].get(id,0))
+			if spent>0:consumed.append([id,spent])
+		check(consumed==plans,"the preview agrees with the actual fuse debit including a returned duplicate")
+	var material_grid: Dictionary=window._scrolls[pending.key].grid
+	check(material_grid.built.size()==4 and is_equal_approx((material_grid.built[3].scene.position-material_grid.built[0].scene.position).y,150.0),"registered material list also uses its own original row pitch")
+	check(hud.card_collection_state==saved,"registration never writes ownership")
+	print("ORIGINAL_FUSION_SETUP_COMPARE ",JSON.stringify({"pitch":pitch,"source_margin":original_gap,"checked":marked,"plan":plans}))
+	for i: int in 3:
+		var extra: Dictionary={"sourceId":"extra-%d" % i,"name":"추가","grade":"고급"}
+		records.append(extra)
+		owned[CARDS.card_id(extra)]=true
+	window.refresh()
+	var state: Dictionary=window._scrolls[roster.key]
+	first=_roster_check(window,state.grid,1)
+	point=first._input_area.get_global_transform_with_canvas()*(first._input_area.size*0.5)
+	var touch:=InputEventScreenTouch.new()
+	touch.index=7;touch.position=point;touch.pressed=true
+	router.route(touch,point,[first])
+	var drag:=InputEventScreenDrag.new()
+	drag.index=7;drag.relative=Vector2(0,-25);drag.position=point+drag.relative
+	router.route(drag,drag.position,[first])
+	touch.pressed=false;touch.position=drag.position
+	router.route(touch,touch.position,[first])
+	check(state.value<0 and window.last_result.filled.registered==4,"drag on a material checkbox scrolls the roster without changing the plan")
+	window.close()
+	window.open(host,"변신")
+	check(window.last_result.filled.registered==0,"closing and reopening resets the unsaved preview")
+	window._auto_register()
+	check(window.last_result.filled.registered==4 and window.last_result.filled.can_fuse,"Auto still registers the existing eligible grade plan")
+	window._select_filter("유일")
+	check(window.grade=="유일" and window._materials.is_empty() and not window._can_fuse(),"the non-fusible grade never keeps a previous grade's materials")
+	window.close()
+	host.queue_free()
+	await process_frame
+
+func _roster_check(window: RefCounted, grid: Dictionary, index: int) -> Node2D:
+	var cell: Dictionary=grid.built[index]
+	var slot: Dictionary=window._locate(cell.scene,cell.out,"Panel_Root/CB_Check")
+	return slot.player.source_nodes[slot.offset].get_meta("source_checkbox")

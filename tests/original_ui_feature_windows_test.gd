@@ -169,6 +169,9 @@ func _fusion_rules() -> void:
 	check(window._available("고급")==6,"merge-restricted duplicates are not fusion materials")
 	window.grade="고급"
 	window._collect()
+	check(window._materials.is_empty() and not window._can_fuse(),"a fresh material page waits for a selection")
+	window._auto_register()
+	window._collect()
 	var used: int=0
 	for entry: Dictionary in window._materials:used+=int(entry.count)
 	check(used==int(CARDS.FUSION_MATERIALS["고급"]) and window._can_fuse(),"the existing rule's material count is registered")
