@@ -153,6 +153,57 @@ static func delayed_read(input: Array, result: Array, gate: Semaphore) -> void:
 	gate.wait()
 	STORE._read_prepared_page(input,result)
 
+func hold_worker(job: Dictionary) -> Semaphore:
+	WorkerThreadPool.wait_for_task_completion(int(job.task))
+	job.result[0] = null
+	var gate := Semaphore.new()
+	job.task = WorkerThreadPool.add_task(delayed_read.bind(job.input,job.result,gate))
+	return gate
+
+func wait_for_cpu(job: Dictionary) -> bool:
+	for _frame: int in 180:
+		if WorkerThreadPool.is_task_completed(int(job.task)): return true
+		await next_frame()
+	return false
+
+func concurrent_demand() -> void:
+	for source: String in ["decoded", "published", "blocked"]:
+		STORE.reset_for_tests()
+		var found: Dictionary = fixture(21,1)
+		STORE.prepare_state(found.actor,0)
+		var job: Dictionary = STORE._page_jobs.values()[0]
+		var gate: Semaphore
+		if source == "blocked":
+			gate = hold_worker(job)
+		else:
+			check(await wait_for_cpu(job),"CPU preparation completes before the pose requests the page")
+		if source == "published": STORE.pump_prepared_pages()
+		var expected: Texture2D = job.get("texture")
+		var demand: Texture2D = STORE.page_texture(found.actor,0)
+		var disk: Image = FORMAT.read_page(FileAccess.open(found.actor.path,FileAccess.READ),found.actor.index.pages[0],found.actor.data_start)
+		var counters: Dictionary = STORE.stats().counters
+		check(demand != null and job.get("texture") == demand,"the visible pose and admission job hold a single texture: " + source)
+		check(demand != null and disk != null and demand.get_image().get_data() == disk.get_data(),"overlap preserves the verified page pixels: " + source)
+		check(counters.get("page_demand_read",0) == (1 if source == "blocked" else 0),"only unfinished preparation needs the original immediate read: " + source)
+		if source == "decoded": check(counters.get("page_demand_reuse_image",0) == 1,"CPU-ready image is uploaded without reading the file again")
+		if source == "published": check(demand == expected and counters.get("page_demand_reuse_texture",0) == 1,"a published texture needs no second upload")
+		if source == "blocked":
+			check(not WorkerThreadPool.is_task_completed(int(job.task)),"the draw never joins the blocked worker")
+			var admitted: Dictionary = STORE.prepare_state(found.actor,0)
+			check(admitted.status == "ready" and admitted.textures[0] == demand,"admission can use the visible texture before the redundant worker returns")
+			check(STORE.prepare_state(found.actor,0).status == "ready","another fully warm admission ignores the retiring worker")
+			gate.post()
+			check(await wait_for_cpu(job),"blocked worker finishes after demand has drawn")
+			STORE.pump_prepared_pages()
+			check(STORE.prepared_page_stats().jobs == 0,"the redundant CPU result is retired after the demand upload")
+		var ready: Dictionary = await drain(found)
+		check(ready.status == "ready" and ready.textures[0] == demand,"admitted pose reuses the exact same texture: " + source)
+		check(STORE.stats().counters.get("page_prepared_upload",0) == (1 if source == "published" else 0),"only one GPU upload takes place: " + source)
+		check(STORE.prepared_page_stats().jobs == 0 and STORE.prepared_page_stats().raw_bytes == 0,"overlap releases all preparation reservations")
+		if source == "published":
+			STORE._install_page_texture(found.actor,0,demand,disk.get_data_size())
+			check(found.actor.textures[0] == demand and STORE.stats().bytes == disk.get_data_size(),"replacing the same reserved page leaves one resident reference")
+
 func cancellation() -> void:
 	STORE.reset_for_tests()
 	var found: Dictionary = fixture(8,1)
@@ -160,10 +211,7 @@ func cancellation() -> void:
 	var job: Dictionary = STORE._page_jobs.values()[0]
 	# Substitute a delayed private read only after the original test task has
 	# finished; no production delay hook or shared actor ever enters a worker.
-	WorkerThreadPool.wait_for_task_completion(int(job.task))
-	job.result[0] = null
-	var gate := Semaphore.new()
-	job.task = WorkerThreadPool.add_task(delayed_read.bind(job.input,job.result,gate))
+	var gate: Semaphore = hold_worker(job)
 	var before: int = int(STORE.stats().counters.get("page_prepared_upload",0))
 	var started: int = Time.get_ticks_usec()
 	var pending: Dictionary = STORE.prepare_state(found.actor,0)
@@ -306,6 +354,27 @@ func benchmark() -> void:
 	evidence["async_1024_warm_usec"] = Time.get_ticks_usec()-started
 	check(warm.status == "ready" and STORE.prepared_page_stats().jobs == 0,"warm pose is immediately ready without another job")
 
+func demand_benchmark() -> void:
+	STORE.reset_for_tests()
+	fixture(22,1,1024)
+	var samples: Array[Array] = [[],[]]
+	for run: int in 12:
+		for ready_cpu: int in ([0,1] if run%2==0 else [1,0]):
+			STORE.reset_for_tests()
+			var found: Dictionary = STORE.lookup(selected(22))
+			if ready_cpu == 1:
+				STORE.prepare_state(found.actor,0)
+				var job: Dictionary = STORE._page_jobs.values()[0]
+				check(await wait_for_cpu(job),"benchmark CPU read completes before demand")
+			var start: int = Time.get_ticks_usec()
+			var texture: Texture2D = STORE.page_texture(found.actor,0)
+			var elapsed: int = Time.get_ticks_usec()-start
+			check(texture != null,"benchmark produces a valid 1024 square texture")
+			if run >= 2: samples[ready_cpu].append(elapsed)
+	for sample: Array in samples: sample.sort()
+	evidence["demand_1024_sync_p50_usec"] = (samples[0][4]+samples[0][5])/2.0
+	evidence["demand_1024_worker_ready_p50_usec"] = (samples[1][4]+samples[1][5])/2.0
+
 func run() -> void:
 	directory = ProjectSettings.globalize_path("user://cooked-page-pilot")
 	STORE.root_override = directory
@@ -313,11 +382,13 @@ func run() -> void:
 	await first_pose()
 	await frame_cap_and_eviction()
 	await failure_and_bounds()
+	await concurrent_demand()
 	await cancellation()
 	await spawn_gate()
 	await sharing_and_live_index()
 	synchronous_consumers()
 	await benchmark()
+	if "--page-demand-benchmark" in OS.get_cmdline_user_args(): await demand_benchmark()
 	check(SP2.enabled == sp2_enabled,"the pilot never changes the original SP2 worker setting")
 	STORE.npc_page_prewarm = false
 	STORE.reset_for_tests()
