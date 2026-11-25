@@ -6,6 +6,8 @@ const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const QUEST_GEAR=preload("res://scripts/quests/quest_equipment523.gd")
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 const REWARD_STACKS=preload("res://scripts/ui/quest_reward_bag_stacks.gd")
+const AWAKENING_BOOKS=preload("res://scripts/cards/source_awakening_items.gd")
+const BLESSED_ITEMS=preload("res://scripts/loot/patch523_monster_drops.gd")
 var _grouped_reward_amounts: Dictionary = {}
 
 static func instance_id_less(a: String,b: String) -> bool:
@@ -382,6 +384,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			var owner_name: String = str((physical as Dictionary).get("name", ""))
 			if not ids_by_name.has(owner_name): ids_by_name[owner_name] = [] as Array[String]
 			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
+	var books: Dictionary=_physical_awakening_books(ids_by_name)
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
 		if int(inventory.get(item_name, 0)) <= 0 or WALLET_ONLY.has(item_name):
@@ -390,7 +393,7 @@ func _inventory_entries() -> Array[Dictionary]:
 		instance_ids.sort_custom(instance_id_less)
 		# Verified book instances keep provenance for transactions, while the
 		# inventory still presents their source 10,000-capacity stack as one row.
-		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
+		if instance_ids.is_empty() or books.get(item_name,false):
 			if QUEST_ONLY_PRESENTATION.matches_reference({},item_name):continue
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
@@ -404,6 +407,37 @@ func _inventory_entries() -> Array[Dictionary]:
 				if grouped.is_empty(): entries.append(entry)
 				else: _grouped_reward_amounts[grouped.reference] = grouped.amount
 	return entries
+
+## This is a single synchronous read of the bag's own catalogue. Only
+## physical rows need book classification. The first same-name catalogue
+## record (not a chosen physical clone) still decides stack presentation.
+func _physical_awakening_books(ids_by_name: Dictionary) -> Dictionary:
+	var requests: Dictionary={}
+	var exact_names: Dictionary={}
+	var books: Dictionary={}
+	for name: String in ids_by_name:
+		if name.is_empty() or int(inventory.get(name,0))<=0 or WALLET_ONLY.has(name):continue
+		# Preserve the existing selected-reference parser for unusual legacy
+		# keys rather than interpreting them as an ordinary catalogue key.
+		if name.contains("@@@"):
+			if AWAKENING_BOOKS.stackable_book(_find_item_record(name)):books[name]=true
+			continue
+		exact_names[name]=true
+		requests[name]=true
+		for suffix: String in BLESSED_ITEMS.BLESS_STACK_SUFFIXES:
+			if name.ends_with(suffix):requests[name.trim_suffix(suffix)]=true;break
+	if exact_names.size()<2:
+		for name: String in exact_names:
+			if AWAKENING_BOOKS.stackable_book(_find_item_record(name)):books[name]=true
+		return books
+	var source: Array=catalog_data.get("아이템",[])
+	var found: Dictionary=CATALOG_LOOKUP.first_by_names(source,requests)
+	var find_base: Callable=func(base: String) -> Dictionary:return found.get(base,{})
+	for name: String in exact_names:
+		var record: Dictionary=found.get(name,{})
+		if record.is_empty():record=BLESSED_ITEMS.bless_stack_record(name,find_base)
+		if AWAKENING_BOOKS.stackable_book(record):books[name]=true
+	return books
 
 static func _owned_slot_amount(physical: Dictionary) -> int:
 	for field: String in ["source_native_stack_quantity", "source_reward_quantity", "source_awakening_quantity", "source_card_currency_quantity"]:

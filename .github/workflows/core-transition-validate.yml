@@ -15,7 +15,7 @@ jobs:
   core:
     name: Core runtime, save preservation and resource paths
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:

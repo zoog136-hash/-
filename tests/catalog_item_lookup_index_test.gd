@@ -77,6 +77,7 @@ func run() -> void:
 	# A brand-new array (catalog reload) must not reuse the old index.
 	var reloaded: Array = [{"name":replaced_name, "grade":"TEST_RELOADED"}]
 	if str(LOOKUP.first_by_name(reloaded, replaced_name).get("grade", "")) != "TEST_RELOADED": failures.append("reloaded array used a stale index")
+	_batch_first_match()
 	# Timing on the same data (informational; the equivalence checks above decide pass/fail).
 	var probes: Array[String] = []
 	for index: int in range(150): probes.append(str(catalog[(index * 37 + 11) % catalog.size()].get("name", "")))
@@ -90,3 +91,34 @@ func run() -> void:
 	print("CATALOG_LOOKUP_INDEX_RESULT ", JSON.stringify({"failures":failures, "names_checked":checked,
 		"linear_150_us":linear_us, "indexed_150_us":indexed_us, "index_builds":LOOKUP.index_builds}))
 	quit(0 if failures.is_empty() else 1)
+
+func _batch_first_match() -> void:
+	var first:Dictionary={"name":"겹치는 책","origin":1}
+	var second:Dictionary={"name":"겹치는 책","origin":2}
+	# djb2 collision: Aa and B@ have equal String.hash() but different names.
+	var repeated:Array=[first,second,{"name":"Aa","origin":3}]
+	var names:Dictionary={"겹치는 책":true,"구형 장비":true,"축복 기록":true,"B@":true}
+	var scans:int=LOOKUP.miss_scans
+	var result:Dictionary=LOOKUP.first_by_names(repeated,names)
+	if not is_same(result.get("겹치는 책"),first) or result.size()!=1 or LOOKUP.miss_scans-scans!=0:
+		failures.append("a just-built index proves all distinct misses without re-reading the catalogue")
+	scans=LOOKUP.miss_scans
+	var fresh_names:Dictionary={"따로 누락1":true,"따로 누락2":true}
+	result=LOOKUP.first_by_names(repeated,fresh_names)
+	LOOKUP.first_by_names(repeated,fresh_names)
+	if not result.is_empty() or LOOKUP.miss_scans-scans!=1:
+		failures.append("new keys in an older index share one scan and remembered misses")
+	for trial:int in range(3):LOOKUP.first_by_names(repeated,names)
+	if LOOKUP.first_by_name(repeated,"B@")!={}:
+		failures.append("a missing name/hash collision cannot acquire another record")
+	var appended:Dictionary={"name":"축복 기록","origin":4}
+	repeated.append(appended)
+	result=LOOKUP.first_by_names(repeated,names)
+	if not is_same(result.get("축복 기록"),appended):
+		failures.append("appending a previously missing name invalidates the negative")
+	var current:Dictionary={"name":"구형 장비","origin":5}
+	repeated[0]=current
+	LOOKUP.forget_misses()
+	result=LOOKUP.first_by_names(repeated,names)
+	if not is_same(result.get("겹치는 책"),second) or not is_same(result.get("구형 장비"),current):
+		failures.append("in-place first record change respects the rebuilt original order")

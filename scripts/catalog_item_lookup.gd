@@ -144,6 +144,54 @@ static func first_by_name(source: Array, item_name: String) -> Dictionary:
 	misses[item_name] = true
 	return {}
 
+## Same synchronous first-match lookup for a set of names, without
+## re-scanning the whole source once for each previously unseen miss.
+## Uses this catalogue's normal validated index and remembered misses; no
+## independent bag/receipt cache is kept.
+static func first_by_names(source: Array, names: Dictionary) -> Dictionary:
+	return _first_by_names(source,names,true)
+
+static func _first_by_names(source: Array, names: Dictionary, may_rebuild: bool) -> Dictionary:
+	if names.is_empty():return {}
+	var found: Dictionary={}
+	var unknown: Dictionary={}
+	var before_build: int=index_builds
+	var entry: Dictionary=_index_entry(source)
+	# A complete index created in this synchronous call has seen every
+	# current first record already. Its misses cannot need another scan.
+	var fresh: bool=index_builds!=before_build or not may_rebuild
+	for name: String in names:
+		var hit: Variant=_validated(source,entry,name)
+		if hit!=null:
+			found[name]=hit
+		elif not fresh and not _candidates(source,entry,name).is_empty():
+			# An indexed record changed in place. Preserve the same global
+			# rebuild performed by first_by_name before trusting any results.
+			_index_entry(source,true)
+			return _first_by_names(source,names,false)
+		elif not entry.misses.has(name):
+			unknown[name]=true
+	if unknown.is_empty():return found
+	if not fresh:
+		# An older index may not know in-place name additions. Search once
+		# for all unresolved names before remembering any new miss.
+		miss_scans+=1
+		var discovered: bool=false
+		for value: Variant in source:
+			if not value is Dictionary:continue
+			var name: String=_name_of(value)
+			if unknown.has(name):
+				found[name]=value
+				unknown.erase(name)
+				discovered=true
+				if unknown.is_empty():break
+		if discovered:entry=_index_entry(source,true)
+	var misses: Dictionary=entry.misses
+	for name: String in unknown:
+		if misses.size()>=MAX_REMEMBERED_MISSES:misses.clear()
+		misses[name]=true
+	return found
+
 ## Drop every remembered miss (after renaming a slot in place).
 static func forget_misses() -> void:
 	for entry: Dictionary in _indexed_sources: (entry.misses as Dictionary).clear()
