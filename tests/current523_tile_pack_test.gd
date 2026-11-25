@@ -50,9 +50,24 @@ func _run() -> void:
 		if arg.begins_with("--tile523-pack-sha="): real_sha = arg.trim_prefix("--tile523-pack-sha=")
 	check(not fixture_root.is_empty(), "focused runtime requires explicit synthetic fixture")
 	if not fixture_root.is_empty():
+		var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(fixture_root.path_join(PACK.MANIFEST_NAME)))
 		check(not pack.load_pack(fixture_root, "0".repeat(64)), "caller pin mismatch rejects before registry")
 		check(pack.load_pack(fixture_root, fixture_sha), "synthetic generic subset accepts: " + pack.problem)
 		if pack.loaded:
+			var warmed := PACK.new()
+			check(warmed.load_pack(fixture_root, fixture_sha) and warmed._records != null, "second reader opens the verified record bake")
+			var resident := PACK.new()
+			var before: bool = PACK.bake_enabled
+			PACK.bake_enabled = false
+			var opened: bool = resident.load_pack(fixture_root, fixture_sha)
+			PACK.bake_enabled = before
+			check(opened and resident._records == null and resident.texture_for(0) != null, "resident metadata path still decodes verified textures")
+			var exact: bool = true
+			for row: Dictionary in original.tiles:
+				var identity: Dictionary = {"member":row.member, "bytes":int(row.source_bytes), "sha256":row.source_sha256}
+				var id: int = int(row.tile_id)
+				exact = exact and pack.source_usage_identity(id) == identity and warmed.source_usage_identity(id) == identity and resident.source_usage_identity(id) == identity
+			check(exact and warmed.source_usage_identity(999).is_empty(), "cold and warm source identities match each pinned row before the first texture")
 			check(pack.has_tile(0) and pack.has_tile(34) and not pack.has_tile(35), "flexible35-tile fixture registry")
 			check(pack.texture_for(999) == null and pack.cache_size() == 0, "unresolved tile does not create fallback")
 			for id: int in range(32): check(pack.texture_for(id) != null, "fixture source+PNG+RGBA verifies: " + str(id))
@@ -61,6 +76,7 @@ func _run() -> void:
 			check(pack.texture_for(32) != null and pack.cache_size() == 32 and pack.atlas_loads == 33, "33rd atlas evicts oldest")
 			check(pack.texture_for(0) != null and pack.atlas_loads == 33, "recently touched atlas stays cached")
 			check(pack.texture_for(1) != null and pack.atlas_loads == 34 and pack.cache_size() == 32, "oldest untouched atlas reloads")
+			check(pack.source_usage_identity(2) == warmed.source_usage_identity(2) and not pack._cache.has(2), "texture eviction retains exact evidence for cached ground blocks")
 			# Worker decode: the same verified result, published on the main thread.
 			check(not pack.prefetch(2) and pack.pending_jobs() == 1, "an uncached atlas decodes on a worker")
 			check(not pack.prefetch(2) and pack.pending_jobs() == 1, "a second request joins the same decode")
@@ -80,7 +96,6 @@ func _run() -> void:
 			check(held_pack.cache_size() == 32 and held_pack.held_size() == 35 and held_pack.prefetch(0) and held_pack.texture_for(0) != null and held_pack.atlas_loads == loads_held, "held atlases are served past the cache limit without a second decode")
 			held_pack.release_held()
 			check(held_pack.held_size() == 0 and held_pack.texture_for(0) != null and held_pack.atlas_loads == loads_held + 1, "released held atlases decode again when asked")
-		var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(fixture_root.path_join(PACK.MANIFEST_NAME)))
 		var mutation_root: String = ProjectSettings.globalize_path("user://generic-ti2-metadata-rejections")
 		for kind: String in ["edition", "version", "count", "duplicate", "path", "provenance_edition", "provenance_version", "wrong_current_container", "wrong_member", "layout", "png_bytes", "raw_sections", "raw_header", "raw_roundtrip", "alpha", "source_inventory", "rgba_inventory", "whole_input_inventory", "atlas_storage", "runtime_with_png", "missing_png_metadata"]:
 			var changed: Dictionary = original.duplicate(true)
