@@ -3,6 +3,7 @@ extends RefCounted
 const PMA_PIXELS=preload("res://scripts/ui/original_ui/cocos_premultiply_pixels.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const PIXELS=preload("res://scripts/ui/original_ui/atlas_pixels.gd")
+const SETTINGS_FRAMES = preload("res://scripts/ui/original_ui/source_settings_frames.gd")
 # A cold PNG normally needs three opens (SHA, decoder, Cocos metadata).
 # Cap the same-byte buffer so unusually large/non-PNG pages retain the
 # existing streaming verification path instead of increasing memory unboundedly.
@@ -31,6 +32,8 @@ var manifest_sha256: String=""
 var last_error: String=""
 var _pages: Dictionary={}
 var _texture_cache=TEXTURE_CACHE.new()
+var _settings_frames: RefCounted
+var _settings_frames_checked := false
 var _fonts: Dictionary={}
 var _bitmap_fonts: Dictionary={}
 var _page_leases: Dictionary={}
@@ -50,6 +53,8 @@ func _notification(what: int) -> void:
 ## idle (evictable) unless another open screen still leases them. Textures
 ## already handed out stay valid; pages are re-acquired on the next decode.
 func release_cache_leases() -> void:
+	_settings_frames = null
+	_settings_frames_checked = false
 	var keys: Array=_page_leases.keys()
 	_page_leases.clear()
 	_pages.clear()
@@ -213,6 +218,18 @@ func _find(node: Dictionary, source_name: String, result: Array[Dictionary]) -> 
 	if widget.get("name")==source_name: result.append(node)
 	for child: Dictionary in node.get("children",[]): _find(child,source_name,result)
 
+## Opening settings is the first time its optional private bundle is needed.
+## Desktop overrides or other pack instances must match the selected root and pin.
+func enable_settings_frames() -> void:
+	if _settings_frames_checked or manifest.is_empty(): return
+	_settings_frames_checked = true
+	var selected_root := OS.get_environment("TWILIGHT_SOURCE_UI").simplify_path().trim_suffix("/")
+	if root.simplify_path().trim_suffix("/") != selected_root or manifest_sha256 != OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").to_lower():
+		return
+	var reader := SETTINGS_FRAMES.new()
+	if reader.load_bundle(root, manifest_sha256, OS.get_environment("TWILIGHT_SOURCE_UI_SETTINGS_FRAMES_SHA256").to_lower()):
+		_settings_frames = reader
+
 func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if manifest.is_empty() or str(reference.get("path","")).is_empty(): return null
 	var plist: String=str(reference.get("plistFile",""))
@@ -241,13 +258,17 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 		var atlas: Dictionary=manifest.atlases.get(_member(plist),{})
 		var frame: Dictionary=atlas.get("frames",{}).get(str(reference.path),{})
 		if frame.is_empty(): return null
-		var page: Image=_page(str(atlas.get("page","")))
-		if page==null: return null
-		premultiplied=bool(page.get_meta("cocos_png_pma",false))
-		var decoded: Dictionary=PIXELS.decode(page,frame,cocos_pixels and premultiplied)
-		if not str(decoded.get("error","")).is_empty():
-			last_error=str(decoded.error); return null
-		original=decoded.image
+		if cocos_pixels and _settings_frames != null:
+			original = _settings_frames.frame_image(_member(plist), str(reference.path), atlas, frame, self)
+			premultiplied = original != null
+		if original == null:
+			var page: Image=_page(str(atlas.get("page","")))
+			if page==null: return null
+			premultiplied=bool(page.get_meta("cocos_png_pma",false))
+			var decoded: Dictionary=PIXELS.decode(page,frame,cocos_pixels and premultiplied)
+			if not str(decoded.get("error","")).is_empty():
+				last_error=str(decoded.error); return null
+			original=decoded.image
 	if original==null: return null
 	# Each new UI frame texture is its own GPU upload: its time and count go
 	# to the phone record (menus open slowly on 523.691; upload cost unknown).

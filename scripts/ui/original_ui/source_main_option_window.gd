@@ -42,6 +42,8 @@ func _root_member() -> String:
 	return ROOT
 
 func open(parent: Node, first_tab: String="sound") -> Dictionary:
+	if _pack != null and _pack.has_method("enable_settings_frames"):
+		_pack.enable_settings_frames()
 	tab=first_tab if TABS.has(first_tab) and first_tab in CONNECTED else "sound"
 	return open_window(parent)
 

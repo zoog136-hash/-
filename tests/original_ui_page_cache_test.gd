@@ -98,11 +98,66 @@ func _verify_cold_pngs(base: String) -> void:
 		check(actual!=null and actual.get_meta("cocos_png_pma",null)==(i%2==1) and PACK._png_premultiplies(path)==(i%2==1),"same Cocos tRNS detection as file parser "+str(i))
 		check(pack._read_verified_page(path,"0".repeat(64),member)==null and pack.last_error=="source_hash_or_size:"+member,"wrong hash fails closed "+str(i))
 
+## The public fixture supplies its own original pixels and has no release-approved catalog.
+func _verify_prepared_frames(dir: String, pin: String) -> void:
+	var pack := PACK.new()
+	check(pack.open(dir, pin).ok, "open settings fixture")
+	var ref: Dictionary = REFS[2]
+	var expected: Dictionary = _baseline(dir, ref, true)
+	var atlas: Dictionary = pack.manifest.atlases["UI/a.plist"]
+	var frame: Dictionary = atlas.frames.rot
+	var raw: PackedByteArray = expected.data
+	var digest := PACK._sha256(raw)
+	var geometry := [frame.rect, frame.source_rect, frame.source_size, true]
+	var entry := {"page": atlas.page, "source_sha256": pack.manifest.files[atlas.page].sha256,
+		"frames": {"rot": {"geometry": geometry, "rgba_sha256": digest}}}
+	var pages := {"UI/a.plist": entry}
+	var compressed := raw.compress(FileAccess.COMPRESSION_ZSTD)
+	var ranges := {digest: [0, compressed.size()]}
+	var reader := PACK.SETTINGS_FRAMES.new()
+	var doc := JSON.stringify({"schema": reader.SCHEMA, "manifest_sha256": pin,
+		"catalog": JSON.stringify(pages), "ranges": ranges}).to_utf8_buffer()
+	var blob := PackedByteArray()
+	blob.resize(4)
+	blob.encode_u32(0, doc.size())
+	blob.append_array(doc)
+	blob.append_array(compressed)
+	var path := dir.path_join(reader.MEMBER)
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(blob)
+	file.close()
+	check(not reader.load_bundle(dir, pin, PACK._sha256(blob)), "matching outer pin cannot authorize new pixels or geometry")
+	check(not reader.load_bundle(dir, pin, "0".repeat(64)), "corrupt or wrong pack is rejected")
+	# Exercise the post-authentication decoder with an independent RGBA oracle.
+	reader._atlases = pages
+	reader._ranges = ranges
+	reader._bytes = compressed
+	pack._settings_frames = reader
+	var tex := pack.texture(ref, true)
+	check(tex != null and _fingerprint(tex).data == raw and tex.get_meta("cocos_premultiplied"), "decoded Zstd fixture matches rotated, padded PMA pixels")
+	check(pack._pages.is_empty() and is_same(tex, pack.texture(ref, true)), "prepared texture uses the resident cache without decoding a page")
+	var other_frame := frame.duplicate(true)
+	other_frame.source_rect = [0, 0, 10, 7]
+	check(reader.frame_image("UI/a.plist", "rot", atlas, other_frame, pack) == null, "changed source geometry rejected")
+	reader._ranges[digest] = [compressed.size(), 1]
+	check(reader.frame_image("UI/a.plist", "rot", atlas, frame, pack) == null, "invalid record range rejected")
+	var wrong := raw.duplicate()
+	wrong[0] ^= 0xff
+	reader._bytes = wrong.compress(FileAccess.COMPRESSION_ZSTD)
+	reader._ranges[digest] = [0, reader._bytes.size()]
+	check(reader.frame_image("UI/a.plist", "rot", atlas, frame, pack) == null, "different valid Zstd pixels rejected by reviewed digest")
+	var straight := pack.texture(ref, false)
+	check(straight != null and _fingerprint(straight).data == _baseline(dir, ref, false).data, "straight-alpha mode keeps the original source decoder")
+	pack.release_cache_leases()
+	check(pack._settings_frames == null and not pack._settings_frames_checked, "lease release drops optional bytes and source-page verification")
+	CACHE.reset()
+
 func _init() -> void:
 	var base: String=ProjectSettings.globalize_path("user://original_ui_page_cache_test_synthetic")
 	var root1: String=base.path_join("pack1"); var root2: String=base.path_join("pack2")
 	var sha1: String=_write_pack(root1,1); var sha2: String=_write_pack(root2,2)
 	_verify_cold_pngs(base)
+	_verify_prepared_frames(root1,sha1)
 	check(sha1!=sha2,"synthetic packs have distinct manifest identity")
 	var key_a1: String=CACHE.page_key(sha1,root1,"UI/a.png",JSON.parse_string(FileAccess.get_file_as_string(root1.path_join("original_ui.json"))).files["UI/a.png"].sha256)
 
