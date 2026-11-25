@@ -1014,7 +1014,7 @@ static func _block_job(job: Dictionary) -> void:
 	var cell: Vector2i = job.cell
 	var tiles: Object = job.tiles
 	var has_subimage: bool = job.has_subimage
-	var by_layer: Dictionary = {}
+	var commands: Dictionary = {}
 	var tile_ids: Dictionary = {}
 	var valid_refs: Dictionary = {}
 	var invalid: Array = []
@@ -1028,9 +1028,13 @@ static func _block_job(job: Dictionary) -> void:
 		for layer: int in bins:
 			if not job.include_objects and layer >= 0: continue
 			var records: PackedInt64Array = layers[layer]
+			# Append to the final layer buffer in the existing member/record order.
+			var target: PackedInt64Array = commands.get(layer, PackedInt64Array())
 			for index: int in (bins[layer] as PackedInt32Array):
 				var ref: int = records[index + 2]
-				var owned: bool = floori(float(records[index]) / BLOCK) == cell.x and floori(float(records[index + 1]) / BLOCK) == cell.y
+				var x: int = records[index]
+				var y: int = records[index + 1]
+				var owned: bool = (x >> BLOCK_SHIFT) == cell.x and (y >> BLOCK_SHIFT) == cell.y
 				if ref == 4294967295:
 					if owned: raw_ff += 1
 					continue
@@ -1050,18 +1054,12 @@ static func _block_job(job: Dictionary) -> void:
 					job["problem"] = "M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다."
 					return
 				tile_ids[tile_id] = true
-				var lane: Variant = by_layer.get(layer)
-				if lane == null:
-					lane = []
-					by_layer[layer] = lane
-				var target: Array = lane
-				target.append(records[index])
-				target.append(records[index + 1])
+				target.append(x)
+				target.append(y)
 				target.append(ref)
 				draws += 1
 				count += int(owned)
-	var commands: Dictionary = {}
-	for layer: int in by_layer: commands[layer] = PackedInt64Array(by_layer[layer])
+			if not target.is_empty(): commands[layer] = target
 	job["result"] = {"commands": commands, "tile_ids": tile_ids.keys(), "invalid": invalid, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
 
 ## Chunks whose records may draw into `cell`, sorted.
