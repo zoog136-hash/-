@@ -29,6 +29,7 @@ const SERVER = preload("res://scripts/loot/current523_server_profile.gd")
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
+const TJ_SKILL = preload("res://scripts/tj/skill_retry523.gd")
 const STAGE = preload("res://scripts/loot/patch523_stage_view.gd")
 const SAVE_KEY := "skill_card523"
 const SCHEMA := 1
@@ -367,10 +368,18 @@ func merge_execute(token: String) -> Dictionary:
 		for uid: Variant in payload.item_instances:
 			if not world.item_instances.has(uid) and int(NATIVE_FIELDS.full(payload.item_instances[uid].get("record", {})).get("source_item_class_id", -1)) == int(chosen.item_class_id): item = str(payload.item_instances[uid].name)
 		result = {"card_id":int(chosen.card_id), "name":str(chosen.name), "item_class_id":int(chosen.item_class_id), "item":item}
+	elif world.get("tj_coupons") != null:
+		var tj: Object = world.tj_coupons.core
+		var history := TJ_SKILL.stage_failure(world,tj,plan)
+		if history.is_empty():
+			rng.state = roll_before
+			return _fail("스킬 합성 이력을 기록할 수 없습니다 · 재료 보존")
+		payload[tj.KEY] = history
 	var saved: Error = world.call("_save_game", true, payload)
 	if saved != OK:
 		rng.state = roll_before
 		return _fail("합성 저장 실패 · 재료를 그대로 두었습니다")
+	if payload.has("tj_coupons523"): world.tj_coupons.core.import_state(payload.tj_coupons523)
 	_commit_world(payload)
 	var message: String = ("스킬 카드 합성 성공 · %s" % str(result.name)) if success else ("스킬 카드 합성 실패 · %s %d장 소멸" % [str(plan.grade), int(plan.source_amount)])
 	_log(message)
