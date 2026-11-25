@@ -7,13 +7,19 @@ import zipfile
 from pathlib import Path
 
 PIN = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
-TABLES = ("ItemClass", "Bonus", "SpellClass", "NpcClass")
+TABLES = (
+    "ItemClass", "Bonus", "SpellClass", "NpcClass",
+    # Large members read together on first admission of a spell-using NPC.
+    "NpcAttack", "NpcAttribute", "NpcSpecialResistance",
+    "SpellBonus", "BuffClass", "BuffBonus",
+)
 MAX_ROWS, MAX_BYTES = 512, 1048576
 
 def generate(path):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
     result = ['extends RefCounted', '## Byte spans only; no row contents. Regenerate from the pinned ZIP with',
               '## tools/build_current523_boot_row_spans.py. [start, end, row count] per batch.',
+              '## Includes the four original boot tables and the large first-encounter NPC tables.',
               'const TABLES = {']
     with zipfile.ZipFile(path) as archive:
         for table in TABLES:

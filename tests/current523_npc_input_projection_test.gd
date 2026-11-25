@@ -25,7 +25,50 @@ static func _canonical(value: Dictionary) -> String:
 	rows.sort_custom(func(a: Variant, b: Variant) -> bool: return JSON.stringify(a, "", true, true) < JSON.stringify(b, "", true, true))
 	return JSON.stringify(copy, "", true, true)
 
+func _check_ordered_id_lookup() -> void:
+	var relation := {"ordered_ids": PackedFloat64Array([-3, 10, 12])}
+	for id: int in [-4, -3, 9, 10, 11, 12, 13]:
+		var expected: int = relation.ordered_ids.find(float(id))
+		check(SOURCE._unique_relation_row(relation, id) == expected, "unique ordered ID lookup %d" % id)
+		var positions := PackedInt32Array([expected]) if expected >= 0 else PackedInt32Array()
+		check(SOURCE._relation_rows(relation, id) == positions, "ordered source positions %d" % id)
+	var disk := SOURCE.DiskTable.new()
+	var different := PackedFloat64Array()
+	different.resize(217916)
+	disk.loaded[0] = different
+	var store := {"columns": PackedStringArray(["ID"]), "count": different.size(), "disk": disk}
+	check(SOURCE._ordered_bonus_ids(store).is_empty(), "matching row count alone cannot admit a different column")
+
+func _check_original_bonus_ids() -> void:
+	var ids: PackedFloat64Array = SOURCE.column("Bonus", "ID")
+	check(ids.size() == 217916, "complete pinned Bonus ID column")
+	if ids.is_empty(): return
+	var previous: float = -INF
+	var ordered := true
+	for value: float in ids:
+		if not SOURCE._integer(value) or value <= previous:
+			ordered = false
+			break
+		previous = value
+	check(ordered, "every original Bonus ID is strictly increasing and integral")
+	var selected := {}
+	var expected_rows: Array[Dictionary] = []
+	for pos: int in [0, ids.size() / 2, ids.size() - 1]:
+		var id := int(ids[pos])
+		var row := SOURCE.row_at("Bonus", pos)
+		selected[id] = true
+		expected_rows.append(row)
+		check(SOURCE.related_indices("Bonus", "ID", id) == PackedInt32Array([pos]), "actual Bonus table position")
+		check(SOURCE.related("Bonus", "ID", id) == [row] and SOURCE.row("Bonus", id) == row, "same original row via both readers")
+	check(SOURCE._relations.get("Bonus:ID", {}).has("ordered_ids"), "verified original column backs the lookup")
+	check(SOURCE.rows_matching("Bonus", "ID", selected) == expected_rows, "multiple requested IDs retain table order")
+	check(SOURCE.related_indices("Bonus", "ID", int(ids[-1]) + 1).is_empty(), "missing original Bonus ID stays missing")
+	SOURCE.release_caches()
+	check(not SOURCE._relations.has("Bonus:ID"), "World cache release drops the column index")
+	check(SOURCE.row("Bonus", int(ids[0])) == expected_rows[0], "original row can be read again after release")
+
 func _run() -> void:
+	_check_ordered_id_lookup()
 	var projection = PROJECTION.new()
 	# Positions: every identical row of the group, 1-based, in table order.
 	var a: Dictionary = {"ID": 7.0, "Value": 1.0}
@@ -41,6 +84,7 @@ func _run() -> void:
 	var identity: Dictionary = SOURCE.identity()
 	if not identity.is_empty() and identity.get("source_sha256") == PROJECTION.SOURCE_SHA:
 		evidence.original = "installed"
+		_check_original_bonus_ids()
 		var ids: Array = []
 		for row: Dictionary in SOURCE.rows("NpcClass"):
 			if CATALOG.definition_eligible(row) and not SOURCE.related("NpcAttack", "NpcClassID", int(row.ID)).is_empty(): ids.append(int(row.ID))

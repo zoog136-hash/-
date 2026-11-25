@@ -36,6 +36,11 @@ func _root_member() -> String:
 	return ROOT
 
 func configure(pack: RefCounted, host: Node) -> Dictionary:
+	# An absent authored scene is the kit's unavailable path, not a bad
+	# identity. Do that check without binding a complete but untrusted pack.
+	var scenes: Dictionary=pack.manifest.get("scenes",{})
+	for member: String in required_members():
+		if not scenes.has(member):return super.configure(pack,host)
 	var files: Dictionary=pack.manifest.get("files",{})
 	if files.get(ROOT,{}).get("sha256")!=ROOT_SHA or files.get(OPTION,{}).get("sha256")!=OPTION_SHA:
 		return _fail("source_option_awakening_identity_mismatch")
