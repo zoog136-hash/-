@@ -60,11 +60,14 @@ func publish_frames() -> void:
 	check(Engine.get_process_frames() == start_frame and pack.atlas_loads - before <= PACK.MAX_PUBLISH_PER_FRAME, "repeated pump_jobs/pump_gpu/texture_for calls share one engine-frame publication cap")
 	check(pack.texture_for(7) != null and pack.atlas_loads > 0, "a ready visible atlas paints in the first eligible frame")
 	check(pack.pending_jobs() > 0, "remaining completed decodes retain their images for later frames")
+	var first_ids: PackedInt32Array = pack.completed_atlases_this_frame()
+	check(first_ids.size()==pack.atlas_loads-before and first_ids[0]==7,"completion IDs follow publication order and share its cap")
 	var held: Texture2D = pack.texture_for(7)
 	var identity: int = held.get_instance_id()
 	var frames: int = 1
 	while pack.pending_jobs() > 0 and frames < 20:
 		await next_frame()
+		check(pack.completed_atlases_this_frame().is_empty(),"previous frame completion IDs never wake current retries")
 		before = pack.atlas_loads
 		for _call: int in 20: pack.pump_gpu()
 		check(pack.atlas_loads - before > 0 and pack.atlas_loads - before <= PACK.MAX_PUBLISH_PER_FRAME, "each following frame progresses within the publication cap")
