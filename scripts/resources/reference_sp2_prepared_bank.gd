@@ -47,6 +47,7 @@ var actor_pins: Dictionary = {}
 var members: Dictionary = {}
 var _node_layout: Dictionary = {}
 var _timed_tracks: Dictionary = {}
+var _timed_direction_totals: Dictionary = {}
 var _timed_mode: String = ""
 var _layout_frames: int = 0
 
@@ -100,14 +101,34 @@ func npc_timing_tracks(mode: String) -> Dictionary:
 		HITCH.count("sp2.npc_timing_hit")
 		return _timed_tracks.duplicate()
 	var tracks: Dictionary = PLAYBACK.tracks_from_prepared(record,"npc",mode)
+	var totals: Dictionary = {}
+	for role: String in tracks:
+		var track: Dictionary = tracks[role]
+		if bool(track.get("static_pending_timing",false)): continue
+		var directions := PackedFloat64Array()
+		for frames: Array in track.directions:
+			var duration: float = 0.0
+			for frame: Dictionary in frames: duration += PRESENTATION.duration(frame)
+			directions.append(duration)
+		totals[role] = directions
+	totals.make_read_only()
 	freeze(tracks)
 	_timed_tracks = tracks
+	_timed_direction_totals = totals
 	_timed_mode = mode
 	HITCH.count("sp2.npc_timing_build")
 	HITCH.count("sp2.npc_timing_frames_built",_layout_frames)
 	# Preview owns its top map (clear() must not edit the memo) and all
 	# sprites, clock, material/style state and cursors remain independent.
 	return tracks.duplicate()
+
+## The finalized presentation fold is shared by NPC lives of this policy
+## mode. Mutable and oversized tracks keep their original live fold.
+func npc_timing_totals(mode: String, tracks: Dictionary) -> Dictionary:
+	if _timed_mode != mode: return {}
+	for role: String in tracks:
+		if not is_same(tracks[role], _timed_tracks.get(role)): return {}
+	return _timed_direction_totals
 
 static func lookup(key: String) -> RefCounted:
 	prune()
