@@ -570,6 +570,17 @@ func _view_rect() -> Rect2:
 	view.position -= _visual_delta
 	return view.grow(64.0)
 
+## Match the next build's block coverage, including its prefetch margin.
+## A hidden arrival renderer remains a consumer while driven by the cover.
+func atlas_request_bounds() -> Rect2i:
+	if not _configured or not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(player):
+		return Rect2i()
+	var screen: Rect2 = _view_rect()
+	var view: Rect2 = _built_view if _built_view.encloses(_motion_coverage(screen)) else screen.grow(BUILD_MARGIN)
+	var first := Vector2i(floori(view.position.x / BLOCK), floori(view.position.y / BLOCK))
+	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
+	return Rect2i(first, last - first + Vector2i.ONE)
+
 
 func _read_chunk(member: String) -> Dictionary:
 	if _raw_chunks.has(member):
@@ -1081,7 +1092,7 @@ func _take_block_job(cell: Vector2i) -> Dictionary:
 		# the completed command list until all requests finish; do not rebuild.
 		var ready: bool = true
 		for tile_id: int in result.tile_ids:
-			if not _frame_atlases.has(tile_id) and not _tile_pack.call("prefetch", tile_id): ready = false
+			if not _frame_atlases.has(tile_id) and not _prefetch_atlas(tile_id, cell): ready = false
 		if not ready: return {}
 	_block_jobs.erase(cell)
 	for entry: Array in result.invalid: _unresolved_tile(int(entry[0]), str(entry[1]))
@@ -1149,6 +1160,11 @@ func _drop_block_jobs(retire: bool = false) -> void:
 		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_block_jobs.clear()
 
+func _prefetch_atlas(tile_id: int, cell: Vector2i) -> bool:
+	if _background_atlases and _tile_pack.has_method("prefetch_for_block"):
+		return _tile_pack.prefetch_for_block(tile_id, self, cell)
+	return _tile_pack.call("prefetch", tile_id)
+
 
 ## Asks the tile pack to decode, on workers, every atlas the block draws;
 ## true when all of them are ready (or the pack decodes only on demand).
@@ -1179,7 +1195,7 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 			asked[tile_id] = true
 			tiles.append(tile_id)
 			if prioritize: _tile_pack.call("prioritize", tile_id)
-			if not _tile_pack.call("prefetch", tile_id): ready = false
+			if not _prefetch_atlas(tile_id, cell): ready = false
 	if collected is Dictionary:
 		collected["tiles"] = tiles
 		collected["complete"] = complete
@@ -1242,7 +1258,7 @@ func _pending_tiles_ready(cell: Vector2i) -> bool:
 		# Keep offering the remaining IDs so the decode slots can fill.
 		for tile_id: int in (tiles as PackedInt32Array):
 			if prioritize: _tile_pack.call("prioritize", tile_id)
-			if not _tile_pack.call("prefetch", tile_id): ready = false
+			if not _prefetch_atlas(tile_id, cell): ready = false
 		return ready
 	var collected: Dictionary = {}
 	var ready: bool = _request_block_tiles(cell, collected)
