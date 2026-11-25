@@ -14,12 +14,14 @@ func check(ok: bool, label: String) -> void:
 		failures.append(label)
 		printerr("RETIRED_MENU_SECTIONS_FAIL: " + label)
 
-func _initialize() -> void:
+func _initialize() -> void: run.call_deferred()
+
+func run() -> void:
 	var hud_script: Script = load("res://scripts/ui/renewal_hud.gd")
 	var retired: Array = hud_script.get_script_constant_map().get("RETIRED_SECTIONS", [])
 	check(retired.has("spell_groups") and retired.has("protection523") and retired.has("clan_emblem523") and retired.size() == 3, "the three retired sections: " + str(retired))
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud.contains("if section_id in RETIRED_SECTIONS: continue"), "no 전체 메뉴 tile for a retired section")
+	await check_live_menu(retired)
 	check(hud.contains("\tif section in RETIRED_SECTIONS:\n\t\treturn"), "_navigate ignores a retired section")
 	var skill: Script = load("res://scripts/ui/original_ui/source_main_skill_window.gd")
 	check(skill.get_script_constant_map().get("GROUP_CONVERSION_SHOWN", true) == false, "original 속성 변경 / 디버프 buttons stay hidden")
@@ -31,3 +33,39 @@ func _initialize() -> void:
 	check(world.contains("\"protection523\": protection523.snapshot(),"), "the 가호 state is still saved")
 	print("RETIRED_MENU_SECTIONS_RESULT " + JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+
+func check_live_menu(retired: Array) -> void:
+	root.size = Vector2i(2048,919)
+	DisplayServer.window_set_size(root.size)
+	var world: Node = (load("res://Main.tscn") as PackedScene).instantiate()
+	root.add_child(world)
+	world.set_process(false)
+	world.save_timer = -100000
+	await process_frame
+	await process_frame
+	var hud: Node = world.hud
+	hud.toggle_menu()
+	for n: int in 5: await process_frame
+	var grid: GridContainer = hud.workspace.find_child("MenuGrid",true,false) as GridContainer
+	check(grid != null and grid.get_child_count() >= 35, "the actual original 전체 메뉴 grid is present")
+	if grid != null and grid.get_child_count() >= 35:
+		for id: String in retired:
+			check(grid.get_node_or_null("MenuTile_"+id)==null, "retired tile is not instantiated: "+id)
+		var gap: Control = grid.get_child(7) as Control
+		check(gap != null and str(gap.name)=="OriginalMenuSpace_7" and not gap is Button
+			and gap.mouse_filter==Control.MOUSE_FILTER_IGNORE and gap.position.is_equal_approx(Vector2(140,67)),
+			"the original unavailable cell stays a non-interactive gap at row 2, column 3")
+		var settings: Button = grid.get_node_or_null("MenuTile_settings") as Button
+		check(settings != null and settings.get_index()==28, "the neighboring live menu structure keeps settings at the original index")
+		if settings != null:
+			var point: Vector2 = root.get_final_transform() * (settings.get_global_transform_with_canvas() * (settings.size*0.5))
+			for pressed: bool in [true,false]:
+				var event:=InputEventScreenTouch.new()
+				event.index=0;event.pressed=pressed;event.position=point
+				Input.parse_input_event(event)
+				await process_frame
+			await process_frame
+			check(str(hud.active_section)=="settings", "a real touch still routes the original settings tile")
+	world.queue_free()
+	await process_frame
