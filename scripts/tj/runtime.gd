@@ -1,4 +1,5 @@
 extends RefCounted
+const Skill = preload("res://scripts/tj/skill_retry523.gd")
 const Service = preload("res://scripts/tj/coupon_service.gd")
 const Source = preload("res://scripts/tj/source523.gd")
 const Definitions = preload("res://scripts/resources/current523_definition_rows.gd")
@@ -98,6 +99,17 @@ func capture_fusion(result: Dictionary) -> void:
 		event=event.duplicate(true)
 		event["context"]=context();event["time"]=core.clock()
 		core.record_failure(event)
+func skill_coupon(item: String) -> bool:
+	return Skill.matches(core.definitions.get("coupons",{}).get(item,{}).get("profile",{}))
+
+func skill_candidates(item: String) -> Dictionary:
+	var view: Dictionary = core.candidates(item,Skill.context(world),core.clock())
+	if view.get("ok",false):
+		var class_id := STACK.current_class(world)
+		view.events = view.events.filter(func(event: Dictionary) -> bool: return int(event.get("class_id",-1)) == class_id)
+		if view.events.is_empty(): view["error"] = "이 캐릭터의 기간 내 스킬 합성 실패 이력이 없습니다"
+	return view
+
 func grant_for_test(item: String) -> Dictionary:
 	if not preload("res://scripts/boot/build_flags.gd").playtest() or not core.definitions.get("coupons",{}).has(item) or core.blocked:return {"ok":false,"error":"검증된 테스트 쿠폰만 지급할 수 있습니다"}
 	var next: Dictionary=core.export_state()
@@ -170,13 +182,14 @@ func redeem(item: String, event_id: String, revision: int, success_ids: Array, f
 		if original.get("TestItem")!=false or STACK.whole(original.get("TargettingTypeID"))!=1 or (original.get("CanUseWhenInvisible")!=true and world.is_player_concealed()):
 			return {"ok":false,"error":"원본 쿠폰의 사용 상태 조건을 충족하지 않습니다 · 아이템 보존"}
 	if world._option_awakening_busy():return {"ok":false,"error":"다른 카드 거래가 진행 중입니다"}
-	var prepared: Dictionary=core.prepare(item,event_id,context(),core.clock(),revision,success_ids,fail_ids,bag_count(item,physical_id),not physical_id.is_empty())
+	var prepared: Dictionary=core.prepare(item,event_id,Skill.context(world) if skill_coupon(item) else context(),core.clock(),revision,success_ids,fail_ids,bag_count(item,physical_id),not physical_id.is_empty())
 	if not prepared.ok:return prepared
 	if int(world.gold)<int(core.settings.retry_gold_cost):return {"ok":false,"error":"TWILIGHT 추가 거래 비용 아데나가 부족합니다"}
 	core.busy=true
-	if int(prepared.event.get("deck",0))==41:
-		core.busy=false
-		return {"ok":false,"error":"기존 게임에 스킬 카드 합성 실패 엔진이 없어 별도 연결이 필요합니다. 소유 쿠폰은 유지됩니다"}
+	if prepared.event.get("adapter") == "skill_fusion":
+		var result := Skill.redeem(self,prepared,physical_id)
+		core.busy = false
+		return result
 	if str(prepared.event.get("adapter",""))=="awakening":return redeem_awakening(prepared,physical_id)
 	var event: Dictionary=prepared.event
 	var rules: Array=[]
