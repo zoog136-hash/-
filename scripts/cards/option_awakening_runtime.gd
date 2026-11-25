@@ -275,12 +275,27 @@ func _world_property(name_value: String,fallback: Variant) -> Variant:
 		_world_property_owner=world.get_instance_id()
 	if _world_property_names.has(name_value):return world.get(name_value)
 	return fallback
+
+## Playback and combat need only the currently admitted identity.
+## An empty slot never needs the view's unlock metadata or source context.
+func active_subslot_identity(relic: bool=false) -> String:
+	if world==null or not core.native_mode:return ""
+	var identity: String=str(progress.get(RelicSubslot.FIELD if relic else Subslot.FIELD,""))
+	if identity.is_empty():return ""
+	_sync_native_context()
+	var rules: GDScript=RelicSubslot if relic else Subslot
+	var state: Dictionary=rules.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
+	return identity if _subslot_active(identity,state,relic) else ""
+
+func _subslot_active(identity: String,state: Dictionary,relic: bool) -> bool:
+	return not identity.is_empty() and bool(state.ok) and problem.is_empty() and (not relic or (not save_blocked and _source_relic_time_active()))
+
 func subslot_view(include_effects: bool=true) -> Dictionary:
 	if world==null or not core.native_mode:return {"active":false,"identity":""}
 	_sync_native_context()
 	var identity: String=str(progress.get(Subslot.FIELD,""))
 	var state: Dictionary=Subslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
-	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty()
+	var active: bool=_subslot_active(identity,state,false)
 	return {"identity":identity,"active":active,"eligibility":state,"effects":Subslot.effects(self,identity) if active and include_effects else {},"unlocked":Subslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
 func select_subslot(identity: String) -> Dictionary:
 	_sync_native_context()
@@ -342,7 +357,7 @@ func relic_subslot_view(include_effects: bool=true) -> Dictionary:
 	_sync_native_context()
 	var identity: String=str(progress.get(RelicSubslot.FIELD,""))
 	var state: Dictionary=RelicSubslot.eligibility(self,identity,int(_world_property("level",0)),_world_property("active_skill_buffs",{}))
-	var active: bool=not identity.is_empty() and bool(state.ok) and problem.is_empty() and not save_blocked and _source_relic_time_active()
+	var active: bool=_subslot_active(identity,state,true)
 	return {"identity":identity,"active":active,"eligibility":state,"effects":RelicSubslot.effects(self,identity) if active and include_effects else {},"unlocked":RelicSubslot.unlocked(int(_world_property("level",0)),_world_property("active_skill_buffs",{}),progress)}
 
 func select_relic_subslot(identity: String) -> Dictionary:
