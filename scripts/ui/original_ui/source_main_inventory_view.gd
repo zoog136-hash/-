@@ -610,7 +610,7 @@ func _on_selection_changed(_reference: String) -> void:
 			_fallback(_unsupported_result(result))
 			return
 		_hits[reference]["shown_selected"]=bag!=null and bag.get("selected_item")==reference
-	_chrome.refresh_selected_controls(_inventory_scene)
+	if _chrome!=null and is_instance_valid(_inventory_scene):_chrome.refresh_selected_controls(_inventory_scene)
 	_sync_detail_control()
 	selection_refreshed.emit()
 
