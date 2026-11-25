@@ -207,6 +207,13 @@ static func selections(base: String, descriptor: Dictionary, addons: Dictionary 
 	if ui is Dictionary:
 		environment.TWILIGHT_SOURCE_UI = base.path_join(ui.root)
 		environment.TWILIGHT_SOURCE_UI_SHA256 = str(ui.manifest_sha256).to_lower()
+		# A rebuilt add-on can supply frames for the same previously installed
+		# main UI. Never take an optional pin from a different UI selection.
+		var frame_section: Dictionary = ui
+		var addon_ui: Variant = addons.get("ui")
+		if addon_ui is Dictionary and addon_ui.get("root") == ui.root and addon_ui.get("manifest_sha256") == ui.manifest_sha256:
+			frame_section = addon_ui
+		environment.TWILIGHT_SOURCE_UI_SETTINGS_FRAMES_SHA256 = str(frame_section.get("settings_frames_sha256", "")).to_lower()
 	if descriptor.has("ui_icons"):
 		# The selection names its CSB icon pack relative to its own folder.
 		environment.TWILIGHT_SOURCE523_UI_ICONS = base.path_join(descriptor.ui_icons.manifest)
