@@ -11,6 +11,19 @@ const EXTENSION_BUTTON=21648
 const SEARCH_BUTTON=44780
 const HAS_EXTENSION=1
 const HAS_SEARCH=2
+const HAS_SORT=4
+const HAS_DELETE=8
+const HAS_LOCK=16
+const HAS_SORT_BUTTON=32
+const SORT_BUTTON=19772
+const SORT_OPTIONS=1476
+const SORT_BACKGROUND=11736
+const DELETE_BUTTON=24648
+const LOCK_BUTTON=26528
+const SORT_DEFAULT_DOWN={"expiry":false,"weight":true}
+const SORT_KEYS={"expiry":8004,"weight":4764,"category":2864}
+const SORT_LABELS: Array[int]=[10096,8780,6804,5540,3560,2968]
+const SORT_ARROWS={"expiry":[[9764,8448],[9384,8116]],"weight":[[6472,5208],[6140,4876]]}
 const FRAMES={
  false:{"parent":55184,"background":60672,"offsets":[60672,59888,59516,59136,58756,58376]},
  true:{"parent":43300,"background":54484,"offsets":[54484,53776,53404,53028,52648,52268,51888]}
@@ -28,6 +41,9 @@ var _pack: RefCounted
 var _inventory: WeakRef
 var _scene: WeakRef
 var _dismiss_presenter: Callable
+var _sort_open: bool=false
+var _sort_directions: Dictionary={}
+
 
 static func parent_contract(parent_member: String) -> Dictionary:
 	if not PARENTS.has(parent_member):return _fail("source_main_inventory_explicit_parent_required")
@@ -96,6 +112,9 @@ func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=tr
 	var wants: int=0
 	if bag!=null and bag.has_method("_toggle_expanded"):wants|=HAS_EXTENSION
 	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb"):wants|=HAS_SEARCH
+	if bag.has_method("sort_inventory_source"):wants|=HAS_SORT|HAS_SORT_BUTTON
+	if bag.has_method("request_selected_delete"):wants|=HAS_DELETE
+	if bag.has_method("_toggle_lock"):wants|=HAS_LOCK
 	# Full layout geometry and the permitted, filtered active scene may differ.
 	# UI affordances must be admitted by the latter, never by layout alone.
 	if separate_layout and wants!=0:active=_pack.scene(MEMBER)
@@ -110,6 +129,28 @@ func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=tr
 		roots.append(SEARCH_BUTTON)
 		bindings[SEARCH_BUTTON]={"role":"button","activate":Callable(self,"_search_requested")}
 		bindings[46132]={"role":"static_source_text"}
+	if (found & (HAS_SORT|HAS_SORT_BUTTON))==(HAS_SORT|HAS_SORT_BUTTON):
+		roots.append_array([SORT_BUTTON,SORT_OPTIONS])
+		bindings[SORT_BUTTON]={"role":"button","activate":Callable(self,"toggle_sort")}
+		bindings[SORT_OPTIONS]={"visible":_sort_open}
+		bindings[1548]={"visible":false} # authored preview highlight, not a new input
+		for field: String in SORT_KEYS:
+			bindings[SORT_KEYS[field]]={"role":"button","activate":Callable(self,"sort_by").bind(field)}
+		for offset: int in SORT_LABELS:bindings[offset]={"role":"static_source_text"}
+		for field: String in SORT_ARROWS:
+			var down: bool=bool(_sort_directions.get(field,SORT_DEFAULT_DOWN[field]))
+			for offset: int in SORT_ARROWS[field][0]:bindings[offset]={"visible":down}
+			for offset: int in SORT_ARROWS[field][1]:bindings[offset]={"visible":not down}
+	if found & HAS_DELETE:
+		roots.append(DELETE_BUTTON)
+		bindings[DELETE_BUTTON]={"role":"button","activate":Callable(self,"request_delete")}
+		_set_button_variants(bindings,25284,24700,false,not str(model.selected_reference).is_empty())
+	if found & HAS_LOCK:
+		roots.append(LOCK_BUTTON)
+		bindings[LOCK_BUTTON]={"role":"button","activate":Callable(self,"toggle_lock")}
+		var locked: bool=_selected_is_locked(bag,str(model.selected_reference))
+		_set_button_variants(bindings,27744,26584,locked,not str(model.selected_reference).is_empty())
+		bindings[27164]={"visible":locked}
 	for category: String in TABS:
 		var variants: Array=TABS[category]
 		for index: int in range(variants.size()):
@@ -131,7 +172,7 @@ func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=tr
 		if int(matches.get(offset,0))!=1:return {"ok":false,"code":"source_main_inventory_core_node_not_unique","offset":offset}
 	for offset: int in selected:
 		if not bindings.has(offset) and remaining.has(offset):bindings[offset]=remaining[offset].duplicate(true)
-	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"expanded":expanded,"background_offset":frame.background,"branch_parent_offset":frame.parent,"original_variant_clip":{"name":"Fx_Extension_On","start_frame":40,"end_frame":70} if expanded else {},"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},{"field":"existing_sort_action_contract","offsets":[19772,8004,4764,2864]},"original_search_lock_delete_move_dissolve_and_keypad_contracts"]}
+	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":selected,"bindings":bindings,"model":model,"expanded":expanded,"background_offset":frame.background,"branch_parent_offset":frame.parent,"original_variant_clip":{"name":"Fx_Extension_On","start_frame":40,"end_frame":70} if expanded else {},"native_parent_required":"original Inventory_All root and retained original ancestor chain","original_root_options":tree.nodeTree.get("options",{}).duplicate(true),"static_source_text_offsets":[],"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"field":"original_inventory_rows_and_slot_placement","scroll_offsets":[55712,43832],"slot_project_offsets":[56036,44156],"slot_member":"UI/FloatingUi/Inventory_Slot_Set.csb","missing":"owned row reference to original slot instance and position"},"original_move_multi_delete_dissolve_mode_contracts"]}
 
 func bind_presented(scene: Node2D) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=MEMBER:return _fail("source_main_inventory_scene_mismatch")
@@ -174,6 +215,72 @@ func _refresh_model(scene: Node2D, model: Dictionary) -> Dictionary:
 			if not result.get("ok",false):return result
 	return {"ok":true,"model":model,"partial_source_scene":true,"complete_screen_contract":false}
 
+static func _selected_is_locked(bag: Object, reference: String) -> bool:
+	var state: Dictionary=bag.get("character_state") if bag.get("character_state") is Dictionary else {}
+	return bool(state.get("item_locks",{}).get(reference,false))
+
+static func _set_button_variants(bindings: Dictionary, normal: int, inactive: int, locked: bool, selected: bool) -> void:
+	bindings[normal]={"visible":selected and not locked}
+	bindings[inactive]={"visible":not selected}
+
+func refresh_selected_controls(scene: Node2D) -> void:
+	var bag: Object=_live_inventory()
+	if bag==null or not is_instance_valid(scene):return
+	var reference: String=str(bag.get("selected_item"))
+	var selected: bool=not reference.is_empty()
+	var locked: bool=_selected_is_locked(bag,reference)
+	for entry: Array in [[25284,selected],[24700,not selected],[27744,selected and not locked],[26584,not selected],[27164,selected and locked]]:
+		if scene.source_nodes.has(entry[0]):scene.set_bound_visible(entry[0],entry[1])
+
+func _sort_scene() -> Node2D:
+	var scene: Variant=_scene.get_ref() if _scene!=null else null
+	return scene if scene is Node2D and is_instance_valid(scene) and scene.source_nodes.has(SORT_OPTIONS) else null
+
+func toggle_sort() -> Dictionary:
+	var scene: Node2D=_sort_scene()
+	if scene==null:return _fail("source_inventory_original_sort_unavailable")
+	var bag: Object=_live_inventory()
+	if bag!=null and bag.has_method("disarm_item_action"):bag.call("disarm_item_action")
+	_sort_open=not _sort_open
+	return scene.set_bound_visible(SORT_OPTIONS,_sort_open)
+
+func close_sort() -> void:
+	_sort_open=false
+	var scene: Node2D=_sort_scene()
+	if scene!=null:scene.set_bound_visible(SORT_OPTIONS,false)
+
+func sort_blocks_point(point: Vector2) -> bool:
+	if not _sort_open:return false
+	var scene: Node2D=_sort_scene()
+	if scene==null:return false
+	var background: Node2D=scene.source_nodes.get(SORT_BACKGROUND)
+	var origin: Node2D=background.get_node_or_null("SourceContentOrigin") if is_instance_valid(background) else null
+	if origin==null or not origin.is_visible_in_tree():return false
+	var extent: Array=background.get_meta("source_size",[0,0])
+	return Rect2(Vector2(0,-float(extent[1])),Vector2(float(extent[0]),float(extent[1]))).has_point(origin.get_global_transform_with_canvas().affine_inverse()*point)
+
+func sort_by(field: String) -> Dictionary:
+	var bag: Object=_live_inventory()
+	if not _sort_open or bag==null or not SORT_KEYS.has(field):return _fail("source_inventory_original_sort_unavailable")
+	var descending: bool=not bool(_sort_directions[field]) if _sort_directions.has(field) else bool(SORT_DEFAULT_DOWN.get(field,false))
+	if not bag.call("sort_inventory_source",field,descending):return _fail("source_inventory_existing_sort_failed")
+	if SORT_ARROWS.has(field):_sort_directions[field]=descending
+	# The legacy grid is parked; the exact owner order still has to be
+	# projected into the mounted native slot assignments.
+	model_changed.emit({"ok":true,"field":field,"descending":descending})
+	return {"ok":true,"field":field,"descending":descending}
+
+func request_delete() -> Dictionary:
+	var bag: Object=_live_inventory()
+	return bag.call("request_selected_delete") if bag!=null else _fail("source_inventory_existing_bag_unavailable")
+
+func toggle_lock() -> Dictionary:
+	var bag: Object=_live_inventory()
+	if bag==null or str(bag.get("selected_item")).is_empty():return _fail("source_inventory_existing_selection_required")
+	bag.call("_toggle_lock")
+	refresh_selected_controls(_scene.get_ref() if _scene!=null else null)
+	return {"ok":true}
+
 func select_category(category: String) -> Dictionary:
 	var inventory_ui: Object=_live_inventory()
 	if inventory_ui==null:return _fail("source_main_inventory_existing_bag_unavailable")
@@ -206,11 +313,22 @@ static func _control_presence(node: Dictionary, wanted: int) -> int:
 	var found: int=0
 	if offset==EXTENSION_BUTTON:found|=HAS_EXTENSION
 	elif offset==SEARCH_BUTTON:found|=HAS_SEARCH
+	elif offset==SORT_OPTIONS and _has_sort_children(node):found|=HAS_SORT
+	elif offset==SORT_BUTTON:found|=HAS_SORT_BUTTON
+	elif offset==DELETE_BUTTON:found|=HAS_DELETE
+	elif offset==LOCK_BUTTON:found|=HAS_LOCK
 	for child: Dictionary in node.get("children",[]):
 		var pending: int=wanted & ~found
 		if pending==0:break
 		found|=_control_presence(child,pending)
 	return found & wanted
+
+static func _has_sort_children(node: Dictionary) -> bool:
+	var present: Dictionary={}
+	for child: Dictionary in node.get("children",[]):present[int(child.get("_offset",0))]=true
+	for offset: int in SORT_KEYS.values():
+		if not present.has(offset):return false
+	return true
 
 func close() -> Dictionary:
 	var inventory_ui: Object=_live_inventory()

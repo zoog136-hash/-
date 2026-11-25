@@ -23,10 +23,9 @@ var last_tap_at: int = -1000
 var last_tap_position: Vector2
 var last_tap_touch: bool = false
 const DOUBLE_TAP_MS: int = 360
-## Original skill window slot under a press: the press stays the window's (tap
-## selects, drag scrolls); holding still for TOUCH_HOLD_SECONDS hands the
-## gesture to this transfer so the skill can be dropped on a quick slot.
-var held_watch: Dictionary = {}
+# Preserve the original stationary hold-to-register. Tiny drift is tolerated;
+# a slow, already moving finger belongs to the list rather than this timer.
+const SKILL_HOLD_STILL_PX: float=3.0
 ## A quick slot moved before the hold time: a pull, not a held drag (held
 ## drags still move/remove slots and decide AUTO on release).
 var quick_pull_armed: bool = false
@@ -78,6 +77,9 @@ func _source_at(point: Vector2) -> Dictionary:
 		var native: Dictionary=hud.original_inventory_hit_at(point)
 		if not native.is_empty():return native
 	if hud.has_method("original_source_pointer_capture_blocked") and hud.original_source_pointer_capture_blocked(point):return {}
+	if hud.has_method("original_skill_window_hit_at"):
+		var native_skill: Dictionary=hud.original_skill_window_hit_at(point)
+		if not native_skill.is_empty():return native_skill
 	if hud.has_method("original_quickslot_hit_at") and (not hud.workspace.visible or not inside(hud.workspace,point)):
 		var native: Dictionary=hud.original_quickslot_hit_at(point)
 		if not native.is_empty():return native
@@ -116,6 +118,12 @@ func _source_at(point: Vector2) -> Dictionary:
 
 func _input(event: InputEvent) -> void:
 	if hud == null: return
+	# The original and fallback reward choice must get their own touch while
+	# the bag is still open, without falling through to physical drag or use.
+	if hud.has_method("reward_choice_blocks_pointer") and hud.reward_choice_blocks_pointer():
+		cancel()
+		reset_tap_history()
+		return
 	# The reveal lives above HUD in another CanvasLayer; quickslot hit testing
 	# must yield without consuming native transport-button touches.
 	if hud.has_method("is_card_reveal_busy") and hud.is_card_reveal_busy():
@@ -141,12 +149,6 @@ func _input(event: InputEvent) -> void:
 		var candidate: Dictionary = _source_at(event.position)
 		if candidate.is_empty():
 			reset_tap_history()
-			held_watch = _held_source_at(event.position)
-			if not held_watch.is_empty():
-				held_watch["pointer"] = event.index if event is InputEventScreenTouch else -1
-				held_watch["origin"] = event.position
-				held_watch["at"] = Time.get_ticks_msec()
-				set_process(true)
 			return
 		pointer = event.index if event is InputEventScreenTouch else -1
 		source = candidate
@@ -162,9 +164,13 @@ func _input(event: InputEvent) -> void:
 			handled_touch_position = event.position
 		get_viewport().set_input_as_handled()
 		return
-	if pointer == -2:
-		_watch_input(event)
-		return
+	if pointer == -2:return
+	var skill_window: bool=bool(source.get("source_skill_window",false))
+	if skill_window and (event is InputEventScreenTouch or event is InputEventScreenDrag):
+		# A second finger must never scroll or tap the view below this owner.
+		if event.index!=pointer:
+			get_viewport().set_input_as_handled()
+			return
 	if (event is InputEventScreenTouch or event is InputEventScreenDrag) and event.index == pointer:
 		handled_touch_at = Time.get_ticks_msec()
 		handled_touch_position = event.position
@@ -174,13 +180,25 @@ func _input(event: InputEvent) -> void:
 		cancel()
 		get_viewport().set_input_as_handled()
 		return
+	if skill_window and (move or release) and not _native_skill_gesture_is_live():
+		cancel()
+		get_viewport().set_input_as_handled()
+		return
 	if move:
 		elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
 		var previous: Vector2 = position
 		position = event.position
 		var distance: Vector2 = position-origin
+		var scroll_delta: float=position.y-previous.y
 		if mode == "pending" and distance.length() > (L.TOUCH_SCROLL_DISTANCE if pointer >= 0 else L.MOUSE_DRAG_DISTANCE):
-			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
+			if skill_window:
+				var stationary_hold: bool=elapsed>=L.TOUCH_HOLD_SECONDS and previous.distance_to(origin)<=SKILL_HOLD_STILL_PX
+				# Once a vertical swipe wins, leaving the view or reaching a
+				# quick slot must never turn it into an assignment or a tap.
+				var vertical: bool=absf(distance.y)>absf(distance.x)*1.25
+				mode="drag" if not source.entry.is_empty() and (stationary_hold or not vertical) else "scroll"
+				if mode=="scroll":scroll_delta=distance.y
+			elif pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
 				if source.from == "inventory":
 					# A fast vertical swipe stays owned by its starting inventory,
 					# even when a compact header lets the finger cross its boundary.
@@ -194,7 +212,9 @@ func _input(event: InputEvent) -> void:
 		# Captured scrolling never turns into an item drop at the window edge.
 		# Deliberate hold/horizontal drags retain the existing transfer path.
 		if mode != "pending": reset_tap_history()
-		if mode == "scroll":
+		if mode == "scroll" and skill_window:
+			hud.original_skill_window_gesture_scroll(int(source.skill_window_epoch),scroll_delta)
+		elif mode == "scroll":
 			if source.from == "inventory" and bool(source.get("source_native",false)) and hud.has_method("original_inventory_scroll_by"):
 				# The original bag's rows: this transfer consumed the touch on a
 				# slot, so the native list never saw the drag (only drags that
@@ -244,58 +264,28 @@ func _quick_pull(delta: Vector2) -> bool:
 	if is_instance_valid(hint): hint.hide()
 	return true
 
-func _held_source_at(point: Vector2) -> Dictionary:
-	if hud.class_picker_initial or not hud.has_method("original_skill_window_hit_at"): return {}
-	var hit: Dictionary = hud.original_skill_window_hit_at(point)
-	return {"source":hit} if not hit.is_empty() else {}
-
-func _watch_input(event: InputEvent) -> void:
-	if held_watch.is_empty(): return
-	var index: int = int(held_watch.pointer)
-	var mine: bool = (event is InputEventScreenTouch or event is InputEventScreenDrag) and event.index == index or index == -1 and (event is InputEventMouseMotion or event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT)
-	if not mine: return
-	if event is InputEventScreenTouch or event is InputEventMouseButton:
-		if not event.pressed: held_watch.clear()
-	elif event.position.distance_to(held_watch.origin) > (L.TOUCH_SCROLL_DISTANCE if index >= 0 else L.MOUSE_DRAG_DISTANCE):
-		held_watch.clear()
-
-func _adopt_held_watch() -> void:
-	var watch: Dictionary = held_watch
-	held_watch = {}
-	var live: Dictionary = hud.original_skill_window_hit_at(watch.origin)
-	if live.is_empty() or str(live.get("id","")) != str(watch.source.get("id","")): return
-	pointer = int(watch.pointer)
-	source = live
-	origin = watch.origin
-	position = origin
-	pressed_at = int(watch.at)
-	elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
-	mode = "drag"
-	if pointer >= 0:
-		handled_touch_at = Time.get_ticks_msec()
-		handled_touch_position = origin
-	_show_drag()
+func _native_skill_gesture_is_live() -> bool:
+	return hud.original_skill_window_gesture_is_live(int(source.get("skill_window_epoch",0)))
 
 func _process(_delta: float) -> void:
 	if pointer == -2:
-		if held_watch.is_empty():
-			set_process(false)
-		elif not hud.original_skill_window_is_open():
-			held_watch.clear()
-		elif float(Time.get_ticks_msec()-int(held_watch.at))/1000.0 >= L.TOUCH_HOLD_SECONDS:
-			_adopt_held_watch()
+		set_process(false)
 		return
 	elapsed = float(Time.get_ticks_msec()-pressed_at)/1000.0
 	var inventory_visible: bool=hud.original_inventory_is_open() if bool(source.get("source_native",false)) else hud.lineage_inventory_ui.is_visible_in_tree()
-	var skill_visible: bool = hud.original_skill_window_is_open() if bool(source.get("source_skill_window",false)) else hud.workspace.visible and hud.active_section == "skills"
+	var native_skill: bool=bool(source.get("source_skill_window",false))
+	var skill_visible: bool = _native_skill_gesture_is_live() if native_skill else hud.workspace.visible and hud.active_section == "skills"
 	if source.from == "inventory" and not inventory_visible or source.from == "skill" and not skill_visible:
 		cancel()
 		return
 	if source.from == "warehouse" and (not hud.workspace.visible or hud.active_section != "warehouse" or not is_instance_valid(hud.transaction_view) or hud.transaction_view.mode.selected != 1):
 		cancel()
 		return
-	if mode == "pending" and pointer >= 0 and elapsed >= L.TOUCH_HOLD_SECONDS:
-		mode = "drag"
+	if mode=="pending" and elapsed>=L.TOUCH_HOLD_SECONDS:
+		if native_skill:
+			if source.entry.is_empty() or position.distance_to(origin)>SKILL_HOLD_STILL_PX:return
+		elif pointer<0:return
+		mode="drag"
 		_show_drag()
 
 func _tap() -> void:
@@ -347,6 +337,9 @@ func _tap() -> void:
 					hud.transaction_view._selected(i)
 					break
 		"skill":
+			if bool(source.get("source_skill_window",false)):
+				hud.original_skill_window_gesture_tap(int(source.skill_window_epoch),str(source.id),position)
+				return
 			for i: int in range(hud.skills_view.filtered.size()):
 				if str(hud.skills_view.filtered[i].get("id",hud.skills_view.filtered[i].name)) == str(source.id):
 					hud.skills_view.cards.select(i)
@@ -392,6 +385,10 @@ func _drop() -> void:
 			hud.transaction_view.request_withdraw(str(source.id))
 		return
 	# Revalidate the identity after all game ticks that occurred during the drag.
+	if bool(source.get("source_skill_window",false)):
+		if not _native_skill_gesture_is_live() or not hud.original_skill_window_hit_at(position).is_empty():return
+		var exact: Dictionary=world._skill_record(str(source.id))
+		if exact.is_empty() or str(exact.get("id",exact.get("name","")))!=str(source.id):return
 	if source.from == "quick" and world.quickslots[int(source.slot)] != source.entry: return
 	if source.from == "quick" and inside(remove_target,position):
 		hud.quickslot_edit_requested.emit("clear",int(source.slot),-1)
@@ -435,7 +432,6 @@ func _drop() -> void:
 
 func cancel() -> void:
 	reset_tap_history()
-	held_watch.clear()
 	_finish_gesture()
 
 func _finish_gesture() -> void:

@@ -429,20 +429,39 @@ func _slot(hud: Node, record: Dictionary) -> Dictionary:
 	slot.merge(labels)
 	return slot
 
-## Long-press source for PointerTransfer (원본 리니지M: 스킬 창의 스킬을 길게 눌러
-## 하단 단축 슬롯으로 끌어 놓아 등록). Only a visible slot inside the list view
-## answers; the tap/scroll of the slot itself stays this window's.
+## The source viewport borrows PointerTransfer's single captured gesture
+## for both the slots and the spaces between them. A clipped or empty slot
+## can scroll but it cannot select/carry a skill.
 func hit_at(viewport_point: Vector2) -> Dictionary:
 	if not is_open() or not viewport_point.is_finite():return {}
 	var scroll_area: Control=_scroll_area()
-	if scroll_area!=null and not _contains(scroll_area,viewport_point):return {}
+	if not _contains(scroll_area,viewport_point):return {}
+	var found: Dictionary={"from":"skill","id":"","entry":{},"source_native":true,"source_skill_window":true,"skill_window_epoch":_scene.get_instance_id()}
 	for index: int in _slots:
 		var slot: Dictionary=_slots[index]
 		var area: Variant=slot.get("area")
 		if not area is Control or not _contains(area,viewport_point):continue
-		if str(slot.get("name","")).is_empty():return {}
-		return {"from":"skill","id":str(slot.name),"entry":{"kind":"skill","id":str(slot.name)},"texture":slot.get("texture"),"source_native":false,"source_skill_window":true}
-	return {}
+		var exact_id: String=str(slot.get("id",""))
+		if exact_id.is_empty():break
+		found.merge({"id":exact_id,"entry":{"kind":"skill","id":exact_id},"texture":slot.get("texture")},true)
+		break
+	return found
+
+func gesture_is_live(epoch: int) -> bool:
+	return is_open() and _scene.get_instance_id()==epoch
+
+func tap_from_pointer(epoch: int, skill_id: String, release_point: Vector2) -> Dictionary:
+	if skill_id.is_empty() or not gesture_is_live(epoch) or str(hit_at(release_point).get("id",""))!=skill_id:
+		return {"ok":false,"handled":false}
+	# This pointer never delivered a press to the native slot's GUI handler.
+	# Do not reuse an old wheel/drag offset as this new tap's movement.
+	_moved=0.0
+	return _slot_pressed(skill_id)
+
+func scroll_from_pointer(epoch: int, viewport_delta_y: float) -> void:
+	if not gesture_is_live(epoch) or not is_finite(viewport_delta_y):return
+	var scale_y: float=absf(_content.get_global_transform_with_canvas().get_scale().y)
+	if scale_y>0.0:_move_scroll(viewport_delta_y/scale_y)
 
 func _scroll_area() -> Control:
 	if not is_instance_valid(_content):return null
@@ -508,8 +527,14 @@ func _list_input(event: InputEvent) -> void:
 	var scale_y: float=absf(_content.get_global_transform_with_canvas().get_scale().y)
 	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
 	_moved+=delta
-	# Dragging up (negative) reveals lower rows.
-	_scroll=clampf(_scroll+delta,_scroll_min,0.0)
+	_move_scroll(delta)
+
+func _move_scroll(delta: float) -> void:
+	# Dragging up (negative) reveals lower rows. Stay cheap while a
+	# captured finger pushes against either end of the list.
+	var next: float=clampf(_scroll+delta,_scroll_min,0.0)
+	if next==_scroll:return
+	_scroll=next
 	_content.position.y=_scroll_base+_scroll
 	_ensure_visible_rows()
 

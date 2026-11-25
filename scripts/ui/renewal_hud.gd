@@ -1409,14 +1409,15 @@ func open_shop() -> void:
 				workspace.hide()
 				_sync_screen_focus()
 
-## The original 523 거래소 window (source_main_trade_window) first; the
-## TWILIGHT frozen-snapshot panel without the original UI pack.
+## Saving or buying a captured listing is never an ordinary menu fallback.
 func open_frozen_exchange() -> void:
-	_open_window("exchange","거래소 · 초기 실측 고정","")
+	_open_window("exchange","TWILIGHT 거래소","")
 	if _open_original_feature("trade"):return
-	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
-	workspace.mount(panel)
-	panel.configure(self)
+	var notice:=Label.new()
+	notice.name="LocalTradeUnavailable"
+	notice.text="원본 거래소 화면과 아이템 자료가 설치되면 이용할 수 있습니다."
+	notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	workspace.mount(notice)
 
 func open_npc_shop(npc_id: String = "") -> void:
 	_open_window("npc_shop","잡화 상인","")
@@ -4055,6 +4056,15 @@ func original_skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
 func original_skill_window_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open()
 
+func original_skill_window_gesture_is_live(epoch: int) -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.skill_window_gesture_is_live(epoch)
+
+func original_skill_window_gesture_tap(epoch: int, skill_id: String, release: Vector2) -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.skill_window_gesture_tap(epoch,skill_id,release)
+
+func original_skill_window_gesture_scroll(epoch: int, delta_y: float) -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.skill_window_gesture_scroll(epoch,delta_y)
+
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
@@ -4066,6 +4076,10 @@ func original_ui_font(path: String) -> FontFile:
 
 func original_inventory_name_hint_context(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}
+
+func reward_choice_blocks_pointer() -> bool:
+	var dialog: Variant=get_meta("patch523_reward_choice",null) if has_meta("patch523_reward_choice") else null
+	return is_instance_valid(dialog) and not dialog.is_queued_for_deletion()
 
 func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	if not original_inventory_is_open():return {}
@@ -4099,6 +4113,20 @@ func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on
 		if opened.get("handled",false):return opened
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
+
+func confirm_inventory_delete(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+	if original_drop_confirm_is_open():return {"ok":false,"handled":false}
+	if pointer_transfer != null:
+		pointer_transfer.cancel()
+		pointer_transfer.reset_tap_history()
+	if is_instance_valid(original_main_ui_controller):
+		original_main_ui_controller.close_item_tooltip()
+		var original: Dictionary=original_main_ui_controller.try_open_drop_confirm(item_name,item_class_id,maximum,on_confirm,true)
+		if original.get("handled",false):return original
+	for dialog: Node in $Root.get_children():
+		if dialog.name=="TwilightConfirmation" and not dialog.is_queued_for_deletion():return {"ok":false,"handled":false}
+	var made: Control=confirm_action("아이템 영구 삭제","%s을(를) 영구 삭제하시겠습니까? 삭제한 아이템은 되돌릴 수 없습니다." % item_name,"삭제",on_confirm,maximum if maximum>1 else 0)
+	return {"ok":made!=null,"handled":made!=null,"member":"twilight_confirmation"}
 
 func original_inventory_scroll_by(screen_delta_y: float) -> Dictionary:
 	return original_main_ui_controller.inventory_scroll_by(screen_delta_y) if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_scroll_by") else {}
