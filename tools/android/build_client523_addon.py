@@ -23,6 +23,10 @@ reinstalling its parts. It is one ZIP picked in the same installer
         --ui /private/ui523/main_pack --output /private/addon-ui
 
 The add-on holds derived original rows: keep it private like the pack.
+Rebuilding a private UI section with Pillow and zstandard from
+tools/lineagem_original/requirements.txt also prepares the 43 reviewed settings
+frames. Existing installed packs continue to use their original atlas pages.
+The original manifest, images, and installation roots keep their identities.
 """
 from __future__ import annotations
 
@@ -30,6 +34,7 @@ import argparse
 import hashlib
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -65,7 +70,7 @@ def check_world_map(root: Path, manifest: Path) -> None:
                      and isinstance(offer.get("label"), str) and offer["label"], f"world_map: invalid offer for Land {land}")
 
 
-def check_ui(root: Path, manifest: Path) -> None:
+def check_ui(root: Path, manifest: Path) -> dict:
     """The runtime refuses a UI pack with blockers or missing originals."""
     pack.require(manifest.stat().st_size <= UI_MANIFEST_LIMIT, "ui: original_ui.json is above the runtime 128 MB limit")
     document = json.loads(manifest.read_text(encoding="utf-8"))
@@ -77,9 +82,15 @@ def check_ui(root: Path, manifest: Path) -> None:
         path = root / "originals" / member
         pack.require(path.is_file() and path.stat().st_size == record.get("bytes"), f"ui: original missing or resized: {member}")
         pack.require(pack.sha256_file(path) == record.get("sha256"), f"ui: original changed: {member}")
+    return document
 
 
 def build(args) -> dict:
+    with tempfile.TemporaryDirectory(prefix="twilight-frames-") as folder:
+        return _build(args, Path(folder))
+
+
+def _build(args, scratch) -> dict:
     members = []
     sections = {}
     for section, (manifest_name, pin) in ADDON_SECTIONS.items():
@@ -91,8 +102,9 @@ def build(args) -> dict:
         pack.require(manifest.is_file(), f"{section}: {manifest_name} missing")
         digest = pack.sha256_file(manifest)
         pack.require(pin is None or digest == pin, f"{section}: manifest SHA-256 {digest} is not the pinned {pin}")
+        entry = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": digest}
         if section == "ui":
-            check_ui(root, manifest)
+            ui = check_ui(root, manifest)
         if section == "world_map":
             check_world_map(root, manifest)
         if section == "equipment_smelt":
@@ -101,8 +113,10 @@ def build(args) -> dict:
             files = [(manifest_name, manifest, SMELT_BYTES)]
         else:
             files = pack.walk(root)
+        if section == "ui":
+            pack.prepared_settings_frames.add_to_package(root, ui, entry, files, scratch)
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
-        sections[section] = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": digest}
+        sections[section] = entry
     pack.require(sections, "no add-on section given")
     listing = hashlib.sha256()
     for name, _, size in members:
