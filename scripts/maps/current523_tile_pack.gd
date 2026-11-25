@@ -58,6 +58,7 @@ const MAX_PUBLISH_PER_FRAME: int = 2
 const PUBLISH_BUDGET_USEC: int = 2000
 var _publish_frame: int = -1
 var _published_this_frame: int = 0
+var _completed_atlases := PackedInt32Array()
 var _publish_usec: int = 0
 var _publish_sequence: int = 0
 var _priority: Dictionary = {} # tile ID -> last visible request frame
@@ -86,6 +87,7 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_recent.clear()
 	_held.clear()
 	_prefetch_errors.clear()
+	_completed_atlases.clear()
 	_priority.clear()
 	_drop_jobs()
 	problem = ""
@@ -248,6 +250,7 @@ func pump_jobs() -> int:
 	if _publish_frame != frame:
 		_publish_frame = frame
 		_published_this_frame = 0
+		_completed_atlases.clear()
 		_publish_usec = 0
 		for tile_id: int in _priority.keys():
 			if int(_priority[tile_id]) < frame - 1: _priority.erase(tile_id)
@@ -272,9 +275,16 @@ func pump_jobs() -> int:
 		problem = saved
 		_publish_usec += Time.get_ticks_usec() - started
 		_published_this_frame += 1
+		_completed_atlases.append(selected)
 		_publish_sequence += 1
 		done += 1
 	return done
+
+## Includes terminal failures. Read-only and frame-scoped so a candidate
+## and active renderer can both react without changing the upload allowance.
+func completed_atlases_this_frame() -> PackedInt32Array:
+	return _completed_atlases if _publish_frame == Engine.get_process_frames() else PackedInt32Array()
+
 
 ## Waits for and discards every worker decode (a new pack or teardown).
 func _drop_jobs() -> void:
