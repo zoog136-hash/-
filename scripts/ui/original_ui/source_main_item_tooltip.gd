@@ -135,7 +135,7 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 	var acquisition: Callable=actions.get("acquisition",Callable())
 	if not delete_action.is_valid() and not acquisition.is_valid():spec["Icon_Set"]={"exclude":true}
 	else:
-		for group: String in ["Business","Del","Warehouse","Probability","Detail"]:
+		for group: String in ["Business","Del","Warehouse","Enchant","Probability","Detail"]:
 			var action: Callable=delete_action if group=="Del" else (acquisition if group=="Detail" else Callable())
 			spec["Icon_Set/"+group+"_Off"]={"exclude":true}
 			if action.is_valid():
