@@ -612,7 +612,12 @@ func _show_selected() -> Dictionary:
 	_info.set_bound_text(int(nodes.name),str(record.get("name","")))
 	_info.set_bound_text(int(nodes.grade),str(record.get("grade","")))
 	var picture: bool=false
-	var owner: Dictionary=_picture(Presentation.catalog_detail(_category,record,true)) if not record.is_empty() else {"ok":false}
+	# Change_DetailView's CardSample is a 46x46 card placeholder (scale 1.5)
+	# whose siblings CardSample_Screen / _Awaken / _Multi overlay the same card
+	# face: every category and grade shows its DisplayBaseAssetID front. The
+	# IllustrationAssetID painting overflowed the option text and buttons
+	# (user list 2026-11-26 #16).
+	var owner: Dictionary=_picture(Presentation.detail(record,true,false)) if not record.is_empty() else {"ok":false}
 	if owner.get("ok",false):
 		var uploaded: Dictionary=_detail.set_bound_source_visual_result(SAMPLE,owner)
 		picture=uploaded.get("ok",false) and _detail.set_bound_visible(SAMPLE,true).get("ok",false)
