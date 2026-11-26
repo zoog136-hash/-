@@ -74,7 +74,11 @@ static func build_char_info(pack: RefCounted, hud: Node, values: Dictionary) -> 
 		# A Callable does not keep its RefCounted target alive: the lambdas
 		# hold `inputs` for as long as the mounted buttons hold them.
 		20552:{"role":"button","activate":func() -> Dictionary: return inputs.open_character()},
-		20060:{"role":"button","activate":func() -> Dictionary: return inputs.open_inventory()}
+		# Btn_FloatingInven covers the class/level badge left of the bars. Its
+		# FloatingUiScene opens CharacterInfo_All_Layout (equipment + 스탯
+		# 정보) there: the whole top-left area opens the character window
+		# (user list 2026-11-26 #15). The bag stays on Hud_TopMenu.
+		20060:{"role":"button","activate":func() -> Dictionary: return inputs.open_character()}
 	}
 	var offsets: Array[int]=CHAR_NODE_OFFSETS.duplicate()
 	if pack.manifest.get("node_scopes",{}).get(CHAR_MEMBER,[]).has(POISON_BAR):
