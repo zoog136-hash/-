@@ -1,5 +1,8 @@
 extends RefCounted
 ## Durable local transactions for source offers. No UI price or grant payload is trusted.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
+const BOOT_LOG = preload("res://scripts/boot/boot_progress_log.gd")
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const Catalog = preload("res://scripts/shop/source523_shop_catalog.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
@@ -38,6 +41,9 @@ var problem: String = ""
 var _busy: bool = false
 var _transaction_time: int = -1
 var _bindings: Dictionary = {}
+## Set only when the real shop recognized its historical aggregate and the
+## installed original supplier can issue the same ItemClass as a physical stack.
+var legacy_powder_key: String = ""
 ## Explicit adapters only. Missing server/calendar/price knowledge never grants access.
 var server_context: Dictionary = {}
 ## Default calendar: Korea time with the 05:00 reset used everywhere else in
@@ -158,9 +164,11 @@ func configure(host: Node) -> void:
 		world.item_db.append(record.duplicate(true))
 		world.catalog_db["아이템"].append(record)
 	world._index_item_weights()
+	var source_start: int = BOOT_LOG.begin("shop_model")
 	var configured_source=Catalog.session()
+	BOOT_LOG.end("shop_model", source_start, {"available":configured_source.available()})
 	if configured_source.available():
-		bind_source(configured_source)
+		bind_source(configured_source, true)
 		release_catalog()
 
 ## Releases the original shop model until the shop is used again.
@@ -170,10 +178,11 @@ func release_catalog() -> void:
 	_catalog_released = true
 	Catalog.release()
 
-func bind_source(source) -> void:
+func bind_source(source, during_boot: bool = false) -> void:
 	if catalog == source and not _bindings.is_empty(): return
 	catalog = source
 	_bindings.clear()
+	legacy_powder_key = ""
 	if catalog == null or not catalog.available(): return
 	for row: Dictionary in world.catalog_db.get("아이템", []):
 		var raw_id: String = str(row.get("sourceId", ""))
@@ -199,14 +208,27 @@ func bind_source(source) -> void:
 		_bindings["34:%d" % id] = {"name":name,"record":world._find_catalog_item_record(name).duplicate(true)}
 	_bindings["4:26"] = {"gold":true,"name":"아데나"}
 	_bindings.merge(NpcConsumables.install(world,catalog))
-	_bindings.merge(SkillBooks.install(world,catalog))
+	var books_started: int = BOOT_LOG.begin("shop_skill_bind") if during_boot else 0
+	var book_scope = CashPackages._install_lookup(world,catalog)
+	var books: Dictionary = SkillBooks.install(world,catalog,book_scope)
+	if book_scope != null: book_scope.close()
+	_bindings.merge(books)
+	if during_boot: BOOT_LOG.end("shop_skill_bind", books_started, {"rows":books.size()})
 	_bindings.merge(preload("res://scripts/shop/source523_wisdom.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_ammo.gd").install(world,catalog))
 	_bindings.merge(preload("res://scripts/shop/source523_restoration.gd").install(world,catalog))
-	_bindings.merge(CashPackages.install(world,catalog))
+	var boxes_started: int = BOOT_LOG.begin("shop_cash_bind") if during_boot else 0
+	var boxes: Dictionary = CashPackages.install(world,catalog)
+	_bindings.merge(boxes)
+	if during_boot: BOOT_LOG.end("shop_cash_bind", boxes_started, {"rows":boxes.size()})
+	var tickets_started: int = BOOT_LOG.begin("shop_ticket_bind") if during_boot else 0
 	inventory_tickets.configure(self)
 	_bindings.merge(inventory_tickets.install())
+	_bind_advanced_powder()
+	if during_boot: BOOT_LOG.end("shop_ticket_bind", tickets_started)
+	var npc_started: int = BOOT_LOG.begin("shop_npc_bind") if during_boot else 0
 	npc_definitions.configure(catalog)
+	if during_boot: BOOT_LOG.end("shop_npc_bind", npc_started)
 	for arg: String in OS.get_cmdline_user_args():
 		if not arg.begins_with("--source523-shop-policy="): continue
 		var expected: String = ""
@@ -214,6 +236,20 @@ func bind_source(source) -> void:
 			if option.begins_with("--source523-shop-policy-sha256="): expected = option.trim_prefix("--source523-shop-policy-sha256=")
 		var loaded: Dictionary = load_policy(arg.trim_prefix("--source523-shop-policy="), expected)
 		if not loaded.ok: problem = str(loaded.reason)
+
+func _bind_advanced_powder() -> void:
+	var owned: Dictionary = _bindings.get("4:117544", {}).get("record", {})
+	if owned.get("source") != "inven" or owned.get("sourceId") != "117544" or owned.get("sourceUrl") != "https://lineagem.inven.co.kr/db/item/117544" or owned.get("slot") != "material": return
+	if not world.has_method("_catalog_item_from_source_id"): return
+	var item: Dictionary = catalog.record("ItemClass", 117544)
+	var name_value: String = catalog.label(int(item.get("IdentifiedDescID", 0)))
+	if name_value.is_empty() or owned.get("name") != name_value or world.catalog_item_variant_count.get(name_value, 0) != 1: return
+	var native: Dictionary = _native_supply_binding(117544, 1)
+	if native.get("name") != name_value + " · 원본#117544": return
+	legacy_powder_key = name_value
+	# New purchases and payments use the normal receipt routes. The former
+	# shop key still identifies old ownership when a save is loaded.
+	_bindings.erase("4:117544")
 
 func item_references(item_id: int) -> Dictionary:
 	var source = catalog if catalog != null else Catalog.session()
@@ -228,11 +264,13 @@ func _source_item_identity(item_id: int) -> Dictionary:
 		"reference_only":true,"can_activate":false}
 
 func load_policy(path: String, expected_sha: String) -> Dictionary:
-	if expected_sha.length()!=64 or not expected_sha.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected_sha.to_lower(): return fail("상점 정책 파일의 해시 확인 실패")
+	if expected_sha.length()!=64 or not expected_sha.is_valid_hex_number(false) or not FileAccess.file_exists(path): return fail("상점 정책 파일의 해시 확인 실패")
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()>1024*1024: return fail("상점 정책 파일 크기·접근 오류")
+	var bytes := VerifiedBytes.read(file,1024*1024)
+	if VerifiedBytes.sha256(bytes)!=expected_sha.to_lower(): return fail("상점 정책 파일의 해시 확인 실패")
 	var parser:=JSON.new()
-	if parser.parse(file.get_as_text())!=OK or not parser.data is Dictionary: return fail("상점 정책 JSON 오류")
+	if parser.parse(bytes.get_string_from_utf8())!=OK or not parser.data is Dictionary: return fail("상점 정책 JSON 오류")
 	var policy: Dictionary=parser.data
 	if policy.get("schema")!="twilight.source523.shop-policy.v1" or policy.get("pack_sha256")!=catalog.loaded_sha256: return fail("상점 정책의 원본 팩 불일치")
 	var offset: Variant=policy.get("calendar_offset_minutes",DEFAULT_CALENDAR_OFFSET_MINUTES)
@@ -394,6 +432,7 @@ func _token(unit: int, id: int, amount: int) -> Dictionary:
 
 func _resolve(token: Dictionary, giving: bool, inventory: Dictionary, gold: int) -> Dictionary:
 	if int(token.unit_id)==4:
+		if RETIRED_ITEMS.item(token.class_id):return fail(RETIRED_ITEMS.REASON)
 		var original: Dictionary=catalog.record("ItemClass",int(token.class_id))
 		var package: bool=giving and original.get("TestItem",false) and CashPackages.is_package(int(token.class_id))
 		if original.is_empty() or (original.get("TestItem",false) and not package) or not Dummy.item_evidence(original).is_empty():return fail("미확인·시험·원본 더미 품목은 상점 지급·차감 연결에서 제외")
@@ -753,6 +792,7 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	var ready: Dictionary=_ready_for_action(internal)
 	if not ready.ok:return ready
 	var offer: Dictionary=catalog.merchant_offer(id)
+	if RETIRED_ITEMS.item(offer.get("goods",{}).get("ItemClassID")):return fail(RETIRED_ITEMS.REASON)
 	var price: Dictionary=merchant_price(id)
 	if not price.ok:return price
 	var profile: Dictionary=merchant_prices.get(str(id),{})
@@ -827,12 +867,12 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if not binding.get("gold",false) and (world._item_locked(str(binding.name),"") or not world._enhancement_kind_for_record(binding.get("record",{})).is_empty()):return fail("잠긴 재료·장비를 결제에 사용할 수 없습니다")
 	var token: Dictionary=_token(4,int(row.ItemClassID),int(count.value))
 	var target: Dictionary=_resolve(token,true,world.inventory,int(world.gold))
-	if not target.ok:
+	if not target.ok or (int(row.ItemClassID) == 117544 and target.binding.get("native_supply",false)):
 		# An original 523 item the game owns as a physical stack (e.g. the
 		# native skill books of 기란 혈맹 상인) is issued by the shared 523
 		# supplier at claim time, with its receipt.
 		var native: Dictionary=_native_supply_binding(int(row.ItemClassID),int(row.get("ItemBlessCodeID",1)))
-		if native.is_empty():return target
+		if native.is_empty():return target if not target.ok else fail("원본 상품 축복 상태 확인 필요")
 		token["native_supply"]=true;token["bless_raw"]=int(row.get("ItemBlessCodeID",1))
 		target={"ok":true,"binding":native}
 	if native_repeat:
@@ -882,6 +922,7 @@ const BUY_LIST_ACTION: int = 2
 var _buy_rows: Dictionary = {}
 
 func buy_row(item_class_id: int) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	if _buy_rows.is_empty() and catalog != null and catalog.available():
 		for row: Dictionary in catalog.rows("MerchantGoods"):
 			if int(row.get("DialogActionTypeID", 0)) != BUY_LIST_ACTION or int(row.get("ItemBlessCodeID", 0)) != 1 or int(row.get("Enchant", 0)) != 0: continue
@@ -981,6 +1022,7 @@ func orders() -> Array:
 	return result
 
 func _native_supply_binding(item_class_id: int, bless: int) -> Dictionary:
+	if RETIRED_ITEMS.item(item_class_id):return {}
 	var D: Script=preload("res://scripts/loot/patch523_monster_drops.gd")
 	var summary: Dictionary=D.definition_id(str(item_class_id))
 	if summary.is_empty() or summary.get("original_item",{}).get("TestItem",true):return {}
@@ -1020,14 +1062,21 @@ func native_debit(name: String, amount: int) -> Dictionary:
 func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionary, next_id: int) -> Dictionary:
 	for token: Dictionary in goods:
 		if not integer(token.get("amount")) or int(token.amount) < 1: return fail("지급 수량 오류")
-		if token.get("native_supply")==true:
-			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,int(token.class_id),int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":int(token.class_id)})
+		var binding: Dictionary = {}
+		if not token.get("native_supply",false):
+			var resolved: Dictionary = _resolve(token, true, inventory, gold)
+			if not resolved.ok: return resolved
+			binding = resolved.binding
+		# Older pending orders can predate the physical binding. Resolve their
+		# actual item at claim time as well as honoring already quoted variants.
+		var received_id: int = int(binding.get("record",{}).get("source_item_class_id", 0))
+		var old_powder_order: bool = received_id == 117544 and binding.get("native_supply",false) and not legacy_powder_key.is_empty()
+		if token.get("native_supply",false) or old_powder_order:
+			var item_id: int = received_id if old_powder_order else int(token.class_id)
+			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,item_id,int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":item_id})
 			if not issued.get("ok",false):return fail(str(issued.get("error","원본 지급 실패")))
 			inventory=issued.overrides.inventory;instances=issued.overrides.item_instances;gold=int(issued.overrides.gold)
 			continue
-		var resolved: Dictionary = _resolve(token, true, inventory, gold)
-		if not resolved.ok: return resolved
-		var binding: Dictionary = resolved.binding
 		var amount: int = int(token.amount)
 		if binding.get("gold", false):
 			if gold > LIMIT - amount: return fail("아데나 보유 범위 초과")
@@ -1151,17 +1200,17 @@ func claim_cumulative(id: int, step: int) -> Dictionary:
 	if result.ok: result["reason"] = "누적 보상 수령 완료"
 	return result
 
-func quote_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
-	return inventory_tickets.quote(item_key,selection)
+func quote_inventory_ticket(item_key: String, selection: Dictionary = {}, physical_id: String = "") -> Dictionary:
+	return inventory_tickets.quote(item_key,selection,false,physical_id)
 
-func use_inventory_ticket(item_key: String, selection: Dictionary = {}) -> Dictionary:
-	var result: Dictionary=inventory_tickets.use_ticket(item_key,selection)
+func use_inventory_ticket(item_key: String, selection: Dictionary = {}, physical_id: String = "") -> Dictionary:
+	var result: Dictionary=inventory_tickets.use_ticket(item_key,selection,physical_id)
 	result["handled"]=InventoryTickets.claims(world._find_catalog_item_record(item_key))
 	return result
 
-func try_use_inventory_ticket(item_key: String) -> bool:
+func try_use_inventory_ticket(item_key: String, physical_id: String = "") -> bool:
 	if not InventoryTickets.claims(world._find_catalog_item_record(item_key)):return false
-	var result: Dictionary=use_inventory_ticket(item_key)
+	var result: Dictionary=use_inventory_ticket(item_key,{},physical_id)
 	world.hud.show_message(str(result.get("message",result.get("reason","티켓 처리 결과 확인 필요"))))
 	return true
 

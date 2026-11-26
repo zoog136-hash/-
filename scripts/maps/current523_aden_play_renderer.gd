@@ -7,6 +7,7 @@ signal safe_return_requested(reason: String)
 ## the map (nearest own-clear cell, else the owner's village fallback).
 signal actor_position_recovered(detail: Dictionary)
 
+const RETIRED_MAP_JOBS = preload("res://scripts/maps/current523_retired_map_jobs.gd")
 const RAW = preload("res://scripts/maps/current523_aden_pack.gd")
 const GENERIC_RAW = preload("res://scripts/maps/current523_source_pack.gd")
 const GENERIC_TILES = preload("res://scripts/maps/current523_tile_pack.gd")
@@ -15,9 +16,17 @@ const REVIEW = preload("res://scripts/maps/current523_aden_review.gd")
 const STATIC_SPR = preload("res://scripts/maps/current523_static_spr.gd")
 const BANK_OBJECTS = preload("res://scripts/maps/current523_bank_objects.gd")
 const USAGE=preload("res://scripts/maps/current523_map_usage.gd")
+const MAP_BACKGROUND=preload("res://scripts/maps/current523_map_background.gd")
+const DREAM_SHADER=preload("res://scripts/maps/current523_dream_background.gdshader")
 const GRID_SHA256: String = "30229ce7fd95656519ff73a47515ac2ac277983022ebc262b084c134a2b80d53"
 const GRID_ORIGIN: Vector2i = Vector2i(32448, 32064)
 const GRID_SIZE: Vector2i = Vector2i(1856, 1536)
+# Group projected chunk bounds into coarse buckets. An exact intersection
+# still decides coverage; small maps and exceptional spans use the linear scan.
+const CHUNK_BUCKET_PX: int = 2048
+const CHUNK_INDEX_MIN: int = 64
+const CHUNK_BUCKET_SPAN_LIMIT: int = 64
+const CHUNK_INDEX_ENTRY_LIMIT: int = 65536
 const RAW_CHUNK_LIMIT: int = 48
 const VISIBLE_CHUNK_LIMIT: int = 48
 const VISIBLE_ATLAS_LIMIT: int = 256
@@ -56,6 +65,10 @@ const HELD_ATLAS_LIMIT: int = 128
 ## The built frame covers this much beyond the screen, so standing still or
 ## small moves reuse it instead of re-walking every visible chunk record.
 const BUILD_MARGIN: float = 192.0
+# Start the next window before the camera reaches its edge. Keep the same
+# number of blocks in a window, so anticipation does not raise GPU residency.
+const LOOK_AHEAD_SECONDS: float = 0.35
+const MAX_LOOK_AHEAD: float = BUILD_MARGIN * 0.5
 ## Frame spread (user report 2026-11-20, phone recording: running diagonally
 ## into new ground stalled about every 0.25 s). A frame build that left margin
 ## blocks unbaked used to clear the built view, so every 0.25 s refresh
@@ -100,10 +113,15 @@ var _member_origins: Dictionary = {}
 var _overlap: Dictionary = {}
 var _legacy_origins: Dictionary = {}
 var _chunk_rects: Dictionary = {}
+var _indexed_members: Array[String] = []
+var _chunk_buckets: Dictionary = {}
 var _raw_chunks: Dictionary = {}
 var _raw_recent: Array[String] = []
 var _frame_commands: Dictionary = {}
 var _built_view := Rect2() # World rect the current frame commands cover.
+var _arrival_view := Rect2()
+var _arrival_keep: Array[Vector2i] = []
+var _arrival_problem: String = ""
 var _frame_atlases: Dictionary = {}
 ## Block cell -> {viewport, canvas, commands {layer: PackedInt64Array},
 ## atlases {tile_id: Texture2D}, count (records owned), draws, raw_ff, unresolved}.
@@ -118,13 +136,22 @@ var _pending_blocks: Array[Vector2i] = []
 var _pending_retry: Dictionary = {}
 ## Pending block cell -> its atlas IDs (PackedInt32Array), see _pending_tiles_ready.
 var _pending_tiles: Dictionary = {}
+# Partial block -> member -> unique atlas IDs. An installed member's records
+# are immutable for this pack; retrying an adjacent read need not walk them.
+var _pending_tile_members: Dictionary = {}
 var _markers_at := Vector2.INF
 var _collision_cell := Vector2i(-2147483648, -2147483648)
 ## On-screen block cell -> msec it started waiting for atlas decodes.
 var _screen_wait: Dictionary = {}
 var _background_atlases: bool = false
+var _dream_background: Dictionary = {}
 ## Chunk member -> block cell -> {layer: record indexes}; dropped with the chunk.
 var _chunk_bins: Dictionary = {}
+## Resident S32 member -> (block x, block y, object policy) -> atlas IDs.
+## Keep dense request lists across viewport eviction without retaining textures.
+var _chunk_atlas_ids: Dictionary = {}
+const MIN_ATLAS_CACHE_RECORDS: int = 64
+const MAX_ATLAS_LISTS_PER_CHUNK: int = 64
 ## Chunk member -> worker read job (see _prefetch_chunk).
 var _chunk_jobs: Dictionary = {}
 ## S32 chunk reads in flight at once.
@@ -227,6 +254,10 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	field = value
 	source = value as OriginalPlayableField
 	player = actor
+	_dream_background = {}
+	if generic and int(value.definition.get("source_land_id",-1)) == MAP_BACKGROUND.DREAM_LAND:
+		_dream_background = MAP_BACKGROUND.dream_layers(MAP_BACKGROUND.DREAM_LAND,str(value.get("source_asset")))
+		print("CURRENT523_DREAM_BACKGROUND ready=",not _dream_background.is_empty())
 	var source_owned: bool = bool(value.get_meta("current523_source_field",false))
 	if source_owned:
 		record = {"chunks":[]}
@@ -244,10 +275,13 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 	# Draw lists on workers with the real pack (its tile table is read-only).
 	block_jobs_enabled = "hold_published" in tiles
 	_visual_delta = visual_delta
-	_member_origins.clear(); _overlap.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	_member_origins.clear(); _legacy_origins.clear(); _chunk_rects.clear()
+	_chunk_buckets.clear(); _indexed_members.clear()
+	# Old workers may still own the previous immutable overlap table.
+	_overlap = {}
 	_drop_chunk_jobs()
 	_raw_chunks.clear(); _raw_recent.clear(); _frame_commands.clear(); _frame_atlases.clear()
-	_chunk_bins.clear(); _clear_blocks()
+	_chunk_bins.clear(); _chunk_atlas_ids.clear(); _clear_blocks()
 	_scope_clipped_records = 0
 	_off_floor_decoration_records = 0
 	for row: Variant in record.chunks:
@@ -273,6 +307,7 @@ func try_configure(value: PlayableField, actor: Node2D, raw_root: String, tile_r
 			_overlap[origin] = member
 			_chunk_rects[member] = _candidate_rect(origin)
 	if _overlap.is_empty(): return _fail("기존 아덴 그림과 M 표시 후보의 공통 영역이 없습니다.")
+	_index_chunk_rects()
 	var scope: String = _scope_problem()
 	if not scope.is_empty(): return _fail(scope)
 	if not field.point_clear(player.global_position, 4.0):
@@ -469,7 +504,64 @@ func _candidate_rect(origin: Vector2i) -> Rect2:
 	return bounds.grow(24.0)
 
 
+static func _bucket_span(rect: Rect2) -> Rect2i:
+	if not rect.has_area() or not rect.is_finite(): return Rect2i()
+	var first := Vector2i((rect.position / CHUNK_BUCKET_PX).floor())
+	var last := Vector2i((rect.end / CHUNK_BUCKET_PX).floor())
+	var size: Vector2i = last - first + Vector2i.ONE
+	if size.x <= 0 or size.y <= 0 or size.x > CHUNK_BUCKET_SPAN_LIMIT or size.y > CHUNK_BUCKET_SPAN_LIMIT:
+		return Rect2i()
+	if size.x * size.y > CHUNK_BUCKET_SPAN_LIMIT: return Rect2i()
+	return Rect2i(first,size)
+
+
+func _index_chunk_rects() -> void:
+	_indexed_members.clear()
+	_chunk_buckets.clear()
+	if _chunk_rects.size() < CHUNK_INDEX_MIN: return
+	var entries: int = 0
+	for member: String in _chunk_rects:
+		var span: Rect2i = _bucket_span(_chunk_rects[member])
+		entries += span.size.x * span.size.y
+		if not span.has_area() or entries > CHUNK_INDEX_ENTRY_LIMIT:
+			# An unusual pack still receives the original exact scan.
+			_indexed_members.clear()
+			_chunk_buckets.clear()
+			return
+		var ordinal: int = _indexed_members.size()
+		_indexed_members.append(member)
+		for x: int in range(span.position.x,span.end.x):
+			for y: int in range(span.position.y,span.end.y):
+				var cell := Vector2i(x,y)
+				if not _chunk_buckets.has(cell): _chunk_buckets[cell] = []
+				(_chunk_buckets[cell] as Array).append(ordinal)
+
+
+## Return the same members in original catalog order for atlas prefetch.
+## Draw callers still sort by member name before assembling a block.
+func _members_in(rect: Rect2) -> Array[String]:
+	var out: Array[String] = []
+	var span: Rect2i = _bucket_span(rect) if not _chunk_buckets.is_empty() else Rect2i()
+	if not span.has_area():
+		for member: String in _chunk_rects:
+			if (_chunk_rects[member] as Rect2).intersects(rect): out.append(member)
+		return out
+	var candidates: Dictionary = {}
+	for x: int in range(span.position.x,span.end.x):
+		for y: int in range(span.position.y,span.end.y):
+			var ids: Variant = _chunk_buckets.get(Vector2i(x,y))
+			if ids == null: continue
+			for ordinal: int in ids: candidates[ordinal] = true
+	var ordinals: Array = candidates.keys()
+	ordinals.sort()
+	for ordinal: int in ordinals:
+		var member: String = _indexed_members[ordinal]
+		if (_chunk_rects[member] as Rect2).intersects(rect): out.append(member)
+	return out
+
+
 func _view_rect() -> Rect2:
+	if _arrival_view.has_area(): return _arrival_view
 	var viewport: Rect2 = player.get_viewport_rect()
 	var inverse: Transform2D = player.get_canvas_transform().affine_inverse()
 	var view := Rect2(inverse * viewport.position, Vector2.ZERO)
@@ -477,6 +569,17 @@ func _view_rect() -> Rect2:
 		view = view.expand(inverse * point)
 	view.position -= _visual_delta
 	return view.grow(64.0)
+
+## Match the next build's block coverage, including its prefetch margin.
+## A hidden arrival renderer remains a consumer while driven by the cover.
+func atlas_request_bounds() -> Rect2i:
+	if not _configured or not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(player):
+		return Rect2i()
+	var screen: Rect2 = _view_rect()
+	var view: Rect2 = _built_view if _built_view.encloses(_motion_coverage(screen)) else screen.grow(BUILD_MARGIN)
+	var first := Vector2i(floori(view.position.x / BLOCK), floori(view.position.y / BLOCK))
+	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
+	return Rect2i(first, last - first + Vector2i.ONE)
 
 
 func _read_chunk(member: String) -> Dictionary:
@@ -507,7 +610,15 @@ func _prefetch_chunk(member: String) -> bool:
 	if _raw_chunks.has(member) or _unreadable_chunks.has(member): return true
 	if _chunk_jobs.has(member) or _chunk_jobs.size() >= MAX_CHUNK_JOBS: return false
 	if _raw_sources == null or not _raw_sources.has_method("read_member_job"): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	var job: Dictionary = _chunk_params(member)
+	if job.generic and _raw_sources.get_script()==GENERIC_RAW and field.has_method("verified_navigation_chunk_for_renderer"):
+		job["catalog_root"] = _raw_sources.catalog_directory()
+		job["catalog_pin"] = _raw_sources.catalog_identity().get("manifest_sha256","")
+		job["asset_path"] = str(_raw_sources.source_asset)
+		job["field_id"] = field.get_instance_id()
+		var cached: Dictionary = field.verified_navigation_chunk_for_renderer(member,job.catalog_root,job.catalog_pin,job.asset_path)
+		if not cached.is_empty(): job["verified_navigation"] = cached
 	job["task"] = WorkerThreadPool.add_task(_chunk_job.bind(job), false, "S32 chunk read")
 	_chunk_jobs[member] = job
 	return false
@@ -520,9 +631,12 @@ func _pump_chunk_jobs() -> void:
 		WorkerThreadPool.wait_for_task_completion(int(job.task))
 		_chunk_jobs.erase(member)
 		_install_chunk(member, job)
+		_wake_blocks_for_chunk(member)
 
-func _drop_chunk_jobs() -> void:
-	for job: Dictionary in _chunk_jobs.values(): WorkerThreadPool.wait_for_task_completion(int(job.task))
+func _drop_chunk_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _chunk_jobs.values():
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_chunk_jobs.clear()
 
 ## Everything a chunk read needs, copied for a worker (the pack, field
@@ -536,14 +650,26 @@ func _chunk_params(member: String) -> Dictionary:
 		"generic": bool(field.get_meta("current523_generic_field", false))}
 
 static func _chunk_job(job: Dictionary) -> void:
-	var decoded: Dictionary = (job.sources as Object).call("read_member_job", str(job.member))
+	var decoded: Dictionary = job.get("verified_navigation",{})
+	if decoded.is_empty():
+		decoded = (job.sources as Object).call("read_member_job", str(job.member))
 	if decoded.has("_problem"):
 		job["problem"] = str(decoded._problem)
 		return
+	if job.has("field_id") and not job.has("verified_navigation"):
+		job["verified_collision"] = {"member":decoded.member,"asset_path":decoded.asset_path,"source_sha256":decoded.source_sha256,
+			"sections":{"floor":decoded.sections.floor,"attributes":decoded.sections.attributes}}
 	job.merge(_decode_chunk(job, decoded), true)
+	job.erase("verified_navigation")
 
 ## S32 sections -> static tail, projected lanes, block bins and clip counts.
 static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary:
+	if not bool(params.valid):
+		return _decode_chunk_with_floor(params, decoded, false)
+	var origin: Vector2i = params.origin
+	return _decode_chunk_with_floor(params, decoded, origin.x % 64 == 0 and origin.y % 64 == 0)
+
+static func _decode_chunk_with_floor(params: Dictionary, decoded: Dictionary, direct_floor: bool) -> Dictionary:
 	var out: Dictionary = {}
 	var tail: Dictionary = STATIC_SPR.parse_tail(decoded.sections.tail, int(params.core_end))
 	if tail.ok:
@@ -555,9 +681,13 @@ static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary
 	# Records in file order (floor, covers, objects), then projected in one pass.
 	var halves := PackedInt32Array(); var rows := PackedInt32Array(); var kinds := PackedInt32Array(); var refs := PackedInt64Array()
 	var floor_bytes: PackedByteArray = decoded.sections.floor
-	halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
-	for index: int in range(8192):
-		halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
+	# Aligned S32 chunks always have 64x64 source cells, two consecutive
+	# halves per cell. Do not materialize four deterministic 8192-entry
+	# arrays just to look the positions up again in the generic projector.
+	if not direct_floor:
+		halves.resize(8192); rows.resize(8192); kinds.resize(8192); refs.resize(8192)
+		for index: int in range(8192):
+			halves[index] = index & 127; rows[index] = index >> 7; kinds[index] = -2; refs[index] = floor_bytes.decode_u32(index * 4)
 	var covers: PackedByteArray = decoded.sections.covers
 	for index: int in range(covers.decode_u16(0)):
 		var offset: int = 2 + index * 6
@@ -570,14 +700,41 @@ static func _decode_chunk(params: Dictionary, decoded: Dictionary) -> Dictionary
 		for _part: int in range(count):
 			halves.append(objects[cursor]); rows.append(objects[cursor + 1]); kinds.append(objects[cursor + 2]); refs.append(objects.decode_u32(cursor + 3))
 			cursor += 7
-	out["halves"] = halves; out["rows"] = rows; out["kinds"] = kinds; out["refs"] = refs
+	if not direct_floor:
+		out["halves"] = halves; out["rows"] = rows; out["kinds"] = kinds; out["refs"] = refs
 	if bool(params.valid):
 		var projected: Dictionary = _project_static(params, halves, rows, kinds, refs)
-		out["packed"] = projected.packed
+		var lanes: Dictionary={}
+		if direct_floor:
+			if (params.overlap as Dictionary).has(params.origin):
+				lanes[-2] = _project_s32_floor(params, floor_bytes)
+			else:
+				projected.clipped += 8192
+		lanes.merge(projected.packed)
+		out["packed"] = lanes
 		out["clipped"] = projected.clipped
 		out["off_floor"] = projected.off_floor
-		out["bins"] = _bin_chunk(projected.packed)
+		out["bins"] = _bin_chunk(lanes)
 	return out
+
+## Same basis and operation order as _project_static. Both halves share the
+## float32 cell anchor; apply the half-column offset only to the second.
+static func _project_s32_floor(params: Dictionary, source: PackedByteArray) -> PackedInt64Array:
+	var origin: Vector2i=params.origin;var grid: Vector2i=params.grid_origin
+	var bx: Vector2=params.basis_x;var by: Vector2=params.basis_y;var shift: Vector2=params.shift
+	var odd: Vector2=(bx+by)*0.5
+	var lane:=PackedInt64Array();lane.resize(8192*3)
+	var pos:=0;var byte_at:=0
+	for y: int in 64:
+		var gy: float=float(origin.y+y)-grid.y+0.5
+		for x: int in 64:
+			var gx: float=float(origin.x+x)-grid.x+0.5
+			var center:=Vector2(bx.x*gx+by.x*gy+shift.x,bx.y*gx+by.y*gy+shift.y)
+			var first: Vector2=center-by;var second: Vector2=first+odd
+			lane[pos]=int(first.x);lane[pos+1]=int(first.y);lane[pos+2]=source.decode_u32(byte_at)
+			lane[pos+3]=int(second.x);lane[pos+4]=int(second.y);lane[pos+5]=source.decode_u32(byte_at+4)
+			pos+=6;byte_at+=8
+	return lane
 
 func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 	if job.has("problem") or not job.has("tail"):
@@ -586,6 +743,9 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 		_unreadable_chunks[member] = str(job.get("problem", "unread"))
 		print("CURRENT523_CHUNK_UNREADABLE ", JSON.stringify({"member":member,"problem":_unreadable_chunks[member]}))
 		return {}
+	if job.has("verified_collision") and is_instance_valid(field) and field.get_instance_id()==job.field_id \
+		and field.has_method("offer_renderer_collision"):
+		field.offer_renderer_collision(member,job.catalog_root,job.catalog_pin,job.asset_path,job.verified_collision)
 	# Retain the same currently loaded S32 tail even while SPR display is off.
 	_static_tails[member] = job.tail
 	_mark_visible_static_tail_changed(member)
@@ -598,11 +758,13 @@ func _install_chunk(member: String, job: Dictionary) -> Dictionary:
 	else:
 		packed = _project_records(_member_origins[member], job.halves, job.rows, job.kinds, job.refs)
 		_chunk_bins[member] = _bin_chunk(packed)
+	_chunk_atlas_ids.erase(member)
 	_raw_chunks[member] = packed
 	_raw_recent.append(member)
 	while _raw_recent.size() > RAW_CHUNK_LIMIT:
 		var oldest: String=_raw_recent.pop_front()
 		_raw_chunks.erase(oldest);_static_tails.erase(oldest);_chunk_bins.erase(oldest)
+		_chunk_atlas_ids.erase(oldest)
 		_mark_visible_static_tail_changed(oldest)
 	return packed
 
@@ -747,9 +909,7 @@ static func _block_rect(cell: Vector2i) -> Rect2:
 func _block_commands(cell: Vector2i) -> Dictionary:
 	var rect: Rect2 = _block_rect(cell)
 	var near: Rect2 = rect.grow(BUILD_MARGIN)
-	var members: Array[String] = []
-	for member: String in _chunk_rects:
-		if (_chunk_rects[member] as Rect2).intersects(near): members.append(member)
+	var members: Array[String] = _members_in(near)
 	members.sort()
 	# A pending member is not an empty chunk: never cache a partial picture.
 	var chunks_ready: bool = true
@@ -828,8 +988,9 @@ var _block_jobs: Dictionary = {}
 
 ## Starts the worker pass for `cell` when its chunks are installed.
 ## On-screen blocks start regardless of MAX_BLOCK_JOBS (it bounds margin work).
-func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
+func _start_block_job(cell: Vector2i, on_screen: bool, resident_only: bool = false) -> bool:
 	if _block_jobs.has(cell): return true
+	if not RETIRED_MAP_JOBS.accept_new_work(): return false
 	if not on_screen and _block_jobs.size() >= MAX_BLOCK_JOBS: return false
 	var members: Array[String] = _block_members(cell)
 	var inputs: Array = []
@@ -837,8 +998,11 @@ func _start_block_job(cell: Vector2i, on_screen: bool) -> bool:
 		if _unreadable_chunks.has(member): continue
 		if not _raw_chunks.has(member): return false
 		var layers: Dictionary = _raw_chunks[member]
-		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
+		if not _chunk_bins.has(member):
+			if resident_only: return false
+			_chunk_bins[member] = _bin_chunk(layers)
 		inputs.append([layers, (_chunk_bins[member] as Dictionary).get(cell, {})])
+	if resident_only and inputs.is_empty(): return false
 	var job: Dictionary = {"cell": cell, "inputs": inputs, "include_objects": include_objects, "tiles": _tile_pack,
 		"has_subimage": _tile_pack.has_method("has_subimage")}
 	job["task"] = WorkerThreadPool.add_task(_block_job.bind(job), false, "Current523 block draw list")
@@ -850,7 +1014,7 @@ static func _block_job(job: Dictionary) -> void:
 	var cell: Vector2i = job.cell
 	var tiles: Object = job.tiles
 	var has_subimage: bool = job.has_subimage
-	var by_layer: Dictionary = {}
+	var commands: Dictionary = {}
 	var tile_ids: Dictionary = {}
 	var valid_refs: Dictionary = {}
 	var invalid: Array = []
@@ -864,9 +1028,13 @@ static func _block_job(job: Dictionary) -> void:
 		for layer: int in bins:
 			if not job.include_objects and layer >= 0: continue
 			var records: PackedInt64Array = layers[layer]
+			# Append to the final layer buffer in the existing member/record order.
+			var target: PackedInt64Array = commands.get(layer, PackedInt64Array())
 			for index: int in (bins[layer] as PackedInt32Array):
 				var ref: int = records[index + 2]
-				var owned: bool = floori(float(records[index]) / BLOCK) == cell.x and floori(float(records[index + 1]) / BLOCK) == cell.y
+				var x: int = records[index]
+				var y: int = records[index + 1]
+				var owned: bool = (x >> BLOCK_SHIFT) == cell.x and (y >> BLOCK_SHIFT) == cell.y
 				if ref == 4294967295:
 					if owned: raw_ff += 1
 					continue
@@ -886,26 +1054,18 @@ static func _block_job(job: Dictionary) -> void:
 					job["problem"] = "M 표시 실험의 타일 또는 아틀라스 예산을 초과했습니다."
 					return
 				tile_ids[tile_id] = true
-				var lane: Variant = by_layer.get(layer)
-				if lane == null:
-					lane = []
-					by_layer[layer] = lane
-				var target: Array = lane
-				target.append(records[index])
-				target.append(records[index + 1])
+				target.append(x)
+				target.append(y)
 				target.append(ref)
 				draws += 1
 				count += int(owned)
-	var commands: Dictionary = {}
-	for layer: int in by_layer: commands[layer] = PackedInt64Array(by_layer[layer])
+			if not target.is_empty(): commands[layer] = target
 	job["result"] = {"commands": commands, "tile_ids": tile_ids.keys(), "invalid": invalid, "count": count, "draws": draws, "raw_ff": raw_ff, "unresolved": unresolved}
 
 ## Chunks whose records may draw into `cell`, sorted.
 func _block_members(cell: Vector2i) -> Array[String]:
 	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
-	var members: Array[String] = []
-	for member: String in _chunk_rects:
-		if (_chunk_rects[member] as Rect2).intersects(near): members.append(member)
+	var members: Array[String] = _members_in(near)
 	members.sort()
 	return members
 
@@ -930,7 +1090,7 @@ func _take_block_job(cell: Vector2i) -> Dictionary:
 		# the completed command list until all requests finish; do not rebuild.
 		var ready: bool = true
 		for tile_id: int in result.tile_ids:
-			if not _frame_atlases.has(tile_id) and not _tile_pack.call("prefetch", tile_id): ready = false
+			if not _frame_atlases.has(tile_id) and not _prefetch_atlas(tile_id, cell): ready = false
 		if not ready: return {}
 	_block_jobs.erase(cell)
 	for entry: Array in result.invalid: _unresolved_tile(int(entry[0]), str(entry[1]))
@@ -991,10 +1151,17 @@ func _ready_block_commands(cell: Vector2i, on_screen: bool, force_sync: bool) ->
 	return built
 
 
-func _drop_block_jobs() -> void:
-	for cell: Vector2i in _block_jobs:
-		if _block_jobs[cell].has("task"): WorkerThreadPool.wait_for_task_completion(int(_block_jobs[cell].task))
+func _drop_block_jobs(retire: bool = false) -> void:
+	for job: Dictionary in _block_jobs.values():
+		if not job.has("task"): continue
+		if retire: RETIRED_MAP_JOBS.retire(int(job.task), job)
+		else: WorkerThreadPool.wait_for_task_completion(int(job.task))
 	_block_jobs.clear()
+
+func _prefetch_atlas(tile_id: int, cell: Vector2i) -> bool:
+	if _background_atlases and _tile_pack.has_method("prefetch_for_block"):
+		return _tile_pack.prefetch_for_block(tile_id, self, cell)
+	return _tile_pack.call("prefetch", tile_id)
 
 
 ## Asks the tile pack to decode, on workers, every atlas the block draws;
@@ -1008,41 +1175,78 @@ func _request_block_tiles(cell: Vector2i, collected: Variant = null) -> bool:
 	var near: Rect2 = _block_rect(cell).grow(BUILD_MARGIN)
 	var ready: bool = true
 	var asked: Dictionary = {}
+	var tiles := PackedInt32Array()
 	var complete: bool = true
-	for member: String in _chunk_rects:
-		if not (_chunk_rects[member] as Rect2).intersects(near): continue
-		# A chunk not read yet is read on a worker; the block waits for it.
+	var member_tiles: Dictionary = _pending_tile_members.get(cell,{}) if collected is Dictionary else {}
+	for member: String in _members_in(near):
+		# A missing member might arrive after the others. Do not turn it into
+		# an empty chunk, or rediscover atlas IDs from earlier members.
 		if not _prefetch_chunk(member):
 			ready = false
 			complete = false
 			continue
 		var layers: Dictionary = _read_chunk(member)
 		if layers.is_empty() or not prefetch_atlases: continue
-		if not _chunk_bins.has(member): _chunk_bins[member] = _bin_chunk(layers)
-		var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell, {})
-		for layer: int in bins:
-			if not include_objects and layer >= 0: continue
-			var records: PackedInt64Array = layers[layer]
-			for index: int in (bins[layer] as PackedInt32Array):
-				var ref: int = records[index + 2]
-				if ref == 4294967295: continue
-				var tile_id: int = ref >> 8
-				if asked.has(tile_id): continue
-				asked[tile_id] = true
-				if not _tile_pack.has_tile(tile_id): continue
-				if prioritize: _tile_pack.call("prioritize", tile_id)
-				if not _tile_pack.call("prefetch", tile_id): ready = false
+		if not member_tiles.has(member): member_tiles[member] = _member_block_tiles(member,cell,layers)
+		for tile_id: int in (member_tiles[member] as PackedInt32Array):
+			if asked.has(tile_id): continue
+			asked[tile_id] = true
+			tiles.append(tile_id)
+			if prioritize: _tile_pack.call("prioritize", tile_id)
+			if not _prefetch_atlas(tile_id, cell): ready = false
 	if collected is Dictionary:
-		var tiles := PackedInt32Array()
-		for tile_id: int in asked:
-			if _tile_pack.has_tile(tile_id): tiles.append(tile_id)
-		(collected as Dictionary)["tiles"] = tiles
-		(collected as Dictionary)["complete"] = complete
+		collected["tiles"] = tiles
+		collected["complete"] = complete
+		if complete: _pending_tile_members.erase(cell)
+		elif not member_tiles.is_empty(): _pending_tile_members[cell] = member_tiles
 	return ready
 
 
-## A pending block's readiness: its recorded atlas IDs only, once every chunk
-## near it was read; else the full record walk (which records them).
+func _member_block_tiles(member: String, cell: Vector2i, layers: Dictionary) -> PackedInt32Array:
+	if not _chunk_bins.has(member):
+		_chunk_bins[member] = _bin_chunk(layers)
+		_chunk_atlas_ids.erase(member)
+	var lists: Dictionary = _chunk_atlas_ids.get(member,{})
+	var key := Vector3i(cell.x,cell.y,int(include_objects))
+	var cached: Variant = lists.get(key)
+	if cached != null: return _available_atlases(cached)
+	var bins: Dictionary = (_chunk_bins[member] as Dictionary).get(cell,{})
+	var asked: Dictionary = {}
+	var record_count: int = 0
+	for layer: int in bins:
+		if not include_objects and layer >= 0: continue
+		var records: PackedInt64Array = layers[layer]
+		var indices: PackedInt32Array = bins[layer]
+		record_count += indices.size()
+		for index: int in indices:
+			var ref: int = records[index+2]
+			if ref != 4294967295: asked[ref >> 8] = true
+	# The first request already collected these IDs in source order. Keep only
+	# compact lists; misses, sparse bins and overflow use the same discovery.
+	if record_count >= MIN_ATLAS_CACHE_RECORDS and asked.size() <= mini(record_count >> 2, VISIBLE_ATLAS_LIMIT) \
+		and lists.size() < MAX_ATLAS_LISTS_PER_CHUNK and _raw_chunks.has(member):
+		lists[key] = PackedInt32Array(asked.keys())
+		_chunk_atlas_ids[member] = lists
+	return _available_atlases(asked)
+
+
+## First discovery supplies ordered dictionary keys; revisits use packed IDs.
+func _available_atlases(ids: Variant) -> PackedInt32Array:
+	var tiles := PackedInt32Array()
+	for tile_id: int in ids:
+		if _tile_pack.has_tile(tile_id): tiles.append(tile_id)
+	return tiles
+
+
+# Start CPU draw-list assembly while the atlases decode. Both jobs use the
+# same installed chunk data; none of this publishes texture work early.
+func _start_waiting_block_job(cell: Vector2i, urgent: bool) -> void:
+	if _background_atlases and block_jobs_enabled and _pending_tiles.has(cell) and not _block_jobs.has(cell):
+		_start_block_job(cell,urgent)
+
+
+## A pending block retries recorded atlas IDs. While chunks are missing,
+## the ready members' atlas lists are reused and extended as reads finish.
 func _pending_tiles_ready(cell: Vector2i) -> bool:
 	var tiles: Variant = _pending_tiles.get(cell)
 	if tiles is PackedInt32Array:
@@ -1052,7 +1256,7 @@ func _pending_tiles_ready(cell: Vector2i) -> bool:
 		# Keep offering the remaining IDs so the decode slots can fill.
 		for tile_id: int in (tiles as PackedInt32Array):
 			if prioritize: _tile_pack.call("prioritize", tile_id)
-			if not _tile_pack.call("prefetch", tile_id): ready = false
+			if not _prefetch_atlas(tile_id, cell): ready = false
 		return ready
 	var collected: Dictionary = {}
 	var ready: bool = _request_block_tiles(cell, collected)
@@ -1082,6 +1286,23 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var block: Dictionary = {"viewport": viewport, "commands": built.commands, "atlases": built.atlases, "atlas_ids": (built.atlases as Dictionary).keys(),
 		"count": int(built.count), "draws": int(built.draws), "raw_ff": int(built.raw_ff), "unresolved": int(built.unresolved)}
+	var background: Node2D = null
+	if not _dream_background.is_empty() and built.commands.has(-2):
+		var flags: PackedInt64Array = _dream_floor_rects(built.commands[-2])
+		if not flags.is_empty():
+			background = Node2D.new()
+			background.name = "DreamIslandOriginalBackground"
+			var material := ShaderMaterial.new()
+			material.shader = DREAM_SHADER
+			material.set_shader_parameter("sky_image",_dream_background.sky)
+			material.set_shader_parameter("cloud_image",_dream_background.cloud)
+			material.set_shader_parameter("block_origin",Vector2(cell*BLOCK))
+			background.material = material
+			var runs: PackedInt64Array = _dream_floor_runs(flags)
+			background.draw.connect(_draw_dream_floor.bind(background,cell,runs))
+			block["dream_draw_runs"] = runs.size()/3
+			viewport.add_child(background)
+			block["dream_floor_replaced"] = flags.size()/2
 	canvas.draw.connect(_draw_block.bind(canvas, cell, block))
 	viewport.add_child(canvas)
 	add_child(viewport)
@@ -1090,6 +1311,7 @@ func _bake_block(cell: Vector2i, built: Dictionary) -> Dictionary:
 	# One connection for all blocks baked this frame (bound callables of the
 	# same method count as one connection).
 	_unreleased.append([block, canvas])
+	if is_instance_valid(background): _unreleased.append([block,background])
 	if not RenderingServer.frame_post_draw.is_connected(_release_baked):
 		RenderingServer.frame_post_draw.connect(_release_baked, CONNECT_ONE_SHOT)
 	return block
@@ -1116,24 +1338,81 @@ func _draw_block(canvas: Node2D, cell: Vector2i, block: Dictionary) -> void:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
+			if block.has("dream_floor_replaced") and MAP_BACKGROUND.dream_floor_background(layer,ref): continue
 			canvas.draw_texture_rect_region(atlases[ref >> 8], Rect2(Vector2(lane[index], lane[index + 1]) - origin, Vector2(TILE_PX, TILE_PX)), TILES.source_rect(ref & 255))
 
+static func _dream_floor_rects(floor_lane: PackedInt64Array) -> PackedInt64Array:
+	var flags := PackedInt64Array()
+	for index: int in range(0,floor_lane.size(),3):
+		if MAP_BACKGROUND.dream_floor_background(-2,floor_lane[index+2]):
+			flags.append(floor_lane[index]); flags.append(floor_lane[index+1])
+	return flags
 
-## ref -> tile corners (x, y, ...) of one block's draw commands.
-static func _usage_pending(commands: Dictionary) -> Dictionary:
-	var lanes: Dictionary = {}
+## Background rectangles all have the same terrain-space shader and opacity.
+## Coalesce only overlapping/touching spans on the same y; never bridge a
+## missing tile or move an ordinary terrain/cover/object command.
+static func _dream_floor_runs(flags: PackedInt64Array) -> PackedInt64Array:
+	var rows: Dictionary = {}
+	for i: int in range(0,flags.size(),2):
+		var y: int = flags[i+1]
+		if not rows.has(y): rows[y] = []
+		(rows[y] as Array).append(flags[i])
+	var runs := PackedInt64Array()
+	for y: int in rows:
+		var xs: Array = rows[y]
+		xs.sort()
+		var left: int = xs[0]
+		var right: int = left+TILE_PX
+		for i: int in range(1,xs.size()):
+			var x: int = xs[i]
+			if x<=right:
+				right=maxi(right,x+TILE_PX)
+			else:
+				runs.append(left); runs.append(y); runs.append(right-left)
+				left=x; right=x+TILE_PX
+		runs.append(left); runs.append(y); runs.append(right-left)
+	return runs
+
+static func _draw_dream_floor(canvas: Node2D, cell: Vector2i, runs: PackedInt64Array) -> void:
+	var origin: Vector2 = Vector2(cell*BLOCK)
+	for i: int in range(0,runs.size(),3):
+		canvas.draw_rect(Rect2(Vector2(runs[i],runs[i+1])-origin,Vector2(runs[i+2],TILE_PX)),Color.WHITE)
+
+
+## Keep corners only for refs still outside the first view of this block.
+static func _first_draw_usage(commands: Dictionary, view: Rect2, observed: Dictionary) -> Dictionary:
+	var by_ref: Dictionary = {}
 	for layer: int in commands:
 		var lane: PackedInt64Array = commands[layer]
 		for index: int in range(0, lane.size(), 3):
 			var ref: int = lane[index + 2]
-			var corners: Variant = lanes.get(ref)
-			if corners == null:
-				corners = []
-				lanes[ref] = corners
-			(corners as Array).append(lane[index]); (corners as Array).append(lane[index + 1])
+			var corners: Variant = by_ref.get(ref)
+			if corners is bool: continue # Another copy of this ref is already visible.
+			if Rect2(lane[index], lane[index + 1], TILE_PX, TILE_PX).intersects(view):
+				by_ref[ref] = true
+			else:
+				if corners == null:
+					corners = []
+					by_ref[ref] = corners
+				corners.append(lane[index])
+				corners.append(lane[index + 1])
+	# First command order determines admission when the ledger reaches its limit,
+	# including when a later copy of the same ref was the one inside the view.
 	var pending: Dictionary = {}
-	for ref: int in lanes: pending[ref] = PackedInt64Array(lanes[ref])
+	for ref: int in by_ref:
+		if by_ref[ref] is bool: observed[ref] = true
+		else: pending[ref] = PackedInt64Array(by_ref[ref])
 	return pending
+
+
+static func _reveal_usage(pending: Dictionary, view: Rect2, observed: Dictionary) -> void:
+	for ref: int in pending.keys():
+		var corners: PackedInt64Array = pending[ref]
+		for index: int in range(0, corners.size(), 2):
+			if Rect2(corners[index], corners[index + 1], TILE_PX, TILE_PX).intersects(view):
+				observed[ref] = true
+				pending.erase(ref)
+				break
 
 
 func _free_block(cell: Vector2i) -> void:
@@ -1144,8 +1423,8 @@ func _free_block(cell: Vector2i) -> void:
 	if is_instance_valid(viewport): (viewport as Node).queue_free()
 
 
-func _clear_blocks() -> void:
-	_drop_block_jobs()
+func _clear_blocks(retire: bool = false) -> void:
+	_drop_block_jobs(retire)
 	for cell: Vector2i in _blocks.keys(): _free_block(cell)
 	_block_recent.clear()
 	_visible_blocks.clear()
@@ -1153,10 +1432,29 @@ func _clear_blocks() -> void:
 	_pending_blocks.clear()
 	_pending_retry.clear()
 	_pending_tiles.clear()
+	_pending_tile_members.clear()
+
+
+# The camera follows the actor with smoothing. Prefer where movement is
+# taking it, but keep a margin on all sides for turns and reversal.
+func _motion_coverage(screen: Rect2) -> Rect2:
+	if _arrival_view.has_area() or not player is CharacterBody2D: return screen
+	var motion: Vector2 = (player as CharacterBody2D).get_real_velocity()
+	var lead: Vector2 = (motion * LOOK_AHEAD_SECONDS).limit_length(MAX_LOOK_AHEAD)
+	return screen.merge(Rect2(screen.position + lead, screen.size))
+
+
+func _trim_block_cache(needed: Array[Vector2i]) -> void:
+	if _block_recent.size() <= BLOCK_CACHE_LIMIT: return
+	for cell: Vector2i in _block_recent.duplicate():
+		if _block_recent.size() <= BLOCK_CACHE_LIMIT: break
+		if not needed.has(cell) and not _arrival_keep.has(cell): _free_block(cell)
 
 
 func _build_frame() -> bool:
-	var view: Rect2 = _view_rect().grow(BUILD_MARGIN)
+	var screen: Rect2 = _view_rect()
+	var view: Rect2 = screen.grow(BUILD_MARGIN)
+	var ahead: Rect2 = _motion_coverage(screen)
 	for cell: Vector2i in _block_jobs.keys():
 		if _view_has_cell(view, cell): continue
 		if _block_jobs[cell].has("task"):
@@ -1164,16 +1462,13 @@ func _build_frame() -> bool:
 			if not WorkerThreadPool.is_task_completed(task): continue
 			WorkerThreadPool.wait_for_task_completion(task)
 		_block_jobs.erase(cell)
-	var visible: Array[String] = []
-	for member: String in _chunk_rects:
-		if (_chunk_rects[member] as Rect2).intersects(view): visible.append(member)
+	var visible: Array[String] = _members_in(view)
 	if visible.is_empty(): return _fail("현재 화면에 표시할 공통 원문 영역이 없습니다.")
 	if visible.size() > VISIBLE_CHUNK_LIMIT: return _fail("M 표시 실험의 동시 청크 예산을 초과했습니다.")
 	visible.sort()
 	if _blocks_include_objects != include_objects:
 		_clear_blocks()
 		_blocks_include_objects = include_objects
-	var screen: Rect2 = _view_rect()
 	var first := Vector2i(floori(view.position.x / BLOCK), floori(view.position.y / BLOCK))
 	var last := Vector2i(floori(view.end.x / BLOCK), floori(view.end.y / BLOCK))
 	var cells: Array[Vector2i] = []
@@ -1184,12 +1479,15 @@ func _build_frame() -> bool:
 	var build_started: int = Time.get_ticks_usec()
 	var pending: Array[Vector2i] = []
 	var order: Array[Vector2i] = []
+	var approaching: Array[Vector2i] = []
 	var margin: Array[Vector2i] = []
 	for bx: int in range(first.x, last.x + 1):
 		for by: int in range(first.y, last.y + 1):
 			var wanted := Vector2i(bx, by)
 			if _block_rect(wanted).intersects(screen): order.append(wanted)
+			elif _block_rect(wanted).intersects(ahead): approaching.append(wanted)
 			else: margin.append(wanted)
+	order.append_array(approaching)
 	order.append_array(margin)
 	var sliced: bool = _background_atlases or block_jobs_enabled or (_raw_sources != null and _raw_sources.has_method("read_member_job"))
 	var draws: int = 0
@@ -1208,6 +1506,7 @@ func _build_frame() -> bool:
 				pending.append(cell)
 				continue
 			var ready: bool = _pending_tiles_ready(cell)
+			if not ready: _start_waiting_block_job(cell,on_screen)
 			if not on_screen and not ready:
 				partial = true
 				pending.append(cell)
@@ -1253,10 +1552,11 @@ func _build_frame() -> bool:
 		if not pending.has(cell): _pending_retry.erase(cell)
 	for cell: Vector2i in _pending_tiles.keys():
 		if not pending.has(cell): _pending_tiles.erase(cell)
-	while _block_recent.size() > BLOCK_CACHE_LIMIT:
-		var oldest: Vector2i = _block_recent[0]
-		if cells.has(oldest): break
-		_free_block(oldest)
+	for cell: Vector2i in _pending_tile_members.keys():
+		if not pending.has(cell): _pending_tile_members.erase(cell)
+	for cell: Vector2i in _screen_wait.keys():
+		if not pending.has(cell): _screen_wait.erase(cell)
+	_trim_block_cache(cells)
 	unresolved_tile_refs = unresolved
 	_frame_commands.clear()
 	_draw_generation+=1
@@ -1272,8 +1572,12 @@ func _build_frame() -> bool:
 	if _tile_pack != null and _tile_pack.has_method("release_held") and (not partial or int(_tile_pack.call("held_size")) > HELD_ATLAS_LIMIT):
 		_tile_pack.call("release_held")
 	var source_owned: bool = bool(field.get_meta("current523_source_field",false))
+	var scope_metrics: Dictionary = field.scope_metrics() if bool(field.get_meta("current523_generic_field",false)) else {}
+	var registered: int = 0
+	if scope_metrics.has("expected_sources"): registered = int(scope_metrics.expected_sources)
+	elif _raw_sources != null: registered = _raw_sources.source_members().size()
 	_metrics = {"display_profile": "CURRENT523_S32_SOURCE_FIELD_OWN_INTERPRETATION" if source_owned else "M_DISPLAY_WITH_TWILIGHT_SOURCE360_NAVIGATION_ASSUMPTION",
-		"registered_sources": _raw_sources.source_members().size() if _raw_sources!=null else 0, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,(_raw_sources.source_members().size() if _raw_sources!=null else 0)-_member_origins.size()),
+		"registered_sources": registered, "candidate_placed_sources": _member_origins.size(), "unplaced_sources": field.unplaced_members.size() if source_owned else maxi(0,registered-_member_origins.size()),
 		"overlap_chunks": _overlap.size(), "visible_chunks": visible.size(), "cached_chunks": _raw_chunks.size(),
 		"visible_atlases": atlases.size(), "cached_atlases": _tile_pack.cache_size(), "draw_commands": count, "block_draw_commands": draws,
 		"visible_blocks": cells.size(), "cached_blocks": _blocks.size(), "block_size": BLOCK,
@@ -1282,10 +1586,10 @@ func _build_frame() -> bool:
 		"scope_clipped_records": _scope_clipped_records,
 		"off_floor_decoration_records":_off_floor_decoration_records,
 		"native_M_rules_verified": false, "navigation_owner": "CURRENT523_S32_OWN_ALLOWLIST" if source_owned else "EXISTING_TWILIGHT_FIELD"}
-	if source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	_visible_members=visible.duplicate()
-	_refresh_static_objects()
-	if bool(field.get_meta("current523_generic_field",false)): _metrics.merge(field.scope_metrics(),true)
+	if not _arrival_view.has_area(): _refresh_static_objects()
+	if not scope_metrics.is_empty(): _metrics.merge(scope_metrics,true)
+	elif source_owned: _metrics["inferred_placements"]=field.inferred_placements.duplicate(true)
 	if is_instance_valid(_tile_ground): _tile_ground.queue_redraw()
 	queue_redraw()  # Existing door labels depend on the live player distance.
 	return true
@@ -1318,9 +1622,13 @@ func _refresh_static_objects() -> void:
 ## Arrival readiness is visible ground, not margin prefetch or NPC counts.
 ## A baked viewport is ready only after its first actual render submission.
 func arrival_readiness() -> Dictionary:
+	if not _arrival_problem.is_empty(): return {"ready":false,"failed":true,"reason":_arrival_problem}
+	return _ground_readiness(_view_rect())
+
+
+func _ground_readiness(screen: Rect2) -> Dictionary:
 	if not problem.is_empty(): return {"ready":false,"failed":true,"reason":problem}
 	if not _configured or field == null or not is_instance_valid(player): return {"ready":false,"failed":true,"reason":"도착 화면의 연결이 사라졌습니다."}
-	var screen: Rect2 = _view_rect()
 	for member: String in _unreadable_chunks:
 		if (_chunk_rects.get(member,Rect2()) as Rect2).intersects(screen):
 			return {"ready":false,"failed":true,"reason":"도착 지역 원문 청크를 읽지 못했습니다: "+member}
@@ -1333,6 +1641,60 @@ func arrival_readiness() -> Dictionary:
 			if block.is_empty() or not bool(block.get("presented",false)): pending += 1
 	return {"ready":pending==0,"failed":false,"pending_visible_blocks":pending,"reason":""}
 
+## Use the real camera projection (zoom, smoothing reset and map limits).
+## No provisional actor position is published while the destination streams.
+func destination_view(destination: Vector2, camera: Camera2D) -> Rect2:
+	var camera_position: Vector2 = camera.global_position
+	camera.global_position += destination - player.global_position
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	var screen: Rect2 = _view_rect()
+	camera.global_position = camera_position
+	camera.reset_smoothing()
+	camera.force_update_scroll()
+	return screen
+
+
+func is_ground_ready(screen: Rect2) -> bool:
+	return _ground_readiness(screen).get("ready",false)
+
+
+## Caller holds the loading cover. Pin source-screen blocks for rollback while
+## the existing bounded pump services the destination, with no player move.
+func begin_arrival_view(screen: Rect2) -> void:
+	var source_screen: Rect2 = _view_rect()
+	for cell: Vector2i in _visible_blocks:
+		if _block_rect(cell).intersects(source_screen): _arrival_keep.append(cell)
+	_arrival_view = screen
+	_arrival_problem = ""
+	_built_view = Rect2()
+	_refresh_clock = 0.0
+	# The cover is visible. Workers can assemble the destination's draw lists
+	# before the next pump if the original lanes and bins are already resident.
+	if not screen.has_area() or not _background_atlases or not block_jobs_enabled: return
+	if _chunk_bins.is_empty() or _blocks_include_objects != include_objects: return
+	var attempts: int = MAX_BLOCK_JOBS - _block_jobs.size()
+	for x: int in range(floori(screen.position.x / BLOCK), ceili(screen.end.x / BLOCK)):
+		for y: int in range(floori(screen.position.y / BLOCK), ceili(screen.end.y / BLOCK)):
+			if attempts <= 0: return
+			var cell := Vector2i(x,y)
+			if _blocks.has(cell) or _block_jobs.has(cell): continue
+			_start_block_job(cell, true, true)
+			attempts -= 1
+
+
+func end_arrival_view() -> void:
+	for cell: Vector2i in _visible_blocks:
+		if _block_rect(cell).intersects(_arrival_view) and not _arrival_keep.has(cell):
+			_arrival_keep.append(cell)
+	_arrival_view = Rect2()
+	_arrival_problem = ""
+	# Restore the old viewport first. A successful caller then moves and
+	# refreshes against the already-baked destination from the same cache.
+	refresh_visible()
+	_arrival_keep.clear()
+
+
 func refresh_visible() -> void:
 	_built_view = Rect2()
 	_force_objects_refresh = true
@@ -1342,15 +1704,16 @@ func refresh_visible() -> void:
 
 func _refresh_view() -> void:
 	if not _configured: return
-	var scope: String = _scope_problem()
-	if not scope.is_empty(): _fail(scope); return
+	if not _arrival_view.has_area():
+		var scope: String = _scope_problem()
+		if not scope.is_empty(): _fail(scope); return
 	# Rebuild only when the screen leaves the area the frame was built for.
-	if not (_built_view.has_area() and _built_view.encloses(_view_rect())):
+	if not _built_view.encloses(_motion_coverage(_view_rect())):
 		var build_started: int = FRAME_HITCH.now()
 		var built_ok: bool = _build_frame()
 		FRAME_HITCH.detail("map.build_frame", build_started)
 		if not built_ok: return
-	_refresh_markers_if_moved(false)
+	if not _arrival_view.has_area(): _refresh_markers_if_moved(false)
 
 
 ## Name labels within 1400 px and the collision stream follow the actor: the
@@ -1391,20 +1754,29 @@ func _bake_pending(budget_usec: int) -> int:
 	var now_msec: int = Time.get_ticks_msec()
 	var screen: Rect2 = _view_rect()
 	var keep: Rect2 = _built_view
+	var ahead: Rect2 = _motion_coverage(screen)
 	var baked: int = 0
 	var late_bakes: int = 0
 	var order: Array[Vector2i] = []
+	var approaching: Array[Vector2i] = []
 	var later: Array[Vector2i] = []
 	for cell: Vector2i in _pending_blocks:
-		if _block_rect(cell).intersects(screen): order.append(cell)
+		var rect: Rect2 = _block_rect(cell)
+		if rect.intersects(screen): order.append(cell)
+		elif rect.intersects(ahead): approaching.append(cell)
 		else: later.append(cell)
+	order.append_array(approaching)
 	order.append_array(later)
 	var remaining: Array[Vector2i] = []
 	for index: int in order.size():
 		var cell: Vector2i = order[index]
 		if _blocks.has(cell): continue
 		# A block outside the current built view is no longer wanted.
-		if keep.has_area() and not _view_has_cell(keep, cell): _pending_retry.erase(cell); _pending_tiles.erase(cell); continue
+		if keep.has_area() and not _view_has_cell(keep, cell):
+			_pending_retry.erase(cell)
+			_pending_tiles.erase(cell)
+			_pending_tile_members.erase(cell)
+			continue
 		if budget_usec >= 0 and Time.get_ticks_usec() - started >= budget_usec:
 			remaining.append_array(order.slice(index))
 			break
@@ -1414,6 +1786,7 @@ func _bake_pending(budget_usec: int) -> int:
 		var on_screen: bool = _block_rect(cell).intersects(screen)
 		var force_sync: bool = not _pending_tiles_ready(cell)
 		if force_sync:
+			_start_waiting_block_job(cell,on_screen)
 			var waited: bool = false
 			if on_screen and not _background_atlases:
 				var since: int = int(_screen_wait.get(cell, now_msec))
@@ -1443,10 +1816,7 @@ func _bake_pending(budget_usec: int) -> int:
 	_pending_blocks = remaining
 	if baked > 0:
 		FRAME_HITCH.count("map.pending_blocks_baked", baked)
-		while _block_recent.size() > BLOCK_CACHE_LIMIT:
-			var oldest: Vector2i = _block_recent[0]
-			if _visible_blocks.has(oldest): break
-			_free_block(oldest)
+		_trim_block_cache(_visible_blocks)
 		_metrics["visible_blocks"] = _visible_blocks.size()
 		_metrics["cached_blocks"] = _blocks.size()
 		_draw_generation += 1
@@ -1454,6 +1824,26 @@ func _bake_pending(budget_usec: int) -> int:
 	if _pending_blocks.is_empty() and _tile_pack != null and _tile_pack.has_method("release_held"):
 		_tile_pack.call("release_held")
 	return baked
+
+
+# Leave the retry timer in place for idle, unrelated or still pending
+# work. A completed dependency can make progress in this same budget slice.
+func _wake_blocks_for_chunk(member: String) -> void:
+	var bounds: Rect2 = _chunk_rects.get(member,Rect2())
+	if not bounds.has_area(): return
+	for cell: Vector2i in _pending_retry.keys():
+		if _block_rect(cell).grow(BUILD_MARGIN).intersects(bounds): _pending_retry.erase(cell)
+
+
+func _wake_blocks_for_atlases(completed: PackedInt32Array, ahead: Rect2) -> void:
+	if completed.is_empty(): return
+	for cell: Vector2i in _pending_retry.keys():
+		if not _block_rect(cell).intersects(ahead): continue
+		var tiles: PackedInt32Array = _pending_tiles.get(cell,PackedInt32Array())
+		for tile_id: int in completed:
+			if tiles.has(tile_id):
+				_pending_retry.erase(cell)
+				break
 
 
 func _refresh_collision() -> void:
@@ -1472,18 +1862,22 @@ func _process_step(delta: float) -> void:
 	if _tile_pack != null and _tile_pack.has_method("prioritize"):
 		# Refresh cheap cached hints before publication, even during the 50 ms
 		# readiness retry interval. No chunk/record walk or texture acquisition.
-		var screen: Rect2 = _view_rect()
+		var ahead: Rect2 = _motion_coverage(_view_rect())
 		for pending: Vector2i in _pending_blocks:
-			if not _block_rect(pending).intersects(screen): continue
+			if not _block_rect(pending).intersects(ahead): continue
 			for tile_id: int in _pending_tiles.get(pending, PackedInt32Array()):
 				_tile_pack.call("prioritize", tile_id)
-	if _tile_pack != null and _tile_pack.has_method("pump_gpu"): _tile_pack.pump_gpu()
+	if _tile_pack != null and _tile_pack.has_method("pump_gpu"):
+		_tile_pack.pump_gpu()
+		if not _pending_retry.is_empty() and _tile_pack.has_method("completed_atlases_this_frame"):
+			var completed: PackedInt32Array = _tile_pack.call("completed_atlases_this_frame")
+			if not completed.is_empty(): _wake_blocks_for_atlases(completed,_motion_coverage(_view_rect()))
 	if not _chunk_jobs.is_empty():
 		var chunks_started: int = FRAME_HITCH.now()
 		_pump_chunk_jobs()
 		FRAME_HITCH.detail("map.chunk_install", chunks_started)
 	var scope_started: int = FRAME_HITCH.now()
-	var scope: String = _scope_problem()
+	var scope: String = "" if _arrival_view.has_area() else _scope_problem()
 	FRAME_HITCH.detail("map.scope", scope_started)
 	if not scope.is_empty(): _fail(scope); return
 	var cell: Vector2i = field.world_to_cell(player.global_position)
@@ -1493,19 +1887,23 @@ func _process_step(delta: float) -> void:
 	if cell != _last_actor_cell:
 		_last_actor_cell = cell
 	_refresh_clock -= delta
-	if _refresh_clock <= 0.0:
+	var budget: int = PENDING_BAKE_BUDGET_USEC
+	var view_needed: bool = not _built_view.encloses(_motion_coverage(_view_rect()))
+	if (_built_view.has_area() and view_needed) or _refresh_clock <= 0.0:
 		_refresh_clock = 0.25
+		var refresh_started: int = Time.get_ticks_usec()
 		_refresh_view()
-	if _configured and not _pending_blocks.is_empty():
+		if view_needed: budget -= Time.get_ticks_usec() - refresh_started
+	if _configured and not _pending_blocks.is_empty() and budget > 0:
 		var pending_started: int = FRAME_HITCH.now()
-		_bake_pending(PENDING_BAKE_BUDGET_USEC)
+		_bake_pending(budget)
 		FRAME_HITCH.detail("map.pending_bake", pending_started)
-	if _configured and _force_objects_refresh: _refresh_static_objects()
+	if _configured and _force_objects_refresh and not _arrival_view.has_area(): _refresh_static_objects()
 
 
 func _draw_tiles(canvas: Node2D) -> void:
 	if not _configured: return
-	var observe: bool=USAGE.actual_main(self) and _usage_generation!=_draw_generation
+	var observe: bool = _usage_generation != _draw_generation and not _arrival_view.has_area() and USAGE.actual_main(self)
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
 	var observed_refs: Dictionary={}
 	for cell: Vector2i in _visible_blocks:
@@ -1514,25 +1912,12 @@ func _draw_tiles(canvas: Node2D) -> void:
 		if not is_instance_valid(viewport): continue
 		canvas.draw_texture((viewport as SubViewport).get_texture(), Vector2(cell * BLOCK))
 		if observe and _block_rect(cell).intersects(view):
-			# Each ref is observed once: refs not yet seen on screen keep their
-			# tile corners; a ref leaves the list when one of them is in view.
-			# (Every rebuild used to walk every tile of every visible block.)
-			if not block.has("usage_pending"): block["usage_pending"] = _usage_pending(block.commands)
-			var pending: Dictionary = block.usage_pending
-			for ref: int in pending.keys():
-				var corners: PackedInt64Array = pending[ref]
-				for index: int in range(0, corners.size(), 2):
-					if Rect2(Vector2(corners[index], corners[index + 1]), Vector2(TILE_PX, TILE_PX)).intersects(view):
-						if not observed_refs.has(ref): observed_refs[ref] = []
-						observed_refs[ref].append(pending)
-						break
+			if block.has("usage_pending"):
+				_reveal_usage(block.usage_pending, view, observed_refs)
+			else:
+				block["usage_pending"] = _first_draw_usage(block.commands, view, observed_refs)
 	if observe:
-		for ref: int in observed_refs:
-			var source: Dictionary=_tile_pack.source_usage_identity(ref>>8)
-			if not source.is_empty(): USAGE.observe_result(self,str(source.member),int(source.bytes),str(source.sha256),"subimage:"+str(ref&255))
-			# Broker retains transient pressure. Invalid/disabled/hard-dropped
-			# attempts are terminal here; never poll by redrawing an idle map.
-			for pending: Dictionary in observed_refs[ref]: pending.erase(ref)
+		USAGE.observe_ground_refs(self, _tile_pack, observed_refs)
 		_usage_generation = _draw_generation
 		USAGE.flush()
 
@@ -1559,6 +1944,9 @@ func _unresolved_tile(tile_id: int, detail: String) -> void:
 
 
 func _fail(reason: String) -> bool:
+	if _arrival_view.has_area():
+		_arrival_problem = reason
+		return false
 	problem = reason
 	failure = reason
 	var active: bool = _configured and is_inside_tree() and is_visible_in_tree()
@@ -1581,11 +1969,17 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_RESUMED and _configured:
 		_clear_blocks()
 		_built_view = Rect2()
+		_refresh_clock = 0.0
 
 
 func _exit_tree() -> void:
 	_configured = false
-	_drop_chunk_jobs()
-	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(); _chunk_bins.clear()
+	var started: int = FRAME_HITCH.now()
+	# No scene operations in either worker. Discard their outputs, but keep
+	# their source and draw-list inputs alive until the map pump reaps them.
+	_drop_chunk_jobs(true)
+	_frame_commands.clear(); _frame_atlases.clear(); _raw_chunks.clear(); _raw_recent.clear(); _clear_blocks(true); _chunk_bins.clear()
+	_chunk_atlas_ids.clear()
 	_raw_sources = null; _tile_pack = null
 	super._exit_tree()
+	FRAME_HITCH.detail("map.renderer_retire", started)

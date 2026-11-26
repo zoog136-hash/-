@@ -6,6 +6,7 @@ extends RefCounted
 ## the existing dissolve transaction (scripts/refine523), 취소 closes.
 ## Text_Info and the Panel_L / Panel_R arrows have no rule here and stay hidden.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const SERVICE=preload("res://scripts/refine523/bless_refine523_service.gd")
 const ROOT="UI/CommonUi/Common_MessageBox_Dissolution.csb"
@@ -15,15 +16,17 @@ signal closed
 signal finished(result: Dictionary)
 var _pack: RefCounted
 var _tree: RefCounted
+var _hud: WeakRef
 var _world: WeakRef
 var _scene: Node2D
 var _uids: Array=[]
 var last_result: Dictionary={}
 
-func configure(pack: RefCounted) -> Dictionary:
+func configure(pack: RefCounted, hud: Node=null) -> Dictionary:
 	for member: String in [ROOT,SLOT]:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_dissolve_popup_member_missing","member":member}
 	_pack=pack
+	_hud=weakref(hud) if hud!=null else null
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	return {"ok":true,"configured":true}
 
@@ -61,9 +64,7 @@ func open(parent: Node, world: Node, uids: Array) -> Dictionary:
 	var located: Dictionary=NamedTree.locate(next,out,"Nd_Result/Nd_Slot/Common_Slot/Sp_IconSample")
 	if located.get("ok",false):
 		var info: Dictionary=SourceImages.describe_item_class(int(quote.output_item_class_id),name)
-		if info.get("texture") is Texture2D:
-			var owner: Dictionary={"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-			picture=located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false) and located.player.set_bound_visible(located.offset,true).get("ok",false)
+		picture=NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref() if _hud!=null else null)
 	close()
 	# A full-screen layer under the popup keeps the field from taking taps.
 	var blocker:=Control.new()

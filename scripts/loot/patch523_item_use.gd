@@ -1,7 +1,9 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const MANUAL_SCROLLS=preload("res://scripts/loot/native_manual_scrolls523.gd")
 const PRESENTATION_FLAGS: Dictionary = {"UIShowFilter":"Value","NoAnnounce":"TrueFalse"}
 
 static func canonical(record: Dictionary) -> Dictionary:
@@ -19,6 +21,9 @@ static func canonical(record: Dictionary) -> Dictionary:
 
 static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	var record: Dictionary = preload("res://scripts/quests/quest_regen523.gd").action(world,canonical(saved))
+	if MANUAL_SCROLLS.RULES.has(int(record.get("source_item_class_id",0))):
+		var manual:Dictionary=MANUAL_SCROLLS.profile(record,DROPS.item_definition(record))
+		if not manual.is_empty():record["source_use_spec"]=manual
 	if int(record.get("source_item_class_id",0)) in [295544,302461,203422,295504,282793,295524]:
 		var reusable: Dictionary=load("res://scripts/quests/quest_reusable523.gd").profile(record)
 		if not reusable.is_empty():record=reusable
@@ -51,6 +56,7 @@ static func action_record(world: Node, saved: Dictionary) -> Dictionary:
 	return record
 
 static func eligibility(world: Node, record: Dictionary) -> String:
+	if RETIRED_ITEMS.record(record):return RETIRED_ITEMS.REASON
 	if record.is_empty(): return "원본 아이템 자료를 확인할 수 없습니다"
 	var dummy: String=preload("res://scripts/quests/source_dummy523.gd").reason(record)
 	if not dummy.is_empty():return dummy
@@ -173,6 +179,9 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	var source: Dictionary = spec.get("source_buff_class", {})
 	var group: Dictionary = spec.get("source_buff_group", {})
 	if duration <= 0.0 or source.is_empty() or group.is_empty() or spec.get("typed_effects", {}).is_empty(): return
+	if spec.has("source_trial_tower_territory_id"):
+		var issue:String=load("res://scripts/loot/current523_native_stack.gd").call("_buff_territory_problem",world,spec)
+		if not issue.is_empty():world.hud.show_message(issue);return
 	var buffs: Dictionary = world.active_item_buffs.duplicate(true)
 	for key: String in buffs.keys():
 		var old: Dictionary = buffs[key]
@@ -181,7 +190,8 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 		if int(previous.ID) == int(source.ID) or (not group.get("IsAllowOverlap", false) and int(previous.BuffGroupID) == int(source.BuffGroupID)): buffs.erase(key)
 	var value: Dictionary = spec.typed_effects.duplicate(true)
 	value.merge({"remaining":duration,"duration":duration,"source_buff_class":source.duplicate(true),"source_buff_group":group.duplicate(true),"source_item_class_id":int(record.source_item_class_id),"source_snapshot":"patch523"})
-	buffs[str(record.name)] = value
+	if spec.get("source_trial_tower_territory_id")==10353:value["source_trial_tower_territory_id"]=10353
+	buffs[MANUAL_SCROLLS.active_key(record,spec,str(record.name))] = value
 	var inventory: Dictionary = debit(world, str(record.name))
 	var cooldowns: Dictionary = next_cooldowns(world, record, spec)
 	if world._save_game(true, {"inventory":inventory,"active_item_buffs":buffs,"item_use_cooldowns":cooldowns}) != OK:
@@ -240,6 +250,9 @@ static func _guaranteed_bag(world: Node, record: Dictionary, spec: Dictionary) -
 	for reward: Dictionary in spec.get("rewards", []):
 		if not class_matches(reward.get("class_ids",[]),class_id): continue
 		if int(reward.get("entity_type_id",1)) == 0 and int(reward.get("probability_raw",0)) <= 0: continue
+		if RETIRED_ITEMS.item(reward.item_class_id):
+			world.hud.show_message(RETIRED_ITEMS.REASON+" · 상자 보존")
+			return
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(reward.item_class_id)).is_empty():
 			world.hud.show_message("원본 더미 보상이 포함된 상자는 보존합니다 · 후보 제거·확률 재배분 없음")
 			return
@@ -264,6 +277,8 @@ static func _commit_rewards(world: Node, record: Dictionary, spec: Dictionary, s
 	for reward: Dictionary in selected:
 		var classes: Array = reward.get("class_ids", [])
 		if not class_matches(classes,class_id): continue
+		if RETIRED_ITEMS.item(reward.item_class_id):
+			world.rng.state=rng_before;world.hud.show_message(RETIRED_ITEMS.REASON+" · 상자 보존");return false
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(reward.item_class_id)).is_empty():
 			world.rng.state=rng_before
 			world.hud.show_message("원본 더미 보상 연결 제외 · 상자와 기존 소유 보존")
@@ -334,7 +349,7 @@ static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGen
 			total += weight
 			if weight > 0: weighted.append(reward)
 		else: return {"ok":false}
-	if spec.get("kind") != "guaranteed_bag":
+	if spec.get("kind") not in ["guaranteed_bag","source_event_box"]:
 		# TWILIGHT 근사: a renormalized box draws over the class's own total.
 		var renormalized: bool = bool(spec.get("approx_renormalized", false)) and total > 0
 		if (total != 10000000 or int(spec.get("source_probability_denominator",0)) != total) and not renormalized or weighted.is_empty(): return {"ok":false}

@@ -6,6 +6,7 @@ var coupons: OptionButton
 var events: OptionButton
 var success: ItemList
 var failure: ItemList
+var caption: Label
 var status: Label
 var use_button: Button
 var selected_revision := -1
@@ -60,8 +61,12 @@ func _card_image(id: String, card: Dictionary, event: Dictionary) -> Dictionary:
 		return _missing_image("source_display_base_asset_field_missing")
 	return SourceImages.resolve_asset_value(card.DisplayBaseAssetID)
 
-func configure(host) -> void:
+var focused_item: String = ""
+var physical_id: String = ""
+
+func configure(host, item: String = "", uid: String = "") -> void:
 	world=host
+	focused_item=item;physical_id=uid
 	var title := Label.new();title.text="TJ 재도전 · 복구";add_child(title)
 	status=Label.new();status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;add_child(status)
 	var notice := Label.new();notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -85,12 +90,12 @@ func configure(host) -> void:
 		status.text="원본 설치 완료" if loaded else "원본 SHA 또는 1065표 검증 실패")
 	coupons=OptionButton.new();coupons.expand_icon=true;add_child(coupons);coupons.item_selected.connect(func(_index: int):refresh_events())
 	events=OptionButton.new();add_child(events);events.item_selected.connect(func(_index: int):refresh_choices())
-	var caption := Label.new();caption.text="성공 후보 한 개 / 실패 후보 (스페셜 합성은 중복 없이 5개)";add_child(caption)
+	caption = Label.new();caption.text="성공 후보 한 개 / 실패 후보 (스페셜 합성은 중복 없이 5개)";add_child(caption)
 	success=ItemList.new();success.custom_minimum_size.y=100;add_child(success)
 	failure=ItemList.new();failure.select_mode=ItemList.SELECT_MULTI;failure.custom_minimum_size.y=100;add_child(failure)
 	use_button=Button.new();use_button.text="선택 확인";use_button.expand_icon=true;add_child(use_button);use_button.pressed.connect(confirm)
 	var reload_button := Button.new();reload_button.text="소유 쿠폰과 실패 기록 새로고침";add_child(reload_button);reload_button.pressed.connect(refresh)
-	if preload("res://scripts/boot/build_flags.gd").playtest() and preload("res://scripts/boot/build_flags.gd").developer_ui():
+	if physical_id.is_empty() and preload("res://scripts/boot/build_flags.gd").playtest() and preload("res://scripts/boot/build_flags.gd").developer_ui():
 		var grant := Button.new();grant.text="개발 도구: 선택 쿠폰 한 장 지급 (실패 기록 지급 없음)";add_child(grant)
 		grant.pressed.connect(func():
 			if coupons.selected<0:return
@@ -107,31 +112,47 @@ func refresh() -> void:
 	_clear_image_metadata(coupons)
 	var service=world.tj_coupons.core
 	for id: String in service.definitions.get("coupons",{}):
+		if not focused_item.is_empty() and id!=focused_item:continue
 		var row: Dictionary=service.definitions.coupons[id]
-		var bag: int=world.tj_coupons.bag_count(id)
-		coupons.add_item("%s · 보유 %d%s" % [str(row.item.Name),int(service.state.coupons.get(id,0))+bag," (가방 %d)" % bag if bag>0 else ""])
+		var bag: int=world.tj_coupons.bag_count(id,physical_id)
+		coupons.add_item("%s · 보유 %d%s" % [str(row.item.Name),(int(service.state.coupons.get(id,0)) if physical_id.is_empty() else 0)+bag," (가방 %d)" % bag if bag>0 else ""])
 		coupons.set_item_metadata(coupons.item_count-1,id)
 		if SourceImages.selected():
 			_row_image(coupons, coupons.item_count - 1, SourceImages.describe_item_class_row(row.item), "ItemClass", row.item.get("ID"), "IconID")
-	if coupons.item_count==0:status.text="최신 523 원본이 없습니다. 기존 저장과 게임 기능은 유지됩니다."
+	if coupons.item_count==0:status.text="최신 523 원본 또는 이 쿠폰의 검증된 재도전 정책이 없습니다 · 아이템 보존"
 	refresh_events()
 func refresh_events() -> void:
 	events.clear();event_rows=[];success.clear();failure.clear();use_button.disabled=true
 	_clear_image_metadata(success);_clear_image_metadata(failure);_selected_coupon_image()
 	if coupons.selected<0:return
+	if not physical_id.is_empty() and world.tj_coupons.bag_count(focused_item,physical_id)<1:
+		status.text="선택한 원본 쿠폰을 더 이상 사용할 수 없습니다 · 다른 쿠폰은 소모하지 않습니다"
+		return
 	var service=world.tj_coupons.core
-	var view: Dictionary=service.candidates(str(coupons.get_item_metadata(coupons.selected)),world.tj_coupons.context(),service.clock())
+	var item := str(coupons.get_item_metadata(coupons.selected))
+	var skill: bool=world.tj_coupons.skill_coupon(item)
+	caption.visible=not skill
+	success.visible=not skill
+	failure.visible=not skill
+	var view: Dictionary=world.tj_coupons.skill_candidates(item) if skill else service.candidates(item,world.tj_coupons.context(),service.clock())
 	selected_revision=int(service.state.revision)
 	status.text=str(view.get("error","소유 쿠폰과 실제 실패 이력을 확인하세요"))
 	if not view.ok:return
 	event_rows=view.get("events",[])
-	for event: Dictionary in event_rows:events.add_item("%s · 종류 %s · 원본 등급 %s" % [str(event.id),str(event.history_type),str(event.grade)])
+	for event: Dictionary in event_rows:
+		if skill:
+			events.add_item("%s 스킬 재합성" % world.skill_cards523.grade_name(int(event.target_grade)))
+			continue
+		events.add_item("%s · 종류 %s · 원본 등급 %s" % [str(event.id),str(event.history_type),str(event.grade)])
 	refresh_choices()
 func refresh_choices() -> void:
 	success.clear();failure.clear();use_button.disabled=true
 	_clear_image_metadata(success);_clear_image_metadata(failure);_selected_coupon_image()
 	if events.selected<0 or events.selected>=event_rows.size():return
 	var event: Dictionary=event_rows[events.selected]
+	if event.get("adapter")=="skill_fusion":
+		use_button.disabled=false
+		return
 	failure.visible=str(event.get("adapter",""))!="awakening"
 	for pair: Array in [[success,event.success_candidates],[failure,event.fail_candidates]]:
 		for id: String in pair[1]:
@@ -153,7 +174,7 @@ func confirm() -> void:
 	for index: int in failure.get_selected_items():bad.append(str(failure.get_item_metadata(index)))
 	var popup := ConfirmationDialog.new();confirmation=popup;popup.name="TJSpendConfirmation";popup.title="TJ 재도전 확인";popup.ok_button_text="확인";popup.cancel_button_text="취소";popup.dialog_text="선택한 쿠폰 1장과 실패 이력을 사용합니다. TWILIGHT 추가 비용은 %d 아데나이며, 옵션 각성은 기존 각성 비용도 필요합니다. 원자 저장에 성공한 결과만 지급합니다. 취소하면 변경하지 않습니다." % int(world.tj_coupons.core.settings.retry_gold_cost);add_child(popup)
 	popup.confirmed.connect(func():
-		var result: Dictionary=world.tj_coupons.redeem(item,event,revision,good,bad)
+		var result: Dictionary=world.tj_coupons.redeem(item,event,revision,good,bad,physical_id)
 		refresh();status.text=str(result.get("error","완료"));popup.hide();popup.queue_free())
 	popup.canceled.connect(func():popup.hide();popup.queue_free())
 	popup.popup_centered(Vector2i(540,180))

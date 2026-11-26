@@ -1,4 +1,5 @@
 extends RefCounted
+const VerifiedBytes = preload("res://scripts/io/verified_source_bytes.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Owned-ticket redemption; no market purchase, new card pool, or free issuance.
 ## Every original LinMarketProduct draw ticket whose products are whole
@@ -16,8 +17,10 @@ const CATEGORY:String="LinMarketProduct"
 ## save and the reveal bounded).
 const MAX_MARKET_DRAWS:int=110
 const UI_POLICY_TEXT:String="TWILIGHT 소지 티켓1개 소비 정책 · 원본 무작위 풀/지급량 · 추가 구매 비용 없음 · 미연결 대상은 소지품 보존"
+const HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const CardEngine=preload("res://scripts/card_draw_fusion.gd")
 const OriginalInput=preload("res://scripts/shop/current523_ticket_input.gd")
+const PermanentMileage=preload("res://scripts/shop/source523_permanent_mileage_tickets.gd")
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -94,11 +97,13 @@ func load_original() -> bool:
 	return true
 
 func load_pack(path:String,expected:String) -> bool:
-	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=expected.to_lower():return _reject("티켓 확장팩 해시 확인 실패")
+	if expected.length()!=64 or not expected.is_valid_hex_number(false) or not FileAccess.file_exists(path):return _reject("티켓 확장팩 해시 확인 실패")
 	var file:=FileAccess.open(path,FileAccess.READ)
 	if file==null or file.get_length()>2*1024*1024:return _reject("티켓 확장팩 크기·접근 오류")
+	var bytes := VerifiedBytes.read(file,2*1024*1024)
+	if VerifiedBytes.sha256(bytes)!=expected.to_lower():return _reject("티켓 확장팩 해시 확인 실패")
 	var json:=JSON.new()
-	if json.parse(file.get_as_text())!=OK or not json.data is Dictionary:return _reject("티켓 확장팩 JSON 오류")
+	if json.parse(bytes.get_string_from_utf8())!=OK or not json.data is Dictionary:return _reject("티켓 확장팩 JSON 오류")
 	var data:Dictionary=json.data
 	return _accept_input(data,expected.to_lower(),{"kind":"twilight.source523.ticket-pack-input.v1","payload_sha256":expected.to_lower(),"declared_source_zip_sha256":runtime.Catalog.SOURCE_SHA256})
 
@@ -163,7 +168,7 @@ func install() -> Dictionary:
 func _identity(name:String,spec:Dictionary,record:Dictionary) -> bool:
 	var id:int=int(record.get("source_item_class_id",0))
 	var original:Dictionary=runtime.catalog.record("ItemClass",id)
-	if not document.tickets.has(str(id)) or original.is_empty() or record.get("source_bless_raw",1)!=1 or int(record.get("source_enchant",0))!=0:return false
+	if spec.is_empty() or original.is_empty() or record.get("source_bless_raw",1)!=1 or int(record.get("source_enchant",0))!=0:return false
 	if record.get("source")=="twilight-shop523-ticket":
 		if id not in IDS:return false
 		return record.get("name")==spec.name and name==spec.name and record.get("source_snapshot")=="patch523" and record.get("source_ticket_extension_sha")==loaded_sha and record.get("source_bless_raw")==1
@@ -180,7 +185,10 @@ func _identity(name:String,spec:Dictionary,record:Dictionary) -> bool:
 	var definition:Dictionary=DROPS.definition_id(str(id))
 	return definition.get("original_item")==original and DROPS.matches(record,DROPS.variant_item(definition.get("native_record",{}),1))
 
-func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionary:
+func quote(name:String,selection:Dictionary={},internal:bool=false,physical_id:String="") -> Dictionary:
+	return _quote(name,selection,internal,true,physical_id)
+
+func _quote(name:String,selection:Dictionary,internal:bool,materialize_pool:bool,physical_id:String="") -> Dictionary:
 	var ready:Dictionary=runtime._ready_for_action(internal)
 	if not ready.ok:return ready
 	if runtime.world.hud.is_card_reveal_busy():return runtime.fail("카드 결과 연출 중 · 티켓 보존")
@@ -189,6 +197,11 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 	var record:Dictionary=runtime.world._find_catalog_item_record(name)
 	var id:int=int(record.get("source_item_class_id",0))
 	var spec:Dictionary=document.tickets.get(str(id),{})
+	if spec.is_empty() and model_input_identity.get("kind")=="twilight.source523.original-ticket-input.v1" and PermanentMileage.VARIANTS.has(id):
+		spec=PermanentMileage.spec(id,runtime.catalog.record("ItemClass",id))
+		# New mileage use is a physical-only owner; an old name balance is not
+		# proof of acquiring one of these exact permanent tickets.
+		if not spec.is_empty() and physical_id.is_empty():return runtime.fail("원본 영구 뽑기권의 실제 소지 칸을 선택하세요 · 티켓 보존")
 	if spec.is_empty() and document.get("unsupported",{}).has(str(id)):return runtime.fail("원본 뽑기권 결과 연결 미지원 ("+str(document.unsupported[str(id)])+") · 티켓 보존")
 	if spec.is_empty() or not _identity(name,spec,record):return runtime.fail("정확한 티켓 발급원장·원본 ID/Normal/강화0 확인 필요")
 	if record.get("source_m_native_item")==true:
@@ -196,6 +209,7 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 		var deadline:String=preload("res://scripts/loot/patch523_monster_drops.gd").deadline_problem(record,int(runtime.world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
 		if not deadline.is_empty():return runtime.fail(deadline+" · 티켓 보존")
 	if int(runtime.world.inventory.get(name,0))<1 or runtime.world._item_locked(name,""):return runtime.fail("소지 티켓 부족 또는 잠금")
+	if not physical_id.is_empty() and _selected_native_ticket(name,physical_id,id).is_empty():return runtime.fail("선택한 원본 티켓의 소유·수량·잠금 확인 필요 · 티켓 보존")
 	for field:String in ["expires_at","source_expires_at"]:
 		if not record.has(field):continue
 		if not runtime.integer(record[field]) or (int(record[field])>0 and int(record[field])<=runtime._now()):return runtime.fail("소지 티켓 기간 만료·형식 오류 · 기한 연장 없음")
@@ -209,13 +223,17 @@ func quote(name:String,selection:Dictionary={},internal:bool=false) -> Dictionar
 	for row:Dictionary in runtime.catalog._related("MarketPurchaseServerLimitGroup",int(spec.market_id)):sets.append(int(row.ServerLimitSetID))
 	var server:Dictionary=runtime._server(sets)
 	if not server.ok:return server
-	var drawn:Dictionary=_candidates(spec.grants)
+	var drawn:Dictionary=_candidates(spec.grants,materialize_pool)
 	if not drawn.ok:return drawn
-	return {"ok":true,"can_use":true,"inventory_key":name,"source_item_id":id,"bless_raw":1,"enchant":0,"draw_count":drawn.count,"category":drawn.category,"grants":spec.grants.duplicate(true),"pools":drawn.pools,"origin":"TWILIGHT 소지 티켓1개 소비 · 원본 풀/가중치/지급량 · 마켓 판매 상태는 유지"}
+	var mileage:int=int(spec.get("original_mileage",0))
+	if mileage>0:
+		var balance:Variant=runtime.world.inventory.get(PermanentMileage.WALLET,0)
+		if runtime.INTANGIBLE_BINDINGS.get(1)!=PermanentMileage.WALLET or drawn.category!="마법인형" or not runtime.integer(balance) or int(balance)>runtime.LIMIT-mileage:return runtime.fail("원본 마일리지 수령 조건 불일치 · 티켓 보존")
+	return {"ok":true,"can_use":true,"inventory_key":name,"source_item_id":id,"bless_raw":1,"enchant":0,"draw_count":drawn.count,"category":drawn.category,"grants":spec.grants.duplicate(true),"pools":drawn.pools,"original_mileage":mileage,"origin":"TWILIGHT 소지 티켓1개 소비 · 원본 풀/가중치/지급량 · 마켓 판매 상태는 유지"}
 
 ## The original candidates of `grants` ([{pool_id, count}], pools of this
 ## model): {ok, pools, category, count} or the refusal.
-func _candidates(grants:Array) -> Dictionary:
+func _candidates(grants:Array,materialize_pool:bool=true) -> Dictionary:
 	var index:Dictionary={}
 	for category:String in CardEngine.CATEGORIES:
 		for card:Dictionary in runtime.world.catalog_db.get(category,[]):
@@ -241,10 +259,10 @@ func _candidates(grants:Array) -> Dictionary:
 					if not spell_window.ok:return spell_window
 				if category.is_empty():category=SKILL_BOOKS
 				if category!=SKILL_BOOKS:return runtime.fail("복수 분류 카드의 원본 선택 계약 필요")
-				candidates.append({"weight":int(entry.weight),"entry":{"kind":"skill_book","id":str(card_id),"spell_card_id":card_id,"item_class_id":book,"name":str(book_record.name)}})
+				if materialize_pool:candidates.append({"weight":int(entry.weight),"entry":{"kind":"skill_book","id":str(card_id),"spell_card_id":card_id,"item_class_id":book,"name":str(book_record.name)}})
 				continue
 			if not index.has(card_id):missing.append(card_id);continue
-			var bound:Dictionary=index[card_id];var original:Dictionary=runtime.catalog.record("BuffCard",card_id)
+			var bound:Dictionary=index[card_id];var original:Dictionary=spell
 			if original.is_empty() or int(original.GradeID)!=int(entry.grade_id) or int(bound.record.get("source_grade_id",0))!=int(original.GradeID) or bound.record.get("source_merge_out_disabled",false)!=original.IsNoMergeOut or bound.record.get("source_swap_out_disabled",false)!=original.IsNoSwapOut:return runtime.fail("원본 카드 등급·교체/합성 제한 정체 불일치")
 			var deck:int=int(original.BuffCardDeckID)
 			var suffix:String=str(deck)+":"+str(card_id)
@@ -257,20 +275,27 @@ func _candidates(grants:Array) -> Dictionary:
 				if not card_window.ok:return card_window
 			if category.is_empty():category=str(bound.category)
 			if category!=str(bound.category):return runtime.fail("복수 분류 카드의 원본 선택 계약 필요")
-			candidates.append({"weight":int(entry.weight),"entry":{"id":str(bound.id),"record":bound.record.duplicate(true)}})
-		pools[pool_id]=candidates;count+=int(grant.count)
+			if materialize_pool:candidates.append({"weight":int(entry.weight),"entry":{"id":str(bound.id),"record":bound.record.duplicate(true)}})
+		if materialize_pool:pools[pool_id]=candidates
+		count+=int(grant.count)
 	if not missing.is_empty():
 		var blocked:Dictionary=runtime.fail("추첨 대상 카드 자료가 미설치 상태입니다 · 티켓 보존")
 		blocked["missing_card_ids"]=missing;return blocked
 	if category.is_empty():return runtime.fail("추첨 대상이 없는 원본 풀입니다")
 	return {"ok":true,"pools":pools,"category":category,"count":count}
 
-func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
-	var prepared:Dictionary=quote(name,selection)
+func use_ticket(name:String,selection:Dictionary={},physical_id:String="") -> Dictionary:
+	# Validate before starting a transaction, but only build the drawable pool
+	# after _start(): it may flush a map save, so revalidation is still required.
+	var measure:int=HITCH.now()
+	var prepared:Dictionary=_quote(name,selection,false,false,physical_id)
+	HITCH.detail("card.ticket_preflight",measure)
 	if not prepared.ok:return prepared
 	var started:Dictionary=runtime._start()
 	if not started.ok:return started
-	prepared=quote(name,selection,true)
+	measure=HITCH.now()
+	prepared=quote(name,selection,true,physical_id)
+	HITCH.detail("card.ticket_pool",measure)
 	if not prepared.ok:runtime._busy=false;return prepared
 	var rng:=RandomNumberGenerator.new()
 	var previous:Dictionary=runtime.state.get("ticket_redemption",{})
@@ -282,7 +307,7 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	var inventory:Dictionary=runtime.world.inventory.duplicate(true)
 	var instances:Dictionary=runtime.world.item_instances.duplicate(true)
 	var extra:Dictionary={"card_draw_fusion":scratch.export_state()}
-	var debit:Dictionary=_native_debit(name)
+	var debit:Dictionary=_native_debit(name,physical_id,int(prepared.source_item_id))
 	if debit.has("ok") and not debit.ok:runtime._busy=false;return runtime.fail(str(debit.get("reason","원본 물리 티켓 차감 확인 필요"))+" · 티켓/난수 보존")
 	if debit.get("ok",false):
 		# A physical original ticket is debited through its own grant receipt.
@@ -290,6 +315,8 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	else:
 		inventory[name]=int(inventory[name])-1
 		if int(inventory[name])==0:inventory.erase(name)
+	var mileage:int=int(prepared.get("original_mileage",0))
+	if mileage>0:inventory[PermanentMileage.WALLET]=int(inventory.get(PermanentMileage.WALLET,0))+mileage
 	if prepared.category==SKILL_BOOKS:
 		# Drawn skill cards arrive as their original skill book stacks.
 		var counts:Dictionary={}
@@ -305,12 +332,24 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 	var uses:int=int(previous.get("uses",0))
 	if uses>=runtime.LIMIT:runtime._busy=false;return runtime.fail("티켓 소비 이력 범위 초과")
 	next["ticket_redemption"]={"version":1,"policy_sha256":loaded_sha,"rng_state":str(rng.state),"uses":uses+1}
+	measure=HITCH.now()
 	var saved:Dictionary=runtime._commit(next,inventory,int(runtime.world.gold),instances,int(runtime.world.next_item_instance_id),extra)
+	HITCH.detail("card.ticket_commit",measure)
 	if not saved.ok:return saved
 	random.state=rng.state
 	runtime.world.card_draw_fusion.import_state(scratch.export_state())
-	runtime.world._invalidate_equipment_static();runtime.world.card_collections.invalidate();runtime.world._update_hud()
+	# The full publication already invalidates/reconciles card-derived stats
+	# and synchronously updates gameplay speed. Only bag presentation batches.
+	measure=HITCH.now()
+	if runtime.world.hud.has_method("publish_committed_ticket_hud"):
+		runtime.world.hud.publish_committed_ticket_hud(runtime.world._update_hud)
+	else:
+		runtime.world._update_hud()
+	HITCH.detail("card.ticket_hud_publish",measure)
 	var outcome:Dictionary={"ok":true,"category":prepared.category,"results":results,"count":results.size(),"consumed":1,"inventory_key":name,"source_item_id":prepared.source_item_id,"message":"소지 티켓1개 소비 · 원본 가중치 %d회 추첨 · TWILIGHT 소지품 소비 정책" % results.size()}
+	if mileage>0:
+		outcome["mileage"]=mileage
+		outcome.message+=" · 마일리지 +%d" % mileage
 	if prepared.category==SKILL_BOOKS:
 		var names:PackedStringArray=[]
 		for result:Dictionary in results:names.append(str(result.name))
@@ -319,7 +358,9 @@ func use_ticket(name:String,selection:Dictionary={}) -> Dictionary:
 		runtime.world.hud.append_log(str(outcome.message))
 		return outcome
 	runtime.world.hud.set_card_draw_fusion_result(str(prepared.category),str(outcome.message))
+	measure=HITCH.now()
 	runtime.world.hud.present_card_reveal(str(prepared.category),outcome,false)
+	HITCH.detail("card.ticket_reveal_setup",measure)
 	return outcome
 
 ## Draws every grant of `prepared` ({grants, pools, category}) with `rng`
@@ -414,17 +455,38 @@ func market_draw_presented(plan:Dictionary,outcome:Dictionary,name:String) -> St
 	runtime.world.hud.present_card_reveal(str(plan.category),{"ok":true,"category":plan.category,"results":results,"count":results.size(),"message":message},false)
 	return message
 
-## {} when the owned ticket is not a physical original stack; otherwise the
-## native stack's staged one-unit debit (or its refusal).
-func _native_debit(name:String) -> Dictionary:
+## Select the exact physical slot before staging a draw. A missing or locked
+## chosen receipt is a refusal, not permission to swap to an identically named
+## stack. All sources of the same bag name keep their separate receipts.
+func _selected_native_ticket(name:String,uid:String,item_id:int) -> Dictionary:
+	var world:Node=runtime.world
+	var entry:Variant=world.item_instances.get(uid)
+	if not entry is Dictionary or entry.get("name")!=name or not entry.has(STACK.RECEIPT) or world._item_locked(name,uid):return {}
+	var owned:Dictionary=STACK.proof(world,uid)
+	if owned.get("receipt",{}).get("item_class_id")!=item_id:return {}
+	return owned
+
+func _stage_ticket(owned:Dictionary,uid:String) -> Dictionary:
+	return STACK.stage_debit(runtime.world,[{"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}])
+
+## A name-only legacy caller may redeem an unlocked receipt from its own
+## lane. It can fall back to legacy accounting only if there are no native
+## receipts for that name at all (all-locked or invalid is a refusal).
+func _native_debit(name:String,physical_id:String,item_id:int) -> Dictionary:
+	if not physical_id.is_empty():
+		var selected:Dictionary=_selected_native_ticket(name,physical_id,item_id)
+		if selected.is_empty():return {"ok":false,"reason":"선택한 원본 티켓의 소유·수량·잠금 확인 필요"}
+		return _stage_ticket(selected,physical_id)
+	var contains_native:bool=false
 	for uid:Variant in runtime.world.item_instances:
 		var entry:Variant=runtime.world.item_instances[uid]
 		if not entry is Dictionary or entry.get("name")!=name or not entry.has(STACK.RECEIPT):continue
+		contains_native=true
 		if runtime.world._item_locked(name,str(uid)):continue
-		var owned:Dictionary=STACK.proof(runtime.world,str(uid))
+		var owned:Dictionary=_selected_native_ticket(name,str(uid),item_id)
 		if owned.is_empty():return {"ok":false,"reason":"원본 물리 소유·잔량 증명 불일치"}
-		return STACK.stage_debit(runtime.world,[{"physical_id":str(uid),"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}])
-	return {}
+		return _stage_ticket(owned,str(uid))
+	return {"ok":false,"reason":"잠기지 않은 원본 물리 티켓이 없습니다"} if contains_native else {}
 
 static func validate_state(value:Variant) -> String:
 	if not value is Dictionary or value.get("version")!=1:return "티켓 소비 저장 버전 오류"

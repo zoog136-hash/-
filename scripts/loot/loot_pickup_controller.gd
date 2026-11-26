@@ -161,14 +161,10 @@ func request_nearby(continuing: bool = false) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		world.hud.show_message("이동 불가 상태에서는 아이템을 주울 수 없습니다")
 		return false
-	var candidates: Array[String] = []
-	for id: String in manager.views.keys():
-		if float(blocked.get(id, 0)) > clock: continue
-		if manager.valid_view(manager.views[id]) and player.global_position.distance_to(_destination(id)) <= SCAN_RADIUS: candidates.append(id)
+	var candidates: Array[String] = _ranked_candidates(false, 1)
 	if candidates.is_empty() or sweep_picked >= SWEEP_LIMIT:
 		sweep = false
 		return false
-	candidates.sort_custom(_priority)
 	var id: String = candidates[0]
 	cancel()
 	selected_id = id
@@ -257,16 +253,34 @@ func _advance_target() -> bool:
 		player.set_click_path(path, destination)
 	return true
 
-func _priority(a: String, b: String) -> bool:
-	var current_a: bool = not manager.current_batch.is_empty() and str(manager.records[a]["hunt_batch"]) == manager.current_batch
-	var current_b: bool = not manager.current_batch.is_empty() and str(manager.records[b]["hunt_batch"]) == manager.current_batch
-	if current_a != current_b: return current_a
-	var da: int = roundi(player.global_position.distance_to(_destination(a)) * 10.0)
-	var db: int = roundi(player.global_position.distance_to(_destination(b)) * 10.0)
-	if da != db: return da < db
-	var ga: int = TwilightDropVisual.GRADES.find(str(manager.records[a]["grade"]))
-	var gb: int = TwilightDropVisual.GRADES.find(str(manager.records[b]["grade"]))
-	return ga > gb if ga != gb else a < b
+## Only the first target (manual) or first eight (auto) are ever tried.
+## Evaluate each drop's original tie-break tuple once. Nothing is cached:
+## moving, batch changes, player drops, cooldowns and expiry apply immediately.
+func _ranked_candidates(automatic: bool, limit: int) -> Array[String]:
+	var ids: Array[String] = []
+	if limit <= 0: return ids
+	var ranks: Array[int] = []
+	var origin: Vector2 = player.global_position
+	var grade_count: int = TwilightDropVisual.GRADES.size()
+	var other_batch: int = roundi(SCAN_RADIUS * 10.0) + 1
+	for id: String in manager.views:
+		if float(blocked.get(id, 0)) > clock: continue
+		if not manager.valid_view(manager.views[id]): continue
+		var row: Dictionary = manager.records[id]
+		if automatic and bool(row.get("player_dropped", false)): continue
+		var coords: Array = row.position
+		var distance: float = origin.distance_to(Vector2(float(coords[0]), float(coords[1])))
+		if not (distance <= SCAN_RADIUS): continue
+		var distance_key: int = roundi(distance * 10.0)
+		if manager.current_batch.is_empty() or str(row.hunt_batch) != manager.current_batch: distance_key += other_batch
+		# Lower is better. Unknown grade (-1) sorts after every named grade.
+		var rank: int = distance_key * (grade_count + 1) + grade_count - 1 - TwilightDropVisual.GRADES.find(str(row.grade))
+		var at: int = ranks.size()
+		if at == limit and (rank > ranks[-1] or (rank == ranks[-1] and id >= ids[-1])): continue
+		while at > 0 and (rank < ranks[at-1] or (rank == ranks[at-1] and id < ids[at-1])): at -= 1
+		ranks.insert(at, rank); ids.insert(at, id)
+		if ranks.size() > limit: ranks.pop_back(); ids.pop_back()
+	return ids
 
 func run_auto() -> bool:
 	if not player.auto_enabled: return false
@@ -278,12 +292,7 @@ func run_auto() -> bool:
 	scan_time = SCAN_INTERVAL
 	seen_revision = manager.revision
 	scan_count += 1
-	var candidates: Array[String] = []
-	for id: String in manager.views.keys():
-		if float(blocked.get(id, 0)) > clock: continue
-		if bool(manager.records[id].get("player_dropped",false)): continue
-		if manager.valid_view(manager.views[id]) and player.global_position.distance_to(_destination(id)) <= SCAN_RADIUS: candidates.append(id)
-	candidates.sort_custom(_priority)
+	var candidates: Array[String] = _ranked_candidates(true, 8)
 	# Bound path searches even with many inaccessible drops. Rejected IDs are
 	# retried after a cooldown, allowing the existing combat AI to continue.
 	var scan_started: int = Time.get_ticks_usec()

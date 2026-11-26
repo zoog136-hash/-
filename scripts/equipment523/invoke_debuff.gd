@@ -121,7 +121,7 @@ static func contract(pack: Dictionary, option: Dictionary, policy: Dictionary) -
 static func apply(pack: Dictionary, world: Node, victim: Node, option: Dictionary, policy: Dictionary, origin: Dictionary = {}) -> Dictionary:
 	var parsed: Dictionary = contract(pack,option,policy)
 	if not parsed.get("ok",false): return parsed
-	if not is_instance_valid(world) or not is_instance_valid(victim) or bool(_field(victim,"dead",true)) or not _has_field(victim,"life_id") or _field(victim,"world_controller",null) != world: return _fail("동일 월드의 유효한 대상 생명주기가 없습니다.")
+	if not is_instance_valid(world) or not is_instance_valid(victim) or bool(_field(victim,"dead",true)) or victim.get("life_id") == null or _field(victim,"world_controller",null) != world: return _fail("동일 월드의 유효한 대상 생명주기가 없습니다.")
 	if not Common.spell_target_allowed(world,victim,parsed.spell): return _fail("원본 주문은 은신 대상에게 시전할 수 없습니다.")
 	if bool(victim.get_meta("is_player_combatant",false)): return _fail("현재 PvE 디버프 계약의 대상이 아닙니다.")
 	if not _valid_origin(origin) or not world.has_method("_equipment523_invoke_owner") or world.call("_equipment523_invoke_owner",origin,int(parsed.spell.ID)) != true: return _fail("현재 물리 장비·슬롯·주문의 발동 소유권을 확인할 수 없습니다.")
@@ -266,14 +266,10 @@ static func _status(world: Node) -> Variant:
 	var service: Variant = _field(world,"original_skills",null)
 	return _field(service,"status",null) if service != null else null
 
-static func _has_field(object: Object, name: String) -> bool:
-	if not is_instance_valid(object): return false
-	for property: Dictionary in object.get_property_list():
-		if str(property.get("name","")) == name: return true
-	return false
-
 static func _field(object: Object, name: String, fallback: Variant) -> Variant:
-	return object.get(name) if _has_field(object,name) else fallback
+	if not is_instance_valid(object): return fallback
+	var value: Variant = object.get(name)
+	return fallback if value == null else value
 
 static func _bounded(value: Variant, low: float, high: float, fallback: float) -> float:
 	if not value is int and not value is float: return fallback

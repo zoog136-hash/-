@@ -8,6 +8,7 @@ extends SceneTree
 ## pack directory>: Change_Fusion_All mounts the result cards.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
+const STAGE=preload("res://scripts/ui/card_reveal_stage.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -121,8 +122,14 @@ func _real_pack(pack_dir: String) -> void:
 	var hud:=FakeHud.new()
 	host.add_child(hud)
 	root.add_child(host)
+	var viewport:=SubViewport.new()
+	viewport.size=Vector2i(1200,676)
+	viewport.disable_3d=true
+	viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
 	var parent:=Node2D.new()
-	root.add_child(parent)
+	parent.position=Vector2(0,675)
+	viewport.add_child(parent)
 	var window=WINDOW.new()
 	check(window.configure(pack,hud).get("ok",false),"window configures")
 	var released: Array=[0]
@@ -133,5 +140,83 @@ func _real_pack(pack_dir: String) -> void:
 	window._next()
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
-	parent.queue_free()
+	await _check_authored_phases(window,parent,pack)
+	viewport.queue_free()
 	host.queue_free()
+
+func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted) -> void:
+	var record: Dictionary={"id":"fixture-legend","name":"결과","grade":"전설"}
+	var effect: Callable=STAGE.play_result_cell.bind("변신",true,true,[],{},pack)
+	for upgraded: bool in [false,true]:
+		record["fusion_success"]=upgraded # individual outcome in a successful batch
+		var response: Dictionary=window.open(parent,[record],"변신",true,Callable(),effect)
+		if not response.get("handled",false):
+			check(false,"mount exact UI with a single fusion result")
+			return
+		var result_scene: Node2D=window._scene
+		var face: Node2D=result_scene.find_child("SourceAwardFace",true,false)
+		var reel: Control=result_scene.find_child("CardRevealEffect",true,false)
+		if not is_instance_valid(face) or not is_instance_valid(reel):
+			check(false,"mount authored face and separate reel")
+			return
+		var panel: Node2D=face.get_parent()
+		var center: Vector2=result_scene.to_local(panel.global_position)
+		check(center.length()<0.5,"one result uses the existing page center")
+		var cell: Node2D=panel.get_parent()
+		var outline: Node2D=cell.find_child("Fx_Outline_Front*",true,false)
+		check(not face.visible and (outline==null or not outline.is_visible_in_tree()),"spinner has no final grade face or outline")
+		var bolt: Node2D=reel.find_child("SourceCardLightning",true,false)
+		check(reel.get_node_or_null("MetalRim")==null,"native reel contains no fixed gold frame")
+		check((bolt!=null)==upgraded,"only a successful fusion builds the original discharge")
+		if bolt!=null:
+			check(not bolt.visible and bolt.source_member==WINDOW.GradeFx.ACTIVE_GRADE["전설"],"exact lightning is initially hidden")
+			check(bolt.get_parent().clip_contents,"native discharge stays inside the card clip")
+			await create_timer(reel.lightning_at()+0.25).timeout
+			var sprite_node: Node2D=bolt.source_nodes.get(WINDOW.GradeFx.LIGHTNING_SPRITES["전설"])
+			var sprite: Sprite2D=sprite_node.get_meta("source_sprite") if sprite_node!=null and sprite_node.has_meta("source_sprite") else null
+			check(bolt.is_visible_in_tree() and bolt.playback_status().playing and sprite!=null and sprite.texture!=null and not face.visible,"verified atlas pixels play during the success reel")
+			if DisplayServer.get_name()!="headless":await _check_lightning_pixels(bolt)
+		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
+		check(not is_instance_valid(reel) and face.is_visible_in_tree(),"settled result has its grade face")
+		window.close()
+		await process_frame
+	var batch: Array=[]
+	for result: Dictionary in [{"fusion_success":true},{"fusion_success":false},{"fusion_success":true,"pity_reward":true}]:
+		var entry:=record.duplicate()
+		entry.merge(result,true)
+		batch.append(entry)
+	window.open(parent,batch,"변신",true,Callable(),effect)
+	var reels: Array=window._scene.find_children("CardRevealEffect","Control",true,false)
+	check(reels.size()==3,"one native reel per result in the mixed batch")
+	for reel: Control in reels:
+		var upgraded: bool=reel.record.fusion_success and not reel.record.get("pity_reward",false)
+		check((reel.find_child("SourceCardLightning",true,false)!=null)==upgraded,"the mixed batch uses each card's own success and pity flags")
+	window.close()
+	await process_frame
+
+## Compare two draws of the same paused game frame. Toggling only the
+## original CSB player isolates its pixels from the card's own illumination.
+func _check_lightning_pixels(bolt: Node2D) -> void:
+	paused=true
+	var clip:=bolt.get_parent() as Control
+	var viewport:=bolt.get_viewport()
+	await RenderingServer.frame_post_draw
+	var lit:=viewport.get_texture().get_image()
+	bolt.hide()
+	await RenderingServer.frame_post_draw
+	var hidden:=viewport.get_texture().get_image()
+	bolt.show()
+	paused=false
+	var bounds:=clip.get_global_rect()
+	var first:=Vector2i(bounds.position.floor())
+	var area:=Rect2i(first,Vector2i(bounds.end.ceil())-first).intersection(Rect2i(Vector2i.ZERO,lit.get_size()))
+	var changed: int=0
+	for y: int in range(area.position.y,area.end.y):
+		for x: int in range(area.position.x,area.end.x):
+			if lit.get_pixel(x,y)!=hidden.get_pixel(x,y):changed+=1
+	check(changed>0,"the original success discharge changes rendered pixels inside the card")
+	lit.fill_rect(area,Color.TRANSPARENT)
+	hidden.fill_rect(area,Color.TRANSPARENT)
+	var same_outside: bool=lit.get_data()==hidden.get_data()
+	check(same_outside,"hiding the bolt leaves all pixels outside the card identical")
+	print("FUSION_LIGHTNING_PIXELS ",JSON.stringify({"inside_changed":changed,"outside_identical":same_outside}))

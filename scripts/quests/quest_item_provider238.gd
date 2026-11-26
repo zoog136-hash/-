@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Reuses exact PR238 modules; quest eligibility and receipts remain quest-owned.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -15,7 +16,7 @@ const REGEN=preload("res://scripts/quests/quest_regen523.gd")
 const CURE=preload("res://scripts/quests/quest_cure310.gd")
 const REUSABLE=preload("res://scripts/quests/quest_reusable523.gd")
 const FIXED=preload("res://scripts/quests/quest_fixed_cards523.gd")
-const REVIEWED_IDS: Array[int] = [310,1186,282793,295524,203422,295504,295544,302461,376,385,177292,177322,177342,177432,306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
+const REVIEWED_IDS: Array[int] = [310,1186,282793,295524,203422,295504,295544,302461,376,385,177292,177322,177342,177432,139781,289172,289182,289202,306611,306621,306631,306641,859,1281,239,233,368202,369002,177192,177202,177212,177222,177232,177252,177332,177452]
 var skill_books=SKILL_BOOKS.new()
 var equipment_owner=preload("res://scripts/quests/quest_equipment523.gd").new()
 ## Lineage M style: only the bound item IDs stay resident (in binding
@@ -114,7 +115,7 @@ func configure(world: Node) -> void:
 			if not world.consumable_service.has_method("use_owned_native_return"):continue
 		elif id==233:
 			if not HP233.metadata(D.variant_item(definition.get("native_record",{}),1)).get("ok",false):continue
-		elif id in FIXED.IDS:
+		elif id in FIXED.QUEST_IDS:
 			if FIXED.target(world,D.variant_item(definition.get("native_record",{}),1)).is_empty():continue
 		elif id in SKILL_BOOKS.IDS:
 			var identity: Dictionary=skill_books.identity(D.variant_item(definition.get("native_record",{}),1),world)
@@ -164,6 +165,7 @@ func configure(world: Node) -> void:
 	ready=not _definition_ids.is_empty()
 
 func _register(world: Node, original: Dictionary, bless: int) -> void:
+	if RETIRED_ITEMS.record(original):return
 	if not preload("res://scripts/quests/source_dummy523.gd").record_evidence(original).is_empty():return
 	var record: Dictionary = D.variant_item(original,bless)
 	if not world._catalog_item_from_source_id(str(record.sourceId)).is_empty(): return
@@ -229,7 +231,7 @@ func try_use(world: Node, record: Dictionary) -> bool:
 		world.hud.show_message(str(result.get("message",result.get("reason","귀환 결과 확인 필요"))))
 	elif int(record.get("source_item_class_id",0))==310:CURE.perform(world,record)
 	elif int(record.get("source_item_class_id",0)) in REUSABLE.IDS:REUSABLE.perform(world,record)
-	elif int(record.get("source_item_class_id",0)) in FIXED.IDS:FIXED.use(world,record)
+	elif int(record.get("source_item_class_id",0)) in FIXED.QUEST_IDS:FIXED.use(world,record)
 	elif int(record.get("source_item_class_id",0)) in SKILL_BOOKS.IDS:skill_books.use(world,record)
 	elif int(record.get("source_item_class_id",0))==369002:handled=CHOICE.open(world,record)
 	elif int(record.get("source_item_class_id",0))==233:handled=HP233.use(world,record)
@@ -305,7 +307,7 @@ func try_use_held(world: Node, id: String) -> bool:
 	if int(owned.item_class_id) in REUSABLE.IDS:
 		var canonical: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 		REUSABLE.perform(world,canonical,id);return true
-	if int(owned.item_class_id) in FIXED.IDS:
+	if int(owned.item_class_id) in FIXED.QUEST_IDS:
 		var canonical: Dictionary=D.variant_item(bound_definition(int(owned.item_class_id)).native_record,int(owned.bless_code_id))
 		FIXED.use(world,canonical,id);return true
 	if int(owned.item_class_id) in SKILL_BOOKS.IDS:

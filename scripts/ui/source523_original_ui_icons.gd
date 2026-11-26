@@ -319,6 +319,22 @@ static func _resolve_scene(info: Dictionary) -> Dictionary:
 ## CSB root is attached at the Sprite anchor with no fit, scale or offset of ours.
 ## Anything else keeps the explicit native_registrations requirement.
 const COMMON_ICON_SETTER_EVIDENCE := "common icon setter 0x00C381A0 attaches the AssetType101 CSB to the slot Sprite"
+# These two complete original icon scenes clip their shine with an authored
+# touch-enabled Panel. Its callback is empty. In an item slot the outer item
+# button owns activation. Preserve the clipping node without a second hit area.
+const COUPON_CLIP_SCENES := {
+	"UI/CsbFile/icon/Fx_Item_Master_Coupon_Change.csb":"66617d288e5ccdb676701a2d24a3292e464414de41e144c9aac0495375cb3663",
+	"UI/CsbFile/icon/Fx_Item_Master_Coupon_HolyStuff.csb":"e5a288d02376262a7466b560d337405fdac16b5eabda32c73f6c376ea133a57c",
+}
+
+static func _embedded_icon_bindings(spec: Dictionary, supplied: Dictionary) -> Dictionary:
+	var member: String = str(spec.get("member", ""))
+	if not COUPON_CLIP_SCENES.has(member) or COUPON_CLIP_SCENES[member] != spec.get("current523_scene_sha256"):
+		return supplied
+	var result: Dictionary = supplied.duplicate()
+	if not result.has(224): result[224] = {"role":"item_slot_clip"}
+	return result
+
 static func common_icon_setter_registration(spec: Dictionary, slot: Dictionary, target: Dictionary) -> Variant:
 	if not str(spec.get("policy_source","")).contains(COMMON_ICON_SETTER_EVIDENCE): return null
 	if slot.get("ui_target_declared_by_original") != true or slot.get("registration_space") != "authored_sprite_anchor" or slot.get("fit_or_offset_inferred") != false: return null
@@ -368,7 +384,7 @@ static func native_scene_descriptor(info: Dictionary, context: Dictionary) -> Di
 	var descriptor: Dictionary = {"pack":resolved.pack,"manifest_sha256":resolved.manifest_sha256,
 		"member":spec.member,"source_sha256":spec.current523_scene_sha256,
 		"registration":{"space":"authored_sprite_anchor","original_registration_confirmed":true,
-			"source_basis":registration.source_basis,"target":target},"bindings":source_bindings.duplicate(true),
+			"source_basis":registration.source_basis,"target":target},"bindings":_embedded_icon_bindings(spec, source_bindings).duplicate(true),
 		"image_owner_identity":{"consumer":resolved.consumer.duplicate(true),
 			"icon_id":int(resolved.canonical.icon_id),"asset_id":int(resolved.canonical.asset_id),
 			"image_pack_manifest_sha256":resolved.canonical.get("manifest_sha256","")}}
@@ -410,6 +426,7 @@ static func attach(view: TextureRect, info: Dictionary, original_ui_bindings: Di
 		"asset_id":int(canonical.asset_id),"asset_type_id":int(canonical.asset_type_id),"path":canonical.path,
 		"image_pack_manifest_sha256":canonical.get("manifest_sha256",""),"manifest_sha256":manifest_sha256,
 		"scene_sha256":spec.current523_scene_sha256,"member":member,"clip":spec.clip,"policy":policy}
+	original_ui_bindings = _embedded_icon_bindings(spec, original_ui_bindings)
 	var reused: Dictionary = _reuse(view,key,original_ui_bindings,context)
 	if not reused.is_empty(): return reused
 	detach(view)

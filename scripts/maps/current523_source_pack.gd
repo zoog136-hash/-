@@ -381,12 +381,14 @@ func read_member_job(member: String) -> Dictionary:
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null or file.get_length() != int(storage.bytes): return {"_problem":"Missing or wrong-sized stored source"}
 	var stored: PackedByteArray = file.get_buffer(int(storage.bytes))
-	if stored.size() != int(storage.bytes) or _hash(stored) != storage.sha256: return {"_problem":"Stored source SHA256 mismatch"}
+	if stored.size() != int(storage.bytes): return {"_problem":"Stored source SHA256 mismatch"}
+	var stored_sha: String = _hash(stored)
+	if stored_sha != storage.sha256: return {"_problem":"Stored source SHA256 mismatch"}
 	var bytes: PackedByteArray = stored
 	if storage.gzip:
 		if not _gzip_header_valid(stored,int(metadata.bytes)): return {"_problem":"Invalid gzip header or original ISIZE"}
 		bytes = stored.decompress(int(metadata.bytes),FileAccess.COMPRESSION_GZIP)
-	if bytes.size() != int(metadata.bytes) or _hash(bytes) != metadata.sha256: return {"_problem":"Original source SHA256 mismatch after storage decode"}
+	if bytes.size() != int(metadata.bytes) or (_hash(bytes) if storage.gzip else stored_sha) != metadata.sha256: return {"_problem":"Original source SHA256 mismatch after storage decode"}
 	var observed: Dictionary = S32_FORMAT.scan_sections(bytes)
 	if observed.is_empty(): return {"_problem":"Malformed generic S32 source"}
 	var result: Dictionary = {"member":member,"asset_path":source_asset,"source_sha256":metadata.sha256,"source_bytes":bytes.size(),"sections":{}}

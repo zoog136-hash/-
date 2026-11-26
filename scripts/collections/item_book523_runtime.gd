@@ -20,6 +20,7 @@ extends RefCounted
 ## the legacy one does not (effect_totals().suppressed_legacy), so one
 ## collection is never applied twice. Bonus types without a TWILIGHT stat
 ## (PvP, 내성 증폭, 물약 ...) are listed as 미적용.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const Source = preload("res://scripts/collections/item_book523_source.gd")
 const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const REFINE = preload("res://scripts/refine523/bless_refine523_service.gd")
@@ -229,6 +230,7 @@ func _index_bag() -> void:
 		var record: Dictionary = entry.record
 		if record.get("source_m_native_item") != true or not _int(record.get("source_item_class_id")): continue
 		var id: int = int(record.source_item_class_id)
+		if RETIRED_ITEMS.item(id):continue
 		var stack: bool = entry.has(STACK.RECEIPT)
 		var bless: int = int(record.get("source_bless_raw", 1)) if _int(record.get("source_bless_raw", 1)) else 1
 		var state_name: String = str(entry.get("bless_state", ""))
@@ -252,6 +254,7 @@ func _cheap_option(card: Dictionary) -> Dictionary:
 
 ## The proven bag entries that satisfy one alternative, or why not.
 func _prove(option: Dictionary) -> Dictionary:
+	if RETIRED_ITEMS.item(option.get("item_class_id")):return {"ok":false,"reasons":[RETIRED_ITEMS.REASON]}
 	var need: int = int(option.amount)
 	var id: int = int(option.item_class_id)
 	var equipment: Array = []

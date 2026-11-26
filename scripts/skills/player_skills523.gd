@@ -977,9 +977,12 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 	var pack: Dictionary = value
 	if pack.get("schema_version") != 1 or pack.get("patch") != 523 or pack.get("source_zip_sha256") != SOURCE_SHA:
 		return reject("unsupported source/schema")
-	if pack.get("bindings_sha256") != FileAccess.get_file_as_string(BINDINGS_PATH).sha256_text():
+	# This pin has always covered decoded text. Reuse that exact UTF-8
+	# string for parsing rather than reopening the bundled bindings file.
+	var binding_text: String = FileAccess.get_file_as_string(BINDINGS_PATH)
+	if pack.get("bindings_sha256") != binding_text.sha256_text():
 		return reject("binding revision mismatch")
-	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string(BINDINGS_PATH))
+	var local: Variant = JSON.parse_string(binding_text)
 	if not local is Dictionary or not pack.get("profiles") is Dictionary: return reject("missing bindings/profiles")
 	var candidate: Dictionary = pack.profiles
 	if candidate.size() != local.skills.size(): return reject("incomplete profile set")

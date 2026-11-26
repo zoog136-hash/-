@@ -1,6 +1,7 @@
 extends "res://tests/reference_sp2_load_memo_test.gd"
 const PREPARED=preload("res://scripts/resources/reference_sp2_prepared_bank.gd")
 const POLICY=preload("res://scripts/animation/source_playback_policy.gd")
+const PRESENTATION=preload("res://scripts/animation/source_presentation_policy.gd")
 const PREVIEW=preload("res://scripts/animation/original_source_preview.gd")
 const LEGACY=preload("res://tests/qa_unshared_reference_preview.gd")
 const NATIVE=preload("res://tests/source_native_attachment_bank_test.gd")
@@ -20,6 +21,77 @@ func frozen(value: Variant) -> bool:
 		for child: Variant in value:
 			if not frozen(child): return false
 	return true
+
+func _timing_benchmark(bank_result: Dictionary, mode: String, data: Dictionary) -> void:
+	# Metadata-only stress input: repeat the already validated fixture's
+	# frames, without creating a texture or changing an original asset.
+	var snapshot := PREPARED.new()
+	snapshot.result = bank_result.duplicate(true)
+	for track: Dictionary in snapshot.result.record.tracks.values():
+		for frames: Array in track.directions:
+			var source: Array = frames.duplicate()
+			for index: int in range(frames.size(),128):
+				frames.append(source[index%source.size()])
+	PREPARED.freeze(snapshot.result)
+	var expected: Dictionary = POLICY.tracks_from_prepared(snapshot.result.record,"npc",mode)
+	check(var_to_bytes(expected)==var_to_bytes(snapshot.npc_timing_tracks(mode)),"large fixture timing matches")
+	var off: Array[float] = []
+	var on: Array[float] = []
+	for cached: bool in [false,true,true,false,false,true,true,false]:
+		for _sample: int in 24:
+			var started: int = Time.get_ticks_usec()
+			var output: Dictionary = snapshot.npc_timing_tracks(mode) if cached else POLICY.tracks_from_prepared(snapshot.result.record,"npc",mode)
+			var elapsed: float = float(Time.get_ticks_usec()-started)/1000.0
+			if cached: on.append(elapsed)
+			else: off.append(elapsed)
+			if output.is_empty(): check(false,"benchmark produces a complete track set")
+	off.sort()
+	on.sort()
+	print("NPC_TIMING_PREPARE_AB "+JSON.stringify({"frames":snapshot._layout_frames,"uncached_p50_ms":(off[47]+off[48])/2.0,"cached_p50_ms":(on[47]+on[48])/2.0}))
+	var view:=PREVIEW.new()
+	var tracks: Dictionary=snapshot.npc_timing_tracks(mode)
+	check(view._configure_reference_bank(data.path,data.sha,ACTOR,BINDINGS,LOOPS,"idle","npc"),"benchmark configures a validated NPC preview")
+	view._playback_tracks=tracks
+	var direction_totals: Dictionary=snapshot.npc_timing_totals(mode,tracks)
+	var role: String=""
+	for candidate: String in direction_totals:
+		role=candidate
+		break
+	if not role.is_empty():
+		var samples: Array[Array]=[[],[]]
+		view._prepared_direction_totals={}
+		var before: float=view.role_cycle_seconds(role)
+		for run: int in 12:
+			for variant: int in ([0,1] if run%2==0 else [1,0]):
+				view._prepared_direction_totals=direction_totals if variant==1 else {}
+				var begin: int=Time.get_ticks_usec()
+				var sum: float=0.0
+				for index: int in 512: sum+=view.role_cycle_seconds(role)
+				var usec: int=Time.get_ticks_usec()-begin
+				if run>=2:samples[variant].append(usec)
+				check(sum==before*512.0 or is_equal_approx(sum,before*512.0),"measured projection preserves cycle totals")
+		for sample: Array in samples:sample.sort()
+		print("NPC_CYCLE_FOLD_AB "+JSON.stringify({"frames_per_direction":tracks[role].directions[0].size(),"reads":512,
+			"uncached_p50_usec":(samples[0][4]+samples[0][5])/2.0,"prepared_p50_usec":(samples[1][4]+samples[1][5])/2.0}))
+		samples=[[],[]]
+		var baseline: PackedInt32Array
+		for run: int in 12:
+			for variant: int in ([0,1] if run%2==0 else [1,0]):
+				view._prepared_direction_totals=direction_totals if variant==1 else {}
+				view.restart_reference_source(role,23)
+				var frames:=PackedInt32Array()
+				var begin: int=Time.get_ticks_usec()
+				for index: int in 256:
+					view.advance_reference_source(1.0/120.0,role,0)
+					frames.append(view.last_source_frame)
+				var usec: int=Time.get_ticks_usec()-begin
+				if run>=2:samples[variant].append(usec)
+				if baseline.is_empty():baseline=frames
+				check(frames==baseline,"all visible frame IDs match the uncached playback")
+		for sample: Array in samples:sample.sort()
+		print("NPC_PLAYBACK_AB "+JSON.stringify({"frames_per_direction":tracks[role].directions[0].size(),"advances":256,
+			"uncached_p50_usec":(samples[0][4]+samples[0][5])/2.0,"prepared_p50_usec":(samples[1][4]+samples[1][5])/2.0}))
+	view.free()
 
 func run() -> void:
 	var directory: String="user://prepared_bank_test_%d" % OS.get_process_id()
@@ -60,6 +132,7 @@ func run() -> void:
 	var other_data: Dictionary=fixture(directory+"_other")
 	check(not is_same(shared(BANK.new(),other_data),first),"same manifest bytes at another path cannot cross-reuse")
 	# The actual preview boundary owns clocks, events, nodes and timing edits.
+	HITCH._counters.clear()
 	var old:=LEGACY.new()
 	var one:=PREVIEW.new()
 	var two:=PREVIEW.new()
@@ -68,6 +141,30 @@ func run() -> void:
 		check(view.advance_reference_source(0.0,"idle",0),"NPC initial frame draws")
 	check(is_same(one._record,two._record) and not is_same(old._record,one._record),"preview uses shared validated record")
 	check(var_to_bytes(old._playback_tracks)==var_to_bytes(one._playback_tracks),"actual preview tracks unchanged")
+	check(HITCH._counters.get("sp2.npc_timing_build")==1 and HITCH._counters.get("sp2.npc_timing_hit")==1,"two actual NPC lives build source playback timing once")
+	check(not is_same(one._playback_tracks,two._playback_tracks) and is_same(one._playback_tracks.idle,two._playback_tracks.idle) and frozen(one._playback_tracks.idle),"per-view map owns frozen timing metadata")
+	check(not is_same(one._layers[0],two._layers[0]),"each NPC owns its own visible nodes")
+	var timed_owner: RefCounted=one._reference_bank._prepared_snapshot
+	var current_mode: String=one.source_playback_mode()
+	var alternate: String="compatible" if current_mode=="strict" else "strict"
+	check(not one._prepared_direction_totals.is_empty() and is_same(one._prepared_direction_totals,two._prepared_direction_totals)
+		and one._prepared_direction_totals.is_read_only(),"live NPC views share immutable presentation totals")
+	for role: String in one._prepared_direction_totals:
+		var totals: PackedFloat64Array=one._prepared_direction_totals[role]
+		for direction: int in totals.size():
+			var oracle_total: float=0.0
+			for frame: Dictionary in old._playback_tracks[role].directions[direction]:oracle_total+=PRESENTATION.duration(frame)
+			check(totals[direction]==oracle_total,"the one-time fold is bit-exact for each source role and direction")
+	check(timed_owner.npc_timing_totals(current_mode,old._playback_tracks).is_empty(),"mutable tracks cannot inherit a prepared total")
+	var other_mode: Dictionary=timed_owner.npc_timing_tracks(alternate)
+	check(var_to_bytes(other_mode)==var_to_bytes(POLICY.tracks(expected.record,"npc",alternate)) and not is_same(other_mode.idle,one._playback_tracks.idle),"changed timing mode rebuilds exactly without changing a live view")
+	check(var_to_bytes(timed_owner.npc_timing_tracks(current_mode))==var_to_bytes(one._playback_tracks),"change back remains exact")
+	if "--npc-timing-benchmark" in OS.get_cmdline_user_args(): _timing_benchmark(first,current_mode,data)
+	var oversized:=PREPARED.new()
+	oversized.result=first
+	oversized.layout()
+	oversized._layout_frames=PREPARED.TIMING_FRAMES_LIMIT+1
+	check(var_to_bytes(oversized.npc_timing_tracks(current_mode))==var_to_bytes(one._playback_tracks) and oversized._timed_tracks.is_empty(),"oversized preparation uses current timing and retains no extra metadata")
 	for direction: int in range(8):
 		for role: String in BINDINGS:
 			for view: Node in [old,one]:
@@ -89,6 +186,9 @@ func run() -> void:
 	var raw: PackedByteArray=FileAccess.get_file_as_bytes(data.raw)
 	write_bytes(data.raw,raw+PackedByteArray([0]))
 	check(not shared(BANK.new(),data).ok,"changed member size rejects hit")
+	var changed_view:=PREVIEW.new()
+	check(not changed_view._configure_reference_bank(data.path,data.sha,ACTOR,BINDINGS,LOOPS,"idle","npc"),"changed member cannot use cached timing through preview")
+	changed_view.free()
 	write_bytes(data.raw,raw)
 	var restored:=BANK.new()
 	check(shared(restored,data).ok,"restored member rebuilds")

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Presentation selection for an effect already requested by an existing caller.
 ## Does not admit spells, apply bonuses, create combat events or infer Sprite IDs.
+const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd")
 const SOURCE = preload("res://scripts/resources/current523_source_bank.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const STAGES = {"cast":"CasterEffectSpriteID", "effect":"EffectSpriteID", "impact":"EffectExplosionSpriteID", "success":"SuccessEffectSpriteID", "fail":"FailEffectSpriteID", "critical":"CriticalEffectSpriteID"}
@@ -38,7 +39,6 @@ static func _bank(options: Dictionary) -> Dictionary:
 	var file := FileAccess.open(path,FileAccess.READ)
 	if file == null or file.get_length() <= 0 or file.get_length() > BANK.MAX_MANIFEST_JSON or not BANK.valid_sha(expected): return fail("current523_effect_bank_missing_or_oversized")
 	var stamp: String = "%d:%d" % [file.get_length(), FileAccess.get_modified_time(path)]
-	file.close()
 	if path == _manifest_path and expected == _manifest_sha and stamp == _manifest_stamp and not _manifest.is_empty(): return {"ok":true,"manifest":_manifest}
 	# A pinned manifest that was read and rejected stays rejected while the
 	# file is unchanged. Without this every effect request re-read, hashed and
@@ -65,11 +65,16 @@ static func _bank(options: Dictionary) -> Dictionary:
 			value = prepared.value.value
 	else:
 		# Ordinary production pin admission; no separate resource audit is launched.
-		if FileAccess.get_sha256(path) != expected: return fail("current523_effect_bank_pin_changed")
 		if path == _manifest_path and expected == _manifest_sha and not _manifest.is_empty():
+			# A known parsed value needs only streaming re-verification.
+			file.close()
+			if FileAccess.get_sha256(path) != expected: return fail("current523_effect_bank_pin_changed")
 			_manifest_stamp = stamp
 			return {"ok":true,"manifest":_manifest}
-		value = JSON.parse_string(FileAccess.get_file_as_string(path))
+		var input: Dictionary = CHECKED_BYTES.read_json(file, file.get_length(), expected)
+		file.close()
+		if not input.verified: return fail("current523_effect_bank_pin_changed")
+		value = input.value
 	if not value is Dictionary or value.get("kind") != "current523_reference_sp2_action_bank" or value.get("source_snapshot") != "patch523" or not value.get("actors") is Dictionary or not value.get("source_action_domains") is Dictionary: return _reject(rejected_key, fail("current523_effect_original_action_domain_required"))
 	if value.get("source_dummy_exclusion_policy") != BANK.SOURCE_DUMMY_EXCLUSION_POLICY or not value.get("excluded_source_actors") is Dictionary: return _reject(rejected_key, fail("current523_effect_source_dummy_policy_required"))
 	_manifest_path = path

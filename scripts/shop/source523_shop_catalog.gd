@@ -453,6 +453,19 @@ func currency(id: int) -> Dictionary:
 func product(id: int) -> Dictionary:
 	return {"definition":record("MarketProduct", id), "additional":_related("MarketProductAdditional", id)}
 
+## Boot registration only needs the ordered original ItemClass products. The
+## full offer (conditions, labels, dates and additional rows) is still used by
+## the UI and the quote/transaction owner. No availability inference here.
+func install_item_products(id: int, include_bonuses: bool) -> PackedInt64Array:
+	var result := PackedInt64Array()
+	if record("MarketPurchase_Korean", id).is_empty(): return result
+	for table: String in (["MarketPurchaseProduct", "MarketBonusForPurchase"] if include_bonuses else ["MarketPurchaseProduct"]):
+		# The checked link rows aren't returned publicly and are never mutated.
+		for link: Dictionary in _links.get(table, {}).get(str(id), []):
+			var row: Dictionary = record("MarketProduct", int(link.MarketProductID))
+			if int(row.get("UnitID", 0)) == 4: result.append(int(row.ClassID))
+	return result
+
 func market_offer(id: int) -> Dictionary:
 	var purchase: Dictionary = record("MarketPurchase_Korean", id)
 	if purchase.is_empty(): return {}

@@ -1,5 +1,6 @@
 extends RefCounted
 ## Private, data-only quest projection. Missing semantics fail closed per quest.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const USER_PATH = "user://quests_current523.json"
 const DEV_PATH = "res://data/quests/private_current523.json"
 const SOURCE_SHA = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
@@ -461,6 +462,16 @@ func _gate_compact(row: Dictionary, lazy: Dictionary, context: Dictionary, claim
 		if int(context.get("level",1)) < int(goal[2]): return "레벨 %d부터 이용" % int(goal[2])
 	return ""
 
+## All 38 original QuestReward joins of type 5 have this completion-time,
+## unconditional base-award shape. Return 0 for any other shape; do not
+## interpret the display/reference class as a physical item or multiplier.
+static func base_blessing_points(reward: Dictionary) -> int:
+	if reward.get("type_name")!="Einasad" or reward.get("RewardTypeID")!=5 or reward.get("RewardGetTimeTypeID")!=2 or reward.get("RewardEnhancementTypeID")!=1: return 0
+	if (reward.get("RewardClassID")!=7049 and reward.get("RewardClassID")!=1859) or reward.get("UseImmediately")!=false or reward.get("ClanOnly")!=false or reward.get("CharacterClassID")!=0:return 0
+	var amount: Variant=reward.get("Amount")
+	if not (amount is int or amount is float) or not is_finite(float(amount)) or amount!=int(amount) or amount<=0 or amount>9007199254740991:return 0
+	return int(amount)
+
 func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	if row.has(LAZY_KEY):
 		row = full(row)
@@ -468,7 +479,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 	# QuestRewardEnhancement is an optional paid boost. The original base
 	# Reward rows are granted; automatic completion never spends diamonds.
 	# NC confirmation: 2019-01-30 patch notes, additional diamond consumption.
-	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"source_dummy_rewards":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
+	var result: Dictionary = {"ok":true,"adena":0,"exp":0,"items":[],"quests":[],"pending_use":[],"ui_requests":[],"source_dummy_rewards":[],"source_retired_rewards":[],"optional_enhancement_unused":not row.enhancements.is_empty()}
 	for reward: Dictionary in row.source_rewards:
 		var character: int = int(reward.CharacterClassID)
 		if character != 0 and int(context.get("class_id",-1)) < 0: return {"ok":false,"error":"직업별 보상 판별 대기"}
@@ -481,8 +492,21 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 		if amount < 0 or amount > 9007199254740991: return {"ok":false,"error":"보상 수량 오류"}
 		match str(reward.type_name):
 			"Exp": result.exp += amount
+			"Einasad":
+				if base_blessing_points(reward)<=0:
+					return {"ok":false,"error":"원본 축복 보상 종류/시점 확인 필요"}
+				result["blessing"]=int(result.get("blessing",0))+amount
+				var room: Callable=context.get("quest_reward_room",Callable())
+				if room.is_valid() and result.blessing>int(room.call()):
+					return {"ok":false,"error":"축복 상한까지 여유가 부족합니다 · 사용 후 수령하세요"}
 			"Item":
 				var original: Dictionary = reward.get("source_item",{})
+				if RETIRED_ITEMS.QUEST_ONLY.item(reward.get("RewardClassID")):
+					# This exact prop is disabled by the user's item policy;
+					# do not turn a remaining ordinary award into a refusal.
+					result.source_retired_rewards.append({"reward_id":int(reward.ID),"item_class_id":int(reward.RewardClassID),"reason":"user_quest_only_item_retirement"})
+					continue
+				if RETIRED_ITEMS.item(reward.get("RewardClassID")):return {"ok":false,"error":RETIRED_ITEMS.REASON}
 				var excluded: Dictionary=preload("res://scripts/quests/source_dummy523.gd").item_evidence(original)
 				if not excluded.is_empty():
 					result.source_dummy_rewards.append({"reward_id":int(reward.ID),"item_class_id":int(reward.RewardClassID),"evidence":excluded})

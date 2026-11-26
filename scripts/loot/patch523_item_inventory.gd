@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Shared exact-ID supplier contract. Prices/recipes/skills remain with owners.
 const SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
@@ -28,6 +29,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			var value: Variant = grant.get(field)
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or not is_finite(float(value)) or absf(float(value)) > MAX_EXACT_JSON_INTEGER: return {"ok":false,"error":"원본 지급 수치 형식 확인 실패"}
 		var id: String = str(int(grant.get("item_class_id",-1)))
+		if RETIRED_ITEMS.item(grant.item_class_id):return {"ok":false,"error":RETIRED_ITEMS.REASON}
 		if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(int(id)).is_empty():return {"ok":false,"error":"원본 더미 선언 아이템은 신규 지급에서 제외 · 기존 소유 보존"}
 		var coin: String=coin_wallet(int(id))
 		if not coin.is_empty():
@@ -62,6 +64,24 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 		if catalog_row.is_empty() and bless != 1 and not D.equipment(record):
 			var base_row: Dictionary = world._catalog_item_from_source_id(str(base.sourceId))
 			if D.matches(base_row, base): catalog_row = D.variant_item(base_row, bless)
+		if catalog_row.get("type") == "문양 재료" and world.has_method("source_symbol_reward_record"):
+			if bless != 1 or enchant != 0: return {"ok":false,"error":"원본 문양 재료의 축복·강화 상태 확인 필요"}
+			var material: Dictionary = world.source_symbol_reward_record(int(id), catalog_row, summary.original_item)
+			if material.is_empty(): return {"ok":false,"error":"문양 재료 원본 등록·사용 조건 확인 필요"}
+			var key: String = str(material.name)
+			var previous: Variant = inventory.get(key, 0)
+			var limit: int = int(summary.original_item.get("MaxStackAmount", 0))
+			if not D._source_integer(previous) or int(previous) < 0 or amount > mini(10000, limit) or int(previous) > MAX_EXACT_JSON_INTEGER - amount:
+				return {"ok":false,"error":"문양 재료 지급 수량 범위 초과"}
+			# The symbol service consumes one explicitly selected physical ID.
+			# Reward UIDs use the supplier's existing UUID convention, keeping the
+			# floor owner's sequential ID allocator independent of a staged reward.
+			for unit: int in amount:
+				var uid: String = Crypto.new().generate_random_bytes(16).hex_encode()
+				while instances.has(uid): uid = Crypto.new().generate_random_bytes(16).hex_encode()
+				instances[uid] = {"name":key, "level":0, "record":material.duplicate()}
+			inventory[key] = int(previous) + amount
+			continue
 		if not D.matches(catalog_row,record): return {"ok":false,"error":"원본 공급 카탈로그 미등록"}
 		if enchant > 0 and not D.equipment(record): return {"ok":false,"error":"비장비 원본 강화값 미지원"}
 		var wallet: String = D.currency_identity_name(record)

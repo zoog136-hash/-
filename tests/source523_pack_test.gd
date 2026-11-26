@@ -143,6 +143,15 @@ func run() -> void:
 	check(PACK.read_addon(addon_files["source523_addon.json"], {"pack_id":"12".repeat(32)}).is_empty(), "an add-on descriptor must match its part")
 	var ui_section: Dictionary = {"ui":{"root":"ui","manifest":"ui/original_ui.json","manifest_sha256":"34".repeat(32)}}
 	check(not PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on is accepted")
+	var base_ui: Dictionary = read.descriptor.duplicate(true)
+	base_ui.ui = ui_section.ui.duplicate(true)
+	var env := "TWILIGHT_SOURCE_UI_SETTINGS_FRAMES_SHA256"
+	check(PACK.selections(target, base_ui).environment[env].is_empty(), "legacy UI carries no prepared settings pin")
+	var addon_ui: Dictionary = ui_section.duplicate(true)
+	addon_ui.ui.settings_frames_sha256 = "ef".repeat(32)
+	check(PACK.selections(target, base_ui, addon_ui).environment[env] == "ef".repeat(32), "matching rebuilt UI add-on supplies prepared settings")
+	addon_ui.ui.manifest_sha256 = "22".repeat(32)
+	check(PACK.selections(target, base_ui, addon_ui).environment[env].is_empty(), "different add-on identity cannot select prepared settings")
 	ui_section.ui.manifest = "ui/other.json"
 	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
 	check(PACK.missing_addons(read.descriptor, addons) == ["ui","world_map"], "after the travel definitions the main UI add-on (UI and world map) is asked for")
@@ -151,7 +160,14 @@ func run() -> void:
 	var lines: PackedStringArray = node.status_lines()
 	check(lines.size() == 2 + PACK.ADDON_SECTIONS.size(), "status lists the pack, every add-on section and the cooked actor pack")
 	check(lines[-1].begins_with("변환 액터 팩:"), "last status line is the cooked actor pack: " + lines[-1])
-	check(lines.size() == 5 and lines[1].contains("설치됨") and lines[2].contains("twilight523-addon-ui.zip") and lines[3].contains("twilight523-addon-ui.zip"), "status shows the installed travel definitions and which ZIP the missing UI needs")
+	check(lines.size() == 6 and lines[1].contains("설치됨") and lines[2].contains("twilight523-addon-ui.zip") and lines[3].contains("twilight523-addon-ui.zip") and lines[4].contains("twilight523-addon-equipment-smelt.zip"), "status shows the existing add-ons and the optional smelt ZIP")
+	var smelt_addon:String=OS.get_environment("TWILIGHT_NATIVE_SMELT_ADDON")
+	if not smelt_addon.is_empty():
+		await install(node,[smelt_addon])
+		addons=PACK.read_addons(ProjectSettings.globalize_path(target))
+		var rules:String=target.path_join(PACK.SMELT.SECTION).path_join(PACK.SMELT.MEMBER)
+		check(addons.has(PACK.SMELT.SECTION) and FileAccess.get_sha256(rules)==PACK.SMELT.SHA,"normal in-app ZIP picker path activates the exact additional smelt file")
+		check(not node._mounted and FileAccess.file_exists(target.path_join("source523_pack.json")) and addons.has("world_links"),"optional sidecar does not mount archive code, replace prior add-ons or reinstall the base")
 	check(not node._failed_on_device(), "no failure screen outside the exported app")
 	PACK.world_links_sha = PACK.WORLD_LINKS_SHA
 	paused = false

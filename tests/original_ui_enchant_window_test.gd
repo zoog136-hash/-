@@ -16,8 +16,8 @@ class FakePack extends RefCounted:
 class FakeController extends Node:
 	var handles: bool=true
 	var opened: Array=[]
-	func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
-		opened.append([scroll,candidates.size()])
+	func try_open_enchant_window(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
+		opened.append([scroll,candidates.size(),blessing])
 		return {"ok":handles,"handled":handles} if handles else {"ok":false,"handled":false,"code":"source_enchant_window_member_missing"}
 
 class ConfirmHost extends Node:
@@ -100,7 +100,9 @@ func _hud_routing() -> void:
 	hud.add_child(controller)
 	hud.original_main_ui_controller=controller
 	check(hud._open_original_enchant("무기 마법 주문서",[{"target_id":"a"}]),"the original window is tried first")
-	check(controller.opened==[["무기 마법 주문서",1]] and not hud.workspace.visible,"the candidates reach the original window and the workspace hides")
+	check(controller.opened==[["무기 마법 주문서",1,false]] and not hud.workspace.visible,"the candidates reach the original window and the workspace hides")
+	hud.open_blessing_targets("축복 부여 주문서",[{"target_id":"a"}])
+	check(controller.opened[-1]==["축복 부여 주문서",1,true] and not hud.workspace.visible,"blessing uses the original tab when available")
 	check(hud.original_main_ui_status.get("enchant_window",{}).get("handled",false),"the original window status is recorded")
 	controller.handles=false
 	hud.workspace.show()

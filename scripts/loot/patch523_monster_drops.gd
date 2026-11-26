@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## 523 membership selects candidates; loot_drop.gd owns all chances and counts.
@@ -857,21 +858,28 @@ static func register_catalog(document: Dictionary, catalog: Dictionary) -> Dicti
 ## the future still does. false = source dates only.
 static var rotate_ended_dates: bool = true
 
+static func source_deadline_unix(raw: int, timezone_minutes: int) -> int:
+	var encoded := str(raw)
+	if encoded.length() not in [10,12]: return -1
+	var minute := encoded.substr(10,2) if encoded.length() == 12 else "00"
+	var local_time := "%s-%s-%sT%s:%s:00" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),minute]
+	var stamp := Time.get_unix_time_from_datetime_string(local_time)
+	if Time.get_datetime_string_from_unix_time(stamp) != local_time: return -1
+	return stamp - clampi(timezone_minutes,-720,840) * 60
+
 static func deadline_problem(item: Dictionary, timezone_minutes: int = 540) -> String:
 	if item.get("source_delete_time_unresolved",false): return "원본 아이템 수명 조건 미지원 · 아이템 보존"
 	for key: String in ["source_start_time_raw","source_end_time_raw","source_delete_time_raw"]:
 		if not NATIVE_FIELDS.has_field(item,key): continue
-		var encoded: String = str(int(NATIVE_FIELDS.field(item,key)))
-		if encoded.length() not in [10,12]: return "원본 기간 형식 확인 실패 · 아이템 보존"
-		var minute: String = encoded.substr(10,2) if encoded.length() == 12 else "00"
-		var local_time: String = "%s-%s-%sT%s:%s:00" % [encoded.substr(0,4),encoded.substr(4,2),encoded.substr(6,2),encoded.substr(8,2),minute]
-		var deadline: int = Time.get_unix_time_from_datetime_string(local_time)-clampi(timezone_minutes,-720,840)*60
+		var deadline := source_deadline_unix(int(NATIVE_FIELDS.field(item,key)),timezone_minutes)
+		if deadline == -1: return "원본 기간 형식 확인 실패 · 아이템 보존"
 		var now: int = int(Time.get_unix_time_from_system())
 		if key == "source_start_time_raw" and now < deadline: return "원본 사용 기간 시작 전 · 보유 아이템 보존"
 		if key != "source_start_time_raw" and now >= deadline and not rotate_ended_dates: return "원본 사용 기한 만료 · 보유 아이템은 보존"
 	return ""
 
 static func equipment_error(item: Dictionary, job: String, level: int, timezone_minutes: int = 540) -> String:
+	if RETIRED_ITEMS.record(item):return RETIRED_ITEMS.REASON
 	if not item.get("source_m_native_item", false): return ""
 	if item.get("source_test_item",false): return "원본 테스트 장비는 착용할 수 없습니다"
 	if not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():return "원본 장비의 서비스·서버·기간 조건 연결 필요"
@@ -898,13 +906,18 @@ static func healing_amount(item: Dictionary, rng: RandomNumberGenerator, fallbac
 	for die: int in range(count): amount += rng.randi_range(1, sides)
 	return amount
 
+## The currently unexpired manual HP6000 potion and its independent clock.
+## Other retired event HP items keep their existing eligibility.
+const LARGE_HP_ELIXIR_ID:int=263901
 static func hp_use_metadata(item: Dictionary) -> Dictionary:
 	var definition: Dictionary = item_definition(item)
 	var original: Dictionary = definition.get("original_item",{})
 	var category: Dictionary = definition.get("category",{})
 	if original.is_empty() or category.get("Name") != "Potion" or not category.get("IsConsumable",false) or definition.get("native_record",{}).get("heal_spec",{}).is_empty(): return {"ok":false}
 	if original.get("TestItem",true) or int(original.get("TargettingTypeID",0)) != 1 or not str(original.get("ServiceRegionCode","")).is_empty(): return {"ok":false}
-	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID"}
+	var allowed: Dictionary = {"HPRestoration":"Value","HPRestorationDiceNumber":"Value","HPRestorationDiceSpotCount":"Value","ItemConsumeDelay":"MilliSeconds","ItemConsumeEffectSpriteID":"SpriteID","AutoUseRegistrable":"TrueFalse"}
+	var manual_elixir:bool=int(original.get("ID",0))==LARGE_HP_ELIXIR_ID and original.get("StoryDescID")==1678231 and CURRENT_DTO.label(1678231).replace("\r","").strip_edges()=="HP 6000을 즉시 회복\n(재사용 시간 15분)"
+	if manual_elixir:allowed["ClassUsageInterval"]="Seconds"
 	var seen: Dictionary = {}
 	var metadata: Dictionary = {"ok":true,"can_use_when_invisible":bool(original.get("CanUseWhenInvisible",false)),"consume_effect_sprite_id":0}
 	for row: Dictionary in definition.get("item_bonus",[]):
@@ -918,9 +931,20 @@ static func hp_use_metadata(item: Dictionary) -> Dictionary:
 		if kind == "DeleteTime" and definition.get("native_record",{}).has("source_delete_time_raw") and row.get("unit",{}).get("Name") == "Time" and not row.get("IsPossession",true) and int(bonus.get("BonusApplicationTypeID",-1)) == 0 and int(bonus.get("BonusApplicationTargetID",-1)) == 0: continue
 		if row.get("IsPossession",true) or int(bonus.get("BonusApplicationTypeID",-1)) != 0 or int(bonus.get("BonusApplicationTargetID",-1)) != 0 or not allowed.has(kind) or row.get("unit",{}).get("Name") != allowed[kind] or seen.has(kind): return {"ok":false}
 		seen[kind] = true
+		# A checked original true flag only offers the already existing
+		# auto-quickslot route; it adds no effect and cannot bypass other rows.
+		if kind == "AutoUseRegistrable":
+			if not _source_integer(bonus.get("Value")) or int(bonus.Value)!=1:return {"ok":false}
+			metadata["auto_use_registrable"] = true
+		if kind == "ClassUsageInterval":
+			if not manual_elixir or bonus.get("Value")!=900:return {"ok":false}
+			metadata["source_reuse_delay_seconds"]=900
 		if kind == "ItemConsumeEffectSpriteID": metadata.consume_effect_sprite_id = int(bonus.get("Value",0))
 		if kind == "ItemConsumeDelay": metadata["source_consume_delay_ms"] = int(bonus.get("Value",-1))
 	if not seen.has("ItemConsumeDelay") or int(metadata.get("source_consume_delay_ms",-1)) < 0: return {"ok":false}
+	if manual_elixir:
+		var dice:Dictionary=definition.native_record.heal_spec
+		if seen.size()!=4 or dice.get("HPRestoration")!=6000 or dice.get("HPRestorationDiceNumber",0)!=0 or dice.get("HPRestorationDiceSpotCount",0)!=0 or metadata.get("source_reuse_delay_seconds")!=900 or metadata.get("source_consume_delay_ms")!=1000 or metadata.consume_effect_sprite_id!=189:return {"ok":false}
 	return metadata
 
 static func hp_use_problem(item: Dictionary, concealed: bool = false, timezone_minutes: int = 540) -> String:

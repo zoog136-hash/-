@@ -1,4 +1,5 @@
 extends RefCounted
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## One existing World save owns costs, rewards, event progress and durable RNG.
 const Source = preload("res://scripts/unconfirmed523/source523.gd")
@@ -667,6 +668,7 @@ func _reward(reward: Dictionary, staged: Dictionary, next: Dictionary, ctx: Dict
 	return "보상 소비자 미연결 · 원본 소유·청구 상태 보존"
 
 func stage_item(staged: Dictionary, id: int, amount: int, enchant: int = 0, bless_code: int = 1) -> String:
+	if RETIRED_ITEMS.item(id):return RETIRED_ITEMS.REASON
 	if amount <= 0 or amount > 1000000000 or enchant < 0 or bless_code not in [1,2,3]: return "아이템 보상 범위 오류"
 	var item: Dictionary = source.row("ItemClass",id)
 	if item.is_empty(): return "아이템 원본 ID 누락"

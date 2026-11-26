@@ -133,7 +133,9 @@ func _initialize() -> void:
 	check(service.apply_confirmed(effect, sink), "authority chooses applicable stage; no guessed stacking")
 	var final_bonuses: Array = regular_levels.back().bonuses
 	check(service.effective_bonuses(book_id, '202610290500') == final_bonuses, "bonuses can outlive counting end")
+	service.rotate_ended_seasons = false # absolute source expiry, not the next offline rotation
 	check(service.effective_bonuses(book_id, '202611040500').is_empty(), "option expiry separate and exclusive")
+	service.rotate_ended_seasons = true
 	check(service.progress(book_id).registered == level_ids, "expiry preserves registrations")
 	var prior := service.export_state()
 	var bad_group := receipt("begin_epoch", 1, 13, "historic")

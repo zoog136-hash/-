@@ -6,6 +6,8 @@ const CATALOG_LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const QUEST_GEAR=preload("res://scripts/quests/quest_equipment523.gd")
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 const REWARD_STACKS=preload("res://scripts/ui/quest_reward_bag_stacks.gd")
+const AWAKENING_BOOKS=preload("res://scripts/cards/source_awakening_items.gd")
+const BLESSED_ITEMS=preload("res://scripts/loot/patch523_monster_drops.gd")
 var _grouped_reward_amounts: Dictionary = {}
 
 static func instance_id_less(a: String,b: String) -> bool:
@@ -53,6 +55,8 @@ var catalog_data: Dictionary = {}
 var item_image_index: Dictionary = {}
 var character_state: Dictionary = {}
 var state_item_fingerprint: int = -1
+var _state_publish_depth: int = 0
+var _state_publish_dirty: bool = false
 var legacy_scroll: ScrollContainer
 var legacy_stack: VBoxContainer
 var legacy_top_space: Control
@@ -287,9 +291,7 @@ func set_character_state(state: Dictionary) -> void:
 	if fingerprint == state_item_fingerprint:return
 	state_item_fingerprint = fingerprint
 	_grouped_reward_amounts.clear()
-	_refresh_inventory_grid()
-	if selected_item != "":
-		_refresh_detail(selected_item)
+	_request_state_view_refresh()
 
 func set_inventory(value: Dictionary) -> void:
 	if inventory == value:return
@@ -297,6 +299,25 @@ func set_inventory(value: Dictionary) -> void:
 	_grouped_reward_amounts.clear()
 	if selected_item != "" and int(inventory.get(_base_item_name(selected_item), 0)) <= 0:
 		selected_item = ""
+	_request_state_view_refresh()
+
+## The committed ticket updates physical instances and stack counts during
+## the same HUD publication. Keep both inputs current but rebuild rows once
+## from the final pair, never from the intermediate mismatched pair.
+func begin_state_publish() -> void:
+	_state_publish_depth += 1
+
+func end_state_publish() -> void:
+	assert(_state_publish_depth > 0)
+	_state_publish_depth -= 1
+	if _state_publish_depth == 0 and _state_publish_dirty:
+		_state_publish_dirty = false
+		_request_state_view_refresh()
+
+func _request_state_view_refresh() -> void:
+	if _state_publish_depth > 0:
+		_state_publish_dirty = true
+		return
 	_refresh_inventory_grid()
 	if selected_item != "":
 		_refresh_detail(selected_item)
@@ -332,7 +353,8 @@ func _clear(node: Node) -> void:
 		child.queue_free()
 
 func _base_item_name(reference: String) -> String:
-	return reference.split("@@@", false, 1)[0]
+	var pieces: PackedStringArray = reference.split("@@@", false, 1)
+	return pieces[0] if not pieces.is_empty() else ""
 
 func _ref_instance_id(reference: String) -> String:
 	var pieces: PackedStringArray = reference.split("@@@", false, 1)
@@ -344,6 +366,7 @@ func _ref_instance_id(reference: String) -> String:
 ## guardian window, opened from original 수호석 상자). Like the original they
 ## are not bag slots (phone 2026-11-20: empty "10000", "400", "2400" slots).
 const WALLET_ONLY: Array[String] = ["다이아", "마일리지", "수호석"]
+const QUEST_ONLY_PRESENTATION=preload("res://scripts/quests/retired_quest_items523.gd")
 
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
@@ -362,6 +385,7 @@ func _inventory_entries() -> Array[Dictionary]:
 			var owner_name: String = str((physical as Dictionary).get("name", ""))
 			if not ids_by_name.has(owner_name): ids_by_name[owner_name] = [] as Array[String]
 			(ids_by_name[owner_name] as Array[String]).append(str(instance_key))
+	var books: Dictionary=_physical_awakening_books(ids_by_name)
 	for raw_name: Variant in names:
 		var item_name: String = str(raw_name)
 		if int(inventory.get(item_name, 0)) <= 0 or WALLET_ONLY.has(item_name):
@@ -370,17 +394,51 @@ func _inventory_entries() -> Array[Dictionary]:
 		instance_ids.sort_custom(instance_id_less)
 		# Verified book instances keep provenance for transactions, while the
 		# inventory still presents their source 10,000-capacity stack as one row.
-		if instance_ids.is_empty() or preload("res://scripts/cards/source_awakening_items.gd").stackable_book(_find_item_record(item_name)):
+		if instance_ids.is_empty() or books.get(item_name,false):
+			if QUEST_ONLY_PRESENTATION.matches_reference({},item_name):continue
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
 		else:
 			var reward_bins: Dictionary = {}
 			for id: String in instance_ids:
 				var physical: Dictionary = instances[id]
+				var data: Variant=physical.get("record")
+				if QUEST_ONLY_PRESENTATION.matches_reference(data if data is Dictionary else {},item_name):continue
 				var entry: Dictionary = {"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(physical)}
 				var grouped: Dictionary = REWARD_STACKS.grouped_row(entry,physical,locks,reward_caps,reward_bins)
 				if grouped.is_empty(): entries.append(entry)
 				else: _grouped_reward_amounts[grouped.reference] = grouped.amount
 	return entries
+
+## This is a single synchronous read of the bag's own catalogue. Only
+## physical rows need book classification. The first same-name catalogue
+## record (not a chosen physical clone) still decides stack presentation.
+func _physical_awakening_books(ids_by_name: Dictionary) -> Dictionary:
+	var requests: Dictionary={}
+	var exact_names: Dictionary={}
+	var books: Dictionary={}
+	for name: String in ids_by_name:
+		if name.is_empty() or int(inventory.get(name,0))<=0 or WALLET_ONLY.has(name):continue
+		# Preserve the existing selected-reference parser for unusual legacy
+		# keys rather than interpreting them as an ordinary catalogue key.
+		if name.contains("@@@"):
+			if AWAKENING_BOOKS.stackable_book(_find_item_record(name)):books[name]=true
+			continue
+		exact_names[name]=true
+		requests[name]=true
+		for suffix: String in BLESSED_ITEMS.BLESS_STACK_SUFFIXES:
+			if name.ends_with(suffix):requests[name.trim_suffix(suffix)]=true;break
+	if exact_names.size()<2:
+		for name: String in exact_names:
+			if AWAKENING_BOOKS.stackable_book(_find_item_record(name)):books[name]=true
+		return books
+	var source: Array=catalog_data.get("아이템",[])
+	var found: Dictionary=CATALOG_LOOKUP.first_by_names(source,requests)
+	var find_base: Callable=func(base: String) -> Dictionary:return found.get(base,{})
+	for name: String in exact_names:
+		var record: Dictionary=found.get(name,{})
+		if record.is_empty():record=BLESSED_ITEMS.bless_stack_record(name,find_base)
+		if AWAKENING_BOOKS.stackable_book(record):books[name]=true
+	return books
 
 static func _owned_slot_amount(physical: Dictionary) -> int:
 	for field: String in ["source_native_stack_quantity", "source_reward_quantity", "source_awakening_quantity", "source_card_currency_quantity"]:
@@ -513,7 +571,7 @@ func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
 	var levels: Array[int] = []
 	for raw: Variant in instances.values():
 		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
-			levels.append(int((raw as Dictionary).get("level", 0)))
+			levels.append(int((raw as Dictionary).get("source_native_event_enhance_rank",(raw as Dictionary).get("level",0))))
 	levels.sort()
 	for rank: int in levels:
 		labels.append("+%d" % rank)
@@ -523,7 +581,8 @@ func _enhance_level(item_reference: String) -> int:
 	var id: String = _ref_instance_id(item_reference)
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
 	if id != "" and instances.has(id):
-		return maxi(0, int((instances[id] as Dictionary).get("level", 0)))
+		var row: Dictionary=instances[id]
+		return maxi(0,int(row.get("source_native_event_enhance_rank",row.get("level",0))))
 	var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
 	return maxi(0, int(legacy.get(_base_item_name(item_reference), 0))) if id == "" else 0
 
@@ -692,8 +751,16 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 	var physical: Variant = instances.get(instance_id,{})
 	if not physical is Dictionary or physical.get("name") != _base_item_name(reference): return fallback
 	var original: Variant = physical.get("record",{})
-	if original is Dictionary and (preload("res://scripts/ui/source523_image_assets.gd").recognized_item(original) or preload("res://scripts/ui/source523_image_assets.gd").handles_item(original)):
-		return original
+	var images = preload("res://scripts/ui/source523_image_assets.gd")
+	if original is Dictionary:
+		if images.recognized_item(original): return original
+		# A compact older held quest copy can retain the immutable grant
+		# receipt without the full presentation row. Use receipt proof before
+		# any name-based inference; only this image lookup sees the DTO.
+		if not original.has("source_original_item") and physical.has("quest_reward_receipt") and images.selected():
+			var recovered: Dictionary = preload("res://scripts/ui/quest_reward_card_icon.gd").resolve(physical,original)
+			if not recovered.is_empty(): return recovered
+		if images.handles_item(original): return original
 	return fallback
 
 func _matches_category(record: Dictionary, item_name: String) -> bool:

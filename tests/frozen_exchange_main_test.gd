@@ -1,6 +1,8 @@
 extends SceneTree
-## Actual Main browse/selection, close/reopen and save-byte preservation.
+## Actual Main with the retired capture browser mounted explicitly by the test.
+## The ordinary exchange menu must not route to it or expose captured buys.
 const Catalog = preload("res://scripts/exchange/frozen_catalog.gd")
+const PANEL = preload("res://scripts/ui/frozen_exchange_panel.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 var checks: int = 0
 var failures: int = 0
@@ -29,8 +31,11 @@ func run() -> void:
 	check(world.hud.menu_page != null,"actual menu remains available")
 	world.hud.open_frozen_exchange()
 	await process_frame
-	var panel: Node = world.hud.workspace.find_child("FrozenExchangePanel",true,false)
-	check(panel != null and panel.is_visible_in_tree(),"actual Main exchange panel opens")
+	check(world.hud.workspace.find_child("FrozenExchangePanel",true,false)==null,"ordinary exchange never exposes captured stock")
+	check(world.hud.workspace.find_child("LocalTradeUnavailable",true,false)!=null,"no-source ordinary menu says native exchange is unavailable")
+	var panel: Node = mount_legacy_browser(world.hud)
+	await process_frame
+	check(panel.is_visible_in_tree(),"actual Main retains the explicitly mounted historical capture browser")
 	if panel != null:
 		if representative:
 			check(panel.status.text.contains("대표") and panel.status.text.contains("부분"),"representative partial scope disclosed without all-server completeness claim")
@@ -44,9 +49,8 @@ func run() -> void:
 	world.hud._close_workspace()
 	await process_frame
 	check(not world.hud.workspace.visible,"close actually dismisses workspace")
-	world.hud.open_frozen_exchange()
+	panel = mount_legacy_browser(world.hud)
 	await process_frame
-	panel = world.hud.workspace.find_child("FrozenExchangePanel",true,false)
 	check(panel != null and panel.listing.item_count == expected_rows and panel.selected_id.is_empty() and not panel.confirm.visible,"reopen restores declared rows without stale selection or confirmation")
 	check(world.inventory == inventory and world.item_instances == instances and int(world.gold) == gold,"browsing preserves wallet and physical items")
 	check(FileAccess.get_file_as_bytes(path) == bytes_before,"browse close and reopen preserve save bytes")
@@ -54,3 +58,10 @@ func run() -> void:
 	await process_frame
 	print("FROZEN_EXCHANGE_MAIN_RESULT checks=%d failures=%d production_snapshot_browse_only" % [checks,failures])
 	quit(1 if failures else 0)
+
+func mount_legacy_browser(hud: Node) -> Node:
+	hud._open_window("legacy_capture_fixture","거래 기록 검증","")
+	var panel=PANEL.new()
+	hud.workspace.mount(panel)
+	panel.configure(hud)
+	return panel

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Explicit optional TWILIGHT gameplay, using source declarations and current fields.
 signal changed
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const ECONOMY = preload("res://scripts/dungeons/dungeon_economy.gd")
 const CLOCK = preload("res://scripts/quests/quest_service.gd")
 const ORIM = preload("res://scripts/orim523/orim523.gd")
@@ -848,6 +849,7 @@ func reward_plan_original(rows: Array) -> Dictionary:
 		var row: Dictionary=reward.row;var id:=int(row.RewardClassID);var amount:=int(row.Amount);var bless:=int(row.get("ItemBlessCodeID",1))
 		var name: String=str(reward.get("item",{}).get("name",str(id)))
 		if str(reward.get("type",""))!="Item" or amount<1:withheld.append("%s (%s 보상)" % [name,str(reward.get("type",""))]);continue
+		if RETIRED_ITEMS.item(id):withheld.append("%s (%s)" % [name,RETIRED_ITEMS.REASON]);continue
 		var staged:=stage_original_item(world,overrides,id,amount,bless,{"kind":"orim523_reward","reward_id":int(row.ID)})
 		if staged.get("ok",false):overrides=staged.overrides;granted.append("%s %d" % [name,amount]);continue
 		# No 523 owner for this item yet: the existing TWILIGHT dungeon item for
@@ -927,6 +929,7 @@ func reward_plan(rows: Array) -> Dictionary:
 	for reward: Dictionary in rows:
 		var row: Dictionary=reward.row;var id:=int(row.RewardClassID);var bless:=int(row.ItemBlessCodeID)
 		if reward.type!="Item" or ECONOMY.count(row.Amount)<1:return {"ok":false,"reason":"지원하지 않는 보상"}
+		if RETIRED_ITEMS.item(id):return {"ok":false,"reason":RETIRED_ITEMS.REASON}
 		if not state.settings.preserve_items and expired(reward.item,int(Time.get_unix_time_from_system())):continue
 		var name: String=ECONOMY.ITEM_NAMES[id] if id in [3631,3252,3242,246058] else "TWILIGHT · "+str(reward.item.name)+(" (축복)" if bless==2 else "")
 		if ECONOMY.count(inventory.get(name,0))<0:return {"ok":false,"reason":"기존 수량 오류"}
@@ -953,6 +956,7 @@ func install_items() -> void:
 	for stage: Dictionary in rules.data.get("orim",[]):
 		for reward: Dictionary in stage.normal_rewards+stage.lucky_rewards:
 			var id:=int(reward.row.RewardClassID);var bless:=int(reward.row.ItemBlessCodeID)
+			if RETIRED_ITEMS.item(id):continue
 			if id in [3631,3252,3242,246058]:continue
 			var name: String="TWILIGHT · "+str(reward.item.name)+(" (축복)" if bless==2 else "")
 			if seen.has(name):continue
@@ -1038,6 +1042,7 @@ func try_enhancement(scroll_name: String, target_reference: String) -> bool:
 	var physical: Dictionary=world.item_instances[id]
 	var record: Dictionary=physical.get("record",world._find_catalog_item_record(str(target.name)))
 	if record.is_empty():record=world._find_catalog_item_record(str(target.name))
+	if RETIRED_ITEMS.record(record):world.hud.show_message(RETIRED_ITEMS.REASON);return true
 	if world._enhancement_kind_for_record(record)!="accessory" or int(world.inventory.get(scroll_name,0))<1:return true
 	var mode: String="blessed_orim" if int(world.item_instances[scroll_id].record.declared_bless)==2 else "orim"
 	var level:=int(physical.level)

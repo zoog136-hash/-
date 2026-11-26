@@ -4,6 +4,7 @@ const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const PROFILES = preload("res://scripts/skills/player_skills523.gd")
 const BINDINGS_PATH: String = "res://data/skills/player_skills523_bindings.json"
+const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const BOOK_BAKE: String = "shop_skill_book_contracts523"
 const BOOK_SCHEMA: String = "twilight.shop523.skill-book-contracts.v1"
@@ -121,7 +122,7 @@ static func _valid_contract_bake(value: Variant, identity: Dictionary, signature
 					if not PROFILES._source_integer(limit.get(field)): return false
 	return true
 
-static func install(world, source) -> Dictionary:
+static func install(world, source, scope: LOOKUP.CashInstallScope = null) -> Dictionary:
 	var bindings: Dictionary = {}
 	if world.get("original_skills") == null:return bindings
 	var catalog = world.original_skills.catalog
@@ -136,7 +137,7 @@ static func install(world, source) -> Dictionary:
 		if skill.is_empty() or skill.get("runtime_blocked",false):continue
 		if int(card.get("ServerLimitSetID",0))!=0 or int(card.get("StartDateTimeID",0))!=0 or int(card.get("EndDateTimeID",0))!=0:continue
 		var name: String = str(spec.name)
-		var record: Dictionary = world._find_catalog_item_record(name)
+		var record: Dictionary = world._find_catalog_item_record_cash_install(name, "", scope) if scope != null else world._find_catalog_item_record(name)
 		var fresh: bool=record.is_empty()
 		if not record.is_empty() and (record.get("source") != "twilight-shop523-book" or int(record.get("source_item_class_id",0)) != int(id) or record.get("source_bless_raw") != 1):continue
 		if record.is_empty():
@@ -144,6 +145,8 @@ static func install(world, source) -> Dictionary:
 		record.merge({"source_weight_raw":item.get("Weight",0),"source_max_stack":int(item.get("MaxStackAmount",0)),"droppable":item.get("IsDroppable",false),"storable":item.get("IsStorable",false),"source_is_tradable":item.get("IsTradable",false)},true)
 		if fresh:
 			world.item_db.append(record.duplicate(true));world.catalog_db["아이템"].append(record);changed=true
+			if scope != null:
+				scope.note_append(world.item_db);scope.note_append(world.catalog_db["아이템"])
 		bindings["4:"+id] = {"name":name,"record":record.duplicate(true)}
 	if changed:world._index_item_weights()
 	return bindings

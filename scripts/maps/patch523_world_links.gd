@@ -3,6 +3,7 @@ extends RefCounted
 const SOURCE_SHA256: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_FILE_BYTES: int = 32 * 1024 * 1024
 const CUT_CONDITION_TABLES: Array[String] = ["DateTimes_Taiwanese", "DateTimes_Japanese", "DateTimes_Chinese"]
+const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd")
 var problem: String = ""
 var loaded: bool = false
 var root: String = ""
@@ -20,13 +21,16 @@ func _fail(message: String) -> bool:
 	problem = message
 	return false
 
-func _object(path: String, spec: Dictionary = {}) -> Dictionary:
-	if not FileAccess.file_exists(path): return {}
+func _object(path: String, spec: Dictionary) -> Dictionary:
+	return _checked_object(path, spec).value
+
+func _checked_object(path: String, spec: Dictionary, require_size: bool = true) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null or file.get_length() > MAX_FILE_BYTES: return {}
-	if not spec.is_empty() and (file.get_length() != int(spec.get("bytes", -1)) or FileAccess.get_sha256(path) != str(spec.get("sha256", ""))): return {}
-	var value: Variant = JSON.parse_string(file.get_as_text())
-	return value if value is Dictionary else {}
+	if file == null or file.get_length() > MAX_FILE_BYTES or (require_size and file.get_length() != int(spec.get("bytes", -1))): return {"verified":false,"value":{}}
+	var input: Dictionary = CHECKED_BYTES.read_json(file, file.get_length(), str(spec.get("sha256", "")))
+	if not input.verified: return {"verified":false,"value":{}}
+	var value: Variant = input.value
+	return {"verified":true,"value":value if value is Dictionary else {}}
 
 func _rows(value: Variant) -> bool:
 	if not value is Array: return false
@@ -156,9 +160,9 @@ func load_land(path: String, land_id: int, asset_path: String, expected_manifest
 	_scoped_land_attributes = null
 	root = path
 	var manifest_path: String = root.path_join("manifest.json")
-	if expected_manifest_sha256.length() != 64 or not FileAccess.file_exists(manifest_path) or FileAccess.get_sha256(manifest_path) != expected_manifest_sha256:
-		return _fail("Cumulative523 manifest is missing or SHA256 differs")
-	manifest = _object(manifest_path)
+	var checked: Dictionary = _checked_object(manifest_path, {"sha256":expected_manifest_sha256}, false)
+	if not checked.verified: return _fail("Cumulative523 manifest is missing or SHA256 differs")
+	manifest = checked.value
 	if manifest.get("schema") != 1 or manifest.get("source_snapshot") != "patch523" or manifest.get("source_zip_sha256") != SOURCE_SHA256:
 		return _fail("Unsupported cumulative523 source identity")
 	if not manifest.get("lands") is Dictionary or not manifest.lands.get(str(land_id)) is Dictionary:

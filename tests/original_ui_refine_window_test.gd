@@ -28,7 +28,7 @@ class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
 	func _open_window(section: String, _title: String, _description: String) -> void:
 		active_section=section
 		workspace.show()
-	func open_bless_refine523() -> void:fallback_opened+=1
+	func open_bless_refine523(_entry_solvent_uid: String="") -> void:fallback_opened+=1
 	var messages: Array[String]=[]
 	func show_message(text: String) -> void:messages.append(text)
 

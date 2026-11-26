@@ -22,6 +22,7 @@ extends RefCounted
 ## at 40%; its 품절 mark stays hidden) and stays selectable.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
 ## ProductionScene is a layout source only; Production_All is mounted at
 ## its Production_All_Layout position (600, 337.5).
@@ -553,10 +554,7 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item_class(int(record.source_item_class_id),title) if record.get("_item_class_only",false) else SourceImages.describe_item(record,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 
@@ -653,13 +651,21 @@ func _material_info(index: int) -> Dictionary:
 	var rows: Array[Dictionary]=_material_rows(world)
 	if index<0 or index>=rows.size():return {"ok":true}
 	var row: Dictionary=rows[index]
+	var detail: Dictionary=_recipe_item_info(world,row)
+	if detail.get("handled",false):return detail
 	return _notice("%s · 보유 %s / 필요 %s" % [str(row.item).get_slice(" · 원본#",0),_number(int(row.available)),_number(int(row.required))])
 
 func _product_info() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null or _selected.is_empty():return _fail("source_production_window_recipe_missing")
+	var detail: Dictionary=_recipe_item_info(world,Craft.recipe_of(world,_selected).get("result",{}))
+	if detail.get("handled",false):return detail
 	var quote: Dictionary=world._craft_quote(_selected,_count)
 	return _notice("제작 가능" if quote.get("ok",false) else str(quote.get("reason","제작 불가")))
+
+func _recipe_item_info(world: Node, row: Dictionary) -> Dictionary:
+	var record: Dictionary=_record(world,str(row.get("item","")),str(row.get("source_id","")),row.get("record",{}))
+	return preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(_hud.get_ref() if _hud!=null else null,int(record.get("source_item_class_id",0)))
 
 func _probability() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null

@@ -5,7 +5,7 @@ extends RefCounted
 ## the way Change_Card_Set places them, in the page's card ListView. Each card
 ## shows its original card picture (BuffCard DisplayBaseAssetID through
 ## SourceCardPresentation); the detail side shows the selected card's
-## illustration, name, grade and options. Tapping the selected card again or
+## artwork, name, grade and options. Tapping the selected card again or
 ## the original 즉시 변신 button runs the existing catalog equip
 ## (World._equip_catalog), so every rule and save stays with the game.
 ## The same window serves 마법인형 and 성물 (the client reuses Change_WinTotal;
@@ -26,6 +26,7 @@ extends RefCounted
 ## Not connected (no TWILIGHT feature): 변신 등록 (quick registration), the keypad's result list, 도펠겡어/이름 옵션,
 ## 사용 가능 기간 and the 합성 시도 보상 gauges.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const StageReads=preload("res://scripts/ui/original_ui/source_stage_tree_reads.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
 const ROOT="UI/Change/Change_WinTotal.csb"
@@ -155,6 +156,7 @@ var _detail: Node2D
 var _info: Node2D
 var _content: Node2D
 var _option_content: Node2D
+var _option_scroll_min: float=0.0
 var _category: String="변신"
 var _cards: Array[Dictionary]=[]
 # Positions are the keys so duplicate source IDs do not hide a card's scene.
@@ -353,10 +355,11 @@ func _stage() -> Dictionary:
 		bindings[TITLE]={"role":"source_text","text":"성 물"}
 		for offset: int in CHANGE_LABELS:bindings[offset]={"role":"source_text","text":"성 물"}
 		for offset: int in COLLECTION_LABELS:bindings[offset]={"role":"source_text","text":"성물 컬렉션"}
-	var page: Dictionary=_detail_bindings(equipped,parent)
+	var reads: Dictionary={}
+	var page: Dictionary=_detail_bindings(equipped,parent,reads)
 	bindings[DETAIL_PROJECT]={"role":"project","visible":true,"source_node_offsets":page.scope,"bindings":page.bindings}
-	var root_scope: Array[int]=_subtree(ROOT,roots)
-	_consume_touch(ROOT,root_scope,bindings)
+	var root_scope: Array[int]=_subtree(ROOT,roots,reads)
+	_consume_touch(ROOT,root_scope,bindings,reads)
 	var next:=Scene.new()
 	var result: Dictionary=next.configure_nodes(_pack,ROOT,root_scope,bindings)
 	if not result.get("ok",false):return _stage_failure(next,result,previous_cards,previous_selection)
@@ -370,7 +373,7 @@ func _stage() -> Dictionary:
 	var option_content: Variant=(info_list.get_meta("source_list_content") if info_list.has_meta("source_list_content") else null) if is_instance_valid(info_list) else null
 	if not content is Node2D or not option_content is Node2D:return _stage_failure(next,_fail("source_change_window_list_content_missing"),previous_cards,previous_selection)
 	var geometry: Dictionary=_set_geometry()
-	var class_rows: Dictionary=_fill_classes(detail.player,owned)
+	var class_rows: Dictionary=_fill_classes(detail.player,owned,reads)
 	if not class_rows.get("ok",false):return _stage_failure(next,class_rows,previous_cards,previous_selection)
 	var previous: Node2D=_scene
 	# Change_WinTotal is laid out on the design centre (600, 337.5).
@@ -487,7 +490,7 @@ func _set_geometry() -> Dictionary:
 	# The ListView centres its items (Align_HorizontalCenter).
 	return {"row_x":(LIST_SIZE.x-float(size[0]))*0.5,"row_height":float(size[1]),"slots":slots}
 
-func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
+func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -> Dictionary:
 	var doll: bool=_category=="마법인형"
 	var info_nodes: Dictionary=INFO_DOLL if doll else INFO_CARD
 	var selected: Dictionary=_record(_selected)
@@ -499,10 +502,10 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 		COLLECTION_BUTTON:{"role":"button","activate":Callable(self,"_collection_requested")}}
 	var scope: Array[int]=[CARD_PANEL_BG,CARD_PANEL_DECO,DETAIL_BG,DETAIL_FX_BG,SAMPLE_PANEL,SAMPLE,APPLY,TAB_BG,LIST,NOTICE,NOTICE_TEXT]
 	scope.append_array(GROUP_LINES)
-	scope.append_array(_subtree(DETAIL,[COLLECTION_BUTTON]))
+	scope.append_array(_subtree(DETAIL,[COLLECTION_BUTTON],reads))
 	# 각 성: the existing option awakening of the selected card.
 	var can_awaken: bool=not selected.is_empty()
-	scope.append_array(_subtree(DETAIL,[AWAKEN]))
+	scope.append_array(_subtree(DETAIL,[AWAKEN],reads))
 	bindings[AWAKEN]={"role":"button","displaystate":can_awaken,"activate":Callable(self,"_awaken_requested")}
 	bindings[AWAKEN_STATES[0]]={"visible":can_awaken}
 	bindings[AWAKEN_STATES[1]]={"visible":not can_awaken}
@@ -517,17 +520,17 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 		bindings[CLASS_LIST]={"role":"source_list","row_offsets":[],"input":Callable(self,"_class_input")}
 	# 초기화 clears the grade, type and search filters.
 	var filtering: bool=_filtering()
-	scope.append_array(_subtree(DETAIL,[RESET]))
+	scope.append_array(_subtree(DETAIL,[RESET],reads))
 	bindings[RESET]={"role":"button","displaystate":filtering,"activate":Callable(self,"_reset_filters")}
 	bindings[RESET_STATES[0]]={"visible":filtering}
 	bindings[RESET_STATES[1]]={"visible":not filtering}
-	scope.append_array(_subtree(DETAIL,[ORDER_BUTTON]))
+	scope.append_array(_subtree(DETAIL,[ORDER_BUTTON],reads))
 	bindings[ORDER_BUTTON]={"role":"button","activate":Callable(self,"_cycle_order")}
 	bindings[ORDER_TEXT]={"role":"source_text","text":ORDERS[_order]}
 	# 모든 유형: Common_ButtonSet_Type over the full-page Btn_Close.
 	var type_set: Dictionary=TYPE_SETS.get(_category,{})
 	if _available(TYPE_SET) and not type_set.is_empty():
-		scope.append_array(_subtree(DETAIL,[SORT]))
+		scope.append_array(_subtree(DETAIL,[SORT],reads))
 		scope.append_array([POPUP_CLOSE,TYPE_PROJECT])
 		var label: String=_type_label(_type)
 		bindings[SORT]={"role":"button","activate":Callable(self,"_toggle_type_popup")}
@@ -535,17 +538,17 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 		bindings[SORT_STATES[1]]={"visible":false}
 		for offset: int in SORT_LABELS:bindings[offset]={"role":"source_text","text":label}
 		bindings[POPUP_CLOSE]={"role":"button","visible":false,"activate":Callable(self,"_close_popups")}
-		var type_scope: Array[int]=_subtree(TYPE_SET,[int(type_set.set)])
+		var type_scope: Array[int]=_subtree(TYPE_SET,[int(type_set.set)],reads)
 		var type_bindings: Dictionary={int(type_set.set):{"visible":true},int(type_set.bg):{"role":"consume"}}
 		for button: Array in type_set.buttons:
 			var on: bool=int(button[3])==_type
 			type_bindings[int(button[0])]={"role":"button","visible":not on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
 			type_bindings[int(button[1])]={"role":"button","visible":on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
-		_consume_touch(TYPE_SET,type_scope,type_bindings)
-		bindings[TYPE_PROJECT]={"role":"project","visible":false,"source_node_offsets":type_scope,"bindings":type_bindings}
+		_consume_touch(TYPE_SET,type_scope,type_bindings,reads)
+		bindings[TYPE_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":type_scope,"bindings":type_bindings}
 	# Search bar: ItemBook_Popup_Keypad with the window's own editor.
 	if _available(KEYPAD) and host!=null:
-		scope.append_array(_subtree(DETAIL,[SEARCH]))
+		scope.append_array(_subtree(DETAIL,[SEARCH],reads))
 		if not scope.has(POPUP_CLOSE):
 			scope.append(POPUP_CLOSE)
 			bindings[POPUP_CLOSE]={"role":"button","visible":false,"activate":Callable(self,"_close_popups")}
@@ -560,16 +563,16 @@ func _detail_bindings(equipped: String, host: Node=null) -> Dictionary:
 			KEYPAD_CLOSE:{"role":"button","activate":Callable(self,"_close_popups")},
 			KEYPAD_CANCEL:{"role":"button","activate":Callable(self,"_clear_query")},
 			5132:{"role":"static_source_text"},2868:{"role":"static_source_text"}}
-		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
+		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
 	var info_scope: Array[int]=[int(info_nodes.name),int(info_nodes.grade),int(info_nodes.title),int(info_nodes.list)]
 	for offset: Variant in info_nodes.decor:info_scope.append(int(offset))
 	var info_bindings: Dictionary={int(info_nodes.name):{"role":"source_text","text":str(selected.get("name",""))},
 		int(info_nodes.grade):{"role":"source_text","text":str(selected.get("grade",""))},
 		int(info_nodes.title):{"role":"static_source_text"},
-		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_ignore_input")}}
-	_consume_touch(INFO,info_scope,info_bindings)
+		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_option_list_input")}}
+	_consume_touch(INFO,info_scope,info_bindings,reads)
 	bindings[INFO_PROJECT]={"role":"project","visible":true,"source_node_offsets":info_scope,"bindings":info_bindings}
-	_consume_touch(DETAIL,scope,bindings)
+	_consume_touch(DETAIL,scope,bindings,reads)
 	scope.append(INFO_PROJECT)
 	return {"scope":scope,"bindings":bindings}
 
@@ -584,7 +587,7 @@ func _card(record: Dictionary) -> Dictionary:
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,member,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
-	var owner: Dictionary=_picture(record,false)
+	var owner: Dictionary=_picture(Presentation.detail(record,true,false))
 	var picture: bool=false
 	if owner.get("ok",false):
 		var uploaded: Dictionary=scene.set_bound_source_visual_result(int(nodes.sample),owner)
@@ -592,10 +595,8 @@ func _card(record: Dictionary) -> Dictionary:
 	scene.set_meta("source_change_card",{"id":id,"member":member,"picture":picture,"status":str(owner.get("status","")),"reason":str(owner.get("reason",""))})
 	return {"ok":true,"scene":scene,"picture":picture}
 
-## The card's own original picture: DisplayBaseAssetID on a list card, the
-## illustration on the detail side (SourceCardPresentation picks the role).
-static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
-	var shown: Dictionary=Presentation.detail(record,true,detail_view)
+## Bind the selected original texture and its source role to the authored slot.
+static func _picture(shown: Dictionary) -> Dictionary:
 	var owner: Dictionary={"ok":shown.get("status","")=="original" and shown.get("texture") is Texture2D,"status":str(shown.get("status","")),"reason":str(shown.get("reason",""))}
 	if owner.ok:
 		owner["texture"]=shown.texture
@@ -603,7 +604,7 @@ static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
 		owner["role"]=str(shown.get("role",""))
 	return owner
 
-## Detail side: illustration, name, grade and the card's option lines.
+## Detail side: card picture, name, grade and option lines.
 func _show_selected() -> Dictionary:
 	if not is_instance_valid(_detail) or not is_instance_valid(_info):return {"ok":false}
 	var record: Dictionary=_record(_selected)
@@ -611,7 +612,12 @@ func _show_selected() -> Dictionary:
 	_info.set_bound_text(int(nodes.name),str(record.get("name","")))
 	_info.set_bound_text(int(nodes.grade),str(record.get("grade","")))
 	var picture: bool=false
-	var owner: Dictionary=_picture(record,true) if not record.is_empty() else {"ok":false}
+	# Change_DetailView's CardSample is a 46x46 card placeholder (scale 1.5)
+	# whose siblings CardSample_Screen / _Awaken / _Multi overlay the same card
+	# face: every category and grade shows its DisplayBaseAssetID front. The
+	# IllustrationAssetID painting overflowed the option text and buttons
+	# (user list 2026-11-26 #16).
+	var owner: Dictionary=_picture(Presentation.detail(record,true,false)) if not record.is_empty() else {"ok":false}
 	if owner.get("ok",false):
 		var uploaded: Dictionary=_detail.set_bound_source_visual_result(SAMPLE,owner)
 		picture=uploaded.get("ok",false) and _detail.set_bound_visible(SAMPLE,true).get("ok",false)
@@ -625,21 +631,46 @@ func _show_selected() -> Dictionary:
 		if not selected_variant.is_empty():options_record=selected_variant
 	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
 	var lines: Array=offered_lines if offered_lines is Array else []
+	var awakening: Array=_applied_awakening_options()
+	if not awakening.is_empty():
+		var combined: Array=[]
+		combined.append_array(lines)
+		combined.append("각성 옵션")
+		combined.append_array(awakening)
+		lines=combined
 	var options: int=0
+	var list_height: float=230.0 if _category=="마법인형" else 260.0
 	for line: Variant in lines:
 		var row: Dictionary=_option_row(line)
 		if not row.get("ok",false):continue
 		# Rows run top-down from the option list's top edge.
-		var list_height: float=260.0 if _category=="변신" else 230.0
 		row.scene.position=Vector2(0.0,-(list_height-OPTION_HEIGHT*float(options+1)))
 		_option_content.add_child(row.scene)
 		options+=1
+	_option_scroll_min=minf(0.0,list_height-float(options)*OPTION_HEIGHT)
+	_option_content.position.y=0.0
 	var applied: bool=not _selected.is_empty() and _selected==_equipped_id()
 	_detail.set_bound_displaystate(APPLY,not record.is_empty() and not applied)
 	_detail.set_bound_displaystate(AWAKEN,not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[0],not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
-	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"applied":applied}
+	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"awakening_options":awakening.size(),"applied":applied}
+
+func _applied_awakening_options() -> Array:
+	if _category not in ["변신","마법인형"] or _selected.is_empty():return []
+	var world: Node=_world_node()
+	var runtime: Variant=world.get("option_awakening") if world!=null else null
+	if runtime==null or not runtime.is_awakened(_category,_selected):return []
+	return runtime.core.definition(_category,_selected).get("applied_options",[])
+
+func _option_list_input(event: InputEvent) -> void:
+	if not is_instance_valid(_option_content) or _option_scroll_min==0.0:return
+	var delta: float=0.0
+	if event is InputEventScreenDrag or (event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT):
+		delta=event.relative.y/maxf(0.001,absf(_option_content.get_global_transform_with_canvas().get_scale().y))
+	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		delta=54.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -54.0
+	_option_content.position.y=clampf(_option_content.position.y+delta,_option_scroll_min,0.0)
 
 func _option_row(line: Variant) -> Dictionary:
 	# "SP +1" -> desc "SP", value "+1" (the row's two original labels).
@@ -720,9 +751,10 @@ func _collection_requested() -> Dictionary:
 
 func _explore_requested() -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
-	close()
-	if hud!=null and hud.has_method("open_expedition"):hud.call("open_expedition")
-	return {"ok":true,"existing_expedition":true}
+	if hud==null or not hud.has_method("open_doll_explore"):return _fail("source_doll_explore_owner_missing")
+	# The HUD owns both the menu tile and the real Change_WinTotal tab. It
+	# closes this view only when the original destination can be opened.
+	return hud.call("open_doll_explore")
 
 ## 각 성: the same request as the catalog's 각성 tab (World opens the
 ## existing option awakening for the card, or reports why it cannot).
@@ -735,17 +767,17 @@ func _awaken_requested() -> Dictionary:
 
 ## --- Grade list (Change_WinTotal_Class) --------------------------------------
 
-func _fill_classes(detail: Node2D, owned: Array[Dictionary]) -> Dictionary:
+func _fill_classes(detail: Node2D, owned: Array[Dictionary], reads: Dictionary={}) -> Dictionary:
 	if not _available(GRADE_ROW):return {"ok":true,"rows":0}
 	var list_node: Variant=detail.get("source_nodes").get(CLASS_LIST)
 	var content: Variant=(list_node.get_meta("source_list_content") if list_node.has_meta("source_list_content") else null) if is_instance_valid(list_node) else null
 	if not content is Node2D:return _fail("source_change_window_grade_list_missing")
-	var tree: Dictionary=_pack.scene(DETAIL).get("nodeTree",{})
+	var tree: Dictionary=StageReads.node_tree(_pack,DETAIL,reads)
 	var options: Dictionary=Scene._node_at_offset(tree,CLASS_LIST).get("options",{})
 	var raw_size: Array=options.get("widgetOptions",{}).get("size",[166,475])
 	var size:=Vector2(float(raw_size[0]),float(raw_size[1]))
 	var gap: float=float(options.get("itemMargin",0))
-	var panel: Dictionary=Scene._node_at_offset(_pack.scene(GRADE_ROW).get("nodeTree",{}),ROW_PANEL).get("options",{}).get("widgetOptions",{})
+	var panel: Dictionary=Scene._node_at_offset(StageReads.node_tree(_pack,GRADE_ROW,reads),ROW_PANEL).get("options",{}).get("widgetOptions",{})
 	var row_size: Array=panel.get("size",[160,72])
 	var row_position: Array=panel.get("position",[0,0])
 	var anchor: Array=panel.get("anchorPoint",[0.5,0.5])
@@ -756,7 +788,7 @@ func _fill_classes(detail: Node2D, owned: Array[Dictionary]) -> Dictionary:
 	var rows: int=0
 	for grade: String in SIDEBAR:
 		var count: Array=counts.get(grade,[0,0])
-		var built: Dictionary=_grade_row(grade,"( %d / %d )" % [int(count[0]),int(count[1])],grade==_grade)
+		var built: Dictionary=_grade_row(grade,"( %d / %d )" % [int(count[0]),int(count[1])],grade==_grade,reads)
 		if not built.get("ok",false):return built
 		# Rows run top-down; a row's root panel lower-left sits on the line.
 		var at: Vector2=Vector2((size.x-extent.x)*0.5,y-extent.y)-origin
@@ -766,10 +798,10 @@ func _fill_classes(detail: Node2D, owned: Array[Dictionary]) -> Dictionary:
 		rows+=1
 	return {"ok":true,"rows":rows,"content":content,"min":minf(0.0,size.y-(size.y-y-gap))}
 
-func _grade_row(grade: String, count_text: String, on: bool) -> Dictionary:
+func _grade_row(grade: String, count_text: String, on: bool, reads: Dictionary={}) -> Dictionary:
 	# The client spaces two-letter grade names ("등 급").
 	var label: String=grade.substr(0,1)+" "+grade.substr(1,1) if grade.length()==2 else grade
-	var scope: Array[int]=_subtree(GRADE_ROW,[ROW_PANEL])
+	var scope: Array[int]=_subtree(GRADE_ROW,[ROW_PANEL],reads)
 	var activate: Callable=Callable(self,"_select_grade").bind(grade)
 	var bindings: Dictionary={ROW_PANEL:{"input":Callable(self,"_class_input")},
 		ROW_NORMAL:{"role":"button","visible":not on,"activate":activate},
@@ -820,15 +852,16 @@ func _type_label(id: int) -> String:
 
 func _toggle_type_popup() -> Dictionary:
 	if not is_instance_valid(_detail):return _fail("source_change_window_not_open")
-	var player: Dictionary=_detail.project_player([TYPE_PROJECT])
-	var shown: bool=player.get("ok",false) and not bool(_detail.get("source_nodes").get(TYPE_PROJECT).visible)
+	var node: Node2D=_detail.source_nodes.get(TYPE_PROJECT)
+	var should_show: bool=is_instance_valid(node) and not node.visible
 	_close_popups()
-	if shown:
-		_detail.set_bound_visible(TYPE_PROJECT,true)
-		_detail.set_bound_visible(POPUP_CLOSE,true)
-		_detail.set_bound_visible(SORT_STATES[0],false)
-		_detail.set_bound_visible(SORT_STATES[1],true)
-	return {"ok":true,"type_popup":shown}
+	if not should_show:return {"ok":true,"type_popup":false}
+	var shown: Dictionary=_detail.set_bound_visible(TYPE_PROJECT,true)
+	if not shown.ok:return shown
+	_detail.set_bound_visible(POPUP_CLOSE,true)
+	_detail.set_bound_visible(SORT_STATES[0],false)
+	_detail.set_bound_visible(SORT_STATES[1],true)
+	return {"ok":true,"type_popup":true}
 
 func _select_type(id: int) -> Dictionary:
 	_close_popups()
@@ -868,10 +901,14 @@ func _keypad_field() -> Variant:
 	return node.get_meta("source_text_field") if is_instance_valid(node) and node.has_meta("source_text_field") else null
 
 func _open_keypad() -> Dictionary:
-	var field: Variant=_keypad_field()
-	if field==null:return _fail("source_change_window_keypad_unavailable")
+	if not is_instance_valid(_detail):return _fail("source_change_window_keypad_unavailable")
 	_close_popups()
-	_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	var shown: Dictionary=_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	if not shown.ok:return _fail("source_change_window_keypad_unavailable")
+	var field: Variant=_keypad_field()
+	if field==null:
+		_close_popups()
+		return _fail("source_change_window_keypad_unavailable")
 	_detail.set_bound_visible(POPUP_CLOSE,true)
 	var attached: Dictionary=field.attach_editor()
 	if not attached.get("ok",false):
@@ -957,8 +994,8 @@ func _queue_card_refresh() -> void:
 
 ## Touch-enabled original nodes in the mounted subtrees with no action of
 ## their own swallow their touch; labels it does not drive keep their text.
-func _consume_touch(member: String, scope: Array[int], bindings: Dictionary) -> void:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+func _consume_touch(member: String, scope: Array[int], bindings: Dictionary, reads: Dictionary={}) -> void:
+	var tree: Dictionary=StageReads.node_tree(_pack,member,reads)
 	for offset: int in scope:_consume_subtree(Scene._node_at_offset(tree,offset),bindings,scope)
 
 static func _consume_subtree(node: Dictionary, bindings: Dictionary, scope: Array[int]) -> void:
@@ -981,8 +1018,8 @@ static func _consume_subtree(node: Dictionary, bindings: Dictionary, scope: Arra
 
 ## A node scope keeps only the listed nodes and their ancestors: list every
 ## descendant of each mounted node (a nested ProjectNode keeps its own scope).
-func _subtree(member: String, roots: Array[int]) -> Array[int]:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+func _subtree(member: String, roots: Array[int], reads: Dictionary={}) -> Array[int]:
+	var tree: Dictionary=StageReads.node_tree(_pack,member,reads)
 	var result: Array[int]=[]
 	for offset: int in roots:_collect(Scene._node_at_offset(tree,offset),result)
 	return result

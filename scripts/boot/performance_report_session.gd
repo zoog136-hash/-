@@ -17,6 +17,7 @@ static var _latest_metrics: Dictionary = {}
 var _directory: String = DIRECTORY
 var _session: String
 var _started_unix: int
+var _start_clock: Dictionary = {}
 var _last_checkpoint_msec: int = -PAUSE_MIN_MSEC
 var _worker: Thread
 var _finished: bool = false
@@ -45,7 +46,8 @@ static func sample(fields: Dictionary, memory: String) -> void:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_started_unix = int(Time.get_unix_time_from_system())
+	_start_clock = _sample_clock()
+	_started_unix = int(int(_start_clock.realtime_usec) / 1000000)
 	var stamp: String = Time.get_datetime_string_from_unix_time(_started_unix).replace(":", "")
 	_session = stamp + "Z-" + Crypto.new().generate_random_bytes(12).hex_encode()
 	# Loading can begin before the first world probe. Start also restores the
@@ -78,9 +80,20 @@ func _exit_tree() -> void:
 	_finish()
 
 func _snapshot(state: String) -> Dictionary:
+	var captured: Dictionary = _sample_clock()
 	return {"schema":1, "session":_session, "started_unix_utc":_started_unix,
-		"captured_unix_utc":int(Time.get_unix_time_from_system()), "capture":state,
+		"captured_unix_utc":int(int(captured.realtime_usec) / 1000000), "capture":state,
+		"clock_sync":{"start":_start_clock,"capture":captured},
 		"hitch_log":HITCH.summary(), "last_sample":_latest_metrics.duplicate()}
+
+## Bracket a system realtime read in the same monotonic clock as frame
+## boundaries. Called only at report capture, not once per frame. Width is
+## exported so an offline tool can reject a preempted or shifted sample.
+static func _sample_clock() -> Dictionary:
+	var before: int = HITCH.now()
+	var realtime: int = roundi(Time.get_unix_time_from_system()*1000000.0)
+	var after: int = HITCH.now()
+	return {"ticks_before_usec":before,"realtime_usec":realtime,"ticks_after_usec":after}
 
 func _checkpoint(recover: bool = false) -> void:
 	if _finished: return
@@ -186,11 +199,17 @@ static func clean_snapshot(snapshot: Dictionary) -> Dictionary:
 		"captured_unix_utc":_number(snapshot.get("captured_unix_utc")),
 		"capture":capture if capture in ["regular_exit", "recovered_checkpoint"] else "checkpoint",
 		"hitch_log":{}, "last_sample":{}}
+	var clock: Variant = snapshot.get("clock_sync")
+	if clock is Dictionary:
+		var first: Dictionary = _clean_clock(clock.get("start"))
+		var last: Dictionary = _clean_clock(clock.get("capture"))
+		if not first.is_empty() and not last.is_empty() and first.ticks_after_usec<=last.ticks_before_usec:
+			result["clock_sync"] = {"start":first,"capture":last}
 	if raw_sample is Dictionary:
 		for key: String in METRICS + MEMORY + ["at_usec"]:
 			if raw_sample.has(key): result.last_sample[key] = _number(raw_sample[key])
 	if not raw_log is Dictionary: return result
-	var log: Dictionary = _numbers(raw_log, ["schema", "frames", "hitches", "threshold_ms"])
+	var log: Dictionary = _numbers(raw_log, ["schema", "frames", "hitches", "threshold_ms", "over_16ms", "over_16667us", "over_33ms", "at_least_4s"])
 	log["build"] = _build(raw_log.get("build"))
 	var worst: Array = []
 	var entries: Variant = raw_log.get("worst", [])
@@ -198,8 +217,34 @@ static func clean_snapshot(snapshot: Dictionary) -> Dictionary:
 		for entry: Variant in entries.slice(0, HITCH.KEEP):
 			if entry is Dictionary: worst.append(_hitch(entry))
 	log["worst"] = worst
+	var bands: Variant=raw_log.get("budget_examples")
+	if bands is Array and bands.size()==2:
+		var clean: Array=[[],[]]
+		for index: int in 2:
+			if not bands[index] is Array:continue
+			for sample: Variant in bands[index].slice(0,HITCH.BUDGET_KEEP):
+				if not sample is Dictionary:continue
+				var row: Dictionary=_numbers(sample,["frame","total_usec","section_usec","unattributed_usec","detail_usec"])
+				var us: int=int(row.get("total_usec",0))
+				if us<=16000 or us>=HITCH.THRESHOLD_USEC or int(us>33000)!=index:continue
+				for key: String in ["map","section","detail"]:row[key]=_label(sample.get(key))
+				clean[index].append(row)
+		log["budget_examples"]=clean
 	result.hitch_log = log
 	return result
+
+static func _clean_clock(value: Variant) -> Dictionary:
+	if not value is Dictionary: return {}
+	for key: String in ["ticks_before_usec","realtime_usec","ticks_after_usec"]:
+		var raw: Variant = value.get(key)
+		if not (raw is int or (raw is float and is_finite(raw))): return {}
+	var out: Dictionary = _numbers(value,["ticks_before_usec","realtime_usec","ticks_after_usec"])
+	if out.size()!=3 or out.ticks_before_usec<0 or out.ticks_after_usec<out.ticks_before_usec \
+		or out.ticks_after_usec-out.ticks_before_usec>1000000 or out.realtime_usec<946684800000000 or out.realtime_usec>9007199254740991:
+		return {}
+	for v: Variant in out.values():
+		if float(v)!=floor(float(v)): return {}
+	return out
 
 static func _hitch(entry: Dictionary) -> Dictionary:
 	var result: Dictionary = _numbers(entry, ["ms", "at_s", "frame"])

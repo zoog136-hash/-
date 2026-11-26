@@ -21,6 +21,7 @@ extends RefCounted
 ## selection follow it) unless every member has partition history.
 ## TWILIGHT 근사: an original row whose MaxStackAmount is not a positive
 ## integer (none in the 523 tables) stacks up to 9999.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const QUANTITY="source_native_stack_quantity"
 const RECEIPT="source_native_stack_receipt"
 const USED="source_native_stack_used_quantity"
@@ -46,7 +47,7 @@ static func _new_id(taken: Callable) -> String:
 
 ## Original MaxStackAmount of the receipt's own ItemClass row.
 static func max_stack(receipt: Dictionary) -> int:
-	var original: Variant=preload("res://scripts/loot/current523_native_fields.gd").full(receipt).get("source_original_item",{})
+	var original: Variant=preload("res://scripts/loot/current523_native_fields.gd").field_view(receipt,"source_original_item",{})
 	var value: Variant=original.get("MaxStackAmount") if original is Dictionary else null
 	if _int(value) and int(value)>=1:return int(value)
 	return APPROX_MAX_STACK
@@ -118,45 +119,62 @@ static func _canonical(value: Variant) -> Variant:
 
 const BLESS_LABELS: Dictionary={1:"normal",2:"blessed",3:"cursed"}
 
+## A same-name peer is necessary (not sufficient) for any merge. Inspect
+## only the shell here, before opening the original definition/cache or
+## validating a receipt. Use exactly the planner's name and level semantics.
+static func possible_names(instances: Dictionary) -> Dictionary:
+	var seen: Dictionary={}
+	var repeated: Dictionary={}
+	for uid: Variant in instances:
+		var entry: Variant=instances[uid]
+		if not entry is Dictionary or not entry.has(RECEIPT) or entry.get("level")!=0:continue
+		var name_value: String=str(entry.get("name",""))
+		if seen.has(name_value):repeated[name_value]=true
+		else:seen[name_value]=true
+	return repeated
+
 ## Plans the bag merge. Pure: returns new copies, never edits its inputs.
 ## {changed, item_instances, consumable_state, item_locks, merged_slots}
-static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reserved: Dictionary={}) -> Dictionary:
-	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
+## The world supplies a synchronous read-only snapshot callback. It is invoked
+## only for real bins, returns {state,reserved}, and must not mutate the bag.
+static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reserved: Dictionary={}, repeated_names: Variant=null, owner_snapshot: Callable=Callable()) -> Dictionary:
 	var unchanged: Dictionary={"changed":false,"merged_slots":0}
-	var ledger: Variant=state.get(USES,{});var partitions: Variant=state.get(PARTITIONS,{});var merges: Variant=state.get(MERGES,{})
-	if not ledger is Dictionary or not partitions is Dictionary or not merges is Dictionary:return unchanged
-	var involved: Dictionary={}
-	for event: Variant in partitions.values():
-		if event is Dictionary:involved[str(event.get("parent_id",""))]=true;involved[str(event.get("child_id",""))]=true
-	var ammo: Variant=state.get(AMMO_EQUIPPED,{})
+	var candidates: Dictionary=possible_names(instances) if repeated_names==null else repeated_names
+	if candidates.is_empty():return unchanged
+	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 	# Same item, bless, enchant 0 and identical other fields, in bag order.
 	var groups: Dictionary={};var order: Array[String]=[]
 	for raw: Variant in instances:
 		var uid: String=str(raw);var entry: Variant=instances[raw]
 		if not entry is Dictionary or not entry.has(RECEIPT) or entry.get("level")!=0:continue
+		var name_value: String=str(entry.get("name",""))
+		if not candidates.has(name_value):continue
+		if entry.get("record") is Dictionary and RETIRED_ITEMS.record(entry.record):continue
 		var owned: Dictionary=stock.call("proof_entry",entry,uid)
-		if owned.is_empty() or max_stack(owned.receipt)<=1:continue
+		if owned.is_empty():continue
+		var cap: int=max_stack(owned.receipt)
+		if cap<=1:continue
 		# User 2026-11-17: equipment never merges, whatever its MaxStackAmount;
 		# each piece keeps its own enchant/bless/element/option/lifetime/lock.
 		if equipment(owned.record) or str(owned.record.get("slot","")) not in STACK_SLOTS:continue
-		var name_value: String=str(entry.get("name",""))
 		var locked: bool=bool(locks.get(name_value+"@@@"+uid,false))
 		var key: String="%s|%d|%d|%d" % [name_value,int(owned.receipt.item_class_id),int(owned.receipt.bless_raw),int(locked)]
 		if not groups.has(key):groups[key]=[];order.append(key)
-		groups[key].append({"uid":uid,"owned":owned,"entry":entry,"other":stack_identity(entry)})
+		groups[key].append({"uid":uid,"owned":owned,"entry":entry,"cap":cap})
 	var bins: Array=[]
 	for key: String in order:
 		var members: Array=groups[key]
 		if members.size()<2:continue
 		var kinds: Array=[]
 		for member: Dictionary in members:
+			member["other"] = stack_identity(member.entry)
 			var placed: bool=false
 			for kind: Array in kinds:
 				if kind[0].other==member.other:kind.append(member);placed=true;break
 			if not placed:kinds.append([member])
 		for kind: Array in kinds:
 			if kind.size()<2:continue
-			var cap: int=max_stack(kind[0].owned.receipt);var current: Array=[];var total: int=0
+			var cap: int=kind[0].cap;var current: Array=[];var total: int=0
 			for member: Dictionary in kind:
 				var amount: int=int(member.owned.remaining)
 				if not current.is_empty() and total+amount>cap:
@@ -165,6 +183,16 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 				current.append(member);total+=amount
 			if current.size()>1:bins.append(current)
 	if bins.is_empty():return unchanged
+	if owner_snapshot.is_valid():
+		var snapshot: Variant=owner_snapshot.call()
+		if not snapshot is Dictionary or not snapshot.get("state") is Dictionary or not snapshot.get("reserved") is Dictionary:return unchanged
+		state=snapshot.state;reserved=snapshot.reserved
+	var ledger: Variant=state.get(USES,{});var partitions: Variant=state.get(PARTITIONS,{});var merges: Variant=state.get(MERGES,{})
+	if not ledger is Dictionary or not partitions is Dictionary or not merges is Dictionary:return unchanged
+	var involved: Dictionary={}
+	for event: Variant in partitions.values():
+		if event is Dictionary:involved[str(event.get("parent_id",""))]=true;involved[str(event.get("child_id",""))]=true
+	var ammo: Variant=state.get(AMMO_EQUIPPED,{})
 	var next_instances: Dictionary=instances.duplicate(true)
 	var next_state: Dictionary=state.duplicate(true)
 	var next_ledger: Dictionary=next_state.get(USES,{});var next_merges: Dictionary=next_state.get(MERGES,{})

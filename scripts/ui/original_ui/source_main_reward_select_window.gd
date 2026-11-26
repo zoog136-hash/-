@@ -12,7 +12,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## Left empty (no TWILIGHT feature): the quantity buttons (+1 / +10 / Max /
 ## 직접입력 / 초기화: TWILIGHT opens one box at a time), the calculator and the
 ## LuckyBag layouts.
-const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const Choices=preload("res://scripts/ui/patch523_reward_choice.gd")
 const ROOT="UI/RewardSelectBoxScene.csb"
 const BOX="UI/CommonUi/Common_Reward_SelectBox.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
@@ -27,6 +27,7 @@ var _rows: Array=[]
 ## moves the selection mark, renames the chosen reward and enables 보상 받기
 ## in place instead of building the window again (a 40-row card box).
 var _marks: Array=[]
+var _row_buttons: Array=[]
 var _labels: Array=[]
 ## Full builds of the window (tests).
 var builds: int=0
@@ -49,6 +50,15 @@ func open(parent: Node, dialog: Object) -> Dictionary:
 	chosen=-1
 	if dialog is Node and not (dialog as Node).tree_exiting.is_connected(close):(dialog as Node).tree_exiting.connect(close)
 	return open_window(parent)
+
+func input_scene() -> Node2D:
+	return _scene if is_open() else null
+
+func append_row_buttons(found: Array) -> void:
+	# Common_Slot controls are intentionally skipped by the ordinary bag
+	# router. Here these exact buttons are owned by the displayed chooser.
+	for button: Variant in _row_buttons:
+		if is_instance_valid(button) and not found.has(button):found.append(button)
 
 func dialog() -> Object:
 	return _dialog.get_ref() if _dialog!=null else null
@@ -79,7 +89,7 @@ func _spec() -> Dictionary:
 	_slot_spec(spec,P+"Nd_Slot/Common_Slot/")
 	spec[P+"Nd_Slot/Common_Slot/Sp_Select"]={"visible":false}
 	spec[P+"Nd_Slot/Common_Slot/Text_Amount"]={"visible":false}
-	spec[P+"Nd_Slot/Common_Slot/Btn"]={"activate":Callable(self,"_ignore")}
+	spec[P+"Nd_Slot/Common_Slot/Btn"]={"activate":_open_item_info.bind(int(box.get("item_class_id",0))),"displaystate":int(box.get("item_class_id",0))>0}
 	var ready: bool=chosen>=0
 	spec[P+"Btn_OK"]={"activate":Callable(self,"_confirm"),"displaystate":ready}
 	spec[P+"Btn_OK/Normal"]={"visible":ready}
@@ -97,12 +107,13 @@ func _slot_spec(spec: Dictionary, p: String) -> void:
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	builds+=1
 	_marks=[]
+	_row_buttons=[]
 	_labels=[]
 	var pictures: int=0
 	var owner: Object=dialog()
 	var box: Dictionary=owner.box_info() if owner!=null and owner.has_method("box_info") else {}
 	var icon: Dictionary=_locate(root,out,"Nd_Slot/Common_Slot/Sp_IconSample")
-	if icon.get("ok",false) and _show_picture(icon.player,icon.offset,_item_picture(int(box.get("item_class_id",0)),str(box.get("name","")))):pictures+=1
+	if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,_item_picture(int(box.get("item_class_id",0)),str(box.get("name","")))):pictures+=1
 	var rows: Array=[]
 	for index: int in range(_rows.size()):
 		var row: Dictionary=_rows[index]
@@ -115,9 +126,12 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var placed: Dictionary=_fill_list(root,out,P+"ListView",rows,NAN,false,5)
 	if not placed.get("ok",false):return placed
 	for index: int in range(rows.size()):
+		var action: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Btn")
+		var action_node: Node=action.player.source_nodes.get(action.offset) if action.get("ok",false) else null
+		_row_buttons.append(action_node.get_meta("source_button",null) if is_instance_valid(action_node) and action_node.has_meta("source_button") else null)
 		var located: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_IconSample")
 		var row: Dictionary=_rows[index]
-		if located.get("ok",false) and _show_picture(located.player,located.offset,_item_picture(int(row.get("item_class_id",0)),str(row.get("name","")))):pictures+=1
+		if located.get("ok",false) and _show_item_icon(located.player,located.offset,_item_picture(int(row.get("item_class_id",0)),str(row.get("name","")))):pictures+=1
 		var mark: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Sp_Select")
 		_marks.append([mark.player,int(mark.offset)] if mark.get("ok",false) else [])
 	for suffix: String in [P+"Nd_Amount/Label_Num",P+"Btn_OK",P+"Btn_OK/Normal",P+"Btn_OK/Disabled"]:
@@ -127,14 +141,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 
 static func _item_picture(item_class_id: int, title: String) -> Dictionary:
 	if item_class_id<=0:return {"ok":false}
-	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-	if not info.get("texture") is Texture2D:
-		# Rows whose item the bag does not carry (e.g. the 변신 카드 items of a
-		# card selection box, ItemClass.TestItem): the row's own original
-		# ItemClass.IconID picture.
-		var icon: Dictionary=SourceImages.resolve_consumer("ItemClass",item_class_id,"IconID")
-		if icon.get("texture") is Texture2D:return {"ok":true,"texture":icon.texture,"status":str(icon.get("status","")),"provenance":icon.get("provenance",{})}
-	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
+	return Choices.describe_choice_icon(item_class_id,title)
 
 ## --- Actions --------------------------------------------------------------------
 

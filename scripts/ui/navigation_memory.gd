@@ -102,7 +102,7 @@ func restore(section: String, root: Node) -> void:
 		(view.get("search_row") as Control).visible = bool(state.get("search_visible", false))
 		view.set("selected_item", "")
 		view.set("detail_active", false)
-		view.call("_refresh_inventory_grid")
+		view.call("repaint_restored_inventory_view")
 		var identity: String = str(state.get("id", ""))
 		var slots: Dictionary = view.get("slot_buttons")
 		# Exact physical item reference only; a sold item must not select its neighbor.

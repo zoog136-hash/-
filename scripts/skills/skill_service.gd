@@ -3,6 +3,8 @@ class_name TwilightOriginalSkillService
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
+const AMMO_FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
+const HEART_SEEKER := "lmref_8f924b6a5bd9ab0a"
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
@@ -291,6 +293,14 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 ## `manual`: a player's press (quick slot, 스킬 사용). Automatic passes keep
 ## their silent refusal so a polling loop never floods the message line.
 func cast(record: Dictionary, manual: bool = true) -> bool:
+	return call("_cast_impl",record,manual,false)
+
+
+func cast_loading(record: Dictionary, manual: bool) -> bool:
+	return await _cast_impl(record,manual,true)
+
+
+func _cast_impl(record: Dictionary, manual: bool, loading: bool) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
 	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
@@ -347,6 +357,15 @@ func cast(record: Dictionary, manual: bool = true) -> bool:
 		if not teleport_landing.is_finite():
 			world.hud.show_message("이동 가능한 위치가 없습니다")
 			return false
+	if loading and mode == "teleport" and world.has_method("travel_map_point"):
+		var commit: Callable = func() -> Dictionary:
+			return {"ok":_commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)}
+		var outcome: Dictionary = await world.travel_map_point(teleport_landing,commit)
+		return outcome.get("ok",false)
+	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)
+
+
+func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2) -> bool:
 	# Validation ends here. Order: register the attack motion (cancellable)
 	# -> pay the cost (MP/HP/materials/ammo; atomic and saved by its owner)
 	# -> cooldown and presentation. A refused registration pays nothing; a
@@ -428,6 +447,7 @@ func cast(record: Dictionary, manual: bool = true) -> bool:
 			world.player.global_position = teleport_landing
 			world.player.clear_click_path()
 			world.player.camera.reset_smoothing()
+			if world.has_method("refresh_map_after_jump"): world.refresh_map_after_jump()
 			vfx.emit_skill(id, "impact", world.player.global_position)
 			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"taunt":
@@ -466,14 +486,26 @@ func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
 	if target.life_id != target_life: return
 	var skill: Dictionary = action.original_skill
 	var hits := clampi(int(skill.get("hits", 1)), 1, 12)
+	var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
+	var origin: Vector2=world.player.combat_projectile_origin()
+	var heart: Dictionary=_heart_seeker_source_projectile(skill) if kind!="timed" and skill.get("id")==HEART_SEEKER else {}
 	for hit: int in range(hits):
 		var shot_action := action.duplicate(false)
 		shot_action["callback"] = impact.bind(skill, target, target_life)
-		var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
 		var visual_id := presentation_id(skill)
-		var visual_options := vfx.flight_options(visual_id)
+		var visual_options := AMMO_FLIGHT.spell_options(world,origin,target,heart) if not heart.is_empty() else {}
+		if visual_options.is_empty(): visual_options=vfx.flight_options(visual_id)
 		visual_options.merge({"color":vfx.color_for(visual_id),"motif":vfx.presets.get(visual_id, {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
-		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, visual_options)
+		world.combat_flights.launch(origin, target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, visual_options)
+
+func _heart_seeker_source_projectile(skill: Dictionary) -> Dictionary:
+	var original: Dictionary=_current_source_effect_row(skill)
+	if original.get("ID")!=86758:return {}
+	var profile: Dictionary=catalog.source523.profiles.get(HEART_SEEKER,{})
+	# Original SpellBonus #552978 explicitly selects AmmoClassID #261738.
+	# This affects presentation only; the skill has no new bag ammo cost.
+	var links: Array=Catalog.SOURCE523.scalar_values(profile,"AmmoClassID","ItemClassID")
+	return original if links.size()==1 and links[0]==261738 else {}
 
 func area_marker(skill: Dictionary, generation: int) -> void:
 	if not is_instance_valid(world) or world.hp <= 0 or generation != world.combat_generation: return
@@ -1128,7 +1160,10 @@ func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vecto
 	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
 	# The cast starts this skill's later effects (impact/success/fail) loading
 	# on worker threads, so the hit does not read/parse them on the main thread.
-	if stage == "cast": world.player.original_source_preview.prefetch_current_source_spell_effects(row,["impact","success","fail"])
+	if stage == "cast":
+		var stages: Array=["impact","success","fail"]
+		if skill.get("id")==HEART_SEEKER: stages.append("effect")
+		world.player.original_source_preview.prefetch_current_source_spell_effects(row,stages)
 
 ## The already admitted skill's pinned current-source row, or {}.
 func _current_source_effect_row(skill: Dictionary) -> Dictionary:

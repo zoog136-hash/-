@@ -32,6 +32,9 @@ func use_owned_quest_return(physical_id: String) -> Dictionary:
 	return _commit_return239(str(input.inventory_key),input)
 
 func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Dictionary:
+	return call("_commit_return239_impl",item_name,quest_input,false)
+
+func _commit_return239_impl(item_name: String, quest_input: Dictionary, loading: bool) -> Dictionary:
 	var is_quest: bool=not quest_input.is_empty()
 	var record: Dictionary=quest_input.get("record",{}) if is_quest else world._find_catalog_item_record(item_name)
 	var stack: Dictionary=REGIONAL_RETURN.stack_identity(str(record.get("name","")) if is_quest else item_name,record)
@@ -58,7 +61,9 @@ func _commit_return239(item_name: String, quest_input: Dictionary={}) -> Diction
 			source_inventory[item_name]=int(source_inventory[item_name])-1
 			if int(source_inventory[item_name])==0:source_inventory.erase(item_name)
 			source_overrides["inventory"]=source_inventory
-		var returned: Dictionary=world.return_current523_source_to_aden(source_overrides)
+		var returned: Dictionary
+		if loading: returned = await world.return_current523_source_to_aden_loading(source_overrides)
+		else: returned = world.return_current523_source_to_aden(source_overrides)
 		if not returned.get("ok",false):result.merge(returned,true);return result
 		world.inventory=source_overrides.inventory
 		if source_overrides.has("item_instances"):world.item_instances=source_overrides.item_instances
@@ -146,26 +151,36 @@ var quest_equipment_receipts_present: bool=false
 var quest_equipment_receipts: Variant=[]
 
 func export_state() -> Dictionary:
+	return _export_state(true)
+
+## Synchronous native ownership validation only. Never mutate, retain or send
+## these borrowed journals to a worker; the durable writer still exports copies.
+func native_stack_validation_state() -> Dictionary:
+	return _export_state(false)
+
+static func _export_value(value: Variant, owned: bool) -> Variant:
+	return value.duplicate(true) if owned and (value is Dictionary or value is Array) else value
+
+func _export_state(owned: bool) -> Dictionary:
 	var state: Dictionary={
-		"elemental_enchants": elemental_enchants.duplicate(true),
+		"elemental_enchants": _export_value(elemental_enchants,owned),
 		"elixirs_used": elixirs_used,
 		"half_elixirs_used": half_elixirs_used,
-		"permanent_damage_bonuses": permanent_damage_bonuses.duplicate(true),
-		"source_skill_book_receipts": source_skill_book_receipts.duplicate(true)
+		"permanent_damage_bonuses": _export_value(permanent_damage_bonuses,owned),
+		"source_skill_book_receipts": _export_value(source_skill_book_receipts,owned)
 	}
 
-	if source_native_bag_uses_present:state["source_native_bag_uses"]=source_native_bag_uses.duplicate(true) if source_native_bag_uses is Dictionary or source_native_bag_uses is Array else source_native_bag_uses
-	if source_native_stack_merges_present:state["source_native_stack_merges"]=source_native_stack_merges.duplicate(true) if source_native_stack_merges is Dictionary or source_native_stack_merges is Array else source_native_stack_merges
-	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=source_native_stack_partitions.duplicate(true) if source_native_stack_partitions is Dictionary or source_native_stack_partitions is Array else source_native_stack_partitions
-	if source_native_stack_uses_present:state["source_native_stack_uses"]=source_native_stack_uses.duplicate(true) if source_native_stack_uses is Dictionary or source_native_stack_uses is Array else source_native_stack_uses
-	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=source_alchemy_item_uses.duplicate(true) if source_alchemy_item_uses is Dictionary or source_alchemy_item_uses is Array else source_alchemy_item_uses
-	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=source_ground_acquisitions.duplicate(true) if source_ground_acquisitions is Dictionary or source_ground_acquisitions is Array else source_ground_acquisitions
-	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=source_quest_craft_receipts.duplicate(true) if source_quest_craft_receipts is Dictionary or source_quest_craft_receipts is Array else source_quest_craft_receipts
-	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=source_monsterbook_grants.duplicate(true) if source_monsterbook_grants is Dictionary or source_monsterbook_grants is Array else source_monsterbook_grants
-	if instant_cure_present:state["source_instant_cure_uses"]=instant_cure_state.duplicate(true) if instant_cure_state is Dictionary or instant_cure_state is Array else instant_cure_state
-	if reusable_state_present:state["source_reusable_item_uses"]=reusable_state.duplicate(true) if reusable_state is Dictionary or reusable_state is Array else reusable_state
-	if not source_skill_book_receipts.is_empty():state["source_skill_book_receipts"]=source_skill_book_receipts.duplicate(true)
-	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=quest_equipment_receipts.duplicate(true) if quest_equipment_receipts is Array or quest_equipment_receipts is Dictionary else quest_equipment_receipts
+	if source_native_bag_uses_present:state["source_native_bag_uses"]=_export_value(source_native_bag_uses,owned)
+	if source_native_stack_merges_present:state["source_native_stack_merges"]=_export_value(source_native_stack_merges,owned)
+	if source_native_stack_partitions_present:state["source_native_stack_partitions"]=_export_value(source_native_stack_partitions,owned)
+	if source_native_stack_uses_present:state["source_native_stack_uses"]=_export_value(source_native_stack_uses,owned)
+	if source_alchemy_item_uses_present:state["source_alchemy_item_uses"]=_export_value(source_alchemy_item_uses,owned)
+	if source_ground_acquisitions_present:state["source_ground_acquisitions"]=_export_value(source_ground_acquisitions,owned)
+	if source_quest_craft_receipts_present:state["source_quest_craft_receipts"]=_export_value(source_quest_craft_receipts,owned)
+	if source_monsterbook_grants_present:state["source_monsterbook_grants"]=_export_value(source_monsterbook_grants,owned)
+	if instant_cure_present:state["source_instant_cure_uses"]=_export_value(instant_cure_state,owned)
+	if reusable_state_present:state["source_reusable_item_uses"]=_export_value(reusable_state,owned)
+	if quest_equipment_receipts_present:state["source_quest_equipment_receipts"]=_export_value(quest_equipment_receipts,owned)
 	return state
 
 func import_state(input: Variant) -> void:
@@ -308,8 +323,16 @@ func prune_removed() -> void:
 			buffs.erase(item_key)
 
 func try_use(item_name: String,selected_instance: String="") -> bool:
+	return call("_try_use_impl",item_name,selected_instance,false)
+
+func try_use_loading(item_name: String,selected_instance: String) -> bool:
+	return await _try_use_impl(item_name,selected_instance,true)
+
+func _try_use_impl(item_name: String,selected_instance: String,loading: bool) -> bool:
 	var buffs_before: int=world.player_npc_buff_signature() if world.has_method("player_npc_buff_signature") else 0
-	var stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").try_use(world,item_name,selected_instance)
+	var stack: Dictionary
+	if loading: stack = await NATIVE_STACK.try_use_loading(world,item_name,selected_instance)
+	else: stack = NATIVE_STACK.try_use(world,item_name,selected_instance)
 	if stack.get("handled",false):
 		if stack.get("silent",false):return true # The owner shows its own chooser or message.
 		if stack.get("requires_original_selection",false) and open_owned_original_selection(item_name,stack):return true
@@ -352,7 +375,9 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 			return true
 	# Original return scrolls have their own owner (their generic 523 use spec
 	# is "effect pending", so the generic path would only refuse them).
-	if try_use_regional_return(item_name): return true
+	if loading:
+		if await try_use_regional_return_loading(item_name): return true
+	elif try_use_regional_return(item_name): return true
 	var source_record: Dictionary = world.call("_find_catalog_item_record", item_name)
 	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
 	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
@@ -386,9 +411,11 @@ func try_use(item_name: String,selected_instance: String="") -> bool:
 			if bool(world.call("_apply_ain_consumable", item_name, spec)):
 				_consume(item_name)
 		"return":
-			_use_return(item_name)
+			if loading: await _use_return_impl(item_name,true)
+			else: _use_return(item_name)
 		"teleport":
-			_use_random_teleport(item_name)
+			if loading: await _use_random_teleport_impl(item_name,true)
+			else: _use_random_teleport(item_name)
 		"elixir":
 			_use_elixir(item_name, spec)
 		"half_elixir":
@@ -439,6 +466,7 @@ func _teleport_player(destination: Vector2) -> void:
 	world.player.velocity = Vector2.ZERO
 	world.player.global_position = destination
 	world.player.camera.reset_smoothing()
+	if world.has_method("refresh_map_after_jump"): world.refresh_map_after_jump()
 	world.set("selected_monster", null)
 	world.set("auto_target", null)
 	world.hud.clear_target()
@@ -465,8 +493,12 @@ func _safe_region_position() -> Vector2:
 	return result
 
 func _use_return(item_name: String) -> void:
+	call("_use_return_impl",item_name,false)
+
+func _use_return_impl(item_name: String, loading: bool) -> void:
 	if world.has_method("current523_aden_source_active") and world.call("current523_aden_source_active"):
-		_use_source_aden_return(item_name)
+		if loading: await _use_source_aden_return_impl(item_name,true)
+		else: _use_source_aden_return(item_name)
 		return
 	# A current source field cannot inherit a PC destination from its host ID.
 	var current_field: Variant = world.get("field_map")
@@ -500,6 +532,9 @@ func _use_return(item_name: String) -> void:
 	_message("아덴 마을로 귀환했습니다" + (" · TWILIGHT 귀환 효과" if world.regional_return_stack(item_name).get("origin") == "patch523_native_normal" else ""))
 
 func _use_source_aden_return(item_name: String) -> void:
+	call("_use_source_aden_return_impl",item_name,false)
+
+func _use_source_aden_return_impl(item_name: String, loading: bool) -> void:
 	var stack: Dictionary=world.regional_return_stack(item_name)
 	var count: int=int(world.inventory.get(item_name,0))
 	if int(stack.get("item_class_id",0))==126424 and not REGIONAL_RETURN.DATA.data.lands.has(str(world._regional_return_land())):
@@ -512,7 +547,9 @@ func _use_source_aden_return(item_name: String) -> void:
 		inventory[item_name]=count-1
 		if int(inventory[item_name])==0:inventory.erase(item_name)
 		changes["inventory"]=inventory
-	var result: Dictionary=world.return_current523_source_to_aden(changes)
+	var result: Dictionary
+	if loading: result = await world.return_current523_source_to_aden_loading(changes)
+	else: result = world.return_current523_source_to_aden(changes)
 	if result.get("ok",false):
 		if changes.has("inventory"):world.inventory=changes.inventory
 		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
@@ -548,6 +585,9 @@ func _random_destination() -> Vector2:
 	return Vector2.INF
 
 func _use_random_teleport(item_name: String) -> void:
+	call("_use_random_teleport_impl",item_name,false)
+
+func _use_random_teleport_impl(item_name: String, loading: bool) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 순간이동할 수 없습니다")
 		return
@@ -558,6 +598,7 @@ func _use_random_teleport(item_name: String) -> void:
 	if destination == Vector2.INF:
 		_message("이동 가능한 위치가 없습니다")
 		return
+	if loading and not await world.prepare_map_point(destination): return
 	_teleport_player(destination)
 	_consume(item_name)
 	_message("현재 맵 내 무작위 순간이동")
@@ -684,58 +725,50 @@ func _use_half_elixir(item_name: String, spec: Dictionary) -> void:
 	_consume(item_name)
 	_message("%s 영구 대미지 +1 (%d/%d)" % [item_name, half_elixirs_used, ELIXIR_LIMIT])
 
-func _use_bless_scroll(scroll_name: String) -> void:
+func _use_bless_scroll(scroll_name: String, selected_uid: String = "") -> void:
 	world.call("_sync_item_instances")
+	var owned: Dictionary = NATIVE_STACK.bless_scroll_owned(world,scroll_name,selected_uid)
+	if owned.has("error"):
+		_message(str(owned.error))
+		return
+	var scroll_reference: String = scroll_name
+	if owned.has("uid"):scroll_reference += "@@@" + str(owned.uid)
 	var instances: Dictionary = world.get("item_instances") as Dictionary
 	var inv: Dictionary = world.get("inventory") as Dictionary
-	var candidates: Array[String] = []
-	for raw_id: Variant in instances.keys():
-		var id: String = str(raw_id)
-		var physical: Dictionary = instances[id] as Dictionary
-		var item_name: String = str(physical.get("name", ""))
-		if int(inv.get(item_name, 0)) <= 0:
-			continue
-		var record: Dictionary = world.call("_find_catalog_item_record", item_name)
-		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
-			record = physical["record"] as Dictionary
+	var views: Array = []
+	var guaranteed: bool = bool(owned.get("spec", {}).get("guaranteed", false))
+	for id: String in instances:
+		var physical: Dictionary = instances[id]
+		var item_name: String = str(physical.get("name",""))
+		if int(inv.get(item_name,0))<=0 or world._item_locked(item_name,id):continue
+		var record: Dictionary = physical.get("record",{})
+		if record.is_empty():record=world._find_catalog_item_record(item_name)
 		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
-		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		if kind not in ["weapon", "armor", "accessory"]:
-			continue
-		if BLESSING.bonus_for(str(record.get("grade", "")), kind, record).is_empty() or BLESSING.is_blessed(physical, record):
-			continue
-		candidates.append(item_name + "@@@" + id)
-	candidates.sort()
-	if candidates.is_empty():
+		var kind: String = world._enhancement_kind_for_record(record)
+		if kind not in ["weapon","armor","accessory"]:continue
+		var grade: String = str(record.get("grade",""))
+		if BLESSING.bonus_for(grade,kind,record).is_empty() or BLESSING.is_blessed(physical,record):continue
+		var chance: float=BLESSING.success_chance(grade,record,guaranteed)
+		if chance<=0.0:continue
+		views.append({"name":item_name, "target_id":item_name+"@@@"+id, "instance_id":id, "scroll_reference":scroll_reference,
+			"level":int(physical.get("level",0)), "success_chance":chance, "success_basis":BLESSING.success_basis(grade,record,guaranteed),
+			"bonus_text":BLESSING.effect_text(grade,kind,record), "equipped":world._is_instance_equipped(id)})
+	if views.is_empty():
 		_message("축복 부여가 가능한 미축복 장비가 없습니다")
 		return
-	var guaranteed: bool = bool(NATIVE_STACK.bless_scroll_owned(world, scroll_name).get("spec", {}).get("guaranteed", false))
-	# Use the game's native touch-friendly equipment chooser, not a floating
-	# ConfirmationDialog which can be unreachable in Android editor/play mode.
-	var views: Array = []
-	for reference: String in candidates:
-		var parts: PackedStringArray = reference.split("@@@", false, 1)
-		if parts.size() != 2: continue
-		var physical: Dictionary = instances.get(parts[1], {}) as Dictionary
-		var record: Dictionary = world.call("_find_catalog_item_record", parts[0])
-		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
-			record = physical["record"] as Dictionary
-		var grade: String = str(record.get("grade", "일반"))
-		record=world.PATCH523_ENHANCE.prepare(world.patch523_equipment,record,1)
-		var kind: String = str(world.call("_enhancement_kind_for_record", record))
-		views.append({"name": parts[0], "target_id": reference, "instance_id": parts[1],
-			"level": int(physical.get("level", 0)), "success_chance": BLESSING.success_chance(grade, record, guaranteed),
-			"success_basis": BLESSING.success_basis(grade, record, guaranteed),
-			"bonus_text": BLESSING.effect_text(grade, kind, record), "equipped": false})
+	views.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:return str(a.target_id)<str(b.target_id))
 	world.hud.call("open_blessing_targets", scroll_name, views)
 
 # The physical instance ID is mandatory: two copies of the same weapon can
 # have different blessings, enchants, pinned catalog variants and equip state.
-func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+func apply_bless_scroll(scroll_reference: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+	if scroll_reference.is_empty() or target_reference.is_empty():return false
 	if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return false
 	# An original 523 bless scroll is a physical stack debited through its
 	# grant receipt; other scrolls keep the existing rule and name count.
-	var native: Dictionary = NATIVE_STACK.bless_scroll_owned(world, scroll_name)
+	var scroll: Dictionary = world._parse_enhancement_target(scroll_reference)
+	var scroll_name: String = scroll.name
+	var native: Dictionary = NATIVE_STACK.bless_scroll_owned(world, scroll_name, str(scroll.get("id","")))
 	if native.has("error"):
 		_message(str(native.error) + " · 주문서 보존")
 		return false
@@ -770,6 +803,9 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	if effect.is_empty():
 		_message("이 장비에는 확인된 축복 옵션이 없습니다")
 		return false
+	if BLESSING.success_chance(grade, record, guaranteed)<=0.0:
+		_message("이 장비에는 확인된 축복 성공률이 없습니다")
+		return false
 	if BLESSING.is_blessed(physical, record):
 		_message("이미 축복받은 장비입니다")
 		return false
@@ -782,6 +818,10 @@ func apply_bless_scroll(scroll_name: String, target_reference: String, forced_ro
 	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
 	var success: bool = BLESSING.roll_succeeds(grade, roll, record, guaranteed)
 	if success:
+		# Preparation may return the catalog row or a record shared by two copies.
+		# Blessing changes only the selected instance's top-level state.
+		physical=physical.duplicate()
+		record=record.duplicate()
 		physical["bless_state"] = "blessed"
 		physical["blessed"] = true
 		physical["source_bless_code"]=2
@@ -1102,6 +1142,12 @@ func _use_regional_return(item_name: String) -> void:
 	_message("잊혀진 섬 시작 지점으로 귀환 · TWILIGHT 대응 지도")
 
 func try_use_regional_return(item_name: String) -> bool:
+	return call("_try_use_regional_return_impl",item_name,false)
+
+func try_use_regional_return_loading(item_name: String) -> bool:
+	return await _try_use_regional_return_impl(item_name,true)
+
+func _try_use_regional_return_impl(item_name: String, loading: bool) -> bool:
 	var record: Dictionary = world._find_catalog_item_record(item_name)
 	if not REGIONAL_RETURN.claims_identity(item_name, record): return false
 	var stack: Dictionary = REGIONAL_RETURN.stack_identity(item_name, record)
@@ -1109,13 +1155,16 @@ func try_use_regional_return(item_name: String) -> bool:
 		_message("귀환 주문서의 원본 ID·이름·Normal 스택 확인 실패 · 아이템 보존")
 		return true
 	if stack.origin == "patch523_native_normal" and int(stack.item_class_id) == 239:
-		var outcome: Dictionary=use_owned_native_return(item_name)
+		var outcome: Dictionary
+		if loading: outcome = await _commit_return239_impl(item_name,{},true)
+		else: outcome = use_owned_native_return(item_name)
 		_message(str(outcome.get("message",outcome.get("reason","귀환 결과 확인 필요"))))
 		return true
 	if int(world.inventory.get(item_name, 0)) <= 0:
 		_message("아이템이 없습니다: "+item_name)
 		return true
-	_use_return(item_name)
+	if loading: await _use_return_impl(item_name,true)
+	else: _use_return(item_name)
 	return true
 
 ## Result contract for external reward producers. Issuance/receipt is their transaction.

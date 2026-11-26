@@ -12,6 +12,11 @@ const MAX_KEYS: int = 64
 ## each; validation (_prepared_valid: pins and member stamps) still runs on
 ## every reuse.
 const RECENT_KEEP: int = 16
+## Bound extra retained timing dictionaries even when a source actor has
+## unusually many roles/directions. Keep one active mode per snapshot.
+const TIMING_FRAMES_LIMIT := 4096
+const PLAYBACK = preload("res://scripts/animation/source_playback_policy.gd")
+const PRESENTATION = preload("res://scripts/animation/source_presentation_policy.gd")
 const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 static var _entries: Dictionary = {}
 static var _order: Array[String] = []
@@ -41,6 +46,10 @@ var exclusions: Dictionary = {}
 var actor_pins: Dictionary = {}
 var members: Dictionary = {}
 var _node_layout: Dictionary = {}
+var _timed_tracks: Dictionary = {}
+var _timed_direction_totals: Dictionary = {}
+var _timed_mode: String = ""
+var _layout_frames: int = 0
 
 static func effect_node_key(layer: Dictionary) -> Variant:
 	var instance: Variant = layer.get("source_layer_instance_key")
@@ -68,12 +77,58 @@ func layout() -> Dictionary:
 					if seen.has(key): continue
 					seen[key] = true
 					effects.append(effect)
+	_layout_frames = frames_scanned
 	_node_layout = {"layer_count":layer_count,"effects":effects}
 	freeze(_node_layout)
 	HITCH.count("sp2.layout_build")
 	HITCH.count("sp2.layout_frames_scanned",frames_scanned)
 	HITCH.detail("sp2.layout_build",started)
 	return _node_layout
+
+## Called only after load_shared_bank validated the pins/member stamps for
+## this NPC request. Exact roles, loops, actor bindings and pack identity are
+## already the snapshot's key. Runtime settings still resolve mode each time.
+func npc_timing_tracks(mode: String) -> Dictionary:
+	if _node_layout.is_empty(): layout()
+	var record: Dictionary = result.record
+	if not record.is_read_only() or mode not in ["strict","compatible"] or _layout_frames > TIMING_FRAMES_LIMIT:
+		return PLAYBACK.tracks_from_prepared(record,"npc",mode)
+	# The built-in policies normally resolve once per process. Do not memoize
+	# a fallback if a policy read failed (the policy loader itself may retry).
+	if PLAYBACK.data().is_empty() or PLAYBACK.clock_corrections().is_empty() or (mode=="compatible" and PRESENTATION.rules().is_empty()):
+		return PLAYBACK.tracks_from_prepared(record,"npc",mode)
+	if _timed_mode == mode and not _timed_tracks.is_empty():
+		HITCH.count("sp2.npc_timing_hit")
+		return _timed_tracks.duplicate()
+	var tracks: Dictionary = PLAYBACK.tracks_from_prepared(record,"npc",mode)
+	var totals: Dictionary = {}
+	for role: String in tracks:
+		var track: Dictionary = tracks[role]
+		if bool(track.get("static_pending_timing",false)): continue
+		var directions := PackedFloat64Array()
+		for frames: Array in track.directions:
+			var duration: float = 0.0
+			for frame: Dictionary in frames: duration += PRESENTATION.duration(frame)
+			directions.append(duration)
+		totals[role] = directions
+	totals.make_read_only()
+	freeze(tracks)
+	_timed_tracks = tracks
+	_timed_direction_totals = totals
+	_timed_mode = mode
+	HITCH.count("sp2.npc_timing_build")
+	HITCH.count("sp2.npc_timing_frames_built",_layout_frames)
+	# Preview owns its top map (clear() must not edit the memo) and all
+	# sprites, clock, material/style state and cursors remain independent.
+	return tracks.duplicate()
+
+## The finalized presentation fold is shared by NPC lives of this policy
+## mode. Mutable and oversized tracks keep their original live fold.
+func npc_timing_totals(mode: String, tracks: Dictionary) -> Dictionary:
+	if _timed_mode != mode: return {}
+	for role: String in tracks:
+		if not is_same(tracks[role], _timed_tracks.get(role)): return {}
+	return _timed_direction_totals
 
 static func lookup(key: String) -> RefCounted:
 	prune()

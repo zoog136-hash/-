@@ -92,7 +92,7 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 	# Exact native or source-qualified supplier identity precedes legacy
 	# sourceId/name canonicalization; it never grants a native gameplay flag.
 	# Inventory IconID is not a source declaration for a floor sprite.
-	if SOURCE523.handles_item(record,ground): return SOURCE523.describe_item(record,fallback_name)
+	if SOURCE523.handles_item(record,ground,fallback_name): return SOURCE523.describe_item(record,fallback_name)
 	if ground:
 		var original: Dictionary = _describe_original(record, fallback_name, images, true)
 		# Preserve existing dedicated floor pairs and their provenance.

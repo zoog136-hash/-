@@ -126,7 +126,7 @@ func original_order_and_save(hud: Node) -> void:
 	hud.toggle_menu(); await frames(5)
 	var ids: Array[String] = []
 	for tile: Control in hud.menu_tiles: ids.append(str(tile.name).trim_prefix("MenuTile_"))
-	var order: Array = hud.get_script().get_script_constant_map().get("ORIGINAL_MENU_ORDER", [])
+	var order: Array = hud.get_script().get_script_constant_map().get("ORIGINAL_MENU_CELLS", [])
 	check(ids.slice(0, 5) == ["crafting","exchange","변신","마법인형","성물"], "the menu starts like the original grid: " + str(ids.slice(0, 6)))
 	var positions: Array[int] = []
 	for id: String in order:

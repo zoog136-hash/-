@@ -154,7 +154,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var pictures: int=0
 	if not selected.is_empty():
 		var icon: Dictionary=_locate(root,out,"Forge_List_Item_Sharpen/Nd_Slot/Common_Slot/Sp_IconSample")
-		if icon.get("ok",false) and _show_picture(icon.player,icon.offset,_item_picture(item_class(selected),str(_current().get("label","")))):pictures+=1
+		if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,_item_picture(item_class(selected),str(_current().get("label","")))):pictures+=1
 		var materials: Dictionary=_fill_materials(root,out)
 		if not materials.get("ok",false):return materials
 		filled["materials"]=int(materials.rows)
@@ -184,7 +184,7 @@ func _fill_materials(root: Node2D, out: Dictionary) -> Dictionary:
 	for index: int in range(rows.size()):
 		var icon: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Common_Slot/Sp_IconSample")
 		var id: int=int(rows[index].cost.item_class_id)
-		if icon.get("ok",false) and _show_picture(icon.player,icon.offset,_item_picture(id,item_name(id))):pictures+=1
+		if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,_item_picture(id,item_name(id))):pictures+=1
 	return {"ok":true,"rows":rows.size(),"pictures":pictures}
 
 ## Inventory_Slot_Set lines (A안), four weapons each, in the ScrollView.
@@ -218,7 +218,7 @@ func _fill_inventory(root: Node2D, out: Dictionary) -> Dictionary:
 			if at>=_weapons.size():continue
 			var icon: Dictionary=_locate(built.scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample")
 			var uid: String=str(_weapons[at].uid)
-			if icon.get("ok",false) and _show_picture(icon.player,icon.offset,_item_picture(item_class(uid),str(_weapons[at].label))):pictures+=1
+			if icon.get("ok",false) and _show_item_icon(icon.player,icon.offset,_item_picture(item_class(uid),str(_weapons[at].label))):pictures+=1
 	# The ScrollView's drag area sits under its content (slot taps first).
 	var area: Variant=scroll.get_meta("source_scroll").input_control() if scroll.has_meta("source_scroll") else null
 	if area is Control and area.get_parent()!=null:area.get_parent().move_child(area,0)
@@ -235,8 +235,7 @@ func _forward_drag(root: Node2D, out: Dictionary, suffix: String) -> void:
 
 static func _item_picture(item_class_id: int, title: String) -> Dictionary:
 	if item_class_id<=0:return {"ok":false}
-	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
+	return SourceImages.describe_item_class(item_class_id,title)
 
 ## --- Actions --------------------------------------------------------------------
 

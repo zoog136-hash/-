@@ -31,6 +31,7 @@ var _raw_recent: Array[String] = []
 var _raw_failures: Dictionary = {}
 var _last_raw_origin: Vector2i
 var _last_raw_chunk: Dictionary = {}
+var _route_verdict_chunks: Dictionary[String, RouteVerdictChunk] = {}
 var _allowed_words: Dictionary = {}
 var _use_allowlist: bool = true
 var _raw_reads: int = 0
@@ -162,18 +163,27 @@ func _source_chunk(origin: Vector2i) -> Dictionary:
 		_last_raw_chunk = _raw_cache[member]
 		return _last_raw_chunk
 	if _raw_failures.has(member): return {}
-	var row: Dictionary = _raw.read_member(member)
-	_raw_reads += 1
+	var row: Dictionary = _take_renderer_collision(member)
+	if row.is_empty():
+		row = _raw.read_member(member)
+		_raw_reads += 1
 	if row.is_empty():
 		_raw_failures[member] = _raw.problem
 		problem = _raw.problem
 		return {}
-	if _raw_recent.size() >= RAW_CACHE_LIMIT: _raw_cache.erase(_raw_recent.pop_front())
+	if _raw_recent.size() >= RAW_CACHE_LIMIT:
+		var retired: String = _raw_recent.pop_front()
+		_raw_cache.erase(retired)
+		_route_verdict_chunks.erase(retired)
 	_raw_cache[member] = row
 	_raw_recent.append(member)
 	_last_raw_origin = origin
 	_last_raw_chunk = row
 	return row
+
+## Generic 523 may take fully verified floor/attribute bytes from a completed
+## renderer job. Review/Aden and other sources keep their original read path.
+func _take_renderer_collision(_member: String) -> Dictionary: return {}
 
 func _allows_word(word: int) -> bool:
 	if policy.get("attribute_rule") == CLIENT_RULE: return (word & 1) == 0
@@ -215,7 +225,14 @@ func _cell_allowed(cell: Vector2i) -> bool:
 	var row: Dictionary = _source_chunk(origin)
 	if row.is_empty(): return false
 	var index: int = (source.y-origin.y)*128+(source.x-origin.x)*2
-	return _pair_status(row.sections.attributes,row.sections.floor,index) == "allowed"
+	var attrs: PackedByteArray = row.sections.attributes
+	var floor_refs: PackedByteArray = row.sections.floor
+	if policy.get("attribute_rule") != CLIENT_RULE:
+		return _pair_status(attrs,floor_refs,index) == "allowed"
+	# Same guards as the diagnostic path. Both attribute words must have
+	# bit 0 clear; 0xffff already fails that test.
+	if (attrs.decode_u16(index*2) | attrs.decode_u16(index*2+2)) & 1: return false
+	return floor_refs.decode_u32(index*4) != 4294967295 and floor_refs.decode_u32(index*4+4) != 4294967295
 
 func value_at(cell: Vector2i, mask: bool = false) -> int:
 	if mask: return 1 if _cell_allowed(cell) else 0
@@ -266,6 +283,34 @@ func _new_path_navigator() -> TwilightL1JSourceNavigation:
 	navigator.diagonal_any = policy.get("attribute_rule") == CLIENT_RULE
 	return navigator
 
+func _route_verdict_chunk(origin: Vector2i) -> RouteVerdictChunk:
+	var row: Dictionary = _source_chunk(origin)
+	if row.is_empty(): return null
+	var member: String = _source_chunks[origin]
+	var existing: RouteVerdictChunk = _route_verdict_chunks.get(member)
+	if existing != null: return existing
+	var chunk := RouteVerdictChunk.new()
+	chunk.attributes = row.sections.attributes
+	chunk.floor_refs = row.sections.floor
+	chunk.verdicts.resize(4096)
+	_route_verdict_chunks[member] = chunk
+	return chunk
+
+# Lazy, byte-sized tri-state: unknown, blocked, open. No eager tile scan,
+# unpacking or new I/O. Projection belongs to the caller, not cached bytes.
+class RouteVerdictChunk extends RefCounted:
+	var attributes: PackedByteArray
+	var floor_refs: PackedByteArray
+	var verdicts := PackedByteArray()
+	var decoded: int = 0
+
+	func decode(index: int) -> bool:
+		var open: bool = ((attributes.decode_u16(index*4) | attributes.decode_u16(index*4+2)) & 1) == 0 \
+			and floor_refs.decode_u32(index*8) != 4294967295 and floor_refs.decode_u32(index*8+4) != 4294967295
+		verdicts[index] = 2 if open else 1
+		decoded += 1
+		return open
+
 class Source523Search extends TwilightL1JSourceNavigation:
 	const MAX_VERDICTS: int = 32768
 	var source: RefCounted
@@ -290,44 +335,90 @@ class Source523Search extends TwilightL1JSourceNavigation:
 			return sideways or _allowed(cell + Vector2i(0, offset.y))
 		return sideways and _allowed(cell + Vector2i(0, offset.y))
 
+# Used only by the verified generic field with the native attribute rule.
+# Keep A* heap/ties, endpoints and the same at-least-one diagonal side.
+class Verified523Search extends TwilightL1JSourceNavigation:
+	var source: RefCounted
+	var grid_size := Vector2i.ZERO
+	var origin_offset := Vector2i.ZERO
+	var last_cell_origin := Vector2i.ZERO
+	var last_chunk: RouteVerdictChunk
+	var last_from := Vector2i(-1,-1)
+	var last_from_open: bool = false
+
+	func can_step(cell: Vector2i, heading: int) -> bool:
+		if heading < 0 or heading >= 8: return false
+		if cell != last_from:
+			last_from = cell
+			last_from_open = _allowed(cell)
+		if not last_from_open: return false
+		var offset: Vector2i = DIRECTIONS[heading]
+		if not _allowed(cell + offset): return false
+		return offset.x == 0 or offset.y == 0 \
+			or _allowed(cell + Vector2i(offset.x, 0)) or _allowed(cell + Vector2i(0, offset.y))
+
+	func _allowed(cell: Vector2i) -> bool:
+		if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y: return false
+		var local: Vector2i = cell - last_cell_origin
+		if last_chunk == null or local.x < 0 or local.x >= 64 or local.y < 0 or local.y >= 64:
+			var point: Vector2i = cell + origin_offset
+			var origin := Vector2i(point.x & -64, point.y & -64)
+			var chunk: RouteVerdictChunk = source._route_verdict_chunk(origin)
+			if chunk == null: return false
+			last_chunk = chunk
+			last_cell_origin = origin - origin_offset
+			local = point - origin
+		var index: int = local.y*64 + local.x
+		var stored: int = last_chunk.verdicts[index]
+		return stored == 2 if stored != 0 else last_chunk.decode(index)
+
+func line_clear(from: Vector2, to: Vector2) -> bool:
+	return loaded and super.line_clear(from,to)
+
+func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	# Validate exact endpoints only once. Unlike generic source fields, 523
+	# never snaps a blocked click or start to some other nearest cell.
+	if not loaded or not from.is_finite() or not to.is_finite(): return PackedVector2Array()
+	var from_grid: Array = coordinates.grid_components(from)
+	var to_grid: Array = coordinates.grid_components(to)
+	var start: Vector2i = coordinates.world_to_cell(from,from_grid)
+	var goal: Vector2i = coordinates.world_to_cell(to,to_grid)
+	if not _cell_allowed(start) or (goal != start and not _cell_allowed(goal)): return PackedVector2Array()
+	# The 523 line_clear wrapper only added the endpoint checks already done.
+	# DDA and its edge rules are unchanged, including fractional coordinates.
+	if _line_between_validated_cells(from_grid,to_grid,start,goal): return PackedVector2Array([to])
+	return _route_between_validated_cells(from,to,start,goal)
+
 const HUNT_SEARCH_BUDGET_USEC: int = 4000
 const HUNT_SEARCH_MAX_POPS: int = 512
 var _hunt_field_epoch: int = 0
 
-## Pass the state only for the same live field and source/target cells.
-## Direct routes still return immediately. A pending result is not a failure.
+## Automatic target acquisition only. A pending slice is not a failed path.
+## Exact endpoints, direct DDA, cap and waypoints match the synchronous path.
 func hunt_path_step(from: Vector2,to: Vector2,work: Dictionary = {}) -> Dictionary:
 	var deadline: int = Time.get_ticks_usec() + HUNT_SEARCH_BUDGET_USEC
-	if not walkable(from) or not walkable(to): return {"pending":false,"path":PackedVector2Array()}
-	var start: Vector2i = world_to_cell(from)
-	var goal: Vector2i = world_to_cell(to)
-	if not work.is_empty() and (work.field_id != get_instance_id() or work.epoch != _hunt_field_epoch or work.search.start != start or work.search.goal != goal or work.limit != _path_node_limit()):
-		work = {}
+	if not loaded or not from.is_finite() or not to.is_finite(): return {"pending":false,"path":PackedVector2Array()}
+	var from_grid: Array = coordinates.grid_components(from)
+	var to_grid: Array = coordinates.grid_components(to)
+	var start: Vector2i = coordinates.world_to_cell(from,from_grid)
+	var goal: Vector2i = coordinates.world_to_cell(to,to_grid)
+	if not _cell_allowed(start) or (goal != start and not _cell_allowed(goal)): return {"pending":false,"path":PackedVector2Array()}
+	var limit: int = _path_node_limit()
 	var nav: TwilightL1JSourceNavigation
 	var search: TwilightL1JSourceNavigation.PathSearch
-	if work.is_empty():
-		if line_clear(from,to): return {"pending":false,"path":PackedVector2Array([to])}
+	if not work.is_empty() and work.field_id == get_instance_id() and work.epoch == _hunt_field_epoch and work.limit == limit and work.search.start == start and work.search.goal == goal:
+		nav = work.nav
+		search = work.search
+	else:
+		if _line_between_validated_cells(from_grid,to_grid,start,goal): return {"pending":false,"path":PackedVector2Array([to])}
 		nav = _new_path_navigator()
 		nav.loaded = true
 		nav.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
-		search = nav.begin_search(start,goal,_path_node_limit())
-		work = {"nav":nav,"search":search,"field_id":get_instance_id(),"epoch":_hunt_field_epoch,"limit":_path_node_limit()}
-	else:
-		nav = work.nav
-		search = work.search
-	if not search.done:
-		var remaining: int = deadline - Time.get_ticks_usec()
-		if remaining <= 0 or not nav.advance_search(search,remaining,HUNT_SEARCH_MAX_POPS):
-			return {"pending":true,"work":work}
+		search = nav.begin_search(start,goal,limit)
+		work = {"nav":nav,"search":search,"field_id":get_instance_id(),"epoch":_hunt_field_epoch,"limit":limit}
+	if not nav.advance_search(search,deadline,HUNT_SEARCH_MAX_POPS):
+		return {"pending":true,"work":work}
 	return {"pending":false,"path":_finish_cell_path(from,to,search.result)}
-
-func line_clear(from: Vector2, to: Vector2) -> bool:
-	return loaded and walkable(from) and walkable(to) and super.line_clear(from,to)
-
-func path(from: Vector2, to: Vector2) -> PackedVector2Array:
-	# No implicit nearest-cell replacement of a blocked click or starting point.
-	if not walkable(from) or not walkable(to): return PackedVector2Array()
-	return super.path(from,to)
 
 func navigation_search_limit() -> int: return int(policy.get("path_search_limit",8192))
 
@@ -374,6 +465,7 @@ func close() -> void:
 	if has_meta("current523_source_field"): remove_meta("current523_source_field")
 	_raw = RAW.new()
 	_raw_cache.clear()
+	_route_verdict_chunks.clear()
 	_raw_recent.clear()
 	_raw_failures.clear()
 	_last_raw_chunk = {}

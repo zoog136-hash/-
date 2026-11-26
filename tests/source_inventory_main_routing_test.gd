@@ -41,6 +41,12 @@ func _run() -> void:
 	await process_frame
 	check(hud.workspace.is_visible_in_tree() and bag.inventory_panel.is_visible_in_tree() and hud.active_section=="inventory","no native pack still opens visible existing fallback")
 	check(bag.item_grid.columns in [4,8] and not bag.inventory_grid_dirty,"fallback slot display is prepared")
+	var fallback_layouts: int=bag.inventory_list_rebuilds
+	hud.toggle_inventory()
+	hud.toggle_inventory()
+	await process_frame
+	check(bag.inventory_panel.is_visible_in_tree() and bag.inventory_list_rebuilds==fallback_layouts,
+		"opening the same fallback bag again reuses rows through the actual HUD entry point")
 	hud._close_workspace()
 	await process_frame
 	var fake:=Admission.new()

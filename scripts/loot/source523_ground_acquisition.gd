@@ -1,6 +1,8 @@
 extends RefCounted
 ## Native monster floor -> exact source ownership + removed floor + receipt.
 ## Uses existing data/physical suppliers and the existing full save writer.
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const Transfer=preload("res://scripts/loot/inventory_ground_transfer.gd")
 const Supply=preload("res://scripts/cards/source_awakening_items.gd")
@@ -32,6 +34,7 @@ static func _source(pending: Dictionary) -> Dictionary:
 	return {"item":item,"proof":proof if proof is Dictionary else {}} if item.has("source_m_item_id") else {}
 
 static func _proof_problem(item: Dictionary,proof: Dictionary,quantity: int) -> String:
+	if RETIRED_ITEMS.record(item):return RETIRED_ITEMS.REASON
 	var id: int=_integer(item.get("source_item_class_id"),1)
 	if _integer(item.get("source_m_item_id"),1)!=id or _integer(proof.get("bless_raw"),1) not in [1,2,3]:return "원본 드랍 품목·축복 식별 불일치"
 	if quantity!=1 or proof.get("quantity_policy")!="host_one" or proof.get("selection_policy")!="host_uniform_distinct_items_then_distinct_variants":return "기존 원본 드랍 수량·선택 정책 확인 필요"
@@ -102,8 +105,8 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	var instances: Dictionary=symbols.item_instances
 	var next_id: int=int(symbols.next_item_instance_id)
 	var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
-	if not stock.call("supply_profile",source.item).is_empty():
-		var granted: Dictionary=stock.call("stage_grant",source.item,quantity,instances,{"kind":"source523_floor"},true)
+	var granted: Dictionary=stock.call("stage_floor_grant",source.item,quantity,instances)
+	if granted.get("handled",false):
 		if not granted.get("ok",false):physical.free();return _fail("원본 물리 수량 영수증 생성 실패 · 바닥 보존")
 		instances=granted.item_instances
 	physical.free()
@@ -127,7 +130,9 @@ func collect(world: Node,view: Button,pending: Dictionary) -> Dictionary:
 	# the grant are written by the same save, so a crash before it loses both
 	# together (the item is back on the floor, never duplicated).
 	_busy=true;_candidate=payload.duplicate(true)
+	var validation_started: int=FRAME_HITCH.now()
 	var checked: Error=world._save_game(true,payload,{},true)
+	FRAME_HITCH.detail("loot.validate_staged_pickup",validation_started)
 	_candidate.clear()
 	if checked!=OK:
 		_busy=false

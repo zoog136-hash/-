@@ -55,6 +55,33 @@ class FakeController extends Node:
 	func enchant_window_is_open() -> bool:return true
 	func enchant_window() -> RefCounted:return window
 
+class ProofPlayer extends Node2D:
+	var missing_clip: String=""
+	var calls: Array[String]=[]
+	var visibility: Dictionary={}
+	var texts: Dictionary={}
+	var projects: Dictionary={}
+	func project_player(offsets: Array) -> Dictionary:
+		var child: Variant=projects.get(int(offsets[0]))
+		return {"ok":child!=null,"player":child}
+	func play(clip: String, _repeat: bool) -> Dictionary:
+		calls.append(clip)
+		return {"ok":clip!=missing_clip}
+	func stop() -> void:calls.append("stop")
+	func seek_frame(frame: float) -> void:calls.append("seek:"+str(int(frame)))
+	func set_bound_visible(offset: int, value: bool) -> Dictionary:
+		visibility[offset]=value
+		return {"ok":true}
+	func set_bound_text(offset: int, value: String) -> Dictionary:
+		texts[offset]=value
+		return {"ok":true}
+
+class ProofWindow extends "res://scripts/ui/original_ui/source_main_enchant_window.gd":
+	var refreshes: int=0
+	func _restage() -> Dictionary:
+		refreshes+=1
+		return {"ok":true,"handled":true}
+
 class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
 	func _ready() -> void:pass
 	func _process(_delta: float) -> void:pass
@@ -77,6 +104,9 @@ func _run() -> void:
 	await _hud_routing()
 	await _fallback_reveal()
 	_texts()
+	await _presentation_proof()
+	var addon := OS.get_environment("TWILIGHT_ENCHANT_WINDOW_TEST_PACK")
+	if not addon.is_empty():await _mounted_enchant_main(addon)
 	var pack: String=""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--source523-pack="):pack=arg.trim_prefix("--source523-pack=")
@@ -196,6 +226,43 @@ func _texts() -> void:
 	check(not source.contains("confirm_action") and not source.contains("confirm_target"),"the enchant window never asks for a confirmation")
 	check(not WINDOW.OTHER_PAGES.has("Fx_Enchant_Start") and not WINDOW.OTHER_PAGES.has("Enchant_Popup_Message"),"the original result members are mounted (not kept out)")
 
+## The original owner must not swallow a committed result or restart clips on
+## the immediate post-save row refresh. Roles are opaque renderer doubles.
+func _presentation_proof() -> void:
+	var window:=ProofWindow.new()
+	var host:=ProofPlayer.new()
+	var fx:=ProofPlayer.new()
+	var banner:=ProofPlayer.new()
+	root.add_child(host)
+	host.add_child(fx);host.add_child(banner)
+	host.projects={1:fx,2:banner}
+	window._scene=host
+	window._presents=true
+	window._last_out={
+		"root/"+WINDOW.P_FX:{"offset":1,"chain":[]},
+		"root/"+WINDOW.P_POPUP:{"offset":2,"chain":[]},
+		"root/"+WINDOW.P_POPUP+"/Set/EnChant_Fail/Text_Item":{"offset":3,"chain":[]},
+		"root/"+WINDOW.P_POPUP+"/Set/EnChant_Success/Text_Item":{"offset":4,"chain":[]},
+		"root/"+WINDOW.P_TAB:{"offset":5,"chain":[]},
+	}
+	banner.missing_clip="Success"
+	check(not window.present_result("success",0,1) and not window.is_presenting() and window._blocker==null,"partial original motion cannot claim the result or block the existing fallback")
+	check(fx.calls==["Fx_Enchant_Start","stop"] and not bool(host.visibility.get(1,true)),"partial projection stops and hides its running original effect")
+	banner.missing_clip=""
+	check(window.present_result("destroy",9,0) and window.is_presenting(),"both exact original phases mounted")
+	check(banner.calls==["Success","Fail"] and str(host.texts.get(3)).contains("소실"),"original fail clip and explicit destruction banner")
+	var refresh: Dictionary=window.update("주문서",[{"target_id":"new"}])
+	check(refresh.get("result_refresh_pending",false) and window.refreshes==0 and fx.calls.size()==3,"committed owner rows queued; no effect restarted and destroyed slot stays in place")
+	window._hold_presentation(window._token)
+	check(banner.calls.has("seek:145") and banner.calls.back()=="stop" and window.is_presenting(), "a failure remains on the original full-opacity frame")
+	window.end_presentation(window._token-1)
+	check(window.is_presenting() and window.refreshes==0,"stale timer cannot release a newer result")
+	window.end_presentation(window._token)
+	check(not window.is_presenting() and window.refreshes==1 and window.selected()=="new","deferred rows refresh once after the result ends")
+	check(WINDOW.result_text("maintain",7,7).contains("+7 유지"),"failed maintain is explicit and distinct")
+	window.close()
+	await process_frame
+
 ## --- Real Main ----------------------------------------------------------------
 
 func _frames(n: int) -> void:
@@ -249,6 +316,73 @@ func _banner_rect(window: RefCounted) -> Rect2:
 	var scale: Vector2=window._scene.get_global_transform_with_canvas().get_scale()
 	var extent: Vector2=Vector2(339.0,64.0)*scale
 	return Rect2(center-extent*0.5,extent)
+
+## Full actual Main transaction with the released original UI add-on only;
+## the isolated fixture does not need to install the ten-GB map/actor pack.
+func _mounted_enchant_main(addon: String) -> void:
+	var pack=load("res://scripts/ui/original_ui/source_pack.gd").new()
+	var opened: Dictionary=pack.open(addon,"5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c")
+	if not check(opened.get("ok",false),"actual SHA-pinned released UI add-on opens: "+str(opened.get("error",""))):return
+	var world: Node=load("res://Main.tscn").instantiate()
+	root.add_child(world)
+	world.set_process(false)
+	world.set_physics_process(false)
+	world.field_population.set_process(false)
+	world.save_timer=-100000
+	check(preload("res://tests/qa_class_selection.gd").enter_game(world),"actual Main class entry")
+	var hud: Node=world.hud
+	var controller: Node=load("res://scripts/ui/original_ui/source_main_hud.gd").new()
+	hud.add_child(controller)
+	controller._pack=pack
+	controller._hud=weakref(hud)
+	controller._coordinates=Node2D.new()
+	hud.get_node("Root").add_child(controller._coordinates)
+	hud.original_main_ui_controller=controller
+	var scroll := "무기 마법 주문서 (각인)"
+	var item := "낡은 장검"
+	world.inventory={item:2,scroll:5}
+	world.item_instances={}
+	world.enhancement_levels={}
+	world.equipped_items={}
+	world.gold=1000000
+	world._sync_item_instances()
+	var ids: Array=world.item_instances.keys()
+	if not check(ids.size()==2,"actual two original request targets"):
+		world.queue_free()
+		return
+	world._update_hud()
+	world._on_inventory_item_activated(scroll)
+	var window: Variant=controller.enchant_window()
+	if not check(window!=null and controller.enchant_window_is_open() and window.presents(),"original window opens with both released presentation members: "+str(hud.original_main_ui_status.get("enchant_window",{}))):
+		world.queue_free()
+		return
+	var original_scene: Node2D=window._scene
+	var chosen: String=window.selected()
+	var target: Dictionary=world._parse_enhancement_target(chosen)
+	var id: String=str(target.get("id",""))
+	var started: Dictionary=window._enchant_requested()
+	check(started.get("ok",false) and window.is_presenting() and hud.is_enhancement_presenting(),"actual window request reaches committed real Main result")
+	check(window._scene==original_scene and window._presentation.get("played",[])==["Fx_Enchant_Start","Success"] and window._pending_result_refresh.has("candidates"),"released start and success clips mounted once on the pre-roll scene, refresh deferred")
+	check(not is_instance_valid(hud.enhancement_reveal),"no fallback overlay when both original clips mount")
+	var saved: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
+	check(saved is Dictionary and int(saved.inventory.get(scroll,0))==4 and int(saved.item_instances.get(id,{}).get("level",-1))==1,"one scroll and exact physical +1 are durable before result")
+	var before_rng: int=world.rng.state
+	hud.enhancement_requested.emit(scroll,chosen)
+	check(world.rng.state==before_rng and world.inventory.get(scroll)==4,"duplicate gameplay signal blocked during original result")
+	window._hold_presentation(window._token)
+	check(window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame==40.0, "actual original success banner stays at its fully opaque frame")
+	window.end_presentation()
+	check(not window.is_presenting() and window._scene!=original_scene and window._pending_result_refresh.is_empty(),"finish applies deferred rows once without replay")
+	world.presentation_settings["reduced_motion"] = true
+	hud.show_enhancement_result("decrease",item,7,6)
+	check(window._presentation.get("played",[]) == ["Fx_Enchant_Start","Fail"] and window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame == 145.0,
+		"reduced motion shows the released failure banner immediately on its opaque key")
+	check(world.rng.state == before_rng and int(world.inventory[scroll]) == 4, "displaying the recorded failure does not roll or consume")
+	window.end_presentation()
+	evidence["mounted_official_addon"]={"pin":"5263d925","paid_success":true,"failure_presentation":true,"save_before_reveal":true}
+	world.source_save_blocked=true
+	world.queue_free()
+	await process_frame
 
 func _real_main() -> void:
 	var world: Node=load("res://Main.tscn").instantiate()
@@ -309,9 +443,12 @@ func _real_main() -> void:
 	check(dev.is_empty(),"no developer item key in the window: "+str(dev))
 	await _frames(30)
 	for i: int in range(240):
-		if not window.is_presenting():break
+		if window._presentation.get("held",false):break
 		await process_frame
-	check(not window.is_presenting(),"the result ends by itself")
+	check(window.is_presenting() and window._presentation.get("held",false),"the original result stays legible after the animation")
+	await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
+	await _frames(3)
+	check(not window.is_presenting(),"acknowledgement dismisses the saved result")
 	var tab: Dictionary=NamedTree.locate(window._scene,window._last_out,WINDOW.P_TAB)
 	check(tab.get("ok",false) and (tab.player.source_nodes.get(tab.offset) as CanvasItem).visible,"the tab row is back after the result")
 	scrolls_before=int(world.inventory.get(scroll,0))

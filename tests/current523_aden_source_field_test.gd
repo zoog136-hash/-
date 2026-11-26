@@ -110,6 +110,21 @@ func _initialize() -> void:
 	for point: Vector2 in route:
 		check(memory.line_clear(previous,point),"every returned route segment passes own DDA")
 		previous = point
+	# The fast boolean query must always agree with the slower diagnostic
+	# decoder, including second halfwords and project-specific missing floors.
+	var sample_cell := Vector2i(64,21)
+	var source_cell: Vector2i = sample_cell + client.coordinates.origin
+	for a: int in [0,1,2,8196,32768,65534,65535]:
+		for b: int in [0,1,2,8196,32768,65534,65535]:
+			for missing_half: int in [-1,0,1]:
+				client.attribute(sample_cell,0,a)
+				client.attribute(sample_cell,1,b)
+				client.floor_reference(sample_cell,0,4294967295 if missing_half == 0 else 0)
+				client.floor_reference(sample_cell,1,4294967295 if missing_half == 1 else 0)
+				var annotated: Dictionary = client.source_cell_info(source_cell)
+				var expected: bool = missing_half == -1 and ((a | b) & 1) == 0
+				check(client.walkable(client.cell_to_world(sample_cell)) == expected and annotated.walkable == expected,
+					"client boolean matches annotated source, attr=%d,%d missing_half=%d" % [a,b,missing_half])
 	var masked := MemoryField.new()
 	masked.prepare()
 	check(masked._configure_policy({"allowed_raw_words":null,"allowed_mask":12,"must_mask":4,"forbidden_mask":8}),"explicit mask-only profile accepts")

@@ -1,7 +1,7 @@
 extends VBoxContainer
-## 에스카로스 · 요정 숲 방어전 · 영지 퀘스트 window (world.content523).
-## Plain controls: no original window CSB for these contents is in the 523
-## UI add-on, and nothing is drawn in place of an original picture.
+## Field activities. Escaros entry itself is on the original dungeon
+## card; this panel only exposes its field actions after arrival. No
+## debugger coordinates or synthetic original-looking art.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Content = preload("res://scripts/content523/content523.gd")
 var hud: Node
@@ -59,37 +59,36 @@ func refresh() -> void:
 	if w == null or w.get("content523") == null: _label("게임 연결 없음"); return
 	var service: RefCounted = w.content523
 	var m: Dictionary = Content.models()
-	status.text = service.status_line() if not str(service.status_line()).is_empty() else "원본 523 표 기준 · 오프라인 1인"
-	if not str(service.problem).is_empty(): _label("저장 보호: " + str(service.problem),14,UI.MUTED)
-	_escaros(service,m.escaros)
+	status.text = service.status_line()
+	if not str(service.problem).is_empty(): _label("진행 기록을 불러올 수 없습니다.",14,UI.MUTED)
+	var here: Dictionary=service.here()
+	var land: int=int(here.get("land_id",0))
+	if m.escaros.get("ok",false) and (m.escaros.get("lands",[]) as Array).any(func(row: Dictionary) -> bool:return int(row.get("id",0))==land):
+		_escaros(service,m.escaros)
 	_elf(service,m.elf)
 	_quests(service,m.tq)
 
 func _escaros(service: RefCounted, model: Dictionary) -> void:
 	_label("에스카로스",17,UI.GOLD)
-	if not model.get("ok",false): _label(str(model.get("problem",""))); return
-	var route: Dictionary = model.dungeon.teleport
-	_label("입장: %s · %d레벨 · 아데나 %d · 원본 Land %s" % [str(model.dungeon.name),int(route.min_level),int(route.cost),str(route.land_name)])
-	_button("에스카로스 입장","Escaros523Enter",func() -> void: _act(service.enter_escaros()))
 	var at: Dictionary = service.here()
 	for teleporter: Dictionary in model.teleporters:
 		if not at.is_empty() and int(at.land_id) == int(teleporter.land_id):
 			var r: Dictionary = teleporter.route
 			_button("%s(%s) → %s (아데나 %d)" % [str(teleporter.name),str(teleporter.object_name),str(r.land_name),int(r.cost)],"Escaros523Teleport_%d" % int(teleporter.spawn_id),func() -> void: _act(service.use_teleporter(int(teleporter.spawn_id))))
-	_label("오늘의 랜드마크 (그룹별 Prob 추첨)",15,UI.GOLD)
+	_label("오늘의 랜드마크",15,UI.GOLD)
 	for landmark: Dictionary in service.landmarks_view():
 		var state_text: String = "조사 완료" if landmark.found else ("조사 가능" if landmark.near else ("%d칸" % int(landmark.distance) if int(landmark.distance) >= 0 else "다른 지역"))
 		var reward: Dictionary = landmark.reward
-		_button("[%s] %s (%d,%d) · %s %d · %s" % [str(landmark.group),str(landmark.name),int(landmark.cell[0]),int(landmark.cell[1]),"아인하사드" if str(reward.type) == "Einasad" else str(reward.type),int(reward.amount),state_text],
+		_button("%s · %s %d · %s" % [str(landmark.name),"아인하사드" if str(reward.type) == "Einasad" else str(reward.type),int(reward.amount),state_text],
 			"Escaros523Landmark_%d" % int(landmark.id),func() -> void: _act(service.examine_landmark(int(landmark.id))),landmark.near and not landmark.found)
 	var touch: Dictionary = service.touchdowns()
 	var parts: Array = []
 	for artifact: Dictionary in model.artifacts:
-		parts.append("%d라운드 %s(%d,%d) %d회" % [int(artifact.round),str(artifact.name),int(artifact.cell[0]),int(artifact.cell[1]),int(touch.get(str(int(artifact.id)),0))])
-	_label("터치다운(아티팩트 %d칸 안 대기): %s · 지금 %d라운드 (TWILIGHT 근사: 30분에 5라운드 반복)" % [int(model.artifacts[0].range) if not model.artifacts.is_empty() else 0,", ".join(parts),service.current_round()])
+		parts.append("%d라운드 %s %d회" % [int(artifact.round),str(artifact.name),int(touch.get(str(int(artifact.id)),0))])
+	_label("터치다운 · 현재 %d라운드\n%s" % [service.current_round()," · ".join(parts)])
 	for row: Dictionary in service.rank_rewards():
 		var rw: Dictionary = row.reward
-		_button("%d라운드 %s 순위 보상 · 이번 주 %d회%s · %s ×%d%s" % [int(row.round),str(row.name),int(row.touches),(" · 1위(로컬)" if int(row.rank)==1 else ""),Content._item_name(int(rw.get("class_id",0))),int(rw.get("amount",0))," · 받음" if row.claimed else ""],
+		_button("%d라운드 %s 순위 보상 · 이번 주 %d회%s · %s ×%d%s" % [int(row.round),str(row.name),int(row.touches),(" · 1위" if int(row.rank)==1 else ""),Content._item_name(int(rw.get("class_id",0))),int(rw.get("amount",0))," · 받음" if row.claimed else ""],
 			"Escaros523Rank_%d" % int(row.artifact),func() -> void: _act(service.claim_rank_reward(int(row.artifact))),int(row.touches)>0 and not bool(row.claimed))
 	for buff: Dictionary in service.artifact_buffs():
 		_label("버프 %s · 경험치 +%d%% · 남은 %d분 %d초" % [str(buff.name),service.buff_value("xp"),int(buff.left)/60,int(buff.left)%60])
@@ -99,7 +98,7 @@ func _elf(service: RefCounted, model: Dictionary) -> void:
 	if not model.get("ok",false): _label(str(model.get("problem",""))); return
 	var wins: int = int(service.state.elf.get("wins",0))
 	var run: Dictionary = service.elf_run()
-	_label("누적 승리 %d회 · 이번 주 %d회(보상은 매주 수요일 05시 초기화)%s · 승리: 그 단계 지역의 몬스터를 모두 처치(사용자 결정 2026-11-13)" % [wins,int(service._weekly(service.state.duplicate(true)).elf.week_wins),(" · 진행 %d/%d" % [int(run.kills),int(run.target)]) if not run.is_empty() else ""])
+	_label("누적 승리 %d회 · 이번 주 %d회(보상은 매주 수요일 05시 초기화)%s · 승리: 해당 지역의 몬스터를 모두 처치" % [wins,int(service._weekly(service.state.duplicate(true)).elf.week_wins),(" · 진행 %d/%d" % [int(run.kills),int(run.target)]) if not run.is_empty() else ""])
 	for grade: Dictionary in model.grades:
 		var r: Dictionary = grade.route
 		var open: bool = int(grade.grade_no) <= wins
@@ -112,7 +111,7 @@ func _elf(service: RefCounted, model: Dictionary) -> void:
 	var chosen: int = int(service.state.elf.blessing)
 	for blessing: Dictionary in model.blessings:
 		_button("가호 %s%s (우위: %s)" % [str(blessing.title),(" · 선택됨" if int(blessing.id) == chosen else ""),str(blessing.advantage_title)],"ElfForest523Blessing_%d" % int(blessing.id),func() -> void: _act(service.choose_blessing(int(blessing.id))))
-	_label("가호 효과(StatusEffect)·팀 규칙은 원본 표에 없어 기록만 합니다.")
+	_label("가호 선택을 기록합니다.")
 
 func _quests(service: RefCounted, model: Dictionary) -> void:
 	_label("영지 퀘스트",17,UI.GOLD)

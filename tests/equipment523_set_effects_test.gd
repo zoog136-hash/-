@@ -34,12 +34,29 @@ class Host extends Node:
 func _initialize() -> void:
 	_test_contracts()
 	_test_lifecycle()
+	_test_set_cache_order()
 	_test_hits()
 	_test_cancel()
 	_test_source_graph()
 	print("equipment523 set effects: %d checks, %d failures" % [checks,failures.size()])
 	print("EQUIPMENT523_SET_EFFECTS_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"private_source_contracts_checked":private_source_contracts_checked,"scope":"SYNTHETIC_KERNEL_WITH_OPTIONAL_PRIVATE_SOURCE_CONTRACTS"}))
 	quit(1 if not failures.is_empty() else 0)
+
+func _test_set_cache_order() -> void:
+	var pack := _fixture()
+	var first: Dictionary = {"source_id":1,"instance_id":"same"}
+	var second: Dictionary = {"source_id":2,"instance_id":"same"}
+	var other: Dictionary = {"source_id":1,"instance_id":"other"}
+	var one: Dictionary = Sets.resolve(pack,[first,second,other])
+	var two: Dictionary = Sets.resolve(pack,[second,first,other])
+	_check(one.records.is_empty() and not two.records.is_empty(),"reordered conflicting input cannot reuse the previous physical owner")
+	_check(is_same(two,Sets.resolve(pack,[second,first,other])),"stable membership reuses the resolved effects")
+	# Retain the existing invalidation when replacing or editing the audit.
+	pack["equipment523_effect_audit"] = {"generation":1}
+	var installed: Dictionary = Sets.resolve(pack,[second,first,other])
+	pack.equipment523_effect_audit.generation = 2
+	var updated: Dictionary = Sets.resolve(pack,[second,first,other])
+	_check(not is_same(two,installed) and not is_same(installed,updated) and updated == installed,"effect audit changes invalidate cached proof")
 
 func _check(value: bool, label: String) -> void:
 	checks += 1

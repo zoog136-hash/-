@@ -75,6 +75,25 @@ static func _flush(output: PackedStringArray, committed: String, pending: String
 	output.append(_trim_tail(committed))
 	output.append(_trim_tail(pending))
 
+## Dynamic lists with scrolling or explicit pagination can continue a long
+## unspaced option name on the next line of the same font.
+static func flow_lines(font: FontFile, value: String, font_size: int, width: float) -> Dictionary:
+	var result: Dictionary = lines(font, value, font_size, width)
+	if result.get("error") != "original_unbreakable_word_exceeds_source_width": return result
+	var output := PackedStringArray()
+	for line: String in value.split("\n", true):
+		if line.is_empty():
+			output.append("")
+			continue
+		var layout := TextParagraph.new()
+		layout.width = width
+		layout.break_flags = TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+		if not layout.add_string(line, font, font_size): return result
+		for i: int in layout.get_line_count():
+			var span: Vector2i = layout.get_line_range(i)
+			output.append(line.substr(span.x, span.y-span.x).strip_edges())
+	return {"ok":true,"lines":output}
+
 static func _trim_tail(value: String) -> String:
 	var end: int=value.length()
 	while end>0 and _space(value.unicode_at(end-1)):end-=1

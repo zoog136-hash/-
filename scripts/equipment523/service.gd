@@ -1,5 +1,8 @@
 extends RefCounted
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const NATIVE_SMELT = preload("res://scripts/equipment523/native_smelt_input.gd")
+const SMELT_RULES = preload("res://scripts/equipment523/native_smelt_rules.gd")
+const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 ## World bridge. Quotes are read-only; transactions persist staged copies first.
 const Common = preload("res://scripts/equipment523/common.gd")
 const SmithSmelt = preload("res://scripts/equipment523/smith_smelt.gd")
@@ -12,6 +15,10 @@ const PendingMigration = preload("res://scripts/equipment523/alchemy_pending_mig
 const POLICY_PATH: String = "res://data/equipment523/policy.json"
 const QUEST_CONSUMPTION_PATH: String = "res://scripts/quests/quest_reward_consumption.gd"
 var store = PackStore.new()
+var compact_smelt_rules:Dictionary={}
+var compact_smelt_prepare_usec:int=0
+var compact_smelt_schedule_usec:int=0
+var _compact_smelt_job:Thread
 var policy: Dictionary = {}
 var pending: Dictionary = {}
 var save_blocked: bool = false
@@ -108,7 +115,36 @@ func startup(_world: Node) -> Dictionary:
 	pending.clear()
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(POLICY_PATH)) if FileAccess.file_exists(POLICY_PATH) else {}
 	policy = parsed if parsed is Dictionary else {}
-	return store.startup()
+	var full:Dictionary=store.startup()
+	compact_smelt_rules={}
+	compact_smelt_prepare_usec=0
+	compact_smelt_schedule_usec=0
+	if not full.get("ok",false) and not FileAccess.file_exists(PackStore.POINTER):
+		for arg:String in OS.get_cmdline_user_args():
+			if arg.begins_with("--equipment523-rules="):return full
+		var path:String=OS.get_environment(SMELT_RULES.ENV)
+		if not path.is_empty():
+			var start:int=Time.get_ticks_usec()
+			_compact_smelt_job=Thread.new()
+			if _compact_smelt_job.start(SMELT_RULES.prepare.bind(path),Thread.PRIORITY_LOW)!=OK:_compact_smelt_job=null
+			compact_smelt_schedule_usec=Time.get_ticks_usec()-start
+	return full
+
+func _finish_compact_smelt()->bool:
+	if _compact_smelt_job==null or _compact_smelt_job.is_alive():return false
+	var result:Variant=_compact_smelt_job.wait_to_finish()
+	_compact_smelt_job=null
+	if not result is Dictionary:return false
+	compact_smelt_rules=result.rules
+	compact_smelt_prepare_usec=result.usec
+	return not compact_smelt_rules.is_empty()
+
+func _notification(what:int)->void:
+	if what==NOTIFICATION_PREDELETE and _compact_smelt_job!=null:
+		_compact_smelt_job.wait_to_finish()
+
+func _smelt_pack()->Dictionary:
+	return store.pack if not store.pack.is_empty() else compact_smelt_rules
 
 func after_load(world: Node, saved: Variant = {}) -> void:
 	# The caller invokes this only after a successful save reload.
@@ -129,6 +165,7 @@ func after_load(world: Node, saved: Variant = {}) -> void:
 	if world.has_method("_invalidate_equipment_static"): world.call("_invalidate_equipment_static")
 
 func tick(world: Node, delta: float) -> void:
+	if _finish_compact_smelt() and world.has_method("_invalidate_equipment_static"):world.call("_invalidate_equipment_static")
 	if next_expiry_unix > 0 and _now() >= next_expiry_unix:
 		next_expiry_unix = 0
 		if world.has_method("_invalidate_equipment_static"): world.call("_invalidate_equipment_static")
@@ -233,13 +270,12 @@ func _sync_sets(world: Node, incoming_context: Dictionary = {}) -> Dictionary:
 		_emit_set_visuals(world)
 		return {}
 	var maximum: int = int(world.call("_effective_max_hp")) if world.has_method("_effective_max_hp") else 0
-	var health: int = 0
-	for property: Dictionary in world.get_property_list():
-		if property.name == "hp": health = int(world.get("hp"))
+	var hp_value: Variant = world.get("hp")
+	var health: int = int(hp_value) if hp_value != null else 0
 	var zone_allowed: bool = bool(world.call("_equipment523_set_zone_allowed")) if world.has_method("_equipment523_set_zone_allowed") else false
 	var context: Dictionary = {"hp":health,"max_hp":maximum,"zone_allowed":zone_allowed,"alive":health > 0}
 	context.merge(incoming_context,true)
-	var resolved: Dictionary = set_effects.sync(store.pack,_equipped(world),policy,context)
+	var resolved: Dictionary = set_effects.sync(store.pack,_equipped(world,{},true),policy,context)
 	_emit_set_visuals(world)
 	return resolved
 
@@ -256,11 +292,11 @@ func locked_target(world: Node) -> Node:
 
 func capability(world: Node, flag: String) -> bool:
 	if store.pack.is_empty() or save_blocked: return false
-	return bool(SetEffects.resolve(store.pack,_equipped(world),policy).get("capabilities",{}).get(flag,false))
+	return bool(SetEffects.resolve(store.pack,_equipped(world,{},true),policy).get("capabilities",{}).get(flag,false))
 
 func capabilities(world: Node) -> Dictionary:
 	if store.pack.is_empty() or save_blocked: return {}
-	return SetEffects.resolve(store.pack,_equipped(world),policy).get("capabilities",{}).duplicate(true)
+	return SetEffects.resolve(store.pack,_equipped(world,{},true),policy).get("capabilities",{}).duplicate(true)
 
 func on_death(world: Node) -> void:
 	set_effects.on_death()
@@ -310,6 +346,36 @@ func snapshot(world: Node) -> Dictionary:
 	return {"pack_ready":not store.pack.is_empty() and not save_blocked,"pack_sha256":store.sha256,"status":status,
 		"targets":entries,"policy_notes":str(policy.get("notes","")),"set_details":sets.get("details",[]),"set_runtime_lines":runtime_lines,"invoke_slots":[]}
 
+## Bound to an actual material selected in the bag. It lists only physical
+## equipment introduced by the original relationship; quotes apply all level,
+## blessing, ownership and probability checks again at preview and commit.
+func native_smelt_offer(world: Node,uid:String) -> Dictionary:
+	var rules:Dictionary=_smelt_pack()
+	if rules.is_empty() and _compact_smelt_job!=null:return Common.fail("원본 제련 규칙을 준비 중입니다. 잠시 후 사용하세요. 재료를 보존합니다.")
+	if rules.is_empty():return Common.fail("원본 제련 추가 리소스를 먼저 설치하세요. 재료를 보존합니다.")
+	if uid.is_empty():return Common.fail("제련 재료의 실제 가방 개체를 선택하세요.")
+	var owned:Dictionary=NATIVE_STACK.proof(world,uid)
+	if owned.is_empty():return Common.fail("선택한 원본 제련 재료를 확인할 수 없습니다.")
+	var material:Dictionary=_info(world,uid,world.item_instances.get(uid,{}),{},rules)
+	var kind:String=NATIVE_SMELT.kind(owned.record)
+	if kind.is_empty() or material.is_empty() or material.get("locked",false) or material.get("equipped",false):return Common.fail("선택한 제련 재료가 잠겼거나 원본 제련 조건에 맞지 않습니다.")
+	if not NATIVE_SMELT.period_allows(int(material.source_id),_now(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))):
+		return Common.fail("원본 제련 재료의 사용 기한이 끝났습니다. 재료를 보존합니다.")
+	var sources:Dictionary={}
+	var pool:int=int(NATIVE_SMELT.POOLS.get(int(material.source_id),0))
+	for row:Dictionary in Common.rows(rules,"ItemSmeltEntity" if kind=="smelt" else "ItemSpiritSmeltEntity"):
+		if kind=="smelt" or int(row.get("ItemSmeltID",0))==pool:sources[int(row.get("ItemClassID",0))]=true
+	var targets:Array[Dictionary]=[]
+	for id:String in world.item_instances:
+		if id==uid:continue
+		var item:Dictionary=world.item_instances[id]
+		var record:Dictionary=item.get("record",{})
+		if not sources.has(_source_hint(record)):continue
+		var info:Dictionary=_info(world,id,item,{},rules)
+		if info.is_empty() or not sources.has(int(info.source_id)):continue
+		targets.append({"target_id":id,"name":info.name,"level":info.level,"record":record,"source_id":info.source_id})
+	return {"ok":true,"kind":kind,"name":material.name,"uid":uid,"quantity":material.quantity,"record":owned.record,"targets":targets}
+
 func quote(world: Node, action: Dictionary) -> Dictionary:
 	var value: Dictionary = _quote(world,action)
 	if value.get("ok",false):
@@ -321,12 +387,25 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	if _busy or save_blocked: return Common.fail(problem if not problem.is_empty() else "가공 거래가 진행 중입니다.")
 	var blocked: String = _host_blocker(world)
 	if not blocked.is_empty(): return Common.fail(blocked)
-	if store.pack.is_empty(): return Common.fail("검증된 523 규칙 팩을 먼저 설치하세요.")
 	var kind: String = str(action.get("kind",""))
 	if kind not in ["elemental_smith","bless_reinforcement","smelt","spirit_smelt","alchemy","invoke_replacement"]: return Common.fail("지원하지 않는 가공 작업입니다.")
+	var use_compact:bool=store.pack.is_empty() and kind in ["smelt","spirit_smelt"]
+	var rules:Dictionary=compact_smelt_rules if use_compact else store.pack
+	if rules.is_empty():return Common.fail("검증된 523 규칙 팩을 먼저 설치하세요.")
 	var by_id: Dictionary = {}
-	for info: Dictionary in _entries(world): by_id[str(info.instance_id)] = info
 	var target_id: String = str(action.get("target_id",""))
+	if use_compact:
+		# This add-on is only for exact selected native custody, never the
+		# original virtual/name fallback or unrelated processing panels.
+		var ids:Variant=action.get("material_ids",[])
+		if not ids is Array or ids.size()!=1:return Common.fail("실제 원본 제련 재료 한 개를 선택하세요.")
+		for uid:String in [target_id,str(ids[0])]:
+			var physical:Variant=world.item_instances.get(uid,{})
+			if not physical is Dictionary:continue
+			var info:Dictionary=_info(world,uid,physical,{},rules)
+			if not info.is_empty():by_id[uid]=info
+	else:
+		for info: Dictionary in _entries(world):by_id[str(info.instance_id)]=info
 	var target: Dictionary = by_id.get(target_id,{})
 	if kind != "alchemy" and (target.is_empty() or bool(target.get("virtual_stack",false))): return Common.fail("원본 ID가 확인된 실제 장비를 선택하세요.")
 	if kind != "alchemy" and bool(target.get("quest_reward_receipt",false)): return Common.fail("원본 보상 장비의 가공 대상 계약을 확인할 때까지 장비를 보존합니다.")
@@ -342,8 +421,13 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 		var id: String = str(raw_id)
 		if id == target_id or chosen.has(id) or not by_id.has(id): return Common.fail("대상과 재료가 같거나 선택한 개체가 중복·누락되었습니다.")
 		var info: Dictionary = by_id[id]
+		if use_compact and not info.get("native_stack",false):return Common.fail("실제 원본 제련 재료의 소지 기록을 먼저 확인하세요.")
 		if bool(info.get("locked",false)) or bool(info.get("equipped",false)): return Common.fail("재료의 장착과 잠금을 해제하세요.")
 		if kind == "alchemy" and bool(info.get("virtual_stack",false)): return Common.fail("연금 재료는 원본 ID가 확인된 실제 개체를 선택하세요.")
+		if kind in ["smelt","spirit_smelt"] and bool(info.get("native_stack",false)):
+			if NATIVE_SMELT.kind(info.record)!=kind:return Common.fail("원본 제련 재료 효과가 현재 작업과 다릅니다. 재료를 보존합니다.")
+			if not NATIVE_SMELT.period_allows(int(info.source_id),_now(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))):
+				return Common.fail("원본 제련 재료의 사용 기한이 끝났습니다. 재료를 보존합니다.")
 		var expiry: String = _expiry_error(info)
 		if not expiry.is_empty(): return Common.fail(expiry)
 		chosen[id] = true
@@ -352,7 +436,7 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	var q: Dictionary
 	if kind == "alchemy": q = Alchemy.quote(store.pack,action,context)
 	elif kind == "invoke_replacement": q = SetInvoke.quote(store.pack,kind,context)
-	else: q = SmithSmelt.quote(store.pack,action,context)
+	else: q = SmithSmelt.quote(rules,action,context)
 	if not q.get("ok",false): return q
 	var gold_cost: int = int(q.get("gold_cost",0))
 	if gold_cost < 0 or int(world.gold) < gold_cost: return Common.fail("아데나가 부족합니다.")
@@ -399,6 +483,17 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	q["_target_info"] = target.duplicate(true)
 	q["_output_records"] = output_records
 	q["_quest_step"] = quest_step
+	q["_compact_smelt"] = use_compact
+	q["_native_smelt_requests"]=[]
+	if kind in ["smelt","spirit_smelt"] and materials.size()==1:
+		var material:Dictionary=materials[0]
+		if material.get("native_stack",false):
+			var uid:String=str(material.instance_id)
+			var owned:Dictionary=NATIVE_STACK.proof(world,uid)
+			var amount:int=int(spent.get(uid,0))
+			if owned.is_empty() or int(owned.remaining)!=int(material.quantity) or amount!=1:
+				return Common.fail("선택한 원본 제련 재료의 실물 잔량이나 한 개 소비 계약을 확인할 수 없습니다.")
+			q["_native_smelt_requests"]=[{"physical_id":uid,"quantity":amount,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-amount,"source_native_stack_receipt":owned.receipt}]
 	return q
 
 func commit(world: Node, action: Dictionary) -> Dictionary:
@@ -420,10 +515,12 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	pending.clear()
 	var candidate_rng := RandomNumberGenerator.new()
 	candidate_rng.state = world.rng.state
+	var compact:bool=q.get("_compact_smelt",false)
+	var rules:Dictionary=compact_smelt_rules if compact else store.pack
 	var outcome: Dictionary
 	if q.get("kind") == "alchemy": outcome = Alchemy.roll(store.pack,q,candidate_rng)
 	elif q.get("kind") == "invoke_replacement": outcome = SetInvoke.roll(store.pack,q,candidate_rng)
-	else: outcome = SmithSmelt.roll(store.pack,q,candidate_rng)
+	else: outcome = SmithSmelt.roll(rules,q,candidate_rng)
 	if not outcome.get("ok",false):
 		_busy = false
 		return outcome
@@ -431,16 +528,28 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	var source_debit: bool = not quest_step.get("requests",[]).is_empty()
 	# Result provenance belongs to this effect owner. The quest owner's first
 	# consumer proof and used counts remain exclusively in its shared journal.
-	var processing_proof: Dictionary = {"kind":str(q.kind),"source_sha256":str(store.pack.get("source_sha256","")),"consumer_data_sha256":store.sha256}
+	var processing_proof: Dictionary = {"kind":str(q.kind),"source_sha256":str(rules.get("source_sha256","")),"consumer_data_sha256":SMELT_RULES.SHA if compact else store.sha256}
 	if outcome.has("result_id"): processing_proof["result_id"] = int(outcome.result_id)
 	var staged: Dictionary = quest_step.get("overrides",{}).duplicate(true) if source_debit else {}
+	var native_requests:Array=q.get("_native_smelt_requests",[])
+	var native_uid:String=""
+	if not native_requests.is_empty():
+		if source_debit:
+			_busy=false
+			return Common.fail("원본 제련 재료의 중복 소모 요청을 거절했습니다.")
+		var debit:Dictionary=NATIVE_STACK.stage_debit(world,native_requests)
+		if not debit.get("ok",false):
+			_busy=false
+			return Common.fail(str(debit.get("reason","선택한 원본 재료 잔량 확인 실패")))
+		staged=debit.overrides
+		native_uid=str(native_requests[0].physical_id)
 	var inventory: Dictionary = staged.get("inventory",world.inventory).duplicate(true)
 	var physical: Dictionary = staged.get("item_instances",world.item_instances).duplicate(true)
 	var next_id: int = maxi(1,int(world.next_item_instance_id))
 	for info: Dictionary in q.get("_materials",[]):
 		var amount: int = int(q.get("_spend",{}).get(str(info.instance_id),0))
 		if amount <= 0: continue
-		if bool(info.get("quest_reward_receipt",false)): continue # Already debited by the shared owner, including zero deletion.
+		if bool(info.get("quest_reward_receipt",false)) or str(info.instance_id)==native_uid: continue # Already debited by the exact existing owner.
 		var error: String = _consume(inventory,physical,info,amount)
 		if not error.is_empty():
 			_busy = false
@@ -471,7 +580,7 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 			if not legacy is Dictionary or (not legacy.is_empty() and legacy.get("origin") != "equipment523"):
 				_busy = false
 				return Common.fail("기존 미확인 제련 기록을 보호합니다. 해당 장비의 원본 기록을 확인하세요.")
-			physical[target_id]["source_smelt"] = {"origin":"equipment523","kind":str(q.kind),"source_sha256":str(store.pack.get("source_sha256",""))}
+			physical[target_id]["source_smelt"] = {"origin":"equipment523","kind":str(q.kind),"source_sha256":str(rules.get("source_sha256",""))}
 	if outcome.has("output"):
 		var output: Dictionary = outcome.output
 		var record: Dictionary = q.get("_output_records",{}).get(_variant_key(int(output.get("source_id",0)),int(output.get("bless_code",0))),{}).duplicate(true)
@@ -513,8 +622,11 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 		if consumer == null or not consumer.matches_payload(world,quest_step,staged):
 			_busy = false
 			return Common.fail("원본 사용 영수증과 최종 가공 저장 후보가 일치하지 않습니다. 재료를 보존합니다.")
+	if not native_uid.is_empty():
+		# The native debit, option roll and post-roll RNG share one checkpoint.
+		staged["patch523_transaction_rng"]={"schema":1,"seed":str(world.rng.seed),"state":str(candidate_rng.state)}
 	var disk_before: String = _disk_stamp(world)
-	var saved: Error = world.call("_save_game",true,staged)
+	var saved: Error = NATIVE_STACK.sealed_save(world,staged) if not native_uid.is_empty() else world.call("_save_game",true,staged)
 	if saved != OK:
 		var disk_after: String = _disk_stamp(world)
 		if _saved_candidate(world,staged) or disk_after != disk_before or disk_after == "unreadable" or source_debit and disk_after == "no-save-path":
@@ -543,20 +655,25 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 func records(world: Node) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	next_expiry_unix = 0
-	if store.pack.is_empty() or save_blocked: return out
-	var targets: Array = _equipped(world)
+	var rules:Dictionary=_smelt_pack()
+	if rules.is_empty() or save_blocked: return out
+	var compact:bool=store.pack.is_empty()
+	var targets: Array = _equipped(world,rules)
+	var kinds:Array=["smelt","spirit_smelt"] if compact else ["elemental_smith","bless_reinforcement","smelt","spirit_smelt"]
 	for info: Dictionary in targets:
 		var state: Dictionary = info.get("state",{})
-		for kind: String in ["elemental_smith","bless_reinforcement","smelt","spirit_smelt"]:
+		for kind: String in kinds:
 			var effect: Variant = state.get(kind,{})
-			if not effect is Dictionary or effect.get("source_sha256") != store.pack.get("source_sha256"): continue
-			var active: Array[Dictionary] = SmithSmelt.active_effects(store.pack,info,kind,state,_now(),policy)
+			if not effect is Dictionary or effect.get("source_sha256") != rules.get("source_sha256"): continue
+			if compact and not NATIVE_SMELT.known(int(effect.get("material_source_id",0))):continue
+			var active: Array[Dictionary] = SmithSmelt.active_effects(rules,info,kind,state,_now(),policy)
 			if active.is_empty(): continue
 			var expires: int = int(effect.get("expires_unix",0))
 			if expires > 0:
 				if expires <= _now(): continue
 				if next_expiry_unix == 0 or expires < next_expiry_unix: next_expiry_unix = expires
 			out.append_array(active)
+	if compact:return out
 	out.append_array(SetInvoke.equipped(store.pack,targets,policy,_now()).get("records",[]))
 	for raw: Dictionary in SetEffects.resolve(store.pack,targets,policy).get("records",[]):
 		var record: Dictionary = raw.duplicate(true)
@@ -628,7 +745,7 @@ func _bless_code(record: Dictionary, physical: Dictionary = {}) -> int:
 	if physical.has("blessed") or physical.has("bless_state") or record.has("blessed") or record.has("bless_state") or name.begins_with("축복받은 "): bless = 2 if blessed else 1
 	return bless
 
-func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary = {}) -> Dictionary:
+func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary = {}, scoped_rules:Dictionary={}, set_member_only: bool=false) -> Dictionary:
 	var name: String = str(physical.get("name",""))
 	var record: Variant = physical.get("record",{})
 	if not record is Dictionary: return {}
@@ -636,18 +753,29 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	if record.is_empty() and world.has_method("_find_catalog_item_record"): record = world.call("_find_catalog_item_record",name)
 	if not record is Dictionary or record.is_empty() or record.get("name") != name: return {}
 	if physical.has("sourceId") and str(physical.sourceId) != str(record.get("sourceId","")): return {}
-	var source: int = _source(record)
+	var compact:bool=store.pack.is_empty() and not scoped_rules.is_empty()
+	var rules:Dictionary=scoped_rules if compact else store.pack
+	var native:Dictionary=NativeCatalog.resolve(rules,record) if compact else {}
+	var source:int=int(native.get("source_id",0)) if compact else _source(record)
 	if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(source).is_empty():return {}
-	if source <= 0 or bool(Common.item(store.pack,source).get("raw",{}).get("TestItem",false)): return {}
+	if source <= 0 or bool(Common.item(rules,source).get("raw",{}).get("TestItem",false)): return {}
 	var quantity: int = _quantity(physical)
 	if quantity <= 0 or int(world.inventory.get(name,0)) < quantity: return {}
 	var state: Variant = physical.get("equipment523",{})
 	if not state is Dictionary: return {}
 	# Main's ordinary blessing action updates host flags. A historical raw source
 	# code must not hide that action or keep a removed host blessing active.
-	var bless: int = _bless_code(record,physical)
+	var bless:int=NativeCatalog.processing_bless(record,physical,native) if compact else _bless_code(record,physical)
 	if bless not in [1,2]: return {}
 	if physical.has("quest_reward_receipt") and int(physical.quest_reward_receipt.bless_code_id) != bless: return {}
+	var native_stack: bool = physical.has(NATIVE_STACK.RECEIPT) and NATIVE_SMELT.known(source)
+	if native_stack:
+		var owned: Dictionary = NATIVE_STACK.proof(world,id)
+		if owned.is_empty() or int(owned.remaining) != quantity or NATIVE_SMELT.kind(record).is_empty(): return {}
+	# The set resolver consumes only these fields. _equipped has already
+	# checked the worn ID. Keep the ownership checks above for both views.
+	if set_member_only:
+		return {"source_id":source,"instance_id":id,"level":int(physical.get("level",0)),"bless_code":bless,"equipped":true}
 	var worn: bool = false
 	for equipped: Variant in world.equipped_items.values():
 		if equipped is Dictionary and str(equipped.get("instance_id","")) == id: worn = true
@@ -656,14 +784,17 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 		"element_type":int({"fire":1,"water":2,"wind":3,"earth":4}.get(str(physical.get("element","")),0)),"element_level":int(physical.get("element_level",0)),
 		"state":state.duplicate(true),"record":record.duplicate(true),"equipped":worn,"locked":locked,"quantity":quantity,"amount":quantity,
 		"quest_reward_receipt":physical.has("quest_reward_receipt")}
+	if native_stack: info["native_stack"] = true
 	for key: String in ["expires_unix","expiry_unix"]:
 		if physical.has(key): info[key] = physical[key]
 		elif record.has(key): info[key] = record[key]
-	info["invoke_slots"] = SetInvoke.slot_options(store.pack,info)
+	info["invoke_slots"] = [] if compact else SetInvoke.slot_options(store.pack,info)
 	return info
 
 func _quantity(physical: Dictionary) -> int:
 	var record: Variant = physical.get("record",{})
+	if physical.has(NATIVE_STACK.RECEIPT) and record is Dictionary and NATIVE_SMELT.known(int(record.get("source_item_class_id",0))):
+		return _positive_integer(physical.get(NATIVE_STACK.QUANTITY,0))
 	var a: int = _positive_integer(physical.get("source_reward_quantity",1))
 	var b: int = _positive_integer(record.get("source_reward_quantity",a)) if record is Dictionary else a
 	if a <= 0 or b <= 0: return -1
@@ -693,7 +824,7 @@ func _positive_integer(value: Variant) -> int:
 	if not (value is int or value is float) or not is_finite(float(value)) or float(value) != floorf(float(value)) or value < 1 or value > 9007199254740991: return 0
 	return int(value)
 
-func _equipped(world: Node) -> Array:
+func _equipped(world: Node, scoped_rules:Dictionary={}, set_members_only: bool=false) -> Array:
 	var out: Array = []
 	var visited: Dictionary = {}
 	for worn: Variant in world.equipped_items.values():
@@ -701,7 +832,7 @@ func _equipped(world: Node) -> Array:
 		var id: String = str(worn.get("instance_id",""))
 		if id.is_empty() or visited.has(id) or not world.item_instances.get(id) is Dictionary: continue
 		visited[id] = true
-		var info: Dictionary = _info(world,id,world.item_instances[id],worn)
+		var info: Dictionary = _info(world,id,world.item_instances[id],worn,scoped_rules,set_members_only)
 		if not info.is_empty(): out.append(info)
 	return out
 

@@ -1,52 +1,43 @@
-# 523.837 repeated hitches: source route cell checks
+# 523.837 source-movement route work, without frame slicing
 
-The Android record captured several auto-acquisition searches of 300–392 ms.
-It did not attribute all frame delays to navigation or measure the sub-100 ms
-distribution. After excluding at least 4-second frames, the two recordings had
-99/4109 and 462/2916 hitches at or above 100 ms; actions were not controlled.
+## Source and scope
 
-Only the 523 static S32 A* query memoizes cell verdicts inside one search. Both
-diagonal policies, neighbour/heap ordering, path endpoints, full search limit,
-direct-line fast path and original input verification are preserved. The cache
-holds at most 32768 verdicts and never survives the synchronous search. It does
-not cache routes and does not change saved state, input, unrelated fields, or
-movement collision.
+LineageM Windows 1.10.22.0 movement-edge analysis (reported at RVA
+`0x01CC95C0` in `24910639f33ea1db2e01f8d306c6cbe8b201034e`) established
+the attribute bit-0 rejection and the diagonal rule: at least one orthogonal
+side must be open. This is prior evidence for the edge predicate only, not
+evidence for a full route planner, Android scheduling, or a client time budget.
+TWILIGHT's paired S32 attributes, missing-floor guard and own allowlist mode
+remain intact. No third-party binaries, data, or images are included.
 
-Linux Godot, alternating 9 runs per policy, 128x128 preloaded synthetic S32
-fixture with a forced detour. Identical points for each pair:
+The Android 523.837 log contains repeated `auto.search_route` samples around
+300–392 ms. It does not measure the sub-100 ms frame distribution or attribute
+all stutter to routes. Base: `bd9dc3b8`. Alternative to draft #862, not a
+follow-on to it: auto target order, route call count and same-call completion
+remain unchanged. No frame continuation, new timers, startup or save changes.
 
-| Policy | prior median | memo median | cell reads prior → memo |
-| --- | --- | --- | --- |
-| Client bit 0 | 115.5 ms | 85.8 ms | 16597 → 5026 |
-| Own allowlist geometry | 141.8 ms | 89.4 ms | 21578 → 5169 |
+## Implementation
 
-This improvement is not a per-frame cap. Cold chunk I/O and large A* searches
-can still exceed 33 ms, especially on Android. No card-reveal, asset, startup,
-save, or phone performance claim.
+- Check both client halfwords together using bit 0, and retain both floor checks.
+  Diagnostic status strings and explicit own allowlist behavior are unchanged.
+- Cache static 523 cell verdicts only for the synchronous A* query, with a cap
+  of 32,768. Never cache a route or carry terrain results between queries.
+- Store the A* heap keys once per entry and keep parent/cost in one record.
+  Tie ordering, waypoint reconstruction, node caps, direct ray, and dynamic
+  collision remain unchanged. The heap improvement is shared.
 
-## 16 ms follow-up: split automatic acquisition
+## Verification
 
-Original supplied static analysis (Lineage M Windows 1.10.22.0, movement edge
-test, integrated by commit `24910639`) supports the bit-0 cell and diagonal
-edge predicates. It does not show the Android path-search scheduler, or prove
-that the original uses this A* implementation or timing budget. We retain the
-verified portion of the rule and schedule TWILIGHT's existing search ourselves.
+The Linux Godot 4.7.2 preloaded 128×128 synthetic fixture checks exact path
+sequences against main via a digest over 50 scenarios, including short routes,
+forced detours and search caps. The client truth table independently checks both
+raw halfwords and both floor sentinels. No original map pack was used.
 
-The acquisition path now spends a cooperative 4 ms slice, at most one slice
-per process frame, with a 512 heap-pop backstop. Direct routes stay immediate.
-The same frontier resumes for a pending candidate, which is not counted as
-unreachable. Player/target cell, target life, field, field reconfiguration,
-policy limit and combat generation changes invalidate the applicable work.
-The synchronous API, including manual routing, uses the same A* and is not
-frame-sliced. Source verification, disk reads, direct-line tests and final
-path projection may consume uninterruptible foreground time.
-
-The preloaded synthetic 128x128 forced detour returned identical paths and
-bounded the largest step to 4.20/4.38 ms across the two rule fixtures. A
-production acquisition callback with synthetic actors/terrain finished after
-27 continuation frames and measured a 5.42 ms largest continuation. The 44
-checks also cover unreachable paths, caps, moved targets, replaced fields,
-and no double pumping within a frame. Spreading work intentionally increases
-time until a difficult route is ready on this fixture. It does not prove
-16 ms total frames on a phone, real pack behavior, or relief for card draws
-and auto-loot.
+In one representative before/after pair (median of nine queries each), the
+127-point forced detour took 115.4 → 48.8 ms and called the source-cell evaluator
+16,597 → 5,026 times. A repeat while local CI was running varied in absolute
+times and retained the same 70% drop in calls and identical path. These figures
+do not establish a 16 ms whole-frame budget: cold reads and difficult A* can
+still miss it. Accept only after a matched Android comparison of frames over
+16 ms, path acquisition-to-first-attack latency and movement response. Card draw
+and loot are outside this route patch.

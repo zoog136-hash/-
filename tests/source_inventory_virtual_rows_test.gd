@@ -50,6 +50,11 @@ class Geometry extends "res://scripts/ui/original_ui/source_main_inventory_view.
 	var height: float=300.0
 	func _view_height() -> float:return height
 
+class GeometryBuildProbe extends Geometry:
+	func _build_line(line: int, _model: Dictionary, _reuse: Dictionary) -> Dictionary:
+		_line_scenes[line]=null
+		return {"ok":true}
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:
@@ -60,6 +65,7 @@ func _initialize() -> void:_run.call_deferred()
 
 func _run() -> void:
 	_geometry()
+	_cold_open_ranges()
 	var root_path: String=OS.get_environment("TWILIGHT_SOURCE_UI_PACK")
 	samples["real_pack"]=not root_path.is_empty()
 	if not root_path.is_empty():_real(root_path)
@@ -85,6 +91,22 @@ func _geometry() -> void:
 	view._lines.clear()
 	check(view.line_range(2)==Vector2i(1,0),"no extra lines, no range")
 	view._scroll_content.free()
+
+func _cold_open_ranges() -> void:
+	var view:=GeometryBuildProbe.new()
+	var shell:=Node2D.new()
+	view._inventory_scene=shell
+	view._scroll_content=Node2D.new()
+	shell.add_child(view._scroll_content)
+	view._row_y=-260.0
+	for line: int in range(100):view._lines.append({})
+	var model: Dictionary={"ok":true}
+	check(view._sync_lines(model,{},VIEW.COLD_OPEN_BUILD_LINES).ok and view._line_scenes.keys()==[1,2,3,4],
+		"cold build retains a partial-edge margin and skips the second offscreen line")
+	view._scroll_content.position.y=-76.0
+	check(view._sync_lines(model).ok and view._line_scenes.has(5) and view._line_scenes.has(6),
+		"scroll restores its full ahead-of-view margin without waiting a frame")
+	shell.free()
 
 func _fixture(pack: RefCounted, count: int) -> Dictionary:
 	var host:=Node2D.new()

@@ -40,6 +40,10 @@ const HOLY_WATER_SOURCE_EXP := 31920000
 ## Item lifetime rows: the projection resolves them and use eligibility
 ## refuses an expired item (patch523_item_use.eligibility).
 const LIFETIME: Array[String] = ["DeleteTime","CannotExtendDeleteTime"]
+## The eight already-expired historical event definitions express a direct
+## blessing charge, neutral cap and original rate group but omit the later
+## PlayerEinasadBless marker. Never bypass their existing lifetime/level gate.
+const EARLY_EXPLICIT_AIN={122744:600000,123254:60000,123572:600000,123662:600000,124342:3000000,125971:600000,132933:600000,157071:600000}
 ## TWILIGHT 근사 switch: false keeps TeleportAmulet items unclaimed as before.
 const AMULET_REUSABLE: bool = true
 ## TWILIGHT 근사 switch: ClassUsageInterval (seconds) on a fixed-destination
@@ -288,14 +292,15 @@ static func ain(record: Dictionary) -> Dictionary:
 				if player!=-1: return {}
 				player = int(bonus.Value)
 			_: return {}
-	if absolute<0 or (absolute==0 and level_group==0) or cap<=0 or player!=1: return {}
+	var raw: Dictionary = definition.get("original_item",{})
+	var early: bool=player==-1 and EARLY_EXPLICIT_AIN.get(int(raw.get("ID",0)),-2)==absolute and cap==599994000 and group==12 and level_group==0 and experience==-1 and experience_group==0
+	if absolute<0 or (absolute==0 and level_group==0) or cap<=0 or (player!=1 and not early): return {}
 	var variables: Array[Dictionary] = SOURCE.rows_matching("EinasadVariable","EinasadVariableTypeID",{EINASAD_POINT_VARIABLE_TYPE:true})
 	if variables.size()!=1 or not _integer(variables[0].get("Value")) or int(variables[0].Value)<=0: return {}
 	var unit: int = int(variables[0].Value)
 	if absolute%unit!=0 or cap%unit!=0: return {}
 	var points: int = absolute/unit
 	# The item's own description states the charge in points.
-	var raw: Dictionary = definition.get("original_item",{})
 	var story: String = str(SOURCE.row("DescData_Korean",int(raw.StoryDescID)).get("Description","")) if _integer(raw.get("StoryDescID")) and int(raw.StoryDescID)>0 else ""
 	if (experience>0)!=(experience_group>0): return {}
 	if experience>0:
@@ -468,7 +473,7 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var service: TwilightAinhasadService = world.ain_service
 		var cap: int = mini(int(contract.cap), service.charge_cap())
 		if service.blessing>=cap: return {"ok":false,"reason":"아인하사드 축복이 최대치입니다 · 아이템 보존"}
-		var amount: int = int(round(float(points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
+		var amount: int = world._amount_with_ainhasad_charge_bonuses(points) if world.has_method("_amount_with_ainhasad_charge_bonuses") else int(round(float(points)*(1.0+(world.growth.bonus("blessing_charge:percent")+world.card_collections.bonus("blessing_charge:percent"))/100.0)))
 		amount = mini(amount, cap-service.blessing)
 		var before: Dictionary = service.export_state()
 		var after: Dictionary = before.duplicate(true)
@@ -488,12 +493,22 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 
 ## A plain name-keyed stack of a claimed item (no receipted physical stack of
 ## that name): true when handled here.
-static func try_use_plain(world: Node, item_name: String) -> bool:
+static func try_use_plain(world: Node, item_name: String, known_record: Variant=null, catalog_action: Dictionary={}) -> bool:
+	return (load("res://scripts/loot/source523_item_effects.gd") as Script).call("_try_use_plain_impl",world,item_name,known_record,false,catalog_action)
+
+static func try_use_plain_loading(world: Node, item_name: String, known_record: Variant, catalog_action: Dictionary={}) -> bool:
+	return await _try_use_plain_impl(world,item_name,known_record,true,catalog_action)
+
+static func _try_use_plain_impl(world: Node, item_name: String, known_record: Variant, loading: bool, catalog_action: Dictionary) -> bool:
 	if item_name.is_empty(): return false
-	var record: Dictionary = world._find_catalog_item_record(item_name)
+	var record: Dictionary = known_record if known_record is Dictionary else world._find_catalog_item_record(item_name)
 	if record.is_empty() or str(record.get("name",""))!=item_name: return false
+	if not catalog_action.is_empty():
+		var legacy: Script = load("res://scripts/loot/current523_catalog_stack.gd")
+		if catalog_action != legacy.action_record(world,record) or not legacy.holds_plain(world,item_name): return false
+		record = catalog_action
 	var kind: String = claims(record)
-	if kind.is_empty(): return false
+	if kind.is_empty() or (not catalog_action.is_empty() and kind not in ["teleport","teleport_location"]): return false
 	for entry: Variant in world.item_instances.values():
 		if entry is Dictionary and entry.get("name")==item_name and (entry as Dictionary).has(RECEIPT): return false
 	if kind=="food": return preload("res://scripts/loot/patch523_item_use.gd").try_use(world, record)
@@ -523,7 +538,9 @@ static func try_use_plain(world: Node, item_name: String) -> bool:
 	if prepared.has("experience"): payload["experience"] = int(prepared.experience)
 	if prepared.has("travel"):
 		# The debit is saved by the arrival's own checkpoint save.
-		var moved: Dictionary = world.item523_teleport_land(int(prepared.travel.land_id), prepared.travel.bounds, payload)
+		var moved: Dictionary
+		if loading: moved = await world.item523_teleport_land_loading(int(prepared.travel.land_id),prepared.travel.bounds,payload)
+		else: moved = world.item523_teleport_land(int(prepared.travel.land_id),prepared.travel.bounds,payload)
 		if not moved.get("ok",false):
 			world.hud.show_message(str(moved.get("reason","이동 실패")) + (" · 정상 저장 불러오기 필요" if moved.get("uncertain",false) else " · 주문서 보존"))
 			return true
@@ -537,7 +554,9 @@ static func try_use_plain(world: Node, item_name: String) -> bool:
 		world.hud.append_log(str(prepared.message))
 		return true
 	var previous: Vector2 = world.player.global_position
-	if prepared.has("destination"): world.consumable_service._teleport_player(prepared.destination)
+	if prepared.has("destination"):
+		if loading and not await world.prepare_map_point(prepared.destination): return true
+		world.consumable_service._teleport_player(prepared.destination)
 	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") else world._save_game(true, payload)
 	if saved!=OK:
 		if prepared.has("destination"): world.consumable_service._teleport_player(previous)

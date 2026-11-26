@@ -1,4 +1,5 @@
 extends Control
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Explicit source entity selection. Opening/cancelling never debits inventory.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
@@ -30,6 +31,7 @@ func _choice_rows() -> Array:
 	if not pending.is_empty(): return pending.get("choices", [])
 	var rows: Array = []
 	for reward: Dictionary in NATIVE_FIELDS.full(record).get("source_use_spec",{}).get("rewards",[]):
+		if RETIRED_ITEMS.item(reward.get("item_class_id")):continue
 		if use_service.class_matches(reward.get("class_ids",[]),world.BASE508.source_class_id(world.job_class)): rows.append(reward)
 	return rows
 
@@ -60,6 +62,12 @@ func _ready() -> void:
 	note.text = "목록·수량·축복·강화·직업 조건: 원본 523 상자 행 · 1종 선택: 원본 아이템 설명" if bag else "목록·수량·축복·직업 조건: 원본 523\n장비 초기 강화 +0: 원본 수치 없음 · TWILIGHT 설정에서 사용/해제"
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	content.add_child(note)
+	for fixed: Dictionary in pending.get("fixed_rewards",[]):
+		var item: Dictionary=DROPS.definition_id(str(int(fixed.item_class_id))).get("native_record",{})
+		var guaranteed := Label.new()
+		guaranteed.text="확정 보상: %s ×%d" % [str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name",""))),int(fixed.amount)]
+		guaranteed.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		content.add_child(guaranteed)
 	choices = ItemList.new()
 	choices.name = "SourceRewardChoices"
 	choices.custom_minimum_size.y = 260
@@ -74,11 +82,12 @@ func _ready() -> void:
 		var level: String = ""
 		if DROPS.equipment(item) and reward.get("enchant") == null: level = " · 자체 초기 +0"
 		elif reward.get("enchant") != null and int(reward.enchant) > 0: level = " · +%d" % int(reward.enchant)
-		var index: int = choices.add_item("%s ×%d · #%d · %s%s" % [str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name","?"))),int(reward.amount),int(reward.item_class_id),blessing,level])
+		var choice_title: String = _choice_name(reward,item)
+		var index: int = choices.add_item("%s ×%d · %s%s" % [choice_title,int(reward.amount),blessing,level])
 		if use_source_images:
 			# This existing provider field is ItemClass.ID. Claim identity stays
 			# the separate source_entity_id stored below, never a numeric alias.
-			var original: Dictionary = IMAGES.describe_item_class(int(reward.item_class_id),str(NATIVE_FIELDS.field(item,"source_display_name","")))
+			var original: Dictionary = describe_choice_icon(int(reward.item_class_id),choice_title)
 			choices.set_item_icon(index,original.get("texture") as Texture2D)
 			var presentation: Dictionary = original.duplicate(true)
 			presentation.erase("texture")
@@ -112,6 +121,25 @@ func _ready() -> void:
 		var native: Dictionary = controller.try_open_feature_window("reward_select",[self])
 		if native.get("handled",false): visible = false
 
+static func _choice_name(reward: Dictionary,item: Dictionary) -> String:
+	var exact: String=str(reward.get("exact_choice_card",{}).get("source_choice_label",""))
+	return exact if not exact.is_empty() else str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name","")))
+
+## A box may use a TestItem solely as an authored, display-only option.
+## Resolve the same original bytes for both selectors without issuing an item.
+static func describe_choice_icon(item_id: int, title: String = "") -> Dictionary:
+	var info: Dictionary = IMAGES.describe_item_class(item_id,title)
+	if info.get("reason") != "source_test_item_excluded": return info
+	var icon: Dictionary = IMAGES.resolve_consumer("ItemClass",item_id,"IconID")
+	if icon.get("ok",false) and icon.get("texture") is Texture2D:
+		info.status = "choice_preview_original"
+		info.reason = ""
+		info.provenance = icon.get("provenance",{})
+		info.path = str(info.provenance.get("path",""))
+		info.texture = icon.texture
+		info.original_bytes_unchanged = true
+	return info
+
 func _sync_confirm_icon(index: int) -> void:
 	confirm.icon = null
 	if confirm.has_meta("source523_reward_item_image"): confirm.remove_meta("source523_reward_item_image")
@@ -135,14 +163,14 @@ func original_rows() -> Array:
 	for reward: Dictionary in _choice_rows():
 		var item: Dictionary = DROPS.cached_definition(str(int(reward.item_class_id))).get("native_record",{})
 		if item.is_empty(): item = DROPS.definition_id(str(int(reward.item_class_id))).get("native_record",{})
-		rows.append({"entity_id":int(reward.source_entity_id),"item_class_id":int(reward.item_class_id),"name":str(NATIVE_FIELDS.field(item,"source_display_name",item.get("name","?"))),
+		rows.append({"entity_id":int(reward.source_entity_id),"item_class_id":int(reward.item_class_id),"name":_choice_name(reward,item),
 			"amount":int(reward.amount),"blessing":int(reward.get("bless_raw",0)),"enchant":int(reward.enchant) if reward.get("enchant") != null else 0})
 	return rows
 
 ## The box's own name and ItemClassID (the original window's box slot).
 func box_info() -> Dictionary:
 	var original: Dictionary = pending.get("original_item",{}) if pending.get("original_item") is Dictionary else {}
-	var id: Variant = original.get("source_item_class_id", record.get("source_item_class_id", 0))
+	var id: Variant = original.get("ID", original.get("source_item_class_id", record.get("source_item_class_id", 0)))
 	return {"name":str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
 
 ## Claims the reward `entity_id` (the list's own claim); true when the box

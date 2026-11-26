@@ -31,6 +31,10 @@ var evidence: Dictionary = {}
 class CountingPlay extends PLAY:
 	var markers: int = 0
 	var collisions: int = 0
+	var sync_block_builds: int = 0
+	func _block_commands(cell: Vector2i) -> Dictionary:
+		sync_block_builds += 1
+		return super._block_commands(cell)
 	func _refresh_markers() -> void: markers += 1
 	func _refresh_collision() -> void: collisions += 1
 
@@ -192,20 +196,54 @@ func worker_blocks() -> void:
 	for cell: Vector2i in renderer._screen_wait:
 		renderer._screen_wait[cell] = Time.get_ticks_msec() - PLAY.ON_SCREEN_WAIT_MSEC - 1
 	check(renderer._bake_pending(-1) == 0 and renderer._blocks.is_empty(), "expired atlas deadline does not force a live-map decode")
+	check(not renderer._block_jobs.is_empty(), "CPU draw lists are assembled while atlases still decode")
 	tiles.pump()
 	renderer._pending_retry.clear()
-	check(renderer._bake_pending(-1) == 0 and not renderer._block_jobs.is_empty(), "ready pending blocks dispatch workers without a synchronous bake")
+	renderer._bake_pending(-1)
+	check(renderer.sync_block_builds == 0, "ready pending blocks consume or await workers without a synchronous rebuild")
 	for _frame: int in 100:
 		if renderer._pending_blocks.is_empty(): break
 		await create_timer(0.003).timeout
 		renderer._bake_pending(-1)
-	check(renderer._blocks.size() == cells.size() and renderer._block_jobs.is_empty(), "pending blocks eventually consume all completed jobs")
+	check(renderer._blocks.size() == cells.size() and renderer._block_jobs.is_empty() and renderer.sync_block_builds == 0, "pending blocks consume all completed jobs without rebuilding their draw lists")
 	var same: bool = renderer._blocks.size() == cells.size()
 	for cell: Vector2i in renderer._blocks:
 		same = same and (renderer._blocks[cell] as Dictionary).commands == renderer._block_commands(cell).commands
 	check(same, "worker-produced commands match the synchronous reference in each block")
 	renderer.queue_free()
 	await process_frame
+
+func worker_layer_order() -> void:
+	var tiles := RENDERER_TEST.CountedTiles.new()
+	var renderer := _renderer(tiles, Vector2.ZERO)
+	var cell := Vector2i(-1,-1)
+	var bounds: Rect2 = PLAY._block_rect(cell)
+	renderer._chunk_rects = {"second":bounds, "first":bounds}
+	renderer._raw_chunks = {
+		"first": {-2: PackedInt64Array([-513,-512,257, -512,-512,258, -1,-1,4294967295]),
+			3: PackedInt64Array([-20,-20,769]), 4: PackedInt64Array([-10,-10,4294967295])},
+		"second": {-2: PackedInt64Array([-511,-511,513, -6,-6,2049, -1,-513,257]),
+			3: PackedInt64Array([-9,-9,257])},
+	}
+	var inputs: Array = []
+	for member: String in renderer._block_members(cell):
+		var layers: Dictionary = renderer._raw_chunks[member]
+		var bins: Dictionary = PLAY._bin_chunk(layers)
+		inputs.append([layers,bins[cell]])
+	for objects: bool in [true,false]:
+		renderer.include_objects = objects
+		var reference: Dictionary = renderer._block_commands(cell)
+		var job := {"cell":cell,"tiles":tiles,"has_subimage":true,"inputs":inputs,"include_objects":objects}
+		PLAY._block_job(job)
+		var result: Dictionary = job.result
+		check(result.commands == reference.commands and result.commands.keys() == reference.commands.keys(),
+			"worker appends shared layers across sorted members and omits empty layers")
+		check(result.commands[-2] == PackedInt64Array([-513,-512,257, -511,-511,513, -1,-513,257])
+			and result.tile_ids == reference.atlases.keys(), "negative seams retain overlapping draws and first-use atlas order")
+		check(result.count == (3 if objects else 1) and result.draws == (5 if objects else 3)
+			and result.raw_ff == (2 if objects else 1) and result.unresolved == 2,
+			"only the owning block counts a record and rejected atlas/subimages stay unresolved")
+	renderer.queue_free()
 
 func _rows(ids: Array, start: int = 0) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -271,6 +309,7 @@ func objects_spread() -> void:
 func _run() -> void:
 	renderer_spread()
 	multi_atlas_retry()
+	worker_layer_order()
 	await worker_blocks()
 	await objects_spread()
 	var result: Dictionary = {"checks": checks, "failures": failures, "evidence": evidence, "synthetic_only": true}

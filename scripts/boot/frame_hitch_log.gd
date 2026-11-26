@@ -41,7 +41,18 @@ static var _slow_spawn: Dictionary = {}
 static var _build: Dictionary = {}
 static var _frames: int = 0
 static var _hitches: int = 0
+static var _over_16ms: int = 0
+static var _over_16667us: int = 0
+static var _over_33ms: int = 0
+static var _at_least_4s: int = 0
 static var _worst: Array = []
+## The worst list loses every 16–100ms frame in a session with large hitches.
+## Retain bounded, rate-limited examples without changing the hitch threshold,
+## issuing a logcat line, taking a performance snapshot or triggering disk I/O.
+const BUDGET_KEEP:=4 # per band
+const BUDGET_SAMPLE_USEC:=5000000
+static var _budget_next: Array[int]=[0,0]
+static var _budget_rows: Array=[[],[]]
 static var _last_frame: int = 0
 static var _dirty: bool = false
 static var _last_flush: int = 0
@@ -218,14 +229,24 @@ static func _close_frame(at: int, map_id: String) -> void:
 	if _last_frame > 0:
 		_frames += 1
 		var total: int = at - _last_frame
+		if total > 16000: _over_16ms += 1
+		if total > 16667: _over_16667us += 1
+		if total > 33000: _over_33ms += 1
+		if total >= 4000000: _at_least_4s += 1
 		if total >= THRESHOLD_USEC: _record(total, map_id, at)
+		elif total>16000:
+			var band: int=int(total>33000)
+			if at>=_budget_next[band]:_sample_budget_frame(band,total,at,map_id)
 		_window_frames += 1
 		_window_usec += total
 		for key: String in _sections: _window_sections[key] = int(_window_sections.get(key, 0)) + int(_sections[key])
 		for key: String in _details:
 			var row: Array = _details[key]
-			var total_row: Array = _window_details.get(key, [0, 0])
-			_window_details[key] = [int(total_row[0]) + int(row[0]), int(total_row[1]) + int(row[1])]
+			var prior: Variant = _window_details.get(key)
+			if prior is Array:
+				prior[0]=int(prior[0])+int(row[0])
+				prior[1]=int(prior[1])+int(row[1])
+			else:_window_details[key]=[int(row[0]),int(row[1])]
 	_last_frame = at
 	_clear_pending()
 	if _dirty and at - _last_flush >= FLUSH_USEC:
@@ -405,6 +426,22 @@ static func _dispatch_sample(at: int, draw: Dictionary) -> Dictionary:
 		result["process_to_probe_usec"] = at - _process_dispatch_usec
 	return result
 
+static func _sample_budget_frame(band: int,total: int,at: int,map_id: String) -> void:
+	_budget_next[band]=at+BUDGET_SAMPLE_USEC
+	var known:=0
+	var section: String="";var section_us:=0
+	var detail_name: String="";var detail_us:=0
+	for key: String in _sections:
+		var us: int=int(_sections[key]);known+=us
+		if us>section_us:section_us=us;section=key
+	for key: String in _details:
+		var us: int=int(_details[key][0])
+		if us>detail_us:detail_us=us;detail_name=key
+	var retained: Array=_budget_rows[band]
+	if retained.size()>=BUDGET_KEEP:retained.pop_front()
+	retained.append({"frame":_frames,"map":map_id,"total_usec":total,"section":section,"section_usec":section_us,
+		"unattributed_usec":maxi(0,total-known),"detail":detail_name,"detail_usec":detail_us})
+
 static func _record(total: int, map_id: String, at: int) -> void:
 	_hitches += 1
 	var parts: Array = []
@@ -476,7 +513,8 @@ static func take_window(top: int = 4) -> Dictionary:
 
 static func summary() -> Dictionary:
 	return {"schema":1, "build":_build.duplicate(), "frames":_frames, "hitches":_hitches, "threshold_ms":THRESHOLD_USEC / 1000,
-		"worst":_worst.duplicate(true)}
+		"worst":_worst.duplicate(true), "budget_examples":_budget_rows.duplicate(true), "over_16ms":_over_16ms, "over_16667us":_over_16667us,
+		"over_33ms":_over_33ms, "at_least_4s":_at_least_4s}
 
 static func flush() -> void:
 	var at: int = Time.get_ticks_usec()
@@ -630,7 +668,12 @@ static func reset_for_test(directory: String) -> void:
 	_build = {}
 	_frames = 0
 	_hitches = 0
+	_over_16ms = 0
+	_over_16667us = 0
+	_over_33ms = 0
+	_at_least_4s = 0
 	_worst.clear()
+	_budget_next=[0,0];_budget_rows=[[],[]]
 	_last_frame = 0
 	_dirty = false
 	_last_flush = 0

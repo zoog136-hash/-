@@ -5,30 +5,65 @@ const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const USE=preload("res://scripts/loot/patch523_item_use.gd")
 const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const CARDS=preload("res://scripts/card_draw_fusion.gd")
+# Original restricted fishing rewards and the four other non-test fixed
+# collection-card IDs reached by the pinned original QuestReward graph.
 const IDS=[306611,306621,306631,306641]
+const QUEST_IDS=[139781,289172,289182,289202,306611,306621,306631,306641]
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const IDENTITY=preload("res://scripts/cards/current523_card_identity.gd")
 const PIN="38ee3ec74d12adaa9847c507f6fb093c41a4f7a8c5c1cefcd08c3a9629920d27"
 static func target(world: Node,record: Dictionary)->Dictionary:
  var id: int=int(record.get("source_item_class_id",0))
- if id not in IDS or int(record.get("source_bless_raw",0))!=1:return {}
+ if id not in QUEST_IDS or int(record.get("source_bless_raw",0))!=1:return {}
  var definition: Dictionary=D.definition_id(str(id))
  var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
  if definition.get("original_item",{}).get("TestItem",true) or spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return {}
  var original: Dictionary=spec.get("original_card",{})
- if original.get("IsNoMergeOut")!=true or original.get("IsNoSwapOut")!=true or int(original.get("ServerLimitSetID",-1))!=0 or int(original.get("StartDateTimeID",-1))!=0 or int(original.get("EndDateTimeID",-1))!=0:return {}
+ var card_id: int=int(spec.get("card_id",0))
+ var deck: int=int(original.get("BuffCardDeckID",0))
+ if deck!=1 or original.is_empty() or SOURCE.row("BuffCard",card_id)!=original or original.get("ServerLimitSetID")!=0 or original.get("StartDateTimeID")!=0 or original.get("EndDateTimeID")!=0:return {}
+ if typeof(original.get("IsNoMergeOut"))!=TYPE_BOOL or typeof(original.get("IsNoSwapOut"))!=TYPE_BOOL:return {}
+ var source_id: String=IDENTITY.source_id(deck,card_id)
+ if source_id.is_empty():return {}
  var category: String=str(spec.get("card_kind",""));var found: Array=[]
+ if category!="변신":return {}
  for row: Dictionary in world.catalog_db.get(category,[]):
-  if row.get("source")!="lineagem_base508" or int(row.get("source_card_id",0))!=int(spec.card_id) or row.get("source_original_card")!=original:continue
+  if row.get("source") not in ["lineagem_base508","lineagem_patch523"] or row.get("sourceId")!=source_id or int(row.get("source_deck_id",0))!=deck or int(row.get("source_card_id",0))!=card_id or int(row.get("source_grade_id",0))!=int(original.GradeID) or row.get("source_original_card")!=original:continue
   var identity: String=CARDS.card_id(row)
-  if identity!="source:m508:"+str(int(original.BuffCardDeckID))+":"+str(int(spec.card_id)):continue
-  if row.get("source_merge_out_disabled")!=true or row.get("source_swap_out_disabled")!=true:continue
-  if world.card_draw_fusion.source_merge_blocked.get(category+":"+identity)!=true or world.card_draw_fusion.known_ids.get(category,{}).get(identity)!=row.grade:continue
+  if identity!="source:"+source_id:continue
+  if row.get("source_merge_out_disabled")!=original.IsNoMergeOut or row.get("source_swap_out_disabled")!=original.IsNoSwapOut:continue
+  if world.card_draw_fusion.source_merge_blocked.get(category+":"+identity,false)!=original.IsNoMergeOut or world.card_draw_fusion.known_ids.get(category,{}).get(identity)!=row.grade:continue
   found.append({"category":category,"identity":identity,"record":row})
  return found[0] if found.size()==1 and world.card_draw_fusion.has_method("receive_source_card") else {}
+static func legacy_receipts(world: Node,item_key: String,item_id: int)->Array:
+ var issued: Array=[]
+ for qid: String in world.quest_service.item_grants:
+  if world.quest_service.claimed.get(qid)!=true:continue
+  for row: Dictionary in world.quest_service.item_grants[qid]:
+   if row.has("origin") or row.get("inventory_key")!=item_key or row.get("pack_sha256")!=PIN or int(row.get("item_class_id",0))!=item_id or int(row.get("bless_raw",0))!=1:continue
+   var quest: Dictionary=world.quest_service.full(world.quest_service.index.get(qid,{}))
+   if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
+   for original: Dictionary in quest.get("source_rewards",[]):
+    if original.get("ID")!=row.get("reward_id") or original.get("type_name")!="Item" or original.get("RewardClassID")!=item_id or original.get("ItemBlessCodeID")!=1 or original.get("UseImmediately")!=false or original.get("ClanOnly")!=false or original.get("RewardEnhancementTypeID")!=1 or original.get("Amount")!=row.get("quantity"):continue
+    if original.get("source_item")!=SOURCE.row("ItemClass",item_id):continue
+    issued.append({"quest_id":qid,"receipt":row.duplicate(true)})
+    break
+ return issued
+
+static func try_use_legacy(world: Node,item_key: String,physical_id: String,record: Dictionary)->bool:
+ var id: int=int(record.get("source_item_class_id",0))
+ if id not in QUEST_IDS or not physical_id.is_empty() or OWN.positive(world.inventory.get(item_key,0))==0:return false
+ if legacy_receipts(world,item_key,id).is_empty():return false
+ for entry: Variant in world.item_instances.values():
+  if entry is Dictionary and entry.get("name")==item_key:return false
+ use(world,record)
+ return true
+
 static func fail(world: Node,message: String)->Dictionary:
  world.hud.show_message(message+" · 원본 카드 아이템 보존")
  return {"handled":true,"ok":false,"saved":false,"consumed":0,"reason":message}
 static func use(world: Node,record: Dictionary,physical_id: String="")->Dictionary:
- if world.quest_service.save_blocked or not world._patch523_item_allowed():return fail(world,"현재 저장·사용 보호")
+ if world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty() or world.hp<=0 or not world._patch523_item_allowed():return fail(world,"현재 저장·사용 보호")
  var canonical: Dictionary=USE.canonical(record)
  if NATIVE_FIELDS.full(record).get("source_use_spec")!=NATIVE_FIELDS.full(canonical).get("source_use_spec"):return fail(world,"전달된 원본 카드 증명 불일치")
  var problem: String=USE.eligibility(world,canonical)
@@ -54,18 +89,22 @@ static func use(world: Node,record: Dictionary,physical_id: String="")->Dictiona
   input={"physical_id":physical_id,"quest_receipt":world.item_instances[physical_id].quest_reward_receipt.duplicate(true),"original_quantity":int(owned.original_quantity),"remaining_before":int(owned.quantity)}
  else:
   if world._item_locked(item_key,"") or int(world.inventory.get(item_key,0))<1:return fail(world,"정확한 소지량·잠금 확인 필요")
-  var issued: Array=[]
-  for qid: String in world.quest_service.item_grants:
-   if world.quest_service.claimed.get(qid)!=true:continue
-   for row: Dictionary in world.quest_service.item_grants[qid]:
-    if row.has("origin") or row.get("inventory_key")!=item_key or row.get("pack_sha256")!=PIN or int(row.item_class_id)!=int(canonical.source_item_class_id) or int(row.bless_raw)!=1:continue
-    issued.append({"quest_id":qid,"receipt":row.duplicate(true)})
-  if issued.is_empty():return fail(world,"실제 퀘스트 지급 영수증 없음")
+  for entry: Variant in world.item_instances.values():
+   if entry is Dictionary and entry.get("name")==item_key:return fail(world,"이름 소지와 물리 보상은 섞어 소비하지 않습니다")
+  var issued: Array=legacy_receipts(world,item_key,int(canonical.source_item_class_id))
+  var granted: int=0
+  for grant: Dictionary in issued:
+   var quantity: int=OWN.positive(grant.receipt.get("quantity"))
+   if quantity==0 or granted>9007199254740991-quantity:return fail(world,"퀘스트 지급량 형식 확인 필요")
+   granted+=quantity
+  if granted<OWN.positive(world.inventory.get(item_key,0)):return fail(world,"실제 퀘스트 지급 영수증·잔량 불일치")
   payload["inventory"]=USE.debit(world,item_key)
   input={"inventory_key":item_key,"remaining_before":int(world.inventory[item_key]),"issued_receipts":issued}
  var candidate=CARDS.new();candidate.configure(world.catalog_db);candidate.import_state(world.card_draw_fusion.export_state())
  var duplicate: bool=candidate.owned[exact.category].has(exact.identity)
- var proof: Dictionary={"origin":"quest_current523","source_snapshot":"patch523","source_sha256":world.quest_service.source.SOURCE_SHA,"item_pack_sha256":PIN,"item_class_id":int(canonical.source_item_class_id),"card_id":int(spec.card_id),"bless":1,"buff_card_cannot_swap":bool(spec.get("buff_card_cannot_swap",false)),"source_global_no_swap":true,"source_global_no_merge":true,"quest_option_feed_hold":1 if duplicate else 0,"quest_option_feed_policy":"TWILIGHT_host_hold_until_option_owner_verified","quest_copy_role":"spare" if duplicate else "permanent","quest_use_token":JSON.stringify([OWN.stamp(world),input,exact.identity]).sha256_text(),"input":input}
+ var original: Dictionary=spec.original_card
+ var proof: Dictionary={"origin":"quest_current523","cannot_swap":original.IsNoSwapOut,"source_snapshot":"patch523","source_sha256":world.quest_service.source.SOURCE_SHA,"item_pack_sha256":PIN,"item_class_id":int(canonical.source_item_class_id),"card_id":int(spec.card_id),"bless":1,"buff_card_cannot_swap":bool(spec.get("buff_card_cannot_swap",false)),"source_global_no_swap":original.IsNoSwapOut,"source_global_no_merge":original.IsNoMergeOut,"quest_option_feed_hold":1 if duplicate and int(canonical.source_item_class_id) in IDS else 0,"quest_copy_role":"spare" if duplicate else "permanent","quest_use_token":JSON.stringify([OWN.stamp(world),input,exact.identity]).sha256_text(),"input":input}
+ if int(canonical.source_item_class_id) in IDS:proof["quest_option_feed_policy"]="TWILIGHT_host_hold_until_option_owner_verified"
  var outcome: Dictionary=candidate.receive_source_card(exact.category,exact.record,proof)
  if not outcome.get("ok",false):return fail(world,str(outcome.get("error","원본 카드 지급 실패")))
  payload["card_draw_fusion"]=candidate.export_state()
@@ -89,6 +128,7 @@ static func use(world: Node,record: Dictionary,physical_id: String="")->Dictiona
  world.item_use_cooldowns=payload.item_use_cooldowns
  world.card_draw_fusion.import_state(payload.card_draw_fusion)
  world.deferred_save.cancel();world._invalidate_equipment_static()
+ world.card_collections.invalidate()
  world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory);world._update_hud()
  world.hud.show_message("원본 지정 카드 획득 · "+str(exact.record.name)+(" · 중복" if duplicate else " · 신규"))
  return {"handled":true,"ok":true,"saved":true,"consumed":1,"category":exact.category,"identity":exact.identity,"duplicate":duplicate,"results":outcome.get("results",[])}

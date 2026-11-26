@@ -18,13 +18,15 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   deck and grade (the same row tj runtime rolls with, server-matched).
 ## Left empty (no TWILIGHT data or feature): 각성 확률 보기, 후보 카드 컬렉션 보기 /
 ## 컬렉션 보기, the awakening detail panel (Nd_Detail), the moving select
-## frame (Nd_SelectEffect) and the reveal effects. Skill card retry (Recovery_All_Compose_Skill) has no TWILIGHT
-## engine and equipment recovery (Recovery_All) no TWILIGHT record. Without
+## frame (Nd_SelectEffect) and the reveal effects. Skill retries use the original three
+## grade buttons and the existing skill-book merge engine. Without
 ## the 523 TJ source or a server context the existing TJ page opens instead
 ## (it installs the source and stores the context).
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
+const SKILL_POLICY=preload("res://scripts/tj/skill_retry523.gd")
+const SKILL_COMPOSE="UI/Recovery/Recovery_All_Compose_Skill.csb"
 const COMPOSE="UI/Recovery/Recovery_All_Compose.csb"
 const AWAKEN="UI/Recovery/Recovery_All_Awaken.csb"
 const GRADE_CARD="UI/Recovery/Recovery_Card.csb"
@@ -33,7 +35,7 @@ const AWAKEN_POPUP="UI/Recovery/Recovery_Popup_Awaken_CardList.csb"
 const CARD_ROW="UI/Recovery/Recovery_List_Card.csb"
 const NAME_ROW="UI/Recovery/Recovery_List_CardName.csb"
 ## BuffCardDeckID of each category (scripts/tj/coupon_service DECK).
-const DECKS={"변신":1,"마법인형":2,"성물":98}
+const DECKS={"변신":1,"마법인형":2,"성물":98,"스킬":41}
 ## Recovery_Card grade node -> original GradeID (희귀 3, 영웅 4, 전설 5, 신화 32).
 const GRADE_NODES={"Nd_Unique":3,"Nd_Legend":4,"Nd__Epic":5,"Nd_Myth":32}
 const GRADE_NAMES={1:"일반",2:"고급",3:"희귀",4:"영웅",5:"전설",32:"신화",52:"유일"}
@@ -51,6 +53,9 @@ var category: String="변신"
 var stage: String="select"
 var grade: int=0
 var coupon: String=""
+## Empty for menu entry. Both fields identify one selected bag stack.
+var _focused_item: String=""
+var _physical_id: String=""
 var retry_event: Dictionary={}
 var fail_count: int=1
 var revision: int=-1
@@ -62,6 +67,7 @@ func required_members() -> Array[String]:
 	return [COMPOSE,AWAKEN,GRADE_CARD,POPUP,AWAKEN_POPUP,CARD_ROW,NAME_ROW]
 
 func _root_member() -> String:
+	if kind=="skill_fusion" and _pack!=null and _pack.manifest.get("scenes",{}).has(SKILL_COMPOSE): return SKILL_COMPOSE
 	return AWAKEN if kind=="awakening" else COMPOSE
 
 func _tj() -> Object:
@@ -70,21 +76,50 @@ func _tj() -> Object:
 
 ## Opens the window of `retry_kind` (fusion / awakening) and `category_name`;
 ## empty picks the first one with a usable record (else 변신 합성).
-func open(parent: Node, retry_kind: String="", category_name: String="") -> Dictionary:
+func open(parent: Node, retry_kind: String="", category_name: String="", focused_item: String="", physical_id: String="") -> Dictionary:
 	var tj: Object=_tj()
 	if tj==null:return _fail("source_tj_window_runtime_unavailable")
 	if tj.core.definitions.is_empty() and not tj.load_default_source():return _fail("source_tj_window_source_unavailable")
-	if tj.core.blocked or tj.context().is_empty():return _fail("source_tj_window_context_unavailable")
+	if tj.core.blocked:return _fail("source_tj_window_context_unavailable")
+	if focused_item.is_empty() != physical_id.is_empty():return _fail("source_tj_window_incomplete_selection")
+	if not focused_item.is_empty():
+		var entry: Dictionary=tj.core.definitions.get("coupons",{}).get(focused_item,{})
+		var route: Dictionary=physical_route(entry)
+		if route.is_empty() or tj.bag_count(focused_item,physical_id)<1:return _fail("source_tj_window_unsupported_selection")
+		retry_kind=route.kind
+		category_name=route.category
+	_focused_item=focused_item
+	_physical_id=physical_id
 	if retry_kind.is_empty():
 		var usable: Array=usable_records()
 		retry_kind=str(usable[0].kind) if not usable.is_empty() else "fusion"
 		category_name=str(usable[0].category) if not usable.is_empty() else "변신"
-	if retry_kind not in ["fusion","awakening"] or not DECKS.has(category_name):return _fail("source_tj_window_kind_unsupported")
+	if retry_kind!="skill_fusion" and tj.context().is_empty():return _fail("source_tj_window_context_unavailable")
+	if retry_kind not in ["fusion","awakening","skill_fusion"] or not DECKS.has(category_name):return _fail("source_tj_window_kind_unsupported")
 	kind=retry_kind
 	category=category_name
 	_reset("select")
 	_records.clear()
 	return open_window(parent)
+
+## The type, deck, history lane and category must agree in the selected
+## PlayerValueReturn policy. Skill-card and equipment histories have
+## different screens and separate rules.
+static func physical_route(entry: Dictionary) -> Dictionary:
+	var policy: Dictionary=entry.get("profile",{})
+	var deck: int=int(policy.get("BuffCardDeckID",0))
+	var category: Variant=DECKS.find_key(deck)
+	if category==null:return {}
+	var type_id: int=int(policy.get("UITypeID",0))
+	var history: int=int(policy.get("TJCouponHistoryType",0))
+	var item_category: int=int(entry.get("item",{}).get("CategoryID",0))
+	if deck==41:
+		return {"kind":"skill_fusion","category":category} if item_category==10272 and SKILL_POLICY.matches(policy) else {}
+	if item_category==10272 and type_id==161 and history==int({1:1,2:11,98:21}[deck]):
+		return {"kind":"fusion","category":category}
+	if item_category==10542 and type_id==(132 if deck==1 else 142) and history==int({1:41,2:51,98:61}[deck]):
+		return {"kind":"awakening","category":category}
+	return {}
 
 ## Every unused failure record an owned coupon can retry, as
 ## {coupon, retry_event, kind, category, grade, fail_count} (the coupon's own
@@ -94,18 +129,20 @@ func usable_records() -> Array:
 	var found: Array=[]
 	if tj==null:return found
 	var context: Dictionary=tj.context()
-	for id: String in tj.core.definitions.get("coupons",{}):
-		if int(tj.owned_count(id))<1:continue
-		var view: Dictionary=tj.core.candidates(id,context,tj.core.clock())
+	var ids: Array=tj.core.definitions.get("coupons",{}).keys() if _focused_item.is_empty() else [_focused_item]
+	for id: String in ids:
+		var count_owned: int=tj.owned_count(id) if _physical_id.is_empty() else tj.bag_count(id,_physical_id)
+		if count_owned<1:continue
+		var view: Dictionary=tj.skill_candidates(id) if SKILL_POLICY.matches(tj.core.definitions.coupons[id].get("profile",{})) else tj.core.candidates(id,context,tj.core.clock())
 		if not view.get("ok",false):continue
 		for row: Dictionary in view.get("events",[]):
 			var row_kind: String=str(row.get("adapter",""))
 			var row_category: String=""
 			for name: String in DECKS:
 				if int(DECKS[name])==int(row.get("deck",0)):row_category=name
-			if row_kind not in ["fusion","awakening"] or row_category.is_empty():continue
+			if row_kind not in ["fusion","awakening","skill_fusion"] or row_category.is_empty():continue
 			var count: int=int(view.get("policy",{}).get("ChoiceFailCardCount",0))
-			found.append({"coupon":id,"retry_event":row,"kind":row_kind,"category":row_category,"grade":int(row.get("grade",0)),"fail_count":count if count>0 else 1})
+			found.append({"coupon":id,"retry_event":row,"kind":row_kind,"category":row_category,"grade":int(row.get("target_grade",row.get("grade",0))),"fail_count":count if count>0 else 1})
 	return found
 
 func _usable_here() -> Array:
@@ -153,6 +190,20 @@ func _spec() -> Dictionary:
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Nd_Title/Text_Title"]={"role":"source_text","text":"%s %s 재도전" % [category,"각성" if kind=="awakening" else "합성"]}
 	spec["Nd_Title/Text_AllNew"]={"visible":false}
+	if kind=="skill_fusion" and _root_member()==SKILL_COMPOSE:
+		var available := {}
+		for row: Dictionary in _usable_here(): available[int(row.grade)] = true
+		for button: String in AWAKEN_BUTTONS:
+			var id := int(GRADE_NODES[AWAKEN_BUTTONS[button]])
+			var path := "Nd_CardSelect/" + button
+			spec[path] = {"activate":Callable(self,"_grade").bind(id)}
+			spec[path+"/Normal"] = {"visible":available.has(id)}
+			spec[path+"/Disabled"] = {"visible":not available.has(id)}
+		spec["Nd_CardSelect/Nd_Skill_AllNewTJ"] = {"exclude":true}
+		spec["Nd_CardSelect/Nd_Skill/Label_Notice"] = {"role":"source_text","text":"재도전할 스킬 합성 등급을 선택하세요."}
+		spec["Nd_ChangeRetry"] = {"exclude":true}
+		spec["Recovery_Popup_CardList"] = {"exclude":true}
+		return spec
 	var buttons: Dictionary=AWAKEN_BUTTONS if kind=="awakening" else COMPOSE_BUTTONS
 	for button: String in buttons:
 		var shown: String=buttons[button]
@@ -165,7 +216,8 @@ func _spec() -> Dictionary:
 		spec[p+"Btn_Card/"+shown]={"visible":true}
 		spec[p+"Btn_Card/"+shown+"/Label_Grade"]={"role":"source_text","text":"%s %s" % [GRADE_NAMES[id],category]}
 		for name: String in CARD_IMAGES:spec[p+"Btn_Card/"+shown+"/"+str(CARD_IMAGES[name])]={"visible":name==category}
-	if kind=="fusion":
+	if kind in ["fusion","skill_fusion"]:
+		if kind=="skill_fusion": spec["Nd_CardSelect/Btn_Unique"]={"exclude":true}
 		spec["Nd_CardSelect/Nd_MagicDoll_AllNewTJ"]={"visible":category=="마법인형"}
 		spec["Nd_CardSelect"]={"visible":stage!="retry"}
 		if stage=="retry":_retry_spec(spec,"Nd_ChangeRetry/")
@@ -192,6 +244,10 @@ func _retry_spec(spec: Dictionary, p: String) -> void:
 func success_chance(grade_id: int) -> float:
 	var tj: Object=_tj()
 	if tj==null:return -1.0
+	if kind=="skill_fusion":
+		var input_grade := int({4:1,5:4,32:5}.get(grade_id,-1))
+		var rule: Dictionary=world().skill_cards523.merge_rule(input_grade)
+		return float(rule.SuccessProbability)/10000.0 if not rule.is_empty() and int(rule.SuccessGradeID)==grade_id else -1.0
 	var found: Array=[]
 	for row: Variant in tj.core.definitions.get("merge_rules",[]):
 		if not row is Dictionary or int(row.get("BuffCardDeckID",0))!=int(DECKS.get(category,0)) or int(row.get("GradeID",0))!=grade_id:continue
@@ -205,6 +261,9 @@ func _probability(grade_id: int) -> Dictionary:
 		_message("현재 서버의 원본 합성 확률을 확인할 수 없습니다")
 		return {"ok":false}
 	var text: String=("%.4f" % chance).rstrip("0").rstrip(".")
+	if kind=="skill_fusion":
+		_message("%s 스킬 재합성 성공 확률 %s%%" % [GRADE_NAMES.get(grade_id,""),text])
+		return {"ok":true,"percent":chance}
 	_message("%s %s 합성 재도전 성공 확률 %s%% (성공 시 고른 성공 후보, 실패 시 고른 실패 후보 중 1장)" % [GRADE_NAMES.get(grade_id,""),category,text])
 	return {"ok":true,"percent":chance}
 
@@ -258,7 +317,7 @@ func _play_states(root: Node2D, out: Dictionary) -> Dictionary:
 	var available: Dictionary={}
 	for row: Dictionary in _usable_here():available[int(row.grade)]=true
 	var states: Dictionary={}
-	if stage=="retry":return states
+	if stage=="retry" or _root_member()==SKILL_COMPOSE:return states
 	var buttons: Dictionary=AWAKEN_BUTTONS if kind=="awakening" else COMPOSE_BUTTONS
 	for button: String in buttons:
 		var on: bool=available.has(int(GRADE_NODES[buttons[button]]))
@@ -384,12 +443,24 @@ func _grade(id: int) -> Dictionary:
 	for row: Dictionary in _usable_here():
 		if int(row.grade)==id:rows.append(row)
 	if rows.is_empty():
-		_message("이 등급의 재도전 이력이 없습니다")
+		var reason: String="이 등급의 재도전 이력이 없습니다"
+		if not _physical_id.is_empty():
+			var service: Object=_tj()
+			if service.bag_count(_focused_item,_physical_id)<1:reason="선택한 가방 쿠폰이 없거나 잠겨 있습니다"
+			elif kind=="skill_fusion":reason=str(service.skill_candidates(_focused_item).get("error",reason))
+			else:reason=str(service.core.candidates(_focused_item,service.context(),service.core.clock()).get("error",reason))
+		_message(reason)
 		return {"ok":false,"grade":id}
 	var tj: Object=_tj()
 	_reset("popup")
 	grade=id
 	revision=int(tj.core.state.revision)
+	if kind=="skill_fusion":
+		stage="select"
+		var selected: Dictionary=rows[-1]
+		coupon=str(selected.coupon)
+		retry_event=selected.retry_event
+		return _redeem()
 	if kind=="fusion":
 		var row: Dictionary=rows[-1]
 		coupon=str(row.coupon)
@@ -454,15 +525,20 @@ func _redeem() -> Dictionary:
 	if coupon.is_empty() or retry_event.is_empty():return {"ok":false}
 	var item: String=coupon
 	var event_id: String=str(retry_event.id)
+	var selected_uid: String=_physical_id
 	var at: int=revision
 	var good: Array=picked_success.duplicate()
 	var bad: Array=picked_fail.duplicate()
 	var fee: int=int(tj.core.settings.get("retry_gold_cost",0))
 	var name: String=str(tj.core.definitions.get("coupons",{}).get(item,{}).get("item",{}).get("Name","TJ의 쿠폰"))
-	var body: String="%s 1장을 사용합니다.\n%s" % [name,"기존 각성 비용이 함께 필요합니다." if kind=="awakening" else "성공 후보 %s · 실패 후보 %d장" % [_card_name(good[0]),bad.size()]]
+	var body: String="%s 1장을 사용합니다." % name
+	if kind=="skill_fusion":
+		body+="\n%s 스킬 재합성 · 성공 확률 %s%%. 실패 시 결과 카드가 없습니다." % [GRADE_NAMES.get(grade,""),str(success_chance(grade))]
+	elif kind=="awakening": body+="\n기존 각성 비용이 함께 필요합니다."
+	else: body+="\n성공 후보 %s · 실패 후보 %d장" % [_card_name(good[0]),bad.size()]
 	if fee>0:body+="\nTWILIGHT 추가 비용 %s 아데나" % _number(fee)
 	owner.call("confirm_action","TJ의 쿠폰",body,"도전",func(_count: int) -> void:
-		var result: Dictionary=tj.redeem(item,event_id,at,good,bad)
+		var result: Dictionary=tj.redeem(item,event_id,at,good,bad,selected_uid)
 		var success: String=" · 성공" if result.get("ok",false) and bool(result.get("success",false)) else (" · 실패" if result.get("ok",false) else "")
 		_message(str(result.get("error","완료"))+success)
 		if result.get("ok",false):_reset("select")

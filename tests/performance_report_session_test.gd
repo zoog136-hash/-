@@ -88,8 +88,10 @@ func _spool_and_privacy() -> void:
 		and not REPORT.valid_session("../" + ACTIVE), "session naming bounds and disallows traversals")
 	var raw: Dictionary = {
 		"session":PREV, "capture":"checkpoint", "account":"secret_user", "token":"secret_token",
+		"clock_sync":{"start":{"ticks_before_usec":100,"ticks_after_usec":110,"realtime_usec":1795500000000000,"extra":"secret_clock"},
+			"capture":{"ticks_before_usec":140,"ticks_after_usec":145,"realtime_usec":1795500000000040}},
 		"last_sample":{"fps":30, "vmrss_kb":789, "path":"/data/user/0/private", "tables":25},
-		"hitch_log":{"frames":32,"build":{"version_name":"523.813","commit":"56f5843f","token":"secret_build"},
+		"hitch_log":{"frames":32,"over_16ms":31,"over_16667us":29,"over_33ms":12,"at_least_4s":1,"build":{"version_name":"523.813","commit":"56f5843f","token":"secret_build"},
 			"worst":[{"ms":11076,"map":"aden_world","private":"/sdcard/secret",
 				"sections":[["other",11057],["/data/private",12]],
 				"details":[["save.write",193,3,76]], "diagnostics":{
@@ -99,9 +101,19 @@ func _spool_and_privacy() -> void:
 	var public_data: String = JSON.stringify(cleaned)
 	check(not public_data.contains("secret") and not public_data.contains("/data")
 		and cleaned.last_sample == {"fps":30, "vmrss_kb":789, "tables":25}, "public projection excludes account, credentials, and private paths")
+	check(cleaned.hitch_log.over_16ms == 31 and cleaned.hitch_log.over_16667us == 29
+		and cleaned.hitch_log.over_33ms == 12 and cleaned.hitch_log.at_least_4s == 1,
+		"public report retains only the exact numeric frame budget counters")
 	check(cleaned.hitch_log.worst[0].diagnostics.detail_spans[0][0] == "save.write"
 		and cleaned.hitch_log.worst[0].diagnostics.next_scene_dispatch.post_to_dispatch_usec == 11063000,
 		"public report retains detailed hitch and boundary data")
+	check(cleaned.clock_sync.start.size()==3 and cleaned.clock_sync.start.realtime_usec==1795500000000000 and cleaned.clock_sync.capture.ticks_before_usec==140,
+		"bounded clock anchors retained; no arbitrary fields")
+	var malformed: Dictionary = raw.duplicate(true)
+	malformed.clock_sync.start.ticks_after_usec=99
+	check(not REPORT.clean_snapshot(malformed).has("clock_sync"),"bad clock brackets are dropped")
+	var sampled: Dictionary = REPORT._sample_clock()
+	check(sampled.ticks_before_usec<=sampled.ticks_after_usec and sampled.realtime_usec>946684800000000,"live clock read is bracketed")
 	check(REPORT.write_private(DIR, cleaned), "valid snapshot writes a private checkpoint")
 	var active: Dictionary = cleaned.duplicate(true)
 	active.session = ACTIVE

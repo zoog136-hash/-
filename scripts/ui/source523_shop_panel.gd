@@ -1,6 +1,7 @@
 extends VBoxContainer
 ## The source catalog is a separate view; legacy purchases keep their policy.
 signal back_requested
+const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -152,6 +153,7 @@ func _build_entries() -> void:
 			title = catalog.label(int(row.get("DescID", 0)))
 			if CashMarket.listed(id): title += " · 다이아 %d" % int(CashMarket.entry(id).diamonds)
 		elif mode.selected == 1:
+			if RETIRED_ITEMS.item(row.get("ItemClassID")):continue
 			var seller: String=runtime.npc_label(int(row.MerchantsID)) if runtime!=null else ""
 			title = _item_name(int(row.ItemClassID)) + " · " + (seller if not seller.is_empty() else "NPC %d" % int(row.MerchantsID))
 		elif mode.selected == 2:

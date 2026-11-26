@@ -18,6 +18,7 @@ extends RefCounted
 ## the dismantle tab (shard amounts are not in the tables) and the
 ## probability popup.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const StageReads=preload("res://scripts/ui/original_ui/source_stage_tree_reads.gd")
 const InventoryImages=preload("res://scripts/ui/original_ui/source_main_inventory_images.gd")
 const Storage=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
 const SRC=preload("res://scripts/domination/domination_stone_source.gd")
@@ -123,8 +124,8 @@ func _runtime() -> Object:
 ## {scope, bindings} for `member` mounted under `key`: every node keeps its
 ## original record; spec entries (by original node-name path suffix) supply
 ## the live roles and visibility. `out` maps each key to {chain, offset}.
-func _bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary) -> Dictionary:
-	var tree: Dictionary=_pack.scene(member).get("nodeTree",{})
+func _bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary, reads: Dictionary={}) -> Dictionary:
+	var tree: Dictionary=StageReads.node_tree(_pack,member,reads)
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
 	var external: Array=_pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[])
@@ -132,10 +133,10 @@ func _bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dic
 	if MEMBER_SCOPES.has(member):
 		for offset: int in MEMBER_SCOPES[member]:roots.append(Scene._node_at_offset(tree,offset))
 	else:roots=tree.get("children",[])
-	for node: Dictionary in roots:_walk(node,key,chain,spec,scope,bindings,external,out)
+	for node: Dictionary in roots:_walk(node,key,chain,spec,scope,bindings,external,out,reads)
 	return {"scope":scope,"bindings":bindings}
 
-func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary) -> void:
+func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, reads: Dictionary) -> void:
 	if node.is_empty():return
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
@@ -153,7 +154,7 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 			if not member.begins_with("UI/"):member="UI/"+member
 			var next_chain: Array=chain.duplicate()
 			next_chain.append(offset)
-			var child: Dictionary=_bind(member,key,next_chain,spec,out)
+			var child: Dictionary=_bind(member,key,next_chain,spec,out,reads)
 			binding={"role":"project","source_node_offsets":child.scope,"bindings":child.bindings}
 		"Button":
 			binding={"role":"button","activate":Callable(self,"_ignore")}
@@ -174,7 +175,7 @@ func _walk(node: Dictionary, parent_key: String, chain: Array, spec: Dictionary,
 	if not binding.is_empty():bindings[offset]=binding
 	out[key]={"chain":chain,"offset":offset,"kind":kind}
 	if kind=="ProjectNode":return
-	for child: Dictionary in node.get("children",[]):_walk(child,key,chain,spec,scope,bindings,external,out)
+	for child: Dictionary in node.get("children",[]):_walk(child,key,chain,spec,scope,bindings,external,out,reads)
 
 ## The player owning `key` and the node offset in it.
 static func _locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:

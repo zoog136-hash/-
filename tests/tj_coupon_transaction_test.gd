@@ -11,6 +11,7 @@ class Host extends RefCounted:
 	var card_collections=Context.new()
 	var card_draw_fusion=Cards.new()
 	var catalog_db: Dictionary={}
+	var item_instances: Dictionary={}
 	var gold:=1234
 	var force_failure:=false
 	var path: String="user://tj-transaction.json"
@@ -40,6 +41,10 @@ func run() -> void:
 	core.state.coupons["900001"]=1
 	check(core.record_failure({"adapter":"fusion","history_type":1,"deck":1,"grade":3,"time":core.clock()-100,"context":runtime.context(),"success_candidates":["100"],"fail_candidates":["101"]}),"record genuine event adapter fixture")
 	var old: Dictionary=core.export_state();var cards: Dictionary=host.card_draw_fusion.export_state()
+	var absent: Dictionary=core.prepare("900001",str(old.history[0].id),runtime.context(),core.clock(),int(old.revision),["100"],["101"],0,true)
+	check(not absent.ok and core.export_state()==old,"focused request refuses absent physical stock despite a same-ID virtual coupon")
+	var backed: Dictionary=core.prepare("900001",str(old.history[0].id),runtime.context(),core.clock(),int(old.revision),["100"],["101"],1,true)
+	check(backed.ok and backed.bag_debit and int(backed.state.coupons["900001"])==1 and core.export_state()==old,"focused preparation stages exact physical debit and leaves virtual stock and live state unchanged")
 	check(host._save_game(true,{Service.KEY:old})==OK,"baseline real atomic writer")
 	var sha: String=FileAccess.get_sha256(host.path)
 	core.settings.retry_gold_cost=99999

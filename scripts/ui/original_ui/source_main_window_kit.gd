@@ -135,22 +135,37 @@ func _read_stage_tree(member: String) -> Dictionary:
 ## key to {chain, offset, kind, member}. `list_key` makes touch panels of a
 ## row scene forward drags to that list's scroll instead of consuming them.
 func _bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dictionary, list_key: String="") -> Dictionary:
+	# A spec suffix matches only a key with the same final slash component.
+	# Keep rules of the same name in insertion order (overlapping overrides)
+	# and check the whole suffix below. Scope this index to this binding; page
+	# callbacks and visibility can change on the next invocation.
+	var rules: Dictionary={}
+	for pattern: String in spec:
+		var leaf: String=pattern.substr(pattern.rfind("/")+1)
+		if not rules.has(leaf):rules[leaf]=[]
+		rules[leaf].append(["/"+pattern,spec[pattern]])
+	return _bind_indexed(member,key,chain,rules,out,list_key)
+
+func _bind_indexed(member: String, key: String, chain: Array, rules: Dictionary, out: Dictionary, list_key: String) -> Dictionary:
 	var tree: Dictionary=_read_stage_tree(member)
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
 	var external: Array=_pack.manifest.get("externally_bound_texture_nodes",{}).get(member,[])
-	for node: Dictionary in tree.get("children",[]):_walk(node,member,key,chain,spec,scope,bindings,external,out,list_key)
+	for node: Dictionary in tree.get("children",[]):_walk(node,member,key,chain,rules,scope,bindings,external,out,list_key)
 	return {"scope":scope,"bindings":bindings}
 
-func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, list_key: String) -> void:
+func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, rules: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, list_key: String) -> void:
 	if node.is_empty():return
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	var offset: int=int(node.get("_offset",-1))
-	var key: String=parent_key+"/"+str(widget.get("name",""))
+	var name: String=str(widget.get("name",""))
+	var key: String=parent_key+"/"+name
 	var kind: String=str(node.get("classname",""))
-	for pattern: String in spec:
-		if key.ends_with("/"+pattern) and bool(spec[pattern].get("exclude",false)):return
+	var candidates: Variant=rules.get(name.substr(name.rfind("/")+1) if "/" in name else name)
+	if candidates!=null:
+		for rule: Array in candidates:
+			if key.ends_with(rule[0]) and bool(rule[1].get("exclude",false)):return
 	scope.append(offset)
 	var touch: bool=bool(widget.get("touchEnabled",false))
 	var binding: Dictionary={}
@@ -160,7 +175,7 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 			if not child_member.begins_with("UI/"):child_member="UI/"+child_member
 			var next_chain: Array=chain.duplicate()
 			next_chain.append(offset)
-			var child: Dictionary=_bind(child_member,key,next_chain,spec,out,list_key)
+			var child: Dictionary=_bind_indexed(child_member,key,next_chain,rules,out,list_key)
 			binding={"role":"project","source_node_offsets":child.scope,"bindings":child.bindings}
 		"Button":
 			binding={"role":"button","activate":Callable(self,"_ignore")}
@@ -179,12 +194,16 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 	elif touch and not binding.has("role") and kind!="ProjectNode":
 		if not list_key.is_empty() and kind in ["Panel","ImageView"]:binding["input"]=Callable(self,"_list_input").bind(list_key)
 		else:binding["role"]="consume"
-	for pattern: String in spec:
-		if key.ends_with("/"+pattern):binding.merge(spec[pattern],true)
+	if candidates!=null:
+		for rule: Array in candidates:
+			if key.ends_with(rule[0]):binding.merge(rule[1],true)
+	if member=="UI/CommonUi/Common_Slot.csb" and kind=="Button":
+		var handler: Callable=binding.get("activate",Callable())
+		if handler.is_valid() and handler.get_method()!=&"_ignore":binding["route_feature_slot"]=true
 	if not binding.is_empty():bindings[offset]=binding
 	out[key]={"chain":chain,"offset":offset,"kind":kind,"member":member}
 	if kind=="ProjectNode":return
-	for child: Dictionary in node.get("children",[]):_walk(child,member,key,chain,spec,scope,bindings,external,out,list_key)
+	for child: Dictionary in node.get("children",[]):_walk(child,member,key,chain,rules,scope,bindings,external,out,list_key)
 
 ## The player owning the node at `suffix` and its offset.
 static func _locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
@@ -204,11 +223,21 @@ func _play_card_effect(effect: Callable, root: Node2D, out: Dictionary, panel: S
 	var host: Variant = located.player.source_nodes.get(located.offset)
 	if not host is Node2D: return false
 	var origin: Node2D = host.get_node_or_null("SourceContentOrigin")
-	var extent: Vector2 = _node_size(out, panel)
+	var extent: Vector2 = _card_effect_extent(located, out, panel)
 	if origin == null or extent.x <= 0.0 or extent.y <= 0.0: return false
 	if not bool(effect.call(origin, Rect2(Vector2(0.0, -extent.y), extent), card, settled)): return false
 	host.show()
 	return true
+
+## For mounted card face panels, the selected original record is already
+## present in this exact project instance. Its authored widget size is not
+## the rendered (possibly scale-nine) size. Do not re-open the pack here.
+func _card_effect_extent(located: Dictionary, out: Dictionary, panel: String) -> Vector2:
+	var player: Node2D=located.player
+	if player is Scene and player.source_member==located.member and out[located.key].get("kind")=="Panel":
+		var node: Dictionary=Scene._node_at_offset(player.source_tree.get("nodeTree",{}),int(located.offset))
+		if node.get("classname")=="Panel":return _authored_extent(node)
+	return _node_size(out,panel)
 
 func _scene_of(member: String, spec: Dictionary, out: Dictionary, list_key: String="") -> Dictionary:
 	var bound: Dictionary=_bind(member,"",[],spec,out,list_key)
@@ -225,10 +254,13 @@ func _node_size(out: Dictionary, suffix: String) -> Vector2:
 	for key: String in out:
 		if not key.ends_with("/"+suffix):continue
 		var node: Dictionary=Scene._node_at_offset(_read_stage_tree(str(out[key].member)),int(out[key].offset))
-		var options: Dictionary=node.get("options",{})
-		var size: Array=options.get("widgetOptions",options.get("nodeOptions",{})).get("size",[0,0])
-		return Vector2(float(size[0]),float(size[1]))
+		return _authored_extent(node)
 	return Vector2.ZERO
+
+static func _authored_extent(node: Dictionary) -> Vector2:
+	var options: Dictionary=node.get("options",{})
+	var size: Array=options.get("widgetOptions",options.get("nodeOptions",{})).get("size",[0,0])
+	return Vector2(float(size[0]),float(size[1]))
 
 func _node_options(out: Dictionary, suffix: String) -> Dictionary:
 	for key: String in out:
@@ -420,6 +452,14 @@ func _list_input(event: InputEvent, key: String) -> void:
 	if scale_y>0.0 and not event is InputEventMouseButton:delta/=scale_y
 	_moved+=delta
 	_scroll_to(key,float(_scrolls[key].value)+delta)
+
+## Common item picture and information routes for original feature windows.
+func _show_item_icon(player: Node2D, offset: int, info: Dictionary) -> bool:
+	return preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd").show_item(player, offset, info, hud())
+
+func _open_item_info(item_class_id: int) -> Dictionary:
+	if _dragged():return {"ok":true,"ignored_after_drag":true}
+	return preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(hud(), item_class_id)
 
 ## Uploads an owner-resolved original picture into a source_asset_slot.
 static func _show_picture(player: Node2D, offset: int, owner: Dictionary) -> bool:

@@ -275,6 +275,25 @@ func _input(event: InputEvent) -> void:
 	if _native_buttons==null or (not event is InputEventScreenTouch and not event is InputEventScreenDrag):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return
+	# The reward selector is modal even when the bag remains visible behind
+	# it. Route its rows, Cancel, and Confirm before the normal bag/chrome.
+	if feature_window_is_open("reward_select"):
+		var reward_buttons: Array=[]
+		var chooser: RefCounted=feature_window("reward_select")
+		if item_tooltip_is_open() and _item_tooltip.blocks_point(event.position):
+			_collect_native_buttons(_item_tooltip.get("_scene"),reward_buttons)
+		else:
+			_collect_native_buttons(chooser.input_scene(),reward_buttons)
+			chooser.append_row_buttons(reward_buttons)
+		_native_buttons.route(event,event.position,reward_buttons)
+		get_viewport().set_input_as_handled()
+		return
+	if drop_confirm_is_open():
+		var modal: Array=[]
+		_collect_native_buttons(_drop_popup.get("_scene"),modal)
+		_native_buttons.route(event,event.position,modal)
+		get_viewport().set_input_as_handled()
+		return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
 	var crafting_search: bool=crafting_search_is_open()
@@ -330,7 +349,13 @@ func _input(event: InputEvent) -> void:
 	elif character_inside:
 		var character: Dictionary=_character_view.presentation()
 		if is_instance_valid(character.get("scene")):_collect_native_buttons(character.scene,candidates)
+	elif item_tooltip_is_open() and _item_tooltip.blocks_point(point):
+		_collect_native_buttons(_item_tooltip.get("_scene"),candidates)
 	elif inventory_is_open() and inventory_blocks_point(point):
+		# Explicit single selected detail control; the normal Common_Slot
+		# subtree remains outside this router and owned by PointerTransfer.
+		var detail_button: Node=_inventory_view.detail_button_at(point)
+		if detail_button!=null:candidates.append(detail_button)
 		if _inventory_name_view!=null and _inventory_name_view.is_open():
 			var name_hint: Dictionary=_inventory_name_view.presentation()
 			if is_instance_valid(name_hint.get("scene")):_collect_native_buttons(name_hint.scene,candidates)
@@ -438,6 +463,8 @@ func _cancel_native_buttons() -> void:
 
 func _route_workspace_source_actions(event: InputEvent, point: Vector2) -> bool:
 	var buttons: Array=[]
+	if is_instance_valid(_full_menu_shell) and _full_menu_shell.is_visible_in_tree():
+		_collect_native_buttons(_full_menu_shell,buttons)
 	if _workspace_controls!=null:
 		var shown: Dictionary=_workspace_controls.presentation()
 		if is_instance_valid(shown.get("scene")):_collect_native_buttons(shown.scene,buttons)
@@ -930,10 +957,11 @@ func inventory_name_hint_context(reference: String) -> Dictionary:
 	return context
 
 func inventory_hit_at(viewport_point: Vector2) -> Dictionary:
+	if item_tooltip_is_open() and _item_tooltip.blocks_point(viewport_point):return {}
 	return _inventory_view.hit_at(viewport_point) if inventory_is_open() and not inventory_search_is_open() else {}
 
 func inventory_blocks_point(viewport_point: Vector2) -> bool:
-	return inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point))
+	return (item_tooltip_is_open() and _item_tooltip.blocks_point(viewport_point)) or (inventory_is_open() and (_inventory_view.blocks_point(viewport_point) or _inventory_view.search_blocks_point(viewport_point)))
 
 func inventory_lock_blocks_point(viewport_point: Vector2) -> bool:
 	if _inventory_lock_view==null:return false
@@ -1067,10 +1095,18 @@ func skill_window() -> RefCounted:
 func skill_window_is_open() -> bool:
 	return _skill_window!=null and _skill_window.is_open()
 
-## A skill slot under the point of the open original skill window (long-press
-## registration source for PointerTransfer), else {}.
+## The original skill viewport's current hit owns one physical gesture.
 func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
 	return _skill_window.hit_at(viewport_point) if skill_window_is_open() else {}
+
+func skill_window_gesture_is_live(epoch: int) -> bool:
+	return _skill_window!=null and _skill_window.gesture_is_live(epoch)
+
+func skill_window_gesture_tap(epoch: int, skill_id: String, release: Vector2) -> void:
+	if _skill_window!=null:_skill_window.tap_from_pointer(epoch,skill_id,release)
+
+func skill_window_gesture_scroll(epoch: int, delta_y: float) -> void:
+	if _skill_window!=null:_skill_window.scroll_from_pointer(epoch,delta_y)
 
 func close_skill_window() -> void:
 	if skill_window_is_open():
@@ -1155,6 +1191,8 @@ func close_emblem_window() -> void:
 const FEATURE_WINDOWS={
 	"card_collection":preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd"),
 	"card_fusion":preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd"),
+	"option_awakening":preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd"),
+	"awakening_result":preload("res://scripts/ui/original_ui/source_main_awakening_result_window.gd"),
 	"card_awakening":preload("res://scripts/ui/original_ui/source_main_card_awakening_window.gd"),
 	"titles":preload("res://scripts/ui/original_ui/source_main_title_window.gd"),
 	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
@@ -1190,6 +1228,21 @@ const FEATURE_WINDOWS={
 	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
 }
 var _feature_windows: Dictionary={}
+var _awakening_review_pack: RefCounted
+var _awakening_review_owner: WeakRef
+
+func awakening_review(parent: Control, title: String, body: String, accept: Callable) -> Control:
+	if _pack == null: return null
+	if _awakening_review_owner == null or _awakening_review_owner.get_ref() != _pack:
+		var source := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
+		_awakening_review_pack = source.resolve(_pack, source.REVIEW)
+		_awakening_review_owner = weakref(_pack) if _awakening_review_pack != null else null
+	if _awakening_review_pack == null: return null
+	var dialog := preload("res://scripts/ui/original_ui/source_main_awakening_review.gd").new()
+	parent.add_child(dialog)
+	if dialog.configure(_awakening_review_pack, _design_size, title, body, accept): return dialog
+	dialog.free()
+	return null
 
 ## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
 func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
@@ -1310,7 +1363,7 @@ func close_refine_window() -> void:
 const DungeonWindow=preload("res://scripts/ui/original_ui/source_main_dungeon_window.gd")
 var _dungeon_window: RefCounted
 
-func try_open_dungeon_window(view: Object) -> Dictionary:
+func try_open_dungeon_window(view: Object, tab: String="special", focus: int=0) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _dungeon_window==null and _pack!=null and hud!=null:
 		var window=DungeonWindow.new()
@@ -1322,7 +1375,7 @@ func try_open_dungeon_window(view: Object) -> Dictionary:
 			_dungeon_window=window
 	if _dungeon_window==null or not is_instance_valid(_coordinates):return _window_problem("dungeon_window")
 	_cancel_native_buttons()
-	return _dungeon_window.open(_coordinates,view)
+	return _dungeon_window.open(_coordinates,view,tab,focus)
 
 func dungeon_window() -> RefCounted:
 	return _dungeon_window
@@ -1528,7 +1581,7 @@ func close_production_window() -> void:
 const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 var _enchant_window: RefCounted
 
-func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
+func _ensure_enchant_window() -> bool:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _enchant_window==null and _pack!=null and hud!=null:
 		var window=EnchantWindow.new()
@@ -1538,10 +1591,18 @@ func try_open_enchant_window(scroll: String, candidates: Array) -> Dictionary:
 			window.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 			_enchant_window=window
-	if _enchant_window==null or not is_instance_valid(_coordinates):return _window_problem("enchant_window")
+	return _enchant_window!=null and is_instance_valid(_coordinates)
+
+func try_open_enchant_window(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
 	_cancel_native_buttons()
-	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates)
-	return _enchant_window.open(_coordinates,scroll,candidates)
+	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates,blessing)
+	return _enchant_window.open(_coordinates,scroll,candidates,blessing)
+
+func try_open_smelt_window(offer:Dictionary)->Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	return _enchant_window.open_smelt(_coordinates,offer)
 
 func enchant_window() -> RefCounted:
 	return _enchant_window
@@ -1563,7 +1624,7 @@ var _dissolve_popup: RefCounted
 func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
 	if _dissolve_popup==null and _pack!=null:
 		var popup=DissolvePopup.new()
-		_window_problems["dissolve_popup"]=popup.configure(_pack)
+		_window_problems["dissolve_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
 	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
 	for connection: Dictionary in _dissolve_popup.finished.get_connections():_dissolve_popup.finished.disconnect(connection.callable)
@@ -1582,13 +1643,13 @@ func close_dissolve_confirm() -> void:
 const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
 var _item_tooltip: RefCounted
 
-func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}) -> Dictionary:
+func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}) -> Dictionary:
 	if _item_tooltip==null and _pack!=null:
 		var popup=ItemTooltip.new()
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
-	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record)
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions,_hud.get_ref())
 
 func item_tooltip_is_open() -> bool:
 	return _item_tooltip!=null and _item_tooltip.is_open()
@@ -1604,14 +1665,23 @@ func close_item_tooltip() -> void:
 const DropPopup=preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
 var _drop_popup: RefCounted
 
-func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+func _prepare_quantity_popup() -> bool:
 	if _drop_popup==null and _pack!=null:
 		var popup=DropPopup.new()
-		_window_problems["drop_popup"]=popup.configure(_pack)
+		_window_problems["drop_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
-	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
+	if _drop_popup==null or not is_instance_valid(_coordinates):return false
 	_cancel_native_buttons()
-	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm)
+	return true
+
+func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
+	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
+	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm,permanent_delete)
+
+func try_open_quantity(maximum: int, selected: Callable) -> Dictionary:
+	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
+	if _drop_popup.is_open(): return {"ok":true,"handled":true}
+	return _drop_popup.open(_coordinates,"",0,maximum,selected,false,true)
 
 func drop_confirm_is_open() -> bool:
 	return _drop_popup!=null and _drop_popup.is_open()
@@ -1645,6 +1715,77 @@ func close_orim_skill_choice() -> void:
 ## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
 const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
 var _menu_tiles: RefCounted
+var _full_menu_shell: Node2D
+
+## Original Hud_TopMenu's open tray. The owner's existing scroll and item
+## routes mount into its measured ListView rectangle; no synthetic menu
+## border, tabs or close icon are drawn on top of this source branch.
+func full_menu_shell(on_close: Callable) -> Dictionary:
+	if _pack==null or _pack.manifest.get("files",{}).get(MainMenu.MEMBER,{}).get("sha256")!=MainMenu.SHA256:
+		return _fail("source_full_menu_identity_mismatch")
+	const BG: int=39228
+	const DECOR: int=38104
+	const LIST: int=35788
+	const CLOSE: int=36572
+	var scene:=Scene.new()
+	var scope: Array[int]=[BG,DECOR,LIST,CLOSE]
+	var built: Dictionary=scene.configure_nodes(_pack,MainMenu.MEMBER,scope,{
+		LIST:{"role":"source_list","row_offsets":[],"visible":true},
+		CLOSE:{"role":"button","activate":on_close,"visible":true}})
+	if not built.get("ok",false) or not scene.play("Ani_On").get("ok",false):
+		scene.free()
+		return _fail(str(built.get("error","source_full_menu_original_open_clip_missing")))
+	# The authored setup is transparent at frame 0. Show the actual open
+	# endpoint before enabling input rather than re-creating the art or animation.
+	scene.seek_frame(30)
+	scene.stop()
+	var bg: Rect2=_full_menu_node_rect(scene,BG)
+	var list: Rect2=_full_menu_node_rect(scene,LIST)
+	var close: Rect2=_full_menu_node_rect(scene,CLOSE)
+	if not bg.has_area() or list.size!=Vector2(350,470) or not bg.encloses(list) or not close.has_area():
+		scene.free()
+		return _fail("source_full_menu_original_bounds_invalid")
+	var shell: Rect2=bg.merge(close)
+	_full_menu_shell=scene
+	scene.name="OriginalFullMenuShell"
+	scene.z_index=-1
+	scene.position=-shell.position
+	return {"ok":true,"member":MainMenu.MEMBER,"scene":scene,"size":shell.size,"list_rect":Rect2(list.position-shell.position,list.size)}
+
+static func _full_menu_node_rect(scene: Node2D, offset: int) -> Rect2:
+	var node: Node2D=scene.source_nodes.get(offset)
+	if not is_instance_valid(node) or not node.visible:return Rect2()
+	var origin: Node2D=node.get_node_or_null("SourceContentOrigin")
+	if not is_instance_valid(origin):return Rect2()
+	var extent: Array=node.get_meta("source_size",[0,0])
+	var relative: Transform2D=scene.global_transform.affine_inverse()*origin.global_transform
+	return (relative*Rect2(Vector2(0,-float(extent[1])),Vector2(float(extent[0]),float(extent[1])))).abs()
+
+## These three actions have real HUD buttons, but no client MainMenu_* tile
+## in ui44. Reuse the mounted normal-state pixels and their original material,
+## never a guessed file, newly decoded atlas or homemade icon.
+const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST}
+func menu_action_art(section: String) -> Dictionary:
+	if section == "auto":
+		return _auto_pad_art()
+	if not MENU_HUD_ACTIONS.has(section) or not is_instance_valid(_menu_scene) or _menu_scene.get("source_member")!=MainMenu.MEMBER:return {}
+	var authored:Variant=_menu_scene.source_nodes.get(MENU_HUD_ACTIONS[section])
+	if not is_instance_valid(authored) or not authored.has_meta("source_button"):return {}
+	var button:Node=authored.get_meta("source_button")
+	var normal:Variant=button.states.get("normal")
+	if not normal is TextureRect or normal.texture==null or normal.material==null:return {}
+	return {"texture":normal.texture,"material":normal.material,"member":MainMenu.MEMBER,"offset":MENU_HUD_ACTIONS[section]}
+
+## The AUTO hit button is transparent. The authored sibling Sprite is the
+## actual original icon, not the touch target or the separate effect layer.
+func _auto_pad_art() -> Dictionary:
+	if not is_instance_valid(_combat_scene) or _combat_scene.get("source_member")!=Combat.PAD:return {}
+	const AUTO_SOURCE_ICON: int=29664
+	var node: Variant=_combat_scene.source_nodes.get(AUTO_SOURCE_ICON)
+	if not is_instance_valid(node) or not node.has_meta("source_sprite"):return {}
+	var art: Variant=node.get_meta("source_sprite")
+	if not art is Sprite2D or art.texture==null or art.material==null:return {}
+	return {"texture":art.texture,"material":art.material,"member":Combat.PAD,"offset":AUTO_SOURCE_ICON}
 
 func menu_tile(section: String) -> Dictionary:
 	if _menu_tiles==null and _pack!=null:

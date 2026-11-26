@@ -1,4 +1,5 @@
 extends RefCounted
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const Markers=preload("res://scripts/ui/original_ui/source_main_inventory_markers.gd")
 ## Only authored slot instances. Host declares exact owned references for those
 ## positions; no row repetition, pagination, sorting, asset lookup or use gesture.
@@ -26,6 +27,7 @@ signal selection_changed(reference: String)
 var _pack: RefCounted
 var _bag: WeakRef
 var _icon_binding_provider: Callable
+var profile_icon_owner: bool=false
 
 func configure(pack: RefCounted, hud: Node, icon_binding_provider: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(hud):return _fail("source_inventory_slots_hud_unavailable")
@@ -54,6 +56,8 @@ func entries() -> Dictionary:
 	# One owner snapshot serves every authored slot in this synchronous refresh.
 	# Preserve opaque physical references and duplicate detection; never join by
 	# name or ask the owner to regenerate/sort its complete bag for each slot.
+	# Owned rows are detached once. Ordered rows borrow from that snapshot;
+	# legacy displayed rows come from the caller and need their own copy.
 	var owned: Array=offered.duplicate(true)
 	var owned_by_reference: Dictionary={}
 	var owned_reference_counts: Dictionary={}
@@ -72,11 +76,13 @@ func entries() -> Dictionary:
 		for reference: String in ordered:
 			if int(owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_order_reference_not_unique")
 			displayed.append(owned_by_reference[reference])
+	else:
+		displayed=displayed.duplicate(true)
 	var displayed_reference_counts: Dictionary={}
 	for row: Dictionary in displayed:
 		var reference: Variant=row.get("reference")
 		if reference is String:displayed_reference_counts[reference]=int(displayed_reference_counts.get(reference,0))+1
-	return {"ok":true,"owned_entries":owned,"current_display_rows":displayed.duplicate(true),"owned_by_reference":owned_by_reference,"owned_reference_counts":owned_reference_counts,"displayed_reference_counts":displayed_reference_counts,"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
+	return {"ok":true,"owned_entries":owned,"current_display_rows":displayed,"owned_by_reference":owned_by_reference,"owned_reference_counts":owned_reference_counts,"displayed_reference_counts":displayed_reference_counts,"selected_reference":bag.get("selected_item"),"assignment_required":true,"partial_source_scene":true,"complete_screen_contract":false}
 
 func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: Dictionary={}, variant: String="Nd_Slot", current_model: Dictionary={}) -> Dictionary:
 	var identity: Dictionary=_identities()
@@ -98,6 +104,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	var set_scope: Array[int]=[]
 	var unresolved: Array=[]
 	var owner_results: Dictionary={}
+	var missing_icon_titles: Dictionary={}
 	for offset: int in authored.slots:
 		set_scope.append(offset)
 		var reference: String=str(assignments.get(offset,""))
@@ -105,6 +112,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 		if not slot.get("ok",false):return slot
 		set_bindings[offset]=slot.binding
 		if slot.has("owner_result"):owner_results[offset]=slot.owner_result
+		if slot.has("missing_icon_title"):missing_icon_titles[offset]=slot.missing_icon_title
 		unresolved.append_array(slot.unresolved_fields)
 	# The exact authored variant is selected explicitly by the host. Its
 	# original parent geometry is untouched; no capacity/page rule is derived.
@@ -115,7 +123,7 @@ func build(parent_project_offset: int, assignments: Dictionary, scroll_binding: 
 	if scroll_binding.get("role")=="source_scroll" and scroll_binding.get("input") is Callable and scroll_binding.input.is_valid():
 		parent_bindings[scroll_offset]=scroll_binding.duplicate(true)
 	else:unresolved.append({"field":"existing_native_scroll_input_binding","offset":scroll_offset,"required":"caller source_scroll binding with existing input Callable"})
-	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
+	return {"ok":true,"member":PARENT,"sha256":PARENT_SHA,"source_node_offsets":[parent_project_offset],"bindings":parent_bindings,"slot_set_member":SET_MEMBER,"slot_set_sha256":SET_SHA,"authored_variant":variant,"authored_slot_offsets":set_scope,"assignments":assignments.duplicate(true),"owner_results":owner_results,"missing_icon_titles":missing_icon_titles,"unassigned_authored_slots":_unassigned(authored.slots,assignments),"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved,"additional_rows_or_page_rules_created":false,"use_gesture_bound":false,"rebuild_on_owned_rows_or_assignments_change":true}
 
 func refresh_slot(slot_scene: Node2D, reference: String, current_model: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(slot_scene) or str(slot_scene.get("source_member"))!=SLOT_MEMBER:return _fail("source_inventory_slots_original_scene_required")
@@ -208,14 +216,18 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		if not _icon_binding_provider.is_valid():return {"ok":false,"handled":false,"code":"source_inventory_slots_existing_icon_provider_required","reference":reference,"slot_project_offset":offset}
 		# The current image owner provides pixels/provenance, not an asset-ref
 		# for a second lookup. Native renderer handles its existing upload API.
+		var started: int=FRAME_HITCH.now() if profile_icon_owner else 0
 		var supplied: Variant=_icon_binding_provider.call(entry.duplicate(true),{"member":SLOT_MEMBER,"node_offset":ICON,"slot_project_offset":offset,"reference":reference})
+		if started>0:FRAME_HITCH.detail("ui.inventory_icon_owner",started)
 		if not supplied is Dictionary:return _fail("source_inventory_slots_existing_owner_result_invalid")
 		if not supplied.get("ok",false) or (not supplied.get("texture") is Texture2D and not supplied.get("source_scene_descriptor") is Dictionary):
-			# An item with no original picture keeps its original slot with
-			# the picture left empty (nothing drawn or substituted); one such
-			# item no longer sends the whole bag back to the TWILIGHT bag.
+			# The authored centre label is for the short selected action only.
+			# A full title here is not clipped to the slot and covers neighbours.
+			# No substitute art: keep the amount, selection, tooltip and detail.
+			var title: String=str(entry.get("shown_name", ""))
+			if title.is_empty():title=preload("res://scripts/ui/source523_item_identity.gd").display_name(entry.get("record",{}),str(entry.get("name", "")))
 			unresolved.append({"field":"owned_original_icon_unavailable","reference":reference,"code":str(supplied.get("code",supplied.get("reason","")))})
-			return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"icon_missing":true,"unresolved_fields":unresolved}
+			return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"missing_icon_title":title,"unresolved_fields":unresolved}
 		scope.append(ICON)
 		bindings[ICON]={"role":"source_asset_slot","visible":false}
 		return {"ok":true,"binding":{"role":"project","source_node_offsets":scope,"bindings":bindings},"owner_result":supplied,"unresolved_fields":unresolved}
@@ -228,7 +240,9 @@ func _resolve_reference(reference: String, current_model: Dictionary={}) -> Dict
 	if not current.get("ok",false):return current
 	if reference.is_empty() or int(current.owned_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_current_owned_reference_not_unique")
 	if int(current.displayed_reference_counts.get(reference,0))!=1:return _fail("source_inventory_slots_reference_not_in_current_bag_filter")
-	return {"ok":true,"entry":current.owned_by_reference[reference].duplicate(true)}
+	# Internal readers never mutate the snapshot. The icon provider is the
+	# separately bound callback and still receives its own deep copy.
+	return {"ok":true,"entry":current.owned_by_reference[reference]}
 
 func _identities() -> Dictionary:
 	if _pack==null:return _fail("source_inventory_slots_source_pack_required")

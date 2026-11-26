@@ -10,7 +10,7 @@ extends RefCounted
 ## the world rolls and reopens this window.
 ## The result is the client's own in-window presentation: Enchant_All's
 ## Fx_Enchant_Start (slot glow) and Enchant_Popup_Message (Success / Fail
-## banner, Text_Item) play over the window for the clip's length, then hide;
+## banner, Text_Item) play over the window, then hold their legible result;
 ## a tap anywhere ends it early. No TWILIGHT full-screen result is drawn over
 ## the original window. Text_Item's result text is a TWILIGHT 근사 (the
 ## client's string is not in the 523 tables).
@@ -21,17 +21,20 @@ extends RefCounted
 ## a destroyed target or too few scrolls. Label_Num shows the fewest scrolls
 ## the goal needs; the picked list (ListView_Item) stays empty.
 ## Left inert or empty (no rule for them in this project): the other Enchant_All pages
-## (축복 부여 / 제련 / 속성 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
+## (속성 부여 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
 ## the grade filters, 상세보기 / 일괄 선택, tooltips and the other effect
 ## layers.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Forge=preload("res://scripts/ui/renewal_forge.gd")
 const ENCHANT=preload("res://scripts/original_enhancement.gd")
 const ROOT="UI/EnchantScene.csb"
 const ALL="UI/FloatingUi/Enchant_All.csb"
 const INVENTORY="UI/FloatingUi/Enchant_Inventory.csb"
 const TEXT_SET="UI/FloatingUi/Enchant_Text_Set.csb"
+const SMELT_BODY="UI/FloatingUi/Enchant_Tab_Smelt.csb"
+const SPIRIT_BODY="UI/FloatingUi/Enchant_Tab_Properties_Smelt.csb"
 const TITLE="UI/CommonUi/Inven_Icon_TitleLayout.csb"
 const SET="UI/FloatingUi/Inventory_Slot_Set.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
@@ -56,6 +59,7 @@ const P_ALL="Enchant_All_Layout/"
 const P_COMMON="Enchant_All_Layout/Nd_Common/"
 const P_ENCHANT="Enchant_All_Layout/Nd_Enchant/"
 const P_INV="Enchant_Inventory_Layout/Nd_Inven/Nd_InvenMode/"
+const P_SMELT_START=P_ALL+"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"
 const SET_SLOTS: Array[String]=["Slot_1","Slot_2","Slot_3","Slot_4"]
 ## Inventory_Slot_Set's authored horizontal slot pitch (-117, -41, 35, 111)
 ## as the line pitch, as the main inventory and the refine window use.
@@ -77,6 +81,8 @@ var _hud: WeakRef
 var _parent: WeakRef
 var _scene: Node2D
 var _scroll: String=""
+var _scroll_row: Dictionary={}
+var _blessing: bool=false
 var _candidates: Array=[]
 var _selected: String=""
 var _tab: String="equip"
@@ -91,8 +97,13 @@ var last_result: Dictionary={}
 var _presents: bool=false
 ## {kind: "success" | "fail", text, token} while the result plays.
 var _presentation: Dictionary={}
+var _pending_result_refresh: Dictionary = {}
+var _last_presentation_problem: String = ""
 var _blocker: Control
 var _token: int=0
+var _smelt:Dictionary={}
+var _smelt_quote:Dictionary={}
+var _smelt_status:String=""
 
 ## Drag scrolling of one original ScrollView whose authored first line is
 ## extended by added lines (the refine window's rule).
@@ -154,20 +165,52 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## Opens on `scroll`'s targets (장비 tab), or on the 주문서 tab without one.
-func open(parent: Node, scroll: String, candidates: Array) -> Dictionary:
+func open(parent: Node, scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_enchant_window_host_unavailable")
 	_parent=weakref(parent)
 	_bag.y=null
 	_text.y=null
 	_selected=""
-	return update(scroll,candidates)
+	return update(scroll,candidates,blessing)
+
+## The native inventory chose this exact physical material. The source
+## EnchantScene still owns the layout and touch controls; only its confirmed
+## common start invokes the existing equipment transaction.
+func open_smelt(parent:Node,offer:Dictionary)->Dictionary:
+	var kind:String=str(offer.get("kind",""))
+	var member:String=SMELT_BODY if kind=="smelt" else SPIRIT_BODY
+	if kind not in ["smelt","spirit_smelt"] or not offer.get("ok",false) or str(offer.get("uid","")).is_empty() or not is_instance_valid(parent):
+		return _fail("source_smelt_entry_unavailable")
+	if not _pack.manifest.get("scenes",{}).has(member):return _fail("source_smelt_body_unavailable")
+	close()
+	_parent=weakref(parent)
+	_bag.y=null;_text.y=null
+	_smelt=offer.duplicate(true)
+	_candidates=offer.get("targets",[]).duplicate(true)
+	_scroll=str(offer.get("name",""))
+	_selected="";_tab="equip";multi=false
+	_smelt_status="제련할 장비를 선택하세요" if not _candidates.is_empty() else "가방에 이 재료에 맞는 장비가 없습니다"
+	return _restage()
 
 ## New candidates after an attempt (or another scroll): keeps the selected
 ## physical item when it is still listed.
-func update(scroll: String, candidates: Array) -> Dictionary:
-	if scroll!=_scroll:
+func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
+	# The committed world requests refreshed rows immediately. Keep the
+	# exact pre-roll slot (including a destroyed item) under the running
+	# authored proof, and apply the refreshed owner rows when it ends.
+	if is_presenting():
+		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true),"blessing":blessing}
+		return {"ok":true,"handled":true,"result_refresh_pending":true}
+	_smelt.clear();_smelt_quote.clear();_smelt_status=""
+	_blessing=blessing
+	if blessing:multi=false
+	var blessing_reference: String=str(candidates[0].get("scroll_reference",scroll)) if blessing and not candidates.is_empty() else ""
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var selected_scroll: Dictionary=Forge.selected_scroll(hud,scroll,blessing_reference) if is_instance_valid(hud) else {"reference":scroll}
+	if selected_scroll.reference!=_scroll_row.get("reference",""):
 		_bag.y=null
 		_picked.clear()
+	_scroll_row=selected_scroll
 	_scroll=scroll
 	_candidates=candidates.duplicate(true)
 	_prune_picked()
@@ -177,7 +220,11 @@ func update(scroll: String, candidates: Array) -> Dictionary:
 	return _restage()
 
 func close() -> void:
+	_blessing=false
+	_scroll_row={}
+	_smelt.clear();_smelt_quote.clear();_smelt_status=""
 	_presentation={}
+	_pending_result_refresh={}
 	_blocker=null
 	var previous: Node2D=_scene
 	_scene=null
@@ -270,11 +317,17 @@ func _stage() -> Dictionary:
 		last_result=built
 		return built
 	var next: Node2D=built.scene
+	if not _smelt.is_empty():
+		var body:String=_smelt_body_path(_smelt.kind)
+		if not NamedTree.locate(next,out,body).get("ok",false) or not NamedTree.locate(next,out,P_SMELT_START).get("ok",false):
+			next.free()
+			return _fail("source_smelt_controls_unavailable")
 	var pictures: int=0
-	if not _scroll.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot0/Sp_IconSample",_scroll_record(hud,_scroll),_scroll):pictures+=1
+	var material:Dictionary=Forge.image_record_of(hud,_scroll_row) if not _scroll.is_empty() and _smelt.is_empty() else _smelt.get("record",{})
+	if not _scroll.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot0/Sp_IconSample",material,_scroll):pictures+=1
 	if not entry.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot1/Sp_IconSample",Forge.image_record_of(hud,entry),str(entry.get("name",""))):pictures+=1
 	var filled: Dictionary=_fill_bag(hud,next,out,listing)
-	var texts: Dictionary=_fill_text(next,out,rows) if filled.get("ok",false) else filled
+	var texts: Dictionary=_fill_text(next,out,rows) if filled.get("ok",false) and _smelt.is_empty() else filled
 	if not texts.get("ok",false):
 		next.free()
 		last_result=texts
@@ -294,11 +347,12 @@ func _stage() -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	# The world reopens the window right after the roll: the result plays on
-	# the new scene.
-	if not _presentation.is_empty():_play_presentation()
 	last_result={"ok":true,"handled":true,"member":ROOT,"scroll":_scroll,"tab":_tab,"candidates":_candidates.size(),"listed":listing.size(),"selected":_selected,
 		"stat_rows":rows.size(),"pictures":pictures,"bag_pictures":int(filled.get("bag_pictures",0)),"can_enchant":not entry.is_empty()}
+	if not _smelt.is_empty():
+		last_result["mode"]=_smelt.kind
+		last_result["material_uid"]=_smelt.uid
+		last_result["can_smelt"]=_smelt_quote.get("ok",false)
 	return last_result
 
 func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]) -> Dictionary:
@@ -336,7 +390,7 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	else:spec[P_ALL+"Nd_Enchant_Multi"]={"exclude":true}
 	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":_title(entry) if has else ("강화할 장비를 선택하세요" if not _scroll.is_empty() else "강화 주문서를 선택하세요")}
 	# Slot0: the scroll; Slot1: the target (TWILIGHT forge order 주문서 + 대상).
-	var owned: int=int(hud.lineage_inventory_ui.inventory.get(_scroll,0)) if not _scroll.is_empty() else 0
+	var owned: int=int(_scroll_row.get("count",0))
 	for slot: String in ["Inventory_Slot0","Inventory_Slot1"]:
 		var key: String=P_COMMON+"Nd_Slot/"+slot+"/"
 		spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
@@ -380,7 +434,79 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 	spec[P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot_Extension"]={"exclude":true}
 	spec[P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot_Extension_Lock"]={"exclude":true}
 	spec.merge(_row_spec(listing,0,P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot/"),true)
+	if _blessing:
+		var tab_path: String=P_COMMON+"Tab/Nd_Bless"
+		spec[tab_path]={"visible":true}
+		spec[tab_path+"/Btn_Bless_On"]={"visible":true}
+		spec[tab_path+"/Btn_Bless_Off"]={"exclude":true}
+		spec[P_COMMON+"Tab/Nd_Single"]={"exclude":true}
+		spec[P_COMMON+"Tab/Nd_Multi"]={"exclude":true}
+		for suffix: String in ["Label_Safe","Label_Unsafe","Nd_Money","Nd_Blessed_Cost","Btn_Probability"]:
+			spec[P_ENCHANT+suffix]={"exclude":true}
+		spec[P_COMMON+"Enchant_Base_Unsafety"]={"visible":false}
+		spec[P_COMMON+"Enchant_Base_Bless"]={"visible":true}
+		spec[P_COMMON+"Label_Title"]={"role":"source_text","text":str(entry.get("name","장비 선택")).get_slice(" · 원본#",0)+" · 축복 부여"}
+		spec[P_ENCHANT+"Btn_Probability_Bless"]={"visible":has,"activate":Callable(self,"_probability"),"touch_enabled":has}
+	if not _smelt.is_empty():_apply_smelt_spec(spec)
 	return spec
+
+func _apply_smelt_spec(spec:Dictionary)->void:
+	var spirit:bool=_smelt.kind=="spirit_smelt"
+	var body:String=P_ALL+("Nd_Enchant_Properties_Smelt" if spirit else "Nd_Enchant_Smelt")
+	var tab:String=P_COMMON+"Tab/"+("Nd_Properties_Smelt" if spirit else "Nd_Smelt")
+	var tab_button:String="Btn_Properties_Smelt_" if spirit else "Btn_Smelt_"
+	var can:bool=_smelt_quote.get("ok",false)
+	spec[body]={"visible":true}
+	spec[body+"/Nd_Money"]={"visible":can}
+	spec[body+"/Nd_Money/Text_Price"]={"role":"source_text","text":_number(int(_smelt_quote.get("gold_cost",0))) if can else ""}
+	spec[body+"/Label_Time_Notice"]={"visible":false}
+	var content:String="Enchant_Tab_Properties_Smelt" if spirit else "Enchant_Tab_Smelt"
+	spec[body+"/"+content+"/Label_Notice"]={"visible":false}
+	spec[P_ALL+"Nd_Enchant"]={"exclude":true}
+	spec[P_COMMON+"Tab/Nd_Single"]={"exclude":true}
+	spec[P_COMMON+"Tab/Nd_Multi"]={"exclude":true}
+	spec[tab]={"visible":true}
+	spec[tab+"/"+tab_button+"On"]={"visible":true}
+	spec[tab+"/"+tab_button+"Off"]={"visible":false}
+	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":_smelt_status}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Btn"]={"visible":false}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Text_Amount"]={"role":"source_text","text":str(_smelt.get("quantity",0)),"visible":int(_smelt.get("quantity",0))>0}
+	spec[P_INV+"Nd_Tab/Nd_Equipment/Btn_Equip_Off"]={"visible":false}
+	var start:String=P_SMELT_START
+	spec[start]={"activate":Callable(self,"_smelt_execute"),"displaystate":can}
+	spec[start+"/Normal"]={"visible":can}
+	spec[start+"/Disabled"]={"visible":not can}
+	for state:String in ["Normal","Disabled"]:
+		spec[start+"/"+state+"/Label"]={"role":"source_text","text":"제련 시작"}
+
+static func _smelt_body_path(kind:String)->String:
+	return P_ALL+("Nd_Enchant_Properties_Smelt/Enchant_Tab_Properties_Smelt" if kind=="spirit_smelt" else "Nd_Enchant_Smelt/Enchant_Tab_Smelt")
+
+func _smelt_action()->Dictionary:
+	return {"kind":_smelt.get("kind",""),"target_id":_selected,"material_ids":[str(_smelt.get("uid",""))]}
+
+func _smelt_select(entry:Dictionary)->Dictionary:
+	_selected=str(entry.get("target_id",""))
+	var hud:Node=_hud.get_ref() if _hud!=null else null
+	var world:Node=hud.get_parent() if is_instance_valid(hud) else null
+	if not is_instance_valid(world) or not world.has_method("native_smelt523_quote"):return _fail("source_smelt_owner_unavailable")
+	_smelt_quote=world.native_smelt523_quote(_smelt_action())
+	_smelt_status=("%s · 재료 1개" % str(entry.get("name",""))) if _smelt_quote.get("ok",false) else str(_smelt_quote.get("error","원본 제련 조건을 확인하세요"))
+	return _restage()
+
+func _smelt_execute()->Dictionary:
+	if _smelt.is_empty() or not _smelt_quote.get("ok",false):return {"ok":false,"handled":true}
+	var hud:Node=_hud.get_ref() if _hud!=null else null
+	var world:Node=hud.get_parent() if is_instance_valid(hud) else null
+	if not is_instance_valid(world) or not world.has_method("native_smelt523_commit"):return _fail("source_smelt_owner_unavailable")
+	_smelt_quote.clear()
+	var outcome:Dictionary=world.native_smelt523_commit(_smelt_action())
+	_smelt_status=str(outcome.get("detail","제련 완료")) if outcome.get("ok",false) else str(outcome.get("error","제련을 완료하지 못했습니다"))
+	if outcome.get("ok",false):
+		_smelt["quantity"]=maxi(0,int(_smelt.get("quantity",0))-1)
+	_restage()
+	return outcome
+
 
 func _text_spec(rows: Array[Dictionary], index: int, prefix: String) -> Dictionary:
 	var row: Dictionary=rows[index] if index<rows.size() else {}
@@ -396,14 +522,15 @@ func _row_spec(listing: Array, line: int, prefix: String) -> Dictionary:
 		var at: int=line*SET_SLOTS.size()+index
 		var entry: Dictionary=listing[at] if at<listing.size() else {}
 		spec[key+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
-		var chosen: bool=not entry.is_empty() and ((str(entry.get("target_id","")) in _picked if multi else str(entry.get("target_id",""))==_selected) if _tab=="equip" else str(entry.get("name",""))==_scroll)
+		var reference: String=str(entry.get("target_id",entry.get("reference","")))
+		var chosen: bool=not entry.is_empty() and ((reference in _picked if multi else reference==_selected) if _tab=="equip" else reference==_scroll_row.get("reference",""))
 		spec[key+"Sp_Select"]={"visible":chosen}
 		var text: String=""
 		if not entry.is_empty():
 			if _tab=="equip":text="+%d" % int(entry.get("level",0)) if int(entry.get("level",0))>0 else ""
 			else:text=_number(int(entry.get("count",0)))
 		spec[key+"Text_Amount"]={"role":"source_text","text":text,"visible":not text.is_empty()}
-		spec[key+"Btn"]={"activate":Callable(self,"_slot_pressed").bind(at)}
+		spec[key+"Btn"]={"activate":Callable(self,"_slot_pressed").bind(at,reference)}
 	return spec
 
 func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dictionary:
@@ -412,7 +539,7 @@ func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dict
 	var prefix: String=P_INV+"ScrollView_Item/Inventory_Slot_Set/Nd_Slot/"
 	for index: int in range(SET_SLOTS.size()):
 		_forward(root,out,prefix+SET_SLOTS[index]+"/Btn",_bag)
-		if index<listing.size() and _picture(root,out,prefix+SET_SLOTS[index]+"/Sp_IconSample",_listing_record(hud,listing[index]),str(listing[index].get("name",""))):pictures+=1
+		if index<listing.size() and _picture(root,out,prefix+SET_SLOTS[index]+"/Sp_IconSample",Forge.image_record_of(hud,listing[index]),str(listing[index].get("name",""))):pictures+=1
 	if lines>1:
 		var row: Variant=_row(root,out,P_INV+"ScrollView_Item/Inventory_Slot_Set")
 		if not row is Node2D or row.get_parent()==null:return _fail("source_enchant_window_slot_row_missing")
@@ -430,7 +557,7 @@ func _fill_bag(hud: Node, root: Node2D, out: Dictionary, listing: Array) -> Dict
 			for index: int in range(SET_SLOTS.size()):
 				_forward(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Btn",_bag)
 				var at: int=line*SET_SLOTS.size()+index
-				if at<listing.size() and _picture(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample",_listing_record(hud,listing[at]),str(listing[at].get("name",""))):pictures+=1
+				if at<listing.size() and _picture(scene,row_out,"Nd_Slot/"+SET_SLOTS[index]+"/Sp_IconSample",Forge.image_record_of(hud,listing[at]),str(listing[at].get("name",""))):pictures+=1
 	return {"ok":true,"bag_pictures":pictures,"pictures":pictures}
 
 func _fill_text(root: Node2D, out: Dictionary, rows: Array[Dictionary]) -> Dictionary:
@@ -450,12 +577,6 @@ func _row(root: Node2D, out: Dictionary, suffix: String) -> Variant:
 	if not located.get("ok",false):return null
 	return located.player.source_nodes.get(located.offset)
 
-func _listing_record(hud: Node, entry: Dictionary) -> Dictionary:
-	return Forge.image_record_of(hud,entry) if _tab=="equip" else _scroll_record(hud,str(entry.get("name","")))
-
-static func _scroll_record(hud: Node, name: String) -> Dictionary:
-	return hud.lineage_inventory_ui._find_item_record(name)
-
 ## The ScrollView's drag area is created above its content; under the
 ## content the slot buttons receive their taps (drags over them are forwarded
 ## back to the scroll by _forward).
@@ -473,6 +594,16 @@ func _forward(root: Node2D, out: Dictionary, suffix: String, scroller: Scroller)
 	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) and node.has_meta("source_button") else null
 	var area: Variant=button.get("_input_area") if is_instance_valid(button) else null
 	if area is Control and not area.gui_input.is_connected(scroller.input):area.gui_input.connect(scroller.input)
+	# The bag targets in this window belong to this exact transaction, never
+	# to the main inventory PointerTransfer. Route their original button.
+	if not _smelt.is_empty() and is_instance_valid(button):
+		button.set_meta("source_drag_forward",Callable(scroller,"input"))
+		var ancestor:Node=node
+		while is_instance_valid(ancestor) and ancestor!=root:
+			var identity:Variant=ancestor.get_meta("original_ui_source",{})
+			if identity is Dictionary and identity.get("scene")==SLOT:
+				ancestor.set_meta("source_slot_routed",true)
+			ancestor=ancestor.get_parent()
 
 ## The item picture the existing image owner resolves; none -> the slot stays empty.
 func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary, title: String) -> bool:
@@ -480,30 +611,32 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item(record,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player,located.offset,info,_hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 
-func _slot_pressed(index: int) -> Dictionary:
+func _slot_pressed(index: int, expected: Variant=null) -> Dictionary:
+	if not _smelt.is_empty():
+		if _bag.moved>12.0 or index<0 or index>=_candidates.size() or int(_smelt.get("quantity",0))<=0:return {"ok":false,"handled":true}
+		return _smelt_select(_candidates[index])
 	if _bag.moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return _fail("source_enchant_window_host_unavailable")
 	var listing: Array=_listing(hud)
 	if index<0 or index>=listing.size():return {"ok":true,"empty_slot":true}
 	var entry: Dictionary=listing[index]
+	var reference: String=str(entry.get("target_id",entry.get("reference","")))
+	if expected!=null and expected!=reference:return _restage()
 	if _tab=="equip":
 		if multi:return _toggle_pick(str(entry.get("target_id","")))
 		_selected=str(entry.get("target_id",""))
 		return _restage()
 	var name: String=str(entry.get("name",""))
-	if name==_scroll:return _set_tab("equip")
+	if reference==_scroll_row.get("reference",""):return _set_tab("equip")
 	# The existing scroll activation: the world reopens this window with that
 	# scroll's targets (a 축복 부여 scroll opens its own blessing list).
-	hud.inventory_item_activated.emit(name)
-	return {"ok":true,"scroll_activated":name}
+	hud.inventory_item_activated.emit(reference)
+	return {"ok":true,"scroll_activated":name,"reference":reference}
 
 func select_target(target_id: String) -> Dictionary:
 	_selected=target_id
@@ -525,6 +658,8 @@ func _notice(text: String) -> Dictionary:
 func _probability() -> Dictionary:
 	var entry: Dictionary=_entry()
 	if entry.is_empty():return _fail("source_enchant_window_target_unselected")
+	if _blessing:
+		return _notice("축복 부여 %.1f%% · %s\n%s" % [float(entry.get("success_chance",0)),str(entry.get("success_basis","")),str(entry.get("bonus_text",""))])
 	return _notice("성공 %.1f%% · 유지 %.1f%% · 하락 %.1f%% · 소실 %.1f%% · 성공 강화폭 %s" % [float(entry.get("success_chance",0.0)),float(entry.get("no_change_chance",0.0)),float(entry.get("decrease_chance",0.0)),float(entry.get("destroy_chance",0.0)),str(entry.get("gain_text","+1"))])
 
 ## --- 다중 강화 ----------------------------------------------------------------
@@ -616,8 +751,13 @@ func _enchant_requested() -> Dictionary:
 	if hud==null or entry.is_empty() or _scroll.is_empty():
 		if hud!=null and hud.has_method("show_message"):hud.call("show_message","강화할 장비를 고르세요" if entry.is_empty() else "강화 주문서가 없습니다")
 		return _fail("source_enchant_window_target_unselected")
+	if _blessing:
+		return {"ok":Forge.request_blessing(hud,_scroll,entry,Callable(self,"_finish_blessing").bind(_scroll_row.reference,_selected))}
 	# 강화 시작 rolls at once: the original window has no confirmation step.
 	return {"ok":Forge.request_target(hud,_scroll,entry),"request_owner":"renewal_forge.request_target"}
+
+func _finish_blessing(reference: String, target: String) -> void:
+	if is_open() and _blessing and _scroll_row.get("reference")==reference and _selected==target:_close_requested()
 
 ## --- Result presentation ---------------------------------------------------
 
@@ -641,45 +781,99 @@ static func result_text(result: String, from_level: int, to_level: int) -> Strin
 		"success":return "+%d 강화 성공" % to_level
 		"decrease":return "강화 실패 +%d → +%d" % [from_level,to_level]
 		"destroy":return "강화 실패 · 장비 소실"
-	return "강화 실패"
+	return "강화 실패 · +%d 유지" % from_level
+
+func presentation_problem() -> String:
+	return _last_presentation_problem
 
 func present(kind: String, text: String) -> bool:
-	if not _presents or not is_open():return false
+	_last_presentation_problem = ""
+	if not _presents or not is_open():
+		_last_presentation_problem = "source_enchant_result_members_unavailable"
+		return false
+	if is_presenting(): return false
 	_token+=1
 	_presentation={"kind":"success" if kind=="success" else "fail","text":text,"token":_token}
-	_play_presentation()
+	if not _play_presentation():
+		# A configured manifest alone does not prove the projections or
+		# clips mounted. Do not consume the committed result or block input.
+		end_presentation(_token)
+		return false
 	var hud: Node=_hud.get_ref() if _hud!=null else null
-	if hud!=null and hud.is_inside_tree():
-		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(end_presentation.bind(_token))
+	var settings: Variant = hud.get_parent().get("presentation_settings") if hud != null and hud.get_parent() != null else null
+	if settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0)) <= 0.0):
+		var glow: Dictionary = NamedTree.locate(_scene, _last_out, P_FX)
+		if glow.get("ok",false): glow.player.set_bound_visible(glow.offset,false)
+		_presentation.players[0].stop()
+		_hold_presentation(_token)
+	elif hud!=null and hud.is_inside_tree():
+		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(_hold_presentation.bind(_token))
 	return true
 
-## Ends the presentation `token` (the latest when -1): hides both members.
+## Both original message clips fade their text to zero at the end. Keep
+## the outcome on its fully opaque authored key until the player dismisses
+## it, including when a slow frame spans the entire entrance animation.
+func _hold_presentation(token: int) -> void:
+	if _presentation.is_empty() or token != _token or not is_open(): return
+	var players: Array = _presentation.get("players", [])
+	if players.size() < 2 or not is_instance_valid(players[1]): return
+	var banner: Node = players[1]
+	banner.seek_frame(40.0 if _presentation.kind == "success" else 145.0)
+	banner.stop()
+	_presentation["held"] = true
+
+## Ends the presentation `token` (the latest when -1): restore the window.
 func end_presentation(token: int=-1) -> void:
 	if _presentation.is_empty() or (token>=0 and token!=int(_presentation.get("token",-1))):return
+	for player: Variant in _presentation.get("players",[]):
+		if is_instance_valid(player):player.stop()
 	_presentation={}
 	if is_instance_valid(_blocker):_blocker.queue_free()
 	_blocker=null
-	if not is_open():return
+	if not is_open():
+		_pending_result_refresh={}
+		return
 	for pair: Array in [[P_FX,false],[P_POPUP,false],[P_TAB,true]]:
 		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
 		if located.get("ok",false):located.player.set_bound_visible(located.offset,bool(pair[1]))
+	var pending: Dictionary = _pending_result_refresh
+	_pending_result_refresh={}
+	if not pending.is_empty():update(pending.scroll,pending.candidates,bool(pending.get("blessing",false)))
 
-func _play_presentation() -> void:
-	if _presentation.is_empty() or not is_open():return
+func _play_presentation() -> bool:
 	var played: Array[String]=[]
-	for set_name: String in POPUP_SETS:
-		var label: Dictionary=NamedTree.locate(_scene,_last_out,P_POPUP+"/Set/"+set_name+"/Text_Item")
-		if label.get("ok",false):label.player.set_bound_text(label.offset,str(_presentation.text))
+	var players: Array=[]
+	_presentation["players"]=players
 	for pair: Array in [[P_FX,"Fx_Enchant_Start"],[P_POPUP,"Success" if _presentation.kind=="success" else "Fail"]]:
 		var located: Dictionary=NamedTree.locate(_scene,_last_out,str(pair[0]))
-		if not located.get("ok",false):continue
-		located.player.set_bound_visible(located.offset,true)
-		var player: Dictionary=located.player.project_player([located.offset])
-		if player.get("ok",false) and player.player.play(str(pair[1]),false).get("ok",false):played.append(str(pair[1]))
+		if not located.get("ok",false):
+			_last_presentation_problem="source_enchant_result_projection_missing:"+str(pair[1])
+			return false
+		var projected: Dictionary=located.player.project_player([located.offset])
+		if not projected.get("ok",false):
+			_last_presentation_problem="source_enchant_result_player_missing:"+str(pair[1])
+			return false
+		var player: Variant=projected.player
+		if not player.play(str(pair[1]),false).get("ok",false):
+			_last_presentation_problem="source_enchant_result_clip_missing:"+str(pair[1])
+			return false
+		players.append(player)
+		played.append(str(pair[1]))
+		if not located.player.set_bound_visible(located.offset,true).get("ok",false):
+			_last_presentation_problem="source_enchant_result_visibility_failed:"+str(pair[1])
+			return false
+	# The failure branch keeps explicit maintain/decrease/destroy text even
+	# though they all use the one original Fail banner clip.
+	var label_path := P_POPUP+"/Set/"+("EnChant_Success" if _presentation.kind=="success" else "EnChant_Fail")+"/Text_Item"
+	var label: Dictionary=NamedTree.locate(_scene,_last_out,label_path)
+	if not label.get("ok",false) or not label.player.set_bound_text(label.offset,str(_presentation.text)).get("ok",false):
+		_last_presentation_problem="source_enchant_result_text_binding_missing"
+		return false
 	_presentation["played"]=played
 	var tab: Dictionary=NamedTree.locate(_scene,_last_out,P_TAB)
 	if tab.get("ok",false):tab.player.set_bound_visible(tab.offset,false)
 	_block()
+	return true
 
 ## A tap anywhere during the presentation ends it (and cannot reach the
 ## window's buttons underneath, so it never starts another roll).

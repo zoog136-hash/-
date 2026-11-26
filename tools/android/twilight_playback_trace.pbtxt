@@ -1,0 +1,20 @@
+# Short Android 12+ local capture. No application logcat or input contents.
+duration_ms: 45000
+buffers { size_kb: 32768 fill_policy: RING_BUFFER }
+data_sources {
+  config {
+    name: "linux.ftrace"
+    ftrace_config {
+      ftrace_events: "sched/sched_switch"
+      ftrace_events: "sched/sched_waking"
+      ftrace_events: "power/suspend_resume"
+      atrace_categories: "gfx"
+      atrace_categories: "view"
+    }
+  }
+}
+data_sources {
+  config {
+    name: "android.surfaceflinger.frametimeline"
+  }
+}

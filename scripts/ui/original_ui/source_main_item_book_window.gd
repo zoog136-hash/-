@@ -294,9 +294,8 @@ func _item_picture(scene: Node2D, out: Dictionary, row: Dictionary) -> bool:
 	var located: Dictionary=_locate(scene,out,"CommonSlot/Sp_IconSample")
 	if not located.get("ok",false) or row.is_empty() or not Images.selected():return false
 	var info: Dictionary=Images.describe_item_class_row(row)
-	if not info.get("texture") is Texture2D:return false
-	var owner: Dictionary={"ok":true,"texture":info.texture,"provenance":info.get("provenance",{}).duplicate(true),"role":"item_book_registration_item"}
-	return _show_picture(located.player,located.offset,owner)
+	info["role"]="item_book_registration_item"
+	return _show_item_icon(located.player, located.offset, info)
 
 func _effect_row(row: Dictionary) -> Dictionary:
 	var spec: Dictionary={"Panel_Effect/Label_Title":{"role":"source_text","text":"%s (%d/%d)" % [str(row.name),int(row.registered),int(row.required)]},
