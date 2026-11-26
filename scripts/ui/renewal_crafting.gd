@@ -5,6 +5,8 @@ const Browser=preload("res://scripts/ui/renewal_browser.gd")
 const CraftRules=preload("res://scripts/crafting/expanded_crafting.gd")
 const Surfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
+const FAVORITES_KEY := "craft_recipe_favorites"
+enum Entry { STANDARD, SEARCH, FAVORITES }
 var hud: Node
 var world: Node
 var listing: ItemList
@@ -17,6 +19,11 @@ var all_recipe_ids: Array[String] = []
 var category_filter: OptionButton
 var grade_filter: OptionButton
 var name_filter: LineEdit
+var favorites_filter: Button
+var favorite_recipe: Button
+var entry: Entry = Entry.STANDARD
+var lookup_recipe_id: String = ""
+var submitted_query: String = ""
 var current_id: String = ""
 var layout: Control
 var product: TextureRect
@@ -38,9 +45,12 @@ var compact_short: bool=false
 static var pending_focus: String=""
 static var last_focus: Dictionary={}
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, entry_point: Entry = Entry.STANDARD, selected_recipe: String = "") -> void:
 	hud = controller
 	world = hud.get_parent()
+	entry = entry_point
+	lookup_recipe_id = selected_recipe
+	current_id = selected_recipe
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	# Inspected Korean normal crafting: recipe list, output/quantity, material
@@ -48,12 +58,17 @@ func configure(controller: Node) -> void:
 	# https://www.lineagem.com.tw/make/make-shields
 	filters = HBoxContainer.new()
 	add_child(filters)
-	var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
-	source_info.name = "Patch523EquipmentInfoButton"
-	filters.add_child(source_info)
-	var gacha_toggle: Button = UI.button("비법서 제작", func() -> void: _toggle_gacha())
-	gacha_toggle.name = "Patch523GachaCraftButton"
-	filters.add_child(gacha_toggle)
+	if entry == Entry.STANDARD:
+		var source_info: Button = UI.button("원본 강화 정보", func() -> void: hud.open_patch523_equipment_info())
+		source_info.name = "Patch523EquipmentInfoButton"
+		filters.add_child(source_info)
+		var gacha_toggle: Button = UI.button("비법서 제작", _toggle_gacha)
+		gacha_toggle.name = "Patch523GachaCraftButton"
+		filters.add_child(gacha_toggle)
+	else:
+		var back := UI.button("기본 제작", func() -> void: hud.open_crafting())
+		back.name = "CraftReturnToProduction"
+		filters.add_child(back)
 	category_filter = OptionButton.new()
 	category_filter.name = "CraftCategoryFilter"
 	category_filter.custom_minimum_size.y=40
@@ -73,9 +88,21 @@ func configure(controller: Node) -> void:
 	name_filter.name = "CraftNameFilter"
 	name_filter.placeholder_text = "제작법 / 결과 아이템 검색"
 	name_filter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	name_filter.text_changed.connect(func(_value: String) -> void: _rebuild_listing())
 	filters.add_child(name_filter)
-	_build_gacha()
+	if entry == Entry.STANDARD:
+		name_filter.text_changed.connect(func(_value: String) -> void: _rebuild_listing())
+	else:
+		name_filter.text_submitted.connect(func(_value: String) -> void: _submit_search())
+		var search := UI.button("검색", _submit_search, Vector2(48, 40))
+		search.name = "CraftSubmitSearch"
+		filters.add_child(search)
+	favorites_filter = UI.button("즐겨찾기만", _rebuild_listing)
+	favorites_filter.name = "CraftFavoritesOnly"
+	favorites_filter.toggle_mode = true
+	favorites_filter.set_pressed_no_signal(entry == Entry.FAVORITES)
+	filters.add_child(favorites_filter)
+	if entry == Entry.STANDARD:
+		_build_gacha()
 	layout = Browser.new()
 	layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(layout)
@@ -136,6 +163,10 @@ func configure(controller: Node) -> void:
 	result_text.add_child(product_name)
 	product_grade=UI.label("",12,UI.MUTED)
 	result_text.add_child(product_grade)
+	favorite_recipe = UI.button("즐겨찾기에 추가", _toggle_favorite)
+	favorite_recipe.name = "CraftFavoriteRecipe"
+	favorite_recipe.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	result_text.add_child(favorite_recipe)
 	var quantity:=VBoxContainer.new()
 	result_row.add_child(quantity)
 	quantity.add_child(UI.label("제작 수량",12,UI.MUTED))
@@ -187,10 +218,8 @@ func configure(controller: Node) -> void:
 	_reflow()
 	var data: Object = world.get("crafting")
 	var registry: Dictionary = data.get("recipes")
-	for raw_id: Variant in registry.keys():
-		var id: String = str(raw_id)
-		var recipe: Dictionary = registry[id]
-		all_recipe_ids.append(id)
+	for raw_id: Variant in registry:
+		all_recipe_ids.append(str(raw_id))
 	_rebuild_listing()
 	if not pending_focus.is_empty():
 		var target: String=pending_focus
@@ -295,6 +324,9 @@ func focus_recipe(recipe_id: String) -> bool:
 	category_filter.select(0)
 	grade_filter.select(0)
 	name_filter.text=""
+	submitted_query = ""
+	lookup_recipe_id = recipe_id
+	favorites_filter.set_pressed_no_signal(false)
 	_rebuild_listing()
 	var index: int=recipe_ids.find(recipe_id)
 	if index<0:return false
@@ -326,42 +358,92 @@ func _update_action_label() -> void:
 	action.text="제작 실행 · %d개" % int(amount.value)
 	if compact_short:action.text+="  ·  "+cost.text
 
+func _submit_search() -> void:
+	name_filter.release_focus()
+	var query := name_filter.text.strip_edges().to_lower()
+	if query == submitted_query:
+		return
+	submitted_query = query
+	_rebuild_listing()
+
+func _recipe_favorites() -> Dictionary:
+	var saved: Variant = world.ui_preferences.get(FAVORITES_KEY)
+	return saved if saved is Dictionary else {}
+
+func _sync_favorite_action() -> void:
+	favorite_recipe.disabled = current_id.is_empty()
+	favorite_recipe.text = "즐겨찾기 해제" if _recipe_favorites().get(current_id) == true else "즐겨찾기에 추가"
+
+func _toggle_favorite() -> void:
+	if current_id.is_empty() or not world.crafting.recipes.has(current_id):
+		return
+	var favorites := _recipe_favorites().duplicate()
+	if favorites.get(current_id) == true:
+		favorites.erase(current_id)
+	else:
+		favorites[current_id] = true
+	world.ui_preferences[FAVORITES_KEY] = favorites
+	world._request_deferred_save()
+	if favorites_filter.button_pressed:
+		_rebuild_listing()
+	else:
+		_sync_favorite_action()
+
 func _rebuild_listing() -> void:
 	listing.clear()
 	recipe_ids.clear()
+	var lookup: bool = entry != Entry.STANDARD
+	var favorites_only: bool = favorites_filter.button_pressed
+	var favorites := _recipe_favorites() if favorites_only else {}
 	var selected_category: String = category_filter.get_item_text(category_filter.selected)
 	var selected_grade: String = grade_filter.get_item_text(grade_filter.selected)
-	var item_records: Dictionary = world.call("_craft_item_index")
-	var needle: String = name_filter.text.strip_edges().to_lower()
-	var service: Object = world.get("crafting")
-	var registry: Dictionary = service.get("recipes")
+	var needle: String = submitted_query if lookup else name_filter.text.strip_edges().to_lower()
+	var registry: Dictionary = world.crafting.recipes
+	var candidates: Array[String] = all_recipe_ids
+	if favorites_only and favorites.is_empty():
+		candidates = []
+	elif lookup and needle.is_empty() and not favorites_only:
+		candidates = []
+		if registry.has(lookup_recipe_id):
+			candidates.append(lookup_recipe_id)
+	var item_records: Dictionary = world._craft_item_index() if not candidates.is_empty() else {}
 	var source_images: Dictionary = {}
-	for id: String in all_recipe_ids:
-		var recipe: Dictionary = registry.get(id,{})
+	for id: String in candidates:
+		if favorites_only and favorites.get(id) != true:
+			continue
+		var recipe: Dictionary = registry.get(id, {})
+		if recipe.is_empty():
+			continue
 		var output: Dictionary = recipe.get("result",{})
-		var match_text: String = (str(recipe.get("name","")) + " " + str(output.get("item",""))).to_lower()
 		if selected_category != "전체" and str(recipe.get("category","")) != selected_category:
 			continue
+		var recipe_name := str(recipe.get("name", id))
 		var output_name: String = str(output.get("item",""))
 		var grade: String = str((item_records.get(output_name,{}) as Dictionary).get("grade","일반"))
 		if selected_grade != "전체 등급" and grade != selected_grade:
 			continue
-		if not needle.is_empty() and not match_text.contains(needle):
+		if not needle.is_empty() and not (recipe_name.to_lower().contains(needle) or output_name.to_lower().contains(needle)):
 			continue
 		recipe_ids.append(id)
-		var item_class_id: int = _recipe_item_class_id(recipe,output,id)
-		var source_recipe_image: bool = _uses_source_recipe_images(recipe,id)
-		var original: Dictionary = SOURCE_IMAGES.describe_item_class(item_class_id,output_name) if item_class_id>0 else {}
-		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],original.get("texture") as Texture2D if source_recipe_image else UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
-		if source_recipe_image:
-			var evidence: Dictionary=original.duplicate(true)
-			evidence.erase("texture")
-			if item_class_id==0: evidence={"source_status":"zero_sentinel","actual_game_consumption_observed":false}
-			elif item_class_id<0: evidence={"source_status":"source_item_identity_required","actual_game_consumption_observed":false}
-			source_images[id]=evidence
+		var icon: Texture2D
+		# Lookup rows carry text only. The inspector loads the selected recipe's art.
+		if not lookup:
+			var item_class_id: int = _recipe_item_class_id(recipe,output,id)
+			var source_recipe_image: bool = _uses_source_recipe_images(recipe,id)
+			if source_recipe_image:
+				var original: Dictionary = SOURCE_IMAGES.describe_item_class(item_class_id, output_name) if item_class_id > 0 else {}
+				icon = original.get("texture") as Texture2D
+				var evidence: Dictionary = original.duplicate(true)
+				evidence.erase("texture")
+				if item_class_id == 0: evidence = {"source_status":"zero_sentinel","actual_game_consumption_observed":false}
+				elif item_class_id < 0: evidence = {"source_status":"source_item_identity_required","actual_game_consumption_observed":false}
+				source_images[id] = evidence
+			else:
+				icon = UI.item_icon(item_records.get(output_name, {}), output_name, hud.item_image_index.get("아이템", {}))
+		listing.add_item("[%s] %s" % [grade,recipe_name], icon)
 		listing.set_item_metadata(listing.item_count-1,id)
 		listing.set_item_custom_fg_color(listing.item_count-1,UI.grade(grade))
-		listing.set_item_tooltip(listing.item_count-1,str(recipe.get("name",id)))
+		listing.set_item_tooltip(listing.item_count-1,recipe_name)
 	listing.set_meta("source523_images",source_images)
 	if recipe_ids.is_empty():
 		current_id = ""
@@ -372,8 +454,14 @@ func _rebuild_listing() -> void:
 		_clear_materials()
 		cost.text="—"
 		wallet.text=""
+		probability_summary.hide()
 		detail.text = "조건에 맞는 제작법이 없습니다."
+		if favorites_only and needle.is_empty() and selected_category == "전체" and selected_grade == "전체 등급":
+			detail.text = "등록한 제작법이 없습니다. 검색 결과에서 즐겨찾기에 추가할 수 있습니다."
+		elif lookup and needle.is_empty() and not favorites_only:
+			detail.text = "제작법이나 결과 아이템 이름을 입력하고 검색하세요."
 		action.disabled = true
+		_sync_favorite_action()
 		return
 	var choice: int = recipe_ids.find(current_id)
 	if choice < 0:
@@ -387,6 +475,7 @@ func _select(index: int) -> void:
 	current_id = recipe_ids[index]
 	amount.max_value=1 if world.crafting.recipes.get(current_id,{}).has("outcomes") else 20
 	_refresh_quote()
+	_sync_favorite_action()
 
 func _refresh_quote() -> void:
 	if current_id.is_empty():

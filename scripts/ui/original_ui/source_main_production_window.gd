@@ -9,9 +9,8 @@ extends RefCounted
 ## 메인 / 한정 / 서버한정 list the registry recipes of the original
 ## recommendation list and MainCategoryID 41 / 51 (scripts/crafting/
 ## craft_tabs523.gd); their category list is every TWILIGHT category.
-## Left inert or empty (no rule here): 이벤트 / 즐겨찾기 / 검색 tabs (Off;
-## tapping says so; the 이벤트 tab is 비법서 제작 when the world has it:
-## TWILIGHT 근사, the existing panel), the class filter,
+## 즐겨찾기 and 검색 open the TWILIGHT recipe browser. 이벤트 opens the
+## existing 비법서 제작 panel when available. The class filter,
 ## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
 ## The recipe list shows 제작 가능 우선 from the start (사용자 목록 28): recipes
@@ -42,7 +41,6 @@ const P_LIST="Production_Tab_List/"
 const P_PROD="Production_Tab_List/Nd_Production/"
 ## 장비 / 기타 tabs over the TWILIGHT recipe categories.
 const TABS: Dictionary={"equip":["무기","방어구","장신구"],"other":["물약","재료"]}
-const OFF_TABS: Array[String]=["Btn_Event","Btn_Bookmark","Btn_Search"]
 ## Original-table tabs (craft_tabs523): tab -> its Nd_TabMenu button.
 const SOURCE_TABS: Dictionary={"main":"Btn_Main","limited":"Btn_LimitedAccount","server":"Btn_LimitedServer"}
 const CraftTabs=preload("res://scripts/crafting/craft_tabs523.gd")
@@ -331,9 +329,12 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 	for name: String in SOURCE_TABS:
 		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_On"]={"visible":_tab==name}
 		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_Off"]={"visible":_tab!=name,"activate":Callable(self,"_set_tab").bind(name)}
-	for tab_name: String in OFF_TABS:
-		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_On"]={"visible":false}
-		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 장비·기타 제작만 연결했습니다")}
+	spec[P_ALL+"Nd_TabMenu/Btn_Event_On"]={"visible":false}
+	spec[P_ALL+"Nd_TabMenu/Btn_Event_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 장비·기타 제작만 연결했습니다")}
+	spec[P_ALL+"Nd_TabMenu/Btn_Bookmark_On"]={"visible":false}
+	spec[P_ALL+"Nd_TabMenu/Btn_Bookmark_Off"]={"activate":Callable(self,"_open_recipe_lookup").bind(true)}
+	spec[P_ALL+"Nd_TabMenu/Btn_Search_On"]={"visible":false}
+	spec[P_ALL+"Nd_TabMenu/Btn_Search_Off"]={"activate":Callable(self,"_open_recipe_lookup").bind(false)}
 	# 비법서 제작 (TWILIGHT 근사): the original has no GachaCraft entry here, so
 	# the 이벤트 tab opens the existing 비법서 제작 panel (renewal_crafting).
 	if world.has_method("patch523_gacha_craft_owned"):
@@ -744,6 +745,13 @@ func _open_gacha() -> Dictionary:
 	close()
 	hud.call("open_gacha_craft523")
 	return {"ok":true,"handled":true,"routed":"open_gacha_craft523"}
+
+func _open_recipe_lookup(favorites_only: bool) -> Dictionary:
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if hud == null or not hud.has_method("open_craft_lookup"):
+		return _fail("source_production_window_lookup_unavailable")
+	hud.call("open_craft_lookup", favorites_only, _selected)
+	return {"ok":true,"handled":true,"routed":"open_craft_lookup"}
 
 func _close_requested() -> Dictionary:
 	close()

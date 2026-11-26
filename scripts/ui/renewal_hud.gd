@@ -1506,6 +1506,12 @@ func open_crafting() -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 
+func open_craft_lookup(favorites_only: bool, selected_recipe: String) -> void:
+	_open_window("crafting", "제작법 찾기", "")
+	var screen := CraftUI.new()
+	workspace.mount(screen)
+	screen.configure(self, CraftUI.Entry.FAVORITES if favorites_only else CraftUI.Entry.SEARCH, selected_recipe)
+
 ## 비법서 제작 (원본 GachaCraft, TWILIGHT 근사): the TWILIGHT crafting screen
 ## with its 비법서 제작 panel open; the original production window's 이벤트
 ## tab routes here (the original UI has no GachaCraft entry).
