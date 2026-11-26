@@ -1665,14 +1665,23 @@ func close_item_tooltip() -> void:
 const DropPopup=preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
 var _drop_popup: RefCounted
 
-func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
+func _prepare_quantity_popup() -> bool:
 	if _drop_popup==null and _pack!=null:
 		var popup=DropPopup.new()
 		_window_problems["drop_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
-	if _drop_popup==null or not is_instance_valid(_coordinates):return _window_problem("drop_popup")
+	if _drop_popup==null or not is_instance_valid(_coordinates):return false
 	_cancel_native_buttons()
+	return true
+
+func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
+	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
 	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm,permanent_delete)
+
+func try_open_quantity(maximum: int, selected: Callable) -> Dictionary:
+	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
+	if _drop_popup.is_open(): return {"ok":true,"handled":true}
+	return _drop_popup.open(_coordinates,"",0,maximum,selected,false,true)
 
 func drop_confirm_is_open() -> bool:
 	return _drop_popup!=null and _drop_popup.is_open()

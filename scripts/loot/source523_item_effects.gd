@@ -493,18 +493,22 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 
 ## A plain name-keyed stack of a claimed item (no receipted physical stack of
 ## that name): true when handled here.
-static func try_use_plain(world: Node, item_name: String, known_record: Variant=null) -> bool:
-	return (load("res://scripts/loot/source523_item_effects.gd") as Script).call("_try_use_plain_impl",world,item_name,known_record,false)
+static func try_use_plain(world: Node, item_name: String, known_record: Variant=null, catalog_action: Dictionary={}) -> bool:
+	return (load("res://scripts/loot/source523_item_effects.gd") as Script).call("_try_use_plain_impl",world,item_name,known_record,false,catalog_action)
 
-static func try_use_plain_loading(world: Node, item_name: String, known_record: Variant) -> bool:
-	return await _try_use_plain_impl(world,item_name,known_record,true)
+static func try_use_plain_loading(world: Node, item_name: String, known_record: Variant, catalog_action: Dictionary={}) -> bool:
+	return await _try_use_plain_impl(world,item_name,known_record,true,catalog_action)
 
-static func _try_use_plain_impl(world: Node, item_name: String, known_record: Variant, loading: bool) -> bool:
+static func _try_use_plain_impl(world: Node, item_name: String, known_record: Variant, loading: bool, catalog_action: Dictionary) -> bool:
 	if item_name.is_empty(): return false
 	var record: Dictionary = known_record if known_record is Dictionary else world._find_catalog_item_record(item_name)
 	if record.is_empty() or str(record.get("name",""))!=item_name: return false
+	if not catalog_action.is_empty():
+		var legacy: Script = load("res://scripts/loot/current523_catalog_stack.gd")
+		if catalog_action != legacy.action_record(world,record) or not legacy.holds_plain(world,item_name): return false
+		record = catalog_action
 	var kind: String = claims(record)
-	if kind.is_empty(): return false
+	if kind.is_empty() or (not catalog_action.is_empty() and kind not in ["teleport","teleport_location"]): return false
 	for entry: Variant in world.item_instances.values():
 		if entry is Dictionary and entry.get("name")==item_name and (entry as Dictionary).has(RECEIPT): return false
 	if kind=="food": return preload("res://scripts/loot/patch523_item_use.gd").try_use(world, record)

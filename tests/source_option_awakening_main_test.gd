@@ -414,6 +414,31 @@ func _native() -> void:
 		await settle()
 		check(options.view("마법인형",doll.target).awakened and options.view("변신",transform.target).experience==failed.experience
 			and w.skill_awakening.export_state()==base.skill,"real reload keeps actual independent option outcomes")
+	var relic: Dictionary = _seed(w,"성물")
+	if check(not relic.is_empty(),"eligible installed relic and its own material"):
+		w._update_hud()
+		var before_relic: Dictionary = _ledger(w)
+		var relic_page: RefCounted = await _open(w,"성물",str(relic.target))
+		if relic_page != null:
+			await _tap(_material(relic_page,false,str(relic.material)))
+			await _tap(_hit(_node(relic_page,OPTION.PRIMARY)))
+			check(relic_page.review_open(),"relic opens the authored confirmation")
+			relic_page.cancel_review()
+			check(_ledger(w)==before_relic,"review and cancel preserve relic, materials, fee and RNG")
+			await _tap(_hit(_node(relic_page,OPTION.OUTSIDE+"Btn_Use_All")))
+			await _tap(_hit(_node(relic_page,OPTION.PRIMARY)))
+			await _confirm(w.hud,false)
+			var supplied: Dictionary = options.view("성물",relic.target)
+			check(supplied.experience==supplied.required_experience and w.card_draw_fusion.spare["성물"][relic.material]==1000-relic.need,"original relic page pays the chosen duplicates")
+			for seed: int in range(1,1000):
+				probe.seed=seed
+				if probe.randi_range(0,9999)<float(supplied.success_chance_pct)*100.0: options.rng.seed=seed; break
+			await _tap(_hit(_node(relic_page,OPTION.PRIMARY)))
+			await _confirm(w.hud,false)
+			check(options.view("성물",relic.target).awakened,"confirmed relic awakens with its installed rule")
+			await _read_result(w,true)
+			var history: Dictionary = relic_page._history()
+			check(history.get("ok",false),"native history accepts the relic awakening tab")
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1": await _paid_skill(w)
 	w.queue_free()
 	await settle()
