@@ -633,7 +633,16 @@ static func remember_durable(path: String, envelope: Variant) -> void:
 ## against this original digest again before the envelope can be reused.
 static func remember_verified_durable(path: String, envelope: Variant, payload_sha: String) -> void:
 	if not envelope is Dictionary or payload_sha.is_empty(): _durable={};return
-	_durable={"path":path,"sha":payload_sha,"envelope":(envelope as Dictionary).duplicate(true)}
+	adopt_verified_envelope(path, (envelope as Dictionary).duplicate(true), payload_sha)
+
+## Consumes the envelope from an exclusive compact writer. All of its roots
+## were detached from live state in _stage_save/_seal. The disk view may
+## share these roots while writing, so both views are read-only.
+static func adopt_verified_envelope(path: String, envelope: Variant, payload_sha: String) -> void:
+	if not envelope is Dictionary or payload_sha.is_empty():
+		forget_durable()
+		return
+	_durable={"path":path,"sha":payload_sha,"envelope":envelope}
 
 ## Only the finished background job can hand off its private sealed graph:
 ## the scene never exposed its data, the worker is joined, and commit_written
@@ -641,10 +650,10 @@ static func remember_verified_durable(path: String, envelope: Variant, payload_s
 static func adopt_verified_worker_envelope(path: String, job: Dictionary, verified_sha: String) -> void:
 	var owned: Variant=job.get("envelope")
 	job.erase("envelope")
-	if not owned is Dictionary or verified_sha.is_empty() or verified_sha!=job.get("payload_hash"):
+	if verified_sha!=job.get("payload_hash"):
 		forget_durable()
 		return
-	_durable={"path":path,"sha":verified_sha,"envelope":owned}
+	adopt_verified_envelope(path, owned, verified_sha)
 
 static func forget_durable() -> void:
 	_durable = {}

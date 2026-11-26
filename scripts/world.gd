@@ -8032,14 +8032,15 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if want_background and background_save_enabled and collection_override.is_empty() and movement_override.is_empty() and pending_map_save_record.is_empty() and not observed_content.has("state") and not equipment_collections.test_save_writer.is_valid():
 		return _start_background_save(data, prior_owner_hash, save_started_usec, owned_save_fields)
 	var checkpoint_only: bool=collection_override.size()==1 and collection_override.has("source_dungeon_play")
-	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_checkpoint_write(save_path(),data) if checkpoint_only else CHARACTER_ACCOUNT.stage_save(save_path(),data)
+	var account_stage: Dictionary = CHARACTER_ACCOUNT.stage_compact_write(save_path(),data)
 	if not account_stage.ok:
 		if not quiet: hud.show_message(str(account_stage.problem))
 		return ERR_INVALID_DATA
 	data = account_stage.payload
-	var written_envelope: Variant = account_stage.envelope if checkpoint_only else data.get(CHARACTER_ACCOUNT.KEY)
-	# The synchronous checkpoint stage already returns its compact file view.
-	if not checkpoint_only: data = CHARACTER_ACCOUNT.compact(data)
+	var written_envelope: Variant = account_stage.envelope
+	# A v2 writer's compact view and envelope already own detached copies.
+	# Flat legacy saves still borrow live fields; their writer must copy them.
+	var owns_payload: bool = written_envelope is Dictionary
 	FRAME_HITCH.detail("save.account", save_stage_usec)
 	save_stage_usec = FRAME_HITCH.now()
 	CHARACTER_ACCOUNT.forget_durable()
@@ -8047,9 +8048,9 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	# a new ledger revision. Don't hash and retain a second full typed save
 	# just for the fast path used by repeated identical saves.
 	var retain_typed_snapshot: bool=not checkpoint_only
-	var result: Error = equipment_collections.write_save(save_path(), data, retain_typed_snapshot)
-	if result==OK and written_envelope is Dictionary:
-		CHARACTER_ACCOUNT.remember_verified_durable(save_path(),written_envelope,equipment_collections.verified_payload_sha(save_path()))
+	var result: Error = equipment_collections.write_save(save_path(), data, retain_typed_snapshot, owns_payload)
+	if result == OK and owns_payload:
+		CHARACTER_ACCOUNT.adopt_verified_envelope(save_path(), written_envelope, equipment_collections.verified_payload_sha(save_path()))
 	FRAME_HITCH.detail("save.write", save_stage_usec)
 	if result!=OK and not equipment_collections.save_blocked and equipment_collections.problem.is_empty():
 		if owner_boundary.committed(self,save_path(),data):

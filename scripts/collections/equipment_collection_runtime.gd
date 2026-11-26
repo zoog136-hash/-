@@ -278,7 +278,9 @@ func commit_written(path: String, _data: Dictionary, payload_hash: String) -> Er
 func verified_payload_sha(path: String) -> String:
 	return _last_payload_hash if path==_disk_path else ""
 
-func write_save(path: String, data: Dictionary, retain_typed_snapshot: bool = true) -> Error:
+## Only the compact account writer passes owns_payload. Its payload is
+## detached from the game and stays read-only after this call.
+func write_save(path: String, data: Dictionary, retain_typed_snapshot: bool = true, owns_payload: bool = false) -> Error:
 	if save_blocked or not problem.is_empty(): return ERR_UNAVAILABLE
 	# Refuse an external/stale save replacement rather than resurrecting consumed gear.
 	var current_hash: String = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
@@ -307,7 +309,7 @@ func write_save(path: String, data: Dictionary, retain_typed_snapshot: bool = tr
 	var payload_hash: String=payload_json.sha256_text()
 	if _disk_path==path and not current_hash.is_empty() and payload_hash==_last_payload_hash and current_hash==payload_hash:
 		_last_payload_revision=payload_revision
-		_last_payload_snapshot=data.duplicate(true) if retain_typed_snapshot else {}
+		_last_payload_snapshot=_retained_payload(data, retain_typed_snapshot, owns_payload)
 		_last_payload_snapshot_valid=retain_typed_snapshot
 		skipped_identical_saves+=1
 		return OK
@@ -322,9 +324,13 @@ func write_save(path: String, data: Dictionary, retain_typed_snapshot: bool = tr
 		_last_payload_hash = payload_hash if _disk_hash==payload_hash else ""
 		_last_payload_revision=payload_revision
 		_last_payload_snapshot_valid=retain_typed_snapshot and not _last_payload_hash.is_empty()
-		_last_payload_snapshot=data.duplicate(true) if _last_payload_snapshot_valid else {}
+		_last_payload_snapshot=_retained_payload(data, _last_payload_snapshot_valid, owns_payload)
 		save_writes+=1
 	return error
+
+func _retained_payload(data: Dictionary, retained: bool, owned: bool) -> Dictionary:
+	if not retained: return {}
+	return data if owned else data.duplicate(true)
 
 func _same_save_value(left: Variant, right: Variant) -> bool:
 	if typeof(left)!=typeof(right):return false
