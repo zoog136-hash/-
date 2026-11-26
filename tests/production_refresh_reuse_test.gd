@@ -20,7 +20,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_production_window.gd")
-	check(source.contains("_reuse_by_state=true") and source.contains("bool(kept.get_meta(\"row_ok\",false))==bool(world._craft_quote(id,1).get(\"ok\",false))"),"a refresh reuses item rows only with the same 제작 가능 state")
+	check(source.contains("_reuse_by_state=true") and source.contains("bool(kept.get_meta(\"row_ok\",false))==_craftable(world,id)") and source.contains("if not _ok_memo.has(id):_ok_memo[id]=bool(world._craft_quote(id,1).get(\"ok\",false))"),"a refresh reuses item rows only with the same 제작 가능 state")
 	check(source.contains("str((old as Node).get_meta(\"row_signature\",\"\"))==signature"),"sort / material rows are reused only with the same spec")
 	var QA=load("res://tests/qa_class_selection.gd")
 	var world=load("res://Main.tscn").instantiate()
