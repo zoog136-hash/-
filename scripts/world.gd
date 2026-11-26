@@ -358,6 +358,9 @@ var auto_search_index: int = 0
 var auto_search_cell: Vector2i
 var auto_search_actor_count: int = -1
 var auto_search_generation: int = -1
+var _auto_source_search_key: String = ""
+var _auto_source_search_frame: int = -1
+var _auto_source_search_work: Dictionary = {}
 var manual_route_pending_target: Vector2 = Vector2.INF
 var region_id: String = ""
 var return_gate: Node2D = null
@@ -3791,9 +3794,14 @@ func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
 	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
 	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
+func _clear_auto_source_search() -> void:
+	_auto_source_search_key = ""
+	_auto_source_search_work = {}
+
 func _clear_auto_target_search() -> void:
 	auto_search_candidates.clear()
 	auto_search_index = 0
+	_clear_auto_source_search()
 
 func _acquire_auto_target() -> PackedVector2Array:
 	auto_target = null
@@ -3804,6 +3812,7 @@ func _acquire_auto_target() -> PackedVector2Array:
 	var cell: Vector2i = _world_to_cell(origin)
 	var actor_count: int = monsters_root.get_child_count()
 	if auto_search_candidates.is_empty() or auto_search_cell != cell or auto_search_actor_count != actor_count or auto_search_generation != combat_generation:
+		_clear_auto_source_search()
 		auto_search_candidates = _reachable_target_candidates(99999.0, true)
 		auto_search_cell = cell
 		auto_search_actor_count = actor_count
@@ -3819,10 +3828,31 @@ func _acquire_auto_target() -> PackedVector2Array:
 		if monster.dead or monster.is_queued_for_deletion() or not monster.permits_auto_selection() or not equipment523_can_detect(monster): continue
 		var key: String = _auto_target_failure_key(monster)
 		if int(auto_target_failed_paths.get(key, 0)) > now: continue
-		auto_target_path_checks += 1
 		var started: int = FRAME_HITCH.now()
-		var route: PackedVector2Array = find_world_path(origin, monster.global_position)
-		FRAME_HITCH.detail("auto.search_route", started)
+		var route: PackedVector2Array
+		if field_map is Current523AdenSourceField:
+			var frame: int = Engine.get_process_frames()
+			if frame == _auto_source_search_frame:
+				auto_search_index -= 1
+				return PackedVector2Array()
+			_auto_source_search_frame = frame
+			if _auto_source_search_key != key:
+				_clear_auto_source_search()
+				_auto_source_search_key = key
+				auto_target_path_checks += 1
+			var step: Dictionary = field_map.hunt_path_step(origin,monster.global_position,_auto_source_search_work)
+			FRAME_HITCH.detail("auto.search_route", started)
+			if bool(step.pending):
+				_auto_source_search_work = step.work
+				auto_search_index -= 1
+				return PackedVector2Array()
+			_clear_auto_source_search()
+			route = step.path
+		else:
+			_clear_auto_source_search()
+			auto_target_path_checks += 1
+			route = find_world_path(origin, monster.global_position)
+			FRAME_HITCH.detail("auto.search_route", started)
 		if not route.is_empty():
 			auto_target_failed_paths.erase(key)
 			_clear_auto_target_search()
