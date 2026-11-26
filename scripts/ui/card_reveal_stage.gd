@@ -9,6 +9,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const SourceCardPresentation = preload("res://scripts/ui/source_card_presentation.gd")
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+const NativeGradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 @export var showcase_on_ready: bool = false
 var cards: Array[Control] = []
 var results: Array[Dictionary] = []
@@ -119,8 +120,9 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 ## Reuse the reveal stage's reel inside an authored result cell. The native
 ## window owns input, paging, dismissal, and the grade effect after the reel.
 static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, settled: Callable, category_name: String,
-		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary) -> bool:
+		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary, pack: RefCounted=null) -> bool:
 	var card: Control = CARD.new()
+	card.result_cell_illumination=true
 	card.name = "CardRevealEffect"
 	card.position = area.position
 	card.size = area.size
@@ -135,11 +137,17 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	shuffled.shuffle()
 	var no_legacy: Array[Texture2D] = []
 	card.configure(record, no_legacy, category_name, shuffled, false)
-	var upgraded: bool = is_fusion and bool(record.get("fusion_success", succeeded))
-	_mount_result_cell(host, card, settled, upgraded)
+	var upgraded: bool=is_fusion and not bool(record.get("pity_reward",false)) and bool(record.get("fusion_success",succeeded))
+	var show_lightning: bool=(not is_fusion or upgraded) and not card.reduced_motion and card.intensity_scale>0.0
+	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade) if show_lightning else null
+	if lightning!=null:
+		lightning.position=area.size*0.5
+		lightning.modulate.a=clampf(card.intensity_scale,0.0,1.0)
+		card.face.get_parent().add_child(lightning)
+	_mount_result_cell(host,card,settled,upgraded,lightning)
 	return true
 
-static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, upgraded: bool) -> void:
+static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, upgraded: bool, lightning: Node2D=null) -> void:
 	# Leave missing slots out of the reel. Missing art never cancels the
 	# original card-back, illumination, or native result timing.
 	card.face.candidates = card.face.candidates.filter(func(texture: Texture2D) -> bool: return texture != null)
@@ -152,6 +160,9 @@ static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, u
 		var motion: Tween = card.create_tween()
 		var duration: float = card.reveal_at()
 		motion.tween_method(card.seek.bind(upgraded), 0.0, duration, duration)
+		if lightning!=null:
+			motion.parallel().tween_callback(func() -> void:
+				if lightning.play(NativeGradeFx.CLIP,false).get("ok",false):lightning.show()).set_delay(duration-CARD.CONFIRM_DELAY_SECONDS)
 		motion.tween_callback(func() -> void:
 			card.hide()
 			if settled.is_valid(): settled.call()

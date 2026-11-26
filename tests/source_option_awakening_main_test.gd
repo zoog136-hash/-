@@ -120,7 +120,88 @@ func _open(w: Node, category: String, id: String) -> RefCounted:
 	check(_node(view,OPTION.LEVEL+"ProgressBar_Exp")!=null and _node(view,OPTION.PRIMARY)!=null and _node(view,"Nd_Content/Btn_Back")!=null,
 		"original progress bar, primary action and Back are mounted")
 	check(_node(view,"Change_Awaken_Skill")==null and not c.feature_window_is_open("card_awakening"),"option presentation does not mount skill awakening")
+	var bonuses: Array=view._snapshot.get("bonus_options",[])
+	var list: Dictionary=view._list(view._scene,view._out,OPTION.BONUS)
+	if check(not bonuses.is_empty() and list.get("ok",false),"authoritative options have the original list"):
+		var content: Node2D=list.content
+		var first: Node2D=content.get_child(0)
+		var label: Node2D=first.get_meta("source_text",null)
+		check(label!=null and label.original_options.text==bonuses[0] and first.is_visible_in_tree()
+			and first.position.x>=0.0 and first.position.x<=list.size.x
+			and first.position.y>=-list.size.y and first.position.y<=0.0,
+			"the first real option is in the visible clip, with its original font and exact text")
+		check(content.get_child_count()==view.last_result.filled.options_shown and content.get_child_count()>=bonuses.size(),"the list contains all source option rows")
 	return view
+
+## Entry with the production pack selector, before any test catalog injection.
+## The visual smoke can run on a UI/tables subset without a playable source map.
+func _descriptor_smoke() -> void:
+	var selector: Node=root.get_node("Source523Pack")
+	if not check(selector.configured and SOURCE.identity().get("source_sha256")==SOURCE.SOURCE_SHA,"cold descriptor selects the pinned 523 definitions"):return
+	root.size=Vector2i(2048,919)
+	var w: Node=load("res://Main.tscn").instantiate()
+	root.add_child(w)
+	current_scene=w
+	await settle()
+	if not check(QA.enter_game(w),"Main admits the local test character after descriptor selection"):w.queue_free();return
+	w.set_process(false)
+	w.player.set_physics_process(false)
+	w.field_population.set_process(false)
+	w.save_timer=-100000
+	for pair: Array in [["변신","source:m508:1:11152"],["마법인형","source:m508:2:40"]]:
+		var category: String=pair[0]
+		var id: String=pair[1]
+		w.card_draw_fusion.owned[category][id]=true
+		w._update_hud()
+		var ledger_before: Dictionary=_ledger(w)
+		var view: RefCounted=await _open(w,category,id)
+		if view==null:break
+		var list: Dictionary=view._list(view._scene,view._out,OPTION.BONUS)
+		var content: Node2D=list.content
+		var last: Node2D=content.get_child(-1)
+		check(content.get_child_count()>6 and last.position.y>0.0,"later authored option rows are below the initial viewport")
+		var start: Vector2=_node(view,OPTION.BONUS).get_global_transform_with_canvas()*Vector2(0.0,32.0)
+		# In its authored anchor space, this touch stays in the ListView
+		# even after the content itself starts moving.
+		for swipe: int in 4:
+			if last.position.y+content.position.y<=0.0:break
+			_pointer(start,true,47)
+			await process_frame
+			var event:=InputEventScreenDrag.new()
+			event.index=47
+			event.position=start-Vector2(0,30)
+			event.relative=Vector2(0,-30)
+			root.push_input(event,true)
+			await process_frame
+			_pointer(event.position,false,47)
+			await settle()
+		var y: float=last.position.y+content.position.y
+		check(content.position.y<0.0 and y<=0.0 and y>=-list.size.y,
+			"actual touch scroll brings the %s last option into view (scroll %.1f, row %.1f)" % [category,content.position.y,y])
+		check(_ledger(w)==ledger_before,"reading and scrolling options leaves the card ledger and RNG intact")
+		await _tap(_hit(_node(view,"Nd_Content/Btn_Back")))
+		var catalog: RefCounted=w.hud.original_main_ui_controller._change_window
+		check(not catalog._show_selected().get("awakening_options",0),"unawakened detail has no applied awakening effects")
+		# Exercise the real detail presenter with a committed-state fixture;
+		# this descriptor smoke does not write progress over a missing map.
+		var progress: Dictionary=w.option_awakening.core.card_progress(w.option_awakening.progress,category,id)
+		progress.awakened=true
+		w.option_awakening.progress.cards[category][id]=progress
+		var detail: Dictionary=catalog._show_selected()
+		var applied: Array=w.option_awakening.core.definition(category,id).applied_options
+		check(not applied.is_empty() and detail.awakening_options==applied.size(),"owned awakened %s displays all applied source options in ordinary detail" % category)
+		if category=="변신":
+			await _tap(_hit(catalog._scene.source_nodes.get(CHANGE.MIX_OFF)))
+			var setup: RefCounted=w.hud.original_main_ui_controller.feature_window("card_fusion")
+			if check(setup!=null and setup.is_open() and w.hud.original_main_ui_status.get("card_fusion_window",{}).get("handled",false),"cold catalog Mix touch mounts native fusion setup"):
+				var list_entry: Dictionary=setup._locate(setup._scene,setup._out,"Nd_CardMix/Nd_Card/ListView")
+				var prompt: Node2D=_node(setup,"Nd_Card/Label_Message")
+				check(list_entry.get("member")=="UI/Change/Change_DetailView_Mix.csb" and list_entry.get("offset")==5392
+					and prompt!=null and prompt.is_visible_in_tree() and not setup.last_result.filled.can_fuse,
+					"ordinary fusion has its original empty registration panel before a roll")
+			w.hud._close_workspace()
+	w.queue_free()
+	await settle()
 
 func _confirm(h: Node, cancel: bool) -> bool:
 	var box: Node=h.get_node_or_null("Root/TwilightConfirmation")
@@ -339,6 +420,7 @@ func _native() -> void:
 
 func run() -> void:
 	check(OPTION.PAGE_SIZE==9,"three authored original rows of three cards")
-	if not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty():await _native()
+	if "--descriptor-smoke" in OS.get_cmdline_user_args():await _descriptor_smoke()
+	elif not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty():await _native()
 	print("SOURCE_OPTION_AWAKENING_RESULT ",JSON.stringify({"checks":_checks,"failures":_errors,"original_ui":not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty(),"touch_release_usec":_touch_usec}))
 	quit(0 if _errors.is_empty() else 1)
