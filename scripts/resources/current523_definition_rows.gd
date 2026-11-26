@@ -984,6 +984,20 @@ static func _integer_column(table: String, field: String) -> bool:
 	if position < 0: return false
 	var column: Variant = _column_data(store, position)
 	if not column is PackedFloat64Array: return false
+	return _integer_values(table, field, store, column)
+
+static func _integer_values(table: String, field: String, store: Dictionary, column: PackedFloat64Array) -> bool:
+	# A validated relation index for this column exists only when every value
+	# was an integer (related() refuses to build one otherwise), so it already
+	# answers the question without checking each row again every run (Twm diag
+	# 2026-11-26: opening 상태판 ran ~91,000 integer checks).
+	var key: String = table + ":" + field
+	if _relations.has(key) and not (_relations[key] as Dictionary).has("ordered_ids"): return true
+	if not _relations.has(key):
+		var saved: Dictionary = _read_relation(table, field, store)
+		if not saved.is_empty():
+			_relations[key] = saved
+			return true
 	for value: float in column:
 		if not _integer(value): return false
 	return true
