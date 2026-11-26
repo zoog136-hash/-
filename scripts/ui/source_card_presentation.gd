@@ -12,6 +12,10 @@ static var textures: Dictionary = {}
 static func native(record: Dictionary) -> bool:
 	return record.get("source", "") in ["lineagem_base508","lineagem_patch523"]
 
+static func catalog_detail(category: String, record: Dictionary, acquired: bool) -> Dictionary:
+	var card_front: bool = category == "변신" and record.get("grade") in ["신화", "유일"]
+	return detail(record, acquired, not card_front)
+
 static func detail(record: Dictionary, acquired: bool, detail_view: bool = true) -> Dictionary:
 	if not native(record):
 		return {"status":"legacy", "texture":null}
@@ -151,7 +155,7 @@ static func apply(hud: Node) -> void:
 	var identity: String = CARDS.card_id(record)
 	var owned: Dictionary = hud.card_collection_state.get("owned", {}).get(hud.catalog_category, {})
 	var acquired: bool = owned.get(identity, false) == true
-	var result: Dictionary = detail(record, acquired)
+	var result: Dictionary = catalog_detail(hud.catalog_category, record, acquired)
 	preview.texture = null if result.get("status","") == "source_dummy_excluded" else result.get("texture")
 	preview.self_modulate = Color.WHITE if acquired or result.get("source523_verified_original",false) else Color(.68,.68,.68,.62)
 	badge.text = "원본 더미 이미지 제외" if result.status == "source_dummy_excluded" else "원본 카드 연결 미설치" if result.status == "runtime_missing" else "원본 이미지 미설치" if result.status in ["missing", "unreadable"] else "원본 이미지 미지정" if result.status == "undeclared" else "" if original_background else "원본 화면 배경 연결 대기"
