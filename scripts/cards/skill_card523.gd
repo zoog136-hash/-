@@ -79,6 +79,11 @@ func export_state() -> Variant:
 	if preserved != null: return preserved
 	return state.duplicate(true)
 
+## Combat reads the same invalidation key as the detached save payload,
+## but must not allocate an exported copy on every stat or skill query.
+func spell_cache_key() -> int:
+	return hash([revision, preserved if preserved != null else state])
+
 func import_state(value: Variant) -> void:
 	_quotes.clear()
 	problem = ""

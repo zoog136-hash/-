@@ -30,7 +30,51 @@ func _initialize() -> void: call_deferred("run")
 func effect(level: int, value: float, link: int) -> Dictionary:
 	return {"link_id":link, "bonus_id":link, "name_value":"SpellDamageBase", "unit":"Value", "denominator":1.0, "value":value, "application":0, "target":0, "spell_level":level, "character_level":0, "character_class":0}
 
+class CombatKeyOwner extends Node:
+	var skill_cards523: Variant
+
+class CountedSkillCards extends SKILL:
+	var exports: int = 0
+
+	func export_state() -> Variant:
+		exports += 1
+		return super.export_state()
+
+# Compatibility path for other lightweight owners.
+class LegacySkillCards extends RefCounted:
+	var revision: int = 4
+	var state: Dictionary = {"schema":1,"cards":{}}
+	func export_state() -> Variant:
+		return state.duplicate(true)
+
+func combat_cache_key() -> void:
+	var owner := CombatKeyOwner.new()
+	var cards := CountedSkillCards.new()
+	owner.skill_cards523 = cards
+	cards.import_state({"schema":1,"cards":{"14991":{"level":2,"exp":5}}})
+	var original: int = hash([cards.revision,cards.export_state()])
+	cards.exports = 0
+	for _i: int in range(32):
+		check(RULES.skill_card_key(owner) == original,"combat key equals saved-state hash")
+	check(cards.exports == 0,"combat key does not export a save snapshot")
+	var old_revision: int = cards.revision
+	cards.state.cards["14991"].level = 3
+	var changed: int = RULES.skill_card_key(owner)
+	check(cards.revision == old_revision and changed != original,"live in-place stage change invalidates combat key without revision")
+	var snapshot: Dictionary = cards.export_state()
+	snapshot.cards["14991"].level = 1
+	check(RULES.skill_card_key(owner) == changed and cards.level(14991) == 3,"exported save remains detached")
+	cards.import_state({"schema":999,"cards":{}})
+	check(not cards.problem.is_empty() and cards.level(14991) == 0 and RULES.skill_card_key(owner) == hash([cards.revision,cards.export_state()]),"unreadable save still has the exact old key and grants no stage")
+	var legacy := LegacySkillCards.new()
+	owner.skill_cards523 = legacy
+	check(RULES.skill_card_key(owner) == hash([legacy.revision,legacy.export_state()]),"compatible owner still uses export")
+	owner.skill_cards523 = null
+	check(RULES.skill_card_key(owner) == 0,"missing owner still uses zero combat key")
+	owner.free()
+
 func synthetic() -> void:
+	combat_cache_key()
 	check(SWAP.validate({}).is_empty() and SWAP.validate(SWAP.empty_state()).is_empty(), "empty reroll state is valid")
 	check(SWAP.validate({"schema":1,"counts":{"변신":{"source:m508:1:4":3}},"picks":{"변신|source:m508:1:4":{"swap_count":6,"candidates":["a","b"]}}}).is_empty(), "reroll counts and held picks validate")
 	check(not SWAP.validate({"schema":1,"counts":{"무기":{}},"picks":{}}).is_empty() and not SWAP.validate({"schema":2,"counts":{},"picks":{}}).is_empty() and not SWAP.validate([]).is_empty(), "unknown deck / schema / type is refused")
