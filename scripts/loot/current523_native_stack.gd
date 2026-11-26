@@ -41,6 +41,9 @@ class SupplierView extends Node:
 	var item_instances: Dictionary
 	var gold: int
 	func _catalog_item_from_source_id(id: String) -> Dictionary:return host._catalog_item_from_source_id(id)
+	func source_symbol_reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+		return host.source_symbol_reward_record(item_id, registered, authored) if host.has_method("source_symbol_reward_record") else {}
+
 
 static func authorizes(payload: Dictionary) -> bool:
 	return busy and not _candidate.is_empty() and _candidate==payload

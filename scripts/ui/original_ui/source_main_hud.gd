@@ -1192,6 +1192,7 @@ const FEATURE_WINDOWS={
 	"card_collection":preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd"),
 	"card_fusion":preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd"),
 	"option_awakening":preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd"),
+	"awakening_result":preload("res://scripts/ui/original_ui/source_main_awakening_result_window.gd"),
 	"card_awakening":preload("res://scripts/ui/original_ui/source_main_card_awakening_window.gd"),
 	"titles":preload("res://scripts/ui/original_ui/source_main_title_window.gd"),
 	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
@@ -1227,6 +1228,21 @@ const FEATURE_WINDOWS={
 	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
 }
 var _feature_windows: Dictionary={}
+var _awakening_review_pack: RefCounted
+var _awakening_review_owner: WeakRef
+
+func awakening_review(parent: Control, title: String, body: String, accept: Callable) -> Control:
+	if _pack == null: return null
+	if _awakening_review_owner == null or _awakening_review_owner.get_ref() != _pack:
+		var source := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
+		_awakening_review_pack = source.resolve(_pack, source.REVIEW)
+		_awakening_review_owner = weakref(_pack) if _awakening_review_pack != null else null
+	if _awakening_review_pack == null: return null
+	var dialog := preload("res://scripts/ui/original_ui/source_main_awakening_review.gd").new()
+	parent.add_child(dialog)
+	if dialog.configure(_awakening_review_pack, _design_size, title, body, accept): return dialog
+	dialog.free()
+	return null
 
 ## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
 func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:

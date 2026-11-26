@@ -31,7 +31,7 @@ REPO = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from build_original_ui_pack import Builder  # noqa: E402
 
-CODE = ["scripts/ui/original_ui/source_main_*.gd", "scripts/ui/original_ui/sprite_scene.gd",
+CODE = ["scripts/ui/original_ui/source_main_*.gd", "scripts/ui/original_ui/source_awakening_result_pack.gd", "scripts/ui/original_ui/sprite_scene.gd",
         "scripts/ui/original_ui/source_button_router.gd", "scripts/ui/original_ui/source_node_scope.gd"]
 # Parents read through pack.layout_source() (geometry for configure_project).
 LAYOUT_SOURCES = ["UI/MainScene.csb", "UI/HUDScene.csb", "UI/MissionScene.csb", "UI/StorageScene.csb",

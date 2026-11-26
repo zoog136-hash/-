@@ -15,6 +15,9 @@ static func make(world: Object, staged_inventory: Dictionary, staged_instances: 
 func _catalog_item_from_source_id(id: String) -> Dictionary:
 	return _world.call("_catalog_item_from_source_id",id)
 
+func source_symbol_reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+	return _world.source_symbol_reward_record(item_id, registered, authored) if _world.has_method("source_symbol_reward_record") else {}
+
 ## {ok, overrides{inventory,item_instances,gold}} or {ok:false,error}.
 static func stage_one(world: Object, staged_inventory: Dictionary, staged_instances: Dictionary, staged_gold: int, item_class_id: int, amount: int, bless: int, origin: Dictionary) -> Dictionary:
 	var view: Node = make(world,staged_inventory,staged_instances,staged_gold)
