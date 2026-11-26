@@ -10,6 +10,7 @@ extends RefCounted
 ##   original slot; 확인 calls `on_confirm(count)`, 취소 closes.
 ## Nothing here moves an item: the caller's existing transfer does that.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const BOX="UI/CommonUi/Common_MessageBox_Dissolution.csb"
 const KEYPAD="UI/CommonUi/Common_Calculator.csb"
@@ -18,6 +19,7 @@ const MEMBER_SCOPES={SLOT:[15728,15316,15012,6880]}
 signal closed
 var _pack: RefCounted
 var _tree: RefCounted
+var _hud: WeakRef
 var _scene: Node2D
 var _parent: Node
 var _out: Dictionary={}
@@ -27,13 +29,16 @@ var _maximum: int=1
 var _count: int=1
 var _typed: String=""
 var _on_confirm: Callable
+var _quantity_only: bool=false
+var _delete: bool=false
 var stage: String=""
 var last_result: Dictionary={}
 
-func configure(pack: RefCounted) -> Dictionary:
+func configure(pack: RefCounted, hud: Node=null) -> Dictionary:
 	for member: String in [BOX,KEYPAD,SLOT]:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_drop_popup_member_missing","member":member}
 	_pack=pack
+	_hud=weakref(hud) if hud!=null else null
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	return {"ok":true,"configured":true}
 
@@ -41,8 +46,8 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## `maximum` > 1 starts with the keypad; otherwise the confirmation directly.
-func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
-	if not is_instance_valid(parent) or item_name.is_empty() or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
+func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false, quantity_only: bool=false) -> Dictionary:
+	if not is_instance_valid(parent) or (item_name.is_empty() and not quantity_only) or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
 	_parent=parent
 	_item_name=item_name
 	_item_class_id=item_class_id
@@ -50,7 +55,9 @@ func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_
 	_count=1
 	_typed=""
 	_on_confirm=on_confirm
-	return _open_keypad() if maximum > 1 else _open_box()
+	_delete=permanent_delete
+	_quantity_only=quantity_only
+	return _open_keypad() if maximum > 1 or quantity_only else _open_box()
 
 func _open_keypad() -> Dictionary:
 	var spec: Dictionary={
@@ -69,7 +76,7 @@ func _open_keypad() -> Dictionary:
 func _open_box() -> Dictionary:
 	var spec: Dictionary={
 		"Fx_Popup_LeftUp":{"exclude":true},"Fx_Popup_RightBottom":{"exclude":true},
-		"Text_Message":{"role":"source_text","text":"%s %d개를 바닥에 내려놓으시겠습니까?" % [_item_name,_count]},
+		"Text_Message":{"role":"source_text","text":"선택한 아이템 %d개를 영구 삭제하시겠습니까?" % _count if _delete else "%s %d개를 바닥에 내려놓으시겠습니까?" % [_item_name,_count]},
 		"Text_Info":{"visible":false},
 		"Nd_Result/Label_Notice":{"visible":false},
 		"Nd_Result/Nd_Slot/Label_Title":{"visible":false},
@@ -86,9 +93,7 @@ func _open_box() -> Dictionary:
 	var located: Dictionary=NamedTree.locate(_scene,_out,"Nd_Result/Nd_Slot/Common_Slot/Sp_IconSample")
 	if located.get("ok",false):
 		var info: Dictionary=SourceImages.describe_item_class(_item_class_id,_item_name)
-		if info.get("texture") is Texture2D:
-			var owner: Dictionary={"ok":true,"texture":info.texture,"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-			shown["picture"]=located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false) and located.player.set_bound_visible(located.offset,true).get("ok",false)
+		shown["picture"]=NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref() if _hud!=null else null)
 	last_result=shown
 	return shown
 
@@ -114,7 +119,7 @@ func _show(member: String, spec: Dictionary, next_stage: String) -> Dictionary:
 	_scene=next
 	_out=out
 	stage=next_stage
-	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum}
+	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum,"permanent_delete":_delete}
 	return last_result
 
 func _refresh_volume() -> void:
@@ -149,9 +154,17 @@ func _set_count(value: int) -> Dictionary:
 	return {"ok":true,"count":_count}
 
 func _keypad_done() -> Dictionary:
+	if _quantity_only:
+		if stage != "keypad" or not is_open(): return {"ok":false}
+		var next: Callable = _on_confirm
+		var chosen: int = _count
+		close()
+		if next.is_valid(): next.call(chosen)
+		return {"ok":true,"count":chosen}
 	return _open_box()
 
 func _confirm() -> Dictionary:
+	if stage!="confirm" or not is_open():return {"ok":false,"code":"inventory_confirmation_not_open"}
 	var callback: Callable=_on_confirm
 	var count: int=_count
 	close()
@@ -173,4 +186,5 @@ func close(emit: bool=true) -> void:
 		previous.queue_free()
 	if emit:
 		stage=""
+		_on_confirm=Callable()
 		closed.emit()

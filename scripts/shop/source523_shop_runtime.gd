@@ -41,6 +41,9 @@ var problem: String = ""
 var _busy: bool = false
 var _transaction_time: int = -1
 var _bindings: Dictionary = {}
+## Set only when the real shop recognized its historical aggregate and the
+## installed original supplier can issue the same ItemClass as a physical stack.
+var legacy_powder_key: String = ""
 ## Explicit adapters only. Missing server/calendar/price knowledge never grants access.
 var server_context: Dictionary = {}
 ## Default calendar: Korea time with the 05:00 reset used everywhere else in
@@ -179,6 +182,7 @@ func bind_source(source, during_boot: bool = false) -> void:
 	if catalog == source and not _bindings.is_empty(): return
 	catalog = source
 	_bindings.clear()
+	legacy_powder_key = ""
 	if catalog == null or not catalog.available(): return
 	for row: Dictionary in world.catalog_db.get("아이템", []):
 		var raw_id: String = str(row.get("sourceId", ""))
@@ -220,6 +224,7 @@ func bind_source(source, during_boot: bool = false) -> void:
 	var tickets_started: int = BOOT_LOG.begin("shop_ticket_bind") if during_boot else 0
 	inventory_tickets.configure(self)
 	_bindings.merge(inventory_tickets.install())
+	_bind_advanced_powder()
 	if during_boot: BOOT_LOG.end("shop_ticket_bind", tickets_started)
 	var npc_started: int = BOOT_LOG.begin("shop_npc_bind") if during_boot else 0
 	npc_definitions.configure(catalog)
@@ -231,6 +236,20 @@ func bind_source(source, during_boot: bool = false) -> void:
 			if option.begins_with("--source523-shop-policy-sha256="): expected = option.trim_prefix("--source523-shop-policy-sha256=")
 		var loaded: Dictionary = load_policy(arg.trim_prefix("--source523-shop-policy="), expected)
 		if not loaded.ok: problem = str(loaded.reason)
+
+func _bind_advanced_powder() -> void:
+	var owned: Dictionary = _bindings.get("4:117544", {}).get("record", {})
+	if owned.get("source") != "inven" or owned.get("sourceId") != "117544" or owned.get("sourceUrl") != "https://lineagem.inven.co.kr/db/item/117544" or owned.get("slot") != "material": return
+	if not world.has_method("_catalog_item_from_source_id"): return
+	var item: Dictionary = catalog.record("ItemClass", 117544)
+	var name_value: String = catalog.label(int(item.get("IdentifiedDescID", 0)))
+	if name_value.is_empty() or owned.get("name") != name_value or world.catalog_item_variant_count.get(name_value, 0) != 1: return
+	var native: Dictionary = _native_supply_binding(117544, 1)
+	if native.get("name") != name_value + " · 원본#117544": return
+	legacy_powder_key = name_value
+	# New purchases and payments use the normal receipt routes. The former
+	# shop key still identifies old ownership when a save is loaded.
+	_bindings.erase("4:117544")
 
 func item_references(item_id: int) -> Dictionary:
 	var source = catalog if catalog != null else Catalog.session()
@@ -848,12 +867,12 @@ func quote_merchant(id: int, quantity: int = 1, internal: bool = false) -> Dicti
 	if not binding.get("gold",false) and (world._item_locked(str(binding.name),"") or not world._enhancement_kind_for_record(binding.get("record",{})).is_empty()):return fail("잠긴 재료·장비를 결제에 사용할 수 없습니다")
 	var token: Dictionary=_token(4,int(row.ItemClassID),int(count.value))
 	var target: Dictionary=_resolve(token,true,world.inventory,int(world.gold))
-	if not target.ok:
+	if not target.ok or (int(row.ItemClassID) == 117544 and target.binding.get("native_supply",false)):
 		# An original 523 item the game owns as a physical stack (e.g. the
 		# native skill books of 기란 혈맹 상인) is issued by the shared 523
 		# supplier at claim time, with its receipt.
 		var native: Dictionary=_native_supply_binding(int(row.ItemClassID),int(row.get("ItemBlessCodeID",1)))
-		if native.is_empty():return target
+		if native.is_empty():return target if not target.ok else fail("원본 상품 축복 상태 확인 필요")
 		token["native_supply"]=true;token["bless_raw"]=int(row.get("ItemBlessCodeID",1))
 		target={"ok":true,"binding":native}
 	if native_repeat:
@@ -1043,14 +1062,21 @@ func native_debit(name: String, amount: int) -> Dictionary:
 func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionary, next_id: int) -> Dictionary:
 	for token: Dictionary in goods:
 		if not integer(token.get("amount")) or int(token.amount) < 1: return fail("지급 수량 오류")
-		if token.get("native_supply")==true:
-			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,int(token.class_id),int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":int(token.class_id)})
+		var binding: Dictionary = {}
+		if not token.get("native_supply",false):
+			var resolved: Dictionary = _resolve(token, true, inventory, gold)
+			if not resolved.ok: return resolved
+			binding = resolved.binding
+		# Older pending orders can predate the physical binding. Resolve their
+		# actual item at claim time as well as honoring already quoted variants.
+		var received_id: int = int(binding.get("record",{}).get("source_item_class_id", 0))
+		var old_powder_order: bool = received_id == 117544 and binding.get("native_supply",false) and not legacy_powder_key.is_empty()
+		if token.get("native_supply",false) or old_powder_order:
+			var item_id: int = received_id if old_powder_order else int(token.class_id)
+			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,item_id,int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":item_id})
 			if not issued.get("ok",false):return fail(str(issued.get("error","원본 지급 실패")))
 			inventory=issued.overrides.inventory;instances=issued.overrides.item_instances;gold=int(issued.overrides.gold)
 			continue
-		var resolved: Dictionary = _resolve(token, true, inventory, gold)
-		if not resolved.ok: return resolved
-		var binding: Dictionary = resolved.binding
 		var amount: int = int(token.amount)
 		if binding.get("gold", false):
 			if gold > LIMIT - amount: return fail("아데나 보유 범위 초과")

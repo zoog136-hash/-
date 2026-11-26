@@ -38,6 +38,7 @@ const MIN_INDEXED_KEYS: int=8
 var _audio_frame_offsets: Dictionary={}
 var _resolved_assets: Dictionary={}
 var _requested_source_nodes: Array[int]=[]
+var _deferred_projects: Dictionary={}
 ## Node-scoped projections of pack scenes by "pack id|member|offsets" ->
 ## [WeakRef(pack), pristine projected tree]. Every bag slot, quickslot and
 ## status row is its own scene: each one read the whole member back from the
@@ -226,6 +227,16 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		if (timeline.property=="FileData" and not _tags[int(timeline.actionTag)].has_meta("source_sprite")) or (timeline.property=="BlendFunc" and not _tags[int(timeline.actionTag)].has_meta("source_sprite") and not _tags[int(timeline.actionTag)].has_meta("source_particle")):
 			root_node.free(); _clear(); return {"ok":false,"error":"unsupported_timeline_target"}
 	add_child(root_node)
+	# Common_Slot also supplies bag and quickslot visuals owned by pointer
+	# transfer. Only explicit feature actions opt their own hit path into the
+	# native router. Sibling badges and inert buttons stay outside that path.
+	if source_member=="UI/CommonUi/Common_Slot.csb":
+		for offset: Variant in _bindings:
+			if not _bindings[offset] is Dictionary or not _bindings[offset].get("route_feature_slot",false):continue
+			var ancestor: Node=source_nodes.get(offset)
+			while ancestor!=null and ancestor!=self:
+				if ancestor.has_meta("original_ui_source"):ancestor.set_meta("source_slot_routed",true)
+				ancestor=ancestor.get_parent()
 	_sync_source_display(self,_source_parent_display())
 	return {"ok":true,"nodes":source_nodes.size(),"source":member,"inspection_only":inspection_only,"partial_source_scene":not _requested_source_nodes.is_empty(),"selected_source_offsets":_requested_source_nodes.duplicate(),"unresolved_bindings":unresolved_bindings.duplicate(),"excluded_audio_events":excluded_audio_events.duplicate(true)}
 
@@ -308,9 +319,14 @@ func _validate(node: Dictionary, problems: Array[String], parent_size: Vector2 =
 			var source_touch: bool=direct_input and ((field=="callBackType" and str(widget[field])=="Touch") or (field=="callBackName" and str(widget.get("callBackType",""))=="Touch" and str(binding.get("callback_name",""))==str(widget[field])))
 			if not inspection_only and not (source_touch or (connected_callback and (declared_type or declared_name))):problems.append("unconnected_source_callback:"+field)
 	if direct_input and not bool(widget.get("touchEnabled",false)):problems.append("source_input_not_declared")
+	# A verified embedded item icon may delegate its clipping panel's touch to
+	# the enclosing slot. Buttons, callbacks and non-clipping panels still
+	# require their own live binding.
+	var item_clip: bool = binding.get("role") == "item_slot_clip" and node.classname == "Panel" and bool(widget.get("touchEnabled",false)) and bool(options.get("clipEnabled",false)) and widget.get("callBackType","") == "" and widget.get("callBackName","") == ""
+	if binding.get("role") == "item_slot_clip" and not item_clip: problems.append("source_item_slot_clip_required")
 	if bool(widget.get("touchEnabled",false)):
-		if inspection_only or (not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]):unresolved_bindings.append(str(widget.name)+":source_input")
-		if not inspection_only and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]: problems.append("unconnected_source_input")
+		if inspection_only or (not item_clip and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]):unresolved_bindings.append(str(widget.name)+":source_input")
+		if not inspection_only and not item_clip and not direct_input and binding.get("role") not in ["button","checkbox","source_scroll","source_list","consume","source_text_field"]: problems.append("unconnected_source_input")
 	if node.classname=="TextField":
 		if binding.get("role")!="source_text_field" or not binding.get("editor") is LineEdit:problems.append("source_text_field_existing_editor_binding_required")
 	if node.classname=="CheckBox":
@@ -396,6 +412,68 @@ func _known_poison_metadata(node: Dictionary, binding: Dictionary, widget: Dicti
 	const PALETTE=" Red:#D80900 Sky:#29D6FF gray:#7F7F7F"
 	return source_member=="UI/Main/Hud_CharInfo.csb" and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="9532ebdf565004332c1a566ee9f7fbf839aaa580b2db3600a187633820c7d805" and node.get("_offset")==39796 and node.classname=="LoadingBar" and str(widget.get("customProperty",""))==PALETTE and binding.get("stock_custom_property_metadata")==PALETTE and binding.get("role")=="source_percent"
 
+
+## A hidden leaf popup can wait for its first show. Reserve its place among
+## siblings so equal-z drawing and touch order are the same as eager mounting.
+## An outer timeline needs the actual authored root even while it is hidden.
+func _can_defer_project(source: Dictionary, action_tag: int, binding: Dictionary) -> bool:
+	if inspection_only or binding.get("defer_until_shown")!=true or binding.get("visible")!=false or not source.get("children",[]).is_empty():
+		return false
+	var action: Variant=source_tree.get("action")
+	if action is Dictionary:
+		for timeline: Dictionary in action.get("timeLines",[]):
+			if int(timeline.actionTag)==action_tag:return false
+	return true
+
+func _build_project(source: Dictionary, placeholder: Node2D=null) -> Node2D:
+	var options: Dictionary=source.options
+	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
+	var offset: int=int(source._offset)
+	var action_tag: int=int(widget.actionTag)
+	if action_tag!=0 and _tags.has(action_tag) and _tags[action_tag]!=placeholder:return null
+	var project_binding: Dictionary=_bindings.get(offset,{})
+	if placeholder==null and _can_defer_project(source,action_tag,project_binding):
+		var slot:=Node2D.new()
+		slot.hide()
+		source_nodes[offset]=slot
+		if action_tag!=0:_tags[action_tag]=slot
+		_deferred_projects[offset]=source
+		return slot
+	var member: String=str(options.fileName)
+	if not member.begins_with("UI/"):member="UI/"+member
+	var nested=get_script().new()
+	nested._project_ancestry=_project_ancestry.duplicate()
+	nested._project_ancestry.append(source_member)
+	nested._project_root_options=widget.duplicate(true)
+	if project_binding.has("visible"):nested._project_root_options.visible=project_binding.visible
+	# Keep the same partial scope, original transform and strict renderer
+	# checks for both eager and deferred projects.
+	if project_binding.get("source_node_offsets") is Array:
+		nested._requested_source_nodes.assign(project_binding.source_node_offsets)
+	var result: Dictionary=nested.configure(source_pack,member,inspection_only,project_binding.get("bindings",{}))
+	if not result.ok:
+		_build_error="project_scene_rejected:"+member+":"+str(result)
+		nested.free()
+		return null
+	# The original loader initially pauses the inner action at frame zero.
+	nested.set_meta("source_inner_action_speed",float(options.innerActionSpeed))
+	nested.seek_frame(0.0)
+	nested.stop()
+	var actual_root: Node2D=nested.get_child(0)
+	source_nodes[offset]=actual_root
+	if action_tag!=0:_tags[action_tag]=actual_root
+	actual_root.set_meta("source_project_player",nested)
+	actual_root.set_meta("original_project_source",{"scene":source_member,"node_offset":offset,"child_scene":member})
+	for unresolved: String in nested.unresolved_bindings:unresolved_bindings.append(member+":"+unresolved)
+	var child_origin: Node=actual_root.get_node("SourceContentOrigin")
+	for child: Dictionary in source.get("children",[]):
+		var built: Node2D=_build(child)
+		if built==null:
+			nested.free()
+			return null
+		child_origin.add_child(built)
+	return nested
+
 func _build(source: Dictionary) -> Node2D:
 	var options: Dictionary=source.options
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
@@ -403,42 +481,7 @@ func _build(source: Dictionary) -> Node2D:
 		widget=widget.duplicate(true)
 		widget.size=options.scale9Size.duplicate()
 	if source.classname=="ProjectNode" and not str(options.get("fileName","")).is_empty():
-		var member: String=str(options.fileName)
-		if not member.begins_with("UI/"):member="UI/"+member
-		var nested=get_script().new()
-		nested._project_ancestry=_project_ancestry.duplicate()
-		nested._project_ancestry.append(source_member)
-		nested._project_root_options=widget.duplicate(true)
-		var project_binding: Dictionary=_bindings.get(int(source._offset),{})
-		if project_binding.has("visible"):nested._project_root_options.visible=project_binding.visible
-		# A nested original ProjectNode can consume an explicit partial child
-		# scope. The native parent properties still apply to that child's root.
-		# Omitting this field retains ordinary whole-child strict loading.
-		if project_binding.get("source_node_offsets") is Array:
-			nested._requested_source_nodes.assign(project_binding.source_node_offsets)
-		var result: Dictionary=nested.configure(source_pack,member,inspection_only,_bindings.get(int(source._offset),{}).get("bindings",{}))
-		if not result.ok:
-			_build_error="project_scene_rejected:"+member+":"+str(result)
-			nested.free();return null
-		# The original loader initially pauses the inner action at frame zero.
-		nested.set_meta("source_inner_action_speed",float(options.innerActionSpeed))
-		nested.seek_frame(0.0)
-		nested.stop()
-		var actual_root: Node2D=nested.get_child(0)
-		source_nodes[int(source._offset)]=actual_root
-		var action_tag: int=int(widget.actionTag)
-		if action_tag!=0:
-			if _tags.has(action_tag):nested.free();return null
-			_tags[action_tag]=actual_root
-		actual_root.set_meta("source_project_player",nested)
-		actual_root.set_meta("original_project_source",{"scene":source_member,"node_offset":int(source._offset),"child_scene":member})
-		for unresolved: String in nested.unresolved_bindings:unresolved_bindings.append(member+":"+unresolved)
-		var child_origin: Node=actual_root.get_node("SourceContentOrigin")
-		for child: Dictionary in source.get("children",[]):
-			var built: Node2D=_build(child)
-			if built==null:nested.free();return null
-			child_origin.add_child(built)
-		return nested
+		return _build_project(source)
 	var node:=Node2D.new()
 	node.name=str(widget.name)
 	node.set_meta("source_size",widget.size.duplicate())
@@ -966,6 +1009,7 @@ static func _frame_value(raw: Dictionary) -> Dictionary:
 	return result
 
 func _clear() -> void:
+	_deferred_projects.clear()
 	source_tree.clear()
 	_indexed_keyframes.clear()
 	source_nodes.clear()
@@ -1074,12 +1118,33 @@ func set_bound_percent(source_offset: int, value: float) -> Dictionary:
 func set_bound_visible(source_offset: int, value: bool) -> Dictionary:
 	var node: Node2D=source_nodes.get(source_offset)
 	if node==null or not _bindings.get(source_offset,{}).has("visible"):return {"ok":false,"error":"source_visibility_binding_missing"}
+	if value and _deferred_projects.has(source_offset):
+		var mounted: Dictionary=_mount_deferred_project(source_offset,node)
+		if not mounted.ok:return mounted
+		node=source_nodes[source_offset]
 	if value and node.get_meta("source_asset_slot",false):
 		var sprite: Sprite2D=(node.get_meta("source_sprite") if node.has_meta("source_sprite") else null)
 		var scene: Variant=node.get_meta("source_asset_scene") if node.has_meta("source_asset_scene") else null
 		var scene_ready: bool=is_instance_valid(scene) and not scene.is_queued_for_deletion() and scene.get_parent()==node
 		if sprite==null or (sprite.texture==null and not scene_ready) or node.get_meta("source_asset_pending",true):return {"ok":false,"error":"source_asset_slot_original_pixels_required"}
 	node.visible=value
+	return {"ok":true}
+
+func _mount_deferred_project(offset: int, slot: Node2D) -> Dictionary:
+	if slot.is_queued_for_deletion() or slot.get_parent()==null or is_queued_for_deletion():
+		return {"ok":false,"error":"source_project_player_unavailable","offset":offset}
+	_build_error=""
+	var nested: Node2D=_build_project(_deferred_projects[offset],slot)
+	if nested==null:
+		return {"ok":false,"error":_build_error if not _build_error.is_empty() else "source_project_scene_rejected","offset":offset}
+	var parent: Node=slot.get_parent()
+	var position: int=slot.get_index()
+	parent.remove_child(slot)
+	slot.queue_free()
+	parent.add_child(nested)
+	parent.move_child(nested,position)
+	_deferred_projects.erase(offset)
+	nested._sync_source_display(nested,nested._source_parent_display())
 	return {"ok":true}
 
 func activate_authored_component_opacity() -> Dictionary:

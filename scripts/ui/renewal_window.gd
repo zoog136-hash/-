@@ -35,6 +35,9 @@ var header_filters: Control
 var filters_home: Node
 var filters_home_index: int
 var filter_drag_handle: Label
+var _menu_source_extent: Vector2=Vector2.ZERO
+var _window_title_row: Control
+var _window_divider: Control
 
 func _ready() -> void:
 	name = "RenewalWindow"
@@ -51,6 +54,7 @@ func _ready() -> void:
 	layout.add_theme_constant_override("separation",5)
 	add_child(layout)
 	var title_row := HBoxContainer.new()
+	_window_title_row=title_row
 	title_row.custom_minimum_size.y = 32
 	layout.add_child(title_row)
 	filter_drag_handle=UI.label("⋮",22,UI.MUTED)
@@ -101,7 +105,8 @@ func _ready() -> void:
 	close.name = "CloseWindow"
 	close.add_theme_stylebox_override("normal",UI.box(Color("542d24"),Color("957963"),3))
 	title_row.add_child(close)
-	layout.add_child(HSeparator.new())
+	_window_divider=HSeparator.new()
+	layout.add_child(_window_divider)
 	content = Control.new()
 	content.name = "Content"
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -205,6 +210,13 @@ func fit_viewport() -> void:
 	var stretch: float = maxf(.01,get_viewport().get_final_transform().get_scale().x)
 	scale = Vector2.ONE/maxf(.01,minf(1.0,stretch))
 	var available: Rect2 = SafeArea.available(get_viewport())
+	if current_section=="menu" and _menu_source_extent.x>0.0:
+		var fit: float=minf(scale.x,minf(available.size.x/_menu_source_extent.x,available.size.y/_menu_source_extent.y))
+		scale=Vector2.ONE*fit
+		set_anchors_preset(Control.PRESET_TOP_LEFT)
+		size=_menu_source_extent
+		position=Vector2(available.end.x-size.x*fit,available.position.y)
+		return
 	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
@@ -290,6 +302,9 @@ func _on_title_drag_input(event: InputEvent) -> void:
 
 func open(section: String, title: String, description: String) -> void:
 	current_section = section
+	_menu_source_extent=Vector2.ZERO
+	_window_title_row.show()
+	_window_divider.show()
 	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections","card_collections"]
 	get_node("WindowMaterialSurface").visible=not full_browser
 	if full_browser:
@@ -308,6 +323,14 @@ func open(section: String, title: String, description: String) -> void:
 	for key: String in navigation:
 		(navigation[key] as Button).button_pressed = key == section
 	show()
+	fit_viewport()
+
+func use_original_menu_frame(extent: Vector2) -> void:
+	_menu_source_extent=extent
+	_window_title_row.hide()
+	_window_divider.hide()
+	get_node("WindowMaterialSurface").hide()
+	add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 	fit_viewport()
 
 func set_back_available(enabled: bool) -> void:

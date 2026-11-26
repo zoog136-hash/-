@@ -5,6 +5,8 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
+const NATIVE_STACK=preload("res://scripts/loot/current523_native_stack.gd")
+const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 
 var hud: Node
 var mode: String = "scroll"
@@ -35,16 +37,46 @@ func configure_scrolls(controller: Node) -> void:
 	values=owned_scrolls(hud)
 	_build()
 
-## Owned enhancement / blessing scrolls, by name (shared with the original
-## Enchant window's 주문서 tab).
+## A name balance can cover several independently locked or owned scrolls.
 static func owned_scrolls(controller: Node) -> Array:
 	var rows: Array=[]
-	for name: String in controller.lineage_inventory_ui.inventory:
-		if int(controller.lineage_inventory_ui.inventory[name]) <= 0: continue
-		if str(controller.get_parent()._scroll_kind(name)).is_empty() and not name.contains("축복 부여"): continue
-		rows.append({"name":name,"count":int(controller.lineage_inventory_ui.inventory[name])})
-	rows.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
+	var world: Node=controller.get_parent()
+	var balances: Dictionary=controller.lineage_inventory_ui.inventory
+	var receipted: Dictionary={}
+	var instances: Variant=world.get("item_instances")
+	if instances is Dictionary:
+		for uid: String in instances:
+			var entry: Dictionary=instances[uid]
+			if not entry.has(NATIVE_STACK.RECEIPT):continue
+			var name: String=str(entry.get("name",""))
+			receipted[name]=true
+			if int(balances.get(name,0))<=0:continue
+			var record: Dictionary=entry.get("record",{})
+			if record.has("slot") and record.slot!="consumable":continue
+			var category: String=str(NATIVE_FIELDS.field(record,"source_category_name",""))
+			if category=="ScrollBless":
+				if NATIVE_STACK.profile(record).get("kind")!="bless":continue
+			elif category not in ["","ScrollEnchant","ScrollElementalEnchant"] or world._scroll_kind(name,record)=="":continue
+			if world._item_locked(name) or world._item_locked(name,uid):continue
+			var held: Dictionary=NATIVE_STACK.proof(world,uid)
+			if not held.is_empty():
+				rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":held.remaining})
+	for name: String in balances:
+		if receipted.has(name) or int(balances[name])<=0:continue
+		if str(world._scroll_kind(name)).is_empty() and not name.contains("축복 부여"):continue
+		rows.append({"name":name,"reference":name,"count":int(balances[name])})
+	rows.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a.reference)<str(b.reference))
 	return rows
+
+static func selected_scroll(controller: Node, scroll: String, blessing_reference: String="") -> Dictionary:
+	var world: Node=controller.get_parent()
+	var selection: Variant=world.get("_enhancement_scroll_selection")
+	var uid: String=blessing_reference.get_slice("@@@",1) if not blessing_reference.is_empty() else ""
+	if blessing_reference.is_empty() and selection is Dictionary and selection.get("name")==scroll:uid=str(selection.get("uid",""))
+	if not uid.is_empty():
+		var owned: Dictionary=NATIVE_STACK.proof(world,uid)
+		return {"name":scroll,"reference":scroll+"@@@"+uid,"instance_id":uid,"count":int(owned.get("remaining",0))}
+	return {"name":scroll,"reference":scroll,"count":int(controller.lineage_inventory_ui.inventory.get(scroll,0))}
 
 func configure_targets(controller: Node, scroll: String, candidates: Array) -> void:
 	hud = controller
@@ -173,7 +205,7 @@ func _build() -> void:
 	side.add_child(action)
 	if mode in ["target","blessing"]:side.add_child(UI.button("다른 주문서 선택",func() -> void:hud._open_enhance_chooser()))
 	for entry: Dictionary in values:
-		var reference: String=str(entry.get("target_id",entry.get("name","")))
+		var reference: String=str(entry.get("target_id",entry.get("reference",entry.get("name",""))))
 		var info: Dictionary=hud.lineage_inventory_ui._find_item_record(reference)
 		listing.add_item(("%s  ×%d" % [entry.get("name",""),int(entry.get("count",0))]) if mode=="scroll" else ("%s  +%d%s" % [entry.get("name",""),int(entry.get("level",0)),"  [장착]" if bool(entry.get("equipped",false)) else ""]),UI.item_icon(_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{})))
 		listing.set_item_metadata(listing.item_count-1,reference)
@@ -239,7 +271,6 @@ func _select(index: int) -> void:
 	if index<0 or index>=values.size():return
 	selected_index=index
 	var entry: Dictionary=values[index]
-	var reference: String=str(entry.get("target_id",entry.get("name","")))
 	if mode=="scroll":
 		UI.apply_item_visual(scroll_icon,_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
 		UI.clear_item_visual(preview);preview.texture=null
@@ -249,12 +280,13 @@ func _select(index: int) -> void:
 		detail.text="장비 목록에서 강화 대상을 선택하세요. 대상의 현재 강화 수치와 확률을 확인한 뒤 진행합니다."
 		action.text="장비 선택하기"
 	else:
+		var stock: Dictionary=selected_scroll(hud,scroll_name,str(entry.get("scroll_reference","")))
 		UI.apply_item_visual(preview,_image_record(entry),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
-		UI.apply_item_visual(scroll_icon,hud.lineage_inventory_ui._find_item_record(scroll_name),scroll_name,hud.item_image_index.get("아이템",{}),"detail")
+		UI.apply_item_visual(scroll_icon,_image_record(stock),scroll_name,hud.item_image_index.get("아이템",{}),"detail")
 		selected_name.text=str(entry.get("name",""))+"  +"+str(int(entry.get("level",0)))
 		selected_state.text=("장착 중" if bool(entry.get("equipped",false)) else "인벤토리 보관")+" · 안전 강화 +"+str(int(entry.get("safe_level",0)))
 		selected_state.tooltip_text="장비 ID "+str(entry.get("instance_id",""))
-		scroll_caption.text=scroll_name+" · 보유 "+UI.number_text(int(hud.lineage_inventory_ui.inventory.get(scroll_name,0)))+"장"
+		scroll_caption.text=scroll_name+" · 보유 "+UI.number_text(int(stock.count))+"장"
 		var content: String="[table=2]"
 		for row: Array in [["성공",float(entry.get("success_chance",0.0))],["유지",float(entry.get("no_change_chance",0.0))],["하락",float(entry.get("decrease_chance",0.0))],["소실",float(entry.get("destroy_chance",0.0))]]:
 			content+="[cell expand=1]%s[/cell][cell expand=1][right]%.1f%%[/right][/cell]" % [row[0],row[1]]
@@ -276,7 +308,7 @@ func _image_record(entry: Dictionary) -> Dictionary:
 static func image_record_of(controller: Node, entry: Dictionary) -> Dictionary:
 	# Keep the exact selected physical source record for image presentation;
 	# enhancement admission and transactions retain their existing references.
-	var reference: String = str(entry.get("target_id",entry.get("name","")))
+	var reference: String = str(entry.get("target_id",entry.get("reference",entry.get("name",""))))
 	var fallback: Dictionary = controller.lineage_inventory_ui._find_item_record(reference)
 	if not SOURCE_IMAGES.selected(): return fallback
 	var instance_id: String = str(entry.get("instance_id",""))
@@ -292,18 +324,24 @@ func _execute() -> void:
 	if selected_index < 0 or selected_index >= values.size(): return
 	var entry: Dictionary = values[selected_index]
 	if mode == "blessing":
-		var target_reference: String = str(entry.get("target_id", ""))
-		if not target_reference.is_empty():
-			var blessing_scroll: String = scroll_name
-			hud.confirm_action("축복 부여 확인", "%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
-				str(entry.get("name", "")), int(entry.get("level", 0)), blessing_scroll, float(entry.get("success_chance", 0))
-			], "축복 부여", func(_count: int) -> void: hud.blessing_target_requested.emit(blessing_scroll, target_reference))
+		request_blessing(hud,scroll_name,entry)
 	elif mode == "scroll":
-		var item := str(entry.get("name",""))
-		if int(hud.lineage_inventory_ui.inventory.get(item,0)) > 0:
-			hud.inventory_item_activated.emit(item)
+		var reference: String = str(entry.reference)
+		if owned_scrolls(hud).any(func(row: Dictionary) -> bool: return row.reference==reference):
+			hud.inventory_item_activated.emit(reference)
 	else:
 		request_target(hud,scroll_name,entry)
+
+static func request_blessing(controller: Node, scroll: String, entry: Dictionary, confirmed: Callable=Callable()) -> bool:
+	var target: String=str(entry.get("target_id",""))
+	if target.is_empty() or scroll.is_empty():return false
+	var reference: String=str(entry.get("scroll_reference",scroll))
+	var confirm:=func(_count: int) -> void:
+		controller.blessing_target_requested.emit(reference,target)
+		if confirmed.is_valid():confirmed.call()
+	controller.confirm_action("축복 부여 확인", "%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
+		str(entry.get("name","")),int(entry.get("level",0)),scroll,float(entry.get("success_chance",0))], "축복 부여",confirm)
+	return true
 
 ## 강화 시작 emits the request the world rolls at once: no extra 강화 확인
 ## step (the original client has none; user request 2026-11-22). Shared with

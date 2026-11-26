@@ -166,8 +166,41 @@ class DrawGround extends "res://scripts/maps/current523_aden_play_renderer.gd":
 	func _view_rect() -> Rect2: return Rect2(-100,-100,1000,1000)
 
 class UsageTiles extends RefCounted:
-	func source_usage_identity(_id: int) -> Dictionary:
-		return {"member":"Tile/1.til","bytes":1000,"sha256":SHA}
+	var identity_reads: int = 0
+	func source_usage_identity(id: int) -> Dictionary:
+		identity_reads += 1
+		if id == 0xff: return {}
+		return {"member":"Tile/%d.til" % id,"bytes":1000,"sha256":"invalid" if id == 0xfe else SHA}
+
+# Compare the same interleaved refs with two places left in the retained
+# queue. Source ordering, dedup keys, capacity and the v1 file must agree.
+func ground_admission(ground: DrawGround, batch: bool) -> Dictionary:
+	var path: String = folder.path_join("ground-%s.json" % str(batch))
+	reset(path)
+	for i: int in USAGE.MAX_PENDING - 1: offer("pending%d" % i)
+	USAGE.observe_result(ground,"Tile/1.til",1000,SHA,"subimage:9")
+	for i: int in USAGE.MAX_RETAINED - 2: offer("retained%d" % i)
+	var refs: Dictionary = {0x109:true, 0x201:true, 0xff01:true, 0xfe01:true, 0x102:true, 0x202:true}
+	if batch:
+		USAGE.observe_ground_refs(ground, ground._tile_pack, refs)
+	else:
+		for ref: int in refs:
+			var source: Dictionary = ground._tile_pack.source_usage_identity(ref >> 8)
+			if not source.is_empty():
+				USAGE.observe_result(ground,source.member,source.bytes,source.sha256,"subimage:" + str(ref & 255))
+	check(USAGE._retained[-2][0] == "Tile/2.til" and USAGE._retained[-2][3] == "subimage:1" and USAGE._retained[-1][0] == "Tile/1.til" and USAGE._retained[-1][3] == "subimage:2", "first two new valid refs take the remaining places in draw order")
+	USAGE._disabled = true
+	USAGE.observe_result(ground,"Tile/2.til",1000,SHA,"subimage:1") # Known before disable.
+	if batch: USAGE.observe_ground_refs(ground,ground._tile_pack,{0x109:true,0x204:true})
+	else:
+		USAGE.observe_result(ground,"Tile/1.til",1000,SHA,"subimage:9")
+		USAGE.observe_result(ground,"Tile/2.til",1000,SHA,"subimage:4")
+	USAGE._disabled = false
+	check(USAGE._accepted == USAGE.MAX_PENDING + USAGE.MAX_RETAINED and USAGE._dropped == 1 and USAGE._rejected == 2,"scalar and batch deduplicate across calls; only new disabled/overflow events count as rejected")
+	USAGE.finish()
+	var value: Dictionary = read(path)
+	check(int(value.get("recording_dropped_observation_attempts",0)) == 1, "shutdown persists the exact hard-drop count")
+	return value
 
 func visible_draw_retention() -> void:
 	if DisplayServer.get_name() == "headless": return
@@ -190,7 +223,7 @@ func visible_draw_retention() -> void:
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(4,4)
 	ground.add_child(viewport)
-	ground._blocks[Vector2i.ZERO] = {"viewport":viewport,"commands":{-2:PackedInt64Array([0,0,0x101])}}
+	ground._blocks[Vector2i.ZERO] = {"viewport":viewport,"commands":{-2:PackedInt64Array([0,0,0x101,24,0,0x102,48,0,0x101,950,0,0x103])}}
 	var canvas := Node2D.new()
 	ground.add_child(canvas)
 	var draws: Array = [0,0]
@@ -205,9 +238,12 @@ func visible_draw_retention() -> void:
 	world.add_child(ground)
 	check(USAGE.actual_main(ground),"visible harness passes unchanged production Main gate")
 	await RenderingServer.frame_post_draw
-	check(draws[0] > 0 and draws[1] > 0 and USAGE._retained.size() == 3,"real ground/static draw callbacks retain all three observed identities")
+	check(draws[0] > 0 and draws[1] > 0 and USAGE._retained.size() == 4,"real ground/static draw callbacks retain all four observations")
+	check(ground._tile_pack.identity_reads == 1,"distinct visible subimages from one atlas share one source identity lookup")
 	world.hide() # The short-lived static frame disappears, and camera is idle.
-	check(USAGE.observe_result(ground,"Sprite/test.sp2",1000,SHA,"unseen-hidden-frame") == USAGE.Observation.INVALID and USAGE._retained.size() == 3,"hidden Main cannot create new evidence while already observed scalars remain retryable")
+	USAGE.observe_ground_refs(ground,ground._tile_pack,{0x207:true})
+	check(ground._tile_pack.identity_reads == 1, "hidden Main cannot submit new ground refs or read their source")
+	check(USAGE.observe_result(ground,"Sprite/test.sp2",1000,SHA,"unseen-hidden-frame") == USAGE.Observation.INVALID and USAGE._retained.size() == 4,"hidden Main cannot create new evidence while already observed scalars remain retryable")
 	var prior_draws: Array = draws.duplicate()
 	for _i: int in 1000:
 		USAGE.pump()
@@ -215,6 +251,11 @@ func visible_draw_retention() -> void:
 		await process_frame
 	var value: Dictionary = read(path)
 	check(draws == prior_draws and value.members.has("Tile/1.til|"+SHA) and value.members.has("Sprite/test.sp2|"+SHA) and value.members["Map/test.s32|"+SHA].origins.AUTOMATED_ACTUAL_MAIN.source_ranges.has("40:4"),"production draw evidence drains after hiding without any redraw or camera update")
+	var units: Dictionary = value.get("members",{}).get("Tile/1.til|"+SHA,{}).get("origins",{}).get("AUTOMATED_ACTUAL_MAIN",{}).get("units",{})
+	check(units.has("subimage:1") and units.has("subimage:2") and not units.has("subimage:3"),"each visible subimage keeps its evidence and the offscreen subimage stays unobserved")
+	world.show()
+	var scalar: Dictionary = ground_admission(ground,false)
+	check(ground_admission(ground,true) == scalar, "batched and scalar ingestion commit identical v1 evidence under pressure")
 	world.free()
 
 class MissingResultWorker extends USAGE.LedgerWorker:

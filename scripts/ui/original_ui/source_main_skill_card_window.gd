@@ -553,9 +553,10 @@ func _icons(placed: Dictionary, rows: Array) -> int:
 	return count
 
 func _slot_icon(scene: Node2D, out: Dictionary, entry: Dictionary) -> bool:
-	var info: Dictionary=_spell_icon(int(entry.spell_class_id)) if entry.has("spell_class_id") else _book_icon(entry)
 	var located: Dictionary=_locate(scene,out,"Common_Slot/Sp_IconSample")
-	return located.get("ok",false) and _show_picture(located.player,located.offset,info)
+	if not located.get("ok",false):return false
+	if entry.has("spell_class_id"):return _show_picture(located.player,located.offset,_spell_icon(int(entry.spell_class_id)))
+	return _show_item_icon(located.player,located.offset,_book_icon(entry))
 
 ## The learned card's spell icon (SpellClass IconID).
 static func _spell_icon(spell_class_id: int) -> Dictionary:
@@ -570,8 +571,7 @@ func _book_icon(entry: Dictionary) -> Dictionary:
 	var raw: Variant=instances.get(str(entry.get("physical_id","")),{}) if instances is Dictionary else {}
 	var record: Dictionary=raw.get("record",{}) if raw is Dictionary else {}
 	if record.is_empty():return {"ok":false}
-	var info: Dictionary=SourceImages.describe_item(record,str(entry.get("name","")))
-	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
+	return SourceImages.describe_item(record,str(entry.get("name","")))
 
 func _book_count(grade_id: int) -> int:
 	var total: int=0

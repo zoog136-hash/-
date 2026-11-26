@@ -6,20 +6,24 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## existing item use. Probability is the original raw value over the bag's
 ## source denominator (10,000,000), else over the class total; IsGiven rows
 ## show 확정. Nothing here opens the bag.
-## Left out: the grade tabs (Nd_Type01), the 확정/확률 보상 tabs (Nd_Type02; the
-## single list shows both kinds), the card notice and the popup effects.
+## Mixed bags use the original Nd_Type02 fixed/random tabs. Other bags keep
+## the single list. Both use the probabilities of the complete source pool.
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
+const IDENTITY=preload("res://scripts/ui/source523_item_identity.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const ItemUse=preload("res://scripts/loot/patch523_item_use.gd")
 const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const ROOT="UI/FloatingUi/Probability_All.csb"
 const ROW="UI/FloatingUi/Probability_List_Item.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
-const BAG_KINDS: Array[String]=["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]
+const BAG_KINDS: Array[String]=["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_event_box"]
 const BLESSING={2:"축복받은 ",3:"저주받은 "}
 const SLOT_EXCLUDED: Array[String]=["Nd_Grace","Nd_Properties","Nd_Properties_Smelt","Nd_Lock","Nd_Wrong","Sp_Select","Sp_Center","Sp_Left_Top","Sp_Left_Middle","Sp_Right_Top","Sp_Left_Bottom","Label_Center","Sp_Random","Sp_Choice","Sp_Infinity","Sp_Check","Img_Enchant","Sp_Pause","Btn_Probability","Btn_Detail","Nd_Collected"]
 var title: String=""
 var rows: Array=[]
+var _mixed: bool=false
+var _given_tab: bool=true
 
 func required_members() -> Array[String]:
 	return [ROOT,ROW,SLOT]
@@ -34,13 +38,30 @@ func _root_position() -> Vector2:
 
 ## True when `record` is a lucky bag with original rows.
 static func is_bag(record: Dictionary) -> bool:
-	var spec: Variant=NATIVE_FIELDS.full(record).get("source_use_spec",{}) if not record.is_empty() else {}
+	var spec: Variant=NATIVE_FIELDS.field_view(record,"source_use_spec",{})
 	return spec is Dictionary and str(spec.get("kind","")) in BAG_KINDS and not (spec.get("rewards",[]) as Array).is_empty()
+
+## ItemClass.IsShowProbability controls the original tooltip's entry point.
+static func disclosed(record: Dictionary, class_id: int) -> bool:
+	if not is_bag(record):return false
+	var source: Dictionary=IDENTITY.row(int(record.get("source_item_class_id",0)))
+	if source.get("TestItem")!=false or source.get("IsShowProbability")!=true:return false
+	var spec: Dictionary=NATIVE_FIELDS.field_view(record,"source_use_spec",{})
+	for reward: Dictionary in spec.get("rewards",[]):
+		if not ItemUse.class_matches(reward.get("class_ids",[]),class_id):continue
+		var raw: Variant=reward.get("probability_raw")
+		if int(reward.get("entity_type_id",0))==1 or (typeof(raw) in [TYPE_INT,TYPE_FLOAT] and raw>0):return true
+	return false
+
+static func available_for(record: Dictionary, class_id: int) -> bool:
+	if int(record.get("source_item_class_id",0))>0 or record.get("source_m_native_item",false):
+		return disclosed(record,class_id)
+	return is_bag(record)
 
 ## The bag's rows for class `class_id`: [{item_class_id, name, amount,
 ## percent (-1 for 확정), given}].
 static func bag_rows(record: Dictionary, class_id: int) -> Array:
-	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
+	var spec: Dictionary=NATIVE_FIELDS.field_view(record,"source_use_spec",{})
 	var denominator: int=int(spec.get("source_probability_denominator",0))
 	if denominator<=0:denominator=int(spec.get("class_probability_totals",{}).get(str(class_id),0))
 	var found: Array=[]
@@ -65,9 +86,11 @@ static func percent_text(percent: float) -> String:
 
 ## `class_id`: the character's original ClassID (the item use's own filter).
 func open(parent: Node, record: Dictionary, class_id: int) -> Dictionary:
-	if not is_bag(record):return _fail("source_box_probability_not_a_bag")
+	if not available_for(record,class_id):return _fail("source_box_probability_unavailable")
 	rows=bag_rows(record,class_id)
 	if rows.is_empty():return _fail("source_box_probability_rows_empty")
+	_mixed=rows.any(func(row: Dictionary) -> bool:return row.given) and rows.any(func(row: Dictionary) -> bool:return not row.given)
+	_given_tab=true
 	title=str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name","")))
 	return open_window(parent)
 
@@ -75,14 +98,26 @@ func _spec() -> Dictionary:
 	var spec: Dictionary={}
 	spec["Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Btn_Back"]={"exclude":true}
-	for name: String in ["Nd_Type01","Nd_Type02","Nd_Notice","Fx_Popup_LeftUp","Fx_Popup_RightBottom"]:spec[name]={"exclude":true}
-	spec["Nd_Type03"]={"visible":true}
+	for name: String in ["Nd_Type01","Nd_Notice","Fx_Popup_LeftUp","Fx_Popup_RightBottom"]:spec[name]={"exclude":true}
+	if _mixed:
+		spec["Nd_Type03"]={"exclude":true}
+		spec["Nd_Type02"]={"visible":true}
+		spec["Nd_Type02/Nd_Grade"]={"exclude":true}
+		for kind: String in ["Fix","Probability"]:
+			var given: bool=kind=="Fix"
+			var path: String="Nd_Type02/Nd_Tab/Btn_"+kind+"_Reward_"
+			spec[path+"On"]={"visible":given==_given_tab}
+			spec[path+"Off"]={"visible":given!=_given_tab,"activate":Callable(self,"_choose_tab").bind(given)}
+	else:
+		spec["Nd_Type02"]={"exclude":true}
+		spec["Nd_Type03"]={"visible":true}
 	spec["Nd_Title/Label"]={"role":"source_text","text":title if not title.is_empty() else "획득 가능 아이템"}
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var specs: Array=[]
-	for row: Dictionary in rows:
+	var shown: Array=rows.filter(func(row: Dictionary) -> bool:return row.given==_given_tab) if _mixed else rows
+	for row: Dictionary in shown:
 		var spec: Dictionary={"Panel/Nd_Special":{"visible":false},
 			"Panel/Label_ItemName":{"role":"source_text","text":"%s ×%s" % [str(row.name),_number(int(row.amount))]},
 			"Panel/Label_Probability":{"role":"source_text","text":percent_text(float(row.percent))},
@@ -92,16 +127,24 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		spec["Common_Slot/Text_Amount"]={"visible":false}
 		spec["Common_Slot/Btn"]={"activate":Callable(self,"_ignore")}
 		specs.append({"member":ROW,"spec":spec})
-	var placed: Dictionary=_fill_list(root,out,"Nd_Type03/ListView_ItemList",specs)
+	var list_path: String="Nd_Type02/Nd_List/ListView_ItemList" if _mixed else "Nd_Type03/ListView_ItemList"
+	var placed: Dictionary=_fill_list(root,out,list_path,specs)
 	if not placed.get("ok",false):return placed
 	var pictures: int=0
 	for index: int in range(specs.size()):
 		var icon: Dictionary=_locate(placed.scenes[index],placed.outs[index],"Common_Slot/Sp_IconSample")
-		var id: int=int(rows[index].item_class_id)
+		var id: int=int(shown[index].item_class_id)
 		if not icon.get("ok",false) or id<=0:continue
-		var info: Dictionary=SourceImages.describe_item_class(id,str(rows[index].name))
-		if _show_picture(icon.player,icon.offset,{"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}):pictures+=1
+		var info: Dictionary=SourceImages.describe_item_class(id,str(shown[index].name))
+		if NativeIcons.show_item(icon.player,icon.offset,info,hud()):pictures+=1
 	return {"ok":true,"rows":specs.size(),"pictures":pictures}
+
+func _choose_tab(given: bool) -> Dictionary:
+	if not is_open() or not _mixed or given==_given_tab:return {"ok":true}
+	_given_tab=given
+	var result: Dictionary=_stage()
+	if not result.get("ok",false):_given_tab=not given
+	return result
 
 ## Only this window closes.
 func _close_requested() -> Dictionary:

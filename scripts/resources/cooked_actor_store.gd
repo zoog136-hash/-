@@ -259,9 +259,29 @@ static func cached_page_texture(actor: CookedActor, page: int) -> Texture2D:
 static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 	var cached: Texture2D = cached_page_texture(actor, page)
 	if cached != null: return cached
+	var job: Variant = null
+	if not _page_jobs.is_empty() and _prepare_root == root():
+		job = _page_jobs.get(var_to_str(_page_input(actor, page)))
+		if job != null and job.cancelled: job = null
+	if job != null:
+		var prepared: Texture2D = job.get("texture")
+		if prepared != null:
+			_install_page_texture(actor, page, prepared, int(job.input[4]))
+			actor.page_retry_after.erase(page)
+			_count("page_demand_reuse_texture")
+			return prepared
 	if actor.page_retry_after.get(page, 0) > Time.get_ticks_msec(): return null
-	var file := FileAccess.open(actor.path, FileAccess.READ)
-	var image: Image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start) if file != null else null
+	var image: Image = null
+	if job != null and _collect_prepared_job(job):
+		image = job.result[0]
+	# A visible pose must draw immediately. Only a completed CPU result
+	# may replace the normal synchronous read; never wait on active I/O.
+	if image == null:
+		_count("page_demand_read")
+		var file := FileAccess.open(actor.path, FileAccess.READ)
+		if file != null: image = FORMAT.read_page(file, actor.index.pages[page], actor.data_start)
+	else:
+		_count("page_demand_reuse_image")
 	if image == null:
 		_count("page_unreadable")
 		actor.page_retry_after[page] = Time.get_ticks_msec() + PAGE_RETRY_MSEC
@@ -269,15 +289,21 @@ static func page_texture(actor: CookedActor, page: int) -> Texture2D:
 	actor.page_retry_after.erase(page)
 	var made: ImageTexture = ImageTexture.create_from_image(image)
 	_install_page_texture(actor, page, made, image.get_data_size())
+	# Admission and playback converge on the same GPU object, even if the
+	# worker was still busy when the demand read started.
+	if job != null:
+		job.texture = made
+		job.erase("failed")
+		if not job.has("task"): job.result[0] = null
 	return made
 
 static func _install_page_texture(actor: CookedActor, page: int, made: Texture2D, bytes: int) -> void:
 	var key: String = actor.path + "#" + str(page)
-	actor.textures[page] = made
-	actor.live_textures[page] = weakref(made)
 	# Direct tooling callers can load the same bundle outside the runtime index
 	# cache. If they replace a reserved key, release its old accounting first.
 	if _pages.has(key): _demote_page(key)
+	actor.textures[page] = made
+	actor.live_textures[page] = weakref(made)
 	_pages[key] = [actor, page, bytes]
 	_page_bytes += bytes
 	_count("page_loaded")
@@ -350,6 +376,14 @@ static func finish_prepared_pages() -> void:
 	_prepare_raw = 0
 	_prepare_root = ""
 
+static func _collect_prepared_job(job: Dictionary) -> bool:
+	if not job.has("task"): return true
+	var task: int = job.task
+	if not WorkerThreadPool.is_task_completed(task): return false
+	WorkerThreadPool.wait_for_task_completion(task)
+	job.erase("task")
+	return true
+
 static func pump_prepared_pages() -> void:
 	var folder: String = root()
 	if folder != _prepare_root:
@@ -365,14 +399,14 @@ static func pump_prepared_pages() -> void:
 		if now - int(_page_groups[group].touched) > PREPARE_IDLE_MSEC: _release_prepared_group(group)
 	for key: String in _page_jobs.keys():
 		var job: Dictionary = _page_jobs[key]
-		if job.has("task"):
-			if not WorkerThreadPool.is_task_completed(int(job.task)): continue
-			WorkerThreadPool.wait_for_task_completion(int(job.task))
-			job.erase("task")
+		if not _collect_prepared_job(job): continue
 		if job.cancelled:
 			_forget_prepared(key)
 			continue
-		if job.has("texture") or job.has("failed"): continue
+		if job.has("texture"):
+			job.result[0] = null
+			continue
+		if job.has("failed"): continue
 		var image: Image = job.result[0]
 		if image == null:
 			job.failed = true
@@ -416,6 +450,7 @@ static func prepare_state(actor: CookedActor, state: int) -> Dictionary:
 	if not _page_groups.has(group):
 		var warm: Dictionary = {}
 		var needed: int = 0
+		var blocked: bool = false
 		packed = 0
 		raw = 0
 		for page: int in pages:
@@ -424,13 +459,14 @@ static func prepare_state(actor: CookedActor, state: int) -> Dictionary:
 			var input: Array = inputs[page]
 			var key: String = var_to_str(input)
 			if _page_jobs.has(key):
-				if _page_jobs[key].cancelled: return {"status":"pending"}
+				if _page_jobs[key].cancelled: blocked = true
 			else:
-				if texture == null and int(actor.page_retry_after.get(page, 0)) > now: return {"status":"pending"}
+				if texture == null and int(actor.page_retry_after.get(page, 0)) > now: blocked = true
 				needed += 1
 				packed += int(input[3])
 				raw += int(input[4]) * 2
 		if warm.size() == pages.size(): return {"status":"ready", "textures":warm}
+		if blocked: return {"status":"pending"}
 		# Reserve the WHOLE pose atomically, including warm pages. Partial
 		# admissions could fill the queue with groups none of which can finish.
 		if _page_jobs.size() + needed > PREPARE_MAX_JOBS or _prepare_packed + packed > PREPARE_PACKED_BYTES or _prepare_raw + raw > PREPARE_RAW_BYTES: return {"status":"pending"}

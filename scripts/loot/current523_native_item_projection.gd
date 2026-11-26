@@ -343,6 +343,8 @@ static func record(definition: Dictionary) -> Dictionary:
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
 	var bag: Dictionary=reward_bag(definition,false)
+	if bag.is_empty() and category.get("Name") == "LuckyBag":
+		bag = described_event_box(definition)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
@@ -1032,6 +1034,7 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	# 아인하사드 절약 and cast speed percent points.
 	percent_fields.merge({"AbsoluteExperienceAdditionPercent":"xp","HPPotionIncreasePercent":"potion_heal_pct","EinasadSavingPercent":"ain_saving_pct","CastSpeedBonus":"cast_speed"})
 	var erase_level: int=0
+	var buff_deadline: int = 0
 	var valid_tower_lands:Dictionary={}
 	var linked: Array=[];var typed: Dictionary={}
 	for effect: Dictionary in graph.get("bonuses",[]):
@@ -1042,6 +1045,15 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 		for key: String in ["CharacterLevel","CharacterClass","MinSpellLevel"]:
 			if row.get(key)!=0:conditional=true
 		var name_value: String=str(kind.get("Name",""))
+		if name_value == "DeleteTime" and row.get("CharacterLevel") == 0 and row.get("CharacterClass") == 0 and row.get("MinSpellLevel") == 0:
+			var active_row := row.duplicate()
+			active_row["IsPossession"] = false
+			var stamp := delete_time_stamp(active_row)
+			if stamp <= 0 or (buff_deadline > 0 and stamp != buff_deadline):
+				reasons.append("source_buff_lifetime_unresolved")
+			else:
+				buff_deadline = stamp
+			continue
 		if tower and name_value=="ValidLand" and not conditional and unit.get("Name")=="LandID" and integer(bonus.get("Value")):
 			var target_land:int=int(bonus.Value)
 			if target_land<45374 or target_land>46364 or (target_land-45374)%10!=0 or valid_tower_lands.has(target_land):
@@ -1133,6 +1145,7 @@ static func timed_buff(definition: Dictionary) -> Dictionary:
 	for row: Dictionary in rows:spec.source_item_bonus_ids.append(row.ID)
 	spec["item_requirements"]={"targetting_type_id":raw.get("TargettingTypeID"),"service_region_code":raw.get("ServiceRegionCode",""),"can_use_when_invisible":raw.get("CanUseWhenInvisible",false)}
 	if erase_level>0:spec["erase_at_level"]=erase_level
+	if buff_deadline > 0: spec["buff_delete_time_raw"] = buff_deadline
 	# IsAbsoluteTimeBuff: the duration runs in real time, also while the game is closed.
 	if buff.get("IsAbsoluteTimeBuff",false)==true:spec["absolute_time"]=true
 	if ignore_during:spec["ignore_use_during_buff"]=true
@@ -1190,6 +1203,33 @@ static func bag_flags_valid(rows: Array) -> bool:
 	for row: Dictionary in rows:
 		if str(row.get("bonus_type",{}).get("Name",""))=="ResetAutoSlotByEmpty" and whole(row.get("bonus",{}).get("Value")) not in [0,1]:return false
 	return true
+
+static func described_event_box(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary = definition.original_item
+	var rule: Array = preload("res://scripts/loot/native_event_boxes523.gd").RULES.get(int(raw.ID),[])
+	if rule.is_empty() or rule[0] != raw.get("StoryDescID"):
+		return {}
+	var rows: Array = definition.item_bonus
+	if rows.size() != 1 or delete_time_stamp(rows[0]) <= 0:
+		return {}
+	var spec := consume_metadata(rows,raw,definition.category,{},false)
+	if not spec.blocked_reasons.is_empty(): return {}
+	var rewards := []
+	var omitted := []
+	for output: Array in rule[1]:
+		var id: int = output[0]
+		if output[3] == -1:
+			if not preload("res://scripts/quests/retired_quest_items523.gd").IDS.has(id): return {}
+			omitted.append(id)
+			continue
+		rewards.append({"item_class_id":id,"amount":output[1],"enchant":output[2],"class_ids":[output[3]] if output[3] > 0 else [],"bless_raw":1,"entity_type_id":1})
+	if rewards.is_empty(): return {}
+	spec.merge({"kind":"source_event_box","source_snapshot":"patch523","source_item_class_id":int(raw.ID),
+		"story_desc_id":int(raw.StoryDescID),"source_item_bonus_ids":[rows[0].ID],"consume_delay_ms":0,
+		"rewards":rewards,"omitted_quest_ids":omitted,"activation_status":"unrestricted",
+		"approximation":"원본 설명을 따른 발록 이벤트 구성품 · 서버 지급 대상 ID와 일반 축복은 TWILIGHT 추정",
+		"item_requirements":{"targetting_type_id":raw.TargettingTypeID,"service_region_code":raw.ServiceRegionCode,"can_use_when_invisible":raw.CanUseWhenInvisible}},true)
+	return spec
 
 # Same public compiler _source_reward_bag_spec contract, supplied by the
 # existing ItemData -> RewardData graph. This does not grant any reward.
@@ -1492,7 +1532,7 @@ static func coin_selection_timing_at_use(definition: Dictionary,graph: Dictionar
 		expected.erase(entity_id)
 	return int(source.desc) if expected.is_empty() else 0
 
-static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array,timing: int=1) -> void:
+static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array,timing: int=1,display_only_test_wrapper: bool=false) -> void:
 	var row: Dictionary=node.get("row",{})
 	for pair: Array in [["RewardGetTimeTypeID",timing],["RewardEnhancementTypeID",1],["Ranking",0]]:
 		if not integer(row.get(pair[0])) or int(row[pair[0]])!=pair[1]:reasons.append("unsupported_select_reward_rule:"+pair[0])
@@ -1501,7 +1541,7 @@ static func selectable_rule(node: Dictionary,active: Dictionary,reasons: Array,t
 	if not node.get("attributes",[]).is_empty():reasons.append("unsupported_select_reward_attributes")
 	var id: Variant=row.get("CharacterClassID")
 	if not integer(id) or (int(id)!=0 and not active.has(int(id))):reasons.append("unsupported_select_reward_class")
-	if node.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty():reasons.append("source_excluded_select_reward")
+	if (node.get("excluded",false) and not display_only_test_wrapper) or not SOURCE.declared_exclusion("Reward",row).is_empty():reasons.append("source_excluded_select_reward")
 
 # The original StoryDesc gives one guaranteed material + one selected item,
 # and the two branch DescIDs independently label the roles in Korean.
@@ -1588,6 +1628,115 @@ static func exact_selection_life(definition: Dictionary) -> int:
 		count+=1
 	return expected if count==1 else 0
 
+## Some original card selectors use a TestItem as a display-only wrapper.
+## Resolve only complete, verified choice groups. The wrapper is never granted.
+## Several dated boxes share exactly the same independently checked Reward.ID.
+const EXACT_CARD_BOX_ROOTS := {
+	227421:200101, 230602:200101, 235143:200101, 235411:200101, 235568:200101,
+	251492:200101, 271638:200101,
+	245991:214431,
+	246001:214441,
+	277372:279802,
+	277382:279812,
+	172943:142443, 182913:142443, 187552:142443, 222653:142443, 246583:142443,
+	254073:142443, 259724:142443, 277481:142443,
+	197931:164781, 202503:164781,
+	202603:168673, 225923:168673, 227431:168673,
+	246613:214573, 254043:214573, 258331:214573, 263882:214573, 267243:214573,
+	271718:214573, 311771:214573, 315723:214573, 332911:214573, 349901:214573,
+	365573:214573,
+	277501:280271,
+}
+## Root reward -> [SelectReward.ID, [entity, reward, wrapper, card, deck] rows].
+const EXACT_CARD_GROUPS := {
+	200101:[4681,[
+		[22821, 200111, 1017, 85, 1],
+		[22831, 200121, 1018, 86, 1],
+		[22841, 200131, 983, 42, 2],
+		[22851, 200141, 984, 43, 2],
+	]],
+	214431:[5841,[
+		[31111, 214231, 127484, 11954, 1],
+	]],
+	214441:[5851,[
+		[31121, 214241, 127474, 11964, 1],
+	]],
+	279802:[8442,[
+		[41362, 279682, 936, 122, 1],
+		[41372, 279692, 961, 10541, 1],
+		[41382, 279702, 1039, 10551, 1],
+		[41392, 279712, 1077, 10561, 1],
+	]],
+	279812:[8452,[
+		[41402, 279722, 938, 48, 2],
+		[41412, 279732, 988, 422, 2],
+		[41422, 279742, 29511, 432, 2],
+		[41432, 279752, 990, 11864, 2],
+	]],
+	142443:[873,[
+		[5963, 142353, 127444, 11984, 1],
+		[5973, 142363, 127454, 11994, 1],
+		[6033, 142423, 127464, 11974, 1],
+	]],
+	164781:[3251,[
+		[17011, 164761, 1017, 85, 1],
+		[17021, 164771, 1018, 86, 1],
+	]],
+	168673:[3773,[
+		[19063, 168653, 983, 42, 2],
+		[19073, 168663, 984, 43, 2],
+	]],
+	214573:[5913,[
+		[31323, 214533, 1198, 160, 1],
+		[31333, 214543, 6571, 301, 1],
+		[31343, 214553, 6591, 281, 1],
+		[31353, 214563, 6581, 291, 1],
+	]],
+	280271:[8441,[
+		[41531, 279861, 1019, 10422, 1],
+		[41541, 279871, 1020, 10432, 1],
+		[41551, 279881, 34031, 10501, 1],
+		[41561, 279891, 34041, 10511, 1],
+		[41571, 279901, 34051, 10521, 1],
+		[41581, 279911, 34061, 10531, 1],
+		[41591, 279921, 65401, 10601, 1],
+		[41601, 279931, 65411, 10611, 1],
+		[41611, 279941, 65421, 10621, 1],
+		[41621, 279951, 65431, 10631, 1],
+		[41631, 279961, 65441, 10641, 1],
+		[41641, 279971, 65451, 10651, 1],
+		[41651, 279981, 65461, 10661, 1],
+	]],
+}
+
+static func exact_choice_rows(box_id: int) -> Array:
+	var root_id: int=int(EXACT_CARD_BOX_ROOTS.get(box_id,0))
+	return EXACT_CARD_GROUPS[root_id][1] if EXACT_CARD_GROUPS.has(root_id) else []
+
+static func exact_selection_card(id: int, root: Dictionary, selection: Dictionary, entity: Dictionary, child: Dictionary) -> Dictionary:
+	var root_id: int=int(EXACT_CARD_BOX_ROOTS.get(id,0))
+	var lane: Array=EXACT_CARD_GROUPS.get(root_id,[])
+	if lane.is_empty() or root.get("ID")!=root_id or root.get("RewardClassID")!=lane[0] or selection.get("ID")!=lane[0] or selection.get("SelectMaxCount")!=1:return {}
+	var item: Dictionary=child.get("item_class",{})
+	var reward: Dictionary=child.get("row",{})
+	for expect: Array in lane[1]:
+		if entity.get("ID")!=expect[0]:continue
+		if entity.get("SelectRewardID")!=lane[0] or entity.get("RewardID")!=expect[1] or reward.get("ID")!=expect[1] or reward.get("RewardTypeID")!=2 or reward.get("RewardClassID")!=expect[2] or reward.get("Amount")!=1 or reward.get("CharacterClassID")!=0 or reward.get("ItemBlessCodeID")!=1:return {}
+		if child.get("exclusion_reason")!="source_test_item" or not child.get("declared_exclusion",{}).is_empty():return {}
+		if item.get("ID")!=expect[2] or item.get("TestItem")!=true or item.get("TargettingTypeID")!=1 or item.get("ServiceRegionCode")!="" or item.get("LevelLimitMin")!=0 or item.get("LevelLimitMax")!=0:return {}
+		if SOURCE.row("ItemCategory",whole(item.get("CategoryID"))).get("Name")!="BuffCardDrawer" or not SOURCE.declared_exclusion("ItemClass",item).is_empty():return {}
+		var links: Array[Dictionary]=SOURCE.related("ItemBonus","ItemClassID",expect[2])
+		if links.size()!=1 or links[0].get("IsPossession")!=false:return {}
+		var bonus: Dictionary=SOURCE.row("Bonus",whole(links[0].get("BonusID")))
+		if bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0 or bonus.get("Value")!=expect[3] or SOURCE.row("BonusType",whole(bonus.get("BonusTypeID"))).get("Name")!="BuffCardID":return {}
+		var card: Dictionary=SOURCE.row("BuffCard",expect[3])
+		var deck: Dictionary=SOURCE.row("BuffCardDeck",expect[4])
+		var title: String=label(item.get("DescID"))
+		if title.is_empty() or card.get("ID")!=expect[3] or card.get("BuffCardDeckID")!=expect[4] or deck.get("Name")!=CARD_DECKS[expect[4]][0] or deck.get("CharacterBased")!=false:return {}
+		if card.get("ServerLimitSetID")!=0 or card.get("StartDateTimeID")!=0 or card.get("EndDateTimeID")!=0 or not SOURCE.declared_exclusion("BuffCard",card).is_empty():return {}
+		return {"card_id":expect[3],"card_kind":CARD_DECKS[expect[4]][1],"source_choice_label":title}
+	return {}
+
 static func selectable_reward(definition: Dictionary) -> Dictionary:
 	var rows: Array=definition.get("item_bonus",[]);var refs: Array=[]
 	for row: Dictionary in rows:
@@ -1618,6 +1767,11 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 	if domain.is_empty():reasons.append("unsupported_select_reward_root_class")
 	for class_id: int in domain:
 		if not active.has(class_id):reasons.append("unsupported_select_reward_root_class")
+	var exact_card_box: bool=EXACT_CARD_BOX_ROOTS.has(whole(definition.original_item.ID))
+	var exact_option_ids: Dictionary={}
+	if exact_card_box:
+		if definition.category.get("Name")!="SelectReward" or definition.original_item.get("TestItem")!=false or root.get("CharacterClassID")!=0 or root.get("Amount")!=0:return {}
+		for expect: Array in exact_choice_rows(whole(definition.original_item.ID)):exact_option_ids[expect[0]]=true
 	var documented_timing_desc: int=coin_selection_timing_at_use(definition,graph,root)
 	var timing: int=2 if documented_timing_desc>0 else 1
 	var child_timing: int=COIN_SELECTION_TIMING[int(definition.original_item.ID)].get("child_timing",2) if documented_timing_desc>0 else 1
@@ -1635,9 +1789,15 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			# 2026-11-21: a choice the original declares excluded or whose item is a
 			# test/excluded row is left out of the window; the other choices stay.
 			var reward_item: Dictionary=child.get("item_class",{})
-			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or child.get("excluded",false) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
+			var exact_card: Dictionary={}
+			if exact_card_box:
+				exact_card=exact_selection_card(whole(definition.original_item.ID),root,selection,entity,child)
+				if exact_card.is_empty() or not exact_option_ids.erase(whole(entity.get("ID"))):
+					reasons.append("unresolved_exact_card_selection")
+					continue
+			if edge.get("excluded",false) or not SOURCE.declared_exclusion("SelectRewardEntity",entity).is_empty() or (exact_card.is_empty() and child.get("excluded",false)) or not SOURCE.declared_exclusion("Reward",row).is_empty() or (exact_card.is_empty() and child.get("reward_type",{}).get("ID")==2 and (reward_item.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",reward_item).is_empty())):
 				dropped.append(entity.get("ID"));continue
-			selectable_rule(child,active,reasons,child_timing)
+			selectable_rule(child,active,reasons,child_timing,not exact_card.is_empty())
 			var original: Dictionary=entity.duplicate(true);var detail: Dictionary=row.duplicate(true);detail["reward_type"]=child.get("reward_type",{});detail["character_class"]=child.get("character_class",{});detail["attributes"]=child.get("attributes",[]);original["reward"]=detail;linked.append(original)
 			if child.get("reward_type",{}).get("ID")!=2 or child.get("reward_type",{}).get("Name")!="Item":reasons.append("unsupported_select_reward_output_type");continue
 			var item: Dictionary=child.get("item_class",{});var class_ids: Array=[]
@@ -1645,10 +1805,13 @@ static func selectable_reward(definition: Dictionary) -> Dictionary:
 			var eligible: bool=false
 			for class_id: int in domain:
 				if (class_ids.is_empty() or class_id in class_ids) and (root.get("CharacterClassID")==0 or root.get("CharacterClassID")==class_id):eligible=true
-			if eligible and (item.get("TestItem")!=false or child.get("excluded",false) or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
+			if exact_card.is_empty() and eligible and (item.get("TestItem")!=false or child.get("excluded",false) or not SOURCE.declared_exclusion("ItemClass",item).is_empty()):reasons.append("source_test_or_excluded_reward_item")
 			if not integer(row.get("Amount")) or int(row.Amount)<1 or whole(row.get("ItemBlessCodeID")) not in [1,2,3]:reasons.append("unsupported_select_reward_amount_or_variant")
 			var needs: bool=not SOURCE.related("ItemEquipSlot","ItemClassID",int(item.get("ID",0))).is_empty();initial_rule=initial_rule or needs
-			rewards.append({"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs})
+			var choice: Dictionary={"source_entity_id":entity.get("ID"),"reward_id":row.get("ID"),"item_class_id":item.get("ID"),"amount":row.get("Amount"),"bless_raw":row.get("ItemBlessCodeID"),"class_ids":class_ids,"enchant":null,"enchant_origin":"source_reward_has_no_initial_enchant_field","requires_local_initial_enchant_rule":needs}
+			if not exact_card.is_empty():choice["exact_choice_card"]=exact_card
+			rewards.append(choice)
+	if exact_card_box and (not exact_option_ids.is_empty() or not dropped.is_empty()):reasons.append("incomplete_exact_card_selection")
 	if rewards.is_empty() and not selection.is_empty():reasons.append("empty_select_reward")
 	var counts: Dictionary={}
 	for class_id: int in domain:

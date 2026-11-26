@@ -349,7 +349,7 @@ static func select_rewards(spec: Dictionary, class_id: int, rng: RandomNumberGen
 			total += weight
 			if weight > 0: weighted.append(reward)
 		else: return {"ok":false}
-	if spec.get("kind") != "guaranteed_bag":
+	if spec.get("kind") not in ["guaranteed_bag","source_event_box"]:
 		# TWILIGHT 근사: a renormalized box draws over the class's own total.
 		var renormalized: bool = bool(spec.get("approx_renormalized", false)) and total > 0
 		if (total != 10000000 or int(spec.get("source_probability_denominator",0)) != total) and not renormalized or weighted.is_empty(): return {"ok":false}

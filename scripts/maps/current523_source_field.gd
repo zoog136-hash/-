@@ -171,7 +171,12 @@ func shared_chunk_metrics() -> Dictionary:
 		"renderer_collision_waiting":_render_collision.size(),"renderer_collision_limit":RENDER_COLLISION_LIMIT}
 
 func scope_metrics() -> Dictionary:
-	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":_raw.source_members().size() if loaded else 0,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"inferred_placements":inferred_placements.duplicate(true),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
+	# Asset selection already verified this count against the pinned inventory,
+	# including unavailable members. A diagnostic does not need a sorted listing.
+	var expected: int = 0
+	if loaded:
+		expected = int(availability.source_count) if availability.has("source_count") else _raw.source_members().size()
+	return {"loaded":loaded,"native_land_id":native_land.get("ID",-1),"native_asset_path":source_asset,"source_manifest_sha256":catalog_sha256,"expected_sources":expected,"ready_placed_sources":source_origins.size(),"unplaced_sources":unplaced_members.size(),"inferred_placements":inferred_placements.duplicate(true),"unavailable_sources":unavailable_sources.duplicate(),"asset_status":availability.get("status","unavailable"),"native_m_rules_verified":false}
 
 func _fail(message: String) -> bool:
 	close()

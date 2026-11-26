@@ -48,12 +48,12 @@ func active() -> Dictionary:
 	if preload("res://scripts/lineagem_base508.gd").native(main):
 		var identity: String=Cards.card_id(main)
 		if runtime.core.owned({"owned":runtime.world.card_draw_fusion.owned},"마법인형",identity) and runtime.core.native_material_available(main):_add_doll_invokes(out,identity,false)
-	var secondary: Dictionary=runtime.subslot_view(false)
-	if secondary.active:_add_doll_invokes(out,str(secondary.identity),true)
-	var relic: Dictionary=runtime.relic_subslot_view(false)
-	if relic.active:
-		var row: Dictionary=RELIC.relic_subslot_buff(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(str(relic.identity)))
-		if not row.is_empty():out["relic_subslot11:"+str(relic.identity)]={"native_source":{"card":row.card,"effects":row.effects}}
+	var secondary: String=runtime.active_subslot_identity()
+	if not secondary.is_empty():_add_doll_invokes(out,secondary,true)
+	var relic: String=runtime.active_subslot_identity(true)
+	if not relic.is_empty():
+		var row: Dictionary=RELIC.relic_subslot_buff(preload("res://scripts/cards/native_relic_subslot.gd").identity_key(relic))
+		if not row.is_empty():out["relic_subslot11:"+relic]={"native_source":{"card":row.card,"effects":row.effects}}
 	return out
 func _add_doll_invokes(out: Dictionary,identity: String,secondary: bool) -> void:
 	var row: Dictionary=preload("res://scripts/cards/native_doll_subslot.gd").subslot_row(identity) if secondary else INPUT.primary_doll_buff(identity)

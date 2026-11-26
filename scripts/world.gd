@@ -11,6 +11,7 @@ var tutorial523: Dictionary = {}
 var character_display_name: String = "황혼의 기사"
 var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
+const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
@@ -3988,7 +3989,12 @@ func _on_monster_died_timed(monster: TwilightMonster) -> void:
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
 	if level != level_before or card_leveled or clan_leveled:
-		_update_hud()
+		# A level-up with stat points already rebuilt every HUD surface this
+		# frame (523.882: kill.level 615 ms + kill.hud 364 ms for one level).
+		if _level_up_hud_frame != Engine.get_process_frames() or card_leveled or clan_leveled: _update_hud()
+		else:
+			_refresh_combat_hud()
+			_update_ain_hud()
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
@@ -4090,6 +4096,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 			inventory[inventory_key]=int(inventory.get(inventory_key,0))+int(record.quantity)
 	var item_name: String=str(record.item_name)
 	var quantity: int=int(record.quantity)
+	if item_name==titles.POWDER_KEY or item_name==titles.POWDER_SHOP_KEY:titles.reconcile_powder_stock()
 	_source_dungeon_pickup(record)
 	unconfirmed523.record_event("pickup",{"source_id":UNCONFIRMED523.native_id(record.get("item_record",{})),"event_id":str(record.get("id","")),"amount":quantity})
 	content523.record_pickup(UNCONFIRMED523.native_id(record.get("item_record",{})),quantity)
@@ -4675,10 +4682,17 @@ func _check_level_up(quiet: bool=false) -> void:
 			if not quiet:hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
 		elif not quiet:
 			hud.show_message("레벨 업! Lv.%d" % level)
+	var level_stage: int = FRAME_HITCH.now()
 	if gained_stat_points and not quiet:
 		_update_hud()
+		_level_up_hud_frame = Engine.get_process_frames()
 		hud.call_deferred("open_character")
+	level_stage = FRAME_HITCH.detail_next("level.hud", level_stage)
 	if not quiet and not reached.is_empty(): _play_original_level_up(reached)
+	FRAME_HITCH.detail("level.presentation", level_stage)
+
+## Frame in which _check_level_up already rebuilt the whole HUD.
+var _level_up_hud_frame: int = -1
 
 ## The original Hud_LevelUp presentation with this class's LevelUpEffectDesc
 ## guidance for every level reached (presentation only).
@@ -4700,6 +4714,9 @@ func _select_nearest_target() -> void:
 func _scroll_kind(scroll_name: String, owned_record: Dictionary = {}) -> String:
 	if scroll_name.begins_with("[원본 보상] "): return ""
 	var lookup: Dictionary=owned_record if not owned_record.is_empty() else _find_catalog_item_record(scroll_name)
+	if lookup.get("slot") == "material":
+		var native: Dictionary = CATALOG_STACK.native_record(self,lookup)
+		if not native.is_empty() and PATCH523_ENHANCE_SOURCE.declares_scroll(native): return "source"
 	if lookup.get("source_m_native_item",false):
 		return "source" if PATCH523_ENHANCE_SOURCE.declares_scroll(lookup) else ""
 	if scroll_name.find("무기 마법 주문서") >= 0:
@@ -4740,6 +4757,9 @@ func source_item_record(item_class_id: int, bless_raw: int = 1) -> Dictionary:
 
 func source_item_definition(item_class_id: int) -> Dictionary:
 	return LOOT_DROP.PATCH523_DROPS.definition_id(str(item_class_id))
+
+func source_symbol_reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+	return growth.source523.reward_record(item_id, registered, authored)
 
 func stage_source_item_grants(grants: Array, supplier: Dictionary) -> Dictionary:
 	return preload("res://scripts/loot/patch523_item_inventory.gd").stage(self,grants,supplier)
@@ -4877,12 +4897,12 @@ func _publish_normal_card_pack_hud() -> void:
 	hud.refresh_inventory(inventory)
 	_update_hud()
 
-func _on_blessing_target_requested(scroll_name: String, target_reference: String) -> void:
-	if consumable_service == null: return
-	if int(inventory.get(scroll_name, 0)) < 1:
+func _on_blessing_target_requested(scroll_reference: String, target_reference: String) -> void:
+	if consumable_service == null or scroll_reference.is_empty(): return
+	if int(inventory.get(_parse_enhancement_target(scroll_reference).name, 0)) < 1:
 		hud.show_message("축복 주문서가 없습니다")
 		return
-	consumable_service.call("apply_bless_scroll", scroll_name, target_reference)
+	consumable_service.call("apply_bless_scroll", scroll_reference, target_reference)
 	_update_hud()
 
 func _item_requests_map_loading(reference: String) -> bool:
@@ -4891,6 +4911,9 @@ func _item_requests_map_loading(reference: String) -> bool:
 	var item_name: String = selection.name
 	var record: Dictionary = item_instances.get(str(selection.get("id","")),{}).get("record",{})
 	if record.is_empty(): record = _find_catalog_item_record(item_name)
+	if str(selection.get("id","")).is_empty():
+		var original: Dictionary = CATALOG_STACK.action_record(self,record)
+		if not original.is_empty(): record = original
 	var effects: Script = preload("res://scripts/loot/source523_item_effects.gd")
 	if not effects.teleport(record).is_empty() or not effects.location_teleport(record).is_empty():
 		return true
@@ -4935,6 +4958,14 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 	var dummy_reason: String=preload("res://scripts/quests/source_dummy523.gd").reason(selected_source)
 	if not dummy_reason.is_empty():hud.show_message(dummy_reason);return
 	if tj_coupons.try_open_owned_coupon(item_name,str(selected.get("id","")),selected_source):return
+	if selected_source.get("source_m_native_item") == true and NATIVE_FIELDS.field(selected_source,"source_category_name") == "ScrollGachaCraft":
+		var book_id := int(selected_source.get("source_item_class_id",0))
+		var book_uid := str(selected.get("id",""))
+		if book_uid.is_empty() or item_name != selected_source.get("name") or not _patch523_item_allowed() or hp <= 0 or _option_awakening_busy():
+			hud.show_message("사용할 수 있는 가방의 비법서를 선택하세요")
+		else:
+			hud.open_gacha_craft523(book_id,book_uid)
+		return
 	if _open_owned_seal_scroll(item_name,str(selected.get("id","")),selected_source):return
 	if preload("res://scripts/shop/source523_cash_packages.gd").try_use(self,item_name):return
 	if alchemy_held_items.try_use(self,item_name,str(selected.get("id",""))):return
@@ -4955,19 +4986,26 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
+	if str(selected.get("id","")).is_empty() and selected_source.get("type") == "문양 재료":
+		if not growth.source523.plain_recharge(self,selected_source).is_empty():
+			var charged: Dictionary = growth.execute("recharge_stack",item_name,1,int(growth.state.revision))
+			hud.show_message(str(charged.message))
+			return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
 	var selected_id: String = str(selected.get("id",""))
 	var native_stack: Dictionary
-	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id)
-	else: native_stack = stack_owner.try_use(self,item_name,selected_id)
+	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id,false)
+	else: native_stack = stack_owner.try_use(self,item_name,selected_id,false)
 	if native_stack.get("handled",false):
 		if native_stack.get("silent",false):return # The owner shows its own chooser or message.
 		# 선택 상자: the original selection window (patch523_reward_choice).
 		if native_stack.get("requires_original_selection",false) and consumable_service.open_owned_original_selection(item_name,native_stack):return
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
-		if native_stack.get("ok",false):hud.refresh_inventory(inventory);_update_hud()
+		if native_stack.get("ok",false):
+			if native_stack.get("effect_kind")=="buff":_publish_timed_buff_hud()
+			else:hud.refresh_inventory(inventory);_update_hud()
 		return
 	if quest_item_provider.try_use_inventory(self,item_name): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
@@ -5003,7 +5041,11 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		hud.show_message(source_use_reason)
 		return
 	var symbol_instance_id: String = str(selected.get("id",""))
-	if not symbol_instance_id.is_empty() and not growth.source523.recharge(item_instances.get(symbol_instance_id,{})).is_empty():
+	var symbol_unit: Dictionary = item_instances.get(symbol_instance_id,{})
+	if not symbol_instance_id.is_empty() and growth.source523.reset_material(symbol_unit):
+		hud.open_growth("emblems")
+		return
+	if not symbol_instance_id.is_empty() and not growth.source523.recharge(symbol_unit).is_empty():
 		var converted: Dictionary = growth.execute("recharge",symbol_instance_id,1,int(growth.state.revision))
 		hud.show_message(str(converted.message))
 		return
@@ -5261,9 +5303,12 @@ func _tick_item_buffs(delta: float) -> void:
 			continue
 		var buff: Dictionary = value as Dictionary
 		var remaining_before: float = maxf(0.0, float(buff.get("remaining", 0.0)))
+		var deadline_left := INF
+		if buff.has("source_buff_delete_at"):
+			deadline_left = float(buff.source_buff_delete_at) - Time.get_unix_time_from_system()
 		var interval: float = float(buff.get("tick_interval", 0.0))
 		if interval > 0.0 and remaining_before > 0.0:
-			var elapsed: float = float(buff.get("tick_elapsed", 0.0)) + minf(delta, remaining_before)
+			var elapsed: float = float(buff.get("tick_elapsed", 0.0)) + minf(delta, minf(remaining_before, maxf(0.0, deadline_left + delta)))
 			var ticks: int = maxi(0, int(floor(elapsed / interval)))
 			buff["tick_elapsed"] = fmod(elapsed, interval)
 			if ticks > 0:
@@ -5273,6 +5318,7 @@ func _tick_item_buffs(delta: float) -> void:
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
 		# 원본 IsAbsoluteTimeBuff: real time, also while the game was closed.
 		if buff.has("absolute_until"): buff["remaining"] = maxf(0.0, float(buff.absolute_until) - Time.get_unix_time_from_system())
+		if buff.has("source_buff_delete_at"): buff["remaining"] = minf(buff.remaining, maxf(0.0, deadline_left))
 		# 원본 EraseBuffOnExperience / EraseOnLevel: ends at that level.
 		if int(buff.get("erase_at_level", 0)) > 0 and level >= int(buff.erase_at_level): buff["remaining"] = 0.0
 		active_item_buffs[key] = buff
@@ -5455,16 +5501,31 @@ func _needs_physical_item(record: Dictionary) -> bool:
 ## intact until a specific roll has both a valid source rule and a durable debit.
 var _enhancement_scroll_selection: Dictionary = {}
 var _enhancement_token_quotes: Dictionary = {}
-func _open_owned_native_enhancement(name: String, selected: String, record: Dictionary) -> bool:
+func _open_owned_native_enhancement(name: String, selected: String, record: Dictionary, seal_scroll: bool=false) -> bool:
 	var kind: String=_scroll_kind(name,record)
 	if kind.is_empty():return false
 	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1)
-	if not held.get("native",false):return false
-	if not held.get("ok",false):
+	if not held.get("native",false):
+		if not selected.is_empty() or kind != "source": return false
+		var source: Dictionary = CATALOG_STACK.action_record(self,record)
+		if source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
+		var problem := preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,source)
+		if not problem.is_empty() or _item_locked(name) or not CATALOG_STACK.holds_plain(self,name):
+			hud.show_message(problem if not problem.is_empty() else "선택한 주문서의 수량과 잠금을 확인하세요")
+			return true
+		if not _patch523_item_allowed() or hp <= 0: return true
+		_enhancement_scroll_selection.clear()
+	elif not held.get("ok",false):
+		if seal_scroll: return false # The seal owner also checks old saved physical scrolls.
 		hud.show_message(str(held.reason))
 		return true
-	_enhancement_scroll_selection={"name":name,"uid":held.uid}
-	hud.call("open_enhancement",name,_enhancement_candidates(kind,_scroll_mode(name),name))
+	else:
+		_enhancement_scroll_selection={"name":name,"uid":held.uid}
+	var candidates: Array = _enhancement_candidates(kind,_scroll_mode(name),name)
+	if seal_scroll and not candidates.any(func(row: Dictionary) -> bool: return not row.seal):
+		_enhancement_scroll_selection.clear()
+		return false
+	hud.open_enhancement(name,candidates)
 	return true
 
 func _enhancement_stock(scroll_name: String, count: int) -> Dictionary:
@@ -5478,6 +5539,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 	var stock: Dictionary=_enhancement_stock(scroll_name,1) if not scroll_name.is_empty() else {}
 	if stock.get("native",false) and not stock.get("ok",false):return result
 	var physical_scroll: Dictionary=stock.proof.record if stock.get("ok",false) else {}
+	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name)) if kind=="source" else ""
 	var names: Array = item_instances.keys()
 	names.sort()
 	for value: Variant in names:
@@ -5495,6 +5557,11 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 		var token: bool=not physical_scroll.is_empty() and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(record)
 		var level_value: int=int(receipt.get(PATCH523_TOKEN_STOCK.TOKEN_RANK,0)) if token else _item_instance_level(instance_id,item_name)
 		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,receipt,physical_scroll,token)
+		var seal: bool = not seal_id.is_empty() and patch523_equipment.identity(receipt) in ["30671","130551"]
+		if seal:
+			source_rule = patch523_seal_quote(instance_id,seal_id,str(stock.get("uid","")))
+			if not source_rule.get("ok",false) or source_rule.scroll_name != scroll_name: continue
+			source_rule["destroy" if not source_rule.protected else "no_change"] = 100.0-float(source_rule.success)
 		if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, level_value, record):
 			continue
 		var chance: Dictionary = source_rule if not source_rule.is_empty() else _enhancement_chance(kind, level_value, mode, record)
@@ -5511,6 +5578,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 			"name": item_name,
 			"instance_id":instance_id,
 			"target_id":item_name + "@@@" + instance_id,
+			"seal":seal,
 			"level": level_value,
 			"safe_level": int(chance.get("safe_level",_safe_enhancement_level(kind))),
 			"success_chance": float(chance.get("success", 0.0)),
@@ -5554,6 +5622,14 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
 	var kind: String=_enhancement_kind_for_record(record)
 	var scroll: Dictionary=scroll_override if not scroll_override.is_empty() else (_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {})
+	if scroll_override.is_empty() and scroll.get("slot") == "material":
+		var native: Dictionary = CATALOG_STACK.native_record(self,scroll)
+		if not native.is_empty() and PATCH523_ENHANCE_SOURCE.declares_scroll(native):
+			var issue: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,native)
+			if issue.is_empty() and (_item_locked(scroll_name) or not CATALOG_STACK.holds_plain(self,scroll_name) or CATALOG_STACK.action_record(self,scroll).is_empty()):
+				issue = "원본 강화 주문서의 수량·잠금·기간을 확인하세요"
+			if not issue.is_empty(): return {"source_rule":true,"success":0.0,"reason":issue}
+			scroll = native
 	if RETIRED_ITEMS.record(scroll):return {"source_rule":true,"success":0.0,"reason":RETIRED_ITEMS.REASON}
 	var exact_required: bool=bool(record.get("source_m_native_item",false)) or bool(scroll.get("source_m_native_item",false))
 	var issued: Dictionary=_patch523_expedition_scroll(scroll_name)
@@ -5787,6 +5863,10 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message(str(owned_scroll.reason))
 		return
 	var physical_scroll: Dictionary=owned_scroll.proof.record if owned_scroll.get("ok",false) else {}
+	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name))
+	if not seal_id.is_empty() and patch523_equipment.identity(item_instances[item_id]) in ["30671","130551"]:
+		_patch523_attempt_seal(item_id,seal_id,str(owned_scroll.get("uid","")),scroll_name)
+		return
 	var kind: String = _scroll_kind(scroll_name,physical_scroll)
 	var mode: String = _scroll_mode(scroll_name)
 	if kind == "":
@@ -6577,14 +6657,18 @@ func _patch523_open_box(source_id: String) -> void:
 	_update_hud()
 	hud.show_message("상자 개봉 완료 · 일반 +0 인장과 강화 주문서 8개")
 
-## Permanent seal scrolls use their own source group and never the generic
-## item-use fallback. Keep the exact bag reference until an enhancement commits.
-func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
+func _seal_scroll_id(record: Dictionary) -> String:
 	var raw_id: Variant=record.get("source_item_class_id")
 	var scroll_id: String=PATCH523_ENHANCE.item_id(record)
 	if (raw_id is int or raw_id is float) and is_finite(float(raw_id)) and raw_id==floorf(float(raw_id)):
 		scroll_id=str(int(raw_id))
-	if scroll_id.is_empty():
+	return scroll_id if scroll_id in PATCH523_SEAL_ACTIONS.SCROLLS else ""
+
+## Both scrolls have authored targets outside the two seals. The common
+## chooser uses the seal owner's quote and transaction for those two targets.
+func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
+	var scroll_id: String = _seal_scroll_id(record)
+	if scroll_id.is_empty() and not record.has("source_item_class_id") and PATCH523_ENHANCE.item_id(record).is_empty():
 		for candidate: String in PATCH523_SEAL_ACTIONS.SCROLLS:
 			if patch523_equipment.record_view(candidate).get("name","")==item_name:
 				scroll_id=candidate
@@ -6597,6 +6681,7 @@ func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dict
 	if int(inventory.get(item_name,0))<1 or _item_locked(item_name) or _item_locked(item_name,scroll_uid):
 		hud.show_message("주문서 소지 수량과 잠금을 확인하세요")
 		return true
+	if _open_owned_native_enhancement(item_name,scroll_uid,record,true): return true
 	if scroll_uid.is_empty():
 		var matches: Array[String]=[]
 		for uid: String in item_instances:
@@ -6647,12 +6732,15 @@ func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String 
 		if plain<int(quote.count): return PATCH523_EQUIPMENT.denied("가방에서 사용할 주문서 묶음을 선택하세요")
 	return quote
 
-func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: String = "") -> void:
+func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: String = "", forge_scroll_name: String = "") -> void:
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")): return
 	if not _patch523_item_allowed(): return
 	var quote: Dictionary = patch523_seal_quote(item_id,scroll_id,scroll_uid)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","원본 강화를 실행할 수 없습니다")))
+		return
+	if not forge_scroll_name.is_empty() and quote.scroll_name != forge_scroll_name:
+		hud.show_message("가방에서 선택한 주문서를 다시 확인하세요")
 		return
 	var staged: Dictionary = {}
 	if quote.has("scroll_request"):
@@ -6707,9 +6795,14 @@ func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: Stri
 		item_instances=staged.item_instances
 		if staged.has("consumable_state"):consumable_service.import_state(staged.consumable_state)
 	_update_hud()
-	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	hud.append_log("원본 인장 강화 · %s +%d · %s" % [target_name,int(quote.level),result_type])
+	if enhancement_series_quiet:
+		enhancement_series_last={"result":result_type,"from":int(quote.level),"to":result_level,"name":target_name}
+		return
+	if forge_scroll_name.is_empty(): hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	hud.show_enhancement_result(result_type,target_name,int(quote.level),result_level)
+	if not forge_scroll_name.is_empty():
+		hud.open_enhancement(forge_scroll_name,_enhancement_candidates("source",_scroll_mode(forge_scroll_name),forge_scroll_name) if int(inventory.get(forge_scroll_name,0))>0 else [])
 
 # Inspection API: exact original branches, not a replacement economy/rate table.
 func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: int, target_bless: int, scroll_bless: int) -> Dictionary:
@@ -6796,14 +6889,15 @@ func patch523_gacha_craft_owned() -> Array:
 	_sync_item_instances()
 	return preload("res://scripts/crafting/patch523_gacha_craft.gd").owned_callers(self)
 
-func patch523_gacha_craft_quote(item_class_id: int) -> Dictionary:
+func patch523_gacha_craft_quote(item_class_id: int, book_uid: String = "") -> Dictionary:
 	_sync_item_instances()
-	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id)
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").quote(self,item_class_id,book_uid)
 
-func patch523_gacha_craft_execute(item_class_id: int) -> Dictionary:
+func patch523_gacha_craft_execute(item_class_id: int, book_uid: String = "", quoted_quantity: int = -1) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 상태에서는 제작할 수 없습니다"}
 	_sync_item_instances()
-	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id)
+	if hp <= 0 or not _patch523_item_allowed() or _option_awakening_busy(): return {"ok":false,"reason":"현재 상태에서는 제작할 수 없습니다"}
+	return preload("res://scripts/crafting/patch523_gacha_craft.gd").execute(self,item_class_id,-1,-1,book_uid,quoted_quantity)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
 	if death_recovery.blocked(): return
@@ -7153,6 +7247,9 @@ func _on_auto_toggled(enabled: bool) -> void:
 
 func _open_inventory() -> void:
 	var started_usec: int = Time.get_ticks_usec()
+	# A session can still receive an old catalog grant, or the player can
+	# unlock one that was protected during load.
+	if inventory.has(titles.POWDER_SHOP_KEY) and titles.reconcile_powder_stock(): _update_hud()
 	hud.refresh_inventory(inventory)
 	hud.toggle_inventory()
 	_perf_log("가방 열기", started_usec)
@@ -7208,7 +7305,23 @@ func player_npc_buff_signature() -> int:
 func _update_hud() -> void:
 	_publish_player_hud(true)
 
-func _publish_player_hud(fold_native_stacks:bool) -> void:
+## All combat/character stats are still published immediately. Only group
+## the bag's count and physical-record changes and omit unrelated card UI
+## exports; the native timed-buff owner did not modify a card ledger.
+func _publish_timed_buff_hud() -> void:
+	var since:int=FRAME_HITCH.now()
+	var bag:Variant=hud.get("lineage_inventory_ui")
+	var batch:bool=is_instance_valid(bag) and bag.has_method("begin_state_publish") and bag.has_method("end_state_publish")
+	if batch:bag.begin_state_publish()
+	_publish_player_hud(true,true)
+	if batch:
+		var finish:int=FRAME_HITCH.now()
+		bag.end_state_publish()
+		FRAME_HITCH.detail("item.buff_bag_publish",finish)
+	FRAME_HITCH.detail("item.buff_hud",since)
+
+func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void:
+	var phase:int=FRAME_HITCH.now() if timed_item else 0
 	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -7224,6 +7337,7 @@ func _publish_player_hud(fold_native_stacks:bool) -> void:
 	_invalidate_equipment_static()
 	if fold_native_stacks:_merge_native_stacks()
 	_sync_item_instances()
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_prepare",phase)
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -7258,22 +7372,29 @@ func _publish_player_hud(fold_native_stacks:bool) -> void:
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	_stat_memo_end()
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_stats",phase)
 	hud.set_character_state(character_state)
-	if hud.has_method("set_card_collection_state"):
-		hud.call("set_card_collection_state", card_draw_fusion.export_state())
-	if hud.has_method("set_option_awakening_state"):
-		hud.call("set_option_awakening_state", option_awakening.export_state())
-	var completed_cards: Array[String] = card_collections.reconcile()
-	if not completed_cards.is_empty():
-		hud.append_log("카드 컬렉션 자동 완성 · %d개" % completed_cards.size())
-	if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
-	if hud.inventory_panel.visible:
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_sheet",phase)
+	if not timed_item:
+		if hud.has_method("set_card_collection_state"):
+			hud.call("set_card_collection_state", card_draw_fusion.export_state())
+		if hud.has_method("set_option_awakening_state"):
+			hud.call("set_option_awakening_state", option_awakening.export_state())
+		var completed_cards: Array[String] = card_collections.reconcile()
+		if not completed_cards.is_empty():
+			hud.append_log("카드 컬렉션 자동 완성 · %d개" % completed_cards.size())
+		if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
+	# Use the loaded physical records and stack counts together. The final
+	# quickslot feed sees the same inventory and cannot trigger another bag publish.
+	if timed_item or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
+	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", effective_quickslots())
 	regional_return_settings_updated.emit()
+	if timed_item:FRAME_HITCH.detail("item.buff_hud_final",phase)
 
 func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
@@ -7721,7 +7842,10 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
-		"consumable_state": SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
+		# A staged transaction already supplied and validated its replacement
+		# journal. The staged merge below detaches it; don't export the old
+		# live ledger just to discard that copy.
+		"consumable_state": {} if collection_override.has("consumable_state") else SAVE_SNAPSHOT.capture(owned_save_fields,"consumable_state",consumable_service.call("export_state")),
 		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"combination523":combinations.export_state(),
@@ -8379,6 +8503,10 @@ func _load_game(quiet: bool) -> void:
 		original_skills.catalog.import_state(data)
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
+	for key: Variant in active_item_buffs.keys():
+		var entry: Variant = active_item_buffs[key]
+		if entry is Dictionary and entry.has("source_buff_delete_at") and float(entry.source_buff_delete_at) <= Time.get_unix_time_from_system():
+			active_item_buffs.erase(key)
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
 	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
 	consumable_service.call("import_state", data.get("consumable_state", {}))
@@ -8508,6 +8636,7 @@ func _load_game(quiet: bool) -> void:
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
+	titles.reconcile_powder_stock()
 	# _update_hud also folds an old save's separate receipted stacks of one
 	# item into one slot (_merge_native_stacks).
 	_update_hud()
@@ -11975,26 +12104,26 @@ func _update_secondary_doll(delta: float) -> void:
 	if bool(presentation_settings.hide_doll):
 		if is_instance_valid(secondary_doll_visual): secondary_doll_visual.hide()
 		return
-	var state: Dictionary=option_awakening.subslot_view(false)
-	if not state.get("active",false):
+	var identity: String=option_awakening.active_subslot_identity()
+	if identity.is_empty():
 		if is_instance_valid(secondary_doll_visual):secondary_doll_visual.clear()
 		return
 	if not is_instance_valid(secondary_doll_visual):
 		secondary_doll_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
 		secondary_doll_visual.name="SecondarySourceDoll";add_child(secondary_doll_visual)
-	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(state.identity,{})
+	var record: Dictionary=option_awakening.core.catalog["마법인형"].get(identity,{})
 	secondary_doll_visual.update_source(delta,self,record)
 
 func _update_secondary_relic(delta: float) -> void:
-	var state: Dictionary=option_awakening.relic_subslot_view(false)
-	if not state.get("active",false):
+	var identity: String=option_awakening.active_subslot_identity(true)
+	if identity.is_empty():
 		if is_instance_valid(secondary_relic_visual):secondary_relic_visual.clear()
 		return
 	if not is_instance_valid(secondary_relic_visual):
 		secondary_relic_visual=preload("res://scripts/cards/native_doll_subslot_visual.gd").new()
 		secondary_relic_visual.category="성물"
 		secondary_relic_visual.name="SecondarySourceRelic";add_child(secondary_relic_visual)
-	var record: Dictionary=option_awakening.core.catalog["성물"].get(state.identity,{})
+	var record: Dictionary=option_awakening.core.catalog["성물"].get(identity,{})
 	secondary_relic_visual.update_source(delta,self,record)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
@@ -12552,6 +12681,9 @@ func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)
 
 ## Bag item dragged onto the field: confirmation (quantity for stacks) first.
+func request_inventory_delete(reference: String) -> Dictionary:
+	return preload("res://scripts/loot/inventory_item_delete.gd").request(self,reference)
+
 func request_inventory_ground_drop(reference: String, target: Vector2) -> Dictionary:
 	return INVENTORY_GROUND_TRANSFER.request(self,reference,target)
 

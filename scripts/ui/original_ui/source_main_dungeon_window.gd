@@ -34,6 +34,7 @@ extends RefCounted
 ## Btn_HelpBox opens the original HelpBox_Mission_TracesOrim.
 ## Party dungeons are excluded (user decision 2026-11-12).
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const Rows=preload("res://scripts/resources/current523_definition_rows.gd")
 const COMPETITION=preload("res://scripts/dungeons/competition_dungeon523.gd")
@@ -1079,7 +1080,7 @@ func _fill_slots(root: Node2D, out: Dictionary, suffix: String, member: String, 
 		var slot: Dictionary=slots[i]
 		var cell_out: Dictionary={}
 		var built: Dictionary=_tree.scene_of(SLOT,{
-			"Btn":{"activate":Callable(self,"_slot_pressed").bind(str(slot.name),int(slot.amount))},
+			"Btn":{"activate":Callable(self,"_slot_pressed").bind(str(slot.name),int(slot.amount),int(slot.class_id))},
 			"Sp_IconSample":{"role":"source_asset_slot","visible":false},
 			"Text_Amount":{"role":"source_text","text":number_text(int(slot.amount)),"visible":int(slot.amount)>1},
 		},cell_out)
@@ -1115,10 +1116,14 @@ static func Storage_forward(root: Node2D, out: Dictionary, suffix: String, scrol
 	if area is Control and not area.gui_input.is_connected(scroller.input):area.gui_input.connect(scroller.input)
 
 func _class_picture(root: Node2D, out: Dictionary, suffix: String, class_id: int, title: String) -> bool:
-	return _apply_picture(root,out,suffix,SourceImages.describe_item_class(class_id,title))
+	return _apply_item_picture(root,out,suffix,SourceImages.describe_item_class(class_id,title))
 
 func _item_row_picture(root: Node2D, out: Dictionary, suffix: String, item_row: Dictionary, title: String) -> bool:
-	return _apply_picture(root,out,suffix,SourceImages.describe_item_class_row(item_row,title))
+	return _apply_item_picture(root,out,suffix,SourceImages.describe_item_class_row(item_row,title))
+
+func _apply_item_picture(root: Node2D, out: Dictionary, suffix: String, info: Dictionary) -> bool:
+	var located: Dictionary=NamedTree.locate(root,out,suffix)
+	return located.get("ok",false) and NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref())
 
 func _apply_picture(root: Node2D, out: Dictionary, suffix: String, info: Dictionary) -> bool:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
@@ -1174,8 +1179,11 @@ func _close_time() -> Dictionary:
 	time_group=0
 	return _stage()
 
-func _slot_pressed(name: String, amount: int) -> Dictionary:
+func _slot_pressed(name: String, amount: int, item_class_id: int=0) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if item_class_id>0:
+		var popup: Dictionary=preload("res://scripts/ui/original_ui/source_reward_item_info.gd").toggle(hud,item_class_id)
+		if popup.get("ok",false):return popup
 	if hud!=null:hud.show_message("%s × %s" % [name,number_text(amount)])
 	return {"ok":true,"shown":name}
 

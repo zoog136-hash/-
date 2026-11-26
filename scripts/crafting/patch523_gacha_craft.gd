@@ -67,7 +67,7 @@ static func spec(item_class_id: int) -> Dictionary:
 	if _specs.has(item_class_id): return _specs[item_class_id]
 	var result: Dictionary = {}
 	var raw: Dictionary = SOURCE.row("ItemClass",item_class_id)
-	if not raw.is_empty() and raw.get("TestItem") == false and DUMMY.item_evidence(raw).is_empty():
+	if raw.get("TestItem") == false and STACK.storage_exclusion(raw).is_empty() and SOURCE.row("ItemCategory",int(raw.get("CategoryID",0))).get("Name") == "ScrollGachaCraft":
 		var found: Dictionary = {}
 		for link: Dictionary in SOURCE.related("ItemBonus","ItemClassID",item_class_id):
 			var bonus: Array = SOURCE.related("Bonus","ID",int(link.get("BonusID",0)))
@@ -170,8 +170,9 @@ static func class_of(world: Node) -> int:
 	return int(preload("res://scripts/lineagem_base508.gd").source_class_id(str(world.job_class)))
 
 ## Proven physical stacks (receipted) of one original item, unlocked, ID order.
-static func stacks_of(world: Node, item_class_id: int) -> Dictionary:
-	var ids: Array = world.item_instances.keys(); ids.sort()
+static func stacks_of(world: Node, item_class_id: int, selected_uid: String = "") -> Dictionary:
+	var ids: Array = world.item_instances.keys() if selected_uid.is_empty() else [selected_uid]
+	ids.sort()
 	var stacks: Array = []; var total: int = 0
 	for uid: Variant in ids:
 		var owned: Dictionary = STACK.proof(world,str(uid))
@@ -217,13 +218,21 @@ static func _material(world: Node, item: Dictionary, extra_gold: int) -> Diction
 	return {"ok":int(owned.total) >= need,"kind":"stack","owned":int(owned.total),"need":need,"requests":_requests(owned.stacks,need) if int(owned.total) >= need else []}
 
 ## Quote of one 비법서 제작: costs, ownership and the class's draw table.
-static func quote(world: Node, item_class_id: int) -> Dictionary:
+static func quote(world: Node, item_class_id: int, book_uid: String = "") -> Dictionary:
 	if SOURCE.not_installed() or SOURCE.identity().is_empty(): return _fail("보유 원본523 정의 ZIP이 필요합니다","source")
 	var item: Dictionary = spec(item_class_id)
-	if item.is_empty(): return _fail("원본 비법서 제작 아이템이 아닙니다","not_caller")
+	if item.is_empty(): return _fail("현재 사용할 수 있는 원본 비법서·재료 조합이 없습니다 · 비법서 보존","not_caller")
 	var drawn: Dictionary = table(int(item.gacha_id),class_of(world))
 	if not drawn.get("ok",false): return drawn
-	var books: Dictionary = stacks_of(world,item_class_id)
+	var books: Dictionary = stacks_of(world,item_class_id,book_uid)
+	if not book_uid.is_empty() and books.stacks.is_empty():
+		return _fail("선택한 비법서의 소유·수량·잠금 상태를 확인하세요","book")
+	if not books.stacks.is_empty():
+		var record: Dictionary = books.stacks[0].owned.record
+		var condition: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(world,record)
+		if not condition.is_empty(): return _fail(condition,"book")
+		if world.is_player_concealed() and SOURCE.row("ItemClass",item_class_id).get("CanUseWhenInvisible") != true:
+			return _fail("은신 중에는 이 비법서를 사용할 수 없습니다","book")
 	var material: Dictionary = _material(world,item,int(item.cost))
 	var gold_need: int = int(item.cost) + (int(item.material_amount) if material.kind == "adena" else 0)
 	var outcomes: Array = []
@@ -239,9 +248,11 @@ static func quote(world: Node, item_class_id: int) -> Dictionary:
 
 ## Executes one 비법서 제작 (one atomic save: book + material + 아데나 + the
 ## granted item + RNG). `roll`/`bound_roll` < 0 draw from the game RNG.
-static func execute(world: Node, item_class_id: int, roll: int = -1, bound_roll: int = -1) -> Dictionary:
-	var approval: Dictionary = quote(world,item_class_id)
+static func execute(world: Node, item_class_id: int, roll: int = -1, bound_roll: int = -1, book_uid: String = "", quoted_quantity: int = -1) -> Dictionary:
+	var approval: Dictionary = quote(world,item_class_id,book_uid)
 	if not approval.get("ok",false): return approval
+	if quoted_quantity >= 0 and int(approval.books_owned) != quoted_quantity:
+		return _fail("비법서 수량이 변경되었습니다. 다시 확인하세요","book")
 	var rng := RandomNumberGenerator.new()
 	rng.state = world.rng.state
 	var drawn: Dictionary = table(int(approval.item.gacha_id),class_of(world))

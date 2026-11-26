@@ -143,6 +143,15 @@ func run() -> void:
 	check(PACK.read_addon(addon_files["source523_addon.json"], {"pack_id":"12".repeat(32)}).is_empty(), "an add-on descriptor must match its part")
 	var ui_section: Dictionary = {"ui":{"root":"ui","manifest":"ui/original_ui.json","manifest_sha256":"34".repeat(32)}}
 	check(not PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on is accepted")
+	var base_ui: Dictionary = read.descriptor.duplicate(true)
+	base_ui.ui = ui_section.ui.duplicate(true)
+	var env := "TWILIGHT_SOURCE_UI_SETTINGS_FRAMES_SHA256"
+	check(PACK.selections(target, base_ui).environment[env].is_empty(), "legacy UI carries no prepared settings pin")
+	var addon_ui: Dictionary = ui_section.duplicate(true)
+	addon_ui.ui.settings_frames_sha256 = "ef".repeat(32)
+	check(PACK.selections(target, base_ui, addon_ui).environment[env] == "ef".repeat(32), "matching rebuilt UI add-on supplies prepared settings")
+	addon_ui.ui.manifest_sha256 = "22".repeat(32)
+	check(PACK.selections(target, base_ui, addon_ui).environment[env].is_empty(), "different add-on identity cannot select prepared settings")
 	ui_section.ui.manifest = "ui/other.json"
 	check(PACK.read_addon(JSON.stringify({"schema":PACK.ADDON_SCHEMA,"cumulative_version":523,"addon_id":addon_id,"sections":ui_section}).to_utf8_buffer(), unknown_index).is_empty(), "a main UI add-on must name original_ui.json")
 	check(PACK.missing_addons(read.descriptor, addons) == ["ui","world_map"], "after the travel definitions the main UI add-on (UI and world map) is asked for")

@@ -323,6 +323,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	var debug_gem_cost: int=0
 	var text: String = ""
 	var consume_instance: String = ""
+	var recharge_amount: int = 0
 	var transaction_day: int = -1
 	if action in ["save_emblem","restore_emblem"]:
 		var offer: Dictionary=history.quote(action,id)
@@ -353,6 +354,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 				for instance_id: String in world.item_instances:
 					var instance: Dictionary = world.item_instances[instance_id]
 					if source523.reset_material(instance) and int(world.inventory.get(str(instance.name),0))>0:
+						if world.has_method("_item_locked") and (world._item_locked(str(instance.name)) or world._item_locked(str(instance.name), instance_id)): continue
 						consume_instance = instance_id
 						costs[str(instance.name)] = 1
 						break
@@ -385,12 +387,15 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 				if action == "absolute": costs["축복의 열쇠"] = int(payment.ForceOpenCost)
 				else: points = int(payment.OpenCost)
 				text = "절대 옵션 %d · %s\n확률 강화 비용은 일반 강화 초기화 환급에 포함되지 않습니다." % [count,"열쇠 %d개 확정" % int(payment.ForceOpenCost) if action == "absolute" else "%d 축복 포인트 · 성공률 %.1f%%" % [points,float(payment.OpenProbability)/10000.0]]
-		"recharge":
-			var instance: Dictionary = world.item_instances.get(id,{}) if world != null else {}
-			var definition: Dictionary = source523.recharge(instance)
+		"recharge","recharge_stack":
+			var physical: bool = action == "recharge"
+			var definition: Dictionary = source523.recharge(world.item_instances.get(id,{})) if physical else source523.plain_recharge(world,world._find_catalog_item_record(id))
 			if definition.is_empty(): return fail("충전 아이템의 원본 식별·사용 조건을 확인할 수 없습니다")
+			if world.has_method("_item_locked") and (world._item_locked(str(definition.name)) or world._item_locked(str(definition.name), id)):
+				return fail("잠긴 축복의 성수입니다")
 			costs[definition.name] = 1
-			consume_instance = id
+			recharge_amount = int(definition.amount)
+			if physical: consume_instance = id
 			text = "%s 1개 → 축복 포인트 %d" % [str(definition.name),int(definition.amount)]
 		"holy_water":
 			if not development: return fail("원본 충전 아이템을 인벤토리에서 선택하세요 · 이름만으로 이관하지 않습니다")
@@ -497,7 +502,9 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 	if points > int(state.points): return fail("축복 포인트 부족 · 필요 %d / 보유 %d" % [points,int(state.points)])
 	for item: String in costs:
 		if int(world.inventory.get(item,0)) < int(costs[item]): return fail("%s 부족 · 필요 %d / 보유 %d" % [item,int(costs[item]),int(world.inventory.get(item,0))])
-	return {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"gold_cost":gold_cost,"debug_gem_cost":debug_gem_cost,"consume_instance":consume_instance,"day":transaction_day}
+	var quoted := {"ok":true,"message":text,"costs":costs,"points":points,"revision":state.revision,"gold_cost":gold_cost,"debug_gem_cost":debug_gem_cost,"consume_instance":consume_instance,"day":transaction_day}
+	if recharge_amount > 0: quoted["recharge_amount"] = recharge_amount
+	return quoted
 
 func execute(action: String, id: String, count: int, revision: int, quote_day: int = -1) -> Dictionary:
 	if busy or revision != int(state.revision): return fail("중복 또는 오래된 요청 · 다시 확인하세요")
@@ -588,11 +595,10 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 		"holy_water":
 			next.points += 100
 			_ledger(next,"recharged",100)
-		"recharge":
-			var definition: Dictionary = source523.recharge(instances[id])
-			next.points += int(definition.amount)
-			_ledger(next,"recharged",int(definition.amount))
-			instances.erase(id)
+		"recharge","recharge_stack":
+			next.points += int(offer.recharge_amount)
+			_ledger(next,"recharged",int(offer.recharge_amount))
+			if action == "recharge": instances.erase(id)
 		"craft_stone", "craft_stone_engraved": inventory["수호석"] = int(inventory.get("수호석",0))+1
 		"activate":
 			var row: Dictionary = node(id)

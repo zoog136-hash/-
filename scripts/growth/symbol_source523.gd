@@ -269,6 +269,28 @@ func install(catalog: Dictionary, loot: Dictionary) -> void:
 		if not exists: catalog["아이템"].append(record)
 		if not loot.get("by_name",{}).has(str(record.name)): loot.by_name[str(record.name)] = record
 
+## Normal shop/box/book rewards use this owner's exact item too. Match the
+## installed ItemClass and the actually registered specialist record. Event,
+## expiry and reset conditions are checked by the same owner as a floor pickup.
+func reward_record(item_id: int, registered: Dictionary, authored: Dictionary) -> Dictionary:
+	if authored.get("ID") != item_id or authored.get("TestItem") != false or data.get("items", {}).get(str(item_id)) != authored:
+		return {}
+	var expected: Dictionary = item_record(item_id)
+	if expected.is_empty() or NATIVE_FIELDS.full(registered) != expected:
+		return {}
+	return expected if material({"name":expected.name, "record":expected}) else {}
+
+func plain_recharge(world: Node, record: Dictionary) -> Dictionary:
+	if record.get("type") != "문양 재료": return {}
+	var id: int = int(record.get("source_item_class_id",0))
+	var key: String = str(record.get("name",""))
+	if int(world.catalog_item_variant_count.get(key,0)) != 1 or world._catalog_item_from_source_id(item_key(id)) != record: return {}
+	var raw: Dictionary = CommonSource.row("ItemClass",id)
+	if reward_record(id,record,raw).is_empty(): return {}
+	var balances: Script = preload("res://scripts/loot/current523_catalog_stack.gd")
+	if not balances.unique_stock_name(key,id) or not balances.holds_plain(world,key): return {}
+	return recharge({"name":key,"record":record})
+
 func prepare_pickup(drop: Dictionary, instances: Dictionary, next_id: int) -> Dictionary:
 	var unchanged: Dictionary = {"item_instances":instances,"next_item_instance_id":next_id}
 	if drop.has("physical_item") or not drop.get("item_record") is Dictionary: return unchanged

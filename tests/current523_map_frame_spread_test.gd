@@ -213,6 +213,38 @@ func worker_blocks() -> void:
 	renderer.queue_free()
 	await process_frame
 
+func worker_layer_order() -> void:
+	var tiles := RENDERER_TEST.CountedTiles.new()
+	var renderer := _renderer(tiles, Vector2.ZERO)
+	var cell := Vector2i(-1,-1)
+	var bounds: Rect2 = PLAY._block_rect(cell)
+	renderer._chunk_rects = {"second":bounds, "first":bounds}
+	renderer._raw_chunks = {
+		"first": {-2: PackedInt64Array([-513,-512,257, -512,-512,258, -1,-1,4294967295]),
+			3: PackedInt64Array([-20,-20,769]), 4: PackedInt64Array([-10,-10,4294967295])},
+		"second": {-2: PackedInt64Array([-511,-511,513, -6,-6,2049, -1,-513,257]),
+			3: PackedInt64Array([-9,-9,257])},
+	}
+	var inputs: Array = []
+	for member: String in renderer._block_members(cell):
+		var layers: Dictionary = renderer._raw_chunks[member]
+		var bins: Dictionary = PLAY._bin_chunk(layers)
+		inputs.append([layers,bins[cell]])
+	for objects: bool in [true,false]:
+		renderer.include_objects = objects
+		var reference: Dictionary = renderer._block_commands(cell)
+		var job := {"cell":cell,"tiles":tiles,"has_subimage":true,"inputs":inputs,"include_objects":objects}
+		PLAY._block_job(job)
+		var result: Dictionary = job.result
+		check(result.commands == reference.commands and result.commands.keys() == reference.commands.keys(),
+			"worker appends shared layers across sorted members and omits empty layers")
+		check(result.commands[-2] == PackedInt64Array([-513,-512,257, -511,-511,513, -1,-513,257])
+			and result.tile_ids == reference.atlases.keys(), "negative seams retain overlapping draws and first-use atlas order")
+		check(result.count == (3 if objects else 1) and result.draws == (5 if objects else 3)
+			and result.raw_ff == (2 if objects else 1) and result.unresolved == 2,
+			"only the owning block counts a record and rejected atlas/subimages stay unresolved")
+	renderer.queue_free()
+
 func _rows(ids: Array, start: int = 0) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for i: int in ids.size(): result.append({"sprite_id":ids[i], "raw_x":float((start + i) * 4), "raw_y":float((start + i) % 3) * 3.0})
@@ -277,6 +309,7 @@ func objects_spread() -> void:
 func _run() -> void:
 	renderer_spread()
 	multi_atlas_retry()
+	worker_layer_order()
 	await worker_blocks()
 	await objects_spread()
 	var result: Dictionary = {"checks": checks, "failures": failures, "evidence": evidence, "synthetic_only": true}

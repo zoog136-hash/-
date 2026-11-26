@@ -6,6 +6,7 @@ var coupons: OptionButton
 var events: OptionButton
 var success: ItemList
 var failure: ItemList
+var caption: Label
 var status: Label
 var use_button: Button
 var selected_revision := -1
@@ -89,7 +90,7 @@ func configure(host, item: String = "", uid: String = "") -> void:
 		status.text="원본 설치 완료" if loaded else "원본 SHA 또는 1065표 검증 실패")
 	coupons=OptionButton.new();coupons.expand_icon=true;add_child(coupons);coupons.item_selected.connect(func(_index: int):refresh_events())
 	events=OptionButton.new();add_child(events);events.item_selected.connect(func(_index: int):refresh_choices())
-	var caption := Label.new();caption.text="성공 후보 한 개 / 실패 후보 (스페셜 합성은 중복 없이 5개)";add_child(caption)
+	caption = Label.new();caption.text="성공 후보 한 개 / 실패 후보 (스페셜 합성은 중복 없이 5개)";add_child(caption)
 	success=ItemList.new();success.custom_minimum_size.y=100;add_child(success)
 	failure=ItemList.new();failure.select_mode=ItemList.SELECT_MULTI;failure.custom_minimum_size.y=100;add_child(failure)
 	use_button=Button.new();use_button.text="선택 확인";use_button.expand_icon=true;add_child(use_button);use_button.pressed.connect(confirm)
@@ -128,18 +129,30 @@ func refresh_events() -> void:
 		status.text="선택한 원본 쿠폰을 더 이상 사용할 수 없습니다 · 다른 쿠폰은 소모하지 않습니다"
 		return
 	var service=world.tj_coupons.core
-	var view: Dictionary=service.candidates(str(coupons.get_item_metadata(coupons.selected)),world.tj_coupons.context(),service.clock())
+	var item := str(coupons.get_item_metadata(coupons.selected))
+	var skill: bool=world.tj_coupons.skill_coupon(item)
+	caption.visible=not skill
+	success.visible=not skill
+	failure.visible=not skill
+	var view: Dictionary=world.tj_coupons.skill_candidates(item) if skill else service.candidates(item,world.tj_coupons.context(),service.clock())
 	selected_revision=int(service.state.revision)
 	status.text=str(view.get("error","소유 쿠폰과 실제 실패 이력을 확인하세요"))
 	if not view.ok:return
 	event_rows=view.get("events",[])
-	for event: Dictionary in event_rows:events.add_item("%s · 종류 %s · 원본 등급 %s" % [str(event.id),str(event.history_type),str(event.grade)])
+	for event: Dictionary in event_rows:
+		if skill:
+			events.add_item("%s 스킬 재합성" % world.skill_cards523.grade_name(int(event.target_grade)))
+			continue
+		events.add_item("%s · 종류 %s · 원본 등급 %s" % [str(event.id),str(event.history_type),str(event.grade)])
 	refresh_choices()
 func refresh_choices() -> void:
 	success.clear();failure.clear();use_button.disabled=true
 	_clear_image_metadata(success);_clear_image_metadata(failure);_selected_coupon_image()
 	if events.selected<0 or events.selected>=event_rows.size():return
 	var event: Dictionary=event_rows[events.selected]
+	if event.get("adapter")=="skill_fusion":
+		use_button.disabled=false
+		return
 	failure.visible=str(event.get("adapter",""))!="awakening"
 	for pair: Array in [[success,event.success_candidates],[failure,event.fail_candidates]]:
 		for id: String in pair[1]:

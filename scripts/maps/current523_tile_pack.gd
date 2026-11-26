@@ -8,6 +8,7 @@ const MAX_PNG_BYTES = 2 * 1024 * 1024
 const MAX_METADATA_BYTES = 64 * 1024 * 1024
 const MAX_TILES = 20000
 const TI2_DECODER = preload("res://scripts/maps/current523_ti2_decoder.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 ## Atlases are swapped to GPU block compression off the main thread.
 const TILE_GPU = preload("res://scripts/maps/current523_tile_gpu.gd")
 var gpu := TILE_GPU.new()
@@ -37,19 +38,29 @@ var _manifest_sha256: String = ""
 var _atlas_storage: String = "png"
 var _tiles: Dictionary = {}
 ## After the first verified load the tile rows live in a device-local record
-## bake (keyed by the manifest pin and this script) and are read when an atlas
-## is decoded; only each tile's block count stays in memory. The manifest
-## bytes are still hash-checked on every load.
+## bake (keyed by the manifest pin and this script). Keep the subimage counts
+## and the small source identities needed by a visible draw in memory.
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 static var bake_enabled: bool = true
 var _records: RefCounted
+# RecordFile owns one verified open file. Serialize only its seek/get_var;
+# worker jobs decode their own rows independently after releasing the cursor.
+var _record_cursor := Mutex.new()
 var _blocks: Dictionary = {}
+# Sorted literal IDs, original byte lengths and 32 digest bytes per ID.
+# 40 bytes per manifest tile, independent of travel and texture eviction.
+const DIGEST_BYTES := 32
+var _source_ids := PackedInt32Array()
+var _source_sizes := PackedInt32Array()
+var _source_digests := PackedByteArray()
 var _cache: Dictionary = {}
 var _recent: Array[int] = []
-## tile_id -> {task, row, root, storage, image, problem} decoding on a worker.
+## tile_id -> {task, decode, optional claims}. Claims stay on the main thread.
 var _jobs: Dictionary = {}
 ## Worker decodes in flight at once (each holds ~1.2 MiB while decoding).
 const MAX_DECODE_JOBS: int = 8
+const MAX_CLAIM_OWNERS: int = 4
+const MAX_CLAIM_BLOCKS: int = 64
 
 ## Publication is counted by engine process frame, not pump invocation: a
 ## frame may call pump_gpu, texture_for and pump_jobs many times. Keep the
@@ -82,6 +93,9 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_atlas_storage = "png"
 	_tiles.clear()
 	_blocks.clear()
+	_source_ids = PackedInt32Array()
+	_source_sizes = PackedInt32Array()
+	_source_digests = PackedByteArray()
 	_records = null
 	_cache.clear()
 	_recent.clear()
@@ -103,10 +117,13 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	var baked: RefCounted = BAKE.open_records(bake_name, bake_key) if not bake_key.is_empty() else null
 	if baked != null:
 		var meta: Variant = baked.read("meta")
-		if meta is Dictionary and meta.get("blocks") is Dictionary and meta.get("atlas_storage") in ["png", "runtime_ti2"] and not meta.blocks.is_empty():
+		if meta is Dictionary and _valid_index(meta):
 			_root = directory
 			_atlas_storage = meta.atlas_storage
 			_blocks = meta.blocks
+			_source_ids = meta.source_ids
+			_source_sizes = meta.source_sizes
+			_source_digests = meta.source_digests
 			_records = baked
 			_manifest_sha256 = expected_manifest_sha256
 			loaded = true
@@ -154,14 +171,21 @@ func load_pack(directory: String, expected_manifest_sha256: String) -> bool:
 	_root = directory
 	_atlas_storage = storage
 	_tiles = candidate
-	for id: int in candidate: _blocks[id] = int(candidate[id].blocks)
+	_source_ids = PackedInt32Array(candidate.keys())
+	_source_ids.sort()
+	for id: int in _source_ids:
+		var row: Dictionary = candidate[id]
+		_blocks[id] = int(row.blocks)
+		_source_sizes.append(int(row.source_bytes))
+		_source_digests.append_array(str(row.source_sha256).hex_decode())
 	_manifest_sha256 = expected_manifest_sha256
 	loaded = true
 	if not bake_key.is_empty():
 		var writer: RefCounted = BAKE.record_writer(bake_name, bake_key)
 		if writer != null:
 			for id: int in candidate: writer.add("t:%d" % id, candidate[id])
-			writer.add("meta", {"atlas_storage":storage, "blocks":_blocks})
+			writer.add("meta", {"atlas_storage":storage, "blocks":_blocks, "source_ids":_source_ids,
+				"source_sizes":_source_sizes, "source_digests":_source_digests})
 			if BAKE.finish_records(writer):
 				var records: RefCounted = BAKE.open_records(bake_name, bake_key)
 				if records != null:
@@ -179,8 +203,22 @@ static func bake_key_for(manifest_sha: String) -> String:
 static func baked(manifest_sha: String) -> bool:
 	return BAKE.present(bake_name_for(manifest_sha), bake_key_for(manifest_sha))
 
-func _row(tile_id: int) -> Dictionary:
-	return _records.read("t:%d" % tile_id) if _records != null else _tiles[tile_id]
+static func _valid_index(meta: Dictionary) -> bool:
+	if meta.get("atlas_storage") not in ["png", "runtime_ti2"] or not meta.get("blocks") is Dictionary: return false
+	if not meta.get("source_ids") is PackedInt32Array or not meta.get("source_sizes") is PackedInt32Array: return false
+	if not meta.get("source_digests") is PackedByteArray: return false
+	var ids: PackedInt32Array = meta.source_ids
+	var sizes: PackedInt32Array = meta.source_sizes
+	var blocks: Dictionary = meta.blocks
+	if ids.is_empty() or ids.size() > MAX_TILES or ids.size() != blocks.size(): return false
+	if sizes.size() != ids.size() or meta.source_digests.size() != ids.size() * DIGEST_BYTES: return false
+	var previous: int = -1
+	for slot: int in ids.size():
+		var id: int = ids[slot]
+		if id <= previous or id > 16777215 or not blocks.has(id): return false
+		if sizes[slot] <= 0 or sizes[slot] > MAX_SOURCE_BYTES: return false
+		previous = id
+	return true
 
 func verified_identity() -> Dictionary:
 	return {"root":_root,"manifest_sha256":_manifest_sha256} if loaded else {}
@@ -196,8 +234,12 @@ func has_tile(tile_id: int) -> bool:
 
 func source_usage_identity(tile_id: int) -> Dictionary:
 	if not has_tile(tile_id):return {}
-	var row: Dictionary=_row(tile_id)
-	return {"member":row.member,"bytes":int(row.source_bytes),"sha256":row.source_sha256}
+	var slot: int = _source_ids.bsearch(tile_id)
+	if slot >= _source_ids.size() or _source_ids[slot] != tile_id: return {}
+	var offset: int = slot * DIGEST_BYTES
+	# The pinned manifest validates the exact literal member name at load.
+	return {"member":"Tile/%d.ti2" % tile_id, "bytes":_source_sizes[slot],
+		"sha256":_source_digests.slice(offset,offset + DIGEST_BYTES).hex_encode()}
 
 func has_subimage(tile_id: int, frame8bit: int) -> bool:
 	return has_tile(tile_id) and frame8bit>=0 and frame8bit<int(_blocks[tile_id])
@@ -216,13 +258,15 @@ func texture_for(tile_id: int) -> Texture2D:
 	if background_only:
 		_fail(str(_prefetch_errors.get(tile_id, "Original atlas is still pending")))
 		return null
-	var job: Dictionary = _jobs.get(tile_id, {})
-	if job.is_empty():
+	var pending: Dictionary = _jobs.get(tile_id, {})
+	var job: Dictionary
+	if pending.is_empty():
 		job = _new_job(tile_id)
 		_decode_job(job)
 	else:
 		# Already decoding on a worker: wait for that one result.
-		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		WorkerThreadPool.wait_for_task_completion(int(pending.task))
+		job = pending.decode
 		_jobs.erase(tile_id)
 	return _publish(tile_id, job)
 
@@ -232,15 +276,47 @@ func texture_for(tile_id: int) -> Texture2D:
 ## made on the main thread (pump_jobs). A miss used to stall the frame for
 ## the whole decode (about 15 ms per atlas on a PC, ~60 ms on the phone).
 func prefetch(tile_id: int) -> bool:
+	return _offer_atlas(tile_id, 0, Vector2i.ZERO)
+
+## A shared pack may service the active map and a covered arrival at once.
+## Attach each block's demand to the existing decode, without owning the node.
+func prefetch_for_block(tile_id: int, renderer: Node, cell: Vector2i) -> bool:
+	return _offer_atlas(tile_id, renderer.get_instance_id(), cell)
+
+func _offer_atlas(tile_id: int, owner: int, cell: Vector2i) -> bool:
 	if _cache.has(tile_id) or _held.has(tile_id): return true
 	# Ready means the request finished, including a verified read failure.
 	# The block assembler can then report it and skip only the failed tiles.
 	if background_only and _prefetch_errors.has(tile_id): return true
-	if not has_tile(tile_id) or _jobs.has(tile_id): return false
-	if _jobs.size() >= MAX_DECODE_JOBS: return false
-	var job: Dictionary = _new_job(tile_id)
-	job["task"] = WorkerThreadPool.add_task(_decode_job.bind(job), false, "TI2 atlas decode")
-	_jobs[tile_id] = job
+	if not _jobs.has(tile_id):
+		if not has_tile(tile_id) or _jobs.size() >= MAX_DECODE_JOBS: return false
+		var decode: Dictionary = _new_job(tile_id)
+		var task: int = WorkerThreadPool.add_task(_decode_job.bind(decode), false, "TI2 atlas decode")
+		_jobs[tile_id] = {"task": task, "decode": decode}
+		if owner != 0: _jobs[tile_id].claims = {}
+	var pending: Dictionary = _jobs[tile_id]
+	if pending.has("claims"):
+		var claims: Dictionary = pending.claims
+		var cells: Variant = claims.get(owner)
+		# An ordinary/tool request or unusually large view keeps its result.
+		if owner == 0 or (cells == null and claims.size() >= MAX_CLAIM_OWNERS) \
+			or (cells != null and cells.size() >= MAX_CLAIM_BLOCKS and not cells.has(cell)):
+			pending.erase("claims")
+		elif cells == null:
+			claims[owner] = {cell: true}
+		else:
+			cells[cell] = true
+	return false
+
+func _still_requested(pending: Dictionary, views: Dictionary) -> bool:
+	if not pending.has("claims"): return true
+	for owner: int in pending.claims:
+		if not views.has(owner):
+			var renderer: Object = instance_from_id(owner)
+			views[owner] = renderer.atlas_request_bounds() if is_instance_valid(renderer) else Rect2i()
+		var bounds: Rect2i = views[owner]
+		for cell: Vector2i in pending.claims[owner]:
+			if bounds.has_point(cell): return true
 	return false
 
 ## Publishes completed decodes within a shared per-frame allowance. Returns
@@ -255,10 +331,20 @@ func pump_jobs() -> int:
 		for tile_id: int in _priority.keys():
 			if int(_priority[tile_id]) < frame - 1: _priority.erase(tile_id)
 	var done: int = 0
-	while _published_this_frame < MAX_PUBLISH_PER_FRAME and (_published_this_frame == 0 or _publish_usec < PUBLISH_BUDGET_USEC):
+	if _jobs.is_empty(): return done
+	var views: Dictionary = {}
+	while not _jobs.is_empty() and _published_this_frame < MAX_PUBLISH_PER_FRAME and (_published_this_frame == 0 or _publish_usec < PUBLISH_BUDGET_USEC):
 		var selected: int = -1
-		for tile_id: int in _jobs:
-			if not WorkerThreadPool.is_task_completed(int(_jobs[tile_id].task)): continue
+		for tile_id: int in _jobs.keys():
+			var job: Dictionary = _jobs[tile_id]
+			if not WorkerThreadPool.is_task_completed(int(job.task)): continue
+			if not _still_requested(job, views):
+				# This slot is released without a texture, failure, or upload
+				# budget charge. A later request can read the same pinned bytes.
+				WorkerThreadPool.wait_for_task_completion(int(job.task))
+				_jobs.erase(tile_id)
+				FRAME_HITCH.count("map.atlas_obsolete")
+				continue
 			if selected < 0: selected = tile_id
 			if _publish_sequence % 4 == 3: break
 			if int(_priority.get(tile_id, -2)) >= frame - 1:
@@ -266,11 +352,11 @@ func pump_jobs() -> int:
 				break
 		if selected < 0: break
 		var started: int = Time.get_ticks_usec()
-		var job: Dictionary = _jobs[selected]
-		WorkerThreadPool.wait_for_task_completion(int(job.task))
+		var pending: Dictionary = _jobs[selected]
+		WorkerThreadPool.wait_for_task_completion(int(pending.task))
 		_jobs.erase(selected)
 		var saved: String = problem
-		var texture: Texture2D = _publish(selected, job)
+		var texture: Texture2D = _publish(selected, pending.decode)
 		if background_only and texture == null: _prefetch_errors[selected] = problem
 		problem = saved
 		_publish_usec += Time.get_ticks_usec() - started
@@ -301,11 +387,30 @@ func pending_jobs() -> int:
 	return _jobs.size()
 
 func _new_job(tile_id: int) -> Dictionary:
-	return {"row": _row(tile_id), "root": _root, "storage": _atlas_storage, "image": null, "problem": ""}
+	var job: Dictionary = {"tile_id": tile_id, "root": _root, "storage": _atlas_storage, "image": null, "problem": ""}
+	if _records == null:
+		job.row = _tiles[tile_id]
+	else:
+		job.records = _records
+		job.cursor = _record_cursor
+	return job
 
-## Worker-safe: only the job's own row copy, files and pure decoders.
+## The live map only enqueues this work. Direct synchronous tools use the
+## same verified reader and byte checks. Never reopen an unverified path
+## to the bake or share the file cursor without the lock.
 static func _decode_job(job: Dictionary) -> void:
-	var row: Dictionary = job.row
+	var row: Dictionary
+	if job.has("records"):
+		var cursor: Mutex = job.cursor
+		cursor.lock()
+		var value: Variant = job.records.read("t:%d" % int(job.tile_id))
+		cursor.unlock()
+		if not value is Dictionary or value.get("tile_id") != job.tile_id:
+			job.problem = "Missing or mismatched verified TI2 metadata row"
+			return
+		row = value
+	else:
+		row = job.row
 	var source := FileAccess.open(str(job.root).path_join(str(row.original_path)), FileAccess.READ)
 	if source == null or source.get_length() != int(row.source_bytes):
 		job.problem = "Missing or wrong-sized original TI2"; return

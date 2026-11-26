@@ -205,6 +205,14 @@ var gacha_books: OptionButton
 var gacha_detail: RichTextLabel
 var gacha_action: Button
 var gacha_ids: Array[int] = []
+var bag_book_id: int = 0
+var bag_book_uid: String = ""
+
+func show_gacha_books(book_id: int = 0, book_uid: String = "") -> void:
+	bag_book_id = book_id
+	bag_book_uid = book_uid
+	gacha_box.show()
+	_reload_gacha()
 
 func _build_gacha() -> void:
 	gacha_box = VBoxContainer.new()
@@ -235,6 +243,14 @@ func _toggle_gacha() -> void:
 
 func _reload_gacha() -> void:
 	gacha_books.clear(); gacha_ids.clear()
+	if not bag_book_uid.is_empty():
+		gacha_ids.append(bag_book_id)
+		gacha_books.add_item(str(world.item_instances.get(bag_book_uid,{}).get("name","선택한 비법서")))
+		gacha_books.select(0)
+		gacha_books.disabled = true
+		_refresh_gacha()
+		return
+	gacha_books.disabled = false
 	if not world.has_method("patch523_gacha_craft_owned"): return
 	for entry: Dictionary in world.patch523_gacha_craft_owned():
 		gacha_ids.append(int(entry.item_class_id))
@@ -248,7 +264,7 @@ func _reload_gacha() -> void:
 
 func _refresh_gacha() -> void:
 	if gacha_books.selected < 0 or gacha_books.selected >= gacha_ids.size(): return
-	var quote: Dictionary = world.patch523_gacha_craft_quote(gacha_ids[gacha_books.selected])
+	var quote: Dictionary = world.patch523_gacha_craft_quote(gacha_ids[gacha_books.selected],bag_book_uid)
 	var item: Dictionary = quote.get("item",{})
 	var lines: PackedStringArray = []
 	if not item.is_empty():
@@ -266,10 +282,11 @@ func _refresh_gacha() -> void:
 func _gacha_execute() -> void:
 	if gacha_books.selected < 0 or gacha_books.selected >= gacha_ids.size(): return
 	var id: int = gacha_ids[gacha_books.selected]
-	var quote: Dictionary = world.patch523_gacha_craft_quote(id)
+	var selected_uid := bag_book_uid
+	var quote: Dictionary = world.patch523_gacha_craft_quote(id,selected_uid)
 	if not quote.get("ok",false): hud.show_message(str(quote.get("reason","제작 불가"))); return
 	hud.confirm_action("비법서 제작 확인","%s 1개, %s ×%d, 아데나 %s를 소모하고 원본 확률로 1개를 얻습니다." % [str(quote.item.name),str(quote.item.material_name),int(quote.item.material_amount),UI.number_text(int(quote.gold_cost))],"제작",func(_amount: int) -> void:
-		var result: Dictionary = world.patch523_gacha_craft_execute(id)
+		var result: Dictionary = world.patch523_gacha_craft_execute(id,selected_uid,int(quote.books_owned))
 		hud.show_message(str(result.get("detail","")) if result.get("ok",false) else str(result.get("reason","비법서 제작 실패")))
 		_reload_gacha())
 

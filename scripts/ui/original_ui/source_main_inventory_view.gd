@@ -43,6 +43,13 @@ var _bound_inputs: Array=[]
 var _bound_asset_key: Array=[]
 var _authored_assignments: Dictionary={}
 var _search: RefCounted
+const DETAIL_BUTTON=1328
+const DETAIL_ICON=1380
+const DETAIL_SCOPE: Array[int]=[DETAIL_BUTTON,1788,DETAIL_ICON]
+var _detail_scene: Node2D
+var _detail_area: Control
+var _detail_reference: String=""
+var _detail_supported: bool=false
 var search_result: Dictionary={}
 ## Vertical pitch between original slot rows (the authored horizontal slot
 ## pitch of Inventory_Slot_Set: -117, -41, 35, 111).
@@ -92,6 +99,12 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 	if not result.get("ok",false):return _unsupported_result(result)
 	result=_slots.configure(pack,hud,image_owner_provider)
 	if not result.get("ok",false):return _unsupported_result(result)
+	# Only use the released Common_Slot detail art and authored control, when
+	# the selected pack admits the whole branch. Old partial packs keep long press.
+	if bag.has_method("open_item_info"):
+		var slot: Dictionary=pack.scene(Slots.SLOT_MEMBER)
+		var button: Dictionary=Scene._node_at_offset(slot.get("nodeTree",{}),DETAIL_BUTTON)
+		_detail_supported=button.get("classname")=="Button" and not Scene._node_at_offset(button,DETAIL_ICON).is_empty()
 	_chrome.model_changed.connect(_on_category_changed)
 	_chrome.search_requested.connect(_open_search)
 	_slots.selection_changed.connect(_on_selection_changed)
@@ -117,6 +130,7 @@ func is_open() -> bool:
 
 func close(keep_warm: bool=true) -> void:
 	close_search()
+	if _chrome!=null:_chrome.close_sort()
 	if not keep_warm: invalidate_cache(); return
 	if not is_open():return
 	if _hits.size()>REOPEN_HIT_LIMIT or not is_instance_valid(_scroll_content): invalidate_cache(); return
@@ -138,6 +152,7 @@ func invalidate_cache() -> void:
 	var previous: Node2D=_scene
 	_parked_until=0
 	_scene=null
+	_clear_detail_control()
 	_inventory_scene=null
 	_bounds=null
 	_scroll_content=null
@@ -195,6 +210,7 @@ func _try_reopen(parent: Node) -> Dictionary:
 	_scene.process_mode=_resume_process_mode
 	_scene.show()
 	_bound_inputs=_owner_inputs()
+	_sync_detail_control()
 	stats.reopens+=1
 	var shown: Dictionary=_open_result()
 	shown["reused_scene"]=true
@@ -295,6 +311,7 @@ func activate_selected(reference: String) -> Dictionary:
 
 func hit_at(viewport_point: Vector2) -> Dictionary:
 	if not is_open() or not viewport_point.is_finite():return {}
+	if _chrome.sort_blocks_point(viewport_point) or _detail_control_at(viewport_point):return {}
 	for reference: String in _hits:
 		var hit: Dictionary=_hits[reference]
 		var control: Control=hit.control
@@ -316,6 +333,7 @@ func _inside_scroll_view(viewport_point: Vector2) -> bool:
 	return Rect2(Vector2.ZERO,area.size).has_point(area.get_global_transform_with_canvas().affine_inverse()*viewport_point)
 
 func blocks_point(viewport_point: Vector2) -> bool:
+	if is_open() and _chrome.sort_blocks_point(viewport_point):return true
 	var bounds: Control=gesture_bounds()
 	if not is_instance_valid(bounds) or not bounds.is_visible_in_tree() or not viewport_point.is_finite():return false
 	return Rect2(Vector2.ZERO,bounds.size).has_point(bounds.get_global_transform_with_canvas().affine_inverse()*viewport_point)
@@ -470,7 +488,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		if not control is Control:return _reject_staged(next,{"ok":false,"code":"source_inventory_view_original_slot_hit_control_missing","offset":offset})
 		var reference: String=assignments[offset]
 		var raw: Dictionary=(model.owned_by_reference[reference] as Dictionary).duplicate(true)
-		_keep_missing_icon_title(native_slot,control,slot_contract.missing_icon_titles.get(offset,""))
+		_show_missing_icon_tooltip(control,slot_contract.missing_icon_titles.get(offset,""))
 		hits[reference]={"from":"inventory","id":reference,"reference":reference,"entry":{"kind":"item","id":raw.get("name")},"owned_row":raw,"texture":accepted.get("texture"),"native_icon_scene":accepted.get("player"),"control":control,"button":control,"native_slot_scene":native_slot,"slot_project_offset":offset,"slot_set_project_offset":slot_set,"source_asset_evidence":accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":model.get("selected_reference")==reference}
 	for reference: String in hits:
 		var hit_control: Variant=hits[reference].get("control")
@@ -592,7 +610,64 @@ func _on_selection_changed(_reference: String) -> void:
 			_fallback(_unsupported_result(result))
 			return
 		_hits[reference]["shown_selected"]=bag!=null and bag.get("selected_item")==reference
+	if _chrome!=null and is_instance_valid(_inventory_scene):_chrome.refresh_selected_controls(_inventory_scene)
+	_sync_detail_control()
 	selection_refreshed.emit()
+
+func _clear_detail_control() -> void:
+	var previous: Node2D=_detail_scene
+	_detail_scene=null
+	_detail_area=null
+	_detail_reference=""
+	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
+		previous.hide()
+		previous.queue_free()
+
+func _sync_detail_control() -> void:
+	if not _detail_supported:return
+	var bag: Object=_bag.get_ref() if _bag!=null else null
+	var picked: String=str(bag.get("selected_item")) if bag!=null else ""
+	var slot: Node2D=_hits.get(picked,{}).get("native_slot_scene")
+	if is_instance_valid(_detail_scene) and _detail_scene.get_parent()==slot and _detail_reference==picked:return
+	_clear_detail_control()
+	if picked.is_empty() or not is_instance_valid(slot):return
+	var scene:=Scene.new()
+	var built: Dictionary=scene.configure_nodes(_pack,Slots.SLOT_MEMBER,DETAIL_SCOPE,{DETAIL_BUTTON:{"role":"button","visible":true,"activate":Callable(self,"_open_slot_detail").bind(picked)}})
+	if not built.get("ok",false):
+		scene.free()
+		return
+	var button_node: Node2D=scene.source_nodes.get(DETAIL_BUTTON)
+	var icon: Node2D=scene.source_nodes.get(DETAIL_ICON)
+	var origin: Node2D=icon.get_node_or_null("SourceContentOrigin") if is_instance_valid(icon) else null
+	var button: Node=button_node.get_meta("source_button") if is_instance_valid(button_node) and button_node.has_meta("source_button") else null
+	var area: Control=button.get("_input_area") if is_instance_valid(button) else null
+	if origin==null or area==null:
+		scene.free()
+		return
+	slot.add_child(scene)
+	# The authored transparent detail button covers its whole shop slot.
+	# In the bag the visible corner icon alone is interactive: the remaining
+	# slot still owns taps, drags and the already established use gesture.
+	var extent: Array=icon.get_meta("source_size",[30,30])
+	var transform: Transform2D=(area.get_parent() as Node2D).get_global_transform().affine_inverse()*origin.get_global_transform()
+	var a: Vector2=transform*Vector2(0,-float(extent[1]))
+	var b: Vector2=transform*Vector2(float(extent[0]),0)
+	area.position=a.min(b)
+	area.size=(b-a).abs()
+	_detail_scene=scene
+	_detail_area=area
+	_detail_reference=picked
+
+func _detail_control_at(point: Vector2) -> bool:
+	return is_instance_valid(_detail_area) and _detail_area.is_visible_in_tree() and _inside_scroll_view(point) and Rect2(Vector2.ZERO,_detail_area.size).has_point(_detail_area.get_global_transform_with_canvas().affine_inverse()*point)
+
+func detail_button_at(point: Vector2) -> Node:
+	return _detail_area.get_parent() if _detail_control_at(point) else null
+
+func _open_slot_detail(reference: String) -> Dictionary:
+	var bag: Object=_bag.get_ref() if _bag!=null else null
+	if bag==null or not is_open() or reference!=bag.get("selected_item") or not _hits.has(reference):return _unsupported("source_inventory_detail_selection_changed")
+	return {"ok":bool(bag.call("open_item_info",reference)),"reference":reference}
 
 func _on_native_closed() -> void:
 	close()
@@ -710,6 +785,7 @@ func _sync_lines(model: Dictionary={}, reuse: Dictionary={}, build_margin: int=B
 			if not model.get("ok",false):return model
 		var built: Dictionary=_build_line(line,model,reuse)
 		if not built.get("ok",false):return built
+	_sync_detail_control()
 	return {"ok":true}
 
 func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
@@ -757,7 +833,7 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 		if not row_raw is Dictionary:
 			row_scene.free()
 			return {"ok":false,"code":"source_inventory_view_owner_reference_missing","reference":row_reference}
-		_keep_missing_icon_title(row_native,row_control,row_contract.missing_icon_titles.get(offset,""))
+		_show_missing_icon_tooltip(row_control,row_contract.missing_icon_titles.get(offset,""))
 		hits[row_reference]={"from":"inventory","id":row_reference,"reference":row_reference,"entry":{"kind":"item","id":row_raw.get("name")},"owned_row":(row_raw as Dictionary).duplicate(true),"texture":row_accepted.get("texture"),"native_icon_scene":row_accepted.get("player"),"control":row_control,"button":row_control,"native_slot_scene":row_native,"slot_project_offset":offset,"slot_set_project_offset":_line_slot_set,"row":line,"source_asset_evidence":row_accepted.get("evidence",{}),"use_on_single_click":false,"shown_selected":bag!=null and bag.get("selected_item")==row_reference}
 	row_scene.position=authored_row.position+Vector2(0.0,ROW_PITCH*float(line))
 	authored_row.get_parent().add_child(row_scene)
@@ -774,10 +850,8 @@ func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 	stats.line_builds+=1
 	return {"ok":true,"line":line}
 
-func _keep_missing_icon_title(slot: Node2D, control: Control, title: String) -> void:
-	if title.is_empty():return
-	slot.set_meta("missing_icon_title",title)
-	control.tooltip_text=title
+static func _show_missing_icon_tooltip(control: Control, title: String) -> void:
+	if not title.is_empty():control.tooltip_text=title
 
 ## Everything the built slots take from the owner besides amounts, markers
 ## and selection: layout, the displayed order of references, each row

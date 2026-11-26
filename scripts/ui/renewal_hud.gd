@@ -129,6 +129,9 @@ var menu_category_filter: HBoxContainer
 var menu_category_buttons: Array[Button] = []
 var menu_category_index: int = 0
 var menu_tiles: Array[Control] = []
+var menu_original_spaces: Array[Control] = []
+var menu_original_shell: Dictionary={}
+var _menu_shell_controller_id: int=0
 var active_section: String = ""
 var totem_view: Control
 var buff_row: HBoxContainer
@@ -386,7 +389,7 @@ func blocks_keyboard_input_except_source_editor(editor: Control) -> bool:
 	return false
 
 func blocks_world_input(point: Vector2) -> bool:
-	if is_enhancement_presenting() or is_option_awakening_busy(): return true
+	if is_enhancement_presenting() or is_option_awakening_busy() or source_option_awakening_is_open(): return true
 	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
 	# Use the same canvas and clipping coordinates as the real controls so
 	# responsive shelves and dragged windows cannot issue a world destination.
@@ -943,6 +946,10 @@ func show_source_system_message(text: String, explicit_priority: int) -> Diction
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
+	if source_awakening_result_is_open() and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		original_main_ui_controller.feature_window("awakening_result").advance_or_dismiss()
+		get_viewport().set_input_as_handled()
+		return
 	if is_enhancement_presenting() or is_option_awakening_busy():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -1087,6 +1094,10 @@ func _park_shared_panels() -> void:
 		if panel.get_parent() != $Root:
 			panel.reparent($Root)
 		panel.hide()
+	var shell: Node2D=menu_original_shell.get("scene")
+	if is_instance_valid(shell):
+		if shell.get_parent()!=null and shell.get_parent()!=$Root:shell.reparent($Root,false)
+		shell.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
 	# Window subtitles such as "원본523 확률·재료 조회 · 현재 강화 정책 보존" are
@@ -1141,8 +1152,9 @@ func _go_back() -> void:
 	if is_instance_valid(companion_detail_view) and companion_detail_view.active and companion_detail_view.active_tab==1:
 		companion_detail_view.select_tab(0)
 		return
-	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():
-		return
+	if active_section == "option_awakening":
+		if source_option_awakening_is_open() and original_main_ui_controller.feature_window("option_awakening").cancel_review():return
+		if is_instance_valid(option_awakening_view) and option_awakening_view.cancel_review():return
 	if active_section == "growth96" and is_instance_valid(growth96_view) and growth96_view.cancel_review():
 		return
 	var restore_card_details: bool = active_section == "option_awakening" and option_awakening_source_detail
@@ -1277,6 +1289,17 @@ func _navigate(section: String) -> void:
 func save_now() -> void:
 	save_pressed.emit()
 
+func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
+	return _confirm_source_action(title,body,action,callback)
+
+func _confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
+	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		var dialog: Control = original_main_ui_controller.awakening_review($Root,title,body,callback)
+		if dialog != null: return dialog
+	return confirm_action(title,body,action,callback)
+
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
 	for dialog: Node in $Root.get_children():
 		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): return dialog
@@ -1314,6 +1337,7 @@ func open_tj_coupons() -> void:
 
 func open_tj_coupons_native(focused_item: String = "", physical_id: String = "") -> void:
 	_open_window("tj_coupons", "TJ 쿠폰", "소유 쿠폰 · 실제 실패 기록 · 확인 · 저장")
+	if not physical_id.is_empty() and _open_original_feature("tj_coupons",["","",focused_item,physical_id]):return
 	var view = preload("res://scripts/tj/view.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent(),focused_item,physical_id)
@@ -1408,14 +1432,15 @@ func open_shop() -> void:
 				workspace.hide()
 				_sync_screen_focus()
 
-## The original 523 거래소 window (source_main_trade_window) first; the
-## TWILIGHT frozen-snapshot panel without the original UI pack.
+## Saving or buying a captured listing is never an ordinary menu fallback.
 func open_frozen_exchange() -> void:
-	_open_window("exchange","거래소 · 초기 실측 고정","")
+	_open_window("exchange","TWILIGHT 거래소","")
 	if _open_original_feature("trade"):return
-	var panel = preload("res://scripts/ui/frozen_exchange_panel.gd").new()
-	workspace.mount(panel)
-	panel.configure(self)
+	var notice:=Label.new()
+	notice.name="LocalTradeUnavailable"
+	notice.text="원본 거래소 화면과 아이템 자료가 설치되면 이용할 수 있습니다."
+	notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	workspace.mount(notice)
 
 func open_npc_shop(npc_id: String = "") -> void:
 	_open_window("npc_shop","잡화 상인","")
@@ -1484,12 +1509,12 @@ func open_crafting() -> void:
 ## 비법서 제작 (원본 GachaCraft, TWILIGHT 근사): the TWILIGHT crafting screen
 ## with its 비법서 제작 panel open; the original production window's 이벤트
 ## tab routes here (the original UI has no GachaCraft entry).
-func open_gacha_craft523() -> void:
+func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> void:
 	_open_window("crafting","제작 장인","비법서 제작")
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
-	if screen.has_method("_toggle_gacha") and not screen.gacha_box.visible: screen._toggle_gacha()
+	screen.show_gacha_books(book_id,book_uid)
 
 ## The original 523 ProductionScene (source_main_production_window) over the
 ## same recipes; false -> the TWILIGHT crafting screen opens (reported).
@@ -1778,10 +1803,33 @@ func toggle_menu() -> void:
 		_close_workspace()
 		return
 	_open_window("menu","전체 메뉴","")
+	var controller_id: int=original_main_ui_controller.get_instance_id() if is_instance_valid(original_main_ui_controller) else 0
+	if controller_id!=_menu_shell_controller_id:
+		var outdated: Node2D=menu_original_shell.get("scene")
+		if is_instance_valid(outdated):outdated.queue_free()
+		menu_original_shell={}
+		_menu_shell_controller_id=controller_id
+		if is_instance_valid(menu_page):menu_page.queue_free();menu_page=null
+		if controller_id!=0:
+			menu_original_shell=original_main_ui_controller.full_menu_shell(_close_workspace)
+			original_main_ui_status["full_menu"]=_inventory_status_summary(menu_original_shell)
 	# Build the menu tiles once and re-mount them; _park_shared_panels moves the
 	# page out of the workspace before it is cleared, so it is never freed.
 	if not is_instance_valid(menu_page): _build_menu_page()
 	workspace.mount(menu_page)
+	var shell: Node2D=menu_original_shell.get("scene")
+	var native: bool=is_instance_valid(shell)
+	menu_category_filter.visible=not native
+	menu_scroll_view.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER if native else ScrollContainer.SCROLL_MODE_AUTO
+	if native:
+		workspace.use_original_menu_frame(menu_original_shell.size)
+		if shell.get_parent()==null:workspace.content.add_child(shell)
+		else:shell.reparent(workspace.content,false)
+		shell.show()
+		var list: Rect2=menu_original_shell.list_rect
+		menu_page.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		menu_page.position=list.position
+		menu_page.size=list.size
 	menu_page.show()
 	# A freshly opened menu always starts on "전체" at the top, as before.
 	_select_menu_category(0)
@@ -1793,6 +1841,7 @@ func _select_menu_category(index: int) -> void:
 		menu_category_buttons[position].set_pressed_no_signal(position == menu_category_index)
 	var category: String = names[menu_category_index]
 	for tile: Control in menu_tiles: tile.visible = category == "전체" or tile.get_meta("menu_category") == category
+	for space: Control in menu_original_spaces:space.visible=category=="전체" and menu_original_shell.get("ok",false)
 	if is_instance_valid(menu_scroll_view): menu_scroll_view.scroll_vertical = 0
 
 const MENU_CATEGORY_NAMES: Array[String] = ["전체","캐릭터·성장","사냥·모험","상점·생활"]
@@ -1804,21 +1853,30 @@ const MENU_GRID_COLUMNS: int = 5
 const MENU_TILE_SIZE: Vector2 = Vector2(70,67)
 const MENU_VISIBLE_ROWS: int = 7
 
-## The original 523 전체 메뉴 order (MainMenuUIButtons, row by row: 제작 거래소
-## 변신 마법인형 성물 / 던전 · · 스킬 카드 컬렉션 / 혈맹 · 기억 · · / · 연금 · 수호성
-## 문양 / 엘릭서 스케줄 숙련 토템 지배석 / 작위 · · 설정 · / 몬스터 도감) for the
-## sections with an original tile (user list 2026-11-21 #3: 인형·성물 beside 변신).
-const ORIGINAL_MENU_ORDER: Array[String] = ["crafting","exchange","변신","마법인형","성물","source_dungeons","skill_card523","equipment_collections","clan523","refine523","guardians","emblems","half_elixir","auto","weapon_mastery","totems","domination_stone","titles","settings","monsterbook523"]
+## Pinned original 523 MainMenuUIButtons.FixedRow/FixedColumn, joined by
+## AssetView.FilePath, flattened to 7×5. Empty is a reserved original cell
+## without an equivalent active owner here, not an invitation to compress.
+## MainMenu_Schedule (5,2) is not TWILIGHT's auto-combat options.
+const ORIGINAL_MENU_CELLS: Array[String] = [
+	"crafting","exchange","변신","마법인형","성물",
+	"source_dungeons","","","skill_card523","equipment_collections",
+	"clan523","","","","",
+	"","refine523","","guardians","emblems",
+	"half_elixir","","weapon_mastery","totems","domination_stone",
+	"titles","","","settings","",
+	"monsterbook523","","","","",
+]
 
-## `pairs` ([section, caption]) with the original-order sections first, the
-## rest after them in their own order.
-static func ordered_menu_pairs(pairs: Array) -> Array:
-	var ranked: Array = []
-	for index: int in pairs.size():
-		var rank: int = ORIGINAL_MENU_ORDER.find(str(pairs[index][0]))
-		ranked.append([rank if rank >= 0 else ORIGINAL_MENU_ORDER.size() + index, pairs[index]])
-	ranked.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) < int(b[0]))
-	return ranked.map(func(entry: Array) -> Array: return entry[1])
+## Preserve source cell indices even for unavailable/paused owners. Only
+## available local tiles go after the entire seven-row original block.
+static func place_menu_pairs(pairs: Array) -> Array:
+	var by_section: Dictionary = {}
+	for pair: Array in pairs:by_section[str(pair[0])]=pair
+	var result: Array = []
+	for id: String in ORIGINAL_MENU_CELLS:result.append(by_section.get(id,[]))
+	for pair: Array in pairs:
+		if not str(pair[0]) in ORIGINAL_MENU_CELLS:result.append(pair)
+	return result
 
 func _build_menu_page() -> void:
 	var col := VBoxContainer.new()
@@ -1870,13 +1928,22 @@ func _build_menu_page() -> void:
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
 	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
-	# 원본 전체 메뉴 순서 (MainMenuUIButtons FixedRow/FixedColumn): sections with an
-	# original tile first in the client's order, then the TWILIGHT-only ones.
-	menu_pairs = ordered_menu_pairs(menu_pairs)
-	for pair: Array in menu_pairs:
+	menu_pairs = menu_pairs.filter(func(pair: Array) -> bool:
+		var id: String = str(pair[0])
+		return not id in RETIRED_SECTIONS and (id!="monsterbook523" or MONSTERBOOK_RUNTIME.progression_enabled()))
+	menu_pairs = place_menu_pairs(menu_pairs)
+	menu_original_spaces.clear()
+	for index: int in menu_pairs.size():
+		var pair: Array = menu_pairs[index]
+		if pair.is_empty():
+			var space := Control.new()
+			space.name="OriginalMenuSpace_%d" % index
+			space.custom_minimum_size=MENU_TILE_SIZE
+			space.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			grid.add_child(space)
+			menu_original_spaces.append(space)
+			continue
 		var section_id: String = str(pair[0])
-		if section_id in RETIRED_SECTIONS: continue
-		if section_id == "monsterbook523" and not MONSTERBOOK_RUNTIME.progression_enabled(): continue
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
 				_navigate(section_id),MENU_TILE_SIZE)
@@ -1948,6 +2015,8 @@ func _mount_domination_menu_tile(button: Button, artwork: TextureRect, caption: 
 	# MainMenu_DominationStone's 70x67 panel is anchored at its centre.
 	scene.position = MENU_TILE_SIZE*0.5
 	button.add_child(scene)
+	# Its existing outer tile is the only owner of taps and swipe cancellation.
+	preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")._ignore_input(scene)
 	caption.hide()
 
 ## The client's MainMenu_* tile (picture and caption) of a menu section that
@@ -2485,6 +2554,10 @@ func set_option_awakening_state(value: Dictionary) -> void:
 	_refresh_option_awakening_markers()
 	_refresh_option_awakening_entry()
 
+func source_option_awakening_is_open() -> bool:
+	return active_section=="option_awakening" and is_instance_valid(original_main_ui_controller) \
+		and original_main_ui_controller.has_method("feature_window_is_open") and original_main_ui_controller.feature_window_is_open("option_awakening")
+
 func set_option_awakening_view(snapshot: Dictionary) -> void:
 	if not bool(snapshot.get("ok", false)):
 		if active_section == "option_awakening" and is_instance_valid(option_awakening_view):
@@ -2495,6 +2568,10 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	var target_id: String = str(snapshot.get("target_id", ""))
 	var same_target: bool = category == str(option_awakening_snapshot.get("category", "")) and target_id == str(option_awakening_snapshot.get("target_id", ""))
 	option_awakening_snapshot = snapshot.duplicate(true)
+	if same_target and source_option_awakening_is_open():
+		var updated: Dictionary=original_main_ui_controller.feature_window("option_awakening").apply_snapshot(snapshot)
+		original_main_ui_status["option_awakening_window"]=updated
+		if updated.get("ok",false):return
 	if active_section == "option_awakening" and is_instance_valid(option_awakening_view) and not option_awakening_view.is_queued_for_deletion() and same_target:
 		option_awakening_view.collection_catalog=catalog_data
 		option_awakening_view.collection_ownership=card_collection_state
@@ -2504,6 +2581,7 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 	if CARD_RULES.CATEGORIES.has(active_section):
 		option_awakening_source_detail = catalog_details_active
 	_open_window("option_awakening", category + " 옵션 각성", "")
+	if _open_original_feature("option_awakening",[option_awakening_snapshot]):return
 	var view: Control = OptionAwakeningView.new()
 	view.collection_catalog=catalog_data;view.collection_ownership=card_collection_state;view.collection_scroll_host=workspace
 	option_awakening_view = view
@@ -2521,7 +2599,16 @@ func set_option_awakening_view(snapshot: Dictionary) -> void:
 func is_option_awakening_busy() -> bool:
 	# The form locks its own submission before emitting. Do not include that
 	# lock here: World's transaction guard must accept the request just emitted.
-	return is_instance_valid(option_awakening_reveal) and not option_awakening_reveal.is_queued_for_deletion()
+	return source_awakening_result_is_open() or (is_instance_valid(option_awakening_reveal) and not option_awakening_reveal.is_queued_for_deletion())
+
+func source_awakening_result_is_open() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("feature_window_is_open") and original_main_ui_controller.feature_window_is_open("awakening_result")
+
+func present_source_awakening_result(card: Dictionary, outcome: Dictionary, settings: Dictionary) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_overlay_window"): return false
+	var opened: Dictionary = original_main_ui_controller.try_open_overlay_window("awakening_result", [card, outcome, settings])
+	original_main_ui_status["awakening_result_window"] = opened
+	return opened.get("ok", false)
 
 func present_option_awakening_result(record: Dictionary, result: Dictionary, settings: Dictionary = {}) -> void:
 	if is_option_awakening_busy() or not bool(result.get("ok", false)) or not result.get("success") is bool:
@@ -2534,6 +2621,8 @@ func present_option_awakening_result(record: Dictionary, result: Dictionary, set
 		outcome["bonus_lines"] = snapshot.get("applied_options", [])
 	if not outcome.has("message"):
 		outcome["message"] = "옵션 각성이 완료되었습니다." if bool(outcome.get("success", false)) else "각성에 실패했습니다. 경험치 %d가 남았습니다." % int(snapshot.get("experience", 0))
+	if present_source_awakening_result(record, outcome, _option_awakening_settings() if settings.is_empty() else settings):
+		return
 	var layer := CanvasLayer.new()
 	layer.name = "OptionAwakeningRevealLayer"
 	layer.layer = 112
@@ -2706,8 +2795,9 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 	if views.is_empty():
 		return
 	var success: bool = bool(awarded.get("success", false))
+	var pack: RefCounted=original_main_ui_controller.get("_pack") if is_instance_valid(original_main_ui_controller) else null
 	var effect: Callable = CARD_REVEAL.play_result_cell.bind(category, is_fusion, success,
-		source_candidate_records, get_parent().presentation_settings)
+		source_candidate_records, get_parent().presentation_settings,pack)
 	if is_fusion and _present_original_fusion(views, category, success, effect): return
 	if not is_fusion and _present_original_gacha(views, category, str(awarded.get("title","")), effect): return
 	var stage: Control = _new_card_reveal_stage()
@@ -2727,13 +2817,21 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 	var release := func() -> void:
 		if card_reveal_stage == guard: card_reveal_stage = null
 		if is_instance_valid(guard): guard.queue_free()
+		_cover_original_fusion(false)
 		_refresh_card_controls()
 	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release,effect])
 	original_main_ui_status["fusion_result_window"] = native
-	if native.get("handled",false): return true
+	if native.get("handled",false):
+		_cover_original_fusion(true)
+		return true
 	card_reveal_stage = null
 	guard.queue_free()
 	return false
+
+func _cover_original_fusion(covered: bool) -> void:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("feature_window"):return
+	var setup: RefCounted=original_main_ui_controller.feature_window("card_fusion")
+	if setup!=null:setup.set_reveal_covered(covered)
 
 ## 카드 뽑기 결과 in the original 523 BM_Gacha window (UI pack only), with
 ## the same hidden busy guard as the fusion result; false keeps the existing
@@ -2860,17 +2958,29 @@ func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
 	var category_spare: Dictionary = (card_collection_state.get("spare",{}) as Dictionary).get(category,{}) as Dictionary
 	for raw: Variant in catalog_data.get(category,[]) as Array:
 		if not raw is Dictionary or str((raw as Dictionary).get("grade","")) != grade_name: continue
+		if not preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd")._eligible(raw): continue
 		var identity: String = CARD_RULES.card_id(raw as Dictionary)
 		if identity.is_empty() or seen.has(identity): continue
 		seen[identity] = true
 		available += maxi(0,int(category_spare.get(identity,0)))
-	var batch_limit: int = clampi(available / maxi(1,required),1,10)
-	var body: String = "%s %s 중복 카드 %d장을 소모하시겠습니까? 최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다." % [
-		category, grade_name, required
-	]
-	if batch_limit > 1:
-		body += "\n합성 횟수를 선택하세요 (최대 %d회 · 1회당 %d장)." % [batch_limit, required]
-	confirm_action("카드 합성", body, "합성", func(count: int) -> void: card_fusion_requested.emit(category, grade_name, clampi(count,1,10)), batch_limit if batch_limit > 1 else 0)
+	if available < required:
+		show_message("같은 등급의 중복 카드 %d장이 필요합니다" % required)
+		return
+	var batch_limit: int = mini(available / required,10)
+	var rules := "최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다."
+	var body := "%s %s 중복 카드 %d장을 소모하시겠습니까? %s" % [category,grade_name,required,rules]
+	if $Root.get_node_or_null("TwilightConfirmation") != null: return
+	var commit := func(count: int) -> void: card_fusion_requested.emit(category,grade_name,clampi(count,1,batch_limit))
+	var review := func(count: int) -> void:
+		var detail: String = body if count == 1 else "%s %s 합성 %d회 · 중복 카드 총 %d장\n%s" % [category,grade_name,count,count*required,rules]
+		_confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
+	if batch_limit == 1:
+		review.call(1)
+		return
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quantity") and original_main_ui_controller.try_open_quantity(batch_limit,review).get("handled",false):
+		return
+	body += "\n합성 횟수를 선택하세요 (최대 %d회 · 1회당 %d장)." % [batch_limit,required]
+	confirm_action("카드 합성",body,"합성",commit,batch_limit)
 
 func _reset_catalog_drag() -> void:
 	catalog_drag_touch = -1
@@ -3516,6 +3626,7 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 
 func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	_open_window("enhance", "장비 축복 부여", scroll_name + " · 장비 개체별 축복")
+	if _open_original_enchant(scroll_name,candidates,true):return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
@@ -3525,9 +3636,9 @@ var enhancement_forge: Control
 
 ## The original 523 EnchantScene (source_main_enchant_window) over the same
 ## candidates; false -> the caller opens the TWILIGHT forge (reported).
-func _open_original_enchant(scroll_name: String, candidates: Array) -> bool:
+func _open_original_enchant(scroll_name: String, candidates: Array, blessing: bool=false) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_enchant_window"): return false
-	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates)
+	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates,blessing)
 	original_main_ui_status["enchant_window"] = native
 	if native.get("handled",false):
 		if pointer_transfer != null: pointer_transfer.cancel()
@@ -3730,22 +3841,29 @@ func open_native_card_craft() -> Dictionary:
 func open_card_skill_growth(_category: String,_identity: String) -> Dictionary:
 	return _unregistered_card_source_operation(CardSourcePresentation.GROWTH)
 
+func source_skill_awakening_registered() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("feature_window") and original_main_ui_controller.feature_window("card_awakening") != null and original_main_ui_controller.feature_window("awakening_result") != null
+
+func source_skill_awakening_active(identity: String) -> bool:
+	if not source_skill_awakening_registered() or source_awakening_result_is_open(): return false
+	var page: RefCounted = original_main_ui_controller.feature_window("card_awakening")
+	return page.is_open() and page.identity == identity and page.submitting
+
 func open_card_skill_awakening(category: String, identity: String) -> void:
-	if not CardSourcePresentation.available(CardSourcePresentation.AWAKENING):
-		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING);return
-	var runtime: Variant=get_parent().get("skill_awakening")
-	if runtime==null:show_message("스킬 각성 런타임 연결 없음");return
-	_open_window("card_skill_awakening",category+" 스킬 각성","")
-	if _open_original_feature("card_awakening",[category,identity]):return
-	var scroll:=ScrollContainer.new()
-	scroll.name="CardSkillAwakeningScroll"
-	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-	workspace.mount(scroll)
-	var view: Control=preload("res://scripts/ui/card_skill_awakening_view.gd").new()
-	card_skill_awakening_view=view
-	scroll.add_child(view)
-	view.configure(runtime,identity)
-	workspace.register_scroll_drag(scroll,view)
+	if category not in ["변신", "마법인형"] or not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("feature_window_available"):
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
+		return
+	if not original_main_ui_controller.feature_window_available("card_awakening") or not original_main_ui_controller.feature_window_available("awakening_result"):
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
+		return
+	var snapshot: Dictionary = get_parent().skill_awakening.view(identity)
+	if not snapshot.get("ok", false) or snapshot.card.category != category:
+		show_message(str(snapshot.get("error", "스킬 각성 대상 확인 필요")))
+		return
+	_open_window("card_skill_awakening", category+" 스킬 각성", "")
+	if not _open_original_feature("card_awakening", [category, identity]):
+		_close_workspace()
+		_unregistered_card_source_operation(CardSourcePresentation.AWAKENING)
 
 
 ## 메뉴 스킬 카드: the original 523 스킬카드 window (source_main_skill_card_window)
@@ -4035,6 +4153,15 @@ func original_skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
 func original_skill_window_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("skill_window_is_open") and original_main_ui_controller.skill_window_is_open()
 
+func original_skill_window_gesture_is_live(epoch: int) -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.skill_window_gesture_is_live(epoch)
+
+func original_skill_window_gesture_tap(epoch: int, skill_id: String, release: Vector2) -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.skill_window_gesture_tap(epoch,skill_id,release)
+
+func original_skill_window_gesture_scroll(epoch: int, delta_y: float) -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.skill_window_gesture_scroll(epoch,delta_y)
+
 func original_inventory_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_is_open()
 
@@ -4046,6 +4173,10 @@ func original_ui_font(path: String) -> FontFile:
 
 func original_inventory_name_hint_context(reference: String) -> Dictionary:
 	return original_main_ui_controller.inventory_name_hint_context(reference) if original_inventory_is_open() else {}
+
+func reward_choice_blocks_pointer() -> bool:
+	var dialog: Variant=get_meta("patch523_reward_choice",null) if has_meta("patch523_reward_choice") else null
+	return is_instance_valid(dialog) and not dialog.is_queued_for_deletion()
 
 func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 	if not original_inventory_is_open():return {}
@@ -4079,6 +4210,20 @@ func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on
 		if opened.get("handled",false):return opened
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
+
+func confirm_inventory_delete(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
+	if original_drop_confirm_is_open():return {"ok":false,"handled":false}
+	if pointer_transfer != null:
+		pointer_transfer.cancel()
+		pointer_transfer.reset_tap_history()
+	if is_instance_valid(original_main_ui_controller):
+		original_main_ui_controller.close_item_tooltip()
+		var original: Dictionary=original_main_ui_controller.try_open_drop_confirm(item_name,item_class_id,maximum,on_confirm,true)
+		if original.get("handled",false):return original
+	for dialog: Node in $Root.get_children():
+		if dialog.name=="TwilightConfirmation" and not dialog.is_queued_for_deletion():return {"ok":false,"handled":false}
+	var made: Control=confirm_action("아이템 영구 삭제","%s을(를) 영구 삭제하시겠습니까? 삭제한 아이템은 되돌릴 수 없습니다." % item_name,"삭제",on_confirm,maximum if maximum>1 else 0)
+	return {"ok":made!=null,"handled":made!=null,"member":"twilight_confirmation"}
 
 func original_inventory_scroll_by(screen_delta_y: float) -> Dictionary:
 	return original_main_ui_controller.inventory_scroll_by(screen_delta_y) if original_inventory_is_open() and original_main_ui_controller.has_method("inventory_scroll_by") else {}

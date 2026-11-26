@@ -5,7 +5,7 @@ extends RefCounted
 ## the way Change_Card_Set places them, in the page's card ListView. Each card
 ## shows its original card picture (BuffCard DisplayBaseAssetID through
 ## SourceCardPresentation); the detail side shows the selected card's
-## illustration, name, grade and options. Tapping the selected card again or
+## artwork, name, grade and options. Tapping the selected card again or
 ## the original 즉시 변신 button runs the existing catalog equip
 ## (World._equip_catalog), so every rule and save stays with the game.
 ## The same window serves 마법인형 and 성물 (the client reuses Change_WinTotal;
@@ -156,6 +156,7 @@ var _detail: Node2D
 var _info: Node2D
 var _content: Node2D
 var _option_content: Node2D
+var _option_scroll_min: float=0.0
 var _category: String="변신"
 var _cards: Array[Dictionary]=[]
 # Positions are the keys so duplicate source IDs do not hide a card's scene.
@@ -544,7 +545,7 @@ func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -
 			type_bindings[int(button[0])]={"role":"button","visible":not on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
 			type_bindings[int(button[1])]={"role":"button","visible":on,"activate":Callable(self,"_select_type").bind(int(button[3]))}
 		_consume_touch(TYPE_SET,type_scope,type_bindings,reads)
-		bindings[TYPE_PROJECT]={"role":"project","visible":false,"source_node_offsets":type_scope,"bindings":type_bindings}
+		bindings[TYPE_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":type_scope,"bindings":type_bindings}
 	# Search bar: ItemBook_Popup_Keypad with the window's own editor.
 	if _available(KEYPAD) and host!=null:
 		scope.append_array(_subtree(DETAIL,[SEARCH],reads))
@@ -562,13 +563,13 @@ func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -
 			KEYPAD_CLOSE:{"role":"button","activate":Callable(self,"_close_popups")},
 			KEYPAD_CANCEL:{"role":"button","activate":Callable(self,"_clear_query")},
 			5132:{"role":"static_source_text"},2868:{"role":"static_source_text"}}
-		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
+		bindings[KEYPAD_PROJECT]={"role":"project","visible":false,"defer_until_shown":true,"source_node_offsets":KEYPAD_NODES.duplicate(),"bindings":keypad_bindings}
 	var info_scope: Array[int]=[int(info_nodes.name),int(info_nodes.grade),int(info_nodes.title),int(info_nodes.list)]
 	for offset: Variant in info_nodes.decor:info_scope.append(int(offset))
 	var info_bindings: Dictionary={int(info_nodes.name):{"role":"source_text","text":str(selected.get("name",""))},
 		int(info_nodes.grade):{"role":"source_text","text":str(selected.get("grade",""))},
 		int(info_nodes.title):{"role":"static_source_text"},
-		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_ignore_input")}}
+		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_option_list_input")}}
 	_consume_touch(INFO,info_scope,info_bindings,reads)
 	bindings[INFO_PROJECT]={"role":"project","visible":true,"source_node_offsets":info_scope,"bindings":info_bindings}
 	_consume_touch(DETAIL,scope,bindings,reads)
@@ -586,7 +587,7 @@ func _card(record: Dictionary) -> Dictionary:
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,member,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
-	var owner: Dictionary=_picture(record,false)
+	var owner: Dictionary=_picture(Presentation.detail(record,true,false))
 	var picture: bool=false
 	if owner.get("ok",false):
 		var uploaded: Dictionary=scene.set_bound_source_visual_result(int(nodes.sample),owner)
@@ -594,10 +595,8 @@ func _card(record: Dictionary) -> Dictionary:
 	scene.set_meta("source_change_card",{"id":id,"member":member,"picture":picture,"status":str(owner.get("status","")),"reason":str(owner.get("reason",""))})
 	return {"ok":true,"scene":scene,"picture":picture}
 
-## The card's own original picture: DisplayBaseAssetID on a list card, the
-## illustration on the detail side (SourceCardPresentation picks the role).
-static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
-	var shown: Dictionary=Presentation.detail(record,true,detail_view)
+## Bind the selected original texture and its source role to the authored slot.
+static func _picture(shown: Dictionary) -> Dictionary:
 	var owner: Dictionary={"ok":shown.get("status","")=="original" and shown.get("texture") is Texture2D,"status":str(shown.get("status","")),"reason":str(shown.get("reason",""))}
 	if owner.ok:
 		owner["texture"]=shown.texture
@@ -605,7 +604,7 @@ static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
 		owner["role"]=str(shown.get("role",""))
 	return owner
 
-## Detail side: illustration, name, grade and the card's option lines.
+## Detail side: card picture, name, grade and option lines.
 func _show_selected() -> Dictionary:
 	if not is_instance_valid(_detail) or not is_instance_valid(_info):return {"ok":false}
 	var record: Dictionary=_record(_selected)
@@ -613,7 +612,7 @@ func _show_selected() -> Dictionary:
 	_info.set_bound_text(int(nodes.name),str(record.get("name","")))
 	_info.set_bound_text(int(nodes.grade),str(record.get("grade","")))
 	var picture: bool=false
-	var owner: Dictionary=_picture(record,true) if not record.is_empty() else {"ok":false}
+	var owner: Dictionary=_picture(Presentation.catalog_detail(_category,record,true)) if not record.is_empty() else {"ok":false}
 	if owner.get("ok",false):
 		var uploaded: Dictionary=_detail.set_bound_source_visual_result(SAMPLE,owner)
 		picture=uploaded.get("ok",false) and _detail.set_bound_visible(SAMPLE,true).get("ok",false)
@@ -627,21 +626,46 @@ func _show_selected() -> Dictionary:
 		if not selected_variant.is_empty():options_record=selected_variant
 	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
 	var lines: Array=offered_lines if offered_lines is Array else []
+	var awakening: Array=_applied_awakening_options()
+	if not awakening.is_empty():
+		var combined: Array=[]
+		combined.append_array(lines)
+		combined.append("각성 옵션")
+		combined.append_array(awakening)
+		lines=combined
 	var options: int=0
+	var list_height: float=230.0 if _category=="마법인형" else 260.0
 	for line: Variant in lines:
 		var row: Dictionary=_option_row(line)
 		if not row.get("ok",false):continue
 		# Rows run top-down from the option list's top edge.
-		var list_height: float=260.0 if _category=="변신" else 230.0
 		row.scene.position=Vector2(0.0,-(list_height-OPTION_HEIGHT*float(options+1)))
 		_option_content.add_child(row.scene)
 		options+=1
+	_option_scroll_min=minf(0.0,list_height-float(options)*OPTION_HEIGHT)
+	_option_content.position.y=0.0
 	var applied: bool=not _selected.is_empty() and _selected==_equipped_id()
 	_detail.set_bound_displaystate(APPLY,not record.is_empty() and not applied)
 	_detail.set_bound_displaystate(AWAKEN,not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[0],not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
-	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"applied":applied}
+	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"awakening_options":awakening.size(),"applied":applied}
+
+func _applied_awakening_options() -> Array:
+	if _category not in ["변신","마법인형"] or _selected.is_empty():return []
+	var world: Node=_world_node()
+	var runtime: Variant=world.get("option_awakening") if world!=null else null
+	if runtime==null or not runtime.is_awakened(_category,_selected):return []
+	return runtime.core.definition(_category,_selected).get("applied_options",[])
+
+func _option_list_input(event: InputEvent) -> void:
+	if not is_instance_valid(_option_content) or _option_scroll_min==0.0:return
+	var delta: float=0.0
+	if event is InputEventScreenDrag or (event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT):
+		delta=event.relative.y/maxf(0.001,absf(_option_content.get_global_transform_with_canvas().get_scale().y))
+	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		delta=54.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -54.0
+	_option_content.position.y=clampf(_option_content.position.y+delta,_option_scroll_min,0.0)
 
 func _option_row(line: Variant) -> Dictionary:
 	# "SP +1" -> desc "SP", value "+1" (the row's two original labels).
@@ -823,15 +847,16 @@ func _type_label(id: int) -> String:
 
 func _toggle_type_popup() -> Dictionary:
 	if not is_instance_valid(_detail):return _fail("source_change_window_not_open")
-	var player: Dictionary=_detail.project_player([TYPE_PROJECT])
-	var shown: bool=player.get("ok",false) and not bool(_detail.get("source_nodes").get(TYPE_PROJECT).visible)
+	var node: Node2D=_detail.source_nodes.get(TYPE_PROJECT)
+	var should_show: bool=is_instance_valid(node) and not node.visible
 	_close_popups()
-	if shown:
-		_detail.set_bound_visible(TYPE_PROJECT,true)
-		_detail.set_bound_visible(POPUP_CLOSE,true)
-		_detail.set_bound_visible(SORT_STATES[0],false)
-		_detail.set_bound_visible(SORT_STATES[1],true)
-	return {"ok":true,"type_popup":shown}
+	if not should_show:return {"ok":true,"type_popup":false}
+	var shown: Dictionary=_detail.set_bound_visible(TYPE_PROJECT,true)
+	if not shown.ok:return shown
+	_detail.set_bound_visible(POPUP_CLOSE,true)
+	_detail.set_bound_visible(SORT_STATES[0],false)
+	_detail.set_bound_visible(SORT_STATES[1],true)
+	return {"ok":true,"type_popup":true}
 
 func _select_type(id: int) -> Dictionary:
 	_close_popups()
@@ -871,10 +896,14 @@ func _keypad_field() -> Variant:
 	return node.get_meta("source_text_field") if is_instance_valid(node) and node.has_meta("source_text_field") else null
 
 func _open_keypad() -> Dictionary:
-	var field: Variant=_keypad_field()
-	if field==null:return _fail("source_change_window_keypad_unavailable")
+	if not is_instance_valid(_detail):return _fail("source_change_window_keypad_unavailable")
 	_close_popups()
-	_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	var shown: Dictionary=_detail.set_bound_visible(KEYPAD_PROJECT,true)
+	if not shown.ok:return _fail("source_change_window_keypad_unavailable")
+	var field: Variant=_keypad_field()
+	if field==null:
+		_close_popups()
+		return _fail("source_change_window_keypad_unavailable")
 	_detail.set_bound_visible(POPUP_CLOSE,true)
 	var attached: Dictionary=field.attach_editor()
 	if not attached.get("ok",false):

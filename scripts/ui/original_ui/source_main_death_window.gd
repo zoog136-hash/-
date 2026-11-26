@@ -14,6 +14,7 @@ extends RefCounted
 ## Left empty (no rule here): the grade icon of an experience row
 ## (Icon_Exp_<grade>), the discount label, the war-zone mark and 상세보기.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const ROOT="UI/FloatingUi/DeathPenalty_All.csb"
 const TAB_EXP="UI/FloatingUi/DeathPenalty_Tab_ExpRecovery.csb"
@@ -261,10 +262,7 @@ func _slot_picture(root: Node2D, out: Dictionary, suffix: String, item_class_id:
 	var located: Dictionary=NamedTree.locate(root,out,suffix)
 	if not located.get("ok",false):return false
 	var info: Dictionary=SourceImages.describe_item_class(item_class_id,title)
-	var owner: Dictionary={"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
-	if not owner.ok:return false
-	if not located.player.set_bound_source_visual_result(located.offset,owner).get("ok",false):return false
-	return located.player.set_bound_visible(located.offset,true).get("ok",false)
+	return NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref())
 
 ## --- Actions -----------------------------------------------------------------
 

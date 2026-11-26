@@ -19,6 +19,10 @@ installs from the phone's storage (scripts/boot/source523_pack.gd):
 
 Output goes to a new private directory outside the repository. Nothing is
 uploaded.
+Rebuilding a private UI section with Pillow and zstandard from
+tools/lineagem_original/requirements.txt also prepares the 43 reviewed settings
+frames. Existing installed packs continue to use their original atlas pages.
+The original manifest, images, and installation roots keep their identities.
 """
 from __future__ import annotations
 
@@ -28,8 +32,11 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import sys
+import tempfile
 import zipfile
 import zlib
+
+import prepared_settings_frames
 
 SCHEMA = "twilight-client523-resource-pack-v1"
 PART_SCHEMA = "twilight-client523-resource-pack-part-v1"
@@ -111,7 +118,7 @@ def walk(root: Path):
     return found
 
 
-def collect(args):
+def collect(args, scratch):
     tables = args.tables.resolve()
     require(tables.stat().st_size == TABLES_BYTES and sha256_file(tables) == TABLES_SHA256,
             "tables ZIP is not the runtime-pinned 523 tables ZIP")
@@ -127,14 +134,17 @@ def collect(args):
         root = root.resolve()
         manifest = root / manifest_name
         require(manifest.is_file(), f"{section}: {manifest_name} missing")
-        manifest_checks(section, json.loads(manifest.read_text(encoding="utf-8-sig")))
+        document = json.loads(manifest.read_text(encoding="utf-8-sig"))
+        manifest_checks(section, document)
         if section == "world_links":
             require(sha256_file(manifest) == WORLD_LINKS_SHA256, "world-links manifest is not the pinned 523 definition pack")
         files = walk(root)
         require(any(name == manifest_name for name, _, _ in files), f"{section}: manifest not under root")
+        entry = {"root": section, "manifest": f"{section}/{manifest_name}", "manifest_sha256": sha256_file(manifest)}
+        if section == "ui":
+            prepared_settings_frames.add_to_package(root, document, entry, files, scratch)
+        descriptor[section] = entry
         members.extend((f"{section}/{name}", path, size) for name, path, size in files)
-        descriptor[section] = {"root": section, "manifest": f"{section}/{manifest_name}",
-                               "manifest_sha256": sha256_file(manifest)}
     names = [name for name, _, _ in members]
     require(len(names) == len(set(names)), "duplicate member names")
     return descriptor, members
@@ -196,7 +206,12 @@ def write_part(path: Path, index: dict, members, descriptor_bytes=None):
 
 
 def build(args):
-    descriptor, members = collect(args)
+    with tempfile.TemporaryDirectory(prefix="twilight-frames-") as folder:
+        return _build(args, Path(folder))
+
+
+def _build(args, scratch):
+    descriptor, members = collect(args, scratch)
     members = [(name, path, size, packed_size(name, path, size)) for name, path, size in members]
     parts = plan_parts(members, args.part_bytes, args.part_entries)
     listing = hashlib.sha256()

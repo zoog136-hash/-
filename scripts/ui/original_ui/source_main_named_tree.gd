@@ -79,6 +79,9 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 	for pattern: String in spec:
 		if key.ends_with("/"+pattern):binding.merge(spec[pattern],true)
 	if kind=="Button" and binding.get("activate")==Callable(self,"_ignore"):inert_buttons[key]=str(widget.get("callBackName",""))
+	if member=="UI/CommonUi/Common_Slot.csb" and kind=="Button":
+		var handler: Callable=binding.get("activate",Callable())
+		if handler.is_valid() and handler.get_method()!=&"_ignore":binding["route_feature_slot"]=true
 	if not binding.is_empty():bindings[offset]=binding
 	var entry: Dictionary={"chain":chain,"offset":offset,"kind":kind,"member":member}
 	if out.has(key):
