@@ -136,7 +136,7 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	var shuffled: Array = source_candidates.duplicate()
 	shuffled.shuffle()
 	var no_legacy: Array[Texture2D] = []
-	card.configure(record, no_legacy, category_name, shuffled, false)
+	card.configure(record, no_legacy, category_name, shuffled)
 	var upgraded: bool=is_fusion and not bool(record.get("pity_reward",false)) and bool(record.get("fusion_success",succeeded))
 	var show_lightning: bool=(not is_fusion or upgraded) and not card.reduced_motion and card.intensity_scale>0.0
 	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade) if show_lightning else null

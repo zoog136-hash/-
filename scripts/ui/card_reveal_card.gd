@@ -76,7 +76,7 @@ class Face extends Control:
 				var image: Texture2D = artwork if cell+j >= 40 else candidates[posmod(cell+j,candidates.size())]
 				_art(image,Vector2((float(j)-offset)*size.x,0))
 
-func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = [], detail_view: bool = true) -> void:
+func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = []) -> void:
 	record = value.duplicate(true)
 	grade = str(record.get("grade","일반"))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -102,7 +102,8 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		face.set_meta("source_candidate_assets",{"status":"source_card_identity_required"})
 	face.tint = PROFILES.color(grade)
 	if SourceCard.native(record):
-		var original: Dictionary = SourceCard.detail(record, true, detail_view)
+		# The settled award uses the same portrait role as the reel candidates.
+		var original: Dictionary = SourceCard.detail(record, true, false)
 		face.artwork = original.get("texture") as Texture2D
 		var evidence: Dictionary = original.duplicate(true)
 		evidence.erase("texture")
