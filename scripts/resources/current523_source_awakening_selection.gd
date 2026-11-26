@@ -6,6 +6,8 @@ const CHECKED_BYTES = preload("res://scripts/resources/checked_resource_bytes.gd
 const BASE = preload("res://scripts/lineagem_base508.gd")
 const SOURCE = preload("res://scripts/resources/current523_source_bank.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const COOKED_STORE = preload("res://scripts/resources/cooked_actor_store.gd")
+const EFFECTS = preload("res://scripts/resources/current523_source_effect_selection.gd")
 const RULES_PATH = "res://data/lineagem_base508/awakening_effects.json"
 const RENDER_SEMANTICS = "exact12chain_allowlist_only_Type48_global_enum_unverified"
 const ACTIVATION = "explicit_existing_native_card_awakened_state_and_ownership_required"
@@ -46,7 +48,34 @@ static func _bank(options: Dictionary) -> Dictionary:
 	_manifest = value
 	return {"ok":true,"manifest":value}
 
+## The installed 523 bank manifest has no source_action_domains, so every
+## awakened card was rejected here and the original body effect
+## (Effect_AwakenTrans_Lightning_*, Effect_Trans_Spell_Sole_*) never showed.
+## The pinned cooked pack ships the cook-time action domains of the same bank
+## (the source effect selection already reads them); use them first, with the
+## same idle(3)/walk(0) contract, before parsing the ~45 MB bank manifest.
+static func _cooked_roles(index: Dictionary, sprite: int) -> Dictionary:
+	var key: String = "sprite:" + str(sprite)
+	if index.excluded.has(key): return fail("current523_awakening_source_declared_dummy",index.excluded[key])
+	var domain: Variant = index.domains.get(key)
+	var compiled: Variant = index.compiled.get(key)
+	if not domain is PackedInt32Array: return fail("current523_awakening_complete_original_action_domain_missing")
+	if not domain.has(3): return fail("current523_awakening_source_idle_action_not_declared")
+	if not compiled is PackedInt32Array or not compiled.has(3): return fail("current523_awakening_source_idle_inputs_unavailable")
+	var optional: Dictionary = {}
+	var walk_status: String = "source_walk_action_not_declared"
+	if domain.has(0):
+		walk_status = "source_walk_inputs_unavailable"
+		if compiled.has(0):
+			optional["walk"] = 0
+			walk_status = "source_walk_action_selected"
+	var source_domain: Dictionary = {"source_snapshot":"patch523","source_actor_id":sprite,"action_ids":Array(domain),"action_domain_basis":str(index.get("domain_basis",""))}
+	return {"ok":true,"role_actions":{"idle":3},"optional_role_actions":optional,"loop_policy":{"idle":true,"walk":true},"walk_status":walk_status,"source_action_domain":source_domain}
+
 static func _roles(options: Dictionary, sprite: int) -> Dictionary:
+	var sha: String = str(options.get("manifest_sha256","")).to_lower()
+	var cooked: Dictionary = EFFECTS.cooked_domain_index if not EFFECTS.cooked_domain_index.is_empty() and str(EFFECTS.cooked_domain_index.get("manifest_sha256","")) == sha else COOKED_STORE.effect_index(sha)
+	if not cooked.is_empty(): return _cooked_roles(cooked,sprite)
 	var loaded: Dictionary = _bank(options)
 	if not loaded.ok: return loaded
 	var index: Dictionary = loaded.manifest
