@@ -7,11 +7,12 @@ extends RefCounted
 ## when it has every scene the expected add-on added; otherwise it is old.
 ## An old pack never blocks the game: the windows it lacks keep their
 ## TWILIGHT fallback; the player is told once to reinstall.
-const EXPECTED_NAME: String="ui44"
-const EXPECTED_SHA256: String="5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c"
+const EXPECTED_NAME: String="ui45"
+const EXPECTED_SHA256: String="47e593f4fa682dc4a8e839fd0af181687926e757ce57d1e09dddd190cd44c407"
 ## Every published build by SHA: an installed one is never "확인되지 않은 팩",
 ## and only an unknown SHA makes installed() read the whole manifest (66 MB).
 const KNOWN: Dictionary={
+	"47e593f4fa682dc4a8e839fd0af181687926e757ce57d1e09dddd190cd44c407":"ui45",
 	"5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c":"ui44",
 	"7a2b59859b8c8abdead63e19fa4cd1c602c0324b7e0ca81d3e36e37186122371":"ui43",
 	"335af82d2794bafa4a9273cb309cde3a59f06a764467e66b58e29321c98eebaa":"ui42",
@@ -27,8 +28,10 @@ const KNOWN: Dictionary={
 	"e1e8295c1105e786706b7ce4ef6fa97ca253be985d5b73882e48c8f2428beb88":"ui32",
 	"d587efcb87cd7bcfa1b6a2bdd5fa31619595d4c7d450e5fc9d1c165d04417e10":"ui31",
 }
-## Scenes ui44 added over ui43 (마법인형 탐험 창, #811).
-const EXPECTED_SCENES: Array[String]=["UI/Change/Change_Card_A_Explore.csb","UI/Change/Change_Explore_Btn.csb","UI/Change/Change_List_Explore_Buff.csb","UI/Change/Change_Popup_Explore_Info.csb","UI/Change/Change_Popup_Explore_Set.csb"]
+## Scenes ui45 added over ui44 (스킬 각성 결과창, 공용 확인창, 스킬 합성 복구).
+## ui45 also packs the whole bag tooltip ToolTip_HudType_Right (#924), a
+## scene ui44 already listed with only its name/lock nodes.
+const EXPECTED_SCENES: Array[String]=["UI/Change/Change_Upgrade_Skill_Awaken.csb","UI/CommonUi/Common_MessageBox.csb","UI/Recovery/Recovery_All_Compose_Skill.csb"]
 const WARNING: String="UI 리소스 팩이 오래됐습니다. twilight523-addon-ui.zip(최신)을 다시 설치하세요"
 static var _warned: bool=false
 
