@@ -43,11 +43,9 @@ LAYOUT_ONLY = {"UI/MainScene.csb", "UI/HUDScene.csb", "UI/MissionScene.csb", "UI
                "UI/ProductionScene.csb", "UI/ShopScene.csb", "UI/StoreScene.csb"}
 # Explicit node scopes, nested members first (a parent's ProjectNode then
 # reuses the scoped child). Offsets are the ones the HUD code mounts:
-# ToolTip_HudType_Right: inventory lock view + item name (source_main_inventory_*).
-# ToolTipScene: their parent ProjectNode 1012.
+# ToolTipScene: the bag tooltip's parent ProjectNode 1012.
 # Hud_CharInfo: vitals (CHAR_NODE_OFFSETS, POISON_BAR, CLASS_PROJECT) + primary stats.
 NODE_SCOPES = [
-    ("UI/ToolTip/ToolTip_HudType_Right.csb", [37228, 37860, 37284, 36120, 36708, 36176, 44536, 44160, 956]),
     ("UI/ToolTipScene.csb", [1012]),
     ("UI/Main/Hud_CharInfo.csb", [46576, 40620, 37172, 35464, 35528, 20552, 20060, 39796, 34940, 18508, 18556, 15324, 15372]),
     # World map (source_main_map_bindings.build_map_scene): MapScene. The
@@ -72,6 +70,14 @@ PICTURE_PREFIXES = [("UI/Emblem/", ".png")]
 # position instead, A안) and without the sort popup, back button and tooltip
 # it does not connect; the dismantle tab and probability popup stay out.
 # Every other node is kept.
+# Whole scopes resolved before NODE_SCOPES, because a node scope above mounts
+# them through a ProjectNode (ToolTipScene 1012 -> ToolTip_HudType_Right).
+# The bag item detail (source_main_item_detail) plus the lock view and name
+# header: every node except ToolTip_Popup_Info 688, whose
+# ToolTip_Popup_Info.csb is absent from the 523 client.
+EARLY_WHOLE_SCOPES = [
+    ("UI/ToolTip/ToolTip_HudType_Right.csb", [688]),
+]
 WHOLE_SCOPES = [
     # The NPC store window (source_main_store_window): Store_All without the
     # cart, sale / auto modes, SET buttons, batch counts, clan coin, tax, help,
@@ -190,10 +196,12 @@ def build(source_index: Path, output: Path, repo: Path = REPO, extra_members: li
     # Completeness probes share read caches with each other, not with the
     # pack: an incomplete scene's files never reach the output.
     prober = Builder(files, link_originals=True)
+    for member, excluded in EARLY_WHOLE_SCOPES:
+        prober.node_scene(member, whole_scope_offsets(prober, member, excluded))
     # Parents of a whole scope resolve their scoped children in the probe too.
     for member, excluded in WHOLE_SCOPES:
         prober.node_scene(member, whole_scope_offsets(prober, member, excluded))
-    scoped = {member for member, _ in NODE_SCOPES} | {member for member, _ in WHOLE_SCOPES}
+    scoped = {member for member, _ in NODE_SCOPES} | {member for member, _ in WHOLE_SCOPES} | {member for member, _ in EARLY_WHOLE_SCOPES}
     entries, skipped = [], {}
     # Scenes named by code not yet on this checkout (open PRs), so one pack
     # serves every pending change; packed by the same closure rule.
@@ -213,6 +221,8 @@ def build(source_index: Path, output: Path, repo: Path = REPO, extra_members: li
         builder.external_texture_nodes[member] = list(offsets)
     for member in LAYOUT_SOURCES:
         builder.layout_source(member)
+    for member, excluded in EARLY_WHOLE_SCOPES:
+        builder.node_scene(member, whole_scope_offsets(builder, member, excluded))
     for member, offsets in NODE_SCOPES:
         builder.node_scene(member, offsets)
     for member, excluded in WHOLE_SCOPES:
