@@ -82,9 +82,10 @@ func capture_spec() -> void:
 	check(spec.get("Title/Label",{}).get("text") == "장검", "original Title/Label carries the name")
 	check(spec.get("ListView_BasicInfo/Panel_set/Text_Title",{}).get("text") == "대미지" and spec.get("ListView_BasicInfo/Panel_set/Text_Desc",{}).get("text") == "8 / 12", "first ListView_BasicInfo row carries the record values")
 	check(spec.get("ToolTip_Button/ItemDrop_On/Button",{}).get("activate") == action, "획득처 runs the bag's acquisition action")
-	for group: String in ["Business","Del","Warehouse","Probability","Detail"]:
-		check((spec.get("Icon_Set",{}).get("exclude",false) or spec.get("Icon_Set/"+group+"_On",{}).get("exclude",false)) and not spec.has("Icon_Set/"+group+"_On/Btn_Icon"), "no Com_Btn_TypeB icon button (cap insets past its frame): " + group)
-	check(spec.get("Icon_Set",{}).get("exclude",false), "no safe level and no icon action: the icon strip is out")
+	for group: String in ["Business","Warehouse","Probability","Detail"]:
+		check(spec.get("Icon_Set/"+group+"_On",{}).get("exclude",false) and not spec.has("Icon_Set/"+group+"_On/Btn_Icon"), "irrelevant icon button remains out: " + group)
+	var delete_face: Dictionary=spec.get("Icon_Set/Del_On/Btn_Icon",{})
+	check(delete_face.get("activate")==action and delete_face.get("enabled_variants_only",false), "eligible item uses its authored delete face without the unsupported disabled texture")
 	popup.open(parent, "held@@@1", "장검", 702, 0, {}, {"safe_level":6}, null, true)
 	check(capture.member == TOOLTIP.DETAIL_MEMBER and capture.spec.get("Icon_Set/Enchant_On/Text_Enchant",{}).get("text") == "+6", "안전강화 +6 label on the bag tooltip")
 	for group: String in ["Business","Del","Warehouse","Probability","Detail"]:

@@ -551,13 +551,17 @@ func _build(source: Dictionary) -> Node2D:
 		if title_binding is String and not str(options.get("text","")).is_empty():
 			button_options=options.duplicate()
 			button_options.text=title_binding
-		var configured: Dictionary=button.configure(source_pack,button_options,_original_button_title_stays_invisible(widget))
+		var binding: Dictionary=_bindings.get(int(source._offset),{})
+		# The exact delete ON face is mounted only when eligible. Never use
+		# its unused cap-overrun disabled texture on that face.
+		var enabled_only: bool=bool(binding.get("enabled_variants_only",false)) and not inspection_only and source_member=="UI/ToolTip/ToolTip_HudType_Right.csb" and int(source._offset)==58728 and not binding.has("displaystate") and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce"
+		var omit_title: bool=_original_button_title_stays_invisible(widget)
+		var configured: Dictionary=button.configure_enabled_variants(source_pack,button_options,omit_title) if enabled_only else button.configure(source_pack,button_options,omit_title)
 		if not configured.ok:
 			_build_error=str(configured.error)+":"+str(widget.name)
 			button.free();node.free();return null
 		origin.add_child(button)
 		node.set_meta("source_button",button)
-		var binding: Dictionary=_bindings.get(int(source._offset),{})
 		if binding.has("displaystate"):button.set_source_state("normal" if binding.displaystate else "disabled")
 		if not inspection_only and binding.get("role")=="button" and binding.get("activate") is Callable and binding.activate.is_valid():button.bind_activation(binding.activate,Vector2(widget.size[0],widget.size[1]),bool(binding.get("touch_enabled",widget.touchEnabled)))
 	if source.classname=="Particle":

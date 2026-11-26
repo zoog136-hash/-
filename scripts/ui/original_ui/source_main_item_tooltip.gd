@@ -175,15 +175,17 @@ static func native_record(item_class_id: int) -> Dictionary:
 ## `bag_item`: the selected bag entry (the original bag tooltip when admitted).
 func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}, hud: Node=null, bag_item: bool=false) -> Dictionary:
 	if not is_instance_valid(parent) or title.is_empty():return {"ok":false,"handled":false,"code":"source_item_tooltip_input_invalid"}
-	# The bag tooltip's Icon_Set buttons (Com_Btn_TypeB, cap insets past the
-	# frame) cannot be drawn faithfully, so it carries no 확률정보 / 삭제 icon:
-	# a box with disclosed probability keeps the common popup, deletion stays
-	# on the bag's own original Btn_Delete and 획득처 is ToolTip_Button.
+	# A box with disclosed probability retains its authored common popup.
+	# The bag detail uses the original right-hand delete ON node only when
+	# supplied an eligible action, and acquisition uses ToolTip_Button.
 	var detail: bool=bag_item and _detail_available and not (actions.get("probability",Callable()) as Callable).is_valid()
 	var shown: String=DETAIL_MEMBER if detail else MEMBER
 	var spec: Dictionary={}
 	for name: String in (DETAIL_HIDDEN if detail else HIDDEN):spec[name]={"exclude":true}
-	var callbacks: Dictionary={} if detail else {"Del":actions.get("delete",Callable()),"Detail":actions.get("acquisition",Callable()),"Probability":actions.get("probability",Callable())}
+	var callbacks: Dictionary={"Del":actions.get("delete",Callable())}
+	if not detail:
+		callbacks["Detail"]=actions.get("acquisition",Callable())
+		callbacks["Probability"]=actions.get("probability",Callable())
 	# Detail and Probability occupy the same authored button position.
 	# An eligible bag uses Probability in that slot.
 	if (callbacks.get("Probability",Callable()) as Callable).is_valid():callbacks.erase("Detail")
@@ -198,6 +200,7 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 				# These original buttons are caller-configured: Del_On is
 				# preview-visible with touchEnabled off, Detail_On starts hidden.
 				spec["Icon_Set/"+group+"_On/Btn_Icon"]={"activate":action,"touch_enabled":true}
+				if detail and group=="Del":spec["Icon_Set/Del_On/Btn_Icon"]["enabled_variants_only"]=true
 			else:spec["Icon_Set/"+group+"_On"]={"exclude":true}
 		# 안전강화 is a label and original state image, with no Button in the
 		# CSB. Use the same normal-scroll source rule as the actual forge.

@@ -6,12 +6,22 @@ var _pressed_uses_normal: bool=false
 var _extent: Vector2
 var _title: Node2D
 func configure(pack: RefCounted, options: Dictionary, omit_invisible_title: bool=false) -> Dictionary:
+	return _configure_states(pack,options,omit_invisible_title,false)
+
+func configure_enabled_variants(pack: RefCounted, options: Dictionary, omit_invisible_title: bool=false) -> Dictionary:
+	return _configure_states(pack,options,omit_invisible_title,true)
+
+func _configure_states(pack: RefCounted, options: Dictionary, omit_invisible_title: bool, enabled_variants_only: bool) -> Dictionary:
+	if enabled_variants_only and not bool(options.displaystate):return {"ok":false,"error":"enabled_only_source_button_requires_enabled_initial_state"}
 	var widget: Dictionary=options.widgetOptions
 	if omit_invisible_title and not _whole_zero(widget.get("alpha")):return {"ok":false,"error":"source_title_omission_requires_original_zero_alpha"}
 	var extent:=Vector2(widget.size[0],widget.size[1])
 	_extent=extent
 	_pressed_uses_normal=str(options.pressedData.path).is_empty()
 	for state: String in ["normal","pressed","disabled"]:
+		# A caller selecting an explicit authored ON group can omit its
+		# unused, out-of-frame disabled texture. Never synthesize that state.
+		if enabled_variants_only and state=="disabled":continue
 		var reference: Dictionary=options[state+"Data"]
 		var grayscale: bool=state=="disabled" and str(reference.path).is_empty()
 		# Cocos Button::onPressStateChangedToDisabled uses the normal sprite
