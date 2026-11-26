@@ -1,4 +1,5 @@
 extends RefCounted
+const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const CATALYST=preload("res://scripts/loot/native_growth_catalyst523.gd")
@@ -691,20 +692,22 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	var named: Dictionary=world._find_catalog_item_record(item_name)
 	if RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.record(named) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(named,item_name):return _failure(RETIRED_ITEMS.REASON)
 	if not selected.is_empty() and RETIRED_ITEMS.record(world.item_instances.get(selected,{}).get("record",{})):return _failure(RETIRED_ITEMS.REASON)
+	var catalog_action: Dictionary = CATALOG_STACK.action_record(world,named) if selected.is_empty() and named.get("name") == item_name else {}
 	# A plain name-keyed stack (as the 523 shop sells it) of an original
 	# teleport/Ainhasad/food item has its own owner; it shows its own message.
 	if selected.is_empty():
 		var handled: bool
-		if loading: handled = await EFFECTS.try_use_plain_loading(world,item_name,named)
-		else: handled = EFFECTS.try_use_plain(world,item_name,named)
+		if loading: handled = await EFFECTS.try_use_plain_loading(world,item_name,named,catalog_action)
+		else: handled = EFFECTS.try_use_plain(world,item_name,named,catalog_action)
 		if handled: return {"handled":true,"ok":false,"silent":true}
 	# Old name-keyed quest rewards predate physical receipts. The quest
 	# owner verifies their historical source before the native UID gate.
 	if int(named.get("source_item_class_id",0)) in [139781,289172,289182,289202,306611,306621,306631,306641] and load("res://scripts/quests/quest_fixed_cards523.gd").call("try_use_legacy",world,item_name,selected,named):
 		return {"handled":true,"silent":true}
 	var selected_entry: Variant=world.item_instances.get(selected,{})
+	var catalog_bag: bool = not catalog_action.is_empty() and profile(catalog_action).get("kind") == "bag"
 	var named_profile: Dictionary=profile(named)
-	var claims: bool=(not named_profile.is_empty() and named_profile.get("kind") not in ["half_elixir_charge","half_elixir_reset"]) or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
+	var claims: bool=catalog_bag or (not named_profile.is_empty() and named_profile.get("kind") not in ["half_elixir_charge","half_elixir_reset"]) or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
 	if not claims:
 		for entry: Variant in world.item_instances.values():
 			if entry is Dictionary and entry.get("name")==item_name and entry.has(RECEIPT):claims=true;break
@@ -733,7 +736,12 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 			var restriction: String=_buff_territory_problem(world,plain_spec)
 			if not restriction.is_empty():return _failure(restriction)
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
-	if not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
+	if catalog_bag:
+		if has_physical or world._item_locked(item_name) or not CATALOG_STACK.holds_plain(world,item_name):
+			return _failure("선택한 기존 상자 수량 또는 잠금 상태를 확인하세요")
+		owned = {"ownership_kind":"catalog","record":catalog_action,"key":item_name,"remaining":int(world.inventory[item_name]),
+			"receipt":{"source":named.source,"source_id":named.sourceId,"inventory_key":item_name,"item_class_id":catalog_action.source_item_class_id}}
+	elif not integer(world.inventory.get(item_name,0)) or total>int(world.inventory.get(item_name,0)) or uid.is_empty() or world._item_locked(item_name):return _failure("선택 물리 개체·잠금·소지 수량 확인 필요 · 이름만 같은 보유품 보존")
 	var record: Dictionary=owned.record;var effect: Dictionary=profile(record)
 	if effect.is_empty() and not draw_ticket_profile(record).is_empty():return {"handled":false} # The owned-ticket service redeems it.
 	if effect.is_empty() and not mystery_card_rule(record).is_empty():return use_mystery_card(world,uid,owned,record)
@@ -1787,7 +1795,17 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
 	var is_quest: bool=owned.get("ownership_kind")=="quest"
 	var paid: Dictionary={}
-	if is_quest:
+	if owned.get("ownership_kind") == "catalog":
+		var key: String = str(owned.key)
+		var current: Dictionary = CATALOG_STACK.action_record(world,world._find_catalog_item_record(key))
+		if current != record or profile(current).get("kind") != "bag" or world._item_locked(key) or not CATALOG_STACK.holds_plain(world,key) or int(world.inventory[key]) != int(owned.remaining):
+			return _failure("기존 상자의 원본 식별·수량이 바뀌었습니다")
+		var balance: Dictionary = world.inventory.duplicate()
+		if not spec.get("approx_reusable",false):
+			if int(balance[key]) == 1: balance.erase(key)
+			else: balance[key] = int(balance[key])-1
+		paid = {"ok":true,"overrides":{"inventory":balance,"item_instances":world.item_instances}}
+	elif is_quest:
 		request.erase("source_native_stack_receipt");request["quest_reward_receipt"]=owned.receipt.duplicate(true)
 		paid=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256))
 	elif spec.get("approx_reusable",false):
@@ -1801,7 +1819,7 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 		if reward.has("approx_card") or reward.has("exact_choice_card"):cards.append(reward);continue
 		grants.append({"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)})
 	origin=origin.duplicate(true)
-	origin.merge({"source_definition_archive":SOURCE.identity(),"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true),"input_ownership_kind":"quest" if is_quest else "native","source_rewards":rewards.duplicate(true)})
+	origin.merge({"source_definition_archive":SOURCE.identity(),"input_physical_id":uid,"input_receipt":owned.receipt.duplicate(true),"input_ownership_kind":owned.get("ownership_kind","native"),"source_rewards":rewards.duplicate(true)})
 	var supplier: Script=load("res://scripts/loot/patch523_item_inventory.gd")
 	var awarded: Dictionary=supplier.call("stage",view,grants,origin) if not grants.is_empty() else {"ok":true,"overrides":paid.overrides.duplicate(true)}
 	view.free()

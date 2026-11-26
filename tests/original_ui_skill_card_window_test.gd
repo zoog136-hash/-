@@ -150,7 +150,7 @@ func _real_pack(pack_dir: String) -> void:
 	var parent:=Node2D.new()
 	parent.position=Vector2(0,675)
 	root.add_child(parent)
-	var window=WINDOW.new()
+	var window:=CheckedWindow.new()
 	check(window.configure(pack,host.hud).get("ok",false),"window configures")
 	var opened: Dictionary=window.open(parent)
 	check(opened.get("handled",false) and int(opened.filled.cards)==1,"SkillCard_All 스킬 tab mounts the learned cards: "+str(opened).left(300))
@@ -161,8 +161,16 @@ func _real_pack(pack_dir: String) -> void:
 	check(window._tab("skill").get("handled",false),"closing the popup returns to the 스킬 tab")
 	var compose: Dictionary=window._tab("compose")
 	check(compose.get("handled",false) and int(compose.filled.cards)==2,"the 합성 tab mounts the books: "+str(compose).left(300))
+	var list: Dictionary=window._list(window._scene,window._out,WINDOW.REGISTERED_LIST)
+	window.slots_before_failure=1
+	check(not window._auto_register().get("ok",false) and window.registered.is_empty() and list.content.get_child_count()==0,
+		"a partial auto-registration failure leaves no new slots in the live list")
+	window.slots_before_failure=-1
 	var auto: Dictionary=window._auto_register()
 	check(auto.get("handled",false) and int(auto.filled.registered)==8,"카드 자동 등록 mounts the registered cards")
+	var auto_slots: Array[Node]=list.content.get_children()
+	window.slots_before_failure=0
+	check(window._auto_register().get("ok",false) and list.content.get_children()==auto_slots,"rethinking the same automatic selection requires no new slots")
 	window.close()
 	await _large_grid(pack,parent)
 	await process_frame
@@ -232,20 +240,33 @@ func _large_grid(pack: RefCounted, parent: Node2D) -> void:
 	await process_frame
 	var rebuilt: Dictionary=window._scrolls[compose_key]
 	check(window.registered=={"book-288":1} and rebuilt.value==compose_state.min and rebuilt.mounted.has(last),"last material touch registers the correct physical book and preserves compose scroll")
+	var registered: Dictionary=window._list(window._scene,window._out,WINDOW.REGISTERED_LIST)
+	var first_copy: Node2D=registered.content.get_child(0)
+	window.slots_before_failure=0
+	check(not window._slot_tap(last).get("ok",false) and window.registered=={"book-288":1} and registered.content.get_child_count()==1 and registered.content.get_child(0)==first_copy,
+		"failed addition preserves the existing physical copy and its input node")
+	window.slots_before_failure=-1
 	_touch_slot(window,material_slot)
 	await process_frame
 	var disabled: Node2D=material_slot.get_meta("compose_disabled")
 	check(window._scene==compose_root and rebuilt.mounted[last]==material_slot and window.registered=={"book-288":2} and disabled.visible,
 		"registering the second copy keeps the material scene and updates its disabled state")
+	check(registered.content.get_child(0)==first_copy and registered.content.get_child_count()==2,"the earlier registered slot is reused when adding a second copy")
 	check(_label_text(window,WINDOW.COMPOSE_INFO+"Label_Title")=="등록한 카드 2 / 8","the original compose title updates in place")
 	window.slots_before_failure=0
-	check(not window._unregister("book-288").get("ok",false) and window.registered=={"book-288":2} and window._scrolls[compose_key]==rebuilt and disabled.visible,
-		"failed compose refresh keeps the visible rows and registered material")
+	_touch_slot(window,first_copy)
+	await process_frame
+	check(window.registered=={"book-288":1} and registered.content.get_child(0)==first_copy and registered.content.get_child_count()==1 and not disabled.visible,
+		"removal reuses the remaining copy without any new scene")
 	window.slots_before_failure=-1
-	var registered: Dictionary=window._list(window._scene,window._out,WINDOW.REGISTERED_LIST)
+	var neighbor: Node2D=rebuilt.mounted[last-1]
+	_touch_slot(window,neighbor)
+	await process_frame
+	check(registered.content.get_child(1)==first_copy and window.registered=={"book-287":1,"book-288":1},"inserting a lower physical ID moves the existing node to its authored order")
 	_touch_slot(window,registered.content.get_child(0))
 	await process_frame
-	check(window._scene==compose_root and window.registered=={"book-288":1} and not disabled.visible,"registered slot touch releases a copy and keeps the material grid")
+	check(window._scene==compose_root and window.registered=={"book-288":1} and registered.content.get_child(0)==first_copy,
+		"touching the moved row releases the correct physical item and restores the surviving node's position")
 	world.last_remaining=3
 	window._slot_tap(last)
 	check(window._scene!=compose_root and window._scrolls[compose_key].value==compose_state.min and window.registered=={"book-288":2},

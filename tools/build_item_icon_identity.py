@@ -41,6 +41,20 @@ FIXED = {
     "초급 회복 물약": 233, "중급 회복 물약": 237, "상급 회복 물약": 236, "특급 회복 물약": 236,
     "왕실 회복 물약": 236, "신성 회복 물약": 236, "엘릭서 회복 물약": 236,
 }
+# Reviewed TWILIGHT 근사 for names the game itself adds outside game_db_v17
+# (world.gd ammo, local shop/consumable rows; user list 2026-11-26 #14): the
+# original item of the same kind, usually its (각인)/bless variant row.
+LOCAL = {
+    "화살": 389, "총알": 75174, "귀환 주문서": 239, "마나 회복 물약": 385, "MP 회복 물약": 385,
+    "힘센 한우 스테이크": 855, "날쌘 연어 찜": 856, "영리한 칠면조 구이": 857,
+    "전투 강화의 주문서": 859, "드래곤의 고급 다이아몬드": 184803,
+    "축복받은 무기 마법 주문서 (각인)": 6401, "축복받은 갑옷 마법 주문서 (각인)": 6411,
+    "축복받은 오림의 장신구 마법 주문서 (각인)": 227002,
+    "속성 변경 주문서": 2751, "속성 초기화 주문서": 198031,
+    "하프 엘릭서 (근거리)": 134632, "하프 엘릭서 (원거리)": 134642, "하프 엘릭서 (마법)": 136312,
+    "최상급 변신 뽑기권 11회 팩": 132693, "최상급 마법인형 뽑기권 11회 팩": 132703,
+    "최상급 성물 뽑기권": 254088, "최상급 성물 뽑기권 11회 팩": 254078,
+}
 
 
 def rows(tables, name):
@@ -158,8 +172,13 @@ def main():
         if status != "verified_original":
             continue
         approx[n] = {"item_class_id": chosen, "icon_file": path.rsplit("/", 1)[-1], "basis": basis}
+    for n, chosen in LOCAL.items():
+        if n in resolved or n in exact or n in approx or chosen not in usable:
+            continue
+        path, status = icon(items[chosen])
+        approx[n] = {"item_class_id": chosen, "icon_file": path.rsplit("/", 1)[-1], "basis": "twilight_approx_reviewed_same_kind"}
 
-    out = {"schema": "twilight-item-icon-identity-v1", "source_version": 523,
+    out ={"schema": "twilight-item-icon-identity-v1", "source_version": 523,
            "note": "Original 523 icons for bag names without an original Korean item name. exact = the item's own original picture; approx = TWILIGHT 근사 (original picture of an original item of the same kind). IDs and file names only.",
            "exact": dict(sorted(exact.items())), "approx": dict(sorted(approx.items()))}
     text = json.dumps(out, ensure_ascii=False, indent=1, sort_keys=False) + "\n"

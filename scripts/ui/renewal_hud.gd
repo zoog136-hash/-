@@ -1290,6 +1290,9 @@ func save_now() -> void:
 	save_pressed.emit()
 
 func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
+	return _confirm_source_action(title,body,action,callback)
+
+func _confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
 		if pointer_transfer != null: pointer_transfer.cancel()
@@ -2955,17 +2958,29 @@ func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
 	var category_spare: Dictionary = (card_collection_state.get("spare",{}) as Dictionary).get(category,{}) as Dictionary
 	for raw: Variant in catalog_data.get(category,[]) as Array:
 		if not raw is Dictionary or str((raw as Dictionary).get("grade","")) != grade_name: continue
+		if not preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd")._eligible(raw): continue
 		var identity: String = CARD_RULES.card_id(raw as Dictionary)
 		if identity.is_empty() or seen.has(identity): continue
 		seen[identity] = true
 		available += maxi(0,int(category_spare.get(identity,0)))
-	var batch_limit: int = clampi(available / maxi(1,required),1,10)
-	var body: String = "%s %s 중복 카드 %d장을 소모하시겠습니까? 최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다." % [
-		category, grade_name, required
-	]
-	if batch_limit > 1:
-		body += "\n합성 횟수를 선택하세요 (최대 %d회 · 1회당 %d장)." % [batch_limit, required]
-	confirm_action("카드 합성", body, "합성", func(count: int) -> void: card_fusion_requested.emit(category, grade_name, clampi(count,1,10)), batch_limit if batch_limit > 1 else 0)
+	if available < required:
+		show_message("같은 등급의 중복 카드 %d장이 필요합니다" % required)
+		return
+	var batch_limit: int = mini(available / required,10)
+	var rules := "최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다."
+	var body := "%s %s 중복 카드 %d장을 소모하시겠습니까? %s" % [category,grade_name,required,rules]
+	if $Root.get_node_or_null("TwilightConfirmation") != null: return
+	var commit := func(count: int) -> void: card_fusion_requested.emit(category,grade_name,clampi(count,1,batch_limit))
+	var review := func(count: int) -> void:
+		var detail: String = body if count == 1 else "%s %s 합성 %d회 · 중복 카드 총 %d장\n%s" % [category,grade_name,count,count*required,rules]
+		_confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
+	if batch_limit == 1:
+		review.call(1)
+		return
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_quantity") and original_main_ui_controller.try_open_quantity(batch_limit,review).get("handled",false):
+		return
+	body += "\n합성 횟수를 선택하세요 (최대 %d회 · 1회당 %d장)." % [batch_limit,required]
+	confirm_action("카드 합성",body,"합성",commit,batch_limit)
 
 func _reset_catalog_drag() -> void:
 	catalog_drag_touch = -1
