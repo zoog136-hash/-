@@ -1137,7 +1137,10 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 		# The catalog can regenerate tooltip copy as display tables become
 		# available. It has no bearing on a saved seal's identity or modifiers.
 		for key: Variant in canonical:
-			if key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
+			if key == "source_enchant_group_ids":
+				# JSON restores integral group IDs as floats inside the array.
+				if not _source_ids_match(pinned.get(key),canonical[key]): return false
+			elif key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
 	for key: Variant in pinned:
 		if key == "originalSourceOptions":
 			if pinned[key] != canonical.get("sourceOptions", []):

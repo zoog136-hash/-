@@ -29,6 +29,7 @@ var _maximum: int=1
 var _count: int=1
 var _typed: String=""
 var _on_confirm: Callable
+var _quantity_only: bool=false
 var _delete: bool=false
 var stage: String=""
 var last_result: Dictionary={}
@@ -45,8 +46,8 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## `maximum` > 1 starts with the keypad; otherwise the confirmation directly.
-func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
-	if not is_instance_valid(parent) or item_name.is_empty() or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
+func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false, quantity_only: bool=false) -> Dictionary:
+	if not is_instance_valid(parent) or (item_name.is_empty() and not quantity_only) or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
 	_parent=parent
 	_item_name=item_name
 	_item_class_id=item_class_id
@@ -55,7 +56,8 @@ func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_
 	_typed=""
 	_on_confirm=on_confirm
 	_delete=permanent_delete
-	return _open_keypad() if maximum > 1 else _open_box()
+	_quantity_only=quantity_only
+	return _open_keypad() if maximum > 1 or quantity_only else _open_box()
 
 func _open_keypad() -> Dictionary:
 	var spec: Dictionary={
@@ -152,6 +154,13 @@ func _set_count(value: int) -> Dictionary:
 	return {"ok":true,"count":_count}
 
 func _keypad_done() -> Dictionary:
+	if _quantity_only:
+		if stage != "keypad" or not is_open(): return {"ok":false}
+		var next: Callable = _on_confirm
+		var chosen: int = _count
+		close()
+		if next.is_valid(): next.call(chosen)
+		return {"ok":true,"count":chosen}
 	return _open_box()
 
 func _confirm() -> Dictionary:

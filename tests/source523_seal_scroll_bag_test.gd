@@ -94,6 +94,11 @@ func _exercise() -> void:
 		print("SEAL_RECORD_FIELDS ",definition.keys().filter(func(key: Variant)->bool:return definition[key]!=saved_seal.get(key)), " · saved only ",saved_seal.keys().filter(func(key: Variant)->bool:return not definition.has(key)))
 	check(legacy_quote.get("legacy_scroll_uid","")==legacy_uid,"legacy pinned scrolls without receipts get a single-unit quote: "+str(legacy_quote))
 	var seal_record: Dictionary=world.item_instances[seal_id].record
+	for bad_group: float in [431.5,99999.0]:
+		var bad: Dictionary=seal_record.duplicate()
+		bad.source_enchant_group_ids=[bad_group]
+		world.item_instances[seal_id].record=bad
+		check(not world.patch523_seal_quote(seal_id,str(SCROLL_ID),legacy_uid).get("ok",false),"a different or fractional enchant group cannot authorize the saved seal")
 	var changed: Dictionary=seal_record.duplicate(true)
 	changed["enhancement_options"]={"0":{"xp_pct":9999}}
 	world.item_instances[seal_id].record=changed
@@ -111,5 +116,26 @@ func _exercise() -> void:
 				break
 		world._patch523_attempt_seal(seal_id,str(SCROLL_ID),legacy_uid)
 		check(not world.item_instances.has(legacy_uid) and STOCK.proof(world,uid).get("remaining")==8 and int(world.inventory[scroll_name])==8 and world.item_instances[seal_id].level==2,"using the legacy unit leaves the other scroll receipt unchanged")
+	var inventory_owner = preload("res://scripts/loot/patch523_item_inventory.gd")
+	var granted: Dictionary = inventory_owner.stage(world,[{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"seal_and_accessory_regression"})
+	if check(granted.get("ok",false),"supply an accessory accepted by the same shining scroll"):
+		world.inventory=granted.overrides.inventory
+		world.item_instances=granted.overrides.item_instances
+		world.hud._close_workspace()
+		var deadline := Time.get_ticks_msec()+5000
+		while world.hud.is_enhancement_presenting() and Time.get_ticks_msec()<deadline: await process_frame
+		world._on_inventory_item_activated(scroll_name+"@@@"+uid)
+		await process_frame
+		var candidates: Array=world.hud.enhancement_candidates
+		var seal_entries: Array=candidates.filter(func(entry: Dictionary) -> bool: return entry.instance_id==seal_id and entry.seal)
+		var non_seals: Array=candidates.filter(func(entry: Dictionary) -> bool: return not entry.seal and world.item_instances[entry.instance_id].record.get("source_item_class_id")==629)
+		check(world.hud.active_section=="enhance" and seal_entries.size()==1 and non_seals.size()==1,"mixed inventory offers both the original seal and the other authored target")
+		if not seal_entries.is_empty():
+			var established: Dictionary=world.patch523_seal_quote(seal_id,str(SCROLL_ID),uid)
+			check(established.get("ok",false) and seal_entries[0].success_chance==established.success and seal_entries[0].cost==established.cost,"shared chooser quotes the dedicated seal owner")
+			var balance: int=int(world.inventory[scroll_name])
+			var adena: int=world.gold
+			world._attempt_enhancement(scroll_name,seal_entries[0].target_id)
+			check(STOCK.proof(world,uid).get("remaining")==balance-1 and world.gold==adena-int(established.cost),"shared chooser spends the selected unit with the established seal transaction")
 	world.queue_free()
 	await process_frame

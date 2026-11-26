@@ -136,6 +136,37 @@ func tap_enchant(forge: RefCounted, target: String) -> void:
 		await tap(node.get_meta("source_button")._input_area)
 		await frames()
 
+func cash_water(world: Node) -> void:
+	var key: String = ""
+	var amount: int = 0
+	var box_id: int = 0
+	for registered: Dictionary in world.catalog_db["아이템"]:
+		if registered.get("source") != CASH.TAG: continue
+		var spec: Dictionary = CASH.definition(int(registered.source_item_class_id))
+		if spec.get("kind") != "bag" or spec.entries.size()>2: continue
+		for entry: Dictionary in spec.entries:
+			if entry.item_class_id==117304 and entry.given and entry.limit_class==CASH.ALL_CLASSES:
+				key=registered.name
+				amount=int(entry.amount)
+				box_id=int(registered.source_item_class_id)
+				break
+		if not key.is_empty(): break
+	if not check(not key.is_empty(),"registered shop package with an authored guaranteed permanent large water"): return
+	var water: String=LABELS.original_name(117304)
+	var previous: int=int(world.inventory.get(water,0))
+	var previous_instances: Dictionary=world.item_instances.duplicate()
+	world.inventory[key]=int(world.inventory.get(key,0))+1
+	world._update_hud()
+	await frames()
+	await use(world,key)
+	var issued := 0
+	for uid: String in world.item_instances:
+		if previous_instances.has(uid): continue
+		var item: Dictionary=world.item_instances[uid]
+		if item.get("name")==water and not world.growth.source523.recharge(item).is_empty(): issued+=1
+	check(issued==amount and int(world.inventory.get(water,0))==previous+amount,"actual shop package delivers each permanent large water as an identifiable unit beside old stock")
+	print("CATALOG_STACK_CASH ",box_id," original water #117304 units=",issued)
+
 func original_bag() -> void:
 	root.size = Vector2i(2048,919)
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -238,6 +269,7 @@ func original_bag() -> void:
 	check(world.inventory.get(initial[320802])==1,"reloaded original scroll debit")
 	if travel: check(int(world.orim_current_land().get("land_id",-1)) == 47914 and world.inventory.get(initial[182411]) == 1,"real reload keeps arrival and exactly one payment")
 	await inventory_pictures(world)
+	await cash_water(world)
 	world.queue_free()
 	await frames()
 

@@ -612,6 +612,9 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 					instances[uid] = {"name":ticket_name, "record":target.record.duplicate(true), "level":0, "element":"", "element_level":0, "bless_state":"normal"}
 				received.append("%s ×%d" % [ticket_name, amount])
 		elif target.kind in ["native_equipment","symbol_material"]:
+			if target.kind == "symbol_material" and (entry.get("bless",1) != 1 or entry.get("enchant",0) != 0):
+				failure = "원본 성수의 축복·강화 상태를 확인할 수 없습니다"
+				break
 			var view := NATIVE_STACK.SupplierView.new()
 			view.host=world; view.inventory=inventory; view.item_instances=instances; view.gold=world.gold
 			var issued: Dictionary = ITEM_INVENTORY.stage(view, [{"item_class_id":item_id, "amount":amount, "bless_raw":1, "enchant":0}], {"kind":"twilight_cash_package", "box_item_class_id":definition_id_of(world, item_name), "item_class_id":item_id})
