@@ -13434,10 +13434,22 @@ func content523_enter_land(land_id: int, bounds: Array, waive: Array) -> Diction
 ## (NoTeleportCome, BlockLoginEnter, CloseTime, GivenSpellClassID, ...) still
 ## holds. Only this item path uses the list; map travel is unchanged.
 const ITEM523_TELEPORT_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTeleport","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand"]
+## A fixed-destination scroll (이동 주문서 · 보물지도) arrives in the Land the
+## original row names. Besides ITEM523_TELEPORT_WAIVE these in-Land
+## declarations do not gate that arrival (user report 2026-11-26 "이동 주문서
+## 대부분 사용 안 됨"; same reading as content523.LAND_RULES and
+## DUNGEON523_ENTRY_WAIVE): BlockLoginEnter is a login rule; AlwaysWakeNpc,
+## NoSpell, NoBuffGroup, NoHellVirtuePoint, WeaponDisable and GivenSpellClassID
+## describe play inside the Land; NoReusableSoloLand limits a server re-entry
+## (TWILIGHT 근사: single player, not counted). MinLevel/MaxLevel and every other
+## declaration (NoTeleportCome, CloseTime, ...) still hold. Map teleports
+## (current523_map_teleport) keep ITEM523_TELEPORT_WAIVE.
+const ITEM523_SCROLL_ARRIVAL_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTeleport","LandPlayerSocketTimeoutSecond","ObjectLazyLoad","IdleTime","UsableCallClan","LandCondition","CompetitionDungeonLand",
+	"BlockLoginEnter","AlwaysWakeNpc","NoSpell","NoBuffGroup","NoHellVirtuePoint","WeaponDisable","GivenSpellClassID","NoReusableSoloLand"]
 
 ## Original 523 fixed-destination teleport item (source523_item_effects
 ## location_teleport): enters the destination Land under its own entry rules
-## except ITEM523_TELEPORT_WAIVE and saves `save_changes` (the item debit)
+## except ITEM523_SCROLL_ARRIVAL_WAIVE and saves `save_changes` (the item debit)
 ## with the arrival checkpoint. Not moved = nothing saved, item kept.
 func item523_teleport_land(land_id: int, bounds: Array, save_changes: Dictionary) -> Dictionary:
 	return call("_item523_teleport_land_impl",land_id,bounds,save_changes,false)
@@ -13449,8 +13461,8 @@ func _item523_teleport_land_impl(land_id: int, bounds: Array, save_changes: Dict
 	if save_changes.is_empty(): return {"ok":false,"reason":"이동 저장 변경 없음"}
 	var controller: RefCounted = _aden_play_controller()
 	var moved: bool
-	if loading: moved = await controller.call("enter_source_land_loading",land_id,bounds,ITEM523_TELEPORT_WAIVE.duplicate(),save_changes)
-	else: moved = controller.call("enter_source_land",land_id,bounds,ITEM523_TELEPORT_WAIVE.duplicate(),save_changes)
+	if loading: moved = await controller.call("enter_source_land_loading",land_id,bounds,ITEM523_SCROLL_ARRIVAL_WAIVE.duplicate(),save_changes)
+	else: moved = controller.call("enter_source_land",land_id,bounds,ITEM523_SCROLL_ARRIVAL_WAIVE.duplicate(),save_changes)
 	var transition: Dictionary = controller.call("last_source_transition")
 	current523_aden_play_active = bool(controller.get("active"))
 	var auto_off: bool = false
@@ -13459,7 +13471,11 @@ func _item523_teleport_land_impl(land_id: int, bounds: Array, save_changes: Dict
 		for hold: Variant in (entry.get("content_entry_waived",[]) if entry is Dictionary else []):
 			if hold is Dictionary and str(hold.get("type",{}).get("Name",""))=="TurnOffAutoForTeleport": auto_off = true
 		if auto_off and player.auto_enabled: player.set_auto_enabled(false)
-	return {"ok": moved, "reason": str(controller.get("problem")), "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
+	var reason: String = str(controller.get("problem"))
+	# The player sees the original refusal, not the internal hold name; the
+	# remaining holds are entry gates such as MinLevel (closed event Lands).
+	if not moved and reason.contains("native_definition_conditions_require_policy"): reason = "원본 지역 입장 조건(레벨 등)에 맞지 않습니다"
+	return {"ok": moved, "reason": reason, "saved": bool(transition.get("saved",false)), "uncertain": bool(transition.get("uncertain",false)), "auto_turned_off": auto_off}
 
 ## Original 523 map teleport (텔레포터 NPC / 지역 이동 창): UIMapArea row `id`
 ## (current523_map_teleport.gd). Same entry rules as a teleport item

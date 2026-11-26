@@ -188,6 +188,10 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 	if _source_portal_provider==null or not _source_portal_provider.has_method("land_entry_context_for_actor_state"):
 		return {"source_travel_hold":"map_entry_definition_provider_required"}
 	var waive: Array=_content_entry_waive if land_id==_content_entry_land else []
+	# The in-Land re-check (level up, policy change) keeps the declarations the
+	# arrival into this same Land already passed; MinLevel is never waived.
+	if waive.is_empty() and land_id==int(_active_entry_context.get("Land",{}).get("ID",-1)):
+		waive=_active_entry_context.get("arrival_waive",[])
 	var competition: Script=load("res://scripts/dungeons/competition_dungeon523.gd")
 	var lobby: Dictionary={}
 	if competition.POLICY in waive or land_id==_resume_land or _active_entry_context.get("competition_lobby_land",-1)==land_id:
@@ -222,6 +226,7 @@ func _entry_context(land_id: int, asset: String, source_cell: Vector2i, actor_st
 		for name: String in START_VILLAGE.ENTRY_WAIVE:
 			if not waive.has(name): waive.append(name)
 	if not waive.is_empty():
+		result["arrival_waive"]=waive.duplicate()
 		# A content teleport (enter_source_land) names the in-Land rules that
 		# do not gate its own entry; every other hold is kept. A named table
 		# (CompetitionDungeonLand) waives that table's Land condition row.
