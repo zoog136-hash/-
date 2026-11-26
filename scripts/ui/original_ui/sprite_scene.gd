@@ -552,9 +552,9 @@ func _build(source: Dictionary) -> Node2D:
 			button_options=options.duplicate()
 			button_options.text=title_binding
 		var binding: Dictionary=_bindings.get(int(source._offset),{})
-		# The exact delete ON face is mounted only when eligible. Never use
-		# its unused cap-overrun disabled texture on that face.
-		var enabled_only: bool=bool(binding.get("enabled_variants_only",false)) and not inspection_only and source_member=="UI/ToolTip/ToolTip_HudType_Right.csb" and int(source._offset)==58728 and not binding.has("displaystate") and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce"
+		# These exact delete/probability ON faces exist only when eligible;
+		# both point to the same unused cap-overrun disabled texture.
+		var enabled_only: bool=bool(binding.get("enabled_variants_only",false)) and not inspection_only and source_member=="UI/ToolTip/ToolTip_HudType_Right.csb" and int(source._offset) in [58728,50568] and not binding.has("displaystate") and source_pack.manifest.get("files",{}).get(source_member,{}).get("sha256","")=="7aa63b5159335c1558e9bc83f8155979b1a9bf4ee37eaed24c7e2652c392c1ce"
 		var omit_title: bool=_original_button_title_stays_invisible(widget)
 		var configured: Dictionary=button.configure_enabled_variants(source_pack,button_options,omit_title) if enabled_only else button.configure(source_pack,button_options,omit_title)
 		if not configured.ok:

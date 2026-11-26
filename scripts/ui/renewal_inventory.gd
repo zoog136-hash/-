@@ -114,6 +114,10 @@ func _ready() -> void:
 	search_line.reparent(search_row)
 	search_line.custom_minimum_size = Vector2(130,32)
 	search_line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var clear_search := UI.button("초기화", clear_inventory_search, Vector2(56, 40))
+	clear_search.name = "InventoryClearSearch"
+	clear_search.set_script(NATIVE_BUTTON)
+	search_row.add_child(clear_search)
 	search_row.hide()
 	header.hide()
 	for button: Button in tab_buttons.values():
@@ -166,7 +170,10 @@ func _ready() -> void:
 	layout.add_child(weight_gauge)
 	var actions := HBoxContainer.new()
 	layout.add_child(actions)
-	actions.add_child(UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,44)))
+	var search_button := UI.button("검색",func() -> void: search_row.visible=not search_row.visible,Vector2(64,44))
+	search_button.name = "InventorySearch"
+	search_button.set_script(NATIVE_BUTTON)
+	actions.add_child(search_button)
 	# The bag stacks items in acquisition order and never re-sorts on its own.
 	# This button sorts once (grade, then name) and keeps that as the new order.
 	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,44))
@@ -214,6 +221,12 @@ func _toggle_expanded() -> void:
 	expand_button.text = "기본" if expanded else "확장"
 	window.fit_viewport()
 	_reflow()
+
+func clear_inventory_search() -> void:
+	if search_line.text.is_empty():
+		return
+	search_line.text = ""
+	search_line.text_changed.emit("")
 
 func _reflow() -> void:
 	if grid_scroll == null: return
@@ -342,6 +355,10 @@ func open_item_info(reference: String) -> bool:
 	var deletion: Script=preload("res://scripts/loot/inventory_item_delete.gd")
 	if world.has_method("request_inventory_delete") and deletion.quote(world,reference).get("ok",false):
 		actions["delete"]=Callable(self,"_tooltip_delete").bind(reference)
+	if _owns_bag_reference(world, reference):
+		var locked: bool = world._item_locked(_base_item_name(reference), _ref_instance_id(reference))
+		actions["locked"] = locked
+		actions["lock"] = Callable(self, "_tooltip_set_lock").bind(reference, not locked)
 	if physical_record.get("source_m_native_item",false) and world.has_method("_source_enhancement_rule") and not str(world._enhancement_kind_for_record(physical_record)).is_empty():
 		var physical: Dictionary=world.item_instances.get(_ref_instance_id(reference),{})
 		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
@@ -360,6 +377,22 @@ func open_item_info(reference: String) -> bool:
 
 func _tooltip_delete(reference: String) -> Dictionary:
 	return request_selected_delete() if reference==selected_item else {"ok":false}
+
+func _tooltip_set_lock(reference: String, locked: bool) -> Dictionary:
+	if not _owns_open_item_tooltip(reference):
+		return {"ok":false}
+	return {"ok":_set_selected_lock(reference, locked)}
+
+func _owns_bag_reference(world: Node, reference: String) -> bool:
+	var name_value := _base_item_name(reference)
+	var uid := _ref_instance_id(reference)
+	return int(world.inventory.get(name_value, 0)) > 0 and (uid.is_empty() or world.item_instances.get(uid, {}).get("name") == name_value)
+
+func _owns_open_item_tooltip(reference: String) -> bool:
+	if not item_tooltip_open or reference != selected_item or not is_instance_valid(controller):
+		return false
+	var original_hud: Variant = controller.get("original_main_ui_controller")
+	return is_instance_valid(original_hud) and original_hud.item_tooltip_is_open() and original_hud.item_tooltip().reference == reference
 
 func _tooltip_acquisition(reference: String) -> Dictionary:
 	if reference!=selected_item:return {"ok":false}
@@ -513,12 +546,27 @@ func show_inventory() -> void:
 	else: _reflow()
 
 func _toggle_lock() -> void:
-	if controller == null or selected_item.is_empty(): return
+	_set_selected_lock(selected_item, not bool(character_state.get("item_locks", {}).get(selected_item, false)))
+
+func _set_selected_lock(reference: String, locked: bool) -> bool:
+	if not is_instance_valid(controller) or reference.is_empty() or reference != selected_item:
+		return false
+	var world := controller.get_parent()
+	if not _owns_bag_reference(world, reference):
+		return false
 	# An explicit lock operation is not the second tap that activates the
 	# selected item. Keep the selection border, but clear Use/Equip arming.
 	disarm_item_action()
-	controller.get_parent()._set_item_locked(selected_item,not bool(character_state.get("item_locks",{}).get(selected_item,false)))
-	_refresh_detail(selected_item)
+	world._set_item_locked(reference, locked)
+	if not _owns_bag_reference(world, reference):
+		# The existing stack merge can absorb a receipt after its lock changes.
+		close_item_info()
+		if selected_item == reference: selected_item = ""
+		if detail_active: close_detail()
+		return true
+	_refresh_detail(reference)
+	if _owns_open_item_tooltip(reference): open_item_info(reference)
+	return true
 
 func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
 	var style: StyleBoxFlat = UI.item_frame(grade,selected)
