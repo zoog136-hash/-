@@ -1,4 +1,5 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
+const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const EMPTY_ITEM_ROWS: Array = []
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
@@ -283,6 +284,9 @@ func item_action_kind(reference: String) -> String:
 		var entry: Dictionary = host.item_instances.get(_ref_instance_id(reference), {})
 		if entry.get("name") == _base_item_name(reference) and host.growth.source523.material(entry):
 			return "사용"
+	if _ref_instance_id(reference).is_empty() and is_instance_valid(host) and host.has_method("source_symbol_reward_record"):
+		if record.get("type") == "문양 재료" and not host.growth.source523.plain_recharge(host,record).is_empty(): return "사용"
+		if not CATALOG_STACK.action_record(host,record).is_empty() and CATALOG_STACK.holds_plain(host,reference): return "사용"
 	return action_for_record(record,_base_item_name(reference),host)
 
 ## The current bag button on a resolved, unworn record (both the stock and
@@ -317,6 +321,11 @@ func item_action_armed(reference: String) -> bool:
 func disarm_item_action() -> void:
 	_hide_item_name()
 
+func _source_info_record(record: Dictionary) -> Dictionary:
+	if not is_instance_valid(controller): return record
+	var native: Dictionary = CATALOG_STACK.native_record(controller.get_parent(),record)
+	return record if native.is_empty() else native
+
 ## Long press: the original item information popup (ToolTip_CommonType).
 func open_item_info(reference: String) -> bool:
 	if reference.is_empty() or not is_instance_valid(controller): return false
@@ -335,11 +344,12 @@ func open_item_info(reference: String) -> bool:
 		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
 		if rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level"):
 			actions["safe_level"]=int(rule.safe_level)
-	if _item_class_id(record)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
-	if BOX_PROBABILITY.is_bag(record) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
+	var information: Dictionary = _source_info_record(record)
+	if _item_class_id(information)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
+	if BOX_PROBABILITY.is_bag(information) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
 		var host: Node=controller.get_parent()
-		if BOX_PROBABILITY.disclosed(record,int(host.BASE508.source_class_id(str(host.job_class)))):
-			actions["probability"]=Callable(self,"_tooltip_probability").bind(reference,_item_class_id(record))
+		if BOX_PROBABILITY.disclosed(information,int(host.BASE508.source_class_id(str(host.job_class)))):
+			actions["probability"]=Callable(self,"_tooltip_probability").bind(reference,_item_class_id(information))
 	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),physical_record,actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
@@ -362,7 +372,7 @@ func _tooltip_probability(reference: String, item_class_id: int) -> Dictionary:
 	if int(host.inventory.get(name_value,0))<=0:return {"ok":false}
 	var physical: Dictionary=host.item_instances.get(uid,{})
 	if not uid.is_empty() and physical.get("name")!=name_value:return {"ok":false}
-	var item: Dictionary=_find_item_record(reference) if uid.is_empty() else physical.get("record",{})
+	var item: Dictionary=_source_info_record(_find_item_record(reference) if uid.is_empty() else physical.get("record",{}))
 	var class_id: int=int(host.BASE508.source_class_id(str(host.job_class)))
 	if _item_class_id(item)!=item_class_id or not BOX_PROBABILITY.disclosed(item,class_id):return {"ok":false}
 	var native: Dictionary=controller.original_main_ui_controller.try_open_overlay_window("box_probability",[item,class_id])
@@ -807,7 +817,7 @@ func sort_inventory_source(field: String, descending: bool) -> bool:
 	var positions: Dictionary={}
 	for reference: String in order:
 		positions[reference]=positions.size()
-		var record: Dictionary=_find_item_record(reference)
+		var record: Dictionary=_source_info_record(_find_item_record(reference))
 		var key: Variant
 		match field:
 			"expiry":
@@ -974,11 +984,12 @@ func _refresh_detail(item_reference: String) -> void:
 			var delta: int = int(item.get(pair[0], 0)) - int((current as Dictionary).get(pair[0], 0))
 			if delta != 0:
 				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
+	var information: Dictionary = _source_info_record(item)
 	if acquisition_button != null:
-		acquisition_button.visible = _item_class_id(item) > 0 and ACQUISITION523.available()
+		acquisition_button.visible = _item_class_id(information) > 0 and ACQUISITION523.available()
 	if probability_button != null:
 		var world: Node=controller.get_parent() if is_instance_valid(controller) else null
-		probability_button.visible = is_instance_valid(world) and BOX_PROBABILITY.is_bag(item) and BOX_PROBABILITY.available_for(item,int(world.BASE508.source_class_id(str(world.job_class))))
+		probability_button.visible = is_instance_valid(world) and BOX_PROBABILITY.is_bag(information) and BOX_PROBABILITY.available_for(information,int(world.BASE508.source_class_id(str(world.job_class))))
 	if lock_button != null:
 		lock_button.text = "잠금 해제" if bool(character_state.get("item_locks",{}).get(item_reference,false)) else "잠금"
 	if controller!=null and not _is_item_equipped(item_reference):
@@ -1008,7 +1019,7 @@ static func _item_class_id(item: Dictionary) -> int:
 ## original UI pack the same rows are listed in the detail text.
 func _open_acquisition() -> void:
 	if selected_item.is_empty() or controller == null: return
-	var item: Dictionary = _find_item_record(selected_item)
+	var item: Dictionary = _source_info_record(_find_item_record(selected_item))
 	var id: int = _item_class_id(item)
 	if id <= 0: return
 	var item_name: String = _base_item_name(selected_item)
@@ -1029,7 +1040,7 @@ const BOX_PROBABILITY = preload("res://scripts/ui/original_ui/source_main_box_pr
 ## the original UI pack the same rows are listed in the detail text.
 func _open_box_probability() -> void:
 	if selected_item.is_empty() or controller == null: return
-	var item: Dictionary = _find_item_record(selected_item)
+	var item: Dictionary = _source_info_record(_find_item_record(selected_item))
 	var host: Node = controller.get_parent()
 	var class_id: int = int(host.BASE508.source_class_id(str(host.job_class)))
 	if not BOX_PROBABILITY.available_for(item,class_id):return

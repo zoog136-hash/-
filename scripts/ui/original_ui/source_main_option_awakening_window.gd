@@ -1,5 +1,5 @@
 extends "res://scripts/ui/original_ui/source_main_change_page.gd"
-## Original, shared 변신/마법인형 option-awakening page. All prices, experience,
+## Original, shared card option-awakening page. All prices, experience,
 ## cards, eligibility, RNG and persistence come from the existing World owner.
 ## Registered material is a UI-only selection; a separate review is mandatory.
 const ROOT="UI/Change/Change_Awaken_All.csb"
@@ -59,7 +59,7 @@ func open(parent: Node, snapshot: Dictionary) -> Dictionary:
 	return open_window(parent)
 
 func _supports(snapshot: Dictionary) -> bool:
-	return snapshot.get("ok",false) and snapshot.get("category") in ["변신","마법인형"] and not str(snapshot.get("target_id","")).is_empty() and GRADE_MEMBERS.has(str(snapshot.get("target_record",{}).get("grade","")))
+	return snapshot.get("ok",false) and snapshot.get("category") in ["변신","마법인형","성물"] and not str(snapshot.get("target_id","")).is_empty() and GRADE_MEMBERS.has(str(snapshot.get("target_record",{}).get("grade","")))
 
 func apply_snapshot(snapshot: Dictionary) -> Dictionary:
 	if not _supports(snapshot) or snapshot.get("category")!=category or snapshot.get("target_id")!=_snapshot.get("target_id"):
@@ -151,7 +151,7 @@ func _spec() -> Dictionary:
 		else:tip="등록한 중복 카드만 소모됩니다. 최초 획득 카드는 보존됩니다."
 	var spec: Dictionary={"Change_Awaken_Skill":{"exclude":true},"Change_Awaken_SkillExp":{"exclude":true},
 		"Nd_Awaken_Tab_2":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Option_On":{"activate":Callable(self,"_ignore")},
-		"Nd_Awaken_Tab_1/Btn_Skill_Off":{"visible":true, "activate":Callable(self, "_open_skill")},"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
+		"Nd_Awaken_Tab_1/Btn_Skill_Off":({"exclude":true} if category=="성물" else {"visible":true, "activate":Callable(self, "_open_skill")}),"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
 		"Nd_Awaken_Tab_1/Btn_Exp_Off":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Exp_On":{"exclude":true},
 		"Btn_Close":{"activate":Callable(self,"_close_requested")},
 		"Nd_Awaken_Clear":{"exclude":true},"CardChange_Popup_CollectionView":{"exclude":true},
@@ -254,10 +254,10 @@ func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
 	if not list.get("ok",false):return list
 	var lines: Array=[]
 	lines.append_array(_snapshot.get("bonus_options",[]))
-	if category=="마법인형":
+	if category in ["마법인형","성물"]:
 		for slot: Dictionary in _snapshot.get("slot_definitions",[]):
 			if int(slot.get("group",{}).get("SlotIndex",0))!=11:continue
-			lines.append("추가 인형 슬롯 각성 효과")
+			lines.append("추가 성물 슬롯 각성 효과" if category=="성물" else "추가 인형 슬롯 각성 효과")
 			lines.append_array(slot.get("labels",[]))
 	if lines.is_empty():lines.append("확인된 각성 옵션이 없습니다.")
 	var scope: Array[int]=[BONUS_TEXT_OFFSET,BONUS_MARKER_OFFSET]
@@ -450,7 +450,7 @@ func _back() -> Dictionary:
 func _history() -> Dictionary:
 	var controller: Object=hud().get("original_main_ui_controller")
 	if controller==null:return _fail("source_option_awakening_history_unavailable")
-	var opened: Dictionary=controller.try_open_overlay_window("fail_history",["Btn_Change_Awaken" if category=="변신" else "Btn_Magic_Awaken"])
+	var opened: Dictionary=controller.try_open_overlay_window("fail_history",[{"변신":"Btn_Change_Awaken","마법인형":"Btn_Magic_Awaken","성물":"Btn_HolyRelics_Awaken"}[category]])
 	if not opened.get("ok",false):_message("실패 이력 화면을 불러올 수 없습니다.")
 	return opened
 

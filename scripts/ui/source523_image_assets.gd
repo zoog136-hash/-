@@ -472,7 +472,19 @@ static func _wallet_item_class_id(record: Dictionary, fallback_name: String) -> 
 		if str(wallets[id]) == name and str(inventory.call("coin_wallet", int(id))) == name: return int(id)
 	return -1
 
+## A held record (bag, store bag, quickslot, detail) always shows its own
+## original picture. 523 retired some rows as TestItem while TWILIGHT still
+## issues them (cash packages such as 빛나는 무기·갑옷 마법 주문서 상자, the
+## arc transform cards, " · 원본#N" keys): their own IconID is read here,
+## presentation only. ID lists (rewards, NPC goods, item book) keep the
+## exclusion of describe_item_class.
 static func describe_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
+	var info: Dictionary = _describe_owned_item(record, fallback_name)
+	if info.get("reason") != "source_test_item_excluded" or not PACK._integer(info.get("item_class_id")) or int(info.item_class_id) <= 0: return info
+	info["source_test_item_own_icon"] = true
+	return _resolve_icon(info)
+
+static func _describe_owned_item(record: Dictionary, fallback_name: String = "") -> Dictionary:
 	if recognized_item(record):
 		# These records already have the exact inventory consumer namespace.
 		# Alternate supplier predicates cannot change the decision and some
@@ -677,6 +689,9 @@ static func _resolve_item_presentation(info: Dictionary, identity: Dictionary) -
 		info.reason = "source_reference_excluded"
 		info["source_status"] = info.reason
 		return info
+	return _resolve_icon(info)
+
+static func _resolve_icon(info: Dictionary) -> Dictionary:
 	var result: Dictionary = resolve_consumer("ItemClass",info.item_class_id,"IconID")
 	info["source_status"] = str(result.get("status","source523_image_unavailable"))
 	info["reason"] = info.source_status

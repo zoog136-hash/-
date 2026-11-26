@@ -531,7 +531,7 @@ func recipe_definition(craft_id: int) -> Dictionary:
 
 func _source_item_allowed(source_id: int) -> bool:
 	if RETIRED_ITEMS.item(source_id):return false
-	var original: Dictionary = item_entry(str(source_id)).get("item_class",{})
+	var original: Dictionary = item_class_of(str(source_id))
 	if original.is_empty(): original = SOURCE_ITEMS.describe(source_id).get("item_class",{})
 	if not SOURCE_DEFINITIONS.declared_exclusion("ItemClass",original).is_empty():return false
 	# UNVERIFIED: read the supplied item's explicit flag; retain excluded rows
@@ -967,6 +967,23 @@ static func _compact_records(records: Object) -> Object:
 ## One compiled item entry with its original rows. Entries compiled from the
 ## installed original keep only a lazy marker; their item_class/item_bonuses/
 ## enchant_effects are read back from the shared original reader.
+## item_entry(id).item_class, kept per ID while `data` is the same catalog.
+## The crafting window checks every recipe material's original ItemClass row
+## when it opens (~10,000 item_entry calls on the real pack, each a catalog
+## record read plus merge). Callers only read the returned row.
+var _item_class_memo: Dictionary = {}
+var _item_class_memo_data: Variant = null
+
+func item_class_of(source_id: String) -> Dictionary:
+	if not is_same(_item_class_memo_data, data):
+		_item_class_memo_data = data
+		_item_class_memo = {}
+	if _item_class_memo.has(source_id): return _item_class_memo[source_id]
+	var row: Variant = item_entry(source_id).get("item_class", {})
+	var result: Dictionary = row if row is Dictionary else {}
+	_item_class_memo[source_id] = result
+	return result
+
 func item_entry(source_id: String) -> Dictionary:
 	var entry: Variant = data.get("items",{}).get(source_id)
 	if not entry is Dictionary: return {}
@@ -1021,7 +1038,7 @@ static func identity(physical: Dictionary) -> String:
 		if stored_id==source_id or (native_id in ["30671","130551"] and stored_id==native_id): return native_id
 	return ""
 
-static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false) -> bool:
+static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false, ordered: bool=false) -> bool:
 	if not left is Array or not right is Array or left.size()!=right.size(): return false
 	var a: Array[int]=[]
 	var b: Array[int]=[]
@@ -1029,7 +1046,9 @@ static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=fa
 		for value: Variant in pair[0]:
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or float(value)!=float(int(value)) or int(value)<(0 if allow_zero else 1): return false
 			pair[1].append(int(value))
-	a.sort(); b.sort()
+	if not ordered:
+		a.sort()
+		b.sort()
 	return a==b
 
 ## The compiled catalog identity (no live-record substitution).
@@ -1137,7 +1156,10 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 		# The catalog can regenerate tooltip copy as display tables become
 		# available. It has no bearing on a saved seal's identity or modifiers.
 		for key: Variant in canonical:
-			if key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
+			if key == "source_enchant_group_ids":
+				# JSON restores integral group IDs as floats inside the array.
+				if not _source_ids_match(pinned.get(key),canonical[key],false,true): return false
+			elif key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
 	for key: Variant in pinned:
 		if key == "originalSourceOptions":
 			if pinned[key] != canonical.get("sourceOptions", []):

@@ -11,6 +11,7 @@ var tutorial523: Dictionary = {}
 var character_display_name: String = "황혼의 기사"
 var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
+const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
@@ -850,7 +851,8 @@ func _process_frame(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
-	_tick_craft_index_warm(delta)
+	# The full craft index is no longer needed by play (see
+	# _patch523_craft_items_for_ids): no background warm build.
 	_slow_tick_delta += delta
 	_slow_tick_clock -= delta
 	if _slow_tick_clock <= 0.0:
@@ -4713,6 +4715,9 @@ func _select_nearest_target() -> void:
 func _scroll_kind(scroll_name: String, owned_record: Dictionary = {}) -> String:
 	if scroll_name.begins_with("[원본 보상] "): return ""
 	var lookup: Dictionary=owned_record if not owned_record.is_empty() else _find_catalog_item_record(scroll_name)
+	if lookup.get("slot") == "material":
+		var native: Dictionary = CATALOG_STACK.native_record(self,lookup)
+		if not native.is_empty() and PATCH523_ENHANCE_SOURCE.declares_scroll(native): return "source"
 	if lookup.get("source_m_native_item",false):
 		return "source" if PATCH523_ENHANCE_SOURCE.declares_scroll(lookup) else ""
 	if scroll_name.find("무기 마법 주문서") >= 0:
@@ -4907,6 +4912,9 @@ func _item_requests_map_loading(reference: String) -> bool:
 	var item_name: String = selection.name
 	var record: Dictionary = item_instances.get(str(selection.get("id","")),{}).get("record",{})
 	if record.is_empty(): record = _find_catalog_item_record(item_name)
+	if str(selection.get("id","")).is_empty():
+		var original: Dictionary = CATALOG_STACK.action_record(self,record)
+		if not original.is_empty(): record = original
 	var effects: Script = preload("res://scripts/loot/source523_item_effects.gd")
 	if not effects.teleport(record).is_empty() or not effects.location_teleport(record).is_empty():
 		return true
@@ -4979,6 +4987,11 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		if quest_item_provider.try_use_held(self,str(selected.get("id",""))): return
 		hud.show_message("원본 보상 보관 중 · 사용 기능 연결 대기")
 		return
+	if str(selected.get("id","")).is_empty() and selected_source.get("type") == "문양 재료":
+		if not growth.source523.plain_recharge(self,selected_source).is_empty():
+			var charged: Dictionary = growth.execute("recharge_stack",item_name,1,int(growth.state.revision))
+			hud.show_message(str(charged.message))
+			return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
@@ -5489,16 +5502,31 @@ func _needs_physical_item(record: Dictionary) -> bool:
 ## intact until a specific roll has both a valid source rule and a durable debit.
 var _enhancement_scroll_selection: Dictionary = {}
 var _enhancement_token_quotes: Dictionary = {}
-func _open_owned_native_enhancement(name: String, selected: String, record: Dictionary) -> bool:
+func _open_owned_native_enhancement(name: String, selected: String, record: Dictionary, seal_scroll: bool=false) -> bool:
 	var kind: String=_scroll_kind(name,record)
 	if kind.is_empty():return false
 	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1)
-	if not held.get("native",false):return false
-	if not held.get("ok",false):
+	if not held.get("native",false):
+		if not selected.is_empty() or kind != "source": return false
+		var source: Dictionary = CATALOG_STACK.action_record(self,record)
+		if source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
+		var problem := preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,source)
+		if not problem.is_empty() or _item_locked(name) or not CATALOG_STACK.holds_plain(self,name):
+			hud.show_message(problem if not problem.is_empty() else "선택한 주문서의 수량과 잠금을 확인하세요")
+			return true
+		if not _patch523_item_allowed() or hp <= 0: return true
+		_enhancement_scroll_selection.clear()
+	elif not held.get("ok",false):
+		if seal_scroll: return false # The seal owner also checks old saved physical scrolls.
 		hud.show_message(str(held.reason))
 		return true
-	_enhancement_scroll_selection={"name":name,"uid":held.uid}
-	hud.call("open_enhancement",name,_enhancement_candidates(kind,_scroll_mode(name),name))
+	else:
+		_enhancement_scroll_selection={"name":name,"uid":held.uid}
+	var candidates: Array = _enhancement_candidates(kind,_scroll_mode(name),name)
+	if seal_scroll and not candidates.any(func(row: Dictionary) -> bool: return not row.seal):
+		_enhancement_scroll_selection.clear()
+		return false
+	hud.open_enhancement(name,candidates)
 	return true
 
 func _enhancement_stock(scroll_name: String, count: int) -> Dictionary:
@@ -5512,6 +5540,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 	var stock: Dictionary=_enhancement_stock(scroll_name,1) if not scroll_name.is_empty() else {}
 	if stock.get("native",false) and not stock.get("ok",false):return result
 	var physical_scroll: Dictionary=stock.proof.record if stock.get("ok",false) else {}
+	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name)) if kind=="source" else ""
 	var names: Array = item_instances.keys()
 	names.sort()
 	for value: Variant in names:
@@ -5529,6 +5558,11 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 		var token: bool=not physical_scroll.is_empty() and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(record)
 		var level_value: int=int(receipt.get(PATCH523_TOKEN_STOCK.TOKEN_RANK,0)) if token else _item_instance_level(instance_id,item_name)
 		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,receipt,physical_scroll,token)
+		var seal: bool = not seal_id.is_empty() and patch523_equipment.identity(receipt) in ["30671","130551"]
+		if seal:
+			source_rule = patch523_seal_quote(instance_id,seal_id,str(stock.get("uid","")))
+			if not source_rule.get("ok",false) or source_rule.scroll_name != scroll_name: continue
+			source_rule["destroy" if not source_rule.protected else "no_change"] = 100.0-float(source_rule.success)
 		if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, level_value, record):
 			continue
 		var chance: Dictionary = source_rule if not source_rule.is_empty() else _enhancement_chance(kind, level_value, mode, record)
@@ -5545,6 +5579,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 			"name": item_name,
 			"instance_id":instance_id,
 			"target_id":item_name + "@@@" + instance_id,
+			"seal":seal,
 			"level": level_value,
 			"safe_level": int(chance.get("safe_level",_safe_enhancement_level(kind))),
 			"success_chance": float(chance.get("success", 0.0)),
@@ -5588,6 +5623,14 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
 	var kind: String=_enhancement_kind_for_record(record)
 	var scroll: Dictionary=scroll_override if not scroll_override.is_empty() else (_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {})
+	if scroll_override.is_empty() and scroll.get("slot") == "material":
+		var native: Dictionary = CATALOG_STACK.native_record(self,scroll)
+		if not native.is_empty() and PATCH523_ENHANCE_SOURCE.declares_scroll(native):
+			var issue: String = preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,native)
+			if issue.is_empty() and (_item_locked(scroll_name) or not CATALOG_STACK.holds_plain(self,scroll_name) or CATALOG_STACK.action_record(self,scroll).is_empty()):
+				issue = "원본 강화 주문서의 수량·잠금·기간을 확인하세요"
+			if not issue.is_empty(): return {"source_rule":true,"success":0.0,"reason":issue}
+			scroll = native
 	if RETIRED_ITEMS.record(scroll):return {"source_rule":true,"success":0.0,"reason":RETIRED_ITEMS.REASON}
 	var exact_required: bool=bool(record.get("source_m_native_item",false)) or bool(scroll.get("source_m_native_item",false))
 	var issued: Dictionary=_patch523_expedition_scroll(scroll_name)
@@ -5821,6 +5864,10 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message(str(owned_scroll.reason))
 		return
 	var physical_scroll: Dictionary=owned_scroll.proof.record if owned_scroll.get("ok",false) else {}
+	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name))
+	if not seal_id.is_empty() and patch523_equipment.identity(item_instances[item_id]) in ["30671","130551"]:
+		_patch523_attempt_seal(item_id,seal_id,str(owned_scroll.get("uid","")),scroll_name)
+		return
 	var kind: String = _scroll_kind(scroll_name,physical_scroll)
 	var mode: String = _scroll_mode(scroll_name)
 	if kind == "":
@@ -6292,6 +6339,72 @@ func _craft_item_index() -> Dictionary:
 	result.merge(expedition_local.received_material_records(),false)
 	return result
 
+## Craft/box lookups need only the items one recipe or box names, not the
+## whole ~27,000-item index: building that on first use froze crafting for
+## 6.5 s on a PC with the real pack (~26 s on the phone), and warming it in the
+## background cost ~3 ms per frame for minutes. Same per-item binding
+## (_patch523_craft_index_item) over the source IDs the definition references,
+## on top of the same base index. The full index is reused when it exists.
+##
+## The bound items accumulate in one shared index (like the full one, but only
+## for IDs some definition asked for): the crafting window quotes every recipe
+## when it opens, and rebuilding per call was as slow as the full index.
+## Dropped wherever the full index is dropped (patch523_craft_item_cache={}).
+var _patch523_lazy_index: Dictionary={}
+var _patch523_lazy_ids: Dictionary={}
+var _patch523_lazy_owner: Variant=null
+
+func _patch523_craft_items_for_ids(source_ids: Array) -> Dictionary:
+	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	# The full cache was reset (catalog/pack change): start over.
+	if not is_same(_patch523_lazy_owner,patch523_craft_item_cache):
+		_patch523_lazy_owner=patch523_craft_item_cache
+		_patch523_lazy_index={}
+		_patch523_lazy_ids={}
+	if _patch523_lazy_index.is_empty():_patch523_lazy_index=_craft_item_index().duplicate()
+	var items: Dictionary=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
+	for value: Variant in source_ids:
+		var source_id: String=str(value)
+		if _patch523_lazy_ids.has(source_id) or not items.has(source_id):continue
+		_patch523_lazy_ids[source_id]=true
+		_patch523_craft_index_item(_patch523_lazy_index,source_id)
+	return _patch523_lazy_index
+
+## Every "source_id" a recipe (all material choices, outcomes and bonuses) names.
+func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
+	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	# A recipe's referenced IDs never change; walk each definition once
+	# (the window asks for every recipe on open). Selections pick among the
+	# same definition's materials, so the base walk already names them; the
+	# selected recipe is walked once per distinct choice set.
+	var recipe: Variant=patch523_equipment.recipes.get(recipe_id,{})
+	if not is_same(_recipe_ids_owner,patch523_equipment.recipes):
+		_recipe_ids_owner=patch523_equipment.recipes
+		_recipe_source_ids={}
+	var choices: Variant=patch523_material_choices.get(recipe_id,{})
+	var memo_key: String=recipe_id+"|"+str(hash(choices))
+	var ids: Variant=_recipe_source_ids.get(memo_key)
+	if ids==null:
+		var found: Array=[]
+		_collect_source_ids(recipe,found)
+		var selection: Dictionary=patch523_equipment.material_selection(recipe_id,choices)
+		if selection.get("recipe") is Dictionary and not is_same(selection.recipe,recipe):_collect_source_ids(selection.recipe,found)
+		ids=found
+		_recipe_source_ids[memo_key]=found
+	return _patch523_craft_items_for_ids(ids)
+
+var _recipe_source_ids: Dictionary={}
+var _recipe_ids_owner: Variant=null
+
+static func _collect_source_ids(value: Variant, out: Array) -> void:
+	if value is Dictionary:
+		for key: Variant in value:
+			var child: Variant=value[key]
+			if str(key)=="source_id" and (child is String or child is int or child is float):out.append(str(int(child)) if child is float else str(child))
+			else:_collect_source_ids(child,out)
+	elif value is Array:
+		for child: Variant in value:_collect_source_ids(child,out)
+
 func _patch523_craft_item_index() -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
 	if not _craft_index_warm.is_empty():
@@ -6534,7 +6647,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 			return
 		outcome_roll=rng.randi_range(0,999999)
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
-		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
+		_patch523_craft_items_for_recipe(recipe_id), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
@@ -6596,8 +6709,11 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 func _patch523_open_box(source_id: String) -> void:
 	_sync_item_instances()
 	var box_name: String = str(patch523_equipment.record(source_id).get("name",""))
+	var box_ids: Array=[source_id]
+	for reward: Variant in (patch523_equipment.data.get("guaranteed_boxes",{}).get(source_id,{}) as Dictionary).get("rewards",[]):
+		if reward is Dictionary and reward.has("ItemClassID"):box_ids.append(str(int(reward.ItemClassID)))
 	var transaction: Dictionary = PATCH523_SEAL_ACTIONS.open_box(patch523_equipment, source_id, inventory, item_instances,
-		next_item_instance_id, _inventory_total_weight(), _carrying_capacity(), _patch523_craft_item_index(), _item_locked(box_name))
+		next_item_instance_id, _inventory_total_weight(), _carrying_capacity(), _patch523_craft_items_for_ids(box_ids), _item_locked(box_name))
 	if not bool(transaction.get("ok",false)):
 		hud.show_message(str(transaction.get("reason","상자를 열 수 없습니다")))
 		return
@@ -6611,14 +6727,18 @@ func _patch523_open_box(source_id: String) -> void:
 	_update_hud()
 	hud.show_message("상자 개봉 완료 · 일반 +0 인장과 강화 주문서 8개")
 
-## Permanent seal scrolls use their own source group and never the generic
-## item-use fallback. Keep the exact bag reference until an enhancement commits.
-func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
+func _seal_scroll_id(record: Dictionary) -> String:
 	var raw_id: Variant=record.get("source_item_class_id")
 	var scroll_id: String=PATCH523_ENHANCE.item_id(record)
 	if (raw_id is int or raw_id is float) and is_finite(float(raw_id)) and raw_id==floorf(float(raw_id)):
 		scroll_id=str(int(raw_id))
-	if scroll_id.is_empty():
+	return scroll_id if scroll_id in PATCH523_SEAL_ACTIONS.SCROLLS else ""
+
+## Both scrolls have authored targets outside the two seals. The common
+## chooser uses the seal owner's quote and transaction for those two targets.
+func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
+	var scroll_id: String = _seal_scroll_id(record)
+	if scroll_id.is_empty() and not record.has("source_item_class_id") and PATCH523_ENHANCE.item_id(record).is_empty():
 		for candidate: String in PATCH523_SEAL_ACTIONS.SCROLLS:
 			if patch523_equipment.record_view(candidate).get("name","")==item_name:
 				scroll_id=candidate
@@ -6631,6 +6751,7 @@ func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dict
 	if int(inventory.get(item_name,0))<1 or _item_locked(item_name) or _item_locked(item_name,scroll_uid):
 		hud.show_message("주문서 소지 수량과 잠금을 확인하세요")
 		return true
+	if _open_owned_native_enhancement(item_name,scroll_uid,record,true): return true
 	if scroll_uid.is_empty():
 		var matches: Array[String]=[]
 		for uid: String in item_instances:
@@ -6681,12 +6802,15 @@ func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String 
 		if plain<int(quote.count): return PATCH523_EQUIPMENT.denied("가방에서 사용할 주문서 묶음을 선택하세요")
 	return quote
 
-func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: String = "") -> void:
+func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: String = "", forge_scroll_name: String = "") -> void:
 	if hud.has_method("is_enhancement_presenting") and bool(hud.call("is_enhancement_presenting")): return
 	if not _patch523_item_allowed(): return
 	var quote: Dictionary = patch523_seal_quote(item_id,scroll_id,scroll_uid)
 	if not bool(quote.get("ok",false)):
 		hud.show_message(str(quote.get("reason","원본 강화를 실행할 수 없습니다")))
+		return
+	if not forge_scroll_name.is_empty() and quote.scroll_name != forge_scroll_name:
+		hud.show_message("가방에서 선택한 주문서를 다시 확인하세요")
 		return
 	var staged: Dictionary = {}
 	if quote.has("scroll_request"):
@@ -6741,9 +6865,14 @@ func _patch523_attempt_seal(item_id: String, scroll_id: String, scroll_uid: Stri
 		item_instances=staged.item_instances
 		if staged.has("consumable_state"):consumable_service.import_state(staged.consumable_state)
 	_update_hud()
-	hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	hud.append_log("원본 인장 강화 · %s +%d · %s" % [target_name,int(quote.level),result_type])
+	if enhancement_series_quiet:
+		enhancement_series_last={"result":result_type,"from":int(quote.level),"to":result_level,"name":target_name}
+		return
+	if forge_scroll_name.is_empty(): hud.open_patch523_equipment_info(scroll_id,scroll_uid)
 	hud.show_enhancement_result(result_type,target_name,int(quote.level),result_level)
+	if not forge_scroll_name.is_empty():
+		hud.open_enhancement(forge_scroll_name,_enhancement_candidates("source",_scroll_mode(forge_scroll_name),forge_scroll_name) if int(inventory.get(forge_scroll_name,0))>0 else [])
 
 # Inspection API: exact original branches, not a replacement economy/rate table.
 func patch523_enhancement_evidence(item_id: int, scroll_id: int, level_value: int, target_bless: int, scroll_bless: int) -> Dictionary:
@@ -6793,7 +6922,7 @@ func _totem_convert_requested(recipe_id: int) -> bool:
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
 	if recipe_id.begins_with("patch523:"):
-		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_item_index(), item_instances,
+		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_items_for_recipe(recipe_id), item_instances,
 			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context(recipe_id,batches))
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
