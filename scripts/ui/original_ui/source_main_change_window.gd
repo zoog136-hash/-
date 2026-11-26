@@ -86,7 +86,8 @@ const SORT_LABELS: Array[int]=[3216,2308]
 const ORDER_BUTTON=4456
 const ORDER_TEXT=4844
 const ORDERS: Array[String]=["전체","등급순","이름순"]
-const GRADE_RANK={"신화":0,"전설":1,"영웅":2,"희귀":3,"고급":4,"일반":5}
+## Highest first, in the original grade sidebar's order (SIDEBAR: 유일 above 신화).
+const GRADE_RANK={"유일":0,"신화":1,"전설":2,"영웅":3,"희귀":4,"고급":5,"일반":6}
 const POPUP_CLOSE=760
 const TYPE_PROJECT=488
 const KEYPAD_PROJECT=1460
