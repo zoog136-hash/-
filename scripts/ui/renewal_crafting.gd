@@ -400,7 +400,7 @@ func _refresh_quote() -> void:
 	var quote: Dictionary = world.call("_craft_quote",current_id,count)
 	var result: Dictionary=recipe.get("result",{})
 	var output_name: String=str(result.get("item",""))
-	var items: Dictionary=world._patch523_craft_item_index() if current_id.begins_with("patch523:") else world._craft_item_index()
+	var items: Dictionary=world._patch523_craft_items_for_recipe(current_id) if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
 	if material_recipe!=current_id:
 		var source_images: Dictionary=_source_recipe_image_references()
@@ -651,7 +651,7 @@ static func recipe_of(game: Node, id: String) -> Dictionary:
 static func material_status(game: Node, id: String, count: int) -> Array:
 	var recipe: Dictionary = recipe_of(game,id)
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
-	var items: Dictionary = game._patch523_craft_item_index() if id.begins_with("patch523:") else game._craft_item_index()
+	var items: Dictionary = game._patch523_craft_items_for_recipe(id) if id.begins_with("patch523:") else game._craft_item_index()
 	var rows: Array = []
 	for raw: Variant in recipe.get("materials",[]):
 		if not raw is Dictionary: continue

@@ -531,7 +531,7 @@ func recipe_definition(craft_id: int) -> Dictionary:
 
 func _source_item_allowed(source_id: int) -> bool:
 	if RETIRED_ITEMS.item(source_id):return false
-	var original: Dictionary = item_entry(str(source_id)).get("item_class",{})
+	var original: Dictionary = item_class_of(str(source_id))
 	if original.is_empty(): original = SOURCE_ITEMS.describe(source_id).get("item_class",{})
 	if not SOURCE_DEFINITIONS.declared_exclusion("ItemClass",original).is_empty():return false
 	# UNVERIFIED: read the supplied item's explicit flag; retain excluded rows
@@ -967,6 +967,23 @@ static func _compact_records(records: Object) -> Object:
 ## One compiled item entry with its original rows. Entries compiled from the
 ## installed original keep only a lazy marker; their item_class/item_bonuses/
 ## enchant_effects are read back from the shared original reader.
+## item_entry(id).item_class, kept per ID while `data` is the same catalog.
+## The crafting window checks every recipe material's original ItemClass row
+## when it opens (~10,000 item_entry calls on the real pack, each a catalog
+## record read plus merge). Callers only read the returned row.
+var _item_class_memo: Dictionary = {}
+var _item_class_memo_data: Variant = null
+
+func item_class_of(source_id: String) -> Dictionary:
+	if not is_same(_item_class_memo_data, data):
+		_item_class_memo_data = data
+		_item_class_memo = {}
+	if _item_class_memo.has(source_id): return _item_class_memo[source_id]
+	var row: Variant = item_entry(source_id).get("item_class", {})
+	var result: Dictionary = row if row is Dictionary else {}
+	_item_class_memo[source_id] = result
+	return result
+
 func item_entry(source_id: String) -> Dictionary:
 	var entry: Variant = data.get("items",{}).get(source_id)
 	if not entry is Dictionary: return {}
