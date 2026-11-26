@@ -6327,11 +6327,28 @@ func _patch523_craft_items_for_ids(source_ids: Array) -> Dictionary:
 ## Every "source_id" a recipe (all material choices, outcomes and bonuses) names.
 func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
-	var ids: Array=[]
-	_collect_source_ids(patch523_equipment.recipes.get(recipe_id,{}),ids)
-	var selection: Dictionary=patch523_equipment.material_selection(recipe_id,patch523_material_choices.get(recipe_id,{}))
-	if selection.get("recipe") is Dictionary:_collect_source_ids(selection.recipe,ids)
+	# A recipe's referenced IDs never change; walk each definition once
+	# (the window asks for every recipe on open). Selections pick among the
+	# same definition's materials, so the base walk already names them; the
+	# selected recipe is walked once per distinct choice set.
+	var recipe: Variant=patch523_equipment.recipes.get(recipe_id,{})
+	if not is_same(_recipe_ids_owner,patch523_equipment.recipes):
+		_recipe_ids_owner=patch523_equipment.recipes
+		_recipe_source_ids={}
+	var choices: Variant=patch523_material_choices.get(recipe_id,{})
+	var memo_key: String=recipe_id+"|"+str(hash(choices))
+	var ids: Variant=_recipe_source_ids.get(memo_key)
+	if ids==null:
+		var found: Array=[]
+		_collect_source_ids(recipe,found)
+		var selection: Dictionary=patch523_equipment.material_selection(recipe_id,choices)
+		if selection.get("recipe") is Dictionary and not is_same(selection.recipe,recipe):_collect_source_ids(selection.recipe,found)
+		ids=found
+		_recipe_source_ids[memo_key]=found
 	return _patch523_craft_items_for_ids(ids)
+
+var _recipe_source_ids: Dictionary={}
+var _recipe_ids_owner: Variant=null
 
 static func _collect_source_ids(value: Variant, out: Array) -> void:
 	if value is Dictionary:
