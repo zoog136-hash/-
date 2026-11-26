@@ -56,7 +56,7 @@ func open(pack: RefCounted,parent: Node,record: Dictionary,hud: Node,dismiss: Ca
 	var next: Node2D=built.scene
 	var located: Dictionary=NamedTree.locate(next,out,"ItemInfo/ListView_BasicInfo")
 	var list: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
-	var content: Variant=list.get_meta("source_list_content",null) if is_instance_valid(list) else null
+	var content: Variant=list.get_meta("source_list_content") if is_instance_valid(list) and list.has_meta("source_list_content") else null
 	if not content is Node2D:
 		next.free()
 		return {"ok":false,"code":"source_skill_detail_list_unavailable"}
