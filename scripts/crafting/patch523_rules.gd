@@ -1021,7 +1021,7 @@ static func identity(physical: Dictionary) -> String:
 		if stored_id==source_id or (native_id in ["30671","130551"] and stored_id==native_id): return native_id
 	return ""
 
-static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false) -> bool:
+static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=false, ordered: bool=false) -> bool:
 	if not left is Array or not right is Array or left.size()!=right.size(): return false
 	var a: Array[int]=[]
 	var b: Array[int]=[]
@@ -1029,7 +1029,9 @@ static func _source_ids_match(left: Variant, right: Variant, allow_zero: bool=fa
 		for value: Variant in pair[0]:
 			if typeof(value) not in [TYPE_INT,TYPE_FLOAT] or float(value)!=float(int(value)) or int(value)<(0 if allow_zero else 1): return false
 			pair[1].append(int(value))
-	a.sort(); b.sort()
+	if not ordered:
+		a.sort()
+		b.sort()
 	return a==b
 
 ## The compiled catalog identity (no live-record substitution).
@@ -1139,7 +1141,7 @@ func _state_matches(physical: Dictionary, material: Dictionary, allow_smelt_loss
 		for key: Variant in canonical:
 			if key == "source_enchant_group_ids":
 				# JSON restores integral group IDs as floats inside the array.
-				if not _source_ids_match(pinned.get(key),canonical[key]): return false
+				if not _source_ids_match(pinned.get(key),canonical[key],false,true): return false
 			elif key not in ["desc","bless_state","blessed","source_bless_raw","patch523_item_use","source_class_ids","source_equip_slot_ids"] and pinned.get(key)!=canonical[key]: return false
 	for key: Variant in pinned:
 		if key == "originalSourceOptions":

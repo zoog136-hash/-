@@ -94,6 +94,7 @@ func _exercise() -> void:
 		print("SEAL_RECORD_FIELDS ",definition.keys().filter(func(key: Variant)->bool:return definition[key]!=saved_seal.get(key)), " · saved only ",saved_seal.keys().filter(func(key: Variant)->bool:return not definition.has(key)))
 	check(legacy_quote.get("legacy_scroll_uid","")==legacy_uid,"legacy pinned scrolls without receipts get a single-unit quote: "+str(legacy_quote))
 	var seal_record: Dictionary=world.item_instances[seal_id].record
+	check(not world.patch523_equipment._source_ids_match([12.0,11.0],[11,12],false,true),"the persisted order of multiple enchant groups still matters")
 	for bad_group: float in [431.5,99999.0]:
 		var bad: Dictionary=seal_record.duplicate()
 		bad.source_enchant_group_ids=[bad_group]
@@ -117,13 +118,12 @@ func _exercise() -> void:
 		world._patch523_attempt_seal(seal_id,str(SCROLL_ID),legacy_uid)
 		check(not world.item_instances.has(legacy_uid) and STOCK.proof(world,uid).get("remaining")==8 and int(world.inventory[scroll_name])==8 and world.item_instances[seal_id].level==2,"using the legacy unit leaves the other scroll receipt unchanged")
 	var inventory_owner = preload("res://scripts/loot/patch523_item_inventory.gd")
-	var granted: Dictionary = inventory_owner.stage(world,[{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"seal_and_accessory_regression"})
-	if check(granted.get("ok",false),"supply an accessory accepted by the same shining scroll"):
-		world.inventory=granted.overrides.inventory
-		world.item_instances=granted.overrides.item_instances
+	if check(inventory_owner.commit(world,[{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"seal_and_accessory_regression"}),"supply an accessory accepted by the same shining scroll"):
+		if is_instance_valid(world.hud.enhancement_reveal):
+			world.hud.enhancement_reveal.skip_to_result()
+			world.hud.enhancement_reveal.close_reveal()
 		world.hud._close_workspace()
-		var deadline := Time.get_ticks_msec()+5000
-		while world.hud.is_enhancement_presenting() and Time.get_ticks_msec()<deadline: await process_frame
+		await process_frame
 		world._on_inventory_item_activated(scroll_name+"@@@"+uid)
 		await process_frame
 		var candidates: Array=world.hud.enhancement_candidates

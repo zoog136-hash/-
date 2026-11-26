@@ -137,21 +137,17 @@ func tap_enchant(forge: RefCounted, target: String) -> void:
 		await frames()
 
 func cash_water(world: Node) -> void:
-	var key: String = ""
+	# Prepare the exact package through the original cash catalog supplier.
+	# It can be absent from today's offers even with a complete installed pack.
+	const box_id: int = 135012
+	var box: Dictionary = CASH.box_record(world,box_id)
+	if not check(box.get("source")==CASH.TAG and box.get("source_item_class_id")==box_id,"original 523 cash catalog package"): return
+	world._index_item_weights()
+	var key: String=box.name
 	var amount: int = 0
-	var box_id: int = 0
-	for registered: Dictionary in world.catalog_db["아이템"]:
-		if registered.get("source") != CASH.TAG: continue
-		var spec: Dictionary = CASH.definition(int(registered.source_item_class_id))
-		if spec.get("kind") != "bag" or spec.entries.size()>2: continue
-		for entry: Dictionary in spec.entries:
-			if entry.item_class_id==117304 and entry.given and entry.limit_class==CASH.ALL_CLASSES:
-				key=registered.name
-				amount=int(entry.amount)
-				box_id=int(registered.source_item_class_id)
-				break
-		if not key.is_empty(): break
-	if not check(not key.is_empty(),"registered shop package with an authored guaranteed permanent large water"): return
+	for entry: Dictionary in CASH.definition(box_id).get("entries",[]):
+		if entry.item_class_id==117304 and entry.given and entry.limit_class==CASH.ALL_CLASSES: amount+=int(entry.amount)
+	if not check(amount>0,"the package guarantees permanent large water"): return
 	var water: String=LABELS.original_name(117304)
 	var previous: int=int(world.inventory.get(water,0))
 	var previous_instances: Dictionary=world.item_instances.duplicate()
@@ -194,6 +190,7 @@ func original_bag() -> void:
 	var forged: Dictionary = world._find_catalog_item_record(initial[6161]).duplicate()
 	forged.sourceUrl = "https://lineagem.inven.co.kr/db/item/9031"
 	check(CATALOG_STACK.native_record(world,forged).is_empty(),"same label, mismatching URL rejected")
+	check(not CATALOG_STACK.unique_stock_name(initial[607],607) and not CATALOG_STACK.unique_stock_name(initial[6161],9031),"ambiguous titles and an otherwise valid ID with the wrong title cannot authorize a debit")
 	var original_key: String = initial[6161]
 	world._set_item_locked(original_key,true)
 	var digest: String = FileAccess.get_sha256(world.save_path())
