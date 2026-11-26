@@ -204,15 +204,18 @@ static func _unlock(result: Dictionary) -> Dictionary:
 	if not _issue.is_empty():
 		_note(result,{"buff_class_id":UNLOCK_BUFF},_issue)
 		return {}
-	var name_value: String = str(item.get("Name",""))
-	if _integer(item.get("DescID")):
-		var text: Dictionary = _row("DescData_Korean",item.DescID)
-		if text.get("Description") is String and not str(text.Description).is_empty(): name_value = text.Description
+	var name_value: String = unlock_catalog_name(item)
 	if name_value.is_empty():
 		_note(result,{"item_class_id":UNLOCK_ITEM},"source_unlock_item_name_unavailable")
 		return {}
 	return {"item":item,"category":category,"grade":grade,"name":name_value,"buff":buff,
 		"effects":effects,"buff_effects":buff_effects,"source_input_identity":result.source_input_identity}
+
+static func unlock_catalog_name(item: Dictionary) -> String:
+	if _integer(item.get("DescID")):
+		var text: Dictionary = _row("DescData_Korean",item.DescID)
+		if text.get("Description") is String and not str(text.Description).is_empty(): return str(text.Description)
+	return str(item.get("Name",""))
 
 static func _doll(result: Dictionary, card: Dictionary, identity: String, targets: Dictionary) -> void:
 	_issue = ""

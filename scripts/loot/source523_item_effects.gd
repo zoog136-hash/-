@@ -192,7 +192,7 @@ static func consume_areas(class_ids: Array) -> Variant:
 			if not _integer(link.get("TerritoryId")): return null
 			ids[int(link.TerritoryId)] = true
 		if ids.is_empty(): return null
-		var found: Array[Dictionary] = SOURCE.rows_matching("Territories","ID",ids)
+		var found: Array[Dictionary] = SOURCE.consumable_territories(ids)
 		if found.size()!=ids.size(): return null
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
@@ -223,7 +223,7 @@ static func forbidden_areas(contract: Dictionary) -> Variant:
 		for link: Dictionary in SOURCE.rows_matching("ConsumeTerritories","ConsumeTerritoryId",{id:true}):
 			if not _integer(link.get("TerritoryId")): return null
 			ids[int(link.TerritoryId)] = true
-		var found: Array[Dictionary] = SOURCE.rows_matching("Territories","ID",ids) if not ids.is_empty() else []
+		var found: Array[Dictionary] = SOURCE.consumable_territories(ids)
 		if found.size()!=ids.size(): return null
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:

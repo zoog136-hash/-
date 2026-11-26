@@ -894,8 +894,12 @@ func _process_frame(delta: float) -> void:
 	loot_pickup.tick(delta)
 	FRAME_HITCH.add("loot", hitch_6)
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
-	_tick_skill_buffs(delta)
+	var skill_effect_expired: bool = _tick_skill_buffs(delta,false)
 	_tick_skill_cooldowns(delta)
+	var buff_started: int = FRAME_HITCH.now()
+	var skill_refreshed: bool = _run_auto_buff_quickslots(delta)
+	if skill_effect_expired and not skill_refreshed: _publish_timed_buff_hud()
+	FRAME_HITCH.add("skills", buff_started)
 	item_life523.tick(delta)
 	item_invoke523.tick(delta)
 	dungeon_extras523.tick()
@@ -1005,7 +1009,7 @@ func _process_slow(delta: float) -> void:
 	FRAME_HITCH.detail("dungeon.content523", dungeon_split)
 	FRAME_HITCH.add("dungeon", hitch_5)
 	expedition_local.tick(delta)
-	_tick_item_buffs(delta)
+	var item_buffs_changed: bool = _tick_item_buffs(delta,false)
 	ain_refresh_clock -= delta
 	if ain_refresh_clock <= 0.0:
 		ain_refresh_clock = 1.0
@@ -1018,11 +1022,9 @@ func _process_slow(delta: float) -> void:
 		_update_ain_hud()
 	_tick_catalog_recovery(delta)
 	combinations.tick(delta)
-	var hitch_8: int = FRAME_HITCH.now()
-	_run_auto_buff_quickslots(delta)
-	FRAME_HITCH.add("items", hitch_8)
 	var hitch_9: int = FRAME_HITCH.now()
-	_run_auto_item_quickslots(delta)
+	var item_buff_refreshed: bool = _run_auto_item_quickslots(delta)
+	if item_buffs_changed and not item_buff_refreshed: _publish_timed_buff_hud()
 	FRAME_HITCH.add("items", hitch_9)
 	save_timer += delta
 	if save_timer >= AUTOSAVE_SECONDS:
@@ -5323,8 +5325,9 @@ func _use_timed_item_buff(record: Dictionary) -> bool:
 	_update_hud()
 	return true
 
-func _tick_item_buffs(delta: float) -> void:
+func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
 	var changed: bool = false
+	var granted_reward: bool = false
 	var expired: Array[String] = []
 	for key_value: Variant in active_item_buffs.keys():
 		var key: String = str(key_value)
@@ -5367,6 +5370,7 @@ func _tick_item_buffs(delta: float) -> void:
 			if now>=_growth_catalyst_retry_usec:
 				_growth_catalyst_retry_usec=now+2000000
 				if preload("res://scripts/loot/current523_native_stack.gd").finish_growth_catalyst(self,key):
+					granted_reward=true
 					changed=true
 			continue
 		active_item_buffs.erase(key)
@@ -5384,8 +5388,11 @@ func _tick_item_buffs(delta: float) -> void:
 		item_use_cooldowns.erase(key)
 	if changed:
 		hp = mini(hp, _effective_max_hp())
-		_refresh_speed_modifiers()
-		_update_hud()
+		if granted_reward:
+			_update_hud()
+			return false
+		if publish: _publish_timed_buff_hud()
+	return changed
 
 func _combined_active_buffs() -> Dictionary:
 	var result: Dictionary = active_skill_buffs.duplicate(true)
@@ -7175,9 +7182,12 @@ func hud_potion_candidates() -> Array[Dictionary]:
 		var name_value: String = str(key)
 		if int(inventory.get(name_value, 0)) <= 0: continue
 		var record: Dictionary = _find_catalog_item_record(name_value)
-		if record.is_empty(): continue
-		var native_hp: bool = str(stack.profile(record).get("kind", "")) == "hp"
-		if not native_hp and not (str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0): continue
+		if record.get("slot", "") != "consumable": continue
+		# The physical owner only admits HP restoratives with heal_spec.
+		# A bag refresh should not resolve use profiles for every buff or scroll.
+		var healing: Variant = record.get("heal_spec")
+		var native_hp: bool = healing is Dictionary and not healing.is_empty() and stack.profile(record).get("kind","") == "hp"
+		if not native_hp and int(record.get("heal", 0)) <= 0: continue
 		var reason: String = PATCH523_ITEM_USE.reason(_patch523_use_record(name_value), level, BASE508.source_class_id(job_class))
 		if reason.is_empty() and native_hp: reason = str(native_use.eligibility(self, record))
 		rows.append({"name":name_value,"count":int(inventory[name_value]),"reason":reason,"item_class_id":int(record.get("source_item_class_id", 0)),"heal":int(record.get("heal", 0))})
@@ -7405,23 +7415,22 @@ func player_npc_buff_signature() -> int:
 func _update_hud() -> void:
 	_publish_player_hud(true)
 
-## All combat/character stats are still published immediately. Only group
-## the bag's count and physical-record changes and omit unrelated card UI
-## exports; the native timed-buff owner did not modify a card ledger.
+## A timed effect or its expiry changes combat stats and may debit a proven
+## stack. Keep the bag and derived stats current without refolding ownership.
 func _publish_timed_buff_hud() -> void:
 	var since:int=FRAME_HITCH.now()
 	var bag:Variant=hud.get("lineage_inventory_ui")
 	var batch:bool=is_instance_valid(bag) and bag.has_method("begin_state_publish") and bag.has_method("end_state_publish")
 	if batch:bag.begin_state_publish()
-	_publish_player_hud(true,true)
+	_publish_player_hud(false,true)
 	if batch:
 		var finish:int=FRAME_HITCH.now()
 		bag.end_state_publish()
 		FRAME_HITCH.detail("item.buff_bag_publish",finish)
 	FRAME_HITCH.detail("item.buff_hud",since)
 
-func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void:
-	var phase:int=FRAME_HITCH.now() if timed_item else 0
+func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void:
+	var phase:int=FRAME_HITCH.now() if timed_buff else 0
 	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
 		title_badge.text=titles.display_name()
@@ -7432,12 +7441,14 @@ func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void
 	if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	stat_hud_refresh_pending = false
 	unconfirmed523.rebuild()
-	# Every equipment, enhancement, card, collection, growth, awakening,
-	# passive-learning and load transaction publishes through this entry point.
-	_invalidate_equipment_static()
-	if fold_native_stacks:_merge_native_stacks()
-	_sync_item_instances()
-	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_prepare",phase)
+	if not timed_buff:
+		# Equipment and ownership transactions publish through this entry point.
+		_invalidate_equipment_static()
+		if fold_native_stacks:_merge_native_stacks()
+		_sync_item_instances()
+	# A native timed use already committed the selected stack and only its
+	# scalar counters changed. The equipped and collected records still match.
+	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_hud_prepare",phase)
 	_stat_memo_begin()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -7472,10 +7483,10 @@ func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void
 	character_state["card_collection_bonuses"] = card_collections.totals.duplicate(true)
 	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	_stat_memo_end()
-	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_stats",phase)
+	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_hud_stats",phase)
 	hud.set_character_state(character_state)
-	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_hud_sheet",phase)
-	if not timed_item:
+	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_hud_sheet",phase)
+	if not timed_buff:
 		if hud.has_method("set_card_collection_state"):
 			hud.call("set_card_collection_state", card_draw_fusion.export_state())
 		if hud.has_method("set_option_awakening_state"):
@@ -7486,15 +7497,15 @@ func _publish_player_hud(fold_native_stacks:bool, timed_item:bool=false) -> void
 		if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
 	# Use the loaded physical records and stack counts together. The final
 	# quickslot feed sees the same inventory and cannot trigger another bag publish.
-	if timed_item or hud.inventory_panel.visible:
+	if timed_buff or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
-	if timed_item:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
+	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", effective_quickslots())
 	regional_return_settings_updated.emit()
-	if timed_item:FRAME_HITCH.detail("item.buff_hud_final",phase)
+	if timed_buff:FRAME_HITCH.detail("item.buff_hud_final",phase)
 
 func _refresh_combat_hud() -> void:
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
@@ -9107,8 +9118,8 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if _is_passive_skill(skill):
 			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
 			return
-		if is_auto_skill and not SKILL_RULES.can_auto_cast(skill):
-			hud.show_message("%s은(는) 자동 공격/회복용 스킬이 아닙니다" % entry_id)
+		if is_auto_skill and not _quickslot_auto_allowed({"kind":"skill", "id":entry_id}):
+			hud.show_message("%s은(는) 자동사용을 지원하지 않습니다" % entry_id)
 			return
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
@@ -9160,17 +9171,14 @@ func _use_quickslot_item(item_name: String) -> void:
 
 func _quickslot_item_supported(item_name: String) -> bool:
 	if option_awakening.source_scroll_supported(item_name):return true
-	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false): return false
-	if CONSUMABLE_RULES.is_removed_item(item_name): return false
-	var return_record: Dictionary = _find_catalog_item_record(item_name)
-	if REGIONAL_RETURN.claims_identity(item_name, return_record): return REGIONAL_RETURN.supported(item_name, return_record)
-	# Original 523 acceleration potions (초록 물약·용기의 물약·엘븐 와퍼 ...) are
-	# drunk from the quick slot like in the original.
-	var native_use: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(return_record)
-	if native_use.get("kind") == "buff" and not native_use.get("runtime_presentation", false) and int(native_use.get("spec", {}).get("acceleration_stage", 0)) > 0: return true
-	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
-	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
+	if record.get("source_automation_catalog_only",false): return false
+	if CONSUMABLE_RULES.is_removed_item(item_name): return false
+	if REGIONAL_RETURN.claims_identity(item_name, record): return REGIONAL_RETURN.supported(item_name, record)
+	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
+	if record.is_empty(): return false
+	if _is_timed_buff_item(record) or int(record.get("heal",0)) > 0: return true
+	return record.get("source_m_native_item", false) and not _quickslot_auto_item_spec(item_name, record).is_empty()
 
 func _quickslot_registration_error(kind: String, id: String) -> String:
 	if kind == "item":
@@ -9185,7 +9193,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if not source_status.is_empty():return str(source_status.message)
 	if _is_passive_skill(skill) and not (original_skills!=null and original_skills.stackable.handles(skill)): return "패시브는 직접 사용할 수 없습니다"
 	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
-	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
+	if kind == "skill_auto" and not (_is_buff_skill(skill) or SKILL_RULES.can_auto_cast(skill)): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
 	return ""
@@ -9237,12 +9245,40 @@ func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 		var skill: Dictionary=_skill_record(str(entry.get("skill_id",entry.get("id",""))))
 		if original_skills!=null and skill.get("origin","") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:skill=original_skills.catalog.resolve(skill)
 		if str(skill.get("mode",""))=="source_toggle":return false
-		return SKILL_RULES.can_auto_cast(skill)
-	if option_awakening.source_scroll_supported(str(entry.get("id",""))):return true
-	var record: Dictionary = _find_catalog_item_record(str(entry.get("id","")))
-	if record.get("source_m_native_item",false) and int(record.get("source_item_class_id",0))==LOOT_DROP.PATCH523_DROPS.LARGE_HP_ELIXIR_ID:return false
-	var spec: Dictionary = CONSUMABLE_RULES.definition(str(entry.get("id","")))
-	return int(record.get("heal",0)) > 0 or str(spec.get("kind","")) in ["regen","food","buff","instant_mp"]
+		return _is_buff_skill(skill) or SKILL_RULES.can_auto_cast(skill)
+	if entry.get("kind") != "item": return false
+	var item: String = str(entry.get("id", ""))
+	if option_awakening.source_scroll_supported(item):return true
+	return not _quickslot_auto_item_spec(item, _find_catalog_item_record(item)).is_empty()
+
+func _quickslot_auto_item_spec(item: String, record: Dictionary) -> Dictionary:
+	if record.is_empty() or record.get("source_automation_catalog_only",false) or CONSUMABLE_RULES.is_removed_item(item):
+		return {}
+	if record.get("source_m_native_item", false):
+		var id: int = int(record.get("source_item_class_id", 0))
+		if id == LOOT_DROP.PATCH523_DROPS.LARGE_HP_ELIXIR_ID: return {}
+		var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+		var effect: Dictionary = stack.profile(record)
+		match str(effect.get("kind", "")):
+			"hp": return {"kind":"hp", "source_item_id":id}
+			"mp":
+				var spec: Dictionary = effect.get("spec", {})
+				return {"kind":"instant_mp", "source_item_id":id,
+					"cooldown":maxf(float(spec.get("consume_delay_ms", 0)) / 1000.0, float(spec.get("reuse_delay_seconds", 0)))}
+			"buff":
+				var spec: Dictionary = stack.timed_buff_spec(self, record, effect)
+				var buff: Dictionary = spec.get("source_buff_class", {})
+				var group: Dictionary = spec.get("source_buff_group", {})
+				var buff_id: int = int(buff.get("ID", 0))
+				if buff_id <= 0 or float(spec.get("duration_seconds", 0)) <= 0: return {}
+				return {"kind":"native_buff", "source_item_id":id, "buff_id":buff_id,
+					"exclusive_group_id":0 if group.get("IsAllowOverlap", false) else int(buff.get("BuffGroupID", 0)),
+					"blocked_groups":spec.get("cannot_use_buff_groups", []), "native_spec":spec}
+		return {}
+	if int(record.get("heal", 0)) > 0:
+		return {"kind":"hp"}
+	var local_spec: Dictionary = CONSUMABLE_RULES.definition(item)
+	return local_spec if CONSUMABLE_AUTO.is_timed_buff(local_spec) or local_spec.get("kind") == "instant_mp" else {}
 
 func _on_quickslot_edit_requested(action: String, source_index: int, target: int) -> void:
 	_normalize_quickslots()
@@ -9266,6 +9302,12 @@ func _on_quickslot_edit_requested(action: String, source_index: int, target: int
 					hud.show_message("자동사용을 지원하지 않는 항목입니다")
 					return
 				quickslots[source_index]["auto"] = action == "auto_on"
+				ui_preferences.edited_quickslots[job_class] = true
+				auto_buff_check_timer = 0.0
+				auto_item_clock = 0.0
+				_refresh_regional_return_slots()
+				_request_deferred_save()
+				return
 			_: return
 		ui_preferences.edited_quickslots[job_class] = true
 	_update_hud()
@@ -9284,19 +9326,26 @@ func _emit_consumable_auto_settings() -> void:
 	if is_instance_valid(hud) and hud.has_signal("consumable_auto_settings_updated"):
 		hud.emit_signal("consumable_auto_settings_updated", get_consumable_auto_settings())
 
-func _run_auto_item_quickslots(delta: float) -> void:
+## Returns whether use already published a new timed buff and its live stats.
+func _run_auto_item_quickslots(delta: float) -> bool:
 	auto_item_clock -= delta
 	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared():
-		return
+		return false
 	auto_item_clock = 0.2
+	if MAP_LOADING.busy(self) or _option_awakening_busy() or patch523_npc_spells.blocks("CannotUseItem"):
+		return false
 	var settings: Dictionary = get_consumable_auto_settings()
 	var candidates: Array[Dictionary] = []
 	var seen: Dictionary = {}
-	var active_entries: Array[Dictionary] = []
+	var active_source_items: Dictionary = {}
+	for effect: Variant in active_item_buffs.values():
+		if effect is Dictionary and float(effect.get("remaining",0)) > 0.0:
+			active_source_items[int(effect.get("source_item_class_id",0))] = true
 	# Candidate collection does not consume items or change buffs. Reuse these
 	# expensive derived stats for this poll; the next poll reads fresh values.
 	var maximum_hp: int = -1
 	var maximum_mp: int = -1
+	var sources: Array = [catalog_db.get("아이템", []), item_db]
 	for value: Variant in quickslots:
 		if not value is Dictionary:
 			continue
@@ -9307,31 +9356,35 @@ func _run_auto_item_quickslots(delta: float) -> void:
 		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
 			continue
 		seen[item] = true
-		active_entries.append(entry)
-	# Runs every 0.2 s: use the indexed single-name lookup (same results as
-	# find_many, verified by catalog_item_lookup_index_test) instead of a scan.
-	var records: Dictionary = {}
-	var sources: Array = [catalog_db.get("아이템", []), item_db]
-	for raw_item: Variant in seen.keys():
-		var found: Dictionary = ITEM_CATALOG_LOOKUP.find_one(sources, item_instances, str(raw_item))
-		if not found.is_empty(): records[str(raw_item)] = found
-	for entry: Dictionary in active_entries:
-		var item: String = str(entry.get("id", ""))
-		var record: Dictionary = records.get(item, {})
+		if _item_locked(item): continue
 		if option_awakening.source_scroll_supported(item):
-			if option_awakening.source_scroll_auto_ready(item) and _quickslot_auto_allowed(entry):candidates.append({"item":item,"priority":2,"source_relic_scroll":true})
+			if not self_mode_enabled and option_awakening.source_scroll_auto_ready(item):
+				candidates.append({"item":item,"priority":2,"source_relic_scroll":true})
 			continue
-		if int(record.get("heal", 0)) > 0 and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
+		var record: Dictionary = ITEM_CATALOG_LOOKUP.find_one(sources, item_instances, item)
+		var source_id: int = int(record.get("source_item_class_id", 0))
+		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0):
 			continue
-		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
-		if maximum_hp < 0:
+		var spec: Dictionary = _quickslot_auto_item_spec(item, record)
+		if spec.is_empty() or (self_mode_enabled and CONSUMABLE_AUTO.is_timed_buff(spec)): continue
+		if spec.get("kind") == "hp" and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
+			continue
+		source_id = int(spec.get("source_item_id", 0))
+		if maximum_hp < 0 and spec.get("kind") in ["hp", "instant_mp"]:
 			maximum_hp = _effective_max_hp()
 			maximum_mp = _effective_max_mp()
 		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, maximum_hp, mp, maximum_mp, job_class, active_item_buffs):
 			continue
-		if not _quickslot_auto_allowed(entry):
-			continue
-		candidates.append({"item":item, "priority":CONSUMABLE_AUTO.priority(record, spec)})
+		if source_id > 0 and not preload("res://scripts/loot/patch523_item_use.gd").eligibility(self, record).is_empty(): continue
+		if spec.get("kind") == "native_buff":
+			var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+			if is_player_concealed() and not spec.native_spec.get("can_use_when_invisible", false): continue
+			if not stack.buff_rule_problem(self, spec.native_spec).is_empty() or not stack._buff_territory_problem(self, spec.native_spec).is_empty():
+				continue
+		var reference: String = _native_auto_use_reference(item,source_id) if source_id > 0 else item
+		if reference.is_empty(): continue
+		candidates.append({"item":item,"reference":reference,"priority":CONSUMABLE_AUTO.priority(record, spec),
+			"timed_buff":CONSUMABLE_AUTO.is_timed_buff(spec)})
 	# One successful consumption per interval. HP first; slot order within
 	# each class is preserved. A refused item cannot starve later slots.
 	for priority: int in range(3):
@@ -9341,9 +9394,24 @@ func _run_auto_item_quickslots(delta: float) -> void:
 			var item: String = str(candidate.item)
 			var before: int = int(inventory.get(item, 0))
 			var before_revision: int=int(option_awakening.progress.revision)
-			_use_quickslot_item(item)
+			var reference: String = str(candidate.get("reference", item))
+			if reference == item: _use_quickslot_item(item)
+			else: _activate_inventory_input(reference)
 			if int(inventory.get(item, 0)) < before or (candidate.get("source_relic_scroll",false) and int(option_awakening.progress.revision)!=before_revision):
-				return
+				return bool(candidate.get("timed_buff", false))
+	return false
+
+## Auto uses an exact unlocked source instance when the stack is physical.
+## A legacy plain stack still goes through the ordinary name-keyed owner.
+func _native_auto_use_reference(item: String, source_id: int) -> String:
+	var has_physical: bool = false
+	for uid: String in item_instances:
+		var entry: Dictionary = item_instances[uid]
+		if entry.get("name") != item: continue
+		has_physical = true
+		if entry.has("source_native_stack_receipt") and int(entry.get("record",{}).get("source_item_class_id",0)) == source_id and not _item_locked(item,uid):
+			return item+"@@@"+uid
+	return "" if has_physical else item
 
 func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
@@ -9416,38 +9484,42 @@ func _passive_skill_names_uncached() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]: return skill.get("mode", "") in ["buff", "counter", "stealth", "summon", "local_buff"]
-	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
+	if _is_passive_skill(skill) or skill.get("runtime_blocked", false): return false
+	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
+		return skill.get("mode", "") in ["buff", "counter", "summon", "local_buff"]
+	return SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
-func _run_auto_buff_quickslots(delta: float) -> void:
-	if self_mode_enabled:
-		return
+func _run_auto_buff_quickslots(delta: float) -> bool:
+	if self_mode_enabled or hp <= 0:
+		return false
 	auto_buff_check_timer = maxf(0.0, auto_buff_check_timer - delta)
 	if auto_buff_check_timer > 0.0:
-		return
+		return false
 	auto_buff_check_timer = 0.8
+	if MAP_LOADING.busy(self) or _option_awakening_busy():
+		return false
 	if player.is_stunned() or player.is_feared() or player.is_silenced():
-		return
+		return false
 	for value: Variant in quickslots:
 		if not (value is Dictionary):
 			continue
 		var entry: Dictionary = value as Dictionary
-		if str(entry.get("kind", "")) != "skill":
+		if str(entry.get("kind", "")) != "skill" or not bool(entry.get("auto", false)):
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		if skill_name == "":
 			continue
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
+		if skill.is_empty() or not _is_buff_skill(skill):
 			continue
 		skill_name = str(skill.name)
 		if active_skill_buffs.has(skill_name): continue
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not bool(entry.get("auto", false)):
-			continue
-		if not _skill_ready(skill):
+		var original: bool = skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]
+		if not (original_skills.auto_wants(skill) if original else _skill_ready(skill)):
 			continue
 		if _cast_job_skill(skill_name, false):
-			break
+			return true
+	return false
 
 
 func _tick_skill_cooldowns(delta: float) -> void:
@@ -9576,7 +9648,7 @@ func _run_auto_combat_quickslots() -> bool:
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
+		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal" or _is_buff_skill(skill):
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
@@ -10287,9 +10359,9 @@ func _active_skill_speed_multiplier() -> float:
 			multiplier = maxf(multiplier, float((value as Dictionary).get("speed", 1.0)))
 	return multiplier
 
-func _tick_skill_buffs(delta: float) -> void:
+func _tick_skill_buffs(delta: float, publish: bool = true) -> bool:
 	if active_skill_buffs.is_empty():
-		return
+		return false
 	var expired: Array[String] = []
 	for key_value: Variant in active_skill_buffs.keys():
 		var key: String = str(key_value)
@@ -10303,13 +10375,15 @@ func _tick_skill_buffs(delta: float) -> void:
 		if float(buff.get("remaining", 0.0)) <= 0.0:
 			expired.append(key)
 	if expired.is_empty():
-		return
+		return false
 	for key: String in expired:
 		active_skill_buffs.erase(key)
+	auto_buff_check_timer = 0.0
 	_refresh_skill_stealth_visual()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = mini(hp, _effective_max_hp())
-	_update_hud()
+	if publish: _publish_timed_buff_hud()
+	return true
 
 func _on_class_selected(value: int) -> void:
 	class_index = clampi(value, 0, 3)
@@ -10898,6 +10972,9 @@ func skill_card523_deck() -> Array:
 
 func skill_card523_merge_quote(grade_id: int, selection: Dictionary = {}) -> Dictionary:
 	return skill_cards523.merge_quote(grade_id, selection)
+
+func skill_card523_merge_preview(grade_id: int, selection: Dictionary = {}) -> Dictionary:
+	return skill_cards523.merge_preview(grade_id, selection)
 
 func skill_card523_merge_execute(token: String) -> Dictionary:
 	return skill_cards523.merge_execute(token)
@@ -12078,7 +12155,6 @@ func _character_stats_snapshot() -> Dictionary:
 		"stat_points": stat_points,
 		"base_attributes":{"str":str_stat,"dex":dex_stat,"con":con_stat,"int":int_stat,"wis":wis_stat,"cha":cha_stat},
 		"skill_cooldown_reduction": (1.0-_skill_cooldown_factor())*100.0,
-		"consumable_state": consumable_service.call("export_state"),
 		"inventory_weight": _inventory_total_weight(),
 		"carrying_capacity": _carrying_capacity(),
 		"current_weight": _inventory_total_weight(),

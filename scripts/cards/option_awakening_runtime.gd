@@ -314,10 +314,11 @@ func select_subslot(identity: String) -> Dictionary:
 	return {"ok":true,"snapshot":subslot_view()}
 
 func use_native_unlock_item(item_name: String,selected_instance: String="") -> Dictionary:
-	var expected: Dictionary=UnlockItem.record()
 	var selected_record: Dictionary=world.item_instances.get(selected_instance,{}).get("record",{})
-	var raw: Dictionary=preload("res://scripts/resources/current523_definition_rows.gd").row("ItemClass",UnlockItem.ITEM)
-	if int(selected_record.get("source_item_class_id",0))!=UnlockItem.ITEM and item_name!=str(expected.get("name","")) and (raw.is_empty() or item_name!="[원본 보상] "+str(raw.get("Name",""))):return {"handled":false}
+	var raw: Dictionary=UnlockItem.source_row()
+	if int(selected_record.get("source_item_class_id",0))!=UnlockItem.ITEM:
+		var legacy_reward: bool=not raw.is_empty() and item_name=="[원본 보상] "+str(raw.get("Name",""))
+		if not legacy_reward and not UnlockItem.matches_catalog_name(item_name,raw):return {"handled":false}
 	if _busy:return {"handled":true,"ok":false,"code":"busy","error":"이전 아이템 사용 처리 중"}
 	if save_blocked or not problem.is_empty() or not core.native_mode:return {"handled":true,"ok":false,"code":"save_blocked","error":"해금 저장 보호 중"}
 	if not UnlockItem.source_rules_valid():return {"handled":true,"ok":false,"error":"새 원문 해금 규칙 연결 필요 · 아이템 보존"}
