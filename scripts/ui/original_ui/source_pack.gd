@@ -322,7 +322,7 @@ func _read_verified_page(path: String, expected_sha: String, member: String) -> 
 		if length<=BUFFERED_PNG_MAX_BYTES:
 			var raw: PackedByteArray=file.get_buffer(length)
 			file.close()
-			if raw.size()!=length or not _verified_bytes(path,raw,expected_sha):
+			if raw.size()!=length or _sha256(raw)!=expected_sha:
 				last_error="source_hash_or_size:"+member; return null
 			original=Image.new()
 			if original.load_png_from_buffer(raw)!=OK or original.is_empty(): return null
@@ -388,21 +388,6 @@ static func _member(path: String) -> String:
 
 static func _safe_member(path: String) -> bool:
 	return MANIFEST._safe_member(path)
-
-## Pages verified in this session: path -> [bytes, modified time, sha256].
-## A page leaves the shared page cache when screens close and was hashed again
-## on every reload (523.882 diag: 38 page hashes, ~210 ms on a PC, when the
-## crafting window opened). Same bytes and modified time -> same verified file;
-## any change is hashed again.
-static var _verified_pages: Dictionary = {}
-
-static func _verified_bytes(path: String, raw: PackedByteArray, expected_sha: String) -> bool:
-	var modified: int = FileAccess.get_modified_time(path)
-	var known: Variant = _verified_pages.get(path)
-	if known is Array and int(known[0]) == raw.size() and int(known[1]) == modified and str(known[2]) == expected_sha: return true
-	if _sha256(raw) != expected_sha: return false
-	_verified_pages[path] = [raw.size(), modified, expected_sha]
-	return true
 
 static func _sha256(raw: PackedByteArray) -> String:
 	var context:=HashingContext.new()
