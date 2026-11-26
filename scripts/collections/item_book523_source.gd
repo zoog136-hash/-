@@ -16,6 +16,9 @@ extends RefCounted
 ## Nothing here reads or writes a save; the reader is the verified original
 ## definition archive (current523_definition_rows) or a test fixture.
 const COMMON_SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BAKE_NAME: String = "item_book523_collections"
+const BAKE_CODE: Array[String] = ["res://scripts/collections/item_book523_source.gd"]
 ## MainTabType -> the ItemBook_All tab button (ItemBookCollectionMainTabType).
 const TAB_BUTTONS: Dictionary = {"UnIdentified":"Btn_UnIdentified","Identified":"Btn_Identified","Dungeon":"Btn_Dungeon","Event":"Btn_Event","Level":"Btn_Level","Alchemy":"Btn_Alchemy"}
 const EXCLUDED_TABS: Array[String] = ["Clan"]
@@ -64,6 +67,38 @@ func load_source(source_reader: RefCounted = null) -> bool:
 	_item_names.clear()
 	_server_allowed.clear()
 	excluded = {"clan":0,"server":0,"growth96":0,"empty":0}
+	# The verified archive's collection rows never change for one archive:
+	# read them back from the bake instead of walking the seven tables
+	# (Twm diag 2026-11-26: first 장비 컬렉션 open 1.6 s, ~40,000 row
+	# views plus ~75,000 ID conversions).
+	var bake_key: String = _bake_key() if source_reader == null else ""
+	if not bake_key.is_empty() and _read_bake(bake_key): return true
+	if not _build(): return false
+	if not bake_key.is_empty(): BAKE.write(BAKE_NAME, bake_key, {"collections":collections,"order":Array(order),"card_owner":card_owner,"excluded":excluded,"server_allowed":_server_allowed})
+	return true
+
+func _bake_key() -> String:
+	var identity: String = str(COMMON_SOURCE.identity().get("source_sha256", ""))
+	if identity.is_empty(): return ""
+	return BAKE.key([identity, BAKE.code_key(BAKE_CODE)])
+
+func _read_bake(bake_key: String) -> bool:
+	var value: Variant = BAKE.read(BAKE_NAME, bake_key)
+	if not value is Dictionary: return false
+	for field: String in ["collections","card_owner","excluded","server_allowed"]:
+		if not value.get(field) is Dictionary: return false
+	if not value.get("order") is Array or (value.order as Array).is_empty(): return false
+	for cid: Variant in value.order:
+		if not cid is String or not (value.collections as Dictionary).has(cid): return false
+	collections = value.collections
+	order.assign(value.order)
+	card_owner = value.card_owner
+	excluded = value.excluded
+	_server_allowed = value.server_allowed
+	ready = true
+	return true
+
+func _build() -> bool:
 	var tables: Dictionary = {}
 	for table: String in TABLES:
 		var rows: Array = reader.rows(table)

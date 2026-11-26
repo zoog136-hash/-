@@ -123,6 +123,7 @@ func _run() -> void:
 	_window()
 	_effects()
 	_wiring()
+	_bake()
 	print("ITEM_BOOK523_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(1 if not failures.is_empty() else 0)
 
@@ -292,3 +293,21 @@ func _wiring() -> void:
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud.contains("if _open_original_feature(\"item_book\"):return\n\topen_legacy_equipment_collections()"), "장비 컬렉션 opens the original window, else the TWILIGHT view")
 	check(world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))\n\t# Original 아이템 컬렉션 effects join the collection stats (no double count).\n\tequipment_collections.refresh_item_book_totals()"), "a load recounts the collection stats")
+
+## Real archive only: the baked collection rows are the rows a fresh walk of
+## the seven tables builds, and a second load reads them back from the bake.
+func _bake() -> void:
+	if str(Source.COMMON_SOURCE.identity().get("source_sha256", "")).is_empty(): return
+	var first := Source.new()
+	check(first.load_source(), "the real archive loads: " + first.problem)
+	var fresh := Source.new()
+	fresh.reader = Source.CommonReader.new()
+	check(fresh._build(), "the real archive builds without the bake: " + fresh.problem)
+	var key: String = first._bake_key()
+	check(not key.is_empty() and Source.BAKE.read(Source.BAKE_NAME, key) is Dictionary, "the collection rows are baked")
+	var again := Source.new()
+	again.reader = Source.CommonReader.new()
+	check(again._read_bake(key), "a second load reads the bake")
+	for loaded: Source in [first, again]:
+		check(loaded.order == fresh.order and loaded.card_owner == fresh.card_owner and loaded.excluded == fresh.excluded and loaded.collections == fresh.collections, "baked rows equal a fresh walk (%d collections)" % fresh.order.size())
+	check(again.effects_of(again.order[0]) == fresh.effects_of(fresh.order[0]), "effect lines resolve the same from baked rows")
