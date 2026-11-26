@@ -178,7 +178,7 @@ func _recipes(world: Node) -> Array[String]:
 	if SOURCE_TABS.has(_tab):
 		for id: String in _source_ids:
 			if registry.has(id) and (_category.is_empty() or str((registry[id] as Dictionary).get("category",""))==_category):ids.append(id)
-		if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return world._craft_quote(id,1).get("ok",false))
+		if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return _craftable(world,id))
 		return ids
 	var allowed: Array=TABS.get(_tab,[])
 	for raw: Variant in registry.keys():
@@ -186,7 +186,7 @@ func _recipes(world: Node) -> Array[String]:
 		if not allowed.has(category_name):continue
 		if not _category.is_empty() and category_name!=_category:continue
 		ids.append(str(raw))
-	if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return world._craft_quote(id,1).get("ok",false))
+	if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return _craftable(world,id))
 	return ids
 
 ## 제작 가능 우선: craftable recipes first, each group in its own order.
@@ -246,7 +246,34 @@ func _material_rows(world: Node) -> Array[Dictionary]:
 
 ## --- Stage ------------------------------------------------------------------
 
+## One build of the window reads the same character values for every recipe
+## row (carrying capacity, weight, skill stats) and asks each row's 1-count
+## quote up to three times (ready-first sort, row, reuse). Nothing changes
+## while it is built: derived stats are memoized for the build
+## (world._stat_memo_begin/_end) and each row's craftable answer is asked once
+## (Twm diag 2026-11-26: opening 제작 asked skill ownership 44,928 times).
+## Outside a build (scrolling rows in) every answer is asked fresh.
+var _ok_memo: Dictionary = {}
+var _building: bool = false
+
 func _stage() -> Dictionary:
+	var world: Node=_world.get_ref() if _world!=null else null
+	var memo: bool=world!=null and world.has_method("_stat_memo_begin") and world.has_method("_stat_memo_end")
+	if memo:world.call("_stat_memo_begin")
+	_ok_memo={}
+	_building=true
+	var result: Dictionary=_stage_built()
+	_building=false
+	_ok_memo={}
+	if memo and is_instance_valid(world):world.call("_stat_memo_end")
+	return result
+
+func _craftable(world: Node, id: String) -> bool:
+	if not _building:return bool(world._craft_quote(id,1).get("ok",false))
+	if not _ok_memo.has(id):_ok_memo[id]=bool(world._craft_quote(id,1).get("ok",false))
+	return bool(_ok_memo[id])
+
+func _stage_built() -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	var world: Node=_world.get_ref() if _world!=null else null
 	if parent==null or world==null:return _fail("source_production_window_host_unavailable")
@@ -386,7 +413,7 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	var recipe: Dictionary=world.crafting.recipes.get(id,{})
 	var result: Dictionary=recipe.get("result",{})
 	var chosen: bool=id==_selected
-	var ok: bool=world._craft_quote(id,1).get("ok",false)
+	var ok: bool=_craftable(world,id)
 	var spec: Dictionary={"Panel":{"input":Callable(_scrolls.items,"input")}}
 	spec["Btn_Normal"]={"visible":not chosen,"activate":Callable(self,"_select").bind(id)}
 	spec["Btn_Pressed"]={"visible":chosen,"activate":Callable(self,"_select").bind(id)}
@@ -422,7 +449,7 @@ func _fill_items(root: Node2D, out: Dictionary, ids: Array[String]) -> Dictionar
 			if not is_instance_valid(kept) or world==null:continue
 			var id: String=str(kept.get_meta("recipe_id",""))
 			if int(index)>=ids.size() or ids[int(index)]!=id:continue
-			if bool(kept.get_meta("row_chosen",false))==(id==_selected) and bool(kept.get_meta("row_ok",false))==bool(world._craft_quote(id,1).get("ok",false)):_reusable[int(index)]=kept
+			if bool(kept.get_meta("row_chosen",false))==(id==_selected) and bool(kept.get_meta("row_ok",false))==_craftable(world,id):_reusable[int(index)]=kept
 	elif not _reuse_except.is_empty() and is_instance_valid(_item_content):
 		for index: Variant in _item_rows:
 			var kept: Node2D=_item_rows[index]
