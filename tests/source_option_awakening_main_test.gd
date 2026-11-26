@@ -414,6 +414,19 @@ func _native() -> void:
 		await settle()
 		check(options.view("마법인형",doll.target).awakened and options.view("변신",transform.target).experience==failed.experience
 			and w.skill_awakening.export_state()==base.skill,"real reload keeps actual independent option outcomes")
+	var relic: Dictionary = _seed(w,"성물")
+	if check(not relic.is_empty(),"eligible installed relic and its own material"):
+		w._update_hud()
+		var before_relic: Dictionary = _ledger(w)
+		var relic_page: RefCounted = await _open(w,"성물",str(relic.target))
+		if relic_page != null:
+			await _tap(_material(relic_page,false,str(relic.material)))
+			await _tap(_hit(_node(relic_page,OPTION.PRIMARY)))
+			check(relic_page.review_open(),"relic opens the authored confirmation")
+			relic_page.cancel_review()
+			check(_ledger(w)==before_relic,"review and cancel preserve relic, materials, fee and RNG")
+			var history: Dictionary = relic_page._history()
+			check(history.get("ok",false),"native history accepts the relic awakening tab")
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1": await _paid_skill(w)
 	w.queue_free()
 	await settle()

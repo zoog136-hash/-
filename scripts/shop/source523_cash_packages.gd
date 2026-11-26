@@ -364,8 +364,12 @@ static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.Cas
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
+	if allow_native and exact.get("type") == "문양 재료" and world.has_method("source_symbol_reward_record"):
+		var water: Dictionary = world.source_symbol_reward_record(item_id,exact,SOURCE.row("ItemClass",item_id))
+		if not water.is_empty(): return {"kind":"symbol_material","name":water.name,"record":water}
 	if exact.is_empty():
 		var named: Dictionary = _find_record(world,label(item_id),"",lookup)
+		if named.get("type") == "문양 재료" and named.get("source_item_class_id") != item_id: named = {}
 		if not named.is_empty() and not named.get("source") in [TAG, ITEM_TAG] and not bool(named.get("source_m_native_item", false)) and not str(named.get("name", "")).contains(" · 원본#"): exact = named
 	if not exact.is_empty():
 		return {"kind":"item", "name":str(exact.name), "record":exact}
@@ -607,15 +611,11 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 					while instances.has(uid): uid = Crypto.new().generate_random_bytes(16).hex_encode()
 					instances[uid] = {"name":ticket_name, "record":target.record.duplicate(true), "level":0, "element":"", "element_level":0, "bless_state":"normal"}
 				received.append("%s ×%d" % [ticket_name, amount])
-		elif target.kind == "native_equipment":
-			# Shared native supplier issues the physical equipment with its proof.
-			var saved_inventory: Dictionary = world.inventory
-			var saved_instances: Dictionary = world.item_instances
-			world.inventory = inventory
-			world.item_instances = instances
-			var issued: Dictionary = ITEM_INVENTORY.stage(world, [{"item_class_id":item_id, "amount":amount, "bless_raw":1, "enchant":0}], {"kind":"twilight_cash_package", "box_item_class_id":definition_id_of(world, item_name), "item_class_id":item_id})
-			world.inventory = saved_inventory
-			world.item_instances = saved_instances
+		elif target.kind in ["native_equipment","symbol_material"]:
+			var view := NATIVE_STACK.SupplierView.new()
+			view.host=world; view.inventory=inventory; view.item_instances=instances; view.gold=world.gold
+			var issued: Dictionary = ITEM_INVENTORY.stage(view, [{"item_class_id":item_id, "amount":amount, "bless_raw":1, "enchant":0}], {"kind":"twilight_cash_package", "box_item_class_id":definition_id_of(world, item_name), "item_class_id":item_id})
+			view.free()
 			if not issued.get("ok", false): failure = str(issued.get("error", "원본 장비 지급 실패"))
 			else:
 				inventory = issued.overrides.inventory
