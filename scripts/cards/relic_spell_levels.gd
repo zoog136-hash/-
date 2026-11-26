@@ -212,7 +212,9 @@ static func skill_card_level(world: Node, card_id: int) -> int:
 
 static func skill_card_key(world: Node) -> int:
 	var cards: Variant = world.get("skill_cards523")
-	if cards == null or not cards.has_method("export_state"): return 0
+	if cards == null: return 0
+	if cards.has_method("spell_cache_key"): return int(cards.call("spell_cache_key"))
+	if not cards.has_method("export_state"): return 0
 	return hash([cards.get("revision"), cards.call("export_state")])
 
 static func project(world: Node, record: Dictionary, identity: Dictionary, enabled: bool) -> Dictionary:
