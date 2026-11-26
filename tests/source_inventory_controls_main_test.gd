@@ -171,6 +171,11 @@ func exact(archive: String) -> void:
 	w._load_game(true);await frames()
 	ck(not w._item_locked(weapon.get_slice("@@@",0),weapon_uid) and w._item_locked(leather,uid_b) and not w._item_locked(leather,uid_a),"unlock and reload preserve the other UID's lock")
 	ck(w.item_instances.has(weapon_uid) and not w._is_instance_equipped(weapon_uid) and int(w.inventory.get(weapon.get_slice("@@@",0),0))==int(before_owned[weapon.get_slice("@@@",0)]) and int(w.inventory[leather])==7,"neither lock gesture activated, equipped, or consumed the tested items")
+	if not await select_reference(b):return
+	if not await tap(view._detail_area,"locked item original details"):return
+	ck(controller.item_tooltip_is_open() and popup_button(controller.item_tooltip(),"Icon_Set/Del_On/Btn_Icon")==null,"locked item never gets an active tooltip delete control")
+	bag.close_item_info()
+	await frames()
 	if not await select_reference(a):return
 	ck(view._detail_reference==a and view._detail_scene.source_member=="UI/CommonUi/Common_Slot.csb","only selected original detail icon is mounted")
 	if not await tap(view._detail_area,"authored slot detail icon"):return
@@ -181,7 +186,7 @@ func exact(archive: String) -> void:
 	await tap(popup_button(delete_dialog(),"Btn_Cancel"),"tooltip deletion cancel")
 	ck(int(w.inventory[leather])==7 and hash_file()==detail_hash,"tooltip deletion cancel also preserves disk and ownership")
 	if not await tap(view._detail_area,"reopen selected details"):return
-	if not await tap(popup_button(controller.item_tooltip(),"Icon_Set/Detail_On/Btn_Icon"),"authored acquisition list"):return
+	if not await tap(popup_button(controller.item_tooltip(),"ToolTip_Button/ItemDrop_On/Button"),"authored acquisition list"):return
 	var acquisition: Dictionary=h.original_main_ui_status.get("acquisition_popup",{})
 	ck(controller.acquisition_is_open() and acquisition.get("handled",false) and bag.last_acquisition.get("item_class_id")==366 and bag.selected_item==a and int(w.inventory[leather])==7 and hash_file()==detail_hash,"acquisition touch opens the original exact leather source list without use or save")
 	controller.close_acquisition();await frames()

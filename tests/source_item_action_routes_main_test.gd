@@ -139,7 +139,7 @@ func item_detail_routes() -> void:
 	if attachment.get("ok",false) and DisplayServer.get_name()!="headless":
 		await check_drawn_icon(attachment.player)
 	await frames()
-	await tap(popup_button(popup,"Icon_Set/Detail_On/Btn_Icon"),"dagger acquisition button")
+	await tap(popup_button(popup,"ToolTip_Button/ItemDrop_On/Button"),"dagger acquisition button")
 	ck(controller.acquisition_is_open() and h.original_main_ui_status.get("acquisition_popup",{}).get("item_picture",false),"dagger keeps its original scene icon on the acquisition screen")
 	controller.close_acquisition()
 	bag.close_item_info()

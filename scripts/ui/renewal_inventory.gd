@@ -337,8 +337,11 @@ func open_item_info(reference: String) -> bool:
 	var record: Dictionary = _find_item_record(reference)
 	var identity: Script = preload("res://scripts/ui/source523_item_identity.gd")
 	var physical_record: Dictionary=_item_visual_record(reference,record)
-	var actions: Dictionary={"delete":Callable(self,"_tooltip_delete").bind(reference)}
+	var actions: Dictionary={}
 	var world: Node=controller.get_parent()
+	var deletion: Script=preload("res://scripts/loot/inventory_item_delete.gd")
+	if world.has_method("request_inventory_delete") and deletion.quote(world,reference).get("ok",false):
+		actions["delete"]=Callable(self,"_tooltip_delete").bind(reference)
 	if physical_record.get("source_m_native_item",false) and world.has_method("_source_enhancement_rule") and not str(world._enhancement_kind_for_record(physical_record)).is_empty():
 		var physical: Dictionary=world.item_instances.get(_ref_instance_id(reference),{})
 		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
