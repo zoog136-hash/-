@@ -79,6 +79,9 @@ EARLY_WHOLE_SCOPES = [
     ("UI/ToolTip/ToolTip_HudType_Right.csb", [688]),
 ]
 WHOLE_SCOPES = [
+    # Skill_ToolTip_Layout's original frame and readout only: no help,
+    # target/lock controls, set preview or authored placeholder text.
+    ("UI/ToolTip/ToolTip_HudType_Skill.csb", [17476, 14072, 12972, 12264, 3152, 1080, 15284]),
     # The NPC store window (source_main_store_window): Store_All without the
     # cart, sale / auto modes, SET buttons, batch counts, clan coin, tax, help,
     # message, particle and spine; Store_Inventory without its SlotSet

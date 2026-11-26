@@ -25,6 +25,7 @@ const MEMBERS: Dictionary={
 	"exchange":"UI/CsbFile/MainMenu/MainMenu_Trade.csb",
 	"crafting":"UI/CsbFile/MainMenu/MainMenu_Production.csb",
 	"refine523":"UI/CsbFile/MainMenu/MainMenu_Alchemy.csb",
+	"memory_places":"UI/CsbFile/MainMenu/MainMenu_Memory.csb",
 	"settings":"UI/CsbFile/MainMenu/MainMenu_Option.csb",
 }
 const HIDDEN: Array[String]=["Panel/Sp_New","Panel/Sp_Event","Panel/Sp_Buff","Panel/Img_Disabled"]

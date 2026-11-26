@@ -1768,10 +1768,10 @@ static func _full_menu_node_rect(scene: Node2D, offset: int) -> Rect2:
 	var relative: Transform2D=scene.global_transform.affine_inverse()*origin.global_transform
 	return (relative*Rect2(Vector2(0,-float(extent[1])),Vector2(float(extent[0]),float(extent[1])))).abs()
 
-## These three actions have real HUD buttons, but no client MainMenu_* tile
+## These actions have real HUD buttons, but no client MainMenu_* tile
 ## in ui44. Reuse the mounted normal-state pixels and their original material,
 ## never a guessed file, newly decoded atlas or homemade icon.
-const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST}
+const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST,"shop":MainMenu.STORE}
 func menu_action_art(section: String) -> Dictionary:
 	if section == "auto":
 		return _auto_pad_art()

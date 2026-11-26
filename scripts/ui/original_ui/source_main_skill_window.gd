@@ -6,8 +6,9 @@ extends RefCounted
 ## inside ScrollView_All; each shows the skill's original picture
 ## (Source523SkillBuffImages), the authored Img_Disabled cover while the
 ## skill is not learned and the authored passive mark. Tapping a slot selects
-## it (Sp_slot_select); 상세 보기 or a second tap opens the existing skills
-## window on that skill, where learning, use and quick-slot registration stay.
+## it (Sp_slot_select). 상세 보기 uses the original 523 skill tooltip when
+## available. A second tap retains the existing skill actions (learn, use,
+## quick-slot registration) without adding unauthored buttons to the tooltip.
 ## The tab strip is one Skill_Tab_Btn per tab: 전체 (every listed skill),
 ## 정령 (요정 only: the elemental school skills, record school fire / earth /
 ## water / wind; ScrollView_Special), 특수 (the card-bound skills, original
@@ -23,6 +24,7 @@ extends RefCounted
 ## holds the original GameClassSpellGroup choice, cost and save.
 ## Every listed skill is reachable: rows are built only near the view.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const Detail=preload("res://scripts/ui/original_ui/source_main_skill_detail.gd")
 const Images=preload("res://scripts/ui/source523_skill_buff_images.gd")
 const RULES=preload("res://scripts/skill_rules.gd")
 const ROOT="UI/FloatingUi/Skill_All.csb"
@@ -60,6 +62,7 @@ var _moved: float=0.0
 var last_result: Dictionary={}
 var tab: String="all"
 var _timer: Timer
+var _detail: RefCounted
 ## Only the rows near the visible part of the list exist as nodes: a class
 ## lists 200+ skills, each Slot_Skill is ~40 nodes, and building
 ## all of them (again on every selection tap) froze phones for many seconds
@@ -90,6 +93,8 @@ func open(parent: Node) -> Dictionary:
 	return _stage()
 
 func close() -> void:
+	if _detail!=null:_detail.close()
+	_detail=null
 	var previous: Node2D=_scene
 	_scene=null
 	_content=null
@@ -448,7 +453,7 @@ func hit_at(viewport_point: Vector2) -> Dictionary:
 	return found
 
 func gesture_is_live(epoch: int) -> bool:
-	return is_open() and _scene.get_instance_id()==epoch
+	return is_open() and _scene.visible and _scene.get_instance_id()==epoch
 
 func tap_from_pointer(epoch: int, skill_id: String, release_point: Vector2) -> Dictionary:
 	if skill_id.is_empty() or not gesture_is_live(epoch) or str(hit_at(release_point).get("id",""))!=skill_id:
@@ -479,7 +484,7 @@ static func _contains(control: Control, point: Vector2) -> bool:
 
 func _slot_pressed(id: String) -> Dictionary:
 	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
-	if id==_selected:return _detail_requested()
+	if id==_selected:return _open_existing_skill_actions()
 	var first_selection: bool=_selected.is_empty()
 	_selected=id
 	# The search button changes state only on the first selection; later taps
@@ -498,8 +503,33 @@ func _move_highlight() -> bool:
 		(node as CanvasItem).visible=str(slot.id)==_selected
 	return true
 
-## The existing skills window on the selected skill (learn, use, quick slot).
+## 상세 보기 is a presentation only. Keep the original selection and
+## scroll position alive underneath; the authored X restores the list.
 func _detail_requested() -> Dictionary:
+	if _selected.is_empty() or not is_open():return _fail("source_skill_window_skill_unselected")
+	for record: Dictionary in _records:
+		if _id(record)!=_selected:continue
+		_detail=Detail.new()
+		var hud: Node=_hud.get_ref() if _hud!=null else null
+		var result: Dictionary=_detail.open(_pack,_scene.get_parent(),record,hud,Callable(self,"close_detail"))
+		if result.get("ok",false):
+			_scene.hide()
+			return result
+		_detail=null
+		break
+	return _open_existing_skill_actions()
+
+func detail_is_open() -> bool:
+	return _detail!=null and _detail.is_open()
+
+func close_detail() -> void:
+	if _detail==null:return
+	_detail.close()
+	_detail=null
+	if is_open():_scene.show()
+
+## The existing skill actions stay reachable and are also the older-pack fallback.
+func _open_existing_skill_actions() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or _selected.is_empty():return _fail("source_skill_window_skill_unselected")
 	var focus: String=_selected
