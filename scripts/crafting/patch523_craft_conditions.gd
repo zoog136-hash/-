@@ -144,7 +144,7 @@ static func server_allows(condition: Dictionary, context: Dictionary) -> Diction
 	if not condition.has("server_limit_set_id"): return {"ok":true}
 	var profile: Variant=context.get("server_profile")
 	if not profile is Dictionary or not profile.get("ServiceRegionCode") is String or not integer(profile.get("WorldNo"),0,1000000): return {"ok":false,"reason":"원본 제작 서버 조건 확인 필요 · 재료 보존"}
-	var rows: Array=SOURCE.related("ServerLimit","ServerLimitSetID",int(condition.server_limit_set_id))
+	var rows: Array=_server_limit_rows(int(condition.server_limit_set_id))
 	if rows.is_empty():
 		# TWILIGHT 근사 2026-11-16 (patch523_craft_approx): a set without any
 		# ServerLimit row is the KR 1 offline profile.
@@ -154,6 +154,20 @@ static func server_allows(condition: Dictionary, context: Dictionary) -> Diction
 		return {"ok":false,"reason":"원본 서버 세트 %d 정의 없음 · 재료 보존" % int(condition.server_limit_set_id)}
 	if not SERVER_PROFILE.rows_allow(rows,str(profile.ServiceRegionCode),int(profile.WorldNo)): return {"ok":false,"reason":"원본 제작 서버 조건 · %s %d서버 대상 아님" % [str(profile.ServiceRegionCode),int(profile.WorldNo)]}
 	return {"ok":true}
+
+## ServerLimit rows of one set, read once per set while the same definition
+## source identity is loaded. The crafting window checks every recipe's server
+## set when it opens (523 real pack diag: ~90,000 definition row reads).
+static var _server_rows: Dictionary = {}
+static var _server_rows_identity: String = ""
+
+static func _server_limit_rows(set_id: int) -> Array:
+	var identity: String = str(SOURCE.identity().get("source_sha256", ""))
+	if identity != _server_rows_identity:
+		_server_rows_identity = identity
+		_server_rows = {}
+	if not _server_rows.has(set_id): _server_rows[set_id] = SOURCE.related("ServerLimit","ServerLimitSetID",set_id)
+	return _server_rows[set_id]
 
 static func stage(recipe: Dictionary, count: int, context: Dictionary) -> Dictionary:
 	if not recipe.has("craft_conditions"): return {"ok":true}
