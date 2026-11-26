@@ -27,7 +27,11 @@ func _run() -> void:
 	for _i: int in range(3):await process_frame
 	var items: Dictionary=world.patch523_equipment.data.get("items",{}) if world.patch523_equipment.data is Dictionary else {}
 	var source: String=FileAccess.get_file_as_string("res://scripts/world.gd")
-	check(source.contains("\t_tick_craft_index_warm(delta)\n") and source.count("_craft_index_warm={}")>=4,"the warm build ticks on game frames and every cache reset drops it")
+	# Play no longer warms the full index (craft/box lookups build only the
+	# items their definition names); the warm build itself is unchanged.
+	check(not source.contains("\t_tick_craft_index_warm(delta)\n") and source.count("_craft_index_warm={}")>=4,"play does not warm the full index and every cache reset drops a warm build")
+	world.patch523_craft_item_cache={}
+	check(world._patch523_craft_items_for_ids([]).keys()==world._craft_item_index().keys(),"targeted lookups start from the same base index")
 	if items.is_empty():
 		world.patch523_craft_item_cache={}
 		world.craft_index_warm_seconds=0.0
@@ -56,6 +60,17 @@ func _run() -> void:
 		world._craft_index_warm={"ids":[],"cursor":0,"result":{}}
 		world._index_catalog_item_sources()
 		check(world._craft_index_warm.is_empty(),"a catalog reindex drops a warm build")
+		# Targeted recipe lookups: every entry they build equals the full index.
+		world.patch523_craft_item_cache={}
+		var compared: int=0
+		var mismatched: Array=[]
+		for recipe_id: String in (world.patch523_equipment.recipes as Dictionary).keys().slice(0,300):
+			var targeted: Dictionary=world._patch523_craft_items_for_recipe(recipe_id)
+			for name: Variant in targeted:
+				if world._craft_item_index().has(name):continue
+				compared+=1
+				if not once.has(name) or once[name]!=targeted[name]:mismatched.append(str(name))
+		check(compared>0 and mismatched.is_empty(),"targeted recipe items equal the full index (%d compared, mismatched %s)" % [compared,str(mismatched.slice(0,5))])
 		print("CRAFT_INDEX_WARM_MEASURE ",JSON.stringify({"entries":once.size(),"slices":slices,"longest_slice_ms":longest/1000.0}))
 	world.queue_free()
 	await process_frame

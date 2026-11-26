@@ -850,7 +850,8 @@ func _process_frame(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
-	_tick_craft_index_warm(delta)
+	# The full craft index is no longer needed by play (see
+	# _patch523_craft_items_for_ids): no background warm build.
 	_slow_tick_delta += delta
 	_slow_tick_clock -= delta
 	if _slow_tick_clock <= 0.0:
@@ -6292,6 +6293,42 @@ func _craft_item_index() -> Dictionary:
 	result.merge(expedition_local.received_material_records(),false)
 	return result
 
+## Craft/box lookups need only the items one recipe or box names, not the
+## whole ~27,000-item index: building that on first use froze crafting for
+## 6.5 s on a PC with the real pack (~26 s on the phone), and warming it in the
+## background cost ~3 ms per frame for minutes. Same per-item binding
+## (_patch523_craft_index_item) over the source IDs the definition references,
+## on top of the same base index. The full index is reused when it exists.
+func _patch523_craft_items_for_ids(source_ids: Array) -> Dictionary:
+	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	var result: Dictionary=_craft_item_index().duplicate()
+	var items: Dictionary=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
+	var seen: Dictionary={}
+	for value: Variant in source_ids:
+		var source_id: String=str(value)
+		if seen.has(source_id) or not items.has(source_id):continue
+		seen[source_id]=true
+		_patch523_craft_index_item(result,source_id)
+	return result
+
+## Every "source_id" a recipe (all material choices, outcomes and bonuses) names.
+func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
+	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
+	var ids: Array=[]
+	_collect_source_ids(patch523_equipment.recipes.get(recipe_id,{}),ids)
+	var selection: Dictionary=patch523_equipment.material_selection(recipe_id,patch523_material_choices.get(recipe_id,{}))
+	if selection.get("recipe") is Dictionary:_collect_source_ids(selection.recipe,ids)
+	return _patch523_craft_items_for_ids(ids)
+
+static func _collect_source_ids(value: Variant, out: Array) -> void:
+	if value is Dictionary:
+		for key: Variant in value:
+			var child: Variant=value[key]
+			if str(key)=="source_id" and (child is String or child is int or child is float):out.append(str(int(child)) if child is float else str(child))
+			else:_collect_source_ids(child,out)
+	elif value is Array:
+		for child: Variant in value:_collect_source_ids(child,out)
+
 func _patch523_craft_item_index() -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
 	if not _craft_index_warm.is_empty():
@@ -6534,7 +6571,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 			return
 		outcome_roll=rng.randi_range(0,999999)
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
-		_patch523_craft_item_index(), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
+		_patch523_craft_items_for_recipe(recipe_id), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
@@ -6596,8 +6633,11 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 func _patch523_open_box(source_id: String) -> void:
 	_sync_item_instances()
 	var box_name: String = str(patch523_equipment.record(source_id).get("name",""))
+	var box_ids: Array=[source_id]
+	for reward: Variant in (patch523_equipment.data.get("guaranteed_boxes",{}).get(source_id,{}) as Dictionary).get("rewards",[]):
+		if reward is Dictionary and reward.has("ItemClassID"):box_ids.append(str(int(reward.ItemClassID)))
 	var transaction: Dictionary = PATCH523_SEAL_ACTIONS.open_box(patch523_equipment, source_id, inventory, item_instances,
-		next_item_instance_id, _inventory_total_weight(), _carrying_capacity(), _patch523_craft_item_index(), _item_locked(box_name))
+		next_item_instance_id, _inventory_total_weight(), _carrying_capacity(), _patch523_craft_items_for_ids(box_ids), _item_locked(box_name))
 	if not bool(transaction.get("ok",false)):
 		hud.show_message(str(transaction.get("reason","상자를 열 수 없습니다")))
 		return
@@ -6793,7 +6833,7 @@ func _totem_convert_requested(recipe_id: int) -> bool:
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
 	if recipe_id.begins_with("patch523:"):
-		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_item_index(), item_instances,
+		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_items_for_recipe(recipe_id), item_instances,
 			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context(recipe_id,batches))
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
