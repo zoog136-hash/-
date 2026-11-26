@@ -68,6 +68,7 @@ class ProofPlayer extends Node2D:
 		calls.append(clip)
 		return {"ok":clip!=missing_clip}
 	func stop() -> void:calls.append("stop")
+	func seek_frame(frame: float) -> void:calls.append("seek:"+str(int(frame)))
 	func set_bound_visible(offset: int, value: bool) -> Dictionary:
 		visibility[offset]=value
 		return {"ok":true}
@@ -252,6 +253,8 @@ func _presentation_proof() -> void:
 	check(banner.calls==["Success","Fail"] and str(host.texts.get(3)).contains("소실"),"original fail clip and explicit destruction banner")
 	var refresh: Dictionary=window.update("주문서",[{"target_id":"new"}])
 	check(refresh.get("result_refresh_pending",false) and window.refreshes==0 and fx.calls.size()==3,"committed owner rows queued; no effect restarted and destroyed slot stays in place")
+	window._hold_presentation(window._token)
+	check(banner.calls.has("seek:145") and banner.calls.back()=="stop" and window.is_presenting(), "a failure remains on the original full-opacity frame")
 	window.end_presentation(window._token-1)
 	check(window.is_presenting() and window.refreshes==0,"stale timer cannot release a newer result")
 	window.end_presentation(window._token)
@@ -366,9 +369,17 @@ func _mounted_enchant_main(addon: String) -> void:
 	var before_rng: int=world.rng.state
 	hud.enhancement_requested.emit(scroll,chosen)
 	check(world.rng.state==before_rng and world.inventory.get(scroll)==4,"duplicate gameplay signal blocked during original result")
+	window._hold_presentation(window._token)
+	check(window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame==40.0, "actual original success banner stays at its fully opaque frame")
 	window.end_presentation()
 	check(not window.is_presenting() and window._scene!=original_scene and window._pending_result_refresh.is_empty(),"finish applies deferred rows once without replay")
-	evidence["mounted_official_addon"]={"pin":"5263d925","success":true,"save_before_reveal":true}
+	world.presentation_settings["reduced_motion"] = true
+	hud.show_enhancement_result("decrease",item,7,6)
+	check(window._presentation.get("played",[]) == ["Fx_Enchant_Start","Fail"] and window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame == 145.0,
+		"reduced motion shows the released failure banner immediately on its opaque key")
+	check(world.rng.state == before_rng and int(world.inventory[scroll]) == 4, "displaying the recorded failure does not roll or consume")
+	window.end_presentation()
+	evidence["mounted_official_addon"]={"pin":"5263d925","paid_success":true,"failure_presentation":true,"save_before_reveal":true}
 	world.source_save_blocked=true
 	world.queue_free()
 	await process_frame
@@ -432,9 +443,12 @@ func _real_main() -> void:
 	check(dev.is_empty(),"no developer item key in the window: "+str(dev))
 	await _frames(30)
 	for i: int in range(240):
-		if not window.is_presenting():break
+		if window._presentation.get("held",false):break
 		await process_frame
-	check(not window.is_presenting(),"the result ends by itself")
+	check(window.is_presenting() and window._presentation.get("held",false),"the original result stays legible after the animation")
+	await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
+	await _frames(3)
+	check(not window.is_presenting(),"acknowledgement dismisses the saved result")
 	var tab: Dictionary=NamedTree.locate(window._scene,window._last_out,WINDOW.P_TAB)
 	check(tab.get("ok",false) and (tab.player.source_nodes.get(tab.offset) as CanvasItem).visible,"the tab row is back after the result")
 	scrolls_before=int(world.inventory.get(scroll,0))

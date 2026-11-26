@@ -353,6 +353,7 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 				for instance_id: String in world.item_instances:
 					var instance: Dictionary = world.item_instances[instance_id]
 					if source523.reset_material(instance) and int(world.inventory.get(str(instance.name),0))>0:
+						if world.has_method("_item_locked") and (world._item_locked(str(instance.name)) or world._item_locked(str(instance.name), instance_id)): continue
 						consume_instance = instance_id
 						costs[str(instance.name)] = 1
 						break
@@ -389,6 +390,8 @@ func quote(action: String, id: String = "", count: int = 1) -> Dictionary:
 			var instance: Dictionary = world.item_instances.get(id,{}) if world != null else {}
 			var definition: Dictionary = source523.recharge(instance)
 			if definition.is_empty(): return fail("충전 아이템의 원본 식별·사용 조건을 확인할 수 없습니다")
+			if world.has_method("_item_locked") and (world._item_locked(str(definition.name)) or world._item_locked(str(definition.name), id)):
+				return fail("잠긴 축복의 성수입니다")
 			costs[definition.name] = 1
 			consume_instance = id
 			text = "%s 1개 → 축복 포인트 %d" % [str(definition.name),int(definition.amount)]

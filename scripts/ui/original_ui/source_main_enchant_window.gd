@@ -10,7 +10,7 @@ extends RefCounted
 ## the world rolls and reopens this window.
 ## The result is the client's own in-window presentation: Enchant_All's
 ## Fx_Enchant_Start (slot glow) and Enchant_Popup_Message (Success / Fail
-## banner, Text_Item) play over the window for the clip's length, then hide;
+## banner, Text_Item) play over the window, then hold their legible result;
 ## a tap anywhere ends it early. No TWILIGHT full-screen result is drawn over
 ## the original window. Text_Item's result text is a TWILIGHT 근사 (the
 ## client's string is not in the 523 tables).
@@ -800,9 +800,27 @@ func present(kind: String, text: String) -> bool:
 		end_presentation(_token)
 		return false
 	var hud: Node=_hud.get_ref() if _hud!=null else null
-	if hud!=null and hud.is_inside_tree():
-		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(end_presentation.bind(_token))
+	var settings: Variant = hud.get_parent().get("presentation_settings") if hud != null and hud.get_parent() != null else null
+	if settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0)) <= 0.0):
+		var glow: Dictionary = NamedTree.locate(_scene, _last_out, P_FX)
+		if glow.get("ok",false): glow.player.set_bound_visible(glow.offset,false)
+		_presentation.players[0].stop()
+		_hold_presentation(_token)
+	elif hud!=null and hud.is_inside_tree():
+		hud.get_tree().create_timer(PRESENT_SECONDS,true).timeout.connect(_hold_presentation.bind(_token))
 	return true
+
+## Both original message clips fade their text to zero at the end. Keep
+## the outcome on its fully opaque authored key until the player dismisses
+## it, including when a slow frame spans the entire entrance animation.
+func _hold_presentation(token: int) -> void:
+	if _presentation.is_empty() or token != _token or not is_open(): return
+	var players: Array = _presentation.get("players", [])
+	if players.size() < 2 or not is_instance_valid(players[1]): return
+	var banner: Node = players[1]
+	banner.seek_frame(40.0 if _presentation.kind == "success" else 145.0)
+	banner.stop()
+	_presentation["held"] = true
 
 ## Ends the presentation `token` (the latest when -1): restore the window.
 func end_presentation(token: int=-1) -> void:
