@@ -389,6 +389,37 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 	if _line_between_validated_cells(from_grid,to_grid,start,goal): return PackedVector2Array([to])
 	return _route_between_validated_cells(from,to,start,goal)
 
+const HUNT_SEARCH_BUDGET_USEC: int = 4000
+const HUNT_SEARCH_MAX_POPS: int = 512
+var _hunt_field_epoch: int = 0
+
+## Automatic target acquisition only. A pending slice is not a failed path.
+## Exact endpoints, direct DDA, cap and waypoints match the synchronous path.
+func hunt_path_step(from: Vector2,to: Vector2,work: Dictionary = {}) -> Dictionary:
+	var deadline: int = Time.get_ticks_usec() + HUNT_SEARCH_BUDGET_USEC
+	if not loaded or not from.is_finite() or not to.is_finite(): return {"pending":false,"path":PackedVector2Array()}
+	var from_grid: Array = coordinates.grid_components(from)
+	var to_grid: Array = coordinates.grid_components(to)
+	var start: Vector2i = coordinates.world_to_cell(from,from_grid)
+	var goal: Vector2i = coordinates.world_to_cell(to,to_grid)
+	if not _cell_allowed(start) or (goal != start and not _cell_allowed(goal)): return {"pending":false,"path":PackedVector2Array()}
+	var limit: int = _path_node_limit()
+	var nav: TwilightL1JSourceNavigation
+	var search: TwilightL1JSourceNavigation.PathSearch
+	if not work.is_empty() and work.field_id == get_instance_id() and work.epoch == _hunt_field_epoch and work.limit == limit and work.search.start == start and work.search.goal == goal:
+		nav = work.nav
+		search = work.search
+	else:
+		if _line_between_validated_cells(from_grid,to_grid,start,goal): return {"pending":false,"path":PackedVector2Array([to])}
+		nav = _new_path_navigator()
+		nav.loaded = true
+		nav.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
+		search = nav.begin_search(start,goal,limit)
+		work = {"nav":nav,"search":search,"field_id":get_instance_id(),"epoch":_hunt_field_epoch,"limit":limit}
+	if not nav.advance_search(search,deadline,HUNT_SEARCH_MAX_POPS):
+		return {"pending":true,"work":work}
+	return {"pending":false,"path":_finish_cell_path(from,to,search.result)}
+
 func navigation_search_limit() -> int: return int(policy.get("path_search_limit",8192))
 
 func region_at(_point: Vector2) -> Dictionary:
@@ -429,6 +460,7 @@ func cache_metrics() -> Dictionary:
 	return {"raw_reads":_raw_reads, "cached_chunks":_raw_cache.size(), "cache_limit":RAW_CACHE_LIMIT, "failed_chunks":_raw_failures.size(), "placed_chunks":source_origins.size(), "unplaced_members":unplaced_members.size(), "native_m_rules_verified":false}
 
 func close() -> void:
+	_hunt_field_epoch += 1
 	loaded = false
 	if has_meta("current523_source_field"): remove_meta("current523_source_field")
 	_raw = RAW.new()

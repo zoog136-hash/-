@@ -40,6 +40,10 @@ class Fixture extends FIELD:
 				_raw_cache[key] = {"sections":{"attributes":attrs,"floor":floor_data}}
 				_raw_recent.append(key)
 
+class WorldProbe extends TwilightWorld:
+	func equipment523_can_detect(_actor: TwilightMonster) -> bool:
+		return true
+
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok:
@@ -55,6 +59,54 @@ func profile(f: Fixture, baseline: bool, a: Vector2, b: Vector2) -> Dictionary:
 	var started: int = Time.get_ticks_usec()
 	var path: PackedVector2Array = f.path(a,b)
 	return {"path":path,"us":Time.get_ticks_usec()-started,"reads":f.cell_reads}
+
+func check_world_budget(f: Fixture) -> Dictionary:
+	f.populate(75)
+	var world := WorldProbe.new()
+	world.field_map = f
+	world.player = load("res://scenes/Player.tscn").instantiate()
+	world.monsters_root = Node2D.new()
+	root.add_child(world.player)
+	root.add_child(world.monsters_root)
+	world.player.set_physics_process(false)
+	world.player.global_position = f.cell_to_world(Vector2i(42,12))
+	var target: TwilightMonster = world.MONSTER_SCENE.instantiate()
+	world.monsters_root.add_child(target)
+	target.set_physics_process(false)
+	target.global_position = f.cell_to_world(Vector2i(85,12))
+	var expected: PackedVector2Array = f.path(world.player.global_position,target.global_position)
+	var result: PackedVector2Array = world._acquire_auto_target()
+	check(result.is_empty() and world.auto_target_failed_paths.is_empty() and world.auto_target_path_checks == 1,"Main retains pending route without blacklisting the target")
+	var handle: Dictionary = world._auto_source_search_work
+	var before_reads: int = f.cell_reads
+	world._acquire_auto_target()
+	check(not handle.is_empty() and world._auto_source_search_work == handle and f.cell_reads == before_reads,"Main does not advance a second slice in the same frame")
+	var acquired_at: int = Time.get_ticks_usec()
+	var longest: int = 0
+	var frames: int = 0
+	for _i: int in 180:
+		await process_frame
+		var started: int = Time.get_ticks_usec()
+		result = world._acquire_auto_target()
+		longest = maxi(longest,Time.get_ticks_usec()-started)
+		frames += 1
+		if not result.is_empty(): break
+	check(not expected.is_empty() and result == expected and world.auto_target == target,"Main selects the same live actor and exact route after successive frames")
+	check(world.auto_target_path_checks == 1 and world._auto_source_search_work.is_empty(),"Main completes one logical search, clears finished work")
+	# Beginning work for the old cell, then moving the same actor, must not
+	# publish the obsolete route or treat the move as a path failure.
+	await process_frame
+	world._acquire_auto_target()
+	check(not world._auto_source_search_work.is_empty(),"Main has pending work for the old target cell")
+	await process_frame
+	target.global_position = f.cell_to_world(Vector2i(43,12))
+	result = world._acquire_auto_target()
+	check(result == PackedVector2Array([target.global_position]) and world.auto_target == target and world.auto_target_failed_paths.is_empty(),
+		"Main changes to the target's new cell without publishing the old route")
+	world.player.free()
+	world.monsters_root.free()
+	world.free()
+	return {"continuation_frames":frames,"largest_continuation_us":longest,"fixture_elapsed_us":Time.get_ticks_usec()-acquired_at}
 
 func _run() -> void:
 	var f := Fixture.new()
@@ -104,11 +156,42 @@ func _run() -> void:
 			var new: PackedVector2Array = profile(f,false,a,b).path
 			check(old == new,rule+" crossing route exact "+str(i))
 			exact_routes.append(Array(new).map(func(point: Vector2) -> Vector2i: return f.world_to_cell(point)))
+		var expected: PackedVector2Array = f.path(start,target)
+		var started: int = Time.get_ticks_usec()
+		var peak: int = 0
+		var slices: int = 0
+		var work: Dictionary = {}
+		var sliced := PackedVector2Array()
+		while slices < 256:
+			var step_started: int = Time.get_ticks_usec()
+			var step: Dictionary = f.hunt_path_step(start,target,work)
+			peak = maxi(peak,Time.get_ticks_usec()-step_started)
+			slices += 1
+			if not step.pending:
+				sliced = step.path
+				break
+			work = step.work
+			check(work.search.visited.size() <= 8192,rule+" actual visited count stays within the cap")
+		check(slices > 1 and sliced == expected and not sliced.is_empty(),rule+" sliced detour matches exact synchronous waypoints")
+		summary[rule]["hunt_slices"] = slices
+		summary[rule]["hunt_peak_us"] = peak
+		summary[rule]["hunt_cpu_us"] = Time.get_ticks_usec()-started
+		var pending: Dictionary = f.hunt_path_step(start,target)
+		check(bool(pending.pending),rule+" obstructed query yields")
+		var moved: Dictionary = f.hunt_path_step(start,local,pending.get("work",{}))
+		check(not moved.pending and moved.path == PackedVector2Array([local]),rule+" moved target cannot publish old path")
+		f.path_search_limit_override = 2
+		var capped_step: Dictionary = f.hunt_path_step(start,target,pending.get("work",{}))
+		check(not capped_step.pending and capped_step.path.is_empty(),rule+" reduced cap restarts pending search and rejects detour")
+		f.path_search_limit_override = 65536
+		check(f._path_node_limit() == 8192,rule+" override cannot raise field limit")
 		f.path_search_limit_override = 2
 		check(profile(f,true,start,target).path == profile(f,false,start,target).path and f.path(start,target).is_empty(),rule+" existing full-search cap and failure unchanged")
 		f.path_search_limit_override = -1
 		f.populate(-1)
 		check(profile(f,true,start,target).path == profile(f,false,start,target).path and f.path(start,target).is_empty(),rule+" new query sees closed gap, no stale verdict")
+	f.policy = {"attribute_rule":FIELD.CLIENT_RULE,"allowed_mask":0,"must_mask":0,"forbidden_mask":0,"path_search_limit":8192}
+	summary["world_acquisition"] = await check_world_budget(f)
 	var signature: String = str(exact_routes).sha256_text()
 	# Recorded by the same fixture against main bd9dc3b8 (before the memo
 	# and heap changes). Assert waypoints and ties, not just endpoint/length.
