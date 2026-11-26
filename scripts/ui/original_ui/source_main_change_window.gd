@@ -5,7 +5,7 @@ extends RefCounted
 ## the way Change_Card_Set places them, in the page's card ListView. Each card
 ## shows its original card picture (BuffCard DisplayBaseAssetID through
 ## SourceCardPresentation); the detail side shows the selected card's
-## illustration, name, grade and options. Tapping the selected card again or
+## artwork, name, grade and options. Tapping the selected card again or
 ## the original 즉시 변신 button runs the existing catalog equip
 ## (World._equip_catalog), so every rule and save stays with the game.
 ## The same window serves 마법인형 and 성물 (the client reuses Change_WinTotal;
@@ -587,7 +587,7 @@ func _card(record: Dictionary) -> Dictionary:
 	var scene:=Scene.new()
 	var result: Dictionary=scene.configure_nodes(_pack,member,scope,bindings)
 	if not result.get("ok",false):scene.free();return result
-	var owner: Dictionary=_picture(record,false)
+	var owner: Dictionary=_picture(Presentation.detail(record,true,false))
 	var picture: bool=false
 	if owner.get("ok",false):
 		var uploaded: Dictionary=scene.set_bound_source_visual_result(int(nodes.sample),owner)
@@ -595,10 +595,8 @@ func _card(record: Dictionary) -> Dictionary:
 	scene.set_meta("source_change_card",{"id":id,"member":member,"picture":picture,"status":str(owner.get("status","")),"reason":str(owner.get("reason",""))})
 	return {"ok":true,"scene":scene,"picture":picture}
 
-## The card's own original picture: DisplayBaseAssetID on a list card, the
-## illustration on the detail side (SourceCardPresentation picks the role).
-static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
-	var shown: Dictionary=Presentation.detail(record,true,detail_view)
+## Bind the selected original texture and its source role to the authored slot.
+static func _picture(shown: Dictionary) -> Dictionary:
 	var owner: Dictionary={"ok":shown.get("status","")=="original" and shown.get("texture") is Texture2D,"status":str(shown.get("status","")),"reason":str(shown.get("reason",""))}
 	if owner.ok:
 		owner["texture"]=shown.texture
@@ -606,7 +604,7 @@ static func _picture(record: Dictionary, detail_view: bool) -> Dictionary:
 		owner["role"]=str(shown.get("role",""))
 	return owner
 
-## Detail side: illustration, name, grade and the card's option lines.
+## Detail side: card picture, name, grade and option lines.
 func _show_selected() -> Dictionary:
 	if not is_instance_valid(_detail) or not is_instance_valid(_info):return {"ok":false}
 	var record: Dictionary=_record(_selected)
@@ -614,7 +612,7 @@ func _show_selected() -> Dictionary:
 	_info.set_bound_text(int(nodes.name),str(record.get("name","")))
 	_info.set_bound_text(int(nodes.grade),str(record.get("grade","")))
 	var picture: bool=false
-	var owner: Dictionary=_picture(record,true) if not record.is_empty() else {"ok":false}
+	var owner: Dictionary=_picture(Presentation.catalog_detail(_category,record,true)) if not record.is_empty() else {"ok":false}
 	if owner.get("ok",false):
 		var uploaded: Dictionary=_detail.set_bound_source_visual_result(SAMPLE,owner)
 		picture=uploaded.get("ok",false) and _detail.set_bound_visible(SAMPLE,true).get("ok",false)
