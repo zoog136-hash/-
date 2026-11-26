@@ -124,6 +124,7 @@ CHECKS = [
     ('character_spine_mesh_factory_test', []),
     ('equipment_collection_native_identity_test', []),
     ('character_account_route_main_test', []),
+    ('character_account_field_save_test', []),
     ('reference_sp2_asset_sharing_test', []),
     ('reference_sp2_load_memo_test', []),
     ('reference_sp2_shared_exclusions_test', []),
@@ -803,7 +804,7 @@ def run_check(name, command, target, log, env, marker):
     # earlier checks may legitimately create either. Isolate only these
     # fixtures; never delete previous data or weaken a gameplay assertion.
     if name in {'loading_screen_test', 'loading_world_readiness_test',
-                'character_account_route_main_test', 'dungeon_durable_cpu_main_test',
+                'character_account_route_main_test', 'character_account_field_save_test', 'dungeon_durable_cpu_main_test',
                 'current523_aden_preferences_test', 'current523_aden_play_options_test',
                 'current523_aden_play_controller_test', 'current523_prior_renderer_release_test',
                 'native_stack_save_validation_budget_test','native_bag_ticket_target_main_test','retired_enhancement_items_main_test',
@@ -937,6 +938,7 @@ def main():
                       'character_spine_mesh_factory_test':'CHARACTER_SPINE_MESH_FACTORY_RESULT',
                       'equipment_collection_native_identity_test':'EQUIPMENT_COLLECTION_NATIVE_IDENTITY_RESULT',
                       'character_account_route_main_test':'CHARACTER_ACCOUNT_ROUTE_MAIN_RESULT',
+                      'character_account_field_save_test':'ACCOUNT_FIELD_SAVE_RESULT',
                       'reference_sp2_asset_sharing_test':'REFERENCE_SP2_ASSET_SHARING_RESULT',
                       'reference_sp2_load_memo_test':'REFERENCE_SP2_LOAD_MEMO_RESULT',
                       'reference_sp2_shared_exclusions_test':'REFERENCE_SP2_SHARED_EXCLUSIONS_RESULT',
