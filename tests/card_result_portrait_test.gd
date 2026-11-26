@@ -171,8 +171,11 @@ func check_catalog_cells(hud: Node, view: RefCounted, rows: Array[Dictionary], n
 			grade_text = hud.companion_detail_view.grade_label.text
 			for label: Label in hud.companion_detail_view.options.get_children():
 				options.append(label.text)
-		var expected_role := "DisplayBaseAssetID" if AWARDS.has(id) else "IllustrationAssetID"
-		var expected_id := int(AWARDS[id][0]) if AWARDS.has(id) else 181031 # Legendary Atun
+		# The original Change_DetailView CardSample shows every card front
+		# (user list 2026-11-26 #16); the fallback HUD preview keeps Atun's
+		# legendary illustration.
+		var expected_role := "DisplayBaseAssetID" if AWARDS.has(id) or native else "IllustrationAssetID"
+		var expected_id := int(AWARDS[id][0]) if AWARDS.has(id) else (157604 if native else 181031) # Legendary Atun
 		var asset_id := int(evidence.get("provenance",{}).get("asset_id",0))
 		var role := str(evidence.get("role",""))
 		var declared: Dictionary = Source.canonical(row).source_ui_assets.get(role,{})
