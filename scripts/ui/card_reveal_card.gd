@@ -61,9 +61,10 @@ class Face extends Control:
 		if elapsed < 0:
 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 			return
-		draw_rect(Rect2(Vector2.ZERO,size),Color(tint,0.08))
 		if elapsed >= duration:
+			draw_rect(Rect2(Vector2.ZERO,size),Color(tint,0.08))
 			_art(artwork,Vector2.ZERO)
+			draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
 		elif candidates.is_empty():
 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
 		else:
@@ -74,8 +75,6 @@ class Face extends Control:
 			for j: int in range(-1,3):
 				var image: Texture2D = artwork if cell+j >= 40 else candidates[posmod(cell+j,candidates.size())]
 				_art(image,Vector2((float(j)-offset)*size.x,0))
-		# Surface reflection follows the result color and leaves the figure legible.
-		draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
 
 func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = [], detail_view: bool = true) -> void:
 	record = value.duplicate(true)
@@ -117,32 +116,22 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	var back_evidence: Dictionary=back.duplicate();back_evidence.erase("texture")
 	face.set_meta("original_card_back",back_evidence)
 	clip.add_child(face)
-	for pass_name: String in ["GradeLightningInsideCard","PromotionLightningInsideCard"]:
-		var effect: Control = FX.new()
-		effect.name = pass_name
-		effect.surface = true
-		if pass_name == "GradeLightningInsideCard":effect.extra_lightning_seconds=extra_lightning_seconds
-		effect.grade = grade
-		effect.reduced_motion = reduced_motion
-		effect.detail_scale = detail_scale
-		effect.intensity_scale = intensity_scale
-		clip.add_child(effect)
-		if pass_name == "GradeLightningInsideCard":
-			surface_fx = effect
-		else:
-			promotion_fx = effect
-	var rim := Panel.new()
-	rim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rim.name = "MetalRim"
-	var style: StyleBoxFlat = UI.box(Color.TRANSPARENT,Color("9b8a6b"),0)
-	style.shadow_size = 0
-	style.set_border_width_all(2)
-	rim.add_theme_stylebox_override("panel",style)
-	add_child(rim)
-	confirmed_chrome=ConfirmedChrome.new()
-	add_child(confirmed_chrome)
-	confirmed_chrome.configure(grade,reduced_motion,detail_scale,intensity_scale)
-	aura=confirmed_chrome.glow
+	if not result_cell_illumination:
+		surface_fx = _add_surface(clip,"GradeLightningInsideCard",extra_lightning_seconds)
+		promotion_fx = _add_surface(clip,"PromotionLightningInsideCard",0.0)
+		var rim:=Panel.new()
+		rim.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		rim.name="MetalRim"
+		var style: StyleBoxFlat=UI.box(Color.TRANSPARENT,PROFILES.color(grade),0)
+		style.shadow_size=0
+		style.set_border_width_all(2)
+		rim.add_theme_stylebox_override("panel",style)
+		rim.hide()
+		add_child(rim)
+		confirmed_chrome=ConfirmedChrome.new()
+		add_child(confirmed_chrome)
+		confirmed_chrome.configure(grade,reduced_motion,detail_scale,intensity_scale)
+		aura=confirmed_chrome.glow
 	name_label = UI.label(str(record.get("name","")),17,UI.grade(grade))
 	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -167,16 +156,36 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	resized.connect(_fit)
 	_fit()
 
+func _add_surface(clip: Control,pass_name: String,extra: float) -> Control:
+	var effect: Control=FX.new()
+	effect.name=pass_name
+	effect.surface=true
+	effect.extra_lightning_seconds=extra
+	effect.grade=grade
+	effect.reduced_motion=reduced_motion
+	effect.detail_scale=detail_scale
+	effect.intensity_scale=intensity_scale
+	clip.add_child(effect)
+	return effect
+
+## Reuse the finished deal's category-specific back when the original
+## portraits for the reel are unavailable.
+func set_native_card_back(texture: Texture2D) -> void:
+	if face.back==null:
+		face.back=texture
+		face.queue_redraw()
+
 func _fit() -> void:
 	if face == null:
 		return
 	var clip: Control = face.get_parent()
 	clip.size = size
 	face.size = size
-	surface_fx.size = size
-	promotion_fx.size = size
-	(get_node("MetalRim") as Control).size = size
-	confirmed_chrome.size=size
+	if surface_fx!=null:surface_fx.size=size
+	if promotion_fx!=null:promotion_fx.size=size
+	var rim: Control=get_node_or_null("MetalRim")
+	if rim!=null:rim.size=size
+	if confirmed_chrome!=null:confirmed_chrome.size=size
 	name_label.position = Vector2(-size.x*0.2,size.y+8)
 	name_label.size = Vector2(size.x*1.4,26)
 	grade_label.position = Vector2(0,size.y+34)
@@ -229,16 +238,14 @@ func seek(value: float, successful_fusion: bool = false) -> void:
 	face.queue_redraw()
 	# Shared bitmap atmosphere replaces the older persistent aura. Inside-card
 	# lightning and the confirmation clock remain on their original passes.
-	surface_fx.set_time(clock-lightning_at(),clock)
+	if surface_fx!=null:surface_fx.set_time(clock-lightning_at(),clock)
 	# Keep the full primary sequence when the success discharge overlaps it.
-	promotion_fx.set_time(clock-promotion_at() if successful_fusion else -1.0,clock)
+	if promotion_fx!=null:promotion_fx.set_time(clock-promotion_at() if successful_fusion else -1.0,clock)
 	name_label.visible = revealed
 	grade_label.visible = revealed
-	var tint: Color = PROFILES.color(grade) if revealed else Color("9b8a6b")
-	var rim: Panel = get_node("MetalRim")
-	rim.show()
-	confirmed_chrome.visible=revealed
-	(rim.get_theme_stylebox("panel") as StyleBoxFlat).border_color = tint
+	var rim: Panel = get_node_or_null("MetalRim")
+	if rim!=null:rim.visible=revealed
+	if confirmed_chrome!=null:confirmed_chrome.visible=revealed
 	queue_redraw()
 
 func set_sequence_playing(value: bool) -> void:

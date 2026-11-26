@@ -14,6 +14,10 @@ const OUTSIDE=P+"Nd_List_Card/"
 const RIGHT=OUTSIDE+"ListView_Swipe"
 const PICKED=LEVEL+"ListView_Material"
 const BONUS=LEVEL+"Nd_ChangeAwakenOption/ListView"
+const BONUS_LIST_OFFSET: int=40112
+const BONUS_TEXT_OFFSET: int=40164
+const BONUS_MARKER_OFFSET: int=40212
+const BONUS_ROW_PITCH: float=18.0
 const PRIMARY=LEVEL+"Btn_Production"
 const PAGE_SIZE=9
 var _snapshot: Dictionary={}
@@ -49,6 +53,7 @@ func configure(pack: RefCounted, host: Node) -> Dictionary:
 func open(parent: Node, snapshot: Dictionary) -> Dictionary:
 	if not _supports(snapshot):return _fail("source_option_awakening_target_unsupported")
 	_reset_selection()
+	_scrolls.erase(BONUS)
 	category=str(snapshot.category)
 	_publish(snapshot)
 	return open_window(parent)
@@ -171,7 +176,7 @@ func _spec() -> Dictionary:
 		LEVEL+"Fx_CardSelect_Material":{"exclude":true},
 		LEVEL+"Fx_Btn_Production":{"exclude":true},
 		LEVEL+"Btn_Probability":{"activate":Callable(self,"_explain")},
-		BONUS:{"row_offsets":[]},BONUS+"/Label_Option":{"exclude":true},
+		BONUS:{"row_offsets":[],"input":Callable(self,"_list_input").bind(BONUS)},BONUS+"/Label_Option":{"exclude":true},
 		PRIMARY:{"activate":Callable(self,"_review"),"displaystate":_can_submit()},
 		PRIMARY+"/Text_Price":_text(_number(int(_snapshot.attempt_cost) if attempted else _fee())),
 		PRIMARY+"/Normal/Label":_text("각성 시도" if attempted else "경험치 주입"),
@@ -236,18 +241,45 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			if built.picture:painted+=1
 			var entries: Dictionary=registered_next if row.registered else candidates_next
 			entries[row.id]=built
-	var list: Dictionary=_list(root,out,BONUS)
-	if not list.get("ok",false):return list
-	var option_rows: Array=[]
-	for line: Variant in _snapshot.get("bonus_options",[]):
-		option_rows.append({BONUS+"/Label_Option":_text(str(line))})
-	var options: Dictionary=_repeat_template(list.content,OPTION,BONUS+"/Label_Option",option_rows,18.0,Vector2.ZERO,6)
+	var options: Dictionary=_fill_bonus_options(root,out)
 	if not options.get("ok",false):return options
 	_candidate_views=candidates_next
 	_registered_views=registered_next
 	return {"ok":true,"category":category,"target_id":_snapshot.target_id,"target_picture":picture,
 		"material_pictures":painted,"eligible":_materials.size(),"page_slots":page.size(),"registered":_selected.duplicate(),
 		"cost":int(_snapshot.attempt_cost) if _attempt_mode() else _fee(),"options_shown":options.rows}
+
+func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
+	var list: Dictionary=_list(root,out,BONUS)
+	if not list.get("ok",false):return list
+	var lines: Array=[]
+	lines.append_array(_snapshot.get("bonus_options",[]))
+	if category=="마법인형":
+		for slot: Dictionary in _snapshot.get("slot_definitions",[]):
+			if int(slot.get("group",{}).get("SlotIndex",0))!=11:continue
+			lines.append("추가 인형 슬롯 각성 효과")
+			lines.append_array(slot.get("labels",[]))
+	if lines.is_empty():lines.append("확인된 각성 옵션이 없습니다.")
+	var scope: Array[int]=[BONUS_TEXT_OFFSET,BONUS_MARKER_OFFSET]
+	var bindings: Dictionary={BONUS_LIST_OFFSET:{"role":"source_list","row_offsets":[BONUS_TEXT_OFFSET],"input":Callable(self,"_list_input").bind(BONUS)}}
+	for index: int in lines.size():
+		bindings[BONUS_TEXT_OFFSET]=_text(str(lines[index]))
+		var template:=Scene.new()
+		var built: Dictionary=template.configure_nodes(_pack,OPTION,scope,bindings)
+		if not built.get("ok",false):
+			template.free()
+			return built
+		var row: Node2D=template.source_nodes[BONUS_TEXT_OFFSET]
+		# The template includes the ListView and the entire authoring path
+		# above it. Move just the arranged row to the live ListView so that
+		# its parent coordinates and clip are applied once.
+		row.position.y+=float(index)*BONUS_ROW_PITCH
+		row.get_parent().remove_child(row)
+		list.content.add_child(row)
+		template.free()
+	var height: float=(list.size as Vector2).y
+	_scrolls[BONUS]={"content":list.content,"value":0.0,"min":minf(0.0,height-float(lines.size())*BONUS_ROW_PITCH)}
+	return {"ok":true,"rows":lines.size()}
 
 func _decorate_material(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 	var picture: bool=_card_picture(scene,out,row.record)

@@ -156,6 +156,7 @@ var _detail: Node2D
 var _info: Node2D
 var _content: Node2D
 var _option_content: Node2D
+var _option_scroll_min: float=0.0
 var _category: String="변신"
 var _cards: Array[Dictionary]=[]
 # Positions are the keys so duplicate source IDs do not hide a card's scene.
@@ -568,7 +569,7 @@ func _detail_bindings(equipped: String, host: Node=null, reads: Dictionary={}) -
 	var info_bindings: Dictionary={int(info_nodes.name):{"role":"source_text","text":str(selected.get("name",""))},
 		int(info_nodes.grade):{"role":"source_text","text":str(selected.get("grade",""))},
 		int(info_nodes.title):{"role":"static_source_text"},
-		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_ignore_input")}}
+		int(info_nodes.list):{"role":"source_list","row_offsets":[],"input":Callable(self,"_option_list_input")}}
 	_consume_touch(INFO,info_scope,info_bindings,reads)
 	bindings[INFO_PROJECT]={"role":"project","visible":true,"source_node_offsets":info_scope,"bindings":info_bindings}
 	_consume_touch(DETAIL,scope,bindings,reads)
@@ -627,21 +628,46 @@ func _show_selected() -> Dictionary:
 		if not selected_variant.is_empty():options_record=selected_variant
 	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
 	var lines: Array=offered_lines if offered_lines is Array else []
+	var awakening: Array=_applied_awakening_options()
+	if not awakening.is_empty():
+		var combined: Array=[]
+		combined.append_array(lines)
+		combined.append("각성 옵션")
+		combined.append_array(awakening)
+		lines=combined
 	var options: int=0
+	var list_height: float=230.0 if _category=="마법인형" else 260.0
 	for line: Variant in lines:
 		var row: Dictionary=_option_row(line)
 		if not row.get("ok",false):continue
 		# Rows run top-down from the option list's top edge.
-		var list_height: float=260.0 if _category=="변신" else 230.0
 		row.scene.position=Vector2(0.0,-(list_height-OPTION_HEIGHT*float(options+1)))
 		_option_content.add_child(row.scene)
 		options+=1
+	_option_scroll_min=minf(0.0,list_height-float(options)*OPTION_HEIGHT)
+	_option_content.position.y=0.0
 	var applied: bool=not _selected.is_empty() and _selected==_equipped_id()
 	_detail.set_bound_displaystate(APPLY,not record.is_empty() and not applied)
 	_detail.set_bound_displaystate(AWAKEN,not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[0],not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
-	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"applied":applied}
+	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"awakening_options":awakening.size(),"applied":applied}
+
+func _applied_awakening_options() -> Array:
+	if _category not in ["변신","마법인형"] or _selected.is_empty():return []
+	var world: Node=_world_node()
+	var runtime: Variant=world.get("option_awakening") if world!=null else null
+	if runtime==null or not runtime.is_awakened(_category,_selected):return []
+	return runtime.core.definition(_category,_selected).get("applied_options",[])
+
+func _option_list_input(event: InputEvent) -> void:
+	if not is_instance_valid(_option_content) or _option_scroll_min==0.0:return
+	var delta: float=0.0
+	if event is InputEventScreenDrag or (event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT):
+		delta=event.relative.y/maxf(0.001,absf(_option_content.get_global_transform_with_canvas().get_scale().y))
+	elif event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP,MOUSE_BUTTON_WHEEL_DOWN]:
+		delta=54.0 if event.button_index==MOUSE_BUTTON_WHEEL_UP else -54.0
+	_option_content.position.y=clampf(_option_content.position.y+delta,_option_scroll_min,0.0)
 
 func _option_row(line: Variant) -> Dictionary:
 	# "SP +1" -> desc "SP", value "+1" (the row's two original labels).
