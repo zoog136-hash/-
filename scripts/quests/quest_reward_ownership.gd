@@ -58,7 +58,9 @@ static func prepare_debit(world: Node, physical_id: String, quantity: int) -> Di
 	var owned: Dictionary = proof(world,physical_id)
 	if not owned.ok: return owned
 	if world._item_locked(str(owned.inventory_key),physical_id) or world._item_locked(str(owned.inventory_key),""): return denied("잠긴 원본 보상은 소비하지 않습니다")
-	if owned.source_use_immediately or owned.source_item.get("TestItem",false): return denied("원본 즉시 사용/시험 아이템은 소비자 별도 연결 필요")
+	# The pinned quest row keeps the original TestItem flag; the game's
+	# TWILIGHT 근사 allow list (current523_definition_rows APPROX_TEST_ITEMS) applies.
+	if owned.source_use_immediately or preload("res://scripts/resources/current523_definition_rows.gd").approximated_item(owned.source_item).get("TestItem",false): return denied("원본 즉시 사용/시험 아이템은 소비자 별도 연결 필요")
 	if quantity<1 or quantity>int(owned.quantity): return denied("원본 소지 수량 부족")
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var instances: Dictionary = world.item_instances.duplicate(true)

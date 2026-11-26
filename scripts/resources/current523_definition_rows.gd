@@ -888,6 +888,11 @@ static func _view(table: String, value: Dictionary) -> Dictionary:
 	if approximate_test_items and table == "ItemClass" and value.get("TestItem") == true and _integer(value.get("ID")) and APPROX_TEST_ITEMS.has(int(value.ID)): value["TestItem"] = false
 	return value
 
+## An original ItemClass row as this game reads it (APPROX_TEST_ITEMS), for
+## a row kept unmodified elsewhere (a quest reward's pinned source_item).
+static func approximated_item(value: Dictionary) -> Dictionary:
+	return _view("ItemClass", value.duplicate(true))
+
 ## Rows whose integer `field` is a key of `ids`, in original table order.
 ## Same rows as filtering rows(table), without building the whole table.
 static func rows_matching(table: String, field: String, ids: Dictionary) -> Array[Dictionary]:
