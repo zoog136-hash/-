@@ -3989,7 +3989,12 @@ func _on_monster_died_timed(monster: TwilightMonster) -> void:
 	# equipment, skill, collection and inventory surface here stalls the very
 	# frame in which loot appears. Level changes still publish all new stats.
 	if level != level_before or card_leveled or clan_leveled:
-		_update_hud()
+		# A level-up with stat points already rebuilt every HUD surface this
+		# frame (523.882: kill.level 615 ms + kill.hud 364 ms for one level).
+		if _level_up_hud_frame != Engine.get_process_frames() or card_leveled or clan_leveled: _update_hud()
+		else:
+			_refresh_combat_hud()
+			_update_ain_hud()
 	else:
 		_refresh_combat_hud()
 		_update_ain_hud()
@@ -4677,10 +4682,17 @@ func _check_level_up(quiet: bool=false) -> void:
 			if not quiet:hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
 		elif not quiet:
 			hud.show_message("레벨 업! Lv.%d" % level)
+	var level_stage: int = FRAME_HITCH.now()
 	if gained_stat_points and not quiet:
 		_update_hud()
+		_level_up_hud_frame = Engine.get_process_frames()
 		hud.call_deferred("open_character")
+	level_stage = FRAME_HITCH.detail_next("level.hud", level_stage)
 	if not quiet and not reached.is_empty(): _play_original_level_up(reached)
+	FRAME_HITCH.detail("level.presentation", level_stage)
+
+## Frame in which _check_level_up already rebuilt the whole HUD.
+var _level_up_hud_frame: int = -1
 
 ## The original Hud_LevelUp presentation with this class's LevelUpEffectDesc
 ## guidance for every level reached (presentation only).
