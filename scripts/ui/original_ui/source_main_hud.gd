@@ -1638,8 +1638,8 @@ func dissolve_confirm_is_open() -> bool:
 func close_dissolve_confirm() -> void:
 	if dissolve_confirm_is_open():_dissolve_popup.close()
 
-## --- One tap on a bag item: the original item information popup
-## (source_main_item_tooltip, ToolTip_CommonType).
+## --- The original item information popup (source_main_item_tooltip):
+## ToolTip_HudType_Right for the selected bag item, ToolTip_CommonType else.
 const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
 var _item_tooltip: RefCounted
 
@@ -1649,7 +1649,14 @@ func try_open_item_tooltip(reference: String, title: String, item_class_id: int,
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
-	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions,_hud.get_ref())
+	return _item_tooltip.open(_coordinates,reference,title,item_class_id,grade_id,record,actions,_hud.get_ref(),_is_bag_selection(reference))
+
+## The open original bag's selected entry: its information is the original
+## bag tooltip (ToolTipScene Inventory_ToolTip_Layout), not the common popup.
+func _is_bag_selection(reference: String) -> bool:
+	var hud: Object=_hud.get_ref() if _hud!=null else null
+	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
+	return inventory_is_open() and bag is Object and is_instance_valid(bag) and not reference.is_empty() and str(bag.get("selected_item"))==reference
 
 func item_tooltip_is_open() -> bool:
 	return _item_tooltip!=null and _item_tooltip.is_open()
