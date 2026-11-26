@@ -116,8 +116,10 @@ static func quest_ownership_provider() -> Script:
 	var provider: Script=load(path)
 	# Re-reviewed 2026-11-14 at 7b3a1ed: since 708c581 (11-04) only the native
 	# field accessor (NATIVE_FIELDS.full) and service.full() row loading were
-	# added; proof() keeps the same checks.
-	return provider if reviewed_script(provider,"7b3a1ed24d401585952fed439f677361de12d947") else null
+	# added; proof() keeps the same checks. Re-reviewed 2026-11-26: prepare_debit
+	# reads the pinned quest row through the approved TWILIGHT 근사 test-item
+	# list (APPROX_TEST_ITEMS) only; every other check is unchanged.
+	return provider if reviewed_script(provider,"3857595d860a176b567186cf492433f8dc6271d9") else null
 
 static var _reviewed_cache: Dictionary={}
 
