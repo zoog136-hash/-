@@ -870,15 +870,30 @@ func try_use(item_name: String) -> bool:
 		# A box or selection box with an exact native 523 use rule opens from
 		# the bag itself (current523_native_stack); only boxes without one are
 		# kept for this events window.
-		if category in [78,10381] and str(preload("res://scripts/loot/current523_native_stack.gd").profile(world._find_catalog_item_record(item_name)).get("kind","")) in ["bag","selection"]: return false
+		# A quest-issued held reward ("[원본 보상] …") has no catalog record of
+		# its own name; its exact native row decides, and the quest owner opens it.
+		var rule: Dictionary = _box_rule_record(item_name,id)
+		if category in [78,10381] and str(preload("res://scripts/loot/current523_native_stack.gd").profile(rule).get("kind","")) in ["bag","selection"]: return false
 		# A box whose native rule refuses it says why from the bag, and a 성장
 		# 보상 상자 (m523-growth-item) opens through its original box rule.
-		if category in [78,10381] and (item_name.begins_with("m523-growth-item:") or str(NATIVE_FIELDS.full(world._find_catalog_item_record(item_name)).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]): return false
+		if category in [78,10381] and (item_name.begins_with("m523-growth-item:") or str(NATIVE_FIELDS.full(rule).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]): return false
 		request_presentation("jade_grail" if category in [10291,10622] else "events",{"item_id":id})
 		# The item belongs to this consumer even while the original UI is absent.
 		# Falling through could consume it through an unrelated item handler.
 		return true
 	return false
+
+## The catalog record of a bag name, or for a quest-held reward (a physical
+## "[원본 보상] …" with its quest receipt) the native record of its exact ID.
+func _box_rule_record(item_name: String, id: int) -> Dictionary:
+	var record: Dictionary = world._find_catalog_item_record(item_name)
+	# The held stub ("원본 보상 보관", source_pending_use) is catalogued under that
+	# name too, without the item's use rule.
+	if not item_name.begins_with("[원본 보상] ") or (not record.is_empty() and not record.get("source_pending_use",false)): return record
+	for physical: Variant in world.item_instances.values():
+		if physical is Dictionary and physical.get("name") == item_name and physical.has("quest_reward_receipt") and native_id(physical.get("record",{})) == id:
+			return preload("res://scripts/loot/patch523_monster_drops.gd").definition_id(str(id)).get("native_record",{})
+	return record
 
 func _available_item(staged: Dictionary, ctx: Dictionary, id: int) -> int:
 	var amount: int = 0
