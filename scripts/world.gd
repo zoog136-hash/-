@@ -6299,17 +6299,30 @@ func _craft_item_index() -> Dictionary:
 ## background cost ~3 ms per frame for minutes. Same per-item binding
 ## (_patch523_craft_index_item) over the source IDs the definition references,
 ## on top of the same base index. The full index is reused when it exists.
+##
+## The bound items accumulate in one shared index (like the full one, but only
+## for IDs some definition asked for): the crafting window quotes every recipe
+## when it opens, and rebuilding per call was as slow as the full index.
+## Dropped wherever the full index is dropped (patch523_craft_item_cache={}).
+var _patch523_lazy_index: Dictionary={}
+var _patch523_lazy_ids: Dictionary={}
+var _patch523_lazy_owner: Variant=null
+
 func _patch523_craft_items_for_ids(source_ids: Array) -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
-	var result: Dictionary=_craft_item_index().duplicate()
+	# The full cache was reset (catalog/pack change): start over.
+	if not is_same(_patch523_lazy_owner,patch523_craft_item_cache):
+		_patch523_lazy_owner=patch523_craft_item_cache
+		_patch523_lazy_index={}
+		_patch523_lazy_ids={}
+	if _patch523_lazy_index.is_empty():_patch523_lazy_index=_craft_item_index().duplicate()
 	var items: Dictionary=patch523_equipment.data.get("items",{}) if patch523_equipment!=null and patch523_equipment.data is Dictionary else {}
-	var seen: Dictionary={}
 	for value: Variant in source_ids:
 		var source_id: String=str(value)
-		if seen.has(source_id) or not items.has(source_id):continue
-		seen[source_id]=true
-		_patch523_craft_index_item(result,source_id)
-	return result
+		if _patch523_lazy_ids.has(source_id) or not items.has(source_id):continue
+		_patch523_lazy_ids[source_id]=true
+		_patch523_craft_index_item(_patch523_lazy_index,source_id)
+	return _patch523_lazy_index
 
 ## Every "source_id" a recipe (all material choices, outcomes and bonuses) names.
 func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
