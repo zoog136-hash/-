@@ -58,10 +58,14 @@ const KINDS: Array[String] = ["parsed", "texture"]
 static var _entries: Dictionary = {"parsed": {}, "texture": {}} # kind -> key -> entry
 static var _stale: Dictionary = {"parsed": {}, "texture": {}} # invalidated but still leased
 static var _pending: Dictionary = {} # reservation id -> {kind,key,bytes,generation}
+# Keys are inserted only on last release. Dictionary insertion order is the
+# LRU order of idle entries, and reacquiring a key removes it from that order.
+static var _idle_keys: Dictionary = {"parsed": {}, "texture": {}}
+static var _idle_bytes: Dictionary = {"parsed": 0, "texture": 0}
+static var _accounted_bytes: Dictionary = {"parsed": 0, "texture": 0}
 static var _generation: int = 1
 static var _next_owner: int = 0
 static var _next_reservation: int = 0
-static var _tick: int = 0
 static var _counters: Dictionary = {}
 static var _decoder_code: String = ""
 static var _renderer_code: String = ""
@@ -118,6 +122,14 @@ static func entry_bytes(kind: String, key: String) -> int:
 	var entry: Variant = (_entries[kind] as Dictionary).get(key)
 	return int(entry.bytes) if entry is Dictionary else -1
 
+## Estimated live, idle, stale and pending bytes for the gameplay heartbeat.
+## The entry count matches current keys only, as in the heartbeat's old view.
+static func accounted_bytes(kind: String) -> int:
+	return int(_accounted_bytes[kind])
+
+static func entry_count(kind: String) -> int:
+	return (_entries[kind] as Dictionary).size()
+
 ## True when `owner` holds a live lease on `key`.
 static func holds(kind: String, key: String, owner: int) -> bool:
 	var entry: Variant = (_entries[kind] as Dictionary).get(key)
@@ -129,9 +141,11 @@ static func acquire(kind: String, key: String, owner: int) -> Variant:
 	if not entry is Dictionary:
 		_count(kind, "misses")
 		return null
-	(entry.owners as Dictionary)[owner] = true
-	_tick += 1
-	entry.used = _tick
+	var owners: Dictionary = entry.owners
+	if owners.is_empty():
+		(_idle_keys[kind] as Dictionary).erase(key)
+		_idle_bytes[kind] -= int(entry.bytes)
+	owners[owner] = true
 	_count(kind, "hits")
 	return entry.payload
 
@@ -141,29 +155,36 @@ static func release(kind: String, key: String, owner: int) -> bool:
 	var stale: Variant = (_stale[kind] as Dictionary).get(key)
 	if stale is Dictionary and (stale.owners as Dictionary).has(owner):
 		(stale.owners as Dictionary).erase(owner)
-		if (stale.owners as Dictionary).is_empty(): (_stale[kind] as Dictionary).erase(key)
+		if (stale.owners as Dictionary).is_empty():
+			_accounted_bytes[kind] -= int(stale.bytes)
+			(_stale[kind] as Dictionary).erase(key)
 		return true
 	var entry: Variant = (_entries[kind] as Dictionary).get(key)
 	if not entry is Dictionary or not (entry.owners as Dictionary).has(owner):
 		if not key.is_empty(): _count(kind, "rejected_releases")
 		return false
 	(entry.owners as Dictionary).erase(owner)
-	_tick += 1
-	entry.used = _tick
-	if (entry.owners as Dictionary).is_empty(): trim_idle(kind)
+	if (entry.owners as Dictionary).is_empty():
+		(_idle_keys[kind] as Dictionary)[key] = true
+		_idle_bytes[kind] += int(entry.bytes)
+		trim_idle(kind)
 	return true
 
 ## Reserves `expected_bytes` for a decode/upload of `key` before it starts.
 static func reserve(kind: String, key: String, expected_bytes: int) -> int:
 	_next_reservation += 1
-	_pending[_next_reservation] = {"kind":kind,"key":key,"bytes":maxi(0, expected_bytes),"generation":_generation}
+	var bytes: int = maxi(0, expected_bytes)
+	_pending[_next_reservation] = {"kind":kind,"key":key,"bytes":bytes,"generation":_generation}
+	_accounted_bytes[kind] = int(_accounted_bytes.get(kind, 0)) + bytes
 	return _next_reservation
 
 static func cancel(reservation: int) -> void:
 	var pending: Variant = _pending.get(reservation)
 	if not pending is Dictionary: return
 	_pending.erase(reservation)
-	_count(str(pending.kind), "cancelled")
+	var kind: String = pending.kind
+	_accounted_bytes[kind] -= int(pending.bytes)
+	_count(kind, "cancelled")
 
 ## Commits a finished payload under its reservation and leases it to `owner`.
 ## Returns the payload to use: an already present entry wins (identical by key),
@@ -173,39 +194,39 @@ static func complete(reservation: int, payload: Variant, payload_bytes: int, own
 	if not pending is Dictionary: return payload
 	_pending.erase(reservation)
 	var kind: String = pending.kind
+	_accounted_bytes[kind] -= int(pending.bytes)
 	if int(pending.generation) != _generation or str(pending.key).is_empty():
 		_count(kind, "stale_completions")
 		return payload
 	var existing: Variant = acquire(kind, pending.key, owner)
 	if existing != null: return existing
 	if kind == "parsed": _freeze(payload)
-	_tick += 1
-	(_entries[kind] as Dictionary)[pending.key] = {"payload":payload,"bytes":maxi(0, payload_bytes),"owners":{owner:true},"used":_tick,"generation":_generation}
+	var bytes: int = maxi(0, payload_bytes)
+	# A null payload is replaced just as before. Drop its previous byte charge.
+	_accounted_bytes[kind] += bytes - maxi(0, entry_bytes(kind, pending.key))
+	(_entries[kind] as Dictionary)[pending.key] = {"payload":payload,"bytes":bytes,"owners":{owner:true},"generation":_generation}
 	_count(kind, "created")
-	trim_idle(kind)
 	return payload
 
 ## Evicts idle (lease 0) entries, least recently used first, until idle bytes
 ## fit `budget` (default: the kind's const budget). Live entries are kept.
 static func trim_idle(kind: String, budget: int = -1) -> int:
 	var limit: int = budget if budget >= 0 else (IDLE_PARSED_BYTES if kind == "parsed" else IDLE_TEXTURE_BYTES)
+	var remaining: int = _idle_bytes[kind]
+	if remaining <= limit: return 0
 	var entries: Dictionary = _entries[kind]
-	var idle: Array = []
-	var idle_bytes: int = 0
-	for key: String in entries:
-		if (entries[key].owners as Dictionary).is_empty():
-			idle.append(key)
-			idle_bytes += int(entries[key].bytes)
-	# Within budget nothing is evicted: skip the sort (it ran on every release).
-	if idle_bytes <= limit: return 0
-	idle.sort_custom(func(a: String, b: String) -> bool: return int(entries[a].used) < int(entries[b].used))
+	var idle: Dictionary = _idle_keys[kind]
 	var evicted: int = 0
-	for key: String in idle:
-		if idle_bytes <= limit: break
-		idle_bytes -= int(entries[key].bytes)
+	while remaining > limit:
+		# Every value is true, so find_key returns the first (oldest) key.
+		var key: String = idle.find_key(true)
+		remaining -= int(entries[key].bytes)
+		idle.erase(key)
 		entries.erase(key)
 		evicted += 1
-	if evicted > 0: _count(kind, "evicted", evicted)
+	_accounted_bytes[kind] -= int(_idle_bytes[kind]) - remaining
+	_idle_bytes[kind] = remaining
+	_count(kind, "evicted", evicted)
 	return evicted
 
 ## Blocks future hits on every current entry: idle entries are dropped, live
@@ -215,12 +236,20 @@ static func invalidate_all() -> void:
 	_generation += 1
 	for kind: String in KINDS:
 		var entries: Dictionary = _entries[kind]
-		for key: String in entries.keys():
-			if not (entries[key].owners as Dictionary).is_empty():
-				var stale: Dictionary = _stale[kind]
-				if stale.has(key): (stale[key].owners as Dictionary).merge(entries[key].owners)
-				else: stale[key] = entries[key]
-			entries.erase(key)
+		var stale: Dictionary = _stale[kind]
+		for key: String in entries:
+			var entry: Dictionary = entries[key]
+			var owners: Dictionary = entry.owners
+			if owners.is_empty(): continue
+			if stale.has(key):
+				(stale[key].owners as Dictionary).merge(owners)
+				_accounted_bytes[kind] -= int(entry.bytes)
+			else:
+				stale[key] = entry
+		entries.clear()
+		(_idle_keys[kind] as Dictionary).clear()
+		_accounted_bytes[kind] -= int(_idle_bytes[kind])
+		_idle_bytes[kind] = 0
 	_count("store", "invalidations")
 
 static func stats() -> Dictionary:
@@ -262,6 +291,9 @@ static func reset_for_tests() -> void:
 	_entries = {"parsed": {}, "texture": {}}
 	_stale = {"parsed": {}, "texture": {}}
 	_pending.clear()
+	_idle_keys = {"parsed": {}, "texture": {}}
+	_idle_bytes = {"parsed": 0, "texture": 0}
+	_accounted_bytes = {"parsed": 0, "texture": 0}
 	_counters.clear()
 	_generation += 1
 

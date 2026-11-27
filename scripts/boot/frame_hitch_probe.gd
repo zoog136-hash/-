@@ -104,12 +104,9 @@ func _process(_delta: float) -> void:
 ## What holds memory, so the next loading screen can name it (MB, counts).
 static func alive_fields(map_id: String) -> Dictionary:
 	var fields: Dictionary = {"map": map_id}
-	var sp2: Dictionary = SP2_ASSETS.stats()
-	for kind: String in ["parsed", "texture"]:
-		var entry: Dictionary = sp2.get(kind, {})
-		var bytes: int = int(entry.get("live_bytes", 0)) + int(entry.get("idle_bytes", 0)) + int(entry.get("stale_live_bytes", 0)) + int(entry.get("pending_bytes", 0))
-		fields["sp2_" + kind + "_mb"] = bytes / 1048576
-		fields["sp2_" + kind + "_n"] = int(entry.get("live_count", 0)) + int(entry.get("idle_count", 0))
+	for kind: String in SP2_ASSETS.KINDS:
+		fields["sp2_" + kind + "_mb"] = SP2_ASSETS.accounted_bytes(kind) / 1048576
+		fields["sp2_" + kind + "_n"] = SP2_ASSETS.entry_count(kind)
 	fields["nodes"] = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
 	fields["resources"] = int(Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT))
 	fields["tables"] = DEFINITIONS._tables.size()
