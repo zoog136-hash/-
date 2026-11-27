@@ -6,7 +6,6 @@ extends RefCounted
 ## cheap (loading screen): the selection the pack boot made and the files it
 ## names, without opening the image list. full (in game): also the image
 ## owner's own verified open.
-const IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 const MISSING := "아이템 아이콘 리소스 없음(팩 재설치 필요)"
 const OK_TEXT := "아이템 아이콘 리소스: 정상"
 
@@ -17,7 +16,11 @@ static func check(full: bool = false, environment: Dictionary = {}) -> Dictionar
 	if not FileAccess.file_exists(root.path_join("manifest.json")): return {"ok":false,"reason":"image_manifest_missing"}
 	if not DirAccess.dir_exists_absolute(root.path_join("originals").path_join("icon")): return {"ok":false,"reason":"item_icon_folder_missing"}
 	if full:
-		var status: Dictionary = IMAGES.selection_status()
+		# The full image owner brings in gameplay scripts. The loading screen's
+		# cheap file check must work without loading any of them.
+		var images := load("res://scripts/ui/source523_image_assets.gd") as Script
+		if images == null: return {"ok":false,"reason":"image_pack_unavailable"}
+		var status: Dictionary = images.selection_status()
 		if not bool(status.get("ready", false)): return {"ok":false,"reason":str(status.get("error","image_pack_unavailable"))}
 	return {"ok":true,"reason":""}
 

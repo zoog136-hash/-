@@ -26,7 +26,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## (tapping says so), 계정 연동, 결제, 로그아웃, 만든 사람들, the help popups.
 const ROOT="UI/Option/Option_All.csb"
 const PackVersion=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
-const SETTINGS_PATH=preload("res://scripts/ui/renewal_settings.gd").SETTINGS_PATH
+const SETTINGS_PATH=preload("res://scripts/ui/saved_ui_settings.gd").SETTINGS_PATH
 ## tab -> [pressed button, released button, page project]
 const TABS={"game":["Btn_Hunt_On","Btn_Hunt_Off","Option_Tab_Game"],"control":["Btn_Looting_On","Btn_Looting_Off","Option_Tab_Hunt"],
 	"sound":["Btn_Sound_On","Btn_Sound_Off","Option_Tab_Sound"],"output":["Btn_Etc_On","Btn_Etc_Off","Option_Tab_Etc"],
