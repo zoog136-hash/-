@@ -288,8 +288,25 @@ func plain_recharge(world: Node, record: Dictionary) -> Dictionary:
 	var raw: Dictionary = CommonSource.row("ItemClass",id)
 	if reward_record(id,record,raw).is_empty(): return {}
 	var balances: Script = preload("res://scripts/loot/current523_catalog_stack.gd")
-	if not balances.unique_stock_name(key,id) or not balances.holds_plain(world,key): return {}
+	if not (balances.unique_stock_name(key,id) or shared_label_recharge(key,id)) or not balances.holds_plain(world,key): return {}
 	return recharge({"name":key,"record":record})
+
+## An old name-only balance (pre-#916 shop, catalog test grant, box) of a
+## label that several original holy waters share, e.g. 축복의 성수(대) for
+## #117304 and the dated #196513. The balance cannot tell them apart, but
+## when every original row of that label is a non-test holy water charging
+## the same amount the use is the same; it debits the registered row.
+func shared_label_recharge(key: String, id: int) -> bool:
+	var ids: Array[int] = preload("res://scripts/ui/source523_item_identity.gd").ids_by_name(key)
+	if ids.size() < 2 or not ids.has(id): return false
+	var amount: int = -1
+	for other: int in ids:
+		var found: int = -1
+		for row: Dictionary in data.get("recharge",[]):
+			if int(row.ItemClassID) == other and row.TestItem == false: found = int(row.amount)
+		if found < 1 or (amount >= 0 and found != amount): return false
+		amount = found
+	return true
 
 func prepare_pickup(drop: Dictionary, instances: Dictionary, next_id: int) -> Dictionary:
 	var unchanged: Dictionary = {"item_instances":instances,"next_item_instance_id":next_id}

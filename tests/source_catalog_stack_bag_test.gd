@@ -214,7 +214,9 @@ func original_bag() -> void:
 	var points: int = world.growth.state.points
 	await use(world,initial[117284],"사용",true)
 	check(world.inventory.get(initial[117284]) == 1 and world.growth.state.points == points+10,"old small water pays ten points in the same save")
-	check(world.growth.source523.plain_recharge(world,world._find_catalog_item_record(initial[117304])).is_empty(),"permanent and dated large water cannot be identified by a shared bare label")
+	# #117304 and the dated #196513 share the label and charge the same 1,000
+	# points: the old name-only balance is used as the registered #117304.
+	check(world.growth.source523.plain_recharge(world,world._find_catalog_item_record(initial[117304])).get("amount") == 1000,"a shared bare label whose originals charge one amount is usable")
 	var supplied: Dictionary = CASH.resolve(world,117304)
 	check(supplied.get("kind") == "symbol_material","a new exact large water has a physical supplier")
 	var before: Dictionary = world.inventory.duplicate()
