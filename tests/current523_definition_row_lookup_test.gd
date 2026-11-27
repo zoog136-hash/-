@@ -120,6 +120,7 @@ func _run() -> void:
 		check(ROWS._open_disk(table,"row-lookup-synthetic-key").is_empty(), "same-size corrupted bake remains rejected")
 		(disk.disk as RefCounted).file.close()
 	BAKE.clear("disk_" + table)
+	_check_compatible_disk_keys(table,packed,regular)
 	var same_pin_identity: Dictionary = ROWS.identity()
 	var same_pin_key: String = ROWS.verified_key()
 	var same_pin_generation: int = ROWS.cache_generation()
@@ -135,6 +136,24 @@ func _run() -> void:
 			_real(argument.trim_prefix("--row-lookup-original="))
 	print("CURRENT523_DEFINITION_ROW_LOOKUP_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"measurements":measurements}))
 	quit(0 if failures.is_empty() else 1)
+
+func _check_compatible_disk_keys(table: String, packed: Dictionary, rows: Array) -> void:
+	var name: String = "disk_" + table
+	var current: String = ROWS._bake_key(table)
+	for format: String in [ROWS.COMPATIBLE_V1,ROWS.COMPATIBLE_V2]:
+		var legacy: String = ROWS._bake_key(table,format)
+		var written: Dictionary = ROWS._publish_disk(table,legacy,packed)
+		check(written.has("disk"),"fixture writes " + format)
+		if not written.has("disk"):continue
+		written.disk.file.close()
+		var key: String = ROWS._stored_read_key(name,table,current)
+		check(key==legacy and legacy!=current,"reader reuses the existing compatible publication " + format)
+		var reopened: Dictionary = ROWS._open_disk(table,key)
+		check(reopened.has("disk") and var_to_bytes(reopened.disk.row(0))==var_to_bytes(rows[0]),"compatible publication supplies original row values " + format)
+		if reopened.has("disk"):reopened.disk.file.close()
+		BAKE.clear(name)
+	var expected: String = BAKE.key([ROWS.RELATION_FORMAT,ROWS._bake_key(table,ROWS.COMPATIBLE_V1),"ID"])
+	check(ROWS._relation_key(table,"ID")==expected,"the identical row order keeps persisted relation keys")
 
 func _real(path: String) -> void:
 	ROWS.reset()

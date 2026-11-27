@@ -113,7 +113,7 @@ static func stored_current(table: String) -> bool:
 	var meta_path: String = BAKE.ROOT + "/" + ("disk_" if on_disk else "definitions_") + table + ".json"
 	if not FileAccess.file_exists(meta_path): return false
 	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(meta_path))
-	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and meta.get("key") in [_bake_key(table),_bake_key(table,COMPATIBLE_V1)]
+	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and _compatible_store_key(table, meta.get("key"), _bake_key(table))
 
 ## Tables kept in the archive and opened on demand only, never converted on
 ## the loading screen even when an earlier run used them: DialogData_Korean
@@ -799,22 +799,23 @@ const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 ## edit here (a new lookup helper, a log line) used to discard every stored
 ## table on the phone, which then re-converted each one from JSON during
 ## play (seconds per large table) after every update.
-const STORE_FORMAT := "twilight.current523.definition-store.v2"
+const STORE_FORMAT := "twilight.current523.definition-store.v3"
 const COMPATIBLE_V1 := "twilight.current523.definition-store.v1"
+const COMPATIBLE_V2 := "twilight.current523.definition-store.v2"
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 
-## Existing v1 publications have identical rows and column encoding. A v1
-## pointer must still pass the normal digest, schema and column checks. Misses
-## or corruption rebuild to v2, never force-convert every installed table.
+## v1, v2 and the direct-column writer all encode identical rows and columns.
+## Resolve the existing key before the normal digest, schema and shape checks.
+static func _compatible_store_key(table: String, stored: Variant, current: String) -> bool:
+	if not stored is String or stored.is_empty(): return false
+	return stored == current or stored == _bake_key(table,COMPATIBLE_V2) or stored == _bake_key(table,COMPATIBLE_V1)
+
 static func _stored_read_key(name:String,table:String,current:String)->String:
 	var path:String=BAKE.ROOT+"/"+name+".json"
 	if not FileAccess.file_exists(path):return current
 	var meta:Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
-	if meta is Dictionary and meta.get("schema")==BAKE.SCHEMA:
-		if meta.get("key")==current:return current
-		var old:String=_bake_key(table,COMPATIBLE_V1)
-		if meta.get("key")==old:return old
+	if meta is Dictionary and meta.get("schema")==BAKE.SCHEMA and _compatible_store_key(table,meta.get("key"),current):return meta.key
 	return current
 
 static func _bake_key(table: String, format: String=STORE_FORMAT) -> String:
@@ -1181,9 +1182,9 @@ const RELATION_SAVE_ROWS: int = 4096
 static var relation_disk_reads: int = 0
 
 static func _relation_key(table: String, foreign_key: String) -> String:
-	# v2 changes cold JSON traversal, not owner/row ordering. Keep existing
-	# validated relation caches; a future non-equivalent format gets a new key.
-	var table_key: String = _bake_key(table,COMPATIBLE_V1 if STORE_FORMAT=="twilight.current523.definition-store.v2" else STORE_FORMAT)
+	# The current writer preserves row positions across v1, v2 and v3.
+	# RELATION_FORMAT versions the layout and row mapping independently.
+	var table_key: String = _bake_key(table,COMPATIBLE_V1)
 	return "" if table_key.is_empty() else BAKE.key([RELATION_FORMAT, table_key, foreign_key])
 
 static func _relation_name(table: String, foreign_key: String) -> String:
