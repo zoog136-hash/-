@@ -4801,10 +4801,15 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	if not preload("res://scripts/boot/build_flags.gd").playtest(): return
 	var source_record: Dictionary = _find_catalog_item_record(item_name)
 	if RETIRED_ITEMS.record(source_record):hud.show_message(RETIRED_ITEMS.REASON);return
-	if source_record.get("source_m_native_item",false) and LOOT_DROP.PATCH523_DROPS.data().get("full_item_catalog",false):
+	# The same receipted supply a box or drop uses, so the granted item is used
+	# like a real one. Without the full drop catalog (the installed phone pack)
+	# this used to fall through to a plain name balance its owner refused.
+	if source_record.get("source_m_native_item",false):
 		var grant: Dictionary = {"item_class_id":int(source_record.get("source_item_class_id",-1)),"amount":clampi(amount,1,10),"bless_raw":int(source_record.get("source_bless_raw",1)),"enchant":0}
-		if preload("res://scripts/loot/patch523_item_inventory.gd").commit(self,[grant],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}): hud.show_message("원본 도감 테스트 지급 · "+str(source_record.get("source_display_name",item_name)))
-		return
+		var supply: Script = preload("res://scripts/loot/patch523_item_inventory.gd")
+		if LOOT_DROP.PATCH523_DROPS.data().get("full_item_catalog",false) or supply.stage(self,[grant],{"kind":"twilight_debug_catalog"}).get("ok",false):
+			if supply.commit(self,[grant],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}): hud.show_message("원본 도감 테스트 지급 · "+str(source_record.get("source_display_name",item_name)))
+			return
 	if item_name.is_empty() or CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("테스트 지급 불가 아이템")
 		return

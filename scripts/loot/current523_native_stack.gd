@@ -492,6 +492,40 @@ static func stage_floor_grant(record: Dictionary,quantity: int,instances: Dictio
 	result["handled"]=true
 	return result
 
+## 이름만 있는 기존 수량 (사용자 보고 2026-11-27 "성수, 퀘스트 카드 여전히 사용
+## 안 되고"). Before physical receipts, and still where the catalog test grant
+## runs without the full item catalog or a floor item carries no drop proof,
+## a native 523 item was stored as a plain balance under its exact registered
+## key. Its owner refused it ("이름만 같은 보유품 보존"). The key, the single
+## registered catalog row and the installed definition identify the item; the
+## unreceipted remainder becomes one receipted stack of the same count (no
+## item is granted) in one save, and the use continues with it.
+const LEGACY_PLAIN_ORIGIN := {"kind":"twilight_legacy_plain_balance","schema":1}
+static func adopt_plain_balance(world: Node,item_name: String,named: Dictionary) -> Dictionary:
+	if busy or named.get("name")!=item_name or named.get("source_m_native_item")!=true or RETIRED_ITEMS.record(named):return {}
+	if not world.get("catalog_item_variant_count") is Dictionary or int(world.catalog_item_variant_count.get(item_name,0))!=1:return {}
+	if world._catalog_item_from_source_id(str(named.get("sourceId","")))!=named or supply_profile(named).is_empty() or world._item_locked(item_name):return {}
+	var amount: Variant=world.inventory.get(item_name,0)
+	if not integer(amount) or int(amount)<1:return {}
+	var receipted: int=0
+	for id: String in world.item_instances:
+		var entry: Variant=world.item_instances[id]
+		if not entry is Dictionary or entry.get("name")!=item_name:continue
+		if not entry.has(RECEIPT):return {} # Another owner's physical form.
+		var current: Dictionary=proof(world,id)
+		if current.is_empty():return {}
+		receipted+=int(current.remaining)
+	var rest: int=int(amount)-receipted
+	if rest<1:return {}
+	var staged: Dictionary=stage_grant(named,rest,world.item_instances,LEGACY_PLAIN_ORIGIN)
+	if not staged.get("ok",false):return {}
+	busy=true
+	var saved: Error=world._save_game(true,{"inventory":world.inventory,"item_instances":staged.item_instances,"gold":world.gold})
+	busy=false
+	if saved!=OK:return {}
+	world.item_instances=staged.item_instances
+	return {"ok":true,"id":str(staged.id)}
+
 static func _stage_proven_grant(record: Dictionary,quantity: int,instances: Dictionary,origin: Dictionary,shallow: bool) -> Dictionary:
 	var uid: String=Crypto.new().generate_random_bytes(16).hex_encode()
 	while instances.has(uid):uid=Crypto.new().generate_random_bytes(16).hex_encode()
@@ -711,6 +745,9 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if not claims:
 		for entry: Variant in world.item_instances.values():
 			if entry is Dictionary and entry.get("name")==item_name and entry.has(RECEIPT):claims=true;break
+	# A plain balance of an original mystery card (no use profile of its own)
+	# belongs to this owner too; it is adopted below.
+	if not claims and selected.is_empty() and named.get("name")==item_name and not mystery_card_rule(named).is_empty():claims=true
 	if not claims:return {"handled":false}
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 소비 저장 보호 중 · 물리 수량 보존")
 	if not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():return _failure("현재 사용·생존 상태 조건 미충족")
@@ -736,6 +773,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 			var restriction: String=_buff_territory_problem(world,plain_spec)
 			if not restriction.is_empty():return _failure(restriction)
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
+	if not catalog_bag and uid.is_empty() and selected.is_empty():
+		var adopted: Dictionary=adopt_plain_balance(world,item_name,named)
+		if adopted.get("ok",false):
+			if loading:return await _try_use_impl(world,item_name,str(adopted.id),loading,update_buff_speed_now)
+			return (load("res://scripts/loot/current523_native_stack.gd") as Script).call("_try_use_impl",world,item_name,str(adopted.id),false,update_buff_speed_now)
 	if catalog_bag:
 		if has_physical or world._item_locked(item_name) or not CATALOG_STACK.holds_plain(world,item_name):
 			return _failure("선택한 기존 상자 수량 또는 잠금 상태를 확인하세요")
@@ -1586,12 +1628,13 @@ static func use_quest_original_bag(world: Node,original_item: Dictionary,request
 	var issue: String=str(executor.call("eligibility",world,record))
 	if not issue.is_empty():return _failure(issue)
 	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
-	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book","fixed_card"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
+	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book","fixed_card","source_bless_points"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	if float(world.item_use_cooldowns.get("m523:item:"+str(int(owned.item_class_id)),0.0))>0:return _failure("원본 상자 재사용 대기")
 	var selected_owned: Dictionary={"record":record,"remaining":int(owned.quantity),"receipt":request.quest_reward_receipt,"ownership_kind":"quest"}
 	if spec.kind=="source_skill_book":return learn_skill_book(world,uid,selected_owned,record,spec)
 	if spec.kind=="fixed_card":return use_fixed_card(world,uid,selected_owned,record,spec)
+	if spec.kind=="source_bless_points":return use_bless_points(world,uid,selected_owned,record,spec)
 	if spec.kind in ["source_selectable_reward","source_selectable_bag"]:return selection_pending(world,uid,selected_owned,record,spec)
 	return use_bag(world,uid,selected_owned,record,spec)
 
@@ -2048,17 +2091,25 @@ static func use_bless_points(world: Node,uid: String,owned: Dictionary,record: D
 	next.economy["recharged"]=int(next.economy.get("recharged",0))+int(spec.points)
 	next.revision=int(next.get("revision",0))+1
 	if not str(growth.validate(next)).is_empty():return _failure("문양 축복 포인트 상태 검증 실패 · 아이템 보존")
-	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1,"source_native_stack_receipt":owned.receipt.duplicate(true)}
-	var paid: Dictionary=stage_debit(world,[request])
+	# A quest-held holy water ("[원본 보상] …", quest receipt) is debited through
+	# the quest reward ledger; a native stack through its physical receipt.
+	var is_quest: bool=owned.get("ownership_kind")=="quest"
+	var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-1}
+	request["quest_reward_receipt" if is_quest else RECEIPT]=owned.receipt.duplicate(true)
+	var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256)) if is_quest else stage_debit(world,[request])
 	if not paid.get("ok",false):return _failure(str(paid.get("reason",paid.get("error","원본 축복 포인트 아이템 차감 소유자 연결 필요"))))
 	var payload: Dictionary=paid.overrides.duplicate(true)
 	payload["growth"]=next
 	payload["item_use_cooldowns"]=load("res://scripts/loot/patch523_item_use.gd").call("next_cooldowns",world,record,spec)
+	if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("퀘스트 성수의 실제 잔량·사용 장부 후보 불일치 · 아이템 보존")
 	busy=true
 	var saved: Error=world._save_game(true,payload)
 	busy=false
 	if saved!=OK:return _failure("원본 축복 포인트 아이템 저장 실패 · 아이템과 포인트 보존 (%d)" % saved)
-	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns;world.consumable_service.import_state(payload.consumable_state)
+	if is_quest and not world.quest_service.import_state(payload.quest_state):
+		world.patch523_owner_state_problem="퀘스트 성수 저장 후 장부 채택 미확정 · 정상 불러오기 전 재사용 중지";return _failure(world.patch523_owner_state_problem)
+	world.inventory=payload.inventory;world.item_instances=payload.item_instances;world.item_use_cooldowns=payload.item_use_cooldowns
+	if payload.has("consumable_state"):world.consumable_service.import_state(payload.consumable_state)
 	growth.state=next;world.deferred_save.cancel()
 	var message: String="%s 사용 · 축복 포인트 +%d (보유 %d)" % [str(NATIVE_FIELDS.field(record,"source_display_name",record.get("name",""))),int(spec.points),int(next.points)]
 	world.hud.append_log(message)
