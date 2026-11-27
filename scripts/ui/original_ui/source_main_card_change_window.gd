@@ -476,7 +476,7 @@ func _reveal_popup(root: Node2D) -> Dictionary:
 	else:
 		filled["clip"]="CardSet_One"
 		scene.play("CardSet_One",false)
-		var lit: Dictionary=GradeFx.light(self,scene,popup_out,CELL,grade)
+		var lit: Dictionary=GradeFx.light(self,scene,popup_out,CELL,grade,true,GradeFx.CONFIRMED_OUTLINE_ALPHA)
 		filled["lit"]=bool(lit.get("lit",false))
 		if not filled.lit:
 			var nested: Node2D=GradeFx.project(self,scene,popup_out,CELL)

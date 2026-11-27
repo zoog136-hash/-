@@ -9,6 +9,7 @@ extends SceneTree
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const STAGE=preload("res://scripts/ui/card_reveal_stage.gd")
+const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -146,6 +147,7 @@ func _run() -> void:
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
+		if value=="--fixed-blend":BLEND.screen_copy_available=false
 	if not pack_dir.is_empty():await _real_pack(pack_dir)
 	hud.queue_free()
 	print("ORIGINAL_UI_FUSION_RESULT_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
@@ -244,16 +246,29 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 		if bolt!=null:
 			check(not bolt.visible and bolt.source_member==WINDOW.GradeFx.ACTIVE_GRADE["전설"],"exact lightning is initially hidden")
 			check(bolt.get_parent().clip_contents,"native discharge stays inside the card clip")
-			await create_timer(reel.lightning_at()+0.25).timeout
+			check(is_equal_approx(reel.lightning_at(),2.4) and is_equal_approx(reel.reveal_at()-reel.lightning_at(),2.0),
+				"success cues the discharge at 2.4 s and keeps the two-second reveal beat")
+			var first_shown: Array[float]=[]
+			bolt.visibility_changed.connect(func() -> void:first_shown.append(reel.clock),CONNECT_ONE_SHOT)
+			await create_timer(maxf(0.05,reel.lightning_at()-reel.clock-0.3)).timeout
+			check(not bolt.visible and not face.visible,"the reel stays sealed before the success cue")
+			await create_timer(maxf(0.05,reel.lightning_at()-reel.clock+0.25)).timeout
 			var sprite_node: Node2D=bolt.source_nodes.get(WINDOW.GradeFx.LIGHTNING_SPRITES["전설"])
 			var sprite: Sprite2D=sprite_node.get_meta("source_sprite") if sprite_node!=null and sprite_node.has_meta("source_sprite") else null
 			check(bolt.is_visible_in_tree() and bolt.playback_status().playing and sprite!=null and sprite.texture!=null and not face.visible,"verified atlas pixels play during the success reel")
+			check(first_shown.size()==1 and first_shown[0]>=2.4 and first_shown[0]<2.7,"the playing reel dispatches the earlier cue")
+			print("FUSION_LIGHTNING_TIMING ",JSON.stringify({"first_shown":first_shown,"reveal_at":reel.reveal_at()}))
 			if DisplayServer.get_name()!="headless":await _check_lightning_pixels(bolt)
+		else:
+			check(is_equal_approx(reel.reveal_at(),4.9),"the failed fusion keeps its result timing")
 		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
 		check(not is_instance_valid(reel) and face.is_visible_in_tree(),"settled result has its grade face")
 		var settled_outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,"Panel/Card_00/Fx_Outline_Front")
 		check(settled_outline!=null and settled_outline.is_visible_in_tree() and settled_outline.playback_status().playing,
 			"the original grade outline mounts and plays after settling")
+		if settled_outline!=null:
+			check(is_equal_approx(settled_outline.modulate.a,0.55),"the settled outline alone uses the lower opacity")
+			if upgraded and DisplayServer.get_name()!="headless":await _check_outline_pixels(settled_outline)
 		window.close()
 		await process_frame
 	var batch: Array=[]
@@ -301,3 +316,30 @@ func _check_lightning_pixels(bolt: Node2D) -> void:
 	var same_outside: bool=lit.get_data()==hidden.get_data()
 	check(same_outside,"hiding the bolt leaves all pixels outside the card identical")
 	print("FUSION_LIGHTNING_PIXELS ",JSON.stringify({"inside_changed":changed,"outside_identical":same_outside}))
+
+func _check_outline_pixels(outline: Node2D) -> void:
+	paused=true
+	var viewport:=outline.get_viewport()
+	outline.seek_frame(24.0) # Inside the authored Fx_Epic_Loop (2–47).
+	await RenderingServer.frame_post_draw
+	var dim:=viewport.get_texture().get_image()
+	var opacity: float=outline.modulate.a
+	outline.modulate.a=1.0
+	await RenderingServer.frame_post_draw
+	var full:=viewport.get_texture().get_image()
+	outline.hide()
+	await RenderingServer.frame_post_draw
+	var base:=viewport.get_texture().get_image()
+	outline.modulate.a=opacity
+	outline.show()
+	paused=false
+	var dim_light: float=0.0
+	var full_light: float=0.0
+	for y: int in range(0,base.get_height(),2):
+		for x: int in range(0,base.get_width(),2):
+			var unlit: float=base.get_pixel(x,y).get_luminance()
+			dim_light+=maxf(0.0,dim.get_pixel(x,y).get_luminance()-unlit)
+			full_light+=maxf(0.0,full.get_pixel(x,y).get_luminance()-unlit)
+	check(full_light>0.0 and dim_light>0.0 and dim_light<full_light*0.8,
+		"the original settled outline remains visible with less additive light")
+	print("FUSION_OUTLINE_PIXELS ",JSON.stringify({"fixed_blend":not BLEND.screen_copy_available,"full_light":full_light,"dim_light":dim_light}))

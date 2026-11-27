@@ -21,6 +21,8 @@ const ACTIVE={"영웅":"UI/Change/Fx_Change_Active_Legend.csb","전설":"UI/Chan
 	"신화":"UI/Change/Fx_Change_Active_Myth.csb","유일":"UI/Change/Fx_Change_Active_Sole.csb"}
 ## Fx_Change_Outline_Loop clips.
 const OUTLINE={"영웅":"Fx_Legend_Loop","전설":"Fx_Epic_Loop","신화":"Fx_Myth_Loop","유일":"Fx_Sole_Loop"}
+# Presentation opacity for the sustained additive loop on settled cards.
+const CONFIRMED_OUTLINE_ALPHA: float=0.55
 const CLIP="Fx_Active"
 const CELL_CLIP="Fx_Start_Active"
 ## Change_Fusion_Card nodes a result cell never shows (the roulette, the
@@ -128,7 +130,8 @@ static func prepare_lightning(pack: RefCounted, grade: String) -> Node2D:
 
 ## Mounts and plays the grade light in the built cell at `prefix` (no "/"):
 ## {lit, scenes}. Nothing changes for a grade below 영웅 or without the scenes.
-static func light(window: Object, root: Node2D, out: Dictionary, prefix: String, grade: String, include_lightning: bool=true) -> Dictionary:
+static func light(window: Object, root: Node2D, out: Dictionary, prefix: String, grade: String, include_lightning: bool=true,
+		outline_alpha: float=1.0) -> Dictionary:
 	if not available(window,grade):return {"lit":false}
 	var scenes: int=0
 	var glow: Dictionary=window._locate(root,out,prefix+"/Fx_Glow")
@@ -156,6 +159,7 @@ static func light(window: Object, root: Node2D, out: Dictionary, prefix: String,
 	var outline: Node2D=project(window,root,out,prefix+"/Fx_Outline_Front")
 	if outline!=null:
 		set_visible(window,root,out,prefix+"/Fx_Outline_Front",true)
+		outline.modulate.a=outline_alpha
 		outline.play(str(OUTLINE[grade]),true)
 	return {"lit":scenes>0,"scenes":scenes}
 
