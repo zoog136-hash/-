@@ -1134,6 +1134,11 @@ static func status_confirmed(profile: Dictionary, kind: String) -> bool:
 				return true
 	return false
 
+## The reviewed progression adapter can turn a base record into a stats passive.
+## Treat every reviewed rule as a candidate until its validated profile is resolved.
+func may_project_static_stats(id: String) -> bool:
+	return profiles.has(id) and progression_rules.rules.has(id)
+
 func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	var id := str(record.get("id", ""))
 	if not profiles.has(id): return record

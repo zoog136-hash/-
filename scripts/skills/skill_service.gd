@@ -174,9 +174,8 @@ func refresh_relic_buffs() -> void:
 	relic_buff_signature = signature
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var base: Dictionary = catalog.record_for(str(buff.get("skill_id", "")))
-		if base.is_empty(): continue
-		var skill: Dictionary = catalog.resolve(base)
-		if not catalog.RELIC_LEVELS.EFFECTS.needs_buff_refresh(base): continue
+		if base.is_empty() or not catalog.RELIC_LEVELS.EFFECTS.needs_buff_refresh(base): continue
+		var skill: Dictionary = catalog._resolved_reference(base)
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 	# Never extend remaining time, cast, spend, heal or write a save on refresh.
@@ -974,9 +973,9 @@ func trigger_relic_miss(target: TwilightMonster, kind: String) -> void:
 	if proc_depth > 0 or not is_instance_valid(target) or target.dead: return
 	var attack: Dictionary = attack_context(kind, false, false)
 	# No new event/RNG side effects when no active native miss increment exists.
-	for base: Dictionary in catalog.records:
-		if not catalog.enabled(base) or base.mode != "proc": continue
-		if Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(catalog.resolve(base), attack) > 0:
+	for base: Dictionary in catalog.possible_owned_records():
+		if base.mode != "proc" or not catalog.enabled(base): continue
+		if Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(catalog._resolved_reference(base), attack) > 0:
 			trigger("on_miss", target, {}, attack)
 			return
 
@@ -1254,27 +1253,21 @@ func _current_source_effect_row(skill: Dictionary) -> Dictionary:
 	# Reuse the already admitted skill's pinned current-source profile. This
 	# changes only its existing cast/impact presentation call, not skill identity,
 	# admission, costs, proc timing, damage, progression or saved state.
-	var profile: Dictionary = catalog.source523.profiles.get(str(skill.get("id","")),{})
+	var id: String = str(skill.get("id", ""))
+	var profile: Dictionary = catalog.source523.profiles.get(id, {})
 	var row: Variant = profile.get("row")
 	if not row is Dictionary or row.is_empty(): return {}
 	if catalog.source523.active_sha256.is_empty():
 		# The raw-definition owner admits profiles without assigning the compiled
-		# pack fingerprint. Read its optional contract dynamically for older owners.
+		# pack fingerprint. Optional fields on older owners read as null.
 		var owner: Object = catalog.source523
-		var source_mode: String = ""
-		var source_identity: Variant = {}
-		var fallback_status: Variant = {}
-		for property: Dictionary in owner.get_property_list():
-			match str(property.name):
-				"source_mode":
-					var value: Variant = owner.get("source_mode")
-					if value is String: source_mode = value
-				"source_identity": source_identity = owner.get("source_identity")
-				"source_fallback_status": fallback_status = owner.get("source_fallback_status")
-		if source_mode != "original_bound_profiles" or not source_identity is Dictionary or not fallback_status is Dictionary: return {}
-		var source_archive_sha: String = "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
+		var source_mode: Variant = owner.get("source_mode")
+		if not source_mode is String or source_mode != "original_bound_profiles": return {}
+		var source_identity: Variant = owner.get("source_identity")
+		var fallback_status: Variant = owner.get("source_fallback_status")
+		if not source_identity is Dictionary or not fallback_status is Dictionary: return {}
+		var source_archive_sha: String = Catalog.SOURCE523.SOURCE_SHA
 		if source_identity.get("kind") != "twilight.current523.original-definitions.v1" or source_identity.get("source_snapshot") != "patch523" or source_identity.get("source_sha256") != source_archive_sha or source_identity.get("source_bytes") != 25031173: return {}
-		var id: String = str(skill.get("id",""))
 		var applied: Variant = fallback_status.get("applied")
 		var deferred: Variant = fallback_status.get("deferred")
 		if fallback_status.get("state") != "loaded" or not applied is Array or not applied.has(id) or not deferred is Dictionary or deferred.has(id): return {}

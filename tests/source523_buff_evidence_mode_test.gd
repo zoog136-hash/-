@@ -10,8 +10,12 @@ const SOURCE = preload("res://scripts/skills/player_skills523.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
-class FakeSource extends RefCounted:
+class LegacySource extends RefCounted:
 	var active_sha256: String = ""
+	var profiles: Dictionary = {}
+	var bindings: Dictionary = {}
+
+class FakeSource extends LegacySource:
 	var source_mode: String = ""
 	var source_identity: Dictionary = {}
 	var source_fallback_status: Dictionary = {}
@@ -31,6 +35,28 @@ func bound(host: String) -> FakeSource:
 	source.source_identity = {"kind":"twilight.current523.original-definitions.v1","source_snapshot":"patch523","source_sha256":SOURCE.SOURCE_SHA,"source_bytes":25031173}
 	source.source_fallback_status = {"state":"loaded","applied":[host],"deferred":{}}
 	return source
+
+func check_spell_effect_evidence() -> void:
+	var service := TwilightOriginalSkillService.new()
+	service.catalog = TwilightOriginalSkillCatalog.new()
+	var source := bound("lm_shield")
+	var row: Dictionary = {"ID":17324}
+	var skill: Dictionary = {"id":"lm_shield"}
+	source.profiles = {"lm_shield":{"row":row}}
+	source.bindings = {"source_zip_sha256":SOURCE.SOURCE_SHA, "skills":{"lm_shield":{"spell_id":17324}}}
+	service.catalog.source523 = source
+	check(is_same(service._current_source_effect_row(skill), row), "cast effect keeps the admitted original SpellClass row")
+	source.bindings.skills.lm_shield.spell_id = 17325
+	check(service._current_source_effect_row(skill).is_empty(), "cast effect rejects a conflicting SpellClass ID")
+	source.bindings.skills.lm_shield.spell_id = 17324
+	source.source_fallback_status.deferred.lm_shield = "held"
+	check(service._current_source_effect_row(skill).is_empty(), "a source hold takes effect on the next cast")
+	var legacy := LegacySource.new()
+	legacy.profiles = source.profiles
+	service.catalog.source523 = legacy
+	check(service._current_source_effect_row(skill).is_empty(), "a legacy source without evidence keeps the effect pending")
+	legacy.active_sha256 = "a".repeat(64)
+	check(is_same(service._current_source_effect_row(skill), row), "the validated compiled route keeps its existing effect")
 
 func run() -> void:
 	check(ICONS.source_evidence(null, "x").get("reason") == "native_buff_relation_unavailable", "no skill owner -> unavailable")
@@ -53,5 +79,6 @@ func run() -> void:
 	var no_mode := bound("lm_shield")
 	no_mode.source_mode = ""
 	check(ICONS.source_evidence(no_mode, "lm_shield").has("reason"), "without a supported mode nothing is accepted")
+	check_spell_effect_evidence()
 	print("SOURCE523_BUFF_EVIDENCE_MODE_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"synthetic_only":true}))
 	quit(0 if failures.is_empty() else 1)
