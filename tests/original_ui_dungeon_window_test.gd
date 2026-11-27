@@ -86,7 +86,7 @@ func _sources() -> void:
 		check(main_text.contains(method),"the original UI controller exposes "+method)
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_dungeon_window.gd")
 	check(text.contains("bound._perform(action)") and text.contains("bound._play_action(action)") and text.contains("bound._play_action(\"begin\")"),"every action is the existing dungeon screen's")
-	check(text.contains("hud.confirm_action("),"actions go through the HUD's confirmation")
+	check(text.contains("hud.confirm_source_action(title,body,button,accept)"),"actions ask the HUD to open the original confirmation")
 	check(text.contains("\"Panel/Img_Special\":{\"visible\":false}"),"dungeon thumbnails without an original picture stay empty")
 	check(not text.contains("Image.create") and not text.contains("draw_rect") and not text.contains("PartyDungeon_Btn"),"no picture is drawn and no party dungeon row is built")
 	var scene_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/sprite_scene.gd")
