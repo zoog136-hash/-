@@ -64,10 +64,16 @@ func _supports(snapshot: Dictionary) -> bool:
 func apply_snapshot(snapshot: Dictionary) -> Dictionary:
 	if not _supports(snapshot) or snapshot.get("category")!=category or snapshot.get("target_id")!=_snapshot.get("target_id"):
 		return _fail("source_option_awakening_target_changed")
+	# An awakening attempt changes progress and gold. The same target,
+	# portraits and option rows can keep their original scenes.
+	var keep_rows: bool = is_open() and last_result.get("ok",false) and _selected.is_empty()
+	for field: String in ["target_record", "materials", "bonus_options", "slot_definitions"]:
+		keep_rows = keep_rows and _snapshot.get(field) == snapshot.get(field)
 	_epoch+=1
 	cancel_review()
 	if snapshot.get("revision")!=_snapshot.get("revision"):_selected.clear()
 	_publish(snapshot)
+	if keep_rows and _refresh_progress(): return last_result
 	return _stage()
 
 func _publish(snapshot: Dictionary) -> void:
@@ -135,20 +141,34 @@ func _can_submit() -> bool:
 	if _attempt_mode():return bool(_snapshot.get("can_awaken",false))
 	return _can_register() and not _selected.is_empty() and _fee()<=int(_snapshot.gold)
 
-func _spec() -> Dictionary:
-	_shown=_query()
-	var pages: int=maxi(1,ceili(float(_shown.size())/float(PAGE_SIZE)))
-	_page_index=clampi(_page_index,0,pages-1)
+func _progress_spec() -> Dictionary:
 	var attempted: bool=_attempt_mode()
 	var current: int=int(_snapshot.experience)
 	var after: int=current+mini(_remaining(),_gained())
 	var was_awakened: bool=bool(_snapshot.get("awakened",false))
-	var title: String=str(_snapshot.target_record.get("name",""))
 	var tip: String=str(_snapshot.get("blocked_reason",""))
 	if tip.is_empty():
 		if was_awakened:tip="이미 옵션 각성한 카드입니다."
 		elif not _snapshot.get("owned",false):tip="먼저 대상 카드를 획득하세요."
 		else:tip="등록한 중복 카드만 소모됩니다. 최초 획득 카드는 보존됩니다."
+	return {P+"Label_Tip":_text(tip),
+		LEVEL+"ProgressBar_Exp":{"role":"source_percent","percent":_experience_percent(current)},
+		LEVEL+"Panel_Exp_Before/Label_Exp_0":_text("%.4f%%" % _experience_percent(current)),
+		LEVEL+"Panel_Exp_After/Label_Exp_0":_text("%.4f%%" % _experience_percent(after)),
+		LEVEL+"Label_Skill_Percent":_text("성공 확률 %.2f%%" % float(_snapshot.success_chance_pct)),
+		LEVEL+"Nd_Exp_Retrieval":{"visible":attempted and not was_awakened},
+		LEVEL+"Nd_Exp_Retrieval/Label_Exp_Retrieval_Percent":_text("실패 시 %.4f%% 유지" % _experience_percent(int(_snapshot.failure_refund_experience))),
+		PRIMARY:{"activate":Callable(self,"_review"),"displaystate":_can_submit()},
+		PRIMARY+"/Text_Price":_text(_number(int(_snapshot.attempt_cost) if attempted else _fee())),
+		PRIMARY+"/Normal/Label":_text("각성 시도" if attempted else "경험치 주입"),
+		PRIMARY+"/Disabled/Label":_text("각성 시도" if attempted else "경험치 주입"),
+		OUTSIDE+"Btn_Use_All":{"activate":Callable(self,"_auto_register"),"displaystate":_can_register() and not _shown.is_empty()},
+		OUTSIDE+"Btn_Cancel_All":{"activate":Callable(self,"_clear_selection"),"displaystate":not _selected.is_empty()}}
+
+func _spec() -> Dictionary:
+	_shown=_query()
+	var pages: int=maxi(1,ceili(float(_shown.size())/float(PAGE_SIZE)))
+	_page_index=clampi(_page_index,0,pages-1)
 	var spec: Dictionary={"Change_Awaken_Skill":{"exclude":true},"Change_Awaken_SkillExp":{"exclude":true},
 		"Nd_Awaken_Tab_2":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Option_On":{"activate":Callable(self,"_ignore")},
 		"Nd_Awaken_Tab_1/Btn_Skill_Off":({"exclude":true} if category=="성물" else {"visible":true, "activate":Callable(self, "_open_skill")}),"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
@@ -161,35 +181,37 @@ func _spec() -> Dictionary:
 		"Nd_Content/Btn_Back":{"activate":Callable(self,"_back")},
 		"Nd_Fail_History/Btn_History":{"activate":Callable(self,"_history")},
 		P+"Btn_HelpBox":{"activate":Callable(self,"_explain")},
-		P+"Label_Tip":_text(tip),
-		LEVEL+"Label_Title":_text(title),
-		LEVEL+"ProgressBar_Exp":{"role":"source_percent","percent":_experience_percent(current)},
-		LEVEL+"Panel_Exp_Before/Label_Exp_0":_text("%.4f%%" % _experience_percent(current)),
-		LEVEL+"Panel_Exp_After/Label_Exp_0":_text("%.4f%%" % _experience_percent(after)),
+		LEVEL+"Label_Title":_text(str(_snapshot.target_record.get("name",""))),
 		LEVEL+"Panel_Exp_After/Label_Level":{"visible":false},
 		LEVEL+"Panel_Exp_After/Fx_Levelup":{"exclude":true},
-		LEVEL+"Label_Skill_Percent":_text("성공 확률 %.2f%%" % float(_snapshot.success_chance_pct)),
-		LEVEL+"Nd_Exp_Retrieval":{"visible":attempted and not was_awakened},
-		LEVEL+"Nd_Exp_Retrieval/Label_Exp_Retrieval_Percent":_text("실패 시 %.4f%% 유지" % _experience_percent(int(_snapshot.failure_refund_experience))),
 		LEVEL+"Nd_Exp_Retrieval/Label_Notice":{"visible":false},
 		LEVEL+"Nd_Card/Card/Panel_Root/Btn_Plus":{"exclude":true},
 		LEVEL+"Fx_CardSelect_Material":{"exclude":true},
 		LEVEL+"Fx_Btn_Production":{"exclude":true},
 		LEVEL+"Btn_Probability":{"activate":Callable(self,"_explain")},
 		BONUS:{"row_offsets":[],"input":Callable(self,"_list_input").bind(BONUS)},BONUS+"/Label_Option":{"exclude":true},
-		PRIMARY:{"activate":Callable(self,"_review"),"displaystate":_can_submit()},
-		PRIMARY+"/Text_Price":_text(_number(int(_snapshot.attempt_cost) if attempted else _fee())),
-		PRIMARY+"/Normal/Label":_text("각성 시도" if attempted else "경험치 주입"),
-		PRIMARY+"/Disabled/Label":_text("각성 시도" if attempted else "경험치 주입"),
 		OUTSIDE+"Btn_Prev":{"activate":Callable(self,"_paginate").bind(-1),"displaystate":_page_index>0},
 		OUTSIDE+"Btn_Next":{"activate":Callable(self,"_paginate").bind(1),"displaystate":_page_index+1<pages},
 		OUTSIDE+"Label_PageInfo":_text("%d / %d" % [_page_index+1,pages]),
-		OUTSIDE+"Btn_Use_All":{"activate":Callable(self,"_auto_register"),"displaystate":_can_register() and not _shown.is_empty()},
-		OUTSIDE+"Btn_Cancel_All":{"activate":Callable(self,"_clear_selection"),"displaystate":not _selected.is_empty()},
 		OUTSIDE+"Label_Title":_text(category+" 카드"),
 		OUTSIDE+"Nd_Notice":{"visible":_shown.is_empty()},
 		OUTSIDE+"Fx_CardSelect":{"exclude":true}}
+	spec.merge(_progress_spec())
 	return spec
+
+func _refresh_progress() -> bool:
+	var spec: Dictionary = _progress_spec()
+	for path: String in spec:
+		var hit: Dictionary = _locate(_scene,_out,path)
+		if not hit.get("ok",false): return false
+		for field: String in spec[path]:
+			if field not in ["text","percent","visible","displaystate"]: continue
+			var changed: Dictionary = hit.player.call("set_bound_"+field,hit.offset,spec[path][field])
+			if not changed.get("ok",false): return false
+	for id: String in _candidate_views:
+		_set_bound(_candidate_views[id].check,"set_bound_displaystate",_can_register() and int(_materials[id].spare)>0)
+	last_result.filled.cost = int(_snapshot.attempt_cost) if _attempt_mode() else 0
+	return true
 
 static func _text(value: String) -> Dictionary:
 	return {"role":"source_text","text":value}

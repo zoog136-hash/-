@@ -6452,24 +6452,17 @@ func _patch523_craft_items_for_ids(source_ids: Array) -> Dictionary:
 ## Every "source_id" a recipe (all material choices, outcomes and bonuses) names.
 func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
 	if not patch523_craft_item_cache.is_empty():return patch523_craft_item_cache
-	# A recipe's referenced IDs never change; walk each definition once
-	# (the window asks for every recipe on open). Selections pick among the
-	# same definition's materials, so the base walk already names them; the
-	# selected recipe is walked once per distinct choice set.
-	var recipe: Variant=patch523_equipment.recipes.get(recipe_id,{})
+	# All choices come from material_slots in the definition. Binding its
+	# IDs requires no quote or validation of the selected subset.
 	if not is_same(_recipe_ids_owner,patch523_equipment.recipes):
 		_recipe_ids_owner=patch523_equipment.recipes
 		_recipe_source_ids={}
-	var choices: Variant=patch523_material_choices.get(recipe_id,{})
-	var memo_key: String=recipe_id+"|"+str(hash(choices))
-	var ids: Variant=_recipe_source_ids.get(memo_key)
+	var ids: Variant=_recipe_source_ids.get(recipe_id)
 	if ids==null:
 		var found: Array=[]
-		_collect_source_ids(recipe,found)
-		var selection: Dictionary=patch523_equipment.material_selection(recipe_id,choices)
-		if selection.get("recipe") is Dictionary and not is_same(selection.recipe,recipe):_collect_source_ids(selection.recipe,found)
+		_collect_source_ids(patch523_equipment.recipes.get(recipe_id,{}),found)
 		ids=found
-		_recipe_source_ids[memo_key]=found
+		_recipe_source_ids[recipe_id]=found
 	return _patch523_craft_items_for_ids(ids)
 
 var _recipe_source_ids: Dictionary={}
@@ -7000,13 +6993,20 @@ func _totem_convert_requested(recipe_id: int) -> bool:
 
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
+	var local_items: Dictionary = {} if recipe_id.begins_with("patch523:") else _craft_item_index()
+	return _quote_craft(recipe_id, batches, _inventory_total_weight(), _carrying_capacity(), local_items)
+
+## One synchronous production preview reads the same bag for all recipes.
+## Confirmations and commits still take their own fresh quote.
+func production_preview_quote() -> Callable:
+	_sync_item_instances()
+	return _quote_craft.bind(_inventory_total_weight(), _carrying_capacity(), _craft_item_index())
+
+func _quote_craft(recipe_id: String, batches: int, weight: int, capacity: int, local_items: Dictionary) -> Dictionary:
 	if recipe_id.begins_with("patch523:"):
 		return patch523_equipment.quote(recipe_id, batches, inventory, gold, _patch523_craft_items_for_recipe(recipe_id), item_instances,
-			equipped_items, _inventory_total_weight(), _carrying_capacity(), ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context(recipe_id,batches))
-	return crafting.quote(
-		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
-		equipped_items, _inventory_total_weight(), _carrying_capacity()
-	)
+			equipped_items, weight, capacity, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), _patch523_craft_context(recipe_id,batches))
+	return crafting.quote(recipe_id, batches, inventory, gold, local_items, item_instances, equipped_items, weight, capacity)
 
 func patch523_set_owned_materials(recipe_id: String,batches: int,selections: Array) -> Dictionary:
 	if not recipe_id.begins_with("patch523:") or not patch523_equipment.recipes.has(recipe_id) or _patch523_protection_recipe_item(recipe_id)>0:return {"ok":false,"reason":"기존 일반 원본 제작식의 선택 재료만 이 계약을 사용합니다"}
@@ -10512,6 +10512,7 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 	if card_draw_fusion.original_points_active(category,grade) and card_draw_fusion.pity.get(category,{}).get(grade,0)>=SOURCE_FUSION_POINTS.LIMIT:
 		hud.show_message("합성 시도 보상을 먼저 받으세요 · 재료 보존")
 		return
+	var phase: int = FRAME_HITCH.now()
 	var tj_before: Dictionary = tj_coupons.core.export_state()
 	var cards_before: Dictionary = card_draw_fusion.export_state()
 	var roll_before: int = card_draw_fusion.rng.state
@@ -10546,7 +10547,10 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 	if source_deck > 0 and attempts > 0:
 		unconfirmed523.record_event("card_compose",{"source_id":source_deck,"amount":attempts,"event_id":"compose:%d:%d"%[source_deck,Time.get_ticks_usec()]})
 	tj_coupons.capture_fusion(result)
-	if _save_game(true) != OK:
+	phase = FRAME_HITCH.detail_next("fusion.prepare",phase)
+	var saved: Error = _save_game(true)
+	phase = FRAME_HITCH.detail_next("fusion.save",phase)
+	if saved != OK:
 		unconfirmed523.state = before_content
 		tj_coupons.core.state=tj_before.duplicate(true)
 		card_draw_fusion.import_state(cards_before)
@@ -10555,11 +10559,16 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 		hud.show_message("합성 저장 실패 · 중복 카드 재료를 복구했습니다")
 		return
 	if source_deck > 0 and attempts > 0: routines.record("card_compose",{"deck":source_deck,"amount":attempts})
+	# The result covers this form. Publish the committed ownership now and
+	# rebuild the form once when the result closes.
+	if hud.has_method("set_fusion_result_covered"): hud.set_fusion_result_covered(true)
 	_update_hud()
+	phase = FRAME_HITCH.detail_next("fusion.hud",phase)
 	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("present_card_reveal", category, result, true)
+	FRAME_HITCH.detail("fusion.present",phase)
 
 func _option_awakening_busy() -> bool:
 	return option_awakening_transaction_busy or (hud.has_method("is_option_awakening_busy") and bool(hud.call("is_option_awakening_busy")))
@@ -10574,7 +10583,7 @@ func _on_option_awakening_feed_requested(category: String, target_id: String, ma
 	option_awakening_transaction_busy = true
 	var result: Dictionary = option_awakening.feed(category, target_id, materials)
 	option_awakening_transaction_busy = false
-	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	var snapshot: Dictionary = result.snapshot if result.has("snapshot") else option_awakening.view(category, target_id)
 	hud.call("set_option_awakening_view", snapshot)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "각성 재료를 적용하지 못했습니다")))
@@ -10589,17 +10598,21 @@ func _on_option_awakening_feed_requested(category: String, target_id: String, ma
 
 func _on_option_awakening_attempt_requested(category: String, target_id: String) -> void:
 	if _option_awakening_busy(): return
+	var phase: int = FRAME_HITCH.now()
 	option_awakening_transaction_busy = true
 	var result: Dictionary = option_awakening.awaken(category, target_id)
 	option_awakening_transaction_busy = false
-	var snapshot: Dictionary = result.get("snapshot", option_awakening.view(category, target_id))
+	var snapshot: Dictionary = result.snapshot if result.has("snapshot") else option_awakening.view(category, target_id)
+	phase = FRAME_HITCH.detail_next("awakening.commit",phase)
 	hud.call("set_option_awakening_view", snapshot)
+	phase = FRAME_HITCH.detail_next("awakening.form",phase)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "옵션 각성을 진행하지 못했습니다")))
 		return
 	_update_hud()
 	# The runtime commits gold, experience, outcome and RNG together before this point.
 	_sync_option_awakening_auras()
+	phase = FRAME_HITCH.detail_next("awakening.hud",phase)
 	var card: Dictionary = snapshot.get("target_record", {})
 	var success: bool = bool(result.get("success", false))
 	var message: String = "%s 옵션 각성 %s" % [str(card.get("name", "")), "성공" if success else "실패"]
@@ -10612,6 +10625,7 @@ func _on_option_awakening_attempt_requested(category: String, target_id: String)
 	presentation["message"] = message
 	presentation["bonus_lines"] = snapshot.get("applied_options", []) if success else []
 	hud.call("present_option_awakening_result", card, presentation, presentation_settings)
+	FRAME_HITCH.detail("awakening.present",phase)
 
 func _equip_catalog(category: String, record: Dictionary) -> void:
 	if death_recovery.blocked(): return

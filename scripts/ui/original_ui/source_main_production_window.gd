@@ -24,6 +24,7 @@ const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd"
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## ProductionScene is a layout source only; Production_All is mounted at
 ## its Production_All_Layout position (600, 337.5).
 const ALL="UI/Production/Production_All.csb"
@@ -210,7 +211,7 @@ func _max_count(world: Node) -> int:
 
 ## Material rows: every fixed material, then one row per candidate slot (the
 ## chosen candidate, or the first one while none is chosen).
-func _material_rows(world: Node) -> Array[Dictionary]:
+func _material_rows(world: Node, quote: Dictionary) -> Array[Dictionary]:
 	var rows: Array[Dictionary]=[]
 	if _selected.is_empty():return rows
 	var recipe: Dictionary=Craft.recipe_of(world,_selected)
@@ -240,7 +241,7 @@ func _material_rows(world: Node) -> Array[Dictionary]:
 		matched["slot"]=key
 		matched["picked"]=picked
 		rows.append(matched)
-	var recipe_cost: int=int(world._craft_quote(_selected,_count).get("cost",0)) if _selected.begins_with("patch523:") else int(recipe.get("adena",0))*_count
+	var recipe_cost: int=int(quote.get("cost",0)) if _selected.begins_with("patch523:") else int(recipe.get("adena",0))*_count
 	if recipe_cost>0:rows.append({"item":"아데나","available":int(world.gold),"required":recipe_cost,"record":world._craft_item_index().get("아데나",{}),"source_id":"","material":{}})
 	return rows
 
@@ -254,35 +255,45 @@ func _material_rows(world: Node) -> Array[Dictionary]:
 ## (Twm diag 2026-11-26: opening 제작 asked skill ownership 44,928 times).
 ## Outside a build (scrolling rows in) every answer is asked fresh.
 var _ok_memo: Dictionary = {}
+var _preview_quote: Callable
 var _building: bool = false
 
 func _stage() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	var memo: bool=world!=null and world.has_method("_stat_memo_begin") and world.has_method("_stat_memo_end")
 	if memo:world.call("_stat_memo_begin")
+	if world!=null and world.has_method("production_preview_quote"):
+		_preview_quote=world.production_preview_quote()
 	_ok_memo={}
 	_building=true
 	var result: Dictionary=_stage_built()
 	_building=false
+	_preview_quote=Callable()
 	_ok_memo={}
 	if memo and is_instance_valid(world):world.call("_stat_memo_end")
 	return result
 
 func _craftable(world: Node, id: String) -> bool:
 	if not _building:return bool(world._craft_quote(id,1).get("ok",false))
-	if not _ok_memo.has(id):_ok_memo[id]=bool(world._craft_quote(id,1).get("ok",false))
+	if not _ok_memo.has(id):_ok_memo[id]=bool(_quote(world,id,1).get("ok",false))
 	return bool(_ok_memo[id])
+
+func _quote(world: Node, id: String, count: int) -> Dictionary:
+	return _preview_quote.call(id,count) if _preview_quote.is_valid() else world._craft_quote(id,count)
 
 func _stage_built() -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	var world: Node=_world.get_ref() if _world!=null else null
 	if parent==null or world==null:return _fail("source_production_window_host_unavailable")
+	var started: int=FRAME_HITCH.now()
 	var ids: Array[String]=_recipes(world)
+	started=FRAME_HITCH.detail_next("craft.recipe_order",started)
 	if not ids.has(_selected):_selected=ids[0] if not ids.is_empty() else ""
 	_count=clampi(_count,1,_max_count(world))
-	var quote: Dictionary=world._craft_quote(_selected,_count) if not _selected.is_empty() else {}
-	var materials: Array[Dictionary]=_material_rows(world)
+	var quote: Dictionary=_quote(world,_selected,_count) if not _selected.is_empty() else {}
+	var materials: Array[Dictionary]=_material_rows(world,quote)
 	var spec: Dictionary=_spec(world,ids,quote)
+	started=FRAME_HITCH.detail_next("craft.recipe_detail",started)
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(ROOT,spec,out)
 	if not built.get("ok",false):
@@ -305,6 +316,7 @@ func _stage_built() -> Dictionary:
 			last_result=filled
 			return filled
 		pictures+=int(filled.get("pictures",0))
+	FRAME_HITCH.detail("craft.window_nodes",started)
 	var previous: Node2D=_scene
 	next.position=LAYOUT_POSITION
 	parent.add_child(next)
@@ -675,7 +687,8 @@ func _material_info(index: int) -> Dictionary:
 	if _moved():return {"ok":true,"ignored_after_drag":true}
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_production_window_host_unavailable")
-	var rows: Array[Dictionary]=_material_rows(world)
+	var quote: Dictionary=world._craft_quote(_selected,_count) if _selected.begins_with("patch523:") else {}
+	var rows: Array[Dictionary]=_material_rows(world,quote)
 	if index<0 or index>=rows.size():return {"ok":true}
 	var row: Dictionary=rows[index]
 	var detail: Dictionary=_recipe_item_info(world,row)

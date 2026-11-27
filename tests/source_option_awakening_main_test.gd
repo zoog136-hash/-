@@ -10,6 +10,7 @@ const CATALOG=preload("res://scripts/lineagem_base508.gd")
 var _checks: int=0
 var _errors: Array[String]=[]
 var _touch_usec: Array[int]=[]
+var _attempt_confirm_usec: Dictionary={}
 
 func _initialize() -> void:
 	var assets := preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
@@ -371,9 +372,12 @@ func _native() -> void:
 	for seed: int in range(1,1000):
 		probe.seed=seed
 		if probe.randi_range(0,9999)>=required_roll:options.rng.seed=seed;break
+	var attempt_form: Node2D=view._scene
 	await _tap(_hit(_node(view,OPTION.PRIMARY)))
 	await _confirm(w.hud,false)
+	_attempt_confirm_usec["변신"]=_touch_usec.back()
 	var failed: Dictionary=options.view("변신",transform.target)
+	check(view._scene==attempt_form and view._snapshot.experience==failed.experience and view._can_register(),"failed attempt updates the original mounted form and restores eligible material input")
 	check(failed.attempts==int(now.attempts)+1 and failed.failures==int(now.failures)+1 and
 		failed.experience==now.failure_refund_experience and w.gold==quoted.gold-now.attempt_cost,"original UI delegates exact failure cost, preserved experience and counters")
 	check(w.card_draw_fusion.export_state()==quoted.cards and w.skill_awakening.export_state()==quoted.skill,"attempt does not double-charge duplicates or modify skill state")
@@ -405,9 +409,12 @@ func _native() -> void:
 		for seed: int in range(1,1000):
 			probe.seed=seed
 			if probe.randi_range(0,9999)<float(doll_now.success_chance_pct)*100.0:options.rng.seed=seed;break
+		var doll_form: Node2D=view._scene
 		await _tap(_hit(_node(view,OPTION.PRIMARY)))
 		await _confirm(w.hud,false)
+		_attempt_confirm_usec["마법인형"]=_touch_usec.back()
 		var success: Dictionary=options.view("마법인형",doll.target)
+		check(view._scene==doll_form and view._snapshot.awakened and not view._can_submit(),"successful attempt keeps the existing original materials and disables submission")
 		check(success.awakened and success.attempts==int(doll_now.attempts)+1
 			and success.failures==doll_now.failures and w.gold==int(doll_now.gold)-int(doll_now.attempt_cost),
 			"actual doll option success charges only its separate attempt and updates the exact card")
@@ -435,9 +442,12 @@ func _native() -> void:
 			for seed: int in range(1,1000):
 				probe.seed=seed
 				if probe.randi_range(0,9999)<float(supplied.success_chance_pct)*100.0: options.rng.seed=seed; break
+			var relic_form: Node2D=relic_page._scene
 			await _tap(_hit(_node(relic_page,OPTION.PRIMARY)))
 			await _confirm(w.hud,false)
+			_attempt_confirm_usec["성물"]=_touch_usec.back()
 			check(options.view("성물",relic.target).awakened,"confirmed relic awakens with its installed rule")
+			check(relic_page._scene==relic_form and relic_page._snapshot.awakened,"relic attempt also keeps its mounted option rows")
 			await _read_result(w,true)
 			var history: Dictionary = relic_page._history()
 			check(history.get("ok",false),"native history accepts the relic awakening tab")
@@ -449,5 +459,5 @@ func run() -> void:
 	check(OPTION.PAGE_SIZE==9,"three authored original rows of three cards")
 	if "--descriptor-smoke" in OS.get_cmdline_user_args():await _descriptor_smoke()
 	elif not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty():await _native()
-	print("SOURCE_OPTION_AWAKENING_RESULT ",JSON.stringify({"checks":_checks,"failures":_errors,"original_ui":not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty(),"touch_release_usec":_touch_usec}))
+	print("SOURCE_OPTION_AWAKENING_RESULT ",JSON.stringify({"checks":_checks,"failures":_errors,"original_ui":not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty(),"touch_release_usec":_touch_usec,"attempt_confirm_usec":_attempt_confirm_usec}))
 	quit(0 if _errors.is_empty() else 1)
