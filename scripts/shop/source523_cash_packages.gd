@@ -7,8 +7,10 @@ extends RefCounted
 const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const ITEM_LABEL = preload("res://scripts/ui/source523_item_identity.gd")
 const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const ITEM_INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
+const ADVANCED_POWDER_ID: int = 117544
 const MASTERY_TICKET_ID: int = 184652
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const TAG: String = "twilight-cash-package"
@@ -31,6 +33,7 @@ static var busy: bool = false
 static func reset() -> void:
 	_definitions.clear()
 	_names.clear()
+	_skill_books.clear()
 
 static func available() -> bool:
 	return not SOURCE.identity().is_empty() and not CashMarket.data().is_empty()
@@ -102,7 +105,7 @@ static func _select(item_id: int, reward_id: int) -> Dictionary:
 		"root_class_id":int(root.get("CharacterClassID", 0)), "max":int(group.get("SelectMaxCount", 1)), "entries":entries}
 
 ## Original card draw pack: the item runs a market purchase whose products are
-## GotChaClass draws (Unit 35). Only polymorph/doll/relic card pools qualify.
+## GotChaClass draws (Unit 35). Deck 41 outcomes are inventory skill books.
 static func _gotcha(item_id: int, purchase_id: int) -> Dictionary:
 	var draws: Array = []
 	for link: Dictionary in SOURCE.related("MarketPurchaseProduct", "MarketPurchaseID", purchase_id):
@@ -146,7 +149,8 @@ static func skill_book_for(card_id: int) -> int:
 			for link: Dictionary in SOURCE.related("ItemBonus", "BonusID", int(bonus.ID)):
 				var id: int = int(link.ItemClassID)
 				var item: Dictionary = SOURCE.row("ItemClass", id)
-				if item.is_empty() or item.get("TestItem", false): continue
+				if item.is_empty() or item.get("TestItem",true) or not str(item.get("ServiceRegionCode","")).is_empty(): continue
+				if SOURCE.row("ItemCategory",int(item.CategoryID)).get("Name") != "BuffCardDrawer" or link.get("IsPossession",true): continue
 				var raw: String = str(item.get("Name", ""))
 				var rank: int = 0
 				for tag: String in ["이벤트", "혈맹상인", "미사용", "테스트", "삭제", "판매", "현상범"]:
@@ -157,6 +161,12 @@ static func skill_book_for(card_id: int) -> int:
 					best_rank = rank
 	_skill_books[card_id] = best
 	return best
+
+static func skill_draw_allows_class(card: Dictionary, class_id: int) -> bool:
+	if class_id <= 0 or int(card.get("BuffCardDeckID",0)) != SPELL_DECK: return false
+	for limit: Dictionary in SOURCE.related("SpellLearnLimit","SpellClassID",int(card.get("SpellClassID",0))):
+		if int(limit.get("ClassID",0)) == class_id and limit.get("IsTutorialSpell") == false: return true
+	return false
 
 static func roll_gotcha(spec: Dictionary, random: RandomNumberGenerator) -> Array:
 	var rewards: Array = []
@@ -272,9 +282,11 @@ static func native_record(world, item_id: int) -> Dictionary:
 	var base: Dictionary = definition.get("native_record", {})
 	if base.is_empty() or definition.get("excluded") == true: return {}
 	var record: Dictionary = DROPS.variant_item(base, 1)
-	# Storage-only stacks (no use rule) keep this box's existing plain leaf
-	# owner below, so saved box contents keep their records after a reload.
-	if record.is_empty() or DROPS.equipment(record) or NATIVE_STACK.supply_profile(record).get("kind", "") in ["", "storage"]: return {}
+	if record.is_empty() or DROPS.equipment(record): return {}
+	var supply: String = str(NATIVE_STACK.supply_profile(record).get("kind", ""))
+	# Advanced powder already has a shared physical owner for hunting, shop
+	# claims, refinement and titles. Other plain storage owners stay in use.
+	if supply.is_empty() or (supply == "storage" and item_id != ADVANCED_POWDER_ID): return {}
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
@@ -361,6 +373,9 @@ static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.Cas
 	if not card.is_empty():
 		var found: Dictionary = _card_target(world, int(card.card_id))
 		if not found.is_empty(): return found
+	if allow_native and item_id == ADVANCED_POWDER_ID:
+		var powder: Dictionary = native_record(world, item_id)
+		if not powder.is_empty(): return {"kind":"native", "name":str(powder.name), "record":powder}
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
@@ -545,7 +560,15 @@ static func try_use(world, item_name: String) -> bool:
 		_choose(world, item_name, choices)
 		return true
 	if spec.kind == "gotcha":
-		var drawn: Dictionary = open(world, item_name, roll_gotcha(spec, rng))
+		for entry: Dictionary in spec.entries:
+			var spell_card: int = int(entry.get("spell_card_id",0))
+			if spell_card > 0 and not skill_draw_allows_class(SOURCE.row("BuffCard",spell_card),class_id):
+				world.hud.show_message("현재 직업의 스킬 카드 뽑기팩을 사용하세요 · 아이템 보존")
+				return true
+		var next_rng := RandomNumberGenerator.new()
+		next_rng.state = rng.state
+		var drawn: Dictionary = open(world, item_name, roll_gotcha(spec,next_rng))
+		if drawn.get("ok",false): rng.state = next_rng.state
 		world.hud.show_message(str(drawn.get("message", drawn.get("reason", ""))))
 		return true
 	var rolled: Dictionary = roll_bag(spec, class_id, rng)
@@ -581,18 +604,31 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	else: inventory[item_name] = have - 1
 	var instances: Dictionary = world.item_instances.duplicate(true)
 	var next_id: int = int(world.next_item_instance_id)
-	var cards_before: Dictionary = world.card_draw_fusion.export_state()
+	var cards_before: Dictionary = {}
 	var card_results: Array = []
 	var received: Array[String] = []
 	var failure: String = ""
 	for entry: Dictionary in rewards:
 		var item_id: int = int(entry.item_class_id)
 		var amount: int = int(entry.amount)
-		var target: Dictionary = _card_target(world, int(entry.card_id)) if int(entry.get("card_id", 0)) > 0 else resolve(world, item_id)
+		var spell_card: int = int(entry.get("spell_card_id",0))
+		var target: Dictionary
+		if spell_card > 0:
+			if item_id != skill_book_for(spell_card) or not skill_draw_allows_class(SOURCE.row("BuffCard",spell_card),current_class(world)):
+				failure = "스킬 뽑기 결과의 마법서 또는 직업을 확인할 수 없습니다"
+				break
+			var record: Dictionary = DROPS.variant_item(DROPS.definition_id(str(item_id)).get("native_record",{}),1)
+			if NATIVE_STACK.profile(record).get("kind") == "skill_book":
+				target = {"kind":"native","record":record,"name":str(record.name)}
+		else: target = _card_target(world, int(entry.card_id)) if int(entry.get("card_id", 0)) > 0 else resolve(world, item_id)
 		if target.is_empty():
 			failure = "원본 카드 정의 연결 실패"
 			break
+		if item_id == ADVANCED_POWDER_ID and (target.kind != "native" or entry.get("bless", 1) != 1 or entry.get("enchant", 0) != 0):
+			failure = "상급 축복의 가루 원본 지급 조건을 확인할 수 없습니다"
+			break
 		if target.kind == "card":
+			if cards_before.is_empty(): cards_before = world.card_draw_fusion.export_state()
 			for unused: int in range(amount):
 				var outcome: Dictionary = world.card_draw_fusion.receive_source_card(target.category, target.record, {"card_id":int(target.card_id),
 					"item_class_id":item_id, "source_snapshot":"patch523", "origin":"twilight_cash_package", "box_item_class_id":int(definition_id_of(world, item_name))})
@@ -634,7 +670,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 				else:
 					instances = staged.item_instances
 					inventory[native_name] = int(inventory.get(native_name, 0)) + amount
-					received.append("%s ×%d" % [native_name, amount])
+					received.append("%s ×%d" % [ITEM_LABEL.display_name(target.record, native_name), amount])
 		else:
 			var name: String = str(target.name)
 			if int(inventory.get(name, 0)) > LIMIT - amount:
@@ -650,8 +686,10 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 						next_id += 1
 				received.append("%s ×%d" % [name, amount])
 		if not failure.is_empty(): break
-	var cards_after: Dictionary = world.card_draw_fusion.export_state()
-	world.card_draw_fusion.import_state(cards_before)
+	var cards_after: Dictionary = {}
+	if not cards_before.is_empty():
+		cards_after = world.card_draw_fusion.export_state()
+		world.card_draw_fusion.import_state(cards_before)
 	if not failure.is_empty(): return {"ok":false, "reason":failure + " · 상자 보존"}
 	if world.has_method("_index_item_weights_appended"): world._index_item_weights_appended(catalog_size, item_db_size)
 	else: world._index_item_weights()
@@ -660,7 +698,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	# the general save in the next frame (background writer on the phone,
 	# #719). Box debit and rewards land in the same save, so a crash before it
 	# keeps the box and loses the rewards together (never duplicated).
-	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id, "card_draw_fusion":cards_after}
+	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id}
+	if not cards_after.is_empty(): staged["card_draw_fusion"] = cards_after
 	var batched: bool = world.has_method("_request_general_save")
 	busy = true
 	var checked: Error = world._save_game(true, staged, {}, true) if batched else world._save_game(true, staged)
@@ -669,7 +708,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	world.inventory = inventory
 	world.item_instances = instances
 	world.next_item_instance_id = next_id
-	world.card_draw_fusion.import_state(cards_after)
+	if not cards_after.is_empty(): world.card_draw_fusion.import_state(cards_after)
 	if batched: _request_save(world)
 	if world.has_method("_invalidate_equipment_static"): world._invalidate_equipment_static()
 	_publish(world, not card_results.is_empty())

@@ -20,9 +20,17 @@ static func coin_wallet(id: int) -> String:
 	return str(COIN_WALLETS[id]) if label==COIN_WALLETS[id] else ""
 
 static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
-	if grants.is_empty() or origin.is_empty(): return {"ok":false,"error":"원본 지급 출처·명세 필요"}
-	var inventory: Dictionary = world.inventory.duplicate(true)
-	var instances: Dictionary = world.item_instances.duplicate(true)
+	return _prepare(world, grants, origin, true)
+
+## Check one possible box outcome against live balances. Each outcome is
+## checked independently and only the drawn rewards create physical items.
+static func quote_grant(world: Node, grant: Dictionary) -> Dictionary:
+	return _prepare(world, [grant], {}, false)
+
+static func _prepare(world: Node, grants: Array, origin: Dictionary, issue: bool) -> Dictionary:
+	if grants.is_empty() or (issue and origin.is_empty()): return {"ok":false,"error":"원본 지급 출처·명세 필요"}
+	var inventory: Dictionary = world.inventory.duplicate(true) if issue else world.inventory
+	var instances: Dictionary = world.item_instances.duplicate(true) if issue else {}
 	var gold: int = world.gold
 	for grant: Dictionary in grants:
 		for field: String in ["item_class_id","amount","bless_raw","enchant"]:
@@ -36,7 +44,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if float(grant.get("item_class_id",-1))!=int(id) or float(grant.get("amount",0))!=floorf(float(grant.get("amount",0))) or int(grant.get("amount",0))<1 or float(grant.get("bless_raw",0))!=1 or float(grant.get("enchant",-1))!=0:return {"ok":false,"error":"원본 코인 지급 수량·일반 축복·강화 조건 불일치"}
 			var coin_amount: int=int(grant.amount);var coin_before: Variant=inventory.get(coin,0)
 			if not D._source_integer(coin_before) or int(coin_before)<0 or int(coin_before)>MAX_EXACT_JSON_INTEGER-coin_amount:return {"ok":false,"error":"원본 코인 지급 후 수량 정수 범위 초과 · 기존 보유 보존"}
-			inventory[coin]=int(coin_before)+coin_amount
+			if issue: inventory[coin]=int(coin_before)+coin_amount
 			continue
 		if int(id) in SUPPLY.IDS:
 			var amount_value: Variant=grant.get("amount",0)
@@ -45,6 +53,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if current.is_empty() or not SUPPLY.exact(world._catalog_item_from_source_id(str(current.sourceId)),int(id)):return {"ok":false,"error":"새 원문 각성 공급 정의 미등록 · 기존 소유 보존"}
 			var name_value: String=SUPPLY.key(current);var previous_amount: Variant=inventory.get(name_value,0)
 			if not SUPPLY.integer(previous_amount) or int(previous_amount)>MAX_EXACT_JSON_INTEGER-int(amount_value):return {"ok":false,"error":"원문 공급 수량 범위 초과"}
+			if not issue: continue
 			var typed: Dictionary=SUPPLY.stage_grant(current,int(amount_value),instances,origin)
 			if not typed.get("ok",false):return {"ok":false,"error":"새 원문 각성 공급 영수증 생성 실패"}
 			instances=typed.item_instances;inventory[name_value]=int(previous_amount)+int(amount_value)
@@ -73,6 +82,7 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			var limit: int = int(summary.original_item.get("MaxStackAmount", 0))
 			if not D._source_integer(previous) or int(previous) < 0 or amount > mini(10000, limit) or int(previous) > MAX_EXACT_JSON_INTEGER - amount:
 				return {"ok":false,"error":"문양 재료 지급 수량 범위 초과"}
+			if not issue: continue
 			# The symbol service consumes one explicitly selected physical ID.
 			# Reward UIDs use the supplier's existing UUID convention, keeping the
 			# floor owner's sequential ID allocator independent of a staged reward.
@@ -97,23 +107,22 @@ static func stage(world: Node, grants: Array, origin: Dictionary) -> Dictionary:
 			if not D._source_integer(previous_value):return {"ok":false,"error":"기존 소지 수량 정수 형식 보존"}
 			var previous: int=int(previous_value)
 			if previous < 0 or previous > MAX_EXACT_JSON_INTEGER-amount: return {"ok":false,"error":"원본 지급 후 수량 정수 범위 초과 · 기존 보유 보존"}
-			inventory[key] = previous+amount
-		if bless==1 and int(id) in preload("res://scripts/cards/native_awakening_supply.gd").IDS:
-			var typed: Dictionary=preload("res://scripts/cards/native_awakening_supply.gd").stage_grant(record,amount,instances,origin)
-			if not typed.get("ok",false):return {"ok":false,"error":"각성 물품 원본 지급 증명 실패"}
-			instances=typed.item_instances
+			if issue: inventory[key] = previous+amount
+		var equipment: bool = D.equipment(record)
+		if equipment and amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
+		if not issue: continue
 		if stack_supported:
 			var staged: Dictionary=stock.call("stage_grant",record,amount,instances,origin)
 			if not staged.get("ok",false):return {"ok":false,"error":"원본 물리 공급 영수증 생성 실패"}
 			instances=staged.item_instances
-		if D.equipment(record):
-			if amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
+		if equipment:
 			var state: String = {1:"normal",2:"blessed",3:"cursed"}[bless]
 			record["bless_state"] = state
 			for index: int in range(amount):
 				var uid: String = Crypto.new().generate_random_bytes(16).hex_encode()
 				while instances.has(uid): uid = Crypto.new().generate_random_bytes(16).hex_encode()
 				instances[uid] = {"name":str(record.name),"record":NATIVE_FIELDS.full(record).duplicate(true),"level":enchant,"element":"","element_level":0,"bless_state":state,"source_m_reward_proof":{"source_snapshot":"patch523","item_class_id":int(id),"source_item_class_id":int(id),"bless":bless,"enchant":enchant,"supplier":origin.duplicate(true)}}
+	if not issue: return {"ok":true}
 	return {"ok":true,"overrides":{"inventory":inventory,"item_instances":instances,"gold":gold}}
 
 static func commit(world: Node, grants: Array, origin: Dictionary) -> bool:

@@ -100,7 +100,7 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 			var id: String=str(entry.get("instance_id",""))
 			var physical: Dictionary=view.world.item_instances
 			if warehouse and view.mode.selected==1:physical=view.world.warehouse.instances
-			var badge: String="+%d" % int((physical.get(id,{}) as Dictionary).get("level",0)) if not id.is_empty() else "×"+str(int(entry.count))
+			var badge: String="+%d" % int((physical.get(id,{}) as Dictionary).get("level",0)) if not id.is_empty() and not entry.get("native_stack",false) else "×"+str(int(entry.count))
 			view.listing.set_item_text(i,badge)
 			view.listing.set_item_tooltip(i,str(entry.name)+" · "+badge)
 	if index<0 or index>=view.entries.size():
@@ -122,7 +122,7 @@ func refresh(report: Dictionary={},rebuild_rows: bool=false) -> void:
 	else:
 		UI.clear_item_visual(picture)
 		picture.texture=view.listing.get_item_icon(index)
-	if not id.is_empty() and physical.has(id):title.text="+%d %s" % [int(physical[id].get("level",0)),entry.name]
+	if not id.is_empty() and physical.has(id) and not entry.get("native_stack",false):title.text="+%d %s" % [int(physical[id].get("level",0)),entry.name]
 	count_label.text="보유 %s개 · 선택 %s개" % [UI.number_text(int(entry.count)),UI.number_text(int(view.quantity.value))]
 	if not warehouse and not report.is_empty():
 		view.details.text="받을 금액  "+UI.number_text(int(report.get("payment",0)))+" 아데나" if bool(report.get("ok",false)) else str(report.get("reason","매입 불가"))

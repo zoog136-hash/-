@@ -2,6 +2,7 @@ extends VBoxContainer
 # Shop-style local UI. World owns transaction validation and persistence.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const AutoInventory = preload("res://scripts/ui/renewal_auto_inventory.gd")
+const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 var auto_controls
 const TransferSheet=preload("res://scripts/ui/transfer_detail_sheet.gd")
 var transfer_sheet: RefCounted
@@ -89,6 +90,13 @@ func rows_for(is_deposit: bool) -> Array[Dictionary]:
 	var stacks: Dictionary = storage.get("stacks")
 	var physical: Dictionary = world.get("item_instances") if is_deposit else storage.get("instances")
 	var amounts: Dictionary = world.get("inventory") if is_deposit else stacks
+	var receipt_ids: Dictionary = {}
+	for id: String in physical:
+		var entry: Variant = physical[id]
+		if entry is Dictionary and entry.has(STACK.RECEIPT):
+			var name_value: String = str(entry.get("name", ""))
+			if not receipt_ids.has(name_value): receipt_ids[name_value] = []
+			(receipt_ids[name_value] as Array).append(id)
 	var names: Array = amounts.keys()
 	names.sort()
 	for raw_name: Variant in names:
@@ -98,7 +106,16 @@ func rows_for(is_deposit: bool) -> Array[Dictionary]:
 			continue
 		var source_record: Dictionary = world._find_catalog_item_record(item_name)
 		if is_deposit and source_record.has("growth96_item_id") and not bool(source_record.get("storable",false)): continue
-		if is_deposit and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,world._find_catalog_item_record(item_name),physical):continue
+		if receipt_ids.has(item_name):
+			var owned_ids: Array = receipt_ids[item_name]
+			owned_ids.sort()
+			for id: String in owned_ids:
+				var owned: Dictionary = STACK.proof_entry(physical[id], id)
+				if owned.is_empty() or physical[id].has(STACK.TOKEN_RANK): continue
+				if is_deposit and (not STACK.warehouse_storable(owned) or world._is_instance_equipped(id)): continue
+				rows.append({"name":item_name,"count":int(owned.remaining),"instance_id":id,"description":"","native_stack":true})
+			continue # An aggregate row cannot debit a receipt-owned stack.
+		if is_deposit and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,source_record,physical):continue
 		if not _is_equipment(item_name) and not preload("res://scripts/cards/source_awakening_items.gd").has_physical_item(item_name,physical):
 			rows.append({"name":item_name,"count":count,"instance_id":"","description":""})
 			continue
@@ -125,6 +142,7 @@ func _refresh() -> void:
 	selected_index = -1
 	for row: Dictionary in rows_for(mode.selected == 0):
 		_add_entry(str(row.name),int(row.count),str(row.instance_id),str(row.description))
+		entries[-1]["native_stack"] = row.get("native_stack", false)
 	action.disabled = entries.is_empty()
 	summary.text = "보관하기: 장착 장비 제외 · 찾기: 무게 제한 적용 · 모든 변경은 자동 저장"
 	if not entries.is_empty():
@@ -138,8 +156,7 @@ func _selected(index: int) -> void:
 		return
 	selected_index = index
 	var entry: Dictionary = entries[index]
-	var is_physical: bool = str(entry.get("instance_id","")) != ""
-	quantity.max_value = 1 if is_physical else mini(99,int(entry.get("count",1)))
+	quantity.max_value = mini(99,int(entry.get("count",1)))
 	quantity.value = 1
 	transfer_sheet.refresh()
 	if auto_controls != null: auto_controls.refresh()
@@ -164,7 +181,7 @@ func request_drop(reference: String) -> void:
 	if not id.is_empty() and world._is_instance_equipped(id):
 		hud.show_message("장착을 해제한 뒤 보관하세요")
 		return
-	var count: int = 1 if not id.is_empty() else mini(99,int(world.inventory.get(item,0)))
+	var count: int = _transfer_limit(item, id, true)
 	if count <= 0: return
 	hud.confirm_action("창고 보관",item+"\n보관할 수량을 선택하세요","보관",func(amount: int) -> void:
 		hud.warehouse_transfer_requested.emit(item,amount,"deposit",id),count)
@@ -173,8 +190,16 @@ func request_withdraw(reference: String) -> void:
 	var parts: PackedStringArray = reference.split("@@@")
 	var item: String = parts[0]
 	var id: String = parts[1] if parts.size() == 2 else ""
-	if not id.is_empty() and (not world.warehouse.instances.has(id) or world.warehouse.instances[id].get("name","") != item): return
-	var count: int = 1 if not id.is_empty() else mini(99,int(world.warehouse.stacks.get(item,0)))
+	var count: int = _transfer_limit(item, id, false)
 	if count <= 0: return
 	hud.confirm_action("창고 찾기",item+"\n찾을 수량을 선택하세요","찾기",func(amount: int) -> void:
 		hud.warehouse_transfer_requested.emit(item,amount,"withdraw",id),count)
+
+func _transfer_limit(item: String, id: String, deposit: bool) -> int:
+	var amounts: Dictionary = world.inventory if deposit else world.warehouse.stacks
+	if id.is_empty(): return mini(99,int(amounts.get(item,0)))
+	var instances: Dictionary = world.item_instances if deposit else world.warehouse.instances
+	var entry: Dictionary = instances.get(id,{})
+	if entry.get("name") != item: return 0
+	if not entry.has(STACK.RECEIPT): return 1
+	return mini(99, int(STACK.proof_entry(entry,id).get("remaining",0)))

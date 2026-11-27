@@ -5,6 +5,10 @@ extends SceneTree
 ## builds the transfer references, asks 보관 / 찾기 through the existing screen,
 ## and the HUD opens it before the TWILIGHT warehouse list.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
+const VIEW=preload("res://scripts/ui/renewal_warehouse.gd")
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
+const STACK=preload("res://scripts/loot/current523_native_stack.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -25,6 +29,9 @@ class FakeWorld extends Node:
 	var item_instances: Dictionary={"e1":{"name":"장검"}}
 	var warehouse:=FakeWarehouse.new()
 	var refused: String="주문서"
+	func _find_catalog_item_record(_name: String) -> Dictionary: return {}
+	func _enhancement_kind_for_record(_record: Dictionary) -> String: return ""
+	func _is_instance_equipped(_id: String) -> bool: return false
 
 class FakeHud extends Node:
 	signal warehouse_transfer_requested(item: String, amount: int, direction: String, id: String)
@@ -72,6 +79,7 @@ func _run() -> void:
 	check(WINDOW.reference_of({"name":"장검","instance_id":"x1"})=="장검@@@x1" and WINDOW.reference_of({"name":"물약","instance_id":""})=="물약","references match the bag's physical identity")
 	check(WINDOW.amount_text({"count":5,"instance_id":""})=="5" and WINDOW.amount_text({"count":1,"instance_id":""})=="","stack counts above one are shown")
 	check(WINDOW.amount_text({"count":1,"instance_id":"x","level":7})=="+7" and WINDOW.amount_text({"count":1,"instance_id":"x","level":0})=="","equipment shows its enchant level")
+	check(WINDOW.amount_text({"count":9,"instance_id":"x","native_stack":true})=="9","a physical consumable shows quantity")
 	var window=WINDOW.new()
 	var screen:=FakeScreen.new()
 	window._screen=weakref(screen)
@@ -80,9 +88,38 @@ func _run() -> void:
 	check(window._slot_pressed("store",0).get("requested")=="withdraw" and screen.calls[1]==["withdraw","장검@@@s9"],"a 창고 item asks 찾기 through the warehouse screen")
 	check(window._slot_pressed("store",3).get("empty_slot",false) and screen.calls.size()==2,"an empty slot asks nothing")
 	_batch()
+	if not SOURCE.not_installed(): _original_stack_rows()
 	_sources()
 	print("ORIGINAL_UI_STORAGE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
+
+func _original_stack_rows() -> void:
+	var record: Dictionary=DROPS.variant_item(DROPS.definition_id("233").get("native_record",{}),1)
+	var grant: Dictionary=STACK.stage_grant(record,9,{}, {"kind":"warehouse_ui_regression"})
+	check(grant.get("ok",false),"verified original potion stack can be selected")
+	if not grant.get("ok",false): return
+	var world:=FakeWorld.new()
+	var key: String=str(record.name)
+	var uid: String=str(grant.id)
+	world.inventory={key:9}
+	world.item_instances=grant.item_instances
+	var view: Control=VIEW.new()
+	view.world=world
+	var rows: Array[Dictionary]=view.rows_for(true)
+	check(rows.size()==1 and rows[0].count==9 and WINDOW.reference_of(rows[0])==key+"@@@"+uid,
+		"deposit row preserves the verified stack ID and actual quantity")
+	check(view._transfer_limit(key,uid,true)==9 and WINDOW._held(world,"bag",key,uid)==9,
+		"single and batch deposit both use the receipt's quantity")
+	world.warehouse.stacks={key:9}
+	world.warehouse.instances=world.item_instances
+	world.inventory={}
+	world.item_instances={}
+	rows=view.rows_for(false)
+	check(rows.size()==1 and rows[0].count==9 and WINDOW.reference_of(rows[0])==key+"@@@"+uid,
+		"withdrawal offers the same receipt reference")
+	check(view._transfer_limit(key,uid,false)==9 and view._transfer_limit("other",uid,false)==0,"withdrawal validates the selected name and quantity")
+	view.free()
+	world.free()
 
 ## 모두 맡기기: every row of the tab, 99 per move, stopping at a refused row.
 func _batch() -> void:

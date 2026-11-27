@@ -1363,6 +1363,12 @@ static func can_supply(record: Dictionary,inventory: Dictionary,instances: Dicti
 		total+=int(owned.remaining)
 	return integer(inventory.get(name_value,0)) and int(inventory.get(name_value,0))>=total
 
+static func warehouse_storable(owned: Dictionary) -> bool:
+	# Proof validation already checked that this is the receipt's ItemClass.
+	# Read the rule from the archive even when the save trimmed its row copy.
+	var item_id: int=int(owned.get("receipt",{}).get("item_class_id",0))
+	return item_id>0 and SOURCE.row("ItemClass",item_id).get("IsStorable")==true
+
 static func transfer_warehouse(world: Node,item_name: String,quantity: int,direction: String,uid: String) -> Dictionary:
 	if direction not in ["deposit","withdraw"]:return {"handled":false}
 	var source: Dictionary=world.item_instances if direction=="deposit" else world.warehouse.instances
@@ -1376,7 +1382,7 @@ static func transfer_warehouse(world: Node,item_name: String,quantity: int,direc
 	if owned.is_empty() or owned.record.get("name")!=item_name:return _failure("이동할 실제 원본 묶음 개체를 선택하세요")
 	if quantity<1 or quantity>99 or quantity>int(owned.remaining):return _failure("선택한 원본 묶음의 실제 잔량 안에서 수량을 지정하세요")
 	if world._item_locked(item_name,uid) or world._item_locked(item_name):return _failure("잠긴 원본 개체는 이동할 수 없습니다")
-	if direction=="deposit" and (NATIVE_FIELDS.full(owned.receipt).source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
+	if direction=="deposit" and (not warehouse_storable(owned) or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
 	if direction=="withdraw" and world._inventory_total_weight()+quantity*maxi(0,int(world.item_weight_index.get(item_name,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	var warehouse: Dictionary=world.warehouse.snapshot()
@@ -1693,7 +1699,6 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 	if needs_class and class_id<=0:return _failure("정확한 현재 원본 직업 정체 연결 필요 · 클래스 풀을 합치지 않습니다")
 	var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
 	var supplier: Script=load("res://scripts/loot/patch523_item_inventory.gd")
-	var view:=SupplierView.new();view.host=world;view.inventory=world.inventory;view.item_instances=world.item_instances;view.gold=world.gold
 	# Every eligible positive candidate must have a real registered supplier.
 	# Missing candidates never disappear or renormalize a random pool.
 	# TWILIGHT 근사 (2): LuckyBagLimitedItemPossession — refused while that many are owned.
@@ -1704,24 +1709,22 @@ static func use_bag(world: Node,uid: String,owned: Dictionary,record: Dictionary
 			if value is Dictionary and value.get("record") is Dictionary and int(value.record.get("source_item_class_id",0))==int(limit.item_class_id):
 				var stack: Dictionary=proof(world,str(key))
 				held+=int(stack.get("remaining",1)) if not stack.is_empty() else 1
-		if held>=int(limit.max):view.free();return _failure("원본 조건: 이미 보유한 아이템이라 열 수 없습니다 · 상자 보존 (TWILIGHT 근사)")
+		if held>=int(limit.max):return _failure("원본 조건: 이미 보유한 아이템이라 열 수 없습니다 · 상자 보존 (TWILIGHT 근사)")
+	var quote_started: int = FRAME_HITCH.now()
 	for reward: Dictionary in spec.get("rewards",[]):
 		if not executor.call("class_matches",reward.get("class_ids",[]),class_id) and not class_id in spec.get("approx_class_pool",[]):continue
 		if reward.get("entity_type_id")==0 and int(reward.get("probability_raw",0))<=0:continue
 		if reward.has("approx_card"):
-			if card_binding(world,str(reward.approx_card.card_kind),int(reward.approx_card.card_id)).is_empty():view.free();return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 상자 보존")
+			if card_binding(world,str(reward.approx_card.card_kind),int(reward.approx_card.card_id)).is_empty():return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 상자 보존")
 			continue
 		var definition: Dictionary=D.definition_id(str(int(reward.get("item_class_id",0))))
 		var item: Dictionary=D.variant_item(definition.get("native_record",{}),int(reward.get("bless_raw",0)))
-		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():view.free();return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
+		if item.is_empty() or definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false) or not NATIVE_FIELDS.field(item,"source_condition_pending",[]).is_empty():return _failure("전체 원본 보상 정체·사용 공급 조건 미연결 · 후보 제거 없이 상자 보존")
 		var deadline: String=D.deadline_problem(item,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
-		if not deadline.is_empty():view.free();return _failure(deadline)
-		var quote_origin := {"kind":"source_native_bag_candidate_quote","input_physical_id":uid}
-		if described: quote_origin["story_desc_id"] = spec.story_desc_id
-		else: quote_origin["entity_id"] = reward.source_entity_id
-		var ready: Dictionary=supplier.call("stage",view,[{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)}],quote_origin)
-		if not ready.get("ok",false):view.free();return _failure(str(ready.get("error","전체 원본 보상 공급자 연결 대기")))
-	view.free()
+		if not deadline.is_empty():return _failure(deadline)
+		var ready: Dictionary=supplier.call("quote_grant",world,{"item_class_id":int(reward.item_class_id),"amount":int(reward.amount),"bless_raw":int(reward.bless_raw),"enchant":int(reward.enchant)})
+		if not ready.get("ok",false):return _failure(str(ready.get("error","전체 원본 보상 공급자 연결 대기")))
+	FRAME_HITCH.detail("item.box_reward_preflight",quote_started)
 	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
 	var selected: Dictionary=executor.call("select_rewards",spec,class_id,candidate_rng,clampi(int(world.ui_preferences.get("patch523_reward_bag_draw_count",1)),1,10))
 	if not selected.get("ok",false):return _failure("원본 전체 보상 풀·선택 계약 불일치")
