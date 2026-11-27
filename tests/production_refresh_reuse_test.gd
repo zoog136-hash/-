@@ -134,6 +134,15 @@ func _run() -> void:
 			window._select(str(ids[1]))
 			check(window.selected()==str(ids[1]) and window.refresh().get("handled",false),"a new selection still refreshes")
 		await _check_quantity(world,window)
+		var before_reopen: int=window._scene.get_instance_id()
+		var selected: String=window.selected()
+		hud._close_workspace()
+		await process_frame
+		check(not is_instance_id_valid(before_reopen) and window._fill_rows.is_empty(),"closing releases the previous source scene and row references")
+		hud._navigate("crafting")
+		await process_frame
+		check(window.is_open() and window.selected()==selected and not hud.workspace.visible,"the menu reopens the original crafting window after its old rows are freed")
+		hud._close_workspace()
 	print("PRODUCTION_REFRESH_REUSE_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"mounted":mounted}))
 	world.queue_free()
 	await process_frame
