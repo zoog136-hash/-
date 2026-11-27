@@ -9,6 +9,7 @@ Git revision; it creates no replacement art and never edits the source tree.
 """
 from __future__ import annotations
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -17,6 +18,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from threading import Event
 
 TEXT = {'.gd', '.tscn', '.tres', '.json', '.godot', '.cfg', '.gdshader'}
 REFERENCE = re.compile(r'["\']((?:res://)?(?:assets|data|scripts|scenes|tests|docs|addons|shaders)/[^"\'\n]+)["\']')
@@ -809,27 +811,111 @@ def run(command: list[str], path: Path, log: Path, env: dict, timeout: int, mark
             print('::error title=Core runtime::' + line.replace('%','%25').replace('\r','%0D').replace('\n','%0A'), flush=True)
         raise RuntimeError(f'{log.name}: exit={result.returncode}, errors={len(errors)}, completion={marker_ok}')
 
+# The existing checks with independent profiles may run beside the serial
+# group. The remaining checks keep their original order and shared profile.
+ISOLATED_CHECKS = frozenset({
+    'audited_item_disposition_main_test',
+    'auto_original_action_art_main_test',
+    'character_account_field_save_test',
+    'character_account_route_main_test',
+    'current523_aden_play_controller_test',
+    'current523_aden_play_options_test',
+    'current523_aden_preferences_test',
+    'current523_prior_renderer_release_test',
+    'doll_explore_routes_main_test',
+    'dungeon_durable_cpu_main_test',
+    'escaros_original_card_main_test',
+    'ground_pickup_shortlist_test',
+    'loading_screen_test',
+    'loading_world_readiness_test',
+    'native_advanced_powder_cold_bag_test',
+    'native_advanced_powder_stock_main_test',
+    'native_antidote_owner_main_test',
+    'native_auto_hp_potion_main_test',
+    'native_bag_ticket_target_main_test',
+    'native_bonus_stat_eye_main_test',
+    'native_event_box_rewards_main_test',
+    'native_exact_card_choice_main_test',
+    'native_exact_experience_main_test',
+    'native_firework_main_test',
+    'native_fusion_points_main_test',
+    'native_growth_adena_potions_main_test',
+    'native_growth_catalyst_main_test',
+    'native_inventory_slot_names_main_test',
+    'native_manual_scrolls_main_test',
+    'native_smelt_inventory_main_test',
+    'native_stack_save_validation_budget_test',
+    'native_symbol_reward_bag_test',
+    'native_timed_buff_publish_main_test',
+    'native_timed_selection_boxes_main_test',
+    'native_trial_coin_main_test',
+    'native_witch_mana_potions_main_test',
+    'normal_hit_roll_scope_test',
+    'quest_only_retirement_main_test',
+    'retired_enhancement_items_main_test',
+    'source523_shop_startup_scope_test',
+    'source_bag_detail_entry_main_test',
+    'source_full_menu_shell_main_test',
+    'source_inventory_controls_main_test',
+    'source_item_action_routes_main_test',
+    'source_item_visible_action_main_test',
+    'source_option_awakening_main_test',
+    'source_skill_scroll_drag_main_test',
+})
+
+
 def run_check(name, command, target, log, env, marker):
     # These checks require a missing prior save or map preference. Unrelated
     # earlier checks may legitimately create either. Isolate only these
     # fixtures; never delete previous data or weaken a gameplay assertion.
-    if name in {'loading_screen_test', 'loading_world_readiness_test',
-                'character_account_route_main_test', 'character_account_field_save_test', 'dungeon_durable_cpu_main_test',
-                'current523_aden_preferences_test', 'current523_aden_play_options_test',
-                'current523_aden_play_controller_test', 'current523_prior_renderer_release_test',
-                'native_stack_save_validation_budget_test','native_bag_ticket_target_main_test','retired_enhancement_items_main_test',
-                'audited_item_disposition_main_test',
-                'ground_pickup_shortlist_test','doll_explore_routes_main_test','native_bonus_stat_eye_main_test',
-                'native_exact_experience_main_test','native_firework_main_test','native_growth_catalyst_main_test','native_witch_mana_potions_main_test','native_auto_hp_potion_main_test','native_antidote_owner_main_test','native_trial_coin_main_test','native_timed_selection_boxes_main_test','native_growth_adena_potions_main_test','native_event_box_rewards_main_test',
-                'native_symbol_reward_bag_test','quest_only_retirement_main_test','escaros_original_card_main_test','source_item_visible_action_main_test',
-                'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test','source_full_menu_shell_main_test','source_option_awakening_main_test','native_advanced_powder_stock_main_test','native_advanced_powder_cold_bag_test',
-                'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test','native_inventory_slot_names_main_test','native_timed_buff_publish_main_test','native_exact_card_choice_main_test',
-                'source_inventory_controls_main_test','source_bag_detail_entry_main_test','source_item_action_routes_main_test','source_skill_scroll_drag_main_test'}:
+    if name in ISOLATED_CHECKS:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
             fixture = dict(env, XDG_DATA_HOME=profile + '/data',
                            XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
             return run(command, target, log, fixture, 180, marker)
     return run(command, target, log, env, 180, marker)
+
+def run_core_checks(checks, target, execute, parallel_isolated=False):
+    stop = Event()
+
+    def run_group(cases, project):
+        try:
+            for name, user_args in cases:
+                if stop.is_set():
+                    return
+                execute(name, user_args, project)
+        except Exception:
+            stop.set()
+            raise
+
+    if not parallel_isolated:
+        run_group(checks, target)
+        return
+    isolated = [check for check in checks if check[0] in ISOLATED_CHECKS]
+    shared = [check for check in checks if check[0] not in ISOLATED_CHECKS]
+    if not isolated or not shared:
+        run_group(checks, target)
+        return
+
+    # Copy the stage only after a successful import. The two groups never
+    # write to the same local project, import cache or user profile.
+    with tempfile.TemporaryDirectory(prefix='twilight-core-isolated-stage-') as workspace:
+        isolated_stage = Path(workspace) / 'project'
+        try:
+            shutil.copytree(target, isolated_stage)
+        except (OSError, shutil.Error):
+            print('CORE_SERIAL_FALLBACK isolated stage copy failed', flush=True)
+            run_group(checks, target)
+            return
+        print('CORE_PARALLEL_ISOLATED', len(shared), len(isolated), flush=True)
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(run_group, isolated, isolated_stage)
+            try:
+                run_group(shared, target)
+                future.result()
+            finally:
+                stop.set()
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -838,6 +924,8 @@ def main():
     parser.add_argument('--godot', required=True)
     parser.add_argument('--logs', type=Path, required=True)
     parser.add_argument('--prepare-only', action='store_true')
+    parser.add_argument('--parallel-isolated', action='store_true',
+                        help='Run the existing isolated-profile checks beside the serial checks')
     args = parser.parse_args()
     root, target, logs = args.root.resolve(), args.stage.resolve(), args.logs.resolve()
     logs.mkdir(parents=True, exist_ok=True)
@@ -852,8 +940,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='twilight-core-') as profile:
         env.update(XDG_DATA_HOME=profile + '/data', XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
         run([args.godot, '--headless', '--path', str(target), '--editor', '--import', '--quit'], target, logs/'import.txt', env, 1800)
-        for name, user_args in CHECKS:
-            command = [args.godot, '--headless', '--path', str(target), '--script', 'res://tests/'+name+'.gd']
+
+        def execute(name, user_args, project):
+            command = [args.godot, '--headless', '--path', str(project), '--script', 'res://tests/'+name+'.gd']
             if user_args:
                 command += ['--', *user_args]
             marker = {'shop_skill_book_contract_cache_test':'SHOP_BOOK_CACHE_RESULT',
@@ -1390,8 +1479,10 @@ def main():
                       'minigame523_scope_test':'MINIGAME523_RESULT',
                       'content523_test':'CONTENT523_RESULT',
                       'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
-            run_check(name, command, target, logs/(name+'.txt'), env, marker)
+            run_check(name, command, project, logs/(name+'.txt'), env, marker)
             print('CORE_CHECK_OK', name, flush=True)
+
+        run_core_checks(CHECKS, target, execute, args.parallel_isolated)
 
 if __name__ == '__main__':
     try:
