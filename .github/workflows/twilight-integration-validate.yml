@@ -15,8 +15,9 @@ concurrency:
 jobs:
   godot-integration:
     # 730 Godot checks no longer fit one 4h job (2026-11-05: 349 ran, then the
-    # job was cancelled). Every check still runs exactly once across 8 shards;
-    # render stages run once, in shard 0.
+    # job was cancelled). Each runtime check runs once across 8 shards.
+    # Each runner prepares its own imports and navigation. The boot smoke
+    # check and the extra render stages run once, in shard 0.
     name: godot-integration (shard ${{ matrix.shard }}/8)
     strategy:
       fail-fast: false
@@ -108,7 +109,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 5400 --logs test-results --shard-index ${{ matrix.shard }} --shard-count 8
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --import-timeout 5400 --logs test-results --shard-index ${{ matrix.shard }} --shard-count 8 --boot-once
       - name: Floor-loot visual, manual pickup and live AUTO regression
         if: ${{ matrix.shard == 0 }}
         shell: bash

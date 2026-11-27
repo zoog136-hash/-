@@ -21,14 +21,18 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(selected, source)
     def test_every_test_exactly_once(self):
         for count in (1,2,4,8):
-            source=checks(); seen=[]
+            source=checks(); seen=[]; boots=0
             for index in range(count):
-                selected,plan=select_checks(source,shard_index=index,shard_count=count)
-                self.assertEqual([n for n,_ in selected[:3]],list(PREPARATION))
+                selected,plan=select_checks(source,shard_index=index,shard_count=count,boot_once=True)
+                preparation=list(PREPARATION if index == 0 else PREPARATION[:2])
+                self.assertEqual([n for n,_ in selected[:len(preparation)]],preparation)
+                self.assertEqual(plan['preparation'],preparation)
                 self.assertEqual(plan['discovered_tests'],[n for n,_ in source[3:]])
+                boots+=sum(n=='boot' for n,_ in selected)
                 seen += plan['selected_tests']
             self.assertEqual(sorted(seen), [n for n,_ in source[3:]])
             self.assertEqual(len(seen),len(set(seen)))
+            self.assertEqual(boots,1)
     def test_invalid_count(self):
         for count in (-1,0):
             with self.assertRaises(ValueError):select_checks(checks(),shard_count=count)
@@ -58,7 +62,7 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(select_checks(checks(),shard_index=2,shard_count=4),select_checks(checks(),shard_index=2,shard_count=4))
     def test_new_discovery_not_omitted(self):
         source=checks()+[('newly_added_test',[])]
-        seen=[n for i in range(4) for n,_ in select_checks(source,shard_index=i,shard_count=4)[0][3:]]
+        seen=[n for i in range(4) for n in select_checks(source,shard_index=i,shard_count=4)[1]['selected_tests']]
         self.assertIn('newly_added_test',seen)
 
 
@@ -81,6 +85,8 @@ elif any('bake_hunting_navigation.gd' in x for x in sys.argv):
     folder=pathlib.Path('data/maps/navigation');folder.mkdir(parents=True,exist_ok=True)
     (folder/'fixture.nav').write_bytes(b'CONTROLLED, NOT GAME NAVIGATION')
     print('NAV_BAKE_OK 1')
+elif '--quit-after' in sys.argv and os.environ.get('CONTROL_BOOT_FAIL')=='1':
+    print('ERROR: controlled boot failure');sys.exit(1)
 elif '--script' in sys.argv:
     mode=os.environ.get('CONTROL_MODE','ok')
     if mode=='error': print('ERROR: controlled test error');sys.exit(1)
@@ -114,6 +120,16 @@ elif '--script' in sys.argv:
         self.assertEqual(d['checks'],[*PREPARATION,'case_1_test','case_5_test'])
         self.assertEqual(len(d['plan']['discovered_tests']),8)
         self.assertEqual(d['selection'],'SHARDED_FULL_SUITE')
+    def test_failed_boot_still_fails_the_owner_shard(self):
+        self.add('case_0_test');self.add('case_1_test')
+        env={'CONTROL_BOOT_FAIL':'1'}
+        p,d=self.run_checks('--shard-count','2','--shard-index','0','--boot-once',extra_env=env)
+        self.assertNotEqual(p.returncode,0)
+        self.assertEqual(d['failed'],['boot'])
+        self.assertEqual(d['not_run'],[])
+        p,d=self.run_checks('--shard-count','2','--shard-index','1','--boot-once',extra_env=env)
+        self.assertEqual(p.returncode,0,p.stderr)
+        self.assertEqual(d['checks'],[*PREPARATION[:2],'case_1_test'])
     def test_retired_legacy_layout_is_reported_never_passed(self):
         # field_world_test asserted the pre-remake Aden layout, which the game
         # no longer serves (RETIRED_LEGACY_MAP_TESTS); it must not run or pass.

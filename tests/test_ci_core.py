@@ -11,10 +11,59 @@ import os
 import sys
 import json
 import re
+from threading import Barrier
 
 SPEC = importlib.util.spec_from_file_location('ci_core', Path(__file__).parents[1]/'tools/ci_core.py')
 CORE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(CORE)
+
+
+class CoreParallelTest(unittest.TestCase):
+    def test_groups_run_once_in_order_with_separate_project_writes(self):
+        checks = [('shared_first', []), ('loading_screen_test', []),
+                  ('shared_second', ['--cached-frames']), ('character_account_route_main_test', [])]
+        with tempfile.TemporaryDirectory() as directory:
+            stage = Path(directory)
+            (stage / '.godot').mkdir()
+            (stage / '.godot/imported.txt').write_text('verified stage fixture')
+            barrier = Barrier(2)
+            calls = {'shared': [], 'isolated': []}
+
+            def execute(name, args, project):
+                group = 'shared' if project == stage else 'isolated'
+                calls[group].append((name, args))
+                if name == 'loading_screen_test':
+                    self.assertEqual((project / '.godot/imported.txt').read_text(), 'verified stage fixture')
+                    (project / 'isolated-write.txt').write_text('isolated')
+                    barrier.wait(timeout=10)
+                if name == 'shared_first':
+                    barrier.wait(timeout=10)
+                    self.assertFalse((project / 'isolated-write.txt').exists())
+
+            CORE.run_core_checks(checks, stage, execute, parallel_isolated=True)
+            self.assertEqual(calls['shared'], [checks[0], checks[2]])
+            self.assertEqual(calls['isolated'], [checks[1], checks[3]])
+
+    def test_failed_stage_copy_runs_the_complete_original_order(self):
+        checks = [('shared_first', []), ('loading_screen_test', []), ('shared_second', [])]
+        calls = []
+        with tempfile.TemporaryDirectory() as directory:
+            stage = Path(directory)
+            with mock.patch.object(CORE.shutil, 'copytree', side_effect=OSError('fixture disk full')):
+                CORE.run_core_checks(checks, stage, lambda n, a, p: calls.append((n, a, p)), True)
+        self.assertEqual(calls, [(name, args, stage) for name, args in checks])
+
+    def test_failed_isolated_check_fails_the_gate(self):
+        checks = [('shared_first', []), ('loading_screen_test', [])]
+
+        def execute(name, _args, _project):
+            if name == 'loading_screen_test':
+                raise RuntimeError('isolated failure')
+
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(RuntimeError, 'isolated failure'):
+                CORE.run_core_checks(checks, Path(directory), execute, parallel_isolated=True)
+
 
 class CoreStageTest(unittest.TestCase):
     def test_current_source_placement_identities_join_actor_scope(self):
