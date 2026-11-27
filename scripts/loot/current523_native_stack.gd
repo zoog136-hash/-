@@ -120,6 +120,8 @@ static func profile(record: Dictionary) -> Dictionary:
 	# Original teleport scroll / Ainhasad charge / RegenHP-RegenMP food.
 	var source_effect: String=str(EFFECTS.claims(record))
 	if source_effect=="food":return {"kind":"buff","runtime_food":true}
+	if source_effect=="teleport" and int(record.get("source_item_class_id",0)) in EFFECTS.REUSABLE_RANDOM_SCROLLS:
+		return {"kind":"teleport","spec":{"can_use_when_invisible":definition.original_item.get("CanUseWhenInvisible",false)}}
 	if source_effect in ["teleport","ain","teleport_location"]:return {"kind":source_effect}
 	return {}
 
@@ -864,6 +866,7 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return _failure("물리 공급 영수증과 기존 사용 장부 불일치")
 	if int(owned.used)+int(owned.transferred)>0 and not _ledger_row_matches(ledger.get(uid),owned,int(owned.used),int(owned.remaining)):return _failure("물리 잔량과 원본 사용 장부 불일치")
 	var candidate_rng:=RandomNumberGenerator.new();candidate_rng.seed=world.rng.seed;candidate_rng.state=world.rng.state
+	if prepared.has("patch523_transaction_rng"):candidate_rng.state=int(prepared.patch523_transaction_rng.state)
 	var amount: int=0
 	if effect.kind=="hp":
 		amount=D.healing_amount(record,candidate_rng,0)
@@ -920,6 +923,9 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if prepared.has("destination"):
 		if loading and not await world.prepare_map_point(prepared.destination):
 			return {"handled":true,"ok":false,"silent":true}
+		if not EFFECTS.landing_rng_current(world,prepared):return _failure("이동 준비 중 상태가 변경되었습니다 · 다시 시도하세요")
+		if prepared.has("patch523_transaction_rng") and (world._item_locked(item_name,uid) or world._item_locked(item_name) or proof(world,uid)!=owned):
+			return _failure("이동 준비 중 주문서 상태가 변경되었습니다 · 아이템 보존")
 		world.consumable_service._teleport_player(prepared.destination)
 	busy=true;_candidate=payload.duplicate(true)
 	if is_buff:buff_phase=FRAME_HITCH.detail_next("item.buff_stage",buff_phase)
