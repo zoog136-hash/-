@@ -20,6 +20,7 @@ const SMELT=preload("res://scripts/equipment523/native_smelt_input.gd")
 const TJ_SOURCE=preload("res://scripts/tj/source523.gd")
 const TJ_WINDOW=preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd")
 const ENHANCEMENT=preload("res://scripts/crafting/patch523_enhance_source_book.gd")
+const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const VERIFIED={
 	139581:"actual_bag_atomic_recharge_fault_retry_reload",
@@ -148,6 +149,9 @@ func run()->void:
 				var owner: String="no_original_direct_owner_found"
 				if category=="ScrollElementalEnchant":
 					if not ENHANCEMENT.scroll_element(record).is_empty():owner="elemental_enhancement_group"
+				elif category in ["ScrollElementalConversion","ScrollElementalRemover"]:
+					var management: String=ELEMENT_MANAGEMENT.kind(record)
+					if not management.is_empty():owner=management
 				elif ENHANCEMENT.declares_scroll(record):owner="enhancement_group"
 				elif category=="ScrollBless" and OWNER.profile(record).get("kind")=="bless":owner="blessing_target_picker"
 				entry["enhancement_route"]=owner

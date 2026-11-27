@@ -4136,9 +4136,16 @@ func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	view.configure(self,entry_solvent_uid)
 
 func open_native_smelt523(offer:Dictionary)->bool:
-	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_smelt_window"):return false
-	_open_window("enhance","장비 제련","원본 장비와 재료를 선택합니다")
-	var result:Dictionary=original_main_ui_controller.try_open_smelt_window(offer)
+	return _open_native_enchant_offer(offer,"장비 제련","try_open_smelt_window")
+
+func open_native_element_management523(offer: Dictionary) -> bool:
+	var header: String="속성 변환" if offer.get("kind")=="element_convert" else "속성 제거"
+	return _open_native_enchant_offer(offer,header,"try_open_element_management_window")
+
+func _open_native_enchant_offer(offer: Dictionary, header: String, method: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method(method):return false
+	_open_window("enhance",header,"원본 장비와 재료를 선택합니다")
+	var result: Dictionary=original_main_ui_controller.call(method,offer)
 	original_main_ui_status["enchant_window"]=result
 	if result.get("ok",false):
 		if pointer_transfer!=null:pointer_transfer.cancel()

@@ -7,6 +7,9 @@ const OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
 const FIXED=preload("res://scripts/quests/quest_fixed_cards523.gd")
 const INV=preload("res://scripts/loot/patch523_item_inventory.gd")
 const FORGE=preload("res://scripts/ui/renewal_forge.gd")
+const NAMED=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const ENCHANT_WINDOW=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const EXPECTED={139781:[77381,93201,12231,false,false],289172:[60311,296242,22892,false,false],
 	289182:[60321,296252,22902,false,false],289202:[60341,296272,22922,true,false],306611:[86111,323831,23801,true,true],
 	306621:[86521,326161,23811,true,true],306631:[86571,326291,23821,true,true],306641:[86581,326321,23831,true,true]}
@@ -111,6 +114,7 @@ func exercise()->void:
 	exercise_legacy(w,306621,SOURCE.SOURCE_SHA)
 	exercise_quest_enchantment(w)
 	exercise_elemental_enchantment(w)
+	if not OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").is_empty():await exercise_element_management(w)
 	w.queue_free()
 	await process_frame
 
@@ -255,3 +259,75 @@ func exercise_elemental_enchantment(w: TwilightWorld)->void:
 	w._load_game(true)
 	weapon=w.item_instances.get(weapon_uid,{})
 	check(weapon.get("element")=="fire" and weapon.get("element_level")==1 and weapon.get("level")==ordinary and not w.item_instances.has(scroll_uid),"element, ordinary level and debit survive reload")
+
+func exercise_element_management(w: TwilightWorld) -> void:
+	var rows: Array[Dictionary]=[]
+	for id: int in ELEMENT_MANAGEMENT.CONVERT_IDS+ELEMENT_MANAGEMENT.REMOVE_IDS:
+		rows.append({"item_class_id":id,"amount":1,"bless_raw":1,"enchant":0})
+	w.gold=150000
+	check(INV.commit(w,rows,{"kind":"twilight_debug_catalog"}),"all six original elemental management items have owned references")
+	var ids: Dictionary={}
+	for uid: String in w.item_instances:
+		var id: int=int(w.item_instances[uid].get("record",{}).get("source_item_class_id",0))
+		ids[id]=uid
+	var weapon_uid: String=str(ids.get(27,""))
+	var before_save: String=FileAccess.get_sha256(w.save_path())
+	var before_rng: int=w.rng.state
+	var forge_rows: Array=FORGE.owned_scrolls(w.hud)
+	for row: Dictionary in rows:
+		var id: int=row.item_class_id
+		var uid: String=str(ids.get(id,""))
+		if not ids.has(id):check(false,"missing native stack "+str(id));continue
+		check(forge_rows.any(func(candidate: Dictionary) -> bool:return candidate.get("instance_id")==uid),"original enhancement scroll tab lists "+str(id))
+		use_from_bag(w,str(w.item_instances[uid].name)+"@@@"+uid)
+		var window: RefCounted=w.hud._original_enchant_window()
+		var convert: bool=id in ELEMENT_MANAGEMENT.CONVERT_IDS
+		var mode: String="element_convert" if convert else "element_remove"
+		check(window!=null and window.is_open() and window.last_result.get("mode")==mode and window.last_result.get("cost")== (100000 if convert else 0) and window.last_result.get("material_uid")==uid,"mounted original elemental picker and exact fee for "+str(id))
+	check(w.gold==150000 and w.rng.state==before_rng and FileAccess.get_sha256(w.save_path())==before_save,"opening each picker changes neither save, adena, nor RNG")
+	if weapon_uid.is_empty() or not ids.has(2751) or not ids.has(198031):return
+	var convert_uid: String=ids[2751]
+	use_from_bag(w,str(w.item_instances[convert_uid].name)+"@@@"+convert_uid)
+	var window: RefCounted=w.hud._original_enchant_window()
+	if window==null or window.last_result.get("mode")!="element_convert":return
+	check(window.select_target(weapon_uid).get("ok",false) and not window.last_result.get("can_enchant",false),"choose the owned weapon before choosing an element")
+	check(not window._choose_property("fire").get("ok",false),"already applied element stays disabled")
+	await press_element_button(window,ENCHANT_WINDOW.P_PROPERTY+"Nd_ButtonSet/Btn_Water_Normal")
+	check(window.last_result.get("element_choice")=="water" and window.last_result.get("can_enchant",false),"actual original Water button enables conversion")
+	var weapon_name: String=w.item_instances[weapon_uid].name
+	w.ui_preferences.item_locks[weapon_name]=true
+	await press_element_button(window,ENCHANT_WINDOW.P_SMELT_START)
+	check(w.item_instances[weapon_uid].element=="fire" and w.item_instances.has(convert_uid) and FileAccess.get_sha256(w.save_path())==before_save,"a lock applied after selection still protects the weapon and scroll")
+	w.ui_preferences.item_locks.erase(weapon_name)
+	w.equipment_collections.test_save_writer=reject
+	rejected={}
+	await press_element_button(window,ENCHANT_WINDOW.P_SMELT_START)
+	check(not rejected.is_empty() and rejected.get("gold")==50000,"actual original confirmation attempts the documented cost")
+	check(w.item_instances[weapon_uid].element=="fire" and w.item_instances.has(convert_uid) and w.gold==150000 and w.rng.state==before_rng and FileAccess.get_sha256(w.save_path())==before_save,"failed write preserves weapon, scroll, currency, RNG, and save")
+	w.equipment_collections.test_save_writer=Callable()
+	await press_element_button(window,ENCHANT_WINDOW.P_SMELT_START)
+	check(w.item_instances[weapon_uid].element=="water" and w.item_instances[weapon_uid].element_level==1 and w.item_instances[weapon_uid].level==1 and not w.item_instances.has(convert_uid) and w.gold==50000,"confirmed conversion changes only the element and consumes one exact scroll and the original fee")
+	var remove_uid: String=ids[198031]
+	use_from_bag(w,str(w.item_instances[remove_uid].name)+"@@@"+remove_uid)
+	window=w.hud._original_enchant_window()
+	if window==null or window.last_result.get("mode")!="element_remove":return
+	window.select_target(weapon_uid)
+	await press_element_button(window,ENCHANT_WINDOW.P_SMELT_START)
+	w._load_game(true)
+	check(w.item_instances[weapon_uid].element=="" and w.item_instances[weapon_uid].element_level==0 and w.item_instances[weapon_uid].level==1 and not w.item_instances.has(remove_uid) and w.gold==50000,"removal only clears elemental values and both exact debits survive reload")
+
+func press_element_button(window: RefCounted, suffix: String) -> void:
+	var located: Dictionary=NAMED.locate(window._scene,window.node_keys(),suffix)
+	var node: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
+	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) else null
+	var area: Variant=button.get("_input_area") if is_instance_valid(button) else null
+	check(area is Control and area.is_visible_in_tree(),"visible authored control "+suffix)
+	if not area is Control or not area.is_visible_in_tree():return
+	var point: Vector2=area.get_global_transform_with_canvas()*(area.size*0.5)
+	for pressed: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.index=0
+		event.pressed=pressed
+		event.position=point
+		root.push_input(event,true)
+		await process_frame

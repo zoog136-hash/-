@@ -270,6 +270,7 @@ const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd
 const PATCH523_TOKEN_STOCK = preload("res://scripts/loot/current523_native_stack.gd")
 const PATCH523_ENHANCE_STOCK = preload("res://scripts/crafting/patch523_enhance_stock.gd")
 const PATCH523_ENHANCE_SOURCE = preload("res://scripts/crafting/patch523_enhance_source_book.gd")
+const ELEMENT_MANAGEMENT = preload("res://scripts/equipment523/element_management.gd")
 const PATCH523_EQUIPMENT_COMBAT = preload("res://scripts/crafting/patch523_equipment_combat.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
@@ -5031,6 +5032,7 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 			hud.show_message(str(charged.message))
 			return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
+	if _open_owned_element_management(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
 	var selected_id: String = str(selected.get("id",""))
@@ -14143,6 +14145,26 @@ func _equipment523_invoke_owner(origin: Dictionary, spell_id: int) -> bool:
 		for effect: Dictionary in EQUIPMENT523_SET_INVOKE.effects(equipment523.store.pack,target,equipment523.policy):
 			if int(effect.get("slot",0)) == int(origin.get("slot",0)) and int(effect.get("bonus_id",0)) == int(origin.get("bonus_id",0)) and int(effect.get("option",{}).get("Param1",0)) == spell_id: return true
 	return false
+
+func _open_owned_element_management(name_value: String, uid: String, record: Dictionary) -> bool:
+	if ELEMENT_MANAGEMENT.kind(record).is_empty():return false
+	if record.get("name")!=name_value:
+		hud.show_message("가방에서 원본 속성 주문서를 선택하세요")
+		return true
+	var offer: Dictionary=ELEMENT_MANAGEMENT.offer(self,uid,record)
+	if not offer.get("ok",false):
+		hud.show_message(str(offer.get("reason","원본 속성 주문서를 확인하세요")))
+	elif not hud.open_native_element_management523(offer):
+		hud.show_message("원본 속성 변환 창을 불러올 수 없습니다 · 주문서 보존")
+	return true
+
+func native_element_management523_commit(offer: Dictionary, target: Dictionary, element: String) -> Dictionary:
+	var result: Dictionary=ELEMENT_MANAGEMENT.commit(self,str(offer.get("uid","")),offer.get("record",{}),target,element)
+	if result.get("ok",false):
+		_publish_player_hud(false)
+		hud.append_log(str(result.message))
+	hud.show_message(str(result.get("message",result.get("reason","속성 주문서를 확인하세요"))))
+	return result
 
 func _open_owned_native_smelt(uid:String,record:Dictionary)->bool:
 	var smelt:Script=EQUIPMENT523_SERVICE.NATIVE_SMELT

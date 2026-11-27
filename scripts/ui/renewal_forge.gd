@@ -7,6 +7,7 @@ const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 const NATIVE_STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
+const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 
 var hud: Node
 var mode: String = "scroll"
@@ -62,6 +63,8 @@ static func owned_scrolls(controller: Node) -> Array:
 			var category: String=str(NATIVE_FIELDS.field(record,"source_category_name",""))
 			if category=="ScrollBless":
 				if NATIVE_STACK.profile(record).get("kind")!="bless":continue
+			elif category in ["ScrollElementalConversion","ScrollElementalRemover"]:
+				if ELEMENT_MANAGEMENT.kind(record).is_empty():continue
 			elif category not in ["","ScrollEnchant","ScrollElementalEnchant"] or world._scroll_kind(name,record)=="":continue
 			var held: Dictionary=NATIVE_STACK.proof(world,uid)
 			if not held.is_empty():
