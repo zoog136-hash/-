@@ -390,6 +390,7 @@ func blocks_keyboard_input_except_source_editor(editor: Control) -> bool:
 
 func blocks_world_input(point: Vector2) -> bool:
 	if is_enhancement_presenting() or is_option_awakening_busy() or source_option_awakening_is_open(): return true
+	if _source_modal_owns_pointer(): return true
 	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
 	# Use the same canvas and clipping coordinates as the real controls so
 	# responsive shelves and dragged windows cannot issue a world destination.
@@ -2791,6 +2792,32 @@ func _preview_card_reveal_grades() -> void:
 		return
 	_new_card_reveal_stage().present_showcase()
 
+## Display the physical books the draw already awarded. Reveal never draws or grants.
+func present_skill_card_draw(results: Array) -> void:
+	if is_card_reveal_busy(): return
+	var cards: Array[Dictionary] = []
+	var skill_cards: RefCounted = get_parent().skill_cards523
+	for result: Dictionary in results:
+		var spell: Dictionary = skill_cards.card(int(result.get("source_buff_card_id", 0)))
+		if spell.is_empty() or int(result.get("item_class_id",0)) <= 0: continue
+		var card: Dictionary = result.duplicate()
+		card["grade"] = skill_cards.grade_name(int(spell.GradeID))
+		cards.append(card)
+	if not cards.is_empty(): _present_skill_draw_page(cards, 0)
+
+func _present_skill_draw_page(cards: Array[Dictionary], start: int) -> void:
+	# Nine fit the existing landscape and portrait grids without clipping.
+	const PER_PAGE: int = 9
+	var next: int = mini(start + PER_PAGE, cards.size())
+	var stage: Control = _new_card_reveal_stage()
+	var no_candidates: Array[Texture2D] = []
+	stage.present(cards.slice(start,next), no_candidates, "스킬 카드")
+	if cards.size() > PER_PAGE:
+		stage.title_label.text += " · %d / %d" % [start / PER_PAGE + 1, ceili(float(cards.size()) / PER_PAGE)]
+	if next < cards.size():
+		(stage.board.get_node("ConfirmReveal") as Button).text = "다음"
+		stage.finished.connect(_present_skill_draw_page.bind(cards, next), CONNECT_ONE_SHOT)
+
 func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool) -> void:
 	if is_card_reveal_busy() or not bool(awarded.get("ok",false)):
 		return
@@ -4270,13 +4297,14 @@ func reward_choice_blocks_pointer() -> bool:
 	return is_instance_valid(dialog) and not dialog.is_queued_for_deletion()
 
 func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
-	if not original_inventory_is_open():return {}
+	if not original_inventory_is_open() or _source_modal_owns_pointer():return {}
 	var hit: Dictionary=original_main_ui_controller.inventory_hit_at(viewport_point)
 	if not hit.is_empty():hit["source_native"]=true
 	return hit
 
 func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if not is_instance_valid(original_main_ui_controller):return false
+	if _source_modal_owns_pointer():return true
 	if original_drop_confirm_is_open():return true
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
@@ -4287,6 +4315,9 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if original_main_ui_controller.dungeon_blocks_point(viewport_point):return true
 	if original_main_ui_controller.workspace_controls_block_point(viewport_point):return true
 	return original_main_ui_controller.inventory_blocks_point(viewport_point)
+
+func _source_modal_owns_pointer() -> bool:
+	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("modal_owns_pointer") and original_main_ui_controller.modal_owns_pointer()
 
 func original_drop_confirm_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("drop_confirm_is_open") and original_main_ui_controller.drop_confirm_is_open()
