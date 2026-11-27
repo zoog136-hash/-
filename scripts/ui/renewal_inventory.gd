@@ -297,7 +297,8 @@ func item_action_kind(reference: String) -> String:
 		var entry: Dictionary = host.item_instances.get(_ref_instance_id(reference), {})
 		if entry.get("name") == _base_item_name(reference) and host.growth.source523.material(entry):
 			return "사용"
-	if _ref_instance_id(reference).is_empty() and is_instance_valid(host) and host.has_method("source_symbol_reward_record"):
+	var uid: String = _ref_instance_id(reference)
+	if uid.is_empty() and is_instance_valid(host) and host.has_method("source_symbol_reward_record"):
 		if record.get("type") == "문양 재료" and not host.growth.source523.plain_recharge(host,record).is_empty(): return "사용"
 		if not CATALOG_STACK.action_record(host,record).is_empty() and CATALOG_STACK.holds_plain(host,reference): return "사용"
 	return action_for_record(record,_base_item_name(reference),host)
@@ -314,9 +315,7 @@ static func action_for_record(record: Dictionary, item_name: String, host: Node=
 	else:
 		equip_slot=str(NATIVE_FIELDS.field(record,"source_equipment_status"))=="mapped"
 	if is_ammo or equip_slot: return "장착"
-	# Some original reuse effects are intentionally stored in the materials
-	# slot. Only an explicitly supported TeleportAmulet may arm direct use;
-	# ordinary crafting, skill reagents and unsupported originals keep no action.
+	# The materials slot also holds original items with a direct-use owner.
 	if str(record.get("slot","")) == "material" or str(record.get("type","")).ends_with("재료"):
 		if material_direct_use(record):return "사용"
 		return ""
@@ -325,7 +324,9 @@ static func action_for_record(record: Dictionary, item_name: String, host: Node=
 static func material_direct_use(record: Dictionary) -> bool:
 	var smelt=preload("res://scripts/equipment523/native_smelt_input.gd")
 	if smelt.known(int(record.get("source_item_class_id",0))) and not smelt.kind(record).is_empty():return true
-	return NATIVE_FIELDS.field(record,"source_category_name")=="TeleportAmulet" and preload("res://scripts/loot/current523_native_stack.gd").profile(record).get("kind")=="teleport_location"
+	var category: String = str(NATIVE_FIELDS.field(record,"source_category_name"))
+	if category == "ScrollEnchant":return preload("res://scripts/crafting/patch523_enhance_source_book.gd").declares_scroll(record)
+	return category=="TeleportAmulet" and preload("res://scripts/loot/current523_native_stack.gd").profile(record).get("kind")=="teleport_location"
 
 ## The second tap on the same slot while its marker shows uses/equips it.
 func item_action_armed(reference: String) -> bool:
@@ -1070,15 +1071,20 @@ static func _item_class_id(item: Dictionary) -> int:
 ## original UI pack the same rows are listed in the detail text.
 func _open_acquisition() -> void:
 	if selected_item.is_empty() or controller == null: return
-	var item: Dictionary = _source_info_record(_find_item_record(selected_item))
+	var item: Dictionary = _source_info_record(_item_visual_record(selected_item,_find_item_record(selected_item)))
 	var id: int = _item_class_id(item)
 	if id <= 0: return
 	var item_name: String = _base_item_name(selected_item)
 	last_acquisition = {"item_class_id":id}
 	if controller.has_method("open_item_acquisition523"):
-		var native: Dictionary = controller.open_item_acquisition523(id,item_name)
+		var world: Node = controller.get_parent()
+		var blessing: String = world.accessory_blessing_recipe(selected_item)
+		var native: Dictionary = controller.open_item_acquisition523(id,item_name,blessing)
 		last_acquisition["native"] = native
 		if native.get("handled",false): return
+		if not blessing.is_empty():
+			controller.open_crafting(blessing)
+			return
 	var data: Dictionary = ACQUISITION523.sources(id)
 	var lines: PackedStringArray = ACQUISITION523.summary_lines(data)
 	if lines.is_empty(): lines.append(str(data.get("problem","원본 표에 획득처 행이 없습니다")))

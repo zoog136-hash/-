@@ -1500,7 +1500,10 @@ func open_npc_teleport() -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 
-func open_crafting() -> void:
+func open_crafting(recipe_id: String = "") -> void:
+	if not recipe_id.is_empty():
+		CraftUI.pending_focus = recipe_id
+		CraftUI.last_focus = {}
 	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
 	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
 	if _open_original_production(): return
@@ -2107,10 +2110,10 @@ func open_clan_emblem523() -> void:
 	workspace.mount(note)
 
 ## The original 523 재료 아이템 출처 popup over the current screen.
-func open_item_acquisition523(item_class_id: int, item_name: String = "") -> Dictionary:
+func open_item_acquisition523(item_class_id: int, item_name: String = "", blessing_recipe: String = "") -> Dictionary:
 	var native: Dictionary = {"ok":false,"code":"source_acquisition_popup_controller_unavailable"}
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_acquisition"):
-		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name)
+		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name,blessing_recipe)
 	original_main_ui_status["acquisition_popup"] = native
 	return native
 
@@ -2948,7 +2951,7 @@ func _claim_source_fusion_reward(category:String,grade:String)->Dictionary:
 	if not result.get("ok",false):show_message(str(result.get("message","합성 시도 보상을 받을 수 없습니다")))
 	return result
 
-func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
+func _confirm_card_fusion_request(category: String, grade_name: String, selection: Array[String] = []) -> void:
 	if not CARD_RULES.CATEGORIES.has(category) or not CARD_RULES.FUSION_MATERIALS.has(grade_name) or is_card_reveal_busy(): return
 	if source_fusion_progress(category,grade_name).get("pending",false):
 		show_message("합성 시도 보상을 먼저 받으세요")
@@ -2968,11 +2971,18 @@ func _confirm_card_fusion_request(category: String, grade_name: String) -> void:
 	if available < required:
 		show_message("같은 등급의 중복 카드 %d장이 필요합니다" % required)
 		return
-	var batch_limit: int = mini(available / required,10)
+	if not selection.is_empty(): available = mini(available,selection.size())
+	var batch_limit: int = mini(available / required,CARD_RULES.MAX_FUSION_BATCH)
+	if batch_limit<1:return
 	var rules := "최초 획득 1장은 보존됩니다. 실패하면 같은 등급 카드 1장을 획득합니다."
 	var body := "%s %s 중복 카드 %d장을 소모하시겠습니까? %s" % [category,grade_name,required,rules]
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return
-	var commit := func(count: int) -> void: card_fusion_requested.emit(category,grade_name,clampi(count,1,batch_limit))
+	var commit := func(count: int) -> void:
+		var attempts: int = clampi(count,1,batch_limit)
+		if selection.is_empty():
+			card_fusion_requested.emit(category,grade_name,attempts)
+		else:
+			get_parent()._on_card_fusion_requested(category,grade_name,attempts,selection.slice(0,attempts*required))
 	var review := func(count: int) -> void:
 		var detail: String = body if count == 1 else "%s %s 합성 %d회 · 중복 카드 총 %d장\n%s" % [category,grade_name,count,count*required,rules]
 		_confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
@@ -3392,6 +3402,13 @@ func _on_catalog_item_selected(index: int) -> void:
 		var copies: int = (1 if category_unlocks.has(identity) else 0) + duplicates
 		catalog_detail.text += "\n카드 보유: %d장 · 합성/각성 재료: 중복 %d장" % [copies, duplicates]
 		if copies > 0: catalog_detail.text += "\n첫 획득 1장은 영구 보유하며 소모되지 않습니다."
+		var awakening: Dictionary = get_parent().option_awakening.card_options(catalog_category,identity)
+		if not awakening.is_empty():
+			var awakened: bool = awakening.awakened
+			var effects: Array = awakening.applied if awakened else awakening.preview
+			if not effects.is_empty():
+				catalog_detail.text += "\n\n"+ ("각성 적용 효과" if awakened else "각성 시 추가 능력")
+				for effect: String in effects:catalog_detail.text += "\n• "+UI.safe(effect)
 	_refresh_option_awakening_entry()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()
 	if is_instance_valid(catalog_card_chrome):catalog_card_chrome.refresh()

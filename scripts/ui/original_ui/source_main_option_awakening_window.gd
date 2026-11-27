@@ -253,7 +253,17 @@ func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
 	var list: Dictionary=_list(root,out,BONUS)
 	if not list.get("ok",false):return list
 	var lines: Array=[]
-	lines.append_array(_snapshot.get("bonus_options",[]))
+	if _snapshot.get("awakened",false):
+		var applied: Array=_snapshot.get("applied_options",[])
+		var pending: Array=_snapshot.get("pending_options",[])
+		if not applied.is_empty():lines.append("각성 적용 효과")
+		lines.append_array(applied)
+		if not pending.is_empty():lines.append("현재 적용되지 않는 원본 옵션")
+		lines.append_array(pending)
+	else:
+		var preview: Array=_snapshot.get("bonus_options",[])
+		if not preview.is_empty():lines.append("각성 시 추가 능력")
+		lines.append_array(preview)
 	if category in ["마법인형","성물"]:
 		for slot: Dictionary in _snapshot.get("slot_definitions",[]):
 			if int(slot.get("group",{}).get("SlotIndex",0))!=11:continue

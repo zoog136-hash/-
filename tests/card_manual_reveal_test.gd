@@ -91,7 +91,7 @@ func _run() -> void:
 	fusion.silent = true
 	fusion.present(records.slice(0,1),textures,"성물",true,true)
 	fusion.set_process(false)
-	check(not fusion.manual_reveal and not fusion.cards[0].waiting_for_press, "fusion retains its own automatic reveal")
+	check(fusion.manual_reveal and fusion.cards[0].waiting_for_press, "fusion also waits for a card tap")
 	fusion.skip_to_result()
 	check(fusion._all_revealed(), "fusion skip still completes")
 	fusion.queue_free()

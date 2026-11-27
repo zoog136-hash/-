@@ -96,7 +96,7 @@ func _seed(w: Node, category: String) -> Dictionary:
 		w.card_draw_fusion.owned[category].erase(id)
 	return {}
 
-func _open(w: Node, category: String, id: String) -> RefCounted:
+func _choose_catalog_card(w: Node, category: String, id: String) -> RefCounted:
 	var h: Node=w.hud
 	h.open_catalog(category)
 	await settle()
@@ -111,6 +111,13 @@ func _open(w: Node, category: String, id: String) -> RefCounted:
 			if node.has_meta("source_checkbox") and change._selected!=id:await _tap(_hit(node))
 		break
 	if not check(change._selected==id,"catalog touch selected the exact "+category+" card"):return null
+	return change
+
+func _open(w: Node, category: String, id: String) -> RefCounted:
+	var change: RefCounted=await _choose_catalog_card(w,category,id)
+	if change==null:return null
+	var h: Node=w.hud
+	var c: Node=h.original_main_ui_controller
 	await _tap(_hit(change._detail.source_nodes.get(CHANGE.AWAKEN)))
 	if not h.source_option_awakening_is_open():print("SOURCE_OPTION_AWAKENING_OPEN_DIAG ",h.original_main_ui_status.get("option_awakening_window"))
 	if not check(h.source_option_awakening_is_open() and not h.workspace.visible,"catalog 각성 opens the original option window, not the old form"):return null
@@ -124,7 +131,7 @@ func _open(w: Node, category: String, id: String) -> RefCounted:
 	var list: Dictionary=view._list(view._scene,view._out,OPTION.BONUS)
 	if check(not bonuses.is_empty() and list.get("ok",false),"authoritative options have the original list"):
 		var content: Node2D=list.content
-		var first: Node2D=content.get_child(0)
+		var first: Node2D=content.get_child(1)
 		var label: Node2D=first.get_meta("source_text",null)
 		check(label!=null and label.original_options.text==bonuses[0] and first.is_visible_in_tree()
 			and first.position.x>=0.0 and first.position.x<=list.size.x
@@ -181,7 +188,8 @@ func _descriptor_smoke() -> void:
 		check(_ledger(w)==ledger_before,"reading and scrolling options leaves the card ledger and RNG intact")
 		await _tap(_hit(_node(view,"Nd_Content/Btn_Back")))
 		var catalog: RefCounted=w.hud.original_main_ui_controller._change_window
-		check(not catalog._show_selected().get("awakening_options",0),"unawakened detail has no applied awakening effects")
+		var preview: Dictionary=catalog._show_selected()
+		check(not preview.get("awakened",true) and preview.get("awakening_options",0)>0,"unawakened detail displays the source preview")
 		# Exercise the real detail presenter with a committed-state fixture;
 		# this descriptor smoke does not write progress over a missing map.
 		var progress: Dictionary=w.option_awakening.core.card_progress(w.option_awakening.progress,category,id)
@@ -316,6 +324,9 @@ func _native() -> void:
 	w.presentation_settings["reduced_motion"]=true
 	var options: RefCounted=w.option_awakening
 	check(options.problem.is_empty(),"authoritative option economy intact")
+	var transform_preview: Dictionary=options.card_options("변신","source:m508:1:11152")
+	check(transform_preview.get("preview",[]).has("공격 속도 +15%") and transform_preview.get("preview",[]).has("힘(STR) +2")
+		and transform_preview.get("applied",[]).is_empty(),"source transform preview uses the Korean BonusType label and original units")
 	var transform: Dictionary=_seed(w,"변신")
 	var doll: Dictionary=_seed(w,"마법인형")
 	if not check(not transform.is_empty() and not doll.is_empty(),"there are eligible transform and doll duplicates in the actual runtime"):
@@ -439,8 +450,14 @@ func _native() -> void:
 			await _confirm(w.hud,false)
 			check(options.view("성물",relic.target).awakened,"confirmed relic awakens with its installed rule")
 			await _read_result(w,true)
+			var relic_effects: Dictionary=options.card_options("성물",str(relic.target))
+			check(relic_effects.awakened and not relic_effects.applied.is_empty(),"awakened relic exposes its applied options to the card encyclopedia")
 			var history: Dictionary = relic_page._history()
 			check(history.get("ok",false),"native history accepts the relic awakening tab")
+			var change: RefCounted=await _choose_catalog_card(w,"성물",str(relic.target))
+			if change!=null:
+				var catalog_result: Dictionary=change._show_selected()
+				check(catalog_result.get("awakened",false) and catalog_result.awakening_options==relic_effects.applied.size(),"catalog renders the relic's applied options")
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1": await _paid_skill(w)
 	w.queue_free()
 	await settle()

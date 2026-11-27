@@ -52,17 +52,21 @@ func _check_effect_dispatch() -> void:
 		return true
 	var page := Node2D.new()
 	root.add_child(page)
-	check(window._fill(page, {}).shown == 10 and requested.size() == 10 and window.settled.is_empty(),
-		"fusion schedules the existing animation for each visible award before settling")
+	check(window._fill(page, {}).shown == 10 and requested.is_empty() and window.settled.is_empty(),
+		"fusion mounts all ten sealed and starts no reel")
+	window._card(0)
+	check(requested.size()==1 and requested[0].id=="source:0" and not window.is_revealed(0),"touch starts only one exact result")
+	check(not window._card(0).opened and window._next().waiting,"repeat taps and background presses cannot advance the reel or page")
 	callbacks[0].call()
-	check(window.settled == ["Panel/Card_00"], "fusion completion starts the original result effect")
+	check(window.settled == ["Panel/Card_00"] and window.is_revealed(0) and not window.is_revealed(1), "only the tapped result settles")
 	var redraw := Node2D.new()
 	root.add_child(redraw)
 	window._fill(redraw, {})
-	check(requested.size() == 10, "rebuilding the same page does not replay its reels")
+	check(requested.size() == 1 and window.is_revealed(0), "rebuilding the same page does not replay its reels")
 	window.page = 1
 	window._fill(redraw, {})
-	check(requested.size() == 12 and requested[-1].pity_reward, "the next page has its own reels and preserves the last pity reward")
+	window._card(11)
+	check(requested.size() == 2 and requested[-1].pity_reward, "the next page has its own sealed cells and preserves the last pity reward")
 	page.free()
 	redraw.free()
 
@@ -89,12 +93,7 @@ func _run() -> void:
 	window.results=_views(12)
 	window.on_closed=func() -> void:released[0]+=1
 	check(window.pages()==2,"ten results a page")
-	window._card(11)
-	check(hud.messages[-1]=="합성 시도 보상 · 희귀 · 카드 11","a card names itself, the pity reward marked")
-	window._next()
-	check(window.page==1 and released[0]==0,"the full-screen tap turns to the next page")
-	window._next()
-	check(released[0]==1,"the last page closes and releases the HUD guard")
+	check(not window._card(11).ok,"a card outside the current page cannot be opened")
 	window.close()
 	check(released[0]==1,"the guard runs once")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
@@ -135,8 +134,11 @@ func _real_pack(pack_dir: String) -> void:
 	var released: Array=[0]
 	var opened: Dictionary=window.open(parent,_views(12),"변신",true,func() -> void:released[0]+=1)
 	check(opened.get("handled",false) and int(opened.filled.shown)==10 and int(opened.filled.pages)==2,"Change_Fusion_All mounts the first ten results: "+str(opened).left(300))
+	check(window._next().waiting,"a background touch does not open any card")
+	window._open_all()
 	var second: Dictionary=window._next()
 	check(second.get("handled",false) and int(second.filled.shown)==2,"the second page mounts the rest")
+	window._open_all()
 	window._next()
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
@@ -155,6 +157,16 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 			return
 		var result_scene: Node2D=window._scene
 		var face: Node2D=result_scene.find_child("SourceAwardFace",true,false)
+		check(result_scene.find_child("CardRevealEffect",true,false)==null and response.filled.backs==1,"one authored back at rest before input")
+		var target: Dictionary=window._locate(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		check(target.get("ok",false),"original result card binds a touch button")
+		if not target.get("ok",false):return
+		var hit: Control=target.player.source_nodes[target.offset].get_meta("source_button")._input_area
+		for held: bool in [true,false]:
+			var event:=InputEventScreenTouch.new()
+			event.index=4;event.pressed=held;event.position=hit.get_global_transform_with_canvas()*(hit.size*0.5)
+			result_scene.get_viewport().push_input(event,true)
+			await process_frame
 		var reel: Control=result_scene.find_child("CardRevealEffect",true,false)
 		if not is_instance_valid(face) or not is_instance_valid(reel):
 			check(false,"mount authored face and separate reel")
@@ -186,7 +198,11 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 		entry.merge(result,true)
 		batch.append(entry)
 	window.open(parent,batch,"변신",true,Callable(),effect)
+	window._card(1)
 	var reels: Array=window._scene.find_children("CardRevealEffect","Control",true,false)
+	check(reels.size()==1 and not reels[0].record.fusion_success,"one result tap leaves the others sealed")
+	window._open_all()
+	reels=window._scene.find_children("CardRevealEffect","Control",true,false)
 	check(reels.size()==3,"one native reel per result in the mixed batch")
 	for reel: Control in reels:
 		var upgraded: bool=reel.record.fusion_success and not reel.record.get("pity_reward",false)

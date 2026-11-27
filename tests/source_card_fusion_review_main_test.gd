@@ -28,8 +28,6 @@ func fusion() -> void:
 	if not check(not material.is_empty(),"installed original fusion material"): w.queue_free(); return
 	w.card_draw_fusion.owned["변신"][material]=true
 	var c: Node=w.hud.original_main_ui_controller
-	var calls: Array[int]=[]
-	w.hud.card_fusion_requested.connect(func(_category: String,_grade: String,count: int) -> void: calls.append(count))
 	for count: int in [1,2]:
 		w.card_draw_fusion.spare["변신"]={material:count*4}
 		w._update_hud()
@@ -40,26 +38,29 @@ func fusion() -> void:
 		var before: Dictionary = _ledger(w)
 		var rng: int = w.card_draw_fusion.rng.state
 		await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Auto")))
+		check(page._registered.size()==count*4 and page._registered.all(func(id: String) -> bool:return id==material),"original auto button registers exactly the available duplicate groups")
 		await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Merge")))
 		if count==2:
 			var keypad: RefCounted=c.drop_confirm_popup()
 			if not check(is_instance_valid(keypad) and keypad.is_open() and keypad.last_result.get("member")==keypad.KEYPAD,"batch opens Common_Calculator"): break
 			await keypad_tap(keypad,"Btn_Cancel")
-			check(calls.is_empty() and _ledger(w)==before and w.card_draw_fusion.rng.state==rng,"cancelling quantity preserves cards and RNG")
+			check(_ledger(w)==before and w.card_draw_fusion.rng.state==rng,"cancelling quantity preserves cards and RNG")
 			await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Merge")))
 			await keypad_tap(keypad,"Btn_Max")
 			check(keypad.count()==2,"maximum follows available duplicates")
 			await keypad_tap(keypad,"Btn_Select")
 		var box: Node = w.hud.get_node_or_null("Root/TwilightConfirmation")
 		if not check(is_instance_valid(box) and box.get_script()==REVIEW,"original Common_MessageBox for the selected quantity"): break
-		check(calls.is_empty() and _ledger(w)==before and w.card_draw_fusion.rng.state==rng,"opening the review never rolls or pays")
+		check(_ledger(w)==before and w.card_draw_fusion.rng.state==rng,"opening the review never rolls or pays")
 		if count==1:
 			await _confirm(w.hud,true)
-			check(calls.is_empty() and _ledger(w)==before and w.card_draw_fusion.rng.state==rng,"cancelling single fusion preserves duplicates")
+			check(_ledger(w)==before and w.card_draw_fusion.rng.state==rng,"cancelling single fusion preserves duplicates")
 		else:
 			check(box._pages[0].contains("8장"),"batch review discloses all eight materials")
 			await _confirm(w.hud,false)
-			check(calls==[2] and w.card_draw_fusion.rng.state!=rng and w.card_draw_fusion.owned["변신"].get(material,false),"one confirmed request executes both rolls and retains the owned card")
+			var result: RefCounted=c.feature_window("fusion_result")
+			check(w.card_draw_fusion.rng.state!=rng and w.card_draw_fusion.owned["변신"].get(material,false)
+				and result!=null and result.results.size()==2 and not result.is_revealed(0) and not result.is_revealed(1),"one confirmed request retains the owned card and presents two sealed results")
 	w.queue_free()
 	await settle()
 

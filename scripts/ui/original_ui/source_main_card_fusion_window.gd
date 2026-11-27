@@ -3,7 +3,7 @@ extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## Change_DetailView_Mix page (일반 합성). The left list shows the owned cards
 ## of the category as Change_Card_A_<grade> with their own pictures, the
 ## grade sidebar (Change_WinTotal_Class) picks the material grade, and the
-## right side shows the duplicates the existing rule would consume, the
+## right side shows the duplicates the player registered, the
 ## 실패 횟수/합성 시도 보상 gauges (희귀/영웅 pity) and the original
 ## 카드 자동 등록 / 합 성 buttons. 합 성 goes through the existing
 ## confirmation (renewal_hud._confirm_card_fusion_request ->
@@ -19,7 +19,7 @@ var grade: String="고급"
 var filter_grade: String="전체"
 var _owned_records: Array[Dictionary]=[]
 var _materials: Array[Dictionary]=[]
-var _registration_active: bool=false
+var _registered: Array[String]=[]
 var _covered_by_reveal: bool=false
 
 func required_members() -> Array[String]:
@@ -36,7 +36,7 @@ func _tab() -> String:
 func open(parent: Node, category_name: String) -> Dictionary:
 	if not Cards.CATEGORIES.has(category_name):return _fail("source_card_fusion_category_unsupported")
 	if category_name!=category:filter_grade="전체"
-	_registration_active=false
+	_registered.clear()
 	_moved=0.0
 	category=category_name
 	return open_window(parent)
@@ -46,7 +46,7 @@ func set_reveal_covered(value: bool) -> void:
 	_covered_by_reveal=value
 	_scene.visible=not value
 	if value:
-		_registration_active=false
+		_registered.clear()
 	else:
 		refresh()
 
@@ -77,7 +77,7 @@ func _available(current: String) -> int:
 		var identity: String=Cards.card_id(raw)
 		if identity.is_empty() or seen.has(identity):continue
 		seen[identity]=true
-		if str(raw.get("grade",""))==current and _eligible(raw):
+		if str(raw.get("grade",""))==current and _eligible(raw) and _owned(identity):
 			total+=_spare(identity)
 	return total
 
@@ -85,20 +85,24 @@ func _collect() -> void:
 	_owned_records.clear()
 	_materials.clear()
 	var seen: Dictionary={}
-	var remaining: int=int(Cards.FUSION_MATERIALS.get(grade,0)) if _registration_active else 0
+	var eligible: Dictionary={}
 	for raw: Variant in _catalog():
 		if not raw is Dictionary:continue
 		var identity: String=Cards.card_id(raw)
 		if identity.is_empty() or seen.has(identity):continue
 		seen[identity]=true
 		var current: String=str(raw.get("grade",""))
-		if current==grade and remaining>0 and _eligible(raw):
-			var used: int=mini(remaining,_spare(identity))
-			if used>0:
-				_materials.append({"record":raw,"count":used})
-				remaining-=used
+		if current==grade and _eligible(raw) and _owned(identity):eligible[identity]=raw
 		var copies: int=(1 if _owned(identity) else 0)+_spare(identity)
 		if copies>0 and (filter_grade=="전체" or current==filter_grade):_owned_records.append(raw)
+	var kept: Array[String]=[]
+	var counts: Dictionary={}
+	for identity: String in _registered:
+		if not eligible.has(identity) or int(counts.get(identity,0))>=_spare(identity):continue
+		counts[identity]=int(counts.get(identity,0))+1
+		kept.append(identity)
+		_materials.append({"record":eligible[identity],"id":identity})
+	_registered=kept
 	# Every owned card of the filter, highest grade first (stable: ties keep
 	# the catalog order); the list builds only the rows in view.
 	var keyed: Array=[]
@@ -117,14 +121,13 @@ func _enough_materials(value: String) -> bool:
 	return required>0 and _available(value)>=required and not _point_progress(value).get("pending",false)
 
 func _can_fuse() -> bool:
-	return _registration_active and _enough_materials(grade)
+	return _registered.size() >= int(Cards.FUSION_MATERIALS.get(grade,1)) and _enough_materials(grade)
 
 func _spec() -> Dictionary:
 	_collect()
 	var spec: Dictionary=_frame_spec()
 	var required: int=int(Cards.FUSION_MATERIALS.get(grade,0))
 	var target: String=str(Cards.FUSION_NEXT.get(grade,""))
-	var available: int=_available(grade)
 	var pity: Dictionary=hud().get("card_collection_state").get("pity",{}).get(category,{})
 	spec[P+"Nd_SelectEffect"]={"exclude":true}
 	# 실패 이력 조회: the original FailHistory_All over the TJ failure records.
@@ -161,7 +164,7 @@ func _spec() -> Dictionary:
 	var can_fuse: bool=_can_fuse()
 	spec[mix+"Btn_Auto"]={"activate":Callable(self,"_auto_register")}
 	spec[mix+"Btn_Merge"]={"activate":Callable(self,"_merge"),"displaystate":can_fuse}
-	var need: int=maxi(0,required-available)
+	var need: int=maxi(0,required-_registered.size())
 	spec[mix+"Node_Condition"]={"visible":need>0 and required>0}
 	spec[mix+"Node_Condition/Label_Dummy"]={"role":"source_text","text":"%s 카드 %d장 추가" % [grade,need]}
 	spec[mix+"Nd_TabMenu/Btn_Normal_On"]={"visible":true}
@@ -182,12 +185,12 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var grades: Dictionary=_optional(_fill_list(root,out,P+"Nd_Tab/ListView_Class",sidebar))
 	if not grades.get("ok",false):return grades
 	var selected_ids: Dictionary={}
-	for entry: Dictionary in _materials:selected_ids[Cards.card_id(entry.record)]=true
+	for entry: Dictionary in _materials:selected_ids[entry.id]=true
 	var cards: Array=[]
 	for record: Dictionary in _owned_records:
 		var identity: String=Cards.card_id(record)
-		var selectable: bool=Cards.FUSION_MATERIALS.has(record.get("grade")) and _eligible(record) and _spare(identity)>0
-		var card: Dictionary=_card_row(record,selected_ids.has(identity),Callable(self,"_card_pressed").bind(str(record.get("grade",""))))
+		var selectable: bool=Cards.FUSION_MATERIALS.has(record.get("grade")) and _eligible(record) and _owned(identity) and _spare(identity)>_registered.count(identity)
+		var card: Dictionary=_card_row(record,selected_ids.has(identity),Callable(self,"_card_pressed").bind(str(record.get("grade","")),identity))
 		if card.is_empty():continue
 		card.spec["Panel_Root/CB_Check"].displaystate=selectable
 		card.spec["Panel_Root/CB_Check"].touch_enabled=selectable
@@ -198,9 +201,8 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var pictures: int=int(owned.get("pictures",0))
 	var registered: Array=[]
 	for entry: Dictionary in _materials:
-		for copy: int in range(int(entry.count)):
-			var card: Dictionary=_card_row(entry.record,false,Callable(self,"_registered_pressed"))
-			if not card.is_empty():registered.append(card)
+		var card: Dictionary=_card_row(entry.record,false,Callable(self,"_registered_pressed").bind(str(entry.id)))
+		if not card.is_empty():registered.append(card)
 	var material_path: String=P+"Nd_CardMix/Nd_Card/ListView"
 	var materials: Dictionary=_material_grid(root,out,material_path,registered)
 	if not materials.get("ok",false):return materials
@@ -219,41 +221,54 @@ func _select_filter(value: String) -> Dictionary:
 	filter_grade=value
 	if value!="전체" and value!=grade:
 		grade=value
-		_registration_active=false
+		_registered.clear()
 	return _stage()
 
-func _card_pressed(checked: bool, value: String) -> Dictionary:
+func _card_pressed(_checked: bool, value: String, identity: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
+	var required: int=int(Cards.FUSION_MATERIALS.get(value,0))
+	if required==0 or not _owned(identity) or _spare(identity)==0:return _stage()
+	if value!=grade:_registered.clear()
 	grade=value
-	_registration_active=checked
+	if _registered.count(identity)<_spare(identity) and _registered.size()<required*Cards.MAX_FUSION_BATCH:
+		_registered.append(identity)
 	return _stage()
 
-func _registered_pressed(_checked: bool) -> Dictionary:
+func _registered_pressed(_checked: bool, identity: String) -> Dictionary:
+	if not _dragged():_registered.erase(identity)
 	return _stage()
 
-## The existing view's 카드 자동 등록: the lowest grade with enough duplicates.
+## Fill complete groups, preferring the current material grade.
 func _auto_register() -> Dictionary:
-	if _enough_materials(grade):
-		_registration_active=true
-		return _stage()
-	for current: String in MATERIAL_GRADES:
-		if _enough_materials(current):
-			grade=current
-			filter_grade="전체"
-			_registration_active=true
-			return _stage()
-	_message("합성할 수 있는 중복 카드가 없습니다")
-	return {"ok":false,"code":"card_fusion_no_materials"}
+	if not _enough_materials(grade):
+		var next: int=MATERIAL_GRADES.find_custom(_enough_materials)
+		if next<0:
+			_message("합성할 수 있는 중복 카드가 없습니다")
+			return {"ok":false,"code":"card_fusion_no_materials"}
+		grade=MATERIAL_GRADES[next]
+		filter_grade="전체"
+		_registered.clear()
+	var required: int=int(Cards.FUSION_MATERIALS[grade])
+	var cap: int=mini(_available(grade)/required,Cards.MAX_FUSION_BATCH)*required
+	var seen: Dictionary={}
+	for record: Dictionary in _catalog():
+		var identity: String=Cards.card_id(record)
+		if record.get("grade")!=grade or not _owned(identity) or not _eligible(record) or seen.has(identity):continue
+		seen[identity]=true
+		var remaining: int=mini(_spare(identity)-_registered.count(identity),cap-_registered.size())
+		for copy: int in range(remaining):_registered.append(identity)
+		if _registered.size()>=cap:break
+	return _stage()
 
 func _merge() -> Dictionary:
 	var owner: Object=hud()
-	if not _registration_active:
+	if _registered.is_empty():
 		_message("먼저 합성 재료를 등록해 주세요")
 		return {"ok":false,"code":"card_fusion_registration_empty"}
 	if owner==null or not _can_fuse():
 		_message("같은 등급의 중복 카드 %d장이 필요합니다" % int(Cards.FUSION_MATERIALS.get(grade,0)))
 		return {"ok":false,"code":"card_fusion_materials_short"}
-	owner.call("_confirm_card_fusion_request",category,grade)
+	owner.call("_confirm_card_fusion_request",category,grade,_registered.duplicate())
 	return {"ok":true,"existing_confirmation":true,"category":category,"grade":grade}
 
 func _probability() -> Dictionary:
