@@ -69,11 +69,11 @@ func check_world_budget(f: Fixture) -> Dictionary:
 	root.add_child(world.player)
 	root.add_child(world.monsters_root)
 	world.player.set_physics_process(false)
-	world.player.global_position = f.cell_to_world(Vector2i(42,12))
+	world.player.global_position = f.cell_to_world(Vector2i(59,12))
 	var target: TwilightMonster = world.MONSTER_SCENE.instantiate()
 	world.monsters_root.add_child(target)
 	target.set_physics_process(false)
-	target.global_position = f.cell_to_world(Vector2i(85,12))
+	target.global_position = f.cell_to_world(Vector2i(68,12))
 	var expected: PackedVector2Array = f.path(world.player.global_position,target.global_position)
 	var result: PackedVector2Array = world._acquire_auto_target()
 	check(result.is_empty() and world.auto_target_failed_paths.is_empty() and world.auto_target_path_checks == 1,"Main retains pending route without blacklisting the target")
@@ -99,7 +99,7 @@ func check_world_budget(f: Fixture) -> Dictionary:
 	world._acquire_auto_target()
 	check(not world._auto_source_search_work.is_empty(),"Main has pending work for the old target cell")
 	await process_frame
-	target.global_position = f.cell_to_world(Vector2i(43,12))
+	target.global_position = f.cell_to_world(Vector2i(60,12))
 	result = world._acquire_auto_target()
 	check(result == PackedVector2Array([target.global_position]) and world.auto_target == target and world.auto_target_failed_paths.is_empty(),
 		"Main changes to the target's new cell without publishing the old route")
