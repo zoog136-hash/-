@@ -243,12 +243,11 @@ func cost_reason(skill: Dictionary) -> String:
 	var reason := _non_material_cost_reason(skill)
 	return str(material_plan(skill).reason) if reason.is_empty() else reason
 
-func spend(skill: Dictionary, area_quote: Dictionary = {}) -> bool:
+func spend(skill: Dictionary) -> bool:
 	if not _non_material_cost_reason(skill).is_empty(): return false
-	# The native material owner re-quotes against the live bag before staging.
-	# Plain balances and ammo keep their own preparation and commit path.
-	var rechecked_by_owner: bool = not area_quote.get("physical_materials", []).is_empty() and area_quote.get("physical_ammo", {}).is_empty()
-	var plan: Dictionary = area_quote if rechecked_by_owner else material_plan(skill)
+	return _pay_skill_cost(skill, material_plan(skill))
+
+func _pay_skill_cost(skill: Dictionary, plan: Dictionary) -> bool:
 	if not str(plan.get("reason","")).is_empty():return false
 	var physical: Dictionary=plan.get("physical_ammo",{})
 	if not physical.is_empty():
@@ -268,7 +267,10 @@ func spend(skill: Dictionary, area_quote: Dictionary = {}) -> bool:
 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
 	return true
 
-func ready(skill: Dictionary, announce: bool = false, quote_materials: bool = true) -> bool:
+func ready(skill: Dictionary, announce: bool = false) -> bool:
+	return _ready(skill, announce, true)
+
+func _ready(skill: Dictionary, announce: bool, quote_materials: bool) -> bool:
 	var source_status: Dictionary=catalog.source_learning_status(skill)
 	if not source_status.is_empty():
 		if announce:world.hud.show_message(str(source_status.message))
@@ -327,7 +329,9 @@ func cast_auto_area(record: Dictionary) -> bool:
 	return call("_cast_impl", record, false, false, true)
 
 func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool = false) -> bool:
-	if not ready(record, manual, not area_only): return false
+	if area_only:
+		if not _ready(record, manual, false): return false
+	elif not ready(record, manual): return false
 	var skill := catalog.resolve(record)
 	var area: bool = is_area_cast(skill)
 	if area_only and (not area or bool(skill.get("spell_move523", {}).get("ok", false)) \
@@ -430,7 +434,10 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			return false
 		registered = int(world.pending_attack.get("id", -1))
 	var payment_started: int = FRAME_HITCH.now() if area else 0
-	var paid: bool = spend(skill, area_quote)
+	# The native material owner re-quotes the live bag before staging. Keep
+	# the existing permit/commit path for plain balances and physical ammo.
+	var quoted_native: bool = not area_quote.get("physical_materials", []).is_empty() and area_quote.get("physical_ammo", {}).is_empty()
+	var paid: bool = (_non_material_cost_reason(skill).is_empty() and _pay_skill_cost(skill, area_quote)) if quoted_native else spend(skill)
 	if payment_started != 0: FRAME_HITCH.detail("skill.area_cost_commit", payment_started)
 	if not paid:
 		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
