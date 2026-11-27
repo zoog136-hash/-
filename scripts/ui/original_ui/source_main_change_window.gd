@@ -631,12 +631,13 @@ func _show_selected() -> Dictionary:
 		var selected_variant: Dictionary=CARD_DEFINITIONS.canonical(record)
 		if not selected_variant.is_empty():options_record=selected_variant
 	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
-	var lines: Array=offered_lines if offered_lines is Array else []
+	# Source stat rows can be Array[Dictionary]. The detail also shows text rows.
+	var lines: Array=[]
+	if offered_lines is Array:lines.append_array(offered_lines)
 	var awakening: Dictionary=_awakening_options()
 	var awakened: bool=awakening.get("awakened",false)
 	var added: int=0
 	if not awakening.is_empty():
-		lines=lines.duplicate()
 		var current: Array=awakening.applied if awakened else awakening.preview
 		if not current.is_empty():
 			lines.append("각성 적용 효과" if awakened else "각성 시 추가 능력")

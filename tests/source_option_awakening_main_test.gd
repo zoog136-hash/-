@@ -114,9 +114,29 @@ func _choose_catalog_card(w: Node, category: String, id: String) -> RefCounted:
 	if not check(change._selected==id,"catalog touch selected the exact "+category+" card"):return null
 	return change
 
+func _catalog_option_text(row: Node2D, offset: int) -> String:
+	var widget: Node2D=row.source_nodes.get(offset)
+	if widget==null or not widget.is_visible_in_tree():return ""
+	var label: Node=widget.get_meta("source_text",null)
+	return str(label.original_options.text) if label!=null else ""
+
+func _catalog_option_lines(change: RefCounted) -> Array[String]:
+	var lines: Array[String]=[]
+	for row: Node2D in change._option_content.get_children():
+		var description: String=_catalog_option_text(row,CHANGE.OPTION_DESC)
+		var value: String=_catalog_option_text(row,CHANGE.OPTION_VALUE)
+		lines.append((description+" "+value).strip_edges())
+	return lines
+
 func _open(w: Node, category: String, id: String) -> RefCounted:
 	var change: RefCounted=await _choose_catalog_card(w,category,id)
 	if change==null:return null
+	var awakening: Dictionary=w.option_awakening.card_options(category,id)
+	var preview: Array=awakening.get("preview",[])
+	if not awakening.get("awakened",false) and not preview.is_empty():
+		var shown: Array[String]=_catalog_option_lines(change)
+		check(shown.has("각성 시 추가 능력") and preview.all(func(effect: String) -> bool: return shown.has(effect)),
+			"the mounted catalog displays the localized source preview for "+category)
 	var h: Node=w.hud
 	var c: Node=h.original_main_ui_controller
 	await _tap(_hit(change._detail.source_nodes.get(CHANGE.AWAKEN)))
@@ -473,7 +493,10 @@ func _native() -> void:
 			var change: RefCounted=await _choose_catalog_card(w,"성물",str(relic.target))
 			if change!=null:
 				var catalog_result: Dictionary=change._show_selected()
-				check(catalog_result.get("awakened",false) and catalog_result.awakening_options==relic_effects.applied.size(),"catalog renders the relic's applied options")
+				var shown: Array[String]=_catalog_option_lines(change)
+				check(catalog_result.get("awakened",false) and catalog_result.awakening_options==relic_effects.applied.size()
+					and shown.has("각성 적용 효과") and relic_effects.applied.all(func(effect: String) -> bool: return shown.has(effect)),
+					"the mounted catalog displays every applied relic option under the committed heading")
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_RESULT") == "1": await _paid_skill(w)
 	w.queue_free()
 	await settle()
