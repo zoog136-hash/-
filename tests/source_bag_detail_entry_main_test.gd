@@ -24,6 +24,9 @@ func fallback() -> void:
 		h.call(method)
 		await frames()
 		ck(not h.workspace.is_visible_in_tree() and h.active_section.is_empty(),method+" holds the old panel when the chosen original pack is invalid")
+	for section: String in ["emblems","guardians"]:
+		h.open_growth(section)
+		ck(not h.workspace.is_visible_in_tree() and h.active_section.is_empty(),section+" holds its old panel when the chosen original pack is invalid")
 	var called: Array[int]=[]
 	var on_accept:=func(count: int) -> void:called.append(count)
 	ck(not h.confirm_ground_drop("아이템",26,1,on_accept).get("handled",false),"missing original drop confirmation is held")

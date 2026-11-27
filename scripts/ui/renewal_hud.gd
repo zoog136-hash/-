@@ -3888,7 +3888,9 @@ func open_mastery_native() -> void:
 	weapon_mastery_requested.emit()
 
 func open_growth(section: String) -> void:
-	_open_window(section,"문양" if section == "emblems" else "수호성","")
+	var title: String="문양" if section=="emblems" else "수호성"
+	var feature: String=section
+	_open_window(section,title,"")
 	# The original 523 문양 window (source_main_symbol_window) over world.growth.
 	if section=="emblems" and _open_original_feature("emblems"):return
 	# Resume the original choice from the saved slot. The normal opening and
@@ -3899,28 +3901,20 @@ func open_growth(section: String) -> void:
 		if pending.is_empty():
 			if _open_original_feature("guardians"):return
 		else:
+			feature="guardian_find"
 			var group_id: String=""
 			for group: Dictionary in growth.config.get("guardians",[]):
 				if group.nodes.any(func(row: Dictionary) -> bool:return row.id==pending.node):
 					group_id=str(group.id)
 					break
 			if not group_id.is_empty() and _open_original_feature("guardian_find",[group_id]):return
+	if _hold_original_inventory_window(title,original_main_ui_status.get(feature+"_window",original_main_ui_bind_problem)):return
 	_mount_growth_view(section)
 
-## The existing growth view (the original 수호성 window routes its slots here).
-func open_growth_native(section: String, group: String="", node: String="") -> void:
-	_open_window(section,"문양" if section == "emblems" else "수호성","")
-	var screen: Control=_mount_growth_view(section)
-	if not group.is_empty():
-		screen.selected=group
-		screen.selected_node=node
-		screen._refresh()
-
-func _mount_growth_view(section: String) -> Control:
+func _mount_growth_view(section: String) -> void:
 	var screen := preload("res://scripts/growth/growth_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,section)
-	return screen
 
 ## The original 523 아이템 컬렉션 window (the original ItemBook tables and
 ## the 96레벨 증표 컬렉션, source_main_item_book_window); false keeps the
