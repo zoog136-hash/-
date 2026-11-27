@@ -10,6 +10,9 @@ const SourceCardPresentation = preload("res://scripts/ui/source_card_presentatio
 const NativeTouchButton=preload("res://scripts/ui/native_touch_button.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
 const NativeGradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
+# Fx_Roultte_Stop1 restores a card slot about 2.4 seconds in.
+# Use that beat for our success cue (reel time minus the lightning lead).
+const FUSION_SUCCESS_REEL_SECONDS: float = 2.5
 @export var showcase_on_ready: bool = false
 var cards: Array[Control] = []
 var results: Array[Dictionary] = []
@@ -141,6 +144,7 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	var show_lightning: bool=(not is_fusion or upgraded) and not card.reduced_motion and card.intensity_scale>0.0
 	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade) if show_lightning else null
 	if lightning!=null:
+		if is_fusion:card.reel_seconds=FUSION_SUCCESS_REEL_SECONDS
 		lightning.position=area.size*0.5
 		lightning.modulate.a=clampf(card.intensity_scale,0.0,1.0)
 		card.face.get_parent().add_child(lightning)
