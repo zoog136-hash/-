@@ -281,7 +281,7 @@ func _ready(skill: Dictionary, announce: bool, quote_materials: bool) -> bool:
 		return false
 	if local_runtime.can_disable(skill): return true
 	if progression.can_disable(skill):return true
-	skill = catalog.resolve(skill)
+	skill = catalog._resolved_reference(skill)
 	var reason := ""
 	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
 	elif spell_move.busy(): reason = "원본 이동 효과 진행 중"
@@ -448,7 +448,7 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 	cooldown *= clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1)
 	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
 	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
-	var concealed_before: bool = area and world.is_player_concealed()
+	var concealed_before: bool = registers and world.is_player_concealed()
 	world._break_invisibility()
 	if not _is_verified_source_skill(skill): vfx.begin_cast(presentation_id(skill), world.player, target)
 	_emit_verified_source_effect(skill, "cast", world.player.global_position)
@@ -511,22 +511,25 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 	var items: Dictionary = skill.get("items", {})
 	# Proven spell materials change the bag and vitals. Ammunition can also
 	# unequip a depleted stack, so it retains the full equipment publish.
-	var area_materials: bool = area and not items.is_empty() and not items.has("화살") and not items.has("총알") \
+	var spell_materials: bool = registers and not items.is_empty() and not items.has("화살") and not items.has("총알") \
 		and skill.get("source523", {}).get("applied", []).has("materials")
-	var light_area_hud: bool = area and kept_buffs.is_empty() and (items.is_empty() or area_materials) and not concealed_before
-	var stacks_before: int = hash(stacks) if light_area_hud else 0
-	var buffs_before: int = hash(world.active_skill_buffs) if light_area_hud else 0
+	var light_combat_hud: bool = registers and kept_buffs.is_empty() and (items.is_empty() or spell_materials) and not concealed_before
+	var stacks_before: int = hash(stacks) if light_combat_hud else 0
+	var buffs_before: int = hash(world.active_skill_buffs) if light_combat_hud else 0
+	var npc_buffs_before: int = world.player_npc_buff_signature() if light_combat_hud else 0
+	var level_before: int = world.level
 	trigger("on_skill", target, skill)
-	# Stable area stats need only the vitals and any changed material counts.
-	var hud_started: int = FRAME_HITCH.now() if area else 0
-	if light_area_hud and stacks_before == hash(stacks) and buffs_before == hash(world.active_skill_buffs):
-		if area_materials: world.publish_hud(world.HUD_ITEMS | world.HUD_VITALS)
+	# Stable combat stats need only the vitals and any changed material counts.
+	var hud_started: int = FRAME_HITCH.now()
+	if light_combat_hud and stacks_before == hash(stacks) and buffs_before == hash(world.active_skill_buffs) \
+		and npc_buffs_before == world.player_npc_buff_signature() and level_before == world.level:
+		if spell_materials: world.publish_hud(world.HUD_ITEMS | world.HUD_VITALS)
 		else: world._refresh_combat_hud()
 	elif mode in ["buff","counter"] and not skill.has("approx_self_child") and world.has_method("_publish_timed_buff_hud"):
 		world._publish_timed_buff_hud()
 	else:
 		world._update_hud()
-	if hud_started != 0: FRAME_HITCH.detail("skill.area_hud", hud_started)
+	FRAME_HITCH.detail("skill.area_hud" if area else "skill.cast_hud", hud_started)
 	return true
 
 ## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables
@@ -919,7 +922,7 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 	stackable.on_event(event, attack)
 	for base: Dictionary in catalog.combat_proc_records():
 		if not catalog.enabled(base): continue
-		var skill := catalog.resolve(base)
+		var skill := catalog._resolved_reference(base)
 		var expected := str(skill.get("trigger", "on_damaged" if skill.mode == "stack_defense" else "on_hit"))
 		var native_delta: float = Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
 		if event == "on_miss":
@@ -1171,8 +1174,14 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 	return random.randf() < clampf(chance, 0, 1)
 
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
-	if not ready(skill): return false
-	skill = catalog.resolve(skill)
+	return ready(skill) and _auto_intent(catalog._resolved_reference(skill), target)
+
+## The quickslot owner will call cast() in the same callback if the slot can
+## be used. Leave the material quote to that authoritative readiness check.
+func should_attempt_auto_cast(skill: Dictionary, target: TwilightMonster = null) -> bool:
+	return _ready(skill, false, false) and _auto_intent(catalog._resolved_reference(skill), target)
+
+func _auto_intent(skill: Dictionary, target: TwilightMonster) -> bool:
 	if progression.is_toggle(skill) or str(skill.get("mode",""))=="source_toggle":return false
 	if is_area_cast(skill): return _has_area_target(skill)
 	if str(skill.get("mode", "")) in ["attack", "status", "turn_undead"] and is_instance_valid(target) and not Catalog.SOURCE523.target_allowed(skill, target): return false

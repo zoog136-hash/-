@@ -191,14 +191,19 @@ func run() -> void:
 	var single: Dictionary = service.catalog.record_for("에너지 볼트")
 	service.catalog.learned[str(single.id)] = 1
 	service.catalog.revision += 1
+	world.quickslots[0] = {"kind":"skill", "id":str(single.id), "auto":true}
+	check_unneeded_auto_quotes(world, service, blocked)
 	world.selected_monster = far
 	far.global_position += Vector2(0, unit * 14)
 	before_mp = world.mp
 	check(not world._cast_job_skill(str(single.id)) and world.mp == before_mp, "out-of-range single-target skill still refuses")
 	primary.global_position = origin + Vector2(0, unit)
 	world.selected_monster = primary
+	var before_single_hud: int = int(world.hud_publish_counts.full)
 	check(world._cast_job_skill(str(single.id)) and world.pending_attack.has("target") and not world.pending_attack.has("area_skill"),
 		"single-target quickslot retains the original tracked motion")
+	check(int(world.hud_publish_counts.full) == before_single_hud and world.mp < before_mp,
+		"an unchanged single-target cast publishes the paid vitals without rebuilding the full HUD")
 	var proof: Dictionary = {"hits":[primary.damage_hit_count,second.damage_hit_count,blocked.damage_hit_count,far.damage_hit_count],
 		"hp":[primary.hp,second.hp,blocked.hp,far.hp],"rng_state":str(world.rng.state),"mp":world.mp,
 		"area_effects":marker_effects.size(),"hunt_searches":world.auto_target_path_checks - path_checks}
@@ -206,6 +211,22 @@ func run() -> void:
 	world.queue_free()
 	await process_frame
 	finish(proof)
+
+func check_unneeded_auto_quotes(world: TwilightWorld, service: QuoteProbe, blocked: TwilightMonster) -> void:
+	var quote_count: int = service.quotes
+	world.selected_monster = blocked
+	check(not world._run_auto_combat_quickslots() and service.quotes == quote_count and world.pending_attack.is_empty(),
+		"a blocked targeted AUTO slot never prepares material costs")
+	var healing: Dictionary = service.catalog.record_for("힐")
+	service.catalog.learned[str(healing.id)] = 1
+	service.catalog.revision += 1
+	var attack_slot: Dictionary = world.quickslots[0]
+	world.quickslots[0] = {"kind":"skill", "id":str(healing.id), "auto":true}
+	world.hp = world._effective_max_hp()
+	world._run_auto_heal_quickslots()
+	check(service.quotes == quote_count and world.hp == world._effective_max_hp(),
+		"a satisfied heal slot never prepares the bill")
+	world.quickslots[0] = attack_slot
 
 func check_lethal_impact(world: TwilightWorld, base: Dictionary, origin: Vector2, unit: float) -> void:
 	clear_cooldown(world)

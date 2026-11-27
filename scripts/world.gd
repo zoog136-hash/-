@@ -9904,7 +9904,7 @@ func _run_auto_buff_quickslots(delta: float) -> bool:
 		skill_name = str(skill.name)
 		if active_skill_buffs.has(skill_name): continue
 		var original: bool = skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]
-		if not (original_skills.auto_wants(skill) if original else _skill_ready(skill)):
+		if not (original_skills.should_attempt_auto_cast(skill) if original else _skill_ready(skill)):
 			continue
 		if _cast_job_skill(skill_name, false):
 			return true
@@ -10016,7 +10016,7 @@ func _run_auto_heal_quickslots() -> void:
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name), false)
+			if original_skills.should_attempt_auto_cast(skill): _cast_job_skill(str(skill.name), false)
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
 			continue
@@ -10057,8 +10057,9 @@ func _run_auto_combat_quickslots() -> bool:
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.is_area_quickslot(skill) or not original_skills.auto_wants(skill, selected_monster): continue
-		if not _skill_ready(skill):
+			if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty(): continue
+			if original_skills.is_area_quickslot(skill) or not original_skills.should_attempt_auto_cast(skill, selected_monster): continue
+		elif not _skill_ready(skill):
 			continue
 		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
 			continue
