@@ -112,7 +112,7 @@ func audit_navigation(hud: Node, controller: Node, world: Node) -> Dictionary:
 		"half_elixir":["half_elixir"], "totems":["totems"], "monsterbook523":["monsterbook"],
 		"auto":["schedule"], "settings":["options"], "promo_code":["options"],
 		"tj_coupons":["tj_coupons"], "doll_explore":["doll_explore"], "forge523":["forge"],
-		"equipment523":[], "bless_refine523":[], "combinations":[], "growth96":[],
+		"equipment523":[], "bless_refine523":["refine_window","_refine_window"], "combinations":[], "growth96":[],
 		"exchange":[], "sell":[], "field_activities523":[], "log":[], "class_select":[]
 	}
 	var results: Dictionary={}

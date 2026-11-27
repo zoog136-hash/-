@@ -4115,7 +4115,7 @@ func open_refine523() -> void:
 		_sync_screen_focus()
 		return
 	if is_instance_valid(original_main_ui_controller): _report_original_fallback("질서의 연금",native)
-	open_bless_refine523()
+	_mount_bless_refine_panel()
 
 ## 메뉴 대장간: the original 523 Forge_All window (source_main_forge_window)
 ## over the existing 대장간 연마 feature; the 용해·질서의 연금 panel (its
@@ -4123,9 +4123,15 @@ func open_refine523() -> void:
 func open_forge() -> void:
 	_open_window("forge523","대장간","")
 	if _open_original_feature("forge"):return
-	open_bless_refine523()
+	_mount_bless_refine_panel()
 
 func open_bless_refine523(entry_solvent_uid: String="") -> void:
+	if entry_solvent_uid.is_empty():
+		open_refine523()
+		return
+	_mount_bless_refine_panel(entry_solvent_uid)
+
+func _mount_bless_refine_panel(entry_solvent_uid: String="") -> void:
 	_open_window("bless_refine523","용해 · 질서의 연금","원본523 축복의 가루 용해 · 상급 축복의 가루 질서의 연금")
 	var scroll := ScrollContainer.new()
 	scroll.name = "BlessRefine523Scroll"
@@ -4136,7 +4142,8 @@ func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	view.configure(self,entry_solvent_uid)
 
 func open_native_smelt523(offer:Dictionary)->bool:
-	return _open_native_enchant_offer(offer,"장비 제련","try_open_smelt_window")
+	var heading: String="속성 세공" if offer.get("kind")=="elemental_smith" else "장비 제련"
+	return _open_native_enchant_offer(offer,heading,"try_open_smelt_window")
 
 func open_native_element_management523(offer: Dictionary) -> bool:
 	var header: String="속성 변환" if offer.get("kind")=="element_convert" else "속성 제거"

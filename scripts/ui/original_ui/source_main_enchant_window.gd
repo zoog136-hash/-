@@ -114,6 +114,7 @@ var _token: int=0
 var _smelt:Dictionary={}
 var _smelt_quote:Dictionary={}
 var _smelt_status:String=""
+var _smith_results: Array[Dictionary]=[]
 var _property: Dictionary={}
 var _property_choice: String=""
 
@@ -193,8 +194,8 @@ func open(parent: Node, scroll: String, candidates: Array, blessing: bool=false)
 ## common start invokes the existing equipment transaction.
 func open_smelt(parent:Node,offer:Dictionary)->Dictionary:
 	var kind:String=str(offer.get("kind",""))
-	var member:String=SMELT_BODY if kind=="smelt" else SPIRIT_BODY
-	if kind not in ["smelt","spirit_smelt"] or not offer.get("ok",false) or str(offer.get("uid","")).is_empty() or not is_instance_valid(parent):
+	var member:String=str({"smelt":SMELT_BODY,"spirit_smelt":SPIRIT_BODY,"elemental_smith":TEXT_SET}.get(kind,""))
+	if member.is_empty() or not offer.get("ok",false) or str(offer.get("uid","")).is_empty() or not is_instance_valid(parent):
 		return _fail("source_smelt_entry_unavailable")
 	if not _pack.manifest.get("scenes",{}).has(member):return _fail("source_smelt_body_unavailable")
 	close()
@@ -204,7 +205,10 @@ func open_smelt(parent:Node,offer:Dictionary)->Dictionary:
 	_candidates=offer.get("targets",[]).duplicate(true)
 	_scroll=str(offer.get("name",""))
 	_selected="";_tab="equip";multi=false
-	_smelt_status="제련할 장비를 선택하세요" if not _candidates.is_empty() else "가방에 이 재료에 맞는 장비가 없습니다"
+	_blessing=false
+	_smelt_status="가방에 이 재료에 맞는 장비가 없습니다"
+	if kind=="elemental_smith":_smelt_status="주문서와 같은 속성 3단계 이상의 무기가 필요합니다"
+	if not _candidates.is_empty():_smelt_status="속성 세공할 무기를 선택하세요" if kind=="elemental_smith" else "제련할 장비를 선택하세요"
 	return _restage()
 
 func open_element_management(parent: Node, offer: Dictionary) -> Dictionary:
@@ -233,6 +237,7 @@ func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictiona
 		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true),"blessing":blessing}
 		return {"ok":true,"handled":true,"result_refresh_pending":true}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
+	_smith_results.clear()
 	_property.clear();_property_choice=""
 	_blessing=blessing
 	if blessing:multi=false
@@ -256,6 +261,7 @@ func close() -> void:
 	_blessing=false
 	_scroll_row={}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
+	_smith_results.clear()
 	_property.clear();_property_choice=""
 	_presentation={}
 	_pending_result_refresh={}
@@ -343,7 +349,8 @@ func _stage() -> Dictionary:
 	if parent==null or hud==null:return _fail("source_enchant_window_host_unavailable")
 	var entry: Dictionary=_entry()
 	var listing: Array=_listing(hud)
-	var rows: Array[Dictionary]=_stat_rows(entry)
+	var smith: bool=_smelt.get("kind")=="elemental_smith"
+	var rows: Array[Dictionary]=_smith_rows() if smith else _stat_rows(entry)
 	var spec: Dictionary=_spec(hud,entry,listing,rows)
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(ROOT,spec,out)
@@ -365,7 +372,7 @@ func _stage() -> Dictionary:
 	if not _scroll.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot0/Sp_IconSample",material,_scroll):pictures+=1
 	if not entry.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot1/Sp_IconSample",Forge.image_record_of(hud,entry),str(entry.get("name",""))):pictures+=1
 	var filled: Dictionary=_fill_bag(hud,next,out,listing)
-	var texts: Dictionary=_fill_text(next,out,rows) if filled.get("ok",false) and _smelt.is_empty() else filled
+	var texts: Dictionary=_fill_text(next,out,rows) if filled.get("ok",false) and (_smelt.is_empty() or smith) else filled
 	if not texts.get("ok",false):
 		next.free()
 		last_result=texts
@@ -488,7 +495,8 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 		spec[P_COMMON+"Enchant_Base_Bless"]={"visible":true}
 		spec[P_COMMON+"Label_Title"]={"role":"source_text","text":str(entry.get("name","장비 선택")).get_slice(" · 원본#",0)+" · 축복 부여"}
 		spec[P_ENCHANT+"Btn_Probability_Bless"]={"visible":has,"activate":Callable(self,"_probability"),"touch_enabled":has}
-	if not _smelt.is_empty():_apply_smelt_spec(spec)
+	if _smelt.get("kind")=="elemental_smith":_apply_smith_spec(spec,rows)
+	elif not _smelt.is_empty():_apply_smelt_spec(spec)
 	if not _property.is_empty():_apply_property_spec(spec,entry)
 	return spec
 
@@ -581,19 +589,51 @@ func _apply_smelt_spec(spec:Dictionary)->void:
 	for state:String in ["Normal","Disabled"]:
 		spec[start+"/"+state+"/Label"]={"role":"source_text","text":"제련 시작"}
 
+func _smith_rows() -> Array[Dictionary]:
+	if not _smith_results.is_empty():return _smith_results
+	if not _smelt_quote.get("ok",false):return []
+	return [{"label":"속성 추가 피해","now":"","next":"새로 추첨"},
+		{"label":"속성 치명타 확률","now":"","next":"새로 추첨"}]
+
+func _apply_smith_spec(spec: Dictionary, rows: Array[Dictionary]) -> void:
+	var tab: String=P_COMMON+"Tab/Nd_Properties"
+	var ready: bool=_smelt_quote.get("ok",false)
+	spec[P_COMMON+"Tab/Nd_Single"]={"exclude":true}
+	spec[P_COMMON+"Tab/Nd_Multi"]={"exclude":true}
+	spec[tab]={"visible":true}
+	spec[tab+"/Btn_Properties_On"]={"visible":true,"touch_enabled":false}
+	spec[tab+"/Btn_Properties_Off"]={"exclude":true}
+	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":_smelt_status}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Btn"]={"exclude":true}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Text_Amount"]={"role":"source_text","text":_number(int(_smelt.quantity))}
+	spec[P_INV+"Nd_Tab/Nd_Equipment/Btn_Equip_Off"]={"exclude":true}
+	for node: String in ["Label_Safe","Label_Unsafe","Nd_Blessed_Cost","Btn_Probability","Btn_Probability_Bless"]:
+		spec[P_ENCHANT+node]={"exclude":true}
+	spec[P_ENCHANT+"Nd_TextSet"]={"visible":not rows.is_empty()}
+	spec[P_ENCHANT+"Nd_Money"]={"visible":ready}
+	spec[P_ENCHANT+"Nd_Money/Text_Price"]={"role":"source_text","text":_number(int(_smelt_quote.get("gold_cost",0)))}
+	spec[P_SMELT_START]={"activate":Callable(self,"_smelt_execute"),"displaystate":ready}
+	spec[P_SMELT_START+"/Normal"]={"visible":ready}
+	spec[P_SMELT_START+"/Disabled"]={"visible":not ready}
+	for state: String in ["Normal","Disabled"]:spec[P_SMELT_START+"/"+state+"/Label"]={"role":"source_text","text":"세공 시작"}
+
 static func _smelt_body_path(kind:String)->String:
+	if kind=="elemental_smith":return P_COMMON+"Tab/Nd_Properties"
 	return P_ALL+("Nd_Enchant_Properties_Smelt/Enchant_Tab_Properties_Smelt" if kind=="spirit_smelt" else "Nd_Enchant_Smelt/Enchant_Tab_Smelt")
 
 func _smelt_action()->Dictionary:
 	return {"kind":_smelt.get("kind",""),"target_id":_selected,"material_ids":[str(_smelt.get("uid",""))]}
 
 func _smelt_select(entry:Dictionary)->Dictionary:
+	_smith_results.clear()
 	_selected=str(entry.get("target_id",""))
 	var hud:Node=_hud.get_ref() if _hud!=null else null
 	var world:Node=hud.get_parent() if is_instance_valid(hud) else null
 	if not is_instance_valid(world) or not world.has_method("native_smelt523_quote"):return _fail("source_smelt_owner_unavailable")
 	_smelt_quote=world.native_smelt523_quote(_smelt_action())
-	_smelt_status=("%s · 재료 1개" % str(entry.get("name",""))) if _smelt_quote.get("ok",false) else str(_smelt_quote.get("error","원본 제련 조건을 확인하세요"))
+	_smelt_status="%s · 재료 1개" % str(entry.get("name",""))
+	if _smelt.get("kind")=="elemental_smith":_smelt_status="속성 %d단계 · 주문서 1장으로 두 효과를 다시 부여합니다" % int(entry.get("element_level",0))
+	if not _smelt_quote.get("ok",false):_smelt_status=str(_smelt_quote.get("error","원본 가공 조건을 확인하세요"))
 	return _restage()
 
 func _smelt_execute()->Dictionary:
@@ -606,6 +646,13 @@ func _smelt_execute()->Dictionary:
 	_smelt_status=str(outcome.get("detail","제련 완료")) if outcome.get("ok",false) else str(outcome.get("error","제련을 완료하지 못했습니다"))
 	if outcome.get("ok",false):
 		_smelt["quantity"]=maxi(0,int(_smelt.get("quantity",0))-1)
+		if _smelt.get("kind")=="elemental_smith":
+			for effect: Dictionary in outcome.get("effects",[]):
+				for key: String in effect:
+					if key.begins_with("equipment523_element_flat_"):
+						_smith_results.append({"label":"속성 추가 피해","now":"","next":"+%d" % int(effect[key])})
+					elif key=="equipment523_element_crit_pct":
+						_smith_results.append({"label":"속성 치명타 확률","now":"","next":"+%s%%" % _value(float(effect[key]))})
 	_restage()
 	return outcome
 
@@ -720,6 +767,7 @@ func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary,
 func _slot_pressed(index: int, expected: Variant=null) -> Dictionary:
 	if not _smelt.is_empty():
 		if _bag.moved>12.0 or index<0 or index>=_candidates.size() or int(_smelt.get("quantity",0))<=0:return {"ok":false,"handled":true}
+		if expected!=null and expected!=_candidates[index].get("target_id"):return _restage()
 		return _smelt_select(_candidates[index])
 	if _bag.moved>12.0:return {"ok":true,"ignored_after_drag":true}
 	var hud: Node=_hud.get_ref() if _hud!=null else null
