@@ -5,6 +5,7 @@ extends SceneTree
 ## (unlearned records answer before the other AND checks).
 ##   godot --headless --path <repo> --script res://tests/kill_path_test.gd
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const SKILL_CATALOG = preload("res://scripts/skills/skill_catalog.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -54,5 +55,27 @@ func _initialize() -> void:
 	var learned_at: int = catalog_source.find("if int(learned.get(str(record.get(\"id\", \"\")), 0)) <= 0: return false", owned_at)
 	var status_at: int = catalog_source.find("if not source_learning_status(record).is_empty():return false", owned_at)
 	check(owned_at >= 0 and learned_at > owned_at and status_at > learned_at, "owned() answers unlearned records before the other checks")
+	var skills := SKILL_CATALOG.new()
+	var attack: Dictionary = {"id":"test_attack", "mode":"attack"}
+	var mark: Dictionary = {"id":"test_mark", "mode":"mark"}
+	var stack: Dictionary = {"id":"test_stack", "mode":"stack_attack"}
+	var equipment: Dictionary = {"id":"test_equipment", "mode":"attack", "equipment_spell523":1}
+	skills.records = [attack, mark, stack, equipment]
+	skills.learned = {"test_stack":1, "test_attack":0}
+	var candidates: Array[Dictionary] = skills.combat_proc_records()
+	check(candidates == [mark, stack] and is_same(candidates, skills.combat_proc_records()),
+		"the cached proc records keep catalog order and include as-yet unlearned procs")
+	skills.records.append({"id":"test_skill", "mode":"attack"})
+	check(skills.combat_proc_records() == [mark, stack] and not is_same(candidates, skills.combat_proc_records()),
+		"the proc filter rebuilds when the catalog grows")
+	check(skills.possible_owned_records() == [stack, equipment],
+		"the ownership prefilter retains equipment grants for live checks")
+	skills.learned["test_attack"] = 1
+	skills.learned.erase("test_stack")
+	check(skills.possible_owned_records() == [attack, equipment],
+		"learning changes within the same catalog revision update candidates in order")
+	attack.mode = "proc"
+	skills.revision += 1
+	check(skills.combat_proc_records() == [attack, mark, stack], "a new catalog revision refreshes proc membership")
 	print("KILL_PATH_RESULT ", JSON.stringify({"checks": checks, "failures": failures}))
 	quit(0 if failures.is_empty() else 1)

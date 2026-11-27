@@ -6279,6 +6279,9 @@ func _on_ain_auto_changed(enabled: bool) -> void:
 	_request_deferred_save()
 
 func _update_ain_hud() -> void:
+	if _area_hud_refresh_depth > 0:
+		_area_ain_refresh_pending = true
+		return
 	if hud.has_method("set_ain_state"):
 		var state: Dictionary = ain_service.snapshot()
 		state["blessing_reduction_pct"] = _blessing_consumption_reduction_percent()
@@ -7674,7 +7677,25 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void
 	regional_return_settings_updated.emit()
 	if timed_buff:FRAME_HITCH.detail("item.buff_hud_final",phase)
 
+var _area_hud_refresh_depth: int = 0
+var _area_ain_refresh_pending: bool = false
+
+## One synchronous area impact can publish the same vitals repeatedly on
+## kills or drains. The final display belongs to the outer impact, after
+## all hit reactions, reward transactions and live stats have been applied.
+func _begin_area_hud_refresh() -> void:
+	_area_hud_refresh_depth += 1
+
+func _end_area_hud_refresh() -> void:
+	_area_hud_refresh_depth -= 1
+	if _area_hud_refresh_depth > 0: return
+	_refresh_combat_hud()
+	if _area_ain_refresh_pending:
+		_area_ain_refresh_pending = false
+		_update_ain_hud()
+
 func _refresh_combat_hud() -> void:
+	if _area_hud_refresh_depth > 0: return
 	# Only presentation limits are reused. Equipment/stat/buff changes and loads
 	# publish fresh limits through _update_hud; real damage still queries live stats.
 	# HP-only changes must not queue an equipment/character/inventory rebuild.

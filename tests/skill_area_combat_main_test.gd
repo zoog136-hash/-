@@ -175,9 +175,41 @@ func run() -> void:
 	var proof: Dictionary = {"hits":[primary.damage_hit_count,second.damage_hit_count,blocked.damage_hit_count,far.damage_hit_count],
 		"hp":[primary.hp,second.hp,blocked.hp,far.hp],"rng_state":str(world.rng.state),"mp":world.mp,
 		"area_effects":marker_effects.size(),"hunt_searches":world.auto_target_path_checks - path_checks}
+	check_lethal_impact(world, base, origin, unit)
 	world.queue_free()
 	await process_frame
 	finish(proof)
+
+func check_lethal_impact(world: TwilightWorld, base: Dictionary, origin: Vector2, unit: float) -> void:
+	clear_cooldown(world)
+	world._clear_monsters()
+	world.exp_need = 1000000000
+	world.mp = 1000
+	world.rng.seed = 282026
+	var first: TwilightMonster = spawn(world, origin + Vector2(0, unit))
+	var second: TwilightMonster = spawn(world, origin + Vector2(-unit, unit * 2))
+	var order: Array[TwilightMonster] = []
+	for mob: TwilightMonster in [first, second]:
+		mob.hp = 1
+		mob.exp_reward = 10
+		mob.gold_reward = 10
+		mob.died.connect(world._on_monster_died)
+		mob.died.connect(func(dead: TwilightMonster) -> void: order.append(dead))
+	var gold: int = world.gold
+	var experience: int = world.experience
+	world.selected_monster = null
+	world.quickslots = [{"kind":"skill", "id":str(base.id), "auto":false}]
+	world._on_quickslot_pressed(0)
+	if not check(world.pending_attack.has("area_skill"), "lethal test registers Meteor through the quickslot"): return
+	var before_vitals: int = int(world.hud_publish_counts.vitals)
+	marker(world)
+	check(order == [first, second] and first.damage_hit_count == 1 and second.damage_hit_count == 1,
+		"lethal area pays each monster life in the same target order and does not repeat a marker")
+	check(world.gold > gold and world.experience > experience and world.hud.character_state.gold == world.gold
+		and world.hud.v20_ain_state.get("blessing") == world.ain_service.snapshot().get("blessing"),
+		"both reward transactions complete and the HUD shows final gold and blessing")
+	check(int(world.hud_publish_counts.vitals)-before_vitals == 1,
+		"one lethal area refreshes the vitals once after all hits")
 
 func finish(proof: Dictionary) -> void:
 	print("SKILL_AREA_COMBAT_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"fixture":proof}))

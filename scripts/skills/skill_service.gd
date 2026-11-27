@@ -616,6 +616,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 	if not area_cast or not world._source_combat_targets_hidden():
 		victims = targets(skill, primary, direction)
 	var area_started: int = FRAME_HITCH.now() if str(skill.get("shape", "single")) != "single" else 0
+	if area_cast: world._begin_area_hud_refresh()
 	for target: TwilightMonster in victims:
 		if not is_instance_valid(target) or target.dead: continue
 		if str(skill.mode) == "turn_undead":
@@ -660,7 +661,8 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 	if skill.has("self_stacks"):
 		var config: Dictionary = skill.self_stacks
 		stack(str(skill.id), {"atk":config.get("atk", 2)}, int(config.get("max", 3)), float(config.get("duration", 15)))
-	world._refresh_combat_hud()
+	if area_cast: world._end_area_hud_refresh()
+	else: world._refresh_combat_hud()
 	if area_started != 0: FRAME_HITCH.detail("skill.area_apply", area_started)
 
 static func presentation_id(skill: Dictionary) -> String:
@@ -854,8 +856,8 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 	proc_depth += 1
 	combat_elapsed = 0 if event != "on_skill" else combat_elapsed
 	stackable.on_event(event, attack)
-	for base: Dictionary in catalog.records:
-		if str(base.mode) not in ["proc","mark","toggle_proc","stack_defense","stack_attack"] or not catalog.enabled(base): continue
+	for base: Dictionary in catalog.combat_proc_records():
+		if not catalog.enabled(base): continue
 		var skill := catalog.resolve(base)
 		var expected := str(skill.get("trigger", "on_damaged" if skill.mode == "stack_defense" else "on_hit"))
 		var native_delta: float = Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
@@ -984,9 +986,9 @@ func outgoing_damage(amount: int, attack: Dictionary = {}) -> int:
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var stats: Dictionary = buff.get("skill_stats", {})
 		if world.rng.randf() < float(stats.get("doubleChance", 0)): multiplier = maxf(multiplier, float(stats.get("doubleMultiplier", 1)))
-	for record: Dictionary in catalog.records:
+	for record: Dictionary in catalog.possible_owned_records():
 		if not catalog.enabled(record): continue
-		var skill: Dictionary = catalog.resolve(record)
+		var skill: Dictionary = catalog._resolved_reference(record)
 		if skill.mode != "amplify": continue
 		var chance: float = float(skill.get("proc_chance", 0)) + Catalog.RELIC_LEVELS.EFFECTS.INVOKE.delta_for(skill, attack)
 		if world.rng.randf() < clampf(chance, 0, 1): multiplier = maxf(multiplier, float(skill.get("multiplier", 1)))
