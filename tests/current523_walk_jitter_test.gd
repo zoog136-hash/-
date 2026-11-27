@@ -314,7 +314,7 @@ func real_main(base: String) -> void:
 	for offset: Vector2i in [Vector2i(0, 8), Vector2i(-7, -7), Vector2i(8, 0), Vector2i(7, -7), Vector2i(-8, 2), Vector2i(2, -8)]:
 		if field.walkable(field.coordinates.to_world(Vector2(origin_cell + offset))): spots.append(origin_cell + offset)
 	var hidden: int = 0
-	for r: int in range(5, 13):
+	for r: int in range(5, world.AUTO_TARGET_SEARCH_RADIUS_CELLS + 1):
 		for dy: int in range(-r, r + 1):
 			for dx: int in range(-r, r + 1):
 				if hidden >= 3 or maxi(absi(dx), absi(dy)) != r: continue

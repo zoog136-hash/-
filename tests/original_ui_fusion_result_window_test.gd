@@ -72,6 +72,45 @@ func _check_effect_dispatch() -> void:
 	page.free()
 	redraw.free()
 
+func _check_open_all_dispatch() -> void:
+	var window := EffectWindow.new()
+	window.results = _views(4)
+	var order: Array[String] = []
+	var frames: Dictionary = {}
+	var callbacks: Array[Callable] = []
+	window.reveal_effect = func(_host: Node2D, _area: Rect2, card: Dictionary, done: Callable) -> bool:
+		order.append(card.id)
+		frames[Engine.get_process_frames()] = true
+		callbacks.append(done)
+		return true
+	var page := Node2D.new()
+	root.add_child(page)
+	window._fill(page, {})
+	window._open_all()
+	window._open_all()
+	check(order.is_empty(), "Open All returns before preparing cards")
+	for i: int in range(7): await process_frame
+	check(order == ["source:0", "source:1", "source:2", "source:3"] and frames.size() == 4,
+		"repeat Open All touches start exactly one result per frame in card order")
+	for done: Callable in callbacks: done.call()
+	check(window._page_revealed(), "the page becomes ready after every scheduled result settles")
+	window.close()
+	callbacks.clear()
+	page.free()
+
+	var replaced := Node2D.new()
+	root.add_child(replaced)
+	window._revealed.clear()
+	window._fill(replaced, {})
+	window.reveal_effect = func(_host: Node2D, _area: Rect2, card: Dictionary, _done: Callable) -> bool:
+		order.append(card.id)
+		return true
+	window._open_all()
+	window.close()
+	for i: int in range(3): await process_frame
+	check(order.size() == 4, "closing the result cancels unopened card jobs")
+	replaced.free()
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:failures.append(label)
@@ -87,6 +126,7 @@ func _views(count: int) -> Array:
 
 func _run() -> void:
 	_check_effect_dispatch()
+	await _check_open_all_dispatch()
 	var hud:=FakeHud.new()
 	root.add_child(hud)
 	var window=WINDOW.new()
@@ -136,17 +176,41 @@ func _real_pack(pack_dir: String) -> void:
 	var released: Array=[0]
 	var opened: Dictionary=window.open(parent,_views(12),"변신",true,func() -> void:released[0]+=1)
 	check(opened.get("handled",false) and int(opened.filled.shown)==10 and int(opened.filled.pages)==2,"Change_Fusion_All mounts the first ten results: "+str(opened).left(300))
+	if not opened.get("handled",false):
+		viewport.queue_free()
+		host.queue_free()
+		return
+	var original_root: Node2D=window._scene
+	var original_page: Node2D=window._cells
 	check(window._next().waiting,"a background touch does not open any card")
-	window._open_all()
-	var second: Dictionary=window._next()
-	check(second.get("handled",false) and int(second.filled.shown)==2,"the second page mounts the rest")
-	window._open_all()
-	window._next()
+	await _tap_button(window._scene,window._out,"Nd_ButtonSet/Btn_Open")
+	for i: int in range(WINDOW.PER_PAGE+2): await process_frame
+	check(window._page_revealed(),"the original Open All button opens the ten results")
+	await _tap_button(window._scene,window._out,"Btn_Close")
+	var second: Dictionary=window.last_result
+	check(second.get("handled",false) and int(second.filled.shown)==2 and window._scene==original_root and not is_instance_valid(original_page),
+		"the second page replaces only the cards and preserves the original outer window")
+	await _tap_button(window._scene,window._out,"Nd_ButtonSet/Btn_Open")
+	for i: int in range(4): await process_frame
+	await _tap_button(window._scene,window._out,"Btn_Close")
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
 	await _check_authored_phases(window,parent,pack)
 	viewport.queue_free()
 	host.queue_free()
+
+func _tap_button(scene: Node2D, out: Dictionary, path: String) -> void:
+	var target: Dictionary=WINDOW._locate(scene,out,path)
+	check(target.get("ok",false),"original touch button is bound: "+path)
+	if not target.get("ok",false):return
+	var hit: Control=target.player.source_nodes[target.offset].get_meta("source_button")._input_area
+	for held: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.index=4
+		event.pressed=held
+		event.position=hit.get_global_transform_with_canvas()*(hit.size*0.5)
+		scene.get_viewport().push_input(event,true)
+		await process_frame
 
 func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted) -> void:
 	var record: Dictionary={"id":"fixture-legend","name":"결과","grade":"전설"}
@@ -158,17 +222,12 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 			check(false,"mount exact UI with a single fusion result")
 			return
 		var result_scene: Node2D=window._scene
-		var face: Node2D=result_scene.find_child("SourceAwardFace",true,false)
 		check(result_scene.find_child("CardRevealEffect",true,false)==null and response.filled.backs==1,"one authored back at rest before input")
-		var target: Dictionary=window._locate(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
-		check(target.get("ok",false),"original result card binds a touch button")
-		if not target.get("ok",false):return
-		var hit: Control=target.player.source_nodes[target.offset].get_meta("source_button")._input_area
-		for held: bool in [true,false]:
-			var event:=InputEventScreenTouch.new()
-			event.index=4;event.pressed=held;event.position=hit.get_global_transform_with_canvas()*(hit.size*0.5)
-			result_scene.get_viewport().push_input(event,true)
-			await process_frame
+		check(result_scene.find_child("SourceAwardFace",true,false)==null and
+			WINDOW.GradeFx.project(window,window._cells,window._cell_out,"Panel/Card_00/Fx_Outline_Front")==null,
+			"the sealed card starts with neither a face nor an instantiated grade outline")
+		await _tap_button(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		var face: Node2D=result_scene.find_child("SourceAwardFace",true,false)
 		var reel: Control=result_scene.find_child("CardRevealEffect",true,false)
 		if not is_instance_valid(face) or not is_instance_valid(reel):
 			check(false,"mount authored face and separate reel")
@@ -192,6 +251,9 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 			if DisplayServer.get_name()!="headless":await _check_lightning_pixels(bolt)
 		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
 		check(not is_instance_valid(reel) and face.is_visible_in_tree(),"settled result has its grade face")
+		var settled_outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,"Panel/Card_00/Fx_Outline_Front")
+		check(settled_outline!=null and settled_outline.is_visible_in_tree() and settled_outline.playback_status().playing,
+			"the original grade outline mounts and plays after settling")
 		window.close()
 		await process_frame
 	var batch: Array=[]
@@ -204,6 +266,7 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 	var reels: Array=window._scene.find_children("CardRevealEffect","Control",true,false)
 	check(reels.size()==1 and not reels[0].record.fusion_success,"one result tap leaves the others sealed")
 	window._open_all()
+	for i: int in range(5): await process_frame
 	reels=window._scene.find_children("CardRevealEffect","Control",true,false)
 	check(reels.size()==3,"one native reel per result in the mixed batch")
 	for reel: Control in reels:
