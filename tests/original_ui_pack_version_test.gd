@@ -1,6 +1,6 @@
 extends SceneTree
 ## The installed original UI add-on is shown (설정 정보 tab, loading screen)
-## and an add-on older than the expected one (ui45) asks once for a reinstall
+## and an add-on older than the expected one (ui46) asks once for a reinstall
 ## without holding the game (source_ui_pack_version).
 const VERSION=preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 var checks: int=0
@@ -19,8 +19,12 @@ func check(ok: bool, label: String) -> void:
 
 func _initialize() -> void:
 	var current: Dictionary=VERSION.describe(VERSION.EXPECTED_SHA256)
-	check(current.installed and current.name=="ui45" and current.sha8=="47e593f4" and not current.outdated,"ui45 is current: "+str(current))
-	check(VERSION.label(current)=="UI 팩 ui45 (47e593f4)","the readable label")
+	check(current.installed and current.name=="ui46" and current.sha8=="91e2c03b" and not current.outdated,"ui46 is current: "+str(current))
+	check(VERSION.label(current)=="UI 팩 ui46 (91e2c03b)","the readable label")
+	# 2026-11-27: ui46 adds the original 강화 결과 screen (Enchant_Result and
+	# its effects) for the two-touch enchant result.
+	var ui45: Dictionary=VERSION.describe("47e593f4fa682dc4a8e839fd0af181687926e757ce57d1e09dddd190cd44c407")
+	check(ui45.name=="ui45" and ui45.outdated and VERSION.label(ui45)=="UI 팩 ui45 (47e593f4) · 오래됨","ui45 is a known old build: "+str(ui45))
 	# 2026-11-26: ui45 adds the skill awakening result, the common message box
 	# and the skill-compose recovery scenes, and the whole bag tooltip (#924).
 	var ui44: Dictionary=VERSION.describe("5263d92594e8f44248ad799d6b56ba7816fc5f30bdc4ead0bafaf0bf2dd0b94c")
@@ -30,7 +34,7 @@ func _initialize() -> void:
 	# on every loading screen. ui43 lacks the 마법인형 탐험 scenes (#811).
 	var ui43: Dictionary=VERSION.describe("7a2b59859b8c8abdead63e19fa4cd1c602c0324b7e0ca81d3e36e37186122371")
 	check(ui43.name=="ui43" and ui43.outdated and VERSION.label(ui43)=="UI 팩 ui43 (7a2b5985) · 오래됨","ui43 is a known old build: "+str(ui43))
-	check(VERSION.EXPECTED_SCENES.has("UI/Change/Change_Upgrade_Skill_Awaken.csb") and VERSION.EXPECTED_SCENES.has("UI/CommonUi/Common_MessageBox.csb") and VERSION.EXPECTED_SCENES.size()==3,"the scenes ui45 added")
+	check(VERSION.EXPECTED_SCENES.has("UI/FloatingUi/Enchant_Result.csb") and VERSION.EXPECTED_SCENES.has("UI/Effect/Effect_Source/Fx_Enchant_Result.csb") and VERSION.EXPECTED_SCENES.size()==4,"the scenes ui46 added")
 	check(VERSION.describe("335af82d2794bafa4a9273cb309cde3a59f06a764467e66b58e29321c98eebaa").outdated,"ui42 is old now")
 	var old: Dictionary=VERSION.describe("1137CCBCA08C61FB64607C01BB4CCD1B19D06DD58B34B95320B0AB74656B87EF")
 	check(old.name=="ui41" and old.outdated and VERSION.label(old)=="UI 팩 ui41 (1137ccbc) · 오래됨","ui41 is old (any case): "+str(old))
@@ -39,13 +43,13 @@ func _initialize() -> void:
 	for member: String in VERSION.EXPECTED_SCENES:scenes[member]={}
 	var newer: Dictionary=VERSION.describe("ab".repeat(32),scenes)
 	check(newer.name=="확인되지 않은 팩" and not newer.outdated,"an unknown pack with every expected scene is current")
-	scenes.erase("UI/CommonUi/Common_MessageBox.csb")
+	scenes.erase("UI/FloatingUi/Enchant_Result.csb")
 	var lacking: Dictionary=VERSION.describe("ab".repeat(32),scenes)
-	check(lacking.outdated and lacking.missing_scenes==["UI/CommonUi/Common_MessageBox.csb"],"an unknown pack without an expected scene is old")
+	check(lacking.outdated and lacking.missing_scenes==["UI/FloatingUi/Enchant_Result.csb"],"an unknown pack without an expected scene is old")
 	check(VERSION.describe("ab".repeat(32)).outdated,"an unknown pack whose scenes are unknown is old")
 	var none: Dictionary=VERSION.describe("")
 	check(not none.installed and not none.outdated and VERSION.label(none)=="UI 팩 설치 안 됨","no pack: nothing to warn")
-	check(VERSION.KNOWN.get(VERSION.EXPECTED_SHA256)==VERSION.EXPECTED_NAME and VERSION.KNOWN.size()==15,"the expected build is in the table")
+	check(VERSION.KNOWN.get(VERSION.EXPECTED_SHA256)==VERSION.EXPECTED_NAME and VERSION.KNOWN.size()==16,"the expected build is in the table")
 	var hud:=FakeHud.new()
 	check(not VERSION.warn_once(hud,current) and hud.messages.is_empty(),"a current pack says nothing")
 	check(VERSION.warn_once(hud,old) and hud.messages==[VERSION.WARNING],"an old pack asks for a reinstall")
