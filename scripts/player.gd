@@ -11,6 +11,8 @@ const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ORIGINAL_SOURCE = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE_WALK = preload("res://scripts/maps/source_walk_speed.gd")
 const PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
+const DETOUR_RETRY_SECONDS: float = 0.25
+const DETOUR_POINT_EPSILON: float = 0.08
 var original_source_preview = ORIGINAL_SOURCE.new()
 var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
@@ -60,6 +62,10 @@ const TRANSFORM_WIDTH_SCALE: float = 0.90
 var touch_vector: Vector2 = Vector2.ZERO
 var click_path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
+var _detour_points := PackedVector2Array()
+var _detour_steering := Vector2.ZERO
+var _detour_last_position := Vector2.INF
+var _detour_retry: float = 0.0
 var auto_enabled: bool = false
 var manual_navigation: bool = false
 var movement_locked: bool = false
@@ -219,14 +225,16 @@ func _physics_step(delta: float) -> void:
 	if manual.length_squared() < 0.01:
 		manual = Vector2.ZERO if ui_blocks else touch_vector
 
+	var steering := Vector2.ZERO
 	if manual.length_squared() > 0.01:
 		cancel_attack()
-		clear_click_path()
-		velocity = _walk_velocity(SOURCE_WALK.cell_direction(_route_coordinates(), manual), move_speed)
+		if not click_path.is_empty() or manual_navigation: clear_click_path()
+		steering = SOURCE_WALK.cell_direction(_route_coordinates(), manual).normalized()
+		velocity = _walk_velocity(steering, move_speed)
 	else:
 		velocity = _click_path_velocity()
 
-	_move_on_map()
+	_move_on_map(true, steering)
 	_update_facing(velocity)
 	_update_visual(delta)
 
@@ -687,6 +695,7 @@ func set_touch_vector(value: Vector2) -> void:
 	touch_vector = value.limit_length(1.0)
 
 func set_click_path(points: PackedVector2Array, target: Vector2) -> void:
+	_reset_obstacle_detour()
 	manual_navigation = false
 	if not points.is_empty(): cancel_attack()
 	click_path = points
@@ -713,10 +722,13 @@ func _route_has_field() -> bool:
 ## Speed (px/s) the current route walk wants this frame, 0 without a route.
 func intended_walk_speed() -> float:
 	if path_index >= click_path.size(): return 0.0
+	if has_active_obstacle_detour():
+		return _walk_velocity(global_position.direction_to(_detour_points[0]), click_move_speed).length()
 	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, click_path[path_index])
 	return _walk_velocity(leg.direction if not leg.is_empty() else global_position.direction_to(click_path[path_index]), click_move_speed).length()
 
 func clear_click_path() -> void:
+	_reset_obstacle_detour()
 	manual_navigation = false
 	click_path = PackedVector2Array()
 	path_index = 0
@@ -908,13 +920,90 @@ func pulse_attack() -> void:
 	attack_visual_duration = clampf(0.42 / maxf(0.5, attack_speed_multiplier), 0.10, 0.84)
 	start_combat_attack(global_position + motion.direction, attack_visual_duration, motion.profile.motion_style)
 
-func _move_on_map() -> void:
+func _move_on_map(assist: bool = false, steering: Vector2 = Vector2.ZERO) -> void:
 	var started: int = FRAME_HITCH.now()
 	var controller: Node = get_parent()
+	var origin: Vector2 = global_position
+	assist = assist and not velocity.is_zero_approx()
+	if not assist or (_detour_last_position.is_finite() and _detour_last_position != origin) \
+		or (_detour_steering != steering and _detour_steering.dot(steering) < 0.95):
+		_reset_obstacle_detour()
+	_detour_steering = steering if assist else Vector2.ZERO
+	var detouring: bool = has_active_obstacle_detour()
+	if detouring: velocity = _obstacle_detour_velocity(steering != Vector2.ZERO)
+	var desired: Vector2 = velocity
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
 		controller.constrain_original_motion(self)
 	move_and_slide()
+	if assist:
+		_detour_last_position = global_position
+		_detour_retry = maxf(0.0, _detour_retry - physics_delta)
+		var moved: Vector2 = global_position - origin
+		var blocked: bool = moved.dot(desired) < desired.length_squared() * physics_delta * PATH_PROGRESS.STALL_SHARE
+		if detouring:
+			if global_position.distance_to(_detour_points[0]) <= DETOUR_POINT_EPSILON:
+				_detour_points.remove_at(0)
+			elif blocked or desired.is_zero_approx():
+				_detour_points.clear()
+				_detour_retry = DETOUR_RETRY_SECONDS
+		elif blocked and _detour_retry <= 0.0:
+			_detour_points = _find_obstacle_detour(desired.normalized(), steering == Vector2.ZERO)
+			_detour_retry = DETOUR_RETRY_SECONDS
 	FRAME_HITCH.detail("player.move", started)
+
+func has_active_obstacle_detour() -> bool:
+	return not _detour_points.is_empty()
+
+func _reset_obstacle_detour() -> void:
+	_detour_points.clear()
+	_detour_steering = Vector2.ZERO
+	_detour_last_position = Vector2.INF
+	_detour_retry = 0.0
+
+func _obstacle_detour_velocity(manual: bool) -> Vector2:
+	var leg: Vector2 = _detour_points[0] - global_position
+	var speed: float = _walk_velocity(leg, move_speed if manual else click_move_speed).length()
+	var step: Vector2 = leg.limit_length(speed * physics_delta)
+	if not _detour_leg_clear(global_position, global_position + step): return Vector2.ZERO
+	return step / maxf(physics_delta, 0.001)
+
+func _detour_leg_clear(from: Vector2, to: Vector2) -> bool:
+	if _route_has_field() and not _route_line_clear(from, to): return false
+	var foot: Transform2D = global_transform
+	foot.origin = from
+	return not test_move(foot, to - from, null, safe_margin)
+
+func _find_obstacle_detour(heading: Vector2, routed: bool) -> PackedVector2Array:
+	var origin: Vector2 = global_position
+	var coordinates: Object = _route_coordinates()
+	var forward: Vector2 = heading * 32.0
+	var sideways: Vector2 = forward.orthogonal()
+	if coordinates != null:
+		# Sideways in the source grid is a legal cell heading on the diamond.
+		var bx: Vector2 = coordinates.basis_x
+		var by: Vector2 = coordinates.basis_y
+		var grid := Vector2(heading.cross(by), bx.cross(heading)) * signf(bx.cross(by))
+		var step: Vector2 = (grid / maxf(absf(grid.x), absf(grid.y))).round()
+		forward = bx * step.x + by * step.y
+		sideways = bx * step.y - by * step.x
+	var advance: Vector2 = forward * 1.25
+	if routed:
+		# Rejoin ahead of the obstruction but before the current waypoint.
+		var room: float = (click_path[path_index] - origin).dot(heading)
+		if room < forward.length() * 0.5: return PackedVector2Array()
+		advance = advance.limit_length(room)
+	# M79 checks candidates in order and takes the first legal one. The local
+	# half/whole-cell offsets are TWILIGHT's choice. Probe the way forward too
+	# so held input cannot carry the player sideways along a continuous wall.
+	for fraction: float in [0.5, 1.0]:
+		for side: float in [1.0, -1.0]:
+			var turn: Vector2 = origin + sideways * fraction * side
+			var passed: Vector2 = turn + advance
+			if not _detour_leg_clear(origin, turn) or not _detour_leg_clear(turn, passed): continue
+			if not routed: return PackedVector2Array([turn])
+			var rejoin: Vector2 = origin + advance
+			if _detour_leg_clear(passed, rejoin): return PackedVector2Array([turn, passed, rejoin])
+	return PackedVector2Array()
 
 func set_manual_click_path(points: PackedVector2Array, target: Vector2) -> void:
 	set_click_path(points, target)
