@@ -1,13 +1,10 @@
 extends RefCounted
-## Original 523 popups for putting a bag item on the floor (drag out of the
-## bag onto the field). The original client has no floor-drop rule, so the
-## nearest original popups are reused (approximation, recorded in
-## docs/INVENTORY_DRAG_DROP_KO.md):
+## Shared original 523 quantity and item confirmation scenes. The floor-drop
+## flow is recorded in docs/INVENTORY_DRAG_DROP_KO.md.
 ## - a stack (more than one) first opens the original quantity keypad
 ##   Common_Calculator (0-9, MAX, ←, -/+, 취소/확인), default 1;
 ## - then the original message box Common_MessageBox_Dissolution asks
-##   "<이름> <수량>개를 바닥에 내려놓으시겠습니까?" with the item picture in its
-##   original slot; 확인 calls `on_confirm(count)`, 취소 closes.
+##   displays the operation, quantity and item; 확인 calls `on_confirm(count)`.
 ## Nothing here moves an item: the caller's existing transfer does that.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
@@ -15,6 +12,11 @@ const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const BOX="UI/CommonUi/Common_MessageBox_Dissolution.csb"
 const KEYPAD="UI/CommonUi/Common_Calculator.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
+const QUESTIONS={
+	"drop":"%s %d개를 바닥에 내려놓으시겠습니까?",
+	"deposit":"%s %d개를 창고에 맡기시겠습니까?",
+	"withdraw":"%s %d개를 창고에서 찾으시겠습니까?",
+}
 const MEMBER_SCOPES={SLOT:[15728,15316,15012,6880]}
 signal closed
 var _pack: RefCounted
@@ -29,8 +31,7 @@ var _maximum: int=1
 var _count: int=1
 var _typed: String=""
 var _on_confirm: Callable
-var _quantity_only: bool=false
-var _delete: bool=false
+var _operation: String="drop"
 var stage: String=""
 var last_result: Dictionary={}
 
@@ -47,7 +48,15 @@ func is_open() -> bool:
 
 ## `maximum` > 1 starts with the keypad; otherwise the confirmation directly.
 func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false, quantity_only: bool=false) -> Dictionary:
-	if not is_instance_valid(parent) or (item_name.is_empty() and not quantity_only) or maximum < 1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
+	var operation: String="quantity" if quantity_only else ("delete" if permanent_delete else "drop")
+	return _open(parent,item_name,item_class_id,maximum,on_confirm,operation)
+
+func open_storage(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String) -> Dictionary:
+	if direction not in ["deposit","withdraw"]:return {"ok":false,"handled":false,"code":"source_storage_transfer_direction_invalid"}
+	return _open(parent,item_name,item_class_id,maximum,on_confirm,direction)
+
+func _open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, operation: String) -> Dictionary:
+	if not is_instance_valid(parent) or (item_name.is_empty() and operation!="quantity") or maximum<1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
 	_parent=parent
 	_item_name=item_name
 	_item_class_id=item_class_id
@@ -55,9 +64,10 @@ func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_
 	_count=1
 	_typed=""
 	_on_confirm=on_confirm
-	_delete=permanent_delete
-	_quantity_only=quantity_only
-	return _open_keypad() if maximum > 1 or quantity_only else _open_box()
+	_operation=operation
+	var result: Dictionary=_open_keypad() if maximum>1 or operation=="quantity" else _open_box()
+	if not result.get("handled",false):_on_confirm=Callable()
+	return result
 
 func _open_keypad() -> Dictionary:
 	var spec: Dictionary={
@@ -74,9 +84,10 @@ func _open_keypad() -> Dictionary:
 	return _show(KEYPAD,spec,"keypad")
 
 func _open_box() -> Dictionary:
+	var question: String="선택한 아이템 %d개를 영구 삭제하시겠습니까?" % _count if _operation=="delete" else (QUESTIONS[_operation] % [_item_name,_count])
 	var spec: Dictionary={
 		"Fx_Popup_LeftUp":{"exclude":true},"Fx_Popup_RightBottom":{"exclude":true},
-		"Text_Message":{"role":"source_text","text":"선택한 아이템 %d개를 영구 삭제하시겠습니까?" % _count if _delete else "%s %d개를 바닥에 내려놓으시겠습니까?" % [_item_name,_count]},
+		"Text_Message":{"role":"source_text","text":question},
 		"Text_Info":{"visible":false},
 		"Nd_Result/Label_Notice":{"visible":false},
 		"Nd_Result/Nd_Slot/Label_Title":{"visible":false},
@@ -119,7 +130,7 @@ func _show(member: String, spec: Dictionary, next_stage: String) -> Dictionary:
 	_scene=next
 	_out=out
 	stage=next_stage
-	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum,"permanent_delete":_delete}
+	last_result={"ok":true,"handled":true,"member":member,"stage":next_stage,"count":_count,"maximum":_maximum,"permanent_delete":_operation=="delete"}
 	return last_result
 
 func _refresh_volume() -> void:
@@ -154,7 +165,7 @@ func _set_count(value: int) -> Dictionary:
 	return {"ok":true,"count":_count}
 
 func _keypad_done() -> Dictionary:
-	if _quantity_only:
+	if _operation=="quantity":
 		if stage != "keypad" or not is_open(): return {"ok":false}
 		var next: Callable = _on_confirm
 		var chosen: int = _count
