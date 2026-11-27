@@ -153,7 +153,7 @@ func _reveal(scene: Node2D, out: Dictionary, cell: String, grade: String) -> boo
 	GradeFx.set_visible(self,scene,out,cell+"/Fx_Glow/Card_Back",false)
 	# The success discharge runs during the reel. Both outcomes get the
 	# result-grade flash, name and outline when they settle.
-	var lit: Dictionary = GradeFx.light(self,scene,out,cell,grade,false)
+	var lit: Dictionary = GradeFx.light(self,scene,out,cell,grade,false,GradeFx.CONFIRMED_OUTLINE_ALPHA)
 	if lit.get("lit", false): return true
 	var nested: Node2D=GradeFx.project(self,scene,out,cell)
 	if nested!=null:GradeFx.chain(nested,GradeFx.CELL_CLIP,"Fx_Cardname")
