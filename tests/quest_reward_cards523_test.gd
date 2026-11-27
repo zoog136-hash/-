@@ -209,7 +209,9 @@ func runtime() -> void:
 		if not rewarded.has(id): continue
 		var candidates: Array=rewarded[id]
 		if REPORTED_CARD_QUESTS.has(id):
-			if not check(candidates.has(REPORTED_CARD_QUESTS[id]),"the specific reported receipt comes from the original quest #"+str(id)):continue
+			var matched: bool=candidates.has(REPORTED_CARD_QUESTS[id])
+			check(matched,"the specific reported receipt comes from the original quest #"+str(id))
+			if not matched:continue
 			candidates=[REPORTED_CARD_QUESTS[id]]
 		var issued: Dictionary = quest_grant(id,candidates)
 		check(issued.get("ok", false), "quest reward #" + str(id) + " is issued")
