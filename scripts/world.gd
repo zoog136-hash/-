@@ -5048,6 +5048,7 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 			return
 	if _open_owned_native_enhancement(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_element_management(item_name,str(selected.get("id","")),selected_source):return
+	if _open_owned_native_smith(item_name,str(selected.get("id","")),selected_source):return
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
 	var selected_id: String = str(selected.get("id",""))
@@ -14185,6 +14186,18 @@ func native_element_management523_commit(offer: Dictionary, target: Dictionary, 
 		hud.append_log(str(result.message))
 	hud.show_message(str(result.get("message",result.get("reason","속성 주문서를 확인하세요"))))
 	return result
+
+func _open_owned_native_smith(name_value: String, uid: String, record: Dictionary) -> bool:
+	if EQUIPMENT523_SERVICE.NATIVE_SMITH.input(record).is_empty():return false
+	if name_value!=record.get("name") or hp<=0 or _option_awakening_busy():
+		hud.show_message("가방에서 사용 가능한 원본 속성 세공 주문서를 선택하세요")
+		return true
+	var offer: Dictionary=equipment523.native_smith_offer(self,uid)
+	if not offer.get("ok",false):
+		hud.show_message(str(offer.get("error","원본 속성 세공 조건을 확인하세요")))
+	elif not hud.open_native_smelt523(offer):
+		hud.show_message("원본 속성 세공 창을 불러올 수 없습니다 · 주문서 보존")
+	return true
 
 func _open_owned_native_smelt(uid:String,record:Dictionary)->bool:
 	var smelt:Script=EQUIPMENT523_SERVICE.NATIVE_SMELT

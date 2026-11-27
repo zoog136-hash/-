@@ -556,10 +556,10 @@ func _use_source_aden_return_impl(item_name: String, loading: bool) -> void:
 		world.deferred_save.cancel();world.hud.refresh_inventory(world.inventory);world._update_hud()
 	_message(str(result.get("reason","아덴 귀환 결과 확인 필요")))
 
-func _random_destination() -> Vector2:
+func _random_destination(candidate_rng: RandomNumberGenerator = null) -> Vector2:
 	var field: Variant = world.get("field_map")
 	var start: Vector2 = world.player.global_position
-	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
+	var rng: RandomNumberGenerator = candidate_rng if candidate_rng != null else world.rng
 	if field is OriginalPlayableField:
 		if field.uses_original_gameplay_rules() and not bool(field.definition.rules.get("teleportable",0)) and not (world.get("item_possession523") != null and world.item_possession523.ignores_no_teleport()): return Vector2.INF
 		return field.random_landing(rng,start)
@@ -579,6 +579,7 @@ func _random_destination() -> Vector2:
 				continue
 			return position
 		return Vector2.INF
+	if candidate_rng != null: return Vector2.INF
 	var spawn: Vector2 = world.call("_spawn_position")
 	var candidate: Vector2 = world.call("_random_walkable_position", spawn, 180.0, INF)
 	if candidate != Vector2.INF and bool(world.call("_is_walkable_world", candidate)):

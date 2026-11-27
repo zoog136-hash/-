@@ -8,6 +8,7 @@ const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 const NATIVE_STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
+const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
 
 var hud: Node
 var mode: String = "scroll"
@@ -65,7 +66,12 @@ static func owned_scrolls(controller: Node) -> Array:
 				if NATIVE_STACK.profile(record).get("kind")!="bless":continue
 			elif category in ["ScrollElementalConversion","ScrollElementalRemover"]:
 				if ELEMENT_MANAGEMENT.kind(record).is_empty():continue
-			elif category not in ["","ScrollEnchant","ScrollElementalEnchant"] or world._scroll_kind(name,record)=="":continue
+			elif category=="ScrollElementalEnchant":
+				var smith: Dictionary=NATIVE_SMITH.input(record)
+				if smith.is_empty():
+					if world._scroll_kind(name,record)=="":continue
+				elif not NATIVE_SMITH.period_error(smith,int(Time.get_unix_time_from_system()),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty():continue
+			elif category not in ["","ScrollEnchant"] or world._scroll_kind(name,record)=="":continue
 			var held: Dictionary=NATIVE_STACK.proof(world,uid)
 			if not held.is_empty():
 				rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":held.remaining})

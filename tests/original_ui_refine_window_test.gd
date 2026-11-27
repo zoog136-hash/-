@@ -28,7 +28,10 @@ class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
 	func _open_window(section: String, _title: String, _description: String) -> void:
 		active_section=section
 		workspace.show()
-	func open_bless_refine523(_entry_solvent_uid: String="") -> void:fallback_opened+=1
+	var solvent_uid: String=""
+	func _mount_bless_refine_panel(entry_solvent_uid: String="") -> void:
+		fallback_opened+=1
+		solvent_uid=entry_solvent_uid
 	var messages: Array[String]=[]
 	func show_message(text: String) -> void:messages.append(text)
 
@@ -75,13 +78,17 @@ func _hud_routing() -> void:
 	hud.open_refine523()
 	check(controller.refine_opened==1 and hud.fallback_opened==0 and not hud.workspace.visible,"질서의 연금 opens the original window and hides the workspace")
 	check(hud.original_main_ui_status.get("refine_window",{}).get("handled",false),"the original window status is recorded")
+	hud.open_bless_refine523()
+	check(controller.refine_opened==2 and hud.fallback_opened==0 and not hud.workspace.visible,"the older menu shortcut opens the same original refine window")
 	controller.handles=false
 	hud.open_refine523()
-	check(controller.refine_opened==2 and hud.fallback_opened==1,"without the original window the existing 용해·질서의 연금 panel opens")
+	check(controller.refine_opened==3 and hud.fallback_opened==1,"without the original window the existing 용해·질서의 연금 panel opens")
 	check(hud.messages.size()==1 and hud.messages[0].begins_with("질서의 연금"),"the fallback is told to the player")
+	hud.open_bless_refine523("exact-solvent-stack")
+	check(controller.refine_opened==3 and hud.fallback_opened==2 and hud.solvent_uid=="exact-solvent-stack","the selected solvent fallback keeps the exact material instead of opening an unrelated tab")
 	hud.original_main_ui_controller=null
 	hud.open_refine523()
-	check(hud.fallback_opened==2,"without the original UI controller the panel opens")
+	check(hud.fallback_opened==3,"without the original UI controller the panel opens")
 	hud.free()
 
 class FakeWorld extends Node:

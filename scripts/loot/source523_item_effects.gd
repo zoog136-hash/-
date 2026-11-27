@@ -3,7 +3,8 @@ extends RefCounted
 ## their own ItemBonus rows (never from the item's name):
 ##  - random teleport scroll: TeleportTypeID 1 ("임의의 장소로 이동"), refused
 ##    inside its ConsumeTerritoryClassID areas (ConsumeTerritoryTypeId 2 =
-##    "사용 불가 지역", ConsumeTerritories -> Territories rectangles);
+##    "사용 불가 지역", ConsumeTerritories -> Territories rectangles).
+##    The two reviewed InfiniteAmount rows keep their owned scrolls;
 ##  - Ainhasad bless charge: EinasadBlessAbsolute in the original bless unit,
 ##    shown as points by EinasadVariable #42 (6000 per point, the item's own
 ##    description "(충전량 : N)" must agree), capped by
@@ -49,6 +50,7 @@ const AMULET_REUSABLE: bool = true
 ## TWILIGHT 근사 switch: ClassUsageInterval (seconds) on a fixed-destination
 ## scroll becomes its reuse delay instead of keeping the scroll.
 const CLASS_USAGE_INTERVAL_AS_DELAY: bool = true
+const REUSABLE_RANDOM_SCROLLS: Array[int] = [203402, 295494]
 
 static var _areas: Dictionary = {}
 
@@ -80,21 +82,35 @@ static func _amulet_category(record: Dictionary) -> bool:
 static func teleport(record: Dictionary) -> Dictionary:
 	var definition: Dictionary = _definition(record)
 	if definition.is_empty(): return {}
+	var raw: Dictionary = definition.original_item
+	var known_reusable: bool = int(raw.ID) in REUSABLE_RANDOM_SCROLLS
+	var reusable: bool = false
 	var kind: int = -1; var territories: Array[int] = []; var delay: int = 0
 	for row: Dictionary in definition.get("item_bonus",[]):
 		var name: String = str(row.get("bonus_type",{}).get("Name",""))
 		if name in LIFETIME: continue
 		if not _direct(row): return {}
 		var value: int = int(row.bonus.Value)
+		var unit: String = str(row.get("unit",{}).get("Name",""))
 		match name:
 			"TeleportTypeID":
-				if kind!=-1: return {}
+				if kind!=-1 or (known_reusable and unit!="TeleportTypeID"): return {}
 				kind = value
-			"ConsumeTerritoryClassID": territories.append(value)
+			"ConsumeTerritoryClassID":
+				if known_reusable and unit!="ConsumeTerritoryClassID": return {}
+				territories.append(value)
 			"ItemConsumeDelay": delay = value
+			"InfiniteAmount":
+				if not known_reusable or reusable or value!=1 or unit!="Value": return {}
+				reusable = true
 			_: return {}
-	if kind!=1 or delay<0: return {}
-	return {"kind":"teleport","teleport_type_id":kind,"territory_class_ids":territories,"consume_delay_ms":delay}
+	if kind!=1 or delay<0 or known_reusable!=reusable: return {}
+	var result: Dictionary = {"kind":"teleport","teleport_type_id":kind,"territory_class_ids":territories,"consume_delay_ms":delay}
+	if reusable:
+		territories.sort()
+		if int(raw.CategoryID)!=5 or territories!=[10103,10504] or definition.item_bonus.size()!=4: return {}
+		result["reusable"] = true
+	return result
 
 ## Fixed-destination teleport item (오만의 탑 n층 이동 주문서 등): exactly one
 ## TeleportToLocation (Unit LocationsID -> Locations LandID/X/Y, one cell) or
@@ -440,10 +456,23 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var areas: Variant = forbidden_areas(contract)
 		if areas==null: return {"ok":false,"reason":"원본 순간이동 불가 지역 자료 확인 실패 · 주문서 보존"}
 		if _forbidden(world, areas, world.player.global_position): return {"ok":false,"reason":"원본 순간 이동 불가 지역입니다 · 주문서 보존"}
+		var candidate_rng: RandomNumberGenerator
+		var original_state: int = world.rng.state
+		if contract.get("reusable",false):
+			if not is_instance_valid(world.field_map): return {"ok":false,"reason":"현재 지도에서 이동 위치를 확인할 수 없습니다 · 주문서 보존"}
+			candidate_rng = RandomNumberGenerator.new()
+			candidate_rng.seed = world.rng.seed
+			candidate_rng.state = original_state
 		for attempt: int in range(8):
-			var destination: Vector2 = world.consumable_service._random_destination()
+			var destination: Vector2 = world.consumable_service._random_destination(candidate_rng)
 			if destination==Vector2.INF: break
-			if not _forbidden(world, areas, destination): return {"ok":true,"destination":destination,"consume_delay_ms":int(contract.consume_delay_ms),"message":"%s · 현재 지도 임의 위치로 이동" % display}
+			if _forbidden(world, areas, destination): continue
+			var result: Dictionary = {"ok":true,"destination":destination,"consume_delay_ms":int(contract.consume_delay_ms),"message":"%s · 현재 지도 임의 위치로 이동" % display}
+			if candidate_rng!=null:
+				result["reusable"] = true
+				result["patch523_transaction_rng"] = {"schema":1,"seed":str(candidate_rng.seed),"state":str(candidate_rng.state)}
+				result["landing_rng_state_before"] = original_state
+			return result
 		return {"ok":false,"reason":"이동 가능한 위치가 없습니다 · 주문서 보존"}
 	if kind=="teleport_location":
 		var contract: Dictionary = location_teleport(record)
@@ -514,8 +543,11 @@ static func _try_use_plain_impl(world: Node, item_name: String, known_record: Va
 	if kind=="food": return preload("res://scripts/loot/patch523_item_use.gd").try_use(world, record)
 	var use_owner: Script = preload("res://scripts/loot/patch523_item_use.gd")
 	var problem: String = use_owner.eligibility(world, record)
+	var reusable: bool = kind=="teleport" and int(record.get("source_item_class_id",0)) in REUSABLE_RANDOM_SCROLLS
+	var plain_stock: Script = load("res://scripts/loot/current523_catalog_stack.gd") if reusable else null
 	if problem.is_empty() and (not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy()): problem = "현재 사용·생존 상태 조건 미충족"
 	if problem.is_empty() and (world._item_locked(item_name) or not _integer(world.inventory.get(item_name,0)) or int(world.inventory.get(item_name,0))<1): problem = "아이템이 없거나 잠겨 있습니다"
+	if problem.is_empty() and reusable and not plain_stock.holds_plain(world,item_name): problem = "가방에서 사용할 원본 주문서를 선택하세요"
 	if problem.is_empty() and not str(world.patch523_owner_state_problem).is_empty(): problem = "원본 소비 저장 보호 중 · 아이템 보존"
 	if problem.is_empty() and not bool(D.item_definition(record).get("original_item",{}).get("CanUseWhenInvisible",false)) and world.is_player_concealed(): problem = "원본 조건: 은신 중 사용할 수 없습니다"
 	var cooldown_key: String = "m523:item:"+str(int(record.source_item_class_id))
@@ -527,8 +559,9 @@ static func _try_use_plain_impl(world: Node, item_name: String, known_record: Va
 	if not prepared.get("ok",false):
 		world.hud.show_message(str(prepared.get("reason","")))
 		return true
-	var inventory: Dictionary = use_owner.debit(world, item_name)
-	var payload: Dictionary = {"inventory":inventory}
+	var inventory: Dictionary = world.inventory if reusable else use_owner.debit(world,item_name)
+	var payload: Dictionary = {} if reusable else {"inventory":inventory}
+	if prepared.has("patch523_transaction_rng"): payload["patch523_transaction_rng"] = prepared.patch523_transaction_rng
 	var delay: float = float(prepared.get("consume_delay_ms",0))/1000.0
 	if delay>0.0:
 		var cooldowns: Dictionary = world.item_use_cooldowns.duplicate(true)
@@ -556,12 +589,21 @@ static func _try_use_plain_impl(world: Node, item_name: String, known_record: Va
 	var previous: Vector2 = world.player.global_position
 	if prepared.has("destination"):
 		if loading and not await world.prepare_map_point(prepared.destination): return true
+		if not landing_rng_current(world,prepared):
+			world.hud.show_message("이동 준비 중 상태가 변경되었습니다 · 다시 시도하세요")
+			return true
+		if reusable and (world._item_locked(item_name) or not plain_stock.holds_plain(world,item_name)):
+			world.hud.show_message("가방에서 사용할 원본 주문서를 선택하세요")
+			return true
 		world.consumable_service._teleport_player(prepared.destination)
-	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") else world._save_game(true, payload)
+	var saved: Error = load("res://scripts/loot/current523_native_stack.gd").sealed_save(world, payload) if payload.has("experience") or payload.has("patch523_transaction_rng") else world._save_game(true, payload)
 	if saved!=OK:
 		if prepared.has("destination"): world.consumable_service._teleport_player(previous)
 		world.hud.show_message("저장 실패 · 아이템과 기존 상태 보존")
 		return true
+	if prepared.has("patch523_transaction_rng"):
+		world.rng.seed = int(prepared.patch523_transaction_rng.seed)
+		world.rng.state = int(prepared.patch523_transaction_rng.state)
 	commit(world, prepared)
 	world.inventory = inventory
 	if payload.has("item_use_cooldowns"): world.item_use_cooldowns = payload.item_use_cooldowns
@@ -574,6 +616,10 @@ static func _try_use_plain_impl(world: Node, item_name: String, known_record: Va
 
 static func _emit_sprite(world: Node, sprite: int) -> void:
 	if sprite>0 and world.get("option_awakening")!=null: world.option_awakening.combat.emit_sprite(sprite,world.player)
+
+static func landing_rng_current(world: Node, prepared: Dictionary) -> bool:
+	if not prepared.has("patch523_transaction_rng"): return true
+	return world.rng.state==prepared.landing_rng_state_before and str(world.rng.seed)==prepared.patch523_transaction_rng.seed
 
 ## Applies a saved prepare() result to the running game (the position of a
 ## teleport is already applied before its save).

@@ -37,7 +37,7 @@ static func equipment(world: Node, uid: String) -> Dictionary:
 	for key: Variant in entry:
 		if str(key) in PLAIN_FIELDS: continue
 		var value: Variant = entry[key]
-		if value==null or (value is Dictionary and value.is_empty()) or (value is Array and value.is_empty()) or (value is String and value.is_empty()) or value==false: continue
+		if value==null or (value is Dictionary and value.is_empty()) or (value is Array and value.is_empty()) or (value is String and value.is_empty()) or (value is bool and not value): continue
 		return _fail("다른 가공·보상 기록(%s)이 있는 장비는 보존합니다" % str(key),"extra_record")
 	var level: Variant = entry.get("level",0)
 	if not RULES._integer(level) or int(level)<0: return _fail("강화 수치 형식 확인 실패","level")

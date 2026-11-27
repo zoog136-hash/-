@@ -21,8 +21,11 @@ const TJ_SOURCE=preload("res://scripts/tj/source523.gd")
 const TJ_WINDOW=preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd")
 const ENHANCEMENT=preload("res://scripts/crafting/patch523_enhance_source_book.gd")
 const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
+const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const VERIFIED={
+	203402:"actual_original_bag_reusable_random_teleport_save_failure_and_reload_navigation_fixture",
+	295494:"actual_original_bag_legacy_stock_reusable_random_teleport_and_reload_navigation_fixture",
 	139581:"actual_bag_atomic_recharge_fault_retry_reload",
 	307971:"actual_bag_4_exact_choices_fault_retry_reload",
 	307931:"actual_child_bag_original_weighted_wallet_reward",
@@ -98,6 +101,7 @@ func run()->void:
 	var accepted:int=0
 	var accepted_counts:Dictionary={}
 	var enhancement_routes:Dictionary={}
+	var audit_now: int=int(Time.get_unix_time_from_system())
 	for raw:Dictionary in original:
 		var id:int=int(raw.ID)
 		var category:String=class_categories.get(int(raw.CategoryID),"")
@@ -149,6 +153,10 @@ func run()->void:
 				var owner: String="no_original_direct_owner_found"
 				if category=="ScrollElementalEnchant":
 					if not ENHANCEMENT.scroll_element(record).is_empty():owner="elemental_enhancement_group"
+					else:
+						var smith: Dictionary=NATIVE_SMITH.input(record)
+						if not smith.is_empty():
+							owner="elemental_smith" if NATIVE_SMITH.period_error(smith,audit_now,540).is_empty() else "elemental_smith_expired"
 				elif category in ["ScrollElementalConversion","ScrollElementalRemover"]:
 					var management: String=ELEMENT_MANAGEMENT.kind(record)
 					if not management.is_empty():owner=management
