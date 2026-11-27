@@ -1,6 +1,7 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const AUTO_AREA_TARGETS := preload("res://scripts/skills/auto_area_targets.gd")
 
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const AMMO_FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
@@ -19,6 +20,7 @@ var catalog: TwilightOriginalSkillCatalog
 var status: TwilightSkillStatusService = Status.new()
 var vfx: TwilightOriginalSkillVFX
 var world: Node
+var _auto_area_targets := AUTO_AREA_TARGETS.new()
 var proc_depth: int = 0
 var counter_depth: int = 0
 var shields: Dictionary = {}
@@ -574,6 +576,9 @@ func _has_area_target(skill: Dictionary) -> bool:
 	FRAME_HITCH.detail("skill.area_auto_probe", started)
 	return found
 
+func clear_auto_area_targets() -> void:
+	_auto_area_targets.clear()
+
 func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center: Vector2, first_only: bool = false, direction: Vector2 = Vector2.ZERO) -> Array[TwilightMonster]:
 	var result: Array[TwilightMonster] = []
 	var radius := float(skill.get("radius", skill.get("range", 160)))
@@ -584,8 +589,27 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 	var reach: float = float(skill.get("range", 0.0))
 	var forward: Vector2 = direction.normalized() if direction != Vector2.ZERO else origin.direction_to(center)
 	var end: Vector2 = origin + forward * reach if line else origin
-	for child: Node in world.monsters_root.get_children():
-		if not child is TwilightMonster or child.dead or child.is_queued_for_deletion(): continue
+	var actors: Array
+	var geometry: Array = []
+	var geometry_only := false
+	if first_only:
+		var bounds := Rect2(origin, end - origin).abs().grow(radius) if line else Rect2(center, Vector2.ZERO).grow(radius)
+		if cone: bounds = Rect2(origin, Vector2.ZERO).grow(maxf(0.0, reach))
+		if not bounds.position.is_finite() or not bounds.size.is_finite(): return result
+		actors = _auto_area_targets.candidates(world.monsters_root, bounds)
+		if actors.is_empty(): return result
+		_auto_area_targets.prepare_sight(world, origin)
+		geometry_only = _auto_area_targets.can_remember_geometry()
+		if geometry_only:
+			geometry = [shape, radius, center, end, forward, reach]
+			if _auto_area_targets.geometry_missed(geometry): return result
+		FRAME_HITCH.count("skill.area_candidate_rows", actors.size())
+	else:
+		actors = world.monsters_root.get_children()
+	for child: Node in actors:
+		if not child is TwilightMonster or child.dead or child.is_queued_for_deletion():
+			geometry_only = false
+			continue
 		var monster := child as TwilightMonster
 		var position: Vector2 = monster.global_position
 		var nearest: Vector2 = Geometry2D.get_closest_point_to_segment(position, origin, end) if line else center
@@ -599,14 +623,19 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 				and absf(offset.cross(forward)) * reach <= radius * depth): continue
 		elif not (position.distance_squared_to(nearest) <= radius_squared):
 			continue
-		if not Catalog.SOURCE523.target_allowed(skill, monster): continue
+		if not Catalog.SOURCE523.target_allowed(skill, monster):
+			geometry_only = false
+			continue
 		if first_only:
-			if not monster.permits_auto_selection(): continue
-			if skill.get("mode") == "status" and not status.can_affect(skill, monster): continue
-			if skill.get("mode") == "turn_undead" and turn_undead_chance(skill, monster) <= 0.0: continue
-		if not world._has_line_of_sight_world(origin, position): continue
+			if not monster.permits_auto_selection() or (skill.get("mode") == "status" and not status.can_affect(skill, monster)) \
+				or (skill.get("mode") == "turn_undead" and turn_undead_chance(skill, monster) <= 0.0):
+				geometry_only = false
+				continue
+		var visible: bool = _auto_area_targets.visible_to(world, position) if first_only else world._has_line_of_sight_world(origin, position)
+		if not visible: continue
 		result.append(monster)
 		if first_only: break
+	if geometry_only and result.is_empty(): _auto_area_targets.remember_geometry_miss(geometry)
 	return result
 
 func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1, direction: Vector2 = Vector2.ZERO, area_cast: bool = false) -> void:
