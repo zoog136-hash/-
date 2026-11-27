@@ -741,16 +741,22 @@ static func _write_disk(table: String, bake_key: String, store: Dictionary) -> b
 	var file := FileAccess.open(path + ".part", FileAccess.WRITE)
 	if file == null: return false
 	var column_offsets := PackedInt64Array()
-	for position: int in (store.columns as PackedStringArray).size():
+	var columns: Array = store.data
+	var column_count: int = columns.size()
+	for position: int in column_count:
 		column_offsets.append(file.get_position())
-		file.store_var(store.data[position])
+		file.store_var(columns[position])
 	var row_offsets := PackedInt64Array()
-	var names: PackedStringArray = store.columns
-	for index: int in int(store.count):
-		row_offsets.append(file.get_position())
-		var row: Dictionary = _row_at(store, index)
-		var values: Array = []
-		for name: String in names: values.append(row[name])
+	var row_count: int = int(store.count)
+	row_offsets.resize(row_count)
+	var values: Array = []
+	values.resize(column_count)
+	# The writer serializes synchronously. Read each cell in column order
+	# without constructing a named row or detaching nested cells for readers.
+	for index: int in row_count:
+		row_offsets[index] = file.get_position()
+		for position: int in column_count:
+			values[position] = columns[position][index]
 		file.store_var(values)
 	var index_position: int = file.get_position()
 	file.store_var({"schema":DISK_SCHEMA,"count":int(store.count),"columns":store.columns,"column_offsets":column_offsets,"row_offsets":row_offsets})

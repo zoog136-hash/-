@@ -96,6 +96,8 @@ func _run() -> void:
 	var disk: Dictionary = ROWS._publish_disk(table,"row-lookup-synthetic-key",packed)
 	check(disk.has("disk"), "fixture commits and reopens with existing SHA/schema validation")
 	if disk.has("disk"):
+		for index: int in regular.size():
+			check(var_to_bytes(disk.disk.row(index)) == var_to_bytes(ROWS._row_at(packed,index)), "direct row serialization preserves the exact encoded values")
 		ROWS._tables[table] = disk
 		same(table,1,"disk cold",true)
 		same(table,2,"disk warm")
