@@ -391,7 +391,11 @@ func path(from: Vector2, to: Vector2) -> PackedVector2Array:
 
 const HUNT_SEARCH_BUDGET_USEC: int = 4000
 const HUNT_SEARCH_MAX_POPS: int = 512
+const HUNT_COMPONENT_MAX_CELLS: int = 4096
 var _hunt_field_epoch: int = 0
+var _hunt_complete_component: Dictionary[Vector2i, Vector3i] = {}
+
+func static_pursuit_epoch() -> int: return 0
 
 ## Automatic target acquisition only. A pending slice is not a failed path.
 ## Exact endpoints, direct DDA, cap and waypoints match the synchronous path.
@@ -402,6 +406,9 @@ func hunt_path_step(from: Vector2,to: Vector2,work: Dictionary = {}) -> Dictiona
 	var to_grid: Array = coordinates.grid_components(to)
 	var start: Vector2i = coordinates.world_to_cell(from,from_grid)
 	var goal: Vector2i = coordinates.world_to_cell(to,to_grid)
+	if _hunt_complete_component.has(start) and not _hunt_complete_component.has(goal) \
+		and static_pursuit_epoch() != 0 and policy.get("attribute_rule") == CLIENT_RULE:
+		return {"pending":false,"path":PackedVector2Array(),"known_disconnected":true}
 	if not _cell_allowed(start) or (goal != start and not _cell_allowed(goal)): return {"pending":false,"path":PackedVector2Array()}
 	var limit: int = _path_node_limit()
 	var nav: TwilightL1JSourceNavigation
@@ -418,6 +425,13 @@ func hunt_path_step(from: Vector2,to: Vector2,work: Dictionary = {}) -> Dictiona
 		work = {"nav":nav,"search":search,"field_id":get_instance_id(),"epoch":_hunt_field_epoch,"limit":limit}
 	if not nav.advance_search(search,deadline,HUNT_SEARCH_MAX_POPS):
 		return {"pending":true,"work":work}
+	# On verified 523 terrain the DDA and A* share the same bidirectional
+	# edges. An empty result with an exhausted frontier below the node cap
+	# proves that the visited cells form a complete component. Keep only
+	# one small component; reaching the cap gives no such proof.
+	if nav is Verified523Search and search.result.is_empty() and not search.visited.is_empty() \
+		and search.visited.size() < search.max_nodes and search.visited.size() <= HUNT_COMPONENT_MAX_CELLS:
+		_hunt_complete_component = search.visited
 	return {"pending":false,"path":_finish_cell_path(from,to,search.result)}
 
 func navigation_search_limit() -> int: return int(policy.get("path_search_limit",8192))
@@ -461,6 +475,7 @@ func cache_metrics() -> Dictionary:
 
 func close() -> void:
 	_hunt_field_epoch += 1
+	_hunt_complete_component = {}
 	loaded = false
 	if has_meta("current523_source_field"): remove_meta("current523_source_field")
 	_raw = RAW.new()

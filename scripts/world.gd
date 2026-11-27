@@ -349,6 +349,7 @@ var auto_stuck_time: float = 0.0
 # Bound repeated unreachable-target pathfinding during AUTO, not manual selection.
 const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
 const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
+const AUTO_TARGET_DISCONNECTED_SCAN_USEC: int = 500
 var auto_target_failed_paths: Dictionary = {}
 var auto_target_next_search_ms: int = 0
 var auto_target_failed_search_actor_count: int = -1
@@ -3800,10 +3801,11 @@ func _auto_target_failure_key(monster: TwilightMonster) -> String:
 		active_map_id, monster.get_instance_id(), monster.life_id,
 		str(_world_to_cell(player.global_position)), str(_world_to_cell(monster.global_position))]
 
-func _remember_auto_target_path_failure(monster: TwilightMonster) -> void:
+func _remember_auto_target_path_failure(monster: TwilightMonster, key: String = "") -> void:
 	if not is_instance_valid(monster): return
 	if auto_target_failed_paths.size() >= 512: auto_target_failed_paths.clear()
-	auto_target_failed_paths[_auto_target_failure_key(monster)] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
+	var failure_key: String = _auto_target_failure_key(monster) if key.is_empty() else key
+	auto_target_failed_paths[failure_key] = Time.get_ticks_msec() + AUTO_TARGET_FAILED_PATH_RETRY_MS
 
 func _clear_auto_source_search() -> void:
 	_auto_source_search_key = ""
@@ -3830,6 +3832,7 @@ func _acquire_auto_target() -> PackedVector2Array:
 		auto_search_generation = combat_generation
 		auto_search_index = 0
 	var now: int = Time.get_ticks_msec()
+	var scan_deadline: int = Time.get_ticks_usec() + AUTO_TARGET_DISCONNECTED_SCAN_USEC
 	while auto_search_index < auto_search_candidates.size():
 		var candidate: Dictionary = auto_search_candidates[auto_search_index]
 		auto_search_index += 1
@@ -3846,12 +3849,21 @@ func _acquire_auto_target() -> PackedVector2Array:
 			if frame == _auto_source_search_frame:
 				auto_search_index -= 1
 				return PackedVector2Array()
-			_auto_source_search_frame = frame
-			if _auto_source_search_key != key:
+			var new_search: bool = _auto_source_search_key != key
+			if new_search:
 				_clear_auto_source_search()
+			var step: Dictionary = field_map.hunt_path_step(origin,monster.global_position,_auto_source_search_work)
+			if step.get("known_disconnected", false):
+				# A membership check used no search slice. Check the next
+				# candidate in the same order with a separate, short budget.
+				_clear_auto_source_search()
+				_remember_auto_target_path_failure(monster, key)
+				if Time.get_ticks_usec() >= scan_deadline: break
+				continue
+			_auto_source_search_frame = frame
+			if new_search:
 				_auto_source_search_key = key
 				auto_target_path_checks += 1
-			var step: Dictionary = field_map.hunt_path_step(origin,monster.global_position,_auto_source_search_work)
 			FRAME_HITCH.detail("auto.search_route", started)
 			if bool(step.pending):
 				_auto_source_search_work = step.work
@@ -3872,7 +3884,7 @@ func _acquire_auto_target() -> PackedVector2Array:
 		if _native_route_pending():
 			auto_search_index -= 1
 		else:
-			_remember_auto_target_path_failure(monster)
+			_remember_auto_target_path_failure(monster, key)
 		# Preserve the field's full route limit, but run only one route per frame.
 		break
 	if auto_search_index >= auto_search_candidates.size(): _clear_auto_target_search()
