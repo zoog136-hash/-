@@ -129,6 +129,9 @@ func advance(delta: float, state: String, facing: int, sequence: int, attacking:
 func source_frame_status() -> Dictionary:
 	return _preview.reference_source_frame_status() if is_instance_valid(_preview) else {}
 
+func displayed_body_bounds() -> Rect2:
+	return _preview.displayed_body_bounds() if is_instance_valid(_preview) else Rect2()
+
 func notify_current_source_spell_event(spell: Dictionary, stage: String, point: Vector2, facing: int, context: Dictionary = {}) -> bool:
 	# The combat owner keeps admission, hit timing, target and effect budgets.
 	# This admitted actor exposes only the shared original-pixel presentation API.

@@ -10,14 +10,16 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## 강화 정보 저장, 강화 복구 and 축복 포인트 상점 (축복의 열쇠).
 ## Every quote, cost, roll and save is the existing world.growth runtime
 ## (quote -> HUD confirmation -> execute), the same requests as the growth
-## view. Left out: the result touch overlay (Bt_Compose_Touch), the
-## full-screen option effect and the registration / reset effects. Btn_HelpBox
+## view. Committed stages light up using the original Enchant part clips.
+## Bt_Compose_Touch lets the player reveal the saved result immediately.
+## Btn_HelpBox
 ## opens the original Symbol_Popup_Help (source_main_help_box).
 const ROOT="UI/Symbol/Symbol_All.csb"
 const ROW="UI/Symbol/Symbol_List_Buff.csb"
 const PERCENT="UI/Symbol/Symbol_Percent.csb"
 const BUFF_LIST="UI/Symbol/Symbol_Listview_Buff.csb"
 const GRADE="UI/Symbol/Symbol_Grade.csb"
+const REVEAL_TOUCH="UI/Symbol/Bt_Compose_Touch.csb"
 ## growth emblem id -> original tab / page name.
 const GODS={"eva":"Eva","paagrio":"Paagrio","maphr":"Maphr","sayha":"Sayha","grankain":"Grankain","einhasad":"Einhasad","shilen":"Silen"}
 const PARTS: int=30
@@ -25,6 +27,10 @@ const ROMAN: Array[String]=["Ⅰ","Ⅱ","Ⅲ","Ⅳ","Ⅴ","Ⅵ","Ⅶ","Ⅷ","Ⅸ
 const ATTEMPT_LIMIT: int=20
 var selected: String="eva"
 var _clips: Array[String]=[]
+var _reveal_stages: Array[int]=[]
+var _revealed_stage: int=0
+var _reveal_message: String=""
+var _reveal_press: int=-2
 
 func required_members() -> Array[String]:
 	return [ROOT,ROW,PERCENT,BUFF_LIST,GRADE]
@@ -40,7 +46,12 @@ func open(parent: Node, id: String="") -> Dictionary:
 	var runtime: Object=_runtime()
 	if runtime==null or runtime.get("config")==null or runtime.config.get("emblems",[]).is_empty():return _fail("source_symbol_window_runtime_unavailable")
 	if GODS.has(id):selected=id
+	_clear_reveal()
 	return open_window(parent)
+
+func close() -> void:
+	_clear_reveal()
+	super.close()
 
 func _spec() -> Dictionary:
 	var runtime: Object=_runtime()
@@ -143,16 +154,102 @@ func _row_spec(on: bool, absolute: bool, numeral: String, text: String, actions:
 	spec["Panel_List/Nd_Lock"]={"visible":shown and not chance and not key}
 	return spec
 
-func _play(root: Node2D, out: Dictionary, suffix: String, clip: String, repeat: bool) -> void:
+func _play(root: Node2D, out: Dictionary, suffix: String, clip: String, repeat: bool) -> Node2D:
 	var located: Dictionary=_locate(root,out,suffix)
-	if not located.get("ok",false):return
+	if not located.get("ok",false):return null
 	var holder: Variant=located.player.source_nodes.get(located.offset)
 	var player: Variant=(holder.get_meta("source_project_player") if holder.has_meta("source_project_player") else null) if is_instance_valid(holder) else null
-	if player!=null and player.play(clip,repeat).get("ok",false):_clips.append(clip)
+	if player==null or not player.play(clip,repeat).get("ok",false):return null
+	_clips.append(clip)
+	return player
+
+func _present_enhancement(previous_stage: int, response: Dictionary) -> bool:
+	var stages: Array=response.get("enhancement_stages",[])
+	if not is_open() or stages.is_empty() or not _pack.manifest.get("scenes",{}).has(REVEAL_TOUCH):return false
+	# The original touch panel carries the displayed skip hint. Its rectangle
+	# is animated, so a stationary modal area receives the first tap as well.
+	var prompt: Dictionary=_scene_of(REVEAL_TOUCH,{"Panel_Touch/Bt_Touch":{"exclude":true}}, {})
+	if not prompt.get("ok",false):return false
+	var scene: Node2D=_scene
+	var art: Node2D=prompt.scene
+	art.name="SymbolEnhancementPrompt"
+	scene.add_child(art)
+	if not art.play("Loop",true).get("ok",false):
+		art.queue_free()
+		return false
+	var input:=Control.new()
+	input.name="SymbolEnhancementTouch"
+	input.position=Vector2(-800.0,-400.0)
+	input.size=Vector2(1600.0,800.0)
+	input.mouse_filter=Control.MOUSE_FILTER_STOP
+	input.gui_input.connect(_reveal_input.bind(scene))
+	scene.add_child(input)
+	_reveal_stages.assign(stages)
+	_revealed_stage=previous_stage
+	_reveal_message=str(response.message)
+	_play_next_enhancement(scene)
+	return true
+
+func _play_next_enhancement(scene: Node2D) -> void:
+	if not is_open() or _scene!=scene or _reveal_message.is_empty():return
+	if _reveal_stages.is_empty():
+		_finish_enhancement(scene)
+		return
+	var from_stage: int=_revealed_stage+1
+	_revealed_stage=_reveal_stages.pop_front()
+	var last: Node2D
+	for index: int in range(from_stage,_revealed_stage+1):
+		var part: Node2D=_play(scene,_out,"Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [GODS[selected],index],"On",false)
+		if part!=null:last=part
+	if last==null:
+		_play_next_enhancement.call_deferred(scene)
+		return
+	last.clip_finished.connect(_enhancement_step_finished.bind(scene,from_stage,_revealed_stage),CONNECT_ONE_SHOT)
+
+func _enhancement_step_finished(_clip: String, scene: Node2D, from_stage: int, through_stage: int) -> void:
+	if not is_open() or _scene!=scene or _reveal_message.is_empty():return
+	for index: int in range(from_stage,through_stage+1):
+		_play(scene,_out,"Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [GODS[selected],index],"On_Loop",true)
+	_play_next_enhancement.call_deferred(scene)
+
+func _reveal_input(event: InputEvent, scene: Node2D) -> void:
+	if not is_open() or _scene!=scene or _reveal_message.is_empty():return
+	var index: int=-2
+	if event is InputEventScreenTouch:index=event.index
+	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT:index=-1
+	if index==-2:return
+	if event.pressed:
+		if _reveal_press==-2:_reveal_press=index
+	elif _reveal_press==index:
+		if event is InputEventScreenTouch and event.canceled:_reveal_press=-2
+		else:_finish_enhancement(scene)
+
+func handle_reveal_input(event: InputEvent) -> bool:
+	if not is_open() or _reveal_message.is_empty():return false
+	_reveal_input(event,_scene)
+	return true
+
+func _finish_enhancement(scene: Node2D) -> void:
+	if not is_open() or _scene!=scene or _reveal_message.is_empty():return
+	var message: String=_reveal_message
+	_clear_reveal()
+	_message(message)
+	# The transaction already completed. Rebuild once with its final values.
+	# Remove the touch area even if a resource prevents a fresh presentation.
+	for name: String in ["SymbolEnhancementTouch","SymbolEnhancementPrompt"]:
+		var node: CanvasItem=scene.get_node_or_null(name)
+		if is_instance_valid(node):node.hide();node.queue_free()
+	_stage()
+
+func _clear_reveal() -> void:
+	_reveal_message=""
+	_reveal_stages.clear()
+	_reveal_press=-2
 
 ## --- Actions ------------------------------------------------------------------
 
 func _select(id: String) -> Dictionary:
+	if not _reveal_message.is_empty():return {"ok":true,"ignored":true}
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	if id==selected:return {"ok":true,"same":true}
 	var runtime: Object=_runtime()
@@ -163,6 +260,7 @@ func _select(id: String) -> Dictionary:
 
 ## The existing quote -> confirmation -> execute of world.growth.
 func _ask(action: String, id: String, count: int) -> Dictionary:
+	if not _reveal_message.is_empty():return {"ok":true,"ignored":true}
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	var runtime: Object=_runtime()
 	if runtime==null:return _fail("source_symbol_window_runtime_unavailable")
@@ -174,8 +272,14 @@ func _ask(action: String, id: String, count: int) -> Dictionary:
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_symbol_window_confirmation_unavailable")
 	var revision: int=int(offer.get("revision",0))
 	var day: int=int(offer.get("day",-1))
-	owner.call("confirm_action","문양",str(offer.message),"확인",func(_count: int) -> void:
+	var request_scene: Node2D=_scene
+	var was_open: bool=is_open()
+	var confirm: String="confirm_source_action" if owner.has_method("confirm_source_action") else "confirm_action"
+	owner.call(confirm,"문양",str(offer.message),"확인",func(_count: int) -> void:
+		if was_open and (not is_open() or _scene!=request_scene):return
+		var previous_stage: int=int(runtime.progress(id).stage) if action=="enhance" else 0
 		var response: Dictionary=runtime.execute(action,id,count,revision,day)
+		if action=="enhance" and response.get("ok",false) and _present_enhancement(previous_stage,response):return
 		_message(str(response.get("message","")))
 		if is_open():_stage())
 	return {"ok":true,"quoted":action,"count":count}

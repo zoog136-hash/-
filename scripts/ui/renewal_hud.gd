@@ -1299,10 +1299,13 @@ func _navigate(section: String) -> void:
 func save_now() -> void:
 	save_pressed.emit()
 
-func original_item_name_font() -> FontFile:
+func original_world_name_font() -> FontFile:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("original_font"):
 		return null
 	return original_main_ui_controller.original_font("Font/font_B.ttf")
+
+func original_item_name_font() -> FontFile:
+	return original_world_name_font()
 
 func _request_character_restart() -> void:
 	var world := get_parent()
@@ -1310,21 +1313,21 @@ func _request_character_restart() -> void:
 		world.return_to_character_lobby())
 
 func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
-	return _confirm_source_action(title,body,action,callback)
+	return confirm_source_action(title,body,action,callback)
 
 func confirm_crafting_action(title: String, body: String, action: String, callback: Callable) -> Control:
-	return _confirm_source_action(title,body,action,callback)
+	return confirm_source_action(title,body,action,callback)
 
 func confirm_item_collection_registration(title: String, body: String, callback: Callable) -> Control:
-	return _confirm_source_action(title,body,"등록",callback,true)
+	return confirm_source_action(title,body,"등록",callback,true)
 
 func confirm_equipment_blessing(body: String, callback: Callable) -> Control:
-	var dialog: Control=_confirm_source_action("축복 부여 확인",body,"축복 부여",callback,requires_original_inventory_ui())
+	var dialog: Control=confirm_source_action("축복 부여 확인",body,"축복 부여",callback,requires_original_inventory_ui())
 	if dialog==null and $Root.get_node_or_null("TwilightConfirmation")==null:
 		show_message("원본 축복 부여 확인창을 열 수 없습니다.")
 	return dialog
 
-func _confirm_source_action(title: String, body: String, action: String, callback: Callable, original_only: bool=false) -> Control:
+func confirm_source_action(title: String, body: String, action: String, callback: Callable, original_only: bool=false) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
 		if pointer_transfer != null: pointer_transfer.cancel()
@@ -3059,7 +3062,7 @@ func _confirm_card_fusion_request(category: String, grade_name: String, selectio
 			get_parent()._on_card_fusion_requested(category,grade_name,attempts,selection.slice(0,attempts*required))
 	var review := func(count: int) -> void:
 		var detail: String = body if count == 1 else "%s %s 합성 %d회 · 중복 카드 총 %d장\n%s" % [category,grade_name,count,count*required,rules]
-		_confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
+		confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
 	if batch_limit == 1:
 		review.call(1)
 		return
@@ -4535,6 +4538,10 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		lineage_side_ui.character_panel.theme = _source_chrome_theme
 	for panel: Control in [workspace,companion_window,detail_window]:
 		if is_instance_valid(panel): panel.bind_source_chrome(_source_chrome,_source_chrome_theme)
+	var world: TwilightWorld = get_parent() as TwilightWorld
+	if world != null and is_instance_valid(world.monsters_root):
+		for monster: Node in world.monsters_root.get_children():
+			if monster is TwilightMonster: monster.apply_original_name_font()
 	_refresh_menu_action_art()
 	candidate.inventory_return_to_current_requested.connect(_restore_current_inventory_view)
 	candidate.inventory_closed.connect(_original_inventory_closed)

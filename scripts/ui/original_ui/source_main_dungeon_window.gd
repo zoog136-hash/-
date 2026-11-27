@@ -1192,9 +1192,11 @@ func _slot_pressed(name: String, amount: int, item_class_id: int=0) -> Dictionar
 func _confirm(title: String, body: String, button: String, run: Callable) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return _fail("source_dungeon_window_host_unavailable")
-	hud.confirm_action(title,body,button,func(_count: int) -> void:
+	var accept := func(_count: int) -> void:
+		if not is_open():return
 		run.call()
-		refresh())
+		refresh()
+	hud.confirm_source_action(title,body,button,accept)
 	return {"ok":true,"confirming":title}
 
 func _notice(view: Object) -> void:

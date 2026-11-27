@@ -340,6 +340,17 @@ func _input(event: InputEvent) -> void:
 	if world_map_is_open() or hud.get("class_picker_initial")==true or (hud.has_method("blocks_keyboard_input") and hud.call("blocks_keyboard_input")):
 		_cancel_native_buttons()
 		return
+	if feature_window_is_open("emblems") and feature_window("emblems").handle_reveal_input(event):
+		get_viewport().set_input_as_handled()
+		return
+	if feature_window_is_open("guardian_find"):
+		var find_window: RefCounted=feature_window("guardian_find")
+		if find_window.stage=="pick":
+			var cards: Array=[]
+			_collect_native_buttons(find_window.get("_scene"),cards)
+			if _native_buttons.route(event,event.position,cards).get("handled",false):get_viewport().set_input_as_handled()
+		# The modal controls handle empty areas and the result's tap to close.
+		return
 	var candidates: Array=[]
 	var point: Vector2=event.position
 	for property: String in ["detail_window","companion_window","workspace"]:
@@ -1215,6 +1226,7 @@ const FEATURE_WINDOWS={
 	"item_book":preload("res://scripts/ui/original_ui/source_main_item_book_window.gd"),
 	"emblems":preload("res://scripts/ui/original_ui/source_main_symbol_window.gd"),
 	"guardians":preload("res://scripts/ui/original_ui/source_main_guardian_window.gd"),
+	"guardian_enchant":preload("res://scripts/ui/original_ui/source_main_guardian_enchant_window.gd"),
 	"weapon_mastery":preload("res://scripts/ui/original_ui/source_main_mastery_window.gd"),
 	"schedule":preload("res://scripts/ui/original_ui/source_main_schedule_window.gd"),
 	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
@@ -1710,6 +1722,11 @@ func _prepare_quantity_popup() -> bool:
 func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, permanent_delete: bool=false) -> Dictionary:
 	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
 	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm,permanent_delete)
+
+func try_open_storage_transfer(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String) -> Dictionary:
+	if not storage_window_is_open() or not _prepare_quantity_popup():return _window_problem("drop_popup")
+	if _drop_popup.is_open():return {"ok":true,"handled":true}
+	return _drop_popup.open_storage(_coordinates,item_name,item_class_id,maximum,on_confirm,direction)
 
 func try_open_quantity(maximum: int, selected: Callable) -> Dictionary:
 	if not _prepare_quantity_popup(): return _window_problem("drop_popup")

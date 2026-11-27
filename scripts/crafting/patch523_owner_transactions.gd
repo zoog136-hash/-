@@ -120,7 +120,10 @@ static func quest_ownership_provider() -> Script:
 	# reads the pinned quest row through the approved TWILIGHT 근사 test-item
 	# list. The compact held format derives omitted fields from a matched
 	# quest row and rejects any conflicting fields that remain on the item.
-	return provider if reviewed_script(provider,"ba5bd437fe19d10d0f53ec8614a255741ecc55dd") else null
+	# Re-reviewed 2026-11-27: proof exposes the original reward timing. Only
+	# the fixed-card effect owner opts into a verified held test card debit.
+	# Protection retains its existing lock, timing and raw TestItem checks.
+	return provider if reviewed_script(provider,"97ddac7e4e27f1a9e1b3ce599ad162470273d17c") else null
 
 static var _reviewed_cache: Dictionary={}
 

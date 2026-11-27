@@ -3,11 +3,11 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## SkillTree_RandomOpen) for the card choice the existing 수호성 rules keep
 ## pending after 활성화 (world.growth: state.pending {node, cards}, the
 ## failed cards of state.searches, quote / execute "choose").
+## - Node_Bg: the original full-frame background from the guardian menu.
 ## - Card_GuidBox: one original SkillTree_Card_Default per card still in play
 ##   (failed cards are gone, as the rules remove them), in rows across the
 ##   box. The client drags a card onto Nd_DragLine; here a tap chooses it
-##   (TWILIGHT 근사). A 수호석 cost (원본 슬롯) is confirmed first, as in the
-##   existing view.
+##   (TWILIGHT 근사). The original common message box confirms the cost.
 ## - The result: SkillTree_Card_Result Nd_Success (the slot's name) or
 ##   Nd_Fail, 수호성 찾기 성공! / 실패!, and 화면을 터치하여 해당 창을 닫습니다
 ##   (a full-screen tap returns to the 수호성 window).
@@ -19,6 +19,7 @@ const ROOT="UI/SkillTreeRandomOpenScene.csb"
 const PANEL="UI/SkillTree/SkillTree_RandomOpen.csb"
 const CARD="UI/SkillTree/SkillTree_Card_Default.csb"
 const RESULT="UI/SkillTree/SkillTree_Card_Result.csb"
+const BACKGROUND={"path":"FullFrameUI_BG01.png","plistFile":"UI_Resource/Atlas_Texture.plist","resourceType":1}
 const P="SkillTree_RandomOpen_Layout/"
 const CARD_SIZE=Vector2(214.0,314.0)
 const CARD_GAP: float=12.0
@@ -117,10 +118,18 @@ func _spec() -> Dictionary:
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var runtime: Object=_runtime()
 	var shown: int=0
+	var has_background: bool=_mount_background(root,out)
 	# The panel starts transparent at its first keyframe: the client's loop
 	# clips (Fx_Loop while choosing, Fx_Success_Loop / Fx_Fail_Loop after).
 	var panel: Node2D=_project(root,out,"SkillTree_RandomOpen_Layout")
-	if panel!=null:panel.play("Fx_Loop" if stage!="result" else ("Fx_Success_Loop" if won else "Fx_Fail_Loop"),true)
+	if panel!=null:
+		if stage=="result":
+			var loop: String="Fx_Success_Loop" if won else "Fx_Fail_Loop"
+			var reveal: String="Fx_Open_End_Success" if won else "Fx_Open_End_Fail"
+			if panel.play(reveal,false).get("ok",false):
+				panel.clip_finished.connect(func(_name: String) -> void: panel.play(loop,true),CONNECT_ONE_SHOT)
+			else:panel.play(loop,true)
+		else:panel.play("Fx_Loop",true)
 	if stage=="result":
 		var card: Node2D=_project(root,out,"SkillTree_Card_Result")
 		if card!=null:card.play("Fx_Success_Start" if won else "Fx_Fail_Start",false)
@@ -131,7 +140,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		catcher.mouse_filter=Control.MOUSE_FILTER_STOP
 		catcher.gui_input.connect(_touch_close)
 		root.add_child(catcher)
-		return {"ok":true,"stage":stage,"won":won,"cards":0}
+		return {"ok":true,"stage":stage,"won":won,"cards":0,"original_background":has_background}
 	var located: Dictionary=_locate(root,out,"Card_GuidBox")
 	var box: Variant=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
 	if not box is Node2D:return _fail("source_guardian_find_card_box_missing")
@@ -149,7 +158,25 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		built.scene.scale=Vector2.ONE*float(layout.scale)
 		(box as Node2D).add_child(built.scene)
 		shown+=1
-	return {"ok":true,"stage":stage,"cards":shown,"scale":float(layout.scale)}
+	return {"ok":true,"stage":stage,"cards":shown,"scale":float(layout.scale),"original_background":has_background}
+
+func _mount_background(root: Node2D, out: Dictionary) -> bool:
+	var backdrop:=ColorRect.new()
+	backdrop.name="GuardianFindBackdrop"
+	backdrop.color=Color("111620")
+	backdrop.position=Vector2(-200.0,-675.0)
+	backdrop.size=Vector2(1600.0,675.0)
+	backdrop.mouse_filter=Control.MOUSE_FILTER_STOP
+	root.add_child(backdrop)
+	root.move_child(backdrop,0)
+	var located: Dictionary=_locate(root,out,P+"Node_Bg")
+	var texture: Texture2D=_pack.texture(BACKGROUND,true) if located.get("ok",false) else null
+	if texture==null:return false
+	var image:=Sprite2D.new()
+	image.texture=texture
+	image.scale=backdrop.size/texture.get_size()
+	located.player.source_nodes[located.offset].add_child(image)
+	return true
 
 func _project(root: Node2D, out: Dictionary, suffix: String) -> Node2D:
 	var located: Dictionary=_locate(root,out,suffix)
@@ -170,10 +197,14 @@ func _pick(index: int) -> Dictionary:
 	if not runtime.guardian_source.has_node(slot):return _choose(index,offer)
 	var owner: Object=hud()
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_find_confirmation_unavailable")
-	owner.call("confirm_action","수호성 찾기",str(offer.get("message","")),"확인",func(_count: int) -> void:_choose(index,offer))
+	var scene: Node2D=_scene
+	var confirm: String="confirm_source_action" if owner.has_method("confirm_source_action") else "confirm_action"
+	owner.call(confirm,"수호성 찾기",str(offer.get("message","")),"확인",func(_count: int) -> void:
+		if is_open() and _scene==scene:_choose(index,offer))
 	return {"ok":true,"handled":true,"quoted":"choose"}
 
 func _choose(index: int, offer: Dictionary) -> Dictionary:
+	if stage!="pick" or not is_open():return {"ok":false,"handled":true}
 	var runtime: Object=_runtime()
 	var response: Dictionary=runtime.execute("choose","",index,int(offer.get("revision",0)),int(offer.get("day",-1)))
 	if not response.get("ok",false):
