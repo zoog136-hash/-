@@ -6,6 +6,7 @@ signal original_page_requested(page: String)
 signal equipment_requested(item_name: String)
 signal class_selection_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const RETIRED = preload("res://scripts/resources/retired_assets.gd")
 const SourceImages = preload("res://scripts/ui/source523_image_assets.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 var equipment_stage: Control
@@ -202,10 +203,12 @@ func bind_item_art(hud: Node) -> void:
 	for raw: Variant in hud.catalog_data.get("아이템",[]):
 		if not raw is Dictionary:continue
 		var record: Dictionary=raw
+		var source: String=str(record.get("image_path",images.get(str(record.get("name","")),"")))
+		# Original-pack rows and retired artwork cannot be placeholder icons.
+		# Filter them before the equipment owner/slot resolution.
+		if not source.begins_with("res://assets/") or not RETIRED.usable(source):continue
 		var slot: String=world._equipment_slot_base(record)
 		if not wanted.has(slot) or empty_slot_art.has(slot):continue
-		var source: String=str(record.get("image_path",images.get(str(record.get("name","")),"")))
-		if not source.begins_with("res://assets/") or not preload("res://scripts/resources/retired_assets.gd").usable(source):continue
 		var texture: Texture2D=UI.item_icon(record,str(record.get("name","")),images)
 		if texture==null:continue
 		empty_slot_art[slot]=texture

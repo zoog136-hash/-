@@ -4,6 +4,7 @@ extends SceneTree
 ## slot opens the bag (TWILIGHT 근사: choose the item there); a slot TWILIGHT
 ## has no equipment for (휘장, 각반, 견갑, 귀걸이, 룬...) says so.
 const BINDINGS=preload("res://scripts/ui/original_ui/source_main_character_equipment_bindings.gd")
+const SIDE=preload("res://scripts/ui/renewal_character.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -15,6 +16,16 @@ class FakeHud extends Node:
 		inventory_pressed.connect(func() -> void: bag_opened+=1)
 	func show_message(text: String) -> void:
 		messages.append(text)
+
+class FallbackWorld extends Node:
+	var slot_lookups: int=0
+	func _equipment_slot_base(_item: Dictionary) -> String:
+		slot_lookups+=1
+		return "weapon"
+
+class FallbackHud extends Node:
+	var item_image_index: Dictionary={"아이템":{"removed":"res://assets/retired/weapon.png"}}
+	var catalog_data: Dictionary={"아이템":[{"name":"removed"},{"name":"없음"},{"name":"원본","image_path":"user://source523/item.png"}]}
 
 func check(ok: bool, label: String) -> void:
 	checks+=1
@@ -49,6 +60,14 @@ func _run() -> void:
 			check(BINDINGS.SLOT_TITLES.has(str(slots.slots[offset].source_name)),"every original slot has a title: "+str(slots.slots[offset].source_name))
 	var text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_character_equipment_bindings.gd")
 	check(text.contains("Callable(self,\"empty_slot\").bind(physical_slot,str(slot.source_name))") and not text.contains("\"activate\":Callable()}"),"no equipment slot button is bound to an empty Callable")
+	var world:=FallbackWorld.new()
+	var fallback:=FallbackHud.new()
+	world.add_child(fallback)
+	var side:=SIDE.new()
+	side.bind_item_art(fallback)
+	check(world.slot_lookups==0 and side.empty_slot_art.is_empty(),"missing, original-pack and retired pictures are skipped before resolving placeholder slots")
+	side.free()
+	world.free()
 	hud.free()
 	print("ORIGINAL_UI_CHARACTER_EMPTY_SLOT_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
