@@ -266,6 +266,8 @@ func set_map_name(value: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_map_name(value)
 
 func _ready() -> void:
+	# The base HUD creates most controls. Give them the final theme on entry.
+	$Root.theme = UI.make_theme()
 	super._ready()
 	# Every OptionButton/MenuButton popup list takes Android touches.
 	preload("res://scripts/ui/popup_touch_bridge.gd").install(get_window())
@@ -277,7 +279,6 @@ func _ready() -> void:
 	target_panel = null
 	target_label = null
 	target_hp = null
-	$Root.theme = UI.make_theme()
 	catalog_drag_icon = TextureRect.new()
 	catalog_drag_icon.name = "CatalogDragPreview"
 	catalog_drag_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE

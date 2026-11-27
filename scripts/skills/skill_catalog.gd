@@ -11,6 +11,7 @@ var source523 = SOURCE523.new()
 const SOURCE_LEARNING=preload("res://scripts/quests/quest_reference_learning.gd")
 var source_quest_knowledge: Dictionary={}
 const ROOT_PATH := "res://data/skills/"
+const BUILT_IN_DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 var records: Array = []
 var by_id: Dictionary = {}
 var by_name: Dictionary = {}
@@ -140,7 +141,7 @@ func _ensure_combat_record_index() -> void:
 
 
 static func read_json(filename: String) -> Dictionary:
-	var result: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROOT_PATH + filename))
+	var result: Variant = BUILT_IN_DATA.read_json(ROOT_PATH + filename)
 	return result if result is Dictionary else {}
 
 static func effect_for(record: Dictionary) -> String:

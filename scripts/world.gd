@@ -14,6 +14,7 @@ var returning_to_character_lobby: bool = false
 const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const STARTUP_BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BUILT_IN_DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
 
@@ -1101,8 +1102,7 @@ func _load_data() -> void:
 		if not maps_by_id.has(str(record.id)):
 			maps.append(record)
 			maps_by_id[str(record.id)] = record
-	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
-	var db_value: Variant = JSON.parse_string(db_text)
+	var db_value: Variant = BUILT_IN_DATA.read_json(DB_PATH)
 	if db_value is Dictionary:
 		game_db = db_value as Dictionary
 	# Pre-November monster records (game_db_v17, the old world catalog and the
@@ -1127,7 +1127,7 @@ func _load_data() -> void:
 	_enrich_weapon_records(item_db)
 	CURRENCY_DROP.ensure_items(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
-	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
+	var catalog_value: Variant = BUILT_IN_DATA.read_json(CATALOG_PATH)
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
@@ -1215,6 +1215,7 @@ func _enrich_inven_catalog() -> void:
 	# Keep the entire Inven source catalog, including every original option;
 	# attach typed passives only to exact source rows.
 	inven_record_index.clear()
+	var parsed_options: Dictionary = {}
 	for category: String in ["아이템", "변신", "마법인형", "성물"]:
 		var category_index: Dictionary = {}
 		var value: Variant = catalog_db.get(category, [])
@@ -1226,7 +1227,7 @@ func _enrich_inven_catalog() -> void:
 				var raw: Dictionary = entries[index] as Dictionary
 				if str(raw.get("source", "")) != "inven":
 					continue
-				var annotated: Dictionary = INVEN_OPTIONS.annotate(raw)
+				var annotated: Dictionary = INVEN_OPTIONS.annotate(raw, parsed_options)
 				entries[index] = annotated
 				var original_name: String = str(annotated.get("name", ""))
 				var original_id: String = str(annotated.get("sourceId", ""))
