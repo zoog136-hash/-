@@ -96,7 +96,13 @@ func fusion_category(w: Node, category: String) -> void:
 					check(not reveal.is_revealed(index),"the committed result waits for its card tap")
 				check(page._scene==setup and not setup.is_visible_in_tree() and page._covered_by_reveal,"committed ownership does not rebuild the covered setup")
 				var committed: Dictionary=_ledger(w)
-				reveal.close()
+				await _tap(_hit(_node(reveal,"Nd_ButtonSet/Btn_Open")))
+				for frame: int in range(reveal.PER_PAGE+2):await process_frame
+				for index: int in range(reveal.results.size()):
+					check(reveal.is_revealed(index) or reveal._opening.has(index),"actual Main routes the native Open All button to each committed result")
+				await _tap(_hit(_node(reveal,"Nd_TopMenu/Btn_Close")))
+				check(not reveal.is_open(),"actual Main routes the native Close button to the result overlay")
+				if reveal.is_open():reveal.close()
 				await settle()
 				check(page.is_open() and page._scene!=setup and page._scene.is_visible_in_tree() and page.last_result.filled.registered==0,"dismissing results refreshes the setup from the committed cards")
 				check(_ledger(w)==committed,"dismissal cannot roll or consume again")

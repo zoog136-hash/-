@@ -515,13 +515,13 @@ func _build(source: Dictionary) -> Node2D:
 	origin.name="SourceContentOrigin"
 	origin.position=Vector2(-float(widget.anchorPoint[0])*float(widget.size[0]),float(widget.anchorPoint[1])*float(widget.size[1]))
 	node.add_child(origin)
-	if not inspection_only and _bindings.get(int(source._offset),{}).get("role")=="consume":
+	var direct_binding: Dictionary=_bindings.get(int(source._offset),{})
+	if not inspection_only and direct_binding.get("role")=="consume" and bool(direct_binding.get("touch_enabled",true)):
 		var input_area:=Control.new()
 		input_area.position=Vector2(0,-float(widget.size[1]))
 		input_area.size=Vector2(widget.size[0],widget.size[1])
 		input_area.mouse_filter=Control.MOUSE_FILTER_STOP
 		origin.add_child(input_area)
-	var direct_binding: Dictionary=_bindings.get(int(source._offset),{})
 	if not inspection_only and source.classname not in ["ScrollView","PageView"] and direct_binding.get("input") is Callable and direct_binding.input.is_valid():
 		var input_area:=Control.new()
 		input_area.name="OriginalSourceInput"
