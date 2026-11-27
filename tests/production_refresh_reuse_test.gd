@@ -8,6 +8,9 @@ extends SceneTree
 ## must show the same state as a fresh build.
 const WORLD = preload("res://scripts/world.gd")
 const PRODUCTION = preload("res://scripts/ui/original_ui/source_main_production_window.gd")
+const NAMED = preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const ROUTER = preload("res://scripts/ui/original_ui/source_button_router.gd")
+const SOURCE_HUD = preload("res://scripts/ui/original_ui/source_main_hud.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -33,6 +36,60 @@ func _check_fast_rejection() -> void:
 	check(WORLD._production_can_meet_required_inputs(recipe,{},10,{"2":12}),"a selected stack still needs the full quote and its original ownership checks")
 	recipe.material_slots[0].candidates=[gear]
 	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":1},10,{}),"the fixed slot's equipment needs its exact quantity")
+
+func _touch(window: RefCounted, suffix: String) -> Dictionary:
+	var target: Dictionary=NAMED.locate_exact(window._scene,window.node_keys(),suffix)
+	if not target.get("ok",false):return target
+	var node: Node2D=target.player.source_nodes.get(target.offset)
+	if not is_instance_valid(node) or not node.has_meta("source_button"):return {}
+	var area: Control=node.get_meta("source_button").get("_input_area")
+	var point: Vector2=area.get_global_transform_with_canvas()*(area.size*0.5)
+	var buttons: Array=[]
+	SOURCE_HUD._collect_native_buttons(window._scene,buttons)
+	var router=ROUTER.new()
+	var result: Dictionary={}
+	for pressed: bool in [true,false]:
+		var event:=InputEventScreenTouch.new()
+		event.pressed=pressed
+		event.position=point
+		result=router.route(event,point,buttons)
+	return result.get("result",{}) if result.get("activated",false) else {}
+
+func _shown_amount(window: RefCounted) -> String:
+	var target: Dictionary=NAMED.locate_exact(window._scene,window.node_keys(),PRODUCTION.P_PROD+"ProgressBar/Label_Amount")
+	if not target.get("ok",false):return ""
+	var node: Node2D=target.player.source_nodes.get(target.offset)
+	if node.has_meta("source_text"):return str(node.get_meta("source_text").original_options.text)
+	if node.has_meta("source_bitmap_text"):return str(node.get_meta("source_bitmap_text")._options.text)
+	return ""
+
+func _check_quantity(world: Node, window: RefCounted) -> void:
+	var editable: String=""
+	for id: String in window._item_ids:
+		if not world.crafting.recipes[id].has("outcomes"):
+			editable=id
+			break
+	if editable.is_empty():return
+	window._select(editable)
+	await process_frame
+	var scene: Node2D=window._scene
+	var visible_rows: Dictionary=window._item_rows.duplicate()
+	var material_rows: Dictionary=window._fill_rows.get("materials",{}).duplicate()
+	var changed: Dictionary=_touch(window,PRODUCTION.P_PROD+"ProgressBar/Btn_Arrow_Top")
+	check(changed.get("ok",false) and window.count()==2 and _shown_amount(window)=="2","touching the original arrow refreshes the mounted amount label")
+	check(window._scene==scene and window._item_rows==visible_rows,"a count change keeps the original window and list row instances")
+	check(window._fill_rows.get("materials",{})==material_rows,"unchanged material slots keep their original row and icon instances")
+	var full_quote: Dictionary=world._craft_quote(editable,2)
+	check(changed.get("quote_ok",false)==full_quote.get("ok",false) and changed.get("quote_reason","")==str(full_quote.get("reason","")),"the mounted detail reads a current full quote at the new count")
+	var maximum: Dictionary=_touch(window,PRODUCTION.P_PROD+"Nd_Count/Btn_Count_50")
+	check(maximum.get("ok",false) and window._scene==scene and window.count()==20 and _shown_amount(window)=="20","the original +50 button clamps to 20 in the same window")
+	var arrow: Dictionary=NAMED.locate_exact(window._scene,window.node_keys(),PRODUCTION.P_PROD+"ProgressBar/Btn_Arrow_Top")
+	check(arrow.get("ok",false) and arrow.player.source_nodes[arrow.offset].get_meta("source_button").current_state=="disabled","the increase control displays its original disabled state at the cap")
+	var reset: Dictionary=_touch(window,PRODUCTION.P_PROD+"Nd_Count/Btn_Count_01")
+	check(reset.get("ok",false) and window._scene==scene and window.count()==1 and _shown_amount(window)=="1","the original reset button updates the same mounted controls")
+	var label: Dictionary=NAMED.locate_exact(scene,window.node_keys(),PRODUCTION.P_PROD+"ProgressBar/Label_Amount")
+	window.node_keys().erase(label.get("key",""))
+	check(window._add_count(1).get("ok",false) and window._scene!=scene and _shown_amount(window)=="2","a missing live binding falls back to the complete source scene")
 
 func _run() -> void:
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_production_window.gd")
@@ -76,6 +133,7 @@ func _run() -> void:
 		if ids.size()>1:
 			window._select(str(ids[1]))
 			check(window.selected()==str(ids[1]) and window.refresh().get("handled",false),"a new selection still refreshes")
+		await _check_quantity(world,window)
 	print("PRODUCTION_REFRESH_REUSE_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"mounted":mounted}))
 	world.queue_free()
 	await process_frame

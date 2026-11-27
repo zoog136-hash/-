@@ -66,6 +66,9 @@ var _awaiting: Dictionary={}
 var _ready_first: bool=true
 var _scrolls: Dictionary={}
 var _last_out: Dictionary={}
+var _shown_recipe: Dictionary={}
+var _shown_quantity: Dictionary={}
+var _shown_duplicates: Dictionary={}
 var last_result: Dictionary={}
 ## The recipe list builds only the rows near its visible part (a tab holds
 ## hundreds of recipes; building every row stalled and ran out of memory).
@@ -258,7 +261,7 @@ var _ok_memo: Dictionary = {}
 var _preview_quote: Callable
 var _building: bool = false
 
-func _stage() -> Dictionary:
+func _stage(quantity_only: bool=false) -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	var memo: bool=world!=null and world.has_method("_stat_memo_begin") and world.has_method("_stat_memo_end")
 	if memo:world.call("_stat_memo_begin")
@@ -266,7 +269,7 @@ func _stage() -> Dictionary:
 		_preview_quote=world.production_preview_quote()
 	_ok_memo={}
 	_building=true
-	var result: Dictionary=_stage_built()
+	var result: Dictionary=_stage_built(quantity_only)
 	_building=false
 	_preview_quote=Callable()
 	_ok_memo={}
@@ -282,7 +285,7 @@ func _craftable(world: Node, id: String) -> bool:
 func _quote(world: Node, id: String, count: int) -> Dictionary:
 	return _preview_quote.call(id,count) if _preview_quote.is_valid() else world._craft_quote(id,count)
 
-func _stage_built() -> Dictionary:
+func _stage_built(quantity_only: bool) -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	var world: Node=_world.get_ref() if _world!=null else null
 	if parent==null or world==null:return _fail("source_production_window_host_unavailable")
@@ -293,18 +296,28 @@ func _stage_built() -> Dictionary:
 	_count=clampi(_count,1,_max_count(world))
 	var quote: Dictionary=_quote(world,_selected,_count) if not _selected.is_empty() else {}
 	var materials: Array[Dictionary]=_material_rows(world,quote)
-	var spec: Dictionary=_spec(world,ids,quote)
+	var recipe: Dictionary=Craft.recipe_of(world,_selected) if not _selected.is_empty() else {}
+	var product: Dictionary=recipe.get("result",{})
+	var quantity: Dictionary=_quantity_spec(int(product.get("quantity",0))*_count,_max_count(world),bool(quote.get("ok",false)))
 	started=FRAME_HITCH.detail_next("craft.recipe_detail",started)
+	if quantity_only:
+		if _can_refresh_quantity(world,ids,recipe):
+			var updated: Dictionary=_refresh_quantity(world,quantity,materials)
+			if updated.get("ok",false):
+				FRAME_HITCH.detail("craft.quantity_nodes",started)
+				return _publish_stage(world,ids.size(),materials.size(),quote,int(updated.pictures),_item_rows.size())
+		_reuse_by_state=true
+	var spec: Dictionary=_spec(world,ids,recipe,quantity)
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(ROOT,spec,out)
 	if not built.get("ok",false):
 		last_result=built
 		return built
 	var next: Node2D=built.scene
+	var duplicates: Dictionary=_tree.duplicate_paths.duplicate()
 	var pictures: int=0
 	if not _selected.is_empty():
-		var result: Dictionary=Craft.recipe_of(world,_selected).get("result",{})
-		if _picture(next,out,"Slot_Gauge/Slot_Gauge/Production_List_Slot/Sp_IconSample",_record(world,str(result.get("item","")),str(result.get("source_id",""))),str(result.get("item",""))):pictures+=1
+		if _picture(next,out,"Slot_Gauge/Slot_Gauge/Production_List_Slot/Sp_IconSample",_record(world,str(product.get("item","")),str(product.get("source_id",""))),str(product.get("item",""))):pictures+=1
 	var lists: Array=[
 		_fill(next,out,P_LIST+"Nd_List/ListView_Sort","sort",_sort_rows(world)),
 		_fill_items(next,out,ids),
@@ -324,15 +337,64 @@ func _stage_built() -> Dictionary:
 	next.z_index=150
 	_scene=next
 	_last_out=out
+	_shown_recipe=recipe.duplicate(true)
+	_shown_quantity=quantity
+	_shown_duplicates=duplicates
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	last_result={"ok":true,"handled":true,"member":ROOT,"tab":_tab,"category":_category,"recipes":ids.size(),"selected":_selected,"count":_count,
-		"materials":materials.size(),"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"reused_rows":reused}
+	return _publish_stage(world,ids.size(),materials.size(),quote,pictures,reused)
+
+func _publish_stage(world: Node, recipes: int, materials: int, quote: Dictionary, pictures: int, reused: int) -> Dictionary:
+	last_result={"ok":true,"handled":true,"member":ROOT,"tab":_tab,"category":_category,"recipes":recipes,"selected":_selected,"count":_count,
+		"materials":materials,"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"reused_rows":reused}
 	_report_result(world)
 	return last_result
 
-func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
+## Preserve the normal rebuild when the order, visible readiness or selected
+## definition changed. A count edit alone does not need another scene.
+func _can_refresh_quantity(world: Node, ids: Array[String], recipe: Dictionary) -> bool:
+	if not is_open() or _selected.is_empty() or last_result.get("selected")!=_selected or _shown_quantity.is_empty():return false
+	if ids!=_item_ids or recipe!=_shown_recipe or not is_instance_valid(_item_content):return false
+	var row_height: float=_item_height()
+	var top: float=-row_height*float(ids.find(_selected))
+	var scroll: ListScroll=_scrolls.items
+	if scroll.y<top or scroll.y>top+_item_size.y-row_height:return false
+	for index: int in _item_rows:
+		var row: Node2D=_item_rows[index]
+		if index>=ids.size() or not is_instance_valid(row) or bool(row.get_meta("row_ok",false))!=_craftable(world,ids[index]):return false
+	return true
+
+func _refresh_quantity(world: Node, quantity: Dictionary, materials: Array[Dictionary]) -> Dictionary:
+	if not _write_quantity_fields(quantity):
+		_write_quantity_fields(_shown_quantity)
+		return {"ok":false}
+	var rows: Array=_material_set_rows(world,materials)
+	var filled: Dictionary={"ok":true,"pictures":0}
+	if not _update_material_amounts(rows):
+		filled=_fill(_scene,_last_out,P_PROD+"Material/ListView_Material","materials",rows)
+	if not filled.get("ok",false):
+		_write_quantity_fields(_shown_quantity)
+		return filled
+	_shown_quantity=quantity
+	return filled
+
+func _write_quantity_fields(spec: Dictionary) -> bool:
+	var targets: Dictionary={}
+	for path: String in spec:
+		var target: Dictionary=NamedTree.locate_exact(_scene,_last_out,path,_shown_duplicates)
+		if not target.get("ok",false):return false
+		targets[path]=target
+	var setters: Dictionary={"text":"set_bound_text","visible":"set_bound_visible","displaystate":"set_bound_displaystate"}
+	for path: String in spec:
+		var target: Dictionary=targets[path]
+		for field: String in setters:
+			if not spec[path].has(field):continue
+			var result: Dictionary=target.player.call(setters[field],target.offset,spec[path][field])
+			if not result.get("ok",false):return false
+	return true
+
+func _spec(world: Node, ids: Array[String], recipe: Dictionary, quantity: Dictionary) -> Dictionary:
 	var spec: Dictionary={}
 	# Frame.
 	spec[P_ALL+"FullFrameType_A/Fx_Img_BG_Particle"]={"exclude":true}
@@ -372,17 +434,23 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 	# Fx_Slot_Gauge holds the product slot (its glow is an effect layer).
 	spec[P_PROD+"Fx_Slot_Gauge"]={"visible":true}
 	spec[P_PROD+"Fx_Slot_Gauge/Slot_Gauge"]={"visible":true}
-	var recipe: Dictionary=Craft.recipe_of(world,_selected) if has else {}
 	var result: Dictionary=recipe.get("result",{})
 	spec["Slot_Gauge/Slot_Gauge/Production_List_Slot/Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 	spec["Slot_Gauge/Slot_Gauge/Production_List_Slot/Sp_Select"]={"visible":false}
-	var quantity: int=int(result.get("quantity",0))*_count
-	spec["Slot_Gauge/Slot_Gauge/Production_List_Slot/Text_Amount"]={"role":"source_text","text":_number(quantity),"visible":quantity>1}
 	spec[P_PROD+"Fx_Slot_Gauge/Btn_Tooltip"]={"activate":Callable(self,"_product_info")}
 	var level: int=int(result.get("level",0))
 	spec[P_PROD+"ProgressBar/Label_Item_Name"]={"role":"source_text","text":("+%d " % level if level>0 else "")+str(result.get("item","")).get_slice(" · 원본#",0)}
+	spec[P_PROD+"Material/Label_Notice"]={"visible":recipe.has("outcomes")}
+	spec[P_PROD+"Material/ListView_Material"]={"input":Callable(_scrolls.materials,"input")}
+	spec[P_PROD+"Btn_Probability"]={"visible":recipe.has("outcomes"),"activate":Callable(self,"_probability")}
+	spec[P_PROD+"Btn_Production/Normal/Sp_Block"]={"visible":false}
+	spec.merge(quantity)
+	return spec
+
+func _quantity_spec(produced: int, most: int, can: bool) -> Dictionary:
+	var spec: Dictionary={}
+	spec["Slot_Gauge/Slot_Gauge/Production_List_Slot/Text_Amount"]={"role":"source_text","text":_number(produced),"visible":produced>1}
 	spec[P_PROD+"ProgressBar/Label_Amount"]={"role":"source_text","text":str(_count)}
-	var most: int=_max_count(world)
 	spec[P_PROD+"ProgressBar/Btn_Arrow_Top"]={"activate":Callable(self,"_add_count").bind(1),"displaystate":_count<most}
 	spec[P_PROD+"ProgressBar/Btn_Arrow_Bottom"]={"activate":Callable(self,"_add_count").bind(-1),"displaystate":_count>1}
 	# 수량 초기화 (Btn_Count_01), +10, +50.
@@ -394,13 +462,8 @@ func _spec(world: Node, ids: Array[String], quote: Dictionary) -> Dictionary:
 		spec[key]={"activate":Callable(self,"_add_count").bind(amount),"displaystate":_count<most}
 		spec[key+"/Normal"]={"visible":_count<most}
 		spec[key+"/Disabled"]={"visible":_count>=most}
-	spec[P_PROD+"Material/Label_Notice"]={"visible":recipe.has("outcomes")}
-	spec[P_PROD+"Material/ListView_Material"]={"input":Callable(_scrolls.materials,"input")}
-	spec[P_PROD+"Btn_Probability"]={"visible":recipe.has("outcomes"),"activate":Callable(self,"_probability")}
-	var can: bool=quote.get("ok",false)
 	spec[P_PROD+"Btn_Production"]={"activate":Callable(self,"_craft_requested"),"displaystate":can}
 	spec[P_PROD+"Btn_Production/Normal"]={"visible":can}
-	spec[P_PROD+"Btn_Production/Normal/Sp_Block"]={"visible":false}
 	spec[P_PROD+"Btn_Production/Disabled"]={"visible":not can}
 	return spec
 
@@ -527,6 +590,7 @@ func _material_set_rows(world: Node, materials: Array[Dictionary]) -> Array:
 	for start: int in range(0,materials.size(),2):
 		var spec: Dictionary={"Panel":{"input":Callable(_scrolls.materials,"input")}}
 		var pictures: Array=[]
+		var amounts: Dictionary={}
 		for side: int in range(2):
 			var key: String="Production_List_Material_"+("L" if side==0 else "R")+"/"
 			var at: int=start+side
@@ -537,16 +601,61 @@ func _material_set_rows(world: Node, materials: Array[Dictionary]) -> Array:
 			spec[key+"Btn_Pressed"]={"visible":false}
 			spec[key+"Btn_Normal"]={"activate":Callable(self,"_material_info").bind(at)}
 			spec[key+"Btn_Normal/Label_Item_Name"]={"role":"source_text","text":str(row.item).get_slice(" · 원본#",0)}
-			var counted: String="선택 필요" if row.has("slot") and not bool(row.get("picked",false)) else "%s/%s" % [_number(int(row.available)),_number(int(row.required))]
-			spec[key+"Btn_Normal/Label_Item_Count"]={"role":"source_text","text":counted}
+			var label: String=key+"Btn_Normal/Label_Item_Count"
+			amounts[label]="선택 필요" if row.has("slot") and not bool(row.get("picked",false)) else "%s/%s" % [_number(int(row.available)),_number(int(row.required))]
+			spec[label]={"role":"source_text","text":amounts[label]}
 			spec[key+"Btn_Normal/Btn_Replace"]={"visible":row.has("slot"),"activate":Callable(self,"_replace").bind(str(row.get("slot","")))}
 			spec[key+"Btn_Normal/Production_Slot/Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 			spec[key+"Btn_Normal/Production_Slot/Sp_Select"]={"visible":false}
 			spec[key+"Btn_Normal/Production_Slot/Text_Amount"]={"visible":false}
 			spec[key+"Btn_Normal/Production_Slot/Btn"]={"activate":Callable(self,"_material_info").bind(at)}
 			pictures.append([key+"Btn_Normal/Production_Slot/Sp_IconSample",_record(world,str(row.item),str(row.source_id),row.get("record",{})),str(row.item)])
-		rows.append({"member":ROW_MATERIAL,"spec":spec,"pictures":pictures})
+		rows.append({"member":ROW_MATERIAL,"spec":spec,"pictures":pictures,"amounts":amounts})
 	return rows
+
+## The layout signature covers the original images, bindings and visibility.
+## Only when it agrees can the live rows retain everything except the count text.
+func _update_material_amounts(rows: Array) -> bool:
+	var current: Dictionary=_fill_rows.get("materials",{})
+	if current.size()!=rows.size():return false
+	var updates: Array[Array]=[]
+	for index: int in range(rows.size()):
+		var scene: Node2D=current.get(index)
+		var row: Dictionary=rows[index]
+		if not is_instance_valid(scene):return false
+		var previous: Dictionary=scene.get_meta("material_row",{})
+		if previous.is_empty() or _material_layout_signature(previous)!=_material_layout_signature(row):return false
+		var out: Dictionary=scene.get_meta("material_bindings",{})
+		var duplicates: Dictionary=scene.get_meta("material_duplicates",{})
+		for path: String in row.amounts:
+			var old_text: Variant=previous.amounts.get(path)
+			if row.amounts[path]==old_text:continue
+			var target: Dictionary=NamedTree.locate_exact(scene,out,path,duplicates)
+			if not old_text is String or not target.get("ok",false) or not is_instance_valid(target.player):return false
+			updates.append([target.player,target.offset,row.amounts[path],old_text])
+	for index: int in range(updates.size()):
+		var step: Array=updates[index]
+		if step[0].set_bound_text(step[1],step[2]).get("ok",false):continue
+		for undo: int in range(index):
+			var prior: Array=updates[undo]
+			prior[0].set_bound_text(prior[1],prior[3])
+		return false
+	for index: int in range(rows.size()):
+		var scene: Node2D=current[index]
+		scene.set_meta("material_row",rows[index])
+		scene.set_meta("row_signature",_row_signature(rows[index]))
+	return true
+
+static func _material_layout_signature(row: Dictionary) -> String:
+	var spec: Dictionary=row.spec.duplicate()
+	for path: String in row.amounts:
+		var binding: Dictionary=spec[path].duplicate()
+		binding.erase("text")
+		spec[path]=binding
+	return str(spec)+str(row.pictures)
+
+static func _row_signature(row: Dictionary) -> String:
+	return str(row.member)+str(row.spec)+str(row.get("pictures",[]))+str(row.get("picture",[]))
 
 func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: Array) -> Dictionary:
 	var list: Dictionary=NamedTree.locate(root,out,suffix)
@@ -559,25 +668,41 @@ func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: 
 	var gap: float=4.0 if scroll=="materials" else 0.0
 	var previous: Dictionary=_fill_rows.get(scroll,{})
 	var kept_rows: Dictionary={}
+	var created: Array[Node2D]=[]
 	for index: int in range(rows.size()):
 		var row: Dictionary=rows[index]
-		var signature: String=str(row.member)+str(row.spec)+str(row.get("pictures",[]))+str(row.get("picture",[]))
+		var signature: String=_row_signature(row)
 		var old: Variant=previous.get(index)
 		if is_instance_valid(old) and str((old as Node).get_meta("row_signature",""))==signature:
-			(old as Node).get_parent().remove_child(old)
-			height+=_tree.add_row(content,row.member,old,index,size,gap)
 			kept_rows[index]=old
 			continue
 		var row_out: Dictionary={}
 		var built: Dictionary=_tree.scene_of(row.member,row.spec,row_out)
-		if not built.get("ok",false):return built
+		if not built.get("ok",false):
+			for staged: Node2D in created:staged.free()
+			return built
+		created.append(built.scene)
 		built.scene.set_meta("row_signature",signature)
+		if row.has("amounts"):
+			built.scene.set_meta("material_row",row)
+			built.scene.set_meta("material_bindings",row_out)
+			built.scene.set_meta("material_duplicates",_tree.duplicate_paths.duplicate())
 		kept_rows[index]=built.scene
-		height+=_tree.add_row(content,row.member,built.scene,index,size,gap)
 		var wanted: Array=row.get("pictures",[])
 		if row.has("picture"):wanted=[row.picture]
 		for picture: Array in wanted:
 			if _picture(built.scene,row_out,str(picture[0]),picture[1],str(picture[2])):pictures+=1
+	# All replacement rows are ready. Remove stale rows only from this live
+	# list, not the previous window that the full rebuild owns.
+	for index: int in previous:
+		var old: Node2D=previous[index]
+		if is_instance_valid(old) and old.get_parent()==content and old!=kept_rows.get(index):
+			content.remove_child(old)
+			old.queue_free()
+	for index: int in range(rows.size()):
+		var scene: Node2D=kept_rows[index]
+		if scene.get_parent()!=null:scene.get_parent().remove_child(scene)
+		height+=_tree.add_row(content,rows[index].member,scene,index,size,gap)
 	_fill_rows[scroll]=kept_rows
 	(_scrolls[scroll] as ListScroll).bind(content,size.y,height)
 	return {"ok":true,"pictures":pictures,"rows":rows.size()}
@@ -650,16 +775,19 @@ func select_recipe(id: String) -> Dictionary:
 	return _stage()
 
 func _reset_count() -> Dictionary:
-	_reuse_except=[_selected]
-	_count=1
-	return _stage()
+	return _change_count(1)
 
 func _add_count(delta: int) -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_production_window_host_unavailable")
-	_reuse_except=[_selected]
-	_count=clampi(_count+delta,1,_max_count(world))
-	return _stage()
+	return _change_count(clampi(_count+delta,1,_max_count(world)))
+
+func _change_count(value: int) -> Dictionary:
+	var previous: int=_count
+	_count=value
+	var result: Dictionary=_stage(true)
+	if not result.get("ok",false):_count=previous
+	return result
 
 ## 대체: the next candidate of a material slot (the existing choice store).
 func _replace(slot_key: String) -> Dictionary:
