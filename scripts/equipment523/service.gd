@@ -1,6 +1,7 @@
 extends RefCounted
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const NATIVE_SMELT = preload("res://scripts/equipment523/native_smelt_input.gd")
+const NATIVE_SMITH = preload("res://scripts/equipment523/native_elemental_smith.gd")
 const SMELT_RULES = preload("res://scripts/equipment523/native_smelt_rules.gd")
 const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 ## World bridge. Quotes are read-only; transactions persist staged copies first.
@@ -376,10 +377,57 @@ func native_smelt_offer(world: Node,uid:String) -> Dictionary:
 		targets.append({"target_id":id,"name":info.name,"level":info.level,"record":record,"source_id":info.source_id})
 	return {"ok":true,"kind":kind,"name":material.name,"uid":uid,"quantity":material.quantity,"record":owned.record,"targets":targets}
 
+func native_smith_offer(world: Node, uid: String) -> Dictionary:
+	var owned: Dictionary=NATIVE_STACK.proof(world,uid)
+	var problem_text: String=_native_smith_material_error(world,uid,owned)
+	if not problem_text.is_empty():return Common.fail(problem_text)
+	var material: Dictionary=owned.record
+	var contract: Dictionary=NATIVE_SMITH.input(material)
+	var targets: Array[Dictionary]=[]
+	for id: String in world.item_instances:
+		var item: Variant=world.item_instances[id]
+		if not item is Dictionary:continue
+		var record: Dictionary=item.get("record",{})
+		if record.get("slot")!="weapon" or item.get("element")!=contract.element or int(item.get("element_level",0))<3:continue
+		if item.has("quest_reward_receipt"):continue
+		var rules: Dictionary=NATIVE_SMITH.scope(_source_hint(record),contract.item_id)
+		if rules.is_empty():continue
+		var target: Dictionary=_info(world,id,item,{},rules)
+		if target.is_empty() or target.locked or bool(world.call("_item_locked",target.name)):continue
+		var input: Dictionary=_info(world,uid,world.item_instances[uid],{},rules)
+		if input.is_empty():break
+		var quote: Dictionary=SmithSmelt.quote(rules,{"kind":"elemental_smith","target_id":id},{"target":target,"materials":[input],"policy":policy})
+		if quote.get("ok",false):
+			targets.append({"target_id":id,"name":target.name,"level":target.level,"record":record,
+				"element_level":target.element_level,"element_type":target.element_type})
+	return {"ok":true,"kind":"elemental_smith","name":material.name,"uid":uid,"quantity":owned.remaining,"record":material,"targets":targets}
+
+func _native_smith_material_error(world: Node, uid: String, owned: Dictionary) -> String:
+	if _busy or save_blocked or NATIVE_STACK.busy:return "다른 거래 또는 저장을 먼저 완료하세요"
+	var host_error: String=_host_blocker(world)
+	if not host_error.is_empty():return host_error
+	var health: Variant=_host_property(world,"hp")
+	var recovery: Variant=_host_property(world,"death_recovery")
+	if (health!=null and int(health)<=0) or (recovery!=null and recovery.blocked()):return "현재 상태에서는 속성 세공을 할 수 없습니다"
+	if world.has_method("_option_awakening_busy") and world.call("_option_awakening_busy"):return "각성 처리가 끝난 뒤 사용할 수 있습니다"
+	var record: Dictionary=owned.get("record",{})
+	var contract: Dictionary=NATIVE_SMITH.input(record)
+	if contract.is_empty() or not int(record.get("source_bless_raw",0)) in [1,2]:return "가방에서 원본 속성 세공 주문서를 선택하세요"
+	var name: String=str(record.name)
+	if bool(world.call("_item_locked",name,uid)) or bool(world.call("_item_locked",name)):
+		return "주문서의 잠금을 먼저 해제하세요"
+	return NATIVE_SMITH.period_error(contract,_now(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540)))
+
+func _smith_rules_for_action(world: Node, action: Dictionary) -> Dictionary:
+	var selected: Array=action.material_ids
+	var target: Dictionary=world.item_instances.get(str(action.get("target_id","")),{}).get("record",{})
+	var material: Dictionary=world.item_instances.get(str(selected[0]),{}).get("record",{})
+	return NATIVE_SMITH.scope(_source_hint(target),_source_hint(material))
+
 func quote(world: Node, action: Dictionary) -> Dictionary:
 	var value: Dictionary = _quote(world,action)
 	if value.get("ok",false):
-		pending = {"action":action.duplicate(true),"fingerprint":_fingerprint(world),"quote":value.duplicate(true)}
+		pending = {"action":action.duplicate(true),"fingerprint":_fingerprint(world,action,value.get("_native_smith",false)),"quote":value.duplicate(true)}
 	else: pending.clear()
 	return value.duplicate(true)
 
@@ -389,12 +437,22 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	if not blocked.is_empty(): return Common.fail(blocked)
 	var kind: String = str(action.get("kind",""))
 	if kind not in ["elemental_smith","bless_reinforcement","smelt","spirit_smelt","alchemy","invoke_replacement"]: return Common.fail("지원하지 않는 가공 작업입니다.")
+	var material_ids: Variant=action.get("material_ids",[])
+	var native_smith: bool=false
+	if kind=="elemental_smith" and material_ids is Array and material_ids.size()==1:
+		var selected: Variant=world.item_instances.get(str(material_ids[0]),{})
+		native_smith=selected is Dictionary and selected.has(NATIVE_STACK.RECEIPT)
 	var use_compact:bool=store.pack.is_empty() and kind in ["smelt","spirit_smelt"]
 	var rules:Dictionary=compact_smelt_rules if use_compact else store.pack
+	if native_smith:
+		var uid: String=str(material_ids[0])
+		var smith_error: String=_native_smith_material_error(world,uid,NATIVE_STACK.proof(world,uid))
+		if not smith_error.is_empty():return Common.fail(smith_error)
+		rules=_smith_rules_for_action(world,action)
 	if rules.is_empty():return Common.fail("검증된 523 규칙 팩을 먼저 설치하세요.")
 	var by_id: Dictionary = {}
 	var target_id: String = str(action.get("target_id",""))
-	if use_compact:
+	if use_compact or native_smith:
 		# This add-on is only for exact selected native custody, never the
 		# original virtual/name fallback or unrelated processing panels.
 		var ids:Variant=action.get("material_ids",[])
@@ -412,6 +470,8 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	if kind != "alchemy" and not bool(target.get("record",{}).get("source_m_native_item",false)) and bool(NATIVE_FIELDS.full(target.get("record",{})).get("source_original_item",false)):
 		return Common.fail("이 원본 장비는 아직 카탈로그에 등록되지 않았습니다. 실제 장착 경로가 준비될 때까지 재료를 보존합니다.")
 	if not target.is_empty() and bool(target.get("locked",false)): return Common.fail("대상 장비의 잠금을 해제하세요.")
+	if native_smith and (target.record.get("slot")!="weapon" or bool(world.call("_item_locked",target.name))):
+		return Common.fail("잠기지 않은 원본 무기를 선택하세요.")
 	if kind in ["smelt","spirit_smelt"] and not target_id.is_empty():
 		var legacy: Variant = world.item_instances.get(target_id,{}).get("source_smelt",{})
 		if not legacy is Dictionary or not legacy.is_empty() and legacy.get("origin") != "equipment523": return Common.fail("기존 미확인 제련 기록을 보호합니다. 원본 기록을 확인하세요.")
@@ -421,14 +481,14 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 		var id: String = str(raw_id)
 		if id == target_id or chosen.has(id) or not by_id.has(id): return Common.fail("대상과 재료가 같거나 선택한 개체가 중복·누락되었습니다.")
 		var info: Dictionary = by_id[id]
-		if use_compact and not info.get("native_stack",false):return Common.fail("실제 원본 제련 재료의 소지 기록을 먼저 확인하세요.")
+		if (use_compact or native_smith) and not info.get("native_stack",false):return Common.fail("실제 원본 재료의 소지 기록을 먼저 확인하세요.")
 		if bool(info.get("locked",false)) or bool(info.get("equipped",false)): return Common.fail("재료의 장착과 잠금을 해제하세요.")
 		if kind == "alchemy" and bool(info.get("virtual_stack",false)): return Common.fail("연금 재료는 원본 ID가 확인된 실제 개체를 선택하세요.")
 		if kind in ["smelt","spirit_smelt"] and bool(info.get("native_stack",false)):
 			if NATIVE_SMELT.kind(info.record)!=kind:return Common.fail("원본 제련 재료 효과가 현재 작업과 다릅니다. 재료를 보존합니다.")
 			if not NATIVE_SMELT.period_allows(int(info.source_id),_now(),int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))):
 				return Common.fail("원본 제련 재료의 사용 기한이 끝났습니다. 재료를 보존합니다.")
-		var expiry: String = _expiry_error(info)
+		var expiry: String = _expiry_error(info, not native_smith)
 		if not expiry.is_empty(): return Common.fail(expiry)
 		chosen[id] = true
 		materials.append(info)
@@ -484,8 +544,9 @@ func _quote(world: Node, action: Dictionary) -> Dictionary:
 	q["_output_records"] = output_records
 	q["_quest_step"] = quest_step
 	q["_compact_smelt"] = use_compact
+	q["_native_smith"] = native_smith
 	q["_native_smelt_requests"]=[]
-	if kind in ["smelt","spirit_smelt"] and materials.size()==1:
+	if (native_smith or kind in ["smelt","spirit_smelt"]) and materials.size()==1:
 		var material:Dictionary=materials[0]
 		if material.get("native_stack",false):
 			var uid:String=str(material.instance_id)
@@ -504,7 +565,7 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 		if consumer == null or not consumer.current(world,quoted_step):
 			pending.clear()
 			return Common.fail("원본 사용 장부나 선택한 잔량이 변경되었습니다. 비용을 다시 확인하세요.")
-	if pending.get("fingerprint") != _fingerprint(world):
+	if pending.get("fingerprint") != _fingerprint(world,action,pending.get("quote",{}).get("_native_smith",false)):
 		pending.clear()
 		return Common.fail("보유 상태나 설정이 변경되었습니다. 비용을 다시 확인하세요.")
 	var q: Dictionary = _quote(world,action)
@@ -517,6 +578,8 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	candidate_rng.state = world.rng.state
 	var compact:bool=q.get("_compact_smelt",false)
 	var rules:Dictionary=compact_smelt_rules if compact else store.pack
+	var native_smith: bool=q.get("_native_smith",false)
+	if native_smith:rules=_smith_rules_for_action(world,action)
 	var outcome: Dictionary
 	if q.get("kind") == "alchemy": outcome = Alchemy.roll(store.pack,q,candidate_rng)
 	elif q.get("kind") == "invoke_replacement": outcome = SetInvoke.roll(store.pack,q,candidate_rng)
@@ -524,11 +587,14 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	if not outcome.get("ok",false):
 		_busy = false
 		return outcome
+	if native_smith:outcome.state.elemental_smith["rules_lane"]=NATIVE_SMITH.SCHEMA
 	var quest_step: Dictionary = q.get("_quest_step",{})
 	var source_debit: bool = not quest_step.get("requests",[]).is_empty()
 	# Result provenance belongs to this effect owner. The quest owner's first
 	# consumer proof and used counts remain exclusively in its shared journal.
-	var processing_proof: Dictionary = {"kind":str(q.kind),"source_sha256":str(rules.get("source_sha256","")),"consumer_data_sha256":SMELT_RULES.SHA if compact else store.sha256}
+	var consumer_sha: String=SMELT_RULES.SHA if compact else store.sha256
+	if native_smith:consumer_sha=str(rules.get("source_sha256",""))
+	var processing_proof: Dictionary = {"kind":str(q.kind),"source_sha256":str(rules.get("source_sha256","")),"consumer_data_sha256":consumer_sha}
 	if outcome.has("result_id"): processing_proof["result_id"] = int(outcome.result_id)
 	var staged: Dictionary = quest_step.get("overrides",{}).duplicate(true) if source_debit else {}
 	var native_requests:Array=q.get("_native_smelt_requests",[])
@@ -653,10 +719,11 @@ func commit(world: Node, action: Dictionary) -> Dictionary:
 	return outcome
 
 func records(world: Node) -> Array[Dictionary]:
-	var out: Array[Dictionary] = []
 	next_expiry_unix = 0
+	if save_blocked:return []
+	var out: Array[Dictionary]=_native_smith_records(world)
 	var rules:Dictionary=_smelt_pack()
-	if rules.is_empty() or save_blocked: return out
+	if rules.is_empty():return out
 	var compact:bool=store.pack.is_empty()
 	var targets: Array = _equipped(world,rules)
 	var kinds:Array=["smelt","spirit_smelt"] if compact else ["elemental_smith","bless_reinforcement","smelt","spirit_smelt"]
@@ -665,6 +732,7 @@ func records(world: Node) -> Array[Dictionary]:
 		for kind: String in kinds:
 			var effect: Variant = state.get(kind,{})
 			if not effect is Dictionary or effect.get("source_sha256") != rules.get("source_sha256"): continue
+			if kind=="elemental_smith" and effect.get("rules_lane")==NATIVE_SMITH.SCHEMA:continue
 			if compact and not NATIVE_SMELT.known(int(effect.get("material_source_id",0))):continue
 			var active: Array[Dictionary] = SmithSmelt.active_effects(rules,info,kind,state,_now(),policy)
 			if active.is_empty(): continue
@@ -679,6 +747,27 @@ func records(world: Node) -> Array[Dictionary]:
 		var record: Dictionary = raw.duplicate(true)
 		record["equipment523_synthetic"] = true
 		out.append(record)
+	return out
+
+func _native_smith_records(world: Node) -> Array[Dictionary]:
+	var out: Array[Dictionary]=[]
+	var visited: Dictionary={}
+	for worn: Variant in world.equipped_items.values():
+		if not worn is Dictionary:continue
+		var id: String=str(worn.get("instance_id",""))
+		if id.is_empty() or visited.has(id):continue
+		visited[id]=true
+		var physical: Variant=world.item_instances.get(id,{})
+		if not physical is Dictionary:continue
+		var state: Variant=physical.get("equipment523",{})
+		if not state is Dictionary:continue
+		var effect: Variant=state.get("elemental_smith",{})
+		if not effect is Dictionary or effect.get("rules_lane")!=NATIVE_SMITH.SCHEMA:continue
+		var source_id: int=_source_hint(physical.get("record",{}))
+		var rules: Dictionary=NATIVE_SMITH.scope(source_id,int(effect.get("material_source_id",0)))
+		if rules.is_empty():continue
+		var target: Dictionary=_info(world,id,physical,{},rules)
+		if not target.is_empty():out.append_array(SmithSmelt.active_effects(rules,target,"elemental_smith",state,_now(),policy))
 	return out
 
 func on_hit(world: Node, target: Node, attack_kind: String = "melee", main_target: bool = true, by_spell: bool = false, available_hp: int = -1, available_mp: int = -1) -> Array:
@@ -753,9 +842,11 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	if record.is_empty() and world.has_method("_find_catalog_item_record"): record = world.call("_find_catalog_item_record",name)
 	if not record is Dictionary or record.is_empty() or record.get("name") != name: return {}
 	if physical.has("sourceId") and str(physical.sourceId) != str(record.get("sourceId","")): return {}
-	var compact:bool=store.pack.is_empty() and not scoped_rules.is_empty()
+	var smith_scope: bool=scoped_rules.get("schema")==NATIVE_SMITH.SCHEMA
+	var compact:bool=not scoped_rules.is_empty() and (store.pack.is_empty() or smith_scope)
 	var rules:Dictionary=scoped_rules if compact else store.pack
-	var native:Dictionary=NativeCatalog.resolve(rules,record) if compact else {}
+	var original: Dictionary=NATIVE_SMITH.original_record(record) if smith_scope else record
+	var native:Dictionary=NativeCatalog.resolve(rules,original) if compact else {}
 	var source:int=int(native.get("source_id",0)) if compact else _source(record)
 	if not preload("res://scripts/quests/source_dummy523.gd").item_id_evidence(source).is_empty():return {}
 	if source <= 0 or bool(Common.item(rules,source).get("raw",{}).get("TestItem",false)): return {}
@@ -768,10 +859,11 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 	var bless:int=NativeCatalog.processing_bless(record,physical,native) if compact else _bless_code(record,physical)
 	if bless not in [1,2]: return {}
 	if physical.has("quest_reward_receipt") and int(physical.quest_reward_receipt.bless_code_id) != bless: return {}
-	var native_stack: bool = physical.has(NATIVE_STACK.RECEIPT) and NATIVE_SMELT.known(source)
+	var native_stack: bool = physical.has(NATIVE_STACK.RECEIPT) and (NATIVE_SMELT.known(source) or not NATIVE_SMITH.input(record).is_empty())
 	if native_stack:
 		var owned: Dictionary = NATIVE_STACK.proof(world,id)
-		if owned.is_empty() or int(owned.remaining) != quantity or NATIVE_SMELT.kind(record).is_empty(): return {}
+		if owned.is_empty() or int(owned.remaining) != quantity: return {}
+		if NATIVE_SMELT.known(source) and NATIVE_SMELT.kind(record).is_empty():return {}
 	# The set resolver consumes only these fields. _equipped has already
 	# checked the worn ID. Keep the ownership checks above for both views.
 	if set_member_only:
@@ -793,7 +885,7 @@ func _info(world: Node, id: String, physical: Dictionary, fallback: Dictionary =
 
 func _quantity(physical: Dictionary) -> int:
 	var record: Variant = physical.get("record",{})
-	if physical.has(NATIVE_STACK.RECEIPT) and record is Dictionary and NATIVE_SMELT.known(int(record.get("source_item_class_id",0))):
+	if physical.has(NATIVE_STACK.RECEIPT) and record is Dictionary and (NATIVE_SMELT.known(int(record.get("source_item_class_id",0))) or not NATIVE_SMITH.input(record).is_empty()):
 		return _positive_integer(physical.get(NATIVE_STACK.QUANTITY,0))
 	var a: int = _positive_integer(physical.get("source_reward_quantity",1))
 	var b: int = _positive_integer(record.get("source_reward_quantity",a)) if record is Dictionary else a
@@ -951,9 +1043,10 @@ func _output_record(world: Node, id: int, indexed: Dictionary = {}, bless: int =
 func _is_equipment(world: Node, record: Dictionary) -> bool:
 	return not str(world.call("_enhancement_kind_for_record",record)).is_empty() if world.has_method("_enhancement_kind_for_record") else str(record.get("slot","")) in ["weapon","body","helmet","gloves","boots","cloak","ring","ring1","ring2","earring","offhand","necklace","belt"]
 
-func _expiry_error(info: Dictionary) -> String:
+func _expiry_error(info: Dictionary, check_pack_schedule: bool=true) -> String:
 	for key: String in ["expires_unix","expiry_unix"]:
 		if info.has(key) and int(info[key]) > 0 and int(info[key]) <= _now(): return "이미 만료된 재료입니다."
+	if not check_pack_schedule:return ""
 	for row: Dictionary in Common.rows(store.pack,"ItemBonus"):
 		if int(row.get("ItemClassID",0)) != int(info.source_id): continue
 		var value: Dictionary = Common.bonus(store.pack,int(row.get("BonusID",0)))
@@ -990,7 +1083,17 @@ func _consume(inventory: Dictionary, physical: Dictionary, info: Dictionary, amo
 	if int(inventory[name]) == 0: inventory.erase(name)
 	return ""
 
-func _fingerprint(world: Node) -> int:
+func _fingerprint(world: Node, action: Dictionary={}, native_smith: bool=false) -> int:
+	if native_smith:
+		# Re-quote validates both exact inputs again. The fingerprint only needs
+		# to detect changes that invalidate the selected weapon or scroll.
+		var ids: Array=[str(action.target_id),str(action.material_ids[0])]
+		var inputs: Array=[]
+		for id: String in ids:
+			var entry: Dictionary=world.item_instances.get(id,{})
+			var name: String=str(entry.get("name",""))
+			inputs.append([entry,world.inventory.get(name,0),world.call("_item_locked",name,id),world.call("_item_locked",name)])
+		return hash([inputs,world.gold,world.equipped_items,world.ui_preferences.get("patch523_source_clock_offset_minutes",540),policy])
 	return hash([world.inventory,world.item_instances,world.gold,world.equipped_items,world.ui_preferences.get("item_locks",{}),world.next_item_instance_id,world.level,world.catalog_db.get("아이템",[]),world.item_db,policy,store.sha256])
 
 func _weight(world: Node, inventory: Dictionary) -> int:
