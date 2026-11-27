@@ -524,20 +524,24 @@ func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonst
 	var shape := str(skill.get("shape", "single"))
 	if shape == "single" and is_instance_valid(primary):
 		return [primary] if Catalog.SOURCE523.target_allowed(skill, primary) else []
+	var started: int = FRAME_HITCH.now()
 	var center: Vector2 = primary.global_position if is_instance_valid(primary) else origin
 	var radius := float(skill.get("radius", skill.get("range", 160)))
+	var line: bool = shape == "line"
+	var end: Vector2 = origin + origin.direction_to(center) * float(skill.get("range", 0.0)) if line else origin
 	for child: Node in world.monsters_root.get_children():
 		if not child is TwilightMonster or child.dead: continue
 		var monster := child as TwilightMonster
 		if not Catalog.SOURCE523.target_allowed(skill, monster): continue
-		if not world._has_line_of_sight_world(origin, monster.global_position): continue
-		var include := monster.global_position.distance_to(center) <= radius
-		if shape == "line":
-			var end := origin + origin.direction_to(center) * float(skill.range)
-			include = Geometry2D.get_closest_point_to_segment(monster.global_position, origin, end).distance_to(monster.global_position) <= radius
-		if include: result.append(monster)
+		var position: Vector2 = monster.global_position
+		var nearest: Vector2 = Geometry2D.get_closest_point_to_segment(position, origin, end) if line else center
+		# The field's line check can traverse several source cells and load a
+		# chunk. An out-of-range candidate never reaches that check.
+		if position.distance_to(nearest) <= radius and world._has_line_of_sight_world(origin, position):
+			result.append(monster)
 	result.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool: return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
 	if result.size() > int(skill.get("targets", 6)): result.resize(int(skill.get("targets", 6)))
+	FRAME_HITCH.detail("skill.area_targets", started)
 	return result
 
 func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1) -> void:
