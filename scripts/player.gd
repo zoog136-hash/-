@@ -722,12 +722,10 @@ func clear_click_path() -> void:
 func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
-func show_received_damage(amount: int, critical: bool = false, kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
+func show_received_damage(amount: int, critical: bool = false, _kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
 	var world: Node = get_parent()
 	if not world is TwilightWorld or world.original_skills==null or world.original_skills.stat("ignoreDamageMotion")<=0:
 		motion.react(critical, source.direction_to(combat_hit_position()))
-	if world is TwilightWorld and world.combat_vfx != null:
-		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)
 	var display_color: Color = Color(1.0, 0.20, 0.12, 1.0) if critical else Color(1.0, 0.38, 0.32, 1.0)
 	_show_combat_text(display_text, display_color, Vector2(-38.0 if critical else -28.0, -112.0))

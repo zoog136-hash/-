@@ -3,7 +3,7 @@ extends SceneTree
 ## (actual Main): flight sprite = weapon AmmoEffectSpriteIDByWeapon > ammo
 ## AmmoEffectSpriteID > WeaponType.DefaultAmmoEffectSpriteID, explosion = ammo
 ## AmmoExplosionSpriteID > WeaponType.DefaultAmmoExplosionSpriteID. The flight
-## keeps its hit callback; without an original sprite the existing line stays.
+## keeps its hit callback even when an original sprite is unavailable.
 const SELECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
 const FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
 const F = preload("res://scripts/loot/current523_native_fields.gd")
@@ -64,7 +64,7 @@ func runtime() -> void:
 	check(sting.get("ok",false) and int(sting.sprite_id)==2989, "gauntlet #%d flies sting sprite 2989" % picks.Gauntlet)
 	var gun_flight: Dictionary = select(world,picks.Rifle,[],"flight")
 	var gun_blast: Dictionary = select(world,picks.Rifle,[],"explosion")
-	check(not gun_flight.get("ok",true) and str(gun_flight.reason)=="current523_ammo_effect_source_sprite_absent", "rifle has no original flight sprite (existing line kept)")
+	check(not gun_flight.get("ok",true) and str(gun_flight.reason)=="current523_ammo_effect_source_sprite_absent", "rifle has no original flight sprite")
 	check(gun_blast.get("ok",false) and int(gun_blast.sprite_id)==16430, "rifle #%d hit explosion 16430 one-shot" % picks.Rifle)
 	evidence["selected"] = {"bow":bow.get("sprite_id"),"quiver":quiver.get("sprite_id"),"girtas":girtas.get("sprite_id"),"sting":sting.get("sprite_id"),"gun_explosion":gun_blast.get("sprite_id")}
 	# Real flight with the bow equipped: original node follows, the hit still lands once.
@@ -104,7 +104,7 @@ func runtime() -> void:
 		if weapon==picks.Bow:
 			check(not options.is_empty() and seen.visual and seen.frame and hits[0]==1, "bow shot: original 66 overlay drew the flight and the hit landed once (%s)" % JSON.stringify(FLIGHT.last_status.get("flight",{}).get("reason","")))
 		else:
-			check(not options.is_empty() and not seen.visual and hits[0]==1 and int(seen.get("blasts_at_hit",0))==1, "rifle shot keeps the existing line, lands once and plays the original 16430 explosion at the hit (%s)" % JSON.stringify(FLIGHT.last_status.get("explosion",{}).get("reason","")))
+			check(world.combat_flights.original_visuals_only and not options.is_empty() and not seen.visual and hits[0]==1 and int(seen.get("blasts_at_hit",0))==1, "rifle shot lands once and plays the original 16430 explosion without a drawn fallback flight (%s)" % JSON.stringify(FLIGHT.last_status.get("explosion",{}).get("reason","")))
 		monster.queue_free()
 		evidence["flight_%d" % weapon] = {"options":not options.is_empty(),"visual":seen.visual,"hits":hits[0],"blasts_at_hit":seen.get("blasts_at_hit",0),"blasts_after":blasts,"debug":seen,"status":FLIGHT.last_status.duplicate(true)}
 	world.queue_free()

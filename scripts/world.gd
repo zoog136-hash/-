@@ -223,7 +223,6 @@ var secondary_relic_visual: Node2D
 const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
 var combat_vfx: TwilightCombatVFX = null
 var feedback_kind: String = "melee"
-var feedback_style: String = "slash"
 const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var combat_flights: TwilightCombatFlights = null
 var combat_corpses: Node2D = null
@@ -1538,7 +1537,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	patch523_npc_spells.extensions.begin_incoming(target,int(final.damage)+equipment523_extra+stolen,kind,by_spell)
 	target.set_meta("title523_direct_life",target.life_id)
 	deal_stage = FRAME_HITCH.detail_next("deal.damage_math", deal_stage)
-	target.take_damage(int(final.damage) + equipment523_extra + stolen, critical or bool(final.triggered))
+	var critical_weapon_type: int = int(context.get("critical_weapon_type",0)) if ordinary_attack and critical else 0
+	target.take_damage(int(final.damage) + equipment523_extra + stolen, critical or bool(final.triggered), "", critical_weapon_type, bool(final.triggered))
 	deal_stage = FRAME_HITCH.detail_next("deal.take_damage", deal_stage)
 	if not target.dead: target.set_meta("title523_direct_life",-1)
 	patch523_npc_spells.extensions.incoming.erase(target.get_instance_id())
@@ -2127,6 +2127,7 @@ func _connect_signals() -> void:
 	combat_vfx = COMBAT_VFX.new()
 	combat_vfx.name = "CombatVFX"
 	combat_vfx.z_index = 12
+	combat_vfx.source_result_visual = _play_original_combat_result
 	add_child(combat_vfx)
 	combat_corpses = Node2D.new()
 	combat_corpses.name = "CombatCorpses"
@@ -2135,6 +2136,7 @@ func _connect_signals() -> void:
 	combat_flights = COMBAT_FLIGHTS.new()
 	combat_flights.name = "CombatFlights"
 	combat_flights.z_index = 12
+	combat_flights.original_visuals_only = true
 	add_child(combat_flights)
 	var saved_presentation := ConfigFile.new()
 	if saved_presentation.load("user://twilight_ui_settings.cfg") == OK:
@@ -3346,7 +3348,9 @@ func _attack(automatic_acquisition: bool = false) -> void:
 		hud.show_message(polymorph_weapon_reason)
 		auto_attack_timer = 1.0
 		return
-	var attack_kind: String = _current_attack_kind()
+	var weapon: Dictionary = _equipped_weapon_record()
+	var source_weapon: Dictionary = preload("res://scripts/loot/patch523_ammo.gd").weapon_type(weapon)
+	var attack_kind: String = _attack_kind_for_weapon(weapon,source_weapon)
 	var target: TwilightMonster = selected_monster
 	var target_usable: bool = is_instance_valid(target) and not target.dead
 	if target_usable and automatic_acquisition: target_usable = target.permits_auto_selection()
@@ -3382,9 +3386,13 @@ func _attack(automatic_acquisition: bool = false) -> void:
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind, _mastery_actual_weapon_type(), source_ammo,native_ammo_bonus), auto_attack_timer, true)
+	var attack_weapon_type: int = _mastery_actual_weapon_type()
+	# Old equipped records use the same explicit weapon family as the existing
+	# player motion. Current typed weapons retain their exact WeaponType ID.
+	var source_weapon_type: int = int(source_weapon.get("ID",attack_weapon_type))
+	_queue_player_attack(target,attack_kind,_resolve_normal_attack.bind(target,attack_kind,attack_weapon_type,source_ammo,native_ammo_bonus,source_weapon_type),auto_attack_timer,true)
 
-func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1, source_ammo: Dictionary = {}, native_ammo_bonus: int=-1) -> void:
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack_weapon_type: int = -1, source_ammo: Dictionary = {}, native_ammo_bonus: int=-1, source_weapon_type: int = 0) -> void:
 	if patch523_npc_spells.blocks("CannotAttack"): return
 	if not is_instance_valid(target) or target.dead: return
 	# Stage times inside one hit (523.800/804: one impact ~120-130 ms on the
@@ -3409,7 +3417,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 	var critical: bool = roll.critical
 	var critical_chance: float = roll.chance
 	hit_stage = FRAME_HITCH.detail_next("hit.roll", hit_stage)
-	_deal_successful_player_hit(target, damage, critical,attack_kind,true,false,{},true)
+	_deal_successful_player_hit(target,damage,critical,attack_kind,true,false,{"critical_weapon_type":source_weapon_type} if critical and source_weapon_type > 0 else {},true)
 	hit_stage = FRAME_HITCH.detail_next("hit.deal", hit_stage)
 	preload("res://scripts/loot/patch523_weapon_bleed.gd").on_normal_hit(self,target)
 	_try_trigger_passives("on_hit", target,attack_kind,true,false)
@@ -4520,7 +4528,9 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	hp = maxi(0, hp - reduced)
 	patch523_npc_spells.extensions.on_player_event("attacked")
 	if hp>0 and int(option_result.heal)+int(guardian_result.heal)>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal)+int(guardian_result.heal))
-	if reduced > 0 and is_instance_valid(presentation_audio): presentation_audio.play_world("hurt", player.global_position)
+	if reduced > 0:
+		if is_instance_valid(presentation_audio): presentation_audio.play_world("hurt",player.global_position)
+		_source_damage_effect(player.original_source_preview,player.global_position,attacker.global_position,player.motion.facing8)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
@@ -11526,10 +11536,13 @@ func _current_weapon_type_uncached() -> String:
 func _current_attack_kind() -> String:
 	var weapon: Dictionary = _equipped_weapon_record()
 	var native: Dictionary = preload("res://scripts/loot/patch523_ammo.gd").weapon_type(weapon)
+	return _attack_kind_for_weapon(weapon,native)
+
+func _attack_kind_for_weapon(weapon: Dictionary, native: Dictionary) -> String:
 	if not native.is_empty(): return "ranged" if int(native.get("AmmoItemCategoryID",0)) > 0 else "melee"
 	if weapon.has("attackKind"):
 		return str(weapon.get("attackKind", "melee"))
-	return _weapon_attack_kind_from_type(_current_weapon_type())
+	return _weapon_attack_kind_from_type(_normalized_weapon_type(str(weapon.get("type",""))))
 
 func _current_attack_range_cells() -> int:
 	var weapon: Dictionary = _equipped_weapon_record()
@@ -12731,10 +12744,8 @@ func _impact_player_attack_timed(action: Dictionary) -> void:
 	if not callback.is_valid(): return
 	resolving_combat_action = true
 	feedback_kind = action.kind
-	feedback_style = action.get("style", action.kind)
 	callback.call()
 	feedback_kind = "melee"
-	feedback_style = "slash"
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
@@ -12746,39 +12757,41 @@ func _clear_combat_actions() -> void:
 	if original_skills != null: original_skills.clear()
 	combat_generation += 1
 	pending_attack.clear()
-	if is_instance_valid(player): player.cancel_attack()
+	if is_instance_valid(player):
+		player.cancel_attack()
+		if is_instance_valid(player.original_source_preview): player.original_source_preview.clear_current523_combat_feedback()
 	if is_instance_valid(combat_flights): combat_flights.clear()
 	if is_instance_valid(combat_vfx): combat_vfx.clear()
 	if is_instance_valid(combat_corpses):
 		for corpse: Node in combat_corpses.get_children(): corpse.queue_free()
 
-func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
-	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
+func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false) -> void:
+	if is_instance_valid(combat_vfx): combat_vfx.number(point,value,color,critical,final_blow)
+
+func _play_original_combat_result(result: String, point: Vector2) -> bool:
+	if not is_instance_valid(player) or not is_instance_valid(player.original_source_preview): return false
+	return player.original_source_preview.notify_current_source_combat_result(result,point)
 
 var _source_damage_effect_absent: Dictionary = {}
-## Original hit effect of a 523 source monster (SkipDamageMotionSprite), on
-## the existing successful-hit feedback. Monsters whose original body has no
-## such row show none.
-func _source_damage_effect(target: TwilightMonster) -> void:
-	if not is_instance_valid(target) or not is_instance_valid(target.source_m_view) or target.source_m_view.get("_preview") == null: return
-	var selection: Variant = target.get_meta("current523_source_bank_selection", {})
-	var body_sprite: int = int(selection.get("sprite_id", -1)) if selection is Dictionary and selection.get("ok", false) else -1
+## The body owns its original hit response. SkipDamageMotionSprite can
+## declare an overlay for either side; other bodies keep their hit motion.
+func _source_damage_effect(preview: Node, target_point: Vector2, attacker_point: Vector2, facing: int) -> void:
+	if not is_instance_valid(preview) or not preview.installed(): return
+	var selection: Dictionary = preview.source_selection_status
+	var body_sprite: int = int(selection.get("sprite_id",-1)) if selection.get("ok",false) else -1
 	if body_sprite <= 0 or _source_damage_effect_absent.has(body_sprite): return
-	var facing: int = int(target.motion.facing8) if target.motion != null else 0
-	var preview: Node = target.source_m_view._preview
-	if not preview.notify_current_source_damage_effect(body_sprite, target.global_position, player.global_position, facing):
-		# Most bodies declare none: do not look the table up again on every hit.
-		if str(preview.source_effect_status.get("reason", "")) == "current523_damage_effect_not_declared": _source_damage_effect_absent[body_sprite] = true
+	if preview.notify_current_source_damage_effect(body_sprite,target_point,attacker_point,facing): return
+	if preview.source_effect_status.get("reason") in ["current523_damage_effect_not_declared","current523_damage_effect_sprite_absent"]:
+		_source_damage_effect_absent[body_sprite] = true
 
-func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
+func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "", critical_weapon_type: int = 0) -> void:
 	# Named skill hits retain their existing skill audio path.
 	if damage_kind.is_empty() and is_instance_valid(presentation_audio):
-		presentation_audio.play_world("impact", target.combat_hit_position(), critical)
-	_source_damage_effect(target)
-	if not is_instance_valid(combat_vfx): return
-	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
-	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
-	if critical and not bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.028
+		presentation_audio.play_world("impact",target.combat_hit_position(),critical)
+	if is_instance_valid(target.source_m_view):
+		_source_damage_effect(target.source_m_view.get("_preview"),target.global_position,player.global_position,target.motion.facing8)
+	if critical_weapon_type > 0 and is_instance_valid(player.original_source_preview):
+		player.original_source_preview.notify_current_source_weapon_critical(critical_weapon_type,target.global_position,player.motion.facing8)
 
 func apply_presentation_settings(settings: Dictionary) -> void:
 	presentation_global_settings = PRESENTATION.normalized(settings, presentation_global_settings)

@@ -1248,7 +1248,7 @@ func is_undead() -> bool:
 func elemental_resistance_percent(element_name: String) -> float:
 	return float(element_resistance.get(element_name, 0.0))
 
-func take_damage(amount: int, critical: bool = false, damage_kind: String = "") -> void:
+func take_damage(amount: int, critical: bool = false, damage_kind: String = "", critical_weapon_type: int = 0, final_blow: bool = false) -> void:
 	if dead:
 		return
 	var source523 = _patch523_service()
@@ -1262,9 +1262,9 @@ func take_damage(amount: int, critical: bool = false, damage_kind: String = "") 
 		world_controller.field_population.alert_social(self)
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
-	_show_damage_number(amount, critical)
+	_show_damage_number(amount,critical,final_blow)
 	if is_instance_valid(world_controller) and world_controller.has_method("monster_combat_feedback"):
-		world_controller.monster_combat_feedback(self, critical, damage_kind)
+		world_controller.monster_combat_feedback(self,critical,damage_kind,critical_weapon_type)
 	motion.react(critical, target_player.global_position.direction_to(global_position) if is_instance_valid(target_player) else Vector2.ZERO)
 	if hp <= 0:
 		dead = true
@@ -1300,9 +1300,9 @@ func show_miss() -> void:
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
 
-func _show_damage_number(amount: int, critical: bool = false) -> void:
+func _show_damage_number(amount: int, critical: bool = false, final_blow: bool = false) -> void:
 	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
-		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), ("CRIT " if critical else "") + str(amount), Color(1.0, 0.45, 0.2) if critical else Color(1.0, 0.83, 0.4), critical)
+		world_controller.show_combat_number(global_position + Vector2(0,-visual_height - 8),("CRIT " if critical else "") + str(amount),Color(1.0,0.45,0.2) if critical else Color(1.0,0.83,0.4),critical,final_blow)
 		return
 	var label: Label = Label.new()
 	label.text = ("CRIT " + str(amount)) if critical else str(amount)

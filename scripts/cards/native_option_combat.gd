@@ -374,6 +374,21 @@ func emit_option_effect(option: Dictionary,field: String,target: Node2D) -> void
 	if preview!=null and preview.has_method("notify_current_source_invoke_effect") and preview.notify_current_source_invoke_effect(option,field,target.global_position,5):
 		visual_results[str(sprite)]="played_current_invoke_source"
 
+func emit_committed_item_sprite(sprite: int, target: Node2D, current_item: Dictionary) -> void:
+	if sprite <= 0 or current_item.is_empty() or not is_instance_valid(target): return
+	var owner: RefCounted = runtime
+	if owner == null or not is_instance_valid(owner.world): return
+	# A successful use also refreshes the HUD and can rebind the actor view.
+	# Publish the already committed visual after that refresh. Old-map events
+	# expire with the same combat generation as the rest of the presentation.
+	_play_committed_item_sprite.call_deferred(sprite,weakref(target),current_item,int(owner.world.combat_generation))
+
+func _play_committed_item_sprite(sprite: int, target_ref: WeakRef, current_item: Dictionary, generation: int) -> void:
+	var owner: RefCounted = runtime
+	if owner == null or not is_instance_valid(owner.world) or generation != int(owner.world.combat_generation): return
+	var target: Node2D = target_ref.get_ref()
+	if is_instance_valid(target): emit_sprite(sprite,target,current_item)
+
 func emit_sprite(sprite: int,target: Node2D,current_item: Dictionary={}) -> void:
 	# Existing private source compositor only. Missing bindings remain absent.
 	if sprite<=0 or not is_instance_valid(target):return

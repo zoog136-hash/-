@@ -6,6 +6,14 @@ const SOURCE = preload("res://scripts/resources/current523_source_bank.gd")
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
 const STAGES = {"cast":"CasterEffectSpriteID", "effect":"EffectSpriteID", "impact":"EffectExplosionSpriteID", "success":"SuccessEffectSpriteID", "fail":"FailEffectSpriteID", "critical":"CriticalEffectSpriteID"}
 const GLOBALS = {"polymorph":"PolymorphEffectSpriteID"}
+const RESULT_SPRITES = {"critical":[22,"Critical"], "miss":[32,"Miss"], "final_blow":[351,"FinalBlow"]}
+const FEEDBACK_BANK_SHA = "587b419b38fd9e66639b315788011c986439a005b2525942162ff71febc81eeb"
+# The published raw bank predates source_action_domains. Its action-outcomes
+# and family failures confirm exactly action 0 and a compiled track for these
+# feedback sprites. The renderer still validates the manifest, action JSON
+# and every SP2 member against the original pins.
+const FEEDBACK_ACTION_ZERO = [1248, 8132, 8234, 10770, 13409, 13410, 13411, 13414, 13416, 13417, 16019, 16023, 16404, 21831, 24259]
+const POTION_ACTION_ZERO = [190, 191, 194, 751, 16007]
 static var _manifest_path: String = ""
 static var _manifest_sha: String = ""
 static var _manifest: Dictionary = {}
@@ -164,6 +172,37 @@ static func _selected(supplied: Dictionary, sprite: int, action: Dictionary, con
 		"source_bank_context":{"current523_source_bank":supplied.options.duplicate(true)},
 		"host_policy":"existing_source_event_anchor_and_facing_plus3_one_shot; native_trigger_and_composition_unverified"}
 
+static func _feedback_action(options: Dictionary, sprite: int) -> Dictionary:
+	if str(options.get("manifest_sha256","")).to_lower() == FEEDBACK_BANK_SHA:
+		if sprite not in FEEDBACK_ACTION_ZERO and sprite not in POTION_ACTION_ZERO: return fail("current523_combat_feedback_track_unavailable")
+		return {"ok":true,"action_id":0,"source_action_domain":{"source_snapshot":"patch523","source_actor_id":sprite,
+			"action_ids":[0],"action_domain_basis":"verified_original_action_outcomes_for_pinned_feedback_bank"}}
+	return _action(options,sprite)
+
+static func select_weapon_critical(weapon_type: int, context: Dictionary = {}) -> Dictionary:
+	if weapon_type <= 0: return fail("current523_critical_weapon_type_required")
+	var supplied: Dictionary = SOURCE.source_tables(context,["WeaponType"])
+	if not supplied.ok: return supplied
+	var row: Dictionary = SOURCE.table_row("WeaponType",weapon_type)
+	return _feedback_sprite(supplied,row,"WeaponType","CriticalEffectSpriteID","weapon_critical",str(weapon_type))
+
+static func select_combat_result(result: String, context: Dictionary = {}) -> Dictionary:
+	if not RESULT_SPRITES.has(result): return fail("current523_combat_result_not_supported")
+	var supplied: Dictionary = SOURCE.source_tables(context,["SpecialSprite"])
+	if not supplied.ok: return supplied
+	var binding: Array = RESULT_SPRITES[result]
+	var row: Dictionary = SOURCE.table_row("SpecialSprite",binding[0])
+	if row.get("Name") != binding[1]: return fail("current523_combat_result_sprite_identity_differs")
+	return _feedback_sprite(supplied,row,"SpecialSprite","SpriteID","combat_result",result)
+
+static func _feedback_sprite(supplied: Dictionary, row: Dictionary, table: String, field: String, consumer: String, key: String) -> Dictionary:
+	var sprite: int = _source_integer(row.get(field))
+	if sprite <= 0: return fail("current523_combat_feedback_sprite_absent")
+	var action: Dictionary = _feedback_action(supplied.options,sprite)
+	if not action.ok: return action
+	return _selected(supplied,sprite,action,consumer,"current523:%s:%s" % [consumer,key],
+		{"table":table,"row":row.duplicate(true),"field":field,"gameplay_admission":"existing_resolved_combat_event_only"},"patch523")
+
 static func select_spell_row(spell: Dictionary, stage: String, source_snapshot: String, context: Dictionary = {}) -> Dictionary:
 	if source_snapshot not in ["base508","patch523"] or not STAGES.has(stage) or not BANK.integer(spell.get("ID"),1): return fail("current523_effect_explicit_spell_and_stage_required")
 	var supplied: Dictionary = SOURCE.source_tables(context)
@@ -224,7 +263,7 @@ static func select_damage_effect(body_sprite: int, context: Dictionary = {}) -> 
 	var row: Dictionary = matches[0]
 	var sprite: int = _source_integer(row.get("DamageEffectSpriteID"))
 	if sprite <= 0: return fail("current523_damage_effect_sprite_absent")
-	var action: Dictionary = _action(supplied.options,sprite)
+	var action: Dictionary = _feedback_action(supplied.options,sprite)
 	if not action.ok: return action
 	var selected: Dictionary = _selected(supplied,sprite,action,"damage_effect","current523:damage_effect:%d" % body_sprite,
 		{"table":"SkipDamageMotionSprite","row":row.duplicate(true),"field":"DamageEffectSpriteID",
@@ -288,7 +327,7 @@ static func select_item_consume(original_item: Dictionary, requested_sprite: int
 	if matches.size() != 1: return fail("current523_item_consume_source_sprite_not_unique",{"ItemClass":native.duplicate(true),"typed_chains":chains})
 	var selected_sprite: int = int(matches.keys()[0])
 	if selected_sprite != requested_sprite: return fail("current523_item_consume_requested_sprite_differs",{"ItemClass":native.duplicate(true),"typed_chains":chains,"requested_sprite":requested_sprite})
-	var action: Dictionary = _action(supplied.options,selected_sprite)
+	var action: Dictionary = _feedback_action(supplied.options,selected_sprite) if selected_sprite in POTION_ACTION_ZERO else _action(supplied.options,selected_sprite)
 	if not action.ok: return action
 	var reference: Dictionary = {"table":"Bonus","field":"Value","bonus_type_name":"ItemConsumeEffectSpriteID",
 		"owner":{"table":"ItemClass","row":native.duplicate(true)},
