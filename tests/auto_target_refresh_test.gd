@@ -65,6 +65,7 @@ func run() -> void:
 	var blocked: TwilightMonster = add_actor(world, Vector2i(1, 0))
 	world.blocked_positions[blocked.global_position] = true
 	var moving: TwilightMonster = add_actor(world, Vector2i(2, 0))
+	var moving_farther: TwilightMonster = add_actor(world, Vector2i(3, 0))
 	world.visible_target = false
 	world.in_weapon_range = false
 	world.auto_repath_timer = 0.0
@@ -76,14 +77,16 @@ func run() -> void:
 		"pending local search keeps the old walk and spends one route on the nearer blocked actor")
 	check(not world.auto_search_candidates.is_empty(), "remaining candidates are carried to the next tick")
 	set_offset(world, moving, Vector2i(12, 0))
+	set_offset(world, moving_farther, Vector2i(8, 0))
 	world.auto_repath_timer = 0.5
 	world._run_auto_hunt(6012)
 	check(world.auto_target == near and world.player.click_path == previous_walk and world.selection_path_calls == calls + 1,
-		"candidate leaving the radius between ticks is skipped and the old route is reused")
+		"candidates that leave the radius or move behind the incumbent between ticks are skipped")
 	check(world.auto_search_candidates.is_empty(), "unchanged incumbent finishes the refresh")
 
 	edge.dead = true
 	blocked.dead = true
+	moving_farther.dead = true
 	set_offset(world, near, Vector2i(11, 0))
 	world._run_auto_hunt(9012)
 	check(world.auto_target == null and world.player.click_path.is_empty() and world.selection_path_calls == calls + 1,
@@ -119,6 +122,32 @@ func run() -> void:
 	var replacement: TwilightMonster = add_actor(world, Vector2i(-3, -2))
 	world._run_auto_hunt(12303)
 	check(world.auto_target == replacement, "death triggers a new search without waiting another 3 seconds")
+
+	# Releasing a distant explicit target must reapply AUTO admission before
+	# the periodic deadline. An earlier attack can still finish first.
+	world.locked_actor = out_of_range
+	world._run_auto_hunt(12304)
+	check(world.last_test_attack == out_of_range and not world.last_test_attack_automatic, "lock accepts an explicit distant target")
+	world.locked_actor = null
+	world.pending_attack = {"fixture_attack":true}
+	world._run_auto_hunt(12305)
+	check(world.auto_target == out_of_range and not world.pending_attack.is_empty(), "releasing lock does not interrupt a queued attack")
+	world.pending_attack.clear()
+	world._run_auto_hunt(12306)
+	check(world.auto_target == replacement and world.last_test_attack == replacement and world.last_test_attack_automatic,
+		"AUTO reacquires a local target after lock release, before the refresh deadline")
+
+	interactions = INTERACTIONS.new()
+	interactions.world = world
+	world.world_interactions = interactions
+	interactions.selections.append(interactions.monster_entry(out_of_range))
+	world._run_auto_hunt(12307)
+	interactions.selections.clear()
+	world._run_auto_hunt(12308)
+	check(world.auto_target == replacement and world.last_test_attack == replacement and world.last_test_attack_automatic,
+		"clearing a manual selection also returns to local AUTO admission")
+	interactions.free()
+	world.world_interactions = null
 
 	world.monsters_root.free()
 	world.player.free()
