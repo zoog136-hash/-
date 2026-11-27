@@ -1,5 +1,5 @@
 extends SceneTree
-## TWILIGHT 근사 2026-11-17: an explicit allow list of TestItem craft results
+## TWILIGHT 근사 2026-11-17: an explicit allow list of TestItem craft and quest results
 ## (current523_definition_rows.APPROX_TEST_ITEMS) is read as ordinary items; every
 ## other test item stays refused. With the original ZIP, in actual Main: the rows read
 ## TestItem=false, the items are registered, a card item gives its original card, a box
@@ -9,6 +9,11 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
+const PREVIOUS_ITEMS = [1067,1068,1069,1070,111114,115802,189614,221871,
+	125502,125512,125522,124562,124572,124582,124592,124602,124612,
+	130631,130641,97434,97444,97454,111654,111664,111674]
+const QUEST_BOXES = [96054,96064,96074]
+const QUEST_CARDS = [98494,98504,98514]
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -26,6 +31,13 @@ func record(id: int) -> Dictionary:
 func runtime() -> void:
 	check(SOURCE.row("ItemClass",1067).get("TestItem") == false and SOURCE.row("ItemClass",125502).get("TestItem") == false, "allow-listed rows read TestItem=false")
 	check(SOURCE.row("ItemClass",962).get("TestItem") == true and SOURCE.row("ItemClass",328371).get("TestItem") == true, "other test items stay TestItem=true")
+	for id: int in QUEST_BOXES+QUEST_CARDS:
+		var projected: Dictionary = SOURCE.row("ItemClass",id)
+		var previous: bool = SOURCE.approximate_test_items
+		SOURCE.approximate_test_items = false
+		var original: Dictionary = SOURCE.row("ItemClass",id)
+		SOURCE.approximate_test_items = previous
+		check(original.get("TestItem")==true and projected.get("TestItem")==false and SOURCE.approximated_item(original)==projected,"only the local rule admits quest item #"+str(id))
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
 	check(QA.enter_game(world), "actual Main map entry")
@@ -38,6 +50,8 @@ func runtime() -> void:
 	evidence["registered"] = registered.size(); evidence["profiles"] = profiles
 	check(registered.size() == SOURCE.APPROX_TEST_ITEMS.size(), "all %d allow-listed items registered (%d)" % [SOURCE.APPROX_TEST_ITEMS.size(),registered.size()])
 	check(str(profiles.get("1067","")) == "card" and str(profiles.get("125502","")) in ["bag","selection"], "card / box use owners "+str(profiles))
+	for id: int in QUEST_BOXES: check(profiles.get(str(id))=="bag","quest intermediate box has its original use owner #"+str(id))
+	for id: int in QUEST_CARDS: check(profiles.get(str(id))=="card","quest card has its original use owner #"+str(id))
 	check(record(962).is_empty(), "a test item outside the list is not registered")
 	# Card: 아크 나이트 (BuffCardID 140).
 	world.inventory = {}; world.item_instances = {}
@@ -61,7 +75,11 @@ func runtime() -> void:
 	for frame: int in 5: await process_frame
 
 func run() -> void:
-	check(SOURCE.APPROX_TEST_ITEMS.size() == 25, "allow list")
+	var expected: Array = PREVIOUS_ITEMS+QUEST_BOXES+QUEST_CARDS
+	expected.sort()
+	var actual: Array = SOURCE.APPROX_TEST_ITEMS.keys()
+	actual.sort()
+	check(actual==expected,"only the 31 reviewed item IDs are on the allow list")
 	if not SOURCE.not_installed(): await runtime()
 	print("TEST_ITEM_ALLOWLIST523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)
