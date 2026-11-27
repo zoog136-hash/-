@@ -55,6 +55,7 @@ var _previous: String = ""
 ## installed and its scene trees are on the device.
 var _fx_loading: Node2D
 var _roster_ui_pack: RefCounted
+var _incoming_loading_fx: RefCounted
 ## Result of the last attach attempt (diagnostics and tests).
 var fx_loading_status: Dictionary = {}
 signal progress_changed(snapshot: Dictionary)
@@ -62,12 +63,13 @@ signal finished(ok: bool)
 
 ## Character lobby integration: call only after select_character() succeeds.
 ## Keeps the account session and selected scene intact; creates no save data.
-static func open(tree: SceneTree, target: String = MAIN, show_title: bool = true) -> Control:
+static func open(tree: SceneTree, target: String = MAIN, show_title: bool = true, loading_fx_scope: RefCounted = null) -> Control:
 	var existing: Node = tree.get_first_node_in_group("twilight_loading")
 	if existing != null: return existing as Control
 	var loader: Control = (load("res://scripts/boot/loading_screen.gd") as Script).new()
 	loader.destination = target
 	loader.title_after_loading = show_title
+	loader._incoming_loading_fx = loading_fx_scope
 	var layer := CanvasLayer.new()
 	layer.layer = 126 # Pack installers stay above this at 127.
 	layer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -457,11 +459,14 @@ func _attach_original_loading_fx() -> void:
 	if not UI_PACK.baked(sha):
 		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_baked"}
 		return
-	var scoped := _mount_original_loading_fx(UI_SELECTION.selected_pack(true, destination == CHARACTERS))
+	var selected := UI_SELECTION.selected_pack(true, destination == CHARACTERS, _incoming_loading_fx)
+	_incoming_loading_fx = null
+	var scoped := _mount_original_loading_fx(selected)
 	if not scoped:
 		# Older packs can author the indicator with different dependencies.
 		if not _mount_original_loading_fx(UI_SELECTION.selected_pack()): return
 	fx_loading_status["scoped"] = scoped
+	fx_loading_status["reused_loading_scope"] = scoped and selected.get("reused_loading_scope", false)
 	BOOT_LOG.mark("original_fx_loading", fx_loading_status)
 
 func _mount_original_loading_fx(selected: Dictionary) -> bool:
@@ -479,6 +484,7 @@ func _mount_original_loading_fx(selected: Dictionary) -> bool:
 	return true
 
 func _release_original_loading_fx() -> void:
+	_incoming_loading_fx = null
 	_roster_ui_pack = null
 	if is_instance_valid(_fx_loading):
 		_fx_loading.queue_free()

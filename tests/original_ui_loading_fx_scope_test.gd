@@ -2,6 +2,7 @@ extends SceneTree
 
 const PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
 const BAKE := preload("res://scripts/resources/current523_bake_cache.gd")
+const SELECT := preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const ATLAS_PAGE := "UI/atlas.png"
 const UNRELATED_PAGE := "UI/other.png"
 
@@ -64,9 +65,18 @@ func _run() -> void:
 	_check(scoped.open_loading_fx(directory, sha).ok, "selected bake can expose the loading scene")
 	_check(scoped.scene(PACK.LOADING_FX_MEMBER) == full.scene(PACK.LOADING_FX_MEMBER), "same verified authored scene")
 	_check(scoped.manifest.files.size() == 4 and not scoped.manifest.files.has(UNRELATED_PAGE), "only exact source dependencies")
+	var handoff := scoped.copy_loading_fx_scope()
+	_check(handoff != null and handoff.can_reuse_loading_fx(directory, sha), "roster can hand off a verified loading scope")
+	_check(full.copy_loading_fx_scope() == null, "full UI pack cannot cross the scoped handoff")
+	_check(not handoff.can_reuse_loading_fx(directory + "/different", sha) and not handoff.can_reuse_loading_fx(directory, "0".repeat(64)), "the handoff requires the same selection")
+	_check(handoff.scene(PACK.LOADING_FX_MEMBER) == scoped.scene(PACK.LOADING_FX_MEMBER) and handoff._records == null, "handoff carries only decoded loading data")
+	OS.set_environment("TWILIGHT_SOURCE_UI", directory)
+	OS.set_environment("TWILIGHT_SOURCE_UI_SHA256", sha)
+	var selected := SELECT.selected_pack(true, false, handoff)
+	_check(selected.get("reused_loading_scope", false) and selected.pack == handoff, "the actual selector uses a valid handed-off scope")
 	var outside := {"path": UNRELATED_PAGE, "resourceType": 0}
 	var texture := full.texture(outside)
-	_check(texture != null and scoped.texture(outside) == null, "full-pack shared texture cannot cross the loading scope")
+	_check(texture != null and scoped.texture(outside) == null and handoff.texture(outside) == null, "full-pack shared texture cannot cross the loading scope")
 
 	var outside_path := originals.path_join(UNRELATED_PAGE)
 	_write(outside_path, _changed_bytes(payloads[UNRELATED_PAGE]))
@@ -78,17 +88,22 @@ func _run() -> void:
 		var path := originals.path_join(member)
 		_write(path, _changed_bytes(payloads[member]))
 		_check(PACK.new().open_loading_fx(directory, sha).get("error") == "source_hash_or_size:" + member, "scoped verification rejects changed bytes in " + member)
+		_check(not handoff.can_reuse_loading_fx(directory, sha), "handoff still rejects changed bytes in " + member)
 		_write(path, payloads[member])
 	_check(PACK.new().open_loading_fx(directory, sha).ok, "retry after restoring originals")
 
 	var manifest_bytes := FileAccess.get_file_as_bytes(manifest_path)
 	_write(manifest_path, _changed_bytes(manifest_bytes))
 	_check(PACK.new().open_loading_fx(directory, sha).get("error") == "manifest_hash_mismatch", "scope requires the pinned original manifest")
+	_check(not handoff.can_reuse_loading_fx(directory, sha), "handoff still authenticates the selected manifest")
+	_check(not SELECT.selected_pack(true, false, handoff).get("ok", false), "selector cannot fall back to reusing a scope after manifest tampering")
+	_check(PACK.new().open(directory, sha).get("error") == "manifest_hash_mismatch", "full baked HUD path also authenticates the manifest")
 	_write(manifest_path, manifest_bytes)
 
 	var bake := BAKE.verified_file(PACK.bake_name_for(sha), PACK.bake_key_for(sha))
 	_write(bake, _changed_bytes(FileAccess.get_file_as_bytes(bake)))
 	_check(PACK.new().open_loading_fx(directory, sha).get("error") == "original_ui_pack_not_baked", "scoped reader rejects same-size bake tampering")
+	_check(handoff.can_reuse_loading_fx(directory, sha), "verified in-memory scope does not re-read the changed baked file")
 	_check(PACK.new().open(directory, sha).ok, "full reader can recover from the verified original")
 	_check(scoped.open(directory, sha).ok and scoped.texture(outside) != null, "successful full open releases the prior scope")
 	print("ORIGINAL_UI_LOADING_FX_SCOPE_RESULT ", JSON.stringify({"checks": checks, "failures": failures}))

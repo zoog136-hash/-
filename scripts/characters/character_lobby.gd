@@ -45,6 +45,7 @@ var _touch_index: int = -1
 var _touch_last: Vector2
 var _original_slot_off: StyleBoxTexture
 var _original_slot_selected: StyleBoxTexture
+var _loading_fx_scope: RefCounted
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -115,6 +116,7 @@ func _button(text: String, action: Callable, identifier: String = "") -> Button:
 	return button
 
 func use_original_roster_art(pack: RefCounted) -> void:
+	_loading_fx_scope = pack.copy_loading_fx_scope()
 	var art: Dictionary = pack.roster_slot_art()
 	if art.is_empty(): return
 	_original_slot_off = _roster_slot_style(art.inactive)
@@ -408,7 +410,9 @@ func _enter_main() -> void:
 	# The world loads behind the progress overlay (no title a second time); the
 	# Main scene itself was already loaded by the first loading.
 	var loader: Script = load(LOADING_SCREEN) as Script if preload("res://scripts/resources/retired_assets.gd").usable(LOADING_SCREEN) else null
-	if loader != null and loader.call("open", get_tree(), MAIN, false) != null: return
+	var loading_fx_scope := _loading_fx_scope
+	_loading_fx_scope = null
+	if loader != null and loader.call("open", get_tree(), MAIN, false, loading_fx_scope) != null: return
 	var result: Error = get_tree().change_scene_to_file(MAIN)
 	if result != OK:
 		busy = false
