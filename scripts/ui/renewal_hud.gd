@@ -971,6 +971,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		if original_inventory_is_open():
+			if original_inventory_move_pending():
+				original_main_ui_controller.cancel_inventory_move()
+				get_viewport().set_input_as_handled()
+				return
 			original_main_ui_controller.close_inventory()
 			_close_workspace()
 			get_viewport().set_input_as_handled()
@@ -1311,13 +1315,23 @@ func confirm_awakening_action(title: String, body: String, action: String, callb
 func confirm_crafting_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	return _confirm_source_action(title,body,action,callback)
 
-func _confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
+func confirm_item_collection_registration(title: String, body: String, callback: Callable) -> Control:
+	return _confirm_source_action(title,body,"등록",callback,true)
+
+func confirm_equipment_blessing(body: String, callback: Callable) -> Control:
+	var dialog: Control=_confirm_source_action("축복 부여 확인",body,"축복 부여",callback,requires_original_inventory_ui())
+	if dialog==null and $Root.get_node_or_null("TwilightConfirmation")==null:
+		show_message("원본 축복 부여 확인창을 열 수 없습니다.")
+	return dialog
+
+func _confirm_source_action(title: String, body: String, action: String, callback: Callable, original_only: bool=false) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
 		if pointer_transfer != null: pointer_transfer.cancel()
 		var identity := preload("res://scripts/ui/source523_item_identity.gd")
 		var dialog: Control = original_main_ui_controller.awakening_review($Root,identity.clean_message(title),identity.clean_message(body),callback)
 		if dialog != null: return dialog
+	if original_only:return null
 	return confirm_action(title,body,action,callback)
 
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
@@ -1468,15 +1482,16 @@ func open_npc_shop(npc_id: String = "") -> void:
 	workspace.mount(shop)
 	shop.configure(self,true)
 	shop_view = shop
+	var native: Dictionary = original_main_ui_bind_problem
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_store_window"):
-		var native: Dictionary = original_main_ui_controller.try_open_store_window(npc_id)
+		native = original_main_ui_controller.try_open_store_window(npc_id)
 		original_main_ui_status["store_window"] = native
 		if native.get("handled",false):
 			if pointer_transfer != null: pointer_transfer.cancel()
 			workspace.hide()
 			_sync_screen_focus()
 			return
-		_report_original_fallback("상점",native)
+	_hold_original_inventory_window("상점",native)
 
 func refresh_shop() -> void:
 	if active_section in ["shop","npc_shop"] and is_instance_valid(shop_view): shop_view.refresh_balances()
@@ -1492,15 +1507,16 @@ func open_warehouse() -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 	transaction_view = screen
+	var native: Dictionary = original_main_ui_bind_problem
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_storage_window"):
-		var native: Dictionary = original_main_ui_controller.try_open_storage_window(screen)
+		native = original_main_ui_controller.try_open_storage_window(screen)
 		original_main_ui_status["storage_window"] = native
 		if native.get("handled",false):
 			if pointer_transfer != null: pointer_transfer.cancel()
 			workspace.hide()
 			_sync_screen_focus()
 			return
-		_report_original_fallback("창고",native)
+	if _hold_original_inventory_window("창고",native):return
 	show_companion_bag()
 
 func open_npc_teleport() -> void:
@@ -1525,6 +1541,9 @@ func open_crafting(recipe_id: String = "") -> void:
 	var source_note: String = " / 원본523 확정 제작" if not get_parent().patch523_equipment.data.is_empty() else ""
 	_open_window("crafting","제작 장인","재료·비용 검사 · 자체 제작식" + source_note)
 	if _open_original_production(): return
+	if _hold_original_inventory_window("제작",original_main_ui_status.get("production_window",original_main_ui_bind_problem)):
+		CraftUI.pending_focus=""
+		return
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
@@ -1544,15 +1563,12 @@ func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> void:
 	screen.configure(self,true)
 	screen.show_gacha_books(book_id,book_uid)
 
-## The original 523 ProductionScene (source_main_production_window) over the
-## same recipes; false -> the TWILIGHT crafting screen opens (reported).
+## The original 523 ProductionScene over the existing recipe owner.
 func _open_original_production() -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_production_window"): return false
 	var native: Dictionary = original_main_ui_controller.try_open_production_window(get_parent())
 	original_main_ui_status["production_window"] = native
-	if not native.get("handled",false):
-		_report_original_fallback("제작",native)
-		return false
+	if not native.get("handled",false):return false
 	if pointer_transfer != null: pointer_transfer.cancel()
 	workspace.hide()
 	_sync_screen_focus()
@@ -1579,6 +1595,7 @@ func refresh_inventory(items: Dictionary) -> void:
 		original_main_ui_status["production_window"] = original_main_ui_controller.refresh_production_window()
 
 func open_patch523_equipment_info(scroll_id: String = "", scroll_uid: String = "") -> void:
+	if not scroll_id.is_empty() and _hold_original_inventory_window("장비 강화",original_main_ui_bind_problem):return
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
 	var screen := Patch523EquipmentInfo.new()
 	workspace.mount(screen)
@@ -1623,6 +1640,8 @@ func _companion(section: String,title: String) -> PanelContainer:
 	return companion_window
 
 func show_companion_bag() -> void:
+	if requires_original_inventory_ui():
+		return
 	var window: PanelContainer = _companion("inventory","가방")
 	window.mount(lineage_inventory_ui)
 	lineage_inventory_ui.show()
@@ -1764,6 +1783,7 @@ func toggle_inventory() -> void:
 	workspace.mount(lineage_inventory_ui)
 	lineage_inventory_ui.prepare_native_inventory()
 	lineage_inventory_ui.show()
+	var problem: Dictionary = original_main_ui_bind_problem
 	if is_instance_valid(original_main_ui_controller):
 		var native: Dictionary=original_main_ui_controller.try_open_inventory()
 		original_main_ui_status["inventory"]=native
@@ -1772,8 +1792,12 @@ func toggle_inventory() -> void:
 			workspace.hide()
 			FRAME_HITCH.detail("ui.inventory_open.native",started)
 			return
-		_report_original_fallback("가방",native)
-	else:_report_original_fallback("가방",original_main_ui_bind_problem)
+		problem=native
+	if requires_original_inventory_ui():
+		_close_workspace()
+		_report_inventory_ui_unavailable(problem)
+		return
+	_report_original_fallback("가방",problem)
 	lineage_inventory_ui.show_inventory()
 	FRAME_HITCH.detail("ui.inventory_open.fallback",started)
 
@@ -2149,6 +2173,20 @@ func open_item_acquisition523(item_class_id: int, item_name: String = "", blessi
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_acquisition"):
 		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name,blessing_recipe)
 	original_main_ui_status["acquisition_popup"] = native
+	return native
+
+func open_bag_item_collection(item_class_id: int, uid: String) -> Dictionary:
+	if not is_instance_valid(original_main_ui_controller): return {"ok":false,"handled":false}
+	var native: Dictionary=original_main_ui_controller.try_open_overlay_window("item_book",[item_class_id,uid])
+	original_main_ui_status["item_book_window"]=_inventory_status_summary(native)
+	if native.get("handled",false):
+		original_main_ui_controller.close_inventory()
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		active_section="item_book"
+		_sync_screen_focus()
+	else:
+		show_message("이 아이템의 원본 컬렉션을 열 수 없습니다.")
 	return native
 
 ## Opens the original 523 feature window `key` (source_main_hud
@@ -3639,9 +3677,25 @@ func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: Str
 func _open_enhance_chooser() -> void:
 	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
 	if _open_original_enchant("",[]): return
+	if _hold_original_inventory_window("장비 강화",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_scrolls(self)
+
+func open_bag_item_enhancement(reference: String) -> Dictionary:
+	if not is_instance_valid(original_main_ui_controller):
+		return {"ok":false,"handled":false,"code":"source_bag_enchant_unavailable"}
+	_open_window("enhance","장비 강화","")
+	var native: Dictionary = original_main_ui_controller.try_open_bag_item_enhancement(reference)
+	original_main_ui_status["enchant_window"] = native
+	if native.get("handled",false):
+		if pointer_transfer != null: pointer_transfer.cancel()
+		workspace.hide()
+		_sync_screen_focus()
+	else:
+		_close_workspace()
+		show_message("원본 장비 강화 화면을 열 수 없습니다.")
+	return native
 
 func is_enhancement_presenting() -> bool:
 	if is_instance_valid(enhancement_reveal) and not enhancement_reveal.is_queued_for_deletion(): return true
@@ -3662,6 +3716,10 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 	# the window, so its texts never mix with result texts.
 	var window: Variant = _original_enchant_window()
 	if window != null and bool(window.call("present_result",result_type,from_level,to_level)): return
+	if requires_original_inventory_ui():
+		var result: String=str({"success":"강화 성공","decrease":"강화 하락","destroy":"장비 소실","maintain":"강화 유지"}.get(result_type,"강화 결과"))
+		show_message("%s · %s%s" % [result,item_name," +%d → +%d" % [from_level,to_level] if result_type != "destroy" else ""])
+		return
 	var layer := CanvasLayer.new()
 	layer.name = "EnhancementRevealLayer"
 	layer.layer = 110
@@ -3682,6 +3740,7 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	_open_window("enhance", "장비 축복 부여", scroll_name + " · 장비 개체별 축복")
 	if _open_original_enchant(scroll_name,candidates,true):return
+	if _hold_original_inventory_window("축복 부여",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
@@ -3689,8 +3748,7 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 
 var enhancement_forge: Control
 
-## The original 523 EnchantScene (source_main_enchant_window) over the same
-## candidates; false -> the caller opens the TWILIGHT forge (reported).
+## The original 523 EnchantScene over the authoritative target candidates.
 func _open_original_enchant(scroll_name: String, candidates: Array, blessing: bool=false) -> bool:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_enchant_window"): return false
 	var native: Dictionary = original_main_ui_controller.try_open_enchant_window(scroll_name,candidates,blessing)
@@ -3700,7 +3758,6 @@ func _open_original_enchant(scroll_name: String, candidates: Array, blessing: bo
 		workspace.hide()
 		_sync_screen_focus()
 		return true
-	_report_original_fallback("장비 강화",native)
 	return false
 
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
@@ -3726,6 +3783,7 @@ func _open_enhancement(scroll_name: String, candidates: Array, original_only: bo
 	enhancement_candidates = candidates.duplicate(true)
 	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
 	if _open_original_enchant(scroll_name,candidates): return true
+	if _hold_original_inventory_window("장비 강화",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return false
 	if original_only:return false
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
@@ -3794,6 +3852,7 @@ func open_equipment_collections() -> void:
 	# The original 523 아이템 컬렉션 window (ItemBook tables, world.item_book523);
 	# the TWILIGHT guide-data view without the original tables or UI pack.
 	if _open_original_feature("item_book"):return
+	if _hold_original_inventory_window("아이템 컬렉션",original_main_ui_status.get("item_book_window",original_main_ui_bind_problem)):return
 	open_legacy_equipment_collections()
 
 ## The TWILIGHT guide-data 장비 컬렉션 view (447 collections, equipment_collection_runtime).
@@ -3856,6 +3915,7 @@ func _mount_growth_view(section: String) -> Control:
 func open_item_book() -> bool:
 	_open_window("item_book","아이템 컬렉션","")
 	if _open_original_feature("item_book"):return true
+	if _hold_original_inventory_window("아이템 컬렉션",original_main_ui_status.get("item_book_window",original_main_ui_bind_problem)):return false
 	open_growth96()
 	return false
 
@@ -4122,7 +4182,7 @@ func open_protection523() -> void:
 
 
 ## The original 523 질서의 연금 window (RefineScene, source_main_refine_window).
-## Without the UI pack (or the definition ZIP) the 용해·질서의 연금 panel opens.
+## The offline mode without a selected UI pack uses the existing panel.
 func open_refine523() -> void:
 	_open_window("refine523","질서의 연금","")
 	var native: Dictionary = {"ok":false,"code":"source_refine_window_controller_unavailable"}
@@ -4134,7 +4194,7 @@ func open_refine523() -> void:
 		workspace.hide()
 		_sync_screen_focus()
 		return
-	if is_instance_valid(original_main_ui_controller): _report_original_fallback("질서의 연금",native)
+	if _hold_original_inventory_window("질서의 연금",native):return
 	_mount_bless_refine_panel()
 
 ## 메뉴 대장간: the original 523 Forge_All window (source_main_forge_window)
@@ -4143,6 +4203,7 @@ func open_refine523() -> void:
 func open_forge() -> void:
 	_open_window("forge523","대장간","")
 	if _open_original_feature("forge"):return
+	if _hold_original_inventory_window("대장간",original_main_ui_status.get("forge_window",original_main_ui_bind_problem)):return
 	_mount_bless_refine_panel()
 
 func open_bless_refine523(entry_solvent_uid: String="") -> void:
@@ -4274,6 +4335,7 @@ func original_inventory_hit_at(viewport_point: Vector2) -> Dictionary:
 func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 	if not is_instance_valid(original_main_ui_controller):return false
 	if original_drop_confirm_is_open():return true
+	if original_main_ui_controller.has_method("dissolve_confirm_is_open") and original_main_ui_controller.dissolve_confirm_is_open():return true
 	if original_main_ui_controller.world_map_is_open():return true
 	if original_main_ui_controller.npc_dialogue_is_open():return true
 	if original_main_ui_controller.inventory_search_is_open():return true
@@ -4287,14 +4349,17 @@ func original_source_pointer_capture_blocked(viewport_point: Vector2) -> bool:
 func original_drop_confirm_is_open() -> bool:
 	return is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("drop_confirm_is_open") and original_main_ui_controller.drop_confirm_is_open()
 
-## Bag -> floor confirmation: the original keypad/message box when the UI pack
-## has them, else the TWILIGHT confirmation (with a quantity box for stacks).
+## The selected pack's original keypad and message box. The offline bag
+## without a selected pack uses its existing confirmation.
 ## `on_confirm(count)` performs the transfer.
 func confirm_ground_drop(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable) -> Dictionary:
 	if pointer_transfer != null: pointer_transfer.cancel()
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_drop_confirm"):
 		var opened: Dictionary=original_main_ui_controller.try_open_drop_confirm(item_name,item_class_id,maximum,on_confirm)
 		if opened.get("handled",false):return opened
+	if requires_original_inventory_ui():
+		show_message("원본 내려놓기 확인창을 열 수 없습니다.")
+		return {"ok":false,"handled":false,"code":"source_ground_drop_confirmation_unavailable"}
 	var dialog: Control=confirm_action("바닥에 내려놓기","%s을(를) 바닥에 내려놓으시겠습니까?%s" % [item_name,"\n보유 %d개 중 내려놓을 수량을 정하세요." % maximum if maximum > 1 else ""],"내려놓기",on_confirm,maximum if maximum > 1 else 0)
 	return {"ok":dialog != null,"handled":dialog != null,"member":"twilight_confirmation"}
 
@@ -4307,6 +4372,9 @@ func confirm_inventory_delete(item_name: String, item_class_id: int, maximum: in
 		original_main_ui_controller.close_item_tooltip()
 		var original: Dictionary=original_main_ui_controller.try_open_drop_confirm(item_name,item_class_id,maximum,on_confirm,true)
 		if original.get("handled",false):return original
+	if requires_original_inventory_ui():
+		show_message("원본 아이템 삭제 확인창을 열 수 없습니다.")
+		return {"ok":false,"handled":false,"code":"source_inventory_delete_confirmation_unavailable"}
 	for dialog: Node in $Root.get_children():
 		if dialog.name=="TwilightConfirmation" and not dialog.is_queued_for_deletion():return {"ok":false,"handled":false}
 	var made: Control=confirm_action("아이템 영구 삭제","%s을(를) 영구 삭제하시겠습니까? 삭제한 아이템은 되돌릴 수 없습니다." % item_name,"삭제",on_confirm,maximum if maximum>1 else 0)
@@ -4322,6 +4390,9 @@ func original_inventory_select(reference: String) -> Dictionary:
 	if not original_inventory_is_open():return {"ok":false,"code":"source_inventory_not_open"}
 	return original_main_ui_controller.inventory_select(reference)
 
+func original_inventory_move_pending() -> bool:
+	return original_inventory_is_open() and original_main_ui_controller.has_method("inventory_move_pending") and original_main_ui_controller.inventory_move_pending()
+
 func original_inventory_activate_selected(reference: String) -> Dictionary:
 	if not original_inventory_is_open():return {"ok":false,"code":"source_inventory_not_open"}
 	return original_main_ui_controller.inventory_activate_selected(reference)
@@ -4330,6 +4401,10 @@ func _restore_current_inventory_view(reason: Dictionary) -> void:
 	# Diagnostics must not keep a retired native scene's textures/controls.
 	original_main_ui_status["inventory"]=_inventory_status_summary(reason)
 	if active_section!="inventory":return
+	if requires_original_inventory_ui():
+		_close_workspace()
+		_report_inventory_ui_unavailable(reason)
+		return
 	_report_original_fallback("가방",reason)
 	# Restore the same current bag after an unsupported native state. This
 	# adds no alternate form, asset lookup, selection, ownership or save logic.
@@ -4369,6 +4444,7 @@ func bind_original_world_map(image_adapter: RefCounted, context_provider: Callab
 
 func _bind_selected_original_main_ui() -> void:
 	var selected: Dictionary=preload("res://scripts/ui/original_ui/source_main_selection.gd").selected_pack()
+	_original_main_selection_expected=selected.get("selected",false)
 	if not selected.get("selected",false):
 		original_main_ui_bind_problem={"ok":false,"code":"source_ui_addon_not_selected"}
 		print("ORIGINAL_UI_BIND ",JSON.stringify(original_main_ui_bind_problem))
@@ -4384,6 +4460,23 @@ func _bind_selected_original_main_ui() -> void:
 
 ## Why the original UI did not bind at all (empty once it did).
 var original_main_ui_bind_problem: Dictionary={"ok":false,"code":"source_ui_not_bound_yet"}
+var _original_main_selection_expected: bool=false
+
+func requires_original_inventory_ui() -> bool:
+	return _original_main_selection_expected or is_instance_valid(original_main_ui_controller)
+
+func _report_inventory_ui_unavailable(reason: Dictionary) -> void:
+	_report_original_window_unavailable("가방",reason)
+
+func _hold_original_inventory_window(window: String, reason: Dictionary) -> bool:
+	if not requires_original_inventory_ui():return false
+	_close_workspace()
+	_report_original_window_unavailable(window,reason)
+	return true
+
+func _report_original_window_unavailable(window: String, reason: Dictionary) -> void:
+	print("ORIGINAL_UI_BLOCKED ",JSON.stringify({"window":window,"reason":_inventory_status_summary(reason)}))
+	show_message("원본 %s 화면을 열 수 없습니다. 설정에서 UI 추가 리소스를 확인하세요." % window)
 
 ## A window that opened as the TWILIGHT window instead of its original one:
 ## the reason goes to the log (logcat) and a short line to the player.

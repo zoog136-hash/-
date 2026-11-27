@@ -181,12 +181,16 @@ func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
 ## Opens on `scroll`'s targets (장비 tab), or on the 주문서 tab without one.
-func open(parent: Node, scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
+## From a bag detail, a scroll must target that exact physical item.
+var _bag_target: String = ""
+
+func open(parent: Node, scroll: String, candidates: Array, blessing: bool=false, bag_target: String="") -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_enchant_window_host_unavailable")
 	_parent=weakref(parent)
 	_bag.y=null
 	_text.y=null
 	_selected=""
+	_bag_target=bag_target
 	return update(scroll,candidates,blessing)
 
 ## The native inventory chose this exact physical material. The source
@@ -249,6 +253,10 @@ func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictiona
 		_picked.clear()
 	_scroll_row=selected_scroll
 	_scroll=scroll
+	if not _bag_target.is_empty():
+		candidates=candidates.filter(func(row: Dictionary) -> bool: return row.get("target_id","")==_bag_target)
+		if not scroll.is_empty() and candidates.is_empty() and is_instance_valid(hud):
+			hud.show_message("선택한 장비에 사용할 수 있는 주문서를 선택하세요.")
 	_candidates=candidates.duplicate(true)
 	_prune_picked()
 	if scroll.is_empty():multi=false
@@ -259,6 +267,7 @@ func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictiona
 func close() -> void:
 	if _screen!=null and _screen.is_open():_screen.close()
 	_blessing=false
+	_bag_target=""
 	_scroll_row={}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
 	_smith_results.clear()
@@ -294,7 +303,14 @@ func _entry() -> Dictionary:
 	return {}
 
 func _listing(hud: Node) -> Array:
-	return _candidates if _tab=="equip" else Forge.owned_scrolls(hud)
+	if _tab=="equip":return _candidates
+	var scrolls: Array=Forge.owned_scrolls(hud)
+	if _bag_target.is_empty():return scrolls
+	var world: Node=hud.get_parent()
+	return scrolls.filter(func(row: Dictionary) -> bool:
+		var physical: Dictionary=world.item_instances.get(row.get("instance_id",""),{})
+		var record: Dictionary=physical.get("record",{})
+		return world._scroll_kind(str(row.name),record) in ["weapon","armor","accessory","source"])
 
 ## Stat lines: every stat the item has now or after success, with the
 ## current and the success value.
@@ -745,7 +761,7 @@ func _forward(root: Node2D, out: Dictionary, suffix: String, scroller: Scroller)
 	if area is Control and not area.gui_input.is_connected(scroller.input):area.gui_input.connect(scroller.input)
 	# The bag targets in this window belong to this exact transaction, never
 	# to the main inventory PointerTransfer. Route their original button.
-	if not _smelt.is_empty() and is_instance_valid(button):
+	if (not _smelt.is_empty() or not _bag_target.is_empty()) and is_instance_valid(button):
 		button.set_meta("source_drag_forward",Callable(scroller,"input"))
 		var ancestor:Node=node
 		while is_instance_valid(ancestor) and ancestor!=root:

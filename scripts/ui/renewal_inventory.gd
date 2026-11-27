@@ -340,12 +340,19 @@ func _source_info_record(record: Dictionary) -> Dictionary:
 	var native: Dictionary = CATALOG_STACK.native_record(controller.get_parent(),record)
 	return record if native.is_empty() else native
 
-## Long press: the original item information popup (ToolTip_CommonType).
+const SOURCE_DISSOLVE = preload("res://scripts/refine523/bless_refine523_service.gd")
+const SOURCE_DEFINITIONS = preload("res://scripts/resources/current523_definition_rows.gd")
+const INVENTORY_DELETE = preload("res://scripts/loot/inventory_item_delete.gd")
+
+## Long press or the selected original detail button.
 func open_item_info(reference: String) -> bool:
 	if reference.is_empty() or not is_instance_valid(controller): return false
 	if selected_item != reference: _select_item(reference)
 	var original_hud: Variant = controller.get("original_main_ui_controller")
 	if not is_instance_valid(original_hud) or not original_hud.has_method("try_open_item_tooltip"):
+		if controller.has_method("requires_original_inventory_ui") and controller.requires_original_inventory_ui():
+			controller.show_message("아이템 상세 원본 UI를 확인할 수 없습니다.")
+			return false
 		open_detail()
 		return detail_active
 	var record: Dictionary = _find_item_record(reference)
@@ -353,20 +360,29 @@ func open_item_info(reference: String) -> bool:
 	var physical_record: Dictionary=_item_visual_record(reference,record)
 	var actions: Dictionary={}
 	var world: Node=controller.get_parent()
-	var deletion: Script=preload("res://scripts/loot/inventory_item_delete.gd")
-	if world.has_method("request_inventory_delete") and deletion.quote(world,reference).get("ok",false):
+	var uid: String = _ref_instance_id(reference)
+	var owned: bool = _owns_bag_reference(world,reference)
+	var locked: bool = owned and world._item_locked(_base_item_name(reference),uid)
+	if selected_can_delete_native():
 		actions["delete"]=Callable(self,"_tooltip_delete").bind(reference)
-	if _owns_bag_reference(world, reference):
-		var locked: bool = world._item_locked(_base_item_name(reference), _ref_instance_id(reference))
+	if owned:
 		actions["locked"] = locked
 		actions["lock"] = Callable(self, "_tooltip_set_lock").bind(reference, not locked)
 	if physical_record.get("source_m_native_item",false) and world.has_method("_source_enhancement_rule") and not str(world._enhancement_kind_for_record(physical_record)).is_empty():
-		var physical: Dictionary=world.item_instances.get(_ref_instance_id(reference),{})
+		var physical: Dictionary=world.item_instances.get(uid,{})
 		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
 		if rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level"):
 			actions["safe_level"]=int(rule.safe_level)
+		if not uid.is_empty() and owned and not locked and controller.has_method("open_bag_item_enhancement"):
+			actions["enhance"]=Callable(self,"_tooltip_enhance").bind(reference)
+	if not uid.is_empty() and original_hud.has_method("dissolve_confirm_available") and original_hud.dissolve_confirm_available() and SOURCE_DISSOLVE.dissolve_quote(world,[uid]).get("ok",false):
+		actions["dissolve"]=Callable(self,"_tooltip_dissolve").bind(reference,uid)
 	var information: Dictionary = _source_info_record(physical_record)
-	if _item_class_id(information)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
+	var item_id: int=_item_class_id(information)
+	if item_id>0:
+		actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
+		if not uid.is_empty() and owned and not locked and information.get("source_m_native_item",false) and not SOURCE_DEFINITIONS.identity().is_empty() and controller.has_method("open_bag_item_collection") and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("item_book"):
+			actions["registration"]=Callable(self,"_tooltip_registration").bind(reference,item_id,uid)
 	if BOX_PROBABILITY.is_bag(information) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
 		var host: Node=controller.get_parent()
 		if BOX_PROBABILITY.disclosed(information,int(host.BASE508.source_class_id(str(host.job_class)))):
@@ -374,6 +390,8 @@ func open_item_info(reference: String) -> bool:
 	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(information,reference),identity.grade_id(information,reference),information,actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
+	elif controller.has_method("requires_original_inventory_ui") and controller.requires_original_inventory_ui():
+		controller.show_message("아이템 상세 원본 UI를 확인할 수 없습니다.")
 	return item_tooltip_open
 
 func _tooltip_delete(reference: String) -> Dictionary:
@@ -383,6 +401,26 @@ func _tooltip_set_lock(reference: String, locked: bool) -> Dictionary:
 	if not _owns_open_item_tooltip(reference):
 		return {"ok":false}
 	return {"ok":_set_selected_lock(reference, locked)}
+
+func _tooltip_dissolve(reference: String, uid: String) -> Dictionary:
+	if not _owns_open_item_tooltip(reference): return {"ok":false}
+	var world: Node = controller.get_parent()
+	var native: Dictionary = controller.original_main_ui_controller.try_open_dissolve_confirm(world,[uid],func(result: Dictionary) -> void:
+		if is_instance_valid(controller):
+			controller.show_message(str(result.get("detail",result.get("reason","용해")))))
+	if native.get("handled",false): close_item_info()
+	else: controller.show_message(str(native.get("reason","원본 용해 확인창을 열 수 없습니다.")))
+	return native
+
+func _tooltip_enhance(reference: String) -> Dictionary:
+	if not _owns_open_item_tooltip(reference) or not _owns_bag_reference(controller.get_parent(),reference): return {"ok":false}
+	return controller.open_bag_item_enhancement(reference)
+
+func _tooltip_registration(reference: String, item_class_id: int, uid: String) -> Dictionary:
+	if not _owns_open_item_tooltip(reference) or not _owns_bag_reference(controller.get_parent(),reference):return {"ok":false}
+	var native: Dictionary=controller.open_bag_item_collection(item_class_id,uid)
+	if native.get("handled",false):close_item_info()
+	return native
 
 func _owns_bag_reference(world: Node, reference: String) -> bool:
 	var name_value := _base_item_name(reference)
@@ -421,6 +459,11 @@ func request_selected_delete() -> Dictionary:
 	_hide_item_name()
 	close_item_info()
 	return controller.get_parent().request_inventory_delete(selected_item)
+
+func selected_can_delete_native() -> bool:
+	if selected_item.is_empty() or not is_instance_valid(controller):return false
+	var world: Node=controller.get_parent()
+	return is_instance_valid(world) and world.has_method("request_inventory_delete") and INVENTORY_DELETE.quote(world,selected_item).get("ok",false)
 
 func close_item_info() -> void:
 	if not item_tooltip_open: return
@@ -524,10 +567,13 @@ func close_detail() -> void:
 	_reflow()
 
 func open_selected_info() -> void:
-	if not open_item_info(selected_item):open_detail()
+	open_item_info(selected_item)
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return
+	if is_instance_valid(controller) and controller.has_method("requires_original_inventory_ui") and controller.requires_original_inventory_ui():
+		open_item_info(selected_item)
+		return
 	_hide_item_name()
 	detail_active = true
 	_refresh_detail(selected_item)
@@ -854,6 +900,22 @@ func reorder(source: String, target: String) -> void:
 	_refresh_inventory_grid()
 	_request_order_save()
 
+## Original inventory movement inserts the exact selected item before the
+## destination. Both references must still be present in this filtered view.
+func move_inventory_before(source: String, target: String) -> bool:
+	if source == target or not sorted_references.has(source) or not sorted_references.has(target):return false
+	var order: Array[String]=_acquisition_order(_inventory_entries())
+	var from: int=order.find(source)
+	var to: int=order.find(target)
+	if from<0 or to<0 or from+1==to:return false
+	order.remove_at(from)
+	order.insert(order.find(target),source)
+	_order_store()["inventory_order"]=Array(order)
+	disarm_item_action()
+	_refresh_inventory_grid()
+	_request_order_save()
+	return true
+
 ## Sort once by grade (highest first), then name, then physical ID, and keep it
 ## as the stored order. Later pickups stack after it again.
 func sort_inventory_now() -> void:
@@ -1085,6 +1147,9 @@ func _open_acquisition() -> void:
 		var native: Dictionary = controller.open_item_acquisition523(id,item_name,blessing)
 		last_acquisition["native"] = native
 		if native.get("handled",false): return
+		if controller.has_method("requires_original_inventory_ui") and controller.requires_original_inventory_ui():
+			controller.show_message("원본 획득처를 열 수 없습니다.")
+			return
 		if not blessing.is_empty():
 			controller.open_crafting(blessing)
 			return

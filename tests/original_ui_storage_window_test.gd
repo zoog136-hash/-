@@ -144,7 +144,7 @@ func _batch() -> void:
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud_text.contains("try_open_storage_window(screen)") and hud_text.contains("_report_original_fallback(\"창고\",native)"),"창고 opens the original window first and reports a fallback")
+	check(hud_text.contains("try_open_storage_window(screen)") and hud_text.contains("_hold_original_inventory_window(\"창고\",native)"),"the original warehouse opens first and a rejected selected pack holds the old screen")
 	check(hud_text.contains("close_storage_window()") and hud_text.contains("refresh_storage_window()"),"closing, ESC and transfers reach the window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	for method: String in ["func try_open_storage_window","func storage_window_is_open","func refresh_storage_window"," or storage_window_is_open() or "]:

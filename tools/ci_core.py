@@ -479,6 +479,7 @@ CHECKS = [
     ('source_inventory_selection_ack_test', []),
     ('source_inventory_tap_action_test', []),
     ('source_inventory_controls_main_test', []),
+    ('source_bag_detail_entry_main_test', []),
     ('source_item_action_routes_main_test', []),
     ('source_inventory_header_refresh_test', []),
     ('source_inventory_chrome_stage_budget_test', []),
@@ -822,7 +823,7 @@ def run_check(name, command, target, log, env, marker):
                 'native_symbol_reward_bag_test','quest_only_retirement_main_test','escaros_original_card_main_test','source_item_visible_action_main_test',
                 'source523_shop_startup_scope_test','normal_hit_roll_scope_test','auto_original_action_art_main_test','source_full_menu_shell_main_test','source_option_awakening_main_test','native_advanced_powder_stock_main_test','native_advanced_powder_cold_bag_test',
                 'native_smelt_inventory_main_test','native_manual_scrolls_main_test','native_fusion_points_main_test','native_inventory_slot_names_main_test','native_timed_buff_publish_main_test','native_exact_card_choice_main_test',
-                'source_inventory_controls_main_test','source_item_action_routes_main_test','source_skill_scroll_drag_main_test'}:
+                'source_inventory_controls_main_test','source_bag_detail_entry_main_test','source_item_action_routes_main_test','source_skill_scroll_drag_main_test'}:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
             fixture = dict(env, XDG_DATA_HOME=profile + '/data',
                            XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
@@ -1304,6 +1305,7 @@ def main():
                       'source_inventory_selection_ack_test':'SOURCE_INVENTORY_SELECTION_ACK_RESULT',
                       'source_inventory_tap_action_test':'INVENTORY_TAP_ACTION_RESULT',
                       'source_inventory_controls_main_test':'SOURCE_INVENTORY_CONTROLS_RESULT',
+                      'source_bag_detail_entry_main_test':'SOURCE_BAG_DETAIL_ENTRY_RESULT',
                       'source_item_action_routes_main_test':'SOURCE_ITEM_ACTION_ROUTES_RESULT',
                       'source_inventory_header_refresh_test':'SOURCE_INVENTORY_HEADER_REFRESH_RESULT',
                       'source_inventory_chrome_stage_budget_test':'SOURCE_INVENTORY_CHROME_STAGE_BUDGET_RESULT',

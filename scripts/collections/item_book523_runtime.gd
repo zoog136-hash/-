@@ -138,25 +138,50 @@ func complete(cid: String) -> bool:
 	return not row.is_empty() and registered_count(cid) == (row.cards as Array).size()
 
 ## The window's rows of one tab (same shape as growth96.snapshot()).
-func rows(tab_button: String) -> Array:
+func rows(tab_button: String, item_class_id: int = 0, uid: String = "") -> Array:
 	var result: Array = []
+	var available: Array = []
 	if not ready(): return result
 	_index_bag()
 	for raw: Dictionary in source.tab_rows(tab_button):
+		if item_class_id > 0 and not _contains_collection_item(raw,item_class_id): continue
 		var cid: String = str(raw.id)
 		var cards: Array = []
 		var count: int = 0
+		var matches_held: bool = false
 		for card: Dictionary in raw.cards:
 			var id: String = str(card.id)
 			var done: bool = card_registered(cid, id)
 			if done: count += 1
 			var option: Dictionary = _shown_option(card, cid)
-			cards.append({"id":id,"registered":done,"possible":not done and not _cheap_option(card).is_empty(),"legacy":state.legacy_links.get(cid, {}).has(id),
+			var possible: Dictionary = _cheap_option(card,item_class_id,uid) if not done else {}
+			var focus_match: bool = item_class_id == 0 or _card_has_item(card,item_class_id)
+			if item_class_id > 0 and not possible.is_empty():option=possible; matches_held=true
+			cards.append({"id":id,"registered":done,"possible":not possible.is_empty(),"focus_match":focus_match,"legacy":state.legacy_links.get(cid, {}).has(id),
 				"item_class_id":int(option.item_class_id),"enchant":int(option.enchant),"bless":int(option.bless),"amount":int(option.amount)})
-		result.append({"id":cid,"owner":"item_book523","name":str(raw.name),"tab":str(raw.tab),"level":int(raw.level),"recommend":bool(raw.recommend),
+		var projected: Dictionary={"id":cid,"owner":"item_book523","name":str(raw.name),"tab":str(raw.tab),"level":int(raw.level),"recommend":bool(raw.recommend),
 			"registered":count,"required":cards.size(),"complete":count == cards.size(),"cards":cards,"effects":[],
-			"approximations":raw.approximations.duplicate()})
-	return result
+			"approximations":raw.approximations.duplicate()}
+		if matches_held:available.append(projected)
+		else:result.append(projected)
+	available.append_array(result)
+	return available
+
+func has_collection_item(item_class_id: int) -> bool:
+	if not ready() or item_class_id<=0:return false
+	for row: Dictionary in source.tab_rows("Btn_All"):
+		if _contains_collection_item(row,item_class_id):return true
+	return false
+
+static func _contains_collection_item(row: Dictionary, item_class_id: int) -> bool:
+	for card: Dictionary in row.cards:
+		if _card_has_item(card,item_class_id):return true
+	return false
+
+static func _card_has_item(card: Dictionary, item_class_id: int) -> bool:
+	for option: Dictionary in card.items:
+		if int(option.item_class_id)==item_class_id:return true
+	return false
 
 ## Adds the original names and effect lines to rows about to be shown (one
 ## page; the item and bonus lookups stay off the other rows).
@@ -240,11 +265,13 @@ func _index_bag() -> void:
 		if not _bag.has(id): _bag[id] = []
 		_bag[id].append({"uid":str(uid),"stack":stack,"enchant":int(entry.get("level", 0)) if _int(entry.get("level", 0)) else -1,"bless":bless,"amount":amount,"equipped":equipped.has(str(uid))})
 
-func _cheap_option(card: Dictionary) -> Dictionary:
+func _cheap_option(card: Dictionary, item_class_id: int = 0, uid: String = "") -> Dictionary:
 	if not _bag_valid: _index_bag()
 	for option: Dictionary in card.items:
+		if item_class_id>0 and int(option.item_class_id)!=item_class_id:continue
 		var total: int = 0
 		for entry: Dictionary in _bag.get(int(option.item_class_id), []):
+			if not uid.is_empty() and entry.uid!=uid:continue
 			if bool(entry.equipped) or int(entry.bless) != int(option.bless): continue
 			if not bool(entry.stack) and int(entry.enchant) != int(option.enchant): continue
 			if bool(entry.stack) and int(option.enchant) != 0: continue
@@ -253,16 +280,16 @@ func _cheap_option(card: Dictionary) -> Dictionary:
 	return {}
 
 ## The proven bag entries that satisfy one alternative, or why not.
-func _prove(option: Dictionary) -> Dictionary:
+func _prove(option: Dictionary, expected_uid: String = "") -> Dictionary:
 	if RETIRED_ITEMS.item(option.get("item_class_id")):return {"ok":false,"reasons":[RETIRED_ITEMS.REASON]}
 	var need: int = int(option.amount)
 	var id: int = int(option.item_class_id)
 	var equipment: Array = []
 	var reasons: Array[String] = []
-	var ids: Array = world.item_instances.keys()
+	var ids: Array = world.item_instances.keys() if expected_uid.is_empty() else [expected_uid]
 	ids.sort()
 	for uid: Variant in ids:
-		var entry: Variant = world.item_instances[uid]
+		var entry: Variant = world.item_instances.get(uid)
 		if not entry is Dictionary or entry.has(STACK.RECEIPT) or not entry.get("record") is Dictionary: continue
 		if int(entry.record.get("source_item_class_id", -1)) != id: continue
 		var info: Dictionary = REFINE.equipment(world, str(uid))
@@ -281,6 +308,7 @@ func _prove(option: Dictionary) -> Dictionary:
 		var stacks: Array = []
 		var total: int = 0
 		for stack: Dictionary in REFINE.stacks_of(world, id).stacks:
+			if not expected_uid.is_empty() and stack.uid!=expected_uid:continue
 			if int(stack.owned.record.get("source_bless_raw", 1)) != int(option.bless): continue
 			stacks.append(stack)
 			total += int(stack.owned.remaining)
@@ -288,7 +316,7 @@ func _prove(option: Dictionary) -> Dictionary:
 		if total > 0: reasons.append("수량 부족 %d/%d" % [total, need])
 	return {"ok":false,"reasons":reasons}
 
-func quote(cid: String, card_id: String) -> Dictionary:
+func quote(cid: String, card_id: String, focus: Dictionary = {}) -> Dictionary:
 	if not save_problem.is_empty(): return _fail(save_problem, "save_preserved")
 	if not ready(): return _fail(problem if not problem.is_empty() else "원본 아이템 컬렉션 표를 읽을 수 없습니다", "source")
 	var row: Dictionary = source.collection(cid)
@@ -297,9 +325,11 @@ func quote(cid: String, card_id: String) -> Dictionary:
 		if str(value.id) == card_id: card = value
 	if card.is_empty(): return _fail("알 수 없는 컬렉션 칸", "unknown")
 	if card_registered(cid, card_id): return _fail("이미 등록한 칸입니다", "registered")
+	var focused_id: int = int(focus.get("item_class_id",0))
 	var reasons: Array[String] = []
 	for option: Dictionary in card.items:
-		var proven: Dictionary = _prove(option)
+		if focused_id>0 and int(option.item_class_id)!=focused_id:continue
+		var proven: Dictionary = _prove(option,str(focus.get("uid","")))
 		if proven.ok:
 			proven["collection_id"] = cid
 			proven["card_id"] = card_id
@@ -309,16 +339,18 @@ func quote(cid: String, card_id: String) -> Dictionary:
 			return proven
 		reasons.append_array(proven.reasons)
 	var wanted: PackedStringArray = []
-	for option: Dictionary in card.items: wanted.append(source.option_label(option))
+	for option: Dictionary in card.items:
+		if focused_id==0 or int(option.item_class_id)==focused_id:wanted.append(source.option_label(option))
 	var detail: String = " · ".join(wanted)
 	if not reasons.is_empty(): detail += "\n(" + reasons[0] + ")"
 	return _fail("등록할 아이템이 없습니다: " + detail, "missing")
 
-func execute(cid: String, card_id: String, expected_revision: int) -> Dictionary:
+func execute(cid: String, card_id: String, expected_revision: int, focus: Dictionary = {}) -> Dictionary:
 	if busy: return _fail("이전 등록을 저장 중입니다", "busy")
 	if int(state.revision) != expected_revision: return _fail("컬렉션이 변경되었습니다. 다시 선택하세요", "stale")
-	var offer: Dictionary = quote(cid, card_id)
+	var offer: Dictionary = quote(cid,card_id,focus)
 	if not offer.get("ok", false): return offer
+	if focus.has("offer") and focus.offer!=offer:return _fail("선택한 장비 또는 등록 조건이 변경되었습니다. 다시 선택하세요", "stale")
 	busy = true
 	var overrides: Dictionary = {}
 	var physical: Array = []
