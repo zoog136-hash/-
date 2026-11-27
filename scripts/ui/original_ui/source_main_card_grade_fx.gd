@@ -148,6 +148,11 @@ static func light(window: Object, root: Node2D, out: Dictionary, prefix: String,
 	var nested: Node2D=project(window,root,out,prefix)
 	# The flash, then the name (Fx_Start_Active ends with Text_Card_Name clear).
 	if nested!=null:chain(nested,CELL_CLIP,"Fx_Cardname")
+	var outline_slot: Dictionary=window._locate(root,out,prefix+"/Fx_Outline_Front")
+	if outline_slot.get("ok",false):
+		# A fusion page can leave this hidden ProjectNode deferred until the
+		# reel finishes. The renderer mounts the exact authored subtree here.
+		outline_slot.player.set_bound_visible(int(outline_slot.offset),true)
 	var outline: Node2D=project(window,root,out,prefix+"/Fx_Outline_Front")
 	if outline!=null:
 		set_visible(window,root,out,prefix+"/Fx_Outline_Front",true)
