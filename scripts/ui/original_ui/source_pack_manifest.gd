@@ -69,7 +69,27 @@ static func write_records(writer: RefCounted, value: Dictionary) -> Dictionary:
 	return slim
 
 static func _files_intact(pack_root: String, files: Dictionary) -> String:
-	for member: String in files:
+	var members := files.keys()
+	# Verification is independent per file. On large installed packs use a
+	# bounded group. Each slice reports its first failure in manifest order.
+	var lanes := mini(4, OS.get_processor_count())
+	if members.size() < 128 or lanes < 2:
+		return _check_files(pack_root, files, members, 0, members.size())
+	var results: Array[String] = []
+	results.resize(lanes)
+	var slice_size := ceili(float(members.size()) / lanes)
+	var task := WorkerThreadPool.add_group_task(func(lane: int) -> void:
+		var first := lane * slice_size
+		results[lane] = _check_files(pack_root, files, members, first, mini(first + slice_size, members.size()))
+	, lanes, lanes)
+	WorkerThreadPool.wait_for_group_task_completion(task)
+	for result: String in results:
+		if not result.is_empty(): return result
+	return ""
+
+static func _check_files(pack_root: String, files: Dictionary, members: Array, first: int, end: int) -> String:
+	for index: int in range(first, end):
+		var member: String = members[index]
 		if not _safe_member(member): return "unsafe_source_path"
 		var entry: Variant=files[member]
 		if not entry is Dictionary or not entry.get("sha256") is String or not entry.get("bytes") is float and not entry.get("bytes") is int:

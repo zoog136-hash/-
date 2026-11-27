@@ -13,6 +13,7 @@ var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
 const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const STARTUP_BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
 
@@ -585,6 +586,8 @@ var inventory: Dictionary = {}
 ## must finish before the overlay may report 100%.
 var _boot_loading_finished: bool = false
 var _boot_loading_problem: String = ""
+var _boot_overlay_active: bool = false
+var _boot_world_work: Dictionary = {}
 
 func loading_readiness() -> Dictionary:
 	var reason: String = ""
@@ -594,13 +597,26 @@ func loading_readiness() -> Dictionary:
 	elif _boot_loading_finished and field_map == null and not current523_aden_review_active: reason = "원본 지도 팩이 설치되지 않았습니다."
 	elif _boot_loading_finished and _current523_source_restore_requested() and not current523_aden_play_active:
 		reason = current523_aden_play_problem if not current523_aden_play_problem.is_empty() else "선택 캐릭터의 원본 지도 복원 실패"
-	return {"ready": _boot_loading_finished and reason.is_empty(), "failed": not reason.is_empty(), "reason": reason}
+	return {"ready": _boot_loading_finished and reason.is_empty(), "failed": not reason.is_empty(),
+		"reason": reason, "world_work": _boot_world_work if _boot_overlay_active else null}
+
+## Publish the actual stage before its synchronous work. The first frame
+## lets Loading observe it and the second permits a render. Main instantiated
+## directly (without the real paused overlay) keeps synchronous initialization.
+func _show_boot_stage(completed: int, status: String) -> bool:
+	_boot_world_work = {"completed": completed, "total": 4, "status": status}
+	var tree := get_tree()
+	await tree.process_frame
+	await tree.process_frame
+	return is_inside_tree() and not is_queued_for_deletion()
 
 func _finish_boot_loading() -> void:
 	_boot_loading_finished = true
 	BOOT_LOG.mark("world_deferred_ready", {"ok": not loading_readiness().failed})
 
 func _ready() -> void:
+	_boot_overlay_active = get_tree().paused and get_tree().get_first_node_in_group("twilight_loading") != null
+	if _boot_overlay_active and not await _show_boot_stage(0, "원본 아이템과 스킬을 준비하는 중…"): return
 	var boot_started: int = BOOT_LOG.begin("world_ready")
 	preload("res://scripts/ui/dialog_korean_texts.gd").install(get_tree())
 	add_child(preload("res://scripts/boot/frame_hitch_probe.gd").new())
@@ -636,6 +652,7 @@ func _ready() -> void:
 	inventory_automation.configure(self)
 	BOOT_LOG.step("world_load_data")
 	_load_data()
+	if _boot_overlay_active and not await _show_boot_stage(1, "상점과 장비 규칙을 준비하는 중…"): return
 	BOOT_LOG.step("world_equipment523")
 	equipment523.startup(self)
 	BOOT_LOG.step("world_dungeons")
@@ -672,6 +689,7 @@ func _ready() -> void:
 	source_shop.configure(self)
 	BOOT_LOG.step("world_patch523_equipment")
 	_load_patch523_equipment()
+	if _boot_overlay_active and not await _show_boot_stage(2, "퀘스트와 필드 기능을 준비하는 중…"): return
 	BOOT_LOG.step("world_quests")
 	if not quest_service.configure(item_db, monster_db):
 		push_warning("퀘스트 데이터 검증 실패: " + quest_service.problem)
@@ -708,7 +726,9 @@ func _ready() -> void:
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
+	var quest_started := BOOT_LOG.begin("world_quest_items")
 	quest_item_provider.configure(self)
+	BOOT_LOG.end("world_quest_items", quest_started, {"definitions":quest_item_provider.definition_count()})
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
 	death_recovery.configure(self)
@@ -735,6 +755,7 @@ func _ready() -> void:
 			if argument.begins_with("--png-map="):
 				var candidate_png_map: String = argument.trim_prefix("--png-map=")
 				if maps_by_id.has(candidate_png_map) and REMAKE_REGISTRY.installed(candidate_png_map): requested_png_map = candidate_png_map;active_map_id = candidate_png_map
+	if _boot_overlay_active and not await _show_boot_stage(3, "선택한 캐릭터의 저장과 지도를 불러오는 중…"): return
 	BOOT_LOG.step("world_set_map")
 	_set_map(active_map_id, false)
 	BOOT_LOG.step("world_load_game")
@@ -1085,10 +1106,12 @@ func _load_data() -> void:
 		if item_value is Dictionary and CONSUMABLE_RULES.is_removed_item(str((item_value as Dictionary).get("name", ""))):
 			item_db.remove_at(item_index)
 	legacy_skills_db = (game_db.get("스킬", []) as Array).duplicate(true)
+	var skills_started := BOOT_LOG.begin("world_original_skills")
 	if original_skills == null:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
 	spell_group_conversion.configure(self)
+	BOOT_LOG.end("world_original_skills", skills_started)
 	skills_db = original_skills.catalog.records.duplicate(true)
 	_rebuild_skill_record_index()
 	_ensure_ammo_items()
@@ -1300,6 +1323,11 @@ func _catalog_item_from_source_id(source_id: String) -> Dictionary:
 	var source: Variant = catalog_item_by_source_id.get(source_id, {})
 	return source as Dictionary if source is Dictionary else {}
 
+const RETIRED_OPTION_FIELD := {
+	"cursed": true, "curse": true, "non_damageable": true, "damageable": true,
+	"indestructible": true, "weapon_damage_prevention": true,
+}
+
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
 	# deprecated durability and curse labels must never reach UI/character data.
@@ -1318,7 +1346,7 @@ func _normalize_option_policies() -> void:
 						var dest: String = "pve_" + label.substr(4)
 						entry[dest] = int(entry.get(dest, 0)) + int(entry.get(key, 0))
 						entry.erase(key)
-					elif label in ["cursed", "curse", "non_damageable", "damageable", "indestructible", "weapon_damage_prevention"]:
+					elif RETIRED_OPTION_FIELD.has(label):
 						entry.erase(key)
 				if str(entry.get("bless_state", "")).to_lower() in ["cursed", "저주"]:
 					entry.erase("bless_state")
@@ -1668,28 +1696,60 @@ func _flush_item_weight_index() -> void:
 	_weight_index_deferred = false
 	if _weight_index_pending:
 		_weight_index_pending = false
-		_index_item_weights()
+		var started := BOOT_LOG.begin("world_weight_index")
+		_index_item_weights(true)
+		BOOT_LOG.end("world_weight_index", started, {"entries":item_weight_index.size()})
 
 ## Full index passes so far (tests check the start builds it once).
 var item_weight_index_builds: int = 0
-func _index_item_weights() -> void:
+const WEIGHT_BAKE := "world_initial_item_weights"
+
+func _index_item_weights(startup: bool = false) -> void:
 	if _weight_index_deferred:
 		_weight_index_pending = true
 		return
 	item_weight_index_builds += 1
-	patch523_craft_item_cache={}
-	_craft_index_warm={}
+	patch523_craft_item_cache = {}
+	_craft_index_warm = {}
 	var rules: Dictionary = _item_weight_rules()
-	var next_weight_index: Dictionary = {}
-	for source: Variant in [catalog_db.get("아이템", []), item_db]:
-		if not (source is Array):
-			continue
-		for entry: Variant in source as Array:
-			if not _weight_index_entry(entry, rules, next_weight_index):
-				return
+	var inputs: Array = [catalog_db.get("아이템", []), item_db]
+	var key := _startup_weight_key(inputs, rules) if startup else ""
+	var saved: Variant = STARTUP_BAKE.read(WEIGHT_BAKE, key) if not key.is_empty() else null
+	var next_weight_index: Dictionary
+	if saved is Dictionary:
+		next_weight_index = saved
+	else:
+		next_weight_index = {}
+		for source: Variant in inputs:
+			if not source is Array:
+				continue
+			for entry: Variant in source:
+				if not _weight_index_entry(entry, rules, next_weight_index):
+					return
+		if not key.is_empty():
+			STARTUP_BAKE.write(WEIGHT_BAKE, key, next_weight_index)
 	# Keep existing dictionary aliases while publishing a complete input index.
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
+
+## Snapshot the exact ordered inputs before a save is loaded. A record's
+## omitted heavy fields are fixed by the verified template content digest.
+## Other index rebuilds still use the general live-record validation path.
+func _startup_weight_key(inputs: Array, rules: Dictionary) -> String:
+	if scene_file_path != "res://Main.tscn" or get_script().resource_path != "res://scripts/potion_feedback_world.gd": return ""
+	if not NATIVE_FIELDS._weight_store_exact: return ""
+	var archive: String = CURRENT523_DEFINITION_ROWS.verified_key()
+	var templates: String = PATCH523_EQUIPMENT.NATIVE_PROJECTION.template_content_key()
+	if archive.is_empty() or not templates.begins_with("content:"): return ""
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(var_to_bytes(rules))
+	for source: Variant in inputs:
+		if not source is Array: return ""
+		hash.update(var_to_bytes(source.size()))
+		for entry: Variant in source: hash.update(var_to_bytes(entry))
+	return STARTUP_BAKE.key(["world_initial_item_weights.v1", archive, templates,
+		hash.finish().hex_encode(), STARTUP_BAKE.global_code_key()])
 
 ## The weight rules file (res://, read-only at run time): parsed once.
 var _item_weight_rules_cache: Dictionary = {}
@@ -13036,6 +13096,9 @@ func _notification(what: int) -> void:
 		# engine already released, or a second focus notification, release nothing.
 		FOCUS_INPUT_RELEASE.release_game_input()
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
+		# A window can now pause between initialization stages. The selected
+		# save still belongs to the loader until the complete world is ready.
+		if _boot_overlay_active and not _boot_loading_finished: return
 		# Leaving the app flushes anything still waiting out its quiet window.
 		_save_game(true)
 

@@ -115,11 +115,30 @@ func run() -> void:
 		evidence["mode"] = "no_original_pack"
 		await finish(world); return
 	evidence["granted"] = grant_rows(world,60)
+	var opened: int = Time.get_ticks_usec()
 	hud.toggle_inventory()
-	await frames(30)
-	if not check(hud.original_inventory_is_open(), "the original bag opens"):
+	evidence["open_call_usec"] = Time.get_ticks_usec() - opened
+	if not check(hud.original_inventory_is_open(), "the original bag opens on the input frame"):
 		await finish(world); return
 	var view: RefCounted = hud.original_main_ui_controller._inventory_view
+	check(not view._hits.is_empty() and view._line_scenes.is_empty(), "the authored row is usable before further rows are mounted")
+	var mounted: int = int(view.stats.line_builds)
+	var slices: Array[int] = []
+	for frame: int in range(12):
+		var started: int = Time.get_ticks_usec()
+		await process_frame
+		slices.append(Time.get_ticks_usec() - started)
+		var count: int = int(view.stats.line_builds)
+		check(count - mounted <= 1, "at most one additional row was mounted this frame")
+		mounted = count
+		if view._opening_line_tree == null: break
+	evidence["open_frame_usec"] = slices
+	var visible_rows: Vector2i = view.line_range(view.COLD_OPEN_BUILD_LINES)
+	var complete: bool = visible_rows.x <= visible_rows.y
+	for line: int in range(visible_rows.x,visible_rows.y+1):
+		if not view._line_scenes.has(line): complete = false
+	check(complete and view._opening_line_tree == null, "all visible original rows complete within the opening frames")
+	await frames(6)
 	var lines: int = view._lines.size()
 	evidence["lines"] = lines+1
 	evidence["scroll"] = [view._scroll_top,view._scroll_bottom]

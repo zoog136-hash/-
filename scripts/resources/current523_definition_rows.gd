@@ -27,6 +27,9 @@ static var _archive: ZIPReader
 static var _archive_path := ""
 static var _tables: Dictionary = {}
 static var _relations: Dictionary = {}
+static var _small_reference_rows: Dictionary = {}
+static var _exclusion_owner: Script
+static var _exclusion_fields: bool = false
 static var _metadata: Dictionary = {}
 static var _consumable_territories: Variant = null
 static var _problem := ""
@@ -49,6 +52,9 @@ static func reset() -> void:
 	_tables.clear()
 	_store_failures.clear()
 	_relations.clear()
+	_small_reference_rows.clear()
+	_exclusion_owner = null
+	_exclusion_fields = false
 	_integer_fields.clear()
 	_metadata.clear()
 	_consumable_territories = null
@@ -110,10 +116,9 @@ static func remember_used_tables() -> int:
 static func stored_current(table: String) -> bool:
 	if not _open() or not _archive.file_exists("content/"+table+".json"): return true
 	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
-	var meta_path: String = BAKE.ROOT + "/" + ("disk_" if on_disk else "definitions_") + table + ".json"
-	if not FileAccess.file_exists(meta_path): return false
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(meta_path))
-	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and meta.get("key") in [_bake_key(table),_bake_key(table,COMPATIBLE_V1)]
+	var name := ("disk_" if on_disk else "definitions_") + table
+	var current := _bake_key(table)
+	return BAKE.present(name, current) or BAKE.present(name, _bake_key(table, COMPATIBLE_V1))
 
 ## Tables kept in the archive and opened on demand only, never converted on
 ## the loading screen even when an earlier run used them: DialogData_Korean
@@ -179,6 +184,7 @@ static func release_caches() -> Dictionary:
 			_tables.erase(table)
 			released.tables += 1
 	_relations = retained
+	_small_reference_rows.clear()
 	_metadata.clear()
 	return released
 
@@ -328,11 +334,18 @@ static func archive_path() -> String:
 static func declared_exclusion(table: String, row: Dictionary, scope: String = "record") -> Dictionary:
 	# PR269 owns the original declarations. Its optional SPI never substitutes
 	# local names, ID lists or heuristics when that owner module is unavailable.
-	var path: String = "res://scripts/quests/source_dummy523.gd"
-	if not preload("res://scripts/resources/retired_assets.gd").usable(path): return {}
-	var owner: Resource = load(path)
-	if owner == null or not owner.has_method("evidence"): return {}
-	var evidence: Variant = owner.call("evidence",table,row.duplicate(true),scope)
+	if _exclusion_owner == null:
+		var path: String = "res://scripts/quests/source_dummy523.gd"
+		if not preload("res://scripts/resources/retired_assets.gd").usable(path): return {}
+		var owner: Script = load(path) as Script
+		if owner == null or not owner.has_method("evidence"): return {}
+		_exclusion_owner = owner
+		_exclusion_fields = owner.has_method("evidence_fields")
+	var evidence: Variant
+	if _exclusion_fields:
+		evidence = _exclusion_owner.call("evidence_fields",table,row.get("ID",0),row.get("Name"),scope)
+	else:
+		evidence = _exclusion_owner.call("evidence",table,row.duplicate(true),scope)
 	if not evidence is Dictionary or evidence.get("source_sha256") != SOURCE_SHA or evidence.get("excluded_from_connection") != true: return {}
 	return evidence.duplicate(true)
 
@@ -1045,6 +1058,24 @@ static func _integer_values(table: String, field: String, store: Dictionary, col
 		if not _integer(value): return false
 	return true
 
+## Startup repeatedly joins these small domains from original items and
+## bonuses. Remember only rows that the verified relation already selected,
+## and give each caller a fresh copy, including nested values.
+const SMALL_REFERENCE_TABLES := {
+	"ItemCategory":true, "Grade":true, "Class":true, "EquipSlot":true,
+	"BonusType":true, "Unit":true, "UIUnit":true, "BonusApplicationType":true,
+}
+const SMALL_REFERENCE_LIMIT: int = 512
+
+static func _joined_row(table: String, store: Dictionary, index: int) -> Dictionary:
+	if not SMALL_REFERENCE_TABLES.has(table): return _view(table,_row_at(store,index))
+	var decoded: Dictionary = _small_reference_rows.get_or_add(table,{})
+	if decoded.has(index): return (decoded[index] as Dictionary).duplicate(true)
+	var value: Dictionary = _row_at(store,index)
+	if decoded.size() >= SMALL_REFERENCE_LIMIT: return value
+	decoded[index] = value
+	return value.duplicate(true)
+
 static func related(table: String, foreign_key: String, id: int) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var store: Dictionary = _store(table)
@@ -1112,7 +1143,7 @@ static func related(table: String, foreign_key: String, id: int) -> Array[Dictio
 					(groups[identifier] as Array).append(index)
 			for identifier: int in groups: groups[identifier] = PackedInt32Array(groups[identifier])
 			_relations[key] = {"groups": groups}
-	for index: int in _relation_rows(_relations[key], id): result.append(_view(table, _row_at(store, index)))
+	for index: int in _relation_rows(_relations[key], id): result.append(_joined_row(table,store,index))
 	return result
 
 ## Equivalent compact index for numeric NPC columns. Typed checks avoid the
@@ -1263,7 +1294,7 @@ static func row(table: String, id: int) -> Dictionary:
 	var key: String = table + ":ID"
 	if _tables.has(table) and _relations.has(key):
 		var index: int = _unique_relation_row(_relations[key], id)
-		if index >= 0: return _view(table, _row_at(store, index))
+		if index >= 0: return _joined_row(table,store,index)
 		if index == -1:
 			_problem = "원본 ID가 없습니다: " + table + "#" + str(id)
 			return {}

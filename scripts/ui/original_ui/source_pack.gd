@@ -24,7 +24,12 @@ const TEXTURE_CACHE=preload("res://scripts/resources/source523_texture_cache.gd"
 ## tree at a time. The manifest bytes are still hash-checked on every open.
 const BAKE=preload("res://scripts/resources/current523_bake_cache.gd")
 const MANIFEST=preload("res://scripts/ui/original_ui/source_pack_manifest.gd")
+const LOADING_FX_MEMBER := "UI/CommonUi/Fx_Loading.csb"
+const LOADING_FX_ATLAS := "UI/UI_Resource/Atlas_Common.plist"
+const LOADING_FX_FONT := "UI/Font/font_B.ttf"
+const MANIFEST_MAX_BYTES := 128 * 1024 * 1024
 static var bake_enabled: bool=true
+var _scoped_loading_fx := false
 var _records: RefCounted
 var manifest: Dictionary={}
 var root: String=""
@@ -81,7 +86,7 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	var manifest_path: String=pack_root.path_join("original_ui.json")
 	if not FileAccess.file_exists(manifest_path): return _fail("manifest_missing")
 	var file:=FileAccess.open(manifest_path,FileAccess.READ)
-	if file==null or file.get_length()>128*1024*1024: return _fail("manifest_size_or_access")
+	if file==null or file.get_length()>MANIFEST_MAX_BYTES: return _fail("manifest_size_or_access")
 	var raw: PackedByteArray=file.get_buffer(file.get_length())
 	if expected_sha256.length()!=64 or _sha256(raw)!=expected_sha256: return _fail("manifest_hash_mismatch")
 	var bake_name: String=bake_name_for(expected_sha256)
@@ -113,6 +118,44 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_adopt(value,pack_root,expected_sha256)
 	_records=null
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+
+## The loading indicator uses one authored CSB, one atlas and one font.
+## Keep its view confined to those verified originals. The HUD still opens
+## the complete pack and checks all of its original files before binding.
+func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
+	var manifest_path := pack_root.path_join("original_ui.json")
+	var manifest_size := FileAccess.get_size(manifest_path)
+	if manifest_size <= 0 or manifest_size > MANIFEST_MAX_BYTES:
+		return _fail("manifest_size_or_access")
+	if expected_sha256.length() != 64 or FileAccess.get_sha256(manifest_path) != expected_sha256:
+		return _fail("manifest_hash_mismatch")
+	var bake_key := bake_key_for(expected_sha256) if bake_enabled else ""
+	var baked := BAKE.open_records(bake_name_for(expected_sha256), bake_key) if not bake_key.is_empty() else null
+	if baked == null:
+		return _fail("original_ui_pack_not_baked")
+	var meta: Variant = baked.read("meta")
+	if not meta is Dictionary or meta.get("schema") != "twilight-original-ui-v1" or not meta.get("files") is Dictionary or not meta.get("atlases") is Dictionary:
+		return _fail("manifest_fields")
+	var atlas: Variant = meta.atlases.get(LOADING_FX_ATLAS)
+	if not atlas is Dictionary or not atlas.get("page") is String:
+		return _fail("fx_loading_atlas_missing")
+	var files := {}
+	for member: String in [LOADING_FX_MEMBER, LOADING_FX_ATLAS, atlas.page, LOADING_FX_FONT]:
+		var entry: Variant = meta.files.get(member)
+		if not entry is Dictionary:
+			return _fail("fx_loading_dependency_missing:" + member)
+		files[member] = entry
+	var problem := _files_intact(pack_root, files)
+	if not problem.is_empty():
+		return _fail(problem)
+	var scene: Variant = baked.read("s:" + LOADING_FX_MEMBER)
+	if not scene is Dictionary or scene.get("_source_sha256") != files[LOADING_FX_MEMBER].sha256:
+		return _fail("scene_source_mismatch")
+	_adopt({"schema": meta.schema, "scenes": {LOADING_FX_MEMBER: scene},
+		"files": files, "atlases": {LOADING_FX_ATLAS: atlas}}, pack_root, expected_sha256)
+	_records = null
+	_scoped_loading_fx = true
+	return {"ok": true, "scene_count": 1, "rendered": false}
 
 static func bake_name_for(manifest_sha: String) -> String:
 	return "original_ui_pack_"+manifest_sha.left(16)
@@ -164,6 +207,7 @@ func _adopt(value: Dictionary, pack_root: String, expected_sha256: String) -> vo
 		external[member]=offsets
 	if not external.is_empty():value["externally_bound_texture_nodes"]=external
 	manifest=value
+	_scoped_loading_fx = false
 	root=pack_root
 	manifest_sha256=expected_sha256
 	release_cache_leases()
@@ -237,6 +281,11 @@ func _load_settings_frames() -> void:
 func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	if manifest.is_empty() or str(reference.get("path","")).is_empty(): return null
 	var plist: String=str(reference.get("plistFile",""))
+	# A shared cache hit may come from a complete pack. The loading view must
+	# enforce its file scope before asking either texture cache for a hit.
+	if _scoped_loading_fx:
+		if plist.is_empty() and not manifest.files.has(_member(str(reference.path))): return null
+		if not plist.is_empty() and not manifest.atlases.has(_member(plist)): return null
 	var key: String=plist+":"+str(reference.path)+":"+str(cocos_pixels)
 	var cached: Texture2D=_texture_cache.lookup(key)
 	if cached!=null:return cached

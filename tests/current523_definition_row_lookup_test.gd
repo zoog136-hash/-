@@ -71,6 +71,14 @@ func _run() -> void:
 	row.List[0].n = 99
 	row.Name = "edited"
 	check(var_to_bytes(ROWS.row("ZzLookup",1)) == var_to_bytes(regular[0]), "nested mutation never changes a later fresh row")
+	# The repeated reference-row path must return freshly owned nested values.
+	ROWS._tables.BonusType = ROWS._pack(regular)
+	same("BonusType",1,"reused source reference",true)
+	var cached_join: Array[Dictionary] = ROWS.related("BonusType","ID",1)
+	cached_join[0].Nested.a.append(88)
+	cached_join[0].List[0].n = 88
+	check(var_to_bytes(ROWS.row("BonusType",1)) == var_to_bytes(regular[0]), "memoized relation and direct lookup do not share nested values with callers")
+	check(not ROWS._small_reference_rows.is_empty(), "the repeated lookup exercised the bounded reference cache")
 	ROWS._tables.ZzDuplicate = ROWS._pack([{"ID":1.0,"V":0},{"ID":1.0,"V":1}])
 	same("ZzDuplicate",1,"duplicate cold",true)
 	same("ZzDuplicate",1,"duplicate warm")
@@ -106,6 +114,7 @@ func _run() -> void:
 		var before_release: int = ROWS.cache_generation()
 		var before_release_row: PackedByteArray = var_to_bytes(ROWS.row(table,1))
 		ROWS.release_caches()
+		check(ROWS._small_reference_rows.is_empty(), "definition release clears decoded reference rows")
 		check(ROWS.cache_generation() == before_release, "releasing acceleration caches keeps source generation")
 		check(var_to_bytes(ROWS.row(table,1)) == before_release_row, "release leaves verified disk row values unchanged")
 		# A same-size changed bake fails the original persisted-byte guard.

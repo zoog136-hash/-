@@ -8,6 +8,8 @@ const DISTANCE_INPUT_POLICY_PATH := "res://data/skills/current523_distance_input
 const SOURCE_SHA := "d5192c3c735ff95c6b181bf2d4d77448d8b562fdb28dbd43f897fa4eae1f4832"
 const MAX_BYTES := 16 * 1024 * 1024
 const SOURCE_ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
+const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const PROFILE_BAKE := "player_original_profiles523"
 const SOURCE_SPELLS = preload("res://scripts/resources/current523_spell_data.gd")
 const SOURCE_BONUSES = preload("res://scripts/resources/current523_bonus_data.gd")
 const SOURCE_BUFFS = preload("res://scripts/resources/current523_buff_data.gd")
@@ -678,10 +680,13 @@ func equipment_spell_records(jobs: Array) -> Array:
 		if str(row.get("Name","")) == "EquipSpellClassID": type_id = int(row.ID)
 	if type_id < 0: return out
 	var bonuses: Dictionary = {}
-	for row: Dictionary in SOURCE_ROWS.rows("Bonus"):
+	var source_bonuses: Array[Dictionary] = SOURCE_ROWS.rows_matching("Bonus", "BonusTypeID", {type_id:true}) if SOURCE_ROWS.integer_field("Bonus", "BonusTypeID") else SOURCE_ROWS.rows("Bonus")
+	for row: Dictionary in source_bonuses:
 		if int(row.get("BonusTypeID",-1)) == type_id and int(row.get("BonusApplicationTypeID",0)) == 1 and _source_integer(row.get("Value")) and int(row.Value) == 1:
 			bonuses[int(row.ID)] = int(row.BonusApplicationTargetID)
-	for row: Dictionary in SOURCE_ROWS.rows("ItemBonus"):
+	if bonuses.is_empty(): return out
+	var links: Array[Dictionary] = SOURCE_ROWS.rows_matching("ItemBonus", "BonusID", bonuses) if SOURCE_ROWS.integer_field("ItemBonus", "BonusID") else SOURCE_ROWS.rows("ItemBonus")
+	for row: Dictionary in links:
 		if row.get("IsPossession") == true or not bonuses.has(int(row.get("BonusID",-1))): continue
 		var item: Dictionary = SOURCE_ROWS.row("ItemClass", int(row.ItemClassID))
 		if item.is_empty() or item.get("TestItem") != false: continue
@@ -743,9 +748,10 @@ static func _canonical_numbers(value: Variant) -> Variant:
 
 static func _source_row_json(row: Dictionary, expected: String = "") -> String:
 	var normalized: Variant = _canonical_numbers(row)
-	var candidates: Array[String] = [JSON.stringify(normalized,"",true,true),JSON.stringify(normalized,"",true,false),JSON.stringify(row,"",true,true),JSON.stringify(row,"",true,false)]
-	for candidate: String in candidates:
-		if expected.is_empty() or candidate.sha256_text()==expected: return candidate
+	for input: Dictionary in [normalized, row]:
+		for full_precision: bool in [true, false]:
+			var candidate := JSON.stringify(input, "", true, full_precision)
+			if expected.is_empty() or candidate.sha256_text() == expected: return candidate
 	return ""
 
 static func _source_evidence(detail: Dictionary) -> Dictionary:
@@ -893,9 +899,17 @@ func _load_source_profiles() -> void:
 	if identity.is_empty():
 		source_fallback_status = {"state":"unavailable","reason":SOURCE_ROWS.problem()}
 		return
-	var local: Variant = JSON.parse_string(FileAccess.get_file_as_string(BINDINGS_PATH))
+	var binding_bytes := FileAccess.get_file_as_bytes(BINDINGS_PATH)
+	var local: Variant = JSON.parse_string(binding_bytes.get_string_from_utf8())
 	if not local is Dictionary or local.get("schema_version")!=1 or local.get("patch")!=523 or local.get("source_zip_sha256")!=SOURCE_SHA or not local.get("skills") is Dictionary or not local.get("material_inventory_keys") is Dictionary:
 		source_fallback_status = {"state":"deferred","reason":"unsupported_public_bindings"}
+		return
+	var original := SOURCE_ROWS.verified_key()
+	var code := BAKE.global_code_key()
+	var key := BAKE.key([PROFILE_BAKE, original, code, BAKE.engine_key(), str(SOURCE_ROWS.approximate_test_items)]) if not (original.is_empty() or code.is_empty()) else ""
+	var stored: Variant = BAKE.read(PROFILE_BAKE, key) if not key.is_empty() else null
+	if stored is Dictionary and stored.get("identity") == identity and stored.get("profiles") is Dictionary and not stored.profiles.is_empty() and stored.get("metadata") is Dictionary and stored.get("status") is Dictionary and stored.status.get("state") == "loaded" and stored.status.get("applied") == stored.profiles.keys() and stored.status.get("material_holds") is Dictionary:
+		_adopt_original_profiles(stored, local)
 		return
 	var material_check: Dictionary = source_material_holds(local)
 	if material_check.invalid:
@@ -941,16 +955,22 @@ func _load_source_profiles() -> void:
 		candidate[id] = profile
 	source_fallback_status = {"state":"loaded" if not candidate.is_empty() else "deferred","applied":candidate.keys(),"deferred":deferred,"material_holds":held_materials.duplicate(true)}
 	if candidate.is_empty(): return
-	material_holds = held_materials.duplicate(true)
 	var metadata: Dictionary = {"classes":SOURCE_ROWS.rows("Class"),"ui_units":SOURCE_ROWS.rows("UIUnit"),
 		"buff_groups":SOURCE_ROWS.rows("BuffGroup"),"bonus_application_types":SOURCE_ROWS.rows("BonusApplicationType"),
 		"special_resistance_types":SOURCE_ROWS.rows("SpecialResistanceType")}
-	profiles = candidate.duplicate(true)
+	var built := {"identity":identity, "profiles":candidate, "metadata":metadata, "status":source_fallback_status}
+	if not key.is_empty(): BAKE.write(PROFILE_BAKE, key, built)
+	_adopt_original_profiles(built, local)
+
+func _adopt_original_profiles(snapshot: Dictionary, local: Dictionary) -> void:
+	source_fallback_status = snapshot.status
+	material_holds = snapshot.status.material_holds.duplicate(true)
+	profiles = snapshot.profiles.duplicate(true)
 	bindings = local.duplicate(true)
-	recovery_rules.configure_pack(metadata)
+	recovery_rules.configure_pack(snapshot.metadata)
 	# active_sha256 remains the compiled-pack fingerprint, never the archive SHA.
 	source_mode = "original_bound_profiles"
-	source_identity = identity.duplicate(true)
+	source_identity = snapshot.identity.duplicate(true)
 	revision += 1
 	last_error = ""
 	# Optional PR269 reader only after this original-profile snapshot is adopted.

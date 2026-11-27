@@ -8,10 +8,14 @@ const ITEM_DECLARATIONS={224743:{"name":"테스트용 더미3","line":712233},22
 static var observed_exclusions: Dictionary={}
 
 static func evidence(table: String,row: Dictionary,scope: String="record") -> Dictionary:
-	var name_value: Variant=row.get("Name")
+	return evidence_fields(table,row.get("ID",0),row.get("Name"),scope)
+
+## The definition reader already owns the row. These are the only fields
+## the declarations use; there is no need to clone its unrelated values.
+static func evidence_fields(table: String, row_id: Variant, name_value: Variant, scope: String = "record") -> Dictionary:
 	if not name_value is String:return {}
 	var marker: String=""
-	var id: int=int(row.get("ID",0))
+	var id: int=int(row_id)
 	var line: int=0
 	if table=="ItemClass" and ITEM_DECLARATIONS.has(id) and name_value==ITEM_DECLARATIONS[id].name:
 		marker=str(ITEM_DECLARATIONS[id].name);line=int(ITEM_DECLARATIONS[id].line)

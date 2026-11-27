@@ -39,6 +39,13 @@ func run() -> void:
 		var complete: Dictionary = service.source.full(row)
 		check(row.id=="m523:quest:"+str(int(complete.definition.ID)),"native quest identity")
 		check(row.blockers.is_empty(),"all original goal/reward/prerequisite links resolve")
+		var startup_ids: Dictionary = {}
+		for reward: Dictionary in complete.source_rewards:
+			if reward.get("type_name") == "Item" and reward.get("UseImmediately") != true and int(reward.get("ItemBlessCodeID", 0)) == 1:
+				startup_ids[int(reward.get("RewardClassID", 0))] = true
+		if row.has(SOURCE.LAZY_KEY):
+			check(SOURCE.may_bind_startup_reward(row, {}) == not startup_ids.is_empty(), "compact row retains possible startup item rewards")
+			check(not SOURCE.may_bind_startup_reward(row, startup_ids), "compact row skips only when all candidates are handled")
 		var reason: String = service.source.gate(row,context,all_claimed,at)
 		gate_reasons[reason] = int(gate_reasons.get(reason,0))+1
 		check(service.source.gate(complete,context,all_claimed,at)==reason and service.source.gate(complete,{"level":1,"class_id":-1},{},at)==service.source.gate(row,{"level":1,"class_id":-1},{},at),"resident compact row gates exactly like the complete row")

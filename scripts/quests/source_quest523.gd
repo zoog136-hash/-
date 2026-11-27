@@ -21,7 +21,7 @@ const TUTORIAL = preload("res://scripts/content523/tutorial523.gd")
 ## lives in a device record bake and is read back on demand by full().
 const RECORDS_NAME := "quest523_records"
 ## 2: compact rows also carry [QuestResetType, MaxDailyRepeat] (repeat rule).
-const RECORDS_SCHEMA := 2
+const RECORDS_SCHEMA := 3
 const HOT_RECORD := "__hot__"
 ## Key of the compact gate inputs on a row whose complete form is on storage.
 const LAZY_KEY := "source_lazy_gate"
@@ -241,11 +241,29 @@ static func _compact(row: Dictionary) -> Dictionary:
 		if goal.relation.has("GoalPredicateTypeID") and not _number(goal.relation.GoalPredicateTypeID): return {}
 		levels.append([int(goal.CharacterClassID), int(goal.relation.get("GoalPredicateTypeID",0)), int(goal.Amount)])
 	lazy["level_goals"] = levels
+	if not row.source_rewards is Array: return {}
+	var item_ids := PackedInt64Array()
+	for reward: Variant in row.source_rewards:
+		if not reward is Dictionary: return {}
+		if startup_reward_item(reward): item_ids.append(int(reward.get("RewardClassID", 0)))
+	lazy["startup_reward_items"] = item_ids
 	var lean: Dictionary = {}
 	for key: Variant in row:
 		if str(key) not in ["definition","prerequisites","goals","source_rewards","enhancements","description"]: lean[key] = row[key]
 	lean[LAZY_KEY] = lazy
 	return lean
+
+static func startup_reward_item(reward: Dictionary) -> bool:
+	return reward.get("type_name") == "Item" and not reward.get("UseImmediately", false) and int(reward.get("ItemBlessCodeID", 0)) == 1
+
+## Compact rows only supply a negative filter. Every remaining reward is read
+## from the complete, verified record and matched to the original ItemClass.
+static func may_bind_startup_reward(row: Dictionary, handled_ids: Dictionary) -> bool:
+	var ids: Variant = row.get(LAZY_KEY, {}).get("startup_reward_items")
+	if not ids is PackedInt64Array: return true
+	for id: int in ids:
+		if not handled_ids.has(id): return true
+	return false
 
 ## The complete row (QuestView definition, goals, rewards, prerequisites,
 ## enhancements, description) of `row`. Rows that are already complete,
