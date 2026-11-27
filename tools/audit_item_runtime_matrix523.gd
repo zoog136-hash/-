@@ -24,6 +24,8 @@ const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.
 const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const VERIFIED={
+	203402:"actual_original_bag_reusable_random_teleport_save_failure_and_reload_navigation_fixture",
+	295494:"actual_original_bag_legacy_stock_reusable_random_teleport_and_reload_navigation_fixture",
 	139581:"actual_bag_atomic_recharge_fault_retry_reload",
 	307971:"actual_bag_4_exact_choices_fault_retry_reload",
 	307931:"actual_child_bag_original_weighted_wallet_reward",
