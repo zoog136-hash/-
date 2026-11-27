@@ -3686,24 +3686,30 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 	if not acquired_path.is_empty() or player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
 		auto_repath_timer = 0.65
 		if auto_stuck_time > 2.0:
+			if automatic: _remember_auto_target_path_failure(auto_target)
 			auto_target = null
+			selected_monster = null
+			auto_target_next_search_ms = 0
 			player.clear_click_path()
 			auto_stuck_time = 0.0
 			_stable_auto_route.clear()
 			return
-		if acquired_path.is_empty() and not can_see and _can_keep_stable_auto_route(auto_target):
+		# A physics obstruction can appear after a route was calculated. Let
+		# the player's short detour finish before replacing its pursuit route.
+		if player.has_active_obstacle_detour(): return
+		# A neighboring source cell may be in combat sight even when the
+		# straight foot line grazes a blocked third cell.
+		var direct_walk: bool = can_see and (not field_map is OriginalPlayableField \
+			or field_map.line_clear(player.global_position, auto_target.global_position))
+		if acquired_path.is_empty() and not direct_walk and _can_keep_stable_auto_route(auto_target):
 			FRAME_HITCH.count("auto.pursuit_path_kept")
 			FRAME_HITCH.detail("auto.path_reuse",auto_stage)
 			return
 		_stable_auto_route.clear()
-		# A moving target that is directly visible must not send AUTO around
-		# a distant A* waypoint. A grid route may include an old first turn even
-		# when the direct segment is already clear, causing a long pursuit stall.
-		# Field line_clear checks the same walkability used for combat sight.
-		# Keep A* for obstructed targets; do not bypass collision or map bounds.
+		# Drop old A* corners only once a straight walk is clear.
 		var path: PackedVector2Array = acquired_path
-		if path.is_empty() or can_see:
-			path = _auto_pursuit_path(auto_target, can_see)
+		if path.is_empty() or direct_walk:
+			path = _auto_pursuit_path(auto_target, direct_walk)
 		auto_stage = FRAME_HITCH.detail_next("auto.path", auto_stage)
 		if path.is_empty():
 			if locked != null:
@@ -3723,7 +3729,7 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 			player.clear_click_path()
 			return
 		player.set_click_path(path, auto_target.global_position)
-		if not can_see:
+		if not direct_walk:
 			_remember_stable_auto_route(auto_target)
 
 func _refresh_auto_hunt_target(now: int) -> PackedVector2Array:
@@ -3787,11 +3793,10 @@ func _can_keep_stable_auto_route(target: TwilightMonster) -> bool:
 	_stable_auto_route["index"]=player.path_index
 	return true
 
-func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
+func _auto_pursuit_path(target: TwilightMonster, direct_walk: bool) -> PackedVector2Array:
 	if not is_instance_valid(target) or target.dead:
 		return PackedVector2Array()
-	if directly_visible:
-		# A visible target needs no old A* corners; physics still collides.
+	if direct_walk:
 		return PackedVector2Array([target.global_position])
 	# Re-search while walking: continue from the point the player is already
 	# walking to. A route searched from the player starts at the centre of its
@@ -3810,9 +3815,10 @@ func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> Pack
 const AUTO_PURSUIT_SEARCH_NODES: int = 2048
 
 func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
-	if player.path_index < player.click_path.size() and not player.manual_navigation:
+	if auto_stuck_time <= 0.0 and player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
-		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via):
+		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via) \
+			and (field_map == null or field_map.line_clear(player.global_position, via)):
 			var rest: PackedVector2Array = find_world_path(via, target.global_position)
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
