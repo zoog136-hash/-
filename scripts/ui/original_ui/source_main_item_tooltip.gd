@@ -32,11 +32,12 @@ const DETAIL_POSITION=Vector2(1008.0,-345.0)
 ## Panel_set; ToolTip_Button (the side buttons).
 const DETAIL_LIST_OFFSET: int=39440
 const DETAIL_BUTTONS_OFFSET: int=1640
+const DETAIL_PROBABILITY_OFFSET: int=50568
 const DETAIL_ROW_STEP: float=20.0
 const DETAIL_MAX_ROWS: int=13
 ## Side buttons and info parts the bag tooltip does not connect (online
-## trade, set and collection pages, repair, dissolve, compare, lock).
-const DETAIL_HIDDEN: Array[String]=["ItemInfo/ListView_SetBuff","ItemInfo/Nd_Unlock","ItemInfo/Nd_Lock",
+## trade, set and collection pages, repair, dissolve, compare).
+const DETAIL_HIDDEN: Array[String]=["ItemInfo/ListView_SetBuff",
 	"ToolTip_Button/BasicInfo","ToolTip_Button/Collection_On","ToolTip_Button/Collection_Off","ToolTip_Button/SetBuff_On","ToolTip_Button/SetBuff_Off",
 	"ToolTip_Button/Enchant_On","ToolTip_Button/Enchant_Off","ToolTip_Button/Solution_On","ToolTip_Button/Solution_Off",
 	"ToolTip_Button/Repair_On","ToolTip_Button/Repair_Off","ToolTip_Button/Business_On","ToolTip_Button/Business_Off",
@@ -61,6 +62,7 @@ var _closer: Node
 ## pack has the whole bag tooltip.
 var member: String=MEMBER
 var _detail_available: bool=false
+var _detail_probability_available: bool=false
 
 ## The client's popup has no X: a tap outside its panel closes it. The tap
 ## is not consumed (the input is never marked handled), so the button, item or slot
@@ -99,9 +101,14 @@ const DETAIL_OUTSIDE_PANEL: String="Inven_Base/Bg"
 ## Whether `pack` admits the whole original bag tooltip (its info list and
 ## side buttons), not only the name/lock header scope.
 static func detail_supported(pack: RefCounted) -> bool:
-	if pack==null or not pack.manifest.get("scenes",{}).has(DETAIL_MEMBER):return false
-	var tree: Dictionary=pack.scene(DETAIL_MEMBER)
-	var root: Dictionary=tree.get("nodeTree",{})
+	return _has_detail(_detail_tree(pack))
+
+static func _detail_tree(pack: RefCounted) -> Dictionary:
+	if pack == null or not pack.manifest.get("scenes", {}).has(DETAIL_MEMBER):
+		return {}
+	return pack.scene(DETAIL_MEMBER).get("nodeTree", {})
+
+static func _has_detail(root: Dictionary) -> bool:
 	return not _offset_node(root,DETAIL_LIST_OFFSET).is_empty() and not _offset_node(root,DETAIL_BUTTONS_OFFSET).is_empty()
 
 static func _offset_node(node: Dictionary, offset: int) -> Dictionary:
@@ -116,7 +123,9 @@ func configure(pack: RefCounted) -> Dictionary:
 	for member: String in [MEMBER,SLOT]:
 		if pack==null or not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_item_tooltip_member_missing","member":member}
 	_pack=pack
-	_detail_available=detail_supported(pack)
+	var detail_root := _detail_tree(pack)
+	_detail_available = _has_detail(detail_root)
+	_detail_probability_available = _offset_node(detail_root, DETAIL_PROBABILITY_OFFSET).get("classname") == "Button"
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	return {"ok":true,"configured":true,"bag_detail":_detail_available}
 
@@ -175,17 +184,16 @@ static func native_record(item_class_id: int) -> Dictionary:
 ## `bag_item`: the selected bag entry (the original bag tooltip when admitted).
 func open(parent: Node, item_reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}, hud: Node=null, bag_item: bool=false) -> Dictionary:
 	if not is_instance_valid(parent) or title.is_empty():return {"ok":false,"handled":false,"code":"source_item_tooltip_input_invalid"}
-	# A box with disclosed probability retains its authored common popup.
-	# The bag detail uses the original right-hand delete ON node only when
-	# supplied an eligible action, and acquisition uses ToolTip_Button.
-	var detail: bool=bag_item and _detail_available and not (actions.get("probability",Callable()) as Callable).is_valid()
+	# The bag detail has a separate acquisition button. The older common
+	# popup shares one position between acquisition and probability.
+	var probability: Callable = actions.get("probability", Callable())
+	var detail: bool = bag_item and _detail_available and (not probability.is_valid() or _detail_probability_available)
 	var shown: String=DETAIL_MEMBER if detail else MEMBER
 	var spec: Dictionary={}
 	for name: String in (DETAIL_HIDDEN if detail else HIDDEN):spec[name]={"exclude":true}
-	var callbacks: Dictionary={"Del":actions.get("delete",Callable())}
+	var callbacks: Dictionary = {"Del":actions.get("delete", Callable()), "Probability":probability}
 	if not detail:
 		callbacks["Detail"]=actions.get("acquisition",Callable())
-		callbacks["Probability"]=actions.get("probability",Callable())
 	# Detail and Probability occupy the same authored button position.
 	# An eligible bag uses Probability in that slot.
 	if (callbacks.get("Probability",Callable()) as Callable).is_valid():callbacks.erase("Detail")
@@ -197,10 +205,10 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 			spec["Icon_Set/"+group+"_Off"]={"exclude":true}
 			if action.is_valid():
 				spec["Icon_Set/"+group+"_On"]={"visible":true}
-				# These original buttons are caller-configured: Del_On is
-				# preview-visible with touchEnabled off, Detail_On starts hidden.
-				spec["Icon_Set/"+group+"_On/Btn_Icon"]={"activate":action,"touch_enabled":true}
-				if detail and group=="Del":spec["Icon_Set/Del_On/Btn_Icon"]["enabled_variants_only"]=true
+				var button_path: String = "Icon_Set/" + group + "_On/Btn_Icon"
+				spec[button_path] = {"activate":action,"touch_enabled":true}
+				if detail and group in ["Del", "Probability"]:
+					spec[button_path]["enabled_variants_only"] = true
 			else:spec["Icon_Set/"+group+"_On"]={"exclude":true}
 		# 안전강화 is a label and original state image, with no Button in the
 		# CSB. Use the same normal-scroll source rule as the actual forge.
@@ -211,6 +219,15 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 	spec["ItemInfo/Text_1"]={"visible":false}
 	spec["ItemInfo/Text_1_0"]={"visible":false}
 	if detail:
+		var lock_action: Callable = actions.get("lock", Callable())
+		var locked: bool = actions.get("locked", false) == true
+		for state: String in ["Nd_Unlock", "Nd_Lock"]:
+			var lock_path := "ItemInfo/" + state
+			if lock_action.is_valid():
+				spec[lock_path] = {"visible":(state == "Nd_Lock") == locked}
+				spec[lock_path + "/Btn_Lock"] = {"activate":lock_action}
+			else:
+				spec[lock_path] = {"exclude":true}
 		# 획득처 (ItemDrop_On) is the same acquisition action as Detail_On.
 		var acquisition: Callable=actions.get("acquisition",Callable())
 		if acquisition.is_valid():spec["ToolTip_Button/ItemDrop_On/Button"]={"activate":acquisition}
@@ -236,6 +253,10 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 	var out: Dictionary={}
 	var built: Dictionary=_tree.scene_of(shown,spec,out)
 	if not built.get("ok",false):
+		if detail and probability.is_valid():
+			var fallback: Dictionary = open(parent,item_reference,title,item_class_id,grade_id,record,actions,hud,false)
+			fallback["detail_problem"] = built.get("code", built.get("error", ""))
+			return fallback
 		last_result=built
 		return built
 	close()

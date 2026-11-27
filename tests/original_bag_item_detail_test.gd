@@ -135,4 +135,16 @@ func real_pack() -> void:
 	check(button != null and (button.get("_activation") as Callable).is_valid(), "Btn_Close is bound")
 	if button != null: (button.get("_activation") as Callable).call()
 	check(not popup.is_open(), "Btn_Close closes the bag tooltip")
+	var box: Dictionary = popup.open(parent, "held@@@3", "상자", 315982, 0, {}, {"probability":action,"acquisition":action,"lock":action}, null, true)
+	check(box.get("member") == TOOLTIP.DETAIL_MEMBER, "a pack with all actions opens the right-hand box detail: " + str(box))
+	if box.get("member") == TOOLTIP.DETAIL_MEMBER:
+		for path: String in ["Icon_Set/Probability_On/Btn_Icon", "ToolTip_Button/ItemDrop_On/Button", "ItemInfo/Nd_Unlock/Btn_Lock"]:
+			var located: Dictionary = TREE.locate(popup._scene, popup._out, path)
+			var control: Variant = located.player.source_nodes[located.offset] if located.get("ok",false) else null
+			check(is_instance_valid(control) and control.is_visible_in_tree() and control.has_meta("source_button"), "original action visible and bound: " + path)
+			if is_instance_valid(control) and control.has_meta("source_button"):
+				var hit: Control = control.get_meta("source_button").get("_input_area")
+				var point: Vector2 = hit.get_global_transform_with_canvas() * (hit.size * .5)
+				check(popup.blocks_point(point) and hit.mouse_filter!=Control.MOUSE_FILTER_IGNORE, "action center accepts input within the tooltip: " + path)
+	popup.close()
 	parent.free()
