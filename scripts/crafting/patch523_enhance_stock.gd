@@ -5,8 +5,11 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const ITEM_USE = preload("res://scripts/loot/patch523_item_use.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SOURCE = preload("res://scripts/crafting/patch523_enhance_source_book.gd")
+const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
+const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const QUEST_OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const QUEST_CONSUME = preload("res://scripts/quests/quest_reward_consumption.gd")
+const SEAL_BOX_SCROLL_ID := "320802"
 
 static func select_owned(world: Node, name: String, selected: String, count: int, require_physical: bool=false) -> Dictionary:
 	var ids: Array = world.item_instances.keys()
@@ -27,7 +30,7 @@ static func select_owned(world: Node, name: String, selected: String, count: int
 		var proof: Dictionary
 		if receipted:proof=STACK.proof(world,uid)
 		elif quest_reward:proof=quest_scroll(world,uid)
-		else:proof=_legacy_unit(world,entry,name)
+		else:proof=legacy_unit(world,entry,name)
 		if proof.is_empty():return {"native":true,"reason":"원본 강화 주문서의 물리 소유를 확인할 수 없습니다"}
 		var reason: String=ITEM_USE.eligibility(world,proof.record)
 		if not reason.is_empty():refused=reason;continue
@@ -49,19 +52,49 @@ static func quest_scroll(world: Node, uid: String) -> Dictionary:
 	if not owned.get("ok",false) or owned.source_use_immediately:return {}
 	return {"record":record,"remaining":int(owned.quantity),"quest_reward_receipt":receipt.duplicate(true)}
 
+## The standalone seal box issued this scroll as a plain original-key balance.
+## The bare bag row is usable only while it still represents that plain stock.
+static func owns_seal_box_balance(world: Node, name: String, record: Dictionary) -> bool:
+	if ENHANCE.item_id(record)!=SEAL_BOX_SCROLL_ID or record.get("name")!=name or record.get("source_bless_raw")!=1:
+		return false
+	if world._catalog_item_from_source_id(str(record.sourceId))!=record or not SOURCE.declares_scroll(record):
+		return false
+	return not world._item_locked(name) and CATALOG_STACK.holds_plain(world,name)
+
 ## Old saves could pin a single ordinary scroll before receipts existed.
 ## A partial or foreign receipt must never be downgraded to this format.
-static func _legacy_unit(world: Node, entry: Dictionary, name: String) -> Dictionary:
-	for field: String in [STACK.QUANTITY, "quest_reward_receipt", "source_reward_quantity", "source_native_stack_used_quantity"]:
+static func legacy_unit(world: Node, entry: Dictionary, name: String) -> Dictionary:
+	if not world.has_method("source_item_record"): return {}
+	for field: String in [STACK.RECEIPT, STACK.QUANTITY, "quest_reward_receipt", "source_reward_quantity", "source_native_stack_used_quantity"]:
 		if entry.has(field): return {}
-	var pinned: Dictionary = entry.get("record", {})
-	var id: String = ENHANCE.item_id(pinned)
-	if not id.is_valid_int() or entry.get("level", -1) != 0 or world.patch523_equipment.bless_code(entry) != 1: return {}
+	var pinned: Variant = entry.get("record")
+	if not pinned is Dictionary or pinned.get("slot") not in ["consumable","material"]:
+		return {}
+	if entry.get("name")!=name or entry.get("level",-1)!=0 or world.patch523_equipment.bless_code(entry)!=1:
+		return {}
+	var record: Dictionary
+	if pinned.get("source_m_native_item",false):
+		var original_id: String = ENHANCE.item_id(pinned)
+		if not original_id.is_valid_int(): return {}
+		record = world._catalog_item_from_source_id("m523:item:"+original_id)
+		if record.is_empty(): record=world.source_item_record(int(original_id))
+		if record.is_empty(): return {}
+		var original_name: String = str(record.name)
+		if name!=original_name and not CATALOG_STACK.unique_stock_name(name,int(original_id)): return {}
+		if pinned.get("name") not in [name,original_name]: return {}
+		# Earlier saves stored the Korean key with or without the verified
+		# ItemClass suffix. Compare the pinned metadata against that exact row.
+		var identity: Dictionary = pinned.duplicate()
+		identity["name"]=original_name
+		if not DROPS.matches(identity,record): return {}
+	else:
+		if pinned.get("name")!=name: return {}
+		record=CATALOG_STACK.action_record(world,pinned)
+	var id: String=ENHANCE.item_id(record)
+	if not id.is_valid_int() or record.get("source_bless_raw")!=1: return {}
 	if str(entry.get("sourceId", pinned.get("sourceId", ""))) not in [id, str(pinned.get("sourceId", ""))]: return {}
-	var record: Dictionary = world.source_item_record(int(id))
-	if record.get("name") != name or pinned.get("name") != name or record.get("source_bless_raw") != 1: return {}
 	if not SOURCE.declares_scroll(record) or world.item_life523.has_life_row(record): return {}
-	return {"record":record, "remaining":1, "legacy_unit":true}
+	return {"record":record,"remaining":1,"legacy_unit":true,"inventory_key":name}
 
 static func stage(world: Node, owned: Dictionary, quantity: int) -> Dictionary:
 	if STACK.busy:return {"ok":false,"reason":"원본 아이템 저장 처리 중 · 주문서 보존"}
@@ -75,7 +108,7 @@ static func stage(world: Node, owned: Dictionary, quantity: int) -> Dictionary:
 		if not result.get("ok",false):return result
 		return {"ok":true,"overrides":result.overrides,"quest_step":result}
 	if proof.get("legacy_unit", false):
-		var name: String = str(proof.record.name)
+		var name: String = str(proof.inventory_key)
 		var current: Dictionary = select_owned(world, name, str(owned.uid), quantity, true)
 		if not current.get("ok", false) or current.proof != proof or int(world.inventory.get(name, 0)) < quantity:
 			return {"ok":false,"reason":"선택한 원본 강화 주문서가 변경되었습니다"}

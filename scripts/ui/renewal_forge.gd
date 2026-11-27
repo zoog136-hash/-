@@ -7,6 +7,7 @@ const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
 const SOURCE_IMAGES=preload("res://scripts/ui/source523_image_assets.gd")
 const NATIVE_STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
+const ENHANCE_STOCK=preload("res://scripts/crafting/patch523_enhance_stock.gd")
 const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
 
@@ -50,13 +51,19 @@ static func owned_scrolls(controller: Node) -> Array:
 		for uid: String in instances:
 			var entry: Dictionary=instances[uid]
 			var quest_reward: bool=entry.has("quest_reward_receipt")
-			if not entry.has(NATIVE_STACK.RECEIPT) and not quest_reward:continue
 			var name: String=str(entry.get("name",""))
+			if not entry.has(NATIVE_STACK.RECEIPT) and not quest_reward:
+				var legacy: Dictionary=ENHANCE_STOCK.legacy_unit(world,entry,name)
+				if legacy.is_empty():continue
+				receipted[name]=true
+				if int(balances.get(name,0))>0 and not world._item_locked(name) and not world._item_locked(name,uid):
+					rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":legacy.remaining})
+				continue
 			receipted[name]=true
 			if int(balances.get(name,0))<=0:continue
 			if world._item_locked(name) or world._item_locked(name,uid):continue
 			if quest_reward:
-				var held: Dictionary=preload("res://scripts/crafting/patch523_enhance_stock.gd").quest_scroll(world,uid)
+				var held: Dictionary=ENHANCE_STOCK.quest_scroll(world,uid)
 				if not held.is_empty():rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":held.remaining})
 				continue
 			var record: Dictionary=entry.get("record",{})
@@ -90,7 +97,7 @@ static func selected_scroll(controller: Node, scroll: String, blessing_reference
 	if not uid.is_empty():
 		var owned: Dictionary
 		if blessing_reference.is_empty():
-			var selected: Dictionary=preload("res://scripts/crafting/patch523_enhance_stock.gd").select_owned(world,scroll,uid,1,true)
+			var selected: Dictionary=ENHANCE_STOCK.select_owned(world,scroll,uid,1,true)
 			owned=selected.get("proof",{})
 		else:owned=NATIVE_STACK.proof(world,uid)
 		return {"name":scroll,"reference":scroll+"@@@"+uid,"instance_id":uid,"count":int(owned.get("remaining",0))}

@@ -5718,17 +5718,19 @@ func _open_owned_native_enhancement(name: String, selected: String, record: Dict
 	var kind: String=_scroll_kind(name,record)
 	if kind.is_empty():return false
 	_enhancement_scroll_selection.clear()
-	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1)
+	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1,not selected.is_empty())
 	if not held.get("native",false):
 		if not selected.is_empty() or kind != "source": return false
 		var source: Dictionary = CATALOG_STACK.action_record(self,record)
-		if source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
+		if PATCH523_ENHANCE_STOCK.owns_seal_box_balance(self,name,record):
+			source=record
+			_enhancement_scroll_selection={"name":name,"seal_box_balance":true}
+		elif source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
 		var problem := preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,source)
 		if not problem.is_empty() or _item_locked(name) or not CATALOG_STACK.holds_plain(self,name):
 			hud.show_message(problem if not problem.is_empty() else "선택한 주문서의 수량과 잠금을 확인하세요")
 			return true
 	elif not held.get("ok",false):
-		if seal_scroll: return false # The seal owner also checks old saved physical scrolls.
 		hud.show_message(str(held.reason))
 		return true
 	else:
@@ -5746,7 +5748,12 @@ func _open_owned_native_enhancement(name: String, selected: String, record: Dict
 	return true
 
 func _enhancement_stock(scroll_name: String, count: int) -> Dictionary:
-	var uid: String=str(_enhancement_scroll_selection.get("uid","")) if _enhancement_scroll_selection.get("name") == scroll_name else ""
+	var selected: Dictionary=_enhancement_scroll_selection if _enhancement_scroll_selection.get("name")==scroll_name else {}
+	if selected.get("seal_box_balance",false):
+		if PATCH523_ENHANCE_STOCK.owns_seal_box_balance(self,scroll_name,_find_catalog_item_record(scroll_name)):
+			return {} # Continue through the existing plain-inventory transaction.
+		return {"native":true,"reason":"선택한 주문서 수량이 달라졌습니다 · 가방에서 다시 선택하세요"}
+	var uid: String=str(selected.get("uid",""))
 	return PATCH523_ENHANCE_STOCK.select_owned(self,scroll_name,uid,count,not uid.is_empty())
 
 func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name: String = "") -> Array:
@@ -5781,7 +5788,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 			level_value=int(receipt.get("element_level",0))
 		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,receipt,physical_scroll,token)
 		if elemental and not _elemental_enhancement_rule_valid(source_rule):continue
-		var seal: bool = not seal_id.is_empty() and patch523_equipment.identity(receipt) in ["30671","130551"]
+		var seal: bool = not seal_id.is_empty() and _compiled_seal_target(receipt)
 		if seal:
 			if stock.get("proof",{}).has("quest_reward_receipt"):continue
 			source_rule = patch523_seal_quote(instance_id,seal_id,str(stock.get("uid","")))
@@ -5879,11 +5886,11 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	# Exact host scroll aliases preserve existing inventory keys; these map only
 	# the original permanent normal/engraved scroll families, never item names.
 	if source_id.is_empty():
-		var aliases: Dictionary={"저주받은 무기 마법 주문서":"137","저주받은 무기 마법 주문서 (각인)":"6401","저주받은 갑옷 마법 주문서":"138","저주받은 갑옷 마법 주문서 (각인)":"6411","무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"139","장신구 마법 주문서 (각인)":"139",
+		var aliases: Dictionary={"저주받은 무기 마법 주문서":"137","저주받은 무기 마법 주문서 (각인)":"6401","저주받은 갑옷 마법 주문서":"138","저주받은 갑옷 마법 주문서 (각인)":"6411","무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"226992","장신구 마법 주문서 (각인)":"226992",
 			"장인의 무기 마법 주문서 (각인)":"1184","장인의 무기 마법 주문서":"134862","장인의 갑옷 마법 주문서":"270654","장인의 갑옷 마법 주문서 (각인)":"271248","오림의 장신구 마법 주문서":"227002","오림의 장신구 마법 주문서 (각인)":"227002","축복받은 오림의 장신구 마법 주문서":"227002","축복받은 오림의 장신구 마법 주문서 (각인)":"227002","축복받은 무기 마법 주문서":"137","축복받은 무기 마법 주문서 (각인)":"6401","축복받은 갑옷 마법 주문서":"138","축복받은 갑옷 마법 주문서 (각인)":"6411"}
 		source_id=str(aliases.get(scroll_name,""))
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["normal","blessed"]:
-		source_id=str({"weapon":"137","armor":"138","accessory":"139"}.get(kind,""))
+		source_id=str({"weapon":"137","armor":"138","accessory":"226992"}.get(kind,""))
 	if source_id.is_empty() and scroll_name.is_empty() and mode=="craftsman": source_id="1184" if kind=="weapon" else ("271248" if kind=="armor" else "")
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["orim","blessed_orim"] and kind=="accessory": source_id="227002"
 	if source_id.is_empty():return {"source_rule":true,"success":0.0,"reason":"원본 ItemClass 또는 강화 주문서 그룹 연결이 없어 아이템을 보존합니다"} if exact_required else {}
@@ -5891,11 +5898,11 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	var scroll_bless: int=int(issued.bless_code) if issued.get("ok",false) else int(scroll.get("source_bless_raw",3 if mode=="cursed" else 2 if mode in ["blessed","blessed_orim"] else 1))
 	var book: RefCounted=patch523_equipment
 	var target_id: String=PATCH523_ENHANCE.item_id(record)
-	var legacy_weapon: Dictionary={}
-	if (kind=="weapon" and record.get("source")=="inven" and not record.get("source_m_native_item",false)
+	var legacy_equip: Dictionary={}
+	if (kind in ["weapon","accessory"] and record.get("source")=="inven" and not record.get("source_m_native_item",false)
 		and target_id.is_valid_int() and not CURRENT523_DEFINITION_ROWS.not_installed() and not patch523_equipment.catalog_identity_matches(record,target_id)):
-		legacy_weapon=_catalog_item_from_source_id(target_id)
-		exact_required=exact_required or not legacy_weapon.is_empty()
+		legacy_equip=_catalog_item_from_source_id(target_id)
+		exact_required=exact_required or not legacy_equip.is_empty()
 	if exact_required and not issued.get("issued",false):
 		# Some original event targets have a numeric enchant family but no
 		# declared equip slot. Their physical storage receipts are not
@@ -5903,7 +5910,7 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 		if not token and record.get("source_m_native_item",false) and not LOOT_DROP.PATCH523_DROPS.equipment(record):
 			return {"source_rule":true,"success":0.0,"reason":"원본 착용 슬롯 없는 강화용 아이템 · 전용 수량/강화 소유자 필요 · 주문서 보존"}
 		var native: RefCounted=PATCH523_ENHANCE_SOURCE.new()
-		if not native.bind(record,target_id,scroll,source_id,patch523_equipment,legacy_weapon):
+		if not native.bind(record,target_id,scroll,source_id,patch523_equipment,legacy_equip):
 			return {"source_rule":true,"success":0.0,"reason":"원본 장비·주문서 정체 또는 지역·조건을 검증하지 못했습니다 · 아이템 보존"}
 		for original: Dictionary in [native.target,native.scroll]:
 			var date_problem: String=LOOT_DROP.PATCH523_DROPS.deadline_problem(original.get("native_record",{}),int(ui_preferences.get("patch523_source_clock_offset_minutes",540)))
@@ -6112,7 +6119,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		return
 	var physical_scroll: Dictionary=owned_scroll.proof.record if owned_scroll.get("ok",false) else {}
 	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name))
-	if not seal_id.is_empty() and patch523_equipment.identity(item_instances[item_id]) in ["30671","130551"]:
+	if not seal_id.is_empty() and _compiled_seal_target(item_instances[item_id]):
 		if owned_scroll.get("proof",{}).has("quest_reward_receipt"):
 			hud.show_message("이 퀘스트 주문서는 인장 강화에 사용할 수 없습니다")
 			return
@@ -7040,6 +7047,12 @@ func _seal_scroll_id(record: Dictionary) -> String:
 		scroll_id=str(int(raw_id))
 	return scroll_id if scroll_id in PATCH523_SEAL_ACTIONS.SCROLLS else ""
 
+func _compiled_seal_target(physical: Dictionary) -> bool:
+	var id: String=patch523_equipment.identity(physical)
+	if id not in ["30671","130551"]: return false
+	var record: Dictionary=physical.get("record",{})
+	return record.get("source_m_native_item",false) or patch523_equipment.catalog_identity_matches(record,id)
+
 ## Both scrolls have authored targets outside the two seals. The common
 ## chooser uses the seal owner's quote and transaction for those two targets.
 func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
@@ -7080,14 +7093,9 @@ func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String 
 		if not owned.is_empty() and owned.record.get("source_item_class_id")==int(scroll_id) and int(owned.receipt.bless_raw)==1:
 			scroll_name=str(owned.record.name)
 		else:
-			var record: Dictionary=scroll.get("record",{})
 			var stored_name: String=str(scroll.get("name",""))
-			var current_name: String=str(source_item_record(int(scroll_id)).get("name",""))
-			# Old saves sometimes pin one ordinary scroll as a physical unit.
-			# An invalid or foreign receipt must never fall back to legacy use.
-			legacy=owned.is_empty() and not scroll.has(stock.RECEIPT) and not scroll.has(stock.QUANTITY) and not scroll.has("quest_reward_receipt") and not scroll.has("source_reward_quantity") \
-				and (record.get("source_item_class_id")==int(scroll_id) or PATCH523_ENHANCE.item_id(record)==scroll_id) and int(scroll.get("level",-1))==0 \
-				and patch523_equipment.bless_code(scroll)==1 and not stored_name.is_empty() and stored_name in [scroll_name,current_name]
+			var old_unit: Dictionary=PATCH523_ENHANCE_STOCK.legacy_unit(self,scroll,stored_name)
+			legacy=old_unit.get("record",{}).get("source_item_class_id")==int(scroll_id)
 			if not legacy:return PATCH523_EQUIPMENT.denied("가방에서 보유한 일반 인장 강화 주문서를 다시 선택하세요")
 			scroll_name=stored_name
 	var quote: Dictionary = PATCH523_SEAL_ACTIONS.quote(patch523_equipment,physical,scroll_id,inventory,gold,
