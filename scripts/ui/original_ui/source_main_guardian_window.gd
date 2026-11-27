@@ -18,9 +18,9 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## 수호성 마법발동 스킬 설정 ON / OFF of an opened skill slot, 닫기 and 활성화.
 ## Every rule stays with world.growth: 수호성 초기화, 활성화 and 대표 지정 are
 ## its quote -> HUD confirmation -> execute; the card choice after 활성화 opens
-## the original 수호성 찾기 window (source_main_guardian_find_window); 강화
-## and 시전 (not in the original popup) open the existing 수호성 view on that
-## slot. Left out: the slot icon (Common_Slot), the gauge, the message.
+## the original 수호성 찾기 window (source_main_guardian_find_window). An
+## opened passive skill can enter the original 강화 window. The existing
+## view also provides the cast action for equipped active guardian skills.
 const ROOT="UI/SkillTree/SkillTree_All.csb"
 const ICON_SKILL="UI/SkillTree/SkillTree_Icon_Skill.csb"
 const ICON_BONUS="UI/SkillTree/SkillTree_Icon_Bonus.csb"
@@ -300,13 +300,20 @@ func _close_info() -> Dictionary:
 	info=""
 	return _stage()
 
-## 활성화: quote -> confirmation -> execute, then the existing view for the
-## card choice; an opened slot's 강화 / 시전 open the existing view on it.
+## 활성화: quote -> confirmation -> execute. An opened passive skill can
+## enter the authored 강화 screen when the selected pack provides it.
 func _info_ok() -> Dictionary:
 	var runtime: Object=_runtime()
 	var id: String=info
 	if (runtime.state.get("nodes",[]) as Array).has(id):
 		info=""
+		var row: Dictionary=runtime.node(id)
+		if row.get("kind","")!="active" and int(row.get("max_level",0))>runtime.guardian_level(id):
+			var owner: Object=hud()
+			var controller: Variant=owner.get("original_main_ui_controller") if owner!=null else null
+			if is_instance_valid(controller):
+				var opened: Dictionary=controller.try_open_feature_window("guardian_enchant",[selected,id])
+				if opened.get("handled",false):return opened
 		return _route("open_growth_native",["guardians",selected,id])
 	if str((runtime.state.get("pending",{}) as Dictionary).get("node",""))==id:
 		info=""
