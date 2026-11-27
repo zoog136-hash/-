@@ -762,19 +762,12 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	var problem: String=str(use_owner.call("eligibility",world,record))
 	if not problem.is_empty():return _failure(problem)
 	var details: Dictionary=effect.get("metadata",{});var spec: Dictionary=effect.get("spec",{})
-	if effect.get("runtime_regen",false):
-		var regen_owner: Script=load("res://scripts/quests/quest_regen523.gd")
-		var active: Dictionary=regen_owner.call("action",world,record)
-		spec=NATIVE_FIELDS.full(active).get("source_use_spec",{})
-		if spec.get("activation_status")!="unrestricted":return _failure("기존 MP 재생 주기 설정·원본 조건 확인 필요 · 물약 보존")
-	if effect.get("runtime_presentation",false):
-		var active: Dictionary=use_owner.call("action_record",world,record)
-		spec=NATIVE_FIELDS.full(active).get("source_use_spec",{})
-		if spec.get("activation_status")!="unrestricted":return _failure("기존 표시 메타데이터·기간 정책에서 사용을 보류합니다 · 아이템 보존")
-	if effect.get("runtime_food",false):
-		var active: Dictionary=use_owner.call("action_record",world,record)
-		spec=NATIVE_FIELDS.full(active).get("source_use_spec",{})
-		if spec.get("activation_status")!="unrestricted":return _failure("기존 음식 회복 주기 설정·원본 조건 확인 필요 · 아이템 보존")
+	if effect.kind=="buff":
+		spec=timed_buff_spec(world,record,effect)
+		if spec.is_empty():
+			if effect.get("runtime_regen",false):return _failure("기존 MP 재생 주기 설정·원본 조건 확인 필요 · 물약 보존")
+			if effect.get("runtime_food",false):return _failure("기존 음식 회복 주기 설정·원본 조건 확인 필요 · 아이템 보존")
+			return _failure("기존 표시 메타데이터·기간 정책에서 사용을 보류합니다 · 아이템 보존")
 	if not bool(details.get("can_use_when_invisible",spec.get("can_use_when_invisible",false))) and world.is_player_concealed():return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	var cooldown_key: String="m523:item:"+str(record.source_item_class_id)
 	if float(world.item_use_cooldowns.get(cooldown_key,0.0))>0:return _failure("원본 아이템 재사용 대기")
@@ -935,6 +928,17 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if is_buff:FRAME_HITCH.detail("item.buff_apply",buff_phase)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.try_use")
+
+## The same duration and original effect identity drive manual use and AUTO.
+static func timed_buff_spec(world: Node, record: Dictionary, effect: Dictionary) -> Dictionary:
+	var spec: Dictionary = effect.get("spec", {})
+	if effect.get("runtime_regen", false):
+		var resolved: Dictionary = load("res://scripts/quests/quest_regen523.gd").action(world,record)
+		spec = NATIVE_FIELDS.full(resolved).get("source_use_spec", {})
+	elif effect.get("runtime_presentation", false) or effect.get("runtime_food", false):
+		var resolved: Dictionary = load("res://scripts/loot/patch523_item_use.gd").action_record(world,record)
+		spec = NATIVE_FIELDS.full(resolved).get("source_use_spec", {})
+	return spec if spec.get("activation_status") == "unrestricted" else {}
 
 static func _buff_territory_problem(world: Node,spec: Dictionary) -> String:
 	if spec.has("source_trial_tower_territory_id"):

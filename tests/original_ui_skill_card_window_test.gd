@@ -15,6 +15,7 @@ var failures: Array[String]=[]
 class FakeWorld extends Node:
 	var item_instances: Dictionary={}
 	var calls: Array=[]
+	var merge_result: Dictionary={"ok":true,"saved":true,"success":false,"consumed":8,"target_grade_id":4,"result":{}}
 	func skill_card523_deck() -> Array:
 		return [{"card_id":4101,"name":"아이스 스파이크","grade_id":1,"grade":"일반","spell_class_id":0,"level":1,"max_level":3,"exp":20,"required_exp":100,"enhanceable":true,"stage_descriptions":{1:"피해 +5"}},
 			{"card_id":4401,"name":"헬 사이드","grade_id":4,"grade":"영웅","spell_class_id":0,"level":3,"max_level":3,"exp":0,"required_exp":0,"enhanceable":false,"stage_descriptions":{}}]
@@ -24,11 +25,15 @@ class FakeWorld extends Node:
 			{"physical_id":"b2","name":"스킬서 B","card_id":4103,"card_name":"B","grade_id":1,"grade":"일반","remaining":4,"locked":false}]
 	func skill_card523_merge_quote(grade_id: int, selection: Dictionary={}) -> Dictionary:
 		calls.append(["merge_quote",grade_id,selection.duplicate()])
+		var result: Dictionary=skill_card523_merge_preview(grade_id,selection)
+		result["token"]="m%d" % calls.size()
+		return result
+	func skill_card523_merge_preview(grade_id: int, selection: Dictionary) -> Dictionary:
 		var picked: Array=[{"physical_id":"b1","quantity":5},{"physical_id":"b2","quantity":3}] if selection.is_empty() else []
-		return {"ok":true,"token":"m%d" % calls.size(),"grade_id":grade_id,"source_amount":8,"probability_percent":1.0,"materials":picked}
+		return {"ok":true,"grade_id":grade_id,"source_amount":8,"probability_percent":1.0,"materials":picked}
 	func skill_card523_merge_execute(token: String) -> Dictionary:
 		calls.append(["merge_execute",token])
-		return {"ok":true,"success":false,"result":{}}
+		return merge_result
 	func skill_card523_levelup_quote(card_id: int, feed: Dictionary={}, attempt: bool=true) -> Dictionary:
 		calls.append(["levelup_quote",card_id,feed.duplicate(),attempt])
 		var fed: int=0

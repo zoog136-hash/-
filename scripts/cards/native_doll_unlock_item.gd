@@ -1,6 +1,7 @@
 extends RefCounted
 ## Exact source item-to-buff use. Display names never establish ownership.
 const INPUT=preload("res://scripts/cards/current523_option_combat_input.gd")
+const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const FIELD: String="native_doll_unlock"
 const ITEM: int=346901
 const BUFF: int=91531
@@ -15,6 +16,15 @@ static func validate(state: Dictionary) -> String:
 		if not value.has(key) or value[key]!=marker()[key]:return "추가 인형 해금 원본 연결 오류"
 	return ""
 static func unlocked(state: Dictionary) -> bool:return state.has(FIELD) and validate(state).is_empty()
+
+## The exact localized name can be screened without building the full option
+## combat records. A matching name still needs the original verified record.
+static func matches_catalog_name(item_name: String, raw: Dictionary) -> bool:
+	return not item_name.is_empty() and item_name==INPUT.unlock_catalog_name(raw) and not record().is_empty()
+
+static func source_row() -> Dictionary:
+	return SOURCE.row("ItemClass",ITEM)
+
 static func record() -> Dictionary:
 	var source: Dictionary=INPUT.session().subslot_unlock_item
 	if source.is_empty():return {}

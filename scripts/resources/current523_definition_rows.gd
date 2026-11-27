@@ -28,6 +28,7 @@ static var _archive_path := ""
 static var _tables: Dictionary = {}
 static var _relations: Dictionary = {}
 static var _metadata: Dictionary = {}
+static var _consumable_territories: Variant = null
 static var _problem := ""
 static var _not_installed := false
 ## Process-local invalidation epoch for short-lived derived read caches. Even
@@ -50,6 +51,7 @@ static func reset() -> void:
 	_relations.clear()
 	_integer_fields.clear()
 	_metadata.clear()
+	_consumable_territories = null
 	_problem = ""
 	_not_installed = false
 
@@ -891,6 +893,38 @@ static func _view(table: String, value: Dictionary) -> Dictionary:
 ## a row kept unmodified elsewhere (a quest reward's pinned source_item).
 static func approximated_item(value: Dictionary) -> Dictionary:
 	return _view("ItemClass", value.duplicate(true))
+
+## These callers only need rows referenced by ConsumeTerritories. Read the
+## verified source spans once instead of converting and publishing the entire
+## 25,465-row table on the first timed use. Keep ordinary lookups as fallback.
+static func consumable_territories(ids: Dictionary) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if ids.is_empty() or not _open(): return result
+	if _consumable_territories == null:
+		_consumable_territories = _read_consumable_territories(_archive.read_file("content/Territories.json"))
+	for id: int in _consumable_territories:
+		if ids.has(id): result.append(_consumable_territories[id].duplicate(true))
+	return result if result.size() == ids.size() else rows_matching("Territories", "ID", ids)
+
+static func _read_consumable_territories(bytes: PackedByteArray) -> Dictionary:
+	var spec: Dictionary = preload("res://scripts/resources/current523_boot_row_spans.gd").CONSUME_TERRITORIES
+	if bytes.size() != int(spec.bytes): return {}
+	var hash := HashingContext.new()
+	if hash.start(HashingContext.HASH_SHA256) != OK or hash.update(bytes) != OK or hash.finish().hex_encode() != spec.sha: return {}
+	var spans: Array = spec.spans
+	var result: Dictionary = {}
+	var previous_end: int = 0
+	for index: int in range(0, spans.size(), 2):
+		var start: int = spans[index]
+		var end: int = spans[index + 1]
+		if start < previous_end or end <= start or end > bytes.size(): return {}
+		var parser := JSON.new()
+		if parser.parse(bytes.slice(start,end).get_string_from_utf8()) != OK: return {}
+		var row: Variant = parser.data
+		if not row is Dictionary or not _integer(row.get("ID")) or result.has(int(row.ID)): return {}
+		result[int(row.ID)] = row
+		previous_end = end
+	return result
 
 ## Rows whose integer `field` is a key of `ids`, in original table order.
 ## Same rows as filtering rows(table), without building the whole table.

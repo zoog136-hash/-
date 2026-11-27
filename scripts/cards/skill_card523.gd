@@ -339,9 +339,17 @@ func _merge_plan(grade_id: int, selection: Dictionary) -> Dictionary:
 func merge_quote(grade_id: int, selection: Dictionary = {}) -> Dictionary:
 	var plan: Dictionary = _merge_plan(grade_id, selection)
 	if not bool(plan.get("ok", false)): return plan
-	var shown: Dictionary = plan.duplicate(true)
+	plan["token"] = _new_token({"kind":"merge", "grade_id":grade_id, "requests":plan.requests, "revision":revision})
+	return _merge_display(plan)
+
+## A repaint or automatic material selection must leave a pending review
+## token valid. The actual confirm action still creates a fresh quote.
+func merge_preview(grade_id: int, selection: Dictionary = {}) -> Dictionary:
+	return _merge_display(_merge_plan(grade_id, selection))
+
+static func _merge_display(plan: Dictionary) -> Dictionary:
+	var shown: Dictionary = plan.duplicate()
 	shown.erase("requests")
-	shown["token"] = _new_token({"kind":"merge", "grade_id":grade_id, "requests":plan.requests, "revision":revision})
 	return shown
 
 ## {ok, reason, saved, success, result{card_id,name,item_class_id,item}|{}, consumed}
@@ -370,9 +378,15 @@ func merge_execute(token: String) -> Dictionary:
 		payload.inventory = issued.overrides.inventory
 		payload.item_instances = issued.overrides.item_instances
 		var item: String = ""
+		var physical_id: String = ""
 		for uid: Variant in payload.item_instances:
-			if not world.item_instances.has(uid) and int(NATIVE_FIELDS.full(payload.item_instances[uid].get("record", {})).get("source_item_class_id", -1)) == int(chosen.item_class_id): item = str(payload.item_instances[uid].name)
-		result = {"card_id":int(chosen.card_id), "name":str(chosen.name), "item_class_id":int(chosen.item_class_id), "item":item}
+			if not world.item_instances.has(uid) and int(NATIVE_FIELDS.full(payload.item_instances[uid].get("record", {})).get("source_item_class_id", -1)) == int(chosen.item_class_id):
+				item = str(payload.item_instances[uid].name)
+				physical_id = str(uid)
+				break
+		var card_id: int = int(chosen.card_id)
+		result = {"card_id":card_id, "name":str(chosen.name), "item_class_id":int(chosen.item_class_id), "item":item,
+			"physical_id":physical_id, "spell_class_id":int(SOURCE.row("BuffCard",card_id).get("SpellClassID",0))}
 	elif world.get("tj_coupons") != null:
 		var tj: Object = world.tj_coupons.core
 		var history := TJ_SKILL.stage_failure(world,tj,plan)

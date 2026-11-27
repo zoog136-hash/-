@@ -923,9 +923,14 @@ func clear_target() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	if lineage_side_ui != null:
-		lineage_side_ui.set_character_state(value)
-	if lineage_inventory_ui != null:
+	if is_instance_valid(lineage_side_ui):
+		if is_instance_valid(lineage_side_ui.character_panel) and lineage_side_ui.character_panel.is_visible_in_tree():
+			lineage_side_ui.set_character_state(value)
+		else:
+			# Vitals update the top-level fields separately. Opening the panel
+			# supplies the current full state and rebuilds the visible controls.
+			lineage_side_ui.character_state=value.duplicate()
+	if is_instance_valid(lineage_inventory_ui):
 		lineage_inventory_ui.set_character_state(value)
 	var job_image_path: String = str(value.get("job_image_path", ""))
 	var source_portrait: bool = SourceClassImages.selected()

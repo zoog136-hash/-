@@ -15,6 +15,13 @@ TABLES = (
 )
 MAX_ROWS, MAX_BYTES = 512, 1048576
 
+def row_spans(raw):
+    rows = json.loads(raw)['rows']
+    starts = [m.start() + 4 for m in re.finditer(rb'(?m)^    \{\r?$', raw)]
+    ends = [m.start() + 5 for m in re.finditer(rb'(?m)^    \},?\r?$', raw)]
+    assert len(starts) == len(ends) == len(rows)
+    return rows, starts, ends
+
 def generate(path):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
     result = ['extends RefCounted', '## Byte spans only; no row contents. Regenerate from the pinned ZIP with',
@@ -24,10 +31,7 @@ def generate(path):
     with zipfile.ZipFile(path) as archive:
         for table in TABLES:
             raw = archive.read('content/' + table + '.json')
-            rows = json.loads(raw)['rows']
-            starts = [m.start() + 4 for m in re.finditer(rb'(?m)^    \{\r?$', raw)]
-            ends = [m.start() + 5 for m in re.finditer(rb'(?m)^    \},?\r?$', raw)]
-            assert len(starts) == len(ends) == len(rows)
+            rows, starts, ends = row_spans(raw)
             spans = []
             i = 0
             while i < len(rows):
@@ -43,7 +47,25 @@ def generate(path):
             for i in range(0, len(spans), 24):
                 result.append(','.join(str(n) for n in spans[i:i+24])+',')
             result.append(']},')
-    return '\n'.join(result + ['}', ''])
+        raw = archive.read('content/Territories.json')
+        ids = {row['TerritoryId'] for row in json.loads(archive.read('content/ConsumeTerritories.json'))['rows']}
+        rows, starts, ends = row_spans(raw)
+        result.extend(['}', '',
+                       '## Territories rows referenced by ConsumeTerritories, in source order.',
+                       '## [start, end] only. IDs and rectangles are read from the installed archive.',
+                       f'const CONSUME_TERRITORIES = {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "spans":['])
+        spans = []
+        seen = set()
+        for row, start, end in zip(rows, starts, ends):
+            if row['ID'] in ids:
+                assert row['ID'] not in seen
+                assert json.loads(raw[start:end]) == row
+                spans.extend((start, end))
+                seen.add(row['ID'])
+        assert seen == ids
+        for i in range(0, len(spans), 24):
+            result.append(','.join(str(n) for n in spans[i:i+24])+',')
+    return '\n'.join(result + [']}', ''])
 
 if __name__ == '__main__':
     print(generate(Path(sys.argv[1])), end='')

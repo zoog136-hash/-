@@ -382,7 +382,8 @@ func _try_use_impl(item_name: String,selected_instance: String,loading: bool) ->
 	if preload("res://scripts/loot/patch523_item_use.gd").try_use(world, source_record): return true
 	if preload("res://scripts/shop/source523_wisdom.gd").try_use(world,item_name):return true
 	if preload("res://scripts/shop/source523_restoration.gd").try_use(world,item_name):return true
-	if not item_name.is_empty() and item_name==str(preload("res://scripts/cards/native_doll_unlock_item.gd").record().get("name","")):
+	var unlock: Script=preload("res://scripts/cards/native_doll_unlock_item.gd")
+	if unlock.matches_catalog_name(item_name,unlock.source_row()):
 		if world.has_method("_patch523_item_allowed") and not bool(world.call("_patch523_item_allowed")): return true
 		var source_result: Dictionary=world.option_awakening.use_native_unlock_item(item_name,selected_instance)
 		if bool(source_result.get("handled",false)):

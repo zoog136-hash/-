@@ -17,14 +17,16 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## - 합성 tab (SkillCard_Tab_Compose): the source grades 일반 / 영웅 / 전설
 ##   with their unlearned books, tap to register (SkillCard_Slot_A), 카드 자동
 ##   등록, the registered cards, the target and the original merge chance;
-##   합 성 runs the existing merge (failure loses the books: OnFailReward false).
+##   합 성 runs the existing merge (failure loses the books: OnFailReward false),
+##   then presents the saved result inside the original compose panel.
 ## - The popup's 성공 확률 shows the levelup quote's chance; its 전체 button
 ##   orders the books 전체 / 수량순 / 이름순 (TWILIGHT 근사(근거 약함)).
 ## Left empty (no TWILIGHT feature or data): 상점 바로가기, 확정 합성, 실패 이력
 ## 조회 and 실패 횟수 / 합성 시도 보상 gauges, the lock buttons, the grade filter
-## of the popup (its books are one grade), the result roulette / reveal and stage 4.
+## of the popup (its books are one grade), the result roulette and stage 4.
 const ROOT="UI/SkillCard/SkillCard_All.csb"
 const POPUP="UI/SkillCard/SkillCard_Popup_Enchant.csb"
+const FUSION_CARD="UI/SkillCard/SkillCard_Fusion_Card.csb"
 const CLASS_ROW="UI/SkillCard/SkillCard_List_Class.csb"
 const SLOT="UI/SkillCard/SkillCard_Slot_A.csb"
 const SLOT_B="UI/SkillCard/SkillCard_Slot_B.csb"
@@ -61,6 +63,9 @@ var book_order: int=0
 var _grid_positions: Dictionary={}
 var _held_slot: int=-1
 var _stage_deck: Variant=null
+var _fusion_result: Dictionary={}
+var _merge_token: String=""
+var _merge_dialog: WeakRef
 
 func required_members() -> Array[String]:
 	return [ROOT,POPUP,CLASS_ROW,SLOT,SLOT_B,COMMON_SLOT]
@@ -78,10 +83,19 @@ func open(parent: Node) -> Dictionary:
 	selected=-1
 	registered.clear()
 	feed.clear()
+	_fusion_result={}
+	_merge_token=""
+	_merge_dialog=null
 	_grid_positions.clear()
 	var deck: Array=deck()
 	grade=int(deck[0].grade_id) if not deck.is_empty() else 1
 	return open_window(parent)
+
+func close() -> void:
+	_fusion_result={}
+	_merge_token=""
+	_merge_dialog=null
+	super.close()
 
 func deck() -> Array:
 	var value: Variant=_call("skill_card523_deck")
@@ -169,13 +183,25 @@ func _compose_spec(spec: Dictionary) -> void:
 	spec[c+"Btn_Probability"]={"activate":Callable(self,"_merge_probability")}
 	for name: String in ["Nd_TabMenu/Btn_Fixed_On","Nd_TabMenu/Btn_Fixed_Off","Nd_TabMenu/Btn_Normal_Off","Nd_Reward","Nd_Fixed","Nd_Reward_All","Nd_Message"]:spec[c+name]={"exclude":true}
 	spec[c+"Nd_TabMenu/Btn_Normal_On"]={"activate":Callable(self,"_ignore")}
+	if not _fusion_result.is_empty():
+		spec[c+"Label_Title"]={"role":"source_text","text":"합성 성공" if _fusion_result.success else "합성 실패"}
+		spec[c+"Label_Tip"]={"visible":false}
+		spec[c+"Btn_Probability"]={"visible":false}
+		spec[c+"Nd_Card/Label_Message"]={"visible":false}
+		spec[REGISTERED_LIST]={"exclude":true}
+		spec[c+"Btn_Auto"]={"visible":false}
+		spec[c+"Btn_Compose"]={"activate":Callable(self,"_dismiss_fusion")}
+		spec[c+"Btn_Compose/Normal"]={"visible":true}
+		spec[c+"Btn_Compose/Normal/Text"]={"role":"source_text","text":"확인"}
+		spec[c+"Btn_Compose/Disabled"]={"visible":false}
+		return
 	spec[c+"Btn_Compose"]={"activate":Callable(self,"_merge")}
 	spec[c+"Btn_Auto"]={"activate":Callable(self,"_auto_register")}
 	_compose_status_spec(spec)
 
 func _compose_status_spec(spec: Dictionary) -> void:
 	var c: String=COMPOSE_INFO
-	var quote: Dictionary=_merge_quote()
+	var quote: Dictionary=_merge_preview(registered)
 	var count: int=_registered_count()
 	var ready: bool=quote.get("ok",false) and count>=int(quote.get("source_amount",0))
 	spec[c+"Label_Title"]={"role":"source_text","text":"왼쪽 카드를 선택해 주세요." if count==0 else "등록한 카드 %d / %d" % [count,int(quote.get("source_amount",0))]}
@@ -281,12 +307,53 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var filled: Dictionary={"ok":true,"tab":tab,"grade":current,"cards":shown.size(),"icons":grid.icons,"mounted_cards":grid.mounted}
 	if tab=="compose":
 		root.set_meta("compose_material_counts",counts)
+		if not _fusion_result.is_empty():
+			return _fill_fusion_result(root,out,filled)
 		var reg: Dictionary=_prepare_registered(root,out,shown)
 		if not reg.get("ok",false):return reg
 		_commit_registered(reg)
 		filled["icons"]+=reg.icons
 		filled["registered"]=reg.ordered.size()
 		filled["registered_icons"]=reg.icons
+	return filled
+
+func _fill_fusion_result(root: Node2D, out: Dictionary, filled: Dictionary) -> Dictionary:
+	var anchor: Dictionary=_locate(root,out,COMPOSE_INFO+"Nd_Card")
+	if not anchor.get("ok",false):return anchor
+	var success: bool=_fusion_result.success
+	var item: Dictionary=_fusion_result.get("result",{})
+	var caption: String=str(item.get("name","")) if success else "재료 %d장 소멸" % int(_fusion_result.consumed)
+	# The source roulette contains preview sprites, so the committed result
+	# uses the standard skill slot and the authored result title/effect.
+	var spec: Dictionary={"Text_Card_Name":{"role":"source_text","text":caption},"card":{"exclude":true},
+		"Panel/Fx_Result_Loop_2":{"exclude":true},"Card_Roultte":{"exclude":true},"Nd_Info":{"exclude":true},
+		"Fx_Glow/Fx_Greade":{"exclude":true},"Fx_Glow/Fx_Result_Start":{"exclude":true},"Btn_Card":{"exclude":true}}
+	if not success:
+		spec["Fx_Result_Loop_1"]={"exclude":true}
+		spec["Fx_Glow"]={"exclude":true}
+	var bound: Dictionary={}
+	var shown: Dictionary=_scene_of(FUSION_CARD,spec,bound)
+	if not shown.get("ok",false):return shown
+	var effect: Node2D=shown.scene
+	var host: Node2D=anchor.player.source_nodes[anchor.offset]
+	host.add_child(effect)
+	if success:
+		var slot_spec: Dictionary={}
+		_slot_spec(slot_spec,"",int(_fusion_result.target_grade_id),-1)
+		var face_nodes: Dictionary={}
+		var face: Dictionary=_scene_of(SLOT,slot_spec,face_nodes)
+		if face.get("ok",false):
+			# Both the original card effect and slot use a centered pivot.
+			effect.add_child(face.scene)
+			var icon: bool=_slot_icon(face.scene,face_nodes,{"spell_class_id":int(item.get("spell_class_id",0))})
+			if not icon:icon=_slot_icon(face.scene,face_nodes,{"physical_id":str(item.get("physical_id",""))})
+			filled["result_icon"]=icon
+		var settings: Variant=world().get("presentation_settings")
+		var motion: bool=not (settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0))
+		if not motion or not effect.play("Fx_Cardname",false).get("ok",false):effect.seek_frame(155)
+	else:
+		effect.seek_frame(155)
+	filled["fusion_result"]={"success":success,"caption":caption,"member":FUSION_CARD}
 	return filled
 
 func _prepare_registered(root: Node2D, out: Dictionary, books: Array) -> Dictionary:
@@ -587,6 +654,10 @@ func _merge_quote() -> Dictionary:
 	var value: Variant=_call("skill_card523_merge_quote",[compose_grade,registered.duplicate()])
 	return value if value is Dictionary else {}
 
+func _merge_preview(selection: Dictionary) -> Dictionary:
+	var value: Variant=_call("skill_card523_merge_preview",[compose_grade,selection])
+	return value if value is Dictionary else {}
+
 func _levelup_quote() -> Dictionary:
 	var card: Dictionary=_card()
 	if card.is_empty():return {}
@@ -631,6 +702,7 @@ func _feed_input(event: InputEvent, physical_id: String, remaining: int) -> void
 ## --- Actions --------------------------------------------------------------------
 
 func _tab(name: String) -> Dictionary:
+	if not _fusion_result.is_empty():return _fail("source_skill_card_fusion_result_open")
 	var previous: String=tab
 	var leaving_enchant: bool=name=="skill" and tab=="enchant"
 	var was_open: bool=is_open()
@@ -642,6 +714,7 @@ func _tab(name: String) -> Dictionary:
 	return result
 
 func _grade(id: int) -> Dictionary:
+	if not _fusion_result.is_empty():return _fail("source_skill_card_fusion_result_open")
 	var previous_grade: int=grade if tab=="skill" else compose_grade
 	var previous_selected: int=selected
 	var previous_registered: Dictionary=registered.duplicate()
@@ -662,6 +735,7 @@ func _grade(id: int) -> Dictionary:
 	return result
 
 func _slot_tap(index: int, entry: Dictionary={}) -> Dictionary:
+	if not _fusion_result.is_empty():return _fail("source_skill_card_fusion_result_open")
 	if tab=="skill":
 		var previous: int=selected
 		selected=index
@@ -678,7 +752,7 @@ func _slot_tap(index: int, entry: Dictionary={}) -> Dictionary:
 		index=books.find_custom(func(book: Dictionary) -> bool:return str(book.physical_id)==physical_id)
 	if index<0 or index>=books.size():return {"ok":false}
 	var key: String=str(books[index].physical_id)
-	var quote: Dictionary=_merge_quote()
+	var quote: Dictionary=_merge_preview(registered)
 	var need: int=int(quote.get("source_amount",0))
 	if need>0 and _registered_count()>=need:
 		_message("합성에는 %d장이 필요합니다" % need)
@@ -718,10 +792,10 @@ func _unregister(physical_id: String) -> Dictionary:
 
 ## 카드 자동 등록: the feature's own automatic pick (an empty selection).
 func _auto_register() -> Dictionary:
+	if not _fusion_result.is_empty():return _fail("source_skill_card_fusion_result_open")
 	var previous: Dictionary=registered.duplicate()
 	registered.clear()
-	var value: Variant=_call("skill_card523_merge_quote",[compose_grade,{}])
-	var quote: Dictionary=value if value is Dictionary else {}
+	var quote: Dictionary=_merge_preview({})
 	for material: Dictionary in quote.get("materials",[]):registered[str(material.physical_id)]=int(registered.get(str(material.physical_id),0))+int(material.get("quantity",1))
 	if registered.is_empty():_message(str(quote.get("reason","등록할 카드가 없습니다")))
 	return _stage_registration(previous)
@@ -772,12 +846,15 @@ func _refresh_registered(grid: Dictionary, books: Array) -> Dictionary:
 	return last_result
 
 func _merge_probability() -> Dictionary:
-	var quote: Dictionary=_merge_quote()
+	var quote: Dictionary=_merge_preview(registered)
 	_message("합성 확률 %s (%s %d장 → %s 1장, 실패 시 재료 소멸)" % [percent_text(float(quote.get("probability_percent",0.0))),str(GRADES.get(compose_grade,"")),int(quote.get("source_amount",0)),str(GRADES.get(int(MERGE_TARGET.get(compose_grade,0)),""))])
 	return {"ok":true}
 
 ## 합 성: quote -> HUD confirmation -> the existing merge.
 func _merge() -> Dictionary:
+	if not _fusion_result.is_empty():return _fail("source_skill_card_fusion_result_open")
+	var existing: Variant=_merge_dialog.get_ref() if _merge_dialog!=null else null
+	if is_instance_valid(existing) and not existing.is_queued_for_deletion():return _fail("source_skill_card_fusion_review_open")
 	var quote: Dictionary=_merge_quote()
 	if not quote.get("ok",false) or _registered_count()<int(quote.get("source_amount",0)):
 		_message(str(quote.get("reason","등록한 카드가 부족합니다")) if not quote.get("ok",false) else "카드를 %d장 등록하세요" % int(quote.get("source_amount",0)))
@@ -785,13 +862,37 @@ func _merge() -> Dictionary:
 	var owner: Object=hud()
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_skill_card_window_confirmation_unavailable")
 	var token: String=str(quote.token)
-	owner.call("confirm_action","스킬 카드 합성","%s %d장 → %s 1장\n성공 확률 %s · 실패하면 재료가 사라집니다" % [str(GRADES.get(compose_grade,"")),int(quote.source_amount),str(GRADES.get(int(MERGE_TARGET.get(compose_grade,0)),"")),percent_text(float(quote.get("probability_percent",0.0)))],"합성",func(_count: int) -> void:
-		var result: Variant=_call("skill_card523_merge_execute",[token])
-		var done: Dictionary=result if result is Dictionary else {}
-		_message(str(done.get("message",done.get("reason",""))) if not str(done.get("message","")).is_empty() or not done.get("ok",false) else ("합성 성공 · "+str(done.get("result",{}).get("name","")) if done.get("success",false) else "합성 실패"))
-		if done.get("ok",false):registered.clear()
-		if is_open():_stage())
+	_merge_token=token
+	var body: String="%s %d장 → %s 1장\n성공 확률 %s · 실패하면 재료가 사라집니다" % [
+		str(GRADES.get(compose_grade,"")),int(quote.source_amount),str(GRADES.get(int(MERGE_TARGET.get(compose_grade,0)),"")),
+		percent_text(float(quote.get("probability_percent",0.0)))]
+	var method: String="confirm_awakening_action" if owner.has_method("confirm_awakening_action") else "confirm_action"
+	var confirm: Callable=Callable(self,"_confirm_fusion").bind(token,compose_grade,registered.duplicate())
+	var dialog: Variant=owner.call(method,"스킬 카드 합성",body,"합성",confirm)
+	_merge_dialog=weakref(dialog) if is_instance_valid(dialog) else null
 	return {"ok":true,"quoted":"skill_card523_merge"}
+
+func _confirm_fusion(_count: int, token: String, quoted_grade: int, selection: Dictionary) -> void:
+	if token!=_merge_token:return
+	_merge_token=""
+	if tab!="compose" or compose_grade!=quoted_grade or registered!=selection:return
+	var value: Variant=_call("skill_card523_merge_execute",[token])
+	var done: Dictionary=value if value is Dictionary else {}
+	if not done.get("ok",false) or not done.get("saved",false):
+		_message(str(done.get("reason","스킬 카드 합성 저장 실패 · 재료 보존")))
+		if is_open():_stage()
+		return
+	registered.clear()
+	_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
+	if not is_open():return
+	_fusion_result=done
+	if not _stage().get("ok",false):
+		_fusion_result={}
+		_stage()
+
+func _dismiss_fusion() -> Dictionary:
+	_fusion_result={}
+	return _stage()
 
 func _enchant() -> Dictionary:
 	var card: Dictionary=_card()

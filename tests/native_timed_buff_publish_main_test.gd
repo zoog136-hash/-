@@ -5,6 +5,7 @@ const QA=preload("res://tests/qa_class_selection.gd")
 const SRC=preload("res://scripts/resources/current523_definition_rows.gd")
 const INV=preload("res://scripts/loot/patch523_item_inventory.gd")
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
+const LAYOUT=preload("res://scripts/ui/reference_layout.gd")
 const ITEMS:Dictionary={380:[40,300],335:[41,300],887:[237,600]}
 var checks:int=0
 var failures:Array[String]=[]
@@ -119,4 +120,80 @@ func live(archive:String)->void:
 	w.equipment_collections.test_save_writer=Callable()
 	w._load_game(true)
 	ck(w.inventory[names[380]]==2 and w.inventory[names[335]]==2 and w.inventory[names[887]]==2,"real reload preserves all six successful debits and none from rejected writes")
+	await auto_refresh(w,str(names[380]),str(uids[380]))
 	w.queue_free();await process_frame
+
+func pull(control: Control, direction: float) -> void:
+	var point: Vector2=control.get_global_transform_with_canvas()*(control.size*.5)
+	var offset:=Vector2(0,direction*(LAYOUT.AUTO_PULL_DISTANCE+2.0))
+	var touch:=InputEventScreenTouch.new()
+	touch.index=14;touch.position=point;touch.pressed=true
+	root.push_input(touch,true)
+	await process_frame
+	var drag:=InputEventScreenDrag.new()
+	drag.index=14;drag.position=point+offset;drag.relative=offset
+	root.push_input(drag,true)
+	await process_frame
+	touch.position=point+offset;touch.pressed=false
+	root.push_input(touch,true)
+	await process_frame
+
+func auto_refresh(w: Node, item: String, uid: String) -> void:
+	var h: Node=w.hud
+	if h.original_inventory_is_open():h.toggle_inventory();await process_frame
+	w.self_mode_enabled=false
+	for entry: Dictionary in w.quickslots:
+		if not entry.is_empty():entry["auto"]=false
+	w.item_use_cooldowns.clear()
+	var slot: int=h.quickslot_index(0)
+	h.quickslot_assignment_requested.emit(slot,"item",item)
+	await process_frame
+	await pull(h.original_quickslot_control(0),1.0)
+	if not ck(w.quickslots[slot].get("id")==item and w.quickslots[slot].get("auto",false),"real short downward drag enables AUTO for exact source haste potion"):return
+	w._run_auto_item_quickslots(1.0)
+	ck(STACK.proof(w,uid).get("remaining")==2,"active original effect does not spend another bottle")
+	for effect: Dictionary in w.active_item_buffs.values():effect["remaining"]=0.2
+	w.ui_preferences.item_locks[item+"@@@"+uid]=true
+	w._tick_item_buffs(0.2)
+	w._run_auto_item_quickslots(1.0)
+	ck(STACK.proof(w,uid).get("remaining")==2,"a locked physical bottle waits even after expiry")
+	w.ui_preferences.item_locks.erase(item+"@@@"+uid)
+	w.item_use_cooldowns["m523:item:380"]=0.2
+	w._run_auto_item_quickslots(1.0)
+	ck(STACK.proof(w,uid).get("remaining")==2,"the original shared cooldown remains in force")
+	w._tick_item_buffs(0.2)
+	ck(w._run_auto_item_quickslots(1.0) and STACK.proof(w,uid).get("remaining")==1,"expiry plus cooldown permits one durable source refresh")
+	w._load_game(true)
+	ck(w.quickslots[slot].get("auto",false) and STACK.proof(w,uid).get("remaining")==1,"actual save/reload preserves AUTO and the exact debit")
+	await pull(h.original_quickslot_control(0),-1.0)
+	w.active_item_buffs.clear();w.item_use_cooldowns.clear()
+	w._run_auto_item_quickslots(1.0)
+	ck(not w.quickslots[slot].get("auto",true) and STACK.proof(w,uid).get("remaining")==1,"pulling up disables later item refresh")
+
+	w.level=90
+	w.equipped_items["weapon"]={"name":"검사 양손검","type":"양손검","slot":"weapon"}
+	var counter: Dictionary=w.original_skills.catalog.record_for("카운터 배리어")
+	w.inventory[str(counter.book_name)]=1
+	w.original_skills.catalog.learn(str(counter.id))
+	h.quickslot_assignment_requested.emit(slot,"skill","카운터 배리어")
+	w.mp=999;w.skill_cooldowns.clear();w.skill_global_cooldown=0.0
+	w.auto_buff_check_timer=0.0
+	w._run_auto_buff_quickslots(1.0)
+	ck(not w.active_skill_buffs.has("카운터 배리어"),"an assigned manual-only skill is never consumed automatically")
+	await pull(h.original_quickslot_control(0),1.0)
+	ck(w.quickslots[slot].get("auto",false) and w._run_auto_buff_quickslots(1.0) and w.active_skill_buffs.has("카운터 배리어"),"downward skill drag enables the real skill cast")
+	if not w.active_skill_buffs.has("카운터 배리어"):return
+	w.skill_cooldowns.clear();w.skill_global_cooldown=0.0
+	w.active_skill_buffs["카운터 배리어"]["remaining"]=0.2
+	var mp_before: int=w.mp
+	w._tick_skill_buffs(0.1)
+	w._run_auto_buff_quickslots(1.0)
+	ck(w.mp==mp_before and float(w.active_skill_buffs["카운터 배리어"].remaining)<0.2,"skill cannot spend MP while its timed effect is active")
+	var before: int=w.hud_publish_counts.full
+	if w._tick_skill_buffs(0.2,false) and not w._run_auto_buff_quickslots(0.0):w._publish_timed_buff_hud()
+	ck(w.mp<mp_before and w.active_skill_buffs.has("카운터 배리어") and w.hud_publish_counts.full-before==1,"expiry and AUTO recast issue one character/buff publication")
+	w.self_mode_enabled=true
+	w.skill_cooldowns.clear();w.skill_global_cooldown=0.0
+	w._tick_skill_buffs(float(w.active_skill_buffs.get("카운터 배리어",{}).get("remaining",0))+0.2)
+	w._run_auto_buff_quickslots(1.0)
+	ck(not w.active_skill_buffs.has("카운터 배리어"),"SELF suppresses the timed skill recast")
