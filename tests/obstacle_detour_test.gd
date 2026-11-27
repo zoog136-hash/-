@@ -126,6 +126,33 @@ func _auto_tick(target: TwilightMonster) -> void:
 	world.auto_repath_timer = 0.0
 	world._run_auto_hunt(10000)
 
+func _add_blocker(center: Vector2, size: Vector2) -> StaticBody2D:
+	var blocker := StaticBody2D.new()
+	blocker.position = center
+	blocker.collision_layer = 4
+	blocker.collision_mask = 0
+	var shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = size
+	shape.shape = rectangle
+	blocker.add_child(shape)
+	host.add_child(blocker)
+	return blocker
+
+func _pursue(target: TwilightMonster, frames: int) -> float:
+	var start: Vector2 = player.global_position
+	world.auto_stuck_time = 0.0
+	var side_peak: float = 0.0
+	for i: int in frames:
+		if i % 39 == 0: _auto_tick(target)
+		var before: Vector2 = player.global_position
+		await physics_frame
+		var delta: float = 1.0 / Engine.physics_ticks_per_second
+		var stalled: bool = PROGRESS.stalled(player.global_position - before, player.intended_walk_speed(), delta)
+		world.auto_stuck_time = world.auto_stuck_time + delta if stalled else 0.0
+		side_peak = maxf(side_peak, absf(player.global_position.y - start.y))
+	return side_peak
+
 func _auto(target: TwilightMonster) -> void:
 	# A legal source diagonal can grant combat sight while the off-center
 	# foot line clips an obstructed cell. Combat sight must still allow attacks.
@@ -150,31 +177,25 @@ func _auto(target: TwilightMonster) -> void:
 	field.blocked.clear()
 
 	var start: Vector2 = _grid(9.5, 9.5)
-	var blocker := StaticBody2D.new()
-	blocker.position = start + Vector2(18.0, 0.0)
-	blocker.collision_layer = 4
-	blocker.collision_mask = 0
-	var shape := CollisionShape2D.new()
-	var rectangle := RectangleShape2D.new()
-	rectangle.size = Vector2(12.0, 16.0)
-	shape.shape = rectangle
-	blocker.add_child(shape)
-	host.add_child(blocker)
+	var blocker: StaticBody2D = _add_blocker(start + Vector2(18, 0), Vector2(12, 16))
 	await _place_player(start)
 	target.global_position = start + Vector2(110, 0)
-	world.auto_stuck_time = 0.0
-	var side_peak: float = 0.0
-	for i: int in 150:
-		if i % 39 == 0: _auto_tick(target)
-		var before: Vector2 = player.global_position
-		await physics_frame
-		var delta: float = 1.0 / Engine.physics_ticks_per_second
-		var stalled: bool = PROGRESS.stalled(player.global_position - before, player.intended_walk_speed(), delta)
-		world.auto_stuck_time = world.auto_stuck_time + delta if stalled else 0.0
-		side_peak = maxf(side_peak, absf(player.global_position.y - start.y))
+	var side_peak: float = await _pursue(target, 150)
 	check(player.global_position.distance_to(target.global_position) <= 5.0 and side_peak > 12.0 and side_peak <= 24.1,
 		"AUTO passes a physical blocker, rejoins its route, and keeps a one-cell lateral bound: %s %.2f" % [player.global_position - start, side_peak])
 	blocker.queue_free()
+
+	# The old return point is still alongside this narrow obstruction. There
+	# is a clear exit farther ahead with the very same one-cell lateral step.
+	blocker = _add_blocker(start + Vector2(54, 0), Vector2(72, 16))
+	await _place_player(start)
+	target.global_position = start + Vector2(156, 0)
+	side_peak = await _pursue(target, 210)
+	check(player.global_position.distance_to(target.global_position) <= 5.0 and side_peak > 12.0 and side_peak <= 24.1,
+		"AUTO passes a long narrow obstruction without widening its sidestep: %s %.2f" % [player.global_position - start, side_peak])
+	blocker.queue_free()
+	await _moving_blocker(target, start)
+	target.global_position = start + Vector2(110, 0)
 
 	await _place_player(start)
 	var alternative: TwilightMonster = world.MONSTER_SCENE.instantiate()
@@ -189,6 +210,41 @@ func _auto(target: TwilightMonster) -> void:
 		"an unreachable pursuit is dropped and remembered for acquisition backoff")
 	var next_path: PackedVector2Array = world._acquire_auto_target()
 	check(world.auto_target == alternative and not next_path.is_empty(), "AUTO can choose another nearby monster during the backoff")
+
+func _moving_blocker(target: TwilightMonster, start: Vector2) -> void:
+	var blocker: StaticBody2D = _add_blocker(start + Vector2(18, 0), Vector2(12, 16))
+	await _place_player(start)
+	target.global_position = start + Vector2(110, 0)
+	var old_goal: Vector2 = target.global_position
+	world.auto_stuck_time = 0.0
+	_auto_tick(target)
+	for i: int in 12:
+		if player.has_active_obstacle_detour(): break
+		await physics_frame
+	check(player.has_active_obstacle_detour(), "a detour is active while the direct route is physically blocked")
+
+	target.global_position = start + Vector2(145, 0)
+	_auto_tick(target)
+	check(player.has_active_obstacle_detour() and player.navigation_agent.target_position == old_goal,
+		"a moved target behind the same blocker keeps the safe detour")
+
+	blocker.position.y += 80.0
+	var corner: StaticBody2D = _add_blocker(Vector2(start.x + 54.0, player.global_position.y), Vector2(8, 4))
+	target.global_position = start + Vector2(110, 24)
+	await physics_frame
+	await physics_frame
+	check(not player.test_move(player.global_transform, target.global_position - player.global_position),
+		"fixture's diagonal ray clears the new blocker")
+	_auto_tick(target)
+	check(player.has_active_obstacle_detour() and player.navigation_agent.target_position == old_goal,
+		"a clear diagonal ray keeps the detour when the actual first cell leg is blocked")
+	corner.queue_free()
+	await physics_frame
+	await physics_frame
+	_auto_tick(target)
+	check(not player.has_active_obstacle_detour() and player.click_path == PackedVector2Array([target.global_position]),
+		"AUTO resumes direct pursuit on its next repath after the blocker moves")
+	blocker.queue_free()
 
 func _run() -> void:
 	field.coordinates.configure([0, 0], [24, 24])
