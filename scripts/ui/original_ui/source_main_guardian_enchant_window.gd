@@ -174,7 +174,9 @@ func _preview_rows(level: int) -> Array:
 func _project(root: Node2D, out: Dictionary, suffix: String) -> Node2D:
 	var located: Dictionary = _locate(root,out,suffix)
 	if not located.get("ok",false): return null
-	return located.player.source_nodes[located.offset].get_meta("source_project_player",null) as Node2D
+	var node: Node2D = located.player.source_nodes.get(located.offset)
+	if not is_instance_valid(node) or not node.has_meta("source_project_player"): return null
+	return node.get_meta("source_project_player") as Node2D
 
 func _probability() -> Dictionary:
 	var upgrade: Dictionary = _runtime().guardian_source.upgrade(slot,before_level+1)
