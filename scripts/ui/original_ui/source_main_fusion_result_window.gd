@@ -98,12 +98,13 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			continue
 		var card: Dictionary=results[start+index]
 		var opened: bool=is_revealed(start+index)
-		GradeFx.cell_spec(self,spec,cell+"/",str(card.get("grade","")),not opened)
-		if not opened:
-			spec.erase(cell+"/Fx_Glow")
-			var outline: String=cell+"/Fx_Outline_Front"
-			if spec.has(outline) and not spec[outline].get("exclude",false):
-				spec[outline]["defer_until_shown"]=true
+		var grade: String=str(card.get("grade",""))
+		GradeFx.cell_spec(self,spec,cell+"/",grade,not opened)
+		if not opened:spec.erase(cell+"/Fx_Glow")
+		var outline: String=cell+"/Fx_Outline_Front"
+		if spec.has(outline) and not spec[outline].get("exclude",false):
+			spec[outline]["playback_clip"]=GradeFx.OUTLINE[grade]
+			if not opened:spec[outline]["defer_until_shown"]=true
 		var label: String=str(card.get("name",""))
 		if card.get("pity_reward",false):label="보상 · "+label
 		spec[cell+"/Text_Card_Name"]={"role":"source_text","text":label,"visible":opened}
@@ -153,7 +154,9 @@ func _reveal(scene: Node2D, out: Dictionary, cell: String, grade: String) -> boo
 	GradeFx.set_visible(self,scene,out,cell+"/Fx_Glow/Card_Back",false)
 	# The success discharge runs during the reel. Both outcomes get the
 	# result-grade flash, name and outline when they settle.
+	var started: int=FRAME_HITCH.now()
 	var lit: Dictionary = GradeFx.light(self,scene,out,cell,grade,false,GradeFx.CONFIRMED_OUTLINE_ALPHA)
+	FRAME_HITCH.detail("fusion.result_effects",started)
 	if lit.get("lit", false): return true
 	var nested: Node2D=GradeFx.project(self,scene,out,cell)
 	if nested!=null:GradeFx.chain(nested,GradeFx.CELL_CLIP,"Fx_Cardname")
