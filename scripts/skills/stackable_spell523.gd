@@ -218,7 +218,7 @@ func on_event(event: String, attack: Dictionary) -> int:
 	if event not in ["on_hit","on_kill"] or service==null or service.catalog==null: return 0
 	if event=="on_hit" and bool(attack.get("by_spell",false)): return 0
 	var gained: int = 0
-	for record: Dictionary in service.catalog.records:
+	for record: Dictionary in service.catalog.possible_owned_records():
 		if not service.catalog.owned(record): continue
 		var spec: Dictionary = spec_for(record)
 		if spec.is_empty(): continue

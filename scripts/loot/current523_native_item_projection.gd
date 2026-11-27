@@ -266,8 +266,19 @@ static func record(definition: Dictionary) -> Dictionary:
 		if row.bonus_type.Name=="CannotExtendDeleteTime" and direct(row) and row.unit.Name=="TrueFalse" and whole(row.bonus.get("Value"))==1:out["source_cannot_extend_delete_time"]=true
 	out["source_condition_pending"]=pending_conditions
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
+	var has_mana: bool=false
+	var has_buff: bool=false
+	var has_card: bool=false
+	var has_bag: bool=false
+	var has_selection: bool=false
 	for index: int in range(rows.size()):
 		var row: Dictionary=rows[index];var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var unit: String=str(row.get("unit",{}).get("Name",""));var amount: Variant=row.get("bonus",{}).get("Value")
+		match name_value:
+			"BuffClassID": has_buff=true
+			"BuffCardID": has_card=true
+			"LuckyBagClassID": has_bag=true
+			"SelectRewardClassID": has_selection=true
+			"MPRestoration", "MPRestorationDiceNumber", "MPRestorationDiceSpotCount": has_mana=true
 		if equipment and name_value in STATUS_BONUS and unit=="Percentage":
 			var status: Dictionary=status_field(row)
 			if not status.is_empty():
@@ -324,7 +335,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		hp["kind"]="source_hp_dice";hp["routing_policy"]="heal_is_base_or_positive_indicator_not_expected_value";out["heal_spec"]=hp;out["heal"]=maxi(1,int(hp.get("HPRestoration",0)))
 		for index: int in range(rows.size()):
 			if rows[index].bonus_type.Name in HP and direct(rows[index]) and rows[index].unit.Name=="Value":handled[index]=true
-	var mp: Dictionary=formula(rows,MP)
+	var mp: Dictionary=formula(rows,MP) if has_mana else {}
 	if not mp.is_empty():
 		var full_reuse: int=documented_mana_reuse(raw,category,rows,mp)
 		var spec: Dictionary=consume_metadata(rows,raw,category)
@@ -337,30 +348,30 @@ static func record(definition: Dictionary) -> Dictionary:
 		spec["activation_status"]="unrestricted" if spec.blocked_reasons.is_empty() else "blocked";out["source_use_spec"]=spec
 		if spec.blocked_reasons.is_empty():
 			for index: int in range(rows.size()):handled[index]=true
-	var timed: Dictionary=timed_buff(definition)
+	var timed: Dictionary=timed_buff(definition) if has_buff else {}
 	if not timed.is_empty():
 		out["source_use_spec"]=timed
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bag: Dictionary=reward_bag(definition,false)
+	var bag: Dictionary=reward_bag(definition,false) if has_bag else {}
 	if bag.is_empty() and category.get("Name") == "LuckyBag":
 		bag = described_event_box(definition)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var skill_book: Dictionary=source_skill_book(definition)
+	var skill_book: Dictionary=source_skill_book(definition) if has_card else {}
 	if not skill_book.is_empty():
 		out["source_use_spec"]=skill_book
 		if skill_book.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var selection: Dictionary=selectable_reward(definition)
+	var selection: Dictionary=selectable_reward(definition) if has_selection else {}
 	if selection.is_empty() and category.get("Name")=="ComplexReward":selection=complex_selectable_reward(definition)
 	if not selection.is_empty():
 		out["source_use_spec"]=selection
 		if selection.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var fixed_card: Dictionary=source_fixed_card(definition)
+	var fixed_card: Dictionary=source_fixed_card(definition) if has_card else {}
 	if not fixed_card.is_empty():
 		out["source_use_spec"]=fixed_card
 		if fixed_card.get("activation_status")=="unrestricted":
@@ -370,11 +381,12 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
-	if not bless_points.is_empty():
-		out["source_use_spec"]=bless_points
-		if bless_points.get("activation_status")=="unrestricted":
-			for index: int in range(rows.size()):handled[index]=true
+	if category.get("Name")=="IntangibleItemRecharger":
+		var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
+		if not bless_points.is_empty():
+			out["source_use_spec"]=bless_points
+			if bless_points.get("activation_status")=="unrestricted":
+				for index: int in range(rows.size()):handled[index]=true
 	var horn: Dictionary=source_clan_horn(definition)
 	if not horn.is_empty():
 		out["source_use_spec"]=horn
@@ -797,19 +809,20 @@ static func register(owner: Script,catalog: Dictionary,document: Dictionary) -> 
 	return result
 static func _register_logged(owner: Script,catalog: Dictionary,document: Dictionary) -> Dictionary:
 	var src: RegisterInputs=_inputs()
-	if src.identity().is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
+	var identity := src.identity()
+	if identity.is_empty() or not catalog.get("아이템",[]) is Array:return {"ok":false,"reason":"current_original_catalog_input_unavailable"}
 	# World._load_data registers through the drop owner and again through the
 	# craft catalog with the same inputs. The pass is deterministic and only
 	# replaces native records with themselves, so an identical second pass on
 	# the same catalog reuses the first result instead of describing ~34,700
 	# items again (about 80 s on desktop, far longer on a phone).
 	var contract: Variant=catalog.get("patch523_crafting_catalog_contract",{})
-	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==src.identity() and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
+	if contract is Dictionary and contract.get("mode")=="current_original_native_projection" and contract.get("source_definition_archive")==identity and document.get("native_item_ids")==contract.get("registered_definition_ids") and document.get("current_registration_pending")==contract.get("pending"):
 		var registered: int=0
 		for record: Variant in catalog.get("아이템",[]):
-			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==src.identity():registered+=1
+			if record is Dictionary and record.get("source_m_native_item")==true and record.get("source_definition_archive")==identity:registered+=1
 		if registered>=int(document.get("current_native_registered_count",-1)):
-			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":src.identity(),"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
+			return {"ok":true,"registered_count":int(document.current_native_registered_count),"pending":contract.pending.duplicate(),"source_definition_archive":identity,"ownership_changed":false,"executed_gameplay":false,"reused_registration":true}
 	# TWILIGHT_NATIVE_FIELDS_EAGER=1 keeps full records resident (comparison/escape hatch).
 	var lazy: bool=OS.get_environment("TWILIGHT_NATIVE_FIELDS_EAGER")!="1"
 	# Item templates (Lineage M style): every native record is a pure function
@@ -858,9 +871,23 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 	# templates are reachable while registering (bound again after the loop).
 	if templates!=null and lazy:FIELDS.bind(templates,TemplateStore)
 	if templates == null: _start_registration_reader()
-	# Rows are streamed from the packed reader, not materialized all at once.
-	for row_index: int in src.row_count("ItemClass"):
-		var raw: Dictionary=src.row_at("ItemClass",row_index)
+	# Use the verified column reader for the three fields the original
+	# ItemClass admission predicate reads. Owners with injected rows and
+	# missing/irregular columns retain the full-row path.
+	var row_count := src.row_count("ItemClass")
+	var item_ids: Variant = []
+	var item_names: Variant = []
+	var test_flags: Variant = []
+	if templates != null and register_inputs == null:
+		item_ids = SOURCE.column("ItemClass", "ID")
+		item_names = SOURCE.column("ItemClass", "Name")
+		test_flags = SOURCE.column("ItemClass", "TestItem")
+	var slim: bool = row_count > 0 and item_ids.size() == row_count and item_names.size() == row_count and test_flags.size() == row_count
+	var archive_identity := _archive_identity()
+	for row_index: int in row_count:
+		var raw: Dictionary = SOURCE._view("ItemClass", {
+			"ID":item_ids[row_index], "Name":item_names[row_index], "TestItem":test_flags[row_index],
+		}) if slim else src.row_at("ItemClass", row_index)
 		if not integer(raw.get("ID")) or int(raw.ID)<=0 or raw.get("TestItem")!=false or not src.declared_exclusion("ItemClass",raw).is_empty():continue
 		var id: String=str(int(raw.ID));var cached: bool=bool(owner.call("has_definition",id)) if indexed else (references.has(id) or definitions.has(id))
 		var current: Dictionary={}
@@ -868,7 +895,7 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		var baked: Variant=(templates.light(id) if lazy else templates.record(id)) if templates!=null else null
 		if baked is Dictionary:
 			current=baked
-			if current.get("source_definition_archive")==_archive_identity():current["source_definition_archive"]=_archive_identity()
+			if current.get("source_definition_archive") == archive_identity: current["source_definition_archive"] = archive_identity
 		else:
 			# An ID not read before is built without being remembered (the
 			# former read-then-erase), so the bounded cache keeps its entries.
@@ -893,7 +920,8 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		if previous.size()>1:pending[id]="ambiguous_registered_source_identity";continue
 		if previous.size()==1:
 			var saved: Dictionary=records[int(previous[0])]
-			var typed_supply: bool=saved.get("source_current523_awakening_supply")==true and saved.get("source_item")==raw and saved.get("source_definition_archive")==src.identity()
+			var typed_supply: bool = saved.get("source_current523_awakening_supply") == true and saved.get("source_definition_archive") == identity
+			if typed_supply: typed_supply = saved.get("source_item") == (src.row_at("ItemClass", row_index) if slim else raw)
 			if typed_supply:admitted.append(id);continue
 			var saved_display: Variant=staged_display[int(previous[0])] if staged_display.has(int(previous[0])) else FIELDS.field(saved,"source_display_name")
 			if saved.get("source")!="lineagem_patch523" or saved.get("source_snapshot")!="patch523" or saved.get("source_item_class_id")!=raw.ID or saved.get("source_m_native_item")!=true or saved.get("name")!=current.name or saved_display!=FIELDS.field(current,"source_display_name"):
@@ -945,9 +973,9 @@ static func _register_logged(owner: Script,catalog: Dictionary,document: Diction
 		if variant.is_empty() or str(variant.get("sourceId",""))==str(base.get("sourceId","")) or positions.has(str(variant.sourceId)):continue
 		records.append(variant);positions[str(variant.sourceId)]=[records.size()-1]
 	catalog["아이템"]=records
-	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":src.identity(),"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
+	catalog["patch523_crafting_catalog_contract"]={"mode":"current_original_native_projection","source_definition_archive":identity,"registered_definition_ids":admitted.duplicate(),"normal_ids":admitted.size(),"pending":pending.duplicate(),"full_native_coverage_observed":false}
 	document["native_item_ids"]=admitted.duplicate();document["current_registration_pending"]=pending.duplicate();document["current_native_registered_count"]=admitted.size()
-	return {"ok":true,"registered_count":admitted.size(),"pending":pending,"source_definition_archive":src.identity(),"ownership_changed":false,"executed_gameplay":false}
+	return {"ok":true,"registered_count":admitted.size(),"pending":pending,"source_definition_archive":identity,"ownership_changed":false,"executed_gameplay":false}
 
 ## The record registration places in the catalog: a cold-built record is
 ## reduced to its light form at once (FIELDS.slim(), as the former end-of-loop

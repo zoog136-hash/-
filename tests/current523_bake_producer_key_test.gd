@@ -112,6 +112,9 @@ func synthetic() -> void:
 
 func shipped() -> void:
 	check(not PRODUCERS.PRODUCERS.is_empty(), "manifest declares producers")
+	var selected_bake_inputs: PackedStringArray = DEPENDENCIES.closure(["res://scripts/boot/startup_bake_pack.gd"]).files
+	check("res://scripts/boot/startup_bake_pack.gd" in selected_bake_inputs, "the startup bake reader itself is still a producer dependency")
+	check(not "res://startup_bake_pin.json" in selected_bake_inputs, "an output archive's own pin cannot be a producer dependency")
 	for producer: String in PRODUCERS.PRODUCERS:
 		var value: Dictionary = PRODUCERS.PRODUCERS[producer]
 		var scan: Dictionary = DEPENDENCIES.closure(value.roots, value.ignore)

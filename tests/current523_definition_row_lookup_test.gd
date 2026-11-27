@@ -5,6 +5,7 @@ extends SceneTree
 ## reads and full serialized output hashes; timings never determine pass/fail.
 const ROWS = preload("res://scripts/resources/current523_definition_rows.gd")
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const SEED = preload("res://scripts/boot/startup_bake_pack.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var measurements: Dictionary = {}
@@ -46,6 +47,9 @@ func _fixture_open() -> void:
 	fixture.start_file("synthetic_metadata_only.txt")
 	fixture.write_file("no original data".to_utf8_buffer())
 	fixture.close_file()
+	fixture.start_file("content/ZzSeedLookup.json")
+	fixture.write_file(JSON.stringify({"rows":[{"ID":1,"Name":"raw table"}]}).to_utf8_buffer())
+	fixture.close_file()
 	fixture.close()
 	OS.set_environment("TWILIGHT_PATCH523_CONTENT", path)
 	ROWS._archive = ZIPReader.new()
@@ -71,6 +75,14 @@ func _run() -> void:
 	row.List[0].n = 99
 	row.Name = "edited"
 	check(var_to_bytes(ROWS.row("ZzLookup",1)) == var_to_bytes(regular[0]), "nested mutation never changes a later fresh row")
+	# The repeated reference-row path must return freshly owned nested values.
+	ROWS._tables.BonusType = ROWS._pack(regular)
+	same("BonusType",1,"reused source reference",true)
+	var cached_join: Array[Dictionary] = ROWS.related("BonusType","ID",1)
+	cached_join[0].Nested.a.append(88)
+	cached_join[0].List[0].n = 88
+	check(var_to_bytes(ROWS.row("BonusType",1)) == var_to_bytes(regular[0]), "memoized relation and direct lookup do not share nested values with callers")
+	check(not ROWS._small_reference_rows.is_empty(), "the repeated lookup exercised the bounded reference cache")
 	ROWS._tables.ZzDuplicate = ROWS._pack([{"ID":1.0,"V":0},{"ID":1.0,"V":1}])
 	same("ZzDuplicate",1,"duplicate cold",true)
 	same("ZzDuplicate",1,"duplicate warm")
@@ -108,6 +120,7 @@ func _run() -> void:
 		var before_release: int = ROWS.cache_generation()
 		var before_release_row: PackedByteArray = var_to_bytes(ROWS.row(table,1))
 		ROWS.release_caches()
+		check(ROWS._small_reference_rows.is_empty(), "definition release clears decoded reference rows")
 		check(ROWS.cache_generation() == before_release, "releasing acceleration caches keeps source generation")
 		check(var_to_bytes(ROWS.row(table,1)) == before_release_row, "release leaves verified disk row values unchanged")
 		# A same-size changed bake fails the original persisted-byte guard.
@@ -121,6 +134,7 @@ func _run() -> void:
 		(disk.disk as RefCounted).file.close()
 	BAKE.clear("disk_" + table)
 	_check_compatible_disk_keys(table,packed,regular)
+	_check_compatible_seed()
 	var same_pin_identity: Dictionary = ROWS.identity()
 	var same_pin_key: String = ROWS.verified_key()
 	var same_pin_generation: int = ROWS.cache_generation()
@@ -140,7 +154,7 @@ func _run() -> void:
 func _check_compatible_disk_keys(table: String, packed: Dictionary, rows: Array) -> void:
 	var name: String = "disk_" + table
 	var current: String = ROWS._bake_key(table)
-	for format: String in [ROWS.COMPATIBLE_V1,ROWS.COMPATIBLE_V2]:
+	for format: String in ROWS.COMPATIBLE_STORE_FORMATS:
 		var legacy: String = ROWS._bake_key(table,format)
 		var written: Dictionary = ROWS._publish_disk(table,legacy,packed)
 		check(written.has("disk"),"fixture writes " + format)
@@ -154,6 +168,39 @@ func _check_compatible_disk_keys(table: String, packed: Dictionary, rows: Array)
 		BAKE.clear(name)
 	var expected: String = BAKE.key([ROWS.RELATION_FORMAT,ROWS._bake_key(table,ROWS.COMPATIBLE_V1),"ID"])
 	check(ROWS._relation_key(table,"ID")==expected,"the identical row order keeps persisted relation keys")
+
+func _check_compatible_seed() -> void:
+	var table := "ZzSeedLookup"
+	var name := "definitions_" + table
+	var old_key := ROWS._bake_key(table, ROWS.COMPATIBLE_V2)
+	var row := {"ID":1.0, "Name":"pinned startup row"}
+	var baked := var_to_bytes(ROWS._pack([row]))
+	var index := JSON.stringify({"schema":SEED.SCHEMA, "files":{
+		name:{"key":old_key, "sha256":SEED._hash(baked), "bytes":baked.size()}
+	}})
+	var base := "user://compatible_definition_seed"
+	var directory := base.path_join(SEED.FOLDER).path_join(index.sha256_text())
+	DirAccess.make_dir_recursive_absolute(directory)
+	var manifest := FileAccess.open(directory.path_join(SEED.INDEX), FileAccess.WRITE)
+	manifest.store_string(index)
+	manifest.close()
+	var payload := FileAccess.open(directory.path_join(name + ".bin"), FileAccess.WRITE)
+	payload.store_buffer(baked)
+	payload.close()
+	BAKE.clear(name)
+	SEED.select(base, index.sha256_text())
+	check(ROWS.stored_current(table), "a compatible pinned startup table satisfies the loading check")
+	check(ROWS.row(table, 1) == row, "normal row lookup uses the compatible verified seed")
+	ROWS._tables.erase(table)
+	ROWS._relations.erase(table + ":ID")
+	baked[-1] = baked[-1] ^ 1
+	payload = FileAccess.open(directory.path_join(name + ".bin"), FileAccess.WRITE)
+	payload.store_buffer(baked)
+	payload.close()
+	check(ROWS.row(table, 1).get("Name") == "raw table", "corrupted seed falls back to reading the source archive")
+	check(BAKE.present(name, ROWS._bake_key(table)), "recovery publishes the current local table")
+	SEED.select("", "")
+	BAKE.clear(name)
 
 func _real(path: String) -> void:
 	ROWS.reset()

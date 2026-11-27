@@ -64,6 +64,7 @@ const STYLE = preload("res://scripts/boot/boot_style.gd")
 const COOKED_PINS = preload("res://scripts/boot/cooked_actor_pins.gd")
 const COOKED_FORMAT = preload("res://scripts/resources/cooked_actor_format.gd")
 const COOKED_STATE := "cooked_actors.json"
+const STARTUP_BAKES := preload("res://scripts/boot/startup_bake_pack.gd")
 const HASH_CHUNK: int = 8 * 1024 * 1024
 
 ## Install target; tests use a scratch directory instead of ROOT.
@@ -102,6 +103,7 @@ var _hash_context: HashingContext
 var _hash_index: Dictionary = {}
 var _hash_path: String = ""
 var _cooked: bool = false
+var _startup_install: RefCounted
 
 static func _safe_relative(value: Variant) -> bool:
 	if not value is String or value.is_empty() or value.length() > 1024: return false
@@ -297,6 +299,8 @@ func _configure_pack() -> void:
 	var addons: Dictionary = read_addons(base)
 	var applied: Dictionary = apply(selections(base, read.descriptor, addons))
 	configured = applied.ok
+	if configured:
+		STARTUP_BAKES.select(base, str(STARTUP_BAKES.pin().get("index_sha256", "")))
 	addon_needed = configured and exported and requested.is_empty() and not missing_addons(read.descriptor, addons).is_empty()
 	_missing = missing_addons(read.descriptor, addons)
 	if not configured:
@@ -388,7 +392,7 @@ static func cooked_status_line(state: Dictionary) -> String:
 	if str(COOKED_PINS.cooked_id).is_empty(): return "변환 액터 팩: 이 빌드에 고정된 팩 없음 (원본 실시간 처리)"
 	return "변환 액터 팩: 없음 (원본 실시간 처리) → twilight523-cooked-*.zip 설치 가능"
 
-func _start_cooked_hash(path: String, index: Dictionary) -> void:
+func _start_pinned_hash(path: String, index: Dictionary) -> void:
 	_hash_file = FileAccess.open(path, FileAccess.READ)
 	if _hash_file == null:
 		_fail_part("변환 액터 팩 조각을 열 수 없습니다: " + _copy_name)
@@ -403,11 +407,16 @@ func _hash_step() -> void:
 	var length: int = _hash_file.get_length()
 	var chunk: PackedByteArray = _hash_file.get_buffer(mini(HASH_CHUNK, length - _hash_file.get_position()))
 	_hash_context.update(chunk)
-	_status.text = "변환 액터 팩 조각 확인 중 (%s): %d / %d MB" % [_copy_name, _hash_file.get_position() >> 20, length >> 20]
+	_status.text = "설치 파일 확인 중 (%s): %d / %d MB" % [_copy_name, _hash_file.get_position() >> 20, length >> 20]
 	if not chunk.is_empty() and _hash_file.get_position() < length: return
 	var sha: String = _hash_context.finish().hex_encode()
 	_hash_file = null
 	_hash_context = null
+	if _hash_index.get("startup") == true:
+		_startup_install = STARTUP_BAKES.new()
+		if not _startup_install.begin(_hash_path, root, STARTUP_BAKES.pin(), sha):
+			_fail_part("이 빌드에 맞는 시작 데이터 팩인지 확인하지 못했습니다.")
+		return
 	var accepted: Dictionary = cooked_part_accepted(sha, _hash_index)
 	if not accepted.ok:
 		_fail_part("변환 액터 팩 조각이 이 빌드에 고정된 SHA-256과 다릅니다 (%s): %s" % [accepted.reason, _copy_name])
@@ -530,6 +539,8 @@ func _fail_part(message: String) -> void:
 func _release_part() -> void:
 	_mounted = false
 	_cooked = false
+	if _startup_install != null: _startup_install.close()
+	_startup_install = null
 	_hash_file = null
 	_hash_context = null
 	_copy_source = null
@@ -583,6 +594,14 @@ func _open_part(path: String) -> void:
 	if reader.open(path) != OK:
 		_fail_part("ZIP을 열 수 없습니다: " + _copy_name)
 		return
+	if reader.file_exists(STARTUP_BAKES.INDEX):
+		reader.close()
+		var expected := STARTUP_BAKES.pin()
+		if expected.is_empty() or FileAccess.get_size(path) != int(expected.archive_bytes):
+			_fail_part("이 빌드에 맞는 시작 데이터 팩인지 확인하지 못했습니다.")
+			return
+		_start_pinned_hash(path, {"startup":true})
+		return
 	if not reader.file_exists(PREFIX + PART_INDEX):
 		reader.close()
 		_fail_part("TWILIGHT 리소스 팩 조각이 아닙니다: " + _copy_name)
@@ -598,7 +617,7 @@ func _open_part(path: String) -> void:
 		return
 	if index.get("cooked") == true:
 		# Never part of the original pack's state; pinned SHA-256 first.
-		_start_cooked_hash(path, index)
+		_start_pinned_hash(path, index)
 		return
 	if index.get("addon") == true:
 		# An add-on never touches the installed pack's parts or descriptor.
@@ -647,6 +666,20 @@ func _process(_delta: float) -> void:
 		return
 	if _hash_file != null:
 		_hash_step()
+		return
+	if _startup_install != null:
+		_startup_install.advance()
+		if not _startup_install.problem.is_empty():
+			_fail_part("시작 데이터 팩을 설치하지 못했습니다: " + _startup_install.problem)
+		elif _startup_install.done:
+			_release_part()
+			if not _queue.is_empty():
+				_next_part()
+			else:
+				_status.text = "시작 데이터 팩 설치 완료.\n앱을 완전히 닫고 다시 실행하세요."
+				_offer_quit()
+		else:
+			_status.text = _startup_install.progress_text()
 		return
 	if not _verify.is_empty():
 		_verify_step()

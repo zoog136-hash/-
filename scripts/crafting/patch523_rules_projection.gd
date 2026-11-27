@@ -1030,10 +1030,17 @@ static func binding_projection(items: Array, contract: Dictionary) -> Dictionary
 ## of that text, produced container by container to `depth` levels so the
 ## whole text never exists at once. hash.update() receives the exact bytes.
 static func stream_round_trip(value: Variant, hash: HashingContext, depth: int, size: Array) -> Variant:
-	if value is Part: return _stream_part(value,hash,depth,size)
+	return _stream_value(value,hash,depth,size,{})
+
+static func _stream_value(value: Variant, hash: HashingContext, depth: int, size: Array, member_text: Dictionary) -> Variant:
+	if value is Part: return _stream_part(value,hash,depth,size,member_text)
 	if depth <= 0 or not (value is Dictionary or value is Array) or value.is_empty():
 		var text: String = JSON.stringify(value,"",true,true)
 		size[0] += _hash_text(hash,text)
+		# JSON's parsed representation has exactly these scalar types.
+		# Keep the parser for floats, strings, containers and large integers.
+		if typeof(value) == TYPE_NIL or value is bool: return value
+		if value is int and value >= -9007199254740991 and value <= 9007199254740991: return float(value)
 		return JSON.parse_string(text)
 	if value is Array:
 		var copies: Array = []
@@ -1041,7 +1048,7 @@ static func stream_round_trip(value: Variant, hash: HashingContext, depth: int, 
 		size[0] += _hash_text(hash,"[")
 		for index: int in value.size():
 			if index > 0: size[0] += _hash_text(hash,",")
-			copies[index] = stream_round_trip(value[index],hash,depth-1,size)
+			copies[index] = _stream_value(value[index],hash,depth-1,size,member_text)
 			if int(size[0]) < 0: return null
 		size[0] += _hash_text(hash,"]")
 		return copies
@@ -1051,11 +1058,20 @@ static func stream_round_trip(value: Variant, hash: HashingContext, depth: int, 
 	size[0] += _hash_text(hash,"{")
 	for index: int in keys.size():
 		var name: String = str(keys[index])
-		size[0] += _hash_text(hash,("" if index == 0 else ",")+JSON.stringify(name)+":")
-		result[name] = stream_round_trip(value[keys[index]],hash,depth-1,size)
+		size[0] += _hash_text(hash,_stream_member(name,index!=0,member_text))
+		result[name] = _stream_value(value[keys[index]],hash,depth-1,size,member_text)
 		if int(size[0]) < 0: return null
 	size[0] += _hash_text(hash,"}")
 	return result
+
+## Most rule records repeat the same property names. Keep a bounded cache
+## for one compilation; leaves and the final hash still use the exact bytes.
+static func _stream_member(name: String, comma: bool, member_text: Dictionary) -> String:
+	var text: String=member_text.get(name,"")
+	if text.is_empty():
+		text=JSON.stringify(name)+":"
+		if member_text.size()<256: member_text[name]=text
+	return ","+text if comma else text
 
 ## Same order as Godot's JSON key sort: String and StringName compare as
 ## text, other types by type first.
@@ -1066,7 +1082,7 @@ static func _key_order(a: Variant, b: Variant) -> bool:
 ## A Part is serialized as the Dictionary of its entries (same bytes), one
 ## entry at a time: made, serialized, parsed, handed to take() and dropped.
 ## size[0] becomes -1 when an entry fails (the caller reads the problem).
-static func _stream_part(part: Part, hash: HashingContext, depth: int, size: Array) -> Variant:
+static func _stream_part(part: Part, hash: HashingContext, depth: int, size: Array, member_text: Dictionary) -> Variant:
 	var keys: Array = part.keys.duplicate()
 	keys.sort_custom(_key_order)
 	var started: int = BOOT_LOG.begin("rules_stream",{"part":part.name,"keys":keys.size()})
@@ -1081,8 +1097,8 @@ static func _stream_part(part: Part, hash: HashingContext, depth: int, size: Arr
 			size[0] = -1
 			BOOT_LOG.end("rules_stream",started,{"part":part.name,"ok":false})
 			return null
-		size[0] += _hash_text(hash,("" if part.count == 0 else ",")+JSON.stringify(name)+":")
-		var copy: Variant = stream_round_trip(made,hash,depth-1,size)
+		size[0] += _hash_text(hash,_stream_member(name,part.count!=0,member_text))
+		var copy: Variant = _stream_value(made,hash,depth-1,size,member_text)
 		made = null
 		part.count += 1
 		var kept: Variant = part.take.call(name,copy) if part.take.is_valid() else copy

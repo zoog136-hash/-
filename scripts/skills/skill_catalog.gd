@@ -33,6 +33,13 @@ var approx_invokes: Array = []
 var approx_transforms: Dictionary = {}
 var stat_rebuild_count: int = 0
 const RELIC_LEVELS = preload("res://scripts/cards/relic_spell_levels.gd")
+const COMBAT_PROC_MODES = ["proc", "mark", "toggle_proc", "stack_defense", "stack_attack"]
+var _combat_record_source: Array = []
+var _combat_record_count: int = -1
+var _combat_record_revision: int = -1
+var _combat_record_learned: Dictionary = {}
+var _proc_records: Array[Dictionary] = []
+var _possible_owned_records: Array[Dictionary] = []
 
 func configure(owner: Node) -> void:
 	world = owner
@@ -99,6 +106,37 @@ func configure(owner: Node) -> void:
 		by_id[str(record.id)] = record
 		by_name[str(record.name)] = str(record.id)
 	seed_starters()
+
+
+## Base records that can receive combat trigger events, in catalog order.
+## Keep live class, equipment, level and ownership checks in the receiver.
+func combat_proc_records() -> Array[Dictionary]:
+	_ensure_combat_record_index()
+	return _proc_records
+
+## Learned records and every equipment-granted candidate, in catalog order.
+## Callers still check the real ownership and restrictions for each record.
+func possible_owned_records() -> Array[Dictionary]:
+	_ensure_combat_record_index()
+	return _possible_owned_records
+
+func _ensure_combat_record_index() -> void:
+	if _combat_record_revision == revision and _combat_record_count == records.size() \
+		and is_same(_combat_record_source, records) and _combat_record_learned == learned:
+		return
+	_combat_record_source = records
+	_combat_record_count = records.size()
+	_combat_record_revision = revision
+	_combat_record_learned = learned.duplicate()
+	var procs: Array[Dictionary] = []
+	var possible: Array[Dictionary] = []
+	for base: Dictionary in records:
+		if str(base.get("mode", "")) in COMBAT_PROC_MODES:
+			procs.append(base)
+		if base.has("equipment_spell523") or int(learned.get(str(base.get("id", "")), 0)) > 0:
+			possible.append(base)
+	_proc_records = procs
+	_possible_owned_records = possible
 
 
 static func read_json(filename: String) -> Dictionary:

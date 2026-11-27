@@ -24,6 +24,8 @@ const GOTCHA_UNIT: int = 35
 const BUFF_CARD_UNIT: int = 33
 const SPELL_DECK: int = 41
 static var _skill_books: Dictionary = {}
+static var _skill_book_generation: int = -1
+static var _skill_bonus_ids: Dictionary = {}
 const LIMIT: int = 9007199254740991
 static var _definitions: Dictionary = {}
 static var _names: Dictionary = {}
@@ -137,30 +139,45 @@ static func _gotcha(item_id: int, purchase_id: int) -> Dictionary:
 ## The original skill book item carrying one Spell BuffCard. Prefers the plain
 ## account-bound "(각인)" variant over event/clan-merchant/unused copies.
 static func skill_book_for(card_id: int) -> int:
+	if SOURCE.verified_key().is_empty(): return 0
+	if _skill_book_generation != SOURCE.cache_generation():
+		_skill_bonus_ids = _build_skill_bonus_index()
+		_skill_books.clear()
+		_skill_book_generation = SOURCE.cache_generation()
 	if _skill_books.has(card_id): return int(_skill_books[card_id])
+	var best: int = 0
+	var best_rank: int = 1 << 30
+	for bonus_id: int in _skill_bonus_ids.get(card_id, []):
+		for link: Dictionary in SOURCE.related("ItemBonus", "BonusID", bonus_id):
+			var id: int = int(link.ItemClassID)
+			var item: Dictionary = SOURCE.row("ItemClass", id)
+			if item.is_empty() or item.get("TestItem",true) or not str(item.get("ServiceRegionCode","")).is_empty(): continue
+			if SOURCE.row("ItemCategory",int(item.CategoryID)).get("Name") != "BuffCardDrawer" or link.get("IsPossession",true): continue
+			var raw: String = str(item.get("Name", ""))
+			var rank: int = 0
+			for tag: String in ["이벤트", "혈맹상인", "미사용", "테스트", "삭제", "판매", "현상범"]:
+				if raw.contains(tag): rank += 10
+			if not raw.contains("(각인)"): rank += 1
+			if rank < best_rank or (rank == best_rank and id < best):
+				best = id
+				best_rank = rank
+	_skill_books[card_id] = best
+	return best
+
+## Group the original Bonus rows once. Linked ItemClass records are still
+## compared only for requested cards, in the same source order and rank.
+static func _build_skill_bonus_index() -> Dictionary:
 	var type_id: int = 0
 	for row: Dictionary in SOURCE.rows("BonusType"):
 		if row.get("Name") == "BuffCardID": type_id = int(row.ID)
-	var best: int = 0
-	var best_rank: int = 1 << 30
-	if type_id > 0:
-		for bonus: Dictionary in SOURCE.related("Bonus", "BonusTypeID", type_id):
-			if not integer(bonus.get("Value")) or int(bonus.Value) != card_id: continue
-			for link: Dictionary in SOURCE.related("ItemBonus", "BonusID", int(bonus.ID)):
-				var id: int = int(link.ItemClassID)
-				var item: Dictionary = SOURCE.row("ItemClass", id)
-				if item.is_empty() or item.get("TestItem",true) or not str(item.get("ServiceRegionCode","")).is_empty(): continue
-				if SOURCE.row("ItemCategory",int(item.CategoryID)).get("Name") != "BuffCardDrawer" or link.get("IsPossession",true): continue
-				var raw: String = str(item.get("Name", ""))
-				var rank: int = 0
-				for tag: String in ["이벤트", "혈맹상인", "미사용", "테스트", "삭제", "판매", "현상범"]:
-					if raw.contains(tag): rank += 10
-				if not raw.contains("(각인)"): rank += 1
-				if rank < best_rank or (rank == best_rank and id < best):
-					best = id
-					best_rank = rank
-	_skill_books[card_id] = best
-	return best
+	if type_id <= 0: return {}
+	var grouped: Dictionary = {}
+	for bonus: Dictionary in SOURCE.related("Bonus", "BonusTypeID", type_id):
+		if not integer(bonus.get("Value")): continue
+		var card_id: int = int(bonus.Value)
+		if not grouped.has(card_id): grouped[card_id] = []
+		grouped[card_id].append(int(bonus.ID))
+	return grouped
 
 static func skill_draw_allows_class(card: Dictionary, class_id: int) -> bool:
 	if class_id <= 0 or int(card.get("BuffCardDeckID",0)) != SPELL_DECK: return false

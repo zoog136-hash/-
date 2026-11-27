@@ -258,7 +258,7 @@ static func _transient_definition(item_id: String, native_only: bool) -> Diction
 		scope.describe_us += Time.get_ticks_usec() - started
 		scope.describe_calls += 1
 	started = Time.get_ticks_usec() if scope != null else 0
-	var definition: Dictionary = _current_raw_definition(detail) if not detail.is_empty() else {}
+	var definition: Dictionary = _current_raw_definition(detail,native_only) if not detail.is_empty() else {}
 	if scope != null:
 		scope.dto_us += Time.get_ticks_usec() - started
 		scope.dto_calls += int(not detail.is_empty())
@@ -300,7 +300,7 @@ static func _describe_item(item_id: int, native_only: bool = false) -> Dictionar
 	if not detail is Dictionary: return {}
 	return detail
 
-static func _current_raw_definition(reference: Dictionary) -> Dictionary:
+static func _current_raw_definition(reference: Dictionary,native_only: bool = false) -> Dictionary:
 	if reference.is_empty() or reference.get("source") != CURRENT_SOURCE.identity(): return {}
 	var original: Dictionary = reference.get("item_class",{})
 	if original.is_empty(): return {}
@@ -333,7 +333,10 @@ static func _current_raw_definition(reference: Dictionary) -> Dictionary:
 		definition.native_record=projected
 		# Base-item weapon invokes (claw / dual blade / rifle bleed) for the
 		# existing weapon_invoke_roll and patch523_weapon_bleed consumers.
-		definition.source_invoke_options=preload("res://scripts/loot/current523_weapon_invokes.gd").compile(bonuses,projected)
+		# The registrar consumes only native_record. Game and public definition
+		# reads still compile the complete invoke graph on their normal path.
+		if not native_only:
+			definition.source_invoke_options=preload("res://scripts/loot/current523_weapon_invokes.gd").compile(bonuses,projected)
 		definition.native_record_status="current_original_typed_game_dto"
 		definition.unresolved_source_reference=""
 	return definition
