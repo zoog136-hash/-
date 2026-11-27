@@ -359,6 +359,7 @@ var auto_target_next_search_ms: int = 0
 var auto_target_failed_search_actor_count: int = -1
 var auto_target_path_checks: int = 0
 var _auto_target_refresh_ms: int = 0
+var _auto_target_was_explicit: bool = false
 var auto_search_candidates: Array[Dictionary] = []
 var auto_search_index: int = 0
 var auto_search_cell: Vector2i
@@ -3628,6 +3629,7 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 			auto_target = priority
 			selected_monster = priority
 	var automatic: bool = locked == null and manual_priority == null
+	if not automatic: _auto_target_was_explicit = true
 	if not pending_attack.is_empty(): return
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
@@ -3651,6 +3653,13 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 	var acquired_path := PackedVector2Array()
 	if automatic:
 		var now: int = Time.get_ticks_msec() if now_ms < 0 else now_ms
+		if _auto_target_was_explicit:
+			# Manual and equipment selection may point outside the AUTO radius.
+			# Revalidate on the first free tick after the explicit selection ends.
+			_auto_target_was_explicit = false
+			_clear_auto_target_search()
+			auto_target_next_search_ms = 0
+			_auto_target_refresh_ms = 0
 		if not is_instance_valid(auto_target) or auto_target.dead or not auto_target.permits_auto_selection() \
 			or not auto_search_candidates.is_empty() or now >= _auto_target_refresh_ms:
 			acquired_path = _refresh_auto_hunt_target(now)
@@ -3948,6 +3957,10 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 			auto_target = current
 			_clear_auto_target_search()
 			return PackedVector2Array()
+		# Candidates are ordered when the search begins. Movement between slices
+		# can make an earlier candidate farther away than the live target.
+		if current != null and origin.distance_squared_to(monster.global_position) > origin.distance_squared_to(current.global_position):
+			continue
 		var key: String = _auto_target_failure_key(monster)
 		if int(auto_target_failed_paths.get(key, 0)) > now: continue
 		var started: int = FRAME_HITCH.now()
@@ -7632,6 +7645,7 @@ func _on_auto_toggled(enabled: bool) -> void:
 	inventory_automation.maintenance.mode_changed(enabled)
 	loot_pickup.cancel()
 	hud.set_auto(enabled)
+	_auto_target_was_explicit = false
 	_auto_target_refresh_ms = 0
 	if not enabled:
 		_auto_area_sweep_due = false
