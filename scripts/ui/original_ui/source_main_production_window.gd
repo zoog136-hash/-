@@ -9,8 +9,8 @@ extends RefCounted
 ## 메인 / 한정 / 서버한정 list the registry recipes of the original
 ## recommendation list and MainCategoryID 41 / 51 (scripts/crafting/
 ## craft_tabs523.gd); their category list is every TWILIGHT category.
-## Left inert or empty (no rule here): 이벤트 / 즐겨찾기 / 검색 tabs (Off;
-## tapping says so; the 이벤트 tab is 비법서 제작 when the world has it:
+## The native search/favorites tabs reuse this recipe list and its actions.
+## The 이벤트 tab is 비법서 제작 when the world has it:
 ## TWILIGHT 근사, the existing panel), the class filter,
 ## 컬렉션 이동, 결과 상세 보기, the progress bar, the limits /
 ## period texts, the 출처 popup, the keypad, every effect layer.
@@ -24,6 +24,8 @@ const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd"
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Craft=preload("res://scripts/ui/renewal_crafting.gd")
+const Search=preload("res://scripts/ui/original_ui/source_main_inventory_search.gd")
+const QueryEdit=preload("res://scripts/ui/native_touch_line_edit.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 ## ProductionScene is a layout source only; Production_All is mounted at
 ## its Production_All_Layout position (600, 337.5).
@@ -43,7 +45,9 @@ const P_LIST="Production_Tab_List/"
 const P_PROD="Production_Tab_List/Nd_Production/"
 ## 장비 / 기타 tabs over the TWILIGHT recipe categories.
 const TABS: Dictionary={"equip":["무기","방어구","장신구"],"other":["물약","재료"]}
-const OFF_TABS: Array[String]=["Btn_Event","Btn_Bookmark","Btn_Search"]
+const LOOKUP_TABS={"favorites":"Btn_Bookmark","search":"Btn_Search"}
+const FAVORITES_KEY="craft_recipe_favorites"
+const SEARCH_KEYPAD="UI/Production/Production_Popup_Keypad.csb"
 ## Original-table tabs (craft_tabs523): tab -> its Nd_TabMenu button.
 const SOURCE_TABS: Dictionary={"main":"Btn_Main","limited":"Btn_LimitedAccount","server":"Btn_LimitedServer"}
 const CraftTabs=preload("res://scripts/crafting/craft_tabs523.gd")
@@ -82,6 +86,12 @@ var _item_ids: Array[String]=[]
 var _item_content: Node2D
 var _item_size: Vector2
 var _item_rows: Dictionary={}
+var _search: RefCounted
+var _query_editor: LineEdit
+var _search_supported: bool=false
+var _query: String=""
+var _search_kind: String="material"
+var _search_picker: bool=false
 
 ## Drag scrolling of one original ListView content (rows placed by add_row).
 class ListScroll extends RefCounted:
@@ -121,6 +131,7 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_production_window_member_missing","member":member}
 	_pack=pack
+	_search_supported=pack.manifest.get("scenes",{}).has(SEARCH_KEYPAD)
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
 	for name: String in ["sort","items","materials"]:_scrolls[name]=ListScroll.new()
@@ -149,6 +160,10 @@ func refresh() -> Dictionary:
 	return _stage()
 
 func close() -> void:
+	close_search()
+	if is_instance_valid(_query_editor): _query_editor.queue_free()
+	_query_editor=null
+	_search_picker=false
 	var previous: Node2D=_scene
 	_scene=null
 	# Row reuse applies while its tree is live. Reopening needs fresh rows
@@ -190,6 +205,16 @@ func node_keys() -> Dictionary:
 func _recipes(world: Node) -> Array[String]:
 	var ids: Array[String]=[]
 	var registry: Dictionary=world.crafting.recipes
+	if LOOKUP_TABS.has(_tab):
+		var favorites: Dictionary=_favorites(world) if _tab=="favorites" else {}
+		if (_tab=="favorites" and favorites.is_empty()) or (_tab=="search" and _query.is_empty()):return ids
+		var needle: String=_query.to_lower()
+		for id: String in registry:
+			if _tab=="favorites":
+				if favorites.get(id)==true:ids.append(id)
+			elif _matches_recipe(registry[id],id,needle,_search_kind):ids.append(id)
+		if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return _craftable(world,id))
+		return ids
 	if SOURCE_TABS.has(_tab):
 		for id: String in _source_ids:
 			if registry.has(id) and (_category.is_empty() or str((registry[id] as Dictionary).get("category",""))==_category):ids.append(id)
@@ -203,6 +228,21 @@ func _recipes(world: Node) -> Array[String]:
 		ids.append(str(raw))
 	if _ready_first:ids=ready_first(ids,func(id: String) -> bool:return _craftable(world,id))
 	return ids
+
+static func _matches_recipe(recipe: Dictionary, id: String, needle: String, kind: String) -> bool:
+	if kind=="result":return _title(recipe,recipe.get("result",{}),id).to_lower().contains(needle) or str(recipe.get("name","")).to_lower().contains(needle)
+	for material: Dictionary in recipe.get("materials",[]):
+		if str(material.get("item","")).to_lower().contains(needle):return true
+	for slot: Dictionary in recipe.get("material_slots",[]):
+		for candidate: Dictionary in slot.get("candidates",[]):
+			if str(candidate.get("item","")).to_lower().contains(needle):return true
+	return false
+
+static func _favorites(world: Node) -> Dictionary:
+	if not is_instance_valid(world):return {}
+	var preferences: Variant=world.get("ui_preferences")
+	var saved: Variant=preferences.get(FAVORITES_KEY) if preferences is Dictionary else null
+	return saved if saved is Dictionary else {}
 
 ## 제작 가능 우선: craftable recipes first, each group in its own order.
 static func ready_first(ids: Array[String], craftable: Callable) -> Array[String]:
@@ -416,16 +456,21 @@ func _spec(world: Node, ids: Array[String], recipe: Dictionary, quantity: Dictio
 	for name: String in SOURCE_TABS:
 		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_On"]={"visible":_tab==name}
 		spec[P_ALL+"Nd_TabMenu/"+str(SOURCE_TABS[name])+"_Off"]={"visible":_tab!=name,"activate":Callable(self,"_set_tab").bind(name)}
-	for tab_name: String in OFF_TABS:
-		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_On"]={"visible":false}
-		spec[P_ALL+"Nd_TabMenu/"+tab_name+"_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 장비·기타 제작만 연결했습니다")}
+	for key: String in LOOKUP_TABS:
+		var tab_name: String=P_ALL+"Nd_TabMenu/"+str(LOOKUP_TABS[key])
+		var available: bool=key!="search" or _search_supported
+		spec[tab_name+"_On"]={"visible":available and _tab==key}
+		spec[tab_name+"_Off"]={"visible":available and _tab!=key,"activate":Callable(self,"_set_tab").bind(key)}
+	spec[P_ALL+"Nd_TabMenu/Btn_Event_On"]={"visible":false}
+	spec[P_ALL+"Nd_TabMenu/Btn_Event_Off"]={"activate":Callable(self,"_notice").bind("이 탭은 원본 규칙이 없어 열 수 없습니다")}
 	# 비법서 제작 (TWILIGHT 근사): the original has no GachaCraft entry here, so
 	# the 이벤트 tab opens the existing 비법서 제작 panel (renewal_crafting).
 	if world.has_method("patch523_gacha_craft_owned"):
 		spec[P_ALL+"Nd_TabMenu/Btn_Event_Off"]={"activate":Callable(self,"_open_gacha")}
 		spec[P_ALL+"Nd_TabMenu/Btn_Event_Off/Label"]={"role":"source_text","text":"비법서 제작"}
 	spec[P_ALL+"Production_Tab_Main"]={"exclude":true}
-	spec[P_ALL+"Nd_SearchBar"]={"exclude":true}
+	if _tab=="search" and _search_supported:spec.merge(_search_spec())
+	else:spec[P_ALL+"Nd_SearchBar"]={"exclude":true}
 	spec[P_ALL+"Production_Popup_Keypad_Layout"]={"exclude":true}
 	spec[P_ALL+"Nd_Notice"]={"visible":ids.is_empty()}
 	# Tab_List: lists.
@@ -456,6 +501,23 @@ func _spec(world: Node, ids: Array[String], recipe: Dictionary, quantity: Dictio
 	spec[P_PROD+"Btn_Production/Normal/Sp_Block"]={"visible":false}
 	spec.merge(quantity)
 	return spec
+
+func _search_spec() -> Dictionary:
+	var bar: String=P_ALL+"Nd_SearchBar/"
+	var picker: String=bar+"Nd_Popup_Select/"
+	return {P_ALL+"Nd_SearchBar":{"visible":true},
+		bar+"Btn_Search":{"activate":Callable(self,"open_search")},
+		bar+"Btn_Search/Text":{"role":"source_text","text":_query if not _query.is_empty() else "아이템 이름"},
+		bar+"Btn_Reset_All":{"activate":Callable(self,"_clear_search")},
+		bar+"Btn_Reset_All/Normal":{"visible":not _query.is_empty()},
+		bar+"Btn_Reset_All/Disabled":{"visible":_query.is_empty()},
+		bar+"Btn_Select/Btn_Material":{"visible":_search_kind=="material","activate":Callable(self,"_toggle_search_kind")},
+		bar+"Btn_Select/Btn_Result":{"visible":_search_kind=="result","activate":Callable(self,"_toggle_search_kind")},
+		bar+"Nd_Popup_Select":{"visible":_search_picker},
+		picker+"Btn_All_On":{"visible":_search_kind=="material","activate":Callable(self,"_set_search_kind").bind("material")},
+		picker+"Btn_All_Off":{"visible":_search_kind!="material","activate":Callable(self,"_set_search_kind").bind("material")},
+		picker+"Btn_Premium_On":{"visible":_search_kind=="result","activate":Callable(self,"_set_search_kind").bind("result")},
+		picker+"Btn_Premium_Off":{"visible":_search_kind!="result","activate":Callable(self,"_set_search_kind").bind("result")}}
 
 func _quantity_spec(produced: int, most: int, can: bool) -> Dictionary:
 	var spec: Dictionary={}
@@ -518,7 +580,11 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	var quantity: int=int(result.get("quantity",1))
 	spec["Common_Slot/Text_Amount"]={"role":"source_text","text":_number(quantity),"visible":quantity>1}
 	spec["Common_Slot/Btn"]={"activate":Callable(self,"_select").bind(id)}
-	return {"member":ROW_ITEM,"ok":ok,"spec":spec,"picture":["Common_Slot/Sp_IconSample",_record(world,str(result.get("item","")),str(result.get("source_id",""))),str(result.get("item",""))]}
+	var bookmark: String="Panel/Btn_CheckBox/"
+	var starred: bool=_favorites(world).get(id)==true
+	spec[bookmark+"Btn_Normal"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":not starred}
+	spec[bookmark+"Btn_Enable"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":starred}
+	return {"member":ROW_ITEM,"ok":ok,"favorite":starred,"spec":spec,"picture":["Common_Slot/Sp_IconSample",_record(world,str(result.get("item","")),str(result.get("source_id",""))),str(result.get("item",""))]}
 
 func _fill_items(root: Node2D, out: Dictionary, ids: Array[String]) -> Dictionary:
 	var list: Dictionary=NamedTree.locate(root,out,P_LIST+"Nd_ItemList/ListView")
@@ -530,12 +596,13 @@ func _fill_items(root: Node2D, out: Dictionary, ids: Array[String]) -> Dictionar
 	_reuse_by_state=false
 	if by_state and is_instance_valid(_item_content):
 		var world: Node=_world.get_ref() if _world!=null else null
+		var favorites: Dictionary=_favorites(world)
 		for index: Variant in _item_rows:
 			var kept: Node2D=_item_rows[index]
 			if not is_instance_valid(kept) or world==null:continue
 			var id: String=str(kept.get_meta("recipe_id",""))
 			if int(index)>=ids.size() or ids[int(index)]!=id:continue
-			if bool(kept.get_meta("row_chosen",false))==(id==_selected) and bool(kept.get_meta("row_ok",false))==_craftable(world,id):_reusable[int(index)]=kept
+			if bool(kept.get_meta("row_chosen",false))==(id==_selected) and bool(kept.get_meta("row_ok",false))==_craftable(world,id) and bool(kept.get_meta("row_favorite",false))==(favorites.get(id)==true):_reusable[int(index)]=kept
 	elif not _reuse_except.is_empty() and is_instance_valid(_item_content):
 		for index: Variant in _item_rows:
 			var kept: Node2D=_item_rows[index]
@@ -590,6 +657,7 @@ func _sync_item_rows() -> Dictionary:
 		built.scene.set_meta("recipe_id",_item_ids[index])
 		built.scene.set_meta("row_chosen",_item_ids[index]==_selected)
 		built.scene.set_meta("row_ok",bool(row.get("ok",false)))
+		built.scene.set_meta("row_favorite",row.favorite)
 		_item_rows[index]=built.scene
 		if _picture(built.scene,row_out,str(row.picture[0]),row.picture[1],str(row.picture[2])):pictures+=1
 	return {"ok":true,"pictures":pictures,"rows":_item_rows.size(),"reused":reused}
@@ -740,12 +808,87 @@ func _moved() -> bool:
 
 func _set_tab(value: String) -> Dictionary:
 	if value==_tab:return {"ok":true}
+	close_search()
+	_search_picker=false
 	_tab=value
 	_category=""
 	_selected=""
 	_count=1
 	_source_ids=source_tab_ids(_world.get_ref() if _world!=null else null,value)
 	for scroll: ListScroll in _scrolls.values():scroll.y=0.0
+	return _stage()
+
+func search_is_open() -> bool:
+	return _search!=null and _search.is_open()
+
+func search_presentation() -> Dictionary:
+	return _search.presentation() if search_is_open() else {}
+
+func focus_search_at(point: Vector2) -> bool:
+	return search_is_open() and _search.focus_input_at(point)
+
+func close_search() -> void:
+	if _search!=null:_search.close()
+	_search=null
+
+func open_search() -> Dictionary:
+	var parent: Variant=_parent.get_ref() if _parent!=null else null
+	if not is_open() or _tab!="search" or not _search_supported or not is_instance_valid(parent):return _fail("source_craft_search_unavailable")
+	if search_is_open():return {"ok":true,"handled":true}
+	if not is_instance_valid(_query_editor):
+		_query_editor=QueryEdit.new()
+		_query_editor.name="ProductionQueryEditor"
+		_query_editor.hide()
+		parent.add_child(_query_editor)
+		_query_editor.text_submitted.connect(_keyboard_query)
+	_query_editor.text=_query
+	_search=Search.new()
+	var configured: Dictionary=_search.configure_production(_pack,self,_query_editor)
+	var opened: Dictionary=_search.open(parent) if configured.get("ok",false) else configured
+	if not opened.get("handled",false):
+		close_search()
+		_notice("원본 제작 검색창을 열 수 없습니다.")
+	return opened
+
+func _keyboard_query(_text: String) -> void:
+	if search_is_open():_search.apply_query()
+
+func apply_search_query(text: String) -> Dictionary:
+	if not is_open() or _tab!="search" or not search_is_open():return _fail("source_craft_search_current_owner_changed")
+	close_search()
+	_query=text.strip_edges()
+	return _restage_lookup()
+
+func _clear_search() -> Dictionary:
+	_query=""
+	_search_picker=false
+	return _restage_lookup()
+
+func _toggle_search_kind() -> Dictionary:
+	_search_picker=not _search_picker
+	return _stage()
+
+func _set_search_kind(kind: String) -> Dictionary:
+	_search_kind=kind
+	_search_picker=false
+	return _restage_lookup()
+
+func _restage_lookup() -> Dictionary:
+	_selected=""
+	_count=1
+	(_scrolls.items as ListScroll).y=0.0
+	return _stage()
+
+func _toggle_favorite(id: String) -> Dictionary:
+	if _moved():return {"ok":true,"ignored_after_drag":true}
+	var world: Node=_world.get_ref() if _world!=null else null
+	if not is_instance_valid(world) or not id in _item_ids or not world.crafting.recipes.has(id):return _fail("source_production_window_recipe_missing")
+	var favorites: Dictionary=_favorites(world).duplicate()
+	if favorites.get(id)==true:favorites.erase(id)
+	else:favorites[id]=true
+	world.ui_preferences[FAVORITES_KEY]=favorites
+	world._request_deferred_save()
+	_reuse_except=[id]
 	return _stage()
 
 ## The recipe ids of an original-table tab for this character now.

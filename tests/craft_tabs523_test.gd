@@ -76,7 +76,7 @@ func _run() -> void:
 	facts.held[700] = 29
 	check(not Tabs.recommended(host.crafting.recipes, facts, reader).has("patch523:3"), "too few held items: not recommended")
 	check(PRODUCTION.source_tab_ids(host, "limited", reader) == ["patch523:2","patch523:4"] and PRODUCTION.source_tab_ids(host, "server", reader) == ["patch523:3"] and PRODUCTION.source_tab_ids(host, "equip", reader).is_empty(), "the window's tabs read the same lists")
-	check(not PRODUCTION.OFF_TABS.has("Btn_Main") and not PRODUCTION.OFF_TABS.has("Btn_LimitedAccount") and not PRODUCTION.OFF_TABS.has("Btn_LimitedServer") and PRODUCTION.SOURCE_TABS.values() == ["Btn_Main","Btn_LimitedAccount","Btn_LimitedServer"], "메인 / 한정 / 서버한정 are connected tabs")
+	check(PRODUCTION.SOURCE_TABS.values() == ["Btn_Main","Btn_LimitedAccount","Btn_LimitedServer"] and PRODUCTION.LOOKUP_TABS.values()==["Btn_Bookmark","Btn_Search"], "메인 / 한정 / 서버한정 and both original lookup tabs have their authored routes")
 	check(not CHANGE.star_target(null, "변신", "x") and not CHANGE.star_target(host, "마법인형", "x"), "성급 강화 needs the star-enchant owner's 변신 card")
 	var change: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_change_window.gd")
 	check(change.contains("hud.call(\"open_halphas_star_enchant\",target,focus)") and change.contains("const TRANSCEND=14884"), "성급 강화 opens the existing star-enchant window")
