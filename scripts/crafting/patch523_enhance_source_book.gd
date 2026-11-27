@@ -5,6 +5,7 @@ const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const LEGACY_ACCESSORY_SLOTS: Array[String]=["ring","earring","seal","bracelet","necklace","belt","badge","crystal","catalyst","rune"]
+const LEGACY_ARMOR_SLOTS: Array[String]=["offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","boots","gloves"]
 const TABLES: Array[String]=["BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView",
 	"ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroupMapping","ItemBlessEnchantProbability","Material"]
 static var _identity: Dictionary={}
@@ -81,7 +82,12 @@ func bind(detached_target: Dictionary, exact_target_id: String, detached_scroll:
 		if slot=="weapon":
 			if target.get("category",{}).get("Name")!="Weapon":return false
 			if not target.get("equip_rows",[]).any(func(row: Dictionary) -> bool: return row.get("equip_slot",{}).get("Name")=="WeaponHold"):return false
-		elif slot not in LEGACY_ACCESSORY_SLOTS or target.get("native_record",{}).get("slot")!=slot or target.get("equip_rows",[]).is_empty():return false
+		else:
+			var original_armor: bool=slot in LEGACY_ARMOR_SLOTS and target.get("category",{}).get("Name")=="Armor"
+			if slot not in LEGACY_ACCESSORY_SLOTS and not original_armor:return false
+			var canonical: Dictionary=target.get("native_record",{})
+			if canonical.get("slot")!=slot or target.get("equip_rows",[]).is_empty():return false
+			if original_armor and (not NATIVE_FIELDS.field(canonical,"source_condition_pending",[]).is_empty() or canonical.get("source_delete_time_unresolved",false)):return false
 		if target.get("item_bonus",[]).any(func(row: Dictionary) -> bool: return row.get("bonus_type",{}).get("Name") in ["DeleteTime","StartDateTimeID","EndDateTimeID","ServerLimitSetID"]):return false
 		_legacy_equip=registered_legacy
 	if _identity!=identity:

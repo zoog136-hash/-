@@ -5899,7 +5899,7 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	var book: RefCounted=patch523_equipment
 	var target_id: String=PATCH523_ENHANCE.item_id(record)
 	var legacy_equip: Dictionary={}
-	if (kind in ["weapon","accessory"] and record.get("source")=="inven" and not record.get("source_m_native_item",false)
+	if (kind in ["weapon","armor","accessory"] and record.get("source")=="inven" and not record.get("source_m_native_item",false)
 		and target_id.is_valid_int() and not CURRENT523_DEFINITION_ROWS.not_installed() and not patch523_equipment.catalog_identity_matches(record,target_id)):
 		legacy_equip=_catalog_item_from_source_id(target_id)
 		exact_required=exact_required or not legacy_equip.is_empty()

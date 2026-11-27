@@ -4,6 +4,13 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const STOCK = preload("res://scripts/crafting/patch523_enhance_stock.gd")
 const SHINING: int = 320802
 const SHINING_GROUPS = {629:10, 2401:32, 30671:81, 882:253, 158761:371, 183681:511, 213611:548, 289062:792}
+const SHINING_ARMOR_GROUPS = {
+	44932:122, 44942:122, 44952:122, 233822:122, 234362:122,
+	140671:291, 140681:291, 140691:291, 276048:291, 276798:291,
+	140701:301, 140711:301, 140721:301, 276058:301, 276808:301,
+	152712:332, 152722:332, 152732:332, 233812:332, 233832:332,
+}
+const STANDARD_SHIRTS = [1171,5391,7731,9541]
 
 func run() -> void:
 	if OS.get_environment("TWILIGHT_ACCESSORY_QA")!="1" or OS.get_environment("XDG_DATA_HOME").is_empty() or FileAccess.file_exists("user://twilight_v20_save.json"):
@@ -24,6 +31,7 @@ func run() -> void:
 		world.level=74
 		world.gold=1000000
 		await exercise_accessories(world)
+		await exercise_armor(world)
 	world.hud._close_workspace()
 	await frames()
 	world.queue_free()
@@ -151,3 +159,77 @@ func exercise_seal_box_balance(world: Node, name: String, ring: String) -> void:
 	check(not world.inventory.has(name) and world.item_instances[ring].level==1,"the last plain box scroll applies to its exact old physical ring")
 	world.hud._close_workspace()
 	await frames()
+
+func exercise_armor(world: Node) -> void:
+	world.hud._close_workspace()
+	await frames()
+	var grants: Array=[{"item_class_id":138,"amount":2,"bless_raw":1,"enchant":0},
+		{"item_class_id":6411,"amount":1,"bless_raw":1,"enchant":0},
+		{"item_class_id":44992,"amount":1,"bless_raw":1,"enchant":0}]
+	if not check(SUPPLY.commit(world,grants,{"kind":"qa_armor_scroll_inventory"}),"grant the original ordinary, engraved and dedicated armor scrolls"):return
+	var old_armor: Dictionary={}
+	for id: int in SHINING_ARMOR_GROUPS.keys()+STANDARD_SHIRTS:
+		var record: Dictionary=world._catalog_item_from_source_id(str(id))
+		if not check(record.get("source")=="inven" and record.get("slot") in ["tshirt","shoulder"],"load legacy registered armor #"+str(id)):return
+		var uid: String=str(world.next_item_instance_id)
+		world.next_item_instance_id+=1
+		var starting_level: int=5 if id==44932 else 6 if id in [140671,152712,140701] else 0
+		world.inventory[record.name]=int(world.inventory.get(record.name,0))+1
+		world.item_instances[uid]={"name":record.name,"level":starting_level,"record":record.duplicate(),"sourceId":str(id),"bless_state":"normal","element":"","element_level":0}
+		old_armor[id]=uid
+	if not check(world._save_game(true)==OK,"preserve the old armor inventory before opening it"):return
+	world._load_game(true)
+	await frames()
+	var shining_window: RefCounted=await open_armor_scroll(world,SHINING)
+	var shining_targets: Dictionary=candidates_by_id(world) if is_instance_valid(shining_window) else {}
+	var shining_record: Dictionary=STACK.proof(world,instance_id(world,SHINING)).get("record",{})
+	for id: int in SHINING_ARMOR_GROUPS:
+		var physical: Dictionary=world.item_instances[old_armor[id]]
+		var quote: Dictionary=world._source_enhancement_rule(physical.record,int(physical.level),"normal",str(shining_record.get("name","")),physical,shining_record)
+		check(shining_targets.get(id,{}).get("instance_id")==old_armor[id] and quote.get("group")==SHINING_ARMOR_GROUPS[id],
+			"shining equipment scroll includes legacy armor #"+str(id)+" "+str(quote.get("reason","")))
+	for id: int in STANDARD_SHIRTS:
+		check(not shining_targets.has(id),"the ordinary shirt is excluded from the shining equipment scroll #"+str(id))
+	if is_instance_valid(await open_armor_scroll(world,166044)):
+		var protected: Dictionary=candidates_by_id(world)
+		check(protected.has(140671) and not protected.has(44932) and not protected.has(152712) and not protected.has(140701),
+			"protection includes the +6 rare shoulder but excludes a +5 shirt and heroic armor")
+	var dedicated: RefCounted=await open_armor_scroll(world,44992)
+	var dedicated_targets: Dictionary=candidates_by_id(world) if is_instance_valid(dedicated) else {}
+	check(SHINING_ARMOR_GROUPS.keys().all(func(id: int) -> bool: return dedicated_targets.has(id)) and not dedicated_targets.has(1171),
+		"the dedicated shining armor scroll includes all 20 compatible shirts and shoulders")
+	if dedicated_targets.has(44932):
+		var chosen: Dictionary=dedicated_targets[44932]
+		seed_success(world,float(chosen.success_chance))
+		await tap_enchant(dedicated,chosen.target_id)
+		check(world.item_instances[old_armor[44932]].level==6 and instance_id(world,44992).is_empty(),"the chosen physical shining shirt goes from +5 to +6 and spends the selected dedicated scroll")
+		world.hud._close_workspace()
+		world._load_game(true)
+		await frames()
+		check(world.item_instances[old_armor[44932]].level==6 and instance_id(world,44992).is_empty(),"the shining shirt and debit survive reload")
+		if is_instance_valid(await open_armor_scroll(world,166044)):
+			check(candidates_by_id(world).has(44932),"the same shining shirt joins the protection list at +6")
+	for scroll_id: int in [6411,138]:
+		var window: RefCounted=await open_armor_scroll(world,scroll_id)
+		var targets: Dictionary=candidates_by_id(world) if is_instance_valid(window) else {}
+		check(STANDARD_SHIRTS.all(func(id: int) -> bool: return targets.has(id)) and not targets.has(44932),
+			"ordinary and engraved armor scrolls include the standard shirts only #"+str(scroll_id))
+		if scroll_id==138 and targets.has(1171):
+			var picked: Dictionary=targets[1171]
+			var uid: String=instance_id(world,138)
+			await tap_enchant(window,picked.target_id)
+			check(world.item_instances[old_armor[1171]].level==1 and STACK.proof(world,uid).get("remaining")==1,
+				"one actual ordinary armor scroll enhances the selected standard strength shirt")
+
+func open_armor_scroll(world: Node, id: int) -> RefCounted:
+	world.hud._close_workspace()
+	await frames()
+	var uid: String=instance_id(world,id)
+	var owned: Dictionary=STACK.proof(world,uid)
+	if not check(not owned.is_empty(),"own the exact armor scroll #"+str(id)):return null
+	var reference: String=str(owned.record.name)+"@@@"+uid
+	if not await use(world,reference):return null
+	var window: RefCounted=world.hud.original_main_ui_controller.enchant_window()
+	if not check(is_instance_valid(window) and window.is_open() and window._scroll_row.get("reference")==reference,
+			"the original armor chooser retains the selected scroll #"+str(id)):return null
+	return window
