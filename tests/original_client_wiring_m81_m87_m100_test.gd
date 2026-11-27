@@ -38,13 +38,16 @@ func run() -> void:
 # ------------------------------------------------------------------ (a) wiring
 func wiring() -> void:
 	var world: String = FileAccess.get_file_as_string("res://scripts/world.gd")
-	var process: String = body(world, "func _process(delta: float) -> void:")
-	if not process.contains("ORIGINAL_AUTOSLOT.timer_step(auto_heal_sweep_elapsed, delta)"): fail("world _process does not use the M81 timer")
-	if not process.contains("ORIGINAL_AUTOSLOT.manager_callback(auto_active, true, _auto_quickslot_queued_pass, _auto_quickslot_spell_pass, _auto_quickslot_aux_pass)"): fail("world _process does not use the M81 manager callback")
+	var wrapper: String = body(world, "func _process(delta: float) -> void:")
+	if not wrapper.contains("_process_frame(delta)"): fail("world _process does not run the gameplay frame")
+	var process: String = body(world, "func _process_frame(delta: float) -> void:")
+	if not process.contains("ORIGINAL_AUTOSLOT.timer_step(auto_heal_sweep_elapsed, delta)"): fail("gameplay frame does not use the M81 timer")
+	if not process.contains("ORIGINAL_AUTOSLOT.manager_callback(auto_active, true, _auto_quickslot_queued_pass, _auto_quickslot_spell_pass, _auto_quickslot_aux_pass)"): fail("gameplay frame does not use the M81 manager callback")
+	if not process.contains("_auto_area_sweep_due = _auto_area_sweep_due or bool(heal_tick.fired)"): fail("area sweep is not scheduled by the M81 timer")
 	if process.contains("\t\t_run_auto_heal_quickslots()\n\t\t_run_auto_hunt()"): fail("old per-frame heal sweep remains")
 	if not body(world, "func _auto_quickslot_spell_pass() -> bool:").contains("_run_auto_heal_quickslots()"): fail("spell pass does not run the heal sweep")
 	if not body(world, "func _auto_quickslot_order() -> Array[int]:").contains("ORIGINAL_AUTOSLOT.build_local_order(pairs, true, [], Callable())"): fail("order not built by the adapter")
-	for signature: String in ["func _run_auto_heal_quickslots() -> void:", "func _run_auto_combat_quickslots() -> bool:"]:
+	for signature: String in ["func _run_auto_heal_quickslots() -> void:", "func _run_auto_combat_quickslots() -> bool:", "func _run_auto_area_quickslots() -> bool:"]:
 		var sweep: String = body(world, signature)
 		if not sweep.contains("for index: int in _auto_quickslot_order():"): fail("sweep not ordered by adapter: " + signature)
 		if sweep.contains("for value: Variant in quickslots:"): fail("old direct iteration remains: " + signature)

@@ -410,6 +410,7 @@ var equip_group_marker: Dictionary = {}
 var auto_item_clock: float = 0.0
 ## M81: the auto heal sweep runs on the original 0.5 s main timer (strict >, single subtraction).
 var auto_heal_sweep_elapsed: float = 0.0
+var _auto_area_sweep_due: bool = false
 var auto_quickslot_order_cache: Array[int] = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
@@ -919,6 +920,9 @@ func _process_frame(delta: float) -> void:
 	if bool(heal_tick.fired):
 		ORIGINAL_AUTOSLOT.manager_callback(auto_active, true, _auto_quickslot_queued_pass, _auto_quickslot_spell_pass, _auto_quickslot_aux_pass)
 	if auto_active:
+		# Hold one due sweep until the next legal action, including when a
+		# normal attack is still in its windup on the timer frame.
+		_auto_area_sweep_due = _auto_area_sweep_due or bool(heal_tick.fired)
 		var hitch_11: int = FRAME_HITCH.now()
 		_run_auto_hunt()
 		FRAME_HITCH.add("auto_hunt", hitch_11)
@@ -3575,6 +3579,11 @@ func _run_auto_hunt() -> void:
 	auto_stage = FRAME_HITCH.detail_next("auto.pickup", auto_stage)
 	if picked:
 		return
+	if _auto_area_sweep_due:
+		_auto_area_sweep_due = false
+		var area_cast: bool = _run_auto_area_quickslots()
+		auto_stage = FRAME_HITCH.detail_next("auto.area_quickslots", auto_stage)
+		if area_cast: return
 	var acquired_path := PackedVector2Array()
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		if Time.get_ticks_msec() < auto_target_next_search_ms and monsters_root.get_child_count() == auto_target_failed_search_actor_count:
@@ -7505,6 +7514,7 @@ func _on_auto_toggled(enabled: bool) -> void:
 	loot_pickup.cancel()
 	hud.set_auto(enabled)
 	if not enabled:
+		_auto_area_sweep_due = false
 		_clear_auto_target_search()
 		auto_target = null
 		player.clear_click_path()
@@ -9817,6 +9827,16 @@ func _run_auto_heal_quickslots() -> void:
 			_cast_job_skill(str(skill.get("name", "")), false)
 			return
 
+func _run_auto_area_quickslots() -> bool:
+	if original_skills == null or skill_global_cooldown > 0.0 or _source_combat_targets_hidden() or death_recovery.blocked(): return false
+	for index: int in _auto_quickslot_order():
+		var value: Variant = quickslots[index]
+		if not value is Dictionary or not bool(value.get("auto", false)) or str(value.get("kind", "")) != "skill": continue
+		var skill: Dictionary = _skill_record(str(value.get("skill_id", value.get("id", ""))))
+		if not SKILL_RULES.can_auto_cast(skill) or not original_skills.is_area_quickslot(skill): continue
+		if original_skills.cast_auto_area(skill): return true
+	return false
+
 func _run_auto_combat_quickslots() -> bool:
 	if not is_instance_valid(selected_monster) or selected_monster.dead:
 		return false
@@ -9836,7 +9856,8 @@ func _run_auto_combat_quickslots() -> bool:
 		# prepare material checks or probe a whole self-centred area.
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
 			continue
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
+		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
+			if original_skills.is_area_quickslot(skill) or not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
 			continue
 		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
@@ -12729,18 +12750,22 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	return true
 
 func _queue_player_area_attack(skill: Dictionary) -> bool:
+	var kind: String = str(skill.get("attack_type", "magic"))
+	if hp <= 0 or patch523_npc_spells.blocks("CannotCastSkill") or (kind == "magic" and patch523_npc_spells.blocks("CannotCastSpell")): return false
 	if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty():return false
 	# Self-centred attacks use the same cancellable motion marker as targeted
 	# attacks, never a second SceneTree timer that survives movement/transform.
 	player.cancel_attack()
 	player.clear_click_path()
-	var kind: String = str(skill.get("attack_type", "magic"))
-	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
-	var id: int = player.start_combat_attack(player.global_position + player.motion.direction,
+	var direction: Vector2 = player.motion.direction
+	var weapon: String = _current_weapon_type()
+	var style: String = TwilightAnimationProfile.weapon_style(weapon, kind)
+	var id: int = player.start_combat_attack(player.global_position + direction,
 		float(skill.get("cast_time", 0.42)), style, player.motion.profile.marker_for(style))
 	if id < 0: return false
 	if original_skills!=null:original_skills.break_attack_buffs()
-	pending_attack = {"id":id, "kind":kind, "style":style, "area_skill":skill.duplicate(true),
+	player.motion.weapon_variant = weapon
+	pending_attack = {"id":id, "kind":kind, "style":style, "area_skill":skill.duplicate(true), "area_direction":direction,
 		"start":player.global_position, "generation":combat_generation}
 	return true
 
@@ -12767,7 +12792,7 @@ func _release_player_attack_timed(id: int) -> void:
 	if action.kind == "magic" and player.is_silenced(): return
 	if player.global_position.distance_to(action.start) > 12.0: return
 	if action.has("area_skill"):
-		original_skills.area_marker(action.area_skill, int(action.generation))
+		original_skills.area_marker(action.area_skill, int(action.generation), action.area_direction)
 		return
 	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
 	if not is_instance_valid(target) or target.dead or target.life_id != int(action.get("target_life_id", target.life_id)): return

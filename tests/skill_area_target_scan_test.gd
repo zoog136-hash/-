@@ -89,16 +89,24 @@ func run() -> void:
 		"the existing targeted single branch stays direct")
 	var auto_skill: Dictionary = {"shape":"self_circle","radius":10.0,"range":40.0,"targets":2,"source523":{"target_kind":"Enemy"}}
 	field.sight_checks = 0
-	check(service._has_self_circle_target(auto_skill) and field.sight_checks == 2,
+	check(service._has_area_target(auto_skill) and field.sight_checks == 2,
 		"auto probe skips the first blocked candidate and stops at the first visible one")
 	field.walls.merge({Vector2(10,0):true,Vector2(-10,0):true,Vector2(4,3):true}, true)
-	check(not service._has_self_circle_target(auto_skill) and service.targets(auto_skill, null).is_empty(),
+	check(not service._has_area_target(auto_skill) and service.targets(auto_skill, null).is_empty(),
 		"auto probe rejects a blocked, hidden, dead or distant crowd")
 	field.walls.clear()
 	auto_skill.targets = 0
 	field.sight_checks = 0
-	check(not service._has_self_circle_target(auto_skill) and field.sight_checks == 0,
+	check(not service._has_area_target(auto_skill) and field.sight_checks == 0,
 		"an empty target limit never admits an automatic cast")
+	var forward_skill: Dictionary = {"mode":"attack","shape":"line","radius":2.0,"range":32.0,"targets":6}
+	check(active in service.targets(forward_skill, null, Vector2.RIGHT)
+		and active not in service.targets(forward_skill, null, Vector2.LEFT),
+		"target-free line uses facing without finding an anchor monster")
+	forward_skill.shape = "cone"
+	var cone_targets: Array[TwilightMonster] = service.targets(forward_skill, null, Vector2.RIGHT)
+	check(active in cone_targets and cone_targets.all(func(actor: TwilightMonster) -> bool: return actor.global_position.x >= 0.0),
+		"target-free cone keeps its declared forward range")
 	var timing: Dictionary = s32_benchmark() if "--benchmark" in OS.get_cmdline_user_args() else {}
 	field.queue_free()
 	await process_frame
@@ -123,7 +131,7 @@ func s32_benchmark() -> Dictionary:
 	service.world = probe
 	var original: Callable = previous_targets.bind(probe, skill, null)
 	var current: Callable = service.targets.bind(skill, null)
-	var auto_probe: Callable = service._has_self_circle_target.bind(skill)
+	var auto_probe: Callable = service._has_area_target.bind(skill)
 	var wanted: Array = original.call()
 	check(wanted.size() == 5 and wanted == current.call() and auto_probe.call(), "production S32 wall traversal keeps the ordered targets")
 	var rounds: Array[Dictionary] = []
