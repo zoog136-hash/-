@@ -22,6 +22,21 @@ def row_spans(raw):
     assert len(starts) == len(ends) == len(rows)
     return rows, starts, ends
 
+def table_spans(raw):
+    rows, starts, ends = row_spans(raw)
+    spans = []
+    i = 0
+    while i < len(rows):
+        j = i+1
+        while j < len(rows) and j-i < MAX_ROWS and ends[j]-starts[i] <= MAX_BYTES:
+            j += 1
+        a, b = starts[i], ends[j-1]
+        assert b-a <= MAX_BYTES
+        assert json.loads(b'[' + raw[a:b] + b']') == rows[i:j]
+        spans.extend((a, b, j-i))
+        i = j
+    return len(rows), spans
+
 def generate(path):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
     result = ['extends RefCounted', '## Byte spans only; no row contents. Regenerate from the pinned ZIP with',
@@ -31,19 +46,8 @@ def generate(path):
     with zipfile.ZipFile(path) as archive:
         for table in TABLES:
             raw = archive.read('content/' + table + '.json')
-            rows, starts, ends = row_spans(raw)
-            spans = []
-            i = 0
-            while i < len(rows):
-                j = i+1
-                while j < len(rows) and j-i < MAX_ROWS and ends[j]-starts[i] <= MAX_BYTES:
-                    j += 1
-                a, b = starts[i], ends[j-1]
-                assert b-a <= MAX_BYTES
-                assert json.loads(b'[' + raw[a:b] + b']') == rows[i:j]
-                spans.extend((a, b, j-i))
-                i = j
-            result.append(f'"{table}": {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{len(rows)}, "spans":[')
+            count, spans = table_spans(raw)
+            result.append(f'"{table}": {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{count}, "spans":[')
             for i in range(0, len(spans), 24):
                 result.append(','.join(str(n) for n in spans[i:i+24])+',')
             result.append(']},')
@@ -67,5 +71,17 @@ def generate(path):
             result.append(','.join(str(n) for n in spans[i:i+24])+',')
     return '\n'.join(result + [']}', ''])
 
+def generate_craft_inputs(path):
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
+    with zipfile.ZipFile(path) as archive:
+        raw = archive.read('content/ItemCraftInput.json')
+    count, spans = table_spans(raw)
+    lines = ['extends RefCounted',
+             '## Byte spans only. Regenerate with tools/build_current523_boot_row_spans.py <ZIP> --craft-inputs.',
+             f'const LAYOUT = {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{count}, "spans":[']
+    lines.extend(','.join(str(n) for n in spans[i:i+24])+',' for i in range(0, len(spans), 24))
+    return '\n'.join(lines + [']}', ''])
+
 if __name__ == '__main__':
-    print(generate(Path(sys.argv[1])), end='')
+    generator = generate_craft_inputs if sys.argv[2:] == ['--craft-inputs'] else generate
+    print(generator(Path(sys.argv[1])), end='')

@@ -9,6 +9,7 @@ const FUSION_POINTS=preload("res://scripts/cards/source_fusion_points523.gd")
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const CONSUMABLE_QUERIES=preload("res://scripts/resources/current523_consumable_queries.gd")
 const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -425,7 +426,7 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	# This is a material-owner admission, not individual use/effect activation.
 	# Actual recipe rows/choices/limits are still checked by the craft executor.
-	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return storage_profile(record)
+	if not CONSUMABLE_QUERIES.item_craft_input_declared(int(record.get("source_item_class_id",0))):return storage_profile(record)
 	return {"kind":"craft_material","standalone_effect_complete":false}
 
 ## Storage stacks (2026-11-13): an original non-equipment item the table fully
@@ -789,11 +790,10 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if not has_physical and selected.is_empty() and named.get("name")==item_name and integer(world.inventory.get(item_name,0)) and int(world.inventory.get(item_name,0))>0 and not world._item_locked(item_name):
 		# Older name-keyed acceleration stacks have no physical receipt. Their
 		# existing atomic buff owner can debit the exact catalog balance directly.
-		var plain: Dictionary=profile(named)
-		var plain_spec: Dictionary=plain.get("spec",{})
-		if plain.get("kind")=="buff" and MANUAL_SCROLLS.RULES.has(int(named.get("source_item_class_id",0))) and plain_spec.get("activation_status")=="unrestricted":
+		var plain_spec: Dictionary=named_profile.get("spec",{})
+		if named_profile.get("kind")=="buff" and MANUAL_SCROLLS.RULES.has(int(named.get("source_item_class_id",0))) and plain_spec.get("activation_status")=="unrestricted":
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
-		if plain.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
+		if named_profile.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
 			var restriction: String=_buff_territory_problem(world,plain_spec)
 			if not restriction.is_empty():return _failure(restriction)
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
@@ -898,11 +898,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		amount=int(spec.base)
 		for die: int in range(int(spec.dice_number)):amount+=candidate_rng.randi_range(1,int(spec.dice_spot_count))
 	var after: int=mini(maximum,before+amount)
-	# A timed buff edits only the selected physical's two scalar counters.
-	# All other rows are read-only until this synchronous commit returns.
-	# Keep the frozen authorization copy and the writer's detached payload.
-	var bag: Dictionary=world.inventory.duplicate(not is_buff)
-	var instances: Dictionary=world.item_instances.duplicate(not is_buff)
+	# A buff or potion edits only the selected physical's two scalar counters
+	# in a synchronous commit. The authorization and writer still detach it.
+	var scalar_use: bool = is_buff or effect.kind in ["hp", "mp"]
+	var bag: Dictionary=world.inventory.duplicate(not scalar_use)
+	var instances: Dictionary=world.item_instances.duplicate(not scalar_use)
 	# TWILIGHT 근사: a reusable teleport amulet moves without a physical debit.
 	var reusable: bool=bool(prepared.get("reusable",false))
 	if not reusable:
@@ -910,11 +910,10 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if int(bag[item_name])==0:bag.erase(item_name)
 		if owned.remaining==1:instances.erase(uid)
 		else:
-			if is_buff:instances[uid]=(instances[uid] as Dictionary).duplicate()
+			if scalar_use:instances[uid]=(instances[uid] as Dictionary).duplicate()
 			instances[uid][QUANTITY]=int(owned.remaining)-1
 			instances[uid].source_native_stack_used_quantity=int(owned.used)+1
-		# export_state() already owns this ledger in the timed-buff candidate.
-		if not is_buff:ledger=ledger.duplicate(true)
+		# export_state() already owns this ledger.
 		ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1)
 		state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
@@ -1329,7 +1328,6 @@ static func stage_debit(world: Node,requests: Array) -> Dictionary:
 	var state: Dictionary=world.consumable_service.export_state()
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("원본 물리 사용 장부 형식 보존")
-	ledger=ledger.duplicate(true)
 	var seen: Dictionary={};var selections: Array=[]
 	for request: Variant in requests:
 		if not request is Dictionary or request.size()!=5:return _failure("원본 물리 재료 요청5필드 필요")
@@ -1944,7 +1942,7 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	for key: String in payload.inventory:keys[key]=true
 	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
 	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
-	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
+	var state: Dictionary=paid.overrides.consumable_state if paid.overrides.has("consumable_state") else world.consumable_service.export_state()
 	# One opening id for this result (visual commit key); the result itself is
 	# the granted items, not a kept journal row.
 	var receipt_id: String=Crypto.new().generate_random_bytes(16).hex_encode()

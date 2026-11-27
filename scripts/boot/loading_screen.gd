@@ -6,6 +6,7 @@ const CHARACTERS := "res://scenes/boot/Characters.tscn"
 const CHARACTER_PROFILE_PATH := "res://scripts/characters/save_profile.gd"
 const STYLE := preload("res://scripts/boot/boot_style.gd")
 const BOOT_LOG := preload("res://scripts/boot/boot_progress_log.gd")
+const CONSUMABLE_QUERIES := preload("res://scripts/resources/current523_consumable_queries.gd")
 const FRAME_HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 const PREBAKE := preload("res://scripts/boot/source523_prebake.gd")
 const HANDOFF := preload("res://scripts/boot/source523_prebake_handoff.gd")
@@ -314,6 +315,7 @@ func _boot() -> void:
 		_render("캐릭터 선택 후 바로 접속할 수 있도록 준비합니다.")
 		await get_tree().process_frame
 		var prepare_started: int = BOOT_LOG.begin("main_scene_prepare", {"scene": MAIN})
+		CONSUMABLE_QUERIES.prepare()
 		_prepared_main = load(MAIN) as PackedScene
 		BOOT_LOG.end("main_scene_prepare", prepare_started, {"ok": _prepared_main != null})
 		_progress.complete_task("main_prepare")
@@ -323,6 +325,7 @@ func _boot() -> void:
 	# Main stays on the main thread: Android GL shader preloads failed with
 	# worker-thread ResourceLoader in the prior implementation.
 	var started: int = BOOT_LOG.begin("main_scene_load", {"scene": destination})
+	if destination == MAIN: CONSUMABLE_QUERIES.prepare()
 	var scene: PackedScene = _prepared_main if destination == MAIN and _prepared_main != null else (load(destination) as PackedScene if preload("res://scripts/resources/retired_assets.gd").usable(destination) else null)
 	if destination == MAIN: _prepared_main = null
 	BOOT_LOG.end("main_scene_load", started, {"ok": scene != null})
