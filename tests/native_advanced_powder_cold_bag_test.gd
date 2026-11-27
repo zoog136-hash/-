@@ -9,8 +9,11 @@ const SUPPLY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const STOCK = preload("res://scripts/loot/current523_native_stack.gd")
 const REFINE = preload("res://scripts/refine523/bless_refine523_service.gd")
 const MIGRATION = preload("res://scripts/loot/legacy_item_migration523.gd")
+const CASH = preload("res://scripts/shop/source523_cash_packages.gd")
 const TOP = preload("res://scripts/ui/original_ui/source_main_menu_bindings.gd")
 const ITEM = 117544
+const BOX = 371431
+const BOX_REWARD = 45000
 const LABEL = "상급 축복의 가루"
 const CANONICAL = "상급 축복의 가루 · 원본#117544"
 var failures: Array[String] = []
@@ -87,6 +90,50 @@ func seed_profile(world: Node) -> void:
 	world.inventory = issued.overrides.inventory
 	world.item_instances = issued.overrides.item_instances
 	check(world._save_game(true) == OK, "persist historical aggregate and independent receipt")
+
+func open_powder_box(world: Node) -> void:
+	var issued: Dictionary = SUPPLY.stage(world, [{"item_class_id":ITEM, "amount":3, "bless_raw":1, "enchant":0}],
+		{"kind":"powder_bag_regression"})
+	if not check(issued.get("ok", false), "existing powder is granted by the native owner"): return
+	world.inventory = issued.overrides.inventory
+	world.item_instances = issued.overrides.item_instances
+	var box: Dictionary = CASH.box_record(world, BOX)
+	var spec: Dictionary = CASH.definition(BOX)
+	var rewards: Array = spec.get("entries", [])
+	if not check(box.get("source") == CASH.TAG and spec.get("lucky_bag_class_id") == 82011 and rewards.size() == 1,
+		"the 523 cash box is connected to its original LuckyBag"): return
+	check(rewards[0].item_class_id == ITEM and rewards[0].amount == BOX_REWARD and rewards[0].bless == 1 and rewards[0].enchant == 0,
+		"the box has the same original material, blessing and enchant as the existing stack")
+	world.inventory[box.name] = 1
+	var rejected: Dictionary = rewards[0].duplicate()
+	rejected.bless = 2
+	check(not CASH.open(world, box.name, [rejected]).ok and world.inventory.get(box.name) == 1 and world.inventory.get(CANONICAL) == 3,
+		"an unproven blessing cannot go into the ordinary powder stack or debit the box")
+	world.source_shop.save_blocked = true
+	var denied: Dictionary = CASH.open(world, box.name, rewards)
+	world.source_shop.save_blocked = false
+	check(not denied.ok and world.inventory.get(box.name) == 1 and REFINE.powder_owned(world).total == 3,
+		"the save guard preserves the unopened box and existing stacks")
+	world._refresh_inventory_hud()
+	check(await visible_amounts(world) == [3], "the bag shows the existing stack before opening the box")
+	var hud: Node = world.hud
+	var view: RefCounted = hud.original_main_ui_controller._inventory_view
+	var bag: Control = hud.lineage_inventory_ui
+	var slot: Dictionary = view._hits.get(box.name, {})
+	if not await touch(slot.get("control")): return
+	check(bag.selected_item == box.name and bag.item_action_armed(box.name), "first original slot touch selects and arms the box")
+	var owned_cards: Dictionary = world.card_draw_fusion.owned["변신"]
+	var card_state: Dictionary = world.card_draw_fusion.export_state()
+	if not await touch(view._hits.get(box.name, {}).get("control")): return
+	await frames()
+	check(not world.inventory.has(box.name), "second original slot touch consumes one box")
+	check(world.card_draw_fusion.export_state() == card_state and is_same(world.card_draw_fusion.owned["변신"], owned_cards),
+		"a material-only opening keeps the existing card state and collection objects")
+	check(await visible_amounts(world) == [3 + BOX_REWARD] and not world.inventory.has(LABEL), "the open bag shows one combined stack immediately")
+	check(world.titles.powder_count() == 3 + BOX_REWARD and REFINE.powder_owned(world).total == 3 + BOX_REWARD,
+		"title and refinement can spend the merged box reward")
+	check(receipt_quantities(world) == [3, BOX_REWARD], "the merge accounts for both original quantities")
+	check(world._save_game(true) == OK, "write the opened box and the merged ownership")
 
 func auto_pickup(world: Node) -> void:
 	# A full field pack is optional. Only the empty test field's walkable
@@ -180,6 +227,11 @@ func actual(phase: String) -> void:
 		if check(item.get("TestItem") == false and item.get("ID") == ITEM and world.titles.source.powder_record.get("source_item_row") == item, "original startup source bound before inventory"):
 			match phase:
 				"seed": await seed_profile(world)
+				"box": await open_powder_box(world)
+				"box_reload":
+					check(await visible_amounts(world) == [3 + BOX_REWARD], "the same combined row survives a cold restart")
+					check(REFINE.powder_owned(world).total == 3 + BOX_REWARD and receipt_quantities(world) == [3, BOX_REWARD],
+						"the box has not credited or consumed any extra units across restart")
 				"combat", "control":
 					var control: bool = phase == "control"
 					check(await visible_amounts(world) == ([3, 2202] if control else [2205]), "all powder rows after cold load")
