@@ -29,9 +29,9 @@ const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_mes
 const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
 const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
 const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
-const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
-const ShopWindow=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
-const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
+const QUEST_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_quest_window.gd"
+const SHOP_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_shop_window.gd"
+const CHANGE_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_change_window.gd"
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
@@ -139,6 +139,7 @@ var _quest_controls: RefCounted
 var _quest_window: RefCounted
 var _shop_window: RefCounted
 var _change_window: RefCounted
+var _unavailable_workspace_windows: Dictionary[String, bool] = {}
 var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
@@ -240,24 +241,6 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 				var side: Variant=hud.get("lineage_side_ui")
 				if is_instance_valid(side):side.call("_show_equipment_page")
 				hud.call("open_character"))
-	if pack.manifest.get("scenes",{}).has(QuestWindow.ROOT):
-		var quest_window=QuestWindow.new()
-		if quest_window.configure(pack,hud).get("ok",false):
-			_quest_window=quest_window
-			quest_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
-	if pack.manifest.get("scenes",{}).has(ShopWindow.ROOT):
-		var shop_window=ShopWindow.new()
-		if shop_window.configure(pack,hud).get("ok",false):
-			_shop_window=shop_window
-			shop_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
-	if pack.manifest.get("scenes",{}).has(ChangeWindow.ROOT):
-		var change_window=ChangeWindow.new()
-		if change_window.configure(pack,hud).get("ok",false):
-			_change_window=change_window
-			change_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
 		_npc_dialogue_view=NpcDialogueView.new()
 		_npc_dialogue_view.configure(pack)
@@ -685,12 +668,34 @@ func bind_quest_controls(owner: Control) -> Dictionary:
 func _quest_category_changed(_category: String) -> void:
 	if _quest_controls!=null:_quest_controls_result=_quest_controls.refresh()
 
+## Three workspace views configure against their own verified assets on the
+## first request. Remember a rejection until the HUD binds a different pack.
+func _configure_workspace_window(path: String) -> RefCounted:
+	if _pack == null or not is_instance_valid(_coordinates) or _unavailable_workspace_windows.has(path):
+		return null
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if not is_instance_valid(hud): return null
+	var script := load(path) as Script
+	if script != null:
+		var window: RefCounted = script.new()
+		if window.configure(_pack, hud).get("ok", false):
+			window.closed.connect(_workspace_window_closed)
+			return window
+	_unavailable_workspace_windows[path] = true
+	return null
+
+func _workspace_window_closed() -> void:
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if is_instance_valid(hud) and hud.has_method("_close_workspace"): hud.call("_close_workspace")
+
 func try_open_quest_window(world: Node, claim: Callable) -> Dictionary:
+	if _quest_window==null:_quest_window=_configure_workspace_window(QUEST_WINDOW_SCRIPT)
 	if _quest_window==null or not is_instance_valid(_coordinates):return _fail("source_quest_window_pack_scope_unavailable")
 	_cancel_native_buttons()
 	return _quest_window.open(_coordinates,world,claim)
 
 func can_open_shop_window() -> bool:
+	if _shop_window==null:_shop_window=_configure_workspace_window(SHOP_WINDOW_SCRIPT)
 	return _shop_window!=null and is_instance_valid(_coordinates)
 
 func try_open_shop_window(panel: Control) -> Dictionary:
@@ -710,6 +715,7 @@ func close_shop_window() -> void:
 	_release_menu_page_leases()
 
 func try_open_change_window(category: String) -> Dictionary:
+	if _change_window==null:_change_window=_configure_workspace_window(CHANGE_WINDOW_SCRIPT)
 	if _change_window==null or not is_instance_valid(_coordinates):return _fail("source_change_window_pack_scope_unavailable")
 	var trace: int=MENU_TRACE.begin("change")
 	_cancel_native_buttons()
@@ -1052,13 +1058,12 @@ func close_domination_window() -> void:
 		_domination_window.close()
 
 ## --- Original 523 콘텐츠 현황판 (source_main_status_board, world.routines)
-const StatusBoard=preload("res://scripts/ui/original_ui/source_main_status_board.gd")
 var _status_board: RefCounted
 
 func try_open_status_board(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _status_board==null and _pack!=null and hud!=null:
-		var board=StatusBoard.new()
+		var board=load("res://scripts/ui/original_ui/source_main_status_board.gd").new()
 		if board.configure(_pack,hud).get("ok",false):
 			board.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
@@ -1087,13 +1092,12 @@ func _window_problem(window: String) -> Dictionary:
 	return result
 
 ## --- Original 523 skill window (source_main_skill_window)
-const SkillWindow=preload("res://scripts/ui/original_ui/source_main_skill_window.gd")
 var _skill_window: RefCounted
 
 func try_open_skill_window() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _skill_window==null and _pack!=null and hud!=null:
-		var window=SkillWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_skill_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["skill_window"]=configured
 		if configured.get("ok",false):
@@ -1158,13 +1162,12 @@ func close_death_window() -> void:
 		_death_window.close()
 
 ## --- Original 523 재료 아이템 출처 popup (source_main_acquisition_popup)
-const AcquisitionPopup=preload("res://scripts/ui/original_ui/source_main_acquisition_popup.gd")
 var _acquisition_popup: RefCounted
 
 func try_open_acquisition(world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="") -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _acquisition_popup==null and _pack!=null and hud!=null:
-		var popup=AcquisitionPopup.new()
+		var popup=load("res://scripts/ui/original_ui/source_main_acquisition_popup.gd").new()
 		if popup.configure(_pack,hud).get("ok",false):_acquisition_popup=popup
 	if _acquisition_popup==null or not is_instance_valid(_coordinates):return _fail("source_acquisition_popup_pack_scope_unavailable")
 	_cancel_native_buttons()
@@ -1179,13 +1182,12 @@ func close_acquisition() -> void:
 		_acquisition_popup.close()
 
 ## --- Original 523 혈맹 문장 선택 popup (source_main_emblem_window, world.emblem523)
-const EmblemWindow=preload("res://scripts/ui/original_ui/source_main_emblem_window.gd")
 var _emblem_window: RefCounted
 
 func try_open_emblem_window(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _emblem_window==null and _pack!=null and hud!=null:
-		var window=EmblemWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_emblem_window.gd").new()
 		if window.configure(_pack,hud).get("ok",false):
 			window.closed.connect(func() -> void:
 				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
@@ -1380,13 +1382,12 @@ func close_refine_window() -> void:
 ## --- Original 523 던전 list window (source_main_dungeon_window; the rows,
 ## entry checks, confirmations and actions stay with the existing dungeon
 ## screen, source_dungeon_view, mounted in the hidden workspace)
-const DungeonWindow=preload("res://scripts/ui/original_ui/source_main_dungeon_window.gd")
 var _dungeon_window: RefCounted
 
 func try_open_dungeon_window(view: Object, tab: String="special", focus: int=0) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _dungeon_window==null and _pack!=null and hud!=null:
-		var window=DungeonWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_dungeon_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["dungeon_window"]=configured
 		if configured.get("ok",false):
@@ -1413,13 +1414,12 @@ func close_dungeon_window() -> void:
 
 ## --- Original 523 NPC 상점 window (source_main_store_window; the talking
 ## NPC's original merchant goods, quotes and payment stay with world.source_shop)
-const StoreWindow=preload("res://scripts/ui/original_ui/source_main_store_window.gd")
 var _store_window: RefCounted
 
 func try_open_store_window(npc_id: String) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _store_window==null and _pack!=null and hud!=null:
-		var window=StoreWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_store_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["store_window"]=configured
 		if configured.get("ok",false):
@@ -1446,13 +1446,12 @@ func close_store_window() -> void:
 
 ## --- Original 523 창고 window (source_main_storage_window; the rows,
 ## confirmation and transfers stay with renewal_warehouse and the world)
-const StorageWindow=preload("res://scripts/ui/original_ui/source_main_storage_window.gd")
 var _storage_window: RefCounted
 
 func try_open_storage_window(screen: Object) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _storage_window==null and _pack!=null and hud!=null:
-		var window=StorageWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_storage_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["storage_window"]=configured
 		if configured.get("ok",false):
@@ -1508,13 +1507,12 @@ func close_clan_window() -> void:
 
 ## --- Original 523 상세 능력치 (source_main_stat_detail_window; the status
 ## sheet's groups and values over hud.character_state)
-const StatDetailWindow=preload("res://scripts/ui/original_ui/source_main_stat_detail_window.gd")
 var _stat_detail_window: RefCounted
 
 func try_open_stat_detail_window() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _stat_detail_window==null and _pack!=null and hud!=null:
-		var window=StatDetailWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_stat_detail_window.gd").new()
 		_window_problems["stat_detail_window"]=window.configure(_pack,hud)
 		if _window_problems["stat_detail_window"].get("ok",false):_stat_detail_window=window
 	if _stat_detail_window==null or not is_instance_valid(_coordinates):return _window_problem("stat_detail_window")
@@ -1534,13 +1532,12 @@ func close_stat_detail_window() -> void:
 
 ## --- Original 523 텔레포트 tab for 지역 이동 (source_main_teleport_window;
 ## destinations, prices and the move stay with the existing owners)
-const TeleportWindow=preload("res://scripts/ui/original_ui/source_main_teleport_window.gd")
 var _teleport_window: RefCounted
 
 func try_open_teleport_window(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _teleport_window==null and _pack!=null and hud!=null:
-		var window=TeleportWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_teleport_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["teleport_window"]=configured
 		if configured.get("ok",false):
@@ -1596,13 +1593,12 @@ func close_production_window() -> void:
 
 ## --- Original 523 장비 강화 window (source_main_enchant_window; the forge
 ## rules, confirmation and the world's roll stay the owners)
-const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 var _enchant_window: RefCounted
 
 func _ensure_enchant_window() -> bool:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _enchant_window==null and _pack!=null and hud!=null:
-		var window=EnchantWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_enchant_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["enchant_window"]=configured
 		if configured.get("ok",false):
@@ -1639,14 +1635,13 @@ func close_enchant_window() -> void:
 		_enchant_window.close()
 
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
-const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
 
 ## Opens the original confirmation for `uids`; `on_finished` receives the
 ## existing dissolve transaction's result after 확인.
 func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
 	if _dissolve_popup==null and _pack!=null:
-		var popup=DissolvePopup.new()
+		var popup=load("res://scripts/ui/original_ui/source_main_dissolve_popup.gd").new()
 		_window_problems["dissolve_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
 	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
@@ -1663,12 +1658,11 @@ func close_dissolve_confirm() -> void:
 
 ## --- The original item information popup (source_main_item_tooltip):
 ## ToolTip_HudType_Right for the selected bag item, ToolTip_CommonType else.
-const ItemTooltip=preload("res://scripts/ui/original_ui/source_main_item_tooltip.gd")
 var _item_tooltip: RefCounted
 
 func try_open_item_tooltip(reference: String, title: String, item_class_id: int, grade_id: int, record: Dictionary={}, actions: Dictionary={}) -> Dictionary:
 	if _item_tooltip==null and _pack!=null:
-		var popup=ItemTooltip.new()
+		var popup=load("res://scripts/ui/original_ui/source_main_item_tooltip.gd").new()
 		_window_problems["item_tooltip"]=popup.configure(_pack)
 		if _window_problems["item_tooltip"].get("ok",false):_item_tooltip=popup
 	if _item_tooltip==null or not is_instance_valid(_coordinates):return _window_problem("item_tooltip")
@@ -1692,12 +1686,11 @@ func close_item_tooltip() -> void:
 
 ## --- Bag item -> floor (source_main_drop_popup: Common_Calculator quantity,
 ## then Common_MessageBox_Dissolution confirmation). `on_confirm(count)`.
-const DropPopup=preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
 var _drop_popup: RefCounted
 
 func _prepare_quantity_popup() -> bool:
 	if _drop_popup==null and _pack!=null:
-		var popup=DropPopup.new()
+		var popup=load("res://scripts/ui/original_ui/source_main_drop_popup.gd").new()
 		_window_problems["drop_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["drop_popup"].get("ok",false):_drop_popup=popup
 	if _drop_popup==null or not is_instance_valid(_coordinates):return false
@@ -1728,14 +1721,13 @@ func close_drop_confirm() -> void:
 	if drop_confirm_is_open():_drop_popup.close()
 
 ## --- Original 523 오림의 흔적 skill choice (source_main_orim_skill_window)
-const OrimSkillWindow=preload("res://scripts/ui/original_ui/source_main_orim_skill_window.gd")
 var _orim_skill_window: RefCounted
 
 ## Shows the original level-up card choice for the current Orim offer (closes
 ## it without one). Not handled -> the caller keeps its own controls.
 func show_orim_skill_choice(world: Node) -> Dictionary:
 	if _orim_skill_window==null and _pack!=null:
-		var window=OrimSkillWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_orim_skill_window.gd").new()
 		_window_problems["orim_skill_window"]=window.configure(_pack)
 		if _window_problems["orim_skill_window"].get("ok",false):_orim_skill_window=window
 	if _orim_skill_window==null or not is_instance_valid(_coordinates):return _window_problem("orim_skill_window")
@@ -1748,7 +1740,6 @@ func close_orim_skill_choice() -> void:
 	if _orim_skill_window!=null:_orim_skill_window.close()
 
 ## --- Original 523 menu tiles (source_main_menu_tiles): picture only.
-const MenuTiles=preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
 var _menu_tiles: RefCounted
 var _full_menu_shell: Node2D
 
@@ -1824,7 +1815,7 @@ func _auto_pad_art() -> Dictionary:
 
 func menu_tile(section: String) -> Dictionary:
 	if _menu_tiles==null and _pack!=null:
-		var tiles=MenuTiles.new()
+		var tiles=load("res://scripts/ui/original_ui/source_main_menu_tiles.gd").new()
 		if tiles.configure(_pack).get("ok",false):_menu_tiles=tiles
 	if _menu_tiles==null:return _fail("source_menu_tiles_pack_scope_unavailable")
 	return _menu_tiles.tile(section)

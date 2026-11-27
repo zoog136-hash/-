@@ -6826,6 +6826,12 @@ func _load_patch523_equipment() -> void:
 	if explicit or installed:
 		if not _install_patch523_equipment(path, expected): push_warning(patch523_equipment.problem)
 		return
+	# The default compiler requires the owned definition ZIP. A genuine
+	# missing install can report that before hashing or projecting the catalog.
+	if patch523_equipment.data.is_empty() and CURRENT523_DEFINITION_ROWS.not_installed():
+		patch523_equipment.problem = "보유 원본523 정의 ZIP이 필요합니다"
+		push_warning(patch523_equipment.problem)
+		return
 	var catalog_bytes: PackedByteArray = FileAccess.get_file_as_bytes("res://data/catalog_v19.json")
 	# Export exactly the already registered catalog inputs used by the public
 	# compiler, never a world/UI object or newly fabricated native identity.
