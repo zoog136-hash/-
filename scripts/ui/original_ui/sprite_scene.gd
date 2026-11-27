@@ -1,4 +1,5 @@
 extends Node2D
+signal clip_finished(clip_name: String)
 const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 const MATERIAL=preload("res://scripts/ui/original_ui/source_material.gd")
 const SPRITE_BACK_BUFFER=preload("res://scripts/ui/original_ui/source_sprite_back_buffer.gd")
@@ -985,6 +986,7 @@ func _advance_playback(delta: float) -> void:
 			_entered_frames.clear()
 		else: next=float(_clip.endIndex); _playing=false
 	_seek_frame(next)
+	if not _playing and next>=float(_clip.endIndex):clip_finished.emit(str(_clip.get("name","")))
 
 func _original_button_title_stays_invisible(widget: Dictionary) -> bool:
 	# Pack JSON numbers arrive as floats; the original fields are integers.

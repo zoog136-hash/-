@@ -1626,15 +1626,22 @@ static func use_owned_original(world: Node,original_item: Dictionary,request: Di
 static func use_quest_original_bag(world: Node,original_item: Dictionary,request: Dictionary) -> Dictionary:
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():return _failure("원본 상자 저장 보호 중")
 	var uid: String=str(request.physical_id);var owned: Dictionary=QUEST_OWN.proof(world,uid)
-	if not owned.get("ok",false) or owned.get("source_use_immediately",true) or original_item!=owned.get("source_item") or SOURCE.approximated_item(original_item)!=SOURCE.row("ItemClass",int(owned.get("item_class_id",0))) or world.item_instances.get(uid,{}).get("quest_reward_receipt")!=request.quest_reward_receipt or request.expected_quantity!=owned.quantity or request.expected_remaining!=int(owned.quantity)-1:return _failure("원본 퀘스트 상자 지급·물리 잔량 증명 불일치")
+	if not owned.get("ok",false) or original_item!=owned.get("source_item") or SOURCE.approximated_item(original_item)!=SOURCE.row("ItemClass",int(owned.get("item_class_id",0))) or world.item_instances.get(uid,{}).get("quest_reward_receipt")!=request.quest_reward_receipt or request.expected_quantity!=owned.quantity or request.expected_remaining!=int(owned.quantity)-1:return _failure("원본 퀘스트 상자 지급·물리 잔량 증명 불일치")
 	if world.hp<=0 or not world._patch523_item_allowed() or world._option_awakening_busy() or world._item_locked(str(owned.inventory_key),uid) or world._item_locked(str(owned.inventory_key)):return _failure("원본 상자 생존·사용·잠금 조건 미충족")
-	var definition: Dictionary=D.definition_id(str(int(owned.item_class_id)))
-	var record: Dictionary=D.variant_item(definition.get("native_record",{}),int(owned.bless_code_id))
-	var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
-	record=executor.call("action_record",world,record)
-	var issue: String=str(executor.call("eligibility",world,record))
-	if not issue.is_empty():return _failure(issue)
-	var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
+	var spec: Dictionary=QUEST_OWN.held_test_card_spec(owned)
+	if owned.get("source_use_immediately",true) and spec.is_empty():return _failure("원본 즉시 사용 보상의 효과 연결 대기")
+	var record: Dictionary
+	if spec.is_empty():
+		var definition: Dictionary=D.definition_id(str(int(owned.item_class_id)))
+		var executor: Script=load("res://scripts/loot/patch523_item_use.gd")
+		record=executor.call("action_record",world,D.variant_item(definition.get("native_record",{}),int(owned.bless_code_id)))
+		var issue: String=str(executor.call("eligibility",world,record))
+		if not issue.is_empty():return _failure(issue)
+		spec=NATIVE_FIELDS.full(record).get("source_use_spec",{})
+	else:
+		# This view is for the fixed-card consumer only. It never becomes a
+		# registered item or a replacement for the saved quest reward.
+		record={"name":owned.inventory_key,"source_item_class_id":owned.item_class_id,"source_bless_raw":owned.bless_code_id,"source_original_item":original_item}
 	if spec.get("kind") not in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book","fixed_card","source_bless_points"] or spec.get("activation_status")!="unrestricted":return _failure("원본 퀘스트 아이템의 현재 효과 소유자 연결 대기")
 	if world.is_player_concealed() and not spec.get("can_use_when_invisible",false):return _failure("원본 조건: 은신 중 사용할 수 없습니다")
 	if float(world.item_use_cooldowns.get("m523:item:"+str(int(owned.item_class_id)),0.0))>0:return _failure("원본 상자 재사용 대기")

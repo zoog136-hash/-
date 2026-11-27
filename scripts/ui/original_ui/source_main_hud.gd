@@ -334,6 +334,17 @@ func _input(event: InputEvent) -> void:
 	if world_map_is_open() or hud.get("class_picker_initial")==true or (hud.has_method("blocks_keyboard_input") and hud.call("blocks_keyboard_input")):
 		_cancel_native_buttons()
 		return
+	if feature_window_is_open("emblems") and feature_window("emblems").handle_reveal_input(event):
+		get_viewport().set_input_as_handled()
+		return
+	if feature_window_is_open("guardian_find"):
+		var find_window: RefCounted=feature_window("guardian_find")
+		if find_window.stage=="pick":
+			var cards: Array=[]
+			_collect_native_buttons(find_window.get("_scene"),cards)
+			if _native_buttons.route(event,event.position,cards).get("handled",false):get_viewport().set_input_as_handled()
+		# The modal controls handle empty areas and the result's tap to close.
+		return
 	var candidates: Array=[]
 	var point: Vector2=event.position
 	for property: String in ["detail_window","companion_window","workspace"]:

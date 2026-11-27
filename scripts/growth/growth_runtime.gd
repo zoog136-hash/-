@@ -521,6 +521,7 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	var vital: Dictionary={}
 	var message: String = "완료"
 	var rolled: Array = []
+	var enhancement_stages: Array[int] = []
 	match action:
 		"enhance":
 			var p: Dictionary = progress(id)
@@ -534,6 +535,7 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 				var cost: int = int(cost_for(id,int(p.attempts)))
 				var previous_stage: int = int(p.stage)
 				p.stage = mini(stage_limit,int(p.stage)+jump)
+				enhancement_stages.append(int(p.stage))
 				p.attempts += 1
 				p.spent += cost
 				next.points -= cost
@@ -688,7 +690,9 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	world.mp = mini(world.mp,world._effective_max_mp())
 	world._update_hud()
 	busy = false
-	return {"ok":true,"message":message}
+	var result: Dictionary = {"ok":true,"message":message}
+	if action == "enhance": result["enhancement_stages"] = enhancement_stages
+	return result
 
 func _ledger(next: Dictionary, key: String, amount: int) -> void:
 	if not next.has("economy"): next["economy"] = {}

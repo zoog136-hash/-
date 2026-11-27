@@ -343,7 +343,9 @@ func quickslot_held_supported(world: Node, id: String) -> bool:
 	if equipment_owner.recognizes(world,id):return true
 	if not held_binding(world,id).is_empty():return true
 	var owner: Dictionary=OWN.proof(world,id)
-	if not owner.get("ok",false) or owner.get("source_use_immediately",true):return false
+	if not owner.get("ok",false):return false
+	if not OWN.held_test_card_spec(owner).is_empty():return true
+	if owner.get("source_use_immediately",true):return false
 	var item_id: int=int(owner.item_class_id)
 	var definition: Dictionary=D.definition_id(str(item_id))
 	var record: Dictionary=D.variant_item(definition.get("native_record",{}),int(owner.bless_code_id))
@@ -354,7 +356,8 @@ func try_use_held(world: Node, id: String) -> bool:
 	# Ordinary original bags use the same real output supplier as new native
 	# ownership, while the exact raw quest debit remains with the common ABI.
 	var original_owned: Dictionary=OWN.proof(world,id)
-	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
+	var held_card: bool=not OWN.held_test_card_spec(original_owned).is_empty()
+	if original_owned.get("ok",false) and (held_card or not original_owned.get("source_use_immediately",true)):
 		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
 		var native_record: Dictionary=D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))
 		if preload("res://scripts/crafting/patch523_enhance_source_book.gd").declares_scroll(native_record):
@@ -368,7 +371,7 @@ func try_use_held(world: Node, id: String) -> bool:
 		# A held card (변신·인형·성물 카드) or event holy water (축복 포인트) uses
 		# the same native owner as a bag-issued one; the reviewed fixed quest
 		# cards keep their own owner.
-		if _native_held_spec_supported(original_definition,int(original_owned.item_class_id)):
+		if held_card or _native_held_spec_supported(original_definition,int(original_owned.item_class_id)):
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
 			if used.get("requires_original_selection",false) and world.consumable_service.open_owned_original_selection(str(original_owned.get("inventory_key","")),used):return true
