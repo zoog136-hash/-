@@ -383,15 +383,22 @@ func _special_enter_impl(next: Dictionary, cost: Dictionary, entry: Dictionary, 
 ## Leaves the dungeon Land for the village (나가기 / time over). The session
 ## is already closed by the caller.
 func _special_return(message: String) -> void:
+	call("_special_return_impl", message, false)
+
+func _special_return_impl(message: String, loading: bool) -> Dictionary:
 	special_note=message
-	if not world.has_method("dungeon523_return_to_village"):return
+	if not world.has_method("dungeon523_return_to_village"):
+		return {"ok": false, "reason": "원본 지도에서 귀환할 수 없습니다."}
 	var here: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
-	var moved: Dictionary=world.dungeon523_return_to_village()
+	var moved: Dictionary
+	if loading: moved = await world.dungeon523_return_to_village_loading()
+	else: moved = world.dungeon523_return_to_village()
 	if moved.get("ok",false):
 		special_return_land=-1;world.hud.show_message(message)
 	else:
 		if special_return_land<0:world.hud.show_message(message)
 		special_return_land=int(here.get("land_id",-1))
+	return moved
 
 func _retry_special_return() -> void:
 	var here: Dictionary=world.orim_current_land() if world.has_method("orim_current_land") else {}
@@ -437,12 +444,18 @@ func _orim_travel_impl(stage_id: int, loading: bool) -> Dictionary:
 	return {"travel":true,"land_id":int(model_stage.land_id)}
 
 func _orim_return() -> void:
+	call("_orim_return_impl", false)
+
+func _orim_return_impl(loading: bool) -> void:
 	var home: Dictionary=state.active.get("home",{}) if not state.active.is_empty() else {}
 	if home.is_empty() or not world.has_method("orim_enter_land"):return
 	var here: Dictionary=world.orim_current_land()
 	if here.is_empty() or int(here.land_id)==int(home.land_id):return
 	var c: Array=home.cell
-	var moved: Dictionary=world.orim_enter_land(int(home.land_id),[maxi(0,int(c[0])-3),maxi(0,int(c[1])-3),int(c[0])+3,int(c[1])+3])
+	var bounds := [maxi(0,int(c[0])-3),maxi(0,int(c[1])-3),int(c[0])+3,int(c[1])+3]
+	var moved: Dictionary
+	if loading: moved = await world.orim_enter_land_loading(int(home.land_id), bounds)
+	else: moved = world.orim_enter_land(int(home.land_id), bounds)
 	orim_return_note="귀환 완료" if moved.get("ok",false) else "귀환 실패: "+str(moved.get("reason",""))
 	if not moved.get("ok",false):world.hud.show_message("오림 출발 지점 귀환 실패 · 아덴 귀환을 사용하세요 ("+str(moved.get("reason",""))+")")
 
@@ -1063,14 +1076,40 @@ func try_enhancement(scroll_name: String, target_reference: String) -> bool:
 	return true
 
 func stop(now: int = -1, return_home: bool = true) -> Dictionary:
+	return call("_stop_impl", now, return_home, false)
+
+func stop_loading() -> Dictionary:
+	var run: Dictionary = state.active
+	if run.is_empty(): return {"ok": true}
+	if not world.has_method("run_map_loading") or not world.has_method("orim_current_land"): return stop()
+	var here: int = int(world.orim_current_land().get("land_id", -1))
+	var moves := false
+	if here >= 0:
+		if run.kind == "special":
+			moves = world.has_method("dungeon523_return_to_village_loading") and here == int(run.get("land", -1))
+		else:
+			var home: int = int(run.get("home", {}).get("land_id", -1))
+			moves = world.has_method("orim_enter_land_loading") and home >= 0 and here != home
+	if not moves: return stop()
+	return await world.run_map_loading(_stop_impl.bind(-1, true, true), "던전 나가기 준비")
+
+func _stop_impl(now: int, return_home: bool, loading: bool) -> Dictionary:
 	if now<0:now=int(Time.get_unix_time_from_system())
 	if state.active.is_empty():return {"ok":true}
 	if state.active.kind=="special":
 		var inside: bool=state.active.has("land") and world.has_method("orim_current_land") and int(world.orim_current_land().get("land_id",-1))==int(state.active.land)
 		var closed:=account_special(now,true)
-		if closed.get("ok",false) and return_home and inside:_special_return("던전에서 나와 마을로 귀환합니다.")
+		if closed.get("ok",false) and return_home and inside:
+			var message := "던전에서 나와 마을로 귀환합니다."
+			if loading:
+				var moved := await _special_return_impl(message, true)
+				if not moved.get("ok", false):
+					return {"ok": false, "closed": true, "reason": "던전 이용 종료 · 마을 귀환 실패: " + str(moved.get("reason", ""))}
+			else: _special_return(message)
 		return closed
-	if return_home:_orim_return()
+	if return_home:
+		if loading: await _orim_return_impl(true)
+		else: _orim_return()
 	var next:=state.duplicate(true);next.active={}
 	var result:=commit(next)
 	if result.get("ok",false):cleanup()

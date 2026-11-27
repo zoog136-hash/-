@@ -204,7 +204,7 @@ func _play_action(action: String) -> void:
 	match action:
 		"begin":result=await world.run_dungeon_loading(Callable(service,"begin_loading").bind(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID),-1,orim_hero.get_selected_id() if _kind()=="orim" and orim_hero.item_count>0 else 0))
 		"claim":result=service.claim()
-		"stop":result=service.stop()
+		"stop":result=await service.stop_loading()
 		"recharge":result=service.recharge(int(rows[selected].item.row.ID))
 		"buy_charge":result=service.buy_recharger(int(rows[selected].item.row.ID))
 		"retry":service.tick(1.0);result={"ok":service.pending.is_empty(),"reason":service.problem if not str(service.problem).is_empty() else "저장 실패 · 기존 상태 보존"}

@@ -27,6 +27,15 @@ const MANIFEST=preload("res://scripts/ui/original_ui/source_pack_manifest.gd")
 const LOADING_FX_MEMBER := "UI/CommonUi/Fx_Loading.csb"
 const LOADING_FX_ATLAS := "UI/UI_Resource/Atlas_Common.plist"
 const LOADING_FX_FONT := "UI/Font/font_B.ttf"
+const WORLD_LOADING_MEMBER := "UI/LoadingScene.csb"
+const WORLD_LOADING_LAYOUT := "UI/Intro/LoadSceneLayout.csb"
+const WORLD_LOADING_ATLAS := "UI/UI_Resource/Atlas_Loading.plist"
+const WORLD_LOADING_SHA := "4c0c85349a26bebbfa19419d96a6ccda34024a007845da74fa379d34b208692a"
+const WORLD_LOADING_LAYOUT_SHA := "fdefa8a7511102d80be44e9a5c5a88a181e41dfb48fd43b9585cd93eb4baaf05"
+const ROSTER_SLOT_ATLAS := "UI/UI_Resource/Atlas_Intro.plist"
+const ROSTER_SLOT_PAGE := "UI/UI_Resource/Atlas_Intro.png"
+const ROSTER_SLOT_ATLAS_SHA := "1dfbeb73c4518e42f00abf5cb9d6dffc56709da5d0f95916d0a0238d3727eec6"
+const ROSTER_SLOT_PAGE_SHA := "35f90b0adeb05033b523a194ab23142569a7b7cc652e55d369943430ce5fadac"
 const MANIFEST_MAX_BYTES := 128 * 1024 * 1024
 static var bake_enabled: bool=true
 var _scoped_loading_fx := false
@@ -122,7 +131,7 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 ## The loading indicator uses one authored CSB, one atlas and one font.
 ## Keep its view confined to those verified originals. The HUD still opens
 ## the complete pack and checks all of its original files before binding.
-func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
+func open_loading_fx(pack_root: String, expected_sha256: String, include_roster: bool = false) -> Dictionary:
 	var manifest_path := pack_root.path_join("original_ui.json")
 	var manifest_size := FileAccess.get_size(manifest_path)
 	if manifest_size <= 0 or manifest_size > MANIFEST_MAX_BYTES:
@@ -151,11 +160,60 @@ func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
 	var scene: Variant = baked.read("s:" + LOADING_FX_MEMBER)
 	if not scene is Dictionary or scene.get("_source_sha256") != files[LOADING_FX_MEMBER].sha256:
 		return _fail("scene_source_mismatch")
-	_adopt({"schema": meta.schema, "scenes": {LOADING_FX_MEMBER: scene},
-		"files": files, "atlases": {LOADING_FX_ATLAS: atlas}}, pack_root, expected_sha256)
+	var scenes := {LOADING_FX_MEMBER: scene}
+	var atlases := {LOADING_FX_ATLAS: atlas}
+	var world := _verified_world_loading(pack_root, baked, meta)
+	if not world.is_empty():
+		scenes.merge(world.scenes)
+		files.merge(world.files)
+		atlases.merge(world.atlases)
+	if include_roster:
+		var roster_files := _roster_atlas_files(meta)
+		if not roster_files.is_empty() and _files_intact(pack_root, roster_files).is_empty():
+			files.merge(roster_files)
+			atlases[ROSTER_SLOT_ATLAS] = meta.atlases[ROSTER_SLOT_ATLAS]
+	_adopt({"schema": meta.schema, "scenes": scenes, "files": files, "atlases": atlases}, pack_root, expected_sha256)
 	_records = null
 	_scoped_loading_fx = true
-	return {"ok": true, "scene_count": 1, "rendered": false}
+	return {"ok": true, "scene_count": scenes.size(), "rendered": false}
+
+## Only the matching current523 loading layout may extend the scoped boot read.
+static func _verified_world_loading(pack_root: String, baked: RefCounted, meta: Dictionary) -> Dictionary:
+	var atlas: Variant = meta.atlases.get(WORLD_LOADING_ATLAS)
+	if not atlas is Dictionary or atlas.get("page") != "UI/UI_Resource/Atlas_Loading.png":
+		return {}
+	var files := {}
+	for member: String in [WORLD_LOADING_MEMBER, WORLD_LOADING_LAYOUT, WORLD_LOADING_ATLAS, atlas.page]:
+		var entry: Variant = meta.files.get(member)
+		if not entry is Dictionary:
+			return {}
+		files[member] = entry
+	if files[WORLD_LOADING_MEMBER].get("sha256") != WORLD_LOADING_SHA or files[WORLD_LOADING_LAYOUT].get("sha256") != WORLD_LOADING_LAYOUT_SHA or not _files_intact(pack_root, files).is_empty():
+		return {}
+	var scenes := {}
+	for member: String in [WORLD_LOADING_MEMBER, WORLD_LOADING_LAYOUT]:
+		var tree: Variant = baked.read("s:" + member)
+		if not tree is Dictionary or tree.get("_source_sha256") != files[member].sha256:
+			return {}
+		scenes[member] = tree
+	return {"files": files, "scenes": scenes, "atlases": {WORLD_LOADING_ATLAS: atlas}}
+
+## Slot backgrounds come from Btn_Off and Nd_Select in CharacterSelect_List_Slot.csb.
+static func _roster_atlas_files(meta: Dictionary) -> Dictionary:
+	var atlas: Dictionary = meta.get("atlases", {}).get(ROSTER_SLOT_ATLAS, {})
+	var atlas_file: Dictionary = meta.get("files", {}).get(ROSTER_SLOT_ATLAS, {})
+	var page_file: Dictionary = meta.get("files", {}).get(ROSTER_SLOT_PAGE, {})
+	if atlas.get("page") != ROSTER_SLOT_PAGE or atlas_file.get("sha256") != ROSTER_SLOT_ATLAS_SHA or page_file.get("sha256") != ROSTER_SLOT_PAGE_SHA:
+		return {}
+	return {ROSTER_SLOT_ATLAS: atlas_file, ROSTER_SLOT_PAGE: page_file}
+
+func roster_slot_art() -> Dictionary:
+	if _roster_atlas_files(manifest).is_empty(): return {}
+	var plist := ROSTER_SLOT_ATLAS.trim_prefix("UI/")
+	var inactive := texture({"path": "character_slot_Set1_Off.png", "plistFile": plist, "resourceType": 1})
+	var selected := texture({"path": "character_slot_Set4.png", "plistFile": plist, "resourceType": 1})
+	if inactive == null or selected == null: return {}
+	return {"inactive": inactive, "selected": selected}
 
 static func bake_name_for(manifest_sha: String) -> String:
 	return "original_ui_pack_"+manifest_sha.left(16)

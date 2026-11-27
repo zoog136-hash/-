@@ -18,6 +18,22 @@ class SpecialHost extends SPECIAL.Host:
 		await get_tree().process_frame
 		awaited+=1
 		return dungeon523_enter_land(land_id,bounds,save)
+	var return_attempts := 0
+	var return_ok := true
+	var return_committed_before_arrival := false
+	var play: RefCounted
+	func run_map_loading(operation: Callable, title: String) -> Dictionary:
+		return await LOADER.run(self, operation, title)
+	func dungeon523_return_to_village_loading() -> Dictionary:
+		return_attempts += 1
+		var tree := get_tree()
+		var overlay := tree.get_first_node_in_group(LOADER.GROUP)
+		return_committed_before_arrival = tree.paused and overlay != null and play.state.active.is_empty()
+		var repeat: Dictionary = await LOADER.run(self, Callable(self, "dungeon523_return_to_village_loading"))
+		if not repeat.get("busy", false): return {"ok": false}
+		await tree.process_frame
+		if not return_ok: return {"ok": false, "reason": "fixture arrival failed"}
+		return dungeon523_return_to_village()
 class Pending extends Node:
 	var ticks: int = 0
 	var ready_after: int = 4
@@ -116,6 +132,22 @@ func run() -> void:
 	special.move_ok=true
 	check((await play.begin_loading("special",41,1800000000)).ok and special.gold==before-10000 and special.land==22701,"async special entry commits once with arrival")
 	check(not (await play.begin_loading("special",41,1800000000)).ok and special.gold==before-10000,"active run cannot debit again")
+	special.play=play
+	special.save_ok=false
+	var exit_failed: Dictionary=await play.stop_loading()
+	check(not exit_failed.ok and special.land==22701 and special.return_attempts==0 and not play.state.active.is_empty(),"failed exit save cannot start a return or close the run")
+	special.save_ok=true
+	var exit_success: Dictionary=await play.stop_loading()
+	check(exit_success.ok and exit_success.loading.painted and not paused,"manual exit shows the shared overlay and restores input")
+	check(special.return_committed_before_arrival and special.land==4 and special.returns==1,"successful exit saves closure before awaiting the sole village return")
+	check((await play.stop_loading()).ok and special.return_attempts==1,"repeated exit after closure does not return twice")
+	check((await play.begin_loading("special",41,1800000000)).ok,"start a separate run for a return-map failure")
+	special.return_ok=false
+	var rejected_map: Dictionary=await play.stop_loading()
+	check(not rejected_map.ok and rejected_map.closed and not paused and play.state.active.is_empty(),"failed return is reported separately from the confirmed dungeon closure")
+	check(special.land==22701 and play.special_return_land==22701,"failed return keeps the current Land and the existing retry target")
+	play._retry_special_return()
+	check(special.land==4 and play.special_return_land==-1 and special.returns==2,"successful retry clears the pending return without reopening the dungeon")
 	special.free()
 	frames.sort()
 	print("DUNGEON_LOADING_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"timings":timings,"frame_usec_max":frames.back() if not frames.is_empty() else 0,"scope":"SYNTHETIC_LINUX; NOT_ANDROID_OR_ORIGINAL_PACK"}))
