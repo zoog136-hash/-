@@ -5,6 +5,8 @@ const STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const ITEM_USE = preload("res://scripts/loot/patch523_item_use.gd")
 const ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const SOURCE = preload("res://scripts/crafting/patch523_enhance_source_book.gd")
+const QUEST_OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
+const QUEST_CONSUME = preload("res://scripts/quests/quest_reward_consumption.gd")
 
 static func select_owned(world: Node, name: String, selected: String, count: int, require_physical: bool=false) -> Dictionary:
 	var ids: Array = world.item_instances.keys()
@@ -15,13 +17,17 @@ static func select_owned(world: Node, name: String, selected: String, count: int
 		var entry: Variant = world.item_instances[uid]
 		if not entry is Dictionary or entry.get("name") != name: continue
 		var receipted: bool = entry.has(STACK.RECEIPT)
-		has_receipts = has_receipts or receipted
+		var quest_reward: bool = entry.has("quest_reward_receipt")
+		has_receipts = has_receipts or receipted or quest_reward
 		if not selected.is_empty() and uid != selected: continue
 		if not receipted and selected.is_empty(): continue
 		if world._item_locked(name,uid) or world._item_locked(name):
 			refused="선택한 원본 강화 주문서의 잠금을 해제하세요"
 			continue
-		var proof: Dictionary=STACK.proof(world,uid) if receipted else _legacy_unit(world, entry, name)
+		var proof: Dictionary
+		if receipted:proof=STACK.proof(world,uid)
+		elif quest_reward:proof=quest_scroll(world,uid)
+		else:proof=_legacy_unit(world,entry,name)
 		if proof.is_empty():return {"native":true,"reason":"원본 강화 주문서의 물리 소유를 확인할 수 없습니다"}
 		var reason: String=ITEM_USE.eligibility(world,proof.record)
 		if not reason.is_empty():refused=reason;continue
@@ -33,6 +39,15 @@ static func select_owned(world: Node, name: String, selected: String, count: int
 	if has_receipts or require_physical:
 		return {"native":true,"reason":refused if not refused.is_empty() else "가방에서 사용할 원본 강화 주문서 묶음을 다시 선택하세요"}
 	return {}
+
+static func quest_scroll(world: Node, uid: String) -> Dictionary:
+	var receipt: Variant=world.item_instances.get(uid,{}).get("quest_reward_receipt")
+	if not receipt is Dictionary:return {}
+	var record: Dictionary=world.source_item_record(QUEST_OWN.positive(receipt.get("item_class_id")),QUEST_OWN.positive(receipt.get("bless_code_id")))
+	if not SOURCE.declares_scroll(record) or world.item_life523.has_life_row(record):return {}
+	var owned: Dictionary=QUEST_OWN.proof(world,uid)
+	if not owned.get("ok",false) or owned.source_use_immediately:return {}
+	return {"record":record,"remaining":int(owned.quantity),"quest_reward_receipt":receipt.duplicate(true)}
 
 ## Old saves could pin a single ordinary scroll before receipts existed.
 ## A partial or foreign receipt must never be downgraded to this format.
@@ -52,6 +67,13 @@ static func stage(world: Node, owned: Dictionary, quantity: int) -> Dictionary:
 	if STACK.busy:return {"ok":false,"reason":"원본 아이템 저장 처리 중 · 주문서 보존"}
 	var proof: Dictionary=owned.proof
 	if quantity<=0 or int(proof.remaining)<quantity:return {"ok":false,"reason":"선택한 원본 강화 주문서 묶음의 수량이 부족합니다"}
+	if proof.has("quest_reward_receipt"):
+		var request: Dictionary={"physical_id":owned.uid,"quantity":quantity,"expected_quantity":proof.remaining,
+			"expected_remaining":int(proof.remaining)-quantity,"quest_reward_receipt":proof.quest_reward_receipt}
+		var digest: String=str(proof.record.get("source_definition_archive",{}).get("source_sha256",""))
+		var result: Dictionary=QUEST_CONSUME.stage(world,[request],digest)
+		if not result.get("ok",false):return result
+		return {"ok":true,"overrides":result.overrides,"quest_step":result}
 	if proof.get("legacy_unit", false):
 		var name: String = str(proof.record.name)
 		var current: Dictionary = select_owned(world, name, str(owned.uid), quantity, true)

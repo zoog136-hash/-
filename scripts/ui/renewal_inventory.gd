@@ -183,7 +183,7 @@ func _ready() -> void:
 	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,44))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
-	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,44))
+	var detail_button: Button = UI.button("상세정보",open_selected_info,Vector2(86,44))
 	var delete_button: Button=UI.button("삭제",func() -> void: request_selected_delete(),Vector2(56,44))
 	delete_button.set_script(NATIVE_BUTTON)
 	delete_button.name="InventoryDelete"
@@ -365,13 +365,13 @@ func open_item_info(reference: String) -> bool:
 		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
 		if rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level"):
 			actions["safe_level"]=int(rule.safe_level)
-	var information: Dictionary = _source_info_record(record)
+	var information: Dictionary = _source_info_record(physical_record)
 	if _item_class_id(information)>0:actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
 	if BOX_PROBABILITY.is_bag(information) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
 		var host: Node=controller.get_parent()
 		if BOX_PROBABILITY.disclosed(information,int(host.BASE508.source_class_id(str(host.job_class)))):
 			actions["probability"]=Callable(self,"_tooltip_probability").bind(reference,_item_class_id(information))
-	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(record,reference),identity.grade_id(record,reference),physical_record,actions)
+	var opened: Variant = original_hud.call("try_open_item_tooltip",reference,_enhanced_display_name(record,reference),identity.item_class_id(information,reference),identity.grade_id(information,reference),information,actions)
 	item_tooltip_open = opened is Dictionary and opened.get("ok",false)
 	if item_tooltip_open: _hide_item_name()
 	return item_tooltip_open
@@ -522,6 +522,9 @@ func close_detail() -> void:
 	# Shared existing close behavior; selection/query/locks and saves stay intact.
 	detail_active=false
 	_reflow()
+
+func open_selected_info() -> void:
+	if not open_item_info(selected_item):open_detail()
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return

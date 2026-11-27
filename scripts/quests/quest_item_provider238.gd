@@ -284,8 +284,11 @@ func try_use_held(world: Node, id: String) -> bool:
 	var original_owned: Dictionary=OWN.proof(world,id)
 	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
 		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
+		var native_record: Dictionary=D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))
+		if preload("res://scripts/crafting/patch523_enhance_source_book.gd").declares_scroll(native_record):
+			return world._open_owned_native_enhancement(str(original_owned.inventory_key),id,native_record)
 		var native_ammo: Script=load("res://scripts/loot/current523_native_stack.gd")
-		if native_ammo.call("native_ammo",D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))):
+		if native_ammo.call("native_ammo",native_record):
 			var equipped: Dictionary=native_ammo.call("equip_ammo",world,str(original_owned.inventory_key),id)
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()

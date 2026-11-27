@@ -1,7 +1,7 @@
 extends SceneTree
-## Open original feature windows on a disposable character. Records actual
-## mounted callbacks, including inert and untouchable controls. No button is
-## pressed and no purchase, claim or enhancement is performed by this audit.
+## Open original feature windows and actual HUD menu routes on a disposable
+## character. Records mounted callbacks and fallback reasons. No purchase,
+## reward claim, card choice or enhancement is performed by this audit.
 const QA = preload("res://tests/qa_class_selection.gd")
 var output: FileAccess
 var buttons := {}
@@ -82,12 +82,83 @@ func run() -> void:
 			results[key]="original window did not open"
 		hud._close_workspace()
 		await process_frame
+	var navigation: Dictionary=await audit_navigation(hud,controller,world)
 	for values: Dictionary in buttons.values(): output.store_line(JSON.stringify(values))
 	output.close()
-	print("UI_BUTTON_RESULT ",JSON.stringify({"distinct_button_nodes":buttons.size(),"first_screen":results}))
+	print("UI_BUTTON_RESULT ",JSON.stringify({"distinct_button_nodes":buttons.size(),"first_screen":results,"hud_navigation":navigation}))
 	world.queue_free()
 	await process_frame
 	quit()
+
+func audit_navigation(hud: Node, controller: Node, world: Node) -> Dictionary:
+	# [original window key, dedicated controller instance if there is one].
+	# An empty entry identifies a direct TWILIGHT route.
+	var entries: Dictionary={
+		"inventory":["inventory","_inventory_view"], "character":["character_equipment","_character_view"],
+		"skills":["skill_window","_skill_window"], "quests":["quest_window","_quest_window"],
+		"shop":["shop_window","_shop_window"], "warehouse":["storage_window","_storage_window"],
+		"teleport":["teleport_window","_teleport_window"], "crafting":["production_window","_production_window"],
+		"enhance":["enchant_window","_enchant_window"], "refine523":["refine_window","_refine_window"],
+		"domination_stone":["domination_window","_domination_window"], "status_board":["status_board","_status_board"],
+		"clan523":["clan_window","_clan_window"], "source_dungeons":["dungeon_window","_dungeon_window"],
+		"content523":["dungeon_window","_dungeon_window"],
+		"변신":["change_window","_change_window"], "마법인형":["change_window","_change_window"],
+		"성물":["change_window","_change_window"], "아이템":[],
+		"card_fusion":["card_fusion"], "card_collections":["card_collection"],
+		"skill_card523":["skill_cards"], "card_swap523":["card_change"],
+		"quick_change523":["quick_change"], "quick_summon523":["quick_summon"],
+		"equipment_collections":["item_book"], "weapon_mastery":["weapon_mastery"],
+		"guardians":["guardians"], "emblems":["emblems"], "titles":["titles"],
+		"half_elixir":["half_elixir"], "totems":["totems"], "monsterbook523":["monsterbook"],
+		"auto":["schedule"], "settings":["options"], "promo_code":["options"],
+		"tj_coupons":["tj_coupons"], "doll_explore":["doll_explore"], "forge523":["forge"],
+		"equipment523":[], "bless_refine523":[], "combinations":[], "growth96":[],
+		"exchange":[], "sell":[], "field_activities523":[], "log":[], "class_select":[]
+	}
+	var results: Dictionary={}
+	for section: String in entries:
+		hud._navigate(section)
+		await process_frame
+		results[section]=route_result(hud,controller,entries[section],section)
+		hud._close_workspace()
+		await process_frame
+	# Re-enter with a pending slot, as when opening the menu after a reload.
+	# The fixture creates no success, debit or changed on-disk growth state.
+	var growth: Object=world.growth
+	var before: Dictionary=growth.state.duplicate(true)
+	for group: Dictionary in growth.config.get("guardians",[]):
+		var nodes: Array=group.get("nodes",[])
+		if nodes.is_empty() or int(nodes[0].get("cards",0))<2:continue
+		var slot: String=nodes[0].id
+		var count: int=int(nodes[0].cards)
+		growth.state.searches[slot]={"cards":count,"winner":0,"failed":[],"attempts":0}
+		growth.state.pending={"node":slot,"cards":count}
+		var pending: Dictionary=growth.state.duplicate(true)
+		hud._navigate("guardians")
+		await process_frame
+		var result: Dictionary=route_result(hud,controller,["guardian_find"],"guardians_pending")
+		result["same_pending_state"]=growth.state==pending
+		results["guardians_pending"]=result
+		hud._close_workspace()
+		growth.state=before
+		break
+	return results
+
+func route_result(hud: Node, controller: Node, entry: Array, section: String) -> Dictionary:
+	if entry.is_empty():return {"presentation":"twilight" if hud.workspace.visible else "no_window","reason":"direct_hud_route"}
+	var key: String=entry[0]
+	var view: Variant=controller.get(entry[1]) if entry.size()>1 else controller.feature_window(key)
+	var opened: bool=view is Object and view.has_method("is_open") and view.is_open()
+	var status_key: String=key if entry.size()>1 else key+"_window"
+	var status: Dictionary=hud.original_main_ui_status.get(status_key,{})
+	if key=="inventory":opened=controller.inventory_is_open()
+	elif key=="character_equipment":opened=controller.character_is_open()
+	if opened:
+		var scene: Variant=view.get("_scene") if view is RefCounted else view
+		if scene is Node:record_buttons(scene,section)
+		return {"presentation":"original","view":key}
+	return {"presentation":"twilight" if hud.workspace.visible else "no_window","view":key,
+		"reason":str(status.get("code",status.get("error","not_mounted")))}
 
 func record_buttons(node: Node, screen: String) -> void:
 	if node==null or node.is_queued_for_deletion():return

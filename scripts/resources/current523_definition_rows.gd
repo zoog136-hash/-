@@ -868,13 +868,17 @@ static func _row_at(store: Dictionary, index: int) -> Dictionary:
 ## [store-format-end]
 
 ## TWILIGHT 근사 2026-11-17 (2026-11-17 지시, docs/PATCH523_CRAFTING_EQUIPMENT.md): the
-## TestItem=true ItemClass rows that are the only result of an original craft and have
-## no same-effect non-test item are read as ordinary items — an explicit allow list,
+## TestItem=true ItemClass rows that are required by an original craft or quest
+## reward are read as ordinary items where explicitly verified — an allow list,
 ## never a global TestItem pass. Their own rows (BuffCardID, LuckyBagClassID …) give
 ## the effect. Every other test item stays refused.
 const APPROX_TEST_ITEMS := {
 	1067:"[변신 카드] 아크 나이트",1068:"[변신 카드] 아크 쉐도우",1069:"[변신 카드] 아크 스카우터",1070:"[변신 카드] 아크 위자드",
 	111114:"[변신 카드] 아크 머스킷티어",115802:"[변신 카드] 아크 드래곤 나이트",189614:"[변신 카드] 아크 리퍼",221871:"[변신 카드] 아크 랜서",
+	# Quest #71834 awards #96114. Its knight/elf/mage branches each have one
+	# original intermediate box and one fixed card with BuffCardCannotSwap.
+	96054:"[마법인형 카드 확정 상자] 나이트발드",96064:"[마법인형 카드 확정 상자] 시어",96074:"[마법인형 카드 확정 상자] 리치",
+	98494:"[마법인형 카드] 나이트발드(업적)",98504:"[마법인형 카드] 시어(업적)",98514:"[마법인형 카드] 리치(업적)",
 	125502:"봉인된 정상의 가호(1단) 상자",125512:"봉인된 정상의 가호(2단) 상자",125522:"봉인된 정상의 가호(3단) 상자",
 	124562:"[+8] 빛나는 완력의 티셔츠 상자",124572:"[+8] 빛나는 민첩의 티셔츠 상자",124582:"[+8] 빛나는 지식의 티셔츠 상자",
 	124592:"[+9] 빛나는 완력의 티셔츠 상자",124602:"[+9] 빛나는 민첩의 티셔츠 상자",124612:"[+9] 빛나는 지식의 티셔츠 상자",

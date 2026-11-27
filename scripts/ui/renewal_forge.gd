@@ -47,17 +47,22 @@ static func owned_scrolls(controller: Node) -> Array:
 	if instances is Dictionary:
 		for uid: String in instances:
 			var entry: Dictionary=instances[uid]
-			if not entry.has(NATIVE_STACK.RECEIPT):continue
+			var quest_reward: bool=entry.has("quest_reward_receipt")
+			if not entry.has(NATIVE_STACK.RECEIPT) and not quest_reward:continue
 			var name: String=str(entry.get("name",""))
 			receipted[name]=true
 			if int(balances.get(name,0))<=0:continue
+			if world._item_locked(name) or world._item_locked(name,uid):continue
+			if quest_reward:
+				var held: Dictionary=preload("res://scripts/crafting/patch523_enhance_stock.gd").quest_scroll(world,uid)
+				if not held.is_empty():rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":held.remaining})
+				continue
 			var record: Dictionary=entry.get("record",{})
 			if record.has("slot") and record.slot!="consumable":continue
 			var category: String=str(NATIVE_FIELDS.field(record,"source_category_name",""))
 			if category=="ScrollBless":
 				if NATIVE_STACK.profile(record).get("kind")!="bless":continue
 			elif category not in ["","ScrollEnchant","ScrollElementalEnchant"] or world._scroll_kind(name,record)=="":continue
-			if world._item_locked(name) or world._item_locked(name,uid):continue
 			var held: Dictionary=NATIVE_STACK.proof(world,uid)
 			if not held.is_empty():
 				rows.append({"name":name,"reference":name+"@@@"+uid,"instance_id":uid,"count":held.remaining})
@@ -74,7 +79,11 @@ static func selected_scroll(controller: Node, scroll: String, blessing_reference
 	var uid: String=blessing_reference.get_slice("@@@",1) if not blessing_reference.is_empty() else ""
 	if blessing_reference.is_empty() and selection is Dictionary and selection.get("name")==scroll:uid=str(selection.get("uid",""))
 	if not uid.is_empty():
-		var owned: Dictionary=NATIVE_STACK.proof(world,uid)
+		var owned: Dictionary
+		if blessing_reference.is_empty():
+			var selected: Dictionary=preload("res://scripts/crafting/patch523_enhance_stock.gd").select_owned(world,scroll,uid,1,true)
+			owned=selected.get("proof",{})
+		else:owned=NATIVE_STACK.proof(world,uid)
 		return {"name":scroll,"reference":scroll+"@@@"+uid,"instance_id":uid,"count":int(owned.get("remaining",0))}
 	return {"name":scroll,"reference":scroll,"count":int(controller.lineage_inventory_ui.inventory.get(scroll,0))}
 

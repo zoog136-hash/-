@@ -68,8 +68,7 @@ func reset() -> void:
 
 func close_ui() -> void:
 	if is_instance_valid(w.hud.get("card_reveal_stage")) and w.hud.card_reveal_stage.has_method("close_reveal"): w.hud.card_reveal_stage.call("close_reveal")
-	if w.hud.workspace != null: w.hud.workspace.hide()
-	w.hud.active_section = ""
+	w.hud._close_workspace()
 
 func physical_of(id: int) -> String:
 	for uid: Variant in w.item_instances:
@@ -86,7 +85,16 @@ func activate(id: int) -> Dictionary:
 	var skills_before: String = JSON.stringify(w.original_skills.catalog.export_state())
 	var before: Dictionary = w.inventory.duplicate(true)
 	w.hud.message_label.text = ""
-	w._on_inventory_item_activated(name + "@@@" + uid)
+	var reference: String = name + "@@@" + uid
+	w.hud.refresh_inventory(w.inventory)
+	w.hud.toggle_inventory()
+	if w.hud.original_inventory_is_open():
+		var selected: Dictionary = w.hud.original_inventory_select(reference)
+		if not selected.get("ok",false):return {"ok":false,"held":held,"why":selected}
+		w.hud.original_inventory_activate_selected(reference)
+	else:
+		w.hud.lineage_inventory_ui._select_item(reference)
+		w.hud.lineage_inventory_ui._activate_selected()
 	var gained: Array = []
 	for key: Variant in w.inventory:
 		if int(w.inventory[key]) > int(before.get(key, 0)): gained.append(str(key))
@@ -96,11 +104,12 @@ func activate(id: int) -> Dictionary:
 	close_ui()
 	return out
 
-func quest_grant(id: int, quests: Array) -> Dictionary:
+func quest_grant(id: int, quests: Array, job: String="") -> Dictionary:
 	var svc = w.quest_service
 	var classes: Array = [base_job]
 	for c: Variant in svc.source.class_ids:
 		if str(c) not in classes: classes.append(str(c))
+	if not job.is_empty():classes=[job]
 	var now: int = int(Time.get_unix_time_from_system())
 	for qid: String in quests:
 		var quest: Dictionary = svc.full(svc.index[qid])
@@ -133,11 +142,32 @@ func quest_grant(id: int, quests: Array) -> Dictionary:
 				if w._save_game(true) == OK and OWN.proof(w, uid).get("ok", false): return {"ok":true,"quest":qid,"class":c,"path":"old_save"}
 	return {"ok":false}
 
+func hero_doll_box() -> void:
+	# The source grants a class-specific box, then one fixed doll card with
+	# the achievement card's CannotSwap restriction. Keep those as three taps.
+	var cases: Dictionary={"기사":[96054,98494,42],"요정":[96064,98504,43],"마법사":[96074,98514,40]}
+	for job: String in cases:
+		var path: Dictionary=quest_grant(96114,["m523:quest:71834"],job)
+		check(path.get("ok",false),"original #71834 issues hero doll box to "+job)
+		if not path.get("ok",false):continue
+		var expected: Array=cases[job]
+		var outer: Dictionary=activate(96114)
+		check(outer.ok and not physical_of(int(expected[0])).is_empty(),"hero box opens only the assigned intermediate box for "+job)
+		if not outer.ok:continue
+		for other: Array in cases.values():
+			if other!=expected:check(physical_of(int(other[0])).is_empty(),"other job's box was not granted")
+		check(activate(int(expected[0])).ok and not physical_of(int(expected[1])).is_empty(),"intermediate box supplies its exact fixed card")
+		var final: Dictionary=activate(int(expected[1]))
+		var identity: String="source:m508:2:"+str(expected[2])
+		check(final.ok and w.card_draw_fusion.total_count("마법인형",identity)==1,"exact final doll registers from the bag: "+identity)
+		check(w.card_draw_fusion.source_swap_blocked.get("마법인형:"+identity,false),"achievement card retains CannotSwap")
+
 func runtime() -> void:
 	w = load("res://Main.tscn").instantiate()
 	root.add_child(w)
 	w.set_process(false); w.player.set_physics_process(false); w.field_population.set_process(false); w.save_timer = -100000
 	check(QA.enter_game(w, "마검사"), "actual Main map entry")
+	await process_frame
 	var save_path: String = w.save_path()
 	var had_save: bool = FileAccess.file_exists(save_path)
 	var original_save: PackedByteArray = FileAccess.get_file_as_bytes(save_path) if had_save else PackedByteArray()
@@ -170,6 +200,7 @@ func runtime() -> void:
 		check(test_use.ok and test_use.card == quest_use.card and test_use.skill == quest_use.skill, "quest reward #" + str(id) + " acts as the test grant: " + JSON.stringify(test_use))
 		results[str(id)] = {"path":issued.path,"card":quest_use.card,"skill":quest_use.skill,"outputs":quest_use.gained.size()}
 	evidence["runtime"] = results
+	hero_doll_box()
 	reset()
 	w.queue_free()
 	await process_frame

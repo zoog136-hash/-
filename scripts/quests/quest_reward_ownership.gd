@@ -15,11 +15,15 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 	var record: Variant = physical.get("record")
 	var receipt: Variant = physical.get("quest_reward_receipt")
 	if not record is Dictionary or not receipt is Dictionary: return denied("원본 지급 영수증 없음 · 기존 개체 보존")
-	if record.get("source_pending_use")!=true or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523": return denied("퀘스트 보관 개체가 아님")
-	var id: int = NUMBERS.item_id(record.get("source_item_class_id"))
+	if record.get("source_pending_use")!=true: return denied("퀘스트 보관 개체가 아님")
+	# Older saves can retain the held-reward shell and immutable receipt only.
+	# Resolve missing definition fields from the linked reward, while requiring
+	# every definition field that did survive to agree with that same row.
+	var compact: bool = record.get("slot")=="quest_reward" and record.get("type")=="원본 보상 보관" and not NATIVE_FIELDS.has_field(record,"source_original_item")
+	var id: int = NUMBERS.item_id(receipt.get("item_class_id"))
 	var quest_id: String = str(receipt.get("quest_id",""))
 	var reward_id: int = NUMBERS.item_id(receipt.get("reward_id"))
-	if id<=0 or reward_id<=0 or record.get("sourceId")!="m523:item:"+str(id) or receipt.get("source_sha256")!=service.source.SOURCE_SHA or receipt.get("schema")!=1 or receipt.get("item_class_id")!=id: return denied("원본 지급 정체 불일치")
+	if id<=0 or reward_id<=0 or receipt.get("source_sha256")!=service.source.SOURCE_SHA or receipt.get("schema")!=1: return denied("원본 지급 정체 불일치")
 	if not service.claimed.get(quest_id) is bool or service.claimed.get(quest_id)!=true: return denied("완료 지급 이력 없음")
 	var quest: Dictionary = service.index.get(quest_id,{})
 	if service.has_method("full"): quest = service.full(quest)
@@ -32,8 +36,11 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 	if original.type_name!="Item" or int(original.RewardClassID)!=id or int(original.RewardEnhancementTypeID)!=1 or original.ClanOnly: return denied("원본 일반 보상 관계 불일치")
 	var item: Dictionary = original.get("source_item",{})
 	var name_value: String = "[원본 보상] "+str(item.get("Name",""))
-	if item.is_empty() or int(item.get("ID",0))!=id or NATIVE_FIELDS.full(record).get("source_original_item")!=item or record.get("name")!=name_value or physical.get("name")!=name_value or physical.get("level",0)!=0: return denied("원본 행/소지 키 불일치")
-	if receipt.get("bless_code_id")!=original.ItemBlessCodeID or record.get("source_bless_code_id")!=original.ItemBlessCodeID or record.get("source_reward_id")!=reward_id or record.get("source_use_immediately")!=original.UseImmediately: return denied("원본 축복/사용/보상 상태 불일치")
+	if item.is_empty() or int(item.get("ID",0))!=id or record.get("name")!=name_value or physical.get("name")!=name_value or physical.get("level",0)!=0: return denied("원본 행/소지 키 불일치")
+	if receipt.get("bless_code_id")!=original.ItemBlessCodeID or (compact and original.UseImmediately!=false): return denied("원본 축복/사용/보상 상태 불일치")
+	var expected: Dictionary = {"source_original_item":item,"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:item:"+str(id),"source_item_class_id":id,"source_bless_code_id":original.ItemBlessCodeID,"source_reward_id":reward_id,"source_use_immediately":original.UseImmediately}
+	for field: String in expected:
+		if (not compact or NATIVE_FIELDS.has_field(record,field)) and NATIVE_FIELDS.field(record,field)!=expected[field]: return denied("저장된 원본 지급 필드 불일치: "+field)
 	var quantity: int = positive(physical.get("source_reward_quantity"))
 	var granted: int = positive(receipt.get("quantity"))
 	if quantity<=0 or granted!=positive(original.Amount) or quantity>granted: return denied("원본 지급/잔여 수량 불일치")
