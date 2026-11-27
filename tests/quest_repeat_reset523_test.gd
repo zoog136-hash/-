@@ -49,7 +49,7 @@ func synthetic() -> void:
 	check(SOURCE.repeat_rule(other).is_empty() and SOURCE.repeat_rule(once).is_empty(), "other reset types and one-time quests have no repeat rule")
 	var compact: Dictionary = SOURCE._compact(daily)
 	check(compact.get(SOURCE.LAZY_KEY,{}).get("repeat") == [11,1] and SOURCE.repeat_rule(compact) == SOURCE.repeat_rule(daily) and str(compact[SOURCE.LAZY_KEY].after).is_empty(), "compact row keeps the repeat rule and opens")
-	check(SOURCE.RECORDS_SCHEMA == 2, "record bake schema bumped for the compact repeat field")
+	check(SOURCE.RECORDS_SCHEMA == 3, "record bake schema covers the compact startup reward field")
 	var source = SOURCE.new()
 	var context: Dictionary = {"level":1,"max_level":1,"class_id":1}
 	var ended: int = kst(18,12)
