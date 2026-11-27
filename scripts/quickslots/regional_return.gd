@@ -73,6 +73,10 @@ static func effective(entry: Dictionary, land_id: int, enabled: bool, inventory:
 		result["id"] = target_key(int(DATA.data.target_item_id), inventory, resolver)
 		result["regional_original_id"] = str(entry.id)
 		result["regional_land_id"] = land_id
+		if result.id!=entry.id:
+			result.erase("instance_id")
+			result.erase("stock_source")
+			result.erase("stock_bless")
 		return result
 	return result
 

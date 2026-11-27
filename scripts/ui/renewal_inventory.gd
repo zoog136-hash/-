@@ -1027,7 +1027,7 @@ func _refresh_detail(item_reference: String) -> void:
 		var cadence: float=preload("res://scripts/quests/quest_regen523.gd").interval(controller.get_parent()) if controller!=null else 30.0
 		detail_text.text+="\n\n원본 MP 회복량·300초 유지 / TWILIGHT 회복 주기 %s초 (원본 주기 미확인)" % str(cadence)
 	if controller != null:
-		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_name)
+		var reason: String = controller.get_parent()._quickslot_registration_error("item",item_reference)
 		quick_button.disabled = not reason.is_empty()
 		quick_button.tooltip_text = reason if not reason.is_empty() else "퀵슬롯을 선택해 등록합니다"
 	var slot: String = str(item.get("slot", ""))

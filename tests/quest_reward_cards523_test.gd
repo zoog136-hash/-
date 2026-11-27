@@ -19,6 +19,8 @@ const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const INV = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
+const PROVIDER = preload("res://scripts/quests/quest_item_provider238.gd")
+const FIXED = preload("res://scripts/quests/quest_fixed_cards523.gd")
 ## 아크 나이트(근사 허용 시험 행 카드), 변신·인형·성물 카드 확정 상자, 희귀 변신
 ## 카드 상자, 스킬 카드 뽑기팩 상자, 마검사 각인 스킬서, 공허의 사원 희귀 카드
 ## 상자(연계 콘텐츠 퀘스트: 옛 세이브 보유분).
@@ -50,7 +52,12 @@ func rules() -> void:
 	check(stack.contains('var payload: Dictionary=paid.overrides.duplicate(true);payload["consumable_state"]=state;payload["original_skill_state"]=learned'), "the quest skill book candidate is compared unchanged")
 	check(stack.contains('SOURCE.approximated_item(original_item)!=SOURCE.row("ItemClass"'), "the held bag/card row check reads the approved approximation")
 	var provider: String = FileAccess.get_file_as_string("res://scripts/quests/quest_item_provider238.gd")
-	check(provider.contains('(held_kind=="fixed_card" and int(original_owned.item_class_id) not in FIXED.QUEST_IDS)'), "held fixed cards route to the native owner; reviewed quest cards keep theirs")
+	var routing = PROVIDER.new()
+	var fixed_card: Dictionary = {"native_record":{"source_use_spec":{"kind":"fixed_card"}}}
+	check(routing._native_held_spec_supported(fixed_card,1067), "an ordinary held fixed card uses the native route")
+	check(139781 in FIXED.QUEST_IDS and FIXED.QUEST_IDS.all(func(id: int) -> bool:
+		return not routing._native_held_spec_supported(fixed_card,id)), "all reviewed quest cards stay with their dedicated owner")
+	check(provider.contains('if _native_held_spec_supported(original_definition,int(original_owned.item_class_id)):') and provider.contains('stock.call("use_owned_original",world,original_owned.source_item') and provider.contains('if int(owned.item_class_id) in FIXED.QUEST_IDS:'), "the held-use path dispatches to both owners with the tested routing decision")
 	var events: String = FileAccess.get_file_as_string("res://scripts/unconfirmed523/runtime.gd")
 	check(events.contains("func _box_rule_record(item_name: String, id: int) -> Dictionary:") and events.contains('profile(rule).get("kind","")) in ["bag","selection"]: return false') and events.contains('NATIVE_FIELDS.full(rule).get("source_use_spec",{})'), "the events window reads a held box's own native rule")
 	var own: String = FileAccess.get_file_as_string("res://scripts/quests/quest_reward_ownership.gd")

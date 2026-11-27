@@ -119,8 +119,8 @@ func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui.set_catalog_data(catalog_data, item_image_index)
 	lineage_inventory_ui.set_character_state(character_state)
 
-func _register_inventory_quickslot(item_name: String) -> void:
-	_open_quickslot_picker("item", item_name, item_name)
+func _register_inventory_quickslot(reference: String) -> void:
+	_open_quickslot_picker("item", reference, reference.get_slice("@@@",0))
 
 func toggle_inventory() -> void:
 	var target: bool = true

@@ -889,7 +889,7 @@ func _activate_selected() -> void:
 func _quickslot_selected() -> void:
 	if selected_item == "":
 		return
-	quickslot_requested.emit(_base_item_name(selected_item))
+	quickslot_requested.emit(selected_item)
 
 func _format_number(value: int) -> String:
 	var source := str(absi(value))

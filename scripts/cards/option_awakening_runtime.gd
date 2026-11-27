@@ -530,6 +530,14 @@ func _craft_native_nemesis() -> Dictionary:
 	Supply.publish(world,next);_busy=false
 	return {"ok":true,"ticket_instance_id":staged.id,"consumed_source_coins":Acquisition.REQUIRED}
 
+func quickslot_item_supported(item_name: String, selected: String, record: Dictionary) -> bool:
+	var id: int=int(record.get("source_item_class_id",0))
+	if id==UnlockItem.ITEM:
+		return (not selected.is_empty() or UnlockItem.exact(record)) and UnlockItem.source_rules_valid()
+	if id not in [346921,365748,365758,370562]:return false
+	if selected.is_empty():return id==365758 and source_scroll_supported(item_name)
+	return Supply.proof(world,selected,id).get("ok",false)
+
 func use_source_awakening_item(item_name: String,selected: String="") -> Dictionary:
 	var physical_id: String=selected;var item_id: int=0
 	for uid: String in world.item_instances:
