@@ -543,6 +543,7 @@ func open_catalog(category: String) -> void:
 	_refresh_catalog_list("")
 
 func _build_catalog_panel() -> void:
+	# Build the hidden subtree before inheriting the live HUD theme and layout.
 	catalog_panel = PanelContainer.new()
 	catalog_panel.name = "CatalogPanel"
 	catalog_panel.set_anchors_preset(Control.PRESET_CENTER)
@@ -552,7 +553,6 @@ func _build_catalog_panel() -> void:
 	catalog_panel.offset_bottom = 300.0
 	catalog_panel.z_index = 120
 	catalog_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	$Root.add_child(catalog_panel)
 
 	var root: VBoxContainer = VBoxContainer.new()
 	root.add_theme_constant_override("separation", 8)
@@ -679,6 +679,8 @@ func _build_catalog_panel() -> void:
 	close.custom_minimum_size = Vector2(0, 42)
 	close.pressed.connect(func() -> void: catalog_panel.visible = false)
 	right.add_child(close)
+	catalog_panel.hide()
+	$Root.add_child(catalog_panel)
 
 func _refresh_catalog_list(filter_text: String) -> void:
 	catalog_filtered_results.clear()
@@ -908,7 +910,6 @@ func _build_character_panel() -> void:
 	character_panel.offset_bottom = 300.0
 	character_panel.z_index = 110
 	character_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	$Root.add_child(character_panel)
 
 	var root: VBoxContainer = VBoxContainer.new()
 	root.add_theme_constant_override("separation", 8)
@@ -983,6 +984,8 @@ func _build_character_panel() -> void:
 	close.custom_minimum_size = Vector2(0, 44)
 	close.pressed.connect(func() -> void: character_panel.visible = false)
 	root.add_child(close)
+	character_panel.hide()
+	$Root.add_child(character_panel)
 
 func open_character() -> void:
 	_hide_aux_panels()
@@ -999,7 +1002,6 @@ func _build_utility_panel() -> void:
 	utility_panel.offset_bottom = 285.0
 	utility_panel.z_index = 135
 	utility_panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	$Root.add_child(utility_panel)
 
 	var root: VBoxContainer = VBoxContainer.new()
 	root.add_theme_constant_override("separation", 10)
@@ -1026,6 +1028,8 @@ func _build_utility_panel() -> void:
 	close.custom_minimum_size = Vector2(0, 44)
 	close.pressed.connect(func() -> void: utility_panel.visible = false)
 	root.add_child(close)
+	utility_panel.hide()
+	$Root.add_child(utility_panel)
 
 func _open_utility_panel(title_text: String) -> void:
 	_hide_aux_panels()

@@ -81,8 +81,8 @@ func _run() -> void:
 	check(window.selected=="einhasad" and growth.rerolls.is_empty(),"changing the god restores base odds (rerolls cleared)")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(renewal.contains("_open_original_feature(\"emblems\")"),"문양 opens the original window first")
-	var main_hud: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
-	check(main_hud.contains("\"emblems\":preload(\"res://scripts/ui/original_ui/source_main_symbol_window.gd\")"),"the main HUD controller owns the window")
+	var feature_paths: Dictionary=preload("res://scripts/ui/original_ui/source_main_hud.gd").FEATURE_WINDOW_PATHS
+	check(load(feature_paths.get("emblems"))==WINDOW,"the main HUD controller owns the window")
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")

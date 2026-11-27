@@ -45,8 +45,11 @@ func run() -> void:
 	hud.toggle_inventory()
 	var optional := {"card_collection":["변신"],"card_fusion":["변신"]}
 	var results := {}
-	for key: String in controller.FEATURE_WINDOWS:
-		var script: Script=controller.FEATURE_WINDOWS[key]
+	for key: String in controller.FEATURE_WINDOW_PATHS:
+		var script := load(controller.FEATURE_WINDOW_PATHS[key]) as Script
+		if script == null or not script.can_instantiate():
+			results[key]="source_feature_window_script_unavailable"
+			continue
 		var arguments: Array=optional.get(key,[])
 		var required := 0
 		for method: Dictionary in script.get_script_method_list():
@@ -62,7 +65,7 @@ func run() -> void:
 			controller.feature_window(key).close()
 			await process_frame
 	# These screens are entered through dedicated HUD methods instead of
-	# FEATURE_WINDOWS. The next open follows the same close path as play.
+	# FEATURE_WINDOW_PATHS. The next open follows the same close path as play.
 	var hud_entries := {
 		"quest_window":"open_quests", "shop_window":"open_shop",
 		"storage_window":"open_warehouse", "teleport_window":"open_npc_teleport",

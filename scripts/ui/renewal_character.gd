@@ -29,8 +29,8 @@ func _show_stats_page() -> void:
 	original_page_requested.emit("stats")
 
 func _ready() -> void:
-	super._ready()
 	theme = UI.make_theme()
+	super._ready()
 	character_panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,0),Color(0,0,0,0),0))
 	var outer: VBoxContainer = character_panel.get_child(0)
 	outer.add_theme_constant_override("separation",4)

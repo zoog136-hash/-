@@ -27,7 +27,7 @@ func check(ok: bool, label: String) -> void:
 		printerr("ORIGINAL_UI_DOLL_EXPLORE_FAIL: ",label)
 
 func _initialize() -> void:
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.get("doll_explore")==EXPLORE,"doll_explore is a registered feature window")
+	check(load(HUD_CONTROLLER.FEATURE_WINDOW_PATHS.get("doll_explore"))==EXPLORE,"doll_explore is a registered feature window")
 	var window=EXPLORE.new()
 	check(window.deck==2 and DISPATCH.new().deck==1,"마법인형 deck 2; the 변신 파견 window keeps deck 1")
 	check(window._page()=="Change_ExploreView" and window._tab()=="explore" and window._p()=="Change_ExploreView/Nd_Explore/" and window._spot_member()=="UI/Change/Change_Explore_Btn.csb","the explore page, its prefix and spot button")
