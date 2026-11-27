@@ -146,10 +146,18 @@ func auto_refresh(w: Node, item: String, uid: String) -> void:
 		if not entry.is_empty():entry["auto"]=false
 	w.item_use_cooldowns.clear()
 	var slot: int=h.quickslot_index(0)
+	# A retained catalog-only row wins name lookup over the real receipt.
+	var records: Array=w.catalog_db["아이템"]
+	var shadow: Dictionary={"name":item,"slot":"material","source_automation_catalog_only":true,"source_item_class_id":380}
+	records.push_front(shadow)
+	preload("res://scripts/catalog_item_lookup.gd").forget_misses()
+	ck(w._find_catalog_item_record(item)==shadow,"the quickslot lookup sees the retained catalog shadow")
 	h.quickslot_assignment_requested.emit(slot,"item",item)
 	await process_frame
 	await pull(h.original_quickslot_control(0),1.0)
-	if not ck(w.quickslots[slot].get("id")==item and w.quickslots[slot].get("auto",false),"real short downward drag enables AUTO for exact source haste potion"):return
+	if not ck(w.quickslots[slot].get("id")==item and w.quickslots[slot].get("auto",false),"real short downward drag enables AUTO for the physical source haste potion behind a catalog shadow"):
+		records.erase(shadow)
+		return
 	w._run_auto_item_quickslots(1.0)
 	ck(STACK.proof(w,uid).get("remaining")==2,"active original effect does not spend another bottle")
 	for effect: Dictionary in w.active_item_buffs.values():effect["remaining"]=0.2
@@ -169,6 +177,7 @@ func auto_refresh(w: Node, item: String, uid: String) -> void:
 	w.active_item_buffs.clear();w.item_use_cooldowns.clear()
 	w._run_auto_item_quickslots(1.0)
 	ck(not w.quickslots[slot].get("auto",true) and STACK.proof(w,uid).get("remaining")==1,"pulling up disables later item refresh")
+	records.erase(shadow)
 
 	w.level=90
 	w.equipped_items["weapon"]={"name":"검사 양손검","type":"양손검","slot":"weapon"}

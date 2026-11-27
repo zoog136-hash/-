@@ -93,7 +93,7 @@ func configure(controller: Node, selected_scroll: String = "", selected_uid: Str
 	add_child(source_action)
 	var actions := HBoxContainer.new()
 	add_child(actions)
-	actions.add_child(UI.button("제작·축복 전환", func() -> void: hud.open_crafting()))
+	actions.add_child(UI.button("제작·축복 전환", _open_blessing_craft))
 	actions.add_child(UI.button("현재 강화 실행", func() -> void: hud._open_enhance_chooser()))
 	world._sync_item_instances()
 	var book: Object = world.patch523_equipment
@@ -280,6 +280,14 @@ func _install_selected(path: String) -> void:
 
 func _selected_scroll_uid(scroll_id: String) -> String:
 	return bag_scroll_uid if scroll_id==bag_scroll_id else ""
+
+func _open_blessing_craft() -> void:
+	var recipe: String = ""
+	if equipment.selected >= 0 and equipment.selected < ids.size():
+		var id: String = ids[equipment.selected]
+		var physical: Dictionary = world.item_instances.get(id,{})
+		if not physical.is_empty():recipe=world.accessory_blessing_recipe(str(physical.name)+"@@@"+id)
+	hud.open_crafting(recipe)
 
 func _confirm_source() -> void:
 	if ids.is_empty() or scroll_ids.is_empty(): return

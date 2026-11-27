@@ -631,14 +631,21 @@ func _show_selected() -> Dictionary:
 		var selected_variant: Dictionary=CARD_DEFINITIONS.canonical(record)
 		if not selected_variant.is_empty():options_record=selected_variant
 	var offered_lines: Variant=options_record.get("source_card_display_options",options_record.get("sourceOptions",[]))
-	var lines: Array=offered_lines if offered_lines is Array else []
-	var awakening: Array=_applied_awakening_options()
+	# Source stat rows can be Array[Dictionary]. The detail also shows text rows.
+	var lines: Array=[]
+	if offered_lines is Array:lines.append_array(offered_lines)
+	var awakening: Dictionary=_awakening_options()
+	var awakened: bool=awakening.get("awakened",false)
+	var added: int=0
 	if not awakening.is_empty():
-		var combined: Array=[]
-		combined.append_array(lines)
-		combined.append("각성 옵션")
-		combined.append_array(awakening)
-		lines=combined
+		var current: Array=awakening.applied if awakened else awakening.preview
+		if not current.is_empty():
+			lines.append("각성 적용 효과" if awakened else "각성 시 추가 능력")
+			lines.append_array(current)
+			added+=current.size()
+		if awakened and not awakening.pending.is_empty():
+			lines.append("현재 적용되지 않는 원본 옵션")
+			lines.append_array(awakening.pending)
 	var options: int=0
 	var list_height: float=230.0 if _category=="마법인형" else 260.0
 	for line: Variant in lines:
@@ -655,14 +662,13 @@ func _show_selected() -> Dictionary:
 	_detail.set_bound_displaystate(AWAKEN,not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[0],not record.is_empty())
 	_detail.set_bound_visible(AWAKEN_STATES[1],record.is_empty())
-	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"awakening_options":awakening.size(),"applied":applied}
+	return {"ok":true,"selected":_selected,"illustration":picture,"illustration_status":str(owner.get("status","")),"options":options,"awakening_options":added,"awakened":awakened,"applied":applied}
 
-func _applied_awakening_options() -> Array:
-	if _category not in ["변신","마법인형"] or _selected.is_empty():return []
+func _awakening_options() -> Dictionary:
+	if _selected.is_empty():return {}
 	var world: Node=_world_node()
 	var runtime: Variant=world.get("option_awakening") if world!=null else null
-	if runtime==null or not runtime.is_awakened(_category,_selected):return []
-	return runtime.core.definition(_category,_selected).get("applied_options",[])
+	return runtime.card_options(_category,_selected) if runtime!=null else {}
 
 func _option_list_input(event: InputEvent) -> void:
 	if not is_instance_valid(_option_content) or _option_scroll_min==0.0:return

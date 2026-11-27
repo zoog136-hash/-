@@ -64,6 +64,8 @@ var _grid_positions: Dictionary={}
 var _held_slot: int=-1
 var _stage_deck: Variant=null
 var _fusion_result: Dictionary={}
+var _fusion_opened: bool=false
+var _fusion_opening: bool=false
 var _merge_token: String=""
 var _merge_dialog: WeakRef
 
@@ -84,6 +86,8 @@ func open(parent: Node) -> Dictionary:
 	registered.clear()
 	feed.clear()
 	_fusion_result={}
+	_fusion_opened=false
+	_fusion_opening=false
 	_merge_token=""
 	_merge_dialog=null
 	_grid_positions.clear()
@@ -93,6 +97,7 @@ func open(parent: Node) -> Dictionary:
 
 func close() -> void:
 	_fusion_result={}
+	_fusion_opening=false
 	_merge_token=""
 	_merge_dialog=null
 	super.close()
@@ -184,13 +189,15 @@ func _compose_spec(spec: Dictionary) -> void:
 	for name: String in ["Nd_TabMenu/Btn_Fixed_On","Nd_TabMenu/Btn_Fixed_Off","Nd_TabMenu/Btn_Normal_Off","Nd_Reward","Nd_Fixed","Nd_Reward_All","Nd_Message"]:spec[c+name]={"exclude":true}
 	spec[c+"Nd_TabMenu/Btn_Normal_On"]={"activate":Callable(self,"_ignore")}
 	if not _fusion_result.is_empty():
-		spec[c+"Label_Title"]={"role":"source_text","text":"합성 성공" if _fusion_result.success else "합성 실패"}
+		var title: String="카드를 눌러 결과 확인"
+		if _fusion_opened:title="합성 성공" if _fusion_result.success else "합성 실패"
+		spec[c+"Label_Title"]={"role":"source_text","text":title}
 		spec[c+"Label_Tip"]={"visible":false}
 		spec[c+"Btn_Probability"]={"visible":false}
 		spec[c+"Nd_Card/Label_Message"]={"visible":false}
 		spec[REGISTERED_LIST]={"exclude":true}
 		spec[c+"Btn_Auto"]={"visible":false}
-		spec[c+"Btn_Compose"]={"activate":Callable(self,"_dismiss_fusion")}
+		spec[c+"Btn_Compose"]={"visible":_fusion_opened,"activate":Callable(self,"_dismiss_fusion")}
 		spec[c+"Btn_Compose/Normal"]={"visible":true}
 		spec[c+"Btn_Compose/Normal/Text"]={"role":"source_text","text":"확인"}
 		spec[c+"Btn_Compose/Disabled"]={"visible":false}
@@ -325,18 +332,24 @@ func _fill_fusion_result(root: Node2D, out: Dictionary, filled: Dictionary) -> D
 	var caption: String=str(item.get("name","")) if success else "재료 %d장 소멸" % int(_fusion_result.consumed)
 	# The source roulette contains preview sprites, so the committed result
 	# uses the standard skill slot and the authored result title/effect.
-	var spec: Dictionary={"Text_Card_Name":{"role":"source_text","text":caption},"card":{"exclude":true},
+	var spec: Dictionary={"Text_Card_Name":{"role":"source_text","text":caption,"visible":_fusion_opened},"card":{"exclude":true},
 		"Panel/Fx_Result_Loop_2":{"exclude":true},"Card_Roultte":{"exclude":true},"Nd_Info":{"exclude":true},
-		"Fx_Glow/Fx_Greade":{"exclude":true},"Fx_Glow/Fx_Result_Start":{"exclude":true},"Btn_Card":{"exclude":true}}
+		"Fx_Glow/Fx_Greade":{"exclude":true},"Fx_Glow/Fx_Result_Start":{"exclude":true}}
+	spec["Btn_Card"]={"exclude":true} if _fusion_opened else {"activate":Callable(self,"_open_fusion_result")}
 	if not success:
 		spec["Fx_Result_Loop_1"]={"exclude":true}
-		spec["Fx_Glow"]={"exclude":true}
+		if _fusion_opened:spec["Fx_Glow"]={"exclude":true}
 	var bound: Dictionary={}
 	var shown: Dictionary=_scene_of(FUSION_CARD,spec,bound)
 	if not shown.get("ok",false):return shown
 	var effect: Node2D=shown.scene
 	var host: Node2D=anchor.player.source_nodes[anchor.offset]
 	host.add_child(effect)
+	effect.name="SkillFusionResultCard"
+	if not _fusion_opened:
+		effect.seek_frame(60)
+		filled["fusion_result"]={"revealed":false,"member":FUSION_CARD}
+		return filled
 	if success:
 		var slot_spec: Dictionary={}
 		_slot_spec(slot_spec,"",int(_fusion_result.target_grade_id),-1)
@@ -353,8 +366,29 @@ func _fill_fusion_result(root: Node2D, out: Dictionary, filled: Dictionary) -> D
 		if not motion or not effect.play("Fx_Cardname",false).get("ok",false):effect.seek_frame(155)
 	else:
 		effect.seek_frame(155)
-	filled["fusion_result"]={"success":success,"caption":caption,"member":FUSION_CARD}
+	filled["fusion_result"]={"revealed":true,"success":success,"caption":caption,"member":FUSION_CARD}
 	return filled
+
+func _open_fusion_result() -> Dictionary:
+	if _fusion_result.is_empty() or _fusion_opened or _fusion_opening:return {"ok":false}
+	var effect: Node2D=_scene.find_child("SkillFusionResultCard",true,false)
+	var settings: Variant=world().get("presentation_settings")
+	var reduced: bool=settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0)
+	if effect==null or reduced or not effect.play("Fx_Start_Active",false).get("ok",false):return _finish_fusion_result()
+	_fusion_opening=true
+	for clip: Dictionary in effect.source_tree.get("animationList",[]):
+		if clip.name!="Fx_Start_Active":continue
+		var speed: float=maxf(0.01,float(effect.source_tree.get("action",{}).get("speed",1.0)))
+		var length: float=float(clip.endIndex)-float(clip.startIndex)
+		effect.get_tree().create_timer(length/60.0/speed).timeout.connect(Callable(self,"_finish_fusion_result").bind(_fusion_result))
+		return {"ok":true,"opening":true}
+	return _finish_fusion_result()
+
+func _finish_fusion_result(expected: Dictionary={}) -> Dictionary:
+	if not is_open() or _fusion_result.is_empty() or (not expected.is_empty() and not is_same(expected,_fusion_result)):return {"ok":false}
+	_fusion_opened=true
+	_fusion_opening=false
+	return _stage()
 
 func _prepare_registered(root: Node2D, out: Dictionary, books: Array) -> Dictionary:
 	var list: Dictionary=_list(root,out,REGISTERED_LIST)
@@ -883,14 +917,19 @@ func _confirm_fusion(_count: int, token: String, quoted_grade: int, selection: D
 		if is_open():_stage()
 		return
 	registered.clear()
-	_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
-	if not is_open():return
+	if not is_open():
+		_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
+		return
 	_fusion_result=done
+	_fusion_opened=false
+	_fusion_opening=false
 	if not _stage().get("ok",false):
 		_fusion_result={}
+		_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
 		_stage()
 
 func _dismiss_fusion() -> Dictionary:
+	if not _fusion_opened:return {"ok":false}
 	_fusion_result={}
 	return _stage()
 
