@@ -38,6 +38,18 @@ func deny(_path:String,payload:Dictionary)->Error:
 	rejected=payload
 	return ERR_CANT_CREATE
 
+func authored_bag_slot(view: RefCounted, reference: String) -> Control:
+	var control: Control=view._hits.get(reference,{}).get("control")
+	if is_instance_valid(control) and view._inside_scroll_view(control.get_global_transform_with_canvas()*(control.size*0.5)):
+		return control
+	for index: int in view._lines.size():
+		if not view._lines[index].values().has(reference):continue
+		var position: float=-view._row_y-view.ROW_PITCH*(index+1)-view._view_height()*0.5
+		var scale: float=absf(view._scroll_content.get_global_transform_with_canvas().get_scale().y)
+		view.scroll_by((position-view._scroll_content.position.y)*scale)
+		break
+	return view._hits.get(reference,{}).get("control")
+
 func live(archive:String)->void:
 	root.size=Vector2i(2048,919)
 	var w:Node=load("res://Main.tscn").instantiate()
@@ -74,7 +86,7 @@ func live(archive:String)->void:
 			var control:Control
 			if route=="bag":
 				if not h.original_inventory_is_open():h.toggle_inventory();await process_frame
-				control=h.original_main_ui_controller._inventory_view._hits.get(ref,{}).get("control")
+				control=authored_bag_slot(h.original_main_ui_controller._inventory_view,ref)
 				if not ck(is_instance_valid(control),"actual original bag slot #"+str(id)):w.queue_free();return
 				h.lineage_inventory_ui.disarm_item_action()
 				h.pointer_transfer.reset_tap_history()
@@ -92,7 +104,16 @@ func live(archive:String)->void:
 			var awake:Dictionary=w.option_awakening.export_state()
 			var look:Dictionary=w.equipped_catalog.duplicate(true)
 			var ui_cards:Dictionary=h.card_collection_state.duplicate(true)
+			var journals: Dictionary=w.consumable_service.export_state()
 			tap(control)
+			var committed_journals: Dictionary=w.consumable_service.export_state()
+			var prior_uses: Dictionary=journals.get(STACK.USES,{})
+			var committed_uses: Dictionary=committed_journals.get(STACK.USES,{})
+			prior_uses.erase(uids[id])
+			committed_uses.erase(uids[id])
+			journals.erase(STACK.USES)
+			committed_journals.erase(STACK.USES)
+			ck(journals==committed_journals and prior_uses==committed_uses,"only the selected use ledger row changes")
 			var buff:Dictionary={}
 			for effect:Dictionary in w.active_item_buffs.values():
 				if effect.get("source_item_class_id")==id:buff=effect;break

@@ -145,9 +145,17 @@ func _real_pack(pack_dir: String) -> void:
 		check(opened.get("handled",false) and int(filled.get("slots",0))==(group.nodes as Array).size() and int(filled.get("lines",-1))==lines,"star graph mounts: %s %s" % [str(group.id),str(opened).left(400)])
 	window._select(str(growth.config.guardians[0].id))
 	check(int(window.last_result.filled.get("effects",-1))==1,"the opened slot is listed in the effect list: "+str(window.last_result.filled))
+	var graph: Node2D=window._graph
+	window._graph_x=maxf(window._graph_min,-80.0)
+	graph.position.x=window._graph_x
+	var scroll_x: float=graph.position.x
 	var shown: Dictionary=window._slot_pressed(str(first.id))
 	check(shown.get("handled",false) and str(shown.filled.get("info",""))==str(first.id),"a slot opens the original info popup: "+str(shown).left(300))
+	check(window._graph==graph and graph.position.x==scroll_x,"the popup reuses all mounted slots and keeps horizontal scroll")
 	check(window._close_info().get("handled",false) and window.info.is_empty(),"닫기 closes the popup")
+	check(window._graph==graph,"closing the popup leaves the original graph in place")
+	growth.state.nodes.append(str(growth.config.guardians[0].nodes[1].id))
+	check(window.refresh().filled.effects==2 and window._graph!=graph,"an ownership change builds the graph with both open slots")
 	window.close()
 	await process_frame
 	parent.queue_free()

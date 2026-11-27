@@ -10,6 +10,7 @@ const ROW = "UI/SkillTree/SkillTree_Text_02.csb"
 const BACKGROUND = {"path":"FullFrameUI_BG01.png","plistFile":"UI_Resource/Atlas_Texture.plist","resourceType":1}
 const R = "SkillTree_RandomOpen_Enchant_Layout/"
 const GrowthView = preload("res://scripts/growth/growth_view.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 
 enum Phase {PREVIEW, CARD, RESULT}
 var phase: Phase = Phase.PREVIEW
@@ -214,7 +215,9 @@ func _commit() -> Dictionary:
 	shown_level = runtime.guardian_level(slot)
 	won = shown_level > before_level
 	phase = Phase.RESULT
+	var started: int = FRAME_HITCH.now()
 	var built: Dictionary = _stage()
+	FRAME_HITCH.detail("growth.guardian_result",started)
 	if not built.get("ok",false): _back()
 	return response
 

@@ -37,6 +37,9 @@ var selected: String="joe"
 var info: String=""
 var _layout: Dictionary={}
 var _graph: Node2D
+var _graph_rows: Array=[]
+var _graph_inputs: Array=[]
+var _graph_summary: Dictionary={}
 var _graph_x: float=0.0
 var _graph_min: float=0.0
 var _graph_drag: bool=false
@@ -113,18 +116,51 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var scroll: Variant=located.player.source_nodes.get(located.offset)
 	var content: Variant=(scroll as Node).find_child("SourceOriginalScrollContent",true,false) if is_instance_valid(scroll) else null
 	if not content is Node2D:return _fail("source_guardian_window_graph_missing")
-	var graph:=Node2D.new()
-	graph.name="GuardianGraph"
-	(content as Node2D).add_child(graph)
-	var opened: Array=runtime.state.get("nodes",[])
+	var rows: Array=group.get("nodes",[])
+	var owned: Array=runtime.state.get("nodes",[])
+	var opened: Dictionary={}
+	for row: Dictionary in rows:
+		if owned.has(row.id):opened[row.id]=true
 	var representative: String=runtime.guardian_representative(int(group.get("category_id",0)))
+	var inputs: Array=[selected,opened,representative,_layout,_pack.get_instance_id()]
+	var reuse: bool=is_open() and is_instance_valid(_graph) and is_same(_graph_rows,rows) and _graph_inputs==inputs
+	var graph: Node2D=_graph
+	var summary: Dictionary=_graph_summary
+	if not reuse:
+		graph=Node2D.new()
+		graph.name="GuardianGraph"
+		(content as Node2D).add_child(graph)
+		summary=_fill_graph(graph,rows,opened,representative)
+		if not summary.get("ok",false):return summary
+	var effects: int=-1
+	if _rows_available():
+		var listed: Dictionary=_fill_list(root,out,"Nd_SkillTreeInfo/ListView_1",_effect_rows(runtime,group))
+		if not listed.get("ok",false):return listed
+		effects=int(listed.rows)
+		if not info.is_empty():
+			var lines_info: Dictionary=_fill_list(root,out,POPUP+"/Nd_SkillInfo/Nd_Skill/ListView_Info",_info_rows(runtime,info))
+			if not lines_info.get("ok",false):return lines_info
+	# A slot popup changes the details, not the graph. Keep the live
+	# scroll position and move the existing graph after the new detail bound.
+	if reuse:graph.reparent(content,false)
+	_graph=graph
+	_graph_rows=rows
+	_graph_inputs=inputs
+	_graph_summary=summary
+	_graph_min=minf(0.0,_node_size(out,"ScrollView_SkillTree").x-float(summary.width))
+	_graph_x=clampf(_graph_x,_graph_min,0.0)
+	graph.position.x=_graph_x
+	return {"ok":true,"selected":selected,"slots":summary.slots,"clips":summary.clips,"lines":summary.lines,
+		"width":summary.width,"effects":effects,"info":info}
+
+func _fill_graph(graph: Node2D, rows: Array, opened: Dictionary, representative: String) -> Dictionary:
 	var centres: Dictionary={}
 	var width: float=0.0
-	for node: Dictionary in group.get("nodes",[]):
+	for node: Dictionary in rows:
 		centres[str(node.id)]=cell_centre(_layout,int(node.get("ui_x",1)),int(node.get("ui_y",1)))
 		width=maxf(width,(centres[str(node.id)] as Vector2).x+float(_layout.column_pitch)*0.5)
 	var lines: int=0
-	for node: Dictionary in group.get("nodes",[]):
+	for node: Dictionary in rows:
 		for prerequisite: Variant in node.get("prerequisites",[]):
 			if not centres.has(str(prerequisite)):continue
 			var both: bool=opened.has(str(node.id)) and opened.has(str(prerequisite))
@@ -134,7 +170,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			lines+=1
 	var slots: int=0
 	var clips: int=0
-	for node: Dictionary in group.get("nodes",[]):
+	for node: Dictionary in rows:
 		var id: String=str(node.id)
 		var skill: bool=str(node.get("kind",""))!="stat"
 		var open_now: bool=opened.has(id)
@@ -158,20 +194,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var clip: String="Fx_Represent" if id==representative else ("Fx_Loop_Yellow" if open_now else "Fx_Slot_Off")
 		if built.scene.play(clip,clip!="Fx_Slot_Off").get("ok",false):clips+=1
 		slots+=1
-	var visible_width: float=_node_size(out,"ScrollView_SkillTree").x
-	_graph=graph
-	_graph_min=minf(0.0,visible_width-width)
-	_graph_x=clampf(_graph_x,_graph_min,0.0)
-	graph.position.x=_graph_x
-	var effects: int=-1
-	if _rows_available():
-		var listed: Dictionary=_fill_list(root,out,"Nd_SkillTreeInfo/ListView_1",_effect_rows(runtime,group))
-		if not listed.get("ok",false):return listed
-		effects=int(listed.rows)
-		if not info.is_empty():
-			var lines_info: Dictionary=_fill_list(root,out,POPUP+"/Nd_SkillInfo/Nd_Skill/ListView_Info",_info_rows(runtime,info))
-			if not lines_info.get("ok",false):return lines_info
-	return {"ok":true,"selected":selected,"slots":slots,"clips":clips,"lines":lines,"width":width,"effects":effects,"info":info}
+	return {"ok":true,"slots":slots,"clips":clips,"lines":lines,"width":width}
 
 ## The row members of the effect list and the popup (absent in older packs).
 func _rows_available() -> bool:
