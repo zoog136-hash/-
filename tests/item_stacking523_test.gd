@@ -14,6 +14,7 @@ const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const ACQUIRE = preload("res://scripts/loot/source523_ground_acquisition.gd")
+const CASH = preload("res://scripts/shop/source523_cash_packages.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const FOLD_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const LEATHER := 366 ## [재료] 가죽, MaxStackAmount 10000
@@ -204,8 +205,36 @@ func lazy_merge_owner_snapshot() -> void:
 	check(not MERGE.plan(inputs,{},{},{},null,bad_snapshot).changed,"malformed late ownership rejects the plan before adoption")
 	STACK.clear_proof_cache()
 
+func interleaved_acquisition_batches() -> void:
+	STACK.clear_proof_cache()
+	STACK._select_proof_archive()
+	var inputs: Dictionary = {}
+	var record: Dictionary = {"name":"same","slot":"material","source_item_class_id":11}
+	for spec: Array in [["a",6,"quest"],["b",6,"shop"],["c",4,"pickup"],["d",4,"warehouse"],["e",10,"pickup"]]:
+		var uid: String = spec[0]
+		var quantity: int = spec[1]
+		var receipt: Dictionary = {"schema":1,"issued_physical_id":uid,"item_class_id":11,"bless_raw":1,
+			"granted_quantity":quantity,"source_original_item":{"MaxStackAmount":10},"origin":{"kind":spec[2]}}
+		var entry: Dictionary = {"name":"same","level":0,"record":record,STACK.RECEIPT:receipt,STACK.QUANTITY:quantity}
+		inputs[uid] = entry
+		STACK._proof_cache[uid] = [entry.duplicate(true),{"record":record,"receipt":receipt,"remaining":quantity,"used":0,"transferred":0}]
+	var before: Dictionary = inputs.duplicate(true)
+	var plan: Dictionary = MERGE.plan(inputs, {}, {})
+	if check(plan.changed and plan.merged_slots == 2, "interleaved quest, shop, pickup and warehouse grants fill both partial slots"):
+		check(plan.item_instances.keys() == ["a","b","e"] and plan.item_instances.a[STACK.QUANTITY] == 10
+			and plan.item_instances.b[STACK.QUANTITY] == 10 and plan.item_instances.e == before.e,
+			"fills the original cap, keeps acquisition anchors and preserves a full stack")
+		var origins: Dictionary = {}
+		for event: Dictionary in plan.consumable_state[MERGE.MERGES].values():
+			for component: Dictionary in event.components:
+				origins[component.physical_id] = component.receipt.origin.kind
+		check(origins == {"a":"quest","b":"shop","c":"pickup","d":"warehouse"} and inputs == before,
+			"all original receipts stay identifiable and inputs are unchanged")
+	STACK.clear_proof_cache()
+
 func rules() -> void:
 	lazy_merge_owner_snapshot()
+	interleaved_acquisition_batches()
 	singleton_proof_pruning()
 	check(STACK.stage_floor_grant({"name":"unsupported fixture"},1,{})=={"handled":false},
 		"unsupported floor item is not claimed by physical grant owner")
@@ -403,6 +432,107 @@ func collect_id(world: Node, id: String) -> bool:
 	if not ok: evidence["pickup_problem_"+id] = {"since_ms":Time.get_ticks_msec()-int(view.get("visible_since")),"on_floor":world.ground_loot.records.has(id)}
 	return ok
 
+func shared_shop_materials(world: Node) -> void:
+	var ids: Array[int] = [6241,129274,216053]
+	var quoted: Dictionary = {}
+	for id: int in ids:
+		var native: Dictionary = record(id)
+		var legacy_name: String = str(world.source_shop.legacy_material_keys.get(id, ""))
+		if not check(not legacy_name.is_empty() and CASH.resolve(world,id).get("name") == native.name,
+			"cash and registered shop use the exact source material #" + str(id)): return
+		world.inventory[legacy_name] = 2
+		var bound: Dictionary = world.source_shop._resolve({"unit_id":4,"class_id":id,"amount":1},true,world.inventory,world.gold)
+		check(bound.get("ok",false) and bound.binding.get("native_supply",false), "direct shop quote uses the receipted owner #" + str(id))
+		if not grant(world,id,3): return
+		quoted[id] = legacy_name
+	var quest_row: Dictionary = SOURCE.row("Reward",81803).duplicate()
+	quest_row["source_item"] = SOURCE.row("ItemClass",6241)
+	var links: Array[Dictionary] = SOURCE.related("QuestReward","QuestID",75513)
+	var quest: Dictionary = world.quest_item_provider.resolve(quest_row)
+	check(links.any(func(row: Dictionary) -> bool: return row.RewardID == 81803) and quest.get("record",{}).get("name") == record(6241).name,
+		"the original quest reward #81803 uses the same native material owner")
+	var owned_before: Dictionary = world.item_instances.duplicate(true)
+	var inventory_before: Dictionary = world.inventory.duplicate(true)
+	var prev_protection: bool = world.source_item_save_blocked
+	world.source_item_save_blocked = true
+	check(not world.source_shop.reconcile_material_stacks() and world.inventory == inventory_before and world.item_instances == owned_before,
+		"a blocked save cannot move or duplicate any legacy amount")
+	world.source_item_save_blocked = prev_protection
+	check(world._save_game(true) == OK, "older name-keyed shop contents can exist beside the original stacks on disk")
+	reload(world)
+	var restored: Dictionary = {}
+	for id: int in ids:
+		var count: Array = slots(world,id)
+		restored[id] = {"old":world.inventory.get(quoted[id]),"slots":count,"total":world.inventory.get(record(id).name)}
+		check(not world.inventory.has(quoted[id]) and count == [5], "old shop quantity and current grant share one slot on load #%d: %s" % [id,str(restored[id])])
+	evidence["materials_after_load"] = restored
+	var chosen: Dictionary = {}
+	var box_id: int = 151853
+	for entry: Dictionary in CASH.definition(box_id).get("entries",[]):
+		if entry.get("item_class_id") == 129274 and entry.get("bless",1) == 1 and entry.get("enchant",0) == 0:
+			chosen = entry
+			break
+	if check(not chosen.is_empty(), "the actual 523 cash-box row supplies Pandora collection pieces"):
+		var box: Dictionary = CASH.resolve(world,box_id)
+		world.inventory[str(box.name)] = 1
+		var opened: Dictionary = CASH.open(world,str(box.name),[chosen])
+		check(opened.get("ok",false) and not world.inventory.has(str(box.name)), "committed cash-box result consumes one box")
+		world._refresh_inventory_hud()
+		check(slots(world,129274) == [5 + int(chosen.amount)], "cash-box reward joins the restored exact stack")
+	check(world._save_game(true) == OK, "mixed material stacks preserve the ownership ledger on save")
+	reload(world)
+	check(slots(world,6241) == [5] and slots(world,216053) == [5], "both other exact stacks survive a fresh load")
+	check(not world.source_shop.reconcile_material_stacks(), "no old stock can be reassigned twice")
+
+func old_arc_quest_reward(world: Node) -> void:
+	var quest_id: String = "m523:quest:75513"
+	var quest: Dictionary = world.quest_service.full_quest(quest_id)
+	if not check(not quest.is_empty(), "the actual resource registers the original Arc quest"): return
+	var plan: Dictionary = world.quest_service.source.reward_plan(quest, {"class_id":0})
+	var candidates: Array = plan.get("items", []).filter(func(item: Dictionary) -> bool: return item.source_reward_id == 81803)
+	if not check(candidates.size() == 1 and candidates[0].record.get("source_pending_use", false),
+		"the real reward planner creates the old held form of #81803"): return
+	var pending: Dictionary = candidates[0].record
+	var quantity: int = int(candidates[0].quantity)
+	var uid: String = str(world.next_item_instance_id)
+	world.next_item_instance_id += 1
+	var receipt: Dictionary = {"schema":1,"quest_id":quest_id,"reward_id":81803,"item_class_id":6241,
+		"bless_code_id":1,"source_sha256":world.quest_service.source.SOURCE_SHA,"quantity":quantity}
+	world.quest_service.claimed[quest_id] = true
+	world.item_instances[uid] = {"name":pending.name,"level":0,"record":pending,
+		"source_reward_quantity":quantity,"quest_reward_receipt":receipt}
+	world.inventory[pending.name] = quantity
+	world.ui_preferences.item_locks[pending.name + "@@@" + uid] = true
+	check(not world.quest_item_provider.reconcile_held_arc_material(world) and slots(world,6241) == [5] and world.item_instances.has(uid),
+		"a locked held reward keeps its original item and quantity")
+	world.ui_preferences.item_locks.erase(pending.name + "@@@" + uid)
+	check(world._save_game(true) == OK, "the legacy held reward can be read from a real save")
+	var original_save: String = FileAccess.get_sha256(world.save_path())
+	world.source_item_save_blocked = true
+	check(not world.quest_item_provider.reconcile_held_arc_material(world) and slots(world,6241) == [5]
+		and world.item_instances.has(uid) and FileAccess.get_sha256(world.save_path()) == original_save,
+		"a rejected save boundary preserves both kinds of inventory and the saved file")
+	world.source_item_save_blocked = false
+	reload(world)
+	var merged_count: Array = slots(world,6241)
+	check(not world.inventory.has(pending.name) and not world.item_instances.has(uid) and merged_count == [5 + quantity],
+		"load folds the old quest item into the existing exact Arc stack: " + str(merged_count))
+	var ledger: Dictionary = world.consumable_service.export_state().get(MERGE.MERGES, {})
+	var retained: bool = false
+	for event: Dictionary in ledger.values():
+		for component: Dictionary in event.components:
+			if component.receipt.get("origin", {}).get("kind") == "quest_current523" and component.receipt.get("granted_quantity") == quantity:
+				retained = true
+	var claims: Array = world.quest_service.item_grants.get(quest_id, [])
+	check(retained and claims.size() == 1 and claims[0].reward_id == receipt.reward_id and claims[0].item_class_id == receipt.item_class_id
+		and claims[0].quantity == receipt.quantity and claims[0].bless_raw == receipt.bless_code_id and world.quest_service.claimed[quest_id],
+		"the same quest and exact reward quantity are retained in the existing claim ledger")
+	check(world._save_game(true) == OK, "the moved reward and its provenance persist atomically")
+	reload(world)
+	check(slots(world,6241) == [5 + quantity] and not world.quest_item_provider.reconcile_held_arc_material(world),
+		"the transferred reward survives a second load without being reissued")
+	evidence["old_arc_quest_stack"] = merged_count
+
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
@@ -414,7 +544,15 @@ func runtime() -> void:
 	world.field_population.set_process(false); world.player.set_physics_process(false); world.player.auto_enabled = false
 	world._clear_monsters(); world._clear_drops()
 	world.inventory = {}; world.item_instances = {}
-	check(world._save_game(true) == OK, "clean bag save")
+	var save_result: Error = world._save_game(true)
+	if not check(save_result == OK, "clean bag save: " + error_string(save_result)):
+		await _restore_fixture_save(world,save_file,had_save,saved_bytes)
+		return
+	shared_shop_materials(world)
+	old_arc_quest_reward(world)
+	if "--shared-material-sources-only" in OS.get_cmdline_user_args():
+		await _restore_fixture_save(world,save_file,had_save,saved_bytes)
+		return
 	# Old save shape: one receipted stack per grant (as the bag showed it).
 	for index: int in range(3):
 		if not grant(world, LEATHER, 2): break
@@ -546,12 +684,15 @@ func runtime() -> void:
 	evidence["final_slots"] = {"leather":slots(world,LEATHER),"potion":slots(world,POTION),"scroll":slots(world,SCROLL),"armor":slots(world,ARMOR),"halpas":slots(world,HALPAS)}
 	evidence["count_diff_final"] = diff(final_counts, counts(world))
 	check(diff(final_counts, counts(world)).is_empty() and world.patch523_owner_state_problem.is_empty(), "final reload keeps counts and ownership")
+	await _restore_fixture_save(world,save_file,had_save,saved_bytes)
+
+func _restore_fixture_save(world: Node, path: String, had_save: bool, bytes: PackedByteArray) -> void:
 	world.queue_free()
 	await process_frame
 	if had_save:
-		var restore := FileAccess.open(save_file, FileAccess.WRITE)
-		if restore != null: restore.store_buffer(saved_bytes); restore.close()
-	elif FileAccess.file_exists(save_file): DirAccess.remove_absolute(ProjectSettings.globalize_path(save_file))
+		var restore := FileAccess.open(path, FileAccess.WRITE)
+		if restore != null: restore.store_buffer(bytes); restore.close()
+	elif FileAccess.file_exists(path): DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 ## Exercise the actual World fold boundary even without a private pack.
 ## Only candidate proof is substituted; write/validate/commit are real.

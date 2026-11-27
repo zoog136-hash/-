@@ -108,6 +108,11 @@ static func is_legacy(world: Node, name_value: String) -> bool:
 	if name_value.begins_with("[원본") or name_value.begins_with("TWILIGHT · "): return false
 	if name_value in CURRENCY.CURRENCY_NAMES or CURRENCY.NAME_ALIASES.has(name_value) or CARD_PACKS.is_pack(name_value): return false
 	var record: Dictionary = world._find_catalog_item_record(name_value)
+	# The original shop binding already carries an exact ID. A display-name
+	# migration could choose another same-name ItemClass or delete the stock
+	# before the dedicated reconciliation can see it.
+	var source_id: String = str(record.get("sourceId", ""))
+	if record.get("source") == "inven" and record.get("slot") == "material" and source_id.is_valid_int() and int(source_id) in PATCH523_ITEMS.SHARED_SHOP_MATERIAL_IDS: return false
 	if str(record.get("slot", "")) == "currency": return false
 	if record.get("source_m_native_item", false) or str(record.get("source_snapshot", "")) == "patch523": return false
 	if not record.is_empty() and SOURCE523_IMAGES.handles_item(record): return false

@@ -4229,6 +4229,9 @@ func _merge_native_stacks() -> int:
 	var stock: Script=preload("res://scripts/loot/current523_native_stack.gd")
 	if stock.busy or source_ground_acquisitions.get("_busy")==true or not patch523_owner_state_problem.is_empty() or source_item_save_blocked: return 0
 	if quest_service==null or quest_service.save_blocked or consumable_service==null or warehouse==null or ground_loot==null: return 0
+	# The original shop's former plain material balances can also arrive from
+	# an old warehouse after the initial load. Normalize them before folding.
+	source_shop.reconcile_material_stacks()
 	# Only repeated receipted names can reach the expensive proof/grouping pass.
 	var merge: Script=preload("res://scripts/loot/native_stack_merge.gd")
 	var repeated: Dictionary=merge.possible_names(item_instances)
@@ -8903,6 +8906,7 @@ func _load_game(quiet: bool) -> void:
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
 	titles.reconcile_powder_stock()
+	quest_item_provider.reconcile_held_arc_material(self)
 	# _update_hud also folds an old save's separate receipted stacks of one
 	# item into one slot (_merge_native_stacks).
 	_update_hud()
