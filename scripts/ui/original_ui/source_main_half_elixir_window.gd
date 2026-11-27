@@ -26,10 +26,19 @@ func _runtime() -> Object:
 	var owner: Object=world()
 	return owner.get("half_elixir") if owner!=null else null
 
-func open(parent: Node, _item_name: String="") -> Dictionary:
+func open(parent: Node, item_name: String="") -> Dictionary:
 	var runtime: Object=_runtime()
 	if runtime==null:return _fail("source_half_elixir_runtime_unavailable")
 	runtime.source=runtime.source_for(runtime.state)
+	if not item_name.is_empty():
+		# A bag selection keeps the account's existing source and context.
+		if not _context_ready():return _fail("source_half_elixir_context_required")
+		var action: Dictionary=runtime.item_action(item_name)
+		if action.is_empty():return _fail("source_half_elixir_item_not_found")
+		var opened: Dictionary=open_window(parent)
+		if opened.get("handled",false):
+			_quote(runtime.request(action.action,action.id),item_name+" 1개를 사용합니다. 실제 소유권과 원본 레벨 조건을 다시 확인합니다.")
+		return opened
 	# No source recorded yet: link the bundled 523 definitions (no copy).
 	if runtime.source==null and str(runtime.state.get("source_sha256","")).is_empty() and runtime.has_method("link_bundled"):
 		runtime.link_bundled()

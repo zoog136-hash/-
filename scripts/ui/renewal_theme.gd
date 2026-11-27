@@ -15,6 +15,12 @@ const SLATE = Color("101114")
 const DEEP = Color("15130f")
 const RAISED = Color("24201a")
 const FONT = preload("res://assets/fonts/NotoSansKR.ttf")
+const PRIMARY = &"TwilightPrimaryButton"
+const CONFIRMATION_PANEL = &"TwilightConfirmationPanel"
+const CANCEL_BUTTON = &"TwilightCancelButton"
+const REFERENCE_ACTION = &"TwilightReferenceAction"
+const INSET_TYPES: Array[String] = ["Panel","PanelContainer","ItemList","ScrollContainer"]
+const INSET_MARGINS: Array[int] = [0,4,5,6,7,8]
 const GRADES = {"일반":Color("ddd6c5"),"고급":Color("79bf83"),"희귀":Color("73b4ee"),"영웅":Color("e97772"),"전설":Color("bc89e3"),"신화":Color("e5be60"),"유일":Color("66dfc2")}
 
 ## Original 523 grade color (Grade.ColorID -> ColorTable) when the 523 tables
@@ -51,10 +57,19 @@ static func screen_frame() -> StyleBoxFlat:
 	return MATERIAL.window_frame()
 
 static func primary_button(button: Button) -> void:
-	button.add_theme_stylebox_override("normal",MATERIAL.from_flat(box(Color("493822"),Color("b69a65"),7)))
-	button.add_theme_stylebox_override("hover",MATERIAL.from_flat(box(Color("5b4629"),GOLD,7)))
-	button.add_theme_stylebox_override("pressed",MATERIAL.from_flat(box(Color("302414"),GOLD,7),true))
-	button.add_theme_color_override("font_color",Color("f7e8c9"))
+	button.theme_type_variation = PRIMARY
+
+static func inset(margin: int) -> StyleBoxFlat:
+	return MATERIAL.from_flat(box(Color("101c28"),Color("354454"),margin),true)
+
+static func inset_variant(kind: String, margin: int) -> StringName:
+	return StringName("TwilightInset%s%d" % [kind,margin])
+
+static func set_inset_variant(theme: Theme, margin: int, style: StyleBox) -> void:
+	for kind: String in INSET_TYPES:
+		var variant: StringName = inset_variant(kind,margin)
+		theme.set_type_variation(variant,kind)
+		theme.set_stylebox("panel",variant,style)
 
 static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFlat:
 	var s := box(Color("29251e") if active else Color("0c0b09"), rim, 3)
@@ -118,6 +133,19 @@ static func make_theme() -> Theme:
 	readable.variation_opentype = {2003265652:550.0}
 	t.default_font = readable
 	t.default_font_size = 14
+	t.set_type_variation(PRIMARY,&"Button")
+	t.set_stylebox("normal",PRIMARY,MATERIAL.from_flat(box(Color("493822"),Color("b69a65"),7)))
+	t.set_stylebox("hover",PRIMARY,MATERIAL.from_flat(box(Color("5b4629"),GOLD,7)))
+	t.set_stylebox("pressed",PRIMARY,MATERIAL.from_flat(box(Color("302414"),GOLD,7),true))
+	t.set_color("font_color",PRIMARY,Color("f7e8c9"))
+	t.set_type_variation(CONFIRMATION_PANEL,&"PanelContainer")
+	t.set_stylebox("panel",CONFIRMATION_PANEL,chrome_panel(Color("211d17"),GOLD,18))
+	t.set_type_variation(CANCEL_BUTTON,&"Button")
+	t.set_type_variation(REFERENCE_ACTION,&"Button")
+	t.set_stylebox("normal",REFERENCE_ACTION,MATERIAL.from_flat(box(Color("243d56"),Color("536a7d"),7)))
+	t.set_stylebox("hover",REFERENCE_ACTION,MATERIAL.from_flat(box(Color("304c67"),Color("9aacae"),7)))
+	t.set_stylebox("pressed",REFERENCE_ACTION,MATERIAL.from_flat(box(Color("172b3f"),Color("8799a6"),7),true))
+	for margin: int in INSET_MARGINS: set_inset_variant(t,margin,inset(margin))
 
 	for type: String in ["Label","Button","CheckButton","LineEdit","OptionButton","ItemList","TextEdit"]:
 		t.set_color("font_color",type,TEXT)

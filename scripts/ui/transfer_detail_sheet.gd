@@ -24,11 +24,11 @@ func bind(owner_view: Node,is_warehouse: bool) -> void:
 	listing.add_theme_font_size_override("font_size",11)
 	listing.add_theme_constant_override("h_separation",5)
 	listing.add_theme_constant_override("v_separation",7)
-	listing.add_theme_stylebox_override("panel",Surfaces.inset(4))
+	Surfaces.apply_inset(listing,4)
 	var amount_row: HBoxContainer=view.quantity.get_parent()
 	var surface:=PanelContainer.new()
 	surface.name="TransferSelection"
-	surface.add_theme_stylebox_override("panel",Surfaces.inset(5))
+	Surfaces.apply_inset(surface,5)
 	view.add_child(surface);view.move_child(surface,listing.get_index()+1)
 	var row:=HBoxContainer.new();surface.add_child(row)
 	picture=TextureRect.new();picture.name="TransferSelectionPicture"
