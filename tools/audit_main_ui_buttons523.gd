@@ -113,7 +113,7 @@ func audit_navigation(hud: Node, controller: Node, world: Node) -> Dictionary:
 		"auto":["schedule"], "settings":["options"], "promo_code":["options"],
 		"tj_coupons":["tj_coupons"], "doll_explore":["doll_explore"], "forge523":["forge"],
 		"equipment523":[], "bless_refine523":["refine_window","_refine_window"], "combinations":[], "growth96":[],
-		"exchange":[], "sell":[], "field_activities523":[], "log":[], "class_select":[]
+		"exchange":["trade"], "sell":[], "field_activities523":[], "log":[], "class_select":[]
 	}
 	var results: Dictionary={}
 	for section: String in entries:

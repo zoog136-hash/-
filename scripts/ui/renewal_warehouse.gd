@@ -175,25 +175,33 @@ func _transfer() -> void:
 		hud.emit_signal("warehouse_transfer_requested",item,count,direction,id))
 
 func request_drop(reference: String) -> void:
-	var parts: PackedStringArray = reference.split("@@@")
-	var item: String = parts[0]
-	var id: String = parts[1] if parts.size() == 2 else ""
-	if not id.is_empty() and world._is_instance_equipped(id):
-		hud.show_message("장착을 해제한 뒤 보관하세요")
-		return
-	var count: int = _transfer_limit(item, id, true)
-	if count <= 0: return
-	hud.confirm_action("창고 보관",item+"\n보관할 수량을 선택하세요","보관",func(amount: int) -> void:
-		hud.warehouse_transfer_requested.emit(item,amount,"deposit",id),count)
+	_request_slot_transfer(reference,true)
 
 func request_withdraw(reference: String) -> void:
-	var parts: PackedStringArray = reference.split("@@@")
-	var item: String = parts[0]
-	var id: String = parts[1] if parts.size() == 2 else ""
-	var count: int = _transfer_limit(item, id, false)
+	_request_slot_transfer(reference,false)
+
+func _request_slot_transfer(reference: String, deposit: bool) -> void:
+	var item: String=reference.get_slice("@@@",0)
+	var id: String=reference.get_slice("@@@",1)
+	if deposit and not id.is_empty() and world._is_instance_equipped(id):
+		hud.show_message("장착을 해제한 뒤 보관하세요")
+		return
+	var count: int=_transfer_limit(item,id,deposit)
 	if count <= 0: return
-	hud.confirm_action("창고 찾기",item+"\n찾을 수량을 선택하세요","찾기",func(amount: int) -> void:
-		hud.warehouse_transfer_requested.emit(item,amount,"withdraw",id),count)
+	var direction: String="deposit" if deposit else "withdraw"
+	var transfer: Callable=func(amount: int) -> void:
+		hud.warehouse_transfer_requested.emit(item,amount,direction,id)
+	var controller: Variant=hud.get("original_main_ui_controller")
+	if is_instance_valid(controller) and controller.storage_window_is_open():
+		var instances: Dictionary=world.item_instances if deposit else world.warehouse.instances
+		var record: Dictionary=instances.get(id,{}).get("record",{})
+		if record.is_empty():record=world._find_catalog_item_record(item)
+		var identity=preload("res://scripts/ui/source523_item_identity.gd")
+		var original: Dictionary=controller.try_open_storage_transfer(identity.clean_message(item),int(record.get("source_item_class_id",0)),count,transfer,direction)
+		if original.get("handled",false):return
+	var action: String="보관" if deposit else "찾기"
+	var instructions: String="보관할 수량을 선택하세요" if deposit else "찾을 수량을 선택하세요"
+	hud.confirm_action("창고 "+action,item+"\n"+instructions,action,transfer,count)
 
 func _transfer_limit(item: String, id: String, deposit: bool) -> int:
 	var amounts: Dictionary = world.inventory if deposit else world.warehouse.stacks
