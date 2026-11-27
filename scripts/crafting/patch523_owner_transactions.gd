@@ -118,8 +118,9 @@ static func quest_ownership_provider() -> Script:
 	# field accessor (NATIVE_FIELDS.full) and service.full() row loading were
 	# added; proof() keeps the same checks. Re-reviewed 2026-11-26: prepare_debit
 	# reads the pinned quest row through the approved TWILIGHT 근사 test-item
-	# list (APPROX_TEST_ITEMS) only; every other check is unchanged.
-	return provider if reviewed_script(provider,"3857595d860a176b567186cf492433f8dc6271d9") else null
+	# list. The compact held format derives omitted fields from a matched
+	# quest row and rejects any conflicting fields that remain on the item.
+	return provider if reviewed_script(provider,"ba5bd437fe19d10d0f53ec8614a255741ecc55dd") else null
 
 static var _reviewed_cache: Dictionary={}
 

@@ -18,6 +18,10 @@ extends RefCounted
 
 const SELF := "res://scripts/resources/current523_bake_dependencies.gd"
 const MANIFEST := "res://scripts/resources/current523_bake_producers.gd"
+## This release metadata selects a previously verified bake archive. A
+## producer's output determines this pin, so hashing it as an input would
+## make every newly pinned archive immediately invalidate its own bakes.
+const STARTUP_PACK_PIN := "res://startup_bake_pin.json"
 const SCANNED_EXTENSIONS := ["gd","tscn","tres"]
 
 static var _globals: Dictionary = {}
@@ -53,7 +57,7 @@ static func globals() -> Dictionary:
 ## `scheme` is the path prefix literals must start with (synthetic tests use
 ## a user:// folder); `names` maps class/autoload words to paths.
 static func closure(roots: Array, ignore: Array = [], scheme: String = "res://", names: Variant = null) -> Dictionary:
-	var skip: Dictionary = {SELF: true, MANIFEST: true}
+	var skip: Dictionary = {SELF: true, MANIFEST: true, STARTUP_PACK_PIN: true}
 	for path: Variant in ignore: skip[str(path)] = true
 	var literal := RegEx.new()
 	literal.compile("[\"'](" + _escape(scheme) + "[^\"'\\n]*)[\"']")

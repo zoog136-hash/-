@@ -250,17 +250,74 @@ func resolve(reward: Dictionary) -> Dictionary:
 	var id: int = int(reward.get("RewardClassID",0))
 	# Newly connected source rows retain actual quest-owned stacks until the
 	# player selects use. Do not mass-convert grants or expand old save schemas.
-	if id not in REVIEWED_IDS:return {}
-	var definition: Dictionary = bound_definition(id)
+	var shared_material: bool = id in GRANTS.SHARED_SHOP_MATERIAL_IDS
+	if id not in REVIEWED_IDS and not shared_material:return {}
+	var definition: Dictionary = D.definition_id(str(id)) if shared_material else bound_definition(id)
 	if definition.is_empty() or definition.original_item!=reward.get("source_item",{}): return {}
 	var bless: int = int(reward.ItemBlessCodeID)
 	if bless not in [1,2,3] or definition.original_item.get("TestItem",true): return {}
-	if id==239 and bless!=1:return {}
+	if (id==239 or shared_material) and bless!=1:return {}
 	var record: Dictionary = D.variant_item(definition.native_record,bless)
 	if not D.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty(): return {}
-	_register(world,definition.native_record,bless)
+	if shared_material:
+		# The slot already has a registered physical supplier. An ordinary new
+		# quest grant should use its existing receipt and crafting material key.
+		if record.get("slot") != "material" or not GRANTS.quote_grant(world, {"item_class_id":id,"amount":reward.get("Amount"),"bless_raw":bless,"enchant":0}).get("ok", false): return {}
+	else:
+		_register(world,definition.native_record,bless)
 	if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {}
 	return {"record":record,"pack_sha256":str(D.pack_identity().get("sha256","")),"source_input_marker":D.pack_identity()}
+
+## The old quest provider stored this ordinary crafting material under a
+## pending-reward key. Transfer proved, untouched rewards to the same owner
+## as a new claim, keeping the quest and reward identity in the claim ledger.
+func reconcile_held_arc_material(world: Node) -> bool:
+	if not ready or world.quest_service.save_blocked or world.quest_auto.busy: return false
+	var inventory: Dictionary = {}
+	var instances: Dictionary = {}
+	var quest_state: Dictionary = {}
+	var grants: Array = []
+	var receipts: Array = []
+	for uid: String in world.item_instances:
+		var entry: Dictionary = world.item_instances[uid]
+		if not entry.has("quest_reward_receipt") or entry.get("record", {}).get("source_item_class_id") != 6241: continue
+		if entry.size() != 5 or not entry.has_all(["name","level","record","source_reward_quantity","quest_reward_receipt"]): continue
+		var owned: Dictionary = OWN.proof(world, uid)
+		if not owned.get("ok", false) or owned.source_use_immediately or owned.quantity != owned.original_quantity: continue
+		if world._item_locked(owned.inventory_key) or world._item_locked(owned.inventory_key, uid): continue
+		var existing: Array = world.quest_service.item_grants.get(owned.quest_id, [])
+		if existing.any(func(row: Dictionary) -> bool: return row.reward_id == owned.reward_id): continue
+		var binding: Dictionary = resolve({"RewardClassID":owned.item_class_id,"ItemBlessCodeID":owned.bless_code_id,
+			"Amount":owned.quantity,"source_item":owned.source_item})
+		if binding.is_empty() or world._item_locked(binding.record.name): continue
+		if grants.is_empty():
+			inventory = world.inventory.duplicate()
+			instances = world.item_instances.duplicate()
+			quest_state = world.quest_service.export_state()
+			if not quest_state.has("item_grants"): quest_state["item_grants"] = {}
+		var name: String = str(owned.inventory_key)
+		inventory[name] = int(inventory[name]) - int(owned.quantity)
+		if inventory[name] == 0: inventory.erase(name)
+		instances.erase(uid)
+		var receipt: Dictionary = {"schema":1,"reward_id":owned.reward_id,"item_class_id":owned.item_class_id,
+			"quantity":owned.original_quantity,"bless_raw":owned.bless_code_id,"inventory_key":str(binding.record.name),"pack_sha256":binding.pack_sha256}
+		if not quest_state.item_grants.has(owned.quest_id): quest_state.item_grants[owned.quest_id] = []
+		quest_state.item_grants[owned.quest_id].append(receipt)
+		receipts.append(receipt.merged({"quest_id":owned.quest_id}))
+		grants.append({"item_class_id":owned.item_class_id,"amount":owned.quantity,"bless_raw":owned.bless_code_id,"enchant":0})
+	if grants.is_empty(): return false
+	var supplied: Dictionary = stage(world, {"inventory":inventory,"item_instances":instances,"gold":world.gold}, grants, receipts)
+	if not supplied.get("ok", false): return false
+	var staged: Dictionary = supplied.overrides
+	staged["quest_state"] = quest_state
+	# Adopt the entire candidate only after the save boundary has accepted it.
+	# The ordinary load-time stack fold and deferred save persist it together.
+	if world._save_game(true, staged, {}, true) != OK: return false
+	world.inventory = staged.inventory
+	world.item_instances = staged.item_instances
+	world.quest_service.item_grants = quest_state.item_grants
+	world._request_deferred_save()
+	return true
 
 func handles(record: Dictionary) -> bool:
 	return ready and record.get("source_m_native_item",false) and _definition_ids.has(int(record.get("source_item_class_id",0)))
@@ -271,7 +328,8 @@ func retains_issued_reference(world: Node, item_key: String) -> bool:
 	for quest_id: String in world.quest_service.item_grants:
 		if world.quest_service.claimed.get(quest_id)!=true:continue
 		for receipt: Dictionary in world.quest_service.item_grants[quest_id]:
-			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256") in [PIN,ORIGINAL.SOURCE_SHA] and REVIEWED_IDS.has(int(receipt.item_class_id)):return true
+			var id: int = int(receipt.item_class_id)
+			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256") in [PIN,ORIGINAL.SOURCE_SHA] and (id in REVIEWED_IDS or id in GRANTS.SHARED_SHOP_MATERIAL_IDS):return true
 	return false
 
 func try_use_inventory(world: Node, item_key: String) -> bool:
@@ -351,8 +409,11 @@ func try_use_held(world: Node, id: String) -> bool:
 	var original_owned: Dictionary=OWN.proof(world,id)
 	if original_owned.get("ok",false) and not original_owned.get("source_use_immediately",true):
 		var original_definition: Dictionary=D.definition_id(str(int(original_owned.item_class_id)))
+		var native_record: Dictionary=D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))
+		if preload("res://scripts/crafting/patch523_enhance_source_book.gd").declares_scroll(native_record):
+			return world._open_owned_native_enhancement(str(original_owned.inventory_key),id,native_record)
 		var native_ammo: Script=load("res://scripts/loot/current523_native_stack.gd")
-		if native_ammo.call("native_ammo",D.variant_item(original_definition.get("native_record",{}),int(original_owned.bless_code_id))):
+		if native_ammo.call("native_ammo",native_record):
 			var equipped: Dictionary=native_ammo.call("equip_ammo",world,str(original_owned.inventory_key),id)
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
@@ -367,7 +428,11 @@ func try_use_held(world: Node, id: String) -> bool:
 			if used.get("requires_original_selection",false) and world.consumable_service.open_owned_original_selection(str(original_owned.get("inventory_key","")),used):return true
 			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
 			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
-				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)
+				world.quest_auto.refresh_context(world)
+				world.hud.refresh_inventory(world.inventory)
+				# The original bag resolves actions from the physical item snapshot.
+				# Publish it now so a nested reward can be used on the next tap.
+				world._update_hud()
 			return used.get("handled",false)
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false

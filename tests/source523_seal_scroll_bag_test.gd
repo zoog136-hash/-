@@ -36,6 +36,7 @@ func _exercise() -> void:
 		return
 	world.player.set_physics_process(false)
 	world.field_population.set_process(false)
+	await process_frame
 	world._clear_monsters()
 	world._clear_drops()
 	world.gold = 100000
@@ -60,7 +61,11 @@ func _exercise() -> void:
 	world.hud.lineage_inventory_ui._activate_selected()
 	await process_frame
 	var picker: Node=world.hud.workspace.find_child("Patch523EquipmentInfo",true,false)
-	check(picker!=null and picker.bag_scroll_uid==uid and picker.bag_scroll_id==str(SCROLL_ID),"bag activation opens the seal screen with the exact physical scroll reference")
+	if OS.get_environment("TWILIGHT_SOURCE_UI_SHA256").is_empty():
+		check(picker!=null and picker.bag_scroll_uid==uid and picker.bag_scroll_id==str(SCROLL_ID),"without the original UI the existing seal screen keeps the exact physical scroll reference")
+	else:
+		var window: RefCounted=world.hud._original_enchant_window()
+		check(window!=null and window._scroll_row.get("instance_id")==uid and picker==null,"only-seal inventory opens the original enhancement window with the exact scroll")
 	check(world.item_instances[uid]==before and int(world.inventory[scroll_name])==9,"opening the screen preserves the receipt and stack")
 	check(not world.patch523_seal_quote(seal_id,str(SCROLL_ID)).get("ok",true),"plain execution cannot debit a physical balance by name")
 	var quote: Dictionary=world.patch523_seal_quote(seal_id,str(SCROLL_ID),uid)

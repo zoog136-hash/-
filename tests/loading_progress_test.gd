@@ -40,6 +40,12 @@ func _initialize() -> void:
 	check(model.begin_task("scene_change") and model.complete_task("scene_change") and model.snapshot().percent == 80, "scene change remains incomplete readiness")
 	check(model.begin_task("scene_ready", "선택 캐릭터와 월드 준비 중"), "readiness can start after handoff")
 	check(model.snapshot().percent < 100 and not model.snapshot().ready, "waiting for deferred world setup cannot display 100")
+	check(model.observe_scene_work(0,4,"원본 아이템과 스킬") and model.snapshot().percent == 80, "start status contains no completed work")
+	check(model.observe_scene_work(1,4,"상점과 장비 규칙") and model.snapshot().percent == 85, "finished world work advances the readiness fraction")
+	check(not model.observe_scene_work(0,4,"stale") and not model.observe_scene_work(2,3,"wrong work plan"), "world progress rejects stale counts and denominator changes")
+	check(not model.observe_scene_work(1,4,"상점과 장비 규칙"), "render polling does not advance world work")
+	check(model.observe_scene_work(3,4,"저장과 지도") and model.snapshot().percent == 95 and not model.snapshot().ready, "only the scene's final readiness can finish the last world step")
+	check(not model.observe_scene_work(4,4,"not ready"), "intermediate progress cannot mark the scene ready")
 	check(model.complete_task("scene_ready") and model.snapshot().percent == 100 and model.snapshot().ready, "100 only after explicit successful readiness")
 	var no_steps: Array[Dictionary] = []
 	model.configure(no_steps)

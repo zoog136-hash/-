@@ -1604,6 +1604,11 @@ func try_open_smelt_window(offer:Dictionary)->Dictionary:
 	_cancel_native_buttons()
 	return _enchant_window.open_smelt(_coordinates,offer)
 
+func try_open_element_management_window(offer: Dictionary) -> Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	return _enchant_window.open_element_management(_coordinates,offer)
+
 func enchant_window() -> RefCounted:
 	return _enchant_window
 

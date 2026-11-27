@@ -124,7 +124,6 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
 	for name: String in ["sort","items","materials"]:_scrolls[name]=ListScroll.new()
-	(_scrolls.items as ListScroll).on_move=Callable(self,"_sync_item_rows")
 	return {"ok":true,"configured":true}
 
 func is_open() -> bool:
@@ -137,6 +136,7 @@ func open(parent: Node, world: Node) -> Dictionary:
 	_count=1
 	if SOURCE_TABS.has(_tab):_source_ids=source_tab_ids(world,_tab)
 	for scroll: ListScroll in _scrolls.values():scroll.y=0.0
+	(_scrolls.items as ListScroll).on_move=Callable(self,"_sync_item_rows")
 	return _stage()
 
 ## After a craft (or any inventory change) with the same selection.
@@ -151,6 +151,20 @@ func refresh() -> Dictionary:
 func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null
+	# Row reuse applies while its tree is live. Reopening needs fresh rows
+	# after the previous scene has been freed.
+	_fill_rows.clear()
+	_item_rows.clear()
+	_reusable.clear()
+	_reuse_except.clear()
+	_reuse_by_state=false
+	_item_content=null
+	_last_out.clear()
+	for scroll: ListScroll in _scrolls.values():
+		scroll.content=null
+		scroll.drag=false
+		scroll.moved=0.0
+		scroll.on_move=Callable()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -691,7 +705,7 @@ func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: 
 	# All replacement rows are ready. Remove stale rows only from this live
 	# list, not the previous window that the full rebuild owns.
 	for index: int in previous:
-		var old: Node2D=previous[index]
+		var old: Variant=previous[index]
 		if is_instance_valid(old) and old.get_parent()==content and old!=kept_rows.get(index):
 			content.remove_child(old)
 			old.queue_free()

@@ -71,6 +71,9 @@ var _line_scenes: Dictionary={}
 var _line_slot_set: int=SLOT_SET
 var _line_offsets: Array[int]=[]
 var _line_variant: String="Nd_Slot"
+var _opening_line_tree: SceneTree
+var _opening_line_model: Dictionary={}
+var _opening_line_inputs: Array=[]
 ## Lines built beyond each edge of the view, and freed past KEEP_LINES.
 const BUILD_LINES: int=2
 # One complete extra row still covers partially visible slot art on a cold
@@ -129,6 +132,7 @@ func is_open() -> bool:
 	return _parked_until==0 and is_instance_valid(_scene) and not _scene.is_queued_for_deletion() and _scene.is_inside_tree()
 
 func close(keep_warm: bool=true) -> void:
+	_stop_opening_lines()
 	close_search()
 	if _chrome!=null:_chrome.close_sort()
 	if not keep_warm: invalidate_cache(); return
@@ -149,6 +153,7 @@ func invalidate_parked_cache() -> void:
 	if _parked_until!=0:invalidate_cache()
 
 func invalidate_cache() -> void:
+	_stop_opening_lines()
 	var previous: Node2D=_scene
 	_parked_until=0
 	_scene=null
@@ -202,7 +207,8 @@ func _try_reopen(parent: Node) -> Dictionary:
 	if not model.is_empty() and _patch_current_rows(model)<0:return {}
 	# Match fresh-open scroll behavior; scrolling while closed is impossible.
 	_scroll_content.position.y=_scroll_top
-	if not _sync_lines(model).get("ok",false):return {}
+	var lines: Dictionary=_sync_lines(model,{},COLD_OPEN_BUILD_LINES,0)
+	if not lines.get("ok",false):return {}
 	# An armed use label may have expired while the panel was hidden.
 	for reference: String in _hits:
 		if not _slots.refresh_action(_hits[reference].native_slot_scene,reference).get("ok",false):return {}
@@ -212,6 +218,7 @@ func _try_reopen(parent: Node) -> Dictionary:
 	_bound_inputs=_owner_inputs()
 	_sync_detail_control()
 	stats.reopens+=1
+	if lines.get("pending",false):_start_opening_lines(model)
 	var shown: Dictionary=_open_result()
 	shown["reused_scene"]=true
 	native_scene_changed.emit(shown.duplicate(true))
@@ -418,6 +425,7 @@ func _stage(parent: Node, initial_open: bool) -> Dictionary:
 	return result
 
 func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
+	_stop_opening_lines()
 	_refreshing=true
 	var phase: int=FRAME_HITCH.now()
 	var model: Dictionary=_eligible_model()
@@ -548,10 +556,10 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 	_authored_assignments=assignments
 	_bind_scroll(inventory_scene,slot_set,extra_rows.size())
 	if kept_scroll!=null and is_instance_valid(_scroll_content):_scroll_content.position.y=clampf(float(kept_scroll),_scroll_bottom,_scroll_top)
-	# Rows below the authored one are built only while in (or near) view;
-	# scrolling builds the rows that come in (_sync_lines).
+	# Present the authored row on the opening input frame. Further visible
+	# rows are mounted on successive frames using the same source bindings.
 	phase=FRAME_HITCH.detail_next("ui.inventory_bind_slots",phase)
-	var lined: Dictionary=_sync_lines(model,previous_hits,COLD_OPEN_BUILD_LINES if initial_open else BUILD_LINES)
+	var lined: Dictionary=_sync_lines(model,previous_hits,COLD_OPEN_BUILD_LINES if initial_open else BUILD_LINES,0 if initial_open else -1)
 	FRAME_HITCH.detail("ui.inventory_visible_lines",phase)
 	if not lined.get("ok",false):
 		_refreshing=false
@@ -565,6 +573,7 @@ func _stage_impl(parent: Node, initial_open: bool) -> Dictionary:
 		previous.hide()
 		previous.queue_free()
 	_refreshing=false
+	if lined.get("pending",false):_start_opening_lines(model)
 	var shown: Dictionary=_open_result()
 	native_scene_changed.emit(shown.duplicate(true))
 	return shown
@@ -695,6 +704,7 @@ func _forward_scroll_input(event: InputEvent) -> void:
 	if scale_y>0.0 and not (event is InputEventMouseButton):delta/=scale_y
 	_scroll_moved+=absf(delta)
 	_scroll_content.position.y=clampf(_scroll_content.position.y+delta,_scroll_bottom,_scroll_top)
+	_stop_opening_lines()
 	var lined: Dictionary=_sync_lines()
 	if not lined.get("ok",false):_fallback(_unsupported_result(lined))
 
@@ -708,6 +718,7 @@ func scroll_by(screen_delta_y: float) -> Dictionary:
 	if scale_y>0.0:delta/=scale_y
 	_scroll_moved+=absf(delta)
 	_scroll_content.position.y=clampf(_scroll_content.position.y+delta,_scroll_bottom,_scroll_top)
+	_stop_opening_lines()
 	var lined: Dictionary=_sync_lines()
 	if not lined.get("ok",false):
 		_fallback(_unsupported_result(lined))
@@ -761,10 +772,47 @@ func _view_height() -> float:
 	_scroll_view_height=float(size[1]) if size.size()>1 else 0.0
 	return _scroll_view_height
 
+func _start_opening_lines(model: Dictionary) -> void:
+	_opening_line_model=model
+	_opening_line_inputs=_owner_inputs()
+	_opening_line_tree=_scene.get_tree()
+	_opening_line_tree.process_frame.connect(_build_opening_line)
+
+func _stop_opening_lines() -> void:
+	if is_instance_valid(_opening_line_tree) and _opening_line_tree.process_frame.is_connected(_build_opening_line):
+		_opening_line_tree.process_frame.disconnect(_build_opening_line)
+	_opening_line_tree=null
+	_opening_line_model={}
+	_opening_line_inputs=[]
+
+func _build_opening_line() -> void:
+	if not is_open():
+		_stop_opening_lines()
+		return
+	if _source_asset_key()!=_bound_asset_key:
+		refresh()
+		return
+	var inputs: Array=_owner_inputs()
+	if _opening_line_model.is_empty() or inputs.is_empty() or inputs!=_opening_line_inputs:
+		var model: Dictionary=_eligible_model()
+		if not model.get("ok",false):
+			_fallback(model)
+			return
+		if _layout_key(model)!=_layout:
+			refresh()
+			return
+		_opening_line_model=model
+		_opening_line_inputs=inputs
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=_sync_lines(_opening_line_model,{},COLD_OPEN_BUILD_LINES,1)
+	FRAME_HITCH.detail("ui.inventory_open_line",started)
+	if not result.get("ok",false):_fallback(_unsupported_result(result))
+	elif not result.get("pending",false):_stop_opening_lines()
+
 ## Builds the lines that came near the view and frees those far from it.
 ## `model` (optional) is the owner snapshot to build from; `reuse` maps
 ## reference -> previous hit whose icon scene may be adopted.
-func _sync_lines(model: Dictionary={}, reuse: Dictionary={}, build_margin: int=BUILD_LINES) -> Dictionary:
+func _sync_lines(model: Dictionary={}, reuse: Dictionary={}, build_margin: int=BUILD_LINES, build_limit: int=-1) -> Dictionary:
 	if not is_instance_valid(_inventory_scene):return {"ok":true}
 	var keep: Vector2i=line_range(KEEP_LINES)
 	for line: Variant in _line_scenes.keys():
@@ -778,15 +826,21 @@ func _sync_lines(model: Dictionary={}, reuse: Dictionary={}, build_margin: int=B
 			old.queue_free()
 		stats.lines_freed+=1
 	var wanted: Vector2i=line_range(build_margin)
+	var mounted: int=0
+	var pending: bool=false
 	for line: int in range(wanted.x,wanted.y+1):
 		if _line_scenes.has(line):continue
+		if build_limit>=0 and mounted>=build_limit:
+			pending=true
+			break
 		if model.is_empty():
 			model=_eligible_model()
 			if not model.get("ok",false):return model
 		var built: Dictionary=_build_line(line,model,reuse)
 		if not built.get("ok",false):return built
+		mounted+=1
 	_sync_detail_control()
-	return {"ok":true}
+	return {"ok":true,"pending":pending}
 
 func _build_line(line: int, model: Dictionary, reuse: Dictionary) -> Dictionary:
 	var assignments: Dictionary=_lines[line-1]

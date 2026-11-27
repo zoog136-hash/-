@@ -376,12 +376,14 @@ static func _describe(item_id: int, include_descriptions: bool, include_market: 
 			"reference_only":true,"can_execute":false,"ownership_authorized":false}
 	# Preserve the declared description domains instead of looking up a same-ID
 	# item, UI token or translated label in another table.
-	for field: String in ["DescID","IdentifiedDescID","StoryDescID","UseDescID","ProductTitleDescID","ProductDescID"]:
-		var id: int = int(item.get(field,0))
-		if id==0: continue
-		# DescData_Korean and DescID are explicitly lower priority. Retain exact
-		# references without pulling their large text tables into ordinary quotes.
-		result.descriptions[field] = {"id":id,"deferred":not include_descriptions}
-		if include_descriptions: result.descriptions[field]["row"] = _missing(blockers,"DescData_Korean",id)
+	# Only the public graph publishes description references. Native templates
+	# read the needed labels from the verified rows when projecting a record.
+	if include_market:
+		for field: String in ["DescID","IdentifiedDescID","StoryDescID","UseDescID","ProductTitleDescID","ProductDescID"]:
+			var id: int = int(item.get(field,0))
+			if id==0: continue
+			# DescData_Korean and DescID are explicitly lower priority.
+			result.descriptions[field] = {"id":id,"deferred":not include_descriptions}
+			if include_descriptions: result.descriptions[field]["row"] = _missing(blockers,"DescData_Korean",id)
 	result.ok = blockers.is_empty()
 	return result

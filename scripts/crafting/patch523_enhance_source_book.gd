@@ -37,6 +37,29 @@ static func declares_scroll(record: Dictionary) -> bool:
 		if kind==2022 or (kind==8352 and int(b.get("BonusApplicationTypeID",0))==202 and int(b.get("BonusApplicationTargetID",0))==bless):return true
 	return false
 
+## The ordinary elemental scrolls carry group 21 plus one element. Scrolls
+## carrying ScrollElementalSmith use the separate refinement transaction.
+static func scroll_element(record: Dictionary) -> String:
+	if NATIVE_FIELDS.field(record,"source_category_name")!="ScrollElementalEnchant":return ""
+	var definition: Dictionary=checked_native(record)
+	var element: String=""
+	var group: bool=false
+	for entry: Dictionary in definition.get("item_bonus",[]):
+		var bonus: Dictionary=entry.get("bonus",{})
+		var type: int=int(bonus.get("BonusTypeID",0))
+		if type==8232:return ""
+		if type not in [441,2022]:continue
+		if entry.get("IsPossession")!=false or bonus.get("BonusApplicationTypeID")!=0 or bonus.get("BonusApplicationTargetID")!=0:return ""
+		if type==2022:
+			if group or bonus.get("Value")!=21:return ""
+			group=true
+		else:
+			if not element.is_empty():return ""
+			var source_type: String=str(SOURCE.row("ElementalType",int(bonus.get("Value",0))).get("Name",""))
+			element=str({"Fire":"fire","Water":"water","Air":"wind","Earth":"earth"}.get(source_type,""))
+			if element.is_empty():return ""
+	return element if group else ""
+
 func bind(detached_target: Dictionary, exact_target_id: String, detached_scroll: Dictionary, exact_scroll_id: String, compiled_book: Object, registered_legacy: Dictionary={}) -> bool:
 	var identity: Dictionary=SOURCE.identity()
 	if identity.is_empty():return false

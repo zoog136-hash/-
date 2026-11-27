@@ -21,7 +21,7 @@ const ICON_STATUS := preload("res://scripts/ui/item_icon_resource_status.gd")
 ## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
 ## Fx_Loop). The loading background stays a plain colour: no original 523
 ## loading backdrop exists (user decision 2026-11-17).
-const FX_LOADING := "UI/CommonUi/Fx_Loading.csb"
+const FX_LOADING := UI_PACK.LOADING_FX_MEMBER
 const FX_LOADING_CLIP := "Fx_Loop"
 ## Fx_Loading's authored design area (its Bg ImageView is 1600x675).
 const FX_LOADING_DESIGN := Vector2(1600, 675)
@@ -248,6 +248,8 @@ func _render(detail: String = "") -> void:
 	_bar.value = value.percent
 	_status.text = value.status
 	_count.text = "완료 작업 %d/%d · 작업 수 기준" % [value.completed, value.total]
+	if int(value.scene_total) > 0:
+		_count.text += " · 월드 준비 %d/%d" % [value.scene_completed, value.scene_total]
 	if not detail.is_empty(): _stage.text = detail
 	progress_changed.emit(value)
 
@@ -350,8 +352,8 @@ func _boot() -> void:
 	_progress.complete_task("scene_change")
 	_progress.begin_task("scene_ready", "지도와 선택 캐릭터를 준비하는 중…")
 	_render("저장 위치와 지도 복원이 끝나기를 기다리는 중…")
-	# scene_changed guarantees _ready, but World also queues source-map restore.
-	# The explicit contract below is set after those deferred calls.
+	# Scene instantiation and World readiness are separate milestones. The
+	# game stays paused through initialization and selected-save restoration.
 	var target: Node = get_tree().current_scene
 	var readiness_started: int = Time.get_ticks_msec()
 	while is_instance_valid(target):
@@ -360,6 +362,10 @@ func _boot() -> void:
 			_fail("게임 준비를 완료하지 못했습니다: " + str(readiness.get("reason", "원본 팩 또는 저장 파일 확인 필요")))
 			return
 		if readiness.get("ready", false): break
+		var world_work: Variant = readiness.get("world_work")
+		if world_work is Dictionary and _progress.observe_scene_work(int(world_work.completed), int(world_work.total), str(world_work.status)):
+			readiness_started = Time.get_ticks_msec()
+			_render("완료한 월드 준비 단계만 반영합니다.")
 		if Time.get_ticks_msec() - readiness_started >= readiness_timeout_msec:
 			_fail("준비 완료 응답을 확인하지 못했습니다. 오류 화면을 확인하거나 다시 시도하세요.")
 			return
@@ -454,18 +460,11 @@ func _attach_original_loading_fx() -> void:
 	if not UI_PACK.baked(sha):
 		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_baked"}
 		return
-	var selected: Dictionary = UI_SELECTION.selected_pack()
-	if not selected.get("ok", false) or not selected.get("selected", false):
-		fx_loading_status = {"ok": false, "reason": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
-		return
-	var pack: RefCounted = selected.pack
-	if not pack.manifest.get("scenes", {}).has(FX_LOADING):
-		fx_loading_status = {"ok": false, "reason": "fx_loading_missing_in_pack"}
-		return
-	# The scene's two Text nodes hold the client's placeholder copy (문구 테스트
-	# / another-device notice); the loading text is this screen's own labels,
-	# so they stay hidden. The dim Bg keeps its original touch-consuming role.
-	var built: Dictionary = NAMED_TREE.new(pack).scene_of(FX_LOADING, {"Text": {"visible": false}, "Text_Sub": {"visible": false}}, {})
+	var built: Dictionary = _build_original_loading_fx(UI_SELECTION.selected_pack(true))
+	var scoped: bool = built.get("ok", false)
+	if not scoped:
+		# Older packs can author the indicator with different dependencies.
+		built = _build_original_loading_fx(UI_SELECTION.selected_pack())
 	if not built.get("ok", false):
 		fx_loading_status = {"ok": false, "reason": str(built.get("error", "fx_loading_configure_failed")), "details": built.get("details", [])}
 		return
@@ -479,8 +478,18 @@ func _attach_original_loading_fx() -> void:
 	_fx_loading = holder
 	_layout_original_loading_fx()
 	if not resized.is_connected(_layout_original_loading_fx): resized.connect(_layout_original_loading_fx)
-	fx_loading_status = {"ok": true, "member": FX_LOADING, "clip": FX_LOADING_CLIP, "playing": played.get("ok", false)}
+	fx_loading_status = {"ok": true, "member": FX_LOADING, "clip": FX_LOADING_CLIP, "playing": played.get("ok", false), "scoped": scoped}
 	BOOT_LOG.mark("original_fx_loading", fx_loading_status)
+
+func _build_original_loading_fx(selected: Dictionary) -> Dictionary:
+	if not selected.get("ok", false) or not selected.get("selected", false):
+		return {"ok": false, "error": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
+	var pack: RefCounted = selected.pack
+	if not pack.manifest.get("scenes", {}).has(FX_LOADING):
+		return {"ok": false, "error": "fx_loading_missing_in_pack"}
+	# The authored Text nodes contain placeholder notices. Loading uses the
+	# status labels above; the original Bg retains its input behavior.
+	return NAMED_TREE.new(pack).scene_of(FX_LOADING, {"Text": {"visible": false}, "Text_Sub": {"visible": false}}, {})
 
 ## Centre of the screen, scaled so the authored 1600x675 area fits.
 func _layout_original_loading_fx() -> void:

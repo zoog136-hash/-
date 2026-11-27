@@ -817,6 +817,8 @@ func _packed_records() -> void:
 func _stream_and_runtime_units() -> void:
 	# Plain values: the streamed round trip is unchanged (bytes, hash, parse).
 	var value: Dictionary = {"b": [1, 2.5, "x", null, true, {"z": [], "a": {}}], "a": {"k": {"deep": [1, [2, [3]]]}, "": 0}, "한글": "값", "empty": {}, "list": []}
+	value["scalar_edges"] = {"zero": 0, "negative": -13, "no": false, "nil": null, "exact": 9007199254740991,
+		"large": 9223372036854775807, "quoted\\key": "줄\n바꿈", "float": -0.0}
 	for depth: int in [0, 1, 2, 3, 5]:
 		var new_hash := HashingContext.new(); new_hash.start(HashingContext.HASH_SHA256)
 		var old_hash := HashingContext.new(); old_hash.start(HashingContext.HASH_SHA256)

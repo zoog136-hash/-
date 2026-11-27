@@ -266,8 +266,19 @@ static func record(definition: Dictionary) -> Dictionary:
 		if row.bonus_type.Name=="CannotExtendDeleteTime" and direct(row) and row.unit.Name=="TrueFalse" and whole(row.bonus.get("Value"))==1:out["source_cannot_extend_delete_time"]=true
 	out["source_condition_pending"]=pending_conditions
 	var handled: Dictionary={};var applied: Array=[];var unknown: Array=[]
+	var has_mana: bool=false
+	var has_buff: bool=false
+	var has_card: bool=false
+	var has_bag: bool=false
+	var has_selection: bool=false
 	for index: int in range(rows.size()):
 		var row: Dictionary=rows[index];var name_value: String=str(row.get("bonus_type",{}).get("Name",""));var unit: String=str(row.get("unit",{}).get("Name",""));var amount: Variant=row.get("bonus",{}).get("Value")
+		match name_value:
+			"BuffClassID": has_buff=true
+			"BuffCardID": has_card=true
+			"LuckyBagClassID": has_bag=true
+			"SelectRewardClassID": has_selection=true
+			"MPRestoration", "MPRestorationDiceNumber", "MPRestorationDiceSpotCount": has_mana=true
 		if equipment and name_value in STATUS_BONUS and unit=="Percentage":
 			var status: Dictionary=status_field(row)
 			if not status.is_empty():
@@ -324,7 +335,7 @@ static func record(definition: Dictionary) -> Dictionary:
 		hp["kind"]="source_hp_dice";hp["routing_policy"]="heal_is_base_or_positive_indicator_not_expected_value";out["heal_spec"]=hp;out["heal"]=maxi(1,int(hp.get("HPRestoration",0)))
 		for index: int in range(rows.size()):
 			if rows[index].bonus_type.Name in HP and direct(rows[index]) and rows[index].unit.Name=="Value":handled[index]=true
-	var mp: Dictionary=formula(rows,MP)
+	var mp: Dictionary=formula(rows,MP) if has_mana else {}
 	if not mp.is_empty():
 		var full_reuse: int=documented_mana_reuse(raw,category,rows,mp)
 		var spec: Dictionary=consume_metadata(rows,raw,category)
@@ -337,30 +348,30 @@ static func record(definition: Dictionary) -> Dictionary:
 		spec["activation_status"]="unrestricted" if spec.blocked_reasons.is_empty() else "blocked";out["source_use_spec"]=spec
 		if spec.blocked_reasons.is_empty():
 			for index: int in range(rows.size()):handled[index]=true
-	var timed: Dictionary=timed_buff(definition)
+	var timed: Dictionary=timed_buff(definition) if has_buff else {}
 	if not timed.is_empty():
 		out["source_use_spec"]=timed
 		if timed.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bag: Dictionary=reward_bag(definition,false)
+	var bag: Dictionary=reward_bag(definition,false) if has_bag else {}
 	if bag.is_empty() and category.get("Name") == "LuckyBag":
 		bag = described_event_box(definition)
 	if not bag.is_empty():
 		out["source_use_spec"]=bag
 		if bag.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var skill_book: Dictionary=source_skill_book(definition)
+	var skill_book: Dictionary=source_skill_book(definition) if has_card else {}
 	if not skill_book.is_empty():
 		out["source_use_spec"]=skill_book
 		if skill_book.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var selection: Dictionary=selectable_reward(definition)
+	var selection: Dictionary=selectable_reward(definition) if has_selection else {}
 	if selection.is_empty() and category.get("Name")=="ComplexReward":selection=complex_selectable_reward(definition)
 	if not selection.is_empty():
 		out["source_use_spec"]=selection
 		if selection.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var fixed_card: Dictionary=source_fixed_card(definition)
+	var fixed_card: Dictionary=source_fixed_card(definition) if has_card else {}
 	if not fixed_card.is_empty():
 		out["source_use_spec"]=fixed_card
 		if fixed_card.get("activation_status")=="unrestricted":
@@ -370,11 +381,12 @@ static func record(definition: Dictionary) -> Dictionary:
 		out["source_use_spec"]=bless_scroll
 		if bless_scroll.get("activation_status")=="unrestricted":
 			for index: int in range(rows.size()):handled[index]=true
-	var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
-	if not bless_points.is_empty():
-		out["source_use_spec"]=bless_points
-		if bless_points.get("activation_status")=="unrestricted":
-			for index: int in range(rows.size()):handled[index]=true
+	if category.get("Name")=="IntangibleItemRecharger":
+		var bless_points: Dictionary=source_bless_points(definition,label(raw.get("StoryDescID"))+"\n"+label(raw.get("DescID")))
+		if not bless_points.is_empty():
+			out["source_use_spec"]=bless_points
+			if bless_points.get("activation_status")=="unrestricted":
+				for index: int in range(rows.size()):handled[index]=true
 	var horn: Dictionary=source_clan_horn(definition)
 	if not horn.is_empty():
 		out["source_use_spec"]=horn
