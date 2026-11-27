@@ -429,36 +429,55 @@ func _real_main() -> void:
 	check(int(world.inventory.get(scroll,0))==scrolls_before-1,"the touch rolls at once (one scroll used)")
 	evidence["single"]={"level":[level_before,int(world.item_instances.get("90001",{}).get("level",-1))],"played":window._presentation.get("played",[])}
 	check(window.is_presenting() and hud.is_enhancement_presenting(),"the result plays in the window")
-	check((window._presentation.get("played",[]) as Array).has("Fx_Enchant_Start") and (window._presentation.get("played",[]) as Array).size()==2,"Fx_Enchant_Start and the Enchant_Popup_Message clip play")
-	check(not is_instance_valid(hud.enhancement_reveal) and hud.find_child("EnhancementRevealLayer",true,false)==null,"no TWILIGHT result layer over the window")
-	await _frames(14)
-	var banner: Rect2=_banner_rect(window)
-	var under: Array=[]
-	var dev: Array=[]
-	for entry: Array in _window_texts(window):
-		if str(entry[0]).contains("원본#") or str(entry[0]).contains("@@@"):dev.append(entry[0])
-		if not bool(entry[2]) and not str(entry[0]).strip_edges().is_empty() and banner.has_point(entry[1]):under.append(entry[0])
-	evidence["banner"]=str(banner)
-	check(banner.size.x>0.0 and under.is_empty(),"no window text is visible under the result banner: "+str(under))
-	check(dev.is_empty(),"no developer item key in the window: "+str(dev))
-	await _frames(30)
-	for i: int in range(240):
-		if window._presentation.get("held",false):break
-		await process_frame
-	check(window.is_presenting() and window._presentation.get("held",false),"the original result stays legible after the animation")
-	await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
-	await _frames(3)
-	check(not window.is_presenting(),"acknowledgement dismisses the saved result")
-	var tab: Dictionary=NamedTree.locate(window._scene,window._last_out,WINDOW.P_TAB)
-	check(tab.get("ok",false) and (tab.player.source_nodes.get(tab.offset) as CanvasItem).visible,"the tab row is back after the result")
-	scrolls_before=int(world.inventory.get(scroll,0))
-	await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
-	await _frames(4)
-	check(window.is_presenting() and int(world.inventory.get(scroll,0))==scrolls_before-1,"a second 강화 시작 rolls at once")
-	var button: Vector2=_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant")
-	await _touch(button)
-	await _frames(4)
-	check(not window.is_presenting() and int(world.inventory.get(scroll,0))==scrolls_before-1,"a tap during the result ends it and starts no roll")
+	var screen: Variant=window.result_screen()
+	if screen!=null:
+		# A UI pack with Enchant_Result: the 강화 결과 screen's two touches
+		# (enchant_awakening_tap_reveal_test covers its texts and clips).
+		check(screen.is_waiting() and window._presentation.get("played",[])==[preload("res://scripts/ui/original_ui/source_main_enchant_result_window.gd").ROOT],"the 강화 결과 screen opens on its touch prompt")
+		check(not is_instance_valid(hud.enhancement_reveal) and hud.find_child("EnhancementRevealLayer",true,false)==null,"no TWILIGHT result layer over the window")
+		await _frames(30)
+		var input: Control=screen._scene.get_node("EnchantResultScreenTouch")
+		var center: Vector2=input.get_global_transform_with_canvas()*(input.size*0.5)
+		await _touch(center)
+		check(screen.is_revealed() and window.is_presenting(),"a touch reveals the saved result")
+		for i: int in range(240):
+			if screen.is_held():break
+			await process_frame
+		scrolls_before=int(world.inventory.get(scroll,0))
+		await _touch(center)
+		await _frames(3)
+		check(not window.is_presenting() and int(world.inventory.get(scroll,0))==scrolls_before,"the next touch dismisses it and starts no roll")
+	else:
+		check((window._presentation.get("played",[]) as Array).has("Fx_Enchant_Start") and (window._presentation.get("played",[]) as Array).size()==2,"Fx_Enchant_Start and the Enchant_Popup_Message clip play")
+		check(not is_instance_valid(hud.enhancement_reveal) and hud.find_child("EnhancementRevealLayer",true,false)==null,"no TWILIGHT result layer over the window")
+		await _frames(14)
+		var banner: Rect2=_banner_rect(window)
+		var under: Array=[]
+		var dev: Array=[]
+		for entry: Array in _window_texts(window):
+			if str(entry[0]).contains("원본#") or str(entry[0]).contains("@@@"):dev.append(entry[0])
+			if not bool(entry[2]) and not str(entry[0]).strip_edges().is_empty() and banner.has_point(entry[1]):under.append(entry[0])
+		evidence["banner"]=str(banner)
+		check(banner.size.x>0.0 and under.is_empty(),"no window text is visible under the result banner: "+str(under))
+		check(dev.is_empty(),"no developer item key in the window: "+str(dev))
+		await _frames(30)
+		for i: int in range(240):
+			if window._presentation.get("held",false):break
+			await process_frame
+		check(window.is_presenting() and window._presentation.get("held",false),"the original result stays legible after the animation")
+		await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
+		await _frames(3)
+		check(not window.is_presenting(),"acknowledgement dismisses the saved result")
+		var tab: Dictionary=NamedTree.locate(window._scene,window._last_out,WINDOW.P_TAB)
+		check(tab.get("ok",false) and (tab.player.source_nodes.get(tab.offset) as CanvasItem).visible,"the tab row is back after the result")
+		scrolls_before=int(world.inventory.get(scroll,0))
+		await _touch(_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"))
+		await _frames(4)
+		check(window.is_presenting() and int(world.inventory.get(scroll,0))==scrolls_before-1,"a second 강화 시작 rolls at once")
+		var button: Vector2=_point(window,"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant")
+		await _touch(button)
+		await _frames(4)
+		check(not window.is_presenting() and int(world.inventory.get(scroll,0))==scrolls_before-1,"a tap during the result ends it and starts no roll")
 	# 다중 강화 by touch: tab, two targets, goal +3, 강화 시작.
 	await _touch(_point(window,"Tab/Nd_Multi/Btn_Multi_Off"))
 	await _frames(8)

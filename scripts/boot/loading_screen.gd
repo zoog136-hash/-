@@ -206,7 +206,7 @@ func _ready() -> void:
 	_refresh_ui_pack()
 	_start.call_deferred()
 
-## UI 팩 ui45 (47e593f4); an old pack adds the reinstall notice. The game
+## UI 팩 ui46 (91e2c03b); an old pack adds the reinstall notice. The game
 ## is never held for it.
 func _refresh_ui_pack() -> void:
 	if not is_instance_valid(_ui_pack): return
