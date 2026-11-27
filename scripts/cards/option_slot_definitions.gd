@@ -110,6 +110,7 @@ static func apply_reviewed_primary(row: Dictionary) -> Dictionary:
 		var supported: bool=int(effect.link.Level)==1 and int(effect.bonus.BonusApplicationTypeID)==0 and int(effect.bonus.BonusApplicationTargetID)==0 and MAP.has(effect.type.Name) and (unit_name=="Value" or (unit_name in ["Percentage","ValuePercent","Weight"] and denominator>0))
 		effect.runtime_supported=supported
 		var label: String=source_label(effect)
+		effect["display_label"]=label
 		if supported:
 			var key: String=MAP[effect.type.Name]
 			result.stats[key]=float(result.stats.get(key,0))+amount
@@ -120,24 +121,43 @@ static func apply_reviewed_primary(row: Dictionary) -> Dictionary:
 	return result
 
 static func source_label(effect: Dictionary) -> String:
-	var text: String=str(effect.type.Name)
+	var kind: String=str(effect.type.Name)
+	var text: String=_description(int(effect.type.get("DescID",0)))
+	if kind=="HPPlus":text="최대 HP"
+	if kind=="Strength":text="힘(STR)"
+	if kind=="Dexterity":text="민첩(DEX)"
+	if kind=="Intelligence":text="지능(INT)"
+	if kind=="StatusEffectID":return "각성 시각 효과"
+	if kind=="ArmorClassBonus":return "AC %+.0f" % -float(effect.bonus.Value)
+	if kind=="IgnoreCounterBarrierProbability":text="카운터 배리어 무시 확률"
+	if kind=="FixedDesc":
+		var description: String=_description(int(effect.bonus.BonusApplicationTargetID))
+		return description if not description.is_empty() else "특수 각성 효과"
+	if kind=="InvokeOption":
+		var invoke: Dictionary=SOURCE.row("InvokeOption",int(effect.bonus.BonusApplicationTargetID))
+		var ability: String=_description(int(invoke.get("DescID",0)))
+		if ability.is_empty() and int(invoke.get("InvokeOptionTypeID",0)) in [1,2]:
+			var spell: Dictionary=SOURCE.row("SpellClass",int(invoke.get("Param1",0)))
+			ability=_description(int(spell.get("DescID",0)))
+		text=ability+" 발동 확률" if not ability.is_empty() else "조건부 발동 확률"
+	if text.is_empty():text="각성 효과"
 	var amount: float=float(effect.bonus.Value)
 	var unit_name: String=str(effect.unit.Name)
 	var denominator: float=float(effect.ui_unit.get("Denominator",0))
 	if unit_name in ["Percentage","ValuePercent","Weight"] and denominator>0:amount/=denominator
 	var suffix: String="%" if unit_name in ["Percentage","ValuePercent"] and denominator>0 else ""
-	return text+" "+str(amount).trim_suffix(".0")+suffix
+	var sign_text: String="+" if amount>0 and kind!="InvokeOption" else ""
+	return text+" "+sign_text+str(amount).trim_suffix(".0")+suffix
+
+static func _description(id: int) -> String:
+	return str(SOURCE.row("DescData_Korean",id).get("Description","")) if id>0 else ""
 
 static func labels(group: Dictionary) -> Array[String]:
 	var result: Array[String]=[]
 	for effect: Dictionary in group.get("effects",[]):
-		var name_value: String=str(effect.type.Name)
-		if name_value=="StatusEffectID":
-			result.append("각성 시각 효과");continue
-		if name_value=="ArmorClassBonus" and effect.unit.Name=="Value" and int(effect.bonus.Value)>=0:
-			# The existing def consumer displays an AC reduction for this bonus.
-			result.append("AC -"+str(int(effect.bonus.Value)));continue
-		result.append(source_label(effect))
+		if int(effect.link.Level)==1:
+			var line: String=str(effect.display_label) if effect.has("display_label") else source_label(effect)
+			if not result.has(line):result.append(line)
 	return result
 
 static func view(identity: String) -> Array[Dictionary]:

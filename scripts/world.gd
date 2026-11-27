@@ -5542,6 +5542,7 @@ var _enhancement_token_quotes: Dictionary = {}
 func _open_owned_native_enhancement(name: String, selected: String, record: Dictionary, seal_scroll: bool=false) -> bool:
 	var kind: String=_scroll_kind(name,record)
 	if kind.is_empty():return false
+	_enhancement_scroll_selection.clear()
 	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1)
 	if not held.get("native",false):
 		if not selected.is_empty() or kind != "source": return false
@@ -5551,18 +5552,20 @@ func _open_owned_native_enhancement(name: String, selected: String, record: Dict
 		if not problem.is_empty() or _item_locked(name) or not CATALOG_STACK.holds_plain(self,name):
 			hud.show_message(problem if not problem.is_empty() else "선택한 주문서의 수량과 잠금을 확인하세요")
 			return true
-		if not _patch523_item_allowed() or hp <= 0: return true
-		_enhancement_scroll_selection.clear()
 	elif not held.get("ok",false):
 		if seal_scroll: return false # The seal owner also checks old saved physical scrolls.
 		hud.show_message(str(held.reason))
 		return true
 	else:
 		_enhancement_scroll_selection={"name":name,"uid":held.uid}
+	if not _patch523_item_allowed() or hp <= 0: return true
 	var candidates: Array = _enhancement_candidates(kind,_scroll_mode(name),name)
-	if seal_scroll and not candidates.any(func(row: Dictionary) -> bool: return not row.seal):
+	if seal_scroll and not candidates.is_empty() and candidates.all(func(row: Dictionary) -> bool: return row.seal):
 		_enhancement_scroll_selection.clear()
 		return false
+	if candidates.is_empty():
+		hud.show_message("이 주문서에 맞는 보유 장비와 강화 단계가 없습니다")
+		return true
 	hud.open_enhancement(name,candidates)
 	return true
 
@@ -5592,7 +5595,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 		if record.is_empty() or (kind!="source" and _enhancement_kind_for_record(record) != kind):
 			continue
 		var receipt: Dictionary=item_instances[instance_id]
-		var token: bool=not physical_scroll.is_empty() and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(record)
+		var token: bool=stock.get("proof",{}).has("receipt") and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(record)
 		var level_value: int=int(receipt.get(PATCH523_TOKEN_STOCK.TOKEN_RANK,0)) if token else _item_instance_level(instance_id,item_name)
 		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,receipt,physical_scroll,token)
 		var seal: bool = not seal_id.is_empty() and patch523_equipment.identity(receipt) in ["30671","130551"]
@@ -5657,7 +5660,9 @@ func _patch523_expedition_scroll(key: String) -> Dictionary:
 func _source_enhancement_rule(record: Dictionary, current_level: int, mode: String, scroll_name: String = "", physical: Dictionary = {}, scroll_override: Dictionary = {}, token: bool=false) -> Dictionary:
 	if RETIRED_ITEMS.record(record):return {"source_rule":true,"success":0.0,"reason":RETIRED_ITEMS.REASON}
 	if not physical.is_empty() and physical.has("sourceId") and str(physical.sourceId)!=str(record.get("sourceId","")):
-		return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
+		var id: String = PATCH523_ENHANCE.item_id(record)
+		if id.is_empty() or str(physical.sourceId) != id or physical.get("record") != record or PATCH523_ENHANCE_SOURCE.checked_native(record).is_empty():
+			return {"source_rule":true,"success":0.0,"reason":"물리 장비의 원본 정체가 일치하지 않습니다"}
 	var kind: String=_enhancement_kind_for_record(record)
 	var scroll: Dictionary=scroll_override if not scroll_override.is_empty() else (_find_catalog_item_record(scroll_name) if not scroll_name.is_empty() else {})
 	if scroll_override.is_empty() and scroll.get("slot") == "material":
@@ -5931,7 +5936,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		return
 
 	var receipt: Dictionary=item_instances[item_id]
-	var token: bool=not str(selected.get("id","")).is_empty() and not physical_scroll.is_empty() and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(target_record)
+	var token: bool=not str(selected.get("id","")).is_empty() and owned_scroll.get("proof",{}).has("receipt") and receipt.has(PATCH523_TOKEN_STOCK.RECEIPT) and PATCH523_TOKEN_STOCK.is_enhancement_token(target_record)
 	var current_level: int=int(receipt.get(PATCH523_TOKEN_STOCK.TOKEN_RANK,0)) if token else _item_instance_level(item_id,target_name)
 	var source_rule: Dictionary=_source_enhancement_rule(target_record,current_level,mode,scroll_name,receipt,physical_scroll,token)
 	if source_rule.is_empty() and not _enhancement_level_allowed(kind, mode, current_level, target_record):
@@ -6431,6 +6436,35 @@ func _patch523_craft_items_for_recipe(recipe_id: String) -> Dictionary:
 		_recipe_source_ids[recipe_id]=found
 	return _patch523_craft_items_for_ids(ids)
 
+func accessory_blessing_recipe(reference: String) -> String:
+	var selected: Dictionary = _parse_enhancement_target(reference)
+	var physical: Dictionary = item_instances.get(str(selected.get("id", "")), {})
+	var name_value: String = str(selected.get("name", ""))
+	if physical.is_empty() or physical.get("name") != name_value or int(inventory.get(name_value, 0)) <= 0: return ""
+	if patch523_equipment.bless_code(physical) != 1: return ""
+	var id: String = patch523_equipment.identity(physical)
+	if not id.is_valid_int() or int(id)<=0: return ""
+	var level_value: int = _item_instance_level(str(selected.id), name_value)
+	var definitions: Script = preload("res://scripts/resources/current523_definition_rows.gd")
+	var match_id: String = ""
+	for view: Dictionary in definitions.related("ItemCraftView", "ItemClassID", int(id)):
+		if view.get("Enchant") != level_value or view.get("ItemBlessCodeID") != 2: continue
+		var recipe_id: String = "patch523:" + str(int(view.ItemCraftID))
+		var recipe: Dictionary = patch523_equipment.recipes.get(recipe_id, {})
+		if recipe.get("category") != "장신구" or recipe.has("outcomes") or recipe.get("requires_material_selection", false): continue
+		var result: Dictionary = recipe.get("result", {})
+		if result.get("source_id") != id or result.get("level") != level_value or result.get("bless_code") != 2 or result.get("quantity") != 1 or not result.get("physical", false): continue
+		var materials: Array = recipe.get("materials", [])
+		if materials.is_empty(): continue
+		var count: int = 0
+		for material: Dictionary in materials:
+			if material.get("source_id") == id and material.get("level") == level_value and material.get("bless_code") == 1 and material.get("physical", false):
+				count += int(material.get("quantity", 0))
+		if count != 2: continue
+		if not match_id.is_empty() and match_id != recipe_id: return ""
+		match_id = recipe_id
+	return match_id
+
 var _recipe_source_ids: Dictionary={}
 var _recipe_ids_owner: Variant=null
 
@@ -6781,14 +6815,14 @@ func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dict
 				scroll_id=candidate
 				break
 	if scroll_id not in PATCH523_SEAL_ACTIONS.SCROLLS: return false
-	if patch523_equipment.record_view(scroll_id).is_empty():
-		hud.show_message("이 주문서의 인장 강화 규칙을 불러오지 못했습니다.")
-		return true
 	if not _patch523_item_allowed(): return true
 	if int(inventory.get(item_name,0))<1 or _item_locked(item_name) or _item_locked(item_name,scroll_uid):
 		hud.show_message("주문서 소지 수량과 잠금을 확인하세요")
 		return true
 	if _open_owned_native_enhancement(item_name,scroll_uid,record,true): return true
+	if patch523_equipment.record_view(scroll_id).is_empty():
+		hud.show_message("이 주문서의 원본 강화 규칙을 불러오지 못했습니다.")
+		return true
 	if scroll_uid.is_empty():
 		var matches: Array[String]=[]
 		for uid: String in item_instances:
@@ -9211,7 +9245,7 @@ func _use_quickslot_item(item_name: String) -> void:
 func _quickslot_item_supported(item_name: String) -> bool:
 	if option_awakening.source_scroll_supported(item_name):return true
 	var record: Dictionary = _find_catalog_item_record(item_name)
-	if record.get("source_automation_catalog_only",false): return false
+	if record.get("source_automation_catalog_only",false): return not _quickslot_auto_item(item_name, record).is_empty()
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if REGIONAL_RETURN.claims_identity(item_name, record): return REGIONAL_RETURN.supported(item_name, record)
 	if record.get("source_m_native_item",false):
@@ -9220,7 +9254,7 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	if record.is_empty(): return false
 	if _is_timed_buff_item(record) or int(record.get("heal",0)) > 0: return true
-	return record.get("source_m_native_item", false) and not _quickslot_auto_item_spec(item_name, record).is_empty()
+	return not _quickslot_auto_item(item_name, record).is_empty()
 
 func _quickslot_registration_error(kind: String, id: String) -> String:
 	if kind == "item":
@@ -9291,7 +9325,29 @@ func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 	if entry.get("kind") != "item": return false
 	var item: String = str(entry.get("id", ""))
 	if option_awakening.source_scroll_supported(item):return true
-	return not _quickslot_auto_item_spec(item, _find_catalog_item_record(item)).is_empty()
+	return not _quickslot_auto_item(item, _find_catalog_item_record(item)).is_empty()
+
+## An older catalog row can take precedence over the same owned source item.
+## When it has no automatic-use rule, use the validated physical receipt.
+func _quickslot_auto_item(item: String, record: Dictionary) -> Dictionary:
+	var spec: Dictionary = _quickslot_auto_item_spec(item, record)
+	if not spec.is_empty(): return {"record":record,"spec":spec}
+	if int(inventory.get(item,0)) <= 0 or CONSUMABLE_RULES.is_removed_item(item): return {}
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	var expected: int = int(record.get("source_item_class_id", PATCH523_ENHANCE.item_id(record)))
+	var resolved: Dictionary = {}
+	for uid: String in item_instances:
+		var row: Dictionary = item_instances[uid]
+		if row.get("name") != item or not row.has(stack.RECEIPT): continue
+		var proof: Dictionary = stack.proof(self, uid)
+		if proof.is_empty(): return {}
+		var id: int = int(proof.record.source_item_class_id)
+		if expected > 0 and id != expected: continue
+		if not resolved.is_empty() and resolved.get("sourceId") != proof.record.get("sourceId"): return {}
+		resolved = proof.record
+	if resolved.is_empty(): return {}
+	spec = _quickslot_auto_item_spec(item, resolved)
+	return {"record":resolved,"spec":spec} if not spec.is_empty() else {}
 
 func _quickslot_auto_item_spec(item: String, record: Dictionary) -> Dictionary:
 	if record.is_empty() or record.get("source_automation_catalog_only",false) or CONSUMABLE_RULES.is_removed_item(item):
@@ -9407,11 +9463,14 @@ func _run_auto_item_quickslots(delta: float) -> bool:
 		var source_id: int = int(record.get("source_item_class_id", 0))
 		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0):
 			continue
-		var spec: Dictionary = _quickslot_auto_item_spec(item, record)
+		var supported: Dictionary = _quickslot_auto_item(item, record)
+		var spec: Dictionary = supported.get("spec", {})
 		if spec.is_empty() or (self_mode_enabled and CONSUMABLE_AUTO.is_timed_buff(spec)): continue
+		record = supported.record
 		if spec.get("kind") == "hp" and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
 			continue
 		source_id = int(spec.get("source_item_id", 0))
+		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0): continue
 		if maximum_hp < 0 and spec.get("kind") in ["hp", "instant_mp"]:
 			maximum_hp = _effective_max_hp()
 			maximum_mp = _effective_max_mp()
@@ -10505,7 +10564,7 @@ func claim_source_fusion_reward(category:String,grade:String)->Dictionary:
 	hud.present_card_reveal(category,awarded,false)
 	return {"ok":true,"message":message,"reward":awarded.results[0],"purchase_id":verified.lane.offer,"pool_id":verified.lane.pool}
 
-func _on_card_fusion_requested(category: String, grade: String, count: int = 1) -> void:
+func _on_card_fusion_requested(category: String, grade: String, count: int = 1, selection: Array[String] = []) -> void:
 	if _option_awakening_busy(): return
 	if hud.has_method("is_card_reveal_busy") and bool(hud.call("is_card_reveal_busy")):
 		return
@@ -10518,7 +10577,7 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 	var roll_before: int = card_draw_fusion.rng.state
 	var batch: bool = count > 1
 	var original_points:bool=SOURCE_FUSION_POINTS.supported_threshold(category,grade) and SOURCE_FUSION_POINTS.reward(self,category,grade).get("ok",false)
-	var result: Dictionary = card_draw_fusion.fuse_many(category, grade, count, original_points) if batch else card_draw_fusion.fuse(category, grade, original_points)
+	var result: Dictionary = card_draw_fusion.fuse_many(category, grade, count, original_points, selection) if batch else card_draw_fusion.fuse(category, grade, original_points, selection)
 	if not bool(result.get("ok", false)):
 		hud.show_message(str(result.get("error", "합성 실패")))
 		return
@@ -10564,10 +10623,10 @@ func _on_card_fusion_requested(category: String, grade: String, count: int = 1) 
 	if hud.has_method("set_fusion_result_covered"): hud.set_fusion_result_covered(true)
 	_update_hud()
 	phase = FRAME_HITCH.detail_next("fusion.hud",phase)
-	hud.show_message(message)
 	hud.append_log(message)
 	hud.call("set_card_draw_fusion_result", category, message)
 	hud.call("present_card_reveal", category, result, true)
+	if not hud.is_card_reveal_busy(): hud.show_message(message)
 	FRAME_HITCH.detail("fusion.present",phase)
 
 func _option_awakening_busy() -> bool:

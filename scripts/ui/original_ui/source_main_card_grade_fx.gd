@@ -98,6 +98,18 @@ static func finish_reel(window: Object, root: Node2D, out: Dictionary, cell: Str
 		if face!=null:face.show()
 	set_visible(window,root,out,cell+"/Text_Card_Name",true)
 
+static func start_reel(window: Object, root: Node2D, out: Dictionary, cell: String) -> void:
+	var nested: Node2D=project(window,root,out,cell)
+	if nested!=null:nested.stop()
+	var back: Node2D=cell_node(window,root,out,cell+"/Fx_Glow/Card_Back")
+	if back!=null and back.has_meta("source_sprite"):
+		var sprite:=back.get_meta("source_sprite") as Sprite2D
+		var panel: Node2D=cell_node(window,root,out,cell+"/Panel")
+		var reel: Node=panel.get_node_or_null("SourceContentOrigin/CardRevealEffect") if panel!=null else null
+		if sprite!=null and sprite.texture!=null and reel!=null and reel.has_method("set_native_card_back"):
+			reel.set_native_card_back(sprite.texture)
+	set_visible(window,root,out,cell+"/Fx_Glow",false)
+
 ## Scope the discharge to the verified texture track. No grade border,
 ## particles or replacement images are created for the reel.
 static func prepare_lightning(pack: RefCounted, grade: String) -> Node2D:

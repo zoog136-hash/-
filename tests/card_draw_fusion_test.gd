@@ -27,7 +27,31 @@ func _fixture() -> Dictionary:
 		catalog[category] = cards
 	return catalog
 
+func _check_registered_fusion() -> void:
+	var model = RULES.new()
+	var category: String = "변신"
+	var other: String = "source:변신-고급-0"
+	var selected: String = "source:변신-고급-9"
+	var catalog: Dictionary = _fixture()
+	model.configure(catalog)
+	model.owned[category] = {other:true,selected:true}
+	model.spare[category] = {other:12,selected:8}
+	var registered: Array[String] = []
+	registered.resize(8)
+	registered.fill(selected)
+	var rng_before: int = model.rng.state
+	var before: Dictionary = model.export_state()
+	var invalid: Array[String] = registered.duplicate()
+	invalid[7] = "source:변신-희귀-0"
+	_check(not model.fuse_many(category,"고급",2,false,invalid).ok and model.export_state()==before and model.rng.state==rng_before,
+		"an invalid second group never spends the first group or rolls")
+	var rolled: Dictionary = model.fuse_many(category,"고급",2,false,registered)
+	_check(rolled.ok and rolled.consumed==8 and model.owned[category][selected],"registered batch spends eight duplicates and retains the first copy")
+	_check(int(model.spare[category].get(selected,0))<=2 and int(model.spare[category][other])>=12,
+		"unregistered duplicates remain even when they are earlier in the catalog")
+
 func _run() -> void:
+	_check_registered_fusion()
 	var total_weight: int = 0
 	for grade: String in RULES.DRAW_ORDER:
 		total_weight += int(RULES.DRAW_WEIGHTS[grade])

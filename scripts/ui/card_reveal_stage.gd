@@ -77,7 +77,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 	category = card_category
 	fusion = is_fusion
 	upgrade = succeeded
-	manual_reveal = not fusion and not showcase
+	manual_reveal = not showcase
 	clock = 0.0
 	playing = true
 	sound_played.clear()

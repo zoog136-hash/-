@@ -161,8 +161,11 @@ func _fusion_rules() -> void:
 	records.append({"name":"제한","grade":"고급","sourceId":"m523:1:200","source_merge_out_disabled":true})
 	hud.catalog_data={"변신":records}
 	var spare: Dictionary={}
-	for record: Dictionary in records:spare[CARDS.card_id(record)]=2
-	hud.card_collection_state={"owned":{"변신":{}},"spare":{"변신":spare}}
+	var owned: Dictionary={}
+	for record: Dictionary in records:
+		spare[CARDS.card_id(record)]=2
+		owned[CARDS.card_id(record)]=true
+	hud.card_collection_state={"owned":{"변신":owned},"spare":{"변신":spare}}
 	var window=FUSION.new()
 	window._hud=weakref(hud)
 	window.category="변신"
@@ -170,10 +173,16 @@ func _fusion_rules() -> void:
 	window.grade="고급"
 	window._collect()
 	check(window._materials.is_empty() and not window._can_fuse(),"a fresh material page waits for a selection")
+	var chosen: String=CARDS.card_id(records[2])
+	window._card_pressed(true,"고급",chosen)
+	window._collect()
+	check(window._materials.size()==1 and window._materials[0].id==chosen and not window._can_fuse(),"tapping one owned card registers only that duplicate")
+	window._registered_pressed(true,chosen)
+	window._collect()
+	check(window._materials.is_empty(),"tapping the registered duplicate removes one copy")
 	window._auto_register()
 	window._collect()
-	var used: int=0
-	for entry: Dictionary in window._materials:used+=int(entry.count)
+	var used: int=window._materials.size()
 	check(used==int(CARDS.FUSION_MATERIALS["고급"]) and window._can_fuse(),"the existing rule's material count is registered")
 	window.grade="유일"
 	check(not window._can_fuse(),"the top grade cannot be fused")

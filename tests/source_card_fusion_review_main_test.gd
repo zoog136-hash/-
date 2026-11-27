@@ -5,6 +5,12 @@ const MIX = preload("res://scripts/ui/original_ui/source_main_card_fusion_window
 const REVIEW = preload("res://scripts/ui/original_ui/source_main_awakening_review.gd")
 const TREE = preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 
+class FusionReviewWorld extends "res://scripts/potion_feedback_world.gd":
+	var fusion_requests: Array[Dictionary]=[]
+	func _on_card_fusion_requested(category: String, grade: String, count: int=1, selection: Array[String]=[]) -> void:
+		fusion_requests.append({"category":category,"grade":grade,"count":count,"selection":selection.duplicate()})
+		super._on_card_fusion_requested(category,grade,count,selection)
+
 func keypad_tap(popup: RefCounted, path: String) -> void:
 	var hit: Dictionary = TREE.locate(popup._scene,popup._out,path)
 	if check(hit.get("ok",false),"calculator has "+path): await _tap(_hit(hit.player.source_nodes[hit.offset]))
@@ -14,6 +20,7 @@ var _confirmed_fusion_usec: Dictionary={}
 func fusion() -> void:
 	root.size=Vector2i(2048,919)
 	var w: Node=load("res://Main.tscn").instantiate()
+	w.set_script(FusionReviewWorld)
 	root.add_child(w)
 	current_scene=w
 	w.set_process(false)
@@ -37,10 +44,8 @@ func fusion_category(w: Node, category: String) -> void:
 	if not check(not material.is_empty(),"installed original fusion material for "+category): return
 	w.card_draw_fusion.owned[category][material]=true
 	var c: Node=w.hud.original_main_ui_controller
-	var calls: Array[int]=[]
-	var on_fuse: Callable = func(name_value: String,_grade: String,count: int) -> void:
-		if name_value==category: calls.append(count)
-	w.hud.card_fusion_requested.connect(on_fuse)
+	var calls: Array[Dictionary]=w.fusion_requests
+	calls.clear()
 	for count: int in ([1,2] if category=="변신" else [1]):
 		w.card_draw_fusion.spare[category]={material:count*4}
 		w._update_hud()
@@ -51,6 +56,8 @@ func fusion_category(w: Node, category: String) -> void:
 		var before: Dictionary = _ledger(w)
 		var rng: int = w.card_draw_fusion.rng.state
 		await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Auto")))
+		check(page._registered.size()==count*4 and page._registered.all(func(id: String) -> bool:return id==material),"original auto button registers exactly the available duplicate groups")
+		var request: Dictionary={"category":category,"grade":"고급","count":count,"selection":page._registered.duplicate()}
 		await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Merge")))
 		if count==2:
 			var keypad: RefCounted=c.drop_confirm_popup()
@@ -73,7 +80,7 @@ func fusion_category(w: Node, category: String) -> void:
 			w.source_save_blocked=true
 			await _confirm(w.hud,false)
 			w.source_save_blocked=false
-			check(calls==[1] and _ledger(w)==before and disk.length()==64 and FileAccess.get_sha256(w.save_path())==disk,"refused save restores the exact cards, RNG and disk bytes")
+			check(calls==[request] and _ledger(w)==before and disk.length()==64 and FileAccess.get_sha256(w.save_path())==disk,"refused save restores the exact cards, RNG and disk bytes")
 			check(page.is_open() and page._scene.is_visible_in_tree() and not w.hud.is_card_reveal_busy(),"a rejected commit leaves the fusion form operable")
 			calls.clear()
 		else:
@@ -81,16 +88,18 @@ func fusion_category(w: Node, category: String) -> void:
 			var setup: Node2D=page._scene
 			await _confirm(w.hud,false)
 			_confirmed_fusion_usec[category]=_touch_usec.back()
-			check(calls==[count] and w.card_draw_fusion.rng.state!=rng and w.card_draw_fusion.owned[category].get(material,false),"one confirmed request executes the requested rolls and retains the owned card")
+			check(calls==[request] and w.card_draw_fusion.rng.state!=rng and w.card_draw_fusion.owned[category].get(material,false),"one confirmed request executes the registered rolls and retains the owned card")
 			var reveal: RefCounted=c.feature_window("fusion_result")
 			if check(reveal!=null and reveal.is_open(),"original saved fusion results are presented"):
+				check(reveal.results.size()==count,"the overlay presents one card per committed roll")
+				for index: int in range(reveal.results.size()):
+					check(not reveal.is_revealed(index),"the committed result waits for its card tap")
 				check(page._scene==setup and not setup.is_visible_in_tree() and page._covered_by_reveal,"committed ownership does not rebuild the covered setup")
 				var committed: Dictionary=_ledger(w)
 				reveal.close()
 				await settle()
 				check(page.is_open() and page._scene!=setup and page._scene.is_visible_in_tree() and page.last_result.filled.registered==0,"dismissing results refreshes the setup from the committed cards")
 				check(_ledger(w)==committed,"dismissal cannot roll or consume again")
-	w.hud.card_fusion_requested.disconnect(on_fuse)
 
 func run() -> void:
 	if OS.get_environment("TWILIGHT_FUSION_SOURCE_REVIEW")!="1": quit(2); return
