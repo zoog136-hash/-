@@ -48,7 +48,8 @@ func opaque_caption(window: RefCounted, expected: String) -> bool:
 			if not scene.playback_status().playing:break
 			await process_frame
 		for node: Node2D in scene.source_nodes.values():
-			var label: Variant=node.get_meta("source_text",null)
+			if not node.has_meta("source_text"):continue
+			var label: Variant=node.get_meta("source_text")
 			if is_instance_valid(label) and label.is_visible_in_tree() and label.original_options.text==expected:
 				return label.modulate.a>=0.99
 	return false
