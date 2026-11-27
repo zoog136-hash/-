@@ -5,6 +5,9 @@ const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const SUPPLY=preload("res://scripts/cards/native_awakening_supply.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const MAX_EXACT_JSON_INTEGER: int = 9007199254740991
+## Original craft materials once supplied under a name-only Inven shop key.
+## These also have a registered 523 material stack and original cash rewards.
+const SHARED_SHOP_MATERIAL_IDS: Array[int] = [6241, 129274, 216053]
 
 ## User decision 2026-11-13: original reward rows of the crafting coins and the
 ## honor coin add to the existing coin wallets (inventory key = wallet name),

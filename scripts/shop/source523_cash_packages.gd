@@ -286,7 +286,7 @@ static func native_record(world, item_id: int) -> Dictionary:
 	var supply: String = str(NATIVE_STACK.supply_profile(record).get("kind", ""))
 	# Advanced powder already has a shared physical owner for hunting, shop
 	# claims, refinement and titles. Other plain storage owners stay in use.
-	if supply.is_empty() or (supply == "storage" and item_id != ADVANCED_POWDER_ID): return {}
+	if supply.is_empty() or (supply == "storage" and item_id != ADVANCED_POWDER_ID and not item_id in ITEM_INVENTORY.SHARED_SHOP_MATERIAL_IDS): return {}
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
@@ -373,9 +373,9 @@ static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.Cas
 	if not card.is_empty():
 		var found: Dictionary = _card_target(world, int(card.card_id))
 		if not found.is_empty(): return found
-	if allow_native and item_id == ADVANCED_POWDER_ID:
-		var powder: Dictionary = native_record(world, item_id)
-		if not powder.is_empty(): return {"kind":"native", "name":str(powder.name), "record":powder}
+	if allow_native and (item_id == ADVANCED_POWDER_ID or item_id in ITEM_INVENTORY.SHARED_SHOP_MATERIAL_IDS):
+		var material: Dictionary = native_record(world, item_id)
+		if not material.is_empty(): return {"kind":"native", "name":str(material.name), "record":material}
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
@@ -626,6 +626,9 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 			break
 		if item_id == ADVANCED_POWDER_ID and (target.kind != "native" or entry.get("bless", 1) != 1 or entry.get("enchant", 0) != 0):
 			failure = "상급 축복의 가루 원본 지급 조건을 확인할 수 없습니다"
+			break
+		if item_id in ITEM_INVENTORY.SHARED_SHOP_MATERIAL_IDS and target.kind == "native" and (entry.get("bless", 1) != 1 or entry.get("enchant", 0) != 0):
+			failure = "원본 제작 재료의 축복·강화 상태를 확인할 수 없습니다"
 			break
 		if target.kind == "card":
 			if cards_before.is_empty(): cards_before = world.card_draw_fusion.export_state()
