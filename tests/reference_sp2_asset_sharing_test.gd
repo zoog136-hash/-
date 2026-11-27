@@ -102,11 +102,63 @@ func make_preview(bank: RefCounted, base: Dictionary, manifest_path: String) -> 
 	preview._role = "idle"
 	return preview
 
+# Cross-check the incremental heartbeat against the full diagnostic scan.
+func check_accounting(label: String) -> void:
+	var stats: Dictionary = ASSETS.stats()
+	for kind: String in ASSETS.KINDS:
+		var usage: Dictionary = stats[kind]
+		var bytes: int = int(usage.live_bytes) + int(usage.idle_bytes) + int(usage.stale_live_bytes) + int(usage.pending_bytes)
+		check(ASSETS.accounted_bytes(kind) == bytes, "%s: %s payload bytes equal the scan" % [label, kind])
+		check(ASSETS.entry_count(kind) == int(usage.live_count) + int(usage.idle_count), "%s: %s current entry count equals the scan" % [label, kind])
+
+func check_idle_order_and_generations() -> void:
+	ASSETS.reset_for_tests()
+	var owner: int = ASSETS.new_owner()
+	var other: int = ASSETS.new_owner()
+	var late: int = ASSETS.reserve("texture", "late", 64)
+	for key: String in ["older", "newer", "live"]:
+		var reservation: int = ASSETS.reserve("texture", key, 32)
+		ASSETS.complete(reservation, key, 16, owner)
+		if key != "live": ASSETS.release("texture", key, owner)
+	check_accounting("live, idle and reserved together")
+	check(ASSETS.acquire("texture", "older", owner) == "older" and ASSETS.release("texture", "older", owner), "reacquiring and releasing moves an idle key to the end")
+	check(ASSETS.trim_idle("texture", 16) == 1 and ASSETS.has_entry("texture", "older") and not ASSETS.has_entry("texture", "newer") and ASSETS.has_entry("texture", "live"), "trim evicts the least recently released idle key")
+	check_accounting("trim at an explicit byte budget")
+	ASSETS.invalidate_all()
+	check(ASSETS.accounted_bytes("texture") == 80 and ASSETS.entry_count("texture") == 0, "invalidation drops idle and retains stale and pending bytes")
+	check_accounting("first invalidation")
+	ASSETS.complete(late, "late", 2, owner)
+	check_accounting("stale completion releases its reservation without publishing")
+	var second_life: int = ASSETS.reserve("texture", "live", 99)
+	ASSETS.complete(second_life, "new payload", 24, other)
+	var duplicate: int = ASSETS.reserve("texture", "live", 123)
+	check(ASSETS.complete(duplicate, "duplicate", 6, other) == "new payload", "same-generation races keep the first completed payload")
+	var cancelled: int = ASSETS.reserve("texture", "cancelled", 48)
+	ASSETS.cancel(cancelled)
+	ASSETS.cancel(cancelled)
+	check(ASSETS.accounted_bytes("texture") == 40 and ASSETS.entry_count("texture") == 1, "same key in two generations charges two retained payloads until consolidated")
+	check_accounting("duplicate completion, cancellation and two generations")
+	ASSETS.invalidate_all()
+	check(ASSETS.accounted_bytes("texture") == 16, "consolidating stale keys retains one payload charge")
+	check(ASSETS.release("texture", "live", other) and ASSETS.accounted_bytes("texture") == 16, "stale charge follows the remaining lessee")
+	check(ASSETS.release("texture", "live", owner) and ASSETS.accounted_bytes("texture") == 0, "last stale release drops the charge")
+	check_accounting("second invalidation and release")
+
+	var null_result: int = ASSETS.reserve("parsed", "empty", 20)
+	ASSETS.complete(null_result, null, 12, owner)
+	ASSETS.release("parsed", "empty", owner)
+	var valid_result: int = ASSETS.reserve("parsed", "empty", 20)
+	ASSETS.complete(valid_result, {}, 24, owner)
+	check(ASSETS.accounted_bytes("parsed") == 24 and ASSETS.trim_idle("parsed", 0) == 0, "replacing an idle null result removes its old charge and idle membership")
+	check_accounting("replacement result")
+	ASSETS.reset_for_tests()
+	check_accounting("reset")
+
 func _initialize() -> void: call_deferred("run")
 
 func run() -> void:
 	var data: String = argument("--data=", "user://zz_probe_sp2_assets")
-	ASSETS.reset_for_tests()
+	check_idle_order_and_generations()
 	var palette_a: Array = [0xF800, 0x07E0, 0x001F, 0xFFFF]
 	var raw_a: String = data.path_join("raw/Sprite/9001-0.sp2")
 	write_bytes(raw_a, make_sp2(palette_a, [[0, 1, 2, 3], [3, 2, 1, 0]]))
@@ -262,5 +314,6 @@ func run() -> void:
 	preview_b.free()
 	check(int(ASSETS.stats().texture.stale_live_count) == 0, "stale entries drop when their last lease is released")
 	var summary: Dictionary = ASSETS.stats()
+	check_accounting("after the preview and bank integration cases")
 	print("REFERENCE_SP2_ASSET_SHARING_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"stats":summary}))
 	quit(0 if failures.is_empty() else 1)
