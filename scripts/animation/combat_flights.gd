@@ -9,6 +9,7 @@ var generation: int = 0
 const MAX_POOL: int = 128
 var resolved_count: int = 0
 var visual_limit: int = 64
+var original_visuals_only: bool = false
 
 func _ready() -> void:
 	set_physics_process(false)
@@ -37,7 +38,7 @@ func clear() -> void:
 	generation += 1
 	for i: int in range(flights.size() - 1, -1, -1): _retire(i)
 	set_physics_process(false)
-	queue_redraw()
+	if not original_visuals_only: queue_redraw()
 
 func _physics_process(delta: float) -> void:
 	var batch_generation: int = generation
@@ -79,7 +80,7 @@ func _physics_process(delta: float) -> void:
 			var callback: Callable = _retire(i)
 			resolved_count += 1
 			if callback.is_valid(): callback.call()
-	queue_redraw()
+	if not original_visuals_only: queue_redraw()
 	if flights.is_empty(): set_physics_process(false)
 
 func _step_visual(flight: Dictionary) -> void:
@@ -87,6 +88,7 @@ func _step_visual(flight: Dictionary) -> void:
 	if observer.is_valid(): flight["visual_active"] = bool(observer.call(flight))
 
 func _draw() -> void:
+	if original_visuals_only: return
 	var drawn: int = 0
 	var view: Rect2 = get_viewport_rect().grow(32)
 	var canvas: Transform2D = get_global_transform_with_canvas()

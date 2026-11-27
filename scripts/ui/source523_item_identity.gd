@@ -118,6 +118,15 @@ static func by_name(name: String) -> int:
 	_cache[name] = found
 	return found
 
+## Every non-test original ItemClass shown under this exact Korean name.
+static func ids_by_name(name: String) -> Array[int]:
+	_ensure_index()
+	var out: Array[int] = []
+	var candidates: Variant = _by_name.get(name)
+	if candidates is Array:
+		for pair: Array in candidates: out.append(int(pair[0]))
+	return out
+
 static func _ensure_index() -> void:
 	var generation: int = SOURCE.cache_generation()
 	if _indexed_generation == generation and not _by_name.is_empty(): return

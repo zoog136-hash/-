@@ -2032,6 +2032,25 @@ func notify_current_source_damage_effect(body_sprite: int, target_point: Vector2
 		return false
 	return _spawn_current523_source_effect(selected,attacker_point if bool(selected.get("near_attacker",false)) else target_point,facing)
 
+func notify_current_source_weapon_critical(weapon_type: int, point: Vector2, facing: int) -> bool:
+	var selected: Dictionary = CURRENT523_EFFECT.select_weapon_critical(weapon_type,_reference_request_context)
+	return _spawn_current523_source_effect(selected,point,facing)
+
+func notify_current_source_combat_result(result: String, point: Vector2) -> bool:
+	var selected: Dictionary = CURRENT523_EFFECT.select_combat_result(result,_reference_request_context)
+	return _spawn_current523_source_effect(selected,point,0)
+
+func clear_current523_combat_feedback() -> void:
+	for index: int in range(_overlay_nodes.size() - 1, -1, -1):
+		var overlay: Variant = _overlay_nodes[index]
+		if not is_instance_valid(overlay):
+			_overlay_nodes.remove_at(index)
+			continue
+		if overlay._reference_overlay_parent.get("consumer") not in ["damage_effect","weapon_critical","combat_result"]: continue
+		overlay.hide()
+		overlay.queue_free()
+		_overlay_nodes.remove_at(index)
+
 func notify_current_source_death_pose(world_point: Vector2, facing: int) -> bool:
 	# Keep this detached from the live player's motion/physics lifecycle. The
 	# existing death event owns when the copied original pose is requested.
@@ -2079,7 +2098,7 @@ func _make_selected_current_source_effect(selected: Dictionary, facing: int, tex
 func _make_selected_current_source_effect_internal(selected: Dictionary, facing: int, texture_budget_bytes: int, require_cooked: bool) -> Node2D:
 	source_effect_status = selected.duplicate(true)
 	if not bool(selected.get("ok",false)): return null
-	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose","damage_effect"] or not selected.get("source_reference") is Dictionary: return null
+	if selected.get("source_snapshot") != "patch523" or selected.get("consumer") not in ["spell_effect","global_effect","item_effect","invoke_effect","death_pose","damage_effect","weapon_critical","combat_result"] or not selected.get("source_reference") is Dictionary: return null
 	if texture_budget_bytes < 0:
 		source_effect_status["ok"] = false
 		source_effect_status["status"] = "selection_pending"

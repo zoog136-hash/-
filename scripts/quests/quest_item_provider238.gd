@@ -293,10 +293,11 @@ func try_use_held(world: Node, id: String) -> bool:
 			world.hud.show_message(str(equipped.get("message",equipped.get("reason","퀘스트 탄약의 실제 소지 개체 착용 연결 대기"))))
 			if equipped.get("ok",false) and equipped.get("saved",false):world.hud.refresh_inventory(world.inventory);world._update_hud()
 			return true
-		# A held card (변신·인형·성물 카드) uses the same native card owner as a
-		# bag-issued one; the reviewed fixed quest cards keep their own owner.
+		# A held card (변신·인형·성물 카드) or event holy water (축복 포인트) uses
+		# the same native owner as a bag-issued one; the reviewed fixed quest
+		# cards keep their own owner.
 		var held_kind: Variant=NATIVE_FIELDS.full(original_definition.get("native_record",{})).get("source_use_spec",{}).get("kind")
-		if held_kind in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book"] or (held_kind=="fixed_card" and int(original_owned.item_class_id) not in FIXED.QUEST_IDS):
+		if held_kind in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag","source_skill_book","source_bless_points"] or (held_kind=="fixed_card" and int(original_owned.item_class_id) not in FIXED.QUEST_IDS):
 			var stock: Script=load("res://scripts/loot/current523_native_stack.gd")
 			var used: Dictionary=stock.call("use_owned_original",world,original_owned.source_item,{"physical_id":id,"quantity":1,"expected_quantity":original_owned.quantity,"expected_remaining":int(original_owned.quantity)-1,"quest_reward_receipt":world.item_instances[id].quest_reward_receipt.duplicate(true)})
 			if used.get("requires_original_selection",false) and world.consumable_service.open_owned_original_selection(str(original_owned.get("inventory_key","")),used):return true
