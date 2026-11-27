@@ -9,7 +9,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## Gem_Popup_Source), the tooltip and lock / shop buttons, the help tooltip
 ## (Gem_ToolTip_Help), and a currency whose original icon is not known.
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
-const ROOT="UI/FloatingUi/Gem_All.csb"
+const ROOT=preload("res://scripts/ui/original_ui/source_main_wallet_bindings.gd").CURRENCY_INFO_MEMBER
 const ROW="UI/FloatingUi/Gem_List.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
 ## The currencies the existing HUD keeps, in its own order.

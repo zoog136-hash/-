@@ -75,15 +75,23 @@ func _node(offset: int, kind: String, name: String, options: Dictionary={}, chil
 func _registry() -> void:
 	var hud:=FakeHud.new()
 	root.add_child(hud)
-	for key: String in HUD_CONTROLLER.FEATURE_WINDOWS:
-		var window: RefCounted=HUD_CONTROLLER.FEATURE_WINDOWS[key].new()
+	for key: String in ["card_dispatch", "trial_dungeon"]:
+		check(not ResourceLoader.has_cached(HUD_CONTROLLER.FEATURE_WINDOW_PATHS[key]),
+			"loading the HUD leaves the %s window cold" % key)
+	check(not ResourceLoader.has_cached("res://scripts/ui/renewal_settings.gd"),
+		"loading the HUD leaves the settings panel cold")
+	for key: String in HUD_CONTROLLER.FEATURE_WINDOW_PATHS:
+		var script := load(HUD_CONTROLLER.FEATURE_WINDOW_PATHS[key]) as Script
+		check(script != null and script.can_instantiate(),key+" loads on request")
+		if script == null or not script.can_instantiate(): continue
+		var window: RefCounted=script.new()
 		check(window is KIT,key+" extends the window kit")
 		var members: Array[String]=window.required_members()
 		check(not members.is_empty() and members.all(func(member: String) -> bool:return member.begins_with("UI/") and member.ends_with(".csb")),key+" names original CSB members")
 		var result: Dictionary=window.configure(FakePack.new(),hud)
 		check(not result.get("ok",true) and result.get("code")=="source_window_member_missing" and not result.get("handled",true),key+" fails closed without its members")
 		check(not window.is_open(),key+" is closed before opening")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.keys()==["card_collection","card_fusion","option_awakening","awakening_result","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","doll_explore","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","mystery_card","guardian_find","buff_info","oman_tower","currency_info","skill_cards","memory_places","trial_dungeon","card_change","fusion_result","forge","fail_history","reward_select","craft_result","quick_change","quick_summon","box_probability","trade","options","card_gacha_result","combat_log"],"the registered feature windows")
+	check(HUD_CONTROLLER.FEATURE_WINDOW_PATHS.keys()==["card_collection","card_fusion","option_awakening","awakening_result","card_awakening","titles","half_elixir","monsterbook","totems","card_dispatch","doll_explore","item_book","emblems","guardians","weapon_mastery","schedule","tj_coupons","mystery_card","guardian_find","buff_info","oman_tower","currency_info","skill_cards","memory_places","trial_dungeon","card_change","fusion_result","forge","fail_history","reward_select","craft_result","quick_change","quick_summon","box_probability","trade","options","card_gacha_result","combat_log"],"the registered feature windows")
 	_option_awakening_admission(hud)
 	hud.free()
 
