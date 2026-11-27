@@ -202,9 +202,7 @@ static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> voi
 	world.item_use_cooldowns = cooldowns
 	world.hp = mini(world.hp, world._effective_max_hp())
 	world.mp = mini(world.mp, world._effective_max_mp())
-	world._refresh_speed_modifiers()
-	world.hud.refresh_inventory(world.inventory)
-	world._update_hud()
+	world._publish_timed_buff_hud()
 	var message: String = "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(duration)]
 	world.hud.show_message(message)
 	world.hud.append_log(message)

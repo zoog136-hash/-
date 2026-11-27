@@ -33,6 +33,18 @@ func _initialize()->void:
 		if FileAccess.get_sha256(path)!=R.SOURCE_SHA:ck(false,"wrong original archive")
 		else:
 			var zip:=ZIPReader.new();ck(zip.open(path)==OK,"pinned archive opened")
+			var ids: Dictionary={}
+			for link: Dictionary in R.rows("ConsumeTerritories"):ids[int(link.TerritoryId)]=true
+			var started: int=Time.get_ticks_usec()
+			var narrow: Array[Dictionary]=R.consumable_territories(ids)
+			sizes["consume_territory_narrow_us"]=Time.get_ticks_usec()-started
+			started=Time.get_ticks_usec()
+			var general: Array[Dictionary]=R.rows_matching("Territories","ID",ids)
+			sizes["consume_territory_full_us"]=Time.get_ticks_usec()-started
+			ck(narrow.size()==ids.size() and narrow==general,"every referenced consumption rectangle is identical in original order")
+			ck(R._read_consumable_territories(negative).is_empty(),"non-pinned territory bytes are rejected")
+			var uncovered: Dictionary=R.row_at("Territories",0)
+			ck(not ids.has(int(uncovered.ID)) and R.consumable_territories({int(uncovered.ID):true})==[uncovered],"an uncovered territory uses the ordinary reader")
 			var order:int=1 if OS.get_environment("TWILIGHT_SPAN_REVERSE")=="1" else 0
 			for table:String in SPANS.TABLES:
 				var bytes:=zip.read_file("content/"+table+".json")

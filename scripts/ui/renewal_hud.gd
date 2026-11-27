@@ -363,10 +363,6 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	if is_instance_valid(lineage_inventory_ui): lineage_inventory_ui.set_character_state(value)
-	if is_instance_valid(lineage_side_ui):
-		if lineage_side_ui.character_panel.is_visible_in_tree(): lineage_side_ui.set_character_state(value)
-		else: lineage_side_ui.character_state = value
 	if is_instance_valid(status_view): status_view.refresh(value)
 	if is_instance_valid(companion_detail_view):companion_detail_view.refresh()
 	if is_instance_valid(relic_reference_view):relic_reference_view.refresh_state()

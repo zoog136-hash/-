@@ -460,7 +460,12 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 		"summon": summons.spawn(skill)
 	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
 	trigger("on_skill", target, skill)
-	world._update_hud()
+	# A direct self effect can publish the live stats and paid materials
+	# without refolding the bag or refreshing unrelated card ownership.
+	if mode in ["buff","counter"] and not skill.has("approx_self_child") and world.has_method("_publish_timed_buff_hud"):
+		world._publish_timed_buff_hud()
+	else:
+		world._update_hud()
 	return true
 
 ## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables

@@ -29,32 +29,35 @@ static func below_threshold(current: int, maximum: int, percent: int) -> bool:
 	return float(current) * 100.0 <= float(maximum) * float(percent)
 
 static func priority(record: Dictionary, spec: Dictionary) -> int:
-	if int(record.get("heal", 0)) > 0:
+	if spec.get("kind") == "hp" or int(record.get("heal", 0)) > 0:
 		return 0
 	if str(spec.get("kind", "")) == "instant_mp":
 		return 1
 	return 2
+
+static func is_timed_buff(spec: Dictionary) -> bool:
+	return spec.get("kind") in ["regen", "food", "buff", "native_buff"]
 
 static func wanted(item_name: String, record: Dictionary, spec: Dictionary,
 		settings: Dictionary, hp: int, max_hp: int, mp: int, max_mp: int,
 		job: String, active_buffs: Dictionary) -> bool:
 	if RULES.is_removed_item(item_name):
 		return false
-	if int(record.get("heal", 0)) > 0:
+	if spec.get("kind") == "hp" or int(record.get("heal", 0)) > 0:
 		return bool(settings.hp_enabled) and below_threshold(hp, max_hp, int(settings.hp_percent))
 	var kind: String = str(spec.get("kind", ""))
 	if kind == "instant_mp":
 		if float(spec.get("cooldown", 0.0)) >= 60.0:
 			return bool(settings.long_mp_enabled) and below_threshold(mp, max_mp, int(settings.long_mp_percent))
 		return bool(settings.mp_enabled) and below_threshold(mp, max_mp, int(settings.mp_percent))
-	if kind not in ["regen", "food", "buff"]:
+	if not is_timed_buff(spec):
 		return false
 	var classes: Variant = spec.get("classes", [])
 	if classes is Array and not classes.is_empty() and not classes.has(job):
 		return false
 	var group: String = str(spec.get("group", ""))
 	var normalized_name: String = RULES.normalize_name(item_name)
-	for key: Variant in active_buffs.keys():
+	for key: Variant in active_buffs:
 		var value: Variant = active_buffs[key]
 		if not value is Dictionary:
 			continue
@@ -65,4 +68,12 @@ static func wanted(item_name: String, record: Dictionary, spec: Dictionary,
 			return false
 		if not group.is_empty() and str(buff.get("group", "")) == group:
 			return false
+		if kind == "native_buff":
+			var source: Variant = buff.get("source_buff_class")
+			var original: Dictionary = source if source is Dictionary else {}
+			var group_id: int = int(original.get("BuffGroupID", 0))
+			if int(buff.get("source_item_class_id", 0)) == int(spec.get("source_item_id", -1)) or int(original.get("ID", 0)) == int(spec.get("buff_id", -1)):
+				return false
+			if group_id > 0 and (group_id == int(spec.get("exclusive_group_id", 0)) or group_id in spec.get("blocked_groups", [])):
+				return false
 	return true
