@@ -112,6 +112,13 @@ func _run() -> void:
 	await _presentation_proof()
 	var addon := OS.get_environment("TWILIGHT_ENCHANT_WINDOW_TEST_PACK")
 	if not addon.is_empty():await _mounted_enchant_main(addon)
+	var standalone_addon: String = OS.get_environment("TWILIGHT_ENCHANT_STANDALONE_TEST_PACK")
+	if not standalone_addon.is_empty():
+		var previous_ui: String = OS.get_environment("TWILIGHT_SOURCE_UI")
+		var previous_sha: String = OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")
+		await _standalone_result_main(standalone_addon)
+		OS.set_environment("TWILIGHT_SOURCE_UI", previous_ui)
+		OS.set_environment("TWILIGHT_SOURCE_UI_SHA256", previous_sha)
 	var pack: String=""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--source523-pack="):pack=arg.trim_prefix("--source523-pack=")
@@ -407,6 +414,108 @@ func _mounted_enchant_main(addon: String) -> void:
 	window.end_presentation()
 	evidence["mounted_official_addon"]={"pin":"5263d925","paid_success":true,"failure_presentation":true,"save_before_reveal":true}
 	world.source_save_blocked=true
+	world.queue_free()
+	await process_frame
+
+func _tap_result(input: Control) -> void:
+	for pressed: bool in [true, false]:
+		var event := InputEventScreenTouch.new()
+		event.pressed = pressed
+		input.gui_input.emit(event)
+
+func _standalone_result_main(addon: String) -> void:
+	var selected_sha: String = "91e2c03b21d2f5da3f285b6cf1377af4d8c83bd4c8b0675312bc5c15f0f3b71a"
+	OS.set_environment("TWILIGHT_SOURCE_UI", addon)
+	OS.set_environment("TWILIGHT_SOURCE_UI_SHA256", selected_sha)
+	var world: Node = load("res://Main.tscn").instantiate()
+	root.add_child(world)
+	world.set_process(false)
+	world.set_physics_process(false)
+	world.field_population.set_process(false)
+	world.player.set_physics_process(false)
+	check(preload("res://tests/qa_class_selection.gd").enter_game(world), "actual Main entered for the standalone enhancement")
+	var hud: Node = world.hud
+	for frame: int in range(12):
+		await process_frame
+		if is_instance_valid(hud.original_main_ui_controller): break
+	var controller: Node = hud.original_main_ui_controller
+	if not check(is_instance_valid(controller) and controller._pack.manifest_sha256 == selected_sha,
+		"original ui46 HUD mounts through production selection: " + str(hud.original_main_ui_bind_problem)):
+		world.queue_free()
+		return
+	var name_value: String = "낡은 장검"
+	var scroll: String = "무기 마법 주문서 (각인)"
+	world.inventory = {name_value:1, scroll:3}
+	world.item_instances = {}
+	world.equipped_items = {}
+	world.gold = 1000000
+	world._sync_item_instances()
+	var uid: String = str(world.item_instances.keys()[0])
+	var record: Dictionary = world._find_catalog_item_record(name_value)
+	var kind: String = world._scroll_kind(scroll)
+	var mode: String = world._scroll_mode(scroll)
+	var level: int = world._safe_enhancement_level(kind, record)
+	world.item_instances[uid].level = level
+	var chance: Dictionary = world._source_enhancement_rule(record,level,mode,scroll,world.item_instances[uid])
+	if chance.is_empty(): chance = world._enhancement_chance(kind,level,mode,record)
+	var rng := RandomNumberGenerator.new()
+	for seed: int in range(1,200):
+		rng.seed = seed
+		if rng.randf_range(0.0,100.0) < float(chance.success):
+			world.rng.seed = seed
+			break
+	world.presentation_settings["reduced_motion"] = true
+	var target: String = name_value + "@@@" + uid
+	check(not controller.enchant_window_is_open(), "enhancement starts outside the original stock forge")
+	hud.enhancement_requested.emit(scroll, target)
+	var screen: RefCounted = controller._standalone_enchant_result
+	if check(screen != null and screen.is_waiting() and hud.is_enhancement_presenting(), "the actual committed world action opens the original standalone touch prompt"):
+		var result_input: Control = screen._scene.get_node("EnchantResultScreenTouch")
+		var saved: PackedByteArray = FileAccess.get_file_as_bytes(world.save_path())
+		var parsed: Variant = JSON.parse_string(saved.get_string_from_utf8())
+		var saved_success: bool = parsed is Dictionary and int(parsed.inventory[scroll]) == 2 and int(parsed.item_instances[uid].level) == level + 1
+		check(saved_success,
+			"the exact +1 and single scroll debit are durable before any touch")
+		var after_rng: int = world.rng.state
+		hud.enhancement_requested.emit(scroll, target)
+		check(world.rng.state == after_rng and int(world.inventory[scroll]) == 2, "duplicate enhancement is blocked while standalone confirmation is open")
+		_tap_result(result_input)
+		check(screen.is_held() and is_instance_valid(screen._banner) and screen._banner.playback_status().frame == 40.0,
+			"first touch shows the real original success banner and keeps its opaque frame")
+		check(not is_instance_valid(hud.enhancement_reveal), "Main uses the original result scene through both phases")
+		if OS.get_environment("TWILIGHT_ENCHANT_VERIFY_PIXELS") == "1":
+			paused = true
+			await RenderingServer.frame_post_draw
+			var shown: PackedByteArray = root.get_texture().get_image().get_data()
+			screen._scene.hide()
+			await RenderingServer.frame_post_draw
+			var hidden: PackedByteArray = root.get_texture().get_image().get_data()
+			screen._scene.show()
+			paused = false
+			check(shown != hidden, "the original standalone result changes the OpenGL viewport pixels")
+		_tap_result(result_input)
+		check(not hud.is_enhancement_presenting() and FileAccess.get_file_as_bytes(world.save_path()) == saved,
+			"second touch dismisses without another save or roll")
+		await process_frame
+		# The committed world action refreshes and opens the standard forge
+		# after presenting. Close it to exercise another standalone result.
+		controller.close_enchant_window()
+		var active_before: bool = hud.is_enhancement_presenting()
+		hud.show_enhancement_result("destroy", name_value, level+1, 0)
+		var live_controller: Node = hud.original_main_ui_controller
+		var live_screen: RefCounted = live_controller._standalone_enchant_result if is_instance_valid(live_controller) else null
+		var detail: Dictionary = {"active_before":active_before,"same_host":live_screen == screen,"route":hud.original_main_ui_status.get("enchant_result",{}),
+			"fallback":is_instance_valid(hud.enhancement_reveal),"phase":live_screen.phase() if live_screen != null else {}}
+		var loss_visible: bool = false
+		if check(live_screen != null and live_screen.is_waiting(), "a later committed loss starts on the original touch prompt: " + str(detail)):
+			_tap_result(live_screen._scene.get_node("EnchantResultScreenTouch"))
+			loss_visible = live_screen.is_held() and is_instance_valid(live_screen._banner) and live_screen._banner.playback_status().frame == 145.0
+			check(loss_visible,
+				"the original failure banner is played for a recorded loss")
+			_tap_result(live_screen._scene.get_node("EnchantResultScreenTouch"))
+		check(world.rng.state == after_rng and int(world.inventory[scroll]) == 2, "failure presentation cannot apply another gameplay result")
+		evidence["standalone_official_addon"] = {"pin":"91e2c03b","actual_saved_success":saved_success,"recorded_failure":loss_visible}
+	world.source_save_blocked = true
 	world.queue_free()
 	await process_frame
 

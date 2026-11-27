@@ -3625,6 +3625,7 @@ func _open_enhance_chooser() -> void:
 
 func is_enhancement_presenting() -> bool:
 	if is_instance_valid(enhancement_reveal) and not enhancement_reveal.is_queued_for_deletion(): return true
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("standalone_enchant_result_is_open") and original_main_ui_controller.standalone_enchant_result_is_open(): return true
 	var window: Variant = _original_enchant_window()
 	return window != null and bool(window.call("is_presenting"))
 
@@ -3642,6 +3643,12 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 	# the window, so its texts never mix with result texts.
 	var window: Variant = _original_enchant_window()
 	if window != null and bool(window.call("present_result",result_type,from_level,to_level)): return
+	var record: Dictionary = get_parent()._find_catalog_item_record(item_name)
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_present_standalone_enchant_result"):
+		var title: String = preload("res://scripts/ui/source523_item_identity.gd").display_name(record, item_name)
+		var original: Dictionary = original_main_ui_controller.try_present_standalone_enchant_result(result_type, title, from_level, to_level, record)
+		original_main_ui_status["enchant_result"] = _inventory_status_summary(original)
+		if original.get("ok", false): return
 	var layer := CanvasLayer.new()
 	layer.name = "EnhancementRevealLayer"
 	layer.layer = 110
@@ -3653,7 +3660,6 @@ func show_enhancement_result(result_type: String, item_name: String, from_level:
 	stage.low_detail = str(settings.get("effect_detail","full")) == "low"
 	enhancement_reveal = stage
 	layer.add_child(stage)
-	var record: Dictionary = get_parent()._find_catalog_item_record(item_name)
 	stage.present(result_type,item_name,from_level,to_level,UI.item_icon(record,item_name,item_image_index.get("아이템",{})))
 	stage.finished.connect(func() -> void:
 		enhancement_reveal = null

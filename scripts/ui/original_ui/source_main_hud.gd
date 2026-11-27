@@ -1579,7 +1579,9 @@ func close_production_window() -> void:
 ## --- Original 523 장비 강화 window (source_main_enchant_window; the forge
 ## rules, confirmation and the world's roll stay the owners)
 const EnchantWindow=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
+const EnchantResultWindow=preload("res://scripts/ui/original_ui/source_main_enchant_result_window.gd")
 var _enchant_window: RefCounted
+var _standalone_enchant_result: RefCounted
 
 func _ensure_enchant_window() -> bool:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
@@ -1614,6 +1616,27 @@ func close_enchant_window() -> void:
 	if enchant_window_is_open():
 		_cancel_native_buttons()
 		_enchant_window.close()
+
+func standalone_enchant_result_is_open() -> bool:
+	return _standalone_enchant_result != null and _standalone_enchant_result.is_open()
+
+## A committed roll can come from another window, such as the dungeon
+## enchant owner. Play the same original result scene without opening a forge.
+func try_present_standalone_enchant_result(outcome: String, title: String, from_level: int, to_level: int, item: Dictionary) -> Dictionary:
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if _pack == null or not is_instance_valid(hud) or not is_instance_valid(_coordinates): return _fail("source_enchant_result_host_unavailable")
+	if standalone_enchant_result_is_open(): return _fail("source_enchant_result_already_open")
+	if _standalone_enchant_result == null:
+		var candidate = EnchantResultWindow.new()
+		var configured: Dictionary = candidate.configure(_pack, hud)
+		if not configured.get("ok", false): return configured
+		_standalone_enchant_result = candidate
+	var settings: Dictionary = hud.get_parent().presentation_settings
+	var rows: Array = [{"label":"강화 단계","now":"+%d" % from_level,"next":"소실" if outcome == "destroy" else "+%d" % to_level}]
+	var result: Dictionary = {"kind":"success" if outcome == "success" else "fail", "outcome":outcome, "title":title,
+		"text":EnchantWindow.result_text(outcome, from_level, to_level), "from":from_level, "to":to_level, "rows":rows,"record":item}
+	_cancel_native_buttons()
+	return _standalone_enchant_result.open(_coordinates, result, settings)
 
 ## --- Original 523 용해 confirmation (source_main_dissolve_popup)
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
@@ -2248,6 +2271,9 @@ func release(restore_legacy: bool=true) -> void:
 	if _dungeon_controls!=null:_dungeon_controls.close()
 	if _workspace_controls!=null:_workspace_controls.close()
 	close_enhance_action()
+	if _standalone_enchant_result != null:
+		_standalone_enchant_result.close()
+		_standalone_enchant_result = null
 	close_quest_controls()
 	close_quest_window()
 	close_shop_window()
