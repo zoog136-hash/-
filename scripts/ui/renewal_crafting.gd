@@ -117,7 +117,7 @@ func configure(controller: Node, gacha_only: bool = false) -> void:
 	product_title=UI.label("제작 아이템",15,UI.GOLD)
 	information.add_child(product_title)
 	var result_panel:=PanelContainer.new()
-	result_panel.add_theme_stylebox_override("panel",Surfaces.inset(8))
+	Surfaces.apply_inset(result_panel,8)
 	information.add_child(result_panel)
 	hud.workspace.register_scroll_drag(material_scroll,result_panel)
 	var result_row:=HBoxContainer.new()
@@ -574,7 +574,7 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 		var panel:=PanelContainer.new()
 		panel.custom_minimum_size.y=54
 		panel.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-		panel.add_theme_stylebox_override("panel",Surfaces.inset(5))
+		Surfaces.apply_inset(panel,5)
 		material_grid.add_child(panel)
 		hud.workspace.register_scroll_drag(material_scroll,panel)
 		var row:=HBoxContainer.new()

@@ -9,6 +9,7 @@ const SafeArea = preload("res://scripts/ui/safe_area.gd")
 const MENU_WINDOW_SIZE := Vector2(378,576)
 const Surface = preload("res://scripts/ui/renewal_surface.gd")
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
+const SourceChrome=preload("res://scripts/ui/original_ui/source_common_chrome.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -38,10 +39,15 @@ var filter_drag_handle: Label
 var _menu_source_extent: Vector2=Vector2.ZERO
 var _window_title_row: Control
 var _window_divider: Control
+var _close_button: Button
+var _default_theme: Theme
+var _default_close: StyleBox
+var _source_frame: StyleBoxTexture
 
 func _ready() -> void:
 	name = "RenewalWindow"
-	theme = UI.make_theme()
+	_default_theme = UI.make_theme()
+	theme = _default_theme
 	z_index = 150
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var frame: StyleBoxFlat=UI.screen_frame()
@@ -100,11 +106,12 @@ func _ready() -> void:
 	teleport_button.hide()
 	title_row.add_child(teleport_button)
 	# Text instead of the removed self-drawn close icon (still tappable).
-	var close := UI.button("X",func() -> void: closed.emit(),Vector2(32,32))
-	close.tooltip_text = "닫기 · Esc"
-	close.name = "CloseWindow"
-	close.add_theme_stylebox_override("normal",UI.box(Color("542d24"),Color("957963"),3))
-	title_row.add_child(close)
+	_close_button = UI.button("X",func() -> void: closed.emit(),Vector2(32,32))
+	_close_button.tooltip_text = "닫기 · Esc"
+	_close_button.name = "CloseWindow"
+	_default_close = UI.box(Color("542d24"),Color("957963"),3)
+	_close_button.add_theme_stylebox_override("normal",_default_close)
+	title_row.add_child(_close_button)
 	_window_divider=HSeparator.new()
 	layout.add_child(_window_divider)
 	content = Control.new()
@@ -305,14 +312,7 @@ func open(section: String, title: String, description: String) -> void:
 	_menu_source_extent=Vector2.ZERO
 	_window_title_row.show()
 	_window_divider.show()
-	var full_browser: bool=section in ["변신","마법인형","성물","아이템","shop","equipment_collections","card_collections"]
-	get_node("WindowMaterialSurface").visible=not full_browser
-	if full_browser:
-		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
-	else:
-		var frame: StyleBoxFlat=UI.screen_frame()
-		for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]:frame.set_content_margin(side,8)
-		add_theme_stylebox_override("panel",frame)
+	_apply_frame()
 	title_dragged = false
 	heading.text = title
 	section_icon.texture = UI.icon({"stats":"character","npc_shop":"shop","detailed_status":"character","card_collections":"catalog"}.get(section,section))
@@ -324,6 +324,29 @@ func open(section: String, title: String, description: String) -> void:
 		(navigation[key] as Button).button_pressed = key == section
 	show()
 	fit_viewport()
+
+func bind_source_chrome(skin: Dictionary, source_theme: Theme) -> void:
+	theme = source_theme if source_theme != null else _default_theme
+	_source_frame = skin.get("frame")
+	var close_styles: Dictionary = skin.get("close",{})
+	for state: String in ["hover","pressed","hover_pressed","disabled"]:
+		_close_button.remove_theme_stylebox_override(state)
+	_close_button.add_theme_stylebox_override("normal",_default_close)
+	_close_button.text = "X" if close_styles.is_empty() else ""
+	SourceChrome.apply_button(_close_button,close_styles)
+	if _menu_source_extent == Vector2.ZERO: _apply_frame()
+
+func _apply_frame() -> void:
+	var full_browser: bool = current_section in ["변신","마법인형","성물","아이템","shop","equipment_collections","card_collections"]
+	get_node("WindowMaterialSurface").visible = _source_frame == null and not full_browser
+	if _source_frame != null:
+		add_theme_stylebox_override("panel",_source_frame)
+	elif full_browser:
+		add_theme_stylebox_override("panel",ReferenceSurfaces.inset(8))
+	else:
+		var frame: StyleBoxFlat = UI.screen_frame()
+		for side: int in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: frame.set_content_margin(side,8)
+		add_theme_stylebox_override("panel",frame)
 
 func use_original_menu_frame(extent: Vector2) -> void:
 	_menu_source_extent=extent

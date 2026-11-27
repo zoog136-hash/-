@@ -49,6 +49,9 @@ const NavigationMemory = preload("res://scripts/ui/navigation_memory.gd")
 var navigation_memory = NavigationMemory.new()
 var switching_workspace: bool = false
 var combat_log_view: RichTextLabel
+const SourceChrome = preload("res://scripts/ui/original_ui/source_common_chrome.gd")
+var _source_chrome: Dictionary = {}
+var _source_chrome_theme: Theme
 var detail_window: PanelContainer
 var status_view: Control
 var pointer_transfer: Node
@@ -944,6 +947,10 @@ func show_source_system_message(text: String, explicit_priority: int) -> Diction
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if get_parent().has_method("_resume_death523") and get_parent().death_recovery.blocked(): return
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.feature_window_is_open("combat_log") and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		_go_back()
+		get_viewport().set_input_as_handled()
+		return
 	if source_awakening_result_is_open() and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		original_main_ui_controller.feature_window("awakening_result").advance_or_dismiss()
 		get_viewport().set_input_as_handled()
@@ -1603,6 +1610,7 @@ func _companion(section: String,title: String) -> PanelContainer:
 	if not is_instance_valid(companion_window):
 		companion_window = RenewalWindowScript.new()
 		$Root.add_child(companion_window)
+		companion_window.bind_source_chrome(_source_chrome,_source_chrome_theme)
 		companion_window.z_index = 155
 		companion_window.closed.connect(func() -> void:
 			pointer_transfer.cancel()
@@ -1728,6 +1736,10 @@ func open_macro_info() -> void:
 
 func open_combat_log() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
+	if _open_original_feature("combat_log"):
+		combat_log_view = original_main_ui_controller.feature_window("combat_log").history
+		combat_log_view.text = "\n".join(log_history) if not log_history.is_empty() else "아직 기록이 없습니다."
+		return
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
 	var history := UI.rich("")
@@ -1811,6 +1823,7 @@ func open_detailed_status() -> void:
 	if not is_instance_valid(detail_window):
 		detail_window = RenewalWindowScript.new()
 		$Root.add_child(detail_window)
+		detail_window.bind_source_chrome(_source_chrome,_source_chrome_theme)
 		detail_window.z_index = 220
 		detail_window.closed.connect(func() -> void: detail_window.hide())
 	detail_window.clear()
@@ -4049,7 +4062,7 @@ func open_combinations() -> void:
 
 func open_half_elixir(item_name: String = "") -> void:
 	_open_window("half_elixir", "하프 엘릭서", "사용 포인트 충전과 능력치 투자·확장·초기화를 구분합니다.")
-	if item_name.is_empty() and _open_original_feature("half_elixir"):return
+	if _open_original_feature("half_elixir",[] if item_name.is_empty() else [item_name]):return
 	var view = preload("res://scripts/growth/half_elixir_view.gd").new()
 	workspace.mount(view)
 	view.configure(self)
@@ -4392,6 +4405,7 @@ static func _original_fallback_text(code: String) -> String:
 func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	var reopen_character: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.character_is_open()
 	var reopen_dialogue: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.npc_dialogue_is_open()
+	var reopen_log: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.feature_window_is_open("combat_log")
 	var candidate=preload("res://scripts/ui/original_ui/source_main_hud.gd").new()
 	candidate.name="OriginalMainGameHUD"
 	add_child(candidate)
@@ -4414,6 +4428,15 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		original_main_ui_controller.release(false)
 		original_main_ui_controller.queue_free()
 	original_main_ui_controller=candidate
+	_source_chrome = SourceChrome.build(source_pack)
+	_source_chrome_theme = UI.make_theme()
+	SourceChrome.apply_theme(_source_chrome_theme,_source_chrome)
+	$Root.theme = _source_chrome_theme
+	if is_instance_valid(lineage_inventory_ui): lineage_inventory_ui.theme = _source_chrome_theme
+	if is_instance_valid(lineage_side_ui) and is_instance_valid(lineage_side_ui.character_panel):
+		lineage_side_ui.character_panel.theme = _source_chrome_theme
+	for panel: Control in [workspace,companion_window,detail_window]:
+		if is_instance_valid(panel): panel.bind_source_chrome(_source_chrome,_source_chrome_theme)
 	_refresh_menu_action_art()
 	candidate.inventory_return_to_current_requested.connect(_restore_current_inventory_view)
 	candidate.inventory_closed.connect(_original_inventory_closed)
@@ -4427,6 +4450,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	candidate.refresh_quickslots()
 	var system_message: Dictionary=candidate.set_system_message_priority(_original_system_message_priority,_original_system_message_routing)
 	if reopen_character:open_character()
+	if reopen_log:open_combat_log()
 	if reopen_dialogue:
 		var owner: Object=_original_npc_dialogue_owner.get_ref() if _original_npc_dialogue_owner!=null else null
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
