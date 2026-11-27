@@ -174,14 +174,27 @@ static func plan(instances: Dictionary,state: Dictionary,locks: Dictionary,reser
 			if not placed:kinds.append([member])
 		for kind: Array in kinds:
 			if kind.size()<2:continue
-			var cap: int=kind[0].cap;var current: Array=[];var total: int=0
+			var cap: int = kind[0].cap
+			# A later small receipt may fit an earlier partial pile even when
+			# the next grant in acquisition order was too large for that pile.
+			var open_bins: Array[Dictionary] = []
 			for member: Dictionary in kind:
-				var amount: int=int(member.owned.remaining)
-				if not current.is_empty() and total+amount>cap:
-					if current.size()>1:bins.append(current)
-					current=[];total=0
-				current.append(member);total+=amount
-			if current.size()>1:bins.append(current)
+				var amount: int = int(member.owned.remaining)
+				if amount >= cap: continue
+				var placed: bool = false
+				for index: int in open_bins.size():
+					var bin: Dictionary = open_bins[index]
+					if amount > int(bin.room): continue
+					bin.members.append(member)
+					bin.room -= amount
+					if bin.room == 0:
+						bins.append(bin.members)
+						open_bins.remove_at(index)
+					placed = true
+					break
+				if not placed: open_bins.append({"members":[member],"room":cap - amount})
+			for bin: Dictionary in open_bins:
+				if bin.members.size() > 1: bins.append(bin.members)
 	if bins.is_empty():return unchanged
 	if owner_snapshot.is_valid():
 		var snapshot: Variant=owner_snapshot.call()

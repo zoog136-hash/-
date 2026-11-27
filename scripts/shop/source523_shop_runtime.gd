@@ -44,6 +44,7 @@ var _bindings: Dictionary = {}
 ## Set only when the real shop recognized its historical aggregate and the
 ## installed original supplier can issue the same ItemClass as a physical stack.
 var legacy_powder_key: String = ""
+var legacy_material_keys: Dictionary = {}
 ## Explicit adapters only. Missing server/calendar/price knowledge never grants access.
 var server_context: Dictionary = {}
 ## Default calendar: Korea time with the 05:00 reset used everywhere else in
@@ -183,6 +184,7 @@ func bind_source(source, during_boot: bool = false) -> void:
 	catalog = source
 	_bindings.clear()
 	legacy_powder_key = ""
+	legacy_material_keys.clear()
 	if catalog == null or not catalog.available(): return
 	for row: Dictionary in world.catalog_db.get("아이템", []):
 		var raw_id: String = str(row.get("sourceId", ""))
@@ -225,6 +227,7 @@ func bind_source(source, during_boot: bool = false) -> void:
 	inventory_tickets.configure(self)
 	_bindings.merge(inventory_tickets.install())
 	_bind_advanced_powder()
+	_bind_shared_material_stacks()
 	if during_boot: BOOT_LOG.end("shop_ticket_bind", tickets_started)
 	var npc_started: int = BOOT_LOG.begin("shop_npc_bind") if during_boot else 0
 	npc_definitions.configure(catalog)
@@ -250,6 +253,60 @@ func _bind_advanced_powder() -> void:
 	# New purchases and payments use the normal receipt routes. The former
 	# shop key still identifies old ownership when a save is loaded.
 	_bindings.erase("4:117544")
+
+func _bind_shared_material_stacks() -> void:
+	if not world.has_method("_catalog_item_from_source_id"): return
+	for id: int in preload("res://scripts/loot/patch523_item_inventory.gd").SHARED_SHOP_MATERIAL_IDS:
+		var key: String = "4:%d" % id
+		var old: Dictionary = _bindings.get(key, {}).get("record", {})
+		if old.get("source") != "inven" or old.get("sourceId") != str(id) or old.get("slot") != "material": continue
+		var name: String = str(old.get("name", ""))
+		if name.is_empty() or world.catalog_item_variant_count.get(name, 0) != 1: continue
+		var native: Dictionary = CashPackages.native_record(world, id)
+		if native.get("name") != "%s · 원본#%d" % [name, id] or native.get("slot") != "material": continue
+		legacy_material_keys[id] = name
+		_bindings.erase(key)
+
+## Reconcile an older aggregate only when the original shop bound that exact
+## name and item ID. Existing physical ownership, locks or enhancement markers
+## require their corresponding owners instead of a name-key translation.
+func reconcile_material_stacks() -> bool:
+	var stock: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	if stock.busy or legacy_material_keys.is_empty(): return false
+	var inventory: Dictionary = world.inventory
+	var instances: Dictionary = world.item_instances
+	var renamed: Dictionary = {}
+	for id: int in legacy_material_keys:
+		var old: String = legacy_material_keys[id]
+		var amount: Variant = inventory.get(old, 0)
+		if not integer(amount) or int(amount) <= 0 or int(amount) > LIMIT or world.enhancement_levels.has(old): continue
+		var record: Dictionary = CashPackages.native_record(world, id)
+		var name: String = str(record.get("name", ""))
+		if name != "%s · 원본#%d" % [old, id] or world._item_locked(old) or world._item_locked(name): continue
+		var original: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").item_definition(record).get("original_item", {})
+		if int(amount) > int(original.get("MaxStackAmount", 0)): continue
+		var before: Variant = inventory.get(name, 0)
+		if not integer(before) or int(before) > LIMIT - int(amount) or instances.has(old): continue
+		if instances.values().any(func(entry: Variant) -> bool: return entry is Dictionary and entry.get("name") == old): continue
+		var locks: Dictionary = world.ui_preferences.get("item_locks", {})
+		if locks.keys().any(func(ref: Variant) -> bool: return str(ref).begins_with(old + "@@@") and bool(locks[ref])): continue
+		var granted: Dictionary = stock.stage_grant(record, int(amount), instances, {"kind":"source523_existing_shop_material", "item_class_id":id, "inventory_key":old}, true)
+		if not granted.get("ok", false): continue
+		if renamed.is_empty(): inventory = inventory.duplicate()
+		inventory.erase(old)
+		inventory[name] = int(before) + int(amount)
+		instances = granted.item_instances
+		renamed[old] = name
+	if renamed.is_empty(): return false
+	if world._save_game(true, {"inventory":inventory,"item_instances":instances}, {}, true) != OK: return false
+	world.inventory = inventory
+	world.item_instances = instances
+	var legacy: Script = preload("res://scripts/loot/legacy_item_migration523.gd")
+	world.quickslots = legacy._rename_refs(world.quickslots, renamed)
+	if world.ui_preferences.has("quickslot_pages"):
+		world.ui_preferences.quickslot_pages = legacy._rename_refs(world.ui_preferences.quickslot_pages, renamed)
+	world._request_deferred_save()
+	return true
 
 func item_references(item_id: int) -> Dictionary:
 	var source = catalog if catalog != null else Catalog.session()
@@ -1070,9 +1127,9 @@ func _grant(goods: Array, inventory: Dictionary, gold: int, instances: Dictionar
 		# Older pending orders can predate the physical binding. Resolve their
 		# actual item at claim time as well as honoring already quoted variants.
 		var received_id: int = int(binding.get("record",{}).get("source_item_class_id", 0))
-		var old_powder_order: bool = received_id == 117544 and binding.get("native_supply",false) and not legacy_powder_key.is_empty()
-		if token.get("native_supply",false) or old_powder_order:
-			var item_id: int = received_id if old_powder_order else int(token.class_id)
+		var old_material_order: bool = binding.get("native_supply",false) and ((received_id == 117544 and not legacy_powder_key.is_empty()) or legacy_material_keys.has(received_id))
+		if token.get("native_supply",false) or old_material_order:
+			var item_id: int = received_id if old_material_order else int(token.class_id)
 			var issued: Dictionary=preload("res://scripts/loot/patch523_stage_view.gd").stage_one(world,inventory,instances,gold,item_id,int(token.amount),int(token.get("bless_raw",1)),{"kind":"source523_npc_merchant","item_class_id":item_id})
 			if not issued.get("ok",false):return fail(str(issued.get("error","원본 지급 실패")))
 			inventory=issued.overrides.inventory;instances=issued.overrides.item_instances;gold=int(issued.overrides.gold)

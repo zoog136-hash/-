@@ -183,15 +183,21 @@ func resolve(reward: Dictionary) -> Dictionary:
 	var id: int = int(reward.get("RewardClassID",0))
 	# Newly connected source rows retain actual quest-owned stacks until the
 	# player selects use. Do not mass-convert grants or expand old save schemas.
-	if id not in REVIEWED_IDS:return {}
-	var definition: Dictionary = bound_definition(id)
+	var shared_material: bool = id in GRANTS.SHARED_SHOP_MATERIAL_IDS
+	if id not in REVIEWED_IDS and not shared_material:return {}
+	var definition: Dictionary = D.definition_id(str(id)) if shared_material else bound_definition(id)
 	if definition.is_empty() or definition.original_item!=reward.get("source_item",{}): return {}
 	var bless: int = int(reward.ItemBlessCodeID)
 	if bless not in [1,2,3] or definition.original_item.get("TestItem",true): return {}
-	if id==239 and bless!=1:return {}
+	if (id==239 or shared_material) and bless!=1:return {}
 	var record: Dictionary = D.variant_item(definition.native_record,bless)
 	if not D.deadline_problem(record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty(): return {}
-	_register(world,definition.native_record,bless)
+	if shared_material:
+		# The slot already has a registered physical supplier. An ordinary new
+		# quest grant should use its existing receipt and crafting material key.
+		if record.get("slot") != "material" or not GRANTS.quote_grant(world, {"item_class_id":id,"amount":reward.get("Amount"),"bless_raw":bless,"enchant":0}).get("ok", false): return {}
+	else:
+		_register(world,definition.native_record,bless)
 	if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {}
 	return {"record":record,"pack_sha256":str(D.pack_identity().get("sha256","")),"source_input_marker":D.pack_identity()}
 
@@ -204,7 +210,8 @@ func retains_issued_reference(world: Node, item_key: String) -> bool:
 	for quest_id: String in world.quest_service.item_grants:
 		if world.quest_service.claimed.get(quest_id)!=true:continue
 		for receipt: Dictionary in world.quest_service.item_grants[quest_id]:
-			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256") in [PIN,ORIGINAL.SOURCE_SHA] and REVIEWED_IDS.has(int(receipt.item_class_id)):return true
+			var id: int = int(receipt.item_class_id)
+			if not receipt.has("origin") and receipt.inventory_key==item_key and receipt.get("pack_sha256") in [PIN,ORIGINAL.SOURCE_SHA] and (id in REVIEWED_IDS or id in GRANTS.SHARED_SHOP_MATERIAL_IDS):return true
 	return false
 
 func try_use_inventory(world: Node, item_key: String) -> bool:
