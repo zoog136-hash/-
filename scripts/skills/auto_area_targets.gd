@@ -10,6 +10,7 @@ const HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 
 var _root: Node2D
 var _actor_cells: Dictionary = {}
+var _pending_moves: Dictionary[TwilightMonster, bool] = {}
 var _cells: Dictionary[Vector2i, Dictionary] = {}
 var _queries: Dictionary[Rect2i, Array] = {}
 var _query_coverage := Rect2i()
@@ -26,6 +27,7 @@ var _miss_coverage := Rect2i()
 func candidates(root: Node2D, bounds: Rect2) -> Array:
 	if not is_instance_valid(root): return []
 	if root != _root: _watch(root)
+	_apply_position_updates()
 	if _cells.is_empty(): return []
 	# Cell membership is local to the monster parent. Querying in its current
 	# transform also covers a translated or scaled parent without reindexing it.
@@ -92,7 +94,7 @@ func _enter(child: Node) -> void:
 	_actor_cells[child] = null
 	child.auto_area_tracker = self
 	child.set_notify_local_transform(true)
-	moved(child)
+	_update_position(child)
 
 func _leave(child: Node) -> void:
 	if not _actor_cells.has(child): return
@@ -100,6 +102,7 @@ func _leave(child: Node) -> void:
 	if cell is Vector2i: _invalidate_geometry(cell)
 	_remove_cell(child, cell)
 	_actor_cells.erase(child)
+	_pending_moves.erase(child)
 	_stop_tracking(child)
 
 func _stop_tracking(actor: TwilightMonster) -> void:
@@ -107,8 +110,21 @@ func _stop_tracking(actor: TwilightMonster) -> void:
 	actor.auto_area_tracker = null
 	actor.set_notify_local_transform(false)
 
-func moved(actor: TwilightMonster) -> void:
-	if not _actor_cells.has(actor): return
+func queue_position_update(actor: TwilightMonster) -> void:
+	# Only the first movement between queries needs a notification. The query
+	# reads the actor's latest position before consulting any cached geometry.
+	actor.set_notify_local_transform(false)
+	_pending_moves[actor] = true
+
+func _apply_position_updates() -> void:
+	if _pending_moves.is_empty(): return
+	HITCH.count("skill.area_index_position_updates", _pending_moves.size())
+	for actor: TwilightMonster in _pending_moves:
+		_update_position(actor)
+		actor.set_notify_local_transform(true)
+	_pending_moves.clear()
+
+func _update_position(actor: TwilightMonster) -> void:
 	# Exact geometry can change inside a cell without changing its roster.
 	var before: Variant = _actor_cells[actor]
 	if before is Vector2i: _invalidate_geometry(before)
@@ -177,6 +193,7 @@ func clear() -> void:
 	for actor: Node in _actor_cells:
 		if is_instance_valid(actor): _stop_tracking(actor)
 	_actor_cells.clear()
+	_pending_moves.clear()
 	_cells.clear()
 	_queries.clear()
 	_sight.clear()

@@ -151,8 +151,15 @@ func check_automatic_index() -> void:
 		check(not service._has_area_target(skill), "far movement cannot admit a cast")
 	check(field.sight_checks == 1 and int(HITCH._counters.get("skill.area_candidate_rows", 0)) == visited,
 		"moving an actor between distant cells leaves the local result intact")
-	monster.global_position = s32.cell_to_world(Vector2i(61, 28))
-	check(service._has_area_target(skill), "an actor that moves into sight is admitted on the next scheduled query")
+	var updates: int = int(HITCH._counters.get("skill.area_index_position_updates", 0))
+	var visible_position: Vector2 = s32.cell_to_world(Vector2i(61, 28))
+	for i: int in 10: monster.global_position = visible_position + Vector2(0, float(i) * 0.1)
+	check(not monster.is_local_transform_notification_enabled()
+		and int(HITCH._counters.get("skill.area_index_position_updates", 0)) == updates,
+		"multiple movements queue a single read for the next query")
+	check(service._has_area_target(skill) and monster.is_local_transform_notification_enabled()
+		and int(HITCH._counters.get("skill.area_index_position_updates", 0)) == updates + 1,
+		"the next query checks the latest visible position and resumes tracking")
 	monster.concealed523 = true
 	check(not service._has_area_target(skill), "an actor's current concealment still gates its AUTO eligibility")
 	monster.concealed523 = false
@@ -161,8 +168,10 @@ func check_automatic_index() -> void:
 	check(not service._has_area_target(skill), "moving behind the wall stops admitting automatic casts")
 	s32.populate(28)
 	check(service._has_area_target(skill), "a new S32 admission invalidates old blocked visibility")
+	monster.position += Vector2(0, 0.1)
 	field.monsters_root.remove_child(monster)
-	check(not service._has_area_target(skill) and monster.auto_area_tracker == null, "reparenting removes the old actor immediately")
+	check(not service._has_area_target(skill) and monster.auto_area_tracker == null
+		and not monster.is_local_transform_notification_enabled(), "reparenting removes the queued actor immediately")
 	monster.position = origin
 	field.monsters_root.add_child(monster)
 	check(service._has_area_target(skill), "the returned actor is indexed through its new tree entry")

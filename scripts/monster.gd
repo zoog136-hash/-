@@ -605,7 +605,7 @@ const OFFSCREEN_DECISION_INTERVAL: float = .4
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_LOCAL_TRANSFORM_CHANGED and auto_area_tracker != null:
-		auto_area_tracker.moved(self)
+		auto_area_tracker.queue_position_update(self)
 
 func _physics_process(delta: float) -> void:
 	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("monster.begin %s %d" % [monster_name, source_m_npc_id])
