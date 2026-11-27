@@ -20,7 +20,7 @@ func fallback() -> void:
 	h.toggle_inventory()
 	await frames()
 	ck(h.requires_original_inventory_ui() and not h.original_inventory_is_open() and not bag.inventory_panel.is_visible_in_tree(),"a rejected selected pack cannot open the homemade bag")
-	for method: String in ["open_warehouse","open_npc_shop","open_crafting","_open_enhance_chooser","open_equipment_collections","open_refine523","open_forge"]:
+	for method: String in ["open_warehouse","open_shop","open_npc_shop","open_item_sell","open_crafting","_open_enhance_chooser","open_equipment_collections","open_refine523","open_forge"]:
 		h.call(method)
 		await frames()
 		ck(not h.workspace.is_visible_in_tree() and h.active_section.is_empty(),method+" holds the old panel when the chosen original pack is invalid")
@@ -28,7 +28,10 @@ func fallback() -> void:
 	var on_accept:=func(count: int) -> void:called.append(count)
 	ck(not h.confirm_ground_drop("아이템",26,1,on_accept).get("handled",false),"missing original drop confirmation is held")
 	ck(not h.confirm_inventory_delete("아이템",26,1,on_accept).get("handled",false),"missing original delete confirmation is held")
-	ck(called.is_empty() and h.get_node_or_null("Root/TwilightConfirmation")==null and hash_file()==saved,"both protected actions leave the save alone")
+	ck(h.confirm_crafting_action("제작 확인","재료 1개","제작",on_accept)==null,"missing original crafting review cannot open a substitute")
+	ck(h.confirm_awakening_action("각성 확인","각성서 1개","각성",on_accept)==null,"missing original awakening review cannot open a substitute")
+	ck(not h.open_gacha_craft523() and not h.workspace.is_visible_in_tree(),"an unconnected source spellbook scene holds the old crafting screen")
+	ck(called.is_empty() and h.get_node_or_null("Root/TwilightConfirmation")==null and hash_file()==saved,"protected actions leave the save alone")
 	OS.unset_environment("TWILIGHT_SOURCE_UI")
 	OS.unset_environment("TWILIGHT_SOURCE_UI_SHA256")
 

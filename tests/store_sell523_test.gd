@@ -9,6 +9,7 @@ extends SceneTree
 ## the same tap sells nothing.
 const STORE = preload("res://scripts/ui/original_ui/source_main_store_window.gd")
 const PURCHASE = preload("res://tests/shop_purchase523_test.gd")
+const TOWN = preload("res://scripts/npc/source523_town_npcs.gd")
 const GIRAN := Vector2i(33441, 32813)
 var checks: int = 0
 var failures: Array[String] = []
@@ -40,6 +41,7 @@ func synthetic() -> void:
 	var text: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_store_window.gd")
 	check(text.contains("call(\"sale_quote\",name,1,id)") and text.contains("call(\"sell_to_merchant\",name,amount,id)") and text.contains("call(\"sale_quote\",name,1,id,") and text.contains("world.call(\"_sell_shop_item\",name,amount,id)") and text.contains("calculator.open(parent,limit,Callable(self,\"sell\").bind(name,id))"), "sale: quote, original keypad, the existing sale transaction")
 	check(text.contains("if sells():_route_slots(scene)"), "the 소지품 slots answer the router only at a 잡화상인")
+	check(not text.contains("hud.confirm_action("), "a native store never swaps in the TWILIGHT quantity confirmation")
 	check(not text.contains("Image.create") and not text.contains("draw_rect"), "no picture is drawn")
 	var menu: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	evidence["menu_sell_tile"] = menu.contains("[\"sell\",\"판매\"]")
@@ -53,7 +55,7 @@ func _find_script(node: Node, file: String) -> Node:
 	return null
 
 func real_main() -> void:
-
+	var fixture: bool="--source523-shop-fixture" in OS.get_cmdline_user_args()
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world)
 	for frame: int in 120: await process_frame
@@ -65,13 +67,24 @@ func real_main() -> void:
 	else: preload("res://tests/qa_class_selection.gd").enter_game(world)
 	for frame: int in 900:
 		await process_frame
-		if world.current523_aden_source_active(): break
+		if world.current523_aden_source_active() or (fixture and world.field_map!=null): break
 	var ctl: Variant = world.hud.get("original_main_ui_controller")
-	if not world.current523_aden_source_active() or not is_instance_valid(ctl) or not ctl.call("can_open_shop_window"):
+	if (not world.current523_aden_source_active() and not fixture) or not is_instance_valid(ctl) or not ctl.call("can_open_shop_window"):
+		if fixture:check(false,"the source shop fixture requires an installed original UI")
 		evidence["real_main"] = "original 523 map / original UI pack not installed: Main part skipped"
 		world.queue_free(); for frame: int in 3: await process_frame
 		return
 	world.save_timer = -100000
+	if fixture and not world.current523_aden_source_active():
+		# Two current523 EarthObject classes mounted on the offline fixture map.
+		# Products, name, role, transactions, UI and touch stay on their normal owners.
+		for class_id: int in [27,58]:
+			var source: Dictionary=TOWN._first("EarthObjectClass",class_id)
+			var name_row: Dictionary=TOWN._first("DescData_Korean",int(source.get("DescID",0)))
+			var position: Vector2=world.player.global_position
+			var display: Dictionary=TOWN.display_name(str(name_row.get("Description","")))
+			world.field_map.data.npc_spawn.append({"id":"m523npc:qa-"+str(class_id),"name":display.display,"source523_earth_object_class_id":class_id,"source523_actions":TOWN.actions_for_class(class_id),"position":[position.x,position.y]})
+		evidence["npc_placement"]="original definitions injected on a fixture map"
 	var general: Dictionary = {}
 	var other: Dictionary = {}
 	for npc: Dictionary in world.field_map.data.get("npc_spawn", []):
@@ -82,7 +95,7 @@ func real_main() -> void:
 	if not check(not general.is_empty(), "the start town has a 잡화상인"): world.queue_free(); return
 	# Something to sell: two of the 잡화상인's own first product, bought there.
 	world.gold = 1000000
-	ctl.call("try_open_store_window", str(general.id))
+	world.hud.open_npc_shop(str(general.id))
 	var window: Object = ctl.get("_store_window")
 	if not check(window != null and window.is_open() and window.sells(), "the 잡화상인's Store_All opens and buys"): world.queue_free(); return
 	var goods: Array = window.goods()
@@ -92,9 +105,22 @@ func real_main() -> void:
 		var row: Dictionary = world.source_shop.catalog.merchant_offer(int(goods[at].id)).goods
 		if not world.source_shop.buy_row(int(row.ItemClassID)).is_empty() and bool(goods[at].ok): pick = at; break
 	if not check(pick >= 0, "the 잡화상인 sells an item the original buy rows take"): world.queue_free(); return
-	var bought: Dictionary = world.source_shop.buy_merchant(int(goods[pick].id), 2, 1)
+	var stock: Dictionary=world.inventory.duplicate(true)
+	var wallet: int=world.gold
+	var save_before: String=FileAccess.get_sha256(world.save_path()) if FileAccess.file_exists(world.save_path()) else ""
+	var authored_keypad: RefCounted=window.calculator
+	window.calculator=STORE.Calculator.new()
+	var blocked_buy: Dictionary=window._buy_requested(pick)
+	check(not blocked_buy.get("ok",false) and world.hud.get_node_or_null("Root/TwilightConfirmation")==null,"missing original purchase keypad refuses the action with no substitute dialog")
+	check(world.gold==wallet and world.inventory==stock and (not FileAccess.file_exists(world.save_path()) if save_before.is_empty() else FileAccess.get_sha256(world.save_path())==save_before),"refused purchase changes neither the wallet, stock nor save")
+	window.calculator=authored_keypad
+	if not check(window._buy_requested(pick).get("calculator",false) and window.calculator.is_open(),"the product opens its authored quantity keypad"):world.queue_free();return
+	window.calculator.press_digit(2)
+	window.calculator.select()
+	var bought: Dictionary=window.last_purchase
 	var name: String = str(bought.get("name", goods[pick].name))
 	check(bought.get("ok", false) and int(world.inventory.get(name, 0)) >= 2, "two %s in the bag (%s)" % [name, str(bought.get("reason", ""))])
+	check(not window.calculator.select().get("ok",false) and world.inventory.get(name,0)==int(stock.get(name,0))+2,"a repeated select on the closed keypad cannot buy a second time")
 	window.refresh()
 	for frame: int in 3: await process_frame
 	var index: int = -1
@@ -109,6 +135,14 @@ func real_main() -> void:
 		var cost: int = int(world.source_shop.catalog.record("ItemClass", int(quote.item_class_id)).get("Cost", 0))
 		check(int(quote.unit) == cost * int(row.Percentage) * int(row.Amount) / 100, "the price is the original Cost × Percentage (%d × %d%%)" % [cost, int(row.Percentage)])
 	if not check(quote.get("ok", false), "the item has a sale price: " + str(quote.get("reason", ""))): world.queue_free(); return
+	window.calculator=STORE.Calculator.new()
+	stock=world.inventory.duplicate(true)
+	wallet=world.gold
+	save_before=FileAccess.get_sha256(world.save_path())
+	var blocked_sale: Dictionary=window._bag_tapped(index)
+	check(not blocked_sale.get("ok",false) and world.hud.get_node_or_null("Root/TwilightConfirmation")==null,"missing original sale keypad refuses the action with no substitute dialog")
+	check(world.gold==wallet and world.inventory==stock and FileAccess.get_sha256(world.save_path())==save_before,"refused sale changes neither the wallet, stock nor save")
+	window.calculator=authored_keypad
 	# A real touch on the grid slot (line index/4, slot index%4).
 	var line: Node = window.get("_bag").content.get_child(index / 4)
 	var slot: Variant = _slot_button(line, index % 4)

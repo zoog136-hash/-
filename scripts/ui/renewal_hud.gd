@@ -1322,10 +1322,7 @@ func confirm_item_collection_registration(title: String, body: String, callback:
 	return confirm_source_action(title,body,"등록",callback,true)
 
 func confirm_equipment_blessing(body: String, callback: Callable) -> Control:
-	var dialog: Control=confirm_source_action("축복 부여 확인",body,"축복 부여",callback,requires_original_inventory_ui())
-	if dialog==null and $Root.get_node_or_null("TwilightConfirmation")==null:
-		show_message("원본 축복 부여 확인창을 열 수 없습니다.")
-	return dialog
+	return confirm_source_action("축복 부여 확인",body,"축복 부여",callback)
 
 func confirm_source_action(title: String, body: String, action: String, callback: Callable, original_only: bool=false) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
@@ -1334,7 +1331,9 @@ func confirm_source_action(title: String, body: String, action: String, callback
 		var identity := preload("res://scripts/ui/source523_item_identity.gd")
 		var dialog: Control = original_main_ui_controller.awakening_review($Root,identity.clean_message(title),identity.clean_message(body),callback)
 		if dialog != null: return dialog
-	if original_only:return null
+	if original_only or requires_original_inventory_ui():
+		_report_original_window_unavailable(title,{"ok":false,"code":"source_action_review_unavailable"})
+		return null
 	return confirm_action(title,body,action,callback)
 
 func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
@@ -1458,16 +1457,19 @@ func open_shop() -> void:
 	shop_view = shop
 	# The original 523 shop window shows the market; the existing panel keeps
 	# quotes, confirmation, payment and the order box.
+	var native: Dictionary=original_main_ui_bind_problem
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("can_open_shop_window") and original_main_ui_controller.can_open_shop_window() and shop.has_method("_open_source523"):
 		shop.call("_open_source523")
 		var panel: Variant=shop.get("source523_panel")
 		if panel is Control and is_instance_valid(panel):
-			var native: Dictionary=original_main_ui_controller.try_open_shop_window(panel)
+			native=original_main_ui_controller.try_open_shop_window(panel)
 			original_main_ui_status["shop_window"]=native
 			if native.get("handled",false):
 				if pointer_transfer!=null:pointer_transfer.cancel()
 				workspace.hide()
 				_sync_screen_focus()
+				return
+	_hold_original_inventory_window("상점",native)
 
 ## Saving or buying a captured listing is never an ordinary menu fallback.
 func open_frozen_exchange() -> void:
@@ -1556,15 +1558,19 @@ func finish_crafting_transaction() -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.production_window_is_open(): return
 	open_crafting()
 
-## 비법서 제작 (원본 GachaCraft, TWILIGHT 근사): the TWILIGHT crafting screen
-## with its 비법서 제작 panel open; the original production window's 이벤트
-## tab routes here (the original UI has no GachaCraft entry).
-func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> void:
+## The offline crafting board keeps its existing spellbook flow. The
+## selected original pack needs its own GachaCraft screen for this route.
+func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> bool:
+	if requires_original_inventory_ui():
+		original_main_ui_status["gacha_craft_window"]={"ok":false,"code":"source_gacha_craft_window_unavailable"}
+		show_message("비법서 제작 원본 화면이 연결되지 않았습니다. 비법서는 그대로 보관됩니다.")
+		return false
 	_open_window("crafting","제작 장인","비법서 제작")
 	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self,true)
 	screen.show_gacha_books(book_id,book_uid)
+	return true
 
 ## The original 523 ProductionScene over the existing recipe owner.
 func _open_original_production() -> bool:
@@ -1604,7 +1610,11 @@ func open_patch523_equipment_info(scroll_id: String = "", scroll_uid: String = "
 	workspace.mount(screen)
 	screen.configure(self,scroll_id,scroll_uid)
 
-func open_item_sell() -> void:
+func open_item_sell(npc_id: String="") -> void:
+	if requires_original_inventory_ui():
+		if not npc_id.is_empty():open_npc_shop(npc_id)
+		else:show_message("아이템 판매는 가까운 잡화상인이나 아이템 매입 상인에게서 할 수 있습니다.")
+		return
 	_open_window("sell","아이템 매입","아이템 검색 · 강화 장비 ID 확인 · 판매")
 	var screen := SellUI.new()
 	workspace.mount(screen)
@@ -4212,6 +4222,9 @@ func open_forge() -> void:
 func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	if entry_solvent_uid.is_empty():
 		open_refine523()
+		return
+	if requires_original_inventory_ui():
+		show_message("원본 용해제 대상 선택 화면이 연결되지 않았습니다. 용해제는 그대로 보관됩니다.")
 		return
 	_mount_bless_refine_panel(entry_solvent_uid)
 

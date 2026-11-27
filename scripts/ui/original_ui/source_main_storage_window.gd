@@ -371,7 +371,8 @@ func _batch_requested(side: String) -> Dictionary:
 		if hud.has_method("show_message"):hud.call("show_message","옮길 아이템이 없습니다")
 		return {"ok":true,"empty":true}
 	var title: String="모두 맡기기" if side=="bag" else "모두 찾기"
-	hud.call("confirm_action",title,"%d개 항목을 %s" % [listing.size(),"창고에 맡깁니다" if side=="bag" else "창고에서 찾습니다"],title,func(_amount: int) -> void: move_all(side,listing))
+	var dialog: Control=hud.confirm_source_action(title,"%d개 항목을 %s" % [listing.size(),"창고에 맡깁니다" if side=="bag" else "창고에서 찾습니다"],title,func(_amount: int) -> void: move_all(side,listing),true)
+	if dialog==null:return _fail("source_storage_batch_review_unavailable")
 	return {"ok":true,"asked":title,"rows":listing.size()}
 
 ## Moves `listing` one row at a time (99 per move) through the world's
