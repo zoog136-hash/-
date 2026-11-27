@@ -7,8 +7,10 @@ extends RefCounted
 const LOOKUP = preload("res://scripts/catalog_item_lookup.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const ITEM_LABEL = preload("res://scripts/ui/source523_item_identity.gd")
 const NATIVE_STACK = preload("res://scripts/loot/current523_native_stack.gd")
 const ITEM_INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
+const ADVANCED_POWDER_ID: int = 117544
 const MASTERY_TICKET_ID: int = 184652
 const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const TAG: String = "twilight-cash-package"
@@ -272,9 +274,11 @@ static func native_record(world, item_id: int) -> Dictionary:
 	var base: Dictionary = definition.get("native_record", {})
 	if base.is_empty() or definition.get("excluded") == true: return {}
 	var record: Dictionary = DROPS.variant_item(base, 1)
-	# Storage-only stacks (no use rule) keep this box's existing plain leaf
-	# owner below, so saved box contents keep their records after a reload.
-	if record.is_empty() or DROPS.equipment(record) or NATIVE_STACK.supply_profile(record).get("kind", "") in ["", "storage"]: return {}
+	if record.is_empty() or DROPS.equipment(record): return {}
+	var supply: String = str(NATIVE_STACK.supply_profile(record).get("kind", ""))
+	# Advanced powder already has a shared physical owner for hunting, shop
+	# claims, refinement and titles. Other plain storage owners stay in use.
+	if supply.is_empty() or (supply == "storage" and item_id != ADVANCED_POWDER_ID): return {}
 	if not DROPS.matches(world._catalog_item_from_source_id(str(record.get("sourceId", ""))), record): return {}
 	return record
 
@@ -361,6 +365,9 @@ static func _resolve(world, item_id: int, allow_native: bool, lookup: LOOKUP.Cas
 	if not card.is_empty():
 		var found: Dictionary = _card_target(world, int(card.card_id))
 		if not found.is_empty(): return found
+	if allow_native and item_id == ADVANCED_POWDER_ID:
+		var powder: Dictionary = native_record(world, item_id)
+		if not powder.is_empty(): return {"kind":"native", "name":str(powder.name), "record":powder}
 	# Existing TWILIGHT owner: exact original ID first, then the original Korean
 	# name. Native 523 records need physical receipts and are not used here.
 	var exact: Dictionary = _exact_owner(world.catalog_db.get("아이템", []), item_id)
@@ -581,7 +588,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	else: inventory[item_name] = have - 1
 	var instances: Dictionary = world.item_instances.duplicate(true)
 	var next_id: int = int(world.next_item_instance_id)
-	var cards_before: Dictionary = world.card_draw_fusion.export_state()
+	var cards_before: Dictionary = {}
 	var card_results: Array = []
 	var received: Array[String] = []
 	var failure: String = ""
@@ -592,7 +599,11 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 		if target.is_empty():
 			failure = "원본 카드 정의 연결 실패"
 			break
+		if item_id == ADVANCED_POWDER_ID and (target.kind != "native" or entry.get("bless", 1) != 1 or entry.get("enchant", 0) != 0):
+			failure = "상급 축복의 가루 원본 지급 조건을 확인할 수 없습니다"
+			break
 		if target.kind == "card":
+			if cards_before.is_empty(): cards_before = world.card_draw_fusion.export_state()
 			for unused: int in range(amount):
 				var outcome: Dictionary = world.card_draw_fusion.receive_source_card(target.category, target.record, {"card_id":int(target.card_id),
 					"item_class_id":item_id, "source_snapshot":"patch523", "origin":"twilight_cash_package", "box_item_class_id":int(definition_id_of(world, item_name))})
@@ -634,7 +645,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 				else:
 					instances = staged.item_instances
 					inventory[native_name] = int(inventory.get(native_name, 0)) + amount
-					received.append("%s ×%d" % [native_name, amount])
+					received.append("%s ×%d" % [ITEM_LABEL.display_name(target.record, native_name), amount])
 		else:
 			var name: String = str(target.name)
 			if int(inventory.get(name, 0)) > LIMIT - amount:
@@ -650,8 +661,10 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 						next_id += 1
 				received.append("%s ×%d" % [name, amount])
 		if not failure.is_empty(): break
-	var cards_after: Dictionary = world.card_draw_fusion.export_state()
-	world.card_draw_fusion.import_state(cards_before)
+	var cards_after: Dictionary = {}
+	if not cards_before.is_empty():
+		cards_after = world.card_draw_fusion.export_state()
+		world.card_draw_fusion.import_state(cards_before)
 	if not failure.is_empty(): return {"ok":false, "reason":failure + " · 상자 보존"}
 	if world.has_method("_index_item_weights_appended"): world._index_item_weights_appended(catalog_size, item_db_size)
 	else: world._index_item_weights()
@@ -660,7 +673,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	# the general save in the next frame (background writer on the phone,
 	# #719). Box debit and rewards land in the same save, so a crash before it
 	# keeps the box and loses the rewards together (never duplicated).
-	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id, "card_draw_fusion":cards_after}
+	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id}
+	if not cards_after.is_empty(): staged["card_draw_fusion"] = cards_after
 	var batched: bool = world.has_method("_request_general_save")
 	busy = true
 	var checked: Error = world._save_game(true, staged, {}, true) if batched else world._save_game(true, staged)
@@ -669,7 +683,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	world.inventory = inventory
 	world.item_instances = instances
 	world.next_item_instance_id = next_id
-	world.card_draw_fusion.import_state(cards_after)
+	if not cards_after.is_empty(): world.card_draw_fusion.import_state(cards_after)
 	if batched: _request_save(world)
 	if world.has_method("_invalidate_equipment_static"): world._invalidate_equipment_static()
 	_publish(world, not card_results.is_empty())

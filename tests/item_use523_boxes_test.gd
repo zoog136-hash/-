@@ -104,6 +104,30 @@ func use_box(world: Node, id: int) -> Dictionary:
 	world.patch523_owner_state_problem = ""
 	return {"ok":left == 1,"left":left,"rewards":rewards,"chosen":chosen,"message":message if message != "" else world.hud.message_label.text,"problem":problem}
 
+func supply_quotes(world: Node) -> void:
+	var inventory: Dictionary = world.inventory.duplicate(true)
+	var instances: Dictionary = world.item_instances.duplicate(true)
+	var gold: int = world.gold
+	var roll: int = world.rng.state
+	for id: int in [26, 233, 2802, 3631, 75184, 117304, 117544]:
+		var grant := {"item_class_id":id,"amount":2,"bless_raw":1,"enchant":0}
+		var staged: Dictionary = INV.stage(world,[grant],{"kind":"box_quote_regression"})
+		check(staged.get("ok",false) and INV.quote_grant(world,grant) == {"ok":true},
+			"preflight and issuance agree for original reward #%d: %s" % [id,str(staged.get("error",""))])
+	for grant: Dictionary in [
+		{"item_class_id":2802,"amount":65537,"bless_raw":1,"enchant":0},
+		{"item_class_id":233,"amount":1.5,"bless_raw":1,"enchant":0},
+		{"item_class_id":3631,"amount":1,"bless_raw":2,"enchant":0},
+		{"item_class_id":117304,"amount":1,"bless_raw":2,"enchant":0},
+		{"item_class_id":117544,"amount":1,"bless_raw":1,"enchant":1},
+		{"item_class_id":0,"amount":1,"bless_raw":1,"enchant":0},
+	]:
+		var staged: Dictionary = INV.stage(world,[grant],{"kind":"box_quote_regression"})
+		check(not staged.get("ok",true) and INV.quote_grant(world,grant) == staged,
+			"preflight preserves the grant denial: %s" % str(grant))
+	check(world.inventory == inventory and world.item_instances == instances and world.gold == gold and world.rng.state == roll,
+		"preflight does not change bag, ownership, gold or gameplay RNG")
+
 var baseline: Dictionary = {}
 func runtime(by_kind: Dictionary) -> void:
 	var save_path: String = ""
@@ -116,6 +140,7 @@ func runtime(by_kind: Dictionary) -> void:
 	world.field_population.set_process(false); world.player.set_physics_process(false)
 	world._clear_monsters(); world._clear_drops()
 	world.level = 85
+	supply_quotes(world)
 	baseline = world.consumable_service.export_state()
 	var all: bool = "--all" in OS.get_cmdline_user_args()
 	var per: int = int(arg("per", "6"))
