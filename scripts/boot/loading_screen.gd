@@ -54,7 +54,6 @@ var _previous: String = ""
 ## Holder of the original Fx_Loading scene; null until the original UI pack is
 ## installed and its scene trees are on the device.
 var _fx_loading: Node2D
-var _roster_ui_pack: RefCounted
 ## Result of the last attach attempt (diagnostics and tests).
 var fx_loading_status: Dictionary = {}
 signal progress_changed(snapshot: Dictionary)
@@ -367,9 +366,6 @@ func _boot() -> void:
 	if not is_instance_valid(target):
 		_fail("준비 중인 게임 장면이 종료되었습니다. 다시 시도하세요.")
 		return
-	if destination == CHARACTERS and _roster_ui_pack != null and target.has_method("use_original_roster_art"):
-		target.call("use_original_roster_art", _roster_ui_pack)
-	_roster_ui_pack = null
 	_progress.complete_task("scene_ready")
 	_render("준비 완료")
 	BOOT_LOG.mark("loading_ready", {"scene": destination, "completed": snapshot().completed, "total": snapshot().total})
@@ -457,7 +453,7 @@ func _attach_original_loading_fx() -> void:
 	if not UI_PACK.baked(sha):
 		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_baked"}
 		return
-	var scoped := _mount_original_loading_fx(UI_SELECTION.selected_pack(true, destination == CHARACTERS))
+	var scoped := _mount_original_loading_fx(UI_SELECTION.selected_pack(true))
 	if not scoped:
 		# Older packs can author the indicator with different dependencies.
 		if not _mount_original_loading_fx(UI_SELECTION.selected_pack()): return
@@ -469,7 +465,6 @@ func _mount_original_loading_fx(selected: Dictionary) -> bool:
 		fx_loading_status = {"ok": false, "reason": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
 		return false
 	var pack: RefCounted = selected.pack
-	if destination == CHARACTERS: _roster_ui_pack = pack
 	var art := SOURCE_ART.new()
 	fx_loading_status = art.mount(self, pack)
 	if not fx_loading_status.get("ok", false):
@@ -479,7 +474,6 @@ func _mount_original_loading_fx(selected: Dictionary) -> bool:
 	return true
 
 func _release_original_loading_fx() -> void:
-	_roster_ui_pack = null
 	if is_instance_valid(_fx_loading):
 		_fx_loading.queue_free()
 		fx_loading_status["released"] = true

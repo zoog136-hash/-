@@ -9,6 +9,8 @@ func run() -> void:
 	var dialog = load("res://scripts/characters/lobby_pack_install_dialog.gd").new()
 	root.add_child(dialog)
 	check(dialog.exclusive and dialog.transient, "modal install prevents changing scenes")
+	check(dialog.title == "캐릭터 생성 연출 팩 설치" and dialog._label.text.contains("캐릭터 생성 미리보기"),
+		"the installer identifies the creation preview")
 	check(dialog._picker.use_native_dialog, "native Android picker")
 	check(dialog._picker.file_mode == FileDialog.FILE_MODE_OPEN_FILES, "three split parts selectable")
 	dialog._start(PackedStringArray(["missing.zip"]))

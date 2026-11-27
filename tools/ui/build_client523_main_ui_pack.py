@@ -34,8 +34,6 @@ from build_original_ui_pack import Builder  # noqa: E402
 CODE = ["scripts/ui/original_ui/source_main_*.gd", "scripts/ui/original_ui/source_awakening_result_pack.gd", "scripts/ui/original_ui/sprite_scene.gd",
         "scripts/ui/original_ui/source_button_router.gd", "scripts/ui/original_ui/source_node_scope.gd",
         "scripts/ui/original_ui/source_pack.gd"]
-ROSTER_SLOT_ATLAS = "UI/UI_Resource/Atlas_Intro.plist"
-ROSTER_SLOT_PAGE = "UI/UI_Resource/Atlas_Intro.png"
 # Parents read through pack.layout_source() (geometry for configure_project).
 LAYOUT_SOURCES = ["UI/MainScene.csb", "UI/HUDScene.csb", "UI/MissionScene.csb", "UI/StorageScene.csb",
                   "UI/ProductionScene.csb", "UI/ShopScene.csb", "UI/StoreScene.csb", "UI/SystemMessageScene.csb",
@@ -234,8 +232,6 @@ def build(source_index: Path, output: Path, repo: Path = REPO, extra_members: li
                       if m.startswith(prefix) and m.endswith(suffix))
     for member in pictures:
         builder.read(member)
-    if ROSTER_SLOT_ATLAS in files and ROSTER_SLOT_PAGE in files:
-        builder.atlas(ROSTER_SLOT_ATLAS)
     receipt = builder.build(entries, output)
     receipt["pictures"] = len(pictures)
     receipt["entries"] = len(entries)
