@@ -1767,14 +1767,11 @@ func toggle_inventory() -> void:
 
 func open_character() -> void:
 	_open_window("character","캐릭터 정보","")
-	var panel: PanelContainer = lineage_side_ui.character_panel
-	panel.custom_minimum_size = Vector2.ZERO
-	workspace.mount(panel)
-	panel.show()
-	lineage_side_ui.bind_item_art(self)
-	lineage_side_ui.show_character(character_state)
-	lineage_side_ui.mount_window_header(workspace)
-	if lineage_side_ui.stats_page.visible:_on_original_character_page_requested("stats")
+	# When the selected original page handles the open, it owns the controls.
+	# Avoid painting fallback equipment and resolving its artwork behind it.
+	if lineage_side_ui.stats_page.visible:
+		_on_original_character_page_requested("stats")
+		if not workspace.visible:return
 	elif is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_character_equipment"):
 		var native: Dictionary=original_main_ui_controller.try_open_character_equipment()
 		original_main_ui_status["character_equipment"]=native
@@ -1782,6 +1779,14 @@ func open_character() -> void:
 			if pointer_transfer!=null:pointer_transfer.cancel()
 			workspace.hide()
 			_sync_screen_focus()
+			return
+	var panel: PanelContainer = lineage_side_ui.character_panel
+	panel.custom_minimum_size = Vector2.ZERO
+	workspace.mount(panel)
+	panel.show()
+	lineage_side_ui.bind_item_art(self)
+	lineage_side_ui.show_character(character_state)
+	lineage_side_ui.mount_window_header(workspace)
 
 func _on_original_character_page_requested(page: String) -> void:
 	if not is_instance_valid(original_main_ui_controller):return
