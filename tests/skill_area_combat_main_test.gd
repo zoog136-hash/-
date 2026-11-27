@@ -2,6 +2,22 @@ extends SceneTree
 
 const QA := preload("res://tests/qa_class_selection.gd")
 const MONSTER := preload("res://scenes/Monster.tscn")
+
+class QuoteProbe extends TwilightOriginalSkillService:
+	var quotes := 0
+	var refuse := false
+
+	func material_plan(skill: Dictionary) -> Dictionary:
+		quotes += 1
+		if refuse: return {"reason":"fixture missing material"}
+		return super.material_plan(skill)
+
+class CombatWorld extends "res://scripts/potion_feedback_world.gd":
+	func _load_data() -> void:
+		original_skills = QuoteProbe.new()
+		original_skills.configure(self)
+		super._load_data()
+
 var checks: int = 0
 var failures: Array[String] = []
 var marker_effects: Array[Vector2] = []
@@ -34,7 +50,9 @@ func marker(world: TwilightWorld) -> void:
 	world._release_player_attack(id) # A repeated marker cannot apply a second hit.
 
 func run() -> void:
-	var world: TwilightWorld = load("res://Main.tscn").instantiate()
+	var node: Node = load("res://Main.tscn").instantiate()
+	node.set_script(CombatWorld)
+	var world := node as CombatWorld
 	root.add_child(world)
 	world.set_process(false)
 	world.save_timer = -100000.0
@@ -72,7 +90,7 @@ func run() -> void:
 	world.skill_cooldowns.clear()
 	world.skill_global_cooldown = 0
 	world.rng.seed = 282026
-	var service: TwilightOriginalSkillService = world.original_skills
+	var service: QuoteProbe = world.original_skills
 	var base: Dictionary = service.catalog.record_for("미티어 스트라이크")
 	if not check(not base.is_empty(), "the installed game catalog contains Meteor Strike"):
 		world.queue_free()
@@ -133,8 +151,17 @@ func run() -> void:
 	primary.global_position += Vector2(0, unit * 7)
 	second.global_position += Vector2(0, unit * 7)
 	var before_mp: int = world.mp
-	check(not world._run_auto_area_quickslots() and world.mp == before_mp,
-		"AUTO spends nothing when the area has only a wall, hidden actor and far actors")
+	var before_quotes: int = service.quotes
+	check(not world._run_auto_area_quickslots() and world.mp == before_mp and service.quotes == before_quotes,
+		"AUTO prepares no material debit when the area has only a wall, hidden actor and far actors")
+	var outside: Vector2 = primary.global_position
+	primary.global_position = origin + Vector2(0, unit)
+	service.refuse = true
+	check(not world._run_auto_area_quickslots() and service.quotes == before_quotes + 1
+		and world.pending_attack.is_empty() and world.mp == before_mp and world.skill_global_cooldown == 0.0,
+		"a reachable actor requires a valid material quote before motion, MP or cooldown")
+	primary.global_position = outside
+	service.refuse = false
 	world._on_quickslot_pressed(0)
 	if check(world.pending_attack.has("area_skill") and not world.pending_attack.has("target"),
 		"manual quickslot press casts into an empty area without selecting an actor"):

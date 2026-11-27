@@ -227,7 +227,7 @@ func material_plan(skill: Dictionary) -> Dictionary:
 			physical_materials.append_array(original.requests)
 	return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 
-func cost_reason(skill: Dictionary) -> String:
+func _non_material_cost_reason(skill: Dictionary) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	var estimate_reason: String = estimated_nodes.cost_reason(skill)
@@ -237,10 +237,14 @@ func cost_reason(skill: Dictionary) -> String:
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
-	return str(material_plan(skill).reason)
+	return ""
+
+func cost_reason(skill: Dictionary) -> String:
+	var reason := _non_material_cost_reason(skill)
+	return str(material_plan(skill).reason) if reason.is_empty() else reason
 
 func spend(skill: Dictionary) -> bool:
-	if not cost_reason(skill).is_empty(): return false
+	if not _non_material_cost_reason(skill).is_empty(): return false
 	var plan: Dictionary = material_plan(skill)
 	if not str(plan.get("reason","")).is_empty():return false
 	var physical: Dictionary=plan.get("physical_ammo",{})
@@ -261,7 +265,7 @@ func spend(skill: Dictionary) -> bool:
 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
 	return true
 
-func ready(skill: Dictionary, announce: bool = false) -> bool:
+func ready(skill: Dictionary, announce: bool = false, quote_materials: bool = true) -> bool:
 	var source_status: Dictionary=catalog.source_learning_status(skill)
 	if not source_status.is_empty():
 		if announce:world.hud.show_message(str(source_status.message))
@@ -288,7 +292,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif stackable.handles(skill):
 		var gate: Dictionary = stackable.admission(skill)
 		reason = str(gate.get("reason","")) if gate.result!="continue_next_validation" else cost_reason(stackable.cast_skill(skill))
-	else: reason = cost_reason(skill)
+	else: reason = cost_reason(skill) if quote_materials else _non_material_cost_reason(skill)
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
 	return reason.is_empty()
 
@@ -320,7 +324,7 @@ func cast_auto_area(record: Dictionary) -> bool:
 	return call("_cast_impl", record, false, false, true)
 
 func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool = false) -> bool:
-	if not ready(record, manual): return false
+	if not ready(record, manual, not area_only): return false
 	var skill := catalog.resolve(record)
 	var area: bool = is_area_cast(skill)
 	if area_only and (not area or bool(skill.get("spell_move523", {}).get("ok", false)) \
@@ -352,6 +356,13 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 	var target: TwilightMonster = null
 	var dash_only := false
 	if area and not manual and not _has_area_target(skill): return false
+	# An AUTO pulse without a reachable victim has no payment to prepare.
+	# Check material availability before registering the motion once it does.
+	if area_only:
+		var quote_started: int = FRAME_HITCH.now()
+		var quote: Dictionary = material_plan(skill)
+		FRAME_HITCH.detail("skill.area_material_quote", quote_started)
+		if not str(quote.reason).is_empty(): return false
 	if mode in ["attack", "status", "turn_undead"] and not area:
 		target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead:
@@ -414,7 +425,10 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			_undo_dash(origin, dash_end)
 			return false
 		registered = int(world.pending_attack.get("id", -1))
-	if not spend(skill):
+	var payment_started: int = FRAME_HITCH.now() if area else 0
+	var paid: bool = spend(skill)
+	if payment_started != 0: FRAME_HITCH.detail("skill.area_cost_commit", payment_started)
+	if not paid:
 		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
 		_undo_dash(origin, dash_end)
 		return false
@@ -483,18 +497,25 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
 		"summon": summons.spawn(skill)
 	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
-	var light_area_hud: bool = area and kept_buffs.is_empty() and skill.get("items", {}).is_empty() and not concealed_before
+	var items: Dictionary = skill.get("items", {})
+	# Proven spell materials change the bag and vitals. Ammunition can also
+	# unequip a depleted stack, so it retains the full equipment publish.
+	var area_materials: bool = area and not items.is_empty() and not items.has("화살") and not items.has("총알") \
+		and skill.get("source523", {}).get("applied", []).has("materials")
+	var light_area_hud: bool = area and kept_buffs.is_empty() and (items.is_empty() or area_materials) and not concealed_before
 	var stacks_before: int = hash(stacks) if light_area_hud else 0
 	var buffs_before: int = hash(world.active_skill_buffs) if light_area_hud else 0
 	trigger("on_skill", target, skill)
-	# A direct self effect can publish the live stats and paid materials
-	# without refolding the bag or refreshing unrelated card ownership.
+	# Stable area stats need only the vitals and any changed material counts.
+	var hud_started: int = FRAME_HITCH.now() if area else 0
 	if light_area_hud and stacks_before == hash(stacks) and buffs_before == hash(world.active_skill_buffs):
-		world._refresh_combat_hud()
+		if area_materials: world.publish_hud(world.HUD_ITEMS | world.HUD_VITALS)
+		else: world._refresh_combat_hud()
 	elif mode in ["buff","counter"] and not skill.has("approx_self_child") and world.has_method("_publish_timed_buff_hud"):
 		world._publish_timed_buff_hud()
 	else:
 		world._update_hud()
+	if hud_started != 0: FRAME_HITCH.detail("skill.area_hud", hud_started)
 	return true
 
 ## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables
