@@ -55,7 +55,6 @@ func _run() -> void:
 		world.player.set_physics_process(false)
 		world.player.motion.advance(0.32, Vector2.ZERO)
 		world.player.motion.apply(world.player.class_sprite, Vector2.ONE)
-		world.feedback_style = pair[0]
 		mob.take_damage(132, pair[0] == "heavy")
 		mob.motion.apply(mob.sprite, mob.animation_base_scale)
 		await capture(pair[1])

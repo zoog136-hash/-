@@ -4,8 +4,8 @@ extends RefCounted
 ## the flight keeps speed, obstruction, cancellation and the single hit
 ## callback; this only follows its position with the original sprite
 ## (current523_source_effect_selection.select_ammo) and plays the original
-## explosion one-shot where the flight hits. Without the original sprite the
-## flight keeps its existing drawn line (nothing is substituted).
+## explosion one-shot where the flight hits. The shot resolves even if its
+## original visual is unavailable.
 const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const SELECT = preload("res://scripts/resources/current523_source_effect_selection.gd")
@@ -60,8 +60,7 @@ static func _make(world: Node, inputs: Dictionary, stage: String, facing: int) -
 	return view
 
 ## Flight options for TwilightCombatFlights.launch ({} for a non-native weapon).
-## Without an original flight sprite the existing line is kept and only the
-## original explosion (if any) plays at the hit.
+## The original explosion, when present, can play independently of the flight sprite.
 static func options(world: Node, origin: Vector2, target: Node2D) -> Dictionary:
 	last_status = {}
 	if world.combat_flights == null or not is_instance_valid(target): return {}
@@ -106,7 +105,6 @@ static func _remove_flight_visual(token: Dictionary) -> void:
 static func _step(flight: Dictionary, token: Dictionary) -> bool:
 	token["point"] = flight.position
 	var node: Variant = token.get("node")
-	# No original flight sprite: the existing drawn line stays (false).
 	if not is_instance_valid(node): return false
 	var direction: Vector2 = (flight.position as Vector2)-(flight.previous as Vector2)
 	if direction.length_squared() > 0.0001: node.set("_overlay_facing",posmod(_facing(direction)+3,8))

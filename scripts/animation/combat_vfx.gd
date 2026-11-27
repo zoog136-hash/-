@@ -20,6 +20,7 @@ var emitted: int = 0
 var detailed_draws: int = 0
 var impact_visual_limit: int = CAPACITY
 var impact_draws: int = 0
+var source_result_visual: Callable
 var font: Font
 var visuals = VISUALS.new()
 var reduced_motion: bool = false
@@ -30,7 +31,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	font = preload("res://assets/fonts/NotoSansKR.ttf")
-	visuals.prepare()
+	if not source_result_visual.is_valid(): visuals.prepare()
 	set_process(false)
 
 func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
@@ -44,29 +45,35 @@ func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
 	queue_redraw()
 	return entry
 
-## True while the 523 original-only presentation is active: the TWILIGHT-made
-## impact halos/crescents, rings and the critical-heading glow are not drawn
-## (no original sprite). Numbers, MISS and the "Critical" text stay.
+## Main binds its original result renderer before entering the tree. Standalone
+## presentation and validation scenes may still use the older drawing API.
 func host_art_suppressed() -> bool:
-	return SOURCE_ONLY.active_for_world(get_parent())
+	return source_result_visual.is_valid() or SOURCE_ONLY.active_for_world(get_parent())
 
 func impact(point: Vector2, direction: Vector2, style: String, critical: bool = false) -> void:
 	if host_art_suppressed(): return
 	var entry: Dictionary = _record("impact", point, 0.22 if not critical else 0.30)
 	entry.merge({"direction":direction.normalized(), "style":style, "family":VISUALS.family(style), "critical":critical})
 
-func number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
+func number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false) -> void:
+	if value == "MISS" and source_result_visual.is_valid() and source_result_visual.call("miss",point): return
 	var caption: bool = critical
+	var title: String = "결정타" if final_blow else "Critical"
 	# Rapid multi-hits keep every number, but do not stack identical headings.
-	for previous: Dictionary in active:
-		if caption and str(previous.kind) == "number" and bool(previous.get("caption", false)):
+	if caption:
+		for previous: Dictionary in active:
+			if previous.kind != "number" or not bool(previous.get("caption",false)) or previous.title != title: continue
 			if float(previous.age) < 0.11 and (previous.point as Vector2).distance_squared_to(point) < 576.0:
 				caption = false
+				break
+	var original_caption: bool = caption and source_result_visual.is_valid() and source_result_visual.call("final_blow" if final_blow else "critical",point)
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
 	var size: int = 25 if critical else 18
 	var display: String = value.trim_prefix("CRIT ") if critical else value
 	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
-	entry.merge({"host_art_suppressed":host_art_suppressed(), "text":value, "display":display, "color":color, "critical":critical, "caption":caption, "width":width, "critical_width":font.get_string_size("Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if critical and font != null else 0.0})
+	entry.merge({"host_art_suppressed":host_art_suppressed(), "text":value,
+		"display":display, "color":color, "critical":critical, "caption":caption, "original_caption":original_caption,
+		"width":width, "title":title, "critical_width":font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if caption and not original_caption and font != null else 0.0})
 
 func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "", registration_base_scale: Vector2 = Vector2.ZERO) -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
@@ -259,17 +266,19 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	draw_string(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 	draw_set_transform(Vector2.ZERO)
 
-	if not bool(entry.get("caption", false)): return
+	if not bool(entry.get("caption", false)) or bool(entry.get("original_caption",false)): return
 	var title_point: Vector2 = point + Vector2(0.0, -27.0) * keep
 	var title_width: float = float(entry.critical_width)
-	if not bool(entry.get("host_art_suppressed", false)):
+	var host_art: bool = not bool(entry.get("host_art_suppressed",false))
+	if host_art:
 		visuals.halo(self, title_point + Vector2(0.0, -8.0) * keep, Vector2(title_width * 1.8, 42.0) * keep, Color(1.0, 0.72, 0.24, alpha * 0.65 * impact_intensity))
 	# Shear just the heading; normal numbers, MISS and healing keep their color.
-	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value, scale_value), title_point))
+	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value if host_art else 0.0, scale_value), title_point))
 	var title_base: Vector2 = Vector2(-title_width * 0.5, 0.0)
-	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 5, Color(0.18, 0.055, 0.01, alpha))
-	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 2, Color(1.0, 0.48, 0.10, alpha))
-	draw_string(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(1.0, 0.91, 0.53, alpha))
+	var title: String = entry.title
+	draw_string_outline(font, title_base, title, HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 5, Color(0.18, 0.055, 0.01, alpha))
+	if host_art: draw_string_outline(font, title_base, title, HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 2, Color(1.0, 0.48, 0.10, alpha))
+	draw_string(font, title_base, title, HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(1.0, 0.91, 0.53, alpha))
 	draw_set_transform(Vector2.ZERO)
 
 static func _death_frame_at_age(entry: Dictionary) -> int:
