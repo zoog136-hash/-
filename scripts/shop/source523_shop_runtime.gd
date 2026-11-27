@@ -279,10 +279,10 @@ func reconcile_material_stacks() -> bool:
 	for id: int in legacy_material_keys:
 		var old: String = legacy_material_keys[id]
 		var amount: Variant = inventory.get(old, 0)
-		if not integer(amount) or int(amount) <= 0 or int(amount) > LIMIT or world.enhancement_levels.has(old): continue
+		if not integer(amount) or int(amount) <= 0 or int(amount) > LIMIT or world.enhancement_levels.has(old) or world._item_locked(old): continue
 		var record: Dictionary = CashPackages.native_record(world, id)
 		var name: String = str(record.get("name", ""))
-		if name != "%s · 원본#%d" % [old, id] or world._item_locked(old) or world._item_locked(name): continue
+		if name != "%s · 원본#%d" % [old, id] or world._item_locked(name): continue
 		var original: Dictionary = preload("res://scripts/loot/patch523_monster_drops.gd").item_definition(record).get("original_item", {})
 		if int(amount) > int(original.get("MaxStackAmount", 0)): continue
 		var before: Variant = inventory.get(name, 0)
