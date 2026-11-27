@@ -965,7 +965,8 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	else:world.deferred_save.cancel()
 	busy=false
 	var sprite: int=int(details.get("consume_effect_sprite_id",spec.get("consume_effect_sprite_id",0)))
-	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
+	if sprite>0:
+		world.option_awakening.combat.emit_committed_item_sprite(sprite,world.player,D.item_definition(record).get("original_item",{}))
 	var message: String=str(prepared.get("message","")) if not prepared.is_empty() else "%s · 원본 버프 %s" % [str(NATIVE_FIELDS.field(record,"source_display_name")),world._format_seconds_short(float(spec.get("duration_seconds",0)))] if effect.kind=="buff" else "%s · %s %d 회복" % [str(NATIVE_FIELDS.field(record,"source_display_name")),"HP" if effect.kind=="hp" else "MP",after-before]
 	if is_buff:FRAME_HITCH.detail("item.buff_apply",buff_phase)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":0 if reusable else 1,"physical_id":uid,"remaining_quantity":int(owned.remaining) if reusable else int(owned.remaining)-1,"message":message,"effect_kind":str(effect.kind)}

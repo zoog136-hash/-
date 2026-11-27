@@ -60,7 +60,9 @@ static func _source_items() -> Dictionary:
 		var label: Dictionary = SOURCE.row("DescData_Korean",int(item.DescID))
 		if not label.get("Description") is String or str(label.Description).is_empty():
 			return _hold_source("회복제의 선택된 원문 표시명을 읽을 수 없습니다: "+str(id))
-		result[str(id)] = {"name":label.Description,"base":values.HPRestoration,"dice_count":values.HPRestorationDiceNumber,"dice_sides":values.HPRestorationDiceSpotCount}
+		var sprite: Variant = values.get("ItemConsumeEffectSpriteID",0)
+		result[str(id)] = {"name":label.Description,"base":values.HPRestoration,"dice_count":values.HPRestorationDiceNumber,
+			"dice_sides":values.HPRestorationDiceSpotCount,"sprite":int(sprite) if _source_integer(sprite) else 0}
 		provenance.selected_inputs[str(id)] = {"item_class":item,"description_id":item.DescID,"effects":references}
 	source_input_identity = identity.duplicate(true)
 	source_provenance = provenance
@@ -92,7 +94,8 @@ static func install(world, catalog) -> Dictionary:
 static func try_use(world, name: String) -> bool:
 	var record: Dictionary=world._find_catalog_item_record(name)
 	if record.get("source")!="twilight-shop523-restoration":return false
-	var spec: Dictionary=_source_items().get(str(int(record.get("source_item_class_id",0))),{})
+	var item_id: int=int(record.get("source_item_class_id",0))
+	var spec: Dictionary=_source_items().get(str(item_id),{})
 	if spec.is_empty() or spec.name!=name or record.get("source_bless_raw")!=1 or DATA.data.dice_policy!="base_plus_uniform_dice":
 		world.hud.show_message("회복제 원본 정체/적용 정책 확인 실패 · 보존");return true
 	var before: int=int(world.inventory.get(name,0))
@@ -108,4 +111,6 @@ static func try_use(world, name: String) -> bool:
 	if world._save_game(true)!=OK:
 		world.hp=old_hp;world.inventory[name]=before;world.item_use_cooldowns=old_cooldowns;world.rng.state=old_rng
 		world._update_hud();world.hud.show_message("회복 저장 실패 · HP·물약·난수 보존")
+	elif spec.sprite > 0:
+		world.option_awakening.combat.emit_committed_item_sprite(spec.sprite,world.player,SOURCE.row("ItemClass",item_id))
 	return true

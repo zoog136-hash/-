@@ -40,6 +40,7 @@ signal bleed_tick(damage: int)
 
 @export var move_speed: float = 210.0
 @export var click_move_speed: float = 225.0
+@export var authored_action_fx_enabled: bool = true
 
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var class_sprite: AnimatedSprite2D = $ClassSprite
@@ -129,11 +130,12 @@ func _ready() -> void:
 	var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
 	shadow.name = "GroundShadow"
 	add_child(shadow)
-	var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
-	action_fx.name = "PlayerActionFX"
-	action_fx.actor = self
-	action_fx.z_index = 6
-	add_child(action_fx)
+	if authored_action_fx_enabled:
+		var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
+		action_fx.name = "PlayerActionFX"
+		action_fx.actor = self
+		action_fx.z_index = 6
+		add_child(action_fx)
 	spx_sprite = AnimatedSprite2D.new()
 	spx_sprite.name = "ExternalSPXActor"
 	spx_sprite.z_index = class_sprite.z_index
@@ -722,12 +724,10 @@ func clear_click_path() -> void:
 func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
-func show_received_damage(amount: int, critical: bool = false, kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
+func show_received_damage(amount: int, critical: bool = false, _kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
 	var world: Node = get_parent()
 	if not world is TwilightWorld or world.original_skills==null or world.original_skills.stat("ignoreDamageMotion")<=0:
 		motion.react(critical, source.direction_to(combat_hit_position()))
-	if world is TwilightWorld and world.combat_vfx != null:
-		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)
 	var display_color: Color = Color(1.0, 0.20, 0.12, 1.0) if critical else Color(1.0, 0.38, 0.32, 1.0)
 	_show_combat_text(display_text, display_color, Vector2(-38.0 if critical else -28.0, -112.0))
