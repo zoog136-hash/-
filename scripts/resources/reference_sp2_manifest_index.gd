@@ -5,14 +5,20 @@ extends RefCounted
 ## actors and raw members). Parsing it whole costs ~0.6 GB per parse, and every
 ## actor's bank used to parse it again. Here it is split once per device into
 ## per-actor and per-member records in user:// (keyed by the manifest SHA256
-## and this code), and one opened index is shared by every bank in the process.
+## and the record format), and one opened index is shared by every bank.
 ## Lookups return exactly what the parsed manifest held (same JSON values);
 ## top-level fields other than `actors`/`members` stay in memory.
 ## The split never substitutes for verification: the manifest bytes are checked
 ## against the caller's SHA256 before an index is built or reused.
 
 const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
-const CODE: Array[String] = ["res://scripts/resources/reference_sp2_manifest_index.gd","res://scripts/resources/current523_bake_cache.gd"]
+const HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+## The writer still produces the exact record and top bakes used by the
+## verified startup pack (#941). Preserve that key across scanner edits, and
+## accept the same format from installs predating the startup pack. Revise
+## these keys if the on-disk records or their top-level metadata change.
+const RECORD_BAKE_FORMAT := "68d7d4b09a138a72c772d22bda610dacd5ef9b44761e44e4e5f0c07ee5afac4f"
+const PRIOR_RECORD_BAKE_FORMAT := "92669d8548711eda21744691a2c636acde4123156c974afdbecfa0815c8f19cb"
 const SPLIT: Array[String] = ["actors","members"]
 
 var top: Dictionary = {}
@@ -69,12 +75,17 @@ static func open(path: String, expected: String, maximum: int, valid_sha: bool) 
 	file.close()
 	if not valid_sha or not pinned(path, expected): return {"ok":false,"error":"Bank JSON SHA256 mismatch: " + path}
 	if _shared.has(expected): return {"ok":true,"index":_shared[expected]}
-	var key: String = BAKE.key([expected, BAKE.code_key(CODE)])
+	var key: String = BAKE.key([expected, RECORD_BAKE_FORMAT])
 	var index = new()
-	if not index._open_bake(key):
+	var started := HITCH.now()
+	var opened: bool = index._open_bake(key) or index._open_bake(BAKE.key([expected, PRIOR_RECORD_BAKE_FORMAT]))
+	HITCH.detail("sp2.manifest_bake_open", started)
+	if not opened:
+		started = HITCH.now()
 		var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 		if bytes.size() <= 0 or BAKE._sha(bytes) != expected: return {"ok":false,"error":"Bank JSON SHA256 mismatch: " + path}
 		var built: Dictionary = index._build(bytes, key)
+		HITCH.detail("sp2.manifest_bake_build", started)
 		if not built.ok: return built
 	_shared[expected] = index
 	return {"ok":true,"index":index}
@@ -129,27 +140,38 @@ static func _split(bytes: PackedByteArray, writers: Dictionary) -> Dictionary:
 	if at >= bytes.size() or bytes[at] != 123: return {}
 	var top_values: Dictionary = {}
 	var kinds: Dictionary = {}
-	var members: Array = _members(bytes, at)
-	if members.is_empty() or _space(bytes, members[0]) != bytes.size(): return {}
-	for member: Array in members[1]:
-		var name: Variant = _parse(bytes, member[0], member[1])
+	var parser := JSON.new()
+	at = _space(bytes, at + 1)
+	while at < bytes.size() and bytes[at] != 125:
+		if bytes[at] != 34: return {}
+		var name_end: int = _string_end(bytes, at)
+		if name_end < 0: return {}
+		var name: Variant = _parse(bytes, at, name_end)
 		if not name is String: return {}
-		var start: int = member[2]
-		var end: int = member[3]
+		var colon: int = _space(bytes, name_end)
+		if colon >= bytes.size() or bytes[colon] != 58: return {}
+		var start: int = _space(bytes, colon + 1)
+		if start >= bytes.size(): return {}
 		if name in SPLIT:
 			if kinds.has(name) or bytes[start] != 123: return {} # rare: whole parse
-			var inner: Array = _members(bytes, start)
-			if inner.is_empty() or inner[0] != end: return {}
-			for entry: Array in inner[1]:
-				var entry_key: Variant = _parse(bytes, entry[0], entry[1])
-				var parser := JSON.new()
-				if not entry_key is String or parser.parse(bytes.slice(entry[2], entry[3]).get_string_from_utf8()) != OK: return {}
-				writers[name].add(entry_key, parser.data)
+			# Defining the top-level span first used to walk through both
+			# large registries again before their entries were needed.
+			var inner: Array = _members(bytes, start, writers[name])
+			if inner.is_empty(): return {}
 			kinds[name] = TYPE_DICTIONARY
+			at = inner[0]
 		else:
-			var parser := JSON.new()
+			var end: int = _value_end(bytes, start)
+			if end < 0: return {}
 			if parser.parse(bytes.slice(start, end).get_string_from_utf8()) != OK: return {}
 			top_values[name] = parser.data
+			at = end
+		at = _space(bytes, at)
+		if at >= bytes.size() or bytes[at] == 125: break
+		if bytes[at] != 44: return {}
+		at = _space(bytes, at + 1)
+		if at >= bytes.size() or bytes[at] != 34: return {}
+	if at >= bytes.size() or _space(bytes, at + 1) != bytes.size(): return {}
 	return {"top":top_values,"kinds":kinds}
 
 static func _parse(bytes: PackedByteArray, start: int, end: int) -> Variant:
@@ -157,9 +179,11 @@ static func _parse(bytes: PackedByteArray, start: int, end: int) -> Variant:
 	return parser.data if parser.parse(bytes.slice(start, end).get_string_from_utf8()) == OK else null
 
 ## [end, [[key_start, key_end, value_start, value_end], ...]] for the object
-## at `at` ('{'), or [] when it is not a well-formed object.
-static func _members(bytes: PackedByteArray, at: int) -> Array:
+## at `at` ('{'), or [] when it is not a well-formed object. A record writer
+## consumes entries in their original order as they are found.
+static func _members(bytes: PackedByteArray, at: int, writer: BAKE.RecordWriter = null) -> Array:
 	var result: Array = []
+	var parser: JSON = JSON.new() if writer != null else null
 	var index: int = _space(bytes, at + 1)
 	if index < bytes.size() and bytes[index] == 125: return [index + 1, result]
 	while index < bytes.size():
@@ -171,7 +195,16 @@ static func _members(bytes: PackedByteArray, at: int) -> Array:
 		var value_start: int = _space(bytes, colon + 1)
 		var value_end: int = _value_end(bytes, value_start)
 		if value_end < 0: return []
-		result.append([index, key_end, value_start, value_end])
+		if writer != null:
+			if parser.parse(bytes.slice(index, key_end).get_string_from_utf8()) != OK or not parser.data is String: return []
+			var key: String = parser.data
+			if parser.parse(bytes.slice(value_start, value_end).get_string_from_utf8()) != OK: return []
+			writer.add(key, parser.data)
+			if not writer.ok:
+				BAKE._failed(writer.name, "finish", "write_fail", {"records":writer.ids.size()})
+				return []
+		else:
+			result.append([index, key_end, value_start, value_end])
 		index = _space(bytes, value_end)
 		if index >= bytes.size(): return []
 		if bytes[index] == 125: return [index + 1, result]

@@ -1538,9 +1538,12 @@ func _release_reference_texture_charges() -> void:
 	_reference_texture_charges.clear()
 
 func _release_shared_textures() -> void:
+	if _texture_leases.is_empty(): return
+	var started := FRAME_HITCH.now()
 	for key: String in _texture_leases:
 		SHARED_ASSETS.release("texture", str(_texture_leases[key]), _asset_owner)
 	_texture_leases.clear()
+	FRAME_HITCH.detail("sp2.texture_release", started)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
@@ -1610,7 +1613,9 @@ func _source_texture(layer: Dictionary) -> Texture2D:
 					_abort_reference_source({"ok":false,"error":"Source effect texture allocation failed."})
 					return null
 				FRAME_HITCH.count("sp2.texture_created")
+				var publish_started := FRAME_HITCH.now()
 				texture = SHARED_ASSETS.complete(reservation,texture,charge,_asset_owner) as Texture2D
+				FRAME_HITCH.detail("sp2.texture_publish", publish_started)
 			if SHARED_ASSETS.holds("texture",verified_key,_asset_owner): _texture_leases[key] = verified_key
 			_textures[key] = texture
 			if not _reference_texture_budget.is_empty():

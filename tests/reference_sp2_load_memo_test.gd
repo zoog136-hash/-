@@ -4,6 +4,8 @@ extends SceneTree
 ## godot --headless --path <repo> --script res://tests/reference_sp2_load_memo_test.gd
 ## These invented FE files prove equivalence/integrity mechanics only.
 const BANK = preload("res://scripts/resources/reference_sp2_bank.gd")
+const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
+const MANIFEST_BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const DECODER = preload("res://scripts/resources/current523_sp2_decoder.gd")
 const ACTOR: int = 9001
@@ -198,8 +200,51 @@ func bytes_equal(left: Variant, right: Variant) -> bool:
 
 func _initialize() -> void: call_deferred("run")
 
+func _check_manifest_records() -> void:
+	var path := scratch.path_join("split_manifest.json")
+	var bytes := ("{\"actors\":{\"a\":{\"part\":1},\"a\":{\"part\":2}},"
+		+ "\"title\":\"한글 } ]\",\"members\":{\"sprite\":[null,{\"leaf\":true}]}}\n").to_utf8_buffer()
+	write_bytes(path, bytes)
+	var sha := FileAccess.get_sha256(path)
+	var current_key := MANIFEST_BAKE.key([sha, MANIFEST_INDEX.RECORD_BAKE_FORMAT])
+	var earlier_key := MANIFEST_BAKE.key([sha, MANIFEST_INDEX.PRIOR_RECORD_BAKE_FORMAT])
+	var expected: Dictionary = JSON.parse_string(bytes.get_string_from_utf8())
+	var names: Array[String] = ["sp2_manifest_top", "sp2_manifest_actors", "sp2_manifest_members"]
+	for name: String in names: MANIFEST_BAKE.clear(name)
+	var disk: Dictionary = MANIFEST_INDEX.open(path, sha, 4096, true)
+	check(disk.ok and disk.index._files.size() == 2 and MANIFEST_BAKE.present(names[0], current_key), "valid input streams to the compatible record format")
+	if disk.ok:
+		check(disk.index.top == {"title":expected.title}, "top data preserves UTF-8 and delimiters in strings")
+		check(disk.index.lookup("actors", "a") == expected.actors.a and disk.index.lookup("members", "sprite") == expected.members.sprite,
+			"duplicate IDs and nested values agree with the whole parse")
+	MANIFEST_INDEX._shared.erase(sha)
+	disk.clear()
+	for name: String in names: MANIFEST_BAKE.clear(name)
+	var kinds := {"actors":TYPE_DICTIONARY, "members":TYPE_DICTIONARY}
+	check(MANIFEST_BAKE.write_records(names[1], earlier_key, PackedStringArray(["a"]), [expected.actors.a])
+		and MANIFEST_BAKE.write_records(names[2], earlier_key, PackedStringArray(["sprite"]), [expected.members.sprite])
+		and MANIFEST_BAKE.write(names[0], earlier_key, {"top":{"title":expected.title}, "kinds":kinds}), "preceding format fixture is published")
+	var legacy: Dictionary = MANIFEST_INDEX.open(path, sha, 4096, true)
+	check(legacy.ok and legacy.index.lookup("actors", "a") == expected.actors.a
+		and MANIFEST_BAKE.present(names[0], earlier_key) and not MANIFEST_BAKE.present(names[0], current_key), "existing verified records are reopened without converting")
+	write_bytes(path, bytes + PackedByteArray([32]))
+	check(not MANIFEST_INDEX.open(path, sha, 4096, true).ok, "a hit cannot hide a changed source manifest")
+	write_bytes(path, bytes)
+	MANIFEST_INDEX._shared.erase(sha)
+	legacy.clear()
+	for name: String in names: MANIFEST_BAKE.clear(name)
+	MANIFEST_BAKE.fault = names[1] + "|append:1"
+	var fallback: Dictionary = MANIFEST_INDEX.open(path, sha, 4096, true)
+	MANIFEST_BAKE.fault = ""
+	check(fallback.ok and fallback.index._files.is_empty() and fallback.index.lookup("members", "sprite") == expected.members.sprite,
+		"a short write uses the complete verified memory fallback")
+	for name: String in names:
+		check(not MANIFEST_BAKE.present(name, current_key) and not FileAccess.file_exists(MANIFEST_BAKE.ROOT + "/" + name + ".bin.part"), "failed split publishes no records or partial file for " + name)
+	MANIFEST_INDEX._shared.erase(sha)
+
 func run() -> void:
 	scratch = "user://reference_sp2_load_memo_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	_check_manifest_records()
 	ASSETS.reset_for_tests()
 	BANK.forget_verified_members()
 	var data: Dictionary = fixture(scratch.path_join("equivalence"))
