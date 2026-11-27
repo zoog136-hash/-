@@ -9831,10 +9831,12 @@ func _run_auto_combat_quickslots() -> bool:
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal" or _is_buff_skill(skill):
 			continue
+		# Reject the same out-of-range quickslot before original readiness can
+		# prepare material checks or probe a whole self-centred area.
+		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
+			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
-			continue
-		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
 			continue
 		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
 			continue

@@ -519,35 +519,50 @@ func area_marker(skill: Dictionary, generation: int) -> void:
 	impact(skill, null)
 
 func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonster]:
-	var result: Array[TwilightMonster] = []
 	var origin: Vector2 = world.player.global_position
 	var shape := str(skill.get("shape", "single"))
 	if shape == "single" and is_instance_valid(primary):
 		return [primary] if Catalog.SOURCE523.target_allowed(skill, primary) else []
 	var started: int = FRAME_HITCH.now()
 	var center: Vector2 = primary.global_position if is_instance_valid(primary) else origin
+	var result: Array[TwilightMonster] = _area_candidates(skill, shape, origin, center)
+	result.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool: return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
+	if result.size() > int(skill.get("targets", 6)): result.resize(int(skill.get("targets", 6)))
+	FRAME_HITCH.detail("skill.area_targets", started)
+	return result
+
+func _has_self_circle_target(skill: Dictionary) -> bool:
+	if int(skill.get("targets", 6)) <= 0: return false
+	var started: int = FRAME_HITCH.now()
+	var origin: Vector2 = world.player.global_position
+	var found: bool = not _area_candidates(skill, "self_circle", origin, origin, true).is_empty()
+	FRAME_HITCH.detail("skill.area_auto_probe", started)
+	return found
+
+func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center: Vector2, first_only: bool = false) -> Array[TwilightMonster]:
+	var result: Array[TwilightMonster] = []
 	var radius := float(skill.get("radius", skill.get("range", 160)))
 	var line: bool = shape == "line"
 	var end: Vector2 = origin + origin.direction_to(center) * float(skill.get("range", 0.0)) if line else origin
 	for child: Node in world.monsters_root.get_children():
 		if not child is TwilightMonster or child.dead: continue
 		var monster := child as TwilightMonster
-		if not Catalog.SOURCE523.target_allowed(skill, monster): continue
 		var position: Vector2 = monster.global_position
 		var nearest: Vector2 = Geometry2D.get_closest_point_to_segment(position, origin, end) if line else center
 		# The field's line check can traverse several source cells and load a
 		# chunk. An out-of-range candidate never reaches that check.
-		if position.distance_to(nearest) <= radius and world._has_line_of_sight_world(origin, position):
-			result.append(monster)
-	result.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool: return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
-	if result.size() > int(skill.get("targets", 6)): result.resize(int(skill.get("targets", 6)))
-	FRAME_HITCH.detail("skill.area_targets", started)
+		if not (position.distance_to(nearest) <= radius) or not Catalog.SOURCE523.target_allowed(skill, monster): continue
+		if not world._has_line_of_sight_world(origin, position): continue
+		result.append(monster)
+		if first_only: break
 	return result
 
 func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1) -> void:
 	if expected_life >= 0 and (not is_instance_valid(primary) or primary.life_id != expected_life): return
 	combat_elapsed = 0
-	for target: TwilightMonster in targets(skill, primary):
+	var victims: Array[TwilightMonster] = targets(skill, primary)
+	var area_started: int = FRAME_HITCH.now() if str(skill.get("shape", "single")) != "single" else 0
+	for target: TwilightMonster in victims:
 		if not is_instance_valid(target) or target.dead: continue
 		if str(skill.mode) == "turn_undead":
 			resolve_turn_undead(skill, target)
@@ -591,6 +606,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 		var config: Dictionary = skill.self_stacks
 		stack(str(skill.id), {"atk":config.get("atk", 2)}, int(config.get("max", 3)), float(config.get("duration", 15)))
 	world._refresh_combat_hud()
+	if area_started != 0: FRAME_HITCH.detail("skill.area_apply", area_started)
 
 static func presentation_id(skill: Dictionary) -> String:
 	return str(skill.get("visual_skill_id", skill.get("id", "")))
@@ -1054,7 +1070,7 @@ func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 			var kind := str(skill.get("status", ""))
 			if kind in ["stun","hold","fear","silence","poison","bleed","slow"] and float(target.get(kind + "_remaining")) > 0: return false
 		"attack":
-			if str(skill.get("shape", "")) == "self_circle" and targets(skill, null).is_empty(): return false
+			if str(skill.get("shape", "")) == "self_circle" and not _has_self_circle_target(skill): return false
 	return true
 
 func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> int:
@@ -1162,17 +1178,19 @@ func _source_only_skill_presentation() -> bool:
 	return is_instance_valid(world) and is_instance_valid(world.player) and world.player.original_source_preview.current523_source_only_presentation()
 
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
-	if _is_verified_source_skill(skill):
-		if world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest): return
+	var started: int = FRAME_HITCH.now() if str(skill.get("shape", "single")) != "single" else 0
+	if _is_verified_source_skill(skill) and world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest):
+		if started != 0: FRAME_HITCH.detail("skill.area_original_effect", started)
+		return
 	var row: Dictionary = _current_source_effect_row(skill)
-	if row.is_empty(): return
-	world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
-	# The cast starts this skill's later effects (impact/success/fail) loading
-	# on worker threads, so the hit does not read/parse them on the main thread.
-	if stage == "cast":
-		var stages: Array=["impact","success","fail"]
-		if skill.get("id")==HEART_SEEKER: stages.append("effect")
-		world.player.original_source_preview.prefetch_current_source_spell_effects(row,stages)
+	if not row.is_empty():
+		world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
+		# Prepare later effects on worker threads as soon as the cast starts.
+		if stage == "cast":
+			var stages: Array=["impact","success","fail"]
+			if skill.get("id")==HEART_SEEKER: stages.append("effect")
+			world.player.original_source_preview.prefetch_current_source_spell_effects(row,stages)
+	if started != 0: FRAME_HITCH.detail("skill.area_original_effect", started)
 
 ## The already admitted skill's pinned current-source row, or {}.
 func _current_source_effect_row(skill: Dictionary) -> Dictionary:
