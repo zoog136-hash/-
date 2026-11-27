@@ -19,12 +19,15 @@ const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const INV = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
+const CONSUME = preload("res://scripts/quests/quest_reward_consumption.gd")
 const PROVIDER = preload("res://scripts/quests/quest_item_provider238.gd")
 const FIXED = preload("res://scripts/quests/quest_fixed_cards523.gd")
 ## 아크 나이트(근사 허용 시험 행 카드), 변신·인형·성물 카드 확정 상자, 희귀 변신
 ## 카드 상자, 스킬 카드 뽑기팩 상자, 마검사 각인 스킬서, 공허의 사원 희귀 카드
 ## 상자(연계 콘텐츠 퀘스트: 옛 세이브 보유분).
-const REPRESENTATIVE = [1067, 123393, 146692, 297858, 155643, 324693, 291202, 328908]
+const REPRESENTATIVE = [1016, 996, 35101, 1067, 123393, 146692, 297858, 155643, 324693, 291202, 328908]
+const REPORTED_CARD_IDS = {1016:84, 996:59, 35101:85}
+const REPORTED_CARD_QUESTS = {1016:"m523:quest:60291", 996:"m523:quest:59982", 35101:"m523:quest:60441"}
 var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
@@ -42,13 +45,15 @@ func _initialize() -> void: call_deferred("run")
 
 func rules() -> void:
 	check(SOURCE.approximated_item({"ID":1067,"TestItem":true}).get("TestItem") == false, "an approved TWILIGHT 근사 test card reads as an ordinary item")
+	check(REPORTED_CARD_IDS.keys().all(func(id: int) -> bool:
+		return SOURCE.approximated_item({"ID":id,"TestItem":true}).TestItem), "authorization for a held quest reward does not change general item rules")
 	check(SOURCE.approximated_item({"ID":5,"TestItem":true}).get("TestItem") == true, "other test items stay test items")
 	var pinned: Dictionary = {"ID":1067,"TestItem":true}
 	SOURCE.approximated_item(pinned)
 	check(pinned.TestItem == true, "the pinned quest row itself is not changed")
 	var stack: String = FileAccess.get_file_as_string("res://scripts/loot/current523_native_stack.gd")
-	check(stack.contains('if spec.kind=="fixed_card":return use_fixed_card(world,uid,selected_owned,record,spec)'), "a quest-held fixed card uses the native card owner")
-	check(stack.contains('var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256)) if is_quest else stage_debit(world,[request])') and stack.contains('if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("퀘스트 카드'), "a quest card is debited through the quest ledger")
+	check(stack.contains('if spec.kind=="fixed_card":return use_fixed_card(world,uid,selected_owned,record,spec,held_test_card)'), "a quest-held fixed card uses the native card owner")
+	check(stack.contains('var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256),held_test_card) if is_quest else stage_debit(world,[request])') and stack.contains('if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload,held_test_card):return _failure("퀘스트 카드'), "a quest card is debited through the quest ledger")
 	check(stack.contains('var payload: Dictionary=paid.overrides.duplicate(true);payload["consumable_state"]=state;payload["original_skill_state"]=learned'), "the quest skill book candidate is compared unchanged")
 	check(stack.contains('SOURCE.approximated_item(original_item)!=SOURCE.row("ItemClass"'), "the held bag/card row check reads the approved approximation")
 	var provider: String = FileAccess.get_file_as_string("res://scripts/quests/quest_item_provider238.gd")
@@ -57,7 +62,7 @@ func rules() -> void:
 	check(routing._native_held_spec_supported(fixed_card,1067), "an ordinary held fixed card uses the native route")
 	check(139781 in FIXED.QUEST_IDS and FIXED.QUEST_IDS.all(func(id: int) -> bool:
 		return not routing._native_held_spec_supported(fixed_card,id)), "all reviewed quest cards stay with their dedicated owner")
-	check(provider.contains('if _native_held_spec_supported(original_definition,int(original_owned.item_class_id)):') and provider.contains('stock.call("use_owned_original",world,original_owned.source_item') and provider.contains('if int(owned.item_class_id) in FIXED.QUEST_IDS:'), "the held-use path dispatches to both owners with the tested routing decision")
+	check(provider.contains('_native_held_spec_supported(original_definition,int(original_owned.item_class_id))') and provider.contains('stock.call("use_owned_original",world,original_owned.source_item') and provider.contains('if int(owned.item_class_id) in FIXED.QUEST_IDS:'), "the held-use path dispatches to both owners with the tested routing decision")
 	var events: String = FileAccess.get_file_as_string("res://scripts/unconfirmed523/runtime.gd")
 	check(events.contains("func _box_rule_record(item_name: String, id: int) -> Dictionary:") and events.contains('profile(rule).get("kind","")) in ["bag","selection"]: return false') and events.contains('NATIVE_FIELDS.full(rule).get("source_use_spec",{})'), "the events window reads a held box's own native rule")
 	var own: String = FileAccess.get_file_as_string("res://scripts/quests/quest_reward_ownership.gd")
@@ -199,21 +204,52 @@ func runtime() -> void:
 				if not rewarded.has(id): rewarded[id] = []
 				rewarded[id].append(qid)
 	var results: Dictionary = {}
+	var recovered: Dictionary={}
 	for id: int in REPRESENTATIVE:
 		check(rewarded.has(id), "the original quest reward table issues #" + str(id))
 		if not rewarded.has(id): continue
-		var issued: Dictionary = quest_grant(id, rewarded[id])
+		var candidates: Array=rewarded[id]
+		if REPORTED_CARD_QUESTS.has(id):
+			var matched: bool=candidates.has(REPORTED_CARD_QUESTS[id])
+			check(matched,"the specific reported receipt comes from the original quest #"+str(id))
+			if not matched:continue
+			candidates=[REPORTED_CARD_QUESTS[id]]
+		var issued: Dictionary = quest_grant(id,candidates)
 		check(issued.get("ok", false), "quest reward #" + str(id) + " is issued")
 		if not issued.get("ok", false): continue
+		if REPORTED_CARD_IDS.has(id):
+			var uid: String=physical_of(id)
+			w._load_game(true)
+			var proof: Dictionary=OWN.proof(w,uid)
+			check(proof.get("ok",false) and proof.source_item.TestItem,"reloaded quest receipt keeps the unchanged original flag #"+str(id))
+			check(proof.get("source_reward_timing")== (1 if id==996 else 2) and proof.get("source_use_immediately")== (id==996),"receipt comes from the expected instant or held original reward")
+			check(OWN.held_test_card_spec(proof).get("card_id",0)==REPORTED_CARD_IDS[id],"only verified receipt reveals fixed effect #"+str(id))
+			var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":1,"expected_remaining":0,"quest_reward_receipt":w.item_instances[uid].quest_reward_receipt}
+			var digest: String=str(SOURCE.identity().source_sha256)
+			check(not OWN.prepare_debit(w,uid,1).get("ok",false) and not CONSUME.stage(w,[request],digest).get("ok",false),"ordinary quest and crafting debits still reject the raw test card #"+str(id))
+			check(w.quest_item_provider.quickslot_held_supported(w,uid),"owned card supports the same manual quickslot path #"+str(id))
+			var inventory_key: String=str(proof.get("inventory_key",""))
+			w.ui_preferences.item_locks[inventory_key+"@@@"+uid]=true
+			var before: String=FileAccess.get_sha256(save_path)
+			check(not activate(id).get("ok",false) and w.item_instances.has(uid) and FileAccess.get_sha256(save_path)==before,"locked quest card preserves ownership and saved bytes #"+str(id))
+			w.ui_preferences.item_locks.erase(inventory_key+"@@@"+uid)
 		var quest_use: Dictionary = activate(id)
 		check(quest_use.held, "#" + str(id) + " is the held quest reward physical")
 		check(quest_use.ok, "quest reward #" + str(id) + " is used from the bag: " + JSON.stringify(quest_use))
+		if REPORTED_CARD_IDS.has(id):
+			w._load_game(true)
+			var source_id: String=preload("res://scripts/cards/current523_card_identity.gd").source_id(1,int(REPORTED_CARD_IDS[id]))
+			check(w.card_draw_fusion.total_count("변신","source:"+source_id)==1 and physical_of(id).is_empty(),"the correct card and one-item debit persist on reload #"+str(id))
+			check(D.definition_id(str(id)).get("native_record",{}).is_empty() and SOURCE.row("ItemClass",id).TestItem,"general loot and crafting still see the original test designation #"+str(id))
+			recovered[str(id)]={"quest":issued.quest,"path":issued.path,"card":source_id,"spent":quest_use.consumed}
+			continue
 		reset(); w.job_class = str(issued.get("class", base_job))
 		check(INV.commit(w, [{"item_class_id":id,"amount":1,"bless_raw":1,"enchant":0}], {"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}), "test grant #" + str(id))
 		var test_use: Dictionary = activate(id)
 		check(test_use.get("ok",false) and test_use.get("card",false) == quest_use.get("card",false) and test_use.get("skill",false) == quest_use.get("skill",false), "quest reward #" + str(id) + " acts as the test grant: " + JSON.stringify(test_use))
 		results[str(id)] = {"path":issued.path,"card":quest_use.get("card",false),"skill":quest_use.get("skill",false),"outputs":quest_use.get("gained",[]).size()}
 	evidence["runtime"] = results
+	evidence["recovered"] = recovered
 	hero_doll_box()
 	reset()
 	w.queue_free()

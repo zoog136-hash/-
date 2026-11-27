@@ -11,6 +11,7 @@ var collection_combat_context: Dictionary={}
 var source_m_npc_id: int = -1
 const SOURCE_M_VIEW = preload("res://scripts/monsters/base508_monster_view.gd")
 const CURRENT523_SOURCE_M_VIEW = preload("res://scripts/monsters/current523_source_bank_view.gd")
+const ORIGINAL_PREVIEW = preload("res://scripts/animation/original_source_preview.gd")
 const SOURCE_M_BINDINGS = preload("res://scripts/monsters/base508_monster_bindings.gd")
 var source_m_view: SOURCE_M_VIEW = null
 const SOURCE_BOSS_COMBAT = preload("res://scripts/monsters/base508_boss_combat.gd")
@@ -519,6 +520,7 @@ func _setup_traced(record: Dictionary, player_ref: TwilightPlayer, world_ref: No
 			var scale_value: float = desired / largest
 			sprite.scale = Vector2(scale_value, scale_value)
 	name_label.text = monster_name if not source_m_original.is_empty() and str(record.get("source_m_level_origin", "")).begins_with("local_") else "Lv.%d %s" % [monster_level, monster_name]
+	apply_original_name_font()
 	hp_bar.max_value = max_hp
 	hp_bar.value = hp
 	# Start with the same distance rule the AI applies every decision tick.
@@ -1284,7 +1286,11 @@ func show_miss() -> void:
 	if dead:
 		return
 	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
-		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), "MISS", Color(0.78, 0.86, 1.0))
+		var point: Vector2 = combat_caption_position()
+		if world_controller is TwilightWorld:
+			world_controller.show_combat_number(point, "MISS", Color(0.78, 0.86, 1.0), false, false, true)
+		else:
+			world_controller.show_combat_number(point, "MISS", Color(0.78, 0.86, 1.0))
 		return
 	var label: Label = Label.new()
 	label.text = "MISS"
@@ -1304,11 +1310,11 @@ func show_miss() -> void:
 
 func _show_damage_number(amount: int, critical: bool = false, final_blow: bool = false) -> void:
 	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
-		var point: Vector2 = global_position + Vector2(0, -visual_height - 8)
+		var point: Vector2 = combat_caption_position()
 		var text: String = ("CRIT " if critical else "") + str(amount)
 		var color: Color = Color(1.0, 0.45, 0.2) if critical else Color(1.0, 0.83, 0.4)
 		if world_controller is TwilightWorld:
-			world_controller.show_combat_number(point, text, color, critical, final_blow)
+			world_controller.show_combat_number(point, text, color, critical, final_blow, true)
 		else:
 			world_controller.show_combat_number(point, text, color, critical)
 		return
@@ -1448,6 +1454,20 @@ func current_attack_range() -> float:
 
 func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
+
+func combat_caption_position() -> Vector2:
+	var bounds: Rect2 = source_m_view.displayed_body_bounds() if source_m_view is CURRENT523_SOURCE_M_VIEW else ORIGINAL_PREVIEW.sprite_world_bounds(sprite)
+	var head: Vector2 = Vector2(bounds.get_center().x,bounds.position.y) if bounds.has_area() else global_position - Vector2(0.0,visual_height)
+	return head - Vector2(0.0,4.0 * FIELD_CAMERA.text_scale())
+
+func apply_original_name_font() -> void:
+	if not is_instance_valid(name_label): return
+	var hud: Object = world_controller.get("hud") if is_instance_valid(world_controller) else null
+	var original: FontFile = hud.original_world_name_font() if is_instance_valid(hud) and hud.has_method("original_world_name_font") else null
+	if original != null:
+		name_label.add_theme_font_override("font",original)
+	else:
+		name_label.remove_theme_font_override("font")
 
 func _cancel_attack(id: int) -> void:
 	var source523 = _patch523_service()

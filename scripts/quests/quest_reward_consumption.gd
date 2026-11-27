@@ -15,7 +15,7 @@ static func fail(reason: String)->Dictionary:return {"ok":false,"reason":reason,
 static func available(world: Node)->bool:
 	var service: Variant=world.get("quest_service")
 	return service is Object and service.has_method("export_state") and service.has_method("validate_saved_state") and service.get("item_grants") is Dictionary and service.get("source")!=null and world.get("inventory") is Dictionary and world.get("item_instances") is Dictionary
-static func stage(world: Node,requests: Array,consumer_data_sha256: String)->Dictionary:
+static func stage(world: Node,requests: Array,consumer_data_sha256: String,allow_held_test_card: bool=false)->Dictionary:
 	if requests.is_empty() or requests.size()>128 or not digest(consumer_data_sha256):return fail("소비 선택·소비자 자료 SHA 확인 필요")
 	var service: Variant=world.get("quest_service")
 	if not available(world):return fail("PR262 원본 소유·사용 장부 계약 미설치")
@@ -32,7 +32,7 @@ static func stage(world: Node,requests: Array,consumer_data_sha256: String)->Dic
 		if not id is String or id.is_empty() or selected.has(id):return fail("같은 물리 개체 중복 선택 · 합산 후 한 번 요청 필요")
 		var amount: int=OWN.positive(request.quantity);var before: int=OWN.positive(request.expected_quantity);var after: int=nonnegative(request.expected_remaining)
 		if amount<=0 or before<=0 or after<0 or amount>before or after!=before-amount or not request.quest_reward_receipt is Dictionary:return fail("소비량·기대 잔량 불일치")
-		var prepared: Dictionary=OWN.prepare_debit(world,id,amount)
+		var prepared: Dictionary=OWN.prepare_debit(world,id,amount,allow_held_test_card)
 		if not prepared.get("ok",false):return fail(str(prepared.get("reason","원본 소유 검증 실패")))
 		var owned: Dictionary=prepared.ownership;var actual: Dictionary=world.item_instances[id]
 		if int(owned.quantity)!=before or not same(actual.quest_reward_receipt,request.quest_reward_receipt):return fail("선택 이후 잔량·원본 지급 영수증 변경")
@@ -45,7 +45,7 @@ static func stage(world: Node,requests: Array,consumer_data_sha256: String)->Dic
 				if int(row.item_class_id)!=int(owned.item_class_id) or int(row.bless_raw)!=int(owned.bless_code_id):return fail("이전 사용 장부의 품목·축복 정체 불일치")
 				if not digest(row.get("pack_sha256")):return fail("최초 소비 자료 영수증 손상")
 				first_pack=str(row.pack_sha256)
-		var use: Dictionary=OWN.use_state(world,prepared,first_pack)
+		var use: Dictionary=OWN.use_state(world,prepared,first_pack,allow_held_test_card)
 		if not use.get("ok",false):return fail(str(use.get("reason","원본 사용 장부 불일치")))
 		var updated: Dictionary={}
 		for row: Dictionary in use.state.item_grants[owned.quest_id]:
@@ -67,13 +67,13 @@ static func stage(world: Node,requests: Array,consumer_data_sha256: String)->Dic
 		receipts.append({"physical_id":id,"quantity":amount,"remaining_before":before,"remaining_after":after,"quest_id":owned.quest_id,"reward_id":int(owned.reward_id),"item_class_id":int(owned.item_class_id),"bless_raw":int(owned.bless_code_id),"original_quantity":int(owned.original_quantity),"source_sha256":owned.source_sha256,"first_consumer_pack_sha256":first_pack,"consumer_data_sha256":consumer_data_sha256,"quest_reward_receipt":actual.quest_reward_receipt.duplicate(true)})
 	if not service.validate_saved_state(state).is_empty() or OWN.stamp(world)!=stamp:return fail("공동 소비 후보 생성 중 원본 상태 변경")
 	return {"ok":true,"kind":KIND,"base_stamp":stamp,"requests":requests.duplicate(true),"consumer_data_sha256":consumer_data_sha256,"overrides":{"inventory":inventory,"item_instances":instances,"quest_state":state},"selections":receipts,"use_authorized":false}
-static func current(world: Node,candidate: Dictionary)->bool:
+static func current(world: Node,candidate: Dictionary,allow_held_test_card: bool=false)->bool:
 	if not available(world):return false
 	if candidate.get("kind")!=KIND or candidate.get("base_stamp")!=OWN.stamp(world) or not candidate.get("requests") is Array or not candidate.get("consumer_data_sha256") is String:return false
-	var fresh: Dictionary=stage(world,candidate.requests,candidate.consumer_data_sha256)
+	var fresh: Dictionary=stage(world,candidate.requests,candidate.consumer_data_sha256,allow_held_test_card)
 	return fresh.get("ok",false) and same(fresh,candidate)
-static func matches_payload(world: Node,candidate: Dictionary,payload: Dictionary)->bool:
-	if not current(world,candidate) or not payload.get("inventory") is Dictionary or not payload.get("item_instances") is Dictionary or not payload.get("quest_state") is Dictionary:return false
+static func matches_payload(world: Node,candidate: Dictionary,payload: Dictionary,allow_held_test_card: bool=false)->bool:
+	if not current(world,candidate,allow_held_test_card) or not payload.get("inventory") is Dictionary or not payload.get("item_instances") is Dictionary or not payload.get("quest_state") is Dictionary:return false
 	if not same(payload.quest_state,candidate.overrides.quest_state):return false
 	var selected: Dictionary={};var keys: Dictionary={}
 	for row: Dictionary in candidate.selections:
