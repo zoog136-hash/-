@@ -305,7 +305,7 @@ func select(reference: String) -> Dictionary:
 	return _slots.select_reference(reference)
 
 func move_pending() -> bool:
-	return is_open() and _chrome.move_pending()
+	return is_open() and _chrome != null and _chrome.move_pending()
 
 func cancel_move() -> void:
 	if move_pending():_chrome.cancel_move()
