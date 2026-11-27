@@ -552,6 +552,11 @@ static func _use_mastery(world, item_name: String, spec: Dictionary) -> String:
 	world.hud.refresh_inventory(world.inventory)
 	return "%s 사용 · 무기 숙련치 +%d" % [item_name, int(spec.points)]
 
+static func supports_bag_record(record: Dictionary) -> bool:
+	var id: int=int(record.get("source_item_class_id",0))
+	if record.get("source")==TAG:return not definition(id).is_empty()
+	return record.get("source")==ITEM_TAG and not mastery_spec(id).is_empty()
+
 static func try_use(world, item_name: String) -> bool:
 	var record: Dictionary = world._find_catalog_item_record(item_name)
 	if record.get("source") == ITEM_TAG:

@@ -123,15 +123,18 @@ func grant_for_test(item: String) -> Dictionary:
 ## coupon record and are spent through the bag's physical debit, never copied.
 ## Route only original PlayerValueReturn card coupons, not the mystery-card
 ## items that share the ScrollBuffCardRetry category.
-func try_open_owned_coupon(name: String, uid: String, record: Dictionary) -> bool:
+func owns_physical_coupon_definition(record: Dictionary) -> bool:
 	if record.get("source_m_native_item")!=true or FIELDS.field(record,"source_category_name") not in ["ScrollBuffCardRetry","ScrollBuffCardAwakenRetry"]:return false
 	var id: Variant = STACK.whole(record.get("source_item_class_id"))
 	if not id is int or id <= 0:return false
 	var exact: Dictionary = DROP.item_definition(record)
-	var is_retry := false
 	for bonus: Dictionary in exact.get("item_bonus",[]):
-		if bonus.get("IsPossession")==false and bonus.get("bonus_type",{}).get("Name")=="PlayerValueReturn":is_retry=true;break
-	if not is_retry:return false
+		if bonus.get("IsPossession")==false and bonus.get("bonus_type",{}).get("Name")=="PlayerValueReturn":return true
+	return false
+
+func try_open_owned_coupon(name: String, uid: String, record: Dictionary) -> bool:
+	if not owns_physical_coupon_definition(record):return false
+	var id: int = int(record.source_item_class_id)
 	if uid.is_empty() or name!=record.get("name") or bag_count(str(id),uid)<1 or not world._patch523_item_allowed() or world.hp<=0 or world._option_awakening_busy():
 		world.hud.show_message("실제 원본 TJ 쿠폰 개체와 사용 가능 상태를 확인하세요 · 아이템 보존")
 		return true

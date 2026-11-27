@@ -51,6 +51,8 @@ const AMULET_REUSABLE: bool = true
 ## scroll becomes its reuse delay instead of keeping the scroll.
 const CLASS_USAGE_INTERVAL_AS_DELAY: bool = true
 const REUSABLE_RANDOM_SCROLLS: Array[int] = [203402, 295494]
+const SUMMIT_SCROLL := 160413
+const SUMMIT_ARRIVAL := 43603
 
 static var _areas: Dictionary = {}
 
@@ -125,6 +127,7 @@ static func teleport(record: Dictionary) -> Dictionary:
 static func location_teleport(record: Dictionary) -> Dictionary:
 	var definition: Dictionary = _definition(record)
 	if definition.is_empty(): return {}
+	if int(definition.original_item.ID)==SUMMIT_SCROLL: return _summit_location(definition)
 	var targets: Array = []; var classes: Array[int] = []; var delay: int = 0; var delays: int = 0; var sprite: int = 0; var sprites: int = 0
 	# TWILIGHT 근사 (user policy 2026-11-16): a TeleportAmulet (이동/지배 부적) is
 	# the same fixed-destination move but is not consumed ("1회성이 아니라
@@ -189,6 +192,24 @@ static func location_teleport(record: Dictionary) -> Dictionary:
 	var result: Dictionary = {"kind":"teleport_location","land_id":int(target.LandID),"bounds":bounds,"usable_classes":usable,"forbidden_classes":forbidden,"consume_delay_ms":delay,"consume_sprite_id":sprite,"source":{"table":table,"id":id}}
 	if amulet: result.merge({"reusable":true,"approximation":"TWILIGHT_REUSABLE_TELEPORT_AMULET","ignored_rows":ignored})
 	return result
+
+## This original scroll's description specifies the summit, level 68, and
+## the tower entrance/interior, but it has no ItemBonus destination link.
+## Use the named original summit arrival and both towers' authored scroll
+## origin areas as the explicit local interpretation.
+static func _summit_location(definition: Dictionary) -> Dictionary:
+	var raw: Dictionary = definition.original_item
+	if raw.get("CategoryID")!=5 or raw.get("LevelLimitMin")!=68 or raw.get("StoryDescID")!=935243 or not definition.get("item_bonus",[]).is_empty():return {}
+	var arrival: Dictionary = SOURCE.row("Locations",SUMMIT_ARRIVAL)
+	var land: int = 22901
+	if arrival.get("LandID")!=land or not _integer(arrival.get("X")) or not _integer(arrival.get("Y")) or SOURCE.row("Land",land).is_empty():return {}
+	var usable: Array[int] = [10442,10581]
+	for class_id: int in usable:
+		if SOURCE.row("ConsumeTerritoryClass",class_id).get("ConsumeTerritoryTypeId")!=1:return {}
+	var bounds: Array = [int(arrival.X),int(arrival.Y),int(arrival.X),int(arrival.Y)]
+	return {"kind":"teleport_location","land_id":land,"bounds":bounds,"usable_classes":usable,"forbidden_classes":[],
+		"consume_delay_ms":0,"consume_sprite_id":0,"min_level":68,"source":{"table":"Locations","id":SUMMIT_ARRIVAL},
+		"approximation":"TWILIGHT_summit_scroll_description_and_existing_tower_regions"}
 
 ## 보고서2 NEW04 (원본 소비 규칙): a ConsumeTerritories point is inside when
 ## StartX <= x < EndX and StartY <= y < EndY (end exclusive; Rect2i.has_point is
@@ -478,6 +499,8 @@ static func prepare(world: Node, record: Dictionary, kind: String) -> Dictionary
 		var contract: Dictionary = location_teleport(record)
 		if contract.is_empty(): return {"ok":false,"reason":"원본 지정 위치 이동 정의 확인 실패 · 주문서 보존"}
 		if not world.has_method("current523_aden_source_active") or not world.current523_aden_source_active(): return {"ok":false,"reason":"원본 523 지도에서만 사용할 수 있습니다 · 주문서 보존"}
+		var minimum: int = int(contract.get("min_level",0))
+		if minimum>0 and world.level<minimum:return {"ok":false,"reason":"%d레벨 이상부터 사용할 수 있습니다 · 주문서 보존" % minimum}
 		if world.patch523_npc_spells.blocks("CannotTeleport") or world.player.is_stunned() or world.player.is_feared() or world.player.is_held() or int(world.hp)<=0 or not world.charge_skill.is_empty() or float(world.portal_cooldown)>0: return {"ok":false,"reason":"현재 상태에서는 순간이동할 수 없습니다 · 주문서 보존"}
 		var usable: Variant = consume_areas(contract.usable_classes)
 		var forbidden: Variant = consume_areas(contract.forbidden_classes)

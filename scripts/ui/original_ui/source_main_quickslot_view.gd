@@ -73,7 +73,7 @@ func hit_at(viewport_point: Vector2) -> Dictionary:
 		# A game update may precede the next UI refresh. Never start a gesture
 		# with a newly selected page/entry behind stale original pixels.
 		var entries: Variant=hud.get("quickslot_entries")
-		if not entries is Array or int(hud.call("quickslot_index",visible))!=int(hit.slot) or int(hit.slot)>=entries.size() or entries[int(hit.slot)]!=hit.entry:return {}
+		if not entries is Array or int(hud.call("quickslot_index",visible))!=int(hit.slot) or int(hit.slot)>=entries.size() or entries[int(hit.slot)]!=hit.get("shown_entry",hit.entry):return {}
 		var world: Node=hud.get_parent()
 		var current: Variant=world.get("quickslots") if world!=null else null
 		if not current is Array or int(hit.slot)>=current.size() or current[int(hit.slot)]!=hit.entry:return {}
@@ -108,6 +108,9 @@ func _stage(parent: Node) -> Dictionary:
 	if not all.get("ok",false):return _reject(next,all)
 	var hits: Dictionary={}
 	var page_inputs: Array[Control]=[]
+	var hud: Node=_hud.get_ref()
+	var host: Node=hud.get_parent()
+	var raw_slots: Variant=host.get("quickslots")
 	for group: int in range(contracts.size()):
 		var contract: Dictionary=contracts[group]
 		var page_node: Variant=all.player.get("source_nodes").get(PAGE_VIEWS[group])
@@ -129,7 +132,7 @@ func _stage(parent: Node) -> Dictionary:
 			var slot: Dictionary=page.project_player([offset])
 			if not slot.get("ok",false):return _reject(next,slot)
 			var texture: Texture2D
-			if not row.entry.is_empty():
+			if contract.owner_results.has(offset):
 				var uploaded: Dictionary=slot.player.set_bound_source_visual_result(ICON,contract.owner_results[offset])
 				if not uploaded.get("ok",false) or (not uploaded.get("texture_assigned",false) and not uploaded.get("source_scene_assigned",false)):return _reject(next,uploaded)
 				texture=uploaded.get("texture")
@@ -139,15 +142,16 @@ func _stage(parent: Node) -> Dictionary:
 			var button: Variant=(button_node.get_meta("source_button") if button_node.has_meta("source_button") else null) if is_instance_valid(button_node) else null
 			var control: Variant=button.get("_input_area") if is_instance_valid(button) else null
 			if not control is Control:return _reject(next,_fail("source_quickslot_original_slot_control_unavailable"))
-			hits[int(row.visible_index)]={"from":"quick","slot":row.absolute_index,"visible":row.visible_index,"entry":row.entry.duplicate(true),"texture":texture,"control":control,"source_native":true,"native_slot_scene":slot.player}
-	# Nothing is hidden until both complete current groups and every filled
-	# icon have been accepted. Only the current game page is materialized.
+			if row.entry.get("kind")=="item":control.tooltip_text=str(row.entry.get("id",""))
+			var raw: Dictionary=raw_slots[row.absolute_index] if raw_slots is Array and int(row.absolute_index)<raw_slots.size() and raw_slots[row.absolute_index] is Dictionary else row.entry
+			hits[int(row.visible_index)]={"from":"quick","slot":row.absolute_index,"visible":row.visible_index,"entry":raw.duplicate(true),"shown_entry":row.entry.duplicate(true),"texture":texture,"control":control,"source_native":true,"native_slot_scene":slot.player}
+	# Mount both groups together. Unavailable item icons leave active slots blank.
 	var previous: Node2D=_scene
 	for visible: int in hits:
 		var old: Dictionary=_hits.get(visible,{})
 		if old.is_empty() or old.get("slot")!=hits[visible].slot or not is_instance_valid(old.get("native_slot_scene")):continue
-		var old_entry: Dictionary=old.entry.duplicate(true)
-		var new_entry: Dictionary=hits[visible].entry.duplicate(true)
+		var old_entry: Dictionary=old.shown_entry.duplicate(true)
+		var new_entry: Dictionary=hits[visible].shown_entry.duplicate(true)
 		old_entry.erase("auto")
 		new_entry.erase("auto")
 		if old_entry!=new_entry:continue

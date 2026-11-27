@@ -36,6 +36,7 @@ var protection523 = PROTECTION523.new()
 signal regional_return_settings_updated
 const SOURCE_AMMO = preload("res://scripts/shop/source523_ammo.gd")
 const REGIONAL_RETURN = preload("res://scripts/quickslots/regional_return.gd")
+const QUICK_ITEM_BINDING = preload("res://scripts/quickslots/item_binding.gd")
 
 const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
 const SOURCE_DUNGEONS = preload("res://scripts/dungeons/source_dungeon_runtime.gd")
@@ -5605,7 +5606,7 @@ func _item_instance_level(instance_id: String, fallback_name: String = "") -> in
 
 func _parse_enhancement_target(raw_name: String) -> Dictionary:
 	var pieces: PackedStringArray = raw_name.split("@@@", false, 1)
-	return {"name": pieces[0], "id": pieces[1] if pieces.size() > 1 else ""}
+	return {"name": pieces[0] if not pieces.is_empty() else "", "id": pieces[1] if pieces.size() > 1 else ""}
 
 func _enhancement_kind_for_record(record: Dictionary) -> String:
 	if record.is_empty():
@@ -9203,8 +9204,8 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		var entry: Dictionary = value as Dictionary
 		if entry.is_empty(): continue
 		if str(entry.get("kind", "")) == "item":
-			if not _quickslot_item_supported(str(entry.get("id",""))):
-				if quest_item_provider.retains_issued_reference(self,str(entry.get("id",""))):continue
+			var item: String = str(entry.get("id",""))
+			if item.is_empty() or RETIRED_ITEMS.retired_reference(item) or RETIRED_ITEMS.record(_find_catalog_item_record(item)):
 				quickslots[index] = {}
 				changed = true
 			continue
@@ -9214,7 +9215,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill)):
+		if skill.is_empty() or (_is_passive_skill(skill) and not original_skills.stackable.handles(skill)) or (skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill)):
 			quickslots[index] = {}
 			changed = true
 			continue
@@ -9325,33 +9326,12 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		return
 	_normalize_quickslots()
 	var is_auto_skill: bool = entry_kind == "skill_auto"
-	if entry_kind == "skill" or is_auto_skill:
-		var skill: Dictionary = _skill_record(entry_id)
-		if skill.is_empty():
-			hud.show_message("등록할 스킬을 찾을 수 없습니다")
-			return
-		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill):
-			hud.show_message("미습득 스킬은 등록할 수 없습니다")
-			return
-		if _is_passive_skill(skill):
-			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
-			return
-		if is_auto_skill and not _quickslot_auto_allowed({"kind":"skill", "id":entry_id}):
-			hud.show_message("%s은(는) 자동사용을 지원하지 않습니다" % entry_id)
-			return
-		var skill_class: String = str(skill.get("class", "공용"))
-		if skill_class != "공용" and skill_class != job_class:
-			hud.show_message("%s 직업에서는 사용할 수 없는 스킬입니다" % job_class)
-			return
-	elif entry_kind == "item":
-		if int(inventory.get(entry_id, 0)) <= 0:
-			hud.show_message("보유하지 않은 아이템입니다")
-			return
-	else:
-		return
 	ui_preferences.edited_quickslots[job_class] = true
-	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
-	if str(quickslots[slot_index].kind) == "skill":
+	if entry_kind == "item":
+		var selected: Dictionary = _parse_enhancement_target(entry_id)
+		quickslots[slot_index] = QUICK_ITEM_BINDING.create(selected,item_instances.get(selected.id,{}))
+	else:
+		quickslots[slot_index] = {"kind":"skill","id":entry_id,"auto":is_auto_skill}
 		var slotted := _skill_record(entry_id)
 		if slotted.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
 			quickslots[slot_index]["skill_id"] = str(slotted.id)
@@ -9375,36 +9355,84 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 	if kind == "skill":
 		_cast_job_skill_input(entry_id)
 	elif kind == "item":
-		_use_quickslot_item(entry_id)
+		_use_quickslot_item(_quickslot_item_reference(entry))
 
-func _use_quickslot_item(item_name: String) -> void:
-	if int(inventory.get(item_name, 0)) <= 0:
-		hud.show_message("%s이(가) 없습니다" % item_name)
-		_update_hud()
+func _quickslot_item_reference(entry: Dictionary) -> String:
+	return QUICK_ITEM_BINDING.resolve_reference(entry,inventory,item_instances,_item_locked)
+
+func _quickslot_item_count(entry: Dictionary) -> int:
+	return QUICK_ITEM_BINDING.count(_parse_enhancement_target(_quickslot_item_reference(entry)),inventory,item_instances)
+
+func _quickslot_item_record(selection: Dictionary) -> Dictionary:
+	if str(selection.id).is_empty(): return _find_catalog_item_record(selection.name)
+	var row: Dictionary = item_instances.get(selection.id,{})
+	if row.get("name")!=selection.name: return {}
+	var record: Dictionary = row.get("record",{})
+	# Older equipment has a physical ID but only stores its catalog name.
+	return _find_catalog_item_record(selection.name) if record.is_empty() else record
+
+func _use_quickslot_item(reference: String) -> void:
+	if MAP_LOADING.busy(self) or death_recovery.blocked(): return
+	var reason: String = _quickslot_registration_error("item",reference)
+	if not reason.is_empty():
+		hud.show_message(reason)
 		return
-	if _quickslot_item_supported(item_name):
-		_activate_inventory_input(item_name)
+	var selected: Dictionary = _parse_enhancement_target(reference)
+	var physical_id: String = selected.id
+	var equipped: bool = equipped_ammo==selected.name if physical_id.is_empty() else _is_instance_equipped(physical_id)
+	if equipped:
+		_unequip_item_reference(reference)
 	else:
-		hud.show_message("직접 사용할 수 없는 아이템입니다")
+		_activate_inventory_input(reference)
 
-func _quickslot_item_supported(item_name: String) -> bool:
-	if option_awakening.source_scroll_supported(item_name):return true
-	var record: Dictionary = _find_catalog_item_record(item_name)
-	if record.get("source_automation_catalog_only",false): return not _quickslot_auto_item(item_name, record).is_empty()
+func _quickslot_item_supported(reference: String) -> bool:
+	var selected: Dictionary = _parse_enhancement_target(reference)
+	var item_name: String = str(selected.name)
+	var uid: String = str(selected.id)
+	var record: Dictionary = _quickslot_item_record(selected)
+	if RETIRED_ITEMS.retired_reference(item_name) or RETIRED_ITEMS.record(record) or RETIRED_ITEMS.QUEST_ONLY.matches_reference(record,item_name):return false
+	if not uid.is_empty() and record.is_empty():return false
+	if preload("res://scripts/quests/source_dummy523.gd").reason(record)!="":return false
+	if option_awakening.quickslot_item_supported(item_name,uid,record):return true
+	if item_name.begins_with("[원본 보상] "):return not uid.is_empty() and quest_item_provider.quickslot_held_supported(self,uid)
+	if quest_item_provider.handles(record):return true
+	# Storage/sale definitions have no manual owner merely because the name
+	# resembles an enhancement scroll. Preserve any verified automatic rule.
+	if record.get("source_automation_catalog_only",false):return not _quickslot_selected_auto_item(selected,record).is_empty()
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if REGIONAL_RETURN.claims_identity(item_name, record): return REGIONAL_RETURN.supported(item_name, record)
-	if record.get("source_m_native_item",false):
-		var profile: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(record)
-		if profile.get("kind","") in ["hp","mp","buff","cure","teleport","teleport_location","ain","bless_points","time_recharge"]: return true
-	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
+	if _is_ammo_record(record) or (not uid.is_empty() and not _equipment_slot_base(record).is_empty()):return true
+	if not _scroll_kind(item_name,record).is_empty():return true
+	if _patch523_expedition_scroll(item_name).get("ok",false):return true
+	if not CATALOG_STACK.action_record(self,record).is_empty():return true
+	if not uid.is_empty() and (not _seal_scroll_id(record).is_empty() or not ELEMENT_MANAGEMENT.kind(record).is_empty()):return true
+	if not uid.is_empty() and not EQUIPMENT523_SERVICE.NATIVE_SMITH.input(record).is_empty():return true
+	if not uid.is_empty() and not EQUIPMENT523_SERVICE.NATIVE_SMELT.kind(record).is_empty():return true
+	var stack: Script = preload("res://scripts/loot/current523_native_stack.gd")
+	if not stack.profile(record).is_empty() or not stack.draw_ticket_profile(record).is_empty() or not stack.mystery_card_rule(record).is_empty():return true
+	if source_shop.inventory_tickets.supports_bag_record(item_name,record,uid):return true
+	if tj_coupons.owns_physical_coupon_definition(record):return not uid.is_empty()
+	if record.get("source_m_native_item",false) and NATIVE_FIELDS.field(record,"source_category_name")=="ScrollGachaCraft":
+		return not uid.is_empty() and not preload("res://scripts/crafting/patch523_gacha_craft.gd").spec(int(record.get("source_item_class_id",0))).is_empty()
+	if record.get("type")=="문양 재료":
+		return growth.source523.material(item_instances.get(uid,{})) if not uid.is_empty() else not growth.source523.plain_recharge(self,record).is_empty()
+	if CARD_PACK_ITEMS.is_pack(item_name) or not half_elixir.item_action(item_name).is_empty() or protection523.managed(record):return true
+	if record.get("source")=="twilight-shop523-book":
+		return preload("res://scripts/shop/source523_skill_books.gd").registered(self,item_name,str(record.get("source_skill_id","")))
+	if preload("res://scripts/shop/source523_cash_packages.gd").supports_bag_record(record):return true
+	if record.get("source")=="twilight_dungeon_adaptation" and not uid.is_empty():
+		return int(record.get("declared_source_item",0))==231162 and not dungeon_play.rules.orim_item_effects.get(231162,[]).is_empty()
+	if not CONSUMABLE_RULES.definition(item_name).is_empty(): return true
 	if record.is_empty(): return false
 	if _is_timed_buff_item(record) or int(record.get("heal",0)) > 0: return true
 	return not _quickslot_auto_item(item_name, record).is_empty()
 
 func _quickslot_registration_error(kind: String, id: String) -> String:
 	if kind == "item":
-		if int(inventory.get(id,0)) <= 0: return "보유하지 않은 아이템입니다"
-		if not _quickslot_item_supported(id): return "장비와 재료는 퀵슬롯에 등록할 수 없습니다"
+		var selected: Dictionary = _parse_enhancement_target(id)
+		if QUICK_ITEM_BINDING.count(selected,inventory,item_instances)<=0: return "선택한 아이템을 가방에서 찾을 수 없습니다"
+		if _item_locked(selected.name) or _item_locked(selected.name,selected.id): return "잠긴 아이템입니다"
+		if not _quickslot_item_supported(id): return "직접 사용할 수 있는 아이템만 퀵슬롯에 등록할 수 있습니다"
 		return ""
 	if kind not in ["skill","skill_auto"]: return "등록할 수 없는 항목입니다"
 	var skill: Dictionary = _skill_record(id)
@@ -9414,7 +9442,7 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if not source_status.is_empty():return str(source_status.message)
 	if _is_passive_skill(skill) and not (original_skills!=null and original_skills.stackable.handles(skill)): return "패시브는 직접 사용할 수 없습니다"
 	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
-	if kind == "skill_auto" and not (_is_buff_skill(skill) or SKILL_RULES.can_auto_cast(skill)): return "자동사용을 지원하지 않는 스킬입니다"
+	if kind == "skill_auto" and not _quickslot_auto_allowed({"kind":"skill","id":id}): return "자동사용을 지원하지 않는 스킬입니다"
 	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
 	return ""
@@ -9469,8 +9497,20 @@ func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 		return _is_buff_skill(skill) or SKILL_RULES.can_auto_cast(skill)
 	if entry.get("kind") != "item": return false
 	var item: String = str(entry.get("id", ""))
-	if option_awakening.source_scroll_supported(item):return true
-	return not _quickslot_auto_item(item, _find_catalog_item_record(item)).is_empty()
+	var selected: Dictionary = _parse_enhancement_target(_quickslot_item_reference(entry))
+	if _item_locked(item) or _item_locked(item,selected.id):return false
+	var record: Dictionary = _quickslot_item_record(selected)
+	if _quickslot_relic_scroll(item,selected,record):return true
+	return not _quickslot_selected_auto_item(selected,record).is_empty()
+
+func _quickslot_relic_scroll(item_name: String, selected: Dictionary, record: Dictionary) -> bool:
+	return (str(selected.id).is_empty() or int(record.get("source_item_class_id",0))==365758) and option_awakening.source_scroll_supported(item_name)
+
+func _quickslot_selected_auto_item(selected: Dictionary, record: Dictionary) -> Dictionary:
+	var name: String = str(selected.name)
+	if str(selected.id).is_empty():return _quickslot_auto_item(name,record)
+	var spec: Dictionary = _quickslot_auto_item_spec(name,record)
+	return {"record":record,"spec":spec} if not spec.is_empty() else {}
 
 ## An older catalog row can take precedence over the same owned source item.
 ## When it has no automatic-use rule, use the validated physical receipt.
@@ -9598,17 +9638,20 @@ func _run_auto_item_quickslots(delta: float) -> bool:
 		var item: String = str(entry.get("id", ""))
 		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
 			continue
-		seen[item] = true
 		if _item_locked(item): continue
-		if option_awakening.source_scroll_supported(item):
+		var selected_reference: String = _quickslot_item_reference(entry)
+		var selected: Dictionary = _parse_enhancement_target(selected_reference)
+		if not str(selected.id).is_empty() and (_item_locked(item,selected.id) or QUICK_ITEM_BINDING.count(selected,inventory,item_instances)<=0):continue
+		var record: Dictionary = ITEM_CATALOG_LOOKUP.find_one(sources,item_instances,item) if str(selected.id).is_empty() else _quickslot_item_record(selected)
+		if _quickslot_relic_scroll(item,selected,record):
 			if not self_mode_enabled and option_awakening.source_scroll_auto_ready(item):
-				candidates.append({"item":item,"priority":2,"source_relic_scroll":true})
+				seen[item] = true
+				candidates.append({"item":item,"reference":selected_reference,"priority":2,"source_relic_scroll":true})
 			continue
-		var record: Dictionary = ITEM_CATALOG_LOOKUP.find_one(sources, item_instances, item)
 		var source_id: int = int(record.get("source_item_class_id", 0))
 		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0):
 			continue
-		var supported: Dictionary = _quickslot_auto_item(item, record)
+		var supported: Dictionary = _quickslot_selected_auto_item(selected,record)
 		var spec: Dictionary = supported.get("spec", {})
 		if spec.is_empty() or (self_mode_enabled and CONSUMABLE_AUTO.is_timed_buff(spec)): continue
 		record = supported.record
@@ -9627,8 +9670,9 @@ func _run_auto_item_quickslots(delta: float) -> bool:
 			if is_player_concealed() and not spec.native_spec.get("can_use_when_invisible", false): continue
 			if not stack.buff_rule_problem(self, spec.native_spec).is_empty() or not stack._buff_territory_problem(self, spec.native_spec).is_empty():
 				continue
-		var reference: String = _native_auto_use_reference(item,source_id) if source_id > 0 else item
+		var reference: String = _native_auto_use_reference(item,source_id) if str(selected.id).is_empty() and source_id > 0 else selected_reference
 		if reference.is_empty(): continue
+		seen[item] = true
 		candidates.append({"item":item,"reference":reference,"priority":CONSUMABLE_AUTO.priority(record, spec),
 			"timed_buff":CONSUMABLE_AUTO.is_timed_buff(spec)})
 	# One successful consumption per interval. HP first; slot order within
