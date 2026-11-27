@@ -146,8 +146,10 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		if not built.get("ok",false):return built
 		var located_button: Dictionary=_locate(built.scene,slot_nodes,button_name)
 		if located_button.get("ok",false):
-			var button: Object=located_button.player.source_nodes[located_button.offset].get_meta("source_button",null)
-			if is_instance_valid(button):button.set_meta(Router.DRAG_META,Callable(self,"_graph_input"))
+			var button_node: Node=located_button.player.source_nodes.get(located_button.offset)
+			if is_instance_valid(button_node) and button_node.has_meta("source_button"):
+				var button: Object=button_node.get_meta("source_button")
+				if is_instance_valid(button):button.set_meta(Router.DRAG_META,Callable(self,"_graph_input"))
 		var at: Vector2=centres[id]
 		built.scene.position=Vector2(at.x,-at.y)
 		graph.add_child(built.scene)
