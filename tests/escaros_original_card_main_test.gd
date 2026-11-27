@@ -5,6 +5,7 @@ const SRC=preload("res://scripts/resources/current523_definition_rows.gd")
 const IMG=preload("res://scripts/ui/source523_image_assets.gd")
 const COMP=preload("res://scripts/dungeons/competition_dungeon523.gd")
 const QA=preload("res://tests/qa_class_selection.gd")
+const REVIEW=preload("res://scripts/ui/original_ui/source_main_awakening_review.gd")
 const ART="Image/Mission/WorldDungeon_Escaros.png"
 const PIN="d3a5740258f6f4d7a9f345a80f56bd7680488fadc1cf640d40e79890df65ef6a"
 const PACK_PIN="db51444bcd65d89c8775b67f321db0c1aa6bcb801f5e4375f6d50a0de2d3cb1f"
@@ -49,9 +50,20 @@ func run()->void:
 			w.gold=100000
 			var quote:Dictionary=w.content523.escaros_entry_quote()
 			ck(quote.get("ok",false) and quote.route.land_id==47954 and quote.route.min_level==85 and quote.route.cost==100000,"original gameplay owner retains verified destination and terms")
+			var saved:String=FileAccess.get_sha256(w.save_path())
 			ck(native._competition_pressed(314).get("confirming")=="에스카로스 · 입장" and w.gold==100000,"card opens the actual activity confirmation without charging prematurely")
 			var confirmation:Node=h.find_child("TwilightConfirmation",true,false)
-			if confirmation!=null:confirmation.queue_free()
+			if ck(is_instance_valid(confirmation) and confirmation.get_script()==REVIEW,"the authored dungeon card opens the original common confirmation"):
+				var cancel:Control=confirmation.cancel_button
+				var point:Vector2=cancel.get_global_transform_with_canvas()*(cancel.size*0.5)
+				for pressed:bool in [true,false]:
+					var event:=InputEventScreenTouch.new()
+					event.position=point
+					event.pressed=pressed
+					root.push_input(event,true)
+					await process_frame
+				ck(not is_instance_valid(confirmation) and native.is_open(),"touching original Cancel returns to the dungeon card")
+				ck(w.gold==100000 and FileAccess.get_sha256(w.save_path())==saved,"cancelling entry leaves the fee and save bytes intact")
 			h._close_workspace();await process_frame
 			ck(not native.is_open(),"native window closes through existing close owner")
 	h._navigate("field_activities523");await process_frame

@@ -1299,12 +1299,12 @@ func _request_character_restart() -> void:
 		world.return_to_character_lobby())
 
 func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
-	return _confirm_source_action(title,body,action,callback)
+	return confirm_source_action(title,body,action,callback)
 
 func confirm_crafting_action(title: String, body: String, action: String, callback: Callable) -> Control:
-	return _confirm_source_action(title,body,action,callback)
+	return confirm_source_action(title,body,action,callback)
 
-func _confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
+func confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
 		if pointer_transfer != null: pointer_transfer.cancel()
@@ -3008,7 +3008,7 @@ func _confirm_card_fusion_request(category: String, grade_name: String, selectio
 			get_parent()._on_card_fusion_requested(category,grade_name,attempts,selection.slice(0,attempts*required))
 	var review := func(count: int) -> void:
 		var detail: String = body if count == 1 else "%s %s 합성 %d회 · 중복 카드 총 %d장\n%s" % [category,grade_name,count,count*required,rules]
-		_confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
+		confirm_source_action("카드 합성",detail,"합성",func(_confirmed: int) -> void: commit.call(count))
 	if batch_limit == 1:
 		review.call(1)
 		return
