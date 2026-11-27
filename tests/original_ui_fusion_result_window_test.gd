@@ -18,6 +18,16 @@ class FakeHud extends Node:
 	func show_message(text: String) -> void:
 		messages.append(text)
 
+class OutlinePack extends SOURCE_PACK:
+	var unused_outline_requests: int=0
+	func texture(reference: Dictionary,cocos_pixels: bool=false) -> Texture2D:
+		# The unplayed Fx_Unique_Loop uses this sheet. Refuse it to ensure it
+		# cannot block an unrelated 전설 result.
+		if str(reference.get("path","")).begins_with("Fx_Unique_"):
+			unused_outline_requests+=1
+			return null
+		return super.texture(reference,cocos_pixels)
+
 class CellScene extends Node2D:
 	var source_nodes: Dictionary = {}
 
@@ -127,6 +137,7 @@ func _views(count: int) -> Array:
 
 func _run() -> void:
 	_check_effect_dispatch()
+	_check_outline_entry_key()
 	await _check_open_all_dispatch()
 	var hud:=FakeHud.new()
 	root.add_child(hud)
@@ -153,11 +164,19 @@ func _run() -> void:
 	print("ORIGINAL_UI_FUSION_RESULT_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
 
+func _check_outline_entry_key() -> void:
+	var keys: Array=[]
+	for at: int in [25,10,25,50]:keys.append({"textureFrame":{"_type":"TextureFrame","frameIndex":at}})
+	var scene=WINDOW.GradeFx.Scene
+	check(scene._texture_key_at(keys,0)==1,"an entry before any key uses the earliest key")
+	check(scene._texture_key_at(keys,30)==2,"an entry between keys uses the last matching predecessor")
+	check(scene._texture_key_at([],30)==-1,"an empty track uses its serialized sprite texture")
+
 func _real_pack(pack_dir: String) -> void:
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(pack_dir.path_join("receipt.json")))
 	check(receipt is Dictionary,"pack receipt readable")
 	if not receipt is Dictionary:return
-	var pack=SOURCE_PACK.new()
+	var pack:=OutlinePack.new()
 	var loaded: Dictionary=pack.open(pack_dir,str(receipt.manifest_sha256))
 	check(loaded.get("ok",false),"pack opens: "+str(loaded))
 	if not loaded.get("ok",false):return
@@ -198,6 +217,7 @@ func _real_pack(pack_dir: String) -> void:
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
 	await _check_authored_phases(window,parent,pack)
+	check(pack.unused_outline_requests==0,"fusion never requests the unused Fx_Unique_Loop sheet")
 	viewport.queue_free()
 	host.queue_free()
 
@@ -268,6 +288,8 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 			"the original grade outline mounts and plays after settling")
 		if settled_outline!=null:
 			check(is_equal_approx(settled_outline.modulate.a,0.55),"the settled outline alone uses the lower opacity")
+			check(settled_outline.playback_status().clip=="Fx_Epic_Loop" and
+				not settled_outline.play("Fx_Unique_Loop",true).get("ok",false),"the loaded outline permits only the selected grade clip")
 			if upgraded and DisplayServer.get_name()!="headless":await _check_outline_pixels(settled_outline)
 		window.close()
 		await process_frame
