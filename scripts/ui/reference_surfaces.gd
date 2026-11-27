@@ -34,12 +34,13 @@ static func card_tab(button: Button) -> void:
 # controls/materials, not extracted game textures or purported original colors.
 # https://lineagem.plaync.com/guidebook/view?title=메뉴%20및%20UI%20소개
 static func inset(margin: int = 8) -> StyleBoxFlat:
-	return UI.MATERIAL.from_flat(UI.box(Color("101c28"),Color("354454"),margin),true)
+	return UI.inset(margin)
+
+static func apply_inset(control: Control, margin: int = 8) -> void:
+	control.theme_type_variation = UI.inset_variant(control.get_class(),margin)
 
 static func action(button: Button) -> void:
-	button.add_theme_stylebox_override("normal",UI.MATERIAL.from_flat(UI.box(Color("243d56"),Color("536a7d"),7)))
-	button.add_theme_stylebox_override("hover",UI.MATERIAL.from_flat(UI.box(Color("304c67"),Color("9aacae"),7)))
-	button.add_theme_stylebox_override("pressed",UI.MATERIAL.from_flat(UI.box(Color("172b3f"),Color("8799a6"),7),true))
+	button.theme_type_variation = UI.REFERENCE_ACTION
 	button.add_theme_color_override("font_color",Color("ece8dd"))
 
 static func grade_row(button: Button) -> void:
@@ -57,9 +58,9 @@ static func catalog(hud: Node) -> void:
 	grades.custom_minimum_size.x=180
 	for button: Button in (hud.get("catalog_grade_buttons") as Dictionary).values():grade_row(button)
 	var listing: ItemList=hud.get("catalog_list")
-	listing.add_theme_stylebox_override("panel",inset(5))
+	apply_inset(listing,5)
 	var actions: ScrollContainer=hud.get("catalog_body_actions")
-	actions.add_theme_stylebox_override("panel",inset(8))
+	apply_inset(actions,8)
 	action(hud.get("catalog_equip_button"))
 
 static func refresh_grade_counts(hud: Node) -> void:

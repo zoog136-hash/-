@@ -162,7 +162,7 @@ func configure(controller: Node) -> void:
 	information.add_child(gap)
 	var sheet:=PanelContainer.new()
 	sheet.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	sheet.add_theme_stylebox_override("panel",Surfaces.inset(8))
+	Surfaces.apply_inset(sheet,8)
 	information.add_child(sheet)
 	var sheet_column:=VBoxContainer.new()
 	sheet.add_child(sheet_column)
@@ -258,7 +258,8 @@ func activate() -> void:
 	window_style=hud.workspace.get_theme_stylebox("panel")
 	catalog_style=hud.catalog_panel.get_theme_stylebox("panel")
 	window_separation=hud.workspace.content.get_parent().get_theme_constant("separation")
-	hud.workspace.add_theme_stylebox_override("panel",Surfaces.inset(2))
+	if not hud.workspace.get_theme_stylebox("panel").has_meta("original_ui_source"):
+		hud.workspace.add_theme_stylebox_override("panel",Surfaces.inset(2))
 	hud.workspace.content.get_parent().add_theme_constant_override("separation",2)
 	hud.catalog_panel.add_theme_stylebox_override("panel",Surfaces.card_surface())
 	var nodes: Array[Control]=[hud.catalog_grade_column,hud.catalog_body_left,hud.catalog_search,hud.catalog_preview,hud.catalog_equip_button,hud.catalog_clear_button,hud.card_controls]

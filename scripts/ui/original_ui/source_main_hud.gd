@@ -1226,6 +1226,7 @@ const FEATURE_WINDOWS={
 	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
 	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
 	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
+	"combat_log":preload("res://scripts/ui/original_ui/source_main_combat_log.gd"),
 }
 var _feature_windows: Dictionary={}
 var _awakening_review_pack: RefCounted

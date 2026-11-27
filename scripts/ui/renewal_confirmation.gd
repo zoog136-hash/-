@@ -17,7 +17,8 @@ func configure(title: String, description: String, action: String, accept: Calla
 	title = shown_title if not shown_title.is_empty() else title.replace("TWILIGHT", "").strip_edges()
 	description = RELEASE_TEXT.body(description)
 	z_index = 400
-	theme = UI.make_theme()
+	var host: Control = get_parent() as Control
+	theme = host.theme if host != null and host.theme != null and host.theme.has_stylebox("panel",UI.CONFIRMATION_PANEL) else UI.make_theme()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	callback = accept
@@ -28,7 +29,7 @@ func configure(title: String, description: String, action: String, accept: Calla
 	add_child(shade)
 	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	panel = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color("211d17"),UI.GOLD,18))
+	panel.theme_type_variation = UI.CONFIRMATION_PANEL
 	add_child(panel)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation",16)
@@ -52,6 +53,7 @@ func configure(title: String, description: String, action: String, accept: Calla
 	col.add_child(row)
 	cancel_button = UI.button("취소",dismiss,Vector2(130,42))
 	cancel_button.name = "CancelTransaction"
+	cancel_button.theme_type_variation = UI.CANCEL_BUTTON
 	row.add_child(cancel_button)
 	confirm_button = UI.button(action,_accept,Vector2(130,42))
 	confirm_button.name = "ConfirmTransaction"

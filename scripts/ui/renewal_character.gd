@@ -88,7 +88,7 @@ func _build_equipment_page() -> Control:
 	left.add_child(equipment_stage)
 	var backdrop := Panel.new()
 	backdrop.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	backdrop.add_theme_stylebox_override("panel",ReferenceSurfaces.inset(0))
+	ReferenceSurfaces.apply_inset(backdrop,0)
 	equipment_stage.add_child(backdrop)
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	paperdoll = TextureRect.new()
@@ -170,7 +170,7 @@ func _build_stats_page() -> Control:
 		var frame:=PanelContainer.new()
 		frame.custom_minimum_size=Vector2(0,66)
 		frame.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-		frame.add_theme_stylebox_override("panel",ReferenceSurfaces.inset(6))
+		ReferenceSurfaces.apply_inset(frame,6)
 		grid.add_child(frame)
 		grid.move_child(frame,index)
 		row.reparent(frame)
