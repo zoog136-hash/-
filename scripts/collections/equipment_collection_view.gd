@@ -129,7 +129,7 @@ func configure(owner_hud: Node) -> void:
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail_scroll.size_flags_stretch_ratio = 1.0
-	detail_scroll.add_theme_stylebox_override("panel",Surfaces.inset(6))
+	Surfaces.apply_inset(detail_scroll,6)
 	detail_side.add_child(detail_scroll)
 	detail = VBoxContainer.new()
 	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL

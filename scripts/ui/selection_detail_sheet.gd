@@ -25,7 +25,7 @@ var source_active: bool=false
 
 func _hero() -> HBoxContainer:
 	var surface:=PanelContainer.new()
-	surface.add_theme_stylebox_override("panel",Surfaces.inset(7))
+	Surfaces.apply_inset(surface,7)
 	add_child(surface)
 	var row:=HBoxContainer.new()
 	row.add_theme_constant_override("separation",10)
@@ -74,7 +74,7 @@ func bind_shop(view: Node,side: VBoxContainer) -> void:
 	side.add_child(self);side.move_child(self,0)
 	_hero();_scroller(self)
 	var price:=PanelContainer.new()
-	price.add_theme_stylebox_override("panel",Surfaces.inset(7))
+	Surfaces.apply_inset(price,7)
 	side.add_child(price);side.move_child(price,1)
 	var line:=HBoxContainer.new();price.add_child(line)
 	line.add_child(UI.label("구매 금액",13,UI.MUTED))

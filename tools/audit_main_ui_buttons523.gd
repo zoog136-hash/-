@@ -113,7 +113,7 @@ func audit_navigation(hud: Node, controller: Node, world: Node) -> Dictionary:
 		"auto":["schedule"], "settings":["options"], "promo_code":["options"],
 		"tj_coupons":["tj_coupons"], "doll_explore":["doll_explore"], "forge523":["forge"],
 		"equipment523":[], "bless_refine523":["refine_window","_refine_window"], "combinations":[], "growth96":[],
-		"exchange":[], "sell":[], "field_activities523":[], "log":[], "class_select":[]
+		"exchange":["trade"], "sell":[], "field_activities523":[], "log":["combat_log"], "class_select":[]
 	}
 	var results: Dictionary={}
 	for section: String in entries:
@@ -145,7 +145,7 @@ func audit_navigation(hud: Node, controller: Node, world: Node) -> Dictionary:
 	return results
 
 func route_result(hud: Node, controller: Node, entry: Array, section: String) -> Dictionary:
-	if entry.is_empty():return {"presentation":"twilight" if hud.workspace.visible else "no_window","reason":"direct_hud_route"}
+	if entry.is_empty():return local_presentation(hud,"direct_hud_route")
 	var key: String=entry[0]
 	var view: Variant=controller.get(entry[1]) if entry.size()>1 else controller.feature_window(key)
 	var opened: bool=view is Object and view.has_method("is_open") and view.is_open()
@@ -157,8 +157,17 @@ func route_result(hud: Node, controller: Node, entry: Array, section: String) ->
 		var scene: Variant=view.get("_scene") if view is RefCounted else view
 		if scene is Node:record_buttons(scene,section)
 		return {"presentation":"original","view":key}
-	return {"presentation":"twilight" if hud.workspace.visible else "no_window","view":key,
-		"reason":str(status.get("code",status.get("error","not_mounted")))}
+	var local: Dictionary = local_presentation(hud,str(status.get("code",status.get("error","not_mounted"))))
+	local["view"] = key
+	return local
+
+func local_presentation(hud: Node, reason: String) -> Dictionary:
+	if not hud.workspace.visible:return {"presentation":"no_window","reason":reason}
+	var frame: StyleBox = hud.workspace.get_theme_stylebox("panel")
+	var source: Dictionary = frame.get_meta("original_ui_source",{})
+	if frame is StyleBoxTexture and frame.texture != null and not source.is_empty():
+		return {"presentation":"original_chrome","reason":reason,"frame":source.frame,"source_offset":source.node_offset}
+	return {"presentation":"twilight","reason":reason}
 
 func record_buttons(node: Node, screen: String) -> void:
 	if node==null or node.is_queued_for_deletion():return

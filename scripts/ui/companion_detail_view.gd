@@ -75,7 +75,7 @@ func configure(controller: Node) -> void:
 	sheet.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	sheet.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	sheet.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	sheet.add_theme_stylebox_override("panel",Surfaces.inset(8))
+	Surfaces.apply_inset(sheet,8)
 	hud.catalog_detail.get_parent().add_child(sheet)
 	sheet.hide()
 	information=VBoxContainer.new()
@@ -117,7 +117,7 @@ func configure(controller: Node) -> void:
 	sheet.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 	var plate:=PanelContainer.new();plate.name="CompanionOptionPlate"
 	plate.custom_minimum_size.y=188
-	plate.add_theme_stylebox_override("panel",Surfaces.inset(8))
+	Surfaces.apply_inset(plate,8)
 	information.add_child(plate)
 	var values:=VBoxContainer.new();values.add_theme_constant_override("separation",8);plate.add_child(values)
 	caption.reparent(values);options.reparent(values);note.reparent(values)
