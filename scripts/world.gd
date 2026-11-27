@@ -3703,13 +3703,18 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 			auto_stuck_time = 0.0
 			_stable_auto_route.clear()
 			return
-		# A physics obstruction can appear after a route was calculated. Let
-		# the player's short detour finish before replacing its pursuit route.
-		if player.has_active_obstacle_detour(): return
 		# A neighboring source cell may be in combat sight even when the
 		# straight foot line grazes a blocked third cell.
+		var goal: Vector2 = auto_target.global_position
 		var direct_walk: bool = can_see and (not field_map is OriginalPlayableField \
-			or field_map.line_clear(player.global_position, auto_target.global_position))
+			or field_map.line_clear(player.global_position, goal))
+		# A moving target or blocker can open a shorter approach mid-detour.
+		# Only probe the usual local AUTO range, and keep the route if the
+		# player's actual walking legs still hit something.
+		if player.has_active_obstacle_detour() and (not direct_walk \
+			or not _in_auto_target_range(_world_to_cell(player.global_position), goal) \
+			or not player.can_resume_pursuit(goal)):
+			return
 		if acquired_path.is_empty() and not direct_walk and _can_keep_stable_auto_route(auto_target):
 			FRAME_HITCH.count("auto.pursuit_path_kept")
 			FRAME_HITCH.detail("auto.path_reuse",auto_stage)
@@ -3737,7 +3742,7 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 			selected_monster = null
 			player.clear_click_path()
 			return
-		player.set_click_path(path, auto_target.global_position)
+		player.set_click_path(path, goal)
 		if not direct_walk:
 			_remember_stable_auto_route(auto_target)
 
