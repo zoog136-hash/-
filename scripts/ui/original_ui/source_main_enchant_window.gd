@@ -8,12 +8,16 @@ extends RefCounted
 ## the rows, 강화 시작 emits hud.enhancement_requested at once (no extra
 ## confirmation: the original window has none, user request 2026-11-22),
 ## the world rolls and reopens this window.
-## The result is the client's own in-window presentation: Enchant_All's
+## The result is the client's own 강화 결과 screen (Enchant_Result.csb,
+## source_main_enchant_result_window): "결과 확인 / 화면을 터치하세요." first,
+## a touch reveals the outcome (banner, stat lines), the next touch closes it
+## (user request 2026-11-27; nothing closes by itself). A UI pack without
+## Enchant_Result keeps the earlier in-window presentation: Enchant_All's
 ## Fx_Enchant_Start (slot glow) and Enchant_Popup_Message (Success / Fail
 ## banner, Text_Item) play over the window, then hold their legible result;
-## a tap anywhere ends it early. No TWILIGHT full-screen result is drawn over
-## the original window. Text_Item's result text is a TWILIGHT 근사 (the
-## client's string is not in the 523 tables).
+## a tap anywhere ends it. No TWILIGHT full-screen result is drawn over the
+## original window. Text_Item's result text is a TWILIGHT 근사 (the client's
+## string is not in the 523 tables).
 ## 다중 강화 (Nd_Enchant_Multi, TWILIGHT 근사: the existing single roll run in
 ## turn): bag taps pick up to MULTI_MAX targets, Nd_Btn_01..10 choose the goal
 ## +N, 강화 시작 starts World.attempt_enhancement_series, which rolls each
@@ -29,6 +33,7 @@ const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
 const Forge=preload("res://scripts/ui/renewal_forge.gd")
 const ENCHANT=preload("res://scripts/original_enhancement.gd")
+const ResultScreen=preload("res://scripts/ui/original_ui/source_main_enchant_result_window.gd")
 const ROOT="UI/EnchantScene.csb"
 const ALL="UI/FloatingUi/Enchant_All.csb"
 const INVENTORY="UI/FloatingUi/Enchant_Inventory.csb"
@@ -95,6 +100,8 @@ var _last_out: Dictionary={}
 var last_result: Dictionary={}
 ## The pack has Fx_Enchant_Start and Enchant_Popup_Message.
 var _presents: bool=false
+## The 강화 결과 screen (null: the pack lacks Enchant_Result or its effects).
+var _screen: RefCounted
 ## {kind: "success" | "fail", text, token} while the result plays.
 var _presentation: Dictionary={}
 var _pending_result_refresh: Dictionary = {}
@@ -157,6 +164,9 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_enchant_window_member_missing","member":member}
 	_pack=pack
 	_presents=PRESENTATION.all(func(member: String) -> bool: return pack.manifest.get("scenes",{}).has(member))
+	var screen: RefCounted=ResultScreen.new()
+	_screen=screen if screen.configure(pack,hud).get("ok",false) else null
+	if _screen!=null:_screen.finished.connect(_screen_finished)
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
 	return {"ok":true,"configured":true}
@@ -220,6 +230,7 @@ func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictiona
 	return _restage()
 
 func close() -> void:
+	if _screen!=null and _screen.is_open():_screen.close()
 	_blessing=false
 	_scroll_row={}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
@@ -728,6 +739,9 @@ func _multi_requested() -> Dictionary:
 	var targets: Array[String]=_picked.duplicate()
 	var goal_level: int=_goal
 	var scroll: String=_scroll
+	var before: Array=[]
+	for entry: Variant in _candidates:
+		if entry is Dictionary and str(entry.get("target_id","")) in targets:before.append((entry as Dictionary).duplicate(true))
 	# 강화 시작 starts the series at once (no confirmation step).
 	var world: Node=hud.get_parent()
 	if world==null or not world.has_method("attempt_enhancement_series"):return _fail("source_enchant_window_series_unavailable")
@@ -735,7 +749,8 @@ func _multi_requested() -> Dictionary:
 	var outcome: Dictionary=series if series is Dictionary else {}
 	var stop: String=str(outcome.get("stop",""))
 	if int(outcome.get("rolls",0))>0:
-		present("success" if stop.is_empty() else "fail","+%d 다중 강화 완료" % goal_level if stop.is_empty() else "다중 강화 중단")
+		present("success" if stop.is_empty() else "fail","+%d 다중 강화 완료" % goal_level if stop.is_empty() else "다중 강화 중단",
+			_multi_detail(hud,before,stop))
 	return {"ok":true,"started":"multi","targets":targets.size(),"goal":goal_level,"series":outcome}
 
 ## Drops picked targets that left the candidate list (sold, destroyed).
@@ -762,7 +777,11 @@ func _finish_blessing(reference: String, target: String) -> void:
 ## --- Result presentation ---------------------------------------------------
 
 func presents() -> bool:
-	return _presents
+	return _presents or _screen!=null
+
+## The 강화 결과 screen (null: this UI pack lacks Enchant_Result).
+func result_screen() -> RefCounted:
+	return _screen
 
 func is_presenting() -> bool:
 	return not _presentation.is_empty() and is_open()
@@ -772,7 +791,61 @@ func is_presenting() -> bool:
 ## presentation. False (nothing shown) when the window is closed or the pack
 ## lacks the presentation members.
 func present_result(result: String, from_level: int, to_level: int) -> bool:
-	return present("success" if result=="success" else "fail",result_text(result,from_level,to_level))
+	var entry: Dictionary=_entry().duplicate(true)
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var detail: Dictionary={"outcome":result,"from":from_level,"to":to_level,"title":str(entry.get("name","")).get_slice(" · 원본#",0),
+		"record":_record_of(hud,entry),
+		"rows":Callable(self,"_single_rows").bind(str(entry.get("target_id","")),entry,result,from_level,to_level)}
+	return present("success" if result=="success" else "fail",result_text(result,from_level,to_level),detail)
+
+## Result stat lines of one roll: 강화 단계, then every stat before -> after
+## (the refreshed owner row of the same physical item; none once destroyed).
+func _single_rows(target_id: String, before: Dictionary, result: String, from_level: int, to_level: int) -> Array:
+	var rows: Array=[{"label":"강화 단계","now":"+%d" % from_level,"next":"소실" if result=="destroy" else "+%d" % to_level}]
+	if result=="destroy":return rows
+	var listing: Array=_pending_result_refresh.get("candidates",_candidates)
+	var after: Dictionary={}
+	for entry: Variant in listing:
+		if entry is Dictionary and str(entry.get("target_id",""))==target_id:after=entry
+	var now: Dictionary=before.get("stats_now",{}) if before.get("stats_now") is Dictionary else {}
+	var next: Dictionary=after.get("stats_now",now) if after.get("stats_now") is Dictionary else now
+	var keys: Array=now.keys()
+	for key: Variant in next.keys():
+		if not keys.has(key):keys.append(key)
+	for key: Variant in keys:
+		var a: float=float(now.get(key,0.0))
+		var b: float=float(next.get(key,0.0))
+		if is_zero_approx(a) and is_zero_approx(b):continue
+		var label: String=ENCHANT.stat_label(str(key))
+		var sign: float=1.0
+		if str(key)=="defense":
+			label="AC"
+			sign=-1.0
+		rows.append({"label":label,"now":_value(a*sign),"next":"%s(%s)" % [_value(b*sign),_delta((b-a)*sign)] if not is_equal_approx(a,b) else _value(b*sign)})
+	return rows
+
+## 다중 강화: one line per target, +start -> +result (or 소실).
+func _multi_detail(hud: Node, before: Array, stop: String) -> Dictionary:
+	var rows: Array=[]
+	for entry: Dictionary in before:
+		var id: String=str(entry.get("target_id",""))
+		var after: Dictionary={}
+		for row: Variant in _candidates:
+			if row is Dictionary and str(row.get("target_id",""))==id:after=row
+		rows.append({"label":str(entry.get("name","")).get_slice(" · 원본#",0),"now":"+%d" % int(entry.get("level",0)),
+			"next":"소실" if after.is_empty() else "+%d" % int(after.get("level",0))})
+	var first: Dictionary=before[0] if not before.is_empty() else {}
+	var from_level: int=int(first.get("level",0))
+	var to_level: int=from_level
+	for row: Variant in _candidates:
+		if row is Dictionary and str(row.get("target_id",""))==str(first.get("target_id","")):to_level=int(row.get("level",0))
+	return {"outcome":"destroy" if stop=="destroy" else ("success" if stop.is_empty() else "maintain"),"from":from_level,"to":to_level,
+		"title":str(first.get("name","")).get_slice(" · 원본#",0),"record":_record_of(hud,first),"rows":rows,"multi":true}
+
+## The item picture record the existing image owner resolves ({} without one).
+static func _record_of(hud: Node, entry: Dictionary) -> Dictionary:
+	if entry.is_empty() or not is_instance_valid(hud) or hud.get("lineage_inventory_ui")==null:return {}
+	return Forge.image_record_of(hud,entry)
 
 ## TWILIGHT 근사: the banner's Text_Item text (the client's string is not in
 ## the 523 tables). Item names are not repeated here (Label_Title has it).
@@ -786,14 +859,18 @@ static func result_text(result: String, from_level: int, to_level: int) -> Strin
 func presentation_problem() -> String:
 	return _last_presentation_problem
 
-func present(kind: String, text: String) -> bool:
+func present(kind: String, text: String, detail: Dictionary={}) -> bool:
 	_last_presentation_problem = ""
-	if not _presents or not is_open():
+	if (not _presents and _screen==null) or not is_open():
 		_last_presentation_problem = "source_enchant_result_members_unavailable"
 		return false
 	if is_presenting(): return false
 	_token+=1
 	_presentation={"kind":"success" if kind=="success" else "fail","text":text,"token":_token}
+	if _screen!=null and _present_screen(detail):return true
+	if not _presents:
+		_presentation={}
+		return false
 	if not _play_presentation():
 		# A configured manifest alone does not prove the projections or
 		# clips mounted. Do not consume the committed result or block input.
@@ -822,9 +899,34 @@ func _hold_presentation(token: int) -> void:
 	banner.stop()
 	_presentation["held"] = true
 
+## The 강화 결과 screen over this window: "결과 확인 / 화면을 터치하세요."
+## first; the screen's own touches reveal and close it (no timer).
+func _present_screen(detail: Dictionary) -> bool:
+	var parent: Object=_parent.get_ref() if _parent!=null else null
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if not parent is Node or hud==null:return false
+	var data: Dictionary=detail.duplicate()
+	data["kind"]=_presentation.kind
+	data["text"]=_presentation.text
+	if not data.has("outcome"):data["outcome"]="success" if _presentation.kind=="success" else "maintain"
+	var settings: Variant=hud.get_parent().get("presentation_settings") if hud.get_parent()!=null else null
+	var opened: Dictionary=_screen.open(parent,data,settings if settings is Dictionary else {})
+	if not opened.get("ok",false):
+		_last_presentation_problem="source_enchant_result_screen_failed:"+str(opened.get("code",opened.get("error","")))
+		return false
+	_presentation["screen"]=true
+	_presentation["players"]=[]
+	_presentation["played"]=[ResultScreen.ROOT]
+	_block()
+	return true
+
+func _screen_finished() -> void:
+	if _presentation.get("screen",false):end_presentation(int(_presentation.get("token",-1)))
+
 ## Ends the presentation `token` (the latest when -1): restore the window.
 func end_presentation(token: int=-1) -> void:
 	if _presentation.is_empty() or (token>=0 and token!=int(_presentation.get("token",-1))):return
+	if _presentation.get("screen",false) and _screen!=null and _screen.is_open():_screen.close()
 	for player: Variant in _presentation.get("players",[]):
 		if is_instance_valid(player):player.stop()
 	_presentation={}
@@ -885,10 +987,13 @@ func _block() -> void:
 	blocker.position=Vector2(-4000.0,-4000.0)
 	blocker.size=Vector2(8000.0,8000.0)
 	var token: int=int(_presentation.get("token",-1))
+	# Under the 강화 결과 screen the screen owns the touches; this only keeps
+	# them off the window's buttons.
+	var screen: bool=_presentation.get("screen",false)
 	blocker.gui_input.connect(func(event: InputEvent) -> void:
 		# Mouse clicks arrive as emulated touches too (emulate_touch_from_mouse).
 		if event is InputEventScreenTouch or event is InputEventMouseButton:blocker.accept_event()
-		if event is InputEventScreenTouch and event.pressed:
+		if event is InputEventScreenTouch and event.pressed and not screen:
 			end_presentation(token))
 	_scene.add_child(blocker)
 	_blocker=blocker
