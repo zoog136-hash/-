@@ -227,15 +227,17 @@ func _read_result(w: Node, success: bool) -> void:
 	var before: Dictionary = _ledger(w)
 	var scene: Node2D = page._scene
 	var branch: String = "Success" if success else "Fail"
-	check(scene.source_member == "UI/Change/Change_Upgrade_Skill_Awaken.csb" and scene.playback_status().clip.begins_with("Fx_"+branch+"_"), "saved result selects its original effect")
+	check(scene.source_member == "UI/Change/Change_Upgrade_Skill_Awaken.csb" and page.phase().waiting and not _node(page, branch+"_Text").is_visible_in_tree(), "saved result opens on the original touch prompt (no outcome yet)")
+	# One touch reveals the committed outcome (the next one closes it).
+	await _tap(scene.get_node("AwakeningResultTouch"))
+	check(page.phase().revealed and (page._steady or scene.playback_status().clip == "Fx_Touch_Active"), "the touch starts the original reveal")
 	await RenderingServer.frame_post_draw
 	if not page._steady:
 		# A late frame can span each clip. Exercise the real player and the
 		# registered transition to the held result, with no wall-clock sleep.
-		scene._process(20.0)
-		await process_frame
-		scene._process(20.0)
-		await process_frame
+		for step: int in range(4):
+			scene._process(20.0)
+			await process_frame
 	var label: Node2D = _node(page, branch+"_Text")
 	check(page._held and is_instance_valid(label) and label.is_visible_in_tree() and label.get_meta("source_display_color").a > 0.99, "original outcome text settles at full authored opacity")
 	if not page._options.is_empty():

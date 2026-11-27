@@ -1,18 +1,39 @@
 extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## An already committed card result. The original scene authors both outcome
 ## texts, the skill/card slot, option text, touch prompt and separate FX loops.
+## Its timeline is the client's own two-touch flow (user request 2026-11-27
+## "한 번 터치하세요가 나온 뒤에 결과"):
+##  1. Start (5..50) then Fx_Loop (55..175, repeating): the card and
+##     Panel_Touch "화면을 터치해 주세요." (UIStaticTextData
+##     CHANGE_UPGRADE_SKILL_AWAKEN\PANEL_TOUCH\LABEL); no outcome yet.
+##  2. A touch: Fx_Touch_Active (180..225) then Fx_Success_Active /
+##     Fx_Fail_Active reveal the outcome text and the awarded options, and the
+##     outcome loop settles on its fully opaque last frame with Panel_Touch
+##     shown again.
+##  3. Another touch closes it. Nothing closes it by itself.
+## A touch while an animation runs jumps to the end of that step.
 const ResultPack = preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
 const Cards = preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const SourceText = preload("res://scripts/ui/original_ui/source_text.gd")
 const Wrap = preload("res://scripts/ui/original_ui/source_text_wrap.gd")
+const WAIT_INTRO = "Start"
+const WAIT_LOOP = "Fx_Loop"
+const TOUCH_CLIP = "Fx_Touch_Active"
 var _source_cards: RefCounted
 var _card: Dictionary
 var _succeeded: bool
 var _card_name: String
+## Label_Skill before the touch: the target card's own name (a skill
+## awakening's new skill is part of the outcome).
+var _target_name: String
 var _options: String
 var _steady: bool
+## The outcome is on screen and settled; the next touch closes.
 var _held: bool
-var _in_loop: bool
+## The touch prompt is up and the outcome is not shown yet.
+var _waiting: bool
+## Clips still to play after the running one (the reveal chain).
+var _queue: Array[String] = []
 var _pressed: bool
 var _drag_distance: float
 var _option_list: String
@@ -36,27 +57,30 @@ func open(parent: Node, card: Dictionary, outcome: Dictionary, settings: Diction
 	_card = card
 	_succeeded = outcome.success
 	_card_name = str(outcome.get("skill_name", card.get("name", "")))
+	_target_name = str(card.get("name", _card_name))
 	var lines := PackedStringArray()
 	for line: Variant in outcome.get("bonus_lines", []):
 		if line is String: lines.append(line)
 	_options = "\n".join(lines)
 	_steady = settings.get("reduced_motion", false) or float(settings.get("impact_intensity", 1.0)) <= 0.0
 	_held = false
-	_in_loop = _steady
+	_waiting = true
+	_queue = []
 	_pressed = false
 	_drag_distance = 0.0
 	_option_list = ""
 	var built: Dictionary = open_window(parent)
 	if not built.get("ok", false): return built
 	_scene.z_index = 180
-	var clip: String = _clip("Loop" if _steady else "Active")
-	if not _scene.play(clip, false).get("ok", false):
-		close()
-		return _fail("source_awakening_result_clip_missing")
+	for clip: String in [WAIT_INTRO, WAIT_LOOP, TOUCH_CLIP, _clip("Active"), _clip("Loop")]:
+		if _clip_range(clip).is_empty():
+			close()
+			return _fail("source_awakening_result_clip_missing")
 	if _steady:
-		_settle_text()
-		_held = true
+		_settle(WAIT_LOOP)
 	else:
+		_scene.play(WAIT_INTRO, false)
+		_queue = [WAIT_LOOP]
 		_tree_ref = weakref(parent.get_tree())
 		parent.get_tree().process_frame.connect(_after_frame)
 	# Input coverage only. All visible pixels and text are the source scene.
@@ -70,7 +94,7 @@ func open(parent: Node, card: Dictionary, outcome: Dictionary, settings: Diction
 	return built
 
 func _spec() -> Dictionary:
-	return {"Panel_Root/Btn_Plus":{"exclude":true}, "Nd_Card/Label_Skill":{"role":"source_text", "text":_card_name},
+	return {"Panel_Root/Btn_Plus":{"exclude":true}, "Nd_Card/Label_Skill":{"role":"source_text", "text":_target_name},
 		"ListView/Label_Option":{"role":"source_text", "text":""},
 		"Panel_Touch/Label":{"role":"static_source_text"}}
 
@@ -125,35 +149,63 @@ func _fill_option_rows(root: Node2D, out: Dictionary) -> Dictionary:
 func _clip(phase: String) -> String:
 	return "Fx_%s_%s" % ["Success" if _succeeded else "Fail", phase]
 
+## Plays the queued clips in order. The touch prompt loop repeats until a
+## touch; the reveal chain ends held on the outcome loop's last frame.
 func _after_frame() -> void:
 	if not is_open() or _held or _scene.playback_status().playing: return
-	if _in_loop:
+	if _queue.is_empty():
+		# Only a touch ends the prompt; a finished prompt clip starts again.
+		if _waiting: _scene.play(WAIT_LOOP, true)
+		else: _hold()
+		return
+	var next: String = _queue.pop_front()
+	_scene.play(next, next == WAIT_LOOP)
+
+## The touch prompt is up; the outcome starts (Fx_Touch_Active, then the
+## committed branch).
+func _reveal() -> void:
+	_waiting = false
+	var label: Dictionary = _locate(_scene, _out, "Nd_Card/Label_Skill")
+	if label.get("ok", false): label.player.set_bound_text(label.offset, _card_name)
+	if _steady:
 		_hold()
-	else:
-		_in_loop = true
-		_scene.play(_clip("Loop"), false)
+		return
+	_queue = [_clip("Active"), _clip("Loop")]
+	_scene.play(TOUCH_CLIP, false)
 
 func _hold() -> void:
-	if not _in_loop:
-		_in_loop = true
-		_scene.play(_clip("Loop"), false)
-	_settle_text()
+	_waiting = false
+	_queue = []
+	_settle(_clip("Loop"))
 	_held = true
 	_stop_checking()
 
-## The authored last frame of both outcome loops keeps the text fully
-## opaque. Reduced motion enters that frame immediately.
-func _settle_text() -> void:
-	var name: String = _clip("Loop")
-	for clip: Dictionary in _scene.source_tree.animationList:
-		if clip.name == name:
-			_scene.seek_frame(float(clip.endIndex))
-			_scene.stop()
-			return
+## Enters the authored last frame of `name`. The last frame of both outcome
+## loops keeps the text fully opaque; Fx_Loop's keeps the prompt opaque.
+func _settle(name: String) -> void:
+	var span: Dictionary = _clip_range(name)
+	if span.is_empty(): return
+	_scene.seek_frame(float(span.endIndex))
+	_scene.stop()
 
+func _settle_text() -> void:
+	_settle(_clip("Loop"))
+
+func _clip_range(name: String) -> Dictionary:
+	for clip: Dictionary in _scene.source_tree.get("animationList", []):
+		if clip.name == name: return clip
+	return {}
+
+## {waiting, revealed, held, clip}: where the two-touch flow stands.
+func phase() -> Dictionary:
+	var status: Dictionary = _scene.playback_status() if is_open() else {}
+	return {"waiting":_waiting, "revealed":not _waiting, "held":_held, "clip":str(status.get("clip", ""))}
+
+## One touch: prompt -> outcome, running outcome -> settled, settled -> close.
 func advance_or_dismiss() -> void:
 	if not is_open(): return
 	if _held: close()
+	elif _waiting: _reveal()
 	else: _hold()
 
 func _touch(event: InputEvent, input: Control) -> void:
