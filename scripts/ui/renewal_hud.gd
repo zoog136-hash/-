@@ -887,9 +887,11 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		var id: String = str(entry.get("id",""))
 		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
 		if entry.get("kind","") == "item":
-			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}),"quickslot")
-			quickslot_captions[index].text = str(int(inventory.get(id,0)))
-			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
+			var reference: String = get_parent()._quickslot_item_reference(entry)
+			var count: int = int(inventory.get(id,0)) if not entry.has("instance_id") else get_parent()._quickslot_item_count(entry)
+			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(reference),id,item_image_index.get("아이템",{}),"quickslot")
+			quickslot_captions[index].text = str(count)
+			quickslot_icons[index].modulate = Color.WHITE if count > 0 else Color(.4,.4,.4)
 		else:
 			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
 			var source_image: Dictionary = Source523SkillImages.describe_guardian_skill(skill,get_parent().get("growth")) if skill.get("origin") == "TWILIGHT_GUARDIAN523" else Source523SkillImages.describe_skill(skill)

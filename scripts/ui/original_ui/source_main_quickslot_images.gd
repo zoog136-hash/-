@@ -13,7 +13,8 @@ static func resolve(hud: Node, row: Dictionary, context: Dictionary={}) -> Dicti
 	if entry.get("kind")=="item":
 		var bag: Variant=hud.get("lineage_inventory_ui")
 		if not is_instance_valid(bag) or not bag.has_method("_find_item_record") or not preload("res://scripts/resources/retired_assets.gd").usable(ITEM_API):return _fail("source_quickslot_item_image_owner_required")
-		var record: Variant=bag.call("_find_item_record",id)
+		var reference: String=world._quickslot_item_reference(entry) if world.has_method("_quickslot_item_reference") else id
+		var record: Variant=bag.call("_find_item_record",reference)
 		if not record is Dictionary or record.is_empty():return _fail("source_quickslot_existing_item_record_required")
 		var api: Script=load(ITEM_API)
 		if not _has_api(api,"describe_item"):return _fail("source_quickslot_item_image_owner_version_required")

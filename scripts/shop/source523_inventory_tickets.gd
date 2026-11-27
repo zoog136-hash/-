@@ -188,6 +188,14 @@ func _identity(name:String,spec:Dictionary,record:Dictionary) -> bool:
 func quote(name:String,selection:Dictionary={},internal:bool=false,physical_id:String="") -> Dictionary:
 	return _quote(name,selection,internal,true,physical_id)
 
+func supports_bag_record(name: String, record: Dictionary, physical_id: String) -> bool:
+	if loaded_sha.is_empty() or not problem.is_empty() or not claims(record):return false
+	var id: int=int(record.get("source_item_class_id",0))
+	var spec: Dictionary=document.tickets.get(str(id),{})
+	if spec.is_empty() and model_input_identity.get("kind")=="twilight.source523.original-ticket-input.v1" and PermanentMileage.VARIANTS.has(id) and not physical_id.is_empty():
+		spec=PermanentMileage.spec(id,runtime.catalog.record("ItemClass",id))
+	return not spec.is_empty() and _identity(name,spec,record)
+
 func _quote(name:String,selection:Dictionary,internal:bool,materialize_pool:bool,physical_id:String="") -> Dictionary:
 	var ready:Dictionary=runtime._ready_for_action(internal)
 	if not ready.ok:return ready

@@ -16,6 +16,7 @@ const PAYMENT = preload("res://scripts/maps/current523_map_travel_payment.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 ## 오만의 탑 2층 이동 주문서: Locations 21272 (Land 22802), ConsumeTerritoryClass 10442.
 const OMAN2 := 19352
+const SUMMIT := 160413
 ## 오만과 신념의 탑 입구 (Land 46952) inside ConsumeTerritory 10442 (Territories 160312).
 const ENTRANCE_LAND := 46952
 ## 윈다우드성 던전 이동 주문서 (각인): Life row (clock unknown) -> kept.
@@ -59,6 +60,11 @@ func table() -> void:
 	check(int(interval.get("consume_delay_ms",0))==1800000, "ClassUsageInterval 1800s becomes the reuse delay (TWILIGHT 근사) "+str(interval.get("consume_delay_ms")))
 	var areas: Variant = EFFECTS.consume_areas([10442])
 	check(areas is Array and (areas as Array).size()==11, "ConsumeTerritory 10442 = entrance + 10 floors")
+	var summit: Dictionary = EFFECTS.location_teleport(record(SUMMIT))
+	check(summit.get("land_id")==22901 and summit.get("bounds")==[32626,32801,32626,32801] and summit.get("source")=={"table":"Locations","id":43603},"summit scroll uses the original named entrance coordinate")
+	check(summit.get("min_level")==68 and summit.get("usable_classes")==[10442,10581] and STACK.profile(record(SUMMIT)).get("kind")=="teleport_location","summit scroll adopts the level and tower origin restriction")
+	var summit_areas: Variant = EFFECTS.consume_areas([10442,10581])
+	check(summit_areas is Array and summit_areas.size()==16 and not summit_areas.any(func(area: Dictionary)->bool:return area.land==4),"combined authored origin areas omit Aden")
 	var categories: Dictionary = {}
 	for category: Dictionary in SOURCE.rows("ItemCategory"):
 		if str(category.get("Name","")) in ["ScrollTeleport","ScrollTeleportDungeon","TeleportAmulet"]: categories[int(category.ID)] = str(category.Name)
@@ -125,10 +131,14 @@ func runtime() -> void:
 	world.level = 70
 	var oman2: String = grant(world,OMAN2,3)
 	var oman3: String = grant(world,OMAN3,1)
+	var summit: String = grant(world,SUMMIT,2)
 	if oman2.is_empty() or oman3.is_empty(): world.queue_free(); await process_frame; return
 	var outside: Dictionary = await use(world,oman2)
 	evidence["outside"] = outside.get("reason","")
 	check(not outside.get("ok",false) and int(world.inventory.get(oman2,0))==3 and land(world)==4, "Aden (outside 사용 지역): refused, 3 kept, still Aden")
+	if not summit.is_empty():
+		var outside_summit: Dictionary = await use(world,summit)
+		check(not outside_summit.get("ok",false) and int(world.inventory.get(summit,0))==2 and land(world)==4,"summit scroll refuses outside the two towers")
 	# TurnOffAutoForTeleport: auto hunting is turned off on arrival.
 	var dock: String = grant(world,AUTO_OFF_SCROLL,1)
 	if not dock.is_empty():
@@ -142,6 +152,14 @@ func runtime() -> void:
 	var setup: Dictionary = world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
 	evidence["setup_entrance"] = setup
 	if not check(setup.get("ok",false) and land(world)==ENTRANCE_LAND, "test setup: at the tower entrance"): world.queue_free(); await process_frame; return
+	if not summit.is_empty():
+		world.level = 67
+		var early: Dictionary = await use(world,summit)
+		check(not early.get("ok",false) and int(world.inventory.get(summit,0))==2 and land(world)==ENTRANCE_LAND,"summit scroll refuses a level 67 character")
+		world.level = 68
+		var arrived: Dictionary = await use(world,summit)
+		check(arrived.get("ok",false) and int(world.inventory.get(summit,0))==1 and land(world)==22901,"summit scroll admits level 68 and pays only after arrival")
+		world.content523_enter_land(ENTRANCE_LAND,[32787,32715,32787,32715],SETUP_WAIVE)
 	world.level = 60
 	var low: Dictionary = await use(world,oman2)
 	evidence["low_level"] = low.get("reason","")

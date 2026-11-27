@@ -302,9 +302,13 @@ func _process(_delta: float) -> void:
 func _tap() -> void:
 	match str(source.from):
 		"quick":
+			var slot: int = int(source.slot)
+			var world: Node = hud.get_parent()
+			if slot < 0 or slot != hud.quickslot_index(int(source.visible)) or slot >= world.quickslots.size() or world.quickslots[slot] != source.entry:return
+			if source.has("shown_entry") and (slot >= hud.quickslot_entries.size() or hud.quickslot_entries[slot] != source.shown_entry):return
 			if not hud.pending_quickslot_binding.is_empty():
-				hud._emit_quickslot_assignment(int(source.slot),str(hud.pending_quickslot_binding.kind),str(hud.pending_quickslot_binding.id))
-			else: hud.quickslot_pressed.emit(int(source.slot))
+				hud._emit_quickslot_assignment(slot,str(hud.pending_quickslot_binding.kind),str(hud.pending_quickslot_binding.id))
+			else: hud.quickslot_pressed.emit(slot)
 		"inventory":
 			var reference: String = str(source.id)
 			var native: bool=bool(source.get("source_native",false))
@@ -366,7 +370,7 @@ func _show_drag() -> void:
 	preview.show()
 	remove_target.visible = source.from == "quick" and not source.entry.is_empty()
 	remove_target.position = Vector2(get_viewport().get_visible_rect().size.x*.5-59,get_viewport().get_visible_rect().size.y-165)
-	var valid: bool = not source.entry.is_empty() and (source.from == "quick" or hud.get_parent()._quickslot_registration_error(str(source.entry.kind),str(source.entry.id)).is_empty())
+	var valid: bool = not source.entry.is_empty() and (source.from == "quick" or hud.get_parent()._quickslot_registration_error(str(source.entry.kind),_registration_reference()).is_empty())
 	for index: int in range(hud.v20_quickslot_buttons.size()):
 		var control: Control=_quickslot_control(index)
 		if is_instance_valid(control):control.modulate = Color("c9ebff") if valid else Color("b6a39d")
@@ -388,6 +392,9 @@ func _show_drag() -> void:
 			if is_instance_valid(control):control.modulate=Color("b6a39d")
 	hint.position = preview.position+Vector2(-40,-22)
 	hint.show()
+
+func _registration_reference() -> String:
+	return str(source.id) if source.from=="inventory" else str(source.entry.id)
 
 func _drop() -> void:
 	var world: Node = hud.get_parent()
@@ -422,7 +429,7 @@ func _drop() -> void:
 		var target: int = hud.quickslot_index(i)
 		if source.from == "quick":
 			if target != int(source.slot): hud.quickslot_edit_requested.emit("swap",int(source.slot),target)
-		else: hud.quickslot_assignment_requested.emit(target,str(source.entry.kind),str(source.entry.id))
+		else: hud.quickslot_assignment_requested.emit(target,str(source.entry.kind),_registration_reference())
 		return
 	if source.from == "inventory":
 		var bag: Control = hud.lineage_inventory_ui
