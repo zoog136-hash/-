@@ -67,6 +67,8 @@ func _check_effect_dispatch() -> void:
 	window._fill(redraw, {})
 	window._card(11)
 	check(requested.size() == 2 and requested[-1].pity_reward, "the next page has its own sealed cells and preserves the last pity reward")
+	window.close()
+	callbacks.clear()
 	page.free()
 	redraw.free()
 
