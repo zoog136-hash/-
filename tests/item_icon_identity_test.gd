@@ -68,6 +68,16 @@ func installed() -> void:
 	if SOURCE.not_installed() or not IMAGES.selected():
 		evidence["images"] = "523 tables/image pack not selected: icon part skipped"
 		return
+	var exact_box_name: String = "희귀 변신 카드 상자"
+	var exact_box: Dictionary = {"name":exact_box_name,"source":"inven","sourceId":"259503"}
+	var older_box: Dictionary = IDENTITY.row(121713)
+	var newer_box: Dictionary = IDENTITY.row(259503)
+	check(IDENTITY.by_name(exact_box_name)==121713 and older_box.IconID==newer_box.IconID and older_box.IsStorable!=newer_box.IsStorable,
+		"same-name and same-icon source boxes have different storage policy")
+	check(IDENTITY.item_class_id(exact_box)==259503 and IMAGES.describe_item(exact_box,exact_box_name).item_class_id==259503,
+		"bag presentation retains the validated ID of the newer source box")
+	exact_box.sourceId="26"
+	check(IDENTITY.item_class_id(exact_box)==121713,"an unrelated numeric ID cannot override the name lookup")
 	var map: Dictionary = _map()
 	var missing: Array = []
 	var linked: int = 0

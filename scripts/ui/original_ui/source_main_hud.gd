@@ -278,6 +278,12 @@ func _input(event: InputEvent) -> void:
 	if _native_buttons==null or (not event is InputEventScreenTouch and not event is InputEventScreenDrag):return
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(_coordinates):return
+	# A visible CanvasLayer reveal handles its own touch buttons. Native
+	# result windows use a hidden guard and still route through this scene.
+	var reveal: Variant=hud.get("card_reveal_stage")
+	if reveal is Control and reveal.is_visible_in_tree():
+		_cancel_native_buttons()
+		return
 	# The reward selector is modal even when the bag remains visible behind
 	# it. Route its rows, Cancel, and Confirm before the normal bag/chrome.
 	if feature_window_is_open("reward_select"):
@@ -296,6 +302,18 @@ func _input(event: InputEvent) -> void:
 		_collect_native_buttons(_drop_popup.get("_scene"),modal)
 		_native_buttons.route(event,event.position,modal)
 		get_viewport().set_input_as_handled()
+		return
+	if clan_window_is_open():
+		# The name field may still have focus when the player presses Create.
+		# Only this modal's buttons may bypass that editor's keyboard guard.
+		var editor: Control = _clan_window.get("_name_editor")
+		if hud.get("class_picker_initial")==true or hud.call("blocks_keyboard_input_except_source_editor",editor):
+			_cancel_native_buttons()
+			return
+		var clan_buttons: Array = []
+		_collect_native_buttons(_clan_window.get("_scene"),clan_buttons)
+		if _native_buttons.route(event,event.position,clan_buttons).get("handled",false):
+			get_viewport().set_input_as_handled()
 		return
 	# The map has its own original-row/scroll input controller. Existing
 	# modal/keyboard guards and PointerTransfer capture retain precedence.
@@ -1334,6 +1352,13 @@ func feature_window(key: String) -> RefCounted:
 func feature_window_is_open(key: String="") -> bool:
 	for name: String in _feature_windows:
 		if (key.is_empty() or name==key) and _feature_windows[name].is_open():return true
+	return false
+
+## These full windows own their entries and never initiate a quickslot drag.
+func modal_owns_pointer() -> bool:
+	if clan_window_is_open() or store_window_is_open() or enchant_window_is_open() or production_window_is_open(): return true
+	for key: String in ["card_fusion", "skill_cards", "card_awakening", "option_awakening", "awakening_result"]:
+		if feature_window_is_open(key): return true
 	return false
 
 ## Refreshes an open feature window after its game state changed.

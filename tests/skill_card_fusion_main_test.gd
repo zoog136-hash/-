@@ -12,6 +12,8 @@ func run() -> void:
 			await process_frame
 			w.field_population.set_process(false);w.player.set_physics_process(false)
 			await fusion(archive)
+			w.hud._close_workspace()
+			await process_frame
 		w.queue_free()
 		await process_frame
 	print("SKILL_CARD_FUSION_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
@@ -93,6 +95,11 @@ func fusion(archive: String) -> void:
 	var window: Variant=hud.original_main_ui_controller._feature_windows.get("skill_cards")
 	if not ck(window!=null and window.is_open(),"real HUD opens the authored skill card window"):return
 	if not press(window,"Nd_SkillCard_Tab/Btn_Compose_Off"):return
+	var name: String=str(w.item_instances[book_uid].name)
+	w.ui_preferences.item_locks[name+"@@@"+book_uid]=true
+	var locked: Dictionary=window._slot_tap(0,{"physical_id":book_uid})
+	ck(locked.get("code")=="source_skill_card_material_locked" and window.registered.is_empty(),"a locked physical book cannot register")
+	w.ui_preferences.item_locks.erase(name+"@@@"+book_uid)
 	if not press(window,SKILL_WINDOW.COMPOSE_INFO+"Btn_Auto"):return
 	if not ck(window.registered=={book_uid:8},"AUTO registration uses the original eight-card rule"):return
 	var compose_button: String=SKILL_WINDOW.COMPOSE_INFO+"Btn_Compose"

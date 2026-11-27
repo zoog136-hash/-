@@ -256,6 +256,9 @@ func _read_result(w: Node, success: bool) -> void:
 	var before: Dictionary = _ledger(w)
 	var scene: Node2D = page._scene
 	var branch: String = "Success" if success else "Fail"
+	var target: Sprite2D = scene.get_node_or_null("AwakeningTargetPortrait") as Sprite2D
+	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_PORTRAIT") == "1":
+		check(target!=null and target.texture!=null and target.get_meta("source_card_id","")==CARDS.card_id(page._card),"the installed portrait belongs to the exact awakening target")
 	check(scene.source_member == "UI/Change/Change_Upgrade_Skill_Awaken.csb" and page.phase().waiting and not _node(page, branch+"_Text").is_visible_in_tree(), "saved result opens on the original touch prompt (no outcome yet)")
 	# One touch reveals the committed outcome (the next one closes it).
 	await _tap(scene.get_node("AwakeningResultTouch"))
@@ -269,6 +272,8 @@ func _read_result(w: Node, success: bool) -> void:
 			await process_frame
 	var label: Node2D = _node(page, branch+"_Text")
 	check(page._held and is_instance_valid(label) and label.is_visible_in_tree() and label.get_meta("source_display_color").a > 0.99, "original outcome text settles at full authored opacity")
+	if target!=null:
+		check(target.is_visible_in_tree() and target.modulate.a>0.99 and absf(target.position.x)<1.0,"the same target stays visible at the center after success or failure")
 	if not page._options.is_empty():
 		var template: Node = _node(page, "ListView/Label_Option").get_meta("source_text")
 		check(template.get_child_count()>0, "awarded options are drawn in the original list")
