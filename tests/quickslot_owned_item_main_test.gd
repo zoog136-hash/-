@@ -133,4 +133,9 @@ func _exercise(world: TwilightWorld) -> void:
 	check(world.quickslots[hud.quickslot_index(9)].get("instance_id")==legacy_id,"legacy gear without an embedded item record has an exact binding")
 	await tap(center(slot_control(hud,9)))
 	check(world.equipped_items.get("weapon",{}).get("instance_id")==legacy_id,"legacy gear uses its existing equip path")
+	var storage_only: String="무기 마법 주문서 · 등록 회귀 검사"
+	world.catalog_db["아이템"].append({"name":storage_only,"slot":"consumable","source_automation_catalog_only":true})
+	world._index_catalog_item_sources()
+	world.inventory[storage_only]=1
+	check(not world._quickslot_registration_error("item",storage_only).is_empty(),"a storage-only item cannot gain a quickslot action from the enchantment name")
 	evidence["original_quickslot"]=hud.original_quickslot_control(6)!=hud.v20_quickslot_buttons[6]

@@ -9331,6 +9331,10 @@ func _quickslot_item_supported(reference: String) -> bool:
 	if preload("res://scripts/quests/source_dummy523.gd").reason(record)!="":return false
 	if option_awakening.quickslot_item_supported(item_name,uid,record):return true
 	if item_name.begins_with("[원본 보상] "):return not uid.is_empty() and quest_item_provider.quickslot_held_supported(self,uid)
+	if quest_item_provider.handles(record):return true
+	# Storage/sale definitions have no manual owner merely because the name
+	# resembles an enhancement scroll. Preserve any verified automatic rule.
+	if record.get("source_automation_catalog_only",false):return not _quickslot_selected_auto_item(selected,record).is_empty()
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if REGIONAL_RETURN.claims_identity(item_name, record): return REGIONAL_RETURN.supported(item_name, record)
 	if _is_ammo_record(record) or (not uid.is_empty() and not _equipment_slot_base(record).is_empty()):return true
@@ -9349,13 +9353,11 @@ func _quickslot_item_supported(reference: String) -> bool:
 	if record.get("type")=="문양 재료":
 		return growth.source523.material(item_instances.get(uid,{})) if not uid.is_empty() else not growth.source523.plain_recharge(self,record).is_empty()
 	if CARD_PACK_ITEMS.is_pack(item_name) or not half_elixir.item_action(item_name).is_empty() or protection523.managed(record):return true
-	if quest_item_provider.handles(record):return true
 	if record.get("source")=="twilight-shop523-book":
 		return preload("res://scripts/shop/source523_skill_books.gd").registered(self,item_name,str(record.get("source_skill_id","")))
 	if preload("res://scripts/shop/source523_cash_packages.gd").supports_bag_record(record):return true
 	if record.get("source")=="twilight_dungeon_adaptation" and not uid.is_empty():
 		return int(record.get("declared_source_item",0))==231162 and not dungeon_play.rules.orim_item_effects.get(231162,[]).is_empty()
-	if record.get("source_automation_catalog_only",false):return not _quickslot_selected_auto_item(selected,record).is_empty()
 	if not CONSUMABLE_RULES.definition(item_name).is_empty(): return true
 	if record.is_empty(): return false
 	if _is_timed_buff_item(record) or int(record.get("heal",0)) > 0: return true
