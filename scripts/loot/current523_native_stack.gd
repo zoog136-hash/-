@@ -668,22 +668,44 @@ static func _proof_entry(entry: Variant,uid: String) -> Dictionary:
 	if entry.has(TOKEN_RANK) and (not is_enhancement_token(record) or not integer(entry[TOKEN_RANK]) or int(entry[TOKEN_RANK]) not in range(1,22) or int(remaining)!=1):return {}
 	return {"record":record,"remaining":int(remaining),"used":int(used),"transferred":int(transferred),"receipt":receipt,"first_grant_receipt":first_grant_receipt(receipt),"allocated_quantity":int(granted)}
 
-static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0) -> bool:
-	if depth>128 or whole(receipt.get("schema")) not in [1,2,3] or receipt.get("issued_physical_id")!=uid or (receipt.has("source_definition_archive") and receipt.source_definition_archive!=SOURCE.identity()) or not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or not _original_row_ok(receipt) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
+## One save can contain many spent receipts for the same ItemClass. Reuse only
+## their source input within this synchronous validation, never a receipt verdict.
+class ReceiptDefinitions:
+	const MAX_ROWS := 128
+	var _identity: Variant
+	var _rows: Dictionary = {}
+
+	func identity() -> Dictionary:
+		if _identity == null: _identity = SOURCE.identity()
+		return _identity
+
+	func item_row(id: int) -> Dictionary:
+		var cached: Variant = _rows.get(id)
+		if cached is Dictionary: return cached
+		var row: Dictionary = SOURCE.row("ItemClass", id)
+		if _rows.size() < MAX_ROWS: _rows[id] = row
+		return row
+
+static func receipt_valid(receipt: Dictionary,uid: String,depth: int=0,definitions: ReceiptDefinitions=null) -> bool:
+	if depth>128 or whole(receipt.get("schema")) not in [1,2,3] or receipt.get("issued_physical_id")!=uid:return false
+	if receipt.has("source_definition_archive") and receipt.source_definition_archive!=(SOURCE.identity() if definitions==null else definitions.identity()):return false
+	if not integer(receipt.get("item_class_id")) or not integer(receipt.get("granted_quantity")) or int(receipt.granted_quantity)<1 or not _original_row_ok(receipt,definitions) or whole(receipt.get("bless_raw")) not in [1,2,3] or not receipt.get("origin") is Dictionary or receipt.origin.is_empty():return false
 	if receipt.schema==1:return true
 	if receipt.schema==3:return MERGE.receipt_shape_valid(receipt)
 	var origin: Dictionary=receipt.origin
 	if origin.get("kind")!="owned_quantity_partition" or not origin.get("partition_id") is String or str(origin.partition_id).length()!=32 or not str(origin.partition_id).is_valid_hex_number(false) or not origin.get("parent_physical_id") is String or origin.parent_physical_id==uid or not origin.get("parent_receipt") is Dictionary:return false
 	var parent: Dictionary=origin.parent_receipt
-	return receipt_valid(parent,str(origin.parent_physical_id),depth+1) and parent.get("item_class_id")==receipt.item_class_id and parent.get("bless_raw")==receipt.bless_raw and int(receipt.granted_quantity)<=int(parent.granted_quantity)
+	return receipt_valid(parent,str(origin.parent_physical_id),depth+1,definitions) and parent.get("item_class_id")==receipt.item_class_id and parent.get("bless_raw")==receipt.bless_raw and int(receipt.granted_quantity)<=int(parent.granted_quantity)
 
 ## A trimmed receipt (no row copy, catalog MARK + the same ItemClass ID) reads
 ## its row from the installed definition; a full one keeps the exact copy
 ## check. Either way the row must be the current original ItemClass row.
-static func _original_row_ok(receipt: Dictionary) -> bool:
-	if NATIVE_FIELDS.lazy(receipt):
-		return not receipt.has("source_original_item") and whole(receipt.get("source_item_class_id"))==whole(receipt.get("item_class_id")) and not SOURCE.row("ItemClass",int(receipt.item_class_id)).is_empty()
-	return receipt.get("source_original_item")==SOURCE.row("ItemClass",int(receipt.item_class_id))
+static func _original_row_ok(receipt: Dictionary,definitions: ReceiptDefinitions=null) -> bool:
+	var lazy: bool = NATIVE_FIELDS.lazy(receipt)
+	if lazy and (receipt.has("source_original_item") or whole(receipt.get("source_item_class_id"))!=whole(receipt.get("item_class_id"))):return false
+	var id: int = int(receipt.item_class_id)
+	var row: Dictionary = SOURCE.row("ItemClass",id) if definitions==null else definitions.item_row(id)
+	return not row.is_empty() if lazy else receipt.get("source_original_item")==row
 
 static func first_grant_receipt(receipt: Dictionary) -> Dictionary:
 	var root: Dictionary=receipt
@@ -1154,6 +1176,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if not integer(inventory.get(name_value,0)) or int(inventory.get(name_value,0))<int(totals[name_value]):return "원본 물리 잔량보다 소지 수량이 적습니다 · 기존 저장 보존"
 	for name_value: String in stored_totals:
 		if not integer(stored_counts.get(name_value,0)) or int(stored_counts.get(name_value,0))<int(stored_totals[name_value]) or int(stored_counts.get(name_value,0))>1000000:return "원본 창고 물리 수량·저장 범위 불일치"
+	var receipt_definitions: ReceiptDefinitions
 	for uid: String in ledger:
 		var entry: Variant=ledger[uid]
 		if not entry is Dictionary or not entry.get("receipt") is Dictionary or not integer(entry.get("used_quantity")) or not integer(entry.get("remaining_quantity")):return "원본 소비 장부 행 형식 확인 필요"
@@ -1161,7 +1184,9 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		# An exact active native match above already proved this receipt for
 		# the same uid and archive. Ledger-only rows still prove independently.
 		var physical: Variant=all.get(uid)
-		if not (physical is Dictionary and physical.has(RECEIPT)) and not receipt_valid(receipt,uid):return "원본 소비 장부 출처 확인 필요"
+		if not (physical is Dictionary and physical.has(RECEIPT)):
+			if receipt_definitions==null:receipt_definitions=ReceiptDefinitions.new()
+			if not receipt_valid(receipt,uid,0,receipt_definitions):return "원본 소비 장부 출처 확인 필요"
 		var disposed: Variant=entry.get("discarded_quantity",0);var transferred: Variant=entry.get("transferred_quantity",0)
 		if not integer(disposed) or not integer(transferred) or int(entry.used_quantity)+int(disposed)+int(transferred)<1 or int(entry.used_quantity)>int(receipt.granted_quantity)-int(disposed)-int(transferred) or int(entry.remaining_quantity)!=int(receipt.granted_quantity)-int(entry.used_quantity)-int(disposed)-int(transferred):return "원본 장부 최초량·사용량·잔량·분할량·소멸량 불일치"
 		if int(disposed)>0 and (entry.get("discard_reason") not in DISCARD_REASONS or int(entry.remaining_quantity)!=0):return "원본 바닥 소멸 출처·잔량 확인 필요"
@@ -1169,7 +1194,7 @@ static func state_error(inventory: Variant,instances: Variant,state: Variant,war
 		if int(entry.remaining_quantity)==0 and all.has(uid):return "소비 완료 원본 개체의 중복 소유 보존 중지"
 	var merged: String=MERGE.merges_error(all,ledger,state.get(MERGES,{}),state.get(PARTITIONS,{}))
 	if not merged.is_empty():return merged
-	return partition_error(all,ledger,state.get(PARTITIONS,{}),state.get(MERGES,{}))
+	return partition_error(all,ledger,state.get(PARTITIONS,{}),state.get(MERGES,{}),receipt_definitions)
 
 ## Borrowed views are private to this synchronous validator. Keep source
 ## expiry at the same boundary; the proof memo still stores an owned copy.
@@ -1548,8 +1573,9 @@ static func expire_floor(world: Node,record: Dictionary) -> bool:
 	world.consumable_service.import_state(state);world.deferred_save.cancel();_clear_floor_candidate()
 	return true
 
-static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Variant,merges: Variant={}) -> String:
+static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Variant,merges: Variant={},definitions: ReceiptDefinitions=null) -> String:
 	if not partitions is Dictionary:return "원본 물리 분할 장부 형식 확인 필요"
+	if definitions==null and not partitions.is_empty():definitions=ReceiptDefinitions.new()
 	var receipts: Dictionary={};var transferred: Dictionary={};var by_parent: Dictionary={}
 	for uid: String in all:
 		if all[uid] is Dictionary and all[uid].has(RECEIPT):receipts[uid]=all[uid][RECEIPT];transferred[uid]=int(all[uid].get(TRANSFERRED,0))
@@ -1562,7 +1588,7 @@ static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Varia
 		for key: String in ["quantity","before_remaining","after_remaining","before_transferred","after_transferred","used_at_partition"]:
 			if not integer(event.get(key)):return "원본 분할 수량 형식 불일치"
 		if int(event.quantity)<1 or int(event.quantity)>=int(event.before_remaining) or int(event.after_remaining)!=int(event.before_remaining)-int(event.quantity) or int(event.after_transferred)!=int(event.before_transferred)+int(event.quantity):return "원본 분할 전후 잔량 불일치"
-		if not receipt_valid(event.parent_receipt,event.parent_id) or not receipt_valid(event.child_receipt,event.child_id) or receipts.get(event.parent_id)!=event.parent_receipt or receipts.get(event.child_id)!=event.child_receipt:return "원본 분할 부모·자식 영수증 보존 필요"
+		if not receipt_valid(event.parent_receipt,event.parent_id,0,definitions) or not receipt_valid(event.child_receipt,event.child_id,0,definitions) or receipts.get(event.parent_id)!=event.parent_receipt or receipts.get(event.child_id)!=event.child_receipt:return "원본 분할 부모·자식 영수증 보존 필요"
 		var child: Dictionary=event.child_receipt
 		if child.schema!=2 or child.origin.get("partition_id")!=id or child.origin.get("parent_physical_id")!=event.parent_id or child.origin.get("parent_receipt")!=event.parent_receipt or child.granted_quantity!=event.quantity or int(event.before_remaining)+int(event.before_transferred)+int(event.used_at_partition)!=int(event.parent_receipt.granted_quantity):return "원본 지급량과 분할 배정량의 불변 관계 불일치"
 		if not by_parent.has(event.parent_id):by_parent[event.parent_id]=[]
@@ -1572,11 +1598,13 @@ static func partition_error(all: Dictionary,ledger: Dictionary,partitions: Varia
 		if receipt.get("schema")==2:
 			var event: Variant=partitions.get(str(receipt.origin.partition_id))
 			if not event is Dictionary or event.get("child_id")!=uid or event.get("child_receipt")!=receipt:return "근거 없는 원본 분할 소유 생성 금지"
-		var events: Array=by_parent.get(uid,[]);events.sort_custom(func(a: Dictionary,b: Dictionary)->bool:return int(a.before_transferred)<int(b.before_transferred))
 		var amount: int=0
-		for event: Dictionary in events:
-			if int(event.before_transferred)!=amount:return "원본 분할 장부 순서·합계 불일치"
-			amount+=int(event.quantity)
+		if by_parent.has(uid):
+			var events: Array=by_parent[uid]
+			events.sort_custom(func(a: Dictionary,b: Dictionary)->bool:return int(a.before_transferred)<int(b.before_transferred))
+			for event: Dictionary in events:
+				if int(event.before_transferred)!=amount:return "원본 분할 장부 순서·합계 불일치"
+				amount+=int(event.quantity)
 		if amount!=int(transferred.get(uid,0)):return "원본 물리 이전량과 분할 장부 합계 불일치"
 	return ""
 

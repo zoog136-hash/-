@@ -19,6 +19,11 @@ class WorldFixture extends Node:
 	var consumable_service := CONSUMABLE.new()
 	func _ground_drops_snapshot() -> Array: return ground_loot.snapshot()
 
+class ReceiptFixture extends STACK.ReceiptDefinitions:
+	var row: Dictionary = {"ID":137.0, "name":"fixture"}
+	func identity() -> Dictionary: return {"fixture":true}
+	func item_row(id: int) -> Dictionary: return row if id==137 else {}
+
 func _initialize() -> void: run.call_deferred()
 func check(ok: bool,label: String) -> void:
 	checks+=1
@@ -51,6 +56,7 @@ func seed_fixture(owner: Node,native: int,legacy: int) -> void:
 	owner.warehouse.instances={"legacy-uid":{"name":"legal-legacy","record":{"nested":range(12)}}}
 
 func run() -> void:
+	check_shared_definition_receipts()
 	var owner := WorldFixture.new()
 	seed_fixture(owner,6,4)
 	var before: Array=owner.ground_loot.snapshot()
@@ -104,6 +110,30 @@ func run() -> void:
 	if "--main" in OS.get_cmdline_user_args(): await main_write()
 	print("NATIVE_STACK_SAVE_VALIDATION_BUDGET_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(0 if failures.is_empty() else 1)
+
+func check_shared_definition_receipts() -> void:
+	var source := ReceiptFixture.new()
+	var parent: Dictionary = {"schema":1,"issued_physical_id":"parent","item_class_id":137,"bless_raw":1,
+		"granted_quantity":6,"origin":{"kind":"fixture"},"source_definition_archive":{"fixture":true},
+		"source_original_item":source.row.duplicate()}
+	check(STACK.receipt_valid(parent,"parent",0,source),"full receipt matches its exact definition")
+	var child: Dictionary = parent.duplicate(true)
+	child.merge({"schema":2,"issued_physical_id":"child","granted_quantity":2,
+		"origin":{"kind":"owned_quantity_partition","partition_id":"a".repeat(32),
+			"parent_physical_id":"parent","parent_receipt":parent}},true)
+	child.erase("source_original_item")
+	child[STACK.NATIVE_FIELDS.MARK]=true
+	child["source_item_class_id"]=137
+	check(STACK.receipt_valid(child,"child",0,source),"a compact child and a full parent share a definition")
+	var changed: Dictionary = parent.duplicate(true)
+	changed.source_original_item.name="other"
+	check(not STACK.receipt_valid(changed,"parent",0,source),"sharing a definition never admits a mismatched full row")
+	check(not STACK.receipt_valid(child,"other_id",0,source),"the physical owner is still checked for every receipt")
+	child.source_definition_archive={"fixture":false}
+	check(not STACK.receipt_valid(child,"child",0,source),"the declared source identity is still checked")
+	child.source_definition_archive=source.identity()
+	child.granted_quantity=7
+	check(not STACK.receipt_valid(child,"child",0,source),"a partition still cannot exceed the proven parent quantity")
 
 func benchmark() -> Dictionary:
 	return {"ordinary":benchmark_size(32,128),"stress":benchmark_size(450,900)}
