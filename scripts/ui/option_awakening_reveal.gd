@@ -39,6 +39,7 @@ var note: Label
 var skip_button: Button
 var confirm_button: Button
 var border: Control
+var portrait: TextureRect
 var sound: AudioStreamPlayer
 var texture: Texture2D
 var design: Vector2 = Vector2(1100, 760)
@@ -66,6 +67,12 @@ func _ready() -> void:
 	note = _label("", 17, UI.MUTED)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.max_lines_visible = 3
+	portrait = TextureRect.new()
+	portrait.name = "AwakeningTargetPortrait"
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	board.add_child(portrait)
 	border = BORDER.new()
 	board.add_child(border)
 	border.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -130,16 +137,14 @@ func present(card: Dictionary, committed_result: Dictionary, settings: Dictionar
 	texture = null
 	if has_meta("original_card_asset"): remove_meta("original_card_asset")
 	if SourceCard.native(record):
-		var original: Dictionary = SourceCard.detail(record,true)
+		var original: Dictionary = SourceCard.detail(record,true,false)
 		texture = original.get("texture") as Texture2D
 		var evidence: Dictionary = original.duplicate(true)
 		evidence.erase("texture")
 		evidence["card_id"] = SourceCard.CARDS.card_id(record)
 		set_meta("original_card_asset",evidence)
-	else:
-		var path: String = str(record.get("image_path", ""))
-		if not path.is_empty() and preload("res://scripts/resources/retired_assets.gd").usable(path):
-			texture = load(path) as Texture2D
+	portrait.texture = texture
+	portrait.visible = texture != null
 	card_label.text = str(record.get("name", "카드"))
 	grade_label.text = str(record.get("grade", ""))
 	grade_label.add_theme_color_override("font_color", UI.grade(grade_label.text))
@@ -155,15 +160,17 @@ func present(card: Dictionary, committed_result: Dictionary, settings: Dictionar
 func _fit() -> void:
 	if board == null:
 		return
-	var portrait: bool = size.y > size.x * 1.1
-	design = Vector2(480, 900) if portrait else Vector2(1100, 760)
-	center = Vector2(design.x * 0.5, 342 if portrait else 318)
+	var portrait_layout: bool = size.y > size.x * 1.1
+	design = Vector2(480, 900) if portrait_layout else Vector2(1100, 760)
+	center = Vector2(design.x * 0.5, 342 if portrait_layout else 318)
 	design_scale = maxf(0.01, minf(size.x / design.x, size.y / design.y))
 	design_offset = (size - design * design_scale) * 0.5
 	board.size = design
 	board.scale = Vector2.ONE * design_scale
 	board.position = design_offset
 	card_rect = Rect2(center - Vector2(86, 117), Vector2(172, 234))
+	portrait.position = card_rect.position
+	portrait.size = card_rect.size
 	heading.position = Vector2(20, 27)
 	heading.size = Vector2(design.x - 40, 48)
 	context_label.position = Vector2(20, 79)
@@ -172,10 +179,10 @@ func _fit() -> void:
 	card_label.size = Vector2(design.x - 80, 38)
 	grade_label.position = Vector2(40, center.y + 180)
 	grade_label.size = Vector2(design.x - 80, 25)
-	result_label.position = Vector2(30, 580 if portrait else 538)
+	result_label.position = Vector2(30, 580 if portrait_layout else 538)
 	result_label.size = Vector2(design.x - 60, 48)
-	note.position = Vector2(30 if portrait else 65, 642 if portrait else 592)
-	note.size = Vector2(design.x - (60 if portrait else 130), 100 if portrait else 70)
+	note.position = Vector2(30 if portrait_layout else 65, 642 if portrait_layout else 592)
+	note.size = Vector2(design.x - (60 if portrait_layout else 130), 100 if portrait_layout else 70)
 	border.position = card_rect.position
 	border.size = card_rect.size
 	controls_layer.size = size

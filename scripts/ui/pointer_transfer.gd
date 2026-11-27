@@ -126,7 +126,7 @@ func _input(event: InputEvent) -> void:
 		return
 	# The reveal lives above HUD in another CanvasLayer; quickslot hit testing
 	# must yield without consuming native transport-button touches.
-	if hud.has_method("is_card_reveal_busy") and hud.is_card_reveal_busy():
+	if (hud.has_method("is_card_reveal_busy") and hud.is_card_reveal_busy()) or (hud.has_method("is_option_awakening_busy") and hud.is_option_awakening_busy()):
 		cancel()
 		reset_tap_history()
 		return

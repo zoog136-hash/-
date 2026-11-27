@@ -1,9 +1,8 @@
 extends "res://scripts/ui/original_ui/source_main_change_page.gd"
 ## The original 523 card fusion window: Change_WinTotal with its
-## Change_DetailView_Mix page (일반 합성). The left list shows the owned cards
-## of the category as Change_Card_A_<grade> with their own pictures, the
-## grade sidebar (Change_WinTotal_Class) picks the material grade, and the
-## right side shows the duplicates the player registered, the
+## Change_DetailView_Mix page (일반 합성). The right list shows eligible
+## duplicates with their own pictures, the grade sidebar picks the material
+## grade, and the center shows the copies the player registered, the
 ## 실패 횟수/합성 시도 보상 gauges (희귀/영웅 pity) and the original
 ## 카드 자동 등록 / 합 성 buttons. 합 성 goes through the existing
 ## confirmation (renewal_hud._confirm_card_fusion_request ->
@@ -92,9 +91,9 @@ func _collect() -> void:
 		if identity.is_empty() or seen.has(identity):continue
 		seen[identity]=true
 		var current: String=str(raw.get("grade",""))
-		if current==grade and _eligible(raw) and _owned(identity):eligible[identity]=raw
-		var copies: int=(1 if _owned(identity) else 0)+_spare(identity)
-		if copies>0 and (filter_grade=="전체" or current==filter_grade):_owned_records.append(raw)
+		if not Cards.FUSION_MATERIALS.has(current) or not _eligible(raw) or not _owned(identity) or _spare(identity)<=0:continue
+		if current==grade:eligible[identity]=raw
+		if filter_grade=="전체" or current==filter_grade:_owned_records.append(raw)
 	var kept: Array[String]=[]
 	var counts: Dictionary={}
 	for identity: String in _registered:
@@ -103,7 +102,7 @@ func _collect() -> void:
 		kept.append(identity)
 		_materials.append({"record":eligible[identity],"id":identity})
 	_registered=kept
-	# Every owned card of the filter, highest grade first (stable: ties keep
+	# Eligible duplicates of the filter, highest grade first (stable: ties keep
 	# the catalog order); the list builds only the rows in view.
 	var keyed: Array=[]
 	for index: int in range(_owned_records.size()):keyed.append([-Cards.GRADES.find(str(_owned_records[index].get("grade",""))),index])
@@ -148,7 +147,7 @@ func _spec() -> Dictionary:
 		spec[gauge+"/Label_Num"]={"role":"source_text","text":"%02d" % count}
 		spec[gauge+"/Label_Num_1"]={"role":"source_text","text":"%02d" % Cards.PITY_LIMIT}
 	var mix: String=P+"Nd_CardMix/"
-	spec[mix+"Label_Tip"]={"visible":_materials.is_empty()}
+	spec[mix+"Label_Tip"]={"visible":_materials.is_empty(),"role":"source_text","text":"오른쪽에서 중복 카드를 골라 등록하세요"}
 	spec[mix+"Label_Tip02"]={"role":"source_text","text":"%s ~ %s 1장 획득 가능!" % [grade,target] if required>0 else "유일 등급은 합성할 수 없습니다"}
 	spec[mix+"Btn_Probability"]={"activate":Callable(self,"_probability")}
 	var points:Dictionary=_point_progress(grade)
@@ -176,6 +175,15 @@ func _spec() -> Dictionary:
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
+	var stage: Node2D=_pane(root,out,P+"Nd_CardMix")
+	var roster: Node2D=_pane(root,out,P+"Nd_CardList")
+	var list: Node2D=_pane(root,out,P+"Nd_CardList/ListView")
+	if stage!=null and roster!=null and list!=null:
+		# The list is offset inside its parent in these scenes. Move its local
+		# center, including the touch targets, to the other panel's center.
+		var shift: float=stage.position.x-roster.position.x-list.position.x
+		stage.position.x-=shift
+		roster.position.x+=shift
 	var sidebar: Array=[]
 	var total: int=0
 	for current: String in MATERIAL_GRADES:total+=_available(current)
@@ -208,6 +216,10 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	if not materials.get("ok",false):return materials
 	pictures+=int(materials.get("pictures",0))
 	return {"ok":true,"category":category,"grade":grade,"filter":filter_grade,"cards":cards.size(),"built_cards":int(owned.get("built",0)),"registered":registered.size(),"pictures":pictures,"can_fuse":_can_fuse(),"available":_available(grade),"required":int(Cards.FUSION_MATERIALS.get(grade,0))}
+
+func _pane(root: Node2D, out: Dictionary, suffix: String) -> Node2D:
+	var found: Dictionary=_locate(root,out,suffix)
+	return found.player.source_nodes.get(found.offset) as Node2D if found.get("ok",false) else null
 
 func _material_grid(root: Node2D, out: Dictionary, path: String, cards: Array) -> Dictionary:
 	var margin: float=float(_node_options(out,path).get("itemMargin",0))
