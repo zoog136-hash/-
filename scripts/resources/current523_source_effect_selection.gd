@@ -173,8 +173,7 @@ static func _selected(supplied: Dictionary, sprite: int, action: Dictionary, con
 		"host_policy":"existing_source_event_anchor_and_facing_plus3_one_shot; native_trigger_and_composition_unverified"}
 
 static func _feedback_action(options: Dictionary, sprite: int) -> Dictionary:
-	if str(options.get("manifest_sha256","")).to_lower() == FEEDBACK_BANK_SHA:
-		if sprite not in FEEDBACK_ACTION_ZERO and sprite not in POTION_ACTION_ZERO: return fail("current523_combat_feedback_track_unavailable")
+	if str(options.get("manifest_sha256", "")).to_lower() == FEEDBACK_BANK_SHA and (sprite in FEEDBACK_ACTION_ZERO or sprite in POTION_ACTION_ZERO):
 		return {"ok":true,"action_id":0,"source_action_domain":{"source_snapshot":"patch523","source_actor_id":sprite,
 			"action_ids":[0],"action_domain_basis":"verified_original_action_outcomes_for_pinned_feedback_bank"}}
 	return _action(options,sprite)

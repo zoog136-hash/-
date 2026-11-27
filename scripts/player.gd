@@ -40,6 +40,7 @@ signal bleed_tick(damage: int)
 
 @export var move_speed: float = 210.0
 @export var click_move_speed: float = 225.0
+@export var authored_action_fx_enabled: bool = true
 
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var class_sprite: AnimatedSprite2D = $ClassSprite
@@ -129,11 +130,12 @@ func _ready() -> void:
 	var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
 	shadow.name = "GroundShadow"
 	add_child(shadow)
-	var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
-	action_fx.name = "PlayerActionFX"
-	action_fx.actor = self
-	action_fx.z_index = 6
-	add_child(action_fx)
+	if authored_action_fx_enabled:
+		var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
+		action_fx.name = "PlayerActionFX"
+		action_fx.actor = self
+		action_fx.z_index = 6
+		add_child(action_fx)
 	spx_sprite = AnimatedSprite2D.new()
 	spx_sprite.name = "ExternalSPXActor"
 	spx_sprite.z_index = class_sprite.z_index

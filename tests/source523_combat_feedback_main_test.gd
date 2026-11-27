@@ -15,6 +15,18 @@ const NPC_BODY: int = 2389
 var checks: int = 0
 var failures: Array[String] = []
 
+class ExistingCombatReceiver extends Node:
+	var patch523_npc_spells: RefCounted
+	var field_population: Node
+	var numbers: Array[String] = []
+	var effects: Array[String] = []
+
+	func show_combat_number(_point: Vector2, value: String, _color: Color, _critical: bool = false) -> void:
+		numbers.append(value)
+
+	func monster_combat_feedback(_target: TwilightMonster, _critical: bool, kind: String) -> void:
+		effects.append(kind)
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -128,6 +140,7 @@ func _run() -> void:
 	check(equip_existing_sword_family(world),"a legacy one-hand sword still resolves original WeaponType 1")
 	world._refresh_speed_modifiers()
 	check(world.combat_flights.original_visuals_only,"live projectiles use original pixels only")
+	check(not world.player.has_node("PlayerActionFX"),"Main never allocates the authored swing and dust renderer")
 	var miss: Dictionary = EFFECT.select_combat_result("miss")
 	var final: Dictionary = EFFECT.select_combat_result("final_blow")
 	check(miss.get("sprite_id") == 16023 and final.get("sprite_id") == 24259,"original result rows distinguish MISS and FinalBlow")
@@ -188,6 +201,14 @@ func _run() -> void:
 	world._clear_combat_actions()
 	check(original_overlays(player_preview,"weapon_critical",13411).is_empty() and original_overlays(player_preview,"combat_result",16023).is_empty(),"combat generation cleanup clears the original feedback")
 	await check_healing_potion(world)
+	var receiver := ExistingCombatReceiver.new()
+	target.world_controller = receiver
+	var hp_before: int = target.hp
+	target.take_damage(5, false, "slash")
+	target.take_damage(7, true, "magic")
+	check(target.hp == hp_before - 12 and receiver.numbers == ["5", "CRIT 7"] and receiver.effects == ["slash", "magic"],"standalone combat receivers keep their existing callback signatures")
+	target.world_controller = world
+	receiver.free()
 	world.queue_free()
 	await process_frame
 	print("COMBAT_FEEDBACK_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))

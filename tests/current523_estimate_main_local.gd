@@ -115,7 +115,8 @@ func run() -> void:
 		var previous_ratio: float = world.player.motion.move_ratio
 		world.player.motion.move_ratio = 0.4
 		await process_frame
-		check(not world.player.get_node("PlayerActionFX").visible,"later movement FX cannot reappear over selected estimate")
+		var movement_fx: CanvasItem = world.player.get_node_or_null("PlayerActionFX")
+		check(movement_fx == null or not movement_fx.visible,"later movement FX cannot reappear over selected estimate")
 		world.player.motion.move_ratio = previous_ratio
 		# Presentation-state fixture only: no synthetic pixels or native-playback claim.
 		var previous_record: Dictionary = world.player.original_source_preview._record
