@@ -12,11 +12,16 @@ var checks: int=0
 var failures: Array[String]=[]
 
 class FakeCrafting extends RefCounted:
-	var recipes: Dictionary={"r1":{"outcomes":[{"label":"성공","item":"강철 검"},{"label":"대성공","item":"축복받은 강철 검"},{"label":"실패","item":"지급 없음"}]},"r2":{}}
+	var recipes: Dictionary={"r1":{"outcomes":[{"label":"성공","item":"강철 검","probability":1000000,"level":0,"quantity":1},{"label":"대성공","item":"축복받은 강철 검","probability":0,"level":0,"quantity":1},{"label":"실패","item":"지급 없음","probability":0,"empty_result":true}]},"r2":{}}
 
 class FakeGame extends Node:
 	var crafting:=FakeCrafting.new()
 	var crafting_log: Array[Dictionary]=[]
+	var write_result: bool=false
+	func _craft_quote(_id: String, _count: int) -> Dictionary:
+		return {"ok":true}
+	func craft(id: String, count: int) -> void:
+		if write_result:crafting_log.append({"recipe_id":id,"output":"강철 검","quantity":count,"batch":count,"at":10.0})
 	func _find_catalog_item_record(name: String) -> Dictionary:
 		return {"source_item_class_id":77} if name=="축복받은 강철 검" else {}
 
@@ -27,7 +32,18 @@ class FakeController extends RefCounted:
 		return {"ok":true,"handled":true}
 
 class FakeHud extends Node:
+	signal craft_requested(recipe_id: String, batch: int)
 	var original_main_ui_controller:=FakeController.new()
+	var pending: Callable
+	func confirm_crafting_action(_title: String, _body: String, _action: String, callback: Callable) -> Control:
+		pending=callback
+		var popup:=Control.new()
+		add_child(popup)
+		return popup
+	func confirm() -> void:
+		var callback: Callable=pending
+		pending=Callable()
+		if callback.is_valid():callback.call(1)
 
 func check(ok: bool, label: String) -> void:
 	checks+=1
@@ -47,17 +63,25 @@ func _run() -> void:
 	check(PRODUCTION.craft_result(game,{"recipe_id":"r2","output":"물약","quantity":5,"batch":5}).label=="","a recipe without outcomes has no label")
 	var hud:=FakeHud.new()
 	root.add_child(hud)
+	hud.craft_requested.connect(game.craft)
 	var window=PRODUCTION.new()
 	window._hud=weakref(hud)
-	window._awaiting={"recipe":"r1","at":PRODUCTION._last_log_at(game)}
-	window._report_result(game)
+	window._world=weakref(game)
+	window._scene=Node2D.new()
+	root.add_child(window._scene)
+	window._selected="r1"
+	check(window._craft_requested().get("ok",false),"the production button opens confirmation")
+	hud.confirm()
 	check(hud.original_main_ui_controller.opened.is_empty(),"no new log entry: no result")
-	game.crafting_log.append({"recipe_id":"r1","output":"강철 검","quantity":1,"batch":1,"at":10.0})
-	window._report_result(game)
+	game.crafting_log.append({"recipe_id":"r1","output":"지급 없음","quantity":0,"batch":1,"at":10.0})
+	game.write_result=true
+	check(window._craft_requested().get("ok",false),"a retry opens confirmation without replaying the old log")
+	hud.confirm()
 	var opened: Array=hud.original_main_ui_controller.opened
-	check(opened.size()==1 and opened[0][0]=="craft_result" and opened[0][1][0].label=="성공","the asked craft opens 제작 결과 once: "+str(opened))
-	window._report_result(game)
+	check(opened.size()==1 and opened[0][0]=="craft_result" and opened[0][1][0].label=="성공","the new confirmed craft opens 제작 결과 even at the previous timestamp: "+str(opened))
+	hud.confirm()
 	check(opened.size()==1,"the result opens once")
+	window.close()
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
