@@ -60,9 +60,6 @@ var _tab: String="equip"
 var _category: String=""
 var _selected: String=""
 var _count: int=1
-## The craft this window asked for: {recipe, at (the last log entry's
-## time)}; the next stage after the log grows opens the original 제작 결과.
-var _awaiting: Dictionary={}
 var _ready_first: bool=true
 var _scrolls: Dictionary={}
 var _last_out: Dictionary={}
@@ -319,7 +316,7 @@ func _stage_built(quantity_only: bool) -> Dictionary:
 			var updated: Dictionary=_refresh_quantity(world,quantity,materials)
 			if updated.get("ok",false):
 				FRAME_HITCH.detail("craft.quantity_nodes",started)
-				return _publish_stage(world,ids.size(),materials.size(),quote,int(updated.pictures),_item_rows.size())
+				return _publish_stage(ids.size(),materials.size(),quote,int(updated.pictures),_item_rows.size())
 		_reuse_by_state=true
 	var spec: Dictionary=_spec(world,ids,recipe,quantity)
 	var out: Dictionary={}
@@ -357,12 +354,11 @@ func _stage_built(quantity_only: bool) -> Dictionary:
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
-	return _publish_stage(world,ids.size(),materials.size(),quote,pictures,reused)
+	return _publish_stage(ids.size(),materials.size(),quote,pictures,reused)
 
-func _publish_stage(world: Node, recipes: int, materials: int, quote: Dictionary, pictures: int, reused: int) -> Dictionary:
+func _publish_stage(recipes: int, materials: int, quote: Dictionary, pictures: int, reused: int) -> Dictionary:
 	last_result={"ok":true,"handled":true,"member":ROOT,"tab":_tab,"category":_category,"recipes":recipes,"selected":_selected,"count":_count,
 		"materials":materials,"quote_ok":quote.get("ok",false),"quote_reason":str(quote.get("reason","")),"pictures":pictures,"reused_rows":reused}
-	_report_result(world)
 	return last_result
 
 ## Preserve the normal rebuild when the order, visible readiness or selected
@@ -862,12 +858,24 @@ func _craft_requested() -> Dictionary:
 	var world: Node=_world.get_ref() if _world!=null else null
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if world==null or hud==null or _selected.is_empty():return _fail("source_production_window_recipe_missing")
-	_awaiting={"recipe":_selected,"at":_last_log_at(world)}
-	return {"ok":Craft.confirm_craft(hud,world,_selected,_count),"confirmation_owner":"renewal_crafting.confirm_craft"}
+	var execute: Callable=Callable(self,"_craft_confirmed").bind(_selected,_count)
+	return {"ok":Craft.confirm_craft(hud,world,_selected,_count,execute),"confirmation_owner":"renewal_crafting.confirm_craft"}
 
-static func _last_log_at(world: Node) -> float:
+static func _last_craft(world: Node) -> Dictionary:
 	var log: Variant=world.get("crafting_log")
-	return float(log[-1].get("at",0.0)) if log is Array and not (log as Array).is_empty() and log[-1] is Dictionary else -1.0
+	return log[-1] if log is Array and not (log as Array).is_empty() and log[-1] is Dictionary else {}
+
+func _craft_confirmed(_amount: int, recipe: String, count: int) -> void:
+	var world: Node=_world.get_ref() if _world!=null else null
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if world==null or hud==null or not is_open():return
+	var before: Dictionary=_last_craft(world)
+	hud.emit_signal("craft_requested",recipe,count)
+	var entry: Dictionary=_last_craft(world)
+	if is_same(before,entry) or str(entry.get("recipe_id",""))!=recipe:return
+	var controller: Variant=hud.get("original_main_ui_controller")
+	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):
+		controller.try_open_feature_window("craft_result",[craft_result(world,entry)])
 
 ## The finished craft of the existing log as the 제작 결과 window shows it:
 ## an outcome recipe's label by its produced item (대성공 / 성공 / 실패).
@@ -880,18 +888,6 @@ static func craft_result(world: Node, entry: Dictionary) -> Dictionary:
 	var id: Variant=record.get("source_item_class_id",0) if record is Dictionary else 0
 	return {"name":name.get_slice(" · 원본#",0),"quantity":int(entry.get("quantity",0)),"batch":int(entry.get("batch",1)),"label":label,
 		"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
-
-## After the asked craft saved a new log entry: the original 제작 결과.
-func _report_result(world: Node) -> void:
-	if _awaiting.is_empty():return
-	var log: Variant=world.get("crafting_log")
-	if not log is Array or (log as Array).is_empty():return
-	var entry: Variant=log[-1]
-	if not entry is Dictionary or float(entry.get("at",0.0))<=float(_awaiting.at) or str(entry.get("recipe_id",""))!=str(_awaiting.recipe):return
-	_awaiting={}
-	var hud: Object=_hud.get_ref() if _hud!=null else null
-	var controller: Variant=hud.get("original_main_ui_controller") if hud!=null else null
-	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):controller.try_open_feature_window("craft_result",[craft_result(world,entry)])
 
 ## 비법서 제작: the existing crafting screen with its 비법서 제작 panel open.
 func _open_gacha() -> Dictionary:

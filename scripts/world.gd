@@ -5721,6 +5721,12 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	var bless: int=patch523_equipment.bless_code(physical) if not physical.is_empty() else (2 if EQUIPMENT_BLESSING.is_blessed({},record) else 1)
 	var scroll_bless: int=int(issued.bless_code) if issued.get("ok",false) else int(scroll.get("source_bless_raw",3 if mode=="cursed" else 2 if mode in ["blessed","blessed_orim"] else 1))
 	var book: RefCounted=patch523_equipment
+	var target_id: String=PATCH523_ENHANCE.item_id(record)
+	var legacy_weapon: Dictionary={}
+	if (kind=="weapon" and record.get("source")=="inven" and not record.get("source_m_native_item",false)
+		and target_id.is_valid_int() and not CURRENT523_DEFINITION_ROWS.not_installed() and not patch523_equipment.catalog_identity_matches(record,target_id)):
+		legacy_weapon=_catalog_item_from_source_id(target_id)
+		exact_required=exact_required or not legacy_weapon.is_empty()
 	if exact_required and not issued.get("issued",false):
 		# Some original event targets have a numeric enchant family but no
 		# declared equip slot. Their physical storage receipts are not
@@ -5728,7 +5734,7 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 		if not token and record.get("source_m_native_item",false) and not LOOT_DROP.PATCH523_DROPS.equipment(record):
 			return {"source_rule":true,"success":0.0,"reason":"원본 착용 슬롯 없는 강화용 아이템 · 전용 수량/강화 소유자 필요 · 주문서 보존"}
 		var native: RefCounted=PATCH523_ENHANCE_SOURCE.new()
-		if not native.bind(record,PATCH523_ENHANCE.item_id(record),scroll,source_id,patch523_equipment):
+		if not native.bind(record,target_id,scroll,source_id,patch523_equipment,legacy_weapon):
 			return {"source_rule":true,"success":0.0,"reason":"원본 장비·주문서 정체 또는 지역·조건을 검증하지 못했습니다 · 아이템 보존"}
 		for original: Dictionary in [native.target,native.scroll]:
 			var date_problem: String=LOOT_DROP.PATCH523_DROPS.deadline_problem(original.get("native_record",{}),int(ui_preferences.get("patch523_source_clock_offset_minutes",540)))
@@ -5899,7 +5905,8 @@ func _enhancement_chance(kind: String, current_level: int, mode: String = "norma
 			success = accessory_success[current_level]
 			destroy = 100.0 - success
 
-	return {"success": success, "no_change": no_change, "destroy": destroy, "decrease": 0.0}
+	return {"success": success, "no_change": no_change, "destroy": destroy, "decrease": 0.0,
+		"safe_level": int({"weapon":6,"armor":4}.get(kind,0))}
 
 func _enhancement_bonus_text(kind: String, target_level: int) -> String:
 	return ENCHANT.summary(kind, target_level)
@@ -6010,7 +6017,8 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		if enhancement_series_quiet:
 			enhancement_series_last={"result":result,"from":current_level,"to":int(outcome.level),"name":target_name}
 			return
-		if hud.has_method("show_enhancement_result"):hud.call("show_enhancement_result",result,target_name,current_level,int(outcome.level))
+		if hud.has_method("show_enhancement_result") and not PATCH523_ENHANCE.safe_success(result,current_level,int(outcome.level),chance):
+			hud.show_enhancement_result(result,target_name,current_level,int(outcome.level))
 		else:hud.show_message("강화 결과 · +%d %s" % [int(outcome.level),target_name])
 		hud.open_enhancement(scroll_name,_enhancement_candidates(kind,mode,scroll_name))
 		return
@@ -6126,7 +6134,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	if enhancement_series_quiet:
 		enhancement_series_last={"result":result_type,"from":current_level,"to":result_level,"name":target_name}
 		return
-	if hud.has_method("show_enhancement_result"):
+	if hud.has_method("show_enhancement_result") and not PATCH523_ENHANCE.safe_success(result_type,current_level,result_level,chance):
 		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	else:
 		hud.show_message(result_message)
@@ -6830,8 +6838,7 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	_update_hud()
 	hud.show_message(("원본 제작 %s · 지급 없음" % str(transaction.get("outcome_label","실패"))) if int(transaction.result_quantity)==0 else ("원본 제작 %s · %s ×%d" % [str(transaction.get("outcome_label","완료")), str(transaction.result_name), int(transaction.result_quantity)]))
 	hud.append_log("원본523 제작 · " + recipe_id)
-	if hud.has_method("open_crafting"):
-		hud.call("open_crafting")
+	hud.finish_crafting_transaction()
 
 func _patch523_open_box(source_id: String) -> void:
 	_sync_item_instances()
@@ -7165,8 +7172,7 @@ func _craft_requested(recipe_id: String, batches: int) -> void:
 	hud.append_log("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	hud.show_message("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	_update_hud()
-	if hud.has_method("open_crafting"):
-		hud.call("open_crafting")
+	hud.finish_crafting_transaction()
 
 func _npc_teleport_requested(map_id: String) -> void:
 	if death_recovery.blocked(): return
@@ -7226,7 +7232,7 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	if record.get("monsterbook_source_item",false) and not record.get("storable",false):
 		hud.show_message("원본 보관 제한 아이템입니다")
 		return
-	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
+	if int(quantity) < 1 or int(quantity) > 99:
 		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
 	var source_restriction:String=expedition_local.transfer_restriction(item_name,direction)
@@ -7234,7 +7240,12 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	var native_stack: Dictionary=preload("res://scripts/loot/current523_native_stack.gd").transfer_warehouse(self,item_name,quantity,direction,instance_id)
 	if native_stack.get("handled",false):
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 창고 개체 확인 필요"))))
-		if native_stack.get("ok",false):_update_hud();hud.refresh_inventory(inventory)
+		if native_stack.get("ok",false):
+			_update_hud()
+			hud.refresh_service()
+		return
+	if record.is_empty():
+		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
 		return
 	if direction=="deposit" and not preload("res://scripts/cards/source_awakening_items.gd").storage_allowed(item_name,record,item_instances):
 		hud.show_message("창고 보관이 불가능한 원본 아이템입니다")
@@ -9300,6 +9311,9 @@ func _quickslot_item_supported(item_name: String) -> bool:
 	if record.get("source_automation_catalog_only",false): return not _quickslot_auto_item(item_name, record).is_empty()
 	if CONSUMABLE_RULES.is_removed_item(item_name): return false
 	if REGIONAL_RETURN.claims_identity(item_name, record): return REGIONAL_RETURN.supported(item_name, record)
+	if record.get("source_m_native_item",false):
+		var profile: Dictionary = preload("res://scripts/loot/current523_native_stack.gd").profile(record)
+		if profile.get("kind","") in ["hp","mp","buff","cure","teleport","teleport_location","ain","bless_points","time_recharge"]: return true
 	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
 	if record.is_empty(): return false
 	if _is_timed_buff_item(record) or int(record.get("heal",0)) > 0: return true

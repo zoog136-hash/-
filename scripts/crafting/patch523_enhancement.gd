@@ -123,6 +123,11 @@ static func selected(rows: Array, group: int, level: int, blessing: int, setting
 	if exact.is_empty() and defaults.size()==1 and settings.get("default_zero_target_selector",false): return defaults[0]
 	return {}
 
+static func safe_success(result: String, from_level: int, to_level: int, chance: Dictionary) -> bool:
+	return (result == "success" and to_level > from_level and from_level < int(chance.get("safe_level",0))
+		and float(chance.get("success",0.0)) == 100.0 and float(chance.get("no_change",0.0)) == 0.0
+		and float(chance.get("destroy",0.0)) == 0.0 and float(chance.get("decrease",0.0)) == 0.0)
+
 static func rule(book: Object, record: Dictionary, scroll_id: String, level: int, blessing: int, scroll_bless: int) -> Dictionary:
 	var id: String=item_id(record)
 	if id.is_empty(): return {}
