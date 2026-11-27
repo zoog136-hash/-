@@ -12,6 +12,7 @@ const Supply=preload("res://scripts/cards/native_awakening_supply.gd")
 const Acquisition=preload("res://scripts/cards/native_card_acquisition.gd")
 const Core = preload("res://scripts/cards/option_awakening_service.gd")
 const Cards = preload("res://scripts/card_draw_fusion.gd")
+const Slots = preload("res://scripts/cards/option_slot_definitions.gd")
 const DATA_PATH: String = "res://data/cards/option_awakening_cards.json"
 const POLICY_PATH: String = "res://data/cards/option_awakening_policy.json"
 const SAVE_KEY: String = "card_option_awakening"
@@ -110,7 +111,7 @@ func view(category: String, target_id: String) -> Dictionary:
 	if not problem.is_empty(): return Core.fail("configuration", problem)
 	var out: Dictionary = core.view(progress, world.card_draw_fusion.export_state(), int(world.gold), category, target_id)
 	if core.native_mode and bool(out.get("ok",false)):
-		out.slot_definitions=preload("res://scripts/cards/option_slot_definitions.gd").view(target_id)
+		out.slot_definitions=Slots.view(target_id)
 	if core.native_mode and out.get("ok",false):
 		out.source_status_reference=preload("res://scripts/cards/native_awakening_status.gd").binding(core.definition(category,target_id))
 		var collections: Variant=world.get("card_collections")
@@ -127,6 +128,16 @@ func view(category: String, target_id: String) -> Dictionary:
 		out.can_awaken = false
 		out["blocked_reason"] = "저장 보호 중 · 정상 저장을 다시 불러오세요"
 	return out
+
+## The catalog needs only this card's options. The transaction view also
+## builds material and collection rows, so it stays out of this tap path.
+func card_options(category: String, identity: String) -> Dictionary:
+	if world==null or not problem.is_empty():return {}
+	var row: Dictionary=core.definitions.get(category,{}).get(identity,{})
+	if row.is_empty():return {}
+	var awakened: bool=is_awakened(category,identity)
+	return {"awakened":awakened,"preview":row.bonus_options.duplicate(),
+		"applied":row.applied_options.duplicate() if awakened else [],"pending":row.pending_options.duplicate() if awakened else []}
 
 func feed(category: String, target_id: String, materials: Dictionary) -> Dictionary:
 	return _transact(category, target_id, materials, false)

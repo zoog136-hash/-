@@ -3,6 +3,8 @@ extends SceneTree
 const QA = preload("res://tests/qa_class_selection.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const STOCK = preload("res://scripts/loot/current523_native_stack.gd")
+const INV = preload("res://scripts/loot/patch523_item_inventory.gd")
+const CRAFT = preload("res://scripts/ui/renewal_crafting.gd")
 const SCROLL_ID := 320802
 const BAG_SEAL := "수호의 인장"
 
@@ -117,8 +119,7 @@ func _exercise() -> void:
 				break
 		world._patch523_attempt_seal(seal_id,str(SCROLL_ID),legacy_uid)
 		check(not world.item_instances.has(legacy_uid) and STOCK.proof(world,uid).get("remaining")==8 and int(world.inventory[scroll_name])==8 and world.item_instances[seal_id].level==2,"using the legacy unit leaves the other scroll receipt unchanged")
-	var inventory_owner = preload("res://scripts/loot/patch523_item_inventory.gd")
-	if check(inventory_owner.commit(world,[{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"seal_and_accessory_regression"}),"supply an accessory accepted by the same shining scroll"):
+	if check(INV.commit(world,[{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"seal_and_accessory_regression"}),"supply an accessory accepted by the same shining scroll"):
 		if is_instance_valid(world.hud.enhancement_reveal):
 			world.hud.enhancement_reveal.skip_to_result()
 			world.hud.enhancement_reveal.close_reveal()
@@ -137,5 +138,97 @@ func _exercise() -> void:
 			var adena: int=world.gold
 			world._attempt_enhancement(scroll_name,seal_entries[0].target_id)
 			check(STOCK.proof(world,uid).get("remaining")==balance-1 and world.gold==adena-int(established.cost),"shared chooser spends the selected unit with the established seal transaction")
+	await _accessories(world,receipt_record,uid)
 	world.queue_free()
 	await process_frame
+
+func _bag_use(world: TwilightWorld, reference: String) -> void:
+	world.hud._close_workspace()
+	if is_instance_valid(world.hud.enhancement_reveal):
+		world.hud.enhancement_reveal.skip_to_result()
+		world.hud.enhancement_reveal.close_reveal()
+	await process_frame
+	world.hud.refresh_inventory(world.inventory)
+	world.hud.lineage_inventory_ui._select_item(reference)
+	check(world.hud.lineage_inventory_ui.item_action_kind(reference)=="사용","bag displays the real scroll's use action")
+	world.hud.lineage_inventory_ui._activate_selected()
+	await process_frame
+
+func _accessories(world: TwilightWorld, scroll: Dictionary, receipt_uid: String) -> void:
+	var name_value: String = str(scroll.name)
+	var legacy: String = str(world.next_item_instance_id)
+	world.next_item_instance_id+=1
+	world.inventory[name_value]=int(world.inventory[name_value])+1
+	world.item_instances[legacy]={"name":name_value,"level":0,"record":scroll,"sourceId":str(SCROLL_ID),"bless_state":"normal"}
+	if not check(world._save_game(true)==OK,"persist a legacy one-unit scroll before opening the bag"):return
+	world._load_game(true)
+	var before: int=int(STOCK.proof(world,receipt_uid).remaining)
+	await _bag_use(world,name_value+"@@@"+legacy)
+	var targets: Array=world.hud.enhancement_candidates.filter(func(row: Dictionary) -> bool:
+		return not row.seal and world.item_instances[row.instance_id].record.get("source_item_class_id")==629)
+	if not check(world.hud.active_section=="enhance" and targets.size()==1,"old saved shining scroll offers the authored earring target"):return
+	var target: Dictionary=targets[0]
+	var hash_before: String=FileAccess.get_sha256(world.save_path())
+	var rng_before: int=world.rng.state
+	world.equipment_collections.test_save_writer=func(_path: String,_payload: Dictionary) -> Error:return ERR_CANT_CREATE
+	world._attempt_enhancement(name_value,target.target_id)
+	world.equipment_collections.test_save_writer=Callable()
+	check(world.rng.state==rng_before and world.item_instances.has(legacy) and FileAccess.get_sha256(world.save_path())==hash_before,
+		"failed enhancement write preserves legacy stock, target, RNG, and saved bytes")
+	var probe:=RandomNumberGenerator.new()
+	for seed_value: int in range(1,1000):
+		probe.seed=seed_value
+		if probe.randf_range(0.0,100.0)<float(target.success_chance):
+			world.rng.seed=seed_value
+			break
+	world._attempt_enhancement(name_value,target.target_id)
+	check(not world.item_instances.has(legacy) and STOCK.proof(world,receipt_uid).remaining==before and world.item_instances.get(target.instance_id,{}).get("level")==1,
+		"one old unit pays for the exact accessory roll, with the other stack intact")
+	world._load_game(true)
+	check(not world.item_instances.has(legacy) and world.item_instances.get(target.instance_id,{}).get("level")==1,"accessory enhancement survives reload")
+	var supplier: Dictionary={"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}
+	if check(INV.commit(world,[{"item_class_id":227002,"amount":1,"bless_raw":1,"enchant":0},{"item_class_id":394,"amount":1,"bless_raw":1,"enchant":0}],supplier),"load actual Orim scroll and eligible necklace"):
+		for id: String in world.item_instances:
+			var physical: Dictionary=world.item_instances[id]
+			if physical.record.get("source_item_class_id")!=227002:continue
+			await _bag_use(world,str(physical.name)+"@@@"+id)
+			check(world.hud.enhancement_candidates.any(func(row: Dictionary) -> bool:return world.item_instances[row.instance_id].record.get("source_item_class_id")==394),"authored Orim scroll opens ordinary necklace candidates through the bag")
+			break
+	await _bless_earrings(world)
+
+func _bless_earrings(world: TwilightWorld) -> void:
+	var supplier: Dictionary={"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}
+	var grants: Array=[{"item_class_id":629,"amount":2,"bless_raw":1,"enchant":3},{"item_class_id":629,"amount":1,"bless_raw":1,"enchant":4}]
+	if not check(INV.commit(world,grants,supplier),"load both +3 and +4 original earrings"):return
+	var same: Array[String]=[]
+	var different: String=""
+	for id: String in world.item_instances:
+		var physical: Dictionary=world.item_instances[id]
+		if physical.record.get("source_item_class_id")!=629:continue
+		if physical.level==3:same.append(id)
+		if physical.level==4:different=id
+	if not check(same.size()==2 and not different.is_empty(),"original two same-level physical copies available"):return
+	var name_value: String=str(world.item_instances[same[0]].name)
+	var reference: String=name_value+"@@@"+same[0]
+	var recipe_id: String="patch523:38084"
+	check(world.accessory_blessing_recipe(reference)==recipe_id,"+3 from bag links the original same-level two-copy recipe")
+	check(world.accessory_blessing_recipe(name_value+"@@@"+different)=="patch523:38094","a +4 links its own recipe")
+	world.ui_preferences.item_locks[name_value+"@@@"+same[1]]=true
+	check(not world._craft_quote(recipe_id,1).get("ok",false),"locked duplicate and wrong-level copy cannot pay")
+	world.ui_preferences.item_locks.clear()
+	world.hud._close_workspace()
+	world.hud.lineage_inventory_ui._select_item(reference)
+	world.hud.lineage_inventory_ui._open_acquisition()
+	var controller: Node=world.hud.original_main_ui_controller
+	if controller.acquisition_is_open():
+		var popup: RefCounted=controller._acquisition_popup
+		check(popup._craft_rows()[0].recipe_id==recipe_id,"bag acquisition presents the exact blessing conversion first")
+		popup._open_craft(recipe_id)
+	check(CRAFT.last_focus.get("recipe_id")==recipe_id and CRAFT.last_focus.get("focused",false),"player path focuses the original craft recipe")
+	if not check(world._craft_quote(recipe_id,1).get("ok",false),"the existing owner accepts the two exact duplicates"):return
+	world._craft_requested(recipe_id,1)
+	world._load_game(true)
+	var blessed: Array=world.item_instances.values().filter(func(row: Dictionary) -> bool:
+		return row.record.get("source_item_class_id")==629 and row.level==3 and world.patch523_equipment.bless_code(row)==2)
+	check(blessed.size()==1 and world.item_instances.has(different) and not world.item_instances.has(same[0]) and not world.item_instances.has(same[1]),
+		"craft and reload leave one blessed +3 and preserve the unselected +4")

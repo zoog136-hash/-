@@ -1146,14 +1146,14 @@ func close_death_window() -> void:
 const AcquisitionPopup=preload("res://scripts/ui/original_ui/source_main_acquisition_popup.gd")
 var _acquisition_popup: RefCounted
 
-func try_open_acquisition(world: Node, item_class_id: int, item_name: String="") -> Dictionary:
+func try_open_acquisition(world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="") -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _acquisition_popup==null and _pack!=null and hud!=null:
 		var popup=AcquisitionPopup.new()
 		if popup.configure(_pack,hud).get("ok",false):_acquisition_popup=popup
 	if _acquisition_popup==null or not is_instance_valid(_coordinates):return _fail("source_acquisition_popup_pack_scope_unavailable")
 	_cancel_native_buttons()
-	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name)
+	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name,blessing_recipe)
 
 func acquisition_is_open() -> bool:
 	return _acquisition_popup!=null and _acquisition_popup.is_open()

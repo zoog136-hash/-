@@ -218,24 +218,12 @@ func open_card(index: int) -> Dictionary:
 		var card: Dictionary = results[index]
 		var settled: Callable = _reveal.bind(_scene, _out, cell, card)
 		if _play_card_effect(reveal_effect, _scene, _out, cell + "/Panel", card, settled):
-			_start_reel(cell)
+			GradeFx.start_reel(self,_scene,_out,cell)
 			lit = {"lit": GradeFx.available(self, str(card.get("grade", "")))}
 		else:
 			lit = settled.call()
 	if page_open():_set_visible(_scene,_out,"Nd_ButtonSet/Btn_Open",false)
 	return {"ok":true,"opened":true,"lit":bool(lit.get("lit",false))}
-
-func _start_reel(cell: String) -> void:
-	var nested: Node2D=GradeFx.project(self,_scene,_out,cell)
-	if nested!=null:nested.stop()
-	var back: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Fx_Glow/Card_Back")
-	if back!=null and back.has_meta("source_sprite"):
-		var sprite:=back.get_meta("source_sprite") as Sprite2D
-		var panel: Node2D=GradeFx.cell_node(self,_scene,_out,cell+"/Panel")
-		var reel: Node=panel.get_node_or_null("SourceContentOrigin/CardRevealEffect") if panel!=null else null
-		if sprite!=null and sprite.texture!=null and reel!=null and reel.has_method("set_native_card_back"):
-			reel.set_native_card_back(sprite.texture)
-	GradeFx.set_visible(self,_scene,_out,cell+"/Fx_Glow",false)
 
 ## 모두 확인: opens every closed card of the page.
 func open_all() -> Dictionary:

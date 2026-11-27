@@ -251,7 +251,19 @@ func claim_original_points(category:String,grade:String)->bool:
 	pity[category][grade]=0
 	return true
 
-func fuse(category: String, grade: String, original_points:bool=false) -> Dictionary:
+func _valid_fusion_selection(category: String, grade: String, material_ids: Array[String], required: int) -> bool:
+	if material_ids.size() != required or not CATEGORIES.has(category): return false
+	var eligible: Dictionary = {}
+	for card: Dictionary in pools[category].get(grade, []):
+		if not source_merge_blocked.has(category + ":" + str(card.id)): eligible[card.id] = true
+	var used: Dictionary = {}
+	for identity: String in material_ids:
+		if not eligible.has(identity) or owned[category].get(identity, false) != true: return false
+		used[identity] = int(used.get(identity, 0)) + 1
+		if int(used[identity]) > int(spare[category].get(identity, 0)): return false
+	return true
+
+func fuse(category: String, grade: String, original_points:bool=false, selection: Array[String]=[]) -> Dictionary:
 	if not CATEGORIES.has(category) or not FUSION_NEXT.has(grade):
 		return {"ok": false, "error": "지원하지 않는 합성입니다"}
 	if original_points_active(category,grade):
@@ -262,16 +274,18 @@ func fuse(category: String, grade: String, original_points:bool=false) -> Dictio
 	if (grade_pools.get(grade, []) as Array).is_empty() or (grade_pools.get(target_grade, []) as Array).is_empty():
 		return {"ok": false, "error": "합성 재료 또는 결과 등급 카드가 없습니다"}
 	var required: int = int(FUSION_MATERIALS[grade])
-	var material_ids: Array[String] = []
+	var material_ids: Array[String] = selection.duplicate()
 	var extras: Dictionary = spare[category] as Dictionary
-	for raw_card: Variant in grade_pools.get(grade, []) as Array:
-		var identity: String = str((raw_card as Dictionary).get("id", ""))
-		if source_merge_blocked.has(category + ":" + identity): continue
-		var available: int = maxi(0, int(extras.get(identity, 0)))
-		for _count: int in range(mini(available, required - material_ids.size())):
-			material_ids.append(identity)
-		if material_ids.size() >= required:
-			break
+	if selection.is_empty():
+		for raw_card: Dictionary in grade_pools[grade]:
+			var identity: String = str(raw_card.id)
+			if source_merge_blocked.has(category + ":" + identity): continue
+			var available: int = maxi(0, int(extras.get(identity, 0)))
+			for _count: int in range(mini(available, required - material_ids.size())):
+				material_ids.append(identity)
+			if material_ids.size() >= required: break
+	elif not _valid_fusion_selection(category, grade, selection, required):
+		return {"ok":false,"error":"등록한 중복 카드의 종류 또는 수량이 변경되었습니다"}
 	if material_ids.size() < required:
 		return {"ok": false, "error": "%s 중복 카드 %d장이 필요합니다" % [grade, required]}
 	var success: bool = rng.randi_range(0, 9999) < int(FUSION_WEIGHTS[grade])
@@ -326,14 +340,18 @@ func fusion_batch_limit(category: String, grade: String) -> int:
 ## Runs up to `times` independent fusions (max 10), like a multi-card draw.
 ## Every fusion uses the same validated single-fusion path. It stops early
 ## when the duplicates run out; it fails only if not even one fusion ran.
-func fuse_many(category: String, grade: String, times: int, original_points:bool=false) -> Dictionary:
+func fuse_many(category: String, grade: String, times: int, original_points:bool=false, selection: Array[String]=[]) -> Dictionary:
 	var wanted: int = clampi(times, 1, MAX_FUSION_BATCH)
+	var required: int = int(FUSION_MATERIALS.get(grade, 0))
+	if not selection.is_empty() and (required <= 0 or not _valid_fusion_selection(category, grade, selection, required * wanted)):
+		return {"ok":false,"error":"등록한 중복 카드의 종류 또는 수량이 변경되었습니다"}
 	var results: Array = []
 	var successes: int = 0
 	var consumed: int = 0
 	var last: Dictionary = {}
-	for _attempt: int in range(wanted):
-		var single: Dictionary = fuse(category, grade, original_points)
+	for attempt: int in range(wanted):
+		var material_ids: Array[String] = selection.slice(attempt * required, (attempt+1) * required)
+		var single: Dictionary = fuse(category, grade, original_points, material_ids)
 		if not bool(single.get("ok", false)):
 			if results.is_empty():
 				return single

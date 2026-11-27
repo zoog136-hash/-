@@ -58,7 +58,9 @@ func configure(pack: RefCounted, hud: Node) -> Dictionary:
 func is_open() -> bool:
 	return is_instance_valid(_scene) and not _scene.is_queued_for_deletion()
 
-func open(parent: Node, world: Node, item_class_id: int, item_name: String="") -> Dictionary:
+var _blessing_recipe: String = ""
+
+func open(parent: Node, world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="") -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_acquisition_popup_host_unavailable")
 	var data: Dictionary=Acquisition.sources(item_class_id)
 	if not data.get("ok",false):return {"ok":false,"handled":false,"code":"source_acquisition_rows_unavailable","problem":str(data.get("problem",""))}
@@ -66,6 +68,7 @@ func open(parent: Node, world: Node, item_class_id: int, item_name: String="") -
 	_world=weakref(world)
 	_data=data
 	_item_name=item_name if not item_name.is_empty() else str(data.get("name",""))
+	_blessing_recipe=blessing_recipe
 	_scroll=0.0
 	return _stage()
 
@@ -85,7 +88,11 @@ func _craft_rows() -> Array:
 	var world: Object=_world.get_ref() if _world!=null else null
 	var recipes: Dictionary=world.get("crafting").get("recipes") if world!=null and world.get("crafting")!=null else {}
 	var rows: Array=[]
+	if recipes.has(_blessing_recipe):
+		var blessed: Dictionary = recipes[_blessing_recipe].result
+		rows.append({"recipe_id":_blessing_recipe,"name":"축복 전환 · +%d %s" % [int(blessed.level),str(blessed.item)]})
 	for craft: Dictionary in _data.get("crafts",[]):
+		if str(craft.recipe_id)==_blessing_recipe:continue
 		var recipe: Variant=recipes.get(str(craft.recipe_id))
 		if not recipe is Dictionary:continue
 		# The row label holds one short line: the output name (+enchant when set).
@@ -153,26 +160,35 @@ func _stage() -> Dictionary:
 				if not scene.get("ok",false):continue
 				height+=_tree.add_row(content,ROW_ACQUIREMENT,scene.scene,rows,list_size)
 				rows+=1
-		"craft":
-			for index: int in range(0,crafts.size(),2):
-				var row_spec: Dictionary={"Panel":{"input":Callable(self,"_list_input")}}
-				for side: int in range(2):
-					var key: String="Production_List_Source_Text_%d/" % side
-					if index+side>=crafts.size():
-						row_spec["Production_List_Source_Text_%d" % side]={"visible":false}
-						continue
-					var craft: Dictionary=crafts[index+side]
-					row_spec[key+"Btn_Normal"]={"activate":Callable(self,"_open_craft").bind(str(craft.recipe_id))}
-					row_spec[key+"Btn_Normal/Label_Item_Name"]={"role":"source_text","text":str(craft.name)}
-					row_spec[key+"Btn_Normal/Production_Slot/Btn"]={"activate":Callable(self,"_open_craft").bind(str(craft.recipe_id))}
-					row_spec[key+"Btn_Pressed"]={"visible":false}
-				var row_out: Dictionary={}
-				var built_row: Dictionary=_tree.scene_of(ROW_CRAFT_SET,row_spec,row_out)
-				if not built_row.get("ok",false):continue
-				for side: int in range(2):
-					if index+side<crafts.size():_slot_picture(built_row.scene,row_out,"Production_List_Source_Text_%d/Btn_Normal/Production_Slot/Sp_IconSample" % side,int(_data.item_class_id),_item_name)
-				height+=_tree.add_row(content,ROW_CRAFT_SET,built_row.scene,rows,list_size)
-				rows+=1
+	if mode == "craft" or (not crafts.is_empty() and crafts[0].recipe_id == _blessing_recipe):
+		# Keep the other acquisition rows. On a mixed page add only the exact
+		# conversion for the held copy, above the existing source list.
+		if mode != "craft": crafts = crafts.slice(0,1)
+		var craft_height: float = 0.0
+		for index: int in range(0,crafts.size(),2):
+			var row_spec: Dictionary={"Panel":{"input":Callable(self,"_list_input")}}
+			for side: int in range(2):
+				var key: String="Production_List_Source_Text_%d/" % side
+				if index+side>=crafts.size():
+					row_spec["Production_List_Source_Text_%d" % side]={"visible":false}
+					continue
+				var craft: Dictionary=crafts[index+side]
+				row_spec[key+"Btn_Normal"]={"activate":Callable(self,"_open_craft").bind(str(craft.recipe_id))}
+				row_spec[key+"Btn_Normal/Label_Item_Name"]={"role":"source_text","text":str(craft.name)}
+				row_spec[key+"Btn_Normal/Production_Slot/Btn"]={"activate":Callable(self,"_open_craft").bind(str(craft.recipe_id))}
+				row_spec[key+"Btn_Pressed"]={"visible":false}
+			var row_out: Dictionary={}
+			var built_row: Dictionary=_tree.scene_of(ROW_CRAFT_SET,row_spec,row_out)
+			if not built_row.get("ok",false):continue
+			for side: int in range(2):
+				if index+side<crafts.size():_slot_picture(built_row.scene,row_out,"Production_List_Source_Text_%d/Btn_Normal/Production_Slot/Sp_IconSample" % side,int(_data.item_class_id),_item_name)
+				craft_height+=_tree.add_row(content,ROW_CRAFT_SET,built_row.scene,index/2,list_size)
+		if mode != "craft":
+			for row: int in range(rows):
+				var existing: Node2D = content.get_child(row)
+				existing.position.y += craft_height
+		height += craft_height
+		rows = content.get_child_count()
 	var previous: Node2D=_scene
 	# The popup is laid out on the design centre (600, 337.5).
 	next.position=Vector2(600.0,-337.5)

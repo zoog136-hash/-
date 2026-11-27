@@ -69,11 +69,18 @@ func apply_snapshot(snapshot: Dictionary) -> Dictionary:
 	var keep_rows: bool = is_open() and last_result.get("ok",false) and _selected.is_empty()
 	for field: String in ["target_record", "materials", "bonus_options", "slot_definitions"]:
 		keep_rows = keep_rows and _snapshot.get(field) == snapshot.get(field)
+	var previous_options: Array = _bonus_option_lines(_snapshot) if keep_rows else []
 	_epoch+=1
 	cancel_review()
 	if snapshot.get("revision")!=_snapshot.get("revision"):_selected.clear()
 	_publish(snapshot)
-	if keep_rows and _refresh_progress(): return last_result
+	if keep_rows and _refresh_progress():
+		var options: Array = _bonus_option_lines(_snapshot)
+		if options == previous_options: return last_result
+		var refreshed: Dictionary = _fill_bonus_options(_scene,_out,options)
+		if refreshed.get("ok",false):
+			last_result.filled.options_shown = refreshed.rows
+			return last_result
 	return _stage()
 
 func _publish(snapshot: Dictionary) -> void:
@@ -263,7 +270,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			if built.picture:painted+=1
 			var entries: Dictionary=registered_next if row.registered else candidates_next
 			entries[row.id]=built
-	var options: Dictionary=_fill_bonus_options(root,out)
+	var options: Dictionary=_fill_bonus_options(root,out,_bonus_option_lines(_snapshot))
 	if not options.get("ok",false):return options
 	_candidate_views=candidates_next
 	_registered_views=registered_next
@@ -271,25 +278,40 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		"material_pictures":painted,"eligible":_materials.size(),"page_slots":page.size(),"registered":_selected.duplicate(),
 		"cost":int(_snapshot.attempt_cost) if _attempt_mode() else _fee(),"options_shown":options.rows}
 
-func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
-	var list: Dictionary=_list(root,out,BONUS)
-	if not list.get("ok",false):return list
+func _bonus_option_lines(snapshot: Dictionary) -> Array:
 	var lines: Array=[]
-	lines.append_array(_snapshot.get("bonus_options",[]))
+	if snapshot.get("awakened",false):
+		var applied: Array=snapshot.get("applied_options",[])
+		var pending: Array=snapshot.get("pending_options",[])
+		if not applied.is_empty():lines.append("각성 적용 효과")
+		lines.append_array(applied)
+		if not pending.is_empty():lines.append("현재 적용되지 않는 원본 옵션")
+		lines.append_array(pending)
+	else:
+		var preview: Array=snapshot.get("bonus_options",[])
+		if not preview.is_empty():lines.append("각성 시 추가 능력")
+		lines.append_array(preview)
 	if category in ["마법인형","성물"]:
-		for slot: Dictionary in _snapshot.get("slot_definitions",[]):
+		for slot: Dictionary in snapshot.get("slot_definitions",[]):
 			if int(slot.get("group",{}).get("SlotIndex",0))!=11:continue
 			lines.append("추가 성물 슬롯 각성 효과" if category=="성물" else "추가 인형 슬롯 각성 효과")
 			lines.append_array(slot.get("labels",[]))
 	if lines.is_empty():lines.append("확인된 각성 옵션이 없습니다.")
+	return lines
+
+func _fill_bonus_options(root: Node2D, out: Dictionary, lines: Array) -> Dictionary:
+	var list: Dictionary=_list(root,out,BONUS)
+	if not list.get("ok",false):return list
 	var scope: Array[int]=[BONUS_TEXT_OFFSET,BONUS_MARKER_OFFSET]
 	var bindings: Dictionary={BONUS_LIST_OFFSET:{"role":"source_list","row_offsets":[BONUS_TEXT_OFFSET],"input":Callable(self,"_list_input").bind(BONUS)}}
+	var rows: Array[Node2D]=[]
 	for index: int in lines.size():
 		bindings[BONUS_TEXT_OFFSET]=_text(str(lines[index]))
 		var template:=Scene.new()
 		var built: Dictionary=template.configure_nodes(_pack,OPTION,scope,bindings)
 		if not built.get("ok",false):
 			template.free()
+			for staged: Node2D in rows:staged.free()
 			return built
 		var row: Node2D=template.source_nodes[BONUS_TEXT_OFFSET]
 		# The template includes the ListView and the entire authoring path
@@ -297,10 +319,17 @@ func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
 		# its parent coordinates and clip are applied once.
 		row.position.y+=float(index)*BONUS_ROW_PITCH
 		row.get_parent().remove_child(row)
-		list.content.add_child(row)
+		rows.append(row)
 		template.free()
+	var content: Node2D=list.content
+	for old: Node in content.get_children():
+		content.remove_child(old)
+		old.queue_free()
+	for row: Node2D in rows:content.add_child(row)
 	var height: float=(list.size as Vector2).y
-	_scrolls[BONUS]={"content":list.content,"value":0.0,"min":minf(0.0,height-float(lines.size())*BONUS_ROW_PITCH)}
+	var scroll: float=float(_scrolls.get(BONUS,{}).get("value",0.0))
+	_scrolls[BONUS]={"content":content,"value":0.0,"min":minf(0.0,height-float(lines.size())*BONUS_ROW_PITCH)}
+	_scroll_to(BONUS,scroll)
 	return {"ok":true,"rows":lines.size()}
 
 func _decorate_material(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:

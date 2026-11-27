@@ -139,6 +139,13 @@ func run() -> void:
 	touch(point,false); await frames(6)
 	evidence["tap"] = [str(pressed),slot,auto(world,slot),hud.pointer_transfer.pointer,hud.pointer_transfer.mode]
 	check(pressed == [slot] and not auto(world,slot), "a tap uses the slot and does not switch AUTO")
+	for canceled: bool in [false,true]:
+		pressed.clear()
+		touch(point,true)
+		touch(point+down,false,canceled)
+		await frames(3)
+		check(auto(world,slot) and pressed.is_empty(), "coalesced down gesture switches AUTO without using an item (canceled=%s)" % canceled)
+		await pull(point,Vector2(0,-(L.AUTO_PULL_DISTANCE+2)))
 	# The finger slides off the bottom edge: the touch is canceled.
 	await pull(point,down,0.0,true)
 	check(auto(world,slot), "the switch survives a canceled touch at the screen edge")

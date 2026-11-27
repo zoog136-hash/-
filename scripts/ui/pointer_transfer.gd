@@ -177,6 +177,7 @@ func _input(event: InputEvent) -> void:
 	var move: bool = event is InputEventMouseMotion and pointer == -1 or event is InputEventScreenDrag and event.index == pointer
 	var release: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and pointer == -1 or event is InputEventScreenTouch and event.index == pointer and not event.pressed
 	if event is InputEventScreenTouch and event.index == pointer and event.canceled:
+		_quick_pull_at_touch_end(event.position)
 		cancel()
 		get_viewport().set_input_as_handled()
 		return
@@ -233,6 +234,7 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif release:
 		position = event.position
+		if event is InputEventScreenTouch: _quick_pull_at_touch_end(position)
 		if mode == "pending": _tap()
 		elif mode == "drag" and source.from == "inventory" and pointer >= 0 and position.distance_to(origin) <= L.TOUCH_SCROLL_DISTANCE*2.0 and hud.lineage_inventory_ui.has_method("open_item_info"):
 			# A long press released where it started: the item information
@@ -249,16 +251,25 @@ func _input(event: InputEvent) -> void:
 		_finish_gesture()
 		get_viewport().set_input_as_handled()
 
+func _quick_pull_at_touch_end(at: Vector2) -> void:
+	if source.get("from") != "quick" or mode not in ["pending", "drag"]: return
+	# A short swipe can arrive as a press and an end position on Android.
+	# A stationary hold still belongs to the slot transfer gesture.
+	if mode == "pending" and Time.get_ticks_msec() - pressed_at < L.TOUCH_HOLD_SECONDS * 1000.0:
+		quick_pull_armed = true
+	_quick_pull(at - origin)
+
 ## A short vertical pull on a filled quick slot: down switches AUTO (on, or
 ## off again when it is on), up switches it off. Committed during the move so
 ## the release (or a cancel at the screen edge) cannot lose it.
 func _quick_pull(delta: Vector2) -> bool:
 	if not quick_pull_armed or source.entry.is_empty() or absf(delta.x) >= L.QUICK_SIZE*.5 or absf(delta.y) < L.AUTO_PULL_DISTANCE or absf(delta.y) <= absf(delta.x): return false
 	var world: Node = hud.get_parent()
-	if world.quickslots[int(source.slot)] != source.entry: return false
-	var auto_on: bool = bool(source.entry.get("auto",false))
-	var request: String = "auto_off" if delta.y < 0 or auto_on else "auto_on"
-	hud.quickslot_edit_requested.emit(request,int(source.slot),-1)
+	var slot: int = int(source.slot)
+	if slot >= 0 and slot < world.quickslots.size() and world.quickslots[slot] == source.entry:
+		var auto_on: bool = bool(source.entry.get("auto",false))
+		var request: String = "auto_off" if delta.y < 0 or auto_on else "auto_on"
+		hud.quickslot_edit_requested.emit(request,slot,-1)
 	mode = "pulled"
 	if is_instance_valid(preview): preview.hide()
 	if is_instance_valid(hint): hint.hide()

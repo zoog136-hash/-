@@ -60,6 +60,17 @@ func accept_review() -> void:
 		await process_frame
 	ck(count>0 and review()==null,"actual confirmation pages complete")
 
+func reveal_fusion(window: RefCounted) -> void:
+	var sealed: Dictionary=window.last_result.get("filled",{}).get("fusion_result",{})
+	ck(not sealed.get("revealed",true) and not sealed.has("caption"),"commit mounts the card back without disclosing the result")
+	var card: Node2D=window._scene.find_child("SkillFusionResultCard",true,false)
+	if not ck(card!=null and card.source_nodes.has(1644),"original skill result has its own card button"):return
+	var button: Control=card.source_nodes[1644].get_meta("source_button")._input_area
+	if not ck(button.is_visible_in_tree(),"closed skill result can be tapped"):return
+	tap(button)
+	await create_timer(1.3).timeout
+	ck(window.last_result.filled.fusion_result.get("revealed",false),"actual card tap reveals the committed skill result")
+
 func fusion(archive: String) -> void:
 	OS.set_environment("TWILIGHT_PATCH523_CONTENT",archive);RAW.reset()
 	w.skill_awakening=w.SKILL_AWAKENING.new();w.skill_awakening.configure(w)
@@ -103,6 +114,7 @@ func fusion(archive: String) -> void:
 		and w.skill_cards523.rng.state==rng_before and FileAccess.get_sha256(w.save_path())==durable,"refused write never presents or consumes the staged result")
 	if not press(window,compose_button):return
 	await accept_review()
+	await reveal_fusion(window)
 	var failure: Dictionary=window.last_result.get("filled",{}).get("fusion_result",{})
 	ck(failure.get("member")==SKILL_WINDOW.FUSION_CARD and failure.get("success",true)==false and failure.get("caption")=="재료 8장 소멸","committed failure displays the authored result panel")
 	ck(await opaque_caption(window,"재료 8장 소멸"),"actual failure label remains visible and opaque")
@@ -114,6 +126,7 @@ func fusion(archive: String) -> void:
 	w.skill_cards523.rng.state=seed_for(true,10000)
 	if not press(window,compose_button):return
 	await accept_review()
+	await reveal_fusion(window)
 	var result: Dictionary=window._fusion_result
 	if not ck(result.get("success",false) and result.get("result",{}).get("spell_class_id",0)>0,"committed success resolves the actual awarded spell"):return
 	var shown: Dictionary=window.last_result.get("filled",{}).get("fusion_result",{})
