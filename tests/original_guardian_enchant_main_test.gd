@@ -99,10 +99,10 @@ func _test_upgrade(world: TwilightWorld, fixture: Dictionary) -> void:
 	var scenes: Dictionary = controller._pack.manifest.scenes
 	var preview: Dictionary = scenes[WINDOW.ROOT]
 	scenes.erase(WINDOW.ROOT)
-	var legacy_opened: bool = await _tap_slot_upgrade(hud,controller,fixture)
+	var touched_missing: bool = await _tap_slot_upgrade(hud,controller,fixture)
 	scenes[WINDOW.ROOT] = preview
-	check(legacy_opened and hud.workspace.visible and not controller.feature_window_is_open("guardian_enchant"),"a pack missing the preview can use the existing upgrade view")
-	check(FileAccess.get_sha256(world.save_path()) == before,"opening either preview performs no save")
+	check(touched_missing and not hud.workspace.visible and controller.feature_window_is_open("guardians") and not controller.feature_window_is_open("guardian_enchant"),"a pack missing the preview keeps the original tree without a substitute")
+	check(FileAccess.get_sha256(world.save_path()) == before and world.inventory["수호석"]==100 and runtime.state.revision==revision,"a missing preview performs no debit, roll or save")
 	hud._close_workspace()
 	var window: RefCounted = await _open_from_slot(hud,controller,fixture)
 	if window == null: return

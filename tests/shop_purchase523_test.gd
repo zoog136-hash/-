@@ -150,6 +150,7 @@ func sources() -> void:
 	var shop: String = FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_shop_window.gd")
 	check(shop.contains("\"buy\",id,amount,Runtime.Delivery.BAG_OR_BOX)") and shop.contains("calculator.open("), "a 유료 상점 purchase uses the keypad and game currency, bag or 보관함")
 	check(shop.contains("MarketDisplayCategoryType") and shop.contains("DisplayOnBmShopCategory"), "유료 상점 tabs are the original BM shop categories")
+	check(not shop.contains("confirm_action") and not store.contains("confirm_action"),"missing original store keypads never open a substitute purchase confirmation")
 	var runtime: String = FileAccess.get_file_as_string("res://scripts/shop/source523_shop_runtime.gd")
 	check(runtime.contains("enum Delivery {BOX, BAG, BAG_OR_BOX}") and runtime.contains("next.orders[order_id].status = \"claimed\""), "payment and delivery share one save")
 	for path: String in ["res://scripts/ui/original_ui/source_main_calculator.gd", "res://scripts/ui/original_ui/source_main_shop_window.gd", "res://scripts/ui/original_ui/source_main_store_window.gd"]:

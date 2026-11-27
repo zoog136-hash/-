@@ -357,9 +357,10 @@ static func request_blessing(controller: Node, scroll: String, entry: Dictionary
 	var confirm:=func(_count: int) -> void:
 		controller.blessing_target_requested.emit(reference,target)
 		if confirmed.is_valid():confirmed.call()
-	controller.confirm_action("축복 부여 확인", "%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
-		str(entry.get("name","")),int(entry.get("level",0)),scroll,float(entry.get("success_chance",0))], "축복 부여",confirm)
-	return true
+	var body: String="%s +%d\n%s 1장 사용\n축복 성공률 %.1f%% · 실패해도 장비 유지" % [
+		str(entry.get("name","")),int(entry.get("level",0)),scroll,float(entry.get("success_chance",0))]
+	if controller.has_method("confirm_equipment_blessing"):return controller.confirm_equipment_blessing(body,confirm)!=null
+	return controller.confirm_action("축복 부여 확인",body,"축복 부여",confirm)!=null
 
 ## 강화 시작 emits the request the world rolls at once: no extra 강화 확인
 ## step (the original client has none; user request 2026-11-22). Shared with

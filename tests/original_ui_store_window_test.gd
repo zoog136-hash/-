@@ -44,7 +44,7 @@ func _run() -> void:
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud_text.contains("func open_npc_shop(npc_id: String = \"\")") and hud_text.contains("try_open_store_window(npc_id)") and hud_text.contains("_report_original_fallback(\"상점\",native)"),"상점 opens the original window for the talking NPC first and reports a fallback")
+	check(hud_text.contains("func open_npc_shop(npc_id: String = \"\")") and hud_text.contains("try_open_store_window(npc_id)") and hud_text.contains("_hold_original_inventory_window(\"상점\",native)"),"the talking NPC opens its original shop and a rejected selected pack holds the old screen")
 	check(hud_text.contains("close_store_window()") and hud_text.contains("refresh_store_window()"),"closing, ESC and purchases reach the window")
 	var world_text: String=FileAccess.get_file_as_string("res://scripts/world.gd")
 	check(world_text.contains("\"shop\": hud.open_npc_shop(npc_id)"),"the NPC dialogue passes its NPC")

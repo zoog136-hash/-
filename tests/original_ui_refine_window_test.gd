@@ -2,9 +2,8 @@ extends SceneTree
 ## Original 523 질서의 연금 window (source_main_refine_window) and 용해
 ## confirmation (source_main_dissolve_popup). Synthetic (no original files):
 ## the windows name the exact client CSBs and fail closed when the pack lacks
-## them, the HUD routes 질서의 연금 to the original window first and falls back
-## to the existing 용해·질서의 연금 panel, and the panel asks through the
-## original confirmation only when the controller handles it.
+## them, the HUD routes 질서의 연금 to the original window first, and the
+## existing offline panel opens only when no original pack was selected.
 const REFINE=preload("res://scripts/ui/original_ui/source_main_refine_window.gd")
 const DISSOLVE=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var checks: int=0
@@ -28,6 +27,9 @@ class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
 	func _open_window(section: String, _title: String, _description: String) -> void:
 		active_section=section
 		workspace.show()
+	func _close_workspace() -> void:
+		active_section=""
+		workspace.hide()
 	var solvent_uid: String=""
 	func _mount_bless_refine_panel(entry_solvent_uid: String="") -> void:
 		fallback_opened+=1
@@ -82,13 +84,15 @@ func _hud_routing() -> void:
 	check(controller.refine_opened==2 and hud.fallback_opened==0 and not hud.workspace.visible,"the older menu shortcut opens the same original refine window")
 	controller.handles=false
 	hud.open_refine523()
-	check(controller.refine_opened==3 and hud.fallback_opened==1,"without the original window the existing 용해·질서의 연금 panel opens")
-	check(hud.messages.size()==1 and hud.messages[0].begins_with("질서의 연금"),"the fallback is told to the player")
+	check(controller.refine_opened==3 and hud.fallback_opened==0 and not hud.workspace.visible,"a selected pack without the original window holds the refine panel")
+	check(hud.messages.size()==1 and hud.messages[0].begins_with("원본 질서의 연금"),"the missing source window is reported")
 	hud.open_bless_refine523("exact-solvent-stack")
-	check(controller.refine_opened==3 and hud.fallback_opened==2 and hud.solvent_uid=="exact-solvent-stack","the selected solvent fallback keeps the exact material instead of opening an unrelated tab")
+	check(controller.refine_opened==3 and hud.fallback_opened==0 and hud.messages.size()==2 and hud.messages[-1].contains("용해제는 그대로"),"the selected pack holds an unavailable solvent chooser and reports that it keeps the item")
 	hud.original_main_ui_controller=null
 	hud.open_refine523()
-	check(hud.fallback_opened==3,"without the original UI controller the panel opens")
+	check(hud.fallback_opened==1,"the unconfigured offline mode still opens the existing refine panel")
+	hud.open_bless_refine523("exact-solvent-stack")
+	check(hud.fallback_opened==2 and hud.solvent_uid=="exact-solvent-stack","the offline solvent panel keeps the exact material")
 	hud.free()
 
 class FakeWorld extends Node:

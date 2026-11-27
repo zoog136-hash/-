@@ -1032,12 +1032,10 @@ static func craft_result(world: Node, entry: Dictionary) -> Dictionary:
 	return {"name":name.get_slice(" · 원본#",0),"quantity":int(entry.get("quantity",0)),"batch":int(entry.get("batch",1)),"label":label,
 		"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
 
-## 비법서 제작: the existing crafting screen with its 비법서 제작 panel open.
 func _open_gacha() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not hud.has_method("open_gacha_craft523"):return _notice("비법서 제작 화면을 열 수 없습니다")
-	close()
-	hud.call("open_gacha_craft523")
+	if not hud.call("open_gacha_craft523"):return _fail("source_gacha_craft_window_unavailable")
 	return {"ok":true,"handled":true,"routed":"open_gacha_craft523"}
 
 func _close_requested() -> Dictionary:
