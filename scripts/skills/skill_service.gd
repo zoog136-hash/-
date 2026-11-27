@@ -243,9 +243,12 @@ func cost_reason(skill: Dictionary) -> String:
 	var reason := _non_material_cost_reason(skill)
 	return str(material_plan(skill).reason) if reason.is_empty() else reason
 
-func spend(skill: Dictionary) -> bool:
+func spend(skill: Dictionary, area_quote: Dictionary = {}) -> bool:
 	if not _non_material_cost_reason(skill).is_empty(): return false
-	var plan: Dictionary = material_plan(skill)
+	# The native material owner re-quotes against the live bag before staging.
+	# Plain balances and ammo keep their own preparation and commit path.
+	var rechecked_by_owner: bool = not area_quote.get("physical_materials", []).is_empty() and area_quote.get("physical_ammo", {}).is_empty()
+	var plan: Dictionary = area_quote if rechecked_by_owner else material_plan(skill)
 	if not str(plan.get("reason","")).is_empty():return false
 	var physical: Dictionary=plan.get("physical_ammo",{})
 	if not physical.is_empty():
@@ -358,11 +361,12 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 	if area and not manual and not _has_area_target(skill): return false
 	# An AUTO pulse without a reachable victim has no payment to prepare.
 	# Check material availability before registering the motion once it does.
+	var area_quote: Dictionary = {}
 	if area_only:
 		var quote_started: int = FRAME_HITCH.now()
-		var quote: Dictionary = material_plan(skill)
+		area_quote = material_plan(skill)
 		FRAME_HITCH.detail("skill.area_material_quote", quote_started)
-		if not str(quote.reason).is_empty(): return false
+		if not str(area_quote.reason).is_empty(): return false
 	if mode in ["attack", "status", "turn_undead"] and not area:
 		target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead:
@@ -396,10 +400,10 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 			return {"ok":_commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)}
 		var outcome: Dictionary = await world.travel_map_point(teleport_landing,commit)
 		return outcome.get("ok",false)
-	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)
+	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing,area_quote)
 
 
-func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2) -> bool:
+func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2, area_quote: Dictionary = {}) -> bool:
 	# Validation ends here. Order: register the attack motion (cancellable)
 	# -> pay the cost (MP/HP/materials/ammo; atomic and saved by its owner)
 	# -> cooldown and presentation. A refused registration pays nothing; a
@@ -426,7 +430,7 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			return false
 		registered = int(world.pending_attack.get("id", -1))
 	var payment_started: int = FRAME_HITCH.now() if area else 0
-	var paid: bool = spend(skill)
+	var paid: bool = spend(skill, area_quote)
 	if payment_started != 0: FRAME_HITCH.detail("skill.area_cost_commit", payment_started)
 	if not paid:
 		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
