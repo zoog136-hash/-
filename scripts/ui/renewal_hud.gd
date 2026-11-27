@@ -2744,6 +2744,7 @@ func _new_card_reveal_stage() -> Control:
 	stage.finished.connect(func() -> void:
 		card_reveal_stage = null
 		layer.queue_free()
+		if stage.fusion: set_fusion_result_covered(false)
 		_refresh_card_controls())
 	return stage
 
@@ -2798,6 +2799,7 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 			var result: Dictionary = raw as Dictionary
 			views.append((by_id.get(str(result.get("id","")),{}) as Dictionary).merged(result,true).duplicate(true))
 	if views.is_empty():
+		if is_fusion: set_fusion_result_covered(false)
 		return
 	var success: bool = bool(awarded.get("success", false))
 	var pack: RefCounted=original_main_ui_controller.get("_pack") if is_instance_valid(original_main_ui_controller) else null
@@ -2822,18 +2824,18 @@ func _present_original_fusion(views: Array[Dictionary], category: String, succes
 	var release := func() -> void:
 		if card_reveal_stage == guard: card_reveal_stage = null
 		if is_instance_valid(guard): guard.queue_free()
-		_cover_original_fusion(false)
+		set_fusion_result_covered(false)
 		_refresh_card_controls()
 	var native: Dictionary = original_main_ui_controller.try_open_overlay_window("fusion_result",[views,category,success,release,effect])
 	original_main_ui_status["fusion_result_window"] = native
 	if native.get("handled",false):
-		_cover_original_fusion(true)
+		set_fusion_result_covered(true)
 		return true
 	card_reveal_stage = null
 	guard.queue_free()
 	return false
 
-func _cover_original_fusion(covered: bool) -> void:
+func set_fusion_result_covered(covered: bool) -> void:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("feature_window"):return
 	var setup: RefCounted=original_main_ui_controller.feature_window("card_fusion")
 	if setup!=null:setup.set_reveal_covered(covered)

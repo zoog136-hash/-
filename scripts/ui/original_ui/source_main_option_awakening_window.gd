@@ -64,10 +64,23 @@ func _supports(snapshot: Dictionary) -> bool:
 func apply_snapshot(snapshot: Dictionary) -> Dictionary:
 	if not _supports(snapshot) or snapshot.get("category")!=category or snapshot.get("target_id")!=_snapshot.get("target_id"):
 		return _fail("source_option_awakening_target_changed")
+	# An awakening attempt changes progress and gold. The same target,
+	# portraits and option rows can keep their original scenes.
+	var keep_rows: bool = is_open() and last_result.get("ok",false) and _selected.is_empty()
+	for field: String in ["target_record", "materials", "bonus_options", "slot_definitions"]:
+		keep_rows = keep_rows and _snapshot.get(field) == snapshot.get(field)
+	var previous_options: Array = _bonus_option_lines(_snapshot) if keep_rows else []
 	_epoch+=1
 	cancel_review()
 	if snapshot.get("revision")!=_snapshot.get("revision"):_selected.clear()
 	_publish(snapshot)
+	if keep_rows and _refresh_progress():
+		var options: Array = _bonus_option_lines(_snapshot)
+		if options == previous_options: return last_result
+		var refreshed: Dictionary = _fill_bonus_options(_scene,_out,options)
+		if refreshed.get("ok",false):
+			last_result.filled.options_shown = refreshed.rows
+			return last_result
 	return _stage()
 
 func _publish(snapshot: Dictionary) -> void:
@@ -135,20 +148,34 @@ func _can_submit() -> bool:
 	if _attempt_mode():return bool(_snapshot.get("can_awaken",false))
 	return _can_register() and not _selected.is_empty() and _fee()<=int(_snapshot.gold)
 
-func _spec() -> Dictionary:
-	_shown=_query()
-	var pages: int=maxi(1,ceili(float(_shown.size())/float(PAGE_SIZE)))
-	_page_index=clampi(_page_index,0,pages-1)
+func _progress_spec() -> Dictionary:
 	var attempted: bool=_attempt_mode()
 	var current: int=int(_snapshot.experience)
 	var after: int=current+mini(_remaining(),_gained())
 	var was_awakened: bool=bool(_snapshot.get("awakened",false))
-	var title: String=str(_snapshot.target_record.get("name",""))
 	var tip: String=str(_snapshot.get("blocked_reason",""))
 	if tip.is_empty():
 		if was_awakened:tip="이미 옵션 각성한 카드입니다."
 		elif not _snapshot.get("owned",false):tip="먼저 대상 카드를 획득하세요."
 		else:tip="등록한 중복 카드만 소모됩니다. 최초 획득 카드는 보존됩니다."
+	return {P+"Label_Tip":_text(tip),
+		LEVEL+"ProgressBar_Exp":{"role":"source_percent","percent":_experience_percent(current)},
+		LEVEL+"Panel_Exp_Before/Label_Exp_0":_text("%.4f%%" % _experience_percent(current)),
+		LEVEL+"Panel_Exp_After/Label_Exp_0":_text("%.4f%%" % _experience_percent(after)),
+		LEVEL+"Label_Skill_Percent":_text("성공 확률 %.2f%%" % float(_snapshot.success_chance_pct)),
+		LEVEL+"Nd_Exp_Retrieval":{"visible":attempted and not was_awakened},
+		LEVEL+"Nd_Exp_Retrieval/Label_Exp_Retrieval_Percent":_text("실패 시 %.4f%% 유지" % _experience_percent(int(_snapshot.failure_refund_experience))),
+		PRIMARY:{"activate":Callable(self,"_review"),"displaystate":_can_submit()},
+		PRIMARY+"/Text_Price":_text(_number(int(_snapshot.attempt_cost) if attempted else _fee())),
+		PRIMARY+"/Normal/Label":_text("각성 시도" if attempted else "경험치 주입"),
+		PRIMARY+"/Disabled/Label":_text("각성 시도" if attempted else "경험치 주입"),
+		OUTSIDE+"Btn_Use_All":{"activate":Callable(self,"_auto_register"),"displaystate":_can_register() and not _shown.is_empty()},
+		OUTSIDE+"Btn_Cancel_All":{"activate":Callable(self,"_clear_selection"),"displaystate":not _selected.is_empty()}}
+
+func _spec() -> Dictionary:
+	_shown=_query()
+	var pages: int=maxi(1,ceili(float(_shown.size())/float(PAGE_SIZE)))
+	_page_index=clampi(_page_index,0,pages-1)
 	var spec: Dictionary={"Change_Awaken_Skill":{"exclude":true},"Change_Awaken_SkillExp":{"exclude":true},
 		"Nd_Awaken_Tab_2":{"exclude":true},"Nd_Awaken_Tab_1/Btn_Option_On":{"activate":Callable(self,"_ignore")},
 		"Nd_Awaken_Tab_1/Btn_Skill_Off":({"exclude":true} if category=="성물" else {"visible":true, "activate":Callable(self, "_open_skill")}),"Nd_Awaken_Tab_1/Btn_Skill_On":{"exclude":true},
@@ -161,35 +188,37 @@ func _spec() -> Dictionary:
 		"Nd_Content/Btn_Back":{"activate":Callable(self,"_back")},
 		"Nd_Fail_History/Btn_History":{"activate":Callable(self,"_history")},
 		P+"Btn_HelpBox":{"activate":Callable(self,"_explain")},
-		P+"Label_Tip":_text(tip),
-		LEVEL+"Label_Title":_text(title),
-		LEVEL+"ProgressBar_Exp":{"role":"source_percent","percent":_experience_percent(current)},
-		LEVEL+"Panel_Exp_Before/Label_Exp_0":_text("%.4f%%" % _experience_percent(current)),
-		LEVEL+"Panel_Exp_After/Label_Exp_0":_text("%.4f%%" % _experience_percent(after)),
+		LEVEL+"Label_Title":_text(str(_snapshot.target_record.get("name",""))),
 		LEVEL+"Panel_Exp_After/Label_Level":{"visible":false},
 		LEVEL+"Panel_Exp_After/Fx_Levelup":{"exclude":true},
-		LEVEL+"Label_Skill_Percent":_text("성공 확률 %.2f%%" % float(_snapshot.success_chance_pct)),
-		LEVEL+"Nd_Exp_Retrieval":{"visible":attempted and not was_awakened},
-		LEVEL+"Nd_Exp_Retrieval/Label_Exp_Retrieval_Percent":_text("실패 시 %.4f%% 유지" % _experience_percent(int(_snapshot.failure_refund_experience))),
 		LEVEL+"Nd_Exp_Retrieval/Label_Notice":{"visible":false},
 		LEVEL+"Nd_Card/Card/Panel_Root/Btn_Plus":{"exclude":true},
 		LEVEL+"Fx_CardSelect_Material":{"exclude":true},
 		LEVEL+"Fx_Btn_Production":{"exclude":true},
 		LEVEL+"Btn_Probability":{"activate":Callable(self,"_explain")},
 		BONUS:{"row_offsets":[],"input":Callable(self,"_list_input").bind(BONUS)},BONUS+"/Label_Option":{"exclude":true},
-		PRIMARY:{"activate":Callable(self,"_review"),"displaystate":_can_submit()},
-		PRIMARY+"/Text_Price":_text(_number(int(_snapshot.attempt_cost) if attempted else _fee())),
-		PRIMARY+"/Normal/Label":_text("각성 시도" if attempted else "경험치 주입"),
-		PRIMARY+"/Disabled/Label":_text("각성 시도" if attempted else "경험치 주입"),
 		OUTSIDE+"Btn_Prev":{"activate":Callable(self,"_paginate").bind(-1),"displaystate":_page_index>0},
 		OUTSIDE+"Btn_Next":{"activate":Callable(self,"_paginate").bind(1),"displaystate":_page_index+1<pages},
 		OUTSIDE+"Label_PageInfo":_text("%d / %d" % [_page_index+1,pages]),
-		OUTSIDE+"Btn_Use_All":{"activate":Callable(self,"_auto_register"),"displaystate":_can_register() and not _shown.is_empty()},
-		OUTSIDE+"Btn_Cancel_All":{"activate":Callable(self,"_clear_selection"),"displaystate":not _selected.is_empty()},
 		OUTSIDE+"Label_Title":_text(category+" 카드"),
 		OUTSIDE+"Nd_Notice":{"visible":_shown.is_empty()},
 		OUTSIDE+"Fx_CardSelect":{"exclude":true}}
+	spec.merge(_progress_spec())
 	return spec
+
+func _refresh_progress() -> bool:
+	var spec: Dictionary = _progress_spec()
+	for path: String in spec:
+		var hit: Dictionary = _locate(_scene,_out,path)
+		if not hit.get("ok",false): return false
+		for field: String in spec[path]:
+			if field not in ["text","percent","visible","displaystate"]: continue
+			var changed: Dictionary = hit.player.call("set_bound_"+field,hit.offset,spec[path][field])
+			if not changed.get("ok",false): return false
+	for id: String in _candidate_views:
+		_set_bound(_candidate_views[id].check,"set_bound_displaystate",_can_register() and int(_materials[id].spare)>0)
+	last_result.filled.cost = int(_snapshot.attempt_cost) if _attempt_mode() else 0
+	return true
 
 static func _text(value: String) -> Dictionary:
 	return {"role":"source_text","text":value}
@@ -241,7 +270,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			if built.picture:painted+=1
 			var entries: Dictionary=registered_next if row.registered else candidates_next
 			entries[row.id]=built
-	var options: Dictionary=_fill_bonus_options(root,out)
+	var options: Dictionary=_fill_bonus_options(root,out,_bonus_option_lines(_snapshot))
 	if not options.get("ok",false):return options
 	_candidate_views=candidates_next
 	_registered_views=registered_next
@@ -249,35 +278,40 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		"material_pictures":painted,"eligible":_materials.size(),"page_slots":page.size(),"registered":_selected.duplicate(),
 		"cost":int(_snapshot.attempt_cost) if _attempt_mode() else _fee(),"options_shown":options.rows}
 
-func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
-	var list: Dictionary=_list(root,out,BONUS)
-	if not list.get("ok",false):return list
+func _bonus_option_lines(snapshot: Dictionary) -> Array:
 	var lines: Array=[]
-	if _snapshot.get("awakened",false):
-		var applied: Array=_snapshot.get("applied_options",[])
-		var pending: Array=_snapshot.get("pending_options",[])
+	if snapshot.get("awakened",false):
+		var applied: Array=snapshot.get("applied_options",[])
+		var pending: Array=snapshot.get("pending_options",[])
 		if not applied.is_empty():lines.append("각성 적용 효과")
 		lines.append_array(applied)
 		if not pending.is_empty():lines.append("현재 적용되지 않는 원본 옵션")
 		lines.append_array(pending)
 	else:
-		var preview: Array=_snapshot.get("bonus_options",[])
+		var preview: Array=snapshot.get("bonus_options",[])
 		if not preview.is_empty():lines.append("각성 시 추가 능력")
 		lines.append_array(preview)
 	if category in ["마법인형","성물"]:
-		for slot: Dictionary in _snapshot.get("slot_definitions",[]):
+		for slot: Dictionary in snapshot.get("slot_definitions",[]):
 			if int(slot.get("group",{}).get("SlotIndex",0))!=11:continue
 			lines.append("추가 성물 슬롯 각성 효과" if category=="성물" else "추가 인형 슬롯 각성 효과")
 			lines.append_array(slot.get("labels",[]))
 	if lines.is_empty():lines.append("확인된 각성 옵션이 없습니다.")
+	return lines
+
+func _fill_bonus_options(root: Node2D, out: Dictionary, lines: Array) -> Dictionary:
+	var list: Dictionary=_list(root,out,BONUS)
+	if not list.get("ok",false):return list
 	var scope: Array[int]=[BONUS_TEXT_OFFSET,BONUS_MARKER_OFFSET]
 	var bindings: Dictionary={BONUS_LIST_OFFSET:{"role":"source_list","row_offsets":[BONUS_TEXT_OFFSET],"input":Callable(self,"_list_input").bind(BONUS)}}
+	var rows: Array[Node2D]=[]
 	for index: int in lines.size():
 		bindings[BONUS_TEXT_OFFSET]=_text(str(lines[index]))
 		var template:=Scene.new()
 		var built: Dictionary=template.configure_nodes(_pack,OPTION,scope,bindings)
 		if not built.get("ok",false):
 			template.free()
+			for staged: Node2D in rows:staged.free()
 			return built
 		var row: Node2D=template.source_nodes[BONUS_TEXT_OFFSET]
 		# The template includes the ListView and the entire authoring path
@@ -285,10 +319,17 @@ func _fill_bonus_options(root: Node2D, out: Dictionary) -> Dictionary:
 		# its parent coordinates and clip are applied once.
 		row.position.y+=float(index)*BONUS_ROW_PITCH
 		row.get_parent().remove_child(row)
-		list.content.add_child(row)
+		rows.append(row)
 		template.free()
+	var content: Node2D=list.content
+	for old: Node in content.get_children():
+		content.remove_child(old)
+		old.queue_free()
+	for row: Node2D in rows:content.add_child(row)
 	var height: float=(list.size as Vector2).y
-	_scrolls[BONUS]={"content":list.content,"value":0.0,"min":minf(0.0,height-float(lines.size())*BONUS_ROW_PITCH)}
+	var scroll: float=float(_scrolls.get(BONUS,{}).get("value",0.0))
+	_scrolls[BONUS]={"content":content,"value":0.0,"min":minf(0.0,height-float(lines.size())*BONUS_ROW_PITCH)}
+	_scroll_to(BONUS,scroll)
 	return {"ok":true,"rows":lines.size()}
 
 func _decorate_material(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
