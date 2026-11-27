@@ -309,12 +309,18 @@ func _lineage_signature() -> String:
 	# alongside the normal learn/import revision without touching old save data.
 	return "%d|%s|%d|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision,hash(world.equipped_items.get("weapon",{}))]
 
-func _resolved_reference(record: Dictionary) -> Dictionary:
-	var signature: String=_lineage_signature()
-	signature += _relic_signature()
-	if signature!=resolved_signature:
-		resolved_signature=signature
+func _refresh_resolved_cache() -> String:
+	var signature: String = _lineage_signature() + _relic_signature()
+	if signature != resolved_signature:
+		resolved_signature = signature
 		resolved_cache.clear()
+	return signature
+
+func _resolved_reference(record: Dictionary) -> Dictionary:
+	_refresh_resolved_cache()
+	return _resolve_in_current_cache(record)
+
+func _resolve_in_current_cache(record: Dictionary) -> Dictionary:
 	var id: String=str(record.get("id",""))
 	# World quickslots and the skill browser keep deep copies of this catalog.
 	# Accept exact copies, then resolve the canonical row; altered records do
@@ -340,13 +346,14 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 	var family: Dictionary = {str(record.id):true}
 	# Apply each augment once, in ancestry order. A stronger tier's values
 	# replace weaker values rather than adding both passive stat packages.
-	for _depth: int in range(records.size()):
+	var candidates: Array[Dictionary] = possible_owned_records()
+	for _depth: int in candidates.size():
 		var changed := false
-		for augment: Dictionary in records:
+		for augment: Dictionary in candidates:
 			var id := str(augment.id)
-			if family.has(id) or not owned(augment): continue
+			if family.has(id): continue
 			var rel: Dictionary = relations.get(id, {})
-			if not family.has(str(rel.get("upgrades_from", ""))): continue
+			if not family.has(str(rel.get("upgrades_from", ""))) or not owned(augment): continue
 			result.merge(rel.get("patch", {}), true)
 			family[id] = true
 			result["resolved_grade"] = augment.grade
@@ -369,13 +376,17 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 	if result.has("bow_range") and world._current_weapon_type() == "활": result["range"] = float(result.bow_range)
 	return source523.apply_to(result,job,family.size() > 1)
 
-func _current_stat_signature() -> String:
-	var equipped: Variant=world.equipped_items.get("weapon",{})
-	return "%s|%s|%d|%d|%d" % [_lineage_signature() + _relic_signature(),str(schools.get("요정","water")),
-		hash(equipped),int(world.level),records.size()]
+static func _can_add_static_stats(fields: Dictionary) -> bool:
+	return fields.get("mode", "") == "stats" or fields.has("source_approx523") or fields.has("id")
+
+func _upgrades_can_add_static_stats() -> bool:
+	for relation: Dictionary in relations.values():
+		if _can_add_static_stats(relation.get("patch", {})):
+			return true
+	return false
 
 func _ensure_stat_index() -> void:
-	var signature: String=_current_stat_signature()
+	var signature: String = _refresh_resolved_cache()
 	if signature==stat_signature:return
 	stat_signature=signature
 	static_stat_totals.clear();weighted_stat_entries.clear()
@@ -387,11 +398,20 @@ func _ensure_stat_index() -> void:
 	# original BuffGroup keeps only its highest-priority learned passive.
 	var approx_groups: Dictionary = {}
 	var approx_weapon: int = source_weapon_type_id()
-	for record: Dictionary in records:
-		if not enabled(record):continue
-		if bool(record.get("local_design",false)):
+	var job: String = str(world.job_class)
+	var stat_upgrades: bool = _upgrades_can_add_static_stats()
+	for record: Dictionary in possible_owned_records():
+		# A cast-only record gets its full projection on demand. Upgrades and
+		# original progression can supply a passive even if the base mode differs.
+		var local_design: bool = bool(record.get("local_design", false))
+		var may_project_stats: bool = stat_upgrades or record.get("mode", "") == "stats" \
+			or record.has("source_approx523") or source523.may_project_static_stats(str(record.id)) \
+			or _can_add_static_stats(record.get("class_costs", {}).get(job, {}))
+		if not (local_design or may_project_stats) or not enabled(record): continue
+		if local_design:
 			static_speed=maxf(static_speed,float(record.get("passive_speed",1)))
-		var resolved: Dictionary=_resolved_reference(record)
+		if not may_project_stats: continue
+		var resolved: Dictionary = _resolve_in_current_cache(record)
 		if not str(resolved.get("source523_block_reason","")).is_empty():continue
 		if resolved.has("source_approx523"):
 			var spec: Dictionary=resolved.source_approx523
