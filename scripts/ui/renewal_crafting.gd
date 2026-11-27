@@ -38,11 +38,17 @@ var compact_short: bool=false
 static var pending_focus: String=""
 static var last_focus: Dictionary={}
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, gacha_only: bool = false) -> void:
 	hud = controller
 	world = hud.get_parent()
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
+	if gacha_only:
+		var back_button: Button = UI.button("제작으로 돌아가기",hud.open_crafting,Vector2(0,40))
+		back_button.name = "BackToProduction"
+		add_child(back_button)
+		_build_gacha()
+		return
 	# Inspected Korean normal crafting: recipe list, output/quantity, material
 	# icon rows with available/required counts, then the existing transaction.
 	# https://www.lineagem.com.tw/make/make-shields
@@ -285,7 +291,7 @@ func _gacha_execute() -> void:
 	var selected_uid := bag_book_uid
 	var quote: Dictionary = world.patch523_gacha_craft_quote(id,selected_uid)
 	if not quote.get("ok",false): hud.show_message(str(quote.get("reason","제작 불가"))); return
-	hud.confirm_action("비법서 제작 확인","%s 1개, %s ×%d, 아데나 %s를 소모하고 원본 확률로 1개를 얻습니다." % [str(quote.item.name),str(quote.item.material_name),int(quote.item.material_amount),UI.number_text(int(quote.gold_cost))],"제작",func(_amount: int) -> void:
+	hud.confirm_crafting_action("비법서 제작 확인","%s 1개, %s ×%d, 아데나 %s를 소모하고 원본 확률로 1개를 얻습니다." % [str(quote.item.name),str(quote.item.material_name),int(quote.item.material_amount),UI.number_text(int(quote.gold_cost))],"제작",func(_amount: int) -> void:
 		var result: Dictionary = world.patch523_gacha_craft_execute(id,selected_uid,int(quote.books_owned))
 		hud.show_message(str(result.get("detail","")) if result.get("ok",false) else str(result.get("reason","비법서 제작 실패")))
 		_reload_gacha())
@@ -618,7 +624,7 @@ func _craft() -> void:
 
 ## The existing 제작 확인 (shared with the original Production window): the
 ## world's quote must admit `count`, then 제작 emits craft_requested.
-static func confirm_craft(controller: Node, game: Node, id: String, count: int) -> bool:
+static func confirm_craft(controller: Node, game: Node, id: String, count: int, execute: Callable = Callable()) -> bool:
 	if not controller.has_signal("craft_requested"): return false
 	var report: Dictionary = game._craft_quote(id,count)
 	if not bool(report.get("ok",false)): return false
@@ -634,8 +640,11 @@ static func confirm_craft(controller: Node, game: Node, id: String, count: int) 
 	if recipe.has("missing_failure_policy"):
 		var failure: Dictionary=recipe.missing_failure_policy
 		warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
-	controller.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning],"제작",func(_amount: int) -> void:
-		controller.emit_signal("craft_requested",id,count))
+	var body: String = "선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning]
+	var confirmed: Callable = execute if execute.is_valid() else func(_amount: int) -> void: controller.emit_signal("craft_requested",id,count)
+	if controller.has_method("confirm_crafting_action"):
+		return controller.confirm_crafting_action("제작 확인",body,"제작",confirmed) != null
+	controller.confirm_action("제작 확인",body,"제작",confirmed)
 	return true
 
 ## The recipe as the quote reads it (a patch523 recipe with its chosen

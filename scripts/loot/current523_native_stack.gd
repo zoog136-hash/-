@@ -1321,6 +1321,12 @@ static func can_supply(record: Dictionary,inventory: Dictionary,instances: Dicti
 		total+=int(owned.remaining)
 	return integer(inventory.get(name_value,0)) and int(inventory.get(name_value,0))>=total
 
+static func warehouse_storable(owned: Dictionary) -> bool:
+	# Proof validation already checked that this is the receipt's ItemClass.
+	# Read the rule from the archive even when the save trimmed its row copy.
+	var item_id: int=int(owned.get("receipt",{}).get("item_class_id",0))
+	return item_id>0 and SOURCE.row("ItemClass",item_id).get("IsStorable")==true
+
 static func transfer_warehouse(world: Node,item_name: String,quantity: int,direction: String,uid: String) -> Dictionary:
 	if direction not in ["deposit","withdraw"]:return {"handled":false}
 	var source: Dictionary=world.item_instances if direction=="deposit" else world.warehouse.instances
@@ -1334,7 +1340,7 @@ static func transfer_warehouse(world: Node,item_name: String,quantity: int,direc
 	if owned.is_empty() or owned.record.get("name")!=item_name:return _failure("이동할 실제 원본 묶음 개체를 선택하세요")
 	if quantity<1 or quantity>99 or quantity>int(owned.remaining):return _failure("선택한 원본 묶음의 실제 잔량 안에서 수량을 지정하세요")
 	if world._item_locked(item_name,uid) or world._item_locked(item_name):return _failure("잠긴 원본 개체는 이동할 수 없습니다")
-	if direction=="deposit" and (NATIVE_FIELDS.full(owned.receipt).source_original_item.get("IsStorable")!=true or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
+	if direction=="deposit" and (not warehouse_storable(owned) or world._is_instance_equipped(uid)):return _failure("원본 보관 제한·장착 조건 미충족")
 	if direction=="withdraw" and world._inventory_total_weight()+quantity*maxi(0,int(world.item_weight_index.get(item_name,3)))>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과")
 	var inventory: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true)
 	var warehouse: Dictionary=world.warehouse.snapshot()

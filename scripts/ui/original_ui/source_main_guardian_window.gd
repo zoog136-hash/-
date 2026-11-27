@@ -139,9 +139,15 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var skill: bool=str(node.get("kind",""))!="stat"
 		var open_now: bool=opened.has(id)
 		var spec: Dictionary={"Particle_1":{"exclude":true},"Particle_2":{"exclude":true}}
-		spec["Btn_Icon_Skill" if skill else "Btn_Icon_Bonus"]={"activate":Callable(self,"_slot_pressed").bind(id)}
-		var built: Dictionary=_scene_of(ICON_SKILL if skill else ICON_BONUS,spec,{},"")
+		var button_name: String="Btn_Icon_Skill" if skill else "Btn_Icon_Bonus"
+		spec[button_name]={"activate":Callable(self,"_slot_pressed").bind(id)}
+		var slot_nodes: Dictionary={}
+		var built: Dictionary=_scene_of(ICON_SKILL if skill else ICON_BONUS,spec,slot_nodes)
 		if not built.get("ok",false):return built
+		var located_button: Dictionary=_locate(built.scene,slot_nodes,button_name)
+		if located_button.get("ok",false):
+			var button: Object=located_button.player.source_nodes[located_button.offset].get_meta("source_button",null)
+			if is_instance_valid(button):button.set_meta(Router.DRAG_META,Callable(self,"_graph_input"))
 		var at: Vector2=centres[id]
 		built.scene.position=Vector2(at.x,-at.y)
 		graph.add_child(built.scene)
@@ -274,7 +280,6 @@ func _graph_input(event: InputEvent) -> void:
 ## --- Actions ------------------------------------------------------------------
 
 func _select(id: String) -> Dictionary:
-	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	if id==selected:return {"ok":true,"same":true}
 	selected=id
 	_graph_x=0.0
@@ -346,7 +351,6 @@ func _represent() -> Dictionary:
 	return {"ok":true,"quoted":"representative"}
 
 func _reset() -> Dictionary:
-	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	var runtime: Object=_runtime()
 	var offer: Dictionary=runtime.quote("guardian_reset",selected)
 	if not offer.get("ok",false):

@@ -242,6 +242,7 @@ func _candidates(grants:Array,materialize_pool:bool=true) -> Dictionary:
 			if index.has(source_id):return runtime.fail("중복 원본 카드 정체 · 풀 보존")
 			index[source_id]={"category":category,"record":card,"id":CardEngine.card_id(card)}
 	var pools:Dictionary={};var category:String="";var count:int=0;var missing:Array=[]
+	var skill_class: int = -1
 	for grant:Dictionary in grants:
 		var pool_id:String=str(int(grant.pool_id));var candidates:Array=[]
 		for entry:Dictionary in pool_entries(int(grant.pool_id)):
@@ -249,9 +250,12 @@ func _candidates(grants:Array,materialize_pool:bool=true) -> Dictionary:
 			var card_id:int=int(entry.card_id)
 			var spell:Dictionary=runtime.catalog.record("BuffCard",card_id)
 			if int(spell.get("BuffCardDeckID",0))==SPELL_DECK:
+				if skill_class == -1: skill_class = CASH_PACKAGES.current_class(runtime.world)
+				if not CASH_PACKAGES.skill_draw_allows_class(spell,skill_class):
+					return runtime.fail("현재 직업의 스킬 카드 뽑기팩을 사용하세요 · 아이템 보존")
 				var book:int=CASH_PACKAGES.skill_book_for(card_id)
 				var book_record:Dictionary=DROPS.variant_item(DROPS.definition_id(str(book)).get("native_record",{}),1) if book>0 else {}
-				if int(spell.GradeID)!=int(entry.grade_id) or book_record.is_empty() or STACK.supply_profile(book_record).get("kind","") in ["","storage"]:missing.append(card_id);continue
+				if int(spell.GradeID)!=int(entry.grade_id) or STACK.profile(book_record).get("kind")!="skill_book":missing.append(card_id);continue
 				var spell_server:Dictionary=runtime._server([] if int(spell.ServerLimitSetID)==0 else [int(spell.ServerLimitSetID)])
 				if not spell_server.ok:return spell_server
 				if int(spell.StartDateTimeID)!=0 or int(spell.EndDateTimeID)!=0:
