@@ -25,7 +25,7 @@ extends RefCounted
 ## a destroyed target or too few scrolls. Label_Num shows the fewest scrolls
 ## the goal needs; the picked list (ListView_Item) stays empty.
 ## Left inert or empty (no rule for them in this project): the other Enchant_All pages
-## (속성 부여 / 은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
+## (은총 / 스킬 / 용해 / 삭제), 자동 강화, 실패 기록,
 ## the grade filters, 상세보기 / 일괄 선택, tooltips and the other effect
 ## layers.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
@@ -63,8 +63,11 @@ const PRESENT_SECONDS: float=110.0/60.0
 const P_ALL="Enchant_All_Layout/"
 const P_COMMON="Enchant_All_Layout/Nd_Common/"
 const P_ENCHANT="Enchant_All_Layout/Nd_Enchant/"
+const P_PROPERTY="Enchant_All_Layout/Nd_ChangeProperty/"
 const P_INV="Enchant_Inventory_Layout/Nd_Inven/Nd_InvenMode/"
 const P_SMELT_START=P_ALL+"Nd_Enchant_Btn/Nd_Enchant/Btn_Enchant"
+const PROPERTY_BUTTONS={"fire":"Fire","water":"Water","wind":"Wind","earth":"Ground"}
+const PROPERTY_NAMES={"fire":"화령","water":"수령","wind":"풍령","earth":"지령"}
 const SET_SLOTS: Array[String]=["Slot_1","Slot_2","Slot_3","Slot_4"]
 ## Inventory_Slot_Set's authored horizontal slot pitch (-117, -41, 35, 111)
 ## as the line pitch, as the main inventory and the refine window use.
@@ -111,6 +114,8 @@ var _token: int=0
 var _smelt:Dictionary={}
 var _smelt_quote:Dictionary={}
 var _smelt_status:String=""
+var _property: Dictionary={}
+var _property_choice: String=""
 
 ## Drag scrolling of one original ScrollView whose authored first line is
 ## extended by added lines (the refine window's rule).
@@ -202,6 +207,22 @@ func open_smelt(parent:Node,offer:Dictionary)->Dictionary:
 	_smelt_status="제련할 장비를 선택하세요" if not _candidates.is_empty() else "가방에 이 재료에 맞는 장비가 없습니다"
 	return _restage()
 
+func open_element_management(parent: Node, offer: Dictionary) -> Dictionary:
+	if not is_instance_valid(parent) or not offer.get("ok",false) or offer.get("kind") not in ["element_convert","element_remove"]:
+		return _fail("source_enchant_element_offer_unavailable")
+	close()
+	_parent=weakref(parent)
+	_bag.y=null
+	_text.y=null
+	_property=offer.duplicate(true)
+	_candidates=_property.targets
+	_scroll=str(_property.name)
+	_selected=""
+	_tab="equip"
+	_blessing=false
+	multi=false
+	return _restage()
+
 ## New candidates after an attempt (or another scroll): keeps the selected
 ## physical item when it is still listed.
 func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictionary:
@@ -212,6 +233,7 @@ func update(scroll: String, candidates: Array, blessing: bool=false) -> Dictiona
 		_pending_result_refresh = {"scroll":scroll,"candidates":candidates.duplicate(true),"blessing":blessing}
 		return {"ok":true,"handled":true,"result_refresh_pending":true}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
+	_property.clear();_property_choice=""
 	_blessing=blessing
 	if blessing:multi=false
 	var blessing_reference: String=str(candidates[0].get("scroll_reference",scroll)) if blessing and not candidates.is_empty() else ""
@@ -234,6 +256,7 @@ func close() -> void:
 	_blessing=false
 	_scroll_row={}
 	_smelt.clear();_smelt_quote.clear();_smelt_status=""
+	_property.clear();_property_choice=""
 	_presentation={}
 	_pending_result_refresh={}
 	_blocker=null
@@ -333,8 +356,12 @@ func _stage() -> Dictionary:
 		if not NamedTree.locate(next,out,body).get("ok",false) or not NamedTree.locate(next,out,P_SMELT_START).get("ok",false):
 			next.free()
 			return _fail("source_smelt_controls_unavailable")
+	if not _property.is_empty() and (not NamedTree.locate(next,out,P_PROPERTY.trim_suffix("/")).get("ok",false) or not NamedTree.locate(next,out,P_SMELT_START).get("ok",false)):
+		next.free()
+		return _fail("source_enchant_element_controls_unavailable")
 	var pictures: int=0
 	var material:Dictionary=Forge.image_record_of(hud,_scroll_row) if not _scroll.is_empty() and _smelt.is_empty() else _smelt.get("record",{})
+	if not _property.is_empty():material=_property.record
 	if not _scroll.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot0/Sp_IconSample",material,_scroll):pictures+=1
 	if not entry.is_empty() and _picture(next,out,P_COMMON+"Nd_Slot/Inventory_Slot1/Sp_IconSample",Forge.image_record_of(hud,entry),str(entry.get("name",""))):pictures+=1
 	var filled: Dictionary=_fill_bag(hud,next,out,listing)
@@ -364,6 +391,9 @@ func _stage() -> Dictionary:
 		last_result["mode"]=_smelt.kind
 		last_result["material_uid"]=_smelt.uid
 		last_result["can_smelt"]=_smelt_quote.get("ok",false)
+	if not _property.is_empty():
+		last_result.merge({"mode":_property.kind,"material_uid":_property.uid,"cost":_property.cost,
+			"element_choice":_property_choice,"can_enchant":_property_ready(entry)},true)
 	return last_result
 
 func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]) -> Dictionary:
@@ -459,7 +489,68 @@ func _spec(hud: Node, entry: Dictionary, listing: Array, rows: Array[Dictionary]
 		spec[P_COMMON+"Label_Title"]={"role":"source_text","text":str(entry.get("name","장비 선택")).get_slice(" · 원본#",0)+" · 축복 부여"}
 		spec[P_ENCHANT+"Btn_Probability_Bless"]={"visible":has,"activate":Callable(self,"_probability"),"touch_enabled":has}
 	if not _smelt.is_empty():_apply_smelt_spec(spec)
+	if not _property.is_empty():_apply_property_spec(spec,entry)
 	return spec
+
+func _property_ready(entry: Dictionary) -> bool:
+	return not entry.is_empty() and (_property.kind=="element_remove" or (PROPERTY_BUTTONS.has(_property_choice) and _property_choice!=entry.element))
+
+func _apply_property_spec(spec: Dictionary, entry: Dictionary) -> void:
+	var convert: bool=_property.kind=="element_convert"
+	var action: String="속성 변환" if convert else "속성 제거"
+	var has_target: bool=not entry.is_empty()
+	var ready: bool=_property_ready(entry)
+	var current: String=str(entry.get("element",""))
+	var stage: int=int(entry.get("element_level",0))
+	spec[P_ALL+"Nd_ChangeProperty"]={"visible":true}
+	spec[P_ALL+"Nd_Enchant"]={"exclude":true}
+	spec[P_COMMON+"Tab/Nd_Single"]={"exclude":true}
+	spec[P_COMMON+"Tab/Nd_Multi"]={"exclude":true}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Btn"]={"exclude":true}
+	spec[P_COMMON+"Nd_Slot/Inventory_Slot0/Text_Amount"]={"role":"source_text","text":_number(int(_property.quantity))}
+	spec[P_INV+"Nd_Tab/Nd_Equipment/Btn_Equip_Off"]={"exclude":true}
+	var title: String="%s할 무기를 선택하세요" % action
+	if has_target:title=action+" · 기존 세공 효과 제거" if entry.get("smith",false) else action
+	spec[P_COMMON+"Label_Title"]={"role":"source_text","text":title}
+	spec[P_PROPERTY+"Nd_ButtonSet"]={"visible":convert and has_target}
+	for code: String in PROPERTY_BUTTONS:
+		var base: String=P_PROPERTY+"Nd_ButtonSet/Btn_"+PROPERTY_BUTTONS[code]+"_"
+		var enabled: bool=has_target and code!=current
+		var selected: bool=code==_property_choice
+		spec[base+"Disabled"]={"visible":not enabled,"touch_enabled":false}
+		spec[base+"Pressed"]={"visible":enabled and selected,"touch_enabled":false}
+		spec[base+"Normal"]={"visible":enabled and not selected,"activate":Callable(self,"_choose_property").bind(code)}
+	var money: String=P_PROPERTY+"Nd_Money/"
+	spec[money.trim_suffix("/")]={"visible":has_target}
+	for node: String in ["Price_Bg","Sp_Icon_Money","Text_1"]:spec[money+node]={"visible":convert}
+	spec[money+"Text_Price"]={"role":"source_text","text":_number(int(_property.cost)),"visible":convert}
+	spec[money+"Nd_Option_2"]={"exclude":true}
+	spec[money+"Nd_Option_3"]={"exclude":true}
+	spec[money+"Nd_Option_1/Text_Before"]={"role":"source_text","text":"%s %d단" % [PROPERTY_NAMES.get(current,""),stage] if has_target else ""}
+	var after: String="없음"
+	if convert:after="%s %d단" % [PROPERTY_NAMES[_property_choice],stage] if ready else "속성을 선택하세요"
+	spec[money+"Nd_Option_1/Text_After"]={"role":"source_text","text":after}
+	spec[P_SMELT_START]={"activate":Callable(self,"_execute_property"),"displaystate":ready}
+	spec[P_SMELT_START+"/Normal"]={"visible":ready}
+	spec[P_SMELT_START+"/Disabled"]={"visible":not ready}
+	for state: String in ["Normal","Disabled"]:spec[P_SMELT_START+"/"+state+"/Label"]={"role":"source_text","text":action}
+
+func _choose_property(code: String) -> Dictionary:
+	var entry: Dictionary=_entry()
+	if _property.get("kind")!="element_convert" or entry.is_empty() or not PROPERTY_BUTTONS.has(code) or code==entry.element:
+		return _fail("source_enchant_element_choice_unavailable")
+	_property_choice=code
+	return _restage()
+
+func _execute_property() -> Dictionary:
+	var entry: Dictionary=_entry()
+	if _property.is_empty() or not _property_ready(entry):return _fail("source_enchant_element_choice_unavailable")
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var world: Node=hud.get_parent() if is_instance_valid(hud) else null
+	if not is_instance_valid(world) or not world.has_method("native_element_management523_commit"):return _fail("source_enchant_element_owner_unavailable")
+	var outcome: Dictionary=world.native_element_management523_commit(_property,entry,_property_choice)
+	if outcome.get("ok",false):_close_requested()
+	return outcome
 
 func _apply_smelt_spec(spec:Dictionary)->void:
 	var spirit:bool=_smelt.kind=="spirit_smelt"
@@ -640,8 +731,7 @@ func _slot_pressed(index: int, expected: Variant=null) -> Dictionary:
 	if expected!=null and expected!=reference:return _restage()
 	if _tab=="equip":
 		if multi:return _toggle_pick(str(entry.get("target_id","")))
-		_selected=str(entry.get("target_id",""))
-		return _restage()
+		return select_target(str(entry.get("target_id","")))
 	var name: String=str(entry.get("name",""))
 	if reference==_scroll_row.get("reference",""):return _set_tab("equip")
 	# The existing scroll activation: the world reopens this window with that
@@ -650,11 +740,13 @@ func _slot_pressed(index: int, expected: Variant=null) -> Dictionary:
 	return {"ok":true,"scroll_activated":name,"reference":reference}
 
 func select_target(target_id: String) -> Dictionary:
+	if target_id!=_selected:_property_choice=""
 	_selected=target_id
 	_tab="equip"
 	return _restage()
 
 func _set_tab(value: String) -> Dictionary:
+	if not _property.is_empty() and value!="equip":return _fail("source_enchant_element_scroll_fixed")
 	if value=="equip" and _scroll.is_empty():return _notice("강화 주문서를 먼저 선택하세요")
 	if value!=_tab:_bag.y=null
 	_tab=value

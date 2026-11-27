@@ -357,7 +357,7 @@ func _build_lineage_side_ui() -> void:
 	lineage_side_ui.equipment_requested.connect(func(item: String) -> void:
 		if not lineage_inventory_ui.is_visible_in_tree(): show_companion_bag()
 		lineage_inventory_ui._select_item(item)
-		lineage_inventory_ui.open_detail())
+		lineage_inventory_ui.open_selected_info())
 	$Root.add_child(lineage_side_ui)
 	lineage_side_ui.set_character_state(character_state)
 
@@ -3684,27 +3684,35 @@ func _open_original_enchant(scroll_name: String, candidates: Array, blessing: bo
 	return false
 
 func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	_open_enhancement(scroll_name,candidates,false)
+
+func open_original_enhancement(scroll_name: String, candidates: Array) -> bool:
+	return _open_enhancement(scroll_name,candidates,true)
+
+func _open_enhancement(scroll_name: String, candidates: Array, original_only: bool) -> bool:
 	if active_section == "enhance" and is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("enchant_window_is_open") and original_main_ui_controller.enchant_window_is_open():
 		enhancement_scroll_name = scroll_name
 		enhancement_candidates = candidates.duplicate(true)
-		if _open_original_enchant(scroll_name,candidates): return
+		if _open_original_enchant(scroll_name,candidates): return true
 	# Same scroll, window still open (the usual "강화 → 결과 → 다시 강화"
 	# loop): update the rows in place instead of rebuilding the whole window.
-	if active_section == "enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_inside_tree() \
+	if not original_only and active_section == "enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_inside_tree() \
 			and str(enhancement_forge.get("mode")) == "target" and enhancement_scroll_name == scroll_name:
 		enhancement_candidates = candidates.duplicate(true)
 		enhancement_forge.call("refresh_targets", candidates)
 		_bind_original_enhance_action(enhancement_forge)
-		return
+		return true
 	enhancement_scroll_name = scroll_name
 	enhancement_candidates = candidates.duplicate(true)
 	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
-	if _open_original_enchant(scroll_name,candidates): return
+	if _open_original_enchant(scroll_name,candidates): return true
+	if original_only:return false
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
 	enhancement_forge = forge
 	_bind_original_enhance_action(forge)
+	return true
 
 func _bind_original_enhance_action(forge: Control) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_status["enhance_action"]=original_main_ui_controller.bind_enhance_action(forge)
@@ -3791,10 +3799,20 @@ func open_growth(section: String) -> void:
 	_open_window(section,"문양" if section == "emblems" else "수호성","")
 	# The original 523 문양 window (source_main_symbol_window) over world.growth.
 	if section=="emblems" and _open_original_feature("emblems"):return
-	# The original 523 수호성 window (source_main_guardian_window) over
-	# world.growth; a pending card choice stays in the existing view.
+	# Resume the original choice from the saved slot. The normal opening and
+	# re-entry after leaving the choice use the same growth owner.
 	var growth: Variant=get_parent().get("growth") if get_parent()!=null else null
-	if section=="guardians" and growth!=null and growth.state.get("pending",{}).is_empty() and _open_original_feature("guardians"):return
+	if section=="guardians" and growth!=null:
+		var pending: Dictionary=growth.state.get("pending",{})
+		if pending.is_empty():
+			if _open_original_feature("guardians"):return
+		else:
+			var group_id: String=""
+			for group: Dictionary in growth.config.get("guardians",[]):
+				if group.nodes.any(func(row: Dictionary) -> bool:return row.id==pending.node):
+					group_id=str(group.id)
+					break
+			if not group_id.is_empty() and _open_original_feature("guardian_find",[group_id]):return
 	_mount_growth_view(section)
 
 ## The existing growth view (the original 수호성 window routes its slots here).
@@ -4118,9 +4136,16 @@ func open_bless_refine523(entry_solvent_uid: String="") -> void:
 	view.configure(self,entry_solvent_uid)
 
 func open_native_smelt523(offer:Dictionary)->bool:
-	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("try_open_smelt_window"):return false
-	_open_window("enhance","장비 제련","원본 장비와 재료를 선택합니다")
-	var result:Dictionary=original_main_ui_controller.try_open_smelt_window(offer)
+	return _open_native_enchant_offer(offer,"장비 제련","try_open_smelt_window")
+
+func open_native_element_management523(offer: Dictionary) -> bool:
+	var header: String="속성 변환" if offer.get("kind")=="element_convert" else "속성 제거"
+	return _open_native_enchant_offer(offer,header,"try_open_element_management_window")
+
+func _open_native_enchant_offer(offer: Dictionary, header: String, method: String) -> bool:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method(method):return false
+	_open_window("enhance",header,"원본 장비와 재료를 선택합니다")
+	var result: Dictionary=original_main_ui_controller.call(method,offer)
 	original_main_ui_status["enchant_window"]=result
 	if result.get("ok",false):
 		if pointer_transfer!=null:pointer_transfer.cancel()

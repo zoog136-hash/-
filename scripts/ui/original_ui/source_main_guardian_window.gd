@@ -287,11 +287,11 @@ func _select(id: String) -> Dictionary:
 	_graph_x=0.0
 	return _stage()
 
-## A slot opens its original info popup; without the popup rows in the pack,
-## or with a pending card choice, the existing 수호성 view on that slot.
+## A slot opens its original info popup or resumes its pending card choice.
 func _slot_pressed(id: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	var runtime: Object=_runtime()
+	if str(runtime.state.get("pending",{}).get("node",""))==id:return _find(selected,id)
 	if not _rows_available() or not (runtime.state.get("pending",{}) as Dictionary).is_empty():return _route("open_growth_native",["guardians",selected,id])
 	info=id
 	return _stage()

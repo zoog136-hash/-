@@ -19,6 +19,8 @@ const RETURN=preload("res://scripts/quickslots/regional_return.gd")
 const SMELT=preload("res://scripts/equipment523/native_smelt_input.gd")
 const TJ_SOURCE=preload("res://scripts/tj/source523.gd")
 const TJ_WINDOW=preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd")
+const ENHANCEMENT=preload("res://scripts/crafting/patch523_enhance_source_book.gd")
+const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const VERIFIED={
 	139581:"actual_bag_atomic_recharge_fault_retry_reload",
@@ -95,6 +97,7 @@ func run()->void:
 	var counts:Dictionary={}
 	var accepted:int=0
 	var accepted_counts:Dictionary={}
+	var enhancement_routes:Dictionary={}
 	for raw:Dictionary in original:
 		var id:int=int(raw.ID)
 		var category:String=class_categories.get(int(raw.CategoryID),"")
@@ -141,7 +144,21 @@ func run()->void:
 				route="tj_physical_requires_history_context_and_eligibility" if not retry.is_empty() else "tj_policy_present_original_adapter_unavailable"
 			elif category=="ScrollSmelt" and SMELT.known(id) and not SMELT.kind(record).is_empty():
 				route="smelt_requires_exact_material_and_equipped_target"
-			elif category in SPECIAL_ENCHANT:route="enhancement_target_and_original_rule_required"
+			elif category in SPECIAL_ENCHANT:
+				route="enhancement_target_and_original_rule_required"
+				var owner: String="no_original_direct_owner_found"
+				if category=="ScrollElementalEnchant":
+					if not ENHANCEMENT.scroll_element(record).is_empty():owner="elemental_enhancement_group"
+				elif category in ["ScrollElementalConversion","ScrollElementalRemover"]:
+					var management: String=ELEMENT_MANAGEMENT.kind(record)
+					if not management.is_empty():owner=management
+				elif ENHANCEMENT.declares_scroll(record):owner="enhancement_group"
+				elif category=="ScrollBless" and OWNER.profile(record).get("kind")=="bless":owner="blessing_target_picker"
+				entry["enhancement_route"]=owner
+				if raw.TestItem==false:
+					var group: Dictionary=enhancement_routes.get(category,{})
+					group[owner]=int(group.get(owner,0))+1
+					enhancement_routes[category]=group
 			elif DROPS.equipment(record):route="equipment_requires_equip_slot_and_class"
 			else:
 				var profile:Dictionary=OWNER.profile(record)
@@ -168,5 +185,5 @@ func run()->void:
 			entry["actual_transaction_evidence"]="actual_bag_firework_original_overlay_one_debit"
 		f.store_line(JSON.stringify(entry))
 	f.close()
-	print("ITEM_AUDIT_RESULT ",JSON.stringify({"source":SRC.SOURCE_SHA,"raw":original.size(),"normal_eligible_before_unresolved":accepted,"counts":counts,"eligible_routes":accepted_counts,"ticket_pools":ticket_model.pools.size(),"mode":"production_registration_and_unworn_action_only; physical transaction evidence enumerated"}))
+	print("ITEM_AUDIT_RESULT ",JSON.stringify({"source":SRC.SOURCE_SHA,"raw":original.size(),"normal_eligible_before_unresolved":accepted,"counts":counts,"eligible_routes":accepted_counts,"enhancement_routes":enhancement_routes,"ticket_pools":ticket_model.pools.size(),"mode":"production_registration_and_unworn_action_only; physical transaction evidence enumerated"}))
 	quit(0 if accepted==30098 else 6)

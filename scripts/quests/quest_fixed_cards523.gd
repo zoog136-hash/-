@@ -40,7 +40,7 @@ static func legacy_receipts(world: Node,item_key: String,item_id: int)->Array:
  for qid: String in world.quest_service.item_grants:
   if world.quest_service.claimed.get(qid)!=true:continue
   for row: Dictionary in world.quest_service.item_grants[qid]:
-   if row.has("origin") or row.get("inventory_key")!=item_key or row.get("pack_sha256")!=PIN or int(row.get("item_class_id",0))!=item_id or int(row.get("bless_raw",0))!=1:continue
+   if row.has("origin") or row.get("inventory_key")!=item_key or row.get("pack_sha256") not in [PIN,SOURCE.SOURCE_SHA] or int(row.get("item_class_id",0))!=item_id or int(row.get("bless_raw",0))!=1:continue
    var quest: Dictionary=world.quest_service.full(world.quest_service.index.get(qid,{}))
    if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
    for original: Dictionary in quest.get("source_rewards",[]):
