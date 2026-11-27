@@ -127,7 +127,7 @@ func run() -> void:
 	world.player.global_position = from
 	for i: int in range(24):
 		add_target(world, field.cell_to_world(Vector2i(64 + i / 6, 25 + i % 6)))
-	var goal: Vector2 = field.cell_to_world(Vector2i(42, 28))
+	var goal: Vector2 = field.cell_to_world(Vector2i(53, 28))
 	var winner: TwilightMonster = add_target(world, goal)
 	add_target(world, goal) # Equal distance must preserve original child order.
 	var expected: PackedVector2Array = field.path(from, goal)
