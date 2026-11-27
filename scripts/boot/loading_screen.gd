@@ -15,16 +15,9 @@ const DEFINITIONS := preload("res://scripts/resources/current523_definition_rows
 const ERROR_RECORD := preload("res://scripts/boot/error_record.gd")
 const UI_SELECTION := preload("res://scripts/ui/original_ui/source_main_selection.gd")
 const UI_PACK := preload("res://scripts/ui/original_ui/source_pack.gd")
-const NAMED_TREE := preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const SOURCE_ART := preload("res://scripts/boot/source_loading_art.gd")
 const PACK_VERSION := preload("res://scripts/ui/original_ui/source_ui_pack_version.gd")
 const ICON_STATUS := preload("res://scripts/ui/item_icon_resource_status.gd")
-## The original 523 loading indicator (UI/CommonUi/Fx_Loading.csb, clip
-## Fx_Loop). The loading background stays a plain colour: no original 523
-## loading backdrop exists (user decision 2026-11-17).
-const FX_LOADING := UI_PACK.LOADING_FX_MEMBER
-const FX_LOADING_CLIP := "Fx_Loop"
-## Fx_Loading's authored design area (its Bg ImageView is 1600x675).
-const FX_LOADING_DESIGN := Vector2(1600, 675)
 ## Show the title picture after loading until a touch (off in headless runs).
 var title_after_loading: bool = true
 ## Test hook: also show the title stage under the headless display server.
@@ -61,6 +54,7 @@ var _previous: String = ""
 ## Holder of the original Fx_Loading scene; null until the original UI pack is
 ## installed and its scene trees are on the device.
 var _fx_loading: Node2D
+var _roster_ui_pack: RefCounted
 ## Result of the last attach attempt (diagnostics and tests).
 var fx_loading_status: Dictionary = {}
 signal progress_changed(snapshot: Dictionary)
@@ -373,6 +367,9 @@ func _boot() -> void:
 	if not is_instance_valid(target):
 		_fail("준비 중인 게임 장면이 종료되었습니다. 다시 시도하세요.")
 		return
+	if destination == CHARACTERS and _roster_ui_pack != null and target.has_method("use_original_roster_art"):
+		target.call("use_original_roster_art", _roster_ui_pack)
+	_roster_ui_pack = null
 	_progress.complete_task("scene_ready")
 	_render("준비 완료")
 	BOOT_LOG.mark("loading_ready", {"scene": destination, "completed": snapshot().completed, "total": snapshot().total})
@@ -460,46 +457,29 @@ func _attach_original_loading_fx() -> void:
 	if not UI_PACK.baked(sha):
 		fx_loading_status = {"ok": false, "reason": "original_ui_pack_not_baked"}
 		return
-	var built: Dictionary = _build_original_loading_fx(UI_SELECTION.selected_pack(true))
-	var scoped: bool = built.get("ok", false)
+	var scoped := _mount_original_loading_fx(UI_SELECTION.selected_pack(true, destination == CHARACTERS))
 	if not scoped:
 		# Older packs can author the indicator with different dependencies.
-		built = _build_original_loading_fx(UI_SELECTION.selected_pack())
-	if not built.get("ok", false):
-		fx_loading_status = {"ok": false, "reason": str(built.get("error", "fx_loading_configure_failed")), "details": built.get("details", [])}
-		return
-	var scene: Node2D = built.scene
-	var played: Dictionary = scene.play(FX_LOADING_CLIP, true)
-	var holder := Node2D.new()
-	holder.name = "OriginalFxLoading"
-	holder.add_child(scene)
-	add_child(holder)
-	move_child(holder, 1) # above the plain backdrop, below the progress text
-	_fx_loading = holder
-	_layout_original_loading_fx()
-	if not resized.is_connected(_layout_original_loading_fx): resized.connect(_layout_original_loading_fx)
-	fx_loading_status = {"ok": true, "member": FX_LOADING, "clip": FX_LOADING_CLIP, "playing": played.get("ok", false), "scoped": scoped}
+		if not _mount_original_loading_fx(UI_SELECTION.selected_pack()): return
+	fx_loading_status["scoped"] = scoped
 	BOOT_LOG.mark("original_fx_loading", fx_loading_status)
 
-func _build_original_loading_fx(selected: Dictionary) -> Dictionary:
+func _mount_original_loading_fx(selected: Dictionary) -> bool:
 	if not selected.get("ok", false) or not selected.get("selected", false):
-		return {"ok": false, "error": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
+		fx_loading_status = {"ok": false, "reason": str(selected.get("code", selected.get("error", "original_ui_pack_unavailable")))}
+		return false
 	var pack: RefCounted = selected.pack
-	if not pack.manifest.get("scenes", {}).has(FX_LOADING):
-		return {"ok": false, "error": "fx_loading_missing_in_pack"}
-	# The authored Text nodes contain placeholder notices. Loading uses the
-	# status labels above; the original Bg retains its input behavior.
-	return NAMED_TREE.new(pack).scene_of(FX_LOADING, {"Text": {"visible": false}, "Text_Sub": {"visible": false}}, {})
-
-## Centre of the screen, scaled so the authored 1600x675 area fits.
-func _layout_original_loading_fx() -> void:
-	if not is_instance_valid(_fx_loading): return
-	var area: Vector2 = size if size.x > 0 and size.y > 0 else get_viewport_rect().size
-	var fit: float = minf(area.x / FX_LOADING_DESIGN.x, area.y / FX_LOADING_DESIGN.y)
-	_fx_loading.scale = Vector2.ONE * fit
-	_fx_loading.position = area * 0.5
+	if destination == CHARACTERS: _roster_ui_pack = pack
+	var art := SOURCE_ART.new()
+	fx_loading_status = art.mount(self, pack)
+	if not fx_loading_status.get("ok", false):
+		art.free()
+		return false
+	_fx_loading = art
+	return true
 
 func _release_original_loading_fx() -> void:
+	_roster_ui_pack = null
 	if is_instance_valid(_fx_loading):
 		_fx_loading.queue_free()
 		fx_loading_status["released"] = true

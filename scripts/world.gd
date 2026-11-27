@@ -13479,8 +13479,13 @@ func source_dungeon_entries(kind: String, hard: bool = false) -> Array:
 func run_dungeon_loading(operation: Callable) -> Dictionary:
 	return await preload("res://scripts/boot/dungeon_loading.gd").run(self,operation)
 
-func run_map_loading(operation: Callable) -> Dictionary:
-	return await MAP_LOADING.run(self,operation,"지도 이동 준비")
+func run_map_loading(operation: Callable, title: String = "지도 이동 준비") -> Dictionary:
+	return await MAP_LOADING.run(self, operation, title)
+
+func map_loading_art_pack() -> RefCounted:
+	var controller: Variant = hud.get("original_main_ui_controller") if is_instance_valid(hud) else null
+	if is_instance_valid(controller): return controller.map_loading_art_pack()
+	return null
 
 
 # Prepared spell destinations commit in the same input call. A cold point
@@ -13895,9 +13900,17 @@ const DUNGEON523_ENTRY_WAIVE: Array[String] = ["NoTeleport","TurnOffAutoForTelep
 ## 특수 던전 나가기 / time over: back to the start village (기란 마을); the
 ## dungeon Land's own rules (NoTeleport, ...) do not keep the player inside.
 func dungeon523_return_to_village() -> Dictionary:
+	return call("_dungeon523_return_to_village_impl", false)
+
+func dungeon523_return_to_village_loading() -> Dictionary:
+	return await _dungeon523_return_to_village_impl(true)
+
+func _dungeon523_return_to_village_impl(loading: bool) -> Dictionary:
 	if player.auto_enabled: player.set_auto_enabled(false)
 	portal_cooldown = 0.0
-	return return_current523_source_to_aden({}, DUNGEON523_ENTRY_WAIVE.duplicate())
+	var departure_waive := DUNGEON523_ENTRY_WAIVE.duplicate()
+	if loading: return await return_current523_source_to_aden_loading({}, departure_waive)
+	return return_current523_source_to_aden({}, departure_waive)
 
 ## 특수 던전 entry: moves into the dungeon's original Land (LandTeleport
 ## Territories box) under DUNGEON523_ENTRY_WAIVE (MinLevel judged) and saves `save_changes` (the entry cost and the dungeon

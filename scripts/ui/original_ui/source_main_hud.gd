@@ -149,6 +149,9 @@ var _joystick_result: Dictionary={}
 # {"control":WeakRef,"owner":String,"property":"visible"|"self_alpha","value":Variant}
 var _legacy_chrome: Array[Dictionary]=[]
 
+func map_loading_art_pack() -> RefCounted:
+	return _pack
+
 func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 	if pack==null or not is_instance_valid(hud) or not is_instance_valid(canvas):return _fail("source_main_host_unavailable")
 	var parent: Dictionary=pack.layout_source(MAIN) if pack.has_method("layout_source") else {}

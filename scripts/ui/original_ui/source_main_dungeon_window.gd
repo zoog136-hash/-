@@ -1262,8 +1262,9 @@ func _special_pressed(i: int) -> Dictionary:
 	if play!=null and str(play.state.active.get("kind",""))=="special":
 		var current: Dictionary=play.rules.special_by_id.get(int(play.state.active.stage_id),{})
 		return _confirm("특수 던전 · 나가기","%s\n남은 이용 시간: %s\n던전에서 나가 마을로 귀환합니다." % [special_name(current) if not current.is_empty() else special_name(entry),clock_text(play.special_left())],"나가기",func() -> void:
-			var result: Dictionary=play.stop()
-			if hud!=null and not result.get("ok",false):hud.show_message(str(result.get("reason",""))))
+			var result: Dictionary=await play.stop_loading()
+			if is_instance_valid(hud) and not result.get("ok",false):hud.show_message(str(result.get("reason","")))
+			if is_open():refresh())
 	# A dungeon that cannot be entered says why; nothing is charged.
 	var blocked: String=play.special_block(entry) if play!=null else ""
 	if not blocked.is_empty():

@@ -43,6 +43,8 @@ var create_button: Button
 var class_buttons: Dictionary = {}
 var _touch_index: int = -1
 var _touch_last: Vector2
+var _original_slot_off: StyleBoxTexture
+var _original_slot_selected: StyleBoxTexture
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -112,6 +114,34 @@ func _button(text: String, action: Callable, identifier: String = "") -> Button:
 		if not busy: action.call())
 	return button
 
+func use_original_roster_art(pack: RefCounted) -> void:
+	var art: Dictionary = pack.roster_slot_art()
+	if art.is_empty(): return
+	_original_slot_off = _roster_slot_style(art.inactive)
+	_original_slot_selected = _roster_slot_style(art.selected)
+	for node: Node in content.get_children():
+		if node is Button: _style_roster_slot(node)
+
+func _roster_slot_style(texture: Texture2D) -> StyleBoxTexture:
+	var style := StyleBoxTexture.new()
+	style.texture = texture
+	# The same content margins as the native roster buttons.
+	style.content_margin_left = 22
+	style.content_margin_right = 22
+	style.content_margin_top = 12
+	style.content_margin_bottom = 12
+	return style
+
+func _style_roster_slot(button: Button) -> void:
+	if _original_slot_off == null: return
+	var character := str(button.name).begins_with("Character_")
+	if not character and button.name != &"NewCharacter": return
+	button.add_theme_stylebox_override("normal", _original_slot_off)
+	button.add_theme_stylebox_override("hover", _original_slot_off)
+	var pressed := _original_slot_selected if character else _original_slot_off
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_stylebox_override("hover_pressed", pressed)
+
 func _show_roster() -> void:
 	_clear()
 	selected_id = ""
@@ -150,6 +180,7 @@ func _show_roster() -> void:
 		var button := _button(label,func() -> void: _select(id),"Character_"+id)
 		button.toggle_mode = true
 		button.button_pressed = id == selected_id
+		_style_roster_slot(button)
 		content.add_child(button)
 		if int(entry.get("gender_id",0))==0 and str(catalog.problem).is_empty():
 			content.add_child(STYLE.label("%s · 기존 저장에 없던 성별을 한 번 선택하세요. 직업과 진행은 유지됩니다."%str(entry.name),14,STYLE.MUTED))
@@ -161,6 +192,7 @@ func _show_roster() -> void:
 	content.add_child(enter)
 	var create := _button("새 캐릭터 생성",_show_creation,"NewCharacter")
 	create.disabled = characters.size() >= 13 or not str(catalog.problem).is_empty()
+	_style_roster_slot(create)
 	content.add_child(create)
 	if not str(catalog.problem).is_empty(): content.add_child(STYLE.label(str(catalog.problem),16,STYLE.MUTED))
 	content.add_child(STYLE.label("레벨·경험치·인벤토리·장비·스킬·위치와 전투 상태는 캐릭터별로 저장됩니다. 캐릭터 삭제는 지원하지 않습니다.",14,STYLE.MUTED))
