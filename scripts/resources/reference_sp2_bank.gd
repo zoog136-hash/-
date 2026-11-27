@@ -6,6 +6,7 @@ const ORIGINAL_SELECTION = preload("res://scripts/original_client/sprite_selecti
 const ORIGINAL_TIMING = preload("res://scripts/original_client/sprite_timing.gd")
 const INSTALL = preload("res://scripts/lineagem_pack_install.gd")
 const MANIFEST_INDEX = preload("res://scripts/resources/reference_sp2_manifest_index.gd")
+const BANK_INDEX = preload("res://scripts/resources/reference_sp2_bank_index.gd")
 const ASSETS = preload("res://scripts/resources/reference_sp2_asset_service.gd")
 const PARSED_PAYLOAD = preload("res://scripts/resources/sp2_parsed_payload.gd")
 const PIXEL_RENDERER = preload("res://scripts/resources/current523_sp2_frame_renderer.gd")
@@ -546,7 +547,7 @@ func _background_role(role_actor_id: int, action_id: int, waiting: Array) -> boo
 ## of inputs still being prepared.
 func prefetch(manifest_path: String, expected_sha: String, source_actor_id: int, bindings: Dictionary, role_actor_ids: Dictionary = {}) -> int:
 	if not LOADER.enabled or not valid_sha(expected_sha): return 0
-	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, true)
+	var opened: Dictionary = BANK_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, true)
 	if not opened.ok: return 0
 	_root = manifest_path.get_base_dir()
 	_recheck_pins_key = ""
@@ -577,7 +578,7 @@ func _open_static(manifest_path: String, expected_sha: String) -> Dictionary:
 	_manifest_sha = expected_sha
 	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
 	# Same shared, storage-backed manifest view as load_bank(); _member() reads it.
-	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
+	var opened: Dictionary = BANK_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened
 	_index = opened.index
 	_manifest = _index.top
@@ -1547,7 +1548,7 @@ func _load_bank(manifest_path: String, expected_sha: String, source_actor_id: in
 	_manifest_sha = expected_sha
 	_manifest = {}; _index = null; _excluded_source_actors = {}; _actor_pins.clear(); _release_parsed()
 	# One shared, storage-backed view of the pinned manifest per process.
-	var opened: Dictionary = MANIFEST_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
+	var opened: Dictionary = BANK_INDEX.open(manifest_path, expected_sha, MAX_MANIFEST_JSON, valid_sha(expected_sha))
 	if not opened.ok: return opened
 	_index = opened.index
 	_manifest = _index.top
