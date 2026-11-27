@@ -274,9 +274,10 @@ func _stage() -> Dictionary:
 	return result
 
 func _craftable(world: Node, id: String) -> bool:
-	if not _building:return bool(world._craft_quote(id,1).get("ok",false))
-	if not _ok_memo.has(id):_ok_memo[id]=bool(_quote(world,id,1).get("ok",false))
-	return bool(_ok_memo[id])
+	if _building and _ok_memo.has(id):return bool(_ok_memo[id])
+	var ready: bool = world.production_recipe_craftable(id, _preview_quote) if world.has_method("production_recipe_craftable") else bool(_quote(world,id,1).get("ok",false))
+	if _building:_ok_memo[id]=ready
+	return ready
 
 func _quote(world: Node, id: String, count: int) -> Dictionary:
 	return _preview_quote.call(id,count) if _preview_quote.is_valid() else world._craft_quote(id,count)
