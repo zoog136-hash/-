@@ -484,6 +484,55 @@ func shared_shop_materials(world: Node) -> void:
 	check(slots(world,6241) == [5] and slots(world,216053) == [5], "both other exact stacks survive a fresh load")
 	check(not world.source_shop.reconcile_material_stacks(), "no old stock can be reassigned twice")
 
+func old_arc_quest_reward(world: Node) -> void:
+	var quest_id: String = "m523:quest:75513"
+	var quest: Dictionary = world.quest_service.full_quest(quest_id)
+	if not check(not quest.is_empty(), "the actual resource registers the original Arc quest"): return
+	var plan: Dictionary = world.quest_service.source.reward_plan(quest, {"class_id":0})
+	var candidates: Array = plan.get("items", []).filter(func(item: Dictionary) -> bool: return item.source_reward_id == 81803)
+	if not check(candidates.size() == 1 and candidates[0].record.get("source_pending_use", false),
+		"the real reward planner creates the old held form of #81803"): return
+	var pending: Dictionary = candidates[0].record
+	var quantity: int = int(candidates[0].quantity)
+	var uid: String = str(world.next_item_instance_id)
+	world.next_item_instance_id += 1
+	var receipt: Dictionary = {"schema":1,"quest_id":quest_id,"reward_id":81803,"item_class_id":6241,
+		"bless_code_id":1,"source_sha256":world.quest_service.source.SOURCE_SHA,"quantity":quantity}
+	world.quest_service.claimed[quest_id] = true
+	world.item_instances[uid] = {"name":pending.name,"level":0,"record":pending,
+		"source_reward_quantity":quantity,"quest_reward_receipt":receipt}
+	world.inventory[pending.name] = quantity
+	world.ui_preferences.item_locks[pending.name + "@@@" + uid] = true
+	check(not world.quest_item_provider.reconcile_held_arc_material(world) and slots(world,6241) == [5] and world.item_instances.has(uid),
+		"a locked held reward keeps its original item and quantity")
+	world.ui_preferences.item_locks.erase(pending.name + "@@@" + uid)
+	check(world._save_game(true) == OK, "the legacy held reward can be read from a real save")
+	var original_save: String = FileAccess.get_sha256(world.save_path())
+	world.source_item_save_blocked = true
+	check(not world.quest_item_provider.reconcile_held_arc_material(world) and slots(world,6241) == [5]
+		and world.item_instances.has(uid) and FileAccess.get_sha256(world.save_path()) == original_save,
+		"a rejected save boundary preserves both kinds of inventory and the saved file")
+	world.source_item_save_blocked = false
+	reload(world)
+	var merged_count: Array = slots(world,6241)
+	check(not world.inventory.has(pending.name) and not world.item_instances.has(uid) and merged_count == [5 + quantity],
+		"load folds the old quest item into the existing exact Arc stack: " + str(merged_count))
+	var ledger: Dictionary = world.consumable_service.export_state().get(MERGE.MERGES, {})
+	var retained: bool = false
+	for event: Dictionary in ledger.values():
+		for component: Dictionary in event.components:
+			if component.receipt.get("origin", {}).get("kind") == "quest_current523" and component.receipt.get("granted_quantity") == quantity:
+				retained = true
+	var claims: Array = world.quest_service.item_grants.get(quest_id, [])
+	check(retained and claims.size() == 1 and claims[0].reward_id == receipt.reward_id and claims[0].item_class_id == receipt.item_class_id
+		and claims[0].quantity == receipt.quantity and claims[0].bless_raw == receipt.bless_code_id and world.quest_service.claimed[quest_id],
+		"the same quest and exact reward quantity are retained in the existing claim ledger")
+	check(world._save_game(true) == OK, "the moved reward and its provenance persist atomically")
+	reload(world)
+	check(slots(world,6241) == [5 + quantity] and not world.quest_item_provider.reconcile_held_arc_material(world),
+		"the transferred reward survives a second load without being reissued")
+	evidence["old_arc_quest_stack"] = merged_count
+
 func runtime() -> void:
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world); world.set_process(false); world.save_timer = -100000
@@ -495,8 +544,12 @@ func runtime() -> void:
 	world.field_population.set_process(false); world.player.set_physics_process(false); world.player.auto_enabled = false
 	world._clear_monsters(); world._clear_drops()
 	world.inventory = {}; world.item_instances = {}
-	check(world._save_game(true) == OK, "clean bag save")
+	var save_result: Error = world._save_game(true)
+	if not check(save_result == OK, "clean bag save: " + error_string(save_result)):
+		await _restore_fixture_save(world,save_file,had_save,saved_bytes)
+		return
 	shared_shop_materials(world)
+	old_arc_quest_reward(world)
 	if "--shared-material-sources-only" in OS.get_cmdline_user_args():
 		await _restore_fixture_save(world,save_file,had_save,saved_bytes)
 		return

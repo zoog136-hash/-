@@ -201,6 +201,57 @@ func resolve(reward: Dictionary) -> Dictionary:
 	if not D.matches(world._catalog_item_from_source_id(str(record.sourceId)),record): return {}
 	return {"record":record,"pack_sha256":str(D.pack_identity().get("sha256","")),"source_input_marker":D.pack_identity()}
 
+## The old quest provider stored this ordinary crafting material under a
+## pending-reward key. Transfer proved, untouched rewards to the same owner
+## as a new claim, keeping the quest and reward identity in the claim ledger.
+func reconcile_held_arc_material(world: Node) -> bool:
+	if not ready or world.quest_service.save_blocked or world.quest_auto.busy: return false
+	var inventory: Dictionary = {}
+	var instances: Dictionary = {}
+	var quest_state: Dictionary = {}
+	var grants: Array = []
+	var receipts: Array = []
+	for uid: String in world.item_instances:
+		var entry: Dictionary = world.item_instances[uid]
+		if not entry.has("quest_reward_receipt") or entry.get("record", {}).get("source_item_class_id") != 6241: continue
+		if entry.size() != 5 or not entry.has_all(["name","level","record","source_reward_quantity","quest_reward_receipt"]): continue
+		var owned: Dictionary = OWN.proof(world, uid)
+		if not owned.get("ok", false) or owned.source_use_immediately or owned.quantity != owned.original_quantity: continue
+		if world._item_locked(owned.inventory_key) or world._item_locked(owned.inventory_key, uid): continue
+		var existing: Array = world.quest_service.item_grants.get(owned.quest_id, [])
+		if existing.any(func(row: Dictionary) -> bool: return row.reward_id == owned.reward_id): continue
+		var binding: Dictionary = resolve({"RewardClassID":owned.item_class_id,"ItemBlessCodeID":owned.bless_code_id,
+			"Amount":owned.quantity,"source_item":owned.source_item})
+		if binding.is_empty() or world._item_locked(binding.record.name): continue
+		if grants.is_empty():
+			inventory = world.inventory.duplicate()
+			instances = world.item_instances.duplicate()
+			quest_state = world.quest_service.export_state()
+			if not quest_state.has("item_grants"): quest_state["item_grants"] = {}
+		var name: String = str(owned.inventory_key)
+		inventory[name] = int(inventory[name]) - int(owned.quantity)
+		if inventory[name] == 0: inventory.erase(name)
+		instances.erase(uid)
+		var receipt: Dictionary = {"schema":1,"reward_id":owned.reward_id,"item_class_id":owned.item_class_id,
+			"quantity":owned.original_quantity,"bless_raw":owned.bless_code_id,"inventory_key":str(binding.record.name),"pack_sha256":binding.pack_sha256}
+		if not quest_state.item_grants.has(owned.quest_id): quest_state.item_grants[owned.quest_id] = []
+		quest_state.item_grants[owned.quest_id].append(receipt)
+		receipts.append(receipt.merged({"quest_id":owned.quest_id}))
+		grants.append({"item_class_id":owned.item_class_id,"amount":owned.quantity,"bless_raw":owned.bless_code_id,"enchant":0})
+	if grants.is_empty(): return false
+	var supplied: Dictionary = stage(world, {"inventory":inventory,"item_instances":instances,"gold":world.gold}, grants, receipts)
+	if not supplied.get("ok", false): return false
+	var staged: Dictionary = supplied.overrides
+	staged["quest_state"] = quest_state
+	# Adopt the entire candidate only after the save boundary has accepted it.
+	# The ordinary load-time stack fold and deferred save persist it together.
+	if world._save_game(true, staged, {}, true) != OK: return false
+	world.inventory = staged.inventory
+	world.item_instances = staged.item_instances
+	world.quest_service.item_grants = quest_state.item_grants
+	world._request_deferred_save()
+	return true
+
 func handles(record: Dictionary) -> bool:
 	return ready and record.get("source_m_native_item",false) and _definition_ids.has(int(record.get("source_item_class_id",0)))
 

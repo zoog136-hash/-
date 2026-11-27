@@ -8840,6 +8840,7 @@ func _load_game(quiet: bool) -> void:
 	if (source_dungeon_runs.has_experience_award() or dungeon_play.has_experience_award()) and experience >= exp_need: _check_level_up()
 	halphas_star.combat.restore_player()
 	titles.reconcile_powder_stock()
+	quest_item_provider.reconcile_held_arc_material(self)
 	# _update_hud also folds an old save's separate receipted stacks of one
 	# item into one slot (_merge_native_stacks).
 	_update_hud()
