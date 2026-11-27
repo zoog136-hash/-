@@ -20,9 +20,11 @@ var fallback_icon: Texture2D
 var fallback_icon_source: Callable
 var fallback_sprite: Sprite2D
 var fallback_name_label: Label
+var _name_font: FontFile
 
-func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground: Dictionary = {}, inventory_icon: Callable = Callable()) -> void:
+func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground: Dictionary = {}, inventory_icon: Callable = Callable(), name_font: FontFile = null) -> void:
 	fallback_icon_source = inventory_icon
+	_name_font = name_font
 	loot_id = str(record["id"])
 	name = "GroundLoot_" + loot_id
 	flat = true
@@ -115,6 +117,7 @@ func _configure_source_presentation(request: Dictionary) -> void:
 		source_name_label.name = "SourceItemName"
 		source_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		source_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		if _name_font != null: source_name_label.add_theme_font_override("font",_name_font)
 		source_name_label.add_theme_font_size_override("font_size",11)
 		source_name_label.add_theme_constant_override("outline_size",3)
 		source_name_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9))
@@ -164,6 +167,7 @@ func _refresh_fallback() -> void:
 		fallback_name_label.name = "FloorItemName"
 		fallback_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		fallback_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		if _name_font != null: fallback_name_label.add_theme_font_override("font",_name_font)
 		fallback_name_label.add_theme_font_size_override("font_size",11)
 		fallback_name_label.add_theme_constant_override("outline_size",3)
 		fallback_name_label.add_theme_color_override("font_outline_color",Color(0,0,0,0.9))

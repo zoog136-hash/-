@@ -157,7 +157,11 @@ func _create_view(record: Dictionary) -> Button:
 	# body can be drawn (legacy-name items had none and lay invisible).
 	var item_name: String = str(record["item_name"])
 	var inventory_icon: Callable = func() -> Variant: return preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,item_name,images,false)
-	view.configure(record, icon, visual_slot, ground_request, inventory_icon)
+	var name_font: FontFile
+	var hud: Variant = world.get("hud")
+	if is_instance_valid(hud) and hud.has_method("original_item_name_font"):
+		name_font = hud.original_item_name_font()
+	view.configure(record, icon, visual_slot, ground_request, inventory_icon, name_font)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view

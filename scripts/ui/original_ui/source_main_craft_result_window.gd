@@ -10,11 +10,13 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## - ListView_Item: one Production_Result_List row (the item's original
 ##   picture, name ×quantity), none for 지급 없음;
 ## - 확 인 closes it.
-## Left out: Skip (no reveal to skip here), the reveal effects and particles.
+## The saved outcome selects the authored success/failure clip. The result
+## and close button are usable without the optional effect scene.
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const ROOT="UI/ProductionResultScene.csb"
 const RESULT="UI/Production/Production_Result.csb"
 const ROW="UI/Production/Production_Result_List.csb"
+const EFFECT="UI/Effect/Effect_Source/Fx_Production_Result.csb"
 const SLOT="UI/CommonUi/Common_Slot.csb"
 const P="Production_Result_Layout/"
 const LABELS: Array[String]=["대성공","성공","실패"]
@@ -82,7 +84,23 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		if icon.get("ok",false) and id>0:
 			var info: Dictionary=SourceImages.describe_item_class(id,str(result.get("name","")))
 			if _show_item_icon(icon.player, icon.offset, info):pictures+=1
-	return {"ok":true,"rows":rows.size(),"counts":counts(result),"pictures":pictures}
+	return {"ok":true,"rows":rows.size(),"counts":counts(result),"pictures":pictures,"effect_clip":_play_outcome(root)}
+
+func _play_outcome(root: Node2D) -> String:
+	var owner: Object = world()
+	if owner != null and owner.get("presentation_settings") is Dictionary and owner.get("presentation_settings").get("reduced_motion",false):
+		return ""
+	if not _pack.manifest.get("scenes",{}).has(EFFECT): return ""
+	var built: Dictionary = _scene_of(EFFECT,{"Fx_Particle":{"exclude":true}}, {})
+	if not built.get("ok",false): return ""
+	var effect: Node2D = built.scene
+	var clip: String = "Fx_Active_Success" if int(result.get("quantity",0)) > 0 else "Fx_Active_Fail"
+	if not effect.play(clip,false).get("ok",false):
+		effect.free()
+		return ""
+	effect.position = Vector2(600.0,-337.5)
+	root.add_child(effect)
+	return clip
 
 ## 확 인: only this window closes (the 제작 window stays).
 func _close_requested() -> Dictionary:

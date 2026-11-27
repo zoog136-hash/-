@@ -19,6 +19,7 @@ extends RefCounted
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SourceImages=preload("res://scripts/ui/source523_image_assets.gd")
 const NativeIcons=preload("res://scripts/ui/original_ui/source_native_icon_scenes.gd")
+const STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const ROOT="UI/Storage/Storage_All.csb"
 const BAG="UI/Storage/Storage_Inventory.csb"
 const STORE="UI/Storage/Storage_AccountInvGridMode.csb"
@@ -158,7 +159,7 @@ static func reference_of(row: Dictionary) -> String:
 	return str(row.get("name",""))+("@@@"+id if not id.is_empty() else "")
 
 static func amount_text(row: Dictionary) -> String:
-	if not str(row.get("instance_id","")).is_empty():
+	if not row.get("native_stack",false) and not str(row.get("instance_id","")).is_empty():
 		var level: int=int(row.get("level",0))
 		return "+%d" % level if level>0 else ""
 	var count: int=int(row.get("count",0))
@@ -387,7 +388,7 @@ func move_all(side: String, listing: Array) -> Dictionary:
 		var id: String=str(row.get("instance_id",""))
 		var left: int=int(row.get("count",1))
 		while left>0 and stopped.is_empty():
-			var amount: int=1 if not id.is_empty() else mini(99,left)
+			var amount: int=mini(99,left)
 			var before: int=_held(world,side,item,id)
 			hud.emit_signal("warehouse_transfer_requested",item,amount,direction,id)
 			var after: int=_held(world,side,item,id)
@@ -401,13 +402,14 @@ func move_all(side: String, listing: Array) -> Dictionary:
 	result["batch"]={"moved":moved,"stopped_at":stopped}
 	return result
 
-## The side's remaining amount of `item` (its physical id: 1 or 0).
+## A selected physical stack may still exist after a successful partial move.
 static func _held(world: Node, side: String, item: String, id: String) -> int:
-	if side=="bag":
-		if not id.is_empty():return 1 if world.item_instances.has(id) else 0
-		return int(world.inventory.get(item,0))
-	if not id.is_empty():return 1 if world.warehouse.instances.has(id) else 0
-	return int(world.warehouse.stacks.get(item,0))
+	if not id.is_empty():
+		var instances: Dictionary=world.item_instances if side=="bag" else world.warehouse.instances
+		var entry: Dictionary=instances.get(id,{})
+		return int(entry.get(STACK.QUANTITY,1)) if entry.get("name")==item else 0
+	var amounts: Dictionary=world.inventory if side=="bag" else world.warehouse.stacks
+	return int(amounts.get(item,0))
 
 func _close_requested() -> Dictionary:
 	close()
