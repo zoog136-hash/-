@@ -35,6 +35,21 @@ func digest(bytes: PackedByteArray) -> String:
 	hashing.update(bytes)
 	return hashing.finish().hex_encode()
 
+func check_large_pack_verification(directory: String) -> void:
+	var files: Dictionary = {}
+	var payload := "original".to_utf8_buffer()
+	var sha := digest(payload)
+	for index: int in range(144):
+		var member := "UI/source_%03d.bin" % index
+		write_bytes(directory.path_join("originals").path_join(member), payload)
+		files[member] = {"sha256":sha, "bytes":payload.size()}
+	check(PACK._files_intact(directory, files).is_empty(), "large pack verifies all files")
+	write_bytes(directory.path_join("originals/UI/source_005.bin"), "changed!".to_utf8_buffer())
+	DirAccess.remove_absolute(directory.path_join("originals/UI/source_130.bin"))
+	check(PACK._files_intact(directory, files) == "source_hash_or_size:UI/source_005.bin", "parallel verification rejects same-size corruption in manifest order")
+	write_bytes(directory.path_join("originals/UI/source_005.bin"), payload)
+	check(PACK._files_intact(directory, files) == "source_missing:UI/source_130.bin", "last verification slice is required")
+
 func fixture(directory: String, variant: int) -> Dictionary:
 	DirAccess.make_dir_recursive_absolute(directory.path_join("originals/UI"))
 	var files: Dictionary = {}
@@ -132,6 +147,7 @@ func _initialize() -> void: call_deferred("run")
 
 func run() -> void:
 	var directory: String = "user://original_ui_pack_memory_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	check_large_pack_verification(directory.path_join("verification"))
 	var first: Dictionary = fixture(directory.path_join("first"), 1)
 	var second: Dictionary = fixture(directory.path_join("second"), 2)
 	var prior_page_budget: int = PAGES.budget_bytes

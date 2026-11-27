@@ -7,6 +7,9 @@ const USE = preload("res://scripts/loot/patch523_item_use.gd")
 const GRANTS = preload("res://scripts/loot/patch523_item_inventory.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const HELD_USE = preload("res://scripts/quests/quest_held_use238.gd")
+const QUEST_SOURCE = preload("res://scripts/quests/source_quest523.gd")
+const BAKE := preload("res://scripts/resources/current523_bake_cache.gd")
+const REWARD_BAKE := "quest_startup_rewards523"
 const HP233 = preload("res://scripts/loot/quest_hp233_use.gd")
 const CHOICE = preload("res://scripts/quests/quest_choice523.gd")
 const ORIGINAL=preload("res://scripts/resources/current523_definition_rows.gd")
@@ -137,22 +140,89 @@ func configure(world: Node) -> void:
 		for reward: Dictionary in spec.get("rewards",[]):
 			var summary: Dictionary = D.cached_definition(str(int(reward.item_class_id)))
 			if not summary.get("native_record",{}).is_empty(): _register(world,summary.native_record,int(reward.bless_raw))
+	var source: Variant = world.quest_service.source
+	var exact_source: bool = source is RefCounted and source.get_script() == QUEST_SOURCE
+	var bake_key := _startup_reward_key(world, source) if exact_source else ""
+	var restored: Variant = BAKE.read(REWARD_BAKE, bake_key) if not bake_key.is_empty() else null
+	if not _apply_startup_rewards(world, restored):
+		var start_ids := _definition_ids.size()
+		var items: Array = world.catalog_db["아이템"]
+		var start_items := items.size()
+		_scan_startup_rewards(world, exact_source)
+		if not bake_key.is_empty():
+			BAKE.write(REWARD_BAKE, bake_key, {
+				"ids":_definition_ids.keys().slice(start_ids),
+				"definitions":_definition_lru,
+				"rows":items.slice(start_items),
+			})
+	world._index_catalog_item_sources()
+	world._index_item_weights()
+	ready = not _definition_ids.is_empty()
+
+## Only the normal pre-save Main path has a complete, pinned startup input.
+## Source proof, code, host action policy, existing suppliers and earlier
+## reviewed item admissions all participate. Nothing here uses player state.
+func _startup_reward_key(world: Node, source: RefCounted) -> String:
+	if world.scene_file_path != "res://Main.tscn" or world.get_script().resource_path != "res://scripts/potion_feedback_world.gd": return ""
+	if not NATIVE_FIELDS._weight_store_exact or source.document.get("source_sha256") != ORIGINAL.SOURCE_SHA: return ""
+	var template := D.CURRENT_DTO.template_content_key()
+	if not template.begins_with("content:"): return ""
+	var inputs := HashingContext.new()
+	inputs.start(HashingContext.HASH_SHA256)
+	inputs.update(var_to_bytes([
+		world.catalog_item_by_source_id.keys(), _definition_ids.keys(), world.ui_preferences,
+		ORIGINAL.approximate_test_items,
+	]))
+	return BAKE.key([REWARD_BAKE, ORIGINAL.verified_key(), QUEST_SOURCE.PAYLOAD_SHA,
+		template, inputs.finish().hex_encode(), BAKE.global_code_key(), BAKE.engine_key()])
+
+## Check the complete candidate before publishing any catalog definition.
+## Ownership, grant/debit checks and actual item effect checks stay live.
+func _apply_startup_rewards(world: Node, value: Variant) -> bool:
+	if not value is Dictionary or not value.get("ids") is Array or not value.get("definitions") is Dictionary or not value.get("rows") is Array:
+		return false
+	var ids := _definition_ids.duplicate()
+	for id: Variant in value.ids:
+		if not id is int or id <= 0 or ids.has(id): return false
+		ids[id] = true
+	if value.definitions.size() > DEFINITION_CACHE_LIMIT: return false
+	for id: Variant in value.definitions:
+		if not ids.has(id) or not value.definitions[id] is Dictionary: return false
+	var present: Dictionary = {}
+	for row: Variant in value.rows:
+		if not row is Dictionary or row.get("quest238_definition_only") != true or not row.get("sourceId") is String or row.sourceId.is_empty(): return false
+		if present.has(row.sourceId) or not world._catalog_item_from_source_id(row.sourceId).is_empty(): return false
+		present[row.sourceId] = true
+	_definition_ids = ids
+	_definition_lru = value.definitions
+	for row: Dictionary in value.rows:
+		world.catalog_db["아이템"].append(row)
+		world.catalog_item_by_source_id[row.sourceId] = row
+	return true
+
+func _scan_startup_rewards(world: Node, exact_source: bool) -> void:
 	# Bind only actual original quest rewards whose installed item owner already
 	# provides an unrestricted typed effect or scalar bag. This does not grant
 	# items, enable Test/expired effects or infer a positive bonus from a name.
+	# A same-ID/same-source negative result can be reused within this call.
+	# Action eligibility here reads original tables and the stable host policy.
+	var declined_rows: Dictionary = {}
 	for quest: Dictionary in world.quest_service.index.values():
 		if not quest.get("blockers",[]).is_empty() or not quest.get("excluded_reasons",[]).is_empty():continue
-		# One pass over every quest at start: each complete row is read on its
-		# own and dropped (not cached, nothing kept resident).
+		if exact_source and not QUEST_SOURCE.may_bind_startup_reward(quest, _definition_ids): continue
 		var complete: Dictionary = world.quest_service.full(quest,false) if world.quest_service.has_method("full") else quest
 		for reward: Dictionary in complete.get("source_rewards",[]):
-			var id: int=int(reward.get("RewardClassID",0))
-			if _definition_ids.has(id) or reward.get("type_name")!="Item" or reward.get("UseImmediately",false) or int(reward.get("ItemBlessCodeID",0))!=1:continue
-			var definition: Dictionary=D.definition_id(str(id))
-			if definition.get("original_item",{}).is_empty() or definition.original_item!=reward.get("source_item") or definition.original_item.get("TestItem",true):continue
-			var record: Dictionary=USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
-			var spec: Dictionary=NATIVE_FIELDS.full(record).get("source_use_spec",{})
-			if spec.get("activation_status")!="unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):continue
+			var id: int = int(reward.get("RewardClassID",0))
+			if _definition_ids.has(id) or not QUEST_SOURCE.startup_reward_item(reward): continue
+			var raw: Variant = reward.get("source_item")
+			if declined_rows.has(id) and declined_rows[id] == raw: continue
+			var definition: Dictionary = D.definition_id(str(id))
+			if definition.get("original_item",{}).is_empty() or definition.original_item != raw or definition.original_item.get("TestItem",true): continue
+			var record: Dictionary = USE.action_record(world,D.variant_item(definition.get("native_record",{}),1))
+			var spec: Dictionary = NATIVE_FIELDS.full(record).get("source_use_spec",{})
+			if spec.get("activation_status") != "unrestricted" or (spec.get("kind") not in ["source_timed_buff","source_mp_dice"] and not _scalar_bag(spec)):
+				declined_rows[id] = raw
+				continue
 			_bind_definition(id,definition)
 			_register(world,definition.native_record,1)
 			if spec.get("kind") in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag"]:
@@ -160,9 +230,6 @@ func configure(world: Node) -> void:
 					if int(output.get("entity_type_id",-1))==0 and int(output.get("probability_raw",0))==0:continue
 					var child: Dictionary=D.definition_id(str(int(output.item_class_id)))
 					if not child.get("native_record",{}).is_empty():_register(world,child.native_record,int(output.bless_raw))
-	world._index_catalog_item_sources()
-	world._index_item_weights()
-	ready=not _definition_ids.is_empty()
 
 func _register(world: Node, original: Dictionary, bless: int) -> void:
 	if RETIRED_ITEMS.record(original):return

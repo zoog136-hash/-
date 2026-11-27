@@ -108,10 +108,9 @@ static func remember_used_tables() -> int:
 static func stored_current(table: String) -> bool:
 	if not _open() or not _archive.file_exists("content/"+table+".json"): return true
 	var on_disk: bool = int(table_metadata(table).get("row_count", 0)) >= DISK_ROWS
-	var meta_path: String = BAKE.ROOT + "/" + ("disk_" if on_disk else "definitions_") + table + ".json"
-	if not FileAccess.file_exists(meta_path): return false
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(meta_path))
-	return meta is Dictionary and meta.get("schema") == BAKE.SCHEMA and meta.get("key") in [_bake_key(table),_bake_key(table,COMPATIBLE_V1)]
+	var name := ("disk_" if on_disk else "definitions_") + table
+	var current := _bake_key(table)
+	return BAKE.present(name, current) or BAKE.present(name, _bake_key(table, COMPATIBLE_V1))
 
 ## Tables kept in the archive and opened on demand only, never converted on
 ## the loading screen even when an earlier run used them: DialogData_Korean

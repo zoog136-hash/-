@@ -13,6 +13,7 @@ var character_dormant_physical: Dictionary = {}
 var returning_to_character_lobby: bool = false
 const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
+const STARTUP_BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
 
@@ -707,7 +708,9 @@ func _ready() -> void:
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
 	consumable_service.call("setup", self)
+	var quest_started := BOOT_LOG.begin("world_quest_items")
 	quest_item_provider.configure(self)
+	BOOT_LOG.end("world_quest_items", quest_started, {"definitions":quest_item_provider.definition_count()})
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
 	death_recovery.configure(self)
@@ -1082,10 +1085,12 @@ func _load_data() -> void:
 		if item_value is Dictionary and CONSUMABLE_RULES.is_removed_item(str((item_value as Dictionary).get("name", ""))):
 			item_db.remove_at(item_index)
 	legacy_skills_db = (game_db.get("스킬", []) as Array).duplicate(true)
+	var skills_started := BOOT_LOG.begin("world_original_skills")
 	if original_skills == null:
 		original_skills = ORIGINAL_SKILLS.new()
 		original_skills.configure(self)
 	spell_group_conversion.configure(self)
+	BOOT_LOG.end("world_original_skills", skills_started)
 	skills_db = original_skills.catalog.records.duplicate(true)
 	_rebuild_skill_record_index()
 	_ensure_ammo_items()
@@ -1297,6 +1302,11 @@ func _catalog_item_from_source_id(source_id: String) -> Dictionary:
 	var source: Variant = catalog_item_by_source_id.get(source_id, {})
 	return source as Dictionary if source is Dictionary else {}
 
+const RETIRED_OPTION_FIELD := {
+	"cursed": true, "curse": true, "non_damageable": true, "damageable": true,
+	"indestructible": true, "weapon_damage_prevention": true,
+}
+
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
 	# deprecated durability and curse labels must never reach UI/character data.
@@ -1315,7 +1325,7 @@ func _normalize_option_policies() -> void:
 						var dest: String = "pve_" + label.substr(4)
 						entry[dest] = int(entry.get(dest, 0)) + int(entry.get(key, 0))
 						entry.erase(key)
-					elif label in ["cursed", "curse", "non_damageable", "damageable", "indestructible", "weapon_damage_prevention"]:
+					elif RETIRED_OPTION_FIELD.has(label):
 						entry.erase(key)
 				if str(entry.get("bless_state", "")).to_lower() in ["cursed", "저주"]:
 					entry.erase("bless_state")
@@ -1664,28 +1674,60 @@ func _flush_item_weight_index() -> void:
 	_weight_index_deferred = false
 	if _weight_index_pending:
 		_weight_index_pending = false
-		_index_item_weights()
+		var started := BOOT_LOG.begin("world_weight_index")
+		_index_item_weights(true)
+		BOOT_LOG.end("world_weight_index", started, {"entries":item_weight_index.size()})
 
 ## Full index passes so far (tests check the start builds it once).
 var item_weight_index_builds: int = 0
-func _index_item_weights() -> void:
+const WEIGHT_BAKE := "world_initial_item_weights"
+
+func _index_item_weights(startup: bool = false) -> void:
 	if _weight_index_deferred:
 		_weight_index_pending = true
 		return
 	item_weight_index_builds += 1
-	patch523_craft_item_cache={}
-	_craft_index_warm={}
+	patch523_craft_item_cache = {}
+	_craft_index_warm = {}
 	var rules: Dictionary = _item_weight_rules()
-	var next_weight_index: Dictionary = {}
-	for source: Variant in [catalog_db.get("아이템", []), item_db]:
-		if not (source is Array):
-			continue
-		for entry: Variant in source as Array:
-			if not _weight_index_entry(entry, rules, next_weight_index):
-				return
+	var inputs: Array = [catalog_db.get("아이템", []), item_db]
+	var key := _startup_weight_key(inputs, rules) if startup else ""
+	var saved: Variant = STARTUP_BAKE.read(WEIGHT_BAKE, key) if not key.is_empty() else null
+	var next_weight_index: Dictionary
+	if saved is Dictionary:
+		next_weight_index = saved
+	else:
+		next_weight_index = {}
+		for source: Variant in inputs:
+			if not source is Array:
+				continue
+			for entry: Variant in source:
+				if not _weight_index_entry(entry, rules, next_weight_index):
+					return
+		if not key.is_empty():
+			STARTUP_BAKE.write(WEIGHT_BAKE, key, next_weight_index)
 	# Keep existing dictionary aliases while publishing a complete input index.
 	item_weight_index.clear()
 	item_weight_index.merge(next_weight_index)
+
+## Snapshot the exact ordered inputs before a save is loaded. A record's
+## omitted heavy fields are fixed by the verified template content digest.
+## Other index rebuilds still use the general live-record validation path.
+func _startup_weight_key(inputs: Array, rules: Dictionary) -> String:
+	if scene_file_path != "res://Main.tscn" or get_script().resource_path != "res://scripts/potion_feedback_world.gd": return ""
+	if not NATIVE_FIELDS._weight_store_exact: return ""
+	var archive: String = CURRENT523_DEFINITION_ROWS.verified_key()
+	var templates: String = PATCH523_EQUIPMENT.NATIVE_PROJECTION.template_content_key()
+	if archive.is_empty() or not templates.begins_with("content:"): return ""
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(var_to_bytes(rules))
+	for source: Variant in inputs:
+		if not source is Array: return ""
+		hash.update(var_to_bytes(source.size()))
+		for entry: Variant in source: hash.update(var_to_bytes(entry))
+	return STARTUP_BAKE.key(["world_initial_item_weights.v1", archive, templates,
+		hash.finish().hex_encode(), STARTUP_BAKE.global_code_key()])
 
 ## The weight rules file (res://, read-only at run time): parsed once.
 var _item_weight_rules_cache: Dictionary = {}

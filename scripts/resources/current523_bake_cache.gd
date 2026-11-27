@@ -15,6 +15,7 @@ const ROOT := "user://current523_bake"
 ## every write logs its result (one short line each; never changes outcomes).
 const LOG := preload("res://scripts/boot/boot_progress_log.gd")
 const SCHEMA := "twilight.current523.bake.v1"
+const STARTUP_BAKES := preload("res://scripts/boot/startup_bake_pack.gd")
 
 ## Storage-failure policy of the first-run device bakes.
 ##
@@ -183,42 +184,46 @@ static func key(parts: Array) -> String:
 
 ## The baked value for `name` when its key matches and its bytes verify; null otherwise.
 static func read(name: String, expected_key: String) -> Variant:
-	var meta: Variant = _meta_checked(name, expected_key)
-	if meta == null: return null
-	var path: String = _data_for(name, meta)
-	if FileAccess.get_sha256(path) != str(meta.get("sha256", "")):
+	var entry := _checked_entry(name, expected_key)
+	if entry.is_empty(): return null
+	var meta: Dictionary = entry.meta
+	var file := FileAccess.open(entry.path, FileAccess.READ)
+	if file == null or file.get_length() != int(meta.get("bytes", -1)):
 		LOG.cache(name, "verify_fail")
 		return null
-	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
-	if bytes.size() != int(meta.get("bytes", -1)):
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	if bytes.size() != int(meta.get("bytes", -1)) or _sha(bytes) != str(meta.get("sha256", "")):
 		LOG.cache(name, "verify_fail")
 		return null
-	LOG.cache(name, "hit", {"bytes": bytes.size()})
+	LOG.cache(name, "hit", {"bytes": bytes.size(), "seed": entry.get("seed", false)})
 	return bytes_to_var(bytes)
 
-## The bake's metadata when its schema and key match; null (logged with the
-## miss reason) otherwise. Same conditions as before, only told apart.
-static func _meta_checked(name: String, expected_key: String) -> Variant:
+## Local atomic generations have priority. A missing or outdated one can
+## read a pinned startup seed at the exact key the original reader requested.
+## Writers and cleanup keep using the local bake directory exclusively.
+static func _checked_entry(name: String, expected_key: String, report: bool = true) -> Dictionary:
 	if expected_key.is_empty():
-		LOG.cache(name, "no_key")
-		return null
-	if not FileAccess.file_exists(_meta(name)):
-		LOG.cache(name, "missing")
-		return null
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
-	if not meta is Dictionary:
-		LOG.cache(name, "corrupt")
-		return null
-	if meta.get("schema") != SCHEMA:
-		LOG.cache(name, "schema_changed")
-		return null
-	if meta.get("key") != expected_key:
-		LOG.cache(name, "key_changed")
-		return null
-	if _data_for(name, meta).is_empty():
-		LOG.cache(name, "corrupt")
-		return null
-	return meta
+		if report: LOG.cache(name, "no_key")
+		return {}
+	var reason := "missing"
+	if FileAccess.file_exists(_meta(name)):
+		var meta: Variant = _meta_value(name)
+		reason = "corrupt"
+		if meta is Dictionary:
+			if meta.get("schema") != SCHEMA: reason = "schema_changed"
+			elif meta.get("key") != expected_key: reason = "key_changed"
+			else:
+				var path := _data_for(name, meta)
+				if not path.is_empty(): return {"meta": meta, "path": path}
+	var seed := STARTUP_BAKES.entry(name, expected_key)
+	if not seed.is_empty():
+		seed["seed"] = true
+		return seed
+	if report: LOG.cache(name, reason)
+	return {}
+
+static func _meta_checked(name: String, expected_key: String) -> Variant:
+	return _checked_entry(name, expected_key).get("meta")
 
 static func write(name: String, value_key: String, value: Variant) -> bool:
 	if value_key.is_empty():
@@ -338,19 +343,18 @@ static func _remove_generations(name: String, keep: String) -> void:
 ## True when a bake with this key and its declared size is present (no hash:
 ## a cheap "already compiled" test; readers still verify the bytes).
 static func present(name: String, expected_key: String) -> bool:
-	if expected_key.is_empty() or not FileAccess.file_exists(_meta(name)): return false
-	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(_meta(name)))
-	return meta is Dictionary and meta.get("schema") == SCHEMA and meta.get("key") == expected_key and _size(_data_for(name, meta)) == int(meta.get("bytes", -2))
+	var entry := _checked_entry(name, expected_key, false)
+	return not entry.is_empty() and _size(entry.path) == int(entry.meta.get("bytes", -2))
 
 static func verified_file(name: String, expected_key: String) -> String:
-	var meta: Variant = _meta_checked(name, expected_key)
-	if meta == null: return ""
-	var path: String = _data_for(name, meta)
+	var entry := _checked_entry(name, expected_key)
+	if entry.is_empty(): return ""
+	var path: String = entry.path
 	var size: int = _size(path)
-	if size != int(meta.get("bytes", -1)) or FileAccess.get_sha256(path) != str(meta.get("sha256", "")):
+	if size != int(entry.meta.get("bytes", -1)) or FileAccess.get_sha256(path) != str(entry.meta.get("sha256", "")):
 		LOG.cache(name, "missing" if size < 0 else "verify_fail")
 		return ""
-	LOG.cache(name, "hit", {"bytes": size})
+	LOG.cache(name, "hit", {"bytes": size, "seed": entry.get("seed", false)})
 	return path
 
 static func _size(path: String) -> int:
