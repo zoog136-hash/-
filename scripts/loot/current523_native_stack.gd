@@ -2262,17 +2262,45 @@ static func use_mystery_card(world: Node,uid: String,owned: Dictionary,record: D
 	if result.get("ok",false):world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	return result
 
-static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false) -> Dictionary:
+static func _fixed_card_target(world: Node, spec: Dictionary, manual: bool) -> Dictionary:
 	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 카드 아이템 사용 대상·서비스 조건 미지원")
 	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
 	if not server.ok:return _failure(str(server.reason)+" · 아이템 보존")
-	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
+	if manual and world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
 	var category: String=str(spec.get("card_kind",""));var card_id: int=int(spec.get("card_id",0))
 	if SOURCE.row("BuffCard",card_id)!=spec.get("original_card"):return _failure("원본 카드 정의 변경 감지 · 아이템 보존")
 	var card: Dictionary=card_binding(world,category,card_id)
 	if card.is_empty():return _failure("지급할 원본 카드 자료가 미설치 상태입니다 · 아이템 보존")
+	return {"ok":true,"card":card}
+
+## Stage the original immediate transformation reward in the caller's quest
+## transaction. An unavailable card definition leaves the ordinary held item.
+static func stage_quest_immediate_card(world: Node, item: Dictionary, quest_id: String, candidate: RefCounted) -> Dictionary:
+	var record: Dictionary = item.record
+	if busy or not str(world.patch523_owner_state_problem).is_empty() or not record.get("source_pending_use",false) or not record.get("source_use_immediately",false): return {}
+	var item_id: int = int(record.source_item_class_id)
+	var spec: Dictionary = QUEST_OWN.test_card_spec(record.source_original_item, int(item.source_bless_code_id), int(item.quantity), true, int(item.source_reward_timing))
+	if spec.get("card_kind") != "변신": return {}
+	var target: Dictionary = _fixed_card_target(world,spec,false)
+	if not target.ok: return {}
+	if candidate == null:
+		candidate = preload("res://scripts/card_draw_fusion.gd").new()
+		candidate.configure(world.catalog_db)
+		candidate.import_state(world.card_draw_fusion.export_state())
+	var receipt: Dictionary = {"schema":1,"quest_id":quest_id,"reward_id":item.source_reward_id,"item_class_id":item_id,
+		"bless_code_id":item.source_bless_code_id,"source_sha256":SOURCE.SOURCE_SHA,"quantity":item.quantity}
+	var outcome: Dictionary = candidate.receive_source_card("변신",target.card,{"source_snapshot":"patch523","origin":"quest_current523_immediate",
+		"item_class_id":item_id,"card_id":spec.card_id,"cannot_swap":spec.original_card.IsNoSwapOut,
+		"buff_card_cannot_swap":spec.buff_card_cannot_swap,"bless":item.source_bless_code_id,"input_receipt":receipt})
+	return {"candidate":candidate,"result":outcome.results[0]} if outcome.get("ok",false) else {}
+
+static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false) -> Dictionary:
+	var target: Dictionary=_fixed_card_target(world,spec,true)
+	if not target.ok:return target
+	var card: Dictionary=target.card
+	var category: String=str(spec.card_kind);var card_id: int=int(spec.card_id)
 	# A quest-held card ("[원본 보상] …", quest receipt) is debited through the
 	# quest reward ledger; a native stack through its physical receipt. Only
 	# this fixed-card use can opt into debiting a verified held TestItem card.

@@ -557,7 +557,7 @@ func reward_plan(row: Dictionary, context: Dictionary) -> Dictionary:
 						record["source_use_immediately"] = bool(reward.UseImmediately)
 						record["source_reward_id"] = int(reward.ID)
 						record["source_binding_problem"] = str(binding.reason)
-					result.items.append({"record":record.duplicate(true),"quantity":amount,"source_reward_id":int(reward.ID),"source_bless_code_id":int(reward.ItemBlessCodeID)})
+					result.items.append({"record":record.duplicate(true),"quantity":amount,"source_reward_id":int(reward.ID),"source_bless_code_id":int(reward.ItemBlessCodeID),"source_reward_timing":int(reward.get("RewardGetTimeTypeID",0))})
 			"NoReward": pass
 			"QuickSlotReg":
 				# Tutorial registration is a UI default, not an item quantity.

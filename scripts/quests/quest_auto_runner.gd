@@ -261,6 +261,8 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	var completed: Array[String] = []
 	var native_grants: Array = []
 	var native_receipts: Array = []
+	var card_candidate: RefCounted
+	var immediate_cards: PackedStringArray = []
 	var at_time: int = int(Time.get_unix_time_from_system())
 	for id: String in ids:
 		var quest: Dictionary = service.index.get(id,{})
@@ -300,6 +302,13 @@ func complete(world: Node, ids: Array[String]) -> bool:
 			if amount < 1 or (amount > 10000 and not bool(item.get("stack_only",false))):
 				failures[id] = "보상 아이템 수량 확인 필요"
 				return false
+			if record.get("source_use_immediately",false):
+				var stock: Script = load("res://scripts/loot/current523_native_stack.gd")
+				var award: Dictionary = stock.call("stage_quest_immediate_card",world,item,id,card_candidate)
+				if not award.is_empty():
+					card_candidate = award.candidate
+					immediate_cards.append(str(award.result.name))
+					continue
 			staged_inventory[name_value] = int(staged_inventory.get(name_value,0))+amount
 			if bool(item.get("stack_only",false)): continue
 			# Held native items keep one physical provenance record per reward
@@ -326,6 +335,7 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	if staged_state.repeats.is_empty(): staged_state.erase("repeats")
 	if completed.is_empty(): return false
 	var staged: Dictionary = {"quest_state":staged_state,"inventory":staged_inventory,"item_instances":staged_instances,"next_item_instance_id":next_id,"gold":world.gold+adena,"experience":world.experience+experience}
+	if card_candidate != null: staged["card_draw_fusion"] = card_candidate.export_state()
 	if blessing>0:
 		var ain: Dictionary=world.ain_service.export_state()
 		ain["blessing"]=int(world.ain_service.blessing)+blessing
@@ -388,14 +398,22 @@ func complete(world: Node, ids: Array[String]) -> bool:
 	world.next_item_instance_id = next_id
 	for key: String in growth_keys: world.set(key,staged["attack" if key=="attack_power" else key])
 	service.import_state(staged_state)
+	if card_candidate != null:
+		world.card_draw_fusion.import_state(staged.card_draw_fusion)
+		world.card_collections.invalidate()
+		world._invalidate_equipment_static()
 	for id: String in completed: failures.erase(id)
 	last_completed = completed.duplicate()
 	world.deferred_save.cancel()
-	if world.level != int(before_growth.level): world._update_hud()
+	if world.level != int(before_growth.level) or card_candidate != null: world._update_hud()
 	else:
 		world._refresh_inventory_hud()
 		world._refresh_combat_hud()
 	if world.hud.has_method("refresh_quests"): world.hud.refresh_quests()
 	world.hud.append_log("원본 퀘스트 완료 %d개 · 아데나 +%d · EXP +%d%s" % [completed.size(),adena,experience," · 축복 +%d" % blessing if blessing>0 else ""])
+	if not immediate_cards.is_empty():
+		var gained_cards: String = "퀘스트 변신 카드 획득 · "+", ".join(immediate_cards)
+		world.hud.append_log(gained_cards)
+		world.hud.show_message(gained_cards)
 	busy = false
 	return true

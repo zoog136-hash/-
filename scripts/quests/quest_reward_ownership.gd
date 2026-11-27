@@ -37,13 +37,19 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 	var item: Dictionary = original.get("source_item",{})
 	var name_value: String = "[원본 보상] "+str(item.get("Name",""))
 	if item.is_empty() or int(item.get("ID",0))!=id or record.get("name")!=name_value or physical.get("name")!=name_value or physical.get("level",0)!=0: return denied("원본 행/소지 키 불일치")
-	if receipt.get("bless_code_id")!=original.ItemBlessCodeID or (compact and original.UseImmediately!=false): return denied("원본 축복/사용/보상 상태 불일치")
+	if receipt.get("bless_code_id")!=original.ItemBlessCodeID: return denied("원본 축복/보상 상태 불일치")
 	var expected: Dictionary = {"source_original_item":item,"source":"lineagem_patch523","source_snapshot":"patch523","sourceId":"m523:item:"+str(id),"source_item_class_id":id,"source_bless_code_id":original.ItemBlessCodeID,"source_reward_id":reward_id,"source_use_immediately":original.UseImmediately}
 	for field: String in expected:
 		if (not compact or NATIVE_FIELDS.has_field(record,field)) and NATIVE_FIELDS.field(record,field)!=expected[field]: return denied("저장된 원본 지급 필드 불일치: "+field)
 	var quantity: int = positive(physical.get("source_reward_quantity"))
 	var granted: int = positive(receipt.get("quantity"))
 	if quantity<=0 or granted!=positive(original.Amount) or quantity>granted: return denied("원본 지급/잔여 수량 불일치")
+	# Older quest claims could put an immediate transformation reward in the
+	# bag. Its surviving receipt can restore that card's use after reload.
+	# Other compact immediate rewards still require their own consumer.
+	if compact and original.UseImmediately:
+		var spec: Dictionary = test_card_spec(item, int(original.ItemBlessCodeID), granted, true, int(original.get("RewardGetTimeTypeID",0)))
+		if spec.get("card_kind")!="변신": return denied("원본 즉시 사용 보상의 효과 확인 필요")
 	var same_grant: int = 0
 	var total: int = 0
 	for candidate: Variant in world.item_instances.values():
@@ -61,17 +67,20 @@ static func proof(world: Node, physical_id: String) -> Dictionary:
 ## ItemClass. Admit their held effect only after proof() establishes the
 ## exact original reward. The global item, loot and crafting view stays raw.
 static func held_test_card_spec(owned: Dictionary) -> Dictionary:
-	if not owned.get("ok",false) or owned.get("bless_code_id")!=1 or owned.get("original_quantity")!=1:return {}
+	if not owned.get("ok",false):return {}
+	return test_card_spec(owned.source_item, owned.bless_code_id, owned.original_quantity, owned.source_use_immediately, owned.source_reward_timing)
+
+## Called with a reward row already verified by the quest owner. The item
+## remains a TestItem for any acquisition or use outside that quest receipt.
+static func test_card_spec(raw: Dictionary, bless: int, quantity: int, immediate: bool, timing: int) -> Dictionary:
+	if raw.get("TestItem")!=true or bless!=1 or quantity!=1:return {}
 	# The quest owner can also retain instant-use rewards as physical items.
 	# Recover those only when the original timing and receipt both agree.
-	var expected_timing: int=1 if owned.get("source_use_immediately",true) else 2
-	if owned.get("source_reward_timing")!=expected_timing:return {}
-	var raw: Dictionary=owned.get("source_item",{})
-	if raw.get("TestItem")!=true:return {}
+	if timing!=(1 if immediate else 2):return {}
 	for field: String in ["LevelLimitMin","LevelLimitMax","MaxLevelLimitMin","MaxLevelLimitMax"]:
 		if raw.get(field)!=0:return {}
 	var drops: Script=load("res://scripts/loot/patch523_monster_drops.gd")
-	var definition: Dictionary=drops.call("definition_id",str(int(owned.item_class_id)))
+	var definition: Dictionary=drops.call("definition_id",str(int(raw.get("ID",0))))
 	if definition.get("original_item")!=raw or definition.get("category",{}).get("Name")!="BuffCardDrawer" or not definition.get("class_rows",[]).is_empty() or not definition.get("equip_rows",[]).is_empty():return {}
 	if definition.get("source_reference",{}).get("blockers")!=["source_TestItem_true"]:return {}
 	for bonus: Dictionary in definition.get("item_bonus",[]):
