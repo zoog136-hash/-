@@ -1286,6 +1286,11 @@ func _navigate(section: String) -> void:
 func save_now() -> void:
 	save_pressed.emit()
 
+func original_item_name_font() -> FontFile:
+	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("original_font"):
+		return null
+	return original_main_ui_controller.original_font("Font/font_B.ttf")
+
 func _request_character_restart() -> void:
 	var world := get_parent()
 	confirm_action("재시작", "현재 캐릭터를 저장하고 캐릭터 선택 화면으로 돌아갑니다.", "재시작", func(_amount: int) -> void:
@@ -1294,11 +1299,15 @@ func _request_character_restart() -> void:
 func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	return _confirm_source_action(title,body,action,callback)
 
+func confirm_crafting_action(title: String, body: String, action: String, callback: Callable) -> Control:
+	return _confirm_source_action(title,body,action,callback)
+
 func _confirm_source_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	if $Root.get_node_or_null("TwilightConfirmation") != null: return null
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("awakening_review"):
 		if pointer_transfer != null: pointer_transfer.cancel()
-		var dialog: Control = original_main_ui_controller.awakening_review($Root,title,body,callback)
+		var identity := preload("res://scripts/ui/source523_item_identity.gd")
+		var dialog: Control = original_main_ui_controller.awakening_review($Root,identity.clean_message(title),identity.clean_message(body),callback)
 		if dialog != null: return dialog
 	return confirm_action(title,body,action,callback)
 
@@ -1511,6 +1520,11 @@ func open_crafting(recipe_id: String = "") -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 
+func finish_crafting_transaction() -> void:
+	# The mounted production window was refreshed with the new inventory.
+	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.production_window_is_open(): return
+	open_crafting()
+
 ## 비법서 제작 (원본 GachaCraft, TWILIGHT 근사): the TWILIGHT crafting screen
 ## with its 비법서 제작 panel open; the original production window's 이벤트
 ## tab routes here (the original UI has no GachaCraft entry).
@@ -1518,7 +1532,7 @@ func open_gacha_craft523(book_id: int = 0, book_uid: String = "") -> void:
 	_open_window("crafting","제작 장인","비법서 제작")
 	var screen := CraftUI.new()
 	workspace.mount(screen)
-	screen.configure(self)
+	screen.configure(self,true)
 	screen.show_gacha_books(book_id,book_uid)
 
 ## The original 523 ProductionScene (source_main_production_window) over the

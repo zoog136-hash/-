@@ -21,6 +21,7 @@ extends SceneTree
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 const FORGE=preload("res://scripts/ui/renewal_forge.gd")
 const REVEAL=preload("res://scripts/ui/enhancement_reveal.gd")
+const RULE=preload("res://scripts/crafting/patch523_enhancement.gd")
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 var checks: int=0
 var failures: Array[String]=[]
@@ -101,6 +102,10 @@ func _run() -> void:
 	_direct_single()
 	_direct_multi()
 	_forge_direct()
+	check(RULE.safe_success("success",5,6,{"safe_level":6,"success":100.0}),"guaranteed success inside the safe range needs no result confirmation")
+	check(not RULE.safe_success("success",6,7,{"safe_level":6,"success":100.0}),"a guaranteed rule outside the safe range still presents its result")
+	check(not RULE.safe_success("success",5,6,{"safe_level":6,"success":33.3,"destroy":66.7})
+		and not RULE.safe_success("decrease",5,4,{"safe_level":6,"success":100.0}),"risky success and a decrease always present their result")
 	await _hud_routing()
 	await _fallback_reveal()
 	_texts()
@@ -356,19 +361,40 @@ func _mounted_enchant_main(addon: String) -> void:
 	if not check(window!=null and controller.enchant_window_is_open() and window.presents(),"original window opens with both released presentation members: "+str(hud.original_main_ui_status.get("enchant_window",{}))):
 		world.queue_free()
 		return
-	var original_scene: Node2D=window._scene
 	var chosen: String=window.selected()
 	var target: Dictionary=world._parse_enhancement_target(chosen)
 	var id: String=str(target.get("id",""))
+	var safe: Dictionary=window._enchant_requested()
+	check(safe.get("ok",false) and not hud.is_enhancement_presenting() and int(world.inventory.get(scroll,0))==4
+		and int(world.item_instances.get(id,{}).get("level",-1))==1,"safe enhancement commits without blocking the next action")
+	var kinds: String=world._scroll_kind(scroll)
+	var mode: String=world._scroll_mode(scroll)
+	var record: Dictionary=world._find_catalog_item_record(item)
+	var safe_level: int=world._safe_enhancement_level(kinds,record)
+	world.item_instances[id]["level"]=safe_level
+	window.update(scroll,world._enhancement_candidates(kinds,mode,scroll))
+	window.select_target(chosen)
+	var chance: Dictionary=world._source_enhancement_rule(record,safe_level,mode,scroll,world.item_instances[id])
+	if chance.is_empty():chance=world._enhancement_chance(kinds,safe_level,mode,record)
+	if not check(float(chance.get("success",0.0))>0.0 and float(chance.get("success",0.0))<100.0,"the first unsafe stage offers a risky attempt"):
+		world.queue_free()
+		return
+	var roll:=RandomNumberGenerator.new()
+	for seeded: int in range(1,200):
+		roll.seed=seeded
+		if roll.randf_range(0.0,100.0)<float(chance.success):
+			world.rng.seed=seeded
+			break
+	var original_scene: Node2D=window._scene
 	var started: Dictionary=window._enchant_requested()
 	check(started.get("ok",false) and window.is_presenting() and hud.is_enhancement_presenting(),"actual window request reaches committed real Main result")
 	check(window._scene==original_scene and window._presentation.get("played",[])==["Fx_Enchant_Start","Success"] and window._pending_result_refresh.has("candidates"),"released start and success clips mounted once on the pre-roll scene, refresh deferred")
 	check(not is_instance_valid(hud.enhancement_reveal),"no fallback overlay when both original clips mount")
 	var saved: Variant=JSON.parse_string(FileAccess.get_file_as_string(world.save_path()))
-	check(saved is Dictionary and int(saved.inventory.get(scroll,0))==4 and int(saved.item_instances.get(id,{}).get("level",-1))==1,"one scroll and exact physical +1 are durable before result")
+	check(saved is Dictionary and int(saved.inventory.get(scroll,0))==3 and int(saved.item_instances.get(id,{}).get("level",-1))==safe_level+1,"one scroll and exact unsafe +1 are durable before result")
 	var before_rng: int=world.rng.state
 	hud.enhancement_requested.emit(scroll,chosen)
-	check(world.rng.state==before_rng and world.inventory.get(scroll)==4,"duplicate gameplay signal blocked during original result")
+	check(world.rng.state==before_rng and world.inventory.get(scroll)==3,"duplicate gameplay signal blocked during original result")
 	window._hold_presentation(window._token)
 	check(window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame==40.0, "actual original success banner stays at its fully opaque frame")
 	window.end_presentation()
@@ -377,7 +403,7 @@ func _mounted_enchant_main(addon: String) -> void:
 	hud.show_enhancement_result("decrease",item,7,6)
 	check(window._presentation.get("played",[]) == ["Fx_Enchant_Start","Fail"] and window._presentation.get("held",false) and window._presentation.players[1].playback_status().frame == 145.0,
 		"reduced motion shows the released failure banner immediately on its opaque key")
-	check(world.rng.state == before_rng and int(world.inventory[scroll]) == 4, "displaying the recorded failure does not roll or consume")
+	check(world.rng.state == before_rng and int(world.inventory[scroll]) == 3, "displaying the recorded failure does not roll or consume")
 	window.end_presentation()
 	evidence["mounted_official_addon"]={"pin":"5263d925","paid_success":true,"failure_presentation":true,"save_before_reveal":true}
 	world.source_save_blocked=true

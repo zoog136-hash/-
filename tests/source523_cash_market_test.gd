@@ -11,6 +11,8 @@ const CashMarket = preload("res://scripts/shop/source523_cash_market.gd")
 const CashPackages = preload("res://scripts/shop/source523_cash_packages.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const Cards = preload("res://scripts/cards/current523_card_catalog.gd")
+const Drops = preload("res://scripts/loot/patch523_monster_drops.gd")
+const Stack = preload("res://scripts/loot/current523_native_stack.gd")
 const Fusion = preload("res://scripts/card_draw_fusion.gd")
 const Writer = preload("res://scripts/skills/save_writer.gd")
 var checks: int = 0
@@ -183,6 +185,23 @@ func _integration() -> void:
 
 func _run() -> void:
 	_contract()
+	if not SOURCE.not_installed(): _skill_draw_contract()
 	_integration()
 	print("source523_cash_market_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+func _skill_draw_contract() -> void:
+	var knight: Dictionary=CashPackages.definition(176972)
+	var elf: Dictionary=CashPackages.definition(176982)
+	check(not knight.get("entries",[]).is_empty() and not elf.get("entries",[]).is_empty(),"the original class draw packs have typed reward rows")
+	for pack: Array in [[knight,1,2],[elf,2,1]]:
+		var foreign_blocked: bool=false
+		for reward: Dictionary in pack[0].get("entries",[]):
+			var card: Dictionary=SOURCE.row("BuffCard",int(reward.get("spell_card_id",0)))
+			check(CashPackages.skill_draw_allows_class(card,int(pack[1])),"every reward in its proper pack is learnable by that class")
+			if not CashPackages.skill_draw_allows_class(card,int(pack[2])): foreign_blocked=true
+			var book: Dictionary=Drops.variant_item(Drops.definition_id(str(reward.item_class_id)).get("native_record",{}),1)
+			var profile: Dictionary=Stack.profile(book)
+			check(profile.get("kind")=="skill_book" and int(profile.get("spec",{}).get("card_id",0))==int(card.get("ID",-1)),
+				"draw reward has a usable physical book with the same original card ID")
+		check(foreign_blocked,"the other class cannot open this complete original probability distribution")
