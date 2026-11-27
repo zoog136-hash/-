@@ -76,6 +76,7 @@ var _annotation_track_key: String = ""
 var _overlay_nodes: Array[Node2D] = []
 var _is_overlay: bool = false
 var _overlay_facing: int = 0
+var _caption_anchor: Vector2 = Vector2.INF
 var _effect_nodes: Dictionary = {}
 var _last_token: String = ""
 var _record: Dictionary = {}
@@ -1666,6 +1667,36 @@ func _process(delta: float) -> void:
 	if _is_overlay:
 		if _reference_bank != null: advance_reference_source(delta,"idle",_overlay_facing)
 		else: advance_source(delta, "idle", _overlay_facing, 0, false)
+		if _caption_anchor.is_finite(): _align_combat_caption()
+
+static func sprite_world_bounds(sprite: Sprite2D) -> Rect2:
+	if not is_instance_valid(sprite) or not sprite.is_visible_in_tree() or sprite.texture == null or sprite.modulate.a <= 0.0:
+		return Rect2()
+	return sprite.get_global_transform() * sprite.get_rect()
+
+func _sprite_bounds(sprites: Array, body_only: bool = false) -> Rect2:
+	var bounds := Rect2()
+	for sprite: Sprite2D in sprites:
+		if body_only and (sprite.z_index != 0 or sprite.get_meta("source_layer_kind", "body") == "shadow"): continue
+		var rect: Rect2 = sprite_world_bounds(sprite)
+		if rect.has_area(): bounds = bounds.merge(rect) if bounds.has_area() else rect
+	return bounds
+
+## Reads the pose already on screen. No texture readback or extra actor advance.
+func displayed_body_bounds() -> Rect2:
+	if _cooked != null:
+		return _sprite_bounds(_cooked_sprites,true)
+	var composite: Rect2 = sprite_world_bounds(_composite_nodes.get("body") as Sprite2D)
+	if composite.has_area(): return composite
+	return _sprite_bounds(_layers,true)
+
+## Apply the authored art's first visible offset once, then let its own
+## animation move normally. Blank lead-in frames leave the anchor pending.
+func _align_combat_caption() -> void:
+	var bounds: Rect2 = _sprite_bounds(_cooked_sprites) if _cooked != null else _sprite_bounds(_layers + _effect_nodes.values() + _composite_nodes.values())
+	if not bounds.has_area(): return
+	global_position += _caption_anchor - Vector2(bounds.get_center().x,bounds.end.y)
+	_caption_anchor = Vector2.INF
 
 func _load_reference_overlay_bindings(selection: Dictionary) -> void:
 	_reference_overlay_parents.clear()
@@ -2036,9 +2067,9 @@ func notify_current_source_weapon_critical(weapon_type: int, point: Vector2, fac
 	var selected: Dictionary = CURRENT523_EFFECT.select_weapon_critical(weapon_type,_reference_request_context)
 	return _spawn_current523_source_effect(selected,point,facing)
 
-func notify_current_source_combat_result(result: String, point: Vector2) -> bool:
+func notify_current_source_combat_result(result: String, point: Vector2, align_above: bool = false) -> bool:
 	var selected: Dictionary = CURRENT523_EFFECT.select_combat_result(result,_reference_request_context)
-	return _spawn_current523_source_effect(selected,point,0)
+	return _spawn_current523_source_effect(selected,point,0,false,align_above)
 
 func clear_current523_combat_feedback() -> void:
 	for index: int in range(_overlay_nodes.size() - 1, -1, -1):
@@ -2066,7 +2097,7 @@ func make_current_source_spell_effect(spell: Dictionary, stage: String, facing: 
 	var selected: Dictionary = CURRENT523_EFFECT.select_spell_row(spell,stage,"patch523",supplied_context)
 	return _make_selected_current_source_effect(selected,facing,texture_budget_bytes)
 
-func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int, fixed_world_point: bool = false) -> bool:
+func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2, facing: int, fixed_world_point: bool = false, align_above: bool = false) -> bool:
 	var overlay: Variant = _make_selected_current_source_effect(selected,facing)
 	if overlay == null: return false
 	var parent: Node = get_parent() if get_parent() != null else self
@@ -2086,6 +2117,9 @@ func _spawn_current523_source_effect(selected: Dictionary, world_point: Vector2,
 		source_effect_status["reason"] = str(overlay.reference_bank_status.get("error","current523_source_effect_frame_unavailable"))
 		overlay.free()
 		return false
+	if align_above:
+		overlay._caption_anchor = world_point
+		overlay._align_combat_caption()
 	_prune_source_overlays()
 	_overlay_nodes.append(overlay)
 	source_effect_status["status"] = "configured_existing_source_effect"

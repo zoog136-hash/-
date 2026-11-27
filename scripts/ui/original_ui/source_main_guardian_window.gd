@@ -325,7 +325,8 @@ func _info_ok() -> Dictionary:
 	var owner: Object=hud()
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_window_confirmation_unavailable")
 	var group: String=selected
-	owner.call("confirm_action","수호성 활성화",str(offer.message),"확인",func(_count: int) -> void:
+	var confirm: String="confirm_source_action" if owner.has_method("confirm_source_action") else "confirm_action"
+	owner.call(confirm,"수호성 활성화",str(offer.message),"확인",func(_count: int) -> void:
 		var response: Dictionary=runtime.execute("activate",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
 		_message(str(response.get("message","")))
 		info=""
@@ -353,7 +354,8 @@ func _represent() -> Dictionary:
 		return {"ok":false}
 	var owner: Object=hud()
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_window_confirmation_unavailable")
-	owner.call("confirm_action","분류 발동 스킬 지정",str(offer.message),"확인",func(_count: int) -> void:
+	var confirm: String="confirm_source_action" if owner.has_method("confirm_source_action") else "confirm_action"
+	owner.call(confirm,"분류 발동 스킬 지정",str(offer.message),"확인",func(_count: int) -> void:
 		var response: Dictionary=runtime.execute("representative",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
 		_message(str(response.get("message","")))
 		if is_open():_stage())
@@ -368,7 +370,8 @@ func _reset() -> Dictionary:
 	var owner: Object=hud()
 	if owner==null or not owner.has_method("confirm_action"):return _fail("source_guardian_window_confirmation_unavailable")
 	var target: String=selected
-	owner.call("confirm_action","수호성 초기화",str(offer.message),"확인",func(_count: int) -> void:
+	var confirm: String="confirm_source_action" if owner.has_method("confirm_source_action") else "confirm_action"
+	owner.call(confirm,"수호성 초기화",str(offer.message),"확인",func(_count: int) -> void:
 		var response: Dictionary=runtime.execute("guardian_reset",target,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
 		_message(str(response.get("message","")))
 		if is_open():_stage())

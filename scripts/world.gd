@@ -2199,6 +2199,7 @@ func _connect_signals() -> void:
 	combat_vfx.name = "CombatVFX"
 	combat_vfx.z_index = 12
 	combat_vfx.source_result_visual = _play_original_combat_result
+	combat_vfx.source_head_result_visual = _play_original_combat_result.bind(true)
 	add_child(combat_vfx)
 	combat_corpses = Node2D.new()
 	combat_corpses.name = "CombatCorpses"
@@ -13059,12 +13060,12 @@ func _clear_combat_actions() -> void:
 	if is_instance_valid(combat_corpses):
 		for corpse: Node in combat_corpses.get_children(): corpse.queue_free()
 
-func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false) -> void:
-	if is_instance_valid(combat_vfx): combat_vfx.number(point,value,color,critical,final_blow)
+func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false, align_above: bool = false) -> void:
+	if is_instance_valid(combat_vfx): combat_vfx.number(point,value,color,critical,final_blow,align_above)
 
-func _play_original_combat_result(result: String, point: Vector2) -> bool:
+func _play_original_combat_result(result: String, point: Vector2, align_above: bool = false) -> bool:
 	if not is_instance_valid(player) or not is_instance_valid(player.original_source_preview): return false
-	return player.original_source_preview.notify_current_source_combat_result(result,point)
+	return player.original_source_preview.notify_current_source_combat_result(result,point,align_above)
 
 var _source_damage_effect_absent: Dictionary = {}
 ## The body owns its original hit response. SkipDamageMotionSprite can

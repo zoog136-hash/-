@@ -21,6 +21,7 @@ var detailed_draws: int = 0
 var impact_visual_limit: int = CAPACITY
 var impact_draws: int = 0
 var source_result_visual: Callable
+var source_head_result_visual: Callable
 var font: Font
 var visuals = VISUALS.new()
 var reduced_motion: bool = false
@@ -55,8 +56,9 @@ func impact(point: Vector2, direction: Vector2, style: String, critical: bool = 
 	var entry: Dictionary = _record("impact", point, 0.22 if not critical else 0.30)
 	entry.merge({"direction":direction.normalized(), "style":style, "family":VISUALS.family(style), "critical":critical})
 
-func number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false) -> void:
-	if value == "MISS" and source_result_visual.is_valid() and source_result_visual.call("miss",point): return
+func number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false, align_above: bool = false) -> void:
+	var result_visual: Callable = source_head_result_visual if align_above and source_head_result_visual.is_valid() else source_result_visual
+	if value == "MISS" and result_visual.is_valid() and result_visual.call("miss",point): return
 	var caption: bool = critical
 	var title: String = "결정타" if final_blow else "Critical"
 	# Rapid multi-hits keep every number, but do not stack identical headings.
@@ -66,7 +68,8 @@ func number(point: Vector2, value: String, color: Color, critical: bool = false,
 			if float(previous.age) < 0.11 and (previous.point as Vector2).distance_squared_to(point) < 576.0:
 				caption = false
 				break
-	var original_caption: bool = caption and source_result_visual.is_valid() and source_result_visual.call("final_blow" if final_blow else "critical",point)
+	var caption_point: Vector2 = point - Vector2(0.0,21.0 * FIELD_CAMERA.text_scale()) if align_above else point
+	var original_caption: bool = caption and result_visual.is_valid() and result_visual.call("final_blow" if final_blow else "critical",caption_point)
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
 	var size: int = 25 if critical else 18
 	var display: String = value.trim_prefix("CRIT ") if critical else value

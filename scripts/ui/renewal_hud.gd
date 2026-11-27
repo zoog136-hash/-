@@ -1295,10 +1295,13 @@ func _navigate(section: String) -> void:
 func save_now() -> void:
 	save_pressed.emit()
 
-func original_item_name_font() -> FontFile:
+func original_world_name_font() -> FontFile:
 	if not is_instance_valid(original_main_ui_controller) or not original_main_ui_controller.has_method("original_font"):
 		return null
 	return original_main_ui_controller.original_font("Font/font_B.ttf")
+
+func original_item_name_font() -> FontFile:
+	return original_world_name_font()
 
 func _request_character_restart() -> void:
 	var world := get_parent()
@@ -4442,6 +4445,10 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		lineage_side_ui.character_panel.theme = _source_chrome_theme
 	for panel: Control in [workspace,companion_window,detail_window]:
 		if is_instance_valid(panel): panel.bind_source_chrome(_source_chrome,_source_chrome_theme)
+	var world: TwilightWorld = get_parent() as TwilightWorld
+	if world != null and is_instance_valid(world.monsters_root):
+		for monster: Node in world.monsters_root.get_children():
+			if monster is TwilightMonster: monster.apply_original_name_font()
 	_refresh_menu_action_art()
 	candidate.inventory_return_to_current_requested.connect(_restore_current_inventory_view)
 	candidate.inventory_closed.connect(_original_inventory_closed)
