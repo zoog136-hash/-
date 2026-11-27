@@ -90,7 +90,9 @@ func activate(id: int) -> Dictionary:
 	w.hud.toggle_inventory()
 	if w.hud.original_inventory_is_open():
 		var selected: Dictionary = w.hud.original_inventory_select(reference)
-		if not selected.get("ok",false):return {"ok":false,"held":held,"why":selected}
+		if not selected.get("ok",false):
+			close_ui()
+			return {"ok":false,"held":held,"why":selected}
 		w.hud.original_inventory_activate_selected(reference)
 	else:
 		w.hud.lineage_inventory_ui._select_item(reference)
@@ -139,7 +141,9 @@ func quest_grant(id: int, quests: Array, job: String="") -> Dictionary:
 				w.item_instances[uid] = {"name":name,"level":0,"record":item.record.duplicate(true),"source_reward_quantity":int(item.quantity),"quest_reward_receipt":{"schema":1,"quest_id":qid,"reward_id":int(item.source_reward_id),"item_class_id":id,"bless_code_id":int(item.get("source_bless_code_id",1)),"source_sha256":svc.source.SOURCE_SHA,"quantity":int(item.quantity)}}
 				w.inventory[name] = int(w.inventory.get(name,0)) + int(item.quantity)
 				svc.claimed[qid] = true
-				if w._save_game(true) == OK and OWN.proof(w, uid).get("ok", false): return {"ok":true,"quest":qid,"class":c,"path":"old_save"}
+				if w._save_game(true) == OK:
+					w._load_game(true)
+					if OWN.proof(w,uid).get("ok",false):return {"ok":true,"quest":qid,"class":str(w.job_class),"path":"old_save"}
 	return {"ok":false}
 
 func hero_doll_box() -> void:
@@ -156,11 +160,14 @@ func hero_doll_box() -> void:
 		if not outer.ok:continue
 		for other: Array in cases.values():
 			if other!=expected:check(physical_of(int(other[0])).is_empty(),"other job's box was not granted")
-		check(activate(int(expected[0])).ok and not physical_of(int(expected[1])).is_empty(),"intermediate box supplies its exact fixed card")
+		var middle: Dictionary=activate(int(expected[0]))
+		check(middle.get("ok",false) and not physical_of(int(expected[1])).is_empty(),"intermediate box supplies its exact fixed card: "+JSON.stringify(middle))
 		var final: Dictionary=activate(int(expected[1]))
 		var identity: String="source:m508:2:"+str(expected[2])
-		check(final.ok and w.card_draw_fusion.total_count("마법인형",identity)==1,"exact final doll registers from the bag: "+identity)
-		check(w.card_draw_fusion.source_swap_blocked.get("마법인형:"+identity,false),"achievement card retains CannotSwap")
+		check(final.get("ok",false) and w.card_draw_fusion.total_count("마법인형",identity)==1,"exact final doll registers from the bag: "+identity+" "+JSON.stringify(final))
+		var receipts: Array=w.card_draw_fusion.source_card_receipts
+		check(receipts.any(func(row: Dictionary)->bool:return row.identity==identity and row.get("buff_card_cannot_swap",false)),"achievement card retains CannotSwap")
+		check(not w.card_draw_fusion.pending_acquisition_confirmation.get("마법인형",{}).has(identity),"the restricted card does not enter the reroll queue")
 
 func runtime() -> void:
 	w = load("res://Main.tscn").instantiate()
@@ -197,8 +204,8 @@ func runtime() -> void:
 		reset(); w.job_class = str(issued.get("class", base_job))
 		check(INV.commit(w, [{"item_class_id":id,"amount":1,"bless_raw":1,"enchant":0}], {"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"}), "test grant #" + str(id))
 		var test_use: Dictionary = activate(id)
-		check(test_use.ok and test_use.card == quest_use.card and test_use.skill == quest_use.skill, "quest reward #" + str(id) + " acts as the test grant: " + JSON.stringify(test_use))
-		results[str(id)] = {"path":issued.path,"card":quest_use.card,"skill":quest_use.skill,"outputs":quest_use.gained.size()}
+		check(test_use.get("ok",false) and test_use.get("card",false) == quest_use.get("card",false) and test_use.get("skill",false) == quest_use.get("skill",false), "quest reward #" + str(id) + " acts as the test grant: " + JSON.stringify(test_use))
+		results[str(id)] = {"path":issued.path,"card":quest_use.get("card",false),"skill":quest_use.get("skill",false),"outputs":quest_use.get("gained",[]).size()}
 	evidence["runtime"] = results
 	hero_doll_box()
 	reset()

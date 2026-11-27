@@ -302,7 +302,11 @@ func try_use_held(world: Node, id: String) -> bool:
 			if used.get("requires_original_selection",false) and world.consumable_service.open_owned_original_selection(str(original_owned.get("inventory_key","")),used):return true
 			world.hud.show_message(str(used.get("message",used.get("reason","원본 상자 수령·사용 소유자 연결 대기"))))
 			if used.get("ok",false) and used.get("saved",false) and used.get("consumed")==1:
-				world.quest_auto.refresh_context(world);world.hud.refresh_inventory(world.inventory)
+				world.quest_auto.refresh_context(world)
+				world.hud.refresh_inventory(world.inventory)
+				# The original bag resolves actions from the physical item snapshot.
+				# Publish it now so a nested reward can be used on the next tap.
+				world._update_hud()
 			return used.get("handled",false)
 	var owned: Dictionary=held_binding(world,id)
 	if owned.is_empty():return false

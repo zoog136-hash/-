@@ -182,7 +182,7 @@ func _stage() -> Dictionary:
 			if not built_row.get("ok",false):continue
 			for side: int in range(2):
 				if index+side<crafts.size():_slot_picture(built_row.scene,row_out,"Production_List_Source_Text_%d/Btn_Normal/Production_Slot/Sp_IconSample" % side,int(_data.item_class_id),_item_name)
-				craft_height+=_tree.add_row(content,ROW_CRAFT_SET,built_row.scene,index/2,list_size)
+			craft_height+=_tree.add_row(content,ROW_CRAFT_SET,built_row.scene,index/2,list_size)
 		if mode != "craft":
 			for row: int in range(rows):
 				var existing: Node2D = content.get_child(row)
