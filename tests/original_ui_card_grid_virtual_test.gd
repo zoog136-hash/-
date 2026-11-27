@@ -3,8 +3,8 @@ extends SceneTree
 ## page) is a virtual list: every card keeps its place in the scroll range,
 ## only the rows in view (plus CARD_GRID_MARGIN) are built, scrolling builds
 ## newly shown rows and frees the rows that left, and each built card is
-## decorated (its picture) once. The card fusion window lists every owned
-## card of the filter (no 150 cap), highest grade first, stable.
+## decorated (its picture) once. The card fusion window lists every eligible
+## duplicate identity (no 150 cap), highest grade first, stable.
 ## Add -- --pack=<original UI directory> to exercise the native material
 ## checkboxes, the registration prompt and row geometry from the pack.
 ##   godot --headless --path <repo> --script res://tests/original_ui_card_grid_virtual_test.gd
@@ -108,15 +108,32 @@ func _fusion_list() -> void:
 	var records: Array=[]
 	var grades: Array[String]=["일반","영웅","고급","희귀"]
 	for index: int in range(400):records.append({"name":"카드 %d" % index,"grade":grades[index%4],"sourceId":"m523:1:%d" % (1000+index)})
-	hud.catalog_data={"변신":records}
+	var owned: Dictionary={}
 	var spare: Dictionary={}
-	for record: Dictionary in records:spare[CARDS.card_id(record)]=1
-	hud.card_collection_state={"owned":{"변신":{}},"spare":{"변신":spare}}
+	for record: Dictionary in records:
+		owned[CARDS.card_id(record)]=true
+		spare[CARDS.card_id(record)]=1
+	var eligible: Dictionary=spare.duplicate()
+	var excluded: Array[Dictionary]=[
+		{"sourceId":"single","grade":"희귀"},
+		{"sourceId":"pending","grade":"희귀","source_draw_pool_pending":true},
+		{"sourceId":"restricted","grade":"희귀","source_merge_out_disabled":true},
+		{"sourceId":"unique","grade":"유일"},
+		{"sourceId":"unowned","grade":"희귀"}]
+	for record: Dictionary in excluded:
+		var id: String=CARDS.card_id(record)
+		records.append(record)
+		if record.sourceId!="unowned":owned[id]=true
+		if record.sourceId!="single":spare[id]=1
+	hud.catalog_data={"변신":records}
+	hud.card_collection_state={"owned":{"변신":owned},"spare":{"변신":spare}}
 	var window=FUSION.new()
 	window._hud=weakref(hud)
 	window.category="변신"
 	window._collect()
-	check(window._owned_records.size()==400,"every owned card is listed (no 150 cap)")
+	var listed: Dictionary={}
+	for record: Dictionary in window._owned_records:listed[CARDS.card_id(record)]=1
+	check(window._owned_records.size()==400 and listed==eligible,"all 400 eligible identities appear, excluding singles and unavailable duplicates (no 150 cap)")
 	var ordered: bool=true
 	for index: int in range(1,window._owned_records.size()):
 		var a: Dictionary=window._owned_records[index-1]
@@ -127,7 +144,7 @@ func _fusion_list() -> void:
 	check(ordered,"highest grade first, ties keep the catalog order")
 	window.filter_grade="희귀"
 	window._collect()
-	check(window._owned_records.size()==100 and window._owned_records.all(func(r: Dictionary) -> bool:return r.grade=="희귀"),"the grade filter runs over the whole list")
+	check(window._owned_records.size()==100 and window._owned_records.all(func(r: Dictionary) -> bool:return r.grade=="희귀" and eligible.has(CARDS.card_id(r))),"the grade filter runs over the whole eligible list")
 	hud.free()
 
 func _original_setup(directory: String) -> void:
@@ -145,13 +162,14 @@ func _original_setup(directory: String) -> void:
 	var owned: Dictionary={}
 	var spares: Dictionary={}
 	for i: int in 9:
-		var row: Dictionary={"sourceId":"material-%d" % i,"name":"재료 %d" % i,"grade":"고급"}
+		var row: Dictionary={"sourceId":"material-%d" % i,"name":"재료 %d" % i,"grade":"고급" if i<4 else "일반"}
 		if i==0:row["source_draw_pool_pending"]=true
 		if i==3:row["source_merge_out_disabled"]=true
 		records.append(row)
 		var id: String=CARDS.card_id(row)
 		owned[id]=true
 		if i<4:spares[id]=1 if i==1 else 4
+		if i in [4,5]:spares[id]=1
 	records.append({"sourceId":"upper","name":"결과","grade":"희귀"})
 	hud.catalog_data={"변신":records}
 	hud.card_collection_state={"owned":{"변신":owned},"spare":{"변신":spares}}
@@ -172,7 +190,8 @@ func _original_setup(directory: String) -> void:
 	check(is_equal_approx(pitch,150.0+original_gap),"roster pitch follows its own authored margin")
 	var tip: Dictionary=window._locate(window._scene,window._out,"Nd_Card/Label_Message")
 	check(tip.player.source_nodes[tip.offset].is_visible_in_tree() and window.last_result.filled.registered==0 and not window.last_result.filled.can_fuse,"entry waits for registration even when enough duplicates are owned")
-	var first: Node2D=_roster_check(window,grid,1)
+	check(window.last_result.filled.cards==4,"only eligible duplicate identities occupy the roster's grid slots")
+	var first: Node2D=_roster_check(window,grid,0)
 	check(first.current_state=="normal" and not first.selected,"an available original checkbox opens bright and unmarked")
 	var router:=PAGE.Router.new()
 	var point: Vector2=first._input_area.get_global_transform_with_canvas()*(first._input_area.size*0.5)
@@ -182,20 +201,26 @@ func _original_setup(directory: String) -> void:
 		var tap: Dictionary=router.route(event,point,[first])
 		check(tap.get("handled",false),"original material checkbox handles the finger")
 	await process_frame
+	check(window._registered==[CARDS.card_id(records[1])] and not window.last_result.filled.can_fuse,"one touch registers only the selected copy")
+	window._auto_register()
 	grid=window._scrolls[roster.key].grid
 	var marked: Array[int]=[]
 	for i: int in grid.built:
 		if _roster_check(window,grid,i).selected:marked.append(i)
 	marked.sort()
+	var quantities: Dictionary={}
+	for item: Dictionary in window._materials:
+		var id: String=CARDS.card_id(item.record)
+		quantities[id]=int(quantities.get(id,0))+1
 	var plans: Array=[]
-	for item: Dictionary in window._materials:plans.append([CARDS.card_id(item.record),item.count])
-	check(marked==[1,2] and plans==[[CARDS.card_id(records[1]),1],[CARDS.card_id(records[2]),3]] and window.last_result.filled.can_fuse,"only the exact spendable identities in the grade plan are marked")
+	for id: String in quantities:plans.append([id,quantities[id]])
+	check(marked==[0,1] and plans==[[CARDS.card_id(records[1]),1],[CARDS.card_id(records[2]),3]] and window.last_result.filled.can_fuse,"only the exact spendable identities in the grade plan are marked")
 	var model:=CARDS.new()
 	model.configure(hud.catalog_data)
 	model.owned["변신"]=owned.duplicate()
 	model.spare["변신"]=spares.duplicate()
 	model.rng.seed=4
-	var outcome: Dictionary=model.fuse("변신","고급")
+	var outcome: Dictionary=model.fuse("변신","고급",false,window._registered)
 	check(outcome.get("ok",false),"the original transaction accepts the shown grade")
 	if outcome.get("ok",false):
 		var consumed: Array=[]
@@ -208,10 +233,11 @@ func _original_setup(directory: String) -> void:
 	check(material_grid.built.size()==4 and is_equal_approx((material_grid.built[3].scene.position-material_grid.built[0].scene.position).y,150.0),"registered material list also uses its own original row pitch")
 	check(hud.card_collection_state==saved,"registration never writes ownership")
 	print("ORIGINAL_FUSION_SETUP_COMPARE ",JSON.stringify({"pitch":pitch,"source_margin":original_gap,"checked":marked,"plan":plans}))
-	for i: int in 3:
-		var extra: Dictionary={"sourceId":"extra-%d" % i,"name":"추가","grade":"고급"}
+	for i: int in 6:
+		var extra: Dictionary={"sourceId":"extra-%d" % i,"name":"추가","grade":"일반"}
 		records.append(extra)
 		owned[CARDS.card_id(extra)]=true
+		spares[CARDS.card_id(extra)]=1
 	window.refresh()
 	var state: Dictionary=window._scrolls[roster.key]
 	first=_roster_check(window,state.grid,1)
