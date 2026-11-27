@@ -13,6 +13,7 @@ const SOURCE_WALK = preload("res://scripts/maps/source_walk_speed.gd")
 const PATH_PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 const DETOUR_RETRY_SECONDS: float = 0.25
 const DETOUR_POINT_EPSILON: float = 0.08
+const DETOUR_FORWARD_STEPS: Array[float] = [1.25, 2.0, 2.5]
 var original_source_preview = ORIGINAL_SOURCE.new()
 var current523_identity_actor = preload("res://scripts/resources/current523_identity_actor.gd").new()
 var original_source_manifest: String = ""
@@ -258,12 +259,15 @@ func _click_path_velocity() -> Vector2:
 	var room: float = distance
 	# On an original Land the leg is walked in the original's eight cell
 	# directions (diagonal steps, then straight), never an off-grid line.
-	var leg: Dictionary = SOURCE_WALK.cell_leg(_route_coordinates(), global_position, next_point, Callable(self, "_route_line_clear") if _route_has_field() else Callable())
+	var leg: Dictionary = _route_cell_leg_to(next_point)
 	if not leg.is_empty():
 		direction = leg.direction
 		room = maxf(float(leg.length), 0.0)
 	var speed: float = _walk_velocity(direction, click_move_speed).length()
 	return direction * minf(speed, room / maxf(physics_delta, 0.001))
+
+func _route_cell_leg_to(point: Vector2) -> Dictionary:
+	return SOURCE_WALK.cell_leg(_route_coordinates(), global_position, point, _route_line_clear if _route_has_field() else Callable())
 
 ## Walk animation clock on an original 523 Land: one walk loop of the
 ## original actor is one cell step, so its own clock is scaled to finish the
@@ -954,6 +958,18 @@ func _move_on_map(assist: bool = false, steering: Vector2 = Vector2.ZERO) -> voi
 func has_active_obstacle_detour() -> bool:
 	return not _detour_points.is_empty()
 
+## Validate the legs the route walker would actually take. A diagonal sight
+## ray can be clear even when the player's foot hits the corner on a cell leg.
+func can_resume_pursuit(target: Vector2) -> bool:
+	var from: Vector2 = global_position
+	var leg: Dictionary = _route_cell_leg_to(target)
+	if not leg.is_empty():
+		var turn: Vector2 = from + leg.direction * leg.length
+		if not _detour_leg_clear(from, turn): return false
+		if turn.distance_to(target) <= DETOUR_POINT_EPSILON: return true
+		from = turn
+	return _detour_leg_clear(from, target)
+
 func _reset_obstacle_detour() -> void:
 	_detour_points.clear()
 	_detour_steering = Vector2.ZERO
@@ -986,23 +1002,28 @@ func _find_obstacle_detour(heading: Vector2, routed: bool) -> PackedVector2Array
 		var step: Vector2 = (grid / maxf(absf(grid.x), absf(grid.y))).round()
 		forward = bx * step.x + by * step.y
 		sideways = bx * step.y - by * step.x
-	var advance: Vector2 = forward * 1.25
+	var room_in_steps: float = DETOUR_FORWARD_STEPS[0]
 	if routed:
-		# Rejoin ahead of the obstruction but before the current waypoint.
-		var room: float = (click_path[path_index] - origin).dot(heading)
-		if room < forward.length() * 0.5: return PackedVector2Array()
-		advance = advance.limit_length(room)
+		# Bound the search and never rejoin beyond the current waypoint.
+		room_in_steps = (click_path[path_index] - origin).dot(heading) / forward.length()
+		if room_in_steps < 0.5: return PackedVector2Array()
 	# M79 checks candidates in order and takes the first legal one. The local
 	# half/whole-cell offsets are TWILIGHT's choice. Probe the way forward too
 	# so held input cannot carry the player sideways along a continuous wall.
 	for fraction: float in [0.5, 1.0]:
 		for side: float in [1.0, -1.0]:
 			var turn: Vector2 = origin + sideways * fraction * side
-			var passed: Vector2 = turn + advance
-			if not _detour_leg_clear(origin, turn) or not _detour_leg_clear(turn, passed): continue
-			if not routed: return PackedVector2Array([turn])
-			var rejoin: Vector2 = origin + advance
-			if _detour_leg_clear(passed, rejoin): return PackedVector2Array([turn, passed, rejoin])
+			if not _detour_leg_clear(origin, turn): continue
+			# A narrow blocker may extend past the first return point. Try
+			# farther exits only while the same side lane stays open.
+			for steps: float in DETOUR_FORWARD_STEPS:
+				var advance: Vector2 = forward * minf(steps, room_in_steps)
+				var passed: Vector2 = turn + advance
+				if not _detour_leg_clear(turn, passed): break
+				if not routed: return PackedVector2Array([turn])
+				var rejoin: Vector2 = origin + advance
+				if _detour_leg_clear(passed, rejoin): return PackedVector2Array([turn, passed, rejoin])
+				if steps >= room_in_steps: break
 	return PackedVector2Array()
 
 func set_manual_click_path(points: PackedVector2Array, target: Vector2) -> void:
