@@ -166,7 +166,9 @@ static func _parse_one(raw: String) -> Dictionary:
 		return {"key":key, "value":value}
 	return {}
 
-static func annotate(source_record: Dictionary) -> Dictionary:
+## A caller scanning a catalog can reuse the pure text parses across records.
+## A record still owns its fields and accumulated passives.
+static func annotate(source_record: Dictionary, parsed_options: Dictionary = {}) -> Dictionary:
 	if str(source_record.get("source", "")) != "inven":
 		return source_record
 	if bool(source_record.get("inven_indexed", false)):
@@ -197,7 +199,9 @@ static func annotate(source_record: Dictionary) -> Dictionary:
 		if raw == "MP 흡수":
 			record["mpAbsorption"] = true
 			continue
-		var parsed: Dictionary = _parse_one(raw)
+		if not parsed_options.has(raw):
+			parsed_options[raw] = _parse_one(raw)
+		var parsed: Dictionary = parsed_options[raw]
 		if parsed.is_empty():
 			pending.append(raw)
 			continue

@@ -69,9 +69,9 @@ func _run() -> void:
 	check(not configured.get("ok",true) and configured.get("code")=="source_window_member_missing","fails closed without Option_All")
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud_text.contains("if original and not expand_all and _open_original_feature(\"options\"):return"),"설정 opens the original window first")
-	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	check(hud_text.contains("if _open_original_feature(\"options\",[\"info\"]):return"),"쿠폰 코드 opens the original 정보 tab (its coupon field) first")
-	check(main_text.contains("\"options\":preload(\"res://scripts/ui/original_ui/source_main_option_window.gd\")"),"the window is a feature window")
+	var feature_paths: Dictionary=preload("res://scripts/ui/original_ui/source_main_hud.gd").FEATURE_WINDOW_PATHS
+	check(load(feature_paths.get("options"))==WINDOW,"the window is a feature window")
 	var window=WINDOW.new()
 	window._hud=weakref(host.hud)
 	check(window._details_requested().get("routed","")=="settings_details" and host.hud.details==[[false,false]],"세부 설정 opens the TWILIGHT settings")

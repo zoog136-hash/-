@@ -6,6 +6,7 @@ const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
 const SourceRows = preload("res://scripts/resources/current523_definition_rows.gd")
 const NativeFields = preload("res://scripts/loot/current523_native_fields.gd")
 const NativeProjection = preload("res://scripts/loot/current523_native_item_projection.gd")
+const BUILT_IN_DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 const PATH: String = "res://data/collections/equipment_collections.json"
 const SAVE_KEY: String = "equipment_collections"
 var world
@@ -40,8 +41,8 @@ var test_save_writer: Callable
 
 func configure(host: Node) -> bool:
 	world = host
-	var parser := JSON.new()
-	if not FileAccess.file_exists(PATH) or parser.parse(FileAccess.get_file_as_string(PATH)) != OK or not parser.data is Dictionary:
+	var model: Variant = BUILT_IN_DATA.read_json(PATH)
+	if not model is Dictionary:
 		problem = "장비 컬렉션 데이터 파일 누락 또는 손상"
 		save_blocked = true
 		return false
@@ -53,7 +54,7 @@ func configure(host: Node) -> bool:
 	_native_identity.clear()
 	_native_identity_loaded = false
 	var required_names: Dictionary = {}
-	for collection: Variant in parser.data.get("collections", []):
+	for collection: Variant in model.get("collections", []):
 		if not collection is Dictionary: continue
 		for requirement: Variant in collection.get("requirements", []):
 			if requirement is Dictionary and requirement.get("name") is String:
@@ -89,7 +90,7 @@ func configure(host: Node) -> bool:
 				if not _normalized_names.has(collection_name): _normalized_names[collection_name] = []
 				_normalized_names[collection_name].append(source)
 		catalog.append(binding)
-	if not core.configure(parser.data,catalog,Stats.SUPPORTED):
+	if not core.configure(model,catalog,Stats.SUPPORTED):
 		problem = core.last_error
 		save_blocked = true
 		return false

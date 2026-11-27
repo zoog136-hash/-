@@ -135,7 +135,7 @@ func _rules() -> void:
 	check(WINDOW._market_span(240,0,400,80)==Vector2i(0,6) and WINDOW._market_span(240,-18800,400,80)==Vector2i(234,240),"market spans include the first and last visible rows with one buffer row")
 	check(WINDOW._money(9999)=="9999" and WINDOW._money(99999)=="9만9999" and WINDOW._money(20000)=="2만","the original 9만9999 money format")
 	check(WINDOW._unit(0.005)=="0.01" and WINDOW._unit(120.0)=="120","unit prices keep two decimals below 100")
-	check(HUD_CONTROLLER.FEATURE_WINDOWS.get("trade")==WINDOW,"the trade window is a registered feature window")
+	check(load(HUD_CONTROLLER.FEATURE_WINDOW_PATHS.get("trade"))==WINDOW,"the trade window is a registered feature window")
 	var captured: Dictionary={"currency_unit_id":34,"currency_class_id":2,"item_class_id":366,"bundle_price":50,"bundle_size":10000,"enchant":0,"element":"","element_level":0,"attributes":{"blessed_type":1},"initial_bundles":77,"server_id":"server:1","listing_id":"untrusted-reference"}
 	var equivalent: Dictionary=captured.duplicate(true)
 	equivalent.bundle_price=100;equivalent.bundle_size=20000;equivalent.initial_bundles=999;equivalent.server_id="server:9";equivalent.listing_id="other"

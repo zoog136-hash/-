@@ -114,7 +114,7 @@ var equipment_collection_button: Button
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const EnhancementReveal = preload("res://scripts/ui/enhancement_reveal.gd")
 var enhancement_reveal: Control
-const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
+const SAVED_UI_SETTINGS = preload("res://scripts/ui/saved_ui_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var quest_view: Control
@@ -266,6 +266,8 @@ func set_map_name(value: String) -> void:
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_map_name(value)
 
 func _ready() -> void:
+	# The base HUD creates most controls. Give them the final theme on entry.
+	$Root.theme = UI.make_theme()
 	super._ready()
 	# Every OptionButton/MenuButton popup list takes Android touches.
 	preload("res://scripts/ui/popup_touch_bridge.gd").install(get_window())
@@ -277,7 +279,6 @@ func _ready() -> void:
 	target_panel = null
 	target_label = null
 	target_hp = null
-	$Root.theme = UI.make_theme()
 	catalog_drag_icon = TextureRect.new()
 	catalog_drag_icon.name = "CatalogDragPreview"
 	catalog_drag_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -320,7 +321,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_fit_hud)
 	_polish_hud_chrome()
 	_fit_hud()
-	SettingsUI.apply_saved(self)
+	SAVED_UI_SETTINGS.apply_saved(self)
 	pointer_transfer = PointerTransfer.new()
 	$Root.add_child(pointer_transfer)
 	pointer_transfer.configure(self)
@@ -1669,7 +1670,7 @@ func _on_source_npc_dialogue_resolved(resolved: Dictionary, owner: Control) -> v
 func open_settings_info(expand_all: bool = false, original: bool = true) -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
 	if original and not expand_all and _open_original_feature("options"):return
-	var options := SettingsUI.new()
+	var options = load("res://scripts/ui/renewal_settings.gd").new()
 	workspace.mount(options)
 	options.configure(self)
 	if expand_all: options.expand_all()

@@ -442,7 +442,6 @@ func _build_ain_window() -> void:
 	_place(v20_ain_panel, 442.0, 88.0, 810.0, 569.0)
 	v20_ain_panel.z_index = 160
 	v20_ain_panel.visible = false
-	$Root.add_child(v20_ain_panel)
 	var margin: MarginContainer = MarginContainer.new()
 	for side: String in ["left", "top", "right", "bottom"]:
 		margin.add_theme_constant_override("margin_" + side, 12)
@@ -492,6 +491,7 @@ func _build_ain_window() -> void:
 	close.text = "닫기"
 	close.pressed.connect(func() -> void: v20_ain_panel.hide())
 	column.add_child(close)
+	$Root.add_child(v20_ain_panel)
 
 func _toggle_ain_window() -> void:
 	if v20_ain_panel == null:

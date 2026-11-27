@@ -74,8 +74,8 @@ var gesture_horizontal: float = 0.0
 var gesture_equipping: bool = false
 
 func _ready() -> void:
-	super._ready()
 	theme = UI.make_theme()
+	super._ready()
 	item_grid.draw.connect(_draw_slot_recesses)
 	item_grid.sort_children.connect(item_grid.queue_redraw)
 	z_index = 1

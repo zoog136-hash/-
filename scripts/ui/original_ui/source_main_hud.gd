@@ -1042,14 +1042,13 @@ func _inventory_model_signature(include_selection: bool=true, include_header: bo
 	return hash([bag.get("inventory_grid_dirty"),bag.get("inventory_list_rebuilds"),bag.get("category_filter"),bag.get("selected_item") if include_selection else null,bag.get("detail_active"),search.text if search is LineEdit else "",grid.columns if grid is GridContainer else 0,state.get("gold") if include_header and state is Dictionary else null,state.get("current_weight") if include_header and state is Dictionary else null,state.get("max_weight") if include_header and state is Dictionary else null,state.get("carrying_capacity") if include_header and state is Dictionary else null,state.get("equipped_items") if state is Dictionary else null,state.get("equipped_ammo") if state is Dictionary else null,state.get("item_locks") if state is Dictionary else null])
 
 ## --- Original 523 domination stone window (source_main_domination_stone_window)
-const DominationWindow=preload("res://scripts/ui/original_ui/source_main_domination_stone_window.gd")
 var _domination_window: RefCounted
 
 func _domination() -> RefCounted:
 	if _domination_window!=null:return _domination_window
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _pack==null or hud==null:return null
-	var window=DominationWindow.new()
+	var window=load("res://scripts/ui/original_ui/source_main_domination_stone_window.gd").new()
 	if not window.configure(_pack,hud).get("ok",false):return null
 	window.closed.connect(func() -> void:
 		if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
@@ -1222,46 +1221,48 @@ func close_emblem_window() -> void:
 		_emblem_window.close()
 
 ## --- Original 523 feature windows (source_main_window_kit subclasses), by key.
-const FEATURE_WINDOWS={
-	"card_collection":preload("res://scripts/ui/original_ui/source_main_card_collection_window.gd"),
-	"card_fusion":preload("res://scripts/ui/original_ui/source_main_card_fusion_window.gd"),
-	"option_awakening":preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd"),
-	"awakening_result":preload("res://scripts/ui/original_ui/source_main_awakening_result_window.gd"),
-	"card_awakening":preload("res://scripts/ui/original_ui/source_main_card_awakening_window.gd"),
-	"titles":preload("res://scripts/ui/original_ui/source_main_title_window.gd"),
-	"half_elixir":preload("res://scripts/ui/original_ui/source_main_half_elixir_window.gd"),
-	"monsterbook":preload("res://scripts/ui/original_ui/source_main_monsterbook_window.gd"),
-	"totems":preload("res://scripts/ui/original_ui/source_main_totem_window.gd"),
-	"card_dispatch":preload("res://scripts/ui/original_ui/source_main_card_dispatch_window.gd"),
-	"doll_explore":preload("res://scripts/ui/original_ui/source_main_doll_explore_window.gd"),
-	"item_book":preload("res://scripts/ui/original_ui/source_main_item_book_window.gd"),
-	"emblems":preload("res://scripts/ui/original_ui/source_main_symbol_window.gd"),
-	"guardians":preload("res://scripts/ui/original_ui/source_main_guardian_window.gd"),
-	"guardian_enchant":preload("res://scripts/ui/original_ui/source_main_guardian_enchant_window.gd"),
-	"weapon_mastery":preload("res://scripts/ui/original_ui/source_main_mastery_window.gd"),
-	"schedule":preload("res://scripts/ui/original_ui/source_main_schedule_window.gd"),
-	"tj_coupons":preload("res://scripts/ui/original_ui/source_main_tj_retry_window.gd"),
-	"mystery_card":preload("res://scripts/ui/original_ui/source_main_mystery_card_window.gd"),
-	"guardian_find":preload("res://scripts/ui/original_ui/source_main_guardian_find_window.gd"),
-	"buff_info":preload("res://scripts/ui/original_ui/source_main_buff_info_window.gd"),
-	"oman_tower":preload("res://scripts/ui/original_ui/source_main_oman_tower_window.gd"),
-	"currency_info":preload("res://scripts/ui/original_ui/source_main_currency_window.gd"),
-	"skill_cards":preload("res://scripts/ui/original_ui/source_main_skill_card_window.gd"),
-	"memory_places":preload("res://scripts/ui/original_ui/source_main_memory_window.gd"),
-	"trial_dungeon":preload("res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd"),
-	"card_change":preload("res://scripts/ui/original_ui/source_main_card_change_window.gd"),
-	"fusion_result":preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd"),
-	"forge":preload("res://scripts/ui/original_ui/source_main_forge_window.gd"),
-	"fail_history":preload("res://scripts/ui/original_ui/source_main_fail_history_window.gd"),
-	"reward_select":preload("res://scripts/ui/original_ui/source_main_reward_select_window.gd"),
-	"craft_result":preload("res://scripts/ui/original_ui/source_main_craft_result_window.gd"),
-	"quick_change":preload("res://scripts/ui/original_ui/source_main_quick_change_window.gd"),
-	"quick_summon":preload("res://scripts/ui/original_ui/source_main_quick_summon_window.gd"),
-	"box_probability":preload("res://scripts/ui/original_ui/source_main_box_probability_window.gd"),
-	"trade":preload("res://scripts/ui/original_ui/source_main_trade_window.gd"),
-	"options":preload("res://scripts/ui/original_ui/source_main_option_window.gd"),
-	"card_gacha_result":preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd"),
-	"combat_log":preload("res://scripts/ui/original_ui/source_main_combat_log.gd"),
+## Load the selected script when the feature is requested; none of these
+## windows is needed to prepare the game scene or play on the field.
+const FEATURE_WINDOW_PATHS={
+	"card_collection":"res://scripts/ui/original_ui/source_main_card_collection_window.gd",
+	"card_fusion":"res://scripts/ui/original_ui/source_main_card_fusion_window.gd",
+	"option_awakening":"res://scripts/ui/original_ui/source_main_option_awakening_window.gd",
+	"awakening_result":"res://scripts/ui/original_ui/source_main_awakening_result_window.gd",
+	"card_awakening":"res://scripts/ui/original_ui/source_main_card_awakening_window.gd",
+	"titles":"res://scripts/ui/original_ui/source_main_title_window.gd",
+	"half_elixir":"res://scripts/ui/original_ui/source_main_half_elixir_window.gd",
+	"monsterbook":"res://scripts/ui/original_ui/source_main_monsterbook_window.gd",
+	"totems":"res://scripts/ui/original_ui/source_main_totem_window.gd",
+	"card_dispatch":"res://scripts/ui/original_ui/source_main_card_dispatch_window.gd",
+	"doll_explore":"res://scripts/ui/original_ui/source_main_doll_explore_window.gd",
+	"item_book":"res://scripts/ui/original_ui/source_main_item_book_window.gd",
+	"emblems":"res://scripts/ui/original_ui/source_main_symbol_window.gd",
+	"guardians":"res://scripts/ui/original_ui/source_main_guardian_window.gd",
+	"guardian_enchant":"res://scripts/ui/original_ui/source_main_guardian_enchant_window.gd",
+	"weapon_mastery":"res://scripts/ui/original_ui/source_main_mastery_window.gd",
+	"schedule":"res://scripts/ui/original_ui/source_main_schedule_window.gd",
+	"tj_coupons":"res://scripts/ui/original_ui/source_main_tj_retry_window.gd",
+	"mystery_card":"res://scripts/ui/original_ui/source_main_mystery_card_window.gd",
+	"guardian_find":"res://scripts/ui/original_ui/source_main_guardian_find_window.gd",
+	"buff_info":"res://scripts/ui/original_ui/source_main_buff_info_window.gd",
+	"oman_tower":"res://scripts/ui/original_ui/source_main_oman_tower_window.gd",
+	"currency_info":"res://scripts/ui/original_ui/source_main_currency_window.gd",
+	"skill_cards":"res://scripts/ui/original_ui/source_main_skill_card_window.gd",
+	"memory_places":"res://scripts/ui/original_ui/source_main_memory_window.gd",
+	"trial_dungeon":"res://scripts/ui/original_ui/source_main_trial_dungeon_window.gd",
+	"card_change":"res://scripts/ui/original_ui/source_main_card_change_window.gd",
+	"fusion_result":"res://scripts/ui/original_ui/source_main_fusion_result_window.gd",
+	"forge":"res://scripts/ui/original_ui/source_main_forge_window.gd",
+	"fail_history":"res://scripts/ui/original_ui/source_main_fail_history_window.gd",
+	"reward_select":"res://scripts/ui/original_ui/source_main_reward_select_window.gd",
+	"craft_result":"res://scripts/ui/original_ui/source_main_craft_result_window.gd",
+	"quick_change":"res://scripts/ui/original_ui/source_main_quick_change_window.gd",
+	"quick_summon":"res://scripts/ui/original_ui/source_main_quick_summon_window.gd",
+	"box_probability":"res://scripts/ui/original_ui/source_main_box_probability_window.gd",
+	"trade":"res://scripts/ui/original_ui/source_main_trade_window.gd",
+	"options":"res://scripts/ui/original_ui/source_main_option_window.gd",
+	"card_gacha_result":"res://scripts/ui/original_ui/source_main_card_gacha_window.gd",
+	"combat_log":"res://scripts/ui/original_ui/source_main_combat_log.gd",
 }
 var _feature_windows: Dictionary={}
 var _awakening_review_pack: RefCounted
@@ -1282,7 +1283,7 @@ func awakening_review(parent: Control, title: String, body: String, accept: Call
 
 ## Opens feature window `key` (its open(parent, ...args)); {handled:false} without its pack members.
 func try_open_feature_window(key: String, args: Array=[]) -> Dictionary:
-	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	if not FEATURE_WINDOW_PATHS.has(key):return _fail("source_feature_window_unknown")
 	var configured: Dictionary=_configure_feature_window(key)
 	if not configured.get("ok",false):return configured
 	close_feature_windows(key)
@@ -1323,7 +1324,7 @@ func play_level_up(reached: int, guidance: Array[Dictionary]) -> Dictionary:
 ## Opens feature window `key` over the open ones (a result popup such as
 ## 합성 결과 over the card fusion window); other windows stay open.
 func try_open_overlay_window(key: String, args: Array=[]) -> Dictionary:
-	if not FEATURE_WINDOWS.has(key):return _fail("source_feature_window_unknown")
+	if not FEATURE_WINDOW_PATHS.has(key):return _fail("source_feature_window_unknown")
 	var configured: Dictionary=_configure_feature_window(key)
 	if not configured.get("ok",false):return configured
 	return _feature_windows[key].callv("open",[_coordinates]+args)
@@ -1333,7 +1334,9 @@ func _configure_feature_window(key: String) -> Dictionary:
 	if key == "monsterbook" and not preload("res://scripts/monsterbook/monsterbook523_runtime.gd").progression_enabled(): return _fail("source_monsterbook_progression_paused")
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if not _feature_windows.has(key) and _pack!=null and hud!=null:
-		var window: RefCounted=FEATURE_WINDOWS[key].new()
+		var script := load(str(FEATURE_WINDOW_PATHS[key])) as Script
+		if script == null or not script.can_instantiate(): return _fail("source_feature_window_script_unavailable")
+		var window: RefCounted=script.new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		if not configured.get("ok",false):return configured
 		window.closed.connect(func() -> void:
@@ -1344,7 +1347,7 @@ func _configure_feature_window(key: String) -> Dictionary:
 
 ## True when feature window `key` can mount (its members are in the pack).
 func feature_window_available(key: String) -> bool:
-	return FEATURE_WINDOWS.has(key) and _configure_feature_window(key).get("ok",false)
+	return FEATURE_WINDOW_PATHS.has(key) and _configure_feature_window(key).get("ok",false)
 
 func feature_window(key: String) -> RefCounted:
 	return _feature_windows.get(key)
@@ -1372,13 +1375,12 @@ func close_feature_windows(except: String="") -> void:
 			_feature_windows[name].close()
 
 ## --- Original 523 질서의 연금 window (source_main_refine_window, scripts/refine523)
-const RefineWindow=preload("res://scripts/ui/original_ui/source_main_refine_window.gd")
 var _refine_window: RefCounted
 
 func try_open_refine_window(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _refine_window==null and _pack!=null and hud!=null:
-		var window=RefineWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_refine_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["refine_window"]=configured
 		if configured.get("ok",false):
@@ -1502,13 +1504,12 @@ func close_storage_window() -> void:
 
 ## --- Original 523 혈맹 window (source_main_clan_window; the local clan
 ## rules, quotes and saves stay in scripts/clan523)
-const ClanWindow=preload("res://scripts/ui/original_ui/source_main_clan_window.gd")
 var _clan_window: RefCounted
 
 func try_open_clan_window(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _clan_window==null and _pack!=null and hud!=null:
-		var window=ClanWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_clan_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["clan_window"]=configured
 		if configured.get("ok",false):
@@ -1588,13 +1589,12 @@ func close_teleport_window() -> void:
 
 ## --- Original 523 제작 window (source_main_production_window; recipes,
 ## quotes, the confirmation and the craft stay with the existing owners)
-const ProductionWindow=preload("res://scripts/ui/original_ui/source_main_production_window.gd")
 var _production_window: RefCounted
 
 func try_open_production_window(world: Node) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _production_window==null and _pack!=null and hud!=null:
-		var window=ProductionWindow.new()
+		var window=load("res://scripts/ui/original_ui/source_main_production_window.gd").new()
 		var configured: Dictionary=window.configure(_pack,hud)
 		_window_problems["production_window"]=configured
 		if configured.get("ok",false):
@@ -2007,7 +2007,7 @@ func _refresh_wallet(changed: bool) -> void:
 	if header.get("_source_sha256")!=HEADER_SHA:
 		_wallet_result=_fail("source_main_header_parent_identity_mismatch")
 		return
-	var contract: Dictionary=Wallet.build(_pack,_gold,_balances,Callable(self,"_wallet_info") if FEATURE_WINDOWS.has("currency_info") and _pack.manifest.get("scenes",{}).has(FEATURE_WINDOWS["currency_info"].ROOT) else Callable())
+	var contract: Dictionary=Wallet.build(_pack,_gold,_balances,Callable(self,"_wallet_info") if FEATURE_WINDOW_PATHS.has("currency_info") and _pack.manifest.get("scenes",{}).has(Wallet.CURRENCY_INFO_MEMBER) else Callable())
 	if not contract.get("ok",false):
 		_wallet_result=contract
 		return
