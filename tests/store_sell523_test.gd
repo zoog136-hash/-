@@ -58,16 +58,16 @@ func real_main() -> void:
 	var fixture: bool="--source523-shop-fixture" in OS.get_cmdline_user_args()
 	var world: Node = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	for frame: int in 120: await process_frame
+	for frame: int in (2 if fixture else 120):await process_frame
 	var picker: Node = _find_script(root, "renewal_class_select.gd")
 	if picker != null:
 		picker.call("_choose", "기사")
 		if picker.has_method("_choose_gender"): picker.call("_choose_gender", 1)
 		picker.call("_confirm")
 	else: preload("res://tests/qa_class_selection.gd").enter_game(world)
-	for frame: int in 900:
+	for frame: int in (4 if fixture else 900):
 		await process_frame
-		if world.current523_aden_source_active() or (fixture and world.field_map!=null): break
+		if world.current523_aden_source_active(): break
 	var ctl: Variant = world.hud.get("original_main_ui_controller")
 	if (not world.current523_aden_source_active() and not fixture) or not is_instance_valid(ctl) or not ctl.call("can_open_shop_window"):
 		if fixture:check(false,"the source shop fixture requires an installed original UI")
@@ -78,6 +78,12 @@ func real_main() -> void:
 	if fixture and not world.current523_aden_source_active():
 		# Two current523 EarthObject classes mounted on the offline fixture map.
 		# Products, name, role, transactions, UI and touch stay on their normal owners.
+		world.set_process(false)
+		world.field_population.set_process(false)
+		world.player.set_physics_process(false)
+		if world.field_map==null:
+			world.field_map=PlayableField.new()
+			world.field_map.data={"npc_spawn":[]}
 		for class_id: int in [27,58]:
 			var source: Dictionary=TOWN._first("EarthObjectClass",class_id)
 			var name_row: Dictionary=TOWN._first("DescData_Korean",int(source.get("DescID",0)))
@@ -95,7 +101,7 @@ func real_main() -> void:
 	if not check(not general.is_empty(), "the start town has a 잡화상인"): world.queue_free(); return
 	# Something to sell: two of the 잡화상인's own first product, bought there.
 	world.gold = 1000000
-	world.hud.open_npc_shop(str(general.id))
+	world._open_town_npc_function(general)
 	var window: Object = ctl.get("_store_window")
 	if not check(window != null and window.is_open() and window.sells(), "the 잡화상인's Store_All opens and buys"): world.queue_free(); return
 	var goods: Array = window.goods()
