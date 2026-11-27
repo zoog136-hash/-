@@ -84,14 +84,15 @@ static func stamp(world: Node) -> String:
 	# Key ordering changes may conservatively stale a quote, never authorize it.
 	return JSON.stringify([world.quest_service.claimed,world.quest_service.item_grants,world.inventory,world.item_instances]).sha256_text()
 
-static func prepare_debit(world: Node, physical_id: String, quantity: int) -> Dictionary:
+static func prepare_debit(world: Node, physical_id: String, quantity: int, allow_held_test_card: bool=false) -> Dictionary:
 	var owned: Dictionary = proof(world,physical_id)
 	if not owned.ok: return owned
 	if world._item_locked(str(owned.inventory_key),physical_id) or world._item_locked(str(owned.inventory_key),""): return denied("잠긴 원본 보상은 소비하지 않습니다")
 	# The pinned quest row keeps the original TestItem flag; the game's
 	# TWILIGHT 근사 allow list (current523_definition_rows APPROX_TEST_ITEMS) applies.
 	var test_item: bool=preload("res://scripts/resources/current523_definition_rows.gd").approximated_item(owned.source_item).get("TestItem",false)
-	if (owned.source_use_immediately or test_item) and held_test_card_spec(owned).is_empty(): return denied("원본 즉시 사용/시험 아이템은 소비자 별도 연결 필요")
+	if owned.source_use_immediately or test_item:
+		if not allow_held_test_card or held_test_card_spec(owned).is_empty(): return denied("원본 즉시 사용/시험 아이템은 소비자 별도 연결 필요")
 	if quantity<1 or quantity>int(owned.quantity): return denied("원본 소지 수량 부족")
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var instances: Dictionary = world.item_instances.duplicate(true)
@@ -102,15 +103,15 @@ static func prepare_debit(world: Node, physical_id: String, quantity: int) -> Di
 	if int(inventory[owned.inventory_key])==0: inventory.erase(owned.inventory_key)
 	return {"ok":true,"kind":"twilight.quest523.reward-debit.v1","physical_id":physical_id,"quantity":quantity,"base_stamp":stamp(world),"ownership":owned,"override":{"inventory":inventory,"item_instances":instances},"use_authorized":false}
 
-static func current(world: Node, prepared: Dictionary) -> bool:
+static func current(world: Node, prepared: Dictionary, allow_held_test_card: bool=false) -> bool:
 	if prepared.get("kind")!="twilight.quest523.reward-debit.v1" or prepared.get("base_stamp")!=stamp(world): return false
 	var quantity: int = positive(prepared.get("quantity"))
 	if quantity<=0: return false
-	var fresh: Dictionary = prepare_debit(world,str(prepared.get("physical_id","")),quantity)
+	var fresh: Dictionary = prepare_debit(world,str(prepared.get("physical_id","")),quantity,allow_held_test_card)
 	return fresh.get("ok",false) and fresh.ownership==prepared.get("ownership") and fresh.override==prepared.get("override")
 
-static func use_state(world: Node, prepared: Dictionary, pack_sha: String) -> Dictionary:
-	if not current(world,prepared):return denied("원본 보상 사용 후보가 변경되었습니다")
+static func use_state(world: Node, prepared: Dictionary, pack_sha: String, allow_held_test_card: bool=false) -> Dictionary:
+	if not current(world,prepared,allow_held_test_card):return denied("원본 보상 사용 후보가 변경되었습니다")
 	var owned: Dictionary=prepared.ownership
 	var state: Dictionary=world.quest_service.export_state()
 	if not state.has("item_grants"):state["item_grants"]={}

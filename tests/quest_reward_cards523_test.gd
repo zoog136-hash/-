@@ -19,6 +19,7 @@ const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const INV = preload("res://scripts/loot/patch523_item_inventory.gd")
 const QA = preload("res://tests/qa_class_selection.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
+const CONSUME = preload("res://scripts/quests/quest_reward_consumption.gd")
 const PROVIDER = preload("res://scripts/quests/quest_item_provider238.gd")
 const FIXED = preload("res://scripts/quests/quest_fixed_cards523.gd")
 ## 아크 나이트(근사 허용 시험 행 카드), 변신·인형·성물 카드 확정 상자, 희귀 변신
@@ -51,8 +52,8 @@ func rules() -> void:
 	SOURCE.approximated_item(pinned)
 	check(pinned.TestItem == true, "the pinned quest row itself is not changed")
 	var stack: String = FileAccess.get_file_as_string("res://scripts/loot/current523_native_stack.gd")
-	check(stack.contains('if spec.kind=="fixed_card":return use_fixed_card(world,uid,selected_owned,record,spec)'), "a quest-held fixed card uses the native card owner")
-	check(stack.contains('var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256)) if is_quest else stage_debit(world,[request])') and stack.contains('if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload):return _failure("퀘스트 카드'), "a quest card is debited through the quest ledger")
+	check(stack.contains('if spec.kind=="fixed_card":return use_fixed_card(world,uid,selected_owned,record,spec,held_test_card)'), "a quest-held fixed card uses the native card owner")
+	check(stack.contains('var paid: Dictionary=QUEST_CONSUME.stage(world,[request],str(SOURCE.identity().source_sha256),held_test_card) if is_quest else stage_debit(world,[request])') and stack.contains('if is_quest and not QUEST_CONSUME.matches_payload(world,paid,payload,held_test_card):return _failure("퀘스트 카드'), "a quest card is debited through the quest ledger")
 	check(stack.contains('var payload: Dictionary=paid.overrides.duplicate(true);payload["consumable_state"]=state;payload["original_skill_state"]=learned'), "the quest skill book candidate is compared unchanged")
 	check(stack.contains('SOURCE.approximated_item(original_item)!=SOURCE.row("ItemClass"'), "the held bag/card row check reads the approved approximation")
 	var provider: String = FileAccess.get_file_as_string("res://scripts/quests/quest_item_provider238.gd")
@@ -223,6 +224,9 @@ func runtime() -> void:
 			check(proof.get("ok",false) and proof.source_item.TestItem,"reloaded quest receipt keeps the unchanged original flag #"+str(id))
 			check(proof.get("source_reward_timing")== (1 if id==996 else 2) and proof.get("source_use_immediately")== (id==996),"receipt comes from the expected instant or held original reward")
 			check(OWN.held_test_card_spec(proof).get("card_id",0)==REPORTED_CARD_IDS[id],"only verified receipt reveals fixed effect #"+str(id))
+			var request: Dictionary={"physical_id":uid,"quantity":1,"expected_quantity":1,"expected_remaining":0,"quest_reward_receipt":w.item_instances[uid].quest_reward_receipt}
+			var digest: String=str(SOURCE.identity().source_sha256)
+			check(not OWN.prepare_debit(w,uid,1).get("ok",false) and not CONSUME.stage(w,[request],digest).get("ok",false),"ordinary quest and crafting debits still reject the raw test card #"+str(id))
 			check(w.quest_item_provider.quickslot_held_supported(w,uid),"owned card supports the same manual quickslot path #"+str(id))
 			var inventory_key: String=str(proof.get("inventory_key",""))
 			w.ui_preferences.item_locks[inventory_key+"@@@"+uid]=true
