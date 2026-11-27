@@ -57,7 +57,8 @@ func open(parent: Node) -> Dictionary:
 	if _crafting:result=next.configure_project(_pack,"UI/ProductionScene.csb",132,{628:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}},[628])
 	else:result=next.configure_nodes(_pack,PARENT,[1572],{1572:{"role":"project","source_node_offsets":[728],"bindings":{728:{"role":"project","visible":true,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings}}}})
 	if not result.get("ok",false):next.free();return result
-	var project_path: Array[int]=[628] if _crafting else [1572,728]
+	var project_path: Array[int]=[1572,728]
+	if _crafting:project_path=[628]
 	var nested: Dictionary=next.project_player(project_path)
 	if not nested.get("ok",false):next.free();return nested
 	var renderer: Node2D=nested.player

@@ -114,7 +114,7 @@ func order_and_retired(hud: Node) -> void:
 		0:"crafting",1:"exchange",2:"변신",3:"마법인형",4:"성물",
 		5:"source_dungeons",8:"skill_card523",9:"equipment_collections",10:"clan523",
 		16:"refine523",18:"guardians",19:"emblems",20:"half_elixir",22:"weapon_mastery",
-		23:"totems",24:"domination_stone",25:"titles",28:"settings",
+		23:"totems",24:"domination_stone",25:"titles",28:"settings",29:"restart",
 	}
 	var original: bool=hud.menu_original_shell.get("ok",false)
 	var visible_cells: Array=grid.get_children().filter(func(cell: Control) -> bool:return cell.visible)
@@ -186,6 +186,12 @@ func every_tile_opens(hud: Node) -> void:
 		# Without it 무기 숙련 hands over to the existing mastery panel.
 		if id == "weapon_mastery" and not ok: ok = mastery[0] > 0
 		if id == "map" and not ok: ok = is_instance_valid(hud.original_main_ui_controller) and hud.original_main_ui_controller.world_map_is_open()
+		if id == "restart":
+			var dialog: Control = hud.get_node_or_null("Root/TwilightConfirmation")
+			ok = is_instance_valid(dialog) and dialog.is_visible_in_tree() and section == "menu" and not hud.get_parent().returning_to_character_lobby
+			# Restart cancel and save refusal/success need an isolated profile;
+			# source_inventory_controls_main_test exercises all three real touches.
+			if is_instance_valid(dialog): dialog.dismiss()
 		if id == "expedition":
 			var controller: Node = hud.original_main_ui_controller
 			var has_window: bool = is_instance_valid(controller) and controller.feature_window_available("doll_explore")

@@ -9,12 +9,14 @@ const GOLD_TEXT=13424
 const CAPACITY_TEXT=12476
 const EXTENSION_BUTTON=21648
 const SEARCH_BUTTON=44780
+const CLEAR_SEARCH_BUTTON=47700
 const HAS_EXTENSION=1
 const HAS_SEARCH=2
 const HAS_SORT=4
 const HAS_DELETE=8
 const HAS_LOCK=16
 const HAS_SORT_BUTTON=32
+const HAS_CLEAR_SEARCH=64
 const SORT_BUTTON=19772
 const SORT_OPTIONS=1476
 const SORT_BACKGROUND=11736
@@ -112,6 +114,7 @@ func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=tr
 	var wants: int=0
 	if bag!=null and bag.has_method("_toggle_expanded"):wants|=HAS_EXTENSION
 	if expanded and _pack.manifest.get("scenes",{}).has("UI/FloatingUi/Inventory_Popup_Keypad.csb"):wants|=HAS_SEARCH
+	if (wants & HAS_SEARCH) != 0 and bag != null and bag.has_method("clear_inventory_search"):wants|=HAS_CLEAR_SEARCH
 	if bag.has_method("sort_inventory_source"):wants|=HAS_SORT|HAS_SORT_BUTTON
 	if bag.has_method("request_selected_delete"):wants|=HAS_DELETE
 	if bag.has_method("_toggle_lock"):wants|=HAS_LOCK
@@ -129,6 +132,12 @@ func build(remaining: Dictionary={}, expanded: bool=false, include_rows: bool=tr
 		roots.append(SEARCH_BUTTON)
 		bindings[SEARCH_BUTTON]={"role":"button","activate":Callable(self,"_search_requested")}
 		bindings[46132]={"role":"static_source_text"}
+	if (found & (HAS_SEARCH | HAS_CLEAR_SEARCH)) == (HAS_SEARCH | HAS_CLEAR_SEARCH):
+		roots.append(CLEAR_SEARCH_BUTTON)
+		bindings[CLEAR_SEARCH_BUTTON] = {"role":"button", "activate":Callable(self, "clear_search")}
+		bindings[48368] = {"role":"static_source_text"} # Btn_Reset_All/Normal/Label
+		bindings[47752] = {"visible":false} # The enabled control uses the Normal label.
+		bindings[47804] = {"role":"static_source_text"}
 	if (found & (HAS_SORT|HAS_SORT_BUTTON))==(HAS_SORT|HAS_SORT_BUTTON):
 		roots.append_array([SORT_BUTTON,SORT_OPTIONS])
 		bindings[SORT_BUTTON]={"role":"button","activate":Callable(self,"toggle_sort")}
@@ -182,6 +191,13 @@ func bind_presented(scene: Node2D) -> Dictionary:
 func _search_requested() -> Dictionary:
 	search_requested.emit()
 	return {"ok":true,"existing_search_requested":true,"game_state_written":false}
+
+func clear_search() -> Dictionary:
+	var bag: Object = _live_inventory()
+	if bag == null or not bag.has_method("clear_inventory_search"):
+		return _fail("source_inventory_search_existing_owner_unavailable")
+	bag.call("clear_inventory_search")
+	return {"ok":true}
 
 func refresh_existing(scene: Node2D) -> Dictionary:
 	if _pack==null or _pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_main_inventory_identity_mismatch")
@@ -313,6 +329,7 @@ static func _control_presence(node: Dictionary, wanted: int) -> int:
 	var found: int=0
 	if offset==EXTENSION_BUTTON:found|=HAS_EXTENSION
 	elif offset==SEARCH_BUTTON:found|=HAS_SEARCH
+	elif offset==CLEAR_SEARCH_BUTTON:found|=HAS_CLEAR_SEARCH
 	elif offset==SORT_OPTIONS and _has_sort_children(node):found|=HAS_SORT
 	elif offset==SORT_BUTTON:found|=HAS_SORT_BUTTON
 	elif offset==DELETE_BUTTON:found|=HAS_DELETE

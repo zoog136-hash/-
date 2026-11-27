@@ -1271,6 +1271,7 @@ func _navigate(section: String) -> void:
 		"menu": toggle_menu()
 		"death523": get_parent().death_recovery.open_ui()
 		"settings": open_settings_info()
+		"restart": _request_character_restart()
 		"save": save_now()
 		"auto": open_schedule()
 		"log": open_combat_log()
@@ -1288,6 +1289,11 @@ func _navigate(section: String) -> void:
 ## same save_pressed as 설정 > 세부 설정 "지금 저장"); the menu stays open.
 func save_now() -> void:
 	save_pressed.emit()
+
+func _request_character_restart() -> void:
+	var world := get_parent()
+	confirm_action("재시작", "현재 캐릭터를 저장하고 캐릭터 선택 화면으로 돌아갑니다.", "재시작", func(_amount: int) -> void:
+		world.return_to_character_lobby())
 
 func confirm_awakening_action(title: String, body: String, action: String, callback: Callable) -> Control:
 	return _confirm_source_action(title,body,action,callback)
@@ -1863,7 +1869,7 @@ const ORIGINAL_MENU_CELLS: Array[String] = [
 	"clan523","","","","",
 	"","refine523","","guardians","emblems",
 	"half_elixir","","weapon_mastery","totems","domination_stone",
-	"titles","","","settings","",
+	"titles","","","settings","restart",
 	"monsterbook523","","","","",
 ]
 
@@ -1927,7 +1933,7 @@ func _build_menu_page() -> void:
 	menu_scroll.add_child(grid_center)
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["restart","재시작"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
 	menu_pairs = menu_pairs.filter(func(pair: Array) -> bool:
 		var id: String = str(pair[0])
 		return not id in RETIRED_SECTIONS and (id!="monsterbook523" or MONSTERBOOK_RUNTIME.progression_enabled()))
