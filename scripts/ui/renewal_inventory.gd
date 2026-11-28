@@ -30,6 +30,9 @@ var probability_button: Button
 ## The last 획득처 request: {item_class_id, native (original popup result) or summary lines}.
 var last_acquisition: Dictionary = {}
 var sort_mode: int = 0
+signal new_items_notice_changed
+var new_items_pending: bool = false
+var _inventory_notice_seeded: bool = false
 var inventory_fingerprint: int = -1
 var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
@@ -179,7 +182,7 @@ func _ready() -> void:
 	# This button sorts once (grade, then name) and keeps that as the new order.
 	var sort_button: Button = UI.button("정렬",sort_inventory_now,Vector2(56,44))
 	sort_button.name = "InventorySort"
-	sort_button.tooltip_text = "등급·이름순으로 한 번 정렬합니다. 이후 획득한 아이템은 뒤에 쌓입니다."
+	sort_button.tooltip_text = "재화, 장비, 소모품, 기타 순으로 품목 번호를 정렬합니다."
 	actions.add_child(sort_button)
 	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,44))
 	expand_button.name = "ExpandInventory"
@@ -656,9 +659,25 @@ func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
 	super.set_catalog_data(data,images)
 
 func set_inventory(value: Dictionary) -> void:
-	if inventory == value:
-		return
+	var detect_pickups: bool = _inventory_notice_seeded and not new_items_pending
+	_inventory_notice_seeded = true
+	if inventory == value:return
+	if detect_pickups:
+		for key: Variant in value:
+			if key is String and not WALLET_ONLY.has(key) and int(value[key])>int(inventory.get(key,0)):
+				new_items_pending=true
+				new_items_notice_changed.emit()
+				break
 	super.set_inventory(value)
+
+func acknowledge_new_items() -> void:
+	if not new_items_pending:return
+	new_items_pending=false
+	new_items_notice_changed.emit()
+
+func reset_new_items_notice() -> void:
+	_inventory_notice_seeded=false
+	acknowledge_new_items()
 
 func set_character_state(value: Dictionary) -> void:
 	var fingerprint: int = hash([value.get("equipped_items",{}),value.get("equipped_ammo",""),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
@@ -923,10 +942,7 @@ func move_inventory_before(source: String, target: String) -> bool:
 ## Sort once by grade (highest first), then name, then physical ID, and keep it
 ## as the stored order. Later pickups stack after it again.
 func sort_inventory_now() -> void:
-	disarm_item_action()
-	_store_sorted_order(_inventory_entries(), 1)
-	_refresh_inventory_grid()
-	_request_order_save()
+	sort_inventory_source("category",false)
 
 ## One-shot original criteria. Keep old acquisition order as the stable
 ## tie-breaker, and keep unknown/undated items after verified values.
@@ -947,8 +963,8 @@ func sort_inventory_source(field: String, descending: bool) -> bool:
 				elif str(int(key)).length() not in [10,12]:key=null
 				elif str(int(key)).length()==10:key=int(key)*100
 			"weight":key=NATIVE_FIELDS.field(record,"source_weight",record.get("source_weight_raw"))
-			"category":key=NATIVE_FIELDS.field(record,"source_category_id",null)
-		if (key is int or key is float) and is_finite(float(key)) and float(key)>=0.0:keys[reference]=key
+			"category":key=_catalog_sort_key(record,reference)
+		if key is Vector2i or ((key is int or key is float) and is_finite(float(key)) and float(key)>=0.0):keys[reference]=key
 	order.sort_custom(func(a: String,b: String) -> bool:
 		if keys.has(a)!=keys.has(b):return keys.has(a)
 		if keys.has(a) and keys[a]!=keys[b]:return keys[a]>keys[b] if descending else keys[a]<keys[b]
@@ -957,6 +973,29 @@ func sort_inventory_source(field: String, descending: bool) -> bool:
 	_refresh_inventory_grid()
 	_request_order_save()
 	return true
+
+func _catalog_sort_key(record: Dictionary, reference: String) -> Vector2i:
+	var slot: String=str(record.get("slot","")).to_lower()
+	var kind: String=str(record.get("type",""))
+	var category: int=3
+	if slot=="currency" or kind=="재화" or NATIVE_FIELDS.field(record,"source_category_id",null)==122:
+		category=0
+	elif slot in BAG_EQUIPMENT_SLOTS:
+		category=1
+	elif slot=="consumable" or kind=="소모품" or NATIVE_FIELDS.field(record,"source_is_consumable",false)==true:
+		category=2
+	var item_id: int=_item_class_id(record)
+	if item_id<1:
+		var source_key: String=str(record.get("sourceId",""))
+		if source_key.begins_with("m523:item:"):source_key=source_key.trim_prefix("m523:item:")
+		if source_key.is_valid_int() and source_key.length()<10 and source_key.to_int()>0:
+			item_id=source_key.to_int()
+	if item_id<1 and not _ref_instance_id(reference).is_empty():
+		# Older quest-held physical rows may carry the ItemClass ID only in
+		# their original receipt. Read it for display ordering only.
+		var physical: Dictionary=character_state.get("item_instances",{}).get(_ref_instance_id(reference),{})
+		item_id=int(physical.get("quest_reward_receipt",{}).get("item_class_id",0))
+	return Vector2i(category,item_id if item_id>0 else 2147483647)
 
 var local_order_store: Dictionary = {}
 

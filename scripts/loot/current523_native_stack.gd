@@ -2258,17 +2258,17 @@ static func use_mystery_card(world: Node,uid: String,owned: Dictionary,record: D
 	var deck: Dictionary=SOURCE.row("BuffCardDeck",int(rule.deck_id))
 	var spec: Dictionary={"kind":"fixed_card","activation_status":"unrestricted","card_kind":rule.card_kind,"card_id":int(card.ID),"deck_id":rule.deck_id,"original_card":card,"original_deck":deck,"buff_card_cannot_swap":false,"server_limit_set_id":0,
 		"item_requirements":{"targetting_type_id":D.item_definition(record).get("original_item",{}).get("TargettingTypeID"),"service_region_code":D.item_definition(record).get("original_item",{}).get("ServiceRegionCode",""),"can_use_when_invisible":true},"approximation":"TWILIGHT 근사: 같은 덱·등급 카드 균등 추첨"}
-	var result: Dictionary=use_fixed_card(world,uid,owned,record,spec)
+	var result: Dictionary=use_fixed_card(world,uid,owned,record,spec,false,true)
 	if result.get("ok",false):world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	return result
 
-static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false) -> Dictionary:
+static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false,reveal_draw: bool=false) -> Dictionary:
 	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 카드 아이템 사용 대상·서비스 조건 미지원")
 	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
 	if not server.ok:return _failure(str(server.reason)+" · 아이템 보존")
-	if world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
+	if reveal_draw and world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
 	var category: String=str(spec.get("card_kind",""));var card_id: int=int(spec.get("card_id",0))
 	if SOURCE.row("BuffCard",card_id)!=spec.get("original_card"):return _failure("원본 카드 정의 변경 감지 · 아이템 보존")
 	var card: Dictionary=card_binding(world,category,card_id)
@@ -2306,7 +2306,8 @@ static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dic
 	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	world.hud.set_card_draw_fusion_result(category,message)
-	world.hud.present_card_reveal(category,outcome,false)
+	if reveal_draw:
+		world.hud.present_card_reveal(category,outcome,false)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"category":category,"card_id":card_id,"results":outcome.results,"message":message}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.use_fixed_card")
 

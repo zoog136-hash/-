@@ -179,6 +179,7 @@ var class_picker_initial: bool = false
 var class_picker_backdrop: ColorRect
 var minimap_mounted: bool = false
 var cooldown_shades: Array[ColorRect] = []
+const SKILL_COOLDOWN_FILL = preload("res://scripts/ui/original_ui/source_radial_fill.gd")
 var catalog_test_tools: VBoxContainer
 var companion_window: PanelContainer
 var transaction_view: Control
@@ -342,6 +343,7 @@ func _polish_hud_chrome() -> void:
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
+	lineage_inventory_ui.new_items_notice_changed.connect(_refresh_inventory_notice)
 	lineage_inventory_ui.name = "LineageInventoryUI"
 	lineage_inventory_ui.set("controller",self)
 	lineage_inventory_ui.item_activate_requested.connect(func(item_name: String) -> void: inventory_item_activated.emit(item_name))
@@ -715,13 +717,27 @@ func _process_step(delta: float) -> void:
 	var cds: Dictionary = world.get("skill_cooldowns")
 	for index: int in range(quickslot_cooldown_labels.size()):
 		var remain: float = 0
+		var entry: Dictionary = {}
 		var absolute: int = quickslot_index(index)
 		if absolute<quickslot_entries.size() and quickslot_entries[absolute] is Dictionary:
-			var entry: Dictionary = quickslot_entries[absolute]
+			entry = quickslot_entries[absolute]
 			var cooldowns: Dictionary = world.item_use_cooldowns if entry.get("kind","") == "item" else cds
 			remain = float(cooldowns.get(str(entry.get("id","")),0))
 		quickslot_cooldown_labels[index].text = "%.1f" % remain if remain>0 else ""
-		if index < cooldown_shades.size(): cooldown_shades[index].visible = remain > 0
+		if index >= cooldown_shades.size():continue
+		var shade: ColorRect = cooldown_shades[index]
+		shade.visible = remain > 0
+		if not shade.is_visible_in_tree():continue
+		if entry.get("kind")=="skill":
+			var material: ShaderMaterial = shade.get_meta("skill_cooldown_material") if shade.has_meta("skill_cooldown_material") else null
+			if material==null:
+				material=ShaderMaterial.new()
+				material.shader=SKILL_COOLDOWN_FILL.shader()
+				shade.set_meta("skill_cooldown_material",material)
+			shade.material=material
+			SKILL_COOLDOWN_FILL.set_fill_ratio(shade,world.quickslot_skill_cooldown_ratio(entry))
+		elif shade.material!=null:
+			shade.material=null
 	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_quickslots()
 	if workspace != null and workspace.visible:
 		workspace.footer.text = "아데나  %s  ·  Lv.%d  ·  %s  ·  Esc로 닫기" % [lineage_inventory_ui._format_number(int(character_state.get("gold",0))),int(character_state.get("level",1)),v20_map_name.text]
@@ -1605,6 +1621,12 @@ func refresh_inventory(items: Dictionary) -> void:
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("production_window_is_open") and original_main_ui_controller.production_window_is_open():
 		original_main_ui_status["production_window"] = original_main_ui_controller.refresh_production_window()
 
+func _refresh_inventory_notice() -> void:
+	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.refresh_inventory_notice()
+
+func reset_inventory_notice() -> void:
+	if is_instance_valid(lineage_inventory_ui):lineage_inventory_ui.reset_new_items_notice()
+
 func open_patch523_equipment_info(scroll_id: String = "", scroll_uid: String = "") -> void:
 	if not scroll_id.is_empty() and _hold_original_inventory_window("장비 강화",original_main_ui_bind_problem):return
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
@@ -1805,6 +1827,7 @@ func toggle_inventory() -> void:
 		if native.get("handled",false):
 			if pointer_transfer!=null:pointer_transfer.cancel()
 			workspace.hide()
+			lineage_inventory_ui.acknowledge_new_items()
 			FRAME_HITCH.detail("ui.inventory_open.native",started)
 			return
 		problem=native
@@ -1814,6 +1837,7 @@ func toggle_inventory() -> void:
 		return
 	_report_original_fallback("가방",problem)
 	lineage_inventory_ui.show_inventory()
+	lineage_inventory_ui.acknowledge_new_items()
 	FRAME_HITCH.detail("ui.inventory_open.fallback",started)
 
 func open_character() -> void:

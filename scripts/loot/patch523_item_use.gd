@@ -165,6 +165,7 @@ static func _fixed_card(world: Node, record: Dictionary, spec: Dictionary) -> vo
 	world.inventory = inventory
 	world.card_draw_fusion.import_state(after)
 	world._invalidate_equipment_static()
+	if world.get("card_collections")!=null:world.card_collections.invalidate()
 	world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
 	var message: String = "원본 지정 카드 지급 · %s (%s)" % [str(candidates[0].name), category]
@@ -172,7 +173,6 @@ static func _fixed_card(world: Node, record: Dictionary, spec: Dictionary) -> vo
 	world.hud.append_log(message)
 	if int(spec.get("consume_effect_sprite_id",0)) > 0: world.option_awakening.combat.emit_sprite(int(spec.consume_effect_sprite_id),world.player,DROPS.item_definition(record).get("original_item",{}))
 	world.hud.set_card_draw_fusion_result(category, message)
-	world.hud.present_card_reveal(category, outcome, false)
 
 static func _flat_buff(world: Node, record: Dictionary, spec: Dictionary) -> void:
 	var duration: float = float(spec.get("duration_seconds", 0.0))

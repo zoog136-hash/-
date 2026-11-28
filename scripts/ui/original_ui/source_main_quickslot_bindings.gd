@@ -13,13 +13,17 @@ const SLOT_BACKGROUND=18816
 const ICON=18488
 const AMOUNT=18112
 const COOLDOWN=16968
+const COOLDOWN_SHADE=5176
+const COMMON_ATLAS="UI/UI_Resource/Atlas_Common.plist"
 const AUTO_ICON=13684
 const SLOT_SOURCE_OFFSETS: Array[int]=[20348,19808,18816,18488,18112,16968,13684]
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 const ORIGINAL_COUNT=preload("res://scripts/original_client/oc_m100_m102_quickslot.gd")
+const RADIAL_FILL=preload("res://scripts/ui/original_ui/source_radial_fill.gd")
 var _pack: RefCounted
 var _hud: WeakRef
 var _image_provider: Callable
+var _cooldown_shade_available: bool=false
 
 func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Dictionary:
 	if not is_instance_valid(hud) or not hud.has_method("quickslot_index") or not hud.has_method("_emit_quickslot"):return _fail("source_quickslot_existing_hud_api_missing")
@@ -28,6 +32,7 @@ func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Diction
 	_image_provider=image_provider
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
+	_cooldown_shade_available=_pack.manifest.get("atlases",{}).get(COMMON_ATLAS,{}).get("frames",{}).has("Img_Bg_Alpha.png")
 	return {"ok":true,"configured":true,"image_provider_available":image_provider.is_valid(),"partial_source_scene":true,"complete_screen_contract":false}
 
 func snapshot() -> Dictionary:
@@ -74,7 +79,8 @@ func _snapshot_model(only_visible: int) -> Dictionary:
 		# other row keeps the existing HUD caption (the game has no spell counter store).
 		var ammo: Dictionary=world.call("_quickslot_ammo_source",entry) if world.has_method("_quickslot_ammo_source") and not entry.is_empty() else {}
 		var amount: Dictionary=amount_presentation(not entry.is_empty(),caption.text,ammo)
-		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
+		var ratio: float=world.call("quickslot_skill_cooldown_ratio",entry) if _cooldown_shade_available and world.has_method("quickslot_skill_cooldown_ratio") else 0.0
+		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"cooldown_ratio":ratio,"auto":bool(entry.get("auto",false))})
 	return {"ok":true,"rows":rows,"pages":pages.duplicate(true),"model_basis":"existing HUD quickslot_index/entries/captions/cooldown_labels and World._quickslot_pages","partial_source_scene":true,"complete_screen_contract":false}
 
 func build_group(group: int) -> Dictionary:
@@ -107,7 +113,11 @@ func build_group(group: int) -> Dictionary:
 			COOLDOWN:{"role":"source_text","text":row.cooldown_text,"visible":row.filled and not str(row.cooldown_text).is_empty()},
 			AUTO_ICON:{"visible":row.filled and bool(row.auto)}
 		}
-		bindings[project]={"role":"project","source_node_offsets":SLOT_SOURCE_OFFSETS.duplicate(),"bindings":slot_bindings}
+		var slot_scope: Array[int]=SLOT_SOURCE_OFFSETS.duplicate()
+		if _cooldown_shade_available:
+			slot_scope.append(COOLDOWN_SHADE)
+			slot_bindings[COOLDOWN_SHADE]={"visible":false}
+		bindings[project]={"role":"project","source_node_offsets":slot_scope,"bindings":slot_bindings}
 		rows.append(row)
 	# Project scopes retain original Panel124 ancestry and five positions.
 	# PageView registration/layout is the caller's independent engine adapter.
@@ -159,10 +169,29 @@ func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 	if not current.filled:
 		shown=scene.set_bound_visible(ICON,false)
 		if not shown.get("ok",false):return shown
+	if _cooldown_shade_available:update_cooldown_shade(scene,current.cooldown_ratio)
 	# No image provider/relookup is invoked by refresh. Initial owner upload
 	# and a real entry/page change are handled by the caller's staged rebuild.
 	scene.set_meta("source_quickslot_identity",current_identity)
 	return {"ok":true,"row":current,"image_lookup_performed":false,"game_state_written":false}
+
+static func update_cooldown_shade(scene: Node2D, ratio: float) -> void:
+	var nodes: Dictionary=scene.get("source_nodes")
+	var shade: Node2D=nodes.get(COOLDOWN_SHADE)
+	if not is_instance_valid(shade):return
+	if ratio<=0.0:
+		shade.hide()
+		return
+	var sprite: Sprite2D=shade.get_meta("source_sprite") if shade.has_meta("source_sprite") else null
+	if not is_instance_valid(sprite):return
+	if sprite.material==null or not sprite.has_meta("source_radial_fill"):
+		# The authored translucent swatch is smaller than the skill icon.
+		var icon: Node2D=nodes.get(ICON)
+		shade.position=icon.position
+		sprite.scale*=64.0/30.0
+		var caption: Node2D=nodes.get(COOLDOWN)
+		if is_instance_valid(caption):caption.z_index=1
+	shade.visible=RADIAL_FILL.apply(sprite,ratio)
 
 ## Amount node text/visibility. `ammo` is empty unless the slot is a skill that consumes ammo:
 ## {"ammo_count": int, "can_use_without_ammo": bool}. Then the game data is projected onto the

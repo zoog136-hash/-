@@ -10,6 +10,8 @@ extends SceneTree
 ##    real Main buys exact local items and settles existing escrow, without
 ##    exposing any new sale registration. Targeted also exercises real CSBs,
 ##    a legacy physical stack, failed write, touch cancellation and reload.
+## -- --targeted-economy exercises the same Main transactions on packs without
+##    the opt-in Alice animated icon scenes. --targeted also requires the icons.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_trade_window.gd")
 const MARKET=preload("res://scripts/exchange/trade523_market.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
@@ -19,6 +21,7 @@ const FROZEN=preload("res://scripts/exchange/frozen_exchange.gd")
 const ICON_REGISTRY=preload("res://scripts/ui/source523_original_ui_icons.gd")
 const SHOP_CATALOG=preload("res://scripts/shop/source523_shop_catalog.gd")
 const ALICE: Dictionary={179094:"LargeSword",179134:"Rifle",185984:"Scythe",291612:"RunSword"}
+const UNIQUE_SWORD: int=362401
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const HUD_CONTROLLER=preload("res://scripts/ui/original_ui/source_main_hud.gd")
 var checks: int=0
@@ -101,20 +104,22 @@ func _run() -> void:
 	var pack_dir: String=""
 	var main: bool=false
 	var targeted: bool=false
+	var economy: bool=false
 	var fallback: bool=false
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
 		if value=="--main":main=true
 		if value=="--targeted":targeted=true
+		if value=="--targeted-economy":economy=true
 		if value=="--fallback":fallback=true
 	if not pack_dir.is_empty():await _real_pack(pack_dir)
 	if main:await _real_main()
-	if targeted:await _targeted_main()
+	if targeted or economy:await _targeted_main(targeted)
 	if fallback:await _fallback_main()
-	if main or targeted:
+	if main or targeted or economy:
 		for pack: RefCounted in ICON_REGISTRY.packs_by_manifest.values():pack.release_cache_leases()
 	for failure: String in failures:printerr("ORIGINAL_UI_TRADE_WINDOW_FAIL ",failure)
-	print("ORIGINAL_UI_TRADE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty(),"main_checked":main or targeted}))
+	print("ORIGINAL_UI_TRADE_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty(),"main_checked":main or targeted or economy,"animated_icons_checked":targeted}))
 	quit(0 if failures.is_empty() else 1)
 
 func _rules() -> void:
@@ -140,15 +145,17 @@ func _rules() -> void:
 	var equivalent: Dictionary=captured.duplicate(true)
 	equivalent.bundle_price=100;equivalent.bundle_size=20000;equivalent.initial_bundles=999;equivalent.server_id="server:9";equivalent.listing_id="other"
 	check(MARKET.captured_unit(captured)==MARKET.captured_unit(equivalent),"normalization alone crosses capture boundary")
-	var first: Dictionary=MARKET.local_lot(10000,"material",MARKET.captured_unit(captured))
-	var equal: Dictionary=MARKET.local_lot(10000,"material",MARKET.captured_unit(equivalent))
-	equivalent.bundle_price=400
-	var different: Dictionary=MARKET.local_lot(10000,"material",MARKET.captured_unit(equivalent))
-	check(first==equal and first.size==1000 and different.size==first.size and different.price>first.price,"capture cannot set local size; distinct normalized price changes only price")
+	var first: Dictionary=MARKET.local_lot(10000,MARKET.captured_unit(captured))
+	var equal: Dictionary=MARKET.local_lot(10000,MARKET.captured_unit(equivalent))
+	equivalent.bundle_price=4000
+	var different: Dictionary=MARKET.local_lot(10000,MARKET.captured_unit(equivalent))
+	check(first==equal and first.size==100 and different.size==first.size and different.price>first.price,"capture cannot set local size; distinct normalized price changes only price")
+	check(MARKET.local_lot(1,123.0)=={"size":1,"price":123} and MARKET.local_lot(20,2.0)=={"size":20,"price":40},"equipment and smaller native stack ceilings hold")
+	check(MARKET.local_lot(500,1000000.0)=={"size":100,"price":MARKET.MAX_SALE_AMOUNT},"an expensive estimated lot stays within the sale policy")
 	for variant: Dictionary in [{"enchant":5},{"element_level":1},{"attributes":{"blessed_type":3}},{"currency_class_id":3}]:
 		var bad_sample: Dictionary=captured.duplicate(true);bad_sample.merge(variant,true)
 		check(MARKET.captured_unit(bad_sample)<0.0,"non-comparable capture ignored: "+str(variant))
-	check(MARKET.local_lot(10000,"material",0.0).is_empty(),"no invented fallback price")
+	check(MARKET.local_lot(10000,0.0).is_empty(),"invalid unit price is rejected")
 	var window=WINDOW.new()
 	var hud:=FakeHud.new()
 	var world:=FakeWorld.new()
@@ -209,8 +216,7 @@ func _real_pack(pack_dir: String) -> void:
 	check(fake.settled==1,"정 산 settles")
 	var history: Dictionary=window._set_tab("history")
 	check(history.get("handled",false) and int(history.filled.rows)==1,"정산 내역 lists the history")
-	window._world_pressed()
-	check(hud.shown.has("월드 거래소는 온라인 전용입니다 · 로컬 거래소를 이용하세요"),"월드 거래소 explains it is online-only")
+	check(not _source_node(window,"Nd_TopMenu/Btn_World_On") and not _source_node(window,"Nd_TopMenu/Btn_World_Off"),"neither world market tab is mounted")
 	await _large_lists(window,fake)
 	window._close_requested()
 	check(not window.is_open(),"Btn_Close closes the window")
@@ -286,7 +292,7 @@ func _real_main() -> void:
 	check(not found.is_empty(),"소모품 lists items: "+str(found.size()))
 	var approx_id: int=0
 	for row: Dictionary in market.search(1):
-		if int(row.count)>0 and bool(row.get("local",false)):
+		if int(row.count)>0 and bool(row.get("local",false)) and int(row.min_price)<=100000:
 			approx_id=int(row.item_class_id)
 			break
 	check(approx_id>0,"a real TWILIGHT weapon is offered locally")
@@ -407,7 +413,7 @@ static func _image_scenes(node: Node, found: Dictionary) -> void:
 			found[evidence.member]={"target":evidence.target,"playback":evidence.playback,"node":node,"player":node.get_meta("source_asset_scene")}
 	for child: Node in node.get_children():_image_scenes(child,found)
 
-func _targeted_main() -> void:
+func _targeted_main(require_animated_icons: bool) -> void:
 	var archive: String=OS.get_environment("TWILIGHT_EXACT_TRADE_DEFINITIONS")
 	check(not archive.is_empty() and not FileAccess.file_exists("user://twilight_v20_save.json"),"targeted local-market fixture uses an empty profile with the exact source ZIP")
 	if archive.is_empty():return
@@ -422,7 +428,7 @@ func _targeted_main() -> void:
 	SOURCE.reset();SHOP_CATALOG.release()
 	check(SOURCE.identity().get("source_sha256")==SOURCE.SOURCE_SHA,"verified live original tables")
 	w.skill_awakening=w.SKILL_AWAKENING.new();w.skill_awakening.configure(w)
-	var ids: Array=ALICE.keys();ids.append_array([366,137])
+	var ids: Array=ALICE.keys();ids.append_array([366,137,UNIQUE_SWORD])
 	for id: int in ids:
 		var native: Dictionary=w.source_item_definition(id).get("native_record",{})
 		check(not native.is_empty(),"original registered catalog #"+str(id))
@@ -438,22 +444,31 @@ func _targeted_main() -> void:
 	if not is_instance_valid(window) or not window.is_open():
 		w.queue_free();await process_frame;return
 	var market: RefCounted=window.market
-	check(market.search(0,"앨리스").size()==4,"exact four installed Alice weapons appear even without price")
+	check(market.search(0,"앨리스").size()==4,"exact four installed Alice weapons appear without direct price observations")
 	window._open_keypad();await process_frame
 	window._editor.text="앨리스"
 	var searched: Dictionary=window._apply_query()
 	check(searched.get("handled",false) and searched.filled.items==4,"native exact four Alice search rows")
 	if searched.get("handled",false):
 		var images: Dictionary={}
-		_image_scenes(window._scene,images)
+		if require_animated_icons:_image_scenes(window._scene,images)
 		for id: int in ALICE:
-			var member: String="UI/CsbFile/icon/Fx_Item_Weapon_%s_Myth_Alice.csb"%ALICE[id]
-			var visual: Dictionary=images.get(member,{})
-			check(not visual.is_empty() and visual.target.member=="UI/CommonUi/Common_Slot.csb" and int(visual.target.node_offset)==15012 and visual.playback.playing and visual.node.is_visible_in_tree(),"actual native animated source slot #"+str(id))
-			check(market.price_reference(id).is_empty() and market.listings(id).is_empty(),"no arbitrary market price or stock #"+str(id))
+			if require_animated_icons:
+				var member: String="UI/CsbFile/icon/Fx_Item_Weapon_%s_Myth_Alice.csb"%ALICE[id]
+				var visual: Dictionary=images.get(member,{})
+				check(not visual.is_empty() and visual.target.member=="UI/CommonUi/Common_Slot.csb" and int(visual.target.node_offset)==15012 and visual.playback.playing and visual.node.is_visible_in_tree(),"actual native animated source slot #"+str(id))
+			var quote: Dictionary=market.price_reference(id)
+			var lots: Array=market.listings(id)
+			check(quote.get("basis")=="hero_multiplier" and lots.size()==1 and lots[0].approx and lots[0].bundle_size==1 and lots[0].bundle_price==int(quote.hero_unit)*10,"one mythic weapon at ten times the heroic estimate #"+str(id))
+	var unique_quote: Dictionary=market.price_reference(UNIQUE_SWORD)
+	var unique_lots: Array=market.listings(UNIQUE_SWORD)
+	var mythic_quote: Dictionary=market.price_reference(179094)
+	check(unique_lots.size()==1 and unique_lots[0].approx and unique_lots[0].bundle_size==1 and unique_lots[0].bundle_price==int(unique_quote.get("hero_unit",0))*100 and float(unique_quote.get("unit",0.0))==float(mythic_quote.get("unit",0.0))*10.0,"one unique sword at ten times the comparable mythic sword estimate")
+	var potions: Array=market.listings(137)
+	check(potions.size()==1 and potions[0].bundle_size==100 and potions[0].approx,"the local consumable is a 100-unit estimated listing")
 	var exact: Dictionary=market.price_reference(366)
 	var quote_rows: Array=market.listings(366)
-	check(exact.get("basis")=="exact" and quote_rows.size()==1 and quote_rows[0].key=="local:366" and quote_rows[0].bundle_size==1000 and quote_rows[0].enchant==0,"captured fraction is only price, local leather lot has exact ID and independent quantity")
+	check(exact.get("basis")=="observed_estimate" and quote_rows.size()==1 and quote_rows[0].approx and quote_rows[0].key=="local:366" and quote_rows[0].bundle_size==100 and quote_rows[0].enchant==0,"observed price informs a tagged local estimate, leather uses the exact ID and independent quantity")
 	if quote_rows.size()!=1:
 		w.queue_free();await process_frame;return
 	var leather: Dictionary=quote_rows[0]
@@ -489,7 +504,7 @@ func _targeted_main() -> void:
 	for uid: String in w.item_instances:
 		var proof: Dictionary=STACK.proof(w,uid)
 		if int(proof.get("record",{}).get("source_item_class_id",0))!=366:continue
-		if proof.remaining==1000:bought_uid=uid;leather_name=str(w.item_instances[uid].name)
+		if proof.remaining==100:bought_uid=uid;leather_name=str(w.item_instances[uid].name)
 		if proof.remaining==3:other_uid=uid
 	check(not bought_uid.is_empty() and not other_uid.is_empty(),"bought real use/supply receipt and same-name sibling remain distinct")
 	if bought_uid.is_empty() or other_uid.is_empty():w.queue_free();await process_frame;return
@@ -503,7 +518,7 @@ func _targeted_main() -> void:
 	# A legacy save is a fixture, not the removed registration path. Put
 	# four physical units in old escrow, keeping the same-name locked stack.
 	var previous: Dictionary=STACK.proof(w,bought_uid)
-	var removed: Dictionary=STACK.stage_debit(w,[{"physical_id":bought_uid,"quantity":4,"expected_quantity":previous.remaining,"expected_remaining":996,"source_native_stack_receipt":previous.receipt}])
+	var removed: Dictionary=STACK.stage_debit(w,[{"physical_id":bought_uid,"quantity":4,"expected_quantity":previous.remaining,"expected_remaining":96,"source_native_stack_receipt":previous.receipt}])
 	check(removed.get("ok",false),"test fixture stages exactly four legacy units: "+str(removed.get("reason","")))
 	if not removed.get("ok",false):w.queue_free();await process_frame;return
 	var legacy: Dictionary=market.state()
@@ -518,7 +533,7 @@ func _targeted_main() -> void:
 	seed["source_shop"]=shop_save
 	check(w._save_game(true,seed)==OK,"three old escrow statuses persisted via test-only fixture")
 	w._load_game(true)
-	check(not shop.save_blocked and market.my_listings().map(func(r: Dictionary)->String:return str(r.status))==["selling","expired","sold"] and int(w.inventory[leather_name])==999 and STACK.proof(w,other_uid).get("remaining")==3,"legacy escrow reloads without consolidating/charging the locked same-name stack")
+	check(not shop.save_blocked and market.my_listings().map(func(r: Dictionary)->String:return str(r.status))==["selling","expired","sold"] and int(w.inventory[leather_name])==99 and STACK.proof(w,other_uid).get("remaining")==3,"legacy escrow reloads without consolidating/charging the locked same-name stack")
 	_check_registration_removed(w,market,selected,bought_uid)
 	window._refresh_pressed()
 	await process_frame
@@ -542,11 +557,11 @@ func _targeted_main() -> void:
 	var cancel: Control=_source_area(window,"Nd_Server/Trade_Tab_Sell/Btn_Cancel")
 	check(is_instance_valid(cancel) and cancel.is_visible_in_tree(),"original cancel-all touch owner exists")
 	if is_instance_valid(cancel):await _touch(cancel)
-	check(market.my_listings().size()==2 and int(w.inventory[leather_name])==1001 and STACK.proof(w,other_uid).get("remaining")==3,"actual cancel touch returns two units without changing the locked same-name stack")
+	check(market.my_listings().size()==2 and int(w.inventory[leather_name])==101 and STACK.proof(w,other_uid).get("remaining")==3,"actual cancel touch returns two units without changing the locked same-name stack")
 	var expired: Control=_source_area(window,"Nd_Server/Trade_Tab_Sell/Nd_TotalAmount/Btn_Return_All")
 	check(is_instance_valid(expired) and expired.is_visible_in_tree(),"original expired-return touch owner exists")
 	if is_instance_valid(expired):await _touch(expired)
-	check(market.my_listings().size()==1 and int(w.inventory[leather_name])==1002 and shop.state[FROZEN.STATE_KEY]==stored_capture,"actual expiry touch returns only its unit and capture history is unchanged")
+	check(market.my_listings().size()==1 and int(w.inventory[leather_name])==102 and shop.state[FROZEN.STATE_KEY]==stored_capture,"actual expiry touch returns only its unit and capture history is unchanged")
 	check(window.tab=="search" and not _has_reclaim_tab(window) and _no_sale_controls(window),"empty reclaim tab disappears after last return, even with sold escrow pending")
 	var no_registration_hash: String=FileAccess.get_sha256(w.save_path())
 	await _touch_position(reclaim_position)
@@ -565,7 +580,7 @@ func _targeted_main() -> void:
 	check(market.my_listings().is_empty() and int(w.inventory["다이아"])==before_settle+140 and market.history().size()==1,"sold listing settles once at the old net price")
 	check(not market.settle_all().get("ok",false),"already settled proceeds cannot be taken twice")
 	w._load_game(true)
-	check(market.my_listings().is_empty() and int(w.inventory[leather_name])==1002 and int(w.inventory["다이아"])==before_settle+140 and market.history().size()==1 and shop.state[FROZEN.STATE_KEY]==stored_capture,"reclaim, proceeds and history all persist after a real disk reload")
+	check(market.my_listings().is_empty() and int(w.inventory[leather_name])==102 and int(w.inventory["다이아"])==before_settle+140 and market.history().size()==1 and shop.state[FROZEN.STATE_KEY]==stored_capture,"reclaim, proceeds and history all persist after a real disk reload")
 	var history: Dictionary=window._set_tab("history")
 	check(history.get("handled",false) and int(history.filled.rows)==1,"legacy settlement is drawn in the original history tab")
 	window._set_tab("search")

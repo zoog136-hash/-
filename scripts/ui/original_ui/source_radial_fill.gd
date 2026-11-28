@@ -31,9 +31,11 @@ void fragment() {
 ## Mastery ProgressBar is authored at 180 degrees) still starts at the top.
 static func apply(sprite: Sprite2D, ratio: float) -> bool:
 	if not is_instance_valid(sprite) or sprite.texture==null or not is_finite(ratio):return false
+	if sprite.material is ShaderMaterial and sprite.material.shader==shader():
+		set_fill_ratio(sprite,ratio)
+		return true
 	var material:=ShaderMaterial.new()
 	material.shader=shader()
-	material.set_shader_parameter("fill_ratio",clampf(ratio,0.0,1.0))
 	material.set_shader_parameter("source_pma",bool(sprite.texture.get_meta("cocos_premultiplied",false)))
 	var rect:=Rect2(0,0,1,1)
 	if sprite.texture is AtlasTexture and (sprite.texture as AtlasTexture).atlas!=null:
@@ -48,5 +50,11 @@ static func apply(sprite: Sprite2D, ratio: float) -> bool:
 		node=node.get_parent()
 	material.set_shader_parameter("start_turn",fposmod(-turned/TAU,1.0))
 	sprite.material=material
-	sprite.set_meta("source_radial_fill",clampf(ratio,0.0,1.0))
+	set_fill_ratio(sprite,ratio)
 	return true
+
+static func set_fill_ratio(item: CanvasItem, ratio: float) -> void:
+	var fill: float=clampf(ratio,0.0,1.0)
+	if item.get_meta("source_radial_fill",-1.0)==fill:return
+	(item.material as ShaderMaterial).set_shader_parameter("fill_ratio",fill)
+	item.set_meta("source_radial_fill",fill)

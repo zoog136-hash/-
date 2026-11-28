@@ -21,6 +21,8 @@ const ACTIVE={"영웅":"UI/Change/Fx_Change_Active_Legend.csb","전설":"UI/Chan
 	"신화":"UI/Change/Fx_Change_Active_Myth.csb","유일":"UI/Change/Fx_Change_Active_Sole.csb"}
 ## Fx_Change_Outline_Loop clips.
 const OUTLINE={"영웅":"Fx_Legend_Loop","전설":"Fx_Epic_Loop","신화":"Fx_Myth_Loop","유일":"Fx_Sole_Loop"}
+const RARE_OUTLINE_CLIP="Fx_Unique_Loop"
+const RARE_OUTLINE_ATLAS="UI/UI_Resource/Atlas_Z_Fx_Seet_CardUnique.plist"
 # Presentation opacity for the sustained additive loop on settled cards.
 const CONFIRMED_OUTLINE_ALPHA: float=0.55
 const CLIP="Fx_Active"
@@ -55,6 +57,10 @@ static func available(window: Object, grade: String) -> bool:
 	if pack==null:return false
 	var scenes: Dictionary=pack.manifest.get("scenes",{})
 	return scenes.has(str(ACTIVE_GRADE[grade])) and scenes.has(str(ACTIVE[grade]))
+
+static func rare_outline_available(pack: RefCounted) -> bool:
+	if pack==null:return false
+	return pack.manifest.get("scenes",{}).has("UI/Change/Fx_Change_Outline_Loop.csb") and pack.manifest.get("atlases",{}).has(RARE_OUTLINE_ATLAS)
 
 ## Spec entries for the Change_Fusion_Card at `prefix` (ends with "/").
 static func cell_spec(window: Object, spec: Dictionary, prefix: String, grade: String, pending: bool=false) -> void:
@@ -151,17 +157,21 @@ static func light(window: Object, root: Node2D, out: Dictionary, prefix: String,
 	var nested: Node2D=project(window,root,out,prefix)
 	# The flash, then the name (Fx_Start_Active ends with Text_Card_Name clear).
 	if nested!=null:chain(nested,CELL_CLIP,"Fx_Cardname")
-	var outline_slot: Dictionary=window._locate(root,out,prefix+"/Fx_Outline_Front")
+	show_outline(window,root,out,prefix,str(OUTLINE[grade]),outline_alpha)
+	return {"lit":scenes>0,"scenes":scenes}
+
+static func show_outline(window: Object, root: Node2D, out: Dictionary, cell: String, clip: String, alpha: float) -> bool:
+	var path: String=cell+"/Fx_Outline_Front"
+	var outline_slot: Dictionary=window._locate(root,out,path)
 	if outline_slot.get("ok",false):
 		# A fusion page can leave this hidden ProjectNode deferred until the
 		# reel finishes. The renderer mounts the exact authored subtree here.
 		outline_slot.player.set_bound_visible(int(outline_slot.offset),true)
-	var outline: Node2D=project(window,root,out,prefix+"/Fx_Outline_Front")
-	if outline!=null:
-		set_visible(window,root,out,prefix+"/Fx_Outline_Front",true)
-		outline.modulate.a=outline_alpha
-		outline.play(str(OUTLINE[grade]),true)
-	return {"lit":scenes>0,"scenes":scenes}
+	var outline: Node2D=project(window,root,out,path)
+	if outline==null:return false
+	set_visible(window,root,out,path,true)
+	outline.modulate.a=alpha
+	return outline.play(clip,true).get("ok",false)
 
 ## The nested player of the ProjectNode at `suffix`.
 static func project(window: Object, root: Node2D, out: Dictionary, suffix: String) -> Node2D:
