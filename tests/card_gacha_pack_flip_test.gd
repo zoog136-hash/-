@@ -352,6 +352,13 @@ func wait_for_faces(window: RefCounted, set_name: String, count: int) -> bool:
 		await process_frame
 	return false
 
+func has_grade_light(window: RefCounted, cell: String, grade: String) -> bool:
+	var host: CanvasItem=node_of(window,cell)
+	if host==null or not GRADE_FX.ACTIVE.has(grade):return false
+	var member: String=GRADE_FX.ACTIVE[grade]
+	return host.get_children().any(func(effect: Node) -> bool:
+		return effect.get("source_member")==member and effect.playback_status().clip==GRADE_FX.CLIP)
+
 ## Grants one pack, uses it from the bag with two taps, then turns the cards.
 func bag_use(world: Node, name: String, category: String) -> void:
 	var hud: Node = world.hud
@@ -420,10 +427,9 @@ func bag_use(world: Node, name: String, category: String) -> void:
 	check(window_point(window,"Nd_ButtonSet/Btn_Open") == Vector2.INF, "%s: 모두 확인 goes once all are open" % label)
 	var lights: int = 0
 	for index: int in range(shown):
-		var glow: CanvasItem = node_of(window,"%s/Card_%02d/Fx_Glow" % [set_name,index])
-		if glow != null:
-			for child: Node in glow.get_children():
-				if child.has_meta("source_project_player") or str(child.get("source_member")).contains("Fx_Change_ActiveGreade"): lights += 1
+		var cell: String="%s/Card_%02d" % [set_name,index]
+		if has_grade_light(window,cell,str(window.results[index].get("grade",""))):lights+=1
+	check(lights==lit_expected,"%s: the revealed cards mount their exact grade lights" % label)
 	evidence[category]["lit_expected"] = lit_expected
 	await create_timer(1.5).timeout
 	await capture("%s_3_all_open" % category)
@@ -457,13 +463,13 @@ func shop_reveal(world: Node) -> void:
 		check(five.is_open() and str(five.last_result.get("filled",{}).get("set","")) == "Nd_CardSet_Five" and int(five.last_result.filled.get("backs",0)) == 5, "five cards: Nd_CardSet_Five face down")
 		await create_timer(2.6).timeout
 		var hero_point: Vector2 = window_point(five,"Nd_CardSet_Five/Card_00/Btn_Card")
-		var glow: CanvasItem = node_of(five,"Nd_CardSet_Five/Card_00/Fx_Glow")
-		var before: int = glow.get_child_count() if glow != null else -1
+		var hero_cell: String="Nd_CardSet_Five/Card_00"
+		check(not has_grade_light(five,hero_cell,"영웅"),"the sealed hero card has no active grade effect")
 		if check(hero_point.is_finite(), "the 영웅 card takes a tap"):
 			await tap(hero_point)
 			var settled: bool=await wait_for_faces(five,"Nd_CardSet_Five",1)
 			check(settled,"the shop grade reel settles before inspecting the result")
-			check(five.is_opened(0) and glow != null and glow.get_child_count() > before, "a turned 영웅 card mounts its original grade light (%d → %d)" % [before,glow.get_child_count() if glow != null else -1])
+			check(five.is_opened(0) and has_grade_light(five,hero_cell,"영웅"),"a turned 영웅 card plays its exact grade effect")
 		var rest: Dictionary = five.open_all()
 		check(int(rest.get("lit",-1)) == 2 and int(rest.get("opened",0)) == 4, "모두 확인 lights the other 영웅 이상 only: %s" % str(rest))
 		check(await wait_for_faces(five,"Nd_CardSet_Five",5),"all five shop cards settle")
