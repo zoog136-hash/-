@@ -21,7 +21,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   then presents the saved result inside the original compose panel.
 ## - The popup's 성공 확률 shows the levelup quote's chance; its 전체 button
 ##   orders the books 전체 / 수량순 / 이름순 (TWILIGHT 근사(근거 약함)).
-## Left empty (no TWILIGHT feature or data): 상점 바로가기, 확정 합성, 실패 이력
+## Left empty (no TWILIGHT feature or data): 확정 합성, 실패 이력
 ## 조회 and 실패 횟수 / 합성 시도 보상 gauges, the lock buttons, the grade filter
 ## of the popup (its books are one grade), the result roulette and stage 4.
 const ROOT="UI/SkillCard/SkillCard_All.csb"
@@ -133,7 +133,7 @@ func _spec() -> Dictionary:
 	if tab=="enchant":return _enchant_spec()
 	var spec: Dictionary={}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
-	spec["Nd_SkillCard_Tab/Btn_BMStore"]={"exclude":true}
+	spec["Nd_SkillCard_Tab/Btn_BMStore"]={"activate":Callable(self,"_route").bind("open_shop")}
 	spec["Nd_SkillCard_Tab/Icon_New"]={"visible":false}
 	spec["Nd_SkillCard_Tab/Icon_New_1"]={"visible":false}
 	spec["Nd_SkillCard_Tab/Btn_Skill_On"]={"visible":tab=="skill","activate":Callable(self,"_tab").bind("skill")}
@@ -547,7 +547,7 @@ func _prepare_skill_slots(key: String, cards: Array, mounted: Dictionary, span: 
 		# across its entire surface, including drags that start on the icon.
 		spec["Common_Slot/Btn"]["touch_enabled"]=false
 		spec["Panel/Panel_Slot"]={"input":Callable(self,"_slot_input").bind(key,index)}
-		if tab=="compose":spec["Nd_Grade/Item_Disabled"]={"visible":int(registered.get(str(entry.physical_id),0))>=remaining}
+		if tab=="compose":spec["Nd_Grade/Item_Disabled"]={"visible":entry.get("locked",false) or int(registered.get(str(entry.physical_id),0))>=remaining}
 		var out: Dictionary={}
 		var built: Dictionary=_scene_of(SLOT,spec,out,key)
 		if not built.get("ok",false):
@@ -785,6 +785,9 @@ func _slot_tap(index: int, entry: Dictionary={}) -> Dictionary:
 		var physical_id: String=str(entry.physical_id)
 		index=books.find_custom(func(book: Dictionary) -> bool:return str(book.physical_id)==physical_id)
 	if index<0 or index>=books.size():return {"ok":false}
+	if books[index].get("locked",false):
+		_message("잠금 상태의 마법서는 등록할 수 없습니다")
+		return {"ok":false,"code":"source_skill_card_material_locked"}
 	var key: String=str(books[index].physical_id)
 	var quote: Dictionary=_merge_preview(registered)
 	var need: int=int(quote.get("source_amount",0))
@@ -872,7 +875,7 @@ func _refresh_registered(grid: Dictionary, books: Array) -> Dictionary:
 		var overlay: Node2D=scene.get_meta("compose_disabled",null) if scene.has_meta("compose_disabled") else null
 		if overlay==null:continue
 		var entry: Dictionary=books[index]
-		overlay.visible=int(registered.get(str(entry.physical_id),0))>=int(entry.remaining)
+		overlay.visible=entry.get("locked",false) or int(registered.get(str(entry.physical_id),0))>=int(entry.remaining)
 	var filled: Dictionary=last_result.filled
 	filled.icons+=int(made.icons)-int(filled.registered_icons)
 	filled.registered_icons=made.icons

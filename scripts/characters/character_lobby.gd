@@ -46,6 +46,7 @@ var create_button: Button
 var class_buttons: Dictionary = {}
 var _touch_index: int = -1
 var _touch_last: Vector2
+var _loading_fx_scope: RefCounted
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -432,11 +433,16 @@ func _enter() -> void:
 	status.text = "세계를 불러오는 중…"
 	_enter_main.call_deferred()
 
+func use_loading_fx_scope(scope: RefCounted) -> void:
+	_loading_fx_scope = scope
+
 func _enter_main() -> void:
 	# The world loads behind the progress overlay (no title a second time); the
 	# Main scene itself was already loaded by the first loading.
 	var loader: Script = load(LOADING_SCREEN) as Script if preload("res://scripts/resources/retired_assets.gd").usable(LOADING_SCREEN) else null
-	if loader != null and loader.call("open", get_tree(), MAIN, false) != null: return
+	if loader != null and loader.call("open", get_tree(), MAIN, false, _loading_fx_scope) != null:
+		_loading_fx_scope = null
+		return
 	var result: Error = get_tree().change_scene_to_file(MAIN)
 	if result != OK:
 		busy = false

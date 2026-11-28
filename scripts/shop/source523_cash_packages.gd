@@ -582,11 +582,16 @@ static func try_use(world, item_name: String) -> bool:
 		_choose(world, item_name, choices)
 		return true
 	if spec.kind == "gotcha":
+		var skill_draw: bool = false
 		for entry: Dictionary in spec.entries:
 			var spell_card: int = int(entry.get("spell_card_id",0))
+			skill_draw = skill_draw or spell_card > 0
 			if spell_card > 0 and not skill_draw_allows_class(SOURCE.row("BuffCard",spell_card),class_id):
 				world.hud.show_message("현재 직업의 스킬 카드 뽑기팩을 사용하세요 · 아이템 보존")
 				return true
+		if skill_draw and world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():
+			world.hud.show_message("먼저 스킬 카드 결과를 확인하세요")
+			return true
 		var next_rng := RandomNumberGenerator.new()
 		next_rng.state = rng.state
 		var drawn: Dictionary = open(world, item_name, roll_gotcha(spec,next_rng))
@@ -628,6 +633,7 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	var next_id: int = int(world.next_item_instance_id)
 	var cards_before: Dictionary = {}
 	var card_results: Array = []
+	var skill_results: Array[Dictionary] = []
 	var received: Array[String] = []
 	var failure: String = ""
 	for entry: Dictionary in rewards:
@@ -695,7 +701,11 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 				else:
 					instances = staged.item_instances
 					inventory[native_name] = int(inventory.get(native_name, 0)) + amount
-					received.append("%s ×%d" % [ITEM_LABEL.display_name(target.record, native_name), amount])
+					var label: String = ITEM_LABEL.display_name(target.record, native_name)
+					received.append("%s ×%d" % [label, amount])
+					if spell_card > 0:
+						for unused: int in range(amount):
+							skill_results.append({"source_buff_card_id":spell_card,"item_class_id":item_id,"name":label})
 		else:
 			var name: String = str(target.name)
 			if int(inventory.get(name, 0)) > LIMIT - amount:
@@ -725,7 +735,9 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 	# keeps the box and loses the rewards together (never duplicated).
 	var staged: Dictionary = {"inventory":inventory, "item_instances":instances, "next_item_instance_id":next_id}
 	if not cards_after.is_empty(): staged["card_draw_fusion"] = cards_after
-	var batched: bool = world.has_method("_request_general_save")
+	var skill_draw: bool = not skill_results.is_empty() and rewards.all(func(entry: Dictionary) -> bool: return int(entry.get("spell_card_id",0)) > 0)
+	# Skill draws follow the ticket path: persist the exact books before reveal.
+	var batched: bool = not skill_draw and world.has_method("_request_general_save")
 	busy = true
 	var checked: Error = world._save_game(true, staged, {}, true) if batched else world._save_game(true, staged)
 	busy = false
@@ -743,6 +755,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 		var first: Dictionary = _card_target(world, int(rewards[0].card_id)) if int(rewards[0].get("card_id", 0)) > 0 else resolve(world, int(rewards[0].item_class_id))
 		var box_title: String = label(definition_id_of(world, item_name))
 		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results, "title":box_title if not box_title.is_empty() else item_name}, false)
+	elif skill_draw and world.hud.has_method("present_skill_card_draw"):
+		world.hud.present_skill_card_draw(skill_results)
 	return {"ok":true, "message":message, "received":received}
 
 ## The opened box's save: the next frame's general save (one per frame).

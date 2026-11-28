@@ -92,18 +92,24 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	if not FileAccess.file_exists(manifest_path): return _fail("manifest_missing")
 	var file:=FileAccess.open(manifest_path,FileAccess.READ)
 	if file==null or file.get_length()>MANIFEST_MAX_BYTES: return _fail("manifest_size_or_access")
-	var raw: PackedByteArray=file.get_buffer(file.get_length())
-	if expected_sha256.length()!=64 or _sha256(raw)!=expected_sha256: return _fail("manifest_hash_mismatch")
+	if expected_sha256.length()!=64: return _fail("manifest_hash_mismatch")
 	var bake_name: String=bake_name_for(expected_sha256)
 	var bake_key: String=bake_key_for(expected_sha256) if bake_enabled else ""
-	var baked: RefCounted=BAKE.open_records(bake_name,bake_key) if not bake_key.is_empty() else null
-	if baked!=null:
-		var slim: Variant=baked.read("meta")
-		if slim is Dictionary and slim.get("schema")=="twilight-original-ui-v1" and slim.get("scenes") is Dictionary and slim.get("files") is Dictionary and _files_intact(pack_root,slim.files).is_empty():
-			raw=PackedByteArray()
-			_adopt(slim,pack_root,expected_sha256)
-			_records=baked
-			return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+	if not bake_key.is_empty() and BAKE.present(bake_name,bake_key):
+		# Authenticate every manifest byte without retaining a second large
+		# buffer while the already-verified bake and member hashes are read.
+		if FileAccess.get_sha256(manifest_path)!=expected_sha256: return _fail("manifest_hash_mismatch")
+		var baked: RefCounted=BAKE.open_records(bake_name,bake_key)
+		if baked!=null:
+			var slim: Variant=baked.read("meta")
+			if slim is Dictionary and slim.get("schema")=="twilight-original-ui-v1" and slim.get("scenes") is Dictionary and slim.get("files") is Dictionary and _files_intact(pack_root,slim.files).is_empty():
+				_adopt(slim,pack_root,expected_sha256)
+				_records=baked
+				return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
+	# A stale/damaged bake still falls back to the exact pinned original bytes.
+	# Hash this buffer independently of the earlier streaming check.
+	var raw: PackedByteArray=file.get_buffer(file.get_length())
+	if _sha256(raw)!=expected_sha256: return _fail("manifest_hash_mismatch")
 	var value: Variant=JSON.parse_string(raw.get_string_from_utf8())
 	raw=PackedByteArray()
 	var problem: String=MANIFEST.verify(value,pack_root)
@@ -124,16 +130,35 @@ func open(pack_root: String, expected_sha256: String) -> Dictionary:
 	_records=null
 	return {"ok":true,"scene_count":manifest.scenes.size(),"rendered":false}
 
+static func _loading_manifest_problem(pack_root: String, expected_sha256: String) -> String:
+	var manifest_path := pack_root.path_join("original_ui.json")
+	var manifest_size := FileAccess.get_size(manifest_path)
+	if manifest_size <= 0 or manifest_size > MANIFEST_MAX_BYTES:
+		return "manifest_size_or_access"
+	if expected_sha256.length() != 64 or FileAccess.get_sha256(manifest_path) != expected_sha256:
+		return "manifest_hash_mismatch"
+	return ""
+
+## Hand off only verified loading metadata. Textures and leases stay here.
+func copy_loading_fx_scope() -> RefCounted:
+	if not _scoped_loading_fx: return null
+	var copy: RefCounted = get_script().new()
+	copy._adopt(manifest.duplicate(true), root, manifest_sha256)
+	copy._scoped_loading_fx = true
+	return copy
+
+## The full HUD reader still authenticates its complete pack independently.
+func can_reuse_loading_fx(pack_root: String, expected_sha256: String) -> bool:
+	return _scoped_loading_fx and root == pack_root and manifest_sha256 == expected_sha256 \
+		and _loading_manifest_problem(pack_root, expected_sha256).is_empty() \
+		and _files_intact(pack_root, manifest.files).is_empty()
+
 ## The loading indicator uses one authored CSB, one atlas and one font.
 ## Keep its view confined to those verified originals. The HUD still opens
 ## the complete pack and checks all of its original files before binding.
 func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
-	var manifest_path := pack_root.path_join("original_ui.json")
-	var manifest_size := FileAccess.get_size(manifest_path)
-	if manifest_size <= 0 or manifest_size > MANIFEST_MAX_BYTES:
-		return _fail("manifest_size_or_access")
-	if expected_sha256.length() != 64 or FileAccess.get_sha256(manifest_path) != expected_sha256:
-		return _fail("manifest_hash_mismatch")
+	var manifest_problem := _loading_manifest_problem(pack_root, expected_sha256)
+	if not manifest_problem.is_empty(): return _fail(manifest_problem)
 	var bake_key := bake_key_for(expected_sha256) if bake_enabled else ""
 	var baked := BAKE.open_records(bake_name_for(expected_sha256), bake_key) if not bake_key.is_empty() else null
 	if baked == null:

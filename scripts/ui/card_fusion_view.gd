@@ -3,7 +3,7 @@ extends Control
 ## https://lineagem.plaync.com/board/free/view?articleId=658baca5f6dba273d09ada3a
 ## https://lineagem-jp.com/guides/lm/guides/beginner_community
 ## The authoritative Cards.fuse still chooses materials, consumes and rolls.
-signal fuse_requested(category: String, grade: String)
+signal fuse_requested(category: String, grade: String, selection: Array[String])
 signal point_reward_requested(category: String, grade: String)
 const UI=preload("res://scripts/ui/renewal_theme.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
@@ -36,7 +36,7 @@ var _body: HBoxContainer
 var _left: ScrollContainer
 var _roster: VBoxContainer
 var _right: VBoxContainer
-var _preview: HBoxContainer
+var _preview: GridContainer
 var _previews: Array[Control]=[]
 var _pity: Label
 var _point_reward:Button
@@ -45,6 +45,7 @@ var _chrome: Control
 var _details_scroll: ScrollContainer
 var _scroll_host: Node
 var _records: Array[Dictionary]=[]
+var _selection: Array[String]=[]
 var registered_materials: Array[Dictionary]=[]
 
 func configure(catalog_value: Dictionary, collection_value: Dictionary, initial_category: String) -> void:
@@ -59,12 +60,18 @@ func set_collection_state(value: Dictionary) -> void:
 
 func set_category(value: String) -> void:
  if not Cards.CATEGORIES.has(value):return
+ if value!=category:
+  _selection.clear()
+  filter_grade="전체"
  category=value
  _last_result.text=""
  _refresh()
 
 func set_result(category_name: String, value: String) -> void:
- if category_name==category and is_instance_valid(_last_result):_last_result.text=value
+ if category_name==category and is_instance_valid(_last_result):
+  _last_result.text=value
+  _selection.clear()
+  _refresh()
 
 func _plate(fill: Color, rim: Color) -> StyleBoxFlat:
  var style:=UI.box(fill,rim,5)
@@ -153,7 +160,7 @@ func _build() -> void:
  _cards.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
  var selection:=_plate(Color(.9,.8,.54,.06),Color("d6c59a"));selection.set_border_width_all(2)
  _cards.add_theme_stylebox_override("selected",selection);_cards.add_theme_stylebox_override("selected_focus",selection)
- _cards.item_selected.connect(func(index: int) -> void:_select_grade(str((_cards.get_item_metadata(index) as Dictionary).grade),false))
+ _cards.item_selected.connect(_register_card)
  _roster.add_child(_cards)
  _chrome=RosterChrome.new();_cards.add_child(_chrome);_chrome.configure(_cards)
  _overall=UI.label("",12,Color("c2c9c9"));_overall.name="CardFusionOverall";_roster.add_child(_overall)
@@ -164,7 +171,7 @@ func _build() -> void:
  chance.name="CardFusionProbability";chance.custom_minimum_size=Vector2(114,34);chance.size_flags_horizontal=Control.SIZE_SHRINK_END
  chance.add_theme_font_size_override("font_size",14);heading.add_child(chance)
  _materials=UI.label("",14);_materials.name="CardFusionMaterialsCount";_materials.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_right.add_child(_materials)
- _preview=HBoxContainer.new();_preview.name="CardFusionRegisteredMaterials";_preview.size_flags_vertical=Control.SIZE_EXPAND_FILL;_preview.add_theme_constant_override("separation",8);_right.add_child(_preview)
+ _preview=GridContainer.new();_preview.name="CardFusionRegisteredMaterials";_preview.columns=4;_preview.size_flags_vertical=Control.SIZE_EXPAND_FILL;_preview.add_theme_constant_override("h_separation",8);_preview.add_theme_constant_override("v_separation",8);_right.add_child(_preview)
  _empty=UI.label("",14,Color("a4adb3"));_empty.name="CardFusionEmpty";_empty.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_right.add_child(_empty)
  _note=UI.label("",12,Color("c4cccb"));_note.name="CardFusionRule";_note.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_note.hide();_right.add_child(_note)
  var actions:=HBoxContainer.new();actions.name="CardFusionActions";actions.add_theme_constant_override("separation",10);_right.add_child(actions)
@@ -221,22 +228,47 @@ func _fit() -> void:
   (preview.get_child(0) as Control).custom_minimum_size.y=extent/.74
 
 func _select_grade(value: String, filter: bool) -> void:
- var scroll: float=_cards.get_v_scroll_bar().value
  if filter:filter_grade=value
- if value!="전체":grade=value
+ if value!="전체" and value!=grade:
+  grade=value
+  _selection.clear()
  if MATERIAL_GRADES.has(grade):_grade_select.select(MATERIAL_GRADES.find(grade))
  _refresh()
- if not filter:_cards.get_v_scroll_bar().set_deferred("value",scroll)
+
+func _register_card(index: int) -> void:
+ if index<0 or index>=_cards.item_count:return
+ var row: Dictionary=_cards.get_item_metadata(index)
+ if grade!=row.grade:
+  grade=row.grade
+  _selection.clear()
+ var limit: int=int(Cards.FUSION_MATERIALS[grade])*Cards.MAX_FUSION_BATCH
+ if _selection.size()>=limit or _selection.count(row.id)>=int(row.duplicates):return
+ _selection.append(row.id)
+ _refresh_selection()
+
+func _refresh_selection() -> void:
+ var scroll: float=_cards.get_v_scroll_bar().value
+ _grade_select.select(MATERIAL_GRADES.find(grade))
+ _refresh()
+ _cards.get_v_scroll_bar().set_deferred("value",scroll)
+
+func _remove_material(identity: String) -> void:
+ _selection.erase(identity)
+ _refresh_selection()
+
+static func _eligible(record: Dictionary) -> bool:
+ return not record.get("source_merge_out_disabled",false) and not record.get("source_draw_pool_pending",false)
 
 func _available(current: String) -> int:
  var total: int=0
  var seen: Dictionary={}
+ var owned: Dictionary=collection.get("owned",{}).get(category,{})
  var extras: Dictionary=collection.get("spare",{}).get(category,{})
  for raw: Variant in catalog.get(category,[]):
   if not raw is Dictionary:continue
   var record: Dictionary=raw
   var identity: String=Cards.card_id(record)
-  if str(record.get("grade",""))==current and not seen.has(identity) and not bool(record.get("source_merge_out_disabled",false)):
+  if str(record.get("grade",""))==current and not seen.has(identity) and owned.has(identity) and _eligible(record):
    seen[identity]=true;total+=maxi(0,int(extras.get(identity,0)))
  return total
 
@@ -255,20 +287,31 @@ func _refresh() -> void:
  var required: int=int(Cards.FUSION_MATERIALS.get(grade,0))
  var target: String=str(Cards.FUSION_NEXT.get(grade,""))
  registered_materials.clear()
- var remaining: int=required
+ var eligible: Dictionary={}
  for raw: Variant in catalog.get(category,[]):
   if not raw is Dictionary:continue
   var row: Dictionary=raw;var identity: String=Cards.card_id(row)
   if identity.is_empty() or seen.has(identity):continue
   seen[identity]=true
   var current: String=str(row.get("grade",""))
-  if current==target:target_exists=true
-  if current==grade:
-   source_exists=true
-   var used: int=0 if bool(row.get("source_merge_out_disabled",false)) else mini(remaining,maxi(0,int(spare.get(identity,0))))
-   if used>0:registered_materials.append({"id":identity,"record":row,"count":used});remaining-=used
-  var copies: int=(1 if owned.has(identity) else 0)+maxi(0,int(spare.get(identity,0)))
-  if copies>0 and (filter_grade=="전체" or current==filter_grade):_records.append(row)
+  if current==target and not row.get("source_draw_pool_pending",false):target_exists=true
+  if not Cards.FUSION_MATERIALS.has(current) or not owned.has(identity) or not _eligible(row) or int(spare.get(identity,0))<=0:continue
+  if current==grade:eligible[identity]=row;source_exists=true
+  if filter_grade=="전체" or current==filter_grade:_records.append(row)
+ var selected: Dictionary={}
+ var kept: Array[String]=[]
+ for identity: String in _selection:
+  if not eligible.has(identity):continue
+  var index: int=int(selected.get(identity,-1))
+  if index<0:
+   index=registered_materials.size()
+   selected[identity]=index
+   registered_materials.append({"id":identity,"record":eligible[identity],"count":0})
+  var entry: Dictionary=registered_materials[index]
+  if int(entry.count)>=int(spare[identity]):continue
+  entry.count+=1
+  kept.append(identity)
+ _selection=kept
  _records.sort_custom(func(a: Dictionary,b: Dictionary) -> bool:return Cards.GRADES.find(str(a.grade))>Cards.GRADES.find(str(b.grade)))
  _cards.clear()
  for record: Dictionary in _records:
@@ -288,7 +331,8 @@ func _refresh() -> void:
    var evidence: Dictionary=source_asset.duplicate(true);evidence.erase("texture")
    metadata["original_card_asset"]=evidence
   _cards.set_item_metadata(index,metadata)
-  _cards.set_item_tooltip(index,"%s · %s · 보유 %d장 / 합성 재료 %d장%s" % [record.name,record.grade,copies,0 if bool(record.get("source_merge_out_disabled",false)) else duplicates," · 원본 합성 제한" if bool(record.get("source_merge_out_disabled",false)) else ""])
+  _cards.set_item_tooltip(index,"%s · %s · 보유 %d장 / 중복 %d장" % [record.name,record.grade,copies,duplicates])
+  _cards.set_item_disabled(index,_selection.count(identity)>=duplicates)
   _cards.set_item_custom_bg_color(index,Color(UI.grade(str(record.grade)),.09))
   _cards.set_item_custom_fg_color(index,Color(1,1,1,0))
  for current: String in _grade_buttons:
@@ -297,13 +341,13 @@ func _refresh() -> void:
   button.button_pressed=filter_grade==current
  var available: int=_available(grade)
  var probability: float=float(Cards.FUSION_WEIGHTS.get(grade,0))/100.0
- _materials.text="%s → %s · 중복 카드 %d / %d장" % [grade,target,available,required] if required>0 else "유일 등급은 합성할 수 없습니다"
+ _materials.text="%s → %s · 등록 %d / %d장 · 중복 %d장 보유" % [grade,target,_selection.size(),required,available] if required>0 else "유일 등급은 합성할 수 없습니다"
  _note.text="현재 게임 합성 성공률 %.2f%%\n처음 획득한 카드 1장은 영구 보관되며 중복만 소비됩니다." % probability
- _fuse.disabled=required==0 or available<required or not target_exists or not source_exists
+ _fuse.disabled=required==0 or _selection.size()<required or not target_exists or not source_exists
  _fuse.text="합성"
  _fuse.tooltip_text=_materials.text+" · 성공률 %.2f%%" % probability
- _empty.visible=available<required or not source_exists
- _empty.text="같은 등급의 중복 카드 %d장이 더 필요합니다." % maxi(0,required-available) if required>0 else "다른 등급의 카드를 선택해 주세요."
+ _empty.visible=_selection.size()<required
+ _empty.text="같은 등급의 중복 카드 %d장이 더 필요합니다." % (required-available) if available<required else "오른쪽에서 중복 카드를 골라 등록하세요."
  _refresh_previews()
  var pity: Dictionary=collection.get("pity",{}).get(category,{})
  var active:Dictionary=collection.get("source_fusion_point_lanes",{}).get(category,{})
@@ -351,9 +395,12 @@ func _refresh_previews() -> void:
   amount.mouse_filter=Control.MOUSE_FILTER_IGNORE;art.add_child(amount);amount.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
   var allocated:=UI.label("등록 %d장" % int(entry.count),11,Color("c2c9c9"));allocated.name="FusionRegisteredCount"
   allocated.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER;cell.add_child(allocated)
+  var remove:=_touch("빼기",_remove_material.bind(entry.id),true,true)
+  remove.custom_minimum_size.y=32
+  remove.add_theme_font_size_override("font_size",12)
+  remove.scroll_host=_scroll_host;remove.scroll_area=_details_scroll
+  cell.add_child(remove)
   cell.tooltip_text=str(record.name)+" · "+str(entry.id)+" · 합성에 사용될 중복 "+str(entry.count)+"장"
- if registered_materials.is_empty():
-  var message:=UI.label("왼쪽 카드를 선택해 주세요.",14,Color("929fa7"));message.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_preview.add_child(message)
  _wire_details(_preview)
 
 func _wire_details(node: Node) -> void:
@@ -364,10 +411,27 @@ func _wire_details(node: Node) -> void:
  for child: Node in node.get_children():_wire_details(child)
 
 func _auto_register() -> void:
- if not _fuse.disabled:_refresh();return
- for current: String in MATERIAL_GRADES:
-  if _available(current)>=int(Cards.FUSION_MATERIALS[current]):
-   grade=current;filter_grade="전체";_grade_select.select(MATERIAL_GRADES.find(current));_refresh();return
+ var grades: Array[String]=MATERIAL_GRADES.duplicate()
+ grades.erase(grade)
+ grades.push_front(grade)
+ for current: String in grades:
+  var required: int=int(Cards.FUSION_MATERIALS.get(current,0))
+  if required==0:continue
+  var limit: int=mini(_available(current)/required,Cards.MAX_FUSION_BATCH)*required
+  if limit==0:continue
+  if grade!=current:
+   grade=current
+   _selection.clear()
+   filter_grade="전체"
+  var spare: Dictionary=collection.get("spare",{}).get(category,{})
+  var owned: Dictionary=collection.get("owned",{}).get(category,{})
+  for row: Dictionary in catalog.get(category,[]):
+   var identity: String=Cards.card_id(row)
+   if row.get("grade")!=grade or not owned.has(identity) or not _eligible(row):continue
+   for copy: int in range(mini(limit-_selection.size(),int(spare.get(identity,0))-_selection.count(identity))):_selection.append(identity)
+   if _selection.size()>=limit:break
+  _refresh_selection()
+  return
 
 func _open_shop() -> void:
  var host: Node=get_parent()
@@ -376,4 +440,4 @@ func _open_shop() -> void:
   host=host.get_parent()
 
 func _request() -> void:
- if not _fuse.disabled and Cards.CATEGORIES.has(category) and Cards.FUSION_NEXT.has(grade):fuse_requested.emit(category,grade)
+ if not _fuse.disabled and Cards.CATEGORIES.has(category) and Cards.FUSION_NEXT.has(grade):fuse_requested.emit(category,grade,_selection.duplicate())
