@@ -17,6 +17,10 @@ on:
       - 'tools/android/test_client523_addon.py'
       - 'tools/android/update_pack.py'
       - 'tools/android/test_update_pack.py'
+      - 'tools/android/startup_ota.py'
+      - 'tools/android/test_startup_ota.py'
+      - 'tools/boot/build_startup_bake_reuse.py'
+      - 'tools/boot/build_startup_bakes.py'
       - '.github/workflows/client523-source-tool.yml'
   workflow_dispatch:
 
@@ -48,6 +52,7 @@ jobs:
         with:
           sparse-checkout: |
             tools/android
+            tools/boot
             tools/lineagem_original
       - uses: actions/setup-python@v5
         with:
@@ -56,4 +61,4 @@ jobs:
         run: python -m pip install -r tools/lineagem_original/requirements.txt
       - name: Run tests
         working-directory: tools/android
-        run: python -m unittest test_client523_resource_pack test_client523_addon test_update_pack -v
+        run: python -m unittest test_client523_resource_pack test_client523_addon test_update_pack test_startup_ota -v
