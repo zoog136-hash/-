@@ -26,6 +26,8 @@ parser.add_argument('--shard-index',type=int,default=0)
 parser.add_argument('--shard-count',type=int,default=1)
 parser.add_argument('--boot-once',action='store_true',
                     help='Run the common boot smoke check only in shard zero of a matching CI matrix')
+parser.add_argument('--bake-once',action='store_true',
+                    help='Bake legacy navigation immediately before its cache test in the final shard')
 parser.add_argument('--no-ci-synthetic-fixtures',action='store_true',help='Audit committed resources without installing synthetic L1J fixtures')
 args=parser.parse_args()
 if args.import_timeout < 1:
@@ -60,7 +62,8 @@ tests=[('import',['--import']),
        ('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
 try:
-    tests,plan=select_checks(tests,args.only,args.shard_index,args.shard_count,args.boot_once)
+    tests,plan=select_checks(tests,args.only,args.shard_index,args.shard_count,
+                             boot_once=args.boot_once,bake_once=args.bake_once)
 except ValueError as exc:
     parser.error(str(exc))
 failed=[]
@@ -178,7 +181,8 @@ for name,extra in tests:
             print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
             if os.environ.get('GITHUB_ACTIONS')=='true':print(failure_annotation(name,output),flush=True)
             if name in ('import','bake_navigation'):
-                # Do not manufacture unrelated failures after broken preparation.
+                # Keep unrun checks explicit after broken preparation. In the
+                # bake-once matrix only the cache test follows the bake.
                 not_run=[remaining for remaining,_ in tests[len(executed):]]
                 print('BLOCKED_BY_'+name.upper()+' '+str(len(not_run))+' checks',flush=True)
                 write_summary()

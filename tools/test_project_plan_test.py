@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from test_project_support import select_checks, PREPARATION
+from test_project_support import NAVIGATION_CACHE_TEST, PREPARATION, select_checks
 
 
 def checks(count=246):
@@ -33,6 +33,28 @@ class SelectionTests(unittest.TestCase):
             self.assertEqual(sorted(seen), [n for n,_ in source[3:]])
             self.assertEqual(len(seen),len(set(seen)))
             self.assertEqual(boots,1)
+    def test_bake_once_keeps_cache_pair_isolated_and_all_runtime_checks(self):
+        source = checks()
+        cache_check = (NAVIGATION_CACHE_TEST, ['--script', 'cache'])
+        source.insert(len(PREPARATION), cache_check)
+        for index in range(8):
+            before, _ = select_checks(source, shard_index=index, shard_count=8, boot_once=True)
+            after, plan = select_checks(source, shard_index=index, shard_count=8,
+                                        boot_once=True, bake_once=True)
+            independent = [check for check in before if check[0] not in ('bake_navigation', NAVIGATION_CACHE_TEST)]
+            if index == 7:
+                self.assertEqual(after, independent + [source[1], cache_check])
+                self.assertEqual(plan['preparation'], ['import', 'bake_navigation'])
+            else:
+                self.assertEqual(after, independent)
+                self.assertEqual(plan['preparation'], ['import', 'boot'] if index == 0 else ['import'])
+
+    def test_bake_once_requires_multiple_shards_and_a_cache_test(self):
+        with self.assertRaisesRegex(ValueError, '--bake-once'):
+            select_checks(checks(), shard_count=8, bake_once=True)
+        with self.assertRaisesRegex(ValueError, '--bake-once'):
+            select_checks(checks() + [(NAVIGATION_CACHE_TEST, [])], bake_once=True)
+
     def test_invalid_count(self):
         for count in (-1,0):
             with self.assertRaises(ValueError):select_checks(checks(),shard_count=count)
@@ -82,6 +104,7 @@ print('ENV='+json.dumps({{k:os.environ.get(k) for k in ['XDG_DATA_HOME','APPDATA
 if '--import' in sys.argv:
     if os.environ.get('CONTROL_IMPORT_FAIL')=='1': print('ERROR: controlled import failure');sys.exit(1)
 elif any('bake_hunting_navigation.gd' in x for x in sys.argv):
+    if os.environ.get('CONTROL_BAKE_FAIL')=='1': print('ERROR: controlled navigation bake failure');sys.exit(1)
     folder=pathlib.Path('data/maps/navigation');folder.mkdir(parents=True,exist_ok=True)
     (folder/'fixture.nav').write_bytes(b'CONTROLLED, NOT GAME NAVIGATION')
     print('NAV_BAKE_OK 1')
@@ -130,6 +153,40 @@ elif '--script' in sys.argv:
         p,d=self.run_checks('--shard-count','2','--shard-index','1','--boot-once',extra_env=env)
         self.assertEqual(p.returncode,0,p.stderr)
         self.assertEqual(d['checks'],[*PREPARATION[:2],'case_1_test'])
+    def test_failed_bake_blocks_only_its_cache_test_in_manual_matrix(self):
+        for name in ('case_0_test', 'case_1_test', NAVIGATION_CACHE_TEST):
+            self.add(name)
+        env = {'CONTROL_BAKE_FAIL': '1'}
+        matrix = ('--shard-count', '2', '--boot-once', '--bake-once')
+        p, report = self.run_checks(*matrix, '--shard-index', '0', extra_env=env)
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+        self.assertEqual(report['checks'], ['import', 'boot', 'case_0_test'])
+        self.assertEqual(report['not_run'], [])
+        p, report = self.run_checks(*matrix, '--shard-index', '1', extra_env=env)
+        self.assertEqual(p.returncode, 1, p.stdout + p.stderr)
+        self.assertIn('PASS case_1_test', p.stdout)
+        self.assertEqual(report['checks'], ['import', 'case_1_test', 'bake_navigation', NAVIGATION_CACHE_TEST])
+        self.assertEqual(report['failed'], ['bake_navigation'])
+        self.assertEqual(report['not_run'], [NAVIGATION_CACHE_TEST])
+        self.assertEqual(report['passed'], 2)
+
+    def test_successful_bake_keeps_evidence_and_runs_its_cache_test(self):
+        for name in ('case_0_test', 'case_1_test', NAVIGATION_CACHE_TEST):
+            self.add(name)
+        p, report = self.run_checks('--shard-count', '2', '--shard-index', '1', '--boot-once', '--bake-once')
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+        self.assertIn('PASS ' + NAVIGATION_CACHE_TEST, p.stdout)
+        self.assertEqual(report['passed'], 4)
+        self.assertEqual(report['not_run'], [])
+        self.assertTrue((self.root / 'logs' / 'navigation' / 'fixture.nav').is_file())
+
+    def test_default_failed_bake_blocks_all_remaining_checks(self):
+        self.add('case_test')
+        p, report = self.run_checks(extra_env={'CONTROL_BAKE_FAIL': '1'})
+        self.assertEqual(p.returncode, 1, p.stdout + p.stderr)
+        self.assertEqual(report['failed'], ['bake_navigation'])
+        self.assertEqual(report['not_run'], ['boot', 'case_test'])
+
     def test_retired_legacy_layout_is_reported_never_passed(self):
         # field_world_test asserted the pre-remake Aden layout, which the game
         # no longer serves (RETIRED_LEGACY_MAP_TESTS); it must not run or pass.
