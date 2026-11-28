@@ -455,11 +455,12 @@ def missing_private_inputs(name: str, env: Mapping[str, str]) -> list[str]:
 
 
 PREPARATION = ("import", "bake_navigation", "boot")
+NAVIGATION_CACHE_TEST = "hunting_navigation_cache_test"
 
 
 def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
                   shard_index: int = 0, shard_count: int = 1,
-                  boot_once: bool = False) -> tuple[list, dict]:
+                  boot_once: bool = False, bake_once: bool = False) -> tuple[list, dict]:
     if shard_count < 1 or not 0 <= shard_index < shard_count:
         raise ValueError("Require shard-count >= 1 and 0 <= shard-index < shard-count")
     names = [name for name, _ in checks]
@@ -468,6 +469,8 @@ def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
     if names[:3] != list(PREPARATION):
         raise ValueError("Import, navigation and boot must precede runtime tests")
     runtime = checks[3:]
+    if bake_once and (shard_count == 1 or NAVIGATION_CACHE_TEST not in names[3:]):
+        raise ValueError(f"--bake-once requires multiple shards and {NAVIGATION_CACHE_TEST}")
     if only:
         if shard_count != 1 or shard_index != 0:
             raise ValueError("--only and sharding cannot be combined")
@@ -478,12 +481,20 @@ def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
         result = [check for check in checks if check[0] in selected]
     elif shard_count > 1:
         assigned = [check for i, check in enumerate(runtime) if i % shard_count == shard_index]
+        if bake_once:
+            # Run the legacy bake immediately before its cache consumer. This
+            # keeps partial bake outputs away from unrelated tests and leaves
+            # shard zero's extra render audits independent of legacy maps.
+            assigned = [check for check in assigned if check[0] != NAVIGATION_CACHE_TEST]
+            if shard_index == shard_count - 1:
+                assigned.extend((checks[1], checks[names.index(NAVIGATION_CACHE_TEST)]))
         if not assigned:
             raise ValueError("An empty runtime shard must not pass preparation alone")
-        # Import and navigation prepare each runner's local project. Boot is
-        # a smoke check of the same revision, map fixture and engine in every
-        # shard, and its isolated profile is not used by subsequent checks.
-        preparation = checks[:2] if boot_once and shard_index != 0 else checks[:3]
+        # Import prepares each local project. Boot's isolated profile is only
+        # used by the smoke check itself.
+        preparation = checks[:1] if bake_once else checks[:2]
+        if not boot_once or shard_index == 0:
+            preparation += checks[2:3]
         result = preparation + assigned
     else:
         result = list(checks)
