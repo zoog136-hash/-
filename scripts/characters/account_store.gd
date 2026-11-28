@@ -11,6 +11,7 @@ const MAX_CHARACTERS: int = 13 # TWILIGHT policy, not a Class/AccountSlot row co
 const DEFAULT_PATH := "user://twilight_v20_save.json"
 const WRITER = preload("res://scripts/skills/save_writer.gd")
 const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
+const SLOT_EXPANDERS = preload("res://scripts/loot/source_slot_expanders523.gd")
 const JOBS := {1:"기사",2:"요정",3:"마법사",4:"다크엘프",5:"투사",7:"광전사",8:"군주",34:"총사",52:"암흑기사",81:"신성검사",94:"사신",111:"뇌신",142:"마검사"}
 const SHARED := ["warehouse","card_draw_fusion","equipment_collections","card_collection_policy","growth","card_option_awakening","card_skill_awakening","halphas_star_enchant","next_item_instance_id"]
 ## Existing gameplay roots cannot be reclassified as unknown shared data.
@@ -176,7 +177,7 @@ static func _seal(data: Dictionary, compact_consumer: bool = false) -> Dictionar
 	for key: String in ["card_option_awakening","consumable_state","source_visual_context"]:
 		if data.has(key) and not data[key] is Dictionary: return fail("공유·캐릭터 상태 저장 형식 오류 · 기존 저장 보존")
 	for key: String in account.shared:
-		if key in PRIVATE_ROOTS: return fail("캐릭터별 상태를 계정 공유 상태로 바꿀 수 없습니다.")
+		if key in PRIVATE_ROOTS or key == SLOT_EXPANDERS.RUNE_KEY: return fail("캐릭터별 상태를 계정 공유 상태로 바꿀 수 없습니다.")
 	var selected: Dictionary=selected_record(data)
 	if selected.is_empty(): return fail("선택한 캐릭터가 계정에 없습니다.")
 	if data.get("job_class")!=JOBS.get(int(selected.get("class_id",0))) or int(data.get("source_visual_context",{}).get("gender_id",-1))!=int(selected.get("gender_id",0)): return fail("캐릭터 생성 시 선택한 직업·성별은 변경할 수 없습니다.")
@@ -281,7 +282,7 @@ static func validate(payload: Dictionary, projection_built: bool=false) -> Strin
 	if not legacy and (not account.get("shared") is Dictionary or account.shared.has(KEY)): return "계정 공유 상태 저장 형식 오류"
 	if not legacy:
 		for key: String in account.shared:
-			if key in PRIVATE_ROOTS: return "캐릭터별 상태가 계정 공유 상태에 중복되어 있습니다."
+			if key in PRIVATE_ROOTS or key == SLOT_EXPANDERS.RUNE_KEY: return "캐릭터별 상태가 계정 공유 상태에 중복되어 있습니다."
 	if account.characters.is_empty() or account.characters.size()>MAX_CHARACTERS: return "캐릭터 슬롯 저장 범위 오류"
 	var ids: Dictionary = {}; var names: Dictionary = {}; var physical: Dictionary = {}
 	var selected: Dictionary = {}
@@ -290,6 +291,9 @@ static func validate(payload: Dictionary, projection_built: bool=false) -> Strin
 		ids[record.id]=true; names[record.name.to_lower()]=true
 		if record.state.has(KEY): return "중첩된 캐릭터 계정 저장 거부"
 		if not BONUS_STAT_CAP.valid_extension(record.state.get(BONUS_STAT_CAP.SAVE_KEY, 0)): return "캐릭터 스탯 상한 저장 형식 오류"
+		var rune_problem := SLOT_EXPANDERS.save_problem(record.state.get(SLOT_EXPANDERS.RUNE_KEY, false),
+			record.state.get("equipped_items", {}), record.state.get("item_instances", {}))
+		if not rune_problem.is_empty(): return rune_problem
 		for key: String in ["card_option_awakening","consumable_state","source_visual_context","character_source_cursor"]:
 			if record.state.has(key) and not record.state[key] is Dictionary: return "캐릭터 개별 상태 저장 형식 오류"
 		if record.state.get("consumable_state") is Dictionary:

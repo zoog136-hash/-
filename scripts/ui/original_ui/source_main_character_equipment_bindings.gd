@@ -3,9 +3,10 @@ extends RefCounted
 ## The side UI owns equipped records, physical reference construction and input.
 const COMMON="UI/CommonUi/Common_Slot.csb"
 const COMMON_SHA="b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6"
+const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
 ## Every original slot of the two equipment pages. physical_slot names the
 ## TWILIGHT equipped_items key the slot shows; "" keeps the original empty
-## slot (insignia, leggings, spaulder, earrings, loons, bangles... have no
+## slot (insignia, leggings, spaulder, earrings, bangles... have no
 ## TWILIGHT equipment slot yet).
 const PAGES={
  "UI/FloatingUi/CharacterInfo_EquipSlotSet_A.csb":{
@@ -13,10 +14,10 @@ const PAGES={
   "slots":{24680:{"source_name":"Slot_Helmet","physical_slot":"helmet"},22860:{"source_name":"Slot_Insignia","physical_slot":""},21044:{"source_name":"Slot_Weapon","physical_slot":"weapon"},19228:{"source_name":"Slot_Armor","physical_slot":"body"},17416:{"source_name":"Slot_Boot","physical_slot":"boots"},15596:{"source_name":"Slot_Legging","physical_slot":""},13780:{"source_name":"Slot_Shirt","physical_slot":"tshirt"},11960:{"source_name":"Slot_Spaulder","physical_slot":""},10148:{"source_name":"Slot_Cape","physical_slot":"cloak"},8332:{"source_name":"Slot_Shield","physical_slot":"offhand"},6516:{"source_name":"Slot_Glove","physical_slot":"gloves"},396:{"source_name":"Slot_Etc","physical_slot":""}}},
  "UI/FloatingUi/CharacterInfo_EquipSlotSet_B.csb":{
   "sha256":"404798592672d54ef558ceaf18c0e6d0889cbf881a3b17a17c9bf83f1072c0af","panel":436,
-  "slots":{22332:{"source_name":"Slot_Earring","physical_slot":""},20520:{"source_name":"Slot_Belt","physical_slot":"belt"},18708:{"source_name":"Slot_Ring","physical_slot":"ring1"},16896:{"source_name":"Slot_Ring_2","physical_slot":""},15080:{"source_name":"Slot_Loon","physical_slot":""},13260:{"source_name":"Slot_Earring_1","physical_slot":""},11440:{"source_name":"Slot_Necklace","physical_slot":"necklace"},9628:{"source_name":"Slot_Ring_1","physical_slot":"ring2"},7816:{"source_name":"Slot_Ring_3","physical_slot":""},5996:{"source_name":"Slot_Loon_1","physical_slot":""}}}
+  "slots":{22332:{"source_name":"Slot_Earring","physical_slot":""},20520:{"source_name":"Slot_Belt","physical_slot":"belt"},18708:{"source_name":"Slot_Ring","physical_slot":"ring1"},16896:{"source_name":"Slot_Ring_2","physical_slot":""},15080:{"source_name":"Slot_Loon","physical_slot":"rune"},13260:{"source_name":"Slot_Earring_1","physical_slot":""},11440:{"source_name":"Slot_Necklace","physical_slot":"necklace"},9628:{"source_name":"Slot_Ring_1","physical_slot":"ring2"},7816:{"source_name":"Slot_Ring_3","physical_slot":""},5996:{"source_name":"Slot_Loon_1","physical_slot":"rune2"}}}
 }
 ## TWILIGHT physical slots shown by the pages above.
-const PHYSICAL_SLOTS: Array[String]=["helmet","weapon","body","boots","tshirt","cloak","offhand","gloves","belt","ring1","ring2","necklace"]
+const PHYSICAL_SLOTS: Array[String]=["helmet","weapon","body","boots","tshirt","cloak","offhand","gloves","belt","ring1","ring2","necklace","rune","rune2"]
 ## Korean slot names for the empty-slot notice (TWILIGHT 근사: an empty slot
 ## opens the bag to choose the item; a slot TWILIGHT has no equipment for
 ## says so instead of staying silent).
@@ -88,6 +89,10 @@ func build(member: String) -> Dictionary:
 			common_bindings[BUTTON]={"role":"button","activate":Callable(self,"activate").bind(physical_slot)}
 		scope.append(offset)
 		bindings[offset]={"role":"project","source_node_offsets":common_scope,"bindings":common_bindings}
+		if physical_slot == "rune":
+			bindings[offset]["visible"] = true
+		elif physical_slot == "rune2":
+			bindings[offset]["visible"] = bool(state.get(SLOT_EXPANDERS.RUNE_KEY, false))
 		rows.append({"source_project_offset":offset,"source_name":slot.source_name,"physical_slot":physical_slot,"record":record.duplicate(true),"owner_button":input_button,"input_basis":"existing equipment_buttons[physical_slot].pressed callback owns equipment_requested/reference construction","original_widget":_widget(raw).duplicate(true)})
 	return {"ok":true,"member":member,"sha256":spec.sha256,"source_node_offsets":scope,"bindings":bindings,"rows":rows,"owner_results":owners,"missing_pictures":missing,"panel_offset":spec.panel,"original_panel_widget":panel_widget.duplicate(true),"viewport_extent":Vector2(326,428),"page_registration_ready":true,"page_registration_basis":"Cocos2d-x3.6 PageView preserves original Layout anchor; changes position/size only","page_selection_inferred":false,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":["original class/mode to caller-selected page member and page order","remaining physical slot aliases/numbering and source modes","original per-slot Border/Broken/Clear visibility and unsupported detail/unequip modes"]}
 

@@ -55,6 +55,9 @@ func open_equipment(parent: Node) -> Dictionary:
 	var hud: Object=_hud.get_ref() if _hud!=null else null
 	if hud==null or not is_instance_valid(parent):return _fail("source_character_original_mount_unavailable")
 	if _equipment==null:return _fail("source_character_original_equipment_unavailable")
+	var side: Variant=hud.get("lineage_side_ui")
+	if is_instance_valid(side) and side.has_method("sync_original_equipment_actions"):
+		side.sync_original_equipment_actions(hud.get("character_state"))
 	for member: String in PAGE_MEMBERS:
 		if not _pack.manifest.get("scenes",{}).has(member):return _fail("source_character_original_equipment_page_missing")
 	var contracts: Array[Dictionary]=[]

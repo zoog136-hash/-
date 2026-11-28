@@ -23,12 +23,16 @@ const ENHANCEMENT=preload("res://scripts/crafting/patch523_enhance_source_book.g
 const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
 const GACHA_CRAFT=preload("res://scripts/crafting/patch523_gacha_craft.gd")
+const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
+const ACCOUNT=preload("res://scripts/characters/account_store.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const CONFIRMED_GAPS := {
 	1185: "source_account_slot_increase_without_consumer",
 	146412: "source_base_stat_cap_without_consumer",
 	146422: "source_rune_slot_unlock_without_consumer",
+	146552: "source_permanent_auto_extra_healing_for_item_237_without_consumer",
 	147152: "source_base_stat_cap_and_point_without_consumer",
+	200753: "source_permanent_auto_extra_healing_for_item_236_without_consumer",
 }
 const KNOWN_HOLDS := {
 	170214: "numeric_experience_disagrees_with_original_description",
@@ -72,7 +76,9 @@ const VERIFIED={
 	263901:"actual_bag_HP6000_separate_900s_reuse_fault_retry_reload",
 	146402:"actual_main_bonus_point_only_physical_debit_refusal_and_reload",
 	146412:"actual_original_bag_base_stat_cap_only_physical_debit_and_reload",
+	146422:"actual_original_bag_second_rune_unlock_growth_claim_fault_retry_equip_reload_unequip",
 	147152:"actual_original_bag_base_stat_cap_and_point_physical_and_growth_stock_fault_retry_reload",
+	1185:"actual_original_bag_fixed_thirteen_slot_policy_refusal_one_physical_item_retained",
 	186024:"actual_main_half_elixir_reset_cancel_fault_retry_and_physical_debit",
 	190754:"actual_main_half_elixir_reset_event_physical_debit",
 	146442:"actual_bag_touch_and_fusion_reward_touch_fault_reload",
@@ -174,6 +180,9 @@ func run()->void:
 				route="tj_physical_requires_history_context_and_eligibility" if not retry.is_empty() else "tj_policy_present_original_adapter_unavailable"
 			elif category=="ScrollSmelt" and SMELT.known(id) and not SMELT.kind(record).is_empty():
 				route="smelt_requires_exact_material_and_equipped_target"
+			elif id == SLOT_EXPANDERS.CHARACTER_SEAL and ACCOUNT.MAX_CHARACTERS == 13 \
+					and SLOT_EXPANDERS.character_seal(DROPS.item_definition(record)):
+				route = "character_slots_already_available_under_current_account_policy"
 			elif category in SPECIAL_ENCHANT:
 				route="enhancement_target_and_original_rule_required"
 				var owner: String="no_original_direct_owner_found"
@@ -230,6 +239,8 @@ func run()->void:
 func disposition(entry: Dictionary, raw: Dictionary) -> Array[String]:
 	var route: String = entry.resolution
 	if route in ["raw_test_default_excluded", "source_declared_dummy", "user_retired_quest_only", "user_retired_exact_other"]:
+		return ["intentionally_excluded", route]
+	if route == "character_slots_already_available_under_current_account_policy":
 		return ["intentionally_excluded", route]
 	if route in LINKED_ROUTES:
 		return ["linked", route]

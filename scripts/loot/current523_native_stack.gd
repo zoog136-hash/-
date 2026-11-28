@@ -10,6 +10,7 @@ const FUSION_POINTS=preload("res://scripts/cards/source_fusion_points523.gd")
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const BONUS_STAT_CAP=preload("res://scripts/loot/source_bonus_stat_cap523.gd")
+const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
 const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -87,6 +88,8 @@ static func profile(record: Dictionary) -> Dictionary:
 	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
 	var cap: Dictionary = BONUS_STAT_CAP.profile(int(record.get("source_item_class_id",0)), definition)
 	if not cap.is_empty():return {"kind":"bonus_stat_cap","spec":cap}
+	if record.get("source_item_class_id") == SLOT_EXPANDERS.RUNE_POUCH and SLOT_EXPANDERS.rune_pouch(definition):
+		return {"kind":"rune_slot_unlock","spec":{"can_use_when_invisible":true}}
 	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
 	var firework:Dictionary=direct_firework_rule(record,definition)
@@ -207,26 +210,33 @@ static func use_bonus_stat_cap(world: Node, uid: String, owned: Dictionary) -> D
 ## The existing level 89 growth milestones award #147152 under a growth key.
 ## Spend the saved growth quantity in the same write as the permanent effects.
 static func use_growth_stat_fruit(world: Node, item_name: String, selected: String) -> Dictionary:
+	var id: int = BONUS_STAT_CAP.FRUIT
+	var definition: Dictionary = D.definition_id(str(id))
+	var rule: Dictionary = BONUS_STAT_CAP.profile(id, definition)
+	if rule.is_empty():
+		return _failure("이그드라실의 열매 원본 확인 필요 · 성장 보상 보존")
+	var problem: String = _bonus_stat_cap_problem(world, rule.stat_points)
+	if not problem.is_empty():
+		return _failure(problem)
+	var paid: Dictionary = _stage_growth_reward_debit(world, item_name, selected, id, definition)
+	return _commit_bonus_stat_cap(world, paid.overrides, rule.stat_points) if paid.get("ok", false) else paid
+
+static func _stage_growth_reward_debit(world: Node, item_name: String, selected: String, id: int, definition: Dictionary) -> Dictionary:
 	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():
 		return _failure("원본 소비 저장 보호 중 · 성장 보상 보존")
 	if not selected.is_empty() or world._item_locked(item_name) or not world._patch523_item_allowed() or world.hp <= 0 or world._option_awakening_busy():
 		return _failure("현재 사용·잠금·생존 조건 미충족 · 성장 보상 보존")
-	var id: int = BONUS_STAT_CAP.FRUIT
 	var growth_record: Dictionary = world.growth96.source.item_record(id)
-	var definition: Dictionary = D.definition_id(str(id))
-	var rule: Dictionary = BONUS_STAT_CAP.profile(id, definition)
-	if growth_record.get("name") != item_name or rule.is_empty():
-		return _failure("이그드라실의 열매 원본 확인 필요 · 성장 보상 보존")
+	if growth_record.get("name") != item_name or growth_record.get("source_original") != definition.get("original_item"):
+		return _failure("성장 보상 원본 확인 필요 · 아이템 보존")
 	var count: Variant = world.inventory.get(item_name, 0)
 	if not integer(count) or count < 1 or count > world.growth96.proven_reward_amount(id):
-		return _failure("이그드라실의 열매 성장 수령 이력·수량 확인 필요 · 성장 보상 보존")
+		return _failure("성장 보상 수령 이력·수량 확인 필요 · 아이템 보존")
 	for entry: Variant in world.item_instances.values():
 		if entry is Dictionary and entry.get("name") == item_name:
-			return _failure("이그드라실의 열매 보유 형태 확인 필요 · 성장 보상 보존")
+			return _failure("성장 보상 보유 형태 확인 필요 · 아이템 보존")
 	var record: Dictionary = D.variant_item(definition.get("native_record", {}), 1)
 	var problem: String = load("res://scripts/loot/patch523_item_use.gd").call("eligibility", world, record)
-	if problem.is_empty():
-		problem = _bonus_stat_cap_problem(world, rule.stat_points)
 	if not problem.is_empty():
 		return _failure(problem)
 	var inventory: Dictionary = world.inventory.duplicate()
@@ -234,10 +244,10 @@ static func use_growth_stat_fruit(world: Node, item_name: String, selected: Stri
 		inventory.erase(item_name)
 	else:
 		inventory[item_name] = int(count) - 1
-	return _commit_bonus_stat_cap(world, {
+	return {"ok":true,"overrides":{
 		"inventory": inventory, "item_instances": world.item_instances,
 		"consumable_state": world.consumable_service.export_state(),
-	}, rule.stat_points)
+	}}
 
 static func _bonus_stat_cap_problem(world: Node, added_points: int) -> String:
 	if world.level < BONUS_STAT_CAP.MIN_LEVEL:
@@ -286,6 +296,54 @@ static func authorizes_bonus_stat_cap(world: Node, staged: Dictionary) -> bool:
 	if not fruit:
 		return not staged.has("stat_points")
 	return integer(staged.get("stat_points")) and staged.stat_points == world.stat_points + 1
+
+static func use_rune_slot(world: Node, uid: String, owned: Dictionary) -> Dictionary:
+	if busy or world.level < SLOT_EXPANDERS.RUNE_LEVEL:
+		return _failure("원본 룬 장착 칸 사용 조건 확인 필요 · 룬 포켓 보존")
+	if world.rune_slot2_unlocked:
+		return _failure("두 번째 룬 장착 칸이 이미 열려 있습니다 · 룬 포켓 보존")
+	var live: Dictionary = proof(world, uid)
+	if live.is_empty() or live != owned or world._item_locked(str(live.record.name), uid) \
+			or not SLOT_EXPANDERS.rune_pouch(D.item_definition(live.record)):
+		return _failure("룬 포켓 원본 실물 확인 필요 · 아이템 보존")
+	var paid: Dictionary = stage_debit(world, [{
+		"physical_id": uid, "quantity": 1, "expected_quantity": owned.remaining,
+		"expected_remaining": int(owned.remaining) - 1, "source_native_stack_receipt": owned.receipt,
+	}])
+	return _commit_rune_slot(world, paid.overrides) if paid.get("ok", false) else paid
+
+static func use_growth_rune_slot(world: Node, item_name: String, selected: String) -> Dictionary:
+	if world.rune_slot2_unlocked:
+		return _failure("두 번째 룬 장착 칸이 이미 열려 있습니다 · 룬 포켓 보존")
+	var id: int = SLOT_EXPANDERS.RUNE_POUCH
+	var definition: Dictionary = D.definition_id(str(id))
+	if not SLOT_EXPANDERS.rune_pouch(definition):
+		return _failure("룬 포켓 원본 확인 필요 · 성장 보상 보존")
+	var paid: Dictionary = _stage_growth_reward_debit(world, item_name, selected, id, definition)
+	return _commit_rune_slot(world, paid.overrides) if paid.get("ok", false) else paid
+
+static func _commit_rune_slot(world: Node, payload: Dictionary) -> Dictionary:
+	payload[SLOT_EXPANDERS.RUNE_KEY] = true
+	busy = true
+	_candidate_kind = "original_146422_unlock"
+	_candidate = payload.duplicate(true)
+	var saved: Error = world._save_game(true, payload)
+	_candidate.clear()
+	_candidate_kind = ""
+	busy = false
+	if saved != OK:
+		return _failure("룬 장착 칸 저장 실패 · 룬 포켓 보존")
+	world.inventory = payload.inventory
+	world.item_instances = payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	world.rune_slot2_unlocked = true
+	world.deferred_save.cancel()
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":"두 번째 룬 장착 칸이 열렸습니다"}
+
+static func authorizes_rune_slot(world: Node, staged: Dictionary) -> bool:
+	return _candidate_kind == "original_146422_unlock" and authorizes(staged) \
+		and staged.size() == 4 and staged.has_all(["inventory","item_instances","consumable_state"]) \
+		and not world.rune_slot2_unlocked and staged.get(SLOT_EXPANDERS.RUNE_KEY) == true
 
 ## The four permanent server-keeper items, not their same-color dated SKUs.
 ## Reward is solely the exact authored above-player effect; no hidden buff.
@@ -871,6 +929,12 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if int(named.get("source_item_class_id",0)) in [139781,289172,289182,289202,306611,306621,306631,306641] and load("res://scripts/quests/quest_fixed_cards523.gd").call("try_use_legacy",world,item_name,selected,named):
 		return {"handled":true,"silent":true}
 	var selected_entry: Variant=world.item_instances.get(selected,{})
+	var seal: Variant = named
+	if not selected.is_empty():
+		seal = selected_entry.get("record", {}) if selected_entry is Dictionary and selected_entry.get("name") == item_name else {}
+	if seal is Dictionary and seal.get("source_item_class_id") == SLOT_EXPANDERS.CHARACTER_SEAL and int(world.inventory.get(item_name, 0)) > 0 \
+			and SLOT_EXPANDERS.character_seal(D.current_original_definition(seal)):
+		return _failure("현재 계정은 캐릭터 슬롯 %d개가 기본으로 열려 있습니다 · 옥새 보존" % world.CHARACTER_ACCOUNT.MAX_CHARACTERS)
 	var catalog_bag: bool = not catalog_action.is_empty() and profile(catalog_action).get("kind") == "bag"
 	var named_profile: Dictionary=profile(named)
 	var claims: bool=catalog_bag or (not named_profile.is_empty() and named_profile.get("kind") not in ["half_elixir_charge","half_elixir_reset"]) or (selected_entry is Dictionary and selected_entry.has(RECEIPT))
@@ -964,6 +1028,7 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
 	if effect.kind=="bonus_stat_cap":return use_bonus_stat_cap(world,uid,owned)
+	if effect.kind=="rune_slot_unlock":return use_rune_slot(world,uid,owned)
 	if effect.kind=="fusion_points":return use_fusion_points(world,uid,owned,spec)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)

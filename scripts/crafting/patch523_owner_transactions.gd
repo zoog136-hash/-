@@ -2,6 +2,7 @@ extends RefCounted
 ## Save boundary only. Source providers retain acquisition/crafting semantics.
 const QUEST_GROWTH_KEYS=["level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]
 const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
+const SLOT_EXPANDERS = preload("res://scripts/loot/source_slot_expanders523.gd")
 
 static func quest_error(world: Node,state: Variant) -> String:
 	var script: Script=world.quest_service.get_script()
@@ -50,6 +51,8 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 	if staged.has(BONUS_STAT_CAP.SAVE_KEY):
 		original_stat_cap = preload("res://scripts/loot/current523_native_stack.gd").authorizes_bonus_stat_cap(world,staged)
 		if not original_stat_cap:return "원본 스탯 상한 거래와 물리 차감 증명이 함께 필요합니다"
+	if staged.has(SLOT_EXPANDERS.RUNE_KEY) and not preload("res://scripts/loot/current523_native_stack.gd").authorizes_rune_slot(world, staged):
+		return "원본 룬 포켓 소비와 두 번째 장착 칸 변경을 함께 저장해야 합니다"
 	if staged.has("expedition523_local"):
 		var error: String=expedition_error(world,staged.expedition523_local)
 		if not error.is_empty():return error

@@ -268,6 +268,7 @@ const HP_POTION_COOLDOWN_SECONDS: float = 1.0
 const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
+const SLOT_EXPANDERS = preload("res://scripts/loot/source_slot_expanders523.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const PATCH523_TOKEN_STOCK = preload("res://scripts/loot/current523_native_stack.gd")
@@ -557,21 +558,21 @@ const SHIELD_COMPATIBLE_WEAPONS: Array[String] = ["단검", "한손검", "지팡
 const EQUIPMENT_SLOT_ORDER: Array[String] = [
 	"weapon", "offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "belt",
 	"earring1", "earring2", "ring1", "ring2", "seal1", "seal2", "gaiters",
-	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune", "domination_stone", "relic_item", "fishing_rod"
+	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune", "rune2", "domination_stone", "relic_item", "fishing_rod"
 ]
 const ARMOR_EQUIPMENT_SLOTS: Array[String] = [
 	"offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "gaiters", "boots", "gloves"
 ]
 const ACCESSORY_EQUIPMENT_SLOTS: Array[String] = [
 	"belt", "earring1", "earring2", "ring1", "ring2", "seal1", "seal2",
-	"bracelet", "necklace", "badge", "crystal", "catalyst", "rune"
+	"bracelet", "necklace", "badge", "crystal", "catalyst", "rune", "rune2"
 ]
 const EQUIPMENT_SLOT_LABELS: Dictionary = {
 	"weapon":"무기", "offhand":"보조무기", "helmet":"투구", "tshirt":"티셔츠", "body":"갑옷",
 	"pants":"하의", "cloak":"망토", "shoulder":"견갑", "belt":"벨트", "earring1":"귀걸이1", "earring2":"귀걸이2",
 	"ring1":"반지1", "ring2":"반지2", "seal1":"인장1", "seal2":"인장2", "gaiters":"각반",
 	"boots":"신발", "gloves":"장갑", "bracelet":"팔찌", "necklace":"목걸이", "badge":"휘장",
-	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬", "domination_stone":"지배석", "relic_item":"유물", "fishing_rod":"낚싯대"
+	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬", "rune2":"룬 II", "domination_stone":"지배석", "relic_item":"유물", "fishing_rod":"낚싯대"
 }
 
 var level: int = 35
@@ -595,6 +596,7 @@ var wis_stat: int = 10
 var cha_stat: int = 9
 var stat_points: int = 0
 var bonus_stat_cap_extension: int = 0
+var rune_slot2_unlocked: bool = false
 
 var gold: int = 100000000 # Playtest-only starting funds; existing saved funds still load unchanged.
 ## A new character starts with original 523 items (current523_starter_kit.gd);
@@ -5344,6 +5346,10 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 			var fruit: Dictionary = stack_owner.use_growth_stat_fruit(self, item_name, selected_id)
 			hud.show_message(str(fruit.get("message", "성장 보상 사용 조건 확인 필요")))
 			if fruit.get("ok", false): hud.refresh_inventory(inventory); _update_hud()
+		elif item_name == GROWTH96.Source.item_key(SLOT_EXPANDERS.RUNE_POUCH):
+			var pouch: Dictionary = stack_owner.use_growth_rune_slot(self, item_name, selected_id)
+			hud.show_message(str(pouch.get("message", "룬 포켓 사용 조건 확인 필요")))
+			if pouch.get("ok", false): hud.refresh_inventory(inventory); _update_hud()
 		else:
 			var opened: Dictionary = _open_growth_reward_box(item_name)
 			if not opened.get("ok", false): hud.show_message(str(opened.get("reason", "미개봉 성장 보상 상자입니다")))
@@ -7956,6 +7962,7 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
 	character_state["equipped_items"] = _equipped_items_snapshot()
+	character_state[SLOT_EXPANDERS.RUNE_KEY] = rune_slot2_unlocked
 	character_state["equipped_ammo"] = equipped_ammo
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
@@ -8246,6 +8253,11 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
 	if not BONUS_STAT_CAP.valid_extension(bonus_stat_cap_extension):return ERR_INVALID_DATA
+	var rune_problem: String = SLOT_EXPANDERS.save_problem(collection_override.get(SLOT_EXPANDERS.RUNE_KEY, rune_slot2_unlocked),
+		collection_override.get("equipped_items", equipped_items), collection_override.get("item_instances", item_instances))
+	if not rune_problem.is_empty():
+		if not quiet: hud.show_message(rune_problem)
+		return ERR_INVALID_DATA
 	if unconfirmed523.save_blocked or not unconfirmed523.validate(collection_override.get("unconfirmed523",unconfirmed523.state)).is_empty():return ERR_INVALID_DATA
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
 	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
@@ -8352,6 +8364,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
+		if key == SLOT_EXPANDERS.RUNE_KEY: continue # Validated by the exact native owner above.
 		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points",BONUS_STAT_CAP.SAVE_KEY,"weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
@@ -8509,6 +8522,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	if not source_map_error.is_empty():
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
+	if rune_slot2_unlocked: data[SLOT_EXPANDERS.RUNE_KEY] = true
 	data.merge(weapon_mastery.save_fields(),true)
 	data["patch523_transaction_rng"]={"schema":1,"seed":str(rng.seed),"state":str(rng.state)}
 	if expedition_local!=null:
@@ -8648,6 +8662,12 @@ func _load_game(quiet: bool) -> void:
 	if not BONUS_STAT_CAP.valid_extension(value.get(BONUS_STAT_CAP.SAVE_KEY, 0)):
 		source_save_blocked = true
 		hud.show_message("스탯 상한 저장 형식 오류 · 기존 저장 보존")
+		return
+	var rune_problem: String = SLOT_EXPANDERS.save_problem(value.get(SLOT_EXPANDERS.RUNE_KEY, false),
+		value.get("equipped_items", {}), value.get("item_instances", {}))
+	if not rune_problem.is_empty():
+		source_save_blocked = true
+		hud.show_message(rune_problem)
 		return
 	if value.has(CHARACTER_ACCOUNT.KEY):
 		if value[CHARACTER_ACCOUNT.KEY].get("schema") == CHARACTER_ACCOUNT.LEGACY_SCHEMA:
@@ -9080,6 +9100,7 @@ func _load_game(quiet: bool) -> void:
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	bonus_stat_cap_extension = int(data.get(BONUS_STAT_CAP.SAVE_KEY, 0))
+	rune_slot2_unlocked = data.get(SLOT_EXPANDERS.RUNE_KEY, false)
 	gold = maxi(0, int(data.get("gold", gold)))
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
@@ -11337,6 +11358,10 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		var compatible: bool = equip_slot == requested_slot
 		for pair: Array in [["ring1","ring2"],["earring1","earring2"],["seal1","seal2"]]:
 			if equip_slot in pair and requested_slot in pair: compatible = true
+		if equip_slot in ["rune", "rune2"] and requested_slot == "rune":
+			compatible = true
+		if equip_slot in ["rune", "rune2"] and requested_slot == "rune2":
+			compatible = rune_slot2_unlocked and SLOT_EXPANDERS.exact_rune(record)
 		if not compatible:
 			hud.show_message("해당 부위에 착용할 수 없는 장비입니다")
 			return
@@ -11364,6 +11389,9 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 			return
 		if _is_instance_equipped(selected_id):
 			hud.show_message("이미 착용한 장비 개체입니다")
+			return
+		if equip_slot == "rune2" and LOOT_DROP.PATCH523_DROPS.current_original_definition(record).is_empty():
+			hud.show_message("두 번째 칸에 장착할 룬 원본 정의를 확인해 주세요")
 			return
 		if record.get("source_m_native_item",false) and not (item_instances[selected_id] as Dictionary).has("record"):
 			item_instances[selected_id]["record"] = record.duplicate(true)
@@ -11793,11 +11821,16 @@ func _choose_multi_equipment_slot(base_slot: String, container: Dictionary = {})
 	return options[0]
 
 func _equipment_slot_for_record(record: Dictionary) -> String:
-	return _choose_multi_equipment_slot(_equipment_slot_base(record))
+	var base: String = _equipment_slot_base(record)
+	if base == "rune" and rune_slot2_unlocked and SLOT_EXPANDERS.exact_rune(record) \
+			and not equipped_items.get("rune", {}).is_empty() and equipped_items.get("rune2", {}).is_empty():
+		return "rune2"
+	return _choose_multi_equipment_slot(base)
 
 func _empty_equipment_slots() -> Dictionary:
 	var result: Dictionary = {}
 	for slot_name: String in EQUIPMENT_SLOT_ORDER:
+		if slot_name == "rune2" and not rune_slot2_unlocked: continue
 		result[slot_name] = {}
 	return result
 
