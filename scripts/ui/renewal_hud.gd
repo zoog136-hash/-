@@ -2954,12 +2954,15 @@ func present_card_reveal(category: String, awarded: Dictionary, is_fusion: bool)
 		return
 	var success: bool = bool(awarded.get("success", false))
 	var pack: RefCounted=original_main_ui_controller.get("_pack") if is_instance_valid(original_main_ui_controller) else null
+	# Every tapped card in this result shares the same grade textures. Read
+	# them on demand so opening a sealed result does not decode any new art.
+	var layers_by_grade: Dictionary = {}
 	var effect: Callable = CARD_REVEAL.play_result_cell.bind(category, is_fusion, success,
-		source_candidate_records, get_parent().presentation_settings,pack)
+		source_candidate_records, get_parent().presentation_settings,pack,layers_by_grade)
 	if is_fusion and _present_original_fusion(views, category, success, effect): return
 	if not is_fusion and _present_original_gacha(views, category, str(awarded.get("title","")), effect): return
 	var stage: Control = _new_card_reveal_stage()
-	stage.present(views,candidates,category,is_fusion,bool(awarded.get("success",false)),source_candidate_records.duplicate(true))
+	stage.present(views,candidates,category,is_fusion,success,source_candidate_records.duplicate(true),pack)
 
 ## 합성 결과 in the original 523 Change_Fusion_All window (UI pack only). A
 ## hidden guard holds card_reveal_stage while it is open, so the busy rule is

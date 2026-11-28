@@ -75,7 +75,8 @@ func _ready() -> void:
 	if showcase_on_ready:
 		present_showcase()
 
-func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], card_category: String, is_fusion: bool = false, succeeded: bool = false, source_candidate_records: Array = []) -> void:
+func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], card_category: String, is_fusion: bool = false,
+		succeeded: bool = false, source_candidate_records: Array = [], pack: RefCounted=null) -> void:
 	results = value.duplicate(true)
 	category = card_category
 	fusion = is_fusion
@@ -88,6 +89,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 		card.hide()
 		card.queue_free()
 	cards.clear()
+	var layers_by_grade: Dictionary = {}
 	for i: int in range(results.size()):
 		var card: Control = CARD.new()
 		card.extra_lightning_seconds=0.0 if fusion else CARD.DRAW_EXTRA_LIGHTNING_SECONDS
@@ -107,7 +109,7 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 			var own_source_candidates: Array = source_candidate_records.duplicate(true)
 			own_source_candidates.shuffle()
 			var no_legacy_candidates: Array[Texture2D] = []
-			card.configure(results[i],no_legacy_candidates,category,own_source_candidates)
+			card.configure(results[i],no_legacy_candidates,category,own_source_candidates,pack if fusion else null,layers_by_grade)
 		else:
 			var own_candidates: Array[Texture2D] = candidate_textures.duplicate()
 			own_candidates.shuffle()
@@ -123,7 +125,8 @@ func present(value: Array[Dictionary], candidate_textures: Array[Texture2D], car
 ## Reuse the reveal stage's reel inside an authored result cell. The native
 ## window owns input, paging, dismissal, and the grade effect after the reel.
 static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, settled: Callable, category_name: String,
-		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary, pack: RefCounted=null) -> bool:
+		is_fusion: bool, succeeded: bool, source_candidates: Array, settings: Dictionary, pack: RefCounted=null,
+		layers_by_grade: Dictionary={}) -> bool:
 	var card: Control = CARD.new()
 	card.result_cell_illumination=true
 	card.name = "CardRevealEffect"
@@ -139,7 +142,7 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	var shuffled: Array = source_candidates.duplicate()
 	shuffled.shuffle()
 	var no_legacy: Array[Texture2D] = []
-	card.configure(record, no_legacy, category_name, shuffled)
+	card.configure(record,no_legacy,category_name,shuffled,pack if is_fusion else null,layers_by_grade)
 	var upgraded: bool=is_fusion and not bool(record.get("pity_reward",false)) and bool(record.get("fusion_success",succeeded))
 	var show_lightning: bool=(not is_fusion or upgraded) and not card.reduced_motion and card.intensity_scale>0.0
 	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade,area.size if is_fusion else Vector2.ZERO) if show_lightning else null
@@ -154,7 +157,7 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, upgraded: bool, lightning: Node2D=null) -> void:
 	# Leave missing slots out of the reel. Missing art never cancels the
 	# original card-back, illumination, or native result timing.
-	card.face.candidates = card.face.candidates.filter(func(texture: Texture2D) -> bool: return texture != null)
+	card.face.candidates = card.face.candidates.filter(func(candidate: Dictionary) -> bool: return candidate.artwork!=null)
 	card.result_cell_illumination = true
 	card.name_label.modulate.a = 0.0
 	card.grade_label.modulate.a = 0.0

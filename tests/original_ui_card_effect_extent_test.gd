@@ -116,7 +116,7 @@ func _real(path: String)->void:
 				check(effects.size()==n and read_count==(n if arm==0 else 0),"all actual reels mounted; per-card scene reads removed")
 				var state: Array=[]
 				for card: Variant in effects:
-					if not exact.is_empty():check(card.face.artwork is Texture2D and card.face.candidates.size()==1 and card.face.candidates[0]==card.face.artwork,"real award portrait and reel candidate match")
+					if not exact.is_empty():check(card.face.artwork is Texture2D and card.face.candidates.size()==1 and card.face.candidates[0].artwork==card.face.artwork,"real award portrait and reel candidate match")
 					state.append([card.position,card.size,card.record.name,card.grade,card.reveal_at(),card.reel_seconds,card.extra_lightning_seconds,card.result_cell_illumination])
 				if expected.is_empty():expected=state
 				check(state==expected,"%d original reel bounds, recorded card and authored duration unchanged"%n)
