@@ -1056,7 +1056,7 @@ func _process_slow(delta: float) -> void:
 	FRAME_HITCH.detail("dungeon.content523", dungeon_split)
 	FRAME_HITCH.add("dungeon", hitch_5)
 	expedition_local.tick(delta)
-	var item_buffs_changed: bool = _tick_item_buffs(delta,false)
+	var item_buff_update: ItemBuffTick = _tick_item_buffs(delta, false)
 	ain_refresh_clock -= delta
 	if ain_refresh_clock <= 0.0:
 		ain_refresh_clock = 1.0
@@ -1071,7 +1071,7 @@ func _process_slow(delta: float) -> void:
 	combinations.tick(delta)
 	var hitch_9: int = FRAME_HITCH.now()
 	var item_buff_refreshed: bool = _run_auto_item_quickslots(delta)
-	if item_buffs_changed and not item_buff_refreshed: _publish_timed_buff_hud()
+	if not item_buff_refreshed: _publish_item_buff_tick(item_buff_update)
 	FRAME_HITCH.add("items", hitch_9)
 	save_timer += delta
 	if save_timer >= AUTOSAVE_SECONDS:
@@ -5643,11 +5643,18 @@ func _use_timed_item_buff(record: Dictionary) -> bool:
 	_update_hud()
 	return true
 
-func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
+enum ItemBuffTick { NONE, VITALS, EFFECTS }
+
+func _publish_item_buff_tick(change: ItemBuffTick) -> void:
+	match change:
+		ItemBuffTick.VITALS: _refresh_combat_hud()
+		ItemBuffTick.EFFECTS: _publish_timed_buff_hud()
+
+func _tick_item_buffs(delta: float, publish: bool = true) -> ItemBuffTick:
 	if active_item_buffs.is_empty():
 		_tick_cooldown_map(item_use_cooldowns, delta)
-		return false
-	var changed: bool = false
+		return ItemBuffTick.NONE
+	var change: ItemBuffTick = ItemBuffTick.NONE
 	var granted_reward: bool = false
 	var expired: Array[String] = []
 	for key_value: Variant in active_item_buffs.keys():
@@ -5667,9 +5674,11 @@ func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
 			var ticks: int = maxi(0, int(floor(elapsed / interval)))
 			buff["tick_elapsed"] = fmod(elapsed, interval)
 			if ticks > 0:
+				var previous_mp: int = mp
+				var previous_hp: int = hp
 				mp = mini(_effective_max_mp(), mp + maxi(0, int(buff.get("mp_regen_tick", 0))) * ticks)
 				hp = mini(_effective_max_hp(), hp + maxi(0, int(buff.get("hp_regen_tick", 0))) * ticks)
-				changed = true
+				if hp != previous_hp or mp != previous_mp: change = ItemBuffTick.VITALS
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
 		# 원본 IsAbsoluteTimeBuff: real time, also while the game was closed.
 		if buff.has("absolute_until"): buff["remaining"] = maxf(0.0, float(buff.absolute_until) - Time.get_unix_time_from_system())
@@ -5686,25 +5695,24 @@ func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
 				# Expired stats stop even if the writer/reward supplier is busy.
 				# Keep only the receipt for a later exact claim, not a second buff.
 				active_item_buffs[key]={"remaining":0.0,"source_growth_catalyst523_expiry":entry.source_growth_catalyst523_expiry}
-				changed=true
+				change = ItemBuffTick.EFFECTS
 			var now:int=Time.get_ticks_usec()
 			if now>=_growth_catalyst_retry_usec:
 				_growth_catalyst_retry_usec=now+2000000
 				if preload("res://scripts/loot/current523_native_stack.gd").finish_growth_catalyst(self,key):
 					granted_reward=true
-					changed=true
+					change = ItemBuffTick.EFFECTS
 			continue
 		active_item_buffs.erase(key)
-		changed = true
+		change = ItemBuffTick.EFFECTS
 		hud.append_log("%s 버프 종료" % key)
 	_tick_cooldown_map(item_use_cooldowns, delta)
-	if changed:
-		hp = mini(hp, _effective_max_hp())
-		if granted_reward:
-			_update_hud()
-			return false
-		if publish: _publish_timed_buff_hud()
-	return changed
+	if change == ItemBuffTick.EFFECTS: hp = mini(hp, _effective_max_hp())
+	if granted_reward:
+		_update_hud()
+		return ItemBuffTick.NONE
+	if publish: _publish_item_buff_tick(change)
+	return change
 
 func _combined_active_buffs() -> Dictionary:
 	var result: Dictionary = active_skill_buffs.duplicate(true)
@@ -6768,6 +6776,12 @@ func _craft_item_index() -> Dictionary:
 	result.merge(expedition_local.received_material_records(),false)
 	return result
 
+func production_item_record(item_name: String) -> Dictionary:
+	var catalog: Dictionary=loot_catalog.get("by_name",{})
+	if catalog.has(item_name): return catalog[item_name]
+	if not expedition_local.state.get("native_handoffs",{}).has(item_name): return {}
+	return expedition_local.received_material_records().get(item_name,{})
+
 ## Craft/box lookups need only the items one recipe or box names, not the
 ## whole ~27,000-item index: building that on first use froze crafting for
 ## 6.5 s on a PC with the real pack (~26 s on the phone), and warming it in the
@@ -7385,7 +7399,15 @@ func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 ## Confirmations and commits still take their own fresh quote.
 func production_preview_quote() -> Callable:
 	_sync_item_instances()
-	return _quote_craft.bind(_inventory_total_weight(), _carrying_capacity(), _craft_item_index())
+	var weight: int = _inventory_total_weight()
+	var capacity: int = _carrying_capacity()
+	var preview: Dictionary = {}
+	# Native recipes use exact definition IDs. Build the merged, name-keyed
+	# catalog only if this preview asks for a legacy recipe.
+	return func(recipe_id: String, batches: int) -> Dictionary:
+		if not recipe_id.begins_with("patch523:") and not preview.has("items"):
+			preview["items"] = _craft_item_index()
+		return _quote_craft(recipe_id, batches, weight, capacity, preview.get("items", {}))
 
 func production_recipe_craftable(recipe_id: String, preview_quote: Callable) -> bool:
 	if recipe_id.begins_with("patch523:"):
@@ -7858,10 +7880,14 @@ var _stat_memo_depth: int = 0
 
 func _stat_memo_begin() -> void:
 	_stat_memo_depth += 1
+	if _stat_memo_depth == 1 and original_skills != null:
+		original_skills.catalog.begin_stat_reads()
 
 func _stat_memo_end() -> void:
 	_stat_memo_depth = maxi(0, _stat_memo_depth - 1)
-	if _stat_memo_depth == 0: _stat_memo.clear()
+	if _stat_memo_depth == 0:
+		_stat_memo.clear()
+		if original_skills != null: original_skills.catalog.end_stat_reads()
 
 ## After a local clan change (creation, donation, level): the clan buff is
 ## read on demand, so only the shown values and the bag are refreshed.

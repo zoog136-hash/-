@@ -45,9 +45,43 @@ func give(id: int, instance_id: String) -> void:
 	host.inventory[record.name] = int(host.inventory.get(record.name,0))+1
 	host.item_instances[instance_id] = {"name":record.name,"level":0,"record":record}
 
+func check_incremental_enchant() -> void:
+	var snapshot: Dictionary = Growth.fresh()
+	snapshot.points = 1000000
+	snapshot.emblems = {"eva":fixture(1,1,20),"sayha":fixture(4,4)}
+	for group: Dictionary in rt.config.guardians:
+		if int(group.server_limit_set_id) != 0: continue
+		for source_node: Dictionary in group.nodes: snapshot.nodes.append(source_node.id)
+	rt.restore(snapshot)
+	var effect_rows: Array = rt._effect_rows
+	var old_guardian_row: Dictionary = effect_rows.back()
+	var denial_before: Dictionary = rt.totals.duplicate()
+	rt.rng.seed = 731
+	rt.rerolls.eva = [100.0,0.0,0.0]
+	host.reject_save = true
+	check(not act("enhance","eva").ok and rt.totals==denial_before and is_same(rt._effect_rows.back(),old_guardian_row),
+		"a rejected symbol save leaves every existing option and projection intact")
+	host.reject_save = false
+	rt.rerolls.eva = [100.0,0.0,0.0]
+	var result: Dictionary = act("enhance","eva")
+	check(result.get("ok",false) and result.get("enhancement_stages")==[2] and host.persisted.growth.emblems.eva.stage==2,
+		"the original stage and points commit before publishing the delta")
+	check(is_same(rt._effect_rows.back(),old_guardian_row),"a symbol upgrade reuses the existing guardian projection")
+	var incremental: Dictionary = rt.totals.duplicate()
+	rt._rebuild()
+	check(rt.totals==incremental and rt.totals!=denial_before,"the selective sums are identical to a full recalculation")
+	# A caller restoring legacy nodes out of band cannot leave a stale sum.
+	rt.state.nodes.pop_back()
+	rt.rerolls.eva = [100.0,0.0,0.0]
+	check(act("enhance","eva").ok,"the next request accepts the live state")
+	incremental = rt.totals.duplicate()
+	rt._rebuild()
+	check(rt.totals==incremental,"an altered source state still uses the complete rebuild")
+
 func run() -> void:
 	host = Host.new(); root.add_child(host)
 	rt = Growth.new(); rt.configure(host)
+	check_incremental_enchant()
 	check(not rt.development and rt.config.get("source_snapshot")=="patch523","production uses523")
 	check(rt.legacy_guardians.size()==6 and rt.legacy_guardians[0].nodes.size()==11,"legacy guardian catalogue preserved")
 	var guardian_count: int = 0

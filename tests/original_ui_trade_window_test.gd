@@ -18,6 +18,7 @@ const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const SUPPLY=preload("res://scripts/loot/patch523_item_inventory.gd")
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
 const FROZEN=preload("res://scripts/exchange/frozen_exchange.gd")
+const FROZEN_CATALOG=preload("res://scripts/exchange/frozen_catalog.gd")
 const ICON_REGISTRY=preload("res://scripts/ui/source523_original_ui_icons.gd")
 const SHOP_CATALOG=preload("res://scripts/shop/source523_shop_catalog.gd")
 const ALICE: Dictionary={179094:"LargeSword",179134:"Rifle",185984:"Scythe",291612:"RunSword"}
@@ -156,6 +157,10 @@ func _rules() -> void:
 		var bad_sample: Dictionary=captured.duplicate(true);bad_sample.merge(variant,true)
 		check(MARKET.captured_unit(bad_sample)<0.0,"non-comparable capture ignored: "+str(variant))
 	check(MARKET.local_lot(10000,0.0).is_empty(),"invalid unit price is rejected")
+	var capture := FROZEN_CATALOG.new()
+	var compiled: Variant=MARKET._load_reference_units()
+	check(capture.load_snapshot() and capture.captured() and compiled is Dictionary and compiled==MARKET.normalized_capture_units(capture.rows()),"compiled projection exactly matches every verified per-item median")
+	check(MARKET._load_reference_units(MARKET.REFERENCE_UNITS_PATH)==null,"changed capture identity cannot use the compiled medians")
 	var window=WINDOW.new()
 	var hud:=FakeHud.new()
 	var world:=FakeWorld.new()
@@ -444,7 +449,9 @@ func _targeted_main(require_animated_icons: bool) -> void:
 	if not is_instance_valid(window) or not window.is_open():
 		w.queue_free();await process_frame;return
 	var market: RefCounted=window.market
-	check(market.search(0,"앨리스").size()==4,"exact four installed Alice weapons appear without direct price observations")
+	check(not market._prices_prepared and market.price_reference(-1).is_empty() and not market._prices_prepared,
+		"opening the original market and asking for an unmapped item do not prepare historical prices")
+	check(market.search(0,"앨리스").size()==4 and market._prices_prepared,"four installed Alice weapons receive their price estimates")
 	window._open_keypad();await process_frame
 	window._editor.text="앨리스"
 	var searched: Dictionary=window._apply_query()
@@ -495,6 +502,9 @@ func _targeted_main(require_animated_icons: bool) -> void:
 	var bought: Dictionary=window._buy_confirmed()
 	check(bought.get("ok",false) and bought.get("item_class_id")==366 and w.inventory["다이아"]==200000-int(leather.bundle_price),"original buy commits exact local leather + its referenced charge: "+str(bought))
 	check(market.listings(366).is_empty() and shop.state[FROZEN.STATE_KEY]==frozen_state,"same-day local stock used; legacy frozen spend unmodified")
+	var leather_search: Array=market.search(market.category_of(366),str(leather.name)).filter(func(row: Dictionary) -> bool: return int(row.item_class_id)==366)
+	check(leather_search.size()==1 and leather_search[0].count==0 and leather_search[0].price_basis=="observed_estimate",
+		"search retains known price provenance for an exhausted mapped listing")
 	if not bought.get("ok",false):w.queue_free();await process_frame;return
 	var bought_uid: String="";var other_uid: String=""
 	var staged: Dictionary=SUPPLY.stage(w,[{"item_class_id":366,"amount":3,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
