@@ -959,7 +959,9 @@ func _merge() -> Dictionary:
 		str(GRADES.get(compose_grade,"")),int(quote.source_amount),str(GRADES.get(int(MERGE_TARGET.get(compose_grade,0)),"")),
 		percent_text(float(quote.get("probability_percent",0.0)))]
 	var method: String="confirm_awakening_action" if owner.has_method("confirm_awakening_action") else "confirm_action"
-	var confirm: Callable=Callable(self,"_confirm_fusion").bind(token,compose_grade,registered.duplicate(),quote.candidates)
+	var raw_candidates: Variant=quote.get("candidates",[])
+	var candidates: Array=raw_candidates if raw_candidates is Array else []
+	var confirm: Callable=Callable(self,"_confirm_fusion").bind(token,compose_grade,registered.duplicate(),candidates)
 	var dialog: Variant=owner.call(method,"스킬 카드 합성",body,"합성",confirm)
 	_merge_dialog=weakref(dialog) if is_instance_valid(dialog) else null
 	return {"ok":true,"quoted":"skill_card523_merge"}
