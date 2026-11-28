@@ -850,11 +850,12 @@ const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 ## edit here (a new lookup helper, a log line) used to discard every stored
 ## table on the phone, which then re-converted each one from JSON during
 ## play (seconds per large table) after every update.
-const STORE_FORMAT := "twilight.current523.definition-store.v4"
+const STORE_FORMAT := "twilight.current523.definition-store.v5"
 const COMPATIBLE_V1 := "twilight.current523.definition-store.v1"
 const COMPATIBLE_V2 := "twilight.current523.definition-store.v2"
 const COMPATIBLE_V3 := "twilight.current523.definition-store.v3"
-const COMPATIBLE_STORE_FORMATS := [COMPATIBLE_V3, COMPATIBLE_V2, COMPATIBLE_V1]
+const COMPATIBLE_V4 := "twilight.current523.definition-store.v4"
+const COMPATIBLE_STORE_FORMATS := [COMPATIBLE_V4, COMPATIBLE_V3, COMPATIBLE_V2, COMPATIBLE_V1]
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 
