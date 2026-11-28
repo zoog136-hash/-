@@ -179,7 +179,9 @@ func skill_ui() -> void:
 	view.refresh()
 	var index: int = view.filtered.find_custom(func(row: Dictionary) -> bool: return row.name == "데스 스턴")
 	if not check(index >= 0, "skill window finds the newly playable Death Stun"): return
-	view.focus_skill(str(view.filtered[index].id))
+	var id: String = str(view.filtered[index].id)
+	world.hud.open_skills_workspace(id)
+	view = world.hud.skills_view
 	check(view.use_button.is_visible_in_tree() and not view.use_button.disabled, "actual skill detail opens manual cast")
 	check(view.quick_button.is_visible_in_tree() and not view.quick_button.disabled, "actual skill detail opens quickslot")
 	check(view.reagent_button.is_visible_in_tree() and not view.reagent_button.disabled, "skill window offers local material purchase")

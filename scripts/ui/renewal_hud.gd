@@ -1205,6 +1205,9 @@ func _go_back() -> void:
 		return
 	if active_section == "skills" and is_instance_valid(skills_view):
 		var browser: Control = skills_view.cards.get_parent().get_parent()
+		if browser.detail_only:
+			open_skills()
+			return
 		if browser.detail_active:
 			browser.detail_active = false
 			browser.reflow()
@@ -2221,10 +2224,10 @@ func open_clan_emblem523() -> void:
 	workspace.mount(note)
 
 ## The original 523 재료 아이템 출처 popup over the current screen.
-func open_item_acquisition523(item_class_id: int, item_name: String = "", blessing_recipe: String = "") -> Dictionary:
+func open_item_acquisition523(item_class_id: int, item_name: String = "", blessing_recipe: String = "", recipe_links: Array[Dictionary] = []) -> Dictionary:
 	var native: Dictionary = {"ok":false,"code":"source_acquisition_popup_controller_unavailable"}
 	if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.has_method("try_open_acquisition"):
-		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name,blessing_recipe)
+		native = original_main_ui_controller.try_open_acquisition(get_parent(),item_class_id,item_name,blessing_recipe,recipe_links)
 	original_main_ui_status["acquisition_popup"] = native
 	return native
 
@@ -3722,11 +3725,11 @@ func open_skills() -> void:
 	open_skills_workspace()
 
 func open_skills_workspace(focus: String="") -> void:
-	_open_window("skills","스킬","")
+	_open_window("skills","스킬" if focus.is_empty() else "스킬 상세","")
 	skills_view=SkillsUI.new()
 	workspace.mount(skills_view)
-	skills_view.configure(self)
-	if not focus.is_empty() and skills_view.has_method("focus_skill"):skills_view.call("focus_skill",focus)
+	skills_view.configure(self,focus)
+	if not focus.is_empty():workspace.set_back_available(true)
 
 func _open_quickslot_picker(entry_kind: String,entry_id: String,display_name: String) -> void:
 	var reason: String = get_parent()._quickslot_registration_error(entry_kind,entry_id)

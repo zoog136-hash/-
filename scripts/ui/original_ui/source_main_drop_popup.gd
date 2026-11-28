@@ -31,6 +31,7 @@ var _maximum: int=1
 var _count: int=1
 var _typed: String=""
 var _on_confirm: Callable
+var _can_confirm: Callable
 var _operation: String="drop"
 var stage: String=""
 var last_result: Dictionary={}
@@ -51,11 +52,11 @@ func open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_
 	var operation: String="quantity" if quantity_only else ("delete" if permanent_delete else "drop")
 	return _open(parent,item_name,item_class_id,maximum,on_confirm,operation)
 
-func open_storage(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String) -> Dictionary:
+func open_storage(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String, can_confirm: Callable=Callable()) -> Dictionary:
 	if direction not in ["deposit","withdraw"]:return {"ok":false,"handled":false,"code":"source_storage_transfer_direction_invalid"}
-	return _open(parent,item_name,item_class_id,maximum,on_confirm,direction)
+	return _open(parent,item_name,item_class_id,maximum,on_confirm,direction,can_confirm)
 
-func _open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, operation: String) -> Dictionary:
+func _open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, operation: String, can_confirm: Callable=Callable()) -> Dictionary:
 	if not is_instance_valid(parent) or (item_name.is_empty() and operation!="quantity") or maximum<1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
 	if _pack==null or (operation!="quantity" and not _pack.manifest.get("scenes",{}).has(BOX)):
 		return {"ok":false,"handled":false,"code":"source_drop_popup_member_missing","member":BOX}
@@ -66,9 +67,12 @@ func _open(parent: Node, item_name: String, item_class_id: int, maximum: int, on
 	_count=1
 	_typed=""
 	_on_confirm=on_confirm
+	_can_confirm=can_confirm
 	_operation=operation
 	var result: Dictionary=_open_keypad() if maximum>1 or operation=="quantity" else _open_box()
-	if not result.get("handled",false):_on_confirm=Callable()
+	if not result.get("handled",false):
+		_on_confirm=Callable()
+		_can_confirm=Callable()
 	return result
 
 func _open_keypad() -> Dictionary:
@@ -184,6 +188,10 @@ func _keypad_done() -> Dictionary:
 
 func _confirm() -> Dictionary:
 	if stage!="confirm" or not is_open():return {"ok":false,"code":"inventory_confirmation_not_open"}
+	if _can_confirm.is_valid() and not _can_confirm.call():
+		var message: Dictionary=NamedTree.locate(_scene,_out,"Text_Message")
+		if message.get("ok",false):message.player.set_bound_text(message.offset,"저장 처리 중입니다. 완료 후 확인을 다시 누르세요.")
+		return {"ok":false,"code":"storage_save_pending"}
 	var callback: Callable=_on_confirm
 	var count: int=_count
 	close()
@@ -206,4 +214,5 @@ func close(emit: bool=true) -> void:
 	if emit:
 		stage=""
 		_on_confirm=Callable()
+		_can_confirm=Callable()
 		closed.emit()

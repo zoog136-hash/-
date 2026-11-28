@@ -6,8 +6,8 @@ extends RefCounted
 ## inside ScrollView_All; each shows the skill's original picture
 ## (Source523SkillBuffImages), the authored Img_Disabled cover while the
 ## skill is not learned and the authored passive mark. Tapping a slot selects
-## it (Sp_slot_select); 상세 보기 or a second tap opens the existing skills
-## window on that skill, where learning, use and quick-slot registration stay.
+## it (Sp_slot_select); 상세 보기 opens only that skill's inspector, where
+## learning, use and quick-slot registration stay.
 ## The tab strip is one Skill_Tab_Btn per tab: 전체 (every listed skill),
 ## 정령 (요정 only: the elemental school skills, record school fire / earth /
 ## water / wind; ScrollView_Special), 특수 (the card-bound skills, original
@@ -479,7 +479,7 @@ static func _contains(control: Control, point: Vector2) -> bool:
 
 func _slot_pressed(id: String) -> Dictionary:
 	if absf(_moved)>12.0:return {"ok":true,"ignored_after_drag":true}
-	if id==_selected:return _detail_requested()
+	if id==_selected:return {"ok":true,"selected":id}
 	var first_selection: bool=_selected.is_empty()
 	_selected=id
 	# The search button changes state only on the first selection; later taps

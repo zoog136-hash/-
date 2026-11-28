@@ -8,6 +8,7 @@ var listing: Control
 var details: Control
 var detail_frame: PanelContainer
 var detail_active: bool = false
+var detail_only: bool = false
 var detail_width: float = 280
 var touch_index: int = -1
 var touch_distance: float = 0
@@ -38,10 +39,10 @@ func configure(list_control: Control, detail_control: Control, width: float = 28
 
 func reflow() -> void:
 	if listing == null: return
-	var compact: bool = size.x < 660
-	tabs.visible = compact
-	listing.visible = not compact or not detail_active
-	detail_frame.visible = not compact or detail_active
+	var compact: bool = detail_only or size.x < 660
+	tabs.visible = compact and not detail_only
+	listing.visible = not detail_only and (not compact or not detail_active)
+	detail_frame.visible = detail_only or not compact or detail_active
 	details.show()
 	detail_frame.custom_minimum_size.x = 0 if compact else detail_width
 	detail_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL

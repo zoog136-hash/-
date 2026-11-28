@@ -231,6 +231,19 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 		var acquisition: Callable=actions.get("acquisition",Callable())
 		if acquisition.is_valid():spec["ToolTip_Button/ItemDrop_On/Button"]={"activate":acquisition}
 		else:spec["ToolTip_Button/ItemDrop_On"]={"exclude":true}
+		var craft: Callable=actions.get("craft",Callable())
+		if craft.is_valid():
+			# TWILIGHT shortcut on the original generic button face. The authored
+			# BasicInfo icon describes a different action and stays out.
+			var path: String="ToolTip_Button/BasicInfo"
+			spec[path]={"visible":true}
+			spec[path+"/Icon"]={"exclude":true}
+			spec[path+"/Label"]={"role":"source_text","text":"제작"}
+			spec[path+"/Button"]={"activate":craft}
+		var collection: Callable=actions.get("collection",Callable())
+		if collection.is_valid():
+			spec["ToolTip_Button/Collection_On"]={"visible":true}
+			spec["ToolTip_Button/Collection_On/Button"]={"activate":collection}
 		for group: Array in [["Enchant","enhance"],["Solution","dissolve"],["Registration","registration"]]:
 			var action: Callable = actions.get(group[1],Callable())
 			var path: String = "ToolTip_Button/"+group[0]+"_On"
