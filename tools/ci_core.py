@@ -268,6 +268,7 @@ CHECKS = [
     ('original_ui_menu_tiles_test', []),
     ('original_ui_enchant_window_test', []),
     ('original_ui_skill_window_test', []),
+    ('skill_navigation_focus_main_test', []),
     ('original_ui_inventory_snapshot_test', []),
     ('original_ui_menu_retirement_test', []),
     ('full_menu_five_columns_test', []),
@@ -871,6 +872,7 @@ ISOLATED_CHECKS = frozenset({
     'source_item_visible_action_main_test',
     'source_option_awakening_main_test',
     'source_skill_scroll_drag_main_test',
+    'skill_navigation_focus_main_test',
 })
 
 # These cases construct their own inputs without reading or updating the
@@ -1204,6 +1206,7 @@ def main():
                       'original_ui_menu_tiles_test':'ORIGINAL_UI_MENU_TILES_RESULT',
                       'original_ui_enchant_window_test':'ORIGINAL_UI_ENCHANT_WINDOW_RESULT',
                       'original_ui_skill_window_test':'ORIGINAL_UI_SKILL_WINDOW_RESULT',
+                      'skill_navigation_focus_main_test':'SKILL_NAVIGATION_FOCUS_RESULT',
                       'original_ui_inventory_snapshot_test':'ORIGINAL_UI_INVENTORY_SNAPSHOT_RESULT',
                       'original_ui_menu_retirement_test':'ORIGINAL_UI_MENU_RETIREMENT_RESULT',
                       'full_menu_five_columns_test':'FULL_MENU_FIVE_COLUMNS_RESULT',

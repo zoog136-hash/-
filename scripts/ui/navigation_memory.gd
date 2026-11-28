@@ -62,6 +62,8 @@ func capture(section: String, root: Node) -> void:
 			"detail": bool(view.get("detail_active")),
 			"search_visible": row.visible, "scroll": scroll.scroll_vertical}
 	else:
+		# A single-skill detail has its own selection and no list filters.
+		if view.get("focus_only") == true: return
 		var search: LineEdit = view.get("search") as LineEdit
 		var type_filter: OptionButton = view.get("type_filter") as OptionButton
 		var class_filter: OptionButton = view.get("class_filter") as OptionButton
