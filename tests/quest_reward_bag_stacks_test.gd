@@ -1,6 +1,6 @@
 extends SceneTree
 
-const BAG = preload("res://scripts/ui/lineage_inventory_ui.gd")
+const BAG = preload("res://scripts/ui/renewal_inventory.gd")
 const GROUPS = preload("res://scripts/ui/quest_reward_bag_stacks.gd")
 const OWN = preload("res://scripts/quests/quest_reward_ownership.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
@@ -90,10 +90,19 @@ func original_rewards() -> void:
 	world.inventory[name_value]=10
 	var before: Dictionary = world.item_instances.duplicate(true)
 	var bag = BAG.new()
+	bag.inventory={name_value:5}
+	bag.character_state={"item_instances":{"11":world.item_instances["11"]}}
+	bag._queue_item_notice_update()
+	bag._update_item_notices()
 	bag.inventory=world.inventory
 	bag.character_state={"item_instances":world.item_instances}
+	bag._queue_item_notice_update()
+	bag._update_item_notices()
 	var rows: Array[Dictionary]=bag._inventory_entries()
 	check(rows.size()==1 and rows[0].amount==10 and rows[0].reference==name_value+"@@@11", "two original quest grants display as one x10 slot")
+	check(bag.is_bag_item_new(name_value+"@@@11"),"the displayed stack reports acquisition of its newly added receipt")
+	bag._acknowledge_item_notice(name_value+"@@@11")
+	check(not bag.is_bag_item_new(name_value+"@@@11") and not bag.is_bag_item_new(name_value+"@@@12"),"acknowledging the visible stack also acknowledges its added receipt")
 	check(world.item_instances==before and OWN.proof(world,"11").get("ok",false) and OWN.proof(world,"12").get("ok",false), "both exact quest receipts remain valid")
 	var staged: Dictionary=OWN.prepare_debit(world,"11",1)
 	check(staged.get("ok",false) and staged.get("override",{}).get("item_instances",{}).get("12")==before["12"], "the existing owner debits only the representative's receipt")

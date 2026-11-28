@@ -9,6 +9,7 @@ const REWARD_STACKS=preload("res://scripts/ui/quest_reward_bag_stacks.gd")
 const AWAKENING_BOOKS=preload("res://scripts/cards/source_awakening_items.gd")
 const BLESSED_ITEMS=preload("res://scripts/loot/patch523_monster_drops.gd")
 var _grouped_reward_amounts: Dictionary = {}
+var _grouped_bag_references: Dictionary = {}
 
 static func instance_id_less(a: String,b: String) -> bool:
 	# IDs are opaque ownership keys. Compare decimal legacy IDs without an
@@ -372,6 +373,7 @@ const QUEST_ONLY_PRESENTATION=preload("res://scripts/quests/retired_quest_items5
 func _inventory_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	_grouped_reward_amounts.clear()
+	_grouped_bag_references.clear()
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
 	var locks: Dictionary = character_state.get("item_locks", {})
 	var reward_caps: Dictionary = {}
@@ -398,6 +400,8 @@ func _inventory_entries() -> Array[Dictionary]:
 		if instance_ids.is_empty() or books.get(item_name,false):
 			if QUEST_ONLY_PRESENTATION.matches_reference({},item_name):continue
 			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
+			for id: String in instance_ids:
+				_grouped_bag_references[item_name+"@@@"+id] = item_name
 		else:
 			var reward_bins: Dictionary = {}
 			for id: String in instance_ids:
@@ -407,7 +411,9 @@ func _inventory_entries() -> Array[Dictionary]:
 				var entry: Dictionary = {"name":item_name, "reference":item_name+"@@@"+id, "amount":_owned_slot_amount(physical)}
 				var grouped: Dictionary = REWARD_STACKS.grouped_row(entry,physical,locks,reward_caps,reward_bins)
 				if grouped.is_empty(): entries.append(entry)
-				else: _grouped_reward_amounts[grouped.reference] = grouped.amount
+				else:
+					_grouped_reward_amounts[grouped.reference] = grouped.amount
+					_grouped_bag_references[entry.reference] = grouped.reference
 	return entries
 
 ## This is a single synchronous read of the bag's own catalogue. Only

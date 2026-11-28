@@ -5,6 +5,9 @@ const MEMBER="UI/CommonUi/Common_Slot.csb"
 const SHA256="b0153e2324de4789e3a5f1d09030f370ed109583e893247656bee5affa3520d6"
 const EQUIPPED=8328
 const LOCKED=7304
+const NEW_ITEM=7644
+const NOTICE_ATLAS="UI/UI_Resource/Atlas_Common.plist"
+const NOTICE_FRAME="Icn_Slot_New.png"
 
 static func build(bag: Object, entry: Dictionary) -> Dictionary:
 	var offsets: Array[int]=[]
@@ -37,6 +40,9 @@ static func build(bag: Object, entry: Dictionary) -> Dictionary:
 		bindings[LOCKED]={"visible":locked}
 		provenance[LOCKED]={"reference":reference,"owner_field":"character_state.item_locks[reference]","owner_producer":"renewal_inventory._bind_reusable_slot InventoryLocked.visible","owner_value":locked,"source_name":"Sp_Left_Bottom","source_asset":"Icn_Slot_Lock.png","source_position":Vector2(-33,-33)}
 	else:unresolved.append({"marker":"locked","offset":LOCKED,"reason":"existing owner item_locks map not supplied"})
+	if bag.has_method("is_bag_item_new"):
+		offsets.append(NEW_ITEM)
+		bindings[NEW_ITEM]={"visible":bag.is_bag_item_new(reference)}
 	# The owner has a Level label and _enhance_level, but the original center
 	# label says Test and the Img_Enchant resource is an Orim skill-slot line.
 	# Neither establishes the native numeric enhancement role or its styling.

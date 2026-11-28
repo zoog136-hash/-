@@ -32,7 +32,13 @@ var last_acquisition: Dictionary = {}
 var sort_mode: int = 0
 signal new_items_notice_changed
 var new_items_pending: bool = false
+var item_notice_revision: int = 0
 var _inventory_notice_seeded: bool = false
+var _item_notice_pending_update: bool = false
+var _observed_inventory: Dictionary = {}
+var _observed_physical_amounts: Dictionary = {}
+var _unread_items: Dictionary = {}
+var _unread_grouped_rows: Dictionary = {}
 var inventory_fingerprint: int = -1
 var inventory_list_rebuilds: int = 0
 var inventory_grid_dirty: bool = true
@@ -257,6 +263,7 @@ func _input(_event: InputEvent) -> void:
 
 func _select_item(reference: String) -> void:
 	gesture_dragged = false
+	_acknowledge_item_notice(reference)
 	var previous: String=selected_item
 	super._select_item(reference)
 	_refresh_slot_states([previous,reference])
@@ -369,6 +376,7 @@ func open_item_info(reference: String) -> bool:
 	var world: Node=controller.get_parent()
 	var uid: String = _ref_instance_id(reference)
 	var owned: bool = _owns_bag_reference(world,reference)
+	if owned: _acknowledge_item_notice(reference)
 	var locked: bool = owned and world._item_locked(_base_item_name(reference),uid)
 	if selected_can_delete_native():
 		actions["delete"]=Callable(self,"_tooltip_delete").bind(reference)
@@ -659,24 +667,91 @@ func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
 	super.set_catalog_data(data,images)
 
 func set_inventory(value: Dictionary) -> void:
-	var detect_pickups: bool = _inventory_notice_seeded and not new_items_pending
-	_inventory_notice_seeded = true
-	if inventory == value:return
-	if detect_pickups:
-		for key: Variant in value:
-			if key is String and not WALLET_ONLY.has(key) and int(value[key])>int(inventory.get(key,0)):
-				new_items_pending=true
-				new_items_notice_changed.emit()
-				break
+	if not _inventory_notice_seeded or inventory != value: _queue_item_notice_update()
 	super.set_inventory(value)
 
+func _queue_item_notice_update() -> void:
+	if _item_notice_pending_update: return
+	_item_notice_pending_update = true
+	_update_item_notices.call_deferred()
+
+func _update_item_notices() -> void:
+	if not _item_notice_pending_update: return
+	_item_notice_pending_update = false
+	# A committed transaction can publish counts before its full HUD state and
+	# fold native stacks in that same transaction. Compare the final inputs once.
+	var gains: Dictionary = {}
+	if _inventory_notice_seeded:
+		for name: String in inventory:
+			if not WALLET_ONLY.has(name) and int(inventory[name]) > int(_observed_inventory.get(name,0)):
+				gains[name] = true
+	var host: Node = controller.get_parent() if is_instance_valid(controller) else null
+	var instances: Dictionary = host.item_instances if is_instance_valid(host) and host.has_method("_sync_item_instances") else character_state.get("item_instances",{})
+	var physical_amounts: Dictionary = {}
+	var physical_names: Dictionary = {}
+	var changed: bool = false
+	for id: String in instances:
+		var physical: Dictionary = instances[id]
+		var name: String = str(physical.get("name",""))
+		if int(inventory.get(name,0)) <= 0 or WALLET_ONLY.has(name): continue
+		var reference: String = name+"@@@"+id
+		var amount: int = _owned_slot_amount(physical)
+		physical_amounts[reference] = amount
+		physical_names[name] = true
+		if gains.has(name) and amount > int(_observed_physical_amounts.get(reference,0)) and not _unread_items.has(reference):
+			_unread_items[reference] = true
+			changed = true
+	for name: String in gains:
+		if not physical_names.has(name) and not _unread_items.has(name):
+			_unread_items[name] = true
+			changed = true
+	for reference: String in _unread_items.keys():
+		var retained: bool = int(inventory.get(reference,0)) > 0 and not physical_names.has(reference)
+		if not retained and int(physical_amounts.get(reference,0)) <= 0:
+			_unread_items.erase(reference)
+			changed = true
+	_observed_inventory = inventory
+	_observed_physical_amounts = physical_amounts
+	_inventory_notice_seeded = true
+	if changed:
+		_project_grouped_item_notices()
+		item_notice_revision += 1
+	if not gains.is_empty() and not new_items_pending:
+		new_items_pending = true
+		new_items_notice_changed.emit()
+
+func _project_grouped_item_notices() -> void:
+	_unread_grouped_rows.clear()
+	for reference: String in _unread_items:
+		if _grouped_bag_references.has(reference):
+			_unread_grouped_rows[_grouped_bag_references[reference]] = true
+
+func is_bag_item_new(reference: String) -> bool:
+	return _unread_items.has(reference) or _unread_grouped_rows.has(reference)
+
+func _acknowledge_item_notice(reference: String) -> void:
+	_update_item_notices()
+	if not is_bag_item_new(reference): return
+	for unread: String in _unread_items.keys():
+		if unread == reference or _grouped_bag_references.get(unread) == reference:
+			_unread_items.erase(unread)
+	_project_grouped_item_notices()
+	item_notice_revision += 1
+
 func acknowledge_new_items() -> void:
+	_update_item_notices()
 	if not new_items_pending:return
 	new_items_pending=false
 	new_items_notice_changed.emit()
 
 func reset_new_items_notice() -> void:
+	_item_notice_pending_update = false
 	_inventory_notice_seeded=false
+	_observed_inventory = {}
+	_observed_physical_amounts.clear()
+	if not _unread_items.is_empty(): item_notice_revision += 1
+	_unread_items.clear()
+	_unread_grouped_rows.clear()
 	acknowledge_new_items()
 
 func set_character_state(value: Dictionary) -> void:
@@ -687,6 +762,7 @@ func set_character_state(value: Dictionary) -> void:
 	if fingerprint == inventory_fingerprint:
 		return
 	inventory_fingerprint = fingerprint
+	_queue_item_notice_update()
 	_grouped_reward_amounts.clear()
 	_request_state_view_refresh()
 
@@ -729,8 +805,14 @@ func _paint_inventory_grid() -> void:
 ## prepared, rebuild the ownership read exactly as before: no persistent
 ## transaction/selection cache can admit a stale physical reference.
 func source_inventory_entries_for_view() -> Array[Dictionary]:
+	_update_item_notices()
 	var prepared: Variant=prepare_source_inventory_model(true)
 	return prepared if prepared is Array else _inventory_entries()
+
+func _inventory_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = super._inventory_entries()
+	_project_grouped_item_notices()
+	return entries
 
 func prepare_source_inventory_model(native_view: bool = false) -> Variant:
 	# The same owner reference/filter/order producer can serve a native CSB
