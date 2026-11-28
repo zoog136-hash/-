@@ -60,23 +60,58 @@ func _symbols(world: TwilightWorld, controller: Node) -> void:
 	if not check(controller.feature_window_is_open("emblems"),"authored 문양 opens through HUD"):return
 	var window: RefCounted=controller.feature_window("emblems")
 	var growth: RefCounted=world.growth
+	check(window._scene.get_node_or_null(window.ENHANCEMENT_MOTION)==null,"idle symbol does not mount its enhancement overlay")
 	if not await _hit(_source_button(window._scene,"_ask",["enhance","eva",1]),"one enhancement"):return
 	if not await _confirm(world.hud):return
 	var first: Dictionary=growth.progress("eva")
 	check(first.attempts==1 and first.spent==20,"one confirmation commits exactly one original-cost enhancement")
-	var prompt: Node=window._scene.get_node_or_null("SymbolEnhancementPrompt")
-	check(is_instance_valid(prompt) and prompt.source_member==window.REVEAL_TOUCH and window._clips.has("On"),"authored On and 즉시 결과 확인 are active just after commit")
+	var original_scene: Node2D=window._scene
+	var motion: Node2D=original_scene.get_node_or_null(window.ENHANCEMENT_MOTION)
+	var prompt: Node2D=original_scene.get_node_or_null(window.ENHANCEMENT_PROMPT)
+	check(is_instance_valid(motion) and motion.source_member==window.ROOT and motion.playback_status().clip=="Fx_Start"
+		and not window._clips.has("On"),"original center charge begins before any new part lights up")
+	check(is_instance_valid(prompt) and prompt.source_member==window.REVEAL_TOUCH and prompt.playback_status().clip in ["Start","Loop"],
+		"authored immediate-result prompt enters with the charge")
+	window.refresh()
+	check(window._scene==original_scene,"refresh preserves the scene playing the committed reveal")
 	var disk: String=FileAccess.get_sha256(world.save_path())
+	var rng_state: int=growth.rng.state
 	await tap(root.get_visible_rect().size*Vector2(0.12,0.48))
-	check(window._scene.get_node_or_null("SymbolEnhancementPrompt")==null and window.last_result.filled.stage==first.stage,"immediate screen touch reveals the committed stage")
-	check(FileAccess.get_sha256(world.save_path())==disk and growth.progress("eva")==first,"skip cannot roll or charge again")
+	check(window._scene.get_node_or_null(window.ENHANCEMENT_MOTION)==null and window._scene.get_node_or_null(window.ENHANCEMENT_PROMPT)==null
+		and window.last_result.filled.stage==first.stage,"an immediate touch during the charge reveals the committed stage")
+	check(FileAccess.get_sha256(world.save_path())==disk and growth.progress("eva")==first and growth.rng.state==rng_state,"skip cannot roll or charge again")
 	if not await _hit(_source_button(window._scene,"_ask",["enhance","eva",5]),"five enhancements"):return
 	if not await _confirm(world.hud):return
-	check(window._reveal_stages.size()>=3,"five enhancements queue their committed stage steps")
-	for frame: int in range(330):
-		if window._reveal_message.is_empty():break
+	check(window._reveal_stages.size()==5,"all five committed stage steps wait for the charge")
+	var committed_stage: int=growth.progress("eva").stage
+	disk=FileAccess.get_sha256(world.save_path())
+	rng_state=growth.rng.state
+	var phases: Array[String]=[]
+	var steps: Dictionary={}
+	var visible_sphere: bool=false
+	var visible_finish: bool=false
+	var prompt_ends: bool=false
+	# The source player uses process time. Software OpenGL in QA may advance
+	# less process time than wall time, so bound both independently.
+	var elapsed: float=0.0
+	var deadline: int=Time.get_ticks_msec()+45000
+	motion=window._scene.get_node_or_null(window.ENHANCEMENT_MOTION)
+	prompt=window._scene.get_node_or_null(window.ENHANCEMENT_PROMPT)
+	while not window._reveal_message.is_empty() and elapsed<9.0 and Time.get_ticks_msec()<deadline:
+		if is_instance_valid(motion):
+			var clip: String=motion.playback_status().clip
+			if phases.is_empty() or phases.back()!=clip:phases.append(clip)
+			if clip=="Fx_Start":visible_sphere=visible_sphere or _visible_sprite(motion,"Fx_Sphere")
+			if clip=="Fx_Light" and window._clips.has("On"):steps[window._revealed_stage]=true
+			if clip=="Fx_End":visible_finish=visible_finish or _visible_sprite(motion,"Sp_Glow_2")
+		if is_instance_valid(prompt):prompt_ends=prompt_ends or prompt.playback_status().clip=="End"
 		await process_frame
-	check(window._reveal_message.is_empty() and growth.progress("eva").attempts==6 and window.last_result.filled.stage==growth.progress("eva").stage,"all original part clips finish and reveal the committed batch")
+		elapsed+=world.get_process_delta_time()
+	check(phases==["Fx_Start","Fx_Light","Fx_End"] and steps.size()==5,
+		"the original charge, five flashes with On and finish: %s, steps %s, remaining %s, process seconds %.2f" % [phases,steps.keys(),window._reveal_stages,elapsed])
+	check(visible_sphere and visible_finish and prompt_ends,"the source sphere, finish glow and prompt exit play visibly")
+	check(window._reveal_message.is_empty() and growth.progress("eva").attempts==6 and window.last_result.filled.stage==committed_stage,"natural playback reveals the committed batch")
+	check(FileAccess.get_sha256(world.save_path())==disk and growth.rng.state==rng_state,"natural playback neither saves nor rolls again")
 	var settled: Dictionary=growth.state.duplicate(true)
 	disk=FileAccess.get_sha256(world.save_path())
 	if not await _hit(_source_button(window._scene,"_ask",["enhance","eva",1]),"an enhancement with a blocked save"):return
@@ -84,8 +119,16 @@ func _symbols(world: TwilightWorld, controller: Node) -> void:
 	var confirmed: bool=await _confirm(world.hud)
 	world.source_save_blocked=false
 	if not confirmed:return
-	check(window._reveal_message.is_empty() and growth.state==settled and FileAccess.get_sha256(world.save_path())==disk,"save rejection leaves the prior stage and spends nothing")
+	check(window._reveal_message.is_empty() and window._scene.get_node_or_null(window.ENHANCEMENT_MOTION)==null
+		and growth.state==settled and FileAccess.get_sha256(world.save_path())==disk,"save rejection starts no motion and spends nothing")
 	world.hud._close_workspace()
+
+func _visible_sprite(motion: Node2D, name: String) -> bool:
+	var node: Node2D=motion.find_child(name,true,false)
+	if not is_instance_valid(node) or not node.is_visible_in_tree():return false
+	var sprite: Sprite2D=node.get_meta("source_sprite",null)
+	var tint: Color=node.get_meta("source_display_color",Color.TRANSPARENT)
+	return is_instance_valid(sprite) and sprite.texture!=null and tint.a>0.25
 
 func _guardians(world: TwilightWorld, controller: Node) -> void:
 	var growth: RefCounted=world.growth
