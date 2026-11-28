@@ -40,7 +40,7 @@ func toggle(record: Dictionary) -> bool:
 	staged=null
 	if result!=OK:service.world.hud.show_message("스킬 ON/OFF 저장 실패 · 기존 상태 보존");return false
 	on=next
-	clocks[id]=0.0
+	clocks.erase(id)
 	service.world.hud.show_message(str(record.name)+(" ON" if bool(on[id]) else " OFF"))
 	service.world._update_hud()
 	return true
@@ -61,18 +61,7 @@ func suspend() -> void:
 func tick(delta: float) -> void:
 	for id: String in clocks:clocks[id]=maxf(0,float(clocks[id])-delta)
 	var world: Node=service.world
-	# Old active-save versions must not stack a converted passive's old package.
-	# Only a changed buff list can hold such a package: resolving every active
-	# buff's record each frame was the "skills.progression" cost (523.691:
-	# 96 ms/s on the phone).
-	var buff_ids: Array = []
-	for name: String in world.active_skill_buffs:
-		var buff: Variant = world.active_skill_buffs[name]
-		buff_ids.append(name); buff_ids.append(str((buff as Dictionary).get("skill_id", name)) if buff is Dictionary else "")
-	var buff_signature: int = hash(buff_ids)
-	if buff_signature != _checked_buffs_signature:
-		_checked_buffs_signature = buff_signature
-		_drop_converted_passives(world)
+	_drop_converted_passives(world)
 	update_light()
 	if world.hp<=0 or world.player.motion.dead or world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced():return
 	for id: String in on:
@@ -117,29 +106,51 @@ func _is_aura(id: String) -> bool:
 	if not record.is_empty(): _aura_kind[id]=aura
 	return aura
 
-## Names and skill ids of the active buffs last checked by _drop_converted_passives.
-var _checked_buffs_signature: int = 0
+var _checked_buff_ids: Dictionary = {}
+var _buff_catalog: RefCounted
+var _buff_catalog_revision: int = -1
+var _buff_source_revision: int = -1
 
+## Old saves can keep the active package of a converted passive. Check each
+## new identity once. Changing a remaining timer does not change its skill.
 func _drop_converted_passives(world: Node) -> void:
-	for name: String in world.active_skill_buffs.keys():
-		var old: Dictionary=world.active_skill_buffs[name]
-		var record: Dictionary=service.catalog.record_for(str(old.get("skill_id",name)))
-		if record.is_empty():continue
-		var resolved: Dictionary=service.catalog.resolve(record)
-		if resolved.has("progression523") and str(resolved.activation)=="passive":
-			world.active_skill_buffs.erase(name);service.vfx.remove_persistent(str(record.id))
-	# Erasing changed the list; remember the list as it now is.
-	var buff_ids: Array = []
-	for name: String in world.active_skill_buffs:
-		var buff: Variant = world.active_skill_buffs[name]
-		buff_ids.append(name); buff_ids.append(str((buff as Dictionary).get("skill_id", name)) if buff is Dictionary else "")
-	_checked_buffs_signature = hash(buff_ids)
+	var buffs: Dictionary = world.active_skill_buffs
+	if buffs.is_empty():
+		if not _checked_buff_ids.is_empty(): _checked_buff_ids.clear()
+		return
+	var catalog: RefCounted = service.catalog
+	if _buff_catalog != catalog or _buff_catalog_revision != catalog.revision or _buff_source_revision != catalog.source523.revision:
+		_checked_buff_ids.clear()
+		_buff_catalog = catalog
+		_buff_catalog_revision = catalog.revision
+		_buff_source_revision = catalog.source523.revision
+	var converted: Variant = null
+	for name: String in buffs:
+		var buff: Variant = buffs[name]
+		var id: String = str(buff.get("skill_id", name)) if buff is Dictionary else ""
+		if _checked_buff_ids.get(name) == id: continue
+		_checked_buff_ids[name] = id
+		if id.is_empty(): continue
+		var record: Dictionary = catalog.record_for(id)
+		if record.is_empty(): continue
+		var resolved: Dictionary = catalog._resolved_reference(record)
+		if resolved.has("progression523") and resolved.get("activation") == "passive":
+			if converted == null: converted = {}
+			converted[name] = str(record.id)
+	if converted != null:
+		for name: String in converted:
+			buffs.erase(name)
+			service.vfx.remove_persistent(converted[name])
+	if _checked_buff_ids.size() > buffs.size():
+		for name: String in _checked_buff_ids.keys():
+			if not buffs.has(name): _checked_buff_ids.erase(name)
 
 func update_light() -> void:
 	# The cheap checks first: stat() sums the stat index and the carried
 	# weight every call, and without a darkened canvas the light stays hidden.
-	if service.world.hp<=0 or not scene_darkened(service.world):
-		if is_instance_valid(light):light.hide()
+	var world: Node = service.world
+	if world.hp <= 0 or not scene_darkened(world):
+		if is_instance_valid(light) and light.visible: light.hide()
 		return
 	var radius: float=service.catalog.stat("lightRadius")
 	# Original rule: 라이트 (SpellClass 2, "밝은 광원을 만들어 주위를 밝힌다")
@@ -152,34 +163,54 @@ func update_light() -> void:
 	# PointLight2D only washed a warm halo over the character and the ground
 	# (user report 2026-11-19 "케릭 부착물 뿌연건 여전히 존재"). Light only a
 	# darkened canvas.
-	if radius<=0 or service.world.hp<=0 or not scene_darkened(service.world):
-		if is_instance_valid(light):light.hide()
+	if radius <= 0 or world.hp <= 0:
+		if is_instance_valid(light) and light.visible: light.hide()
 		return
 	if not is_instance_valid(light):
 		light=PointLight2D.new();light.name="Source523PassiveLight";light.position=Vector2(0,-30);light.energy=.35
 		var gradient:=Gradient.new();gradient.colors=PackedColorArray([Color(1,.95,.7,.6),Color(1,.95,.7,0)])
 		var texture:=GradientTexture2D.new();texture.width=256;texture.height=256;texture.gradient=gradient
 		texture.fill=GradientTexture2D.FILL_RADIAL;texture.fill_from=Vector2(.5,.5);texture.fill_to=Vector2(1,.5)
-		light.texture=texture;service.world.player.add_child(light)
-	light.texture_scale=radius/128.0;light.show()
+		light.texture=texture;world.player.add_child(light)
+	var scale_value: float = radius / 128.0
+	if light.texture_scale != scale_value: light.texture_scale = scale_value
+	if not light.visible: light.show()
 
 ## True when the world's canvas is darkened (a CanvasModulate below full
 ## brightness), the only case where the original light radius is visible.
-static var _dark_checked_msec: int = -1000000
-static var _dark_cached: bool = false
-static func scene_darkened(world: Node) -> bool:
+var _shade_tree: SceneTree
+var _shades: Array[CanvasModulate] = []
+var _dark_checked_msec: int = -1000000
+var _dark_cached: bool = false
+
+func scene_darkened(world: Node) -> bool:
 	if world == null or not world.is_inside_tree(): return false
-	# The tick calls this every frame; the canvas shade changes rarely.
+	var tree: SceneTree = world.get_tree()
+	if _shade_tree != tree:
+		if is_instance_valid(_shade_tree): _shade_tree.node_added.disconnect(_track_shade)
+		_shade_tree = tree
+		_shades.clear()
+		for node: Node in tree.root.find_children("*", "CanvasModulate", true, false): _track_shade(node)
+		tree.node_added.connect(_track_shade)
+		reset_darkness_cache()
+	# Keep the existing color/visibility interval. Track later additions so
+	# the interval never traverses every sprite, monster and UI node again.
 	var now: int = Time.get_ticks_msec()
 	if now - _dark_checked_msec < 1000: return _dark_cached
 	_dark_checked_msec = now
 	_dark_cached = false
-	for node: Node in world.get_tree().root.find_children("*", "CanvasModulate", true, false):
-		var shade := node as CanvasModulate
-		if shade.visible and shade.color.get_luminance() < 0.95: _dark_cached = true; break
+	for index: int in range(_shades.size() - 1, -1, -1):
+		var shade: Variant = _shades[index]
+		if not is_instance_valid(shade) or not shade.is_inside_tree() or shade.get_tree() != tree:
+			_shades.remove_at(index)
+		elif shade.visible and shade.color.get_luminance() < 0.95:
+			_dark_cached = true
 	return _dark_cached
 
-static func reset_darkness_cache() -> void:
+func _track_shade(node: Node) -> void:
+	if node is CanvasModulate and node not in _shades: _shades.append(node)
+
+func reset_darkness_cache() -> void:
 	_dark_checked_msec = -1000000
 
 func ammo_problem(skill: Dictionary) -> String:
