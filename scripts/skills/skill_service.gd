@@ -137,7 +137,9 @@ func tick(delta: float) -> void:
 
 func refresh_buff_visuals() -> void:
 	# Map transitions cancel pending hits, while retained buffs regain their aura.
-	if world.active_skill_buffs.is_empty() and vfx.persistent.is_empty(): return
+	# In source-only mode maintain() cannot start a persistent substitute.
+	# Keep reconciling any already tracked visuals until they are retired.
+	if vfx.persistent.is_empty() and (world.active_skill_buffs.is_empty() or vfx._source_only()): return
 	var retained: Dictionary = {}
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var id := str(buff.get("skill_id", ""))
