@@ -7763,7 +7763,9 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void
 		title_badge.visible=not title_badge.text.is_empty()
 	if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	stat_hud_refresh_pending = false
+	var content_started: int = FRAME_HITCH.now()
 	unconfirmed523.rebuild()
+	FRAME_HITCH.detail("stats.content_bonuses",content_started)
 	if not timed_buff:
 		# Equipment and ownership transactions publish through this entry point.
 		_invalidate_equipment_static()

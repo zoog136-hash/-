@@ -3,6 +3,7 @@ const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.g
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## One existing World save owns costs, rewards, event progress and durable RNG.
 const Source = preload("res://scripts/unconfirmed523/source523.gd")
+const JadeGrail = preload("res://scripts/unconfirmed523/jade_grail_domain.gd")
 const StatAdapter = preload("res://scripts/collections/equipment_collection_stats.gd")
 const QuestOwnership = preload("res://scripts/quests/quest_reward_ownership.gd")
 const QuestConsumption = preload("res://scripts/quests/quest_reward_consumption.gd")
@@ -146,30 +147,7 @@ func now() -> int:
 func context() -> Dictionary:
 	var clock: int = effective_now()
 	var ctx: Dictionary = {"nowUnix":clock,"now":clock,"level":int(world.level),"max_level":int(world.level),"max_level_basis":"local_monotonic_level","class_id":int(world.BASE508.source_class_id(str(world.job_class))),"region":"KR","service_region":"KR","world_no":1,"map_id":str(world.active_map_id),"owned":{},"currencies":{"1":int(world.gold)},"instances":{},"equipped":{},"ain":world.ain_service.export_state(),"event_counters":state.event_counters.duplicate(true),"completed_quests":{},"pass_exp":{},"twilight_policy":policy.duplicate(true),"time_policy":_time_policy()}
-	var assigned: Dictionary = {}
-	for uid: String in world.item_instances:
-		var raw: Dictionary = world.item_instances[uid]
-		var record: Dictionary = raw.get("record",{})
-		var sid: int = native_id(record)
-		var item_name: String = str(raw.get("name",""))
-		var quantity: int = _quantity(raw)
-		# Reserve every physical copy before considering an untracked bag remainder.
-		# A conflicting native record must never be replaced by a name lookup.
-		assigned[item_name] = int(assigned.get(item_name,0)) + maxi(0,quantity)
-		if sid <= 0:
-			if record.has("source_item_class_id") or str(record.get("sourceId","")).begins_with("m523:item:") or str(record.get("sourceId","")).begins_with("m508:item:"): ctx["ownership_error"] = "원본 개체 ID 충돌"
-			continue
-		if quantity < 1 or quantity > 1000000000: ctx["ownership_error"] = "원본 아이템 수량 오류"; continue
-		var receipt_error: String = _grant_receipt_error(raw,sid,quantity,uid)
-		if not receipt_error.is_empty(): ctx["ownership_error"] = receipt_error; continue
-		if int(assigned[item_name]) > int(world.inventory.get(item_name,0)): ctx["ownership_error"] = "원본 아이템 개체와 가방 수량 불일치"; continue
-		if _physical_expired(raw,maxi(now(),int(state.domains.get("jade_grail",{}).get("latest_at",0)))): continue
-		var item: Dictionary = raw.duplicate(true)
-		item["sourceID"] = sid; item["instance_id"] = uid; item["quantity"] = quantity
-		item["locked"] = bool(raw.get("locked",false)) or bool(world.ui_preferences.get("item_locks",{}).get(uid,false)) or bool(world.ui_preferences.get("item_locks",{}).get(item_name,false))
-		item["equipped"] = world._is_instance_equipped(uid)
-		ctx.instances[uid] = item
-		ctx.owned[str(sid)] = int(ctx.owned.get(str(sid),0)) + quantity
+	var assigned: Dictionary = _append_owned_instances(ctx)
 	ctx["stacks"] = {}
 	# Ordinary native stacks already in the catalog need no synthetic physical ID.
 	for item_name: String in world.inventory:
@@ -194,6 +172,64 @@ func context() -> Dictionary:
 		ctx.pass_exp[pass_id] = int(state.domains.events.passes[pass_id].get("experience",0))
 	var completed: Variant = world.quest_service.export_state().get("claimed",{})
 	if completed is Dictionary: ctx.completed_quests = completed.duplicate(true)
+	return ctx
+
+func _append_owned_instances(ctx: Dictionary, selected: Variant = null, names: Dictionary = {}) -> Dictionary:
+	var all_instances: bool = selected == null
+	var assigned: Dictionary = {}
+	for uid: String in world.item_instances:
+		var raw: Dictionary = world.item_instances[uid]
+		var item_name: String = str(raw.get("name",""))
+		if not all_instances and not names.has(item_name): continue
+		var quantity: int = _quantity(raw)
+		# Reserve every physical copy before considering an untracked bag remainder.
+		# A conflicting native record must never be replaced by a name lookup.
+		assigned[item_name] = int(assigned.get(item_name,0)) + maxi(0,quantity)
+		if not all_instances and not selected.has(uid): continue
+		var record: Dictionary = raw.get("record",{})
+		var sid: int = native_id(record) if all_instances else int(selected[uid])
+		if sid <= 0:
+			if record.has("source_item_class_id") or str(record.get("sourceId","")).begins_with("m523:item:") or str(record.get("sourceId","")).begins_with("m508:item:"): ctx["ownership_error"] = "원본 개체 ID 충돌"
+			continue
+		if quantity < 1 or quantity > 1000000000: ctx["ownership_error"] = "원본 아이템 수량 오류"; continue
+		var receipt_error: String = _grant_receipt_error(raw,sid,quantity,uid)
+		if not receipt_error.is_empty(): ctx["ownership_error"] = receipt_error; continue
+		if int(assigned[item_name]) > int(world.inventory.get(item_name,0)): ctx["ownership_error"] = "원본 아이템 개체와 가방 수량 불일치"; continue
+		if _physical_expired(raw,int(ctx.now)): continue
+		var item: Dictionary
+		if all_instances:
+			item = raw.duplicate(true)
+			item["quantity"] = quantity
+			item["locked"] = bool(raw.get("locked",false)) or bool(world.ui_preferences.get("item_locks",{}).get(uid,false)) or bool(world.ui_preferences.get("item_locks",{}).get(item_name,false))
+			item["equipped"] = world._is_instance_equipped(uid)
+		else:
+			item = {"expires_at":raw.get("expires_at",0)}
+		item["sourceID"] = sid; item["instance_id"] = uid
+		ctx.instances[uid] = item
+		ctx.owned[str(sid)] = int(ctx.owned.get(str(sid),0)) + quantity
+	return assigned
+
+func _jade_status_context() -> Dictionary:
+	return {"nowUnix":effective_now(),"level":int(world.level),"ain":world.ain_service.export_state()}
+
+## Passive grail effects count physical, eligible copies. Ordinary stacks
+## cannot add an eligible instance, and the admitted copies already satisfy
+## the owned-count cap (each contributes at least one). Claims still use
+## context(), including all receipt, wallet and quest checks.
+func _grail_bonus_context(grail: JadeGrail) -> Dictionary:
+	var ctx: Dictionary = _jade_status_context()
+	ctx.merge({"now":ctx.nowUnix,"class_id":int(world.BASE508.source_class_id(str(world.job_class))),"region":"KR","service_region":"KR","world_no":1,"owned":{},"instances":{},"time_policy":_time_policy()})
+	var selected: Dictionary = {}
+	var names: Dictionary = {}
+	for uid: String in world.item_instances:
+		var raw: Dictionary = world.item_instances[uid]
+		var sid: int = native_id(raw.get("record",{}))
+		if not grail.is_grail_item(sid): continue
+		selected[uid] = sid
+		# A same-name copy still occupies part of the aggregate count even if
+		# that copy is expired or is a different original item.
+		names[str(raw.get("name",""))] = true
+	if not selected.is_empty(): _append_owned_instances(ctx,selected,names)
 	return ctx
 
 static func native_id(record: Dictionary) -> int:
@@ -783,7 +819,8 @@ func rebuild() -> void:
 	totals.clear(); effect_details.clear(); conditional_totals = {"undead":{},"pvp":{}}
 	if world == null or not source.ready() or not _source_configured: return
 	if domains.has("jade_grail") and state.domains.has("jade_grail"):
-		effect_details = domains.jade_grail.bonuses(context(),state.domains.jade_grail)
+		var grail: RefCounted = domains.jade_grail
+		effect_details = grail.bonuses(_grail_bonus_context(grail) if grail is JadeGrail else context(),state.domains.jade_grail)
 		var mapping: Dictionary = {"melee_damage":"melee_damage:flat","ranged_damage":"ranged_damage:flat","magic_damage":"magic_damage:flat","melee_accuracy":"melee_hit:flat","ranged_accuracy":"ranged_hit:flat","magic_accuracy":"magic_hit:flat","armor_class":"ac:flat","max_hp":"max_hp:flat","exp_bonus_pct":"experience_bonus:percent","damage_reduction":"damage_reduction:flat","pve_damage_reduction":"pve_damage_reduction:flat","move_speed_bonus":"movement_speed:percent","attack_speed_bonus":"attack_speed:percent","hp_potion_recovery_pct":"potion_percent:percent","cast_speed_bonus":"cast_speed:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","ignore_melee_damage_reduction_pct":"ignore_melee_damage_reduction:percent","ignore_ranged_damage_reduction_pct":"ignore_ranged_damage_reduction:percent","ignore_magic_damage_reduction_pct":"ignore_magic_damage_reduction:percent"}
 		for key: String in effect_details.get("stats",{}):
 			var canonical: String = str(mapping.get(key,key))
@@ -798,7 +835,8 @@ func rebuild() -> void:
 	for reward: Dictionary in state.get("bonus_rewards",[]):
 		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > effective_now(): ids.append(int(reward.id))
 	if not ids.is_empty():
-		var earned: Dictionary = source.bonus_stats(ids,context())
+		# Raw bonus rows resolve their effects without live inventory or quests.
+		var earned: Dictionary = source.bonus_stats(ids,{})
 		for key: String in earned.get("stats",{}): totals[key] = float(totals.get(key,0))+float(earned.stats[key])
 		for scope: String in conditional_totals:
 			for key: String in earned.get("conditional_stats",{}).get(scope,{}):
@@ -809,10 +847,12 @@ func rebuild() -> void:
 	if world.ain_service != null:
 		var jade: Dictionary = state.domains.get("jade_grail",{}).get("jade",{})
 		var matches_timer: bool = not jade.is_empty() and int(jade.get("used_at",0))+int(jade.get("duration",0)) == int(world.ain_service.dragon_orb_expires_at)
-		world.ain_service.source_jade_level_override = int(jade_status().get("protection_level",0)) if matches_timer else -1
+		var status: Dictionary = effect_details.get("jade",{})
+		if matches_timer and status.is_empty():status = jade_status()
+		world.ain_service.source_jade_level_override = int(status.get("protection_level",0)) if matches_timer else -1
 
 func jade_status() -> Dictionary:
-	return domains.jade_grail.jade_status(context(),state.domains.jade_grail) if source.ready() and domains.has("jade_grail") else {}
+	return domains.jade_grail.jade_status(_jade_status_context(),state.domains.jade_grail) if source.ready() and domains.has("jade_grail") else {}
 
 func bonus(key: String) -> float:
 	return float(totals.get(key,0))

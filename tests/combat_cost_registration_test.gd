@@ -28,6 +28,12 @@ class RefusedPayment extends "res://scripts/skills/skill_service.gd":
 		paid += 1
 		return false
 
+class CountedPayment extends "res://scripts/skills/skill_service.gd":
+	var plans: int = 0
+	func material_plan(skill: Dictionary) -> Dictionary:
+		plans += 1
+		return super.material_plan(skill)
+
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok:
@@ -160,6 +166,15 @@ func run() -> void:
 		var cost: int = int(service.catalog.resolve(record).get("mp", 0))
 		check(service.cast(record), "C02 normal cast succeeds")
 		check(world.mp == mp0 - cost and not world.pending_attack.is_empty() and world.pending_attack.has("original_skill") and float(world.skill_cooldowns.get(skill_name, 0.0)) >= 0.0 and world.skill_global_cooldown > 0.0, "C02 normal cast pays once and registers")
+		var payment := CountedPayment.new()
+		payment.world = world
+		payment.estimated_nodes = service.estimated_nodes
+		payment.progression = service.progression
+		var resolved: Dictionary = service.catalog.resolve(record)
+		world.mp = 0
+		check(not payment.spend(resolved) and payment.plans == 0, "a refused MP cost does not quote materials")
+		world.mp = mp0
+		check(payment.spend(resolved) and payment.plans == 1 and world.mp == mp0-cost, "one payment quotes the same material plan once")
 		report["c02"] = {"skill":skill_name, "mp_cost":cost}
 		idle(world)
 		world.patch523_npc_spells = spells
