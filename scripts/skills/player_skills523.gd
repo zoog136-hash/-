@@ -1030,11 +1030,20 @@ func load_pack(path: String, expected_sha256: String) -> bool:
 func _profile_problem(id: String, profile: Variant, binding: Dictionary) -> String:
 	# Both input paths retain the original compiled profile validation contract.
 	if not profile is Dictionary: return "missing profile " + id
-	if not profile.get("row_json") is String or str(profile.row_json).sha256_text() != str(binding.row_sha256):
+	var row: Variant = _decode_profile_row(id, profile.get("row_json"), binding)
+	if row is String: return row
+	if row != profile.get("row"): return "source identity mismatch " + id
+	return _profile_payload_problem(id, profile, row)
+
+func _decode_profile_row(id: String, row_json: Variant, binding: Dictionary) -> Variant:
+	if not row_json is String or row_json.sha256_text() != str(binding.row_sha256):
 		return "unreviewed source row " + id
-	var row: Variant = JSON.parse_string(profile.row_json)
-	if not row is Dictionary or row != profile.get("row") or int(row.get("ID", -1)) != int(binding.spell_id):
+	var row: Variant = JSON.parse_string(row_json)
+	if not row is Dictionary or not _source_integer(row.get("ID")) or int(row.ID) != int(binding.spell_id):
 		return "source identity mismatch " + id
+	return row
+
+func _profile_payload_problem(id: String, profile: Dictionary, row: Dictionary) -> String:
 	for key: String in ["learn_limits", "bonuses", "buffs", "costs", "cast_groups"]:
 		if not profile.get(key) is Array: return "invalid " + key
 	for entry: Variant in profile.bonuses:
@@ -1055,9 +1064,9 @@ func _profile_problem(id: String, profile: Variant, binding: Dictionary) -> Stri
 			if not child_ids.has(child_id) or seen.has(child_id): return "unexpected component identity"
 			seen[child_id] = true
 	if profile.has("execution_graph") and not valid_execution(id,profile): return "invalid reviewed execution graph"
-	if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
+	if not profile.get("target_kind") is Dictionary or not _source_integer(profile.target_kind.get("ID")) or profile.target_kind.ID != row.TargetKindID:
 		return "target kind mismatch"
-	if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
+	if not profile.get("targeting_type") is Dictionary or not _source_integer(profile.targeting_type.get("ID")) or profile.targeting_type.ID != row.TargettingTypeID:
 		return "targeting type mismatch"
 	return ""
 

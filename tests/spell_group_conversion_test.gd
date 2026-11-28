@@ -54,19 +54,25 @@ func run()->void:
  for row:Dictionary in s.settings:
   if row.CheckSpellLearned:
    var id:String='fixture-'+str(int(row.CheckLearnSpellClassID));w.original_skills.catalog.records.append({'id':id,'spell_class_id':int(row.CheckLearnSpellClassID)});w.original_skills.catalog.learned[id]=1
- var seen:Dictionary={};s.policy.allow_test_materials=true
+ var seen:Dictionary={};var excluded_costs:int=0
+ check(s.excluded_input_items.has(32801) and not s.items.has(32801),'source test item retained only as exclusion evidence')
+ add_material(w,s,1122)
  for cost:Dictionary in s.costs:
   var setting:Dictionary={}
   for row:Dictionary in s.settings:
    if int(row.SpellGroupID)==int(cost.SpellGroupID):setting=row;break
   w.job_class='요정' if int(setting.GameClassID)==2 else '마법사'
   s.state.classes[w.job_class]={'group':0,'count':int(cost.ChangeCount)-1}
-  add_material(w,s,1122);add_material(w,s,32801)
   var quote:Dictionary=s.quote(int(cost.SpellGroupID),int(cost.ItemClassID))
-  check(quote.get('error','')=='' and int(quote.get('amount',-1))==int(cost.ItemAmount),'source cost row '+str(int(cost.ID)))
+  if int(cost.ItemClassID)==32801:
+   excluded_costs+=1
+   check(not quote.get('error','').is_empty() and not quote.has('token'),'excluded source cost row '+str(int(cost.ID)))
+  else:
+   check(quote.get('error','')=='' and int(quote.get('amount',-1))==int(cost.ItemAmount),'source cost row '+str(int(cost.ID)))
   var key:String='%d:%d:%d' % [cost.SpellGroupID,cost.ChangeCount,cost.ItemClassID]
   check(not seen.has(key),'unique composite cost '+key);seen[key]=true
  check(seen.size()==1200,'all cost rows compared')
+ check(excluded_costs==400,'excluded source cost rows remain non-runnable')
  s.state={'schema':1,'source_snapshot':'patch523','classes':{}};w.job_class='요정';s.policy.allow_test_materials=false
  var slots:Array=w.quickslots.duplicate(true);var learned:Dictionary=w.original_skills.catalog.learned.duplicate(true)
  w.gold=1000000
@@ -91,6 +97,7 @@ func run()->void:
  plan=s.quote(4,1122);check(s.commit(plan).is_empty(),'exact source candle payment')
  check(not w.item_instances.has('1122') and not w.inventory.has(name) and w.gold==0,'candle paid once without gold charge')
  check(not s.quote(6,32801).get('error','').is_empty(),'test item not silently enabled')
+ check(not s.commit({'group':6,'item':32801}).is_empty() and not s.busy and s.current_group()==4,'excluded material confirmation cannot enter a transaction')
  w.job_class='투사';check(not s.quote(408).get('error','').is_empty(),'missing cost cannot become free')
  w.job_class='마법사';w.original_skills.catalog.learned.clear();check(not s.quote(501).get('error','').is_empty(),'missing learned prerequisite')
  w.gold=1000000000
