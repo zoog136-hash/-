@@ -93,6 +93,11 @@ func cast(row: Dictionary) -> bool:
 func stat(key: String) -> float:
 	var result := 0.0
 	for row: Dictionary in rows():
+		# A row whose passive stats lack this key adds 0 whatever its state;
+		# skip the ownership check (enabled()) for it. A buff cast sums ~16
+		# keys over every local row (Twm diag 2026-11-28: ~1,050 enabled()).
+		var stats: Variant = row.get("passive_stats",{})
+		if not stats is Dictionary or not (stats as Dictionary).has(key): continue
 		if not active(row): continue
 		var weapons: Array = row.get("passive_weapons",[])
 		if not weapons.is_empty() and not weapons.has(world._current_weapon_type()): continue

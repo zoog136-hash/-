@@ -10078,6 +10078,9 @@ func _non_original_skill_rows() -> Array[Dictionary]:
 func _passive_skill_total(key: String) -> int:
 	var total: int = int(original_skills.stat(key)) if original_skills != null else 0
 	for skill: Dictionary in _non_original_skill_rows():
+		# A row without this key adds 0 whatever its state; the pure ownership
+		# checks below run only for rows that carry the stat.
+		if not skill.has(key): continue
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
