@@ -17,6 +17,10 @@ var items:Dictionary={}
 # Input provenance is separate from the character/class save in state.
 var source_input_identity:Dictionary={}
 var source_row_metadata:Dictionary={}
+var _bound_memo:Dictionary={}
+var _bound_adapter_id:int=0
+var _bound_revision:int=-1
+var _bound_generation:int=-1
 var excluded_input_items:Dictionary={}
 var excluded_input_item_reasons:Dictionary={}
 var _input_read_problem:String=''
@@ -210,7 +214,7 @@ func _accepted_bound_source_id(record:Dictionary)->int:
  var canonical:Variant=canonical_rows.get(canonical_id)
  if not canonical is Dictionary or canonical.get('id')!=canonical_id or _explicit_source_claim(canonical).present:return 0
  var adapter:Variant=catalog.get('source523')
- if not adapter is Object or not is_instance_valid(adapter) or not adapter.has_method('_profile_problem'):return 0
+ if not adapter is Object or not is_instance_valid(adapter) or not adapter.has_method('_decode_profile_row') or not adapter.has_method('_profile_payload_problem'):return 0
  var profile_type:Script=adapter.get_script()
  if profile_type==null:return 0
  var constants:Dictionary=profile_type.get_script_constant_map()
@@ -221,35 +225,45 @@ func _accepted_bound_source_id(record:Dictionary)->int:
  var binding:Variant=bindings.skills.get(canonical_id)
  var profile:Variant=profiles.get(canonical_id)
  if not binding is Dictionary or not profile is Dictionary or not profile.get('row') is Dictionary:return 0
- # The checks below (row SHA-256, JSON parse and bonus validation in
- # _profile_problem, the original SpellClass row) depend only on these exact
- # objects. enabled() asks this for every learned skill on each stat sum, so
- # a buff cast validated ~160 profiles again (Twm diag 2026-11-28: 12 ms of
- # an 86 ms buff cast on PC). The answer is kept while the adapter revision,
- # the profile/binding/member objects, the input identity and the definition
- # cache generation are the same.
- var revision:Variant=adapter.get('revision')
- var generation:int=CommonSource.cache_generation()
- var memo:Variant=_bound_memo.get(canonical_id)
- if memo is Array and is_same(memo[0],adapter) and memo[1]==revision and is_same(memo[2],profile) and is_same(memo[3],binding) and is_same(memo[4],members) and is_same(memo[5],source_input_identity) and memo[6]==generation:return memo[7]
- var result:int=_bound_source_tail(canonical_id,adapter,binding,profile)
- _bound_memo[canonical_id]=[adapter,revision,profile,binding,members,source_input_identity,generation,result]
- return result
-
-var _bound_memo:Dictionary={}
-
-func _bound_source_tail(canonical_id:String,adapter:Object,binding:Dictionary,profile:Dictionary)->int:
  var bound_sha:Variant=binding.get('row_sha256')
  if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false):return 0
  var id:int=_source_id_value(binding.get('spell_id'))
- if id==0 or _source_id_value(profile.row.get('ID'))!=id or not adapter._profile_problem(canonical_id,profile,binding).is_empty():return 0
+ if id==0 or _source_id_value(profile.row.get('ID'))!=id:return 0
  if source_input_identity.get('kind')!='twilight.spell-group.current523.input.v1' or source_input_identity.get('source_snapshot')!='patch523' or source_input_identity.get('archive_sha256')!=SOURCE_SHA or source_input_identity.get('source_sha256')!=SOURCE_SHA:return 0
- var identity:Dictionary=CommonSource.identity()
- if identity.is_empty() or identity.get('source_sha256')!=SOURCE_SHA:return 0
- var original:Dictionary=CommonSource.row('SpellClass',id)
- if original.is_empty() or original!=profile.row or original.get('TestSpell') is not bool or original.TestSpell or not CommonSource.declared_exclusion('SpellClass',original).is_empty():return 0
+ var original:Dictionary=_memoized_spell_row(canonical_id,adapter,binding,profile.get('row_json'),id)
+ if original.is_empty() or original!=profile.row:return 0
+ if not adapter._profile_payload_problem(canonical_id,profile,original).is_empty():return 0
  if members.has(id) and (not members[id] is Dictionary or members[id]!=original):return 0
  return id
+
+# Only the decoded, verified original row is cached. The caller checks the
+# current profile payload, source input identity and group member every time.
+func _memoized_spell_row(canonical_id:String,adapter:Object,binding:Dictionary,row_json:Variant,id:int)->Dictionary:
+ var adapter_id:int=adapter.get_instance_id()
+ var revision:int=adapter.get('revision')
+ var generation:int=CommonSource.cache_generation()
+ if _bound_adapter_id!=adapter_id or _bound_revision!=revision or _bound_generation!=generation:
+  _bound_memo.clear()
+  _bound_adapter_id=adapter_id;_bound_revision=revision;_bound_generation=generation
+ # Non-string representations all fail decoding, including StringName.
+ var document:Variant=row_json if row_json is String else null
+ var memo:Variant=_bound_memo.get(canonical_id)
+ if memo is Array and memo[0]==id and memo[1]==binding.row_sha256 and memo[2]==document:return memo[3]
+ var decoded:Variant=adapter._decode_profile_row(canonical_id,document,binding)
+ var original:Dictionary={}
+ if decoded is Dictionary:
+  original=_read_verified_spell_row(id)
+  # A missing original archive may become available on a later call.
+  if original.is_empty() or original!=decoded:return {}
+ _bound_memo[canonical_id]=[id,binding.row_sha256,document,original]
+ return original
+
+func _read_verified_spell_row(id:int)->Dictionary:
+ var identity:Dictionary=CommonSource.identity()
+ if identity.get('source_sha256')!=SOURCE_SHA:return {}
+ var original:Dictionary=CommonSource.row('SpellClass',id)
+ if original.is_empty() or original.get('TestSpell') is not bool or original.TestSpell or not CommonSource.declared_exclusion('SpellClass',original).is_empty():return {}
+ return original
 
 
 func owns_source(id:int)->bool:
