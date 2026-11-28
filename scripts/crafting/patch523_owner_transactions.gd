@@ -3,6 +3,7 @@ extends RefCounted
 const QUEST_GROWTH_KEYS=["level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]
 const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const SLOT_EXPANDERS = preload("res://scripts/loot/source_slot_expanders523.gd")
+const EVA_AUTO_POTION = preload("res://scripts/loot/source_eva_auto_potion523.gd")
 
 static func quest_error(world: Node,state: Variant) -> String:
 	var script: Script=world.quest_service.get_script()
@@ -53,6 +54,8 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 		if not original_stat_cap:return "원본 스탯 상한 거래와 물리 차감 증명이 함께 필요합니다"
 	if staged.has(SLOT_EXPANDERS.RUNE_KEY) and not preload("res://scripts/loot/current523_native_stack.gd").authorizes_rune_slot(world, staged):
 		return "원본 룬 포켓 소비와 두 번째 장착 칸 변경을 함께 저장해야 합니다"
+	if staged.has(EVA_AUTO_POTION.SAVE_KEY) and not preload("res://scripts/loot/current523_native_stack.gd").authorizes_eva_auto_potion(world, staged):
+		return "에바의 원본 아이템 소비와 회복제 자동 사용 권한을 함께 저장해야 합니다"
 	if staged.has("expedition523_local"):
 		var error: String=expedition_error(world,staged.expedition523_local)
 		if not error.is_empty():return error

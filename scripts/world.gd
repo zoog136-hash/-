@@ -269,6 +269,7 @@ const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const SLOT_EXPANDERS = preload("res://scripts/loot/source_slot_expanders523.gd")
+const EVA_AUTO_POTION = preload("res://scripts/loot/source_eva_auto_potion523.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const PATCH523_TOKEN_STOCK = preload("res://scripts/loot/current523_native_stack.gd")
@@ -597,6 +598,7 @@ var cha_stat: int = 9
 var stat_points: int = 0
 var bonus_stat_cap_extension: int = 0
 var rune_slot2_unlocked: bool = false
+var eva_auto_potion_unlocks: int = 0
 
 var gold: int = 100000000 # Playtest-only starting funds; existing saved funds still load unchanged.
 ## A new character starts with original 523 items (current523_starter_kit.gd);
@@ -5374,6 +5376,10 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 			var pouch: Dictionary = stack_owner.use_growth_rune_slot(self, item_name, selected_id)
 			hud.show_message(str(pouch.get("message", "룬 포켓 사용 조건 확인 필요")))
 			if pouch.get("ok", false): hud.refresh_inventory(inventory); _update_hud()
+		elif EVA_AUTO_POTION.ITEMS.has(int(selected_source.get("growth96_item_id", 0))):
+			var unlocked: Dictionary = stack_owner.use_growth_eva_auto_potion(self, item_name, selected_id, int(selected_source.growth96_item_id))
+			hud.show_message(str(unlocked.get("message", unlocked.get("reason", "회복제 자동 사용 조건 확인 필요"))))
+			if unlocked.get("ok", false): hud.refresh_inventory(inventory); _update_hud()
 		else:
 			var opened: Dictionary = _open_growth_reward_box(item_name)
 			if not opened.get("ok", false): hud.show_message(str(opened.get("reason", "미개봉 성장 보상 상자입니다")))
@@ -8329,6 +8335,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
 	if not BONUS_STAT_CAP.valid_extension(bonus_stat_cap_extension):return ERR_INVALID_DATA
+	if not EVA_AUTO_POTION.valid_unlocks(eva_auto_potion_unlocks): return ERR_INVALID_DATA
 	var rune_problem: String = SLOT_EXPANDERS.save_problem(collection_override.get(SLOT_EXPANDERS.RUNE_KEY, rune_slot2_unlocked),
 		collection_override.get("equipped_items", equipped_items), collection_override.get("item_instances", item_instances))
 	if not rune_problem.is_empty():
@@ -8440,7 +8447,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key == SLOT_EXPANDERS.RUNE_KEY: continue # Validated by the exact native owner above.
+		if key in [SLOT_EXPANDERS.RUNE_KEY, EVA_AUTO_POTION.SAVE_KEY]: continue # Validated by the exact native owner above.
 		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points",BONUS_STAT_CAP.SAVE_KEY,"weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
@@ -8599,6 +8606,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if not quiet:hud.show_message(source_map_error)
 		return ERR_UNAVAILABLE
 	if rune_slot2_unlocked: data[SLOT_EXPANDERS.RUNE_KEY] = true
+	if eva_auto_potion_unlocks != 0: data[EVA_AUTO_POTION.SAVE_KEY] = eva_auto_potion_unlocks
 	data.merge(weapon_mastery.save_fields(),true)
 	data["patch523_transaction_rng"]={"schema":1,"seed":str(rng.seed),"state":str(rng.state)}
 	if expedition_local!=null:
@@ -8738,6 +8746,10 @@ func _load_game(quiet: bool) -> void:
 	if not BONUS_STAT_CAP.valid_extension(value.get(BONUS_STAT_CAP.SAVE_KEY, 0)):
 		source_save_blocked = true
 		hud.show_message("스탯 상한 저장 형식 오류 · 기존 저장 보존")
+		return
+	if not EVA_AUTO_POTION.valid_unlocks(value.get(EVA_AUTO_POTION.SAVE_KEY, 0)):
+		source_save_blocked = true
+		hud.show_message("회복제 자동 사용 권한 저장 형식 오류 · 기존 저장 보존")
 		return
 	var rune_problem: String = SLOT_EXPANDERS.save_problem(value.get(SLOT_EXPANDERS.RUNE_KEY, false),
 		value.get("equipped_items", {}), value.get("item_instances", {}))
@@ -9177,6 +9189,7 @@ func _load_game(quiet: bool) -> void:
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	bonus_stat_cap_extension = int(data.get(BONUS_STAT_CAP.SAVE_KEY, 0))
 	rune_slot2_unlocked = data.get(SLOT_EXPANDERS.RUNE_KEY, false)
+	eva_auto_potion_unlocks = int(data.get(EVA_AUTO_POTION.SAVE_KEY, 0))
 	gold = maxi(0, int(data.get("gold", gold)))
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
@@ -9596,9 +9609,17 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		if entry.is_empty(): continue
 		if str(entry.get("kind", "")) == "item":
 			var item: String = str(entry.get("id",""))
-			if item.is_empty() or RETIRED_ITEMS.retired_reference(item) or RETIRED_ITEMS.record(_find_catalog_item_record(item)):
+			var record: Dictionary = _find_catalog_item_record(item)
+			if item.is_empty() or RETIRED_ITEMS.retired_reference(item) or RETIRED_ITEMS.record(record):
 				quickslots[index] = {}
 				changed = true
+			elif entry.get("auto", false):
+				# Old saves could mark the restricted potions AUTO. Retain the
+				# slot and allow manual use until the original permission is earned.
+				var owned: Dictionary = item_instances.get(str(entry.get("instance_id", "")), {})
+				var selected_record: Dictionary = owned.get("record", record) if owned.get("name") == item else record
+				if _eva_auto_potion_blocked(selected_record, _eva_potion_item_id(selected_record)):
+					entry.auto = false
 			continue
 		if str(entry.get("kind", "")) != "skill":
 			quickslots[index] = {}
@@ -9897,7 +9918,18 @@ func _quickslot_auto_allowed(entry: Dictionary) -> bool:
 func _quickslot_relic_scroll(item_name: String, selected: Dictionary, record: Dictionary) -> bool:
 	return (str(selected.id).is_empty() or int(record.get("source_item_class_id",0))==365758) and option_awakening.source_scroll_supported(item_name)
 
+func _eva_potion_item_id(record: Dictionary) -> int:
+	var id: int = int(record.get("source_item_class_id", 0))
+	# Before physical receipts, Inven catalog stock used the numeric ItemClass
+	# key. The name is not an identity and event/concentrated IDs stay separate.
+	return int(PATCH523_ENHANCE.item_id(record)) if id == 0 and record.get("source") == "inven" else id
+
+func _eva_auto_potion_blocked(record: Dictionary, potion: int) -> bool:
+	var bit: int = EVA_AUTO_POTION.registration_bit(potion)
+	return bit != 0 and ((eva_auto_potion_unlocks & bit) == 0 or record.get("source_bless_raw", 1) != 1)
+
 func _quickslot_selected_auto_item(selected: Dictionary, record: Dictionary) -> Dictionary:
+	if _eva_auto_potion_blocked(record, _eva_potion_item_id(record)): return {}
 	var name: String = str(selected.name)
 	if str(selected.id).is_empty():return _quickslot_auto_item(name,record)
 	var spec: Dictionary = _quickslot_auto_item_spec(name,record)
@@ -9921,7 +9953,7 @@ func _quickslot_auto_item(item: String, record: Dictionary) -> Dictionary:
 		if expected > 0 and id != expected: continue
 		if not resolved.is_empty() and resolved.get("sourceId") != proof.record.get("sourceId"): return {}
 		resolved = proof.record
-	if resolved.is_empty(): return {}
+	if resolved.is_empty() or _eva_auto_potion_blocked(resolved, _eva_potion_item_id(resolved)): return {}
 	spec = _quickslot_auto_item_spec(item, resolved)
 	return {"record":resolved,"spec":spec} if not spec.is_empty() else {}
 
@@ -9972,8 +10004,16 @@ func _on_quickslot_edit_requested(action: String, source_index: int, target: int
 			"clear": quickslots[source_index] = {}
 			"auto_on", "auto_off":
 				if quickslots[source_index].is_empty(): return
-				if action == "auto_on" and not _quickslot_auto_allowed(quickslots[source_index]):
-					hud.show_message("자동사용을 지원하지 않는 항목입니다")
+				var entry: Dictionary = quickslots[source_index]
+				if action == "auto_on" and not _quickslot_auto_allowed(entry):
+					var reason: String = "자동사용을 지원하지 않는 항목입니다"
+					if entry.get("kind") == "item":
+						var selected: Dictionary = _parse_enhancement_target(_quickslot_item_reference(entry))
+						var potion: int = _eva_potion_item_id(_quickslot_item_record(selected))
+						var bit: int = EVA_AUTO_POTION.registration_bit(potion)
+						if bit != 0 and (eva_auto_potion_unlocks & bit) == 0:
+							reason = "%s 사용 후 자동 사용 등록 가능 · 직접 사용 가능" % EVA_AUTO_POTION.required_item_name(potion)
+					hud.show_message(reason)
 					return
 				quickslots[source_index]["auto"] = action == "auto_on"
 				ui_preferences.edited_quickslots[job_class] = true
@@ -10040,6 +10080,14 @@ func _run_auto_item_quickslots(delta: float) -> bool:
 				candidates.append({"item":item,"reference":selected_reference,"priority":2,"source_relic_scroll":true})
 			continue
 		var source_id: int = int(record.get("source_item_class_id", 0))
+		var eva_potion: int = _eva_potion_item_id(record)
+		if EVA_AUTO_POTION.registration_bit(eva_potion) != 0:
+			# These verified HP items need no original rule lookup on healthy,
+			# disabled, or locked polls. Still verify the exact live use below.
+			if _eva_auto_potion_blocked(record, eva_potion) or not settings.hp_enabled \
+					or float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0: continue
+			if maximum_hp < 0: maximum_hp = _effective_max_hp()
+			if not CONSUMABLE_AUTO.below_threshold(hp, maximum_hp, int(settings.hp_percent)): continue
 		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0):
 			continue
 		var supported: Dictionary = _quickslot_selected_auto_item(selected,record)
@@ -10050,8 +10098,9 @@ func _run_auto_item_quickslots(delta: float) -> bool:
 			continue
 		source_id = int(spec.get("source_item_id", 0))
 		if source_id > 0 and (active_source_items.has(source_id) or float(item_use_cooldowns.get("m523:item:"+str(source_id), 0.0)) > 0.0): continue
-		if maximum_hp < 0 and spec.get("kind") in ["hp", "instant_mp"]:
+		if maximum_hp < 0 and spec.get("kind") == "hp":
 			maximum_hp = _effective_max_hp()
+		if maximum_mp < 0 and spec.get("kind") == "instant_mp":
 			maximum_mp = _effective_max_mp()
 		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, maximum_hp, mp, maximum_mp, job_class, active_item_buffs):
 			continue
