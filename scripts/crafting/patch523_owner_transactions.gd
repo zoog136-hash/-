@@ -122,8 +122,10 @@ static func quest_ownership_provider() -> Script:
 	# quest row and rejects any conflicting fields that remain on the item.
 	# Re-reviewed 2026-11-27: proof exposes the original reward timing. Only
 	# the fixed-card effect owner opts into a verified held test card debit.
+	# Compact immediate transformation cards also require the exact source
+	# card definition before proof succeeds. They retain their immediate flag.
 	# Protection retains its existing lock, timing and raw TestItem checks.
-	return provider if reviewed_script(provider,"97ddac7e4e27f1a9e1b3ce599ad162470273d17c") else null
+	return provider if reviewed_script(provider,"8574d14581a04b36270549632a17eab565c0740b") else null
 
 static var _reviewed_cache: Dictionary={}
 
