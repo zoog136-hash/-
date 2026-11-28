@@ -24,6 +24,8 @@ parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds 
 parser.add_argument('--only',default='',help='Comma-separated exact test names for targeted rechecks; omitted runs the full suite')
 parser.add_argument('--shard-index',type=int,default=0)
 parser.add_argument('--shard-count',type=int,default=1)
+parser.add_argument('--boot-once',action='store_true',
+                    help='Run the common boot smoke check only in shard zero of a matching CI matrix')
 parser.add_argument('--no-ci-synthetic-fixtures',action='store_true',help='Audit committed resources without installing synthetic L1J fixtures')
 args=parser.parse_args()
 if args.import_timeout < 1:
@@ -58,7 +60,7 @@ tests=[('import',['--import']),
        ('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
 try:
-    tests,plan=select_checks(tests,args.only,args.shard_index,args.shard_count)
+    tests,plan=select_checks(tests,args.only,args.shard_index,args.shard_count,args.boot_once)
 except ValueError as exc:
     parser.error(str(exc))
 failed=[]

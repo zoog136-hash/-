@@ -458,7 +458,8 @@ PREPARATION = ("import", "bake_navigation", "boot")
 
 
 def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
-                  shard_index: int = 0, shard_count: int = 1) -> tuple[list, dict]:
+                  shard_index: int = 0, shard_count: int = 1,
+                  boot_once: bool = False) -> tuple[list, dict]:
     if shard_count < 1 or not 0 <= shard_index < shard_count:
         raise ValueError("Require shard-count >= 1 and 0 <= shard-index < shard-count")
     names = [name for name, _ in checks]
@@ -479,11 +480,15 @@ def select_checks(checks: list[tuple[str, list[str]]], only: str = "",
         assigned = [check for i, check in enumerate(runtime) if i % shard_count == shard_index]
         if not assigned:
             raise ValueError("An empty runtime shard must not pass preparation alone")
-        result = checks[:3] + assigned
+        # Import and navigation prepare each runner's local project. Boot is
+        # a smoke check of the same revision, map fixture and engine in every
+        # shard, and its isolated profile is not used by subsequent checks.
+        preparation = checks[:2] if boot_once and shard_index != 0 else checks[:3]
+        result = preparation + assigned
     else:
         result = list(checks)
     plan = {"shard_index": shard_index, "shard_count": shard_count,
             "discovered_tests": [name for name, _ in runtime],
             "selected_tests": [name for name, _ in result if name not in PREPARATION],
-            "preparation": list(PREPARATION)}
+            "preparation": [name for name, _ in result if name in PREPARATION]}
     return result, plan
