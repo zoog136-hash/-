@@ -14,9 +14,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   cancellable/expired escrow; inventory and registration controls are excluded.
 ## - 정 산 / 정산 내역: Trade_Tab_Calculate (sold rows, 정 산) and
 ##   Trade_Tab_CalculateList (the last 30 days).
-## Rows the runtime marks approx show "TWILIGHT 근사". Left out (online-only
-## or no TWILIGHT data): 월드 거래소 (Nd_World, its tabs and popups; the top
-## button explains), 일괄 구매 / 일괄 수정 / 재등록 / check boxes, 검색 조건
+## Local estimates are marked "TWILIGHT 근사". The server-only world market,
+## 일괄 구매 / 일괄 수정 / 재등록 / check boxes, 검색 조건
 ## filter, class filter, sort, favorites, tooltips, 컬렉션 / 제작 이동,
 ## Trade_Popup_Purchase_Batch (its Atlas_Hud frame is absent from the 523
 ## client) and the loading popup.
@@ -99,9 +98,11 @@ func _collect() -> void:
 
 static func _price_basis(basis: String) -> String:
 	match basis:
-		"exact":return "동일 아이템 시세"
-		"category_grade":return "동일 분류·등급 참고"
-		"grade":return "동일 등급 참고"
+		"observed_estimate":return "동일 아이템 자료 기반 추정가"
+		"category_grade":return "동일 분류·등급 추정가"
+		"grade":return "동일 등급 추정가"
+		"hero_multiplier":return "영웅 등급 기준 추정가"
+		"local_default":return "기본 추정가"
 	return "가격 자료 없음"
 
 static func _money(value: int) -> String:
@@ -130,14 +131,12 @@ static func _date(timestamp: int) -> String:
 func _spec() -> Dictionary:
 	_collect()
 	var spec: Dictionary={}
-	for absent: String in ["Nd_World","Trade_Popup_Purchase_Batch","Trade_Popup_Loading","Nd_Bg/Fx_Img_BG_Particle","Nd_Bg/Fx_Particle",S+"Trade_Popup_Input"]:
+	for absent: String in ["Nd_World","Nd_TopMenu/Btn_World_On","Nd_TopMenu/Btn_World_Off","Trade_Popup_Purchase_Batch","Trade_Popup_Loading","Nd_Bg/Fx_Img_BG_Particle","Nd_Bg/Fx_Particle",S+"Trade_Popup_Input"]:
 		spec[absent]={"exclude":true}
 	spec["Btn_Close"]={"activate":Callable(self,"_close_requested")}
 	spec["Nd_TopMenu/Btn_Server_On"]={"visible":true}
 	spec["Nd_TopMenu/Btn_Server_On/Label"]={"role":"source_text","text":"로컬 거래소"}
 	spec["Nd_TopMenu/Btn_Server_Off"]={"visible":false}
-	spec["Nd_TopMenu/Btn_World_On"]={"visible":false}
-	spec["Nd_TopMenu/Btn_World_Off"]={"visible":true,"activate":Callable(self,"_world_pressed")}
 	for name: String in TABS:
 		var on: bool=name==tab
 		var button: String=S+"Nd_TabMenu/"+TABS[name]
@@ -577,10 +576,6 @@ func _release_editor() -> void:
 		_editor.release_focus()
 
 ## --- Actions -------------------------------------------------------------------
-
-func _world_pressed() -> Dictionary:
-	_message("월드 거래소는 온라인 전용입니다 · 로컬 거래소를 이용하세요")
-	return {"ok":true,"world_offline":true}
 
 func _set_tab(name: String) -> Dictionary:
 	tab=name

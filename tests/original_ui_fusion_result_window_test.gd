@@ -195,7 +195,10 @@ func _real_pack(pack_dir: String) -> void:
 	var window=WINDOW.new()
 	check(window.configure(pack,hud).get("ok",false),"window configures")
 	var released: Array=[0]
-	var opened: Dictionary=window.open(parent,_views(12),"변신",true,func() -> void:released[0]+=1)
+	var other_grades: Array=_views(12)
+	for card: Dictionary in other_grades:
+		if card.grade=="희귀":card.grade="고급"
+	var opened: Dictionary=window.open(parent,other_grades,"변신",true,func() -> void:released[0]+=1)
 	check(opened.get("handled",false) and int(opened.filled.shown)==10 and int(opened.filled.pages)==2,"Change_Fusion_All mounts the first ten results: "+str(opened).left(300))
 	if not opened.get("handled",false):
 		viewport.queue_free()
@@ -217,7 +220,21 @@ func _real_pack(pack_dir: String) -> void:
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
 	await _check_authored_phases(window,parent,pack)
-	check(pack.unused_outline_requests==0,"fusion never requests the unused Fx_Unique_Loop sheet")
+	check(pack.unused_outline_requests==0,"non-rare results do not request the rare sheet")
+	var rare_pack:=SOURCE_PACK.new()
+	check(rare_pack.open(pack_dir,str(receipt.manifest_sha256)).get("ok",false),"the original rare outline pack opens")
+	check(window.configure(rare_pack,hud).get("ok",false),"the result window uses that pack")
+	var rare_results: Array=[{"id":"rare","name":"희귀 카드","grade":"희귀"},{"id":"other","name":"일반 카드","grade":"일반"}]
+	var rare_opened: bool=window.open(parent,rare_results,"변신",true,Callable()).get("handled",false)
+	check(rare_opened,"the window mounts a real rare result")
+	if rare_opened:
+		var path: String="Panel/Card_00/Fx_Outline_Front"
+		check(WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)==null,"a sealed rare result does not instantiate its outline")
+		await _tap_button(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		var outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)
+		check(outline!=null and outline.is_visible_in_tree() and outline.playback_status().clip==WINDOW.GradeFx.RARE_OUTLINE_CLIP,"only the opened rare card plays the authored blue outline")
+		check(window.is_revealed(0) and not window.is_revealed(1),"the adjacent result remains face down")
+		window.close()
 	viewport.queue_free()
 	host.queue_free()
 

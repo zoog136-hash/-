@@ -71,8 +71,8 @@ func runtime(limit: int) -> void:
 		var identity: String = world.card_draw_fusion.card_id(card) if not card.is_empty() else ""
 		var before: int = world.card_draw_fusion.total_count(category, identity) if not identity.is_empty() else 0
 		var result: Dictionary = STACK.try_use(world, name_value)
-		if is_instance_valid(world.hud.card_reveal_stage): world.hud.card_reveal_stage.close_reveal()
 		if result.get("ok", false):
+			check(not world.hud.is_card_reveal_busy(), "named card skips the reveal reel " + str(id))
 			check(int(world.inventory.get(name_value, 0)) == 0 and world.item_instances.is_empty(), "card item debited through its physical receipt " + str(id))
 			check(world.card_draw_fusion.total_count(category, identity) == before + 1, "exactly the original card is credited " + str(id))
 			outcome.granted += 1; outcome.by_kind[category] = int(outcome.by_kind.get(category, 0)) + 1

@@ -151,7 +151,7 @@ func run() -> void:
 			var owned_before: int = world.card_draw_fusion.total_count(str(spec.card_kind),world.card_draw_fusion.card_id(candidates[0])) if candidates.size() == 1 else 0
 			world._on_inventory_item_activated(str(record.name))
 			if candidates.size() == 1:
-				check(int(world.inventory.get(str(record.name),0)) == 0 and world.hud.is_card_reveal_busy(),"every compatible source fixed card received and revealed "+id)
+				check(int(world.inventory.get(str(record.name),0)) == 0 and not world.hud.is_card_reveal_busy(),"every compatible source fixed card registered without a reel "+id)
 				check(world.card_draw_fusion.total_count(str(spec.card_kind),world.card_draw_fusion.card_id(candidates[0])) == owned_before+1,"exact original card ownership increased "+id)
 				mark(id,"fixed_card_received_and_saved")
 			else:

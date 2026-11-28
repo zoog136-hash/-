@@ -404,6 +404,7 @@ var source_gender_id: int = 0 # Unknown until an explicit source gender is selec
 var source_card_visual_options: Dictionary = {}
 var active_skill_buffs: Dictionary = {}
 var skill_cooldowns: Dictionary = {}
+var skill_cooldown_totals: Dictionary = {}
 var skill_global_cooldown: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
@@ -8913,6 +8914,7 @@ func _load_game(quiet: bool) -> void:
 	gold = maxi(0, int(data.get("gold", gold)))
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
+		hud.reset_inventory_notice()
 		inventory = inventory_value as Dictionary
 	_ensure_inventory_ammo_defaults()
 	consumable_service.call("prune_removed")
@@ -8950,6 +8952,7 @@ func _load_game(quiet: bool) -> void:
 	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
 	var skill_cooldowns_value: Variant = data.get("skill_cooldowns", {})
 	skill_cooldowns = skill_cooldowns_value as Dictionary if skill_cooldowns_value is Dictionary else {}
+	skill_cooldown_totals.clear()
 	skill_global_cooldown = maxf(0.0, float(data.get("skill_global_cooldown", 0.0)))
 	if original_skills != null:
 		original_skills.catalog.import_state(data)
@@ -9936,22 +9939,31 @@ func _run_auto_buff_quickslots(delta: float) -> bool:
 
 func _tick_skill_cooldowns(delta: float) -> void:
 	skill_global_cooldown = maxf(0.0, skill_global_cooldown - delta)
-	_tick_cooldown_map(skill_cooldowns, delta)
+	_tick_cooldown_map(skill_cooldowns, delta, skill_cooldown_totals)
 
-static func _tick_cooldown_map(cooldowns: Dictionary, delta: float) -> void:
+static func _tick_cooldown_map(cooldowns: Dictionary, delta: float, skill_totals: Variant = null) -> void:
 	if cooldowns.is_empty(): return
 	var expired: Array[String] = []
 	# Replacing values is safe during dictionary iteration. Erase only
 	# afterward so each entry is visited exactly once without a key copy.
 	for key_value: Variant in cooldowns:
 		var key: String = str(key_value)
-		var remaining: float = float(cooldowns.get(key, 0.0)) - delta
+		var cooldown: float = float(cooldowns.get(key, 0.0))
+		var remaining: float = cooldown - delta
 		if remaining <= 0.0:
 			expired.append(key)
 		else:
+			if skill_totals != null and cooldown > float(skill_totals.get(key,0.0)): skill_totals[key] = cooldown
 			cooldowns[key] = remaining
 	for key: String in expired:
 		cooldowns.erase(key)
+		if skill_totals != null: skill_totals.erase(key)
+
+func quickslot_skill_cooldown_ratio(entry: Dictionary) -> float:
+	if entry.get("kind")!="skill": return 0.0
+	var key: String = str(entry.get("id",""))
+	var remaining: float = float(skill_cooldowns.get(key,0.0))
+	return remaining/maxf(remaining,float(skill_cooldown_totals.get(key,remaining))) if remaining>0.0 else 0.0
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false

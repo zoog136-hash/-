@@ -764,16 +764,18 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 		if images.handles_item(original): return original
 	return fallback
 
+const BAG_EQUIPMENT_SLOTS: Array[String] = ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
+
 func _matches_category(record: Dictionary, item_name: String) -> bool:
 	if category_filter == "전체":
 		return true
 	var slot := str(record.get("slot", "")).to_lower()
 	var item_type := str(record.get("type", ""))
 	if category_filter == "장비":
-		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
+		return slot in BAG_EQUIPMENT_SLOTS
 	if category_filter == "소모품":
 		return slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor","consumable"])
+	return slot not in BAG_EQUIPMENT_SLOTS and slot != "consumable"
 
 func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name
