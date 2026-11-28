@@ -10,8 +10,9 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## 강화 정보 저장, 강화 복구 and 축복 포인트 상점 (축복의 열쇠).
 ## Every quote, cost, roll and save is the existing world.growth runtime
 ## (quote -> HUD confirmation -> execute), the same requests as the growth
-## view. Committed stages light up using the original Enchant part clips.
-## Bt_Compose_Touch lets the player reveal the saved result immediately.
+## view. The committed results drive the Symbol_All charge, step flash and
+## finish clips and the selected page's Enchant parts. Bt_Compose_Touch lets
+## the player reveal the saved result immediately.
 ## Btn_HelpBox
 ## opens the original Symbol_Popup_Help (source_main_help_box).
 const ROOT="UI/Symbol/Symbol_All.csb"
@@ -20,6 +21,8 @@ const PERCENT="UI/Symbol/Symbol_Percent.csb"
 const BUFF_LIST="UI/Symbol/Symbol_Listview_Buff.csb"
 const GRADE="UI/Symbol/Symbol_Grade.csb"
 const REVEAL_TOUCH="UI/Symbol/Bt_Compose_Touch.csb"
+const ENHANCEMENT_MOTION="SymbolEnhancementMotion"
+const ENHANCEMENT_PROMPT="SymbolEnhancementPrompt"
 ## growth emblem id -> original tab / page name.
 const GODS={"eva":"Eva","paagrio":"Paagrio","maphr":"Maphr","sayha":"Sayha","grankain":"Grankain","einhasad":"Einhasad","shilen":"Silen"}
 const PARTS: int=30
@@ -52,6 +55,10 @@ func open(parent: Node, id: String="") -> Dictionary:
 func close() -> void:
 	_clear_reveal()
 	super.close()
+
+func refresh() -> Dictionary:
+	# Result presentation owns this scene until it reveals the committed state.
+	return last_result if is_open() and not _reveal_message.is_empty() else super.refresh()
 
 func _spec() -> Dictionary:
 	var runtime: Object=_runtime()
@@ -163,6 +170,36 @@ func _play(root: Node2D, out: Dictionary, suffix: String, clip: String, repeat: 
 	_clips.append(clip)
 	return player
 
+func _mount_enhancement_motion(scene: Node2D) -> Node2D:
+	# Play the authored FX at the same origin as Symbol_All. A node-scoped
+	# player keeps these tracks from ticking the whole window every frame.
+	var groups: Array[String]=["Nd_Fx","Fx_Registration"]
+	var scope: Array[int]=[]
+	for node: Dictionary in _read_stage_tree(ROOT).get("children",[]):
+		var options: Dictionary=node.get("options",{})
+		var name: String=str(options.get("widgetOptions",options.get("nodeOptions",options)).get("name",""))
+		if name not in groups:continue
+		groups.erase(name)
+		_collect_subtree(node,scope)
+	if not groups.is_empty():return null
+	var motion:=Scene.new()
+	if not motion.configure_nodes(_pack,ROOT,scope,{}).get("ok",false):
+		motion.free()
+		return null
+	motion.name=ENHANCEMENT_MOTION
+	scene.add_child(motion)
+	return motion
+
+func _play_enhancement_motion(scene: Node2D, motion: Node2D, clip: String) -> bool:
+	if motion==null or not motion.play(clip,false).get("ok",false) or not motion.playback_status().playing:
+		return false
+	motion.clip_finished.connect(_enhancement_motion_finished.bind(scene),CONNECT_ONE_SHOT)
+	return true
+
+func _enhancement_motion_finished(clip: String, scene: Node2D) -> void:
+	if clip=="Fx_Start":_play_next_enhancement.call_deferred(scene)
+	elif clip=="Fx_End":_finish_enhancement.call_deferred(scene)
+
 func _present_enhancement(previous_stage: int, response: Dictionary) -> bool:
 	var stages: Array=response.get("enhancement_stages",[])
 	if not is_open() or stages.is_empty() or not _pack.manifest.get("scenes",{}).has(REVEAL_TOUCH):return false
@@ -172,11 +209,12 @@ func _present_enhancement(previous_stage: int, response: Dictionary) -> bool:
 	if not prompt.get("ok",false):return false
 	var scene: Node2D=_scene
 	var art: Node2D=prompt.scene
-	art.name="SymbolEnhancementPrompt"
+	var motion: Node2D=_mount_enhancement_motion(scene)
+	art.name=ENHANCEMENT_PROMPT
 	scene.add_child(art)
-	if not art.play("Loop",true).get("ok",false):
-		art.queue_free()
-		return false
+	if art.play("Start",false).get("ok",false):
+		art.clip_finished.connect(_enhancement_prompt_started.bind(scene,art),CONNECT_ONE_SHOT)
+	else:art.play("Loop",true)
 	var input:=Control.new()
 	input.name="SymbolEnhancementTouch"
 	input.position=Vector2(-800.0,-400.0)
@@ -187,20 +225,27 @@ func _present_enhancement(previous_stage: int, response: Dictionary) -> bool:
 	_reveal_stages.assign(stages)
 	_revealed_stage=previous_stage
 	_reveal_message=str(response.message)
-	_play_next_enhancement(scene)
+	if not _play_enhancement_motion(scene,motion,"Fx_Start"): _play_next_enhancement(scene)
 	return true
+
+func _enhancement_prompt_started(clip: String, scene: Node2D, art: Node2D) -> void:
+	if clip=="Start" and _scene==scene and not _reveal_message.is_empty():art.play("Loop",true)
 
 func _play_next_enhancement(scene: Node2D) -> void:
 	if not is_open() or _scene!=scene or _reveal_message.is_empty():return
+	var motion: Node2D=scene.get_node_or_null(ENHANCEMENT_MOTION)
 	if _reveal_stages.is_empty():
-		_finish_enhancement(scene)
+		var prompt: Node2D=scene.get_node_or_null(ENHANCEMENT_PROMPT)
+		if prompt!=null:prompt.play("End",false)
+		if not _play_enhancement_motion(scene,motion,"Fx_End"):_finish_enhancement(scene)
 		return
+	if motion!=null:motion.play("Fx_Light",false)
 	var from_stage: int=_revealed_stage+1
 	_revealed_stage=_reveal_stages.pop_front()
 	var last: Node2D
 	for index: int in range(from_stage,_revealed_stage+1):
 		var part: Node2D=_play(scene,_out,"Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [GODS[selected],index],"On",false)
-		if part!=null:last=part
+		if part!=null and part.playback_status().playing:last=part
 	if last==null:
 		_play_next_enhancement.call_deferred(scene)
 		return
@@ -236,9 +281,12 @@ func _finish_enhancement(scene: Node2D) -> void:
 	_message(message)
 	# The transaction already completed. Rebuild once with its final values.
 	# Remove the touch area even if a resource prevents a fresh presentation.
-	for name: String in ["SymbolEnhancementTouch","SymbolEnhancementPrompt"]:
+	for name: String in ["SymbolEnhancementTouch",ENHANCEMENT_PROMPT,ENHANCEMENT_MOTION]:
 		var node: CanvasItem=scene.get_node_or_null(name)
-		if is_instance_valid(node):node.hide();node.queue_free()
+		if is_instance_valid(node):
+			if node.has_method("stop"):node.call("stop")
+			node.hide()
+			node.queue_free()
 	_stage()
 
 func _clear_reveal() -> void:

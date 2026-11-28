@@ -2576,13 +2576,27 @@ static func original_skill_ammo(world: Node,cost_key: String,quantity: int) -> D
 	return {"handled":true,"ok":true,"inventory_key":key,"physical_id":selected.physical_id,"quantity":quantity,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-quantity,"receipt":owned.receipt.duplicate(true),"ownership_kind":owned.ownership_kind,"cost_role":cost_key}
 
 
+const SPELL_BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
+const SPELL_BINDINGS_SHA := "497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346"
+static var _verified_spell_binding_text: String = ""
+static var _verified_spell_binding_rows: Dictionary = {}
+
+## Private read-only rows from the same pinned bytes. The caller reads the
+## current resource, so changed bytes still fail even after a successful read.
+static func _checked_spell_bindings(text: String) -> Dictionary:
+	if text == _verified_spell_binding_text: return _verified_spell_binding_rows
+	if text.sha256_text() != SPELL_BINDINGS_SHA: return {}
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Dictionary or not parsed.get("material_inventory_keys") is Dictionary: return {}
+	_verified_spell_binding_text = text
+	_verified_spell_binding_rows = parsed
+	return _verified_spell_binding_rows
+
 static func spell_material_profile(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or not D.currency_identity_name(record).is_empty():return {} # Currency wallets keep their existing separate owner.
 	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_test_item")!=false or record.get("source_bless_raw")!=1 or D.equipment(record) or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
-	var text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
-	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346":return {}
-	var bindings: Variant=JSON.parse_string(text)
-	if not bindings is Dictionary or not bindings.get("material_inventory_keys") is Dictionary:return {}
+	var bindings: Dictionary=_checked_spell_bindings(FileAccess.get_file_as_string(SPELL_BINDINGS_PATH))
+	if bindings.is_empty():return {}
 	var definition: Dictionary=D.current_original_definition(record)
 	if definition.is_empty():return {}
 	var matches: Array=[]
@@ -2606,9 +2620,8 @@ static func material_owned(world: Node,uid: String) -> Dictionary:
 static func plan_spell_material(world: Node,skill: Dictionary,cost_key: String,quantity: int) -> Dictionary:
 	if quantity<1 or not skill.get("source523",{}).get("applied",[]).has("materials") or world.original_skills==null:return {"handled":false}
 	var adapter: Object=world.original_skills.catalog.source523
-	var text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
-	var public: Variant=JSON.parse_string(text)
-	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346" or not public is Dictionary or adapter.bindings!=public or not adapter.material_ready(public,cost_key):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
+	var public: Dictionary=_checked_spell_bindings(FileAccess.get_file_as_string(SPELL_BINDINGS_PATH))
+	if public.is_empty() or adapter.bindings!=public or not adapter.material_ready(public,cost_key):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
 	var ids: Array=[]
 	for bridge: Variant in public.get("material_inventory_keys",{}).values():
 		if bridge is Dictionary and bridge.get("inventory_key")==cost_key and bridge.get("native_item_id") not in ids:ids.append(bridge.get("native_item_id"))

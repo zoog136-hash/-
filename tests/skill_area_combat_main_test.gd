@@ -175,6 +175,16 @@ func run() -> void:
 	var proof: Dictionary = {"hits":[primary.damage_hit_count,second.damage_hit_count,blocked.damage_hit_count,far.damage_hit_count],
 		"hp":[primary.hp,second.hp,blocked.hp,far.hp],"rng_state":str(world.rng.state),"mp":world.mp,
 		"area_effects":marker_effects.size(),"hunt_searches":world.auto_target_path_checks - path_checks}
+	clear_cooldown(world)
+	world.quickslots[0] = {"kind":"skill", "id":str(single.id), "auto":true}
+	var auto_mp: int = world.mp
+	world.halphas_star.combat.charge = {"fixture_in_progress":true}
+	check(not world._run_auto_combat_quickslots() and world.mp == auto_mp and world.pending_attack.is_empty(),
+		"targeted original AUTO does not cast or pay while its separate charge is in progress")
+	world.halphas_star.combat.charge.clear()
+	check(world._run_auto_combat_quickslots() and world.pending_attack.has("target") and world.mp == auto_mp - int(service.catalog.resolve(single).mp),
+		"targeted original AUTO keeps its single cast, selected target and exact MP debit")
+	clear_cooldown(world)
 	check_lethal_impact(world, base, origin, unit)
 	world.queue_free()
 	await process_frame
