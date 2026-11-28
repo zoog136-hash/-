@@ -35,6 +35,59 @@ func reference(w:Node,target:TwilightMonster,kind:String,native:int)->Dictionary
 	damage=w._elemental_damage_to_monster(damage,element,target)
 	damage+=int(w.consumable_service.call("weapon_element_bonus",w._equipped_weapon_record(),target))
 	return {"damage":damage,"critical":critical,"chance":chance}
+func check_equipment_scopes(w: TwilightWorld) -> void:
+	var slots: Array[String] = ["weapon"]
+	var same_name := "same-name physical weapon"
+	w.item_instances["scope-first"] = {"name":same_name,"level":3}
+	w.item_instances["scope-second"] = {"name":same_name,"level":8}
+	var worn: Dictionary = {"name":same_name,"type":"한손검","atk":20,"instance_id":"scope-first","scope_value":9}
+	w.equipped_items["weapon"] = worn
+	w._invalidate_equipment_static()
+	w._stat_memo_begin()
+	ck(w._enhancement_weapon_stat("damage")==3 and w._enhancement_stat_for_slots(slots,"accuracy")==3,
+		"one stat scope keeps the exact equipped physical rank for every field")
+	ck(w._equipment_inven_sum("scope_value")==9,"the scope reads the selected item options")
+	w._stat_memo_end()
+	# Same frame, same displayed name, different inventory instance and stats.
+	var replacement: Dictionary = worn.duplicate()
+	replacement.instance_id = "scope-second"
+	replacement.scope_value = 14
+	w.equipped_items["weapon"] = replacement
+	w._invalidate_equipment_static()
+	w._stat_memo_begin()
+	ck(w._enhancement_weapon_stat("damage")==8 and w._enhancement_stat_for_slots(slots,"accuracy")==8,
+		"the next scope reads the replacement physical rank even in the same frame")
+	ck(w._equipment_inven_sum("scope_value")==14,"the next scope reads the replacement item options")
+	w._stat_memo_end()
+	# A strengthening transaction can change an instance without changing the slot.
+	w.item_instances["scope-second"].level = 9
+	w._stat_memo_begin()
+	ck(w._enhancement_weapon_stat("damage")==9,"a level change on the same physical item is visible in the next scope")
+	w._stat_memo_end()
+	ck(w._stat_memo.is_empty() and w._stat_memo_depth==0,"no resolved item or enhancement is retained between scopes")
+
+func check_mp_drain(w: TwilightWorld, target: TwilightMonster) -> void:
+	w.equipped_items["weapon"] = {"name":"MP drain fixture","slot":"weapon","type":"한손검","atk":10,"mpAbsorption":4}
+	w._invalidate_equipment_static()
+	w.mp = 0
+	target.mp = 2
+	w._deal_successful_player_hit(target, 10, false, "melee")
+	ck(w.mp==2 and target.mp==0,"normal hit transfers only the target's available MP")
+	w._deal_successful_player_hit(target, 10, false, "melee")
+	ck(w.mp==2 and target.mp==0,"another hit on an empty target cannot add MP")
+	var cap: int = w._effective_max_mp()
+	w.mp = cap - 1
+	target.mp = 20
+	w._deal_successful_player_hit(target, 10, false, "melee")
+	ck(w.mp==cap and target.mp==19,"drain preserves both MP totals at the player's cap")
+	w._deal_successful_player_hit(target, 10, false, "melee")
+	ck(w.mp==cap and target.mp==19,"full player MP does not remove target MP")
+	w.equipped_items["weapon"].erase("mpAbsorption")
+	w._invalidate_equipment_static()
+	w.mp = 0
+	w._deal_successful_player_hit(target, 10, false, "melee")
+	ck(w.mp==0 and target.mp==19,"no equipped drain leaves a nonempty target's MP untouched")
+
 func samples(times:Array)->Array:
 	times.sort()
 	return [times[times.size()/2],times[ceili(.95*times.size())-1],times.back(),times.filter(func(t:int)->bool:return t>16000 and t<=50000).size(),times.filter(func(t:int)->bool:return t>50000).size()]
@@ -124,6 +177,8 @@ func run()->void:
 		w.rng.seed=seed_hit
 		w._resolve_normal_attack(target,"melee",weapon_type)
 		ck(int(mastery.core.record(mastery.state,weapon_type).points)==points+3 and w._stat_memo_depth==0,"valid hit applies mastery before immutable roll (save_protected=%s owner=%s)" % [str(w.source_save_blocked),str(mastery.balance_error)])
+	check_equipment_scopes(w)
+	check_mp_drain(w,target)
 	w.queue_free();await process_frame
 	print("NORMAL_HIT_SCOPE_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

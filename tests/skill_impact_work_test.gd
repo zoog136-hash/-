@@ -10,6 +10,49 @@ class CastProbe extends TwilightOriginalSkillService:
 		attempts += 1
 		return false
 
+class BuffVisualCatalog extends TwilightOriginalSkillCatalog:
+	var reads := 0
+
+	func record_for(id: String) -> Dictionary:
+		reads += 1
+		return {"id":id}
+
+	func enabled(_record: Dictionary) -> bool:
+		return true
+
+func _retained_buff_visuals() -> void:
+	var world := WORLD.new()
+	var player := Node2D.new()
+	var service := TwilightOriginalSkillService.new()
+	var catalog := BuffVisualCatalog.new()
+	var visuals := service.VFX.new()
+	service.world = world
+	service.catalog = catalog
+	service.vfx = visuals
+	world.active_skill_buffs = {"fixture":{"skill_id":"fixture","remaining":6.0}}
+	visuals.source_only_policy = func() -> bool: return true
+	service.refresh_buff_visuals()
+	check(catalog.reads == 0 and visuals.persistent.is_empty() and world.active_skill_buffs.fixture.remaining == 6.0,
+		"source-only visual refresh does not reread buffs or disturb their gameplay time")
+	# Seed the render owner directly. When the original-only policy starts
+	# without tracked substitutes, only that empty visual pass can be skipped.
+	visuals.persistent.fixture = {"target":weakref(player),"remaining":1.0,"visual":{}}
+	service.refresh_buff_visuals()
+	check(catalog.reads == 1 and visuals.persistent.fixture.remaining == 6.0,
+		"an existing persistent visual retains its original reconciliation")
+	# The previous policy's visuals are retired by the renderer. Verify that
+	# a subsequent fallback build can still restore a retained aura.
+	visuals.persistent.clear()
+	visuals.source_only_policy = func() -> bool: return false
+	world.player = TwilightPlayer.new()
+	service.refresh_buff_visuals()
+	check(visuals.persistent.fixture.target.get_ref() == world.player,
+		"fallback can restore a retained buff after presentation policy changes")
+	world.player.free()
+	player.free()
+	visuals.free()
+	world.free()
+
 func _previous_impact(service: TwilightOriginalSkillService, skill: Dictionary) -> Array[TwilightMonster]:
 	var origin: Vector2 = service.world.player.global_position
 	var targets: Array[TwilightMonster] = service._area_candidates(skill, skill.shape, origin, origin)
@@ -120,6 +163,7 @@ func run() -> void:
 	var rounds: Array[Dictionary] = _dense_impact()
 	_ties_and_idle_cast()
 	_cooldowns()
+	_retained_buff_visuals()
 	await process_frame
 	var bindings: Dictionary = _spell_binding_reads()
 	print("SKILL_IMPACT_WORK_RESULT ", JSON.stringify({"checks":checks, "failures":failures, "synthetic_s32":rounds, "material_bindings":bindings}))

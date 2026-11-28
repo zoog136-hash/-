@@ -1289,6 +1289,15 @@ func _source_enhancement_extra_record(base: Dictionary,saved: Dictionary) -> Dic
 	output["_patch523_effective_extras"]=true
 	return output
 
+## Read-only stat paths ask several questions about the same physical slot.
+## Resolve its exact item and enhancement data once inside the existing
+## stat scope. The next operation starts with the live equipment.
+func _equipment_record_for_stats(slot: String, worn: Dictionary) -> Dictionary:
+	if _stat_memo_depth == 0: return _source_catalog_record("아이템", worn)
+	var key: String = "equip_slot:" + slot
+	if not _stat_memo.has(key): _stat_memo[key] = _source_catalog_record("아이템", worn)
+	return _stat_memo[key]
+
 func _equipment_inven_sum(key: String) -> float:
 	if _stat_memo_depth == 0: return _equipment_inven_sum_uncached(key)
 	var memo_key: String = "inven_sum:"+key
@@ -1300,7 +1309,7 @@ func _equipment_inven_sum_uncached(key: String) -> float:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var raw: Variant = equipped_items.get(slot, {})
 		if raw is Dictionary and not (raw as Dictionary).is_empty():
-			var record: Dictionary = _source_catalog_record("아이템", raw as Dictionary)
+			var record: Dictionary = _equipment_record_for_stats(slot, raw as Dictionary)
 			total += float(record.get(key, 0.0))
 	for record: Dictionary in _equipment523_bonus_records():
 		total += float(record.get(key, 0.0))
@@ -1510,12 +1519,21 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	var settings: Dictionary=PATCH523_ENHANCE.policy()
 	var source_attack: bool=not by_spell or settings.get("source_drain_scope","")=="all_successful_hits"
 	if source_attack:
+		_stat_memo_begin()
 		stolen+=mini(maxi(0,target.hp-stolen),maxi(0,int(_equipment_inven_sum("source_attack_drain_hp")+_equipped_numeric_sum("source_card_attack_drain_hp"))))
-		var drain_mp: int=maxi(0,int(_equipment_inven_sum("source_attack_drain_mp")))
-		for worn: Dictionary in _all_equipped_records():
-			if str(worn.get("slot","")).is_empty():continue
-			drain_mp+=maxi(0,int(worn.get("mpAbsorption",0)))
-		drain_mp=mini(drain_mp,mini(maxi(0,target.mp),maxi(0,_effective_max_mp()-mp)))
+		var drain_mp: int = 0
+		if target.mp > 0:
+			drain_mp = maxi(0,int(_equipment_inven_sum("source_attack_drain_mp")))
+			for worn: Dictionary in _all_equipped_records():
+				if str(worn.get("slot","")).is_empty():continue
+				drain_mp += maxi(0,int(worn.get("mpAbsorption",0)))
+			drain_mp = mini(drain_mp,target.mp)
+		if drain_mp>0:
+			drain_mp=mini(drain_mp,maxi(0,_effective_max_mp()-mp))
+		elif original_skills!=null:
+			# The maximum-MP lookup also reconciles retained relic buffs.
+			original_skills.refresh_relic_buffs()
+		_stat_memo_end()
 		if drain_mp>0:
 			target.mp-=drain_mp;mp+=drain_mp
 			hud.append_log("MP 흡수 · %s MP -%d / 내 MP +%d" % [target.monster_name,drain_mp,drain_mp])
@@ -1915,7 +1933,7 @@ func _equipment_attribute_bonus_uncached(stat: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
+			result += ITEM_OPTIONS.attribute(_equipment_record_for_stats(slot, entry as Dictionary), stat)
 	for record: Dictionary in _equipment523_bonus_records():
 		result += ITEM_OPTIONS.attribute(record, stat)
 	return result + _source_enchantment_extra([],stat.to_lower()) + int(equipment_collections.bonus(stat.to_lower()+":flat") + card_collections.bonus(stat.to_lower()+":flat") + growth.bonus(stat.to_lower()+":flat"))
@@ -1951,7 +1969,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
+			result += ITEM_OPTIONS.accuracy(_equipment_record_for_stats(slot, entry as Dictionary), kind)
 	for record: Dictionary in _equipment523_bonus_records():
 		result += ITEM_OPTIONS.accuracy(record, kind)
 	return result + int(titles.bonus({"melee":"MeleeHit","ranged":"RangeHit","magic":"MagicHit"}.get(kind,""))) + int(growth.bonus(kind+"_hit:flat") + equipment_collections.bonus(kind+"_hit:flat") + equipment_collections.bonus("pve_"+kind+"_hit:flat") + card_collections.bonus(kind+"_hit:flat") + card_collections.bonus("pve_"+kind+"_hit:flat")) + int(unconfirmed523.bonus(kind+"_hit:flat"))
@@ -1963,7 +1981,7 @@ func _equipment_potion_heal_stat(label: String) -> int:
 		var entry: Variant = equipped_items.get(slot, {})
 		if not (entry is Dictionary) or (entry as Dictionary).is_empty():
 			continue
-		var record: Dictionary = _source_catalog_record("아이템", entry as Dictionary)
+		var record: Dictionary = _equipment_record_for_stats(slot, entry as Dictionary)
 		sum += int(record.get(typed_key, ITEM_OPTIONS._description_bonus(record, label)))
 	for record: Dictionary in _equipment523_bonus_records():
 		sum += int(record.get(typed_key, 0))
@@ -1978,7 +1996,7 @@ func _equipment_additional_damage(kind: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			var item: Dictionary = _source_catalog_record("아이템", entry as Dictionary)
+			var item: Dictionary = _equipment_record_for_stats(slot, entry as Dictionary)
 			result += ITEM_OPTIONS.additional_damage(item, kind)
 			var typed_ignore: int = int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
 			result += typed_ignore
@@ -11473,7 +11491,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
-			records.append(_source_catalog_record("아이템", item_value as Dictionary))
+			records.append(_equipment_record_for_stats(slot, item_value as Dictionary))
 	var combination_record: Dictionary=combinations.stat_record()
 	if not combination_record.is_empty():records.append(combination_record)
 	var collection_record: Dictionary = equipment_collections.stat_record()
@@ -11689,14 +11707,34 @@ func _source_enchantment_extra(excluded_slots: Array, stat: String) -> int:
 		if excluded_slots.has(slot): continue
 		var record: Dictionary = equipped_items.get(slot,{})
 		if not record.get("source_m_native_item",false): continue
-		total += int(LOOT_DROP.PATCH523_DROPS.native_enchant_stats(record,_equipment_enhancement_level(slot)).get(stat,0))
+		total += int(_native_enchantment_for_stats(slot, record).get(stat, 0))
 	return total
+
+## The native extras read the worn source record. The ordinary enhancement
+## lookup below resolves the physical receipt, and keeps its own entry.
+func _native_enchantment_for_stats(slot: String, worn: Dictionary) -> Dictionary:
+	if _stat_memo_depth == 0:
+		return LOOT_DROP.PATCH523_DROPS.native_enchant_stats(worn, _equipment_enhancement_level(slot))
+	var key: String = "native_enchant_slot:" + slot
+	if not _stat_memo.has(key):
+		_stat_memo[key] = LOOT_DROP.PATCH523_DROPS.native_enchant_stats(worn, _equipment_enhancement_level(slot))
+	return _stat_memo[key]
 
 func _enhancement_weapon_stat(stat: String) -> int:
 	var record_value: Variant = equipped_items.get("weapon", {})
 	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
 		return 0
-	return int(ENCHANT.stats("weapon", _equipment_enhancement_level("weapon"), _physical_enhancement_record(record_value as Dictionary)).get(stat, 0))
+	return int(_equipment_enchantment_for_stats("weapon", record_value as Dictionary).get(stat, 0))
+
+func _equipment_enchantment_for_stats(slot: String, worn: Dictionary) -> Dictionary:
+	var key: String = ""
+	if _stat_memo_depth > 0:
+		key = "enchant_slot:" + slot
+		if _stat_memo.has(key): return _stat_memo[key]
+	var kind: String = "weapon" if slot == "weapon" else ("armor" if ARMOR_EQUIPMENT_SLOTS.has(slot) else "accessory")
+	var stats: Dictionary = ENCHANT.stats(kind, _equipment_enhancement_level(slot), _physical_enhancement_record(worn))
+	if not key.is_empty(): _stat_memo[key] = stats
+	return stats
 
 func _physical_enhancement_record(worn: Dictionary) -> Dictionary:
 	var physical: Dictionary=item_instances.get(str(worn.get("instance_id","")),{})
@@ -11713,8 +11751,7 @@ func _enhancement_float_for_slots(slots: Array[String], stat: String) -> float:
 		var record_value: Variant = equipped_items.get(slot, {})
 		if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
 			continue
-		var kind: String = "weapon" if slot == "weapon" else ("armor" if ARMOR_EQUIPMENT_SLOTS.has(slot) else "accessory")
-		result += float(ENCHANT.stats(kind, _equipment_enhancement_level(slot), _physical_enhancement_record(record_value as Dictionary)).get(stat, 0))
+		result += float(_equipment_enchantment_for_stats(slot, record_value as Dictionary).get(stat, 0))
 	return result
 
 func _equipment_enhancement_max(slots: Array[String]) -> int:
@@ -12068,7 +12105,9 @@ func _toggle_ammo_equipped(ammo_name: String,physical_id: String="") -> void:
 func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> float:
 	if target == null:
 		return 0.05
+	_stat_memo_begin()
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
+	_stat_memo_end()
 	if original_skills != null:
 		return original_skills.physical_hit_chance(accuracy, target,attack_kind)
 	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.hit_armor_class(),0)*halphas_star.combat.hit_factor(player)
