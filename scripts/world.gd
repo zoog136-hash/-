@@ -4463,7 +4463,7 @@ func _flush_inventory_hud() -> void:
 ## the whole character sheet (all derived stats, card/awakening state, portrait,
 ## a deep copy for the side panel) on every pickup stalled the frame; publish just
 ## what changed. Equipment, stats and buffs still go through _update_hud.
-func _refresh_inventory_hud() -> void:
+func _refresh_inventory_hud(refresh_bag: bool = false) -> void:
 	hud_publish_counts.items += 1
 	var started: int=FRAME_HITCH.now()
 	_merge_native_stacks()
@@ -4477,10 +4477,12 @@ func _refresh_inventory_hud() -> void:
 	# nothing else of the speeds (I09), so the same multiplier needs no refresh.
 	if encumbrance != _speed_encumbrance: _refresh_speed_modifiers()
 	var state: Variant = hud.get("character_state")
+	var bag: Variant = hud.get("lineage_inventory_ui")
 	if state is Dictionary:
 		(state as Dictionary).merge({"inventory_weight":weight, "current_weight":weight, "carrying_capacity":capacity,
 			"max_weight":capacity, "encumbrance_multiplier":encumbrance,
 			"item_instances":item_instances}, true)
+		if refresh_bag and is_instance_valid(bag): bag.set_character_state(state)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quickslot_state"):
@@ -4489,9 +4491,8 @@ func _refresh_inventory_hud() -> void:
 		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", effective_quickslots())
-	if hud.inventory_panel.visible:
+	if refresh_bag or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
-	var bag: Variant = hud.get("lineage_inventory_ui")
 	if bag is Object and is_instance_valid(bag) and (bag as Object).has_method("_refresh_weight"):
 		(bag as Object).call("_refresh_weight")
 	# An open character sheet shows weight-derived values; refresh it fully once.
@@ -5248,8 +5249,7 @@ func _item_requests_map_loading(reference: String) -> bool:
 		var original: Dictionary = CATALOG_STACK.action_record(self,record)
 		if not original.is_empty(): record = original
 	var effects: Script = preload("res://scripts/loot/source523_item_effects.gd")
-	if not effects.teleport(record).is_empty() or not effects.location_teleport(record).is_empty():
-		return true
+	if not effects.travel_kind(record).is_empty(): return true
 	var kind: String = str(CONSUMABLE_RULES.definition(item_name).get("kind",""))
 	return kind == "return" or (kind == "teleport" and not growth.travel.enabled()) or REGIONAL_RETURN.claims_identity(item_name,record)
 
@@ -5257,7 +5257,7 @@ func _item_requests_map_loading(reference: String) -> bool:
 func _activate_inventory_input(reference: String) -> void:
 	if MAP_LOADING.busy(self): return
 	if _item_requests_map_loading(reference):
-		await run_map_loading(_activate_travel_item.bind(reference))
+		await _run_teleport_preparation(_activate_travel_item.bind(reference))
 		return
 	_on_inventory_item_activated(reference)
 
@@ -5331,6 +5331,7 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 	if _open_owned_native_smelt(str(selected.get("id","")),selected_source):return
 	var stack_owner: Script = preload("res://scripts/loot/current523_native_stack.gd")
 	var selected_id: String = str(selected.get("id",""))
+	var npc_buffs_before: int = player_npc_buff_signature()
 	var native_stack: Dictionary
 	if loading: native_stack = await stack_owner.try_use_loading(self,item_name,selected_id,false)
 	else: native_stack = stack_owner.try_use(self,item_name,selected_id,false)
@@ -5341,7 +5342,13 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		hud.show_message(str(native_stack.get("message",native_stack.get("reason","원본 물리 수량 확인 필요"))))
 		if native_stack.get("ok",false):
 			if native_stack.get("effect_kind")=="buff":_publish_timed_buff_hud()
-			else:hud.refresh_inventory(inventory);_update_hud()
+			else:
+				var hud_started: int = FRAME_HITCH.now()
+				var domains: int = native_use_hud_domains(native_stack, npc_buffs_before)
+				var publish: Callable = _publish_player_hud.bind(true, false, true) if domains == HUD_FULL else publish_hud.bind(domains, true)
+				if hud.has_method("publish_committed_ticket_hud"): hud.publish_committed_ticket_hud(publish)
+				else: publish.call()
+				FRAME_HITCH.detail("item.consume_hud", hud_started)
 		return
 	if quest_item_provider.try_use_inventory(self,item_name): return
 	if _find_catalog_item_record(item_name).get("source_automation_catalog_only",false):
@@ -7686,7 +7693,7 @@ func select_hud_potion(item_name: String) -> bool:
 func _use_quick_item(item_name: String) -> void:
 	if death_recovery.blocked(): return
 	if _item_requests_map_loading(item_name):
-		_activate_inventory_input(item_name)
+		_run_teleport_preparation(_activate_travel_item.bind(item_name))
 		return
 	if item_name.begins_with("[원본 보상] "):
 		hud.show_message("원본 보상 보관 중 · 사용/이동 기능 연결 대기")
@@ -7786,7 +7793,7 @@ func _source_hp_potion_committed(amount: int) -> void:
 func _return_to_spawn_input() -> void:
 	if MAP_LOADING.busy(self) or death_recovery.blocked() or patch523_npc_spells.blocks("CannotTeleport"): return
 	if current523_aden_source_active():
-		var outcome: Dictionary = await run_map_loading(return_current523_source_to_aden_loading)
+		var outcome: Dictionary = await _run_teleport_preparation(return_current523_source_to_aden_loading)
 		hud.show_message(str(outcome.get("reason","아덴 귀환 결과 확인 필요")))
 		return
 	_return_to_spawn()
@@ -7864,11 +7871,11 @@ func _refresh_after_clan_change() -> void:
 
 ## Publishes the HUD for `domains` (HUD_* bits). Vitals/items only take the
 ## light paths; any other bit rebuilds everything (_update_hud).
-func publish_hud(domains: int) -> void:
+func publish_hud(domains: int, refresh_bag: bool = false) -> void:
 	if domains & ~(HUD_VITALS | HUD_ITEMS) != 0 or domains == 0:
 		_update_hud()
 		return
-	if domains & HUD_ITEMS: _refresh_inventory_hud()
+	if domains & HUD_ITEMS: _refresh_inventory_hud(refresh_bag)
 	if domains & HUD_VITALS:
 		_refresh_combat_hud()
 		_update_ain_hud()
@@ -7940,7 +7947,7 @@ func _publish_timed_buff_hud() -> void:
 		FRAME_HITCH.detail("item.buff_bag_publish",finish)
 	FRAME_HITCH.detail("item.buff_hud",since)
 
-func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void:
+func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false, refresh_bag: bool=false) -> void:
 	var phase:int=FRAME_HITCH.now() if timed_buff else 0
 	hud_publish_counts.full += 1
 	if is_instance_valid(title_badge):
@@ -8011,7 +8018,7 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void
 		if hud.has_method("refresh_normal_card_collections"):hud.call("refresh_normal_card_collections")
 	# Use the loaded physical records and stack counts together. The final
 	# quickslot feed sees the same inventory and cannot trigger another bag publish.
-	if timed_buff or hud.inventory_panel.visible:
+	if timed_buff or refresh_bag or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
 	_publish_player_quickslot_hud()
@@ -13792,21 +13799,23 @@ func run_dungeon_loading(operation: Callable) -> Dictionary:
 func run_map_loading(operation: Callable, title: String = "지도 이동 준비") -> Dictionary:
 	return await MAP_LOADING.run(self, operation, title)
 
+func _run_teleport_preparation(operation: Callable) -> Dictionary:
+	return await MAP_LOADING.run(self, operation, "지도 이동 준비", false)
+
 func map_loading_art_pack() -> RefCounted:
 	var controller: Variant = hud.get("original_main_ui_controller") if is_instance_valid(hud) else null
 	if is_instance_valid(controller): return controller.map_loading_art_pack()
 	return null
 
 
-# Prepared spell destinations commit in the same input call. A cold point
-# enters the same loading/rollback flow as a scroll, with payment still owned
-# by the spell or bookmark.
-func travel_map_point(destination: Vector2, commit: Callable, always_load: bool = false) -> Dictionary:
+# Prepared points commit in the same input call. Cold points keep the previous
+# view visible while the transaction prepares the destination.
+func travel_map_point(destination: Vector2, commit: Callable) -> Dictionary:
 	if MAP_LOADING.busy(self): return {"ok":false}
 	if not current523_aden_source_active(): return commit.call()
 	var controller: RefCounted = _aden_play_controller()
-	if not always_load and controller.call("same_land_prepared",destination): return commit.call()
-	return await run_map_loading(_commit_prepared_map_point.bind(destination,commit))
+	if controller.call("same_land_prepared",destination): return commit.call()
+	return await _run_teleport_preparation(_commit_prepared_map_point.bind(destination,commit))
 
 
 func _commit_prepared_map_point(destination: Vector2, commit: Callable) -> Dictionary:
@@ -14316,7 +14325,7 @@ func current523_map_teleport(id: String) -> Dictionary:
 	return call("_current523_map_teleport_impl",id,false)
 
 func current523_map_teleport_loading(id: String) -> Dictionary:
-	return await run_map_loading(_current523_map_teleport_impl.bind(id,true))
+	return await _run_teleport_preparation(_current523_map_teleport_impl.bind(id,true))
 
 func _current523_map_teleport_impl(id: String, loading: bool) -> Dictionary:
 	if death_recovery.blocked(): return {"ok":false,"reason":"사망 처리 중에는 이동할 수 없습니다"}

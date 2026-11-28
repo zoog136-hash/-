@@ -960,8 +960,6 @@ static func hp_use_problem(item: Dictionary, concealed: bool = false, timezone_m
 
 static func definition_id(item_id: String) -> Dictionary:
 	if not item_id.is_valid_int() or int(item_id) <= 0 or item_id != str(int(item_id)): return {}
-	var document: Dictionary = data()
-	if document.is_empty(): return {}
 	var entry: Array = _current_item_entry(int(item_id))
 	return entry[1] if not entry.is_empty() else {}
 
