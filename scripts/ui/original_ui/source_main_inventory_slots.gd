@@ -198,6 +198,7 @@ func _slot_binding(offset: int, reference: String, current_model: Dictionary) ->
 		if not markers.get("ok",false):return markers
 		var allowed: Variant=_pack.manifest.get("node_scopes",{}).get(SLOT_MEMBER)
 		for marker_offset: int in markers.source_node_offsets:
+			if marker_offset==Markers.NEW_ITEM and not _pack.manifest.get("atlases",{}).get(Markers.NOTICE_ATLAS,{}).get("frames",{}).has(Markers.NOTICE_FRAME):continue
 			if allowed is Array and not allowed.has(marker_offset):
 				unresolved.append({"field":"original_item_marker_outside_selected_pack_scope","offset":marker_offset})
 				continue

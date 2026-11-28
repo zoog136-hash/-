@@ -631,6 +631,7 @@ func _on_selection_changed(_reference: String) -> void:
 			_fallback(_unsupported_result(result))
 			return
 		_hits[reference]["shown_selected"]=bag!=null and bag.get("selected_item")==reference
+	_marker_key=_marker_inputs()
 	if _chrome!=null and is_instance_valid(_inventory_scene):_chrome.refresh_selected_controls(_inventory_scene)
 	_sync_detail_control()
 	selection_refreshed.emit()
@@ -951,7 +952,7 @@ func _marker_inputs() -> int:
 	var bag: Object=_bag.get_ref() if _bag!=null else null
 	var state: Variant=bag.get("character_state") if bag!=null else null
 	if not state is Dictionary:return 0
-	return hash([state.get("equipped_items"),state.get("equipped_ammo"),state.get("item_locks")])
+	return hash([state.get("equipped_items"),state.get("equipped_ammo"),state.get("item_locks"),bag.get("item_notice_revision")])
 
 static func _source_consume_control(scene: Node2D, offset: int) -> Control:
 	var node: Variant=scene.get("source_nodes").get(offset)
