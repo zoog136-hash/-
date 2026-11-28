@@ -57,6 +57,8 @@ static func value_text(value: Variant, suffix: String = "") -> String:
 	return "미확인" if value == null else str(value) + suffix
 
 static func blocked_reason(row: Dictionary) -> String:
+	if row.has("reference_offline_hold523"):
+		return "오프라인 실행 보류 · " + str(row.reference_offline_hold523)
 	var missing := PackedStringArray(["습득 스킬북·입수/가격"])
 	for field: String in row.get("missing_runtime_fields",[]): missing.append(field)
 	# User decision 2026-11-12: original CastDelay(ms) is the reuse delay, so a

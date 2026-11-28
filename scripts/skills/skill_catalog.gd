@@ -643,6 +643,14 @@ func import_state(data: Dictionary) -> void:
 		# Never translate a pre-2024 counter name into a different 2024 rarity.
 		# Its old buff is preserved in the archive instead of executing stale stats.
 		world.active_skill_buffs.clear()
+	var buffs: Variant = world.get("active_skill_buffs")
+	if buffs is Dictionary:
+		for name: String in buffs.keys():
+			var buff: Variant = buffs[name]
+			var record := record_for(str(buff.get("skill_id", name)) if buff is Dictionary else name)
+			if not record.has("reference_offline_hold523"): continue
+			archived["offline_reference_buff523:" + name] = buff.duplicate(true) if buff is Dictionary else buff
+			buffs.erase(name)
 	migrate_slots()
 	revision += 1
 
