@@ -386,7 +386,7 @@ func select(index: int) -> void:
 		select_original()
 		return
 	var passive := RULES.is_passive(selected)
-	var owned := str(selected.get("class","공용")) in ["공용",str(hud.character_state.get("job_class","기사"))]
+	var owned: bool = str(selected.get("class","공용")) in ["공용",str(hud.character_state.get("job_class","기사"))] or bool(hud.get_parent().original_skills.catalog.permitted(selected))
 	var supported := RULES.is_supported(RULES.effect_kind(selected))
 	detail.text="[font_size=24][color=#%s]%s[/color][/font_size]\n%s · %s\n\nMP 소모  %d\n재사용 대기  %.1f초\n\n%s\n\n%s" % [UI.grade(str(selected.get("grade","일반"))).to_html(false),UI.safe(selected.get("name","")),UI.safe(selected.get("class","공용")),"패시브" if passive else "액티브",selected.get("mp",0),0.0 if passive else RULES.cooldown_seconds(selected),UI.safe(selected.get("desc","")),("현재 직업에서 사용 가능" if owned else "다른 직업 · 조회 전용")]
 	if passive:
