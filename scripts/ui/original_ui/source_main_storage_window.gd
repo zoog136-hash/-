@@ -38,6 +38,7 @@ const ROW_PITCH: float=76.0
 const ROW_TAIL: float=40.0
 ## Storage_Inventory's SlotSet sits one unit right of the 창고 grid's.
 const BAG_ROW_SHIFT=Vector2(1.0,0.0)
+const BATCH_BUTTON_SPACING: float=224.0
 const OTHER: Array[String]=["Cart","Storage_KeepAuto","Storage_KeepAuto_Equipment","AccountInv_ListMode","Btn_Confirm_On/Fx_Btn_Activation","Btn_Sell_On/Fx_Btn_Activation","Nd_SaleButton","Nd_AutoKeep","Nd_Auto_Set_Group","Btn_Help","Hud_AutoMessage_Dungeon","FullFrameType_A/Fx_Img_BG_Particle","Nd_Spine"]
 const BAG_TABS: Array[String]=["all","equip","consume","etc"]
 const STORE_TABS: Array[String]=["all","equip","etc"]
@@ -53,8 +54,6 @@ var _tabs: Dictionary={"bag":"all","store":"all"}
 var _scrollers: Dictionary={"bag":Scroller.new(),"store":Scroller.new()}
 var _rows: Dictionary={"bag":[],"store":[]}
 var _last_out: Dictionary={}
-## Which batch button shows (both sit at one place): the side last used.
-var batch_side: String="bag"
 var last_result: Dictionary={}
 
 ## Drag scrolling of one original ScrollView whose first line is extended by
@@ -199,8 +198,8 @@ func _stage() -> Dictionary:
 	var spec: Dictionary={}
 	for name: String in OTHER:spec[name]={"exclude":true}
 	spec["Nd_TopMenu/Btn_Close"]={"activate":Callable(self,"_close_requested")}
-	spec["Btn_Sell_On"]={"visible":batch_side=="bag","activate":Callable(self,"_batch_requested").bind("bag")}
-	spec["Btn_Confirm_On"]={"visible":batch_side=="store","activate":Callable(self,"_batch_requested").bind("store")}
+	spec["Btn_Sell_On"]={"visible":true,"activate":Callable(self,"_batch_requested").bind("bag")}
+	spec["Btn_Confirm_On"]={"visible":true,"activate":Callable(self,"_batch_requested").bind("store")}
 	for side: String in ["bag","store"]:
 		var p: String=P_BAG if side=="bag" else P_STORE
 		var tabs: Array[String]=BAG_TABS if side=="bag" else STORE_TABS
@@ -219,6 +218,12 @@ func _stage() -> Dictionary:
 		last_result=built
 		return built
 	var next: Node2D=built.scene
+	# Both authored actions share a position. Put each below its own side.
+	var deposit: Node2D=_node(next,out,"Btn_Sell_On")
+	var withdraw: Node2D=_node(next,out,"Btn_Confirm_On")
+	if is_instance_valid(deposit) and is_instance_valid(withdraw):
+		deposit.position.x+=BATCH_BUTTON_SPACING*0.5
+		withdraw.position.x-=BATCH_BUTTON_SPACING*0.5
 	var first: Variant=_node(next,out,P_STORE+"ScrollView/SlotSet")
 	var store_content: Variant=_content(first)
 	var bag_content: Variant=_scroll_content(next,out,P_BAG+"ScrollView")
@@ -330,7 +335,11 @@ func _forward(root: Node2D, out: Dictionary, suffix: String, scroller: Scroller)
 	var node: Variant=_node(root,out,suffix)
 	var button: Variant=node.get_meta("source_button",null) if is_instance_valid(node) and node.has_meta("source_button") else null
 	var area: Variant=button.get("_input_area") if is_instance_valid(button) else null
-	if area is Control and not area.gui_input.is_connected(scroller.input):area.gui_input.connect(scroller.input)
+	if area is Control:
+		# The native router consumes screen touches before GUI input. Forward
+		# that same gesture so a drag scrolls and the next tap starts cleanly.
+		button.set_meta("source_drag_forward",Callable(scroller,"input"))
+		if not area.gui_input.is_connected(scroller.input):area.gui_input.connect(scroller.input)
 
 ## The item picture the existing image owner resolves; none -> the slot stays empty.
 func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary, title: String) -> bool:
@@ -350,13 +359,11 @@ func _slot_pressed(side: String, index: int) -> Dictionary:
 	var screen: Object=_screen.get_ref() if _screen!=null else null
 	if screen==null:return _fail("source_storage_window_host_unavailable")
 	var reference: String=reference_of(listing[index])
-	batch_side=side
 	screen.call("request_drop" if side=="bag" else "request_withdraw",reference)
 	return {"ok":true,"requested":"deposit" if side=="bag" else "withdraw","reference":reference}
 
 func _set_tab(side: String, tab_name: String) -> Dictionary:
 	_tabs[side]=tab_name
-	batch_side=side
 	(_scrollers[side] as Scroller).y=null
 	(_scrollers[("store" if side=="bag" else "bag")] as Scroller).keep()
 	return _stage()

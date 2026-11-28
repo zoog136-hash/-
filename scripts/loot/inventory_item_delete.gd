@@ -3,6 +3,7 @@ extends RefCounted
 ## selection and its quantity/receipt against the original ItemClass flag,
 ## then publish only after the existing durable save accepts the debit.
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
+const CATALOG_STACK=preload("res://scripts/loot/current523_catalog_stack.gd")
 const SourceItems=preload("res://scripts/loot/patch523_monster_drops.gd")
 const Identity=preload("res://scripts/ui/source523_item_identity.gd")
 const RETIRED=preload("res://scripts/loot/retired_enhancement_items523.gd")
@@ -47,9 +48,17 @@ static func quote(world: Node, reference: String) -> Dictionary:
 			if existing is Dictionary and existing.get("name")==name:return _fail("합쳐진 이름으로는 삭제할 수 없습니다. 아이템 개체를 선택하세요.")
 		record=world._find_catalog_item_record(name)
 		if str(world.get("equipped_ammo"))==name or SourceItems.equipment(record):return _fail("장착을 해제하고 실제 개체를 선택하세요.")
-	if record.get("source_m_native_item")!=true or record.get("name")!=name or RETIRED.record(record) or record.get("quest_item",false) or str(record.get("slot",""))=="currency":
+	if record.get("name")!=name or RETIRED.record(record) or record.get("quest_item",false) or str(record.get("slot",""))=="currency":
 		return _fail("이 아이템의 원본 삭제 조건을 확인할 수 없습니다.")
-	var source: Dictionary=SourceItems.item_definition(record).get("original_item",{})
+	var exact: Dictionary=record
+	# An older equipment instance can retain the registered publisher identity
+	# without the new native record. Only the exact catalog mapping may admit it.
+	if not record.get("source_m_native_item",false) and kind=="equipment" and record.get("source")=="inven" \
+		and entry.get("sourceId",record.get("sourceId"))==record.get("sourceId"):
+		exact=CATALOG_STACK.native_record(world,record)
+	if not exact.get("source_m_native_item",false) or RETIRED.record(exact):
+		return _fail("이 아이템의 원본 삭제 조건을 확인할 수 없습니다.")
+	var source: Dictionary=SourceItems.item_definition(exact).get("original_item",{})
 	if source.get("TestItem")!=false or source.get("IsDeletable")!=true:return _fail("원본에서 삭제할 수 없는 아이템입니다.")
 	return {"ok":true,"reference":reference,"name":name,"display_name":Identity.display_name(record,name),"uid":uid,"kind":kind,"maximum":maximum,"item_class_id":int(source.ID),"entry":entry.duplicate(true)}
 

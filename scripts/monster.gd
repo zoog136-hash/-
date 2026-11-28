@@ -180,6 +180,7 @@ var drop_items: Array[String] = []
 var loot_source_identity: Dictionary = {}
 var target_player: TwilightPlayer = null
 var world_controller: Node = null
+var auto_area_miss_observer: RefCounted
 var attack_cooldown: float = 0.0
 var repath_cooldown: float = 0.0
 var path_stuck_elapsed: float = 0.0
@@ -603,6 +604,10 @@ func custom_frozen() -> bool:
 	return is_instance_valid(world_controller) and world_controller.get("halphas_star")!=null and world_controller.halphas_star.combat.frozen(self)
 
 const OFFSCREEN_DECISION_INTERVAL: float = .4
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_LOCAL_TRANSFORM_CHANGED and auto_area_miss_observer != null:
+		auto_area_miss_observer.actor_moved(self)
 
 func _physics_process(delta: float) -> void:
 	if FRAME_HITCH._trail_until_msec != 0: FRAME_HITCH.trail("monster.begin %s %d" % [monster_name, source_m_npc_id])

@@ -378,17 +378,20 @@ func open_item_info(reference: String) -> bool:
 	var owned: bool = _owns_bag_reference(world,reference)
 	if owned: _acknowledge_item_notice(reference)
 	var locked: bool = owned and world._item_locked(_base_item_name(reference),uid)
+	var restricted: bool = locked or (owned and world._item_locked(_base_item_name(reference)))
 	if selected_can_delete_native():
 		actions["delete"]=Callable(self,"_tooltip_delete").bind(reference)
 	if owned:
 		actions["locked"] = locked
 		actions["lock"] = Callable(self, "_tooltip_set_lock").bind(reference, not locked)
-	if physical_record.get("source_m_native_item",false) and world.has_method("_source_enhancement_rule") and not str(world._enhancement_kind_for_record(physical_record)).is_empty():
-		var physical: Dictionary=world.item_instances.get(uid,{})
-		var rule: Dictionary=world._source_enhancement_rule(physical_record,0,"normal","",physical)
-		if rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level"):
+	var physical: Dictionary=world.item_instances.get(uid,{}) if owned else {}
+	var held_record: Dictionary=physical.get("record",{})
+	if not held_record.is_empty() and not str(world._enhancement_kind_for_record(held_record)).is_empty():
+		var rule: Dictionary=world._source_enhancement_rule(held_record,0,"normal","",physical)
+		var confirmed_rule: bool=rule.get("source_rule",false) and rule.has("group") and rule.has("safe_level")
+		if confirmed_rule:
 			actions["safe_level"]=int(rule.safe_level)
-		if not uid.is_empty() and owned and not locked and controller.has_method("open_bag_item_enhancement"):
+		if not restricted and (confirmed_rule or held_record.get("source_m_native_item",false)):
 			actions["enhance"]=Callable(self,"_tooltip_enhance").bind(reference)
 	if not uid.is_empty() and original_hud.has_method("dissolve_confirm_available") and original_hud.dissolve_confirm_available() and SOURCE_DISSOLVE.dissolve_quote(world,[uid]).get("ok",false):
 		actions["dissolve"]=Callable(self,"_tooltip_dissolve").bind(reference,uid)
@@ -396,8 +399,11 @@ func open_item_info(reference: String) -> bool:
 	var item_id: int=_item_class_id(information)
 	if item_id>0:
 		actions["acquisition"]=Callable(self,"_tooltip_acquisition").bind(reference)
-		if not uid.is_empty() and owned and not locked and information.get("source_m_native_item",false) and not SOURCE_DEFINITIONS.identity().is_empty() and controller.has_method("open_bag_item_collection") and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("item_book"):
-			actions["registration"]=Callable(self,"_tooltip_registration").bind(reference,item_id,uid)
+		if owned and not ACQUISITION523.connected_crafts(item_id,world.crafting.recipes).is_empty():
+			actions["craft"]=Callable(self,"_tooltip_craft").bind(reference,item_id)
+		if not physical.is_empty() and information.get("source_m_native_item",false) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("item_book") and not SOURCE_DEFINITIONS.related("ItemBookItem","ItemClassID",item_id).is_empty():
+			var access: String="registration" if not restricted and not world._is_instance_equipped(uid) and held_record.get("source_m_native_item",false) else "collection"
+			actions[access]=Callable(self,"_tooltip_registration").bind(reference,item_id,uid)
 	if BOX_PROBABILITY.is_bag(information) and original_hud.has_method("feature_window_available") and original_hud.feature_window_available("box_probability"):
 		var host: Node=controller.get_parent()
 		if BOX_PROBABILITY.disclosed(information,int(host.BASE508.source_class_id(str(host.job_class)))):
@@ -410,7 +416,7 @@ func open_item_info(reference: String) -> bool:
 	return item_tooltip_open
 
 func _tooltip_delete(reference: String) -> Dictionary:
-	return request_selected_delete() if reference==selected_item else {"ok":false}
+	return request_selected_delete() if _owns_open_item_tooltip(reference) else {"ok":false}
 
 func _tooltip_set_lock(reference: String, locked: bool) -> Dictionary:
 	if not _owns_open_item_tooltip(reference):
@@ -453,6 +459,20 @@ func _tooltip_acquisition(reference: String) -> Dictionary:
 	close_item_info()
 	_open_acquisition()
 	return {"ok":true}
+
+func _tooltip_craft(reference: String, item_class_id: int) -> Dictionary:
+	if not _owns_open_item_tooltip(reference):return {"ok":false}
+	var world: Node=controller.get_parent()
+	var item: Dictionary=_source_info_record(_item_visual_record(reference,_find_item_record(reference)))
+	if not _owns_bag_reference(world,reference) or _item_class_id(item)!=item_class_id:return {"ok":false}
+	var links: Array[Dictionary]=ACQUISITION523.connected_crafts(item_class_id,world.crafting.recipes)
+	if links.is_empty():
+		controller.show_message("현재 열 수 있는 제작식이 없습니다.")
+		return {"ok":false}
+	var opened: Dictionary=controller.open_item_acquisition523(item_class_id,_enhanced_display_name(item,reference),"",links)
+	if opened.get("handled",false):close_item_info()
+	else:controller.show_message("제작식 목록을 열 수 없습니다.")
+	return opened
 
 func _tooltip_probability(reference: String, item_class_id: int) -> Dictionary:
 	if not item_tooltip_open or selected_item!=reference:return {"ok":false}

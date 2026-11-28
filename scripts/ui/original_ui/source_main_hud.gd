@@ -1188,14 +1188,14 @@ func close_death_window() -> void:
 ## --- Original 523 재료 아이템 출처 popup (source_main_acquisition_popup)
 var _acquisition_popup: RefCounted
 
-func try_open_acquisition(world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="") -> Dictionary:
+func try_open_acquisition(world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="", recipe_links: Array[Dictionary]=[]) -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if _acquisition_popup==null and _pack!=null and hud!=null:
 		var popup=(load("res://scripts/ui/original_ui/source_main_acquisition_popup.gd") as Script).new()
 		if popup.configure(_pack,hud).get("ok",false):_acquisition_popup=popup
 	if _acquisition_popup==null or not is_instance_valid(_coordinates):return _fail("source_acquisition_popup_pack_scope_unavailable")
 	_cancel_native_buttons()
-	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name,blessing_recipe)
+	return _acquisition_popup.open(_coordinates,world,item_class_id,item_name,blessing_recipe,recipe_links)
 
 func acquisition_is_open() -> bool:
 	return _acquisition_popup!=null and _acquisition_popup.is_open()
@@ -1739,10 +1739,10 @@ func try_open_drop_confirm(item_name: String, item_class_id: int, maximum: int, 
 	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
 	return _drop_popup.open(_coordinates,item_name,item_class_id,maximum,on_confirm,permanent_delete)
 
-func try_open_storage_transfer(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String) -> Dictionary:
+func try_open_storage_transfer(item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, direction: String, can_confirm: Callable=Callable()) -> Dictionary:
 	if not storage_window_is_open() or not _prepare_quantity_popup():return _window_problem("drop_popup")
 	if _drop_popup.is_open():return {"ok":true,"handled":true}
-	return _drop_popup.open_storage(_coordinates,item_name,item_class_id,maximum,on_confirm,direction)
+	return _drop_popup.open_storage(_coordinates,item_name,item_class_id,maximum,on_confirm,direction,can_confirm)
 
 func try_open_quantity(maximum: int, selected: Callable) -> Dictionary:
 	if not _prepare_quantity_popup(): return _window_problem("drop_popup")
