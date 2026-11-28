@@ -25,6 +25,7 @@ const ROOT="UI/ItemBook/ItemBook_All.csb"
 const ROW="UI/ItemBook/ItemBook_List_Button.csb"
 const SLOT="UI/ItemBook/ItemBook_Slot.csb"
 const EFFECT_ROW="UI/ItemBook/ItemBook_List_Effect.csb"
+const NOTICE_ATLAS="UI/UI_Resource/Atlas_Common.plist"
 const Images=preload("res://scripts/ui/source523_image_assets.gd")
 const SourceMaterial=preload("res://scripts/ui/original_ui/source_material.gd")
 const Growth96Source=preload("res://scripts/progression/growth96_source.gd")
@@ -226,6 +227,8 @@ static func _effect_summary(row: Dictionary) -> String:
 func _collection_row(row: Dictionary) -> Dictionary:
 	var done: bool=bool(row.complete)
 	var recommend: bool=bool(row.get("recommend",false)) and not done
+	var can_register: bool=not done and (row.get("cards",[]) as Array).any(func(card: Dictionary)->bool:return not card.get("registered",false) and card.get("possible",false))
+	var notice_available: bool=_pack!=null and _pack.manifest.get("atlases",{}).get(NOTICE_ATLAS,{}).get("frames",{}).has("Icn_Slot_New.png")
 	var spec: Dictionary={"Panel_Itembook/Bg":{"visible":not done and not recommend},"Panel_Itembook/Bg_Complete":{"visible":done},
 		"Panel_Itembook/Bg_Recommend":{"visible":recommend},"Panel_Itembook/Bg_Recommend_01":{"exclude":true},
 		"Panel_Itembook/Fx_Select":{"exclude":true},"Panel_Itembook/Icn_BookMark":{"exclude":true},"Panel_Itembook/Icon_New":{"exclude":true},
@@ -233,6 +236,7 @@ func _collection_row(row: Dictionary) -> Dictionary:
 		"Panel_Badge/Image_Complete":{"visible":done},"Panel_Badge/Image_Recommend":{"visible":recommend},"Panel_Badge/Image_Recommend_01":{"exclude":true},
 		"ListView_Title/Label_Lv":{"visible":false},
 		"ListView_Option/Label_Option":{"role":"source_text","text":_effect_summary(row)}}
+	if can_register and notice_available:spec["Panel_Itembook/Icon_New"]={"visible":true}
 	return {"member":ROW,"spec":spec}
 
 ## One card's ItemBook_Slot: Item_Own when registered, Item_Possible when the

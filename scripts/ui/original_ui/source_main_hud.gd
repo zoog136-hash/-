@@ -1872,7 +1872,10 @@ func menu_tile(section: String) -> Dictionary:
 		var tiles=MenuTiles.new()
 		if tiles.configure(_pack).get("ok",false):_menu_tiles=tiles
 	if _menu_tiles==null:return _fail("source_menu_tiles_pack_scope_unavailable")
-	return _menu_tiles.tile(section)
+	if section!="character":return _menu_tiles.tile(section)
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var state: Variant=hud.get("character_state") if hud!=null else null
+	return _menu_tiles.tile(section,int(state.get("stat_points",0)) if state is Dictionary else 0)
 
 ## The original MainMenu_DominationStone tile, or {} without the pack scene.
 func domination_menu_tile(activate: Callable) -> Dictionary:

@@ -352,7 +352,7 @@ var auto_stuck_time: float = 0.0
 # Bound repeated unreachable-target pathfinding during AUTO, not manual selection.
 const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
 const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
-const AUTO_TARGET_DISCONNECTED_SCAN_USEC: int = 500
+const AUTO_TARGET_CANDIDATE_SCAN_USEC: int = 500
 const AUTO_TARGET_REFRESH_MS: int = 3000
 const AUTO_TARGET_SEARCH_RADIUS_CELLS: int = 10
 var auto_target_failed_paths: Dictionary = {}
@@ -3956,8 +3956,11 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 		auto_search_generation = combat_generation
 		auto_search_index = 0
 	var now: int = Time.get_ticks_msec()
-	var scan_deadline: int = Time.get_ticks_usec() + AUTO_TARGET_DISCONNECTED_SCAN_USEC
+	var scan_deadline: int = Time.get_ticks_usec() + AUTO_TARGET_CANDIDATE_SCAN_USEC
+	var first_index: int = auto_search_index
+	var incumbent_distance_squared: float = origin.distance_squared_to(current.global_position) if current!=null else INF
 	while auto_search_index < auto_search_candidates.size():
+		if auto_search_index>first_index and Time.get_ticks_usec()>=scan_deadline:break
 		var candidate: Dictionary = auto_search_candidates[auto_search_index]
 		auto_search_index += 1
 		if not is_instance_id_valid(int(candidate.actor_id)): continue
@@ -3966,13 +3969,11 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 		if monster.dead or monster.is_queued_for_deletion() or not monster.permits_auto_selection() or not equipment523_can_detect(monster): continue
 		if not _in_auto_target_range(cell, monster.global_position): continue
 		if monster == current:
-			# No better reachable candidate was found. Keep the current route.
 			auto_target = current
-			_clear_auto_target_search()
-			return PackedVector2Array()
-		# Candidates are ordered when the search begins. Movement between slices
-		# can make an earlier candidate farther away than the live target.
-		if current != null and origin.distance_squared_to(monster.global_position) > origin.distance_squared_to(current.global_position):
+			continue
+		# Later entries can have moved ahead of the incumbent since the list
+		# was built. Only try routes to candidates that are closer now.
+		if origin.distance_squared_to(monster.global_position) >= incumbent_distance_squared:
 			continue
 		var key: String = _auto_target_failure_key(monster)
 		if int(auto_target_failed_paths.get(key, 0)) > now: continue
@@ -3988,11 +3989,8 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 				_clear_auto_source_search()
 			var step: Dictionary = field_map.hunt_path_step(origin,monster.global_position,_auto_source_search_work)
 			if step.get("known_disconnected", false):
-				# A membership check used no search slice. Check the next
-				# candidate in the same order with a separate, short budget.
 				_clear_auto_source_search()
 				_remember_auto_target_path_failure(monster, key)
-				if Time.get_ticks_usec() >= scan_deadline: break
 				continue
 			_auto_source_search_frame = frame
 			if new_search:
