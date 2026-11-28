@@ -186,6 +186,7 @@ func run() -> void:
 		"targeted original AUTO keeps its single cast, selected target and exact MP debit")
 	clear_cooldown(world)
 	check_lethal_impact(world, base, origin, unit)
+	check_material_hud(world)
 	world.queue_free()
 	await process_frame
 	finish(proof)
@@ -220,6 +221,33 @@ func check_lethal_impact(world: TwilightWorld, base: Dictionary, origin: Vector2
 		"both reward transactions complete and the HUD shows final gold and blessing")
 	check(int(world.hud_publish_counts.vitals)-before_vitals == 1,
 		"one lethal area refreshes the vitals once after all hits")
+
+func check_material_hud(world: TwilightWorld) -> void:
+	world.inventory["영혼석"] = 10
+	world._update_hud()
+	world._refresh_equipment_effects()
+	var previous: Dictionary = world.hud.character_state.duplicate()
+	var snapshots: int = int(world.hud_publish_counts.stat_snapshots)
+	var full: int = int(world.hud_publish_counts.full)
+	world.inventory["영혼석"] = 7 # The payment owner already completed its transaction.
+	world.mp -= 3
+	check(world._try_publish_skill_material_hud(), "a material-only debit can reuse current stats")
+	var state: Dictionary = world.hud.character_state
+	check(state.mp == world.mp and state.inventory_weight == world._inventory_total_weight()
+		and state.inventory_weight <= previous.inventory_weight and world.hud.lineage_inventory_ui.inventory.get("영혼석") == 7,
+		"material HUD immediately displays committed MP, weight, and bag counts")
+	check(state.attack == previous.attack and state.ac == previous.ac and state.max_mp == previous.max_mp
+		and int(world.hud_publish_counts.stat_snapshots) == snapshots and int(world.hud_publish_counts.full) == full,
+		"a material-only debit does not recompute or replace unrelated stats")
+	world.stat_hud_refresh_pending = true
+	check(not world._try_publish_skill_material_hud(), "a pending stats change still requires the full publish")
+	world.stat_hud_refresh_pending = false
+	var settled_speed: float = world._speed_encumbrance
+	world._speed_encumbrance = 0.0
+	check(not world._try_publish_skill_material_hud(), "an encumbrance threshold change keeps the full speed refresh")
+	world._speed_encumbrance = settled_speed
+	world.combinations.progress.selected_id = 1
+	check(not world._try_publish_skill_material_hud(), "an inventory-dependent combination keeps its full evaluation")
 
 func finish(proof: Dictionary) -> void:
 	print("SKILL_AREA_COMBAT_MAIN_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"fixture":proof}))

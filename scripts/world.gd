@@ -7763,6 +7763,45 @@ func player_npc_buff_signature() -> int:
 func _update_hud() -> void:
 	_publish_player_hud(true)
 
+## A saved material debit already owns the exact updated bag. Reuse the
+## published stats when there is no related gear, passive or speed change.
+func _try_publish_skill_material_hud() -> bool:
+	if stat_hud_refresh_pending or equipment_records_dirty or equipment_effects_dirty: return false
+	# A selected combination can depend on the bag. Its existing full publish
+	# reconciles that dependency before displaying the new stats.
+	if int(combinations.progress.get("selected_id", 0)) > 0: return false
+	var previous: Dictionary = hud.character_state
+	if not previous.has("carrying_capacity") or not previous.has("max_hp") or not previous.has("max_mp"): return false
+	var weight: int = _inventory_total_weight()
+	var capacity: int = int(previous.carrying_capacity)
+	if ITEM_OPTIONS.encumbrance_multiplier(weight, capacity) != _speed_encumbrance: return false
+	# Grail possession and timed rewards can affect stats independently of a
+	# skill buff. Retain their existing rebuild and fall back if its totals move.
+	var old_bonuses: Dictionary = unconfirmed523.totals.duplicate()
+	var started: int = FRAME_HITCH.now()
+	unconfirmed523.rebuild()
+	FRAME_HITCH.detail("stats.content_bonuses", started)
+	if old_bonuses != unconfirmed523.totals: return false
+
+	var state: Dictionary = previous.duplicate()
+	state.merge({"hp":hp, "mp":mp, "inventory_weight":weight, "current_weight":weight, "item_instances":item_instances}, true)
+	var ammo: String = str(previous.get("weapon_ammo", ""))
+	if not ammo.is_empty(): state["weapon_ammo_count"] = int(inventory.get(ammo, 0))
+	hud_publish_counts.items += 1
+	if hud.has_method("publish_committed_ticket_hud"):
+		hud.call("publish_committed_ticket_hud", _publish_skill_material_hud.bind(state))
+	else:
+		_publish_skill_material_hud(state)
+	return true
+
+func _publish_skill_material_hud(state: Dictionary) -> void:
+	_refresh_combat_hud()
+	_update_ain_hud()
+	if hud.has_method("set_quick_items"): hud.call("set_quick_items", inventory)
+	hud.set_character_state(state)
+	if hud.inventory_panel.visible: hud.refresh_inventory(inventory)
+	_publish_player_quickslot_hud()
+
 ## A timed effect or its expiry changes combat stats and may debit a proven
 ## stack. Keep the bag and derived stats current without refolding ownership.
 func _publish_timed_buff_hud() -> void:
@@ -7850,12 +7889,15 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false) -> void
 	if timed_buff or hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
 	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_bag_feed",phase)
+	_publish_player_quickslot_hud()
+	if timed_buff:FRAME_HITCH.detail("item.buff_hud_final",phase)
+
+func _publish_player_quickslot_hud() -> void:
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", effective_quickslots(), inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", effective_quickslots())
 	regional_return_settings_updated.emit()
-	if timed_buff:FRAME_HITCH.detail("item.buff_hud_final",phase)
 
 var _area_hud_refresh_depth: int = 0
 var _area_ain_refresh_pending: bool = false

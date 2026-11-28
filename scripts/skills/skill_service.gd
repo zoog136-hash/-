@@ -239,7 +239,7 @@ func cost_reason(skill: Dictionary, quote_materials: bool = true) -> String:
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
 	return str(material_plan(skill).reason) if quote_materials else ""
 
-func spend(skill: Dictionary) -> bool:
+func spend(skill: Dictionary, changed: Variant = null) -> bool:
 	# Check admission before scanning the bag, then use this exact quote.
 	# Physical ownership and the saved payload are revalidated by their owner.
 	if not cost_reason(skill, false).is_empty(): return false
@@ -254,9 +254,12 @@ func spend(skill: Dictionary) -> bool:
 		if not paid.get("ok",false) or not paid.get("saved",false) or paid.get("consumed")!=physical.quantity:
 			world.hud.show_message(str(paid.get("reason","원문 스킬 탄약·비용 저장 연결 대기")));return false
 		world._refresh_ammo_counters();return true
-	if not plan.get("physical_materials",[]).is_empty():
+	var materials: Array = plan.get("physical_materials", [])
+	if not materials.is_empty():
 		var paid: Dictionary=load("res://scripts/loot/current523_native_stack.gd").call("spend_original_skill_materials",world,skill,plan)
 		if not paid.get("ok",false) or not paid.get("saved",false):world.hud.show_message(str(paid.get("reason","원문 스킬 재료 저장 연결 대기")));return false
+		if changed is Dictionary and plan.spent.is_empty():
+			changed["native_material_only"] = not materials.any(func(request: Dictionary) -> bool: return request.has("quest_reward_receipt"))
 		return true
 	world.mp -= int(skill.get("mp", 0))
 	world.hp -= int(skill.get("hp", 0))
@@ -420,7 +423,9 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			return false
 		registered = int(world.pending_attack.get("id", -1))
 	var timing: int = FRAME_HITCH.now() if area or mode in ["buff","counter"] else 0
-	var paid: bool = spend(skill)
+	var area_has_materials: bool = area and not skill.get("items", {}).is_empty()
+	var spending: Variant = {} if area_has_materials else null
+	var paid: bool = spend(skill, spending)
 	if timing != 0:
 		timing = FRAME_HITCH.detail_next("skill.area_cost_commit" if area else "skill.buff_cost_commit",timing)
 	if not paid:
@@ -492,16 +497,22 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
 		"summon": summons.spawn(skill)
 	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
-	var light_area_hud: bool = area and kept_buffs.is_empty() and skill.get("items", {}).is_empty() and not concealed_before
+	var native_material_only: bool = area_has_materials and spending.get("native_material_only", false)
+	var light_area_hud: bool = area and kept_buffs.is_empty() and not concealed_before \
+		and (not area_has_materials or native_material_only)
 	var stacks_before: int = hash(stacks) if light_area_hud else 0
 	var buffs_before: int = hash(world.active_skill_buffs) if light_area_hud else 0
+	var npc_buffs_before: int = world.player_npc_buff_signature() if light_area_hud and native_material_only else 0
 	trigger("on_skill", target, skill)
 	if timing != 0:
 		timing = FRAME_HITCH.detail_next("skill.area_feedback" if area else "skill.buff_feedback",timing)
 	# A direct self effect can publish the live stats and paid materials
 	# without refolding the bag or refreshing unrelated card ownership.
 	if light_area_hud and stacks_before == hash(stacks) and buffs_before == hash(world.active_skill_buffs):
-		world._refresh_combat_hud()
+		if not native_material_only:
+			world._refresh_combat_hud()
+		elif npc_buffs_before != world.player_npc_buff_signature() or not world._try_publish_skill_material_hud():
+			world._update_hud()
 	elif mode in ["buff","counter"] and not skill.has("approx_self_child") and world.has_method("_publish_timed_buff_hud"):
 		world._publish_timed_buff_hud()
 	else:
