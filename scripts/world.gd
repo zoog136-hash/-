@@ -9784,7 +9784,9 @@ func _quickslot_registration_error(kind: String, id: String) -> String:
 	if _is_passive_skill(skill) and not (original_skills!=null and original_skills.stackable.handles(skill)): return "패시브는 직접 사용할 수 없습니다"
 	if kind=="skill_auto" and str(skill.get("mode",""))=="source_toggle":return "ON/OFF는 수동 전환하고 일반 공격에서 실행합니다"
 	if kind == "skill_auto" and not _quickslot_auto_allowed({"kind":"skill","id":id}): return "자동사용을 지원하지 않는 스킬입니다"
-	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
+	# A skill the original lets several classes learn (e.g. 요정 파이어 볼) is
+	# registrable by every class in its classes list, as its learning/cast are.
+	if str(skill.get("class","공용")) not in [job_class,"공용"] and not (original_skills!=null and original_skills.catalog.permitted(skill)): return "현재 직업의 스킬이 아닙니다"
 	if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"] and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
 	return ""
 
