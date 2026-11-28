@@ -7239,30 +7239,41 @@ func production_preview_quote() -> Callable:
 func production_recipe_craftable(recipe_id: String, preview_quote: Callable) -> bool:
 	if recipe_id.begins_with("patch523:"):
 		var recipe: Dictionary = patch523_equipment.recipes.get(recipe_id, {})
-		if not _production_can_meet_required_inputs(recipe, inventory, gold, patch523_material_choices.get(recipe_id, {})): return false
+		var issued: Variant = null
+		if not patch523_owned_material_choices.has(recipe_id):
+			issued = expedition_local.state.get("issued", {})
+		if not _production_can_meet_required_inputs(recipe, inventory, gold, patch523_material_choices.get(recipe_id, {}), issued): return false
 	var result: Dictionary = preview_quote.call(recipe_id, 1) if preview_quote.is_valid() else _craft_quote(recipe_id, 1)
 	return bool(result.get("ok", false))
 
-## Reject only prerequisites that the full one-craft quote always needs.
-## Explicit alternatives and stack materials are left to their owners.
-static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, choices: Dictionary) -> bool:
+## A list preview may rule out insufficient fixed inputs before resolving any
+## definitions. The optional issued ledger permits an upper bound for ordinary
+## stacks when there are no explicitly selected receipt inputs. A potential
+## match still needs the complete quote and all ownership checks.
+static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, choices: Dictionary, issued: Variant = null) -> bool:
 	if recipe.is_empty() or wallet < int(recipe.adena): return false
 	if not recipe.has("material_slots"):
 		for material: Dictionary in recipe.materials:
-			if _production_lacks_equipment(material, bag): return false
+			if _production_lacks_material(material, bag, issued): return false
 		return true
 	for slot: Dictionary in recipe.material_slots:
 		var candidates: Array = slot.candidates
 		if candidates.size() == 1:
-			if _production_lacks_equipment(candidates[0], bag): return false
+			if _production_lacks_material(candidates[0], bag, issued): return false
 		elif not choices.has(str(int(slot.slot_index))):
 			return false
 	return true
 
-static func _production_lacks_equipment(material: Dictionary, bag: Dictionary) -> bool:
-	if not material.physical or material.has("inventory_key"): return false
+static func _production_lacks_material(material: Dictionary, bag: Dictionary, issued: Variant) -> bool:
 	if material.get("wallet", false) and str(material.source_id) == "26": return false
-	return int(bag.get(str(material.item), 0)) < int(material.quantity)
+	var needed: int = int(material.quantity)
+	if material.physical:
+		return not material.has("inventory_key") and int(bag.get(str(material.item), 0)) < needed
+	if not issued is Dictionary: return false
+	var owned: int = maxi(0, int(bag.get(str(material.get("inventory_key", material.item)), 0)))
+	if owned >= needed or int(material.source_id) in PATCH523_EQUIPMENT.AWAKENING_SUPPLY.IDS: return false
+	var alternative: Variant = issued.get(PATCH523_EQUIPMENT.EXPEDITION_MATERIALS.tuple_key(material))
+	return not alternative is String or int(bag.get(alternative, 0)) < needed - owned
 
 func _quote_craft(recipe_id: String, batches: int, weight: int, capacity: int, local_items: Dictionary) -> Dictionary:
 	if recipe_id.begins_with("patch523:"):
