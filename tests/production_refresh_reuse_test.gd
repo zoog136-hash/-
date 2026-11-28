@@ -36,6 +36,16 @@ func _check_fast_rejection() -> void:
 	check(WORLD._production_can_meet_required_inputs(recipe,{},10,{"2":12}),"a selected stack still needs the full quote and its original ownership checks")
 	recipe.material_slots[0].candidates=[gear]
 	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":1},10,{}),"the fixed slot's equipment needs its exact quantity")
+	var ordinary := {"item":"stack","source_id":"3732","bless_code":1,"level":0,"quantity":3,"physical":false}
+	var stack_recipe := {"adena":0,"materials":[ordinary]}
+	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2},0,{},{}),"two plain stacks cannot satisfy three required units without another owner")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2,"issued stack":1},0,{},{"3732:1:0":"issued stack"}),"plain and exact expedition balances may cover the same ingredient")
+	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"issued stack":3},0,{},{"3732:2:0":"issued stack"}),"a different expedition blessing cannot cover this ingredient")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,{},null),"explicitly selected source receipts leave stack availability to the full quote")
+	ordinary["inventory_key"]="catalog currency"
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"catalog currency":3},0,{},{}),"the source wallet's inventory key supplies its stack")
+	ordinary["source_id"]="3252"
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,{},{}),"awakening receipts are still checked by their owner")
 
 func _touch(window: RefCounted, suffix: String) -> Dictionary:
 	var target: Dictionary=NAMED.locate_exact(window._scene,window.node_keys(),suffix)
