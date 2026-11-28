@@ -35,14 +35,15 @@ var _owned_hash: int=0
 var _source_server_context: Dictionary={}
 var _option_version: String=""
 ## Incremental re-derive (사용자 목록 8: a card acquisition re-derived every
-## collection, 120-130 ms on the phone). The owned cards last derived
-## ("category:id"), the inputs other than them, each definition's completion
-## and card -> definition indices. Only the collections holding a changed
-## card are derived again; the rest keep their deltas.
+## collection, 120-130 ms on the phone). Keep the owned and earned card sets,
+## fixed option bindings and the definition indices for both requirements.
 var _derived_owned: Dictionary={}
+var _derived_earned: Dictionary={}
+var _derived_option_bindings: Dictionary={}
 var _derived_inputs: int=0
 var _row_completed: Array[bool]=[]
 var _card_rows: Dictionary={}
+var _awakening_rows: Dictionary={}
 const INCREMENTAL_LIMIT: int=64
 var incremental_count: int=0
 
@@ -93,18 +94,33 @@ func _ensure() -> void:
 	var owned: Dictionary=world.card_draw_fusion.owned
 	var signature: int=hash([owned,_source_server_context,_option_version,policy_values]) if core is NativeRules else hash(owned)
 	if _has_cache and signature==_owned_hash:return
-	var inputs: int=hash([_source_server_context,_option_version,policy_values]) if core is NativeRules else 0
+	var inputs: int=hash([_source_server_context,policy_values]) if core is NativeRules else 0
 	var flat: Dictionary=_flat_owned(owned)
-	var cached: bool=_has_cache and inputs==_derived_inputs and _aligned() and _row_completed.size()==core.definitions.size()
-	_owned_hash=signature;_has_cache=true
 	var state: Dictionary={"owned":owned,"source_server_context":_source_server_context}
-	if core is NativeRules:state.source_option_awakening=world.option_awakening.native_collection_state()
-	if cached and _rederive_changed(state,flat):
+	var earned: Dictionary={}
+	var option_bindings: Dictionary={}
+	if core is NativeRules:
+		var option: Dictionary=world.option_awakening.native_collection_state()
+		state.source_option_awakening=option
+		earned=_flat_owned(option.get("earned",{}))
+		option_bindings=option.duplicate()
+		option_bindings.erase("earned")
+	var cached: bool=_has_cache and inputs==_derived_inputs and option_bindings==_derived_option_bindings and _aligned() and _row_completed.size()==core.definitions.size()
+	_owned_hash=signature;_has_cache=true
+	# XP, attempts and failed rolls advance the save revision without
+	# changing either collection requirement.
+	if cached and flat==_derived_owned and earned==_derived_earned:return
+	if cached and _rederive_changed(state,flat,earned):
 		_derived_owned=flat
+		_derived_earned=earned
 		revision+=1;rebuild_count+=1;incremental_count+=1
 		return
 	_derived_owned=flat
+	_derived_earned=earned
+	_derived_option_bindings=option_bindings
 	_derived_inputs=inputs
+	_card_rows.clear()
+	_awakening_rows.clear()
 	var derived: Dictionary=core.derive(state)
 	totals=derived.totals;_completed=derived.completed
 	_view_deltas.clear()
@@ -136,30 +152,41 @@ static func _flat_owned(owned: Dictionary) -> Dictionary:
 			if cards[id]==true:flat[str(category)+":"+str(id)]=true
 	return flat
 
-## Re-derives only the definitions that hold a card whose ownership changed
-## since the last derive; false (a full derive follows) when too many changed.
-func _rederive_changed(state: Dictionary, flat: Dictionary) -> bool:
+static func _changed_keys(previous: Dictionary, current: Dictionary) -> Dictionary:
 	var changed: Dictionary={}
-	for key: Variant in flat:
-		if not _derived_owned.has(key):changed[key]=true
-	for key: Variant in _derived_owned:
-		if not flat.has(key):changed[key]=true
-	if changed.size()>INCREMENTAL_LIMIT:return false
-	if _card_rows.is_empty():
-		for index: int in core.definitions.size():
-			for requirement: Variant in core.definitions[index].get("requirements",[]):
-				if not requirement is Dictionary:continue
-				var key: String=str(requirement.get("category",""))+":"+str(requirement.get("id",""))
-				if not _card_rows.has(key):_card_rows[key]=[]
-				_card_rows[key].append(index)
+	for key: Variant in current:
+		if not previous.has(key):changed[key]=true
+	for key: Variant in previous:
+		if not current.has(key):changed[key]=true
+	return changed
+
+func _index_requirements() -> void:
+	if not _card_rows.is_empty():return
+	for index: int in core.definitions.size():
+		for requirement: Variant in core.definitions[index].get("requirements",[]):
+			if not requirement is Dictionary:continue
+			var key: String=str(requirement.get("category",""))+":"+str(requirement.get("id",""))
+			if not _card_rows.has(key):_card_rows[key]=[]
+			_card_rows[key].append(index)
+			if bool(requirement.get("awakened",false)):
+				if not _awakening_rows.has(key):_awakening_rows[key]=[]
+				_awakening_rows[key].append(index)
+
+## Re-derive the affected definitions; a bulk change still uses a full derive.
+func _rederive_changed(state: Dictionary, flat: Dictionary, earned: Dictionary) -> bool:
+	var ownership_changed: Dictionary=_changed_keys(_derived_owned,flat)
+	var awakening_changed: Dictionary=_changed_keys(_derived_earned,earned)
+	if ownership_changed.size()+awakening_changed.size()>INCREMENTAL_LIMIT:return false
+	_index_requirements()
+	var affected: Dictionary={}
+	for key: Variant in ownership_changed:
+		for index: int in _card_rows.get(key,[]):affected[index]=true
+	for key: Variant in awakening_changed:
+		for index: int in _awakening_rows.get(key,[]):affected[index]=true
+	if affected.is_empty():return true
 	var indices: Array[int]=[]
-	var seen: Dictionary={}
-	for key: Variant in changed:
-		for index: Variant in _card_rows.get(key,[]):
-			if seen.has(index):continue
-			seen[index]=true
-			indices.append(int(index))
-	if indices.is_empty():return true
+	indices.assign(affected.keys())
+	indices.sort()
 	var rows: Array=core.derive_rows(state,indices)
 	var completion_changed: bool=false
 	for at: int in indices.size():

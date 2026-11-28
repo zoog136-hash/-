@@ -256,6 +256,10 @@ func _read_result(w: Node, success: bool) -> void:
 	var before: Dictionary = _ledger(w)
 	var scene: Node2D = page._scene
 	var branch: String = "Success" if success else "Fail"
+	var other_branch: String = "Fail" if success else "Success"
+	check(is_instance_valid(_node(page, "Fx_"+branch)) and _node(page, "Fx_"+other_branch)==null
+		and _node(page, other_branch+"_Text")==null,
+		"only the committed outcome mounts its original effects and label")
 	var target: Sprite2D = scene.get_node_or_null("AwakeningTargetPortrait") as Sprite2D
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_PORTRAIT") == "1":
 		check(target!=null and target.texture!=null and target.get_meta("source_card_id","")==CARDS.card_id(page._card),"the installed portrait belongs to the exact awakening target")
@@ -409,11 +413,14 @@ func _native() -> void:
 		probe.seed=seed
 		if probe.randi_range(0,9999)>=required_roll:options.rng.seed=seed;break
 	var attempt_form: Node2D=view._scene
+	var collections_before: int=w.card_collections.rebuild_count
 	await _tap(_hit(_node(view,OPTION.PRIMARY)))
 	await _confirm(w.hud,false)
 	_attempt_confirm_usec["변신"]=_touch_usec.back()
 	var failed: Dictionary=options.view("변신",transform.target)
 	check(view._scene==attempt_form and view._snapshot.experience==failed.experience and view._can_register(),"failed attempt updates the original mounted form and restores eligible material input")
+	check(w.card_collections.rebuild_count==collections_before,
+		"failed option attempt changes experience and gold without re-deriving card collections")
 	check(failed.attempts==int(now.attempts)+1 and failed.failures==int(now.failures)+1 and
 		failed.experience==now.failure_refund_experience and w.gold==quoted.gold-now.attempt_cost,"original UI delegates exact failure cost, preserved experience and counters")
 	check(w.card_draw_fusion.export_state()==quoted.cards and w.skill_awakening.export_state()==quoted.skill,"attempt does not double-charge duplicates or modify skill state")
@@ -446,11 +453,27 @@ func _native() -> void:
 			probe.seed=seed
 			if probe.randi_range(0,9999)<float(doll_now.success_chance_pct)*100.0:options.rng.seed=seed;break
 		var doll_form: Node2D=view._scene
+		var deltas_before: Array=w.card_collections._view_deltas.duplicate()
+		var incremental_before: int=w.card_collections.incremental_count
 		await _tap(_hit(_node(view,OPTION.PRIMARY)))
 		await _confirm(w.hud,false)
 		_attempt_confirm_usec["마법인형"]=_touch_usec.back()
 		var success: Dictionary=options.view("마법인형",doll.target)
 		check(view._scene==doll_form and view._snapshot.awakened and not view._can_submit(),"successful attempt keeps the existing original materials and disables submission")
+		var runtime: RefCounted=w.card_collections
+		var full: Dictionary=runtime.core.derive({"owned":w.card_draw_fusion.owned,
+			"source_server_context":runtime.source_server_context(),"source_option_awakening":options.native_collection_state()})
+		check(runtime.incremental_count==incremental_before+1 and runtime.totals==full.totals and runtime.snapshot()==full.rows,
+			"the successful option publishes the same collection rows and totals as a full derive")
+		var kept_unrelated: bool=deltas_before.size()==runtime._view_deltas.size()
+		var recomputed: int=0
+		for index: int in mini(deltas_before.size(),runtime._view_deltas.size()):
+			var affected: bool=runtime.core.definitions[index].requirements.any(func(req: Dictionary) -> bool:
+				return req.awakened and req.category=="마법인형" and req.id==doll.target)
+			if is_same(deltas_before[index],runtime._view_deltas[index]):continue
+			recomputed+=1
+			if not affected:kept_unrelated=false
+		check(kept_unrelated and recomputed>0,"an earned option updates real dependent rows and preserves unrelated and ownership-only rows")
 		var bonus_list: Dictionary=view._list(view._scene,view._out,OPTION.BONUS)
 		if check(bonus_list.get("ok",false) and bonus_list.content.get_child_count()>1 and not success.applied_options.is_empty(),"mounted form displays applied option rows after success"):
 			var heading: Node=bonus_list.content.get_child(0).get_meta("source_text",null)
