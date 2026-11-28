@@ -22,7 +22,7 @@ func _initialize() -> void: call_deferred("_run")
 
 func _state(world: Node) -> Dictionary:
 	var hud: Node = world.hud
-	return {"character_state": JSON.stringify(hud.character_state, "", true), "hp_bar": [hud.hp_bar.value, hud.hp_bar.max_value] if hud.get("hp_bar") != null else [], "player": JSON.stringify(hud.get("_original_main_player_values"))}
+	return {"character_state": JSON.stringify(hud.character_state, "", true), "hp_bar": [hud.hp_bar.value, hud.hp_bar.max_value] if hud.get("hp_bar") != null else [], "player": JSON.stringify(hud.get("_player_values"))}
 
 func _diff(a: Dictionary, b: Dictionary) -> Array:
 	var keys: Array = []

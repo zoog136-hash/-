@@ -44,6 +44,53 @@ func archive(path: String, index: PackedByteArray, data: PackedByteArray) -> Str
 	zip.close()
 	return FileAccess.get_sha256(path)
 
+func check_reuse(base: String, index_sha: String, original: PackedByteArray) -> void:
+	var source := "c".repeat(64)
+	var current_key := "d".repeat(64)
+	var receipt := {
+		"schema": SEED.REUSE_SCHEMA, "engine": BAKE.engine_key(), "index_sha256": index_sha, "source": source,
+		"files": {NAME: {"previous_key": KEY, "key": current_key, "sha256": SEED._hash(original), "bytes": original.size()}}
+	}
+	var proof := JSON.stringify(receipt).to_utf8_buffer()
+	check(SEED._decode_reuse(proof, "e".repeat(64)).is_empty(), "changed original selection rejects proof")
+	receipt.engine = "different engine"
+	check(SEED._decode_reuse(JSON.stringify(receipt).to_utf8_buffer(), source).is_empty(), "different engine rejects proof")
+	SEED._reuse = SEED._decode_reuse(proof, source)
+	check(BAKE.read(NAME, current_key) == bytes_to_var(original), "seed with exactly proven payload and new key reopens")
+	check(BAKE.read(NAME, "e".repeat(64)) == null, "matching file cannot satisfy a different current input key")
+	receipt.engine = BAKE.engine_key()
+	receipt.index_sha256 = "e".repeat(64)
+	SEED._reuse = SEED._decode_reuse(JSON.stringify(receipt).to_utf8_buffer(), source)
+	check(BAKE.read(NAME, current_key) == null and BAKE.read(NAME, KEY) != null, "different index cannot relabel an installed seed")
+	receipt.index_sha256 = ""
+	var device_proof := SEED._decode_reuse(JSON.stringify(receipt).to_utf8_buffer(), source)
+	SEED._reuse = device_proof
+	check(BAKE.read(NAME, current_key) == null, "device-only proof cannot relabel an installed seed")
+	check(BAKE.write(NAME, KEY, bytes_to_var(original)), "old local cache fixture written")
+	check(BAKE.read(NAME, current_key) == bytes_to_var(original), "device-only proof works beside an unrelated seed")
+	SEED.select(base, "")
+	SEED._reuse = device_proof
+	check(BAKE.read(NAME, current_key) == bytes_to_var(original), "device-only proof works without a seed pin")
+	var local_entry: Dictionary = BAKE._checked_entry(NAME, current_key)
+	check(local_entry.get("reused", false) and not local_entry.get("seed", false), "proven local cache is preferred")
+	var local := FileAccess.open(local_entry.path, FileAccess.READ_WRITE)
+	local.store_8(0xff)
+	local.close()
+	check(BAKE.read(NAME, current_key) == null, "reused local cache must still pass the payload SHA")
+	BAKE.clear(NAME)
+	SEED.select(base, index_sha)
+	SEED._reuse = SEED._decode_reuse(proof, source)
+	var marker := BAKE.verified_file(NAME, current_key)
+	var seed_file := FileAccess.open(marker, FileAccess.READ_WRITE)
+	seed_file.store_8(0xff)
+	seed_file.close()
+	check(BAKE.verified_file(NAME, current_key).is_empty(), "reused seed must still pass the payload SHA")
+	var file := FileAccess.open(marker, FileAccess.WRITE)
+	file.store_buffer(original)
+	file.close()
+	SEED.select(base, index_sha)
+	check(BAKE.read(NAME, current_key) == null and BAKE.read(NAME, KEY) != null, "selection clears proof and keeps the exact-key path")
+
 func _initialize() -> void:
 	run.call_deferred()
 
@@ -76,6 +123,7 @@ func run() -> void:
 	SEED.select(base, index_sha)
 	check(BAKE.present(NAME, KEY) and BAKE.read(NAME, KEY) == bytes_to_var(bytes), "real cache fallback matches exact payload")
 	check(not BAKE.present(NAME, "b".repeat(64)), "different producer key is still a miss")
+	check_reuse(base, index_sha, bytes)
 	check(BAKE.write(NAME, "b".repeat(64), {"local":true}), "ordinary local cache published")
 	check(BAKE.read(NAME, "b".repeat(64)) == {"local":true}, "local generation retained beside seed")
 	check(BAKE.read(NAME, KEY) == bytes_to_var(bytes), "different local key does not mask seed")

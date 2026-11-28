@@ -485,11 +485,14 @@ func set_character_state(state: Dictionary) -> void:
 	_refresh_character()
 
 func update_vitals(hp: int, max_hp: int, mp: int, max_mp: int) -> void:
-	character_state.merge({"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}, true)
-	if hp_label != null:
-		hp_label.text = "HP %d / %d" % [hp, max_hp]
-	if mp_label != null:
-		mp_label.text = "MP %d / %d" % [mp, max_mp]
+	if character_state.get("hp")!=hp or character_state.get("max_hp")!=max_hp:
+		character_state["hp"]=hp
+		character_state["max_hp"]=max_hp
+		if hp_label!=null:hp_label.text="HP %d / %d" % [hp,max_hp]
+	if character_state.get("mp")!=mp or character_state.get("max_mp")!=max_mp:
+		character_state["mp"]=mp
+		character_state["max_mp"]=max_mp
+		if mp_label!=null:mp_label.text="MP %d / %d" % [mp,max_mp]
 
 func _equipped_display_name(record: Dictionary) -> String:
 	var name_value: String = str(record.get("name", ""))
