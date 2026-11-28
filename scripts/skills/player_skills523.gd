@@ -1173,7 +1173,8 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		69601:"복합 효과 보류: 회복량 정의표 없음 · 상태 해제·충돌 무시 미연결",
 		95662:"복합 효과 보류: 회복량 정의표 없음 · 자신/파티 회복·보호막·해제 미연결"
 	}.get(int(row.ID), "")
-	if not pending_note.is_empty() and recovery.is_empty(): record.source523["pending_note"] = pending_note
+	if not pending_note.is_empty() and recovery.is_empty() and not bool(record.get("reference_approx523", false)):
+		record.source523["pending_note"] = pending_note
 	if not recovery.is_empty():record.source523["recovery"]=recovery.meta.duplicate(true)
 	if not progression.is_empty():record.source523["progression"]=progression.meta.duplicate(true)
 	if not estimate.is_empty():
@@ -1189,6 +1190,13 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 	if not spell_move.is_empty():
 		record.source523["spell_move"] = spell_move.duplicate(true)
 		record["spell_move523"] = spell_move
+	if bool(record.get("reference_approx523", false)):
+		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
+		record.source523["time_policy"] = "TWILIGHT_ESTIMATE"
+		if record.has("reference_native_material"): record.source523.applied.append("materials")
+		if int(row.TargetKindID) == 52 and PVP_TARGET_TO_NPC:
+			record.source523["original_target_kind"] = str(record.source523.target_kind)
+			record.source523["target_kind"] = "AllButMe"
 	for prefix: String in bindings.get("reference_only_prefixes", []):
 		if id.begins_with(prefix) and estimate.is_empty(): return record
 	if not progression.is_empty() and str(record.activation)=="passive":
@@ -1408,6 +1416,11 @@ func _apply_numeric_distance_input(record: Dictionary, profile: Dictionary) -> D
 
 static func target_allowed(skill: Dictionary, target: TwilightMonster) -> bool:
 	if is_instance_valid(target) and target.concealed523: return false
+	if bool(skill.get("reference_approx523", false)):
+		# The public PvE profile defines which casts require a live hostile
+		# target. Bound source evidence keeps the original ID and target label.
+		# Preserve the explicit undead-only classification.
+		return is_instance_valid(target) and not target.dead and (str(skill.get("source523", {}).get("target_kind", "")) != "Undead" or target.is_undead())
 	if not skill.has("source523"): return true
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return false
 	if not is_instance_valid(target) or target.dead: return false
@@ -1429,7 +1442,8 @@ static func material_text(skill: Dictionary) -> String:
 	return " · ".join(materials) if not materials.is_empty() else "없음"
 
 static func inventory_keys(skill: Dictionary, item: String) -> Array:
-	var result: Array = [item]
+	var local_key: String = preload("res://scripts/skills/reference_profiles523.gd").local_item_name(skill,item)
+	var result: Array = [local_key]
 	if skill.get("source523", {}).get("applied", []).has("materials"):
 		result.append_array(HOST_MATERIAL_ALIASES.get(item, []))
 	return result

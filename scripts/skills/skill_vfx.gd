@@ -10,6 +10,7 @@ const ENERGY_SHADER = preload("res://assets/effects/skill_energy.gdshader")
 const ELECTRIC = preload("res://scripts/skills/lightning_vfx_art.gd")
 const ELECTRIC_SHADER = preload("res://assets/effects/skills/lightning_filament.gdshader")
 const LIBRARY = preload("res://scripts/skills/skill_vfx_library.gd")
+const REFERENCE_VFX523 = preload("res://scripts/skills/reference_vfx523.gd")
 const MAX_EFFECTS := 160
 const MAX_POOL := 160
 const MAX_LAYERS := 3
@@ -32,6 +33,7 @@ var library: TwilightSkillVFXLibrary = LIBRARY.new()
 var spx_pool: Array[AnimatedSprite2D] = []
 var layer_pool: Array[Node2D] = []
 var spx_material: ShaderMaterial
+var reference_effects: Node2D
 
 func _ready() -> void:
 	presets = preload("res://scripts/skills/skill_catalog.gd").read_json("vfx.json")
@@ -196,6 +198,12 @@ func _clip_duration(frames: SpriteFrames, phase: String) -> float:
 
 func _source_only() -> bool:
 	return source_only_policy.is_valid() and bool(source_only_policy.call())
+
+func emit_reference_effect(id: String, style: Dictionary, stage: String, point: Vector2) -> void:
+	if not is_instance_valid(reference_effects):
+		reference_effects = REFERENCE_VFX523.new()
+		add_child(reference_effects)
+	reference_effects.show_effect(id, style, stage, point, low_detail or detail_limit < MAX_EFFECTS)
 
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF, context: Dictionary = {}) -> void:
 	# Preserve PR122's source event routing while retaining authored VFX layers.
@@ -367,6 +375,7 @@ func _retire(index: int) -> void:
 	retired += 1
 
 func clear() -> void:
+	if is_instance_valid(reference_effects): reference_effects.clear()
 	epoch += 1
 	if is_instance_valid(audio_pool): audio_pool.clear()
 	persistent.clear()

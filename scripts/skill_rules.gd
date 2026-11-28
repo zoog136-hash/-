@@ -57,6 +57,9 @@ static func can_auto_cast(skill: Dictionary) -> bool:
 	if bool(skill.get("runtime_blocked",false)): return false
 	if is_passive(skill):
 		return false
+	if skill.get("reference_approx523", false):
+		return skill.get("mode", "") in ["attack", "status", "heal", "buff", "counter", "detect", "convert", "summon"] \
+			and not skill.get("reference_dash_only", false)
 	if bool(skill.get("local_design",false)):
 		if skill.has("estimated523"): return skill.get("mode", "") in ["attack","status","heal","buff","detect"]
 		return skill.get("mode", "") in ["local_heal","local_buff","summon"]

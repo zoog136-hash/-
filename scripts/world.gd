@@ -1515,6 +1515,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if main_target and not equipment523_can_detect(target): return
 	var locked: TwilightMonster = _equipment523_locked_target()
 	if main_target and locked != null and target != locked: return
+	if ordinary_attack and job_class == "기사" and target.is_stunned() and original_skills != null:
+		normal_damage += int(float(normal_damage) * original_skills.stat("referenceVsStunned") / 100.0)
 	var deal_stage: int = FRAME_HITCH.now()
 	normal_damage+=card_collections.death_damage_bonus()
 	normal_damage+=preload("res://scripts/crafting/patch523_final_blow.gd").conditional_magic_damage(self,target,by_spell)
@@ -1526,6 +1528,8 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if target.get_meta("dungeon_play_role","")=="Boss":normal_damage=int(round(normal_damage*(1.0+dungeon_play.modifier("boss_damage")/100.0)))
 	var stolen: int = 0
 	var drain: int = (1 if _has_hp_absorption() else 0)+int(growth.bonus("hp_drain:flat"))
+	if ordinary_attack and active_skill_buffs.has("파워 블러드"):
+		drain += mini(100, int(normal_damage * float(active_skill_buffs["파워 블러드"].get("skill_stats", {}).get("referenceLifesteal", 0))))
 	if drain>0:
 		# Extra damage and healing represent the exact same amount of
 		# HP stolen from the target, capped by its remaining HP.
@@ -1578,7 +1582,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 			var minimum: int=clampi(int(settings.get("source_undead_damage_min",1)),0,maximum)
 			adjusted_damage+=rng.randi_range(minimum,maximum)
 	var before_reduction: int=adjusted_damage
-	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage,target,attack_kind)
+	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage,target,attack_kind,float(context.get("reference_armor_pierce", 0)))
 	var hit_context: Dictionary=context.duplicate(true)
 	hit_context.flat_reduction=maxi(0,before_reduction-adjusted_damage)
 	if attack_kind == "magic" and target.has_meta("magic_shield_reduction_percent"):
@@ -1612,6 +1616,11 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	deal_stage = FRAME_HITCH.detail_next("deal.damage_math", deal_stage)
 	var critical_weapon_type: int = int(context.get("critical_weapon_type",0)) if ordinary_attack and critical else 0
 	target.take_damage(int(final.damage) + equipment523_extra + stolen, critical or bool(final.triggered), "", critical_weapon_type, bool(final.triggered))
+	if original_skills != null and attack_kind == "magic": original_skills.status.consume_magic_exposure(target)
+	if critical and ordinary_attack and attack_kind == "melee" and job_class == "사신" and original_skills != null:
+		var critical_skill: Dictionary = original_skills.catalog.record_for("lm_86d332ddfb0de110")
+		if original_skills.catalog.enabled(critical_skill):
+			original_skills._emit_verified_source_effect(critical_skill, "critical", target.combat_hit_position())
 	deal_stage = FRAME_HITCH.detail_next("deal.take_damage", deal_stage)
 	if not target.dead: target.set_meta("title523_direct_life",-1)
 	patch523_npc_spells.extensions.incoming.erase(target.get_instance_id())
@@ -3529,7 +3538,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 	_deal_successful_player_hit(target,damage,critical,attack_kind,true,false,{"critical_weapon_type":source_weapon_type} if critical and source_weapon_type > 0 else {},true)
 	hit_stage = FRAME_HITCH.detail_next("hit.deal", hit_stage)
 	preload("res://scripts/loot/patch523_weapon_bleed.gd").on_normal_hit(self,target)
-	_try_trigger_passives("on_hit", target,attack_kind,true,false)
+	_try_trigger_passives("on_hit", target,attack_kind,true,false,critical)
 	hit_stage = FRAME_HITCH.detail_next("hit.passives", hit_stage)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hit_stage = FRAME_HITCH.detail_next("hit.extra", hit_stage)
@@ -3550,7 +3559,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String, attack
 func _normal_hit_damage_roll(target: TwilightMonster, attack_kind: String, source_ammo: Dictionary, native_ammo_bonus: int) -> Dictionary:
 	_stat_memo_begin()
 	var weapon: Dictionary = _equipped_weapon_record()
-	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
+	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _spell_power_stat() if attack_kind == "magic" else _melee_damage_stat()
 	# Size-specific weapon base is rolled separately; no legacy -6..+9 spread.
 	var weapon_roll: int=_roll_weapon_damage(target, true, weapon)
 	weapon_roll=PATCH523_EQUIPMENT_COMBAT.weapon_scale(self,weapon_roll,attack_kind,target)
@@ -4366,6 +4375,10 @@ func _collect_ground_drop(drop: Button) -> bool:
 	FRAME_HITCH.detail("loot.pickup", pickup_started)
 	return collected
 
+func _ground_pickup_radius() -> float:
+	if job_class != "뇌신" or original_skills == null: return GROUND_PICKUP_RADIUS
+	return GROUND_PICKUP_RADIUS + clampf(original_skills.stat("pickupRange"), 0.0, 70.0)
+
 func _collect_ground_drop_timed(drop: Button) -> bool:
 	if patch523_npc_spells.blocks("CannotLoot"): return false
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
@@ -4390,7 +4403,7 @@ func _collect_ground_drop_timed(drop: Button) -> bool:
 		record=acquired.record
 		wallet_item=LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record",{}))
 	else:
-		record=ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
+		record=ground_loot.take(drop, player.global_position, _ground_pickup_radius())
 		if record.is_empty():return false
 		wallet_item=LOOT_DROP.PATCH523_DROPS.wallet_name(record.get("item_record",{}))
 		INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
@@ -4796,6 +4809,9 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		reduced = maxi(1,reduced - EQUIPMENT523_COMBAT.critical_reduction(_all_equipped_records(),critical))
 		if attack_element != "physical": reduced = maxi(1,reduced - EQUIPMENT523_COMBAT.elemental_reduction(_all_equipped_records()))
 	hp = maxi(0, hp - reduced)
+	if original_skills != null and hp > 0 and reduced > 0 and job_class in ["신성검사", "광전사"]:
+		var recovery: int = int(float(reduced) * original_skills.stat("referenceDamageRecovery"))
+		if recovery > 0: hp = mini(_effective_max_hp(), hp + recovery)
 	patch523_npc_spells.extensions.on_player_event("attacked")
 	if hp>0 and int(option_result.heal)+int(guardian_result.heal)>0:hp=mini(_effective_max_hp(),hp+int(option_result.heal)+int(guardian_result.heal))
 	if reduced > 0:
@@ -7731,7 +7747,8 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	var next_cooldowns: Dictionary = item_use_cooldowns.duplicate(true)
 	next_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS * (1.0-clampf(growth.bonus("potion_cooldown:percent") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_cooldown_pct"),0.0,90.0)/100.0)
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
-	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct")) / 100.0))
+	var skill_heal_percent: float = original_skills.stat("potionPct") if original_skills != null else 0.0
+	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "potion_heal_pct") + _equipped_bless_bonus("potion_heal_pct") + skill_heal_percent) / 100.0))
 	var adjusted_heal: int = patch523_npc_spells.extensions.healing(maxi(1, enhanced_heal),true)
 	var next_hp: int = clampi(hp + adjusted_heal,0,effective_max_hp)
 	# Consumables commit in memory and join the coalesced background save
@@ -7753,7 +7770,8 @@ func _source_hp_potion_parameters(heal_amount: int) -> Dictionary:
 	# Existing host potion bonuses and shared cooldown, used by the verified
 	# source dice consumer without replacing the NPC healing adjustment/event.
 	var enhanced: int=maxi(1,heal_amount+_catalog_stat_sum("potionHealFlat")+_equipment_potion_heal_stat("물약 회복량")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_flat")+int(original_skills.stat("potionFlat") if original_skills!=null else 0))
-	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct")+_active_item_buff_total("potion_heal_pct"))/100.0))
+	var skill_heal_percent: float = original_skills.stat("potionPct") if original_skills != null else 0.0
+	enhanced+=int(round(float(heal_amount)*float(_catalog_stat_sum("potionHealPct")+_equipment_potion_heal_stat("물약 회복률")+_enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"potion_heal_pct")+_active_item_buff_total("potion_heal_pct")+skill_heal_percent)/100.0))
 	return {"heal_amount":maxi(1,enhanced),"cooldown_key":HP_POTION_COOLDOWN_KEY,"cooldown_seconds":HP_POTION_COOLDOWN_SECONDS*(1.0-clampf(growth.bonus("potion_cooldown:percent"),0.0,90.0)/100.0)}
 
 func _source_hp_potion_committed(amount: int) -> void:
@@ -10361,13 +10379,13 @@ func _break_invisibility() -> void:
 	_refresh_skill_stealth_visual()
 	hud.append_log("공격으로 은신 해제")
 
-func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false) -> void:
+func _try_trigger_passives(trigger_name: String, target: TwilightMonster, attack_kind: String="melee", main_target: bool=true, by_spell: bool=false, critical: bool=false) -> void:
 	if trigger_name=="on_hit" and hp>0:
 		option_awakening.combat.on_hit(target,attack_kind,main_target,by_spell)
 		if main_target: totem_combat.on_hit(target,attack_kind,by_spell)
 	if trigger_name=="on_hit" and hp>0:PATCH523_EQUIPMENT_COMBAT.on_hit(self,target,attack_kind,main_target,by_spell)
 	if trigger_name=="on_hit":skill_awakening.on_successful_hit(target)
-	if original_skills != null: original_skills.trigger(trigger_name, target, {}, original_skills.attack_context(attack_kind, by_spell, true, main_target))
+	if original_skills != null: original_skills.trigger(trigger_name, target, {}, original_skills.attack_context(attack_kind, by_spell, true, main_target, critical))
 	for skill: Dictionary in _non_original_skill_rows():
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
@@ -11486,6 +11504,15 @@ func _apply_transform_visual(record: Dictionary) -> void:
 			hud.append_log("원본 변신 외형 선택 대기 · 직업/성별 문맥 필요")
 	_sync_option_awakening_aura("변신")
 
+func apply_reference_skill_look(kind: String) -> void:
+	match kind:
+		"transform":
+			var record: Dictionary = equipped_catalog.get("변신", {})
+			if not record.is_empty(): _apply_transform_visual(record)
+		"relic":
+			var record: Dictionary = equipped_catalog.get("성물", {})
+			if not record.is_empty(): _apply_relic_visual(record)
+
 func _apply_doll_visual(record: Dictionary) -> void:
 	player.source_visual_context = _source_visual_context()
 	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
@@ -12092,6 +12119,7 @@ func _current_weapon_type_uncached() -> String:
 
 func _current_attack_kind() -> String:
 	var weapon: Dictionary = _equipped_weapon_record()
+	if job_class == "마법사" and active_skill_buffs.get("매직 마스터", {}).get("reference_magic_normal", false) and str(weapon.get("type", "")) == "지팡이": return "magic"
 	var native: Dictionary = preload("res://scripts/loot/patch523_ammo.gd").weapon_type(weapon)
 	return _attack_kind_for_weapon(weapon,native)
 
@@ -12103,11 +12131,16 @@ func _attack_kind_for_weapon(weapon: Dictionary, native: Dictionary) -> String:
 
 func _current_attack_range_cells() -> int:
 	var weapon: Dictionary = _equipped_weapon_record()
+	var bonus: int = 0
+	if original_skills != null:
+		bonus = int(original_skills.local_runtime.attack_range_bonus())
+		if job_class in ["암흑기사", "마검사", "뇌신", "다크엘프", "신성검사", "투사"]:
+			bonus += int(original_skills.stat("referenceReach") / 30.0)
 	var native: Dictionary = preload("res://scripts/loot/patch523_ammo.gd").weapon_type(weapon)
-	if not native.is_empty(): return maxi(1,int(native.get("AttackRange",1))) + int(original_skills.local_runtime.attack_range_bonus() if original_skills != null else 0)
+	if not native.is_empty(): return maxi(1,int(native.get("AttackRange",1))) + bonus
 	if weapon.has("attackRangeCells"):
-		return maxi(1, int(weapon.get("attackRangeCells", 1))) + int(original_skills.local_runtime.attack_range_bonus() if original_skills != null else 0)
-	return _weapon_range_cells_from_type(_current_weapon_type()) + int(original_skills.local_runtime.attack_range_bonus() if original_skills != null else 0)
+		return maxi(1, int(weapon.get("attackRangeCells", 1))) + bonus
+	return _weapon_range_cells_from_type(_current_weapon_type()) + bonus
 
 func _weapon_cell_distance(target: TwilightMonster) -> int:
 	if target == null:
@@ -12287,6 +12320,7 @@ func _toggle_ammo_equipped(ammo_name: String,physical_id: String="") -> void:
 func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> float:
 	if target == null:
 		return 0.05
+	if attack_kind == "magic" and original_skills != null: return original_skills.hit_chance({"attack_type":"magic"},target)
 	_stat_memo_begin()
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
 	_stat_memo_end()
@@ -12731,7 +12765,8 @@ func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
-	return -(_effective_defense() + dex_ac_bonus) + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus")) + int(titles.bonus("ArmorClass")) - totems.bonus("ArmorClass")
+	var skill_ac: int = int(original_skills.stat("referenceArmor")) if original_skills != null else 0
+	return -(_effective_defense() + dex_ac_bonus) + skill_ac + int(equipment_collections.bonus("ac:flat") + growth.bonus("ac:flat") + card_collections.bonus("ac:flat")) - int(patch523_npc_spells.modifier("ArmorClassBonus")) + int(titles.bonus("ArmorClass")) - totems.bonus("ArmorClass")
 
 func _record_dg(record: Dictionary) -> int:
 	if record.has("dg"):
@@ -12957,6 +12992,7 @@ func _experience_multiplier() -> float:
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
 	bonus += float(_enhancement_float_for_slots(EQUIPMENT_SLOT_ORDER, "xp_pct")) / 100.0
+	if original_skills != null and job_class == "신성검사": bonus += original_skills.stat("xpBonus") / 100.0
 	return maxf(1.0, 1.0 + bonus + totem_map_experience() + float(_active_item_buff_total("xp")) / 100.0)
 
 func _update_companion(delta: float) -> void:
