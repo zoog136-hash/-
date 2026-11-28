@@ -33,14 +33,14 @@ func configure(pack: RefCounted, hud: Node, image_provider: Callable) -> Diction
 func snapshot() -> Dictionary:
 	return _snapshot()
 
-func _snapshot(only_visible: int=-1) -> Dictionary:
+func _snapshot(first_visible: int=-1, visible_count: int=1) -> Dictionary:
 	var started: int=FRAME_HITCH.now()
-	var result: Dictionary=_snapshot_model(only_visible)
-	if result.get("ok",false):FRAME_HITCH.count("ui.quickslot_projected_rows",1 if only_visible>=0 else 10)
+	var result: Dictionary=_snapshot_model(first_visible,visible_count)
+	if result.get("ok",false):FRAME_HITCH.count("ui.quickslot_projected_rows",visible_count if first_visible>=0 else 10)
 	FRAME_HITCH.detail("ui.quickslot_snapshot",started)
 	return result
 
-func _snapshot_model(only_visible: int) -> Dictionary:
+func _snapshot_model(first_visible: int, visible_count: int) -> Dictionary:
 	var hud: Object=_live_hud()
 	if hud==null:return _fail("source_quickslot_hud_unavailable")
 	var world: Node=hud.get_parent()
@@ -54,18 +54,16 @@ func _snapshot_model(only_visible: int) -> Dictionary:
 		if typeof(page)!=TYPE_INT or int(page)<0:return _fail("source_quickslot_existing_page_index_invalid")
 	if not entries is Array or not captions is Array or not cooldowns is Array or captions.size()<10 or cooldowns.size()<10:return _fail("source_quickslot_existing_visible_model_missing")
 	var rows: Array=[]
+	rows.resize(10)
 	for visible: int in range(10):
 		var absolute: Variant=hud.call("quickslot_index",visible)
 		if typeof(absolute)!=TYPE_INT or int(absolute)<0:return _fail("source_quickslot_existing_index_invalid")
 		var caption: Variant=captions[visible]
 		var cooldown: Variant=cooldowns[visible]
 		if not is_instance_valid(caption) or not caption is Label or not is_instance_valid(cooldown) or not cooldown is Label:return _fail("source_quickslot_existing_text_label_missing")
-		# A single-slot refresh still validates every live index/label, but does
-		# not project/copy the nine rows that its caller will never consume.
-		# No cross-call cache: the requested row is read again for each refresh.
-		if only_visible>=0 and visible!=only_visible:
-			rows.append({})
-			continue
+		# Partial reads preserve live model validation at all slots. Only
+		# project entries the caller uses in this synchronous operation.
+		if first_visible>=0 and (visible<first_visible or visible>=first_visible+visible_count): continue
 		# This is the same out-of-range/non-dictionary empty case the HUD
 		# presents. No 50-slot count, page modulus or game filter is reproduced.
 		var entry: Dictionary=entries[absolute].duplicate(true) if absolute<entries.size() and entries[absolute] is Dictionary else {}
@@ -74,21 +72,21 @@ func _snapshot_model(only_visible: int) -> Dictionary:
 		# other row keeps the existing HUD caption (the game has no spell counter store).
 		var ammo: Dictionary=world.call("_quickslot_ammo_source",entry) if world.has_method("_quickslot_ammo_source") and not entry.is_empty() else {}
 		var amount: Dictionary=amount_presentation(not entry.is_empty(),caption.text,ammo)
-		rows.append({"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))})
+		rows[visible]={"visible_index":visible,"absolute_index":absolute,"group":group,"page_index":pages[group],"entry":entry,"filled":not entry.is_empty(),"amount_text":amount.text,"amount_visible":amount.visible,"amount_basis":amount.basis,"cooldown_text":cooldown.text,"auto":bool(entry.get("auto",false))}
 	return {"ok":true,"rows":rows,"pages":pages.duplicate(true),"model_basis":"existing HUD quickslot_index/entries/captions/cooldown_labels and World._quickslot_pages","partial_source_scene":true,"complete_screen_contract":false}
 
 func build_group(group: int) -> Dictionary:
 	var identity: Dictionary=_identities()
 	if not identity.get("ok",false):return identity
 	if group not in [0,1]:return _fail("source_quickslot_visible_group_unknown")
-	var model: Dictionary=snapshot()
+	var model: Dictionary=_snapshot(group*5,5)
 	if not model.get("ok",false):return model
 	var bindings: Dictionary={PANEL:{"role":"consume"}}
 	var rows: Array=[]
 	var owners: Dictionary={}
 	for local_index: int in range(5):
 		var visible: int=group*5+local_index
-		var row: Dictionary=model.rows[visible].duplicate(true)
+		var row: Dictionary=model.rows[visible]
 		var project: int=SLOT_PROJECT_OFFSETS[local_index]
 		row["slot_project_offset"]=project
 		if row.filled:
@@ -115,24 +113,27 @@ func build_group(group: int) -> Dictionary:
 
 func activate(visible: int) -> Dictionary:
 	if visible<0 or visible>=10:return _fail("source_quickslot_visible_index_unknown")
-	var model: Dictionary=snapshot()
+	var model: Dictionary=_snapshot(visible)
 	if not model.get("ok",false):return model
+	return _dispatch_visible(visible,int(model.rows[visible].absolute_index))
+
+func _dispatch_visible(visible: int, absolute: int) -> Dictionary:
 	var hud: Object=_live_hud()
 	if hud==null:return _fail("source_quickslot_hud_unavailable")
 	# _emit_quickslot owns PointerTransfer.suppress_click and the current
 	# game index. A void dispatch is not a claim that a use/action succeeded.
 	hud.call("_emit_quickslot",visible)
-	return {"ok":true,"dispatched":true,"method":"_emit_quickslot","visible_index":visible,"absolute_index":model.rows[visible].absolute_index,"action_result_known":false}
+	return {"ok":true,"dispatched":true,"method":"_emit_quickslot","visible_index":visible,"absolute_index":absolute,"action_result_known":false}
 
 func activate_presented(visible: int, presented: Dictionary) -> Dictionary:
 	if visible<0 or visible>=10:return _fail("source_quickslot_visible_index_unknown")
-	var current: Dictionary=snapshot()
+	var current: Dictionary=_snapshot(visible)
 	if not current.get("ok",false):return current
 	# A release from an old source node must not use a new item/skill that
 	# occupies the same visible position after page/edit changes. Amount,
 	# cooldown and AUTO refreshes do not change the registered entry identity.
 	if presented!=_presented_identity(current.rows[visible]):return {"ok":false,"code":"source_quickslot_presented_entry_changed","rebuild_required":true,"dispatched":false}
-	return activate(visible)
+	return _dispatch_visible(visible,int(current.rows[visible].absolute_index))
 
 func refresh_slot(scene: Node2D, row: Dictionary) -> Dictionary:
 	var identity: Dictionary=_identities()
