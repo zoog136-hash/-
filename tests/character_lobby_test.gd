@@ -152,11 +152,59 @@ func run() -> void:
 		"scrolling the roster does not move the entry action")
 	lobby.queue_free()
 	await process_frame
+	await roster_selection_test(catalog)
 	await profile_route_test(catalog)
 	await upgrade_test(catalog)
 	await legacy_guard_test(catalog)
 	print("CHARACTER_LOBBY_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"scope":"SYNTHETIC_RELATION_AND_UI_INPUT_NOT_ORIGINAL_ART"}))
 	quit(0 if failures.is_empty() else 1)
+
+func roster_selection_test(catalog: RefCounted) -> void:
+	var store := MemoryStore.new()
+	for index: int in 12:
+		store.characters.append({"id":"slot-%d" % index, "name":"시험캐릭터%02d" % index, "class_id":1, "gender_id":1})
+	store.selected = "slot-11"
+	var view = LOBBY.new()
+	view.store = store
+	view.catalog = catalog
+	root.add_child(view)
+	for frame: int in 3: await process_frame
+	var last := view.find_child("Character_slot-11", true, false) as Button
+	var enter := view.find_child("EnterCharacter", true, false) as Button
+	var visible_area: Rect2 = view.scroll.get_global_rect()
+	check(last.button_pressed and view.scroll.scroll_vertical > 0 and visible_area.encloses(last.get_global_rect()),
+		"returning to a filled roster reveals its selected row")
+	check(view.status.text == "선택 · 시험캐릭터11" and not enter.disabled,
+		"fixed entry identifies the character even during scrolling")
+	(view.find_child("Character_slot-0", true, false) as Button).pressed.emit()
+	(view.find_child("NewCharacter", true, false) as Button).pressed.emit()
+	(view.find_child("CancelCreation", true, false) as Button).pressed.emit()
+	var first := view.find_child("Character_slot-0", true, false) as Button
+	enter = view.find_child("EnterCharacter", true, false) as Button
+	check(view.selected_id == "slot-0" and first.button_pressed and not enter.disabled
+		and view.status.text == "선택 · 시험캐릭터00",
+		"cancelling creation restores the user's pending choice")
+	check(store.selected == "slot-11" and store.selects == 0 and store.creates == 0,
+		"reviewing a choice or cancelling creation does not write the account")
+	(view.find_child("NewCharacter", true, false) as Button).pressed.emit()
+	view._choose_class(1)
+	view._choose_gender(1)
+	view.name_input.text = "열세번째캐릭터"
+	view.name_input.text_changed.emit(view.name_input.text)
+	(view.find_child("CreateCharacter", true, false) as Button).pressed.emit()
+	for frame: int in 3: await process_frame
+	var created := view.find_child("Character_fixture", true, false) as Button
+	enter = view.find_child("EnterCharacter", true, false) as Button
+	check(store.creates == 1 and view.selected_id == "fixture" and created.button_pressed
+		and view.scroll.get_global_rect().encloses(created.get_global_rect())
+		and view.status.text == "생성 완료 · 열세번째캐릭터" and not enter.disabled,
+		"a new character at the end is revealed and named above the entry action")
+	store.selected = "missing-slot"
+	view._show_roster()
+	enter = view.find_child("EnterCharacter", true, false) as Button
+	check(view.selected_id.is_empty() and enter.disabled, "a missing saved selection cannot enable entry")
+	view.queue_free()
+	await process_frame
 
 func profile_route_test(catalog: RefCounted) -> void:
 	const ACCOUNT = preload("res://scripts/characters/account_store.gd")
