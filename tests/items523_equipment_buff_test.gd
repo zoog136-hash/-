@@ -2,7 +2,6 @@ extends "res://tests/source_inventory_controls_main_test.gd"
 ## Original growth-pass ring in actual Main with a disposable character.
 ## The optional UI pack drives both taps on the original bag slot.
 const RING := 286632
-const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 
 func result_marker() -> String: return "EQUIPMENT_BUFF523_RESULT"
 
@@ -88,18 +87,14 @@ func exact(archive: String) -> void:
 	await frames()
 	ck(not w._is_instance_equipped(uid) and w._effective_max_hp() == plain_cap and w.hp == plain_cap, "reload preserves the unequipped cap and physical item")
 
-	# Exercise the existing host policy for an alternative active form. This
-	# uses a persisted catalog selection independently of the original ring.
-	var card: Dictionary = {}
-	for value: Variant in w.catalog_db.get("변신", []):
-		if value is Dictionary and not value.is_empty():
-			card = value
-			break
-	if not card.is_empty():
-		w.equipped_catalog["변신"] = card
-		w._invalidate_equipment_static()
-		w._equip_reference_in_slot(reference, "ring1")
-		ck(w._is_instance_equipped(uid) and w.equipment_buff523.buff_value("damage_reduction") == 2 and w.equipment_buff523.buff_value("attack_speed") == 0 and w.equipment_buff523.buff_value("hp_flat") == 0, "a different active form keeps the existing exclusion policy and receives no Sharna form HP")
+	# Isolate the existing active-card precedence from card art loading.
+	var card: Dictionary = SOURCE.row("BuffCard", 4)
+	if not ck(card.get("BuffCardDeckID") == 1, "the alternate form comes from the pinned transformation deck"): return
+	w.equipped_catalog["변신"] = {"name":str(card.Name), "source_card_id":int(card.ID)}
+	w._invalidate_equipment_static()
+	w._equip_reference_in_slot(reference, "ring1")
+	ck(w._is_instance_equipped(uid) and w.equipment_buff523.buff_value("damage_reduction") == 2, "the ring stays worn and keeps the existing damage reduction")
+	ck(w.equipment_buff523.buff_value("attack_speed") == 0 and w.equipment_buff523.buff_value("hp_flat") == 0, "a different active form excludes both form bonuses")
 
 func bag_equipment_action(reference: String, equip: bool, original: bool) -> bool:
 	if not original:
