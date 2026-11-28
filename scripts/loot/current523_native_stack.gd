@@ -11,6 +11,8 @@ const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const BONUS_STAT_CAP=preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
+const CONSUMABLE_QUERIES=preload("res://scripts/resources/current523_consumable_queries.gd")
+const EVA_AUTO_POTION=preload("res://scripts/loot/source_eva_auto_potion523.gd")
 const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -90,6 +92,11 @@ static func profile(record: Dictionary) -> Dictionary:
 	if not cap.is_empty():return {"kind":"bonus_stat_cap","spec":cap}
 	if record.get("source_item_class_id") == SLOT_EXPANDERS.RUNE_POUCH and SLOT_EXPANDERS.rune_pouch(definition):
 		return {"kind":"rune_slot_unlock","spec":{"can_use_when_invisible":true}}
+	var item_id: int = int(record.get("source_item_class_id", 0))
+	if record.get("source_bless_raw") == 1 and EVA_AUTO_POTION.ITEMS.has(item_id):
+		var potion: int = EVA_AUTO_POTION.registration_target(item_id, definition)
+		if potion > 0:
+			return {"kind":"eva_auto_potion_unlock","spec":{"potion_id":potion,"can_use_when_invisible":true}}
 	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
 	var firework:Dictionary=direct_firework_rule(record,definition)
@@ -345,6 +352,76 @@ static func authorizes_rune_slot(world: Node, staged: Dictionary) -> bool:
 		and staged.size() == 4 and staged.has_all(["inventory","item_instances","consumable_state"]) \
 		and not world.rune_slot2_unlocked and staged.get(SLOT_EXPANDERS.RUNE_KEY) == true
 
+static func use_growth_eva_auto_potion(world: Node, item_name: String, selected: String, item_id: int) -> Dictionary:
+	var definition: Dictionary = D.definition_id(str(item_id))
+	var potion: int = EVA_AUTO_POTION.registration_target(item_id, definition)
+	if potion == 0:
+		return _failure("에바의 성장 보상 원본 확인 필요 · 아이템 보존")
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var paid: Dictionary = _stage_growth_reward_debit(world, item_name, selected, item_id, definition)
+	return _commit_eva_auto_potion(world, paid.overrides, potion, definition.original_item) if paid.get("ok", false) else paid
+
+static func _use_eva_auto_potion(world: Node, uid: String, owned: Dictionary, potion: int) -> Dictionary:
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var paid: Dictionary = stage_debit(world, [{
+		"physical_id":uid, "quantity":1, "expected_quantity":owned.remaining,
+		"expected_remaining":int(owned.remaining) - 1, "source_native_stack_receipt":owned.receipt,
+	}])
+	if not paid.get("ok", false): return paid
+	return _commit_eva_auto_potion(world, paid.overrides, potion, D.item_definition(owned.record).original_item)
+
+## Existing saves may have the exact ID-bearing native inventory key without
+## a receipt. Use it atomically, without a separate adoption write.
+static func _use_plain_eva_auto_potion(world: Node, item_name: String, record: Dictionary, potion: int) -> Dictionary:
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var id: int = int(record.source_item_class_id)
+	if record.name != item_name or not item_name.ends_with(" · 원본#" + str(id)) \
+			or world._catalog_item_from_source_id("m523:item:" + str(id)) != record \
+			or world._item_locked(item_name) or not CATALOG_STACK.holds_plain(world, item_name):
+		return _failure("에바의 원본 아이템 번호와 보유 수량 확인 필요 · 아이템 보존")
+	var problem: String = load("res://scripts/loot/patch523_item_use.gd").call("eligibility", world, record)
+	if not problem.is_empty(): return _failure(problem)
+	var inventory: Dictionary = world.inventory.duplicate()
+	if int(inventory[item_name]) == 1: inventory.erase(item_name)
+	else: inventory[item_name] = int(inventory[item_name]) - 1
+	var payload: Dictionary = {"inventory":inventory, "item_instances":world.item_instances,
+		"consumable_state":world.consumable_service.export_state()}
+	return _commit_eva_auto_potion(world, payload, potion, D.item_definition(record).original_item)
+
+static func _commit_eva_auto_potion(world: Node, payload: Dictionary, potion: int, original: Dictionary) -> Dictionary:
+	var unlocks: int = world.eva_auto_potion_unlocks | EVA_AUTO_POTION.registration_bit(potion)
+	payload[EVA_AUTO_POTION.SAVE_KEY] = unlocks
+	busy = true
+	_candidate_kind = "original_eva_auto_potion_unlock"
+	_candidate = payload.duplicate(true)
+	var saved: Error = world._save_game(true, payload)
+	_candidate.clear()
+	_candidate_kind = ""
+	busy = false
+	if saved != OK:
+		return _failure("회복제 자동 사용 권한 저장 실패 · 아이템 보존")
+	world.inventory = payload.inventory
+	world.item_instances = payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	world.eva_auto_potion_unlocks = unlocks
+	world.deferred_save.cancel()
+	world.option_awakening.combat.emit_sprite(751, world.player, original)
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,
+		"message":"%s 자동 사용 등록 가능 · 회복제를 퀵슬롯에 놓고 아래로 드래그하세요" % EVA_AUTO_POTION.potion_name(potion)}
+
+static func authorizes_eva_auto_potion(world: Node, staged: Dictionary) -> bool:
+	if _candidate_kind != "original_eva_auto_potion_unlock" or not authorizes(staged) \
+			or staged.size() != 4 or not staged.has_all(["inventory","item_instances","consumable_state"]):
+		return false
+	var proposed: Variant = staged.get(EVA_AUTO_POTION.SAVE_KEY)
+	if not EVA_AUTO_POTION.valid_unlocks(proposed): return false
+	var current: int = world.eva_auto_potion_unlocks
+	return ((current & int(proposed)) == current) \
+		and (current ^ int(proposed)) in [EVA_AUTO_POTION.ADVANCED_BIT, EVA_AUTO_POTION.GREATER_BIT]
+
 ## The four permanent server-keeper items, not their same-color dated SKUs.
 ## Reward is solely the exact authored above-player effect; no hidden buff.
 const DIRECT_FIREWORKS:Dictionary={
@@ -591,7 +668,7 @@ static func supply_profile(record: Dictionary) -> Dictionary:
 	if definition.get("original_item",{}).get("TestItem")!=false or definition.get("excluded",false):return {}
 	# This is a material-owner admission, not individual use/effect activation.
 	# Actual recipe rows/choices/limits are still checked by the craft executor.
-	if SOURCE.related("ItemCraftInput","ItemClassID",int(record.get("source_item_class_id",0))).is_empty():return storage_profile(record)
+	if not CONSUMABLE_QUERIES.item_craft_input_declared(int(record.get("source_item_class_id",0))):return storage_profile(record)
 	return {"kind":"craft_material","standalone_effect_complete":false}
 
 ## Storage stacks (2026-11-13): an original non-equipment item the table fully
@@ -958,14 +1035,15 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if total>9007199254740991-int(current.remaining):return _failure("물리 수량 정수 범위 초과")
 		total+=int(current.remaining)
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
+	if not has_physical and selected.is_empty() and named_profile.get("kind") == "eva_auto_potion_unlock":
+		return _use_plain_eva_auto_potion(world, item_name, named, int(named_profile.spec.potion_id))
 	if not has_physical and selected.is_empty() and named.get("name")==item_name and integer(world.inventory.get(item_name,0)) and int(world.inventory.get(item_name,0))>0 and not world._item_locked(item_name):
 		# Older name-keyed acceleration stacks have no physical receipt. Their
 		# existing atomic buff owner can debit the exact catalog balance directly.
-		var plain: Dictionary=profile(named)
-		var plain_spec: Dictionary=plain.get("spec",{})
-		if plain.get("kind")=="buff" and MANUAL_SCROLLS.RULES.has(int(named.get("source_item_class_id",0))) and plain_spec.get("activation_status")=="unrestricted":
+		var plain_spec: Dictionary=named_profile.get("spec",{})
+		if named_profile.get("kind")=="buff" and MANUAL_SCROLLS.RULES.has(int(named.get("source_item_class_id",0))) and plain_spec.get("activation_status")=="unrestricted":
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
-		if plain.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
+		if named_profile.get("kind")=="buff" and int(plain_spec.get("acceleration_stage",0))>0 and plain_spec.get("activation_status")=="unrestricted":
 			var restriction: String=_buff_territory_problem(world,plain_spec)
 			if not restriction.is_empty():return _failure(restriction)
 			if preload("res://scripts/loot/patch523_item_use.gd").try_use(world,named):return {"handled":true,"silent":true}
@@ -1029,6 +1107,7 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
 	if effect.kind=="bonus_stat_cap":return use_bonus_stat_cap(world,uid,owned)
 	if effect.kind=="rune_slot_unlock":return use_rune_slot(world,uid,owned)
+	if effect.kind=="eva_auto_potion_unlock":return _use_eva_auto_potion(world,uid,owned,int(spec.potion_id))
 	if effect.kind=="fusion_points":return use_fusion_points(world,uid,owned,spec)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)
@@ -1056,7 +1135,8 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="hp" and float(world.item_use_cooldowns.get(str(parameters.cooldown_key),0.0))>0:return _failure("HP 물약 재사용 대기")
 	var is_buff: bool=effect.kind=="buff"
 	var buff_phase: int=FRAME_HITCH.now() if is_buff else 0
-	var state: Dictionary=world.consumable_service.export_state()
+	var selective_journal: bool=is_buff and world.consumable_service.has_method("publish_native_stack_use")
+	var state: Dictionary=_validation_consumables(world) if selective_journal else world.consumable_service.export_state()
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("기존 원본 물리 소비 장부 형식 보존")
 	if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return _failure("물리 공급 영수증과 기존 사용 장부 불일치")
@@ -1072,11 +1152,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		amount=int(spec.base)
 		for die: int in range(int(spec.dice_number)):amount+=candidate_rng.randi_range(1,int(spec.dice_spot_count))
 	var after: int=mini(maximum,before+amount)
-	# A timed buff edits only the selected physical's two scalar counters.
-	# All other rows are read-only until this synchronous commit returns.
-	# Keep the frozen authorization copy and the writer's detached payload.
-	var bag: Dictionary=world.inventory.duplicate(not is_buff)
-	var instances: Dictionary=world.item_instances.duplicate(not is_buff)
+	# A buff or potion edits only the selected physical's two scalar counters
+	# in a synchronous commit. The authorization and writer still detach it.
+	var scalar_use: bool = is_buff or effect.kind in ["hp", "mp"]
+	var bag: Dictionary=world.inventory.duplicate(not scalar_use)
+	var instances: Dictionary=world.item_instances.duplicate(not scalar_use)
 	# TWILIGHT 근사: a reusable teleport amulet moves without a physical debit.
 	var reusable: bool=bool(prepared.get("reusable",false))
 	if not reusable:
@@ -1084,11 +1164,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if int(bag[item_name])==0:bag.erase(item_name)
 		if owned.remaining==1:instances.erase(uid)
 		else:
-			if is_buff:instances[uid]=(instances[uid] as Dictionary).duplicate()
+			if scalar_use:instances[uid]=(instances[uid] as Dictionary).duplicate()
 			instances[uid][QUANTITY]=int(owned.remaining)-1
 			instances[uid].source_native_stack_used_quantity=int(owned.used)+1
-		# export_state() already owns this ledger in the timed-buff candidate.
-		if not is_buff:ledger=ledger.duplicate(true)
+		# Validation borrows the live ledger. Copy its map before staging a debit.
+		if selective_journal:ledger=ledger.duplicate()
 		ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1)
 		state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
@@ -1154,7 +1234,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if prepared.has("destination"):world.consumable_service._teleport_player(previous_position)
 		world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 		busy=false;return _failure(world.patch523_owner_state_problem)
-	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns;world.consumable_service.import_state(state)
+	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns
+	if selective_journal:
+		world.consumable_service.publish_native_stack_use(uid,ledger[uid])
+	else:
+		world.consumable_service.import_state(state)
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	if effect.kind=="hp":world.hp=after;world._source_hp_potion_committed(amount)
 	elif effect.kind=="mp":world.mp=after
@@ -1405,12 +1489,12 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else _validation_warehouse(world))
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else _validation_floor(world)
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
-	# A dungeon-ledger-only save stages no native ownership fields. It has the
+	# Growth-only and dungeon-ledger-only saves stage no native ownership fields. They have the
 	# same native inputs and transition as an ordinary save. Reuse proof only
 	# on the same deeply compared inventory/instances/consumables/warehouse/
 	# floor/dormant characters and source definition; any change revalidates.
 	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
-	var plain: bool=overrides.is_empty() or (overrides.size()==1 and overrides.has("source_dungeon_play"))
+	var plain: bool=overrides.is_empty() or (overrides.size()==1 and (overrides.has("source_dungeon_play") or overrides.has("growth")))
 	var unchanged: bool=plain and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
 	if not unchanged:
 		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)
@@ -1503,7 +1587,6 @@ static func stage_debit(world: Node,requests: Array) -> Dictionary:
 	var state: Dictionary=world.consumable_service.export_state()
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("원본 물리 사용 장부 형식 보존")
-	ledger=ledger.duplicate(true)
 	var seen: Dictionary={};var selections: Array=[]
 	for request: Variant in requests:
 		if not request is Dictionary or request.size()!=5:return _failure("원본 물리 재료 요청5필드 필요")
@@ -1879,8 +1962,8 @@ static func restoration_metadata(record: Dictionary) -> Dictionary:
 			result.auto_use_registrable=bonus.Value==1
 		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
 		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
-	# AutoUseRegistrable is optional: the 523 rows of #236/#237 carry only the
-	# five restoration/consume rows (no AutoUseRegistrable => not auto-use).
+	# #236/#237 have no unconditional AutoUseRegistrable flag. The quickslot
+	# owner checks the character's separately earned Eva permission.
 	for required: String in ["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount","ItemConsumeDelay","ItemConsumeEffectSpriteID"]:
 		if not seen.has(required):return {"ok":false}
 	return result if result.get("source_consume_delay_ms")==1000 else {"ok":false}
@@ -2122,7 +2205,7 @@ static func commit_owned_rewards(world: Node,uid: String,owned: Dictionary,recor
 	for key: String in payload.inventory:keys[key]=true
 	for key: String in keys:weight+=(int(payload.inventory.get(key,0))-int(world.inventory.get(key,0)))*maxi(0,int(world.item_weight_index.get(key,3)))
 	if weight>world._carrying_capacity():return _failure("기존 소지 무게 한도 초과 · 상자와 전체 결과 보존")
-	var state: Dictionary=paid.overrides.get("consumable_state",world.consumable_service.export_state())
+	var state: Dictionary=paid.overrides.consumable_state if paid.overrides.has("consumable_state") else world.consumable_service.export_state()
 	# One opening id for this result (visual commit key); the result itself is
 	# the granted items, not a kept journal row.
 	var receipt_id: String=Crypto.new().generate_random_bytes(16).hex_encode()
@@ -2833,7 +2916,19 @@ static func plan_spell_material(world: Node,skill: Dictionary,cost_key: String,q
 	for bridge: Variant in public.get("material_inventory_keys",{}).values():
 		if bridge is Dictionary and bridge.get("inventory_key")==cost_key and bridge.get("native_item_id") not in ids:ids.append(bridge.get("native_item_id"))
 	if ids.size()!=1:return {"handled":false}
-	var remaining: int=quantity;var requests: Array=[];var physical_ids: Array=world.item_instances.keys();physical_ids.sort()
+	var remaining: int=quantity;var requests: Array=[]
+	var physical_ids: Array[String]=[]
+	for uid: String in world.item_instances:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary: continue
+		# Use the receipt's class only as a filter. Both owners still verify
+		# the complete original definition, proof, locks and quantity below.
+		var native: Variant=entry.get(RECEIPT)
+		var quest: Variant=entry.get("quest_reward_receipt")
+		if (native is Dictionary and native.get("item_class_id")==ids[0]) or (quest is Dictionary and quest.get("item_class_id")==ids[0]):
+			physical_ids.append(uid)
+	physical_ids.sort()
+	FRAME_HITCH.count("skill.material_candidate_proofs",physical_ids.size())
 	# Deterministic host custody selection, not native material/odds semantics.
 	# Every chosen ID is recorded with exact proof/remaining and consumed as quoted.
 	for uid: String in physical_ids:
@@ -2858,6 +2953,8 @@ static func stage_owned_debits(world: Node,requests: Array) -> Dictionary:
 		else:native_requests.append(request)
 	var native: Dictionary=stage_debit(world,native_requests) if not native_requests.is_empty() else {}
 	if not native_requests.is_empty() and not native.get("ok",false):return native
+	if not native.is_empty() and quest_requests.is_empty():
+		return {"ok":true,"overrides":native.overrides,"selections":native.selections,"quest_step":{},"use_authorized":false}
 	var quest: Dictionary=QUEST_CONSUME.stage(world,quest_requests,str(SOURCE.identity().source_sha256)) if not quest_requests.is_empty() else {}
 	if not quest_requests.is_empty() and not quest.get("ok",false):return _failure(str(quest.get("reason","공동 퀘스트 재료 차감 증명 불일치")))
 	var bag: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true);var selected: Array=[]

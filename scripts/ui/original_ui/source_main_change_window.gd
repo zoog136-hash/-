@@ -26,6 +26,7 @@ extends RefCounted
 ## Not connected (no TWILIGHT feature): 변신 등록 (quick registration), the keypad's result list, 도펠겡어/이름 옵션,
 ## 사용 가능 기간 and the 합성 시도 보상 gauges.
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
+const CardPage=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const StageReads=preload("res://scripts/ui/original_ui/source_stage_tree_reads.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Cards=preload("res://scripts/card_draw_fusion.gd")
@@ -136,17 +137,8 @@ const OPTION_HEIGHT: float=18.0
 ## TWILIGHT grade -> original card prefab. The 일반/고급/희귀/영웅/전설
 ## pairs are the client's own (Change_Card_List: Node_Common 일 반, Node_Rare
 ## 고 급, Node_Unique 희 귀, Node_Legend 영 웅, Node_Epic 전 설).
-const GRADE_MEMBERS={"일반":"UI/Change/Change_Card_A_Common.csb","고급":"UI/Change/Change_Card_A_Rare.csb","희귀":"UI/Change/Change_Card_A_Unique.csb","영웅":"UI/Change/Change_Card_A_Legend.csb","전설":"UI/Change/Change_Card_A_Epic.csb","신화":"UI/Change/Change_Card_A_Myth.csb","유일":"UI/Change/Change_Card_A_Sole.csb"}
-## Per prefab: Panel_Root, Img_Bg, Nd_Character, Sp_Card_<grade>, CardSample, CB_Check.
-const CARD_NODES={
-	"UI/Change/Change_Card_A_Common.csb":{"root":276,"bg":4024,"character":1928,"frame":2520,"sample":2256,"check":1244},
-	"UI/Change/Change_Card_A_Rare.csb":{"root":276,"bg":4056,"character":1932,"frame":2524,"sample":2260,"check":1244},
-	"UI/Change/Change_Card_A_Unique.csb":{"root":320,"bg":3104,"character":1976,"frame":2568,"sample":2304,"check":1288},
-	"UI/Change/Change_Card_A_Epic.csb":{"root":320,"bg":3100,"character":1976,"frame":2568,"sample":2304,"check":1288},
-	"UI/Change/Change_Card_A_Legend.csb":{"root":320,"bg":3104,"character":1976,"frame":2568,"sample":2304,"check":1288},
-	"UI/Change/Change_Card_A_Myth.csb":{"root":320,"bg":3096,"character":1972,"frame":2564,"sample":2300,"check":1288},
-	"UI/Change/Change_Card_A_Sole.csb":{"root":320,"bg":3128,"character":2004,"frame":2596,"sample":2332,"check":1320},
-}
+const GRADE_MEMBERS=CardPage.GRADE_MEMBERS
+const CARD_NODES=CardPage.CARD_NODES
 const MAX_CARDS: int=150
 signal closed
 var _pack: RefCounted

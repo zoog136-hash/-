@@ -1,7 +1,6 @@
 extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
-const CatalogWindow=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
 const Blend=preload("res://scripts/ui/original_ui/source_blend.gd")
 ## The original 523 grade light of a revealed card, for the windows that show
@@ -78,7 +77,7 @@ static func card_face_layers(pack: RefCounted, grade: String, with_background: b
 	var member: String=Page.GRADE_MEMBERS[grade]
 	if not pack.manifest.get("scenes",{}).has(member):return {}
 	var scope: Variant=pack.manifest.get("node_scopes",{}).get(member)
-	var nodes: Dictionary=CatalogWindow.CARD_NODES[member]
+	var nodes: Dictionary=Page.CARD_NODES[member]
 	if scope is Array and not scope.has(nodes.frame):return {}
 	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
 	var node: Dictionary=Scene._node_at_offset(tree,nodes.frame)

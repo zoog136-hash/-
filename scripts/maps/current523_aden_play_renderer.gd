@@ -1659,8 +1659,8 @@ func is_ground_ready(screen: Rect2) -> bool:
 	return _ground_readiness(screen).get("ready",false)
 
 
-## Caller holds the loading cover. Pin source-screen blocks for rollback while
-## the existing bounded pump services the destination, with no player move.
+## Keep the departing frame visible and pin its blocks while the bounded
+## pump services the destination, with no provisional player move.
 func begin_arrival_view(screen: Rect2) -> void:
 	var source_screen: Rect2 = _view_rect()
 	for cell: Vector2i in _visible_blocks:
@@ -1669,8 +1669,8 @@ func begin_arrival_view(screen: Rect2) -> void:
 	_arrival_problem = ""
 	_built_view = Rect2()
 	_refresh_clock = 0.0
-	# The cover is visible. Workers can assemble the destination's draw lists
-	# before the next pump if the original lanes and bins are already resident.
+	# Workers can assemble the destination's draw lists before the next pump
+	# when the original lanes and bins are already resident.
 	if not screen.has_area() or not _background_atlases or not block_jobs_enabled: return
 	if _chunk_bins.is_empty() or _blocks_include_objects != include_objects: return
 	var attempts: int = MAX_BLOCK_JOBS - _block_jobs.size()
@@ -1906,7 +1906,8 @@ func _draw_tiles(canvas: Node2D) -> void:
 	var observe: bool = _usage_generation != _draw_generation and not _arrival_view.has_area() and USAGE.actual_main(self)
 	var view: Rect2=_view_rect().grow(-64.0) if observe else Rect2()
 	var observed_refs: Dictionary={}
-	for cell: Vector2i in _visible_blocks:
+	var draw_blocks: Array[Vector2i] = _arrival_keep if _arrival_view.has_area() else _visible_blocks
+	for cell: Vector2i in draw_blocks:
 		var block: Dictionary = _blocks.get(cell, {})
 		var viewport: Variant = block.get("viewport")
 		if not is_instance_valid(viewport): continue

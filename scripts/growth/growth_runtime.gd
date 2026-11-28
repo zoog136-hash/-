@@ -1,6 +1,7 @@
 extends RefCounted
 ## Local single-save progression. Unknown source values fail closed, never become zero costs.
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const DATA = "res://data/growth/lineage_growth.json"
 const GuardianSource = preload("res://scripts/growth/guardian_source.gd")
 var guardian_source = GuardianSource.new()
@@ -23,6 +24,12 @@ var lab: Dictionary = {}
 var config: Dictionary = {}
 var state: Dictionary = fresh()
 var totals: Dictionary = {}
+# Keep the same accumulation order as a full rebuild. A symbol enchant can
+# replace its stage row without projecting every guardian reward again.
+var _effect_rows: Array[Dictionary] = []
+var _effect_offsets_by_stat: Dictionary = {}
+var _emblem_stage_offsets: Dictionary = {}
+var _effect_inputs: Array = []
 var rerolls: Dictionary = {} # Session only: leaving the screen restores base odds.
 var busy: bool = false
 var rng := RandomNumberGenerator.new()
@@ -86,6 +93,8 @@ func emblem(id: String) -> Dictionary:
 	return {}
 
 func node(id: String) -> Dictionary:
+	if not development and guardian_source.has_node(id):
+		return guardian_source.nodes[id]
 	for group: Dictionary in config.get("guardians",[]):
 		for row: Dictionary in group.nodes:
 			if row.id == id: return row
@@ -215,16 +224,27 @@ func restore(value: Dictionary) -> void:
 
 func _rebuild() -> void:
 	totals.clear()
+	_effect_rows.clear()
+	_effect_offsets_by_stat.clear()
+	_emblem_stage_offsets.clear()
+	_effect_inputs.clear()
 	for id: String in state.emblems:
-		_add_effects(emblem(id).get("effects",[])[int(progress(id).stage)])
-		if development: totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(progress(id).get("absolute",0))
-		else: _add_effects(source523.absolute_effects(id,progress(id).get("absolute_grades",[])))
+		var p: Dictionary = state.emblems[id]
+		var stage: Dictionary = emblem(id).get("effects",[])[int(p.stage)]
+		if development:
+			_add_effects(stage)
+			totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(p.get("absolute",0))
+		else:
+			_emblem_stage_offsets[id] = _effect_rows.size()
+			_record_effects(stage)
+			_record_effects(source523.absolute_effects(id,p.get("absolute_grades",[])))
 	# 523 SKILLTREE_TOOLTIP PANEL_2: stats are always active; invoked skills
 	# require a separate selection per category. Do not gate stats on that selection.
 	if not development:
 		for id: String in state.nodes:
 			if guardian_source.has_node(id) and guardian_source.availability(node(id)).is_empty():
-				_add_effects(guardian_source.effects(id,guardian_level(id)))
+				_record_effects(guardian_source.effects(id,guardian_level(id)))
+		_effect_inputs = _effect_state().duplicate(true)
 		return
 	# Preserve the isolated development profile's existing behavior.
 	var representative: String = str(state.representative)
@@ -237,15 +257,49 @@ func _rebuild() -> void:
 				for row: Dictionary in group.nodes:
 					if state.nodes.has(row.id) and row.get("effects") is Dictionary: _add_effects(row.effects)
 
-func _add_effects(effects: Dictionary) -> void:
+func _record_effects(effects: Dictionary) -> void:
+	var offset: int = _effect_rows.size()
+	_effect_rows.append(effects)
 	for key: String in effects:
-		if key.begins_with("local_"):
-			if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(effects[key])
-			continue
-		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag","pve_damage_reduction:percent"]:
-			totals[key] = float(totals.get(key,0))+float(effects[key])
-		elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
-			totals[key] = float(totals.get(key,0))+float(effects[key])
+		if not _effect_offsets_by_stat.has(key): _effect_offsets_by_stat[key] = []
+		_effect_offsets_by_stat[key].append(offset)
+		_add_effect(key,effects[key])
+
+func _effect_state() -> Array:
+	return [state.emblems,state.nodes,state.get("guardian_levels",{}),Combat.estimates(),state.emblems.keys()]
+
+func _replace_emblem_stage(id: String) -> void:
+	var offset: int = _emblem_stage_offsets[id]
+	var before: Dictionary = _effect_rows[offset]
+	var after: Dictionary = emblem(id).effects[int(state.emblems[id].stage)]
+	var changed: Dictionary = {}
+	for key: String in before:
+		if not after.has(key) or before[key] != after[key]: changed[key] = true
+	for key: String in after:
+		if not before.has(key): changed[key] = true
+	_effect_rows[offset] = after
+	_effect_inputs[0] = state.emblems.duplicate(true)
+	for key: String in changed:
+		var offsets: Array = _effect_offsets_by_stat.get(key,[])
+		if not before.has(key):
+			offsets.insert(offsets.bsearch(offset),offset)
+			_effect_offsets_by_stat[key] = offsets
+		elif not after.has(key): offsets.erase(offset)
+		totals.erase(key)
+		for source_offset: int in offsets:
+			_add_effect(key,_effect_rows[source_offset][key])
+
+func _add_effects(effects: Dictionary) -> void:
+	for key: String in effects: _add_effect(key,effects[key])
+
+func _add_effect(key: String, value: Variant) -> void:
+	if key.begins_with("local_"):
+		if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(value)
+		return
+	if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag","pve_damage_reduction:percent"]:
+		totals[key] = float(totals.get(key,0))+float(value)
+	elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
+		totals[key] = float(totals.get(key,0))+float(value)
 
 func guardian_group(id: String) -> Dictionary:
 	for group: Dictionary in config.guardians:
@@ -513,8 +567,11 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	var stage_limit: int = symbol_stage_limit()
 	if quote_day>=0 and int(offer.get("day",-1))!=quote_day:return fail("게임 일자가 바뀌었습니다 · 비용과 횟수를 다시 확인하세요")
 	busy = true
+	var upgrade_only: bool = action in ["enhance","guardian_enchant"]
 	var next: Dictionary = state.duplicate(true)
-	var inventory: Dictionary = world.inventory.duplicate(true)
+	# These two attempts only edit scalar balances. Other growth actions
+	# retain their existing staged inventory and physical-item handling.
+	var inventory: Dictionary = world.inventory.duplicate(not upgrade_only)
 	var instances: Dictionary = world.item_instances.duplicate(true) if not str(offer.consume_instance).is_empty() else {}
 	for item: String in offer.costs:
 		inventory[item] = int(inventory.get(item,0))-int(offer.costs[item])
@@ -662,20 +719,26 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 				next.guardian_switch_until[str(int(node(id).category_id))]=Time.get_unix_time_from_system()+float(guardian_source.constant("CoolTimeSec"))
 			else: next.representative = id
 	next.revision += 1
+	var started: int = FRAME_HITCH.now()
 	if not validate(next).is_empty():
 		busy = false
 		return fail("성장 상태 검증 실패")
-	var payload: Dictionary={"inventory":inventory,"growth":next}
+	started = FRAME_HITCH.detail_next("growth.action_validate",started)
+	var inventory_changed: bool = inventory != world.inventory
+	var payload: Dictionary={"growth":next}
+	if not upgrade_only or inventory_changed:payload["inventory"]=inventory
 	payload.merge(vital,true)
 	if int(offer.get("gold_cost",0))>0:payload.gold=world.gold-int(offer.gold_cost)
 	if not str(offer.consume_instance).is_empty():payload["item_instances"]=instances
 	var error: Error = world._save_game(true,payload)
+	started = FRAME_HITCH.detail_next("growth.action_save",started)
 	if error != OK:
 		busy = false
 		return fail("저장 실패 · 재료와 성장 상태를 변경하지 않았습니다 (%d)" % error)
+	var refresh_emblem_stage: bool = action == "enhance" and not development and _emblem_stage_offsets.has(id) and _effect_inputs == _effect_state()
 	state = next
 	if world.get("skill_cooldowns") is Dictionary:sync_guardian_cooldowns()
-	world.inventory = inventory
+	if not upgrade_only or inventory_changed:world.inventory = inventory
 	if payload.has("gold"):world.gold=int(payload.gold)
 	if vital.has("hp"):
 		world.hp=int(vital.hp);world.mp=int(vital.mp)
@@ -684,11 +747,16 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	if not str(offer.consume_instance).is_empty(): world.item_instances = instances
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset","restore_emblem"]: rerolls.erase(id)
-	_rebuild()
-	world._invalidate_equipment_static()
-	world.hp = mini(world.hp,world._effective_max_hp())
-	world.mp = mini(world.mp,world._effective_max_mp())
-	world._update_hud()
+	if refresh_emblem_stage: _replace_emblem_stage(id)
+	else: _rebuild()
+	if upgrade_only and world.has_method("_publish_growth_upgrade_hud"):
+		world._publish_growth_upgrade_hud()
+	else:
+		world._invalidate_equipment_static()
+		world.hp = mini(world.hp,world._effective_max_hp())
+		world.mp = mini(world.mp,world._effective_max_mp())
+		world._update_hud()
+	FRAME_HITCH.detail("growth.action_publish",started)
 	busy = false
 	var result: Dictionary = {"ok":true,"message":message}
 	if action == "enhance": result["enhancement_stages"] = enhancement_stages

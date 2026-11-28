@@ -36,6 +36,7 @@ class Host extends Node:
 	var attack_power: int = 10
 	var defense: int = 0
 	var cache_invalidations: int = 0
+	var catalog_lookups: int = 0
 	var level: int = 85
 	var experience: int = 0
 	var exp_need: int = 500
@@ -64,7 +65,9 @@ class Host extends Node:
 	var disk: Dictionary = {}
 	var last_staged: Dictionary = {}
 	var catalog: Dictionary = {"native stack":{"source_item_class_id":100,"sourceId":"m523:item:100"}}
-	func _find_catalog_item_record(label: String) -> Dictionary: return catalog.get(label,{})
+	func _find_catalog_item_record(label: String) -> Dictionary:
+		catalog_lookups += 1
+		return catalog.get(label,{})
 	func _is_instance_equipped(uid: String) -> bool:
 		for item: Dictionary in equipped_items.values():
 			if item.get("instance_id") == uid: return true
@@ -315,8 +318,12 @@ func _run() -> void:
 	runtime.rebuild()
 	check(is_equal_approx(runtime.bonus("ac:flat"),-1.0) and is_equal_approx(float(runtime.stat_record().get("def",0)),1.0),"jade source positive armor maps once to negative canonical AC then positive defense")
 	runtime.state.bonus_rewards = [{"id":99,"expires_at":runtime.now()+10,"pass_id":1,"source_reward_id":50,"receipt_id":"1:50:99"}]
+	runtime.state.domains.jade_grail.jade = {"used_at":runtime.now(),"duration":30}
+	world.ain_service.dragon_orb_expires_at = runtime.now()+30
+	var before_lookups: int = world.catalog_lookups
 	runtime.rebuild()
 	check(is_equal_approx(runtime.bonus("ac:flat"),-3.0) and is_equal_approx(runtime.bonus("experience_bonus:percent"),5.0),"earned bonus uses canonical source helper colon keys without second AC negation")
+	check(world.catalog_lookups == before_lookups+1 and world.ain_service.source_jade_level_override==0,"jade status and earned bonuses share one live ownership scan")
 	var cache_before: int = world.cache_invalidations
 	runtime.test_now += 10; runtime.advance_time()
 	check(world.cache_invalidations > cache_before,"bonus expiry invalidates equipped-record stat cache")
@@ -334,11 +341,14 @@ func _run() -> void:
 	runtime.record_event("kill",{"event_id":"monster:life1","source_id":42,"player_credit":true})
 	runtime.record_event("kill",{"event_id":"monster:life2","source_id":42,"player_credit":false})
 	check(int(runtime.state.event_counters.get("kill",0)) == 1 and int(runtime.state.event_counters.get("kill:42",0)) == 1,"real credited kill occurrence counted once")
+	check(runtime.domains.events.received_events.size() == 1,"a duplicate live occurrence reaches the pass event adapter once")
 	var saved: Dictionary = runtime.snapshot()
+	check(saved.event_receipts.is_empty(),"live replay keys stay outside the saved snapshot")
 	runtime.restore({"unconfirmed523":saved})
 	runtime.record_event("kill",{"event_id":"monster:life1","source_id":42,"player_credit":true})
-	check(int(runtime.state.event_counters.kill) == 1,"event receipts dedupe after reload")
-	check(runtime.domains.events.received_events.size() == 1,"deduped host occurrence reaches pass event adapter once")
+	runtime.record_event("kill",{"event_id":"monster:life1","source_id":42,"player_credit":true})
+	check(int(runtime.state.event_counters.kill) == 2 and runtime.domains.events.received_events.size() == 2,
+		"restoring a snapshot preserves earned progress and starts a fresh live replay window")
 	var cold: Dictionary = fixture()
 	cold.runtime.restore({"unconfirmed523":saved})
 	cold.runtime.record_event("kill",{"event_id":"monster:life1","source_id":42,"player_credit":true})

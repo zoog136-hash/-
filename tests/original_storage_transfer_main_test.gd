@@ -5,6 +5,7 @@ const POPUP = preload("res://scripts/ui/original_ui/source_main_drop_popup.gd")
 const TREE = preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const SUPPLY = preload("res://scripts/loot/patch523_item_inventory.gd")
 const MERGE = preload("res://scripts/loot/native_stack_merge.gd")
+const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const POTION := 233
 
 func _button_for(node: Node, method: String, args: Array) -> Control:
@@ -70,8 +71,24 @@ func _finish_storage() -> void:
 	quit(0 if failures.is_empty() else 1)
 
 func _exercise_storage(world: TwilightWorld) -> void:
+	var archive: String=OS.get_environment("TWILIGHT_INVENTORY_CONTROLS_DEFINITIONS")
+	if not archive.is_empty() and SOURCE.identity().is_empty():
+		OS.set_environment("TWILIGHT_PATCH523_CONTENT",archive)
+		SOURCE.reset()
+		world.skill_awakening=world.SKILL_AWAKENING.new()
+		world.skill_awakening.configure(world)
+	var potion: Dictionary=world.source_item_definition(POTION).get("native_record",{})
+	if not check(SOURCE.identity().get("source_sha256")==SOURCE.SOURCE_SHA and not potion.is_empty(),"verified original potion definition"):return
+	if world._catalog_item_from_source_id(str(potion.sourceId)).is_empty():
+		world.catalog_db["아이템"].append(potion)
+		world._index_catalog_item_sources()
 	var grants: Array=[{"item_class_id":POTION,"amount":4,"bless_raw":1,"enchant":0}]
-	if not check(SUPPLY.commit(world,grants,{"kind":"warehouse_ui_test"}),"four authentic potions are owned by the disposable character"):return
+	var issued: bool=SUPPLY.commit(world,grants,{"kind":"warehouse_ui_test"})
+	if not issued:
+		var staged: Dictionary=SUPPLY.stage(world,grants,{"kind":"warehouse_ui_test"})
+		var reason: String=str(staged.get("error","")) if not staged.get("ok",false) else error_string(world._save_game(false,staged.overrides,{},true))
+		print("ORIGINAL_STORAGE_TEST_SETUP ",reason," / ",world.hud.message_label.text)
+	if not check(issued,"four authentic potions are owned by the disposable character"+("" if issued else " / "+world.hud.message_label.text)):return
 	var uid: String=""
 	var item: String=""
 	for candidate: String in world.item_instances:
@@ -90,6 +107,16 @@ func _exercise_storage(world: TwilightWorld) -> void:
 	var storage: RefCounted=controller._storage_window
 	var initial: int=int(world.inventory.get(item,0))
 	var disk: String=FileAccess.get_sha256(world.save_path())
+	var bulk_deposit: Control=_button_for(storage._scene,"_batch_requested",["bag"])
+	var bulk_withdraw: Control=_button_for(storage._scene,"_batch_requested",["store"])
+	if not check(is_instance_valid(bulk_deposit) and is_instance_valid(bulk_withdraw) and not bulk_deposit.get_global_rect().intersects(bulk_withdraw.get_global_rect()),"both original warehouse bulk actions are independently visible"):return
+	var owned_slot: Control=_slot(storage,"bag",reference)
+	if not check(is_instance_valid(owned_slot),"owned depot slot has a native touch control"):return
+	var start: Vector2=center(owned_slot)
+	await gesture(start,start+Vector2(0,-34),0)
+	check(storage._scrollers.bag.moved>12.0 and not controller.drop_confirm_is_open(),"drag beginning on an owned slot is forwarded without depositing")
+	# Restore the first page before testing the same slot's fresh tap.
+	await gesture(start+Vector2(0,-34),start,0)
 	# Keep the warehouse assets present and remove only the popup from this fixture.
 	var scenes: Dictionary=controller._pack.manifest.scenes
 	var review: Variant=scenes.get(POPUP.BOX)
@@ -108,12 +135,24 @@ func _exercise_storage(world: TwilightWorld) -> void:
 	if not await _answer(controller,"deposit",2,true):return
 	check(world.warehouse.stacks.get(item,0)==0 and world.inventory.get(item,0)==initial and FileAccess.get_sha256(world.save_path())==disk,"cancelling preserves owned stock and disk bytes")
 	if not await _hit(_slot(storage,"bag",reference),"retry the same owned stock"):return
+	world.background_save_enabled=true
+	if not check(world._save_game(true,{},{},false,true)==OK and world.background_save_pending(),"a real autosave is pending when confirming the exact selection"):return
 	if not await _answer(controller,"deposit",3):return
+	var held_confirmation: RefCounted=controller.drop_confirm_popup()
+	if not check(held_confirmation.is_open() and held_confirmation.count()==3 and world.warehouse.stacks.get(item,0)==0 and world.inventory.get(item,0)==initial,"busy confirmation retains the item and quantity for an explicit retry"):return
+	world._finish_background_save(true)
+	check(held_confirmation.is_open() and world.warehouse.stacks.get(item,0)==0,"autosave completion alone never transfers an item")
+	if not await _hit(_popup_button(held_confirmation,"Btn_Yes"),"retry confirmation after autosave"):return
 	check(world.warehouse.stacks.get(item,0)==3 and world.inventory.get(item,0)==initial-3,"confirmation transfers exactly three units")
 	var rows: Array=storage.rows("store").filter(func(row: Dictionary)->bool:return row.name==item)
 	if not check(rows.size()==1 and rows[0].count==3 and not str(rows[0].instance_id).is_empty(),"warehouse shows the exact physical child stack"):return
 	var stored: String=STORAGE.reference_of(rows[0])
 	disk=FileAccess.get_sha256(world.save_path())
+	if not await _hit(_button_for(storage._scene,"_batch_requested",["store"]),"bulk withdrawal without changing the active tab"):return
+	batch=hud.get_node_or_null("Root/TwilightConfirmation")
+	if not check(is_instance_valid(batch),"bulk withdrawal opens its review"):return
+	if not await _hit(batch.cancel_button,"bulk withdrawal cancellation"):return
+	check(world.warehouse.stacks.get(item,0)==3 and FileAccess.get_sha256(world.save_path())==disk,"cancelling withdrawal leaves the stored stock intact")
 	if not await _hit(_slot(storage,"store",stored),"stored physical row"):return
 	world.source_save_blocked=true
 	var answered: bool=await _answer(controller,"withdraw",2)
@@ -138,4 +177,11 @@ func _exercise_storage(world: TwilightWorld) -> void:
 		for component: Dictionary in event.components:
 			if component.physical_id==uid:origin_kept=true
 	check(origin_kept,"the original physical parent's provenance survives the reload")
+	hud.open_warehouse()
+	await frames()
+	if not await _hit(_button_for(storage._scene,"_batch_requested",["store"]),"bulk withdraw the last stored unit"):return
+	batch=hud.get_node_or_null("Root/TwilightConfirmation")
+	if not check(is_instance_valid(batch),"bulk withdrawal is reviewed before movement"):return
+	if not await _hit(batch.confirm_button,"confirm bulk withdrawal"):return
+	check(int(world.warehouse.stacks.get(item,0))==0 and int(world.inventory.get(item,0))==initial,"bulk withdrawal returns the last unit once")
 	evidence["viewport"]=str(root.size)

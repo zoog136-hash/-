@@ -221,6 +221,24 @@ func _accepted_bound_source_id(record:Dictionary)->int:
  var binding:Variant=bindings.skills.get(canonical_id)
  var profile:Variant=profiles.get(canonical_id)
  if not binding is Dictionary or not profile is Dictionary or not profile.get('row') is Dictionary:return 0
+ # The checks below (row SHA-256, JSON parse and bonus validation in
+ # _profile_problem, the original SpellClass row) depend only on these exact
+ # objects. enabled() asks this for every learned skill on each stat sum, so
+ # a buff cast validated ~160 profiles again (Twm diag 2026-11-28: 12 ms of
+ # an 86 ms buff cast on PC). The answer is kept while the adapter revision,
+ # the profile/binding/member objects, the input identity and the definition
+ # cache generation are the same.
+ var revision:Variant=adapter.get('revision')
+ var generation:int=CommonSource.cache_generation()
+ var memo:Variant=_bound_memo.get(canonical_id)
+ if memo is Array and is_same(memo[0],adapter) and memo[1]==revision and is_same(memo[2],profile) and is_same(memo[3],binding) and is_same(memo[4],members) and is_same(memo[5],source_input_identity) and memo[6]==generation:return memo[7]
+ var result:int=_bound_source_tail(canonical_id,adapter,binding,profile)
+ _bound_memo[canonical_id]=[adapter,revision,profile,binding,members,source_input_identity,generation,result]
+ return result
+
+var _bound_memo:Dictionary={}
+
+func _bound_source_tail(canonical_id:String,adapter:Object,binding:Dictionary,profile:Dictionary)->int:
  var bound_sha:Variant=binding.get('row_sha256')
  if not bound_sha is String or bound_sha.length()!=64 or not bound_sha.is_valid_hex_number(false):return 0
  var id:int=_source_id_value(binding.get('spell_id'))

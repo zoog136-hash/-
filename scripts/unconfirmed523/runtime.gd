@@ -818,9 +818,13 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 func rebuild() -> void:
 	totals.clear(); effect_details.clear(); conditional_totals = {"undead":{},"pvp":{}}
 	if world == null or not source.ready() or not _source_configured: return
+	# Jade and earned bonuses read the same ownership and time snapshot.
+	var clock: int = effective_now()
 	if domains.has("jade_grail") and state.domains.has("jade_grail"):
 		var grail: RefCounted = domains.jade_grail
-		effect_details = grail.bonuses(_grail_bonus_context(grail) if grail is JadeGrail else context(),state.domains.jade_grail)
+		var inputs: Dictionary = _grail_bonus_context(grail) if grail is JadeGrail else context()
+		clock = int(inputs.get("now",clock))
+		effect_details = grail.bonuses(inputs,state.domains.jade_grail)
 		var mapping: Dictionary = {"melee_damage":"melee_damage:flat","ranged_damage":"ranged_damage:flat","magic_damage":"magic_damage:flat","melee_accuracy":"melee_hit:flat","ranged_accuracy":"ranged_hit:flat","magic_accuracy":"magic_hit:flat","armor_class":"ac:flat","max_hp":"max_hp:flat","exp_bonus_pct":"experience_bonus:percent","damage_reduction":"damage_reduction:flat","pve_damage_reduction":"pve_damage_reduction:flat","move_speed_bonus":"movement_speed:percent","attack_speed_bonus":"attack_speed:percent","hp_potion_recovery_pct":"potion_percent:percent","cast_speed_bonus":"cast_speed:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","ignore_melee_damage_reduction_pct":"ignore_melee_damage_reduction:percent","ignore_ranged_damage_reduction_pct":"ignore_ranged_damage_reduction:percent","ignore_magic_damage_reduction_pct":"ignore_magic_damage_reduction:percent"}
 		for key: String in effect_details.get("stats",{}):
 			var canonical: String = str(mapping.get(key,key))
@@ -833,7 +837,7 @@ func rebuild() -> void:
 				conditional_totals[scope][str(scoped_mapping.get(key,key))] = float(effect_details.conditional_stats[scope][key])
 	var ids: Array = []
 	for reward: Dictionary in state.get("bonus_rewards",[]):
-		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > effective_now(): ids.append(int(reward.id))
+		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > clock: ids.append(int(reward.id))
 	if not ids.is_empty():
 		# Raw bonus rows resolve their effects without live inventory or quests.
 		var earned: Dictionary = source.bonus_stats(ids,{})

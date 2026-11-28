@@ -29,6 +29,20 @@ class ConfirmHost extends Node:
 		callback.call(1)
 		return null
 
+class PreviewHost extends TwilightWorld:
+	var index_reads: int = 0
+
+	func _sync_item_instances() -> void: pass
+	func _inventory_total_weight() -> int: return 30
+	func _carrying_capacity() -> int: return 100
+
+	func _craft_item_index() -> Dictionary:
+		index_reads += 1
+		return {"local_bar":{"name":"local_bar"}}
+
+	func _quote_craft(recipe_id: String, batches: int, weight: int, capacity: int, local_items: Dictionary) -> Dictionary:
+		return {"id":recipe_id,"batches":batches,"weight":weight,"capacity":capacity,"items":local_items}
+
 func check(ok: bool, label: String) -> void:
 	checks+=1
 	if not ok:
@@ -87,11 +101,23 @@ func _ready_rows() -> void:
 	check(window._ready_first,"제작 가능 우선 is on when the window opens")
 	var ids: Array[String]=["a","b","c","d"]
 	check(WINDOW.ready_first(ids,func(id: String) -> bool:return id in ["c","a"])==["a","c","b","d"],"craftable recipes come first, each group in its own order")
+	var host := PreviewHost.new()
+	var preview: Callable = host.production_preview_quote()
+	var native: Dictionary = preview.call("patch523:1172",1)
+	check(host.index_reads==0 and native.items.is_empty() and native.weight==30 and native.capacity==100,"original preview does not copy the name-based item catalog")
+	var legacy: Dictionary = preview.call("local",1)
+	check(legacy.items.has("local_bar") and preview.call("other",2).items==legacy.items and host.index_reads==1,"legacy quotes build the catalog once within the same preview")
+	var art: Dictionary = {"name":"iron"}
+	host.loot_catalog["by_name"] = {"iron":art}
+	check(is_same(host.production_item_record("iron"),art) and host.production_item_record("missing").is_empty() and host.index_reads==1,"individual item icons need neither a full catalog copy nor an absent grant")
+	host.free()
 	for name: String in ["sort","items","materials"]:window._scrolls[name]=WINDOW.ListScroll.new()
 	var game:=FakeGame.new()
 	game.crafting.recipes["r1"]["result"]["source_id"]="77"
 	var ready: Dictionary=window._item_row(game,"r1")
-	check(not ready.spec.Btn_Disabled.visible and ready.spec.Label_Production.visible and ready.ok,"a craftable row has no dim layer")
+	check(not ready.spec.Btn_Disabled.visible and ready.spec.Btn_Disabled.exclude and ready.spec.Label_Production.visible and ready.ok,"a craftable row does not instantiate the dim layer")
+	check(ready.spec.Btn_Pressed.exclude and not ready.spec.Btn_Normal.get("exclude",false) and ready.spec["Panel/Btn_CheckBox/Btn_Enable"].exclude,
+		"a default row mounts only the active button and bookmark variants")
 	game.ok=false
 	var blocked: Dictionary=window._item_row(game,"r1")
 	check(blocked.spec.Btn_Disabled.visible and not blocked.spec["Btn_Disabled/Nd_SoldOut"].visible and not blocked.spec.Label_Production.visible and not blocked.ok,"a recipe that cannot be made shows the original dim layer, not 품절")

@@ -28,8 +28,16 @@ const GODS={"eva":"Eva","paagrio":"Paagrio","maphr":"Maphr","sayha":"Sayha","gra
 const PARTS: int=30
 const ROMAN: Array[String]=["Ⅰ","Ⅱ","Ⅲ","Ⅳ","Ⅴ","Ⅵ","Ⅶ","Ⅷ","Ⅸ","Ⅹ"]
 const ATTEMPT_LIMIT: int=20
+const OPTION_LIST="Symbol_Listview_Buff/Nd_Buff/ListView"
+const GRADE_PART="Symbol_Listview_Buff/Symbol_Grade"
+const BOUND_PROPERTIES=["text","visible","percent","displaystate"]
+const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
 var selected: String="eva"
-var _clips: Array[String]=[]
+var _next_spec: Dictionary={}
+var _shown_spec: Dictionary={}
+var _shown_options: Array=[]
+var _option_scenes: Array[Node2D]=[]
+var _option_bindings: Array[Dictionary]=[]
 var _reveal_stages: Array[int]=[]
 var _revealed_stage: int=0
 var _reveal_message: String=""
@@ -54,6 +62,11 @@ func open(parent: Node, id: String="") -> Dictionary:
 
 func close() -> void:
 	_clear_reveal()
+	_next_spec.clear()
+	_shown_spec.clear()
+	_shown_options.clear()
+	_option_scenes.clear()
+	_option_bindings.clear()
 	super.close()
 
 func refresh() -> Dictionary:
@@ -106,22 +119,78 @@ func _spec() -> Dictionary:
 	spec["Nd_Button/Btn_Probability/Disabled"]={"visible":false}
 	spec["Btn_HelpBox"]={"activate":Callable(self,"_help")}
 	spec["Btn_Shop"]={"activate":Callable(self,"_ask").bind("buy_key","",1)}
+	_next_spec=spec
 	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var runtime: Object=_runtime()
 	var p: Dictionary=runtime.progress(selected)
 	var stage: int=int(p.stage)
-	_clips.clear()
+	var clips: int=0
 	# The page's enchant parts follow the original clips.
 	var god: String=GODS[selected]
 	for index: int in range(1,PARTS+1):
-		_play(root,out,"Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [god,index],"On_Loop" if index<=stage else "Off",index<=stage)
-	if stage>=3:_play(root,out,"Symbol_Listview_Buff/Symbol_Grade","Grade_%d" % (mini(stage,30)/3*3),false)
+		if _play(root,out,"Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [god,index],"On_Loop" if index<=stage else "Off",index<=stage)!=null:
+			clips+=1
+	if stage>=3 and _play(root,out,GRADE_PART,"Grade_%d" % (mini(stage,30)/3*3),false)!=null:clips+=1
 	var rows: Array=_option_rows(runtime,stage,p.get("absolute_grades",[]))
-	var listed: Dictionary=_fill_list(root,out,"Symbol_Listview_Buff/Nd_Buff/ListView",rows)
+	var listed: Dictionary=_fill_list(root,out,OPTION_LIST,rows)
 	if not listed.get("ok",false):return listed
-	return {"ok":true,"selected":selected,"stage":stage,"attempts":int(p.attempts),"rows":rows.size(),"clips":_clips.size()}
+	_shown_spec=_next_spec
+	_shown_options=rows
+	_option_scenes=listed.scenes
+	_option_bindings=listed.outs
+	return {"ok":true,"selected":selected,"stage":stage,"attempts":int(p.attempts),"rows":rows.size(),"clips":clips}
+
+## The selected god's tree and option rows have fixed geometry. After a
+## transaction update the changed bindings on those nodes. Tab changes
+## and an authored binding that cannot be updated still use the normal build.
+func _refresh_progress() -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var result: Dictionary=last_result if _update_progress_bindings() else _stage()
+	FRAME_HITCH.detail("growth.symbol_progress",started)
+	return result
+
+func _update_progress_bindings() -> bool:
+	var rendered: Dictionary=last_result.get("filled",{})
+	if not is_open() or rendered.get("selected")!=selected:return false
+	var runtime: Object=_runtime()
+	var progress: Dictionary=runtime.progress(selected)
+	var stage: int=int(progress.stage)
+	var previous: int=int(rendered.stage)
+	var rows: Array=_option_rows(runtime,stage,progress.get("absolute_grades",[]))
+	if rows.size()!=_option_scenes.size():return false
+	var updated: Dictionary=_spec()
+	if not _apply_changed_bindings(_scene,_out,_shown_spec,updated):return false
+	for index: int in rows.size():
+		if rows[index].member!=_shown_options[index].member:return false
+		if not _apply_changed_bindings(_option_scenes[index],_option_bindings[index],_shown_options[index].spec,rows[index].spec):return false
+	for index: int in range(mini(previous,stage)+1,maxi(previous,stage)+1):
+		var active: bool=index<=stage
+		var part: String="Symbol_Tap_%s/Nd_Symbol/Nd_Parts/Enchant_%d" % [GODS[selected],index]
+		if _play(_scene,_out,part,"On_Loop" if active else "Off",active)==null:return false
+	if stage>=3 and mini(previous,30)/3!=mini(stage,30)/3:
+		if _play(_scene,_out,GRADE_PART,"Grade_%d" % (mini(stage,30)/3*3),false)==null:return false
+	rendered["stage"]=stage
+	rendered["attempts"]=int(progress.attempts)
+	rendered["clips"]=PARTS+int(stage>=3)
+	_shown_spec=updated
+	_shown_options=rows
+	return true
+
+static func _apply_changed_bindings(scene: Node2D, out: Dictionary, before: Dictionary, after: Dictionary) -> bool:
+	for suffix: String in after:
+		var update: Dictionary=after[suffix]
+		var previous: Dictionary=before.get(suffix,{})
+		if update==previous:continue
+		var target: Dictionary={}
+		for property: String in BOUND_PROPERTIES:
+			if not update.has(property) or update[property]==previous.get(property):continue
+			if target.is_empty():
+				target=_locate(scene,out,suffix)
+				if not target.get("ok",false):return false
+			if not target.player.call("set_bound_"+property,target.offset,update[property]).get("ok",false):return false
+	return true
 
 ## Stage option rows (Ⅰ~Ⅹ by the option's stage) then 절대 옵션 I~V.
 func _option_rows(runtime: Object, stage: int, grades: Array) -> Array:
@@ -167,7 +236,6 @@ func _play(root: Node2D, out: Dictionary, suffix: String, clip: String, repeat: 
 	var holder: Variant=located.player.source_nodes.get(located.offset)
 	var player: Variant=(holder.get_meta("source_project_player") if holder.has_meta("source_project_player") else null) if is_instance_valid(holder) else null
 	if player==null or not player.play(clip,repeat).get("ok",false):return null
-	_clips.append(clip)
 	return player
 
 func _mount_enhancement_motion(scene: Node2D) -> Node2D:
@@ -287,7 +355,7 @@ func _finish_enhancement(scene: Node2D) -> void:
 			if node.has_method("stop"):node.call("stop")
 			node.hide()
 			node.queue_free()
-	_stage()
+	_refresh_progress()
 
 func _clear_reveal() -> void:
 	_reveal_message=""
@@ -329,7 +397,7 @@ func _ask(action: String, id: String, count: int) -> Dictionary:
 		var response: Dictionary=runtime.execute(action,id,count,revision,day)
 		if action=="enhance" and response.get("ok",false) and _present_enhancement(previous_stage,response):return
 		_message(str(response.get("message","")))
-		if is_open():_stage())
+		if is_open():_refresh_progress())
 	return {"ok":true,"quoted":action,"count":count}
 
 func _probability() -> Dictionary:

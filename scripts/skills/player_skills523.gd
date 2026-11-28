@@ -834,12 +834,13 @@ func _source_execution_graph(profile: Dictionary) -> Dictionary:
 ## file; an original item that is missing, marked TestItem=true or lacks the
 ## ItemBonus type-89 identity holds only that material (and the skills that
 ## spend it). Nothing is substituted for a held material.
-func source_material_holds(local: Dictionary) -> Dictionary:
+func source_material_holds(local: Dictionary, only_inventory_key: String = "") -> Dictionary:
 	var holds: Dictionary = {}
 	if not local.get("material_inventory_keys") is Dictionary: return {"invalid":true,"holds":holds}
 	for material: String in local.material_inventory_keys:
 		var bridge: Variant = local.material_inventory_keys[material]
 		if not bridge is Dictionary or not _source_integer(bridge.get("native_item_id")) or int(bridge.native_item_id)<1 or not bridge.get("inventory_key") is String: return {"invalid":true,"holds":{}}
+		if not only_inventory_key.is_empty() and bridge.inventory_key != only_inventory_key: continue
 		var held: Dictionary = {"native_item_id":int(bridge.native_item_id),"inventory_key":str(bridge.inventory_key)}
 		var item: Dictionary = SOURCE_ROWS.row("ItemClass",int(bridge.native_item_id))
 		if item.is_empty(): held["reason"] = "source_item_unavailable"; holds[material] = held; continue
@@ -862,7 +863,7 @@ func _source_materials(local: Dictionary) -> bool:
 
 ## True when the bridge(s) for this inventory key are proven in the original.
 func material_ready(local: Dictionary, inventory_key: String) -> bool:
-	var checked: Dictionary = source_material_holds(local)
+	var checked: Dictionary = source_material_holds(local, inventory_key)
 	if checked.invalid: return false
 	var matched := false
 	for material: String in local.material_inventory_keys:
@@ -1194,9 +1195,6 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
 		record.source523["time_policy"] = "TWILIGHT_ESTIMATE"
 		if record.has("reference_native_material"): record.source523.applied.append("materials")
-		if int(row.TargetKindID) == 52 and PVP_TARGET_TO_NPC:
-			record.source523["original_target_kind"] = str(record.source523.target_kind)
-			record.source523["target_kind"] = "AllButMe"
 	for prefix: String in bindings.get("reference_only_prefixes", []):
 		if id.begins_with(prefix) and estimate.is_empty(): return record
 	if not progression.is_empty() and str(record.activation)=="passive":

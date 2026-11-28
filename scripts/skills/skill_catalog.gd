@@ -24,6 +24,8 @@ var world: Node
 var revision: int = 0
 var resolved_cache: Dictionary = {}
 var resolved_signature: String = ""
+var _stat_reads_active: bool = false
+var _stat_read_signature: String = ""
 var stat_signature: String = ""
 var static_stat_totals: Dictionary = {}
 var weighted_stat_entries: Dictionary = {}
@@ -328,8 +330,23 @@ func _lineage_signature() -> String:
 	# alongside the normal learn/import revision without touching old save data.
 	return "%d|%s|%d|%d|%d|%d" % [revision,str(world.job_class),hash(learned),records.size(),source523.revision,hash(world.equipped_items.get("weapon",{}))]
 
-func _refresh_resolved_cache() -> String:
+# The world only opens this scope around synchronous, read-only stat work.
+# Skill learning, weapon changes and relic updates outside it are read live.
+func begin_stat_reads() -> void:
+	_stat_reads_active = true
+
+func end_stat_reads() -> void:
+	_stat_reads_active = false
+	_stat_read_signature = ""
+
+func _projection_signature() -> String:
+	if _stat_reads_active and not _stat_read_signature.is_empty(): return _stat_read_signature
 	var signature: String = _lineage_signature() + _relic_signature()
+	if _stat_reads_active: _stat_read_signature = signature
+	return signature
+
+func _refresh_resolved_cache() -> String:
+	var signature: String = _projection_signature()
 	if signature != resolved_signature:
 		resolved_signature = signature
 		resolved_cache.clear()
@@ -643,6 +660,14 @@ func import_state(data: Dictionary) -> void:
 		# Never translate a pre-2024 counter name into a different 2024 rarity.
 		# Its old buff is preserved in the archive instead of executing stale stats.
 		world.active_skill_buffs.clear()
+	var buffs: Variant = world.get("active_skill_buffs")
+	if buffs is Dictionary:
+		for name: String in buffs.keys():
+			var buff: Variant = buffs[name]
+			var record := record_for(str(buff.get("skill_id", name)) if buff is Dictionary else name)
+			if not record.has("reference_offline_hold523"): continue
+			archived["offline_reference_buff523:" + name] = buff.duplicate(true) if buff is Dictionary else buff
+			buffs.erase(name)
 	migrate_slots()
 	revision += 1
 

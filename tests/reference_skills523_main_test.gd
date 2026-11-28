@@ -4,6 +4,7 @@ const QA := preload("res://tests/qa_class_selection.gd")
 const MONSTER := preload("res://scenes/Monster.tscn")
 const PROFILES := preload("res://scripts/skills/reference_profiles523.gd")
 const RULES := preload("res://scripts/skill_rules.gd")
+const NATIVE := preload("res://scripts/skills/player_skills523.gd")
 var checks: int = 0
 var failures: Array[String] = []
 var world: TwilightWorld
@@ -22,20 +23,55 @@ func check(ok: bool, note: String) -> bool:
 func audit_catalog() -> void:
 	var profiles: Dictionary = PROFILES.profiles()
 	var catalog := service.catalog
-	check(profiles.size() == 332, "all 332 reference skills authored")
+	var bindings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(NATIVE.BINDINGS_PATH)).skills
+	var verified_source: bool = catalog.source523.source_identity.get("source_sha256") == NATIVE.SOURCE_SHA
+	var has_source: bool = not catalog.source523.profiles.is_empty()
+	if "--require-native-source" in OS.get_cmdline_user_args():
+		check(verified_source and has_source, "the SHA-pinned original archive is mounted")
+	var direct_player_only := 0
+	for id: String in PROFILES.OTHER_PLAYER_REFERENCE523:
+		var spell_id: int = PROFILES.OTHER_PLAYER_REFERENCE523[id]
+		direct_player_only += int(profiles.has(id))
+		check(int(bindings.get(id, {}).get("spell_id", 0)) == spell_id, "reviewed native binding " + id)
+		if verified_source:
+			var row: Dictionary = NATIVE.SOURCE_ROWS.row("SpellClass", spell_id)
+			check(int(row.get("TargetKindID", 0)) == 52, "verified player-only target " + id)
+	check(profiles.size() == 332 and direct_player_only == 19 and PROFILES.OTHER_PLAYER_REFERENCE523.size() == 20,
+		"all public candidates and the earlier bound upgrade base are counted")
 	var mode_counts: Dictionary = {}
 	var classes: Dictionary = {}
 	var fallbacks := 0
+	var bound_fallbacks := 0
+	var affected := 0
+	var retained_native := 0
+	var other_holds := 0
 	for id: String in profiles:
 		var row: Dictionary = catalog.record_for(id)
 		var profile: Dictionary = profiles[id]
 		if not check(not row.is_empty() and row.name == profile.name, "stable ID and canonical name " + id): continue
-		check(not bool(row.get("runtime_blocked", false)) and int(row.minimum_level) > 0 and not str(row.book_name).is_empty(), "learnable role and book " + str(row.name))
+		var required: String = str(profile.get("requires", ""))
+		var excluded: bool = PROFILES._other_player_target(id, catalog.source523.profiles.get(id, {}))
+		if profile.runtime.mode == "upgrade" and not required.is_empty():
+			excluded = excluded or PROFILES._other_player_target(required, catalog.source523.profiles.get(required, {}))
+		if excluded:
+			affected += 1
+			check(not row.has("reference_approx523") and not row.has("reference_visual523"), "no new fallback execution or preview for " + id)
+			if row.runtime_blocked:
+				check(row.has("reference_offline_hold523") and not catalog.owned(row) and not service.ready(row), "held effect cannot execute " + id)
+			else:
+				retained_native += 1
+				check(has_source and (row.has("source_approx523_active") or row.has("source_direct523") or row.has("estimated523")), "only an existing native path remains " + id)
+			continue
+		if row.get("runtime_blocked", false):
+			other_holds += 1
+			continue
 		check(row.reference_visual523.has("shape") and row.reference_visual523.has("color"), "bounded visual registered " + str(row.name))
 		mode_counts[row.mode] = int(mode_counts.get(row.mode, 0)) + 1
 		classes[row["class"]] = true
 		if not row.get("reference_approx523", false): continue
 		fallbacks += 1
+		bound_fallbacks += int(bindings.has(id))
+		check(int(row.minimum_level) > 0 and not str(row.book_name).is_empty(), "learnable role and book " + str(row.name))
 		if row.activation == "active":
 			check(service.CAST_MODES.has(str(row.mode)) and float(row.cooldown) > 0, "reachable cast mode " + str(row.name))
 		else:
@@ -51,7 +87,51 @@ func audit_catalog() -> void:
 	metrics["classes"] = classes.size()
 	metrics["modes"] = mode_counts
 	metrics["fallbacks"] = fallbacks
-	check(classes.size() == 13 and fallbacks == 332, "all classes have executable public fallback without a source pack")
+	metrics["bound_fallbacks"] = bound_fallbacks
+	metrics["public_only_fallbacks"] = fallbacks - bound_fallbacks
+	metrics["runnable_candidates"] = profiles.size() - (affected - retained_native) - other_holds
+	metrics["other_player_scope"] = affected
+	metrics["retained_preexisting_native"] = retained_native
+	metrics["other_holds"] = other_holds
+	metrics["verified_source"] = verified_source
+	check(affected >= 24, "upgrades of player-only effects follow the same hold")
+	if not has_source:
+		check(classes.size() == 13 and fallbacks == 308 and bound_fallbacks == 276 and affected == 24,
+			"without the pack 308 local profiles remain, including 32 public-only approximations")
+
+func audit_offline_admission() -> void:
+	var catalog := service.catalog
+	var id := "lmref_40b6a0c2b8afe497"
+	var entry: Dictionary = PROFILES.profiles()[id]
+	var saved_native: Dictionary = catalog.source523.profiles.get(id, {})
+	catalog.source523.profiles[id] = {"row":{"TargetKindID":52}, "target_kind":{"Name":"PCButMe"}}
+	var held := {"id":id, "runtime_blocked":true}
+	PROFILES.install(held, entry, catalog)
+	check(held.runtime_blocked and held.has("reference_offline_hold523"), "present native classification keeps an otherwise missing fallback held")
+	var prior := {"id":id, "runtime_blocked":false, "source_approx523_active":{"pvp_only_to_npc":true}}
+	var before: Dictionary = prior.duplicate(true)
+	PROFILES.install(prior, entry, catalog)
+	check(prior == before, "already admitted PC-to-NPC execution keeps its original route")
+	check(PROFILES._other_player_target("unlisted_fixture",catalog.source523.profiles[id]), "a verified player-only row also holds a profile missing from the static list")
+	if saved_native.is_empty(): catalog.source523.profiles.erase(id)
+	else: catalog.source523.profiles[id] = saved_native
+
+	var blocked: Dictionary = catalog.record_for(id)
+	if not blocked.has("reference_offline_hold523"): return
+	var saved: Dictionary = catalog.export_state()
+	var with_held: Dictionary = saved.duplicate(true)
+	with_held.learned[id] = 1
+	var name: String = str(blocked.name)
+	var buff := {"skill_id":id,"remaining":20.0,"skill_stats":{"mr":99}}
+	world.active_skill_buffs[name] = buff.duplicate(true)
+	catalog.import_state({"original_skill_state":with_held})
+	var resources := [world.hp,world.mp,world.gold,world.inventory.duplicate(true)]
+	check(not world._cast_job_skill(id) and resources == [world.hp,world.mp,world.gold,world.inventory],
+		"saved ownership of a held skill neither casts nor pays")
+	check(int(catalog.export_state().learned.get(id,0)) == 1 and not world.active_skill_buffs.has(name)
+		and catalog.export_state().archived.get("offline_reference_buff523:" + name) == buff,
+		"the save keeps ownership and archives the inactive effect")
+	catalog.import_state({"original_skill_state":saved})
 
 func setup_grid() -> Vector2:
 	var grid := AStarGrid2D.new()
@@ -179,7 +259,9 @@ func skill_ui() -> void:
 	view.refresh()
 	var index: int = view.filtered.find_custom(func(row: Dictionary) -> bool: return row.name == "데스 스턴")
 	if not check(index >= 0, "skill window finds the newly playable Death Stun"): return
-	view.focus_skill(str(view.filtered[index].id))
+	var id: String = str(view.filtered[index].id)
+	world.hud.open_skills_workspace(id)
+	view = world.hud.skills_view
 	check(view.use_button.is_visible_in_tree() and not view.use_button.disabled, "actual skill detail opens manual cast")
 	check(view.quick_button.is_visible_in_tree() and not view.quick_button.disabled, "actual skill detail opens quickslot")
 	check(view.reagent_button.is_visible_in_tree() and not view.reagent_button.disabled, "skill window offers local material purchase")
@@ -225,9 +307,11 @@ func run() -> void:
 	world.rng.seed = 11523
 	service = world.original_skills
 	audit_catalog()
-	reaper(setup_grid())
-	skill_ui()
-	mobile_cap()
+	audit_offline_admission()
+	if not "--offline-scope-only" in OS.get_cmdline_user_args():
+		reaper(setup_grid())
+		skill_ui()
+		mobile_cap()
 	world.queue_free()
 	await process_frame
 	print("REFERENCE_SKILLS523_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"metrics":metrics}))
