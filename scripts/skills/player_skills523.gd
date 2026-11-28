@@ -1206,9 +1206,14 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		else:record.source523.applied=["native_passive"]
 		return record
 	if str(record.get("activation", "")) != "active" or bool(record.get("runtime_blocked", false)): return record
+	# A learned higher tier (베테랑/마스터/에이션트...) is an original passive on
+	# this base spell. Its own row is not executed here: the base keeps its
+	# verified original contract and the host tier patch already merged by the
+	# catalog (TWILIGHT 근사, internal only). Learning a tier must never make
+	# the base skill uncastable.
+	if upgraded and recovery.is_empty(): record.source523["upgrade_policy"] = "TWILIGHT_APPROX_BASE_CONTRACT_WITH_HOST_TIER_PATCH"
 	var reason := ""
 	if int(row.SpellTypeID) == 3: reason = "523 원본은 패시브 · 기존 액티브 연결 확인 필요"
-	elif upgraded and recovery.is_empty(): reason = "523 상위 스킬 효과 연결 확인 필요"
 	elif int(row.SpellCompositionNode) != 0 and estimate.is_empty() and progression.is_empty(): reason = "523 조건 노드 %d · 노드·조건 유형 정의가 없어 시전 보류" % int(row.SpellCompositionNode)
 	elif int(row.SpellCategoryID) == 184 and recovery.is_empty(): reason = "523 복합 효과 · 하위 주문의 회복·해제·보너스 연결 미완료"
 	elif int(row.SpellCategoryID) in [172,371] and estimate.is_empty() and progression.is_empty(): reason = "523 조건별 하위 주문 · 분기·실행 순서 연결 미완료"
