@@ -891,14 +891,12 @@ func _emit_quick_item(item_name: String) -> void:
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
 	super.update_player(level, hp, max_hp, mp, max_mp, experience_value, exp_need, gold)
-	if v20_level_badge != null:
+	if (_player_fields & PlayerField.LEVEL) and v20_level_badge != null:
 		v20_level_badge.text = str(level)
-	if v20_hp_text != null:
+	if (_player_fields & PlayerField.HP) and v20_hp_text != null:
 		v20_hp_text.text = "%d / %d" % [hp, max_hp]
-	if v20_mp_text != null:
+	if (_player_fields & PlayerField.MP) and v20_mp_text != null:
 		v20_mp_text.text = "%d / %d" % [mp, max_mp]
-	if v20_status_name != null:
-		v20_status_name.text = "황혼의 %s" % str(character_state.get("job_class", "기사"))
 
 func set_map_name(value: String) -> void:
 	super.set_map_name(value)

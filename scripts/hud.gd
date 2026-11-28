@@ -4,6 +4,11 @@ class_name TwilightHUD
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const CARD_OPTION_VISIBILITY = preload("res://scripts/card_option_visibility.gd")
 
+enum PlayerField { HP = 1, MP = 2, LEVEL = 4, EXP = 8, GOLD = 16 }
+# Also used to replay the last publication when the original HUD is mounted.
+var _player_values: Array = []
+var _player_fields: int = 0
+
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
 signal bleed_skill_pressed
@@ -331,14 +336,29 @@ func _job_profile(job_name: String) -> Dictionary:
 	return {}
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
-	player_label.text = "황혼의 %s  Lv.%d" % [str(character_state.get("job_class", "기사")), level]
-	hp_bar.max_value = maxi(1, max_hp)
-	hp_bar.value = hp
-	mp_bar.max_value = maxi(1, max_mp)
-	mp_bar.value = mp
-	exp_bar.max_value = maxi(1, exp_need)
-	exp_bar.value = experience_value
-	gold_label.text = "HP %d/%d   MP %d/%d   아데나 %d" % [hp, max_hp, mp, max_mp, gold]
+	var first: bool = _player_values.is_empty()
+	_player_fields = 0
+	if first or level != _player_values[0]:
+		_player_fields |= PlayerField.LEVEL
+		player_label.text = "황혼의 %s  Lv.%d" % [str(character_state.get("job_class", "기사")), level]
+	if first or hp != _player_values[1] or max_hp != _player_values[2]:
+		_player_fields |= PlayerField.HP
+		hp_bar.max_value = maxi(1, max_hp)
+		hp_bar.value = hp
+	if first or mp != _player_values[3] or max_mp != _player_values[4]:
+		_player_fields |= PlayerField.MP
+		mp_bar.max_value = maxi(1, max_mp)
+		mp_bar.value = mp
+	if first or experience_value != _player_values[5] or exp_need != _player_values[6]:
+		_player_fields |= PlayerField.EXP
+		exp_bar.max_value = maxi(1, exp_need)
+		exp_bar.value = experience_value
+	if first or gold != _player_values[7]:
+		_player_fields |= PlayerField.GOLD
+	if _player_fields & (PlayerField.HP | PlayerField.MP | PlayerField.GOLD):
+		gold_label.text = "HP %d/%d   MP %d/%d   아데나 %d" % [hp, max_hp, mp, max_mp, gold]
+	if _player_fields != 0:
+		_player_values = [level, hp, max_hp, mp, max_mp, experience_value, exp_need, gold]
 
 func set_map_name(value: String) -> void:
 	map_label.text = value

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Presentation math matches renewal_hud.update_player; no progression or
 ## reward processing. Original LoadingBar applies its own native clipping.
+enum CharField { HP=1, MP=2, LEVEL=4, ALL=7 }
 const EXP_MEMBER="UI/Main/Hud_ExpBar.csb"
 const EXP_SHA256="af872f74f183897d2704723811378c39434a78d2bde0a9f98fba4ddbab1e3c8e"
 const EXP_BAR=2572
@@ -95,23 +96,28 @@ static func build_char_info(pack: RefCounted, hud: Node, values: Dictionary) -> 
 		bindings[CLASS_PROJECT]={"role":"project","source_node_offsets":CLASS_LEVEL_OFFSETS.duplicate(),"bindings":{CLASS_LEVEL:{"role":"source_text","text":str(values.level)}}}
 	return {"ok":true,"member":CHAR_MEMBER,"sha256":CHAR_SHA256,"source_node_offsets":offsets,"bindings":bindings,"values":presented,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":[{"offset":37544,"field":"original_clipping_custom_property","source_property":"clipping","source_value":0.5,"included_in_scope":false},"original_hp_delta_trail_timing","original_poison_weight_lawful_and_other_stat_roles","class_portrait_and_rank_branch_selection"]}
 
-static func refresh_char_info(scene: Node2D, values: Dictionary) -> Dictionary:
+static func refresh_char_info(scene: Node2D, values: Dictionary, fields: int=CharField.ALL, previous: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(scene) or str(scene.get("source_member"))!=CHAR_MEMBER:return _fail("source_main_char_info_scene_mismatch")
 	if not scene.has_method("set_bound_percent") or not scene.has_method("set_bound_text"):return _fail("source_main_char_info_scene_binding_api_missing")
 	var pack: Variant=scene.get("source_pack")
 	if pack==null or pack.manifest.get("files",{}).get(CHAR_MEMBER,{}).get("sha256","")!=CHAR_SHA256:return _fail("source_main_char_info_identity_mismatch")
-	var presented: Dictionary=_char_values(values)
+	if previous.is_empty():fields=CharField.ALL
+	var presented: Dictionary=_char_values(values,fields,previous)
 	if not presented.get("ok",false):return presented
-	for offset: int in [37172,35528]:
-		var result: Dictionary=scene.set_bound_text(offset,presented.hp_text if offset==37172 else presented.mp_text)
+	if fields & CharField.HP:
+		var result: Dictionary=scene.set_bound_text(37172,presented.hp_text)
 		if not result.get("ok",false):return result
-	for offset: int in [40620,35464]:
-		var result: Dictionary=scene.set_bound_percent(offset,presented.hp_percent if offset==40620 else presented.mp_percent)
+		result=scene.set_bound_percent(40620,presented.hp_percent)
 		if not result.get("ok",false):return result
-	if scene.get("source_nodes").has(POISON_BAR):
-		var poison_percent: Dictionary=scene.set_bound_percent(POISON_BAR,presented.hp_percent)
-		if not poison_percent.get("ok",false):return poison_percent
-	if scene.get("source_nodes").has(CLASS_PROJECT):
+		if scene.get("source_nodes").has(POISON_BAR):
+			result=scene.set_bound_percent(POISON_BAR,presented.hp_percent)
+			if not result.get("ok",false):return result
+	if fields & CharField.MP:
+		var result: Dictionary=scene.set_bound_text(35528,presented.mp_text)
+		if not result.get("ok",false):return result
+		result=scene.set_bound_percent(35464,presented.mp_percent)
+		if not result.get("ok",false):return result
+	if (fields & CharField.LEVEL) and scene.get("source_nodes").has(CLASS_PROJECT):
 		if typeof(values.get("level"))!=TYPE_INT:return _fail("source_main_raw_level_required")
 		var child: Dictionary=scene.project_player([CLASS_PROJECT])
 		if not child.get("ok",false):return child
@@ -119,10 +125,19 @@ static func refresh_char_info(scene: Node2D, values: Dictionary) -> Dictionary:
 		if not result.get("ok",false):return result
 	return {"ok":true,"values":presented,"partial_source_scene":true,"game_state_written":false}
 
-static func _char_values(values: Dictionary) -> Dictionary:
-	for key: String in ["hp","max_hp","mp","max_mp"]:
-		if not values.has(key) or typeof(values[key])!=TYPE_INT:return {"ok":false,"code":"source_main_char_info_raw_value_required","field":key}
-	return {"ok":true,"hp_percent":float(values.hp)*100/maxi(1,int(values.max_hp)),"mp_percent":float(values.mp)*100/maxi(1,int(values.max_mp)),"hp_text":"%d / %d" % [int(values.hp),int(values.max_hp)],"mp_text":"%d / %d" % [int(values.mp),int(values.max_mp)]}
+static func _char_values(values: Dictionary, fields: int=CharField.ALL, previous: Dictionary={}) -> Dictionary:
+	var presented: Dictionary=previous.duplicate() if not previous.is_empty() else {"ok":true}
+	if fields & CharField.HP:
+		for key: String in ["hp","max_hp"]:
+			if typeof(values.get(key))!=TYPE_INT:return {"ok":false,"code":"source_main_char_info_raw_value_required","field":key}
+		presented["hp_percent"]=float(values.hp)*100/maxi(1,values.max_hp)
+		presented["hp_text"]="%d / %d" % [values.hp,values.max_hp]
+	if fields & CharField.MP:
+		for key: String in ["mp","max_mp"]:
+			if typeof(values.get(key))!=TYPE_INT:return {"ok":false,"code":"source_main_char_info_raw_value_required","field":key}
+		presented["mp_percent"]=float(values.mp)*100/maxi(1,values.max_mp)
+		presented["mp_text"]="%d / %d" % [values.mp,values.max_mp]
+	return presented
 
 static func refresh_poison(scene: Node2D, hud: Node) -> Dictionary:
 	if not is_instance_valid(scene) or not scene.get("source_nodes").has(POISON_BAR):return {"ok":true,"handled":false}
