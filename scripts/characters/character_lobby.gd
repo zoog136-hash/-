@@ -166,7 +166,7 @@ func _button(text: String, action: Callable, identifier: String = "") -> ScrollB
 		if not busy: action.call())
 	return button
 
-func _show_roster() -> void:
+func _show_roster(preferred_id: String = "") -> void:
 	_clear()
 	selected_id = ""
 	snapshot = {}
@@ -196,7 +196,11 @@ func _show_roster() -> void:
 		content.add_child(_button("계정 저장 구조 업그레이드\n원본 백업 후 진행", _upgrade, "UpgradeAccount"))
 		return
 	var characters: Array = snapshot.get("characters",[])
-	selected_id = str(snapshot.get("selected",""))
+	var selection := _roster_character(preferred_id)
+	if selection.is_empty():
+		selection = _roster_character(str(snapshot.get("selected", "")))
+	selected_id = str(selection.get("id", ""))
+	var selected_row: Button
 	var count := STYLE.label("내 캐릭터 %d / 13" % characters.size(), 18, STYLE.GOLD)
 	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	content.add_child(count)
@@ -206,7 +210,9 @@ func _show_roster() -> void:
 		var button := _button(label,func() -> void: _select(id),"Character_"+id)
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
-		button.button_pressed = id == selected_id
+		button.button_pressed = not selected_id.is_empty() and id == selected_id
+		if button.button_pressed:
+			selected_row = button
 		content.add_child(button)
 		if int(entry.get("gender_id",0))==0 and str(catalog.problem).is_empty():
 			content.add_child(STYLE.label("%s · 기존 저장에 없던 성별을 한 번 선택하세요. 직업과 진행은 유지됩니다."%str(entry.name),14,STYLE.MUTED))
@@ -217,7 +223,7 @@ func _show_roster() -> void:
 	enter.scroll_host = null
 	enter.clip_text = false
 	enter.theme_type_variation = ENTER_STYLE
-	enter.disabled = selected_id.is_empty()
+	_update_entry(enter, selection)
 	_roster_actions.add_child(enter)
 	var create := _button("새 캐릭터",_show_creation,"NewCharacter")
 	create.scroll_host = null
@@ -225,24 +231,46 @@ func _show_roster() -> void:
 	create.disabled = characters.size() >= 13 or not str(catalog.problem).is_empty()
 	_roster_actions.add_child(create)
 	if not str(catalog.problem).is_empty(): content.add_child(STYLE.label(str(catalog.problem),16,STYLE.MUTED))
+	if selected_row != null:
+		_reveal_selected_row(selected_row, selected_id)
 
 func _roster_ready() -> bool:
 	return _profile_problem.is_empty() and snapshot.get("ok", false) == true and not snapshot.get("legacy", false) and not snapshot.get("upgrade", false)
 
+func _roster_character(id: String) -> Dictionary:
+	if not id.is_empty():
+		for entry: Dictionary in snapshot.get("characters", []):
+			if str(entry.get("id", "")) == id:
+				return entry
+	return {}
+
+func _update_entry(enter: Button, entry: Dictionary) -> void:
+	enter.disabled = entry.is_empty()
+	var display_name := str(entry.get("name", "캐릭터"))
+	status.text = "" if enter.disabled else "선택 · %s" % display_name
+	enter.tooltip_text = "접속" if enter.disabled else "접속 · %s" % display_name
+
+func _reveal_selected_row(row: Button, id: String) -> void:
+	await get_tree().process_frame
+	if is_instance_valid(row) and row.get_parent() == content and selected_id == id:
+		scroll.ensure_control_visible(row)
+
 func _select(id: String) -> void:
 	if busy or not _roster_ready(): return
+	var entry := _roster_character(id)
+	if entry.is_empty(): return
 	selected_id = id
 	for node: Node in content.get_children():
 		if node is Button and node.name.begins_with("Character_"): node.button_pressed = node.name == "Character_"+id
 	var enter := _roster_actions.get_node_or_null("EnterCharacter") as Button
-	if enter != null: enter.disabled = false
+	if enter != null: _update_entry(enter, entry)
 
 func _complete_gender(id: String, gender: int) -> void:
 	if busy or not _roster_ready(): return
 	busy=true
 	var result: Dictionary=store.complete_legacy_gender(id,gender,catalog)
 	busy=false
-	if result.get("ok",false): _show_roster()
+	if result.get("ok",false): _show_roster(selected_id)
 	else: status.text=str(result.get("problem","성별 저장 실패"))
 
 func _upgrade() -> void:
@@ -311,7 +339,7 @@ func _show_creation() -> void:
 	content.add_child(name_input)
 	create_button = _button("캐릭터 생성",_create,"CreateCharacter")
 	content.add_child(create_button)
-	content.add_child(_button("취소 · 목록으로",_show_roster,"CancelCreation"))
+	content.add_child(_button("취소 · 목록으로",func() -> void: _show_roster(selected_id),"CancelCreation"))
 	status.text = "생성 가능한 직업 수와 계정의 13개 슬롯은 별개입니다."
 	_refresh_create()
 
@@ -411,19 +439,21 @@ func _create() -> void:
 	var result: Dictionary = store.create_character(name_input.text,selected_class,selected_gender,catalog)
 	busy = false
 	if result.get("ok",false):
-		_show_roster()
-		_select(str(result.get("id","")))
-		status.text = "캐릭터를 생성했습니다. 접속할 캐릭터를 확인하세요."
+		var created_id := str(result.get("id", ""))
+		_show_roster(created_id)
+		if not created_id.is_empty() and selected_id == created_id:
+			status.text = "생성 완료 · %s" % str(_roster_character(created_id).get("name", "캐릭터"))
 	else:
 		_refresh_create()
 		status.text = str(result.get("problem","캐릭터를 저장하지 못했습니다."))
 
 func _enter() -> void:
-	if busy or not _roster_ready() or selected_id.is_empty(): return
-	for entry: Dictionary in snapshot.get("characters",[]):
-		if entry.id==selected_id and int(entry.get("gender_id",0))==0 and str(catalog.problem).is_empty():
-			status.text="기존 캐릭터의 성별을 먼저 선택하세요. 직업과 진행은 바뀌지 않습니다."
-			return
+	if busy or not _roster_ready(): return
+	var entry := _roster_character(selected_id)
+	if entry.is_empty(): return
+	if int(entry.get("gender_id",0))==0 and str(catalog.problem).is_empty():
+		status.text="기존 캐릭터의 성별을 먼저 선택하세요. 직업과 진행은 바뀌지 않습니다."
+		return
 	busy = true
 	var result: Dictionary = store.select_character(selected_id)
 	if not result.get("ok",false):
