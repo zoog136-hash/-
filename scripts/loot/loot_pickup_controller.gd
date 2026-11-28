@@ -5,6 +5,7 @@ const PICKUP_RADIUS: float = 60.0
 const SCAN_RADIUS: float = 460.0
 const SCAN_INTERVAL: float = 0.25
 const BLOCKED_RETRY: float = 15.0
+const REFUSED_RETRY: float = 1.0
 ## Path searches for new targets stop for this frame once this much time is
 ## spent (the first one always runs); the scan continues next frame. Up to 8
 ## unreachable drops each ran a full search in one frame (523.699: auto.pickup
@@ -229,16 +230,22 @@ func _reject_target() -> void:
 func _advance_target() -> bool:
 	if not manager.views.has(target_id) or not manager.valid_view(manager.views[target_id]): cancel(); return false
 	if player.is_stunned() or player.is_feared() or player.is_held() or player.movement_locked: return true
-	var view: Button = manager.views[target_id]
+	var view: TwilightGroundLoot = manager.views[target_id]
 	var destination: Vector2 = _destination(target_id)
 	if player.global_position.distance_to(destination) <= PICKUP_RADIUS and bool(world.call("_has_line_of_sight_world", player.global_position, destination)):
 		player.clear_click_path()
-		if bool(world.call("_collect_ground_drop", view)):
-			var again: bool = sweep and mode == "manual"
+		if Time.get_ticks_msec() - view.visible_since < manager.MIN_VISIBLE_MS: return true
+		if not bool(world.call("_collect_ground_drop", view)):
+			# The item reached the ownership check. Release the route and let
+			# AUTO consider another drop or resume combat.
+			if mode == "auto": blocked[target_id] = clock + REFUSED_RETRY
 			cancel()
-			if again:
-				sweep_picked += 1
-				request_nearby(true)
+			return false
+		var again: bool = sweep and mode == "manual"
+		cancel()
+		if again:
+			sweep_picked += 1
+			request_nearby(true)
 		return true
 	if stuck_time > 2.2:
 		_reject_target()
@@ -265,12 +272,12 @@ func _ranked_candidates(automatic: bool, limit: int) -> Array[String]:
 	var other_batch: int = roundi(SCAN_RADIUS * 10.0) + 1
 	for id: String in manager.views:
 		if float(blocked.get(id, 0)) > clock: continue
-		if not manager.valid_view(manager.views[id]): continue
-		var row: Dictionary = manager.records[id]
-		if automatic and bool(row.get("player_dropped", false)): continue
+		var row: Dictionary = manager.records.get(id, {})
+		if row.is_empty() or (automatic and bool(row.get("player_dropped", false))): continue
 		var coords: Array = row.position
 		var distance: float = origin.distance_to(Vector2(float(coords[0]), float(coords[1])))
 		if not (distance <= SCAN_RADIUS): continue
+		if not manager.valid_view(manager.views[id]): continue
 		var distance_key: int = roundi(distance * 10.0)
 		if manager.current_batch.is_empty() or str(row.hunt_batch) != manager.current_batch: distance_key += other_batch
 		# Lower is better. Unknown grade (-1) sorts after every named grade.
