@@ -1,6 +1,7 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
+const AUTO_AREA_MISSES = preload("res://scripts/skills/auto_area_misses.gd")
 
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const AMMO_FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
@@ -19,6 +20,7 @@ var catalog: TwilightOriginalSkillCatalog
 var status: TwilightSkillStatusService = Status.new()
 var vfx: TwilightOriginalSkillVFX
 var world: Node
+var _auto_area_misses := AUTO_AREA_MISSES.new()
 var proc_depth: int = 0
 var counter_depth: int = 0
 var shields: Dictionary = {}
@@ -225,7 +227,7 @@ func material_plan(skill: Dictionary) -> Dictionary:
 			physical_materials.append_array(original.requests)
 	return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 
-func cost_reason(skill: Dictionary) -> String:
+func cost_reason(skill: Dictionary, quote_materials: bool = true) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	var estimate_reason: String = estimated_nodes.cost_reason(skill)
@@ -235,7 +237,7 @@ func cost_reason(skill: Dictionary) -> String:
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
-	return str(material_plan(skill).reason)
+	return str(material_plan(skill).reason) if quote_materials else ""
 
 func spend(skill: Dictionary) -> bool:
 	if not cost_reason(skill).is_empty(): return false
@@ -259,7 +261,7 @@ func spend(skill: Dictionary) -> bool:
 	for item: String in plan.spent: world.inventory[item] = int(world.inventory.get(item,0)) - int(plan.spent[item])
 	return true
 
-func ready(skill: Dictionary, announce: bool = false) -> bool:
+func ready(skill: Dictionary, announce: bool = false, quote_materials: bool = true) -> bool:
 	var source_status: Dictionary=catalog.source_learning_status(skill)
 	if not source_status.is_empty():
 		if announce:world.hud.show_message(str(source_status.message))
@@ -288,7 +290,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif stackable.handles(skill):
 		var gate: Dictionary = stackable.admission(skill)
 		reason = str(gate.get("reason","")) if gate.result!="continue_next_validation" else cost_reason(stackable.cast_skill(skill))
-	else: reason = cost_reason(skill)
+	else: reason = cost_reason(skill, quote_materials)
 	if not reason.is_empty() and announce: world.hud.show_message(reason)
 	return reason.is_empty()
 
@@ -320,8 +322,14 @@ func cast_auto_area(record: Dictionary) -> bool:
 	if world.monsters_root.get_child_count() == 0: return false
 	return call("_cast_impl", record, false, false, true)
 
+func clear_auto_area_misses() -> void:
+	_auto_area_misses.clear()
+
 func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool = false) -> bool:
-	if not ready(record, manual): return false
+	# On the ordinary automatic area route, HP/MP and cooldowns still gate
+	# geometry. The bag only needs a quote once a victim is reachable.
+	var defer_materials: bool = area_only and not manual and not bool(record.get("local_design", false))
+	if not ready(record, manual, not defer_materials): return false
 	var skill := catalog.resolve(record)
 	var area: bool = is_area_cast(skill)
 	if area_only and (not area or bool(skill.get("spell_move523", {}).get("ok", false)) \
@@ -353,6 +361,7 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 	var target: TwilightMonster = null
 	var dash_only := false
 	if area and not manual and not _has_area_target(skill): return false
+	if defer_materials and not str(material_plan(skill).reason).is_empty(): return false
 	if mode in ["attack", "status", "turn_undead"] and not area:
 		target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead:
@@ -614,8 +623,26 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 	var reach: float = float(skill.get("range", 0.0))
 	var forward: Vector2 = direction.normalized() if direction != Vector2.ZERO else origin.direction_to(center)
 	var end: Vector2 = origin + forward * reach if line else origin
-	for child: Node in world.monsters_root.get_children():
-		if not child is TwilightMonster or child.dead or child.is_queued_for_deletion(): continue
+	var can_remember: bool = first_only and _auto_area_misses.prepare(world, origin)
+	var geometry: Array = []
+	var bounds := Rect2()
+	if can_remember:
+		geometry = [shape, radius, reach, center, end, forward]
+		if _auto_area_misses.has_miss(geometry):
+			FRAME_HITCH.count("skill.area_auto_miss_reused")
+			return result
+		if line: bounds = Rect2(origin, end - origin).abs().grow(radius)
+		elif cone: bounds = Rect2(origin, Vector2.ZERO).grow(maxf(0.0, reach))
+		else: bounds = Rect2(center, Vector2.ZERO).grow(radius)
+		bounds = bounds.grow(1.0)
+		can_remember = bounds.position.is_finite() and bounds.size.is_finite()
+	var actors: Array[Node] = world.monsters_root.get_children()
+	if first_only: FRAME_HITCH.count("skill.area_auto_scans")
+	for child: Node in actors:
+		if not child is TwilightMonster: continue
+		if child.dead or child.is_queued_for_deletion():
+			if can_remember and bounds.has_point(child.global_position): can_remember = false
+			continue
 		var monster := child as TwilightMonster
 		var position: Vector2 = monster.global_position
 		var nearest: Vector2 = Geometry2D.get_closest_point_to_segment(position, origin, end) if line else center
@@ -629,17 +656,26 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 				and absf(offset.cross(forward)) * reach <= radius * depth): continue
 		elif not (position.distance_squared_to(nearest) <= radius_squared):
 			continue
-		if not Catalog.SOURCE523.target_allowed(skill, monster): continue
+		if not Catalog.SOURCE523.target_allowed(skill, monster):
+			can_remember = false
+			continue
 		if first_only:
-			if not monster.permits_auto_selection(): continue
-			if skill.get("mode") == "status" and not status.can_affect(skill, monster): continue
-			if skill.get("mode") == "turn_undead" and turn_undead_chance(skill, monster) <= 0.0: continue
+			if not monster.permits_auto_selection() \
+				or (skill.get("mode") == "status" and not status.can_affect(skill, monster)) \
+				or (skill.get("mode") == "turn_undead" and turn_undead_chance(skill, monster) <= 0.0):
+				can_remember = false
+				continue
 		if defer_sight:
 			result.append(monster)
 			continue
 		if not world._has_line_of_sight_world(origin, position): continue
 		result.append(monster)
 		if first_only: break
+	if first_only:
+		# Only remember misses proven by position and terrain. A live change to
+		# concealment, immunity, or auto-selectability needs no move to be seen.
+		if can_remember and result.is_empty(): _auto_area_misses.remember(world.monsters_root, actors, geometry, bounds)
+		else: _auto_area_misses.clear_if_unused()
 	return result
 
 func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1, direction: Vector2 = Vector2.ZERO, area_cast: bool = false) -> void:
