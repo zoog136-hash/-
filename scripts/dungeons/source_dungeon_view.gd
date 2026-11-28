@@ -186,7 +186,7 @@ func _set_orim_buff_icon(button: Button, service: RefCounted) -> void:
 	button.set_meta("source523_image_provenance",provenance)
 	button.set_meta("source523_image_status",str(image.get("status",image.get("reason",""))))
 
-func _play_action(action: String) -> void:
+func _play_action(action: String) -> Dictionary:
 	if action=="settings":
 		if not is_instance_valid(play_settings_dialog):
 			play_settings_dialog=AcceptDialog.new();play_settings_dialog.ok_button_text="확인";play_settings_dialog.title="TWILIGHT 자체 던전 규칙 · 원본값과 별도";play_settings_dialog.min_size=Vector2i(680,520);add_child(play_settings_dialog)
@@ -198,8 +198,8 @@ func _play_action(action: String) -> void:
 				if parser.parse(play_settings_text.text)==OK and parser.data is Dictionary:result=world.dungeon_play.configure_settings(parser.data)
 				_update_play();notice.text="자체 설정을 저장했습니다." if result.get("ok",false) else str(result.get("reason","저장 실패")))
 		play_settings_text.text=JSON.stringify(world.dungeon_play.state.settings,"\t")
-		play_settings_dialog.popup_centered();return
-	if selected<0 or selected>=rows.size():return
+		play_settings_dialog.popup_centered();return {}
+	if selected<0 or selected>=rows.size():return {}
 	var service: RefCounted=world.dungeon_play;var result: Dictionary
 	match action:
 		"begin":result=await world.run_dungeon_loading(Callable(service,"begin_loading").bind(_kind(),int(rows[selected].stage.ID) if _kind()=="orim" else int(rows[selected].row.ID),-1,orim_hero.get_selected_id() if _kind()=="orim" and orim_hero.item_count>0 else 0))
@@ -211,6 +211,7 @@ func _play_action(action: String) -> void:
 		"cancel":result=service.cancel_pending()
 		_:result={"ok":false,"reason":"알 수 없는 작업"}
 	_update_play();notice.text="처리를 저장했습니다." if result.get("ok",false) else str(result.get("reason","실패"))
+	return result
 
 func _choose_pack() -> void:
 	if not is_instance_valid(import_dialog):

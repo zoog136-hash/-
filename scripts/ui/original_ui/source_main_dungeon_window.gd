@@ -1243,7 +1243,10 @@ func _orim_pressed(action: String) -> Dictionary:
 		var bound: Object=_bind_view(_family(),index)
 		if bound==null:return
 		if action=="begin" and chosen>=0 and chosen<bound.orim_hero.item_count:bound.orim_hero.select(chosen)
-		await bound._play_action(action)
+		var result: Dictionary=await bound._play_action(action)
+		if action=="begin" and result.get("ok",false) and result.get("travel",false):
+			call_deferred("_close_requested")
+			return
 		_notice(bound)
 	match action:
 		"begin":return _confirm("오림의 흔적 · 도전",stage+"\n캐릭터: "+str(view.orim_hero.get_item_text(chosen)).get_slice(" · ",0),"도전",run)

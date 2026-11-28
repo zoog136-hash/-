@@ -50,6 +50,10 @@
 - 입장: 스테이지의 원본 Land로 이동(Territory 상자 안 첫 통행 가능 셀). Land 속성 `MinLevel 80` 확인.
   `NoTeleport`·`TurnOffAutoForTeleport`·`NoPurplePushOnDie`·`NpcBuff`는 Land 안 규칙이라 입장을 막지 않는다.
   끝나면(클리어·실패·포기) 출발 지점으로 돌아온다.
+- 원본 지도에서 출발할 때는 도착 좌표·귀환 지점·오림 진행 기록·입장료를 같은 저장에서 확정한다. 지도 준비 또는 저장이
+  거절되면 도전 횟수와 입장료를 유지하고 창을 열어 둔다. 저장 결과가 불확실하면 다시 불러올 때까지 재입장을 중지한다.
+  전수 대조표 #697의 일반 첫 장은 `OrimsTrailStage` #2 → `Territories` #224812 → `Land` #48752(`13459/`)다.
+  검증용 `tests/orim_source_entry_main_test.gd`는 원본 UI46 버튼과 523 정의, Main 저장을 사용하며 지도 도착 결과를 제어한다.
 - 영웅: 선택한 영웅의 HP가 오림 HP. 오림 몬스터의 NpcAttack 주사위 피해는 플레이어가 아니라 영웅 HP를 깎고,
   0이 되면 실패.
 - 경험치: 처치한 NpcClass.Exp(오림 NPC 대부분 100) × (1 + 보유 `ExperienceAdditionPercent`) → OrimsTrailExperience 레벨.

@@ -258,13 +258,22 @@ func _begin_impl(kind: String, identifier: int, now: int, character_id: int, loa
 		if requirement.type=="MaxLevel":maximum=int(requirement.row.Value)
 	if world.level<minimum or (maximum>0 and world.level>maximum):return {"ok":false,"reason":"원본 입장 레벨 조건 불충족"}
 	var next:=state.duplicate(true);var cost: Dictionary;var groups: Array=[]
+	var orim_run: Dictionary={}
+	var orim_stage: Dictionary={}
+	var orim_home: Dictionary={}
 	if kind=="orim":
 		if not rules.ensure_orim() or rules.orim_actor_types.is_empty():return {"ok":false,"reason":"원본 523 오림 NPC 정의(OrimsTrailNpc/NpcClass)를 읽지 못했습니다."}
-		if not bool(orim_model().get("ok",false)):return {"ok":false,"reason":"오림의 흔적 원본 표: "+str(orim_model().get("problem",""))}
-		if character_id<=0 and not ORIM_RUN.selectable(orim_model()).is_empty():character_id=int(ORIM_RUN.selectable(orim_model())[0].id)
-		if ORIM_RUN.start(orim_model(),character_id).is_empty():return {"ok":false,"reason":"선택할 수 없는 오림 영웅입니다."}
-		choose_template() # Visual fallback only; Orim NPCs use their original sprites.
-		if not placement_point().is_finite():return {"ok":false,"reason":"현재 지역의 검증된 배치 공간이 필요합니다. 입장 비용을 보존했습니다."}
+		var model: Dictionary=orim_model()
+		if not bool(model.get("ok",false)):return {"ok":false,"reason":"오림의 흔적 원본 표: "+str(model.get("problem",""))}
+		var heroes: Array=ORIM_RUN.selectable(model)
+		if character_id<=0 and not heroes.is_empty():character_id=int(heroes[0].id)
+		orim_run=ORIM_RUN.start(model,character_id)
+		if orim_run.is_empty():return {"ok":false,"reason":"선택할 수 없는 오림 영웅입니다."}
+		orim_stage=model.stages.get(identifier,{})
+		if world.has_method("orim_current_land"):orim_home=world.orim_current_land()
+		if orim_home.is_empty():
+			choose_template() # Visual fallback only; Orim NPCs use their original sprites.
+			if not placement_point().is_finite():return {"ok":false,"reason":"현재 지역의 검증된 배치 공간이 필요합니다. 입장 비용을 보존했습니다."}
 		var budget: String=("hard:" if bool(entry.stage.IsHard) else "normal:")+str(day(now))
 		if int(next.attempts.get(budget,0))>=int(state.settings.attempts):return {"ok":false,"reason":"오늘 이 모드 도전 횟수 소진"}
 		cost=payment(int(state.settings.entry_currency),int(state.settings.entry_cost));next.attempts[budget]=int(next.attempts.get(budget,0))+1
@@ -285,16 +294,19 @@ func _begin_impl(kind: String, identifier: int, now: int, character_id: int, loa
 	cost.erase("ok");cost.erase("reason")
 	var rng:=RandomNumberGenerator.new();rng.randomize()
 	next.active={"kind":kind,"id":kind+":"+str(int(next.next)),"stage_id":identifier,"map_id":world.active_map_id,"status":"active","started":now,"last":now,"duration":int(state.settings.duration) if kind=="orim" else 0,"seed":rng.randi_range(1,2000000000),"cursor":0,"remaining_count":0,"groups":groups,"buffs":{},"events":{},"rewards":[],"issued":{},"rerolls":0,"reroll_stat":""}
-	if kind=="orim":next.active.orim=ORIM_RUN.start(orim_model(),character_id)
+	if kind=="orim":next.active.orim=orim_run
 	next.next=int(next.next)+1;next.day=day(now)
 	if kind=="special":
 		if loading: return await _special_enter_impl(next,cost,entry,now,true)
 		return call("_special_enter_impl",next,cost,entry,now,false)
+	if not orim_home.is_empty():
+		if loading: return await _enter_orim_source(next,cost,orim_stage,orim_home,true)
+		return call("_enter_orim_source",next,cost,orim_stage,orim_home,false)
 	var result:=commit(next,cost)
-	if result.get("ok",false) and kind=="orim":
+	if result.get("ok",false):
 		_reset_orim_clock()
-		if loading: result.merge(await _orim_travel_impl(int(identifier),true),true)
-		else: result.merge(_orim_travel(int(identifier)),true)
+		orim_travel_note="523 원문 필드가 아님 · 현재 지역"
+		result["travel"]=false
 	return result
 
 ## --- 특수 던전 (시간 던전): real entry into the original Land -----------------
@@ -422,26 +434,38 @@ func migrate_special_sessions(now: int) -> bool:
 	state["special_travel_v1"]=true
 	return true
 
-## Move to the stage's original Land (Stage.TeleportTerritoryID box). Without
-## a 523 source field the run stays on the current field (stated in status).
-func _orim_travel(stage_id: int) -> Dictionary:
-	return call("_orim_travel_impl",stage_id,false)
-
-func _orim_travel_impl(stage_id: int, loading: bool) -> Dictionary:
-	var model_stage: Dictionary=orim_model().stages.get(stage_id,{})
-	orim_travel_note=""
-	if model_stage.is_empty() or not world.has_method("orim_enter_land"):orim_travel_note="원본 지도 없음 · 현재 지역";return {"travel":false}
-	var home: Dictionary=world.orim_current_land()
-	if home.is_empty():orim_travel_note="523 원문 필드가 아님 · 현재 지역";return {"travel":false}
-	var t: Dictionary=model_stage.territory
+## Original Land entry commits the fee, daily attempt and return point with
+## the same arrival save. No session starts while the map is being prepared.
+func _enter_orim_source(candidate: Dictionary, cost: Dictionary, stage: Dictionary, home: Dictionary, loading: bool) -> Dictionary:
+	if stage.is_empty(): return {"ok":false,"reason":"오림 원본 도착 지역을 확인할 수 없습니다."}
+	var land_id: int=int(stage.land_id)
+	candidate.active.home=home
+	candidate.active.land=land_id
+	candidate.revision=int(state.get("revision",0))+1
+	var error: String=valid(candidate)
+	if not error.is_empty(): return {"ok":false,"reason":error}
+	var save: Dictionary=cost.duplicate()
+	save["source_dungeon_play"]=candidate
+	var t: Dictionary=stage.territory
+	var bounds: Array=[int(t.StartX),int(t.StartY),int(t.EndX),int(t.EndY)]
 	var moved: Dictionary
-	if loading: moved = await world.orim_enter_land_loading(int(model_stage.land_id),[int(t.get("StartX",0)),int(t.get("StartY",0)),int(t.get("EndX",0)),int(t.get("EndY",0))])
-	else: moved = world.orim_enter_land(int(model_stage.land_id),[int(t.get("StartX",0)),int(t.get("StartY",0)),int(t.get("EndX",0)),int(t.get("EndY",0))])
-	if not moved.get("ok",false):orim_travel_note="원본 지도 이동 실패("+str(moved.reason)+") · 현재 지역";return {"travel":false,"travel_reason":str(moved.reason)}
-	var next:=state.duplicate(true);next.active.home=home;next.active.land=int(model_stage.land_id)
-	commit(next)
-	orim_travel_note=str(model_stage.land_name)
-	return {"travel":true,"land_id":int(model_stage.land_id)}
+	if loading: moved=await world.orim_enter_land_loading(land_id,bounds,save)
+	else: moved=world.orim_enter_land(land_id,bounds,save)
+	if moved.get("uncertain",false) or (moved.get("ok",false) and not moved.get("saved",false)):
+		save_blocked=true
+		problem="오림 입장 저장 결과가 확정되지 않았습니다. 저장을 다시 불러오세요."
+		return {"ok":false,"reason":problem}
+	if not moved.get("ok",false):
+		return {"ok":false,"reason":"오림에 입장하지 못했습니다. 비용과 도전 횟수는 차감되지 않았습니다. ("+str(moved.get("reason",""))+")"}
+	state=candidate
+	problem=""
+	if cost.has("inventory"):world.inventory=cost.inventory
+	if cost.has("ainhasad_state"):world.ain_service.blessing=int(cost.ainhasad_state.blessing)
+	_reset_orim_clock()
+	orim_travel_note=str(stage.land_name)
+	world._update_hud()
+	changed.emit()
+	return {"ok":true,"travel":true,"land_id":land_id}
 
 func _orim_return() -> void:
 	call("_orim_return_impl", false)

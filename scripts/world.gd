@@ -14285,18 +14285,19 @@ func _bind_current523_world_map_from_settings() -> void:
 	current523_world_map_status=_world_map_input().call("configure_from_settings",self)
 
 ## 오림의 흔적: move to a stage's original Land / back to the starting point.
-func orim_enter_land(land_id: int, bounds: Array) -> Dictionary:
-	return call("_orim_enter_land_impl",land_id,bounds,false)
+func orim_enter_land(land_id: int, bounds: Array, save_changes: Dictionary = {}) -> Dictionary:
+	return call("_orim_enter_land_impl",land_id,bounds,save_changes,false)
 
-func orim_enter_land_loading(land_id: int, bounds: Array) -> Dictionary:
-	return await _orim_enter_land_impl(land_id,bounds,true)
+func orim_enter_land_loading(land_id: int, bounds: Array, save_changes: Dictionary = {}) -> Dictionary:
+	return await _orim_enter_land_impl(land_id,bounds,save_changes,true)
 
-func _orim_enter_land_impl(land_id: int, bounds: Array, loading: bool) -> Dictionary:
+func _orim_enter_land_impl(land_id: int, bounds: Array, save_changes: Dictionary, loading: bool) -> Dictionary:
 	var controller: RefCounted = _aden_play_controller()
 	var moved: bool
-	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds)
-	else: moved = controller.call("enter_source_land", land_id, bounds)
-	return {"ok": moved, "reason": str(controller.get("problem"))}
+	if loading: moved = await controller.call("enter_source_land_loading", land_id, bounds, CURRENT523_ADEN_PLAY.CONTENT_ENTRY_WAIVE, save_changes)
+	else: moved = controller.call("enter_source_land", land_id, bounds, CURRENT523_ADEN_PLAY.CONTENT_ENTRY_WAIVE, save_changes)
+	var transition: Dictionary=controller.call("last_source_transition")
+	return {"ok":moved,"reason":str(controller.get("problem")),"saved":transition.get("saved",false),"uncertain":transition.get("uncertain",false)}
 
 func orim_current_land() -> Dictionary:
 	return _aden_play_controller().call("current_source_land")
