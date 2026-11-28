@@ -2,6 +2,8 @@ extends SceneTree
 ## Production AUTO tick with controlled routes and monotonic times in milliseconds.
 const TEST_WORLD = preload("res://tests/qa_auto_selection_world.gd")
 const INTERACTIONS = preload("res://scripts/input/world_interactions.gd")
+const FIELD_FIXTURE = preload("res://tests/current523_aden_source_field_test.gd")
+const BODY_PROFILE = preload("res://scripts/maps/source_body_profile.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -12,6 +14,22 @@ class HuntWorld extends TEST_WORLD:
 	func _has_line_of_sight_world(_from: Vector2, _to: Vector2) -> bool: return visible_target
 	func _target_in_current_weapon_range(_target: TwilightMonster) -> bool: return in_weapon_range
 	func _equipment523_locked_target() -> TwilightMonster: return locked_actor
+
+class RoamHost extends Node2D:
+	var field_map: PlayableField
+
+class RoamField extends FIELD_FIXTURE.MemoryField:
+	var walk_leg_checks: int = 0
+	func line_clear(from: Vector2, to: Vector2) -> bool:
+		walk_leg_checks += 1
+		return super.line_clear(from, to)
+
+class RoamWorld extends HuntWorld:
+	var pickup_goal := Vector2.INF
+	func _run_auto_ground_pickup() -> bool:
+		if not pickup_goal.is_finite(): return false
+		player.set_click_path(PackedVector2Array([pickup_goal]), pickup_goal)
+		return true
 
 func _initialize() -> void:
 	run.call_deferred()
@@ -77,6 +95,165 @@ func attackable_without_route(world: HuntWorld) -> void:
 	world.auto_target_failed_paths.clear()
 	world.auto_target_next_search_ms = 0
 	world._auto_target_refresh_ms = 0
+
+func roaming_walk_and_target(world: RoamWorld, field: FIELD_FIXTURE.MemoryField) -> void:
+	var player: TwilightPlayer = world.player
+	var start: Vector2 = player.global_position
+	world._run_auto_hunt(0)
+	var first_goal: Vector2 = player.navigation_agent.target_position
+	check(player.auto_roaming_navigation and field.line_clear(start, first_goal) and world.selection_path_calls == 0,
+		"empty local scan starts a walkable roam leg without a full route search")
+	var first_path: PackedVector2Array = player.click_path
+	world._run_auto_hunt(1)
+	check(player.click_path == first_path, "a running roam leg is kept between target scans")
+	player.set_physics_process(true)
+	for frame: int in range(10): await physics_frame
+	player.set_physics_process(false)
+	check(player.global_position.distance_to(first_goal) < start.distance_to(first_goal) - 4.0,
+		"the ordinary player physics walks toward the selected cell")
+
+	var headings: Dictionary = {world._auto_roam_direction: true}
+	var avoids_reverse: bool = true
+	for leg: int in range(1, 7):
+		var previous: Vector2i = world._auto_roam_direction
+		player.global_position = player.navigation_agent.target_position
+		player.path_index = player.click_path.size()
+		world._run_auto_hunt(leg * 250)
+		var heading: Vector2i = world._auto_roam_direction
+		headings[heading] = true
+		avoids_reverse = avoids_reverse and heading != -previous
+	check(headings.size() >= 3 and avoids_reverse, "seeded open terrain chooses varied headings without immediate backtracking")
+	var actor: TwilightMonster = add_actor(world, Vector2i(1, 0))
+	world._run_auto_hunt(1501)
+	check(world.auto_target == actor and world.last_test_attack == actor and player.click_path.is_empty() and not player.auto_roaming_navigation,
+		"a newly available target interrupts the current roam leg before the next empty-scan deadline")
+	actor.free()
+
+func roaming_obstacles_and_ownership(world: RoamWorld, host: RoamHost, field: RoamField) -> void:
+	var player: TwilightPlayer = world.player
+	var cell := Vector2i(24, 24)
+	player.global_position = field.cell_to_world(cell)
+	for direction: Vector2i in OriginalPlayableField.DIRECTIONS:
+		field.attribute(cell + direction, 0, 1)
+	field.attribute(cell + Vector2i.RIGHT, 0, 0)
+	field.attribute(cell + Vector2i.RIGHT * 2, 0, 1)
+	var goal: Vector2 = field.cell_to_world(cell + Vector2i.RIGHT)
+	field.walk_leg_checks = 0
+	world._run_auto_hunt(2000)
+	check(player.auto_roaming_navigation and player.click_path == PackedVector2Array([goal]),
+		"a dead end uses the sole walkable direction and shortens the leg before blocked cells")
+	check(field.walk_leg_checks == 3, "the other seven closed neighbors need no route-leg checks")
+
+	var blocker := StaticBody2D.new()
+	blocker.collision_layer = 4
+	blocker.position = player.global_position.lerp(goal, 0.5)
+	var shape := CollisionShape2D.new()
+	var circle := CircleShape2D.new()
+	circle.radius = 5.0
+	shape.shape = circle
+	blocker.add_child(shape)
+	host.add_child(blocker)
+	await physics_frame
+	await physics_frame
+	world.auto_stuck_time = 1.0
+	world._run_auto_hunt(2500)
+	check(field.line_clear(player.global_position, goal) and player.click_path.is_empty(),
+		"a stalled roam leg is abandoned and a physical foot blocker prevents choosing it again")
+	blocker.free()
+	await physics_frame
+	await physics_frame
+	world._run_auto_hunt(2999)
+	check(player.click_path.is_empty(), "a fully blocked roam attempt backs off before checking again")
+	world._run_auto_hunt(3000)
+	check(player.auto_roaming_navigation and player.click_path == PackedVector2Array([goal]),
+		"roaming resumes when the physical blocker is gone")
+
+	world.pickup_goal = goal
+	world._run_auto_hunt(3001)
+	check(not player.auto_roaming_navigation and player.click_path == PackedVector2Array([goal]),
+		"loot owns its new route even when its destination matches the old roam")
+	world.pickup_goal = Vector2.INF
+	player.set_manual_click_path(PackedVector2Array([goal]), goal)
+	world._run_auto_hunt(3002)
+	check(player.manual_navigation and player.click_path == PackedVector2Array([goal]), "manual click movement keeps its route")
+	player.clear_click_path()
+	world._run_auto_hunt(3003)
+	player.set_touch_vector(Vector2.RIGHT)
+	world._run_auto_hunt(3004)
+	check(player.click_path.is_empty(), "manual steering cancels a roam leg")
+	player.set_touch_vector(Vector2.ZERO)
+	world._run_auto_hunt(3005)
+	player.set_auto_enabled(false)
+	check(player.click_path.is_empty() and not player.auto_roaming_navigation, "disabling AUTO stops an active roam leg")
+	player.set_auto_enabled(true)
+	world.field_map = null
+	world._run_auto_hunt(3006)
+	check(player.click_path.is_empty(), "an absent field does not start an unverified walk")
+
+func roaming_checks_are_bounded(world: RoamWorld, host: RoamHost, field: RoamField) -> void:
+	world.field_map = field
+	var player: TwilightPlayer = world.player
+	player.global_position = field.cell_to_world(Vector2i(40, 40))
+	# The terrain permits all eight exits. Four physical walls block the foot.
+	for axis: Vector2 in [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP]:
+		var wall := StaticBody2D.new()
+		wall.collision_layer = 4
+		wall.position = player.global_position + axis * 12.0
+		var collision := CollisionShape2D.new()
+		var rectangle := RectangleShape2D.new()
+		rectangle.size = Vector2(4, 48) if axis.x != 0.0 else Vector2(48, 4)
+		collision.shape = rectangle
+		wall.add_child(collision)
+		host.add_child(wall)
+	await physics_frame
+	await physics_frame
+	var remaining_per_tick: Array[int] = []
+	for frame: int in range(4):
+		world._run_auto_hunt(4000 + frame * 16)
+		remaining_per_tick.append(world._auto_roam_headings.size())
+	check(remaining_per_tick == [6, 4, 2, 0] and player.click_path.is_empty(),
+		"all eight physically blocked headings are checked over four ticks without starting a walk")
+	field.walk_leg_checks = 0
+	world._run_auto_hunt(4547)
+	check(field.walk_leg_checks == 0, "the retry delay begins only after the final heading was checked")
+	world._run_auto_hunt(4548)
+	check(world._auto_roam_headings.size() == 6, "a new attempt resumes with only two headings per tick")
+	var actor: TwilightMonster = add_actor(world, Vector2i(1, 0))
+	field.walk_leg_checks = 0
+	world._run_auto_hunt(4549)
+	check(world.last_test_attack == actor and world._auto_roam_headings.is_empty() and field.walk_leg_checks == 0,
+		"a target found between probe ticks is attacked before any remaining roam work")
+
+func run_roaming() -> void:
+	var world := RoamWorld.new()
+	var field := RoamField.new()
+	field.prepare({})
+	field.set_meta("current523_source_field", true)
+	world.field_map = field
+	world._auto_roam_random.seed = 70411
+	var host := RoamHost.new()
+	host.field_map = field
+	root.add_child(host)
+	world.player = load("res://scenes/Player.tscn").instantiate()
+	world.player.collision_mask = 4
+	BODY_PROFILE.apply(world.player, true)
+	world.player.position = field.cell_to_world(Vector2i(20, 20))
+	host.add_child(world.player)
+	world.player.set_physics_process(false)
+	world.monsters_root = Node2D.new()
+	host.add_child(world.monsters_root)
+	world.hud = TwilightHUD.new()
+	world.hud.auto_button = Button.new()
+	world.hud.add_child(world.hud.auto_button)
+	world.loot_pickup.world = world
+	world.player.auto_toggled.connect(world._on_auto_toggled)
+	world.player.set_auto_enabled(true)
+	await roaming_walk_and_target(world, field)
+	await roaming_obstacles_and_ownership(world, host, field)
+	await roaming_checks_are_bounded(world, host, field)
+	world.hud.free()
+	host.free()
+	world.free()
 
 func run() -> void:
 	var world := HuntWorld.new()
@@ -201,5 +378,6 @@ func run() -> void:
 	world.monsters_root.free()
 	world.player.free()
 	world.free()
+	await run_roaming()
 	print("AUTO_TARGET_REFRESH_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

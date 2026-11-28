@@ -57,6 +57,7 @@ const CLASS_SHEETS: Array[String] = [
 	""
 ]
 const CELL_SIZE: Vector2 = Vector2(148, 116)
+const CLICK_ARRIVAL_DISTANCE: float = 5.0
 # Visual-only width correction for transformed player sprites; no physics or base class changes.
 const TRANSFORM_WIDTH_SCALE: float = 0.90
 
@@ -69,6 +70,7 @@ var _detour_last_position := Vector2.INF
 var _detour_retry: float = 0.0
 var auto_enabled: bool = false
 var manual_navigation: bool = false
+var auto_roaming_navigation: bool = false
 var movement_locked: bool = false
 var source_523_movement_blocked: bool = false
 var source_523_spell_blocked: bool = false
@@ -249,7 +251,7 @@ func _click_path_velocity() -> Vector2:
 	# Within 5 px of a route point the walk turns to the next one, unless the
 	# field blocks that straight walk from here (a diagonal corner step the
 	# route takes from the exact cell centre): then finish on the point first.
-	while distance <= 5.0 and (distance < 0.05 or path_index + 1 >= click_path.size() or _route_line_clear(global_position, click_path[path_index + 1]) or not _route_has_field()):
+	while distance <= CLICK_ARRIVAL_DISTANCE and (distance < 0.05 or path_index + 1 >= click_path.size() or _route_line_clear(global_position, click_path[path_index + 1]) or not _route_has_field()):
 		path_index += 1
 		if path_index >= click_path.size():
 			return Vector2.ZERO
@@ -701,6 +703,7 @@ func set_touch_vector(value: Vector2) -> void:
 func set_click_path(points: PackedVector2Array, target: Vector2) -> void:
 	_reset_obstacle_detour()
 	manual_navigation = false
+	auto_roaming_navigation = false
 	if not points.is_empty(): cancel_attack()
 	click_path = points
 	# A route searched from here starts at this cell's centre; the player may
@@ -734,6 +737,7 @@ func intended_walk_speed() -> float:
 func clear_click_path() -> void:
 	_reset_obstacle_detour()
 	manual_navigation = false
+	auto_roaming_navigation = false
 	click_path = PackedVector2Array()
 	path_index = 0
 
@@ -1031,6 +1035,10 @@ func _find_obstacle_detour(heading: Vector2, routed: bool) -> PackedVector2Array
 func set_manual_click_path(points: PackedVector2Array, target: Vector2) -> void:
 	set_click_path(points, target)
 	manual_navigation = not points.is_empty()
+
+func set_auto_roam_path(target: Vector2) -> void:
+	set_click_path(PackedVector2Array([target]), target)
+	auto_roaming_navigation = true
 
 func has_manual_movement() -> bool:
 	if manual_navigation and path_index < click_path.size(): return true
