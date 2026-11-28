@@ -342,13 +342,13 @@ func face_shown(window: RefCounted, cell: String) -> bool:
 	return (back == null or not back.visible) and face != null and face.visible
 
 func wait_for_faces(window: RefCounted, set_name: String, count: int) -> bool:
-	var deadline: int=Time.get_ticks_msec()+10000
+	var deadline: SceneTreeTimer=create_timer(10.0)
 	while window.is_open():
 		var settled: bool=true
 		for index: int in range(count):
 			if not face_shown(window,"%s/Card_%02d" % [set_name,index]):settled=false;break
 		if settled:return true
-		if Time.get_ticks_msec()>=deadline:return false
+		if deadline.time_left<=0.0:return false
 		await process_frame
 	return false
 
