@@ -48,7 +48,10 @@ func fixture(old: bool,counted: bool=true,filled: int=10) -> Dictionary:
 	check(source.count("_snapshot(int(visible))")==1,"baseline call substitution is exact")
 	if old:source=source.replace("_snapshot(int(visible))","_snapshot()")
 	if counted:source=source.replace("extends RefCounted\n","extends RefCounted\nvar test_rows: int=0\n")
-	if counted:source=source.replace("\t\trows.append({\"visible_index\"", "\t\ttest_rows+=1\n\t\trows.append({\"visible_index\"")
+	if counted:
+		var projection: String = "\t\trows[visible]={\"visible_index\""
+		check(source.count(projection)==1,"projected-row probe binds to the single production row")
+		source=source.replace(projection,"\t\ttest_rows+=1\n"+projection)
 	var script:=GDScript.new();script.source_code=source
 	check(script.reload()==OK,"comparison script compiles")
 	var w:=World.new();root.add_child(w)
@@ -132,10 +135,20 @@ func run() -> void:
 	# Action dispatch continues to validate the presented entry and live page.
 	var row: Dictionary=a.b.snapshot().rows[2]
 	var identity: Dictionary=a.b._presented_identity(row)
+	a.b.test_rows=0
+	a.w.reads=0
 	check(a.b.activate_presented(2,identity).ok and a.h.clicks==[2],"live matching identity dispatches")
+	check(a.b.test_rows==1 and a.w.reads==1,"one presented press projects and checks ammo for just its own slot")
 	a.h.quickslot_entries[2].id="new"
 	check(not a.b.activate_presented(2,identity).ok and a.h.clicks==[2],"stale identity never dispatches")
+	a.h.indices[9]=-1
+	check(not a.b.activate(2).ok and a.h.clicks==[2],"one-slot activation still refuses an invalid live index in the whole model")
 	a.w.free();b.w.free()
+	var empty: Dictionary=fixture(false,true,0)
+	var group: Dictionary=empty.b.build_group(1)
+	check(group.get("ok",false) and group.rows.size()==5 and group.rows[0].visible_index==5 and empty.b.test_rows==5,
+		"building the second authored group projects only its five slots")
+	empty.w.free()
 	for filled: int in [0,4]:
 		var mixed: Dictionary=fixture(false,true,filled);var old_mixed: Dictionary=fixture(true,true,filled)
 		check(mixed.v.refresh()==old_mixed.v.refresh(),"mixed/empty actual-view result")

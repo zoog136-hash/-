@@ -5501,6 +5501,9 @@ func _use_timed_item_buff(record: Dictionary) -> bool:
 	return true
 
 func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
+	if active_item_buffs.is_empty():
+		_tick_cooldown_map(item_use_cooldowns, delta)
+		return false
 	var changed: bool = false
 	var granted_reward: bool = false
 	var expired: Array[String] = []
@@ -5551,16 +5554,7 @@ func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
 		active_item_buffs.erase(key)
 		changed = true
 		hud.append_log("%s 버프 종료" % key)
-	var cooldown_finished: Array[String] = []
-	for key_value: Variant in item_use_cooldowns.keys():
-		var key: String = str(key_value)
-		var left: float = maxf(0.0, float(item_use_cooldowns.get(key, 0.0)) - delta)
-		if left <= 0.0:
-			cooldown_finished.append(key)
-		else:
-			item_use_cooldowns[key] = left
-	for key: String in cooldown_finished:
-		item_use_cooldowns.erase(key)
+	_tick_cooldown_map(item_use_cooldowns, delta)
 	if changed:
 		hp = mini(hp, _effective_max_hp())
 		if granted_reward:
@@ -9944,16 +9938,22 @@ func _run_auto_buff_quickslots(delta: float) -> bool:
 
 func _tick_skill_cooldowns(delta: float) -> void:
 	skill_global_cooldown = maxf(0.0, skill_global_cooldown - delta)
+	_tick_cooldown_map(skill_cooldowns, delta)
+
+static func _tick_cooldown_map(cooldowns: Dictionary, delta: float) -> void:
+	if cooldowns.is_empty(): return
 	var expired: Array[String] = []
-	for key_value: Variant in skill_cooldowns.keys():
+	# Replacing values is safe during dictionary iteration. Erase only
+	# afterward so each entry is visited exactly once without a key copy.
+	for key_value: Variant in cooldowns:
 		var key: String = str(key_value)
-		var remaining: float = maxf(0.0, float(skill_cooldowns.get(key, 0.0)) - delta)
+		var remaining: float = float(cooldowns.get(key, 0.0)) - delta
 		if remaining <= 0.0:
 			expired.append(key)
 		else:
-			skill_cooldowns[key] = remaining
+			cooldowns[key] = remaining
 	for key: String in expired:
-		skill_cooldowns.erase(key)
+		cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
@@ -10085,8 +10085,12 @@ func _run_auto_combat_quickslots() -> bool:
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.is_area_quickslot(skill) or not original_skills.auto_wants(skill, selected_monster): continue
-		if not _skill_ready(skill):
+			if original_skills.is_area_quickslot(skill): continue
+			if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty(): return false
+			# auto_wants already ran the original readiness check. The final
+			# cast still checks its live target, costs and admission.
+			if not original_skills.auto_wants(skill, selected_monster): continue
+		elif not _skill_ready(skill):
 			continue
 		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
 			continue
@@ -10796,16 +10800,16 @@ func _tick_skill_buffs(delta: float, publish: bool = true) -> bool:
 	if active_skill_buffs.is_empty():
 		return false
 	var expired: Array[String] = []
-	for key_value: Variant in active_skill_buffs.keys():
+	for key_value: Variant in active_skill_buffs:
 		var key: String = str(key_value)
 		var value: Variant = active_skill_buffs.get(key, {})
 		if not (value is Dictionary):
 			expired.append(key)
 			continue
 		var buff: Dictionary = value as Dictionary
-		buff["remaining"] = float(buff.get("remaining", 0.0)) - delta
-		active_skill_buffs[key] = buff
-		if float(buff.get("remaining", 0.0)) <= 0.0:
+		var remaining: float = float(buff.get("remaining", 0.0)) - delta
+		buff["remaining"] = remaining
+		if remaining <= 0.0:
 			expired.append(key)
 	if expired.is_empty():
 		return false
