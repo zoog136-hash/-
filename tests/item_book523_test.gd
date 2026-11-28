@@ -10,6 +10,8 @@ const Source = preload("res://scripts/collections/item_book523_source.gd")
 const Runtime = preload("res://scripts/collections/item_book523_runtime.gd")
 const WINDOW = preload("res://scripts/ui/original_ui/source_main_item_book_window.gd")
 const LEGACY = preload("res://scripts/collections/equipment_collection_runtime.gd")
+const ORIGINAL_PACK = preload("res://scripts/ui/original_ui/source_pack.gd")
+const MENU_TILES = preload("res://scripts/ui/original_ui/source_main_menu_tiles.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -125,6 +127,8 @@ func _run() -> void:
 	_effects()
 	_wiring()
 	_bake()
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--notice-pack="): _notices(arg.trim_prefix("--notice-pack="))
 	print("ITEM_BOOK523_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(1 if not failures.is_empty() else 0)
 
@@ -259,6 +263,41 @@ func _window() -> void:
 	var gray: ShaderMaterial = preload("res://scripts/ui/original_ui/source_material.gd").gray_blur(plain)
 	check(gray != null and gray.shader.code.contains("luminance") and gray.shader.code.contains("blend_mix") and preload("res://scripts/ui/original_ui/source_material.gd").gray_blur(plain) == gray, "an unregistered icon gets the shared gray blur shader")
 	check(not preload("res://scripts/ui/original_ui/source_material.gd").takes_display(gray), "display colour binding leaves the gray icon alone")
+	host.queue_free()
+
+func _notices(pack_dir: String) -> void:
+	var pack := ORIGINAL_PACK.new()
+	check(pack.open(pack_dir,OS.get_environment("TWILIGHT_SOURCE_UI_SHA256")).get("ok",false),"the installed original notice art is verified")
+	var host := _host()
+	var window := WINDOW.new()
+	check(window.configure(pack,host.hud).get("ok",false),"the collection row uses the verified pack")
+	var notices: Array[bool]=[]
+	for held: bool in [false,true]:
+		if held:
+			host.item_instances["10"] = equipment(501,7)
+			host.inventory["장비#501"] = 1
+		var projected: Array=window._rows_of("Btn_Identified").filter(func(row: Dictionary)->bool:return row.id=="100")
+		if projected.is_empty():break
+		var out: Dictionary={}
+		var row: Dictionary=window._collection_row(projected[0])
+		var built: Dictionary=window._scene_of(row.member,row.spec,out)
+		if not built.get("ok",false):break
+		var marker: Dictionary=window._locate(built.scene,out,"Panel_Itembook/Icon_New")
+		var node: Node2D=marker.player.source_nodes.get(marker.offset) if marker.get("ok",false) else null
+		notices.append(is_instance_valid(node) and node.visible)
+		built.scene.free()
+	check(notices==[false,true],"only an actionable original collection row displays its authored notice")
+	var tiles := MENU_TILES.new()
+	tiles.configure(pack)
+	var stat_notices: Array[bool]=[]
+	for points: int in [0,2]:
+		var tile: Dictionary=tiles.tile("character",points)
+		if not tile.get("ok",false):break
+		var marker: Node2D=tile.scene.source_nodes.get(612)
+		stat_notices.append(is_instance_valid(marker) and marker.visible)
+		tile.scene.free()
+	check(stat_notices==[false,true],"the character tile displays its original notice only when stat points are available")
+	window.close()
 	host.queue_free()
 
 ## 2단계: complete original collections add their effects; a legacy

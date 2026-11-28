@@ -32,6 +32,26 @@ func add_actor(world: HuntWorld, offset: Vector2i) -> TwilightMonster:
 func set_offset(world: HuntWorld, actor: TwilightMonster, offset: Vector2i) -> void:
 	actor.global_position = world.player.global_position + Vector2(offset * world.tile_size)
 
+func approaching_target(world: HuntWorld) -> void:
+	var incumbent: TwilightMonster = add_actor(world,Vector2i(4,0))
+	var blocked: TwilightMonster = add_actor(world,Vector2i(1,0))
+	var approaching: TwilightMonster = add_actor(world,Vector2i(6,0))
+	world.blocked_positions[blocked.global_position] = true
+	world.auto_target = incumbent
+	var before: int = world.selection_path_calls
+	world._refresh_auto_hunt_target(20000)
+	check(world.auto_target==incumbent and world.selection_path_calls==before+1 and not world.auto_search_candidates.is_empty(),"a blocked nearer candidate leaves the incumbent and the remaining queue intact")
+	set_offset(world,approaching,Vector2i(2,0))
+	var route: PackedVector2Array = world._refresh_auto_hunt_target(20001)
+	check(world.auto_target==approaching and not route.is_empty() and world.selection_path_calls==before+2,"the pending search reaches a moving candidate that is now closer than the incumbent")
+	world.blocked_positions.clear()
+	incumbent.free();blocked.free();approaching.free()
+	world._clear_auto_target_search()
+	world.auto_target = null
+	world.auto_target_failed_paths.clear()
+	world.auto_target_next_search_ms = 0
+	world._auto_target_refresh_ms = 0
+
 func run() -> void:
 	var world := HuntWorld.new()
 	world.player = load("res://scenes/Player.tscn").instantiate()
@@ -40,6 +60,8 @@ func run() -> void:
 	root.add_child(world.monsters_root)
 	world.player.set_physics_process(false)
 	world.player.global_position = Vector2(528, 528)
+	approaching_target(world)
+	world.selection_path_calls = 0
 
 	var out_of_range: TwilightMonster = add_actor(world, Vector2i(11, 0))
 	world._run_auto_hunt(0)
