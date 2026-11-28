@@ -833,6 +833,7 @@ ISOLATED_CHECKS = frozenset({
     'dungeon_durable_cpu_main_test',
     'escaros_original_card_main_test',
     'ground_pickup_shortlist_test',
+    'items523_equipment_buff_test',
     'loading_screen_test',
     'loading_world_readiness_test',
     'native_advanced_powder_cold_bag_test',
