@@ -95,25 +95,25 @@ func _load_original() -> bool:
 	projection = null
 	value = {}
 	if not _load_payload(bytes,""): return false
-	var digest := HashingContext.new()
-	digest.start(HashingContext.HASH_SHA256)
-	digest.update(bytes)
-	BAKE.write(BAKE_NAME, bake_key, {"bytes":bytes,"sha256":digest.finish().hex_encode(),"identity":ORIGINAL_PROJECTION.SOURCE.identity()})
+	BAKE.write(BAKE_NAME, bake_key, {"bytes":bytes,"sha256":PAYLOAD_SHA,"identity":ORIGINAL_PROJECTION.SOURCE.identity()})
 	return true
 
 func _load_payload(bytes: PackedByteArray, path: String) -> bool:
 	if bytes.size() > MAX_BYTES:
 		problem = "퀘스트 팩 파일을 읽을 수 없습니다"
 		return false
-	var text: String = bytes.get_string_from_utf8()
-	if text.sha256_text() != PAYLOAD_SHA:
+	# Verify the pinned payload as bytes. On a record-cache hit there is
+	# no need to expand it into a UTF-32 string just to check its digest.
+	var digest := HashingContext.new()
+	digest.start(HashingContext.HASH_SHA256)
+	digest.update(bytes)
+	if digest.finish().hex_encode() != PAYLOAD_SHA:
 		problem = "퀘스트 팩 SHA-256 불일치"
 		return false
 	# The verified payload bytes (and this code) fully determine the records:
 	# a later start reads the compact rows instead of parsing all 3,621 quests.
 	if _open_records(PAYLOAD_SHA, path): return true
-	var value: Variant = JSON.parse_string(text)
-	text = ""
+	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
 	if not value is Dictionary or not valid_document(value):
 		problem = "퀘스트 팩 구조 오류"
 		return false

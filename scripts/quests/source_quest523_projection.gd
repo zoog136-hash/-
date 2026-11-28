@@ -3,6 +3,8 @@ extends RefCounted
 ## Existing projection, exclusions, and Korean clock policy; no quest execution.
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const TABLES = ["QuestView","QuestType","QuestLevel","QuestPrerequisite","Prerequisite","PrerequisiteType","QuestGoal","Goal","GoalType","QuestReward","Reward","RewardType","QuestRewardEnhancement","RewardEnhancement","ItemClass","DescData_Korean","DateTimes_Korean","Class","StartingQuest","Currency","CurrencyUnitClass"]
+# These lookups need only the rows reached from QuestView/QuestReward.
+const REFERENCED_TABLES := ["Reward", "ItemClass", "DateTimes_Korean"]
 var problem: String = ""
 var _tables: Dictionary = {}
 var _indexes: Dictionary = {}
@@ -42,11 +44,22 @@ func _read() -> bool:
 		var meta: Dictionary = SOURCE.table_metadata(name)
 		if meta.is_empty(): problem = "퀘스트 원본 메타데이터가 없습니다: "+name; return false
 		_evidence[name] = {"rows":meta.get("row_count"),"sha256":meta.get("sha256")}
-		var rows: Array = [] if name == "DescData_Korean" else SOURCE.rows(name)
-		if name != "DescData_Korean" and rows.size() != int(meta.get("row_count",-1)):
-			problem = "퀘스트 원본 표를 읽을 수 없습니다: "+name
-			return false
+		if name == "DescData_Korean": continue
+		var expected_count := int(meta.get("row_count", -1))
+		var rows: Array[Dictionary]
+		if name in REFERENCED_TABLES:
+			if SOURCE.row_count(name) != expected_count:
+				problem = "퀘스트 원본 표를 읽을 수 없습니다: " + name
+				return false
+			rows = SOURCE.rows_matching(name, "ID", _referenced_ids(name))
+		else:
+			rows = SOURCE.rows(name)
+			if rows.size() != expected_count:
+				problem = "퀘스트 원본 표를 읽을 수 없습니다: " + name
+				return false
 		_tables[name] = rows
+		# The selective reader preserves source order, including duplicate IDs.
+		# Keep the former last-row rule when building each join index.
 		var index: Dictionary = {}
 		for row: Dictionary in rows:
 			if row.has("ID"): index[int(row.ID)] = row
@@ -55,6 +68,22 @@ func _read() -> bool:
 		problem = "퀘스트 원본 ID가 중복됩니다"
 		return false
 	return true
+
+func _referenced_ids(table: String) -> Dictionary:
+	var ids: Dictionary = {}
+	match table:
+		"Reward":
+			for link: Dictionary in _tables.QuestReward:
+				ids[int(link.RewardID)] = true
+		"ItemClass":
+			for reward: Dictionary in _tables.Reward:
+				if reward.RewardTypeID == 2:
+					ids[int(reward.RewardClassID)] = true
+		"DateTimes_Korean":
+			for quest: Dictionary in _tables.QuestView:
+				ids[int(quest.StartTime)] = true
+				ids[int(quest.EndTime)] = true
+	return ids
 
 func build() -> Dictionary:
 	problem = ""
