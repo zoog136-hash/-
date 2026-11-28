@@ -1,6 +1,7 @@
 extends RefCounted
 ## Save boundary only. Source providers retain acquisition/crafting semantics.
 const QUEST_GROWTH_KEYS=["level","experience","exp_need","max_hp","max_mp","hp","mp","attack","defense","stat_points"]
+const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 
 static func quest_error(world: Node,state: Variant) -> String:
 	var script: Script=world.quest_service.get_script()
@@ -45,6 +46,10 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 			if entries.has(id) or entries.has("patch523:"+id):return "기존 일반 제작의 생애 제한 이력 보존 · 중복 가호 거부"
 	var debit_error: String=protected_debit_error(world,staged)
 	if not debit_error.is_empty():return debit_error
+	var original_stat_cap := false
+	if staged.has(BONUS_STAT_CAP.SAVE_KEY):
+		original_stat_cap = preload("res://scripts/loot/current523_native_stack.gd").authorizes_bonus_stat_cap(world,staged)
+		if not original_stat_cap:return "원본 스탯 상한 거래와 물리 차감 증명이 함께 필요합니다"
 	if staged.has("expedition523_local"):
 		var error: String=expedition_error(world,staged.expedition523_local)
 		if not error.is_empty():return error
@@ -64,7 +69,7 @@ static func override_error(world: Node,staged: Dictionary) -> String:
 		if not staged.has(key):continue
 		if not staged.has("quest_state") and not death_growth_owned:
 			var owner: String=nonquest_vital_owner(world,staged)
-			var original_point:bool=key=="stat_points" and preload("res://scripts/loot/current523_native_stack.gd").authorizes_bonus_point(world,staged)
+			var original_point:bool=key=="stat_points" and (original_stat_cap or preload("res://scripts/loot/current523_native_stack.gd").authorizes_bonus_point(world,staged))
 			var original_exp:bool=preload("res://scripts/loot/current523_native_stack.gd").authorizes_experience_reward(staged)
 			if not original_point and not original_exp and owner!="sealed_monsterbook_reward" and (key not in ["hp","mp","experience"] or owner.is_empty() or (key=="experience" and owner not in ["source_dungeon523","source_dungeon_play","death_recovery523","sealed_current_native_stack_consumer"])):return "퀘스트 성장 거래와 완료 장부가 함께 필요합니다"
 		var value: Variant=staged[key]

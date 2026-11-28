@@ -267,6 +267,7 @@ const CONSUMABLE_AUTO = preload("res://scripts/consumable_auto_policy.gd")
 const HP_POTION_COOLDOWN_SECONDS: float = 1.0
 const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
+const BONUS_STAT_CAP = preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const PATCH523_ENHANCE = preload("res://scripts/crafting/patch523_enhancement.gd")
 const PATCH523_TOKEN_STOCK = preload("res://scripts/loot/current523_native_stack.gd")
@@ -584,6 +585,7 @@ var int_stat: int = 8
 var wis_stat: int = 10
 var cha_stat: int = 9
 var stat_points: int = 0
+var bonus_stat_cap_extension: int = 0
 
 var gold: int = 100000000 # Playtest-only starting funds; existing saved funds still load unchanged.
 ## A new character starts with original 523 items (current523_starter_kit.gd);
@@ -4851,21 +4853,15 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	if stat_points <= 0:
 		hud.show_message("남은 스탯 포인트가 없습니다")
 		return
-	match stat_name:
-		"STR":
-			str_stat += 1
-		"DEX":
-			dex_stat += 1
-		"CON":
-			con_stat += 1
-		"INT":
-			int_stat += 1
-		"WIS":
-			wis_stat += 1
-		"CHA":
-			cha_stat += 1
-		_:
-			return
+	if stat_name not in CONSUMABLE_RULES.STAT_KEYS:
+		return
+	var property := stat_name.to_lower() + "_stat"
+	var base: int = get(property)
+	var limit := BONUS_STAT_CAP.BASE_LIMIT + bonus_stat_cap_extension
+	if base >= limit:
+		hud.show_message("%s 기본 스탯 상한 %d에 도달했습니다" % [stat_name, limit])
+		return
+	set(property, base + 1)
 	stat_points -= 1
 	hud.show_message("%s +1 · 남은 포인트 %d" % [stat_name, stat_points])
 	hud.append_log("스탯 투자 · %s +1" % stat_name)
@@ -5254,6 +5250,10 @@ func _activate_inventory_impl(item_name: String, loading: bool) -> void:
 		return
 	if item_name.begins_with("m523-growth-item:"):
 		if item_name == GROWTH96.Source.item_key(GROWTH96.Source.TOKEN): hud.open_growth96()
+		elif item_name == GROWTH96.Source.item_key(BONUS_STAT_CAP.FRUIT):
+			var fruit: Dictionary = stack_owner.use_growth_stat_fruit(self, item_name, selected_id)
+			hud.show_message(str(fruit.get("message", "성장 보상 사용 조건 확인 필요")))
+			if fruit.get("ok", false): hud.refresh_inventory(inventory); _update_hud()
 		else:
 			var opened: Dictionary = _open_growth_reward_box(item_name)
 			if not opened.get("ok", false): hud.show_message(str(opened.get("reason", "미개봉 성장 보상 상자입니다")))
@@ -8152,6 +8152,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 	# Stage times for the phone record (523.655: save 286 ms/s without a split).
 	var save_stage_usec: int = FRAME_HITCH.now()
 	if equipment523.save_blocked: return ERR_UNAVAILABLE
+	if not BONUS_STAT_CAP.valid_extension(bonus_stat_cap_extension):return ERR_INVALID_DATA
 	if unconfirmed523.save_blocked or not unconfirmed523.validate(collection_override.get("unconfirmed523",unconfirmed523.state)).is_empty():return ERR_INVALID_DATA
 	if CURRENT523_ADEN_REVIEW.requested() or current523_aden_review_active: return ERR_UNAVAILABLE
 	if current523_aden_play_active and _current523_aden_play_controller != null and bool(_current523_aden_play_controller.get("source_owned")) and not bool(_current523_aden_play_controller.get("saving_prior_snapshot")):
@@ -8258,7 +8259,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		if key=="patch523_transaction_rng":
 			if not (alchemy_held_items.authorizes(collection_override) or quest_item_provider.authorizes_held_save(collection_override) or preload("res://scripts/loot/current523_native_stack.gd").authorizes(collection_override)) or not owner_boundary.rng_error(collection_override[key]).is_empty():return ERR_INVALID_PARAMETER
 			continue
-		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points","weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
+		if key not in ["inventory","item_instances","equipment_collections","gold","card_draw_fusion","card_option_awakening","card_skill_awakening","growth","source_dungeon523","ainhasad_state","experience","source_dungeon_play","hp","mp","warehouse","inventory_automation","halphas_star_enchant","source_visual_context","death_recovery523","level","exp_need","max_hp","max_mp","attack","defense","stat_points",BONUS_STAT_CAP.SAVE_KEY,"weapon_mastery523","growth96","combination523","half_elixir523","spell_group_conversion","original_skill_state","title523","totem_state","totem_combat_settings","monsterbook523","ground_drops","tj_coupons523","next_item_instance_id","equipped_items","patch523_crafting_usage","protection523","unconfirmed523","quest_state",EXPEDITION_LOCAL.KEY,"crafting_log",SOURCE_SHOP.SAVE_KEY,"active_item_buffs","item_use_cooldowns","consumable_state","equipped_ammo","ammo_unequipped","equipped_catalog",ROUTINE523.SAVE_KEY,DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]: return ERR_INVALID_PARAMETER
 	if collection_override.has("source_visual_context"):
 		var visual: Variant=collection_override.source_visual_context
 		if not visual is Dictionary or visual.get("snapshot")!="base508" or visual.get("gender_id")!=source_gender_id or not visual.get("active_card_options") is Dictionary:return ERR_INVALID_DATA
@@ -8314,6 +8315,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"wis": wis_stat,
 		"cha": cha_stat,
 		"stat_points": stat_points,
+		BONUS_STAT_CAP.SAVE_KEY: bonus_stat_cap_extension,
 		"gold": gold,
 		"inventory": inventory,
 		"source_item_catalog": LOOT_DROP.PATCH523_DROPS.pack_identity(),
@@ -8549,6 +8551,10 @@ func _load_game(quiet: bool) -> void:
 	if not account_error.is_empty():
 		source_save_blocked=true
 		hud.show_message(account_error)
+		return
+	if not BONUS_STAT_CAP.valid_extension(value.get(BONUS_STAT_CAP.SAVE_KEY, 0)):
+		source_save_blocked = true
+		hud.show_message("스탯 상한 저장 형식 오류 · 기존 저장 보존")
 		return
 	if value.has(CHARACTER_ACCOUNT.KEY):
 		if value[CHARACTER_ACCOUNT.KEY].get("schema") == CHARACTER_ACCOUNT.LEGACY_SCHEMA:
@@ -8980,6 +8986,7 @@ func _load_game(quiet: bool) -> void:
 	wis_stat = int(data.get("wis", wis_stat))
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
+	bonus_stat_cap_extension = int(data.get(BONUS_STAT_CAP.SAVE_KEY, 0))
 	gold = maxi(0, int(data.get("gold", gold)))
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
@@ -12707,6 +12714,7 @@ func _character_stats_snapshot() -> Dictionary:
 		"wis": _effective_attribute("WIS"),
 		"cha": _effective_attribute("CHA"),
 		"stat_points": stat_points,
+		"base_stat_allocation_cap": BONUS_STAT_CAP.BASE_LIMIT + bonus_stat_cap_extension,
 		"base_attributes":{"str":str_stat,"dex":dex_stat,"con":con_stat,"int":int_stat,"wis":wis_stat,"cha":cha_stat},
 		"skill_cooldown_reduction": (1.0-_skill_cooldown_factor())*100.0,
 		"inventory_weight": _inventory_total_weight(),

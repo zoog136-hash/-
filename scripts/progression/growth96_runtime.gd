@@ -97,6 +97,18 @@ func restore(value: Dictionary) -> void:
 func fail(message: String) -> Dictionary:
 	return {"ok":false,"message":message,"revision":int(state.revision)}
 
+## A growth stack predates native item receipts. Its exact growth reward IDs
+## are still in the character's claim ledger, including older true markers.
+func proven_reward_amount(item_id: int) -> int:
+	if not source.ready or save_blocked or not problem.is_empty() or not validate(state).is_empty():
+		return 0
+	var amount := 0
+	for reward_id: String in state.claims:
+		var reward: Dictionary = source.rewards.get(reward_id, {})
+		if reward.get("RewardClassID") == item_id:
+			amount += int(reward.Amount)
+	return amount
+
 func selected_rewards(point: String) -> Array:
 	var available: Array = source.by_point.get(point,[])
 	var selected := -1

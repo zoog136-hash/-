@@ -566,14 +566,18 @@ func _refresh_character() -> void:
 	stat_summary.text = "\n".join(stat_lines)
 
 	var stat_points := int(character_state.get("stat_points", 0))
+	var cap := int(character_state.get("base_stat_allocation_cap", 0))
+	var base_attributes: Dictionary = character_state.get("base_attributes", {})
 	stat_points_label.text = "남은 포인트 %d" % stat_points
+	if cap > 0:
+		stat_points_label.text += " · 상한 %d" % cap
 	for stat_name: String in ["STR", "DEX", "CON", "INT", "WIS", "CHA"]:
 		var value_label := stats_page.find_child(stat_name + "Value", true, false) as Label
 		if value_label != null:
 			value_label.text = str(int(character_state.get(stat_name.to_lower(), 0)))
 		var plus_button := stats_page.find_child(stat_name + "Plus", true, false) as Button
 		if plus_button != null:
-			plus_button.disabled = stat_points <= 0
+			plus_button.disabled = stat_points <= 0 or (cap > 0 and int(base_attributes.get(stat_name.to_lower(), 0)) >= cap)
 
 	var current_weight := float(character_state.get("current_weight", 0.0))
 	var max_weight := float(character_state.get("max_weight", 0.0))
