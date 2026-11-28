@@ -18,6 +18,12 @@ class HuntWorld extends TEST_WORLD:
 class RoamHost extends Node2D:
 	var field_map: PlayableField
 
+class RoamField extends FIELD_FIXTURE.MemoryField:
+	var walk_leg_checks: int = 0
+	func line_clear(from: Vector2, to: Vector2) -> bool:
+		walk_leg_checks += 1
+		return super.line_clear(from, to)
+
 class RoamWorld extends HuntWorld:
 	var pickup_goal := Vector2.INF
 	func _run_auto_ground_pickup() -> bool:
@@ -123,7 +129,7 @@ func roaming_walk_and_target(world: RoamWorld, field: FIELD_FIXTURE.MemoryField)
 		"a newly available target interrupts the current roam leg before the next empty-scan deadline")
 	actor.free()
 
-func roaming_obstacles_and_ownership(world: RoamWorld, host: RoamHost, field: FIELD_FIXTURE.MemoryField) -> void:
+func roaming_obstacles_and_ownership(world: RoamWorld, host: RoamHost, field: RoamField) -> void:
 	var player: TwilightPlayer = world.player
 	var cell := Vector2i(24, 24)
 	player.global_position = field.cell_to_world(cell)
@@ -132,9 +138,11 @@ func roaming_obstacles_and_ownership(world: RoamWorld, host: RoamHost, field: FI
 	field.attribute(cell + Vector2i.RIGHT, 0, 0)
 	field.attribute(cell + Vector2i.RIGHT * 2, 0, 1)
 	var goal: Vector2 = field.cell_to_world(cell + Vector2i.RIGHT)
+	field.walk_leg_checks = 0
 	world._run_auto_hunt(2000)
 	check(player.auto_roaming_navigation and player.click_path == PackedVector2Array([goal]),
 		"a dead end uses the sole walkable direction and shortens the leg before blocked cells")
+	check(field.walk_leg_checks == 3, "the other seven closed neighbors need no route-leg checks")
 
 	var blocker := StaticBody2D.new()
 	blocker.collision_layer = 4
@@ -182,9 +190,43 @@ func roaming_obstacles_and_ownership(world: RoamWorld, host: RoamHost, field: FI
 	world._run_auto_hunt(3006)
 	check(player.click_path.is_empty(), "an absent field does not start an unverified walk")
 
+func roaming_checks_are_bounded(world: RoamWorld, host: RoamHost, field: RoamField) -> void:
+	world.field_map = field
+	var player: TwilightPlayer = world.player
+	player.global_position = field.cell_to_world(Vector2i(40, 40))
+	# The terrain permits all eight exits. Four physical walls block the foot.
+	for axis: Vector2 in [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP]:
+		var wall := StaticBody2D.new()
+		wall.collision_layer = 4
+		wall.position = player.global_position + axis * 12.0
+		var collision := CollisionShape2D.new()
+		var rectangle := RectangleShape2D.new()
+		rectangle.size = Vector2(4, 48) if axis.x != 0.0 else Vector2(48, 4)
+		collision.shape = rectangle
+		wall.add_child(collision)
+		host.add_child(wall)
+	await physics_frame
+	await physics_frame
+	var remaining_per_tick: Array[int] = []
+	for frame: int in range(4):
+		world._run_auto_hunt(4000 + frame * 16)
+		remaining_per_tick.append(world._auto_roam_headings.size())
+	check(remaining_per_tick == [6, 4, 2, 0] and player.click_path.is_empty(),
+		"all eight physically blocked headings are checked over four ticks without starting a walk")
+	field.walk_leg_checks = 0
+	world._run_auto_hunt(4547)
+	check(field.walk_leg_checks == 0, "the retry delay begins only after the final heading was checked")
+	world._run_auto_hunt(4548)
+	check(world._auto_roam_headings.size() == 6, "a new attempt resumes with only two headings per tick")
+	var actor: TwilightMonster = add_actor(world, Vector2i(1, 0))
+	field.walk_leg_checks = 0
+	world._run_auto_hunt(4549)
+	check(world.last_test_attack == actor and world._auto_roam_headings.is_empty() and field.walk_leg_checks == 0,
+		"a target found between probe ticks is attacked before any remaining roam work")
+
 func run_roaming() -> void:
 	var world := RoamWorld.new()
-	var field := FIELD_FIXTURE.MemoryField.new()
+	var field := RoamField.new()
 	field.prepare({})
 	field.set_meta("current523_source_field", true)
 	world.field_map = field
@@ -208,6 +250,7 @@ func run_roaming() -> void:
 	world.player.set_auto_enabled(true)
 	await roaming_walk_and_target(world, field)
 	await roaming_obstacles_and_ownership(world, host, field)
+	await roaming_checks_are_bounded(world, host, field)
 	world.hud.free()
 	host.free()
 	world.free()

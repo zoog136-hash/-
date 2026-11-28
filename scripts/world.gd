@@ -356,11 +356,14 @@ const AUTO_TARGET_CANDIDATE_SCAN_USEC: int = 500
 const AUTO_TARGET_REFRESH_MS: int = 3000
 const AUTO_TARGET_SEARCH_RADIUS_CELLS: int = 10
 const AUTO_ROAM_CELLS: int = 3
+const AUTO_ROAM_HEADINGS_PER_FRAME: int = 2
 const AUTO_ROAM_RETRY_MS: int = 500
 const AUTO_ROAM_STUCK_SECONDS: float = 0.8
 var _auto_roam_random := RandomNumberGenerator.new()
 var _auto_roam_direction := Vector2i.ZERO
 var _auto_roam_retry_ms: int = 0
+var _auto_roam_cell: Vector2i
+var _auto_roam_headings: Array[Vector2i] = []
 var auto_target_failed_paths: Dictionary = {}
 var auto_target_next_search_ms: int = 0
 var auto_target_failed_search_actor_count: int = -1
@@ -2449,6 +2452,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_target_failed_search_actor_count = -1
 	_auto_roam_direction = Vector2i.ZERO
 	_auto_roam_retry_ms = 0
+	_auto_roam_headings.clear()
 	if active_map_id != map_id:
 		unconfirmed523.record_event("map_change",{"event_id":"map:%s:%s:%d"%[active_map_id,map_id,Time.get_ticks_usec()],"map_id":map_id})
 	active_map_id = map_id
@@ -3666,9 +3670,11 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 		_cancel_auto_roam()
 		return
 	if player.is_stunned() or player.is_feared():
+		_auto_roam_headings.clear()
 		player.clear_click_path()
 		return
 	if not charge_skill.is_empty():
+		_auto_roam_headings.clear()
 		player.clear_click_path()
 		return
 	# Stage times for the phone record (523.681: auto_hunt 196 ms/s, no split).
@@ -3710,6 +3716,7 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 		selected_monster = null
 		if automatic:
 			_run_auto_roam(now)
+			FRAME_HITCH.detail("auto.roam", auto_stage)
 		else:
 			player.clear_click_path()
 		return
@@ -3790,6 +3797,7 @@ func _run_auto_hunt(now_ms: int = -1) -> void:
 			_remember_stable_auto_route(auto_target)
 
 func _cancel_auto_roam() -> void:
+	_auto_roam_headings.clear()
 	if player.auto_roaming_navigation:
 		player.clear_click_path()
 
@@ -3798,6 +3806,7 @@ func _run_auto_roam(now: int) -> void:
 	if not player.auto_enabled or not is_instance_valid(field_map) or _source_combat_targets_hidden() \
 		or player.is_held() or player.movement_locked or player.source_523_movement_blocked \
 		or not auto_search_candidates.is_empty() or _native_route_pending():
+		_auto_roam_headings.clear()
 		player.clear_click_path()
 		return
 	if player.auto_roaming_navigation and player.path_index < player.click_path.size() \
@@ -3809,6 +3818,32 @@ func _run_auto_roam(now: int) -> void:
 		return
 	var origin: Vector2 = player.global_position
 	var cell: Vector2i = field_map.world_to_cell(origin)
+	if _auto_roam_headings.is_empty() or _auto_roam_cell != cell:
+		_auto_roam_cell = cell
+		_auto_roam_headings = _shuffled_auto_roam_headings()
+	# Reject obviously closed neighbors before doing physics sweeps. Carry the
+	# remaining headings to the next AUTO tick, which checks for targets first.
+	var checked_headings: int = 0
+	while not _auto_roam_headings.is_empty() and checked_headings < AUTO_ROAM_HEADINGS_PER_FRAME:
+		var direction: Vector2i = _auto_roam_headings.pop_front()
+		if not field_map.walkable(field_map.cell_to_world(cell + direction)):
+			continue
+		checked_headings += 1
+		for steps: int in range(AUTO_ROAM_CELLS, 0, -1):
+			var goal: Vector2 = field_map.cell_to_world(cell + direction * steps)
+			if not goal.is_finite() or origin.distance_to(goal) <= TwilightPlayer.CLICK_ARRIVAL_DISTANCE \
+				or not player.can_resume_pursuit(goal):
+				continue
+			player.set_auto_roam_path(goal)
+			_auto_roam_direction = direction
+			_auto_roam_retry_ms = 0
+			_auto_roam_headings.clear()
+			auto_stuck_time = 0.0
+			return
+	if _auto_roam_headings.is_empty():
+		_auto_roam_retry_ms = now + AUTO_ROAM_RETRY_MS
+
+func _shuffled_auto_roam_headings() -> Array[Vector2i]:
 	var directions: Array[Vector2i] = OriginalPlayableField.DIRECTIONS.duplicate()
 	var reverse: Vector2i = -_auto_roam_direction
 	directions.erase(reverse)
@@ -3820,18 +3855,7 @@ func _run_auto_roam(now: int) -> void:
 		directions[chosen] = swap
 	if reverse != Vector2i.ZERO:
 		directions.append(reverse)
-	for direction: Vector2i in directions:
-		for steps: int in range(AUTO_ROAM_CELLS, 0, -1):
-			var goal: Vector2 = field_map.cell_to_world(cell + direction * steps)
-			if not goal.is_finite() or origin.distance_to(goal) <= TwilightPlayer.CLICK_ARRIVAL_DISTANCE \
-				or not player.can_resume_pursuit(goal):
-				continue
-			player.set_auto_roam_path(goal)
-			_auto_roam_direction = direction
-			_auto_roam_retry_ms = 0
-			auto_stuck_time = 0.0
-			return
-	_auto_roam_retry_ms = now + AUTO_ROAM_RETRY_MS
+	return directions
 
 func _refresh_auto_hunt_target(now: int) -> PackedVector2Array:
 	var previous: TwilightMonster = auto_target if is_instance_valid(auto_target) else null
@@ -7765,6 +7789,7 @@ func _on_auto_toggled(enabled: bool) -> void:
 	_auto_target_refresh_ms = 0
 	_auto_roam_direction = Vector2i.ZERO
 	_auto_roam_retry_ms = 0
+	_auto_roam_headings.clear()
 	if not enabled:
 		_auto_area_sweep_due = false
 		_clear_auto_target_search()
