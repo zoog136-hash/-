@@ -9,7 +9,7 @@ extends RefCounted
 ## corrected once on load (enforce_loaded, user decision 2026-11-13).
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
-const FAMILIES: Dictionary = {"earring":["earring1","earring2"],"ring":["ring1","ring2"],"seal":["seal1","seal2"]}
+const FAMILIES: Dictionary = {"earring":["earring1","earring2"],"ring":["ring1","ring2"],"seal":["seal1","seal2"],"rune":["rune","rune2"]}
 
 static func _whole(value: Variant) -> int:
 	return int(value) if typeof(value) in [TYPE_INT,TYPE_FLOAT] and is_finite(float(value)) and float(value)==floorf(float(value)) else -1
@@ -50,6 +50,11 @@ static func reason(record: Dictionary, target_slot: String, worn: Dictionary) ->
 		var other: Variant = worn.get(slot,{})
 		if not other is Dictionary or (other as Dictionary).is_empty() or not other.get("source_m_native_item",false): continue
 		other = FIELDS.full(other)
+		# The existing primary key can also hold SpellRune. Only the same
+		# original EquipSlot participates in the source duplication limits.
+		if target_slot in FAMILIES.rune:
+			var other_ids: Array = other.get("source_equip_slot_ids", [])
+			if other_ids.size() != 1 or _whole(other_ids[0]) != _whole(config.get("EquipSlotID")): continue
 		if _whole(other.get("source_item_class_id"))==item_id:
 			same_item += 1; conflict = str(other.get("source_display_name",other.get("name","")))
 		for group: int in groups(other):
