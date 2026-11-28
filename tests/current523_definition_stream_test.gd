@@ -135,8 +135,24 @@ func run() -> void:
 	ROWS._store_failures.erase(table)
 	BAKE.clear("disk_" + table)
 	_row_scanner_units()
+	_pinned_column_units()
 	print("CURRENT523_DEFINITION_STREAM_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"stats":stats}))
 	quit(0 if failures.is_empty() else 1)
+
+func _pinned_column_units() -> void:
+	var first: String = '{"N":1,"T":"first","V":true}'
+	var second: String = '{"N":2.5,"T":"second","V":{"x":[1,2]}}'
+	var text: String = '{"rows":[' + first + ',' + second + ']}'
+	var bytes: PackedByteArray = text.to_utf8_buffer()
+	var start: int = text.find(first)
+	var next: int = text.find(second)
+	var spec: Dictionary = {"bytes":bytes.size(),"sha":text.sha256_text(),"rows":2,
+		"kinds":[TYPE_FLOAT,TYPE_STRING,TYPE_NIL],
+		"spans":[start,start+first.length(),1,next,next+second.length(),1]}
+	var pinned: Dictionary = ROWS._convert_pinned_spans(bytes,spec)
+	check(pinned.get("ok",false) and var_to_bytes(pinned) == var_to_bytes(ROWS._convert_whole(bytes)), "pinned batches preserve all column kinds, key order and value types")
+	bytes[start + first.find("1")] = 50
+	check(ROWS._convert_pinned_spans(bytes,spec).is_empty(), "same-length modified source never uses the offline column proof")
 
 func _row_scanner_units() -> void:
 	same_result("{\"rows\":[{\"a\":[1}]}]}", "scanner nested bracket mismatch falls back exactly", false)

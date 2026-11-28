@@ -90,6 +90,56 @@ func finish(world: Node) -> void:
 	print("HUD_PICKUP_NEARBY_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
 	quit(1 if not failures.is_empty() else 0)
 
+func pickup_refusal(world: TwilightWorld) -> void:
+	# The state machine needs a walkable floor even in CI without an installed
+	# map. Use a small open grid with the actual Main pickup/ownership checks.
+	var previous_field = world.field_map
+	var previous_grid: AStarGrid2D = world.astar
+	var previous_position: Vector2 = world.player.global_position
+	var previous_auto: bool = world.player.auto_enabled
+	world.field_map = null
+	world.astar = AStarGrid2D.new()
+	world.astar.region = Rect2i(0,0,12,12)
+	world.astar.cell_size = Vector2.ONE * world.tile_size
+	world.astar.update()
+	var origin: Vector2 = world._cell_to_world(Vector2i(5,5))
+	world.player.global_position = origin
+	world.player.auto_enabled = true
+	var item: String = "pickup regression"
+	var metadata: Dictionary = {"item_record":{"name":item,"grade":"일반","slot":"material"}}
+	var fresh: Button = world.ground_loot.spawn(item,origin,1,"",metadata)
+	check(fresh != null, "fixture drop is placed by the real manager")
+	if fresh != null:
+		var fresh_id: String = fresh.get_meta("id")
+		check(world._run_auto_ground_pickup() and world.loot_pickup.target_id == fresh_id and not world.loot_pickup.blocked.has(fresh_id), "a new drop waits for the visual lifetime")
+		fresh.set("visible_since",Time.get_ticks_msec()-900)
+		check(world._run_auto_ground_pickup() and int(world.inventory.get(item,0)) == 1, "the same drop is collected once after the wait")
+	var collision_id := "pickup-regression-existing-owner"
+	var physical_data: Dictionary = {"name":item}
+	world.item_instances[collision_id] = physical_data
+	var refused: Button = world.ground_loot.spawn(item,origin,1,"",metadata.merged({"physical_item":{"id":collision_id,"data":physical_data}}))
+	var available: Button = world.ground_loot.spawn(item,origin+Vector2(40,0),1,"",metadata)
+	check(refused != null and available != null, "fixture has a refused drop and an eligible neighbor")
+	if refused != null and available != null:
+		var refused_id: String = refused.get_meta("id")
+		var refused_record: Dictionary = world.ground_loot.records[refused_id].duplicate(true)
+		refused.set("visible_since",Time.get_ticks_msec()-900)
+		available.set("visible_since",Time.get_ticks_msec()-900)
+		check(world._run_auto_ground_pickup() and int(world.inventory.get(item,0)) == 2, "AUTO skips the refused drop and collects the next candidate")
+		check(world.loot_pickup.blocked.has(refused_id) and not world._run_auto_ground_pickup(), "a mature refusal releases AUTO and throttles retries")
+		check(world.ground_loot.records.get(refused_id) == refused_record and world.item_instances.get(collision_id) == physical_data, "failed acquisition preserves the floor record and existing owner")
+		world.loot_pickup.select(refused)
+		world.loot_pickup.request_selected()
+		check(world.loot_pickup.mode == "idle" and world.pending_ground_pickup == null, "manual refusal clears the pending action")
+	world.loot_pickup.map_changed()
+	world.ground_loot.clear_map(world.ground_loot.current_map)
+	world.inventory.erase(item)
+	world.item_instances.erase(collision_id)
+	world.field_map = previous_field
+	world.astar = previous_grid
+	world.player.global_position = previous_position
+	world.player.auto_enabled = previous_auto
+
 func run() -> void:
 	snapshot_user("user://")
 	var world: Node = load("res://Main.tscn").instantiate()
@@ -106,6 +156,7 @@ func run() -> void:
 		if origin.is_finite(): player.global_position = origin
 	evidence["origin"] = str(player.global_position)
 	world._clear_drops()
+	pickup_refusal(world)
 	var item: String = floor_item(world)
 	if not check(not item.is_empty(), "a floor item can be spawned"):
 		await finish(world); return

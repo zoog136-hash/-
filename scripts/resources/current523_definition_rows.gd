@@ -470,26 +470,65 @@ static func _convert(bytes: PackedByteArray) -> Dictionary:
 	var streamed: Dictionary = _convert_streaming(bytes)
 	return streamed if not streamed.is_empty() else _convert_whole(bytes)
 
-## The publisher supplies these four members in an exact immutable byte layout.
-## Their row-span index is derived OFFLINE from that source; the member hash
-## gates its use. Native JSON still parses every row before the existing packer
-## validates it. Other layouts and tables keep the prior general converter.
+## The offline index certifies the layout and column kinds of exact original
+## members. Only matching bytes can skip the generic shape and type scans.
 static func _convert_pinned_member(table: String, bytes: PackedByteArray) -> Dictionary:
 	var spec: Dictionary=preload("res://scripts/resources/current523_boot_row_spans.gd").TABLES.get(table,{})
-	if spec.is_empty() or bytes.size()!=int(spec.bytes):return _convert(bytes)
+	var converted: Dictionary = _convert_pinned_spans(bytes,spec)
+	return converted if not converted.is_empty() else _convert(bytes)
+
+static func _convert_pinned_spans(bytes: PackedByteArray, spec: Dictionary) -> Dictionary:
+	if spec.is_empty() or bytes.size()!=int(spec.bytes):return {}
 	var hash:=HashingContext.new()
-	if hash.start(HashingContext.HASH_SHA256)!=OK or hash.update(bytes)!=OK or hash.finish().hex_encode()!=spec.sha:return _convert(bytes)
+	if hash.start(HashingContext.HASH_SHA256)!=OK or hash.update(bytes)!=OK or hash.finish().hex_encode()!=spec.sha:return {}
 	var packer:=RowPacker.new()
-	var spans: Array=spec.spans
+	var spans: Array = spec.spans
+	var kinds: Array = spec.kinds
+	if spans.size() % 3 != 0 or kinds.is_empty(): return {}
 	for i:int in range(0,spans.size(),3):
 		var start:int=spans[i];var end:int=spans[i+1];var count:int=spans[i+2]
-		if start<0 or end>bytes.size() or end<=start or end-start>CONVERT_BATCH_BYTES or count<1 or count>CONVERT_BATCH_ROWS:return _convert(bytes)
+		if start<0 or end>bytes.size() or end<=start or end-start>CONVERT_BATCH_BYTES or count<1 or count>CONVERT_BATCH_ROWS:return {}
 		var parser:=JSON.new()
-		if parser.parse("{\"rows\":["+bytes.slice(start,end).get_string_from_utf8()+"]}")!=OK:return _convert(bytes)
+		if parser.parse("{\"rows\":["+bytes.slice(start,end).get_string_from_utf8()+"]}")!=OK:return {}
 		var rows:Array=parser.data.rows
-		if rows.size()!=count or not packer.add_batch(rows):return _convert(bytes)
-	if packer.count!=int(spec.rows):return _convert(bytes)
+		if rows.size()!=count or not _append_pinned_batch(packer,rows,kinds):return {}
+	if packer.count!=int(spec.rows):return {}
 	return {"ok":true,"store":packer.finish()}
+
+static func _append_pinned_batch(packer: RowPacker, rows: Array, kinds: Array) -> bool:
+	if packer.count == 0:
+		packer.columns = PackedStringArray((rows[0] as Dictionary).keys())
+		if packer.columns.size() != kinds.size(): return false
+		for kind: int in kinds:
+			match kind:
+				TYPE_FLOAT: packer.data.append(PackedFloat64Array())
+				TYPE_STRING: packer.data.append(PackedStringArray())
+				TYPE_NIL: packer.data.append([])
+				_: return false
+	# The producer verifies the same key insertion order in every row.
+	# Fetch its values once through the native Dictionary API.
+	var values: Array[Array] = []
+	values.resize(rows.size())
+	for index: int in rows.size(): values[index] = (rows[index] as Dictionary).values()
+	var cells: Array = []
+	cells.resize(rows.size())
+	for position: int in kinds.size():
+		for index: int in rows.size(): cells[index] = values[index][position]
+		match int(kinds[position]):
+			TYPE_FLOAT:
+				var numbers: PackedFloat64Array = packer.data[position]
+				packer.data[position] = null
+				numbers.append_array(PackedFloat64Array(cells))
+				packer.data[position] = numbers
+			TYPE_STRING:
+				var strings: PackedStringArray = packer.data[position]
+				packer.data[position] = null
+				strings.append_array(PackedStringArray(cells))
+				packer.data[position] = strings
+			TYPE_NIL:
+				(packer.data[position] as Array).append_array(cells)
+	packer.count += rows.size()
+	return true
 
 ## The former conversion (reference and fallback): the same parser and values
 ## as JSON.parse_string(), which is this parse plus an engine error print.
@@ -811,11 +850,12 @@ const BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
 ## edit here (a new lookup helper, a log line) used to discard every stored
 ## table on the phone, which then re-converted each one from JSON during
 ## play (seconds per large table) after every update.
-const STORE_FORMAT := "twilight.current523.definition-store.v4"
+const STORE_FORMAT := "twilight.current523.definition-store.v5"
 const COMPATIBLE_V1 := "twilight.current523.definition-store.v1"
 const COMPATIBLE_V2 := "twilight.current523.definition-store.v2"
 const COMPATIBLE_V3 := "twilight.current523.definition-store.v3"
-const COMPATIBLE_STORE_FORMATS := [COMPATIBLE_V3, COMPATIBLE_V2, COMPATIBLE_V1]
+const COMPATIBLE_V4 := "twilight.current523.definition-store.v4"
+const COMPATIBLE_STORE_FORMATS := [COMPATIBLE_V4, COMPATIBLE_V3, COMPATIBLE_V2, COMPATIBLE_V1]
 const BAKE_CODE: Array[String] = ["res://scripts/resources/current523_bake_cache.gd"]
 static var _bake_code: String = ""
 

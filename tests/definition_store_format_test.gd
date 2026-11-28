@@ -11,6 +11,7 @@ const ROWS_PATH := "res://scripts/resources/current523_definition_rows.gd"
 ## STORE_FORMAT -> SHA-256 of the format region text. Add a new entry (with a
 ## new STORE_FORMAT) when the region changes; never edit an existing hash.
 const RECORDED: Dictionary = {
+	"twilight.current523.definition-store.v5": "29b4d0884c99f1330fb2eb23cb4dac0129ac2bd543788d61362c9e65d9ebeee6",
 	"twilight.current523.definition-store.v4": "257aa48fa0fe2d5f24d41eb9075f1aa42db9b2f489fbac7d1d4dad093ed55e8c",
 	"twilight.current523.definition-store.v3": "df41c6d8258a8b81a8d0467beec1d9a32de11d124d517fbd5bb59a8e2cd82b5b",
 	"twilight.current523.definition-store.v2": "5f1decea0ed1e696df5694167d08e3ed378e3082ac4f0b0ad9a25e8d9829def4",

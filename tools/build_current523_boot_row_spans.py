@@ -1,4 +1,4 @@
-"""Generate offsets only, no original row content, for pinned cold-start inputs."""
+"""Generate byte spans and column kinds, without any original cell values."""
 import hashlib
 import json
 import re
@@ -22,9 +22,24 @@ def row_spans(raw):
     assert len(starts) == len(ends) == len(rows)
     return rows, starts, ends
 
+def column_kinds(rows):
+    keys = list(rows[0])
+    # The pinned runtime reads Dictionary.values() in insertion order.
+    assert all(list(row) == keys for row in rows)
+    kinds = []
+    for key in keys:
+        types = {type(row[key]) for row in rows}
+        if types <= {int, float}:
+            kinds.append("TYPE_FLOAT")
+        elif types == {str}:
+            kinds.append("TYPE_STRING")
+        else:
+            kinds.append("TYPE_NIL")
+    return ", ".join(kinds)
+
 def generate(path):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
-    result = ['extends RefCounted', '## Byte spans only; no row contents. Regenerate from the pinned ZIP with',
+    result = ['extends RefCounted', '## Byte spans and column kinds only. Regenerate from the pinned ZIP with',
               '## tools/build_current523_boot_row_spans.py. [start, end, row count] per batch.',
               '## Includes the four original boot tables and the large first-encounter NPC tables.',
               'const TABLES = {']
@@ -43,7 +58,8 @@ def generate(path):
                 assert json.loads(b'[' + raw[a:b] + b']') == rows[i:j]
                 spans.extend((a, b, j-i))
                 i = j
-            result.append(f'"{table}": {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{len(rows)}, "spans":[')
+            result.append(f'"{table}": {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{len(rows)},')
+            result.append(f'"kinds":[{column_kinds(rows)}], "spans":[')
             for i in range(0, len(spans), 24):
                 result.append(','.join(str(n) for n in spans[i:i+24])+',')
             result.append(']},')
