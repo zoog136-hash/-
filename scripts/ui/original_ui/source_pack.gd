@@ -178,27 +178,52 @@ func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
 	var manifest_problem := _loading_manifest_problem(pack_root, expected_sha256)
 	if not manifest_problem.is_empty(): return _fail(manifest_problem)
 	var bake_key := bake_key_for(expected_sha256) if bake_enabled else ""
-	var baked := BAKE.open_records(bake_name_for(expected_sha256), bake_key) if not bake_key.is_empty() else null
-	if baked == null:
-		return _fail("original_ui_pack_not_baked")
+	if bake_key.is_empty(): return _fail("original_ui_pack_not_baked")
+	# The loading screens consume only these scenes. Authenticate the same
+	# source manifest and member closure without scanning the full HUD bake.
+	var scope_name := "original_ui_loading_" + expected_sha256.left(16)
+	var scope_key := BAKE.key([bake_key, BAKE.code_key(["res://scripts/ui/original_ui/source_pack.gd"]), "loading_scope.v1"])
+	var records := BAKE.open_records(scope_name, scope_key) if not scope_key.is_empty() else null
+	var scope: Dictionary = _loading_scope(pack_root, records) if records != null else {}
+	if not scope.get("complete", false):
+		records = BAKE.open_records(bake_name_for(expected_sha256), bake_key)
+		if records == null: return _fail("original_ui_pack_not_baked")
+		scope = _loading_scope(pack_root, records)
+		if scope.has("error"): return _fail(scope.error)
+		# Do not cache an incomplete optional scope. A repaired installation
+		# must be able to expose its world loading layout at the next open.
+		if scope.complete and not scope_key.is_empty():
+			var ids := PackedStringArray(["meta"])
+			var values: Array = [{"schema":scope.schema, "files":scope.files, "atlases":scope.atlases}]
+			for member: String in scope.scenes:
+				ids.append("s:" + member)
+				values.append(scope.scenes[member])
+			BAKE.write_records(scope_name, scope_key, ids, values)
+	scope.erase("complete")
+	_adopt(scope, pack_root, expected_sha256)
+	_records = null
+	_scoped_loading_fx = true
+	return {"ok": true, "scene_count": scope.scenes.size(), "rendered": false}
+
+static func _loading_scope(pack_root: String, baked: BAKE.RecordFile) -> Dictionary:
 	var meta: Variant = baked.read("meta")
 	if not meta is Dictionary or meta.get("schema") != "twilight-original-ui-v1" or not meta.get("files") is Dictionary or not meta.get("atlases") is Dictionary:
-		return _fail("manifest_fields")
+		return {"error": "manifest_fields"}
 	var atlas: Variant = meta.atlases.get(LOADING_FX_ATLAS)
 	if not atlas is Dictionary or not atlas.get("page") is String:
-		return _fail("fx_loading_atlas_missing")
+		return {"error": "fx_loading_atlas_missing"}
 	var files := {}
 	for member: String in [LOADING_FX_MEMBER, LOADING_FX_ATLAS, atlas.page, LOADING_FX_FONT]:
 		var entry: Variant = meta.files.get(member)
 		if not entry is Dictionary:
-			return _fail("fx_loading_dependency_missing:" + member)
+			return {"error": "fx_loading_dependency_missing:" + member}
 		files[member] = entry
 	var problem := _files_intact(pack_root, files)
 	if not problem.is_empty():
-		return _fail(problem)
+		return {"error": problem}
 	var scene: Variant = baked.read("s:" + LOADING_FX_MEMBER)
 	if not scene is Dictionary or scene.get("_source_sha256") != files[LOADING_FX_MEMBER].sha256:
-		return _fail("scene_source_mismatch")
+		return {"error": "scene_source_mismatch"}
 	var scenes := {LOADING_FX_MEMBER: scene}
 	var atlases := {LOADING_FX_ATLAS: atlas}
 	var world := _verified_world_loading(pack_root, baked, meta)
@@ -206,10 +231,11 @@ func open_loading_fx(pack_root: String, expected_sha256: String) -> Dictionary:
 		scenes.merge(world.scenes)
 		files.merge(world.files)
 		atlases.merge(world.atlases)
-	_adopt({"schema": meta.schema, "scenes": scenes, "files": files, "atlases": atlases}, pack_root, expected_sha256)
-	_records = null
-	_scoped_loading_fx = true
-	return {"ok": true, "scene_count": scenes.size(), "rendered": false}
+	# A pack with neither world scene can safely cache just the indicator.
+	# If the pinned bake declares both, preserve a retry for a missing member.
+	var declares_world := baked.has("s:" + WORLD_LOADING_MEMBER) and baked.has("s:" + WORLD_LOADING_LAYOUT)
+	return {"schema": meta.schema, "scenes": scenes, "files": files, "atlases": atlases,
+		"complete": not declares_world or not world.is_empty()}
 
 ## Only the matching current523 loading layout may extend the scoped boot read.
 static func _verified_world_loading(pack_root: String, baked: RefCounted, meta: Dictionary) -> Dictionary:

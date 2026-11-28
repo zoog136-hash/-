@@ -108,15 +108,24 @@ func load_original_bound(catalog_bytes: PackedByteArray, items: Array, contract:
 	var baked: Variant = BAKE.read(BAKE_NAME,_bake_key)
 	var usable: bool = baked is Dictionary and baked.get("model") is Dictionary and baked.get("sha256") is String and baked.get("offloaded") == true
 	if usable and OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": usable = false
-	if usable and BAKE.open_records(RECORDS_NAME,_bake_key) == null: usable = false
-	if usable and (baked.model.get("equipment_runtime",{}) as Dictionary).get(RUNTIME_MARK) == true and BAKE.open_records(RUNTIME_NAME,_bake_key) == null: usable = false
+	# Publish the same readers whose key, bytes and indexes were verified here.
+	var catalog_records: BAKE.RecordFile
+	var runtime_records: BAKE.RecordFile
 	if usable:
-		if _accept(baked.model,baked.sha256):
+		catalog_records = BAKE.open_records(RECORDS_NAME, _bake_key)
+		usable = catalog_records != null
+	if usable and (baked.model.get("equipment_runtime", {}) as Dictionary).get(RUNTIME_MARK) == true:
+		runtime_records = BAKE.open_records(RUNTIME_NAME, _bake_key)
+		usable = runtime_records != null
+	if usable:
+		if _accept(baked.model, baked.sha256, catalog_records, runtime_records):
 			loaded_from_bake = true
 			_release_cold()
 			return true
 		data = {}
 	baked = null
+	catalog_records = null
+	runtime_records = null
 	BOOT_LOG.mark("rules_cold_build", {"bake_usable": usable})
 	return compile_original_bound(catalog_bytes,items,contract,_bake_key)
 
@@ -412,7 +421,8 @@ func _load_payload(text: String, expected_sha256: String) -> bool:
 		return false
 	return _accept(parser.data,expected_sha256)
 
-func _accept(parsed: Variant, expected_sha256: String) -> bool:
+func _accept(parsed: Variant, expected_sha256: String, catalog_records: BAKE.RecordFile = null,
+		runtime_records: BAKE.RecordFile = null) -> bool:
 	if not _valid_model(parsed): return false
 	# Rejected replacements never erase the last valid registry.
 	data = parsed
@@ -424,7 +434,7 @@ func _accept(parsed: Variant, expected_sha256: String) -> bool:
 	_cold_key = ""
 	_cold_parts = PackedStringArray()
 	_cold_cache.clear()
-	_offload_catalog_records()
+	_offload_catalog_records(catalog_records, runtime_records)
 	# Shared with data.recipes (read-only: material_selection() duplicates a
 	# recipe before choosing materials) instead of a second deep copy.
 	recipes = data.recipes
@@ -669,7 +679,7 @@ static func _source_material_contract(recipe: Dictionary, source: Dictionary) ->
 static func denied(reason: String) -> Dictionary:
 	return {"ok": false, "reason": reason}
 
-func _offload_catalog_records() -> void:
+func _offload_catalog_records(catalog_records: BAKE.RecordFile, runtime_records: BAKE.RecordFile) -> void:
 	_records = null
 	_runtime = null
 	_runtime_ids.clear()
@@ -679,7 +689,7 @@ func _offload_catalog_records() -> void:
 	if key.is_empty() or not data.get("items") is Dictionary or OS.get_environment("TWILIGHT_RULES_RECORDS_RESIDENT") == "1": return
 	_cold_key = key
 	var items: Dictionary = data.items
-	var records: Object = BAKE.open_records(RECORDS_NAME,key)
+	var records: BAKE.RecordFile = catalog_records if catalog_records != null else BAKE.open_records(RECORDS_NAME, key)
 	if records == null:
 		var ids := PackedStringArray()
 		var values: Array = []
@@ -699,7 +709,7 @@ func _offload_catalog_records() -> void:
 	var runtime: Variant = data.get("equipment_runtime")
 	if not runtime is Dictionary or (runtime as Dictionary).is_empty(): return
 	if (runtime as Dictionary).get(RUNTIME_MARK) == true:
-		var existing: Object = BAKE.open_records(RUNTIME_NAME,key)
+		var existing: BAKE.RecordFile = runtime_records if runtime_records != null else BAKE.open_records(RUNTIME_NAME, key)
 		if existing == null: return
 		_runtime_ids.clear()
 		for id: Variant in existing.offsets: _runtime_ids[str(id)] = true
