@@ -17,9 +17,10 @@ var checks: int = 0
 var failures: Array[String] = []
 var evidence: Dictionary = {}
 
-func check(condition: bool, label: String) -> void:
+func check(condition: bool, label: String) -> bool:
 	checks += 1
 	if not condition: failures.append(label)
+	return condition
 
 func argument(prefix: String) -> String:
 	for value: String in OS.get_cmdline_user_args():
