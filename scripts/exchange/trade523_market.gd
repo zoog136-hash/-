@@ -3,8 +3,8 @@ extends RefCounted
 ## - 검색 분류: the original UITradeMarketCategory tree (DescData_Korean names)
 ##   and UITradeMarketCategoryMappingView (ItemClass -> category).
 ## - 구매: one locally restocked offer per exact installed TWILIGHT catalog
-##   item. Captured data supplies comparable unit prices only, never listings,
-##   quantities, provenance, variants or stock. There is no server connection.
+##   item. Captured unit prices inform estimates where available. Listings,
+##   quantities, price estimates and stock are local.
 ## - 기존 매물: no new listings. Previously saved escrow can be cancelled,
 ##   recovered after expiry or settled using its original recorded sale time.
 ## All transfers use game currency and one atomic save, never a server.
@@ -26,6 +26,10 @@ const MAX_SALE_AMOUNT: int=9999999
 const TAX_PERCENT: int=7
 const BASE_TAX_PERCENT: int=2
 const CASTLE_TAX_PERCENT: int=5
+const HERO_GRADE: int=4
+const HIGH_GRADE_MULTIPLIERS: Dictionary={32:10,52:100}
+const DEFAULT_ESTIMATED_UNIT: Dictionary={1:0.1,2:1.0,3:10.0,4:500.0,5:5000.0}
+const STACKABLE_LOT_SIZE: int=100
 ## History rows kept (최근 한달, the original Trade_Tab_CalculateList message).
 const HISTORY_DAYS: int=30
 const LIMIT: int=9007199254740991
@@ -201,14 +205,21 @@ func _index_reference_prices() -> void:
 
 func price_reference(item_class_id: int) -> Dictionary:
 	if not _mapping.has(item_class_id):return {}
-	if _exact_prices.has(item_class_id):return {"unit":float(_exact_prices[item_class_id]),"basis":"exact"}
 	var grade: int=int(SOURCE.row("ItemClass",item_class_id).get("GradeID",0))
 	var top: int=top_of(category_of(item_class_id))
+	if HIGH_GRADE_MULTIPLIERS.has(grade):
+		var hero: Dictionary=_grade_price_reference(top,HERO_GRADE)
+		var anchor: int=clampi(ceili(float(hero.unit)),MIN_SALE_AMOUNT,floori(MAX_SALE_AMOUNT/100.0))
+		return {"unit":float(anchor*int(HIGH_GRADE_MULTIPLIERS[grade])),"basis":"hero_multiplier","hero_unit":anchor,"hero_basis":hero.basis}
+	if _exact_prices.has(item_class_id):return {"unit":float(_exact_prices[item_class_id]),"basis":"observed_estimate"}
+	return _grade_price_reference(top,grade)
+
+func _grade_price_reference(top: int, grade: int) -> Dictionary:
 	var key: String="%d:%d"%[top,grade]
 	if _peer_prices.has(key):return {"unit":float(_peer_prices[key].unit),"basis":"category_grade","peer_items":int(_peer_prices[key].peer_items)}
 	key="*:%d"%grade
 	if _peer_prices.has(key):return {"unit":float(_peer_prices[key].unit),"basis":"grade","peer_items":int(_peer_prices[key].peer_items)}
-	return {}
+	return {"unit":float(DEFAULT_ESTIMATED_UNIT.get(grade,0.1)),"basis":"local_default"}
 
 func reference_unit_price(item_class_id: int) -> float:
 	return float(price_reference(item_class_id).get("unit",0.0))
@@ -249,14 +260,12 @@ func _item_name(id: int) -> String:
 		if not title.is_empty():_item_names[id]=title
 	return str(_item_names.get(id,""))
 
-## Local policy: one equipment, 1,000 materials or 10 other stackables,
-## bounded by the item's own stack ceiling. Changing a price sample must
-## not change quantity. A low total still obeys the existing 10-diamond minimum.
-static func local_lot(max_stack: int, slot: String, unit: float) -> Dictionary:
-	if max_stack<1 or not is_finite(unit) or unit<=0.0 or unit>MAX_SALE_AMOUNT:return {}
-	var size: int=mini(max_stack,1000 if slot=="material" else 10)
-	var total: float=unit*float(size)
-	if total>MAX_SALE_AMOUNT:return {}
+## The equipment ceiling is one. Stackable listings use one 100-unit lot
+## within the item's original stack ceiling and the existing sale limits.
+static func local_lot(max_stack: int, unit: float) -> Dictionary:
+	if max_stack<1 or not is_finite(unit) or unit<=0.0:return {}
+	var size: int=mini(max_stack,STACKABLE_LOT_SIZE)
+	var total: float=minf(unit*float(size),float(MAX_SALE_AMOUNT))
 	return {"size":size,"price":maxi(MIN_SALE_AMOUNT,ceili(total))}
 
 func _local_listing(item_class_id: int, used: Dictionary) -> Dictionary:
@@ -266,10 +275,10 @@ func _local_listing(item_class_id: int, used: Dictionary) -> Dictionary:
 	if ref.is_empty():return {}
 	var info: Dictionary=item(item_class_id)
 	if info.is_empty() or not D.deadline_problem(info.record,_source_clock_offset()).is_empty():return {}
-	var lot: Dictionary=local_lot(int(info.max_stack),str(info.record.get("slot","")),float(ref.unit))
+	var lot: Dictionary=local_lot(int(info.max_stack),float(ref.unit))
 	if lot.is_empty():return {}
 	var paid_unit: float=float(lot.price)/float(lot.size)
-	return {"key":key,"name":str(info.name),"item_class_id":item_class_id,"bundle_size":int(lot.size),"bundle_price":int(lot.price),"unit_price":paid_unit,"unit_price_display":maxi(1,ceili(paid_unit)),"available":1,"enchant":0,"approx":ref.basis!="exact","price_basis":str(ref.basis),"grade":int(info.grade),"local":true}
+	return {"key":key,"name":str(info.name),"item_class_id":item_class_id,"bundle_size":int(lot.size),"bundle_price":int(lot.price),"unit_price":paid_unit,"unit_price_display":maxi(1,ceili(paid_unit)),"available":1,"enchant":0,"approx":true,"price_basis":str(ref.basis),"grade":int(info.grade),"local":true}
 
 ## Name lookup before deal construction. Take a single live stock projection.
 func search(category: int, query: String="") -> Array:
@@ -293,7 +302,7 @@ func search(category: int, query: String="") -> Array:
 		if info.is_empty() or not D.deadline_problem(info.record,_source_clock_offset()).is_empty():continue
 		var row: Dictionary=_local_listing(id,used)
 		var basis: String=str(price_reference(id).get("basis","")) if row.is_empty() else str(row.price_basis)
-		found.append({"item_class_id":id,"name":name,"min_price":int(row.get("unit_price_display",0)),"unit_price":float(row.get("unit_price",0.0)),"count":int(not row.is_empty()),"approx":not basis.is_empty() and basis!="exact","grade":int(info.grade),"local":true,"price_basis":basis})
+		found.append({"item_class_id":id,"name":name,"min_price":int(row.get("unit_price_display",0)),"unit_price":float(row.get("unit_price",0.0)),"count":int(not row.is_empty()),"approx":not basis.is_empty(),"grade":int(info.grade),"local":true,"price_basis":basis})
 	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.grade)>int(b.grade) if int(a.grade)!=int(b.grade) else (str(a.name)<str(b.name) if str(a.name)!=str(b.name) else int(a.item_class_id)<int(b.item_class_id)))
 	return found
 

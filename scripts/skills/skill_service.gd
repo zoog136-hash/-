@@ -137,6 +137,7 @@ func tick(delta: float) -> void:
 
 func refresh_buff_visuals() -> void:
 	# Map transitions cancel pending hits, while retained buffs regain their aura.
+	if world.active_skill_buffs.is_empty() and vfx.persistent.is_empty(): return
 	var retained: Dictionary = {}
 	for buff: Dictionary in world.active_skill_buffs.values():
 		var id := str(buff.get("skill_id", ""))
@@ -269,7 +270,9 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 		return false
 	if local_runtime.can_disable(skill): return true
 	if progression.can_disable(skill):return true
-	skill = catalog.resolve(skill)
+	# Admission reads the projection. Only the subsequent cast needs a copy
+	# it can modify with temporary effects and its own attack context.
+	skill = catalog._resolved_reference(skill)
 	var reason := ""
 	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
 	elif spell_move.busy(): reason = "원본 이동 효과 진행 중"
@@ -314,6 +317,7 @@ func is_area_quickslot(record: Dictionary) -> bool:
 		and not progression.is_toggle(skill) and not stackable.handles(skill)
 
 func cast_auto_area(record: Dictionary) -> bool:
+	if world.monsters_root.get_child_count() == 0: return false
 	return call("_cast_impl", record, false, false, true)
 
 func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool = false) -> bool:
@@ -555,13 +559,40 @@ func targets(skill: Dictionary, primary: TwilightMonster, direction: Vector2 = V
 	var shape := str(skill.get("shape", "single"))
 	if shape == "single" and is_instance_valid(primary):
 		return [primary] if Catalog.SOURCE523.target_allowed(skill, primary) else []
+	var limit: int = int(skill.get("targets", 6))
+	if limit <= 0: return []
 	var started: int = FRAME_HITCH.now()
 	var center: Vector2 = primary.global_position if is_instance_valid(primary) else origin
-	var result: Array[TwilightMonster] = _area_candidates(skill, shape, origin, center, false, direction)
-	result.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool: return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
-	if result.size() > int(skill.get("targets", 6)): result.resize(int(skill.get("targets", 6)))
+	var defer_sight: bool = world.monsters_root.get_child_count() > limit
+	var result: Array[TwilightMonster] = _area_candidates(skill, shape, origin, center, false, direction, defer_sight)
+	var nearest_first: bool = result.size() > limit and _distinct_area_distances(result, center)
+	var nearer := func(a: TwilightMonster, b: TwilightMonster) -> bool:
+		return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center)
+	if defer_sight:
+		if nearest_first: result.sort_custom(nearer)
+		var kept: int = 0
+		for i: int in result.size():
+			var monster: TwilightMonster = result[i]
+			if not world._has_line_of_sight_world(origin, monster.global_position): continue
+			if kept != i: result[kept] = monster
+			kept += 1
+			if nearest_first and kept == limit: break
+		result.resize(kept)
+	if not nearest_first:
+		result.sort_custom(nearer)
+		if result.size() > limit: result.resize(limit)
 	FRAME_HITCH.detail("skill.area_targets", started)
 	return result
+
+static func _distinct_area_distances(candidates: Array[TwilightMonster], center: Vector2) -> bool:
+	# Godot's sort is unstable. With a tie, filter first as before so removing
+	# a blocked actor cannot change which tied target is hit or its RNG order.
+	var seen: Dictionary = {}
+	for monster: TwilightMonster in candidates:
+		var distance: float = monster.global_position.distance_squared_to(center)
+		if not is_finite(distance) or seen.has(distance): return false
+		seen[distance] = true
+	return true
 
 func _has_area_target(skill: Dictionary) -> bool:
 	if int(skill.get("targets", 6)) <= 0: return false
@@ -573,7 +604,7 @@ func _has_area_target(skill: Dictionary) -> bool:
 	FRAME_HITCH.detail("skill.area_auto_probe", started)
 	return found
 
-func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center: Vector2, first_only: bool = false, direction: Vector2 = Vector2.ZERO) -> Array[TwilightMonster]:
+func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center: Vector2, first_only: bool = false, direction: Vector2 = Vector2.ZERO, defer_sight: bool = false) -> Array[TwilightMonster]:
 	var result: Array[TwilightMonster] = []
 	var radius := float(skill.get("radius", skill.get("range", 160)))
 	if not is_finite(radius) or radius < 0.0: return result
@@ -603,6 +634,9 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 			if not monster.permits_auto_selection(): continue
 			if skill.get("mode") == "status" and not status.can_affect(skill, monster): continue
 			if skill.get("mode") == "turn_undead" and turn_undead_chance(skill, monster) <= 0.0: continue
+		if defer_sight:
+			result.append(monster)
+			continue
 		if not world._has_line_of_sight_world(origin, position): continue
 		result.append(monster)
 		if first_only: break
@@ -1110,7 +1144,7 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
-	skill = catalog.resolve(skill)
+	skill = catalog._resolved_reference(skill)
 	if progression.is_toggle(skill) or str(skill.get("mode",""))=="source_toggle":return false
 	if is_area_cast(skill): return _has_area_target(skill)
 	if str(skill.get("mode", "")) in ["attack", "status", "turn_undead"] and is_instance_valid(target) and not Catalog.SOURCE523.target_allowed(skill, target): return false

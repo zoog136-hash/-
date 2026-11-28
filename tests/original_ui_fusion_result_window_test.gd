@@ -9,6 +9,7 @@ extends SceneTree
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const STAGE=preload("res://scripts/ui/card_reveal_stage.gd")
+const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -16,6 +17,16 @@ class FakeHud extends Node:
 	var messages: Array[String]=[]
 	func show_message(text: String) -> void:
 		messages.append(text)
+
+class OutlinePack extends SOURCE_PACK:
+	var unused_outline_requests: int=0
+	func texture(reference: Dictionary,cocos_pixels: bool=false) -> Texture2D:
+		# The unplayed Fx_Unique_Loop uses this sheet. Refuse it to ensure it
+		# cannot block an unrelated 전설 result.
+		if str(reference.get("path","")).begins_with("Fx_Unique_"):
+			unused_outline_requests+=1
+			return null
+		return super.texture(reference,cocos_pixels)
 
 class CellScene extends Node2D:
 	var source_nodes: Dictionary = {}
@@ -126,6 +137,7 @@ func _views(count: int) -> Array:
 
 func _run() -> void:
 	_check_effect_dispatch()
+	_check_outline_entry_key()
 	await _check_open_all_dispatch()
 	var hud:=FakeHud.new()
 	root.add_child(hud)
@@ -146,16 +158,25 @@ func _run() -> void:
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")
+		if value=="--fixed-blend":BLEND.screen_copy_available=false
 	if not pack_dir.is_empty():await _real_pack(pack_dir)
 	hud.queue_free()
 	print("ORIGINAL_UI_FUSION_RESULT_WINDOW_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"real_input_checked":not pack_dir.is_empty()}))
 	quit(0 if failures.is_empty() else 1)
 
+func _check_outline_entry_key() -> void:
+	var keys: Array=[]
+	for at: int in [25,10,25,50]:keys.append({"textureFrame":{"_type":"TextureFrame","frameIndex":at}})
+	var scene=WINDOW.GradeFx.Scene
+	check(scene._texture_key_at(keys,0)==1,"an entry before any key uses the earliest key")
+	check(scene._texture_key_at(keys,30)==2,"an entry between keys uses the last matching predecessor")
+	check(scene._texture_key_at([],30)==-1,"an empty track uses its serialized sprite texture")
+
 func _real_pack(pack_dir: String) -> void:
 	var receipt: Variant=JSON.parse_string(FileAccess.get_file_as_string(pack_dir.path_join("receipt.json")))
 	check(receipt is Dictionary,"pack receipt readable")
 	if not receipt is Dictionary:return
-	var pack=SOURCE_PACK.new()
+	var pack:=OutlinePack.new()
 	var loaded: Dictionary=pack.open(pack_dir,str(receipt.manifest_sha256))
 	check(loaded.get("ok",false),"pack opens: "+str(loaded))
 	if not loaded.get("ok",false):return
@@ -174,7 +195,10 @@ func _real_pack(pack_dir: String) -> void:
 	var window=WINDOW.new()
 	check(window.configure(pack,hud).get("ok",false),"window configures")
 	var released: Array=[0]
-	var opened: Dictionary=window.open(parent,_views(12),"변신",true,func() -> void:released[0]+=1)
+	var other_grades: Array=_views(12)
+	for card: Dictionary in other_grades:
+		if card.grade=="희귀":card.grade="고급"
+	var opened: Dictionary=window.open(parent,other_grades,"변신",true,func() -> void:released[0]+=1)
 	check(opened.get("handled",false) and int(opened.filled.shown)==10 and int(opened.filled.pages)==2,"Change_Fusion_All mounts the first ten results: "+str(opened).left(300))
 	if not opened.get("handled",false):
 		viewport.queue_free()
@@ -196,6 +220,21 @@ func _real_pack(pack_dir: String) -> void:
 	check(not window.is_open() and released[0]==1,"the last tap closes")
 	await process_frame
 	await _check_authored_phases(window,parent,pack)
+	check(pack.unused_outline_requests==0,"non-rare results do not request the rare sheet")
+	var rare_pack:=SOURCE_PACK.new()
+	check(rare_pack.open(pack_dir,str(receipt.manifest_sha256)).get("ok",false),"the original rare outline pack opens")
+	check(window.configure(rare_pack,hud).get("ok",false),"the result window uses that pack")
+	var rare_results: Array=[{"id":"rare","name":"희귀 카드","grade":"희귀"},{"id":"other","name":"일반 카드","grade":"일반"}]
+	var rare_opened: bool=window.open(parent,rare_results,"변신",true,Callable()).get("handled",false)
+	check(rare_opened,"the window mounts a real rare result")
+	if rare_opened:
+		var path: String="Panel/Card_00/Fx_Outline_Front"
+		check(WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)==null,"a sealed rare result does not instantiate its outline")
+		await _tap_button(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		var outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)
+		check(outline!=null and outline.is_visible_in_tree() and outline.playback_status().clip==WINDOW.GradeFx.RARE_OUTLINE_CLIP,"only the opened rare card plays the authored blue outline")
+		check(window.is_revealed(0) and not window.is_revealed(1),"the adjacent result remains face down")
+		window.close()
 	viewport.queue_free()
 	host.queue_free()
 
@@ -244,16 +283,31 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 		if bolt!=null:
 			check(not bolt.visible and bolt.source_member==WINDOW.GradeFx.ACTIVE_GRADE["전설"],"exact lightning is initially hidden")
 			check(bolt.get_parent().clip_contents,"native discharge stays inside the card clip")
-			await create_timer(reel.lightning_at()+0.25).timeout
+			check(is_equal_approx(reel.lightning_at(),2.4) and is_equal_approx(reel.reveal_at()-reel.lightning_at(),2.0),
+				"success cues the discharge at 2.4 s and keeps the two-second reveal beat")
+			var first_shown: Array[float]=[]
+			bolt.visibility_changed.connect(func() -> void:first_shown.append(reel.clock),CONNECT_ONE_SHOT)
+			await create_timer(maxf(0.05,reel.lightning_at()-reel.clock-0.3)).timeout
+			check(not bolt.visible and not face.visible,"the reel stays sealed before the success cue")
+			await create_timer(maxf(0.05,reel.lightning_at()-reel.clock+0.25)).timeout
 			var sprite_node: Node2D=bolt.source_nodes.get(WINDOW.GradeFx.LIGHTNING_SPRITES["전설"])
 			var sprite: Sprite2D=sprite_node.get_meta("source_sprite") if sprite_node!=null and sprite_node.has_meta("source_sprite") else null
 			check(bolt.is_visible_in_tree() and bolt.playback_status().playing and sprite!=null and sprite.texture!=null and not face.visible,"verified atlas pixels play during the success reel")
+			check(first_shown.size()==1 and first_shown[0]>=2.4 and first_shown[0]<2.7,"the playing reel dispatches the earlier cue")
+			print("FUSION_LIGHTNING_TIMING ",JSON.stringify({"first_shown":first_shown,"reveal_at":reel.reveal_at()}))
 			if DisplayServer.get_name()!="headless":await _check_lightning_pixels(bolt)
+		else:
+			check(is_equal_approx(reel.reveal_at(),4.9),"the failed fusion keeps its result timing")
 		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
 		check(not is_instance_valid(reel) and face.is_visible_in_tree(),"settled result has its grade face")
 		var settled_outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,"Panel/Card_00/Fx_Outline_Front")
 		check(settled_outline!=null and settled_outline.is_visible_in_tree() and settled_outline.playback_status().playing,
 			"the original grade outline mounts and plays after settling")
+		if settled_outline!=null:
+			check(is_equal_approx(settled_outline.modulate.a,0.55),"the settled outline alone uses the lower opacity")
+			check(settled_outline.playback_status().clip=="Fx_Epic_Loop" and
+				not settled_outline.play("Fx_Unique_Loop",true).get("ok",false),"the loaded outline permits only the selected grade clip")
+			if upgraded and DisplayServer.get_name()!="headless":await _check_outline_pixels(settled_outline)
 		window.close()
 		await process_frame
 	var batch: Array=[]
@@ -301,3 +355,30 @@ func _check_lightning_pixels(bolt: Node2D) -> void:
 	var same_outside: bool=lit.get_data()==hidden.get_data()
 	check(same_outside,"hiding the bolt leaves all pixels outside the card identical")
 	print("FUSION_LIGHTNING_PIXELS ",JSON.stringify({"inside_changed":changed,"outside_identical":same_outside}))
+
+func _check_outline_pixels(outline: Node2D) -> void:
+	paused=true
+	var viewport:=outline.get_viewport()
+	outline.seek_frame(24.0) # Inside the authored Fx_Epic_Loop (2–47).
+	await RenderingServer.frame_post_draw
+	var dim:=viewport.get_texture().get_image()
+	var opacity: float=outline.modulate.a
+	outline.modulate.a=1.0
+	await RenderingServer.frame_post_draw
+	var full:=viewport.get_texture().get_image()
+	outline.hide()
+	await RenderingServer.frame_post_draw
+	var base:=viewport.get_texture().get_image()
+	outline.modulate.a=opacity
+	outline.show()
+	paused=false
+	var dim_light: float=0.0
+	var full_light: float=0.0
+	for y: int in range(0,base.get_height(),2):
+		for x: int in range(0,base.get_width(),2):
+			var unlit: float=base.get_pixel(x,y).get_luminance()
+			dim_light+=maxf(0.0,dim.get_pixel(x,y).get_luminance()-unlit)
+			full_light+=maxf(0.0,full.get_pixel(x,y).get_luminance()-unlit)
+	check(full_light>0.0 and dim_light>0.0 and dim_light<full_light*0.8,
+		"the original settled outline remains visible with less additive light")
+	print("FUSION_OUTLINE_PIXELS ",JSON.stringify({"fixed_blend":not BLEND.screen_copy_available,"full_light":full_light,"dim_light":dim_light}))

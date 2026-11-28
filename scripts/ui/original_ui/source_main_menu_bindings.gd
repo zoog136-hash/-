@@ -4,6 +4,8 @@ extends RefCounted
 const MEMBER="UI/Main/Hud_TopMenu.csb"
 const SHA256="0b0fd7d02b604924dfb1a16f9ef35d71c0e1cfd19e634028b72837499a75ae85"
 const INVENTORY=31392
+const INVENTORY_NOTICE=31076
+const HUD_ATLAS="UI/UI_Resource/Atlas_Hud.plist"
 const SKILL=29848
 const STORE=35008
 const ALL=37304
@@ -41,6 +43,8 @@ func core_source_offsets(include_quest: bool=true) -> Dictionary:
 	# The active scene, not separate layout geometry, admits optional controls.
 	var active_tree: Dictionary=active.get("nodeTree",{})
 	var roots: Array[int]=CORE_ROOT_OFFSETS.duplicate()
+	if _pack.manifest.get("atlases",{}).get(HUD_ATLAS,{}).get("frames",{}).has("Hud_IconNew.png") and not _source_node(active_tree,INVENTORY_NOTICE).is_empty():
+		roots.append(INVENTORY_NOTICE)
 	if include_quest:
 		roots.append(QUEST)
 		roots.append(27336)
@@ -72,6 +76,7 @@ func build_core(include_quest: bool=true, remaining: Dictionary={}) -> Dictionar
 	for offset: int in scope.source_node_offsets:
 		if built.bindings.has(offset):bindings[offset]=built.bindings[offset].duplicate(true)
 	bindings[ALL]={"role":"button","activate":Callable(self,"open_menu")}
+	if INVENTORY_NOTICE in scope.source_node_offsets:bindings[INVENTORY_NOTICE]={"visible":_inventory_notice_pending()}
 	for offset: int in [34596,29528]:bindings[offset]={"role":"static_source_text"}
 	if scope.optional_weight.get("ok",false):bindings[WEIGHT_TEXT]={"role":"source_text","text":scope.optional_weight.text,"visible":true}
 	var buttons: Array[int]=[ALL,INVENTORY,SKILL,STORE]
@@ -95,6 +100,16 @@ func refresh_presented(scene: Node2D) -> Dictionary:
 	updated=scene.set_bound_visible(WEIGHT_TEXT,true)
 	if not updated.get("ok",false):return updated
 	return {"ok":true,"weight_connected":true,"weight_display":weight,"complete_screen_contract":false}
+
+func refresh_inventory_notice(scene: Node2D) -> void:
+	if not is_instance_valid(scene):return
+	var notice: Node2D=scene.source_nodes.get(INVENTORY_NOTICE)
+	if is_instance_valid(notice):notice.visible=_inventory_notice_pending()
+
+func _inventory_notice_pending() -> bool:
+	var hud: Object=_live_hud()
+	var bag: Variant=hud.get("lineage_inventory_ui") if hud!=null else null
+	return is_instance_valid(bag) and bag.get("new_items_pending")==true
 
 func _weight_display() -> Dictionary:
 	var hud: Object=_live_hud()

@@ -3,6 +3,9 @@ extends RefCounted
 ## Crafting owns its one candidate/save; issuance and its ledger stay unchanged.
 const IDS=[3732,117544,19342,98454,292302,292312,292322,292332,112762,112772,112782,112792,112912,112932,224062,224072,224082,224092,224142,224152,224162,224172,126434,126444,126454,126464,126474,160222,282863,268922,268932,268942,268952,268962,268972,341314,341324,341334,150293,150303,216053,341344,341354,341364]
 
+static func tuple_key(material: Dictionary) -> String:
+	return "%d:%d:%d" % [int(material.source_id),int(material.bless_code),int(material.level)]
+
 static func owned(book: RefCounted,material: Dictionary,inventory: Dictionary,physical: Dictionary,locks: Dictionary,context: Dictionary) -> Dictionary:
 	var result: Dictionary={}
 	var id: int=int(material.source_id)
@@ -17,7 +20,7 @@ static func owned(book: RefCounted,material: Dictionary,inventory: Dictionary,ph
 	if catalog==null or not catalog.ready():return result
 	var original: Dictionary=book.item_class_of(str(id)) if book.has_method("item_class_of") else book.item_entry(str(id)).get("item_class",{})
 	if original.is_empty() or original.get("TestItem")!=false or catalog.record("ItemClass",id)!=original:return result
-	var tuple: String="%d:%d:%d" % [id,int(material.bless_code),int(material.level)]
+	var tuple: String=tuple_key(material)
 	var key: String=str(original.get("Name",""))+" (탐험 "+tuple+")"
 	if state.get("issued",{}).get(tuple)!=key or locks.get(key,false) or locks.get(str(material.item),false):return result
 	var amount: Variant=inventory.get(key,0)

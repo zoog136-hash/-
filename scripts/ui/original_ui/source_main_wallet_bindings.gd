@@ -10,6 +10,7 @@ const JEWEL_TEXT=5808
 ## flash (Nd_Fx_Select), Enable state and Sp_New badge stay out.
 const INFO_BUTTON=692
 const INFO_OFFSETS: Array[int]=[692,1276,1700]
+const CURRENCY_INFO_MEMBER="UI/FloatingUi/Gem_All.csb"
 
 ## `info` (the 재화 정보 window) makes Btn_Info a button; without it the
 ## wallet stays read-only as before.

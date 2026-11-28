@@ -125,7 +125,6 @@ func _build_inventory() -> void:
 	inventory_panel.anchor_bottom = 0.95
 	inventory_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	inventory_panel.add_theme_stylebox_override("panel", _style(PANEL, Color(0.48,0.39,0.23,1), 4, 1))
-	add_child(inventory_panel)
 
 	var root := VBoxContainer.new()
 	root.add_theme_constant_override("separation", 7)
@@ -276,6 +275,8 @@ func _build_inventory() -> void:
 	quick_button.add_theme_stylebox_override("normal", _style(Color(0.055,0.06,0.065,1), Color(0.30,0.32,0.34,1)))
 	quick_button.pressed.connect(_quickslot_selected)
 	detail_buttons.add_child(quick_button)
+	inventory_panel.hide()
+	add_child(inventory_panel)
 
 func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
 	catalog_data = data
@@ -763,16 +764,18 @@ func _item_visual_record(reference: String, fallback: Dictionary) -> Dictionary:
 		if images.handles_item(original): return original
 	return fallback
 
+const BAG_EQUIPMENT_SLOTS: Array[String] = ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
+
 func _matches_category(record: Dictionary, item_name: String) -> bool:
 	if category_filter == "전체":
 		return true
 	var slot := str(record.get("slot", "")).to_lower()
 	var item_type := str(record.get("type", ""))
 	if category_filter == "장비":
-		return slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor"]
+		return slot in BAG_EQUIPMENT_SLOTS
 	if category_filter == "소모품":
 		return slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","domination_stone","relic_item","fishing_rod","necklace","armor","consumable"])
+	return slot not in BAG_EQUIPMENT_SLOTS and slot != "consumable"
 
 func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name

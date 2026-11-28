@@ -55,6 +55,7 @@ var _npc_id: String=""
 var npc_class: int=0
 ## The talking NPC's shown name ("[잡화상인] 세린").
 var npc_name: String=""
+var _npc_buyback: bool=false
 var last_sale: Dictionary={}
 var _merchants: Array[int]=[]
 var _scene: Node2D
@@ -90,6 +91,7 @@ func open(parent: Node, npc_id: String) -> Dictionary:
 	var npc: Dictionary=TownNpcs.record(hud.get_parent(),npc_id) if hud!=null and not npc_id.is_empty() and hud.get_parent().get("field_map")!=null else {}
 	npc_class=int(npc.get("source523_earth_object_class_id",0))
 	npc_name=str(npc.get("name",""))
+	_npc_buyback="buyback" in npc.get("source523_actions",[])
 	_tab="all"
 	_bag.y=null
 	_list.y=null
@@ -177,7 +179,7 @@ func _merchant_goods(world: Object) -> Array:
 		for id: Variant in runtime.npc_definitions.records.get(str(merchant),{}).get("goods_ids",[]):wanted[int(id)]=true
 	var rows: Array=[]
 	for row: Dictionary in catalog.rows("MerchantGoods"):
-		if not wanted.has(int(row.ID)):continue
+		if not wanted.has(int(row.ID)) or int(row.get("DialogActionTypeID",0))!=1:continue
 		var class_id: int=int(row.get("ItemClassID",0))
 		if RETIRED_ITEMS.item(class_id):continue
 		var item: Dictionary=catalog.record("ItemClass",class_id)
@@ -343,7 +345,7 @@ func _class_picture(root: Node2D, out: Dictionary, suffix: String, class_id: int
 ## buy row (source_shop.sale_quote), else TWILIGHT's existing buyback price
 ## (inventory_automation.sale_quote) (TWILIGHT 근사: the 잡화상인 buys).
 func sells() -> bool:
-	return npc_name.contains("잡화상인")
+	return _npc_buyback or npc_name.contains("잡화상인")
 
 ## A 소지품 grid item at a 잡화상인: the sale quote, the original quantity
 ## keypad (Common_Calculator, up to the owned count; equipment one by one),
@@ -371,8 +373,8 @@ func _bag_tapped(at: int = -1) -> Dictionary:
 	var limit: int=1 if not id.is_empty() else clampi(int(world.get("inventory").get(name,0)),1,SELL_MAX)
 	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"sell").bind(name,id))
 	if opened.get("handled",false):return {"ok":true,"requested_sale":name,"calculator":true,"maximum":limit}
-	hud.confirm_action("원본 상점 · 판매","%s\n개당 %s 아데나 · 판매할 수량을 선택하세요" % [name,price_text(int(quote.get("payment",0)))],"판매",func(amount: int) -> void: sell(amount,name,id),limit)
-	return {"ok":true,"requested_sale":name,"calculator":false,"maximum":limit}
+	hud._report_original_window_unavailable("판매 수량 입력",opened)
+	return opened
 
 ## The most one sale takes (the existing buyback's single-stack limit).
 const SELL_MAX: int=99
@@ -421,11 +423,8 @@ func _buy_requested(index: int) -> Dictionary:
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"purchase").bind(id)) if parent!=null else _fail("source_store_window_host_unavailable")
 	if opened.get("handled",false):return {"ok":true,"requested":id,"calculator":true,"maximum":limit}
-	# No keypad member: the existing quantity confirmation.
-	var name: String=str(_goods[index].name)
-	var body: String="%s\n단가 %s · 구매할 수량을 선택하세요\n구매품은 가방에 바로 들어갑니다" % [name,price_text(int(_goods[index].price))]
-	hud.confirm_action("원본 상점 · 구매",body,"구매",func(amount: int) -> void: purchase(amount,id),limit)
-	return {"ok":true,"requested":id,"calculator":false,"maximum":limit}
+	hud._report_original_window_unavailable("구매 수량 입력",opened)
+	return opened
 
 ## The largest count the balance pays for (1..1000).
 static func affordable(quote: Dictionary, world: Object) -> int:

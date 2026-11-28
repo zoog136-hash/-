@@ -14,6 +14,7 @@ var returning_to_character_lobby: bool = false
 const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const STARTUP_BAKE = preload("res://scripts/resources/current523_bake_cache.gd")
+const BUILT_IN_DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 
 var card_selection_saves = preload("res://scripts/cards/card_selection_save.gd").new()
 
@@ -351,7 +352,7 @@ var auto_stuck_time: float = 0.0
 # Bound repeated unreachable-target pathfinding during AUTO, not manual selection.
 const AUTO_TARGET_FAILED_PATH_RETRY_MS: int = 900
 const AUTO_TARGET_EMPTY_RETRY_MS: int = 250
-const AUTO_TARGET_DISCONNECTED_SCAN_USEC: int = 500
+const AUTO_TARGET_CANDIDATE_SCAN_USEC: int = 500
 const AUTO_TARGET_REFRESH_MS: int = 3000
 const AUTO_TARGET_SEARCH_RADIUS_CELLS: int = 10
 var auto_target_failed_paths: Dictionary = {}
@@ -403,6 +404,7 @@ var source_gender_id: int = 0 # Unknown until an explicit source gender is selec
 var source_card_visual_options: Dictionary = {}
 var active_skill_buffs: Dictionary = {}
 var skill_cooldowns: Dictionary = {}
+var skill_cooldown_totals: Dictionary = {}
 var skill_global_cooldown: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
@@ -1101,8 +1103,7 @@ func _load_data() -> void:
 		if not maps_by_id.has(str(record.id)):
 			maps.append(record)
 			maps_by_id[str(record.id)] = record
-	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
-	var db_value: Variant = JSON.parse_string(db_text)
+	var db_value: Variant = BUILT_IN_DATA.read_json(DB_PATH)
 	if db_value is Dictionary:
 		game_db = db_value as Dictionary
 	# Pre-November monster records (game_db_v17, the old world catalog and the
@@ -1127,7 +1128,7 @@ func _load_data() -> void:
 	_enrich_weapon_records(item_db)
 	CURRENCY_DROP.ensure_items(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
-	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
+	var catalog_value: Variant = BUILT_IN_DATA.read_json(CATALOG_PATH)
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
@@ -1215,6 +1216,7 @@ func _enrich_inven_catalog() -> void:
 	# Keep the entire Inven source catalog, including every original option;
 	# attach typed passives only to exact source rows.
 	inven_record_index.clear()
+	var parsed_options: Dictionary = {}
 	for category: String in ["아이템", "변신", "마법인형", "성물"]:
 		var category_index: Dictionary = {}
 		var value: Variant = catalog_db.get(category, [])
@@ -1226,7 +1228,7 @@ func _enrich_inven_catalog() -> void:
 				var raw: Dictionary = entries[index] as Dictionary
 				if str(raw.get("source", "")) != "inven":
 					continue
-				var annotated: Dictionary = INVEN_OPTIONS.annotate(raw)
+				var annotated: Dictionary = INVEN_OPTIONS.annotate(raw, parsed_options)
 				entries[index] = annotated
 				var original_name: String = str(annotated.get("name", ""))
 				var original_id: String = str(annotated.get("sourceId", ""))
@@ -2765,7 +2767,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"shop": hud.open_npc_shop(npc_id)
 		"warehouse": hud.call("open_warehouse")
 		"craft": hud.call("open_crafting")
-		"buyback": hud.call("open_item_sell")
+		"buyback": hud.open_item_sell(npc_id)
 		"teleport": hud.call("open_npc_teleport")
 		"quest": hud.call("open_quests")
 		"restore": death_recovery.open_ui()
@@ -2782,7 +2784,7 @@ func _open_town_npc_function(npc: Dictionary) -> void:
 		"warehouse": hud.call("open_warehouse")
 		"teleport": hud.call("open_npc_teleport")
 		"craft": hud.call("open_crafting")
-		"buyback": hud.call("open_item_sell")
+		"buyback": hud.open_item_sell(npc_id)
 		"quest": hud.call("open_quests")
 		"restore": death_recovery.open_ui()
 		_: hud.show_message(str(npc.get("name","")))
@@ -3955,8 +3957,11 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 		auto_search_generation = combat_generation
 		auto_search_index = 0
 	var now: int = Time.get_ticks_msec()
-	var scan_deadline: int = Time.get_ticks_usec() + AUTO_TARGET_DISCONNECTED_SCAN_USEC
+	var scan_deadline: int = Time.get_ticks_usec() + AUTO_TARGET_CANDIDATE_SCAN_USEC
+	var first_index: int = auto_search_index
+	var incumbent_distance_squared: float = origin.distance_squared_to(current.global_position) if current!=null else INF
 	while auto_search_index < auto_search_candidates.size():
+		if auto_search_index>first_index and Time.get_ticks_usec()>=scan_deadline:break
 		var candidate: Dictionary = auto_search_candidates[auto_search_index]
 		auto_search_index += 1
 		if not is_instance_id_valid(int(candidate.actor_id)): continue
@@ -3965,13 +3970,11 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 		if monster.dead or monster.is_queued_for_deletion() or not monster.permits_auto_selection() or not equipment523_can_detect(monster): continue
 		if not _in_auto_target_range(cell, monster.global_position): continue
 		if monster == current:
-			# No better reachable candidate was found. Keep the current route.
 			auto_target = current
-			_clear_auto_target_search()
-			return PackedVector2Array()
-		# Candidates are ordered when the search begins. Movement between slices
-		# can make an earlier candidate farther away than the live target.
-		if current != null and origin.distance_squared_to(monster.global_position) > origin.distance_squared_to(current.global_position):
+			continue
+		# Later entries can have moved ahead of the incumbent since the list
+		# was built. Only try routes to candidates that are closer now.
+		if origin.distance_squared_to(monster.global_position) >= incumbent_distance_squared:
 			continue
 		var key: String = _auto_target_failure_key(monster)
 		if int(auto_target_failed_paths.get(key, 0)) > now: continue
@@ -3987,11 +3990,8 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 				_clear_auto_source_search()
 			var step: Dictionary = field_map.hunt_path_step(origin,monster.global_position,_auto_source_search_work)
 			if step.get("known_disconnected", false):
-				# A membership check used no search slice. Check the next
-				# candidate in the same order with a separate, short budget.
 				_clear_auto_source_search()
 				_remember_auto_target_path_failure(monster, key)
-				if Time.get_ticks_usec() >= scan_deadline: break
 				continue
 			_auto_source_search_frame = frame
 			if new_search:
@@ -5500,6 +5500,9 @@ func _use_timed_item_buff(record: Dictionary) -> bool:
 	return true
 
 func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
+	if active_item_buffs.is_empty():
+		_tick_cooldown_map(item_use_cooldowns, delta)
+		return false
 	var changed: bool = false
 	var granted_reward: bool = false
 	var expired: Array[String] = []
@@ -5550,16 +5553,7 @@ func _tick_item_buffs(delta: float, publish: bool = true) -> bool:
 		active_item_buffs.erase(key)
 		changed = true
 		hud.append_log("%s 버프 종료" % key)
-	var cooldown_finished: Array[String] = []
-	for key_value: Variant in item_use_cooldowns.keys():
-		var key: String = str(key_value)
-		var left: float = maxf(0.0, float(item_use_cooldowns.get(key, 0.0)) - delta)
-		if left <= 0.0:
-			cooldown_finished.append(key)
-		else:
-			item_use_cooldowns[key] = left
-	for key: String in cooldown_finished:
-		item_use_cooldowns.erase(key)
+	_tick_cooldown_map(item_use_cooldowns, delta)
 	if changed:
 		hp = mini(hp, _effective_max_hp())
 		if granted_reward:
@@ -5717,17 +5711,19 @@ func _open_owned_native_enhancement(name: String, selected: String, record: Dict
 	var kind: String=_scroll_kind(name,record)
 	if kind.is_empty():return false
 	_enhancement_scroll_selection.clear()
-	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1)
+	var held: Dictionary=PATCH523_ENHANCE_STOCK.select_owned(self,name,selected,1,not selected.is_empty())
 	if not held.get("native",false):
 		if not selected.is_empty() or kind != "source": return false
 		var source: Dictionary = CATALOG_STACK.action_record(self,record)
-		if source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
+		if PATCH523_ENHANCE_STOCK.owns_seal_box_balance(self,name,record):
+			source=record
+			_enhancement_scroll_selection={"name":name,"seal_box_balance":true}
+		elif source.is_empty() or not PATCH523_ENHANCE_SOURCE.declares_scroll(source): return false
 		var problem := preload("res://scripts/loot/patch523_item_use.gd").eligibility(self,source)
 		if not problem.is_empty() or _item_locked(name) or not CATALOG_STACK.holds_plain(self,name):
 			hud.show_message(problem if not problem.is_empty() else "선택한 주문서의 수량과 잠금을 확인하세요")
 			return true
 	elif not held.get("ok",false):
-		if seal_scroll: return false # The seal owner also checks old saved physical scrolls.
 		hud.show_message(str(held.reason))
 		return true
 	else:
@@ -5745,7 +5741,12 @@ func _open_owned_native_enhancement(name: String, selected: String, record: Dict
 	return true
 
 func _enhancement_stock(scroll_name: String, count: int) -> Dictionary:
-	var uid: String=str(_enhancement_scroll_selection.get("uid","")) if _enhancement_scroll_selection.get("name") == scroll_name else ""
+	var selected: Dictionary=_enhancement_scroll_selection if _enhancement_scroll_selection.get("name")==scroll_name else {}
+	if selected.get("seal_box_balance",false):
+		if PATCH523_ENHANCE_STOCK.owns_seal_box_balance(self,scroll_name,_find_catalog_item_record(scroll_name)):
+			return {} # Continue through the existing plain-inventory transaction.
+		return {"native":true,"reason":"선택한 주문서 수량이 달라졌습니다 · 가방에서 다시 선택하세요"}
+	var uid: String=str(selected.get("uid",""))
 	return PATCH523_ENHANCE_STOCK.select_owned(self,scroll_name,uid,count,not uid.is_empty())
 
 func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name: String = "") -> Array:
@@ -5780,7 +5781,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal", scroll_name:
 			level_value=int(receipt.get("element_level",0))
 		var source_rule: Dictionary=_source_enhancement_rule(record,level_value,mode,scroll_name,receipt,physical_scroll,token)
 		if elemental and not _elemental_enhancement_rule_valid(source_rule):continue
-		var seal: bool = not seal_id.is_empty() and patch523_equipment.identity(receipt) in ["30671","130551"]
+		var seal: bool = not seal_id.is_empty() and _compiled_seal_target(receipt)
 		if seal:
 			if stock.get("proof",{}).has("quest_reward_receipt"):continue
 			source_rule = patch523_seal_quote(instance_id,seal_id,str(stock.get("uid","")))
@@ -5878,11 +5879,11 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	# Exact host scroll aliases preserve existing inventory keys; these map only
 	# the original permanent normal/engraved scroll families, never item names.
 	if source_id.is_empty():
-		var aliases: Dictionary={"저주받은 무기 마법 주문서":"137","저주받은 무기 마법 주문서 (각인)":"6401","저주받은 갑옷 마법 주문서":"138","저주받은 갑옷 마법 주문서 (각인)":"6411","무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"139","장신구 마법 주문서 (각인)":"139",
+		var aliases: Dictionary={"저주받은 무기 마법 주문서":"137","저주받은 무기 마법 주문서 (각인)":"6401","저주받은 갑옷 마법 주문서":"138","저주받은 갑옷 마법 주문서 (각인)":"6411","무기 마법 주문서":"137","무기 마법 주문서 (각인)":"6401","갑옷 마법 주문서":"138","갑옷 마법 주문서 (각인)":"6411","장신구 마법 주문서":"226992","장신구 마법 주문서 (각인)":"226992",
 			"장인의 무기 마법 주문서 (각인)":"1184","장인의 무기 마법 주문서":"134862","장인의 갑옷 마법 주문서":"270654","장인의 갑옷 마법 주문서 (각인)":"271248","오림의 장신구 마법 주문서":"227002","오림의 장신구 마법 주문서 (각인)":"227002","축복받은 오림의 장신구 마법 주문서":"227002","축복받은 오림의 장신구 마법 주문서 (각인)":"227002","축복받은 무기 마법 주문서":"137","축복받은 무기 마법 주문서 (각인)":"6401","축복받은 갑옷 마법 주문서":"138","축복받은 갑옷 마법 주문서 (각인)":"6411"}
 		source_id=str(aliases.get(scroll_name,""))
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["normal","blessed"]:
-		source_id=str({"weapon":"137","armor":"138","accessory":"139"}.get(kind,""))
+		source_id=str({"weapon":"137","armor":"138","accessory":"226992"}.get(kind,""))
 	if source_id.is_empty() and scroll_name.is_empty() and mode=="craftsman": source_id="1184" if kind=="weapon" else ("271248" if kind=="armor" else "")
 	if source_id.is_empty() and scroll_name.is_empty() and mode in ["orim","blessed_orim"] and kind=="accessory": source_id="227002"
 	if source_id.is_empty():return {"source_rule":true,"success":0.0,"reason":"원본 ItemClass 또는 강화 주문서 그룹 연결이 없어 아이템을 보존합니다"} if exact_required else {}
@@ -5890,11 +5891,11 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 	var scroll_bless: int=int(issued.bless_code) if issued.get("ok",false) else int(scroll.get("source_bless_raw",3 if mode=="cursed" else 2 if mode in ["blessed","blessed_orim"] else 1))
 	var book: RefCounted=patch523_equipment
 	var target_id: String=PATCH523_ENHANCE.item_id(record)
-	var legacy_weapon: Dictionary={}
-	if (kind=="weapon" and record.get("source")=="inven" and not record.get("source_m_native_item",false)
+	var legacy_equip: Dictionary={}
+	if (kind in ["weapon","armor","accessory"] and record.get("source")=="inven" and not record.get("source_m_native_item",false)
 		and target_id.is_valid_int() and not CURRENT523_DEFINITION_ROWS.not_installed() and not patch523_equipment.catalog_identity_matches(record,target_id)):
-		legacy_weapon=_catalog_item_from_source_id(target_id)
-		exact_required=exact_required or not legacy_weapon.is_empty()
+		legacy_equip=_catalog_item_from_source_id(target_id)
+		exact_required=exact_required or not legacy_equip.is_empty()
 	if exact_required and not issued.get("issued",false):
 		# Some original event targets have a numeric enchant family but no
 		# declared equip slot. Their physical storage receipts are not
@@ -5902,7 +5903,7 @@ func _source_enhancement_rule(record: Dictionary, current_level: int, mode: Stri
 		if not token and record.get("source_m_native_item",false) and not LOOT_DROP.PATCH523_DROPS.equipment(record):
 			return {"source_rule":true,"success":0.0,"reason":"원본 착용 슬롯 없는 강화용 아이템 · 전용 수량/강화 소유자 필요 · 주문서 보존"}
 		var native: RefCounted=PATCH523_ENHANCE_SOURCE.new()
-		if not native.bind(record,target_id,scroll,source_id,patch523_equipment,legacy_weapon):
+		if not native.bind(record,target_id,scroll,source_id,patch523_equipment,legacy_equip):
 			return {"source_rule":true,"success":0.0,"reason":"원본 장비·주문서 정체 또는 지역·조건을 검증하지 못했습니다 · 아이템 보존"}
 		for original: Dictionary in [native.target,native.scroll]:
 			var date_problem: String=LOOT_DROP.PATCH523_DROPS.deadline_problem(original.get("native_record",{}),int(ui_preferences.get("patch523_source_clock_offset_minutes",540)))
@@ -6111,7 +6112,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		return
 	var physical_scroll: Dictionary=owned_scroll.proof.record if owned_scroll.get("ok",false) else {}
 	var seal_id: String = _seal_scroll_id(physical_scroll if not physical_scroll.is_empty() else _find_catalog_item_record(scroll_name))
-	if not seal_id.is_empty() and patch523_equipment.identity(item_instances[item_id]) in ["30671","130551"]:
+	if not seal_id.is_empty() and _compiled_seal_target(item_instances[item_id]):
 		if owned_scroll.get("proof",{}).has("quest_reward_receipt"):
 			hud.show_message("이 퀘스트 주문서는 인장 강화에 사용할 수 없습니다")
 			return
@@ -7039,6 +7040,12 @@ func _seal_scroll_id(record: Dictionary) -> String:
 		scroll_id=str(int(raw_id))
 	return scroll_id if scroll_id in PATCH523_SEAL_ACTIONS.SCROLLS else ""
 
+func _compiled_seal_target(physical: Dictionary) -> bool:
+	var id: String=patch523_equipment.identity(physical)
+	if id not in ["30671","130551"]: return false
+	var record: Dictionary=physical.get("record",{})
+	return record.get("source_m_native_item",false) or patch523_equipment.catalog_identity_matches(record,id)
+
 ## Both scrolls have authored targets outside the two seals. The common
 ## chooser uses the seal owner's quote and transaction for those two targets.
 func _open_owned_seal_scroll(item_name: String, scroll_uid: String, record: Dictionary) -> bool:
@@ -7079,14 +7086,9 @@ func patch523_seal_quote(item_id: String, scroll_id: String, scroll_uid: String 
 		if not owned.is_empty() and owned.record.get("source_item_class_id")==int(scroll_id) and int(owned.receipt.bless_raw)==1:
 			scroll_name=str(owned.record.name)
 		else:
-			var record: Dictionary=scroll.get("record",{})
 			var stored_name: String=str(scroll.get("name",""))
-			var current_name: String=str(source_item_record(int(scroll_id)).get("name",""))
-			# Old saves sometimes pin one ordinary scroll as a physical unit.
-			# An invalid or foreign receipt must never fall back to legacy use.
-			legacy=owned.is_empty() and not scroll.has(stock.RECEIPT) and not scroll.has(stock.QUANTITY) and not scroll.has("quest_reward_receipt") and not scroll.has("source_reward_quantity") \
-				and (record.get("source_item_class_id")==int(scroll_id) or PATCH523_ENHANCE.item_id(record)==scroll_id) and int(scroll.get("level",-1))==0 \
-				and patch523_equipment.bless_code(scroll)==1 and not stored_name.is_empty() and stored_name in [scroll_name,current_name]
+			var old_unit: Dictionary=PATCH523_ENHANCE_STOCK.legacy_unit(self,scroll,stored_name)
+			legacy=old_unit.get("record",{}).get("source_item_class_id")==int(scroll_id)
 			if not legacy:return PATCH523_EQUIPMENT.denied("가방에서 보유한 일반 인장 강화 주문서를 다시 선택하세요")
 			scroll_name=stored_name
 	var quote: Dictionary = PATCH523_SEAL_ACTIONS.quote(patch523_equipment,physical,scroll_id,inventory,gold,
@@ -7238,30 +7240,41 @@ func production_preview_quote() -> Callable:
 func production_recipe_craftable(recipe_id: String, preview_quote: Callable) -> bool:
 	if recipe_id.begins_with("patch523:"):
 		var recipe: Dictionary = patch523_equipment.recipes.get(recipe_id, {})
-		if not _production_can_meet_required_inputs(recipe, inventory, gold, patch523_material_choices.get(recipe_id, {})): return false
+		var issued: Variant = null
+		if not patch523_owned_material_choices.has(recipe_id):
+			issued = expedition_local.state.get("issued", {})
+		if not _production_can_meet_required_inputs(recipe, inventory, gold, patch523_material_choices.get(recipe_id, {}), issued): return false
 	var result: Dictionary = preview_quote.call(recipe_id, 1) if preview_quote.is_valid() else _craft_quote(recipe_id, 1)
 	return bool(result.get("ok", false))
 
-## Reject only prerequisites that the full one-craft quote always needs.
-## Explicit alternatives and stack materials are left to their owners.
-static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, choices: Dictionary) -> bool:
+## A list preview may rule out insufficient fixed inputs before resolving any
+## definitions. The optional issued ledger permits an upper bound for ordinary
+## stacks when there are no explicitly selected receipt inputs. A potential
+## match still needs the complete quote and all ownership checks.
+static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, choices: Dictionary, issued: Variant = null) -> bool:
 	if recipe.is_empty() or wallet < int(recipe.adena): return false
 	if not recipe.has("material_slots"):
 		for material: Dictionary in recipe.materials:
-			if _production_lacks_equipment(material, bag): return false
+			if _production_lacks_material(material, bag, issued): return false
 		return true
 	for slot: Dictionary in recipe.material_slots:
 		var candidates: Array = slot.candidates
 		if candidates.size() == 1:
-			if _production_lacks_equipment(candidates[0], bag): return false
+			if _production_lacks_material(candidates[0], bag, issued): return false
 		elif not choices.has(str(int(slot.slot_index))):
 			return false
 	return true
 
-static func _production_lacks_equipment(material: Dictionary, bag: Dictionary) -> bool:
-	if not material.physical or material.has("inventory_key"): return false
+static func _production_lacks_material(material: Dictionary, bag: Dictionary, issued: Variant) -> bool:
 	if material.get("wallet", false) and str(material.source_id) == "26": return false
-	return int(bag.get(str(material.item), 0)) < int(material.quantity)
+	var needed: int = int(material.quantity)
+	if material.physical:
+		return not material.has("inventory_key") and int(bag.get(str(material.item), 0)) < needed
+	if not issued is Dictionary: return false
+	var owned: int = maxi(0, int(bag.get(str(material.get("inventory_key", material.item)), 0)))
+	if owned >= needed or int(material.source_id) in PATCH523_EQUIPMENT.AWAKENING_SUPPLY.IDS: return false
+	var alternative: Variant = issued.get(PATCH523_EQUIPMENT.EXPEDITION_MATERIALS.tuple_key(material))
+	return not alternative is String or int(bag.get(alternative, 0)) < needed - owned
 
 func _quote_craft(recipe_id: String, batches: int, weight: int, capacity: int, local_items: Dictionary) -> Dictionary:
 	if recipe_id.begins_with("patch523:"):
@@ -8901,6 +8914,7 @@ func _load_game(quiet: bool) -> void:
 	gold = maxi(0, int(data.get("gold", gold)))
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
+		hud.reset_inventory_notice()
 		inventory = inventory_value as Dictionary
 	_ensure_inventory_ammo_defaults()
 	consumable_service.call("prune_removed")
@@ -8938,6 +8952,7 @@ func _load_game(quiet: bool) -> void:
 	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
 	var skill_cooldowns_value: Variant = data.get("skill_cooldowns", {})
 	skill_cooldowns = skill_cooldowns_value as Dictionary if skill_cooldowns_value is Dictionary else {}
+	skill_cooldown_totals.clear()
 	skill_global_cooldown = maxf(0.0, float(data.get("skill_global_cooldown", 0.0)))
 	if original_skills != null:
 		original_skills.catalog.import_state(data)
@@ -9924,16 +9939,31 @@ func _run_auto_buff_quickslots(delta: float) -> bool:
 
 func _tick_skill_cooldowns(delta: float) -> void:
 	skill_global_cooldown = maxf(0.0, skill_global_cooldown - delta)
+	_tick_cooldown_map(skill_cooldowns, delta, skill_cooldown_totals)
+
+static func _tick_cooldown_map(cooldowns: Dictionary, delta: float, skill_totals: Variant = null) -> void:
+	if cooldowns.is_empty(): return
 	var expired: Array[String] = []
-	for key_value: Variant in skill_cooldowns.keys():
+	# Replacing values is safe during dictionary iteration. Erase only
+	# afterward so each entry is visited exactly once without a key copy.
+	for key_value: Variant in cooldowns:
 		var key: String = str(key_value)
-		var remaining: float = maxf(0.0, float(skill_cooldowns.get(key, 0.0)) - delta)
+		var cooldown: float = float(cooldowns.get(key, 0.0))
+		var remaining: float = cooldown - delta
 		if remaining <= 0.0:
 			expired.append(key)
 		else:
-			skill_cooldowns[key] = remaining
+			if skill_totals != null and cooldown > float(skill_totals.get(key,0.0)): skill_totals[key] = cooldown
+			cooldowns[key] = remaining
 	for key: String in expired:
-		skill_cooldowns.erase(key)
+		cooldowns.erase(key)
+		if skill_totals != null: skill_totals.erase(key)
+
+func quickslot_skill_cooldown_ratio(entry: Dictionary) -> float:
+	if entry.get("kind")!="skill": return 0.0
+	var key: String = str(entry.get("id",""))
+	var remaining: float = float(skill_cooldowns.get(key,0.0))
+	return remaining/maxf(remaining,float(skill_cooldown_totals.get(key,remaining))) if remaining>0.0 else 0.0
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 	if patch523_npc_spells.blocks("CannotCastSkill"): return false
@@ -10065,8 +10095,12 @@ func _run_auto_combat_quickslots() -> bool:
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
 			continue
 		if skill.get("origin", "") in ["LINEAGEM_20250617","LINEAGEM_CURRENT_LOCAL_20261029","OFFICIAL_REFERENCE_20261029"]:
-			if original_skills.is_area_quickslot(skill) or not original_skills.auto_wants(skill, selected_monster): continue
-		if not _skill_ready(skill):
+			if original_skills.is_area_quickslot(skill): continue
+			if halphas_star.combat.frozen(player) or not halphas_star.combat.charge.is_empty(): return false
+			# auto_wants already ran the original readiness check. The final
+			# cast still checks its live target, costs and admission.
+			if not original_skills.auto_wants(skill, selected_monster): continue
+		elif not _skill_ready(skill):
 			continue
 		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
 			continue
@@ -10776,16 +10810,16 @@ func _tick_skill_buffs(delta: float, publish: bool = true) -> bool:
 	if active_skill_buffs.is_empty():
 		return false
 	var expired: Array[String] = []
-	for key_value: Variant in active_skill_buffs.keys():
+	for key_value: Variant in active_skill_buffs:
 		var key: String = str(key_value)
 		var value: Variant = active_skill_buffs.get(key, {})
 		if not (value is Dictionary):
 			expired.append(key)
 			continue
 		var buff: Dictionary = value as Dictionary
-		buff["remaining"] = float(buff.get("remaining", 0.0)) - delta
-		active_skill_buffs[key] = buff
-		if float(buff.get("remaining", 0.0)) <= 0.0:
+		var remaining: float = float(buff.get("remaining", 0.0)) - delta
+		buff["remaining"] = remaining
+		if remaining <= 0.0:
 			expired.append(key)
 	if expired.is_empty():
 		return false

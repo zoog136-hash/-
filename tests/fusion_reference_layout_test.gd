@@ -57,14 +57,17 @@ func run() -> void:
 				check(view._cards.get_v_scroll_bar().value>0 and view._cards.get_selected_items()==selected,"native portrait scrolling never registers a different card")
 				view._cards.get_v_scroll_bar().value=0;await frames()
 			tap_card(view._cards,0);await frames()
-			check(view.grade==str((view._cards.get_item_metadata(0) as Dictionary).grade),"native portrait chooses its actual grade")
+			check(view.grade==str((view._cards.get_item_metadata(0) as Dictionary).grade) and view._selection.size()==1,"native portrait registers one copy at its actual grade")
 			view._left.ensure_control_visible(view._grade_buttons["일반"]);await frames();tap(view._grade_buttons["일반"]);await frames()
-			check(view.grade=="일반" and view.filter_grade=="일반" and not view._fuse.disabled,"native grade filter keeps current eligibility")
+			check(view.grade=="일반" and view.filter_grade=="일반" and view._fuse.disabled,"native grade filter changes the roster without registering cards")
+			for index: int in [0,0,0,1]:
+				tap_card(view._cards,index);await frames()
+			check(not view._fuse.disabled,"four explicit copies enable fusion")
 			check(hud.workspace.active_scroll_touch==-1,"grade release never strands a finger in the window gesture owner")
 			for preview: Control in view._previews:
-				check(view._details_scroll.get_global_rect().grow(1).encloses((preview.get_child(0) as Control).get_global_rect()),"default registered portrait and count fit before scrolling")
+				check(view._details_scroll.get_global_rect().grow(1).encloses((preview.get_child(0) as Control).get_global_rect()),"registered portrait fits before scrolling")
 			var model=Cards.new();model.configure(world.catalog_db);model.import_state(before);model.rng.state=rng
-			var outcome: Dictionary=model.fuse(category,"일반")
+			var outcome: Dictionary=model.fuse(category,"일반",false,view._selection)
 			check(bool(outcome.ok),"authoritative comparison model fuses the unchanged fixture")
 			var consumed: int=0
 			for entry: Dictionary in view.registered_materials:

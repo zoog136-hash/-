@@ -107,7 +107,7 @@ func run() -> void:
 		world._on_inventory_item_activated(str(record.name))
 		check(world.card_draw_fusion.total_count(str(spec.card_kind),str(spec.host_card_identity)) == before+1,"exact fixed card actual receive "+str(value.id))
 		check(int(world.inventory.get(str(record.name),0)) == item_before-1,"fixed card exactly one debit "+str(value.id))
-		check(world.hud.is_card_reveal_busy(),"actual reveal UI after durable grant "+str(value.id))
+		check(not world.hud.is_card_reveal_busy(),"named card goes straight into the catalog after durable grant "+str(value.id))
 		categories[str(spec.card_kind)] = true
 		if categories.size() == 1 and world.card_draw_fusion.source_card_receipts.size() == 1: await capture("patch523-fixed-card")
 		dismiss(world)

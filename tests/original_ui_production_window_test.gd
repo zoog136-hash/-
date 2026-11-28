@@ -101,7 +101,7 @@ func _ready_rows() -> void:
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
 	check(hud_text.contains("if _open_original_production(): return"),"제작 opens the original window first")
-	check(hud_text.contains("_report_original_fallback(\"제작\",native)"),"the fallback is reported")
+	check(hud_text.contains("_hold_original_inventory_window(\"제작\","),"a rejected selected pack holds the crafting screen and reports the reason")
 	check(hud_text.contains("refresh_production_window()") and hud_text.contains("close_production_window()"),"a craft refreshes and closing the workspace closes the window")
 	check(hud_text.contains("CraftUI.pending_focus") and hud_text.contains("select_recipe(target)"),"획득처 → 제작 selects the recipe in the original window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")

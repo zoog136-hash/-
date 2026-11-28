@@ -2258,17 +2258,17 @@ static func use_mystery_card(world: Node,uid: String,owned: Dictionary,record: D
 	var deck: Dictionary=SOURCE.row("BuffCardDeck",int(rule.deck_id))
 	var spec: Dictionary={"kind":"fixed_card","activation_status":"unrestricted","card_kind":rule.card_kind,"card_id":int(card.ID),"deck_id":rule.deck_id,"original_card":card,"original_deck":deck,"buff_card_cannot_swap":false,"server_limit_set_id":0,
 		"item_requirements":{"targetting_type_id":D.item_definition(record).get("original_item",{}).get("TargettingTypeID"),"service_region_code":D.item_definition(record).get("original_item",{}).get("ServiceRegionCode",""),"can_use_when_invisible":true},"approximation":"TWILIGHT 근사: 같은 덱·등급 카드 균등 추첨"}
-	var result: Dictionary=use_fixed_card(world,uid,owned,record,spec)
+	var result: Dictionary=use_fixed_card(world,uid,owned,record,spec,false,true)
 	if result.get("ok",false):world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	return result
 
-static func _fixed_card_target(world: Node, spec: Dictionary, manual: bool) -> Dictionary:
+static func _fixed_card_target(world: Node, spec: Dictionary, reveal_draw: bool) -> Dictionary:
 	if spec.get("kind")!="fixed_card" or spec.get("activation_status")!="unrestricted":return _failure("원본 카드 아이템 정의 연결 필요")
 	var requirements: Dictionary=spec.get("item_requirements",{})
 	if requirements.get("targetting_type_id")!=1 or not str(requirements.get("service_region_code","")).is_empty():return _failure("원본 카드 아이템 사용 대상·서비스 조건 미지원")
 	var server: Dictionary=SERVER.allows(world,spec.get("server_limit_set_id",0))
 	if not server.ok:return _failure(str(server.reason)+" · 아이템 보존")
-	if manual and world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
+	if reveal_draw and world.hud.has_method("is_card_reveal_busy") and world.hud.is_card_reveal_busy():return _failure("카드 결과 연출 중 · 아이템 보존")
 	var category: String=str(spec.get("card_kind",""));var card_id: int=int(spec.get("card_id",0))
 	if SOURCE.row("BuffCard",card_id)!=spec.get("original_card"):return _failure("원본 카드 정의 변경 감지 · 아이템 보존")
 	var card: Dictionary=card_binding(world,category,card_id)
@@ -2296,8 +2296,8 @@ static func stage_quest_immediate_card(world: Node, item: Dictionary, quest_id: 
 		"buff_card_cannot_swap":spec.buff_card_cannot_swap,"bless":item.source_bless_code_id,"input_receipt":receipt})
 	return {"candidate":candidate,"result":outcome.results[0]} if outcome.get("ok",false) else {}
 
-static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false) -> Dictionary:
-	var target: Dictionary=_fixed_card_target(world,spec,true)
+static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dictionary,spec: Dictionary,held_test_card: bool=false,reveal_draw: bool=false) -> Dictionary:
+	var target: Dictionary=_fixed_card_target(world,spec,reveal_draw)
 	if not target.ok:return target
 	var card: Dictionary=target.card
 	var category: String=str(spec.card_kind);var card_id: int=int(spec.card_id)
@@ -2334,7 +2334,8 @@ static func use_fixed_card(world: Node,uid: String,owned: Dictionary,record: Dic
 	var sprite: int=int(spec.get("consume_effect_sprite_id",0))
 	if sprite>0:world.option_awakening.combat.emit_sprite(sprite,world.player)
 	world.hud.set_card_draw_fusion_result(category,message)
-	world.hud.present_card_reveal(category,outcome,false)
+	if reveal_draw:
+		world.hud.present_card_reveal(category,outcome,false)
 	var result: Dictionary={"handled":true,"ok":true,"saved":true,"consumed":1,"physical_id":uid,"remaining_quantity":int(owned.remaining)-1,"category":category,"card_id":card_id,"results":outcome.results,"message":message}
 	return committed_use_context(result,record,sprite,sprite>0,"current523_native_stack.use_fixed_card")
 
@@ -2603,13 +2604,27 @@ static func original_skill_ammo(world: Node,cost_key: String,quantity: int) -> D
 	return {"handled":true,"ok":true,"inventory_key":key,"physical_id":selected.physical_id,"quantity":quantity,"expected_quantity":owned.remaining,"expected_remaining":int(owned.remaining)-quantity,"receipt":owned.receipt.duplicate(true),"ownership_kind":owned.ownership_kind,"cost_role":cost_key}
 
 
+const SPELL_BINDINGS_PATH := "res://data/skills/player_skills523_bindings.json"
+const SPELL_BINDINGS_SHA := "497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346"
+static var _verified_spell_binding_text: String = ""
+static var _verified_spell_binding_rows: Dictionary = {}
+
+## Private read-only rows from the same pinned bytes. The caller reads the
+## current resource, so changed bytes still fail even after a successful read.
+static func _checked_spell_bindings(text: String) -> Dictionary:
+	if text == _verified_spell_binding_text: return _verified_spell_binding_rows
+	if text.sha256_text() != SPELL_BINDINGS_SHA: return {}
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Dictionary or not parsed.get("material_inventory_keys") is Dictionary: return {}
+	_verified_spell_binding_text = text
+	_verified_spell_binding_rows = parsed
+	return _verified_spell_binding_rows
+
 static func spell_material_profile(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source")!="lineagem_patch523" or record.get("source_snapshot")!="patch523" or not D.currency_identity_name(record).is_empty():return {} # Currency wallets keep their existing separate owner.
 	if record.get("source_projection")!="current523_original_typed_game_dto_v1" or record.get("source_definition_archive")!=SOURCE.identity() or record.get("source_test_item")!=false or record.get("source_bless_raw")!=1 or D.equipment(record) or not record.get("source_condition_pending",[]).is_empty() or record.get("source_delete_time_unresolved",false):return {}
-	var text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
-	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346":return {}
-	var bindings: Variant=JSON.parse_string(text)
-	if not bindings is Dictionary or not bindings.get("material_inventory_keys") is Dictionary:return {}
+	var bindings: Dictionary=_checked_spell_bindings(FileAccess.get_file_as_string(SPELL_BINDINGS_PATH))
+	if bindings.is_empty():return {}
 	var definition: Dictionary=D.current_original_definition(record)
 	if definition.is_empty():return {}
 	var matches: Array=[]
@@ -2633,9 +2648,8 @@ static func material_owned(world: Node,uid: String) -> Dictionary:
 static func plan_spell_material(world: Node,skill: Dictionary,cost_key: String,quantity: int) -> Dictionary:
 	if quantity<1 or not skill.get("source523",{}).get("applied",[]).has("materials") or world.original_skills==null:return {"handled":false}
 	var adapter: Object=world.original_skills.catalog.source523
-	var text: String=FileAccess.get_file_as_string("res://data/skills/player_skills523_bindings.json")
-	var public: Variant=JSON.parse_string(text)
-	if text.sha256_text()!="497a594e7312ce98dd966b737b1bfb4555072af3c0d5b63d61b8ee2c33075346" or not public is Dictionary or adapter.bindings!=public or not adapter.material_ready(public,cost_key):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
+	var public: Dictionary=_checked_spell_bindings(FileAccess.get_file_as_string(SPELL_BINDINGS_PATH))
+	if public.is_empty() or adapter.bindings!=public or not adapter.material_ready(public,cost_key):return _failure("원문 스킬 재료의 실제 공개 연결·전체 원문 정체 확인 필요")
 	var ids: Array=[]
 	for bridge: Variant in public.get("material_inventory_keys",{}).values():
 		if bridge is Dictionary and bridge.get("inventory_key")==cost_key and bridge.get("native_item_id") not in ids:ids.append(bridge.get("native_item_id"))

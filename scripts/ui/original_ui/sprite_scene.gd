@@ -29,6 +29,10 @@ var unresolved_bindings: Array[String]=[]
 var _build_error: String=""
 var _project_ancestry: Array[String]=[]
 var _project_root_options: Dictionary={}
+var _playback_clip: String=""
+var _clip_start: float=0.0
+var _clip_end: float=0.0
+var _clip_entry_textures: Dictionary={}
 var _bindings: Dictionary={}
 var excluded_audio_events: Array[Dictionary]=[]
 var _entered_frames: Dictionary={}
@@ -100,6 +104,7 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 	excluded_audio_events.clear()
 	_audio_frame_offsets.clear()
 	_resolved_assets.clear()
+	_clip_entry_textures.clear()
 	_build_error=""
 	inspection_only=inspect_only
 	_bindings=bindings.duplicate()
@@ -146,6 +151,18 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		# transform by wrapping the original root in another transformed node.
 		if tree.nodeTree.classname!="Node":return {"ok":false,"error":"unsupported_project_root_class"}
 		tree.nodeTree.options=_project_root_options.duplicate(true)
+	if not _playback_clip.is_empty():
+		var clip: Dictionary={}
+		for candidate: Dictionary in tree.get("animationList",[]):
+			if candidate.name==_playback_clip:
+				clip=candidate
+				break
+		if not _whole(clip.get("startIndex")) or not _whole(clip.get("endIndex")):
+			return {"ok":false,"error":"source_playback_clip_missing_or_invalid"}
+		if clip.startIndex<0 or clip.endIndex<clip.startIndex or clip.endIndex>int(tree.get("action",{}).get("duration",-1)):
+			return {"ok":false,"error":"source_playback_clip_missing_or_invalid"}
+		_clip_start=float(clip.startIndex)
+		_clip_end=float(clip.endIndex)
 	# Identity-sensitive validation must use this requested source, not the
 	# empty/default identity of an unconfigured renderer. Keep source_tree
 	# uncommitted until validation succeeds; create no nodes on this path.
@@ -193,17 +210,23 @@ func configure(pack: RefCounted, member: String, inspect_only: bool=false, bindi
 		source_member=""
 		return {"ok":false,"error":"unsupported_source_scene","details":problems}
 	source_tree=tree
-	# Validate every original timeline frame before creating a visible scene.
+	# Validate the texture dependencies of every playable frame before mounting.
 	var timelines: Array=action.get("timeLines",[])
 	for track_index: int in timelines.size():
 		var timeline: Dictionary=timelines[track_index]
 		var frames: Array=timeline.get("frames",[])
+		var scoped_texture_track: bool=not _playback_clip.is_empty() and timeline.property=="FileData"
+		var entry_key: int=_texture_key_at(frames,_clip_start) if scoped_texture_track else -1
+		if entry_key>=0:
+			_clip_entry_textures[int(timeline.actionTag)]=_frame_value(frames[entry_key]).textureFile
 		var ordered: Variant=[] if frames.size()>=MIN_INDEXED_KEYS else null
 		var previous: float=-INF
-		for frame: Dictionary in frames:
-			var value: Dictionary=_frame_value(frame)
-			if value.get("_type")=="TextureFrame" and source_pack.texture(value.textureFile,true)==null:
-				source_tree={}; return {"ok":false,"error":"source_texture_missing"}
+		for frame_index: int in frames.size():
+			var value: Dictionary=_frame_value(frames[frame_index])
+			if value.get("_type")=="TextureFrame":
+				var required: bool=not scoped_texture_track or frame_index==entry_key or (value.frameIndex>_clip_start and value.frameIndex<=_clip_end)
+				if required and source_pack.texture(value.textureFile,true)==null:
+					source_tree={}; return {"ok":false,"error":"source_texture_missing"}
 			if ordered!=null:
 				var at: float=float(value.get("frameIndex",NAN))
 				if not is_finite(at) or at<previous:
@@ -447,6 +470,7 @@ func _build_project(source: Dictionary, placeholder: Node2D=null) -> Node2D:
 	nested._project_ancestry.append(source_member)
 	nested._project_root_options=widget.duplicate(true)
 	if project_binding.has("visible"):nested._project_root_options.visible=project_binding.visible
+	if not inspection_only:nested._playback_clip=str(project_binding.get("playback_clip",""))
 	# Keep the same partial scope, original transform and strict renderer
 	# checks for both eager and deferred projects.
 	if project_binding.get("source_node_offsets") is Array:
@@ -810,7 +834,11 @@ func _node_texture(source: Dictionary, original_reference: Dictionary) -> Textur
 	if binding.get("role")=="source_asset_slot":
 		_resolved_assets[int(source._offset)]={"pending_original_pixels":true}
 		return null
-	if binding.get("role")!="source_asset":return source_pack.texture(original_reference,true)
+	if binding.get("role")!="source_asset":
+		if not _clip_entry_textures.is_empty():
+			var widget: Dictionary=source.options.get("widgetOptions",source.options.get("nodeOptions",source.options))
+			original_reference=_clip_entry_textures.get(int(widget.actionTag),original_reference)
+		return source_pack.texture(original_reference,true)
 	var resolved: Dictionary=preload("res://scripts/ui/original_ui/source_asset_pixels.gd").resolve(binding.asset_ref)
 	if not resolved.get("ok",false):
 		_build_error=str(resolved.get("error","source_image_unavailable"))
@@ -819,6 +847,8 @@ func _node_texture(source: Dictionary, original_reference: Dictionary) -> Textur
 	return resolved.texture
 
 func play(source_clip: String, repeat: bool=false) -> Dictionary:
+	if not _playback_clip.is_empty() and source_clip!=_playback_clip:
+		return {"ok":false,"error":"source_clip_outside_playback_scope"}
 	for clip: Dictionary in source_tree.get("animationList",[]):
 		if clip.name==source_clip:
 			_clip=clip.duplicate(true)
@@ -837,7 +867,26 @@ func playback_status() -> Dictionary:
 
 func seek_frame(frame_number: float) -> void:
 	_entered_frames.clear()
+	if not _playback_clip.is_empty():frame_number=clampf(frame_number,_clip_start,_clip_end)
 	_seek_frame(frame_number)
+
+## A clip enters on the last key at or before its start, or the first future
+## key when the track has no predecessor. Match _seek_frame's tie order even
+## for unsorted keys.
+static func _texture_key_at(frames: Array, frame_number: float) -> int:
+	var previous: int=-1
+	var following: int=-1
+	var previous_frame: float=-INF
+	var following_frame: float=INF
+	for index: int in frames.size():
+		var at: float=float(_frame_value(frames[index]).frameIndex)
+		if at<=frame_number and at>=previous_frame:
+			previous=index
+			previous_frame=at
+		elif at>frame_number and at<following_frame:
+			following=index
+			following_frame=at
+	return previous if previous>=0 else following
 
 func _seek_frame(frame_number: float) -> void:
 	_frame=frame_number
@@ -1021,6 +1070,7 @@ func _clear() -> void:
 	source_nodes.clear()
 	_tags.clear()
 	_texture_refs.clear()
+	_clip_entry_textures.clear()
 	_resolved_assets.clear()
 
 static func _blend(options: Dictionary) -> String:
@@ -1047,6 +1097,8 @@ static func _optional_dictionary(text: String) -> Variant:
 	return parser.data
 
 func _inner_range(nested: Node2D, frame: Dictionary) -> Dictionary:
+	# A scoped component is driven by its owner rather than by parent ranges.
+	if not nested._playback_clip.is_empty():return {}
 	if int(frame.innerActionType)==2:
 		return {"name":"source_single_frame","startIndex":int(frame.singleFrameIndex),"endIndex":int(frame.singleFrameIndex)} if int(frame.singleFrameIndex)>=0 else {}
 	var name_value: String=str(frame.currentAniamtionName)

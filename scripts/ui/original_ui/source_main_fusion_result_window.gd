@@ -10,7 +10,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   comes last as in the existing reveal.
 ## - Individual taps turn cards over. Once the page has opened, the
 ##   full-screen Btn_Close advances or closes. The top Btn_Close closes.
-## - 영웅 이상 results light up in their grade (source_main_card_grade_fx).
+## - 희귀 uses the authored blue outline. 영웅 이상 use their grade effects.
 const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const Gacha=preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
@@ -91,6 +91,7 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	# The page's background touch belongs to the outer Btn_Close. The
 	# authored CardSet panel holds the cards and does not swallow that tap.
 	var spec: Dictionary={"Panel":{"touch_enabled":false}}
+	var rare_outline: bool=GradeFx.rare_outline_available(_pack)
 	for index: int in PER_PAGE:
 		var cell: String="Panel/Card_%02d" % index
 		if index>=shown:
@@ -98,12 +99,16 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 			continue
 		var card: Dictionary=results[start+index]
 		var opened: bool=is_revealed(start+index)
-		GradeFx.cell_spec(self,spec,cell+"/",str(card.get("grade","")),not opened)
-		if not opened:
+		var grade: String=str(card.get("grade",""))
+		GradeFx.cell_spec(self,spec,cell+"/",grade,not opened)
+		var outline: String=cell+"/Fx_Outline_Front"
+		if grade=="희귀" and rare_outline:
+			spec[outline]={"visible":opened,"playback_clip":GradeFx.RARE_OUTLINE_CLIP}
 			spec.erase(cell+"/Fx_Glow")
-			var outline: String=cell+"/Fx_Outline_Front"
-			if spec.has(outline) and not spec[outline].get("exclude",false):
-				spec[outline]["defer_until_shown"]=true
+		elif not opened:spec.erase(cell+"/Fx_Glow")
+		if spec.has(outline) and not spec[outline].get("exclude",false):
+			if GradeFx.OUTLINE.has(grade):spec[outline]["playback_clip"]=GradeFx.OUTLINE[grade]
+			if not opened:spec[outline]["defer_until_shown"]=true
 		var label: String=str(card.get("name",""))
 		if card.get("pity_reward",false):label="보상 · "+label
 		spec[cell+"/Text_Card_Name"]={"role":"source_text","text":label,"visible":opened}
@@ -153,10 +158,14 @@ func _reveal(scene: Node2D, out: Dictionary, cell: String, grade: String) -> boo
 	GradeFx.set_visible(self,scene,out,cell+"/Fx_Glow/Card_Back",false)
 	# The success discharge runs during the reel. Both outcomes get the
 	# result-grade flash, name and outline when they settle.
-	var lit: Dictionary = GradeFx.light(self,scene,out,cell,grade,false)
+	var started: int=FRAME_HITCH.now()
+	var lit: Dictionary = GradeFx.light(self,scene,out,cell,grade,false,GradeFx.CONFIRMED_OUTLINE_ALPHA)
+	FRAME_HITCH.detail("fusion.result_effects",started)
 	if lit.get("lit", false): return true
 	var nested: Node2D=GradeFx.project(self,scene,out,cell)
 	if nested!=null:GradeFx.chain(nested,GradeFx.CELL_CLIP,"Fx_Cardname")
+	if grade=="희귀" and GradeFx.rare_outline_available(_pack):
+		return GradeFx.show_outline(self,scene,out,cell,GradeFx.RARE_OUTLINE_CLIP,GradeFx.CONFIRMED_OUTLINE_ALPHA)
 	return false
 
 ## Keep the authored spacing. Center partial rows in the same PageView;

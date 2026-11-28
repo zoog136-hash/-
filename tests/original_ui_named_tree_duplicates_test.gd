@@ -65,6 +65,16 @@ func _initialize() -> void:
 	check(many.get("error")=="source_named_node_ambiguous","a suffix matching several paths is ambiguous")
 	check(NAMED.locate_exact(scene,out,"Nope").get("error")=="source_named_node_missing","a missing suffix is missing")
 	check(tree.inert_buttons=={"/Root/Nd_Row/Panel/Btn_Ok":"onOk"},"inert buttons are listed with their callbacks (%s)" % str(tree.inert_buttons))
+	var layered: Dictionary=tree.bind("UI/Win.csb","",[],{
+		"Label":{"text":"shared","visible":false},
+		"Nd_A/Label":{"text":"overridden"},
+		"Nd_Row/Panel/Label":{"visible":true},
+		"Nd_B":{"exclude":true},
+	},{})
+	check(layered.bindings[3].text=="overridden" and not layered.bindings[4].visible,"overlapping suffixes merge in their original order")
+	var child: Dictionary=layered.bindings[7].bindings
+	check(child[12].text=="shared" and child[12].visible,"full-path rules still apply across an authored project")
+	check(5 not in layered.scope and 6 not in layered.scope,"excluding a path skips its complete subtree")
 	var again: Dictionary={}
 	tree.bind("UI/Row.csb","",[],{},again)
 	check(tree.duplicate_paths.is_empty(),"a new top-level bind starts a new record")

@@ -13,13 +13,12 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##  3. Another touch closes it. Nothing closes it by itself.
 ## A touch while an animation runs jumps to the end of that step.
 const ResultPack = preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
-const Cards = preload("res://scripts/ui/original_ui/source_main_change_page.gd")
+const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const SourceText = preload("res://scripts/ui/original_ui/source_text.gd")
 const Wrap = preload("res://scripts/ui/original_ui/source_text_wrap.gd")
 const WAIT_INTRO = "Start"
 const WAIT_LOOP = "Fx_Loop"
 const TOUCH_CLIP = "Fx_Touch_Active"
-var _source_cards: RefCounted
 var _card: Dictionary
 var _succeeded: bool
 var _card_name: String
@@ -47,8 +46,6 @@ func configure(active: RefCounted, host: Node) -> Dictionary:
 	if selected == null:
 		if active != null and not active.manifest.get("scenes", {}).has(ResultPack.MEMBER): return super.configure(active, host)
 		return _fail("source_awakening_result_unavailable")
-	_source_cards = Cards.new()
-	_source_cards._pack = active
 	return super.configure(selected, host)
 
 func open(parent: Node, card: Dictionary, outcome: Dictionary, settings: Dictionary = {}) -> Dictionary:
@@ -95,28 +92,27 @@ func open(parent: Node, card: Dictionary, outcome: Dictionary, settings: Diction
 
 func _spec() -> Dictionary:
 	return {"Panel_Root/Btn_Plus":{"exclude":true}, "Nd_Card/Label_Skill":{"role":"source_text", "text":_target_name},
+		"Nd_Skill/Nd_Card/Card":{"visible":false},
 		"ListView/Label_Option":{"role":"source_text", "text":""},
 		"Panel_Touch/Label":{"role":"static_source_text"}}
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var options_result: Dictionary = _fill_option_rows(root, out)
 	if not options_result.ok: return options_result
-	var grade: String = str(_card.get("grade", ""))
-	if not Cards.GRADE_MEMBERS.has(grade) or _source_cards._pack == null: return {"ok":true}
-	var member: String = Cards.GRADE_MEMBERS[grade]
-	if not _source_cards._pack.manifest.get("scenes", {}).has(member): return {"ok":true}
-	var card_row: Dictionary = _source_cards._card_row(_card, false, Callable(self, "_ignore"))
-	var offsets: Dictionary = {}
-	var built: Dictionary = _source_cards._scene_of(member, card_row.spec, offsets)
-	if not built.get("ok", false): return {"ok":true}
-	var anchor: Dictionary = _locate(root, out, "Nd_Skill/Nd_Card/Card")
-	if not anchor.get("ok", false):
-		built.scene.free()
-		return {"ok":true}
-	var host: Node2D = anchor.player.source_nodes[anchor.offset]
-	var grade_scene: Node2D = built.scene
-	host.add_child(grade_scene)
-	return {"ok":true, "picture":_source_cards._card_picture(grade_scene, offsets, _card)}
+	var art: Dictionary = SourceCard.detail(_card, true, false)
+	var texture: Texture2D = art.get("texture") as Texture2D
+	if texture == null: return {"ok":true, "picture":false}
+	# Keep the exact target in a stable central slot. The authored FX animate
+	# the skill-slot node's visibility and alpha on both result branches.
+	var portrait := Sprite2D.new()
+	portrait.name = "AwakeningTargetPortrait"
+	portrait.texture = texture
+	portrait.position = Vector2(0, -48)
+	portrait.scale = Vector2.ONE * minf(170.0 / texture.get_width(), 198.0 / texture.get_height())
+	portrait.z_index = 1
+	portrait.set_meta("source_card_id", SourceCard.CARDS.card_id(_card))
+	root.add_child(portrait)
+	return {"ok":true, "picture":true}
 
 ## The ListView authors a single 155×14 label to repeat for awarded option
 ## lines. Use its font and original layout for every row of the saved result.

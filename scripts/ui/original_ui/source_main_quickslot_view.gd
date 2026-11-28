@@ -138,6 +138,7 @@ func _stage(parent: Node) -> Dictionary:
 				texture=uploaded.get("texture")
 				result=slot.player.set_bound_visible(ICON,true)
 				if not result.get("ok",false):return _reject(next,result)
+			if float(row.cooldown_ratio)>0.0:Bindings.update_cooldown_shade(slot.player,float(row.cooldown_ratio))
 			var button_node: Variant=slot.player.get("source_nodes").get(BUTTON)
 			var button: Variant=(button_node.get_meta("source_button") if button_node.has_meta("source_button") else null) if is_instance_valid(button_node) else null
 			var control: Variant=button.get("_input_area") if is_instance_valid(button) else null

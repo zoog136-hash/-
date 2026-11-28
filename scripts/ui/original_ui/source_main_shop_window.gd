@@ -432,8 +432,8 @@ func _buy(id: int) -> Dictionary:
 		return {"ok":true,"refused":short}
 	var opened: Dictionary=calculator.open(parent,limit,Callable(self,"purchase").bind(id))
 	if opened.get("handled",false):return {"ok":true,"requested":id,"calculator":true,"maximum":limit}
-	hud.call("confirm_action","유료 상점 · 구매","%s\n구매할 수량을 선택하세요" % str(quote.get("name","")),"구매",func(amount: int) -> void: purchase(amount,id),limit)
-	return {"ok":true,"requested":id,"calculator":false,"maximum":limit}
+	hud.call("_report_original_window_unavailable","구매 수량 입력",opened)
+	return opened
 
 ## The refusal of an offer the wallet cannot pay: the client's own line for
 ## 다이아 (DescData 268491); other game currencies use the same sentence with

@@ -17,7 +17,7 @@ const KEEP: int = 12
 const FLUSH_USEC: int = 5000000
 ## Korean labels for the loading screen; unknown sections show their key.
 const LABELS: Dictionary = {
-	"ui_text_draw":"UI 글자 그리기",
+	"ui_text_draw":"UI 글자 그리기", "ui_crafting":"제작 창",
 	"combat_vfx_draw":"전투 효과 그리기",
 	"world":"월드 기타", "quests":"퀘스트", "hud":"HUD 갱신", "auto_hunt":"자동 사냥",
 	"skills":"스킬", "loot":"드랍·줍기", "save":"저장", "field_triggers":"맵 이벤트",

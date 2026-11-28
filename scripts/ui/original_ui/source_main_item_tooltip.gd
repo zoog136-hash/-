@@ -35,14 +35,13 @@ const DETAIL_BUTTONS_OFFSET: int=1640
 const DETAIL_PROBABILITY_OFFSET: int=50568
 const DETAIL_ROW_STEP: float=20.0
 const DETAIL_MAX_ROWS: int=13
-## Side buttons and info parts the bag tooltip does not connect (online
-## trade, set and collection pages, repair, dissolve, compare).
+## Controls that have no local owner or are handled by a different member.
 const DETAIL_HIDDEN: Array[String]=["ItemInfo/ListView_SetBuff",
 	"ToolTip_Button/BasicInfo","ToolTip_Button/Collection_On","ToolTip_Button/Collection_Off","ToolTip_Button/SetBuff_On","ToolTip_Button/SetBuff_Off",
-	"ToolTip_Button/Enchant_On","ToolTip_Button/Enchant_Off","ToolTip_Button/Solution_On","ToolTip_Button/Solution_Off",
+	"ToolTip_Button/Enchant_Off","ToolTip_Button/Solution_Off",
 	"ToolTip_Button/Repair_On","ToolTip_Button/Repair_Off","ToolTip_Button/Business_On","ToolTip_Button/Business_Off",
 	"ToolTip_Button/Business_ Possible","ToolTip_Button/Business_Add","ToolTip_Button/Restraint",
-	"ToolTip_Button/Registration_On","ToolTip_Button/Registration_Off","ToolTip_Button/ItemDrop_Off",
+	"ToolTip_Button/Registration_Off","ToolTip_Button/ItemDrop_Off",
 	"ToolTip_Button/Compare_On","ToolTip_Button/Compare_Off","Icon_Set/Warehouse_On","Icon_Set/Warehouse_Off"]
 ## ListView_BasicInfo is 195 high; a Panel_set row is 20 plus the list's
 ## itemMargin 3.
@@ -232,6 +231,14 @@ func open(parent: Node, item_reference: String, title: String, item_class_id: in
 		var acquisition: Callable=actions.get("acquisition",Callable())
 		if acquisition.is_valid():spec["ToolTip_Button/ItemDrop_On/Button"]={"activate":acquisition}
 		else:spec["ToolTip_Button/ItemDrop_On"]={"exclude":true}
+		for group: Array in [["Enchant","enhance"],["Solution","dissolve"],["Registration","registration"]]:
+			var action: Callable = actions.get(group[1],Callable())
+			var path: String = "ToolTip_Button/"+group[0]+"_On"
+			if action.is_valid():spec[path+"/Button"]={"activate":action}
+			else:spec[path]={"exclude":true}
+		# The baked preview number is an editor sample. The native collection
+		# window supplies the matching saved registration state when opened.
+		spec["ToolTip_Button/Registration_On/Label_Num"]={"visible":false}
 		spec["Btn_Close"]={"activate":Callable(self,"_close_pressed")}
 	var title_spec: Dictionary={"role":"source_text","text":title}
 	var color: Dictionary=GRADE.color_info({"source_grade_id":grade_id}) if grade_id>0 else {}

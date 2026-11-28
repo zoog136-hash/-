@@ -131,8 +131,8 @@ func restart_routes() -> void:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	ck(is_instance_valid(current_scene) and current_scene.scene_file_path=="res://scenes/boot/Characters.tscn" and data is Dictionary and int(data.get("gold",-1))==expected_gold,"ordinary menu restart saves actual character state before opening the character lobby")
 
-func grant(id: int,amount: int,fixture: String) -> bool:
-	var staged: Dictionary=SUPPLY.stage(w,[{"item_class_id":id,"amount":amount,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero","controls_test_origin":fixture})
+func grant(id: int,amount: int,fixture: String,level: int=0) -> bool:
+	var staged: Dictionary=SUPPLY.stage(w,[{"item_class_id":id,"amount":amount,"bless_raw":1,"enchant":level}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero","controls_test_origin":fixture})
 	if not staged.get("ok",false):
 		print("SOURCE_INVENTORY_CONTROLS_GRANT_DIAG ",id," ",staged.get("error"))
 		return false

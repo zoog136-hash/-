@@ -23,20 +23,21 @@ PR122_TRANSFORM_SCOPE = ('PR122_TRANSFORM_RUN_ONLY_SCOPE_PASS cases=7 slow,fast,
 
 
 class PR122ResultContracts(unittest.TestCase):
-    def test_existing_pr122_pass_producers(self):
+    def test_retired_pr122_receipts_do_not_pass_current_checks(self):
+        # The producers and their acceptance rules were removed with the
+        # legacy pack. Historical output is not a pass for this runner.
         cases = {
             'pr122_transform_run_only_scope_test': PR122_TRANSFORM_SCOPE,
             'pr122_monster_run_only_scope_test': 'PR122_MONSTER_RUN_ONLY_SCOPE_PASS monsters=318 run_cases=33 existing_walk=preserved transform_unknown=7 approvals_added=0',
         }
         for name, output in cases.items():
             with self.subTest(name=name):
-                self.assertEqual(classify_result(name, 0, output + '\n'), (True, False))
+                self.assertEqual(classify_result(name, 0, output + '\n'), (False, False))
                 self.assertEqual(classify_result('unrelated_test', 0, output), (False, False))
                 self.assertEqual(classify_result(name, 1, output), (False, False))
                 self.assertEqual(classify_result(name, 0, output + '\nERROR: failed assertion'), (False, False))
                 self.assertEqual(classify_result(name, 0, output + '\n' + output), (False, False))
-                self.assertEqual(classify_result(name, 0, output + '\nCASE_SKIP: unavailable'), (False, False))
-                self.assertEqual(classify_result(name, 0, 'CASE_OK\n'), (False, False))
+                self.assertEqual(classify_result(name, 0, output + '\nCASE_SKIP: unavailable'), (True, True))
 
     def test_png_runtime_budget_is_bounded_and_does_not_reduce_requested_time(self):
         self.assertEqual(timeout_budget('aden_faith_png_runtime_test', 150, 900), 300)
@@ -121,13 +122,13 @@ elif "--script" in sys.argv:
         self.assertEqual(process.returncode, 0)
         self.assertEqual(summary['passed'], 4)
 
-    def test_pr122_terminal_pass_through_real_runner(self):
+    def test_retired_pr122_receipt_is_rejected_by_real_runner(self):
         name = 'pr122_transform_run_only_scope_test'
         (self.root / 'tests/case_test.gd').rename(self.root / 'tests' / (name + '.gd'))
         process, summary = self.run_case(output=PR122_TRANSFORM_SCOPE + '\n')
-        self.assertEqual(process.returncode, 0)
-        self.assertEqual(summary['passed'], 4)
-        self.assertEqual(summary['failed'], [])
+        self.assertNotEqual(process.returncode, 0)
+        self.assertEqual(summary['passed'], 3)
+        self.assertEqual(summary['failed'], [name])
         self.assertEqual(summary['skipped'], [])
 
     def test_pr122_terminal_pass_does_not_hide_process_error(self):

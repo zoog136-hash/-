@@ -135,6 +135,16 @@ func real_pack() -> void:
 	check(button != null and (button.get("_activation") as Callable).is_valid(), "Btn_Close is bound")
 	if button != null: (button.get("_activation") as Callable).call()
 	check(not popup.is_open(), "Btn_Close closes the bag tooltip")
+	var equipment: Dictionary = popup.open(parent,"held@@@2","장검",702,0,{},{"enhance":action,"dissolve":action,"registration":action},null,true)
+	check(equipment.get("member")==TOOLTIP.DETAIL_MEMBER,"all three equipment actions use the original bag detail")
+	if equipment.get("member")==TOOLTIP.DETAIL_MEMBER:
+		for path: String in ["Enchant_On","Solution_On","Registration_On"]:
+			var located: Dictionary=TREE.locate(popup._scene,popup._out,"ToolTip_Button/"+path+"/Button")
+			var control: Node=located.player.source_nodes.get(located.offset) if located.get("ok",false) else null
+			var button_owner: Node=control.get_meta("source_button") if is_instance_valid(control) and control.has_meta("source_button") else null
+			check(is_instance_valid(button_owner) and button_owner.get("_activation")==action,"authored equipment action is bound: "+path)
+		var count: Dictionary=TREE.locate(popup._scene,popup._out,"ToolTip_Button/Registration_On/Label_Num")
+		check(count.get("ok",false) and not count.player.source_nodes[count.offset].visible,"the editor's sample registration count is hidden")
 	var box: Dictionary = popup.open(parent, "held@@@3", "상자", 315982, 0, {}, {"probability":action,"acquisition":action,"lock":action}, null, true)
 	check(box.get("member") == TOOLTIP.DETAIL_MEMBER, "a pack with all actions opens the right-hand box detail: " + str(box))
 	if box.get("member") == TOOLTIP.DETAIL_MEMBER:

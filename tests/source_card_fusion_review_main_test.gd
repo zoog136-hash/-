@@ -15,6 +15,13 @@ func keypad_tap(popup: RefCounted, path: String) -> void:
 	var hit: Dictionary = TREE.locate(popup._scene,popup._out,path)
 	if check(hit.get("ok",false),"calculator has "+path): await _tap(_hit(hit.player.source_nodes[hit.offset]))
 
+func _first_copy(page: RefCounted, suffix: String) -> Control:
+	var list: Dictionary = page._list(page._scene,page._out,suffix)
+	var entry: Dictionary = page._scrolls.get(list.get("key",""),{}).get("grid",{}).get("built",{}).get(0,{})
+	if entry.is_empty(): return null
+	var target: Dictionary = page._locate(entry.scene,entry.out,"Panel_Root/CB_Check")
+	return _hit(target.player.source_nodes[target.offset]) if target.get("ok",false) else null
+
 var _confirmed_fusion_usec: Dictionary={}
 
 func fusion() -> void:
@@ -55,6 +62,14 @@ func fusion_category(w: Node, category: String) -> void:
 		if not check(is_instance_valid(page) and page.is_open(),"authored fusion page mounted"): break
 		var before: Dictionary = _ledger(w)
 		var rng: int = w.card_draw_fusion.rng.state
+		var roster: Node2D = _node(page,MIX.P+"Nd_CardList/ListView")
+		var stage: Node2D = _node(page,MIX.P+"Nd_CardMix/Nd_Card/ListView")
+		check(roster!=null and stage!=null and roster.get_global_transform_with_canvas().origin.x>stage.get_global_transform_with_canvas().origin.x,"spare cards are right of the registered cards")
+		check(page.last_result.filled.cards==1 and page._registered.is_empty(),"one spendable identity on the right and an empty center")
+		await _tap(_first_copy(page,MIX.P+"Nd_CardList/ListView"))
+		check(page._registered==[material] and _ledger(w)==before,"a right-hand touch registers that one copy without payment")
+		await _tap(_first_copy(page,MIX.P+"Nd_CardMix/Nd_Card/ListView"))
+		check(page._registered.is_empty() and _ledger(w)==before,"touching the registered card removes only that one copy")
 		await _tap(_hit(_node(page,MIX.P+"Nd_CardMix/Btn_Auto")))
 		check(page._registered.size()==count*4 and page._registered.all(func(id: String) -> bool:return id==material),"original auto button registers exactly the available duplicate groups")
 		var request: Dictionary={"category":category,"grade":"고급","count":count,"selection":page._registered.duplicate()}

@@ -121,7 +121,6 @@ func _build_character_panel() -> void:
 	character_panel.offset_top = 8.0
 	character_panel.offset_right = -4.0
 	character_panel.offset_bottom = -8.0
-	add_child(character_panel)
 
 	var outer := VBoxContainer.new()
 	outer.add_theme_constant_override("separation", 6)
@@ -238,6 +237,8 @@ func _build_character_panel() -> void:
 	weight_bar.add_theme_stylebox_override("background", _style(Color(0.025,0.025,0.025,1), Color(0.14,0.14,0.13,1), 2, 1))
 	weight_bar.add_theme_stylebox_override("fill", _style(Color(0.48,0.38,0.16,1), GOLD, 2, 0))
 	weight_box.add_child(weight_bar)
+	character_panel.hide()
+	add_child(character_panel)
 
 func _build_equipment_page() -> Control:
 	var root := Control.new()
@@ -379,7 +380,6 @@ func _build_menu_panel() -> void:
 	menu_panel.offset_right = -8.0
 	menu_panel.offset_bottom = -8.0
 	menu_panel.add_theme_stylebox_override("panel", _style(Color(0.018,0.020,0.023,0.97), GOLD_SOFT, 4, 1))
-	add_child(menu_panel)
 
 	var outer := VBoxContainer.new()
 	outer.add_theme_constant_override("separation", 8)
@@ -432,6 +432,8 @@ func _build_menu_panel() -> void:
 	var footer := _label("메뉴를 선택하면 해당 기능 창이 열립니다.", 12, TEXT_DIM)
 	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	outer.add_child(footer)
+	menu_panel.hide()
+	add_child(menu_panel)
 
 func _on_menu_pressed(action_id: String) -> void:
 	if action_id == "close":

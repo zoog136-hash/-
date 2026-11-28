@@ -214,8 +214,18 @@ func _real_pack(pack_dir: String) -> void:
 		check(flipped.get("handled",false) and flipped.filled.popup_fill.popup=="gacha" and flipped.filled.popup_fill.clip=="CardSet_One","CardChange_Gacha mounts and flips: "+str(flipped).left(300))
 		window._close_popup()
 		window._confirm_entry(window.cards()[0])
-		var shown_result: Dictionary=window._confirm_result()
+		var confirm_out: Dictionary={}
+		window._bind(WINDOW.CONFIRM,"",[],{},confirm_out)
+		var confirm: Node2D=window._scene.get_child(window._scene.get_child_count()-1)
+		check(tap_button(window._locate(confirm,confirm_out,"Nd_Confirm/Btn_Ok")),"tap the original card confirmation button")
+		var shown_result: Dictionary=window.last_result
 		check(shown_result.get("handled",false) and shown_result.filled.popup_fill.popup=="result" and shown_result.filled.popup_fill.lit,"CardChange_Result mounts and a 전설 card lights up: "+str(shown_result).left(300))
+		var result_out: Dictionary={}
+		window._bind(WINDOW.RESULT,"",[],{},result_out)
+		var result: Node2D=window._scene.get_child(window._scene.get_child_count()-1)
+		var outline: Node2D=WINDOW.GradeFx.project(window,result,result_out,WINDOW.CELL+"/Fx_Outline_Front")
+		check(outline!=null and outline.playback_status().playing and is_equal_approx(outline.modulate.a,0.55),
+			"the authored confirmed-card outline plays at the lower opacity")
 	else:
 		print("original_ui_card_change_window_test: pack without CardChange_Gacha (before ui43); reveal not mounted")
 	window.close()

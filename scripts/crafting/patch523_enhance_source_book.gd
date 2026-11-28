@@ -4,7 +4,8 @@ extends RefCounted
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const DROPS=preload("res://scripts/loot/patch523_monster_drops.gd")
 const NATIVE_FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
-const LABEL=preload("res://scripts/ui/source523_item_identity.gd")
+const LEGACY_ACCESSORY_SLOTS: Array[String]=["ring","earring","seal","bracelet","necklace","belt","badge","crystal","catalyst","rune"]
+const LEGACY_ARMOR_SLOTS: Array[String]=["offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","boots","gloves"]
 const TABLES: Array[String]=["BmItemEnchantProView","ItemEnchantCostView","ItemEnchantProbabilityView",
 	"ItemEnchantProbabilityGroup","ItemEnchantEquipGroupMapping","ItemEnchantScrollGroupMapping","ItemBlessEnchantProbability","Material"]
 static var _identity: Dictionary={}
@@ -16,7 +17,7 @@ var scroll: Dictionary={}
 var target_id: String
 var scroll_id: String
 var compiled: Object
-var _legacy_weapon: Dictionary={}
+var _legacy_equip: Dictionary={}
 
 static func checked_native(record: Dictionary) -> Dictionary:
 	if record.get("source_m_native_item")!=true or record.get("source_definition_archive")!=SOURCE.identity():return {}
@@ -71,16 +72,24 @@ func bind(detached_target: Dictionary, exact_target_id: String, detached_scroll:
 		var raw: Dictionary=row.get("original_item",{})
 		if raw.get("TestItem")!=false or not str(raw.get("ServiceRegionCode","")).is_empty():return false
 	if str(int(target.original_item.ID))!=exact_target_id or str(int(scroll.original_item.ID))!=exact_scroll_id:return false
-	_legacy_weapon={}
+	_legacy_equip={}
 	if not registered_legacy.is_empty():
-		# The old owned weapon stays on its inventory key. Only its original
+		# Old equipment stays on its existing inventory key. Only its original
 		# enhancement tables are substituted for the incompatible compiled DTO.
-		if not _legacy_weapon_matches(detached_target,registered_legacy,exact_target_id):return false
+		if not _legacy_equip_matches(detached_target,registered_legacy,exact_target_id):return false
 		if target.get("source_input_identity")!=identity or target.get("source_reference",{}).get("ok")!=true:return false
-		if target.get("category",{}).get("Name")!="Weapon":return false
-		if not target.get("equip_rows",[]).any(func(row: Dictionary) -> bool: return row.get("equip_slot",{}).get("Name")=="WeaponHold"):return false
+		var slot: String=str(registered_legacy.get("slot",""))
+		if slot=="weapon":
+			if target.get("category",{}).get("Name")!="Weapon":return false
+			if not target.get("equip_rows",[]).any(func(row: Dictionary) -> bool: return row.get("equip_slot",{}).get("Name")=="WeaponHold"):return false
+		else:
+			var original_armor: bool=slot in LEGACY_ARMOR_SLOTS and target.get("category",{}).get("Name")=="Armor"
+			if slot not in LEGACY_ACCESSORY_SLOTS and not original_armor:return false
+			var canonical: Dictionary=target.get("native_record",{})
+			if canonical.get("slot")!=slot or target.get("equip_rows",[]).is_empty():return false
+			if original_armor and (not NATIVE_FIELDS.field(canonical,"source_condition_pending",[]).is_empty() or canonical.get("source_delete_time_unresolved",false)):return false
 		if target.get("item_bonus",[]).any(func(row: Dictionary) -> bool: return row.get("bonus_type",{}).get("Name") in ["DeleteTime","StartDateTimeID","EndDateTimeID","ServerLimitSetID"]):return false
-		_legacy_weapon=registered_legacy
+		_legacy_equip=registered_legacy
 	if _identity!=identity:
 		var loaded: Dictionary={}
 		for table: String in TABLES:
@@ -95,14 +104,18 @@ func bind(detached_target: Dictionary, exact_target_id: String, detached_scroll:
 func catalog_identity_matches(record: Dictionary, id: String) -> bool:
 	if id!=target_id:return false
 	if record.get("source_m_native_item",false):return not checked_native(record).is_empty()
-	if not _legacy_weapon.is_empty():return _legacy_weapon_matches(record,_legacy_weapon,id)
+	if not _legacy_equip.is_empty():return _legacy_equip_matches(record,_legacy_equip,id)
 	return compiled!=null and compiled.catalog_identity_matches(record,id)
 
-static func _legacy_weapon_matches(record: Dictionary, registered: Dictionary, id: String) -> bool:
-	return (registered.get("source")=="inven" and registered.get("sourceId")==id
-		and registered.get("sourceUrl")=="https://lineagem.inven.co.kr/db/item/"+id
-		and registered.get("slot")=="weapon" and registered.get("name")==LABEL.original_name(int(id))
-		and DROPS.matches(record,registered))
+func _legacy_equip_matches(record: Dictionary, registered: Dictionary, id: String) -> bool:
+	if (registered.get("source")!="inven" or registered.get("sourceId")!=id
+		or registered.get("sourceUrl")!="https://lineagem.inven.co.kr/db/item/"+id
+		or not DROPS.matches(record,registered)):return false
+	var raw: Dictionary=target.get("original_item",{})
+	for field: String in ["IdentifiedDescID","DescID"]:
+		var text: String=str(SOURCE.row("DescData_Korean",int(raw.get(field,0))).get("Description","")).strip_edges()
+		if not text.is_empty() and text==registered.get("name"):return true
+	return false
 
 func item_entry(id: String) -> Dictionary:
 	var row: Dictionary=target if id==target_id else scroll if id==scroll_id else {}

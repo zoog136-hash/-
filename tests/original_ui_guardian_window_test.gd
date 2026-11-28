@@ -3,9 +3,8 @@ extends SceneTree
 ## existing world.growth guardians. Without arguments (no original files): the
 ## six stars match the growth guardians, the estimated layout is declared as
 ## TWILIGHT 추정 in one data file, slot cells follow SkillTreeSlot UIPosX/Y,
-## 초기화 goes quote -> confirmation -> execute and a slot opens the existing
-## 수호성 view on it, 활성화 / 대표 지정 from the slot info popup go quote ->
-## confirmation -> execute and its lines come from the guardian source.
+## The original popup runs each quoted action after confirmation and keeps
+## unavailable source steps inside the current window.
 ## Real input: -- --pack=<private original main UI pack directory>: the graph
 ## mounts with every slot and prerequisite line, the opened-slot effect list
 ## and the slot info popup.
@@ -54,14 +53,26 @@ class FakeWorld extends Node:
 
 class FakeHud extends Node:
 	var messages: Array[String]=[]
-	var routed: Array=[]
+	var original_main_ui_controller: Node
+	var review: Control
+	var accept: Callable
+	var review_available: bool=true
 	func show_message(text: String) -> void:
 		messages.append(text)
-	func confirm_action(_title: String, _body: String, _action: String, callback: Callable, _maximum: int=0) -> Control:
-		callback.call(1)
+	func confirm_action(_title: String, _body: String, _action: String, _callback: Callable, _maximum: int=0) -> Control:
 		return null
-	func open_growth_native(section: String, group: String="", node: String="") -> void:
-		routed.append([section,group,node])
+	func confirm_source_action(_title: String, _body: String, _action: String, callback: Callable) -> Control:
+		if not review_available:return null
+		accept=callback
+		review=Control.new()
+		add_child(review)
+		return review
+	func accept_review() -> void:
+		if not is_instance_valid(review):return
+		review.free()
+		var callback: Callable=accept
+		accept=Callable()
+		if callback.is_valid():callback.call(1)
 
 func check(ok: bool, label: String) -> void:
 	checks+=1
@@ -92,27 +103,50 @@ func _run() -> void:
 	window._hud=weakref(host.hud)
 	window.selected="joe"
 	var reset: Dictionary=window._reset()
+	check(growth.executed.is_empty(),"초기화 waits for the confirmation")
+	host.hud.accept_review()
 	check(reset.get("ok",false) and growth.executed==[["guardian_reset","joe",1,3,-1]],"초기화 confirms and executes the existing guardian_reset: "+str(growth.executed))
-	window._slot_pressed("source523_2022")
-	check(host.hud.routed==[["guardians","joe","source523_2022"]],"a slot opens the existing 수호성 view on it: "+str(host.hud.routed))
+	check(window._slot_pressed("source523_2022").get("code")=="source_guardian_window_info_unavailable" and not host.hud.messages.is_empty(),"a missing slot-info scene keeps the action pending without a substitute")
 	# The slot info popup's actions and lines (existing guardian runtime).
 	var slot: Dictionary=growth.config.guardians[0].nodes[1]
 	window.info=str(slot.id)
 	var activated: Dictionary=window._info_ok()
+	host.hud.accept_review()
 	check(activated.get("ok",false) and growth.executed[-1]==["activate",str(slot.id),1,3,-1],"활성화 confirms and executes the existing activate: "+str(growth.executed))
 	window.info=str(slot.id)
 	var represented: Dictionary=window._represent()
+	host.hud.accept_review()
 	check(represented.get("ok",false) and growth.executed[-1]==["representative",str(slot.id),1,3,-1],"ON executes the existing representative action")
 	var info_rows: Array=window._info_rows(growth,str(slot.id))
 	var titles: Array=info_rows.map(func(row: Dictionary) -> String: return str(row.spec["Nd_Skill/Text_Title"].text))
 	check(titles.has("비용") and titles.has("능력치") and info_rows.all(func(row: Dictionary) -> bool: return row.member==WINDOW.INFO_ROW),"popup lines come from the guardian source: "+str(titles))
-	growth.state.nodes=[str(slot.id)]
-	window.info=str(slot.id)
-	window._info_ok()
-	check(host.hud.routed[-1]==["guardians","joe",str(slot.id)],"an opened slot's 강화 / 시전 open the existing view on it")
+	var opened: Dictionary={}
+	var active: Dictionary={}
+	for group: Dictionary in growth.config.guardians:
+		for row: Dictionary in group.nodes:
+			if row.kind=="active":active=row
+			elif int(row.get("max_level",0))>1:opened=row
+	check(not opened.is_empty() and not active.is_empty(),"the source models have an upgradable slot and an active skill")
+	if not opened.is_empty():
+		growth.state.nodes=[str(opened.id)]
+		window.info=str(opened.id)
+		check(window._info_ok().get("code")=="source_guardian_enchant_window_unavailable" and window.info==opened.id,"a missing upgrade keeps the original info and selection")
+	if not active.is_empty():
+		growth.state.nodes=[str(active.id)]
+		window.info=str(active.id)
+		var before: int=growth.executed.size()
+		host.hud.review_available=false
+		check(not window._info_ok().get("ok",false) and growth.executed.size()==before,"a missing cast confirmation leaves the runtime untouched")
+		host.hud.review_available=true
+		check(window._info_ok().get("quoted")=="guardian_cast" and growth.executed.size()==before,"the authored skill action opens its confirmation")
+		host.hud.accept_review()
+		check(growth.executed.size()==before+1 and growth.executed[-1]==["guardian_cast",str(active.id),1,3,-1],"confirming executes the existing guardian cast once")
 	growth.state.nodes=[]
+	growth.state.pending={"node":str(slot.id),"cards":3}
+	check(window._slot_pressed("another").get("code")=="source_guardian_window_card_pending","another slot does not discard a pending selection")
+	check(window._slot_pressed(str(slot.id)).get("code")=="source_guardian_find_window_unavailable" and growth.state.pending.node==slot.id,"a missing card scene preserves the exact pending selection")
 	var renewal: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(renewal.contains("_open_original_feature(\"guardians\")") and renewal.contains("func open_growth_native"),"수호성 opens the original window first, a pending card choice stays native")
+	check(renewal.contains("_open_original_feature(\"guardians\")") and not renewal.contains("func open_growth_native"),"수호성 opens the original window first, a pending card choice stays native")
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")

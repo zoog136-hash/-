@@ -1,5 +1,6 @@
 extends RefCounted
 ## Current official supplement. Reference IDs cannot enter legacy combat defaults.
+const BUILT_IN_DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 var records: Array[Dictionary] = []
 var index: Dictionary = {}
 var mode_audit: Dictionary = {}
@@ -8,7 +9,7 @@ var local_design: Dictionary = {}
 func _init() -> void:
 	local_design = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/local_design_missing12.json"))
 	var document: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/current_official_specs.json"))
-	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/official_roster.json"))
+	var roster: Dictionary = BUILT_IN_DATA.read_json("res://data/skills/official_roster.json")
 	var observed: Array = document.get("records", []).duplicate()
 	observed.append_array(roster.get("references", []))
 	for row: Dictionary in observed:

@@ -44,6 +44,7 @@ var _parent: WeakRef
 var _scene: Node2D
 var _donate_open: bool=false
 var _name_editor: LineEdit
+var _name_field: Node2D
 var _last_out: Dictionary={}
 var _popup_opacity: Dictionary={}
 var last_result: Dictionary={}
@@ -128,6 +129,7 @@ func refresh() -> Dictionary:
 func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null
+	_release_name_field()
 	if is_instance_valid(_name_editor):
 		_name_editor.queue_free()
 	_name_editor=null
@@ -184,6 +186,7 @@ func _stage() -> Dictionary:
 	next.z_index=150
 	_scene=next
 	_last_out=out
+	_release_name_field()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -219,7 +222,7 @@ func _foundation_spec(snap: Dictionary) -> Dictionary:
 	spec[p+"Btn_Foundation"]={"activate":Callable(self,"_create_requested"),"displaystate":can}
 	spec[p+"Btn_Foundation/Normal"]={"visible":can}
 	spec[p+"Btn_Foundation/Disabled"]={"visible":not can}
-	spec[p+"Nd_TitleBar/Label"]={"role":"source_text","text":"혈맹 창설을 위해 아래 정보를 입력해주세요." if can else str(quote.get("reason",""))}
+	spec[p+"Nd_TitleBar/Label"]={"role":"source_text","text":"혈맹 이름 입력 · 창설 비용 아데나 %s" % _number(int(quote.get("fee",0))) if can else str(quote.get("reason",""))}
 	return spec
 
 ## 혈맹 정보: the existing snapshot's name, level, experience and buff.
@@ -410,6 +413,7 @@ func _editor() -> LineEdit:
 		_name_editor.name="Clan523OriginalName"
 		_name_editor.max_length=Clan.NAME_MAX
 		_name_editor.visible=false
+		_name_editor.text_submitted.connect(func(_value: String) -> void: _create_requested())
 		var parent: Object=_parent.get_ref() if _parent!=null else null
 		# The field returns the editor here (hidden) when its scene closes.
 		if parent is Node:(parent as Node).add_child(_name_editor)
@@ -422,7 +426,12 @@ func _attach_name(root: Node2D, out: Dictionary) -> Dictionary:
 	var field: Variant=node.get_meta("source_text_field",null) if is_instance_valid(node) and node.has_meta("source_text_field") else null
 	if field==null or not field.has_method("attach_editor"):return {"ok":true}
 	var attached: Dictionary=field.attach_editor()
+	if attached.get("ok",false):_name_field=field
 	return {"ok":true,"attached":attached.get("ok",false)}
+
+func _release_name_field() -> void:
+	if is_instance_valid(_name_field):_name_field.release_editor()
+	_name_field=null
 
 static func _leader(world: Node) -> String:
 	var name: Variant=world.get("character_name")

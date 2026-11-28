@@ -60,7 +60,7 @@ func _run() -> void:
 	var many: Dictionary=WINDOW.card_layout(12,Vector2(1200.0,530.0))
 	check(float(many.scale)<1.0 and (many.centres[0] as Vector2).y>(many.centres[8] as Vector2).y,"twelve cards: two rows, scaled into the box")
 	var guardian: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_guardian_window.gd")
-	check(guardian.contains("try_open_feature_window(\"guardian_find\",[group])") and guardian.contains("return _find(selected,id)"),"the 수호성 window opens it for a pending choice")
+	check(guardian.contains("_open_guardian_step(\"guardian_find\",[group]") and guardian.contains("return _find(selected)"),"the 수호성 window opens the original card scene for a pending choice")
 	var pack_dir: String=""
 	for value: String in OS.get_cmdline_user_args():
 		if value.begins_with("--pack="):pack_dir=value.trim_prefix("--pack=")

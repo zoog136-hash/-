@@ -3,8 +3,8 @@ extends RefCounted
 ## panel, Hud_Menu_* picture, caption) for the menu sections that have one.
 ## A tile is only a picture: the TWILIGHT menu button keeps the tap and the
 ## scroll drag, so every original touch node is made transparent to input.
-## Sections without a client tile keep their TWILIGHT tile. Sp_New / Sp_Event /
-## Sp_Buff / Img_Disabled have no rule here and stay hidden.
+## Sections without a client tile keep their TWILIGHT tile. The character
+## tile can show its authored notice when stat points can be assigned.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const MEMBERS: Dictionary={
 	"character":"UI/CsbFile/MainMenu/MainMenu_CharacterInfo.csb",
@@ -28,6 +28,7 @@ const MEMBERS: Dictionary={
 	"settings":"UI/CsbFile/MainMenu/MainMenu_Option.csb",
 }
 const HIDDEN: Array[String]=["Panel/Sp_New","Panel/Sp_Event","Panel/Sp_Buff","Panel/Img_Disabled"]
+const NOTICE_ATLAS="UI/UI_Resource/Atlas_Hud.plist"
 var _pack: RefCounted
 var _tree: RefCounted
 
@@ -42,12 +43,14 @@ static func member_of(section: String) -> String:
 
 ## The tile scene of `section` (centre of its 70x67 panel at the origin),
 ## or not ok when the section has no tile or the pack lacks it.
-func tile(section: String) -> Dictionary:
+func tile(section: String, stat_points: int=0) -> Dictionary:
 	var member: String=member_of(section)
 	if member.is_empty():return _fail("source_menu_tile_not_in_client")
 	if _pack==null or not _pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_menu_tile_member_missing","member":member}
 	var spec: Dictionary={}
 	for name: String in HIDDEN:spec[name]={"visible":false}
+	if section=="character" and stat_points>0 and _pack.manifest.get("atlases",{}).get(NOTICE_ATLAS,{}).get("frames",{}).has("Hud_IconNew.png"):
+		spec["Panel/Sp_New"]={"visible":true}
 	var built: Dictionary=_tree.scene_of(member,spec,{})
 	if not built.get("ok",false):return built
 	var scene: Node2D=built.scene

@@ -74,6 +74,8 @@ func _run() -> void:
 	root.add_child(origin)
 	current_scene = origin
 	var loader: Control = LOADER.open(self, "res://tests/fixtures/loading/absent_destination.tscn")
+	check(not ResourceLoader.has_cached("res://scripts/ui/source523_image_assets.gd"),
+		"opening the loading screen and checking icon availability does not load the game image owner")
 	_watch(loader)
 	var hitch_labels: Array[Node] = loader.find_children("*", "Label", true, false).filter(func(node: Node) -> bool: return (node as Label).text == expected_hitch)
 	check(hitch_labels.size() == 1 and (hitch_labels[0] as Label).visible, "previous measured hitch diagnostic remains visible")
