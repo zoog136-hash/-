@@ -26,13 +26,15 @@ static func build(pack: RefCounted, gold: int, balances: Dictionary, info: Calla
 	else:unresolved.push_front("original_info_button_action")
 	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":offsets,"bindings":bindings,"partial_source_scene":true,"complete_screen_contract":false,"unresolved_fields":unresolved}
 
-static func refresh(scene: Node2D, gold: int, balances: Dictionary) -> Dictionary:
+static func refresh(scene: Node2D, gold: int, balances: Dictionary, gold_changed: bool=true, diamonds_changed: bool=true) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=MEMBER:return _fail("source_main_wallet_scene_mismatch")
 	if typeof(balances.get("다이아"))!=TYPE_INT:return _fail("source_main_wallet_existing_diamond_balance_required")
-	var result: Dictionary=scene.set_bound_text(GOLD_TEXT,str(gold))
-	if not result.get("ok",false):return result
-	result=scene.set_bound_text(JEWEL_TEXT,str(balances["다이아"]))
-	if not result.get("ok",false):return result
+	if gold_changed:
+		var result: Dictionary=scene.set_bound_text(GOLD_TEXT,str(gold))
+		if not result.get("ok",false):return result
+	if diamonds_changed:
+		var result: Dictionary=scene.set_bound_text(JEWEL_TEXT,str(balances["다이아"]))
+		if not result.get("ok",false):return result
 	return {"ok":true,"gold":gold,"diamonds":balances["다이아"],"game_state_written":false,"complete_screen_contract":false}
 
 static func _fail(code: String) -> Dictionary:

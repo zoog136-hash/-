@@ -1953,30 +1953,44 @@ func update_map_name(map_name: String) -> Dictionary:
 	return _map_name_result.duplicate(true)
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> Dictionary:
-	var unchanged: bool=_has_player_values and _exp_value==experience_value and _exp_need==exp_need
-	var values: Dictionary={"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level}
-	var char_unchanged: bool=values==_char_values
-	_char_values=values
-	_exp_value=experience_value
-	_exp_need=exp_need
-	var gold_changed: bool=not _has_player_values or _gold!=gold
-	_gold=gold
-	_has_player_values=true
+	apply_player_values(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
 	if not is_instance_valid(_coordinates):return _fail("source_main_not_configured")
-	if not is_instance_valid(_exp_scene):
-		if not _exp_mount_attempted or last_result.get("ok",false):_mount_exp()
-	elif not unchanged:last_result=Vitals.refresh_exp(_exp_scene,_exp_value,_exp_need)
-	if _pack.manifest.get("scenes",{}).has(Vitals.CHAR_MEMBER):
-		if not is_instance_valid(_char_scene):
-			if not _char_mount_attempted:_mount_char_info()
-		elif not char_unchanged:_char_result=Vitals.refresh_char_info(_char_scene,_char_values)
-	if not _core_attempted:_mount_core_controls()
-	refresh_primary_stats()
-	_refresh_wallet(gold_changed)
-	_sync_chrome()
 	return {"ok":last_result.get("ok",false),"components":{"exp":last_result.duplicate(true),"hp_mp":_char_result.duplicate(true),"combat":_combat_result.duplicate(true),"menu":_menu_result.duplicate(true),"wallet":_wallet_result.duplicate(true),"blessing":_blessing_result.duplicate(true),"map_name":_map_name_result.duplicate(true),"selected_target_name":_target_result.duplicate(true),"primary_stats":_primary_stats_result.duplicate(true),"joystick":_joystick_result.duplicate(true)},"complete_screen_contract":false,"game_state_written":false}
 
+func apply_player_values(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
+	var first: bool=not _has_player_values
+	var exp_changed: bool=first or _exp_value!=experience_value or _exp_need!=exp_need
+	var gold_changed: bool=first or _gold!=gold
+	var changed: int=0
+	if first or _char_values.hp!=hp or _char_values.max_hp!=max_hp:changed|=Vitals.CharField.HP
+	if first or _char_values.mp!=mp or _char_values.max_mp!=max_mp:changed|=Vitals.CharField.MP
+	if first or _char_values.level!=level:changed|=Vitals.CharField.LEVEL
+	if changed!=0:_char_values={"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level}
+	_exp_value=experience_value
+	_exp_need=exp_need
+	_gold=gold
+	_has_player_values=true
+	if not is_instance_valid(_coordinates):return
+	if not is_instance_valid(_exp_scene):
+		if not _exp_mount_attempted or last_result.get("ok",false):_mount_exp()
+	elif exp_changed:last_result=Vitals.refresh_exp(_exp_scene,_exp_value,_exp_need)
+	if is_instance_valid(_char_scene):
+		if changed!=0:_char_result=Vitals.refresh_char_info(_char_scene,_char_values,changed,_char_result.get("values",{}))
+	elif not _char_mount_attempted and _pack.manifest.get("scenes",{}).has(Vitals.CHAR_MEMBER):
+		_mount_char_info()
+		_sync_chrome("char")
+	if not _core_attempted:_mount_core_controls()
+	# Subsequent attack/defence changes are published by set_character_state.
+	if first:refresh_primary_stats()
+	if gold_changed:_refresh_wallet(true)
+
 func refresh_primary_stats() -> Dictionary:
+	var owned_before: bool=_chrome_owned("stats")
+	var result: Dictionary=_refresh_primary_stats()
+	if _chrome_owned("stats")!=owned_before:_sync_chrome("stats")
+	return result.duplicate(true)
+
+func _refresh_primary_stats() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null:return _fail("source_primary_stats_host_unavailable")
 	var model: Dictionary=PrimaryStats.snapshot(hud)
@@ -1985,11 +1999,13 @@ func refresh_primary_stats() -> Dictionary:
 		_primary_stats_result=model
 		return model
 	if is_instance_valid(_primary_stats_scene):
-		if model!=_primary_stats_model or not _primary_stats_result.get("ok",false):_primary_stats_result=PrimaryStats.refresh(_primary_stats_scene,hud)
-		_primary_stats_model=model
+		var previous: Dictionary=_primary_stats_model if _primary_stats_result.get("ok",false) else {}
+		if model==previous:return _primary_stats_result
+		_primary_stats_result=PrimaryStats.refresh(_primary_stats_scene,model,previous)
+		if _primary_stats_result.get("ok",false):_primary_stats_model=model
 		_primary_stats_scene.visible=_primary_stats_result.get("ok",false)
-		return _primary_stats_result.duplicate(true)
-	if _primary_stats_attempted:return _primary_stats_result.duplicate(true)
+		return _primary_stats_result
+	if _primary_stats_attempted:return _primary_stats_result
 	_primary_stats_attempted=true
 	var contract: Dictionary=PrimaryStats.build(_pack,hud)
 	if not contract.get("ok",false):
@@ -2006,20 +2022,21 @@ func refresh_primary_stats() -> Dictionary:
 	_primary_stats_model=model
 	_primary_stats_result["read_only"]=true
 	_primary_stats_result["unconnected_controls"]=contract.get("unconnected_controls",[])
-	return _primary_stats_result.duplicate(true)
+	return _primary_stats_result
 
 func update_currency_balances(balances: Dictionary) -> Dictionary:
-	var changed: bool=_balances!=balances
-	_balances=balances.duplicate(true)
-	_refresh_wallet(changed)
-	_sync_chrome()
+	var changed: bool=_balances.get("다이아")!=balances.get("다이아")
+	if changed:
+		_balances={"다이아":balances["다이아"]} if balances.has("다이아") else {}
+		_refresh_wallet(false,true)
 	return _wallet_result.duplicate(true)
 
-func _refresh_wallet(changed: bool) -> void:
+func _refresh_wallet(gold_changed: bool, diamonds_changed: bool=false) -> void:
 	if not _has_player_values or not _balances.has("다이아") or not is_instance_valid(_coordinates):return
 	if not _pack.manifest.get("scenes",{}).has(Wallet.MEMBER):return
 	if is_instance_valid(_wallet_scene):
-		if changed:_wallet_result=Wallet.refresh(_wallet_scene,_gold,_balances)
+		var retry: bool=not _wallet_result.get("ok",false)
+		_wallet_result=Wallet.refresh(_wallet_scene,_gold,_balances,gold_changed or retry,diamonds_changed or retry)
 		return
 	if _wallet_mount_attempted:return
 	_wallet_mount_attempted=true
@@ -2040,6 +2057,7 @@ func _refresh_wallet(changed: bool) -> void:
 	_coordinates.add_child(scene)
 	_wallet_scene=scene
 	_wallet_result={"ok":true,"source":Wallet.MEMBER,"source_parent":HEADER,"source_project":1540,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+	_sync_chrome("wallet")
 
 ## The wallet's Btn_Info: the original 재화 정보 window (Gem_All).
 func _wallet_info() -> Dictionary:
@@ -2235,7 +2253,7 @@ func _mount_char_info() -> Dictionary:
 	_coordinates.add_child(scene)
 	_char_scene=scene
 	_set_legacy_vitals_visible(false)
-	_char_result={"ok":true,"source":contract.member,"source_parent":HEADER,"source_project":HEADER_PROJECT,"selected_source_offsets":contract.source_node_offsets.duplicate(),"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
+	_char_result={"ok":true,"source":contract.member,"source_parent":HEADER,"source_project":HEADER_PROJECT,"selected_source_offsets":contract.source_node_offsets.duplicate(),"values":contract.values,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
 	return _char_result
 
 func _fit_source_coordinates() -> void:
@@ -2289,8 +2307,9 @@ func sync_legacy_visibility() -> void:
 		if control!=null:control.visible=not is_instance_valid(_menu_scene)
 	_sync_chrome()
 
-func _sync_chrome() -> void:
-	for record: Dictionary in _legacy_chrome:_apply_legacy_chrome(record,_chrome_owned(str(record.owner)))
+func _sync_chrome(owner: String="") -> void:
+	for record: Dictionary in _legacy_chrome:
+		if owner.is_empty() or record.owner==owner:_apply_legacy_chrome(record,_chrome_owned(str(record.owner)))
 
 func _remember(result: Dictionary) -> Dictionary:
 	last_result=result.duplicate(true)

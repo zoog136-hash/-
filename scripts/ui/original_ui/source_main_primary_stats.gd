@@ -32,20 +32,19 @@ static func build(pack: RefCounted, hud: Object) -> Dictionary:
 	# ancestors only. RD/SP/MR/DR/PDR remain outside this explicit scope.
 	return {"ok":true,"member":MEMBER,"sha256":SHA256,"source_node_offsets":SOURCE_OFFSETS.duplicate(),"bindings":bindings,"values":values,"value_basis":"existing hud.character_state.melee_damage/ac integers","partial_source_scene":true,"complete_screen_contract":false,"read_only":true,"button_actions_connected":false,"unconnected_controls":[{"offset":ATTACK_BUTTON,"field":"original_attack_button_action_and_mode_selection"},{"offset":DEFENSE_BUTTON,"field":"original_defense_button_action_and_mode_selection"}],"unresolved_fields":["original_RD_SP_MR_DR_PDR_selection_contracts"]}
 
-static func refresh(scene: Node2D, hud: Object) -> Dictionary:
+## The complete admitted scope was already checked by build and mount.
+## Touch only changed bindings on that mounted scene, without reading the tree.
+static func refresh(scene: Node2D, values: Dictionary, previous: Dictionary) -> Dictionary:
 	if not is_instance_valid(scene) or scene.get("source_member")!=MEMBER or not scene.has_method("set_bound_text"):return _fail("source_primary_stats_original_scene_required")
 	var pack: Variant=scene.get("source_pack")
 	if not pack is RefCounted:return _fail("source_primary_stats_original_pack_required")
-	var source: Dictionary=_active_source(pack)
-	if not source.get("ok",false):return source
-	var nodes: Variant=scene.get("source_nodes")
-	if not nodes is Dictionary or not nodes.has(MD_TEXT) or not nodes.has(AC_TEXT):return _fail("source_primary_stats_text_not_in_presented_scope")
-	var values: Dictionary=snapshot(hud)
-	if not values.get("ok",false):return values
-	var result: Dictionary=scene.set_bound_text(MD_TEXT,str(values.melee_damage))
-	if not result.get("ok",false):return result
-	result=scene.set_bound_text(AC_TEXT,str(values.ac))
-	if not result.get("ok",false):return result
+	if pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")!=SHA256:return _fail("source_primary_stats_original_identity_mismatch")
+	if previous.get("melee_damage")!=values.melee_damage:
+		var result: Dictionary=scene.set_bound_text(MD_TEXT,str(values.melee_damage))
+		if not result.get("ok",false):return result
+	if previous.get("ac")!=values.ac:
+		var result: Dictionary=scene.set_bound_text(AC_TEXT,str(values.ac))
+		if not result.get("ok",false):return result
 	return {"ok":true,"values":values,"read_only":true,"button_actions_connected":false,"partial_source_scene":true,"complete_screen_contract":false,"game_state_written":false}
 
 static func _active_source(pack: RefCounted) -> Dictionary:

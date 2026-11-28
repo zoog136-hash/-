@@ -728,40 +728,54 @@ func _process_step(delta: float) -> void:
 
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
-	_original_main_player_values=[level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold]
-	# Preserve latest main's HP-only combat refresh (PR #43).
-	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp,"level":level,"gold":gold}
-	character_state.merge(vitals, true)
-	if is_instance_valid(lineage_side_ui):
+	if _player_fields & (PlayerField.HP | PlayerField.MP | PlayerField.LEVEL | PlayerField.GOLD):
+		var changed: Dictionary = {}
+		if _player_fields & PlayerField.HP:
+			changed["hp"] = hp
+			changed["max_hp"] = max_hp
+		if _player_fields & PlayerField.MP:
+			changed["mp"] = mp
+			changed["max_mp"] = max_mp
+		if _player_fields & PlayerField.LEVEL: changed["level"] = level
+		if _player_fields & PlayerField.GOLD: changed["gold"] = gold
+		character_state.merge(changed,true)
+		if is_instance_valid(lineage_inventory_ui):lineage_inventory_ui.character_state.merge(changed,true)
+	if (_player_fields & (PlayerField.HP | PlayerField.MP)) and is_instance_valid(lineage_side_ui):
 		lineage_side_ui.update_vitals(hp,max_hp,mp,max_mp)
-	if is_instance_valid(lineage_inventory_ui):
-		lineage_inventory_ui.character_state.merge(vitals,true)
-		# The lightweight kill refresh must also update the bag's wallet, without
-		# invoking set_character_state and rebuilding its item slots.
-		lineage_inventory_ui.gold_label.text = "아데나  "+lineage_inventory_ui._format_number(gold)
-	if exp_readout != null:
+	if (_player_fields & (PlayerField.LEVEL | PlayerField.EXP)) and exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
-	_refresh_currency_readout()
+	if _player_fields & PlayerField.GOLD:
+		if is_instance_valid(lineage_inventory_ui):
+			lineage_inventory_ui.gold_label.text = "아데나  "+lineage_inventory_ui._format_number(gold)
+		_refresh_currency_readout(true,false)
 	if is_instance_valid(original_main_ui_controller):
-		original_main_ui_status=original_main_ui_controller.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
+		original_main_ui_controller.apply_player_values(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
 
 func update_currency_balances(items: Dictionary) -> void:
+	var diamonds_changed: bool = false
+	var other_coins_changed: bool = false
 	for currency_name: String in ["다이아", "명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
-		currency_balances[currency_name] = maxi(0, int(items.get(currency_name, 0)))
-	_refresh_currency_readout()
-	if is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_currency_balances(currency_balances)
+		var count: int = maxi(0, int(items.get(currency_name, 0)))
+		if currency_balances.get(currency_name)==count:continue
+		currency_balances[currency_name]=count
+		if currency_name=="다이아":diamonds_changed=true
+		else:other_coins_changed=true
+	if diamonds_changed or other_coins_changed:_refresh_currency_readout(diamonds_changed,other_coins_changed)
+	if diamonds_changed and is_instance_valid(original_main_ui_controller):original_main_ui_controller.update_currency_balances(currency_balances)
 
 ## The original HUD wallet's Btn_Info: the original 523 재화 정보 window
 ## (source_main_currency_window) over the existing balances.
 func open_currency_info() -> void:
 	_open_original_feature("currency_info")
 
-func _refresh_currency_readout() -> void:
+func _refresh_currency_readout(refresh_balance: bool, refresh_tooltip: bool) -> void:
 	if currency_readout == null or not is_instance_valid(lineage_inventory_ui):
 		return
-	var funds: String = lineage_inventory_ui._format_number(int(character_state.get("gold", 0)))
-	var diamonds: String = lineage_inventory_ui._format_number(int(currency_balances.get("다이아", 0)))
-	currency_readout.text = "아데나 %s · 다이아 %s" % [funds, diamonds]
+	if refresh_balance:
+		var funds: String = lineage_inventory_ui._format_number(int(character_state.get("gold", 0)))
+		var diamonds: String = lineage_inventory_ui._format_number(int(currency_balances.get("다이아", 0)))
+		currency_readout.text = "아데나 %s · 다이아 %s" % [funds, diamonds]
+	if not refresh_tooltip:return
 	currency_readout.tooltip_text = "재화 보유량"
 	for currency_name: String in ["명예 코인", "변신 제작 코인", "마법인형 제작 코인", "성물 제작 코인"]:
 		currency_readout.tooltip_text += "\n%s  %s" % [currency_name, lineage_inventory_ui._format_number(int(currency_balances.get(currency_name, 0)))]
@@ -4300,7 +4314,6 @@ var _original_npc_dialogue_owner: WeakRef
 var _original_system_message_priority: int=LOCAL_SYSTEM_MESSAGE_PRIORITY_ESTIMATE
 var _original_system_message_routing: Dictionary={"kind":"TWILIGHT_ESTIMATE","field":"local_show_message_priority","value":2,"original_rule_confirmed":false}
 var original_main_ui_status: Dictionary={}
-var _original_main_player_values: Array=[]
 var _original_main_map_value: String=""
 var _original_main_has_map_name: bool=false
 var _original_world_map_inputs: Dictionary={}
@@ -4557,8 +4570,8 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		return configured
 	candidate.update_currency_balances(currency_balances)
 	if _original_main_has_map_name:candidate.update_map_name(_original_main_map_value)
-	if not _original_main_player_values.is_empty():
-		var mounted: Dictionary=candidate.callv("update_player",_original_main_player_values)
+	if not _player_values.is_empty():
+		var mounted: Dictionary=candidate.callv("update_player",_player_values)
 		if not mounted.get("ok",false):
 			candidate.release(true)
 			candidate.queue_free()
@@ -4600,7 +4613,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 		if owner is Control and owner.get("source_dialogue_model") is Dictionary:_on_source_npc_dialogue_resolved(owner.get("source_dialogue_model"),owner)
 	if active_section=="enhance" and is_instance_valid(enhancement_forge) and enhancement_forge.is_visible_in_tree():_bind_original_enhance_action(enhancement_forge)
 	if active_section=="quests" and is_instance_valid(quest_view) and quest_view.is_visible_in_tree():original_main_ui_status["quest_controls"]=original_main_ui_controller.bind_quest_controls(quest_view)
-	return {"ok":true,"main_ui_bound":true,"player_values_pending":_original_main_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
+	return {"ok":true,"main_ui_bound":true,"player_values_pending":_player_values.is_empty(),"world_map_registration":map_registration,"npc_portrait_registration":npc_portrait_registration,"system_message":system_message,"complete_screen_contract":false,"game_state_written":false}
 
 func bind_original_ui_runtime(runtime: Object, source_pack: RefCounted) -> Dictionary:
 	if not is_instance_valid(original_ui_runtime_presenter):
