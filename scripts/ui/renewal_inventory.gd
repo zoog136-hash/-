@@ -1,5 +1,6 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
 const CATALOG_STACK = preload("res://scripts/loot/current523_catalog_stack.gd")
+const ENHANCE_STOCK = preload("res://scripts/crafting/patch523_enhance_stock.gd")
 const EMPTY_ITEM_ROWS: Array = []
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
@@ -301,6 +302,9 @@ func item_action_kind(reference: String) -> String:
 	if uid.is_empty() and is_instance_valid(host) and host.has_method("source_symbol_reward_record"):
 		if record.get("type") == "문양 재료" and not host.growth.source523.plain_recharge(host,record).is_empty(): return "사용"
 		if not CATALOG_STACK.action_record(host,record).is_empty() and CATALOG_STACK.holds_plain(host,reference): return "사용"
+	elif not uid.is_empty() and is_instance_valid(host) and host.has_method("source_item_record"):
+		var entry: Dictionary=host.item_instances.get(uid,{})
+		if not ENHANCE_STOCK.legacy_unit(host,entry,_base_item_name(reference)).is_empty(): return "사용"
 	return action_for_record(record,_base_item_name(reference),host)
 
 ## The current bag button on a resolved, unworn record (both the stock and
