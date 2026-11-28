@@ -33,6 +33,7 @@ func set_offset(world: HuntWorld, actor: TwilightMonster, offset: Vector2i) -> v
 	actor.global_position = world.player.global_position + Vector2(offset * world.tile_size)
 
 func approaching_target(world: HuntWorld) -> void:
+	world.in_weapon_range = false
 	var incumbent: TwilightMonster = add_actor(world,Vector2i(4,0))
 	var blocked: TwilightMonster = add_actor(world,Vector2i(1,0))
 	var approaching: TwilightMonster = add_actor(world,Vector2i(6,0))
@@ -51,6 +52,31 @@ func approaching_target(world: HuntWorld) -> void:
 	world.auto_target_failed_paths.clear()
 	world.auto_target_next_search_ms = 0
 	world._auto_target_refresh_ms = 0
+	world.in_weapon_range = true
+
+func attackable_without_route(world: HuntWorld) -> void:
+	var actor: TwilightMonster = add_actor(world, Vector2i(1, 0))
+	var key: String = world._auto_target_failure_key(actor)
+	world.auto_target_failed_paths[key] = Time.get_ticks_msec() + 60000
+	world.blocked_positions[actor.global_position] = true
+	var calls: int = world.selection_path_calls
+	world.visible_target = false
+	world._run_auto_hunt(0)
+	check(world.auto_target == null and world.selection_path_calls == calls,
+		"a backed-off actor behind an obstacle still cannot be selected for an attack")
+	world.visible_target = true
+	world._run_auto_hunt(250)
+	check(world.auto_target == actor and world.last_test_attack == actor and world.selection_path_calls == calls,
+		"an actor already in weapon range and sight can be attacked during path backoff without routing")
+	check(world.auto_target_failed_paths.has(key), "an attack does not certify that the failed walking route is now passable")
+	world.blocked_positions.clear()
+	actor.free()
+	world._clear_auto_target_search()
+	world.auto_target = null
+	world.selected_monster = null
+	world.auto_target_failed_paths.clear()
+	world.auto_target_next_search_ms = 0
+	world._auto_target_refresh_ms = 0
 
 func run() -> void:
 	var world := HuntWorld.new()
@@ -61,6 +87,7 @@ func run() -> void:
 	world.player.set_physics_process(false)
 	world.player.global_position = Vector2(528, 528)
 	approaching_target(world)
+	attackable_without_route(world)
 	world.selection_path_calls = 0
 
 	var out_of_range: TwilightMonster = add_actor(world, Vector2i(11, 0))
@@ -81,8 +108,8 @@ func run() -> void:
 		"refresh does not interrupt an in-flight attack")
 	world.pending_attack.clear()
 	world._run_auto_hunt(3011)
-	check(world.auto_target == near and world.last_test_attack == near and world.selection_path_calls == calls + 1,
-		"first eligible tick after 3 seconds adopts closer reachable target")
+	check(world.auto_target == near and world.last_test_attack == near and world.selection_path_calls == calls,
+		"first eligible tick after 3 seconds adopts a closer attackable target without requesting a route")
 
 	var blocked: TwilightMonster = add_actor(world, Vector2i(1, 0))
 	world.blocked_positions[blocked.global_position] = true

@@ -3806,7 +3806,8 @@ func _can_keep_stable_auto_route(target: TwilightMonster) -> bool:
 	if epoch==0 or field_map.get_instance_id()!=_stable_auto_route.field or epoch!=_stable_auto_route.epoch or combat_generation!=_stable_auto_route.combat: return false
 	if target.get_instance_id()!=_stable_auto_route.actor or target.life_id!=_stable_auto_route.life or target.global_position!=_stable_auto_route.goal: return false
 	if player.path_index<int(_stable_auto_route.index) or player.click_path!=_stable_auto_route.points: return false
-	if not field_map.line_clear(player.global_position,player.click_path[player.path_index]): return false
+	var waypoint: Vector2 = player.click_path[player.path_index]
+	if not field_map.line_clear(player.global_position, waypoint) or not player.can_resume_pursuit(waypoint): return false
 	_stable_auto_route["index"]=player.path_index
 	return true
 
@@ -3835,7 +3836,7 @@ func _auto_pursuit_search(target: TwilightMonster) -> PackedVector2Array:
 	if auto_stuck_time <= 0.0 and player.path_index < player.click_path.size() and not player.manual_navigation:
 		var via: Vector2 = player.click_path[player.path_index]
 		if via.is_finite() and via.distance_to(target.global_position) > 1.0 and _is_walkable_world(via) \
-			and (field_map == null or field_map.line_clear(player.global_position, via)):
+			and (field_map == null or (field_map.line_clear(player.global_position, via) and player.can_resume_pursuit(via))):
 			var rest: PackedVector2Array = find_world_path(via, target.global_position)
 			if not rest.is_empty():
 				if rest[0].distance_to(via) > 0.5: rest.insert(0, via)
@@ -3976,6 +3977,12 @@ func _acquire_auto_target(current: TwilightMonster = null) -> PackedVector2Array
 		# was built. Only try routes to candidates that are closer now.
 		if origin.distance_squared_to(monster.global_position) >= incumbent_distance_squared:
 			continue
+		# M85 can stop before routing when its initial position check passes.
+		# AUTO uses the live weapon and sight gates used by the actual attack.
+		if _target_in_current_weapon_range(monster) and _has_line_of_sight_world(origin, monster.global_position):
+			_clear_auto_target_search()
+			auto_target = monster
+			return PackedVector2Array()
 		var key: String = _auto_target_failure_key(monster)
 		if int(auto_target_failed_paths.get(key, 0)) > now: continue
 		var started: int = FRAME_HITCH.now()

@@ -99,10 +99,22 @@ func check_world_budget(f: Fixture) -> Dictionary:
 	world._acquire_auto_target()
 	check(not world._auto_source_search_work.is_empty(),"Main has pending work for the old target cell")
 	await process_frame
-	target.global_position = f.cell_to_world(Vector2i(60,12))
+	target.global_position = f.cell_to_world(Vector2i(61,12))
 	result = world._acquire_auto_target()
 	check(result == PackedVector2Array([target.global_position]) and world.auto_target == target and world.auto_target_failed_paths.is_empty(),
 		"Main changes to the target's new cell without publishing the old route")
+	# If the same actor comes into attack range, no walking route is needed.
+	await process_frame
+	target.global_position = f.cell_to_world(Vector2i(68,12))
+	world._acquire_auto_target()
+	check(not world._auto_source_search_work.is_empty(), "a new pursuit search has pending work")
+	await process_frame
+	target.global_position = f.cell_to_world(Vector2i(60,12))
+	var route_checks: int = world.auto_target_path_checks
+	result = world._acquire_auto_target()
+	check(result.is_empty() and world.auto_target == target and world._auto_source_search_work.is_empty() \
+		and world.auto_target_failed_paths.is_empty() and world.auto_target_path_checks == route_checks,
+		"an actor entering weapon range and sight releases pending route work without starting another search")
 	world.player.free()
 	world.monsters_root.free()
 	world.free()
