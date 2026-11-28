@@ -18,6 +18,9 @@ class Host extends Node:
 class ConversionProbe extends "res://scripts/skills/spell_group_conversion.gd":
 	var source_row: Dictionary = {}
 	var source_reads: int = 0
+	var source_available: bool = true
+	func _bound_source_generation() -> int:
+		return ROWS.cache_generation() if source_available else -1
 	func _read_verified_spell_row(id: int) -> Dictionary:
 		source_reads += 1
 		return source_row.duplicate(true) if id == int(source_row.get("ID", 0)) else {}
@@ -66,7 +69,7 @@ func run() -> void:
 
 	check(conversion.source_id(record) == 0, "missing document rejects")
 	var rejected: Variant = conversion._bound_memo.get("s1")
-	check(rejected is Array and conversion.source_id(record) == 0 and is_same(conversion._bound_memo.get("s1"),rejected),
+	check(rejected is Dictionary and conversion.source_id(record) == 0 and is_same(conversion._bound_memo.get("s1"),rejected),
 		"identical invalid document reuses its rejection")
 	profile.row_json = document
 	check(conversion.source_id(record) == 77 and conversion.source_reads == 1, "adding a valid document in place admits it")
@@ -82,6 +85,8 @@ func run() -> void:
 	check(conversion.source_id(record) == 77 and conversion.source_reads == valid_reads, "restored nested bonus is admitted without a stale refusal")
 	profile.target_kind.ID = 2
 	check(conversion.source_id(record) == 0, "in-place target-kind change rejects")
+	profile.target_kind.ID = {}
+	check(conversion.source_id(record) == 0, "invalid target-kind type rejects")
 	profile.target_kind.ID = 1
 	profile.row.Name = "changed"
 	check(conversion.source_id(record) == 0, "in-place row body change rejects")
@@ -115,6 +120,13 @@ func run() -> void:
 	replacement.revision = adapter.revision
 	catalog.source523 = replacement
 	check(conversion.source_id(record) == 77 and conversion.source_reads == valid_reads + 3, "a different adapter does not retain the previous cache")
+	conversion.source_available = false
+	check(conversion.source_id(record) == 0 and conversion.source_reads == valid_reads + 3, "unavailable archive rejects a previously verified document")
+	conversion.source_available = true
+	conversion.source_row = {}
+	check(conversion.source_id(record) == 0 and conversion.source_reads == valid_reads + 4, "unavailable row is not verified")
+	conversion.source_row = source_row
+	check(conversion.source_id(record) == 77 and conversion.source_reads == valid_reads + 5, "newly readable row has no stale rejection")
 	host.queue_free()
 	print("SPELL_GROUP_BOUND_MEMO_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

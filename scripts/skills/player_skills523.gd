@@ -1064,9 +1064,9 @@ func _profile_payload_problem(id: String, profile: Dictionary, row: Dictionary) 
 			if not child_ids.has(child_id) or seen.has(child_id): return "unexpected component identity"
 			seen[child_id] = true
 	if profile.has("execution_graph") and not valid_execution(id,profile): return "invalid reviewed execution graph"
-	if not profile.get("target_kind") is Dictionary or int(profile.target_kind.get("ID", -1)) != int(row.TargetKindID):
+	if not profile.get("target_kind") is Dictionary or not _source_integer(profile.target_kind.get("ID")) or profile.target_kind.ID != row.TargetKindID:
 		return "target kind mismatch"
-	if not profile.get("targeting_type") is Dictionary or int(profile.targeting_type.get("ID", -1)) != int(row.TargettingTypeID):
+	if not profile.get("targeting_type") is Dictionary or not _source_integer(profile.targeting_type.get("ID")) or profile.targeting_type.ID != row.TargettingTypeID:
 		return "targeting type mismatch"
 	return ""
 

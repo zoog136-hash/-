@@ -241,26 +241,32 @@ func _accepted_bound_source_id(record:Dictionary)->int:
 func _memoized_spell_row(canonical_id:String,adapter:Object,binding:Dictionary,row_json:Variant,id:int)->Dictionary:
  var adapter_id:int=adapter.get_instance_id()
  var revision:int=adapter.get('revision')
- var generation:int=CommonSource.cache_generation()
+ var generation:int=_bound_source_generation()
  if _bound_adapter_id!=adapter_id or _bound_revision!=revision or _bound_generation!=generation:
   _bound_memo.clear()
-  _bound_adapter_id=adapter_id;_bound_revision=revision;_bound_generation=generation
+  _bound_adapter_id=adapter_id
+  _bound_revision=revision
+  _bound_generation=generation
+ if generation<0:return {}
  # Non-string representations all fail decoding, including StringName.
  var document:Variant=row_json if row_json is String else null
- var memo:Variant=_bound_memo.get(canonical_id)
- if memo is Array and memo[0]==id and memo[1]==binding.row_sha256 and memo[2]==document:return memo[3]
+ var memo:Dictionary=_bound_memo.get(canonical_id,{})
+ if not memo.is_empty() and memo.id==id and memo.binding_sha==binding.row_sha256 and memo.document==document:return memo.row
  var decoded:Variant=adapter._decode_profile_row(canonical_id,document,binding)
  var original:Dictionary={}
  if decoded is Dictionary:
   original=_read_verified_spell_row(id)
-  # A missing original archive may become available on a later call.
+  # An unavailable source row can become available on a later call.
   if original.is_empty() or original!=decoded:return {}
- _bound_memo[canonical_id]=[id,binding.row_sha256,document,original]
+ _bound_memo[canonical_id]={'id':id,'binding_sha':binding.row_sha256,'document':document,'row':original}
  return original
 
+func _bound_source_generation()->int:
+ # identity() also checks for a changed or explicitly removed archive path.
+ if CommonSource.identity().get('source_sha256')!=SOURCE_SHA:return -1
+ return CommonSource.cache_generation()
+
 func _read_verified_spell_row(id:int)->Dictionary:
- var identity:Dictionary=CommonSource.identity()
- if identity.get('source_sha256')!=SOURCE_SHA:return {}
  var original:Dictionary=CommonSource.row('SpellClass',id)
  if original.is_empty() or original.get('TestSpell') is not bool or original.TestSpell or not CommonSource.declared_exclusion('SpellClass',original).is_empty():return {}
  return original
@@ -285,7 +291,9 @@ func candidates()->Array:
   result.append(copy)
  return result
 func quote(group:int,item:int=26)->Dictionary:
- if excluded_input_items.has(item):return {"ok":false,"reason":"원문 시험·더미 제외 결제 재료는 연결하지 않습니다."}
+ if excluded_input_items.has(item):
+  var reason: String = '원문 시험·더미 제외 결제 재료는 연결하지 않습니다.'
+  return {'error':reason,'ok':false,'reason':reason}
  if not problem.is_empty():return {'error':problem}
  if save_blocked:return {'error':'손상된 계열 저장을 보호 중입니다.'}
  if policy.payment_mode=='adena_only' and item!=26:return {'error':'현재 TWILIGHT 설정은 아데나 결제만 허용합니다.'}
