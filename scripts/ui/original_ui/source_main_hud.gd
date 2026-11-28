@@ -303,6 +303,12 @@ func _input(event: InputEvent) -> void:
 		_native_buttons.route(event,event.position,modal)
 		get_viewport().set_input_as_handled()
 		return
+	if dissolve_confirm_is_open():
+		var modal: Array=[]
+		_collect_native_buttons(_dissolve_popup.get("_scene"),modal)
+		_native_buttons.route(event,event.position,modal)
+		get_viewport().set_input_as_handled()
+		return
 	if clan_window_is_open():
 		# The name field may still have focus when the player presses Create.
 		# Only this modal's buttons may bypass that editor's keyboard guard.
@@ -1013,6 +1019,12 @@ func inventory_gesture_bounds() -> Control:
 func inventory_select(reference: String) -> Dictionary:
 	return _inventory_view.select(reference) if inventory_is_open() else _fail("source_inventory_not_open")
 
+func inventory_move_pending() -> bool:
+	return inventory_is_open() and _inventory_view.move_pending()
+
+func cancel_inventory_move() -> void:
+	if inventory_move_pending():_inventory_view.cancel_move()
+
 func inventory_refresh_actions() -> Dictionary:
 	return _inventory_view.refresh_actions() if inventory_is_open() else _fail("source_inventory_not_open")
 
@@ -1642,6 +1654,11 @@ func try_open_enchant_window(scroll: String, candidates: Array, blessing: bool=f
 	if _enchant_window.is_open():return _enchant_window.update(scroll,candidates,blessing)
 	return _enchant_window.open(_coordinates,scroll,candidates,blessing)
 
+func try_open_bag_item_enhancement(reference: String) -> Dictionary:
+	if not _ensure_enchant_window():return _window_problem("enchant_window")
+	_cancel_native_buttons()
+	return _enchant_window.open(_coordinates,"",[],false,reference)
+
 func try_open_smelt_window(offer:Dictionary)->Dictionary:
 	if not _ensure_enchant_window():return _window_problem("enchant_window")
 	_cancel_native_buttons()
@@ -1667,14 +1684,17 @@ func close_enchant_window() -> void:
 const DissolvePopup=preload("res://scripts/ui/original_ui/source_main_dissolve_popup.gd")
 var _dissolve_popup: RefCounted
 
-## Opens the original confirmation for `uids`; `on_finished` receives the
-## existing dissolve transaction's result after 확인.
-func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
+func dissolve_confirm_available() -> bool:
 	if _dissolve_popup==null and _pack!=null:
 		var popup=DissolvePopup.new()
 		_window_problems["dissolve_popup"]=popup.configure(_pack, _hud.get_ref() if _hud!=null else null)
 		if _window_problems["dissolve_popup"].get("ok",false):_dissolve_popup=popup
-	if _dissolve_popup==null or not is_instance_valid(_coordinates):return _window_problem("dissolve_popup")
+	return _dissolve_popup!=null and is_instance_valid(_coordinates)
+
+## Opens the original confirmation for `uids`; `on_finished` receives the
+## existing dissolve transaction's result after 확인.
+func try_open_dissolve_confirm(world: Node, uids: Array, on_finished: Callable=Callable()) -> Dictionary:
+	if not dissolve_confirm_available():return _window_problem("dissolve_popup")
 	for connection: Dictionary in _dissolve_popup.finished.get_connections():_dissolve_popup.finished.disconnect(connection.callable)
 	if on_finished.is_valid():_dissolve_popup.finished.connect(on_finished,CONNECT_ONE_SHOT)
 	_cancel_native_buttons()

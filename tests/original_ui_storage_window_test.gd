@@ -36,9 +36,15 @@ class FakeWorld extends Node:
 class FakeHud extends Node:
 	signal warehouse_transfer_requested(item: String, amount: int, direction: String, id: String)
 	var asked: Array=[]
-	func confirm_action(title: String, _body: String, _action: String, callback: Callable, _maximum: int=0) -> void:
+	var approve: Callable
+	var has_original_review: bool=true
+	func confirm_source_action(title: String, _body: String, _action: String, callback: Callable, original_only: bool=false) -> Control:
+		if not original_only or not has_original_review:return null
 		asked.append(title)
-		callback.call(0)
+		approve=callback
+		var dialog:=Control.new()
+		add_child(dialog)
+		return dialog
 	func show_message(_text: String) -> void:
 		pass
 
@@ -131,8 +137,13 @@ func _batch() -> void:
 	var window=WINDOW.new()
 	window._hud=weakref(hud)
 	window._rows={"bag":[{"name":"물약","count":150,"instance_id":""},{"name":"장검","count":1,"instance_id":"e1"},{"name":"주문서","count":2,"instance_id":""},{"name":"물약2","count":1,"instance_id":""}],"store":[]}
+	hud.has_original_review=false
+	check(window._batch_requested("bag").get("code")=="source_storage_batch_review_unavailable" and hud.asked.is_empty() and world.warehouse.stacks.is_empty(),"the missing native review makes no transfer")
+	hud.has_original_review=true
 	var asked: Dictionary=window._batch_requested("bag")
-	check(asked.get("asked","")=="모두 맡기기" and hud.asked==["모두 맡기기"],"모두 맡기기 asks once")
+	check(asked.get("asked","")=="모두 맡기기" and hud.asked==["모두 맡기기"] and world.warehouse.stacks.is_empty(),"모두 맡기기 asks once before making a transfer")
+	hud.approve.call(1)
+	hud.approve=Callable()
 	check(int(world.inventory["물약"])==0 and int(world.warehouse.stacks["물약"])==150 and world.warehouse.instances.has("e1"),"every row moves, a stack of 150 in moves of up to 99")
 	check(int(world.inventory["주문서"])==2,"the batch stops at the first move the world refuses")
 	check(window._batch_requested("store").get("empty",false),"모두 찾기 with an empty tab moves nothing")
@@ -144,7 +155,7 @@ func _batch() -> void:
 
 func _sources() -> void:
 	var hud_text: String=FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud_text.contains("try_open_storage_window(screen)") and hud_text.contains("_report_original_fallback(\"창고\",native)"),"창고 opens the original window first and reports a fallback")
+	check(hud_text.contains("try_open_storage_window(screen)") and hud_text.contains("_hold_original_inventory_window(\"창고\",native)"),"the original warehouse opens first and a rejected selected pack holds the old screen")
 	check(hud_text.contains("close_storage_window()") and hud_text.contains("refresh_storage_window()"),"closing, ESC and transfers reach the window")
 	var main_text: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
 	for method: String in ["func try_open_storage_window","func storage_window_is_open","func refresh_storage_window"," or storage_window_is_open() or "]:

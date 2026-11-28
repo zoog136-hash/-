@@ -20,6 +20,7 @@ var _hud: WeakRef
 var _world: WeakRef
 var _scene: Node2D
 var _uids: Array=[]
+var _shown_quote: Dictionary={}
 var last_result: Dictionary={}
 
 func configure(pack: RefCounted, hud: Node=null) -> Dictionary:
@@ -37,8 +38,6 @@ func open(parent: Node, world: Node, uids: Array) -> Dictionary:
 	if not is_instance_valid(parent) or not is_instance_valid(world):return _fail("source_dissolve_popup_host_unavailable")
 	var quote: Dictionary=SERVICE.dissolve_quote(world,uids)
 	if not quote.get("ok",false):return {"ok":false,"handled":false,"code":"source_dissolve_quote_refused","reason":str(quote.get("reason",""))}
-	_world=weakref(world)
-	_uids=uids.duplicate()
 	# The record name may carry a " · 원본#<id>" disambiguation suffix.
 	var name: String=str(SERVICE.D.definition_id(str(int(quote.output_item_class_id))).get("native_record",{}).get("name","축복의 가루")).get_slice(" · 원본#",0)
 	var spec: Dictionary={
@@ -66,6 +65,9 @@ func open(parent: Node, world: Node, uids: Array) -> Dictionary:
 		var info: Dictionary=SourceImages.describe_item_class(int(quote.output_item_class_id),name)
 		picture=NativeIcons.show_item(located.player, located.offset, info, _hud.get_ref() if _hud!=null else null)
 	close()
+	_world=weakref(world)
+	_uids=uids.duplicate()
+	_shown_quote=quote.duplicate(true)
 	# A full-screen layer under the popup keeps the field from taking taps.
 	var blocker:=Control.new()
 	blocker.name="DissolveModalArea"
@@ -84,14 +86,18 @@ func open(parent: Node, world: Node, uids: Array) -> Dictionary:
 func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null
+	_world=null
+	_uids.clear()
+	_shown_quote.clear()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
 
 func _confirm() -> Dictionary:
+	if not is_open():return _fail("source_dissolve_popup_closed")
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_dissolve_popup_host_unavailable")
-	var result: Dictionary=SERVICE.dissolve(world,_uids)
+	var result: Dictionary=SERVICE.dissolve(world,_uids,_shown_quote)
 	close()
 	finished.emit(result)
 	closed.emit()

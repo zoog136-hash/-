@@ -60,9 +60,10 @@ class Host extends Node:
 
 ## Registration with a fixture proof (the real proof needs original records).
 class TestRuntime extends "res://scripts/collections/item_book523_runtime.gd":
-	func _prove(option: Dictionary) -> Dictionary:
+	func _prove(option: Dictionary, expected_uid: String = "") -> Dictionary:
 		var found: Array = []
 		for uid: Variant in world.item_instances:
+			if not expected_uid.is_empty() and uid != expected_uid: continue
 			var entry: Dictionary = world.item_instances[uid]
 			if int(entry.record.source_item_class_id) == int(option.item_class_id) and int(entry.level) == int(option.enchant) and int(entry.record.get("source_bless_raw", 1)) == int(option.bless):
 				found.append({"uid":str(uid),"name":str(entry.name)})
@@ -168,6 +169,13 @@ func _runtime() -> void:
 	check(not refused.ok and refused.code == "missing" and str(refused.message).contains("+5 마법 방어 투구"), "missing item: the wanted original item is named")
 	var offer: Dictionary = book.quote("100", "1001")
 	check(offer.ok and offer.kind == "equipment" and int(offer.option.bless) == 2, "the blessed alternative is quoted")
+	var focus: Dictionary = {"item_class_id":501,"uid":"9"}
+	check(book.rows("Btn_All",501,"9")[0].cards[0].possible and book.rows("Btn_All",501,"missing")[0].cards[0].possible==false,"only the held focused reference lights the matching slot")
+	check(not book.quote("100","1001",{"item_class_id":501,"uid":"missing"}).ok,"a different physical instance cannot fill a focused registration")
+	focus["offer"] = book.quote("100","1001",focus)
+	host.item_instances["9"].record.source_bless_raw=1
+	check(book.execute("100","1001",int(offer.revision),focus).code=="stale" and host.saves.is_empty(),"a changed alternative of the same physical item keeps the original offer unspent")
+	host.item_instances["9"].record.source_bless_raw=2
 	host.fail_save = true
 	var failed: Dictionary = book.execute("100", "1001", int(offer.revision))
 	check(not failed.ok and failed.code == "save" and host.item_instances.has("9") and book.state.registered.is_empty(), "a failed save changes nothing")
@@ -291,7 +299,7 @@ func _wiring() -> void:
 	var world: String = FileAccess.get_file_as_string("res://scripts/world.gd")
 	check(world.contains("ITEM_BOOK523.SAVE_KEY: item_book523.export_state(),") and world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))") and world.contains("DUNGEON_EXTRAS523.SAVE_KEY,ITEM_BOOK523.SAVE_KEY]"), "world saves, loads and admits the new save key")
 	var hud: String = FileAccess.get_file_as_string("res://scripts/ui/renewal_hud.gd")
-	check(hud.contains("if _open_original_feature(\"item_book\"):return\n\topen_legacy_equipment_collections()"), "장비 컬렉션 opens the original window, else the TWILIGHT view")
+	check(hud.contains("if _open_original_feature(\"item_book\"):return\n\tif _hold_original_inventory_window(\"아이템 컬렉션\",") and hud.contains("open_legacy_equipment_collections()"), "장비 컬렉션 requires its selected original pack and retains the unconfigured offline route")
 	check(world.contains("item_book523.import_state(data.get(ITEM_BOOK523.SAVE_KEY))\n\t# Original 아이템 컬렉션 effects join the collection stats (no double count).\n\tequipment_collections.refresh_item_book_totals()"), "a load recounts the collection stats")
 
 ## Real archive only: the baked collection rows are the rows a fresh walk of

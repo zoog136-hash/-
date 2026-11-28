@@ -57,6 +57,8 @@ func open_storage(parent: Node, item_name: String, item_class_id: int, maximum: 
 
 func _open(parent: Node, item_name: String, item_class_id: int, maximum: int, on_confirm: Callable, operation: String) -> Dictionary:
 	if not is_instance_valid(parent) or (item_name.is_empty() and operation!="quantity") or maximum<1:return {"ok":false,"handled":false,"code":"source_drop_popup_input_invalid"}
+	if _pack==null or (operation!="quantity" and not _pack.manifest.get("scenes",{}).has(BOX)):
+		return {"ok":false,"handled":false,"code":"source_drop_popup_member_missing","member":BOX}
 	_parent=parent
 	_item_name=item_name
 	_item_class_id=item_class_id
@@ -172,7 +174,13 @@ func _keypad_done() -> Dictionary:
 		close()
 		if next.is_valid(): next.call(chosen)
 		return {"ok":true,"count":chosen}
-	return _open_box()
+	var shown: Dictionary=_open_box()
+	if not shown.get("handled",false):
+		close()
+		var hud: Node=_hud.get_ref() if _hud!=null else null
+		if hud!=null and hud.has_method("_report_original_window_unavailable"):
+			hud._report_original_window_unavailable("아이템 확인",shown)
+	return shown
 
 func _confirm() -> Dictionary:
 	if stage!="confirm" or not is_open():return {"ok":false,"code":"inventory_confirmation_not_open"}

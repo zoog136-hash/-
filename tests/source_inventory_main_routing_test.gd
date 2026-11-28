@@ -69,8 +69,8 @@ func _run() -> void:
 	fake.accepted=false
 	hud.toggle_inventory()
 	await process_frame
-	check(not fake.legacy_was_visible and not fake.opened and bag.inventory_panel.is_visible_in_tree() and hud.workspace.visible,"native rejection opens the existing fallback after admission fails")
-	check(bag.slot_visual_updates>visuals,"fallback still binds and shows current slots")
+	check(not fake.legacy_was_visible and not fake.opened and not bag.inventory_panel.is_visible_in_tree() and not hud.workspace.visible,"native rejection leaves both inventory presentations closed")
+	check(bag.slot_visual_updates==visuals,"native rejection skips homemade slot rendering")
 	hud._close_workspace()
 	hud.original_main_ui_controller=actual
 	world.queue_free()

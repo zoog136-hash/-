@@ -31,6 +31,16 @@ func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dict
 	if key.is_empty() and chain.is_empty():
 		duplicate_paths.clear()
 		inert_buttons.clear()
+	# Only rules with the node's final path component can match it. Keep
+	# insertion order within that component, including overlapping rules.
+	var rules: Dictionary={}
+	for pattern: String in spec:
+		var leaf: String=pattern.substr(pattern.rfind("/")+1)
+		if not rules.has(leaf):rules[leaf]=[]
+		rules[leaf].append(["/"+pattern,spec[pattern]])
+	return _bind_indexed(member,key,chain,rules,out,reads)
+
+func _bind_indexed(member: String, key: String, chain: Array, rules: Dictionary, out: Dictionary, reads: Dictionary) -> Dictionary:
 	var tree: Dictionary=StageReads.node_tree(pack,member,reads)
 	var scope: Array[int]=[]
 	var bindings: Dictionary={}
@@ -39,18 +49,21 @@ func bind(member: String, key: String, chain: Array, spec: Dictionary, out: Dict
 	if member_scopes.has(member):
 		for offset: int in member_scopes[member]:roots.append(Scene._node_at_offset(tree,offset))
 	else:roots=tree.get("children",[])
-	for node: Dictionary in roots:_walk(node,member,key,chain,spec,scope,bindings,external,out,reads)
+	for node: Dictionary in roots:_walk(node,member,key,chain,rules,scope,bindings,external,out,reads)
 	return {"scope":scope,"bindings":bindings}
 
-func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, spec: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, reads: Dictionary) -> void:
+func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, rules: Dictionary, scope: Array[int], bindings: Dictionary, external: Array, out: Dictionary, reads: Dictionary) -> void:
 	if node.is_empty():return
 	var options: Dictionary=node.get("options",{})
 	var widget: Dictionary=options.get("widgetOptions",options.get("nodeOptions",options))
 	var offset: int=int(node.get("_offset",-1))
-	var key: String=parent_key+"/"+str(widget.get("name",""))
+	var name: String=str(widget.get("name",""))
+	var key: String=parent_key+"/"+name
 	var kind: String=str(node.get("classname",""))
-	for pattern: String in spec:
-		if key.ends_with("/"+pattern) and bool(spec[pattern].get("exclude",false)):return
+	var candidates: Variant=rules.get(name.substr(name.rfind("/")+1) if "/" in name else name)
+	if candidates!=null:
+		for rule: Array in candidates:
+			if key.ends_with(rule[0]) and bool(rule[1].get("exclude",false)):return
 	scope.append(offset)
 	var binding: Dictionary={}
 	match kind:
@@ -59,7 +72,7 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 			if not child_member.begins_with("UI/"):child_member="UI/"+child_member
 			var next_chain: Array=chain.duplicate()
 			next_chain.append(offset)
-			var child: Dictionary=bind(child_member,key,next_chain,spec,out,reads)
+			var child: Dictionary=_bind_indexed(child_member,key,next_chain,rules,out,reads)
 			binding={"role":"project","source_node_offsets":child.scope,"bindings":child.bindings}
 		"Button":binding={"role":"button","activate":Callable(self,"_ignore")}
 		"CheckBox":binding={"role":"checkbox","displaystate":false}
@@ -76,8 +89,9 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 		"LoadingBar":binding={"role":"source_percent","percent":0.0}
 	if offset in external and kind=="Sprite":binding={"role":"source_asset_slot","visible":false}
 	elif bool(widget.get("touchEnabled",false)) and not binding.has("role") and kind!="ProjectNode":binding["role"]="consume"
-	for pattern: String in spec:
-		if key.ends_with("/"+pattern):binding.merge(spec[pattern],true)
+	if candidates!=null:
+		for rule: Array in candidates:
+			if key.ends_with(rule[0]):binding.merge(rule[1],true)
 	if kind=="Button" and binding.get("activate")==Callable(self,"_ignore"):inert_buttons[key]=str(widget.get("callBackName",""))
 	if member=="UI/CommonUi/Common_Slot.csb" and kind=="Button":
 		var handler: Callable=binding.get("activate",Callable())
@@ -89,7 +103,7 @@ func _walk(node: Dictionary, member: String, parent_key: String, chain: Array, s
 		(duplicate_paths[key] as Array).append(entry)
 	out[key]=entry
 	if kind=="ProjectNode":return
-	for child: Dictionary in node.get("children",[]):_walk(child,member,key,chain,spec,scope,bindings,external,out,reads)
+	for child: Dictionary in node.get("children",[]):_walk(child,member,key,chain,rules,scope,bindings,external,out,reads)
 
 ## The player owning `suffix` and the node offset in it.
 static func locate(root: Node2D, out: Dictionary, suffix: String) -> Dictionary:
@@ -151,16 +165,16 @@ func scene_of(member: String, spec: Dictionary, out: Dictionary, reads: Dictiona
 	return {"ok":true,"scene":scene}
 
 ## The first child panel of a row scene: {size, position, anchor}.
-func row_panel(member: String) -> Dictionary:
-	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
+func row_panel(member: String, reads: Dictionary={}) -> Dictionary:
+	var tree: Dictionary=StageReads.node_tree(pack,member,reads)
 	var panel: Dictionary=(tree.get("children",[]) as Array)[0] if not (tree.get("children",[]) as Array).is_empty() else {}
 	var widget: Dictionary=panel.get("options",{}).get("widgetOptions",{})
 	return {"size":widget.get("size",[0,0]),"position":widget.get("position",[0,0]),"anchor":widget.get("anchorPoint",[0,0])}
 
 ## Places an original row scene top-down in a ListView's content (Cocos y up,
 ## content origin at the list's lower-left), centred horizontally.
-func add_row(content: Node2D, member: String, row: Node2D, index: int, list_size: Vector2, gap: float=0.0) -> float:
-	var panel: Dictionary=row_panel(member)
+func add_row(content: Node2D, member: String, row: Node2D, index: int, list_size: Vector2, gap: float=0.0, reads: Dictionary={}) -> float:
+	var panel: Dictionary=row_panel(member,reads)
 	var size: Array=panel.size
 	var position: Array=panel.position
 	var anchor: Array=panel.anchor
@@ -172,10 +186,10 @@ func add_row(content: Node2D, member: String, row: Node2D, index: int, list_size
 	content.add_child(row)
 	return height+gap
 
-static func list_size(out: Dictionary, source_pack: RefCounted, member: String, suffix: String) -> Vector2:
+static func list_size(out: Dictionary, source_pack: RefCounted, member: String, suffix: String, reads: Dictionary={}) -> Vector2:
 	for key: String in out:
 		if not key.ends_with("/"+suffix):continue
-		var node: Dictionary=Scene._node_at_offset(source_pack.scene(member).get("nodeTree",{}),int(out[key].offset))
+		var node: Dictionary=Scene._node_at_offset(StageReads.node_tree(source_pack,member,reads),int(out[key].offset))
 		var size: Array=node.get("options",{}).get("widgetOptions",{}).get("size",[0,0])
 		return Vector2(float(size[0]),float(size[1]))
 	return Vector2.ZERO

@@ -206,10 +206,13 @@ func _popup_spec(runtime: Object, spec: Dictionary) -> void:
 	var name: String=str(row.get("name",info))
 	if int(row.get("max_level",0))>0:name+="  Lv.%d / %d" % [runtime.guardian_level(info),int(row.max_level)]
 	spec["Nd_Skill/Label_SkillName"]={"role":"source_text","text":name}
-	# 활성화 for a closed slot; an opened one keeps 강화 / 시전 in the existing view.
+	# Opened slots use the same authored info popup for 강화 or 시전.
 	var activate: Dictionary=runtime.quote("activate",info) if not opened else {}
 	var ok: bool=opened or bool(activate.get("ok",false))
-	var label: String="활성화" if not opened else ("수호성 강화" if int(row.get("max_level",0))>runtime.guardian_level(info) else "사용 스킬 시전" if str(row.get("kind",""))=="active" else "수호성 정보")
+	var label: String="활성화"
+	if opened:
+		if str(row.get("kind",""))=="active":label="사용 스킬 시전"
+		else:label="수호성 강화" if int(row.get("max_level",0))>runtime.guardian_level(info) else "수호성 정보"
 	spec["Nd_SkillInfo/Btn_Ok"]={"activate":Callable(self,"_info_ok"),"displaystate":ok}
 	spec["Btn_Ok/Normal"]={"visible":ok}
 	spec["Btn_Ok/Disabled"]={"visible":not ok}
@@ -291,8 +294,14 @@ func _select(id: String) -> Dictionary:
 func _slot_pressed(id: String) -> Dictionary:
 	if _dragged():return {"ok":true,"ignored_after_drag":true}
 	var runtime: Object=_runtime()
-	if str(runtime.state.get("pending",{}).get("node",""))==id:return _find(selected,id)
-	if not _rows_available() or not (runtime.state.get("pending",{}) as Dictionary).is_empty():return _route("open_growth_native",["guardians",selected,id])
+	var pending: Dictionary=runtime.state.get("pending",{})
+	if not pending.is_empty():
+		if str(pending.get("node",""))==id:return _find(selected)
+		_message("진행 중인 수호성 카드 선택을 먼저 완료하세요.")
+		return _fail("source_guardian_window_card_pending")
+	if not _rows_available():
+		_message("원본 수호성 정보를 표시할 수 없습니다.")
+		return _fail("source_guardian_window_info_unavailable")
 	info=id
 	return _stage()
 
@@ -305,19 +314,15 @@ func _close_info() -> Dictionary:
 func _info_ok() -> Dictionary:
 	var runtime: Object=_runtime()
 	var id: String=info
+	if id.is_empty():return _fail("source_guardian_window_slot_unselected")
 	if (runtime.state.get("nodes",[]) as Array).has(id):
-		info=""
 		var row: Dictionary=runtime.node(id)
-		if row.get("kind","")!="active" and int(row.get("max_level",0))>runtime.guardian_level(id):
-			var owner: Object=hud()
-			var controller: Variant=owner.get("original_main_ui_controller") if owner!=null else null
-			if is_instance_valid(controller):
-				var opened: Dictionary=controller.try_open_feature_window("guardian_enchant",[selected,id])
-				if opened.get("handled",false):return opened
-		return _route("open_growth_native",["guardians",selected,id])
+		if row.get("kind","")=="active":return _cast(id)
+		if int(row.get("max_level",0))<=runtime.guardian_level(id):return _close_info()
+		return _open_guardian_step("guardian_enchant",[selected,id],"수호성 강화")
 	if str((runtime.state.get("pending",{}) as Dictionary).get("node",""))==id:
 		info=""
-		return _find(selected,id)
+		return _find(selected)
 	var offer: Dictionary=runtime.quote("activate",id)
 	if not offer.get("ok",false):
 		_message(str(offer.get("message","활성화할 수 없습니다")))
@@ -330,19 +335,36 @@ func _info_ok() -> Dictionary:
 		var response: Dictionary=runtime.execute("activate",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
 		_message(str(response.get("message","")))
 		info=""
-		if response.get("ok",false) and not (runtime.state.get("pending",{}) as Dictionary).is_empty():_find(group,id)
+		if response.get("ok",false) and not (runtime.state.get("pending",{}) as Dictionary).is_empty():_find(group)
 		elif is_open():_stage())
 	return {"ok":true,"quoted":"activate"}
 
-## The pending card choice: the original 수호성 찾기 window
-## (source_main_guardian_find_window), else the existing view on the slot.
-func _find(group: String, id: String) -> Dictionary:
+func _find(group: String) -> Dictionary:
+	return _open_guardian_step("guardian_find",[group],"수호성 찾기")
+
+func _open_guardian_step(key: String, arguments: Array, title: String) -> Dictionary:
 	var owner: Object=hud()
 	var controller: Variant=owner.get("original_main_ui_controller") if owner!=null else null
 	if is_instance_valid(controller) and controller.has_method("try_open_feature_window"):
-		var opened: Dictionary=controller.try_open_feature_window("guardian_find",[group])
+		var opened: Dictionary=controller.try_open_feature_window(key,arguments)
 		if opened.get("handled",false):return opened
-	return _route("open_growth_native",["guardians",group,id])
+	_message("원본 %s 화면을 열 수 없습니다." % title)
+	return _fail("source_%s_window_unavailable" % key)
+
+func _cast(id: String) -> Dictionary:
+	var runtime: Object=_runtime()
+	var offer: Dictionary=runtime.quote("guardian_cast",id)
+	if not offer.get("ok",false):
+		_message(str(offer.get("message","사용 스킬을 시전할 수 없습니다")))
+		return _fail("source_guardian_cast_refused")
+	var owner: Object=hud()
+	if owner==null or not owner.has_method("confirm_source_action"):return _fail("source_guardian_window_confirmation_unavailable")
+	var accept:=func(_count: int) -> void:
+		var response: Dictionary=runtime.execute("guardian_cast",id,1,int(offer.get("revision",0)),int(offer.get("day",-1)))
+		_message(str(response.get("message","")))
+		if is_open():_stage()
+	var review: Variant=owner.call("confirm_source_action","수호성 스킬 시전",str(offer.message),"시전",accept)
+	return {"ok":true,"quoted":"guardian_cast"} if is_instance_valid(review) else _fail("source_guardian_window_confirmation_unavailable")
 
 ## 수호성 마법발동 스킬 설정 ON: the existing representative action.
 func _represent() -> Dictionary:

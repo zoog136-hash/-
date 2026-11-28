@@ -313,6 +313,8 @@ var _preview_quote: Callable
 var _building: bool = false
 
 func _stage(quantity_only: bool=false) -> Dictionary:
+	var started: int=FRAME_HITCH.now()
+	var nested: int=FRAME_HITCH.nested()
 	var world: Node=_world.get_ref() if _world!=null else null
 	var memo: bool=world!=null and world.has_method("_stat_memo_begin") and world.has_method("_stat_memo_end")
 	if memo:world.call("_stat_memo_begin")
@@ -325,6 +327,7 @@ func _stage(quantity_only: bool=false) -> Dictionary:
 	_preview_quote=Callable()
 	_ok_memo={}
 	if memo and is_instance_valid(world):world.call("_stat_memo_end")
+	FRAME_HITCH.add_self("ui_crafting",started,nested)
 	return result
 
 func _craftable(world: Node, id: String) -> bool:
@@ -369,10 +372,14 @@ func _stage_built(quantity_only: bool) -> Dictionary:
 	var pictures: int=0
 	if not _selected.is_empty():
 		if _picture(next,out,"Slot_Gauge/Slot_Gauge/Production_List_Slot/Sp_IconSample",_record(world,str(product.get("item","")),str(product.get("source_id",""))),str(product.get("item",""))):pictures+=1
+	var list_started: int=FRAME_HITCH.detail_next("craft.window_root",started)
+	# The visible list rows all use the same few authored members. Geometry
+	# and bindings can read those records once during this synchronous build.
+	var reads: Dictionary={}
 	var lists: Array=[
-		_fill(next,out,P_LIST+"Nd_List/ListView_Sort","sort",_sort_rows(world)),
-		_fill_items(next,out,ids),
-		_fill(next,out,P_PROD+"Material/ListView_Material","materials",_material_set_rows(world,materials)),
+		_fill(next,out,P_LIST+"Nd_List/ListView_Sort","sort",_sort_rows(world),reads),
+		_fill_items(next,out,ids,reads),
+		_fill(next,out,P_PROD+"Material/ListView_Material","materials",_material_set_rows(world,materials),reads),
 	]
 	var reused: int=int(lists[1].get("reused",0))
 	for filled: Dictionary in lists:
@@ -381,6 +388,7 @@ func _stage_built(quantity_only: bool) -> Dictionary:
 			last_result=filled
 			return filled
 		pictures+=int(filled.get("pictures",0))
+	FRAME_HITCH.detail("craft.window_lists",list_started)
 	FRAME_HITCH.detail("craft.window_nodes",started)
 	var previous: Node2D=_scene
 	next.position=LAYOUT_POSITION
@@ -586,7 +594,7 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	spec[bookmark+"Btn_Enable"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":starred}
 	return {"member":ROW_ITEM,"ok":ok,"favorite":starred,"spec":spec,"picture":["Common_Slot/Sp_IconSample",_record(world,str(result.get("item","")),str(result.get("source_id",""))),str(result.get("item",""))]}
 
-func _fill_items(root: Node2D, out: Dictionary, ids: Array[String]) -> Dictionary:
+func _fill_items(root: Node2D, out: Dictionary, ids: Array[String], reads: Dictionary) -> Dictionary:
 	var list: Dictionary=NamedTree.locate(root,out,P_LIST+"Nd_ItemList/ListView")
 	var node: Variant=list.player.source_nodes.get(list.offset) if list.get("ok",false) else null
 	var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) and node.has_meta("source_list_content") else null
@@ -611,26 +619,29 @@ func _fill_items(root: Node2D, out: Dictionary, ids: Array[String]) -> Dictionar
 	_reuse_except=[]
 	_item_ids=ids
 	_item_content=content
-	_item_size=NamedTree.list_size(out,_pack,TAB_LIST,"Nd_ItemList/ListView")
+	_item_size=NamedTree.list_size(out,_pack,TAB_LIST,"Nd_ItemList/ListView",reads)
 	_item_rows={}
-	var height: float=_item_height()*float(ids.size())
+	var row_height: float=_item_height(reads)
+	var height: float=row_height*float(ids.size())
 	var scroll: ListScroll=_scrolls.items
 	# Keep the selected recipe in view when it moved out of the window.
 	var at: int=ids.find(_selected)
 	if at>=0:
-		var top: float=-_item_height()*float(at)
-		if scroll.y<top or scroll.y>top+_item_size.y-_item_height():scroll.y=top
+		var top: float=-row_height*float(at)
+		if scroll.y<top or scroll.y>top+_item_size.y-row_height:scroll.y=top
 	scroll.bind(content,_item_size.y,height)
-	return _sync_item_rows()
+	return _sync_item_rows(reads)
 
-func _item_height() -> float:
-	return float(_tree.row_panel(ROW_ITEM).size[1])
+func _item_height(reads: Dictionary={}) -> float:
+	return float(_tree.row_panel(ROW_ITEM,reads).size[1])
 
-func _sync_item_rows() -> Dictionary:
+func _sync_item_rows(reads: Dictionary={}) -> Dictionary:
 	if not is_instance_valid(_item_content):return {"ok":true,"pictures":0}
 	var world: Node=_world.get_ref() if _world!=null else null
 	if world==null:return _fail("source_production_window_host_unavailable")
-	var first: int=maxi(0,floori(-(_scrolls.items as ListScroll).y/_item_height())-2)
+	var row_height: float=_item_height(reads)
+	if row_height<=0.0:return _fail("source_production_item_geometry_missing")
+	var first: int=maxi(0,floori(-(_scrolls.items as ListScroll).y/row_height)-2)
 	var last: int=mini(_item_ids.size(),first+ITEM_WINDOW)
 	for index: Variant in _item_rows.keys():
 		if int(index)<first or int(index)>=last:
@@ -651,9 +662,9 @@ func _sync_item_rows() -> Dictionary:
 			continue
 		var row: Dictionary=_item_row(world,_item_ids[index])
 		var row_out: Dictionary={}
-		var built: Dictionary=_tree.scene_of(row.member,row.spec,row_out)
+		var built: Dictionary=_tree.scene_of(row.member,row.spec,row_out,reads)
 		if not built.get("ok",false):return built
-		_tree.add_row(_item_content,row.member,built.scene,index,_item_size)
+		_tree.add_row(_item_content,row.member,built.scene,index,_item_size,0.0,reads)
 		built.scene.set_meta("recipe_id",_item_ids[index])
 		built.scene.set_meta("row_chosen",_item_ids[index]==_selected)
 		built.scene.set_meta("row_ok",bool(row.get("ok",false)))
@@ -735,12 +746,12 @@ static func _material_layout_signature(row: Dictionary) -> String:
 static func _row_signature(row: Dictionary) -> String:
 	return str(row.member)+str(row.spec)+str(row.get("pictures",[]))+str(row.get("picture",[]))
 
-func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: Array) -> Dictionary:
+func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: Array, reads: Dictionary={}) -> Dictionary:
 	var list: Dictionary=NamedTree.locate(root,out,suffix)
 	var node: Variant=list.player.source_nodes.get(list.offset) if list.get("ok",false) else null
 	var content: Variant=node.get_meta("source_list_content",null) if is_instance_valid(node) and node.has_meta("source_list_content") else null
 	if not content is Node2D:return _fail("source_production_window_list_content_missing")
-	var size: Vector2=NamedTree.list_size(out,_pack,TAB_LIST,suffix.trim_prefix(P_LIST))
+	var size: Vector2=NamedTree.list_size(out,_pack,TAB_LIST,suffix.trim_prefix(P_LIST),reads)
 	var height: float=0.0
 	var pictures: int=0
 	var gap: float=4.0 if scroll=="materials" else 0.0
@@ -755,7 +766,7 @@ func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: 
 			kept_rows[index]=old
 			continue
 		var row_out: Dictionary={}
-		var built: Dictionary=_tree.scene_of(row.member,row.spec,row_out)
+		var built: Dictionary=_tree.scene_of(row.member,row.spec,row_out,reads)
 		if not built.get("ok",false):
 			for staged: Node2D in created:staged.free()
 			return built
@@ -780,7 +791,7 @@ func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: 
 	for index: int in range(rows.size()):
 		var scene: Node2D=kept_rows[index]
 		if scene.get_parent()!=null:scene.get_parent().remove_child(scene)
-		height+=_tree.add_row(content,rows[index].member,scene,index,size,gap)
+		height+=_tree.add_row(content,rows[index].member,scene,index,size,gap,reads)
 	_fill_rows[scroll]=kept_rows
 	(_scrolls[scroll] as ListScroll).bind(content,size.y,height)
 	return {"ok":true,"pictures":pictures,"rows":rows.size()}
@@ -1032,12 +1043,10 @@ static func craft_result(world: Node, entry: Dictionary) -> Dictionary:
 	return {"name":name.get_slice(" · 원본#",0),"quantity":int(entry.get("quantity",0)),"batch":int(entry.get("batch",1)),"label":label,
 		"item_class_id":int(id) if typeof(id) in [TYPE_INT,TYPE_FLOAT] else 0}
 
-## 비법서 제작: the existing crafting screen with its 비법서 제작 panel open.
 func _open_gacha() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or not hud.has_method("open_gacha_craft523"):return _notice("비법서 제작 화면을 열 수 없습니다")
-	close()
-	hud.call("open_gacha_craft523")
+	if not hud.call("open_gacha_craft523"):return _fail("source_gacha_craft_window_unavailable")
 	return {"ok":true,"handled":true,"routed":"open_gacha_craft523"}
 
 func _close_requested() -> Dictionary:
