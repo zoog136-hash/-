@@ -115,7 +115,9 @@ static func _prepare(world: Node, grants: Array, origin: Dictionary, issue: bool
 		if equipment and amount > 65536: return {"ok":false,"error":"물리 장비 묶음 지급 크기 초과"}
 		if not issue: continue
 		if stack_supported:
-			var staged: Dictionary=stock.call("stage_grant",record,amount,instances,origin)
+			# The working inventory already owns a detached copy of its rows.
+			# Each reward adds a new physical ID to that copy.
+			var staged: Dictionary=stock.call("stage_grant",record,amount,instances,origin,true)
 			if not staged.get("ok",false):return {"ok":false,"error":"원본 물리 공급 영수증 생성 실패"}
 			instances=staged.item_instances
 		if equipment:

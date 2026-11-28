@@ -57,8 +57,13 @@ func exact(source:String)->void:
 	ck(STACK.proof(w,uid).get("remaining")==2,"full HP refuses without wasting the original bottle")
 	w.hp=10
 	var expected:int=expected_hp(w)
+	var before_hud:Dictionary=w.hud_publish_counts.duplicate()
 	w.hud.inventory_item_activated.emit(ref)
 	ck(w.hp==expected and STACK.proof(w,uid).get("remaining")==1 and w.item_use_cooldowns.get("m523:item:19473")==1.0,"actual manual bag use keeps source roll, consumes one and starts 1s cooldown: "+w.hud.message_label.text)
+	ck(w.hud_publish_counts.items==before_hud.items+1 and w.hud_publish_counts.vitals==before_hud.vitals+1 and w.hud_publish_counts.full==before_hud.full,"manual potion refreshes the bag and vitals without a full rebuild")
+	ck(w.hud.character_state.get("hp")==expected and w.hud.character_state.get("item_instances",{}).get(uid,{}).get(STACK.QUANTITY)==1,"manual potion shows the committed HP and remaining quantity")
+	var bag: Control = w.hud.lineage_inventory_ui
+	ck(bag.inventory.get(name)==1 and bag.character_state.get("item_instances",{}).get(uid,{}).get(STACK.QUANTITY)==1 and bag._state_publish_depth==0,"bag model receives paired committed quantity and receipt")
 	w.hud.inventory_item_activated.emit(ref)
 	ck(w.hp==expected and STACK.proof(w,uid).get("remaining")==1,"immediate second press preserves remaining copy")
 	ck(w._save_game(true)==OK,"ordinary coalesced adjustment persists at normal save")

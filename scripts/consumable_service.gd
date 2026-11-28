@@ -153,10 +153,16 @@ var quest_equipment_receipts: Variant=[]
 func export_state() -> Dictionary:
 	return _export_state(true)
 
-## Synchronous native ownership validation only. Never mutate, retain or send
-## these borrowed journals to a worker; the durable writer still exports copies.
+## Synchronous validation and native-use staging. Never mutate or send the
+## borrowed journals to a worker; the durable writer still exports copies.
 func native_stack_validation_state() -> Dictionary:
 	return _export_state(false)
+
+## The synchronous timed-use owner calls this only after its saved override
+## proved the selected receipt and the single committed ledger row.
+func publish_native_stack_use(physical_id: String, row: Dictionary) -> void:
+	source_native_stack_uses_present = true
+	source_native_stack_uses[physical_id] = row
 
 static func _export_value(value: Variant, owned: bool) -> Variant:
 	return value.duplicate(true) if owned and (value is Dictionary or value is Array) else value

@@ -6,8 +6,7 @@ extends RefCounted
 ## inside ScrollView_All; each shows the skill's original picture
 ## (Source523SkillBuffImages), the authored Img_Disabled cover while the
 ## skill is not learned and the authored passive mark. Tapping a slot selects
-## it (Sp_slot_select); 상세 보기 opens only that skill's inspector, where
-## learning, use and quick-slot registration stay.
+## it (Sp_slot_select). 상세 보기는 the existing focused skill actions.
 ## The tab strip is one Skill_Tab_Btn per tab: 전체 (every listed skill),
 ## 정령 (요정 only: the elemental school skills, record school fire / earth /
 ## water / wind; ScrollView_Special), 특수 (the card-bound skills, original
@@ -23,6 +22,7 @@ extends RefCounted
 ## holds the original GameClassSpellGroup choice, cost and save.
 ## Every listed skill is reachable: rows are built only near the view.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
+const Detail=preload("res://scripts/ui/original_ui/source_main_skill_detail.gd")
 const Images=preload("res://scripts/ui/source523_skill_buff_images.gd")
 const RULES=preload("res://scripts/skill_rules.gd")
 const ROOT="UI/FloatingUi/Skill_All.csb"
@@ -60,6 +60,8 @@ var _moved: float=0.0
 var last_result: Dictionary={}
 var tab: String="all"
 var _timer: Timer
+var _detail: RefCounted
+var _detail_restore: Callable
 ## Only the rows near the visible part of the list exist as nodes: a class
 ## lists 200+ skills, each Slot_Skill is ~40 nodes, and building
 ## all of them (again on every selection tap) froze phones for many seconds
@@ -90,6 +92,9 @@ func open(parent: Node) -> Dictionary:
 	return _stage()
 
 func close() -> void:
+	if _detail!=null:_detail.close()
+	_detail=null
+	_detail_restore=Callable()
 	var previous: Node2D=_scene
 	_scene=null
 	_content=null
@@ -448,7 +453,7 @@ func hit_at(viewport_point: Vector2) -> Dictionary:
 	return found
 
 func gesture_is_live(epoch: int) -> bool:
-	return is_open() and _scene.get_instance_id()==epoch
+	return is_open() and _scene.visible and _scene.get_instance_id()==epoch
 
 func tap_from_pointer(epoch: int, skill_id: String, release_point: Vector2) -> Dictionary:
 	if skill_id.is_empty() or not gesture_is_live(epoch) or str(hit_at(release_point).get("id",""))!=skill_id:
@@ -498,8 +503,37 @@ func _move_highlight() -> bool:
 		(node as CanvasItem).visible=str(slot.id)==_selected
 	return true
 
-## The existing skills window on the selected skill (learn, use, quick slot).
 func _detail_requested() -> Dictionary:
+	return _open_existing_skill_actions()
+
+func original_detail_available() -> bool:
+	return Detail.available(_pack)
+
+func open_original_detail(parent: Node, record: Dictionary, restore: Callable) -> Dictionary:
+	if detail_is_open(): return _fail("source_skill_detail_already_open")
+	var detail=Detail.new()
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	var result: Dictionary=detail.open(_pack,parent,record,hud,Callable(self,"close_detail"))
+	if result.get("ok",false):
+		_detail=detail
+		_detail_restore=restore
+		if is_open():_scene.hide()
+	return result
+
+func detail_is_open() -> bool:
+	return _detail!=null and _detail.is_open()
+
+func close_detail() -> void:
+	if _detail==null:return
+	_detail.close()
+	_detail=null
+	var restore: Callable=_detail_restore
+	_detail_restore=Callable()
+	if is_open():_scene.show()
+	if restore.is_valid():restore.call()
+
+## The existing skill actions stay reachable and are also the older-pack fallback.
+func _open_existing_skill_actions() -> Dictionary:
 	var hud: Node=_hud.get_ref() if _hud!=null else null
 	if hud==null or _selected.is_empty():return _fail("source_skill_window_skill_unselected")
 	var focus: String=_selected

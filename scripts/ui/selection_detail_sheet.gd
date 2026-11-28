@@ -130,6 +130,13 @@ func bind_skill(view: Node,old_scroll: ScrollContainer,side: VBoxContainer) -> C
 	toggle.toggle_mode=true
 	controls.add_child(toggle)
 	info_tab=toggle;source_tab=toggle
+	var controller: Node=view.hud.original_main_ui_controller
+	if is_instance_valid(controller) and controller.original_skill_detail_available():
+		var native_detail: Button=UI.button("원본 상세",func() -> void:
+			if not view.selected.is_empty() and not controller.show_original_skill_detail(view.selected):
+				view.hud.show_message("원본 스킬 상세를 열 수 없습니다"),Vector2(84,32))
+		native_detail.add_theme_font_size_override("font_size",12)
+		controls.add_child(native_detail)
 	picture.custom_minimum_size=Vector2(40,40)
 	view.preview_button.custom_minimum_size=Vector2(84,32)
 	old_scroll.reparent(self)

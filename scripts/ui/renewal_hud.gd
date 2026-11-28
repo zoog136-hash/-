@@ -91,32 +91,18 @@ var companion_detail_view: Node
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
-const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const Source523SkillImages = preload("res://scripts/ui/source523_skill_buff_images.gd")
 var _source523_buff_signature: Dictionary = {}
 var _source523_buff_views: Dictionary = {}
-const QuestUI = preload("res://scripts/ui/renewal_quests.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
-const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
-const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
-const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
-const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
-const AutoHuntingDestinationsUI = preload("res://scripts/ui/auto_hunting_destinations.gd")
-const SourceDungeonUI = preload("res://scripts/dungeons/source_dungeon_view.gd")
 var dungeon_progress_refresh_pending: bool = false
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
-const Patch523EquipmentInfo = preload("res://scripts/ui/patch523_equipment_info.gd")
-const SellUI = preload("res://scripts/ui/renewal_sell.gd")
-const EquipmentCollectionsUI = preload("res://scripts/collections/equipment_collection_view.gd")
-const Growth96UI = preload("res://scripts/progression/growth96_view.gd")
 var growth96_view: Control
 var equipment_collection_button: Button
-const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const EnhancementReveal = preload("res://scripts/ui/enhancement_reveal.gd")
 var enhancement_reveal: Control
 const SAVED_UI_SETTINGS = preload("res://scripts/ui/saved_ui_settings.gd")
-const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
-const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
+var _window_scripts: Dictionary[String, Script] = {}
 var quest_view: Control
 var quest_refresh_pending: bool = false
 var quest_refresh_generation: int = 0
@@ -340,6 +326,13 @@ func _polish_hud_chrome() -> void:
 		_place(v20_map_name.get_parent(),746,16,930,48)
 		v20_map_name.add_theme_font_size_override("font_size",13)
 		v20_map_name.clip_text = true
+
+# These windows are opened on request. Keep their scripts for subsequent opens
+# within this HUD session even after the workspace has freed the window.
+func _window_script(path: String) -> Script:
+	if not _window_scripts.has(path):
+		_window_scripts[path] = load(path) as Script
+	return _window_scripts[path]
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
@@ -994,6 +987,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_crafting_search()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller):
+			var skill_window: RefCounted=original_main_ui_controller.skill_window()
+			if skill_window!=null and skill_window.detail_is_open():
+				skill_window.close_detail()
+				get_viewport().set_input_as_handled()
+				return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_search_is_open():
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
@@ -1310,6 +1309,7 @@ func _navigate(section: String) -> void:
 		"exchange": open_frozen_exchange()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
+		"memory_places": get_parent().growth.travel.open()
 		"source_dungeons": open_source_dungeons()
 		"map": toggle_map()
 		"menu": toggle_menu()
@@ -1452,7 +1452,7 @@ func open_quests() -> void:
 	MENU_MEMORY_TRACE.end(trace_token)
 
 func _open_quest_browser() -> void:
-	var view := QuestUI.new()
+	var view = _window_script("res://scripts/ui/renewal_quests.gd").new()
 	workspace.mount(view)
 	view.configure(get_parent())
 	view.claim_requested.connect(func(quest_id: String) -> void:
@@ -1486,7 +1486,7 @@ func _refresh_quests_deferred(generation: int = -1) -> void:
 
 func open_shop() -> void:
 	_open_window("shop","상점","")
-	var shop := ShopUI.new()
+	var shop = _window_script("res://scripts/ui/renewal_shop.gd").new()
 	workspace.mount(shop)
 	shop.configure(self)
 	shop_view = shop
@@ -1518,7 +1518,7 @@ func open_frozen_exchange() -> void:
 
 func open_npc_shop(npc_id: String = "") -> void:
 	_open_window("npc_shop","잡화 상인","")
-	var shop := ShopUI.new()
+	var shop = _window_script("res://scripts/ui/renewal_shop.gd").new()
 	workspace.mount(shop)
 	shop.configure(self,true)
 	shop_view = shop
@@ -1543,7 +1543,7 @@ func refresh_service() -> void:
 
 func open_warehouse() -> void:
 	_open_window("warehouse","창고지기","아이템 보관/찾기 · 개별 강화 상태 보존")
-	var screen := WarehouseUI.new()
+	var screen = _window_script("res://scripts/ui/renewal_warehouse.gd").new()
 	workspace.mount(screen)
 	screen.configure(self)
 	transaction_view = screen
@@ -1570,7 +1570,7 @@ func open_npc_teleport() -> void:
 			_sync_screen_focus()
 			return
 		_report_original_fallback("지역 이동",native)
-	var screen := TeleportUI.new()
+	var screen = _window_script("res://scripts/ui/renewal_teleport.gd").new()
 	workspace.mount(screen)
 	screen.configure(self)
 
@@ -1647,7 +1647,7 @@ func reset_inventory_notice() -> void:
 func open_patch523_equipment_info(scroll_id: String = "", scroll_uid: String = "") -> void:
 	if not scroll_id.is_empty() and _hold_original_inventory_window("장비 강화",original_main_ui_bind_problem):return
 	_open_window("patch523_equipment", "원본 장비 강화 정보", "원본523 확률·재료 조회 · 현재 강화 정책 보존")
-	var screen := Patch523EquipmentInfo.new()
+	var screen = _window_script("res://scripts/ui/patch523_equipment_info.gd").new()
 	workspace.mount(screen)
 	screen.configure(self,scroll_id,scroll_uid)
 
@@ -1657,7 +1657,7 @@ func open_item_sell(npc_id: String="") -> void:
 		else:show_message("아이템 판매는 가까운 잡화상인이나 아이템 매입 상인에게서 할 수 있습니다.")
 		return
 	_open_window("sell","아이템 매입","아이템 검색 · 강화 장비 ID 확인 · 판매")
-	var screen := SellUI.new()
+	var screen = _window_script("res://scripts/ui/renewal_sell.gd").new()
 	workspace.mount(screen)
 	screen.configure(self)
 	transaction_view = screen
@@ -1710,7 +1710,7 @@ func show_companion_equipment() -> void:
 
 func open_npc_dialogue(npc_id: String) -> void:
 	_open_window("dialogue","","")
-	var screen := DialogueUI.new()
+	var screen = _window_script("res://scripts/ui/renewal_dialogue.gd").new()
 	workspace.mount(screen)
 	screen.source_dialogue_resolved.connect(_on_source_npc_dialogue_resolved.bind(screen))
 	screen.configure(self,npc_id)
@@ -1786,7 +1786,7 @@ func open_macro_info() -> void:
 	toggle.name = "AutoSettingToggle"
 	col.add_child(toggle)
 	workspace.register_scroll_drag(scroll,toggle)
-	var destinations := AutoHuntingDestinationsUI.new()
+	var destinations = _window_script("res://scripts/ui/auto_hunting_destinations.gd").new()
 	col.add_child(destinations)
 	destinations.configure(get_parent())
 	for pair: Array in [["목표 탐색","주변 몬스터 탐색 및 이동"],["전투","현재 장비와 스킬 · 등록된 자동 사용"],["습득","바닥 드랍을 통한 자동 아이템 습득"]]:
@@ -1979,7 +1979,7 @@ const MENU_VISIBLE_ROWS: int = 7
 const ORIGINAL_MENU_CELLS: Array[String] = [
 	"crafting","exchange","변신","마법인형","성물",
 	"source_dungeons","","","skill_card523","equipment_collections",
-	"clan523","","","","",
+	"clan523","","memory_places","","",
 	"","refine523","","guardians","emblems",
 	"half_elixir","","weapon_mastery","totems","domination_stone",
 	"titles","","","settings","restart",
@@ -2046,7 +2046,7 @@ func _build_menu_page() -> void:
 	menu_scroll.add_child(grid_center)
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["restart","재시작"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["memory_places","기억 장소"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["restart","재시작"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
 	menu_pairs = menu_pairs.filter(func(pair: Array) -> bool:
 		var id: String = str(pair[0])
 		return not id in RETIRED_SECTIONS and (id!="monsterbook523" or MONSTERBOOK_RUNTIME.progression_enabled()))
@@ -2071,12 +2071,12 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","content523","field_activities523","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","memory_places","monsterbook523","quests","status_board","source_dungeons","content523","field_activities523","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		if section_id in ["inventory","skills","quests","auto"]:
+		if section_id in ["inventory","skills","quests","auto","shop"]:
 			artwork.name="SourceActionIcon"
 			_set_menu_source_action_art(section_id,artwork)
 		else:
@@ -3703,7 +3703,7 @@ func toggle_map() -> void:
 	for index: int in range(map_records.size()):
 		if str(map_records[index].get("id",""))==str(get_parent().active_map_id): region_selection.select(index)
 	if region_selection.get_selected_items().is_empty() and region_selection.item_count>0: region_selection.select(0)
-	var map_view := RegionMapUI.new()
+	var map_view = _window_script("res://scripts/ui/renewal_map.gd").new()
 	map_view.name="RegionMap"
 	map_view.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	row.add_child(map_view)
@@ -3732,7 +3732,7 @@ func open_skills() -> void:
 
 func open_skills_workspace(focus: String="") -> void:
 	_open_window("skills","스킬" if focus.is_empty() else "스킬 상세","")
-	skills_view=SkillsUI.new()
+	skills_view=_window_script("res://scripts/ui/renewal_skills.gd").new()
 	workspace.mount(skills_view)
 	skills_view.configure(self,focus)
 	if not focus.is_empty():workspace.set_back_available(true)
@@ -3769,7 +3769,7 @@ func _open_enhance_chooser() -> void:
 	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
 	if _open_original_enchant("",[]): return
 	if _hold_original_inventory_window("장비 강화",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return
-	var forge := ForgeUI.new()
+	var forge = _window_script("res://scripts/ui/renewal_forge.gd").new()
 	workspace.mount(forge)
 	forge.configure_scrolls(self)
 
@@ -3832,7 +3832,7 @@ func open_blessing_targets(scroll_name: String, candidates: Array) -> void:
 	_open_window("enhance", "장비 축복 부여", scroll_name + " · 장비 개체별 축복")
 	if _open_original_enchant(scroll_name,candidates,true):return
 	if _hold_original_inventory_window("축복 부여",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return
-	var forge := ForgeUI.new()
+	var forge = _window_script("res://scripts/ui/renewal_forge.gd").new()
 	workspace.mount(forge)
 	forge.configure_blessing(self, scroll_name, candidates)
 	enhancement_forge=forge
@@ -3876,7 +3876,7 @@ func _open_enhancement(scroll_name: String, candidates: Array, original_only: bo
 	if _open_original_enchant(scroll_name,candidates): return true
 	if _hold_original_inventory_window("장비 강화",original_main_ui_status.get("enchant_window",original_main_ui_bind_problem)):return false
 	if original_only:return false
-	var forge := ForgeUI.new()
+	var forge = _window_script("res://scripts/ui/renewal_forge.gd").new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
 	enhancement_forge = forge
@@ -3949,7 +3949,7 @@ func open_equipment_collections() -> void:
 ## The TWILIGHT guide-data 장비 컬렉션 view (447 collections, equipment_collection_runtime).
 func open_legacy_equipment_collections() -> void:
 	_open_window("equipment_collections","장비 컬렉션","등록 장비 소모 · 요구 강화 일치 · 각인 구분 없음")
-	var screen := EquipmentCollectionsUI.new()
+	var screen = _window_script("res://scripts/collections/equipment_collection_view.gd").new()
 	workspace.mount(screen)
 	screen.configure(self)
 
@@ -4010,7 +4010,7 @@ func item_book_available() -> bool:
 
 func open_growth96() -> void:
 	_open_window("growth96","96레벨 보상·증표","")
-	growth96_view = Growth96UI.new()
+	growth96_view = _window_script("res://scripts/progression/growth96_view.gd").new()
 	workspace.mount(growth96_view)
 	growth96_view.configure(self,get_parent().growth96)
 
@@ -4131,7 +4131,7 @@ func open_source_dungeons() -> void:
 
 func _open_source_dungeons(tab: String, focus: int, section: String, title: String) -> void:
 	_open_window(section,title,"" if focus>0 else "입장 조건 · 목표 · 보상 · 등장 계획")
-	var view := SourceDungeonUI.new()
+	var view = _window_script("res://scripts/dungeons/source_dungeon_view.gd").new()
 	view.name = "SourceDungeonView"
 	workspace.mount(view)
 	view.configure(get_parent(),6 if tab=="world" else 0)
@@ -4595,7 +4595,7 @@ func bind_original_main_ui(source_pack: RefCounted) -> Dictionary:
 	var reopen_character: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.character_is_open()
 	var reopen_dialogue: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.npc_dialogue_is_open()
 	var reopen_log: bool=is_instance_valid(original_main_ui_controller) and original_main_ui_controller.feature_window_is_open("combat_log")
-	var candidate=preload("res://scripts/ui/original_ui/source_main_hud.gd").new()
+	var candidate=load("res://scripts/ui/original_ui/source_main_hud.gd").new()
 	candidate.name="OriginalMainGameHUD"
 	add_child(candidate)
 	var configured: Dictionary=candidate.configure(source_pack,self,$Root)

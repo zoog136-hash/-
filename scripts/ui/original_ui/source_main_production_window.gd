@@ -560,8 +560,9 @@ func _sort_rows(world: Node) -> Array:
 		var chosen: bool=value==_category
 		var spec: Dictionary={"Panel":{"input":Callable(_scrolls.sort,"input")}}
 		for state: String in ["Btn_Normal","Btn_Pressed"]:
-			spec[state]={"visible":(state=="Btn_Pressed")==chosen,"activate":Callable(self,"_set_category").bind(value)}
-			spec[state+"/Label"]={"role":"source_text","text":title}
+			var shown: bool=(state=="Btn_Pressed")==chosen
+			spec[state]={"visible":shown,"exclude":not shown,"activate":Callable(self,"_set_category").bind(value)}
+			if shown:spec[state+"/Label"]={"role":"source_text","text":title}
 		rows.append({"member":ROW_SORT,"spec":spec})
 	return rows
 
@@ -571,17 +572,20 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	var chosen: bool=id==_selected
 	var ok: bool=_craftable(world,id)
 	var spec: Dictionary={"Panel":{"input":Callable(_scrolls.items,"input")}}
-	spec["Btn_Normal"]={"visible":not chosen,"activate":Callable(self,"_select").bind(id)}
-	spec["Btn_Pressed"]={"visible":chosen,"activate":Callable(self,"_select").bind(id)}
-	for state: String in ["Btn_Normal","Btn_Pressed"]:
-		spec[state+"/Sp_Arrow_Close"]={"visible":not chosen}
-		spec[state+"/Sp_Arrow_Open"]={"visible":chosen}
+	# Selection, readiness and bookmark changes already remount this row.
+	# Omit the hidden button and arrow subtrees for its current authored state.
+	var visible_button: String="Btn_Pressed" if chosen else "Btn_Normal"
+	var hidden_button: String="Btn_Normal" if chosen else "Btn_Pressed"
+	spec[visible_button]={"visible":true,"activate":Callable(self,"_select").bind(id)}
+	spec[hidden_button]={"visible":false,"exclude":true}
+	spec[visible_button+"/Sp_Arrow_Close"]={"visible":not chosen,"exclude":chosen}
+	spec[visible_button+"/Sp_Arrow_Open"]={"visible":chosen,"exclude":not chosen}
 	# Not craftable now: the original dim layer over the row (Img_Bg, 40%
 	# black); the row still selects (its tap goes to the same select).
-	spec["Btn_Disabled"]={"visible":not ok,"activate":Callable(self,"_select").bind(id)}
-	spec["Btn_Disabled/Nd_SoldOut"]={"visible":false}
-	spec["Nd_Collection"]={"visible":false}
-	spec["Label_Production"]={"visible":ok}
+	spec["Btn_Disabled"]={"visible":not ok,"exclude":ok,"activate":Callable(self,"_select").bind(id)}
+	spec["Btn_Disabled/Nd_SoldOut"]={"visible":false,"exclude":true}
+	spec["Nd_Collection"]={"visible":false,"exclude":true}
+	spec["Label_Production"]={"visible":ok,"exclude":not ok}
 	spec["Label_Item"]={"role":"source_text","text":_title(recipe,result,id)}
 	spec["Common_Slot/Sp_IconSample"]={"role":"source_asset_slot","visible":false}
 	spec["Common_Slot/Sp_Select"]={"visible":false}
@@ -590,8 +594,8 @@ func _item_row(world: Node, id: String) -> Dictionary:
 	spec["Common_Slot/Btn"]={"activate":Callable(self,"_select").bind(id)}
 	var bookmark: String="Panel/Btn_CheckBox/"
 	var starred: bool=_favorites(world).get(id)==true
-	spec[bookmark+"Btn_Normal"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":not starred}
-	spec[bookmark+"Btn_Enable"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":starred}
+	spec[bookmark+"Btn_Normal"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":not starred,"exclude":starred}
+	spec[bookmark+"Btn_Enable"]={"activate":Callable(self,"_toggle_favorite").bind(id),"visible":starred,"exclude":not starred}
 	return {"member":ROW_ITEM,"ok":ok,"favorite":starred,"spec":spec,"picture":["Common_Slot/Sp_IconSample",_record(world,str(result.get("item","")),str(result.get("source_id",""))),str(result.get("item",""))]}
 
 func _fill_items(root: Node2D, out: Dictionary, ids: Array[String], reads: Dictionary) -> Dictionary:
@@ -801,6 +805,7 @@ func _fill(root: Node2D, out: Dictionary, suffix: String, scroll: String, rows: 
 func _record(world: Node, item_name: String, source_id: String, record: Dictionary={}) -> Dictionary:
 	if source_id.is_valid_int() and int(source_id)>0:return {"source_item_class_id":int(source_id),"name":item_name,"_item_class_only":true}
 	if not record.is_empty():return record
+	if world.has_method("production_item_record"):return world.production_item_record(item_name)
 	return world._craft_item_index().get(item_name,{})
 
 func _picture(root: Node2D, out: Dictionary, suffix: String, record: Dictionary, title: String) -> bool:
@@ -947,6 +952,7 @@ func _add_count(delta: int) -> Dictionary:
 	return _change_count(clampi(_count+delta,1,_max_count(world)))
 
 func _change_count(value: int) -> Dictionary:
+	if value==_count and is_open() and last_result.get("ok",false):return last_result
 	var previous: int=_count
 	_count=value
 	var result: Dictionary=_stage(true)

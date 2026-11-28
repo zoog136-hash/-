@@ -1,7 +1,7 @@
 extends RefCounted
 class_name TwilightOriginalSkillService
 const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
-const AUTO_AREA_MISSES = preload("res://scripts/skills/auto_area_misses.gd")
+const AUTO_AREA_TARGETS = preload("res://scripts/skills/auto_area_targets.gd")
 
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const AMMO_FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
@@ -23,7 +23,7 @@ var catalog: TwilightOriginalSkillCatalog
 var status: TwilightSkillStatusService = Status.new()
 var vfx: TwilightOriginalSkillVFX
 var world: Node
-var _auto_area_misses := AUTO_AREA_MISSES.new()
+var _auto_area_targets := AUTO_AREA_TARGETS.new()
 var proc_depth: int = 0
 var counter_depth: int = 0
 var shields: Dictionary = {}
@@ -64,6 +64,7 @@ func configure(owner: Node) -> void:
 	stackable.configure(self)
 
 func clear() -> void:
+	_auto_area_targets.clear()
 	estimated_nodes.clear()
 	spell_move.clear()
 	stackable.clear()
@@ -199,7 +200,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 
 func refresh_relic_buffs() -> void:
-	var signature: String = catalog._lineage_signature() + catalog._relic_signature()
+	var signature: String = catalog._projection_signature()
 	if signature == relic_buff_signature: return
 	relic_buff_signature = signature
 	for buff: Dictionary in world.active_skill_buffs.values():
@@ -268,11 +269,12 @@ func cost_reason(skill: Dictionary, quote_materials: bool = true) -> String:
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
 	return str(material_plan(skill).reason) if quote_materials else ""
 
-func spend(skill: Dictionary, changed: Variant = null) -> bool:
+func spend(skill: Dictionary, changed: Variant = null, area_quote: Dictionary = {}) -> bool:
 	# Check admission before scanning the bag, then use this exact quote.
 	# Physical ownership and the saved payload are revalidated by their owner.
 	if not cost_reason(skill, false).is_empty(): return false
-	var plan: Dictionary = material_plan(skill)
+	var quoted_native: bool = not area_quote.get("physical_materials", []).is_empty() and area_quote.get("physical_ammo", {}).is_empty()
+	var plan: Dictionary = area_quote if quoted_native else material_plan(skill)
 	if not str(plan.get("reason","")).is_empty():return false
 	var physical: Dictionary=plan.get("physical_ammo",{})
 	if not physical.is_empty():
@@ -358,8 +360,8 @@ func cast_auto_area(record: Dictionary) -> bool:
 	if world.monsters_root.get_child_count() == 0: return false
 	return call("_cast_impl", record, false, false, true)
 
-func clear_auto_area_misses() -> void:
-	_auto_area_misses.clear()
+func clear_auto_area_targets() -> void:
+	_auto_area_targets.clear()
 
 func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool = false) -> bool:
 	# On the ordinary automatic area route, HP/MP and cooldowns still gate
@@ -414,7 +416,8 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 		if not dash_only and not Catalog.SOURCE523.target_allowed(skill, target):
 			if manual: world.hud.show_message("사용할 수 없는 대상입니다")
 			return false
-	if defer_materials and not str(material_plan(skill).reason).is_empty(): return false
+	var area_quote: Dictionary = material_plan(skill) if defer_materials else {}
+	if not str(area_quote.get("reason", "")).is_empty(): return false
 	var dash_end := Vector2.INF
 	if not ground_area and (estimated_nodes.kind(skill) == "grab" or bool(skill.get("reference_dash", false))):
 		if world.field_map == null and not skill.get("reference_dash", false): return false
@@ -446,10 +449,10 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 			return {"ok":_commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)}
 		var outcome: Dictionary = await world.travel_map_point(teleport_landing,commit)
 		return outcome.get("ok",false)
-	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing)
+	return _commit_cast(skill,mode,target,dash_only,dash_end,teleport_landing,area_quote)
 
 
-func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2) -> bool:
+func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash_only: bool, dash_end: Vector2, teleport_landing: Vector2, area_quote: Dictionary = {}) -> bool:
 	# Validation ends here. Order: register the attack motion (cancellable)
 	# -> pay the cost (MP/HP/materials/ammo; atomic and saved by its owner)
 	# -> cooldown and presentation. A refused registration pays nothing; a
@@ -486,7 +489,7 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 	var timing: int = FRAME_HITCH.now() if area or mode in ["buff","counter"] else 0
 	var area_has_materials: bool = area and not skill.get("items", {}).is_empty()
 	var spending: Variant = {} if area_has_materials else null
-	var paid: bool = spend(skill, spending)
+	var paid: bool = spend(skill, spending, area_quote)
 	if timing != 0:
 		timing = FRAME_HITCH.detail_next("skill.area_cost_commit" if area else "skill.buff_cost_commit",timing)
 	if not paid:
@@ -714,21 +717,29 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 	var reach: float = float(skill.get("range", 0.0))
 	var forward: Vector2 = direction.normalized() if direction != Vector2.ZERO else origin.direction_to(center)
 	var end: Vector2 = origin + forward * reach if line else origin
-	var can_remember: bool = first_only and _auto_area_misses.prepare(world, origin)
+	var actors: Array
+	var can_remember := false
 	var geometry: Array = []
 	var bounds := Rect2()
-	if can_remember:
-		geometry = [shape, radius, reach, center, end, forward]
-		if _auto_area_misses.has_miss(geometry):
-			FRAME_HITCH.count("skill.area_auto_miss_reused")
-			return result
+	if first_only:
 		if line: bounds = Rect2(origin, end - origin).abs().grow(radius)
 		elif cone: bounds = Rect2(origin, Vector2.ZERO).grow(maxf(0.0, reach))
 		else: bounds = Rect2(center, Vector2.ZERO).grow(radius)
 		bounds = bounds.grow(1.0)
-		can_remember = bounds.position.is_finite() and bounds.size.is_finite()
-	var actors: Array[Node] = world.monsters_root.get_children()
-	if first_only: FRAME_HITCH.count("skill.area_auto_scans")
+		if not bounds.position.is_finite() or not bounds.size.is_finite(): return result
+		actors = _auto_area_targets.candidates(world.monsters_root, bounds)
+		if actors.is_empty(): return result
+		_auto_area_targets.prepare_sight(world, origin)
+		can_remember = _auto_area_targets.can_remember_geometry()
+		if can_remember:
+			geometry = [shape, radius, reach, center, end, forward]
+			if _auto_area_targets.geometry_missed(geometry):
+				FRAME_HITCH.count("skill.area_auto_miss_reused")
+				return result
+		FRAME_HITCH.count("skill.area_auto_scans")
+		FRAME_HITCH.count("skill.area_candidate_rows", actors.size())
+	else:
+		actors = world.monsters_root.get_children()
 	for child: Node in actors:
 		if not child is TwilightMonster: continue
 		if child.dead or child.is_queued_for_deletion():
@@ -759,14 +770,12 @@ func _area_candidates(skill: Dictionary, shape: String, origin: Vector2, center:
 		if defer_sight:
 			result.append(monster)
 			continue
-		if not world._has_line_of_sight_world(origin, position): continue
+		var visible: bool = _auto_area_targets.visible_to(world, position) if first_only else world._has_line_of_sight_world(origin, position)
+		if not visible: continue
 		result.append(monster)
 		if first_only: break
-	if first_only:
-		# Only remember misses proven by position and terrain. A live change to
-		# concealment, immunity, or auto-selectability needs no move to be seen.
-		if can_remember and result.is_empty(): _auto_area_misses.remember(world.monsters_root, actors, geometry, bounds)
-		else: _auto_area_misses.clear_if_unused()
+	# A miss earned while actors are temporarily ineligible cannot be reused.
+	if can_remember and result.is_empty(): _auto_area_targets.remember_geometry_miss(geometry)
 	return result
 
 func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1, direction: Vector2 = Vector2.ZERO, area_cast: bool = false) -> void:

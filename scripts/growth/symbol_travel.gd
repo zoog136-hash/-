@@ -155,7 +155,7 @@ func travel_loading(index: int, source: Dictionary, origin: String, revision: in
 	if not offer.ok: return offer
 	if bool(offer.landing.cross): return _cross(offer,source)
 	if not world.has_method("travel_map_point"): return _commit_same_land(index,source,offer)
-	return await world.travel_map_point(offer.destination,_commit_same_land.bind(index,source,offer),source.kind=="scroll")
+	return await world.travel_map_point(offer.destination,_commit_same_land.bind(index,source,offer))
 
 
 func _commit_same_land(index: int, source: Dictionary, offer: Dictionary) -> Dictionary:

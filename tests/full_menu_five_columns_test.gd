@@ -112,13 +112,17 @@ func order_and_retired(hud: Node) -> void:
 	var grid: Control=hud.workspace.find_child("MenuGrid",true,false)
 	var source: Dictionary={
 		0:"crafting",1:"exchange",2:"변신",3:"마법인형",4:"성물",
-		5:"source_dungeons",8:"skill_card523",9:"equipment_collections",10:"clan523",
+		5:"source_dungeons",8:"skill_card523",9:"equipment_collections",10:"clan523",12:"memory_places",
 		16:"refine523",18:"guardians",19:"emblems",20:"half_elixir",22:"weapon_mastery",
 		23:"totems",24:"domination_stone",25:"titles",28:"settings",29:"restart",
 	}
 	var original: bool=hud.menu_original_shell.get("ok",false)
 	var visible_cells: Array=grid.get_children().filter(func(cell: Control) -> bool:return cell.visible)
 	if original:
+		var controller: Node=hud.original_main_ui_controller
+		var source_shop: Dictionary=controller.menu_action_art("shop")
+		var shop_art: TextureRect=grid.get_node("MenuTile_shop/SourceActionIcon")
+		check(source_shop.get("texture")!=null and shop_art.texture==source_shop.texture and shop_art.material==source_shop.material,"the menu shop tile uses the authored HUD shop icon")
 		for index: int in 35:
 			var cell: Control=visible_cells[index]
 			var id:String=str(source.get(index,""))
@@ -184,6 +188,11 @@ func every_tile_opens(hud: Node) -> void:
 		var ok: bool = (saved[0] == 1) if id == "save" else (section != "menu" and section != "")
 		# With the original UI pack 월드맵 is the client's Map_All over the field.
 		# Without it 무기 숙련 hands over to the existing mastery panel.
+		if id == "memory_places":
+			var controller: Node=hud.original_main_ui_controller
+			ok=section=="teleport"
+			if is_instance_valid(controller) and controller.feature_window_available("memory_places"):
+				ok=ok and controller.feature_window_is_open("memory_places")
 		if id == "weapon_mastery" and not ok: ok = mastery[0] > 0
 		if id == "map" and not ok: ok = is_instance_valid(hud.original_main_ui_controller) and hud.original_main_ui_controller.world_map_is_open()
 		if id == "restart":

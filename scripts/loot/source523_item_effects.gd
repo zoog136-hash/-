@@ -28,6 +28,7 @@ extends RefCounted
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
+const CONSUMABLE_QUERIES = preload("res://scripts/resources/current523_consumable_queries.gd")
 const FOOD_REASONS: Array[String] = ["unsupported_buff_effect:RegenHP","unsupported_buff_effect:RegenMP"]
 const EINASAD_POINT_VARIABLE_TYPE := 42
 const RULES = preload("res://scripts/einasad/einasad523_rules.gd")
@@ -82,7 +83,9 @@ static func _amulet_category(record: Dictionary) -> bool:
 
 ## {"kind":"teleport", "territory_class_ids", "consume_delay_ms"} or {}.
 static func teleport(record: Dictionary) -> Dictionary:
-	var definition: Dictionary = _definition(record)
+	return _teleport_from_definition(_definition(record))
+
+static func _teleport_from_definition(definition: Dictionary) -> Dictionary:
 	if definition.is_empty(): return {}
 	var raw: Dictionary = definition.original_item
 	var known_reusable: bool = int(raw.ID) in REUSABLE_RANDOM_SCROLLS
@@ -125,7 +128,9 @@ static func teleport(record: Dictionary) -> Dictionary:
 ## {"kind":"teleport_location", "land_id", "bounds", "usable_classes",
 ## "forbidden_classes", "consume_delay_ms", "consume_sprite_id", "source"} or {}.
 static func location_teleport(record: Dictionary) -> Dictionary:
-	var definition: Dictionary = _definition(record)
+	return _location_from_definition(_definition(record))
+
+static func _location_from_definition(definition: Dictionary) -> Dictionary:
 	if definition.is_empty(): return {}
 	if int(definition.original_item.ID)==SUMMIT_SCROLL: return _summit_location(definition)
 	var targets: Array = []; var classes: Array[int] = []; var delay: int = 0; var delays: int = 0; var sprite: int = 0; var sprites: int = 0
@@ -229,7 +234,7 @@ static func consume_areas(class_ids: Array) -> Variant:
 			if not _integer(link.get("TerritoryId")): return null
 			ids[int(link.TerritoryId)] = true
 		if ids.is_empty(): return null
-		var found: Array[Dictionary] = SOURCE.consumable_territories(ids)
+		var found: Array[Dictionary] = CONSUMABLE_QUERIES.territories(ids)
 		if found.size()!=ids.size(): return null
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
@@ -260,7 +265,7 @@ static func forbidden_areas(contract: Dictionary) -> Variant:
 		for link: Dictionary in SOURCE.rows_matching("ConsumeTerritories","ConsumeTerritoryId",{id:true}):
 			if not _integer(link.get("TerritoryId")): return null
 			ids[int(link.TerritoryId)] = true
-		var found: Array[Dictionary] = SOURCE.consumable_territories(ids)
+		var found: Array[Dictionary] = CONSUMABLE_QUERIES.territories(ids)
 		if found.size()!=ids.size(): return null
 		for territory: Dictionary in found:
 			for field: String in ["LandID","StartX","StartY","EndX","EndY"]:
@@ -433,9 +438,16 @@ static func food_action(world: Node, record: Dictionary) -> Dictionary:
 	result["source_use_spec"] = spec
 	return result
 
+## Both teleport contracts read the same verified ItemClass definition.
+static func travel_kind(record: Dictionary) -> String:
+	var definition: Dictionary = _definition(record)
+	if not _teleport_from_definition(definition).is_empty(): return "teleport"
+	if not _location_from_definition(definition).is_empty(): return "teleport_location"
+	return ""
+
 static func claims(record: Dictionary) -> String:
-	if not teleport(record).is_empty(): return "teleport"
-	if not location_teleport(record).is_empty(): return "teleport_location"
+	var travel: String = travel_kind(record)
+	if not travel.is_empty(): return travel
 	if not ain(record).is_empty(): return "ain"
 	if not food_contract(record).is_empty(): return "food"
 	return ""
