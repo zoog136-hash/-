@@ -432,8 +432,8 @@ func _open_fusion_result() -> Dictionary:
 	var reduced: bool=settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0)
 	if not reveal_intro(effect,Callable(self,"_finish_fusion_result").bind(_fusion_result),not reduced):return _finish_fusion_result()
 	var reel_host: Node2D=effect.find_child("SkillFusionCandidateReel",true,false) as Node2D
-	if reel_host!=null and int(reel_host.get_meta("skill_fusion_reel_icons",0))>0:
-		var reel: Node2D=reel_host.get_meta("source_project_player",null) as Node2D
+	if reel_host!=null and int(reel_host.get_meta("skill_fusion_reel_icons",0))>0 and reel_host.has_meta("source_project_player"):
+		var reel: Node2D=reel_host.get_meta("source_project_player") as Node2D
 		if reel!=null and reel.play("Fx_Roultte_Start",true).get("ok",false):reel_host.show()
 	_fusion_opening=true
 	return {"ok":true,"opening":true}
