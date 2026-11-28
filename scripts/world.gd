@@ -2243,6 +2243,7 @@ func _connect_signals() -> void:
 	combat_vfx.z_index = 12
 	combat_vfx.source_result_visual = _play_original_combat_result
 	combat_vfx.source_head_result_visual = _play_original_combat_result.bind(true)
+	combat_vfx.show_result_titles = false
 	add_child(combat_vfx)
 	combat_corpses = Node2D.new()
 	combat_corpses.name = "CombatCorpses"
@@ -7093,6 +7094,9 @@ func _patch523_craft_requested(recipe_id: String, batches: int) -> void:
 	var transaction: Dictionary = patch523_equipment.execute(recipe_id, batches, inventory, gold,
 		_patch523_craft_items_for_recipe(recipe_id), item_instances, equipped_items, _inventory_total_weight(), _carrying_capacity(),
 		next_item_instance_id, ui_preferences.get("item_locks", {}), patch523_material_choices.get(recipe_id, {}), outcome_roll, context)
+	if transaction.has("auto_native_material_review"):
+		context["quest_material_review"] = transaction.auto_native_material_review
+		transaction.erase("auto_native_material_review")
 	if transaction.get("ok",false):transaction=PATCH523_QUEST_MATERIALS.join(self,patch523_equipment,transaction,context)
 	if transaction.get("ok",false):transaction=preload("res://scripts/loot/current523_native_stack.gd").join_craft_output(self,patch523_equipment,transaction,context)
 	# TWILIGHT 근사 2026-11-16: 성공 페이백 / 혈맹 몫 stacks get the same owned-stack receipts.
@@ -7380,7 +7384,7 @@ func production_recipe_craftable(recipe_id: String, preview_quote: Callable) -> 
 		var issued: Variant = null
 		if not patch523_owned_material_choices.has(recipe_id):
 			issued = expedition_local.state.get("issued", {})
-		if not _production_can_meet_required_inputs(recipe, inventory, gold, patch523_material_choices.get(recipe_id, {}), issued): return false
+		if not _production_can_meet_required_inputs(recipe, inventory, gold, issued): return false
 	var result: Dictionary = preview_quote.call(recipe_id, 1) if preview_quote.is_valid() else _craft_quote(recipe_id, 1)
 	return bool(result.get("ok", false))
 
@@ -7388,7 +7392,7 @@ func production_recipe_craftable(recipe_id: String, preview_quote: Callable) -> 
 ## definitions. The optional issued ledger permits an upper bound for ordinary
 ## stacks when there are no explicitly selected receipt inputs. A potential
 ## match still needs the complete quote and all ownership checks.
-static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, choices: Dictionary, issued: Variant = null) -> bool:
+static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictionary, wallet: int, issued: Variant = null) -> bool:
 	if recipe.is_empty() or wallet < int(recipe.adena): return false
 	if not recipe.has("material_slots"):
 		for material: Dictionary in recipe.materials:
@@ -7396,10 +7400,12 @@ static func _production_can_meet_required_inputs(recipe: Dictionary, bag: Dictio
 		return true
 	for slot: Dictionary in recipe.material_slots:
 		var candidates: Array = slot.candidates
-		if candidates.size() == 1:
-			if _production_lacks_material(candidates[0], bag, issued): return false
-		elif not choices.has(str(int(slot.slot_index))):
-			return false
+		var possible: bool = false
+		for candidate: Dictionary in candidates:
+			if not _production_lacks_material(candidate, bag, issued):
+				possible = true
+				break
+		if not possible: return false
 	return true
 
 static func _production_lacks_material(material: Dictionary, bag: Dictionary, issued: Variant) -> bool:
@@ -7434,9 +7440,11 @@ func _patch523_craft_context(recipe_id: String="",batches: int=1) -> Dictionary:
 	var context: Dictionary={"level":level,"usage":patch523_crafting_usage,"now":int(Time.get_unix_time_from_system()),"expedition_owner":expedition_local,"awakening_world":self,"source_recipe_id":recipe_id,"server_profile":preload("res://scripts/loot/current523_server_profile.gd").profile(self)}
 	if recipe_id.is_empty():return context
 	var selected: Dictionary=patch523_owned_material_choices.get(recipe_id,{})
-	if not selected.is_empty() and int(selected.batch)!=batches:
+	if selected.is_empty():
+		context["auto_materials"]=true
+	elif int(selected.batch)!=batches:
 		context["quest_material_review"]={"ok":false,"reason":"제작 횟수가 변경됐습니다 · 원본 물리 재료와 잔량을 다시 선택하세요"}
-	else:context["quest_material_review"]=PATCH523_QUEST_MATERIALS.review(self,patch523_equipment,recipe_id,batches,patch523_material_choices.get(recipe_id,{}),selected.get("selections",[]))
+	else:context["quest_material_review"]=PATCH523_QUEST_MATERIALS.review(self,patch523_equipment,recipe_id,batches,patch523_material_choices.get(recipe_id,{}),selected.selections)
 	return context
 
 func patch523_craft_condition_summary(recipe: Dictionary) -> String:

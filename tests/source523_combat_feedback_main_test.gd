@@ -183,21 +183,20 @@ func _run() -> void:
 		if not crit.is_empty(): break
 	if check(crit.size() == 1,"actual critical uses the worn sword's exact original effect once"):
 		await check_frames(crit[0],"weapon critical")
-	var title: Array[Node2D] = original_overlays(player_preview,"combat_result",16019)
-	if check(title.size() == 1,"critical uses the original caption"):
-		await check_frames(title[0],"critical caption")
-	check(world.combat_vfx.active.any(func(row: Dictionary) -> bool: return row.kind == "number" and row.get("original_caption",false)),"damage number remains with the original caption")
+	check(original_overlays(player_preview,"combat_result",16019).is_empty(),"ordinary attack shows no Critical title above the target")
+	check(world.combat_vfx.active.any(func(row: Dictionary) -> bool: return row.kind == "number" and row.critical and not row.caption),"critical damage number remains on the target")
 	player_preview.clear_current523_combat_feedback()
 	var hp: int = target.hp
 	target.show_miss()
-	var miss_overlays: Array[Node2D] = original_overlays(player_preview,"combat_result",16023)
-	if check(miss_overlays.size() == 1 and target.hp == hp,"MISS uses its original sprite without applying damage"):
-		await check_frames(miss_overlays[0],"miss caption")
+	check(original_overlays(player_preview,"combat_result",16023).is_empty() and target.hp == hp,"a miss shows no title and applies no damage")
 	check(not world.combat_vfx.active.any(func(row: Dictionary) -> bool: return row.kind in ["impact","ring"] or row.get("text") == "MISS"),"custom shapes and duplicate MISS text are absent")
 	world.show_combat_number(target.combat_hit_position(),"CRIT 800",Color.WHITE,true,true)
-	var finisher: Array[Node2D] = original_overlays(player_preview,"combat_result",24259)
-	if check(finisher.size()==1 and original_overlays(player_preview,"combat_result",16019).is_empty(),"final blow and ordinary critical have separate original markers"):
-		await check_frames(finisher[0],"final blow")
+	check(original_overlays(player_preview,"combat_result",24259).is_empty(),"final blow shows no title above the target")
+	var emitted_before: int = world.combat_vfx.emitted
+	world.player.show_miss()
+	world.player.show_received_damage(9,true)
+	world.player.show_status_text("GUARD")
+	check(world.combat_vfx.emitted == emitted_before,"incoming combat does not draw text over the player")
 	world._clear_combat_actions()
 	check(original_overlays(player_preview,"weapon_critical",13411).is_empty() and original_overlays(player_preview,"combat_result",16023).is_empty(),"combat generation cleanup clears the original feedback")
 	await check_healing_potion(world)

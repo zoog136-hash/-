@@ -140,10 +140,10 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		evidence.erase("texture")
 		evidence["card_id"] = SourceCard.CARDS.card_id(record)
 		face.set_meta("original_card_asset",evidence)
-	elif category == "스킬 카드" and int(record.get("item_class_id",0)) > 0:
-		var book: Dictionary = SourceCard.IMAGES523.describe_item_class(int(record.item_class_id), str(record.get("name","")))
-		face.artwork = book.get("texture") as Texture2D
-		var evidence: Dictionary = book.duplicate()
+	elif category == "스킬 카드":
+		var skill: Dictionary = preload("res://scripts/ui/original_ui/source_main_skill_card_window.gd").spell_icon(int(record.get("spell_class_id",0)))
+		face.artwork = skill.get("texture") as Texture2D
+		var evidence: Dictionary = skill.duplicate()
 		evidence.erase("texture")
 		face.set_meta("original_card_asset",evidence)
 	else:

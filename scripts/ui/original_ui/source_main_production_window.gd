@@ -273,11 +273,11 @@ func _material_rows(world: Node, quote: Dictionary) -> Array[Dictionary]:
 	for slot: Dictionary in recipe.get("material_slots",[]):
 		if (slot.candidates as Array).size()<2:continue
 		for candidate: Dictionary in slot.candidates:slot_rows[int(candidate.get("row_id",-1))]=int(slot.slot_index)
-	var statuses: Array=Craft.material_status(world,_selected,_count)
+	var statuses: Array=Craft.material_status(world,_selected,_count,quote)
 	for status: Dictionary in statuses:
 		if slot_rows.has(int(status.material.get("row_id",-2))):continue
 		rows.append(status)
-	var choices: Dictionary=world.patch523_material_choices.get(_selected,{})
+	var choices: Dictionary=quote.get("material_choices",world.patch523_material_choices.get(_selected,{}))
 	for slot: Dictionary in recipe.get("material_slots",[]):
 		var candidates: Array=slot.candidates
 		if candidates.size()<2:continue
@@ -962,9 +962,11 @@ func _replace(slot_key: String) -> Dictionary:
 		if str(int(slot.slot_index))!=slot_key:continue
 		var candidates: Array=slot.candidates
 		var chosen: Dictionary=world.patch523_material_choices.get(_selected,{}).duplicate(true)
+		var quote: Dictionary=world._craft_quote(_selected,_count)
+		var effective: Dictionary=quote.get("material_choices",{})
 		var current: int=-1
 		for index: int in range(candidates.size()):
-			if int(candidates[index].row_id)==int(chosen.get(slot_key,-3)):current=index
+			if int(candidates[index].row_id)==int(chosen.get(slot_key,effective.get(slot_key,-3))):current=index
 		chosen[slot_key]=int(candidates[(current+1)%candidates.size()].row_id)
 		world.patch523_material_choices[_selected]=chosen
 		_reuse_except=[_selected]

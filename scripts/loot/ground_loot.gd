@@ -6,6 +6,7 @@ const GROUND_SOURCE_VIEW = preload("res://scripts/loot/current523_ground_source_
 const DROP_EFFECT = preload("res://scripts/loot/current523_ground_drop_effect.gd")
 const GRADE = preload("res://scripts/loot/current523_item_grade.gd")
 const FIELD_CAMERA = preload("res://scripts/maps/field_camera_scale.gd")
+const SOURCE_IMAGES = preload("res://scripts/ui/source523_image_assets.gd")
 var source_drop_effect: Node2D
 var source_name_label: Label
 var loot_id: String = ""
@@ -19,6 +20,7 @@ var source_ground_status: Dictionary = {}
 var fallback_icon: Texture2D
 var fallback_icon_source: Callable
 var fallback_sprite: Sprite2D
+var fallback_icon_scene: TextureRect
 var fallback_name_label: Label
 var _name_font: FontFile
 
@@ -55,7 +57,7 @@ func configure(record: Dictionary, icon: Texture2D, slot: String, source_ground:
 		pass # No developer text on the floor (2026-11-20); the slot stays empty.
 	add_child(visual)
 	if source_ground.get("required",false): configure_source_ground(source_ground)
-	_refresh_fallback()
+	else: _refresh_fallback()
 
 func configure_source_ground(request: Dictionary) -> void:
 	if not request.get("required",false) or not is_instance_valid(visual): return
@@ -71,7 +73,6 @@ func configure_source_ground(request: Dictionary) -> void:
 	visual.queue_redraw()
 	if is_instance_valid(source_ground_view): source_ground_view.free()
 	source_ground_view = GROUND_SOURCE_VIEW.new()
-	source_ground_view.connect("source_status_changed",_on_source_ground_status)
 	visual.add_child(source_ground_view)
 	var configured: bool = source_ground_view.call("configure_ground_source",request.get("original_item",{}),request.get("source_bank_context",{}),request.get("source_binding",{}),request.get("source_owner_context",{}),loot_id)
 	source_ground_status = source_ground_view.get("selection_status").duplicate(true)
@@ -93,6 +94,8 @@ func configure_source_ground(request: Dictionary) -> void:
 		add_child(source_ground_label)
 	source_ground_label.visible = not configured
 	_configure_source_presentation(request)
+	source_ground_view.connect("source_status_changed",_on_source_ground_status)
+	_refresh_fallback()
 
 ## Original drop effect behind the item body, and the item name over it in
 ## the original grade color (Grade.ColorID -> ColorTable). Nothing is shown
@@ -150,7 +153,9 @@ func _refresh_fallback() -> void:
 	if not drawn and fallback_icon == null and fallback_icon_source.is_valid():
 		var resolved: Variant = fallback_icon_source.call()
 		fallback_icon_source = Callable()
-		if resolved is Texture2D: fallback_icon = resolved
+		if resolved is Dictionary and resolved.get("route") == "source523_images":
+			fallback_icon = resolved.get("texture") as Texture2D
+			if resolved.get("reason") == "unsupported_csb": _mount_fallback_icon_scene(resolved)
 	if not drawn and fallback_icon != null and not is_instance_valid(fallback_sprite) and is_instance_valid(visual):
 		fallback_sprite = Sprite2D.new()
 		fallback_sprite.name = "InventoryIconFallback"
@@ -161,6 +166,9 @@ func _refresh_fallback() -> void:
 		if size.x > 0 and size.y > 0: fallback_sprite.scale = Vector2.ONE * (32.0 / maxf(size.x,size.y))
 		visual.add_child(fallback_sprite)
 	if is_instance_valid(fallback_sprite): fallback_sprite.visible = not drawn
+	if is_instance_valid(fallback_icon_scene):
+		fallback_icon_scene.visible = not drawn
+		fallback_icon_scene.process_mode = Node.PROCESS_MODE_DISABLED if drawn else Node.PROCESS_MODE_INHERIT
 	var named: bool = is_instance_valid(source_name_label) and source_name_label.visible
 	if not drawn and not named and not is_instance_valid(fallback_name_label):
 		fallback_name_label = Label.new()
@@ -181,6 +189,18 @@ func _refresh_fallback() -> void:
 		add_child(fallback_name_label)
 		FIELD_CAMERA.keep_screen_size(fallback_name_label, Vector2(80,8))
 	if is_instance_valid(fallback_name_label): fallback_name_label.visible = not drawn and not named
+
+func _mount_fallback_icon_scene(info: Dictionary) -> void:
+	var icon := TextureRect.new()
+	icon.name = "InventoryIconSceneFallback"
+	icon.position = Vector2(-16,-30)
+	icon.size = Vector2(32,32)
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	visual.add_child(icon)
+	var mounted: Dictionary = SOURCE_IMAGES.attach_original_icon(icon,info,{}, {"usage":"ground","trigger":"ground_inventory_icon_fallback"})
+	if mounted.get("ok",false): fallback_icon_scene = icon
+	else: icon.queue_free()
 
 func set_selected(value: bool) -> void:
 	visual.selected = value

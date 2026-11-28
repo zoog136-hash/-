@@ -8,6 +8,8 @@ const GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const GROUND_SOURCE = preload("res://scripts/resources/current523_source_ground_selection.gd")
 const SOURCE_ITEMS = preload("res://scripts/loot/patch523_monster_drops.gd")
 const IDENTITY = preload("res://scripts/ui/source523_item_identity.gd")
+const ITEM_IMAGES = preload("res://scripts/ui/item_visual_resolver.gd")
+const TRANSFER = preload("res://scripts/loot/inventory_ground_transfer.gd")
 const LIFETIME: float = 600.0
 const MIN_VISIBLE_MS: int = 850
 const OCCUPANCY_CELL: float = 64.0
@@ -144,7 +146,8 @@ func _commit_spawn(staged: Dictionary) -> Button:
 
 func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
-	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
+	var item_name: String = str(record["item_name"])
+	var item_data: Dictionary = floor_item_record(record)
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
 	var started: int = FRAME_HITCH.now()
 	var ground_request: Dictionary = _source_ground_request(item_data,str(record["id"]))
@@ -152,11 +155,10 @@ func _create_view(record: Dictionary) -> Button:
 	var icon: Texture2D = null
 	var images: Dictionary = world.catalog_image_index.get("아이템",{})
 	if ground_request.is_empty():
-		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
+		icon = ITEM_IMAGES.texture(item_data,item_name,images,true)
 	# The original inventory icon is the floor picture when no original floor
 	# body can be drawn (legacy-name items had none and lay invisible).
-	var item_name: String = str(record["item_name"])
-	var inventory_icon: Callable = func() -> Variant: return preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,item_name,images,false)
+	var inventory_icon: Callable = func() -> Dictionary: return ITEM_IMAGES.describe(item_data,item_name,images)
 	var name_font: FontFile
 	var hud: Variant = world.get("hud")
 	if is_instance_valid(hud) and hud.has_method("original_item_name_font"):
@@ -166,6 +168,20 @@ func _create_view(record: Dictionary) -> Button:
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view
 	return view
+
+func floor_item_record(record: Dictionary) -> Dictionary:
+	var item_name: String = str(record.get("item_name", ""))
+	var own: Variant = record.get("item_record")
+	if own is Dictionary and own.get("name") == item_name: return own
+	var catalog: Dictionary = item_record(item_name)
+	# Older floor saves may carry the exact item only inside the moved
+	# instance. Use it for display without promoting it into a pickup proof.
+	if record.has("physical_item") and TRANSFER.payload_valid(record):
+		var physical: Variant = record.physical_item.data.get("record")
+		if physical is Dictionary and physical.get("name") == item_name:
+			if not catalog.is_empty() or not SOURCE_ITEMS.current_original_definition(physical).get("original_item",{}).is_empty():
+				return physical
+	return catalog
 
 func _source_ground_request(item: Dictionary, ground_id: String = "") -> Dictionary:
 	if item.get("source_m_native_item") != true:
@@ -346,10 +362,9 @@ func restore(saved: Variant) -> void:
 			var record: Dictionary = (entry as Dictionary).duplicate(true)
 			var item_name: String = str(record.get("item_name", ""))
 			var point: Variant = record.get("position", [])
-			var item: Dictionary = item_record(item_name)
-			if record.get("item_record") is Dictionary and str(record.item_record.get("name","")) == item_name: item = record.item_record
+			var item: Dictionary = floor_item_record(record)
 			if item.is_empty() or not point is Array or point.size() < 2: continue
-			if not preload("res://scripts/loot/inventory_ground_transfer.gd").can_collect(world,record): continue
+			if not TRANSFER.can_collect(world,record): continue
 			var physical_id: String = str(record.physical_item.id) if record.has("physical_item") else ""
 			if not physical_id.is_empty():
 				if restored_physical_ids.has(physical_id): continue

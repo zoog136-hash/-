@@ -1254,7 +1254,7 @@ static func _debit_awakening(world: Node, physical: Dictionary, key: String, ite
 func available_material(material: Dictionary, inventory: Dictionary, items: Dictionary, physical: Dictionary, equipped: Dictionary, locks: Dictionary, allow_smelt_loss: bool, gold: int = -1, context: Dictionary = {}) -> int:
 	var item_name: String = str(material.item)
 	if bool(material.get("wallet",false)) and str(material.source_id)=="26": return maxi(0,gold)
-	if bool(locks.get(item_name, false)):
+	if bool(locks.get(item_name, false)) or bool(locks.get(ownership_key(material),false)):
 		return 0
 	var owned: int = maxi(0, int(inventory.get(ownership_key(material), 0)))
 	if not bool(material.physical):
@@ -1291,7 +1291,7 @@ static func recipe_cost(recipe: Dictionary, count: int) -> int:
 		if bool(material.get("wallet",false)) and str(material.source_id)=="26": cost+=int(material.quantity)*count
 	return cost
 
-func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictionary:
+func material_selection(recipe_id: String, choices: Dictionary = {}, show_defaults: bool = false) -> Dictionary:
 	if not recipes.has(recipe_id): return denied("원본 제작법이 없습니다")
 	var recipe: Dictionary = recipes[recipe_id].duplicate(true)
 	var contract: Dictionary = _source_recipe_contract(recipe)
@@ -1310,6 +1310,7 @@ func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictiona
 			var wanted: int = int(choices.get(str(int(slot.slot_index)), -1))
 			for candidate: Dictionary in candidates:
 				if int(candidate.row_id) == wanted: chosen = candidate
+			if chosen.is_empty() and show_defaults and not candidates.is_empty(): chosen = candidates[0]
 		if chosen.is_empty():
 			missing = true
 			continue
@@ -1321,6 +1322,74 @@ func material_selection(recipe_id: String, choices: Dictionary = {}) -> Dictiona
 	return {"ok":not missing,"recipe":recipe,"reason":"각 재료 슬롯의 후보를 직접 선택하세요" if missing else ""}
 
 func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary = {}, choices: Dictionary = {}, context: Dictionary = {}) -> Dictionary:
+	var check_choice: Callable = _quote_choice.bind(recipe_id,count,inventory,gold,items,physical,equipped,current_weight,capacity,locks,context)
+	var recipe: Dictionary = recipes.get(recipe_id,{})
+	if not context.get("auto_materials",false) or not recipe.get("requires_material_selection",false):
+		return check_choice.call(choices)
+	var preferred: Dictionary = {}
+	var alternatives: Array[Dictionary] = []
+	for slot: Dictionary in recipe.material_slots:
+		var candidates: Array = slot.candidates
+		if candidates.size() < 2: continue
+		var key: String = str(int(slot.slot_index))
+		var wanted: int = int(choices.get(key,candidates[0].row_id))
+		preferred[key] = int(candidates[0].row_id)
+		for candidate: Dictionary in candidates:
+			if int(candidate.row_id) == wanted:
+				preferred[key] = wanted
+				break
+		alternatives.append(slot)
+	var first: Dictionary = check_choice.call(preferred)
+	if first.get("ok",false):
+		first["material_choices"] = preferred
+		return first
+	if not first.get("material_unavailable",false): return first
+	var craft_world: Variant = context.get("awakening_world")
+	var stock: Dictionary = QUEST_MATERIALS.automatic_stock(craft_world,alternatives) if craft_world is Node else {}
+	var alternate_context: Dictionary = context.merged({"automatic_native_stock":stock,"automatic_slots":preferred})
+	check_choice = _quote_choice.bind(recipe_id,count,inventory,gold,items,physical,equipped,current_weight,capacity,locks,alternate_context)
+	var groups: Array[Dictionary] = []
+	var allow_smelt_loss: bool = int(recipe.get("popup_text_id",0)) != 0
+	for slot: Dictionary in alternatives:
+		var key: String = str(int(slot.slot_index))
+		var eligible: Array[int] = []
+		for material: Dictionary in slot.candidates:
+			var backed: int = QUEST_MATERIALS.automatic_units(material,stock,preferred)
+			var available: int = available_material(material,inventory,items,physical,equipped,locks,allow_smelt_loss,gold,context)
+			if int(material.quantity) * count > available+backed: continue
+			var row_id: int = int(material.row_id)
+			if preferred[key] == row_id: eligible.push_front(row_id)
+			else: eligible.append(row_id)
+		if eligible.is_empty(): return first
+		groups.append({"key":key,"rows":eligible})
+	# Most recipes have one alternative slot. When individually viable
+	# candidates share a stack or instance, only the complete quote can
+	# approve their combined debit. Bound retries in unusually large recipes.
+	var attempt: Dictionary = {"left":128}
+	var found: Dictionary = _quote_alternatives(check_choice,groups,0,{},attempt)
+	return found if not found.is_empty() else first
+
+static func _quote_alternatives(check_choice: Callable, groups: Array[Dictionary], index: int, choices: Dictionary, attempt: Dictionary) -> Dictionary:
+	if int(attempt.left) <= 0: return {}
+	if index == groups.size():
+		attempt.left -= 1
+		var quote_result: Dictionary = check_choice.call(choices)
+		if quote_result.get("ok",false):
+			quote_result["material_choices"] = choices.duplicate()
+			return quote_result
+		return {}
+	var group: Dictionary = groups[index]
+	for row_id: int in group.rows:
+		choices[group.key] = row_id
+		var result: Dictionary = _quote_alternatives(check_choice,groups,index+1,choices,attempt)
+		if not result.is_empty(): return result
+		if int(attempt.left) <= 0: break
+	return {}
+
+static func _unavailable_material(reason: String) -> Dictionary:
+	return denied(reason).merged({"material_unavailable":true})
+
+func _quote_choice(choices: Dictionary, recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, locks: Dictionary, context: Dictionary) -> Dictionary:
 	if not recipes.has(recipe_id) or count < 1 or count > MAX_BATCH or gold < 0 or current_weight < 0 or capacity < 0:
 		return denied("원본 제작법·횟수·보관 상태가 유효하지 않습니다")
 	if context.has("quest_material_review"):
@@ -1330,6 +1399,14 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var selection: Dictionary = material_selection(recipe_id, choices)
 	if not bool(selection.get("ok", false)): return selection
 	var recipe: Dictionary = selection.recipe
+	var native_review: Dictionary = {}
+	var stock: Dictionary = context.get("automatic_native_stock",{})
+	if not stock.is_empty():
+		var requests: Array = QUEST_MATERIALS.automatic_selections(recipe,count,stock,context.automatic_slots)
+		if not requests.is_empty():
+			native_review = QUEST_MATERIALS.review(context.awakening_world,self,recipe_id,count,choices,requests)
+			if not native_review.get("ok",false): return _unavailable_material(str(native_review.reason))
+			context = context.merged({"quest_material_review":native_review},true)
 	var qualification: Dictionary=CONDITIONS.stage(recipe,count,context)
 	if not bool(qualification.get("ok",false)): return qualification
 	if recipe.has("outcomes") and count!=1: return denied("확률 제작은 결과를 확인하며 1회씩 진행합니다")
@@ -1353,7 +1430,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var net_weight: int = current_weight
 	var cost: int = recipe_cost(recipe,count)
 	if gold < cost:
-		return denied("아데나가 부족합니다")
+		return _unavailable_material("아데나가 부족합니다")
 	for material: Dictionary in recipe.materials:
 		if bool(material.get("wallet",false)) and str(material.source_id)=="26": continue
 		var item_name: String = str(material.item)
@@ -1361,7 +1438,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		var required: int = int(material.quantity) * count
 		var item: Dictionary = items.get(item_name, {})
 		if required < 1 or owned_key.is_empty() or bool(locks.get(item_name, false)) or bool(locks.get(owned_key,false)):
-			return denied("잠긴 재료 또는 중복 재료는 사용할 수 없습니다")
+			return _unavailable_material("잠긴 재료 또는 중복 재료는 사용할 수 없습니다")
 		if not bool(material.physical):
 			var pools: Dictionary={}
 			if not _stack_has_owned_entities(material,physical,owned_key) and _stack_identity_matches(item,material):pools[owned_key]={"amount":maxi(0,int(inventory.get(owned_key,0))),"record":item}
@@ -1390,10 +1467,10 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 				net_weight-=maxi(0,int(pools[key].get("carried_weight",pools[key].record.get("weight",3))))*take
 				need-=take
 				if need==0:break
-			if need>0:return denied(item_name+" 재료가 부족하거나 원본 소지/발급 증명이 일치하지 않습니다")
+			if need>0:return _unavailable_material(item_name+" 재료가 부족하거나 원본 소지/발급 증명이 일치하지 않습니다")
 			continue
 		if int(inventory.get(owned_key, 0)) < required + int(costs.get(owned_key, 0)):
-			return denied(item_name + " 재료가 부족합니다")
+			return _unavailable_material(item_name + " 재료가 부족합니다")
 		if bool(material.physical):
 			var candidates: Array = physical.keys()
 			candidates.sort()
@@ -1409,7 +1486,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 					if selected == required:
 						break
 			if selected != required:
-				return denied("재료의 원본 ID·강화·축복·잠금·장착 상태를 확인하세요: " + item_name)
+				return _unavailable_material("재료의 원본 ID·강화·축복·잠금·장착 상태를 확인하세요: " + item_name)
 		elif _stack_has_owned_entities(material,physical,owned_key):
 			return denied("원본 보상 개체의 수량·제한·영수증 차감 소유자 연결이 필요합니다: "+item_name)
 		elif not _stack_identity_matches(item,material):
@@ -1436,11 +1513,12 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 		output_weight+=maxi(0,int(bonus_item.get("weight",3)))*int(bonus.quantity)*count
 	net_weight += output_weight
 	if net_weight < 0 or net_weight > capacity:
-		return denied("제작 결과를 보관할 무게가 부족합니다")
+		return _unavailable_material("제작 결과를 보관할 무게가 부족합니다")
 	qualification.merge({"ok": true, "result_name": str(output.item), "result_quantity": produced, "cost": cost,
 		"materials": costs, "material_provenance":provenance, "material_rows":material_rows, "consumed_ids": selections, "new_weight": net_weight},true)
 	var quest_problem: String=QUEST_MATERIALS.quote_problem(qualification,context)
 	if not quest_problem.is_empty():return denied(quest_problem)
+	if not native_review.is_empty():qualification["auto_native_material_review"]=native_review
 	return qualification
 
 func execute(recipe_id: String, count: int, inventory: Dictionary, gold: int, items: Dictionary, physical: Dictionary, equipped: Dictionary, current_weight: int, capacity: int, next_id: int, locks: Dictionary = {}, choices: Dictionary = {}, roll: int = -1, context: Dictionary = {}) -> Dictionary:

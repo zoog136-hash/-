@@ -27,6 +27,8 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 const ROOT="UI/SkillCard/SkillCard_All.csb"
 const POPUP="UI/SkillCard/SkillCard_Popup_Enchant.csb"
 const FUSION_CARD="UI/SkillCard/SkillCard_Fusion_Card.csb"
+const FUSION_REEL="UI/SkillCard/SkillCard_Fusion_Roultte.csb"
+const REEL_SLOTS="Card_Roultte/Fx_Skill_Roultte/Panel/Change_Slot_Skill_"
 const CLASS_ROW="UI/SkillCard/SkillCard_List_Class.csb"
 const SLOT="UI/SkillCard/SkillCard_Slot_A.csb"
 const SLOT_B="UI/SkillCard/SkillCard_Slot_B.csb"
@@ -64,6 +66,7 @@ var _grid_positions: Dictionary={}
 var _held_slot: int=-1
 var _stage_deck: Variant=null
 var _fusion_result: Dictionary={}
+var _fusion_candidates: Array=[]
 var _fusion_opened: bool=false
 var _fusion_opening: bool=false
 var _merge_token: String=""
@@ -86,6 +89,7 @@ func open(parent: Node) -> Dictionary:
 	registered.clear()
 	feed.clear()
 	_fusion_result={}
+	_fusion_candidates=[]
 	_fusion_opened=false
 	_fusion_opening=false
 	_merge_token=""
@@ -97,6 +101,7 @@ func open(parent: Node) -> Dictionary:
 
 func close() -> void:
 	_fusion_result={}
+	_fusion_candidates=[]
 	_fusion_opening=false
 	_merge_token=""
 	_merge_dialog=null
@@ -280,12 +285,51 @@ func _enchant_spec() -> Dictionary:
 
 ## Grade frame (Nd_Grade/Item_<suffix>), Common_Slot trimmed to its picture.
 func _slot_spec(spec: Dictionary, p: String, grade_id: int, level: int) -> void:
+	slot_art_spec(spec,p,grade_id,level)
+	spec[p+"Common_Slot/Btn"]={"activate":Callable(self,"_ignore")}
+
+static func slot_art_spec(spec: Dictionary, p: String, grade_id: int, level: int = -1, slot_parent: String = "") -> void:
 	for suffix: String in SUFFIXES:spec[p+"Nd_Grade/Item_"+suffix]={"visible":suffix==str(GRADE_SUFFIX.get(grade_id,""))}
 	spec[p+"Nd_Grade/Item_Disabled"]={"visible":false}
 	spec[p+"Label_Level"]={"role":"source_text","text":"Lv.%d" % level,"visible":level>=0}
-	spec[p+"Common_Slot/Btn"]={"activate":Callable(self,"_ignore")}
-	spec[p+"Common_Slot/Sp_IconSample"]={"role":"source_asset_slot","visible":false}
-	for name: String in SLOT_EXCLUDED:spec[p+"Common_Slot/"+name]={"exclude":true}
+	var slot: String=p+slot_parent+"Common_Slot/"
+	spec[slot+"Btn"]={"exclude":true}
+	spec[slot+"Sp_IconSample"]={"role":"source_asset_slot","visible":false}
+	for name: String in SLOT_EXCLUDED:spec[slot+name]={"exclude":true}
+
+## Shared by the skill draw and fusion results. The display binds the
+## committed BuffCard's SpellClass icon, independently of its inventory book.
+static func mount_result_face(window: RefCounted, host: Node2D, card: Dictionary) -> Dictionary:
+	var spec: Dictionary={}
+	slot_art_spec(spec,"Panel/",int(card.get("grade_id",0)),-1,"Panel_Slot/")
+	spec["Panel_Fx"]={"exclude":true}
+	var keys: Dictionary={}
+	var built: Dictionary=window._scene_of(SLOT,spec,keys)
+	if not built.get("ok",false):return built
+	var scene: Node2D=built.scene
+	scene.name="SkillCardResultFace"
+	host.add_child(scene)
+	var shown: bool=bind_spell_icon(window,scene,keys,"Common_Slot/Sp_IconSample",int(card.get("spell_class_id",0)))
+	return {"ok":true,"picture":shown,"face":scene}
+
+static func bind_spell_icon(window: RefCounted, root: Node2D, keys: Dictionary, key: String, spell_class_id: int) -> bool:
+	var located: Dictionary=window._locate(root,keys,key)
+	if not located.get("ok",false):return false
+	var info: Dictionary=spell_icon(spell_class_id)
+	return window._show_item_icon(located.player,located.offset,info)
+
+static func reveal_intro(effect: Node2D, done: Callable, motion: bool) -> bool:
+	if not is_instance_valid(effect) or not effect.is_inside_tree() or not motion:return false
+	if not effect.play("Fx_Start_Active",false).get("ok",false):return false
+	for clip: Dictionary in effect.source_tree.get("animationList",[]):
+		if clip.name!="Fx_Start_Active":continue
+		var speed: float=maxf(0.01,float(effect.source_tree.get("action",{}).get("speed",1.0)))
+		var length: float=float(clip.endIndex)-float(clip.startIndex)
+		var timer: Tween=effect.create_tween()
+		timer.tween_interval(length/60.0/speed)
+		timer.tween_callback(done)
+		return true
+	return false
 
 ## --- Fill ---------------------------------------------------------------------
 
@@ -330,11 +374,21 @@ func _fill_fusion_result(root: Node2D, out: Dictionary, filled: Dictionary) -> D
 	var success: bool=_fusion_result.success
 	var item: Dictionary=_fusion_result.get("result",{})
 	var caption: String=str(item.get("name","")) if success else "재료 %d장 소멸" % int(_fusion_result.consumed)
-	# The source roulette contains preview sprites, so the committed result
-	# uses the standard skill slot and the authored result title/effect.
-	var spec: Dictionary={"Text_Card_Name":{"role":"source_text","text":caption,"visible":_fusion_opened},"card":{"exclude":true},
-		"Panel/Fx_Result_Loop_2":{"exclude":true},"Card_Roultte":{"exclude":true},"Nd_Info":{"exclude":true},
+	# The sealed result mounts the preview slots; the settled face uses only
+	# the committed spell and its grade.
+	var spec: Dictionary={"Text_Card_Name":{"role":"source_text","text":caption,"visible":_fusion_opened},
+		"Panel/Fx_Result_Loop_2":{"exclude":true},"Nd_Info":{"exclude":true},
 		"Fx_Glow/Fx_Greade":{"exclude":true},"Fx_Glow/Fx_Result_Start":{"exclude":true}}
+	var reel_rows: Array=[]
+	if not _fusion_opened and success and not _fusion_candidates.is_empty() and _pack.manifest.get("scenes",{}).has(FUSION_REEL):
+		for index: int in range(6):
+			var candidate: Dictionary=_fusion_candidates[index%_fusion_candidates.size()]
+			var spell: int=int(Rows.row("BuffCard",int(candidate.card_id)).get("SpellClassID",0))
+			reel_rows.append(spell)
+			var reel_slot: String=REEL_SLOTS+str(index+1)+"/"
+			slot_art_spec(spec,reel_slot+"Panel/",int(_fusion_result.target_grade_id),-1,"Panel_Slot/")
+			spec[reel_slot+"Panel_Fx"]={"exclude":true}
+	else: spec["Card_Roultte"]={"exclude":true}
 	spec["Btn_Card"]={"exclude":true} if _fusion_opened else {"activate":Callable(self,"_open_fusion_result")}
 	if not success:
 		spec["Fx_Result_Loop_1"]={"exclude":true}
@@ -347,20 +401,22 @@ func _fill_fusion_result(root: Node2D, out: Dictionary, filled: Dictionary) -> D
 	host.add_child(effect)
 	effect.name="SkillFusionResultCard"
 	if not _fusion_opened:
+		var reel: Dictionary=_locate(effect,bound,"Card_Roultte")
+		var reel_icons: int=0
+		if reel.get("ok",false):
+			var reel_host: Node2D=reel.player.source_nodes[reel.offset]
+			reel_host.name="SkillFusionCandidateReel"
+			reel_host.hide()
+			for index: int in range(reel_rows.size()):
+				var key: String=REEL_SLOTS+str(index+1)+"/Panel/Panel_Slot/Common_Slot/Sp_IconSample"
+				if bind_spell_icon(self,effect,bound,key,int(reel_rows[index])):reel_icons+=1
+			reel_host.set_meta("skill_fusion_reel_icons",reel_icons)
 		effect.seek_frame(60)
-		filled["fusion_result"]={"revealed":false,"member":FUSION_CARD}
+		filled["fusion_result"]={"revealed":false,"member":FUSION_CARD,"candidate_icons":reel_icons}
 		return filled
 	if success:
-		var slot_spec: Dictionary={}
-		_slot_spec(slot_spec,"",int(_fusion_result.target_grade_id),-1)
-		var face_nodes: Dictionary={}
-		var face: Dictionary=_scene_of(SLOT,slot_spec,face_nodes)
-		if face.get("ok",false):
-			# Both the original card effect and slot use a centered pivot.
-			effect.add_child(face.scene)
-			var icon: bool=_slot_icon(face.scene,face_nodes,{"spell_class_id":int(item.get("spell_class_id",0))})
-			if not icon:icon=_slot_icon(face.scene,face_nodes,{"physical_id":str(item.get("physical_id",""))})
-			filled["result_icon"]=icon
+		var face: Dictionary=mount_result_face(self,effect,item.merged({"grade_id":_fusion_result.target_grade_id},true))
+		filled["result_icon"]=face.get("picture",false)
 		var settings: Variant=world().get("presentation_settings")
 		var motion: bool=not (settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0))
 		if not motion or not effect.play("Fx_Cardname",false).get("ok",false):effect.seek_frame(155)
@@ -374,15 +430,13 @@ func _open_fusion_result() -> Dictionary:
 	var effect: Node2D=_scene.find_child("SkillFusionResultCard",true,false)
 	var settings: Variant=world().get("presentation_settings")
 	var reduced: bool=settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0)
-	if effect==null or reduced or not effect.play("Fx_Start_Active",false).get("ok",false):return _finish_fusion_result()
+	if not reveal_intro(effect,Callable(self,"_finish_fusion_result").bind(_fusion_result),not reduced):return _finish_fusion_result()
+	var reel_host: Node2D=effect.find_child("SkillFusionCandidateReel",true,false) as Node2D
+	if reel_host!=null and int(reel_host.get_meta("skill_fusion_reel_icons",0))>0 and reel_host.has_meta("source_project_player"):
+		var reel: Node2D=reel_host.get_meta("source_project_player") as Node2D
+		if reel!=null and reel.play("Fx_Roultte_Start",true).get("ok",false):reel_host.show()
 	_fusion_opening=true
-	for clip: Dictionary in effect.source_tree.get("animationList",[]):
-		if clip.name!="Fx_Start_Active":continue
-		var speed: float=maxf(0.01,float(effect.source_tree.get("action",{}).get("speed",1.0)))
-		var length: float=float(clip.endIndex)-float(clip.startIndex)
-		effect.get_tree().create_timer(length/60.0/speed).timeout.connect(Callable(self,"_finish_fusion_result").bind(_fusion_result))
-		return {"ok":true,"opening":true}
-	return _finish_fusion_result()
+	return {"ok":true,"opening":true}
 
 func _finish_fusion_result(expected: Dictionary={}) -> Dictionary:
 	if not is_open() or _fusion_result.is_empty() or (not expected.is_empty() and not is_same(expected,_fusion_result)):return {"ok":false}
@@ -644,7 +698,7 @@ func _fill_enchant(root: Node2D, out: Dictionary) -> Dictionary:
 		rows+=line.size()
 	var shown: Dictionary={"ok":true,"tab":"enchant","card":int(card.get("card_id",0)),"books":books.size(),"page_books":rows,"feed":feed.duplicate()}
 	var located: Dictionary=_locate(root,out,"Nd_Skill/Nd_Skill/SkillCard_Slot_B/Common_Slot/Sp_IconSample")
-	if located.get("ok",false):shown["icon"]=_show_picture(located.player,located.offset,_spell_icon(int(card.get("spell_class_id",0))))
+	if located.get("ok",false):shown["icon"]=_show_picture(located.player,located.offset,spell_icon(int(card.get("spell_class_id",0))))
 	return shown
 
 func _icons(placed: Dictionary, rows: Array) -> int:
@@ -656,15 +710,16 @@ func _icons(placed: Dictionary, rows: Array) -> int:
 func _slot_icon(scene: Node2D, out: Dictionary, entry: Dictionary) -> bool:
 	var located: Dictionary=_locate(scene,out,"Common_Slot/Sp_IconSample")
 	if not located.get("ok",false):return false
-	if entry.has("spell_class_id"):return _show_picture(located.player,located.offset,_spell_icon(int(entry.spell_class_id)))
+	if entry.has("spell_class_id"):return _show_picture(located.player,located.offset,spell_icon(int(entry.spell_class_id)))
 	return _show_item_icon(located.player,located.offset,_book_icon(entry))
 
 ## The learned card's spell icon (SpellClass IconID).
-static func _spell_icon(spell_class_id: int) -> Dictionary:
+static func spell_icon(spell_class_id: int) -> Dictionary:
 	var rows: Array[Dictionary]=Rows.related("SpellClass","ID",spell_class_id)
 	if rows.is_empty():return {"ok":false}
 	var info: Dictionary=SkillImages.describe_spell_class_row(rows[-1],"IconID")
-	return {"ok":info.get("texture") is Texture2D,"texture":info.get("texture"),"status":str(info.get("status","")),"provenance":info.get("provenance",{})}
+	info["ok"]=info.get("texture") is Texture2D
+	return info
 
 ## A material book's own item icon (its physical record).
 func _book_icon(entry: Dictionary) -> Dictionary:
@@ -904,12 +959,14 @@ func _merge() -> Dictionary:
 		str(GRADES.get(compose_grade,"")),int(quote.source_amount),str(GRADES.get(int(MERGE_TARGET.get(compose_grade,0)),"")),
 		percent_text(float(quote.get("probability_percent",0.0)))]
 	var method: String="confirm_awakening_action" if owner.has_method("confirm_awakening_action") else "confirm_action"
-	var confirm: Callable=Callable(self,"_confirm_fusion").bind(token,compose_grade,registered.duplicate())
+	var raw_candidates: Variant=quote.get("candidates",[])
+	var candidates: Array=raw_candidates if raw_candidates is Array else []
+	var confirm: Callable=Callable(self,"_confirm_fusion").bind(token,compose_grade,registered.duplicate(),candidates)
 	var dialog: Variant=owner.call(method,"스킬 카드 합성",body,"합성",confirm)
 	_merge_dialog=weakref(dialog) if is_instance_valid(dialog) else null
 	return {"ok":true,"quoted":"skill_card523_merge"}
 
-func _confirm_fusion(_count: int, token: String, quoted_grade: int, selection: Dictionary) -> void:
+func _confirm_fusion(_count: int, token: String, quoted_grade: int, selection: Dictionary, candidates: Array) -> void:
 	if token!=_merge_token:return
 	_merge_token=""
 	if tab!="compose" or compose_grade!=quoted_grade or registered!=selection:return
@@ -924,16 +981,19 @@ func _confirm_fusion(_count: int, token: String, quoted_grade: int, selection: D
 		_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
 		return
 	_fusion_result=done
+	_fusion_candidates=candidates
 	_fusion_opened=false
 	_fusion_opening=false
 	if not _stage().get("ok",false):
 		_fusion_result={}
+		_fusion_candidates=[]
 		_message(str(done.get("message","합성 성공" if done.get("success",false) else "합성 실패")))
 		_stage()
 
 func _dismiss_fusion() -> Dictionary:
 	if not _fusion_opened:return {"ok":false}
 	_fusion_result={}
+	_fusion_candidates=[]
 	return _stage()
 
 func _enchant() -> Dictionary:

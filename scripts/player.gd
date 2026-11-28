@@ -753,6 +753,9 @@ func show_received_damage(amount: int, critical: bool = false, _kind: String = "
 	_show_combat_text(display_text, display_color, Vector2(-38.0 if critical else -28.0, -112.0))
 
 func _show_combat_text(text_value: String, color_value: Color, start_position: Vector2) -> void:
+	# Live combat reports through the HUD log and status bar. Preview scenes
+	# still use the standalone captions to inspect hits and status effects.
+	if get_parent() is TwilightWorld: return
 	if get_parent().has_method("show_combat_number"):
 		get_parent().show_combat_number(global_position + Vector2(0, start_position.y), text_value, color_value, text_value.begins_with("CRIT"))
 		return
