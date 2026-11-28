@@ -333,7 +333,7 @@ func _hud_hooks() -> void:
 	check(renewal.contains("_open_original_change_window(category)") and renewal.contains("try_open_change_window"),"open_catalog opens the original window first")
 	check(renewal.contains("close_change_window()"),"closing the workspace closes the window")
 	var main_hud: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_hud.gd")
-	check(main_hud.contains("func try_open_change_window") and main_hud.contains("ChangeWindow.ROOT"),"main HUD controller owns the window")
+	check(main_hud.contains("func try_open_change_window") and main_hud.contains("_configure_workspace_window(CHANGE_WINDOW_SCRIPT)"),"main HUD controller owns the window")
 	var window: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_change_window.gd")
 	check(window.contains("\"catalog_equip_requested\""),"window applies through the existing equip signal")
 

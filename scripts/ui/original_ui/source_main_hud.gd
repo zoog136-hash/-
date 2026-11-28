@@ -29,9 +29,9 @@ const SystemMessage=preload("res://scripts/ui/original_ui/source_main_system_mes
 const InventoryNameView=preload("res://scripts/ui/original_ui/source_main_inventory_name_view.gd")
 const EnhanceAction=preload("res://scripts/ui/original_ui/source_main_enhance_action.gd")
 const QuestControls=preload("res://scripts/ui/original_ui/source_main_quest_controls.gd")
-const QuestWindow=preload("res://scripts/ui/original_ui/source_main_quest_window.gd")
-const ShopWindow=preload("res://scripts/ui/original_ui/source_main_shop_window.gd")
-const ChangeWindow=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
+const QUEST_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_quest_window.gd"
+const SHOP_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_shop_window.gd"
+const CHANGE_WINDOW_SCRIPT := "res://scripts/ui/original_ui/source_main_change_window.gd"
 const InventoryLockView=preload("res://scripts/ui/original_ui/source_main_inventory_lock_view.gd")
 const JoystickView=preload("res://scripts/ui/original_ui/source_main_joystick_view.gd")
 const LOG_BASE_META="source_joystick_log_base"
@@ -139,6 +139,7 @@ var _quest_controls: RefCounted
 var _quest_window: RefCounted
 var _shop_window: RefCounted
 var _change_window: RefCounted
+var _unavailable_workspace_windows: Dictionary[String, bool] = {}
 var _quest_controls_result: Dictionary={}
 var _quest_owner: WeakRef
 var _inventory_lock_view: RefCounted
@@ -240,24 +241,6 @@ func configure(pack: RefCounted, hud: Node, canvas: Control) -> Dictionary:
 				var side: Variant=hud.get("lineage_side_ui")
 				if is_instance_valid(side):side.call("_show_equipment_page")
 				hud.call("open_character"))
-	if pack.manifest.get("scenes",{}).has(QuestWindow.ROOT):
-		var quest_window=QuestWindow.new()
-		if quest_window.configure(pack,hud).get("ok",false):
-			_quest_window=quest_window
-			quest_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
-	if pack.manifest.get("scenes",{}).has(ShopWindow.ROOT):
-		var shop_window=ShopWindow.new()
-		if shop_window.configure(pack,hud).get("ok",false):
-			_shop_window=shop_window
-			shop_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
-	if pack.manifest.get("scenes",{}).has(ChangeWindow.ROOT):
-		var change_window=ChangeWindow.new()
-		if change_window.configure(pack,hud).get("ok",false):
-			_change_window=change_window
-			change_window.closed.connect(func() -> void:
-				if hud.has_method("_close_workspace"):hud.call("_close_workspace"))
 	if pack.manifest.get("scenes",{}).has("UI/NpcDialogue/NpcDialogue_All.csb"):
 		_npc_dialogue_view=NpcDialogueView.new()
 		_npc_dialogue_view.configure(pack)
@@ -709,12 +692,34 @@ func bind_quest_controls(owner: Control) -> Dictionary:
 func _quest_category_changed(_category: String) -> void:
 	if _quest_controls!=null:_quest_controls_result=_quest_controls.refresh()
 
+## Three workspace views configure against their own verified assets on the
+## first request. Remember a rejection until the HUD binds a different pack.
+func _configure_workspace_window(path: String) -> RefCounted:
+	if _pack == null or not is_instance_valid(_coordinates) or _unavailable_workspace_windows.has(path):
+		return null
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if not is_instance_valid(hud): return null
+	var script := load(path) as Script
+	if script != null:
+		var window: RefCounted = script.new()
+		if window.configure(_pack, hud).get("ok", false):
+			window.closed.connect(_workspace_window_closed)
+			return window
+	_unavailable_workspace_windows[path] = true
+	return null
+
+func _workspace_window_closed() -> void:
+	var hud: Node = _hud.get_ref() if _hud != null else null
+	if is_instance_valid(hud) and hud.has_method("_close_workspace"): hud.call("_close_workspace")
+
 func try_open_quest_window(world: Node, claim: Callable) -> Dictionary:
+	if _quest_window==null:_quest_window=_configure_workspace_window(QUEST_WINDOW_SCRIPT)
 	if _quest_window==null or not is_instance_valid(_coordinates):return _fail("source_quest_window_pack_scope_unavailable")
 	_cancel_native_buttons()
 	return _quest_window.open(_coordinates,world,claim)
 
 func can_open_shop_window() -> bool:
+	if _shop_window==null:_shop_window=_configure_workspace_window(SHOP_WINDOW_SCRIPT)
 	return _shop_window!=null and is_instance_valid(_coordinates)
 
 func try_open_shop_window(panel: Control) -> Dictionary:
@@ -734,6 +739,7 @@ func close_shop_window() -> void:
 	_release_menu_page_leases()
 
 func try_open_change_window(category: String) -> Dictionary:
+	if _change_window==null:_change_window=_configure_workspace_window(CHANGE_WINDOW_SCRIPT)
 	if _change_window==null or not is_instance_valid(_coordinates):return _fail("source_change_window_pack_scope_unavailable")
 	var trace: int=MENU_TRACE.begin("change")
 	_cancel_native_buttons()
