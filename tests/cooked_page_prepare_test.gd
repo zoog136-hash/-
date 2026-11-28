@@ -177,7 +177,11 @@ func concurrent_demand() -> void:
 			gate = hold_worker(job)
 		else:
 			check(await wait_for_cpu(job),"CPU preparation completes before the pose requests the page")
-		if source == "published": STORE.pump_prepared_pages()
+		if source == "published":
+			# A fast worker can complete in the frame whose upload allowance
+			# the prior scenario spent. Give the publication its own frame.
+			await next_frame()
+			STORE.pump_prepared_pages()
 		var expected: Texture2D = job.get("texture")
 		var demand: Texture2D = STORE.page_texture(found.actor,0)
 		var disk: Image = FORMAT.read_page(FileAccess.open(found.actor.path,FileAccess.READ),found.actor.index.pages[0],found.actor.data_start)

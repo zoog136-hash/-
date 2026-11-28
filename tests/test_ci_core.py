@@ -21,7 +21,8 @@ SPEC.loader.exec_module(CORE)
 class CoreParallelTest(unittest.TestCase):
     def test_groups_run_once_in_order_with_separate_project_writes(self):
         checks = [('shared_first', []), ('loading_screen_test', []),
-                  ('shared_second', ['--cached-frames']), ('character_account_route_main_test', [])]
+                  ('shared_second', ['--cached-frames']), ('obstacle_detour_test', []),
+                  ('character_account_route_main_test', [])]
         with tempfile.TemporaryDirectory() as directory:
             stage = Path(directory)
             (stage / '.godot').mkdir()
@@ -42,10 +43,11 @@ class CoreParallelTest(unittest.TestCase):
 
             CORE.run_core_checks(checks, stage, execute, parallel_isolated=True)
             self.assertEqual(calls['shared'], [checks[0], checks[2]])
-            self.assertEqual(calls['isolated'], [checks[1], checks[3]])
+            self.assertEqual(calls['isolated'], [checks[1], checks[3], checks[4]])
 
     def test_failed_stage_copy_runs_the_complete_original_order(self):
-        checks = [('shared_first', []), ('loading_screen_test', []), ('shared_second', [])]
+        checks = [('shared_first', []), ('loading_screen_test', []),
+                  ('obstacle_detour_test', []), ('shared_second', [])]
         calls = []
         with tempfile.TemporaryDirectory() as directory:
             stage = Path(directory)

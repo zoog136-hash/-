@@ -74,8 +74,11 @@ func run() -> void:
 	root.add_child(lobby)
 	await process_frame
 	check(lobby.find_child("NewCharacter",true,false) != null,"creation entry visible")
+	var install := lobby.find_child("InstallLobbyPack", true, false) as Button
+	check(install != null and install.text == "생성 연출 팩 설치", "pack entry names the creation preview")
 	check(injected_resolutions.calls == 0,"explicit injected store never resolves another profile")
 	lobby._show_creation()
+	check(lobby.find_child("EnterCharacter", true, false) == null, "roster actions clear while creating a character")
 	check(lobby.create_button.disabled,"no implicit class gender or name")
 	lobby._choose_class(1)
 	lobby.name_input.text = "시험기사"
@@ -119,6 +122,21 @@ func run() -> void:
 			two_line_names = two_line_names and child.text.contains("\n")
 	check(horizontal_fit and two_line_names,"12-character names and class fit as separate lines at 360px")
 	var first: Button = lobby.content.get_child(1) as Button
+	var normal := first.get_theme_stylebox("normal") as StyleBoxFlat
+	var selected := first.get_theme_stylebox("pressed") as StyleBoxFlat
+	check(normal != null and selected != null and selected.bg_color != normal.bg_color,
+		"character rows have distinct local selection styles")
+	var enter := lobby.find_child("EnterCharacter", true, false) as Button
+	var create := lobby.find_child("NewCharacter", true, false) as Button
+	var enter_bounds := enter.get_global_rect()
+	check(not lobby.scroll.is_ancestor_of(enter) and enter.is_visible_in_tree()
+		and create.is_visible_in_tree() and lobby.get_global_rect().encloses(enter_bounds)
+		and lobby.get_global_rect().encloses(create.get_global_rect()),
+		"both actions stay visible at the top of a full narrow roster")
+	var second := lobby.content.get_child(2) as Button
+	second.pressed.emit()
+	check(lobby.selected_id == "0" and second.button_pressed and not first.button_pressed
+		and store.selects == 1 and not enter.disabled, "changing selection updates both rows without entering")
 	first.finger = 3
 	first.touch_origin = Vector2(100,300)
 	var drag := InputEventScreenDrag.new()
@@ -130,8 +148,8 @@ func run() -> void:
 	lobby.scroll.scroll_vertical = int(ceil(lobby.content.size.y))
 	await process_frame
 	await process_frame
-	var enter: Button = lobby.find_child("EnterCharacter", true, false) as Button
-	check(lobby.scroll.get_global_rect().encloses(enter.get_global_rect()), "entry action remains reachable at end of narrow roster")
+	check(enter.get_global_rect() == enter_bounds and enter.is_visible_in_tree(),
+		"scrolling the roster does not move the entry action")
 	lobby.queue_free()
 	await process_frame
 	await profile_route_test(catalog)

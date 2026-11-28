@@ -863,12 +863,21 @@ ISOLATED_CHECKS = frozenset({
     'source_skill_scroll_drag_main_test',
 })
 
+# These cases construct their own inputs without reading or updating the
+# preceding checks' save, settings or baked outputs. The resolution suite's
+# child processes all use explicit fixture paths in its own profile.
+PARALLEL_FIXTURE_CHECKS = frozenset({
+    'current523_walk_jitter_test',
+    'lineagem_pack_resolution_test',
+    'obstacle_detour_test',
+})
 
-def run_check(name, command, target, log, env, marker):
+
+def run_check(name, command, target, log, env, marker, *, isolate_profile=False):
     # These checks require a missing prior save or map preference. Unrelated
     # earlier checks may legitimately create either. Isolate only these
     # fixtures; never delete previous data or weaken a gameplay assertion.
-    if name in ISOLATED_CHECKS:
+    if isolate_profile or name in ISOLATED_CHECKS:
         with tempfile.TemporaryDirectory(prefix='twilight-core-' + name + '-') as profile:
             fixture = dict(env, XDG_DATA_HOME=profile + '/data',
                            XDG_CONFIG_HOME=profile + '/config', XDG_CACHE_HOME=profile + '/cache')
@@ -891,8 +900,9 @@ def run_core_checks(checks, target, execute, parallel_isolated=False):
     if not parallel_isolated:
         run_group(checks, target)
         return
-    isolated = [check for check in checks if check[0] in ISOLATED_CHECKS]
-    shared = [check for check in checks if check[0] not in ISOLATED_CHECKS]
+    parallel_checks = ISOLATED_CHECKS | PARALLEL_FIXTURE_CHECKS
+    isolated = [check for check in checks if check[0] in parallel_checks]
+    shared = [check for check in checks if check[0] not in parallel_checks]
     if not isolated or not shared:
         run_group(checks, target)
         return
@@ -1479,7 +1489,8 @@ def main():
                       'minigame523_scope_test':'MINIGAME523_RESULT',
                       'content523_test':'CONTENT523_RESULT',
                       'content523_approx_test':'CONTENT523_APPROX_RESULT'}[name]
-            run_check(name, command, project, logs/(name+'.txt'), env, marker)
+            run_check(name, command, project, logs/(name+'.txt'), env, marker,
+                      isolate_profile=project != target)
             print('CORE_CHECK_OK', name, flush=True)
 
         run_core_checks(CHECKS, target, execute, args.parallel_isolated)

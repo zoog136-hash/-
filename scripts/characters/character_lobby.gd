@@ -6,6 +6,8 @@ const IMAGE_OWNER_PATH := "res://scripts/ui/source523_image_assets.gd"
 const STYLE = preload("res://scripts/boot/boot_style.gd")
 const PROFILE = preload("res://scripts/characters/save_profile.gd")
 const PRESENTATION = preload("res://scripts/characters/lobby_source_presentation.gd")
+const PANEL_WIDTH := 860.0
+const ENTER_STYLE := &"RosterEnterButton"
 # Native buttons suppress taps after a drag. Forward that drag to the roster
 # scroll before the button marks it handled, so long lists work on touch too.
 class ScrollButton extends "res://scripts/ui/native_touch_button.gd":
@@ -29,6 +31,7 @@ var selected_class: int = 0
 var selected_gender: int = 0
 var busy: bool = false
 var content: VBoxContainer
+var _roster_actions: HBoxContainer
 var status: Label
 var scroll: ScrollContainer
 var name_input: LineEdit
@@ -43,8 +46,6 @@ var create_button: Button
 var class_buttons: Dictionary = {}
 var _touch_index: int = -1
 var _touch_last: Vector2
-var _original_slot_off: StyleBoxTexture
-var _original_slot_selected: StyleBoxTexture
 var _loading_fx_scope: RefCounted
 
 func _ready() -> void:
@@ -55,21 +56,36 @@ func _ready() -> void:
 	if catalog == null:
 		catalog = CATALOG.new()
 		catalog.configure()
-	var font := load("res://assets/fonts/NotoSansKR.ttf") as Font
-	if font != null: add_theme_font_override("font",font)
+	theme = _roster_theme()
 	add_child(STYLE.backdrop())
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side: String in ["left","right","top","bottom"]: margin.add_theme_constant_override("margin_"+side,16)
+	margin.add_theme_constant_override("margin_top", 16)
+	margin.add_theme_constant_override("margin_bottom", 16)
 	add_child(margin)
+	resized.connect(_layout_panel.bind(margin))
+	_layout_panel(margin)
 	var panel: PanelContainer = STYLE.panel()
 	margin.add_child(panel)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",10)
 	panel.add_child(column)
-	column.add_child(STYLE.label("TWILIGHT · 캐릭터 선택",26,STYLE.GOLD))
-	column.add_child(STYLE.label("최대 13명 · 창고 / 변신·인형·성물 보유 / 아이템 컬렉션 / 문양·수호성은 계정 공유",14,STYLE.MUTED))
-	column.add_child(_button("원본 로비 리소스 팩 설치", _open_pack_installer, "InstallLobbyPack"))
+	var heading := HBoxContainer.new()
+	heading.add_theme_constant_override("separation", 10)
+	column.add_child(heading)
+	var title := STYLE.label("캐릭터 선택", 22, STYLE.GOLD)
+	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(title)
+	var install := _button("생성 연출 팩 설치", _open_pack_installer, "InstallLobbyPack")
+	install.size_flags_horizontal = Control.SIZE_FILL
+	install.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	install.clip_text = false
+	install.custom_minimum_size.y = 42
+	install.add_theme_font_size_override("font_size", 14)
+	heading.add_child(install)
 	scroll = ScrollContainer.new()
 	scroll.name = "RosterScroll"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -82,7 +98,42 @@ func _ready() -> void:
 	status = STYLE.label("",16,STYLE.GOLD)
 	status.name = "LobbyStatus"
 	column.add_child(status)
+	_roster_actions = HBoxContainer.new()
+	_roster_actions.name = "RosterActions"
+	_roster_actions.add_theme_constant_override("separation", 10)
+	column.add_child(_roster_actions)
 	_show_roster()
+
+func _layout_panel(margin: MarginContainer) -> void:
+	var inset := maxi(12, roundi((size.x - PANEL_WIDTH) * 0.5))
+	margin.add_theme_constant_override("margin_left", inset)
+	margin.add_theme_constant_override("margin_right", inset)
+
+func _roster_theme() -> Theme:
+	var value := Theme.new()
+	var font := load("res://assets/fonts/NotoSansKR.ttf") as Font
+	if font != null:
+		var readable := FontVariation.new()
+		readable.base_font = font
+		readable.variation_opentype = {2003265652: 500.0} # OpenType wght
+		value.default_font = readable
+	var normal := STYLE.box(7, Color("262134"), Color("62566f"), 1)
+	var hover := STYLE.box(7, Color("322a43"), STYLE.GOLD, 1)
+	var selected := STYLE.box(7, Color("423448"), STYLE.GOLD)
+	value.set_stylebox("normal", "Button", normal)
+	value.set_stylebox("hover", "Button", hover)
+	value.set_stylebox("pressed", "Button", selected)
+	value.set_stylebox("hover_pressed", "Button", selected)
+	value.set_stylebox("focus", "Button", STYLE.box(7, Color.TRANSPARENT, STYLE.TEXT))
+	value.set_stylebox("disabled", "Button", STYLE.box(7, Color("1c1925"), Color("41394c"), 1))
+	value.set_color("font_disabled_color", "Button", Color("a9a2b2"))
+	value.set_type_variation(ENTER_STYLE, "Button")
+	value.set_stylebox("normal", ENTER_STYLE, STYLE.box(7, Color("d1aa66"), STYLE.GOLD, 1))
+	value.set_stylebox("hover", ENTER_STYLE, STYLE.box(7, STYLE.GOLD, STYLE.GOLD, 1))
+	value.set_stylebox("pressed", ENTER_STYLE, STYLE.box(7, Color("b89251"), STYLE.GOLD, 1))
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		value.set_color(state, ENTER_STYLE, Color("1b1208"))
+	return value
 
 func _clear() -> void:
 	source_selection_revision += 1
@@ -92,16 +143,17 @@ func _clear() -> void:
 	portrait = null
 	details = null
 	gender_row = null
-	for child: Node in content.get_children():
-		content.remove_child(child)
-		child.queue_free()
+	for container: Control in [content, _roster_actions]:
+		for child: Node in container.get_children():
+			container.remove_child(child)
+			child.queue_free()
 	class_buttons.clear()
 	name_input = null
 	create_button = null
 	scroll.scroll_vertical = 0
 
-func _button(text: String, action: Callable, identifier: String = "") -> Button:
-	var button: Button = ScrollButton.new()
+func _button(text: String, action: Callable, identifier: String = "") -> ScrollButton:
+	var button := ScrollButton.new()
 	button.scroll_host = scroll
 	button.text = text
 	button.clip_text = true
@@ -110,39 +162,9 @@ func _button(text: String, action: Callable, identifier: String = "") -> Button:
 	button.custom_minimum_size.y = 52
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.add_theme_font_size_override("font_size",18)
-	button.add_theme_stylebox_override("normal",STYLE.box(7,Color("262134"),STYLE.GOLD,1))
 	button.pressed.connect(func() -> void:
 		if not busy: action.call())
 	return button
-
-func use_original_roster_art(pack: RefCounted) -> void:
-	_loading_fx_scope = pack.copy_loading_fx_scope()
-	var art: Dictionary = pack.roster_slot_art()
-	if art.is_empty(): return
-	_original_slot_off = _roster_slot_style(art.inactive)
-	_original_slot_selected = _roster_slot_style(art.selected)
-	for node: Node in content.get_children():
-		if node is Button: _style_roster_slot(node)
-
-func _roster_slot_style(texture: Texture2D) -> StyleBoxTexture:
-	var style := StyleBoxTexture.new()
-	style.texture = texture
-	# The same content margins as the native roster buttons.
-	style.content_margin_left = 22
-	style.content_margin_right = 22
-	style.content_margin_top = 12
-	style.content_margin_bottom = 12
-	return style
-
-func _style_roster_slot(button: Button) -> void:
-	if _original_slot_off == null: return
-	var character := str(button.name).begins_with("Character_")
-	if not character and button.name != &"NewCharacter": return
-	button.add_theme_stylebox_override("normal", _original_slot_off)
-	button.add_theme_stylebox_override("hover", _original_slot_off)
-	var pressed := _original_slot_selected if character else _original_slot_off
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("hover_pressed", pressed)
 
 func _show_roster() -> void:
 	_clear()
@@ -175,29 +197,34 @@ func _show_roster() -> void:
 		return
 	var characters: Array = snapshot.get("characters",[])
 	selected_id = str(snapshot.get("selected",""))
-	content.add_child(STYLE.label("내 캐릭터 %d / 13" % characters.size(),20,STYLE.GOLD))
+	var count := STYLE.label("내 캐릭터 %d / 13" % characters.size(), 18, STYLE.GOLD)
+	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	content.add_child(count)
 	for entry: Dictionary in characters:
 		var id: String = str(entry.get("id",""))
 		var label: String = "%s\n%s" % [str(entry.get("name","캐릭터")),catalog.job_name(int(entry.get("class_id",0)))]
 		var button := _button(label,func() -> void: _select(id),"Character_"+id)
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.toggle_mode = true
 		button.button_pressed = id == selected_id
-		_style_roster_slot(button)
 		content.add_child(button)
 		if int(entry.get("gender_id",0))==0 and str(catalog.problem).is_empty():
 			content.add_child(STYLE.label("%s · 기존 저장에 없던 성별을 한 번 선택하세요. 직업과 진행은 유지됩니다."%str(entry.name),14,STYLE.MUTED))
 			for gender: int in [1,2]:
 				if catalog.profile(int(entry.class_id),gender).is_empty(): continue
 				content.add_child(_button("%s · %s 선택"%[str(entry.name),"남성" if gender==1 else "여성"],func() -> void: _complete_gender(id,gender),"LegacyGender_%s_%d"%[id,gender]))
-	var enter := _button("선택한 캐릭터로 접속",_enter,"EnterCharacter")
+	var enter := _button("접속",_enter,"EnterCharacter")
+	enter.scroll_host = null
+	enter.clip_text = false
+	enter.theme_type_variation = ENTER_STYLE
 	enter.disabled = selected_id.is_empty()
-	content.add_child(enter)
-	var create := _button("새 캐릭터 생성",_show_creation,"NewCharacter")
+	_roster_actions.add_child(enter)
+	var create := _button("새 캐릭터",_show_creation,"NewCharacter")
+	create.scroll_host = null
+	create.clip_text = false
 	create.disabled = characters.size() >= 13 or not str(catalog.problem).is_empty()
-	_style_roster_slot(create)
-	content.add_child(create)
+	_roster_actions.add_child(create)
 	if not str(catalog.problem).is_empty(): content.add_child(STYLE.label(str(catalog.problem),16,STYLE.MUTED))
-	content.add_child(STYLE.label("레벨·경험치·인벤토리·장비·스킬·위치와 전투 상태는 캐릭터별로 저장됩니다. 캐릭터 삭제는 지원하지 않습니다.",14,STYLE.MUTED))
 
 func _roster_ready() -> bool:
 	return _profile_problem.is_empty() and snapshot.get("ok", false) == true and not snapshot.get("legacy", false) and not snapshot.get("upgrade", false)
@@ -207,7 +234,7 @@ func _select(id: String) -> void:
 	selected_id = id
 	for node: Node in content.get_children():
 		if node is Button and node.name.begins_with("Character_"): node.button_pressed = node.name == "Character_"+id
-	var enter := content.get_node_or_null("EnterCharacter") as Button
+	var enter := _roster_actions.get_node_or_null("EnterCharacter") as Button
 	if enter != null: enter.disabled = false
 
 func _complete_gender(id: String, gender: int) -> void:
@@ -406,13 +433,16 @@ func _enter() -> void:
 	status.text = "세계를 불러오는 중…"
 	_enter_main.call_deferred()
 
+func use_loading_fx_scope(scope: RefCounted) -> void:
+	_loading_fx_scope = scope
+
 func _enter_main() -> void:
 	# The world loads behind the progress overlay (no title a second time); the
 	# Main scene itself was already loaded by the first loading.
 	var loader: Script = load(LOADING_SCREEN) as Script if preload("res://scripts/resources/retired_assets.gd").usable(LOADING_SCREEN) else null
-	var loading_fx_scope := _loading_fx_scope
-	_loading_fx_scope = null
-	if loader != null and loader.call("open", get_tree(), MAIN, false, loading_fx_scope) != null: return
+	if loader != null and loader.call("open", get_tree(), MAIN, false, _loading_fx_scope) != null:
+		_loading_fx_scope = null
+		return
 	var result: Error = get_tree().change_scene_to_file(MAIN)
 	if result != OK:
 		busy = false

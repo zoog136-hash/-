@@ -72,7 +72,7 @@ func _run() -> void:
 	_check(handoff.scene(PACK.LOADING_FX_MEMBER) == scoped.scene(PACK.LOADING_FX_MEMBER) and handoff._records == null, "handoff carries only decoded loading data")
 	OS.set_environment("TWILIGHT_SOURCE_UI", directory)
 	OS.set_environment("TWILIGHT_SOURCE_UI_SHA256", sha)
-	var selected := SELECT.selected_pack(true, false, handoff)
+	var selected := SELECT.selected_pack(true, handoff)
 	_check(selected.get("reused_loading_scope", false) and selected.pack == handoff, "the actual selector uses a valid handed-off scope")
 	var outside := {"path": UNRELATED_PAGE, "resourceType": 0}
 	var texture := full.texture(outside)
@@ -96,7 +96,7 @@ func _run() -> void:
 	_write(manifest_path, _changed_bytes(manifest_bytes))
 	_check(PACK.new().open_loading_fx(directory, sha).get("error") == "manifest_hash_mismatch", "scope requires the pinned original manifest")
 	_check(not handoff.can_reuse_loading_fx(directory, sha), "handoff still authenticates the selected manifest")
-	_check(not SELECT.selected_pack(true, false, handoff).get("ok", false), "selector cannot fall back to reusing a scope after manifest tampering")
+	_check(not SELECT.selected_pack(true, handoff).get("ok", false), "selector cannot fall back to reusing a scope after manifest tampering")
 	_check(PACK.new().open(directory, sha).get("error") == "manifest_hash_mismatch", "full baked HUD path also authenticates the manifest")
 	_write(manifest_path, manifest_bytes)
 
