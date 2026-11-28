@@ -70,16 +70,37 @@ static func rare_outline_available(pack: RefCounted) -> bool:
 
 ## The Sp_Card_* sprite of the exact Change_Card_A grade scene.
 static func card_frame(pack: RefCounted, grade: String) -> Texture2D:
-	if pack==null or not Page.GRADE_MEMBERS.has(grade):return null
+	return card_face_layers(pack,grade,false).get("frame") as Texture2D
+
+## The non-animated layers behind CardSample in the original grade prefab.
+static func card_face_layers(pack: RefCounted, grade: String, with_background: bool=true) -> Dictionary:
+	if pack==null or not Page.GRADE_MEMBERS.has(grade):return {}
 	var member: String=Page.GRADE_MEMBERS[grade]
-	if not pack.manifest.get("scenes",{}).has(member):return null
+	if not pack.manifest.get("scenes",{}).has(member):return {}
 	var scope: Variant=pack.manifest.get("node_scopes",{}).get(member)
-	var offset: int=CatalogWindow.CARD_NODES[member].frame
-	if scope is Array and not scope.has(offset):return null
-	var node: Dictionary=Scene._node_at_offset(pack.scene(member).get("nodeTree",{}),offset)
+	var nodes: Dictionary=CatalogWindow.CARD_NODES[member]
+	if scope is Array and not scope.has(nodes.frame):return {}
+	var tree: Dictionary=pack.scene(member).get("nodeTree",{})
+	var node: Dictionary=Scene._node_at_offset(tree,nodes.frame)
 	var options: Dictionary=node.get("options",{})
-	if node.get("classname")!="Sprite" or options.get("nodeOptions",{}).get("name")!=Page.GRADE_SPRITES[grade]:return null
-	return pack.texture(options.get("fileNameData",{}))
+	if node.get("classname")!="Sprite" or options.get("nodeOptions",{}).get("name")!=Page.GRADE_SPRITES[grade]:return {}
+	var frame: Texture2D=pack.texture(options.get("fileNameData",{}))
+	if frame==null:return {}
+	var layers: Dictionary={"frame":frame}
+	if not with_background or (scope is Array and not scope.has(nodes.bg)):return layers
+	var background: Dictionary=Scene._node_at_offset(tree,nodes.bg)
+	var background_options: Dictionary=background.get("options",{})
+	var widget: Dictionary=background_options.get("widgetOptions",{})
+	if background.get("classname")!="ImageView" or widget.get("name")!="Img_Bg" or not bool(widget.get("visible",false)):return layers
+	var extent: Array=widget.get("size",[])
+	var color: Array=widget.get("color",[])
+	if extent.size()!=2 or color.size()!=4 or extent[0]<=0 or extent[1]<=0:return layers
+	var picture: Texture2D=pack.texture(background_options.get("fileNameData",{}))
+	if picture==null:return layers
+	layers["background"]=picture
+	layers["background_size"]=Vector2(extent[0],extent[1])
+	layers["background_color"]=Color8(color[1],color[2],color[3],widget.get("alpha",255))
+	return layers
 
 ## Spec entries for the Change_Fusion_Card at `prefix` (ends with "/").
 static func cell_spec(window: Object, spec: Dictionary, prefix: String, grade: String, pending: bool=false) -> void:

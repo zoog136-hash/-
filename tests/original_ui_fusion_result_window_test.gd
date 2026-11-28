@@ -6,10 +6,14 @@ extends SceneTree
 ## once on close, and present_card_reveal uses the window only for fusions
 ## through the overlay path. Real input: -- --pack=<private original main UI
 ## pack directory>: Change_Fusion_All mounts the result cards.
+## Add --candidate-surfaces with the installed 523 definitions and images
+## selected to verify painted cards while the original result cell is spinning.
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_fusion_result_window.gd")
 const SOURCE_PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
 const STAGE=preload("res://scripts/ui/card_reveal_stage.gd")
 const BLEND=preload("res://scripts/ui/original_ui/source_blend.gd")
+const CATALOG=preload("res://scripts/lineagem_base508.gd")
+const ART=preload("res://scripts/ui/source_card_presentation.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -253,8 +257,82 @@ func _real_pack(pack_dir: String) -> void:
 		await _tap_button(window._cells,window._cell_out,"Panel/Card_01/Btn_Card")
 		check(window._scene.find_child("SourceCardLightning",true,false)==null,"the adjacent failed rare result does not borrow the successful card's discharge")
 		window.close()
+	if "--candidate-surfaces" in OS.get_cmdline_user_args():
+		await _check_fusion_candidates(window,parent,rare_pack)
 	viewport.queue_free()
 	host.queue_free()
+
+func _check_fusion_candidates(window: RefCounted, parent: Node2D, pack: RefCounted) -> void:
+	var catalog: Dictionary=CATALOG.cards().get("catalog",{})
+	var plist: String="UI_Resource/Atlas_Common.plist"
+	var background: Texture2D=pack.texture({"path":"Img_Bg_Radius0.png","plistFile":plist,"resourceType":1})
+	if not check(background!=null and not catalog.is_empty(),"verified definitions, portraits and native card layers are available"):return
+	for category: String in ["변신","마법인형","성물"]:
+		var records: Array[Dictionary]=[]
+		var expected: Dictionary={}
+		for grade: String in ["고급","희귀"]:
+			for candidate: Dictionary in catalog.get(category,[]):
+				if candidate.get("grade")!=grade:continue
+				var portrait: Texture2D=ART.detail(candidate,true,false).get("texture")
+				if portrait==null or expected.has(portrait):continue
+				var sprite: String="Img_ChageCard_Rare.png" if grade=="고급" else "Img_ChageCard_Unique.png"
+				expected[portrait]={"frame":pack.texture({"path":sprite,"plistFile":plist,"resourceType":1}),"alpha":127 if grade=="고급" else 255}
+				records.append(candidate)
+				break
+		if not check(records.size()==2,"two real candidates with different grades for "+category):continue
+		var source_candidates: Array=records.duplicate()
+		source_candidates.append({"source":"lineagem_patch523","grade":"신화"})
+		var effect: Callable=STAGE.play_result_cell.bind(category,true,false,source_candidates,{"reduced_motion":true},pack)
+		window.close()
+		if not check(window.open(parent,records,category,false,Callable(),effect).get("handled",false),"opens the native fusion results for "+category):continue
+		await _tap_button(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		var reel: Control=window._scene.find_child("CardRevealEffect",true,false)
+		if not check(reel!=null and reel.face.candidates.size()==2,"both verified candidates are kept and missing art is skipped"):continue
+		for entry: Dictionary in reel.face.candidates:
+			var layers: Dictionary=entry.get("layers",{})
+			var source: Dictionary=expected.get(entry.artwork,{})
+			var color: Color=layers.get("background_color",Color.TRANSPARENT)
+			check(not source.is_empty() and source.frame!=null and layers.get("frame")==source.frame
+				and layers.get("background")==background and roundi(color.a*255.0)==int(source.alpha),"a portrait carries its own grade frame and authored background on the reel")
+		var award_frame: Texture2D=expected.get(reel.face.artwork,{}).get("frame")
+		check(award_frame!=null and reel.face.award_layers.get("frame")==award_frame,"the last moving tile uses the awarded card's own frame")
+		if category=="변신" and DisplayServer.get_name()!="headless":await _check_fusion_candidate_pixels(reel)
+		check(not window.is_revealed(1),"tapping one result leaves its adjacent result sealed")
+		window.close()
+		await process_frame
+	window.close()
+
+func _check_fusion_candidate_pixels(reel: Control) -> void:
+	paused=true
+	# The ease-out traverses 40 cells. Halfway through the first cell, both
+	# candidates contribute to the same clipped frame.
+	reel.seek(reel.face.duration*(1.0-sqrt(1.0-0.5/40.0)))
+	await RenderingServer.frame_post_draw
+	var view: Viewport=reel.get_viewport()
+	var composed: Image=view.get_texture().get_image()
+	var layers: Array[Dictionary]=[]
+	for entry: Dictionary in reel.face.candidates:
+		layers.append(entry.layers)
+		entry.layers={}
+	reel.face.queue_redraw()
+	await RenderingServer.frame_post_draw
+	var plain: Image=view.get_texture().get_image()
+	for index: int in layers.size():reel.face.candidates[index].layers=layers[index]
+	reel.face.queue_redraw()
+	paused=false
+	var bounds: Rect2=reel.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,reel.size)
+	var area:=Rect2i(Vector2i(bounds.position.floor()),Vector2i(bounds.end.ceil()-bounds.position.floor()))
+	area=area.intersection(Rect2i(Vector2i.ZERO,composed.get_size()))
+	var changed: Array[int]=[0,0]
+	var center: int=area.get_center().x
+	for y: int in range(area.position.y,area.end.y):
+		for x: int in range(area.position.x,area.end.x):
+			if composed.get_pixel(x,y)!=plain.get_pixel(x,y):changed[int(x>=center)]+=1
+	check(changed[0]>100 and changed[1]>100,"both moving candidate cards paint their own layers inside the clipped slot")
+	composed.fill_rect(area,Color.TRANSPARENT)
+	plain.fill_rect(area,Color.TRANSPARENT)
+	check(composed.get_data()==plain.get_data(),"candidate layers cannot draw outside the selected result card")
+	print("FUSION_CANDIDATE_PIXELS ",JSON.stringify(changed))
 
 func _tap_button(scene: Node2D, out: Dictionary, path: String) -> void:
 	var target: Dictionary=WINDOW._locate(scene,out,path)

@@ -8,6 +8,7 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 const ConfirmedChrome = preload("res://scripts/ui/card_reveal_chrome.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
 const SourceSurfaces = preload("res://scripts/ui/original_card_surfaces.gd")
+const GradeFx = preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const LIGHTNING_EARLY_SECONDS: float = 0.1
 const CONFIRM_DELAY_SECONDS: float = 2.0
 const DRAW_EXTRA_LIGHTNING_SECONDS: float = 2.0
@@ -37,19 +38,39 @@ var reveal_button: Button
 class Face extends Control:
 	var artwork: Texture2D
 	var back: Texture2D
-	var candidates: Array[Texture2D] = []
+	var candidates: Array[Dictionary] = []
+	var award_layers: Dictionary = {}
 	var elapsed: float = -1.0
 	var duration: float = 3.0
 	var tint: Color = Color.WHITE
 	var illumination: Color = Color.TRANSPARENT
 	var category: String = "변신"
 
-	func _art(texture: Texture2D, at: Vector2) -> void:
+	func _art(texture: Texture2D, at: Vector2, portrait_bounds: Vector2) -> void:
 		if texture == null:
 			return
 		var factor: float = 0.79 if category == "마법인형" else 0.91 if category == "성물" else 0.98
-		var fitted: Vector2 = texture.get_size()*minf(size.x*factor/texture.get_width(),size.y*0.98/texture.get_height())
+		var fitted: Vector2 = texture.get_size()*minf(portrait_bounds.x*factor/texture.get_width(),portrait_bounds.y*0.98/texture.get_height())
 		draw_texture_rect(texture,Rect2(at+(size-fitted)*0.5,fitted),false)
+
+	func _draw_reel_card(texture: Texture2D, layers: Dictionary, at: Vector2) -> void:
+		if layers.is_empty():
+			_art(texture,at,size)
+			return
+		var frame: Texture2D = layers.frame
+		var background: Texture2D = layers.get("background")
+		var original_size: Vector2 = frame.get_size()
+		var background_size: Vector2 = layers.get("background_size",original_size)
+		var extent: Vector2 = original_size.max(background_size)
+		var fit: float = minf(size.x/extent.x,size.y/extent.y)
+		var center: Vector2 = at+size*0.5
+		if background!=null:
+			var fitted_background: Vector2 = background_size*fit
+			draw_texture_rect(background,Rect2(center-fitted_background*0.5,fitted_background),false,layers.background_color)
+		var fitted_frame: Vector2 = original_size*fit
+		draw_texture_rect(frame,Rect2(center-fitted_frame*0.5,fitted_frame),false)
+		# Leave the frame visible even for portraits that fill the original slot.
+		_art(texture,at,fitted_frame*0.9)
 
 	func _draw() -> void:
 		_draw_surface()
@@ -63,7 +84,7 @@ class Face extends Control:
 			return
 		if elapsed >= duration:
 			draw_rect(Rect2(Vector2.ZERO,size),Color(tint,0.08))
-			_art(artwork,Vector2.ZERO)
+			_art(artwork,Vector2.ZERO,size)
 			draw_rect(Rect2(0,size.y*0.78,size.x,size.y*0.22),Color(tint,0.12))
 		elif candidates.is_empty():
 			if back!=null:draw_texture_rect(back,Rect2(Vector2.ZERO,size),false)
@@ -72,11 +93,17 @@ class Face extends Control:
 			var position_value: float = (1-pow(1-clampf(elapsed/duration,0,1),2.0))*40.0
 			var cell: int = int(floor(position_value))
 			var offset: float = position_value-floor(position_value)
-			for j: int in range(-1,3):
-				var image: Texture2D = artwork if cell+j >= 40 else candidates[posmod(cell+j,candidates.size())]
-				_art(image,Vector2((float(j)-offset)*size.x,0))
+			# The clip can intersect only these two adjacent slots.
+			for j: int in range(2):
+				var at := Vector2((float(j)-offset)*size.x,0)
+				if cell+j >= 40:
+					_draw_reel_card(artwork,award_layers,at)
+				else:
+					var candidate: Dictionary = candidates[(cell+j)%candidates.size()]
+					_draw_reel_card(candidate.artwork,candidate.layers,at)
 
-func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = []) -> void:
+func configure(value: Dictionary, candidates: Array[Texture2D], category: String, source_candidate_records: Array = [],
+		fusion_pack: RefCounted = null, layers_by_grade: Dictionary = {}) -> void:
 	record = value.duplicate(true)
 	grade = str(record.get("grade","일반"))
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -92,7 +119,10 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		var candidate_assets: Array = []
 		for candidate: Variant in source_candidate_records:
 			var original_candidate: Dictionary = SourceCard.detail(candidate,true,false) if candidate is Dictionary else {"status":"missing","reason":"source_candidate_record_required","texture":null}
-			face.candidates.append(original_candidate.get("texture") as Texture2D)
+			var texture: Texture2D = original_candidate.get("texture") as Texture2D
+			if texture!=null or fusion_pack==null:
+				var layers: Dictionary = _reel_layers(fusion_pack,str(candidate.get("grade","")),layers_by_grade) if fusion_pack!=null else {}
+				face.candidates.append({"artwork":texture,"layers":layers})
 			var candidate_evidence: Dictionary = original_candidate.duplicate(true)
 			candidate_evidence.erase("texture")
 			candidate_evidence["card_id"] = SourceCard.CARDS.card_id(candidate) if candidate is Dictionary else ""
@@ -105,6 +135,7 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 		# The settled award uses the same portrait role as the reel candidates.
 		var original: Dictionary = SourceCard.detail(record, true, false)
 		face.artwork = original.get("texture") as Texture2D
+		if face.artwork!=null and fusion_pack!=null:face.award_layers=_reel_layers(fusion_pack,grade,layers_by_grade)
 		var evidence: Dictionary = original.duplicate(true)
 		evidence.erase("texture")
 		evidence["card_id"] = SourceCard.CARDS.card_id(record)
@@ -162,6 +193,10 @@ func configure(value: Dictionary, candidates: Array[Texture2D], category: String
 	add_child(reveal_button)
 	resized.connect(_fit)
 	_fit()
+
+static func _reel_layers(pack: RefCounted, grade: String, layers_by_grade: Dictionary) -> Dictionary:
+	if not layers_by_grade.has(grade):layers_by_grade[grade]=GradeFx.card_face_layers(pack,grade)
+	return layers_by_grade[grade]
 
 func _add_surface(clip: Control,pass_name: String,extra: float) -> Control:
 	var effect: Control=FX.new()
