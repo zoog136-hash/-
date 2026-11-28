@@ -14,6 +14,16 @@ const PAGES: Array[String]=["Change_ExploreView","Change_PrayView","Change_Dispa
 ## source_main_change_window).
 const GRADE_MEMBERS={"일반":"UI/Change/Change_Card_A_Common.csb","고급":"UI/Change/Change_Card_A_Rare.csb","희귀":"UI/Change/Change_Card_A_Unique.csb","영웅":"UI/Change/Change_Card_A_Legend.csb","전설":"UI/Change/Change_Card_A_Epic.csb","신화":"UI/Change/Change_Card_A_Myth.csb","유일":"UI/Change/Change_Card_A_Sole.csb"}
 const GRADE_SPRITES={"일반":"Sp_Card_Common","고급":"Sp_Card_Rare","희귀":"Sp_Card_Unique","영웅":"Sp_Card_Legend","전설":"Sp_Card_Epic","신화":"Sp_Card_Myth","유일":"Sp_Card_Sole"}
+## Per prefab: Panel_Root, Img_Bg, Nd_Character, Sp_Card_<grade>, CardSample, CB_Check.
+const CARD_NODES={
+	"UI/Change/Change_Card_A_Common.csb":{"root":276,"bg":4024,"character":1928,"frame":2520,"sample":2256,"check":1244},
+	"UI/Change/Change_Card_A_Rare.csb":{"root":276,"bg":4056,"character":1932,"frame":2524,"sample":2260,"check":1244},
+	"UI/Change/Change_Card_A_Unique.csb":{"root":320,"bg":3104,"character":1976,"frame":2568,"sample":2304,"check":1288},
+	"UI/Change/Change_Card_A_Epic.csb":{"root":320,"bg":3100,"character":1976,"frame":2568,"sample":2304,"check":1288},
+	"UI/Change/Change_Card_A_Legend.csb":{"root":320,"bg":3104,"character":1976,"frame":2568,"sample":2304,"check":1288},
+	"UI/Change/Change_Card_A_Myth.csb":{"root":320,"bg":3096,"character":1972,"frame":2564,"sample":2300,"check":1288},
+	"UI/Change/Change_Card_A_Sole.csb":{"root":320,"bg":3128,"character":2004,"frame":2596,"sample":2332,"check":1320},
+}
 ## Change_WinTotal_Class pressed images per grade (Btn_Pressed/Img_*).
 const GRADE_IMAGES={"일반":"Img_Common","고급":"Img_Rare","희귀":"Img_Unique","영웅":"Img_Legend","전설":"Img_Epic","신화":"Img_Myth","유일":"Img_Sole"}
 const GRADE_ROW="UI/Change/Change_WinTotal_Class.csb"

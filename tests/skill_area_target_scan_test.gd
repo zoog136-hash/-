@@ -12,11 +12,11 @@ class FieldProbe extends Node2D:
 	var sight_checks: int = 0
 	var walls: Dictionary = {Vector2(4, 0):true, Vector2(30, 1):true}
 	var navigation: OriginalPlayableField
-	var field_map: OriginalPlayableField
+	var field_map: Object
 	var combat_generation := 1
 
 	func _static_auto_route_epoch() -> int:
-		return field_map.static_pursuit_epoch() if field_map != null else 0
+		return field_map.static_pursuit_epoch() if field_map is OriginalPlayableField else 0
 
 	func _has_line_of_sight_world(from: Vector2, to: Vector2) -> bool:
 		sight_checks += 1
@@ -24,9 +24,10 @@ class FieldProbe extends Node2D:
 		return not walls.has(to)
 
 class StaticFieldProbe extends FieldProbe:
-	var field_map := RefCounted.new()
-	var combat_generation: int = 0
 	var epoch: int = 1
+
+	func _init() -> void:
+		field_map = RefCounted.new()
 
 	func _static_auto_route_epoch() -> int: return epoch
 
