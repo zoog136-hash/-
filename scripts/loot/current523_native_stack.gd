@@ -9,6 +9,7 @@ const FUSION_POINTS=preload("res://scripts/cards/source_fusion_points523.gd")
 ## No name-only conversion, reference effect activation, or live trial grant.
 const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const BONUS_STAT_CAP=preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -84,6 +85,8 @@ static func profile(record: Dictionary) -> Dictionary:
 		var points:Dictionary=FUSION_POINTS.profile(record,definition)
 		if not points.is_empty():return {"kind":"fusion_points","spec":points}
 	if bonus_point_rule(record,definition):return {"kind":"bonus_stat_point","spec":{"can_use_when_invisible":true}}
+	var cap: Dictionary = BONUS_STAT_CAP.profile(int(record.get("source_item_class_id",0)), definition)
+	if not cap.is_empty():return {"kind":"bonus_stat_cap","spec":cap}
 	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
 	var firework:Dictionary=direct_firework_rule(record,definition)
@@ -178,6 +181,111 @@ static func use_fusion_points(world:Node,uid:String,owned:Dictionary,spec:Dictio
 
 static func authorizes_bonus_point(world:Node,staged:Dictionary)->bool:
 	return _candidate_kind=="original_146402_point" and staged.size()==4 and staged.has("inventory") and staged.has("item_instances") and staged.has("consumable_state") and integer(world.stat_points) and staged.get("stat_points")==int(world.stat_points)+1 and authorizes(staged)
+
+static func use_bonus_stat_cap(world: Node, uid: String, owned: Dictionary) -> Dictionary:
+	if busy:
+		return _failure("스탯 상한 증가 조건 미충족 · 아이템 보존")
+	var live: Dictionary = proof(world, uid)
+	if live.is_empty() or live != owned or world._item_locked(str(live.record.name), uid):
+		return _failure("스탯 상한 증가 아이템의 원본 개체 확인 실패 · 아이템 보존")
+	var id: int = int(live.receipt.item_class_id)
+	var rule: Dictionary = BONUS_STAT_CAP.profile(id, D.item_definition(live.record))
+	if rule.is_empty():
+		return _failure("스탯 상한 증가의 원본 규칙 확인 필요 · 아이템 보존")
+	var added_points: int = rule.stat_points
+	var problem: String = _bonus_stat_cap_problem(world, added_points)
+	if not problem.is_empty():
+		return _failure(problem)
+	var paid: Dictionary = stage_debit(world, [{
+		"physical_id": uid, "quantity": 1, "expected_quantity": owned.remaining,
+		"expected_remaining": int(owned.remaining) - 1, "source_native_stack_receipt": owned.receipt,
+	}])
+	if not paid.get("ok", false):
+		return _failure("스탯 상한 증가 아이템의 물리 수량 확인 실패 · 아이템 보존")
+	return _commit_bonus_stat_cap(world, paid.overrides, added_points)
+
+## The existing level 89 growth milestones award #147152 under a growth key.
+## Spend the saved growth quantity in the same write as the permanent effects.
+static func use_growth_stat_fruit(world: Node, item_name: String, selected: String) -> Dictionary:
+	if busy or world.quest_service.save_blocked or not str(world.patch523_owner_state_problem).is_empty():
+		return _failure("원본 소비 저장 보호 중 · 성장 보상 보존")
+	if not selected.is_empty() or world._item_locked(item_name) or not world._patch523_item_allowed() or world.hp <= 0 or world._option_awakening_busy():
+		return _failure("현재 사용·잠금·생존 조건 미충족 · 성장 보상 보존")
+	var id: int = BONUS_STAT_CAP.FRUIT
+	var growth_record: Dictionary = world.growth96.source.item_record(id)
+	var definition: Dictionary = D.definition_id(str(id))
+	var rule: Dictionary = BONUS_STAT_CAP.profile(id, definition)
+	if growth_record.get("name") != item_name or rule.is_empty():
+		return _failure("이그드라실의 열매 원본 확인 필요 · 성장 보상 보존")
+	var count: Variant = world.inventory.get(item_name, 0)
+	if not integer(count) or count < 1 or count > world.growth96.proven_reward_amount(id):
+		return _failure("이그드라실의 열매 성장 수령 이력·수량 확인 필요 · 성장 보상 보존")
+	for entry: Variant in world.item_instances.values():
+		if entry is Dictionary and entry.get("name") == item_name:
+			return _failure("이그드라실의 열매 보유 형태 확인 필요 · 성장 보상 보존")
+	var record: Dictionary = D.variant_item(definition.get("native_record", {}), 1)
+	var problem: String = load("res://scripts/loot/patch523_item_use.gd").call("eligibility", world, record)
+	if problem.is_empty():
+		problem = _bonus_stat_cap_problem(world, rule.stat_points)
+	if not problem.is_empty():
+		return _failure(problem)
+	var inventory: Dictionary = world.inventory.duplicate()
+	if count == 1:
+		inventory.erase(item_name)
+	else:
+		inventory[item_name] = int(count) - 1
+	return _commit_bonus_stat_cap(world, {
+		"inventory": inventory, "item_instances": world.item_instances,
+		"consumable_state": world.consumable_service.export_state(),
+	}, rule.stat_points)
+
+static func _bonus_stat_cap_problem(world: Node, added_points: int) -> String:
+	if world.level < BONUS_STAT_CAP.MIN_LEVEL:
+		return "원본 사용 레벨 조건에 맞지 않습니다"
+	var extension: int = world.bonus_stat_cap_extension
+	if not BONUS_STAT_CAP.valid_extension(extension) or extension >= BONUS_STAT_CAP.MAX_EXTENSION:
+		return "스탯 상한을 더 늘릴 수 없습니다 · 아이템 보존"
+	if added_points > 0 and (not integer(world.stat_points) or world.stat_points >= BONUS_STAT_CAP.MAX_EXACT_INTEGER):
+		return "스탯 포인트를 더 받을 수 없습니다 · 아이템 보존"
+	return ""
+
+static func _commit_bonus_stat_cap(world: Node, payload: Dictionary, added_points: int) -> Dictionary:
+	var extension: int = world.bonus_stat_cap_extension
+	payload[BONUS_STAT_CAP.SAVE_KEY] = extension + 1
+	if added_points > 0:
+		payload["stat_points"] = world.stat_points + added_points
+	busy = true
+	_candidate_kind = "original_147152_cap_point" if added_points > 0 else "original_146412_cap"
+	_candidate = payload.duplicate(true)
+	var saved: Error = world._save_game(true, payload)
+	_candidate.clear()
+	_candidate_kind = ""
+	busy = false
+	if saved != OK:
+		return _failure("스탯 상한 저장 실패 · 포인트와 아이템 보존")
+	world.inventory = payload.inventory
+	world.item_instances = payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	world.bonus_stat_cap_extension = payload[BONUS_STAT_CAP.SAVE_KEY]
+	world.stat_points = payload.get("stat_points", world.stat_points)
+	world.deferred_save.cancel()
+	var message := "스탯 상한 +1 · 최대 %d" % (BONUS_STAT_CAP.BASE_LIMIT + extension + 1)
+	if added_points > 0:
+		message += " · 보너스 스탯 +1"
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,"message":message}
+
+static func authorizes_bonus_stat_cap(world: Node, staged: Dictionary) -> bool:
+	if _candidate_kind not in ["original_146412_cap", "original_147152_cap_point"] or not authorizes(staged):
+		return false
+	var fruit: bool = _candidate_kind == "original_147152_cap_point"
+	if staged.size() != (5 if fruit else 4) or not staged.has_all(["inventory", "item_instances", "consumable_state"]):
+		return false
+	var extension: Variant = staged.get(BONUS_STAT_CAP.SAVE_KEY)
+	if not BONUS_STAT_CAP.valid_extension(extension) or extension != world.bonus_stat_cap_extension + 1:
+		return false
+	if not fruit:
+		return not staged.has("stat_points")
+	return integer(staged.get("stat_points")) and staged.stat_points == world.stat_points + 1
 
 ## The four permanent server-keeper items, not their same-color dated SKUs.
 ## Reward is solely the exact authored above-player effect; no hidden buff.
@@ -855,6 +963,7 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="skill_book":return learn_skill_book(world,uid,owned,record,spec)
 	if effect.kind=="card":return use_fixed_card(world,uid,owned,record,spec)
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
+	if effect.kind=="bonus_stat_cap":return use_bonus_stat_cap(world,uid,owned)
 	if effect.kind=="fusion_points":return use_fusion_points(world,uid,owned,spec)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)

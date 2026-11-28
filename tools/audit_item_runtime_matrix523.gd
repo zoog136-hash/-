@@ -22,7 +22,27 @@ const TJ_WINDOW=preload("res://scripts/ui/original_ui/source_main_tj_retry_windo
 const ENHANCEMENT=preload("res://scripts/crafting/patch523_enhance_source_book.gd")
 const ELEMENT_MANAGEMENT=preload("res://scripts/equipment523/element_management.gd")
 const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd")
+const GACHA_CRAFT=preload("res://scripts/crafting/patch523_gacha_craft.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
+const CONFIRMED_GAPS := {
+	1185: "source_account_slot_increase_without_consumer",
+	146412: "source_base_stat_cap_without_consumer",
+	146422: "source_rune_slot_unlock_without_consumer",
+	147152: "source_base_stat_cap_and_point_without_consumer",
+}
+const KNOWN_HOLDS := {
+	170214: "numeric_experience_disagrees_with_original_description",
+	164643: "complex_reward_graph_not_present_in_pinned_tables",
+	292582: "quest_destination_not_established",
+}
+const LINKED_ROUTES := [
+	"equipment_requires_equip_slot_and_class", "internal_ammo_consumer_not_bag",
+	"not_direct_item_material_owner", "not_direct_wallet",
+	"original_trial_tower_land_and_cell_required", "ready_owner_resolver_not_tapped",
+	"regional_return_owner_requires_map", "smelt_requires_exact_material_and_equipped_target",
+	"ticket_original_full_pool_model_not_tapped", "ticket_permanent_card_and_mileage_live_tested",
+	"tj_physical_requires_history_context_and_eligibility",
+]
 const VERIFIED={
 	203402:"actual_original_bag_reusable_random_teleport_save_failure_and_reload_navigation_fixture",
 	295494:"actual_original_bag_legacy_stock_reusable_random_teleport_and_reload_navigation_fixture",
@@ -50,6 +70,11 @@ const VERIFIED={
 	19473:"actual_bag_and_auto_quickslot_original_hp_dice_reload",
 	310:"actual_bag_poison_only_debit_fault_retry_reload",
 	263901:"actual_bag_HP6000_separate_900s_reuse_fault_retry_reload",
+	146402:"actual_main_bonus_point_only_physical_debit_refusal_and_reload",
+	146412:"actual_original_bag_base_stat_cap_only_physical_debit_and_reload",
+	147152:"actual_original_bag_base_stat_cap_and_point_physical_and_growth_stock_fault_retry_reload",
+	186024:"actual_main_half_elixir_reset_cancel_fault_retry_and_physical_debit",
+	190754:"actual_main_half_elixir_reset_event_physical_debit",
 	146442:"actual_bag_touch_and_fusion_reward_touch_fault_reload",
 	146452:"actual_bag_dispatch_one_point_exact_fusion_lane",
 	146462:"actual_bag_dispatch_one_point_exact_fusion_lane",
@@ -101,6 +126,7 @@ func run()->void:
 	var accepted:int=0
 	var accepted_counts:Dictionary={}
 	var enhancement_routes:Dictionary={}
+	var dispositions: Dictionary = {}
 	var audit_now: int=int(Time.get_unix_time_from_system())
 	for raw:Dictionary in original:
 		var id:int=int(raw.ID)
@@ -186,6 +212,10 @@ func run()->void:
 		if raw.TestItem==false and not RET.item(id):
 			accepted_counts[route]=int(accepted_counts.get(route,0))+1
 		entry["resolution"]=route
+		var classified := disposition(entry, raw)
+		entry["connection"] = classified[0]
+		entry["connection_evidence"] = classified[1]
+		dispositions[classified[0]] = int(dispositions.get(classified[0], 0)) + 1
 		entry["actual_transaction_evidence"]=str(VERIFIED.get(id,"none"))
 		if DTO.EXACT_CARD_BOX_ROOTS.has(id):entry["actual_transaction_evidence"]="actual_bag_original_selection_each_option_one_debit_and_reload"
 		if id==323211:entry["actual_transaction_evidence"]="actual_original_focused_tj_one_bag_debit_saved_reload"
@@ -193,5 +223,33 @@ func run()->void:
 			entry["actual_transaction_evidence"]="actual_bag_firework_original_overlay_one_debit"
 		f.store_line(JSON.stringify(entry))
 	f.close()
-	print("ITEM_AUDIT_RESULT ",JSON.stringify({"source":SRC.SOURCE_SHA,"raw":original.size(),"normal_eligible_before_unresolved":accepted,"counts":counts,"eligible_routes":accepted_counts,"enhancement_routes":enhancement_routes,"ticket_pools":ticket_model.pools.size(),"mode":"production_registration_and_unworn_action_only; physical transaction evidence enumerated"}))
+	print("ITEM_AUDIT_RESULT ",JSON.stringify({"source":SRC.SOURCE_SHA,"raw":original.size(),"normal_eligible_before_unresolved":accepted,"counts":counts,"eligible_routes":accepted_counts,"connections":dispositions,"enhancement_routes":enhancement_routes,"ticket_pools":ticket_model.pools.size(),"mode":"production_registration_and_unworn_action_only; physical transaction evidence enumerated"}))
 	quit(0 if accepted==30098 else 6)
+
+
+func disposition(entry: Dictionary, raw: Dictionary) -> Array[String]:
+	var route: String = entry.resolution
+	if route in ["raw_test_default_excluded", "source_declared_dummy", "user_retired_quest_only", "user_retired_exact_other"]:
+		return ["intentionally_excluded", route]
+	if route in LINKED_ROUTES:
+		return ["linked", route]
+	if route == "enhancement_target_and_original_rule_required":
+		var target_route: String = entry.enhancement_route
+		if target_route == "elemental_smith_expired":
+			return ["intentionally_excluded", target_route]
+		if target_route != "no_original_direct_owner_found":
+			return ["linked", target_route]
+		return ["needs_source_or_condition", target_route]
+	if route in ["bag_action_absent_owner_unconfirmed", "bag_action_visible_owner_unconfirmed"]:
+		# This is a Main dispatcher outside the native-stack use owner.
+		if entry.category == "ScrollGachaCraft" and entry.bag_action == "사용" \
+				and entry.get("supply") == "storage" and not GACHA_CRAFT.spec(entry.id).is_empty():
+			return ["linked", "existing_main_gacha_craft_dispatch"]
+		var exclusion: String = OWNER.storage_exclusion(raw)
+		if not exclusion.is_empty() and entry.get("supply") == "":
+			return ["intentionally_excluded", exclusion]
+		if CONFIRMED_GAPS.has(entry.id):
+			return ["confirmed_missing", CONFIRMED_GAPS[entry.id]]
+		if KNOWN_HOLDS.has(entry.id):
+			return ["needs_source_or_condition", KNOWN_HOLDS[entry.id]]
+	return ["needs_source_or_condition", route]
