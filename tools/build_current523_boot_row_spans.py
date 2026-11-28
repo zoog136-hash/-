@@ -91,10 +91,10 @@ def generate_craft_inputs(path):
     assert hashlib.sha256(path.read_bytes()).hexdigest() == PIN
     with zipfile.ZipFile(path) as archive:
         raw = archive.read('content/ItemCraftInput.json')
-    count, spans = table_spans(raw)
+    rows, spans = table_spans(raw)
     lines = ['extends RefCounted',
              '## Byte spans only. Regenerate with tools/build_current523_boot_row_spans.py <ZIP> --craft-inputs.',
-             f'const LAYOUT = {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{count}, "spans":[']
+             f'const LAYOUT = {{"sha":"{hashlib.sha256(raw).hexdigest()}", "bytes":{len(raw)}, "rows":{len(rows)}, "spans":[']
     lines.extend(','.join(str(n) for n in spans[i:i+24])+',' for i in range(0, len(spans), 24))
     return '\n'.join(lines + [']}', ''])
 
