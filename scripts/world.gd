@@ -7933,6 +7933,13 @@ func _publish_skill_material_hud(state: Dictionary) -> void:
 	if hud.inventory_panel.visible: hud.refresh_inventory(inventory)
 	_publish_player_quickslot_hud()
 
+func _publish_growth_upgrade_hud() -> void:
+	# Growth participates in stats and recovery, but an upgrade neither
+	# equips a record nor changes card/combination ownership.
+	equipment_records_dirty = true
+	equipment_effects_dirty = true
+	_publish_player_hud(false, false, false, true)
+
 ## A timed effect or its expiry changes combat stats and may debit a proven
 ## stack. Keep the bag and derived stats current without refolding ownership.
 func _publish_timed_buff_hud() -> void:
@@ -7947,21 +7954,21 @@ func _publish_timed_buff_hud() -> void:
 		FRAME_HITCH.detail("item.buff_bag_publish",finish)
 	FRAME_HITCH.detail("item.buff_hud",since)
 
-func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false, refresh_bag: bool=false) -> void:
+func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false, refresh_bag: bool=false, growth_only: bool=false) -> void:
 	var phase:int=FRAME_HITCH.now() if timed_buff else 0
 	hud_publish_counts.full += 1
-	if is_instance_valid(title_badge):
-		title_badge.text=titles.display_name()
-		title_badge.add_theme_color_override("font_color",titles.personal.display_color())
-		# TWILIGHT 근사: with no 작위/개인 호칭 shown, the held possession title (보유 칭호).
-		if title_badge.text.is_empty() and item_appellation523 != null: title_badge.text=item_appellation523.display_name()
-		title_badge.visible=not title_badge.text.is_empty()
-	if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 	stat_hud_refresh_pending = false
 	var content_started: int = FRAME_HITCH.now()
 	unconfirmed523.rebuild()
 	FRAME_HITCH.detail("stats.content_bonuses",content_started)
-	if not timed_buff:
+	if not timed_buff and not growth_only:
+		if is_instance_valid(title_badge):
+			title_badge.text=titles.display_name()
+			title_badge.add_theme_color_override("font_color",titles.personal.display_color())
+			# TWILIGHT 근사: with no 작위/개인 호칭 shown, the held possession title (보유 칭호).
+			if title_badge.text.is_empty() and item_appellation523 != null: title_badge.text=item_appellation523.display_name()
+			title_badge.visible=not title_badge.text.is_empty()
+		if protection523!=null and not protection523.get("source").is_empty():preload("res://scripts/crafting/patch523_protection_bindings.gd").prepare(self)
 		# Equipment and ownership transactions publish through this entry point.
 		_invalidate_equipment_static()
 		if fold_native_stacks:_merge_native_stacks()
@@ -7973,6 +7980,9 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false, refresh
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
 	var display_max_mp: int = _effective_max_mp()
+	if growth_only:
+		hp = mini(hp,display_max_hp)
+		mp = mini(mp,display_max_mp)
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
@@ -8007,7 +8017,7 @@ func _publish_player_hud(fold_native_stacks:bool, timed_buff:bool=false, refresh
 	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_hud_stats",phase)
 	hud.set_character_state(character_state)
 	if timed_buff:phase=FRAME_HITCH.detail_next("item.buff_hud_sheet",phase)
-	if not timed_buff:
+	if not timed_buff and not growth_only:
 		if hud.has_method("set_card_collection_state"):
 			hud.call("set_card_collection_state", card_draw_fusion.export_state())
 		if hud.has_method("set_option_awakening_state"):
@@ -8464,7 +8474,7 @@ func _save_game(quiet: bool, collection_override: Dictionary = {}, movement_over
 		"protection523": protection523.snapshot(),
 		"equipment_collections": SAVE_SNAPSHOT.capture(owned_save_fields,"equipment_collections",equipment_collections.export_state()),
 		"totem_state": totems.export_state(),
-		"growth": growth.state.duplicate(true),
+		"growth": {} if collection_override.has("growth") else growth.state.duplicate(true),
 		"growth96": growth96.state.duplicate(true),
 		"half_elixir523": half_elixir.state.duplicate(true),
 		DOMINATION_STONES.SAVE_KEY: domination_stones.export_state(),

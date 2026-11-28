@@ -1056,7 +1056,8 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="hp" and float(world.item_use_cooldowns.get(str(parameters.cooldown_key),0.0))>0:return _failure("HP 물약 재사용 대기")
 	var is_buff: bool=effect.kind=="buff"
 	var buff_phase: int=FRAME_HITCH.now() if is_buff else 0
-	var state: Dictionary=world.consumable_service.export_state()
+	var selective_journal: bool=is_buff and world.consumable_service.has_method("publish_native_stack_use")
+	var state: Dictionary=_validation_consumables(world) if selective_journal else world.consumable_service.export_state()
 	var ledger: Variant=state.get(USES,{})
 	if not ledger is Dictionary:return _failure("기존 원본 물리 소비 장부 형식 보존")
 	if int(owned.used)+int(owned.transferred)==0 and ledger.has(uid):return _failure("물리 공급 영수증과 기존 사용 장부 불일치")
@@ -1087,7 +1088,8 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 			if scalar_use:instances[uid]=(instances[uid] as Dictionary).duplicate()
 			instances[uid][QUANTITY]=int(owned.remaining)-1
 			instances[uid].source_native_stack_used_quantity=int(owned.used)+1
-		# export_state() already owns this ledger.
+		# Validation borrows the live ledger. Copy its map before staging a debit.
+		if selective_journal:ledger=ledger.duplicate()
 		ledger[uid]=ledger_row(owned,int(owned.used)+1,int(owned.remaining)-1)
 		state[USES]=ledger
 	var cooldowns: Dictionary=world.item_use_cooldowns.duplicate(true)
@@ -1153,7 +1155,11 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if prepared.has("destination"):world.consumable_service._teleport_player(previous_position)
 		world.patch523_owner_state_problem="원본 물리 소비 저장 실패·결과 미확정 · 다시 불러오기 전 저장·재사용 중지"
 		busy=false;return _failure(world.patch523_owner_state_problem)
-	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns;world.consumable_service.import_state(state)
+	world.inventory=bag;world.item_instances=instances;world.item_use_cooldowns=cooldowns
+	if selective_journal:
+		world.consumable_service.publish_native_stack_use(uid,ledger[uid])
+	else:
+		world.consumable_service.import_state(state)
 	world.rng.seed=candidate_rng.seed;world.rng.state=candidate_rng.state
 	if effect.kind=="hp":world.hp=after;world._source_hp_potion_committed(amount)
 	elif effect.kind=="mp":world.mp=after
@@ -1404,12 +1410,12 @@ static func override_error(world: Node,overrides: Dictionary) -> String:
 	var warehouse: Variant=(overrides["warehouse"] if overrides.has("warehouse") else _validation_warehouse(world))
 	var floor: Variant=overrides["ground_drops"] if overrides.has("ground_drops") else _validation_floor(world)
 	var dormant: Dictionary=world.call("dormant_character_items") if world.has_method("dormant_character_items") else {}
-	# A dungeon-ledger-only save stages no native ownership fields. It has the
+	# Growth-only and dungeon-ledger-only saves stage no native ownership fields. They have the
 	# same native inputs and transition as an ordinary save. Reuse proof only
 	# on the same deeply compared inventory/instances/consumables/warehouse/
 	# floor/dormant characters and source definition; any change revalidates.
 	var inputs: Array=[inventory,instances,state,warehouse,floor,dormant,SOURCE.identity()]
-	var plain: bool=overrides.is_empty() or (overrides.size()==1 and overrides.has("source_dungeon_play"))
+	var plain: bool=overrides.is_empty() or (overrides.size()==1 and (overrides.has("source_dungeon_play") or overrides.has("growth")))
 	var unchanged: bool=plain and not _last_valid_inputs.is_empty() and _last_valid_inputs==inputs
 	if not unchanged:
 		var issue: String=state_error(inventory,instances,state,warehouse,floor,dormant)

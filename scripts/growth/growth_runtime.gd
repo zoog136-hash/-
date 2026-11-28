@@ -1,6 +1,7 @@
 extends RefCounted
 ## Local single-save progression. Unknown source values fail closed, never become zero costs.
 const Stats = preload("res://scripts/collections/equipment_collection_stats.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const DATA = "res://data/growth/lineage_growth.json"
 const GuardianSource = preload("res://scripts/growth/guardian_source.gd")
 var guardian_source = GuardianSource.new()
@@ -86,6 +87,8 @@ func emblem(id: String) -> Dictionary:
 	return {}
 
 func node(id: String) -> Dictionary:
+	if not development and guardian_source.has_node(id):
+		return guardian_source.nodes[id]
 	for group: Dictionary in config.get("guardians",[]):
 		for row: Dictionary in group.nodes:
 			if row.id == id: return row
@@ -513,8 +516,11 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	var stage_limit: int = symbol_stage_limit()
 	if quote_day>=0 and int(offer.get("day",-1))!=quote_day:return fail("게임 일자가 바뀌었습니다 · 비용과 횟수를 다시 확인하세요")
 	busy = true
+	var upgrade_only: bool = action in ["enhance","guardian_enchant"]
 	var next: Dictionary = state.duplicate(true)
-	var inventory: Dictionary = world.inventory.duplicate(true)
+	# These two attempts only edit scalar balances. Other growth actions
+	# retain their existing staged inventory and physical-item handling.
+	var inventory: Dictionary = world.inventory.duplicate(not upgrade_only)
 	var instances: Dictionary = world.item_instances.duplicate(true) if not str(offer.consume_instance).is_empty() else {}
 	for item: String in offer.costs:
 		inventory[item] = int(inventory.get(item,0))-int(offer.costs[item])
@@ -662,20 +668,25 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 				next.guardian_switch_until[str(int(node(id).category_id))]=Time.get_unix_time_from_system()+float(guardian_source.constant("CoolTimeSec"))
 			else: next.representative = id
 	next.revision += 1
+	var started: int = FRAME_HITCH.now()
 	if not validate(next).is_empty():
 		busy = false
 		return fail("성장 상태 검증 실패")
-	var payload: Dictionary={"inventory":inventory,"growth":next}
+	started = FRAME_HITCH.detail_next("growth.action_validate",started)
+	var inventory_changed: bool = inventory != world.inventory
+	var payload: Dictionary={"growth":next}
+	if not upgrade_only or inventory_changed:payload["inventory"]=inventory
 	payload.merge(vital,true)
 	if int(offer.get("gold_cost",0))>0:payload.gold=world.gold-int(offer.gold_cost)
 	if not str(offer.consume_instance).is_empty():payload["item_instances"]=instances
 	var error: Error = world._save_game(true,payload)
+	started = FRAME_HITCH.detail_next("growth.action_save",started)
 	if error != OK:
 		busy = false
 		return fail("저장 실패 · 재료와 성장 상태를 변경하지 않았습니다 (%d)" % error)
 	state = next
 	if world.get("skill_cooldowns") is Dictionary:sync_guardian_cooldowns()
-	world.inventory = inventory
+	if not upgrade_only or inventory_changed:world.inventory = inventory
 	if payload.has("gold"):world.gold=int(payload.gold)
 	if vital.has("hp"):
 		world.hp=int(vital.hp);world.mp=int(vital.mp)
@@ -685,10 +696,14 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset","restore_emblem"]: rerolls.erase(id)
 	_rebuild()
-	world._invalidate_equipment_static()
-	world.hp = mini(world.hp,world._effective_max_hp())
-	world.mp = mini(world.mp,world._effective_max_mp())
-	world._update_hud()
+	if upgrade_only and world.has_method("_publish_growth_upgrade_hud"):
+		world._publish_growth_upgrade_hud()
+	else:
+		world._invalidate_equipment_static()
+		world.hp = mini(world.hp,world._effective_max_hp())
+		world.mp = mini(world.mp,world._effective_max_mp())
+		world._update_hud()
+	FRAME_HITCH.detail("growth.action_publish",started)
 	busy = false
 	var result: Dictionary = {"ok":true,"message":message}
 	if action == "enhance": result["enhancement_stages"] = enhancement_stages
