@@ -99,7 +99,7 @@ func _run() -> void:
 		service.world = world
 		var runtime = PROGRESSION.new()
 		runtime.configure(service)
-		PROGRESSION.reset_darkness_cache()
+		runtime.reset_darkness_cache()
 		runtime.update_light()
 		var light: Node = player.get_node_or_null("Source523PassiveLight")
 		var bright_shown: bool = light != null and (light as CanvasItem).visible
@@ -107,14 +107,29 @@ func _run() -> void:
 		var shade := CanvasModulate.new()
 		shade.color = Color(0.35, 0.35, 0.4)
 		world.add_child(shade)
-		PROGRESSION.reset_darkness_cache()
+		runtime.reset_darkness_cache()
 		runtime.update_light()
 		light = player.get_node_or_null("Source523PassiveLight")
 		var shown: bool = light != null and (light as CanvasItem).visible
 		evidence[label + "_light"] = shown
 		check(shown, "%s: original LightRadius light reveals a darkened field (TWILIGHT approximation)" % label)
+		shade.color = Color.WHITE
+		runtime.reset_darkness_cache()
+		runtime.update_light()
+		check(not runtime.light.visible, "%s: a changed shade color retires the light" % label)
+		shade.color = Color(0.35, 0.35, 0.4)
+		world.remove_child(shade)
+		runtime.reset_darkness_cache()
+		runtime.update_light()
+		check(not runtime.light.visible, "%s: a detached shade leaves the field bright" % label)
+		world.add_child(shade)
+		runtime.reset_darkness_cache()
+		runtime.update_light()
+		check(runtime.light.visible, "%s: the same shade returning to the tree is tracked" % label)
 		shade.free()
-		PROGRESSION.reset_darkness_cache()
+		runtime.reset_darkness_cache()
+		runtime.update_light()
+		check(not runtime.light.visible, "%s: freeing a shade retires the light" % label)
 		world.queue_free()
 		await process_frame
 		player.free()

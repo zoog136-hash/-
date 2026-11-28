@@ -53,6 +53,13 @@ class DashWorld extends Node:
 	func _is_walkable_world(_point: Vector2) -> bool: return true
 	func _has_line_of_sight_world(_from: Vector2, _to: Vector2) -> bool: return true
 
+class BuffIdentityCatalog extends TwilightOriginalSkillCatalog:
+	var lookups: int = 0
+	func record_for(key: String) -> Dictionary:
+		lookups += 1
+		return by_id.get(key, {})
+	func _resolved_reference(record: Dictionary) -> Dictionary: return record
+
 func _initialize() -> void: call_deferred("run")
 
 func check(ok: bool, message: String) -> void:
@@ -60,6 +67,35 @@ func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures.append(message)
 		print("SKILLS523_POLICY_FAIL ", message)
+
+func check_buff_identities(host: CostHost) -> void:
+	var service := TwilightOriginalSkillService.new()
+	var catalog := BuffIdentityCatalog.new()
+	service.catalog = catalog
+	service.world = host
+	service.vfx = service.VFX.new()
+	service.progression.configure(service)
+	catalog.by_id = {"active":{"id":"active","activation":"active"},
+		"passive":{"id":"passive","activation":"passive","progression523":{"kind":"stats"}}}
+	host.active_skill_buffs = {"keep":{"skill_id":"active","remaining":10.0}, "changing":{"skill_id":"unknown","remaining":20.0}}
+	service.progression.tick(0.0)
+	var initial: int = catalog.lookups
+	host.active_skill_buffs.keep.remaining = 9.0
+	service.progression.tick(0.0)
+	check(initial == 2 and catalog.lookups == initial, "stable skill identities reuse admission while the buff timer changes")
+	host.active_skill_buffs.changing.skill_id = "passive"
+	service.progression.tick(0.0)
+	check(catalog.lookups == initial + 1 and not host.active_skill_buffs.has("changing") and host.active_skill_buffs.keep.remaining == 9.0,
+		"only the changed identity is read and its obsolete active package is removed")
+	host.active_skill_buffs.changing = {"skill_id":"unknown","remaining":30.0}
+	service.progression.tick(0.0)
+	catalog.by_id.unknown = {"id":"unknown","activation":"passive","progression523":{"kind":"stats"}}
+	catalog.source523.revision += 1
+	service.progression.tick(0.0)
+	check(not host.active_skill_buffs.has("changing") and host.active_skill_buffs.has("keep"),
+		"a verified source revision rechecks retained old packages")
+	service.vfx.free()
+	host.active_skill_buffs.clear()
 
 func row() -> Dictionary:
 	# Synthetic, deliberately unrelated numeric identity. Never an original row.
@@ -223,6 +259,7 @@ func run() -> void:
 	dash_world.field_map.wall_x=INF
 	check(planner.dash_plan({"dash_distance":120},null)==Vector2(120,0),"unobstructed no-target dash preserves intended distance")
 	dash_world.player.free();dash_world.free()
+	check_buff_identities(cost_host)
 	cost_host.free()
 	print("SKILLS523_POLICY_RESULT ", JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)
