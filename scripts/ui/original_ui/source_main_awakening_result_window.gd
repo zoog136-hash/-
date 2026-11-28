@@ -97,10 +97,21 @@ func open(parent: Node, card: Dictionary, outcome: Dictionary, settings: Diction
 	return built
 
 func _spec() -> Dictionary:
-	return {"Panel_Root/Btn_Plus":{"exclude":true}, "Nd_Card/Label_Skill":{"role":"source_text", "text":_target_name},
+	var spec: Dictionary = {"Panel_Root/Btn_Plus":{"exclude":true}, "Nd_Card/Label_Skill":{"role":"source_text", "text":_target_name},
 		"Nd_Skill/Nd_Card/Card":{"visible":false},
 		"ListView/Label_Option":{"role":"source_text", "text":""},
 		"Panel_Touch/Label":{"role":"static_source_text"}}
+	# The pinned CSB keeps these roots hidden in the intro, touch and
+	# opposite-outcome clips. Project out their nodes and tracks before
+	# SpriteScene loads texture frames and instantiates particle emitters.
+	if _succeeded:
+		spec["Fx_Fail"] = {"exclude":true}
+		spec["Fail_Text"] = {"exclude":true}
+		spec["smoke"] = {"exclude":true}
+	else:
+		spec["Fx_Success"] = {"exclude":true}
+		spec["Success_Text"] = {"exclude":true}
+	return spec
 
 func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var options_result: Dictionary = _fill_option_rows(root, out)
