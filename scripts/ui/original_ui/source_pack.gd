@@ -10,9 +10,12 @@ const SETTINGS_FRAMES = preload("res://scripts/ui/original_ui/source_settings_fr
 const BUFFERED_PNG_MAX_BYTES: int=8*1024*1024
 ## Decoded CPU pages and reconstructed frames are shared across instances that
 ## opened the same verified pack; see source_pack_page_cache.gd for identity,
-## leases and the idle byte budget. This instance holds a lease on every page
-## in _pages until release_cache_leases(), a successful open() or deletion.
+## leases and the idle byte budget. This instance leases pages during
+## texture builds. Displayed textures have their own lifetime.
 const PAGE_CACHE=preload("res://scripts/ui/original_ui/source_pack_page_cache.gd")
+## Keep decoded pages together through clustered frame and staged UI builds.
+## Afterward the shared reserve can drop them even while the UI stays open.
+const PAGE_LEASE_BATCH_SECONDS: float = 0.75
 ## Cache ownership is bounded even when a HUD keeps this pack for the whole
 ## session. Active controls/fonts keep their own textures; weak hits reuse
 ## those exact objects after the cache drops its strong reserve.
@@ -48,6 +51,7 @@ var _building_settings := false
 var _fonts: Dictionary={}
 var _bitmap_fonts: Dictionary={}
 var _page_leases: Dictionary={}
+var _page_release_scheduled: bool = false
 # Captured at construction: a RefCounted cannot call its own methods during
 # NOTIFICATION_PREDELETE, so the lease owner id must already be stored.
 var _lease_owner: int=0
@@ -57,7 +61,7 @@ func _init() -> void:
 
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_PREDELETE and not _page_leases.is_empty():
-		PAGE_CACHE.release(_lease_owner,_page_leases.keys())
+		PAGE_CACHE.release(_lease_owner,_page_leases.values())
 		_page_leases.clear()
 
 ## Screen/owner close: returns this instance's page leases so the pages become
@@ -66,10 +70,24 @@ func _notification(what: int) -> void:
 func release_cache_leases() -> void:
 	_settings_frames = null
 	_settings_frames_checked = false
-	var keys: Array=_page_leases.keys()
+	_release_decoded_pages()
+
+func _release_decoded_pages() -> void:
+	var keys: Array=_page_leases.values()
 	_page_leases.clear()
 	_pages.clear()
 	if not keys.is_empty():PAGE_CACHE.release(_lease_owner,keys)
+
+func _schedule_decoded_page_release() -> void:
+	if _page_release_scheduled: return
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null: return
+	_page_release_scheduled = true
+	tree.create_timer(PAGE_LEASE_BATCH_SECONDS, true, false, true).timeout.connect(_on_page_lease_timeout)
+
+func _on_page_lease_timeout() -> void:
+	_page_release_scheduled = false
+	_release_decoded_pages()
 
 ## Decoded RGBA payload reserve only, not a cap on externally held textures,
 ## FontFile allocations, GPU memory or RSS. Does not change any source pixels.
@@ -394,15 +412,20 @@ func texture(reference: Dictionary, cocos_pixels: bool=false) -> Texture2D:
 	return result
 
 func _page(member: String) -> Image:
-	if _pages.has(member): return _pages[member]
+	if _pages.has(member):
+		# A page borrowed once can supply many later frames in the same
+		# burst. Order the idle reserve by its actual latest decode use.
+		if _page_leases.has(member): PAGE_CACHE.touch_page(_page_leases[member])
+		return _pages[member]
 	if not _safe_member(member) or not manifest.files.has(member): return null
 	var cache_key: String=""
 	if PAGE_CACHE.enabled:
 		cache_key=PAGE_CACHE.page_key(manifest_sha256,root,member,str(manifest.files[member].sha256))
 		var shared: Image=PAGE_CACHE.acquire_page(cache_key,_lease_owner)
 		if shared!=null:
-			_page_leases[cache_key]=true
+			_page_leases[member]=cache_key
 			_pages[member]=shared
+			_schedule_decoded_page_release()
 			return shared
 	var path: String=root.path_join("originals").path_join(member)
 	var original: Image=_read_verified_page(path, str(manifest.files[member].sha256), member)
@@ -410,8 +433,9 @@ func _page(member: String) -> Image:
 	original.set_meta(PIXELS.OPAQUE_CROPS, {})
 	if not cache_key.is_empty():
 		original=PAGE_CACHE.store_page(cache_key,_lease_owner,original)
-		_page_leases[cache_key]=true
-	_pages[member]=original
+		_page_leases[member]=cache_key
+		_pages[member]=original
+		_schedule_decoded_page_release()
 	return original
 
 ## Verify and decode exactly the same bytes for ordinary PNGs. The first
