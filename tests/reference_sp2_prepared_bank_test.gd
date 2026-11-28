@@ -7,6 +7,7 @@ const LEGACY=preload("res://tests/qa_unshared_reference_preview.gd")
 const NATIVE=preload("res://tests/source_native_attachment_bank_test.gd")
 const ATTRIBUTES=preload("res://tests/reference_sp2_attribute_memo_test.gd")
 const HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
+const BANK_INDEX=preload("res://scripts/resources/reference_sp2_bank_index.gd")
 
 func shared(bank: RefCounted, data: Dictionary, bindings: Dictionary=BINDINGS, loops: Dictionary=LOOPS, scope: String="npc", actors: Dictionary={}) -> Dictionary:
 	return bank.load_shared_bank(data.path,data.sha,ACTOR,bindings,loops,scope,actors)
@@ -93,7 +94,52 @@ func _timing_benchmark(bank_result: Dictionary, mode: String, data: Dictionary) 
 			"uncached_p50_usec":(samples[0][4]+samples[0][5])/2.0,"prepared_p50_usec":(samples[1][4]+samples[1][5])/2.0}))
 	view.free()
 
+func _check_manifest_bake() -> void:
+	var path: String="user://sp2_index_%d.json" % OS.get_process_id()
+	var source: Dictionary={"schema":1,"note":["한글 {\"}",null,true],"members":{"one":{"count":8}},
+		"actors":{"sprite:1":{"0":{"path":"actors/1/action-0.json"}}},"fixture":Time.get_ticks_usec()}
+	var input: String=JSON.stringify(source)
+	var parsed: Dictionary=JSON.parse_string(input)
+	var file := FileAccess.open(path,FileAccess.WRITE)
+	file.store_string(input)
+	file.close()
+	var pin: String=FileAccess.get_sha256(path)
+	var baked: Dictionary=BANK_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,true)
+	check(baked.ok and baked.index._files.size()==2,"streaming the original manifest produces both registry files")
+	if baked.ok:
+		check(baked.index.lookup("actors","sprite:1")==parsed.actors["sprite:1"] and baked.index.top.note==parsed.note,
+			"record lookup preserves nested values, Unicode and quoted braces")
+		BANK.MANIFEST_INDEX._shared.erase(pin)
+		var installed: Dictionary=BANK.MANIFEST_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,true)
+		check(installed.ok and installed.index._files.size()==2 and installed.index.lookup("members","one")==parsed.members.one,
+			"existing manifest reader opens the same bake")
+		BANK.MANIFEST_INDEX._shared.erase(pin)
+		var reused: Dictionary=BANK_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,true)
+		check(reused.ok and reused.index._files.size()==2,"runtime opens the existing verified bake")
+		var shared: Dictionary=BANK_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,true)
+		check(shared.ok and is_same(shared.index,reused.index),"a matching live stamp returns the verified index")
+		check(not BANK_INDEX.open(path,pin,1,true).ok and not BANK_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,false).ok,
+			"resident indexes still enforce the caller's size and pin checks")
+	file=FileAccess.open(path,FileAccess.WRITE)
+	file.store_string('{"actors":{},"actors":{"sprite:2":{"0":{}}},"members":{}}')
+	file.close()
+	check(not BANK_INDEX.open(path,pin,BANK.MAX_MANIFEST_JSON,true).ok,"changed manifest cannot reuse the old pin")
+	var fallback: Dictionary=BANK_INDEX.open(path,FileAccess.get_sha256(path),BANK.MAX_MANIFEST_JSON,true)
+	check(fallback.ok and fallback.index._files.is_empty() and fallback.index.contains("actors","sprite:2"),
+		"a duplicate registry uses the original whole-JSON fallback and last value")
+	file=FileAccess.open(path,FileAccess.WRITE)
+	file.store_string(input+"\n")
+	file.close()
+	var previous_fault: String=BANK_INDEX.BAKE.fault
+	BANK_INDEX.BAKE.fault="sp2_manifest_members|create"
+	var unsaved: Dictionary=BANK_INDEX.open(path,FileAccess.get_sha256(path),BANK.MAX_MANIFEST_JSON,true)
+	BANK_INDEX.BAKE.fault=previous_fault
+	check(unsaved.ok and unsaved.index._files.is_empty() and unsaved.index.lookup("members","one")==parsed.members.one,
+		"unavailable bake storage still reads the verified source")
+	DirAccess.remove_absolute(path)
+
 func run() -> void:
+	_check_manifest_bake()
 	var directory: String="user://prepared_bank_test_%d" % OS.get_process_id()
 	var data: Dictionary=fixture(directory)
 	PREPARED.clear()
