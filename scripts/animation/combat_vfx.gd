@@ -22,6 +22,7 @@ var impact_visual_limit: int = CAPACITY
 var impact_draws: int = 0
 var source_result_visual: Callable
 var source_head_result_visual: Callable
+var show_result_titles: bool = true
 var font: Font
 var visuals = VISUALS.new()
 var reduced_motion: bool = false
@@ -57,9 +58,10 @@ func impact(point: Vector2, direction: Vector2, style: String, critical: bool = 
 	entry.merge({"direction":direction.normalized(), "style":style, "family":VISUALS.family(style), "critical":critical})
 
 func number(point: Vector2, value: String, color: Color, critical: bool = false, final_blow: bool = false, align_above: bool = false) -> void:
+	if value == "MISS" and not show_result_titles: return
 	var result_visual: Callable = source_head_result_visual if align_above and source_head_result_visual.is_valid() else source_result_visual
 	if value == "MISS" and result_visual.is_valid() and result_visual.call("miss",point): return
-	var caption: bool = critical
+	var caption: bool = critical and show_result_titles
 	var title: String = "결정타" if final_blow else "Critical"
 	# Rapid multi-hits keep every number, but do not stack identical headings.
 	if caption:

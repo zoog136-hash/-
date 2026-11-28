@@ -126,7 +126,7 @@ func rules() -> void:
 	window._next()
 	check(closed == [true], "the last tap closes and releases the reveal")
 	check(window.has_method("back_clip") and window.call("back_clip","변신") == "Fx_Start_Change" and window.call("back_clip","마법인형") == "Fx_Start_Doll" and window.call("back_clip","성물") == "Fx_Start_HolyStuff", "the card back clip of each category")
-	check(constant("DEAL") == {"Nd_CardSet_One":"CardSet_One","Nd_CardSet_Five":"CardSet_Five","Nd_CardSet":"Fx_Start"}, "each set's own dealing clip")
+	check(constant("DEAL") == {"Nd_CardSet_One":"CardSet_One","Nd_CardSet_Five":"CardSet_Five","Nd_CardSet":"Fx_Start","Nd_SkillCardSet_One":"SkillCardSet_One","Nd_SkillCardSet_Five":"SkillCardSet_Five","Nd_SkillCardSet":"Skill_Fx_Start"}, "each set's own dealing clip")
 	check(int(constant("Z",0)) > 160 and int(constant("Z",0)) < 180, "the window lies over the bag and shop windows, under the system message")
 	var spec_window = WINDOW.new()
 	spec_window.results = cards(1,"전설")
@@ -184,7 +184,79 @@ func run() -> void:
 	for category: String in order:
 		if packs.has(category): await bag_use(world,str(packs[category]),category)
 	await shop_reveal(world)
+	await skill_pack_from_bag(world)
 	await finish(world)
+
+func skill_pack_from_bag(world: Node) -> void:
+	var class_id: int=CASH.current_class(world)
+	var pack_name: String=""
+	for record: Dictionary in world.catalog_db.get("아이템",[]):
+		if record.get("source")!=CASH.TAG: continue
+		var spec: Dictionary=CASH.definition(int(record.get("source_item_class_id",0)))
+		if spec.get("kind")!="gotcha":continue
+		if spec.entries.all(func(entry: Dictionary) -> bool:
+			return CASH.skill_draw_allows_class(DEF.row("BuffCard",int(entry.get("spell_card_id",0))),class_id)):
+			pack_name=str(record.name)
+			var rolls: int=0
+			for draw: Dictionary in spec.draws:rolls+=int(draw.count)
+			if rolls>10:break
+	if not check(not pack_name.is_empty(),"source skill draw package for current class"):return
+	var hud: Node=world.hud
+	world.inventory[pack_name]=2
+	world._update_hud();hud.refresh_inventory(world.inventory)
+	if not hud.original_inventory_is_open():hud.toggle_inventory()
+	await frames(30)
+	var point: Vector2=await slot_point(hud,reference_of(world,pack_name))
+	if not check(point.is_finite(),"skill draw package is reachable in the real bag"):return
+	await tap(point)
+	await tap(point)
+	var window: RefCounted=hud.original_main_ui_controller.feature_window("card_gacha_result")
+	if not check(window!=null and window.is_open() and window.category==WINDOW.SKILL_CATEGORY,"using the skill pack opens the original skill draw layout"):return
+	check(str(window.last_result.filled.set).begins_with("Nd_SkillCardSet") and not hud.original_inventory_is_open(),"skill sets dealt above the closed bag")
+	check(int(world.inventory.get(pack_name,0))==1,"the real pack debits once")
+	await create_timer(3.4).timeout
+	var set_name: String=window.last_result.filled.set
+	var cell: String=set_name+"/Card_00"
+	var back: CanvasItem=node_of(window,cell+"/Fx_Glow/Card_Back")
+	if not check(back!=null and back.is_visible_in_tree(),"sealed skill result uses its own card back"):return
+	await capture("skill_1_closed")
+	var opened_at: Vector2=window_point(window,cell+"/Btn_Card")
+	if not check(opened_at.is_finite(),"the real skill card button accepts input"):return
+	var initial_bag: Dictionary=world.inventory.duplicate()
+	await tap(opened_at)
+	await create_timer(1.35).timeout
+	var player: Node2D=GRADE_FX.project(window,window._scene,window._out,cell)
+	var face: Node2D=player.get_node_or_null("SkillCardResultFace") if player!=null else null
+	check(window.is_opened(0) and face!=null and face.is_visible_in_tree(),"the tapped card reveals the spell slot")
+	check(window.results.size()==1 or not window.is_opened(1),"a skill card tap leaves its neighbor sealed")
+	var award: Dictionary=window.results[0]
+	var icon: Dictionary=WINDOW.SkillCard.spell_icon(int(award.spell_class_id))
+	check(award.name==world.skill_cards523.card_name(int(award.source_buff_card_id)) and icon.get("texture") is Texture2D,"result label and picture use the BuffCard and SpellClass")
+	if face!=null and icon.get("texture") is Texture2D:
+		var expected: Image=icon.texture.get_image()
+		var painted: bool=face.find_children("*","Sprite2D",true,false).any(func(sprite: Sprite2D) -> bool:
+			if sprite.texture==null or not sprite.is_visible_in_tree():return false
+			var actual: Image=sprite.texture.get_image()
+			return actual!=null and actual.get_size()==expected.get_size() and actual.get_data()==expected.get_data())
+		check(painted,"the visible slot uses the pixels of the awarded spell icon")
+	check(world.inventory==initial_bag,"revealing a skill card cannot debit or draw again")
+	await capture("skill_2_first_open")
+	if window.pages()>1:
+		window.open_all()
+		window._next()
+		check(window.page==1 and not window.is_opened(WINDOW.PER_PAGE),"second page keeps the remaining results sealed")
+	evidence["skill"]={"count":window.results.size(),"pages":window.pages(),"skill_face":face!=null}
+	var records: Array=window.results.duplicate()
+	window.close()
+	await frames()
+	if records.size()>=WINDOW.PER_PAGE:
+		hud.present_skill_card_draw(records.slice(0,WINDOW.PER_PAGE)+[records[0]])
+		check(window.is_open() and window.pages()==2 and window.last_result.filled.shown==10,"ten skill slots fit on the first page")
+		window.open_all()
+		window._next()
+		check(window.page==1 and not window.is_opened(WINDOW.PER_PAGE),"an eleventh skill result opens sealed on its own page")
+		window.close()
+		await frames()
 
 func hud_native_handoff(hud: Node) -> void:
 	var original: Node = hud.original_main_ui_controller
@@ -269,6 +341,17 @@ func face_shown(window: RefCounted, cell: String) -> bool:
 	var face: CanvasItem = node_of(window,cell+"/Panel")
 	return (back == null or not back.visible) and face != null and face.visible
 
+func wait_for_faces(window: RefCounted, set_name: String, count: int) -> bool:
+	var deadline: int=Time.get_ticks_msec()+10000
+	while window.is_open():
+		var settled: bool=true
+		for index: int in range(count):
+			if not face_shown(window,"%s/Card_%02d" % [set_name,index]):settled=false;break
+		if settled:return true
+		if Time.get_ticks_msec()>=deadline:return false
+		await process_frame
+	return false
+
 ## Grants one pack, uses it from the bag with two taps, then turns the cards.
 func bag_use(world: Node, name: String, category: String) -> void:
 	var hud: Node = world.hud
@@ -319,8 +402,8 @@ func bag_use(world: Node, name: String, category: String) -> void:
 	var card_point: Vector2 = window_point(window,"%s/Card_00/Btn_Card" % set_name)
 	if check(card_point.is_finite(), "%s: the first card takes a tap" % label):
 		await tap(card_point)
-		await frames(20)
-		check(window.is_opened(0) and face_shown(window,"%s/Card_00" % set_name), "%s: a tap turns the card face up" % label)
+		var first_face: bool=await wait_for_faces(window,set_name,1)
+		check(window.is_opened(0) and first_face, "%s: a tap turns the card face up after its reel" % label)
 		if shown > 1: check(back_shown(window,"%s/Card_01" % set_name), "%s: the other cards stay closed" % label)
 		await create_timer(1.2).timeout
 		await capture("%s_2_one_open" % category)
@@ -332,10 +415,7 @@ func bag_use(world: Node, name: String, category: String) -> void:
 		var open_point: Vector2 = window_point(window,"Nd_ButtonSet/Btn_Open")
 		if check(open_point.is_finite(), "%s: 모두 확인 is on the screen" % label):
 			await tap(open_point)
-			await frames(20)
-	var all_open: bool = true
-	for index: int in range(shown):
-		if not face_shown(window,"%s/Card_%02d" % [set_name,index]): all_open = false
+	var all_open: bool = await wait_for_faces(window,set_name,shown)
 	check(window.page_open() and all_open, "%s: 모두 확인 turns every card" % label)
 	check(window_point(window,"Nd_ButtonSet/Btn_Open") == Vector2.INF, "%s: 모두 확인 goes once all are open" % label)
 	var lights: int = 0
@@ -381,11 +461,12 @@ func shop_reveal(world: Node) -> void:
 		var before: int = glow.get_child_count() if glow != null else -1
 		if check(hero_point.is_finite(), "the 영웅 card takes a tap"):
 			await tap(hero_point)
-			await frames(10)
+			var settled: bool=await wait_for_faces(five,"Nd_CardSet_Five",1)
+			check(settled,"the shop grade reel settles before inspecting the result")
 			check(five.is_opened(0) and glow != null and glow.get_child_count() > before, "a turned 영웅 card mounts its original grade light (%d → %d)" % [before,glow.get_child_count() if glow != null else -1])
 		var rest: Dictionary = five.open_all()
 		check(int(rest.get("lit",-1)) == 2 and int(rest.get("opened",0)) == 4, "모두 확인 lights the other 영웅 이상 only: %s" % str(rest))
-		await create_timer(1.0).timeout
+		check(await wait_for_faces(five,"Nd_CardSet_Five",5),"all five shop cards settle")
 		await capture("shop_0_five_lit")
 		five._next(); await frames(6)
 		check(not five.is_open(), "five cards close")

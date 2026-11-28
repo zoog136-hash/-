@@ -59,6 +59,12 @@ func run() -> void:
 	vfx.number(head,"MISS",Color.WHITE)
 	check(calls.size()==3 and calls[0]==["head","miss",head] and calls[1]==["head","final_blow",head-Vector2(0.0,21.0*CAMERA.text_scale())] and calls[2]==["generic","miss",head],"monster miss and final blow align while generic feedback retains its origin")
 	check(vfx.active.size()==1 and vfx.active[0].display=="576","native caption still preserves the damage number")
+	calls.clear()
+	vfx.clear()
+	vfx.show_result_titles=false
+	vfx.number(head,"MISS",Color.WHITE,false,false,true)
+	vfx.number(head,"CRIT 576",Color.WHITE,true,true,true)
+	check(calls.is_empty() and vfx.active.size()==1 and vfx.active[0].display=="576" and not vfx.active[0].caption,"live title suppression applies to both source captions and fallback text")
 	vfx.free()
 	overlay.free()
 	monster.free()

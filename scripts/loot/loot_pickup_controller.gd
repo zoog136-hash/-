@@ -105,20 +105,19 @@ func select(view: Button) -> void:
 	(view as TwilightGroundLoot).set_selected(true)
 	var record: Dictionary = manager.records[id]
 	var title: String = str(record["item_name"])
-	var item: Variant = record.get("item_record")
-	if item is Dictionary and item.get("source_m_native_item") == true:
+	var item: Dictionary = manager.floor_item_record(record)
+	if item.get("source_m_native_item") == true:
 		title = str(preload("res://scripts/loot/current523_native_fields.gd").field(item,"source_display_name",title))
 	info.text = "%s · %s ×%d" % [title, record["grade"], record["quantity"]]
-	info.add_theme_color_override("font_color", preload("res://scripts/loot/current523_item_grade.gd").color(item if item is Dictionary else str(record["grade"]), TwilightDropVisual.grade_color(str(record["grade"]))))
-	_show_selected_item_image(record)
+	info.add_theme_color_override("font_color", preload("res://scripts/loot/current523_item_grade.gd").color(item if not item.is_empty() else str(record["grade"]), TwilightDropVisual.grade_color(str(record["grade"]))))
+	_show_selected_item_image(record,item)
 	overlay.show()
 
-func _show_selected_item_image(record: Dictionary) -> void:
+func _show_selected_item_image(record: Dictionary,item: Dictionary) -> void:
 	_clear_selected_item_image()
 	# This is the selected item's UI icon on the existing pickup button. The
 	# floor visual still requires its own source-declared ground asset role.
-	var item: Variant = record.get("item_record")
-	if not item is Dictionary or not IMAGES.handles_item(item): return
+	if not IMAGES.handles_item(item): return
 	var image_info: Dictionary = IMAGES.describe_item(item, str(record.get("item_name", "")))
 	pickup_button.icon = image_info.get("texture") as Texture2D
 	var evidence: Dictionary = image_info.duplicate(true)

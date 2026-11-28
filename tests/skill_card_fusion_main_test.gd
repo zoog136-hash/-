@@ -71,6 +71,10 @@ func reveal_fusion(window: RefCounted) -> void:
 	var button: Control=card.source_nodes[1644].get_meta("source_button")._input_area
 	if not ck(button.is_visible_in_tree(),"closed skill result can be tapped"):return
 	tap(button)
+	if window._fusion_result.get("success",false) and OS.has_environment("TWILIGHT_SOURCE523_IMAGES"):
+		var reel: Node2D=card.find_child("SkillFusionCandidateReel",true,false)
+		ck(int(sealed.get("candidate_icons",0))>0 and reel!=null and reel.is_visible_in_tree(),"the selected fusion card plays real candidate slots")
+		if reel!=null and reel.has_meta("source_project_player"):ck(reel.get_meta("source_project_player").playback_status().clip=="Fx_Roultte_Start","the candidate strip plays the authored clip")
 	await create_timer(1.3).timeout
 	ck(window.last_result.filled.fusion_result.get("revealed",false),"actual card tap reveals the committed skill result")
 
@@ -142,7 +146,7 @@ func fusion(archive: String) -> void:
 	ck(shown.get("member")==SKILL_WINDOW.FUSION_CARD and shown.get("caption")==card.name,"original result presents the actual card name")
 	ck(await opaque_caption(window,str(card.name)),"the result animation settles on the opaque original card label")
 	if OS.has_environment("TWILIGHT_SOURCE523_IMAGES"):
-		ck(window.last_result.filled.get("result_icon",false),"verified original spell or awarded item icon is mounted")
+		ck(window.last_result.filled.get("result_icon",false),"verified original spell icon is mounted")
 	ck(STACK.proof(w,book_uid).get("remaining")==8 and uid_of(int(card.item_class_id))==card.physical_id,"success spends eight and yields exactly the verified physical reward")
 	w._load_game(true)
 	ck(STACK.proof(w,book_uid).get("remaining")==8 and uid_of(int(card.item_class_id))==card.physical_id and w.tj_coupons.core.state.history.size()==1,"restart preserves both outcomes and the failure ledger")

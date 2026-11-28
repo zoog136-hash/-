@@ -12,6 +12,63 @@ const FIELD="source_quest_craft_receipts"
 
 static func fail(reason: String) -> Dictionary:return {"ok":false,"reason":reason}
 
+## An alternative slot may spend a receipted native stack after its original
+## item, blessing and row have been matched. Quest rewards still require the
+## player's explicit selection.
+static func automatic_stock(world: Node, alternatives: Array[Dictionary]) -> Dictionary:
+	var possible: Dictionary={}
+	for slot: Dictionary in alternatives:
+		for material: Dictionary in slot.candidates:
+			var key: String=_automatic_key(material)
+			if not key.is_empty():possible[key]=true
+	var result: Dictionary={}
+	if possible.is_empty() or not str(world.get("patch523_owner_state_problem")).is_empty() or world.hp<=0:return result
+	var ids: Array=world.item_instances.keys()
+	ids.sort()
+	for uid: String in ids:
+		var instance: Dictionary=world.item_instances[uid]
+		if not instance.has(Stock.RECEIPT) or instance.has(Stock.TOKEN_RANK):continue
+		var item: Dictionary=instance.get("record",{})
+		var key: String="%d:%d" % [int(item.get("source_item_class_id",0)),int(item.get("source_bless_raw",0))]
+		if not possible.has(key):continue
+		var label: String=str(instance.get("name",""))
+		if world._item_locked(label,uid) or world._item_locked(label) or world._is_instance_equipped(uid):continue
+		var owned: Dictionary=Stock.proof(world,uid)
+		if owned.is_empty() or not Drops.deadline_problem(owned.record,int(world.ui_preferences.get("patch523_source_clock_offset_minutes",540))).is_empty():continue
+		if not result.has(key):result[key]={"units":0,"stacks":[]}
+		result[key].units+=int(owned.remaining)
+		result[key].stacks.append({"physical_id":uid,"remaining":int(owned.remaining),"receipt":owned.receipt})
+	return result
+
+static func _automatic_key(material: Dictionary) -> String:
+	if material.get("physical",true) or material.get("wallet",false) or int(material.get("level",-1))!=0:return ""
+	return "%s:%d" % [str(material.source_id),int(material.bless_code)]
+
+static func automatic_units(material: Dictionary, stock: Dictionary, alternatives: Dictionary) -> int:
+	if not alternatives.has(str(int(material.get("slot_index",-1)))):return 0
+	return int((stock.get(_automatic_key(material),{}) as Dictionary).get("units",0))
+
+static func automatic_selections(recipe: Dictionary, count: int, stock: Dictionary, alternatives: Dictionary) -> Array:
+	var selected: Dictionary={}
+	for material: Dictionary in recipe.materials:
+		if automatic_units(material,stock,alternatives)<=0:continue
+		var need: int=int(material.quantity)*count
+		for stack: Dictionary in stock[_automatic_key(material)].stacks:
+			var uid: String=stack.physical_id
+			var current: Dictionary=selected.get(uid,{})
+			var taken: int=mini(need,int(stack.remaining)-int(current.get("quantity",0)))
+			if taken<=0:continue
+			if current.is_empty():
+				current={"physical_id":uid,"quantity":0,"expected_quantity":stack.remaining,
+					"expected_remaining":stack.remaining,"source_native_stack_receipt":stack.receipt,"material_allocations":[]}
+				selected[uid]=current
+			current.quantity+=taken
+			current.expected_remaining-=taken
+			current.material_allocations.append({"material_row_id":int(material.row_id),"quantity":taken})
+			need-=taken
+			if need==0:break
+	return selected.values()
+
 static func review(world: Node,book: RefCounted,recipe_id: String,batches: int,choices: Dictionary,selections: Array) -> Dictionary:
 	if selections.is_empty():return {"ok":true,"requests":[],"native_requests":[],"allocations":[],"rows":{},"keys":{}}
 	if not str(world.get("patch523_owner_state_problem")).is_empty() or world.hp<=0:return fail("저장 보호·생존 상태 확인 필요 · 선택 재료 보존")
