@@ -62,6 +62,8 @@ func capture(section: String, root: Node) -> void:
 			"detail": bool(view.get("detail_active")),
 			"search_visible": row.visible, "scroll": scroll.scroll_vertical}
 	else:
+		# A single-skill detail has its own selection and no list filters.
+		if view.get("focus_only") == true: return
 		var search: LineEdit = view.get("search") as LineEdit
 		var type_filter: OptionButton = view.get("type_filter") as OptionButton
 		var class_filter: OptionButton = view.get("class_filter") as OptionButton
@@ -113,15 +115,23 @@ func restore(section: String, root: Node) -> void:
 			view.set("detail_active", bool(state.get("detail", false)))
 		view.call("_reflow")
 	else:
+		var focused_cards: ItemList = view.get("cards") as ItemList
+		var focused: bool = view.get("focus_only") == true or bool(focused_cards.get_parent().get_parent().get("detail_active"))
+		# 상세 보기 opened this window on one named skill: keep that skill
+		# (its learn / book / quick-slot buttons) and the filters that list it,
+		# instead of the skill and filters of the last close.
+		if focused:
+			state = {"query": "", "type": 0, "class": 0, "grade": 0, "detail": true,
+				"id": str((view.get("selected") as Dictionary).get("id", "")), "scroll": focused_cards.get_v_scroll_bar().value}
 		(view.get("search") as LineEdit).text = str(state.get("query", ""))
 		_select_filter(view.get("type_filter") as OptionButton, int(state.get("type", 0)))
 		_select_filter(view.get("class_filter") as OptionButton, int(state.get("class", 0)))
 		_select_filter(view.get("grade_filter") as OptionButton, int(state.get("grade", 0)))
+		var cards: ItemList = view.get("cards") as ItemList
+		var browser: Node = cards.get_parent().get_parent()
 		# refresh resolves by stable skill ID and updates both selection and details.
 		view.set("selected", {"id": str(state.get("id", ""))})
 		view.call("refresh")
-		var cards: ItemList = view.get("cards") as ItemList
-		var browser: Node = cards.get_parent().get_parent()
 		browser.set("detail_active", bool(state.get("detail", false)) and cards.item_count > 0)
 		browser.call("reflow")
 	_restore_scroll(section, root, view, state, revision)
