@@ -62,6 +62,8 @@ var tab: String="all"
 var _timer: Timer
 var _detail: RefCounted
 var _detail_restore: Callable
+var _detail_pack: RefCounted
+var _detail_pack_checked: bool=false
 ## Only the rows near the visible part of the list exist as nodes: a class
 ## lists 200+ skills, each Slot_Skill is ~40 nodes, and building
 ## all of them (again on every selection tap) froze phones for many seconds
@@ -76,6 +78,9 @@ var _pictures: int=0
 func configure(pack: RefCounted, hud: Node) -> Dictionary:
 	for member: String in REQUIRED:
 		if not pack.manifest.get("scenes",{}).has(member):return {"ok":false,"handled":false,"code":"source_skill_window_member_missing","member":member}
+	if _pack!=pack:
+		_detail_pack=null
+		_detail_pack_checked=false
 	_pack=pack
 	_tree=NamedTree.new(pack,MEMBER_SCOPES)
 	_hud=weakref(hud)
@@ -507,13 +512,19 @@ func _detail_requested() -> Dictionary:
 	return _open_existing_skill_actions()
 
 func original_detail_available() -> bool:
-	return Detail.available(_pack)
+	return _original_detail_pack()!=null
+
+func _original_detail_pack() -> RefCounted:
+	if not _detail_pack_checked:
+		_detail_pack_checked=true
+		_detail_pack=Detail.resolve_pack(_pack)
+	return _detail_pack
 
 func open_original_detail(parent: Node, record: Dictionary, restore: Callable) -> Dictionary:
 	if detail_is_open(): return _fail("source_skill_detail_already_open")
 	var detail=Detail.new()
 	var hud: Node=_hud.get_ref() if _hud!=null else null
-	var result: Dictionary=detail.open(_pack,parent,record,hud,Callable(self,"close_detail"))
+	var result: Dictionary=detail.open(_original_detail_pack(),parent,record,hud,Callable(self,"close_detail"))
 	if result.get("ok",false):
 		_detail=detail
 		_detail_restore=restore
