@@ -899,6 +899,9 @@ func catalog_bonus(key: String) -> int:
 	if mapping.has(key): return int(bonus(str(mapping[key])))
 	return StatAdapter.catalog_bonus(totals,key)
 
+const BOX_UNAVAILABLE := "원본 보상 구성을 지원하지 않는 상자라 열 수 없습니다 · 상자 보존"
+const WINDOW_UNAVAILABLE := "원본 사용 화면이 연결되지 않은 아이템입니다 · 아이템 보존"
+
 func try_use(item_name: String) -> bool:
 	if not source.ready(): return false
 	var ctx: Dictionary = context()
@@ -917,13 +920,19 @@ func try_use(item_name: String) -> bool:
 		# A quest-issued held reward ("[원본 보상] …") has no catalog record of
 		# its own name; its exact native row decides, and the quest owner opens it.
 		var rule: Dictionary = _box_rule_record(item_name,id)
-		if category in [78,10381] and str(preload("res://scripts/loot/current523_native_stack.gd").profile(rule).get("kind","")) in ["bag","selection"]: return false
+		# ComplexReward (10394) boxes with an exact native selection rule open
+		# from the bag like LuckyBag/SelectReward ones.
+		var box: bool = category in [78,10381,10394]
+		if box and str(preload("res://scripts/loot/current523_native_stack.gd").profile(rule).get("kind","")) in ["bag","selection"]: return false
 		# A box whose native rule refuses it says why from the bag, and a 성장
 		# 보상 상자 (m523-growth-item) opens through its original box rule.
-		if category in [78,10381] and (item_name.begins_with("m523-growth-item:") or str(NATIVE_FIELDS.full(rule).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]): return false
-		request_presentation("jade_grail" if category in [10291,10622] else "events",{"item_id":id})
+		if box and (item_name.begins_with("m523-growth-item:") or str(NATIVE_FIELDS.full(rule).get("source_use_spec",{}).get("kind","")) in ["guaranteed_bag","source_weighted_bag","mixed_rewards_bag","source_selectable_reward","source_selectable_bag"]): return false
+		var opened: Dictionary = request_presentation("jade_grail" if category in [10291,10622] else "events",{"item_id":id})
 		# The item belongs to this consumer even while the original UI is absent.
 		# Falling through could consume it through an unrelated item handler.
+		# Without that window the bag touch still says why (it was silent).
+		if not opened.get("ok",false) and world != null and world.get("hud") != null and world.hud.has_method("show_message"):
+			world.hud.show_message(BOX_UNAVAILABLE if box else WINDOW_UNAVAILABLE)
 		return true
 	return false
 
