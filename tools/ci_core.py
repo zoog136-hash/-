@@ -211,6 +211,7 @@ CHECKS = [
     ('quest_einasad_main_test', []),
     ('retired_enhancement_items_main_test', []),
     ('audited_item_disposition_main_test', []),
+    ('eva_auto_potion523_main_test', []),
     ('verified_worker_envelope_test', []),
     ('held_reward_catalog_prefix_test', []),
     ('town_idle_clock_test', []),
@@ -818,6 +819,7 @@ def run(command: list[str], path: Path, log: Path, env: dict, timeout: int, mark
 # group. The remaining checks keep their original order and shared profile.
 ISOLATED_CHECKS = frozenset({
     'audited_item_disposition_main_test',
+    'eva_auto_potion523_main_test',
     'auto_original_action_art_main_test',
     'character_account_field_save_test',
     'character_account_route_main_test',
@@ -1142,6 +1144,7 @@ def main():
                       'quest_einasad_main_test':'QUEST_EINASAD_MAIN_RESULT',
                       'retired_enhancement_items_main_test':'RETIRED_ITEMS_MAIN_RESULT',
                       'audited_item_disposition_main_test':'AUDITED_ITEM_DISPOSITION_RESULT',
+                      'eva_auto_potion523_main_test':'EVA_AUTO_POTION_RESULT',
                       'verified_worker_envelope_test':'VERIFIED_WORKER_ENVELOPE_RESULT',
                       'held_reward_catalog_prefix_test':'HELD_REWARD_CATALOG_PREFIX_RESULT',
                       'town_idle_clock_test':'TOWN_IDLE_CLOCK_RESULT',

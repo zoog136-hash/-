@@ -11,6 +11,7 @@ const D=preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const BONUS_STAT_CAP=preload("res://scripts/loot/source_bonus_stat_cap523.gd")
 const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
+const EVA_AUTO_POTION=preload("res://scripts/loot/source_eva_auto_potion523.gd")
 const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const RESTORATION=preload("res://scripts/shop/source523_restoration.gd")
 const QUEST_OWN=preload("res://scripts/quests/quest_reward_ownership.gd")
@@ -90,6 +91,11 @@ static func profile(record: Dictionary) -> Dictionary:
 	if not cap.is_empty():return {"kind":"bonus_stat_cap","spec":cap}
 	if record.get("source_item_class_id") == SLOT_EXPANDERS.RUNE_POUCH and SLOT_EXPANDERS.rune_pouch(definition):
 		return {"kind":"rune_slot_unlock","spec":{"can_use_when_invisible":true}}
+	var item_id: int = int(record.get("source_item_class_id", 0))
+	if record.get("source_bless_raw") == 1 and EVA_AUTO_POTION.ITEMS.has(item_id):
+		var potion: int = EVA_AUTO_POTION.registration_target(item_id, definition)
+		if potion > 0:
+			return {"kind":"eva_auto_potion_unlock","spec":{"potion_id":potion,"can_use_when_invisible":true}}
 	var exact_exp: Dictionary=experience_rule(record,definition)
 	if not exact_exp.is_empty():return {"kind":"exact_experience","spec":exact_exp}
 	var firework:Dictionary=direct_firework_rule(record,definition)
@@ -344,6 +350,76 @@ static func authorizes_rune_slot(world: Node, staged: Dictionary) -> bool:
 	return _candidate_kind == "original_146422_unlock" and authorizes(staged) \
 		and staged.size() == 4 and staged.has_all(["inventory","item_instances","consumable_state"]) \
 		and not world.rune_slot2_unlocked and staged.get(SLOT_EXPANDERS.RUNE_KEY) == true
+
+static func use_growth_eva_auto_potion(world: Node, item_name: String, selected: String, item_id: int) -> Dictionary:
+	var definition: Dictionary = D.definition_id(str(item_id))
+	var potion: int = EVA_AUTO_POTION.registration_target(item_id, definition)
+	if potion == 0:
+		return _failure("에바의 성장 보상 원본 확인 필요 · 아이템 보존")
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var paid: Dictionary = _stage_growth_reward_debit(world, item_name, selected, item_id, definition)
+	return _commit_eva_auto_potion(world, paid.overrides, potion, definition.original_item) if paid.get("ok", false) else paid
+
+static func _use_eva_auto_potion(world: Node, uid: String, owned: Dictionary, potion: int) -> Dictionary:
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var paid: Dictionary = stage_debit(world, [{
+		"physical_id":uid, "quantity":1, "expected_quantity":owned.remaining,
+		"expected_remaining":int(owned.remaining) - 1, "source_native_stack_receipt":owned.receipt,
+	}])
+	if not paid.get("ok", false): return paid
+	return _commit_eva_auto_potion(world, paid.overrides, potion, D.item_definition(owned.record).original_item)
+
+## Existing saves may have the exact ID-bearing native inventory key without
+## a receipt. Use it atomically, without a separate adoption write.
+static func _use_plain_eva_auto_potion(world: Node, item_name: String, record: Dictionary, potion: int) -> Dictionary:
+	if world.eva_auto_potion_unlocks & EVA_AUTO_POTION.registration_bit(potion):
+		return _failure("이 회복제는 이미 자동 사용 등록이 가능합니다 · 아이템 보존")
+	var id: int = int(record.source_item_class_id)
+	if record.name != item_name or not item_name.ends_with(" · 원본#" + str(id)) \
+			or world._catalog_item_from_source_id("m523:item:" + str(id)) != record \
+			or world._item_locked(item_name) or not CATALOG_STACK.holds_plain(world, item_name):
+		return _failure("에바의 원본 아이템 번호와 보유 수량 확인 필요 · 아이템 보존")
+	var problem: String = load("res://scripts/loot/patch523_item_use.gd").call("eligibility", world, record)
+	if not problem.is_empty(): return _failure(problem)
+	var inventory: Dictionary = world.inventory.duplicate()
+	if int(inventory[item_name]) == 1: inventory.erase(item_name)
+	else: inventory[item_name] = int(inventory[item_name]) - 1
+	var payload: Dictionary = {"inventory":inventory, "item_instances":world.item_instances,
+		"consumable_state":world.consumable_service.export_state()}
+	return _commit_eva_auto_potion(world, payload, potion, D.item_definition(record).original_item)
+
+static func _commit_eva_auto_potion(world: Node, payload: Dictionary, potion: int, original: Dictionary) -> Dictionary:
+	var unlocks: int = world.eva_auto_potion_unlocks | EVA_AUTO_POTION.registration_bit(potion)
+	payload[EVA_AUTO_POTION.SAVE_KEY] = unlocks
+	busy = true
+	_candidate_kind = "original_eva_auto_potion_unlock"
+	_candidate = payload.duplicate(true)
+	var saved: Error = world._save_game(true, payload)
+	_candidate.clear()
+	_candidate_kind = ""
+	busy = false
+	if saved != OK:
+		return _failure("회복제 자동 사용 권한 저장 실패 · 아이템 보존")
+	world.inventory = payload.inventory
+	world.item_instances = payload.item_instances
+	world.consumable_service.import_state(payload.consumable_state)
+	world.eva_auto_potion_unlocks = unlocks
+	world.deferred_save.cancel()
+	world.option_awakening.combat.emit_sprite(751, world.player, original)
+	return {"ok":true,"handled":true,"saved":true,"consumed":1,
+		"message":"%s 자동 사용 등록 가능 · 회복제를 퀵슬롯에 놓고 아래로 드래그하세요" % EVA_AUTO_POTION.potion_name(potion)}
+
+static func authorizes_eva_auto_potion(world: Node, staged: Dictionary) -> bool:
+	if _candidate_kind != "original_eva_auto_potion_unlock" or not authorizes(staged) \
+			or staged.size() != 4 or not staged.has_all(["inventory","item_instances","consumable_state"]):
+		return false
+	var proposed: Variant = staged.get(EVA_AUTO_POTION.SAVE_KEY)
+	if not EVA_AUTO_POTION.valid_unlocks(proposed): return false
+	var current: int = world.eva_auto_potion_unlocks
+	return ((current & int(proposed)) == current) \
+		and (current ^ int(proposed)) in [EVA_AUTO_POTION.ADVANCED_BIT, EVA_AUTO_POTION.GREATER_BIT]
 
 ## The four permanent server-keeper items, not their same-color dated SKUs.
 ## Reward is solely the exact authored above-player effect; no hidden buff.
@@ -958,6 +1034,8 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 		if total>9007199254740991-int(current.remaining):return _failure("물리 수량 정수 범위 초과")
 		total+=int(current.remaining)
 		if uid.is_empty() and (selected.is_empty() or selected==id) and not world._item_locked(item_name,id):uid=id;owned=current
+	if not has_physical and selected.is_empty() and named_profile.get("kind") == "eva_auto_potion_unlock":
+		return _use_plain_eva_auto_potion(world, item_name, named, int(named_profile.spec.potion_id))
 	if not has_physical and selected.is_empty() and named.get("name")==item_name and integer(world.inventory.get(item_name,0)) and int(world.inventory.get(item_name,0))>0 and not world._item_locked(item_name):
 		# Older name-keyed acceleration stacks have no physical receipt. Their
 		# existing atomic buff owner can debit the exact catalog balance directly.
@@ -1029,6 +1107,7 @@ static func _try_use_impl(world: Node,item_name: String,selected: String,loading
 	if effect.kind=="bonus_stat_point":return use_bonus_point(world,uid,owned)
 	if effect.kind=="bonus_stat_cap":return use_bonus_stat_cap(world,uid,owned)
 	if effect.kind=="rune_slot_unlock":return use_rune_slot(world,uid,owned)
+	if effect.kind=="eva_auto_potion_unlock":return _use_eva_auto_potion(world,uid,owned,int(spec.potion_id))
 	if effect.kind=="fusion_points":return use_fusion_points(world,uid,owned,spec)
 	if effect.kind=="exact_experience":return use_exact_experience(world,uid,owned)
 	if effect.kind=="exact_firework":return use_exact_firework(world,uid,owned)
@@ -1879,8 +1958,8 @@ static func restoration_metadata(record: Dictionary) -> Dictionary:
 			result.auto_use_registrable=bonus.Value==1
 		elif name_value=="ItemConsumeDelay":result["source_consume_delay_ms"]=int(bonus.Value)
 		elif name_value=="ItemConsumeEffectSpriteID":result.consume_effect_sprite_id=int(bonus.Value)
-	# AutoUseRegistrable is optional: the 523 rows of #236/#237 carry only the
-	# five restoration/consume rows (no AutoUseRegistrable => not auto-use).
+	# #236/#237 have no unconditional AutoUseRegistrable flag. The quickslot
+	# owner checks the character's separately earned Eva permission.
 	for required: String in ["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount","ItemConsumeDelay","ItemConsumeEffectSpriteID"]:
 		if not seen.has(required):return {"ok":false}
 	return result if result.get("source_consume_delay_ms")==1000 else {"ok":false}
