@@ -5,19 +5,20 @@ extends RefCounted
 ## Not applied (listed): the fishing-rod 폴 forms (fishing is a cut feature), the
 ## polymorph appearance itself (PolymorphSetID — the card register owns appearance),
 ## and flag rows without a receiver (대상 고정·발동 억제 무시·투명·공격 불가 등).
-## A worn polymorph buff (one with PolymorphSetID) is a polymorph: in Lineage M a form
-## replaces the other, so its speed rows (공격·이동·시전 속도) apply only while no
-## polymorph card is worn (근거 약함, conservative: never stacks two forms).
+## The existing form exclusion suppresses form-specific bonuses while a
+## polymorph card is worn.
 const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
 const ENABLED := true
+const SHARNA_HERO_RING := 286632
+const SHARNA_HERO_BUFF := 78962
 ## BonusType -> [buff key, divisor] (Percentage = 1/10000 %).
 const RECEIVERS := {
 	"MeleeDamage":["melee_damage",1], "RangeDamage":["ranged_damage",1], "DamageReduction":["damage_reduction",1],
 	"PVEDamageReduction":["pve_damage_reduction",1], "PVPDamageReduction":["pve_damage_reduction",1], "MagicResist":["mr",1],
 	"MeleeHit":["melee_accuracy",1], "RangeHit":["ranged_accuracy",1], "MagicHit":["magic_accuracy",1], "SpellPower":["sp",1],
 	"AttackSpeedBonus":["attack_speed",10000], "MoveSpeedBonus":["move_speed",10000]}
-const SPEED_KEYS := ["attack_speed","move_speed"]
+const FORM_ONLY_KEYS := ["attack_speed","move_speed","hp_flat"]
 const EXCLUDED_SLOTS := ["fishing_rod"]
 
 var world: Node = null
@@ -43,8 +44,18 @@ func buff_of(record: Dictionary) -> Dictionary:
 			out = {"buff_id":buff_id,"polymorph":false,"values":{},"unmapped":[]}
 			for link: Dictionary in SOURCE.related("BuffBonus","BuffClassID",buff_id):
 				var source: Dictionary = SOURCE.row("Bonus", int(link.get("BonusID",0)))
-				var kind: String = str(SOURCE.row("BonusType", int(source.get("BonusTypeID",0))).get("Name",""))
+				var type: Dictionary = SOURCE.row("BonusType", int(source.get("BonusTypeID",0)))
+				var kind: String = str(type.get("Name",""))
 				if kind == "PolymorphSetID": out.polymorph = true; continue
+				# The official growth-pass item description identifies this as a
+				# flat HP bonus of the ring's form, active while wearing it.
+				if kind == "HPPlus" and id == SHARNA_HERO_RING and buff_id == SHARNA_HERO_BUFF:
+					var unconditional: bool = (link.get("CharacterLevel") == 0 and link.get("CharacterClass") == 0
+						and link.get("MinSpellLevel") == 0 and source.get("BonusApplicationTypeID") == 0
+						and source.get("BonusApplicationTargetID") == 0)
+					if unconditional and SOURCE.row("Unit", int(type.get("UnitID", 0))).get("Name") == "Value":
+						out.values["hp_flat"] = int(source.Value)
+						continue
 				if not RECEIVERS.has(kind) or int(source.get("BonusApplicationTypeID",0)) != 0 or int(link.get("CharacterLevel",0)) != 0:
 					if kind not in out.unmapped: out.unmapped.append(kind)
 					continue
@@ -73,7 +84,7 @@ func _refresh() -> void:
 		var buff: Dictionary = buff_of(physical.record)
 		if buff.is_empty(): continue
 		for key: String in buff.values:
-			if bool(buff.polymorph) and card_form and key in SPEED_KEYS: continue
+			if bool(buff.polymorph) and card_form and key in FORM_ONLY_KEYS: continue
 			_values[key] = int(_values.get(key,0)) + int(buff.values[key])
 
 func invalidate() -> void:

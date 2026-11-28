@@ -1507,6 +1507,7 @@ func _refresh_equipment_effects() -> void:
 func _invalidate_equipment_static() -> void:
 	combinations.invalidate()
 	card_collections.invalidate()
+	equipment_buff523.invalidate()
 	equipment_effects_dirty=true
 	equipment_records_dirty=true
 

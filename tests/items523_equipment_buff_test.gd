@@ -1,70 +1,113 @@
-extends SceneTree
-## 장비 상시 버프 (BuffClassID on worn items) — TWILIGHT 근사 (scripts/loot/equipment_buff523.gd).
-## With the original ZIP, in actual Main: 샤르나의 영웅 변신 반지 (#286632, BuffClass 78962:
-## 공격 속도 +108% · 대미지 리덕션 +2 · 이동 속도 +2% · HP +100 · 시전 속도 · PolymorphSetID) worn
-## adds 대미지 리덕션 +2 and the speeds; with a polymorph card worn the speed rows are not
-## added (one form at a time); taking it off removes everything.
-const SOURCE = preload("res://scripts/resources/current523_definition_rows.gd")
-const INVENTORY = preload("res://scripts/loot/patch523_item_inventory.gd")
-const QA = preload("res://tests/qa_class_selection.gd")
+extends "res://tests/source_inventory_controls_main_test.gd"
+## Original growth-pass ring in actual Main with a disposable character.
+## The optional UI pack drives both taps on the original bag slot.
 const RING := 286632
-var checks: int = 0
-var failures: Array[String] = []
-var evidence: Dictionary = {}
+const D = preload("res://scripts/loot/patch523_monster_drops.gd")
 
-func check(condition: bool, label: String) -> bool:
-	checks += 1
-	if not condition: failures.append(label); printerr("EQUIPMENT_BUFF523_FAIL: ",label)
-	return condition
+func result_marker() -> String: return "EQUIPMENT_BUFF523_RESULT"
 
-func _initialize() -> void: call_deferred("run")
+func fallback() -> void:
+	if SOURCE.identity().is_empty():
+		ck(SOURCE.not_installed(), "missing original definitions provide no equipment buff")
+		return
+	await exact("")
 
-func values(world: Node) -> Dictionary:
-	world.equipment_buff523.invalidate()
-	return {"damage_reduction":world.equipment_buff523.buff_value("damage_reduction"),"attack_speed":world.equipment_buff523.buff_value("attack_speed"),"move_speed":world.equipment_buff523.buff_value("move_speed")}
+func exact(archive: String) -> void:
+	if not archive.is_empty() and SOURCE.identity().is_empty():
+		OS.set_environment("TWILIGHT_PATCH523_CONTENT", archive)
+		SOURCE.reset()
+		# Main was started without the private test archive.
+		w.skill_awakening = w.SKILL_AWAKENING.new()
+		w.skill_awakening.configure(w)
+	if not ck(SOURCE.identity().get("source_sha256") == SOURCE.SOURCE_SHA, "pinned original 523 definitions"): return
+	w._clear_monsters()
+	w.level = 90
+	w.equipped_items.clear()
+	w.equipped_catalog["변신"] = {}
+	w._invalidate_equipment_static()
+	var record: Dictionary = w.source_item_definition(RING).get("native_record", {})
+	if not ck(not record.is_empty(), "original wearable ItemClass #%d" % RING): return
+	if w._catalog_item_from_source_id(str(record.sourceId)).is_empty():
+		w.catalog_db["아이템"].append(record)
+	w._index_catalog_item_sources()
+	if not ck(grant(RING, 1, "equipped buff"), "existing original ring saved in the test bag"): return
+	var reference: String = ""
+	for uid: String in w.item_instances:
+		var entry: Dictionary = w.item_instances[uid]
+		if int(entry.get("record", {}).get("source_item_class_id", 0)) == RING:
+			reference = "%s@@@%s" % [entry.name, uid]
+			break
+	if not ck(not reference.is_empty(), "the ring has an exact physical reference"): return
+	var uid: String = reference.get_slice("@@@", 1)
+	var name_value: String = reference.get_slice("@@@", 0)
+	var buff: Dictionary = w.equipment_buff523.buff_of(w.item_instances[uid].record)
+	if not ck(int(buff.get("buff_id", 0)) == 78962 and bool(buff.get("polymorph", false)), "ring owns original BuffClass #78962"): return
+	var expect_ui: bool = not OS.get_environment("TWILIGHT_SOURCE_UI").is_empty()
+	if expect_ui:
+		h.toggle_inventory()
+		await frames()
+		controller = h.original_main_ui_controller
+		if not ck(is_instance_valid(controller) and h.original_inventory_is_open(), "original bag is active"): return
+		view = controller._inventory_view
 
-func runtime() -> void:
-	var world: Node = load("res://Main.tscn").instantiate()
-	root.add_child(world); world.set_process(false); world.save_timer = -100000
-	check(QA.enter_game(world), "actual Main map entry")
-	world.level = 90
-	world.equipped_items.clear(); world._invalidate_equipment_static()
-	world.inventory = {}; world.item_instances = {}
-	var saved_card: Variant = world.equipped_catalog.get("변신", {})
-	world.equipped_catalog["변신"] = {}
-	var staged: Dictionary = INVENTORY.stage(world,[{"item_class_id":RING,"amount":1,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
-	if not check(staged.get("ok",false), "grant #%d: %s" % [RING,str(staged.get("error",""))]): world.queue_free(); await process_frame; return
-	world._save_game(true,staged.overrides)
-	world.inventory = staged.overrides.inventory; world.item_instances = staged.overrides.item_instances
-	var uid: String = ""
-	for key: String in world.item_instances:
-		if int(world.item_instances[key].get("record",{}).get("source_item_class_id",-1)) == RING: uid = key
-	var buff: Dictionary = world.equipment_buff523.buff_of(world.item_instances[uid].record)
-	evidence["buff"] = buff
-	check(int(buff.get("buff_id",0)) == 78962 and bool(buff.get("polymorph",false)) and int(buff.values.get("damage_reduction",0)) == 2 and int(buff.values.get("attack_speed",0)) == 108, "BuffClass 78962 rows: "+str(buff))
-	var before: Dictionary = values(world)
-	world._equip_or_acquire_item(world.item_instances[uid].record,false,uid,"")
-	world._invalidate_equipment_static()
-	var worn: Dictionary = values(world)
-	evidence["values"] = {"before":before,"worn":worn,"equipped":world._is_instance_equipped(uid),"total_dr":world._active_item_buff_total("damage_reduction")}
-	check(world._is_instance_equipped(uid) and int(worn.damage_reduction) == 2 and int(worn.attack_speed) == 108 and int(worn.move_speed) == 2, "worn: 리덕션 +2, 공속 +108%, 이속 +2% "+str(evidence.values))
-	# A polymorph card worn: the ring's speed rows are not stacked.
+	var plain_cap: int = w._effective_max_hp()
+	var plain_mp: int = w._effective_max_mp()
+	w.hp = plain_cap - 30
+	var expected_hp: int = w.hp + 100
+	ck(w.equipment_buff523.buff_value("hp_flat") == 0, "bag ownership alone contributes no HP")
+	if not await bag_equipment_action(reference, true, expect_ui): return
+	var worn_cap: int = w._effective_max_hp()
+	print("EQUIPMENT_BUFF523_VITALS ", JSON.stringify({"original_bag":expect_ui, "owned_only":plain_cap, "worn":worn_cap, "current_hp":w.hp}))
+	ck(w._is_instance_equipped(uid) and int(w.inventory.get(name_value, 0)) == 1, "bag equips the selected ring without consuming it")
+	ck(w.equipment_buff523.buff_value("hp_flat") == 100 and worn_cap == plain_cap + 100, "first worn equipment read and Main HP cap include the original +100")
+	ck(w.hp == expected_hp and w._effective_max_mp() == plain_mp, "the existing equip transition applies only the HP cap delta")
+	ck(w.equipment_buff523.buff_value("damage_reduction") == 2 and w.equipment_buff523.buff_value("attack_speed") == 108 and w.equipment_buff523.buff_value("move_speed") == 2, "existing damage reduction and speed remain")
+	if not ck(w._save_game(true) == OK, "existing save schema persists the equipped physical ring"): return
+	var former_hp: int = w.hp
+	var state: Variant = JSON.parse_string(FileAccess.get_file_as_string(w.save_path()))
+	ck(state is Dictionary and not state.has("equipment_buff523") and int(state.get("hp", 0)) == former_hp, "no new save key or cached buff payload is written")
+
+	# Re-enter through the existing restore path from a profile holding the
+	# ring and prime the previous game's stat cache before loading it.
+	w.equipped_items.clear()
+	w._invalidate_equipment_static()
+	ck(w.equipment_buff523.buff_value("hp_flat") == 0, "the previous live state has no worn bonus")
+	w._load_game(true)
+	await frames()
+	ck(w._is_instance_equipped(uid) and w._effective_max_hp() == worn_cap and w.hp == former_hp, "existing profile reload derives the bonus once before clamping saved HP")
+	if expect_ui:
+		if not h.original_inventory_is_open(): h.toggle_inventory()
+		await frames()
+		view = controller._inventory_view
+	w.hp = worn_cap
+	if not await bag_equipment_action(reference, false, expect_ui): return
+	ck(not w._is_instance_equipped(uid) and w.inventory.get(name_value, 0) == 1, "bag unequips and returns the exact item to storage in the bag")
+	ck(w._effective_max_hp() == plain_cap and w.hp == plain_cap and w.equipment_buff523.buff_value("hp_flat") == 0, "unequip clears the bonus and clamps on the same transition")
+	if not ck(w._save_game(true) == OK, "unequipped state saves without a new field"): return
+	w._load_game(true)
+	await frames()
+	ck(not w._is_instance_equipped(uid) and w._effective_max_hp() == plain_cap and w.hp == plain_cap, "reload preserves the unequipped cap and physical item")
+
+	# Exercise the existing host policy for an alternative active form. This
+	# uses a persisted catalog selection independently of the original ring.
 	var card: Dictionary = {}
-	for value: Variant in world.catalog_db.get("변신", []):
-		if value is Dictionary: card = value; break
-	world.equipped_catalog["변신"] = card.duplicate(true)
-	var with_card: Dictionary = values(world)
-	evidence["with_card"] = with_card
-	check(card.is_empty() or (int(with_card.damage_reduction) == 2 and int(with_card.attack_speed) == 0 and int(with_card.move_speed) == 0), "polymorph card worn: speeds not stacked "+str(with_card))
-	world.equipped_catalog["변신"] = saved_card
-	world.equipped_items.clear(); world._invalidate_equipment_static()
-	var off: Dictionary = values(world)
-	check(int(off.damage_reduction) == 0 and int(off.attack_speed) == 0, "taken off: none "+str(off))
-	world.queue_free()
-	for frame: int in 5: await process_frame
+	for value: Variant in w.catalog_db.get("변신", []):
+		if value is Dictionary and not value.is_empty():
+			card = value
+			break
+	if not card.is_empty():
+		w.equipped_catalog["변신"] = card
+		w._invalidate_equipment_static()
+		w._equip_reference_in_slot(reference, "ring1")
+		ck(w._is_instance_equipped(uid) and w.equipment_buff523.buff_value("damage_reduction") == 2 and w.equipment_buff523.buff_value("attack_speed") == 0 and w.equipment_buff523.buff_value("hp_flat") == 0, "a different active form keeps the existing exclusion policy and receives no Sharna form HP")
 
-func run() -> void:
-	if not SOURCE.not_installed(): await runtime()
-	else: check(true, "without the original ZIP nothing is read")
-	print("EQUIPMENT_BUFF523_RESULT " + JSON.stringify({"checks":checks,"failures":failures,"evidence":evidence}))
-	quit(0 if failures.is_empty() else 1)
+func bag_equipment_action(reference: String, equip: bool, original: bool) -> bool:
+	if not original:
+		if equip: w._activate_inventory_input(reference)
+		else: w._unequip_item_reference(reference)
+		return true
+	var control: Control = view._hits.get(reference, {}).get("control")
+	if not await tap(control, "original ring slot"): return false
+	if not ck(bag.item_action_armed(reference) and bag.selected_item == reference, "first tap arms the exact equipment action"): return false
+	control = view._hits.get(reference, {}).get("control")
+	return await tap(control, "장착" if equip else "해제")
