@@ -1,6 +1,7 @@
 extends SceneTree
 ## Run with TWILIGHT_SOURCE_UI and TWILIGHT_SOURCE_UI_SHA256 for original-pixel
-## checks, or without the optional pack to check offline routing and fallback.
+## checks. Add -- --complete-basic-ui when its installed complete UI scope
+## is supplied through TWILIGHT_SOURCE523_UI_ICONS and its SHA256.
 const DETAIL=preload("res://scripts/ui/original_ui/source_main_skill_detail.gd")
 const SKILL=preload("res://scripts/ui/original_ui/source_main_skill_window.gd")
 const PACK=preload("res://scripts/ui/original_ui/source_pack.gd")
@@ -55,8 +56,12 @@ func verify_original(pack: RefCounted,host: SkillHost,record: Dictionary) -> voi
 	window._selected=str(record.id)
 	window._scroll=-67.0
 	var epoch: int=window._scene.get_instance_id()
+	var require_complete: bool="--complete-basic-ui" in OS.get_cmdline_user_args()
+	var has_scope: bool=window.original_detail_available()
+	if require_complete:
+		check(has_scope,"the installed complete pack exposes the original detail even with UI46 selected")
 	var result: Dictionary=window.open_original_detail(host,record,Callable())
-	if not pack.manifest.get("scenes",{}).has(DETAIL.MEMBER):
+	if not has_scope:
 		check(not result.get("ok",false) and window._detail_requested().get("existing_skill_window",false) and host.action_skill=="probe","an installed older pack keeps the existing skill actions")
 		return
 	check(result.get("handled",false) and result.get("member","")==DETAIL.MEMBER,"the skill detailed-view callback mounts the original popup: "+str(result))
@@ -81,5 +86,6 @@ func verify_original(pack: RefCounted,host: SkillHost,record: Dictionary) -> voi
 	var tiles=TILES.new()
 	tiles.configure(pack)
 	var tile: Dictionary=tiles.tile("memory_places")
-	check(tile.get("ok",false) and tile.get("member","")==TILES.member_of("memory_places"),"real memory tile mounts")
+	if require_complete or pack.manifest.get("scenes",{}).has(TILES.member_of("memory_places")):
+		check(tile.get("ok",false) and tile.get("member","")==TILES.member_of("memory_places"),"real memory tile mounts")
 	if is_instance_valid(tile.get("scene")):tile.scene.free()

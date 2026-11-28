@@ -82,6 +82,12 @@ player yet, so those scenes stay listed rather than packed. The complete pack
 manifest is about 194 MB, above the runtime's 128 MB manifest limit, so it is
 an inventory and a source for scoped packs, not a runtime selection.
 
+UI46 uses the installed complete pack for the original skill tooltip and
+memory-place tile when its own manifest omits them. Each lookup reads its
+indexed scene and atlas records and verifies the specific original files it
+needs. The existing skill and travel actions still own input and game state.
+The same scope reader serves the existing awakening dialogs.
+
 ## Main HUD pack and the UI add-on (2026-11-09)
 
 The original main HUD (`scripts/ui/original_ui/source_main_hud.gd`, bound by

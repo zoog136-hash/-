@@ -3,6 +3,8 @@ extends RefCounted
 ## Only the details with data in the selected TWILIGHT skill are shown.
 const NamedTree=preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const Rules=preload("res://scripts/skill_rules.gd")
+const COMPLETE=preload("res://scripts/ui/original_ui/source_complete_ui_scope.gd")
+const INDEX="res://data/ui/current523_skill_detail_index.json"
 const MEMBER="UI/ToolTip/ToolTip_HudType_Skill.csb"
 const SHA="1d7512e791b02975dc6be141f443d5f98c746c752ab6c7717ef3998013b32dc2"
 const LIST=15176
@@ -26,6 +28,11 @@ func close() -> void:
 
 static func available(pack: RefCounted) -> bool:
 	return pack!=null and pack.manifest.get("files",{}).get(MEMBER,{}).get("sha256","")==SHA and pack.manifest.get("scenes",{}).has(MEMBER)
+
+static func resolve_pack(active: RefCounted) -> RefCounted:
+	if available(active): return active
+	var installed: RefCounted=COMPLETE.open_selected(INDEX)
+	return installed if available(installed) else null
 
 func open(pack: RefCounted,parent: Node,record: Dictionary,hud: Node,dismiss: Callable) -> Dictionary:
 	if not available(pack):
