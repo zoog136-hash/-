@@ -34,3 +34,11 @@ static func enter_game(world: Node, job: String = "기사") -> bool:
 		return false
 	confirm.pressed.emit()
 	return not bool(hud.get("class_picker_initial")) and str(world.get("job_class")) == job
+
+## Allow the original map its existing budget. Once Main has completed boot
+## and reported a failure, waiting more frames cannot open the source map.
+static func wait_for_aden_source(tree: SceneTree, world: Node) -> void:
+	for frame: int in 900:
+		await tree.process_frame
+		if world.current523_aden_source_active(): return
+		if world._boot_loading_finished and world.loading_readiness().get("failed", false): return
