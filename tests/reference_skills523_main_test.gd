@@ -28,13 +28,16 @@ func audit_catalog() -> void:
 	var has_source: bool = not catalog.source523.profiles.is_empty()
 	if "--require-native-source" in OS.get_cmdline_user_args():
 		check(verified_source and has_source, "the SHA-pinned original archive is mounted")
-	check(profiles.size() == 332 and PROFILES.OTHER_PLAYER_REFERENCE523.size() == 19, "all public candidates and reviewed player-only targets are counted")
+	var direct_player_only := 0
 	for id: String in PROFILES.OTHER_PLAYER_REFERENCE523:
 		var spell_id: int = PROFILES.OTHER_PLAYER_REFERENCE523[id]
-		check(int(bindings.get(id, {}).get("spell_id", 0)) == spell_id and profiles.has(id), "reviewed native binding " + id)
+		direct_player_only += int(profiles.has(id))
+		check(int(bindings.get(id, {}).get("spell_id", 0)) == spell_id, "reviewed native binding " + id)
 		if verified_source:
 			var row: Dictionary = NATIVE.SOURCE_ROWS.row("SpellClass", spell_id)
 			check(int(row.get("TargetKindID", 0)) == 52, "verified player-only target " + id)
+	check(profiles.size() == 332 and direct_player_only == 19 and PROFILES.OTHER_PLAYER_REFERENCE523.size() == 20,
+		"all public candidates and the earlier bound upgrade base are counted")
 	var mode_counts: Dictionary = {}
 	var classes: Dictionary = {}
 	var fallbacks := 0
@@ -91,10 +94,10 @@ func audit_catalog() -> void:
 	metrics["retained_preexisting_native"] = retained_native
 	metrics["other_holds"] = other_holds
 	metrics["verified_source"] = verified_source
-	check(affected >= 23, "upgrades of player-only effects follow the same hold")
+	check(affected >= 24, "upgrades of player-only effects follow the same hold")
 	if not has_source:
-		check(classes.size() == 13 and fallbacks == 309 and bound_fallbacks == 277 and affected == 23,
-			"without the pack 309 local profiles remain, including 32 public-only approximations")
+		check(classes.size() == 13 and fallbacks == 308 and bound_fallbacks == 276 and affected == 24,
+			"without the pack 308 local profiles remain, including 32 public-only approximations")
 
 func audit_offline_admission() -> void:
 	var catalog := service.catalog
