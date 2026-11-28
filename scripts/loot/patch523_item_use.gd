@@ -3,6 +3,7 @@ const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.g
 const NATIVE_FIELDS = preload("res://scripts/loot/current523_native_fields.gd")
 ## Execute verified source joins; never infer an item's use from its name.
 const DROPS = preload("res://scripts/loot/patch523_monster_drops.gd")
+const SERVER = preload("res://scripts/loot/current523_server_profile.gd")
 const MANUAL_SCROLLS=preload("res://scripts/loot/native_manual_scrolls523.gd")
 const PRESENTATION_FLAGS: Dictionary = {"UIShowFilter":"Value","NoAnnounce":"TrueFalse"}
 
@@ -142,6 +143,10 @@ static func debit(world: Node, item_name: String) -> Dictionary:
 
 static func _fixed_card(world: Node, record: Dictionary, spec: Dictionary) -> void:
 	var category: String = str(spec.get("card_kind", ""))
+	var server: Dictionary = SERVER.allows(world,spec.get("original_card",{}).get("ServerLimitSetID",0),int(record.source_item_class_id),int(spec.card_id))
+	if not server.ok:
+		world.hud.show_message(str(server.reason)+" · 아이템 보존")
+		return
 	var candidates: Array[Dictionary] = []
 	for card: Dictionary in world.catalog_db.get(category, []):
 		if card.get("source") in ["lineagem_base508","lineagem_patch523"] and int(card.get("source_card_id", -1)) == int(spec.get("card_id", -2)) and card.get("source_original_card", {}) == spec.get("original_card", {}): candidates.append(card)

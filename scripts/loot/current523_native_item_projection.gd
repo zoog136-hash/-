@@ -18,6 +18,7 @@ static var _substitutes: Dictionary = {}
 static var _substitutes_identity: String = ""
 
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
+const SERVER=preload("res://scripts/loot/current523_server_profile.gd")
 const SLOT_MAP={"Head":"helmet","Torso":"body","Shirt":"tshirt","Cloak":"cloak","Leg":"gaiters","Foot":"boots","Hand":"gloves","WeaponHold":"weapon","Finger":"ring","Neck":"necklace","Waist":"belt","Ear":"earring","ShieldHold":"offhand","Quiver":"offhand","Rune":"rune","SpellRune":"rune","Badge":"seal","Insignia":"badge","Spaulder":"shoulder","Bangle_normal":"bracelet","Bangle_BM":"bracelet","Crest":"crystal","Catalyst":"catalyst","DominationStone":"domination_stone","Relic":"relic_item","FishingRod":"fishing_rod"}
 const FLAT={"WeaponSmallDamage":"small_damage","WeaponLargeDamage":"large_damage","WeaponHitBonus":"hit","WeaponDamageBonus":"additionalDamage","ArmorClass":"def","ArmorClassBonus":"def","Strength":"strFlat","Dexterity":"dexFlat","Constitution":"conFlat","Intelligence":"intFlat","Wisdom":"wisFlat","Charisma":"chaFlat","HPPlus":"hpFlat","MPPlus":"mpFlat","MagicResist":"mr","DamageReduction":"damage_reduction","SpellPower":"sp","MeleeDamage":"meleeDamage","RangeDamage":"rangedDamage","MagicDamage":"magicDamage","MeleeHit":"meleeHit","RangeHit":"rangedHit","MagicHit":"magicHit","PVEDamageReduction":"pve_damage_reduction","PVPDamageReduction":"pvp_damage_reduction","PVPMeleeAdditionDamage":"pvp_melee_damage","PVPRangeAdditionDamage":"pvp_ranged_damage","PVPMagicAdditionDamage":"pvp_magic_damage","PVEMeleeAdditionDamage":"pve_melee_damage","PVERangeAdditionDamage":"pve_ranged_damage","PVEMagicAdditionDamage":"pve_magic_damage","PierceMeleeEvasion":"melee_evasion_ignore","PierceRangeEvasion":"ranged_evasion_ignore","PierceMeleeDamageReduction":"melee_reduction_ignore","PierceRangeDamageReduction":"ranged_reduction_ignore","PierceMagicDamageReduction":"magic_reduction_ignore","HPPotionIncreaseStatic":"potionHealFlat"}
 const HP=["HPRestoration","HPRestorationDiceNumber","HPRestorationDiceSpotCount"]
@@ -1886,11 +1887,11 @@ static func source_fixed_card(definition: Dictionary) -> Dictionary:
 	var reasons: Array=spec.blocked_reasons
 	if definition.category.get("Name")!="BuffCardDrawer" or deck.get("CharacterBased")!=false:reasons.append("unsupported_card_item_category_or_deck")
 	if not SOURCE.declared_exclusion("BuffCard",card).is_empty() or not SOURCE.declared_exclusion("BuffCardDeck",deck).is_empty():reasons.append("source_excluded_card")
-	# A defined server set is checked at use against the current server profile
-	# (current523_server_profile.gd); a set without original rows stays closed.
+	# Server eligibility is checked again by the use owner. The offline rule
+	# resolves only its exact item/card pair when no original server rows exist.
 	var server: Variant=card.get("ServerLimitSetID",0)
 	if not integer(server):reasons.append("invalid_card_server_limit")
-	elif int(server)!=0 and SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty():reasons.append("server_definition_missing")
+	elif int(server)!=0 and not SERVER.has_offline_fixed_card_rule(int(definition.original_item.ID),id,int(server)) and SOURCE.related("ServerLimit","ServerLimitSetID",int(server)).is_empty():reasons.append("server_definition_missing")
 	if card.get("StartDateTimeID",0)!=0 or card.get("EndDateTimeID",0)!=0:reasons.append("source_card_date_context_required")
 	var swap: Array=[]
 	for row: Dictionary in rows:
