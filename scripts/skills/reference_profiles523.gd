@@ -6,8 +6,8 @@ const DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 const PATH := "res://data/skills/reference_profiles523.json"
 const MODES := ["attack", "status", "buff", "counter", "stealth", "detect", "heal",
 	"convert", "teleport", "taunt", "toggle_proc", "summon", "stats", "proc", "upgrade"]
-## Reviewed bindings to original 523 TargetKindID 52 (PCButMe).
-## Canonical IDs also apply when the matching native profile is unavailable.
+## Reviewed 523 TargetKindID 52 (PCButMe) bindings for fallback candidates
+## and their bases. Canonical IDs also apply with the definition pack absent.
 const OTHER_PLAYER_REFERENCE523 := {
 	"lmref_d8b163f67b016204":53972, "lmref_118e8fcbce796ace":87448,
 	"lmref_63985e6f425023b4":55594, "lmref_ef01381b531dbca0":45132,
@@ -19,6 +19,9 @@ const OTHER_PLAYER_REFERENCE523 := {
 	"lmref_449b0ee31564e7cd":118114, "lmref_8a6f583a9b442edd":41641,
 	"lmref_58505159dcc7cb3f":48671, "lmref_624f29271aa2d434":62674,
 	"lmref_7f058dc15efcccd3":95192,
+	# Existing Side Grab remains playable through its approved route. The
+	# separate Requiem fallback must not extend it without the original pack.
+	"lm_ad6488f0cedbc544":62684,
 }
 const LOCAL_REAGENT_PRICES := {"영혼석":75, "명예 코인":110, "신성석":85, "마력의 돌":80,
 	"정령옥":65, "흑요석":75, "정제석":65, "정제석 조각":40, "인장석":75, "혈정석":75,
