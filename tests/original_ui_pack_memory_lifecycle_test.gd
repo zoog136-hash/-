@@ -216,6 +216,14 @@ func run() -> void:
 	var final_pixels: Dictionary = window_fingerprint(final_window)
 	var final_frame_ref: WeakRef = weakref(final_window.sprite.texture)
 	var final_bitmap_ref: WeakRef = weakref(final_window.bitmap._font_data.page_textures[0])
+	pressure(pack)
+	var during_build: Dictionary = pack.cache_stats()
+	check(during_build.live_leases > 0 and during_build.cache_owned_bytes > PAGES.budget_bytes,
+		"a clustered build can use its decoded pages together")
+	await create_timer(PACK.PAGE_LEASE_BATCH_SECONDS + 0.15, true, false, true).timeout
+	check_bounds(pack, 8, "still-open window after the decoded page lease expires")
+	check(window_fingerprint(final_window) == final_pixels,
+		"all visible sprite and font pixels survive automatic decoded page release")
 	pack.configure_texture_cache(0, 8)
 	pack.release_cache_leases()
 	check(window_fingerprint(final_window) == final_pixels and final_frame_ref.get_ref() != null and final_bitmap_ref.get_ref() != null, "zero cache reserve preserves externally owned frame and bitmap resources")

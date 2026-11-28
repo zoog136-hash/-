@@ -26,6 +26,19 @@ class Pack extends RefCounted:
 	var manifest_sha256: String=""
 	var tree: Dictionary={}
 	func scene(_member: String) -> Dictionary:return tree.duplicate(true)
+
+class TexturePack extends RefCounted:
+	var textures: Dictionary={}
+	var calls: int=0
+	func texture(reference: Dictionary, _cocos_pixels: bool=false) -> Texture2D:
+		calls+=1
+		return textures.get(reference.path)
+
+class DisplayProbe extends Node2D:
+	var colors: Array[Color]=[]
+	func set_source_display(color: Color) -> void:
+		colors.append(color)
+
 var checks: int=0
 var failures: Array[String]=[]
 var decode_proofs: int=0
@@ -131,6 +144,73 @@ func ordered_configuration(counted: Script) -> void:
 	var unordered_result: Dictionary=unordered.configure(source,"unordered",true)
 	check(unordered_result.get("ok",false) and unordered.get("_indexed_keyframes").keys()==[1],"only the ordered track is indexed")
 	unordered.free()
+
+func held_texture() -> void:
+	var p: Node2D=player(SCENE)
+	var target: Node2D=p.get_node("Target")
+	var sprite:=Sprite2D.new()
+	var origin:=Node2D.new()
+	target.add_child(origin)
+	origin.add_child(sprite)
+	target.set_meta("source_sprite",sprite)
+	target.set_meta("source_anchor",[0.25,0.5])
+	target.set_meta("source_origin",origin)
+	target.set_meta("source_blend","1:771")
+	var pack:=TexturePack.new()
+	var a: Texture2D=ImageTexture.create_from_image(Image.create(8,4,false,Image.FORMAT_RGBA8))
+	var b: Texture2D=ImageTexture.create_from_image(Image.create(12,6,false,Image.FORMAT_RGBA8))
+	pack.textures={"a.png":a,"b.png":b}
+	p.set("source_pack",pack)
+	var frames: Array=[
+		{"textureFrame":{"_type":"TextureFrame","frameIndex":0,"textureFile":{"path":"a.png"}}},
+		{"textureFrame":{"_type":"TextureFrame","frameIndex":10,"textureFile":{"path":"b.png"}}}]
+	var tree: Dictionary={"action":{"duration":20,"timeLines":[{"property":"FileData","actionTag":10,"frames":frames}]}}
+	p.set("source_tree",tree)
+	for frame: int in 10:p.seek_frame(frame)
+	check(pack.calls==1 and sprite.texture==a and sprite.position.y==-4 and origin.position==Vector2(-2,2),
+		"a held image uses one lookup and the authored anchor")
+	p.call("_seek_frame",10.0,false)
+	check(pack.calls==2 and sprite.texture==b and sprite.position.y==-6 and origin.position==Vector2(-3,3),
+		"the next authored image still binds with its own geometry")
+	sprite.texture=a
+	p.seek_frame(11)
+	check(pack.calls==3 and sprite.texture==b,"a replaced sprite texture is rebound even within the same source key")
+	p.seek_frame(0)
+	check(pack.calls==4 and sprite.texture==a,"a backwards seek binds the original earlier texture")
+	p.set("source_tree",tree.duplicate(true))
+	p.seek_frame(0)
+	check(pack.calls==5 and sprite.texture==a,"replacing the source tree clears the held frame binding")
+	p.free()
+
+func tint_playback() -> void:
+	var p: Node2D=player(SCENE)
+	var parent: Node2D=p.get_node("Target")
+	parent.set_meta("source_rgba",[255,255,255,255])
+	var child:=DisplayProbe.new()
+	child.set_meta("source_rgba",[255,127,63,127])
+	child.set_meta("source_panel",child)
+	parent.add_child(child)
+	var frames: Array=[
+		{"intFrame":{"_type":"IntFrame","frameIndex":0,"value":255}},
+		{"intFrame":{"_type":"IntFrame","frameIndex":10,"value":128}}]
+	p.set("source_tree",{"action":{"duration":20,"timeLines":[{"property":"Alpha","actionTag":10,"frames":frames}]}})
+	p.seek_frame(0)
+	p.call("_seek_frame",1.0,false)
+	check(child.colors.size()==1 and child.colors[0]==Color8(255,127,63,127),
+		"a held display color needs no second widget update")
+	p.call("_seek_frame",10.0,false)
+	check(child.colors.size()==2 and child.colors[1]==Color8(255,127,63,63),
+		"a parent's alpha change reaches an otherwise unchanged child during playback")
+	p.seek_frame(10)
+	check(child.colors.size()==3 and child.colors[2]==child.colors[1],"an explicit seek still rebinds the same display color")
+	var host:=Node2D.new()
+	host.set_meta("source_display_color",Color8(255,255,255,128))
+	host.add_child(p)
+	p.call("_seek_frame",10.0,false)
+	check(child.colors.size()==4 and child.colors[3]==Color8(255,127,63,31),
+		"an inherited display change crosses the scene boundary without a local key change")
+	host.free()
+
 func run() -> void:
 	var old:=instrument(true)
 	var counted:=instrument(false)
@@ -155,6 +235,8 @@ func run() -> void:
 	compare(players,{},1)
 	for p: Node2D in players:p.free()
 	ordered_configuration(counted)
+	held_texture()
+	tint_playback()
 	failures_unchanged()
 	print("SOURCE_UI_TIMELINE_SELECTION_RESULT "+JSON.stringify({"checks":checks,"failures":failures,"decode_comparisons":decode_proofs,"synthetic_only":true}))
 	quit(0 if failures.is_empty() else 1)
