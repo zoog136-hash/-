@@ -12,7 +12,7 @@ func run():
  world.set_process(false);world.field_population.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.save_timer=-100000
  world._clear_monsters();world.gold=1000000;world.level=90
  var service=world.original_skills;var catalog=service.catalog
- check(service.local_runtime.rows().size()==22,"332 blocked references never enter per-hit runtime scan")
+ check(service.local_runtime.rows().size()==22,"reviewed local skills retain their existing runtime owner")
  for values:Array in [["요정","엘리멘탈 스피드",1.25,25.0,12.5],["암흑기사","다크 러쉬",1.25,25.0,25.0],["사신","고스트 스텝",1.3,30.0,25.0]]:
   world.job_class=values[0];var row:Dictionary=catalog.record_for(values[1]);catalog.learned.erase(row.id)
   world.level=int(row.minimum_level)-1
@@ -32,13 +32,13 @@ func run():
   world.job_class="기사";check(not catalog.enabled(row),"class change disables unrelated passive")
  for name:String in ["프라임 소드","쇼크 스턴(베테랑)","매직 마스터(에이션트)"]:
   var row:Dictionary=catalog.record_for(name);var mp:int=world.mp;var hp:int=world.hp
-  check(row.runtime_blocked and not world._cast_job_skill(name),"unknown skill cannot fall through legacy damage path")
-  check(world.mp==mp and world.hp==hp and world.pending_attack.is_empty(),"blocked reference cannot charge or attack")
+  check(not row.runtime_blocked and not world._cast_job_skill(name),"unlearned references cannot fall through legacy damage path")
+  check(world.mp==mp and world.hp==hp and world.pending_attack.is_empty(),"unlearned reference cannot charge or attack")
  check(world._skill_record("셋팅 업").id==catalog.record_for("세팅 업").id,"world quickslot alias uses original ID")
  check(world._save_game(true)==OK,"save all three learned passive IDs")
  var learned:Dictionary=catalog.learned.duplicate(true);world._load_game(true)
  for values:Array in [["요정","엘리멘탈 스피드"],["암흑기사","다크 러쉬"],["사신","고스트 스텝"]]:
   world.job_class=values[0];var row:Dictionary=catalog.record_for(values[1]);check(catalog.enabled(row) and catalog.learned.get(row.id)==learned.get(row.id),"load preserves stable passive identity")
  service.vfx.clear();world.queue_free();await process_frame;await process_frame
- print("OFFICIAL_SPEED_MAIN_RESULT checks=",checks," errors=",errors," passives=3 playable=147 references=332")
+ print("OFFICIAL_SPEED_MAIN_RESULT checks=",checks," errors=",errors," passives=3 references=332")
  quit(0 if errors==0 else 1)

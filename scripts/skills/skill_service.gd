@@ -5,6 +5,9 @@ const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const EQUIPMENT523_COMBAT = preload("res://scripts/equipment523/combat.gd")
 const AMMO_FLIGHT = preload("res://scripts/animation/current523_ammo_flight.gd")
 const HEART_SEEKER := "lmref_8f924b6a5bd9ab0a"
+const PUBLIC_PROFILES = preload("res://scripts/skills/reference_profiles523.gd")
+const PUBLIC_COMBAT = preload("res://scripts/skills/reference_combat523.gd")
+var public_combat := PUBLIC_COMBAT.new()
 const LOCAL = preload("res://scripts/skills/local_skill_runtime.gd")
 var local_runtime = LOCAL.new()
 var estimated_nodes = preload("res://scripts/skills/estimated_nodes523.gd").new()
@@ -26,6 +29,8 @@ var stacks: Dictionary = {}
 var marks: Dictionary = {}
 var toggles: Dictionary = {}
 var counter_counts: Dictionary = {}
+var reference_hit_counts: Dictionary = {}
+var reference_sense_elapsed: float = 0.0
 var combat_elapsed: float = 100
 var recovery_elapsed: float = 0
 var relic_buff_signature: String = ""
@@ -69,6 +74,9 @@ func clear() -> void:
 	stacks.clear()
 	marks.clear()
 	counter_counts.clear()
+	reference_hit_counts.clear()
+	reference_sense_elapsed = 0.0
+	public_combat.clear()
 	if is_instance_valid(vfx): vfx.clear()
 	relic_buff_signature = ""
 
@@ -89,6 +97,7 @@ func tick(delta: float) -> void:
 	summons.tick(delta)
 	stage = FRAME_HITCH.detail_next("skills.summons", stage)
 	progression.tick(delta)
+	public_combat.tick_link(delta)
 	stage = FRAME_HITCH.detail_next("skills.progression", stage)
 	combat_elapsed += delta
 	recovery_elapsed += delta
@@ -110,6 +119,7 @@ func tick(delta: float) -> void:
 		var buff: Dictionary = world.active_skill_buffs[name]
 		var id := str(buff.get("skill_id", ""))
 		if id.is_empty(): continue
+		if buff.has("reference_pulse"): PUBLIC_COMBAT.pulse(self, name, buff, delta)
 		var drain := float(buff.get("drain_mp_percent", 0))
 		if drain > 0:
 			buff["drain_clock"] = float(buff.get("drain_clock", 0)) + delta
@@ -118,6 +128,8 @@ func tick(delta: float) -> void:
 				world.mp = maxi(0, world.mp - maxi(1, int(ceil(world._effective_max_mp() * drain))))
 				if world.mp <= 0: world.active_skill_buffs.erase(name)
 		if not world.active_skill_buffs.has(name): vfx.remove_persistent(id)
+		elif bool(buff.get("reference_stationary", false)) and world.player.global_position.distance_squared_to(buff.reference_origin) > 49:
+			world.active_skill_buffs.erase(name)
 	stage = FRAME_HITCH.detail_next("skills.timers", stage)
 	refresh_buff_visuals()
 	FRAME_HITCH.detail("skills.buff_visuals", stage)
@@ -134,6 +146,19 @@ func tick(delta: float) -> void:
 		var mp_regen := int(stat("mpRegen"))
 		if hp_regen > 0: world.hp = mini(world._effective_max_hp(), world.hp + hp_regen)
 		if mp_regen > 0: world.mp = mini(world._effective_max_mp(), world.mp + mp_regen)
+		if world.job_class == "암흑기사":
+			reference_sense_elapsed += 1.0
+			if reference_sense_elapsed >= 5.0:
+				reference_sense_elapsed = 0.0
+				_reference_sense_low_health()
+
+func _reference_sense_low_health() -> void:
+	if not is_instance_valid(world.player) or world.hp <= 0 or stat("referenceSense") <= 0: return
+	var sense := catalog.record_for("다크 아이")
+	for target: TwilightMonster in targets({"shape":"self_circle","radius":165.0,"targets":4},null):
+		if target.hp * 3 > target.max_hp: continue
+		_emit_verified_source_effect(sense, "success", target.combat_hit_position())
+		break
 
 func refresh_buff_visuals() -> void:
 	# Map transitions cancel pending hits, while retained buffs regain their aura.
@@ -208,9 +233,11 @@ func equipment_modifier(skill: Dictionary, key: String) -> float:
 func material_plan(skill: Dictionary) -> Dictionary:
 	var spent: Dictionary = {}
 	var physical_ammo: Dictionary={};var physical_materials: Array=[]
+	var items: Dictionary = skill.get("items", {})
+	if items.is_empty(): return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 	var original_owner: Script=load("res://scripts/loot/current523_native_stack.gd")
-	for item: String in skill.get("items", {}):
-		var remaining: int = int(skill.items[item])
+	for item: String in items:
+		var remaining: int = int(items[item])
 		var ammo: Dictionary=original_owner.call("original_skill_ammo",world,item,remaining)
 		if ammo.get("handled",false):
 			if not ammo.get("ok",false) or not physical_ammo.is_empty():return {"reason":str(ammo.get("reason","하나의 스킬에서 서로 다른 실제 탄약 선택은 미지원")),"spent":{}}
@@ -280,6 +307,8 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	# Admission reads the projection. Only the subsequent cast needs a copy
 	# it can modify with temporary effects and its own attack context.
 	skill = catalog._resolved_reference(skill)
+	if bool(skill.get("reference_approx523", false)) and skill.mode == "toggle_proc" and bool(toggles.get(str(skill.id), false)):
+		return catalog.enabled(skill) and world.hp > 0
 	var reason := ""
 	if world.halphas_star.combat.frozen(world.player) or not world.halphas_star.combat.charge.is_empty():reason="자체 동빙 또는 차징 중"
 	elif spell_move.busy(): reason = "원본 이동 효과 진행 중"
@@ -331,6 +360,9 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 	if not ready(record, manual): return false
 	var skill := catalog.resolve(record)
 	var area: bool = is_area_cast(skill)
+	var local_effect: bool = PUBLIC_COMBAT.uses_local_effect(skill)
+	var targeted_area: bool = local_effect and str(skill.get("shape", "")) == "target_circle"
+	var ground_area: bool = area and not targeted_area
 	if area_only and (not area or bool(skill.get("spell_move523", {}).get("ok", false)) \
 		or progression.is_toggle(skill) or stackable.handles(skill)): return false
 	# TWILIGHT 근사 "스킬 대체": a learned passive's SpellTransformID replaces this cast.
@@ -359,12 +391,14 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 		return false # Selection has not cast or spent anything yet.
 	var target: TwilightMonster = null
 	var dash_only := false
-	if area and not manual and not _has_area_target(skill): return false
-	if mode in ["attack", "status", "turn_undead"] and not area:
-		target = world._skill_target(float(skill.get("range", 240)))
+	if ground_area and not manual and not _has_area_target(skill): return false
+	if mode in ["attack", "status", "turn_undead"] and not ground_area:
+		if not bool(skill.get("reference_dash_only", false)) or is_instance_valid(world.selected_monster):
+			target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead:
 			# An explicit unreachable selection never redirects into a dash.
-			if estimated_nodes.kind(skill) == "grab" and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
+			if (estimated_nodes.kind(skill) == "grab" or bool(skill.get("reference_dash_without_target", false))) \
+				and not is_instance_valid(world.selected_monster) and world.world_interactions.selections.is_empty(): dash_only = true
 			else:
 				# A refused manual cast must say why (the quick slot otherwise looks dead).
 				if manual: world.hud.show_message(_target_refusal(skill))
@@ -373,16 +407,26 @@ func _cast_impl(record: Dictionary, manual: bool, loading: bool, area_only: bool
 			if manual: world.hud.show_message("사용할 수 없는 대상입니다")
 			return false
 	var dash_end := Vector2.INF
-	if not area and estimated_nodes.kind(skill) == "grab":
-		dash_end = estimated_nodes.dash_plan(skill, target)
+	if not ground_area and (estimated_nodes.kind(skill) == "grab" or bool(skill.get("reference_dash", false))):
+		if world.field_map == null and not skill.get("reference_dash", false): return false
+		dash_end = PUBLIC_COMBAT.forward_landing(world, skill, target) if bool(skill.get("reference_dash", false)) else estimated_nodes.dash_plan(skill, target)
 		if not dash_end.is_finite(): return false
+		dash_only = dash_only or bool(skill.get("reference_dash_only", false))
+	if float(skill.get("reference_execute_below", 0)) > 0.0:
+		if not is_instance_valid(target) or float(target.hp) / maxf(1.0, float(target.max_hp)) > float(skill.reference_execute_below):
+			if manual: world.hud.show_message("체력이 낮은 대상이 필요합니다")
+			return false
 	if mode == "turn_undead" and not area and turn_undead_chance(skill, target) <= 0:
 		world.hud.show_message("턴 언데드 대상이 아니거나 즉사 면역입니다")
 		return false
-	if mode == "heal" and world.hp >= world._effective_max_hp() and not bool(skill.get("overflow_shield", false)) and skill.get("statuses", []).is_empty(): return false
+	if mode == "heal" and world.hp >= world._effective_max_hp() and not bool(skill.get("overflow_shield", false)) and skill.get("statuses", []).is_empty() \
+		and (not local_effect or (skill.get("stats", {}).is_empty() and int(skill.get("mana", 0)) == 0)): return false
 	if mode == "convert" and world.mp >= world._effective_max_mp(): return false
 	if mode == "cleanse" and not world.player.is_poisoned(): return false
 	var teleport_landing: Vector2 = Vector2.INF
+	if mode == "summon" and local_effect:
+		teleport_landing = summons.safe_landing(world.player.global_position, 30, 72)
+		if not teleport_landing.is_finite(): return false
 	if mode == "teleport":
 		teleport_landing = world._random_walkable_position(world.player.global_position, 96, 600)
 		if not teleport_landing.is_finite():
@@ -404,8 +448,16 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 	# world._clear_combat_actions(). After a paid release, MISS and target
 	# death keep the normal rules.
 	if mode not in CAST_MODES: return false
+	var local_effect: bool = PUBLIC_COMBAT.uses_local_effect(skill)
+	var id := str(skill.id)
+	if local_effect and mode == "toggle_proc" and bool(toggles.get(id, false)):
+		toggles.erase(id)
+		world.active_skill_buffs.erase(str(skill.name))
+		world.hud.show_message(str(skill.name) + " OFF")
+		world._update_hud()
+		return true
 	var registers: bool = mode in ["attack", "status", "turn_undead"] and not dash_only
-	var area: bool = is_area_cast(skill)
+	var area: bool = is_area_cast(skill) and not (local_effect and str(skill.get("shape", "")) == "target_circle")
 	var origin: Vector2 = world.player.global_position
 	if dash_end.is_finite(): estimated_nodes.move_to(dash_end)
 	var registered: int = -1
@@ -432,7 +484,6 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
 		_undo_dash(origin, dash_end)
 		return false
-	var id := str(skill.id)
 	var cooldown: float = float(skill.get("cooldown", 0)) * world._skill_cooldown_factor()
 	cooldown *= clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1)
 	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
@@ -450,16 +501,21 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 				world.pending_attack["original_target_life_id"] = target.life_id
 		"buff", "counter", "stealth":
 			apply_buff(skill)
+			var shield: int = int(skill.get("reference_shield", 0))
+			if shield > 0: shields[id] = {"amount":shield, "remaining":float(skill.duration)}
 			# TWILIGHT 근사 (4): self heal / cleanse actives.
 			if skill.has("approx_self_child"):
 				var self_child: Dictionary = skill.approx_self_child
 				while not self_child.is_empty():
 					approx_cast_child(id, self_child, null)
 					self_child = self_child.get("next", {})
-		"detect": estimated_nodes.detect(skill)
+		"detect":
+			estimated_nodes.detect(skill)
+			_emit_verified_source_effect(skill, "success", world.player.global_position)
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
 			var amount := int(skill.get("heal", 0)) + int(world._effective_max_hp() * float(skill.get("heal_percent", 0)))
+			if skill.has("reference_heal_sp"): amount += int(world._spell_power_stat() * float(skill.reference_heal_sp))
 			if skill.has("heal_dice"):
 				var dice: Dictionary=skill.heal_dice
 				var sp_scale: float=float(dice.sp_scale) if int(catalog.source523.bindings.class_ids.get(str(world.job_class),-1))==int(dice.sp_class_id) else 0.0
@@ -494,8 +550,14 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			_emit_verified_source_effect(skill, "impact", world.player.global_position)
 		"toggle_proc":
 			toggles[id] = not bool(toggles.get(id, false))
+			if bool(skill.get("reference_approx523", false)) and not skill.get("stats", {}).is_empty():
+				if bool(toggles[id]): apply_buff(skill)
+				else: world.active_skill_buffs.erase(str(skill.name))
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
-		"summon": summons.spawn(skill)
+		"summon": summons.spawn(skill, teleport_landing)
+	if local_effect:
+		PUBLIC_COMBAT.apply_cast_effects(self, skill)
+		PUBLIC_COMBAT.temporary_buff(self, skill)
 	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
 	var native_material_only: bool = area_has_materials and spending.get("native_material_only", false)
 	var light_area_hud: bool = area and kept_buffs.is_empty() and not concealed_before \
@@ -547,9 +609,13 @@ func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
 	var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
 	var origin: Vector2=world.player.combat_projectile_origin()
 	var heart: Dictionary=_heart_seeker_source_projectile(skill) if kind!="timed" and skill.get("id")==HEART_SEEKER else {}
+	var landed_skill: Dictionary = skill
+	if hits > 1 and PUBLIC_COMBAT.uses_local_effect(skill):
+		landed_skill = skill.duplicate(false)
+		landed_skill["hits"] = 1
 	for hit: int in range(hits):
 		var shot_action := action.duplicate(false)
-		shot_action["callback"] = impact.bind(skill, target, target_life)
+		shot_action["callback"] = impact.bind(landed_skill, target, target_life)
 		var visual_id := presentation_id(skill)
 		var visual_options := AMMO_FLIGHT.spell_options(world,origin,target,heart) if not heart.is_empty() else {}
 		if visual_options.is_empty(): visual_options=vfx.flight_options(visual_id)
@@ -581,7 +647,9 @@ func targets(skill: Dictionary, primary: TwilightMonster, direction: Vector2 = V
 	var origin: Vector2 = world.player.global_position
 	var shape := str(skill.get("shape", "single"))
 	if shape == "single" and is_instance_valid(primary):
-		return [primary] if Catalog.SOURCE523.target_allowed(skill, primary) else []
+		var selected: Array[TwilightMonster] = []
+		if Catalog.SOURCE523.target_allowed(skill, primary): selected.append(primary)
+		return selected
 	var limit: int = int(skill.get("targets", 6))
 	if limit <= 0: return []
 	var started: int = FRAME_HITCH.now()
@@ -672,6 +740,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 	if not area_cast or not world._source_combat_targets_hidden():
 		victims = targets(skill, primary, direction)
 	var area_started: int = FRAME_HITCH.now() if str(skill.get("shape", "single")) != "single" else 0
+	var local_effect: bool = PUBLIC_COMBAT.uses_local_effect(skill)
 	if area_cast: world._begin_area_hud_refresh()
 	for target: TwilightMonster in victims:
 		if not is_instance_valid(target) or target.dead: continue
@@ -682,6 +751,7 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			if skill.has("approx_extra_child") and is_instance_valid(target) and not target.dead: approx_cast_child(str(skill.id), skill.approx_extra_child, target)
 			if not is_instance_valid(target) or target.dead: continue
 			if status.apply(skill, target, world):
+				if local_effect: public_combat.status_applied(self, skill, target)
 				if not area_cast:
 					vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position(), Vector2.INF, {"ground_point":target.global_position})
 					_emit_verified_source_effect(skill, "impact", target.combat_hit_position())
@@ -705,9 +775,15 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 			vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
 			_emit_verified_source_effect(skill, "fail", target.combat_hit_position())
 			continue
-		deal_damage(skill, target, Vector2.INF, area_cast)
+		if bool(skill.get("reference_debuff_only", false)):
+			public_combat.contact(self, skill, target, 0)
+			_emit_verified_source_effect(skill, "success", target.combat_hit_position())
+			continue
+		if local_effect: _reference_hit_series(skill, target, area_cast, victims.size())
+		else: deal_damage(skill, target, Vector2.INF, area_cast)
 		if not target.dead and skill.has("status"):
 			if status.apply(skill, target, world):
+				if local_effect: public_combat.status_applied(self, skill, target)
 				vfx.maintain_status(presentation_id(skill), target, str(skill.status))
 				_emit_verified_source_effect(skill, "success", target.combat_hit_position())
 			else:
@@ -720,6 +796,18 @@ func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1
 	if area_cast: world._end_area_hud_refresh()
 	else: world._refresh_combat_hud()
 	if area_started != 0: FRAME_HITCH.detail("skill.area_apply", area_started)
+
+func _reference_hit_series(skill: Dictionary, target: TwilightMonster, area_cast: bool = false, count: int = 1) -> void:
+	var hits: int = clampi(int(skill.get("hits", 1)), 1, 4)
+	if skill.has("reference_extra_hit_chance") and world.rng.randf() < float(skill.reference_extra_hit_chance):
+		hits = mini(4, hits + 1)
+	var attack := skill
+	if skill.has("reference_focus_damage") and count < 3:
+		attack = skill.duplicate(false)
+		attack["power"] = int(float(skill.get("power", 20)) * (1 + float(skill.reference_focus_damage)))
+	for _hit: int in hits:
+		if not is_instance_valid(target) or target.dead: break
+		deal_damage(attack, target, Vector2.INF, area_cast)
 
 static func presentation_id(skill: Dictionary) -> String:
 	return str(skill.get("visual_skill_id", skill.get("id", "")))
@@ -767,11 +855,14 @@ func physical_hit_chance(accuracy: int, target: TwilightMonster,attack_kind: Str
 	# Keep the shared formula's AC normalization and nonnegative DG floor.
 	var avoidance: float=status.modifier(target,"er" if attack_kind=="ranged" else "dg")
 	avoidance+=status.modifier(target,"source_ranged_evasion" if attack_kind=="ranged" else "source_melee_evasion")
+	if attack_kind == "ranged" and world.job_class == "요정": avoidance -= stat("rangedPierce")
 	if bool(target.get_meta("is_player_combatant",false)):avoidance-=world.growth.guardian_combat.value("PVPPierceRangeEvasion" if attack_kind=="ranged" else "PVPPierceMeleeEvasion")
 	return world._physical_hit_chance(accuracy, target.hit_armor_class() + int(status.modifier(target, "ac")), world.card_collections.avoidance_after_pierce(int(avoidance),attack_kind))*world.halphas_star.combat.hit_factor(world.player)
 
 func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 = Vector2.INF, area_cast: bool = false) -> void:
 	if target.dead: return
+	var local_effect: bool = PUBLIC_COMBAT.uses_local_effect(skill)
+	var health_before: int = target.hp if local_effect else 0
 	var amount: int = int(skill.get("power", 20)) + int(world.card_collections.spell_damage_bonus(skill)) + int(stat("lfe") * float(skill.get("lfe_scale", 0)))
 	var source_kind: String=str(skill.get("attack_type","melee"))
 	if world.get("growth")!=null:
@@ -786,8 +877,12 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	if world.get("growth")!=null:
 		var main_target: bool = str(skill.get("shape","single")) != "area" or (not area_cast and target == world.selected_monster)
-		world._deal_successful_player_hit(target, maxi(1, amount), critical, str(skill.get("attack_type","magic")), main_target, true)
+		var context: Dictionary = {"reference_armor_pierce":skill.reference_armor_pierce} if skill.has("reference_armor_pierce") else {}
+		world._deal_successful_player_hit(target, maxi(1, amount), critical, str(skill.get("attack_type","magic")), main_target, true, context)
 	else:world._deal_successful_player_hit(target, maxi(1, amount), critical,str(skill.get("attack_type","melee")))
+	if local_effect and is_instance_valid(target):
+		public_combat.contact(self, skill, target, maxi(0, health_before - int(target.hp)))
+		if target.dead: PUBLIC_COMBAT.reset_on_kill(self, skill)
 	if not area_cast: _emit_verified_source_effect(skill, "impact", target.global_position)
 	if critical: _emit_verified_source_effect(skill, "critical", target.global_position)
 	if not area_cast and not _is_verified_source_skill(skill):
@@ -851,11 +946,21 @@ func execute_equipment_source_damage(profile: Dictionary,target: TwilightMonster
 func apply_buff(skill: Dictionary, force_stealth: bool = false) -> void:
 	var stats: Dictionary = skill.get("stats", {})
 	var buff: Dictionary = {"remaining":float(skill.duration),"skill_id":str(skill.id),"skill_stats":stats.duplicate(true),"stealth":force_stealth or skill.mode == "stealth","break_on_damage":bool(skill.get("break_on_damage", false)),"break_on_attack":bool(skill.get("break_on_attack",false)),"drain_mp_percent":float(skill.get("drain_mp_percent", 0)),"speed":float(stats.get("speed", 1))}
+	if skill.has("reference_pulse"):
+		buff["reference_pulse"] = skill.reference_pulse
+		buff["pulse_clock"] = float(skill.reference_pulse.interval)
+	if skill.has("reference_hit_status"): buff["reference_hit_status"] = skill.reference_hit_status
+	if skill.get("reference_magic_normal", false): buff["reference_magic_normal"] = true
+	if bool(skill.get("reference_stationary", false)):
+		buff["reference_stationary"] = true
+		buff["reference_origin"] = world.player.global_position
+	if PUBLIC_COMBAT.uses_local_effect(skill) and skill.has("reference_kill_stacks"):
+		buff["reference_kill_stacks"] = skill.reference_kill_stacks
 	world.active_skill_buffs[str(skill.name)] = buff
 	vfx.maintain(str(skill.id), world.player, float(skill.duration))
 	# Existing self-buff application is the presentation event. No periodic
 	# replay, duration inference or status activation is created by the renderer.
-	if str(skill.get("mode","")) in ["buff","counter","stealth"]:
+	if str(skill.get("mode","")) in ["buff","counter","stealth"] or (skill.get("local_design",false) and skill.has("reference_visual523")):
 		_emit_verified_source_effect(skill, "effect", world.player.global_position)
 		_emit_verified_source_effect(skill, "success", world.player.global_position)
 	world._refresh_skill_stealth_visual()
@@ -891,7 +996,7 @@ func heal(skill: Dictionary, amount: int) -> void:
 	if bool(skill.get("overflow_shield", false)) and before + effective > maximum:
 		var cap := int(maximum * float(skill.get("shield_cap_percent",100)) / 100.0)
 		shields[str(skill.id)] = {"amount":mini(cap, before + effective - maximum),"remaining":float(skill.get("shield_duration",skill.get("duration", 12)))}
-	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty(): apply_buff(skill)
+	if str(skill.get("mode", "")) == "heal" and not skill.get("stats", {}).is_empty() and not skill.get("stealth_after", false): apply_buff(skill)
 	vfx.emit_skill(str(skill.id), "impact", world.player.global_position)
 	_emit_verified_source_effect(skill, "impact", world.player.global_position)
 
@@ -912,6 +1017,10 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 	proc_depth += 1
 	combat_elapsed = 0 if event != "on_skill" else combat_elapsed
 	stackable.on_event(event, attack)
+	if event == "on_kill":
+		for buff: Dictionary in world.active_skill_buffs.values():
+			var config: Dictionary = buff.get("reference_kill_stacks", {})
+			if not config.is_empty(): stack(str(buff.skill_id), config.stats, int(config.limit), float(config.duration))
 	for base: Dictionary in catalog.combat_proc_records():
 		if not catalog.enabled(base): continue
 		var skill := catalog.resolve(base)
@@ -922,6 +1031,15 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 		elif expected != event: continue
 		var id := str(skill.id)
 		if float(world.skill_cooldowns.get(id, 0)) > 0: continue
+		var local_effect: bool = PUBLIC_COMBAT.uses_local_effect(skill)
+		if local_effect:
+			if not PUBLIC_COMBAT.proc_allowed(skill, target, source_skill, attack, world): continue
+			if str(skill.mode) == "toggle_proc" and not bool(toggles.get(id, false)): continue
+			var every: int = int(skill.get("reference_every", 0))
+			if every > 1:
+				var count: int = int(reference_hit_counts.get(id, 0)) + 1
+				reference_hit_counts[id] = count % every
+				if count < every: continue
 		var chance: float = native_delta if event == "on_miss" else float(skill.get("proc_chance", 1)) + native_delta
 		if world.rng.randf() >= clampf(chance, 0, 1): continue
 		match str(skill.mode):
@@ -945,7 +1063,14 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 						marks.erase(key)
 			"toggle_proc":
 				if not is_instance_valid(target) or target.dead: continue
-				if bool(toggles.get(id, false)):
+				if local_effect:
+					var cost := skill.duplicate(false)
+					cost["mp"] = 0
+					cost["hp"] = 0
+					cost["items"] = skill.get("proc_items", {})
+					if not spend(cost): continue
+					_reference_proc_impact(skill, target)
+				elif bool(toggles.get(id, false)):
 					var cost := skill.duplicate(true)
 					cost["mp"] = 0
 					if not spend(cost): continue
@@ -959,20 +1084,45 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 						last = next_chain_target(last, visited, float(skill.radius))
 				else: deal_damage(skill, target)
 			"proc":
-				if event == "on_skill" and str(source_skill.get("school", "")) != str(skill.get("trigger_school", "rune")): continue
+				if not local_effect and event == "on_skill" and str(source_skill.get("school", "")) != str(skill.get("trigger_school", "rune")): continue
 				if skill.has("heal"): heal(skill, int(skill.heal))
 				if skill.has("mana"):
 					world.mp = mini(world._effective_max_mp(), world.mp + int(skill.mana))
 					vfx.emit_skill(id, "impact", world.player.global_position)
 					_emit_verified_source_effect(skill, "impact", world.player.global_position)
-				if skill.has("power") and event in ["on_hit", "on_miss"] and is_instance_valid(target) and not target.dead: deal_damage(skill, target)
+				if local_effect:
+					PUBLIC_COMBAT.temporary_buff(self, skill)
+					var shield: int = int(skill.get("reference_shield", 0))
+					if shield > 0:
+						shields[id] = {"amount":shield,"remaining":float(skill.duration)}
+						_emit_verified_source_effect(skill, "success", world.player.global_position)
+					_reference_proc_impact(skill, target)
+				elif is_instance_valid(target) and not target.dead:
+					if skill.has("power") and event in ["on_hit", "on_miss"]: deal_damage(skill, target)
 		world.skill_cooldowns[id] = float(skill.get("proc_cooldown", 0))
 	if event == "on_hit": approx_attack_spells(target, attack)
 	if event == "on_hit" and is_instance_valid(target) and not target.dead:
+		if source_skill.is_empty() and world.job_class in ["암흑기사","신성검사"]:
+			for buff: Dictionary in world.active_skill_buffs.values():
+				if not buff.has("reference_hit_status"): continue
+				var followup: Dictionary = {"id":buff.skill_id,"status":buff.reference_hit_status,"duration":1.8,"status_chance":.16}
+				if status.apply(followup, target, world): _emit_verified_source_effect(followup, "success", target.combat_hit_position())
 		progression.on_normal_hit(target,source_skill)
 		local_runtime.on_hit(target,source_skill)
 		trigger_equipment(target)
 	proc_depth -= 1
+
+func _reference_proc_impact(skill: Dictionary, target: TwilightMonster) -> void:
+	if not is_instance_valid(target) or target.dead: return
+	var direction: Vector2 = world.player.global_position.direction_to(target.global_position)
+	var center: TwilightMonster = null if skill.get("shape", "") in ["self_circle", "cone", "line"] else target
+	var targets_hit := targets(skill, center, direction)
+	for victim: TwilightMonster in targets_hit:
+		if skill.has("power"): _reference_hit_series(skill, victim)
+		else: public_combat.contact(self, skill, victim, 0)
+		if not victim.dead and skill.has("status") and status.apply(skill, victim, world):
+			public_combat.status_applied(self, skill, victim)
+		if not skill.has("power"): _emit_verified_source_effect(skill, "impact", victim.combat_hit_position())
 
 func trigger_equipment(target: TwilightMonster) -> void:
 	var fired: Dictionary = {}
@@ -1011,11 +1161,12 @@ func next_chain_target(previous: TwilightMonster, visited: Array[TwilightMonster
 			distance = d
 	return result
 
-func target_damage(amount: int, target: TwilightMonster,kind: String="") -> int:
+func target_damage(amount: int, target: TwilightMonster,kind: String="", local_pierce: float=0.0) -> int:
 	# One common successful-hit boundary covers normal attacks, skills and
 	# equipment procs. Instant death intentionally bypasses that boundary.
 	var pierce: float = world.totem_reduction_pierce() if world.has_method("totem_reduction_pierce") else 0.0
-	var result: int=status.damage_after_reduction(amount,target,pierce)
+	if world.job_class in ["광전사","뇌신","마검사"]: amount += int(stat("referenceReductionIgnore"))
+	var result: int=status.damage_after_reduction(amount,target,maxf(pierce, local_pierce))
 	if kind=="ranged":result=maxi(1,result-int(status.modifier(target,"source_ranged_reduction")))
 	if kind in ["melee","ranged","magic"]:
 		var settings: Dictionary=world.PATCH523_ENHANCE.policy()
@@ -1023,8 +1174,15 @@ func target_damage(amount: int, target: TwilightMonster,kind: String="") -> int:
 		result=maxi(1,int(round(result*(1-percentage/100.0))))
 	return result
 
-func attack_context(kind: String, by_spell: bool, hit: bool, main_target: bool = true) -> Dictionary:
-	return {"confirmed":true,"attack_type":kind,"by_spell":by_spell,"hit":hit,"main_target":main_target,"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())}
+func reference_npc_healing(target: TwilightMonster, amount: int) -> int:
+	var fraction: float = status.modifier(target, "healing_taken")
+	if fraction == -1.0:
+		target.take_damage(amount, false, "skill_reversed_healing")
+		return 0
+	return maxi(0, int(amount * (1.0 + fraction)))
+
+func attack_context(kind: String, by_spell: bool, hit: bool, main_target: bool = true, critical: bool = false) -> Dictionary:
+	return {"confirmed":true,"attack_type":kind,"by_spell":by_spell,"hit":hit,"main_target":main_target,"critical":critical,"source_weapon_type":preload("res://scripts/animation/source_weapon_banks.gd").local_type(world._current_weapon_type())}
 
 func trigger_relic_miss(target: TwilightMonster, kind: String) -> void:
 	if proc_depth > 0 or not is_instance_valid(target) or target.dead: return
@@ -1089,16 +1247,20 @@ func approx_cast_child(owner: String, child: Dictionary, target: TwilightMonster
 				# TWILIGHT 근사 (4): control rows through the existing status service (resistance, boss factor).
 				var applied: bool = is_instance_valid(target) and status.apply({"id":"approx523:"+owner,"status":str(child.status),"status_chance":clampf(float(child.get("hit_chance",1)),0,1),
 					"duration_bounds":[float(span[0]),float(span[1])],"tick_damage":int(child.get("tick_damage",8)),"tick_interval":1.0,"debuff":child.get("modifiers",{})}, target, world)
-				if applied: event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+				if applied:
+					event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+					if record.has("reference_visual523"): _emit_verified_source_effect(record, "success", target.combat_hit_position())
 				return
 			if world.rng.randf() >= clampf(float(child.get("hit_chance",1)), 0, 1): return
 			status.set_modifiers(target, "approx523:" + owner, world.rng.randf_range(float(span[0]), float(span[1])), child.get("modifiers",{}))
 			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+			if record.has("reference_visual523"): _emit_verified_source_effect(record, "success", target.combat_hit_position())
 		"heal_pct":
 			var amount: int = int(float(world._effective_max_hp()) * float(child.get("percent",0)) / 100.0)
 			if amount > 0: world.hp = mini(world._effective_max_hp(), world.hp + amount)
 			if bool(child.get("cleanse",false)): status.cleanse(world.player, ["stun","hold","fear","silence","poison","bleed","dark","ice"])
 			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
+			if record.has("reference_visual523"): _emit_verified_source_effect(record, "impact", world.player.global_position)
 		"cleanse":
 			status.cleanse(world.player, ["stun","hold","fear","silence","poison","bleed","dark","ice"])
 			event_counts["approx_spell:"+owner] = int(event_counts.get("approx_spell:"+owner,0)) + 1
@@ -1138,14 +1300,22 @@ func on_evaded(attacker: TwilightMonster) -> void:
 			proc_depth -= 1
 
 func counter(attacker: TwilightMonster, kind: String, amount: int) -> bool:
-	if counter_depth > 0 or proc_depth > 0 or kind != "melee" or not is_instance_valid(attacker) or attacker.dead: return false
+	if counter_depth > 0 or proc_depth > 0 or not is_instance_valid(attacker) or attacker.dead: return false
 	var best: Dictionary = {}
 	for name: String in world.active_skill_buffs:
 		var base := catalog.record_for(name)
 		if base.is_empty() or base.mode != "counter" or not catalog.enabled(base): continue
 		var skill := catalog.resolve(base)
+		if not skill.get("counter_kinds", ["melee"]).has(kind): continue
 		if float(skill.counter_chance) > float(best.get("counter_chance", 0)): best = skill
-	if best.is_empty() or not roll_counter(world.rng, float(best.counter_chance)): return false
+	for base: Dictionary in catalog.combat_proc_records():
+		if not bool(base.get("reference_passive_counter", false)) or not base.get("counter_kinds", []).has(kind) or not catalog.enabled(base): continue
+		if float(world.hp) > world._effective_max_hp() * float(base.get("reference_health_below", 1)): continue
+		var skill := catalog._resolved_reference(base)
+		if float(skill.counter_chance) > float(best.get("counter_chance", 0)): best = skill
+	var chance: float = float(best.get("counter_chance",0))
+	if chance > 0 and world.job_class == "광전사": chance += stat("referenceCounterBonus") / 100.0
+	if best.is_empty() or not roll_counter(world.rng, chance): return false
 	counter_depth += 1
 	vfx.emit_skill(presentation_id(best), "release", world.player.combat_projectile_origin(), Vector2.INF,
 		{"direction":world.player.global_position.direction_to(attacker.global_position)})
@@ -1153,8 +1323,14 @@ func counter(attacker: TwilightMonster, kind: String, amount: int) -> bool:
 	var count := int(counter_counts.get(id, 0)) + 1
 	if count >= int(best.get("counter_evades", 1)):
 		counter_counts[id] = 0
-		var damage := maxi(1, int(world._effective_attack() * float(best.counter_multiplier)))
-		attacker.take_damage(damage, false, "skill_counter")
+		var damage := 0
+		if not bool(best.get("reference_counter_no_damage", false)):
+			damage = maxi(1, int(world._effective_attack() * float(best.counter_multiplier)))
+			attacker.take_damage(damage, false, "skill_counter")
+		if PUBLIC_COMBAT.uses_local_effect(best):
+			public_combat.contact(self, best, attacker, damage)
+			if best.has("status") and not attacker.dead: status.apply(best, attacker, world)
+			if bool(best.get("reference_counter_once", false)): dispel_active_buff(str(best.name))
 		if world.rng.randf() < float(best.get("counter_heal_chance", .2)): heal(best, int(best.get("counter_heal", 0)))
 		vfx.emit_skill(id, "impact", attacker.combat_hit_position(), world.player.global_position)
 		_emit_verified_source_effect(best, "impact", attacker.combat_hit_position())
@@ -1168,8 +1344,8 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
 	skill = catalog._resolved_reference(skill)
-	if progression.is_toggle(skill) or str(skill.get("mode",""))=="source_toggle":return false
-	if is_area_cast(skill): return _has_area_target(skill)
+	if progression.is_toggle(skill) or str(skill.get("mode",""))=="source_toggle" or (bool(skill.get("reference_approx523",false)) and skill.mode=="toggle_proc"):return false
+	if is_area_cast(skill) and not (PUBLIC_COMBAT.uses_local_effect(skill) and skill.get("shape") == "target_circle"): return _has_area_target(skill)
 	if str(skill.get("mode", "")) in ["attack", "status", "turn_undead"] and is_instance_valid(target) and not Catalog.SOURCE523.target_allowed(skill, target): return false
 	if bool(skill.get("local_design",false)) and str(skill.get("local_kind",""))!="generic": return local_runtime.auto_wants(skill)
 	match str(skill.mode):
@@ -1217,6 +1393,15 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 		if int(shields[id].amount) <= 0:
 			shields.erase(id)
 			remove_guardian_shield_buff(id)
+	result = public_combat.linked_damage(self, result)
+	if result >= world.hp and result > 0:
+		for base: Dictionary in catalog.combat_proc_records():
+			if not base.get("reference_survival", false) or not catalog.enabled(base) or float(world.skill_cooldowns.get(str(base.id), 0)) > 0: continue
+			var resolved: Dictionary = catalog._resolved_reference(base)
+			world.skill_cooldowns[str(base.id)] = float(resolved.get("proc_cooldown", 120))
+			PUBLIC_COMBAT.temporary_buff(self, resolved)
+			result = maxi(0, world.hp - 1)
+			break
 	# Losing HP ends shadow hiding; ordinary invisibility only ends on attack.
 	if result > 0:
 		for name: String in world.active_skill_buffs.keys():
@@ -1227,6 +1412,10 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 func remove_guardian_shield_buff(id: String) -> void:
 	var record := catalog.record_for(id)
 	var resolved := catalog.resolve(record) if not record.is_empty() else {}
+	if int(resolved.get("reference_shield", 0)) > 0:
+		world.active_skill_buffs.erase(str(record.name))
+		vfx.remove_persistent(id)
+		return
 	if resolved.has("recovery523") and bool(resolved.get("overflow_shield",false)):
 		world.active_skill_buffs.erase(str(record.name))
 		vfx.remove_persistent(id)
@@ -1257,13 +1446,17 @@ func import_state(data: Dictionary) -> void:
 			if record.is_empty() or not catalog.enabled(record): continue
 			var skill: Dictionary = catalog.resolve(record)
 			var mode := str(record.get("mode", ""))
-			if mode != "summon" and (mode != "heal" or not bool(skill.get("overflow_shield", false))): continue
+			if mode != "summon" and int(skill.get("reference_shield", 0)) <= 0 and (mode != "heal" or not bool(skill.get("overflow_shield", false))): continue
 			var value: Variant = saved_shields[id]
 			if typeof(value) != TYPE_DICTIONARY: continue
-			var amount := clampi(int(value.get("amount", 0)), 0, world._effective_max_hp())
+			var cap: int = int(skill.get("reference_shield", world._effective_max_hp()))
+			var amount := clampi(int(value.get("amount", 0)), 0, cap)
 			var remaining := clampf(float(value.get("remaining", 0)), 0, 60)
 			if amount <= 0 or remaining <= 0: continue
 			shields[id] = {"amount":amount, "remaining":remaining}
+			if mode == "buff" and skill.has("reference_shield"):
+				skill.duration = remaining
+				apply_buff(skill)
 			if mode == "summon":
 				skill.duration = remaining
 				apply_buff(skill)
@@ -1283,6 +1476,14 @@ func import_state(data: Dictionary) -> void:
 			world.active_skill_buffs.erase(name)
 			continue
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
+		if skill.has("reference_pulse"):
+			buff["reference_pulse"] = skill.reference_pulse
+			buff["pulse_clock"] = float(skill.reference_pulse.interval)
+		if skill.has("reference_hit_status"): buff["reference_hit_status"] = skill.reference_hit_status
+		if skill.has("reference_kill_stacks"): buff["reference_kill_stacks"] = skill.reference_kill_stacks
+		if skill.get("reference_stationary", false):
+			buff["reference_stationary"] = true
+			buff["reference_origin"] = world.player.global_position
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
 	local_runtime.restore(data.get("local_design",{}))
 	stackable.import_state(data.get("stackable523",{}))
@@ -1290,19 +1491,29 @@ func import_state(data: Dictionary) -> void:
 func _source_only_skill_presentation() -> bool:
 	return is_instance_valid(world) and is_instance_valid(world.player) and world.player.original_source_preview.current523_source_only_presentation()
 
+func emit_reference_learning(skill: Dictionary) -> void:
+	if skill.has("reference_visual523"):
+		_emit_verified_source_effect(skill, "learn", world.player.global_position)
+
 func _emit_verified_source_effect(skill: Dictionary, stage: String, point: Vector2) -> void:
 	var started: int = FRAME_HITCH.now() if str(skill.get("shape", "single")) != "single" else 0
 	if _is_verified_source_skill(skill) and world.player.original_source_preview.notify_source_spell_event(int(skill.source_m_spell_id), stage, point, world.player.motion.facing8, world.player.original_source_manifest):
 		if started != 0: FRAME_HITCH.detail("skill.area_original_effect", started)
 		return
 	var row: Dictionary = _current_source_effect_row(skill)
+	var shown: bool = false
 	if not row.is_empty():
-		world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
+		shown = world.player.original_source_preview.notify_current_source_spell_event(row,stage,point,world.player.motion.facing8)
 		# Prepare later effects on worker threads as soon as the cast starts.
 		if stage == "cast":
 			var stages: Array=["impact","success","fail"]
 			if skill.get("id")==HEART_SEEKER: stages.append("effect")
 			world.player.original_source_preview.prefetch_current_source_spell_effects(row,stages)
+	if not shown:
+		var style: Dictionary = skill.get("reference_visual523", {})
+		if style.is_empty() and skill.has("id"):
+			style = catalog.record_for(str(skill.id)).get("reference_visual523", {})
+		if not style.is_empty(): vfx.emit_reference_effect(str(skill.id), style, stage, point)
 	if started != 0: FRAME_HITCH.detail("skill.area_original_effect", started)
 
 ## The already admitted skill's pinned current-source row, or {}.

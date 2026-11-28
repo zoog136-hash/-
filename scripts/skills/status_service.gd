@@ -60,6 +60,41 @@ func set_modifiers(target: Node, source: String, duration: float, values: Dictio
 	debuffs[key] = entry
 	refresh_entry(key)
 
+func set_reference_modifiers(target: Node, source: String, duration: float, values: Dictionary, limit: int, one_magic: bool) -> void:
+	var id := target.get_instance_id()
+	var entry: Dictionary = debuffs.get(id, {})
+	var previous: Dictionary = entry.get("sources", {}).get(source, {}) if same_life(entry, target) else {}
+	var count: int = mini(maxi(1, limit), int(previous.get("stacks", 0)) + 1)
+	var scaled: Dictionary = values.duplicate(false)
+	if count > 1:
+		for key: String in scaled: scaled[key] *= count
+	set_modifiers(target, source, duration, scaled)
+	if debuffs.get(id, {}).get("sources", {}).has(source):
+		debuffs[id].sources[source]["stacks"] = count
+		debuffs[id].sources[source]["one_magic"] = one_magic
+
+func extend_reference_modifiers(target: Node, seconds: float) -> void:
+	var id := target.get_instance_id()
+	var entry: Dictionary = debuffs.get(id, {})
+	if not same_life(entry, target): return
+	var changed := false
+	for key: String in entry.sources:
+		if not key.begins_with("reference:"): continue
+		entry.sources[key].remaining = minf(30, float(entry.sources[key].remaining) + seconds)
+		changed = true
+	if changed: refresh_entry(id)
+
+func consume_magic_exposure(target: Node) -> void:
+	var id := target.get_instance_id()
+	var entry: Dictionary = debuffs.get(id, {})
+	if not same_life(entry, target): return
+	var removed := false
+	for key: String in entry.sources.keys():
+		if not entry.sources[key].get("one_magic", false): continue
+		entry.sources.erase(key)
+		removed = true
+	if removed: refresh_entry(id)
+
 func set_native_equipment_modifiers(target: Node,profile: Dictionary,duration: float,values: Dictionary,context: Dictionary) -> bool:
 	if not is_instance_valid(target) or target.dead:return false
 	var raw: Dictionary=profile.buff.source_buff
@@ -131,6 +166,8 @@ func chance(skill: Dictionary, target: TwilightMonster, world: Node) -> float:
 	# Keep this service's existing resistance and boss formula. Only earned,
 	# equipped Halphas adds percentage points to the existing base chance.
 	var base: float=float(skill.get("status_chance",.6))
+	if kind == "stun" and (skill.get("reference_approx523", false) or skill.get("reference_upgrade523", false)):
+		base += clampf(world.original_skills.stat("stunHit") / 100.0, 0.0, .20)
 	if accuracy_bonus>0.0:base=maxf(base,minf(1.0,base+accuracy_bonus))
 	var result: float=base*(1.0-clampf(resistance/100.0,0,1))
 	# Additive hit bonuses are capped at 100%, but they never lower a chance

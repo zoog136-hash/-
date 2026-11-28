@@ -52,6 +52,8 @@ func spawn(record: Dictionary, prepared_landing: Vector2 = Vector2.INF) -> bool:
 	owner_service.apply_buff(skill)
 	world.active_skill_buffs[str(skill.name)]["summon_stage"] = "creature"
 	owner_service.vfx.emit_skill(str(skill.id),"summon",actor.global_position)
+	if skill.has("reference_visual523"):
+		owner_service._emit_verified_source_effect(skill, "success", actor.global_position)
 	return true
 
 ## This source-grid remake inherits OriginalPlayableField but must NOT use
@@ -209,6 +211,8 @@ func release_hit() -> void:
 	# through the caster's weapon procs, double hits, HP steal or counters.
 	enemy.take_damage(damage,false,"skill_summon")
 	owner_service.vfx.emit_skill(str(skill.id),"impact",enemy.combat_hit_position(),actor.global_position)
+	if skill.has("reference_visual523"):
+		owner_service._emit_verified_source_effect(skill, "impact", enemy.combat_hit_position())
 	hit_events += 1
 
 func intercept(amount: int) -> void:

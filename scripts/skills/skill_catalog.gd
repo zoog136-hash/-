@@ -34,6 +34,7 @@ var approx_invokes: Array = []
 var approx_transforms: Dictionary = {}
 var stat_rebuild_count: int = 0
 const RELIC_LEVELS = preload("res://scripts/cards/relic_spell_levels.gd")
+const REFERENCE_PROFILES523 = preload("res://scripts/skills/reference_profiles523.gd")
 const COMBAT_PROC_MODES = ["proc", "mark", "toggle_proc", "stack_defense", "stack_attack"]
 var _combat_record_source: Array = []
 var _combat_record_count: int = -1
@@ -91,6 +92,7 @@ func configure(owner: Node) -> void:
 		row.class_references[job]=fact.duplicate(true)
 	relations.merge(current_official.local_design.get("relations",{}))
 	source523.configure_arguments()
+	var public_profiles: Dictionary = REFERENCE_PROFILES523.profiles()
 	for record: Dictionary in records:
 		source523.prepare_estimate(record)
 		source523.prepare_source_direct(record)
@@ -99,6 +101,7 @@ func configure(owner: Node) -> void:
 		if not required.is_empty():
 			if not relations.has(str(record.id)):relations[str(record.id)]={}
 			relations[str(record.id)]["requires_skill"]=required.duplicate()
+		REFERENCE_PROFILES523.install(record, public_profiles.get(str(record.id), {}), self)
 		record["effect"] = effect_for(record)
 	# TWILIGHT 근사: skills given by worn equipment (EquipSpellClassID).
 	for record: Dictionary in source523.equipment_spell_records(source523.bindings.get("class_ids",{}).keys()):
@@ -182,7 +185,8 @@ func _host_minimum_level_for(record: Dictionary) -> int:
 func level_locked(record: Dictionary) -> bool:
 	# The new source learning threshold is for learning/UI only. Historical
 	# owned spell execution retains its existing host level policy.
-	return (bool(record.get("local_design",false)) or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<_host_minimum_level_for(record)
+	return (record.get("reference_approx523",false) or record.get("local_design",false) \
+		or record.get("class_learning_levels",{}).has(str(world.job_class))) and int(world.level)<_host_minimum_level_for(record)
 
 
 func permitted(record: Dictionary) -> bool:
@@ -225,6 +229,9 @@ func enabled(record: Dictionary) -> bool:
 	if not owned(record): return false
 	if world.get("spell_group_conversion")!=null and not world.spell_group_conversion.allows(record):return false
 	if level_locked(record):return false
+	if bool(record.get("reference_approx523", false)):
+		for prerequisite: String in relations.get(str(record.id), {}).get("requires_skill", []):
+			if int(learned.get(prerequisite, 0)) <= 0: return false
 	if str(record.get("class", "")) == "요정" and str(record.get("school", "")) in ["water","earth","wind","fire"]:
 		if str(record.school) != str(schools.get("요정", "water")): return false
 	var approx_weapons: Array = record.get("approx_weapon_types", [])
@@ -259,10 +266,19 @@ func buy_book(key: String) -> bool:
 	if int(world.gold) < price:
 		world.hud.show_message("아데나 부족 · %d 필요" % price)
 		return false
+	var book: String = str(record.book_name)
+	var previous_count: int = int(world.inventory.get(book, 0))
 	world.gold -= price
-	world.inventory[str(record.book_name)] = int(world.inventory.get(str(record.book_name), 0)) + 1
+	world.inventory[book] = previous_count + 1
 	world._update_hud()
-	world._save_game(true)
+	var result: Error = world._save_game(true)
+	if result != OK and bool(record.get("reference_approx523", false)):
+		world.gold += price
+		if previous_count > 0: world.inventory[book] = previous_count
+		else: world.inventory.erase(book)
+		world._update_hud()
+		world.hud.show_message("교본 구매 저장 실패 · 아데나 복구")
+		return false
 	return true
 
 func learn(key: String, supplied_book: String = "") -> bool:
@@ -289,7 +305,8 @@ func learn(key: String, supplied_book: String = "") -> bool:
 	learned[str(record.id)] = 1
 	revision += 1
 	world.original_skills.refresh_buffs_after_learning(str(record.id))
-	if not supplied_book.is_empty() and world._save_game(true) != OK:
+	var atomic_learning: bool = not supplied_book.is_empty() or bool(record.get("reference_approx523", false))
+	if atomic_learning and world._save_game(true) != OK:
 		world.inventory[book] = before_count
 		learned = before_learned
 		world.active_skill_buffs = before_buffs
@@ -299,9 +316,10 @@ func learn(key: String, supplied_book: String = "") -> bool:
 		return false
 	if str(record.activation) == "passive":
 		world.original_skills.vfx.emit_skill(str(record.id), "learn", world.player.global_position)
+		world.original_skills.emit_reference_learning(record)
 	world._refresh_speed_modifiers()
 	world._update_hud()
-	if supplied_book.is_empty():world._save_game(true)
+	if not atomic_learning:world._save_game(true)
 	world.hud.show_message(str(record.name) + " 습득")
 	return true
 
@@ -345,6 +363,8 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 	var result: Dictionary = record.duplicate(true)
 	result["relic_resolved_id"] = str(record.id)
 	var family: Dictionary = {str(record.id):true}
+	var native_upgrade := false
+	var public_upgrades: Array[Dictionary] = []
 	# Apply each augment once, in ancestry order. A stronger tier's values
 	# replace weaker values rather than adding both passive stat packages.
 	var candidates: Array[Dictionary] = possible_owned_records()
@@ -355,7 +375,12 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			if family.has(id): continue
 			var rel: Dictionary = relations.get(id, {})
 			if not family.has(str(rel.get("upgrades_from", ""))) or not owned(augment): continue
-			result.merge(rel.get("patch", {}), true)
+			if bool(augment.get("reference_approx523", false)):
+				if level_locked(augment): continue
+				public_upgrades.append(rel.get("patch", {}))
+			else:
+				result.merge(rel.get("patch", {}), true)
+				native_upgrade = true
 			family[id] = true
 			result["resolved_grade"] = augment.grade
 			result["relic_resolved_id"] = id
@@ -375,10 +400,34 @@ func _resolve_uncached(record: Dictionary) -> Dictionary:
 			result.official["learning_level"]=result.minimum_level
 			result.official["mp_cost"]=result.mp
 	if result.has("bow_range") and world._current_weapon_type() == "활": result["range"] = float(result.bow_range)
-	return source523.apply_to(result,job,family.size() > 1)
+	result = source523.apply_to(result, job, native_upgrade)
+	for patch: Dictionary in public_upgrades:
+		result.merge(patch, true)
+		result["reference_upgrade523"] = true
+		if patch.has("stats"): result["reference_upgrade_stats"] = patch.stats
+		if patch.has("power") and result.get("approx_child", {}).get("effect") == "damage":
+			# Keep the admitted child's dice, timing and follow-up graph.
+			result.approx_child["base"] = maxi(int(result.approx_child.get("base", 0)), int(patch.power))
+	if result.get("reference_flexible_weapon", false) and world._current_weapon_type() == "활":
+		result["attack_type"] = "ranged"
+		result["range"] = maxf(314, float(result.get("range", 0)))
+	var name: String = str(record.get("name", ""))
+	for support: Dictionary in candidates:
+		var names: Array = support.get("reference_boost_skills", [])
+		var fairy: bool = support.get("reference_fairy_master", false) and name in ["블러드 투 소울","엘리멘탈 큐어"]
+		if not (names.has(name) or fairy) or not enabled(support): continue
+		result["reference_upgrade523"] = true
+		if fairy:
+			result["heal"] = int(result.get("heal", 0)) + 25
+			result["mana"] = int(result.get("mana", 0)) + 12
+		else:
+			if result.has("range"): result["range"] = float(result.range) + 14.0
+			if result.has("status_chance"): result["status_chance"] = minf(.95, float(result.status_chance) + .06)
+			if result.has("power"): result["power"] = int(result.power) + 12
+	return result
 
 static func _can_add_static_stats(fields: Dictionary) -> bool:
-	return fields.get("mode", "") == "stats" or fields.has("source_approx523") or fields.has("id")
+	return fields.get("mode", "") == "stats" or fields.has("stats") or fields.has("source_approx523") or fields.has("id")
 
 func _upgrades_can_add_static_stats() -> bool:
 	for relation: Dictionary in relations.values():
@@ -405,7 +454,9 @@ func _ensure_stat_index() -> void:
 		# A cast-only record gets its full projection on demand. Upgrades and
 		# original progression can supply a passive even if the base mode differs.
 		var local_design: bool = bool(record.get("local_design", false))
-		var may_project_stats: bool = stat_upgrades or record.get("mode", "") == "stats" \
+		var reference_stats: bool = bool(record.get("reference_approx523", false)) \
+			and record.get("activation") == "passive" and not record.get("stats", {}).is_empty()
+		var may_project_stats: bool = stat_upgrades or record.get("mode", "") == "stats" or reference_stats \
 			or record.has("source_approx523") or source523.may_project_static_stats(str(record.id)) \
 			or _can_add_static_stats(record.get("class_costs", {}).get(job, {}))
 		if not (local_design or may_project_stats) or not enabled(record): continue
@@ -421,16 +472,25 @@ func _ensure_stat_index() -> void:
 				if int(transform.get("level",0))>int(world.level):continue
 				var current: Dictionary=approx_transforms.get(str(transform.record),{})
 				if current.is_empty() or int(transform.level)>int(current.level):approx_transforms[str(transform.record)]=transform
-			var entry: Dictionary={"id":str(record.id),"stats":SOURCE523.approx_values(spec,int(world.level),approx_weapon),
+			var projected: Dictionary = SOURCE523.approx_values(spec,int(world.level),approx_weapon)
+			projected.merge(resolved.get("reference_upgrade_stats", {}), true)
+			var entry: Dictionary={"id":str(record.id),"stats":projected,
 				"invokes":SOURCE523.approx_level_rows(spec.get("invokes",[]),int(world.level),approx_weapon,spec.get("weapons",[]))}
 			var group: Dictionary=spec.get("group",{})
 			var key: String=str(record.id) if group.is_empty() or bool(group.get("overlap",true)) else "group:%d" % int(group.id)
 			var rank: Array=[int(group.get("priority",0)),int(group.get("buff_id",0))]
 			if not approx_groups.has(key) or rank>approx_groups[key].rank:approx_groups[key]={"rank":rank,"entry":entry}
 			continue
-		if str(resolved.mode)!="stats":continue
+		if str(resolved.mode)!="stats" and not reference_stats:continue
 		static_speed=maxf(static_speed,float(resolved.get("stats",{}).get("speed",1)))
 		var stats: Dictionary=resolved.get("stats",{})
+		if record.has("reference_aura_steps"):
+			var aura_count := 0
+			for aura_id: String in record.reference_aura_steps:
+				if owned(record_for(aura_id)): aura_count += 1
+			static_stat_totals["meleeDamage"] = float(static_stat_totals.get("meleeDamage", 0)) + aura_count
+			static_stat_totals["rangedDamage"] = float(static_stat_totals.get("rangedDamage", 0)) + aura_count
+			static_stat_totals["referenceArmor"] = float(static_stat_totals.get("referenceArmor", 0)) - aura_count
 		var conditions: Dictionary=resolved.get("stat_conditions",{})
 		for key: String in stats:
 			var condition: Dictionary=conditions.get(key,{})
