@@ -20,6 +20,7 @@ func uses_original_gameplay_rules() -> bool: return true
 func configure_source(value: Dictionary) -> bool:
 	if not bool(value.get("playable",false)) or value.navigation.profile!="A3_STATIC_EDGES": return false
 	definition=value
+	_spawn_source_input = Vector2.INF
 	if not coordinates.configure(value.origin,value.dimensions,value.get("coordinate_mapping",{})): return false
 	width=coordinates.dimensions.x
 	height=coordinates.dimensions.y
@@ -202,9 +203,20 @@ func build_physics(parent: Node2D) -> StaticBody2D:
 	parent.add_child(body)
 	return body
 func close() -> void: packs.clear(); nav_cache.clear(); nav_used.clear()
+## The population wake asks this for every slot (~1,600 on Aden) with the
+## same player position (Twm diag 2026-11-29: ~3,800 calls/s, population.wake
+## ~11 ms twice a second on PC). The source point of that position is kept
+## while the position and the coordinate object are the same.
+var _spawn_source_input: Vector2 = Vector2.INF
+var _spawn_source_point: Vector2 = Vector2.INF
+var _spawn_source_coordinates: Object = null
 func source_spawn_active(region: Dictionary, player_position: Vector2) -> bool:
 	var box: Rect2i=region.source_rect
-	return Rect2(Vector2(box.position),Vector2(box.size)).grow(40).has_point(coordinates.to_source(player_position))
+	if player_position != _spawn_source_input or _spawn_source_coordinates != coordinates or not player_position.is_finite():
+		_spawn_source_input = player_position
+		_spawn_source_coordinates = coordinates
+		_spawn_source_point = coordinates.to_source(player_position)
+	return Rect2(Vector2(box.position),Vector2(box.size)).grow(40).has_point(_spawn_source_point)
 func sample_source_spawn(region: Dictionary, player_position: Vector2, random: RandomNumberGenerator) -> Vector2:
 	var source: Vector2=coordinates.to_source(player_position)
 	var box: Rect2i=(region.source_rect as Rect2i).intersection(Rect2i(Vector2i(source)-Vector2i(40,40),Vector2i(81,81)))
