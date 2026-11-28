@@ -10,7 +10,7 @@ var _close: Button
 var _picker: FileDialog
 
 func _ready() -> void:
-	title = "원본 로비 리소스 설치"
+	title = "캐릭터 생성 연출 팩 설치"
 	size = Vector2i(640, 300)
 	unresizable = false
 	transient = true
@@ -26,7 +26,7 @@ func _ready() -> void:
 	_label = Label.new()
 	_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_label.text = "다운로드한 로비 ZIP 또는 분할 파일 3개(.001~.003)를 선택하세요.\n압축 해제 약 1.4GB, 분할 결합 포함 여유 공간 약 2GB가 필요합니다.\n기존 계정 저장과 게임 리소스는 변경하지 않습니다."
+	_label.text = "캐릭터 생성 미리보기에 사용할 ZIP 또는 분할 파일 3개(.001~.003)를 선택하세요.\n압축 해제 약 1.4GB, 분할 결합 포함 여유 공간 약 2GB가 필요합니다."
 	column.add_child(_label)
 	_choose = Button.new()
 	_choose.text = "로비 팩 파일 선택"
@@ -77,7 +77,7 @@ func _finish(result: Dictionary) -> void:
 	_busy = false
 	_choose.disabled = false
 	_close.disabled = false
-	_label.text = "로비 팩 설치 완료. 직업·성별을 선택하면 적용됩니다." if result.get("ok",false) else "설치하지 못했습니다: %s\n파일과 여유 공간을 확인한 뒤 다시 선택하세요." % str(result.get("error","알 수 없는 오류"))
+	_label.text = "설치 완료. 캐릭터 생성에서 직업과 성별을 선택하면 연출을 미리 볼 수 있습니다." if result.get("ok",false) else "설치하지 못했습니다: %s\n파일과 여유 공간을 확인한 뒤 다시 선택하세요." % str(result.get("error","알 수 없는 오류"))
 	if result.get("ok",false): installed.emit(result)
 
 func _close_requested() -> void:
