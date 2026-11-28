@@ -7816,6 +7816,7 @@ func _on_auto_toggled(enabled: bool) -> void:
 	_auto_roam_headings.clear()
 	if not enabled:
 		_auto_area_sweep_due = false
+		if original_skills != null: original_skills.clear_auto_area_misses()
 		_clear_auto_target_search()
 		auto_target = null
 		player.clear_click_path()
@@ -10275,12 +10276,15 @@ func _run_auto_heal_quickslots() -> void:
 
 func _run_auto_area_quickslots() -> bool:
 	if original_skills == null or skill_global_cooldown > 0.0 or _source_combat_targets_hidden() or death_recovery.blocked(): return false
+	var armed: bool = false
 	for index: int in _auto_quickslot_order():
 		var value: Variant = quickslots[index]
 		if not value is Dictionary or not bool(value.get("auto", false)) or str(value.get("kind", "")) != "skill": continue
 		var skill: Dictionary = _skill_record(str(value.get("skill_id", value.get("id", ""))))
 		if not SKILL_RULES.can_auto_cast(skill) or not original_skills.is_area_quickslot(skill): continue
+		armed = true
 		if original_skills.cast_auto_area(skill): return true
+	if not armed: original_skills.clear_auto_area_misses()
 	return false
 
 func _run_auto_combat_quickslots() -> bool:

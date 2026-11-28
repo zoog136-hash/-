@@ -3,6 +3,7 @@ extends SceneTree
 const MONSTER := preload("res://scenes/Monster.tscn")
 const SOURCE := preload("res://scripts/skills/player_skills523.gd")
 const SOURCE_FIELD_FIXTURE := preload("res://tests/current523_aden_source_field_test.gd")
+const HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 
 class FieldProbe extends Node2D:
 	var player := Node2D.new()
@@ -15,6 +16,13 @@ class FieldProbe extends Node2D:
 		sight_checks += 1
 		if navigation != null: return navigation.line_clear(from, to)
 		return not walls.has(to)
+
+class StaticFieldProbe extends FieldProbe:
+	var field_map := RefCounted.new()
+	var combat_generation: int = 0
+	var epoch: int = 1
+
+	func _static_auto_route_epoch() -> int: return epoch
 
 var checks: int = 0
 var failures: Array[String] = []
@@ -62,6 +70,67 @@ func make_field() -> FieldProbe:
 	field.add_child(field.monsters_root)
 	return field
 
+func check_stationary_auto_misses() -> void:
+	var probe := StaticFieldProbe.new()
+	probe.process_mode = Node.PROCESS_MODE_DISABLED
+	root.add_child(probe)
+	probe.add_child(probe.player)
+	probe.add_child(probe.monsters_root)
+	probe.walls = {Vector2(4,0):true, Vector2(5,0):true}
+	var blocked: TwilightMonster = spawn(probe, Vector2(4,0))
+	spawn(probe, Vector2(5,0))
+	var distant: TwilightMonster = spawn(probe, Vector2(200,0))
+	var service := TwilightOriginalSkillService.new()
+	service.world = probe
+	var skill: Dictionary = {"mode":"attack","shape":"self_circle","radius":10.0,"range":40.0,
+		"targets":2,"source523":{"target_kind":"Enemy"}}
+	HITCH._clear_pending()
+	var all_missed: bool = true
+	for _pulse: int in range(20):
+		all_missed = not service._has_area_target(skill) and all_missed
+	check(all_missed and probe.sight_checks == 2 and HITCH._counters.get("skill.area_auto_scans",0) == 1,
+		"a stationary blocked area scans the list once across 20 probes")
+	distant.position = Vector2(220,0)
+	check(not service._has_area_target(skill) and probe.sight_checks == 2, "out-of-range movement leaves the proof intact")
+	distant.position = Vector2(10,0)
+	check(service._has_area_target(skill) and distant.auto_area_miss_observer == null,
+		"an actor on the exact radius invalidates the miss and resumes the live route")
+	distant.free()
+	check(not service._has_area_target(skill), "a new miss can be recorded after removal")
+	var joined: TwilightMonster = spawn(probe, Vector2(6,0))
+	check(service._has_area_target(skill), "a new child at a reachable position invalidates the miss")
+	joined.free()
+	check(not service._has_area_target(skill), "blocked original candidates remain")
+	probe.monsters_root.position = Vector2(1,0)
+	check(service._has_area_target(skill), "a parent transform invalidates the previous world endpoints")
+	probe.monsters_root.position = Vector2.ZERO
+	check(not service._has_area_target(skill), "the same blockage is tested after moving the parent back")
+	var last_sight: int = probe.sight_checks
+	probe.player.position = Vector2(0,1)
+	check(not service._has_area_target(skill) and probe.sight_checks == last_sight+2, "caster world position is part of the proof")
+	probe.walls.erase(blocked.position)
+	probe.epoch += 1
+	check(service._has_area_target(skill), "new terrain admission drops a cached wall refusal")
+	blocked.concealed523 = true
+	check(not service._has_area_target(skill), "concealment still refuses an immobile actor")
+	blocked.concealed523 = false
+	check(service._has_area_target(skill), "removing concealment does not need movement to enable AUTO")
+	blocked.dead = true
+	check(not service._has_area_target(skill), "a dead pooled actor stays ineligible")
+	blocked.dead = false
+	check(service._has_area_target(skill), "the next life at the same position is seen")
+	probe.epoch = 0
+	probe.walls[blocked.position] = true
+	check(not service._has_area_target(skill), "unversioned terrain uses the live wall")
+	probe.walls.erase(blocked.position)
+	check(service._has_area_target(skill), "unversioned terrain sees an opened wall immediately")
+	probe.epoch += 1
+	probe.walls[blocked.position] = true
+	check(not service._has_area_target(skill) and blocked.auto_area_miss_observer != null, "verified blocked geometry arms movement notifications")
+	probe.monsters_root.free()
+	check(service._auto_area_misses._root == null, "releasing the actor root also releases the miss cache")
+	probe.queue_free()
+
 func run() -> void:
 	var field: FieldProbe = make_field()
 	field.monsters_root.add_child(Node2D.new())
@@ -107,6 +176,7 @@ func run() -> void:
 	var cone_targets: Array[TwilightMonster] = service.targets(forward_skill, null, Vector2.RIGHT)
 	check(active in cone_targets and cone_targets.all(func(actor: TwilightMonster) -> bool: return actor.global_position.x >= 0.0),
 		"target-free cone keeps its declared forward range")
+	check_stationary_auto_misses()
 	var timing: Dictionary = s32_benchmark() if "--benchmark" in OS.get_cmdline_user_args() else {}
 	field.queue_free()
 	await process_frame
