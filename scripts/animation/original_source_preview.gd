@@ -569,12 +569,14 @@ func _configure_source_nodes(candidate: Dictionary, tracks: Dictionary, layer_co
 
 func _prune_source_overlays() -> void:
 	# Completed one-shots remain as freed handles until their next owner call.
-	# Check validity before converting a handle to the typed Node2D array.
-	var live: Array[Node2D] = []
-	for overlay: Variant in _overlay_nodes:
-		if is_instance_valid(overlay) and overlay is Node2D and not overlay.is_queued_for_deletion():
-			live.append(overlay)
-	_overlay_nodes = live
+	# Compact the live nodes in their existing order.
+	var kept: int = 0
+	for index: int in _overlay_nodes.size():
+		var overlay: Variant = _overlay_nodes[index]
+		if not is_instance_valid(overlay) or overlay.is_queued_for_deletion(): continue
+		if kept != index: _overlay_nodes[kept] = overlay
+		kept += 1
+	if kept != _overlay_nodes.size(): _overlay_nodes.resize(kept)
 
 func clear() -> void:
 	_reference_bank = null
@@ -887,12 +889,14 @@ func cached_frame_status() -> Dictionary:
 		groups[group] = _cached_applied_plan.groups[group].mode
 	return {"active":not _cached_applied_plan.is_empty(),"plans":_frame_plans.size(),"groups":groups,"translucent":_cached_applied_translucent}
 
-func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
+func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dictionary) -> Dictionary:
 	var plan: Variant = _frame_plans.get(applied_hash)
 	var fresh: bool = false
 	if not (plan is Dictionary and is_same(plan.selected, selected) and is_same(plan.nodes, _layers) and plan.node_count == _layers.size() and plan.screen_copy == SP2_COMPOSITOR.screen_copy_available and plan.mode == _playback_mode):
-		plan = _build_frame_plan(selected, track, body_attributes, body_unresolved, body_projection_verified)
+		var body_input: Dictionary = _reference_body_input(selected)
+		plan = _build_frame_plan(selected, track, body_input.attributes, body_input.unresolved, body_input.verified)
 		if plan.is_empty(): return {}
+		plan["body_input"] = body_input
 		_frame_plans.erase(applied_hash)
 		while _frame_plans.size() >= maxi(1, frame_plan_max): _frame_plans.erase(_frame_plans.keys()[0])
 		_frame_plans[applied_hash] = plan
@@ -907,8 +911,12 @@ func _advance_cached_frame(selected: Dictionary, applied_hash: int, track: Dicti
 	# layers one by one so overlapping layers keep their per-layer blending;
 	# compositing is exact only for an opaque draw.
 	var translucent: bool = _inherited_alpha() < 1.0
-	if not is_same(plan, _cached_applied_plan) or translucent != _cached_applied_translucent:
+	var opacity_changed: bool = translucent != _cached_applied_translucent
+	if not is_same(plan, _cached_applied_plan) or (opacity_changed and (plan.groups.body.mode == "composite" or plan.groups.effects.mode == "composite")):
 		if not _apply_frame_plan(plan, translucent): return {}
+	elif opacity_changed:
+		# The engine propagates alpha directly to a plan's existing layer nodes.
+		_cached_applied_translucent = translucent
 	return plan
 
 func _inherited_alpha() -> float:
@@ -918,6 +926,22 @@ func _inherited_alpha() -> float:
 		alpha *= (node as CanvasItem).modulate.a
 		node = node.get_parent()
 	return alpha
+
+## P13 shadow flags come from the parent body's draw. The cached frame key
+## already includes the selected layers and the parent attachment's flags.
+func _reference_body_input(selected: Dictionary) -> Dictionary:
+	if _reference_attachment_parent.get("kind", "") == "shadow":
+		var unresolved: bool = bool(_reference_attachment_parent.get("parent_draw_attributes_unresolved", true))
+		return {"attributes":_reference_attachment_parent.get("parent_draw_attributes", []), "unresolved":unresolved,
+			"verified":bool(_reference_attachment_parent.get("parent_draw_projection_verified", false)) and not unresolved}
+	for layer: Dictionary in selected.layers:
+		if layer.get("kind", "") != "body": continue
+		var input: Dictionary = SP2_COMPOSITOR.attribute_input(layer)
+		var projection: Variant = layer.get("source_attribute_projection")
+		input.unresolved = input.unresolved or (not layer.has("source_attributes") and not layer.has("source_attribute_projection"))
+		input["verified"] = projection is Dictionary and bool(projection.get("ok", false)) and not input.unresolved
+		return input
+	return {"attributes":[], "unresolved":true, "verified":false}
 
 func _body_draw_spec(index: int, layer: Dictionary, track: Dictionary, body_attributes: Array, body_unresolved: bool, body_projection_verified: bool) -> Dictionary:
 	# Mirrors the reference branch of the per-layer body loop.
@@ -1266,23 +1290,6 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 			queue_free()
 		return
 	var token: String = "%s:%d:%d:%d" % [_role, int(selected.source_group), int(selected.source_frame), source_direction]
-	# P13 shadow flags come from the body draw, never from the shadow SPR attr.
-	var body_attributes: Array = []
-	var body_attributes_unresolved: bool = true
-	var body_projection_verified: bool = false
-	if is_reference:
-		for source_layer: Dictionary in selected.layers:
-			if source_layer.get("kind", "") == "body":
-				var body_input: Dictionary = SP2_COMPOSITOR.attribute_input(source_layer)
-				body_attributes = body_input.attributes
-				body_attributes_unresolved = body_input.unresolved or (not source_layer.has("source_attributes") and not source_layer.has("source_attribute_projection"))
-				var body_projection: Variant = source_layer.get("source_attribute_projection")
-				body_projection_verified = body_projection is Dictionary and bool(body_projection.get("ok",false)) and not body_attributes_unresolved
-				break
-		if _reference_attachment_parent.get("kind", "") == "shadow":
-			body_attributes = _reference_attachment_parent.get("parent_draw_attributes", [])
-			body_attributes_unresolved = bool(_reference_attachment_parent.get("parent_draw_attributes_unresolved", true))
-			body_projection_verified = bool(_reference_attachment_parent.get("parent_draw_projection_verified", false)) and not body_attributes_unresolved
 	# The same selected frame (same track objects, layers and token) was
 	# already applied: styles, textures and positions are unchanged, so only the
 	# clock, events and child sources advance. The host calls this every
@@ -1304,18 +1311,27 @@ func _advance_selected_source(delta: float, source_direction: int) -> void:
 		# frame were computed (and every layer verified by render_layer) once;
 		# each advance rechecks pins/admission/member stamps once per frame.
 		var cached_started: int = FRAME_HITCH.now()
-		var plan: Dictionary = _advance_cached_frame(selected, applied_hash, track, body_attributes, body_attributes_unresolved, body_projection_verified)
+		var plan: Dictionary = _advance_cached_frame(selected, applied_hash, track)
 		FRAME_HITCH.detail("preview.cached", cached_started)
 		if plan.is_empty(): return
 		_last_token = token
 		if not static_track and not _reference_card_context.is_empty(): _dispatch_reference_overlays(frames,track,total,source_direction)
 		if _is_overlay and not bool(track.loop) and not static_track and _clock >= total:
 			queue_free()
-		_finish_reference_advance(delta,source_direction,track,body_attributes,body_attributes_unresolved,body_projection_verified,plan.shown)
+		var input: Dictionary = plan.body_input
+		_finish_reference_advance(delta,source_direction,track,input.attributes,input.unresolved,input.verified,plan.shown)
 		return
 	if not _cached_applied_plan.is_empty():
 		_leave_cached_frames()
 		unchanged = false
+	var body_attributes: Array = []
+	var body_attributes_unresolved: bool = true
+	var body_projection_verified: bool = false
+	if is_reference:
+		var body_input: Dictionary = _reference_body_input(selected)
+		body_attributes = body_input.attributes
+		body_attributes_unresolved = body_input.unresolved
+		body_projection_verified = body_input.verified
 	# Reference effects always take the full path (their style depends on
 	# per-effect attributes); reference body layers re-run only the per-draw
 	# byte checks when the frame is unchanged (_verify_unchanged_layers).
