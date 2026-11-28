@@ -1195,9 +1195,6 @@ func apply_to(record: Dictionary, job: String, upgraded: bool) -> Dictionary:
 		record.source523["distance_policy"] = "TWILIGHT_ESTIMATE"
 		record.source523["time_policy"] = "TWILIGHT_ESTIMATE"
 		if record.has("reference_native_material"): record.source523.applied.append("materials")
-		if int(row.TargetKindID) == 52 and PVP_TARGET_TO_NPC:
-			record.source523["original_target_kind"] = str(record.source523.target_kind)
-			record.source523["target_kind"] = "AllButMe"
 	for prefix: String in bindings.get("reference_only_prefixes", []):
 		if id.begins_with(prefix) and estimate.is_empty(): return record
 	if not progression.is_empty() and str(record.activation)=="passive":

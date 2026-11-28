@@ -6,6 +6,20 @@ const DATA = preload("res://scripts/resources/built_in_startup_data.gd")
 const PATH := "res://data/skills/reference_profiles523.json"
 const MODES := ["attack", "status", "buff", "counter", "stealth", "detect", "heal",
 	"convert", "teleport", "taunt", "toggle_proc", "summon", "stats", "proc", "upgrade"]
+## Reviewed bindings to original 523 TargetKindID 52 (PCButMe).
+## Canonical IDs also apply when the matching native profile is unavailable.
+const OTHER_PLAYER_REFERENCE523 := {
+	"lmref_d8b163f67b016204":53972, "lmref_118e8fcbce796ace":87448,
+	"lmref_63985e6f425023b4":55594, "lmref_ef01381b531dbca0":45132,
+	"lmref_8ae2c6ee03a988e5":343, "lmref_16336f795d95bd55":91,
+	"lmref_cabe1f7751a9de94":337, "lmref_0f6716fc637ac929":47422,
+	"lmref_40b6a0c2b8afe497":47392, "lmref_dfbd818ce40011d7":6641,
+	"lmref_7589512308d91630":6223, "lmref_c92955afa1bfc843":34912,
+	"lmref_096abac2369747bf":89152, "lmref_5ec0d0d5b9ca30cc":41531,
+	"lmref_449b0ee31564e7cd":118114, "lmref_8a6f583a9b442edd":41641,
+	"lmref_58505159dcc7cb3f":48671, "lmref_624f29271aa2d434":62674,
+	"lmref_7f058dc15efcccd3":95192,
+}
 const LOCAL_REAGENT_PRICES := {"영혼석":75, "명예 코인":110, "신성석":85, "마력의 돌":80,
 	"정령옥":65, "흑요석":75, "정제석":65, "정제석 조각":40, "인장석":75, "혈정석":75,
 	"흑마법 결정체":80, "번개석":80, "에테르 결정체":80}
@@ -24,17 +38,25 @@ static func install(record: Dictionary, entry: Dictionary, catalog) -> void:
 			record["reference_visual523"] = {"shape":shape,
 				"color":str({"heal":"#9becc0","guard":"#ecd581","bind":"#7bb5ff","rune":"#77dbea","scythe":"#eb8c96","round":"#ecbc74","bolt":"#87b8f7"}.get(shape, "#81c7e8"))}
 		return
+	var id: String = str(record.id)
+	var source: Dictionary = catalog.source523.profiles.get(id, {})
+	var required: String = str(entry.get("requires", ""))
+	var blocked: bool = bool(record.get("runtime_blocked", false))
+	if _other_player_target(id, source):
+		if blocked: record["reference_offline_hold523"] = "원본은 다른 플레이어 대상입니다."
+		return
+	if entry.get("runtime", {}).get("mode") == "upgrade" and not required.is_empty():
+		if _other_player_target(required, catalog.source523.profiles.get(required, {})):
+			if blocked: record["reference_offline_hold523"] = "다른 플레이어 대상인 선행 스킬을 강화합니다."
+			return
 	record["reference_visual523"] = entry.get("visual", {})
-	if not bool(record.get("runtime_blocked", false)): return
+	if not blocked: return
 	var runtime: Dictionary = entry.get("runtime", {}).duplicate(true)
 	if not MODES.has(str(runtime.get("mode", ""))) or int(entry.get("level", 0)) <= 0: return
 	for key: String in ["mp","hp","cooldown","duration"]:
 		if not runtime.has(key): runtime[key] = 0
-	var id: String = str(record.id)
-	var required: String = str(entry.get("requires", ""))
 	if required == id or (not required.is_empty() and not catalog.by_id.has(required)): return
 	if runtime.mode == "upgrade" and required.is_empty(): return
-	var source: Dictionary = catalog.source523.profiles.get(id, {})
 	if not _apply_verified_cost(runtime, source, catalog.source523): return
 	var relation: Dictionary = catalog.relations.get(id, {}).duplicate(true)
 	if not required.is_empty(): relation["requires_skill"] = [required]
@@ -69,6 +91,11 @@ static func install(record: Dictionary, entry: Dictionary, catalog) -> void:
 			if shown.is_valid_int(): costs[field] = maxi(0, int(shown))
 		if not costs.is_empty(): record.class_costs[job] = costs
 	record.erase("source_direct523_hold")
+
+static func _other_player_target(id: String, source: Dictionary) -> bool:
+	return (OTHER_PLAYER_REFERENCE523.has(id)
+		or int(source.get("row", {}).get("TargetKindID", 0)) == 52
+		or str(source.get("target_kind", {}).get("Name", "")) in ["PCButMe", "PCButCompany"])
 
 static func _apply_verified_cost(runtime: Dictionary, source: Dictionary, adapter) -> bool:
 	if source.is_empty() or str(runtime.mode) in ["stats", "proc", "upgrade"]: return true
