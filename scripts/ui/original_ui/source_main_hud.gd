@@ -1136,7 +1136,25 @@ func skill_window() -> RefCounted:
 	return _skill_window
 
 func skill_window_is_open() -> bool:
-	return _skill_window!=null and _skill_window.is_open()
+	return _skill_window!=null and (_skill_window.is_open() or _skill_window.detail_is_open())
+
+func original_skill_detail_available() -> bool:
+	return _skill_window!=null and _skill_window.original_detail_available() and is_instance_valid(_coordinates)
+
+func show_original_skill_detail(record: Dictionary) -> bool:
+	var hud: Node=_hud.get_ref() if _hud!=null else null
+	if not is_instance_valid(hud) or not original_skill_detail_available():return false
+	var workspace: Control=hud.workspace
+	var restore: Callable=func() -> void:
+		if is_instance_valid(hud) and is_instance_valid(workspace):
+			workspace.show()
+			hud._sync_screen_focus()
+	var result: Dictionary=_skill_window.open_original_detail(_coordinates,record,restore)
+	if not result.get("ok",false):return false
+	_cancel_native_buttons()
+	workspace.hide()
+	hud._sync_screen_focus()
+	return true
 
 ## The original skill viewport's current hit owns one physical gesture.
 func skill_window_hit_at(viewport_point: Vector2) -> Dictionary:
@@ -1825,10 +1843,10 @@ static func _full_menu_node_rect(scene: Node2D, offset: int) -> Rect2:
 	var relative: Transform2D=scene.global_transform.affine_inverse()*origin.global_transform
 	return (relative*Rect2(Vector2(0,-float(extent[1])),Vector2(float(extent[0]),float(extent[1])))).abs()
 
-## These three actions have real HUD buttons, but no client MainMenu_* tile
+## These actions have real HUD buttons, but no client MainMenu_* tile
 ## in ui44. Reuse the mounted normal-state pixels and their original material,
 ## never a guessed file, newly decoded atlas or homemade icon.
-const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST}
+const MENU_HUD_ACTIONS: Dictionary={"inventory":MainMenu.INVENTORY,"skills":MainMenu.SKILL,"quests":MainMenu.QUEST,"shop":MainMenu.STORE}
 func menu_action_art(section: String) -> Dictionary:
 	if section == "auto":
 		return _auto_pad_art()

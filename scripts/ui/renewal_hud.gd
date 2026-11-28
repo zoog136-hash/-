@@ -994,6 +994,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			original_main_ui_controller.close_crafting_search()
 			get_viewport().set_input_as_handled()
 			return
+		if is_instance_valid(original_main_ui_controller):
+			var skill_window: RefCounted=original_main_ui_controller.skill_window()
+			if skill_window!=null and skill_window.detail_is_open():
+				skill_window.close_detail()
+				get_viewport().set_input_as_handled()
+				return
 		if is_instance_valid(original_main_ui_controller) and original_main_ui_controller.inventory_search_is_open():
 			original_main_ui_controller.close_inventory_search()
 			get_viewport().set_input_as_handled()
@@ -1310,6 +1316,7 @@ func _navigate(section: String) -> void:
 		"exchange": open_frozen_exchange()
 		"npc_shop": open_npc_shop()
 		"teleport": open_npc_teleport()
+		"memory_places": get_parent().growth.travel.open()
 		"source_dungeons": open_source_dungeons()
 		"map": toggle_map()
 		"menu": toggle_menu()
@@ -1979,7 +1986,7 @@ const MENU_VISIBLE_ROWS: int = 7
 const ORIGINAL_MENU_CELLS: Array[String] = [
 	"crafting","exchange","변신","마법인형","성물",
 	"source_dungeons","","","skill_card523","equipment_collections",
-	"clan523","","","","",
+	"clan523","","memory_places","","",
 	"","refine523","","guardians","emblems",
 	"half_elixir","","weapon_mastery","totems","domination_stone",
 	"titles","","","settings","restart",
@@ -2046,7 +2053,7 @@ func _build_menu_page() -> void:
 	menu_scroll.add_child(grid_center)
 	var tiles: Array[Control] = []
 	menu_tiles = tiles
-	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","잡화 상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["restart","재시작"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
+	var menu_pairs: Array = [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["skill_card523","스킬 카드"],["spell_groups","스킬 계열 전환"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["card_swap523","카드 다시 뽑기"],["아이템","아이템 도감"],["equipment_collections","장비 컬렉션"],["protection523","불멸·파멸 가호"],["combinations","조합"],["emblems","문양"],["clan523","혈맹"],["clan_emblem523","혈맹 문장"],["guardians","수호성"],["half_elixir","하프 엘릭서"],["domination_stone","지배석"],["titles","작위"],["totems","토템"],["weapon_mastery","무기 숙련"],["expedition","인형 탐험"],["map","월드맵"],["memory_places","기억 장소"],["monsterbook523","몬스터 도감"],["quests","퀘스트"],["status_board","현황판"],["source_dungeons","던전"],["content523","에스카로스"],["field_activities523","요정 숲·영지 활동"],["shop","상점"],["exchange","거래소"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["bless_refine523","용해·질서의 연금"],["refine523","질서의 연금"],["forge523","대장간"],["death523","사망 복구"],["promo_code","쿠폰 코드"],["settings","설정"],["save","저장"],["log","전투 기록"],["quick_change523","빠른 변신"],["quick_summon523","빠른 소환"]]
 	menu_pairs = menu_pairs.filter(func(pair: Array) -> bool:
 		var id: String = str(pair[0])
 		return not id in RETIRED_SECTIONS and (id!="monsterbook523" or MONSTERBOOK_RUNTIME.progression_enabled()))
@@ -2071,12 +2078,12 @@ func _build_menu_page() -> void:
 			button.scroll_host = workspace
 			button.scroll_area = menu_scroll
 		button.name = "MenuTile_"+section_id
-		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","monsterbook523","quests","status_board","source_dungeons","content523","field_activities523","auto","enhance","아이템"] else "상점·생활"))
+		button.set_meta("menu_category", "캐릭터·성장" if section_id in ["character","class_select","변신","마법인형","성물","equipment_collections","emblems","clan523","clan_emblem523","guardians","growth96","combinations","half_elixir","domination_stone","titles","totems","skill_card523","card_swap523","quick_change523","quick_summon523"] else ("사냥·모험" if section_id in ["inventory","skills","map","memory_places","monsterbook523","quests","status_board","source_dungeons","content523","field_activities523","auto","enhance","아이템"] else "상점·생활"))
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		var artwork := TextureRect.new()
-		if section_id in ["inventory","skills","quests","auto"]:
+		if section_id in ["inventory","skills","quests","auto","shop"]:
 			artwork.name="SourceActionIcon"
 			_set_menu_source_action_art(section_id,artwork)
 		else:
