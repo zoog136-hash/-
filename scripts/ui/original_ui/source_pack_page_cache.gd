@@ -30,6 +30,7 @@ static var budget_bytes: int = DEFAULT_BUDGET_BYTES
 static var _entries: Dictionary = {}
 static var _frames: Dictionary = {}
 static var _clock: int = 0
+static var _page_bytes: int = 0
 static var _counters: Dictionary = {"page_hits":0,"page_misses":0,"page_stores":0,"page_evictions":0,"evicted_bytes":0,"frame_hits":0,"frame_registrations":0}
 
 static func page_key(manifest_sha256: String, root: String, member: String, member_sha256: String) -> String:
@@ -53,12 +54,21 @@ static func acquire_page(key: String, owner: int) -> Image:
 	_counters.page_hits += 1
 	return entry.image
 
+## Updates recency without adding a lease when the caller already owns one.
+static func touch_page(key: String) -> void:
+	var entry: Variant = _entries.get(key)
+	if entry is Dictionary:
+		_clock += 1
+		entry.last_used = _clock
+
 ## Publishes a freshly decoded page leased to owner. If an equal key already
 ## exists the existing image wins so every owner sees one object.
 static func store_page(key: String, owner: int, image: Image) -> Image:
 	if _entries.has(key): return acquire_page(key, owner)
 	_clock += 1
-	_entries[key] = {"image":image,"bytes":image.get_data_size(),"leases":{owner:true},"last_used":_clock}
+	var bytes: int = image.get_data_size()
+	_entries[key] = {"image":image,"bytes":bytes,"leases":{owner:true},"last_used":_clock}
+	_page_bytes += bytes
 	_counters.page_stores += 1
 	trim_idle()
 	return image
@@ -73,19 +83,18 @@ static func release(owner: int, keys: Array) -> void:
 ## Evicts IDLE entries, oldest first, until cache-owned bytes <= target.
 static func trim_idle(target: int = -1) -> int:
 	var limit: int = budget_bytes if target < 0 else target
-	var total: int = 0
+	if _page_bytes <= limit: return 0
 	var idle: Array[Dictionary] = []
 	for key: String in _entries:
 		var entry: Dictionary = _entries[key]
-		total += int(entry.bytes)
 		if entry.leases.is_empty(): idle.append({"key":key,"last_used":int(entry.last_used),"bytes":int(entry.bytes)})
-	if total <= limit or idle.is_empty(): return 0
+	if idle.is_empty(): return 0
 	idle.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.last_used < b.last_used)
 	var freed: int = 0
 	for row: Dictionary in idle:
-		if total <= limit: break
+		if _page_bytes <= limit: break
 		_entries.erase(row.key)
-		total -= int(row.bytes); freed += int(row.bytes)
+		_page_bytes -= int(row.bytes); freed += int(row.bytes)
 		_counters.page_evictions += 1
 		_counters.evicted_bytes += int(row.bytes)
 	return freed
@@ -127,6 +136,7 @@ static func page_leases(key: String) -> int:
 ## Test/probe helper. Never called by game code.
 static func reset() -> void:
 	_entries.clear(); _frames.clear(); _clock = 0
+	_page_bytes = 0
 	for key: String in _counters: _counters[key] = 0
 	budget_bytes = DEFAULT_BUDGET_BYTES
 	enabled = true

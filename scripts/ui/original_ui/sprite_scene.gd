@@ -6,6 +6,7 @@ const SPRITE_BACK_BUFFER=preload("res://scripts/ui/original_ui/source_sprite_bac
 const EASING=preload("res://scripts/ui/original_ui/source_easing.gd")
 const NODE_SCOPE=preload("res://scripts/ui/original_ui/source_node_scope.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
+const UNBOUND_DISPLAY := Color(-1,-1,-1,-1)
 ## Original Node/SingleNode/Sprite and transparent noninteractive Panel scenes,
 ## with discrete texture/visibility tracks. Other classes/tracks are rejected.
 var source_pack: RefCounted
@@ -14,6 +15,8 @@ var source_tree: Dictionary={}:
 	set(value):
 		source_tree=value
 		_indexed_keyframes.clear()
+		_presented_file_frames.clear()
+		_last_parent_display=UNBOUND_DISPLAY
 var source_nodes: Dictionary={}
 var _tags: Dictionary={}
 var _clip: Dictionary={}
@@ -23,7 +26,10 @@ var _playing: bool=false:
 		_playing=value
 		set_process(value)
 var _loop: bool=false
-var _texture_refs: Dictionary={}
+## Action tag -> [immutable TextureFrame reference, presented texture instance ID].
+## The sprite owns the texture. A held source frame does not touch the pack LRU.
+var _presented_file_frames: Dictionary={}
+var _last_parent_display: Color=UNBOUND_DISPLAY
 var inspection_only: bool=false
 var unresolved_bindings: Array[String]=[]
 var _build_error: String=""
@@ -721,7 +727,6 @@ func _build(source: Dictionary) -> Node2D:
 		node.set_meta("source_anchor",widget.anchorPoint)
 		node.set_meta("source_origin",origin)
 		if texture!=null and _bindings.get(int(source._offset),{}).get("role")=="source_asset":origin.position=Vector2(-float(widget.anchorPoint[0])*texture.get_width(),float(widget.anchorPoint[1])*texture.get_height())
-		_texture_refs[int(source._offset)]=options.fileNameData.duplicate(true)
 	if _resolved_assets.has(int(source._offset)) and not bool(_resolved_assets[int(source._offset)].get("pending_original_pixels",false)):node.set_meta("source523_original_asset",_resolved_assets[int(source._offset)].duplicate(true))
 	var child_origin: Node=origin
 	if source.classname in ["Panel","ListView","ScrollView","PageView"] and bool(options.clipEnabled):
@@ -888,8 +893,9 @@ static func _texture_key_at(frames: Array, frame_number: float) -> int:
 			following_frame=at
 	return previous if previous>=0 else following
 
-func _seek_frame(frame_number: float) -> void:
+func _seek_frame(frame_number: float, force_display: bool=true) -> void:
 	_frame=frame_number
+	var color_changed: bool=false
 	var action: Dictionary=source_tree.get("action",{}) if source_tree.get("action") is Dictionary else {}
 	var use_index: bool=not _indexed_keyframes.is_empty() and not is_nan(frame_number)
 	var track_index: int=0
@@ -940,6 +946,7 @@ func _seek_frame(frame_number: float) -> void:
 				if not inspection_only and is_inside_tree() and in_clip and not _audio_frame_offsets.has(int(selected._offset)) and event_callback is Callable and event_callback.is_valid():
 					event_callback.call(str(selected.value))
 					if is_queued_for_deletion():return
+					force_display=true
 		elif timeline.property=="ActionValue":
 			var key: int=int(timeline._offset)
 			if _entered_frames.get(key,-1)!=int(selected._offset):
@@ -959,13 +966,19 @@ func _seek_frame(frame_number: float) -> void:
 			var b: Array=following.color
 			# Cocos ColorFrame affects RGB; the separate Alpha track owns opacity.
 			var rgba: Array=target.get_meta("source_rgba")
-			target.set_meta("source_rgba",[int(lerpf(a[1],b[1],ratio)),int(lerpf(a[2],b[2],ratio)),int(lerpf(a[3],b[3],ratio)),rgba[3]])
+			var red: int=int(lerpf(a[1],b[1],ratio))
+			var green: int=int(lerpf(a[2],b[2],ratio))
+			var blue: int=int(lerpf(a[3],b[3],ratio))
+			if rgba[0]!=red or rgba[1]!=green or rgba[2]!=blue:
+				target.set_meta("source_rgba",[red,green,blue,rgba[3]])
+				color_changed=true
 		elif timeline.property=="BlendFunc":
 			if target.has_meta("source_sprite"):
 				var sprite: Sprite2D=target.get_meta("source_sprite")
 				if str(target.get_meta("source_blend"))!=_blend(selected):
 					sprite.material=BLEND.material(sprite.texture,_blend(selected))
 					target.set_meta("source_blend",_blend(selected))
+					force_display=true
 			elif target.has_meta("source_particle"):
 				target.get_meta("source_particle").set_source_blend(_blend(selected))
 		elif timeline.property=="AnchorPoint":
@@ -979,8 +992,11 @@ func _seek_frame(frame_number: float) -> void:
 			target.get_node("SourceContentOrigin").position=Vector2(-float(anchor[0])*float(extent[0]),float(anchor[1])*float(extent[1]))
 		elif timeline.property=="Alpha":
 			var rgba: Array=target.get_meta("source_rgba")
-			rgba[3]=int(lerpf(float(selected.value),float(following.value),ratio))
-			target.set_meta("source_rgba",rgba)
+			var alpha: int=int(lerpf(float(selected.value),float(following.value),ratio))
+			if rgba[3]!=alpha:
+				rgba[3]=alpha
+				target.set_meta("source_rgba",rgba)
+				color_changed=true
 		elif timeline.property in ["Scale","RotationSkew"]:
 			var a: Array=selected.scale
 			var b: Array=following.scale
@@ -990,20 +1006,34 @@ func _seek_frame(frame_number: float) -> void:
 			var rx: float=deg_to_rad(float(rotation_value[0]))
 			var ry: float=deg_to_rad(float(rotation_value[1]))
 			target.transform=Transform2D(Vector2(cos(ry)*scale_value[0],sin(ry)*scale_value[0]),Vector2(-sin(rx)*scale_value[1],cos(rx)*scale_value[1]),target.position)
-		elif timeline.property=="VisibleForFrame": target.visible=bool(selected.value)
+		elif timeline.property=="VisibleForFrame":
+			var shown: bool=bool(selected.value)
+			if target.visible!=shown:
+				target.visible=shown
+				force_display=true
 		elif timeline.property=="FileData" and target.has_meta("source_sprite"):
 			var sprite: Sprite2D=target.get_meta("source_sprite")
-			var texture: Texture2D=source_pack.texture(selected.textureFile,true)
-			if texture==null: _playing=false; return
+			var tag: int=int(timeline.actionTag)
+			var reference: Dictionary=selected.textureFile
+			var presented: Variant=_presented_file_frames.get(tag)
+			var texture: Texture2D=sprite.texture
+			if texture==null or presented==null or not is_same(presented[0],reference) or texture.get_instance_id()!=int(presented[1]):
+				texture=source_pack.texture(reference,true)
+				if texture==null: _playing=false; return
+				_presented_file_frames[tag]=[reference,texture.get_instance_id()]
 			if sprite.texture!=texture:
 				sprite.texture=texture
 				sprite.material=BLEND.material(texture,str(target.get_meta("source_blend")))
+				force_display=true
 			sprite.position.y=-texture.get_height()
 			var anchor: Array=target.get_meta("source_anchor")
 			var origin: Node2D=target.get_meta("source_origin")
 			origin.position=Vector2(-float(anchor[0])*texture.get_width(),float(anchor[1])*texture.get_height())
 
-	_sync_source_display(self,_source_parent_display())
+	var parent_display: Color=_source_parent_display()
+	if force_display or color_changed or _last_parent_display!=parent_display:
+		_sync_source_display(self,parent_display,force_display)
+		_last_parent_display=parent_display
 
 func _process(delta: float) -> void:
 	if not _playing or _clip.is_empty(): return
@@ -1034,7 +1064,10 @@ func _advance_playback(delta: float) -> void:
 			next=float(_clip.startIndex)
 			_entered_frames.clear()
 		else: next=float(_clip.endIndex); _playing=false
-	_seek_frame(next)
+	# Ordinary playback only rebinds display colors that changed. Explicit
+	# seeks still refresh the complete scene, as do texture/visibility swaps
+	# and authored callbacks that can replace the current render bindings.
+	_seek_frame(next,false)
 	if not _playing and next>=float(_clip.endIndex):clip_finished.emit(str(_clip.get("name","")))
 
 func _original_button_title_stays_invisible(widget: Dictionary) -> bool:
@@ -1067,9 +1100,10 @@ func _clear() -> void:
 	_deferred_projects.clear()
 	source_tree.clear()
 	_indexed_keyframes.clear()
+	_presented_file_frames.clear()
+	_last_parent_display=UNBOUND_DISPLAY
 	source_nodes.clear()
 	_tags.clear()
-	_texture_refs.clear()
 	_clip_entry_textures.clear()
 	_resolved_assets.clear()
 
@@ -1126,23 +1160,24 @@ func _source_parent_display() -> Color:
 		if ancestor.has_meta("source_display_color"):return ancestor.get_meta("source_display_color")
 		ancestor=ancestor.get_parent()
 	return Color.WHITE
-func _sync_source_display(node: Node, inherited: Color) -> void:
+func _sync_source_display(node: Node, inherited: Color, force: bool=true) -> void:
 	var display: Color=inherited
 	if node.has_meta("source_rgba"):
 		var rgba: Array=node.get_meta("source_rgba")
 		# NodeReader enables both cascades. CCNode truncates each 8-bit level.
 		display=Color(float(int(rgba[0]*inherited.r8/255.0))/255.0,float(int(rgba[1]*inherited.g8/255.0))/255.0,float(int(rgba[2]*inherited.b8/255.0))/255.0,float(int(rgba[3]*inherited.a8/255.0))/255.0)
-		node.set_meta("source_display_color",display)
-		if node.has_meta("source_sprite"):MATERIAL.bind_display(node.get_meta("source_sprite"),display)
-		if node.has_meta("source_image"):MATERIAL.bind_tree_display(node.get_meta("source_image"),display)
-		if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
-		if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
-		if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
-		if node.has_meta("source_text_field"):node.get_meta("source_text_field").modulate=display
-		if node.has_meta("source_bitmap_text"):node.get_meta("source_bitmap_text").set_source_display(display)
-		if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
-		if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
-	for child: Node in node.get_children():_sync_source_display(child,display)
+		if force or node.get_meta("source_display_color",UNBOUND_DISPLAY)!=display:
+			node.set_meta("source_display_color",display)
+			if node.has_meta("source_sprite"):MATERIAL.bind_display(node.get_meta("source_sprite"),display)
+			if node.has_meta("source_image"):MATERIAL.bind_tree_display(node.get_meta("source_image"),display)
+			if node.has_meta("source_loading_bar"):MATERIAL.bind_tree_display(node.get_meta("source_loading_bar"),display)
+			if node.has_meta("source_panel"):node.get_meta("source_panel").set_source_display(display)
+			if node.has_meta("source_text"):node.get_meta("source_text").modulate=display
+			if node.has_meta("source_text_field"):node.get_meta("source_text_field").modulate=display
+			if node.has_meta("source_bitmap_text"):node.get_meta("source_bitmap_text").set_source_display(display)
+			if node.has_meta("source_checkbox"):node.get_meta("source_checkbox").set_source_display(display)
+			if node.has_meta("source_button"):node.get_meta("source_button").set_source_display(display)
+	for child: Node in node.get_children():_sync_source_display(child,display,force)
 
 
 func project_player(project_offsets: Array) -> Dictionary:

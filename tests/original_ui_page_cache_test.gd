@@ -244,10 +244,10 @@ func _init() -> void:
 	CACHE.budget_bytes=CACHE.DEFAULT_BUDGET_BYTES
 	var p6=PACK.new(); p6.open(root1,sha1)
 	# Frames are still shared hits (p1 holds them), so decode pages directly.
-	p6._page("UI/b.png"); p6._page("UI/a.png")
+	p6._page("UI/a.png"); p6._page("UI/b.png"); p6._page("UI/a.png")
 	p6.release_cache_leases()
 	CACHE.budget_bytes=CACHE.stats().live_bytes+page_a_bytes; CACHE.trim_idle()
-	check(CACHE.page_leases(key_a1)==0 and CACHE.stats().idle_pages==1,"oldest idle (b) evicted first, most recent (a) kept")
+	check(CACHE.page_leases(key_a1)==0 and CACHE.stats().idle_pages==1,"actual latest use of a borrowed page orders the idle reserve")
 
 	# 10. Re-decode after eviction is byte-identical; frames shared while alive only.
 	t1.clear(); t2.clear(); legacy_tex.clear(); a_pma=null; a_straight=null
