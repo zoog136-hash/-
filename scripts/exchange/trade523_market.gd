@@ -9,6 +9,7 @@ extends RefCounted
 ##   recovered after expiry or settled using its original recorded sale time.
 ## All transfers use game currency and one atomic save, never a server.
 const RETIRED_ITEMS = preload("res://scripts/loot/retired_enhancement_items523.gd")
+const FRAME_HITCH = preload("res://scripts/boot/frame_hitch_log.gd")
 const Frozen=preload("res://scripts/exchange/frozen_exchange.gd")
 const FrozenCatalog=preload("res://scripts/exchange/frozen_catalog.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
@@ -36,6 +37,7 @@ var _mapping: Dictionary={}
 var _by_category: Dictionary={}
 var _exact_prices: Dictionary={}
 var _peer_prices: Dictionary={}
+var _prices_prepared: bool=false
 var _top_categories: Dictionary={}
 var _item_names: Dictionary={}
 var _item_cache: Dictionary={}
@@ -68,6 +70,9 @@ func configure(host: Object) -> Dictionary:
 	problem=""
 	_item_cache.clear()
 	_item_names.clear()
+	_exact_prices.clear()
+	_peer_prices.clear()
+	_prices_prepared=false
 	_load_categories()
 	return {"ok":problem.is_empty(),"problem":problem}
 
@@ -143,7 +148,6 @@ func _load_categories() -> void:
 		var category: int=_mapping[item]
 		if not _by_category.has(category):_by_category[category]=[]
 		_by_category[category].append(item)
-	_index_reference_prices()
 
 func categories() -> Array:
 	return _categories.duplicate(true)
@@ -173,8 +177,6 @@ static func captured_unit(row: Dictionary) -> float:
 	return float(row.bundle_price)/float(row.bundle_size)
 
 func _index_reference_prices() -> void:
-	_exact_prices.clear()
-	_peer_prices.clear()
 	var capture=FrozenCatalog.new()
 	if not capture.load_snapshot() or not capture.captured():return
 	var per_item: Dictionary={}
@@ -201,6 +203,13 @@ func _index_reference_prices() -> void:
 
 func price_reference(item_class_id: int) -> Dictionary:
 	if not _mapping.has(item_class_id):return {}
+	# Opening or reclaiming listings does not need normalized prices. Prepare
+	# the offline quote index only when presenting a mapped item's price.
+	if not _prices_prepared:
+		_prices_prepared=true
+		var started: int=FRAME_HITCH.now()
+		_index_reference_prices()
+		FRAME_HITCH.detail("market.price_index",started)
 	if _exact_prices.has(item_class_id):return {"unit":float(_exact_prices[item_class_id]),"basis":"exact"}
 	var grade: int=int(SOURCE.row("ItemClass",item_class_id).get("GradeID",0))
 	var top: int=top_of(category_of(item_class_id))
@@ -266,6 +275,9 @@ func _local_listing(item_class_id: int, used: Dictionary) -> Dictionary:
 	if ref.is_empty():return {}
 	var info: Dictionary=item(item_class_id)
 	if info.is_empty() or not D.deadline_problem(info.record,_source_clock_offset()).is_empty():return {}
+	return _price_listing(item_class_id,key,info,ref)
+
+func _price_listing(item_class_id: int, key: String, info: Dictionary, ref: Dictionary) -> Dictionary:
 	var lot: Dictionary=local_lot(int(info.max_stack),str(info.record.get("slot","")),float(ref.unit))
 	if lot.is_empty():return {}
 	var paid_unit: float=float(lot.price)/float(lot.size)
@@ -284,17 +296,23 @@ func search(category: int, query: String="") -> Array:
 			for child: Dictionary in top.children:ids.append_array(_by_category.get(int(child.id),[]))
 			break
 	var needle: String=query.strip_edges().replace(" ","")
+	var started: int=FRAME_HITCH.now()
+	var source_clock_offset: int=_source_clock_offset()
 	var found: Array=[]
 	for id: int in ids:
 		if _local_record(id).is_empty():continue
 		var name: String=_item_name(id)
 		if name.is_empty() or (not needle.is_empty() and not name.replace(" ","").contains(needle)):continue
 		var info: Dictionary=item(id)
-		if info.is_empty() or not D.deadline_problem(info.record,_source_clock_offset()).is_empty():continue
-		var row: Dictionary=_local_listing(id,used)
-		var basis: String=str(price_reference(id).get("basis","")) if row.is_empty() else str(row.price_basis)
+		if info.is_empty() or not D.deadline_problem(info.record,source_clock_offset).is_empty():continue
+		var reference: Dictionary=price_reference(id)
+		var key: String="local:%d"%id
+		var row: Dictionary={}
+		if not reference.is_empty() and not used.has(key):row=_price_listing(id,key,info,reference)
+		var basis: String=str(reference.get("basis",""))
 		found.append({"item_class_id":id,"name":name,"min_price":int(row.get("unit_price_display",0)),"unit_price":float(row.get("unit_price",0.0)),"count":int(not row.is_empty()),"approx":not basis.is_empty() and basis!="exact","grade":int(info.grade),"local":true,"price_basis":basis})
 	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.grade)>int(b.grade) if int(a.grade)!=int(b.grade) else (str(a.name)<str(b.name) if str(a.name)!=str(b.name) else int(a.item_class_id)<int(b.item_class_id)))
+	FRAME_HITCH.detail("market.search",started)
 	return found
 
 func listings(item_class_id: int) -> Array:

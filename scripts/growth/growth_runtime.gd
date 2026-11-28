@@ -23,6 +23,11 @@ var lab: Dictionary = {}
 var config: Dictionary = {}
 var state: Dictionary = fresh()
 var totals: Dictionary = {}
+# Keep the same accumulation order as a full rebuild. A symbol enchant can
+# replace its stage row without projecting every guardian reward again.
+var _effect_rows: Array[Dictionary] = []
+var _emblem_stage_offsets: Dictionary = {}
+var _effect_inputs: Array = []
 var rerolls: Dictionary = {} # Session only: leaving the screen restores base odds.
 var busy: bool = false
 var rng := RandomNumberGenerator.new()
@@ -215,16 +220,26 @@ func restore(value: Dictionary) -> void:
 
 func _rebuild() -> void:
 	totals.clear()
+	_effect_rows.clear()
+	_emblem_stage_offsets.clear()
+	_effect_inputs.clear()
 	for id: String in state.emblems:
-		_add_effects(emblem(id).get("effects",[])[int(progress(id).stage)])
-		if development: totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(progress(id).get("absolute",0))
-		else: _add_effects(source523.absolute_effects(id,progress(id).get("absolute_grades",[])))
+		var p: Dictionary = state.emblems[id]
+		var stage: Dictionary = emblem(id).get("effects",[])[int(p.stage)]
+		if development:
+			_add_effects(stage)
+			totals["max_hp:flat"] = float(totals.get("max_hp:flat",0))+5*int(p.get("absolute",0))
+		else:
+			_emblem_stage_offsets[id] = _effect_rows.size()
+			_record_effects(stage)
+			_record_effects(source523.absolute_effects(id,p.get("absolute_grades",[])))
 	# 523 SKILLTREE_TOOLTIP PANEL_2: stats are always active; invoked skills
 	# require a separate selection per category. Do not gate stats on that selection.
 	if not development:
 		for id: String in state.nodes:
 			if guardian_source.has_node(id) and guardian_source.availability(node(id)).is_empty():
-				_add_effects(guardian_source.effects(id,guardian_level(id)))
+				_record_effects(guardian_source.effects(id,guardian_level(id)))
+		_effect_inputs = _effect_state().duplicate(true)
 		return
 	# Preserve the isolated development profile's existing behavior.
 	var representative: String = str(state.representative)
@@ -237,8 +252,31 @@ func _rebuild() -> void:
 				for row: Dictionary in group.nodes:
 					if state.nodes.has(row.id) and row.get("effects") is Dictionary: _add_effects(row.effects)
 
-func _add_effects(effects: Dictionary) -> void:
-	for key: String in effects:
+func _record_effects(effects: Dictionary) -> void:
+	_effect_rows.append(effects)
+	_add_effects(effects)
+
+func _effect_state() -> Array:
+	return [state.emblems,state.nodes,state.get("guardian_levels",{}),Combat.estimates(),state.emblems.keys()]
+
+func _replace_emblem_stage(id: String) -> void:
+	var offset: int = _emblem_stage_offsets[id]
+	var before: Dictionary = _effect_rows[offset]
+	var after: Dictionary = emblem(id).effects[int(state.emblems[id].stage)]
+	var changed: Dictionary = {}
+	for key: String in before:
+		if not after.has(key) or before[key] != after[key]: changed[key] = true
+	for key: String in after:
+		if not before.has(key): changed[key] = true
+	_effect_rows[offset] = after
+	_effect_inputs[0] = state.emblems.duplicate(true)
+	if changed.is_empty(): return
+	for key: String in changed: totals.erase(key)
+	for effects: Dictionary in _effect_rows: _add_effects(effects,changed)
+
+func _add_effects(effects: Dictionary, keys: Variant = null) -> void:
+	for key: String in effects if keys == null else keys:
+		if not effects.has(key): continue
 		if key.begins_with("local_"):
 			if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(effects[key])
 			continue
@@ -673,6 +711,7 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	if error != OK:
 		busy = false
 		return fail("저장 실패 · 재료와 성장 상태를 변경하지 않았습니다 (%d)" % error)
+	var refresh_emblem_stage: bool = action == "enhance" and not development and _emblem_stage_offsets.has(id) and _effect_inputs == _effect_state()
 	state = next
 	if world.get("skill_cooldowns") is Dictionary:sync_guardian_cooldowns()
 	world.inventory = inventory
@@ -684,7 +723,8 @@ func execute(action: String, id: String, count: int, revision: int, quote_day: i
 	if not str(offer.consume_instance).is_empty(): world.item_instances = instances
 	if action == "reroll": rerolls[id] = rolled
 	elif action in ["enhance","reset","restore_emblem"]: rerolls.erase(id)
-	_rebuild()
+	if refresh_emblem_stage: _replace_emblem_stage(id)
+	else: _rebuild()
 	world._invalidate_equipment_static()
 	world.hp = mini(world.hp,world._effective_max_hp())
 	world.mp = mini(world.mp,world._effective_max_mp())

@@ -170,7 +170,7 @@ func refresh_buffs_after_learning(learned_id: String) -> void:
 		buff["speed"] = float(buff.skill_stats.get("speed", 1))
 
 func refresh_relic_buffs() -> void:
-	var signature: String = catalog._lineage_signature() + catalog._relic_signature()
+	var signature: String = catalog._projection_signature()
 	if signature == relic_buff_signature: return
 	relic_buff_signature = signature
 	for buff: Dictionary in world.active_skill_buffs.values():

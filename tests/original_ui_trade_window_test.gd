@@ -438,7 +438,9 @@ func _targeted_main() -> void:
 	if not is_instance_valid(window) or not window.is_open():
 		w.queue_free();await process_frame;return
 	var market: RefCounted=window.market
-	check(market.search(0,"앨리스").size()==4,"exact four installed Alice weapons appear even without price")
+	check(not market._prices_prepared and market.price_reference(-1).is_empty() and not market._prices_prepared,
+		"opening the original market and asking for an unmapped item do not prepare historical prices")
+	check(market.search(0,"앨리스").size()==4 and market._prices_prepared,"exact four installed Alice weapons appear even without price")
 	window._open_keypad();await process_frame
 	window._editor.text="앨리스"
 	var searched: Dictionary=window._apply_query()
@@ -480,6 +482,9 @@ func _targeted_main() -> void:
 	var bought: Dictionary=window._buy_confirmed()
 	check(bought.get("ok",false) and bought.get("item_class_id")==366 and w.inventory["다이아"]==200000-int(leather.bundle_price),"original buy commits exact local leather + its referenced charge: "+str(bought))
 	check(market.listings(366).is_empty() and shop.state[FROZEN.STATE_KEY]==frozen_state,"same-day local stock used; legacy frozen spend unmodified")
+	var leather_search: Array=market.search(market.category_of(366),str(leather.name)).filter(func(row: Dictionary) -> bool: return int(row.item_class_id)==366)
+	check(leather_search.size()==1 and leather_search[0].count==0 and leather_search[0].price_basis=="exact",
+		"search retains known price provenance for an exhausted mapped listing")
 	if not bought.get("ok",false):w.queue_free();await process_frame;return
 	var bought_uid: String="";var other_uid: String=""
 	var staged: Dictionary=SUPPLY.stage(w,[{"item_class_id":366,"amount":3,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
