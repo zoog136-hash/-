@@ -133,7 +133,8 @@ func run() -> void:
 	check(projected.power==base.power and projected.status_chance==base.status_chance and projected.debuff==base.debuff,"no new damage/probability/AC formula")
 	check(not base.has("source523"),"input catalog record remains untouched")
 	check(not adapter.apply_to(base.duplicate(true),"마법사",false).get("source523_block_reason","").is_empty(),"native class restriction")
-	check(not adapter.apply_to(base.duplicate(true),"기사",true).get("source523_block_reason","").is_empty(),"unresolved upgrade cannot borrow base contract")
+	var upgraded: Dictionary = adapter.apply_to(base.duplicate(true),"기사",true)
+	check(upgraded.get("source523_block_reason","").is_empty() and upgraded.source523.get("upgrade_policy","").begins_with("TWILIGHT_APPROX") and upgraded.mp==17 and is_equal_approx(upgraded.cooldown,1.234),"a learned tier keeps the base castable with its original contract (TWILIGHT 근사 tier)")
 	adapter.profiles.synthetic.row.SpellTypeID=3
 	check(not adapter.apply_to(base.duplicate(true),"기사",false).get("source523_block_reason","").is_empty(),"source passive cannot cast as active")
 	adapter.profiles.synthetic=profile()
