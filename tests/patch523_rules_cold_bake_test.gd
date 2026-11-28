@@ -681,8 +681,14 @@ func _run() -> void:
 	var baked: Variant = BAKE.read("equipment_rules", "rules-cold-big")
 	check(baked is Dictionary and baked.get("offloaded") == true, "big: bake readable")
 	if baked is Dictionary:
+		var catalog_reader := BAKE.open_records(RULES.RECORDS_NAME, "rules-cold-big")
+		var runtime_reader := BAKE.open_records(RULES.RUNTIME_NAME, "rules-cold-big")
+		check(catalog_reader != null and runtime_reader != null, "big: both warm stores verify")
 		warm._model_key = "rules-cold-big"
-		check(warm._accept(baked.model, baked.sha256), "big: bake accepted")
+		# A fault on a second reopen must not replace the verified readers.
+		BAKE.fault = RULES.RECORDS_NAME + "|reopen"
+		check(warm._accept(baked.model, baked.sha256, catalog_reader, runtime_reader), "big: bake accepted with verified readers")
+		BAKE.fault = ""
 		warm._release_cold()
 		same("big: warm accessors", accessors(warm), accessors(new_big))
 	warm = null
