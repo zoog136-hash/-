@@ -195,11 +195,12 @@ static func read(name: String, expected_key: String) -> Variant:
 	if bytes.size() != int(meta.get("bytes", -1)) or _sha(bytes) != str(meta.get("sha256", "")):
 		LOG.cache(name, "verify_fail")
 		return null
-	LOG.cache(name, "hit", {"bytes": bytes.size(), "seed": entry.get("seed", false)})
+	LOG.cache(name, "hit", {"bytes": bytes.size(), "seed": entry.get("seed", false), "reused": entry.get("reused", false)})
 	return bytes_to_var(bytes)
 
 ## Local atomic generations have priority. A missing or outdated one can
-## read a pinned startup seed at the exact key the original reader requested.
+## read a pinned seed. A release proof can also identify an older cache
+## generation with the exact bytes produced for the reader's current key.
 ## Writers and cleanup keep using the local bake directory exclusively.
 static func _checked_entry(name: String, expected_key: String, report: bool = true) -> Dictionary:
 	if expected_key.is_empty():
@@ -211,10 +212,13 @@ static func _checked_entry(name: String, expected_key: String, report: bool = tr
 		reason = "corrupt"
 		if meta is Dictionary:
 			if meta.get("schema") != SCHEMA: reason = "schema_changed"
-			elif meta.get("key") != expected_key: reason = "key_changed"
 			else:
-				var path := _data_for(name, meta)
-				if not path.is_empty(): return {"meta": meta, "path": path}
+				var reused: bool = meta.get("key") != expected_key
+				if reused and not STARTUP_BAKES.reusable(name, meta, expected_key):
+					reason = "key_changed"
+				else:
+					var path := _data_for(name, meta)
+					if not path.is_empty(): return {"meta": meta, "path": path, "reused": reused}
 	var seed := STARTUP_BAKES.entry(name, expected_key)
 	if not seed.is_empty():
 		seed["seed"] = true
@@ -354,7 +358,7 @@ static func verified_file(name: String, expected_key: String) -> String:
 	if size != int(entry.meta.get("bytes", -1)) or FileAccess.get_sha256(path) != str(entry.meta.get("sha256", "")):
 		LOG.cache(name, "missing" if size < 0 else "verify_fail")
 		return ""
-	LOG.cache(name, "hit", {"bytes": size, "seed": entry.get("seed", false)})
+	LOG.cache(name, "hit", {"bytes": size, "seed": entry.get("seed", false), "reused": entry.get("reused", false)})
 	return path
 
 static func _size(path: String) -> int:

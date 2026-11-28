@@ -284,6 +284,15 @@ func _init() -> void:
 	_configure_pack()
 	BOOT_LOG.end("autoload_source523_pack", boot_started, {"configured": configured, "needed": needed, "addon_needed": addon_needed})
 
+## Use the selected content pins, independent of archive splits or locations.
+## The readers keep verifying the actual original inputs as before.
+static func _startup_source_key(descriptor: Dictionary, addons: Dictionary) -> String:
+	var pins: Dictionary = {"tables": str(descriptor.tables.sha256).to_lower()}
+	for section: String in SECTIONS:
+		var selected: Variant = descriptor.get(section, addons.get(section))
+		if selected is Dictionary: pins[section] = str(selected.manifest_sha256).to_lower()
+	return JSON.stringify(pins).sha256_text()
+
 func _configure_pack() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var requested: String = _requested_root()
@@ -300,7 +309,7 @@ func _configure_pack() -> void:
 	var applied: Dictionary = apply(selections(base, read.descriptor, addons))
 	configured = applied.ok
 	if configured:
-		STARTUP_BAKES.select(base, str(STARTUP_BAKES.pin().get("index_sha256", "")))
+		STARTUP_BAKES.select(base, str(STARTUP_BAKES.pin().get("index_sha256", "")), _startup_source_key(read.descriptor, addons))
 	addon_needed = configured and exported and requested.is_empty() and not missing_addons(read.descriptor, addons).is_empty()
 	_missing = missing_addons(read.descriptor, addons)
 	if not configured:

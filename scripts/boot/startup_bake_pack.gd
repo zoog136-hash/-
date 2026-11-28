@@ -2,6 +2,8 @@ extends RefCounted
 ## An optional, release-pinned seed of the game's own first-run bakes.
 ## No saves, configuration, originals or executable resources are mounted.
 const PIN_PATH := "res://startup_bake_pin.json"
+const REUSE_PATH := "res://startup_bake_reuse.json"
+const REUSE_SCHEMA := "twilight.current523.startup-bake-reuse.v1"
 const FOLDER := "startup_bakes"
 const INDEX := "startup_bakes.json"
 const SCHEMA := "twilight.current523.startup-bakes.v1"
@@ -12,6 +14,8 @@ const MAX_PAYLOAD := 1536 * 1024 * 1024
 
 static var _root := ""
 static var _files: Dictionary = {}
+static var _installed_index := ""
+static var _reuse: Dictionary = {}
 
 var _zip: ZIPReader
 var _target := ""
@@ -66,23 +70,62 @@ static func _decode(bytes: PackedByteArray, expected: String) -> Dictionary:
 		if total > MAX_PAYLOAD: return {}
 	return files
 
+## The manifest is a resource of the new release. The release builder only
+## lists entries whose independently produced output bytes match a pinned older
+## archive. A device still needs the current producer key and verified bytes.
+static func _decode_reuse(bytes: PackedByteArray, source: String) -> Dictionary:
+	if bytes.is_empty() or bytes.size() > MAX_INDEX or not _sha(source): return {}
+	var value: Variant = JSON.parse_string(bytes.get_string_from_utf8())
+	var version: Dictionary = Engine.get_version_info()
+	var engine := str(version.get("string", "")) + "|" + str(version.get("hash", ""))
+	if not value is Dictionary or value.get("schema") != REUSE_SCHEMA or value.get("engine") != engine: return {}
+	if value.get("source") != source or not value.get("files") is Dictionary: return {}
+	var index: Variant = value.get("index_sha256")
+	if not index is String or (not index.is_empty() and not _sha(index)): return {}
+	var files: Dictionary = value.files
+	if files.size() > MAX_FILES: return {}
+	for name: String in files:
+		var row: Variant = files[name]
+		if not name.is_valid_identifier() or name.length() > 180 or not row is Dictionary: return {}
+		if not _sha(row.get("previous_key")) or not _sha(row.get("key")) or row.previous_key == row.key: return {}
+		if not _sha(row.get("sha256")) or not _size_ok(row.get("bytes")): return {}
+	return {"index_sha256": index, "files": files}
+
+static func reusable(name: String, previous: Dictionary, current_key: String) -> bool:
+	var row: Variant = (_reuse.get("files", {}) as Dictionary).get(name)
+	return row is Dictionary and row.key == current_key and row.previous_key == previous.get("key") \
+		and row.sha256 == previous.get("sha256") and row.bytes == previous.get("bytes")
+
 ## The installed pack selection owns this path. Nothing is extracted
 ## at startup. Every consumer still requests its original, code-keyed bake.
-static func select(base: String, expected: String) -> void:
+static func select(base: String, expected: String, source: String = "") -> void:
 	_root = ""
 	_files = {}
-	if base.is_empty() or not _sha(expected): return
+	_installed_index = ""
+	_reuse = {}
+	if base.is_empty(): return
+	# Device caches can be proven independently of the optional seed pin.
+	var proof := FileAccess.open(REUSE_PATH, FileAccess.READ)
+	if proof != null and proof.get_length() <= MAX_INDEX:
+		_reuse = _decode_reuse(proof.get_buffer(proof.get_length()), source)
+	if not _sha(expected): return
 	var directory := base.path_join(FOLDER).path_join(expected)
 	var file := FileAccess.open(directory.path_join(INDEX), FileAccess.READ)
 	if file == null or file.get_length() > MAX_INDEX: return
 	_files = _decode(file.get_buffer(file.get_length()), expected)
-	if not _files.is_empty(): _root = directory
+	if not _files.is_empty():
+		_root = directory
+		_installed_index = expected
 
 static func entry(name: String, key: String) -> Dictionary:
 	if _root.is_empty(): return {}
 	var meta: Variant = _files.get(name)
-	if not meta is Dictionary or meta.key != key: return {}
-	return {"meta": meta, "path": _root.path_join(name + ".bin")}
+	if not meta is Dictionary: return {}
+	var reused: bool = meta.key != key
+	# Only a proof generated against this authenticated installed index
+	# can change its keys. A device-cache proof has an empty index.
+	if reused and (_reuse.get("index_sha256") != _installed_index or not reusable(name, meta, key)): return {}
+	return {"meta": meta, "path": _root.path_join(name + ".bin"), "reused": reused}
 
 ## The caller hashes the installer-owned ZIP copy before opening it.
 func begin(path: String, base: String, installed_pin: Dictionary, archive_sha: String) -> bool:
