@@ -280,9 +280,7 @@ func real_main() -> void:
 		if picker.has_method("_choose_gender"): picker.call("_choose_gender", 1)
 		picker.call("_confirm")
 	else: preload("res://tests/qa_class_selection.gd").enter_game(world)
-	for frame: int in 900:
-		await process_frame
-		if world.current523_aden_source_active(): break
+	await preload("res://tests/qa_class_selection.gd").wait_for_aden_source(self, world)
 	var ctl: Variant = world.hud.get("original_main_ui_controller")
 	if not world.current523_aden_source_active() or not is_instance_valid(ctl) or not ctl.call("can_open_shop_window"):
 		evidence["real_main"] = "original 523 map / original UI pack not installed: Main part skipped"
