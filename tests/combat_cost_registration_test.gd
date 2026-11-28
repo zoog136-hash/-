@@ -24,7 +24,7 @@ class SpellBlock extends "res://scripts/monsters/patch523_npc_combat.gd":
 ## The live service with a payment owner that refuses (a failed save).
 class RefusedPayment extends "res://scripts/skills/skill_service.gd":
 	var paid: int = 0
-	func spend(_skill: Dictionary, _changed: Variant = null) -> bool:
+	func spend(_skill: Dictionary, _changed: Variant = null, _area_quote: Dictionary = {}) -> bool:
 		paid += 1
 		return false
 
