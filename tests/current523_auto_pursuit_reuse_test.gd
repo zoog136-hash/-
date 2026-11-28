@@ -1,6 +1,7 @@
 extends SceneTree
 ## Production _run_auto_hunt with controlled route/sight and static 523 field.
 const FIELD = preload("res://scripts/maps/current523_source_field.gd")
+const BODY_PROFILE = preload("res://scripts/maps/source_body_profile.gd")
 var checks: int = 0
 var failures: Array[String] = []
 
@@ -46,6 +47,9 @@ func _run() -> void:
 	field.admit_fixture()
 	world.field_map=field
 	var player: TwilightPlayer=load("res://scenes/Player.tscn").instantiate()
+	# Match the source field's terrain mask and foot before registering physics.
+	player.collision_mask=4
+	BODY_PROFILE.apply(player,true)
 	root.add_child(player)
 	player.set_physics_process(false)
 	world.player=player
