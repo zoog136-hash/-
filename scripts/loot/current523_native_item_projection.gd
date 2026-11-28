@@ -1427,11 +1427,13 @@ static func _substitute_for(item: Dictionary) -> Dictionary:
 		var types: Dictionary={}
 		for row: Dictionary in SOURCE.rows("BonusType"):
 			if str(row.get("Name","")) in SUBSTITUTE_TYPES:types[int(row.ID)]=str(row.Name)
+		# Select both joins in source order. The first matching group still
+		# wins, and that group's lowest usable original item remains the pick.
 		var bonuses: Dictionary={}
-		for row: Dictionary in SOURCE.rows("Bonus"):
-			if types.has(int(row.get("BonusTypeID",-1))) and int(row.get("BonusApplicationTypeID",0))==0:bonuses[int(row.ID)]=types[int(row.BonusTypeID)]+":"+str(int(row.Value))
-		for row: Dictionary in SOURCE.rows("ItemBonus"):
-			if row.get("IsPossession")==true or not bonuses.has(int(row.get("BonusID",-1))):continue
+		for row: Dictionary in SOURCE.rows_matching("Bonus","BonusTypeID",types):
+			if int(row.get("BonusApplicationTypeID",0))==0:bonuses[int(row.ID)]=types[int(row.BonusTypeID)]+":"+str(int(row.Value))
+		for row: Dictionary in SOURCE.rows_matching("ItemBonus","BonusID",bonuses):
+			if row.get("IsPossession")==true:continue
 			var key: String=bonuses[int(row.BonusID)];var owner: Dictionary=SOURCE.row("ItemClass",int(row.ItemClassID))
 			var test: bool=owner.get("TestItem")!=false or not SOURCE.declared_exclusion("ItemClass",owner).is_empty() or not str(owner.get("ServiceRegionCode","")).is_empty()
 			if not _substitutes.has(key):_substitutes[key]={"items":[],"test":{}}
