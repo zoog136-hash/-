@@ -11,7 +11,7 @@ func run() -> void:
 	if not QA.enter_game(world):quit(1);return
 	world.set_process(false);world.player.set_auto_enabled(false);world.level=90;world.gold=10000000;world.max_mp=1000;world.mp=1000
 	var catalog:=world.original_skills.catalog
-	check(catalog.records.filter(func(r):return not r.get("runtime_blocked",false)).size()==147,"147 usable runtime skills")
+	check(catalog.records.filter(func(r):return not r.get("runtime_blocked",false)).size()==479,"147 original/local and 332 public-reference runtime skills")
 	var master: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/master.json"))
 	var balance: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://data/skills/balance.json"))
 	check(master.records.size()==125,"base master unchanged")
@@ -20,6 +20,9 @@ func run() -> void:
 		for key: String in balance.skills[str(old.id)]:check(record[key]==balance.skills[str(old.id)][key].value,"base125 balance "+str(old.id)+" "+key)
 	check(catalog.record_for("엘리멘탈 애로우").id==catalog.record_for("엘리멘탈 웨폰").id,"one stable renamed skill")
 	for record: Dictionary in catalog.current_official.records:
+		if record.get("reference_approx523",false):
+			check(not catalog.owned(record) and not world.original_skills.ready(record),"unlearned public reference cannot execute")
+			continue
 		if record.runtime_blocked:
 			check(not catalog.owned(record) and not world.original_skills.ready(record),"unconfirmed reference cannot execute")
 			continue
@@ -46,8 +49,7 @@ func run() -> void:
 	check(not preload("res://scripts/skill_rules.gd").can_auto_cast(catalog.record_for("슈팅 스타")),"toggle AUTO cannot oscillate")
 	var vfx=world.original_skills.vfx
 	vfx.clear()
-	vfx.similar_bridge.effects.clear()
-	vfx.emit_skill(str(catalog.record_for("프라이드").id),"impact",world.player.global_position)
-	check(not vfx.live.is_empty() and vfx.live[0].get("layers")!=null,"new twelve retain committed authored visual fallback without private SPR pack")
+	world.original_skills._emit_verified_source_effect(catalog.record_for("프라이드"),"impact",world.player.global_position)
+	check(is_instance_valid(vfx.reference_effects) and not vfx.reference_effects.live.is_empty(),"existing local skills have an authored effect without a private SPR pack")
 	world.queue_free();await process_frame
-	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT ",JSON.stringify({"checks":checks,"failures":errors,"usable":147}));quit(0 if errors.is_empty() else 1)
+	print("CURRENT_OFFICIAL_RUNTIME_UI_RESULT ",JSON.stringify({"checks":checks,"failures":errors,"usable":479}));quit(0 if errors.is_empty() else 1)

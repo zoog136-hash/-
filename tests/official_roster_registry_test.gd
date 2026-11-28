@@ -1,10 +1,14 @@
 extends SceneTree
 const CATALOG=preload("res://scripts/skills/skill_catalog.gd")
-const RULES=preload("res://scripts/skill_rules.gd")
+class CollectionFixture extends RefCounted:
+ func source_server_context():return {}
 class Owner extends Node:
  var job_class:String="기사"
  var level:int=90
  var equipped_items:Dictionary={}
+ var equipped_catalog:Dictionary={}
+ var card_draw_fusion:Dictionary={"owned":{}}
+ var card_collections:=CollectionFixture.new()
  var inventory:Dictionary={}
  func _current_weapon_type():return ""
  func _inventory_total_weight():return 0
@@ -17,16 +21,15 @@ func check(ok:bool,label:String):
 func _initialize():
  var owner=Owner.new();root.add_child(owner)
  var catalog=CATALOG.new();catalog.configure(owner)
- check(catalog.records.size()==479,"147 usable plus 332 explicitly blocked references")
- var ids:Dictionary={};var blocked:int=0
+ check(catalog.records.size()==479,"147 existing and 332 publicly documented skills retain their IDs")
+ var ids:Dictionary={};var public_profiles:int=0
  for row:Dictionary in catalog.records:
   check(not ids.has(row.id),"unique stable ID "+str(row.id));ids[row.id]=true
-  if row.get("runtime_blocked",false):
-   blocked+=1
-   catalog.learned[row.id]=1
-   check(not catalog.owned(row) and not catalog.enabled(row) and not RULES.can_auto_cast(row),"manual save injection cannot enable reference")
-   check(not CATALOG.CURRENT.detail_text(row).is_empty(),"unknown fields render without default combat values")
- check(blocked==332,"unknown reference count remains separate")
+  if row.get("reference_approx523",false):
+   public_profiles+=1
+   check(not catalog.owned(row) and not catalog.enabled(row),"reference profile does not auto-grant ownership")
+   check(not row.get("runtime_blocked",false) and row.desc.contains("TWILIGHT 근사"),"public approximation identifies local execution")
+ check(public_profiles==332,"every reference is available in the off-pack catalog")
  for alias:String in ["디스인티그레이트","디스인티그레이트 (에이션트)","셋팅 업"]:
   var canonical:String={"디스인티그레이트":"디스인트그레이트","디스인티그레이트 (에이션트)":"디스인트그레이트(에이션트)","셋팅 업":"세팅 업"}[alias]
   check(catalog.record_for(alias).id==catalog.record_for(canonical).id,"alias preserves prior save identity")
@@ -50,5 +53,5 @@ func _initialize():
   owner.job_class="마법사";owner.level=90
   check(catalog.resolve(row).mp==row.mp and catalog.resolve(row).minimum_level==row.minimum_level,"original wizard balance unchanged after class switch")
  owner.queue_free()
- print("OFFICIAL_ROSTER_REGISTRY_RESULT checks=",checks," errors=",errors," playable=147 references=332")
+ print("OFFICIAL_ROSTER_REGISTRY_RESULT checks=",checks," errors=",errors," playable=479 references=332")
  quit(0 if errors==0 else 1)

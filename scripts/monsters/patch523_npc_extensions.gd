@@ -97,6 +97,7 @@ func release(actor: Node, spell: Dictionary, already_paid: bool = false) -> bool
 		if target == service.world.player: service.world.apply_patch523_healing(amount,false)
 		else:
 			amount = target.source_option_healing(amount)
+			if service.world.original_skills != null: amount = service.world.original_skills.reference_npc_healing(target, amount)
 			target.hp = mini(target.max_hp,target.hp+amount); target.hp_bar.value = target.hp
 		if generation != int(service.world.combat_generation): return true
 		last_event = {"kind":"heal","spell":id,"source_dice":dice,"host_target_mode":heal_target,"amount":amount}
@@ -175,6 +176,16 @@ func bind_current(attribute_id: int) -> bool:
 	if not found: return false
 	own_attribute = attribute_id; own_map = str(service.world.active_map_id); own_center = service.world.player.global_position
 	return true
+
+func dispel_reference_target(actor: TwilightMonster) -> void:
+	if not enabled or not is_instance_valid(actor) or actor.dead: return
+	var id := actor.get_instance_id()
+	if not actor_buffs.has(id): return
+	var kept: Array = actor_buffs[id].filter(func(entry: Dictionary) -> bool:
+		return int(entry.life) == actor.life_id and int(entry.generation) == service.world.combat_generation \
+			and not bool(entry.source.get("IsGood", false)))
+	if kept.is_empty(): actor_buffs.erase(id)
+	else: actor_buffs[id] = kept
 
 func actor_invisible(actor: Node) -> bool:
 	if service == null or not enabled or not service.host_enabled or not is_instance_valid(actor): return false

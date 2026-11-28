@@ -63,7 +63,8 @@ func run() -> void:
 	world.set_process(false);world.player.set_physics_process(false);world.player.set_auto_enabled(false);world.save_timer=-100000
 	world._clear_monsters();world.level=90;world.gold=100000000;world.max_mp=1000
 	service=world.original_skills;catalog=service.catalog
-	check(catalog.records.filter(func(r):return not r.get("runtime_blocked",false)).size()==147,"147 playable records; references are not implementations")
+	var supplements: Array = catalog.current_official.records.filter(func(row: Dictionary) -> bool: return row.get("local_design",false) and not row.has("estimated523"))
+	check(supplements.size()==22,"reviewed local skills retain their independent runtime profiles")
 	check(catalog.record_for("엘리멘탈 애로우").id==row("엘리멘탈 웨폰").id,"alias stable identity")
 	arena=POSITIONS.combat(world,[Vector2(30,0),Vector2(50,0)],25)
 	check(arena.is_finite(),"real native walkable combat lane")
@@ -77,6 +78,7 @@ func run() -> void:
 	world.job_class="요정";world.inventory[str(spirit.book_name)]=1
 	check(not catalog.learn(str(spirit.id)),"upgrade needs base before book consumed")
 	for record: Dictionary in catalog.current_official.records:
+		if not record.get("local_design",false) or record.has("estimated523"): continue
 		world.job_class=record["class"];world.level=int(record.minimum_level)-1
 		check(not catalog.buy_book(str(record.id)),str(record.name)+" low level blocked")
 		world.level=90;world.gold=0

@@ -2,6 +2,7 @@ extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
+var browser: Browser
 const SelectionSheet=preload("res://scripts/ui/selection_detail_sheet.gd")
 var selection_sheet: Control
 const ReferenceSurfaces=preload("res://scripts/ui/reference_surfaces.gd")
@@ -107,9 +108,9 @@ func configure(controller: Node) -> void:
 	toolbar.add_child(grade_filter)
 	var state: Dictionary = hud.character_state
 	scope.tooltip_text="Lv.%d %s / 등록 %d · 신규 %d" % [state.get("level",1),state.get("job_class","기사"),records.size(),hud.get_parent().original_skills.catalog.current_official.records.size()]
-	var body := Browser.new()
-	body.size_flags_vertical=Control.SIZE_EXPAND_FILL
-	add_child(body)
+	browser = Browser.new()
+	browser.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	add_child(browser)
 	cards=ItemList.new()
 	cards.name="SkillCards"
 	cards.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -124,13 +125,13 @@ func configure(controller: Node) -> void:
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
 	# Shared PointerTransfer handles native touch, scrolling and actual drops.
-	body.add_child(cards)
+	browser.add_child(cards)
 	var side_scroll := ScrollContainer.new()
 	side_scroll.name = "OriginalSkillDetailsScroll"
 	side_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	side_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	side_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_child(side_scroll)
+	browser.add_child(side_scroll)
 	var side := VBoxContainer.new()
 	side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	side.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -163,7 +164,9 @@ func configure(controller: Node) -> void:
 	book_button.name = "BuyOriginalSkillBook"
 	reagent_button = UI.button("스킬 재료 구입",func() -> void:
 		if not selected.is_empty():
-			hud.get_parent().original_skills.local_runtime.buy_reagents(selected)
+			var owner: TwilightOriginalSkillService = hud.get_parent().original_skills
+			if bool(selected.get("reference_approx523", false)): owner.PUBLIC_PROFILES.buy_reagents(owner.catalog, selected)
+			else: owner.local_runtime.buy_reagents(selected)
 			select(cards.get_selected_items()[0]))
 	reagent_button.visible = false
 	actions.add_child(reagent_button)
@@ -185,8 +188,13 @@ func configure(controller: Node) -> void:
 		if selection_sheet!=null and hud.workspace.was_scroll_dragged(selection_sheet.scroll):return
 		preview_container.visible = true
 		preview_vfx.clear()
-		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
-		preview_vfx.emit_skill(str(selected.id), "impact", Vector2(180,45))
+		var visual: Dictionary = selected.get("reference_visual523", {})
+		if visual.is_empty():
+			preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
+			preview_vfx.emit_skill(str(selected.id), "impact", Vector2(180,45))
+		else:
+			preview_vfx.emit_reference_effect(str(selected.id), visual, "cast", Vector2(90,45))
+			preview_vfx.emit_reference_effect(str(selected.id), visual, "impact", Vector2(180,45))
 		_fit_effect_preview(viewport))
 	side.add_child(preview_button)
 	official_toggle_preview = CheckButton.new()
@@ -227,10 +235,10 @@ func configure(controller: Node) -> void:
 	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
 	selection_sheet=SelectionSheet.new()
 	var inspector: Control=selection_sheet.bind_skill(self,side_scroll,side)
-	body.configure(cards,inspector,278)
-	body.move_child(body.tabs,body.get_child_count()-1)
-	(body.tabs.get_child(0) as Button).text="스킬 목록"
-	(body.tabs.get_child(1) as Button).text="상세보기"
+	browser.configure(cards,inspector,278)
+	browser.move_child(browser.tabs,browser.get_child_count()-1)
+	(browser.tabs.get_child(0) as Button).text="스킬 목록"
+	(browser.tabs.get_child(1) as Button).text="상세보기"
 	cards.add_theme_stylebox_override("panel",UI.MATERIAL.from_flat(UI.box(Color("211b14"),Color("675640"),4),true))
 	for button: Button in [learn_button,book_button,use_button,quick_button]:ReferenceSurfaces.action(button)
 	hud.workspace.register_scroll_drag(side_scroll,side_scroll)
@@ -330,6 +338,8 @@ func focus_skill(id: String) -> void:
 		if str(filtered[index].get("id",filtered[index].get("name","")))==id:
 			cards.select(index)
 			select(index)
+			browser.detail_active = true
+			browser.reflow()
 			return
 
 func select(index: int) -> void:
@@ -451,6 +461,15 @@ func select_original() -> void:
 	if catalog.current_official.mode_audit.has(str(selected.id)):
 		detail.text += "\n\n현재 공식 분류: 패시브 / 기존 게임 동작: 액티브\n기존 비용·행동·저장 호환을 위한 전환 검토 중"
 	detail.text += SOURCE523.detail_text(skill)
+	if skill.get("reference_approx523", false):
+		var materials: Dictionary = skill.get("proc_items", {}) if skill.mode == "toggle_proc" else skill.get("items", {})
+		var material_lines := PackedStringArray()
+		for item: String in materials: material_lines.append("%s ×%d" % [item,int(materials[item])])
+		if not material_lines.is_empty(): detail.text += "\n\n사용 재료 " + " · ".join(material_lines)
+		var quote: Dictionary = service.PUBLIC_PROFILES.local_reagent_quote(skill)
+		reagent_button.visible = not quote.items.is_empty()
+		reagent_button.disabled = int(world.gold) < int(quote.price) or catalog.level_locked(selected)
+		reagent_button.tooltip_text = "10회분 · %d 아데나" % int(quote.price)
 	if passive: detail.text = detail.text.replace("기본 재사용 %.1f초\n보정 후 재사용 %.1f초" % [base_cooldown,final_cooldown],"패시브 · 조건 충족 시 적용")
 	if passive: detail.text = detail.text.replace("지속시간 %.1f초" % float(skill.get("duration",0)),"상시 / 조건부 적용")
 	summon_controls.visible = str(selected.mode) == "summon" and learned

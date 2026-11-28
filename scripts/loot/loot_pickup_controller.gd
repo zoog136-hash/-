@@ -232,7 +232,8 @@ func _advance_target() -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held() or player.movement_locked: return true
 	var view: TwilightGroundLoot = manager.views[target_id]
 	var destination: Vector2 = _destination(target_id)
-	if player.global_position.distance_to(destination) <= PICKUP_RADIUS and bool(world.call("_has_line_of_sight_world", player.global_position, destination)):
+	var radius: float = world._ground_pickup_radius() if world.has_method("_ground_pickup_radius") else PICKUP_RADIUS
+	if player.global_position.distance_to(destination) <= radius and bool(world.call("_has_line_of_sight_world", player.global_position, destination)):
 		player.clear_click_path()
 		if Time.get_ticks_msec() - view.visible_since < manager.MIN_VISIBLE_MS: return true
 		if not bool(world.call("_collect_ground_drop", view)):
@@ -254,7 +255,7 @@ func _advance_target() -> bool:
 		repath_time = 0.65
 		repath_count += 1
 		var path: PackedVector2Array = world.call("find_world_path", player.global_position, destination)
-		if path.is_empty() or path[path.size() - 1].distance_to(destination) > PICKUP_RADIUS:
+		if path.is_empty() or path[path.size() - 1].distance_to(destination) > radius:
 			_reject_target()
 			return false
 		player.set_click_path(path, destination)

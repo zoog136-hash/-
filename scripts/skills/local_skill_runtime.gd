@@ -72,6 +72,7 @@ func cast(row: Dictionary) -> bool:
 	world.skill_cooldowns[str(row.name)] = float(row.cooldown) * world._skill_cooldown_factor()
 	world.skill_global_cooldown = float(row.global_cooldown)
 	service.vfx.begin_cast(str(row.id),world.player)
+	service._emit_verified_source_effect(row,"cast",world.player.global_position)
 	match kind:
 		"pride","berserk":
 			var buff := row.duplicate(true)
@@ -126,6 +127,7 @@ func damage(row: Dictionary, target: TwilightMonster, power: int, from: Vector2 
 	# Direct, tagged proc damage avoids normal-hit/weapon/lifesteal recursion.
 	target.take_damage(amount,false,"local_skill:"+str(row.id))
 	service.vfx.emit_skill(service.presentation_id(row),"impact",target.combat_hit_position(),from)
+	service._emit_verified_source_effect(row,"impact",target.combat_hit_position())
 	service.event_counts[str(row.id)] = int(service.event_counts.get(str(row.id),0))+1
 	return maxi(0,before-target.hp)
 
@@ -151,6 +153,7 @@ func on_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 			"prison":
 				if service.status.apply(row,target,world):
 					service.vfx.emit_skill(service.presentation_id(row),"impact",target.combat_hit_position())
+					service._emit_verified_source_effect(row,"success",target.combat_hit_position())
 					if row.has("shark_power"):
 						var dealt := damage(row,target,int(row.shark_power),world.player.global_position)
 						service.heal(row,mini(dealt,int(row.heal_on_hit)))
@@ -164,6 +167,7 @@ func on_hit(target: TwilightMonster, source_skill: Dictionary) -> void:
 				if world._is_walkable_world(end) and world.field_map.point_clear(end,4.0) and world._has_line_of_sight_world(start,end):
 					world.player.clear_click_path();world.player.global_position=end
 				service.vfx.emit_skill(str(row.id),"impact",world.player.global_position)
+				service._emit_verified_source_effect(row,"success",world.player.global_position)
 	depth -= 1
 
 func incoming(attacker: TwilightMonster, kind: String, amount: int) -> int:
@@ -178,6 +182,7 @@ func incoming(attacker: TwilightMonster, kind: String, amount: int) -> int:
 	if attempt(wings,":wing"):
 		amount = maxi(0,amount-int(wings.wing_reduction))
 		service.vfx.emit_skill(str(wings.id),"impact",world.player.global_position)
+		service._emit_verified_source_effect(wings,"success",world.player.global_position)
 	depth -= 1
 	return amount
 
