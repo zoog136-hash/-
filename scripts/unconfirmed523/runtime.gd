@@ -782,8 +782,11 @@ func record_event(kind: String, payload: Dictionary = {}) -> void:
 func rebuild() -> void:
 	totals.clear(); effect_details.clear(); conditional_totals = {"undead":{},"pvp":{}}
 	if world == null or not source.ready() or not _source_configured: return
+	# Jade and earned bonuses read the same ownership and time snapshot.
+	var inputs: Dictionary = {}
 	if domains.has("jade_grail") and state.domains.has("jade_grail"):
-		effect_details = domains.jade_grail.bonuses(context(),state.domains.jade_grail)
+		inputs = context()
+		effect_details = domains.jade_grail.bonuses(inputs,state.domains.jade_grail)
 		var mapping: Dictionary = {"melee_damage":"melee_damage:flat","ranged_damage":"ranged_damage:flat","magic_damage":"magic_damage:flat","melee_accuracy":"melee_hit:flat","ranged_accuracy":"ranged_hit:flat","magic_accuracy":"magic_hit:flat","armor_class":"ac:flat","max_hp":"max_hp:flat","exp_bonus_pct":"experience_bonus:percent","damage_reduction":"damage_reduction:flat","pve_damage_reduction":"pve_damage_reduction:flat","move_speed_bonus":"movement_speed:percent","attack_speed_bonus":"attack_speed:percent","hp_potion_recovery_pct":"potion_percent:percent","cast_speed_bonus":"cast_speed:percent","damage_reduction_ignore":"damage_reduction_ignore:flat","ignore_melee_damage_reduction_pct":"ignore_melee_damage_reduction:percent","ignore_ranged_damage_reduction_pct":"ignore_ranged_damage_reduction:percent","ignore_magic_damage_reduction_pct":"ignore_magic_damage_reduction:percent"}
 		for key: String in effect_details.get("stats",{}):
 			var canonical: String = str(mapping.get(key,key))
@@ -795,10 +798,12 @@ func rebuild() -> void:
 			for key: String in effect_details.get("conditional_stats",{}).get(scope,{}):
 				conditional_totals[scope][str(scoped_mapping.get(key,key))] = float(effect_details.conditional_stats[scope][key])
 	var ids: Array = []
+	var clock: int = int(inputs.now) if not inputs.is_empty() else effective_now()
 	for reward: Dictionary in state.get("bonus_rewards",[]):
-		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > effective_now(): ids.append(int(reward.id))
+		if int(reward.get("expires_at",0)) == 0 or int(reward.expires_at) > clock: ids.append(int(reward.id))
 	if not ids.is_empty():
-		var earned: Dictionary = source.bonus_stats(ids,context())
+		if inputs.is_empty(): inputs = context()
+		var earned: Dictionary = source.bonus_stats(ids,inputs)
 		for key: String in earned.get("stats",{}): totals[key] = float(totals.get(key,0))+float(earned.stats[key])
 		for scope: String in conditional_totals:
 			for key: String in earned.get("conditional_stats",{}).get(scope,{}):
@@ -809,7 +814,12 @@ func rebuild() -> void:
 	if world.ain_service != null:
 		var jade: Dictionary = state.domains.get("jade_grail",{}).get("jade",{})
 		var matches_timer: bool = not jade.is_empty() and int(jade.get("used_at",0))+int(jade.get("duration",0)) == int(world.ain_service.dragon_orb_expires_at)
-		world.ain_service.source_jade_level_override = int(jade_status().get("protection_level",0)) if matches_timer else -1
+		world.ain_service.source_jade_level_override = -1
+		if matches_timer:
+			var status: Dictionary = effect_details.get("jade",{})
+			if status.is_empty() and domains.has("jade_grail"):
+				status = domains.jade_grail.jade_status(inputs,state.domains.jade_grail)
+			world.ain_service.source_jade_level_override = int(status.get("protection_level",0))
 
 func jade_status() -> Dictionary:
 	return domains.jade_grail.jade_status(context(),state.domains.jade_grail) if source.ready() and domains.has("jade_grail") else {}

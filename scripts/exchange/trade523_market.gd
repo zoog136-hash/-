@@ -18,6 +18,8 @@ const FIELDS=preload("res://scripts/loot/current523_native_fields.gd")
 const INV=preload("res://scripts/loot/patch523_item_inventory.gd")
 const DUMMY=preload("res://scripts/quests/source_dummy523.gd")
 const STACK=preload("res://scripts/loot/current523_native_stack.gd")
+const REFERENCE_UNITS_PATH: String="res://data/exchange/frozen_reference_units.json"
+const REFERENCE_UNITS_SHA256: String="82f5c2f4528a4a8ef1ef3007249920d1265a8c0b8d4aee59b917a369b5bfc3c3"
 const STATE_KEY: String="trade523"
 const DIAMOND: String="다이아"
 ## ItemTradeMarketPolicyValue (ServiceRegionCode KR).
@@ -176,22 +178,54 @@ static func captured_unit(row: Dictionary) -> float:
 	if not _int(row.get("bundle_price"),1) or not _int(row.get("bundle_size"),1):return -1.0
 	return float(row.bundle_price)/float(row.bundle_size)
 
-func _index_reference_prices() -> void:
-	var capture=FrozenCatalog.new()
-	if not capture.load_snapshot() or not capture.captured():return
+static func normalized_capture_units(rows: Array) -> Dictionary:
 	var per_item: Dictionary={}
-	for row: Dictionary in capture.rows():
+	for row: Dictionary in rows:
 		var id: int=int(row.item_class_id)
-		if not _mapping.has(id):continue
 		var unit: float=captured_unit(row)
 		if unit<=0.0:continue
 		if not per_item.has(id):per_item[id]=[]
 		per_item[id].append(unit)
+	for id: int in per_item:
+		per_item[id]=_median(per_item[id])
+	return per_item
+
+## The compiled medians are valid only for the exact checked-in capture.
+## A different capture still uses the full validator and normalizer.
+static func _load_reference_units(snapshot_path: String=FrozenCatalog.PATH) -> Variant:
+	var index := FileAccess.open(REFERENCE_UNITS_PATH,FileAccess.READ)
+	if index==null or index.get_length()>64*1024:return null
+	var raw: String=index.get_as_text()
+	if raw.sha256_text()!=REFERENCE_UNITS_SHA256:return null
+	var compiled: Variant=JSON.parse_string(raw)
+	if not compiled is Dictionary or compiled.get("schema")!=1 or not compiled.get("units") is Dictionary:return null
+	var snapshot := FileAccess.open(snapshot_path,FileAccess.READ)
+	if snapshot==null or snapshot.get_length()!=compiled.get("snapshot_bytes"):return null
+	if FileAccess.get_sha256(snapshot_path)!=compiled.get("snapshot_sha256"):return null
+	var units: Dictionary={}
+	for key: String in compiled.units:
+		var id: int=int(key)
+		var value: Variant=compiled.units[key]
+		if str(id)!=key or not _int(id,1) or not value is String or value.length()!=16:return null
+		var bytes: PackedByteArray=value.hex_decode()
+		if bytes.size()!=8:return null
+		var unit: float=bytes.decode_double(0)
+		if not is_finite(unit) or unit<=0.0:return null
+		units[id]=unit
+	return units
+
+func _index_reference_prices() -> void:
+	var per_item: Variant=_load_reference_units()
+	if per_item==null:
+		var capture=FrozenCatalog.new()
+		if not capture.load_snapshot() or not capture.captured():return
+		per_item=normalized_capture_units(capture.rows())
 	var peers: Dictionary={}
 	for id: int in per_item:
+		if not _mapping.has(id):continue
 		var original: Dictionary=SOURCE.row("ItemClass",id)
 		if original.get("TestItem")!=false or original.get("IsTradable")!=true or RETIRED_ITEMS.item(id):continue
-		var unit: float=_median(per_item[id])
+		var unit: float=per_item[id]
 		_exact_prices[id]=unit
 		var grade: int=int(original.get("GradeID",0))
 		var top: int=top_of(category_of(id))

@@ -26,6 +26,7 @@ var totals: Dictionary = {}
 # Keep the same accumulation order as a full rebuild. A symbol enchant can
 # replace its stage row without projecting every guardian reward again.
 var _effect_rows: Array[Dictionary] = []
+var _effect_offsets_by_stat: Dictionary = {}
 var _emblem_stage_offsets: Dictionary = {}
 var _effect_inputs: Array = []
 var rerolls: Dictionary = {} # Session only: leaving the screen restores base odds.
@@ -221,6 +222,7 @@ func restore(value: Dictionary) -> void:
 func _rebuild() -> void:
 	totals.clear()
 	_effect_rows.clear()
+	_effect_offsets_by_stat.clear()
 	_emblem_stage_offsets.clear()
 	_effect_inputs.clear()
 	for id: String in state.emblems:
@@ -253,8 +255,12 @@ func _rebuild() -> void:
 					if state.nodes.has(row.id) and row.get("effects") is Dictionary: _add_effects(row.effects)
 
 func _record_effects(effects: Dictionary) -> void:
+	var offset: int = _effect_rows.size()
 	_effect_rows.append(effects)
-	_add_effects(effects)
+	for key: String in effects:
+		if not _effect_offsets_by_stat.has(key): _effect_offsets_by_stat[key] = []
+		_effect_offsets_by_stat[key].append(offset)
+		_add_effect(key,effects[key])
 
 func _effect_state() -> Array:
 	return [state.emblems,state.nodes,state.get("guardian_levels",{}),Combat.estimates(),state.emblems.keys()]
@@ -270,20 +276,27 @@ func _replace_emblem_stage(id: String) -> void:
 		if not before.has(key): changed[key] = true
 	_effect_rows[offset] = after
 	_effect_inputs[0] = state.emblems.duplicate(true)
-	if changed.is_empty(): return
-	for key: String in changed: totals.erase(key)
-	for effects: Dictionary in _effect_rows: _add_effects(effects,changed)
+	for key: String in changed:
+		var offsets: Array = _effect_offsets_by_stat.get(key,[])
+		if not before.has(key):
+			offsets.insert(offsets.bsearch(offset),offset)
+			_effect_offsets_by_stat[key] = offsets
+		elif not after.has(key): offsets.erase(offset)
+		totals.erase(key)
+		for source_offset: int in offsets:
+			_add_effect(key,_effect_rows[source_offset][key])
 
-func _add_effects(effects: Dictionary, keys: Variant = null) -> void:
-	for key: String in effects if keys == null else keys:
-		if not effects.has(key): continue
-		if key.begins_with("local_"):
-			if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(effects[key])
-			continue
-		if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag","pve_damage_reduction:percent"]:
-			totals[key] = float(totals.get(key,0))+float(effects[key])
-		elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
-			totals[key] = float(totals.get(key,0))+float(effects[key])
+func _add_effects(effects: Dictionary) -> void:
+	for key: String in effects: _add_effect(key,effects[key])
+
+func _add_effect(key: String, value: Variant) -> void:
+	if key.begins_with("local_"):
+		if Combat.estimates(): totals[key]=float(totals.get(key,0))+float(value)
+		return
+	if key in Stats.SUPPORTED or key in ["potion_flat:flat","potion_percent:percent","potion_cooldown:percent","blessing_consumption:percent","incoming_reduction:percent","mp_regeneration:flat","blessing_charge:percent","magic_heal:percent","hp_drain:flat","life:flat","critical_reduction:flat","stunned_reduction:flat","low_hp_reduction:percent","fear_resistance:percent","teleport_control:flag","pve_damage_reduction:percent"]:
+		totals[key] = float(totals.get(key,0))+float(value)
+	elif key in ["veil_proc:percent","melee_reduction_ignore:flat","ranged_reduction_ignore:flat","magic_reduction_ignore:flat","pve_reduction_ignore:flat","melee_evasion_ignore:flat","ranged_evasion_ignore:flat"]:
+		totals[key] = float(totals.get(key,0))+float(value)
 
 func guardian_group(id: String) -> Dictionary:
 	for group: Dictionary in config.guardians:
