@@ -14,8 +14,10 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ## A touch while an animation runs jumps to the end of that step.
 const ResultPack = preload("res://scripts/ui/original_ui/source_awakening_result_pack.gd")
 const SourceCard = preload("res://scripts/ui/source_card_presentation.gd")
+const GradeFx = preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const SourceText = preload("res://scripts/ui/original_ui/source_text.gd")
 const Wrap = preload("res://scripts/ui/original_ui/source_text_wrap.gd")
+const CARD_SCALE: float = 1.25
 const WAIT_INTRO = "Start"
 const WAIT_LOOP = "Fx_Loop"
 const TOUCH_CLIP = "Fx_Touch_Active"
@@ -37,11 +39,15 @@ var _pressed: bool
 var _drag_distance: float
 var _option_list: String
 var _tree_ref: WeakRef
+var _card_pack: RefCounted
 
 func _root_member() -> String:
 	return ResultPack.MEMBER
 
 func configure(active: RefCounted, host: Node) -> Dictionary:
+	# The narrow installed result pack has the animation. The active main
+	# pack also carries the original grade card frames it can display.
+	_card_pack = active
 	var selected: RefCounted = ResultPack.resolve(active)
 	if selected == null:
 		if active != null and not active.manifest.get("scenes", {}).has(ResultPack.MEMBER): return super.configure(active, host)
@@ -102,17 +108,28 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 	var art: Dictionary = SourceCard.detail(_card, true, false)
 	var texture: Texture2D = art.get("texture") as Texture2D
 	if texture == null: return {"ok":true, "picture":false}
-	# Keep the exact target in a stable central slot. The authored FX animate
-	# the skill-slot node's visibility and alpha on both result branches.
+	var grade: String = str(_card.get("grade", ""))
+	var frame: Texture2D = GradeFx.card_frame(_card_pack,grade)
+	var picture_area := Vector2(170,198)
+	# This card remains centered and opaque through the authored success and
+	# failure effects. Their animated empty skill slot has its own visibility.
+	if frame != null:
+		var center_card := Sprite2D.new()
+		center_card.name = "AwakeningTargetCard"
+		center_card.texture = frame
+		center_card.scale = Vector2.ONE * CARD_SCALE
+		center_card.z_index = 1
+		center_card.set_meta("source_card_id", SourceCard.CARDS.card_id(_card))
+		root.add_child(center_card)
+		picture_area = frame.get_size() * CARD_SCALE * Vector2(0.84,0.82)
 	var portrait := Sprite2D.new()
 	portrait.name = "AwakeningTargetPortrait"
 	portrait.texture = texture
-	portrait.position = Vector2(0, -48)
-	portrait.scale = Vector2.ONE * minf(170.0 / texture.get_width(), 198.0 / texture.get_height())
-	portrait.z_index = 1
+	portrait.scale = Vector2.ONE * minf(picture_area.x / texture.get_width(), picture_area.y / texture.get_height())
+	portrait.z_index = 2 if frame!=null else 1
 	portrait.set_meta("source_card_id", SourceCard.CARDS.card_id(_card))
 	root.add_child(portrait)
-	return {"ok":true, "picture":true}
+	return {"ok":true, "picture":true, "card_frame":frame!=null}
 
 ## The ListView authors a single 155×14 label to repeat for awarded option
 ## lines. Use its font and original layout for every row of the saved result.

@@ -7,6 +7,7 @@ const CHANGE=preload("res://scripts/ui/original_ui/source_main_change_window.gd"
 const OPTION=preload("res://scripts/ui/original_ui/source_main_option_awakening_window.gd")
 const SOURCE=preload("res://scripts/resources/current523_definition_rows.gd")
 const CATALOG=preload("res://scripts/lineagem_base508.gd")
+const GRADE_FX=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 var _checks: int=0
 var _errors: Array[String]=[]
 var _touch_usec: Array[int]=[]
@@ -257,8 +258,10 @@ func _read_result(w: Node, success: bool) -> void:
 	var scene: Node2D = page._scene
 	var branch: String = "Success" if success else "Fail"
 	var target: Sprite2D = scene.get_node_or_null("AwakeningTargetPortrait") as Sprite2D
+	var framed: Sprite2D = scene.get_node_or_null("AwakeningTargetCard") as Sprite2D
 	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_PORTRAIT") == "1":
 		check(target!=null and target.texture!=null and target.get_meta("source_card_id","")==CARDS.card_id(page._card),"the installed portrait belongs to the exact awakening target")
+		check(framed!=null and framed.is_visible_in_tree() and framed.position==Vector2.ZERO,"the card is centered while waiting for the reveal touch")
 	check(scene.source_member == "UI/Change/Change_Upgrade_Skill_Awaken.csb" and page.phase().waiting and not _node(page, branch+"_Text").is_visible_in_tree(), "saved result opens on the original touch prompt (no outcome yet)")
 	# One touch reveals the committed outcome (the next one closes it).
 	await _tap(scene.get_node("AwakeningResultTouch"))
@@ -274,6 +277,14 @@ func _read_result(w: Node, success: bool) -> void:
 	check(page._held and is_instance_valid(label) and label.is_visible_in_tree() and label.get_meta("source_display_color").a > 0.99, "original outcome text settles at full authored opacity")
 	if target!=null:
 		check(target.is_visible_in_tree() and target.modulate.a>0.99 and absf(target.position.x)<1.0,"the same target stays visible at the center after success or failure")
+	if OS.get_environment("TWILIGHT_EXPECT_AWAKEN_PORTRAIT") == "1":
+		var original: Texture2D = GRADE_FX.card_frame(page._card_pack,str(page._card.grade))
+		check(framed!=null and original!=null and framed.texture==original and framed.is_visible_in_tree()
+			and framed.position==Vector2.ZERO and framed.get_meta("source_card_id","")==CARDS.card_id(page._card),"the exact target's original card frame remains centered on both outcomes")
+		if framed!=null and target!=null:
+			check(target.position==framed.position and framed.z_index<target.z_index
+				and (target.texture.get_size()*target.scale).y<(framed.texture.get_size()*framed.scale).y,"the selected artwork fits above its own grade card frame")
+			if DisplayServer.get_name()!="headless":await _check_center_card_pixels(framed)
 	if not page._options.is_empty():
 		var template: Node = _node(page, "ListView/Label_Option").get_meta("source_text")
 		check(template.get_child_count()>0, "awarded options are drawn in the original list")
@@ -281,6 +292,25 @@ func _read_result(w: Node, success: bool) -> void:
 	var blocker: Control = scene.get_node("AwakeningResultTouch")
 	await _tap(blocker)
 	check(not page.is_open() and _ledger(w) == before and FileAccess.get_sha256(w.save_path()) == disk, "acknowledgement returns to the form without a second debit or roll")
+
+func _check_center_card_pixels(frame: Sprite2D) -> void:
+	paused=true
+	var viewport := frame.get_viewport()
+	await RenderingServer.frame_post_draw
+	var shown := viewport.get_texture().get_image()
+	frame.hide()
+	await RenderingServer.frame_post_draw
+	var hidden := viewport.get_texture().get_image()
+	frame.show()
+	paused=false
+	var bounds: Rect2 = frame.get_global_transform_with_canvas()*frame.get_rect()
+	var area: Rect2i = Rect2i(bounds).intersection(Rect2i(Vector2i.ZERO,shown.get_size()))
+	var changed: int=0
+	for y: int in range(area.position.y,area.end.y):
+		for x: int in range(area.position.x,area.end.x):
+			if shown.get_pixel(x,y)!=hidden.get_pixel(x,y):changed+=1
+	check(changed>100,"the original grade frame contributes rendered pixels at the center of the outcome")
+	print("AWAKENING_CENTER_CARD_PIXELS ",changed)
 
 func _paid_skill(w: Node) -> void:
 	var runtime: RefCounted = w.skill_awakening
@@ -341,6 +371,10 @@ func _native() -> void:
 	OS.set_environment("TWILIGHT_PATCH523_CONTENT",archive)
 	SOURCE.reset()
 	w.catalog_db=CATALOG.apply_catalog(w.catalog_db)
+	# This test mounts the definitions after startup. Register the proven book
+	# supply in the same order as the World's normal catalog initialization.
+	preload("res://scripts/cards/native_awakening_supply.gd").install_current_definitions(w.catalog_db)
+	w._index_catalog_item_sources()
 	w.card_draw_fusion.configure(w.catalog_db)
 	w.option_awakening.configure(w)
 	w.skill_awakening=w.SKILL_AWAKENING.new()
@@ -408,6 +442,7 @@ func _native() -> void:
 	for seed: int in range(1,1000):
 		probe.seed=seed
 		if probe.randi_range(0,9999)>=required_roll:options.rng.seed=seed;break
+	w.presentation_settings["reduced_motion"]=false
 	var attempt_form: Node2D=view._scene
 	await _tap(_hit(_node(view,OPTION.PRIMARY)))
 	await _confirm(w.hud,false)
@@ -420,6 +455,7 @@ func _native() -> void:
 	var saved: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(w.save_path()))
 	check(saved.get("card_option_awakening",{}).get("cards",{}).get("변신",{}).has(transform.target),"committed exact card is on disk")
 	await _read_result(w, false)
+	w.presentation_settings["reduced_motion"]=true
 	await settle()
 	await _tap(_hit(_node(view,"Nd_Content/Btn_Back")))
 	check(w.hud.active_section=="변신" and not w.hud.source_option_awakening_is_open(),"authored back returns to the same transform catalog")
