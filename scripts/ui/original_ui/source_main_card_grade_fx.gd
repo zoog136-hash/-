@@ -1,7 +1,9 @@
 extends RefCounted
 const Scene=preload("res://scripts/ui/original_ui/sprite_scene.gd")
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
+const CatalogWindow=preload("res://scripts/ui/original_ui/source_main_change_window.gd")
 const Presentation=preload("res://scripts/ui/source_card_presentation.gd")
+const Blend=preload("res://scripts/ui/original_ui/source_blend.gd")
 ## The original 523 grade light of a revealed card, for the windows that show
 ## a card result in the client cell Change_Fusion_Card (BM_Gacha 카드 뽑기,
 ## CardChange_Result 다시 뽑기 확정, Change_Fusion_All 합성 결과).
@@ -23,6 +25,10 @@ const ACTIVE={"영웅":"UI/Change/Fx_Change_Active_Legend.csb","전설":"UI/Chan
 const OUTLINE={"영웅":"Fx_Legend_Loop","전설":"Fx_Epic_Loop","신화":"Fx_Myth_Loop","유일":"Fx_Sole_Loop"}
 const RARE_OUTLINE_CLIP="Fx_Unique_Loop"
 const RARE_OUTLINE_ATLAS="UI/UI_Resource/Atlas_Z_Fx_Seet_CardUnique.plist"
+# This page carries all 19 original blue FusionUnique frames. The
+# selected UI has no separate Change grade-start CSB for these frames.
+const RARE_LIGHTNING_ATLAS="UI/UI_Resource/Atlas_Z_Fx_Seet_FusionRare.plist"
+const RARE_LIGHTNING_FRAMES:int=19
 # Presentation opacity for the sustained additive loop on settled cards.
 const CONFIRMED_OUTLINE_ALPHA: float=0.55
 const CLIP="Fx_Active"
@@ -61,6 +67,19 @@ static func available(window: Object, grade: String) -> bool:
 static func rare_outline_available(pack: RefCounted) -> bool:
 	if pack==null:return false
 	return pack.manifest.get("scenes",{}).has("UI/Change/Fx_Change_Outline_Loop.csb") and pack.manifest.get("atlases",{}).has(RARE_OUTLINE_ATLAS)
+
+## The Sp_Card_* sprite of the exact Change_Card_A grade scene.
+static func card_frame(pack: RefCounted, grade: String) -> Texture2D:
+	if pack==null or not Page.GRADE_MEMBERS.has(grade):return null
+	var member: String=Page.GRADE_MEMBERS[grade]
+	if not pack.manifest.get("scenes",{}).has(member):return null
+	var scope: Variant=pack.manifest.get("node_scopes",{}).get(member)
+	var offset: int=CatalogWindow.CARD_NODES[member].frame
+	if scope is Array and not scope.has(offset):return null
+	var node: Dictionary=Scene._node_at_offset(pack.scene(member).get("nodeTree",{}),offset)
+	var options: Dictionary=node.get("options",{})
+	if node.get("classname")!="Sprite" or options.get("nodeOptions",{}).get("name")!=Page.GRADE_SPRITES[grade]:return null
+	return pack.texture(options.get("fileNameData",{}))
 
 ## Spec entries for the Change_Fusion_Card at `prefix` (ends with "/").
 static func cell_spec(window: Object, spec: Dictionary, prefix: String, grade: String, pending: bool=false) -> void:
@@ -120,7 +139,9 @@ static func start_reel(window: Object, root: Node2D, out: Dictionary, cell: Stri
 
 ## Scope the discharge to the verified texture track. No grade border,
 ## particles or replacement images are created for the reel.
-static func prepare_lightning(pack: RefCounted, grade: String) -> Node2D:
+static func prepare_lightning(pack: RefCounted, grade: String, fusion_card_size: Vector2=Vector2.ZERO) -> Node2D:
+	if grade=="희귀" and fusion_card_size!=Vector2.ZERO:
+		return _prepare_rare_lightning(pack,fusion_card_size)
 	if pack==null or not LIGHTNING_SPRITES.has(grade):return null
 	var member: String=ACTIVE_GRADE[grade]
 	if not pack.manifest.get("scenes",{}).has(member):return null
@@ -133,6 +154,35 @@ static func prepare_lightning(pack: RefCounted, grade: String) -> Node2D:
 	scene.name="SourceCardLightning"
 	scene.hide()
 	return scene
+
+static func _prepare_rare_lightning(pack: RefCounted, card_size: Vector2) -> AnimatedSprite2D:
+	if pack==null or not pack.manifest.get("atlases",{}).has(RARE_LIGHTNING_ATLAS):return null
+	var frames := SpriteFrames.new()
+	frames.rename_animation(&"default",CLIP)
+	frames.set_animation_speed(CLIP,30.0)
+	frames.set_animation_loop(CLIP,false)
+	for frame: int in range(1,RARE_LIGHTNING_FRAMES+1):
+		var texture: Texture2D=pack.texture({"path":"Fx_Seet_FusionUnique_%02d.png" % frame,"plistFile":RARE_LIGHTNING_ATLAS,"resourceType":1},true)
+		if texture==null:return null
+		frames.add_frame(CLIP,texture)
+	var lightning := AnimatedSprite2D.new()
+	lightning.name="SourceCardLightning"
+	lightning.sprite_frames=frames
+	lightning.animation=CLIP
+	lightning.material=Blend.material(frames.get_frame_texture(CLIP,0),"1:1")
+	# Fit the sequence to the same card clip as the other grade discharges.
+	var extent: Vector2=frames.get_frame_texture(CLIP,1).get_size()
+	lightning.scale=Vector2.ONE*minf(card_size.x/extent.x,card_size.y/extent.y)
+	lightning.hide()
+	lightning.animation_finished.connect(lightning.hide)
+	return lightning
+
+static func play_lightning(lightning: Node2D) -> void:
+	if lightning is AnimatedSprite2D:
+		lightning.play(CLIP)
+	elif not lightning.play(CLIP,false).get("ok",false):
+		return
+	lightning.show()
 
 ## Mounts and plays the grade light in the built cell at `prefix` (no "/"):
 ## {lit, scenes}. Nothing changes for a grade below 영웅 or without the scenes.

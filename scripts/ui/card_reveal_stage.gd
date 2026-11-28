@@ -142,7 +142,7 @@ static func play_result_cell(host: Node2D, area: Rect2, record: Dictionary, sett
 	card.configure(record, no_legacy, category_name, shuffled)
 	var upgraded: bool=is_fusion and not bool(record.get("pity_reward",false)) and bool(record.get("fusion_success",succeeded))
 	var show_lightning: bool=(not is_fusion or upgraded) and not card.reduced_motion and card.intensity_scale>0.0
-	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade) if show_lightning else null
+	var lightning: Node2D=NativeGradeFx.prepare_lightning(pack,card.grade,area.size if is_fusion else Vector2.ZERO) if show_lightning else null
 	if lightning!=null:
 		if is_fusion:card.reel_seconds=FUSION_SUCCESS_REEL_SECONDS
 		lightning.position=area.size*0.5
@@ -165,8 +165,7 @@ static func _mount_result_cell(host: Node2D, card: Control, settled: Callable, u
 		var duration: float = card.reveal_at()
 		motion.tween_method(card.seek.bind(upgraded), 0.0, duration, duration)
 		if lightning!=null:
-			motion.parallel().tween_callback(func() -> void:
-				if lightning.play(NativeGradeFx.CLIP,false).get("ok",false):lightning.show()).set_delay(duration-CARD.CONFIRM_DELAY_SECONDS)
+			motion.parallel().tween_callback(NativeGradeFx.play_lightning.bind(lightning)).set_delay(duration-CARD.CONFIRM_DELAY_SECONDS)
 		motion.tween_callback(func() -> void:
 			card.hide()
 			if settled.is_valid(): settled.call()

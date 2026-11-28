@@ -122,9 +122,10 @@ func _check_open_all_dispatch() -> void:
 	check(order.size() == 4, "closing the result cancels unopened card jobs")
 	replaced.free()
 
-func check(ok: bool, label: String) -> void:
+func check(ok: bool, label: String) -> bool:
 	checks+=1
 	if not ok:failures.append(label)
+	return ok
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -224,16 +225,33 @@ func _real_pack(pack_dir: String) -> void:
 	var rare_pack:=SOURCE_PACK.new()
 	check(rare_pack.open(pack_dir,str(receipt.manifest_sha256)).get("ok",false),"the original rare outline pack opens")
 	check(window.configure(rare_pack,hud).get("ok",false),"the result window uses that pack")
-	var rare_results: Array=[{"id":"rare","name":"희귀 카드","grade":"희귀"},{"id":"other","name":"일반 카드","grade":"일반"}]
-	var rare_opened: bool=window.open(parent,rare_results,"변신",true,Callable()).get("handled",false)
+	var rare_results: Array=[{"id":"rare","name":"희귀 카드","grade":"희귀","fusion_success":true},
+		{"id":"other","name":"희귀 카드","grade":"희귀","fusion_success":false}]
+	var rare_effect: Callable=STAGE.play_result_cell.bind("변신",true,true,[],{},rare_pack)
+	var rare_opened: bool=window.open(parent,rare_results,"변신",true,Callable(),rare_effect).get("handled",false)
 	check(rare_opened,"the window mounts a real rare result")
 	if rare_opened:
 		var path: String="Panel/Card_00/Fx_Outline_Front"
 		check(WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)==null,"a sealed rare result does not instantiate its outline")
 		await _tap_button(window._cells,window._cell_out,"Panel/Card_00/Btn_Card")
+		var reel: Control=window._scene.find_child("CardRevealEffect",true,false)
+		if not check(reel!=null,"opening the rare card mounts its result reel"):
+			window.close()
+			viewport.queue_free()
+			host.queue_free()
+			return
+		var bolt: AnimatedSprite2D=reel.find_child("SourceCardLightning",true,false) as AnimatedSprite2D
+		if check(bolt!=null and not bolt.visible and bolt.get_parent().clip_contents,"opening one successful rare card prepares its clipped blue discharge"):
+			check(bolt.sprite_frames.get_frame_count(WINDOW.GradeFx.CLIP)==WINDOW.GradeFx.RARE_LIGHTNING_FRAMES,"all original rare discharge frames are used")
+			await create_timer(maxf(0.05,reel.lightning_at()-reel.clock+0.22)).timeout
+			check(bolt.is_visible_in_tree() and bolt.is_playing() and bolt.frame>0 and not window.is_revealed(0),"the original blue discharge plays before the rare result settles")
+			if DisplayServer.get_name()!="headless":await _check_lightning_pixels(bolt,true)
+		await create_timer(maxf(0.05,reel.reveal_at()-reel.clock+0.15)).timeout
 		var outline: Node2D=WINDOW.GradeFx.project(window,window._cells,window._cell_out,path)
 		check(outline!=null and outline.is_visible_in_tree() and outline.playback_status().clip==WINDOW.GradeFx.RARE_OUTLINE_CLIP,"only the opened rare card plays the authored blue outline")
 		check(window.is_revealed(0) and not window.is_revealed(1),"the adjacent result remains face down")
+		await _tap_button(window._cells,window._cell_out,"Panel/Card_01/Btn_Card")
+		check(window._scene.find_child("SourceCardLightning",true,false)==null,"the adjacent failed rare result does not borrow the successful card's discharge")
 		window.close()
 	viewport.queue_free()
 	host.queue_free()
@@ -331,7 +349,7 @@ func _check_authored_phases(window: RefCounted, parent: Node2D, pack: RefCounted
 
 ## Compare two draws of the same paused game frame. Toggling only the
 ## original CSB player isolates its pixels from the card's own illumination.
-func _check_lightning_pixels(bolt: Node2D) -> void:
+func _check_lightning_pixels(bolt: Node2D, require_blue: bool=false) -> void:
 	paused=true
 	var clip:=bolt.get_parent() as Control
 	var viewport:=bolt.get_viewport()
@@ -346,15 +364,20 @@ func _check_lightning_pixels(bolt: Node2D) -> void:
 	var first:=Vector2i(bounds.position.floor())
 	var area:=Rect2i(first,Vector2i(bounds.end.ceil())-first).intersection(Rect2i(Vector2i.ZERO,lit.get_size()))
 	var changed: int=0
+	var blue: int=0
 	for y: int in range(area.position.y,area.end.y):
 		for x: int in range(area.position.x,area.end.x):
-			if lit.get_pixel(x,y)!=hidden.get_pixel(x,y):changed+=1
+			var after: Color=lit.get_pixel(x,y)
+			var before: Color=hidden.get_pixel(x,y)
+			if after!=before:changed+=1
+			if require_blue and after.b-before.b>0.06 and after.b-before.b>after.r-before.r+0.03:blue+=1
 	check(changed>0,"the original success discharge changes rendered pixels inside the card")
+	if require_blue:check(blue>20,"the rare discharge adds visible blue inside the card")
 	lit.fill_rect(area,Color.TRANSPARENT)
 	hidden.fill_rect(area,Color.TRANSPARENT)
 	var same_outside: bool=lit.get_data()==hidden.get_data()
 	check(same_outside,"hiding the bolt leaves all pixels outside the card identical")
-	print("FUSION_LIGHTNING_PIXELS ",JSON.stringify({"inside_changed":changed,"outside_identical":same_outside}))
+	print("FUSION_LIGHTNING_PIXELS ",JSON.stringify({"inside_changed":changed,"outside_identical":same_outside,"blue_changed":blue}))
 
 func _check_outline_pixels(outline: Node2D) -> void:
 	paused=true

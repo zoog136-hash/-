@@ -10,7 +10,7 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   comes last as in the existing reveal.
 ## - Individual taps turn cards over. Once the page has opened, the
 ##   full-screen Btn_Close advances or closes. The top Btn_Close closes.
-## - 희귀 uses the authored blue outline. 영웅 이상 use their grade effects.
+## - Successful 희귀 results use the original blue discharge and outline.
 const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
 const Gacha=preload("res://scripts/ui/original_ui/source_main_card_gacha_window.gd")
 const FRAME_HITCH=preload("res://scripts/boot/frame_hitch_log.gd")
