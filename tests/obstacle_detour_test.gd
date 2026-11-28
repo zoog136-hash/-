@@ -6,14 +6,18 @@ const PROGRESS = preload("res://scripts/maps/walk_path_progress.gd")
 
 class TestField extends FIELD:
 	var blocked: Dictionary[Vector2i, bool] = {}
+	var pursuit_epoch: int = 0
 
 	func _cell_allowed(cell: Vector2i) -> bool:
 		return in_bounds(cell) and not blocked.has(cell)
+	func static_pursuit_epoch() -> int:
+		return pursuit_epoch
 
 class TestWorld extends TwilightWorld:
 	var attack_sight_override: bool = false
 	var in_attack_range: bool = false
 	var attacks: int = 0
+	var last_route_origin: Vector2 = Vector2.INF
 
 	func _run_auto_ground_pickup() -> bool: return false
 	func _run_auto_combat_quickslots() -> bool: return false
@@ -21,6 +25,9 @@ class TestWorld extends TwilightWorld:
 	func _equipment523_locked_target() -> TwilightMonster: return null
 	func _has_line_of_sight_world(from: Vector2, to: Vector2) -> bool:
 		return attack_sight_override or super._has_line_of_sight_world(from, to)
+	func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVector2Array:
+		last_route_origin = from_position
+		return super.find_world_path(from_position, to_position)
 	func _attack(_automatic: bool = false) -> void:
 		attacks += 1
 
@@ -38,6 +45,7 @@ var host := PhysicsHost.new()
 var player: TwilightPlayer
 var checks: int = 0
 var failures: Array[String] = []
+var short_moves: Dictionary = {}
 
 func _initialize() -> void: _run.call_deferred()
 
@@ -152,6 +160,53 @@ func _pursue(target: TwilightMonster, frames: int) -> float:
 		world.auto_stuck_time = world.auto_stuck_time + delta if stalled else 0.0
 		side_peak = maxf(side_peak, absf(player.global_position.y - start.y))
 	return side_peak
+
+func _short_waypoint(target: TwilightMonster) -> void:
+	var start: Vector2 = _grid(9.5, 9.5)
+	var goal: Vector2 = start + Vector2(19.5, 0)
+	var blocker: StaticBody2D = _add_blocker(start + Vector2(9, 0), Vector2(4, 9))
+	await _place_player(start)
+	check(field.line_clear(start, goal) and player.test_move(player.global_transform, goal - start),
+		"fixture has a physically blocked short route in a walkable source cell")
+	player.set_manual_click_path(PackedVector2Array([goal]), goal)
+	var clear: bool = await _walk_frames(100)
+	short_moves["click_remaining_px"] = player.global_position.distance_to(goal)
+	check(clear and player.global_position.distance_to(goal) <= 5.0,
+		"a short clicked route can slip around the blocker and reach its own waypoint: %s" % (player.global_position - start))
+	await _place_player(start)
+	target.global_position = goal
+	var side_peak: float = await _pursue(target, 104)
+	short_moves["auto_remaining_px"] = player.global_position.distance_to(goal)
+	short_moves["auto_peak_side_px"] = side_peak
+	check(player.global_position.distance_to(goal) <= 5.0 and side_peak > 8.0 and side_peak <= 24.1,
+		"AUTO walks around the short final leg without widening its sidestep: %s %.2f" % [player.global_position - start, side_peak])
+	blocker.queue_free()
+	await _place_player(start)
+
+func _blocked_route_anchor(target: TwilightMonster) -> void:
+	var start: Vector2 = _grid(9.5, 9.5)
+	var waypoint: Vector2 = start + Vector2(28, 0)
+	var goal: Vector2 = start + Vector2(100, 0)
+	await _place_player(start)
+	target.global_position = goal
+	world.auto_stuck_time = 0.0
+	field.pursuit_epoch = 1
+	player.set_click_path(PackedVector2Array([waypoint, goal]), goal)
+	world._remember_stable_auto_route(target)
+	check(world._can_keep_stable_auto_route(target), "a confirmed current route with a clear walking leg can be kept")
+	var blocker: StaticBody2D = _add_blocker(start + Vector2(13, 0), Vector2(6, 10))
+	player.set_physics_process(false)
+	await physics_frame
+	await physics_frame
+	check(field.line_clear(start, waypoint) and not player.can_resume_pursuit(waypoint),
+		"the previous route anchor is clear on the terrain grid but blocked for the player's foot")
+	check(not world._can_keep_stable_auto_route(target), "a new physical obstruction invalidates a retained pursuit route")
+	world._auto_pursuit_path(target, false)
+	check(world.last_route_origin == start, "a blocked waypoint is never used as the start of the next pursuit search")
+	blocker.queue_free()
+	field.pursuit_epoch = 0
+	player.set_physics_process(true)
+	await _place_player(start)
 
 func _auto(target: TwilightMonster) -> void:
 	# A legal source diagonal can grant combat sight while the off-center
@@ -269,8 +324,10 @@ func _run() -> void:
 	target.set_physics_process(false)
 	target.collision_layer = 0
 	await _manual()
+	await _short_waypoint(target)
+	await _blocked_route_anchor(target)
 	await _auto(target)
-	print("OBSTACLE_DETOUR_RESULT ", JSON.stringify({"checks": checks, "failures": failures}))
+	print("OBSTACLE_DETOUR_RESULT ", JSON.stringify({"checks": checks, "failures": failures, "short_moves": short_moves}))
 	host.free()
 	world.free()
 	quit(0 if failures.is_empty() else 1)

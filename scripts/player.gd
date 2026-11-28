@@ -1004,9 +1004,11 @@ func _find_obstacle_detour(heading: Vector2, routed: bool) -> PackedVector2Array
 		sideways = bx * step.y - by * step.x
 	var room_in_steps: float = DETOUR_FORWARD_STEPS[0]
 	if routed:
-		# Bound the search and never rejoin beyond the current waypoint.
-		room_in_steps = (click_path[path_index] - origin).dot(heading) / forward.length()
-		if room_in_steps < 0.5: return PackedVector2Array()
+		# A short last leg can still make progress around a small blocker.
+		# Probe only up to the current waypoint, even inside half a cell.
+		var remaining: float = (click_path[path_index] - origin).dot(heading)
+		if remaining <= DETOUR_POINT_EPSILON: return PackedVector2Array()
+		room_in_steps = remaining / forward.length()
 	# M79 checks candidates in order and takes the first legal one. The local
 	# half/whole-cell offsets are TWILIGHT's choice. Probe the way forward too
 	# so held input cannot carry the player sideways along a continuous wall.
