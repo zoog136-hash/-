@@ -198,7 +198,9 @@ func _request_slot_transfer(reference: String, deposit: bool) -> void:
 		if record.is_empty():record=world._find_catalog_item_record(item)
 		var identity=preload("res://scripts/ui/source523_item_identity.gd")
 		var original: Dictionary=controller.try_open_storage_transfer(identity.clean_message(item),int(record.get("source_item_class_id",0)),count,transfer,direction)
-		if original.get("handled",false):return
+		if not original.get("handled",false) and not controller.drop_confirm_is_open():
+			hud._report_original_window_unavailable("창고 이동 확인",original)
+		return
 	var action: String="보관" if deposit else "찾기"
 	var instructions: String="보관할 수량을 선택하세요" if deposit else "찾을 수량을 선택하세요"
 	hud.confirm_action("창고 "+action,item+"\n"+instructions,action,transfer,count)

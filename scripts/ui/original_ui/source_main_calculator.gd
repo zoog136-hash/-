@@ -40,7 +40,6 @@ func open(parent: Node, limit: int, accept: Callable, z: int=190) -> Dictionary:
 	maximum=clampi(limit,1,1000)
 	value=1
 	_fresh=true
-	_accept=accept
 	var spec: Dictionary={}
 	for name: String in ["Fx_Popup_LeftUp","Fx_Popup_RightBottom"]:spec[name]={"exclude":true}
 	spec["Label_Volume"]={"role":"source_text","text":str(value)}
@@ -58,6 +57,7 @@ func open(parent: Node, limit: int, accept: Callable, z: int=190) -> Dictionary:
 	if not built.get("ok",false):
 		last_result=built
 		return built
+	_accept=accept
 	_scene=built.scene
 	_out=out
 	_scene.position=LAYOUT_POSITION
@@ -70,6 +70,7 @@ func close() -> void:
 	var previous: Node2D=_scene
 	_scene=null
 	_out={}
+	_accept=Callable()
 	if is_instance_valid(previous) and not previous.is_queued_for_deletion():
 		previous.hide()
 		previous.queue_free()
@@ -98,6 +99,7 @@ func step(delta: int) -> Dictionary:
 
 func select() -> Dictionary:
 	if value<1:return {"ok":true,"refused":"count_zero"}
+	if not is_open():return _fail("source_calculator_closed")
 	var count: int=value
 	var accept: Callable=_accept
 	close()

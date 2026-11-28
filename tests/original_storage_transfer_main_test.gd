@@ -95,11 +95,15 @@ func _exercise_storage(world: TwilightWorld) -> void:
 	var review: Variant=scenes.get(POPUP.BOX)
 	if not check(review is Dictionary,"authored confirmation resource was admitted"):return
 	scenes.erase(POPUP.BOX)
-	var touched: bool=await _hit(_slot(storage,"bag",reference),"fallback when confirmation asset is absent")
+	var touched: bool=await _hit(_slot(storage,"bag",reference),"tap with the original confirmation asset absent")
 	scenes[POPUP.BOX]=review
-	var fallback: Node=hud.get_node_or_null("Root/TwilightConfirmation")
-	if not check(touched and is_instance_valid(fallback),"missing popup asset retains the working transfer dialog"):return
-	if not await _hit(fallback.cancel_button,"fallback cancellation"):return
+	if not check(touched and not controller.drop_confirm_is_open() and hud.get_node_or_null("Root/TwilightConfirmation")==null,"missing original popup keeps the warehouse open without a substitute dialog"):return
+	check(world.warehouse.stacks.get(item,0)==0 and world.inventory.get(item,0)==initial and FileAccess.get_sha256(world.save_path())==disk,"missing original popup leaves both sides and the save intact")
+	if not await _hit(_button_for(storage._scene,"_batch_requested",["bag"]),"original warehouse bulk deposit button"):return
+	var batch: Node=hud.get_node_or_null("Root/TwilightConfirmation")
+	if not check(is_instance_valid(batch) and batch.get_script().resource_path.ends_with("source_main_awakening_review.gd"),"bulk deposit opens the authored common review"):return
+	if not await _hit(batch.cancel_button,"original bulk review cancellation"):return
+	check(world.warehouse.stacks.get(item,0)==0 and world.inventory.get(item,0)==initial and FileAccess.get_sha256(world.save_path())==disk,"cancelling bulk deposit preserves both sides and the save")
 	if not await _hit(_slot(storage,"bag",reference),"original inventory grid slot"):return
 	if not await _answer(controller,"deposit",2,true):return
 	check(world.warehouse.stacks.get(item,0)==0 and world.inventory.get(item,0)==initial and FileAccess.get_sha256(world.save_path())==disk,"cancelling preserves owned stock and disk bytes")

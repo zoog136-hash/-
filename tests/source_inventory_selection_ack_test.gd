@@ -120,6 +120,7 @@ func _fixture(count: int=8, acknowledge: bool=true) -> Dictionary:
 	view.closed.connect(controller._inventory_view_closed)
 	if acknowledge:view.selection_refreshed.connect(controller._inventory_selection_refreshed)
 	check(controller.try_open_inventory().get("handled",false),"real HUD open captures model")
+	check(not controller.inventory_move_pending(),"an open slot view without move controls can still select items")
 	return {"host":host,"bag":bag,"hud":hud,"pack":pack,"slots":slots,"view":view,"controller":controller}
 
 func _run() -> void:

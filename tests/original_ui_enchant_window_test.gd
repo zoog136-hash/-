@@ -2,7 +2,7 @@ extends SceneTree
 ## Original 523 장비 강화 window (source_main_enchant_window). Synthetic (no
 ## original files): the window names the exact client CSBs and fails closed
 ## without them, its texts come from the existing candidate fields, the HUD
-## opens it before the TWILIGHT forge (and reports the fallback), and the
+## opens it before the TWILIGHT forge and reports a missing selected pack, and the
 ## 강화 시작 button requests the roll at once (no 강화 확인 step).
 const WINDOW=preload("res://scripts/ui/original_ui/source_main_enchant_window.gd")
 const FORGE=preload("res://scripts/ui/renewal_forge.gd")
@@ -35,6 +35,9 @@ class RoutingHud extends "res://scripts/ui/renewal_hud.gd":
 	func _open_window(section: String, _title: String, _description: String) -> void:
 		active_section=section
 		workspace.show()
+	func _close_workspace() -> void:
+		active_section=""
+		workspace.hide()
 	var messages: Array[String]=[]
 	func show_message(text: String) -> void:messages.append(text)
 
@@ -105,9 +108,9 @@ func _hud_routing() -> void:
 	check(controller.opened[-1]==["축복 부여 주문서",1,true] and not hud.workspace.visible,"blessing uses the original tab when available")
 	check(hud.original_main_ui_status.get("enchant_window",{}).get("handled",false),"the original window status is recorded")
 	controller.handles=false
-	hud.workspace.show()
-	check(not hud._open_original_enchant("무기 마법 주문서",[]),"without the window the TWILIGHT forge stays the fallback")
-	check(hud.messages.size()==1 and hud.messages[0].begins_with("장비 강화") and hud.messages[0].contains("UI 추가 리소스가 오래되었습니다"),"the fallback is told to the player (outdated add-on)")
+	hud.open_enhancement("무기 마법 주문서",[])
+	check(not hud.workspace.visible and hud.enhancement_forge==null,"a selected pack without the original enchant window holds the TWILIGHT forge")
+	check(hud.messages.size()==1 and hud.messages[0].begins_with("원본 장비 강화") and hud.messages[0].contains("UI 추가 리소스"),"the missing selected window is told to the player")
 	hud.original_main_ui_controller=null
 	check(not hud._open_original_enchant("무기 마법 주문서",[]) and hud.messages.size()==1,"without the original UI controller nothing is reported")
 	hud.free()

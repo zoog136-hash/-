@@ -42,6 +42,8 @@ var page: int=0
 var _shown: Array=[]
 var _tab_rows: Array=[]
 var _pages: int=1
+var _focus_item_class_id: int=0
+var _focus_item_uid: String=""
 
 func required_members() -> Array[String]:
 	return [ROOT,ROW,SLOT,EFFECT_ROW]
@@ -65,9 +67,13 @@ func _book_ready() -> bool:
 	var book: Object=_book()
 	return book!=null and bool(book.prepare())
 
-func open(parent: Node) -> Dictionary:
+func open(parent: Node, item_class_id: int=0, uid: String="") -> Dictionary:
 	if _runtime()==null and _book()==null:return _fail("source_item_book_runtime_unavailable")
 	if not _book_ready() and not _growth96_ready():return _fail("source_item_book_source_unavailable")
+	if item_class_id>0 and (_book()==null or not _book().has_collection_item(item_class_id)):
+		return _fail("source_item_book_has_no_matching_collection")
+	_focus_item_class_id=item_class_id
+	_focus_item_uid=uid
 	showing_status=false
 	state=0
 	page=0
@@ -117,6 +123,8 @@ func _tokens() -> int:
 ## 96레벨 증표 collections on 레벨 / 전체.
 func _rows_of(button: String) -> Array:
 	var rows: Array=[]
+	if _focus_item_class_id>0:
+		return _book().rows(button,_focus_item_class_id,_focus_item_uid) if _book_ready() else rows
 	if _book_ready():rows.append_array(_book().rows(button))
 	if button in GROWTH96_TABS and _growth96_ready():
 		for row: Dictionary in _runtime().snapshot().get("collections",[]):
@@ -234,7 +242,7 @@ static func slot_spec(registered: bool, possible: bool, growth: bool, amount: in
 	var spec: Dictionary={"Panel/Item_Own":{"visible":registered},"Panel/Item_Possible":{"visible":possible},
 		"Panel/Text_ItemName":{"exclude":true},
 		"Panel/Text_Amount":{"visible":not growth and amount>1,"role":"source_text","text":_number(amount)},
-		"Panel/Fx_Registration":{"exclude":true},"CommonSlot/Btn":{"activate":press}}
+		"Panel/Fx_Registration":{"exclude":true},"CommonSlot/Btn":{"activate":press,"displaystate":press.is_valid()}}
 	# 사용자 목록 8: the Common_Slot layers a collection slot never shows (all
 	# hidden as authored) are not built; a page of 40-50 slots built each one
 	# with its sprites, materials and back buffers (~10 ms a slot).
@@ -251,6 +259,7 @@ func _fill_slots(scene: Node2D, out: Dictionary, row: Dictionary) -> Dictionary:
 		var possible: bool=not registered and (tokens>0 if growth else bool(card.get("possible",false)))
 		var amount: int=int(card.get("amount",1))
 		var press: Callable=Callable(self,"_slot_pressed").bind(str(card.id),registered) if growth else Callable(self,"_card_pressed").bind(str(row.id),str(card.id),registered)
+		if not card.get("focus_match",true):press=Callable()
 		specs.append({"member":SLOT,"spec":slot_spec(registered,possible,growth,amount,press)})
 	var placed: Dictionary=_fill_list(scene,out,"Panel_Itembook/CardListView",specs,NAN,true)
 	if not placed.get("ok",false):return placed
@@ -314,15 +323,21 @@ func _card_pressed(collection_id: String, card_id: String, registered: bool) -> 
 		return {"ok":true,"registered":true}
 	var book: Object=_book()
 	if book==null:return _fail("source_item_book_runtime_unavailable")
-	var offer: Dictionary=book.quote(collection_id,card_id)
+	var focus: Dictionary={}
+	if _focus_item_class_id>0:focus={"item_class_id":_focus_item_class_id,"uid":_focus_item_uid}
+	var offer: Dictionary=book.quote(collection_id,card_id,focus)
 	if not offer.get("ok",false):
 		_message(str(offer.get("message","등록할 수 없습니다")))
 		return {"ok":false,"code":"item_book_register_refused","reason":str(offer.get("code",""))}
 	var revision: int=int(offer.revision)
-	hud().call("confirm_action","컬렉션 등록",str(offer.get("message","")),"등록",func(_count: int=1) -> void:
-		var result: Dictionary=book.execute(collection_id,card_id,revision)
+	if not focus.is_empty():focus["offer"]=offer.duplicate(true)
+	var review: Control=hud().confirm_item_collection_registration("컬렉션 등록",str(offer.get("message","")),func(_count: int=1) -> void:
+		var result: Dictionary=book.execute(collection_id,card_id,revision,focus)
 		_message(str(result.get("message","")))
 		if is_open():_stage())
+	if review==null:
+		_message("원본 컬렉션 등록 확인창을 열 수 없습니다.")
+		return _fail("source_item_book_registration_review_unavailable")
 	return {"ok":true,"existing_confirmation":true,"collection":collection_id,"card":card_id}
 
 ## A 96레벨 증표 slot: the existing growth96 quote -> confirmation -> execute.
@@ -337,8 +352,11 @@ func _slot_pressed(id: String, registered: bool) -> Dictionary:
 		_message(str(offer.get("message",offer.get("error","등록할 수 없습니다"))))
 		return {"ok":false,"code":"item_book_register_refused"}
 	var revision: int=int(offer.revision)
-	hud().call("confirm_action","증표 등록",str(offer.get("message","")),"등록",func(_count: int=1) -> void:
+	var review: Control=hud().confirm_item_collection_registration("증표 등록",str(offer.get("message","")),func(_count: int=1) -> void:
 		var result: Dictionary=runtime.execute("register",id,revision)
 		_message(str(result.get("message",result.get("error",""))))
 		if is_open():_stage())
+	if review==null:
+		_message("원본 증표 등록 확인창을 열 수 없습니다.")
+		return _fail("source_item_book_registration_review_unavailable")
 	return {"ok":true,"existing_confirmation":true,"id":id}

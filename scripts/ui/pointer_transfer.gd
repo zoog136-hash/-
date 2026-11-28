@@ -236,7 +236,7 @@ func _input(event: InputEvent) -> void:
 		position = event.position
 		if event is InputEventScreenTouch: _quick_pull_at_touch_end(position)
 		if mode == "pending": _tap()
-		elif mode == "drag" and source.from == "inventory" and pointer >= 0 and position.distance_to(origin) <= L.TOUCH_SCROLL_DISTANCE*2.0 and hud.lineage_inventory_ui.has_method("open_item_info"):
+		elif mode == "drag" and source.from == "inventory" and pointer >= 0 and position.distance_to(origin) <= L.TOUCH_SCROLL_DISTANCE*2.0 and hud.lineage_inventory_ui.has_method("open_item_info") and not _native_inventory_move():
 			# A long press released where it started: the item information
 			# popup (the original detail gesture; a single tap never opens it).
 			hud.lineage_inventory_ui.open_item_info(str(source.id))
@@ -278,6 +278,9 @@ func _quick_pull(delta: Vector2) -> bool:
 func _native_skill_gesture_is_live() -> bool:
 	return hud.original_skill_window_gesture_is_live(int(source.get("skill_window_epoch",0)))
 
+func _native_inventory_move() -> bool:
+	return source.get("from")=="inventory" and source.get("source_native",false) and hud.has_method("original_inventory_move_pending") and hud.original_inventory_move_pending()
+
 func _process(_delta: float) -> void:
 	if pointer == -2:
 		set_process(false)
@@ -312,6 +315,10 @@ func _tap() -> void:
 		"inventory":
 			var reference: String = str(source.id)
 			var native: bool=bool(source.get("source_native",false))
+			if _native_inventory_move():
+				reset_tap_history()
+				hud.original_inventory_select(reference)
+				return
 			if not native and not hud.lineage_inventory_ui.slot_buttons.has(reference):
 				reset_tap_history()
 				return
@@ -364,6 +371,7 @@ func _tap() -> void:
 func _show_drag() -> void:
 	reset_tap_history()
 	suppress_click = true
+	if _native_inventory_move():return
 	preview.texture = source.get("texture")
 	preview.material = preload("res://scripts/ui/original_ui/source_material.gd").original_default(preview.texture) if bool(source.get("source_native",false)) and preview.texture!=null else null
 	preview.position = position-Vector2(31,31)+(L.TOUCH_PREVIEW_OFFSET if pointer >= 0 else Vector2(14,-14))
@@ -398,6 +406,10 @@ func _registration_reference() -> String:
 
 func _drop() -> void:
 	var world: Node = hud.get_parent()
+	if _native_inventory_move():
+		var target: Dictionary=hud.original_inventory_hit_at(position)
+		if not target.is_empty():hud.original_inventory_select(str(target.reference))
+		return
 	if source.from == "warehouse":
 		if is_instance_valid(hud.transaction_view) and hud.active_section == "warehouse" and inside(hud.lineage_inventory_ui.inventory_panel,position):
 			hud.transaction_view.request_withdraw(str(source.id))
@@ -419,7 +431,7 @@ func _drop() -> void:
 	if hud.has_method("original_inventory_hit_at"):
 		var native_target: Dictionary=hud.original_inventory_hit_at(position)
 		if not native_target.is_empty():
-			if source.from=="inventory":hud.lineage_inventory_ui.reorder(str(source.id),str(native_target.reference))
+			if source.from=="inventory":hud.lineage_inventory_ui.move_inventory_before(str(source.id),str(native_target.reference))
 			return
 	# Source chrome owns its pixels/hit region. Never assign an underlying
 	# quickslot or drop an item into the world through the original window.

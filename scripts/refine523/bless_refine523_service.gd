@@ -99,9 +99,11 @@ static func _apply(world: Node, overrides: Dictionary) -> void:
 		world.hud.refresh_inventory(world.inventory)
 	world._update_hud()
 
-static func dissolve(world: Node, uids: Array) -> Dictionary:
+static func dissolve(world: Node, uids: Array, expected_quote: Dictionary = {}) -> Dictionary:
 	var quote: Dictionary = dissolve_quote(world,uids)
 	if not quote.ok: return quote
+	if not expected_quote.is_empty() and quote != expected_quote:
+		return _fail("선택 장비 또는 결과 수량이 바뀌어 용해하지 않았습니다.","stale_dissolve_quote")
 	var inventory: Dictionary = world.inventory.duplicate(true)
 	var instances: Dictionary = world.item_instances.duplicate(true)
 	var ledger: Array = []

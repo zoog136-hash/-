@@ -110,6 +110,7 @@ func configure(pack: RefCounted, hud: Node, image_owner_provider: Callable=Calla
 		_detail_supported=button.get("classname")=="Button" and not Scene._node_at_offset(button,DETAIL_ICON).is_empty()
 	_chrome.model_changed.connect(_on_category_changed)
 	_chrome.search_requested.connect(_open_search)
+	_chrome.move_mode_changed.connect(_sync_detail_control)
 	_slots.selection_changed.connect(_on_selection_changed)
 	if pack.manifest.get("scenes",{}).has(Search.MEMBER):
 		var candidate=Search.new()
@@ -134,7 +135,9 @@ func is_open() -> bool:
 func close(keep_warm: bool=true) -> void:
 	_stop_opening_lines()
 	close_search()
-	if _chrome!=null:_chrome.close_sort()
+	if _chrome!=null:
+		_chrome.close_sort()
+		_chrome.cancel_move()
 	if not keep_warm: invalidate_cache(); return
 	if not is_open():return
 	if _hits.size()>REOPEN_HIT_LIMIT or not is_instance_valid(_scroll_content): invalidate_cache(); return
@@ -298,7 +301,14 @@ func _patch_current_rows(model: Dictionary) -> int:
 
 func select(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
+	if move_pending():return _chrome.move_to(reference)
 	return _slots.select_reference(reference)
+
+func move_pending() -> bool:
+	return is_open() and _chrome != null and _chrome.move_pending()
+
+func cancel_move() -> void:
+	if move_pending():_chrome.cancel_move()
 
 ## The bag armed or disarmed an item (single tap / timeout / use): update
 ## the original Label_Center marker on every built slot.
@@ -313,6 +323,7 @@ func refresh_actions() -> Dictionary:
 
 func activate_selected(reference: String) -> Dictionary:
 	if not is_open():return _unsupported("source_inventory_view_not_open")
+	if move_pending():return _chrome.move_to(reference)
 	# The existing PointerTransfer/host decides double-tap or explicit use.
 	return _slots.activate_existing_selection(reference)
 
@@ -379,6 +390,7 @@ func search_blocks_point(point: Vector2) -> bool:
 	return search_is_open() and _search.blocks_point(point)
 
 func _open_search() -> void:
+	cancel_move()
 	if not is_open() or _native_capacity!=8 or _search==null:return
 	var parent: Object=_parent.get_ref() if _parent!=null else null
 	search_result=_search.open(parent) if parent!=null else _unsupported("source_inventory_search_parent_unavailable")
@@ -634,6 +646,9 @@ func _clear_detail_control() -> void:
 
 func _sync_detail_control() -> void:
 	if not _detail_supported:return
+	if _chrome.move_pending():
+		_clear_detail_control()
+		return
 	var bag: Object=_bag.get_ref() if _bag!=null else null
 	var picked: String=str(bag.get("selected_item")) if bag!=null else ""
 	var slot: Node2D=_hits.get(picked,{}).get("native_slot_scene")
