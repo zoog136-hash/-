@@ -1,6 +1,8 @@
 extends SceneTree
 
 const Domain = preload("res://scripts/unconfirmed523/jade_grail_domain.gd")
+const Runtime = preload("res://scripts/unconfirmed523/runtime.gd")
+const Source = preload("res://scripts/unconfirmed523/source523.gd")
 const DURATIONS: Dictionary = {123412: 600, 130541: 2592000, 139101: 2592000, 139931: 2592000, 169373: 864000, 174863: 864000, 181194: 864000, 188674: 2592000, 195112: 2592000, 195254: 1209600, 197781: 2592000, 255643: 2592000}
 var checked: int = 0
 var failures: Array[String] = []
@@ -19,6 +21,39 @@ class Fixture extends RefCounted:
 			if int(value.get("ID", 0)) == id:
 				return value
 		return {}
+	func ready() -> bool: return true
+	func bonus_stats(_ids: Array, _ctx: Dictionary) -> Dictionary: return {"stats":{"max_hp:flat":25}}
+
+class QuestProbe extends RefCounted:
+	var exports: int = 0
+	func export_state() -> Dictionary:
+		exports += 1
+		return {"claimed":{"fixture":true}}
+
+class AinProbe extends RefCounted:
+	var source_jade_level_override: int = -1
+	var dragon_orb_expires_at: int = 0
+	func export_state() -> Dictionary:
+		return {"blessing":0,"dragon_orb_expires_at":dragon_orb_expires_at}
+
+class ProjectionHost extends Node:
+	const BASE508 = preload("res://scripts/lineagem_base508.gd")
+	var level: int = 70
+	var job_class: String = "기사"
+	var active_map_id: String = "aden_world"
+	var gold: int = 1000
+	var inventory: Dictionary = {}
+	var item_instances: Dictionary = {}
+	var records: Dictionary = {}
+	var equipped_items: Dictionary = {}
+	var ui_preferences: Dictionary = {}
+	var ain_service := AinProbe.new()
+	var quest_service := QuestProbe.new()
+	var catalog_reads: int = 0
+	func _find_catalog_item_record(item: String) -> Dictionary:
+		catalog_reads += 1
+		return records.get(item,{})
+	func _is_instance_equipped(_uid: String) -> bool: return false
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -40,6 +75,16 @@ func _run() -> void:
 	var fixture_domain = Domain.new()
 	fixture_domain.setup(source)
 	_exercise(fixture_domain, "fixture")
+	_live_bonus_projection(source,fixture_domain,"fixture")
+	var archive: String = OS.get_environment("TWILIGHT_523_SOURCE_ZIP")
+	if not archive.is_empty():
+		var pinned = Source.new()
+		var opened: Dictionary = pinned.load_zip(archive)
+		_check(opened.get("ok",false),"pinned original ZIP admitted")
+		if opened.get("ok",false):
+			var pinned_domain = Domain.new()
+			pinned_domain.setup(pinned)
+			_live_bonus_projection(pinned,pinned_domain,"pinned")
 	var source_path: String = OS.get_environment("TWILIGHT_SOURCE523_DIR")
 	if not source_path.is_empty():
 		var actual: Fixture = Fixture.new()
@@ -69,6 +114,66 @@ func _run() -> void:
 	else:
 		printerr("UNCONFIRMED523_JADE_GRAIL_FAILED: " + ", ".join(failures))
 		quit(1)
+
+func _live_bonus_projection(source: Object, domain: RefCounted, label: String) -> void:
+	var host := ProjectionHost.new()
+	var rt := Runtime.new()
+	rt.world = host
+	rt.source = source
+	rt.domains = {"jade_grail":domain}
+	rt._source_configured = true
+	rt.test_now = 1546300800
+	rt.state = rt.fresh()
+	rt.state.bonus_rewards = [{"id":2133354,"expires_at":0}]
+	var grail: Dictionary = {"source_item_class_id":338438,"sourceId":"m523:item:338438"}
+	var ordinary: Dictionary = {"source_item_class_id":355334,"sourceId":"m523:item:355334"}
+	host.item_instances = {
+		"normal":{"name":"grail","record":grail},
+		"other-alias":{"name":"shared","record":ordinary,"source_reward_quantity":2},
+		"overdrawn":{"name":"shared","record":grail},
+		"expired":{"name":"expired","record":grail,"expires_at":rt.test_now},
+		"unproven":{"name":"unproven","record":grail,"quest_reward_receipt":{"schema":2}}}
+	host.inventory = {"grail":1,"shared":2,"expired":1,"unproven":1,"untracked grail":5}
+	host.records["untracked grail"] = grail
+	for i: int in 160:
+		var item: String = "other stock %d" % i
+		host.inventory[item] = 2
+		host.records[item] = ordinary
+		if i < 85:
+			host.item_instances[item] = {"name":item,"record":ordinary,"source_reward_quantity":1}
+	var jade: Dictionary = domain._jade[139931]
+	rt.state.domains.jade_grail.latest_at = rt.test_now
+	rt.state.domains.jade_grail.jade = {"item_id":139931,"used_at":rt.test_now-60,"duration":jade.duration,"subscription":jade.subscription}
+	rt.state.domains.jade_grail.grails["normal"] = {"item_id":338438,"grace_id":4,"absolute_prefix_id":14,"base_prefix_id":24}
+	host.ain_service.dragon_orb_expires_at = rt.test_now-60+int(jade.duration)
+	var full_ctx: Dictionary = rt.context()
+	var ref: Dictionary = domain.bonuses(full_ctx,rt.state.domains.jade_grail)
+	_check(full_ctx.instances.has("normal") and not full_ctx.instances.has("overdrawn") and not full_ctx.instances.has("expired") and not full_ctx.instances.has("unproven"),label+" full ownership reference rejects overdraw, expiry and invalid receipt")
+	_check(not ref.effects.is_empty(),label+" admitted original grail contributes a possession effect")
+	host.catalog_reads = 0
+	host.quest_service.exports = 0
+	rt.rebuild()
+	var shown: Dictionary = rt.effect_details.duplicate(true)
+	var earned: Dictionary = shown.get("earned",{})
+	shown.erase("combat_policy")
+	shown.erase("earned")
+	_check(shown == ref and rt.jade_status() == ref.jade and host.ain_service.source_jade_level_override == ref.jade.protection_level,label+" identical possession, grace and jade outputs")
+	_check(earned == source.bonus_stats([2133354],full_ctx) and not earned.get("stats",{}).is_empty(),label+" earned passive bonus matches the full context")
+	_check(host.catalog_reads == 0 and host.quest_service.exports == 0,label+" no unrelated catalog or quest export for the live bonuses")
+	var samples: Array = []
+	for _round: int in 3:
+		var elapsed: Array[int] = []
+		for _call: int in 40:
+			var started: int = Time.get_ticks_usec()
+			rt.rebuild()
+			elapsed.append(Time.get_ticks_usec()-started)
+		elapsed.sort()
+		samples.append({"p95_us":elapsed[37],"max_us":elapsed[-1]})
+	print("LIVE_BONUS_PROJECTION ", JSON.stringify({"input":label,"inventory_names":host.inventory.size(),"physical":host.item_instances.size(),"measurements":samples,"catalog_reads":host.catalog_reads,"quest_exports":host.quest_service.exports}))
+	# Actual transaction context still detects the invalid receipt after the
+	# read-only publish and visits ordinary stack, quest, and wallet inputs.
+	_check(rt.context().has("ownership_error") and host.catalog_reads > 0 and host.quest_service.exports > 0,label+" full action context keeps its receipt and inventory checks")
+	host.free()
 
 func _audit_source_effects(domain) -> void:
 	var all_links: Array = domain._rows("ItemGraceBonus").duplicate(true)

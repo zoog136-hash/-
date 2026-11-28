@@ -225,7 +225,7 @@ func material_plan(skill: Dictionary) -> Dictionary:
 			physical_materials.append_array(original.requests)
 	return {"reason":"","spent":spent,"physical_ammo":physical_ammo,"physical_materials":physical_materials}
 
-func cost_reason(skill: Dictionary) -> String:
+func cost_reason(skill: Dictionary, quote_materials: bool = true) -> String:
 	if not str(skill.get("source523_block_reason", "")).is_empty(): return str(skill.source523_block_reason)
 	if bool(skill.get("runtime_blocked", false)): return Catalog.CURRENT.blocked_reason(skill)
 	var estimate_reason: String = estimated_nodes.cost_reason(skill)
@@ -235,10 +235,12 @@ func cost_reason(skill: Dictionary) -> String:
 	if world.mp < int(skill.get("mp", 0)): return "MP 부족"
 	if world.hp <= int(skill.get("hp", 0)): return "HP 부족"
 	if skill.get("source523", {}).get("applied", []).has("mana") and world.mp >= world._effective_max_mp(): return "MP가 이미 가득 참"
-	return str(material_plan(skill).reason)
+	return str(material_plan(skill).reason) if quote_materials else ""
 
 func spend(skill: Dictionary) -> bool:
-	if not cost_reason(skill).is_empty(): return false
+	# Check admission before scanning the bag, then use this exact quote.
+	# Physical ownership and the saved payload are revalidated by their owner.
+	if not cost_reason(skill, false).is_empty(): return false
 	var plan: Dictionary = material_plan(skill)
 	if not str(plan.get("reason","")).is_empty():return false
 	var physical: Dictionary=plan.get("physical_ammo",{})
@@ -415,7 +417,11 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 			_undo_dash(origin, dash_end)
 			return false
 		registered = int(world.pending_attack.get("id", -1))
-	if not spend(skill):
+	var timing: int = FRAME_HITCH.now() if area or mode in ["buff","counter"] else 0
+	var paid: bool = spend(skill)
+	if timing != 0:
+		timing = FRAME_HITCH.detail_next("skill.area_cost_commit" if area else "skill.buff_cost_commit",timing)
+	if not paid:
 		if registered >= 0: world._withdraw_player_attack(registered, kept_buffs)
 		_undo_dash(origin, dash_end)
 		return false
@@ -488,6 +494,8 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 	var stacks_before: int = hash(stacks) if light_area_hud else 0
 	var buffs_before: int = hash(world.active_skill_buffs) if light_area_hud else 0
 	trigger("on_skill", target, skill)
+	if timing != 0:
+		timing = FRAME_HITCH.detail_next("skill.area_feedback" if area else "skill.buff_feedback",timing)
 	# A direct self effect can publish the live stats and paid materials
 	# without refolding the bag or refreshing unrelated card ownership.
 	if light_area_hud and stacks_before == hash(stacks) and buffs_before == hash(world.active_skill_buffs):
@@ -496,6 +504,8 @@ func _commit_cast(skill: Dictionary, mode: String, target: TwilightMonster, dash
 		world._publish_timed_buff_hud()
 	else:
 		world._update_hud()
+	if timing != 0:
+		FRAME_HITCH.detail("skill.area_hud" if area else "skill.buff_hud",timing)
 	return true
 
 ## Why an attack/status skill found no target. TWILIGHT 근사: the 523 tables
