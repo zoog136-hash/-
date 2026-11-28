@@ -2829,7 +2829,19 @@ static func plan_spell_material(world: Node,skill: Dictionary,cost_key: String,q
 	for bridge: Variant in public.get("material_inventory_keys",{}).values():
 		if bridge is Dictionary and bridge.get("inventory_key")==cost_key and bridge.get("native_item_id") not in ids:ids.append(bridge.get("native_item_id"))
 	if ids.size()!=1:return {"handled":false}
-	var remaining: int=quantity;var requests: Array=[];var physical_ids: Array=world.item_instances.keys();physical_ids.sort()
+	var remaining: int=quantity;var requests: Array=[]
+	var physical_ids: Array[String]=[]
+	for uid: String in world.item_instances:
+		var entry: Variant=world.item_instances[uid]
+		if not entry is Dictionary: continue
+		# Use the receipt's class only as a filter. Both owners still verify
+		# the complete original definition, proof, locks and quantity below.
+		var native: Variant=entry.get(RECEIPT)
+		var quest: Variant=entry.get("quest_reward_receipt")
+		if (native is Dictionary and native.get("item_class_id")==ids[0]) or (quest is Dictionary and quest.get("item_class_id")==ids[0]):
+			physical_ids.append(uid)
+	physical_ids.sort()
+	FRAME_HITCH.count("skill.material_candidate_proofs",physical_ids.size())
 	# Deterministic host custody selection, not native material/odds semantics.
 	# Every chosen ID is recorded with exact proof/remaining and consumed as quoted.
 	for uid: String in physical_ids:
@@ -2854,6 +2866,8 @@ static func stage_owned_debits(world: Node,requests: Array) -> Dictionary:
 		else:native_requests.append(request)
 	var native: Dictionary=stage_debit(world,native_requests) if not native_requests.is_empty() else {}
 	if not native_requests.is_empty() and not native.get("ok",false):return native
+	if not native.is_empty() and quest_requests.is_empty():
+		return {"ok":true,"overrides":native.overrides,"selections":native.selections,"quest_step":{},"use_authorized":false}
 	var quest: Dictionary=QUEST_CONSUME.stage(world,quest_requests,str(SOURCE.identity().source_sha256)) if not quest_requests.is_empty() else {}
 	if not quest_requests.is_empty() and not quest.get("ok",false):return _failure(str(quest.get("reason","공동 퀘스트 재료 차감 증명 불일치")))
 	var bag: Dictionary=world.inventory.duplicate(true);var instances: Dictionary=world.item_instances.duplicate(true);var selected: Array=[]

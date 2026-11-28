@@ -3,6 +3,7 @@ extends SceneTree
 const MONSTER := preload("res://scenes/Monster.tscn")
 const SOURCE := preload("res://scripts/skills/player_skills523.gd")
 const SOURCE_FIELD_FIXTURE := preload("res://tests/current523_aden_source_field_test.gd")
+const ROOMS_FIXTURE := preload("res://tests/current523_auto_disconnected_target_test.gd")
 const HITCH := preload("res://scripts/boot/frame_hitch_log.gd")
 
 class FieldProbe extends Node2D:
@@ -11,6 +12,11 @@ class FieldProbe extends Node2D:
 	var sight_checks: int = 0
 	var walls: Dictionary = {Vector2(4, 0):true, Vector2(30, 1):true}
 	var navigation: OriginalPlayableField
+	var field_map: OriginalPlayableField
+	var combat_generation := 1
+
+	func _static_auto_route_epoch() -> int:
+		return field_map.static_pursuit_epoch() if field_map != null else 0
 
 	func _has_line_of_sight_world(from: Vector2, to: Vector2) -> bool:
 		sight_checks += 1
@@ -93,7 +99,7 @@ func check_stationary_auto_misses() -> void:
 	distant.position = Vector2(220,0)
 	check(not service._has_area_target(skill) and probe.sight_checks == 2, "out-of-range movement leaves the proof intact")
 	distant.position = Vector2(10,0)
-	check(service._has_area_target(skill) and distant.auto_area_miss_observer == null,
+	check(service._has_area_target(skill) and probe.sight_checks == 3,
 		"an actor on the exact radius invalidates the miss and resumes the live route")
 	distant.free()
 	check(not service._has_area_target(skill), "a new miss can be recorded after removal")
@@ -126,9 +132,9 @@ func check_stationary_auto_misses() -> void:
 	check(service._has_area_target(skill), "unversioned terrain sees an opened wall immediately")
 	probe.epoch += 1
 	probe.walls[blocked.position] = true
-	check(not service._has_area_target(skill) and blocked.auto_area_miss_observer != null, "verified blocked geometry arms movement notifications")
+	check(not service._has_area_target(skill) and blocked.auto_area_tracker != null, "verified blocked geometry arms movement notifications")
 	probe.monsters_root.free()
-	check(service._auto_area_misses._root == null, "releasing the actor root also releases the miss cache")
+	check(service._auto_area_targets._root == null, "releasing the actor root also releases the miss cache")
 	probe.queue_free()
 
 func run() -> void:
@@ -177,11 +183,71 @@ func run() -> void:
 	check(active in cone_targets and cone_targets.all(func(actor: TwilightMonster) -> bool: return actor.global_position.x >= 0.0),
 		"target-free cone keeps its declared forward range")
 	check_stationary_auto_misses()
+	check_automatic_index()
 	var timing: Dictionary = s32_benchmark() if "--benchmark" in OS.get_cmdline_user_args() else {}
 	field.queue_free()
 	await process_frame
 	print("SKILL_AREA_TARGET_SCAN_RESULT ", JSON.stringify({"checks":checks,"failures":failures,"wall_queries_before_after":counts,"synthetic_s32":timing}))
 	quit(0 if failures.is_empty() else 1)
+
+func check_automatic_index() -> void:
+	var field: FieldProbe = make_field()
+	var s32 := ROOMS_FIXTURE.Rooms.new()
+	s32.populate()
+	field.navigation = s32
+	field.field_map = s32
+	var origin: Vector2 = s32.cell_to_world(Vector2i(62, 28))
+	var blocked: Vector2 = s32.cell_to_world(Vector2i(64, 28))
+	field.player.global_position = origin
+	var monster: TwilightMonster = spawn(field, blocked)
+	var distant: TwilightMonster = spawn(field, blocked + Vector2(600, 600))
+	for i: int in 79: spawn(field, blocked + Vector2(612 + i * 12, 600))
+	var service := TwilightOriginalSkillService.new()
+	service.world = field
+	var skill := {"mode":"attack", "shape":"self_circle", "radius":160.0, "targets":8, "source523":{"target_kind":"Enemy"}}
+	HITCH.enabled = true
+	HITCH._counters.clear()
+	check(not service._has_area_target(skill) and field.sight_checks == 1, "nearby blocked actor checks exact S32 sight once; distant rows are excluded")
+	var visited: int = int(HITCH._counters.get("skill.area_candidate_rows", 0))
+	var scans: int = int(HITCH._counters.get("skill.area_index_root_scans", 0))
+	check(visited < 5 and scans == 1, "the initial index selects local buckets from 81 actors")
+	var stationary: bool = true
+	for i: int in 20: stationary = not service._has_area_target(skill) and stationary
+	check(stationary and field.sight_checks == 1 and int(HITCH._counters.get("skill.area_candidate_rows", 0)) == visited
+		and int(HITCH._counters.get("skill.area_index_root_scans", 0)) == scans, "stationary blocked pulses do not walk either the complete actor list or the prior local rows")
+	for i: int in 8:
+		distant.position += Vector2(140, 0)
+		check(not service._has_area_target(skill), "far movement cannot admit a cast")
+	check(field.sight_checks == 1 and int(HITCH._counters.get("skill.area_candidate_rows", 0)) == visited,
+		"moving an actor between distant cells leaves the local result intact")
+	var updates: int = int(HITCH._counters.get("skill.area_index_position_updates", 0))
+	var visible_position: Vector2 = s32.cell_to_world(Vector2i(61, 28))
+	for i: int in 10: monster.global_position = visible_position + Vector2(0, float(i) * 0.1)
+	check(not monster.is_local_transform_notification_enabled()
+		and int(HITCH._counters.get("skill.area_index_position_updates", 0)) == updates,
+		"multiple movements queue a single read for the next query")
+	check(service._has_area_target(skill) and monster.is_local_transform_notification_enabled()
+		and int(HITCH._counters.get("skill.area_index_position_updates", 0)) == updates + 1,
+		"the next query checks the latest visible position and resumes tracking")
+	monster.concealed523 = true
+	check(not service._has_area_target(skill), "an actor's current concealment still gates its AUTO eligibility")
+	monster.concealed523 = false
+	check(service._has_area_target(skill), "revealing the same actor in place is visible to AUTO")
+	monster.global_position = blocked
+	check(not service._has_area_target(skill), "moving behind the wall stops admitting automatic casts")
+	s32.populate(28)
+	check(service._has_area_target(skill), "a new S32 admission invalidates old blocked visibility")
+	monster.position += Vector2(0, 0.1)
+	field.monsters_root.remove_child(monster)
+	check(not service._has_area_target(skill) and monster.auto_area_tracker == null
+		and not monster.is_local_transform_notification_enabled(), "reparenting removes the queued actor immediately")
+	monster.position = origin
+	field.monsters_root.add_child(monster)
+	check(service._has_area_target(skill), "the returned actor is indexed through its new tree entry")
+	service.clear_auto_area_targets()
+	check(monster.auto_area_tracker == null and not monster.is_local_transform_notification_enabled(), "disabling AUTO releases tracking")
+	field.free()
+	s32.close()
 
 ## Warm CPU comparison through the production S32 line traversal, using the
 ## existing in-memory synthetic terrain fixture. No disk/GPU time is sampled.
