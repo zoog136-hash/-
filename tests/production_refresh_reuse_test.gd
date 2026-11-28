@@ -11,6 +11,8 @@ const PRODUCTION = preload("res://scripts/ui/original_ui/source_main_production_
 const NAMED = preload("res://scripts/ui/original_ui/source_main_named_tree.gd")
 const ROUTER = preload("res://scripts/ui/original_ui/source_button_router.gd")
 const SOURCE_HUD = preload("res://scripts/ui/original_ui/source_main_hud.gd")
+const ITEMS = preload("res://scripts/loot/patch523_item_inventory.gd")
+const STOCK = preload("res://scripts/loot/current523_native_stack.gd")
 var checks: int=0
 var failures: Array[String]=[]
 
@@ -25,27 +27,28 @@ func _initialize() -> void:
 
 func _check_fast_rejection() -> void:
 	var gear := {"item":"gear","source_id":"41","quantity":2,"row_id":11,"physical":true}
-	var stack := {"item":"stack","source_id":"42","quantity":3,"row_id":12,"physical":false}
+	var stack := {"item":"stack","source_id":"42","quantity":3,"row_id":12,"physical":false,"level":0,"bless_code":1}
 	var recipe := {"adena":10,"materials":[gear,stack]}
 	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":2},9,{}),"known fee cannot be paid")
 	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":1},10,{}),"known physical requirement cannot be met")
-	check(WORLD._production_can_meet_required_inputs(recipe,{"gear":2},10,{}),"a missing stack may be supplied by another owner and must reach the full quote")
+	check(WORLD._production_can_meet_required_inputs(recipe,{"gear":2},10,null),"a missing stack may be supplied by another owner and must reach the full quote")
 	recipe["material_slots"]=[{"slot_index":2,"candidates":[gear,stack]}]
-	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":2},10,{}),"an unchosen alternative cannot be ready")
-	check(WORLD._production_can_meet_required_inputs(recipe,{"gear":2},10,{"2":44}),"an explicit alternative must undergo the full choice validation")
-	check(WORLD._production_can_meet_required_inputs(recipe,{},10,{"2":12}),"a selected stack still needs the full quote and its original ownership checks")
+	check(WORLD._production_can_meet_required_inputs(recipe,{"gear":2},10,{}),"an owned alternative reaches the full quote without a manual choice")
+	check(WORLD._production_can_meet_required_inputs(recipe,{"stack":3},10,{}),"a different owned alternative reaches the full quote")
+	check(not WORLD._production_can_meet_required_inputs(recipe,{"stack":1},10,{}),"an alternative slot with no viable inputs is rejected quickly")
+	check(WORLD._production_can_meet_required_inputs(recipe,{},10,null),"receipt selections still need the full quote and original ownership checks")
 	recipe.material_slots[0].candidates=[gear]
 	check(not WORLD._production_can_meet_required_inputs(recipe,{"gear":1},10,{}),"the fixed slot's equipment needs its exact quantity")
 	var ordinary := {"item":"stack","source_id":"3732","bless_code":1,"level":0,"quantity":3,"physical":false}
 	var stack_recipe := {"adena":0,"materials":[ordinary]}
-	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2},0,{},{}),"two plain stacks cannot satisfy three required units without another owner")
-	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2,"issued stack":1},0,{},{"3732:1:0":"issued stack"}),"plain and exact expedition balances may cover the same ingredient")
-	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"issued stack":3},0,{},{"3732:2:0":"issued stack"}),"a different expedition blessing cannot cover this ingredient")
-	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,{},null),"explicitly selected source receipts leave stack availability to the full quote")
+	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2},0,{}),"two plain stacks cannot satisfy three required units without another owner")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"stack":2,"issued stack":1},0,{"3732:1:0":"issued stack"}),"plain and exact expedition balances may cover the same ingredient")
+	check(not WORLD._production_can_meet_required_inputs(stack_recipe,{"issued stack":3},0,{"3732:2:0":"issued stack"}),"a different expedition blessing cannot cover this ingredient")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,null),"explicitly selected source receipts leave stack availability to the full quote")
 	ordinary["inventory_key"]="catalog currency"
-	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"catalog currency":3},0,{},{}),"the source wallet's inventory key supplies its stack")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{"catalog currency":3},0,{}),"the source wallet's inventory key supplies its stack")
 	ordinary["source_id"]="3252"
-	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,{},{}),"awakening receipts are still checked by their owner")
+	check(WORLD._production_can_meet_required_inputs(stack_recipe,{},0,{}),"awakening receipts are still checked by their owner")
 
 func _touch(window: RefCounted, suffix: String) -> Dictionary:
 	var target: Dictionary=NAMED.locate_exact(window._scene,window.node_keys(),suffix)
@@ -72,6 +75,19 @@ func _shown_amount(window: RefCounted) -> String:
 	if node.has_meta("source_text"):return str(node.get_meta("source_text").original_options.text)
 	if node.has_meta("source_bitmap_text"):return str(node.get_meta("source_bitmap_text")._options.text)
 	return ""
+
+func _confirm_current_craft(hud: Node) -> void:
+	for page: int in range(8):
+		var dialog: Variant=hud.get_node_or_null("Root/TwilightConfirmation")
+		if not is_instance_valid(dialog) or dialog.is_queued_for_deletion():return
+		var confirm: Control=dialog.confirm_button
+		for pressed: bool in [true,false]:
+			var event:=InputEventScreenTouch.new()
+			event.index=14
+			event.pressed=pressed
+			event.position=confirm.get_global_transform_with_canvas()*(confirm.size*0.5)
+			root.push_input(event,true)
+		await process_frame
 
 func _check_quantity(world: Node, window: RefCounted) -> void:
 	var editable: String=""
@@ -100,6 +116,56 @@ func _check_quantity(world: Node, window: RefCounted) -> void:
 	var label: Dictionary=NAMED.locate_exact(scene,window.node_keys(),PRODUCTION.P_PROD+"ProgressBar/Label_Amount")
 	window.node_keys().erase(label.get("key",""))
 	check(window._add_count(1).get("ok",false) and window._scene!=scene and _shown_amount(window)=="2","a missing live binding falls back to the complete source scene")
+
+func _check_awakening_substitute(world: Node, window: RefCounted) -> void:
+	const RECIPE := "patch523:38064"
+	const SUBSTITUTE := 244
+	var recipe: Dictionary=world.patch523_equipment.recipes.get(RECIPE,{})
+	check(not recipe.is_empty(),"the screenshot's original shard recipe is compiled")
+	if recipe.is_empty():return
+	world.level=74
+	world.gold=maxi(world.gold,1000000)
+	world.patch523_material_choices.erase(RECIPE)
+	var staged: Dictionary=ITEMS.stage(world,[{"item_class_id":SUBSTITUTE,"amount":2,"bless_raw":1,"enchant":0}],{"kind":"twilight_debug_catalog","initial_level_origin":"twilight_debug_default_zero"})
+	check(staged.get("ok",false),"a real physical alternate spellbook can be issued")
+	if not staged.get("ok",false):return
+	world.inventory=staged.overrides.inventory
+	world.item_instances=staged.overrides.item_instances
+	var uid: String=""
+	for key: String in world.item_instances:
+		if int(world.item_instances[key].get("record",{}).get("source_item_class_id",0))==SUBSTITUTE and not STOCK.proof(world,key).is_empty():uid=key;break
+	check(not uid.is_empty(),"alternative has its original physical receipt")
+	if uid.is_empty():return
+	world._update_hud()
+	var selection: Dictionary=window.select_recipe(RECIPE)
+	if not selection.get("ok",false):
+		check(false,"the original production window shows the shard recipe: "+str(selection));return
+	var report: Dictionary=world._craft_quote(RECIPE,1)
+	check(report.get("ok",false) and report.get("material_rows",[]).any(func(row: Dictionary) -> bool: return str(row.source_id)=="244"),"quote automatically uses #244: "+str(report.get("reason","")))
+	check(window._material_rows(world,report).any(func(row: Dictionary) -> bool: return str(row.source_id)=="244" and row.available>=row.required),"the mounted material row shows the same usable alternate")
+	if not report.get("ok",false):return
+	var review: Dictionary=_touch(window,PRODUCTION.P_PROD+"Btn_Production")
+	check(review.get("ok",false),"the actual production button opens confirmation with no manual choice")
+	var dialog: Variant=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	check(is_instance_valid(dialog),"the craft confirmation presents the reviewed material")
+	if not is_instance_valid(dialog):return
+	var lock_key: String=str(world.item_instances[uid].name)+"@@@"+uid
+	world.ui_preferences.item_locks[lock_key]=true
+	var before: String=FileAccess.get_sha256(world.save_path())
+	await _confirm_current_craft(world.hud)
+	check(STOCK.proof(world,uid).get("remaining")==2 and FileAccess.get_sha256(world.save_path())==before,"a changed alternate is rejected after review with no debit or save")
+	world.ui_preferences.item_locks.erase(lock_key)
+	window.refresh()
+	_touch(window,PRODUCTION.P_PROD+"Btn_Production")
+	dialog=world.hud.get_node_or_null("Root/TwilightConfirmation")
+	if not is_instance_valid(dialog):
+		check(false,"the identical ready recipe opens a new confirmation");return
+	var output_key: String=world.patch523_equipment.ownership_key(recipe.result)
+	var output_before: int=int(world.inventory.get(output_key,0))
+	await _confirm_current_craft(world.hud)
+	check(STOCK.proof(world,uid).get("remaining")==1 and int(world.inventory.get(output_key,0))==output_before+1,"confirmation debits one physical substitute and awards one genuine shard")
+	world._load_game(true)
+	check(STOCK.proof(world,uid).get("remaining")==1 and int(world.inventory.get(output_key,0))==output_before+1,"the alternate debit and the shard survive reload")
 
 func _run() -> void:
 	var source: String=FileAccess.get_file_as_string("res://scripts/ui/original_ui/source_main_production_window.gd")
@@ -152,6 +218,7 @@ func _run() -> void:
 		hud._navigate("crafting")
 		await process_frame
 		check(window.is_open() and window.selected()==selected and not hud.workspace.visible,"the menu reopens the original crafting window after its old rows are freed")
+		if not preload("res://scripts/resources/current523_definition_rows.gd").not_installed():await _check_awakening_substitute(world,window)
 		hud._close_workspace()
 	print("PRODUCTION_REFRESH_REUSE_RESULT ",JSON.stringify({"checks":checks,"failures":failures,"mounted":mounted}))
 	world.queue_free()

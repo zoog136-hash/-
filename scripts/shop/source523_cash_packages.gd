@@ -756,7 +756,8 @@ static func open(world, item_name: String, rewards: Array) -> Dictionary:
 		var box_title: String = label(definition_id_of(world, item_name))
 		world.hud.present_card_reveal(str(first.get("category", "변신")), {"ok":true, "results":card_results, "title":box_title if not box_title.is_empty() else item_name}, false)
 	elif skill_draw and world.hud.has_method("present_skill_card_draw"):
-		world.hud.present_skill_card_draw(skill_results)
+		var box_title: String=label(definition_id_of(world,item_name))
+		world.hud.present_skill_card_draw(skill_results,box_title if not box_title.is_empty() else item_name)
 	return {"ok":true, "message":message, "received":received}
 
 ## The opened box's save: the next frame's general save (one per frame).

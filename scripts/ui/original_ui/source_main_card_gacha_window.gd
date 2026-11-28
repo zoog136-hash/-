@@ -23,17 +23,21 @@ extends "res://scripts/ui/original_ui/source_main_window_kit.gd"
 ##   are TWILIGHT 근사 (the client code is not in the data).
 ## - Label_Title: the opened box's name.
 ## Left out (no TWILIGHT feature): the roulette, 재 구매 / 재사용 / 자동 사용 /
-## 합성하러 가기, the bonus slot, the collection notice, 카드교체 바로가기 and
-## the skill card sets.
+## 합성하러 가기, the bonus slot, the collection notice and 카드교체 바로가기.
+## Skill draws use the authored skill sets with the same paging and input.
 const Page=preload("res://scripts/ui/original_ui/source_main_change_page.gd")
 const GradeFx=preload("res://scripts/ui/original_ui/source_main_card_grade_fx.gd")
+const SkillCard=preload("res://scripts/ui/original_ui/source_main_skill_card_window.gd")
 const ROOT="UI/BMShop/BM_Gacha.csb"
 const CARD="UI/Change/Change_Fusion_Card.csb"
 const PER_PAGE: int=10
 ## Set node, cells used, the set's own bonus cell left out.
 const SETS: Array=[["Nd_CardSet_One",1,""],["Nd_CardSet_Five",5,"Card_05"],["Nd_CardSet",10,"Card_10"]]
+const SKILL_CATEGORY="스킬 카드"
+const SKILL_SETS: Array=[["Nd_SkillCardSet_One",1,""],["Nd_SkillCardSet_Five",5,"Card_05"],["Nd_SkillCardSet",10,"Card_10"]]
 ## The set's dealing clip (BM_Gacha animationList).
-const DEAL={"Nd_CardSet_One":"CardSet_One","Nd_CardSet_Five":"CardSet_Five","Nd_CardSet":"Fx_Start"}
+const DEAL={"Nd_CardSet_One":"CardSet_One","Nd_CardSet_Five":"CardSet_Five","Nd_CardSet":"Fx_Start",
+	"Nd_SkillCardSet_One":"SkillCardSet_One","Nd_SkillCardSet_Five":"SkillCardSet_Five","Nd_SkillCardSet":"Skill_Fx_Start"}
 ## The card back clip of each category (Change_Fusion_Card animationList).
 const BACK={"변신":"Fx_Start_Change","마법인형":"Fx_Start_Doll","성물":"Fx_Start_HolyStuff"}
 ## The inner clip name the sets give their cells.
@@ -64,6 +68,9 @@ func _root_member() -> String:
 ## grade, ...); `done` runs when the window closes.
 func open(parent: Node, views: Array, category_name: String, box_title: String="", done: Callable=Callable(), effect: Callable=Callable()) -> Dictionary:
 	if views.is_empty():return _fail("source_card_gacha_empty")
+	if category_name==SKILL_CATEGORY:
+		for member: String in [SkillCard.FUSION_CARD,SkillCard.SLOT,SkillCard.COMMON_SLOT]:
+			if not _pack.manifest.get("scenes",{}).has(member):return _fail("source_skill_gacha_member_missing")
 	results=views.duplicate(true)
 	category=category_name
 	title=box_title
@@ -102,9 +109,10 @@ func pages() -> int:
 ## [set node, cells, bonus cell] for the current page.
 func _card_set() -> Array:
 	var count: int=mini(PER_PAGE,results.size()-page*PER_PAGE)
-	for entry: Array in SETS:
+	var sets: Array=SKILL_SETS if category==SKILL_CATEGORY else SETS
+	for entry: Array in sets:
 		if count<=int(entry[1]):return entry
-	return SETS[SETS.size()-1]
+	return sets.back()
 
 func _spec() -> Dictionary:
 	var spec: Dictionary={}
@@ -115,17 +123,17 @@ func _spec() -> Dictionary:
 	for name: String in ["Payment","Btn_Repeat","Btn_Retry","Btn_Auto","Btn_Auto_Stop","Btn_Fusion","Nd_Option"]:spec["Nd_ButtonSet/"+name]={"exclude":true}
 	if title.is_empty():spec["Nd_ButtonSet/Label_Title"]={"exclude":true}
 	else:spec["Nd_ButtonSet/Label_Title"]={"role":"source_text","text":title}
-	for name: String in ["FullFrameType_A/Fx_Img_BG_Particle","Nd_ButtonSet_Collection","Nd_Btn_Change","Fx_Screen","Nd_SkillCardSet","Nd_SkillCardSet_One","Nd_SkillCardSet_Five"]:spec[name]={"exclude":true}
+	for name: String in ["FullFrameType_A/Fx_Img_BG_Particle","Nd_ButtonSet_Collection","Nd_Btn_Change","Fx_Screen"]:spec[name]={"exclude":true}
 	var chosen: Array=_card_set()
 	var start: int=page*PER_PAGE
-	for entry: Array in SETS:
+	for entry: Array in SETS+SKILL_SETS:
 		var node: String=str(entry[0])
 		if entry!=chosen:
 			spec[node]={"exclude":true}
 			continue
 		spec[node]={"visible":true}
 		for extra: String in ["Nd_Bonus","Fx_Card_Recall"]:
-			if node!="Nd_CardSet_One":spec[node+"/"+extra]={"exclude":true}
+			spec[node+"/"+extra]={"exclude":true}
 		if not str(entry[2]).is_empty():spec[node+"/"+str(entry[2])]={"exclude":true}
 		for index: int in range(int(entry[1])):
 			var key: String="%s/Card_%02d/" % [node,index]
@@ -135,8 +143,12 @@ func _spec() -> Dictionary:
 			var card: Dictionary=results[start+index]
 			var grade: String=str(card.get("grade",""))
 			var opened_card: bool=is_opened(start+index)
-			GradeFx.cell_spec(self,spec,key,grade,not opened_card)
-			if not opened_card:
+			if category==SKILL_CATEGORY:
+				for child: String in ["Panel/Fx_Result_Loop_2","Fx_Result_Loop_1","Card_Roultte","Nd_Info","Fx_Glow/Fx_Greade","Fx_Glow/Fx_Result_Start"]:
+					spec[key+child]={"exclude":true}
+			else:
+				GradeFx.cell_spec(self,spec,key,grade,not opened_card)
+			if category!=SKILL_CATEGORY and not opened_card:
 				# Fx_Glow holds Card_Back; the outline lights only once open.
 				spec.erase(key+"Fx_Glow")
 			spec[key+"Text_Card_Name"]={"role":"source_text","text":str(card.get("name","")),"visible":opened_card}
@@ -155,6 +167,15 @@ func _fill(root: Node2D, out: Dictionary) -> Dictionary:
 		var card: Dictionary=results[start+index]
 		var cell: String="%s/Card_%02d" % [node,index]
 		shown+=1
+		if category==SKILL_CATEGORY:
+			var skill_cell: Node2D=GradeFx.project(self,root,out,cell)
+			if skill_cell==null:return _fail("source_skill_gacha_cell_missing")
+			if is_opened(start+index):
+				if _show_skill_face(skill_cell,card,false):pictures+=1
+			else:
+				skill_cell.seek_frame(60)
+				backs+=1
+			continue
 		var face: Dictionary=GradeFx.prepare_face(self,root,out,cell,card,is_opened(start+index))
 		if not face.get("ok",false):return face
 		if face.picture:pictures+=1
@@ -203,6 +224,19 @@ func _set_visible(root: Node2D, out: Dictionary, suffix: String, value: bool) ->
 	var node: Variant=located.player.source_nodes.get(located.offset)
 	if node is CanvasItem:(node as CanvasItem).visible=value
 
+func _show_skill_face(cell: Node2D, card: Dictionary, animate: bool) -> bool:
+	if not is_instance_valid(cell) or cell.get_node_or_null("SkillCardResultFace")!=null:return false
+	var face: Dictionary=SkillCard.mount_result_face(self,cell,card)
+	if not animate or not cell.play(NAME_CLIP,false).get("ok",false):cell.seek_frame(155)
+	return face.get("picture",false)
+
+func _reveal_skill_cell(cell: Node2D, card: Dictionary) -> void:
+	if not is_instance_valid(cell):return
+	var settings: Variant=world().get("presentation_settings")
+	var motion: bool=not (settings is Dictionary and (settings.get("reduced_motion",false) or float(settings.get("impact_intensity",1.0))<=0.0))
+	if not SkillCard.reveal_intro(cell,_show_skill_face.bind(cell,card,true),motion):
+		_show_skill_face(cell,card,false)
+
 ## --- Actions --------------------------------------------------------------------
 
 ## A tap on a card: opens it once (an open card does nothing).
@@ -216,12 +250,14 @@ func open_card(index: int) -> Dictionary:
 	if is_open():
 		var cell: String="%s/Card_%02d" % [str(_card_set()[0]),index-page*PER_PAGE]
 		var card: Dictionary = results[index]
-		var settled: Callable = _reveal.bind(_scene, _out, cell, card)
-		if _play_card_effect(reveal_effect, _scene, _out, cell + "/Panel", card, settled):
-			GradeFx.start_reel(self,_scene,_out,cell)
-			lit = {"lit": GradeFx.available(self, str(card.get("grade", "")))}
+		if category==SKILL_CATEGORY:_reveal_skill_cell(GradeFx.project(self,_scene,_out,cell),card)
 		else:
-			lit = settled.call()
+			var settled: Callable = _reveal.bind(_scene, _out, cell, card)
+			if _play_card_effect(reveal_effect, _scene, _out, cell + "/Panel", card, settled):
+				GradeFx.start_reel(self,_scene,_out,cell)
+				lit = {"lit": GradeFx.available(self, str(card.get("grade", "")))}
+			else:
+				lit = settled.call()
 	if page_open():_set_visible(_scene,_out,"Nd_ButtonSet/Btn_Open",false)
 	return {"ok":true,"opened":true,"lit":bool(lit.get("lit",false))}
 

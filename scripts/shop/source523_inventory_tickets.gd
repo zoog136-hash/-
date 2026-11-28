@@ -368,7 +368,7 @@ func use_ticket(name:String,selection:Dictionary={},physical_id:String="") -> Di
 		outcome.message="소지 티켓1개 소비 · 원본 스킬 카드 %d회 추첨 · 원본 스킬서 지급: %s" % [results.size(),", ".join(names)]
 		runtime.world.hud.refresh_inventory(runtime.world.inventory)
 		runtime.world.hud.append_log(str(outcome.message))
-		if runtime.world.hud.has_method("present_skill_card_draw"): runtime.world.hud.present_skill_card_draw(results)
+		if runtime.world.hud.has_method("present_skill_card_draw"): runtime.world.hud.present_skill_card_draw(results,name)
 		return outcome
 	runtime.world.hud.set_card_draw_fusion_result(str(prepared.category),str(outcome.message))
 	measure=HITCH.now()
@@ -462,7 +462,7 @@ func market_draw_presented(plan:Dictionary,outcome:Dictionary,name:String) -> St
 		for result:Dictionary in results:names.append(str(result.name))
 		var line:String="%s · 원본 스킬 카드 %d회 추첨 · 원본 스킬서 지급: %s" % [name,results.size(),", ".join(names)]
 		runtime.world.hud.append_log(line)
-		if runtime.world.hud.has_method("present_skill_card_draw"): runtime.world.hud.present_skill_card_draw(results)
+		if runtime.world.hud.has_method("present_skill_card_draw"): runtime.world.hud.present_skill_card_draw(results,name)
 		return line
 	var message:String="%s · 원본 가중치 %d회 추첨" % [name,results.size()]
 	runtime.world.hud.set_card_draw_fusion_result(str(plan.category),message)

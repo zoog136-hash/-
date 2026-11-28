@@ -1640,7 +1640,11 @@ static func _floor_payload(record: Dictionary) -> Dictionary:
 	var physical: Variant=record.get("physical_item")
 	if not physical is Dictionary or not physical.get("data") is Dictionary or not physical.data.has(RECEIPT):return {}
 	var uid: String=str(physical.get("id",""));var owned: Dictionary=proof_entry(physical.data,uid)
-	if owned.is_empty() or not integer(record.get("quantity")) or int(record.quantity)<1 or int(owned.remaining)!=int(record.quantity) or record.get("player_dropped")!=true or record.get("item_name")!=physical.data.get("name") or record.get("item_record")!=physical.data.get("record"):return {}
+	if owned.is_empty() or not integer(record.get("quantity")) or int(record.quantity)<1 or int(owned.remaining)!=int(record.quantity) or record.get("player_dropped")!=true or record.get("item_name")!=physical.data.get("name"):return {}
+	# Older floor entries may omit the duplicate display record. The
+	# verified physical entry already pins its original definition and units.
+	# A supplied duplicate still has to agree with it.
+	if record.has("item_record") and record.item_record!=physical.data.get("record"):return {}
 	return {"uid":uid,"owned":owned,"physical":physical.data}
 
 static func _clear_floor_candidate() -> void:

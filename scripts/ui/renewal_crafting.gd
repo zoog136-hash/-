@@ -27,6 +27,7 @@ var material_grid: GridContainer
 var material_scroll: ScrollContainer
 var material_rows: Array[Dictionary]=[]
 var material_recipe: String=""
+var material_choices: Dictionary={}
 var cost: Label
 var wallet: Label
 var filters: HBoxContainer
@@ -397,20 +398,17 @@ func _select(index: int) -> void:
 func _refresh_quote() -> void:
 	if current_id.is_empty():
 		return
-	var service: Object = world.get("crafting")
-	var recipe: Dictionary = (service.get("recipes") as Dictionary).get(current_id,{})
-	if current_id.begins_with("patch523:"):
-		var selection: Dictionary = world.patch523_equipment.material_selection(current_id, world.patch523_material_choices.get(current_id, {}))
-		if selection.get("recipe") is Dictionary: recipe = selection.recipe
 	var count: int = int(amount.value)
 	var quote: Dictionary = world.call("_craft_quote",current_id,count)
+	var recipe: Dictionary = recipe_of(world,current_id,quote)
+	var choices: Dictionary = quote.get("material_choices",world.patch523_material_choices.get(current_id,{}))
 	var result: Dictionary=recipe.get("result",{})
 	var output_name: String=str(result.get("item",""))
 	var items: Dictionary=world._patch523_craft_items_for_recipe(current_id) if current_id.begins_with("patch523:") else world._craft_item_index()
 	var output: Dictionary=items.get(output_name,{})
-	if material_recipe!=current_id:
+	if material_recipe!=current_id or material_choices!=choices:
 		var source_images: Dictionary=_source_recipe_image_references()
-		_build_materials(recipe,items,source_images)
+		_build_materials(recipe,items,source_images,choices)
 		var source_output: Variant=source_images.get(str(result.get("source_id","")))
 		if source_output is Dictionary and not source_output.is_empty():
 			UI.apply_source_item_reference(product,source_output,output_name,"detail")
@@ -438,10 +436,12 @@ func _refresh_quote() -> void:
 	product_name.text=output_name+state_label+" ×"+str(int(result.get("quantity",0))*count)
 	product_name.add_theme_color_override("font_color",UI.grade(str(output.get("grade","일반"))))
 	product_grade.text=str(output.get("grade","일반"))+" · "+str(recipe.get("category",""))
+	var material_context: Dictionary=world._patch523_craft_context(current_id,count) if source_recipe else {}
+	if quote.has("auto_native_material_review"):material_context["quest_material_review"]=quote.auto_native_material_review
 	for row: Dictionary in material_rows:
 		var available: int=_available_material(str(row.item),items)
 		if source_recipe:
-			available = world.patch523_equipment.available_material(row.source_material, world.inventory, items, world.item_instances, world.equipped_items, world.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(world.gold),world._patch523_craft_context())
+			available = world.patch523_equipment.available_material(row.source_material, world.inventory, items, world.item_instances, world.equipped_items, world.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(world.gold),material_context)
 		var required: int=int(row.unit)*count
 		(row.count as Label).text=UI.number_text(available)+" / "+UI.number_text(required)
 		(row.count as Label).add_theme_color_override("font_color",UI.grade("고급") if available>=required else Color("ec8075"))
@@ -523,9 +523,10 @@ func _source_recipe_image_references() -> Dictionary:
 	var references: Variant=definition.get("items")
 	return references if references is Dictionary else {}
 
-func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictionary={}) -> void:
+func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictionary,choices: Dictionary) -> void:
 	_clear_materials()
 	material_recipe=current_id
+	material_choices=choices.duplicate()
 	material_scroll.scroll_vertical=0
 	for source_slot: Dictionary in recipe.get("material_slots", []):
 		var candidates: Array = source_slot.candidates
@@ -536,7 +537,7 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 		chooser.name = "Patch523Candidate_" + slot_key
 		chooser.custom_minimum_size.y = 40
 		chooser.expand_icon = true
-		chooser.add_item("재료 후보 선택…")
+		chooser.add_item("자동 선택")
 		var candidate_images: Dictionary = {}
 		for material: Dictionary in candidates:
 			chooser.add_item("아데나 ×%d · 지갑" % int(material.quantity) if bool(material.get("wallet",false)) else "%s +%d · %s ×%d" % [str(material.item),int(material.level),"축복" if int(material.bless_code)==2 else "일반",int(material.quantity)])
@@ -556,7 +557,7 @@ func _build_materials(recipe: Dictionary,items: Dictionary,source_images: Dictio
 				evidence.erase("texture")
 				evidence["source_material_row_id"] = material.row_id
 				candidate_images[chooser.item_count-1] = evidence
-			if int(world.patch523_material_choices.get(current_id, {}).get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
+			if int(choices.get(slot_key, -1)) == int(material.row_id): chooser.select(chooser.item_count-1)
 		chooser.set_meta("source523_item_images",candidate_images)
 		chooser.item_selected.connect(func(index: int) -> void:
 			var chosen: Dictionary = world.patch523_material_choices.get(current_id, {}).duplicate(true)
@@ -630,6 +631,13 @@ static func confirm_craft(controller: Node, game: Node, id: String, count: int, 
 	if not bool(report.get("ok",false)): return false
 	var recipe: Dictionary = game.crafting.recipes.get(id, {})
 	var warning: String = "\n재료 장비의 속성 제련 효과는 계승되지 않습니다." if int(recipe.get("popup_text_id", 0)) != 0 else ""
+	if report.has("material_choices"):
+		var choices: Dictionary=report.material_choices
+		var selected: PackedStringArray=[]
+		for material: Dictionary in recipe_of(game,id,report).get("materials",[]):
+			if choices.has(str(int(material.get("slot_index",-1)))) and not material.get("wallet",false):
+				selected.append("%s ×%d" % [str(material.item).get_slice(" · 원본#",0),int(material.quantity)*count])
+		if not selected.is_empty():warning+="\n선택된 재료: "+", ".join(selected)
 	if id.begins_with("patch523:"): warning += "\n아데나 소모: %s" % UI.number_text(int(report.cost))
 	if recipe.has("craft_conditions"): warning+="\n"+game.patch523_craft_condition_summary(recipe)
 	if recipe.get("result",{}).has("inventory_key"): warning+="\n원본 결과를 보유 재화 [%s]에 적립합니다." % str(recipe.result.inventory_key)
@@ -641,7 +649,15 @@ static func confirm_craft(controller: Node, game: Node, id: String, count: int, 
 		var failure: Dictionary=recipe.missing_failure_policy
 		warning+="\n누락 실패는 TWILIGHT 설정: 지급 없음 · 재료 %s / 비용 %s" % ["소모" if failure.consume_materials_on_failure else "보존","소모" if failure.consume_fee_on_failure else "보존"]
 	var body: String = "선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다.%s" % [count,warning]
-	var confirmed: Callable = execute if execute.is_valid() else func(_amount: int) -> void: controller.emit_signal("craft_requested",id,count)
+	var send: Callable = execute if execute.is_valid() else func(_amount: int) -> void: controller.emit_signal("craft_requested",id,count)
+	var confirmed: Callable = send
+	if report.has("material_choices"):
+		confirmed = func(amount_value: int) -> void:
+			var fresh: Dictionary = game._craft_quote(id,count)
+			if not fresh.get("ok",false) or fresh.get("material_choices") != report.material_choices or fresh.get("material_rows") != report.material_rows or fresh.get("consumed_ids") != report.consumed_ids or fresh.get("auto_native_material_review",{}) != report.get("auto_native_material_review",{}) or fresh.get("cost") != report.cost:
+				controller.show_message("제작 재료가 바뀌었습니다 · 다시 확인하세요")
+				return
+			send.call(amount_value)
 	if controller.has_method("confirm_crafting_action"):
 		return controller.confirm_crafting_action("제작 확인",body,"제작",confirmed) != null
 	controller.confirm_action("제작 확인",body,"제작",confirmed)
@@ -649,18 +665,21 @@ static func confirm_craft(controller: Node, game: Node, id: String, count: int, 
 
 ## The recipe as the quote reads it (a patch523 recipe with its chosen
 ## material candidates).
-static func recipe_of(game: Node, id: String) -> Dictionary:
+static func recipe_of(game: Node, id: String, quote: Dictionary = {}) -> Dictionary:
 	var recipe: Dictionary = (game.crafting.recipes as Dictionary).get(id,{})
 	if id.begins_with("patch523:"):
-		var selection: Dictionary = game.patch523_equipment.material_selection(id, game.patch523_material_choices.get(id, {}))
+		var choices: Dictionary = quote.get("material_choices",game.patch523_material_choices.get(id, {}))
+		var selection: Dictionary = game.patch523_equipment.material_selection(id, choices, not game.patch523_owned_material_choices.has(id))
 		if selection.get("recipe") is Dictionary: recipe = selection.recipe
 	return recipe
 
 ## Owned / required of each material row, as the forge's material panel shows.
-static func material_status(game: Node, id: String, count: int) -> Array:
-	var recipe: Dictionary = recipe_of(game,id)
+static func material_status(game: Node, id: String, count: int, quote: Dictionary = {}) -> Array:
+	var recipe: Dictionary = recipe_of(game,id,quote)
 	var source_recipe: bool = recipe.get("source_snapshot", "") == "patch523"
 	var items: Dictionary = game._patch523_craft_items_for_recipe(id) if id.begins_with("patch523:") else game._craft_item_index()
+	var context: Dictionary = game._patch523_craft_context(id,count) if source_recipe else {}
+	if quote.has("auto_native_material_review"):context["quest_material_review"]=quote.auto_native_material_review
 	var rows: Array = []
 	for raw: Variant in recipe.get("materials",[]):
 		if not raw is Dictionary: continue
@@ -668,7 +687,7 @@ static func material_status(game: Node, id: String, count: int) -> Array:
 		var item_name: String = str(material.get("item",""))
 		var available: int
 		if source_recipe:
-			available = game.patch523_equipment.available_material(material, game.inventory, items, game.item_instances, game.equipped_items, game.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(game.gold),game._patch523_craft_context())
+			available = game.patch523_equipment.available_material(material, game.inventory, items, game.item_instances, game.equipped_items, game.ui_preferences.get("item_locks", {}), int(recipe.get("popup_text_id", 0)) != 0, int(game.gold),context)
 		else:
 			available = available_material_of(game,item_name,items)
 		rows.append({"item":item_name,"available":available,"required":int(material.get("quantity",0))*count,"record":items.get(item_name,{}),"source_id":str(material.get("source_id","")),"material":material.duplicate(true)})

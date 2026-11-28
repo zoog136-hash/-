@@ -2881,8 +2881,9 @@ func _preview_card_reveal_grades() -> void:
 		return
 	_new_card_reveal_stage().present_showcase()
 
-## Display the physical books the draw already awarded. Reveal never draws or grants.
-func present_skill_card_draw(results: Array) -> void:
+## Reveal the committed skill identity. The inventory debit and grant stay with
+## the draw owner and never run again while a card is being opened.
+func present_skill_card_draw(results: Array, title: String = "스킬 카드 뽑기") -> void:
 	if is_card_reveal_busy(): return
 	var cards: Array[Dictionary] = []
 	var skill_cards: RefCounted = get_parent().skill_cards523
@@ -2890,9 +2891,14 @@ func present_skill_card_draw(results: Array) -> void:
 		var spell: Dictionary = skill_cards.card(int(result.get("source_buff_card_id", 0)))
 		if spell.is_empty() or int(result.get("item_class_id",0)) <= 0: continue
 		var card: Dictionary = result.duplicate()
+		card["name"] = skill_cards.card_name(int(spell.ID))
 		card["grade"] = skill_cards.grade_name(int(spell.GradeID))
+		card["grade_id"] = int(spell.GradeID)
+		card["spell_class_id"] = int(spell.get("SpellClassID",0))
 		cards.append(card)
-	if not cards.is_empty(): _present_skill_draw_page(cards, 0)
+	if cards.is_empty(): return
+	if _present_original_gacha(cards,"스킬 카드",title,Callable()): return
+	_present_skill_draw_page(cards, 0)
 
 func _present_skill_draw_page(cards: Array[Dictionary], start: int) -> void:
 	# Nine fit the existing landscape and portrait grids without clipping.
