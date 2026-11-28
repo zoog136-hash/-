@@ -25,6 +25,8 @@ const NATIVE_SMITH=preload("res://scripts/equipment523/native_elemental_smith.gd
 const GACHA_CRAFT=preload("res://scripts/crafting/patch523_gacha_craft.gd")
 const SLOT_EXPANDERS=preload("res://scripts/loot/source_slot_expanders523.gd")
 const ACCOUNT=preload("res://scripts/characters/account_store.gd")
+const DOLL_UNLOCK=preload("res://scripts/cards/native_doll_unlock_item.gd")
+const RELIC_UNLOCK=preload("res://scripts/cards/native_relic_unlock_item.gd")
 const SPECIAL_ENCHANT=["ScrollEnchant","ScrollElementalEnchant","ScrollElementalConversion","ScrollElementalRemover","ScrollBless"]
 const CONFIRMED_GAPS := {
 	1185: "source_account_slot_increase_without_consumer",
@@ -33,7 +35,9 @@ const CONFIRMED_GAPS := {
 	146552: "source_permanent_auto_extra_healing_for_item_237_without_consumer",
 	147152: "source_base_stat_cap_and_point_without_consumer",
 	200753: "source_permanent_auto_extra_healing_for_item_236_without_consumer",
+	245748: "source_buff_73838_auto_registration_item_236_without_consumer_acquisition_unverified",
 }
+const PVP_LEVEL_MANUALS := [146562,146572,146582,146592,146602,146612,146622,146632]
 const KNOWN_HOLDS := {
 	170214: "numeric_experience_disagrees_with_original_description",
 	164643: "complex_reward_graph_not_present_in_pinned_tables",
@@ -77,7 +81,9 @@ const VERIFIED={
 	146402:"actual_main_bonus_point_only_physical_debit_refusal_and_reload",
 	146412:"actual_original_bag_base_stat_cap_only_physical_debit_and_reload",
 	146422:"actual_original_bag_second_rune_unlock_growth_claim_fault_retry_equip_reload_unequip",
+	146552:"actual_original_bag_and_growth_whisper_exact_237_auto_registration_death_and_reload",
 	147152:"actual_original_bag_base_stat_cap_and_point_physical_and_growth_stock_fault_retry_reload",
+	200753:"actual_original_bag_and_version0_growth_vow_exact_236_auto_registration_death_and_reload",
 	1185:"actual_original_bag_fixed_thirteen_slot_policy_refusal_one_physical_item_retained",
 	186024:"actual_main_half_elixir_reset_cancel_fault_retry_and_physical_debit",
 	190754:"actual_main_half_elixir_reset_event_physical_debit",
@@ -256,6 +262,12 @@ func disposition(entry: Dictionary, raw: Dictionary) -> Array[String]:
 		if entry.category == "ScrollGachaCraft" and entry.bag_action == "사용" \
 				and entry.get("supply") == "storage" and not GACHA_CRAFT.spec(entry.id).is_empty():
 			return ["linked", "existing_main_gacha_craft_dispatch"]
+		if (entry.id == DOLL_UNLOCK.ITEM and DOLL_UNLOCK.source_rules_valid()) \
+				or (entry.id == RELIC_UNLOCK.ITEM and RELIC_UNLOCK.source_rules_valid()):
+			return ["linked", "existing_main_native_awakening_subslot_unlock"]
+		# Each pinned item grants only the saved PVPSpellByLevelAdditionLevel buff.
+		if entry.id in PVP_LEVEL_MANUALS:
+			return ["intentionally_excluded", "source_pvp_level_spell_manual"]
 		var exclusion: String = OWNER.storage_exclusion(raw)
 		if not exclusion.is_empty() and entry.get("supply") == "":
 			return ["intentionally_excluded", exclusion]
