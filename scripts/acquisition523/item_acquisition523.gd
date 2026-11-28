@@ -51,6 +51,22 @@ static func _row(table: String, id: int) -> Dictionary:
 static func available() -> bool:
 	return not SOURCE.identity().is_empty()
 
+## Recipes already admitted by production. Both an output and an ingredient
+## can link here, but browsing never treats a table-only recipe as usable.
+static func connected_crafts(item_class_id: int, recipes: Dictionary) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if item_class_id <= 0 or recipes.is_empty(): return result
+	var seen: Dictionary = {}
+	for table: String in ["ItemCraftOutputView", "ItemCraftInput"]:
+		for row: Dictionary in SOURCE.related(table,"ItemClassID",item_class_id):
+			var craft_id: int = int(row.get("ItemCraftID",0))
+			var recipe_id: String = "patch523:" + str(craft_id)
+			if craft_id <= 0 or not recipes.has(recipe_id) or seen.has(recipe_id): continue
+			seen[recipe_id] = true
+			result.append({"craft_id":craft_id,"recipe_id":recipe_id})
+			if result.size() == MAX_CRAFT_ROWS: return result
+	return result
+
 ## The acquisition classification of an ItemCategoryID (empty when the
 ## category has no ItemAcquisition row).
 static func classification(item_category_id: int) -> Dictionary:

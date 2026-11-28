@@ -60,9 +60,13 @@ func is_open() -> bool:
 
 var _blessing_recipe: String = ""
 
-func open(parent: Node, world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="") -> Dictionary:
+func open(parent: Node, world: Node, item_class_id: int, item_name: String="", blessing_recipe: String="", recipe_links: Array[Dictionary]=[]) -> Dictionary:
 	if not is_instance_valid(parent):return _fail("source_acquisition_popup_host_unavailable")
-	var data: Dictionary=Acquisition.sources(item_class_id)
+	var data: Dictionary
+	if recipe_links.is_empty():
+		data=Acquisition.sources(item_class_id)
+	else:
+		data={"ok":true,"item_class_id":item_class_id,"crafts":recipe_links,"crafts_total":recipe_links.size(),"drops":[],"acquirements":[]}
 	if not data.get("ok",false):return {"ok":false,"handled":false,"code":"source_acquisition_rows_unavailable","problem":str(data.get("problem",""))}
 	_parent=weakref(parent)
 	_world=weakref(world)
@@ -70,6 +74,8 @@ func open(parent: Node, world: Node, item_class_id: int, item_name: String="", b
 	_item_name=item_name if not item_name.is_empty() else str(data.get("name",""))
 	_blessing_recipe=blessing_recipe
 	_scroll=0.0
+	_moved=0.0
+	_drag=false
 	return _stage()
 
 func close() -> void:
@@ -99,7 +105,7 @@ func _craft_rows() -> Array:
 		var output: Dictionary=recipe.get("result",{}) if recipe.get("result") is Dictionary else {}
 		var title: String=str(output.get("item",recipe.get("name","")))
 		if int(output.get("level",0))>0:title+=" +%d" % int(output.level)
-		rows.append({"recipe_id":str(craft.recipe_id),"craft_id":int(craft.craft_id),"name":title})
+		rows.append({"recipe_id":str(craft.recipe_id),"craft_id":int(craft.craft_id),"name":title,"item_class_id":int(output.get("source_id",0))})
 	return rows
 
 func _mode() -> String:
@@ -181,7 +187,9 @@ func _stage() -> Dictionary:
 			var built_row: Dictionary=_tree.scene_of(ROW_CRAFT_SET,row_spec,row_out)
 			if not built_row.get("ok",false):continue
 			for side: int in range(2):
-				if index+side<crafts.size():_slot_picture(built_row.scene,row_out,"Production_List_Source_Text_%d/Btn_Normal/Production_Slot/Sp_IconSample" % side,int(_data.item_class_id),_item_name)
+				if index+side>=crafts.size():continue
+				var craft: Dictionary=crafts[index+side]
+				_slot_picture(built_row.scene,row_out,"Production_List_Source_Text_%d/Btn_Normal/Production_Slot/Sp_IconSample" % side,int(craft.get("item_class_id",_data.item_class_id)),str(craft.name))
 			craft_height+=_tree.add_row(content,ROW_CRAFT_SET,built_row.scene,index/2,list_size)
 		if mode != "craft":
 			for row: int in range(rows):

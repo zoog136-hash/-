@@ -197,7 +197,8 @@ func _request_slot_transfer(reference: String, deposit: bool) -> void:
 		var record: Dictionary=instances.get(id,{}).get("record",{})
 		if record.is_empty():record=world._find_catalog_item_record(item)
 		var identity=preload("res://scripts/ui/source523_item_identity.gd")
-		var original: Dictionary=controller.try_open_storage_transfer(identity.clean_message(item),int(record.get("source_item_class_id",0)),count,transfer,direction)
+		var can_confirm: Callable=func() -> bool: return is_instance_valid(world) and not world.background_save_pending()
+		var original: Dictionary=controller.try_open_storage_transfer(identity.clean_message(item),int(record.get("source_item_class_id",0)),count,transfer,direction,can_confirm)
 		if not original.get("handled",false) and not controller.drop_confirm_is_open():
 			hud._report_original_window_unavailable("창고 이동 확인",original)
 		return

@@ -48,13 +48,21 @@ var guardian_cast_buttons: Dictionary={}
 var guardian_special_scroll: ScrollContainer
 var guardian_hidden_state: Dictionary={}
 var guardian_special_clock: float=0
+var focus_only: bool=false
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, focus: String="") -> void:
 	hud=controller
 	visibility_changed.connect(_sync_visibility)
-	records=hud.job_skills.duplicate(true)
+	focus_only=not focus.is_empty()
+	if focus_only:
+		for record: Dictionary in hud.job_skills:
+			if str(record.get("id",record.get("name","")))==focus:
+				records=[record.duplicate(true)]
+				break
+	else:
+		records=hud.job_skills.duplicate(true)
 	var source = hud.get_parent().original_skills.catalog.source523
-	if not source.profiles.is_empty() or not source.last_error.is_empty():
+	if not focus_only and (not source.profiles.is_empty() or not source.last_error.is_empty()):
 		var source_label: Label = UI.label("523 원본 규칙 · 확인된 비용과 대상 제한 적용" if not source.profiles.is_empty() else "523 자료를 읽지 못했습니다 · 기존 게임 규칙 사용",12,UI.MUTED)
 		source_label.name = "PlayerSkills523Status"
 		source_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -63,6 +71,7 @@ func configure(controller: Node) -> void:
 	# Names, costs and learning information remain in the existing inspector.
 	var scope:=HBoxContainer.new();scope.name="SkillReferenceTabs"
 	add_child(scope)
+	scope.visible=not focus_only
 	for current: int in range(2):
 		var selection: int=current
 		var button: Button=UI.button("전체" if current==0 else "기술",func() -> void:
@@ -227,6 +236,7 @@ func configure(controller: Node) -> void:
 	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
 	selection_sheet=SelectionSheet.new()
 	var inspector: Control=selection_sheet.bind_skill(self,side_scroll,side)
+	body.detail_only=focus_only
 	body.configure(cards,inspector,278)
 	body.move_child(body.tabs,body.get_child_count()-1)
 	(body.tabs.get_child(0) as Button).text="스킬 목록"
@@ -237,6 +247,11 @@ func configure(controller: Node) -> void:
 	refresh()
 
 func refresh() -> void:
+	if focus_only:
+		filtered=records
+		if filtered.is_empty():_clear_selection()
+		else:select(0)
+		return
 	var scroll_position: float = cards.get_v_scroll_bar().value
 	cards.clear()
 	filtered.clear()
@@ -323,14 +338,6 @@ func _unlearned_icon(source: Texture2D) -> Texture2D:
 	var gray: ImageTexture = ImageTexture.create_from_image(image)
 	unlearned_icons[key] = gray
 	return gray
-
-## Selects the skill `id` (from the original skill window's 상세 보기).
-func focus_skill(id: String) -> void:
-	for index: int in range(filtered.size()):
-		if str(filtered[index].get("id",filtered[index].get("name","")))==id:
-			cards.select(index)
-			select(index)
-			return
 
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
